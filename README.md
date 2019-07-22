@@ -1,0 +1,1 @@
+# applcommon.multi-target-starter-kit
