@@ -79,9 +79,10 @@ enum
    ENTRY(Erd_TimeSource,                       0xF004, I_TimeSource_t *,                          Ram,       Swap_N, Io_N, O_N) \
    ENTRY(Erd_TimerModule,                      0xF005, TimerModule_t *,                           Ram,       Swap_N, Io_N, O_N) \
    ENTRY(Erd_GpioGroup,                        0xF006, I_GpioGroup_t *,                           Ram,       Swap_N, Io_N, O_N) \
-   ENTRY(Erd_BufferedUart,                     0xF007, I_BufferedUart_t *,                        Ram,       Swap_N, Io_N, O_N) \
-   ENTRY(Erd_CrcCalcTable,                     0xF008, I_Crc16Calculator_t *,                     Ram,       Swap_N, Io_N, O_N) \
-   ENTRY(Erd_Gea2MessageEndpoint,              0xF009, I_Gea2MessageEndpoint_t *,                 Ram,       Swap_N, Io_N, O_N) \
+   ENTRY(Erd_InternalBufferedUart,             0xF007, I_BufferedUart_t *,                        Ram,       Swap_N, Io_N, O_N) \
+   ENTRY(Erd_ExternalBufferedUart,             0xF008, I_BufferedUart_t *,                        Ram,       Swap_N, Io_N, O_N) \
+   ENTRY(Erd_CrcCalcTable,                     0xF009, I_Crc16Calculator_t *,                     Ram,       Swap_N, Io_N, O_N) \
+   ENTRY(Erd_Gea2MessageEndpoint,              0xF00A, I_Gea2MessageEndpoint_t *,                 Ram,       Swap_N, Io_N, O_N) \
    ENTRY(Erd_JumpToBootLoaderAction,           0xF00B, I_Action_t *,                              Ram,       Swap_N, Io_N, O_N) \
    ENTRY(Erd_SystemResetAction,                0xF00C, I_Action_t *,                              Ram,       Swap_N, Io_N, O_N) \
    ENTRY(Erd_TimerModuleDiagnosticsEnable,     0xF00D, bool,                                      Ram,       Swap_N, Io_Y, O_Y) \

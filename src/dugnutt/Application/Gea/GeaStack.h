@@ -20,13 +20,13 @@
 #include "Validator_RestrictedRangeErd.h"
 #include "ErdGea2ReadWriteApiRevision2.h"
 
-#define NUMBER_OF_SUBSCRIPTIONS  (5)
-
 enum
 {
-   FullDuplexMaxSendBufferSize = 251,
-   InterfaceReceiveBufferSize = 251,
-   PacketQueueStorageSize = 300
+   MaxNumberOfSubscriptions = 5,
+   SendBufferSize = 251,
+   ReceiveBufferSize = 251,
+   PacketQueueStorageSize = 300,
+   DynamicRoutingTableBufferSize = 8,
 };
 
 typedef struct
@@ -39,22 +39,43 @@ typedef struct
       DataSourcePacketReadWriteManager_Simple_t dataSourceReadWriteManager;
       DataSourcePacketGea2MessageEndpointConnector_t dataSourceEndpointConnector;
       DataSourcePacketSubscriptionFrontEnd_Simple_t dataSourceSubscriptionFrontEnd;
-      DataSourcePacketSubscriptionManager_Simple_SubscriptionListItem_t subscriptionList[NUMBER_OF_SUBSCRIPTIONS];
+      DataSourcePacketSubscriptionManager_Simple_SubscriptionListItem_t subscriptionList[MaxNumberOfSubscriptions];
       DataSourcePacketSubscriptionManager_Simple_t dataSourceSubscriptionManager;
       Gea2CommonCommands_t commonCommands;
       ErdGea2ReadWriteApiRevision2_t erdApiRevision2;
 
-      Gea2Configurator_t configurator;
-      Gea2ConfiguratorNode_t node;
-      Gea2ConfiguratorPacketEndpointNodeResources_t packetEndpointResources;
-      Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t customBackgroundResources;
-      uint8_t interfaceSendBuffer[FullDuplexMaxSendBufferSize];
-      uint8_t interfaceReceiveBuffer[InterfaceReceiveBufferSize];
-      uint8_t packetQueueStorage[PacketQueueStorageSize];
+      Gea2ConfiguratorNode_t applicationNode;
+      Gea2ConfiguratorPacketEndpointNodeResources_t applicationNodeResources;
 
-      Gea2ConfiguratorSimpleDynamicRoutingTableResources_t dynamicRoutingTableResources;
-      Gea2ConfiguratorStaticRoutingTableResources_t staticRoutingResources;
-      uint8_t dynamicRoutingTable[16];
+      Gea2Configurator_t configurator;
+
+      struct
+      {
+         Gea2ConfiguratorNode_t node;
+         Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t nodeResources;
+         Gea2ConfiguratorStaticRoutingTableResources_t staticRoutingResources;
+         struct
+         {
+            uint8_t sendBuffer[SendBufferSize];
+            uint8_t receiveBuffer[ReceiveBufferSize];
+            uint8_t packetQueueStorage[PacketQueueStorageSize];
+         } buffers;
+      } internal;
+
+      struct
+      {
+         Gea2ConfiguratorNode_t node;
+         Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t nodeResources;
+         Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
+         uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
+         struct
+         {
+            uint8_t sendBuffer[SendBufferSize];
+            uint8_t receiveBuffer[ReceiveBufferSize];
+            uint8_t packetQueueStorage[PacketQueueStorageSize];
+         } buffers;
+      } external;
+
       struct
       {
          Gea2MessageEndpoint_MessageRestrictor_t restrictedErdMessageRestrictor;
@@ -83,6 +104,6 @@ I_Gea2PacketEndpoint_t * GeaStack_GetGea2PacketEndpoint(GeaStack_t *instance);
 /*!
  * @param instance
  */
-void GeaStack_RunGea(GeaStack_t *instance);
+void GeaStack_Run(GeaStack_t *instance);
 
 #endif

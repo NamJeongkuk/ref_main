@@ -7,6 +7,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+
 #include "Timer.h"
 #include "InvokeActionOnTimerPeriodic.h"
 #include "Application.h"
@@ -25,11 +26,14 @@
 #include "ApplicationResetSetup.h"
 #include "Header.h"
 #include "Hardware.h"
+#include "GeaStack.h"
+#include "Constants_Binary.h"
 
 static ApplicationDataModel_t applicationDataModel;
 static Application_t application;
 static TimerModuleStack_t timerModuleStack;
 static InvokeActionOnTimerPeriodic_t watchdogPetter;
+static GeaStack_t geaStack;
 
 static void UpdateBuildInfo(
    I_DataModel_t *dataModel,
@@ -76,10 +80,10 @@ int main(void)
 
    Hardware_InitializeStage2(dataModel);
 
-   // GeaStack_Init(
-   //    &geaStack,
-   //    dataModel,
-   //    ApplicationDataModel_GetExternalDataSource(&applicationDataModel));
+   GeaStack_Init(
+      &geaStack,
+      dataModel,
+      ApplicationDataModel_GetExternalDataSource(&applicationDataModel));
 
    Application_Init(
       &application,
@@ -94,6 +98,8 @@ int main(void)
    UpdateBuildInfo(
       dataModel,
       Header_GetImageHeader(ImageType_Application));
+
+   DataModel_Write(dataModel, Erd_ReadyToEnterBootLoader, enabled);
 
    while(1)
    {

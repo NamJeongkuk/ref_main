@@ -18,9 +18,9 @@ enum
 
 static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] =
    {
+      SWAPPED_ERD(Erd_BuildNumber, sizeof(uint32_t)),
       SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, revision),
       SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, features),
-      SWAPPED_ERD(Erd_BuildNumber, sizeof(uint32_t)),
       SWAPPED_FIELD(Erd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, maximumLatency),
       SWAPPED_FIELD(Erd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, averageLatency),
    };
