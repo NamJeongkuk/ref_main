@@ -280,8 +280,9 @@ I_BufferedUart_t * BufferedUart_Channel5_Init(void)
 
    DTCE(SCI5,TXI5) = 1;                                      // DTC activation by SCI5 Tx interrupt request is enabled
 
-   SCI5.SCR.BIT.TIE = 1;  // Transmit Interrupt Enabled
+   // To avoid generating a transmit interrupt here, we must enable transmit before enabling the transmit interrupt.
    SCI5.SCR.BIT.TE = 1;   // Transmit Enabled
+   SCI5.SCR.BIT.TIE = 1;  // Transmit Interrupt Enabled
 
    return &instance.interface;
 }
