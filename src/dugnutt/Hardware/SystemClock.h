@@ -2,11 +2,11 @@
  * @file
  * @brief Clock module header file for RX130
  *
- * Copyright GE Appliances - Confidential - All rights reserved.  
+ * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef CLOCKCONFIG_H
-#define CLOCKCONFIG_H
+#ifndef SYSTEMCLOCK_H
+#define SYSTEMCLOCK_H
 
 #include <stdint.h>
 #include "I_Action.h"
@@ -60,15 +60,8 @@
 #define U16_DELAY_COUNT                   ((uint16_t)10)
 
 /*!
- * Sets RX130 CPU clock register
- * @param sckcrRegisterMask Clock settings
+ * Initialize and select the high-speed clock
  */
-void ClockConfig_SetHOCO(uint32_t sckcrRegisterMask);
-
-/*!
- * Get action for setting clock speed to high.
- * @return Action for setting clock speed to high.
- */
-I_Action_t * ClockConfig_GetSetClockSpeedHighAction(void);
+void SystemClock_Init(void);
 
 #endif

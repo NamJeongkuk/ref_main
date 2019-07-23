@@ -7,15 +7,12 @@
 
 #include <stdint.h>
 #include "iodefine.h"
-#include "ClockConfig.h"
+#include "SystemClock.h"
 #include "utils.h"
 
 // Disables optimization for this file
 #pragma GCC optimize ("O0")
 
-/*!
- * Delay to manage clock stabilization
- */
 static void WaitForClockToStabilize(void)
 {
    for(uint16_t u16Index = 0; u16Index < U16_DELAY_COUNT; u16Index++)
@@ -24,10 +21,7 @@ static void WaitForClockToStabilize(void)
    }
 }
 
-/*!
- * Sets up the internal high speed clock
- */
-void ClockConfig_SetHOCO(uint32_t sckcrRegisterMask)
+void SystemClock_Init(void)
 {
    WaitForClockToStabilize();
 
@@ -48,8 +42,8 @@ void ClockConfig_SetHOCO(uint32_t sckcrRegisterMask)
    }
 
    // Set clock dividers
-   SYSTEM.SCKCR.LONG = sckcrRegisterMask;
-   while(sckcrRegisterMask != SYSTEM.SCKCR.LONG)
+   SYSTEM.SCKCR.LONG = U32_SCKCR_REGISTER_MASK_HIGHSPEED;
+   while(U32_SCKCR_REGISTER_MASK_HIGHSPEED != SYSTEM.SCKCR.LONG)
    {
       // Confirm write success
    }
@@ -63,19 +57,4 @@ void ClockConfig_SetHOCO(uint32_t sckcrRegisterMask)
 
    // Disable register modification
    SYSTEM.PRCR.WORD = U16_PRCR_DISABLE;
-}
-
-static void SetClockSpeedHighDelegate(I_Action_t *context)
-{
-   IGNORE_ARG(context);
-   ClockConfig_SetHOCO(U32_SCKCR_REGISTER_MASK_HIGHSPEED);
-}
-
-static I_Action_t setClockSpeedHighAction;
-static const I_Action_Api_t setClockSpeedHighApi = { SetClockSpeedHighDelegate };
-
-I_Action_t * ClockConfig_GetSetClockSpeedHighAction(void)
-{
-   setClockSpeedHighAction.api = &setClockSpeedHighApi;
-   return &setClockSpeedHighAction;
 }

@@ -29,37 +29,36 @@
 static ApplicationDataModel_t applicationDataModel;
 static Application_t application;
 static TimerModuleStack_t timerModuleStack;
+static InvokeActionOnTimerPeriodic_t watchdogPetter;
 
-// static void UpdateBuildInfo(
-//    I_DataModel_t *dataModel,
-//    const ImageHeader_t *header)
-// {
-//    static const GitHash_t gitHash =
-//       { GIT_HASH_U8_ARRAY_RX };
-//    DataModel_Write(dataModel, Erd_GitHash, &gitHash);
+static void UpdateBuildInfo(
+   I_DataModel_t *dataModel,
+   const ImageHeader_t *header)
+{
+   static const GitHash_t gitHash =
+    { GIT_HASH_U8_ARRAY_RX };
+   DataModel_Write(dataModel, Erd_GitHash, &gitHash);
 
-//    uint32_t buildNumber = BUILD_NUMBER;
-//    DataModel_Write(dataModel, Erd_BuildNumber, &buildNumber);
+   uint32_t buildNumber = BUILD_NUMBER;
+   DataModel_Write(dataModel, Erd_BuildNumber, &buildNumber);
 
-//    if(header)
-//    {
-//       Version_t version;
-//       version.criticalMajor = header->criticalMajorVersion;
-//       version.criticalMinor = header->criticalMinorVersion;
-//       version.major = header->majorVersion;
-//       version.minor = header->minorVersion;
-//       DataModel_Write(dataModel, Erd_OldApplicationVersion, &version);
-//    }
-// }
+   if(header)
+   {
+      Version_t version;
+      version.criticalMajor = header->criticalMajorVersion;
+      version.criticalMinor = header->criticalMinorVersion;
+      version.major = header->majorVersion;
+      version.minor = header->minorVersion;
+      DataModel_Write(dataModel, Erd_OldApplicationVersion, &version);
+   }
+}
 
 int main(void)
 {
-   ApplicationResetSetup();
+   Hardware_InitializeStage1();
 
    I_Action_t *watchdog = Action_Rx2xxWatchdog_Init();
-
-   TimerModuleStack_Init(&timerModuleStack);
-   TimerModule_t *timerModule = TimerModuleStack_GetTimerModule(&timerModuleStack);
+   TimerModule_t *timerModule = TimerModuleStack_Init(&timerModuleStack);
 
    ApplicationDataModel_Init(
       &applicationDataModel,
@@ -75,7 +74,7 @@ int main(void)
 
    TimerModuleStack_WritePointersToDataModel(&timerModuleStack, dataModel);
 
-   Hardware_Init(dataModel);
+   Hardware_InitializeStage2(dataModel);
 
    // GeaStack_Init(
    //    &geaStack,
@@ -86,10 +85,15 @@ int main(void)
       &application,
       dataModel);
 
+   InvokeActionOnTimerPeriodic_Init(
+      &watchdogPetter,
+      watchdog,
+      timerModule,
+      1);
 
-   // UpdateBuildInfo(
-   //    dataModel,
-   //    Header_GetImageHeader(ImageType_Application));
+   UpdateBuildInfo(
+      dataModel,
+      Header_GetImageHeader(ImageType_Application));
 
    while(1)
    {

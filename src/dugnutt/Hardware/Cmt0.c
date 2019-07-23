@@ -5,12 +5,13 @@
  * Copyright GE Appliances - Confidential - All rights reserved
  */
 
-#include "Cmt0.h"
 #include <stdint.h>
-#include "iodefine.h"
-#include "I_Interrupt.h"
+
+#include "Cmt0.h"
 #include "Event_Simple.h"
-#include "ClockConfig.h"
+#include "I_Interrupt.h"
+#include "iodefine.h"
+#include "SystemClock.h"
 #include "utils.h"
 
 #define U8_CMT_MODULE_STOP_CANCELED        ((uint8_t)0)
@@ -52,7 +53,7 @@ void CMT0_CMI0(void)
    Event_Simple_Publish(&cmt0Interrupt.OnInterrupt, NULL);
 }
 
-I_Interrupt_t * CMT0_Init(void)
+I_Interrupt_t * Cmt0_Init(void)
 {
    // PRCR write enabled
    SYSTEM.PRCR.WORD = U16_PRCR_ENABLE;
@@ -78,6 +79,5 @@ I_Interrupt_t * CMT0_Init(void)
    Event_Simple_Init(&cmt0Interrupt.OnInterrupt);
    cmt0Interrupt.interrupt.OnInterrupt = &cmt0Interrupt.OnInterrupt.interface;
 
-   // Let caller know our interface
    return &cmt0Interrupt.interrupt;
 }

@@ -31,7 +31,7 @@ enum
 typedef enum
 {
    GpioPullUp_Disable = 0,
-   GpioPullUp_Enable = 1,
+   GpioPullUp_Enable,
    GpioPullUp_Max
 } GpioPullUp_t;
 
@@ -41,7 +41,6 @@ typedef enum
    GpioDriveCapacity_High,
    GpioDriveCapacity_Max
 } GpioDriveCapacity_t;
-
 
 #define GPIO_EXPAND_AS_ENUM(name, direction, pullUp, driveCapacity, port, pin) name,
 
@@ -55,6 +54,6 @@ enum
  * Initialize the Gpio Group
  * @return I_GpioGroup_t The Gpio Group interface
  */
-I_GpioGroup_t *GpioGroup_Init(void);
+I_GpioGroup_t * GpioGroup_Init(void);
 
 #endif

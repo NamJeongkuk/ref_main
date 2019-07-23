@@ -67,7 +67,7 @@ COMMON_LIB_DIRS=\
 SRC_DIRS=\
    $(PROJECT_DIR)/Application \
    $(PROJECT_DIR)/Application/DataModel \
-   $(PROJECT_DIR)/Application/Devices \
+   $(PROJECT_DIR)/Application/TimerModule \
    $(PROJECT_DIR)/Hardware \
    $(PROJECT_DIR)/Hardware/Flash \
 

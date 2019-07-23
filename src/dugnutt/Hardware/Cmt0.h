@@ -12,8 +12,8 @@
 
 /*!
  * Initialize CMT0 to be the system tick
- * @return Pointer to interrupt handle
+ * @return Interrupt interface
  */
-I_Interrupt_t * CMT0_Init(void);
+I_Interrupt_t * Cmt0_Init(void);
 
 #endif

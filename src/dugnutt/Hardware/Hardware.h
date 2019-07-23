@@ -12,9 +12,14 @@
 #include "I_DataModel.h"
 
 /*!
- * The hardware initialization function before start main function.
- * @param applicationDataModel Data Model to store hardware pointers.
+ * Initialize the first stage of hardware
  */
-void Hardware_Init(I_DataModel_t *internalDataModel);
+void Hardware_InitializeStage1(void);
+
+/*!
+ * Initialize the second stage of hardware
+ * @param dataModel
+ */
+void Hardware_InitializeStage2(I_DataModel_t *dataModel);
 
 #endif

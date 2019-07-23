@@ -1,15 +1,15 @@
 /*!
  * @file
- * @brief Source Code for Gpio Group
+ * @brief Gpio Group
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "GpioGroup_Rx130.h"
-#include <stdint.h>
+#include "GpioGroup.h"
 #include "iodefine.h"
 #include "uassert.h"
 #include "utils.h"
+#include <stdint.h>
 
 typedef struct
 {
