@@ -103,6 +103,6 @@ int main(void)
    while(1)
    {
       TimerModule_Run(timerModule);
-      //GeaStack_RunGea(&geaStack);
+      GeaStack_Run(&geaStack);
    }
 }
