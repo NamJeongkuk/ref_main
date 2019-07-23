@@ -17,22 +17,22 @@
 #define ParametricEndAddress 0
 #define ParametricHeaderAddress 0
 
-#define ApplicationStartAddress FirstAddressInBlock(127)
+#define ApplicationStartAddress FirstAddressInBlock(63)
 #define ApplicationEndAddress LastAddressInBlock(20)
 #define ApplicationHeaderAddress ApplicationStartAddress
 
 enum
 {
    DummyCrc = 0x1234,
-   TargetMemorySizeInK = 128,
+   TargetMemorySizeInK = 64,
 
    ApplicationIncluded = true,
    ParametricIncluded = false,
    AuxiliaryIncluded = false,
 
-   ApplicationImageId = 126,
-   ParametricDataImageId = 126,
-   AuxiliaryImageId = 126,
+   ApplicationImageId = 1,
+   ParametricDataImageId = 1,
+   AuxiliaryImageId = 1,
 
    HardwareVersion = 1,
 

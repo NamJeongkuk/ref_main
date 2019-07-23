@@ -106,7 +106,7 @@ static void Run(I_BufferedUart_t *_instance)
 {
    IGNORE_ARG(_instance);
    // Transmit Data Ready?
-   if (instance.waitingForTransmitToComplete && !uart5Transmit.CR.CRA)
+   if(instance.waitingForTransmitToComplete && !uart5Transmit.CR.CRA && SCI5.SSR.BIT.TDRE)
    {
       instance.waitingForTransmitToComplete = false;
       Event_SingleSubscriberSynchronous_Publish(&instance.OnTransmit, NULL);
