@@ -51,7 +51,7 @@ void * const Relocatable_Vectors[] __attribute__ ((section (".dtcVectorTable")))
     DUMMY_ADDR,             /*  25 INTB+0064h                   */
     DUMMY_ADDR,             /*  26 INTB+0068h                   */
     DUMMY_ADDR,             /*  27 INTB+006Ch       SWINT       */
-    DUMMY_ADDR,   			 /*  28 INTB+0070h       CMI0        */
+    DUMMY_ADDR,             /*  28 INTB+0070h       CMI0        */
     DUMMY_ADDR,             /*  29 INTB+0074h       CMI1        */
     DUMMY_ADDR,             /*  30 INTB+0078h       CMI2        */
     DUMMY_ADDR,             /*  31 INTB+007Ch       CMI3        */
@@ -250,8 +250,8 @@ void * const Relocatable_Vectors[] __attribute__ ((section (".dtcVectorTable")))
     (void *)&uart5Transmit, /* 224 INTB+0380h       SCI5_TXI5   */
     DUMMY_ADDR,             /* 225 INTB+0384h                   */
     DUMMY_ADDR,             /* 226 INTB+0388h                   */
-    DUMMY_ADDR,             /* 227 INTB+038Ch       SCI6_RXI6   */
-    DUMMY_ADDR,             /* 228 INTB+0390h       SCI6_TXI6   */
+    (void *)&uart6Receive,  /* 227 INTB+038Ch       SCI6_RXI6   */
+    (void *)&uart6Transmit, /* 228 INTB+0390h       SCI6_TXI6   */
     DUMMY_ADDR,             /* 229 INTB+0394h                   */
     DUMMY_ADDR,             /* 230 INTB+0398h                   */
     DUMMY_ADDR,             /* 231 INTB+039Ch       SCI8_RXI8   */
