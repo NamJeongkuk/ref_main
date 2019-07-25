@@ -21,7 +21,7 @@
       "linux": {
         "serverpath": "${workspaceFolder}/Tools/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
       },
-      "preLaunchTask": "jlink_tools"
+      "preLaunchTask": "prepare_to_debug"
     },
     {
       "name": "Target attach",
