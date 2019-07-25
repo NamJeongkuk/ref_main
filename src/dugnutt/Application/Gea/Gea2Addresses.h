@@ -15,6 +15,7 @@ enum
    DandletonGeaAddress = 0xB2,
    BonzalezGeaAddress = 0xB3,
    ChamgerlainGeaAddress = 0xB4,
+   PcToolAddress = 0xE4,
    EmbeddedWiFiGeaAddress = 0xBF,
    ConnectPlusWiFiGeaAddress = 0xBE
 };

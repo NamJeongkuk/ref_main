@@ -15,7 +15,7 @@
 #include "Gea2CommonCommands.h"
 #include "I_DataModel.h"
 #include "I_DataSource.h"
-#include "Gea2MessageEndpoint_MessageRestrictor.h"
+#include "Gea2PacketEndpoint_PacketRestrictor.h"
 #include "Input_ErdGea2UnlockState.h"
 #include "Validator_RestrictedRangeErd.h"
 #include "ErdGea2ReadWriteApiRevision2.h"
@@ -44,41 +44,20 @@ typedef struct
       Gea2CommonCommands_t commonCommands;
       ErdGea2ReadWriteApiRevision2_t erdApiRevision2;
 
-      Gea2ConfiguratorNode_t applicationNode;
-      Gea2ConfiguratorPacketEndpointNodeResources_t applicationNodeResources;
-
       Gea2Configurator_t configurator;
+      Gea2ConfiguratorNode_t node;
+      Gea2ConfiguratorPacketEndpointNodeResources_t packetEndpointResources;
+      Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t customBackgroundResources;
+      uint8_t interfaceSendBuffer[SendBufferSize];
+      uint8_t interfaceReceiveBuffer[ReceiveBufferSize];
+      uint8_t packetQueueStorage[PacketQueueStorageSize];
 
+      Gea2ConfiguratorSimpleDynamicRoutingTableResources_t dynamicRoutingTableResources;
+      Gea2ConfiguratorStaticRoutingTableResources_t staticRoutingResources;
+      uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
       struct
       {
-         Gea2ConfiguratorNode_t node;
-         Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t nodeResources;
-         Gea2ConfiguratorStaticRoutingTableResources_t staticRoutingResources;
-         struct
-         {
-            uint8_t sendBuffer[SendBufferSize];
-            uint8_t receiveBuffer[ReceiveBufferSize];
-            uint8_t packetQueueStorage[PacketQueueStorageSize];
-         } buffers;
-      } internal;
-
-      struct
-      {
-         Gea2ConfiguratorNode_t node;
-         Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t nodeResources;
-         Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
-         uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
-         struct
-         {
-            uint8_t sendBuffer[SendBufferSize];
-            uint8_t receiveBuffer[ReceiveBufferSize];
-            uint8_t packetQueueStorage[PacketQueueStorageSize];
-         } buffers;
-      } external;
-
-      struct
-      {
-         Gea2MessageEndpoint_MessageRestrictor_t restrictedErdMessageRestrictor;
+         Gea2PacketEndpoint_PacketRestrictor_t restrictedErdPacketRestrictor;
          Input_ErdGea2UnlockState_t erdGea2UnlockStateInput;
          Validator_RestrictedRangeErd_t restrictedRangeErdValidator;
       } erdSecurity;

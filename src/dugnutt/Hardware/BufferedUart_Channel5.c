@@ -158,7 +158,7 @@ I_BufferedUart_t * BufferedUart_Channel5_Init(void)
    SYSTEM.PRCR.WORD = 0xA500;
    // Disable UART in/out while we fiddle with it, set the clock to internal (CKE=0)
    SCI5.SCR.BYTE = 0;
-   // Setup port PA3 (rx) and PB4 (tx) for use by UART
+   // Setup port PA3 (rx) and PA4 (tx) for use by UART
    PORTA.PMR.BIT.B3 = 1;
    PORTA.PMR.BIT.B4 = 1;
    PORTA.PDR.BIT.B4 = 1;

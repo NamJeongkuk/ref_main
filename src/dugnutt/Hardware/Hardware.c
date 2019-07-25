@@ -57,10 +57,10 @@ void Hardware_InitializeStage2(I_DataModel_t *dataModel)
    DataModelErdPointerAccess_Write(dataModel, Erd_GpioGroup, gpioGroup);
 
    I_BufferedUart_t *internalUart = BufferedUart_Channel5_Init();
-   DataModelErdPointerAccess_Write(dataModel, Erd_InternalBufferedUart, internalUart);
+   DataModelErdPointerAccess_Write(dataModel, Erd_ExternalBufferedUart, internalUart);
 
    I_BufferedUart_t *externalUart = BufferedUart_Channel6_Init();
-   DataModelErdPointerAccess_Write(dataModel, Erd_ExternalBufferedUart, externalUart);
+   DataModelErdPointerAccess_Write(dataModel, Erd_InternalBufferedUart, externalUart);
 
    I_Crc16Calculator_t *crcCalcTable = Crc16Calculator_Table;
    DataModelErdPointerAccess_Write(dataModel, Erd_CrcCalcTable, crcCalcTable);
