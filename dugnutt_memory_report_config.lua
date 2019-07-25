@@ -3,7 +3,7 @@ return {
     ram = {
       map = 'build/dugnutt/dugnutt.map',
       type = 'rx-gcc',
-      total = 10 * 1024,
+      total = 16 * 1024,
       ram_sections = {
         'RAM'
       }

@@ -456,8 +456,8 @@ void Excep_SCI1_TXI1(void);
 void Excep_SCI1_TEI1(void);
 
 // SCI5 ERI5
-#pragma interrupt (Excep_SCI5_ERI5(vect=222))
-void Excep_SCI5_ERI5(void);
+//#pragma interrupt (Excep_SCI5_ERI5(vect=222))
+//void Excep_SCI5_ERI5(void);
 
 // SCI5 RXI5
 #pragma interrupt (Excep_SCI5_RXI5(vect=223))
