@@ -13,6 +13,5 @@ void Application_Init(
    Application_t *instance,
    I_DataModel_t *dataModel)
 {
-   (void)instance;
-   (void)dataModel;
+   HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
 }

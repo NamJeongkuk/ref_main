@@ -9,12 +9,13 @@
 #define APPLICATION_H
 
 #include "I_DataModel.h"
+#include "HeartbeatLedPlugin.h"
 
 typedef struct
 {
    struct
    {
-      uint8_t dummy;
+      HeartbeatLedPlugin_t heartbeatLedPlugin;
    } _private;
 } Application_t;
 

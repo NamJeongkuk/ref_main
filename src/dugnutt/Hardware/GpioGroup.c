@@ -136,7 +136,7 @@ static void SetDirection(I_GpioGroup_t *instance, const GpioChannel_t channel, c
 static const I_GpioGroup_Api_t api =
    { Read, Write, SetDirection };
 
-I_GpioGroup_t *GpioGroup_Init(void)
+I_GpioGroup_t * GpioGroup_Init(void)
 {
    static I_GpioGroup_t gpio;
    gpio.api = &api;

@@ -56,6 +56,20 @@ static void UpdateBuildInfo(
    }
 }
 
+static void SendStartupMessage(I_Gea2PacketEndpoint_t *gea2PacketEndpoint)
+{
+   STACK_ALLOC_GEA2PACKET(packet, 10);
+   packet->destination = 0xFF;
+   packet->payloadLength = 5;
+   packet->payload[0] = 0x00;
+   packet->payload[1] = 0xDE;
+   packet->payload[2] = 0xAF;
+   packet->payload[3] = 0xBA;
+   packet->payload[4] = 0xBE;
+
+   Gea2PacketEndpoint_Send(gea2PacketEndpoint, packet, 2);
+}
+
 int main(void)
 {
    Hardware_InitializeStage1();
@@ -93,6 +107,8 @@ int main(void)
       watchdog,
       timerModule,
       1);
+
+   SendStartupMessage(GeaStack_GetGea2PacketEndpoint(&geaStack));
 
    UpdateBuildInfo(
       dataModel,
