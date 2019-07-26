@@ -5,15 +5,13 @@ PROJECT_DIR = src/$(PROJECT_NAME)
 TESTING_DIR = Testing
 TESTS_DIR = Testing/Tests/$(PROJECT_NAME)
 
-RUN_APPLCOMMON_TESTS = N
+RUN_APPLCOMMON_TESTS = Y
 
 # Specific files to include if you don't want the entire directory included
 SRC_FILES += \
 
 # List of directories that contain your code under test
 SRC_DIRS = \
-   $(PROJECT_DIR)/Application \
-   $(PROJECT_DIR)/Application/DataModel \
 
 # List of directories that contain your tests and test helpers (mocks, fakes, etc.)
 TEST_SRC_DIRS = \
