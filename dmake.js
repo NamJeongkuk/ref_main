@@ -7,7 +7,8 @@ module.exports = {
       ...require('./kpit-rx/dmake').options,
       outputDirectories: [
         'build',
-        'artifacts'
+        'artifacts',
+        'lib/boot-loaders/build'
       ]
     }
   }
