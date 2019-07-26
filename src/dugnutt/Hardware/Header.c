@@ -13,12 +13,12 @@
 #define BootLoaderEndAddress LastAddressInBlock(0)
 #define BootLoaderHeaderAddress BootLoaderStartAddress
 
-#define ParametricStartAddress 0
-#define ParametricEndAddress 0
-#define ParametricHeaderAddress 0
+#define ParametricStartAddress FirstAddressInBlock(29)
+#define ParametricEndAddress LastAddressInBlock(20)
+#define ParametricHeaderAddress ParametricStartAddress
 
 #define ApplicationStartAddress FirstAddressInBlock(127)
-#define ApplicationEndAddress LastAddressInBlock(20)
+#define ApplicationEndAddress LastAddressInBlock(30)
 #define ApplicationHeaderAddress ApplicationStartAddress
 
 enum
