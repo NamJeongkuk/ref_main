@@ -14,12 +14,12 @@
       "servertype": "jlink",
       "interface": "FINE",
       "jlinkscript": "${workspaceFolder}/build/dugnutt/debug.jlink",
-      "armToolchainPath": "${workspaceFolder}/Tools/kpit-rx/tc/bin/",
+      "armToolchainPath": "${workspaceFolder}/kpit-rx/tc/bin/",
       "osx": {
-        "serverpath": "${workspaceFolder}/Tools/kpit-rx/JLink/JLinkGDBServer"
+        "serverpath": "${workspaceFolder}/kpit-rx/JLink/JLinkGDBServer"
       },
       "linux": {
-        "serverpath": "${workspaceFolder}/Tools/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
+        "serverpath": "${workspaceFolder}/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
       },
       "preLaunchTask": "prepare_to_debug"
     },
@@ -32,12 +32,12 @@
       "device": "R5F51305",
       "servertype": "jlink",
       "interface": "FINE",
-      "armToolchainPath": "${workspaceFolder}/Tools/kpit-rx/tc/bin/",
+      "armToolchainPath": "${workspaceFolder}/kpit-rx/tc/bin/",
       "osx": {
-        "serverpath": "${workspaceFolder}/Tools/kpit-rx/JLink/JLinkGDBServer"
+        "serverpath": "${workspaceFolder}/kpit-rx/JLink/JLinkGDBServer"
       },
       "linux": {
-        "serverpath": "${workspaceFolder}/Tools/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
+        "serverpath": "${workspaceFolder}/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
       },
       "preLaunchTask": "jlink_tools"
     }

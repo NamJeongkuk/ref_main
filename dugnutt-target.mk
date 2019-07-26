@@ -1,4 +1,4 @@
-include Tools/kpit-rx/kpit-rx.mk
+include kpit-rx/kpit-rx.mk
 
 TARGET=dugnutt
 
@@ -140,4 +140,4 @@ upload: all jlink_tools
 .PHONY: clean
 clean: target_clean
 
-include Tools/kpit-rx/kpit-rx-makefile-worker.mk
+include kpit-rx/kpit-rx-makefile-worker.mk

@@ -2,7 +2,7 @@
 	path = lib/applcommon
 	url = https://github.com/geappliances/applcommon.applcommon
 [submodule "Tools/kpit-rx"]
-	path = Tools/kpit-rx
+	path = kpit-rx
 	url = https://github.com/geappliances/build-tools.kpit-rx-release.git
 [submodule "Tools/lua-erd-documentation-tools"]
 	path = Tools/lua-erd-documentation-tools
