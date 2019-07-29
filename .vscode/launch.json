@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Target launch",
+      "name": "Dugnutt launch",
       "cwd": "${workspaceRoot}",
       "request": "launch",
       "type": "cortex-debug",
@@ -21,10 +21,10 @@
       "linux": {
         "serverpath": "${workspaceFolder}/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
       },
-      "preLaunchTask": "prepare_to_debug"
+      "preLaunchTask": "dugnutt jlink_tools"
     },
     {
-      "name": "Target attach",
+      "name": "Dugnutt attach",
       "cwd": "${workspaceRoot}",
       "request": "attach",
       "type": "cortex-debug",

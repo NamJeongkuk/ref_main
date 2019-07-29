@@ -4,22 +4,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "jlink_tools",
+      "label": "dugnutt jlink_tools",
       "type": "shell",
       "command": "make RELEASE=Y DEBUG=Y -f dugnutt-target.mk jlink_tools",
-      "presentation": {
-        "echo": false,
-        "reveal": "silent",
-        "focus": false,
-        "panel": "shared",
-        "showReuseMessage": false,
-        "clear": false
-      }
-    },
-    {
-    "label": "prepare_to_debug",
-      "type": "shell",
-      "command": "make RELEASE=Y DEBUG=Y -f dugnutt-target.mk jlink_tools erase",
       "presentation": {
         "echo": false,
         "reveal": "silent",
