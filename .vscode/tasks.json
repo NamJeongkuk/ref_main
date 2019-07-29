@@ -4,7 +4,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "dugnutt jlink_tools",
+      "label": "dugnutt_jlink_tools",
       "type": "shell",
       "command": "make RELEASE=Y DEBUG=Y -f dugnutt-target.mk jlink_tools",
       "presentation": {

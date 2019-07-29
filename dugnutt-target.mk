@@ -1,4 +1,4 @@
-include kpit-rx/kpit-rx.mk
+include tools/kpit-rx/kpit-rx.mk
 
 TARGET=dugnutt
 
@@ -151,4 +151,4 @@ upload: all jlink_tools
 clean: target_clean
 	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(TARGET)-boot-loader.mk RELEASE=Y DEBUG=N clean
 
-include kpit-rx/kpit-rx-makefile-worker.mk
+include tools/kpit-rx/kpit-rx-makefile-worker.mk

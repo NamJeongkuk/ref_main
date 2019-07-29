@@ -2,10 +2,10 @@
 	path = lib/applcommon
 	url = https://github.com/geappliances/applcommon.applcommon
 [submodule "Tools/kpit-rx"]
-	path = kpit-rx
+	path = tools/kpit-rx
 	url = https://github.com/geappliances/build-tools.kpit-rx-release.git
 [submodule "Tools/lua-erd-documentation-tools"]
-	path = temp/lua-erd-documentation-tools
+	path = tools/lua-erd-documentation-tools
 	url = https://github.com/geappliances/applcommon.lua-erd-documentation-tools
 [submodule "lib/boot-loaders"]
 	path = lib/boot-loaders
