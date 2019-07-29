@@ -12,6 +12,7 @@
 #include "utils.h"
 #include "uassert.h"
 #include "Dtc.h"
+#include "InterruptPriorityLevel.h"
 
 // Set the DTC Receive Buffer Size: (230400 bits/sec) / 10 bits / 1000 msec = 23.04 bytes/msec ~= 25 bytes/msec
 // The buffer is serviced every msec, so double this number for safety: 25 * 2 = 50 bytes
@@ -131,7 +132,7 @@ static void Run(I_BufferedUart_t *_instance)
    }
 }
 
-static const I_BufferedUart_Api_t uartApi =
+static const I_BufferedUart_Api_t bufferedUartApi =
    {
       Transmit,
       GetOnTransmitCompleteEvent,
@@ -147,7 +148,7 @@ I_BufferedUart_t * BufferedUart_Channel6_Init(void)
    Event_SingleSubscriberSynchronous_Init(&instance.OnReceive);
    Event_SingleSubscriberSynchronous_Init(&instance.OnTransmit);
 
-   instance.interface.api = &uartApi;
+   instance.interface.api = &bufferedUartApi;
    instance.dtcRingBufferTail = 0;
 
    // First, allow writes to Module-Stop-Control-Register
@@ -209,7 +210,7 @@ I_BufferedUart_t * BufferedUart_Channel6_Init(void)
 
    // Set up interrupts in the Interrupt-Control-Unit
    // There is only one priority register per SCI port
-   ICU.IPR[IPR_SCI6_RXI6].BIT.IPR = 13;
+   ICU.IPR[IPR_SCI6_RXI6].BIT.IPR = E_IRQ_PRIORITY_13;
    // But there are 4 separate interrupt enable bits
    ICU.IER[IER_SCI6_RXI6].BIT.IEN_SCI6_RXI6 = 1;
    ICU.IER[IER_SCI6_TXI6].BIT.IEN_SCI6_TXI6 = 1;
@@ -243,7 +244,7 @@ I_BufferedUart_t * BufferedUart_Channel6_Init(void)
    // ||||||XX
    // ||||##---> MRB DM DAR value increments
    // |||#-----> MRB DTS Transfer destination side is repeat area
-   // ||#------> MRB DISEL An interrupt request to the CPU is not generated when specified data transfer is completed
+   // ||#------> MRB DISEL An interrupt request to the CPU is generated when specified data transfer is completed
    // |#-------> MRB CHNS
    // #--------> MRB CHNE Chain transfer is disabled
 
@@ -269,7 +270,7 @@ I_BufferedUart_t * BufferedUart_Channel6_Init(void)
    // ||||||XX
    // ||||##---> MRB DM DAR value is fixed
    // |||#-----> MRB DTS Transfer destination side is repeat area
-   // ||#------> MRB DISEL An interrupt request to the CPU is not generated when specified data transfer is completed
+   // ||#------> MRB DISEL An interrupt request to the CPU is generated when specified data transfer is completed
    // |#-------> MRB CHNS
    // #--------> MRB CHNE Chain transfer is disabled
 

@@ -66,7 +66,7 @@ static void Transmit(I_BufferedUart_t *_instance, const uint8_t *data, const uin
 
    instance.waitingForTransmitToComplete = true;
 
-   uart5Transmit.CR.CRA = byteCount-1;
+   uart5Transmit.CR.CRA = byteCount - 1;
    uart5Transmit.SAR = (void *)&data[1];
    // DTC activation by SCI5 Tx interrupt request is enabled
    DTCE(SCI5,TXI5) = (byteCount > 1);
@@ -131,7 +131,7 @@ static void Run(I_BufferedUart_t *_instance)
    }
 }
 
-static const I_BufferedUart_Api_t uartApi =
+static const I_BufferedUart_Api_t bufferedUartApi =
    {
       Transmit,
       GetOnTransmitCompleteEvent,
@@ -147,7 +147,7 @@ I_BufferedUart_t * BufferedUart_Channel5_Init(void)
    Event_SingleSubscriberSynchronous_Init(&instance.OnReceive);
    Event_SingleSubscriberSynchronous_Init(&instance.OnTransmit);
 
-   instance.interface.api = &uartApi;
+   instance.interface.api = &bufferedUartApi;
    instance.dtcRingBufferTail = 0;
 
    // First, allow writes to Module-Stop-Control-Register
@@ -209,7 +209,7 @@ I_BufferedUart_t * BufferedUart_Channel5_Init(void)
 
    // Set up interrupts in the Interrupt-Control-Unit
    // There is only one priority register per SCI port
-   ICU.IPR[IPR_SCI5_RXI5].BIT.IPR = 13;
+   ICU.IPR[IPR_SCI5_RXI5].BIT.IPR = E_IRQ_PRIORITY_14;
    // But there are 4 separate interrupt enable bits
    ICU.IER[IER_SCI5_RXI5].BIT.IEN_SCI5_RXI5 = 1;
    ICU.IER[IER_SCI5_TXI5].BIT.IEN_SCI5_TXI5 = 1;
@@ -243,7 +243,7 @@ I_BufferedUart_t * BufferedUart_Channel5_Init(void)
    // ||||||XX
    // ||||##---> MRB DM DAR value increments
    // |||#-----> MRB DTS Transfer destination side is repeat area
-   // ||#------> MRB DISEL An interrupt request to the CPU is not generated when specified data transfer is completed
+   // ||#------> MRB DISEL An interrupt request to the CPU is generated when specified data transfer is completed
    // |#-------> MRB CHNS
    // #--------> MRB CHNE Chain transfer is disabled
 
@@ -269,7 +269,7 @@ I_BufferedUart_t * BufferedUart_Channel5_Init(void)
    // ||||||XX
    // ||||##---> MRB DM DAR value is fixed
    // |||#-----> MRB DTS Transfer destination side is repeat area
-   // ||#------> MRB DISEL An interrupt request to the CPU is not generated when specified data transfer is completed
+   // ||#------> MRB DISEL An interrupt request to the CPU is generated when specified data transfer is completed
    // |#-------> MRB CHNS
    // #--------> MRB CHNE Chain transfer is disabled
 
