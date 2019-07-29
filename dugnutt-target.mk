@@ -6,8 +6,8 @@ DEVICE:=R5F51305
 # ID_CODE:=45CAFEC0FFEECAFEC0FFEECAFEC0FFEE
 ID_CODE:=FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 
+PROJECT_DIR=src
 OUTPUT_DIR=build/$(TARGET)
-PROJECT_DIR=src/$(TARGET)
 APPLCOMMON_DIR=lib/applcommon
 BOOT_LOADER_DIR=lib/boot-loaders
 
@@ -67,13 +67,14 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_DIR)/Watchdog
 
 SRC_DIRS=\
+   $(PROJECT_DIR)/$(TARGET) \
+   $(PROJECT_DIR)/$(TARGET)/Hardware \
+   $(PROJECT_DIR)/$(TARGET)/Hardware/Flash \
    $(PROJECT_DIR)/Application \
    $(PROJECT_DIR)/Application/DataModel \
    $(PROJECT_DIR)/Application/Gea \
    $(PROJECT_DIR)/Application/Plugins \
    $(PROJECT_DIR)/Application/TimerModule \
-   $(PROJECT_DIR)/Hardware \
-   $(PROJECT_DIR)/Hardware/Flash \
 
 # Additional include directories
 INC_DIRS=\
@@ -139,7 +140,7 @@ $(OUTPUT_DIR)/doc:
 
 .PHONY: erd_definitions
 erd_definitions: $(OUTPUT_DIR)/doc
-	@$(LUA53) $(PROJECT_DIR)/generate_erd_definitions.lua
+	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
 
 .PHONY: upload
 upload: all jlink_tools

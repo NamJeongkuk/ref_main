@@ -12,6 +12,7 @@
 #include "utils.h"
 #include "uassert.h"
 #include "Dtc.h"
+#include "InterruptPriorityLevel.h"
 
 // Set the DTC Receive Buffer Size: (230400 bits/sec) / 10 bits / 1000 msec = 23.04 bytes/msec ~= 25 bytes/msec
 // The buffer is serviced every msec, so double this number for safety: 25 * 2 = 50 bytes

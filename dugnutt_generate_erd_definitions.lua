@@ -3,12 +3,12 @@ local Types = require 'Tools.Types'
 
 tools.build_json({
   namespace = 'dugnutt',
-  address = 0x99,
+  address = 0xB0,
   parsers = {
     tools.parser.standard
   },
   erd_files = {
-    'src/dugnutt/Application/DataModel/SystemErds.h'
+    'src/Application/DataModel/SystemErds.h'
   },
   types_factory = Types,
   output = 'build/dugnutt/doc/erd-definitions.json'
