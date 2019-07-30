@@ -12,7 +12,7 @@
 
 #define EXPAND_AS_CONFIGURATION(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData) \
    CONCAT(INCLUDE_RAM_, StorageType)                                                                             \
-   ({ Number COMMA OFFSET_OF(RamDataSourceStorage_t, MACRO_SAFE_CONCATENATE(erd, Number)) } COMMA)
+   ({ Name COMMA OFFSET_OF(RamDataSourceStorage_t, MACRO_SAFE_CONCATENATE(erd, Name)) } COMMA)
 
 static const DataSource_RamErdConfigurationElement_t erds[] =
    { ERD_TABLE(EXPAND_AS_CONFIGURATION) };

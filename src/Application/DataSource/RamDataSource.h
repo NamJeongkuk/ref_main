@@ -15,7 +15,7 @@
 
 #define EXPAND_AS_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData) \
    CONCAT(INCLUDE_RAM_, StorageType)                                                                                    \
-   (uint8_t MACRO_SAFE_CONCATENATE(erd, Number)[sizeof(DataType)];)
+   (uint8_t MACRO_SAFE_CONCATENATE(erd, Name)[sizeof(DataType)];)
 
 typedef struct
 {
