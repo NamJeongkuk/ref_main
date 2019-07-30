@@ -22,7 +22,6 @@ typedef struct
 } InputGroup_NonVolatileDataSourceDefaultData_t;
 
 /*!
- * Initialize the Record Storage Default Data Input Group
  * @param instance
  * @param erdTable The table of flash block group erd information
  * @param erdCount The number of entries in the table
