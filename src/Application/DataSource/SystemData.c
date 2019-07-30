@@ -1,0 +1,111 @@
+/*!
+ * @file
+ * @brief
+ *
+ * Copyright GE Appliances - Confidential - All rights reserved.
+ */
+
+#include "SystemData.h"
+
+typedef SystemData_t Instance_t;
+
+static void AddDataSourceToComposite(
+   Instance_t *instance,
+   I_DataSource_t *dataSource,
+   DataSource_CompositeComponent_t *component)
+{
+   DataSource_Composite_InitComponent(component, dataSource);
+   DataSource_Composite_Add(&instance->_private.dataSource.composite, component);
+}
+
+static void InitializeInternalDataSource(
+   Instance_t *instance,
+   TimerModule_t *timerModule,
+   I_FlashBlockGroup_t *flashBlockGroup,
+   I_Crc16Calculator_t *crcCalculator,
+   I_Action_t *systemActionForStartup,
+   I_Action_t *resetAction)
+{
+   DataSource_Composite_Init(&instance->_private.dataSource.composite);
+
+   RamDataSource_Init(
+      &instance->_private.dataSource.ram);
+   AddDataSourceToComposite(
+      instance,
+      RamDataSource_DataSource(&instance->_private.dataSource.ram),
+      &instance->_private.dataSource.ramComponent);
+
+   NonVolatileDataSource_Init(
+      &instance->_private.dataSource.nv,
+      timerModule,
+      systemActionForStartup,
+      crcCalculator,
+      flashBlockGroup);
+   AddDataSourceToComposite(
+      instance,
+      NonVolatileDataSource_DataSource(&instance->_private.dataSource.nv),
+      &instance->_private.dataSource.nvComponent);
+
+   ApplianceApiDataSource_Init(
+      &instance->_private.dataSource.applianceApi,
+      &instance->_private.dataSource.composite.interface,
+      timerModule,
+      resetAction,
+      crcCalculator);
+   AddDataSourceToComposite(
+      instance,
+      ApplianceApiDataSource_DataSource(&instance->_private.dataSource.applianceApi),
+      &instance->_private.dataSource.applianceApiComponent);
+}
+
+static void InitializeExternalDataSource(Instance_t *instance)
+{
+   EndiannessSwappedDataSource_Init(
+      &instance->_private.dataSource.endiannessSwapped,
+      &instance->_private.dataSource.internal);
+}
+
+static void InitializeDataModel(Instance_t *instance)
+{
+   DataModel_Init(
+      &instance->_private.dataModel,
+      &instance->_private.dataSource.internal);
+}
+
+void SystemData_Init(
+   SystemData_t *instance,
+   TimerModule_t *timerModule,
+   I_FlashBlockGroup_t *flashBlockGroup,
+   I_Crc16Calculator_t *crcCalculator,
+   I_Action_t *systemActionForStartup,
+   I_Action_t *resetAction)
+{
+   InitializeInternalDataSource(
+      instance,
+      timerModule,
+      flashBlockGroup,
+      crcCalculator,
+      systemActionForStartup,
+      resetAction);
+
+   InitializeExternalDataSource(
+      instance);
+
+   InitializeDataModel(
+      instance);
+}
+
+I_DataSource_t * SystemData_InternalDataSource(SystemData_t *instance)
+{
+   return &instance->_private.dataSource.internal;
+}
+
+I_DataSource_t * SystemData_ExternalDataSource(SystemData_t *instance)
+{
+   return &instance->_private.dataSource.external;
+}
+
+I_DataModel_t * SystemData_DataModel(SystemData_t *instance)
+{
+   return DataModel_DataModel(&instance->_private.dataModel);
+}

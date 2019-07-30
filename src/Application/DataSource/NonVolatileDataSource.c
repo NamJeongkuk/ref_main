@@ -11,14 +11,14 @@
 #include "Constants_Binary.h"
 #include "utils.h"
 
+#define EXPAND_AS_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData) \
+   CONCAT(INCLUDE_NV_, StorageType)({ Name COMMA sizeof(DataType) } COMMA)
+
 enum
 {
    ClientVersion = 1,
    BitsPerByte = 8
 };
-
-#define EXPAND_AS_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Type, Swap, Io, O) \
-   CONCAT(INCLUDE_NV_, Type)({ Name COMMA sizeof(DataType) } COMMA)
 
 static const AsyncDataSource_FlashBlockGroupErdInfo_t asyncMapElements[] =
    { ERD_TABLE(EXPAND_AS_ASYNC_MAP_ELEMENTS) };
@@ -33,8 +33,8 @@ static const ConstArrayMap_BinarySearchConfiguration_t asyncMapConfiguration =
       IS_SIGNED(Erd_t)
    };
 
-#define EXPAND_AS_SYNC_CONFIGURATION(Name, Number, DataType, Type, Swap, Io, O) \
-   CONCAT(INCLUDE_NV_, Type)({ Name COMMA OFFSET_OF(NonVolatileDataSourceSyncCache_t, CONCAT(erd, Name)) } COMMA)
+#define EXPAND_AS_SYNC_CONFIGURATION(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData) \
+   CONCAT(INCLUDE_NV_, StorageType)({ Name COMMA OFFSET_OF(NonVolatileDataSourceSyncCache_t, CONCAT(erd, Name)) } COMMA)
 
 static const DataSource_CachedAsyncDataSourceErdInfo_t syncMapElements[] =
    { ERD_TABLE(EXPAND_AS_SYNC_CONFIGURATION) };
@@ -70,12 +70,17 @@ void NonVolatileDataSource_Init(
 
    ConstArrayMap_BinarySearch_Init(&instance->_private.asyncMap, &asyncMapConfiguration);
 
+   InputGroup_NonVolatileDataSourceDefaultData_Init(
+      &instance->_private.defaultDataInputGroup,
+      asyncMapElements,
+      NUM_ELEMENTS(asyncMapElements));
+
    AsyncDataSource_FlashBlockGroup_Init(
       &instance->_private.async,
       flashBlockGroup,
       crc16Calculator,
       &instance->_private.asyncMap.interface,
-      InputGroup_Null_GetInstance(),
+      &instance->_private.defaultDataInputGroup.interface,
       &instance->_private.asyncReadWriteBuffer,
       sizeof(instance->_private.asyncReadWriteBuffer),
       Erd_NvMetadata,
@@ -109,7 +114,7 @@ void NonVolatileDataSource_Init(
    }
 }
 
-I_DataSource_t *NonVolatileDataSource_GetDataSource(
+I_DataSource_t * NonVolatileDataSource_DataSource(
    NonVolatileDataSource_t *instance)
 {
    return &instance->_private.sync.interface;

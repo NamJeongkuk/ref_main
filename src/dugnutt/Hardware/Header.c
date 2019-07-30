@@ -9,18 +9,6 @@
 #include "Header.h"
 #include "utils.h"
 
-#define BootLoaderStartAddress FirstAddressInBlock(19)
-#define BootLoaderEndAddress LastAddressInBlock(0)
-#define BootLoaderHeaderAddress BootLoaderStartAddress
-
-#define ParametricStartAddress FirstAddressInBlock(29)
-#define ParametricEndAddress LastAddressInBlock(20)
-#define ParametricHeaderAddress ParametricStartAddress
-
-#define ApplicationStartAddress FirstAddressInBlock(127)
-#define ApplicationEndAddress LastAddressInBlock(30)
-#define ApplicationHeaderAddress ApplicationStartAddress
-
 enum
 {
    DummyCrc = 0x1234,

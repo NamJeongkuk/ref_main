@@ -71,7 +71,7 @@ SRC_DIRS=\
    $(PROJECT_DIR)/$(TARGET)/Hardware \
    $(PROJECT_DIR)/$(TARGET)/Hardware/Flash \
    $(PROJECT_DIR)/Application \
-   $(PROJECT_DIR)/Application/DataModel \
+   $(PROJECT_DIR)/Application/DataSource \
    $(PROJECT_DIR)/Application/Gea \
    $(PROJECT_DIR)/Application/Plugins \
    $(PROJECT_DIR)/Application/TimerModule \

@@ -8,7 +8,7 @@ tools.build_json({
     tools.parser.standard
   },
   erd_files = {
-    'src/Application/DataModel/SystemErds.h'
+    'src/Application/DataSource/SystemErds.h'
   },
   types_factory = Types,
   output = 'build/dugnutt/doc/erd-definitions.json'

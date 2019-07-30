@@ -1,0 +1,22 @@
+/*!
+ * @file
+ * @brief
+ *
+ * Copyright GE Appliances - Confidential - All rights reserved.
+ */
+
+#include <stdint.h>
+#include <string.h>
+#include "NonVolatileDataSourceDefaultData.h"
+#include "Constants_Binary.h"
+#include "SystemErds.h"
+
+void NonVolatileDataSourceDefaultData_Zeros(void *data, size_t dataSize)
+{
+   memset(data, 0, dataSize);
+}
+
+void NonVolatileDataSourceDefaultData_BooleanTrue(void *data, size_t dataSize)
+{
+   memcpy(data, &constTrue, dataSize);
+}

@@ -17,19 +17,18 @@
 #include "AsyncDataSource_FlashBlockGroup.h"
 #include "DataSource_CachedAsyncDataSource.h"
 #include "ConstArrayMap_BinarySearch.h"
+#include "InputGroup_NonVolatileDataSourceDefaultData.h"
 
-// fixme generate a union that can be used to size the RW buffer
-
-#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_READ_WRITE_BUFFER_MEMBERS(Name, Number, DataType, Type, Swap, Io, O) \
-   CONCAT(INCLUDE_NV_, Type)(uint8_t CONCAT(erd, Name)[sizeof(DataType)];)
+#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_READ_WRITE_BUFFER_MEMBERS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData) \
+   CONCAT(INCLUDE_NV_, StorageType)(uint8_t CONCAT(erd, Name)[sizeof(DataType)];)
 
 typedef union
 {
    ERD_TABLE(EXPAND_AS_NON_VOLATILE_DATA_SOURCE_READ_WRITE_BUFFER_MEMBERS)
 } NonVolatileDataSourceReadWriteBuffer_t;
 
-#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Type, Swap, Io, O) \
-   CONCAT(INCLUDE_NV_, Type)(uint8_t CONCAT(erd, Name)[sizeof(DataType)];)
+#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData) \
+   CONCAT(INCLUDE_NV_, StorageType)(uint8_t CONCAT(erd, Name)[sizeof(DataType)];)
 
 typedef struct
 {
@@ -46,6 +45,7 @@ typedef struct
       DataSource_CachedAsyncDataSource_t sync;
       ConstArrayMap_BinarySearch_t syncMap;
       NonVolatileDataSourceSyncCache_t syncCache;
+      InputGroup_NonVolatileDataSourceDefaultData_t defaultDataInputGroup;
       uint8_t syncMetadataCache[1];
    } _private;
 } NonVolatileDataSource_t;
@@ -68,7 +68,7 @@ void NonVolatileDataSource_Init(
  * @param instance
  * @return
  */
-I_DataSource_t * NonVolatileDataSource_GetDataSource(
+I_DataSource_t * NonVolatileDataSource_DataSource(
    NonVolatileDataSource_t *instance);
 
 #endif

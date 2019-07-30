@@ -12,7 +12,7 @@
 #include "Action_Rx2xxSystemReset.h"
 #include "Action_Rx2xxWatchdog.h"
 #include "Application.h"
-#include "ApplicationDataModel.h"
+#include "SystemData.h"
 #include "Constants_Binary.h"
 #include "Crc16Calculator_Table.h"
 #include "DataModelErdPointerAccess.h"
@@ -28,7 +28,7 @@
 #include "TimerModuleStack.h"
 #include "Version.h"
 
-static ApplicationDataModel_t applicationDataModel;
+static SystemData_t systemData;
 static Application_t application;
 static TimerModuleStack_t timerModuleStack;
 static InvokeActionOnTimerPeriodic_t watchdogPetter;
@@ -74,20 +74,18 @@ int main(void)
 {
    Hardware_InitializeStage1();
 
-   I_Action_t *watchdog = Action_Rx2xxWatchdog_Init();
+   I_Action_t *watchdogKickAction = Action_Rx2xxWatchdog_Init();
    TimerModule_t *timerModule = TimerModuleStack_Init(&timerModuleStack);
 
-   ApplicationDataModel_Init(
-      &applicationDataModel,
+   SystemData_Init(
+      &systemData,
       timerModule,
-      Action_Rx2xxSystemReset_Init(),
-      watchdog,
+      FlashBlockGroup_Rx130_Init(watchdogKickAction, Action_Null_GetInstance(), timerModule),
       Crc16Calculator_Table,
-      FlashBlockGroup_Rx130_Init(Action_Null_GetInstance(), Action_Null_GetInstance(), timerModule),
-      Header_GetImageHeader(ImageType_Application),
-      Header_GetImageHeader(ImageType_BootLoader));
+      watchdogKickAction,
+      Action_Rx2xxSystemReset_Init());
 
-   I_DataModel_t *dataModel = ApplicationDataModel_GetInternalDataModel(&applicationDataModel);
+   I_DataModel_t *dataModel = SystemData_DataModel(&systemData);
 
    TimerModuleStack_WritePointersToDataModel(&timerModuleStack, dataModel);
 
@@ -96,7 +94,7 @@ int main(void)
    GeaStack_Init(
       &geaStack,
       dataModel,
-      ApplicationDataModel_GetExternalDataSource(&applicationDataModel));
+      SystemData_ExternalDataSource(&systemData));
 
    Application_Init(
       &application,
@@ -104,7 +102,7 @@ int main(void)
 
    InvokeActionOnTimerPeriodic_Init(
       &watchdogPetter,
-      watchdog,
+      watchdogKickAction,
       timerModule,
       1);
 
