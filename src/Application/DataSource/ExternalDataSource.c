@@ -36,9 +36,16 @@ static const ConstArrayMap_BinarySearchConfiguration_t externalToInternalMapConf
 
 static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] =
    {
+      // NV ERDs
+      SWAPPED_ERD(Erd_AppliancePersonality, sizeof(AppliancePersonality_t)),
+
+      // Virtual ERDs
       SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, revision),
       SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, features),
+
+      // RAM ERDs
       SWAPPED_ERD(Erd_BuildNumber, sizeof(uint32_t)),
+      SWAPPED_ERD(Erd_ApplianceRunTimeInMinutes, sizeof(ApplianceRunTimeMinutes_t)),
       SWAPPED_FIELD(Erd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, maximumLatency),
       SWAPPED_FIELD(Erd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, averageLatency),
    };

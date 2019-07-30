@@ -23,6 +23,8 @@
 #include "TimerModuleDiagnostics.h"
 #include "Version.h"
 #include "XMacroUtils.h"
+#include "AppliancePersonality.h"
+#include "ApplianceRunTimeMinutes.h"
 
 #define Swap_N 0
 #define Swap_Y 1
@@ -76,6 +78,10 @@ enum
 
 // ErdEnum, ID, DataType, EndiannessAware, InOutConfig, StorageLoc, NonVolatileDefaultData)
 #define ERD_TABLE(ENTRY)  \
+   ENTRY(Erd_ModelNumber,                      0x0001, ModelNumber_t,                              Swap_N, Io_None, Virtual,     NotNv) \
+   ENTRY(Erd_SerialNumber,                     0x0002, SerialNumber_t,                             Swap_N, Io_None, Virtual,     NotNv) \
+   ENTRY(Erd_ApplianceType,                    0x0008, ApplianceType_t,                            Swap_N, Io_None, Virtual,     NotNv) \
+   ENTRY(Erd_AppliancePersonality,             0x0035, AppliancePersonality_t,                     Swap_Y, Io_None, NvPublic,    NotNv) \
    ENTRY(Erd_ReadyToEnterBootLoader,           0x0030, bool,                                       Swap_N, Io_All,  Ram,         NotNv) \
    ENTRY(Erd_BuildNumber,                      0x0031, uint32_t,                                   Swap_Y, Io_None, Ram,         NotNv) \
    ENTRY(Erd_Reset,                            0x0032, uint8_t,                                    Swap_N, Io_None, Virtual,     NotNv) \
@@ -85,6 +91,7 @@ enum
    ENTRY(Erd_ParametricVersion,                0x003B, Version_t,                                  Swap_N, Io_None, Virtual,     NotNv) \
    ENTRY(Erd_AuxiliaryVersion,                 0x003C, Version_t,                                  Swap_N, Io_None, Virtual,     NotNv) \
    ENTRY(Erd_GitHash,                          0x007F, GitHash_t,                                  Swap_N, Io_None, Ram,         NotNv) \
+   ENTRY(Erd_ApplianceRunTimeInMinutes,        0x008D, ApplianceRunTimeMinutes_t,                  Swap_Y, Io_None, Ram,         NotNv) \
    ENTRY(Erd_ApplianceApiManifest,             0x0092, ApplianceApiManifest_t,                     Swap_Y, Io_None, Virtual,     NotNv) \
    ENTRY(Erd_OldApplicationVersion,            0xF000, Version_t,                                  Swap_N, Io_None, Ram,         NotNv) \
    ENTRY(Erd_SystemTickInterrupt,              0xF003, I_Interrupt_t *,                            Swap_N, Io_None, Ram,         NotNv) \

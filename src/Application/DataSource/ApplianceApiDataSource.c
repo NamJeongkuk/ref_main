@@ -48,7 +48,15 @@ static DataSource_ApplianceApiRevision1Configuration_t applianceApiConfiguration
 
       .primary =
          {
-            .supported = false,
+            .supported = true,
+            .erd =
+            {
+               .modelNumber = Erd_ModelNumber,
+               .serialNumber = Erd_SerialNumber,
+               .applianceType = Erd_ApplianceType,
+               .appliancePersonality = Erd_AppliancePersonality,
+               .applianceRunTime = Erd_ApplianceRunTimeInMinutes
+            }
          },
 
       .serviceMode =
@@ -59,8 +67,10 @@ static DataSource_ApplianceApiRevision1Configuration_t applianceApiConfiguration
       .bootLoader =
          {
             .supported = false,
-
-            .erd = { Erd_ReadyToEnterBootLoader }
+            .erd =
+               {
+                  .readyToEnterBootLoader = Erd_ReadyToEnterBootLoader
+               }
          },
    };
 
