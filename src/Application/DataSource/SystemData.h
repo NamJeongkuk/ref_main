@@ -13,10 +13,10 @@
 #include "ApplianceApiDataSource.h"
 #include "DataSource_Composite.h"
 #include "DataModel_DataSource.h"
-#include "ConstArrayMap_BinarySearch.h"
-#include "SystemErds.h"
-#include "EndiannessSwappedDataSource.h"
+#include "DataSource_Mapped.h"
+#include "ExternalDataSource.h"
 #include "DataModel.h"
+#include "SystemErds.h"
 
 typedef struct
 {
@@ -33,7 +33,7 @@ typedef struct
          union
          {
             I_DataSource_t external;
-            EndiannessSwappedDataSource_t endiannessSwapped;
+            ExternalDataSource_t externalDataSource;
          };
 
          RamDataSource_t ram;

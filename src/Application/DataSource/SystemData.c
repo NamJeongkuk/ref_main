@@ -60,8 +60,8 @@ static void InitializeInternalDataSource(
 
 static void InitializeExternalDataSource(Instance_t *instance)
 {
-   EndiannessSwappedDataSource_Init(
-      &instance->_private.dataSource.endiannessSwapped,
+   ExternalDataSource_Init(
+      &instance->_private.dataSource.externalDataSource,
       &instance->_private.dataSource.internal);
 }
 

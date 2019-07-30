@@ -1,6 +1,6 @@
 /*!
  * @file
- * @brief Glue code for the application data source to be shared all modules
+ * @brief
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
