@@ -24,6 +24,25 @@
       "preLaunchTask": "dugnutt_jlink_tools"
     },
     {
+      "name": "Truk launch",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "type": "cortex-debug",
+      "executable": "${workspaceFolder}/build/truk/truk.elf",
+      "device": "R5F52316",
+      "servertype": "jlink",
+      "interface": "FINE",
+      "jlinkscript": "${workspaceFolder}/build/truk/debug.jlink",
+      "armToolchainPath": "${workspaceFolder}/kpit-rx/tc/bin/",
+      "osx": {
+        "serverpath": "${workspaceFolder}/kpit-rx/JLink/JLinkGDBServer"
+      },
+      "linux": {
+        "serverpath": "${workspaceFolder}/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
+      },
+      "preLaunchTask": "truk jlink_tools"
+    },
+    {
       "name": "Dugnutt attach",
       "cwd": "${workspaceRoot}",
       "request": "attach",
