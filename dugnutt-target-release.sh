@@ -11,4 +11,4 @@ else
   exit 1
 fi
 
-make -f dugnutt-target.mk -j8 RELEASE=Y DEBUG=N package
+$MAKE -f dugnutt-target.mk -j8 RELEASE=Y DEBUG=N package
