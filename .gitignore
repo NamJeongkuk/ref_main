@@ -35,7 +35,8 @@
 *.dSYM/
 
 .DS_Store
-/.settings
+.dmake/
+.settings/
 artifacts/
 build/
 Testing/Build

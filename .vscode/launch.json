@@ -1,0 +1,45 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Dugnutt launch",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "type": "cortex-debug",
+      "executable": "${workspaceFolder}/build/dugnutt/dugnutt.elf",
+      "device": "R5F51305",
+      "servertype": "jlink",
+      "interface": "FINE",
+      "jlinkscript": "${workspaceFolder}/build/dugnutt/debug.jlink",
+      "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
+      "osx": {
+        "serverpath": "${workspaceFolder}/tools/kpit-rx/JLink/JLinkGDBServer"
+      },
+      "linux": {
+        "serverpath": "${workspaceFolder}/tools/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
+      },
+      "preLaunchTask": "dugnutt_jlink_tools"
+    },
+    {
+      "name": "Dugnutt attach",
+      "cwd": "${workspaceRoot}",
+      "request": "attach",
+      "type": "cortex-debug",
+      "executable": "${workspaceFolder}/build/dugnutt/dugnutt.elf",
+      "device": "R5F51305",
+      "servertype": "jlink",
+      "interface": "FINE",
+      "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
+      "osx": {
+        "serverpath": "${workspaceFolder}/tools/kpit-rx/JLink/JLinkGDBServer"
+      },
+      "linux": {
+        "serverpath": "${workspaceFolder}/tools/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
+      },
+      "preLaunchTask": "dugnutt_jlink_tools"
+    }
+  ]
+}
