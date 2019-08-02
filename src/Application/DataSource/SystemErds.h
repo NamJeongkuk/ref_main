@@ -80,57 +80,57 @@ enum
 
 // ErdEnum, ID, DataType, EndiannessAware, InOutConfig, StorageLoc, NonVolatileDefaultData)
 #define ERD_TABLE(ENTRY)  \
-   ENTRY(Erd_ModelNumber,                      0x0001, ModelNumber_t,                              Swap_N, Io_None, Virtual,     NotNv) \
-   ENTRY(Erd_SerialNumber,                     0x0002, SerialNumber_t,                             Swap_N, Io_None, Virtual,     NotNv) \
-   ENTRY(Erd_ApplianceType,                    0x0008, ApplianceType_t,                            Swap_N, Io_None, Virtual,     NotNv) \
-   ENTRY(Erd_AppliancePersonality,             0x0035, AppliancePersonality_t,                     Swap_Y, Io_None, NvPublic,    NotNv) \
-   ENTRY(Erd_ReadyToEnterBootLoader,           0x0030, bool,                                       Swap_N, Io_All,  Ram,         NotNv) \
-   ENTRY(Erd_BuildNumber,                      0x0031, uint32_t,                                   Swap_Y, Io_None, Ram,         NotNv) \
-   ENTRY(Erd_Reset,                            0x0032, uint8_t,                                    Swap_N, Io_None, Virtual,     NotNv) \
-   ENTRY(Erd_SupportedImageTypes,              0x0038, uint8_t,                                    Swap_N, Io_None, Virtual,     NotNv) \
-   ENTRY(Erd_BootLoaderVersion,                0x0039, Version_t,                                  Swap_N, Io_None, Virtual,     NotNv) \
-   ENTRY(Erd_ApplicationVersion,               0x003A, Version_t,                                  Swap_N, Io_None, Virtual,     NotNv) \
-   ENTRY(Erd_ParametricVersion,                0x003B, Version_t,                                  Swap_N, Io_None, Virtual,     NotNv) \
-   ENTRY(Erd_AuxiliaryVersion,                 0x003C, Version_t,                                  Swap_N, Io_None, Virtual,     NotNv) \
-   ENTRY(Erd_GitHash,                          0x007F, GitHash_t,                                  Swap_N, Io_None, Ram,         NotNv) \
-   ENTRY(Erd_ApplianceRunTimeInMinutes,        0x008D, ApplianceRunTimeMinutes_t,                  Swap_Y, Io_None, Ram,         NotNv) \
-   ENTRY(Erd_ApplianceApiManifest,             0x0092, ApplianceApiManifest_t,                     Swap_Y, Io_None, Virtual,     NotNv) \
-   ENTRY(Erd_OldApplicationVersion,            0xF000, Version_t,                                  Swap_N, Io_None, Ram,         NotNv) \
-   ENTRY(Erd_SystemTickInterrupt,              0xF003, I_Interrupt_t *,                            Swap_N, Io_None, Ram,         NotNv) \
-   ENTRY(Erd_TimeSource,                       0xF004, I_TimeSource_t *,                           Swap_N, Io_None, Ram,         NotNv) \
-   ENTRY(Erd_TimerModule,                      0xF005, TimerModule_t *,                            Swap_N, Io_None, Ram,         NotNv) \
-   ENTRY(Erd_GpioGroup,                        0xF006, I_GpioGroup_t *,                            Swap_N, Io_None, Ram,         NotNv) \
-   ENTRY(Erd_InternalBufferedUart,             0xF007, I_BufferedUart_t *,                         Swap_N, Io_None, Ram,         NotNv) \
-   ENTRY(Erd_ExternalBufferedUart,             0xF008, I_BufferedUart_t *,                         Swap_N, Io_None, Ram,         NotNv) \
-   ENTRY(Erd_CrcCalcTable,                     0xF009, I_Crc16Calculator_t *,                      Swap_N, Io_None, Ram,         NotNv) \
-   ENTRY(Erd_Gea2MessageEndpoint,              0xF00A, I_Gea2MessageEndpoint_t *,                  Swap_N, Io_None, Ram,         NotNv) \
-   ENTRY(Erd_JumpToBootLoaderAction,           0xF00B, I_Action_t *,                               Swap_N, Io_None, Ram,         NotNv) \
-   ENTRY(Erd_SystemResetAction,                0xF00C, I_Action_t *,                               Swap_N, Io_None, Ram,         NotNv) \
-   ENTRY(Erd_TimerModuleDiagnosticsEnable,     0xF00D, bool,                                       Swap_N, Io_All,  Ram,         NotNv) \
-   ENTRY(Erd_TimerModuleDiagnosticsResult,     0xF00E, TimerModuleDiagnosticsResults_t,            Swap_Y, Io_O,    Ram,         NotNv) \
-   ENTRY(Erd_ResetSignal,                      0xF00F, Signal_t,                                   Swap_N, Io_None, Ram,         NotNv) \
-   ENTRY(Erd_ExternalDataSource,               0xF010, I_DataSource_t *,                           Swap_N, Io_None, Ram,         NotNv) \
-   ENTRY(Erd_HeartbeatLed,                     0xF100, bool,                                       Swap_N, Io_O,    Virtual,     NotNv) \
-   ENTRY(Erd_OtherLed,                         0xF101, bool,                                       Swap_N, Io_None, Virtual,     NotNv) \
-   ENTRY(Erd_PushButtonSwitch,                 0xF102, bool,                                       Swap_N, Io_All,  Virtual,     NotNv) \
-   ENTRY(Erd_SomeAnalogInput,                  0xF103, AdcCounts_t,                                Swap_Y, Io_None, Virtual,     NotNv) \
-   ENTRY(Erd_AnotherAnalogInput,               0xF104, AdcCounts_t,                                Swap_Y, Io_None, Virtual,     NotNv) \
-   ENTRY(Erd_NvReserved,                       0xFFFD, uint8_t,                                    Swap_N, Io_None, NvPublic,    NotNv) \
-   ENTRY(Erd_NvMetadata,                       0xFFFE, AsyncDataSource_FlashBlockGroupMetadata_t,  Swap_N, Io_None, NvPrivate,   NonVolatileDataSourceDefaultData_Zeros) \
+   ENTRY(Erd_ModelNumber,                      0x0001, ModelNumber_t,                              Swap_N, Io_None, Virtual,     NotNv,                                    NotFault) \
+   ENTRY(Erd_SerialNumber,                     0x0002, SerialNumber_t,                             Swap_N, Io_None, Virtual,     NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplianceType,                    0x0008, ApplianceType_t,                            Swap_N, Io_None, Virtual,     NotNv,                                    NotFault) \
+   ENTRY(Erd_AppliancePersonality,             0x0035, AppliancePersonality_t,                     Swap_Y, Io_None, NvPublic,    NotNv,                                    NotFault) \
+   ENTRY(Erd_ReadyToEnterBootLoader,           0x0030, bool,                                       Swap_N, Io_All,  Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_BuildNumber,                      0x0031, uint32_t,                                   Swap_Y, Io_None, Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_Reset,                            0x0032, uint8_t,                                    Swap_N, Io_None, Virtual,     NotNv,                                    NotFault) \
+   ENTRY(Erd_SupportedImageTypes,              0x0038, uint8_t,                                    Swap_N, Io_None, Virtual,     NotNv,                                    NotFault) \
+   ENTRY(Erd_BootLoaderVersion,                0x0039, Version_t,                                  Swap_N, Io_None, Virtual,     NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplicationVersion,               0x003A, Version_t,                                  Swap_N, Io_None, Virtual,     NotNv,                                    NotFault) \
+   ENTRY(Erd_ParametricVersion,                0x003B, Version_t,                                  Swap_N, Io_None, Virtual,     NotNv,                                    NotFault) \
+   ENTRY(Erd_AuxiliaryVersion,                 0x003C, Version_t,                                  Swap_N, Io_None, Virtual,     NotNv,                                    NotFault) \
+   ENTRY(Erd_GitHash,                          0x007F, GitHash_t,                                  Swap_N, Io_None, Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplianceRunTimeInMinutes,        0x008D, ApplianceRunTimeMinutes_t,                  Swap_Y, Io_None, Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplianceApiManifest,             0x0092, ApplianceApiManifest_t,                     Swap_Y, Io_None, Virtual,     NotNv,                                    NotFault) \
+   ENTRY(Erd_OldApplicationVersion,            0xF000, Version_t,                                  Swap_N, Io_None, Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_SystemTickInterrupt,              0xF003, I_Interrupt_t *,                            Swap_N, Io_None, Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_TimeSource,                       0xF004, I_TimeSource_t *,                           Swap_N, Io_None, Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_TimerModule,                      0xF005, TimerModule_t *,                            Swap_N, Io_None, Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_GpioGroup,                        0xF006, I_GpioGroup_t *,                            Swap_N, Io_None, Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_InternalBufferedUart,             0xF007, I_BufferedUart_t *,                         Swap_N, Io_None, Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_ExternalBufferedUart,             0xF008, I_BufferedUart_t *,                         Swap_N, Io_None, Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_CrcCalcTable,                     0xF009, I_Crc16Calculator_t *,                      Swap_N, Io_None, Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_Gea2MessageEndpoint,              0xF00A, I_Gea2MessageEndpoint_t *,                  Swap_N, Io_None, Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_JumpToBootLoaderAction,           0xF00B, I_Action_t *,                               Swap_N, Io_None, Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_SystemResetAction,                0xF00C, I_Action_t *,                               Swap_N, Io_None, Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_TimerModuleDiagnosticsEnable,     0xF00D, bool,                                       Swap_N, Io_All,  Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_TimerModuleDiagnosticsResult,     0xF00E, TimerModuleDiagnosticsResults_t,            Swap_Y, Io_O,    Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_ResetSignal,                      0xF00F, Signal_t,                                   Swap_N, Io_None, Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_ExternalDataSource,               0xF010, I_DataSource_t *,                           Swap_N, Io_None, Ram,         NotNv,                                    NotFault) \
+   ENTRY(Erd_HeartbeatLed,                     0xF100, bool,                                       Swap_N, Io_O,    Virtual,     NotNv,                                    NotFault) \
+   ENTRY(Erd_OtherLed,                         0xF101, bool,                                       Swap_N, Io_None, Virtual,     NotNv,                                    NotFault) \
+   ENTRY(Erd_PushButtonSwitch,                 0xF102, bool,                                       Swap_N, Io_All,  Virtual,     NotNv,                                    NotFault) \
+   ENTRY(Erd_SomeAnalogInput,                  0xF103, AdcCounts_t,                                Swap_Y, Io_None, Virtual,     NotNv,                                    NotFault) \
+   ENTRY(Erd_AnotherAnalogInput,               0xF104, AdcCounts_t,                                Swap_Y, Io_None, Virtual,     NotNv,                                    NotFault) \
+   ENTRY(Erd_NvReserved,                       0xFFFD, uint8_t,                                    Swap_N, Io_None, NvPublic,    NotNv,                                    NotFault) \
+   ENTRY(Erd_NvMetadata,                       0xFFFE, AsyncDataSource_FlashBlockGroupMetadata_t,  Swap_N, Io_None, NvPrivate,   NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
 
-#define EXPAND_AS_NV_PUBLIC_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData) \
+#define EXPAND_AS_NV_PUBLIC_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_NV_PUBLIC_, StorageType)(Name = Number COMMA)
 
-#define EXPAND_AS_VIRTUAL_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData) \
+#define EXPAND_AS_VIRTUAL_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_VIRTUAL_, StorageType)(Name = Number COMMA)
 
-#define EXPAND_AS_INTERNAL_RAM_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData) \
+#define EXPAND_AS_INTERNAL_RAM_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)(Name COMMA)
 
-#define EXPAND_AS_NV_PRIVATE_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData) \
+#define EXPAND_AS_NV_PRIVATE_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_NV_PRIVATE_, StorageType)(Name = Number COMMA)
 
-#define EXPAND_AS_PUBLIC_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData) \
+#define EXPAND_AS_PUBLIC_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    Public##Name = Number,
 
 enum

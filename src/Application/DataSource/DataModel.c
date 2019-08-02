@@ -7,11 +7,11 @@
 
 #include "DataModel.h"
 
-#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultDataa) \
+#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultIda) \
    CONCAT(INCLUDE_INPUT_OUTPUT_, Io)                                                                         \
    (Name COMMA)
 
-#define EXPAND_AS_OUTPUT_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData) \
+#define EXPAND_AS_OUTPUT_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_OUTPUT_, Io)                                                              \
    (Name COMMA)
 
