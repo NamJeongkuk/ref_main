@@ -41,24 +41,6 @@
         "serverpath": "${workspaceFolder}/tools/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
       },
       "preLaunchTask": "truk_jlink_tools"
-    },
-    {
-      "name": "Dugnutt attach",
-      "cwd": "${workspaceRoot}",
-      "request": "attach",
-      "type": "cortex-debug",
-      "executable": "${workspaceFolder}/build/dugnutt/dugnutt.elf",
-      "device": "R5F51305",
-      "servertype": "jlink",
-      "interface": "FINE",
-      "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
-      "osx": {
-        "serverpath": "${workspaceFolder}/tools/kpit-rx/JLink/JLinkGDBServer"
-      },
-      "linux": {
-        "serverpath": "${workspaceFolder}/tools/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
-      },
-      "preLaunchTask": "dugnutt_jlink_tools"
     }
   ]
 }
