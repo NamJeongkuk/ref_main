@@ -1,4 +1,4 @@
-include kpit-rx/kpit-rx.mk
+include tools/kpit-rx/kpit-rx.mk
 
 TARGET=truk
 
@@ -6,8 +6,8 @@ DEVICE:=R5F52316
 # ID_CODE:=45CAFEC0FFEECAFEC0FFEECAFEC0FFEE
 ID_CODE:=FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 
+PROJECT_DIR=src
 OUTPUT_DIR=build/$(TARGET)
-PROJECT_DIR=src/$(TARGET)
 APPLCOMMON_DIR=lib/applcommon
 BOOT_LOADER_DIR=lib/boot-loaders
 
@@ -116,8 +116,8 @@ $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
 .PHONY: all
-all: target
-   # $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
+all: target \
+	$(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 	$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
 	$(call make_directory,$(OUTPUT_DIR)/binaries)
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness little --output_directory $(OUTPUT_DIR)/binaries
@@ -140,10 +140,10 @@ $(OUTPUT_DIR)/doc:
 
 .PHONY: erd_definitions
 erd_definitions: $(OUTPUT_DIR)/doc
-	@$(LUA53) $(PROJECT_DIR)/generate_erd_definitions.lua
+	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
 
 .PHONY: upload
-upload: all jlink_tools
+upload: $(call upload_deps,all jlink_tools)
 	$(call jlink_upload,$(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot)
 
 # RxMakefileWorker.mk will clean up the RX build files, use this for anything else that needs to be cleaned
@@ -151,4 +151,4 @@ upload: all jlink_tools
 clean: target_clean
 	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(TARGET)-boot-loader.mk RELEASE=Y DEBUG=N clean
 
-include kpit-rx/kpit-rx-makefile-worker.mk
+include tools/kpit-rx/kpit-rx-makefile-worker.mk

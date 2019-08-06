@@ -1,9 +1,9 @@
 return {
   Application = {
     ram = {
-      map = 'build/truk/dugnutt.map',
+      map = 'build/truk/truk.map',
       type = 'rx-gcc',
-      total = 16 * 1024,
+      total = 32 * 1024,
       ram_sections = {
         'RAM'
       }

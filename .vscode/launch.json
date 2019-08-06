@@ -33,14 +33,14 @@
       "servertype": "jlink",
       "interface": "FINE",
       "jlinkscript": "${workspaceFolder}/build/truk/debug.jlink",
-      "armToolchainPath": "${workspaceFolder}/kpit-rx/tc/bin/",
+      "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
       "osx": {
-        "serverpath": "${workspaceFolder}/kpit-rx/JLink/JLinkGDBServer"
+        "serverpath": "${workspaceFolder}/tools/kpit-rx/JLink/JLinkGDBServer"
       },
       "linux": {
-        "serverpath": "${workspaceFolder}/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
+        "serverpath": "${workspaceFolder}/tools/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
       },
-      "preLaunchTask": "truk jlink_tools"
+      "preLaunchTask": "truk_jlink_tools"
     },
     {
       "name": "Dugnutt attach",

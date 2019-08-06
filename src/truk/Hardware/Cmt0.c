@@ -85,8 +85,3 @@ I_Interrupt_t * Cmt0_Init(void)
 
    return &cmt0Interrupt.interrupt;
 }
-
-I_Interrupt_t * CMT0_GetInterrupt(void)
-{
-   return &cmt0Interrupt.interrupt;
-}

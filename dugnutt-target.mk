@@ -117,7 +117,7 @@ $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
 .PHONY: all
 all: target \
-   $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
+	$(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 	$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
 	$(call make_directory,$(OUTPUT_DIR)/binaries)
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness little --output_directory $(OUTPUT_DIR)/binaries
@@ -143,7 +143,7 @@ erd_definitions: $(OUTPUT_DIR)/doc
 	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
 
 .PHONY: upload
-upload: all jlink_tools
+upload: $(call upload_deps,all jlink_tools)
 	$(call jlink_upload,$(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot)
 
 # RxMakefileWorker.mk will clean up the RX build files, use this for anything else that needs to be cleaned

@@ -13,9 +13,9 @@ module.exports = {
     }
   },
   'truk-target.mk': {
-    ...require('./kpit-rx/dmake'),
+    ...require('./tools/kpit-rx/dmake'),
     options: {
-      ...require('./kpit-rx/dmake').options,
+      ...require('./tools/kpit-rx/dmake').options,
       outputDirectories: [
         'build',
         'artifacts',

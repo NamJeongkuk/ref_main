@@ -13,11 +13,6 @@
 /*!
  * Initialize the CMT0 timer
  */
-void Cmt0_Init(void);
-
-/*!
- * Get the interrupt hook for the CMT0 timer
- */
 I_Interrupt_t * Cmt0_Init(void);
 
 #endif

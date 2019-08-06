@@ -17,7 +17,7 @@
       }
     },
     {
-      "label": "truk jlink_tools",
+      "label": "truk_jlink_tools",
       "type": "shell",
       "command": "make RELEASE=Y DEBUG=Y -f truk-target.mk jlink_tools",
       "presentation": {
