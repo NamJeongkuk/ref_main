@@ -12,7 +12,7 @@ DESCRIPTION:
 multiple paragraphs in the description, they should  be separated by a blank
 line.>
 
-Copyright (c) 2005 - General Electric Corporation - All rights reserved.
+Copyright GE Appliances - Confidential - All rights reserved.
 \*****************************************************************************/
 
 /***************************** Header Files **********************************/

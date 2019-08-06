@@ -111,7 +111,8 @@ static void Run(I_BufferedUart_t *_instance)
       instance.waitingForTransmitToComplete = false;
       Event_SingleSubscriberSynchronous_Publish(&instance.OnTransmit, NULL);
    }
-   { // Any Received Data?
+   {
+      // Any Received Data?
       uint8_t localData[TRANSFER_BUFFER_SIZE_BYTES];
       uint16_t queueCount = DtcRingBuffer_GetCount();
       uint8_t index = 0;
