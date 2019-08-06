@@ -18,11 +18,11 @@ enum
    ParametricIncluded = false,
    AuxiliaryIncluded = false,
 
-   ApplicationImageId = 1,
-   ParametricDataImageId = 1,
-   AuxiliaryImageId = 1,
+   ApplicationImageId = 2,
+   ParametricDataImageId = 2,
+   AuxiliaryImageId = 2,
 
-   HardwareVersion = 1,
+   HardwareVersion = 2,
 
    ImageParametricItemSize = 0,
    ImageParametricItemCount = 0,
