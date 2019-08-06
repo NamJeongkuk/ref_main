@@ -27,12 +27,18 @@
 #include "Timer.h"
 #include "TimerModuleStack.h"
 #include "Version.h"
+#include "Gea2Addresses.h"
 
 static SystemData_t systemData;
 static Application_t application;
 static TimerModuleStack_t timerModuleStack;
 static InvokeActionOnTimerPeriodic_t watchdogPetter;
 static GeaStack_t geaStack;
+
+static const uint8_t staticRoutingTable[] =
+   {
+      DugnuttGeaAddress
+   };
 
 static void UpdateBuildInfo(
    I_DataModel_t *dataModel,
@@ -94,7 +100,10 @@ int main(void)
    GeaStack_Init(
       &geaStack,
       dataModel,
-      SystemData_ExternalDataSource(&systemData));
+      SystemData_ExternalDataSource(&systemData),
+      TrukGeaAddress,
+      staticRoutingTable,
+      ELEMENT_COUNT(staticRoutingTable));
 
    Application_Init(
       &application,

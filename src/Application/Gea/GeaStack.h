@@ -53,6 +53,8 @@ typedef struct
          Gea2ConfiguratorNode_t node;
          Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t nodeResources;
          Gea2ConfiguratorStaticRoutingTableResources_t staticRoutingResources;
+         Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
+         uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
          struct
          {
             uint8_t sendBuffer[SendBufferSize];
@@ -92,7 +94,10 @@ typedef struct
 void GeaStack_Init(
    GeaStack_t *instance,
    I_DataModel_t *dataModel,
-   I_DataSource_t *externalDataSource);
+   I_DataSource_t *externalDataSource,
+   uint8_t geaAddress,
+   const uint8_t *staticRoutingTable,
+   uint8_t staticRoutingTableEntryCount);
 
 /*!
  * @param instance
