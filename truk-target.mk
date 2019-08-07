@@ -116,8 +116,7 @@ $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
 .PHONY: all
-all: target \
-	$(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
+all: target $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 	$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
 	$(call make_directory,$(OUTPUT_DIR)/binaries)
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness little --output_directory $(OUTPUT_DIR)/binaries
