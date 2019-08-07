@@ -58,7 +58,7 @@ enum
 //      *---------->  CKSEL[2]:  ----
 
 // ~500 us delay
-#define U16_DELAY_COUNT                   ((uint16_t)10)
+#define U16_DELAY_COUNT                   ((uint16_t)2000)
 
 static void WaitForClockToStabilize(void)
 {
@@ -70,8 +70,6 @@ static void WaitForClockToStabilize(void)
 
 void SystemClock_Init(void)
 {
-   WaitForClockToStabilize();
-
    // Enable register modification
    SYSTEM.PRCR.WORD = Prcr_Enable;
 
