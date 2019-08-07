@@ -13,30 +13,20 @@
 #include "Rx231FlashInfo.h"
 #include "ImageHeader.h"
 
-enum
-{
-   ApplicationStartBlock = 127,
-   ApplicationEndBlock = 20,
-   ParametricStartBlock = 19,
-   ParametricEndBlock = 10,
-   BootLoaderStartBlock = 9,
-   BootLoaderEndBlock = 0
-};
+#define ApplicationStartAddress  (0xFFFC0000)
+#define ApplicationEndAddress    (0xFFFF5FFF)
+#define ApplicationHeaderAddress ApplicationStartAddress
+#define ApplicationImageHeader (const ImageHeader_t *)(intptr_t)(ApplicationHeaderAddress)
 
-#define BootLoaderStartAddress FirstAddressInBlock(BootLoaderStartBlock)
-#define BootLoaderEndAddress LastAddressInBlock(BootLoaderEndBlock)
-#define BootLoaderHeaderAddress BootLoaderStartAddress
-#define BootLoaderImageHeader (const ImageHeader_t *)(intptr_t)(BootLoaderHeaderAddress)
-
-#define ParametricStartAddress FirstAddressInBlock(ParametricStartBlock)
-#define ParametricEndAddress LastAddressInBlock(ParametricEndBlock)
+#define ParametricStartAddress   (0xFFFF6000)
+#define ParametricEndAddress     (0xFFFFAFFF)
 #define ParametricHeaderAddress ParametricStartAddress
 #define ParametricImageHeader (const ImageHeader_t *)(intptr_t)(ParametricHeaderAddress)
 
-#define ApplicationStartAddress FirstAddressInBlock(ApplicationStartBlock)
-#define ApplicationEndAddress LastAddressInBlock(ApplicationEndBlock)
-#define ApplicationHeaderAddress ApplicationStartAddress
-#define ApplicationImageHeader (const ImageHeader_t *)(intptr_t)(ApplicationHeaderAddress)
+#define BootLoaderStartAddress   (0xFFFFB000)
+#define BootLoaderEndAddress     (0xFFFFFFFF)
+#define BootLoaderHeaderAddress BootLoaderStartAddress
+#define BootLoaderImageHeader (const ImageHeader_t *)(intptr_t)(BootLoaderHeaderAddress)
 
 /*!
  * Get the Action that is used to enter the Boot Loader
