@@ -64,9 +64,8 @@ static void UpdateBuildInfo(
 
 static void SendStartupMessage(I_Gea2PacketEndpoint_t *gea2PacketEndpoint)
 {
-   STACK_ALLOC_GEA2PACKET(packet, 10);
+   STACK_ALLOC_GEA2PACKET(packet, 5);
    packet->destination = 0xFF;
-   packet->payloadLength = 5;
    packet->payload[0] = 0x00;
    packet->payload[1] = 0xDE;
    packet->payload[2] = 0xAF;
