@@ -1,15 +1,15 @@
 /*!
  * @file
- * @brief Gpio group
+ * @brief GPIO Hardware Driver
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef GPIOGROUP_H
-#define GPIOGROUP_H
+#ifndef PLATFORMGPIO_H
+#define PLATFORMGPIO_H
 
-#include "I_GpioGroup.h"
 #include "GpioConfiguration.h"
+#include "I_GpioGroup.h"
 
 enum
 {
@@ -51,9 +51,18 @@ enum
 };
 
 /*!
- * Initialize the Gpio Group
- * @return I_GpioGroup_t The Gpio Group interface
+ * Initialize the GPIO
  */
-I_GpioGroup_t * GpioGroup_Init(void);
+void PlatformGpio_Init(void);
+
+/*!
+ * Read a GPIO channel
+ */
+bool PlatformGpio_Read(const GpioChannel_t channel);
+
+/*!
+ * Write to a GPIO channel
+ */
+void PlatformGpio_Write(const GpioChannel_t channel, const bool state);
 
 #endif

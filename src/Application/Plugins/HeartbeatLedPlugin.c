@@ -6,7 +6,6 @@
  */
 
 #include "HeartbeatLedPlugin.h"
-#include "GpioGroup.h"
 #include "DataModelErdPointerAccess.h"
 #include "SystemErds.h"
 
@@ -19,10 +18,9 @@ void HeartbeatLedPlugin_Init(
    HeartbeatLedPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
-   DigitalOutput_GpioGroupAdapter_Init(
+   DigitalOutput_OutputAdapter_Init(
       &instance->_private.heartbeatLed,
-      DataModelErdPointerAccess_GetGpioGroup(dataModel, Erd_GpioGroup),
-      Gpio_HeartbeatLed);
+      DataModel_GetOutput(dataModel, Erd_HeartbeatLed));
 
    DigitalOutputBlinker_Init(
       &instance->_private.blinkHeartbeat,

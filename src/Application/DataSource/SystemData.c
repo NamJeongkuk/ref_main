@@ -46,6 +46,13 @@ static void InitializeInternalDataSource(
       NonVolatileDataSource_DataSource(&instance->_private.dataSource.nv),
       &instance->_private.dataSource.nvComponent);
 
+   BspDataSource_Init(
+      &instance->_private.dataSource.bsp);
+   AddDataSourceToComposite(
+      instance,
+      BspDataSource_DataSource(&instance->_private.dataSource.bsp),
+      &instance->_private.dataSource.bspComponent);
+
    ApplianceApiDataSource_Init(
       &instance->_private.dataSource.applianceApi,
       &instance->_private.dataSource.composite.interface,

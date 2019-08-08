@@ -5,11 +5,10 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "GpioGroup.h"
+#include "PlatformGpio.h"
 #include "iodefine.h"
 #include "uassert.h"
 #include "utils.h"
-#include <stdint.h>
 
 typedef struct
 {
@@ -60,10 +59,8 @@ static const GpioDirectionPortsAndPins_t gpioPortsAndPins[] =
    GPIO_TABLE(EXPAND_PORTS_AND_PINS)
 };
 
-static void SetPullUp(I_GpioGroup_t *instance, const GpioChannel_t channel, const GpioPullUp_t pullUp)
+static void SetPullUp(const GpioChannel_t channel, const GpioPullUp_t pullUp)
 {
-   IGNORE_ARG(instance);
-
    if(gpioPortAddresses[gpioPortsAndPins[channel].port].pullUpControl)
    {
       uint8_t pullUpRegister = *gpioPortAddresses[gpioPortsAndPins[channel].port].pullUpControl;
@@ -72,10 +69,8 @@ static void SetPullUp(I_GpioGroup_t *instance, const GpioChannel_t channel, cons
    }
 }
 
-static void SetGpioMode(I_GpioGroup_t *instance, const GpioChannel_t channel)
+static void SetGpioMode(const GpioChannel_t channel)
 {
-   IGNORE_ARG(instance);
-
    if(gpioPortAddresses[gpioPortsAndPins[channel].port].mode)
    {
       uint8_t modeRegister = *gpioPortAddresses[gpioPortsAndPins[channel].port].mode;
@@ -84,10 +79,8 @@ static void SetGpioMode(I_GpioGroup_t *instance, const GpioChannel_t channel)
    }
 }
 
-static void SetDriveCapacity(I_GpioGroup_t *instance, const GpioChannel_t channel, const GpioDriveCapacity_t driveCapacitySetting)
+static void SetDriveCapacity(const GpioChannel_t channel, const GpioDriveCapacity_t driveCapacitySetting)
 {
-   IGNORE_ARG(instance);
-
    if(gpioPortAddresses[gpioPortsAndPins[channel].port].driveCapacity)
    {
       uint8_t driveCapacityRegister = *gpioPortAddresses[gpioPortsAndPins[channel].port].driveCapacity;
@@ -96,10 +89,18 @@ static void SetDriveCapacity(I_GpioGroup_t *instance, const GpioChannel_t channe
    }
 }
 
-static bool Read(I_GpioGroup_t *instance, const GpioChannel_t channel)
+static void SetDirection(const GpioChannel_t channel, const GpioDirection_t direction)
 {
-   IGNORE_ARG(instance);
+   if(gpioPortAddresses[gpioPortsAndPins[channel].port].direction)
+   {
+      uint8_t directionRegister = *gpioPortAddresses[gpioPortsAndPins[channel].port].direction;
+      BIT_WRITE(directionRegister, gpioPortsAndPins[channel].pin, direction);
+      *gpioPortAddresses[gpioPortsAndPins[channel].port].direction = directionRegister;
+   }
+}
 
+bool PlatformGpio_Read(const GpioChannel_t channel)
+{
    if(gpioPortAddresses[gpioPortsAndPins[channel].port].inputData)
    {
       uint8_t inputRegister = *gpioPortAddresses[gpioPortsAndPins[channel].port].inputData;
@@ -109,10 +110,8 @@ static bool Read(I_GpioGroup_t *instance, const GpioChannel_t channel)
    return false;
 }
 
-static void Write(I_GpioGroup_t *instance, const GpioChannel_t channel, const bool state)
+void PlatformGpio_Write(const GpioChannel_t channel, const bool state)
 {
-   IGNORE_ARG(instance);
-
    if(gpioPortAddresses[gpioPortsAndPins[channel].port].outputData)
    {
       uint8_t outputRegister = *gpioPortAddresses[gpioPortsAndPins[channel].port].outputData;
@@ -121,33 +120,13 @@ static void Write(I_GpioGroup_t *instance, const GpioChannel_t channel, const bo
    }
 }
 
-static void SetDirection(I_GpioGroup_t *instance, const GpioChannel_t channel, const GpioDirection_t direction)
+void PlatformGpio_Init(void)
 {
-   IGNORE_ARG(instance);
-
-   if(gpioPortAddresses[gpioPortsAndPins[channel].port].direction)
-   {
-      uint8_t directionRegister = *gpioPortAddresses[gpioPortsAndPins[channel].port].direction;
-      BIT_WRITE(directionRegister, gpioPortsAndPins[channel].pin, direction);
-      *gpioPortAddresses[gpioPortsAndPins[channel].port].direction = directionRegister;
-   }
-}
-
-static const I_GpioGroup_Api_t api =
-   { Read, Write, SetDirection };
-
-I_GpioGroup_t * GpioGroup_Init(void)
-{
-   static I_GpioGroup_t gpio;
-   gpio.api = &api;
-
    for(GpioChannel_t channel = 0; channel < NUM_ELEMENTS(gpioPortsAndPins); channel++)
    {
-      SetPullUp(&gpio, channel, gpioPortsAndPins[channel].pullUp);
-      SetDirection(&gpio, channel, gpioPortsAndPins[channel].direction);
-      SetGpioMode(&gpio, channel);
-      SetDriveCapacity(&gpio, channel, gpioPortsAndPins[channel].driveCapacity);
+      SetPullUp(channel, gpioPortsAndPins[channel].pullUp);
+      SetDirection(channel, gpioPortsAndPins[channel].direction);
+      SetGpioMode(channel);
+      SetDriveCapacity(channel, gpioPortsAndPins[channel].driveCapacity);
    }
-
-   return &gpio;
 }
