@@ -17,7 +17,7 @@
 #include "Crc16Calculator_Table.h"
 #include "DataModelErdPointerAccess.h"
 #include "DataSource_ApplianceApiRevision1.h"
-#include "FlashBlockGroup_Rx130.h"
+#include "FlashBlockGroup_Rx231.h"
 #include "GeaStack.h"
 #include "Hardware.h"
 #include "Header.h"
@@ -37,7 +37,7 @@ static GeaStack_t geaStack;
 
 static const uint8_t staticRoutingTable[] =
    {
-      TrukGeaAddress
+      DugnuttGeaAddress
    };
 
 static void UpdateBuildInfo(
@@ -64,9 +64,8 @@ static void UpdateBuildInfo(
 
 static void SendStartupMessage(I_Gea2PacketEndpoint_t *gea2PacketEndpoint)
 {
-   STACK_ALLOC_GEA2PACKET(packet, 10);
+   STACK_ALLOC_GEA2PACKET(packet, 5);
    packet->destination = 0xFF;
-   packet->payloadLength = 5;
    packet->payload[0] = 0x00;
    packet->payload[1] = 0xDE;
    packet->payload[2] = 0xAF;
@@ -86,7 +85,7 @@ int main(void)
    SystemData_Init(
       &systemData,
       timerModule,
-      FlashBlockGroup_Rx130_Init(watchdogKickAction, Action_Null_GetInstance(), timerModule),
+      FlashBlockGroup_Rx231_Init(watchdogKickAction, Action_Null_GetInstance(), timerModule),
       Crc16Calculator_Table,
       watchdogKickAction,
       Action_Rx2xxSystemReset_Init());
@@ -101,7 +100,7 @@ int main(void)
       &geaStack,
       dataModel,
       SystemData_ExternalDataSource(&systemData),
-      DugnuttGeaAddress,
+      TrukGeaAddress,
       staticRoutingTable,
       ELEMENT_COUNT(staticRoutingTable));
 

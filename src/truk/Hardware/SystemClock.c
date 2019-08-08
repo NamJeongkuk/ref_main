@@ -19,8 +19,8 @@ enum
    Prcr_Disable = 0xA500
 };
 
-// Configured for 32 Mhz
-#define U8_HOCOCR_REGISTER_MASK           ((uint8_t)3)
+// Configured for 54 Mhz
+#define U8_HOCOCR2_REGISTER_MASK          ((uint8_t)3)
 #define U8_HOCOWTCR2_REGISTER_MASK        ((uint8_t)3)
 
 #define B_HOCO_START                      ((uint8_t)0)
@@ -29,28 +29,36 @@ enum
 
 #define B_POWER_CONTROL_MODE_HIGH         ((uint8_t)0)
 
-#define U32_SCKCR_REGISTER_MASK_HIGHSPEED ((uint32_t)0x00000001)
-// 00000000000000000000000000000001b
-// ||||||||XXXXXXXXXXXX||||XXXX||||
-// ||||||||            ||||    |||#---> PCKD: x1/2
-// ||||||||            ||||    ||#----> PCKD
-// ||||||||            ||||    |#-----> PCKD
-// ||||||||            ||||    #------> PCKD
-// ||||||||            |||#-----------> PCKB: x1
-// ||||||||            ||#------------> PCKB
-// ||||||||            |#-------------> PCKB
-// ||||||||            #--------------> PCKB
-// |||||||#---------------------------> ICLK: x1
-// ||||||#----------------------------> ICLK
-// |||||#-----------------------------> ICLK
-// ||||#------------------------------> ICLK
-// |||#-------------------------------> FCLK: x1
-// ||#--------------------------------> FCLK
-// |#---------------------------------> FCLK
-// #----------------------------------> FCLK
+#define U32_SCKCR_REGISTER_MASK           ((uint32_t)0x20811100)
+// 00100000100000010001000100000000b
+// |||||||||XXX||||||||||||XXXX|||*--> PCKD: x1
+// |||||||||   ||||||||||||    ||*---> PCKD
+// |||||||||   ||||||||||||    |*----> PCKD
+// |||||||||   ||||||||||||    *-----> PCKD
+// |||||||||   |||||||||||*----------> PCKB: x1/2
+// |||||||||   ||||||||||*-----------> PCKB
+// |||||||||   |||||||||*------------> PCKB
+// |||||||||   ||||||||*-------------> PCKB
+// |||||||||   |||||||*--------------> PCKA: x1/2
+// |||||||||   ||||||*---------------> PCKA
+// |||||||||   |||||*----------------> PCKA
+// |||||||||   ||||*-----------------> PCKA
+// |||||||||   |||*------------------> BCK: x1/2
+// |||||||||   ||*-------------------> BCK
+// |||||||||   |*--------------------> BCK
+// |||||||||   *---------------------> BCK
+// ||||||||*-------------------------> PSTOP1: Disabled
+// |||||||*--------------------------> ICK: x1
+// ||||||*---------------------------> ICK
+// |||||*----------------------------> ICK
+// ||||*-----------------------------> ICK
+// |||*------------------------------> FCK
+// ||*-------------------------------> FCK:
+// |*--------------------------------> FCK
+// *---------------------------------> FCK
 
 // Configured for HOCO
-#define U16_SCKCR3_REGISTER_MASK          ((uint16_t)0x0100)
+#define U16_SCKCR3_REGISTER_MASK          ((uint16_t)0x100)
 // 0000000100000000b
 // XXXXX|||XXXXXXXX
 //      ||*-------->  CKSEL[0]:  HOCO
@@ -73,6 +81,12 @@ void SystemClock_Init(void)
    // Enable register modification
    SYSTEM.PRCR.WORD = Prcr_Enable;
 
+   // Configured for 54 Mhz
+   SYSTEM.HOCOCR2.BIT.HCFRQ = U8_HOCOCR2_REGISTER_MASK;
+
+   // If ICLK > 32 MHz, you must set MEMWAIT bit
+   SYSTEM.MEMWAIT.BIT.MEMWAIT = 1;
+
    // Start the HOCO clock
    SYSTEM.HOCOCR.BIT.HCSTP = B_HOCO_START;
 
@@ -86,8 +100,8 @@ void SystemClock_Init(void)
    }
 
    // Set clock dividers
-   SYSTEM.SCKCR.LONG = U32_SCKCR_REGISTER_MASK_HIGHSPEED;
-   while(U32_SCKCR_REGISTER_MASK_HIGHSPEED != SYSTEM.SCKCR.LONG)
+   SYSTEM.SCKCR.LONG = U32_SCKCR_REGISTER_MASK;
+   while(U32_SCKCR_REGISTER_MASK != SYSTEM.SCKCR.LONG)
    {
       // Wait until the register is set
    }

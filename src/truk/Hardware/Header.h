@@ -10,10 +10,10 @@
 
 #include <stdbool.h>
 #include "I_Action.h"
-#include "Rx130FlashInfo.h"
+#include "Rx231FlashInfo.h"
 #include "ImageHeader.h"
 
-#define ApplicationStartAddress  (0xFFFE0000)
+#define ApplicationStartAddress  (0xFFFC0000)
 #define ApplicationEndAddress    (0xFFFF5FFF)
 #define ApplicationHeaderAddress ApplicationStartAddress
 #define ApplicationImageHeader (const ImageHeader_t *)(intptr_t)(ApplicationHeaderAddress)

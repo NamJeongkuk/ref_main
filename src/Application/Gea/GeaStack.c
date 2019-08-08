@@ -17,7 +17,6 @@
 
 enum
 {
-   GeaAddress = DugnuttGeaAddress,
    Gea2CrcSeed = 0x1021,
    ParametricHackRequired = false,
    UnlockErdSecurityPeriodMsec = 30 * MSEC_PER_MIN,
@@ -26,11 +25,6 @@ enum
    RestrictedFullRangeErdEnd = 0xFFFF,
    RetryCount = 3
 };
-
-static const uint8_t staticRoutingTable[] =
-   {
-      TrukGeaAddress
-   };
 
 static const uint8_t rangeRestrictedValidatorRestrictedAddressTable[] =
    {
@@ -105,14 +99,15 @@ static void ConnectGea2MessageEndpointToDataSource(
 
 static void CreatePacketAndMessageEndpoints(
    GeaStack_t *instance,
-   I_DataModel_t *dataModel)
+   I_DataModel_t *dataModel,
+   uint8_t geaAddress)
 {
    instance->_private.packetEndpoint =
       Gea2Configurator_CreatePacketEndpointNode(
          &instance->_private.configurator,
          &instance->_private.applicationNode,
          &instance->_private.applicationPacketEndpointResources,
-         GeaAddress);
+         geaAddress);
 
    // Validate if Erds in the restricted range are restricted
    InitializeErdSecurityComponents(instance, dataModel);
@@ -126,7 +121,10 @@ static void CreatePacketAndMessageEndpoints(
 
 static void CreateInternalNode(
    GeaStack_t *instance,
-   I_DataModel_t *dataModel)
+   I_DataModel_t *dataModel,
+   uint8_t geaAddress,
+   const uint8_t *staticRoutingTable,
+   uint8_t staticRoutingTableEntryCount)
 {
    Gea2Configurator_CreateCustomBufferedFullDuplexUartInterfaceNode(
       &instance->_private.configurator,
@@ -134,7 +132,7 @@ static void CreateInternalNode(
       &instance->_private.internal.nodeResources,
       DataModelErdPointerAccess_GetBufferedUart(dataModel, Erd_InternalBufferedUart),
       DataModelErdPointerAccess_GetCrc16Calculator(dataModel, Erd_CrcCalcTable),
-      GeaAddress,
+      geaAddress,
       RetryCount,
       instance->_private.internal.buffers.sendBuffer,
       sizeof(instance->_private.internal.buffers.sendBuffer),
@@ -143,17 +141,25 @@ static void CreateInternalNode(
       instance->_private.internal.buffers.packetQueueStorage,
       sizeof(instance->_private.internal.buffers.packetQueueStorage));
 
+   Gea2Configurator_AddDynamicRoutingTableWithReplacementToNode(
+      &instance->_private.configurator,
+      &instance->_private.internal.node,
+      &instance->_private.internal.dynamicRoutingResources,
+      instance->_private.internal.dynamicRoutingTable,
+      ELEMENT_COUNT(instance->_private.internal.dynamicRoutingTable));
+
    Gea2Configurator_AddStaticRoutingTableToNode(
       &instance->_private.configurator,
       &instance->_private.internal.node,
       &instance->_private.internal.staticRoutingResources,
       staticRoutingTable,
-      ELEMENT_COUNT(staticRoutingTable));
+      staticRoutingTableEntryCount);
 }
 
 static void CreateExternalNode(
    GeaStack_t *instance,
-   I_DataModel_t *dataModel)
+   I_DataModel_t *dataModel,
+   uint8_t geaAddress)
 {
    Gea2Configurator_CreateCustomBufferedFullDuplexUartInterfaceNode(
       &instance->_private.configurator,
@@ -161,7 +167,7 @@ static void CreateExternalNode(
       &instance->_private.external.nodeResources,
       DataModelErdPointerAccess_GetBufferedUart(dataModel, Erd_ExternalBufferedUart),
       DataModelErdPointerAccess_GetCrc16Calculator(dataModel, Erd_CrcCalcTable),
-      GeaAddress,
+      geaAddress,
       RetryCount,
       instance->_private.external.buffers.sendBuffer,
       sizeof(instance->_private.external.buffers.sendBuffer),
@@ -181,14 +187,17 @@ static void CreateExternalNode(
 void GeaStack_Init(
    GeaStack_t *instance,
    I_DataModel_t *dataModel,
-   I_DataSource_t *externalDataSource)
+   I_DataSource_t *externalDataSource,
+   uint8_t geaAddress,
+   const uint8_t *staticRoutingTable,
+   uint8_t staticRoutingTableEntryCount)
 {
    Gea2Configurator_Init(&instance->_private.configurator);
 
-   CreateInternalNode(instance, dataModel);
-   CreateExternalNode(instance, dataModel);
+   CreateInternalNode(instance, dataModel, geaAddress, staticRoutingTable, staticRoutingTableEntryCount);
+   CreateExternalNode(instance, dataModel, geaAddress);
 
-   CreatePacketAndMessageEndpoints(instance, dataModel);
+   CreatePacketAndMessageEndpoints(instance, dataModel, geaAddress);
 
    ConnectGea2MessageEndpointToDataSource(instance, externalDataSource);
 

@@ -1,8 +1,8 @@
 include tools/kpit-rx/kpit-rx.mk
 
-TARGET=dugnutt
+TARGET=truk
 
-DEVICE:=R5F51305
+DEVICE:=R5F52316
 # ID_CODE:=45CAFEC0FFEECAFEC0FFEECAFEC0FFEE
 ID_CODE:=FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 
@@ -47,7 +47,7 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_DIR)/Filter \
    $(APPLCOMMON_DIR)/Git \
    $(APPLCOMMON_DIR)/Hardware/Kpit/Rx2xx \
-   $(APPLCOMMON_DIR)/Hardware/Rx130 \
+   $(APPLCOMMON_DIR)/Hardware/Rx231 \
    $(APPLCOMMON_DIR)/HardwareInterfaces \
    $(APPLCOMMON_DIR)/HardwareInterfaces/Adapters \
    $(APPLCOMMON_DIR)/Image \
@@ -83,8 +83,8 @@ INC_DIRS=\
    $(APPLCOMMON_DIR)/BootLoader \
    $(APPLCOMMON_DIR)/Fingerprinter \
    $(APPLCOMMON_DIR)/Git \
-   $(APPLCOMMON_DIR)/Hardware/Rx130 \
-   $(APPLCOMMON_DIR)/Hardware/Kpit/Rx130 \
+   $(APPLCOMMON_DIR)/Hardware/Rx231 \
+   $(APPLCOMMON_DIR)/Hardware/Kpit/Rx231 \
    $(APPLCOMMON_DIR)/Image \
    $(APPLCOMMON_DIR)/Reset \
    $(APPLCOMMON_DIR)/ServiceMode \
