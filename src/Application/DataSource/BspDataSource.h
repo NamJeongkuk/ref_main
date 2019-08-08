@@ -22,6 +22,6 @@ typedef struct
 
 void BspDataSource_Init(BspDataSource_t *instance);
 
-I_DataSource_t * BspDataSource_DataSource(BspDataSource_t *instance);
+I_DataSource_t *BspDataSource_DataSource(BspDataSource_t *instance);
 
 #endif

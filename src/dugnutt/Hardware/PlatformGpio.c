@@ -21,27 +21,27 @@ typedef struct
 } GpioPortAddresses_t;
 
 #define GPIO_PORT_ADDRESS_ENTRY(__port) \
-   (uint8_t *) &__port.PODR, (uint8_t *) &__port.PIDR, (uint8_t *) &__port.PDR, (uint8_t *) &__port.PMR, (uint8_t *) &__port.PCR, (uint8_t *) &__port.DSCR
+   (uint8_t *)&__port.PODR, (uint8_t *)&__port.PIDR, (uint8_t *)&__port.PDR, (uint8_t *)&__port.PMR, (uint8_t *)&__port.PCR, (uint8_t *)&__port.DSCR
 
 #define GPIO_PORT_ADDRESS_ENTRY_WITHOUT_DSCR(__port) \
-   (uint8_t *) &__port.PODR, (uint8_t *) &__port.PIDR, (uint8_t *) &__port.PDR, (uint8_t *) &__port.PMR, (uint8_t *) &__port.PCR, (uint8_t *) NULL
+   (uint8_t *)&__port.PODR, (uint8_t *)&__port.PIDR, (uint8_t *)&__port.PDR, (uint8_t *)&__port.PMR, (uint8_t *)&__port.PCR, (uint8_t *)NULL
 
 static const GpioPortAddresses_t gpioPortAddresses[] =
-{
-   { GPIO_PORT_ADDRESS_ENTRY_WITHOUT_DSCR(PORT0) },
-   { GPIO_PORT_ADDRESS_ENTRY(PORT1) },
-   { GPIO_PORT_ADDRESS_ENTRY(PORT2) },
-   { GPIO_PORT_ADDRESS_ENTRY(PORT3) },
-   { GPIO_PORT_ADDRESS_ENTRY_WITHOUT_DSCR(PORT4) },
-   { GPIO_PORT_ADDRESS_ENTRY(PORT5) },
-   { GPIO_PORT_ADDRESS_ENTRY(PORTA) },
-   { GPIO_PORT_ADDRESS_ENTRY(PORTB) },
-   { GPIO_PORT_ADDRESS_ENTRY(PORTC) },
-   { GPIO_PORT_ADDRESS_ENTRY(PORTD) },
-   { GPIO_PORT_ADDRESS_ENTRY(PORTE) },
-   { GPIO_PORT_ADDRESS_ENTRY(PORTH) },
-   { GPIO_PORT_ADDRESS_ENTRY(PORTJ) }
-};
+   {
+      { GPIO_PORT_ADDRESS_ENTRY_WITHOUT_DSCR(PORT0) },
+      { GPIO_PORT_ADDRESS_ENTRY(PORT1) },
+      { GPIO_PORT_ADDRESS_ENTRY(PORT2) },
+      { GPIO_PORT_ADDRESS_ENTRY(PORT3) },
+      { GPIO_PORT_ADDRESS_ENTRY_WITHOUT_DSCR(PORT4) },
+      { GPIO_PORT_ADDRESS_ENTRY(PORT5) },
+      { GPIO_PORT_ADDRESS_ENTRY(PORTA) },
+      { GPIO_PORT_ADDRESS_ENTRY(PORTB) },
+      { GPIO_PORT_ADDRESS_ENTRY(PORTC) },
+      { GPIO_PORT_ADDRESS_ENTRY(PORTD) },
+      { GPIO_PORT_ADDRESS_ENTRY(PORTE) },
+      { GPIO_PORT_ADDRESS_ENTRY(PORTH) },
+      { GPIO_PORT_ADDRESS_ENTRY(PORTJ) }
+   };
 
 typedef struct
 {
@@ -55,9 +55,9 @@ typedef struct
 #define EXPAND_PORTS_AND_PINS(channel, direction, pullUp, driveCapacity, port, pin) { direction, pullUp, driveCapacity, port, pin },
 
 static const GpioDirectionPortsAndPins_t gpioPortsAndPins[] =
-{
-   GPIO_TABLE(EXPAND_PORTS_AND_PINS)
-};
+   {
+      GPIO_TABLE(EXPAND_PORTS_AND_PINS)
+   };
 
 static void SetPullUp(const GpioChannel_t channel, const GpioPullUp_t pullUp)
 {

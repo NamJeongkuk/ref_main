@@ -43,7 +43,7 @@ static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
          PlatformGpio_Write(entry.channel, *state);
 
          DataSourceOnDataChangeArgs_t args =
-         { erd, data };
+            { erd, data };
          Event_Synchronous_Publish(&instance->_private.OnDataChange, &args);
       }
    }
