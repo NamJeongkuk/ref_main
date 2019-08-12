@@ -24,6 +24,7 @@ typedef struct
 } DataSource_Bsp_t;
 
 void DataSource_Bsp_Init(
-   DataSource_Bsp_t *instance);
+   DataSource_Bsp_t *instance,
+   TimerModule_t *timerModule);
 
 #endif

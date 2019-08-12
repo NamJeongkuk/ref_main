@@ -10,7 +10,17 @@
 #include "uassert.h"
 #include "I_GpioGroup.h"
 #include "iodefine.h"
+#include "ContextProtector_Rx2xx.h"
 #include <string.h>
+
+#define CHANNEL_FROM_ERD(erd) (erd - Erd_BspGpio_Start - 1)
+#define ERD_FROM_CHANNEL(channel) (Erd_BspGpio_Start + 1 + channel)
+#define ERD_IS_IN_RANGE(erd) (IN_RANGE(Erd_BspGpio_Start + 1, erd, Erd_BspGpio_End))
+
+enum
+{
+   InputPollPeriodInMsec = 10
+};
 
 enum
 {
@@ -156,9 +166,9 @@ static void WriteGpio(const GpioChannel_t channel, const bool state)
 static void Read(I_DataSource_t *instance, const Erd_t erd, void *data)
 {
    IGNORE(instance);
-   GpioChannel_t channel = Erd_BspGpio_Start + 1 - erd;
+   GpioChannel_t channel = CHANNEL_FROM_ERD(erd);
 
-   if(IN_RANGE(Erd_BspGpio_Start + 1, erd, Erd_BspGpio_End))
+   if(ERD_IS_IN_RANGE(erd))
    {
       bool value = ReadGpio(channel);
       memcpy(data, &value, sizeof(bool));
@@ -173,18 +183,18 @@ static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
 {
    REINTERPRET(instance, _instance, DataSource_Gpio_t *);
 
-   if(IN_RANGE(Erd_BspGpio_Start + 1, erd, Erd_BspGpio_End))
+   if(ERD_IS_IN_RANGE(erd))
    {
       REINTERPRET(state, data, const bool *);
 
-      GpioChannel_t channel = Erd_BspGpio_Start + 1 - erd;
+      GpioChannel_t channel = CHANNEL_FROM_ERD(erd);
       if(ReadGpio(channel) != *state)
       {
          WriteGpio(channel, *state);
 
          DataSourceOnDataChangeArgs_t args =
             { erd, data };
-         Event_Synchronous_Publish(&instance->_private.OnDataChange, &args);
+         Event_Synchronous_Publish(instance->_private.onChangeEvent, &args);
       }
    }
    else
@@ -196,14 +206,14 @@ static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
 static bool Has(const I_DataSource_t *instance, const Erd_t erd)
 {
    IGNORE(instance);
-   return IN_RANGE(Erd_BspGpio_Start + 1, erd, Erd_BspGpio_End);
+   return ERD_IS_IN_RANGE(erd);
 }
 
 static uint8_t SizeOf(const I_DataSource_t *instance, const Erd_t erd)
 {
    IGNORE(instance);
 
-   if(IN_RANGE(Erd_BspGpio_Start + 1, erd, Erd_BspGpio_End))
+   if(ERD_IS_IN_RANGE(erd))
    {
       return sizeof(bool);
    }
@@ -218,6 +228,29 @@ static uint8_t SizeOf(const I_DataSource_t *instance, const Erd_t erd)
 static const I_DataSource_Api_t api =
    { Read, Write, Has, SizeOf };
 
+static void PollInputs(void *context)
+{
+   REINTERPRET(instance, context, DataSource_Gpio_t *);
+
+   for(GpioChannel_t channel = 0; channel < NUM_ELEMENTS(gpioPortsAndPins); channel++)
+   {
+      if(gpioPortsAndPins[channel].direction == GpioDirection_Input)
+      {
+         bool state = ReadGpio(channel);
+         if(BIT_STATE(instance->_private.cachedInputs, channel) != state)
+         {
+            BIT_WRITE(instance->_private.cachedInputs, channel, state);
+
+            ContextProtector_Protect(ContextProtector_Rx2xx_GetInstance());
+            DataSourceOnDataChangeArgs_t args =
+               { ERD_FROM_CHANNEL(channel), &state };
+            Event_Synchronous_Publish(instance->_private.onChangeEvent, &args);
+            ContextProtector_Unprotect(ContextProtector_Rx2xx_GetInstance());
+         }
+      }
+   }
+}
+
 static void InitializeGpio(void)
 {
    for(GpioChannel_t channel = 0; channel < NUM_ELEMENTS(gpioPortsAndPins); channel++)
@@ -229,12 +262,21 @@ static void InitializeGpio(void)
    }
 }
 
-void DataSource_Gpio_Init(DataSource_Gpio_t *instance)
+void DataSource_Gpio_Init(
+   DataSource_Gpio_t *instance,
+   TimerModule_t *timerModule,
+   Event_Synchronous_t *onChangeEvent)
 {
    instance->interface.api = &api;
-   instance->interface.OnDataChange = &instance->_private.OnDataChange.interface;
-
-   Event_Synchronous_Init(&instance->_private.OnDataChange);
+   instance->interface.OnDataChange = &onChangeEvent->interface;
+   instance->_private.onChangeEvent = onChangeEvent;
 
    InitializeGpio();
+
+   TimerModule_StartPeriodic(
+      timerModule,
+      &instance->_private.timer,
+      InputPollPeriodInMsec,
+      PollInputs,
+      instance);
 }

@@ -14,4 +14,5 @@ void Application_Init(
    I_DataModel_t *dataModel)
 {
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
+   SwitchedLedPlugin_Init(&instance->_private.switchedLedPlugin, dataModel);
 }

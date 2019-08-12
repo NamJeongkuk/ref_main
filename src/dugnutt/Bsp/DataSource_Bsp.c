@@ -70,11 +70,15 @@ static const I_DataSource_Api_t api =
    { Read, Write, Has, SizeOf };
 
 void DataSource_Bsp_Init(
-   DataSource_Bsp_t *instance)
+   DataSource_Bsp_t *instance,
+   TimerModule_t *timerModule)
 {
    instance->interface.api = &api;
    instance->interface.OnDataChange = &instance->_private.OnDataChange.interface;
    Event_Synchronous_Init(&instance->_private.OnDataChange);
 
-   DataSource_Gpio_Init(&instance->_private.dataSourceGpio);
+   DataSource_Gpio_Init(
+      &instance->_private.dataSourceGpio,
+      timerModule,
+      &instance->_private.OnDataChange);
 }

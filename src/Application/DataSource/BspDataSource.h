@@ -27,7 +27,9 @@ typedef struct
    } _private;
 } BspDataSource_t;
 
-void BspDataSource_Init(BspDataSource_t *instance);
+void BspDataSource_Init(
+   BspDataSource_t *instance,
+   TimerModule_t *timerModule);
 
 I_DataSource_t *BspDataSource_DataSource(BspDataSource_t *instance);
 

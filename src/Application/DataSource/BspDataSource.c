@@ -34,10 +34,13 @@ static const ConstArrayMap_LinearSearchConfiguration_t applicationToBspMapConfig
       OFFSET_OF(DataSource_MappedErdPair_t, mappedErdId)
    };
 
-void BspDataSource_Init(BspDataSource_t *instance)
+void BspDataSource_Init(
+   BspDataSource_t *instance,
+   TimerModule_t *timerModule)
 {
    DataSource_Bsp_Init(
-      &instance->_private.dataSource);
+      &instance->_private.dataSource,
+      timerModule);
 
    ConstArrayMap_LinearSearch_Init(
       &instance->_private.applicationToBspMap,
