@@ -5,41 +5,60 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "SystemErds.h"
 #include "BspDataSource.h"
-#include "GpioBspConfiguration.h"
-#include "ErdGpioChannelPair.h"
+#include "SystemErds.h"
 
-#define EXPAND_AS_ERD_GPIO_CHANNEL_PAIR(Erd, Channel) \
-   { Erd, Channel },
-
-static const ErdGpioChannelPair_t erdGpioChannelPairs[] =
+static const DataSource_MappedErdPair_t applicationToBspMappedPairs[] =
    {
-      ERD_GPIO_CHANNEL_TABLE(EXPAND_AS_ERD_GPIO_CHANNEL_PAIR)
+      { Erd_HeartbeatLed, Erd_BspGpio_HeartbeatLed },
+      { Erd_OtherLed, Erd_BspGpio_OtherLed },
+      { Erd_PushButtonSwitch, Erd_BspGpio_PushButtonSwitch }
    };
 
-static const ConstArrayMap_BinarySearchConfiguration_t erdGpioChannelPairMapConfig =
+static const ConstArrayMap_BinarySearchConfiguration_t bspToApplicationMapConfiguration =
    {
-      .array = erdGpioChannelPairs,
-      .elementCount = NUM_ELEMENTS(erdGpioChannelPairs),
-      .elementSize = ELEMENT_SIZE(erdGpioChannelPairs),
-      .keySize = MEMBER_SIZE(ErdGpioChannelPair_t, erd),
-      .keyOffset = OFFSET_OF(ErdGpioChannelPair_t, erd),
-      .keyIsSigned = IS_SIGNED(Erd_t)
+      applicationToBspMappedPairs,
+      NUM_ELEMENTS(applicationToBspMappedPairs),
+      ELEMENT_SIZE(applicationToBspMappedPairs),
+      MEMBER_SIZE(DataSource_MappedErdPair_t, baseErdId),
+      OFFSET_OF(DataSource_MappedErdPair_t, baseErdId),
+      IS_SIGNED(Erd_t)
+   };
+
+static const ConstArrayMap_LinearSearchConfiguration_t applicationToBspMapConfiguration =
+   {
+      applicationToBspMappedPairs,
+      NUM_ELEMENTS(applicationToBspMappedPairs),
+      ELEMENT_SIZE(applicationToBspMappedPairs),
+      MEMBER_SIZE(DataSource_MappedErdPair_t, mappedErdId),
+      OFFSET_OF(DataSource_MappedErdPair_t, mappedErdId)
    };
 
 void BspDataSource_Init(BspDataSource_t *instance)
 {
-   ConstArrayMap_BinarySearch_Init(
-      &instance->_private.erdGpioChannelMap,
-      &erdGpioChannelPairMapConfig);
-
    DataSource_Bsp_Init(
-      &instance->_private.dataSource,
-      &instance->_private.erdGpioChannelMap.interface);
+      &instance->_private.dataSource);
+
+   ConstArrayMap_LinearSearch_Init(
+      &instance->_private.applicationToBspMap,
+      &applicationToBspMapConfiguration);
+
+   ConstArrayMap_BinarySearch_Init(
+      &instance->_private.bspToApplicationMap,
+      &bspToApplicationMapConfiguration);
+
+   ConstBidirectionalMap_ConstArrayMap_Init(
+      &instance->_private.applicationToBspBiDirectionalMap,
+      &instance->_private.applicationToBspMap.interface,
+      &instance->_private.bspToApplicationMap.interface);
+
+   DataSource_Mapped_Init(
+      &instance->_private.mappedDataSource,
+      &instance->_private.dataSource.interface,
+      &instance->_private.applicationToBspBiDirectionalMap.interface);
 }
 
 I_DataSource_t *BspDataSource_DataSource(BspDataSource_t *instance)
 {
-   return &instance->_private.dataSource.interface;
+   return &instance->_private.mappedDataSource.interface;
 }

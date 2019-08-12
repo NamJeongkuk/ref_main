@@ -1,14 +1,47 @@
 /*!
  * @file
- * @brief Gpio Group
+ * @brief
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "PlatformGpio.h"
-#include "iodefine.h"
+#include "DataSource_Gpio.h"
+#include "SystemErds.h"
 #include "uassert.h"
-#include "utils.h"
+#include "I_GpioGroup.h"
+#include "iodefine.h"
+#include <string.h>
+
+enum
+{
+   Port0,
+   Port1,
+   Port2,
+   Port3,
+   Port4,
+   Port5,
+   PortA,
+   PortB,
+   PortC,
+   PortD,
+   PortE,
+   PortH,
+   PortJ
+};
+
+typedef enum
+{
+   GpioPullUp_Disable = 0,
+   GpioPullUp_Enable,
+   GpioPullUp_Max
+} GpioPullUp_t;
+
+typedef enum
+{
+   GpioDriveCapacity_Normal = 0,
+   GpioDriveCapacity_High,
+   GpioDriveCapacity_Max
+} GpioDriveCapacity_t;
 
 typedef struct
 {
@@ -99,7 +132,7 @@ static void SetDirection(const GpioChannel_t channel, const GpioDirection_t dire
    }
 }
 
-bool PlatformGpio_Read(const GpioChannel_t channel)
+static bool ReadGpio(const GpioChannel_t channel)
 {
    if(gpioPortAddresses[gpioPortsAndPins[channel].port].inputData)
    {
@@ -110,7 +143,7 @@ bool PlatformGpio_Read(const GpioChannel_t channel)
    return false;
 }
 
-void PlatformGpio_Write(const GpioChannel_t channel, const bool state)
+static void WriteGpio(const GpioChannel_t channel, const bool state)
 {
    if(gpioPortAddresses[gpioPortsAndPins[channel].port].outputData)
    {
@@ -120,7 +153,72 @@ void PlatformGpio_Write(const GpioChannel_t channel, const bool state)
    }
 }
 
-void PlatformGpio_Init(void)
+static void Read(I_DataSource_t *instance, const Erd_t erd, void *data)
+{
+   IGNORE(instance);
+   GpioChannel_t channel = Erd_BspGpio_Start + 1 - erd;
+
+   if(IN_RANGE(Erd_BspGpio_Start + 1, erd, Erd_BspGpio_End))
+   {
+      bool value = ReadGpio(channel);
+      memcpy(data, &value, sizeof(bool));
+   }
+   else
+   {
+      uassert(!"ERD not supported");
+   }
+}
+
+static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
+{
+   REINTERPRET(instance, _instance, DataSource_Gpio_t *);
+
+   if(IN_RANGE(Erd_BspGpio_Start + 1, erd, Erd_BspGpio_End))
+   {
+      REINTERPRET(state, data, const bool *);
+
+      GpioChannel_t channel = Erd_BspGpio_Start + 1 - erd;
+      if(ReadGpio(channel) != *state)
+      {
+         WriteGpio(channel, *state);
+
+         DataSourceOnDataChangeArgs_t args =
+            { erd, data };
+         Event_Synchronous_Publish(&instance->_private.OnDataChange, &args);
+      }
+   }
+   else
+   {
+      uassert(!"ERD not supported");
+   }
+}
+
+static bool Has(const I_DataSource_t *instance, const Erd_t erd)
+{
+   IGNORE(instance);
+   return IN_RANGE(Erd_BspGpio_Start + 1, erd, Erd_BspGpio_End);
+}
+
+static uint8_t SizeOf(const I_DataSource_t *instance, const Erd_t erd)
+{
+   IGNORE(instance);
+
+   if(IN_RANGE(Erd_BspGpio_Start + 1, erd, Erd_BspGpio_End))
+   {
+      return sizeof(bool);
+   }
+   else
+   {
+      uassert(!"ERD not supported");
+   }
+
+   return 0;
+}
+
+static const I_DataSource_Api_t api =
+   { Read, Write, Has, SizeOf };
+
+static void InitializeGpio(void)
 {
    for(GpioChannel_t channel = 0; channel < NUM_ELEMENTS(gpioPortsAndPins); channel++)
    {
@@ -129,4 +227,14 @@ void PlatformGpio_Init(void)
       SetGpioMode(channel);
       SetDriveCapacity(channel, gpioPortsAndPins[channel].driveCapacity);
    }
+}
+
+void DataSource_Gpio_Init(DataSource_Gpio_t *instance)
+{
+   instance->interface.api = &api;
+   instance->interface.OnDataChange = &instance->_private.OnDataChange.interface;
+
+   Event_Synchronous_Init(&instance->_private.OnDataChange);
+
+   InitializeGpio();
 }

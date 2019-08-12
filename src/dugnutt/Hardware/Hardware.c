@@ -14,7 +14,6 @@
 #include "Crc16Calculator_Table.h"
 #include "DataModelErdPointerAccess.h"
 #include "Dtc.h"
-#include "PlatformGpio.h"
 #include "Header.h"
 #include "I_Interrupt.h"
 #include "InitializeStackMemory.h"
@@ -52,8 +51,6 @@ void Hardware_InitializeStage1(void)
 void Hardware_InitializeStage2(I_DataModel_t *dataModel)
 {
    Dtc_Init();
-
-   PlatformGpio_Init();
 
    I_BufferedUart_t *internalUart = BufferedUart_Channel5_Init();
    DataModelErdPointerAccess_Write(dataModel, Erd_InternalBufferedUart, internalUart);

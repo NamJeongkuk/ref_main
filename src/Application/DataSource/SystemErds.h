@@ -109,6 +109,8 @@ enum
    ENTRY(Erd_ResetSignal,                      0xF00F, Signal_t,                                   Swap_N, Io_None, Ram,         NotNv) \
    ENTRY(Erd_ExternalDataSource,               0xF010, I_DataSource_t *,                           Swap_N, Io_None, Ram,         NotNv) \
    ENTRY(Erd_HeartbeatLed,                     0xF100, bool,                                       Swap_N, Io_O,    Virtual,     NotNv) \
+   ENTRY(Erd_OtherLed,                         0xF101, bool,                                       Swap_N, Io_None, Virtual,     NotNv) \
+   ENTRY(Erd_PushButtonSwitch,                 0xF102, bool,                                       Swap_N, Io_None, Virtual,     NotNv) \
    ENTRY(Erd_NvReserved,                       0xFFFD, uint8_t,                                    Swap_N, Io_None, NvPublic,    NotNv) \
    ENTRY(Erd_NvMetadata,                       0xFFFE, AsyncDataSource_FlashBlockGroupMetadata_t,  Swap_N, Io_None, NvPrivate,   NonVolatileDataSourceDefaultData_Zeros) \
 

@@ -31,7 +31,7 @@ static const ConstArrayMap_BinarySearchConfiguration_t externalToInternalMapConf
       ELEMENT_SIZE(internalExternalMappings),
       MEMBER_SIZE(DataSource_MappedErdPair_t, mappedErdId),
       OFFSET_OF(DataSource_MappedErdPair_t, mappedErdId),
-      IS_SIGNED(Erd_t),
+      IS_SIGNED(Erd_t)
    };
 
 static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] =
