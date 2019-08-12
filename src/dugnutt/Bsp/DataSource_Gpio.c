@@ -166,11 +166,10 @@ static void WriteGpio(const GpioChannel_t channel, const bool state)
 static void Read(I_DataSource_t *instance, const Erd_t erd, void *data)
 {
    IGNORE(instance);
-   GpioChannel_t channel = CHANNEL_FROM_ERD(erd);
 
    if(ERD_IS_IN_RANGE(erd))
    {
-      bool value = ReadGpio(channel);
+      bool value = ReadGpio(CHANNEL_FROM_ERD(erd));
       memcpy(data, &value, sizeof(bool));
    }
    else
@@ -186,8 +185,8 @@ static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
    if(ERD_IS_IN_RANGE(erd))
    {
       REINTERPRET(state, data, const bool *);
-
       GpioChannel_t channel = CHANNEL_FROM_ERD(erd);
+
       if(ReadGpio(channel) != *state)
       {
          WriteGpio(channel, *state);
@@ -241,11 +240,9 @@ static void PollInputs(void *context)
          {
             BIT_WRITE(instance->_private.cachedInputs, channel, state);
 
-            ContextProtector_Protect(ContextProtector_Rx2xx_GetInstance());
             DataSourceOnDataChangeArgs_t args =
                { ERD_FROM_CHANNEL(channel), &state };
             Event_Synchronous_Publish(instance->_private.onChangeEvent, &args);
-            ContextProtector_Unprotect(ContextProtector_Rx2xx_GetInstance());
          }
       }
    }
@@ -262,6 +259,18 @@ static void InitializeGpio(void)
    }
 }
 
+static bool AtLeastOneInputExists(void)
+{
+   for(GpioChannel_t channel = 0; channel < NUM_ELEMENTS(gpioPortsAndPins); channel++)
+   {
+      if(gpioPortsAndPins[channel].direction == GpioDirection_Input)
+      {
+         return true;
+      }
+   }
+   return false;
+}
+
 void DataSource_Gpio_Init(
    DataSource_Gpio_t *instance,
    TimerModule_t *timerModule,
@@ -273,10 +282,13 @@ void DataSource_Gpio_Init(
 
    InitializeGpio();
 
-   TimerModule_StartPeriodic(
-      timerModule,
-      &instance->_private.timer,
-      InputPollPeriodInMsec,
-      PollInputs,
-      instance);
+   if(AtLeastOneInputExists())
+   {
+      TimerModule_StartPeriodic(
+         timerModule,
+         &instance->_private.timer,
+         InputPollPeriodInMsec,
+         PollInputs,
+         instance);
+   }
 }
