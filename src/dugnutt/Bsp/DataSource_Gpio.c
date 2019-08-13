@@ -166,39 +166,27 @@ static void WriteGpio(const GpioChannel_t channel, const bool state)
 static void Read(I_DataSource_t *instance, const Erd_t erd, void *data)
 {
    IGNORE(instance);
+   uassert(ERD_IS_IN_RANGE(erd));
 
-   if(ERD_IS_IN_RANGE(erd))
-   {
-      bool value = ReadGpio(CHANNEL_FROM_ERD(erd));
-      memcpy(data, &value, sizeof(bool));
-   }
-   else
-   {
-      uassert(!"ERD not supported");
-   }
+   bool value = ReadGpio(CHANNEL_FROM_ERD(erd));
+   memcpy(data, &value, sizeof(bool));
 }
 
 static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
 {
    REINTERPRET(instance, _instance, DataSource_Gpio_t *);
+   REINTERPRET(state, data, const bool *);
 
-   if(ERD_IS_IN_RANGE(erd))
+   uassert(ERD_IS_IN_RANGE(erd));
+
+   GpioChannel_t channel = CHANNEL_FROM_ERD(erd);
+   if(ReadGpio(channel) != *state)
    {
-      REINTERPRET(state, data, const bool *);
-      GpioChannel_t channel = CHANNEL_FROM_ERD(erd);
+      WriteGpio(channel, *state);
 
-      if(ReadGpio(channel) != *state)
-      {
-         WriteGpio(channel, *state);
-
-         DataSourceOnDataChangeArgs_t args =
-            { erd, data };
-         Event_Synchronous_Publish(instance->_private.onChangeEvent, &args);
-      }
-   }
-   else
-   {
-      uassert(!"ERD not supported");
+      DataSourceOnDataChangeArgs_t args =
+         { erd, data };
+      Event_Synchronous_Publish(instance->_private.onChangeEvent, &args);
    }
 }
 
