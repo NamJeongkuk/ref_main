@@ -16,7 +16,7 @@ static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
 
    if(IN_RANGE(BspErdGpioStart, erd, BspErdGpioEnd))
    {
-      return DataSource_Read(&instance->_private.dataSourceGpio.interface, erd, data);
+      DataSource_Read(&instance->_private.dataSourceGpio.interface, erd, data);
    }
    else
    {
@@ -30,7 +30,7 @@ static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
 
    if(IN_RANGE(BspErdGpioStart, erd, BspErdGpioEnd))
    {
-      return DataSource_Write(&instance->_private.dataSourceGpio.interface, erd, data);
+      DataSource_Write(&instance->_private.dataSourceGpio.interface, erd, data);
    }
    else
    {
