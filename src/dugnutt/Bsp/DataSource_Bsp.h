@@ -23,6 +23,10 @@ typedef struct
    } _private;
 } DataSource_Bsp_t;
 
+/*!
+ * @param instance
+ * @param timerModule
+ */
 void DataSource_Bsp_Init(
    DataSource_Bsp_t *instance,
    TimerModule_t *timerModule);

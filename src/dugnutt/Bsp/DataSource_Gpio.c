@@ -211,17 +211,9 @@ static bool Has(const I_DataSource_t *instance, const Erd_t erd)
 static uint8_t SizeOf(const I_DataSource_t *instance, const Erd_t erd)
 {
    IGNORE(instance);
+   uassert(ERD_IS_IN_RANGE(erd));
 
-   if(ERD_IS_IN_RANGE(erd))
-   {
-      return sizeof(bool);
-   }
-   else
-   {
-      uassert(!"ERD not supported");
-   }
-
-   return 0;
+   return sizeof(bool);
 }
 
 static const I_DataSource_Api_t api =

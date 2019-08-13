@@ -27,10 +27,20 @@ typedef struct
    } _private;
 } BspDataSource_t;
 
+/*!
+ * Initialize BSP data source components
+ * @param instance
+ * @param timerModule
+ */
 void BspDataSource_Init(
    BspDataSource_t *instance,
    TimerModule_t *timerModule);
 
+/*!
+ * Get the interface to the BSP data source
+ * @param instance
+ * @return
+ */
 I_DataSource_t *BspDataSource_DataSource(BspDataSource_t *instance);
 
 #endif

@@ -41,6 +41,11 @@ typedef struct
    } _private;
 } DataSource_Gpio_t;
 
+/*!
+ * @param instance
+ * @param timerModule
+ * @param onChangeEvent
+ */
 void DataSource_Gpio_Init(
    DataSource_Gpio_t *instance,
    TimerModule_t *timerModule,

@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef BSPERDS_H
-#define BSPERDS_H
+#ifndef BSPERDRANGES_H
+#define BSPERDRANGES_H
 
 enum
 {
