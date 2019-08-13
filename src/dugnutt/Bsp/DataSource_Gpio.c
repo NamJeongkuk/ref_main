@@ -216,9 +216,9 @@ static void PollInputs(void *context)
       if(gpioPortsAndPins[channel].direction == GpioDirection_Input)
       {
          bool state = ReadGpio(channel);
-         if(BIT_STATE(instance->_private.cachedInputs, channel) != state)
+         if(BIT_STATE(instance->_private.inputCache[channel / BitsPerByte], channel % BitsPerByte) != state)
          {
-            BIT_WRITE(instance->_private.cachedInputs, channel, state);
+            BIT_WRITE(instance->_private.inputCache[channel / BitsPerByte], channel % BitsPerByte, state);
 
             DataSourceOnDataChangeArgs_t args =
                { ERD_FROM_CHANNEL(channel), &state };

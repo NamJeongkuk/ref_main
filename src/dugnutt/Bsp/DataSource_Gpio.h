@@ -22,11 +22,20 @@
 #define GPIO_EXPAND_AS_HARDWARE_ERDS(name, direction, pullUp, driveCapacity, port, pin) \
    Erd_BspGpio_##name,
 
+#define GPIO_TABLE_EXPAND_AS_GPIO_COUNT(name, direction, pullUp, driveCapacity, port, pin) \
+   +1
+
 enum
 {
    Erd_BspGpio_Start = (BspErdGpioStart - 1),
    GPIO_TABLE(GPIO_EXPAND_AS_HARDWARE_ERDS)
       Erd_BspGpio_End
+};
+
+enum
+{
+   BitsPerByte = 8,
+   GpioCount = 0 GPIO_TABLE(GPIO_TABLE_EXPAND_AS_GPIO_COUNT)
 };
 
 typedef struct
@@ -37,7 +46,7 @@ typedef struct
    {
       Event_Synchronous_t *onChangeEvent;
       Timer_t timer;
-      uint32_t cachedInputs;
+      uint8_t inputCache[((GpioCount - 1) / BitsPerByte) + 1];
    } _private;
 } DataSource_Gpio_t;
 
