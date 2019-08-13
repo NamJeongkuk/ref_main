@@ -186,7 +186,7 @@ static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
 
       DataSourceOnDataChangeArgs_t args =
          { erd, data };
-      Event_Synchronous_Publish(instance->_private.onChangeEvent, &args);
+      Event_Synchronous_Publish(&instance->_private.onChangeEvent, &args);
    }
 }
 
@@ -222,7 +222,7 @@ static void PollInputs(void *context)
 
             DataSourceOnDataChangeArgs_t args =
                { ERD_FROM_CHANNEL(channel), &state };
-            Event_Synchronous_Publish(instance->_private.onChangeEvent, &args);
+            Event_Synchronous_Publish(&instance->_private.onChangeEvent, &args);
          }
       }
    }
@@ -253,12 +253,12 @@ static bool AtLeastOneInputExists(void)
 
 void DataSource_Gpio_Init(
    DataSource_Gpio_t *instance,
-   TimerModule_t *timerModule,
-   Event_Synchronous_t *onChangeEvent)
+   TimerModule_t *timerModule)
 {
+   Event_Synchronous_Init(&instance->_private.onChangeEvent);
+
    instance->interface.api = &api;
-   instance->interface.OnDataChange = &onChangeEvent->interface;
-   instance->_private.onChangeEvent = onChangeEvent;
+   instance->interface.OnDataChange = &instance->_private.onChangeEvent.interface;
 
    InitializeGpio();
 

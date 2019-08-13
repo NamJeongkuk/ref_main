@@ -38,8 +38,8 @@ void BspDataSource_Init(
    BspDataSource_t *instance,
    TimerModule_t *timerModule)
 {
-   DataSource_Bsp_Init(
-      &instance->_private.dataSource,
+   Bsp_Init(
+      &instance->_private.bsp,
       timerModule);
 
    ConstArrayMap_LinearSearch_Init(
@@ -57,7 +57,7 @@ void BspDataSource_Init(
 
    DataSource_Mapped_Init(
       &instance->_private.mappedDataSource,
-      &instance->_private.dataSource.interface,
+      Bsp_GetDataSource(&instance->_private.bsp),
       &instance->_private.applicationToBspBiDirectionalMap.interface);
 }
 
