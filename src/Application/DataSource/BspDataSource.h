@@ -8,7 +8,7 @@
 #ifndef BSPDATASOURCE_H
 #define BSPDATASOURCE_H
 
-#include "Bsp.h"
+#include "DataSource_Bsp.h"
 #include "DataSource_Mapped.h"
 #include "ConstArrayMap_LinearSearch.h"
 #include "ConstArrayMap_BinarySearch.h"
@@ -18,7 +18,7 @@ typedef struct
 {
    struct
    {
-      Bsp_t bsp;
+      DataSource_Bsp_t dataSource;
       DataSource_Mapped_t mappedDataSource;
 
       ConstArrayMap_LinearSearch_t applicationToBspMap;

@@ -41,7 +41,7 @@ typedef struct
 
    struct
    {
-      Event_Synchronous_t onChangeEvent;
+      Event_Synchronous_t *onChangeEvent;
       Timer_t timer;
       uint8_t inputCache[((GpioCount - 1) / BitsPerByte) + 1];
    } _private;
@@ -54,6 +54,7 @@ typedef struct
  */
 void DataSource_Gpio_Init(
    DataSource_Gpio_t *instance,
-   TimerModule_t *timerModule);
+   TimerModule_t *timerModule,
+   Event_Synchronous_t *onChangeEvent);
 
 #endif
