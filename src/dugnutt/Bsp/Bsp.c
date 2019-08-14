@@ -33,6 +33,13 @@ void Bsp_Init(
       instance,
       &instance->_private.dataSource.gpio.interface,
       &instance->_private.dataSource.gpioComponent);
+
+   DataSource_Adc_Init(
+      &instance->_private.dataSource.adc);
+   AddDataSourceToComposite(
+      instance,
+      &instance->_private.dataSource.adc.interface,
+      &instance->_private.dataSource.adcComponent);
 }
 
 I_DataSource_t *Bsp_GetDataSource(Bsp_t *instance)

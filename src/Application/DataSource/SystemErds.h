@@ -113,6 +113,8 @@ enum
    ENTRY(Erd_HeartbeatLed,                     0xF100, bool,                                       Swap_N, Io_O,    Virtual,     NotNv) \
    ENTRY(Erd_OtherLed,                         0xF101, bool,                                       Swap_N, Io_None, Virtual,     NotNv) \
    ENTRY(Erd_PushButtonSwitch,                 0xF102, bool,                                       Swap_N, Io_All,  Virtual,     NotNv) \
+   ENTRY(Erd_SomeAnalogInput,                  0xF103, AdcCounts_t,                                Swap_Y, Io_None, Virtual,     NotNv) \
+   ENTRY(Erd_AnotherAnalogInput,               0xF104, AdcCounts_t,                                Swap_Y, Io_None, Virtual,     NotNv) \
    ENTRY(Erd_NvReserved,                       0xFFFD, uint8_t,                                    Swap_N, Io_None, NvPublic,    NotNv) \
    ENTRY(Erd_NvMetadata,                       0xFFFE, AsyncDataSource_FlashBlockGroupMetadata_t,  Swap_N, Io_None, NvPrivate,   NonVolatileDataSourceDefaultData_Zeros) \
 

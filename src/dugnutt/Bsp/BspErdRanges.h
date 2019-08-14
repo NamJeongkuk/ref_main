@@ -14,6 +14,7 @@ enum
    BspErdGpioStart = BspErdStart,
    BspErdGpioEnd = 0xF6FF,
    BspErdAdcStart = 0xF700,
+   BspErdAdcEnd = 0xF71F
 };
 
 #endif

@@ -10,7 +10,7 @@
 
 #include "DataSource_Composite.h"
 #include "DataSource_Gpio.h"
-#include "Event_Synchronous.h"
+#include "DataSource_Adc.h"
 
 typedef struct
 {
@@ -22,6 +22,9 @@ typedef struct
 
          DataSource_Gpio_t gpio;
          DataSource_CompositeComponent_t gpioComponent;
+
+         DataSource_Adc_t adc;
+         DataSource_CompositeComponent_t adcComponent;
       } dataSource;
    } _private;
 } Bsp_t;
