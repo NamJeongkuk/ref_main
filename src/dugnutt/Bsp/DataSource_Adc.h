@@ -1,6 +1,6 @@
 /*!
  * @file
- * @brief This is ADC driver for the Rx130 water heater
+ * @brief
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
