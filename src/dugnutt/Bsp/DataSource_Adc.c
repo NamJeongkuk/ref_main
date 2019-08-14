@@ -82,9 +82,6 @@ static void ConfigureAdcGroupA(void)
    // PRCR write enabled
    SYSTEM.PRCR.WORD = 0xA50F;
 
-   // Enable event link controller
-   //MSTP(ELC) = 0;
-
    // Enable ADC module
    MSTP(S12AD) = 0;
 
