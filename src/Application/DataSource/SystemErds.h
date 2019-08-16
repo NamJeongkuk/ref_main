@@ -25,6 +25,8 @@
 #include "XMacroUtils.h"
 #include "AppliancePersonality.h"
 #include "ApplianceRunTimeMinutes.h"
+#include "ModelNumber.h"
+#include "SerialNumber.h"
 #include "ServiceDiagnosticsRevision3.h"
 #include "FaultIds.h"
 #include "FaultSnapshot.h"
