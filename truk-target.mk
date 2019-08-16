@@ -68,6 +68,7 @@ COMMON_LIB_DIRS=\
 
 SRC_DIRS=\
    $(PROJECT_DIR)/$(TARGET) \
+   $(PROJECT_DIR)/$(TARGET)/Bsp \
    $(PROJECT_DIR)/$(TARGET)/Hardware \
    $(PROJECT_DIR)/$(TARGET)/Hardware/Flash \
    $(PROJECT_DIR)/Application \
