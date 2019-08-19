@@ -1,14 +1,12 @@
 /*!
  * @file
- * @brief Creates the DataSource_ServiceDiagnosticsRevision3_t
- * Defines the configuration for it.
- * Provides other ServiceDiagnosticsRevision3 support
+ * @brief d
  *
  * Copyright GE Appliances - GEA Confidential - All rights reserved
  */
 
-#ifndef SERVICEDIAGNOSTICSPLUGIN_H
-#define SERVICEDIAGNOSTICSPLUGIN_H
+#ifndef SERVICEDIAGNOSTICSDATASOURCE_H
+#define SERVICEDIAGNOSTICSDATASOURCE_H
 
 #include "I_DataSource.h"
 #include "Timer.h"
@@ -32,24 +30,23 @@ typedef struct
          SystemRunTimeUpdater_t updater;
       } systemRuntime;
    } _private;
-} ServiceDiagnosticsPlugin_t;
+} ServiceDiagnosticsDataSource_t;
 
 /*!
- * Initializes the service diagnostic plugin.
+ * Initializes the service diagnostic data source.
  * @param instance
- * @param dataSource The system dataSource that contains all other dataSources except the one that is being created in this plugin
+ * @param dataSource The system dataSource that contains all other data sources
  * @param timerModule
  */
-void ServiceDiagnosticsPlugin_Init(
-   ServiceDiagnosticsPlugin_t *instance,
+void ServiceDiagnosticsDataSource_Init(
+   ServiceDiagnosticsDataSource_t *instance,
    I_DataSource_t *dataSource,
    TimerModule_t *timerModule);
 
 /*!
- *Provides th service diagnostics data source
  * @param instance
- * @return The DataSource Created by this plugin
+ * @return
  */
-I_DataSource_t * ServiceDiagnosticsPlugin_GetDataSource(ServiceDiagnosticsPlugin_t *instance);
+I_DataSource_t * ServiceDiagnosticsDataSource_DataSource(ServiceDiagnosticsDataSource_t *instance);
 
 #endif

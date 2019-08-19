@@ -5,7 +5,7 @@
  * Copyright GE Appliances - GEA Confidential - All rights reserved
  */
 
-#include "ServiceDiagnosticsPlugin.h"
+#include "ServiceDiagnosticsDataSource.h"
 #include "SystemErds.h"
 #include "uassert.h"
 #include "utils.h"
@@ -155,7 +155,7 @@ static void InitializeApiVersionAndManifest(I_DataSource_t *dataSource)
 }
 
 static void InitializeSystemTimeUpdater(
-   ServiceDiagnosticsPlugin_t *instance,
+   ServiceDiagnosticsDataSource_t *instance,
    I_DataSource_t *dataSource,
    TimerModule_t *timerModule)
 {
@@ -182,8 +182,8 @@ static void InitializeSystemTimeUpdater(
       &periodicErdTransferConfiguration);
 }
 
-void ServiceDiagnosticsPlugin_Init(
-   ServiceDiagnosticsPlugin_t *instance,
+void ServiceDiagnosticsDataSource_Init(
+   ServiceDiagnosticsDataSource_t *instance,
    I_DataSource_t *dataSource,
    TimerModule_t *timerModule)
 {
@@ -208,7 +208,7 @@ void ServiceDiagnosticsPlugin_Init(
    DataSourceErdPointerAccess_Write(dataSource, Erd_FaultCodeTableInputGroup, &instance->_private.faultTableIterator.interface);
 }
 
-I_DataSource_t * ServiceDiagnosticsPlugin_GetDataSource(ServiceDiagnosticsPlugin_t *instance)
+I_DataSource_t * ServiceDiagnosticsDataSource_DataSource(ServiceDiagnosticsDataSource_t *instance)
 {
    return &instance->_private.serviceDiagnosticsRevision3DataSource.interface;
 }

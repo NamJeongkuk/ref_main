@@ -64,6 +64,15 @@ static void InitializeInternalDataSource(
       instance,
       ApplianceApiDataSource_DataSource(&instance->_private.dataSource.applianceApi),
       &instance->_private.dataSource.applianceApiComponent);
+
+   ServiceDiagnosticsDataSource_Init(
+      &instance->_private.dataSource.serviceDiagnostics,
+      &instance->_private.dataSource.composite.interface,
+      timerModule);
+   AddDataSourceToComposite(
+      instance,
+      ServiceDiagnosticsDataSource_DataSource(&instance->_private.dataSource.serviceDiagnostics),
+      &instance->_private.dataSource.serviceDiagnosticsComponent);
 }
 
 static void InitializeExternalDataSource(Instance_t *instance)

@@ -16,9 +16,4 @@ void Application_Init(
 {
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
    SwitchedLedPlugin_Init(&instance->_private.switchedLedPlugin, dataModel);
-
-   ServiceDiagnosticsPlugin_Init(
-      &instance->_private.serviceDiagnosticsPlugin,
-      DataModel_AsDataSource(dataModel),
-      DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule));
 }
