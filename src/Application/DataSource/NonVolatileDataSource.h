@@ -46,7 +46,7 @@ typedef struct
       ConstArrayMap_BinarySearch_t syncMap;
       NonVolatileDataSourceSyncCache_t syncCache;
       InputGroup_NonVolatileDataSourceDefaultData_t defaultDataInputGroup;
-      uint8_t syncMetadataCache[1];
+      uint8_t syncMetadataCache[100];  //TODO figure out how to size this correctly
    } _private;
 } NonVolatileDataSource_t;
 

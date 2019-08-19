@@ -42,7 +42,7 @@ static const Erd_t snapshotErdList[] =
 
 static const FaultId_t faultCodes[] =
    {
-      ERD_TABLE(EXPAND_ERD_FAULT_CODE_TABLE_AS_FAULT_CODE)
+      ERD_TABLE(EXPAND_AS_FAULT_ID)
    };
 
 static const DataSource_ServiceDiagnosticsRevision3Entity_t serviceDiagnosticsEntity =
@@ -50,9 +50,9 @@ static const DataSource_ServiceDiagnosticsRevision3Entity_t serviceDiagnosticsEn
       .manifest = Erd_ServiceDiagnosticsEntityManifest,
 
       .cycleCount = Erd_ServiceDiagnosticsEntityCycleCount,
-      .runTime = Erd_ServiceDiagnosticsRunTimeMinutes,
+      .runTime = Erd_ApplianceRunTimeInMinutes,
 
-      .id = DiagnosticEntityIdWasher,
+      .id = DiagnosticEntityId,
 
       .dataVersion =
          {
@@ -70,8 +70,8 @@ static const DataSource_ServiceDiagnosticsRevision3Entity_t serviceDiagnosticsEn
 
             .entryCount = Erd_ServiceDiagnosticsFaultTableEntry9 - Erd_ServiceDiagnosticsFaultTableEntry0 + 1,
             .entryStart = Erd_ServiceDiagnosticsFaultTableEntry0,
-            .snapshotStart = Erd_FaultTableSnapshot0,
-            .snapshotPayloadStart = Erd_FaultTableSnapshotData0
+            .snapshotStart = Erd_FaultSnapshot0,
+            .snapshotPayloadStart = Erd_FaultSnapshotData0
          },
 
       .faultSequence =
@@ -136,7 +136,7 @@ static void InitializeApiVersionAndManifest(I_DataSource_t *dataSource)
          .apiVersion = DiagnosticsApiVersion,
          .profile = DiagnosticsProfileVersion
       };
-   DataSource_Write(dataSource, Erd_DiagnosticsApiVersion, &apiVersion);
+   DataSource_Write(dataSource, Erd_ServiceDiagnosticsApiVersion, &apiVersion);
 
    ServiceDiagnosticsRevision3Manifest_t manifest =
       {

@@ -37,21 +37,18 @@ static const ConstArrayMap_BinarySearchConfiguration_t externalToInternalMapConf
 static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] =
    {
       SWAPPED_ERD(Erd_AppliancePersonality, sizeof(AppliancePersonality_t)),
-
-      // Virtual ERDs
-      SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, revision),
-      SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, features),
       SWAPPED_ERD(Erd_BuildNumber, sizeof(uint32_t)),
       SWAPPED_ERD(Erd_ApplianceRunTimeInMinutes, sizeof(ApplianceRunTimeMinutes_t)),
-      SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, revision),
-      SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, features),
-      SWAPPED_FIELD(Erd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, maximumLatency),
-      SWAPPED_FIELD(Erd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, averageLatency),
-      SWAPPED_ERD(Erd_SomeAnalogInput, sizeof(uint16_t)),
-      SWAPPED_ERD(Erd_AnotherAnalogInput, sizeof(uint16_t)),
+      SWAPPED_FIELD(Erd_ServiceDiagnosticsRevision3Manifest, ServiceDiagnosticsRevision3Manifest_t, entityMapStart),
       SWAPPED_ERD(Erd_ServiceDiagnosticsEntityLocation, sizeof(Erd_t)),
       SWAPPED_FIELD(Erd_ServiceDiagnosticsEntityManifest, ServiceDiagnosticsRevision3Manifest_t, entityMapStart),
+      SWAPPED_FIELD(Erd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, maximumLatency),
+      SWAPPED_FIELD(Erd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, averageLatency),
+      SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, revision),
+      SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, features),
       SWAPPED_ERD(Erd_ServiceDiagnosticsEntityCycleCount, sizeof(uint32_t)),
+      SWAPPED_ERD(Erd_SomeAnalogInput, sizeof(uint16_t)),
+      SWAPPED_ERD(Erd_AnotherAnalogInput, sizeof(uint16_t)),
       SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultTableStatus, ServiceDiagnosticsRevision3TableStatus_t, currentIndex),
       SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultTableStatus, ServiceDiagnosticsRevision3TableStatus_t, count),
       SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultTableStatus, ServiceDiagnosticsRevision3TableStatus_t, overwriteCount),
@@ -59,7 +56,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] =
       SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultSequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, currentIndex),
       SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultSequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, count),
       SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultSequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, overwriteCount),
-      SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultSequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, reserved)
+      SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultSequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, reserved),
    };
 
 static const ConstMultiMap_BinarySearchConfiguration_t endiannessSwappedMapConfiguration =

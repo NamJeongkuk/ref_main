@@ -11,6 +11,7 @@
 #include "I_DataModel.h"
 #include "HeartbeatLedPlugin.h"
 #include "SwitchedLedPlugin.h"
+#include "ServiceDiagnosticsPlugin.h"
 
 typedef struct
 {
@@ -18,6 +19,7 @@ typedef struct
    {
       HeartbeatLedPlugin_t heartbeatLedPlugin;
       SwitchedLedPlugin_t switchedLedPlugin;
+      ServiceDiagnosticsPlugin_t serviceDiagnosticsPlugin;
    } _private;
 } Application_t;
 
