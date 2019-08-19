@@ -8,12 +8,12 @@
 #include "ExternalDataSource.h"
 #include "SystemErds.h"
 
-#define EXPAND_AS_MAPPED_RAM_ERD_PAIR(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_RAM_, StorageType)({ Number COMMA Name } COMMA)
+#define EXPAND_AS_MAPPED_ERD_PAIR(Name, Number, DataType, Swap, Io, StorageType, Public, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_MAP_TO_EXTERNAL_, Public)({ Number COMMA Name } COMMA)
 
 static const DataSource_MappedErdPair_t internalExternalMappings[] =
    {
-      ERD_TABLE(EXPAND_AS_MAPPED_RAM_ERD_PAIR)
+      ERD_TABLE(EXPAND_AS_MAPPED_ERD_PAIR)
    };
 
 static const ConstArrayMap_DirectIndexConfiguration_t internalToExternalMapConfiguration =

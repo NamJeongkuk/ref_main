@@ -7,40 +7,36 @@
 
 #include "DataModel.h"
 
-#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_RAM_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultIda) \
+#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_RAM_ERDS(Name, Number, DataType, Swap, Io, StorageType, Public, NvDefaultData, FaultIda) \
    CONCAT(INCLUDE_RAM_, StorageType)(CONCAT(INCLUDE_INPUT_OUTPUT_, Io)(Name COMMA))
 
-#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_VIRTUAL_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultIda) \
+#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_VIRTUAL_ERDS(Name, Number, DataType, Swap, Io, StorageType, Public, NvDefaultData, FaultIda) \
    CONCAT(INCLUDE_VIRTUAL_, StorageType)(CONCAT(INCLUDE_INPUT_OUTPUT_, Io)(Name COMMA))
 
-#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_NV_PUBLIC_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultIda) \
-   CONCAT(INCLUDE_NV_PUBLIC_, StorageType)(CONCAT(INCLUDE_INPUT_OUTPUT_, Io)(Name COMMA))
+#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_NV_ERDS(Name, Number, DataType, Swap, Io, StorageType, Public, NvDefaultData, FaultIda) \
+   CONCAT(INCLUDE_NV_, StorageType)(CONCAT(INCLUDE_INPUT_OUTPUT_, Io)(Name COMMA))
 
-#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_NV_PRIVATE_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultIda) \
-   CONCAT(INCLUDE_NV_PRIVATE_, StorageType)(CONCAT(INCLUDE_INPUT_OUTPUT_, Io)(Name COMMA))
-
-#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_FAULT_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultIda) \
+#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_FAULT_ERDS(Name, Number, DataType, Swap, Io, StorageType, Public, NvDefaultData, FaultIda) \
    CONCAT(INCLUDE_FAULT_, StorageType)(CONCAT(INCLUDE_INPUT_OUTPUT_, Io)(Name COMMA))
 
-#define EXPAND_AS_OUTPUT_RAM_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_OUTPUT_RAM_ERDS(Name, Number, DataType, Swap, Io, StorageType, Public, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)(CONCAT(INCLUDE_OUTPUT_, Io)(Name COMMA))
 
-#define EXPAND_AS_OUTPUT_VIRTUAL_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_OUTPUT_VIRTUAL_ERDS(Name, Number, DataType, Swap, Io, StorageType, Public, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_VIRTUAL_, StorageType)(CONCAT(INCLUDE_OUTPUT_, Io)(Name COMMA))
 
-#define EXPAND_AS_OUTPUT_NV_PUBLIC_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_NV_PUBLIC_, StorageType)(CONCAT(INCLUDE_OUTPUT_, Io)(Name COMMA))
+#define EXPAND_AS_OUTPUT_NV_ERDS(Name, Number, DataType, Swap, Io, StorageType, Public, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_NV_, StorageType)(CONCAT(INCLUDE_OUTPUT_, Io)(Name COMMA))
 
-#define EXPAND_AS_OUTPUT_NV_PRIVATE_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_OUTPUT_NV_PRIVATE_ERDS(Name, Number, DataType, Swap, Io, StorageType, Public, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_NV_PRIVATE_, StorageType)(CONCAT(INCLUDE_OUTPUT_, Io)(Name COMMA))
 
-#define EXPAND_AS_OUTPUT_FAULT_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_OUTPUT_FAULT_ERDS(Name, Number, DataType, Swap, Io, StorageType, Public, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_FAULT_, StorageType)(CONCAT(INCLUDE_OUTPUT_, Io)(Name COMMA))
 
 static const Erd_t inputAndInputOutputErds[] =
    {
-      ERD_TABLE(EXPAND_AS_INPUT_AND_INPUT_OUTPUT_NV_PUBLIC_ERDS)
-      ERD_TABLE(EXPAND_AS_INPUT_AND_INPUT_OUTPUT_NV_PRIVATE_ERDS)
+      ERD_TABLE(EXPAND_AS_INPUT_AND_INPUT_OUTPUT_NV_ERDS)
       ERD_TABLE(EXPAND_AS_INPUT_AND_INPUT_OUTPUT_RAM_ERDS)
       ERD_TABLE(EXPAND_AS_INPUT_AND_INPUT_OUTPUT_VIRTUAL_ERDS)
       ERD_TABLE(EXPAND_AS_INPUT_AND_INPUT_OUTPUT_FAULT_ERDS)
@@ -48,8 +44,7 @@ static const Erd_t inputAndInputOutputErds[] =
 
 static const Erd_t outputErds[] =
    {
-      ERD_TABLE(EXPAND_AS_OUTPUT_NV_PUBLIC_ERDS)
-      ERD_TABLE(EXPAND_AS_OUTPUT_NV_PRIVATE_ERDS)
+      ERD_TABLE(EXPAND_AS_OUTPUT_NV_ERDS)
       ERD_TABLE(EXPAND_AS_OUTPUT_RAM_ERDS)
       ERD_TABLE(EXPAND_AS_OUTPUT_VIRTUAL_ERDS)
       ERD_TABLE(EXPAND_AS_OUTPUT_FAULT_ERDS)

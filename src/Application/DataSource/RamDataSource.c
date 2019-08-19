@@ -10,7 +10,7 @@
 #include "utils.h"
 #include "uassert.h"
 
-#define EXPAND_AS_CONFIGURATION(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_CONFIGURATION(Name, Number, DataType, Swap, Io, StorageType, Public, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)                                                                             \
    ({ Name COMMA OFFSET_OF(RamDataSourceStorage_t, MACRO_SAFE_CONCATENATE(erd, Name)) } COMMA)
 

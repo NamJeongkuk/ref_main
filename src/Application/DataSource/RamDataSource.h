@@ -13,7 +13,7 @@
 #include "ConstArrayMap_BinarySearch.h"
 #include "XMacroUtils.h"
 
-#define EXPAND_AS_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, StorageType, Public, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)                                                                                    \
    (uint8_t MACRO_SAFE_CONCATENATE(erd, Name)[sizeof(DataType)];)
 
