@@ -8,6 +8,8 @@
 #ifndef NONVOLATILEDATASOURCEDEFAULTDATA_H
 #define NONVOLATILEDATASOURCEDEFAULTDATA_H
 
+#include <stddef.h>
+
 /*!
  * Set data to zeros
  * @param data Buffer into which to copy the data

@@ -10,12 +10,14 @@
 
 #include "I_DataModel.h"
 #include "HeartbeatLedPlugin.h"
+#include "SwitchedLedPlugin.h"
 
 typedef struct
 {
    struct
    {
       HeartbeatLedPlugin_t heartbeatLedPlugin;
+      SwitchedLedPlugin_t switchedLedPlugin;
    } _private;
 } Application_t;
 

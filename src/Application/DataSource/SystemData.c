@@ -46,6 +46,14 @@ static void InitializeInternalDataSource(
       NonVolatileDataSource_DataSource(&instance->_private.dataSource.nv),
       &instance->_private.dataSource.nvComponent);
 
+   BspDataSource_Init(
+      &instance->_private.dataSource.bsp,
+      timerModule);
+   AddDataSourceToComposite(
+      instance,
+      BspDataSource_DataSource(&instance->_private.dataSource.bsp),
+      &instance->_private.dataSource.bspComponent);
+
    ApplianceApiDataSource_Init(
       &instance->_private.dataSource.applianceApi,
       &instance->_private.dataSource.composite.interface,
@@ -95,17 +103,17 @@ void SystemData_Init(
       instance);
 }
 
-I_DataSource_t * SystemData_InternalDataSource(SystemData_t *instance)
+I_DataSource_t *SystemData_InternalDataSource(SystemData_t *instance)
 {
    return &instance->_private.dataSource.internal;
 }
 
-I_DataSource_t * SystemData_ExternalDataSource(SystemData_t *instance)
+I_DataSource_t *SystemData_ExternalDataSource(SystemData_t *instance)
 {
    return &instance->_private.dataSource.external;
 }
 
-I_DataModel_t * SystemData_DataModel(SystemData_t *instance)
+I_DataModel_t *SystemData_DataModel(SystemData_t *instance)
 {
    return DataModel_DataModel(&instance->_private.dataModel);
 }

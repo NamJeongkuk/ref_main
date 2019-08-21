@@ -9,7 +9,8 @@
 #include "SystemErds.h"
 
 #define EXPAND_AS_MAPPED_RAM_ERD_PAIR(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData) \
-   CONCAT(INCLUDE_RAM_, StorageType)({ Number COMMA Name } COMMA)
+   CONCAT(INCLUDE_RAM_, StorageType)                                                                \
+   ({ Number COMMA Name } COMMA)
 
 static const DataSource_MappedErdPair_t internalExternalMappings[] =
    {
@@ -31,23 +32,20 @@ static const ConstArrayMap_BinarySearchConfiguration_t externalToInternalMapConf
       ELEMENT_SIZE(internalExternalMappings),
       MEMBER_SIZE(DataSource_MappedErdPair_t, mappedErdId),
       OFFSET_OF(DataSource_MappedErdPair_t, mappedErdId),
-      IS_SIGNED(Erd_t),
+      IS_SIGNED(Erd_t)
    };
 
 static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] =
    {
-      // NV ERDs
       SWAPPED_ERD(Erd_AppliancePersonality, sizeof(AppliancePersonality_t)),
-
-      // Virtual ERDs
       SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, revision),
       SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, features),
-
-      // RAM ERDs
       SWAPPED_ERD(Erd_BuildNumber, sizeof(uint32_t)),
       SWAPPED_ERD(Erd_ApplianceRunTimeInMinutes, sizeof(ApplianceRunTimeMinutes_t)),
       SWAPPED_FIELD(Erd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, maximumLatency),
       SWAPPED_FIELD(Erd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, averageLatency),
+      SWAPPED_ERD(Erd_SomeAnalogInput, sizeof(uint16_t)),
+      SWAPPED_ERD(Erd_AnotherAnalogInput, sizeof(uint16_t)),
    };
 
 static const ConstMultiMap_BinarySearchConfiguration_t endiannessSwappedMapConfiguration =

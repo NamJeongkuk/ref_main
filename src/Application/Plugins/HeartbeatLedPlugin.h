@@ -9,7 +9,7 @@
 #define HEARTBEATLEDPLUGIN_H
 
 #include "DigitalOutputBlinker.h"
-#include "DigitalOutput_GpioGroupAdapter.h"
+#include "DigitalOutput_OutputAdapter.h"
 #include "I_DataModel.h"
 
 typedef struct
@@ -17,7 +17,7 @@ typedef struct
    struct
    {
       DigitalOutputBlinker_t blinkHeartbeat;
-      DigitalOutput_GpioGroupAdapter_t heartbeatLed;
+      DigitalOutput_OutputAdapter_t heartbeatLed;
    } _private;
 } HeartbeatLedPlugin_t;
 
