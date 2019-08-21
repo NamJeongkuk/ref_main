@@ -50,7 +50,7 @@ static const DataSource_ServiceDiagnosticsRevision3Entity_t serviceDiagnosticsEn
       .manifest = Erd_ServiceDiagnosticsEntityManifest,
 
       .cycleCount = Erd_ServiceDiagnosticsEntityCycleCount,
-      .runTime = Erd_ApplianceRunTimeInMinutes,
+      .runTime = Erd_ServiceDiagnosticsRunTimeInMinutes,
 
       .id = DiagnosticEntityId,
 
@@ -120,7 +120,7 @@ static const DataSource_ServiceDiagnosticsRevision3Configuration_t serviceDiagno
 
 static const PeriodicErdTransfererConfigurationEntry_t periodicErdTransferTableEntries[] =
    {
-      { Erd_ApplianceRunTimeInMinutes, Erd_ApplianceRunTimeInMinutesUpdatedHourly }
+      { Erd_ServiceDiagnosticsRunTimeInMinutes, Erd_ApplianceRunTimeInMinutesUpdatedHourly }
    };
 
 static const PeriodicErdTransfererConfiguration_t periodicErdTransferConfiguration =
@@ -161,12 +161,12 @@ static void InitializeSystemTimeUpdater(
 {
    uint32_t initialSystemTimeMin;
    DataSource_Read(dataSource, Erd_ApplianceRunTimeInMinutesUpdatedHourly, &initialSystemTimeMin);
-   DataSource_Write(dataSource, Erd_ApplianceRunTimeInMinutes, &initialSystemTimeMin);
+   DataSource_Write(dataSource, Erd_ServiceDiagnosticsRunTimeInMinutes, &initialSystemTimeMin);
 
    InputOutput_DataSource_Init(
       &instance->_private.systemRuntime.inputOutput,
       dataSource,
-      Erd_ApplianceRunTimeInMinutes);
+      Erd_ServiceDiagnosticsRunTimeInMinutes);
 
    SystemRunTimeUpdater_Init(
       &instance->_private.systemRuntime.updater,

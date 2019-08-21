@@ -46,9 +46,10 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] =
       SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultSequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, overwriteCount),
       SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultSequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, reserved),
 
+      // Other ERDs
       SWAPPED_ERD(Erd_BuildNumber, sizeof(uint32_t)),
       SWAPPED_ERD(Erd_AppliancePersonality, sizeof(AppliancePersonality_t)),
-      SWAPPED_ERD(Erd_ApplianceRunTimeInMinutes, sizeof(ApplianceRunTimeMinutes_t)),
+      SWAPPED_ERD(Erd_ServiceDiagnosticsApiVersion, sizeof(ServiceDiagnosticsApiVersion_t)),
       SWAPPED_FIELD(Erd_ServiceDiagnosticsRevision3Manifest, ServiceDiagnosticsRevision3Manifest_t, entityMapStart),
       SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, revision),
       SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, features),
