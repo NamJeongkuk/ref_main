@@ -140,29 +140,30 @@ enum
    ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry07,        0xE122, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
    ENTRY(Erd_OldApplicationVersion,                         0xF000, Version_t,                                          Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_SystemTickInterrupt,                           0xF003, I_Interrupt_t *,                                    Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_TimeSource,                                    0xF004, I_TimeSource_t *,                                   Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_TimerModule,                                   0xF005, TimerModule_t *,                                    Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_GpioGroup,                                     0xF006, I_GpioGroup_t *,                                    Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_InternalBufferedUart,                          0xF007, I_BufferedUart_t *,                                 Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_ExternalBufferedUart,                          0xF008, I_BufferedUart_t *,                                 Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_CrcCalcTable,                                  0xF009, I_Crc16Calculator_t *,                              Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_Gea2MessageEndpoint,                           0xF00A, I_Gea2MessageEndpoint_t *,                          Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_JumpToBootLoaderAction,                        0xF00B, I_Action_t *,                                       Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_SystemResetAction,                             0xF00C, I_Action_t *,                                       Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_TimerModuleDiagnosticsEnable,                  0xF00D, bool,                                               Swap_N, Io_All,  Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_TimerModuleDiagnosticsResult,                  0xF00E, TimerModuleDiagnosticsResults_t,                    Swap_Y, Io_O,    Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_ResetSignal,                                   0xF00F, Signal_t,                                           Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_ExternalDataSource,                            0xF010, I_DataSource_t *,                                   Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_SomeData,                                      0xF011, uint32_t,                                           Swap_Y, Io_None, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_ApplianceRunTimeInMinutesUpdatedHourly,        0xF012, ApplianceRunTimeMinutes_t,                          Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_FaultCodeTableInputGroup,                      0xF013, I_InputGroup_t *,                                   Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_TimerModuleDiagnosticsEnable,                  0xF001, bool,                                               Swap_N, Io_All,  Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_TimerModuleDiagnosticsResult,                  0xF002, TimerModuleDiagnosticsResults_t,                    Swap_Y, Io_O,    Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_ResetSignal,                                   0xF003, Signal_t,                                           Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_SomeData,                                      0xF004, uint32_t,                                           Swap_Y, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplianceRunTimeInMinutesUpdatedHourly,        0xF005, ApplianceRunTimeMinutes_t,                          Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
-   ENTRY(Erd_HeartbeatLed,                                  0xF100, bool,                                               Swap_N, Io_O,    Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_OtherLed,                                      0xF101, bool,                                               Swap_N, Io_None, Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_PushButtonSwitch,                              0xF102, bool,                                               Swap_N, Io_All,  Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_SomeAnalogInput,                               0xF103, AdcCounts_t,                                        Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_AnotherAnalogInput,                            0xF104, AdcCounts_t,                                        Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_SystemTickInterrupt,                           0xF100, I_Interrupt_t *,                                    Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_TimeSource,                                    0xF101, I_TimeSource_t *,                                   Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_TimerModule,                                   0xF102, TimerModule_t *,                                    Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_GpioGroup,                                     0xF103, I_GpioGroup_t *,                                    Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_InternalBufferedUart,                          0xF104, I_BufferedUart_t *,                                 Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_ExternalBufferedUart,                          0xF105, I_BufferedUart_t *,                                 Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CrcCalcTable,                                  0xF106, I_Crc16Calculator_t *,                              Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_Gea2MessageEndpoint,                           0xF107, I_Gea2MessageEndpoint_t *,                          Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_JumpToBootLoaderAction,                        0xF108, I_Action_t *,                                       Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_SystemResetAction,                             0xF109, I_Action_t *,                                       Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_ExternalDataSource,                            0xF10A, I_DataSource_t *,                                   Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FaultCodeTableInputGroup,                      0xF10B, I_InputGroup_t *,                                   Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_OtherLed,                                      0xF201, bool,                                               Swap_N, Io_None, Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_PushButtonSwitch,                              0xF202, bool,                                               Swap_N, Io_All,  Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_SomeAnalogInput,                               0xF203, AdcCounts_t,                                        Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_AnotherAnalogInput,                            0xF204, AdcCounts_t,                                        Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FaultSnapshotData0,                            0xF500, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_FaultSnapshotData1,                            0xF501, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
