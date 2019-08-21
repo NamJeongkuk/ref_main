@@ -34,8 +34,9 @@ static const ConstArrayMap_BinarySearchConfiguration_t externalToInternalMapConf
       IS_SIGNED(Erd_t)
    };
 
-static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] =
+static const DataSource_SlowEndiannessSwappedSwappedField_t swappedFields[] =
    {
+      // NV ERDs
       SWAPPED_ERD(Erd_ServiceDiagnosticsEntityCycleCount, sizeof(uint32_t)),
       SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultTableStatus, ServiceDiagnosticsRevision3TableStatus_t, currentIndex),
       SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultTableStatus, ServiceDiagnosticsRevision3TableStatus_t, count),
@@ -55,29 +56,51 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] =
       SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, features),
       SWAPPED_ERD(Erd_ServiceDiagnosticsEntityLocation, sizeof(Erd_t)),
       SWAPPED_FIELD(Erd_ServiceDiagnosticsEntityManifest, ServiceDiagnosticsRevision3Manifest_t, entityMapStart),
+      SWAPPED_ERD(Erd_ServiceDiagnosticsEntityCycleCount, sizeof(uint32_t)),
+      SWAPPED_ERD(Erd_ServiceDiagnosticsRunTimeInMinutes, sizeof(ApplianceRunTimeMinutes_t)),
+      SWAPPED_FIELD(Erd_ServiceDiagnosticsEntityManifest, ServiceDiagnosticsRevision3EntityManifest_t, entryCount.faultTable),
+      SWAPPED_FIELD(Erd_ServiceDiagnosticsEntityManifest, ServiceDiagnosticsRevision3EntityManifest_t, entryCount.faultSequence),
+      SWAPPED_FIELD(Erd_ServiceDiagnosticsEntityManifest, ServiceDiagnosticsRevision3EntityManifest_t, entryCount.cycleHistorySequence),
+      SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultTableStatus, ServiceDiagnosticsRevision3TableStatus_t, currentIndex),
+      SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultTableStatus, ServiceDiagnosticsRevision3TableStatus_t, count),
+      SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultTableStatus, ServiceDiagnosticsRevision3TableStatus_t, overwriteCount),
+      SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultSequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, currentIndex),
+      SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultSequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, count),
+      SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultSequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, overwriteCount),
+
       SWAPPED_FIELD(Erd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, maximumLatency),
       SWAPPED_FIELD(Erd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, averageLatency),
       SWAPPED_ERD(Erd_SomeAnalogInput, sizeof(uint16_t)),
       SWAPPED_ERD(Erd_AnotherAnalogInput, sizeof(uint16_t))
    };
 
-static const ConstMultiMap_BinarySearchConfiguration_t endiannessSwappedMapConfiguration =
+   static const DataSource_SlowEndiannessSwappedSwappedFieldRange_t swappedRanges[] =
+   {
+      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableEntry0, Erd_ServiceDiagnosticsFaultTableEntry9, ServiceDiagnosticsRevision3FaultTableEntry_t, cycleNumber),
+      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableEntry0, Erd_ServiceDiagnosticsFaultTableEntry9, ServiceDiagnosticsRevision3FaultTableEntry_t, timeStamp),
+      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableEntry0, Erd_ServiceDiagnosticsFaultTableEntry9, ServiceDiagnosticsRevision3FaultTableEntry_t, faultCode),
+      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableEntry0, Erd_ServiceDiagnosticsFaultTableEntry9, ServiceDiagnosticsRevision3FaultTableEntry_t, faultCount),
+      SWAPPED_FIELD_RANGE(Erd_FaultSnapshot0, Erd_FaultSnapshot9, FaultSnapshot_t, header.cycleNumber),
+      SWAPPED_FIELD_RANGE(Erd_FaultSnapshot0, Erd_FaultSnapshot9, FaultSnapshot_t, header.timeStamp),
+      SWAPPED_FIELD_RANGE(Erd_FaultSnapshot0, Erd_FaultSnapshot9, FaultSnapshot_t, header.faultCode),
+      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultSequenceEntry00, Erd_ServiceDiagnosticsFaultSequenceEntry07, ServiceDiagnosticsRevision3FaultSequenceEntry_t, cycleNumber),
+      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultSequenceEntry00, Erd_ServiceDiagnosticsFaultSequenceEntry07, ServiceDiagnosticsRevision3FaultSequenceEntry_t, timeStamp),
+      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultSequenceEntry00, Erd_ServiceDiagnosticsFaultSequenceEntry07, ServiceDiagnosticsRevision3FaultSequenceEntry_t, faultCode),
+      SWAPPED_FIELD_RANGE(Erd_FaultSnapshotData0, Erd_FaultSnapshotData9, FaultSnapshotData_t, someData)
+   };
+
+static const DataSource_SlowEndiannessSwappedConfiguration_t endianessSwappedConfiguration =
    {
       swappedFields,
+      swappedRanges,
       NUM_ELEMENTS(swappedFields),
-      ELEMENT_SIZE(swappedFields),
-      MEMBER_SIZE(DataSource_EndiannessSwappedSwappedField_t, erd),
-      OFFSET_OF(DataSource_EndiannessSwappedSwappedField_t, erd),
-      sizeof(DataSource_EndiannessSwappedSwappedField_t),
-      0,
-      false
+      NUM_ELEMENTS(swappedRanges)
    };
 
 void ExternalDataSource_Init(
    ExternalDataSource_t *instance,
    I_DataSource_t *dataSource)
 {
-   ConstMultiMap_BinarySearch_Init(&instance->_private.endiannessSwappedMap, &endiannessSwappedMapConfiguration);
    ConstArrayMap_DirectIndex_Init(&instance->_private.internalToExternalMap, &internalToExternalMapConfiguration);
    ConstArrayMap_BinarySearch_Init(&instance->_private.externalToInternalMap, &externalToInternalMapConfiguration);
    ConstBidirectionalMap_ConstArrayMap_Init(
@@ -85,10 +108,10 @@ void ExternalDataSource_Init(
       &instance->_private.externalToInternalMap.interface,
       &instance->_private.internalToExternalMap.interface);
 
-   DataSource_EndiannessSwapped_Init(
+   DataSource_SlowEndiannessSwapped_Init(
       &instance->_private.endiannessSwappedDataSource,
       dataSource,
-      &instance->_private.endiannessSwappedMap.interface,
+      &endianessSwappedConfiguration,
       true);
 
    DataSource_Mapped_InitWithPassThrough(
