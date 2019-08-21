@@ -30,6 +30,7 @@
 #include "ServiceDiagnosticsRevision3.h"
 #include "FaultIds.h"
 #include "FaultSnapshot.h"
+#include "CycleHistoryRecord.h"
 
 // clang-format off
 
@@ -138,6 +139,19 @@ enum
    ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry05,        0xE120, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry06,        0xE121, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry07,        0xE122, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsCycleHistorySequenceStatus,  0xE123, ServiceDiagnosticsRevision3SequenceStatus_t,        Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsCycleHistorySequenceClear,   0xE124, ServiceDiagnosticsRevision3SequenceClearRequest_t,  Swap_Y, Io_O,    Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_DiagnosticsCycleHistoryRecord0,                0xE125, CycleHistoryRecord_t,                               Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_DiagnosticsCycleHistoryRecord1,                0xE126, CycleHistoryRecord_t,                               Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_DiagnosticsCycleHistoryRecord2,                0xE127, CycleHistoryRecord_t,                               Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_DiagnosticsCycleHistoryRecord3,                0xE128, CycleHistoryRecord_t,                               Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_DiagnosticsCycleHistoryRecord4,                0xE129, CycleHistoryRecord_t,                               Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_DiagnosticsCycleHistoryRecord5,                0xE12A, CycleHistoryRecord_t,                               Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_DiagnosticsCycleHistoryRecord6,                0xE12B, CycleHistoryRecord_t,                               Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_DiagnosticsCycleHistoryRecord7,                0xE12C, CycleHistoryRecord_t,                               Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_DiagnosticsCycleHistoryRecord8,                0xE12D, CycleHistoryRecord_t,                               Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_DiagnosticsCycleHistoryRecord9,                0xE12E, CycleHistoryRecord_t,                               Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsCycleHistoryAddEntry,        0xE12F, CycleHistoryRecord_t,                               Swap_Y, Io_O,    Virtual,  NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
    ENTRY(Erd_OldApplicationVersion,                         0xF000, Version_t,                                          Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_TimerModuleDiagnosticsEnable,                  0xF001, bool,                                               Swap_N, Io_All,  Ram,      NotNv,                                    NotFault) \

@@ -90,7 +90,14 @@ static const DataSource_ServiceDiagnosticsRevision3Entity_t serviceDiagnosticsEn
 
       .cycleHistorySequence =
          {
-            .enabled = false
+            .enabled = true,
+
+            .status = Erd_ServiceDiagnosticsCycleHistorySequenceStatus,
+            .clear = Erd_ServiceDiagnosticsCycleHistorySequenceClear,
+
+            .entryCount = Erd_DiagnosticsCycleHistoryRecord9 - Erd_DiagnosticsCycleHistoryRecord0 + 1,
+            .entryStart = Erd_DiagnosticsCycleHistoryRecord0,
+            .addEntry = Erd_ServiceDiagnosticsCycleHistoryAddEntry
          },
 
       .fault =

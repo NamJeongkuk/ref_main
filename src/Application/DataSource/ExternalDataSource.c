@@ -67,7 +67,10 @@ static const DataSource_SlowEndiannessSwappedSwappedField_t swappedFields[] =
       SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultSequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, currentIndex),
       SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultSequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, count),
       SWAPPED_FIELD(Erd_ServiceDiagnosticsFaultSequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, overwriteCount),
-
+      SWAPPED_FIELD(Erd_ServiceDiagnosticsCycleHistorySequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, currentIndex),
+      SWAPPED_FIELD(Erd_ServiceDiagnosticsCycleHistorySequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, count),
+      SWAPPED_FIELD(Erd_ServiceDiagnosticsCycleHistorySequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, overwriteCount),
+      SWAPPED_FIELD(Erd_ServiceDiagnosticsCycleHistoryAddEntry, CycleHistoryRecord_t, someData),
       SWAPPED_FIELD(Erd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, maximumLatency),
       SWAPPED_FIELD(Erd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, averageLatency),
       SWAPPED_ERD(Erd_SomeAnalogInput, sizeof(uint16_t)),
@@ -86,6 +89,7 @@ static const DataSource_SlowEndiannessSwappedSwappedField_t swappedFields[] =
       SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultSequenceEntry00, Erd_ServiceDiagnosticsFaultSequenceEntry07, ServiceDiagnosticsRevision3FaultSequenceEntry_t, cycleNumber),
       SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultSequenceEntry00, Erd_ServiceDiagnosticsFaultSequenceEntry07, ServiceDiagnosticsRevision3FaultSequenceEntry_t, timeStamp),
       SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultSequenceEntry00, Erd_ServiceDiagnosticsFaultSequenceEntry07, ServiceDiagnosticsRevision3FaultSequenceEntry_t, faultCode),
+      SWAPPED_FIELD_RANGE(Erd_DiagnosticsCycleHistoryRecord0, Erd_DiagnosticsCycleHistoryRecord9, CycleHistoryRecord_t, someData),
       SWAPPED_FIELD_RANGE(Erd_FaultSnapshotData0, Erd_FaultSnapshotData9, FaultSnapshotData_t, someData)
    };
 
