@@ -105,11 +105,8 @@ void SystemData_Init(
       systemActionForStartup,
       resetAction);
 
-   InitializeExternalDataSource(
-      instance);
-
-   InitializeDataModel(
-      instance);
+   InitializeExternalDataSource(instance);
+   InitializeDataModel(instance);
 }
 
 I_DataSource_t *SystemData_InternalDataSource(SystemData_t *instance)

@@ -11,7 +11,7 @@
 #include "uassert.h"
 #include "Event_Unsupported.h"
 
-#define EXPAND_AS_NON_VOLATILE_DEFAULT_DATA_MAPPING(Name, Number, DataType, Swap, Io, StorageType, Public, NvDefaultData, FaultId) \
+#define EXPAND_AS_NON_VOLATILE_DEFAULT_DATA_MAPPING(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_NV_, StorageType)({ Name COMMA NvDefaultData } COMMA)
 
 typedef struct
