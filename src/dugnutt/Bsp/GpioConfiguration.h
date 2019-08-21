@@ -23,4 +23,5 @@
    ENTRY(PushButtonSwitch,    GpioDirection_Input,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortC, 5)
 
 // clang-format on
+
 #endif
