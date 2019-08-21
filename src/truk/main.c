@@ -34,6 +34,7 @@ static Application_t application;
 static TimerModuleStack_t timerModuleStack;
 static InvokeActionOnTimerPeriodic_t watchdogPetter;
 static GeaStack_t geaStack;
+static TimerModuleDiagnostics_t timerModuleDiagnostics;
 
 static const uint8_t staticRoutingTable[] =
    {
@@ -93,6 +94,12 @@ int main(void)
    I_DataModel_t *dataModel = SystemData_DataModel(&systemData);
 
    TimerModuleStack_WritePointersToDataModel(&timerModuleStack, dataModel);
+
+   TimerModuleDiagnostics_Init(
+      &timerModuleDiagnostics,
+      timerModule,
+      DataModel_GetInput(dataModel, Erd_TimerModuleDiagnosticsEnable),
+      DataModel_GetOutput(dataModel, Erd_TimerModuleDiagnosticsResult));
 
    Hardware_InitializeStage2(dataModel);
 

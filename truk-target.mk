@@ -75,6 +75,7 @@ SRC_DIRS=\
    $(PROJECT_DIR)/Application/DataSource \
    $(PROJECT_DIR)/Application/Gea \
    $(PROJECT_DIR)/Application/Plugins \
+   $(PROJECT_DIR)/Application/ServiceDiagnostics \
    $(PROJECT_DIR)/Application/TimerModule \
 
 # Additional include directories
