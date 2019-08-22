@@ -14,7 +14,7 @@ enum
 {
    FaultId_Unknown = 0,
    FaultId_SomeFault = 1,
-   FaultId_SomeOtherFault = 1,
+   FaultId_SomeOtherFault = 2
 };
 typedef uint16_t FaultId_t;
 
