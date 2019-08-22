@@ -13,11 +13,11 @@
 #include "SystemErds.h"
 #include "XMacroUtils.h"
 
-#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_ERDS_TYPE(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData) \
+#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_ERDS_TYPE(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_INPUT_OUTPUT_, Io)                                                                                                \
    (uint8_t Name;)
 
-#define EXPAND_AS_OUTPUT_ERDS_TYPE(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData) \
+#define EXPAND_AS_OUTPUT_ERDS_TYPE(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_OUTPUT_, Io)                                                                                      \
    (uint8_t Name;)
 

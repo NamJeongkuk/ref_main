@@ -11,7 +11,7 @@
 #include "Constants_Binary.h"
 #include "utils.h"
 
-#define EXPAND_AS_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData) \
+#define EXPAND_AS_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_NV_, StorageType)({ Name COMMA sizeof(DataType) } COMMA)
 
 enum
@@ -33,7 +33,7 @@ static const ConstArrayMap_BinarySearchConfiguration_t asyncMapConfiguration =
       IS_SIGNED(Erd_t)
    };
 
-#define EXPAND_AS_SYNC_CONFIGURATION(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData) \
+#define EXPAND_AS_SYNC_CONFIGURATION(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_NV_, StorageType)({ Name COMMA OFFSET_OF(NonVolatileDataSourceSyncCache_t, CONCAT(erd, Name)) } COMMA)
 
 static const DataSource_CachedAsyncDataSourceErdInfo_t syncMapElements[] =

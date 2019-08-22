@@ -55,7 +55,7 @@ static DataSource_ApplianceApiRevision1Configuration_t applianceApiConfiguration
                .serialNumber = Erd_SerialNumber,
                .applianceType = Erd_ApplianceType,
                .appliancePersonality = Erd_AppliancePersonality,
-               .applianceRunTime = Erd_ApplianceRunTimeInMinutes
+               .applianceRunTime = Erd_ServiceDiagnosticsRunTimeInMinutes
             }
          },
 

@@ -17,6 +17,7 @@
 #include "DataSource_Mapped.h"
 #include "ExternalDataSource.h"
 #include "DataModel.h"
+#include "ServiceDiagnosticsDataSource.h"
 #include "SystemErds.h"
 
 typedef struct
@@ -48,6 +49,9 @@ typedef struct
 
          ApplianceApiDataSource_t applianceApi;
          DataSource_CompositeComponent_t applianceApiComponent;
+
+         ServiceDiagnosticsDataSource_t serviceDiagnostics;
+         DataSource_CompositeComponent_t serviceDiagnosticsComponent;
       } dataSource;
 
       DataModel_t dataModel;
