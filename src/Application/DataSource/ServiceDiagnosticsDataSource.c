@@ -32,7 +32,7 @@ enum
    DiagnosticEntityId = 0,
 
    RunTimeUpdatePeriod = MSEC_PER_MIN,
-   MilliSecondsPerHour = (MSEC_PER_MIN * 60),
+   MsecPerHour = (MSEC_PER_MIN * 60)
 };
 
 static const Erd_t snapshotErdList[] =
@@ -152,11 +152,6 @@ static void InitializeApiVersionAndManifest(I_DataSource_t *dataSource)
       };
    DataSource_Write(dataSource, Erd_ServiceDiagnosticsRevision3Manifest, &manifest);
 
-   ServiceDiagnosticsRevision3Manifest_t test;
-   DataSource_Read(dataSource, Erd_ServiceDiagnosticsRevision3Manifest, &test);
-
-   uassert(test.entityMapStart == manifest.entityMapStart);
-
    Erd_t entityLocation = EntityStartLocation;
    DataSource_Write(dataSource, Erd_ServiceDiagnosticsEntityLocation, &entityLocation);
 }
@@ -185,7 +180,7 @@ static void InitializeSystemTimeUpdater(
       &instance->_private.periodicErdTransferer,
       dataSource,
       timerModule,
-      MilliSecondsPerHour,
+      MsecPerHour,
       &periodicErdTransferConfiguration);
 }
 
