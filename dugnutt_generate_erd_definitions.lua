@@ -1,5 +1,5 @@
 local tools = require 'tools.lua-erd-documentation-tools.lua-erd-documentation-tools'
-local Types = require 'build.generated_types'
+local Types = require 'build.GeneratedTypes'
 
 tools.build_json({
   namespace = 'dugnutt',

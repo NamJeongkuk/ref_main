@@ -1,4 +1,4 @@
 return {
-  output = 'build/generated_types.lua',
+  output = 'build/GeneratedTypes.lua',
   type_overrides = {}
 }
