@@ -6,7 +6,7 @@
     {
       "label": "dugnutt_jlink_tools",
       "type": "shell",
-      "command": "make RELEASE=Y DEBUG=Y -f dugnutt-target.mk jlink_tools",
+      "command": "make RELEASE=Y DEBUG=Y -f dugnutt-target.mk jlink_tools jlink_gdb_server_wrapper",
       "presentation": {
         "echo": false,
         "reveal": "silent",
@@ -19,7 +19,7 @@
     {
       "label": "truk_jlink_tools",
       "type": "shell",
-      "command": "make RELEASE=Y DEBUG=Y -f truk-target.mk jlink_tools",
+      "command": "make RELEASE=Y DEBUG=Y -f truk-target.mk jlink_tools jlink_gdb_server_wrapper",
       "presentation": {
         "echo": false,
         "reveal": "silent",
