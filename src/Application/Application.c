@@ -8,7 +8,6 @@
 #include <stdint.h>
 #include "Application.h"
 #include "SystemErds.h"
-#include "DataModelErdPointerAccess.h"
 
 void Application_Init(
    Application_t *instance,

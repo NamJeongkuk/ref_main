@@ -7,10 +7,10 @@
 
 #include "DataModel.h"
 
-#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_EXTERNALLY_MAPPED_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultIda) \
+#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_EXTERNALLY_MAPPED_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_MAP_TO_EXTERNAL_, StorageType)(CONCAT(INCLUDE_INPUT_OUTPUT_, Io)(Name COMMA))
 
-#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_NV_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultIda) \
+#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_NV_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_NV_, StorageType)(CONCAT(INCLUDE_INPUT_OUTPUT_, Io)(Name COMMA))
 
 #define EXPAND_AS_OUTPUT_EXTERNALLY_MAPPED_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
