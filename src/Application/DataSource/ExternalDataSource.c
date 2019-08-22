@@ -117,7 +117,7 @@ void ExternalDataSource_Init(
       &instance->_private.endiannessSwappedDataSource,
       dataSource,
       &endianessSwappedConfiguration,
-      true);
+      false);
 
    DataSource_Mapped_InitWithPassThrough(
       &instance->_private.mappedDataSource,
