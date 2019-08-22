@@ -17,7 +17,7 @@
 enum
 {
    ServiceDiagnosticsDataVersion_Major = 1,
-   ServiceDiagnosticsDataVersion_Minor = 1
+   ServiceDiagnosticsDataVersion_Minor = 0
 };
 
 enum
