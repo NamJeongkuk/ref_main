@@ -9,7 +9,8 @@
 #include "SystemErds.h"
 
 #define EXPAND_AS_MAPPED_ERD_PAIR(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_MAP_TO_EXTERNAL_, StorageType)({ Number COMMA Name } COMMA)
+   CONCAT(INCLUDE_MAP_TO_EXTERNAL_, StorageType)                                                         \
+   ({ Number COMMA Name } COMMA)
 
 static const DataSource_MappedErdPair_t internalExternalMappings[] =
    {
@@ -77,7 +78,7 @@ static const DataSource_SlowEndiannessSwappedSwappedField_t swappedFields[] =
       SWAPPED_ERD(Erd_AnotherAnalogInput, sizeof(uint16_t))
    };
 
-   static const DataSource_SlowEndiannessSwappedSwappedFieldRange_t swappedRanges[] =
+static const DataSource_SlowEndiannessSwappedSwappedFieldRange_t swappedRanges[] =
    {
       SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableEntry0, Erd_ServiceDiagnosticsFaultTableEntry9, ServiceDiagnosticsRevision3FaultTableEntry_t, cycleNumber),
       SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableEntry0, Erd_ServiceDiagnosticsFaultTableEntry9, ServiceDiagnosticsRevision3FaultTableEntry_t, timeStamp),
