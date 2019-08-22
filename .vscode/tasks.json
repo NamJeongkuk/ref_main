@@ -4,9 +4,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "dugnutt_jlink_tools",
+      "label": "dugnutt_vscode_debug",
       "type": "shell",
-      "command": "make RELEASE=Y DEBUG=Y -f dugnutt-target.mk jlink_tools jlink_gdb_server_wrapper",
+      "command": "make RELEASE=Y DEBUG=Y -f dugnutt-target.mk vscode_debug",
       "presentation": {
         "echo": false,
         "reveal": "silent",
@@ -17,9 +17,9 @@
       }
     },
     {
-      "label": "truk_jlink_tools",
+      "label": "truk_vscode_debug",
       "type": "shell",
-      "command": "make RELEASE=Y DEBUG=Y -f truk-target.mk jlink_tools jlink_gdb_server_wrapper",
+      "command": "make RELEASE=Y DEBUG=Y -f truk-target.mk vscode_debug",
       "presentation": {
         "echo": false,
         "reveal": "silent",

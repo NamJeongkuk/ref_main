@@ -21,7 +21,7 @@
       "linux": {
         "serverpath": "${workspaceFolder}/tools/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
       },
-      "preLaunchTask": "dugnutt_jlink_tools"
+      "preLaunchTask": "dugnutt_vscode_debug"
     },
     {
       "name": "Truk launch",
@@ -40,7 +40,7 @@
       "linux": {
         "serverpath": "${workspaceFolder}/tools/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
       },
-      "preLaunchTask": "truk_jlink_tools"
+      "preLaunchTask": "truk_vscode_debug"
     }
   ]
 }
