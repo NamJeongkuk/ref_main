@@ -10,6 +10,3 @@
 [submodule "lib/boot-loaders"]
 	path = lib/boot-loaders
 	url = https://github.com/geappliances/applcommon.multi-target-starter-kit-boot-loaders.git
-[submodule "tools/lua-c-data-type-generator"]
-	path = tools/lua-c-data-type-generator
-	url = https://github.com/geappliances/applcommon.lua-c-data-type-generator
