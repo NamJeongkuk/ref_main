@@ -23,14 +23,17 @@ SRC_FILES:=\
 SRC_DIRS:=\
    $(PROJECT_DIR)/$(TARGET) \
    $(PROJECT_DIR)/$(TARGET)/Hardware \
+   $(PROJECT_DIR)/TinyApplication \
+   $(PROJECT_DIR)/TinyApplication/Gea \
 
 COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
 
 INC_DIRS:=\
-   $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(APPLCOMMON_DIR)/Utilities \
+   $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
+   $(PROJECT_DIR)/Application/Gea \
 
 TOOLCHAIN_VERSION:=3.9.0
 
@@ -38,6 +41,8 @@ SOURCE_EXTENSIONS:=.c
 
 # Options are --opt-code-size, --opt-code-speed or nothing
 OPTIMIZE:=--opt-code-size
+
+IGNORE_WARNINGS=--disable-warning 24
 
 # Update value to tweak optimization
 # In general, a higher number means longer build times but smaller code

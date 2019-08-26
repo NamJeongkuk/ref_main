@@ -41,6 +41,21 @@
         "serverpath": "${workspaceFolder}/tools/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
       },
       "preLaunchTask": "truk_vscode_debug"
+    },
+    {
+      "name": "Bonzalez launch",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/bonzalez/bonzalez-debug.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceFolder}/tools/sdcc-stm8/stm8-gdb/bin",
+      "serverpath": "${workspaceFolder}/tools/sdcc-stm8/openocd/bin/openocd",
+      "configFiles": [
+        "${workspaceFolder}/build/bonzalez/bonzalez_debug_openocd.cfg"
+      ],
+      "preLaunchTask": "bonzalez_vscode_debug"
     }
   ]
 }

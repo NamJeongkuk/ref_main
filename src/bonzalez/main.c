@@ -12,9 +12,11 @@
 #include "TinyTimeSource_Tim4SystemTick.h"
 #include "TinyAdcGroup_Adc1.h"
 #include "TinyUart_Uart1.h"
-#include "utils.h"
 #include "TinyTimer.h"
 #include "I_TinyInterrupt.h"
+#include "TinyGeaStack.h"
+#include "Gea2Addresses.h"
+#include "utils.h"
 
 enum
 {
@@ -23,6 +25,7 @@ enum
 
 TinyTimerModule_t timerModule;
 TinyTimer_t periodicWatchdogTimer;
+TinyGeaStack_t geaStack;
 
 static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 {
@@ -37,6 +40,18 @@ static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
       NULL);
 }
 
+static void SendStartupMessage(I_TinyGea2Interface_t *gea2Interface)
+{
+   STACK_ALLOC_GEA2PACKET(packet, 5);
+   packet->destination = 0xFF;
+   packet->payload[0] = 0x00;
+   packet->payload[1] = 0xDE;
+   packet->payload[2] = 0xAF;
+   packet->payload[3] = 0xBA;
+   packet->payload[4] = 0xBE;
+  TinyGea2Interface_Send(gea2Interface, packet);
+}
+
 void main(void)
 {
    Iwdg_Init();
@@ -49,13 +64,17 @@ void main(void)
          TinyTimeSource_Tim4SystemTick_Init());
 
       Pd4Heartbeat_Init(&timerModule);
+
+      TinyGeaStack_Init(&geaStack, TinyUart_Uart1_Init(), BonzalezGeaAddress);
    }
    enableInterrupts();
 
+   SendStartupMessage(TinyGeaStack_GetGea2Interface(&geaStack));
    KickWatchdog(NULL, &timerModule);
 
    while(1)
    {
       TinyTimerModule_Run(&timerModule);
+      TinyGeaStack_Run(&geaStack);
    }
 }
