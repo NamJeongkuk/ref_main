@@ -49,13 +49,16 @@ IGNORE_WARNINGS=--disable-warning 24
 # OPTIMIZE_MAX_ALLOCS_PER_NODE:=50000
 
 PACKAGE_CONTENTS:=
-$(call add_to_package,$(OUTPUT_DIR)/$(TARGET).debug.elf,)
+$(call add_to_package,$(OUTPUT_DIR)/$(TARGET)-debug.elf,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).hex,)
+$(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
+$(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
 include tools/sdcc-stm8/sdcc-stm8-makefile-worker.mk
 
 .PHONY: all
 all: target $(TOOLCHAIN_LOCATION)
+	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration bonzalez_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 	@echo Build complete
 
 .PHONY: clean
@@ -63,4 +66,4 @@ clean: target_clean
 
 .PHONY: package
 package: all
-	@$(call create_artifacts,$(TARGET).zip)
+	@$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
