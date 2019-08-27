@@ -22,7 +22,6 @@ TEST_SRC_DIRS = \
 
 # List of include directories
 INCLUDE_DIRS = \
-   $(APPLCOMMON_DIR)/Image
 
 include $(APPLCOMMON_DIR)/Makefile
 
