@@ -24,6 +24,7 @@ SRC_DIRS:=\
    $(PROJECT_DIR)/$(TARGET) \
    $(PROJECT_DIR)/$(TARGET)/Hardware \
    $(PROJECT_DIR)/TinyApplication \
+   $(PROJECT_DIR)/TinyApplication/DataSource \
    $(PROJECT_DIR)/TinyApplication/Gea \
 
 COMMON_LIB_DIRS:=\
@@ -31,6 +32,7 @@ COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
 
 INC_DIRS:=\
+   $(APPLCOMMON_DIR)/Image \
    $(APPLCOMMON_DIR)/Utilities \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(PROJECT_DIR)/Application/Gea \

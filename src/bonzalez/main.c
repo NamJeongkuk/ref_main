@@ -13,8 +13,9 @@
 #include "TinyAdcGroup_Adc1.h"
 #include "TinyUart_Uart1.h"
 #include "TinyTimer.h"
-#include "I_TinyInterrupt.h"
 #include "TinyGeaStack.h"
+#include "TinySystemData.h"
+#include "I_TinyInterrupt.h"
 #include "Gea2Addresses.h"
 #include "utils.h"
 
@@ -23,9 +24,10 @@ enum
    WatchdogKickPeriodInMsec = 1
 };
 
-TinyTimerModule_t timerModule;
-TinyTimer_t periodicWatchdogTimer;
-TinyGeaStack_t geaStack;
+static TinyTimerModule_t timerModule;
+static TinyTimer_t periodicWatchdogTimer;
+static TinyGeaStack_t geaStack;
+static TinySystemData_t systemData;
 
 static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 {
@@ -66,6 +68,8 @@ void main(void)
       Pd4Heartbeat_Init(&timerModule);
 
       TinyGeaStack_Init(&geaStack, TinyUart_Uart1_Init(), BonzalezGeaAddress);
+
+      TinySystemData_Init(&systemData);
    }
    enableInterrupts();
 
