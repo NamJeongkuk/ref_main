@@ -1,6 +1,6 @@
 /*!
  * @file
- * @brief Background full duplex GEA communication stack
+ * @brief Foreground full duplex GEA communication stack
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
@@ -14,9 +14,6 @@
 
 enum
 {
-   FullDuplexSendBufferOverhead= 8,
-   MaxSendPayloadSize = 12,
-   MaxReceivePayloadSize = 12,
    SendBufferSize = 80,
    ReceiveBufferSize = 80,
    UartReceivedByteBufferSize = SendBufferSize,

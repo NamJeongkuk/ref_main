@@ -12,25 +12,21 @@
 
 enum
 {
-   Gea2CommonCommand_Version = 0x0001
+   Gea2CommonCommand_Version = 0x01
 };
 
 static void HandleVersionRequest(TinyGeaStack_t *instance, const Gea2Packet_t *request)
 {
-   uint8_t responseBuffer[10];
-   Gea2Packet_t *response = (Gea2Packet_t *)responseBuffer;
-   uint8_t *responsePayload = response->payload;
+   STACK_ALLOC_GEA2PACKET(packet, 5);
+   packet->destination = request->source;
 
-   response->payloadLength = 5;
-   response->destination = request->source;
+   packet->payload[0] = Gea2CommonCommand_Version;
+   packet->payload[1]= 0x01;
+   packet->payload[2] = 0x02;
+   packet->payload[3] = 0x03;
+   packet->payload[4] = 0x04;
 
-   *responsePayload++ = Gea2CommonCommand_Version;
-   *responsePayload++ = 0x01;
-   *responsePayload++ = 0x02;
-   *responsePayload++ = 0x03;
-   *responsePayload++ = 0x04;
-
-   TinyGea2Interface_Send(&instance->_private.gea2Interface.interface, response);
+   TinyGea2Interface_Send(&instance->_private.gea2Interface.interface, packet);
 }
 
 static void GeaMessageReceived(void *context, const void *_args)
