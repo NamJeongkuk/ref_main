@@ -17,9 +17,7 @@
 enum
 {
    SendBufferSize = 80,
-   ReceiveBufferSize = 80,
-   UartReceivedByteBufferSize = SendBufferSize,
-   PacketQueueStorageSize = SendBufferSize
+   ReceiveBufferSize = 80
 };
 
 typedef struct
@@ -31,8 +29,6 @@ typedef struct
       TinyEventSubscription_t geaMessageSubscription;
       uint8_t sendBuffer[SendBufferSize];
       uint8_t receiveBuffer[ReceiveBufferSize];
-      uint8_t uartReceivedByteBuffer[UartReceivedByteBufferSize];
-      uint8_t packetQueueStorage[PacketQueueStorageSize];
       uint8_t geaAddress;
    } _private;
 } TinyGeaStack_t;
@@ -55,7 +51,7 @@ void TinyGeaStack_Init(
  * @param instance
  * @return I_Gea2Interface_t
  */
-I_TinyGea2Interface_t * TinyGeaStack_GetGea2Interface(TinyGeaStack_t *instance);
+I_TinyGea2Interface_t *TinyGeaStack_GetGea2Interface(TinyGeaStack_t *instance);
 
 /*!
  * Run Gea2Interface_FullDuplex & Uart_IsrSafe
