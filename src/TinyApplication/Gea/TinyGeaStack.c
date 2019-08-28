@@ -6,7 +6,6 @@
  */
 
 #include "TinyGeaStack.h"
-#include "uassert.h"
 #include "Gea2Addresses.h"
 #include "utils.h"
 
