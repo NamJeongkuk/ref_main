@@ -8,11 +8,19 @@
 #include "TinyGeaStack.h"
 #include "Gea2Addresses.h"
 #include "utils.h"
+#include <string.h>
 
 enum
 {
    Gea2CommonCommand_Version = 0x01
 };
+
+static void SendCallback(void *context, Gea2Packet_t *packet)
+{
+   REINTERPRET(sourcePacket, context, const Gea2Packet_t *);
+   packet->destination = sourcePacket->destination;
+   memcpy(packet->payload, sourcePacket->payload, sourcePacket->payloadLength);
+}
 
 static void HandleVersionRequest(TinyGeaStack_t *instance, const Gea2Packet_t *request)
 {
@@ -25,7 +33,7 @@ static void HandleVersionRequest(TinyGeaStack_t *instance, const Gea2Packet_t *r
    packet->payload[3] = 0x03;
    packet->payload[4] = 0x04;
 
-   TinyGea2Interface_Send(&instance->_private.gea2Interface.interface, packet);
+   TinyGea2Interface_Send(&instance->_private.gea2Interface.interface, packet->payloadLength, SendCallback, packet);
 }
 
 static void GeaMessageReceived(void *context, const void *_args)
