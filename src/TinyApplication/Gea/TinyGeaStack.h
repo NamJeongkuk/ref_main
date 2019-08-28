@@ -52,7 +52,6 @@ void TinyGeaStack_Init(
 I_TinyGea2Interface_t *TinyGeaStack_GetGea2Interface(TinyGeaStack_t *instance);
 
 /*!
- * Run Gea2Interface_FullDuplex & Uart_IsrSafe
  * @param instance
  */
 void TinyGeaStack_Run(TinyGeaStack_t *instance);
