@@ -58,9 +58,11 @@ $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).hex,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
+.PHONY: all
+all:
+
 include tools/sdcc-stm8/sdcc-stm8-makefile-worker.mk
 
-.PHONY: all
 all: target $(TOOLCHAIN_LOCATION)
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration bonzalez_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 	@echo Build complete
