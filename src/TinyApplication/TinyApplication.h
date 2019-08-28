@@ -23,7 +23,6 @@ typedef struct
  * @param instance
  * @param dataSource
  */
-
 void TinyApplication_Init(TinyApplication_t *instance, I_TinyDataSource_t *dataSource);
 
 #endif
