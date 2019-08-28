@@ -26,12 +26,14 @@ SRC_DIRS:=\
    $(PROJECT_DIR)/TinyApplication \
    $(PROJECT_DIR)/TinyApplication/DataSource \
    $(PROJECT_DIR)/TinyApplication/Gea \
+   $(PROJECT_DIR)/TinyApplication/Plugins \
 
 COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
 
 INC_DIRS:=\
+   $(APPLCOMMON_DIR)/Constants \
    $(APPLCOMMON_DIR)/Image \
    $(APPLCOMMON_DIR)/Utilities \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \

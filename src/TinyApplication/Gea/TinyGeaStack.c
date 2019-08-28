@@ -20,7 +20,7 @@ static void HandleVersionRequest(TinyGeaStack_t *instance, const Gea2Packet_t *r
    packet->destination = request->source;
 
    packet->payload[0] = Gea2CommonCommand_Version;
-   packet->payload[1]= 0x01;
+   packet->payload[1] = 0x01;
    packet->payload[2] = 0x02;
    packet->payload[3] = 0x03;
    packet->payload[4] = 0x04;
@@ -43,7 +43,11 @@ static void GeaMessageReceived(void *context, const void *_args)
    }
 }
 
-void TinyGeaStack_Init(TinyGeaStack_t *instance, I_TinyUart_t *uart, uint8_t geaAddress)
+void TinyGeaStack_Init(
+   TinyGeaStack_t *instance,
+   I_TinyUart_t *uart,
+   I_TinyDataSource_t *dataSource,
+   uint8_t geaAddress)
 {
    instance->_private.geaAddress = geaAddress;
 
@@ -56,13 +60,18 @@ void TinyGeaStack_Init(TinyGeaStack_t *instance, I_TinyUart_t *uart, uint8_t gea
       instance->_private.receiveBuffer,
       sizeof(instance->_private.receiveBuffer));
 
+   TinyErdGea2OpenLoopWriteApiRevision2_Init(
+      &instance->_private.erdGea2OpenLoopWriteApi,
+      dataSource,
+      &instance->_private.gea2Interface.interface);
+
    TinyEventSubscription_Init(&instance->_private.geaMessageSubscription, instance, GeaMessageReceived);
    TinyEvent_Subscribe(
       TinyGea2Interface_GetOnReceiveEvent(&instance->_private.gea2Interface.interface),
       &instance->_private.geaMessageSubscription);
 }
 
-I_TinyGea2Interface_t * TinyGeaStack_GetGea2Interface(TinyGeaStack_t *instance)
+I_TinyGea2Interface_t *TinyGeaStack_GetGea2Interface(TinyGeaStack_t *instance)
 {
    return &instance->_private.gea2Interface.interface;
 }

@@ -14,8 +14,9 @@
 
 // Name, Number, DataType
 #define ERD_TABLE(ENTRY) \
-   ENTRY(Erd_BuildNumber,                 0x0031, uint32_t ) \
-   ENTRY(Erd_ApplicationVersion,          0x003A, Version_t) \
+   ENTRY(Erd_ApplicationVersion,       0x003A, Version_t) \
+   ENTRY(Erd_ButtonState,              0xF000, bool) \
+   ENTRY(Erd_LedState,                 0xF001, bool)
 
 #define EXPAND_AS_ENUM(Name, Number, DataType) \
    Name = Number COMMA

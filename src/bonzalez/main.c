@@ -15,6 +15,9 @@
 #include "TinyTimer.h"
 #include "TinyGeaStack.h"
 #include "TinySystemData.h"
+#include "Led.h"
+#include "Button.h"
+#include "SwitchedLedPlugin.h"
 #include "I_TinyInterrupt.h"
 #include "Gea2Addresses.h"
 #include "utils.h"
@@ -28,6 +31,7 @@ static TinyTimerModule_t timerModule;
 static TinyTimer_t periodicWatchdogTimer;
 static TinyGeaStack_t geaStack;
 static TinySystemData_t systemData;
+static SwitchedLedPlugin_t ledPlugin;
 
 static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 {
@@ -51,8 +55,14 @@ static void SendStartupMessage(I_TinyGea2Interface_t *gea2Interface)
    packet->payload[2] = 0xAF;
    packet->payload[3] = 0xBA;
    packet->payload[4] = 0xBE;
-  TinyGea2Interface_Send(gea2Interface, packet);
+   TinyGea2Interface_Send(gea2Interface, packet);
 }
+
+static const SwitchedLedPluginConfiguration_t ledPluginConfiguration =
+   {
+      .ledStateErd = Erd_LedState,
+      .buttonStateErd = Erd_ButtonState
+   };
 
 void main(void)
 {
@@ -67,9 +77,18 @@ void main(void)
 
       Pd4Heartbeat_Init(&timerModule);
 
-      TinyGeaStack_Init(&geaStack, TinyUart_Uart1_Init(), BonzalezGeaAddress);
-
       TinySystemData_Init(&systemData);
+      I_TinyDataSource_t *dataSource = TinySystemData_DataSource(&systemData);
+
+      TinyGeaStack_Init(
+         &geaStack,
+         TinyUart_Uart1_Init(),
+         dataSource,
+         BonzalezGeaAddress);
+
+      Button_Init(dataSource, &timerModule, Erd_ButtonState);
+      Led_Init(dataSource, Erd_LedState);
+      SwitchedLedPlugin_Init(&ledPlugin, dataSource, &ledPluginConfiguration);
    }
    enableInterrupts();
 
