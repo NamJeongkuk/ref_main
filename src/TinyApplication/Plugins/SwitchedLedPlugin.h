@@ -28,6 +28,11 @@ typedef struct
    } _private;
 } SwitchedLedPlugin_t;
 
+/*!
+ * @param instance
+ * @param dataSource
+ * @param configuration
+ */
 void SwitchedLedPlugin_Init(
    SwitchedLedPlugin_t *instance,
    I_TinyDataSource_t *dataSource,

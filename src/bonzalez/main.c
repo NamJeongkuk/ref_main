@@ -15,9 +15,9 @@
 #include "TinyTimer.h"
 #include "TinyGeaStack.h"
 #include "TinySystemData.h"
+#include "TinyApplication.h"
 #include "Led.h"
 #include "Button.h"
-#include "SwitchedLedPlugin.h"
 #include "I_TinyInterrupt.h"
 #include "Gea2Addresses.h"
 #include "utils.h"
@@ -31,7 +31,7 @@ static TinyTimerModule_t timerModule;
 static TinyTimer_t periodicWatchdogTimer;
 static TinyGeaStack_t geaStack;
 static TinySystemData_t systemData;
-static SwitchedLedPlugin_t ledPlugin;
+static TinyApplication_t application;
 
 static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 {
@@ -58,12 +58,6 @@ static void SendStartupMessage(I_TinyGea2Interface_t *gea2Interface)
    TinyGea2Interface_Send(gea2Interface, packet);
 }
 
-static const SwitchedLedPluginConfiguration_t ledPluginConfiguration =
-   {
-      .ledStateErd = Erd_LedState,
-      .buttonStateErd = Erd_ButtonState
-   };
-
 void main(void)
 {
    Iwdg_Init();
@@ -88,7 +82,8 @@ void main(void)
 
       Button_Init(dataSource, &timerModule, Erd_ButtonState);
       Led_Init(dataSource, Erd_LedState);
-      SwitchedLedPlugin_Init(&ledPlugin, dataSource, &ledPluginConfiguration);
+
+      TinyApplication_Init(&application, dataSource);
    }
    enableInterrupts();
 
