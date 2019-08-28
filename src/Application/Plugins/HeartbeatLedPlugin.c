@@ -11,7 +11,7 @@
 
 enum
 {
-   HeartbeatBlinkPeriodMsec = 250
+   HeartbeatBlinkHalfPeriodMsec = 500
 };
 
 void HeartbeatLedPlugin_Init(
@@ -26,5 +26,5 @@ void HeartbeatLedPlugin_Init(
       &instance->_private.blinkHeartbeat,
       &instance->_private.heartbeatLed.interface,
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
-      HeartbeatBlinkPeriodMsec);
+      HeartbeatBlinkHalfPeriodMsec);
 }
