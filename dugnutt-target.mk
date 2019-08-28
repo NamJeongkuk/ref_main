@@ -118,10 +118,6 @@ $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
 .PHONY: all
-all:
-
-include tools/kpit-rx/kpit-rx-makefile-worker.mk
-
 all: target $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 	$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
 	$(call make_directory,$(OUTPUT_DIR)/binaries)
@@ -159,3 +155,5 @@ upload: $(call upload_deps,all jlink_tools)
 .PHONY: clean
 clean: target_clean
 	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(TARGET)-boot-loader.mk RELEASE=Y DEBUG=N clean
+
+include tools/kpit-rx/kpit-rx-makefile-worker.mk

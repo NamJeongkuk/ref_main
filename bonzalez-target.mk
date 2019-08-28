@@ -59,10 +59,6 @@ $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
 .PHONY: all
-all:
-
-include tools/sdcc-stm8/sdcc-stm8-makefile-worker.mk
-
 all: target $(TOOLCHAIN_LOCATION)
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration bonzalez_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 	@echo Build complete
@@ -73,3 +69,5 @@ clean: target_clean
 .PHONY: package
 package: all
 	@$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
+
+include tools/sdcc-stm8/sdcc-stm8-makefile-worker.mk
