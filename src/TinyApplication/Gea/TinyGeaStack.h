@@ -34,7 +34,6 @@ typedef struct
 } TinyGeaStack_t;
 
 /*!
- * Initialize background full duplex GEA stack
  * @param instance
  * @param uart
  * @param dataSource
