@@ -16,6 +16,3 @@
 [submodule "lib/applcommon-tiny"]
 	path = lib/applcommon-tiny
 	url = https://github.com/geappliances/applcommon.tiny
-[submodule "lib/stm8s-header"]
-	path = lib/stm8s-header
-	url = https://github.com/geappliances/build-tools.stm8s-header
