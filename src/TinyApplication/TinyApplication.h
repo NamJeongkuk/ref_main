@@ -9,6 +9,7 @@
 #define TINYAPPLICATION_H
 
 #include "SwitchedLedPlugin.h"
+#include "TinyErdStreamSender.h"
 #include "I_TinyDataSource.h"
 
 typedef struct
@@ -16,6 +17,7 @@ typedef struct
    struct
    {
       SwitchedLedPlugin_t switchedLedPlugin;
+      TinyErdStreamSender_t erdStreamSender;
    } _private;
 } TinyApplication_t;
 
