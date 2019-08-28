@@ -46,7 +46,6 @@ void TinyGeaStack_Init(
    uint8_t geaAddress);
 
 /*!
- * Get Gea2Interface
  * @param instance
  * @return I_Gea2Interface_t
  */
