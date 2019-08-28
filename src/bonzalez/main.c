@@ -47,23 +47,20 @@ static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
       NULL);
 }
 
-static void SendCallback(void *context, Gea2Packet_t *packet)
+static void PopulateStartupMessage(void *context, Gea2Packet_t *packet)
 {
-   REINTERPRET(sourcePacket, context, const Gea2Packet_t *);
-   packet->destination = sourcePacket->destination;
-   memcpy(packet->payload, sourcePacket->payload, sourcePacket->payloadLength);
-}
-
-static void SendStartupMessage(I_TinyGea2Interface_t *gea2Interface)
-{
-   STACK_ALLOC_GEA2PACKET(packet, 5);
+   IGNORE(context);
    packet->destination = 0xFF;
    packet->payload[0] = 0x00;
    packet->payload[1] = 0xDE;
    packet->payload[2] = 0xAF;
    packet->payload[3] = 0xBA;
    packet->payload[4] = 0xBE;
-   TinyGea2Interface_Send(gea2Interface, packet->payloadLength, SendCallback, packet);
+}
+
+static void SendStartupMessage(I_TinyGea2Interface_t *gea2Interface)
+{
+   TinyGea2Interface_Send(gea2Interface, 5, PopulateStartupMessage, NULL);
 }
 
 void main(void)
