@@ -52,12 +52,10 @@ void TinyGeaStack_Init(
    I_TinyDataSource_t *dataSource,
    uint8_t geaAddress)
 {
-   instance->_private.geaAddress = geaAddress;
-
    TinyGea2Interface_FullDuplex_Init(
       &instance->_private.gea2Interface,
       uart,
-      instance->_private.geaAddress,
+      geaAddress,
       instance->_private.sendBuffer,
       sizeof(instance->_private.sendBuffer),
       instance->_private.receiveBuffer,

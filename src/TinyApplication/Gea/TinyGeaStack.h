@@ -29,7 +29,6 @@ typedef struct
       TinyEventSubscription_t geaMessageSubscription;
       uint8_t sendBuffer[SendBufferSize];
       uint8_t receiveBuffer[ReceiveBufferSize];
-      uint8_t geaAddress;
    } _private;
 } TinyGeaStack_t;
 
