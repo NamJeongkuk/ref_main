@@ -46,7 +46,7 @@ SOURCE_EXTENSIONS:=.c
 # Options are --opt-code-size, --opt-code-speed or nothing
 OPTIMIZE:=--opt-code-size
 
-IGNORE_WARNINGS=--disable-warning 24
+IGNORE_WARNINGS=24
 
 # Update value to tweak optimization
 # In general, a higher number means longer build times but smaller code
