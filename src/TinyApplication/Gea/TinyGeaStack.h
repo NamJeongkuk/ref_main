@@ -13,6 +13,7 @@
 #include "TinyGea2Interface_FullDuplex.h"
 #include "TinyEventSubscription.h"
 #include "TinyErdGea2OpenLoopWriteApiRevision2.h"
+#include "TinyErdHeartbeat.h"
 
 enum
 {
@@ -26,6 +27,7 @@ typedef struct
    {
       TinyGea2Interface_FullDuplex_t gea2Interface;
       TinyErdGea2OpenLoopWriteApiRevision2_t erdGea2OpenLoopWriteApi;
+      TinyErdHeartbeat_t erdHeartbeat;
       TinyEventSubscription_t geaMessageSubscription;
       uint8_t sendBuffer[SendBufferSize];
       uint8_t receiveBuffer[ReceiveBufferSize];
@@ -36,12 +38,14 @@ typedef struct
  * @param instance
  * @param uart
  * @param dataSource
+ * @param timerModule
  * @param geaAddress
  */
 void TinyGeaStack_Init(
    TinyGeaStack_t *instance,
    I_TinyUart_t *uart,
    I_TinyDataSource_t *dataSource,
+   TinyTimerModule_t *timerModule,
    uint8_t geaAddress);
 
 /*!

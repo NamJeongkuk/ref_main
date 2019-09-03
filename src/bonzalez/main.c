@@ -83,6 +83,7 @@ void main(void)
          &geaStack,
          TinyUart_Uart1_Init(),
          dataSource,
+         &timerModule,
          BonzalezGeaAddress);
 
       Button_Init(dataSource, &timerModule, Erd_ButtonState);

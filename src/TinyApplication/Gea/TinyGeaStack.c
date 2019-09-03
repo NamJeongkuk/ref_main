@@ -7,13 +7,29 @@
 
 #include "TinyGeaStack.h"
 #include "Gea2Addresses.h"
+#include "TinySystemErds.h"
 #include "utils.h"
 #include <string.h>
 
 enum
 {
-   Gea2CommonCommand_Version = 0x01
+   Gea2CommonCommand_Version = 0x01,
+   HeartbeatPeriodMsec = 1000,
+   RemoteErdStreamErd = 0xF123
 };
+
+static const TinyErdHeartbeatErdPair_t erdHeartbeatPairs[] =
+   {
+      { Erd_ErdStream, RemoteErdStreamErd }
+   };
+
+static const TinyErdHeartbeatConfiguration_t erdHeartbeatConfig =
+   {
+      .destination = TrukGeaAddress,
+      .period = HeartbeatPeriodMsec,
+      .pairs = erdHeartbeatPairs,
+      .pairCount = NUM_ELEMENTS(erdHeartbeatPairs)
+   };
 
 static void PopulateVersionResponse(void *context, Gea2Packet_t *packet)
 {
@@ -50,6 +66,7 @@ void TinyGeaStack_Init(
    TinyGeaStack_t *instance,
    I_TinyUart_t *uart,
    I_TinyDataSource_t *dataSource,
+   TinyTimerModule_t *timerModule,
    uint8_t geaAddress)
 {
    TinyGea2Interface_FullDuplex_Init(
@@ -65,6 +82,13 @@ void TinyGeaStack_Init(
       &instance->_private.erdGea2OpenLoopWriteApi,
       dataSource,
       &instance->_private.gea2Interface.interface);
+
+   TinyErdHeartbeat_Init(
+      &instance->_private.erdHeartbeat,
+      &instance->_private.gea2Interface.interface,
+      dataSource,
+      timerModule,
+      &erdHeartbeatConfig);
 
    TinyEventSubscription_Init(&instance->_private.geaMessageSubscription, instance, GeaMessageReceived);
    TinyEvent_Subscribe(
