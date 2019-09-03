@@ -117,11 +117,9 @@ $(call add_to_package,$(OUTPUT_DIR)/doc,doc)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
-.PHONY: all
-all:
-
 include tools/kpit-rx/kpit-rx-makefile-worker.mk
 
+.PHONY: all
 all: target $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 	$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
 	$(call make_directory,$(OUTPUT_DIR)/binaries)
