@@ -28,7 +28,7 @@ static const TinyErdStreamSenderConfiguration_t erdStreamSenderConfiguration =
       .erdStreamErd = Erd_ErdStream,
       .requestedStateErdFromReceiver = Erd_ErdStreamRequestedState,
       .streamEntryCount = NumberOfStreamedErds,
-      .sizeOfLargestStreamedErd = sizeof(StreamedItem_t),
+      .sizeOfLargestStreamedErd = sizeof(StreamedErd_t),
       .mappings = streamLocalToRemoteErdMap,
       .mappingCount = NUM_ELEMENTS(streamLocalToRemoteErdMap)
    };
