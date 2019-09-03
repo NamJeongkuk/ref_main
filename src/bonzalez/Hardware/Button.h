@@ -11,6 +11,11 @@
 #include "I_TinyDataSource.h"
 #include "TinyTimer.h"
 
+/*!
+ * @param dataSource
+ * @param timerModule
+ * @param buttonErd
+ */
 void Button_Init(I_TinyDataSource_t *dataSource, TinyTimerModule_t *timerModule, Erd_t buttonErd);
 
 #endif
