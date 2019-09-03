@@ -5,16 +5,16 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "TinyGeaStack.h"
 #include "Gea2Addresses.h"
 #include "TinySystemErds.h"
 #include "utils.h"
-#include <string.h>
 
 enum
 {
    Gea2CommonCommand_Version = 0x01,
-   HeartbeatPeriodMsec = 1000,
+   HeartbeatPeriodMsec = 100,
    RemoteErdStreamErd = 0xF123
 };
 
