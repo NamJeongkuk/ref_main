@@ -146,7 +146,7 @@ $(OUTPUT_DIR)/doc:
 erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)
 	@echo Generating ERD definitions
 	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -P -MMD $(PROJECT_DIR)/Application/DataSource/SystemErds.h -o $(OUTPUT_DIR)/temporary.h
-	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua
+	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output build/GeneratedTypes.lua
 	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
 
 .PHONY: upload

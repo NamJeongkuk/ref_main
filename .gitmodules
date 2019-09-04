@@ -10,3 +10,9 @@
 [submodule "lib/boot-loaders"]
 	path = lib/boot-loaders
 	url = https://github.com/geappliances/applcommon.multi-target-starter-kit-boot-loaders.git
+[submodule "tools/sdcc-stm8"]
+	path = tools/sdcc-stm8
+	url = https://github.com/geappliances/build-tools.sdcc-stm8-release.git
+[submodule "lib/applcommon-tiny"]
+	path = lib/applcommon-tiny
+	url = https://github.com/geappliances/applcommon.tiny
