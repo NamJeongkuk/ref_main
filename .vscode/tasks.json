@@ -32,7 +32,7 @@
     {
       "label": "bonzalez_vscode_debug",
       "type": "shell",
-      "command": "make -f bonzalez-target.mk RELEASE=Y debug-vscode build/bonzalez/bonzalez-debug.elf",
+      "command": "make -f bonzalez-target.mk RELEASE=N debug-vscode build/bonzalez/bonzalez-debug.elf",
       "presentation": {
         "echo": true,
         "reveal": "silent",
