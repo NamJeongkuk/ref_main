@@ -3,8 +3,7 @@
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
-  "configurations": [
-    {
+  "configurations": [{
       "name": "Dugnutt launch",
       "cwd": "${workspaceRoot}",
       "request": "launch",
@@ -15,12 +14,7 @@
       "interface": "FINE",
       "jlinkscript": "${workspaceFolder}/build/dugnutt/debug.jlink",
       "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
-      "osx": {
-        "serverpath": "${workspaceFolder}/build/dugnutt/jlink_gdb_server_wrapper.sh"
-      },
-      "linux": {
-        "serverpath": "${workspaceFolder}/tools/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
-      },
+      "serverpath": "${workspaceFolder}/build/dugnutt/jlink_gdb_server_wrapper.sh",
       "preLaunchTask": "dugnutt_vscode_debug"
     },
     {
@@ -34,12 +28,7 @@
       "interface": "FINE",
       "jlinkscript": "${workspaceFolder}/build/truk/debug.jlink",
       "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
-      "osx": {
-        "serverpath": "${workspaceFolder}/build/truk/jlink_gdb_server_wrapper.sh"
-      },
-      "linux": {
-        "serverpath": "${workspaceFolder}/tools/kpit-rx/JLink/opt/SEGGER/JLink_V646i/JLinkGDBServer"
-      },
+      "serverpath": "${workspaceFolder}/build/truk/jlink_gdb_server_wrapper.sh",
       "preLaunchTask": "truk_vscode_debug"
     },
     {
