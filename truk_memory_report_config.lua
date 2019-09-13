@@ -3,7 +3,7 @@ return {
     ram = {
       map = 'build/truk/truk.map',
       type = 'rx-gcc',
-      total = 32 * 1024,
+      total = 64 * 1024,
       ram_sections = {
         'RAM'
       }

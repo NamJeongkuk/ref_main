@@ -13,7 +13,7 @@
 #include "Rx130FlashInfo.h"
 #include "ImageHeader.h"
 
-#define ApplicationStartAddress  (0xFFFE0000)
+#define ApplicationStartAddress  (0xFFF80000)
 #define ApplicationEndAddress    (0xFFFF5FFF)
 #define ApplicationHeaderAddress ApplicationStartAddress
 #define ApplicationImageHeader (const ImageHeader_t *)(intptr_t)(ApplicationHeaderAddress)

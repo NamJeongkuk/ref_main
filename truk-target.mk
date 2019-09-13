@@ -2,9 +2,8 @@ include tools/kpit-rx/kpit-rx.mk
 
 TARGET=truk
 
-DEVICE:=R5F52316
+DEVICE:=R5F52318
 ID_CODE:=45CAFEC0FFEECAFEC0FFEECAFEC0FFEE
-#ID_CODE:=FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 
 PROJECT_DIR=src
 OUTPUT_DIR=build/$(TARGET)
@@ -131,6 +130,7 @@ all: target $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 .PHONY: package
 package: all artifacts erd_definitions
 	$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
+	@echo Archive complete
 
 $(BOOT_LOADER_DIR)/build/$(TARGET)-boot-loader/$(TARGET)-boot-loader.mot:
 	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(TARGET)-boot-loader.mk RELEASE=Y DEBUG=N
@@ -146,7 +146,7 @@ erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)
 	@echo Generating ERD definitions
 	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -P -MMD $(PROJECT_DIR)/Application/DataSource/SystemErds.h -o $(OUTPUT_DIR)/temporary.h
 	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output build/GeneratedTypes.lua
-	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
+	@$(LUA53) generate_erd_definitions.lua
 
 .PHONY: upload
 upload: $(call upload_deps,all jlink_tools)

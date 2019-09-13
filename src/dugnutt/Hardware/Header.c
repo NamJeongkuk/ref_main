@@ -12,7 +12,7 @@
 enum
 {
    DummyCrc = 0x1234,
-   TargetMemorySizeInK = 128,
+   TargetMemorySizeInK = 512,
 
    ApplicationIncluded = true,
    ParametricIncluded = false,
