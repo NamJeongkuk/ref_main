@@ -11,5 +11,5 @@ tools.build_json({
     'src/Application/DataSource/SystemErds.h'
   },
   types_factory = Types,
-  output = 'build/dugnutt/doc/erd-definitions.json'
+  output = 'build/truk/doc/erd-definitions.json'
 })
