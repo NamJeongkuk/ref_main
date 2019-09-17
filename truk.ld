@@ -78,6 +78,13 @@ SECTIONS
 		_ebss = .;
 		_end = .;
 	} > RAM
+	__stackCheckRomStart = LOADADDR(.stackCheck);
+	.stackCheck :
+	{
+		__stackCheckStart = .;
+		*(.stackCheck)
+		__stackCheckEnd = .;
+	} > RAM AT>ROM
 
 	_ustack = ORIGIN(RAM) + LENGTH(RAM) - 4;
 	_istack = ORIGIN(RAM) + LENGTH(RAM) - 4;
