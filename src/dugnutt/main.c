@@ -31,6 +31,8 @@
 #include "Crc16Calculator_Rx2xx.h"
 #include "ContextProtector_Rx2xx.h"
 #include "UlTestsPlugin.h"
+#include "InitializeStackMemory.h"
+#include "StackConfigurator.h"
 
  #ifdef DEBUG
    const bool romCheckErrorEnabled = false;
@@ -94,6 +96,9 @@ static void SendStartupMessage(I_Gea2PacketEndpoint_t *gea2PacketEndpoint)
 
 int main(void)
 {
+   const StackConfiguration_t *stackConfig = StackConfigurator_GetConfiguration();
+   INIT_STACK_MEMORY(stackConfig->stackStartAddress, stackConfig->stackSize, stackConfig->stackDirection, stackConfig->pattern, stackConfig->patternSize);
+
    Hardware_InitializeStage1();
 
    I_Action_t *watchdogKickAction = Action_Rx2xxWatchdog_Init();

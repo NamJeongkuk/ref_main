@@ -12,16 +12,21 @@
 #include <stdint.h>
 
 static const uint8_t pattern[4] = {0xDE, 0xAD, 0xBE, 0xEF};
-extern char _stackCheckEnd;
 extern char _iStackSize;
+extern char _stackCheckEnd;
 
-void StackConfigurator_GetConfiguration(StackConfiguration_t *stackConfiguration)
+static const StackConfiguration_t stackConfiguration =
+   {
+      (uintptr_t)&_iStackSize,
+      (uint8_t *)&_stackCheckEnd,
+      pattern,
+      StackDirection_ReverseGrowing,
+      sizeof(pattern)
+   };
+
+const StackConfiguration_t *StackConfigurator_GetConfiguration(void)
 {
-   stackConfiguration->stackSize = (uintptr_t)&_iStackSize;
-   stackConfiguration->stackStartAddress = (uint8_t *)&_stackCheckEnd;
-   stackConfiguration->pattern = pattern;
-   stackConfiguration->stackDirection = StackDirection_ReverseGrowing;
-   stackConfiguration->patternSize = sizeof(pattern);
+   return &stackConfiguration;
 }
 
 #endif

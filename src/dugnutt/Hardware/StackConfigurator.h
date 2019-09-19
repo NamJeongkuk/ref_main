@@ -10,6 +10,6 @@
 
 #include "StackConfiguration.h"
 
-void StackConfigurator_GetConfiguration(StackConfiguration_t *stackConfiguration);
+const StackConfiguration_t *StackConfigurator_GetConfiguration(void);
 
 #endif

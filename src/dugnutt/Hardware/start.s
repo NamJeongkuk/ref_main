@@ -27,6 +27,8 @@
     .extern _istack
     .extern _rvectors
     .extern _exit
+    .extern _SystemClock_Init
+    .extern _UlRamTest_RunStartupTests
 
 _PowerON_Reset:
 /* initialise user stack pointer */
@@ -40,6 +42,9 @@ _PowerON_Reset:
 
 /* setup relocateable vector table */
     mvtc    #__relocatableVectorTableStart, intb
+
+    mov #_SystemClock_Init,r7
+    jsr r7
 
 /* load data section from ROM to RAM */
 
@@ -56,6 +61,9 @@ _PowerON_Reset:
     bne     1b
 2:
 
+    mov #_UlRamTest_RunStartupTests,r7
+    jsr r7
+
 /* bss initialisation : zero out bss */
     mov    #00h,r2      /* load R2 reg with zero */
     mov    #_ebss, r3  /* store the end address of bss in R3 */
@@ -63,8 +71,19 @@ _PowerON_Reset:
     sub    r1,r3           /* size of bss section in R3 (R3=R3-R1) */
     sstr.b
 
-    nop
-    mvtc #0, psw
+/* move the stack check into place */
+    mov     #__stackCheckRomStart,r2      /* src ROM address of stack check section in R2 */
+    mov     #__stackCheckStart,r1       /* dest start RAM address of stack check section in R1 */
+    mov     #__stackCheckEnd,r3      /* end RAM address of stack check section in R3 */
+    sub    r1,r3            /* size of data section in R3 (R3=R3-R1) */
+    cmp     #0, r3
+    beq     2f
+
+1:  mov.b   [r2+], r5
+    mov.b   r5, [r1+]
+    sub     #1, r3
+    bne     1b
+2:
 
 /* start user program */
     mov    #_main,r7

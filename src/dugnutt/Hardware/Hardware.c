@@ -16,35 +16,11 @@
 #include "Dtc.h"
 #include "Header.h"
 #include "I_Interrupt.h"
-#include "InitializeStackMemory.h"
-#include "StackConfigurator.h"
 #include "SystemClock.h"
 #include "SystemErds.h"
 
-static void InitializeStack(void)
-{
-   StackConfiguration_t stackConfiguration;
-   uint8_t *stackStartAddress;
-   uint32_t stackSize;
-   StackDirection_t stackDirection;
-   const uint8_t *pattern;
-   uint8_t patternSize;
-
-   StackConfigurator_GetConfiguration(&stackConfiguration);
-   stackStartAddress = stackConfiguration.stackStartAddress;
-   stackSize = stackConfiguration.stackSize;
-   stackDirection = stackConfiguration.stackDirection;
-   pattern = stackConfiguration.pattern;
-   patternSize = stackConfiguration.patternSize;
-
-   INIT_STACK_MEMORY(stackStartAddress, stackSize, stackDirection, pattern, patternSize);
-}
-
 void Hardware_InitializeStage1(void)
 {
-   SystemClock_Init();
-   InitializeStack();
-
    __builtin_rx_setpsw('I');
 }
 
