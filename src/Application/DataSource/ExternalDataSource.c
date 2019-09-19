@@ -51,7 +51,6 @@ static const DataSource_SlowEndiannessSwappedSwappedField_t swappedFields[] =
       // Other ERDs
       SWAPPED_ERD(Erd_BuildNumber, sizeof(uint32_t)),
       SWAPPED_ERD(Erd_AppliancePersonality, sizeof(AppliancePersonality_t)),
-      SWAPPED_FIELD(Erd_ServiceDiagnosticsRevision3Manifest, ServiceDiagnosticsRevision3Manifest_t, entityMapStart),
       SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, revision),
       SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, features),
       SWAPPED_ERD(Erd_ServiceDiagnosticsEntityLocation, sizeof(Erd_t)),
