@@ -94,7 +94,7 @@ INC_DIRS=\
    $(APPLCOMMON_DIR)/Validator \
 
 # RX micro being used
-CPU=rx100
+CPU=rx200
 
 # Set endianness as big or little
 ENDIANNESS=little
