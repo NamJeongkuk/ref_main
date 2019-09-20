@@ -31,6 +31,7 @@
 #include "Crc16Calculator_Rx2xx.h"
 #include "ContextProtector_Rx2xx.h"
 #include "UlTestsPlugin.h"
+#include "UlRamTest.h"
 #include "InitializeStackMemory.h"
 #include "StackConfigurator.h"
 
@@ -96,10 +97,16 @@ static void SendStartupMessage(I_Gea2PacketEndpoint_t *gea2PacketEndpoint)
 
 int main(void)
 {
-   const StackConfiguration_t *stackConfig = StackConfigurator_GetConfiguration();
-   INIT_STACK_MEMORY(stackConfig->stackStartAddress, stackConfig->stackSize, stackConfig->stackDirection, stackConfig->pattern, stackConfig->patternSize);
-
    Hardware_InitializeStage1();
+
+   ContextProtector_Protect(ContextProtector_Rx2xx_GetInstance());
+   {
+      UlRamTest_RunStartupTests();
+
+      const StackConfiguration_t *stackConfig = StackConfigurator_GetConfiguration();
+      INIT_STACK_MEMORY(stackConfig->stackStartAddress, stackConfig->stackSize, stackConfig->stackDirection, stackConfig->pattern, stackConfig->patternSize);
+   }
+   ContextProtector_Unprotect(ContextProtector_Rx2xx_GetInstance());
 
    I_Action_t *watchdogKickAction = Action_Rx2xxWatchdog_Init();
    I_Action_t *resetAction = Action_Rx2xxSystemReset_Init();

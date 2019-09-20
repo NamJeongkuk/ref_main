@@ -27,8 +27,6 @@
     .extern _istack
     .extern _rvectors
     .extern _exit
-    .extern _SystemClock_Init
-    .extern _UlRamTest_RunStartupTests
 
 _PowerON_Reset:
 /* initialise user stack pointer */
@@ -42,9 +40,6 @@ _PowerON_Reset:
 
 /* setup relocateable vector table */
     mvtc    #__relocatableVectorTableStart, intb
-
-    mov #_SystemClock_Init,r7
-    jsr r7
 
 /* load data section from ROM to RAM */
 
@@ -60,9 +55,6 @@ _PowerON_Reset:
     sub     #1, r3
     bne     1b
 2:
-
-    mov #_UlRamTest_RunStartupTests,r7
-    jsr r7
 
 /* bss initialisation : zero out bss */
     mov    #00h,r2      /* load R2 reg with zero */
