@@ -119,16 +119,16 @@ enum
    ENTRY(Erd_ServiceDiagnosticsFaultTableEntry7,            0xE10C, ServiceDiagnosticsRevision3FaultTableEntry_t,       Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultTableEntry8,            0xE10D, ServiceDiagnosticsRevision3FaultTableEntry_t,       Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultTableEntry9,            0xE10E, ServiceDiagnosticsRevision3FaultTableEntry_t,       Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_FaultSnapshot0,                                0xE10F, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_FaultSnapshot1,                                0xE110, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_FaultSnapshot2,                                0xE111, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_FaultSnapshot3,                                0xE112, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_FaultSnapshot4,                                0xE113, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_FaultSnapshot5,                                0xE114, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_FaultSnapshot6,                                0xE115, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_FaultSnapshot7,                                0xE116, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_FaultSnapshot8,                                0xE117, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_FaultSnapshot9,                                0xE118, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshot0,         0xE10F, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshot1,         0xE110, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshot2,         0xE111, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshot3,         0xE112, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshot4,         0xE113, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshot5,         0xE114, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshot6,         0xE115, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshot7,         0xE116, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshot8,         0xE117, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshot9,         0xE118, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultSequenceStatus,         0xE119, ServiceDiagnosticsRevision3SequenceStatus_t,        Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultSequenceClear,          0xE11A, ServiceDiagnosticsRevision3SequenceClearRequest_t,  Swap_N, Io_O,    Virtual,  NotNv,                                    NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry00,        0xE11B, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
@@ -179,16 +179,16 @@ enum
    ENTRY(Erd_SomeAnalogInput,                               0xF203, AdcCounts_t,                                        Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
    ENTRY(Erd_AnotherAnalogInput,                            0xF204, AdcCounts_t,                                        Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FaultSnapshotData0,                            0xF500, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_FaultSnapshotData1,                            0xF501, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_FaultSnapshotData2,                            0xF502, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_FaultSnapshotData3,                            0xF503, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_FaultSnapshotData4,                            0xF504, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_FaultSnapshotData5,                            0xF505, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_FaultSnapshotData6,                            0xF506, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_FaultSnapshotData7,                            0xF507, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_FaultSnapshotData8,                            0xF508, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_FaultSnapshotData9,                            0xF509, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData0,     0xF500, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData1,     0xF501, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData2,     0xF502, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData3,     0xF503, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData4,     0xF504, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData5,     0xF505, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData6,     0xF506, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData7,     0xF507, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData8,     0xF508, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData9,     0xF509, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
    ENTRY(Erd_SomeFault,                                     0xF600, bool,                                               Swap_N, Io_None, Fault,    NotNv,                                    FaultId_SomeFault) \
    ENTRY(Erd_SomeOtherFault,                                0xF601, bool,                                               Swap_N, Io_None, Fault,    NotNv,                                    FaultId_SomeOtherFault) \
