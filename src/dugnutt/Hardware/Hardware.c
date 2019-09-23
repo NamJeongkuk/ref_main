@@ -21,8 +21,8 @@
 
 void Hardware_InitializeStage1(void)
 {
-   __builtin_rx_setpsw('I');
    SystemClock_Init();
+   __builtin_rx_setpsw('I');
 }
 
 void Hardware_InitializeStage2(I_DataModel_t *dataModel)

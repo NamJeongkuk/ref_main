@@ -1,6 +1,6 @@
 /*!
  * @file
- * @brief This module sets the platform specific stack information for other modules.
+ * @brief
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */

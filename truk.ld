@@ -14,8 +14,8 @@ SECTIONS
 	.text :
 	{
 		. = ALIGN(4);
-		__bootLoaderHeaderStart = .;
-		KEEP(*(.bootLoaderHeader))
+		__applicationHeaderStart = .;
+		KEEP(*(.applicationHeader))
 		*(.text)
 		*(.text.*)
 		*(P)
