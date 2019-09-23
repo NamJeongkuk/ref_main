@@ -12,14 +12,19 @@
 #include "HeartbeatLedPlugin.h"
 #include "SwitchedLedPlugin.h"
 #include "TimerModuleDiagnostics.h"
+#include "Input_StackUsageCalculator.h"
 
 typedef struct
 {
    struct
    {
+      I_DataModel_t *dataModel;
+
       HeartbeatLedPlugin_t heartbeatLedPlugin;
       SwitchedLedPlugin_t switchedLedPlugin;
       TimerModuleDiagnostics_t timerModuleDiagnostics;
+      Input_StackUsageCalculator_t stackUsageCalculator;
+      Timer_t stackUsageUpdateTimer;
    } _private;
 } Application_t;
 
@@ -30,6 +35,7 @@ typedef struct
  */
 void Application_Init(
    Application_t *instance,
-   I_DataModel_t *dataModel);
+   I_DataModel_t *dataModel,
+   const StackConfiguration_t *stackConfiguration);
 
 #endif

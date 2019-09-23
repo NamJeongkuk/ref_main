@@ -159,6 +159,7 @@ enum
    ENTRY(Erd_ResetSignal,                                   0xF003, Signal_t,                                           Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_SomeData,                                      0xF004, uint32_t,                                           Swap_Y, Io_None, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_ApplianceRunTimeInMinutesUpdatedHourly,        0xF005, ApplianceRunTimeMinutes_t,                          Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_StackPercentFree,                              0xF006, uint8_t,                                            Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_SystemTickInterrupt,                           0xF100, I_Interrupt_t *,                                    Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_TimeSource,                                    0xF101, I_TimeSource_t *,                                   Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \

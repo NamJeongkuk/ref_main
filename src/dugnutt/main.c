@@ -136,7 +136,8 @@ int main(void)
 
    Application_Init(
       &application,
-      dataModel);
+      dataModel,
+      StackConfigurator_GetConfiguration());
 
    InvokeActionOnTimerPeriodic_Init(
       &watchdogPetter,
