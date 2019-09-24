@@ -43,7 +43,7 @@
 
 enum
 {
-   UlTestsRunPeriodInMSec = 50,
+   UlTestsRunPeriodInMSec = 10,
    UlTestsWatchdogTimeoutInMSec = 1000,
    BytesToCrcPerRomCheck = 1024
 };
