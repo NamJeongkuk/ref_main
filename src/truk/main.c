@@ -35,7 +35,7 @@
 #include "InitializeStackMemory.h"
 #include "StackConfigurator.h"
 
- #ifdef DEBUG
+#ifdef DEBUG
    const bool romCheckErrorEnabled = false;
 #else
    const bool romCheckErrorEnabled = true;
