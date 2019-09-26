@@ -72,6 +72,8 @@ static const DataSource_SlowEndiannessSwappedSwappedField_t swappedFields[] =
       SWAPPED_FIELD(Erd_ServiceDiagnosticsCycleHistoryAddEntry, CycleHistoryRecord_t, someData),
       SWAPPED_FIELD(Erd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, maximumLatency),
       SWAPPED_FIELD(Erd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, averageLatency),
+      SWAPPED_ERD(Erd_SomeData, sizeof(uint32_t)),
+      SWAPPED_ERD(Erd_ApplianceRunTimeInMinutesUpdatedHourly, sizeof(uint32_t)),
       SWAPPED_ERD(Erd_SomeAnalogInput, sizeof(uint16_t)),
       SWAPPED_ERD(Erd_AnotherAnalogInput, sizeof(uint16_t))
    };

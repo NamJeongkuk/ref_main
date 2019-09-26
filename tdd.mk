@@ -1,30 +1,39 @@
-PROJECT_NAME = truk
+PROJECT_NAME = multi-target-starter-kit
 
 APPLCOMMON_DIR = lib/applcommon
-PROJECT_DIR = src/$(PROJECT_NAME)
+PROJECT_DIR = src
 TESTING_DIR = Testing
-TESTS_DIR = Testing/Tests/$(PROJECT_NAME)
+TESTS_DIR = Testing/Tests
 
-RUN_APPLCOMMON_TESTS = Y
+RUN_APPLCOMMON_TESTS = N
 
 # Specific files to include if you don't want the entire directory included
 SRC_FILES += \
 
 # List of directories that contain your code under test
 SRC_DIRS = \
+   $(PROJECT_DIR)/Application/DataSource \
 
 # List of directories that contain your tests and test helpers (mocks, fakes, etc.)
 TEST_SRC_DIRS = \
    $(TESTING_DIR) \
    $(TESTING_DIR)/Doubles \
    $(TESTING_DIR)/Mocks \
-   $(TESTS_DIR)
+   $(TESTING_DIR)/Mocks/Bsp \
+   $(TESTS_DIR) \
+   $(TESTS_DIR)/Application/DataSource \
 
 # List of include directories
 INCLUDE_DIRS = \
    $(APPLCOMMON_DIR)/Hardware/Rx130 \
+   $(APPLCOMMON_DIR)/Hardware/Kpit/Rx130 \
    $(APPLCOMMON_DIR)/Hardware/Rx2xx \
-   $(APPLCOMMON_DIR)/Image
+   $(APPLCOMMON_DIR)/Image \
+   $(PROJECT_DIR)/Application/ServiceDiagnostics \
+   $(PROJECT_DIR)/dugnutt/Bsp \
+   $(PROJECT_DIR)/dugnutt/Hardware \
+   $(PROJECT_DIR)/Hardware \
+   $(PROJECT_DIR)/Hardware/Rx130 \
 
 include $(APPLCOMMON_DIR)/Makefile
 
