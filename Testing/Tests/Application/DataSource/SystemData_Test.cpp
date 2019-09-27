@@ -139,6 +139,25 @@ TEST_GROUP(SystemData)
          EraseTime,
          MinAllowableBytes);
 
+      memset(dataFromExternalDataSource, 0, sizeof(dataFromExternalDataSource));
+      FillBlockOfRandomData();
+   }
+
+   void After(TimerTicks_t ticks)
+   {
+      TimerModule_TestDouble_ElapseTime(&timerModuleDouble, ticks);
+   }
+
+   void FillBlockOfRandomData()
+   {
+      for(uint8_t index = 0; index < sizeof(blockOfRandomData); index++)
+      {
+         blockOfRandomData[index] = index + 5;
+      }
+   }
+
+   void GivenThatSystemDataIsInitialized()
+   {
       SystemData_Init(
          &instance,
          &timerModuleDouble.timerModule,
@@ -149,34 +168,37 @@ TEST_GROUP(SystemData)
 
       dataModel = SystemData_DataModel(&instance);
       externalDataSource = SystemData_ExternalDataSource(&instance);
-
-      memset(dataFromExternalDataSource, 0, sizeof(dataFromExternalDataSource));
-      FillBlockOfRandomData();
    }
 
-   void FillBlockOfRandomData()
+   void WhenFlashBlockGroupWriteCompletes()
    {
-      for(uint8_t index = 0; index < sizeof(blockOfRandomData); index++)
-      {
-         blockOfRandomData[index] = index + 5;
-      }
+      After(1);
+   }
+
+   void WhenSystemDataIsReset()
+   {
+      GivenThatSystemDataIsInitialized();
    }
 };
 
-TEST(SystemData, ShouldBeAbleToReadAndWriteToInternalDataModel)
+TEST(SystemData, ShouldSupportReadAndWriteToInternalDataModel)
 {
+   GivenThatSystemDataIsInitialized();
+
    for(uint8_t i = 0; i < NUM_ELEMENTS(endiannessAwareTable); i++)
    {
       Erd_t erd = endiannessAwareTable[i].erd;
 
       DataModel_Write(dataModel, erd, blockOfRandomData);
-      DataModel_Read(dataModel, erd, dataFromExternalDataSource);
-      CHECK_EQUAL(DataMatched, memcmp(blockOfRandomData, dataFromExternalDataSource, DataModel_SizeOf(dataModel, erd)));
+      DataModel_Read(dataModel, erd, dataFromInternalDataSource);
+      CHECK_EQUAL(DataMatched, memcmp(blockOfRandomData, dataFromInternalDataSource, DataModel_SizeOf(dataModel, erd)));
    }
 }
 
 TEST(SystemData, ShouldSwapEndiannessOfSpecifiedErds)
 {
+   GivenThatSystemDataIsInitialized();
+
    for(uint8_t i = 0; i < NUM_ELEMENTS(endiannessAwareTable); i++)
    {
       Erd_t erd = endiannessAwareTable[i].erd;
@@ -209,6 +231,8 @@ TEST(SystemData, ShouldSwapEndiannessOfSpecifiedErds)
 
 TEST(SystemData, ShouldSupportInputsAndInputOutputsForSpecifiedErds)
 {
+   GivenThatSystemDataIsInitialized();
+
    for(uint8_t i = 0; i < NUM_ELEMENTS(ioConfigurationTable); i++)
    {
       Erd_t erd = ioConfigurationTable[i].erd;
@@ -231,6 +255,8 @@ TEST(SystemData, ShouldSupportInputsAndInputOutputsForSpecifiedErds)
 
 TEST(SystemData, ShouldSupportOutputsForSpecifiedErds)
 {
+   GivenThatSystemDataIsInitialized();
+
    for(uint8_t i = 0; i < NUM_ELEMENTS(ioConfigurationTable); i++)
    {
       Erd_t erd = ioConfigurationTable[i].erd;
@@ -248,8 +274,10 @@ TEST(SystemData, ShouldSupportOutputsForSpecifiedErds)
    }
 }
 
-TEST(SystemData, ShouldAllowReadAndWriteToAnErdViaAnInputAndOutput)
+TEST(SystemData, ShouldSupportReadAndWriteToAnErdViaAnInputAndOutput)
 {
+   GivenThatSystemDataIsInitialized();
+
    I_Output_t *output = DataModel_GetOutput(dataModel, Erd_TimerModuleDiagnosticsEnable);
    I_Input_t *input = DataModel_GetInput(dataModel, Erd_TimerModuleDiagnosticsEnable);
    bool expected = true;
@@ -260,13 +288,59 @@ TEST(SystemData, ShouldAllowReadAndWriteToAnErdViaAnInputAndOutput)
    CHECK_EQUAL(expected, actual);
 }
 
-TEST(SystemData, ShouldAllowReadAndWriteToBspErdsViaExternalDataSource)
+TEST(SystemData, ShouldSupportReadAndWriteToBspErdsViaExternalDataSource)
 {
+   GivenThatSystemDataIsInitialized();
+
    AdcCounts_t expected = 0x1234;
    AdcCounts_t actual;
 
    DataSource_Write(externalDataSource, Erd_SomeAnalogInput, &expected);
    DataSource_Read(externalDataSource, Erd_SomeAnalogInput, &actual);
+
+   CHECK_EQUAL(expected, actual);
+}
+
+TEST(SystemData, ShouldSupportReadAndWriteToBspErdsViaInternalDataSource)
+{
+   GivenThatSystemDataIsInitialized();
+
+   AdcCounts_t expected = 0x4321;
+   AdcCounts_t actual;
+
+   DataModel_Write(dataModel, Erd_SomeAnalogInput, &expected);
+   DataModel_Read(dataModel, Erd_SomeAnalogInput, &actual);
+
+   CHECK_EQUAL(expected, actual);
+}
+
+TEST(SystemData, ShouldSetNvErdDataToDefaultValues)
+{
+   GivenThatSystemDataIsInitialized();
+
+   uint32_t expected = 0xC0DE;
+   uint32_t actual;
+
+   DataModel_Read(dataModel, Erd_SomeData, &actual);
+
+   CHECK_EQUAL(expected, actual);
+}
+
+TEST(SystemData, NvErdsShouldPersistAfterReset)
+{
+   GivenThatSystemDataIsInitialized();
+
+   uint32_t expected = 0xABCD;
+   uint32_t actual;
+
+   DataModel_Write(dataModel, Erd_SomeData, &expected);
+   DataModel_Read(dataModel, Erd_SomeData, &actual);
+
+   WhenFlashBlockGroupWriteCompletes();
+
+   WhenSystemDataIsReset();
+
+   DataModel_Read(dataModel, Erd_SomeData, &actual);
 
    CHECK_EQUAL(expected, actual);
 }
