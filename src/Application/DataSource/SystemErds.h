@@ -31,6 +31,7 @@
 #include "FaultIds.h"
 #include "FaultSnapshot.h"
 #include "CycleHistoryRecord.h"
+#include "I_Adc.h"
 
 // clang-format off
 

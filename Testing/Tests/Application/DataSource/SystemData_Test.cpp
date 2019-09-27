@@ -121,9 +121,6 @@ TEST_GROUP(SystemData)
    FlashBlockGroup_Model_t flashBlockGroupModel;
    Action_Context_t runTimerModuleAction;
 
-   //FIXME!
-   I_DataSource_t *bspDataSource = &instance._private.dataSource.bsp._private.dataSource.interface;
-
    void setup()
    {
       TimerModule_TestDouble_Init(&timerModuleDouble);
