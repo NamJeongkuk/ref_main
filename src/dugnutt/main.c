@@ -35,17 +35,17 @@
 #include "InitializeStackMemory.h"
 #include "StackConfigurator.h"
 
-#ifdef DEBUG
-   const bool romCheckErrorEnabled = false;
-#else
-   const bool romCheckErrorEnabled = true;
-#endif
-
 enum
 {
    UlTestsRunPeriodInMSec = 10,
    UlTestsWatchdogTimeoutInMSec = 1000,
-   BytesToCrcPerRomCheck = 1024
+   BytesToCrcPerRomCheck = 1024,
+
+#ifdef DEBUG
+   RomCheckErrorEnabled = false,
+#else
+   RomCheckErrorEnabled = true
+#endif
 };
 
 static SystemData_t systemData;
@@ -155,7 +155,7 @@ int main(void)
       resetAction,
       Crc16Calculator_Rx2xx_Init(ContextProtector_Rx2xx_GetInstance()),
       Header_GetImageHeader(ImageType_Application),
-      romCheckErrorEnabled,
+      RomCheckErrorEnabled,
       UlTestsRunPeriodInMSec,
       UlTestsWatchdogTimeoutInMSec,
       BytesToCrcPerRomCheck,
