@@ -78,7 +78,6 @@ SECTIONS
 		_ebss = .;
 		_end = .;
 	} > RAM
-	__stackCheckRomStart = LOADADDR(.stackCheck);
 	.stackCheck :
 	{
 		__stackCheckStart = .;
