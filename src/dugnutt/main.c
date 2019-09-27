@@ -101,8 +101,6 @@ int main(void)
 
    ContextProtector_Protect(ContextProtector_Rx2xx_GetInstance());
    {
-      UlRamTest_RunStartupTests();
-
       const StackConfiguration_t *stackConfig = StackConfigurator_GetConfiguration();
       INIT_STACK_MEMORY(stackConfig->stackStartAddress, stackConfig->stackSize, stackConfig->stackDirection, stackConfig->pattern, stackConfig->patternSize);
    }
@@ -160,7 +158,8 @@ int main(void)
       romCheckErrorEnabled,
       UlTestsRunPeriodInMSec,
       UlTestsWatchdogTimeoutInMSec,
-      BytesToCrcPerRomCheck);
+      BytesToCrcPerRomCheck,
+      watchdogKickAction);
 
    DataModel_Write(dataModel, Erd_ReadyToEnterBootLoader, enabled);
 
