@@ -1,6 +1,6 @@
 MEMORY
 {
-	RAM (rx) : ORIGIN = 0x4, LENGTH = 0x7FFC
+	RAM (rx) : ORIGIN = 0x4, LENGTH = 0xFFFC
 	ROM (rx) : ORIGIN = 0xFFF80000, LENGTH = 0x76800
 	DTC_VECTOR_TABLE (rx) : ORIGIN = 0xFFFF5800, LENGTH = 0x400
 	PARAMETRIC_DATA (r) : ORIGIN = 0xFFFF6000, LENGTH = 0x5000
@@ -14,8 +14,8 @@ SECTIONS
 	.text :
 	{
 		. = ALIGN(4);
-		__bootLoaderHeaderStart = .;
-		KEEP(*(.bootLoaderHeader))
+		__applicationHeaderStart = .;
+		KEEP(*(.applicationHeader))
 		*(.text)
 		*(.text.*)
 		*(P)
@@ -78,6 +78,12 @@ SECTIONS
 		_ebss = .;
 		_end = .;
 	} > RAM
+	.stackCheck :
+	{
+		__stackCheckStart = .;
+		*(.stackCheck)
+		__stackCheckEnd = .;
+	} > RAM AT>ROM
 
 	_ustack = ORIGIN(RAM) + LENGTH(RAM) - 4;
 	_istack = ORIGIN(RAM) + LENGTH(RAM) - 4;

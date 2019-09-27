@@ -28,12 +28,32 @@
 #include "TimerModuleStack.h"
 #include "Version.h"
 #include "Gea2Addresses.h"
+#include "Crc16Calculator_Rx2xx.h"
+#include "ContextProtector_Rx2xx.h"
+#include "UlTestsPlugin.h"
+#include "UlRamTest.h"
+#include "InitializeStackMemory.h"
+#include "StackConfigurator.h"
+
+enum
+{
+   UlTestsRunPeriodInMSec = 10,
+   UlTestsWatchdogTimeoutInMSec = 1000,
+   BytesToCrcPerRomCheck = 1024,
+
+#ifdef DEBUG
+   RomCheckErrorEnabled = false,
+#else
+   RomCheckErrorEnabled = true
+#endif
+};
 
 static SystemData_t systemData;
 static Application_t application;
 static TimerModuleStack_t timerModuleStack;
 static InvokeActionOnTimerPeriodic_t watchdogPetter;
 static GeaStack_t geaStack;
+static UlTestsPlugin_t ulTestsPlugin;
 
 static const uint8_t staticRoutingTable[] =
    {
@@ -79,7 +99,15 @@ int main(void)
 {
    Hardware_InitializeStage1();
 
+   ContextProtector_Protect(ContextProtector_Rx2xx_GetInstance());
+   {
+      const StackConfiguration_t *stackConfig = StackConfigurator_GetConfiguration();
+      INIT_STACK_MEMORY(stackConfig->stackStartAddress, stackConfig->stackSize, stackConfig->stackDirection, stackConfig->pattern, stackConfig->patternSize);
+   }
+   ContextProtector_Unprotect(ContextProtector_Rx2xx_GetInstance());
+
    I_Action_t *watchdogKickAction = Action_Rx2xxWatchdog_Init();
+   I_Action_t *resetAction = Action_Rx2xxSystemReset_Init();
    TimerModule_t *timerModule = TimerModuleStack_Init(&timerModuleStack);
 
    SystemData_Init(
@@ -88,7 +116,7 @@ int main(void)
       FlashBlockGroup_Rx130_Init(watchdogKickAction, Action_Null_GetInstance(), timerModule),
       Crc16Calculator_Table,
       watchdogKickAction,
-      Action_Rx2xxSystemReset_Init());
+      resetAction);
 
    I_DataModel_t *dataModel = SystemData_DataModel(&systemData);
 
@@ -106,7 +134,8 @@ int main(void)
 
    Application_Init(
       &application,
-      dataModel);
+      dataModel,
+      StackConfigurator_GetConfiguration());
 
    InvokeActionOnTimerPeriodic_Init(
       &watchdogPetter,
@@ -119,6 +148,18 @@ int main(void)
    UpdateBuildInfo(
       dataModel,
       Header_GetImageHeader(ImageType_Application));
+
+   UlTestsPlugin_Init(
+      &ulTestsPlugin,
+      timerModule,
+      resetAction,
+      Crc16Calculator_Rx2xx_Init(ContextProtector_Rx2xx_GetInstance()),
+      Header_GetImageHeader(ImageType_Application),
+      RomCheckErrorEnabled,
+      UlTestsRunPeriodInMSec,
+      UlTestsWatchdogTimeoutInMSec,
+      BytesToCrcPerRomCheck,
+      watchdogKickAction);
 
    DataModel_Write(dataModel, Erd_ReadyToEnterBootLoader, enabled);
 

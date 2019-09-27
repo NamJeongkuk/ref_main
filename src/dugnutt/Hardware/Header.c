@@ -31,7 +31,7 @@ enum
 
 typedef void (*BootLoaderJumpJunction_t)(void);
 
-static const ImageHeader_t applicationHeader __attribute__ ((section (".bootLoaderHeader"))) =
+static const ImageHeader_t applicationHeader __attribute__ ((section (".applicationHeader"))) =
    {
       DummyCrc,
       DummyCrc,

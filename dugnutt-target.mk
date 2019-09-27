@@ -45,6 +45,8 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_DIR)/Event \
    $(APPLCOMMON_DIR)/Filter \
    $(APPLCOMMON_DIR)/Git \
+   $(APPLCOMMON_DIR)/Hardware/Kpit/Rx/Ul \
+   $(APPLCOMMON_DIR)/Hardware/Kpit/Rx/Ul/Vendor \
    $(APPLCOMMON_DIR)/Hardware/Kpit/Rx2xx \
    $(APPLCOMMON_DIR)/Hardware/Rx130 \
    $(APPLCOMMON_DIR)/HardwareInterfaces \
@@ -60,6 +62,8 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_DIR)/Time \
    $(APPLCOMMON_DIR)/TimeOfDay \
    $(APPLCOMMON_DIR)/Ui \
+   $(APPLCOMMON_DIR)/Ul \
+   $(APPLCOMMON_DIR)/Ul/Plugins \
    $(APPLCOMMON_DIR)/Updater \
    $(APPLCOMMON_DIR)/Utilities \
    $(APPLCOMMON_DIR)/Validator \
