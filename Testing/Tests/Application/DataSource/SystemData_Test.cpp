@@ -22,12 +22,15 @@ extern "C"
 #include "FlashBlocks.h"
 #include "FlashBlockGroup_Model.h"
 
+#define AllErds uint8_t i = 0; i < NUM_ELEMENTS(erdTable); i++
+#define And
+
 enum
 {
    DataMatched = 0,
 
    OutputIsEnabled = 1,
-   InputAndOutputIsEnabled = 2,
+   InputAndOutputAreEnabled = 2,
 
    WriteTime = 1,
    EraseTime = 1,
@@ -39,64 +42,51 @@ enum
    Block3,
    BlockCount,
 
-   BlockSize2K = 2048
+   BlockSize = 1024
 };
 
 #define ERD_EXPAND_AS_ENDIANNESS_AWARE_RAM_STORAGE(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)                                                                             \
-   ({ Name COMMA Number COMMA Swap } COMMA)
+   ({ Name COMMA Number COMMA Swap COMMA Io } COMMA)
 
 #define ERD_EXPAND_AS_ENDIANNESS_AWARE_NV_STORAGE(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_NV_, StorageType)                                                                             \
-   ({ Name COMMA Number COMMA Swap } COMMA)
+   ({ Name COMMA Number COMMA Swap COMMA Io } COMMA)
 
 typedef struct
 {
    Erd_t erd;
    Erd_t externalErd;
    bool endiannessNeedsToBeSwapped;
-} EndianessCheckTableElement_t;
+   uint8_t io;
+} ErdTableElement_t;
 
-static const EndianessCheckTableElement_t endiannessAwareTable[] =
+static const ErdTableElement_t erdTable[] =
    {
       ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_RAM_STORAGE)
       ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_NV_STORAGE)
    };
 
-#define ERD_EXPAND_AS_IO_CONFIGURATION(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   { Name, Io },
-
-typedef struct
-{
-   Erd_t erd;
-   uint8_t io;
-} IoCheckTableElement_t;
-
-static const IoCheckTableElement_t ioConfigurationTable[] =
-   {
-      ERD_TABLE(ERD_EXPAND_AS_IO_CONFIGURATION)
-   };
-
 static const FlashBlockItem_t flashBlockTable[] =
    {
-      { Block0, BlockSize2K },
-      { Block1, BlockSize2K },
-      { Block2, BlockSize2K },
-      { Block3, BlockSize2K }
+      { Block0, BlockSize },
+      { Block1, BlockSize },
+      { Block2, BlockSize },
+      { Block3, BlockSize }
    };
 
-static uint8_t block0Data[BlockSize2K];
-static uint8_t block1Data[BlockSize2K];
-static uint8_t block2Data[BlockSize2K];
-static uint8_t block3Data[BlockSize2K];
+static uint8_t block0Data[BlockSize];
+static uint8_t block1Data[BlockSize];
+static uint8_t block2Data[BlockSize];
+static uint8_t block3Data[BlockSize];
 
 static uint8_t *blockList[] =
    { block0Data, block1Data, block2Data, block3Data };
 
-static uint8_t block0BlankStatus[BlockSize2K];
-static uint8_t block1BlankStatus[BlockSize2K];
-static uint8_t block2BlankStatus[BlockSize2K];
-static uint8_t block3BlankStatus[BlockSize2K];
+static uint8_t block0BlankStatus[BlockSize];
+static uint8_t block1BlankStatus[BlockSize];
+static uint8_t block2BlankStatus[BlockSize];
+static uint8_t block3BlankStatus[BlockSize];
 
 static uint8_t *blockBlankStatusList[] =
    { block0BlankStatus, block1BlankStatus, block2BlankStatus, block3BlankStatus };
@@ -127,6 +117,12 @@ TEST_GROUP(SystemData)
       Crc16Calculator_TestDouble_Init(&crc16CalculatorDouble);
 
       Action_Context_Init(&runTimerModuleAction, &timerModuleDouble.timerModule, RunTimerModule);
+
+      for(FlashBlockCount_t i = 0; i < BlockCount; i++)
+      {
+         memset(blockList[i], 0x00, flashBlockTable[i].size);
+         memset(blockBlankStatusList[i], 0x00, flashBlockTable[i].size);
+      }
 
       FlashBlockGroup_Model_Init(
          &flashBlockGroupModel,
@@ -172,26 +168,113 @@ TEST_GROUP(SystemData)
 
    void WhenFlashBlockGroupWriteCompletes()
    {
-      After(1);
+      After(WriteTime);
    }
 
    void WhenSystemDataIsReset()
    {
       GivenThatSystemDataIsInitialized();
    }
+
+   void WhenDataIsWrittenViaInternalDataModel(Erd_t erd, void *data)
+   {
+      DataModel_Write(dataModel, erd, data);
+   }
+
+   void WhenDataIsWrittenViaExternalDataSource(Erd_t erd, void *data)
+   {
+      DataSource_Write(externalDataSource, erd, data);
+   }
+
+   void WhenOutputForErdIsWrittenWithData(Erd_t erd, void *data)
+   {
+      Output_Write(DataModel_GetOutput(dataModel, erd), data);
+   }
+
+   void InternalDataModelShouldReturnDataEqualTo(Erd_t erd, void *expected)
+   {
+      uint8_t size = DataModel_SizeOf(dataModel, erd);
+
+      DataModel_Read(dataModel, erd, dataFromInternalDataSource);
+      MEMCMP_EQUAL(expected, dataFromInternalDataSource, size);
+   }
+
+   void ExternalDataModelShouldReturnDataEqualTo(Erd_t erd, void *expected)
+   {
+      uint8_t size = DataSource_SizeOf(externalDataSource, erd);
+
+      DataSource_Read(externalDataSource, erd, dataFromExternalDataSource);
+      MEMCMP_EQUAL(expected, dataFromExternalDataSource, size);
+   }
+
+   void EndiannessShouldBeSwapped(Erd_t internalErd, Erd_t externalErd)
+   {
+      DataModel_Read(dataModel, internalErd, dataFromInternalDataSource);
+      DataSource_Read(externalDataSource, externalErd, dataFromExternalDataSource);
+
+      if(DataMatched == memcmp(dataFromInternalDataSource, dataFromExternalDataSource, DataSource_SizeOf(externalDataSource, internalErd)))
+      {
+         char error[50];
+         sprintf(error, "ERD 0x%04X was not swapped but should be", externalErd);
+         STRCMP_EQUAL("", error);
+      }
+   }
+
+   void EndiannessShouldNotBeSwapped(Erd_t internalErd, Erd_t externalErd)
+   {
+      DataModel_Read(dataModel, internalErd, dataFromInternalDataSource);
+      DataSource_Read(externalDataSource, externalErd, dataFromExternalDataSource);
+
+      if(DataMatched != memcmp(dataFromInternalDataSource, dataFromExternalDataSource, DataSource_SizeOf(externalDataSource, internalErd)))
+      {
+         char error[50];
+         sprintf(error, "ERD 0x%04X was swapped but shouldn't be", externalErd);
+         STRCMP_EQUAL("", error);
+      }
+   }
+
+   void DataModelShouldReturnInputForErd(Erd_t erd)
+   {
+      I_Input_t *input = DataModel_GetInput(dataModel, erd);
+      CHECK(input != NULL);
+   }
+
+   void DataModelShouldReturnInputOutputForErd(Erd_t erd)
+   {
+      I_InputOutput_t *inputOutput = DataModel_GetInputOutput(dataModel, erd);
+      CHECK(inputOutput != NULL);
+   }
+
+   void DataModelShouldReturnOutputForErd(Erd_t erd)
+   {
+      I_Output_t *output = DataModel_GetOutput(dataModel, erd);
+      CHECK(output != NULL);
+   }
+
+   void AssertionShouldFailWhenInputIsRequestedForErd(Erd_t erd)
+   {
+      ShouldFailAssertionWhen(DataModel_GetInput(dataModel, erd))
+   }
+
+   void AssertionShouldFailWhenInputOutputIsRequestedForErd(Erd_t erd)
+   {
+      ShouldFailAssertionWhen(DataModel_GetInputOutput(dataModel, erd));
+   }
+
+   void AssertionShouldFailWhenOutputIsRequestedForErd(Erd_t erd)
+   {
+      ShouldFailAssertionWhen(DataModel_GetOutput(dataModel, erd));
+   }
 };
 
-TEST(SystemData, ShouldSupportReadAndWriteToInternalDataModel)
+TEST(SystemData, ShouldSupportReadsAndWritesToInternalDataModel)
 {
    GivenThatSystemDataIsInitialized();
 
-   for(uint8_t i = 0; i < NUM_ELEMENTS(endiannessAwareTable); i++)
+   for(AllErds)
    {
-      Erd_t erd = endiannessAwareTable[i].erd;
-
-      DataModel_Write(dataModel, erd, blockOfRandomData);
-      DataModel_Read(dataModel, erd, dataFromInternalDataSource);
-      CHECK_EQUAL(DataMatched, memcmp(blockOfRandomData, dataFromInternalDataSource, DataModel_SizeOf(dataModel, erd)));
+      WhenDataIsWrittenViaInternalDataModel(erdTable[i].erd, blockOfRandomData);
+      InternalDataModelShouldReturnDataEqualTo(erdTable[i].erd, blockOfRandomData);
    }
 }
 
@@ -199,32 +282,21 @@ TEST(SystemData, ShouldSwapEndiannessOfSpecifiedErds)
 {
    GivenThatSystemDataIsInitialized();
 
-   for(uint8_t i = 0; i < NUM_ELEMENTS(endiannessAwareTable); i++)
+   for(AllErds)
    {
-      Erd_t erd = endiannessAwareTable[i].erd;
-      bool endiannessNeedsToBeSwapped = endiannessAwareTable[i].endiannessNeedsToBeSwapped;
+      Erd_t internalErd = erdTable[i].erd;
+      Erd_t externalErd = erdTable[i].externalErd;
+      bool endiannessNeedsToBeSwapped = erdTable[i].endiannessNeedsToBeSwapped;
 
-      DataModel_Write(dataModel, erd, blockOfRandomData);
-      DataModel_Read(dataModel, erd, dataFromInternalDataSource);
-      DataSource_Read(externalDataSource, erd, dataFromExternalDataSource);
+      WhenDataIsWrittenViaInternalDataModel(internalErd, blockOfRandomData);
 
       if(endiannessNeedsToBeSwapped)
       {
-         if(DataMatched == memcmp(dataFromInternalDataSource, dataFromExternalDataSource, DataSource_SizeOf(externalDataSource, erd)))
-         {
-            char error[50];
-            sprintf(error, "ERD 0x%04X was not swapped but should be", endiannessAwareTable[i].externalErd);
-            STRCMP_EQUAL("", error);
-         }
+         EndiannessShouldBeSwapped(internalErd, externalErd);
       }
       else
       {
-         if(DataMatched != memcmp(dataFromInternalDataSource, dataFromExternalDataSource, DataSource_SizeOf(externalDataSource, erd)))
-         {
-            char error[50];
-            sprintf(error, "ERD 0x%04X was swapped but shouldn't be", endiannessAwareTable[i].externalErd);
-            STRCMP_EQUAL("", error);
-         }
+         EndiannessShouldNotBeSwapped(internalErd, externalErd);
       }
    }
 }
@@ -233,22 +305,20 @@ TEST(SystemData, ShouldSupportInputsAndInputOutputsForSpecifiedErds)
 {
    GivenThatSystemDataIsInitialized();
 
-   for(uint8_t i = 0; i < NUM_ELEMENTS(ioConfigurationTable); i++)
+   for(AllErds)
    {
-      Erd_t erd = ioConfigurationTable[i].erd;
-      uint8_t ioConfiguration = ioConfigurationTable[i].io;
+      Erd_t erd = erdTable[i].erd;
+      uint8_t ioConfiguration = erdTable[i].io;
 
-      if(ioConfiguration == InputAndOutputIsEnabled)
+      if(ioConfiguration == InputAndOutputAreEnabled)
       {
-         I_Input_t *input = DataModel_GetInput(dataModel, erd);
-         I_InputOutput_t *inputOutput = DataModel_GetInputOutput(dataModel, erd);
-         CHECK(input != NULL);
-         CHECK(inputOutput != NULL);
+         DataModelShouldReturnInputForErd(erd);
+         And DataModelShouldReturnInputOutputForErd(erd);
       }
       else
       {
-         ShouldFailAssertionWhen(DataModel_GetInput(dataModel, erd))
-         ShouldFailAssertionWhen(DataModel_GetInputOutput(dataModel, erd))
+         AssertionShouldFailWhenInputIsRequestedForErd(erd);
+         And AssertionShouldFailWhenInputOutputIsRequestedForErd(erd);
       }
    }
 }
@@ -257,90 +327,59 @@ TEST(SystemData, ShouldSupportOutputsForSpecifiedErds)
 {
    GivenThatSystemDataIsInitialized();
 
-   for(uint8_t i = 0; i < NUM_ELEMENTS(ioConfigurationTable); i++)
+   for(AllErds)
    {
-      Erd_t erd = ioConfigurationTable[i].erd;
-      uint8_t ioConfiguration = ioConfigurationTable[i].io;
+      Erd_t erd = erdTable[i].erd;
+      uint8_t ioConfiguration = erdTable[i].io;
 
-      if(ioConfiguration == OutputIsEnabled || ioConfiguration == InputAndOutputIsEnabled)
+      if(ioConfiguration == OutputIsEnabled || ioConfiguration == InputAndOutputAreEnabled)
       {
-         I_Output_t *output = DataModel_GetOutput(dataModel, erd);
-         CHECK(output != NULL);
+         DataModelShouldReturnOutputForErd(erd);
       }
       else
       {
-         ShouldFailAssertionWhen(DataModel_GetOutput(dataModel, erd))
+         AssertionShouldFailWhenOutputIsRequestedForErd(erd);
       }
    }
 }
 
-TEST(SystemData, ShouldSupportReadAndWriteToAnErdViaAnInputAndOutput)
-{
-   GivenThatSystemDataIsInitialized();
-
-   I_Output_t *output = DataModel_GetOutput(dataModel, Erd_TimerModuleDiagnosticsEnable);
-   I_Input_t *input = DataModel_GetInput(dataModel, Erd_TimerModuleDiagnosticsEnable);
-   bool expected = true;
-   bool actual;
-
-   Output_Write(output, &expected);
-   Input_Read(input, &actual);
-   CHECK_EQUAL(expected, actual);
-}
-
 TEST(SystemData, ShouldSupportReadAndWriteToBspErdsViaExternalDataSource)
 {
+   AdcCounts_t expected = 0x1234;
    GivenThatSystemDataIsInitialized();
 
-   AdcCounts_t expected = 0x1234;
-   AdcCounts_t actual;
+   WhenDataIsWrittenViaExternalDataSource(Erd_SomeAnalogInput, &expected);
 
-   DataSource_Write(externalDataSource, Erd_SomeAnalogInput, &expected);
-   DataSource_Read(externalDataSource, Erd_SomeAnalogInput, &actual);
-
-   CHECK_EQUAL(expected, actual);
+   ExternalDataModelShouldReturnDataEqualTo(Erd_SomeAnalogInput, &expected);
 }
 
 TEST(SystemData, ShouldSupportReadAndWriteToBspErdsViaInternalDataSource)
 {
+   AdcCounts_t expected = 0x4321;
    GivenThatSystemDataIsInitialized();
 
-   AdcCounts_t expected = 0x4321;
-   AdcCounts_t actual;
+   WhenDataIsWrittenViaInternalDataModel(Erd_SomeAnalogInput, &expected);
 
-   DataModel_Write(dataModel, Erd_SomeAnalogInput, &expected);
-   DataModel_Read(dataModel, Erd_SomeAnalogInput, &actual);
-
-   CHECK_EQUAL(expected, actual);
+   InternalDataModelShouldReturnDataEqualTo(Erd_SomeAnalogInput, &expected);
 }
 
 TEST(SystemData, ShouldSetNvErdDataToDefaultValues)
 {
+   uint32_t expected = 0xC0DECAFE;
    GivenThatSystemDataIsInitialized();
 
-   uint32_t expected = 0xC0DE;
-   uint32_t actual;
-
-   DataModel_Read(dataModel, Erd_SomeData, &actual);
-
-   CHECK_EQUAL(expected, actual);
+   InternalDataModelShouldReturnDataEqualTo(Erd_SomeData, &expected);
 }
 
 TEST(SystemData, NvErdsShouldPersistAfterReset)
 {
    GivenThatSystemDataIsInitialized();
 
-   uint32_t expected = 0xABCD;
-   uint32_t actual;
+   uint32_t expected = 0xAAAABBBB;
 
-   DataModel_Write(dataModel, Erd_SomeData, &expected);
-   DataModel_Read(dataModel, Erd_SomeData, &actual);
-
+   WhenDataIsWrittenViaInternalDataModel(Erd_SomeData, &expected);
    WhenFlashBlockGroupWriteCompletes();
-
    WhenSystemDataIsReset();
 
-   DataModel_Read(dataModel, Erd_SomeData, &actual);
-
-   CHECK_EQUAL(expected, actual);
+   InternalDataModelShouldReturnDataEqualTo(Erd_SomeData, &expected);
 }
