@@ -26,14 +26,10 @@ TEST_SRC_DIRS = \
 # List of include directories
 INCLUDE_DIRS = \
    $(APPLCOMMON_DIR)/Hardware/Rx130 \
-   $(APPLCOMMON_DIR)/Hardware/Kpit/Rx130 \
-   $(APPLCOMMON_DIR)/Hardware/Rx2xx \
    $(APPLCOMMON_DIR)/Image \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \
    $(PROJECT_DIR)/dugnutt/Bsp \
    $(PROJECT_DIR)/dugnutt/Hardware \
-   $(PROJECT_DIR)/Hardware \
-   $(PROJECT_DIR)/Hardware/Rx130 \
 
 include $(APPLCOMMON_DIR)/Makefile
 
