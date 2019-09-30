@@ -166,12 +166,12 @@ TEST_GROUP(SystemData)
       externalDataSource = SystemData_ExternalDataSource(&instance);
    }
 
-   void WhenFlashBlockGroupWriteCompletes()
+   void AfterFlashBlockGroupWriteCompletes()
    {
       After(WriteTime);
    }
 
-   void WhenSystemDataIsReset()
+   void SystemDataIsReset()
    {
       GivenThatSystemDataIsInitialized();
    }
@@ -373,13 +373,12 @@ TEST(SystemData, ShouldSetNvErdDataToDefaultValues)
 
 TEST(SystemData, NvErdsShouldPersistAfterReset)
 {
+   uint32_t expected = 0xAAAABBBB;
    GivenThatSystemDataIsInitialized();
 
-   uint32_t expected = 0xAAAABBBB;
-
    WhenDataIsWrittenViaInternalDataModel(Erd_SomeData, &expected);
-   WhenFlashBlockGroupWriteCompletes();
-   WhenSystemDataIsReset();
+   AfterFlashBlockGroupWriteCompletes();
+   SystemDataIsReset();
 
    InternalDataModelShouldReturnDataEqualTo(Erd_SomeData, &expected);
 }
