@@ -9,7 +9,7 @@ General-purpose RX231 project using the [R5F52318ADFL](https://www.renesas.com/s
 | Data Flash  | 8 KB   |
 
 
-## Duggnutt
+## Dugnutt
 General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html)
 
 | Memory      | Size   |
