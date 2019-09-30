@@ -5,12 +5,12 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
+#include <stdint.h>
 #include "DataSource_Bsp.h"
 #include "DataSource_Ram.h"
 #include "SystemErds.h"
 #include "uassert.h"
-#include <string.h>
-#include <stdint.h>
 
 #define GPIO_ERD_TABLE(ENTRY) \
    ENTRY(Erd_BspGpio_HeartbeatLed, bool) \
@@ -23,7 +23,7 @@
    uint8_t MACRO_SAFE_CONCATENATE(erd, Name)[sizeof(DataType)];
 
 #define EXPAND_AS_CONFIGURATION(Name, DataType) \
-   { Name COMMA OFFSET_OF(DataSourceStorage_t, MACRO_SAFE_CONCATENATE(erd, Name)) } COMMA
+   { Name, OFFSET_OF(DataSourceStorage_t, MACRO_SAFE_CONCATENATE(erd, Name)) },
 
 typedef struct
 {

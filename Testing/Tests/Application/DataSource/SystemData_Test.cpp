@@ -23,7 +23,7 @@ extern "C"
 #include "FlashBlocks.h"
 #include "FlashBlockGroup_Model.h"
 
-#define AllErds uint8_t i = 0; i < NUM_ELEMENTS(erdTable); i++
+#define AllErds size_t i = 0; i < NUM_ELEMENTS(erdTable); i++
 #define And
 
 enum
