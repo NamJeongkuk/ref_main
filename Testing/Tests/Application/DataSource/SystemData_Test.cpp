@@ -10,6 +10,7 @@ extern "C"
 #include "SystemData.h"
 #include "Action_Null.h"
 #include "Action_Context.h"
+#include "Crc16Calculator_Table.h"
 }
 
 #include <string.h>
@@ -107,15 +108,12 @@ TEST_GROUP(SystemData)
    I_DataSource_t *externalDataSource;
 
    TimerModule_TestDouble_t timerModuleDouble;
-   Crc16Calculator_TestDouble_t crc16CalculatorDouble;
    FlashBlockGroup_Model_t flashBlockGroupModel;
    Action_Context_t runTimerModuleAction;
 
    void setup()
    {
       TimerModule_TestDouble_Init(&timerModuleDouble);
-      Crc16Calculator_TestDouble_Init(&crc16CalculatorDouble);
-
       Action_Context_Init(&runTimerModuleAction, &timerModuleDouble.timerModule, RunTimerModule);
 
       for(FlashBlockCount_t i = 0; i < BlockCount; i++)
@@ -158,7 +156,7 @@ TEST_GROUP(SystemData)
          &instance,
          &timerModuleDouble.timerModule,
          &flashBlockGroupModel.interface,
-         &crc16CalculatorDouble.interface,
+         Crc16Calculator_Table,
          &runTimerModuleAction.interface,
          Action_Null_GetInstance());
 
@@ -168,7 +166,7 @@ TEST_GROUP(SystemData)
 
    void AfterFlashBlockGroupWriteCompletes()
    {
-      After(WriteTime);
+      After(WriteTime * 4);
    }
 
    void SystemDataIsReset()
