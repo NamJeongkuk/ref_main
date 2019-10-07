@@ -11,17 +11,21 @@
 #include <stddef.h>
 
 /*!
- * Set data to zeros
- * @param data Buffer into which to copy the data
- * @param dataSize Size of the buffer
+ * @param data
+ * @param dataSize
  */
 void NonVolatileDataSourceDefaultData_Zeros(void *data, size_t dataSize);
 
 /*!
- * Set data to boolean true
- * @param data Buffer into which to copy the data
- * @param dataSize Size of the buffer
+ * @param data
+ * @param dataSize
  */
 void NonVolatileDataSourceDefaultData_BooleanTrue(void *data, size_t dataSize);
+
+/*!
+ * @param data
+ * @param dataSize
+ */
+void NonVolatileDataSourceDefaultData_Code(void *data, size_t dataSize);
 
 #endif

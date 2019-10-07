@@ -20,3 +20,9 @@ void NonVolatileDataSourceDefaultData_BooleanTrue(void *data, size_t dataSize)
 {
    memcpy(data, &constTrue, dataSize);
 }
+
+void NonVolatileDataSourceDefaultData_Code(void *data, size_t dataSize)
+{
+   uint32_t code = 0xC0DECAFE;
+   memcpy(data, &code, dataSize);
+}

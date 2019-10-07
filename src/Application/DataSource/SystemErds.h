@@ -31,6 +31,7 @@
 #include "FaultIds.h"
 #include "FaultSnapshot.h"
 #include "CycleHistoryRecord.h"
+#include "I_Adc.h"
 
 // clang-format off
 
@@ -157,7 +158,7 @@ enum
    ENTRY(Erd_TimerModuleDiagnosticsEnable,                  0xF001, bool,                                               Swap_N, Io_All,  Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_TimerModuleDiagnosticsResult,                  0xF002, TimerModuleDiagnosticsResults_t,                    Swap_Y, Io_O,    Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_ResetSignal,                                   0xF003, Signal_t,                                           Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_SomeData,                                      0xF004, uint32_t,                                           Swap_Y, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_SomeData,                                      0xF004, uint32_t,                                           Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Code,    NotFault) \
    ENTRY(Erd_ApplianceRunTimeInMinutesUpdatedHourly,        0xF005, ApplianceRunTimeMinutes_t,                          Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_StackPercentFree,                              0xF006, uint8_t,                                            Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
    \
