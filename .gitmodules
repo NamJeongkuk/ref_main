@@ -16,3 +16,6 @@
 [submodule "lib/applcommon-tiny"]
 	path = lib/applcommon-tiny
 	url = https://github.com/geappliances/applcommon.tiny
+[submodule "lib/stm32-standard-peripherals"]
+	path = lib/stm32-standard-peripherals
+	url = https://github.com/geappliances/build-tools.stm32-standard-peripherals.git
