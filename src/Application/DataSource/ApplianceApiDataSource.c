@@ -12,13 +12,14 @@
 static const ImageHeader_t bootLoaderHeader;
 static const ImageHeader_t applicationHeader;
 static const ImageHeader_t parametricHeader;
-#define  BootLoaderImageHeader &bootLoaderHeader
+#define BootLoaderImageHeader &bootLoaderHeader
 #define ApplicationImageHeader &applicationHeader
 #define ParametricImageHeader &parametricHeader
 #else
 #include "Header.h"
 #endif
 
+// clang-format off
 static DataSource_ApplianceApiRevision1Configuration_t applianceApiConfiguration =
    {
       .header =
@@ -50,13 +51,13 @@ static DataSource_ApplianceApiRevision1Configuration_t applianceApiConfiguration
          {
             .supported = true,
             .erd =
-            {
-               .modelNumber = Erd_ModelNumber,
-               .serialNumber = Erd_SerialNumber,
-               .applianceType = Erd_ApplianceType,
-               .appliancePersonality = Erd_AppliancePersonality,
-               .applianceRunTime = Erd_ServiceDiagnosticsRunTimeInMinutes
-            }
+               {
+                  .modelNumber = Erd_ModelNumber,
+                  .serialNumber = Erd_SerialNumber,
+                  .applianceType = Erd_ApplianceType,
+                  .appliancePersonality = Erd_AppliancePersonality,
+                  .applianceRunTime = Erd_ServiceDiagnosticsRunTimeInMinutes
+               }
          },
 
       .serviceMode =
@@ -73,6 +74,7 @@ static DataSource_ApplianceApiRevision1Configuration_t applianceApiConfiguration
                }
          },
    };
+// clang-format on
 
 void ApplianceApiDataSource_Init(
    ApplianceApiDataSource_t *instance,

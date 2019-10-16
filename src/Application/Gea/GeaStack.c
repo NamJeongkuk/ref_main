@@ -126,34 +126,39 @@ static void CreateInternalNode(
    const uint8_t *staticRoutingTable,
    uint8_t staticRoutingTableEntryCount)
 {
-   Gea2Configurator_CreateCustomBufferedFullDuplexUartInterfaceNode(
-      &instance->_private.configurator,
-      &instance->_private.internal.node,
-      &instance->_private.internal.nodeResources,
-      DataModelErdPointerAccess_GetBufferedUart(dataModel, Erd_InternalBufferedUart),
-      DataModelErdPointerAccess_GetCrc16Calculator(dataModel, Erd_CrcCalcTable),
-      geaAddress,
-      RetryCount,
-      instance->_private.internal.buffers.sendBuffer,
-      sizeof(instance->_private.internal.buffers.sendBuffer),
-      instance->_private.internal.buffers.receiveBuffer,
-      sizeof(instance->_private.internal.buffers.receiveBuffer),
-      instance->_private.internal.buffers.packetQueueStorage,
-      sizeof(instance->_private.internal.buffers.packetQueueStorage));
+   I_BufferedUart_t *uart = DataModelErdPointerAccess_GetBufferedUart(dataModel, Erd_InternalBufferedUart);
 
-   Gea2Configurator_AddDynamicRoutingTableWithReplacementToNode(
-      &instance->_private.configurator,
-      &instance->_private.internal.node,
-      &instance->_private.internal.dynamicRoutingResources,
-      instance->_private.internal.dynamicRoutingTable,
-      ELEMENT_COUNT(instance->_private.internal.dynamicRoutingTable));
+   if(uart)
+   {
+      Gea2Configurator_CreateCustomBufferedFullDuplexUartInterfaceNode(
+         &instance->_private.configurator,
+         &instance->_private.internal.node,
+         &instance->_private.internal.nodeResources,
+         uart,
+         DataModelErdPointerAccess_GetCrc16Calculator(dataModel, Erd_CrcCalcTable),
+         geaAddress,
+         RetryCount,
+         instance->_private.internal.buffers.sendBuffer,
+         sizeof(instance->_private.internal.buffers.sendBuffer),
+         instance->_private.internal.buffers.receiveBuffer,
+         sizeof(instance->_private.internal.buffers.receiveBuffer),
+         instance->_private.internal.buffers.packetQueueStorage,
+         sizeof(instance->_private.internal.buffers.packetQueueStorage));
 
-   Gea2Configurator_AddStaticRoutingTableToNode(
-      &instance->_private.configurator,
-      &instance->_private.internal.node,
-      &instance->_private.internal.staticRoutingResources,
-      staticRoutingTable,
-      staticRoutingTableEntryCount);
+      Gea2Configurator_AddDynamicRoutingTableWithReplacementToNode(
+         &instance->_private.configurator,
+         &instance->_private.internal.node,
+         &instance->_private.internal.dynamicRoutingResources,
+         instance->_private.internal.dynamicRoutingTable,
+         ELEMENT_COUNT(instance->_private.internal.dynamicRoutingTable));
+
+      Gea2Configurator_AddStaticRoutingTableToNode(
+         &instance->_private.configurator,
+         &instance->_private.internal.node,
+         &instance->_private.internal.staticRoutingResources,
+         staticRoutingTable,
+         staticRoutingTableEntryCount);
+   }
 }
 
 static void CreateExternalNode(
@@ -222,7 +227,7 @@ void GeaStack_Init(
       DataModel_GetInput(dataModel, Erd_ReadyToEnterBootLoader));
 }
 
-I_Gea2PacketEndpoint_t * GeaStack_GetGea2PacketEndpoint(GeaStack_t *instance)
+I_Gea2PacketEndpoint_t *GeaStack_GetGea2PacketEndpoint(GeaStack_t *instance)
 {
    return &instance->_private.erdSecurity.restrictedErdPacketRestrictor.interface;
 }

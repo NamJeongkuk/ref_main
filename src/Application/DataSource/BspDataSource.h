@@ -13,6 +13,7 @@
 #include "ConstArrayMap_LinearSearch.h"
 #include "ConstArrayMap_BinarySearch.h"
 #include "ConstBidirectionalMap_ConstArrayMap.h"
+#include "Timer.h"
 
 typedef struct
 {

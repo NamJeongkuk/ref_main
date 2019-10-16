@@ -1,6 +1,6 @@
 /*!
  * @file
- * @brief The hardware initialization implementation.
+ * @brief
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
