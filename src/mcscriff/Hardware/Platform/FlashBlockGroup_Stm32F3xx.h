@@ -20,8 +20,8 @@
  * @return
  */
 I_FlashBlockGroup_t *FlashBlockGroup_Stm32F3xx_Init(
-   I_Action_t *flashBlockBlankAction,
    I_Action_t *onErrorAction,
+   FlashBlockCount_t blockCount,
    const uint32_t *blockAddresses);
 
 #endif

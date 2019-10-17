@@ -60,7 +60,6 @@ static const uint8_t staticRoutingTable[] =
 
 static const uint32_t flashBlockAddresses[] =
    {
-      0x0800F000,
       0x0800F800
    };
 
@@ -116,7 +115,7 @@ int main(void)
    SystemData_Init(
       &systemData,
       timerModule,
-      FlashBlockGroup_Stm32F3xx_Init(Action_Null_GetInstance(), Action_Null_GetInstance(), flashBlockAddresses),
+      FlashBlockGroup_Stm32F3xx_Init(Action_Null_GetInstance(), NUM_ELEMENTS(flashBlockAddresses), flashBlockAddresses),
       Crc16Calculator_Stm32_Init(ContextProtector_Stm32_GetInstance()),
       watchdogKickAction,
       resetAction);

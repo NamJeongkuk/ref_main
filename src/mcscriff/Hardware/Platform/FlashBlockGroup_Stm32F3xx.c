@@ -14,7 +14,6 @@
 
 enum
 {
-   NumberOfFlashBlocks = 2,
    BlockAlignment = 2,
    FlashBlockSize = 2048,
    EraseOneBlock = 1,
@@ -26,11 +25,12 @@ enum
 typedef struct
 {
    I_FlashBlockGroup_t interface;
+
+   FlashBlockCount_t blockCount;
    const uint32_t *blockAddresses;
 
    struct
    {
-      I_Action_t *blankCheck;
       I_Action_t *error;
    } actions;
 
@@ -47,8 +47,8 @@ typedef struct
       bool operationInProgress;
       bool flashErrorOccurred;
       uint16_t halfWordsToWrite;
-      const uint16_t *writeBuffer;
       uint32_t addressBeingProgrammed;
+      const uint16_t *writeBuffer;
    } flashOperation;
 } FlashBlockGroup_Stm32F3xx_t;
 
@@ -181,16 +181,13 @@ static bool FlashBlockRegionIsBlank(
    return true;
 }
 
-static FlashBlockCount_t GetNumberOfBlocks(
-   I_FlashBlockGroup_t *instance)
+static FlashBlockCount_t GetNumberOfBlocks(I_FlashBlockGroup_t *_instance)
 {
-   IGNORE_ARG(instance);
-   return NumberOfFlashBlocks;
+   REINTERPRET(instance, _instance, FlashBlockGroup_Stm32F3xx_t *);
+   return instance->blockCount;
 }
 
-static FlashBlockByteCount_t GetBlockSize(
-   I_FlashBlockGroup_t *instance,
-   FlashBlock_t block)
+static FlashBlockByteCount_t GetBlockSize(I_FlashBlockGroup_t *instance, FlashBlock_t block)
 {
    IGNORE_ARG(instance);
    IGNORE_ARG(block);
@@ -242,8 +239,8 @@ static void ConfigureFlashDriver(void)
 }
 
 I_FlashBlockGroup_t *FlashBlockGroup_Stm32F3xx_Init(
-   I_Action_t *flashBlockBlankAction,
    I_Action_t *onErrorAction,
+   FlashBlockCount_t blockCount,
    const uint32_t *blockAddresses)
 {
    instance.interface.api = &api;
@@ -252,7 +249,7 @@ I_FlashBlockGroup_t *FlashBlockGroup_Stm32F3xx_Init(
    instance.flashOperation.operationInProgress = false;
 
    instance.actions.error = onErrorAction;
-   instance.actions.blankCheck = flashBlockBlankAction;
+   instance.blockCount = blockCount;
    instance.blockAddresses = blockAddresses;
 
    Event_Synchronous_Init(&instance.events.onWritten);
