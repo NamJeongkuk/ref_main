@@ -22,6 +22,7 @@ enum
 
 #define EXPAND_AS_INIT(name, mode, pullUp, speed, port, pin)   \
    {                                                           \
+      __HAL_RCC_##port##_CLK_ENABLE();                         \
       GPIO_InitTypeDef gpioInitStruct;                         \
       if(mode != GPIO_MODE_INPUT)                              \
       {                                                        \
