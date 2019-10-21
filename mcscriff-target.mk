@@ -6,11 +6,12 @@ TARGET:=mcscriff
 OUTPUT_DIR:=build/$(TARGET)
 APPLCOMMON_DIR:=lib/applcommon
 PROJECT_DIR:=src
+BOOT_LOADER_DIR=lib/boot-loaders
 
 # The STM32 CPU
-DEVICE:=STM32F303R8
+DEVICE:=STM32F303RB
 
-DEFINE_LIST+=STM32F303x8
+DEFINE_LIST+=STM32F303xC
 DEFINE_LIST+=USE_HAL_DRIVER
 DEFINE_LIST+=HSI_VALUE=8000000
 
@@ -36,7 +37,6 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_DIR)/Alignment \
    $(APPLCOMMON_DIR)/Allocator \
    $(APPLCOMMON_DIR)/ApplianceApi \
-   $(APPLCOMMON_DIR)/ApplianceType \
    $(APPLCOMMON_DIR)/Audio \
    $(APPLCOMMON_DIR)/Communications/Gea2 \
    $(APPLCOMMON_DIR)/Communications/Gea2/Commands \
@@ -78,12 +78,10 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_DIR)/Ui \
    $(APPLCOMMON_DIR)/Updater \
    $(APPLCOMMON_DIR)/Utilities \
-   $(APPLCOMMON_DIR)/Validator \
-   $(APPLCOMMON_DIR)/Watchdog
+   $(APPLCOMMON_DIR)/Validator
 
 SRC_DIRS=\
    $(PROJECT_DIR)/$(TARGET) \
-   $(PROJECT_DIR)/$(TARGET)/Bsp \
    $(PROJECT_DIR)/$(TARGET)/Hardware \
    $(PROJECT_DIR)/$(TARGET)/Hardware/Peripheral \
    $(PROJECT_DIR)/$(TARGET)/Hardware/Platform \
@@ -96,10 +94,12 @@ SRC_DIRS=\
 
 # Additional include directories
 INC_DIRS=\
+   $(PROJECT_DIR)/$(TARGET)/Bsp \
    $(APPLCOMMON_DIR)/Assert \
    $(APPLCOMMON_DIR)/ApplianceApi \
    $(APPLCOMMON_DIR)/BootLoader \
    $(APPLCOMMON_DIR)/Git \
+   $(APPLCOMMON_DIR)/Fingerprinter \
    $(APPLCOMMON_DIR)/Image \
    $(APPLCOMMON_DIR)/Reset \
    $(APPLCOMMON_DIR)/ServiceMode \
@@ -118,7 +118,7 @@ C_STANDARD:=gnu99
 
 WARNINGS_TO_IGNORE:=no-array-bounds no-maybe-uninitialized no-type-limits no-implicit-fallthrough
 
-HEADER_ADDRESS:=0x08000188
+HEADER_ADDRESS:=0x08005000
 
 # Space delimited list, whole folders can also be included
 PACKAGE_CONTENTS=
@@ -131,7 +131,7 @@ include lib/stm32-standard-peripherals/stm32-standard-peripherals.mk
 include tools/gcc-arm-none-eabi/MakefileWorker.mk
 
 .PHONY: all
-all: target $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
+all: target boot-loader
 	$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
 	$(call make_directory,$(OUTPUT_DIR)/binaries)
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness little --output_directory $(OUTPUT_DIR)/binaries
@@ -144,7 +144,8 @@ package: all artifacts erd_definitions
 	$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 	@echo Archive complete
 
-$(BOOT_LOADER_DIR)/build/$(TARGET)-boot-loader/$(TARGET)-boot-loader.mot:
+.PHONY: boot-loader
+boot-loader:
 	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(TARGET)-boot-loader.mk RELEASE=Y DEBUG=N
 
 $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot: target $(BOOT_LOADER_DIR)/build/$(TARGET)-boot-loader/$(TARGET)-boot-loader.mot
@@ -161,7 +162,7 @@ erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)
 	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
 
 .PHONY: upload
-upload: $(call upload_deps,all jlink_tools)
+upload: all jlink_tools
 	$(call jlink_upload,$(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot)
 
 .PHONY: clean

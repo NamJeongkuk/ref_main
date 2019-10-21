@@ -60,7 +60,8 @@ static const uint8_t staticRoutingTable[] =
 
 static const uint32_t flashBlockAddresses[] =
    {
-      0x0800F800
+      0x08017000,
+      0x08017800
    };
 
 static void UpdateBuildInfo(

@@ -15,7 +15,7 @@
 extern char __Boot_Header;
 
 #define ApplicationStartAddress (0x08005000)
-#define ApplicationEndAddress (0x0800FFFF)
+#define ApplicationEndAddress (0x0801EFFF)
 #define ApplicationHeaderAddress ApplicationStartAddress
 #define ApplicationImageHeader (const ImageHeader_t *)(intptr_t)(ApplicationHeaderAddress)
 
@@ -25,7 +25,7 @@ extern char __Boot_Header;
 #define ParametricImageHeader (const ImageHeader_t *)(intptr_t)(ParametricHeaderAddress)
 
 #define BootLoaderStartAddress (0x08000000)
-#define BootLoaderEndAddress (0x0800FFFF)
+#define BootLoaderEndAddress (0x08004FFF)
 #define BootLoaderHeaderAddress (&__Boot_Header)
 #define BootLoaderImageHeader (const ImageHeader_t *)(intptr_t)(BootLoaderHeaderAddress)
 

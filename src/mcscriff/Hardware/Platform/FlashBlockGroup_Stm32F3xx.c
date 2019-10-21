@@ -269,3 +269,8 @@ void HAL_FLASH_OperationErrorCallback(uint32_t status)
 {
    instance.flashOperation.flashErrorOccurred = true;
 }
+
+void FLASH_IRQHandler(void)
+{
+   HAL_FLASH_IRQHandler();
+}

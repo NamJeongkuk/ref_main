@@ -45,6 +45,7 @@ static const FaultId_t faultCodes[] =
       ERD_TABLE(EXPAND_AS_FAULT_ID)
    };
 
+// clang-format off
 static const DataSource_ServiceDiagnosticsRevision3Entity_t serviceDiagnosticsEntity =
    {
       .manifest = Erd_ServiceDiagnosticsEntityManifest,
@@ -113,6 +114,7 @@ static const DataSource_ServiceDiagnosticsRevision3Entity_t serviceDiagnosticsEn
             .erdCount = ELEMENT_COUNT(snapshotErdList)
          }
    };
+// clang-format on
 
 static const DataSource_ServiceDiagnosticsRevision3Entity_t *entities[] =
    {
@@ -210,7 +212,7 @@ void ServiceDiagnosticsDataSource_Init(
    DataSourceErdPointerAccess_Write(dataSource, Erd_FaultCodeTableInputGroup, &instance->_private.faultTableIterator.interface);
 }
 
-I_DataSource_t * ServiceDiagnosticsDataSource_DataSource(ServiceDiagnosticsDataSource_t *instance)
+I_DataSource_t *ServiceDiagnosticsDataSource_DataSource(ServiceDiagnosticsDataSource_t *instance)
 {
    return &instance->_private.serviceDiagnosticsRevision3DataSource.interface;
 }

@@ -9,8 +9,6 @@
 #include "SystemErds.h"
 #include "uassert.h"
 #include "I_GpioGroup.h"
-#include "iodefine.h"
-#include "ContextProtector_Rx2xx.h"
 #include <string.h>
 
 #define CHANNEL_FROM_ERD(erd) (erd - Erd_BspGpio_Start - 1)
