@@ -9,19 +9,17 @@
 #define GPIOCONFIGURATION_H
 
 // clang-format off
-
-// Name, Direction, PullUp, DriveCapacity, Port, Bit
+// Name, Mode, PullUp, Speed, Port, Pin
 #define GPIO_TABLE(ENTRY) \
-   ENTRY(HeartbeatLed,        GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortB, 3) \
-   ENTRY(OtherLed,            GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortB, 5) \
-   ENTRY(Io1,                 GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, Port1, 7) \
-   ENTRY(Io2,                 GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, Port1, 6) \
-   ENTRY(Io3,                 GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, Port1, 5) \
-   ENTRY(Io4,                 GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, Port1, 4) \
-   ENTRY(Io5,                 GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, Port3, 1) \
-   ENTRY(Io6,                 GpioDirection_Input,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortE, 3) \
-   ENTRY(PushButtonSwitch,    GpioDirection_Input,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortC, 5)
-
+   ENTRY(HeartbeatLed,        GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW,      GPIOB, GPIO_PIN_9)  \
+   ENTRY(OtherLed,            GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_LOW,      GPIOB, GPIO_PIN_8)  \
+   ENTRY(Io1,                 GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM,   GPIOC, GPIO_PIN_6)  \
+   ENTRY(Io2,                 GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM,   GPIOC, GPIO_PIN_7)  \
+   ENTRY(Io3,                 GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM,   GPIOC, GPIO_PIN_8)  \
+   ENTRY(Io4,                 GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM,   GPIOC, GPIO_PIN_9)  \
+   ENTRY(Io5,                 GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, GPIO_SPEED_FREQ_MEDIUM,   GPIOA, GPIO_PIN_8)  \
+   ENTRY(Io6,                 GPIO_MODE_INPUT,     GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH,     GPIOB, GPIO_PIN_14) \
+   ENTRY(PushButtonSwitch,    GPIO_MODE_INPUT,     GPIO_NOPULL, GPIO_SPEED_FREQ_HIGH,     GPIOB, GPIO_PIN_13)
 // clang-format on
 
 #endif

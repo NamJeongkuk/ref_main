@@ -82,6 +82,7 @@ COMMON_LIB_DIRS=\
 
 SRC_DIRS=\
    $(PROJECT_DIR)/$(TARGET) \
+   $(PROJECT_DIR)/$(TARGET)/Bsp \
    $(PROJECT_DIR)/$(TARGET)/Hardware \
    $(PROJECT_DIR)/$(TARGET)/Hardware/Peripheral \
    $(PROJECT_DIR)/$(TARGET)/Hardware/Platform \
@@ -94,7 +95,6 @@ SRC_DIRS=\
 
 # Additional include directories
 INC_DIRS=\
-   $(PROJECT_DIR)/$(TARGET)/Bsp \
    $(APPLCOMMON_DIR)/Assert \
    $(APPLCOMMON_DIR)/ApplianceApi \
    $(APPLCOMMON_DIR)/BootLoader \
