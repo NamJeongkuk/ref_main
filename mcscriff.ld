@@ -4,7 +4,7 @@ MEMORY
   BOOT_HEADER (r)  : ORIGIN = 0x08000194, LENGTH = 0x40
   HEADER (r)       : ORIGIN = 0x08005000, LENGTH = 0x40
   VECTORS (rx)     : ORIGIN = 0x08005100, LENGTH = 0x194
-  FLASH (rx)       : ORIGIN = 0x08005294, LENGTH = 128K - 20K - LENGTH(VECTORS) - LENGTH(HEADER) - 4K
+  FLASH (rx)       : ORIGIN = 0x08005300, LENGTH = 128K - 20K - LENGTH(VECTORS) - LENGTH(HEADER) - 4K
   USER_FLASH (rw)  : ORIGIN = 0x0801F000, LENGTH = 4K
   RAM (rwx)        : ORIGIN = 0x20000000, LENGTH = 32K
   CCMRAM (rwx)     : ORIGIN = 0x10000000, LENGTH = 4K
@@ -40,12 +40,6 @@ SECTIONS
 		*(.rodata*)
 	} > FLASH
 
-	.userFlash :
-	{
-		__User_Flash = .;
-		KEEP(*(.userFlash))
-	} > USER_FLASH
-
 	.ARM.extab :
 	{
 		*(.ARM.extab* .gnu.linkonce.armextab.*)
@@ -60,7 +54,6 @@ SECTIONS
 
 	__etext = .;
 
-
 	__data_rom_start__ = LOADADDR(.data);
 	.data :
 	{
@@ -71,6 +64,12 @@ SECTIONS
 		__data_end__ = .;
 
 	} > RAM AT>FLASH
+
+		.userFlash :
+	{
+		__User_Flash = .;
+		KEEP(*(.userFlash))
+	} > USER_FLASH
 
 	.bss :
 	{

@@ -9,21 +9,23 @@
 #include "Event_Simple.h"
 #include "Interrupt_Stm32SystemTick.h"
 
-static struct
+typedef struct
 {
    I_Interrupt_t interrupt;
-   Event_Simple_t OnInterrupt;
-} instance;
+   Event_Simple_t interruptEvent;
+} Interrupt_Stm32SystemTick_t;
+
+static Interrupt_Stm32SystemTick_t instance;
 
 void SysTick_Handler(void)
 {
-   Event_Simple_Publish(&instance.OnInterrupt, NULL);
+   Event_Simple_Publish(&instance.interruptEvent, NULL);
 }
 
 I_Interrupt_t *Interrupt_Stm32SystemTick_Init(void)
 {
-   instance.interrupt.OnInterrupt = &instance.OnInterrupt.interface;
-   Event_Simple_Init(&instance.OnInterrupt);
+   Event_Simple_Init(&instance.interruptEvent);
+   instance.interrupt.OnInterrupt = &instance.interruptEvent.interface;
 
    // Set the counter value for a 1ms system tick
    if(SysTick_Config(SystemCoreClock / 1000))

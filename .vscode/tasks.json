@@ -44,7 +44,7 @@
     {
       "label": "mcscriff_vscode_debug",
       "type": "shell",
-      "command": "make -f mcscriff-target.mk RELEASE=N DEBUG=Y vscode_debug build/mcscriff/mcscriff-debug.elf",
+      "command": "make -f mcscriff-target.mk RELEASE=N DEBUG=Y vscode_debug",
       "presentation": {
         "echo": true,
         "reveal": "silent",
