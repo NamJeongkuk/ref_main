@@ -20,8 +20,8 @@
 
 void Hardware_InitializeStage1(void)
 {
-   HAL_Init();
    SystemClock_Init();
+   HAL_Init();
 }
 
 void Hardware_InitializeStage2(I_DataModel_t *dataModel)
