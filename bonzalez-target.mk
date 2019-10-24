@@ -51,7 +51,6 @@ IGNORE_WARNINGS=24
 # OPTIMIZE_MAX_ALLOCS_PER_NODE:=50000
 
 PACKAGE_CONTENTS:=
-$(call add_to_package,$(OUTPUT_DIR)/$(TARGET)-debug.elf,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).hex,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
