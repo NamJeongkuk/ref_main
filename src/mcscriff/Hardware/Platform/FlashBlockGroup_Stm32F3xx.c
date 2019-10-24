@@ -28,6 +28,8 @@ typedef struct
 
    FlashBlockCount_t blockCount;
    const uint32_t *blockAddresses;
+   TimerModule_t *timerModule;
+   Timer_t operationCompleteCheckTimer;
 
    struct
    {
@@ -48,23 +50,32 @@ typedef struct
       bool flashErrorOccurred;
       uint16_t halfWordsToWrite;
       uint32_t addressBeingProgrammed;
+      uint32_t lastOperationAddress;
       const uint16_t *writeBuffer;
    } flashOperation;
 } FlashBlockGroup_Stm32F3xx_t;
 
+static void CheckForOperationComplete(void *context);
+
 static FlashBlockGroup_Stm32F3xx_t instance;
 
-static void CheckForFlashError(void)
+static bool CheckForFlashError(void)
 {
    if(instance.flashOperation.flashErrorOccurred)
    {
       Action_SafeInvoke(instance.actions.error);
+      return true;
    }
+
+   return false;
 }
 
 static void EraseComplete(void)
 {
-   CheckForFlashError();
+   if(CheckForFlashError())
+   {
+      return;
+   }
 
    Event_Synchronous_Publish(
       &instance.events.onErased,
@@ -74,16 +85,25 @@ static void EraseComplete(void)
 static void WriteHalfWord(uint32_t address, const uint16_t *data)
 {
    instance.flashOperation.operationInProgress = true;
+
+   TimerModule_StartPeriodic(
+      instance.timerModule,
+      &instance.operationCompleteCheckTimer,
+      1,
+      CheckForOperationComplete,
+      NULL);
+
    uassert(HAL_OK == HAL_FLASH_Program_IT(FLASH_TYPEPROGRAM_HALFWORD, address, *data));
 }
 
-static void CheckForWriteComplete(uint32_t addressProgrammed)
+static void WriteComplete(void)
 {
-   CheckForFlashError();
+   if(CheckForFlashError())
+   {
+      return;
+   }
 
-   instance.flashOperation.halfWordsToWrite -= BlockAlignment;
-
-   if(instance.flashOperation.halfWordsToWrite)
+   if(--instance.flashOperation.halfWordsToWrite)
    {
       instance.flashOperation.writeBuffer += BlockAlignment;
       instance.flashOperation.addressBeingProgrammed += BlockAlignment;
@@ -102,21 +122,49 @@ static void AssertOperationIsNotInProgress(void)
    uassert(!instance.flashOperation.operationInProgress);
 }
 
+static void CheckForOperationComplete(void *context)
+{
+   IGNORE(context);
+
+   if(!instance.flashOperation.operationInProgress)
+   {
+      TimerModule_Stop(
+         instance.timerModule,
+         &instance.operationCompleteCheckTimer);
+
+      if(instance.flashOperation.lastOperationAddress == EraseCompleteReturnAddress)
+      {
+         EraseComplete();
+      }
+      else if(instance.flashOperation.lastOperationAddress == instance.flashOperation.addressBeingProgrammed)
+      {
+         WriteComplete();
+      }
+   }
+}
+
 static void Erase(
    I_FlashBlockGroup_t *_instance,
    FlashBlock_t block)
 {
-   REINTERPRET(instance, _instance, FlashBlockGroup_Stm32F3xx_t *);
+   IGNORE(_instance);
 
    AssertOperationIsNotInProgress();
 
-   instance->flashOperation.operationInProgress = true;
-   instance->flashOperation.eraseBlock = block;
+   instance.flashOperation.operationInProgress = true;
+   instance.flashOperation.eraseBlock = block;
 
    FLASH_EraseInitTypeDef eraseConfig;
    eraseConfig.TypeErase = FLASH_TYPEERASE_PAGES;
-   eraseConfig.PageAddress = instance->blockAddresses[block];
+   eraseConfig.PageAddress = instance.blockAddresses[block];
    eraseConfig.NbPages = 1;
+
+   TimerModule_StartPeriodic(
+      instance.timerModule,
+      &instance.operationCompleteCheckTimer,
+      1,
+      CheckForOperationComplete,
+      NULL);
 
    uassert(HAL_OK == HAL_FLASHEx_Erase_IT(&eraseConfig));
 }
@@ -194,20 +242,6 @@ static FlashBlockByteCount_t GetBlockSize(I_FlashBlockGroup_t *instance, FlashBl
    return FlashBlockSize;
 }
 
-static void OperationComplete(uint32_t address)
-{
-   if(address == EraseCompleteReturnAddress)
-   {
-      instance.flashOperation.operationInProgress = false;
-      EraseComplete();
-   }
-   else if(address == instance.flashOperation.addressBeingProgrammed)
-   {
-      instance.flashOperation.operationInProgress = false;
-      CheckForWriteComplete(address);
-   }
-}
-
 static I_Event_t *GetOnErasedEvent(I_FlashBlockGroup_t *_instance)
 {
    REINTERPRET(instance, _instance, FlashBlockGroup_Stm32F3xx_t *);
@@ -236,10 +270,13 @@ static const I_FlashBlockGroup_Api_t api =
 static void ConfigureFlashDriver(void)
 {
    HAL_FLASH_Unlock();
+   HAL_NVIC_SetPriority(FLASH_IRQn, 12, 12);
+   HAL_NVIC_EnableIRQ(FLASH_IRQn);
 }
 
 I_FlashBlockGroup_t *FlashBlockGroup_Stm32F3xx_Init(
    I_Action_t *onErrorAction,
+   TimerModule_t *timerModule,
    FlashBlockCount_t blockCount,
    const uint32_t *blockAddresses)
 {
@@ -249,6 +286,7 @@ I_FlashBlockGroup_t *FlashBlockGroup_Stm32F3xx_Init(
    instance.flashOperation.operationInProgress = false;
 
    instance.actions.error = onErrorAction;
+   instance.timerModule = timerModule;
    instance.blockCount = blockCount;
    instance.blockAddresses = blockAddresses;
 
@@ -262,12 +300,15 @@ I_FlashBlockGroup_t *FlashBlockGroup_Stm32F3xx_Init(
 
 void HAL_FLASH_EndOfOperationCallback(uint32_t address)
 {
-   OperationComplete(address);
+   instance.flashOperation.lastOperationAddress = address;
+   instance.flashOperation.operationInProgress = false;
 }
 
-void HAL_FLASH_OperationErrorCallback(uint32_t status)
+void HAL_FLASH_OperationErrorCallback(uint32_t address)
 {
    instance.flashOperation.flashErrorOccurred = true;
+   instance.flashOperation.lastOperationAddress = address;
+   instance.flashOperation.operationInProgress = false;
 }
 
 void FLASH_IRQHandler(void)

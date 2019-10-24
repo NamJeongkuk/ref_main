@@ -119,7 +119,7 @@ int main(void)
    SystemData_Init(
       &systemData,
       timerModule,
-      FlashBlockGroup_Stm32F3xx_Init(Action_Null_GetInstance(), NUM_ELEMENTS(flashBlockAddresses), flashBlockAddresses),
+      FlashBlockGroup_Stm32F3xx_Init(Action_Null_GetInstance(), timerModule, NUM_ELEMENTS(flashBlockAddresses), flashBlockAddresses),
       Crc16Calculator_Stm32_Init(ContextProtector_Stm32_GetInstance()),
       watchdogKickAction,
       resetAction);
