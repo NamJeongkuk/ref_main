@@ -45,11 +45,12 @@ static I_Crc16Calculator_t calculator =
       &api
    };
 
-I_Crc16Calculator_t *Crc16Calculator_Stm32_Init(I_ContextProtector_t *contextProtector)
+I_Crc16Calculator_t *Crc16Calculator_Stm32_Init(I_ContextProtector_t *_contextProtector)
 {
-   uassert(contextProtector);
-   contextProtector = contextProtector;
+   uassert(_contextProtector);
+   contextProtector = _contextProtector;
 
+   crcPeripheral.Instance = CRC;
    crcPeripheral.Init.DefaultPolynomialUse = DEFAULT_POLYNOMIAL_DISABLE;
    crcPeripheral.Init.DefaultInitValueUse = DEFAULT_INIT_VALUE_DISABLE;
    crcPeripheral.Init.GeneratingPolynomial = 0x8810;
