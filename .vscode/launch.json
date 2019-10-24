@@ -3,8 +3,7 @@
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
-  "configurations": [
-    {
+  "configurations": [{
       "name": "TDD launch",
       "type": "cppdbg",
       "request": "launch",
@@ -70,7 +69,7 @@
       "request": "launch",
       "type": "cortex-debug",
       "executable": "${workspaceFolder}/build/mcscriff/mcscriff.elf",
-      "device": "STM32F303R8",
+      "device": "STM32F303RB",
       "servertype": "jlink",
       "interface": "swd",
       "armToolchainPath": "${workspaceFolder}/tools/gcc-arm-none-eabi/tc/bin/",
