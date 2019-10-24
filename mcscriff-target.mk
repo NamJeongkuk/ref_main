@@ -118,7 +118,7 @@ C_STANDARD:=gnu99
 
 WARNINGS_TO_IGNORE:=no-array-bounds no-maybe-uninitialized no-type-limits no-implicit-fallthrough
 
-HEADER_ADDRESS:=0x08005000
+HEADER_ADDRESS:=0x08006000
 
 # Space delimited list, whole folders can also be included
 PACKAGE_CONTENTS=

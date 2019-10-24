@@ -34,6 +34,9 @@
 #include "Crc16Calculator_Stm32.h"
 #include "Interrupt_Stm32SystemTick.h"
 
+extern char __NvData1_Location;
+extern char __NvData2_Location;
+
 enum
 {
    UlTestsRunPeriodInMSec = 10,
@@ -60,8 +63,8 @@ static const uint8_t staticRoutingTable[] =
 
 static const uint32_t flashBlockAddresses[] =
    {
-      0x08017000,
-      0x08017800
+      (uint32_t)&__NvData1_Location,
+      (uint32_t)&__NvData2_Location
    };
 
 static void UpdateBuildInfo(

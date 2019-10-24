@@ -1,6 +1,6 @@
 /*!
  * @file
- * @brief Initialize the UART1 communication port
+ * @brief
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
