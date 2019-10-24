@@ -16,8 +16,6 @@ STM8FLASH_PROGRAMMER:=stlinkv2
 
 MAIN:=$(PROJECT_DIR)/$(TARGET)/main.c
 
-FORCE_INCLUDE:=\
-
 SRC_FILES:=\
 
 SRC_DIRS:=\
@@ -53,15 +51,18 @@ IGNORE_WARNINGS=24
 # OPTIMIZE_MAX_ALLOCS_PER_NODE:=50000
 
 PACKAGE_CONTENTS:=
-$(call add_to_package,$(OUTPUT_DIR)/$(TARGET)-debug.elf,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).hex,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
 .PHONY: all
-all: target $(TOOLCHAIN_LOCATION)
+all: $(OUTPUT_DIR)/$(TARGET).hex
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration bonzalez_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 	@echo Build complete
+
+.PHONY: upload
+upload: $(OUTPUT_DIR)/$(TARGET).hex stm8flash
+	$(call stm8flash_upload,$(STM8FLASH_PROGRAMMER),$(STM8FLASH_PART),$^)
 
 .PHONY: clean
 clean: target_clean
