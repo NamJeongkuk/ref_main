@@ -72,6 +72,7 @@ SECTIONS
 	__etext = .;
 
 	__data_rom_start__ = LOADADDR(.data);
+
 	.data :
 	{
 		. = ALIGN(4);
@@ -79,7 +80,6 @@ SECTIONS
 		*(.data*)
 		. = ALIGN(4);
 		__data_end__ = .;
-
 	} > RAM AT>FLASH
 
 	.bss :
@@ -87,9 +87,11 @@ SECTIONS
 		. = ALIGN(4);
 		__bss_start__ = .;
 		*(.bss*)
+		*(COMMON)
 		. = ALIGN(4);
 		__bss_end__ = .;
 	} > RAM
+
 	.stackCheck :
 	{
 		__stackCheckStart = .;
