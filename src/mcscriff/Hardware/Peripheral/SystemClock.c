@@ -10,6 +10,8 @@
 
 void SystemClock_Init(void)
 {
+   HAL_RCC_DeInit();
+
    __HAL_RCC_SYSCFG_CLK_ENABLE();
    __HAL_RCC_PWR_CLK_ENABLE();
 
