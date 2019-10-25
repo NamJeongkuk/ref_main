@@ -58,7 +58,7 @@ static GeaStack_t geaStack;
 
 static const uint8_t staticRoutingTable[] =
    {
-      BonzalezGeaAddress
+      DugnuttGeaAddress
    };
 
 static const uint32_t flashBlockAddresses[] =

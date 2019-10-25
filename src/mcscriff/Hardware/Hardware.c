@@ -10,6 +10,7 @@
 #include "Hardware.h"
 #include "Action_Stm32SystemReset.h"
 #include "BufferedUart_Uart1.h"
+#include "BufferedUart_Uart3.h"
 #include "Crc16Calculator_Table.h"
 #include "DataModelErdPointerAccess.h"
 #include "Header.h"
@@ -26,7 +27,7 @@ void Hardware_InitializeStage1(void)
 
 void Hardware_InitializeStage2(I_DataModel_t *dataModel)
 {
-   I_BufferedUart_t *internalUart = NULL;
+   I_BufferedUart_t *internalUart = BufferedUart_Uart3_Init();
    DataModelErdPointerAccess_Write(dataModel, Erd_InternalBufferedUart, internalUart);
 
    I_BufferedUart_t *externalUart = BufferedUart_Uart1_Init();
