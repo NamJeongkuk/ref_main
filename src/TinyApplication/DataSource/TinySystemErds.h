@@ -14,6 +14,11 @@
 #include "utils.h"
 #include <stdint.h>
 
+enum
+{
+   StreamedItemCount = 5
+};
+
 // clang-format off
 
 #define INCLUDE_STREAM_StreamNone(_x)
@@ -62,7 +67,7 @@ enum
 typedef struct
 {
    ErdStreamHeader_t header;
-   StreamedItem_t items[NumberOfStreamedErds];
+   StreamedItem_t items[StreamedItemCount];
 } ErdStreamErd_t;
 
 #define EXPAND_AS_ENUM(Name, Number, DataType, Stream, RemoteErd) \
