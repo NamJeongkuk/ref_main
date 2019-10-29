@@ -71,7 +71,7 @@ static void Read(I_DataSource_t *instance, const Erd_t erd, void *data)
    uassert(ERD_IS_IN_RANGE(erd));
 
    bool value = ReadGpio(CHANNEL_FROM_ERD(erd));
-   memcpy(data, &value, sizeof(bool));
+   memcpy(data, &value, sizeof(value));
 }
 
 static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
