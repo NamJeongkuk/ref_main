@@ -55,6 +55,15 @@ typedef struct
    uint8_t item[sizeof(StreamedErd_t)];
 } StreamedItem_t;
 
+#define EXPAND_AS_STREAM_COUNT_ENUM(Name, Number, DataType, Stream, RemoteErd) \
+   CONCAT(INCLUDE_STREAM_, Stream)(StreamCount##Name COMMA)
+
+enum
+{
+   ERD_TABLE(EXPAND_AS_STREAM_COUNT_ENUM)
+   NumberOfStreamedErds
+};
+
 typedef struct
 {
    ErdStreamHeader_t header;
