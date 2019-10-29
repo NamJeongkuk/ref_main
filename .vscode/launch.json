@@ -73,7 +73,7 @@
       "servertype": "jlink",
       "interface": "swd",
       "armToolchainPath": "${workspaceFolder}/tools/gcc-arm-none-eabi/tc/bin/",
-      "serverpath": "${workspaceFolder}/build/mcscriff/jlink_gdb_server_wrapper.sh"
+      "serverpath": "${workspaceFolder}/build/mcscriff/jlink_gdb_server_wrapper.sh",
       "preLaunchTask": "mcscriff_vscode_debug",
       "svdFile": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32F3xx/Libraries/CMSIS/SVD/STM32F303x.svd"
     }
