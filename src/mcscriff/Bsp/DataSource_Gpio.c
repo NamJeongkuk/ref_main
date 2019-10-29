@@ -20,31 +20,23 @@ enum
    InputPollPeriodInMsec = 10
 };
 
-#define EXPAND_AS_INIT(name, mode, pullUp, speed, port, pin)   \
-   {                                                           \
-      __HAL_RCC_##port##_CLK_ENABLE();                         \
-      GPIO_InitTypeDef gpioInitStruct;                         \
-      if(mode != GPIO_MODE_INPUT)                              \
-      {                                                        \
-         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET); \
-      }                                                        \
-      gpioInitStruct.Pin = pin;                                \
-      gpioInitStruct.Mode = mode;                              \
-      gpioInitStruct.Pull = pullUp;                            \
-      gpioInitStruct.Speed = speed;                            \
-      HAL_GPIO_Init(port, &gpioInitStruct);                    \
+#define EXPAND_AS_CLOCK_INIT(name, mode, pullUp, speed, port, pin) \
+   {                                                               \
+      __HAL_RCC_##port##_CLK_ENABLE();                             \
    }
 
 #define EXPAND_AS_MODES_PORTS_AND_PINS(name, mode, pullUp, speed, port, pin) \
    {                                                                         \
-      mode, port, pin                                                        \
+      port, pin, mode, pullUp, speed                                         \
    },
 
 typedef struct
 {
-   uint8_t mode;
    void *port;
    uint16_t pin;
+   uint8_t mode;
+   uint8_t pullUp;
+   uint8_t speed;
 } GpioModePortAndPin_t;
 
 static const GpioModePortAndPin_t gpioModesPortsAndPins[] =
@@ -132,7 +124,23 @@ static void PollInputs(void *context)
 
 static void InitializeGpio(void)
 {
-   GPIO_TABLE(EXPAND_AS_INIT)
+   GPIO_TABLE(EXPAND_AS_CLOCK_INIT)
+
+   GPIO_InitTypeDef gpioInitStruct;
+
+   for(uint8_t i = 0; i < NUM_ELEMENTS(gpioModesPortsAndPins); i++)
+   {
+      if(gpioModesPortsAndPins[i].mode != GPIO_MODE_INPUT)
+      {
+         HAL_GPIO_WritePin(gpioModesPortsAndPins[i].port, gpioModesPortsAndPins[i].pin, GPIO_PIN_RESET);
+      }
+
+      gpioInitStruct.Pin = gpioModesPortsAndPins[i].pin;
+      gpioInitStruct.Mode = gpioModesPortsAndPins[i].mode;
+      gpioInitStruct.Pull = gpioModesPortsAndPins[i].pullUp;
+      gpioInitStruct.Speed = gpioModesPortsAndPins[i].speed;
+      HAL_GPIO_Init(gpioModesPortsAndPins[i].port, &gpioInitStruct);
+   }
 }
 
 static bool AtLeastOneInputExists(void)

@@ -12,8 +12,8 @@
 enum
 {
    DummyCrc = 0x1234,
-   TargetMemorySizeInK = 64,
-   WriteAlignment = 8,
+   TargetMemorySizeInK = 128,
+   WriteAlignment = 2,
 
    ApplicationIncluded = true,
    ParametricIncluded = false,
