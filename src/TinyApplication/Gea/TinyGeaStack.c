@@ -31,6 +31,25 @@ static const TinyErdHeartbeatConfiguration_t erdHeartbeatConfig =
       .pairCount = NUM_ELEMENTS(erdHeartbeatPairs)
    };
 
+#define EXPAND_AS_LOCAL_TO_REMOTE_ERD_MAP(Name, Number, DataType, Stream, RemoteErd) \
+   CONCAT(INCLUDE_STREAM_, Stream)                                                   \
+   ({ Number COMMA RemoteErd COMMA CONCAT(INCLUDE_STREAM_EVENT_, Stream)(ErdStreamDataType_Event) CONCAT(INCLUDE_STREAM_LEVEL_, Stream)(ErdStreamDataType_Level) } COMMA)
+
+static const ErdStreamLocalToRemoteErdMap_t streamLocalToRemoteErdMap[] =
+   {
+      ERD_TABLE(EXPAND_AS_LOCAL_TO_REMOTE_ERD_MAP)
+   };
+
+static const TinyErdStreamSenderConfiguration_t erdStreamSenderConfiguration =
+   {
+      .erdStreamErd = Erd_ErdStream,
+      .requestedStateErdFromReceiver = Erd_ErdStreamRequestedState,
+      .streamEntryCount = NumberOfStreamedErds,
+      .sizeOfLargestStreamedErd = sizeof(StreamedErd_t),
+      .mappings = streamLocalToRemoteErdMap,
+      .mappingCount = NUM_ELEMENTS(streamLocalToRemoteErdMap)
+   };
+
 static void PopulateVersionResponse(void *context, Gea2Packet_t *packet)
 {
    REINTERPRET(sourcePacket, context, const Gea2Packet_t *);
@@ -89,6 +108,11 @@ void TinyGeaStack_Init(
       dataSource,
       timerModule,
       &erdHeartbeatConfig);
+
+   TinyErdStreamSender_Init(
+      &instance->_private.erdStreamSender,
+      dataSource,
+      &erdStreamSenderConfiguration);
 
    TinyEventSubscription_Init(&instance->_private.geaMessageSubscription, instance, GeaMessageReceived);
    TinyEvent_Subscribe(

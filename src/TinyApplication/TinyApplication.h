@@ -17,7 +17,6 @@ typedef struct
    struct
    {
       SwitchedLedPlugin_t switchedLedPlugin;
-      TinyErdStreamSender_t erdStreamSender;
    } _private;
 } TinyApplication_t;
 
