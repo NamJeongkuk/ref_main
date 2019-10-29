@@ -1,9 +1,8 @@
 /*!
  * @file
- * @brief The header file to initialize hardware dependent modules.
- * This module will fill the data source with pointers to the hardware interfaces.
+ * @brief
  *
- * Copyright General Electric Corporation - GE Confidential - All rights reserved.
+ * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
 #ifndef HARDWARE_H

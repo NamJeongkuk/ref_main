@@ -8,11 +8,10 @@
 #include "TimerModuleStack.h"
 #include "SystemErds.h"
 #include "DataModelErdPointerAccess.h"
-#include "Cmt0.h"
 
-TimerModule_t * TimerModuleStack_Init(TimerModuleStack_t *instance)
+TimerModule_t *TimerModuleStack_Init(TimerModuleStack_t *instance, I_Interrupt_t *systemTickInterrupt)
 {
-   instance->_private.systemTickInterrupt = Cmt0_Init();
+   instance->_private.systemTickInterrupt = systemTickInterrupt;
 
    // Use system tick interrupt handle to set up a 1mS time source
    TimeSource_Interrupt_Init(&instance->_private.systemTickTimeSource, instance->_private.systemTickInterrupt);
