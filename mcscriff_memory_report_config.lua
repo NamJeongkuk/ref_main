@@ -3,7 +3,7 @@ return {
     ram = {
       map = 'build/mcscriff/mcscriff.map',
       type = 'arm-gcc',
-      total = 12 * 1024,
+      total = 32 * 1024,
       ram_sections = {
         'RAM'
       }
