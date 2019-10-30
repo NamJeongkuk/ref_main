@@ -10,14 +10,10 @@
 
 // clang-format off
 
-#define Port
-#define Bit
-#define Channel
-
-// Name, port, bit, channel
+// Name, port, pin, channel
 #define ADC_TABLE(ENTRY)         \
-   ENTRY(SomeAnalogInput,     4, 1, 0) \
-   ENTRY(AnotherAnalogInput,  4, 2, 1)
+   ENTRY(SomeAnalogInput,     GPIOA, GPIO_PIN_6, 3) \
+   ENTRY(AnotherAnalogInput,  GPIOA, GPIO_PIN_7, 4)
 
 // clang-format on
 

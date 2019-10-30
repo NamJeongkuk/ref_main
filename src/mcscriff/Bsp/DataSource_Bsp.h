@@ -19,8 +19,8 @@ typedef struct
 
    struct
    {
-      DataSource_Gpio_t dataSourceGpio;
-      DataSource_Adc_t dataSourceAdc;
+      I_DataSource_t *dataSourceGpio;
+      I_DataSource_t *dataSourceAdc;
       Event_Synchronous_t OnDataChange;
    } _private;
 } DataSource_Bsp_t;

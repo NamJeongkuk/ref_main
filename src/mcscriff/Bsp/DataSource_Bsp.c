@@ -12,13 +12,13 @@
 
 static I_DataSource_t *GetDataSource(DataSource_Bsp_t *instance, const Erd_t erd)
 {
-   if(DataSource_Has(&instance->_private.dataSourceGpio.interface, erd))
+   if(DataSource_Has(instance->_private.dataSourceGpio, erd))
    {
-      return &instance->_private.dataSourceGpio.interface;
+      return instance->_private.dataSourceGpio;
    }
-   else if(DataSource_Has(&instance->_private.dataSourceAdc.interface, erd))
+   else if(DataSource_Has(instance->_private.dataSourceAdc, erd))
    {
-      return &instance->_private.dataSourceAdc.interface;
+      return instance->_private.dataSourceAdc;
    }
 
    return NULL;
@@ -46,9 +46,8 @@ static bool Has(const I_DataSource_t *_instance, const Erd_t erd)
 {
    REINTERPRET(instance, _instance, DataSource_Bsp_t *);
 
-   return
-      DataSource_Has(&instance->_private.dataSourceGpio.interface, erd) ||
-      DataSource_Has(&instance->_private.dataSourceAdc.interface, erd);
+   return DataSource_Has(instance->_private.dataSourceGpio, erd) ||
+      DataSource_Has(instance->_private.dataSourceAdc, erd);
 }
 
 static uint8_t SizeOf(const I_DataSource_t *_instance, const Erd_t erd)
@@ -71,10 +70,9 @@ void DataSource_Bsp_Init(
    instance->interface.OnDataChange = &instance->_private.OnDataChange.interface;
    Event_Synchronous_Init(&instance->_private.OnDataChange);
 
-   DataSource_Gpio_Init(
-      &instance->_private.dataSourceGpio,
+   instance->_private.dataSourceGpio = DataSource_Gpio_Init(
       timerModule,
       &instance->_private.OnDataChange);
 
-   DataSource_Adc_Init(&instance->_private.dataSourceAdc);
+   instance->_private.dataSourceAdc = DataSource_Adc_Init(timerModule);
 }
