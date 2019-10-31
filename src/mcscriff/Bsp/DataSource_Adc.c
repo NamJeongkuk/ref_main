@@ -75,7 +75,7 @@ static struct
    ADC_HandleTypeDef adcHandle;
    DMA_HandleTypeDef dmaHandle;
    ConstArrayMap_LinearSearch_t erdToChannelMap;
-   uint16_t buffer[AdcChannelCount];
+   AdcCounts_t buffer[AdcChannelCount];
    uint8_t channelIndex;
 } instance;
 
