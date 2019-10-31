@@ -87,7 +87,7 @@ static void ConfigurePins(void)
 
    for(uint8_t i = 0; i < NUM_ELEMENTS(adcPortsAndPins); i++)
    {
-      if(adcPortsAndPins[i].pin != NOT_GPIO)
+      if(adcPortsAndPins[i].pin != ON_CHIP)
       {
          gpioInitStruct.Pin = adcPortsAndPins[i].pin;
          gpioInitStruct.Mode = GPIO_MODE_ANALOG;
@@ -176,7 +176,7 @@ static AdcCounts_t ReadAdcChannel(uint8_t channel)
 
 static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
 {
-   IGNORE(instance);
+   IGNORE(_instance);
    uint16_t index;
    ErdAdcChannelPair_t pair;
 
