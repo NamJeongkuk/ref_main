@@ -121,11 +121,11 @@ void USB_HP_IRQHandler                 (void) __attribute__ ((weak, alias("Defau
 void USB_LP_IRQHandler                 (void) __attribute__ ((weak, alias("Default_Handler")));
 void FPU_IRQHandler                    (void) __attribute__ ((weak, alias("Default_Handler")));
 
-extern char __StackTop;
+extern char __StackBottom;
 
 const pFunc __Vectors[] __attribute__ ((section(".vectors"))) = {
   /* Cortex-M4 Exceptions Handler */
-  (pFunc)&__StackTop,                // Initial Stack Pointer
+  (pFunc)&__StackBottom,             // Initial Stack Pointer
   Reset_Handler,                     // Reset Handler
   NMI_Handler,                       // NMI Handler
   HardFault_Handler,                 // Hard Fault Handler

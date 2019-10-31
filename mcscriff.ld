@@ -4,9 +4,9 @@ MEMORY
   BOOT_HEADER (r)  : ORIGIN = 0x08000194, LENGTH = 0x40
   NVDATA_1 (rw)    : ORIGIN = 0x08005000, LENGTH = 2K
   NVDATA_2 (rw)    : ORIGIN = 0x08005800, LENGTH = 2K
-  HEADER (r)       : ORIGIN = 0x08006000, LENGTH = 0x40
-  VECTORS (rx)     : ORIGIN = 0x08006100, LENGTH = 0x194
-  FLASH (rx)       : ORIGIN = 0x08006300, LENGTH = 128K - 20K - LENGTH(VECTORS) - LENGTH(HEADER) - LENGTH(NVDATA_1) - LENGTH(NVDATA_2)
+  VECTORS (rx)     : ORIGIN = 0x08006000, LENGTH = 0x194
+  HEADER (r)       : ORIGIN = 0x08006194, LENGTH = 0x40
+  FLASH (rx)       : ORIGIN = 0x08006200, LENGTH = 128K - 20K - LENGTH(VECTORS) - LENGTH(HEADER) - LENGTH(NVDATA_1) - LENGTH(NVDATA_2)
   RAM (rwx)        : ORIGIN = 0x20000000, LENGTH = 32K
   CCMRAM (rwx)     : ORIGIN = 0x10000000, LENGTH = 4K
 }
@@ -44,8 +44,10 @@ SECTIONS
 
 	.vectors :
 	{
+		. = ALIGN(4);
 		__Vectors_Start = .;
 		KEEP(*(.vectors))
+		. = ALIGN(4);
 		__Vectors_End = .;
 	} > VECTORS
 
@@ -102,6 +104,7 @@ SECTIONS
    /* Helper variables for accessing sections from c code. */
    __Boot_Header = ORIGIN(BOOT_HEADER);
    __Header = ORIGIN(HEADER);
-   __StackTop = ORIGIN(RAM) + LENGTH(RAM);
-	__StackSize = __StackTop - __bss_end__;
+	__StackTop = __stackCheckEnd;
+   __StackBottom = ORIGIN(RAM) + LENGTH(RAM);
+	__StackSize = __StackBottom - __bss_end__;
 }
