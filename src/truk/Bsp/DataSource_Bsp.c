@@ -5,20 +5,32 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "DataSource_Bsp.h"
 #include "SystemErds.h"
 #include "uassert.h"
-#include <string.h>
+#include "Event_Synchronous.h"
 
-static I_DataSource_t *GetDataSource(DataSource_Bsp_t *instance, const Erd_t erd)
+enum
 {
-   if(DataSource_Has(&instance->_private.dataSourceGpio.interface, erd))
+   BspDataSourceCount = 2
+};
+
+static struct
+{
+   I_DataSource_t interface;
+   I_DataSource_t *dataSources[BspDataSourceCount];
+   Event_Synchronous_t OnDataChange;
+} instance;
+
+static I_DataSource_t *GetDataSource(const Erd_t erd)
+{
+   for(uint8_t i = 0; i < NUM_ELEMENTS(instance.dataSources); i++)
    {
-      return &instance->_private.dataSourceGpio.interface;
-   }
-   else if(DataSource_Has(&instance->_private.dataSourceAdc.interface, erd))
-   {
-      return &instance->_private.dataSourceAdc.interface;
+      if(DataSource_Has(instance.dataSources[i], erd))
+      {
+         return instance.dataSources[i];
+      }
    }
 
    return NULL;
@@ -26,8 +38,8 @@ static I_DataSource_t *GetDataSource(DataSource_Bsp_t *instance, const Erd_t erd
 
 static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
 {
-   REINTERPRET(instance, _instance, DataSource_Bsp_t *);
-   I_DataSource_t *dataSource = GetDataSource(instance, erd);
+   IGNORE(_instance);
+   I_DataSource_t *dataSource = GetDataSource(erd);
 
    uassert(dataSource);
    DataSource_Read(dataSource, erd, data);
@@ -35,8 +47,8 @@ static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
 
 static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
 {
-   REINTERPRET(instance, _instance, DataSource_Bsp_t *);
-   I_DataSource_t *dataSource = GetDataSource(instance, erd);
+   IGNORE(_instance);
+   I_DataSource_t *dataSource = GetDataSource(erd);
 
    uassert(dataSource);
    DataSource_Write(dataSource, erd, data);
@@ -44,17 +56,23 @@ static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
 
 static bool Has(const I_DataSource_t *_instance, const Erd_t erd)
 {
-   REINTERPRET(instance, _instance, DataSource_Bsp_t *);
+   IGNORE(_instance);
 
-   return
-      DataSource_Has(&instance->_private.dataSourceGpio.interface, erd) ||
-      DataSource_Has(&instance->_private.dataSourceAdc.interface, erd);
+   for(uint8_t i = 0; i < NUM_ELEMENTS(instance.dataSources); i++)
+   {
+      if(DataSource_Has(instance.dataSources[i], erd))
+      {
+         return true;
+      }
+   }
+
+   return false;
 }
 
 static uint8_t SizeOf(const I_DataSource_t *_instance, const Erd_t erd)
 {
-   REINTERPRET(instance, _instance, DataSource_Bsp_t *);
-   I_DataSource_t *dataSource = GetDataSource(instance, erd);
+   IGNORE(_instance);
+   I_DataSource_t *dataSource = GetDataSource(erd);
 
    uassert(dataSource);
    return DataSource_SizeOf(dataSource, erd);
@@ -63,18 +81,17 @@ static uint8_t SizeOf(const I_DataSource_t *_instance, const Erd_t erd)
 static const I_DataSource_Api_t api =
    { Read, Write, Has, SizeOf };
 
-void DataSource_Bsp_Init(
-   DataSource_Bsp_t *instance,
-   TimerModule_t *timerModule)
+I_DataSource_t *DataSource_Bsp_Init(TimerModule_t *timerModule)
 {
-   instance->interface.api = &api;
-   instance->interface.OnDataChange = &instance->_private.OnDataChange.interface;
-   Event_Synchronous_Init(&instance->_private.OnDataChange);
+   instance.interface.api = &api;
+   instance.interface.OnDataChange = &instance.OnDataChange.interface;
+   Event_Synchronous_Init(&instance.OnDataChange);
 
-   DataSource_Gpio_Init(
-      &instance->_private.dataSourceGpio,
-      timerModule,
-      &instance->_private.OnDataChange);
+   uint8_t index = 0;
+   instance.dataSources[index++] = DataSource_Gpio_Init(timerModule, &instance.OnDataChange);
+   instance.dataSources[index++] = DataSource_Adc_Init();
 
-   DataSource_Adc_Init(&instance->_private.dataSourceAdc);
+   uassert(index <= NUM_ELEMENTS(instance.dataSources));
+
+   return &instance.interface;
 }

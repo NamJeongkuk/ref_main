@@ -19,7 +19,7 @@ typedef struct
 {
    struct
    {
-      DataSource_Bsp_t dataSource;
+      I_DataSource_t *dataSource;
       DataSource_Mapped_t mappedDataSource;
 
       ConstArrayMap_LinearSearch_t applicationToBspMap;
