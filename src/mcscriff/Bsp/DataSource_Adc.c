@@ -26,13 +26,10 @@
       channel, port, pin                                   \
    },
 
-#define EXPAND_AS_CHANNEL_COUNT(name, port, pin, channel) 1 +
-
 enum
 {
    ConversionTriggerPeriodInMSec = 5,
-   HardwareChannelCount = 19,
-   AdcChannelCount = ADC_TABLE(EXPAND_AS_CHANNEL_COUNT) 0
+   HardwareChannelCount = 19
 };
 
 typedef struct
@@ -75,7 +72,7 @@ static struct
    ADC_HandleTypeDef adcHandle;
    DMA_HandleTypeDef dmaHandle;
    ConstArrayMap_LinearSearch_t erdToChannelMap;
-   AdcCounts_t buffer[AdcChannelCount];
+   AdcCounts_t buffer[NUM_ELEMENTS(erdAdcChannelPairs)];
    uint8_t channelIndex;
 } instance;
 
@@ -114,9 +111,9 @@ static void ConfigureAdc(void)
    instance.adcHandle.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
    instance.adcHandle.Init.LowPowerAutoWait = DISABLE;
    instance.adcHandle.Init.ContinuousConvMode = DISABLE;
-   instance.adcHandle.Init.NbrOfConversion = AdcChannelCount;
+   instance.adcHandle.Init.NbrOfConversion = NUM_ELEMENTS(erdAdcChannelPairs);
    instance.adcHandle.Init.DiscontinuousConvMode = ENABLE;
-   instance.adcHandle.Init.NbrOfDiscConversion = AdcChannelCount;
+   instance.adcHandle.Init.NbrOfDiscConversion = NUM_ELEMENTS(erdAdcChannelPairs);
    instance.adcHandle.Init.ExternalTrigConv = ADC_SOFTWARE_START;
    instance.adcHandle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
    instance.adcHandle.Init.DMAContinuousRequests = ENABLE;
@@ -164,7 +161,7 @@ static AdcCounts_t ReadAdcChannel(uint8_t channel)
 {
    IGNORE(channel);
 
-   for(uint8_t i = 0; i < AdcChannelCount; i++)
+   for(uint8_t i = 0; i < NUM_ELEMENTS(erdAdcChannelPairs); i++)
    {
       if(adcPortsAndPins[i].channel == channel)
       {
@@ -220,7 +217,7 @@ static const I_DataSource_Api_t api =
 static void StartDmaConversion(void *context)
 {
    IGNORE(context);
-   HAL_ADC_Start_DMA(&instance.adcHandle, (uint32_t *)instance.buffer, AdcChannelCount);
+   HAL_ADC_Start_DMA(&instance.adcHandle, (uint32_t *)instance.buffer, NUM_ELEMENTS(erdAdcChannelPairs));
 }
 
 I_DataSource_t *DataSource_Adc_Init(TimerModule_t *timerModule)
