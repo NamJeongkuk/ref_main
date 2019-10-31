@@ -72,7 +72,8 @@ static struct
    ADC_HandleTypeDef adcHandle;
    DMA_HandleTypeDef dmaHandle;
    ConstArrayMap_LinearSearch_t erdToChannelMap;
-   AdcCounts_t buffer[NUM_ELEMENTS(erdAdcChannelPairs)];
+   AdcCounts_t dmaBuffer[NUM_ELEMENTS(erdAdcChannelPairs)];
+   AdcCounts_t safeBuffer[NUM_ELEMENTS(erdAdcChannelPairs)];
    uint8_t channelIndex;
 } instance;
 
@@ -165,7 +166,7 @@ static AdcCounts_t ReadAdcChannel(uint8_t channel)
    {
       if(adcPortsAndPins[i].channel == channel)
       {
-         return (AdcCounts_t)instance.buffer[i];
+         return (AdcCounts_t)instance.safeBuffer[i];
       }
    }
    return 0;
@@ -217,7 +218,9 @@ static const I_DataSource_Api_t api =
 static void StartDmaConversion(void *context)
 {
    IGNORE(context);
-   HAL_ADC_Start_DMA(&instance.adcHandle, (uint32_t *)instance.buffer, NUM_ELEMENTS(erdAdcChannelPairs));
+
+   memcpy(instance.safeBuffer, instance.dmaBuffer, sizeof(instance.safeBuffer));
+   HAL_ADC_Start_DMA(&instance.adcHandle, (uint32_t *)instance.dmaBuffer, NUM_ELEMENTS(erdAdcChannelPairs));
 }
 
 I_DataSource_t *DataSource_Adc_Init(TimerModule_t *timerModule)
