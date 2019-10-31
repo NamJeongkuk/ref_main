@@ -16,17 +16,17 @@
 
 #define ERD_IS_IN_RANGE(erd) (IN_RANGE(Erd_BspAdc_Start + 1, erd, Erd_BspAdc_End))
 
-#define EXPAND_AS_ERD_ADC_CHANNEL_PAIRS(name, port, bit, channel, rank) \
-   {                                                                    \
-      Erd_BspAdc_##name, channel                                        \
+#define EXPAND_AS_ERD_ADC_CHANNEL_PAIRS(name, port, bit, channel) \
+   {                                                              \
+      Erd_BspAdc_##name, channel                                  \
    },
 
-#define EXPAND_AS_PORTS_AND_PINS(name, port, pin, channel, rank) \
-   {                                                             \
-      channel, port, pin, rank                                   \
+#define EXPAND_AS_PORTS_AND_PINS(name, port, pin, channel) \
+   {                                                       \
+      channel, port, pin                                   \
    },
 
-#define EXPAND_AS_CHANNEL_COUNT(name, port, pin, channel, rank) 1 +
+#define EXPAND_AS_CHANNEL_COUNT(name, port, pin, channel) 1 +
 
 enum
 {
@@ -51,7 +51,6 @@ typedef struct
    AdcChannel_t channel;
    void *port;
    uint16_t pin;
-   uint8_t rank;
 } AdcPortsAndPins_t;
 
 static const AdcPortsAndPins_t adcPortsAndPins[] =
@@ -88,10 +87,13 @@ static void ConfigurePins(void)
 
    for(uint8_t i = 0; i < NUM_ELEMENTS(adcPortsAndPins); i++)
    {
-      gpioInitStruct.Pin = adcPortsAndPins[i].pin;
-      gpioInitStruct.Mode = GPIO_MODE_ANALOG;
-      gpioInitStruct.Pull = GPIO_NOPULL;
-      HAL_GPIO_Init(adcPortsAndPins[i].port, &gpioInitStruct);
+      if(adcPortsAndPins[i].pin != NOT_GPIO)
+      {
+         gpioInitStruct.Pin = adcPortsAndPins[i].pin;
+         gpioInitStruct.Mode = GPIO_MODE_ANALOG;
+         gpioInitStruct.Pull = GPIO_NOPULL;
+         HAL_GPIO_Init(adcPortsAndPins[i].port, &gpioInitStruct);
+      }
    }
 }
 
@@ -109,12 +111,12 @@ static void ConfigureAdc(void)
    instance.adcHandle.Init.Resolution = ADC_RESOLUTION_12B;
    instance.adcHandle.Init.DataAlign = ADC_DATAALIGN_RIGHT;
    instance.adcHandle.Init.ScanConvMode = ADC_SCAN_ENABLE;
-   instance.adcHandle.Init.EOCSelection = ADC_EOC_SEQ_CONV; //ADC_EOC_SINGLE_CONV;
+   instance.adcHandle.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
    instance.adcHandle.Init.LowPowerAutoWait = DISABLE;
    instance.adcHandle.Init.ContinuousConvMode = DISABLE;
-   instance.adcHandle.Init.NbrOfConversion = 2;
+   instance.adcHandle.Init.NbrOfConversion = AdcChannelCount;
    instance.adcHandle.Init.DiscontinuousConvMode = ENABLE;
-   instance.adcHandle.Init.NbrOfDiscConversion = 1;
+   instance.adcHandle.Init.NbrOfDiscConversion = AdcChannelCount;
    instance.adcHandle.Init.ExternalTrigConv = ADC_SOFTWARE_START;
    instance.adcHandle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
    instance.adcHandle.Init.DMAContinuousRequests = ENABLE;
@@ -124,6 +126,7 @@ static void ConfigureAdc(void)
       HAL_NVIC_SystemReset();
    }
 
+   uint8_t rank = ADC_REGULAR_RANK_1;
    ADC_ChannelConfTypeDef config = { 0 };
    config.SingleDiff = ADC_SINGLE_ENDED;
    config.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
@@ -133,7 +136,7 @@ static void ConfigureAdc(void)
    for(uint8_t i = 0; i < NUM_ELEMENTS(adcPortsAndPins); i++)
    {
       config.Channel = adcPortsAndPins[i].channel;
-      config.Rank = adcPortsAndPins[i].rank;
+      config.Rank = rank++;
       HAL_ADC_ConfigChannel(&instance.adcHandle, &config);
    }
 }

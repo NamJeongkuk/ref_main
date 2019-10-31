@@ -13,7 +13,7 @@
 #include "AdcConfiguration.h"
 #include "Timer.h"
 
-#define ADC_TABLE_EXPAND_AS_HARDWARE_ERDS(name, port, bit, channel, rank) \
+#define ADC_TABLE_EXPAND_AS_HARDWARE_ERDS(name, port, bit, channel) \
    Erd_BspAdc_##name,
 
 enum
