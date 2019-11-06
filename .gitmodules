@@ -22,3 +22,6 @@
 [submodule "tools/gcc-arm-none-eabi"]
 	path = tools/gcc-arm-none-eabi
 	url = https://github.com/geappliances/build-tools.gcc-arm-none-eabi-release
+[submodule "tools/iar-stm8-wine"]
+	path = tools/iar-stm8-wine
+	url = https://github.com/geappliances/build-tools.iar-stm8-wine-tools-release.git

@@ -1,4 +1,8 @@
-include tools/sdcc-stm8/sdcc-stm8.mk
+ifeq ($(TC), IAR)
+   include tools/iar-stm8-wine/iar-stm8-wine-tools.mk
+else
+   include tools/sdcc-stm8/sdcc-stm8.mk
+endif
 
 TARGET:=bonzalez
 
@@ -38,18 +42,28 @@ INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(PROJECT_DIR)/Application/Gea \
 
-TOOLCHAIN_VERSION:=3.9.0
-
 SOURCE_EXTENSIONS:=.c
 
-# Options are --opt-code-size, --opt-code-speed or nothing
-OPTIMIZE:=--opt-code-size
+ifeq ($(TC), IAR)
+   TOOLCHAIN_VERSION=1.04
+   OPTIMIZE:=hz
+   WARNINGS_TO_IGNORE:=Pe618,Pe236,Pa050
+   ENDIANNESS:=big
+   # Compiler optimization level (n - none, hs - High, favoring speed, hz - High, favoring size)
+   OPTIMIZE:=hz
 
-IGNORE_WARNINGS=24
+   # Code and data model size (small|medium|large)
+   CODE_MODEL:=small
+   DATA_MODEL:=medium
 
-# Update value to tweak optimization
-# In general, a higher number means longer build times but smaller code
-# OPTIMIZE_MAX_ALLOCS_PER_NODE:=50000
+   # Define how many virtual registers to use
+   VREGS:=16
+
+else
+   TOOLCHAIN_VERSION:=3.9.0
+   OPTIMIZE:=--opt-code-size
+   IGNORE_WARNINGS=24
+endif
 
 PACKAGE_CONTENTS:=
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).hex,)
@@ -72,4 +86,8 @@ clean: target_clean
 package: all
 	@$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 
-include tools/sdcc-stm8/sdcc-stm8-makefile-worker.mk
+ifeq ($(TC), IAR)
+   include tools/iar-stm8-wine/iar-stm8-wine-tools-makefile-worker.mk
+else
+   include tools/sdcc-stm8/sdcc-stm8-makefile-worker.mk
+endif
