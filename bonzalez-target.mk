@@ -1,4 +1,5 @@
 ifeq ($(TC), IAR)
+   STM8_MAKEFILE_LOCATION:=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
    include tools/iar-stm8-wine/iar-stm8-wine-tools.mk
 else
    include tools/sdcc-stm8/sdcc-stm8.mk
@@ -49,6 +50,7 @@ ifeq ($(TC), IAR)
    OPTIMIZE:=hz
    WARNINGS_TO_IGNORE:=Pe618,Pe236,Pa050
    ENDIANNESS:=big
+
    # Compiler optimization level (n - none, hs - High, favoring speed, hz - High, favoring size)
    OPTIMIZE:=hz
 
@@ -58,7 +60,6 @@ ifeq ($(TC), IAR)
 
    # Define how many virtual registers to use
    VREGS:=16
-
 else
    TOOLCHAIN_VERSION:=3.9.0
    OPTIMIZE:=--opt-code-size
@@ -74,10 +75,6 @@ $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 all: $(OUTPUT_DIR)/$(TARGET).hex
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration bonzalez_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 	@echo Build complete
-
-.PHONY: upload
-upload: $(OUTPUT_DIR)/$(TARGET).hex stm8flash
-	$(call stm8flash_upload,$(STM8FLASH_PROGRAMMER),$(STM8FLASH_PART),$^)
 
 .PHONY: clean
 clean: target_clean

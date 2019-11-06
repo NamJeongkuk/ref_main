@@ -63,7 +63,7 @@ static void PopulateVersionResponse(void *context, Gea2Packet_t *packet)
 
 static void HandleVersionRequest(TinyGeaStack_t *instance, const Gea2Packet_t *request)
 {
-   TinyGea2Interface_Send(&instance->_private.gea2Interface.interface, 5, PopulateVersionResponse, request);
+   TinyGea2Interface_Send(&instance->_private.gea2Interface.interface, 5, PopulateVersionResponse, (void *)(request));
 }
 
 static void GeaMessageReceived(void *context, const void *_args)
