@@ -9,6 +9,8 @@
 #include "TinyGeaStack.h"
 #include "Gea2Addresses.h"
 #include "TinySystemErds.h"
+#include "BootLoader.h"
+#include "TinyBootLoaderCommand.h"
 #include "utils.h"
 
 enum
@@ -77,6 +79,10 @@ static void GeaMessageReceived(void *context, const void *_args)
    {
       case Gea2CommonCommand_Version:
          HandleVersionRequest(instance, packet);
+         break;
+
+      case TinyBootLoaderCommand_JumpToBootLoader:
+         BootLoader_JumpToBootLoader();
          break;
    }
 }

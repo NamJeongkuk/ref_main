@@ -102,3 +102,6 @@ void main(void)
       TinyGeaStack_Run(&geaStack);
    }
 }
+
+// CRC needs to be placed at the end of ROM and given a dummy value
+static const uint16_t __at(0x9FFE) crc = 0xDEAD;
