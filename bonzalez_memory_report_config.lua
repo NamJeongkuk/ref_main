@@ -8,7 +8,7 @@ return {
     rom = {
       map = 'build/bonzalez/bonzalez.map',
       type = 'sdcc',
-      total = 8 * 1024
+      total = (8 * 1024) - (1024 + 64)
     }
   }
 }
