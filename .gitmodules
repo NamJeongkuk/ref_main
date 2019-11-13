@@ -25,3 +25,6 @@
 [submodule "lib/stm8-boot-loader"]
 	path = lib/stm8-boot-loader
 	url = https://github.com/geappliances/applcommon.stm8-boot-loader.git
+[submodule "tools/iar-stm8-wine"]
+	path = tools/iar-stm8-wine
+	url = https://github.com/geappliances/build-tools.iar-stm8-wine-tools-release.git
