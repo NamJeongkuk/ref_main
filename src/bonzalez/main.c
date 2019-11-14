@@ -5,6 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
+#include "stm8s_flash.h"
 #include "Clk.h"
 #include "Iwdg.h"
 #include "Pd4Heartbeat.h"
@@ -21,7 +23,6 @@
 #include "I_TinyInterrupt.h"
 #include "Gea2Addresses.h"
 #include "utils.h"
-#include <string.h>
 
 enum
 {
@@ -104,4 +105,4 @@ void main(void)
 }
 
 // CRC needs to be placed at the end of ROM and given a dummy value
-static const uint16_t __at(0x9FFE) crc = 0xDEAD;
+static const uint16_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 1) crc = 0xDEAD;
