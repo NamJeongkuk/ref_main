@@ -14,10 +14,10 @@ BOOT_LOADER_DIR=lib/stm8-boot-loader
 BOOT_LOADER:=$(BOOT_LOADER_DIR)/build/boot-loader.hex
 
 # Configures the STM8S headers for your part
-DEVICE_TYPE:=STM8S003
+DEVICE_TYPE:=STM8S105
 
-OPENOCD_TARGET:=target/stm8s003.cfg
-STM8FLASH_PART:=stm8s103f3
+OPENOCD_TARGET:=target/stm8s105.cfg
+STM8FLASH_PART:=stm8s105?6
 STM8FLASH_PROGRAMMER:=stlinkv2
 
 MAIN:=$(PROJECT_DIR)/$(TARGET)/main.c
@@ -31,6 +31,7 @@ SRC_DIRS:=\
    $(PROJECT_DIR)/TinyApplication/DataSource \
    $(PROJECT_DIR)/TinyApplication/Gea \
    $(PROJECT_DIR)/TinyApplication/Plugins \
+   # tools/sdcc-stm8/lib/STM8_TouchSensing_Driver/src
 
 COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src \
@@ -44,6 +45,7 @@ INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(PROJECT_DIR)/Application/Gea \
+   # tools/sdcc-stm8/lib/STM8_TouchSensing_Driver/inc
 
 SOURCE_EXTENSIONS:=.c
 
