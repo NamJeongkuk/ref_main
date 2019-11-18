@@ -5,14 +5,15 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
 #include "DataSource_Adc.h"
 #include "I_Adc.h"
 #include "iodefine.h"
 #include "uassert.h"
 #include "Event_Null.h"
 #include "InterruptPriorityLevel.h"
+#include "ConstArrayMap_LinearSearch.h"
 #include "utils.h"
-#include <string.h>
 
 #define ERD_IS_IN_RANGE(erd) (IN_RANGE(Erd_BspAdc_Start + 1, erd, Erd_BspAdc_End))
 
@@ -57,6 +58,12 @@ static const ConstArrayMap_LinearSearchConfiguration_t erdToAdcChannelMapConfigu
       MEMBER_SIZE(ErdAdcChannelPair_t, erd),
       OFFSET_OF(ErdAdcChannelPair_t, erd)
    };
+
+static struct
+{
+   I_DataSource_t interface;
+   ConstArrayMap_LinearSearch_t erdToChannelMap;
+} instance;
 
 static void ConfigurePins(void)
 {
@@ -135,13 +142,13 @@ void S12AD_S12ADI0(void)
 
 static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
 {
+   IGNORE(_instance);
+   uassert(ERD_IS_IN_RANGE(erd));
+
    uint16_t index;
    ErdAdcChannelPair_t pair;
 
-   REINTERPRET(instance, _instance, DataSource_Adc_t *);
-   uassert(ERD_IS_IN_RANGE(erd));
-
-   if(ConstArrayMap_Find(&instance->_private.erdToChannelMap.interface, &erd, &index, &pair))
+   if(ConstArrayMap_Find(&instance.erdToChannelMap.interface, &erd, &index, &pair))
    {
       AdcCounts_t value = ReadAdcChannel(pair.channel);
       memcpy(data, &value, sizeof(AdcCounts_t));
@@ -152,22 +159,22 @@ static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
    }
 }
 
-static void Write(I_DataSource_t *instance, const Erd_t erd, const void *data)
+static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
 {
-   IGNORE(instance);
+   IGNORE(_instance);
    IGNORE(erd);
    IGNORE(data);
 }
 
-static bool Has(const I_DataSource_t *instance, const Erd_t erd)
+static bool Has(const I_DataSource_t *_instance, const Erd_t erd)
 {
-   IGNORE(instance);
+   IGNORE(_instance);
    return ERD_IS_IN_RANGE(erd);
 }
 
-static uint8_t SizeOf(const I_DataSource_t *instance, const Erd_t erd)
+static uint8_t SizeOf(const I_DataSource_t *_instance, const Erd_t erd)
 {
-   IGNORE(instance);
+   IGNORE(_instance);
    uassert(ERD_IS_IN_RANGE(erd));
 
    return sizeof(AdcCounts_t);
@@ -176,15 +183,17 @@ static uint8_t SizeOf(const I_DataSource_t *instance, const Erd_t erd)
 static const I_DataSource_Api_t api =
    { Read, Write, Has, SizeOf };
 
-void DataSource_Adc_Init(DataSource_Adc_t *instance)
+I_DataSource_t *DataSource_Adc_Init(void)
 {
    ConstArrayMap_LinearSearch_Init(
-      &instance->_private.erdToChannelMap,
+      &instance.erdToChannelMap,
       &erdToAdcChannelMapConfiguration);
 
-   instance->interface.api = &api;
-   instance->interface.OnDataChange = Event_Null_GetInstance();
+   instance.interface.api = &api;
+   instance.interface.OnDataChange = Event_Null_GetInstance();
 
    ConfigurePins();
    ConfigureAdcGroupA();
+
+   return &instance.interface;
 }

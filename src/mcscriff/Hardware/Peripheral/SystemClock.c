@@ -40,8 +40,9 @@ void SystemClock_Init(void)
    {
       HAL_NVIC_SystemReset();
    }
-   peripheralClockInitStructure.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+   peripheralClockInitStructure.PeriphClockSelection = RCC_PERIPHCLK_USART1 | RCC_PERIPHCLK_USART3;
    peripheralClockInitStructure.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
+   peripheralClockInitStructure.Usart3ClockSelection = RCC_USART3CLKSOURCE_PCLK1;
    if(HAL_RCCEx_PeriphCLKConfig(&peripheralClockInitStructure) != HAL_OK)
    {
       HAL_NVIC_SystemReset();

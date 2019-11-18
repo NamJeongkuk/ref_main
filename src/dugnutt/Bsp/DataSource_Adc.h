@@ -11,7 +11,6 @@
 #include "I_DataSource.h"
 #include "BspErdRanges.h"
 #include "AdcConfiguration.h"
-#include "ConstArrayMap_LinearSearch.h"
 
 #define ADC_TABLE_EXPAND_AS_HARDWARE_ERDS(name, port, bit, channel) \
    Erd_BspAdc_##name,
@@ -23,19 +22,9 @@ enum
       Erd_BspAdc_End
 };
 
-typedef struct
-{
-   I_DataSource_t interface;
-
-   struct
-   {
-      ConstArrayMap_LinearSearch_t erdToChannelMap;
-   } _private;
-} DataSource_Adc_t;
-
 /*!
- * @param instance
+ * @return
  */
-void DataSource_Adc_Init(DataSource_Adc_t *instance);
+I_DataSource_t *DataSource_Adc_Init(void);
 
 #endif
