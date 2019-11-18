@@ -17,11 +17,13 @@
 #include "TinySystemData.h"
 #include "TinyApplication.h"
 #include "Led.h"
-#include "Button.h"
+#include "CapSenseButton.h"
 #include "I_TinyInterrupt.h"
 #include "Gea2Addresses.h"
 #include "utils.h"
 #include <string.h>
+
+ISR(TSL_Timer_ISR, ITC_IRQ_TIM4_OVF);
 
 enum
 {
@@ -86,7 +88,7 @@ void main(void)
          &timerModule,
          BonzalezGeaAddress);
 
-      Button_Init(dataSource, &timerModule, Erd_ButtonState);
+      CapSenseButton_Init(dataSource, &timerModule, Erd_ButtonState);
       Led_Init(dataSource, Erd_LedState);
 
       TinyApplication_Init(&application, dataSource);
@@ -100,8 +102,9 @@ void main(void)
    {
       TinyTimerModule_Run(&timerModule);
       TinyGeaStack_Run(&geaStack);
+      TSL_Action();
    }
 }
 
 // CRC needs to be placed at the end of ROM and given a dummy value
-static const uint16_t __at(0x9FFE) crc = 0xDEAD;
+static const uint16_t __at(0xFFFE) crc = 0xDEAD;

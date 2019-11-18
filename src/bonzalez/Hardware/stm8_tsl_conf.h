@@ -377,7 +377,7 @@
 // RTOS Management of the acquisition (instead of the timebase interrupt sub-routine
 #define RTOS_MANAGEMENT (0) /**< The Timebase routine is launched by the application instead to be managed through a timebase interrupt routine */
 // Timer Callback to allow the user to add its own function called from the timer interrupt sub-routine
-#define TIMER_CALLBACK (0) /**< if (1) Allows the use of a callback function in the timer interrupt. This function will be called every 0.5ms. The callback function must be defined inside the application and have the following prototype FAR void USER_TickTimerCallback(void);  */
+#define TIMER_CALLBACK (1) /**< if (1) Allows the use of a callback function in the timer interrupt. This function will be called every 0.5ms. The callback function must be defined inside the application and have the following prototype FAR void USER_TickTimerCallback(void);  */
 //Inline functions
 #define USE_INLINED_FUNCTIONS (0) /**< Inline functions are enabled (=1) */
 /** @} */

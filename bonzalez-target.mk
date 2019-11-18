@@ -2,6 +2,7 @@ ifeq ($(TC), IAR)
    STM8_MAKEFILE_LOCATION:=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
    include tools/iar-stm8-wine/iar-stm8-wine-tools.mk
 else
+   TC=SDCC
    include tools/sdcc-stm8/sdcc-stm8.mk
 endif
 
@@ -31,7 +32,7 @@ SRC_DIRS:=\
    $(PROJECT_DIR)/TinyApplication/DataSource \
    $(PROJECT_DIR)/TinyApplication/Gea \
    $(PROJECT_DIR)/TinyApplication/Plugins \
-   # tools/sdcc-stm8/lib/STM8_TouchSensing_Driver/src
+   tools/sdcc-stm8/lib/STM8_TouchSensing_Driver/src
 
 COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src \
@@ -45,7 +46,7 @@ INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(PROJECT_DIR)/Application/Gea \
-   # tools/sdcc-stm8/lib/STM8_TouchSensing_Driver/inc
+   tools/sdcc-stm8/lib/STM8_TouchSensing_Driver/inc
 
 SOURCE_EXTENSIONS:=.c
 
@@ -86,7 +87,7 @@ target: $(OUTPUT_DIR)/$(TARGET).htiny
 
 .PHONY: $(BOOT_LOADER)
 $(BOOT_LOADER):
-	@$(MAKE) -C $(BOOT_LOADER_DIR) -f target.mk RELEASE=Y
+	@$(MAKE) -C $(BOOT_LOADER_DIR) -f target.mk RELEASE=Y TC=$(TC)
 
 # The ordering of the boot loader and htiny is important
 # The vector table of the app (htiny) must overwrite the vector table of the boot loader
