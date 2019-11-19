@@ -31,7 +31,7 @@
 
 #define EXPAND_AS_ERD_ADC_CHANNEL_PAIRS(name, port, bit, channel) \
    {                                                              \
-      Erd_BspAdc_##name, channel                                  \
+      name, channel                                  \
    },
 
 enum

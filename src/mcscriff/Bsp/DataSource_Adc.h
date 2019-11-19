@@ -13,13 +13,13 @@
 #include "AdcConfiguration.h"
 #include "Timer.h"
 
-#define ADC_TABLE_EXPAND_AS_HARDWARE_ERDS(name, port, bit, channel) \
-   Erd_BspAdc_##name,
+#define ADC_TABLE_EXPAND_AS_ERD_NAMES(name, port, bit, channel) \
+   name,
 
 enum
 {
    Erd_BspAdc_Start = (BspErdAdcStart - 1),
-   ADC_TABLE(ADC_TABLE_EXPAND_AS_HARDWARE_ERDS)
+   ADC_TABLE(ADC_TABLE_EXPAND_AS_ERD_NAMES)
       Erd_BspAdc_End
 };
 

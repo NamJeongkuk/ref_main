@@ -16,13 +16,13 @@
 #include "XMacroUtils.h"
 #include "utils.h"
 
-#define GPIO_EXPAND_AS_HARDWARE_ERDS(name, direction, pullUp, driveCapacity, port, pin) \
-   Erd_BspGpio_##name,
+#define GPIO_EXPAND_AS_ERD_NAMES(name, direction, pullUp, driveCapacity, port, pin) \
+   name,
 
 enum
 {
    Erd_BspGpio_Start = (BspErdGpioStart - 1),
-   GPIO_TABLE(GPIO_EXPAND_AS_HARDWARE_ERDS)
+   GPIO_TABLE(GPIO_EXPAND_AS_ERD_NAMES)
       Erd_BspGpio_End
 };
 
