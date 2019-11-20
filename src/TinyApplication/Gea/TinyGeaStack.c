@@ -13,6 +13,8 @@
 #include "TinyBootLoaderCommand.h"
 #include "utils.h"
 
+extern Version_t version;
+
 enum
 {
    Gea2CommonCommand_Version = 0x01,
@@ -52,20 +54,21 @@ static const TinyErdStreamSenderConfiguration_t erdStreamSenderConfiguration =
       .mappingCount = NUM_ELEMENTS(streamLocalToRemoteErdMap)
    };
 
-static void PopulateVersionResponse(void *context, Gea2Packet_t *packet)
+static void PopulateTinyVersionResponse(void *context, Gea2Packet_t *packet)
 {
    REINTERPRET(sourcePacket, context, const Gea2Packet_t *);
    packet->destination = sourcePacket->source;
-   packet->payload[0] = Gea2CommonCommand_Version;
-   packet->payload[1] = 0x01;
-   packet->payload[2] = 0x02;
-   packet->payload[3] = 0x03;
-   packet->payload[4] = 0x04;
+   packet->payload[0] = TinyBootLoaderCommand_VersionResponse;
+   packet->payload[1] = sourcePacket->payload[1];
+   packet->payload[2] = version.criticalMajor;
+   packet->payload[3] = version.criticalMinor;
+   packet->payload[4] = version.major;
+   packet->payload[5] = version.minor;
 }
 
-static void HandleVersionRequest(TinyGeaStack_t *instance, const Gea2Packet_t *request)
+static void HandleTinyVersionRequest(TinyGeaStack_t *instance, const Gea2Packet_t *request)
 {
-   TinyGea2Interface_Send(&instance->_private.gea2Interface.interface, 5, PopulateVersionResponse, (void *)(request));
+   TinyGea2Interface_Send(&instance->_private.gea2Interface.interface, 6, PopulateTinyVersionResponse, (void *)(request));
 }
 
 static void GeaMessageReceived(void *context, const void *_args)
@@ -77,8 +80,8 @@ static void GeaMessageReceived(void *context, const void *_args)
 
    switch(command)
    {
-      case Gea2CommonCommand_Version:
-         HandleVersionRequest(instance, packet);
+      case TinyBootLoaderCommand_VersionRequest:
+         HandleTinyVersionRequest(instance, packet);
          break;
 
       case TinyBootLoaderCommand_JumpToBootLoader:
