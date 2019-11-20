@@ -16,8 +16,8 @@
 
 // Name, port, bit, channel
 #define ADC_TABLE(ENTRY)         \
-   ENTRY(SomeAnalogInput,     4, 1, 0) \
-   ENTRY(AnotherAnalogInput,  4, 2, 1)
+   ENTRY(Erd_BspAdc_SomeAnalogInput,     4, 1, 0) \
+   ENTRY(Erd_BspAdc_AnotherAnalogInput,  4, 2, 1)
 
 // clang-format on
 
