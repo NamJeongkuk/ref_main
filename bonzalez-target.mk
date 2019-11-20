@@ -32,11 +32,12 @@ SRC_DIRS:=\
    $(PROJECT_DIR)/TinyApplication/DataSource \
    $(PROJECT_DIR)/TinyApplication/Gea \
    $(PROJECT_DIR)/TinyApplication/Plugins \
-   tools/sdcc-stm8/lib/STM8_TouchSensing_Driver/src
+
 
 COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
+   $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/TouchSense/src \
    $(APPLCOMMON_TINY_DIR)/src/TinyLib \
 
 INC_DIRS:=\
@@ -45,8 +46,8 @@ INC_DIRS:=\
    $(APPLCOMMON_DIR)/Utilities \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
+   $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/TouchSense/inc \
    $(PROJECT_DIR)/Application/Gea \
-   tools/sdcc-stm8/lib/STM8_TouchSensing_Driver/inc
 
 SOURCE_EXTENSIONS:=.c
 

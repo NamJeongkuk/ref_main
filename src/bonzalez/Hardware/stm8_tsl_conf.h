@@ -367,7 +367,7 @@
 #define MCKEY2_DELTA_COEFF_H (0x0100) /**< MCKey2 Channel H parameter */
 
 // Interrupt synchronisation
-#define IT_SYNC (1) /**< Interrupt synchronisation. (=1) Allow to synchronize the aquisition with a flag set in an interrupt routine */
+#define IT_SYNC (0) /**< Interrupt synchronisation. (=1) Allow to synchronize the aquisition with a flag set in an interrupt routine */
 
 // Spread spectrum
 #define SPREAD_SPECTRUM (1) /**< Spread spectrum. (=1) Add a variable delay between acquisitions */
@@ -377,7 +377,7 @@
 // RTOS Management of the acquisition (instead of the timebase interrupt sub-routine
 #define RTOS_MANAGEMENT (0) /**< The Timebase routine is launched by the application instead to be managed through a timebase interrupt routine */
 // Timer Callback to allow the user to add its own function called from the timer interrupt sub-routine
-#define TIMER_CALLBACK (1) /**< if (1) Allows the use of a callback function in the timer interrupt. This function will be called every 0.5ms. The callback function must be defined inside the application and have the following prototype FAR void USER_TickTimerCallback(void);  */
+#define TIMER_CALLBACK (0) /**< if (1) Allows the use of a callback function in the timer interrupt. This function will be called every 0.5ms. The callback function must be defined inside the application and have the following prototype FAR void USER_TickTimerCallback(void);  */
 //Inline functions
 #define USE_INLINED_FUNCTIONS (0) /**< Inline functions are enabled (=1) */
 /** @} */

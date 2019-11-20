@@ -7,11 +7,11 @@
 
 #include "Clk.h"
 #include "Iwdg.h"
-#include "Pd4Heartbeat.h"
+#include "Pd0Heartbeat.h"
 #include "Rst.h"
-#include "TinyTimeSource_Tim4SystemTick.h"
+#include "TinyTimeSource_Tim2SystemTick.h"
 #include "TinyAdcGroup_Adc1.h"
-#include "TinyUart_Uart1.h"
+#include "TinyUart_Uart2.h"
 #include "TinyTimer.h"
 #include "TinyGeaStack.h"
 #include "TinySystemData.h"
@@ -21,9 +21,8 @@
 #include "I_TinyInterrupt.h"
 #include "Gea2Addresses.h"
 #include "utils.h"
+#include "stm8_tsl_timebase.h"
 #include <string.h>
-
-ISR(TSL_Timer_ISR, ITC_IRQ_TIM4_OVF);
 
 enum
 {
@@ -74,16 +73,16 @@ void main(void)
    {
       TinyTimerModule_Init(
          &timerModule,
-         TinyTimeSource_Tim4SystemTick_Init());
+         TinyTimeSource_Tim2SystemTick_Init());
 
-      Pd4Heartbeat_Init(&timerModule);
+      Pd0Heartbeat_Init(&timerModule);
 
       TinySystemData_Init(&systemData);
       I_TinyDataSource_t *dataSource = TinySystemData_DataSource(&systemData);
 
       TinyGeaStack_Init(
          &geaStack,
-         TinyUart_Uart1_Init(),
+         TinyUart_Uart2_Init(),
          dataSource,
          &timerModule,
          BonzalezGeaAddress);

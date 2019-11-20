@@ -11,7 +11,7 @@
 
 enum
 {
-   PollPeriodMsec = 10
+   PollPeriodMsec = 0
 };
 
 typedef struct
@@ -29,17 +29,20 @@ static void PollButtonState(void *context, struct TinyTimerModule_t *timerModule
 {
    IGNORE(context);
 
-   if((TSL_GlobalSetting.b.CHANGED) && (TSLState == TSL_IDLE_STATE))
+   if(TSLState == TSL_IDLE_STATE)
    {
-      TSL_GlobalSetting.b.CHANGED = 0;
+      if(TSL_GlobalSetting.b.CHANGED)
+      {
+         TSL_GlobalSetting.b.CHANGED = 0;
 
-      bool state = sSCKeyInfo[0].Setting.b.DETECTED;
-      TinyDataSource_Write(instance.dataSource, instance.buttonErd, &state);
-   }
+         bool state = sSCKeyInfo[0].Setting.b.DETECTED;
+         TinyDataSource_Write(instance.dataSource, instance.buttonErd, &state);
+      }
 
-   if((TSL_GlobalSetting.b.NOISE) && (TSLState == TSL_IDLE_STATE))
-   {
-      TSL_GlobalSetting.b.NOISE = 0;
+      if(TSL_GlobalSetting.b.NOISE)
+      {
+         TSL_GlobalSetting.b.NOISE = 0;
+      }
    }
 
    StartTimer(timerModule);
@@ -54,6 +57,8 @@ void CapSenseButton_Init(I_TinyDataSource_t *dataSource, TinyTimerModule_t *time
 {
    instance.dataSource = dataSource;
    instance.buttonErd = buttonErd;
+
+   CLK->PCKENR1 |= (CLK_PCKENR1_TIM3 | CLK_PCKENR1_TIM4);
 
    TSL_Init();
 
