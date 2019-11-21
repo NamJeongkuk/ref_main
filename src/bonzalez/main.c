@@ -104,6 +104,10 @@ void main(void)
    }
 }
 
+// CRC needs to be placed at the end of ROM and given a dummy value
+static const uint16_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 1) crc = 0xDEAD;
+
+// ...and version is placed just before CRC
 const Version_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 5) version =
    {
       CRIT_VERSION_MAJOR,
@@ -111,6 +115,3 @@ const Version_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 5) version =
       NONCRIT_VERSION_MAJOR,
       NONCRIT_VERSION_MINOR
    };
-
-// CRC needs to be placed at the end of ROM and given a dummy value
-static const uint16_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 1) crc = 0xDEAD;
