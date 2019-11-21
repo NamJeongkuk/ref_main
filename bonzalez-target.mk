@@ -33,7 +33,7 @@ SRC_DIRS:=\
    $(PROJECT_DIR)/TinyApplication/Plugins \
 
 COMMON_LIB_DIRS:=\
-   $(APPLCOMMON_TINY_DIR)/src \
+   $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(APPLCOMMON_TINY_DIR)/src/TinyLib \
 
