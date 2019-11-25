@@ -61,7 +61,8 @@
       "configFiles": [
         "${workspaceFolder}/build/bonzalez/bonzalez_debug_openocd.cfg"
       ],
-      "preLaunchTask": "bonzalez_vscode_debug"
+      "preLaunchTask": "bonzalez_vscode_debug",
+      "svdFile": "${workspaceFolder}/tools/sdcc-stm8/svd/STM8Sx03.svd"
     },
     {
       "name": "McScriff launch",
