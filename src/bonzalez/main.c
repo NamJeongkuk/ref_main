@@ -22,6 +22,7 @@
 #include "Button.h"
 #include "I_TinyInterrupt.h"
 #include "Gea2Addresses.h"
+#include "Ul.h"
 #include "utils.h"
 
 enum
@@ -66,6 +67,7 @@ static void SendStartupMessage(I_TinyGea2Interface_t *gea2Interface)
 
 void main(void)
 {
+   Ul_Startup();
    Iwdg_Init();
    Clk_Init();
 
@@ -101,6 +103,7 @@ void main(void)
    {
       TinyTimerModule_Run(&timerModule);
       TinyGeaStack_Run(&geaStack);
+      Ul_Run();
    }
 }
 
