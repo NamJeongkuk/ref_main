@@ -2,8 +2,9 @@ PROJECT_NAME = multi-target-starter-kit
 
 APPLCOMMON_DIR = lib/applcommon
 PROJECT_DIR = src
-TESTING_DIR = Testing
-TESTS_DIR = Testing/Tests
+TESTING_DIR = test
+TESTS_DIR = test/Tests
+OUTPUT_DIR = test
 
 RUN_APPLCOMMON_TESTS = N
 

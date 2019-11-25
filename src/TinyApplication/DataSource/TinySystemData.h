@@ -12,7 +12,7 @@
 #include "TinySystemErds.h"
 #include "utils.h"
 
-#define EXPAND_AS_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Stream, RemoteErd) \
+#define EXPAND_AS_OFFSET_STRUCT_MEMBER(Name, Number, DataType) \
    uint8_t MACRO_SAFE_CONCATENATE(erd, Name)[sizeof(DataType)];
 
 typedef struct

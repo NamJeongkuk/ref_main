@@ -85,7 +85,7 @@ Reset_Handler:
 	blt	.L_loop3
 
 	// Set the Stack
-	LDR r1,=__StackTop
+	LDR r1,=__StackBottom
 	//LDR r1,=0x20001000
 	MSR MSP,r1
 

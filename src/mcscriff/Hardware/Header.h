@@ -12,11 +12,12 @@
 #include "I_Action.h"
 #include "ImageHeader.h"
 
+extern char __Header;
 extern char __Boot_Header;
 
 #define ApplicationStartAddress (0x08006000)
 #define ApplicationEndAddress (0x0801EFFF)
-#define ApplicationHeaderAddress ApplicationStartAddress
+#define ApplicationHeaderAddress (&__Header)
 #define ApplicationImageHeader (const ImageHeader_t *)(intptr_t)(ApplicationHeaderAddress)
 
 #define ParametricStartAddress (0x00000000)

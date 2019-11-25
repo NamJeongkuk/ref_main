@@ -9,13 +9,14 @@
 #include <stdint.h>
 #include "DataSource_Bsp.h"
 #include "DataSource_Ram.h"
+#include "ConstArrayMap_LinearSearch.h"
 #include "SystemErds.h"
 #include "uassert.h"
 
-#define GPIO_ERD_TABLE(ENTRY) \
-   ENTRY(Erd_BspGpio_HeartbeatLed, bool) \
-   ENTRY(Erd_BspGpio_OtherLed, bool) \
-   ENTRY(Erd_BspGpio_PushButtonSwitch, bool) \
+#define GPIO_ERD_TABLE(ENTRY)                     \
+   ENTRY(Erd_BspGpio_HeartbeatLed, bool)          \
+   ENTRY(Erd_BspGpio_OtherLed, bool)              \
+   ENTRY(Erd_BspGpio_PushButtonSwitch, bool)      \
    ENTRY(Erd_BspAdc_SomeAnalogInput, AdcCounts_t) \
    ENTRY(Erd_BspAdc_AnotherAnalogInput, AdcCounts_t)
 
@@ -48,6 +49,11 @@ static DataSource_Ram_t dataSource;
 static DataSourceStorage_t storage;
 static ConstArrayMap_LinearSearch_t dataSourceConstArrayMap;
 
+static struct
+{
+   I_DataSource_t interface;
+} instance;
+
 static void Read(I_DataSource_t *instance, const Erd_t erd, void *data)
 {
    IGNORE(instance);
@@ -75,15 +81,15 @@ static uint8_t SizeOf(const I_DataSource_t *instance, const Erd_t erd)
 static const I_DataSource_Api_t api =
    { Read, Write, Has, SizeOf };
 
-void DataSource_Bsp_Init(
-   DataSource_Bsp_t *instance,
-   TimerModule_t *timerModule)
+I_DataSource_t *DataSource_Bsp_Init(TimerModule_t *timerModule)
 {
    IGNORE_ARG(timerModule);
 
    ConstArrayMap_LinearSearch_Init(&dataSourceConstArrayMap, &constArrayMapConfig);
    DataSource_Ram_Init(&dataSource, &storage, sizeof(storage), &dataSourceConstArrayMap.interface);
 
-   instance->interface.api = &api;
-   instance->interface.OnDataChange = dataSource.interface.OnDataChange;
+   instance.interface.api = &api;
+   instance.interface.OnDataChange = dataSource.interface.OnDataChange;
+
+   return &instance.interface;
 }

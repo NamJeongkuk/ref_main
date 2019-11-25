@@ -39,4 +39,4 @@
 .settings/
 artifacts/
 build/
-Testing/Build
+test/Build

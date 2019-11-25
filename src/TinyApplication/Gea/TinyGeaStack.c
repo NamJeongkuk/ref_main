@@ -13,59 +13,65 @@
 #include "TinyBootLoaderCommand.h"
 #include "utils.h"
 
+extern Version_t version;
+
 enum
 {
    Gea2CommonCommand_Version = 0x01,
    HeartbeatPeriodMsec = 100,
-   RemoteErdStreamErd = 0xF123
+   RemoteButtonStateErd = 0xF123,
+   RemoteHeartbeatCountErd = 0xF124,
+   RemoteErdStreamErd = 0xF125,
+
+   StreamEntryCount = 5
 };
 
-static const TinyErdHeartbeatErdPair_t erdHeartbeatPairs[] =
-   {
-      { Erd_ErdStream, RemoteErdStreamErd }
-   };
+// static const TinyErdHeartbeatErdPair_t erdHeartbeatPairs[] =
+//    {
+//       { Erd_ErdStream, RemoteErdStreamErd }
+//    };
 
-static const TinyErdHeartbeatConfiguration_t erdHeartbeatConfig =
+// static const TinyErdHeartbeatConfiguration_t erdHeartbeatConfig =
+//    {
+//       .destination = DugnuttGeaAddress,
+//       .period = HeartbeatPeriodMsec,
+//       .pairs = erdHeartbeatPairs,
+//       .pairCount = NUM_ELEMENTS(erdHeartbeatPairs)
+//    };
+
+static const TinySingleErdHeartbeatStreamConfiguration_t erdHeartbeatStreamConfiguration =
    {
-      .destination = TrukGeaAddress,
+      .destination = DugnuttGeaAddress,
       .period = HeartbeatPeriodMsec,
-      .pairs = erdHeartbeatPairs,
-      .pairCount = NUM_ELEMENTS(erdHeartbeatPairs)
-   };
-
-#define EXPAND_AS_LOCAL_TO_REMOTE_ERD_MAP(Name, Number, DataType, Stream, RemoteErd) \
-   CONCAT(INCLUDE_STREAM_, Stream)                                                   \
-   ({ Number COMMA RemoteErd COMMA CONCAT(INCLUDE_STREAM_EVENT_, Stream)(ErdStreamDataType_Event) CONCAT(INCLUDE_STREAM_LEVEL_, Stream)(ErdStreamDataType_Level) } COMMA)
-
-static const ErdStreamLocalToRemoteErdMap_t streamLocalToRemoteErdMap[] =
-   {
-      ERD_TABLE(EXPAND_AS_LOCAL_TO_REMOTE_ERD_MAP)
-   };
-
-static const TinyErdStreamSenderConfiguration_t erdStreamSenderConfiguration =
-   {
-      .erdStreamErd = Erd_ErdStream,
+      .local =
+         {
+            .dataErd = Erd_ButtonState,
+            .erdStreamErd = Erd_ErdStream },
+      .remote =
+         {
+            .dataErd = RemoteButtonStateErd,
+            .heartbeatCountErd = RemoteHeartbeatCountErd,
+            .erdStreamErd = RemoteErdStreamErd },
       .requestedStateErdFromReceiver = Erd_ErdStreamRequestedState,
-      .streamEntryCount = NumberOfStreamedErds,
-      .sizeOfLargestStreamedErd = sizeof(StreamedErd_t),
-      .mappings = streamLocalToRemoteErdMap,
-      .mappingCount = NUM_ELEMENTS(streamLocalToRemoteErdMap)
+      .streamEntryCount = 5,
+      .dataSize = sizeof(bool)
    };
 
-static void PopulateVersionResponse(void *context, Gea2Packet_t *packet)
+static void PopulateTinyVersionResponse(void *context, Gea2Packet_t *packet)
 {
    REINTERPRET(sourcePacket, context, const Gea2Packet_t *);
    packet->destination = sourcePacket->source;
-   packet->payload[0] = Gea2CommonCommand_Version;
-   packet->payload[1] = 0x01;
-   packet->payload[2] = 0x02;
-   packet->payload[3] = 0x03;
-   packet->payload[4] = 0x04;
+   packet->payload[0] = TinyBootLoaderCommand_VersionResponse;
+   packet->payload[1] = sourcePacket->payload[1];
+   packet->payload[2] = version.criticalMajor;
+   packet->payload[3] = version.criticalMinor;
+   packet->payload[4] = version.major;
+   packet->payload[5] = version.minor;
 }
 
-static void HandleVersionRequest(TinyGeaStack_t *instance, const Gea2Packet_t *request)
+static void HandleTinyVersionRequest(TinyGeaStack_t *instance, const Gea2Packet_t *request)
 {
-   TinyGea2Interface_Send(&instance->_private.gea2Interface.interface, 5, PopulateVersionResponse, (void *)(request));
+   TinyGea2Interface_Send(&instance->_private.gea2Interface.interface, 6, PopulateTinyVersionResponse, (void *)(request));
 }
 
 static void GeaMessageReceived(void *context, const void *_args)
@@ -77,8 +83,8 @@ static void GeaMessageReceived(void *context, const void *_args)
 
    switch(command)
    {
-      case Gea2CommonCommand_Version:
-         HandleVersionRequest(instance, packet);
+      case TinyBootLoaderCommand_VersionRequest:
+         HandleTinyVersionRequest(instance, packet);
          break;
 
       case TinyBootLoaderCommand_JumpToBootLoader:
@@ -94,6 +100,8 @@ void TinyGeaStack_Init(
    TinyTimerModule_t *timerModule,
    uint8_t geaAddress)
 {
+   (void)timerModule;
+
    TinyGea2Interface_FullDuplex_Init(
       &instance->_private.gea2Interface,
       uart,
@@ -103,22 +111,12 @@ void TinyGeaStack_Init(
       instance->_private.receiveBuffer,
       sizeof(instance->_private.receiveBuffer));
 
-   TinyErdGea2OpenLoopWriteApiRevision2_Init(
-      &instance->_private.erdGea2OpenLoopWriteApi,
-      dataSource,
-      &instance->_private.gea2Interface.interface);
-
-   TinyErdHeartbeat_Init(
-      &instance->_private.erdHeartbeat,
+   TinySingleErdHeartbeatStream_Init(
+      &instance->_private.erdHeartbeatStream,
       &instance->_private.gea2Interface.interface,
       dataSource,
       timerModule,
-      &erdHeartbeatConfig);
-
-   TinyErdStreamSender_Init(
-      &instance->_private.erdStreamSender,
-      dataSource,
-      &erdStreamSenderConfiguration);
+      &erdHeartbeatStreamConfiguration);
 
    TinyEventSubscription_Init(&instance->_private.geaMessageSubscription, instance, GeaMessageReceived);
    TinyEvent_Subscribe(

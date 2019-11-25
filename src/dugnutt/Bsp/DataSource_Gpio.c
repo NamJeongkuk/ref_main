@@ -17,9 +17,13 @@
 #define ERD_FROM_CHANNEL(channel) (Erd_BspGpio_Start + 1 + channel)
 #define ERD_IS_IN_RANGE(erd) (IN_RANGE(Erd_BspGpio_Start + 1, erd, Erd_BspGpio_End))
 
+#define GPIO_TABLE_EXPAND_AS_GPIO_COUNT(name, direction, pullUp, driveCapacity, port, pin) +1
+
 enum
 {
-   InputPollPeriodInMsec = 10
+   InputPollPeriodInMsec = 10,
+   BitsPerByte = 8,
+   GpioCount = 0 GPIO_TABLE(GPIO_TABLE_EXPAND_AS_GPIO_COUNT)
 };
 
 enum
@@ -102,6 +106,14 @@ static const GpioDirectionPortsAndPins_t gpioPortsAndPins[] =
       GPIO_TABLE(EXPAND_PORTS_AND_PINS)
    };
 
+static struct
+{
+   I_DataSource_t interface;
+   Event_Synchronous_t *onChangeEvent;
+   Timer_t timer;
+   uint8_t inputCache[((GpioCount - 1) / BitsPerByte) + 1];
+} instance;
+
 static void SetPullUp(const GpioChannel_t channel, const GpioPullUp_t pullUp)
 {
    if(gpioPortAddresses[gpioPortsAndPins[channel].port].pullUpControl)
@@ -163,9 +175,9 @@ static void WriteGpio(const GpioChannel_t channel, const bool state)
    }
 }
 
-static void Read(I_DataSource_t *instance, const Erd_t erd, void *data)
+static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
 {
-   IGNORE(instance);
+   IGNORE(_instance);
    uassert(ERD_IS_IN_RANGE(erd));
 
    bool value = ReadGpio(CHANNEL_FROM_ERD(erd));
@@ -174,7 +186,7 @@ static void Read(I_DataSource_t *instance, const Erd_t erd, void *data)
 
 static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
 {
-   REINTERPRET(instance, _instance, DataSource_Gpio_t *);
+   IGNORE(_instance);
    REINTERPRET(state, data, const bool *);
 
    uassert(ERD_IS_IN_RANGE(erd));
@@ -186,19 +198,19 @@ static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
 
       DataSourceOnDataChangeArgs_t args =
          { erd, data };
-      Event_Synchronous_Publish(instance->_private.onChangeEvent, &args);
+      Event_Synchronous_Publish(instance.onChangeEvent, &args);
    }
 }
 
-static bool Has(const I_DataSource_t *instance, const Erd_t erd)
+static bool Has(const I_DataSource_t *_instance, const Erd_t erd)
 {
-   IGNORE(instance);
+   IGNORE(_instance);
    return ERD_IS_IN_RANGE(erd);
 }
 
-static uint8_t SizeOf(const I_DataSource_t *instance, const Erd_t erd)
+static uint8_t SizeOf(const I_DataSource_t *_instance, const Erd_t erd)
 {
-   IGNORE(instance);
+   IGNORE(_instance);
    uassert(ERD_IS_IN_RANGE(erd));
 
    return sizeof(bool);
@@ -209,20 +221,20 @@ static const I_DataSource_Api_t api =
 
 static void PollInputs(void *context)
 {
-   REINTERPRET(instance, context, DataSource_Gpio_t *);
+   IGNORE(context);
 
    for(GpioChannel_t channel = 0; channel < NUM_ELEMENTS(gpioPortsAndPins); channel++)
    {
       if(gpioPortsAndPins[channel].direction == GpioDirection_Input)
       {
          bool state = ReadGpio(channel);
-         if(BIT_STATE(instance->_private.inputCache[channel / BitsPerByte], channel % BitsPerByte) != state)
+         if(BIT_STATE(instance.inputCache[channel / BitsPerByte], channel % BitsPerByte) != state)
          {
-            BIT_WRITE(instance->_private.inputCache[channel / BitsPerByte], channel % BitsPerByte, state);
+            BIT_WRITE(instance.inputCache[channel / BitsPerByte], channel % BitsPerByte, state);
 
             DataSourceOnDataChangeArgs_t args =
                { ERD_FROM_CHANNEL(channel), &state };
-            Event_Synchronous_Publish(instance->_private.onChangeEvent, &args);
+            Event_Synchronous_Publish(instance.onChangeEvent, &args);
          }
       }
    }
@@ -251,14 +263,13 @@ static bool AtLeastOneInputExists(void)
    return false;
 }
 
-void DataSource_Gpio_Init(
-   DataSource_Gpio_t *instance,
+I_DataSource_t *DataSource_Gpio_Init(
    TimerModule_t *timerModule,
    Event_Synchronous_t *onChangeEvent)
 {
-   instance->interface.api = &api;
-   instance->interface.OnDataChange = &onChangeEvent->interface;
-   instance->_private.onChangeEvent = onChangeEvent;
+   instance.interface.api = &api;
+   instance.interface.OnDataChange = &onChangeEvent->interface;
+   instance.onChangeEvent = onChangeEvent;
 
    InitializeGpio();
 
@@ -266,9 +277,11 @@ void DataSource_Gpio_Init(
    {
       TimerModule_StartPeriodic(
          timerModule,
-         &instance->_private.timer,
+         &instance.timer,
          InputPollPeriodInMsec,
          PollInputs,
-         instance);
+         &instance);
    }
+
+   return &instance.interface;
 }

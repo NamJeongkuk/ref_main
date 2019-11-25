@@ -35,34 +35,17 @@ enum
 
 // Name, Number, DataType, Stream, RemoteErd
 #define ERD_TABLE(ENTRY) \
-   ENTRY(Erd_ApplicationVersion,       0x003A, Version_t,               StreamNone,    NotMapped) \
-   ENTRY(Erd_ErdStream,                0xF000, ErdStreamErd_t,          StreamNone,    NotMapped) \
-   ENTRY(Erd_ErdStreamRequestedState,  0xF001, ErdStreamStateRequest_t, StreamNone,    NotMapped) \
-   ENTRY(Erd_ButtonState,              0xF002, bool,                    StreamEvent,   0xA000) \
-   ENTRY(Erd_LedState,                 0xF003, bool,                    StreamEvent,   0xA001) \
-
-#define EXPAND_AS_STREAMED_ITEM_UNION(Name, Number, DataType, Stream, RemoteErd) \
-   CONCAT(INCLUDE_STREAM_, Stream)(DataType item##Name;)
-
-typedef union
-{
-   ERD_TABLE(EXPAND_AS_STREAMED_ITEM_UNION)
-} StreamedErd_t;
+   ENTRY(Erd_ApplicationVersion,       0x003A, Version_t               ) \
+   ENTRY(Erd_ErdStream,                0xF000, ErdStreamErd_t          ) \
+   ENTRY(Erd_ErdStreamRequestedState,  0xF001, ErdStreamStateRequest_t ) \
+   ENTRY(Erd_ButtonState,              0xF002, bool                    ) \
+   ENTRY(Erd_LedState,                 0xF003, bool                    )
 
 typedef struct
 {
    uint8_t erd[sizeof(Erd_t)];
-   uint8_t item[sizeof(StreamedErd_t)];
+   uint8_t item[sizeof(uint8_t)];
 } StreamedItem_t;
-
-#define EXPAND_AS_STREAM_COUNT_ENUM(Name, Number, DataType, Stream, RemoteErd) \
-   CONCAT(INCLUDE_STREAM_, Stream)(StreamCount##Name COMMA)
-
-enum
-{
-   ERD_TABLE(EXPAND_AS_STREAM_COUNT_ENUM)
-   NumberOfStreamedErds
-};
 
 typedef struct
 {
@@ -70,11 +53,8 @@ typedef struct
    StreamedItem_t items[StreamedItemCount];
 } ErdStreamErd_t;
 
-#define EXPAND_AS_ENUM(Name, Number, DataType, Stream, RemoteErd) \
+#define EXPAND_AS_ENUM(Name, Number, DataType) \
    Name = Number COMMA
-
-#define EXPAND_AS_LARGEST_STREAMED_ERD_SIZE_CHECK(Name, Number, DataType, Stream, RemoteErd) \
-   CONCAT(INCLUDE_STREAM_, Stream)(((sizeof(DataType) <= LARGEST_STREAMED_ERD_SIZE) ? true : false) &&)
 
 enum
 {

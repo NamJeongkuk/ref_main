@@ -8,7 +8,6 @@ General-purpose RX231 project using the [R5F52318ADFL](https://www.renesas.com/s
 | RAM         | 64 KB  |
 | Data Flash  | 8 KB   |
 
-
 ## Dugnutt
 General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html)
 
@@ -26,3 +25,11 @@ Tiny STM8 project using the [STM8S003F3U6TR](https://www.st.com/en/microcontroll
 | Flash       | 8 KB  |
 | RAM         | 1 KB  |
 | EEPROM      | 128 B |
+
+## McScriff
+General-purpose STM32 project using the [STM32F303RB](https://www.st.com/en/microcontrollers-microprocessors/stm32f303rb.html).
+
+| Memory Type | Size   |
+|-------------|--------|
+| Flash       | 128 KB |
+| RAM         | 40 KB  |
