@@ -7,7 +7,7 @@
 
 #include "TinySystemData.h"
 
-#define EXPAND_AS_DATASOURCE_TINY_RAM_ERD_ENTRY(Name, Number, DataType, Stream, RemoteErd) \
+#define EXPAND_AS_DATASOURCE_TINY_RAM_ERD_ENTRY(Name, Number, DataType) \
    { Name, sizeof(DataType) },
 
 static const TinyDataSource_RamErd_t erdTable[] =
