@@ -103,7 +103,9 @@ void main(void)
    {
       TinyTimerModule_Run(&timerModule);
       TinyGeaStack_Run(&geaStack);
+#ifndef DISABLE_UL_CHECKS
       Ul_Run();
+#endif
    }
 }
 
