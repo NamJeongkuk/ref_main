@@ -18,7 +18,6 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_DIR)/Alignment \
    $(APPLCOMMON_DIR)/Allocator \
    $(APPLCOMMON_DIR)/ApplianceApi \
-   $(APPLCOMMON_DIR)/ApplianceType \
    $(APPLCOMMON_DIR)/Audio \
    $(APPLCOMMON_DIR)/Communications/Gea2 \
    $(APPLCOMMON_DIR)/Communications/Gea2/Commands \
@@ -67,7 +66,6 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_DIR)/Updater \
    $(APPLCOMMON_DIR)/Utilities \
    $(APPLCOMMON_DIR)/Validator \
-   $(APPLCOMMON_DIR)/Watchdog
 
 SRC_DIRS=\
    $(PROJECT_DIR)/$(TARGET) \

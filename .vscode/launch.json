@@ -32,7 +32,8 @@
       "jlinkscript": "${workspaceFolder}/build/dugnutt/debug.jlink",
       "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
       "serverpath": "${workspaceFolder}/build/dugnutt/jlink_gdb_server_wrapper.sh",
-      "preLaunchTask": "dugnutt_vscode_debug"
+      "preLaunchTask": "dugnutt_vscode_debug",
+      "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx130.svd"
     },
     {
       "name": "Truk launch",
@@ -46,7 +47,8 @@
       "jlinkscript": "${workspaceFolder}/build/truk/debug.jlink",
       "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
       "serverpath": "${workspaceFolder}/build/truk/jlink_gdb_server_wrapper.sh",
-      "preLaunchTask": "truk_vscode_debug"
+      "preLaunchTask": "truk_vscode_debug",
+      "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx231.svd"
     },
     {
       "name": "Bonzalez launch",
