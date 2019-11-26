@@ -45,15 +45,8 @@ typedef struct
 void TinyGeaStack_Init(
    TinyGeaStack_t *instance,
    I_TinyUart_t *uart,
-   I_TinyDataSource_t *dataSource,
    TinyTimerModule_t *timerModule,
    uint8_t geaAddress);
-
-/*!
- * @param instance
- * @return I_Gea2Interface_t
- */
-I_TinyGea2Interface_t *TinyGeaStack_GetGea2Interface(TinyGeaStack_t *instance);
 
 /*!
  * @param instance

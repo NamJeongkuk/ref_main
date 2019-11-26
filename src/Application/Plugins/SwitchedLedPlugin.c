@@ -26,7 +26,7 @@ void SwitchedLedPlugin_Init(
    instance->_private.dataModel = dataModel;
 
    EventSubscription_Init(&instance->_private.buttonPressSubscription, instance, ButtonStateChanged);
-   Event_Subscribe(Input_GetOnChangeEvent(DataModel_GetInput(dataModel, Erd_PushButtonSwitch)), &instance->_private.buttonPressSubscription);
+   Event_Subscribe(Input_GetOnChangeEvent(DataModel_GetInput(dataModel, Erd_RemoteKeyState)), &instance->_private.buttonPressSubscription);
 
    bool initialState = ON;
    DataModel_Write(instance->_private.dataModel, Erd_OtherLed, &initialState);

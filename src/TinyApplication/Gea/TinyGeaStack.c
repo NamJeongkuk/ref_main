@@ -8,9 +8,9 @@
 #include <string.h>
 #include "TinyGeaStack.h"
 #include "Gea2Addresses.h"
-#include "TinySystemErds.h"
 #include "BootLoader.h"
 #include "TinyBootLoaderCommand.h"
+#include "Version.h"
 #include "utils.h"
 
 extern Version_t version;
@@ -18,41 +18,21 @@ extern Version_t version;
 enum
 {
    Gea2CommonCommand_Version = 0x01,
-   HeartbeatPeriodMsec = 100,
-   RemoteButtonStateErd = 0xF123,
-   RemoteHeartbeatCountErd = 0xF124,
-   RemoteErdStreamErd = 0xF125,
+   HeartbeatPeriodMsec = 1000,
+   RemoteButtonStateErd = 0xF00D,
+   RemoteHeartbeatCountErd = 0xF00C,
+   RemoteErdStreamErd = 0xF007,
 
    StreamEntryCount = 5
 };
 
-// static const TinyErdHeartbeatErdPair_t erdHeartbeatPairs[] =
-//    {
-//       { Erd_ErdStream, RemoteErdStreamErd }
-//    };
-
-// static const TinyErdHeartbeatConfiguration_t erdHeartbeatConfig =
-//    {
-//       .destination = DugnuttGeaAddress,
-//       .period = HeartbeatPeriodMsec,
-//       .pairs = erdHeartbeatPairs,
-//       .pairCount = NUM_ELEMENTS(erdHeartbeatPairs)
-//    };
-
 static const TinySingleErdHeartbeatStreamConfiguration_t erdHeartbeatStreamConfiguration =
    {
-      .destination = DugnuttGeaAddress,
       .period = HeartbeatPeriodMsec,
-      .local =
-         {
-            .dataErd = Erd_ButtonState,
-            .erdStreamErd = Erd_ErdStream },
-      .remote =
-         {
-            .dataErd = RemoteButtonStateErd,
-            .heartbeatCountErd = RemoteHeartbeatCountErd,
-            .erdStreamErd = RemoteErdStreamErd },
-      .requestedStateErdFromReceiver = Erd_ErdStreamRequestedState,
+      .remoteDataErd = RemoteButtonStateErd,
+      .remoteErdStreamErd = RemoteErdStreamErd,
+      .remoteHeartbeatCountErd = RemoteHeartbeatCountErd,
+      .destination = DugnuttGeaAddress,
       .streamEntryCount = 5,
       .dataSize = sizeof(bool)
    };
@@ -96,7 +76,6 @@ static void GeaMessageReceived(void *context, const void *_args)
 void TinyGeaStack_Init(
    TinyGeaStack_t *instance,
    I_TinyUart_t *uart,
-   I_TinyDataSource_t *dataSource,
    TinyTimerModule_t *timerModule,
    uint8_t geaAddress)
 {
@@ -114,7 +93,6 @@ void TinyGeaStack_Init(
    TinySingleErdHeartbeatStream_Init(
       &instance->_private.erdHeartbeatStream,
       &instance->_private.gea2Interface.interface,
-      dataSource,
       timerModule,
       &erdHeartbeatStreamConfiguration);
 
@@ -122,11 +100,6 @@ void TinyGeaStack_Init(
    TinyEvent_Subscribe(
       TinyGea2Interface_GetOnReceiveEvent(&instance->_private.gea2Interface.interface),
       &instance->_private.geaMessageSubscription);
-}
-
-I_TinyGea2Interface_t *TinyGeaStack_GetGea2Interface(TinyGeaStack_t *instance)
-{
-   return &instance->_private.gea2Interface.interface;
 }
 
 void TinyGeaStack_Run(TinyGeaStack_t *instance)

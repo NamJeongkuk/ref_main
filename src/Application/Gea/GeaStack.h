@@ -19,6 +19,7 @@
 #include "Input_ErdGea2UnlockState.h"
 #include "Validator_RestrictedRangeErd.h"
 #include "ErdGea2ReadWriteApiRevision2.h"
+#include "ErdStreamReceiver.h"
 
 enum
 {
@@ -43,6 +44,7 @@ typedef struct
       DataSourcePacketSubscriptionManager_Simple_t dataSourceSubscriptionManager;
       Gea2CommonCommands_t commonCommands;
       ErdGea2ReadWriteApiRevision2_t erdApiRevision2;
+      ErdStreamReceiver_t erdStreamReceiver;
 
       Gea2Configurator_t configurator;
       Gea2ConfiguratorNode_t applicationNode;
@@ -103,7 +105,7 @@ void GeaStack_Init(
  * @param instance
  * @return Gea2 Packet Endpoint
  */
-I_Gea2PacketEndpoint_t * GeaStack_GetGea2PacketEndpoint(GeaStack_t *instance);
+I_Gea2PacketEndpoint_t *GeaStack_GetGea2PacketEndpoint(GeaStack_t *instance);
 
 /*!
  * @param instance

@@ -32,6 +32,7 @@
 #include "FaultSnapshot.h"
 #include "CycleHistoryRecord.h"
 #include "I_Adc.h"
+#include "KeyStreamPlugin.h"
 
 // clang-format off
 
@@ -161,6 +162,13 @@ enum
    ENTRY(Erd_SomeData,                                      0xF004, uint32_t,                                           Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Code,    NotFault) \
    ENTRY(Erd_ApplianceRunTimeInMinutesUpdatedHourly,        0xF005, ApplianceRunTimeMinutes_t,                          Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_StackPercentFree,                              0xF006, uint8_t,                                            Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_KeyErdStream,                                  0xF007, KeyErdStream_t,                                     Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_KeyStreamSequenceNumber,                       0xF008, ErdStreamSequenceNumber_t,                          Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_KeyStreamMissedEventSignal,                    0xF009, Signal_t,                                           Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_KeyStreamSenderResetSignal,                    0xF00A, Signal_t,                                           Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_KeyStreamSenderStateRequest,                   0xF00B, ErdStreamStateRequest_t,                            Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_HeartbeatTick,                                 0xF00C, uint8_t,                                            Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_RemoteKeyState,                                0xF00D, bool,                                               Swap_N, Io_All,  Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_SystemTickInterrupt,                           0xF100, I_Interrupt_t *,                                    Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_TimeSource,                                    0xF101, I_TimeSource_t *,                                   Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \

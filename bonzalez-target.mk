@@ -24,18 +24,22 @@ STM8FLASH_PROGRAMMER:=stlinkv2
 MAIN:=$(PROJECT_DIR)/$(TARGET)/main.c
 
 SRC_FILES:=\
+   $(APPLCOMMON_TINY_DIR)/src/Core/TinyGea2Interface_FullDuplex.c \
+   $(APPLCOMMON_TINY_DIR)/src/Core/TinyCrcCalculator.c \
+   $(APPLCOMMON_TINY_DIR)/src/Core/TinyLinkedList.c \
+   $(APPLCOMMON_TINY_DIR)/src/Core/TinyEvent_Synchronous.c \
+   $(APPLCOMMON_TINY_DIR)/src/Core/TinyEvent_SingleSubscriberSynchronous.c \
+   $(APPLCOMMON_TINY_DIR)/src/Core/TinyEventSubscription.c \
+   $(APPLCOMMON_TINY_DIR)/src/Core/TinySingleErdHeartbeatStream.c \
+   $(APPLCOMMON_TINY_DIR)/src/Core/TinyTimer.c \
 
 SRC_DIRS:=\
    $(PROJECT_DIR)/$(TARGET) \
    $(PROJECT_DIR)/$(TARGET)/Hardware \
-   $(PROJECT_DIR)/TinyApplication \
-   $(PROJECT_DIR)/TinyApplication/DataSource \
    $(PROJECT_DIR)/TinyApplication/Gea \
-   $(PROJECT_DIR)/TinyApplication/Plugins \
 
 
 COMMON_LIB_DIRS:=\
-   $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/TouchSense/src \
    $(APPLCOMMON_TINY_DIR)/src/TinyLib \
@@ -44,6 +48,7 @@ INC_DIRS:=\
    $(APPLCOMMON_DIR)/Constants \
    $(APPLCOMMON_DIR)/Image \
    $(APPLCOMMON_DIR)/Utilities \
+   $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/TouchSense/inc \
@@ -81,6 +86,7 @@ $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 .PHONY: all
 all: $(OUTPUT_DIR)/$(TARGET)_combined.hex $(OUTPUT_DIR)/$(TARGET).tiny
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration $(TARGET)_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
+	@cat $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 	@echo Build complete
 
 .PHONY: target

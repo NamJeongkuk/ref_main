@@ -41,18 +41,6 @@ enum
    ENTRY(Erd_ButtonState,              0xF002, bool                    ) \
    ENTRY(Erd_LedState,                 0xF003, bool                    )
 
-typedef struct
-{
-   uint8_t erd[sizeof(Erd_t)];
-   uint8_t item[sizeof(uint8_t)];
-} StreamedItem_t;
-
-typedef struct
-{
-   ErdStreamHeader_t header;
-   StreamedItem_t items[StreamedItemCount];
-} ErdStreamErd_t;
-
 #define EXPAND_AS_ENUM(Name, Number, DataType) \
    Name = Number COMMA
 

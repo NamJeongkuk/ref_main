@@ -58,7 +58,7 @@ static UlTestsPlugin_t ulTestsPlugin;
 
 static const uint8_t staticRoutingTable[] =
    {
-      TrukGeaAddress
+      BonzalezGeaAddress
    };
 
 static void UpdateBuildInfo(

@@ -17,6 +17,6 @@
  * @param timerModule
  * @param buttonErd
  */
-void CapSenseButton_Init(I_TinyDataSource_t *dataSource, TinyTimerModule_t *timerModule, Erd_t buttonErd);
+void CapSenseButton_Init(TinyTimerModule_t *timerModule);
 
 #endif
