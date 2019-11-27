@@ -10,8 +10,6 @@
 #include "utils.h"
 #include "TinySingleErdHeartbeatStream.h"
 
-extern TinySingleErdHeartbeatStream_t *heartbeatStream;
-
 enum
 {
    PollPeriodMsec = 0
@@ -39,7 +37,7 @@ static void PollButtonState(void *context, struct TinyTimerModule_t *timerModule
 
          bool state = sSCKeyInfo[0].Setting.b.DETECTED;
 
-         TinySingleErdHeartbeatStream_UpdateData(heartbeatStream, &state);
+         TinySingleErdHeartbeatStream_UpdateData(state);
       }
 
       TSL_GlobalSetting.b.NOISE = 0;

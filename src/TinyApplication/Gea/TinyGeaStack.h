@@ -28,7 +28,6 @@ typedef struct
    struct
    {
       TinyGea2Interface_FullDuplex_t gea2Interface;
-      TinySingleErdHeartbeatStream_t erdHeartbeatStream;
       TinyEventSubscription_t geaMessageSubscription;
       uint8_t sendBuffer[SendBufferSize];
       uint8_t receiveBuffer[ReceiveBufferSize];

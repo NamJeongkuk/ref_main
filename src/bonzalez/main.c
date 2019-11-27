@@ -34,8 +34,6 @@ static TinyTimerModule_t timerModule;
 static TinyTimer_t periodicWatchdogTimer;
 static TinyGeaStack_t geaStack;
 
-TinySingleErdHeartbeatStream_t *heartbeatStream = &geaStack._private.erdHeartbeatStream;
-
 static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 {
    IGNORE(context);
