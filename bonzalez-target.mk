@@ -24,22 +24,15 @@ STM8FLASH_PROGRAMMER:=stlinkv2
 MAIN:=$(PROJECT_DIR)/$(TARGET)/main.c
 
 SRC_FILES:=\
-   $(APPLCOMMON_TINY_DIR)/src/Core/TinyGea2Interface_FullDuplex.c \
-   $(APPLCOMMON_TINY_DIR)/src/Core/TinyCrcCalculator.c \
-   $(APPLCOMMON_TINY_DIR)/src/Core/TinyLinkedList.c \
-   $(APPLCOMMON_TINY_DIR)/src/Core/TinyEvent_Synchronous.c \
-   $(APPLCOMMON_TINY_DIR)/src/Core/TinyEvent_SingleSubscriberSynchronous.c \
-   $(APPLCOMMON_TINY_DIR)/src/Core/TinyEventSubscription.c \
-   $(APPLCOMMON_TINY_DIR)/src/Core/TinySingleErdHeartbeatStream.c \
-   $(APPLCOMMON_TINY_DIR)/src/Core/TinyTimer.c \
 
 SRC_DIRS:=\
    $(PROJECT_DIR)/$(TARGET) \
    $(PROJECT_DIR)/$(TARGET)/Hardware \
    $(PROJECT_DIR)/TinyApplication/Gea \
 
-
 COMMON_LIB_DIRS:=\
+   $(APPLCOMMON_TINY_DIR)/src/Application/Stm8CapTouch \
+   $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/TouchSense/src \
    $(APPLCOMMON_TINY_DIR)/src/TinyLib \
@@ -48,7 +41,6 @@ INC_DIRS:=\
    $(APPLCOMMON_DIR)/Constants \
    $(APPLCOMMON_DIR)/Image \
    $(APPLCOMMON_DIR)/Utilities \
-   $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/TouchSense/inc \

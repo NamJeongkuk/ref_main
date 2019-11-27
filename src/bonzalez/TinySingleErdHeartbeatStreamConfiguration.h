@@ -14,7 +14,7 @@ enum
 {
    StreamEntryCount = 5,
    DestinationAddress = 0xB0,
-   HeartbeatPeriodInMsec = 500,
+   HeartbeatPeriodInMsec = 1000,
 
    DataErd = 0xF00D,
    HeartbeatTickErd = 0xF00C,

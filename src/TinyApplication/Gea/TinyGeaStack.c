@@ -18,24 +18,7 @@ extern Version_t version;
 enum
 {
    Gea2CommonCommand_Version = 0x01,
-   HeartbeatPeriodMsec = 1000,
-   RemoteButtonStateErd = 0xF00D,
-   RemoteHeartbeatCountErd = 0xF00C,
-   RemoteErdStreamErd = 0xF007,
-
-   StreamEntryCount = 5
 };
-
-static const TinySingleErdHeartbeatStreamConfiguration_t erdHeartbeatStreamConfiguration =
-   {
-      .period = HeartbeatPeriodMsec,
-      .remoteDataErd = RemoteButtonStateErd,
-      .remoteErdStreamErd = RemoteErdStreamErd,
-      .remoteHeartbeatCountErd = RemoteHeartbeatCountErd,
-      .destination = DugnuttGeaAddress,
-      .streamEntryCount = 5,
-      .dataSize = sizeof(bool)
-   };
 
 static void PopulateTinyVersionResponse(void *context, Gea2Packet_t *packet)
 {
@@ -79,8 +62,6 @@ void TinyGeaStack_Init(
    TinyTimerModule_t *timerModule,
    uint8_t geaAddress)
 {
-   (void)timerModule;
-
    TinyGea2Interface_FullDuplex_Init(
       &instance->_private.gea2Interface,
       uart,
@@ -91,10 +72,8 @@ void TinyGeaStack_Init(
       sizeof(instance->_private.receiveBuffer));
 
    TinySingleErdHeartbeatStream_Init(
-      &instance->_private.erdHeartbeatStream,
       &instance->_private.gea2Interface.interface,
-      timerModule,
-      &erdHeartbeatStreamConfiguration);
+      timerModule);
 
    TinyEventSubscription_Init(&instance->_private.geaMessageSubscription, instance, GeaMessageReceived);
    TinyEvent_Subscribe(
