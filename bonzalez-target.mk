@@ -46,6 +46,7 @@ INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(PROJECT_DIR)/Application/Gea \
+   $(PROJECT_DIR)/TinyApplication/Gea \
 
 SOURCE_EXTENSIONS:=.c .s
 
