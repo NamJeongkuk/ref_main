@@ -37,9 +37,10 @@ typedef struct
       ErdStreamReceiver_t erdStreamReceiver;
       Timer_t heartbeatTimer;
       EventSubscription_t streamStateRequestOnChangeSubscription;
+      uint8_t senderAddress;
    } _private;
 } KeyStreamPlugin_t;
 
-void KeyStreamPlugin_Init(KeyStreamPlugin_t *instance, I_DataModel_t *dataModel);
+void KeyStreamPlugin_Init(KeyStreamPlugin_t *instance, I_DataModel_t *dataModel, uint8_t senderAddress);
 
 #endif

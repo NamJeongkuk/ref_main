@@ -14,13 +14,12 @@
 enum
 {
    OpenLoopWriteCommand = 0xB8,
-   HeartbeatTickPeriodInMsec = 500,
-   SenderAddress = BonzalezGeaAddress
+   HeartbeatTickPeriodInMsec = 100
 };
 
 static const ErdStreamReceiverConfiguration_t erdStreamReceiverConfiguration =
    {
-      .erdStreamErd = Erd_KeyErdStream,
+      .erdStreamErd = PublicErd_KeyErdStream,
       .lastSequenceNumberProcessedErd = Erd_KeyStreamSequenceNumber,
       .missedEventSignalErd = Erd_KeyStreamMissedEventSignal,
       .senderResetSignalErd = Erd_KeyStreamSenderResetSignal,
@@ -40,7 +39,7 @@ static void HeartbeatTick(void *context)
 
    STACK_ALLOC_GEA2MESSAGE(message, 9);
 
-   Gea2Message_SetDestination(message, SenderAddress);
+   Gea2Message_SetDestination(message, instance->_private.senderAddress);
    Gea2Message_SetCommand(message, OpenLoopWriteCommand);
    uint8_t *payload = Gea2Message_GetPayload(message);
    uint8_t offset = 0;
@@ -61,9 +60,10 @@ static void HeartbeatTick(void *context)
    Gea2MessageEndpoint_Send(DataModelErdPointerAccess_GetGea2MessageEndpoint(instance->_private.dataModel, Erd_Gea2MessageEndpoint), message, 3);
 }
 
-void KeyStreamPlugin_Init(KeyStreamPlugin_t *instance, I_DataModel_t *dataModel)
+void KeyStreamPlugin_Init(KeyStreamPlugin_t *instance, I_DataModel_t *dataModel, uint8_t senderAddress)
 {
    instance->_private.dataModel = dataModel;
+   instance->_private.senderAddress = senderAddress;
 
    ErdStreamReceiver_Init(
       &instance->_private.erdStreamReceiver,
