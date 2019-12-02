@@ -2,7 +2,7 @@
 include tools/gcc-arm-none-eabi/mc/makecommon.mk
 
 # Name of the project that is being built
-TARGET:=mcscriff
+TARGET:=mcsriff
 OUTPUT_DIR:=build/$(TARGET)
 APPLCOMMON_DIR:=lib/applcommon
 PROJECT_DIR:=src
