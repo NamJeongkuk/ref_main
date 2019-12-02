@@ -3,7 +3,7 @@ return {
     ram = {
       map = 'build/bonzalez/bonzalez.map',
       type = 'sdcc',
-      total = 2 * 1024
+      total = 1 * 1024
     },
     rom = {
       map = 'build/bonzalez/bonzalez.map',

@@ -11,9 +11,9 @@
 define memory with size = 8M;
 
 define symbol __ICFEDIT_region_ROM_start__ = 0x08000;
-define symbol __ICFEDIT_region_ROM_end__   = 0x0FFFF;
+define symbol __ICFEDIT_region_ROM_end__   = 0x09FFF;
 define symbol __ICFEDIT_region_RAM_start__ = 0x100;
-define symbol __ICFEDIT_region_RAM_end__   = 0x7FF;
+define symbol __ICFEDIT_region_RAM_end__   = 0x3FF;
 
 define symbol __ICFEDIT_region_RUN_TIME_RAM_CHCK_start__  = 0x00;
 define symbol __ICFEDIT_region_RUN_TIME_RAM_CHCK_end__ = 0x0f;
@@ -35,9 +35,9 @@ define region TinyData = [from 0x00 to 0xFF];
 
 define region NearFuncCode = [from __ICFEDIT_region_ROM_start__ to __ICFEDIT_region_ROM_end__];
 
-define region FarFuncCode = [from 0x8000 to 0xFFFF];
+define region FarFuncCode = [from 0x8000 to 0x9FFF];
 
-define region HugeFuncCode = [from 0x8000 to 0xFFFF];
+define region HugeFuncCode = [from 0x8000 to 0x9FFF];
 
 define region NearData = [from __ICFEDIT_region_RAM_start__ to __ICFEDIT_region_RAM_end__];
 

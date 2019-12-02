@@ -8,17 +8,50 @@
 #include <string.h>
 #include "TinyGeaStack.h"
 #include "Gea2Addresses.h"
+#include "TinySystemErds.h"
 #include "BootLoader.h"
 #include "TinyBootLoaderCommand.h"
-#include "Version.h"
 #include "utils.h"
-
-extern Version_t version;
 
 enum
 {
-   Gea2CommonCommand_Version = 0x01,
+   HeartbeatPeriodMsec = 100,
+   RemoteErdStreamErd = 0xF123
 };
+
+static const TinyErdHeartbeatErdPair_t erdHeartbeatPairs[] =
+   {
+      { Erd_ErdStream, RemoteErdStreamErd }
+   };
+
+static const TinyErdHeartbeatConfiguration_t erdHeartbeatConfig =
+   {
+      .destination = TrukGeaAddress,
+      .period = HeartbeatPeriodMsec,
+      .pairs = erdHeartbeatPairs,
+      .pairCount = NUM_ELEMENTS(erdHeartbeatPairs)
+   };
+
+#define EXPAND_AS_LOCAL_TO_REMOTE_ERD_MAP(Name, Number, DataType, Stream, RemoteErd) \
+   CONCAT(INCLUDE_STREAM_, Stream)                                                   \
+   ({ Number COMMA RemoteErd COMMA CONCAT(INCLUDE_STREAM_EVENT_, Stream)(ErdStreamDataType_Event) CONCAT(INCLUDE_STREAM_LEVEL_, Stream)(ErdStreamDataType_Level) } COMMA)
+
+static const ErdStreamLocalToRemoteErdMap_t streamLocalToRemoteErdMap[] =
+   {
+      ERD_TABLE(EXPAND_AS_LOCAL_TO_REMOTE_ERD_MAP)
+   };
+
+static const TinyErdStreamSenderConfiguration_t erdStreamSenderConfiguration =
+   {
+      .erdStreamErd = Erd_ErdStream,
+      .requestedStateErdFromReceiver = Erd_ErdStreamRequestedState,
+      .streamEntryCount = NumberOfStreamedErds,
+      .sizeOfLargestStreamedErd = sizeof(StreamedErd_t),
+      .mappings = streamLocalToRemoteErdMap,
+      .mappingCount = NUM_ELEMENTS(streamLocalToRemoteErdMap)
+   };
+
+extern Version_t version;
 
 static void PopulateTinyVersionResponse(void *context, Gea2Packet_t *packet)
 {
@@ -59,6 +92,7 @@ static void GeaMessageReceived(void *context, const void *_args)
 void TinyGeaStack_Init(
    TinyGeaStack_t *instance,
    I_TinyUart_t *uart,
+   I_TinyDataSource_t *dataSource,
    TinyTimerModule_t *timerModule,
    uint8_t geaAddress)
 {
@@ -71,14 +105,32 @@ void TinyGeaStack_Init(
       instance->_private.receiveBuffer,
       sizeof(instance->_private.receiveBuffer));
 
-   TinySingleErdHeartbeatStream_Init(
+   TinyErdGea2OpenLoopWriteApiRevision2_Init(
+      &instance->_private.erdGea2OpenLoopWriteApi,
+      dataSource,
+      &instance->_private.gea2Interface.interface);
+
+   TinyErdHeartbeat_Init(
+      &instance->_private.erdHeartbeat,
       &instance->_private.gea2Interface.interface,
-      timerModule);
+      dataSource,
+      timerModule,
+      &erdHeartbeatConfig);
+
+   TinyErdStreamSender_Init(
+      &instance->_private.erdStreamSender,
+      dataSource,
+      &erdStreamSenderConfiguration);
 
    TinyEventSubscription_Init(&instance->_private.geaMessageSubscription, instance, GeaMessageReceived);
    TinyEvent_Subscribe(
       TinyGea2Interface_GetOnReceiveEvent(&instance->_private.gea2Interface.interface),
       &instance->_private.geaMessageSubscription);
+}
+
+I_TinyGea2Interface_t *TinyGeaStack_GetGea2Interface(TinyGeaStack_t *instance)
+{
+   return &instance->_private.gea2Interface.interface;
 }
 
 void TinyGeaStack_Run(TinyGeaStack_t *instance)

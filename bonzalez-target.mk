@@ -15,26 +15,28 @@ BOOT_LOADER_DIR=lib/stm8-boot-loader
 BOOT_LOADER:=$(BOOT_LOADER_DIR)/build/boot-loader.hex
 
 # Configures the STM8S headers for your part
-DEVICE_TYPE:=STM8S105
+DEVICE_TYPE:=STM8S003
 
-OPENOCD_TARGET:=target/stm8s105.cfg
-STM8FLASH_PART:=stm8s105?6
+OPENOCD_TARGET:=target/stm8s003.cfg
+STM8FLASH_PART:=stm8s103f3
 STM8FLASH_PROGRAMMER:=stlinkv2
 
 MAIN:=$(PROJECT_DIR)/$(TARGET)/main.c
 
 SRC_FILES:=\
+   $(PROJECT_DIR)/TinyApplication/Gea/TinyGeaStack.c \
 
 SRC_DIRS:=\
    $(PROJECT_DIR)/$(TARGET) \
    $(PROJECT_DIR)/$(TARGET)/Hardware \
-   $(PROJECT_DIR)/TinyApplication/Gea \
+   $(PROJECT_DIR)/TinyApplication \
+   $(PROJECT_DIR)/TinyApplication/DataSource \
+   $(PROJECT_DIR)/TinyApplication/Plugins \
 
 COMMON_LIB_DIRS:=\
-   $(APPLCOMMON_TINY_DIR)/src/Application/Stm8CapTouch \
    $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
-   $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/TouchSense/src \
+   $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/Ul \
    $(APPLCOMMON_TINY_DIR)/src/TinyLib \
 
 INC_DIRS:=\
@@ -43,10 +45,9 @@ INC_DIRS:=\
    $(APPLCOMMON_DIR)/Utilities \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
-   $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/TouchSense/inc \
    $(PROJECT_DIR)/Application/Gea \
 
-SOURCE_EXTENSIONS:=.c
+SOURCE_EXTENSIONS:=.c .s
 
 ifeq ($(TC), IAR)
    TOOLCHAIN_VERSION=1.04
@@ -68,6 +69,7 @@ else
    OPTIMIZE:=--opt-code-size
    IGNORE_WARNINGS=24
    HEX_LINKER_OPTIONS=--code-loc 0x8440
+   ELF_LINKER_OPTIONS:=-DDISABLE_UL_CHECKS
 endif
 
 PACKAGE_CONTENTS:=
