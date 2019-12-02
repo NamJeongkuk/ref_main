@@ -36,5 +36,16 @@ module.exports = {
         'lib/boot-loaders/build'
       ]
     }
+  },
+  'chamgerlain-target.mk': {
+    ...iar_stm8_base,
+    options: {
+      ...iar_stm8_base.options,
+      outputDirectories: [
+        'build',
+        'artifacts',
+        'lib/boot-loaders/build'
+      ]
+    }
   }
 }

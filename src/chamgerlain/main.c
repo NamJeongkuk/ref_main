@@ -64,7 +64,7 @@ void main(void)
          &geaStack,
          TinyUart_Uart2_Init(),
          &timerModule,
-         BonzalezGeaAddress);
+         ChamgerlainGeaAddress);
 
       CapSenseButton_Init(&timerModule);
    }

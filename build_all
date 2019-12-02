@@ -18,5 +18,7 @@ $MAKE -f dugnutt-target.mk -j16 RELEASE=Y DEBUG=N clean &&
    $MAKE -f truk-target.mk -j16 RELEASE=Y DEBUG=N package &&
    make -f bonzalez-target.mk -j16 RELEASE=Y DEBUG=N clean &&
    make -f bonzalez-target.mk -j16 RELEASE=Y DEBUG=N package &&
+   make -f chamgerlain-target.mk -j16 RELEASE=Y DEBUG=N clean &&
+   make -f chamgerlain-target.mk -j16 RELEASE=Y DEBUG=N package &&
    make -f mcscriff-target.mk -j16 RELEASE=Y DEBUG=N clean &&
    make -f mcscriff-target.mk -j16 RELEASE=Y DEBUG=N package

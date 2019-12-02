@@ -13,6 +13,8 @@
 #include "TinyBootLoaderCommand.h"
 #include "utils.h"
 
+extern Version_t version;
+
 enum
 {
    HeartbeatPeriodMsec = 100,
@@ -50,8 +52,6 @@ static const TinyErdStreamSenderConfiguration_t erdStreamSenderConfiguration =
       .mappings = streamLocalToRemoteErdMap,
       .mappingCount = NUM_ELEMENTS(streamLocalToRemoteErdMap)
    };
-
-extern Version_t version;
 
 static void PopulateTinyVersionResponse(void *context, Gea2Packet_t *packet)
 {
