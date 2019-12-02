@@ -80,18 +80,18 @@ static const DataSource_SlowEndiannessSwappedSwappedField_t swappedFields[] =
 
 static const DataSource_SlowEndiannessSwappedSwappedFieldRange_t swappedRanges[] =
    {
-      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableEntry0, Erd_ServiceDiagnosticsFaultTableEntry9, ServiceDiagnosticsRevision3FaultTableEntry_t, cycleNumber),
-      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableEntry0, Erd_ServiceDiagnosticsFaultTableEntry9, ServiceDiagnosticsRevision3FaultTableEntry_t, timeStamp),
-      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableEntry0, Erd_ServiceDiagnosticsFaultTableEntry9, ServiceDiagnosticsRevision3FaultTableEntry_t, faultCode),
-      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableEntry0, Erd_ServiceDiagnosticsFaultTableEntry9, ServiceDiagnosticsRevision3FaultTableEntry_t, faultCount),
-      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableSnapshot0, Erd_ServiceDiagnosticsFaultTableSnapshot9, FaultSnapshot_t, header.cycleNumber),
-      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableSnapshot0, Erd_ServiceDiagnosticsFaultTableSnapshot9, FaultSnapshot_t, header.timeStamp),
-      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableSnapshot0, Erd_ServiceDiagnosticsFaultTableSnapshot9, FaultSnapshot_t, header.faultCode),
-      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultSequenceEntry00, Erd_ServiceDiagnosticsFaultSequenceEntry07, ServiceDiagnosticsRevision3FaultSequenceEntry_t, cycleNumber),
-      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultSequenceEntry00, Erd_ServiceDiagnosticsFaultSequenceEntry07, ServiceDiagnosticsRevision3FaultSequenceEntry_t, timeStamp),
-      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultSequenceEntry00, Erd_ServiceDiagnosticsFaultSequenceEntry07, ServiceDiagnosticsRevision3FaultSequenceEntry_t, faultCode),
-      SWAPPED_FIELD_RANGE(Erd_DiagnosticsCycleHistoryRecord0, Erd_DiagnosticsCycleHistoryRecord9, CycleHistoryRecord_t, someData),
-      SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableSnapshotData0, Erd_ServiceDiagnosticsFaultTableSnapshotData9, FaultSnapshotData_t, someData)
+      SLOW_SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableEntry0, Erd_ServiceDiagnosticsFaultTableEntry9, ServiceDiagnosticsRevision3FaultTableEntry_t, cycleNumber),
+      SLOW_SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableEntry0, Erd_ServiceDiagnosticsFaultTableEntry9, ServiceDiagnosticsRevision3FaultTableEntry_t, timeStamp),
+      SLOW_SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableEntry0, Erd_ServiceDiagnosticsFaultTableEntry9, ServiceDiagnosticsRevision3FaultTableEntry_t, faultCode),
+      SLOW_SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableEntry0, Erd_ServiceDiagnosticsFaultTableEntry9, ServiceDiagnosticsRevision3FaultTableEntry_t, faultCount),
+      SLOW_SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableSnapshot0, Erd_ServiceDiagnosticsFaultTableSnapshot9, FaultSnapshot_t, header.cycleNumber),
+      SLOW_SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableSnapshot0, Erd_ServiceDiagnosticsFaultTableSnapshot9, FaultSnapshot_t, header.timeStamp),
+      SLOW_SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableSnapshot0, Erd_ServiceDiagnosticsFaultTableSnapshot9, FaultSnapshot_t, header.faultCode),
+      SLOW_SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultSequenceEntry00, Erd_ServiceDiagnosticsFaultSequenceEntry07, ServiceDiagnosticsRevision3FaultSequenceEntry_t, cycleNumber),
+      SLOW_SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultSequenceEntry00, Erd_ServiceDiagnosticsFaultSequenceEntry07, ServiceDiagnosticsRevision3FaultSequenceEntry_t, timeStamp),
+      SLOW_SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultSequenceEntry00, Erd_ServiceDiagnosticsFaultSequenceEntry07, ServiceDiagnosticsRevision3FaultSequenceEntry_t, faultCode),
+      SLOW_SWAPPED_FIELD_RANGE(Erd_DiagnosticsCycleHistoryRecord0, Erd_DiagnosticsCycleHistoryRecord9, CycleHistoryRecord_t, someData),
+      SLOW_SWAPPED_FIELD_RANGE(Erd_ServiceDiagnosticsFaultTableSnapshotData0, Erd_ServiceDiagnosticsFaultTableSnapshotData9, FaultSnapshotData_t, someData)
    };
 
 static const DataSource_SlowEndiannessSwappedConfiguration_t endianessSwappedConfiguration =
