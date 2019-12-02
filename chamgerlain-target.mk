@@ -24,11 +24,11 @@ STM8FLASH_PROGRAMMER:=stlinkv2
 MAIN:=$(PROJECT_DIR)/$(TARGET)/main.c
 
 SRC_FILES:=\
+   $(PROJECT_DIR)/TinyApplication/Gea/TinyGeaStackWithSingleErdHeartbeat.c \
 
 SRC_DIRS:=\
    $(PROJECT_DIR)/$(TARGET) \
    $(PROJECT_DIR)/$(TARGET)/Hardware \
-   $(PROJECT_DIR)/TinyApplication/Gea \
 
 COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Application/Stm8CapTouch \
@@ -45,6 +45,7 @@ INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/TouchSense/inc \
    $(PROJECT_DIR)/Application/Gea \
+   $(PROJECT_DIR)/TinyApplication/Gea \
 
 SOURCE_EXTENSIONS:=.c
 
@@ -68,6 +69,7 @@ else
    OPTIMIZE:=--opt-code-size
    IGNORE_WARNINGS=24
    HEX_LINKER_OPTIONS=--code-loc 0x8440
+   ELF_LINKER_OPTIONS:=-DDISABLE_UL_CHECKS
 endif
 
 PACKAGE_CONTENTS:=
