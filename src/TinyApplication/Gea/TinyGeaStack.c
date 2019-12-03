@@ -17,7 +17,6 @@ extern Version_t version;
 
 enum
 {
-   Gea2CommonCommand_Version = 0x01,
    HeartbeatPeriodMsec = 100,
    RemoteErdStreamErd = 0xF123
 };

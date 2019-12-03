@@ -67,6 +67,21 @@
       "svdFile": "${workspaceFolder}/tools/sdcc-stm8/svd/STM8Sx03.svd"
     },
     {
+      "name": "Chamgerlain launch",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/chamgerlain/chamgerlain-debug.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceFolder}/tools/sdcc-stm8/stm8-gdb/bin",
+      "serverpath": "${workspaceFolder}/tools/sdcc-stm8/openocd/bin/openocd",
+      "configFiles": [
+        "${workspaceFolder}/build/chamgerlain/chamgerlain_debug_openocd.cfg"
+      ],
+      "preLaunchTask": "chamgerlain_vscode_debug"
+    },
+    {
       "name": "McSriff launch",
       "cwd": "${workspaceRoot}",
       "request": "launch",

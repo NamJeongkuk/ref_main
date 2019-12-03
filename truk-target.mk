@@ -41,6 +41,7 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_DIR)/Diagnostics \
    $(APPLCOMMON_DIR)/Display \
    $(APPLCOMMON_DIR)/Endianness \
+   $(APPLCOMMON_DIR)/ErdStream \
    $(APPLCOMMON_DIR)/Event \
    $(APPLCOMMON_DIR)/Filter \
    $(APPLCOMMON_DIR)/Git \
