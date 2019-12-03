@@ -35,6 +35,7 @@
 #include "InitializeStackMemory.h"
 #include "StackConfigurator.h"
 #include "Interrupt_Cmt0.h"
+#include "KeyStreamPlugin.h"
 
 enum
 {
@@ -55,6 +56,7 @@ static TimerModuleStack_t timerModuleStack;
 static InvokeActionOnTimerPeriodic_t watchdogPetter;
 static GeaStack_t geaStack;
 static UlTestsPlugin_t ulTestsPlugin;
+static KeyStreamPlugin_t keyStreamPlugin;
 
 static const uint8_t staticRoutingTable[] =
    {
@@ -137,6 +139,11 @@ int main(void)
       &application,
       dataModel,
       StackConfigurator_GetConfiguration());
+
+   KeyStreamPlugin_Init(
+      &keyStreamPlugin,
+      dataModel,
+      ChamgerlainGeaAddress);
 
    InvokeActionOnTimerPeriodic_Init(
       &watchdogPetter,
