@@ -11,6 +11,7 @@
 enum
 {
    DugnuttGeaAddress = 0xB0,
+   WesreyGeaAddress = 0xB0,
    TrukGeaAddress = 0xB1,
    DandletonGeaAddress = 0xB2,
    BonzalezGeaAddress = 0xB3,

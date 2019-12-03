@@ -66,6 +66,19 @@
         "showReuseMessage": true,
         "clear": false
       }
+    },
+    {
+      "label": "wesrey_vscode_debug",
+      "type": "shell",
+      "command": "make RELEASE=N DEBUG=Y -f wesrey-target.mk vscode_debug",
+      "presentation": {
+        "echo": false,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false
+      }
     }
   ]
 }
