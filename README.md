@@ -44,7 +44,7 @@ Tiny STM8 project using the [STM8S003F3U6TR](https://www.st.com/en/microcontroll
 | EEPROM      | 128 B |
 
 ## Wesrey
-General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html). Implements the receiving end of the single ERD stream sent by Chamgerlain.
+Sample project that is an ERD stream receiver using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html). Designed to work with Chamgerlain.
 
 | Memory     | Size   |
 | ---------- | ------ |
