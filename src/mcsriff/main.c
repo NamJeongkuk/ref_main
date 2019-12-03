@@ -134,7 +134,7 @@ int main(void)
       &geaStack,
       dataModel,
       SystemData_ExternalDataSource(&systemData),
-      McsriffGeaAddress,
+      McSriffGeaAddress,
       staticRoutingTable,
       ELEMENT_COUNT(staticRoutingTable));
 

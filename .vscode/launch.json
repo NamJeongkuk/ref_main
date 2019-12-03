@@ -67,7 +67,7 @@
       "svdFile": "${workspaceFolder}/tools/sdcc-stm8/svd/STM8Sx03.svd"
     },
     {
-      "name": "Mcsriff launch",
+      "name": "McSriff launch",
       "cwd": "${workspaceRoot}",
       "request": "launch",
       "type": "cortex-debug",
