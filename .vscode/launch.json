@@ -94,6 +94,21 @@
       "serverpath": "${workspaceFolder}/build/mcsriff/jlink_gdb_server_wrapper.sh",
       "preLaunchTask": "mcsriff_vscode_debug",
       "svdFile": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32F3xx/Libraries/CMSIS/SVD/STM32F303x.svd"
+    },
+    {
+      "name": "Wesrey launch",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "type": "cortex-debug",
+      "executable": "${workspaceFolder}/build/wesrey/wesrey.elf",
+      "device": "R5F51308",
+      "servertype": "jlink",
+      "interface": "FINE",
+      "jlinkscript": "${workspaceFolder}/build/wesrey/debug.jlink",
+      "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
+      "serverpath": "${workspaceFolder}/build/wesrey/jlink_gdb_server_wrapper.sh",
+      "preLaunchTask": "wesrey_vscode_debug",
+      "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx130.svd"
     }
   ]
 }

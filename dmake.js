@@ -47,5 +47,16 @@ module.exports = {
         'lib/boot-loaders/build'
       ]
     }
+  },
+  'wesrey-target.mk': {
+    ...kpit_rx_base,
+    options: {
+      ...kpit_rx_base.options,
+      outputDirectories: [
+        'build',
+        'artifacts',
+        'lib/boot-loaders/build'
+      ]
+    }
   }
 }
