@@ -18,7 +18,7 @@ General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/u
 | Data Flash | 8 KB   |
 
 ## Bonzalez
-Tiny STM8 project using the [STM8S003F3U6TR](https://www.st.com/en/microcontrollers-microprocessors/stm8s003f3.html).
+Tiny STM8 project using the [STM8S003F3U6TR](https://www.st.com/en/microcontrollers-microprocessors/stm8s003f3.html). Includes a tiny data source.
 
 | Memory Type | Size  |
 | ----------- | ----- |
@@ -33,3 +33,11 @@ General-purpose STM32 project using the [STM32F303RB](https://www.st.com/en/micr
 | ----------- | ------ |
 | Flash       | 128 KB |
 | RAM         | 40 KB  |
+
+## Chamgerlain
+Tiny STM8 project using the [STM8S003F3U6TR](https://www.st.com/en/microcontrollers-microprocessors/stm8s003f3.html). Supports cap touch and single ERD streaming.
+| Memory Type | Size  |
+| ----------- | ----- |
+| Flash       | 8 KB  |
+| RAM         | 1 KB  |
+| EEPROM      | 128 B |
