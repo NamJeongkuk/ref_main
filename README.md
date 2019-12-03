@@ -36,6 +36,7 @@ General-purpose STM32 project using the [STM32F303RB](https://www.st.com/en/micr
 
 ## Chamgerlain
 Tiny STM8 project using the [STM8S003F3U6TR](https://www.st.com/en/microcontrollers-microprocessors/stm8s003f3.html). Supports cap touch and single ERD streaming.
+
 | Memory Type | Size  |
 | ----------- | ----- |
 | Flash       | 8 KB  |
