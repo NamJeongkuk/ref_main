@@ -11,7 +11,13 @@
 #include "BootLoader.h"
 #include "TinyBootLoaderCommand.h"
 #include "Version.h"
+#include "stm8_tsl_api.h"
 #include "utils.h"
+
+enum
+{
+   CapSenseParametersCommand = 0xBB
+};
 
 extern Version_t version;
 
@@ -47,6 +53,13 @@ static void GeaMessageReceived(void *context, const void *_args)
 
       case TinyBootLoaderCommand_JumpToBootLoader:
          BootLoader_JumpToBootLoader();
+         break;
+
+      case CapSenseParametersCommand:
+         TSL_SetParameters(
+            (TSL_GlobalParameters_t *)&packet->payload[1],
+            packet->payload[9],
+            (TSL_KeyParameters_t *)&packet->payload[10]);
          break;
    }
 }
