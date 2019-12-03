@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-OPERATING_SYSTEM=`uname`
+OPERATING_SYSTEM=$(uname)
 
 if [[ $OPERATING_SYSTEM == 'Linux' ]]; then
   MAKE=make
@@ -12,4 +12,4 @@ else
   exit 1
 fi
 
-$MAKE -f mcscriff-target.mk -j8 RELEASE=Y DEBUG=N package
+$MAKE -f mcsriff-target.mk -j8 RELEASE=Y DEBUG=N package

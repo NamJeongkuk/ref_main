@@ -1,7 +1,7 @@
 return {
   Application = {
     ram = {
-      map = 'build/mcscriff/mcscriff.map',
+      map = 'build/mcsriff/mcsriff.map',
       type = 'arm-gcc',
       total = 32 * 1024,
       ram_sections = {
@@ -9,8 +9,8 @@ return {
       }
     },
     rom = {
-      srec = 'build/mcscriff/mcscriff.napl',
-      apl = 'build/mcscriff/mcscriff.apl',
+      srec = 'build/mcsriff/mcsriff.napl',
+      apl = 'build/mcsriff/mcsriff.apl',
       endianness = 'little'
     }
   }
