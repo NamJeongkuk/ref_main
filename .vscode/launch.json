@@ -67,17 +67,17 @@
       "svdFile": "${workspaceFolder}/tools/sdcc-stm8/svd/STM8Sx03.svd"
     },
     {
-      "name": "McScriff launch",
+      "name": "McSriff launch",
       "cwd": "${workspaceRoot}",
       "request": "launch",
       "type": "cortex-debug",
-      "executable": "${workspaceFolder}/build/mcscriff/mcscriff.elf",
+      "executable": "${workspaceFolder}/build/mcsriff/mcsriff.elf",
       "device": "STM32F303RB",
       "servertype": "jlink",
       "interface": "swd",
       "armToolchainPath": "${workspaceFolder}/tools/gcc-arm-none-eabi/tc/bin/",
-      "serverpath": "${workspaceFolder}/build/mcscriff/jlink_gdb_server_wrapper.sh",
-      "preLaunchTask": "mcscriff_vscode_debug",
+      "serverpath": "${workspaceFolder}/build/mcsriff/jlink_gdb_server_wrapper.sh",
+      "preLaunchTask": "mcsriff_vscode_debug",
       "svdFile": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32F3xx/Libraries/CMSIS/SVD/STM32F303x.svd"
     }
   ]

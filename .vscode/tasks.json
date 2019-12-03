@@ -42,9 +42,9 @@
       }
     },
     {
-      "label": "mcscriff_vscode_debug",
+      "label": "mcsriff_vscode_debug",
       "type": "shell",
-      "command": "make -f mcscriff-target.mk RELEASE=N DEBUG=Y vscode_debug",
+      "command": "make -f mcsriff-target.mk RELEASE=N DEBUG=Y vscode_debug",
       "presentation": {
         "echo": true,
         "reveal": "silent",
