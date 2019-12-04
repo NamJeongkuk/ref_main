@@ -52,7 +52,7 @@ static void PopulateCapSenseParametersResponse(void *context, Gea2Packet_t *pack
    packet->destination = sourcePacket->source;
    packet->payload[0] = GetCapSenseParametersResponse;
    packet->payload[9] = NUMBER_OF_SINGLE_CHANNEL_KEYS;
-   TSL_GetParameters((TSL_GlobalParameters_t *)&packet->payload[1], (TSL_KeyParameters_t *) &packet->payload[10]);
+   TSL_GetParameters((TSL_GlobalParameters_t *)&packet->payload[1], (TSL_KeyParameters_t *)&packet->payload[10]);
 }
 
 static void HandleGetCapSenseParametersRequest(TinyGeaStackWithSingleErdHeartbeat_t *instance, const Gea2Packet_t *request)
@@ -60,7 +60,8 @@ static void HandleGetCapSenseParametersRequest(TinyGeaStackWithSingleErdHeartbea
    TinyGea2Interface_Send(
       &instance->_private.gea2Interface.interface,
       CAP_SENSE_PARAMETERS_RESPONSE_PAYLOAD_SIZE,
-      PopulateCapSenseParametersResponse, (void *)(request));
+      PopulateCapSenseParametersResponse,
+      (void *)request);
 }
 
 static void GeaMessageReceived(void *context, const void *_args)
