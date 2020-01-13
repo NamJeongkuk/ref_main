@@ -24,8 +24,7 @@ enum
 {
    SetCapSenseParametersRequest= 0xBB,
    GetCapSenseParametersRequest = 0xBC,
-   GetCapSenseParametersResponse = 0xBD,
-   SetCapSenseParametersResponse = 0xBE
+   GetCapSenseParametersResponse = 0xBD
 };
 
 extern Version_t version;
@@ -56,13 +55,6 @@ static void PopulateCapSenseParametersResponse(void *context, Gea2Packet_t *pack
    TSL_GetParameters((TSL_GlobalParameters_t *)&packet->payload[1], (TSL_KeyParameters_t *)&packet->payload[10]);
 }
 
-static void PopulateSetCapSenseParametersResponse(void *context, Gea2Packet_t *packet)
-{
-   REINTERPRET(sourcePacket, context, const Gea2Packet_t *);
-   packet->destination = sourcePacket->source;
-   packet->payload[0] = SetCapSenseParametersResponse;
-}
-
 static void HandleGetCapSenseParametersRequest(TinyGeaStackWithSingleErdHeartbeat_t *instance, const Gea2Packet_t *request)
 {
    TinyGea2Interface_Send(
@@ -79,11 +71,7 @@ static void HandleSetCapSenseParametersRequest(TinyGeaStackWithSingleErdHeartbea
       request->payload[9],
       (const TSL_KeyParameters_t *)&request->payload[10]);
 
-   TinyGea2Interface_Send(
-      &instance->_private.gea2Interface.interface,
-      1,
-      PopulateSetCapSenseParametersResponse,
-      (void *)request);
+   HandleGetCapSenseParametersRequest(instance, request);
 }
 
 static void GeaMessageReceived(void *context, const void *_args)
