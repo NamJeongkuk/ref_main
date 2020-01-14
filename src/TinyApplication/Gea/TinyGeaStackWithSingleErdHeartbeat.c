@@ -64,6 +64,16 @@ static void HandleGetCapSenseParametersRequest(TinyGeaStackWithSingleErdHeartbea
       (void *)request);
 }
 
+static void HandleSetCapSenseParametersRequest(TinyGeaStackWithSingleErdHeartbeat_t *instance, const Gea2Packet_t *request)
+{
+   TSL_SetParameters(
+      (const TSL_GlobalParameters_t *)&request->payload[1],
+      request->payload[9],
+      (const TSL_KeyParameters_t *)&request->payload[10]);
+
+   HandleGetCapSenseParametersRequest(instance, request);
+}
+
 static void GeaMessageReceived(void *context, const void *_args)
 {
    REINTERPRET(instance, context, TinyGeaStackWithSingleErdHeartbeat_t *);
@@ -86,10 +96,7 @@ static void GeaMessageReceived(void *context, const void *_args)
          break;
 
       case SetCapSenseParametersRequest:
-         TSL_SetParameters(
-            (const TSL_GlobalParameters_t *)&packet->payload[1],
-            packet->payload[9],
-            (const TSL_KeyParameters_t *)&packet->payload[10]);
+         HandleSetCapSenseParametersRequest(instance, packet);
          break;
    }
 }
