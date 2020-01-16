@@ -119,8 +119,6 @@ $(call add_to_package,$(OUTPUT_DIR)/doc,doc)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
-include tools/kpit-rx/kpit-rx-makefile-worker.mk
-
 .PHONY: all
 all: target $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 	$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
@@ -135,6 +133,7 @@ package: all artifacts erd_definitions
 	$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 	@echo Archive complete
 
+.PHONY: $(BOOT_LOADER_DIR)/build/$(TARGET)-boot-loader/$(TARGET)-boot-loader.mot
 $(BOOT_LOADER_DIR)/build/$(TARGET)-boot-loader/$(TARGET)-boot-loader.mot:
 	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(TARGET)-boot-loader.mk RELEASE=Y DEBUG=N
 
@@ -144,13 +143,6 @@ $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot: target $(BOOT_LOADER_DIR)/build/$(TA
 $(OUTPUT_DIR)/doc:
 	@mkdir -p $(OUTPUT_DIR)/doc
 
-.PHONY: erd_definitions
-erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)
-	@echo Generating ERD definitions
-	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -P -MMD $(PROJECT_DIR)/Application/DataSource/SystemErds.h -o $(OUTPUT_DIR)/temporary.h
-	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output build/GeneratedTypes.lua
-	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
-
 .PHONY: upload
 upload: $(call upload_deps,all jlink_tools)
 	$(call jlink_upload,$(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot)
@@ -159,3 +151,12 @@ upload: $(call upload_deps,all jlink_tools)
 .PHONY: clean
 clean: target_clean
 	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(TARGET)-boot-loader.mk RELEASE=Y DEBUG=N clean
+
+include tools/kpit-rx/kpit-rx-makefile-worker.mk
+
+.PHONY: erd_definitions
+erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)
+	@echo Generating ERD definitions
+	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -P -MMD $(PROJECT_DIR)/Application/DataSource/SystemErds.h -o $(OUTPUT_DIR)/temporary.h
+	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output build/GeneratedTypes.lua
+	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
