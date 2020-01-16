@@ -96,9 +96,11 @@ $(BOOT_LOADER):
 $(OUTPUT_DIR)/$(TARGET)_combined.hex: $(BOOT_LOADER) $(OUTPUT_DIR)/$(TARGET).htiny
 	@$(LUA53) $(LUA_INTEL_HEX_CONCATENATE) --allow_overlap --input $^ --output $@
 
+.PHONY: upload
 upload: $(OUTPUT_DIR)/$(TARGET)_combined.hex stm8flash
 	$(call stm8flash_upload,$(STM8FLASH_PROGRAMMER),$(STM8FLASH_PART),$^)
 
+.PHONY: upload_boot_loader
 upload_boot_loader: $(BOOT_LOADER) stm8flash
 	$(call stm8flash_upload,$(STM8FLASH_PROGRAMMER),$(STM8FLASH_PART),$^)
 
@@ -107,7 +109,7 @@ clean: target_clean
 	$(MAKE) -C $(BOOT_LOADER_DIR) -f target.mk RELEASE=Y DEBUG=N clean
 
 .PHONY: package
-package: all
+package: all articats
 	@$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 
 ifeq ($(TC), IAR)
