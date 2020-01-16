@@ -109,7 +109,7 @@ clean: target_clean
 	$(MAKE) -C $(BOOT_LOADER_DIR) -f target.mk RELEASE=Y DEBUG=N clean
 
 .PHONY: package
-package: all articats
+package: all artifacts
 	@$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 
 ifeq ($(TC), IAR)
