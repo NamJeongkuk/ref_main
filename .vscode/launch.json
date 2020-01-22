@@ -3,8 +3,7 @@
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
-  "configurations": [
-    {
+  "configurations": [{
       "name": "TDD launch",
       "type": "cppdbg",
       "request": "launch",
@@ -33,7 +32,8 @@
       "jlinkscript": "${workspaceFolder}/build/dugnutt/debug.jlink",
       "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
       "serverpath": "${workspaceFolder}/build/dugnutt/jlink_gdb_server_wrapper.sh",
-      "preLaunchTask": "dugnutt_vscode_debug"
+      "preLaunchTask": "dugnutt_vscode_debug",
+      "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx130.svd"
     },
     {
       "name": "Truk launch",
@@ -47,7 +47,8 @@
       "jlinkscript": "${workspaceFolder}/build/truk/debug.jlink",
       "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
       "serverpath": "${workspaceFolder}/build/truk/jlink_gdb_server_wrapper.sh",
-      "preLaunchTask": "truk_vscode_debug"
+      "preLaunchTask": "truk_vscode_debug",
+      "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx231.svd"
     },
     {
       "name": "Bonzalez launch",
@@ -62,7 +63,52 @@
       "configFiles": [
         "${workspaceFolder}/build/bonzalez/bonzalez_debug_openocd.cfg"
       ],
-      "preLaunchTask": "bonzalez_vscode_debug"
+      "preLaunchTask": "bonzalez_vscode_debug",
+      "svdFile": "${workspaceFolder}/tools/sdcc-stm8/svd/STM8Sx03.svd"
+    },
+    {
+      "name": "Chamgerlain launch",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/chamgerlain/chamgerlain-debug.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceFolder}/tools/sdcc-stm8/stm8-gdb/bin",
+      "serverpath": "${workspaceFolder}/tools/sdcc-stm8/openocd/bin/openocd",
+      "configFiles": [
+        "${workspaceFolder}/build/chamgerlain/chamgerlain_debug_openocd.cfg"
+      ],
+      "preLaunchTask": "chamgerlain_vscode_debug"
+    },
+    {
+      "name": "McSriff launch",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "type": "cortex-debug",
+      "executable": "${workspaceFolder}/build/mcsriff/mcsriff.elf",
+      "device": "STM32F303RB",
+      "servertype": "jlink",
+      "interface": "swd",
+      "armToolchainPath": "${workspaceFolder}/tools/gcc-arm-none-eabi/tc/bin/",
+      "serverpath": "${workspaceFolder}/build/mcsriff/jlink_gdb_server_wrapper.sh",
+      "preLaunchTask": "mcsriff_vscode_debug",
+      "svdFile": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32F3xx/Libraries/CMSIS/SVD/STM32F303x.svd"
+    },
+    {
+      "name": "Wesrey launch",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "type": "cortex-debug",
+      "executable": "${workspaceFolder}/build/wesrey/wesrey.elf",
+      "device": "R5F51308",
+      "servertype": "jlink",
+      "interface": "FINE",
+      "jlinkscript": "${workspaceFolder}/build/wesrey/debug.jlink",
+      "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
+      "serverpath": "${workspaceFolder}/build/wesrey/jlink_gdb_server_wrapper.sh",
+      "preLaunchTask": "wesrey_vscode_debug",
+      "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx130.svd"
     }
   ]
 }

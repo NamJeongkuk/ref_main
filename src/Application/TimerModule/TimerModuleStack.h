@@ -26,9 +26,10 @@ typedef struct
 /*!
  * Initialize everything needed for a timer module
  * @param instance
+ * @param systemTickInterrupt
  * @return The initialized timer module interface
  */
-TimerModule_t * TimerModuleStack_Init(TimerModuleStack_t *instance);
+TimerModule_t *TimerModuleStack_Init(TimerModuleStack_t *instance, I_Interrupt_t *systemTickInterrupt);
 
 /*!
  * Writes system tick interrupt, time source, and timer module pointers to the data model

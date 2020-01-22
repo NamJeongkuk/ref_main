@@ -11,6 +11,7 @@
 #include "I_DataModel.h"
 #include "HeartbeatLedPlugin.h"
 #include "SwitchedLedPlugin.h"
+#include "KeyStreamPlugin.h"
 #include "TimerModuleDiagnostics.h"
 #include "Input_StackUsageCalculator.h"
 
@@ -22,6 +23,7 @@ typedef struct
 
       HeartbeatLedPlugin_t heartbeatLedPlugin;
       SwitchedLedPlugin_t switchedLedPlugin;
+      KeyStreamPlugin_t keyStreamPlugin;
       TimerModuleDiagnostics_t timerModuleDiagnostics;
       Input_StackUsageCalculator_t stackUsageCalculator;
       Timer_t stackUsageUpdateTimer;

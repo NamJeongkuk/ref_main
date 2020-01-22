@@ -5,6 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <string.h>
+#include "stm8s_flash.h"
 #include "Clk.h"
 #include "Iwdg.h"
 #include "Pd4Heartbeat.h"
@@ -20,8 +22,8 @@
 #include "Button.h"
 #include "I_TinyInterrupt.h"
 #include "Gea2Addresses.h"
+#include "Ul.h"
 #include "utils.h"
-#include <string.h>
 
 enum
 {
@@ -65,6 +67,7 @@ static void SendStartupMessage(I_TinyGea2Interface_t *gea2Interface)
 
 void main(void)
 {
+   Ul_Startup();
    Iwdg_Init();
    Clk_Init();
 
@@ -100,5 +103,20 @@ void main(void)
    {
       TinyTimerModule_Run(&timerModule);
       TinyGeaStack_Run(&geaStack);
+#ifndef DISABLE_UL_CHECKS
+      Ul_Run();
+#endif
    }
 }
+
+// CRC needs to be placed at the end of ROM and given a dummy value
+static const uint16_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 1) crc = 0xDEAD;
+
+// ...and version is placed just before CRC
+const Version_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 5) version =
+   {
+      CRIT_VERSION_MAJOR,
+      CRIT_VERSION_MINOR,
+      NONCRIT_VERSION_MAJOR,
+      NONCRIT_VERSION_MINOR
+   };

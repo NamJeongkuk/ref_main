@@ -34,6 +34,7 @@
 #include "UlRamTest.h"
 #include "InitializeStackMemory.h"
 #include "StackConfigurator.h"
+#include "Interrupt_Cmt0.h"
 
 enum
 {
@@ -65,7 +66,7 @@ static void UpdateBuildInfo(
    const ImageHeader_t *header)
 {
    static const GitHash_t gitHash =
-    { GIT_HASH_U8_ARRAY_RX };
+      { GIT_HASH_U8_ARRAY_RX };
    DataModel_Write(dataModel, Erd_GitHash, &gitHash);
 
    uint32_t buildNumber = BUILD_NUMBER;
@@ -108,7 +109,7 @@ int main(void)
 
    I_Action_t *watchdogKickAction = Action_Rx2xxWatchdog_Init();
    I_Action_t *resetAction = Action_Rx2xxSystemReset_Init();
-   TimerModule_t *timerModule = TimerModuleStack_Init(&timerModuleStack);
+   TimerModule_t *timerModule = TimerModuleStack_Init(&timerModuleStack, Interrupt_Cmt0_Init());
 
    SystemData_Init(
       &systemData,

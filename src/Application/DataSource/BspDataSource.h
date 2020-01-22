@@ -13,12 +13,13 @@
 #include "ConstArrayMap_LinearSearch.h"
 #include "ConstArrayMap_BinarySearch.h"
 #include "ConstBidirectionalMap_ConstArrayMap.h"
+#include "Timer.h"
 
 typedef struct
 {
    struct
    {
-      DataSource_Bsp_t dataSource;
+      I_DataSource_t *dataSource;
       DataSource_Mapped_t mappedDataSource;
 
       ConstArrayMap_LinearSearch_t applicationToBspMap;

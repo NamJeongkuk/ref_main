@@ -6,6 +6,7 @@
  */
 
 #include "SystemData.h"
+#include "DataModelErdPointerAccess.h"
 
 typedef SystemData_t Instance_t;
 
@@ -107,6 +108,11 @@ void SystemData_Init(
 
    InitializeExternalDataSource(instance);
    InitializeDataModel(instance);
+
+   DataModelErdPointerAccess_Write(
+      DataModel_DataModel(&instance->_private.dataModel),
+      Erd_ExternalDataSource,
+      &instance->_private.dataSource.external);
 }
 
 I_DataSource_t *SystemData_InternalDataSource(SystemData_t *instance)

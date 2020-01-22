@@ -16,3 +16,15 @@
 [submodule "lib/applcommon-tiny"]
 	path = lib/applcommon-tiny
 	url = https://github.com/geappliances/applcommon.tiny
+[submodule "lib/stm32-standard-peripherals"]
+	path = lib/stm32-standard-peripherals
+	url = https://github.com/geappliances/build-tools.stm32-standard-peripherals.git
+[submodule "tools/gcc-arm-none-eabi"]
+	path = tools/gcc-arm-none-eabi
+	url = https://github.com/geappliances/build-tools.gcc-arm-none-eabi-release
+[submodule "lib/stm8-boot-loader"]
+	path = lib/stm8-boot-loader
+	url = https://github.com/geappliances/applcommon.stm8-boot-loader.git
+[submodule "tools/iar-stm8-wine"]
+	path = tools/iar-stm8-wine
+	url = https://github.com/geappliances/build-tools.iar-stm8-wine-tools-release.git

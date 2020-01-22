@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -e
+
+OPERATING_SYSTEM=$(uname)
+
+if [[ $OPERATING_SYSTEM == 'Linux' ]]; then
+   MAKE=make
+elif [[ $OPERATING_SYSTEM == 'Darwin' ]]; then
+   MAKE=dmake
+else
+   echo 'Unsupported operating system!'
+   exit 1
+fi
+
+$MAKE -f dugnutt-target.mk -j16 RELEASE=Y DEBUG=N clean &&
+   $MAKE -f dugnutt-target.mk -j16 RELEASE=Y DEBUG=N package &&
+   $MAKE -f truk-target.mk -j16 RELEASE=Y DEBUG=N clean &&
+   $MAKE -f truk-target.mk -j16 RELEASE=Y DEBUG=N package &&
+   make -f bonzalez-target.mk -j16 RELEASE=Y DEBUG=N clean &&
+   make -f bonzalez-target.mk -j16 RELEASE=Y DEBUG=N package &&
+   make -f chamgerlain-target.mk -j16 RELEASE=Y DEBUG=N clean &&
+   make -f chamgerlain-target.mk -j16 RELEASE=Y DEBUG=N package &&
+   make -f mcsriff-target.mk -j16 RELEASE=Y DEBUG=N clean &&
+   make -f mcsriff-target.mk -j16 RELEASE=Y DEBUG=N package

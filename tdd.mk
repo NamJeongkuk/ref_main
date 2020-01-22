@@ -2,8 +2,9 @@ PROJECT_NAME = multi-target-starter-kit
 
 APPLCOMMON_DIR = lib/applcommon
 PROJECT_DIR = src
-TESTING_DIR = Testing
-TESTS_DIR = Testing/Tests
+TESTING_DIR = test
+TESTS_DIR = test/Tests
+OUTPUT_DIR = test
 
 RUN_APPLCOMMON_TESTS = N
 
@@ -27,6 +28,7 @@ TEST_SRC_DIRS = \
 INCLUDE_DIRS = \
    $(APPLCOMMON_DIR)/Hardware/Rx130 \
    $(APPLCOMMON_DIR)/Image \
+   $(PROJECT_DIR)/Application/Plugins \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \
    $(PROJECT_DIR)/dugnutt/Bsp \
    $(PROJECT_DIR)/dugnutt/Hardware \
