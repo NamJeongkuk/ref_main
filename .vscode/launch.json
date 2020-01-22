@@ -7,7 +7,7 @@
       "name": "TDD launch",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/Testing/Build/multi-target-starter-kit_tests",
+      "program": "${workspaceFolder}/test/Build/multi-target-starter-kit_tests",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
