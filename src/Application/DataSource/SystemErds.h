@@ -76,11 +76,6 @@
 #define INCLUDE_OUTPUT_1(_x) _x
 #define INCLUDE_OUTPUT_2(_x) _x
 
-#define INCLUDE_MAP_TO_EXTERNAL_Ram(_x) _x
-#define INCLUDE_MAP_TO_EXTERNAL_Virtual(_x) _x
-#define INCLUDE_MAP_TO_EXTERNAL_Nv(_x)
-#define INCLUDE_MAP_TO_EXTERNAL_Fault(_x) _x
-
 enum
 {
    ErdBaseId = 0xFD00
@@ -205,14 +200,17 @@ enum
    ENTRY(Erd_NvReserved,                                    0xFCFD, uint8_t,                                            Swap_N, Io_None, Nv,       NotNv,                                    NotFault) \
    ENTRY(Erd_NvMetadata,                                    0xFCFE, AsyncDataSource_FlashBlockGroupMetadata_t,          Swap_N, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
 
+#define EXPAND_AS_INTERNAL_RAM_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_RAM_, StorageType)(Name COMMA)
+
 #define EXPAND_AS_NV_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_NV_, StorageType)(Name = Number COMMA)
 
 #define EXPAND_AS_VIRTUAL_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_VIRTUAL_, StorageType)(Name COMMA)
+   CONCAT(INCLUDE_VIRTUAL_, StorageType)(Name = Number COMMA)
 
-#define EXPAND_AS_INTERNAL_RAM_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_RAM_, StorageType)(Name COMMA)
+#define EXPAND_AS_FAULT_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_FAULT_, StorageType)(Name = Number COMMA)
 
 #define EXPAND_AS_PUBLIC_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    Public##Name = Number,
@@ -220,23 +218,19 @@ enum
 #define EXPAND_AS_FAULT_ID(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId)\
    CONCAT(INCLUDE_FAULT_, StorageType)(FaultId COMMA)
 
-#define EXPAND_AS_FAULT_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_FAULT_, StorageType)(Name COMMA)
-
 #define EXPAND_AS_FAULT_ERD_TABLE(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_FAULT_, StorageType)(Name COMMA)
 
 #define EXPAND_AS_ERD_FAULT_CODE_COUNT(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_FAULT_, StorageType)(+1)
 
-#define EXPAND_AS_ALL_EXTERNALLY_MAPPED_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_MAP_TO_EXTERNAL_, StorageType)(Name COMMA)
-
 enum
 {
    ERD_TABLE(EXPAND_AS_NV_ERD_ENUM)
+   ERD_TABLE(EXPAND_AS_VIRTUAL_ERD_ENUM)
+   ERD_TABLE(EXPAND_AS_FAULT_ERD_ENUM)
    Erd_Base = (ErdBaseId - 1),
-   ERD_TABLE(EXPAND_AS_ALL_EXTERNALLY_MAPPED_ERDS)
+   ERD_TABLE(EXPAND_AS_INTERNAL_RAM_ERD_ENUM)
 };
 
 enum

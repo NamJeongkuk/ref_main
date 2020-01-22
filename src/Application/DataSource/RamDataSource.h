@@ -10,7 +10,7 @@
 
 #include "DataSource_Ram.h"
 #include "SystemErds.h"
-#include "ConstArrayMap_BinarySearch.h"
+#include "ConstArrayMap_DirectIndex.h"
 #include "XMacroUtils.h"
 
 #define EXPAND_AS_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
@@ -28,7 +28,7 @@ typedef struct
    {
       RamDataSourceStorage_t erdRam;
       DataSource_Ram_t dataSource;
-      ConstArrayMap_BinarySearch_t erdMap;
+      ConstArrayMap_DirectIndex_t erdMap;
    } _private;
 } RamDataSource_t;
 
