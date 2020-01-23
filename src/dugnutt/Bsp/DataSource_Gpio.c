@@ -17,7 +17,7 @@
 #define ERD_FROM_CHANNEL(channel) (Erd_BspGpio_Start + 1 + channel)
 #define ERD_IS_IN_RANGE(erd) (IN_RANGE(Erd_BspGpio_Start + 1, erd, Erd_BspGpio_End))
 
-#define GPIO_TABLE_EXPAND_AS_GPIO_COUNT(name, direction, pullUp, driveCapacity, port, pin) +1
+#define GPIO_TABLE_EXPAND_AS_GPIO_COUNT(name, direction, pullUp, driveCapacity, port, pin, inverted) +1
 
 enum
 {
@@ -97,9 +97,10 @@ typedef struct
    GpioDriveCapacity_t driveCapacity;
    uint8_t port;
    uint8_t pin;
+   bool inverted;
 } GpioDirectionPortsAndPins_t;
 
-#define EXPAND_PORTS_AND_PINS(channel, direction, pullUp, driveCapacity, port, pin) { direction, pullUp, driveCapacity, port, pin },
+#define EXPAND_PORTS_AND_PINS(channel, direction, pullUp, driveCapacity, port, pin, inverted) { direction, pullUp, driveCapacity, port, pin, inverted },
 
 static const GpioDirectionPortsAndPins_t gpioPortsAndPins[] =
    {
@@ -159,17 +160,25 @@ static bool ReadGpio(const GpioChannel_t channel)
    if(gpioPortAddresses[gpioPortsAndPins[channel].port].inputData)
    {
       uint8_t inputRegister = *gpioPortAddresses[gpioPortsAndPins[channel].port].inputData;
-      return BIT_STATE(inputRegister, gpioPortsAndPins[channel].pin);
+      bool pinValue = BIT_STATE(inputRegister, gpioPortsAndPins[channel].pin);
+      if(gpioPortsAndPins[channel].inverted)
+      {
+         pinValue = !pinValue;
+      }
+      return pinValue;
    }
-
    return false;
 }
 
-static void WriteGpio(const GpioChannel_t channel, const bool state)
+static void WriteGpio(const GpioChannel_t channel, bool state)
 {
    if(gpioPortAddresses[gpioPortsAndPins[channel].port].outputData)
    {
       uint8_t outputRegister = *gpioPortAddresses[gpioPortsAndPins[channel].port].outputData;
+      if(gpioPortsAndPins[channel].inverted)
+      {
+         state = !state;
+      }
       BIT_WRITE(outputRegister, gpioPortsAndPins[channel].pin, state);
       *gpioPortAddresses[gpioPortsAndPins[channel].port].outputData = outputRegister;
    }
@@ -187,7 +196,7 @@ static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
 static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
 {
    IGNORE(_instance);
-   REINTERPRET(state, data, const bool *);
+   REINTERPRET(state, data, bool *);
 
    uassert(ERD_IS_IN_RANGE(erd));
 
