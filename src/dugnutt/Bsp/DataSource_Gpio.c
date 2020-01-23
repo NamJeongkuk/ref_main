@@ -59,10 +59,10 @@ typedef enum
 
 typedef enum
 {
-   GpioPolarity_Negative = 0,
-   GpioPolarity_Positive,
-   GpioPolarity_Max
-} GpioPolarity_t;
+   GpioSignal_NotInverted = 0,
+   GpioSignal_Inverted,
+   GpioSignal_Max
+} GpioSignal_t;
 
 typedef struct
 {
@@ -104,7 +104,7 @@ typedef struct
    GpioDriveCapacity_t driveCapacity;
    uint8_t port;
    uint8_t pin;
-   GpioPolarity_t polarity;
+   GpioSignal_t inverted;
 } GpioDirectionPortsAndPins_t;
 
 #define EXPAND_PORTS_AND_PINS(channel, direction, pullUp, driveCapacity, port, pin, polarity) { direction, pullUp, driveCapacity, port, pin, polarity },
@@ -169,11 +169,7 @@ static bool ReadGpio(const GpioChannel_t channel)
       bool pinValue;
       uint8_t inputRegister = *gpioPortAddresses[gpioPortsAndPins[channel].port].inputData;
       pinValue = BIT_STATE(inputRegister, gpioPortsAndPins[channel].pin);
-      if(GpioPolarity_Positive == gpioPortsAndPins[channel].polarity)
-      {
-         return pinValue;
-      }
-      else
+      if(gpioPortsAndPins[channel].inverted)
       {
          return !pinValue;
       }
@@ -187,11 +183,7 @@ static void WriteGpio(const GpioChannel_t channel, const bool state)
    {
       bool pinState = state;
       uint8_t outputRegister = *gpioPortAddresses[gpioPortsAndPins[channel].port].outputData;
-      if(GpioPolarity_Positive == gpioPortsAndPins[channel].polarity)
-      {
-         pinState = state;
-      }
-      else
+      if(gpioPortsAndPins[channel].inverted)
       {
          pinState = !state;
       }
