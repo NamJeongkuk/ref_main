@@ -173,7 +173,7 @@ static bool ReadGpio(const GpioChannel_t channel)
       {
          return pinValue;
       }
-      else if(GpioPolarity_Negative == gpioPortsAndPins[channel].polarity)
+      else
       {
          return !pinValue;
       }
@@ -191,7 +191,7 @@ static void WriteGpio(const GpioChannel_t channel, const bool state)
       {
          pinState = state;
       }
-      else if(GpioPolarity_Negative == gpioPortsAndPins[channel].polarity)
+      else
       {
          pinState = !state;
       }
