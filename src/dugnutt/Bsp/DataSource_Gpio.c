@@ -57,13 +57,6 @@ typedef enum
    GpioDriveCapacity_Max
 } GpioDriveCapacity_t;
 
-typedef enum
-{
-   GpioSignal_NotInverted = 0,
-   GpioSignal_Inverted,
-   GpioSignal_Max
-} GpioSignal_t;
-
 typedef struct
 {
    uint8_t *outputData;
@@ -104,7 +97,7 @@ typedef struct
    GpioDriveCapacity_t driveCapacity;
    uint8_t port;
    uint8_t pin;
-   GpioSignal_t inverted;
+   bool inverted;
 } GpioDirectionPortsAndPins_t;
 
 #define EXPAND_PORTS_AND_PINS(channel, direction, pullUp, driveCapacity, port, pin, inverted) { direction, pullUp, driveCapacity, port, pin, inverted },
