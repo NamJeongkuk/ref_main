@@ -16,7 +16,7 @@
 #include "XMacroUtils.h"
 #include "utils.h"
 
-#define GPIO_EXPAND_AS_ERD_NAMES(name, direction, pullUp, driveCapacity, port, pin, polarity) \
+#define GPIO_EXPAND_AS_ERD_NAMES(name, direction, pullUp, driveCapacity, port, pin, inverted) \
    name,
 
 enum

@@ -17,7 +17,7 @@
 #define ERD_FROM_CHANNEL(channel) (Erd_BspGpio_Start + 1 + channel)
 #define ERD_IS_IN_RANGE(erd) (IN_RANGE(Erd_BspGpio_Start + 1, erd, Erd_BspGpio_End))
 
-#define GPIO_TABLE_EXPAND_AS_GPIO_COUNT(name, direction, pullUp, driveCapacity, port, pin, polarity) +1
+#define GPIO_TABLE_EXPAND_AS_GPIO_COUNT(name, direction, pullUp, driveCapacity, port, pin, inverted) +1
 
 enum
 {
@@ -107,7 +107,7 @@ typedef struct
    GpioSignal_t inverted;
 } GpioDirectionPortsAndPins_t;
 
-#define EXPAND_PORTS_AND_PINS(channel, direction, pullUp, driveCapacity, port, pin, polarity) { direction, pullUp, driveCapacity, port, pin, polarity },
+#define EXPAND_PORTS_AND_PINS(channel, direction, pullUp, driveCapacity, port, pin, inverted) { direction, pullUp, driveCapacity, port, pin, inverted },
 
 static const GpioDirectionPortsAndPins_t gpioPortsAndPins[] =
    {
