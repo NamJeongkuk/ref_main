@@ -10,7 +10,7 @@
 
 // clang-format off
 
-// Name, Direction, PullUp, DriveCapacity, Port, Bit
+// Name, Direction, PullUp, DriveCapacity, Port, Bit, Polarity
 #define GPIO_TABLE(ENTRY) \
    ENTRY(Erd_BspGpio_HeartbeatLed,        GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortB, 3, GpioPolarity_Positive) \
    ENTRY(Erd_BspGpio_OtherLed,            GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortB, 5, GpioPolarity_Positive) \
