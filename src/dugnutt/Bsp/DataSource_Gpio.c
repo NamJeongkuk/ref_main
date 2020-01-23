@@ -171,23 +171,23 @@ static bool ReadGpio(const GpioChannel_t channel)
       pinValue = BIT_STATE(inputRegister, gpioPortsAndPins[channel].pin);
       if(gpioPortsAndPins[channel].inverted)
       {
-         return !pinValue;
+         pinValue = !pinValue;
       }
+      return pinValue;
    }
    return false;
 }
 
-static void WriteGpio(const GpioChannel_t channel, const bool state)
+static void WriteGpio(const GpioChannel_t channel, bool state)
 {
    if(gpioPortAddresses[gpioPortsAndPins[channel].port].outputData)
    {
-      bool pinState = state;
       uint8_t outputRegister = *gpioPortAddresses[gpioPortsAndPins[channel].port].outputData;
       if(gpioPortsAndPins[channel].inverted)
       {
-         pinState = !state;
+         state = !state;
       }
-      BIT_WRITE(outputRegister, gpioPortsAndPins[channel].pin, pinState);
+      BIT_WRITE(outputRegister, gpioPortsAndPins[channel].pin, state);
       *gpioPortAddresses[gpioPortsAndPins[channel].port].outputData = outputRegister;
    }
 }
@@ -204,7 +204,7 @@ static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
 static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
 {
    IGNORE(_instance);
-   REINTERPRET(state, data, const bool *);
+   REINTERPRET(state, data, bool *);
 
    uassert(ERD_IS_IN_RANGE(erd));
 
