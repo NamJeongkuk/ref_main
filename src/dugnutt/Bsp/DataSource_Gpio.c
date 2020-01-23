@@ -17,7 +17,7 @@
 #define ERD_FROM_CHANNEL(channel) (Erd_BspGpio_Start + 1 + channel)
 #define ERD_IS_IN_RANGE(erd) (IN_RANGE(Erd_BspGpio_Start + 1, erd, Erd_BspGpio_End))
 
-#define GPIO_TABLE_EXPAND_AS_GPIO_COUNT(name, direction, pullUp, driveCapacity, port, pin) +1
+#define GPIO_TABLE_EXPAND_AS_GPIO_COUNT(name, direction, pullUp, driveCapacity, port, pin, polarity) +1
 
 enum
 {
@@ -56,6 +56,13 @@ typedef enum
    GpioDriveCapacity_High,
    GpioDriveCapacity_Max
 } GpioDriveCapacity_t;
+
+typedef enum
+{
+   GpioPolarity_Negative = 0,
+   GpioPolarity_Positive,
+   GpioPolarity_Max
+} GpioPolarity_t;
 
 typedef struct
 {
@@ -97,9 +104,10 @@ typedef struct
    GpioDriveCapacity_t driveCapacity;
    uint8_t port;
    uint8_t pin;
+   GpioPolarity_t polarity;
 } GpioDirectionPortsAndPins_t;
 
-#define EXPAND_PORTS_AND_PINS(channel, direction, pullUp, driveCapacity, port, pin) { direction, pullUp, driveCapacity, port, pin },
+#define EXPAND_PORTS_AND_PINS(channel, direction, pullUp, driveCapacity, port, pin, polarity) { direction, pullUp, driveCapacity, port, pin, polarity },
 
 static const GpioDirectionPortsAndPins_t gpioPortsAndPins[] =
    {
@@ -158,10 +166,18 @@ static bool ReadGpio(const GpioChannel_t channel)
 {
    if(gpioPortAddresses[gpioPortsAndPins[channel].port].inputData)
    {
+      bool pinValue;
       uint8_t inputRegister = *gpioPortAddresses[gpioPortsAndPins[channel].port].inputData;
-      return BIT_STATE(inputRegister, gpioPortsAndPins[channel].pin);
+      pinValue = BIT_STATE(inputRegister, gpioPortsAndPins[channel].pin);
+      if(GpioPolarity_Positive == gpioPortsAndPins[channel].polarity)
+      {
+         return pinValue;
+      }
+      else if(GpioPolarity_Negative == gpioPortsAndPins[channel].polarity)
+      {
+         return !pinValue;
+      }
    }
-
    return false;
 }
 
@@ -169,8 +185,17 @@ static void WriteGpio(const GpioChannel_t channel, const bool state)
 {
    if(gpioPortAddresses[gpioPortsAndPins[channel].port].outputData)
    {
+      bool pinState = state;
       uint8_t outputRegister = *gpioPortAddresses[gpioPortsAndPins[channel].port].outputData;
-      BIT_WRITE(outputRegister, gpioPortsAndPins[channel].pin, state);
+      if(GpioPolarity_Positive == gpioPortsAndPins[channel].polarity)
+      {
+         pinState = state;
+      }
+      else if(GpioPolarity_Negative == gpioPortsAndPins[channel].polarity)
+      {
+         pinState = !state;
+      }
+      BIT_WRITE(outputRegister, gpioPortsAndPins[channel].pin, pinState);
       *gpioPortAddresses[gpioPortsAndPins[channel].port].outputData = outputRegister;
    }
 }
