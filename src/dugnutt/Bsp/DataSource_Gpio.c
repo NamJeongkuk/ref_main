@@ -159,9 +159,8 @@ static bool ReadGpio(const GpioChannel_t channel)
 {
    if(gpioPortAddresses[gpioPortsAndPins[channel].port].inputData)
    {
-      bool pinValue;
       uint8_t inputRegister = *gpioPortAddresses[gpioPortsAndPins[channel].port].inputData;
-      pinValue = BIT_STATE(inputRegister, gpioPortsAndPins[channel].pin);
+      bool pinValue = BIT_STATE(inputRegister, gpioPortsAndPins[channel].pin);
       if(gpioPortsAndPins[channel].inverted)
       {
          pinValue = !pinValue;
