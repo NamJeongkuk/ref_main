@@ -10,9 +10,9 @@
 #include "Gea2Message.h"
 #include "Gea2Addresses.h"
 #include "Header.h"
-#include "SystemErds.h"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
+#include "XMacroUtils.h"
 #include "uassert.h"
 
 enum
@@ -25,6 +25,24 @@ enum
    RestrictedFullRangeErdEnd = 0xFFFF,
    RetryCount = 3
 };
+
+#define EXPAND_AS_PUBLIC_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_PUBLIC_, Number)(Public##Name COMMA)
+
+static const Erd_t publicErds[] =
+   {
+      ERD_TABLE(EXPAND_AS_PUBLIC_ERDS)
+   };
+
+static const ConstArrayMap_BinarySearchConfiguration_t publicErdMapConfiguration =
+   {
+      publicErds,
+      NUM_ELEMENTS(publicErds),
+      ELEMENT_SIZE(publicErds),
+      sizeof(Erd_t),
+      0,
+      false
+   };
 
 static const uint8_t rangeRestrictedValidatorRestrictedAddressTable[] =
    {
@@ -66,35 +84,29 @@ static void InitializeErdSecurityComponents(
 
 static void ConnectGea2MessageEndpointToDataSource(
    GeaStack_t *instance,
+   I_DataModel_t *dataModel,
    I_DataSource_t *externalDataSource)
 {
-   // Datasource/ERD handling system and GEA interface
-   DataSourcePacketReadWriteManager_Init(&instance->_private.dataSourceReadWriteManager, externalDataSource);
-   DataSourcePacketSubscriptionManager_Simple_Init(
-      &instance->_private.dataSourceSubscriptionManager,
-      externalDataSource,
-      instance->_private.subscriptionList,
-      MaxNumberOfSubscriptions,
-      MissedAckLimit);
-   DataSourcePacketSubscriptionFrontEnd_Simple_Init(
-      &instance->_private.dataSourceSubscriptionFrontEnd,
-      &instance->_private.dataSourceSubscriptionManager.interface);
-
    ErdGea2ReadWriteApiRevision2_Init(
-      &instance->_private.erdApiRevision2,
+      &instance->_private.erdApiRevision2ReadWrite,
       externalDataSource,
       NULL,
       NULL,
       &instance->_private.erdSecurity.restrictedErdPacketRestrictor.interface);
 
-   DataSourcePacketGea2MessageEndpointConnector_Init(
-      &instance->_private.dataSourceEndpointConnector,
-      &instance->_private.messageEndpointAdapter.interface,
-      &instance->_private.dataSourceReadWriteManager.interface,
-      &instance->_private.dataSourceSubscriptionFrontEnd.interface,
-      GEA2MESSAGE_MAXPAYLOAD,
-      RetryCount,
-      RetryCount);
+   ConstArrayMap_BinarySearch_Init(
+      &instance->_private.publicErdMap,
+      &publicErdMapConfiguration);
+
+   ErdGea2SubscriptionApiRevision2_Init(
+      &instance->_private.erdApiRevision2Subscription,
+      externalDataSource,
+      NULL,
+      &instance->_private.erdSecurity.restrictedErdPacketRestrictor.interface,
+      DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
+      &instance->_private.publicErdMap.interface,
+      instance->_private.subscriptionBuffer,
+      sizeof(instance->_private.subscriptionBuffer));
 }
 
 static void CreatePacketAndMessageEndpoints(
@@ -204,7 +216,7 @@ void GeaStack_Init(
 
    CreatePacketAndMessageEndpoints(instance, dataModel, geaAddress);
 
-   ConnectGea2MessageEndpointToDataSource(instance, externalDataSource);
+   ConnectGea2MessageEndpointToDataSource(instance, dataModel, externalDataSource);
 
    DataModel_Write(dataModel, Erd_ReadyToEnterBootLoader, enabled);
 

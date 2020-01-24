@@ -19,7 +19,11 @@
 #include "Input_ErdGea2UnlockState.h"
 #include "Validator_RestrictedRangeErd.h"
 #include "ErdGea2ReadWriteApiRevision2.h"
+#include "ErdGea2SubscriptionApiRevision2.h"
+#include "ConstArrayMap_BinarySearch.h"
 #include "ErdStreamReceiver.h"
+#include "GeaStackXmacroUtils.h"
+#include "SystemErds.h"
 
 enum
 {
@@ -30,20 +34,25 @@ enum
    DynamicRoutingTableBufferSize = 8,
 };
 
+#define EXPAND_AS_PUBLIC_ERD_COUNT_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_PUBLIC_, Number)(uint8_t Name;)
+
+typedef struct
+{
+   ERD_TABLE(EXPAND_AS_PUBLIC_ERD_COUNT_STRUCT_MEMBER)
+} GeaStackPublicErdCount_t;
+
 typedef struct
 {
    struct
    {
       I_Gea2PacketEndpoint_t *packetEndpoint;
       Gea2MessageEndpoint_Gea2PacketEndpointAdapter_t messageEndpointAdapter;
-      SimpleDataSourceMessageEndpointConnector_t endpointConnector;
-      DataSourcePacketReadWriteManager_Simple_t dataSourceReadWriteManager;
-      DataSourcePacketGea2MessageEndpointConnector_t dataSourceEndpointConnector;
-      DataSourcePacketSubscriptionFrontEnd_Simple_t dataSourceSubscriptionFrontEnd;
-      DataSourcePacketSubscriptionManager_Simple_SubscriptionListItem_t subscriptionList[MaxNumberOfSubscriptions];
-      DataSourcePacketSubscriptionManager_Simple_t dataSourceSubscriptionManager;
       Gea2CommonCommands_t commonCommands;
-      ErdGea2ReadWriteApiRevision2_t erdApiRevision2;
+      ErdGea2ReadWriteApiRevision2_t erdApiRevision2ReadWrite;
+      ErdGea2SubscriptionApiRevision2_t erdApiRevision2Subscription;
+      uint8_t subscriptionBuffer[sizeof(GeaStackPublicErdCount_t) / 4 + 1];
+      ConstArrayMap_BinarySearch_t publicErdMap;
       ErdStreamReceiver_t erdStreamReceiver;
 
       Gea2Configurator_t configurator;
