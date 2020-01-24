@@ -67,9 +67,9 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] =
       SWAPPED_FIELD(PublicErd_ServiceDiagnosticsFaultSequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, count),
       SWAPPED_FIELD(PublicErd_ServiceDiagnosticsFaultSequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, overwriteCount),
       SWAPPED_FIELD(PublicErd_ServiceDiagnosticsFaultSequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, reserved),
-      SWAPPED_FIELD(PublicErd_ServiceDiagnosticsFaultSequenceEntry00, ServiceDiagnosticsRevision3FaultSequenceEntry_t, cycleNumber),
-      SWAPPED_FIELD(PublicErd_ServiceDiagnosticsFaultSequenceEntry00, ServiceDiagnosticsRevision3FaultSequenceEntry_t, timeStamp),
-      SWAPPED_FIELD(PublicErd_ServiceDiagnosticsFaultSequenceEntry00, ServiceDiagnosticsRevision3FaultSequenceEntry_t, faultCode),
+      SWAPPED_FIELD(PublicErd_ServiceDiagnosticsFaultSequenceEntry0, ServiceDiagnosticsRevision3FaultSequenceEntry_t, cycleNumber),
+      SWAPPED_FIELD(PublicErd_ServiceDiagnosticsFaultSequenceEntry0, ServiceDiagnosticsRevision3FaultSequenceEntry_t, timeStamp),
+      SWAPPED_FIELD(PublicErd_ServiceDiagnosticsFaultSequenceEntry0, ServiceDiagnosticsRevision3FaultSequenceEntry_t, faultCode),
       SWAPPED_FIELD(PublicErd_ServiceDiagnosticsCycleHistorySequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, currentIndex),
       SWAPPED_FIELD(PublicErd_ServiceDiagnosticsCycleHistorySequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, count),
       SWAPPED_FIELD(PublicErd_ServiceDiagnosticsCycleHistorySequenceStatus, ServiceDiagnosticsRevision3SequenceStatus_t, overwriteCount),
@@ -94,7 +94,7 @@ static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] =
    {
       SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableEntry0, PublicErd_ServiceDiagnosticsFaultTableEntry9),
       SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableSnapshot0, PublicErd_ServiceDiagnosticsFaultTableSnapshot9),
-      SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultSequenceEntry00, PublicErd_ServiceDiagnosticsFaultSequenceEntry07),
+      SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultSequenceEntry0, PublicErd_ServiceDiagnosticsFaultSequenceEntry7),
       SWAPPED_FIELD_RANGE(PublicErd_DiagnosticsCycleHistoryRecord0, PublicErd_DiagnosticsCycleHistoryRecord9),
       SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableSnapshotData0, PublicErd_ServiceDiagnosticsFaultTableSnapshotData9)
    };

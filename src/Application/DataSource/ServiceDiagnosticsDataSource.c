@@ -83,8 +83,8 @@ static const DataSource_ServiceDiagnosticsRevision3Entity_t serviceDiagnosticsEn
             .status = Erd_ServiceDiagnosticsFaultSequenceStatus,
             .clear = Erd_ServiceDiagnosticsFaultSequenceClear,
 
-            .entryCount = Erd_ServiceDiagnosticsFaultSequenceEntry07 - Erd_ServiceDiagnosticsFaultSequenceEntry00 + 1,
-            .entryStart = Erd_ServiceDiagnosticsFaultSequenceEntry00,
+            .entryCount = Erd_ServiceDiagnosticsFaultSequenceEntry7 - Erd_ServiceDiagnosticsFaultSequenceEntry0 + 1,
+            .entryStart = Erd_ServiceDiagnosticsFaultSequenceEntry0,
             .snapshotStart = Erd_Invalid,
             .snapshotPayloadStart = Erd_Invalid
          },
