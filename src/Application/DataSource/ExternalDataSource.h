@@ -9,21 +9,23 @@
 #define EXTERNALDATASOURCE_H
 
 #include "DataSource_Mapped.h"
-#include "DataSource_SlowEndiannessSwapped.h"
+#include "DataSource_EndiannessSwapped.h"
 #include "ConstBidirectionalMap_ConstArrayMap.h"
 #include "ConstArrayMap_BinarySearch.h"
 #include "ConstArrayMap_DirectIndex.h"
+#include "ConstMultiMap_BinarySearch.h"
 
 typedef struct
 {
    struct
    {
+      DataSource_EndiannessSwapped_t endiannessSwappedDataSource;
       DataSource_Mapped_t mappedDataSource;
-      DataSource_SlowEndiannessSwapped_t endiannessSwappedDataSource;
 
       ConstArrayMap_DirectIndex_t internalToExternalMap;
       ConstArrayMap_BinarySearch_t externalToInternalMap;
       ConstBidirectionalMap_ConstArrayMap_t internalExternalMap;
+      ConstMultiMap_BinarySearch_t swappedFieldsMap;
    } _private;
 } ExternalDataSource_t;
 

@@ -76,11 +76,6 @@
 #define INCLUDE_OUTPUT_1(_x) _x
 #define INCLUDE_OUTPUT_2(_x) _x
 
-#define INCLUDE_MAP_TO_EXTERNAL_Ram(_x) _x
-#define INCLUDE_MAP_TO_EXTERNAL_Virtual(_x) _x
-#define INCLUDE_MAP_TO_EXTERNAL_Nv(_x)
-#define INCLUDE_MAP_TO_EXTERNAL_Fault(_x) _x
-
 enum
 {
    ErdBaseId = 0xFD00
@@ -133,14 +128,14 @@ enum
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshot9,         0xE118, FaultSnapshot_t,                                    Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultSequenceStatus,         0xE119, ServiceDiagnosticsRevision3SequenceStatus_t,        Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultSequenceClear,          0xE11A, ServiceDiagnosticsRevision3SequenceClearRequest_t,  Swap_N, Io_O,    Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry00,        0xE11B, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry01,        0xE11C, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry02,        0xE11D, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry03,        0xE11E, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry04,        0xE11F, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry05,        0xE120, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry06,        0xE121, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry07,        0xE122, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry0,         0xE11B, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry1,         0xE11C, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry2,         0xE11D, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry3,         0xE11E, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry4,         0xE11F, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry5,         0xE120, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry6,         0xE121, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsFaultSequenceEntry7,         0xE122, ServiceDiagnosticsRevision3FaultSequenceEntry_t,    Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsCycleHistorySequenceStatus,  0xE123, ServiceDiagnosticsRevision3SequenceStatus_t,        Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsCycleHistorySequenceClear,   0xE124, ServiceDiagnosticsRevision3SequenceClearRequest_t,  Swap_Y, Io_O,    Virtual,  NotNv,                                    NotFault) \
    ENTRY(Erd_DiagnosticsCycleHistoryRecord0,                0xE125, CycleHistoryRecord_t,                               Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
@@ -205,14 +200,17 @@ enum
    ENTRY(Erd_NvReserved,                                    0xFCFD, uint8_t,                                            Swap_N, Io_None, Nv,       NotNv,                                    NotFault) \
    ENTRY(Erd_NvMetadata,                                    0xFCFE, AsyncDataSource_FlashBlockGroupMetadata_t,          Swap_N, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
 
+#define EXPAND_AS_INTERNAL_RAM_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_RAM_, StorageType)(Name COMMA)
+
 #define EXPAND_AS_NV_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_NV_, StorageType)(Name = Number COMMA)
 
 #define EXPAND_AS_VIRTUAL_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_VIRTUAL_, StorageType)(Name COMMA)
+   CONCAT(INCLUDE_VIRTUAL_, StorageType)(Name = Number COMMA)
 
-#define EXPAND_AS_INTERNAL_RAM_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_RAM_, StorageType)(Name COMMA)
+#define EXPAND_AS_FAULT_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_FAULT_, StorageType)(Name = Number COMMA)
 
 #define EXPAND_AS_PUBLIC_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    Public##Name = Number,
@@ -220,23 +218,19 @@ enum
 #define EXPAND_AS_FAULT_ID(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId)\
    CONCAT(INCLUDE_FAULT_, StorageType)(FaultId COMMA)
 
-#define EXPAND_AS_FAULT_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_FAULT_, StorageType)(Name COMMA)
-
 #define EXPAND_AS_FAULT_ERD_TABLE(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_FAULT_, StorageType)(Name COMMA)
 
 #define EXPAND_AS_ERD_FAULT_CODE_COUNT(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_FAULT_, StorageType)(+1)
 
-#define EXPAND_AS_ALL_EXTERNALLY_MAPPED_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_MAP_TO_EXTERNAL_, StorageType)(Name COMMA)
-
 enum
 {
    ERD_TABLE(EXPAND_AS_NV_ERD_ENUM)
+   ERD_TABLE(EXPAND_AS_VIRTUAL_ERD_ENUM)
+   ERD_TABLE(EXPAND_AS_FAULT_ERD_ENUM)
    Erd_Base = (ErdBaseId - 1),
-   ERD_TABLE(EXPAND_AS_ALL_EXTERNALLY_MAPPED_ERDS)
+   ERD_TABLE(EXPAND_AS_INTERNAL_RAM_ERD_ENUM)
 };
 
 enum

@@ -17,21 +17,19 @@
 static const DataSource_RamErdConfigurationElement_t erds[] =
    { ERD_TABLE(EXPAND_AS_CONFIGURATION) };
 
-static const ConstArrayMap_BinarySearchConfiguration_t erdMapConfiguration =
+static const ConstArrayMap_DirectIndexConfiguration_t erdMapConfiguration =
    {
       erds,
-      NUM_ELEMENTS(erds),
       ELEMENT_SIZE(erds),
-      MEMBER_SIZE(DataSource_RamErdConfigurationElement_t, erd),
-      OFFSET_OF(DataSource_RamErdConfigurationElement_t, erd),
-      IS_SIGNED(Erd_t)
+      NUM_ELEMENTS(erds),
+      ErdBaseId
    };
 
 void RamDataSource_Init(RamDataSource_t *instance)
 {
    uassert(instance);
 
-   ConstArrayMap_BinarySearch_Init(&instance->_private.erdMap, &erdMapConfiguration);
+   ConstArrayMap_DirectIndex_Init(&instance->_private.erdMap, &erdMapConfiguration);
 
    DataSource_Ram_Init(
       &instance->_private.dataSource,
