@@ -19,8 +19,8 @@ typedef struct
 {
    struct
    {
-      DataSource_Mapped_t mappedDataSource;
       DataSource_EndiannessSwapped_t endiannessSwappedDataSource;
+      DataSource_Mapped_t mappedDataSource;
 
       ConstArrayMap_DirectIndex_t internalToExternalMap;
       ConstArrayMap_BinarySearch_t externalToInternalMap;

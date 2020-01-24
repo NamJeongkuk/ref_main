@@ -137,7 +137,7 @@ void ExternalDataSource_Init(
 
    DataSource_EndiannessSwapped_Init(
       &instance->_private.endiannessSwappedDataSource,
-      &instance->_private.endiannessSwappedDataSource.interface,
+      &instance->_private.mappedDataSource.interface,
       &instance->_private.swappedFieldsMap.interface,
       &endianessSwappedSwappedRangesConfiguration,
       false);

@@ -3,7 +3,7 @@
  * @brief File was generated using E2Studio, but has been modified to remove any
  * CPP references and other stuff thats not needed.
  *
- * Copyright General Electric Corporation - GE Confidential - All rights reserved.
+ * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
 /************************************************************************/
