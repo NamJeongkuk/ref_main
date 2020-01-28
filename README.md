@@ -8,6 +8,15 @@ General-purpose RX231 project using the [R5F52318ADFL](https://www.renesas.com/s
 | RAM        | 64 KB  |
 | Data Flash | 8 KB   |
 
+## Mini-Truk
+General-purpose RX231 project using the [R5F52318ADFL](https://www.renesas.com/sg/en/products/microcontrollers-microprocessors/rx/rx200/rx231/device/R5F52318ADFL.html) and a smaller, non-routing boot loader
+
+| Memory     | Size   |
+| ---------- | ------ |
+| Flash      | 512 KB |
+| RAM        | 64 KB  |
+| Data Flash | 8 KB   |
+
 ## Dugnutt
 General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html)
 
