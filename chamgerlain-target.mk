@@ -73,7 +73,7 @@ else
 endif
 
 PACKAGE_CONTENTS:=
-$(call add_to_package,$(OUTPUT_DIR)/$(TARGET).hex,)
+$(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_combined.hex,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
