@@ -26,6 +26,15 @@ General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/u
 | RAM        | 48 KB  |
 | Data Flash | 8 KB   |
 
+## Mini-Dugnutt
+General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html) and a smaller, non-routing boot loader
+
+| Memory     | Size   |
+| ---------- | ------ |
+| Flash      | 512 KB |
+| RAM        | 48 KB  |
+| Data Flash | 8 KB   |
+
 ## Bonzalez
 Tiny STM8 project using the [STM8S003F3U6TR](https://www.st.com/en/microcontrollers-microprocessors/stm8s003f3.html). Includes a tiny data source.
 
