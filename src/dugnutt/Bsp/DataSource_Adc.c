@@ -27,7 +27,7 @@
    MPC.P##port##bit##PFS.BIT.ASEL = 1;
 
 #define EXPAND_AS_ENABLE_CHANNELS_FOR_CONVERSION(name, port, bit, channel) \
-   ((channel < 8) ? (BIT_SET(S12AD.ADANSA0.WORD, channel)) : (BIT_SET(S12AD.ADANSA0.WORD, channel)));
+   ((channel < 8) ? (BIT_SET(S12AD.ADANSA0.WORD, channel)) : (BIT_SET(S12AD.ADANSA1.WORD, (channel - 16))));
 
 #define EXPAND_AS_ERD_ADC_CHANNEL_PAIRS(name, port, bit, channel) \
    {                                                              \
