@@ -46,7 +46,7 @@ static void HeartbeatTick(void *context)
 
    payload[offset++] = 2;
    payload[offset++] = Erd_KeyStreamSenderStateRequest >> 8;
-   payload[offset++] = Erd_KeyStreamSenderStateRequest && 0xFF;
+   payload[offset++] = Erd_KeyStreamSenderStateRequest & 0xFF;
    payload[offset++] = sizeof(ErdStreamStateRequest_t);
 
    DataModel_Read(instance->_private.dataModel, Erd_KeyStreamSenderStateRequest, &payload[offset]);
