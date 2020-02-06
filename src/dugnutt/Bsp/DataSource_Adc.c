@@ -15,7 +15,7 @@
 #include "ConstArrayMap_LinearSearch.h"
 #include "utils.h"
 
-#define ERD_IS_IN_RANGE(erd) (IN_RANGE(Erd_BspAdc_Start + 1, erd, Erd_BspAdc_End))
+#define ERD_IS_IN_RANGE(erd) (IN_RANGE(Erd_BspAdc_Start + 1, erd, Erd_BspAdc_End - 1))
 
 #define EXPAND_AS_SET_PIN_DIRECTIONS(name, port, bit, channel) \
    PORT##port.PDR.BIT.B##bit = 0;

@@ -16,7 +16,7 @@
 
 #define CHANNEL_FROM_ERD(erd) (erd - Erd_BspGpio_Start - 1)
 #define ERD_FROM_CHANNEL(channel) (Erd_BspGpio_Start + 1 + channel)
-#define ERD_IS_IN_RANGE(erd) (IN_RANGE(Erd_BspGpio_Start + 1, erd, Erd_BspGpio_End))
+#define ERD_IS_IN_RANGE(erd) (IN_RANGE(Erd_BspGpio_Start + 1, erd, Erd_BspGpio_End - 1))
 
 #define GPIO_TABLE_EXPAND_AS_GPIO_COUNT(name, direction, pullUp, driveCapacity, port, pin) +1
 
