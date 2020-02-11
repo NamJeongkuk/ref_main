@@ -13,27 +13,20 @@
 #include "SystemErds.h"
 #include "uassert.h"
 
-#define GPIO_ERD_TABLE(ENTRY)                     \
-   ENTRY(Erd_BspGpio_HeartbeatLed, bool)          \
-   ENTRY(Erd_BspGpio_OtherLed, bool)              \
-   ENTRY(Erd_BspGpio_PushButtonSwitch, bool)      \
-   ENTRY(Erd_BspAdc_SomeAnalogInput, AdcCounts_t) \
-   ENTRY(Erd_BspAdc_AnotherAnalogInput, AdcCounts_t)
+#define EXPAND_AS_BSP_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_BSP_, StorageType)(uint8_t MACRO_SAFE_CONCATENATE(erd, Name)[sizeof(DataType)];)
 
-#define EXPAND_AS_OFFSET_STRUCT_MEMBER(Name, DataType) \
-   uint8_t MACRO_SAFE_CONCATENATE(erd, Name)[sizeof(DataType)];
-
-#define EXPAND_AS_CONFIGURATION(Name, DataType) \
-   { Name, OFFSET_OF(DataSourceStorage_t, MACRO_SAFE_CONCATENATE(erd, Name)) },
+#define EXPAND_AS_BSP_CONFIGURATION(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_BSP_, StorageType)({ Name COMMA OFFSET_OF(DataSourceStorage_t, MACRO_SAFE_CONCATENATE(erd, Name)) } COMMA)
 
 typedef struct
 {
-   GPIO_ERD_TABLE(EXPAND_AS_OFFSET_STRUCT_MEMBER)
+   ERD_TABLE(EXPAND_AS_BSP_OFFSET_STRUCT_MEMBER)
 } DataSourceStorage_t;
 
 static const DataSource_RamErdConfigurationElement_t erds[] =
    {
-      GPIO_ERD_TABLE(EXPAND_AS_CONFIGURATION)
+      ERD_TABLE(EXPAND_AS_BSP_CONFIGURATION)
    };
 
 static const ConstArrayMap_LinearSearchConfiguration_t constArrayMapConfig =

@@ -52,21 +52,31 @@
 #define INCLUDE_RAM_Virtual(_x)
 #define INCLUDE_RAM_Nv(_x)
 #define INCLUDE_RAM_Fault(_x)
+#define INCLUDE_RAM_Bsp(_x)
 
 #define INCLUDE_VIRTUAL_Ram(_x)
 #define INCLUDE_VIRTUAL_Virtual(_x) _x
 #define INCLUDE_VIRTUAL_Nv(_x)
 #define INCLUDE_VIRTUAL_Fault(_x)
+#define INCLUDE_VIRTUAL_Bsp(_x)
 
 #define INCLUDE_NV_Ram(_x)
 #define INCLUDE_NV_Virtual(_x)
 #define INCLUDE_NV_Nv(_x) _x
 #define INCLUDE_NV_Fault(_x)
+#define INCLUDE_NV_Bsp(_x)
 
 #define INCLUDE_FAULT_Ram(_x)
 #define INCLUDE_FAULT_Virtual(_x)
 #define INCLUDE_FAULT_Nv(_x)
 #define INCLUDE_FAULT_Fault(_x) _x
+#define INCLUDE_FAULT_Bsp(_x)
+
+#define INCLUDE_BSP_Ram(_x)
+#define INCLUDE_BSP_Virtual(_x)
+#define INCLUDE_BSP_Nv(_x)
+#define INCLUDE_BSP_Fault(_x)
+#define INCLUDE_BSP_Bsp(_x) _x
 
 #define INCLUDE_INPUT_OUTPUT_0(_x)
 #define INCLUDE_INPUT_OUTPUT_1(_x)
@@ -177,11 +187,11 @@ enum
    ENTRY(Erd_ExternalDataSource,                            0xF109, I_DataSource_t *,                                   Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_FaultCodeTableInputGroup,                      0xF10A, I_InputGroup_t *,                                   Swap_N, Io_None, Ram,      NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_OtherLed,                                      0xF201, bool,                                               Swap_N, Io_None, Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_PushButtonSwitch,                              0xF202, bool,                                               Swap_N, Io_All,  Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_SomeAnalogInput,                               0xF203, AdcCounts_t,                                        Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_AnotherAnalogInput,                            0xF204, AdcCounts_t,                                        Swap_Y, Io_None, Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Bsp,      NotNv,                                    NotFault) \
+   ENTRY(Erd_OtherLed,                                      0xF201, bool,                                               Swap_N, Io_None, Bsp,      NotNv,                                    NotFault) \
+   ENTRY(Erd_PushButtonSwitch,                              0xF202, bool,                                               Swap_N, Io_All,  Bsp,      NotNv,                                    NotFault) \
+   ENTRY(Erd_SomeAnalogInput,                               0xF203, AdcCounts_t,                                        Swap_Y, Io_None, Bsp,      NotNv,                                    NotFault) \
+   ENTRY(Erd_AnotherAnalogInput,                            0xF204, AdcCounts_t,                                        Swap_Y, Io_None, Bsp,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData0,     0xF500, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData1,     0xF501, FaultSnapshotData_t,                                Swap_Y, Io_None, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
@@ -209,6 +219,9 @@ enum
 #define EXPAND_AS_VIRTUAL_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_VIRTUAL_, StorageType)(Name = Number COMMA)
 
+#define EXPAND_AS_BSP_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_BSP_, StorageType)(Name = Number COMMA)
+
 #define EXPAND_AS_FAULT_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_FAULT_, StorageType)(Name = Number COMMA)
 
@@ -228,6 +241,7 @@ enum
 {
    ERD_TABLE(EXPAND_AS_NV_ERD_ENUM)
    ERD_TABLE(EXPAND_AS_VIRTUAL_ERD_ENUM)
+   ERD_TABLE(EXPAND_AS_BSP_ERD_ENUM)
    ERD_TABLE(EXPAND_AS_FAULT_ERD_ENUM)
    Erd_Base = (ErdBaseId - 1),
    ERD_TABLE(EXPAND_AS_INTERNAL_RAM_ERD_ENUM)
