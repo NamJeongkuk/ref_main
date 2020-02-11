@@ -78,6 +78,12 @@
 #define INCLUDE_BSP_Fault(_x)
 #define INCLUDE_BSP_Bsp(_x) _x
 
+#define INCLUDE_NON_RAM_Ram(_x)
+#define INCLUDE_NON_RAM_Virtual(_x) _x
+#define INCLUDE_NON_RAM_Nv(_x) _x
+#define INCLUDE_NON_RAM_Fault(_x) _x
+#define INCLUDE_NON_RAM_Bsp(_x) _x
+
 #define INCLUDE_INPUT_OUTPUT_0(_x)
 #define INCLUDE_INPUT_OUTPUT_1(_x)
 #define INCLUDE_INPUT_OUTPUT_2(_x) _x
