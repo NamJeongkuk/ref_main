@@ -7,17 +7,19 @@
 
 #include <string.h>
 #include <stdint.h>
-#include "DataSource_Bsp.h"
+#include "BspDataSource.h"
 #include "DataSource_Ram.h"
 #include "ConstArrayMap_LinearSearch.h"
 #include "SystemErds.h"
 #include "uassert.h"
 
 #define EXPAND_AS_BSP_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_BSP_, StorageType)(uint8_t MACRO_SAFE_CONCATENATE(erd, Name)[sizeof(DataType)];)
+   CONCAT(INCLUDE_BSP_, StorageType)                                                                              \
+   (uint8_t MACRO_SAFE_CONCATENATE(erd, Name)[sizeof(DataType)];)
 
 #define EXPAND_AS_BSP_CONFIGURATION(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_BSP_, StorageType)({ Name COMMA OFFSET_OF(DataSourceStorage_t, MACRO_SAFE_CONCATENATE(erd, Name)) } COMMA)
+   CONCAT(INCLUDE_BSP_, StorageType)                                                                       \
+   ({ Name COMMA OFFSET_OF(DataSourceStorage_t, MACRO_SAFE_CONCATENATE(erd, Name)) } COMMA)
 
 typedef struct
 {
@@ -74,15 +76,23 @@ static uint8_t SizeOf(const I_DataSource_t *instance, const Erd_t erd)
 static const I_DataSource_Api_t api =
    { Read, Write, Has, SizeOf };
 
-I_DataSource_t *DataSource_Bsp_Init(TimerModule_t *timerModule)
+void BspDataSource_Init(
+   BspDataSource_t *_instance,
+   TimerModule_t *timerModule)
 {
-   IGNORE_ARG(timerModule);
+   IGNORE(_instance);
+   IGNORE(timerModule);
 
    ConstArrayMap_LinearSearch_Init(&dataSourceConstArrayMap, &constArrayMapConfig);
    DataSource_Ram_Init(&dataSource, &storage, sizeof(storage), &dataSourceConstArrayMap.interface);
 
    instance.interface.api = &api;
    instance.interface.OnDataChange = dataSource.interface.OnDataChange;
+}
+
+I_DataSource_t *BspDataSource_DataSource(BspDataSource_t *_instance)
+{
+   IGNORE(_instance);
 
    return &instance.interface;
 }
