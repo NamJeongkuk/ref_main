@@ -4,7 +4,7 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [{
-      "name": "TDD launch",
+      "name": "TDD",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/test/Build/multi-target-starter-kit_tests",
@@ -19,24 +19,25 @@
       "osx": {
         "MIMode": "lldb"
       },
+      "preLaunchTask": "tdd_vscode_debug",
     },
     {
-      "name": "Dugnutt launch",
+      "name": "rx130",
       "cwd": "${workspaceRoot}",
       "request": "launch",
       "type": "cortex-debug",
-      "executable": "${workspaceFolder}/build/dugnutt/dugnutt.elf",
+      "executable": "${workspaceFolder}/build/rx130/rx130.elf",
       "device": "R5F51308",
       "servertype": "jlink",
       "interface": "FINE",
-      "jlinkscript": "${workspaceFolder}/build/dugnutt/debug.jlink",
+      "jlinkscript": "${workspaceFolder}/build/rx130/debug.jlink",
       "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
-      "serverpath": "${workspaceFolder}/build/dugnutt/jlink_gdb_server_wrapper.sh",
-      "preLaunchTask": "dugnutt_vscode_debug",
+      "serverpath": "${workspaceFolder}/build/rx130/jlink_gdb_server_wrapper.sh",
+      "preLaunchTask": "rx130_vscode_debug",
       "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx130.svd"
     },
     {
-      "name": "Truk launch",
+      "name": "rx231",
       "cwd": "${workspaceRoot}",
       "request": "launch",
       "type": "cortex-debug",
@@ -51,9 +52,9 @@
       "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx231.svd"
     },
     {
-      "name": "Bonzalez launch",
+      "name": "stm8s",
       "cwd": "${workspaceRoot}",
-      "executable": "${workspaceFolder}/build/bonzalez/bonzalez-debug.elf",
+      "executable": "${workspaceFolder}/build/stm8s/stm8s-debug.elf",
       "request": "launch",
       "type": "cortex-debug",
       "servertype": "openocd",
@@ -61,15 +62,15 @@
       "armToolchainPath": "${workspaceFolder}/tools/sdcc-stm8/stm8-gdb/bin",
       "serverpath": "${workspaceFolder}/tools/sdcc-stm8/openocd/bin/openocd",
       "configFiles": [
-        "${workspaceFolder}/build/bonzalez/bonzalez_debug_openocd.cfg"
+        "${workspaceFolder}/build/stm8s/stm8s_debug_openocd.cfg"
       ],
-      "preLaunchTask": "bonzalez_vscode_debug",
+      "preLaunchTask": "stm8s_vscode_debug",
       "svdFile": "${workspaceFolder}/tools/sdcc-stm8/svd/STM8Sx03.svd"
     },
     {
-      "name": "Chamgerlain launch",
+      "name": "stm8s-cap-touch",
       "cwd": "${workspaceRoot}",
-      "executable": "${workspaceFolder}/build/chamgerlain/chamgerlain-debug.elf",
+      "executable": "${workspaceFolder}/build/stm8s-cap-touch/stm8s-cap-touch-debug.elf",
       "request": "launch",
       "type": "cortex-debug",
       "servertype": "openocd",
@@ -77,37 +78,37 @@
       "armToolchainPath": "${workspaceFolder}/tools/sdcc-stm8/stm8-gdb/bin",
       "serverpath": "${workspaceFolder}/tools/sdcc-stm8/openocd/bin/openocd",
       "configFiles": [
-        "${workspaceFolder}/build/chamgerlain/chamgerlain_debug_openocd.cfg"
+        "${workspaceFolder}/build/stm8s-cap-touch/stm8s-cap-touch_debug_openocd.cfg"
       ],
-      "preLaunchTask": "chamgerlain_vscode_debug"
+      "preLaunchTask": "stm8s-cap-touch_vscode_debug"
     },
     {
-      "name": "McSriff launch",
+      "name": "stm32f3",
       "cwd": "${workspaceRoot}",
       "request": "launch",
       "type": "cortex-debug",
-      "executable": "${workspaceFolder}/build/mcsriff/mcsriff.elf",
+      "executable": "${workspaceFolder}/build/stm32f3/stm32f3.elf",
       "device": "STM32F303RB",
       "servertype": "jlink",
       "interface": "swd",
       "armToolchainPath": "${workspaceFolder}/tools/gcc-arm-none-eabi/tc/bin/",
-      "serverpath": "${workspaceFolder}/build/mcsriff/jlink_gdb_server_wrapper.sh",
-      "preLaunchTask": "mcsriff_vscode_debug",
+      "serverpath": "${workspaceFolder}/build/stm32f3/jlink_gdb_server_wrapper.sh",
+      "preLaunchTask": "stm32f3_vscode_debug",
       "svdFile": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32F3xx/Libraries/CMSIS/SVD/STM32F303x.svd"
     },
     {
-      "name": "Wesrey launch",
+      "name": "rx130-cap-touch-client",
       "cwd": "${workspaceRoot}",
       "request": "launch",
       "type": "cortex-debug",
-      "executable": "${workspaceFolder}/build/wesrey/wesrey.elf",
+      "executable": "${workspaceFolder}/build/rx130-cap-touch-client/rx130-cap-touch-client.elf",
       "device": "R5F51308",
       "servertype": "jlink",
       "interface": "FINE",
-      "jlinkscript": "${workspaceFolder}/build/wesrey/debug.jlink",
+      "jlinkscript": "${workspaceFolder}/build/rx130-cap-touch-client/debug.jlink",
       "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
-      "serverpath": "${workspaceFolder}/build/wesrey/jlink_gdb_server_wrapper.sh",
-      "preLaunchTask": "wesrey_vscode_debug",
+      "serverpath": "${workspaceFolder}/build/rx130-cap-touch-client/jlink_gdb_server_wrapper.sh",
+      "preLaunchTask": "rx130-cap-touch-client_vscode_debug",
       "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx130.svd"
     }
   ]

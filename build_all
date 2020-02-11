@@ -12,13 +12,19 @@ else
    exit 1
 fi
 
-$MAKE -f dugnutt-target.mk -j16 RELEASE=Y DEBUG=N clean &&
-   $MAKE -f dugnutt-target.mk -j16 RELEASE=Y DEBUG=N package &&
-   $MAKE -f truk-target.mk -j16 RELEASE=Y DEBUG=N clean &&
-   $MAKE -f truk-target.mk -j16 RELEASE=Y DEBUG=N package &&
-   make -f bonzalez-target.mk -j16 RELEASE=Y DEBUG=N clean &&
-   make -f bonzalez-target.mk -j16 RELEASE=Y DEBUG=N package &&
-   make -f chamgerlain-target.mk -j16 RELEASE=Y DEBUG=N clean &&
-   make -f chamgerlain-target.mk -j16 RELEASE=Y DEBUG=N package &&
-   make -f mcsriff-target.mk -j16 RELEASE=Y DEBUG=N clean &&
-   make -f mcsriff-target.mk -j16 RELEASE=Y DEBUG=N package
+$MAKE -f rx130-target.mk -j16 RELEASE=Y DEBUG=N clean &&
+   $MAKE -f rx130-target.mk -j16 RELEASE=Y DEBUG=N package &&
+   $MAKE -f rx231-target.mk -j16 RELEASE=Y DEBUG=N clean &&
+   $MAKE -f rx231-target.mk -j16 RELEASE=Y DEBUG=N package &&
+   make -f stm8s-target.mk -j16 RELEASE=Y DEBUG=N clean &&
+   make -f stm8s-target.mk -j16 RELEASE=Y DEBUG=N package &&
+   make -f stm8s-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N clean &&
+   make -f stm8s-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N package &&
+   make -f stm32f3-target.mk -j16 RELEASE=Y DEBUG=N clean &&
+   make -f stm32f3-target.mk -j16 RELEASE=Y DEBUG=N package &&
+   $MAKE -f rx130-cap-touch-client-target.mk -j16 RELEASE=Y DEBUG=N clean &&
+   $MAKE -f rx130-cap-touch-client-target.mk -j16 RELEASE=Y DEBUG=N package &&
+   $MAKE -f mini-rx130-target.mk -j16 RELEASE=Y DEBUG=N clean &&
+   $MAKE -f mini-rx130-target.mk -j16 RELEASE=Y DEBUG=N package &&
+   $MAKE -f mini-rx231-target.mk -j16 RELEASE=Y DEBUG=N clean &&
+   $MAKE -f mini-rx231-target.mk -j16 RELEASE=Y DEBUG=N package

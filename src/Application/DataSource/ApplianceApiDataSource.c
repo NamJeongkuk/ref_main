@@ -7,17 +7,7 @@
 
 #include "ApplianceApiDataSource.h"
 #include "SystemErds.h"
-
-#ifdef TDD_BUILD
-static const ImageHeader_t bootLoaderHeader;
-static const ImageHeader_t applicationHeader;
-static const ImageHeader_t parametricHeader;
-#define BootLoaderImageHeader &bootLoaderHeader
-#define ApplicationImageHeader &applicationHeader
-#define ParametricImageHeader &parametricHeader
-#else
 #include "Header.h"
-#endif
 
 // clang-format off
 static DataSource_ApplianceApiRevision1Configuration_t applianceApiConfiguration =

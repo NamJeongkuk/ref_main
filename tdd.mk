@@ -30,8 +30,8 @@ INCLUDE_DIRS = \
    $(APPLCOMMON_DIR)/Image \
    $(PROJECT_DIR)/Application/Plugins \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \
-   $(PROJECT_DIR)/dugnutt/Bsp \
-   $(PROJECT_DIR)/dugnutt/Hardware \
+   $(PROJECT_DIR)/rx130/Bsp \
+   $(PROJECT_DIR)/rx130/Hardware \
 
 include $(APPLCOMMON_DIR)/Makefile
 
