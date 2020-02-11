@@ -219,17 +219,8 @@ enum
 #define EXPAND_AS_INTERNAL_RAM_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)(Name COMMA)
 
-#define EXPAND_AS_NV_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_NV_, StorageType)(Name = Number COMMA)
-
-#define EXPAND_AS_VIRTUAL_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_VIRTUAL_, StorageType)(Name = Number COMMA)
-
-#define EXPAND_AS_BSP_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_BSP_, StorageType)(Name = Number COMMA)
-
-#define EXPAND_AS_FAULT_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_FAULT_, StorageType)(Name = Number COMMA)
+#define EXPAND_AS_NON_RAM_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_NON_RAM_, StorageType)(Name = Number COMMA)
 
 #define EXPAND_AS_PUBLIC_ERD_ENUM(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
    Public##Name = Number,
@@ -245,10 +236,7 @@ enum
 
 enum
 {
-   ERD_TABLE(EXPAND_AS_NV_ERD_ENUM)
-   ERD_TABLE(EXPAND_AS_VIRTUAL_ERD_ENUM)
-   ERD_TABLE(EXPAND_AS_BSP_ERD_ENUM)
-   ERD_TABLE(EXPAND_AS_FAULT_ERD_ENUM)
+   ERD_TABLE(EXPAND_AS_NON_RAM_ERD_ENUM)
    Erd_Base = (ErdBaseId - 1),
    ERD_TABLE(EXPAND_AS_INTERNAL_RAM_ERD_ENUM)
 };
