@@ -4,7 +4,7 @@ const kpit_rx_base = require('./tools/kpit-rx/dmake');
 const iar_stm8_base = require('./tools/iar-stm8-wine/dmake');
 
 module.exports = {
-  'dugnutt-target.mk': {
+  'rx130-target.mk': {
     ...kpit_rx_base,
     options: {
       ...kpit_rx_base.options,
@@ -15,7 +15,7 @@ module.exports = {
       ]
     }
   },
-  'truk-target.mk': {
+  'rx231-target.mk': {
     ...kpit_rx_base,
     options: {
       ...kpit_rx_base.options,
@@ -26,7 +26,7 @@ module.exports = {
       ]
     }
   },
-  'bonzalez-target.mk': {
+  'stm8s-target.mk': {
     ...iar_stm8_base,
     options: {
       ...iar_stm8_base.options,
@@ -37,7 +37,7 @@ module.exports = {
       ]
     }
   },
-  'chamgerlain-target.mk': {
+  'stm8s-cap-touch-target.mk': {
     ...iar_stm8_base,
     options: {
       ...iar_stm8_base.options,
@@ -48,7 +48,7 @@ module.exports = {
       ]
     }
   },
-  'wesrey-target.mk': {
+  'rx130-cap-touch-client-target.mk': {
     ...kpit_rx_base,
     options: {
       ...kpit_rx_base.options,
