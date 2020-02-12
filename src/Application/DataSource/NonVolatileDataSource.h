@@ -47,7 +47,7 @@ typedef struct
       DataSource_CachedAsyncDataSource_t sync;
       ConstArrayMap_BinarySearch_t syncMap;
       NonVolatileDataSourceSyncCache_t syncCache;
-      NonVolatileDataSourceSyncWriteCache_t writeCache;
+      NonVolatileDataSourceSyncWriteCache_t syncWriteCache;
       InputGroup_NonVolatileDataSourceDefaultData_t defaultDataInputGroup;
       uint8_t syncMetadataCache[sizeof(NonVolatileDataSourceSyncCache_t) / 8];
    } _private;
