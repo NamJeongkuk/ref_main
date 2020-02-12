@@ -105,6 +105,7 @@ void NonVolatileDataSource_Init(
       &instance->_private.syncMetadataCache,
       &instance->_private.syncCache,
       sizeof(instance->_private.syncCache),
+      &instance->_private.writeCache,
       &onReadyAction.interface);
 
    while(!ready)
