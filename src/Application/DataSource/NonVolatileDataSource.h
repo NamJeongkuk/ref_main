@@ -35,6 +35,14 @@ typedef struct
    ERD_TABLE(EXPAND_AS_NON_VOLATILE_DATA_SOURCE_OFFSET_STRUCT_MEMBER)
 } NonVolatileDataSourceSyncCache_t;
 
+#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_COUNT_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_NV_, StorageType)(uint8_t CONCAT(erd, Name);)
+
+typedef struct
+{
+   ERD_TABLE(EXPAND_AS_NON_VOLATILE_DATA_SOURCE_COUNT_STRUCT_MEMBER)
+} NonVolatileDataSourceErdCount_t;
+
 typedef NonVolatileDataSourceReadWriteBuffer_t NonVolatileDataSourceSyncWriteCache_t;
 
 typedef struct
@@ -49,7 +57,7 @@ typedef struct
       NonVolatileDataSourceSyncCache_t syncCache;
       NonVolatileDataSourceSyncWriteCache_t syncWriteCache;
       InputGroup_NonVolatileDataSourceDefaultData_t defaultDataInputGroup;
-      uint8_t syncMetadataCache[sizeof(NonVolatileDataSourceSyncCache_t) / 8];
+      uint8_t syncMetadataCache[sizeof(NonVolatileDataSourceErdCount_t) / 8 + 1];
    } _private;
 } NonVolatileDataSource_t;
 
