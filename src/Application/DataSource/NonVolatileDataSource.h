@@ -35,6 +35,8 @@ typedef struct
    ERD_TABLE(EXPAND_AS_NON_VOLATILE_DATA_SOURCE_OFFSET_STRUCT_MEMBER)
 } NonVolatileDataSourceSyncCache_t;
 
+typedef NonVolatileDataSourceReadWriteBuffer_t NonVolatileDataSourceSyncWriteCache_t;
+
 typedef struct
 {
    struct
@@ -45,6 +47,7 @@ typedef struct
       DataSource_CachedAsyncDataSource_t sync;
       ConstArrayMap_BinarySearch_t syncMap;
       NonVolatileDataSourceSyncCache_t syncCache;
+      NonVolatileDataSourceSyncWriteCache_t syncWriteCache;
       InputGroup_NonVolatileDataSourceDefaultData_t defaultDataInputGroup;
       uint8_t syncMetadataCache[sizeof(NonVolatileDataSourceSyncCache_t) / 8];
    } _private;
