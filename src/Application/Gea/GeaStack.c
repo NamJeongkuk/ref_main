@@ -62,20 +62,17 @@ static void InitializeErdSecurityComponents(
    GeaStack_t *instance,
    I_DataModel_t *dataModel)
 {
-   // Set the ErdGea2Unlock State by an unlock gea2 command or a lock gea2 command
    Input_ErdGea2UnlockState_Init(
       &instance->_private.erdSecurity.erdGea2UnlockStateInput,
       instance->_private.packetEndpoint,
       UnlockErdSecurityPeriodMsec,
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule));
 
-   // Validate if restricted range erd is valid or not
    Validator_RestrictedRangeErd_Init(
       &instance->_private.erdSecurity.restrictedRangeErdValidator,
       &instance->_private.erdSecurity.erdGea2UnlockStateInput.interface,
       &restrictedRangeConfiguration);
 
-   // Wrap GEA2PacketEndPoint to restrict GEA2Packet using Validator
    Gea2PacketEndpoint_PacketRestrictor_Init(
       &instance->_private.erdSecurity.restrictedErdPacketRestrictor,
       instance->_private.packetEndpoint,
@@ -121,7 +118,6 @@ static void CreatePacketAndMessageEndpoints(
          &instance->_private.applicationPacketEndpointResources,
          geaAddress);
 
-   // Validate if Erds in the restricted range are restricted
    InitializeErdSecurityComponents(instance, dataModel);
 
    Gea2MessageEndpoint_Gea2PacketEndpointAdapter_Init(
