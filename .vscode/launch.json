@@ -48,7 +48,7 @@
       "jlinkscript": "${workspaceFolder}/build/rx231/debug.jlink",
       "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
       "serverpath": "${workspaceFolder}/build/rx231/jlink_gdb_server_wrapper.sh",
-      "preLaunchTask": "truk_vscode_debug",
+      "preLaunchTask": "rx231_vscode_debug",
       "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx231.svd"
     },
     {
