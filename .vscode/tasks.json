@@ -29,6 +29,19 @@
       }
     },
     {
+      "label": "rx130-cap-touch-client_vscode_debug",
+      "type": "shell",
+      "command": "make RELEASE=N DEBUG=Y -f rx130-cap-touch-client-target.mk vscode_debug",
+      "presentation": {
+        "echo": false,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false
+      }
+    },
+    {
       "label": "rx231_vscode_debug",
       "type": "shell",
       "command": "make RELEASE=N DEBUG=Y -f rx231-target.mk vscode_debug",
@@ -38,6 +51,19 @@
         "focus": false,
         "panel": "shared",
         "showReuseMessage": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "stm32f3_vscode_debug",
+      "type": "shell",
+      "command": "make -f stm32f3-target.mk RELEASE=N DEBUG=Y vscode_debug",
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
         "clear": false
       }
     },
@@ -64,32 +90,6 @@
         "focus": false,
         "panel": "shared",
         "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "stm32f3_vscode_debug",
-      "type": "shell",
-      "command": "make -f stm32f3-target.mk RELEASE=N DEBUG=Y vscode_debug",
-      "presentation": {
-        "echo": true,
-        "reveal": "silent",
-        "focus": false,
-        "panel": "shared",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "rx130-cap-touch-client_vscode_debug",
-      "type": "shell",
-      "command": "make RELEASE=N DEBUG=Y -f rx130-cap-touch-client-target.mk vscode_debug",
-      "presentation": {
-        "echo": false,
-        "reveal": "silent",
-        "focus": false,
-        "panel": "shared",
-        "showReuseMessage": false,
         "clear": false
       }
     }
