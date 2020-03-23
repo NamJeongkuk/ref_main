@@ -52,9 +52,9 @@
       "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx231.svd"
     },
     {
-      "name": "stm8s",
+      "name": "nano-stm8s",
       "cwd": "${workspaceRoot}",
-      "executable": "${workspaceFolder}/build/stm8s/stm8s-debug.elf",
+      "executable": "${workspaceFolder}/build/nano-stm8s/nano-stm8s-debug.elf",
       "request": "launch",
       "type": "cortex-debug",
       "servertype": "openocd",
@@ -62,15 +62,15 @@
       "armToolchainPath": "${workspaceFolder}/tools/sdcc-stm8/stm8-gdb/bin",
       "serverpath": "${workspaceFolder}/tools/sdcc-stm8/openocd/bin/openocd",
       "configFiles": [
-        "${workspaceFolder}/build/stm8s/stm8s_debug_openocd.cfg"
+        "${workspaceFolder}/build/nano-stm8s/nano-stm8s_debug_openocd.cfg"
       ],
-      "preLaunchTask": "stm8s_vscode_debug",
+      "preLaunchTask": "nano-stm8s_vscode_debug",
       "svdFile": "${workspaceFolder}/tools/sdcc-stm8/svd/STM8Sx03.svd"
     },
     {
-      "name": "stm8s-cap-touch",
+      "name": "nano-stm8s-cap-touch",
       "cwd": "${workspaceRoot}",
-      "executable": "${workspaceFolder}/build/stm8s-cap-touch/stm8s-cap-touch-debug.elf",
+      "executable": "${workspaceFolder}/build/nano-stm8s-cap-touch/nano-stm8s-cap-touch-debug.elf",
       "request": "launch",
       "type": "cortex-debug",
       "servertype": "openocd",
@@ -78,9 +78,9 @@
       "armToolchainPath": "${workspaceFolder}/tools/sdcc-stm8/stm8-gdb/bin",
       "serverpath": "${workspaceFolder}/tools/sdcc-stm8/openocd/bin/openocd",
       "configFiles": [
-        "${workspaceFolder}/build/stm8s-cap-touch/stm8s-cap-touch_debug_openocd.cfg"
+        "${workspaceFolder}/build/nano-stm8s-cap-touch/nano-stm8s-cap-touch_debug_openocd.cfg"
       ],
-      "preLaunchTask": "stm8s-cap-touch_vscode_debug"
+      "preLaunchTask": "nano-stm8s-cap-touch_vscode_debug"
     },
     {
       "name": "stm32f3",
