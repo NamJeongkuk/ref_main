@@ -6,7 +6,7 @@ else
    include tools/sdcc-stm8/sdcc-stm8.mk
 endif
 
-TARGET:=stm8s
+TARGET:=nano-stm8s
 OUTPUT_DIR:=build/$(TARGET)
 APPLCOMMON_TINY_DIR=lib/applcommon-tiny
 APPLCOMMON_DIR=$(APPLCOMMON_TINY_DIR)/lib/applcommon

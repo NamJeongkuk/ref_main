@@ -4,27 +4,34 @@ set -e
 OPERATING_SYSTEM=$(uname)
 
 if [[ $OPERATING_SYSTEM == 'Linux' ]]; then
-   MAKE=make
+   RX_MAKE=make
 elif [[ $OPERATING_SYSTEM == 'Darwin' ]]; then
-   MAKE=dmake
+   RX_MAKE=dmake
 else
    echo 'Unsupported operating system!'
    exit 1
 fi
 
-$MAKE -f rx130-target.mk -j16 RELEASE=Y DEBUG=N clean &&
-   $MAKE -f rx130-target.mk -j16 RELEASE=Y DEBUG=N package &&
-   $MAKE -f rx231-target.mk -j16 RELEASE=Y DEBUG=N clean &&
-   $MAKE -f rx231-target.mk -j16 RELEASE=Y DEBUG=N package &&
-   make -f stm8s-target.mk -j16 RELEASE=Y DEBUG=N clean &&
-   make -f stm8s-target.mk -j16 RELEASE=Y DEBUG=N package &&
-   make -f stm8s-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N clean &&
-   make -f stm8s-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N package &&
-   make -f stm32f3-target.mk -j16 RELEASE=Y DEBUG=N clean &&
-   make -f stm32f3-target.mk -j16 RELEASE=Y DEBUG=N package &&
-   $MAKE -f rx130-cap-touch-client-target.mk -j16 RELEASE=Y DEBUG=N clean &&
-   $MAKE -f rx130-cap-touch-client-target.mk -j16 RELEASE=Y DEBUG=N package &&
-   $MAKE -f mini-rx130-target.mk -j16 RELEASE=Y DEBUG=N clean &&
-   $MAKE -f mini-rx130-target.mk -j16 RELEASE=Y DEBUG=N package &&
-   $MAKE -f mini-rx231-target.mk -j16 RELEASE=Y DEBUG=N clean &&
-   $MAKE -f mini-rx231-target.mk -j16 RELEASE=Y DEBUG=N package
+$RX_MAKE -f rx130-target.mk -j16 RELEASE=Y DEBUG=N clean
+$RX_MAKE -f rx130-target.mk -j16 RELEASE=Y DEBUG=N package
+
+$RX_MAKE -f mini-rx130-target.mk -j16 RELEASE=Y DEBUG=N clean
+$RX_MAKE -f mini-rx130-target.mk -j16 RELEASE=Y DEBUG=N package
+
+$RX_MAKE -f rx130-cap-touch-client-target.mk -j16 RELEASE=Y DEBUG=N clean
+$RX_MAKE -f rx130-cap-touch-client-target.mk -j16 RELEASE=Y DEBUG=N package
+
+$RX_MAKE -f rx231-target.mk -j16 RELEASE=Y DEBUG=N clean
+$RX_MAKE -f rx231-target.mk -j16 RELEASE=Y DEBUG=N package
+
+$RX_MAKE -f mini-rx231-target.mk -j16 RELEASE=Y DEBUG=N clean
+$RX_MAKE -f mini-rx231-target.mk -j16 RELEASE=Y DEBUG=N package
+
+make -f stm32f3-target.mk -j16 RELEASE=Y DEBUG=N clean
+make -f stm32f3-target.mk -j16 RELEASE=Y DEBUG=N package
+
+make -f nano-stm8s-target.mk -j16 RELEASE=Y DEBUG=N clean
+make -f nano-stm8s-target.mk -j16 RELEASE=Y DEBUG=N package
+
+make -f nano-stm8s-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N clean
+make -f nano-stm8s-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N package

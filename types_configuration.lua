@@ -6,6 +6,8 @@ return {
     'max_align_t',
     'KeyErdStreamData_t'
   },
+
   -- Types that can't be automatically generated but need to be defined
-  type_overrides = {}
+  type_overrides = {
+  }
 }

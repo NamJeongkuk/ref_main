@@ -29,9 +29,9 @@
       }
     },
     {
-      "label": "rx231_vscode_debug",
+      "label": "rx130-cap-touch-client_vscode_debug",
       "type": "shell",
-      "command": "make RELEASE=N DEBUG=Y -f rx231-target.mk vscode_debug",
+      "command": "make RELEASE=N DEBUG=Y -f rx130-cap-touch-client-target.mk vscode_debug",
       "presentation": {
         "echo": false,
         "reveal": "silent",
@@ -42,28 +42,15 @@
       }
     },
     {
-      "label": "stm8s_vscode_debug",
+      "label": "rx231_vscode_debug",
       "type": "shell",
-      "command": "make -f stm8s-target.mk RELEASE=N DEBUG=Y debug-vscode build/stm8s/stm8s-debug.elf",
+      "command": "make RELEASE=N DEBUG=Y -f rx231-target.mk vscode_debug",
       "presentation": {
-        "echo": true,
+        "echo": false,
         "reveal": "silent",
         "focus": false,
         "panel": "shared",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "stm8s-cap-touch_vscode_debug",
-      "type": "shell",
-      "command": "make -f stm8s-cap-touch-target.mk RELEASE=N DEBUG=Y debug-vscode build/stm8s-cap-touch/stm8s-cap-touch-debug.elf",
-      "presentation": {
-        "echo": true,
-        "reveal": "silent",
-        "focus": false,
-        "panel": "shared",
-        "showReuseMessage": true,
+        "showReuseMessage": false,
         "clear": false
       }
     },
@@ -81,15 +68,28 @@
       }
     },
     {
-      "label": "rx130-cap-touch-client_vscode_debug",
+      "label": "nano-stm8s_vscode_debug",
       "type": "shell",
-      "command": "make RELEASE=N DEBUG=Y -f rx130-cap-touch-client-target.mk vscode_debug",
+      "command": "make -f nano-stm8s-target.mk RELEASE=N DEBUG=Y debug-vscode build/nano-stm8s/nano-stm8s-debug.elf",
       "presentation": {
-        "echo": false,
+        "echo": true,
         "reveal": "silent",
         "focus": false,
         "panel": "shared",
-        "showReuseMessage": false,
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "nano-stm8s-cap-touch_vscode_debug",
+      "type": "shell",
+      "command": "make -f nano-stm8s-cap-touch-target.mk RELEASE=N DEBUG=Y debug-vscode build/nano-stm8s-cap-touch/nano-stm8s-cap-touch-debug.elf",
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
         "clear": false
       }
     }

@@ -3,7 +3,8 @@
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
-  "configurations": [{
+  "configurations": [
+    {
       "name": "TDD",
       "type": "cppdbg",
       "request": "launch",
@@ -37,6 +38,21 @@
       "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx130.svd"
     },
     {
+      "name": "rx130-cap-touch-client",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "type": "cortex-debug",
+      "executable": "${workspaceFolder}/build/rx130-cap-touch-client/rx130-cap-touch-client.elf",
+      "device": "R5F51308",
+      "servertype": "jlink",
+      "interface": "FINE",
+      "jlinkscript": "${workspaceFolder}/build/rx130-cap-touch-client/debug.jlink",
+      "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
+      "serverpath": "${workspaceFolder}/build/rx130-cap-touch-client/jlink_gdb_server_wrapper.sh",
+      "preLaunchTask": "rx130-cap-touch-client_vscode_debug",
+      "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx130.svd"
+    },
+    {
       "name": "rx231",
       "cwd": "${workspaceRoot}",
       "request": "launch",
@@ -50,37 +66,6 @@
       "serverpath": "${workspaceFolder}/build/rx231/jlink_gdb_server_wrapper.sh",
       "preLaunchTask": "rx231_vscode_debug",
       "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx231.svd"
-    },
-    {
-      "name": "stm8s",
-      "cwd": "${workspaceRoot}",
-      "executable": "${workspaceFolder}/build/stm8s/stm8s-debug.elf",
-      "request": "launch",
-      "type": "cortex-debug",
-      "servertype": "openocd",
-      "runToMain": true,
-      "armToolchainPath": "${workspaceFolder}/tools/sdcc-stm8/stm8-gdb/bin",
-      "serverpath": "${workspaceFolder}/tools/sdcc-stm8/openocd/bin/openocd",
-      "configFiles": [
-        "${workspaceFolder}/build/stm8s/stm8s_debug_openocd.cfg"
-      ],
-      "preLaunchTask": "stm8s_vscode_debug",
-      "svdFile": "${workspaceFolder}/tools/sdcc-stm8/svd/STM8Sx03.svd"
-    },
-    {
-      "name": "stm8s-cap-touch",
-      "cwd": "${workspaceRoot}",
-      "executable": "${workspaceFolder}/build/stm8s-cap-touch/stm8s-cap-touch-debug.elf",
-      "request": "launch",
-      "type": "cortex-debug",
-      "servertype": "openocd",
-      "runToMain": true,
-      "armToolchainPath": "${workspaceFolder}/tools/sdcc-stm8/stm8-gdb/bin",
-      "serverpath": "${workspaceFolder}/tools/sdcc-stm8/openocd/bin/openocd",
-      "configFiles": [
-        "${workspaceFolder}/build/stm8s-cap-touch/stm8s-cap-touch_debug_openocd.cfg"
-      ],
-      "preLaunchTask": "stm8s-cap-touch_vscode_debug"
     },
     {
       "name": "stm32f3",
@@ -97,19 +82,35 @@
       "svdFile": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32F3xx/Libraries/CMSIS/SVD/STM32F303x.svd"
     },
     {
-      "name": "rx130-cap-touch-client",
+      "name": "nano-stm8s",
       "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/nano-stm8s/nano-stm8s-debug.elf",
       "request": "launch",
       "type": "cortex-debug",
-      "executable": "${workspaceFolder}/build/rx130-cap-touch-client/rx130-cap-touch-client.elf",
-      "device": "R5F51308",
-      "servertype": "jlink",
-      "interface": "FINE",
-      "jlinkscript": "${workspaceFolder}/build/rx130-cap-touch-client/debug.jlink",
-      "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
-      "serverpath": "${workspaceFolder}/build/rx130-cap-touch-client/jlink_gdb_server_wrapper.sh",
-      "preLaunchTask": "rx130-cap-touch-client_vscode_debug",
-      "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx130.svd"
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceFolder}/tools/sdcc-stm8/stm8-gdb/bin",
+      "serverpath": "${workspaceFolder}/tools/sdcc-stm8/openocd/bin/openocd",
+      "configFiles": [
+        "${workspaceFolder}/build/nano-stm8s/nano-stm8s_debug_openocd.cfg"
+      ],
+      "preLaunchTask": "nano-stm8s_vscode_debug",
+      "svdFile": "${workspaceFolder}/tools/sdcc-stm8/svd/STM8Sx03.svd"
+    },
+    {
+      "name": "nano-stm8s-cap-touch",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/nano-stm8s-cap-touch/nano-stm8s-cap-touch-debug.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceFolder}/tools/sdcc-stm8/stm8-gdb/bin",
+      "serverpath": "${workspaceFolder}/tools/sdcc-stm8/openocd/bin/openocd",
+      "configFiles": [
+        "${workspaceFolder}/build/nano-stm8s-cap-touch/nano-stm8s-cap-touch_debug_openocd.cfg"
+      ],
+      "preLaunchTask": "nano-stm8s-cap-touch_vscode_debug"
     }
   ]
 }
