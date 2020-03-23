@@ -2,7 +2,8 @@
 This includes starter kit projects for most commonly-used microcontrollers.
 
 Projects are named after the target microcontroller and are broken down into 3 main categories:
-- Projects with the `nano-` prefix either do not use boot loaders or use a micro-specific boot loader, use `applcommon.tiny` instead of `applcommon.applcommon`, and are optimized for minimum resource usage.
+- Projects with the `nano-` prefix either do not use boot loaders or use a micro-specific boot loader, use `applcommon.tiny` instead of `applcommon.applcommon`, and are optimized for minimum RAM/ROM usage.
+- Projects with the `micro-` prefix use non-routing capable boot loaders, use `applcommon.tiny` instead of `applcommon.applcommon`, and are optimized for minimum RAM/ROM usage.
 - Projects with the `mini-` prefix use non-routing capable boot loaders but are otherwise general-purpose projects using `applcommon.applcommon`.
 - Projects with no prefix use routing capable boot loaders and are general-purpose projects using `applcommon.applcommon`.
 
