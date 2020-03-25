@@ -10,7 +10,7 @@
 #include "Iwdg.h"
 #include "Pa4Heartbeat.h"
 #include "TinyTimeSource_Tim4SystemTick.h"
-#include "TinyUart_Uart3.h"
+#include "TinyUart_Uart2.h"
 #include "TinyTimer.h"
 #include "GeaStack.h"
 #include "Gea2Addresses.h"
@@ -74,7 +74,7 @@ void main(void)
 
       GeaStack_Init(
          &geaStack,
-         TinyUart_Uart3_Init(),
+         TinyUart_Uart2_Init(),
          BonzalezGeaAddress);
    }
    enableInterrupts();

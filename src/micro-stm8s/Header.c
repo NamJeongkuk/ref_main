@@ -15,7 +15,9 @@ enum
    DummyCrc = 0x1234,
 
    HardwareVersion = 1,
-   ImageId = 1
+   ImageId = 1,
+
+   ApplicationHeaderSize = sizeof(ImageHeader_t) - sizeof(FlashPageRecord_t) * (ImageHeaderMaxFlashPageCount - 1)
 };
 
 static const ImageHeader_t __at(ApplicationHeaderAddress) applicationHeader =
@@ -41,14 +43,9 @@ static const ImageHeader_t __at(ApplicationHeaderAddress) applicationHeader =
       0,
       0,
 
-      // fixme this needs to point to the vector table
-      // this can probably be done by placing the vector table right after
-      // the header using the linker flag
-      0,
-      // fixme oh shit also the boot loader needs to relocate the vector table
-      // in the boot loader we need to figure out how to not CRC this (can we exclude
-      // it from the image somehow without it getting trimmed?) and then make sure we
-      // verify that it has been relocated before jumping to the application
+      // The application vector table is placed right after the application
+      // header using the --code-loc flag in the makefile
+      ApplicationHeaderAddress + ApplicationHeaderSize,
 
       ImageHeaderFillValue,
       ImageHeaderFillValue,
