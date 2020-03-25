@@ -12,10 +12,10 @@ BOOT_LOADER_DIR=lib/boot-loaders
 HEX_LINKER_OPTIONS=--code-loc 0xA028
 
 # Configures the STM8S headers for your part
-DEVICE_TYPE:=STM8S207
+DEVICE_TYPE:=STM8S105
 
 OPENOCD_TARGET:=target/stm8s.cfg
-STM8FLASH_PART:=stm8s207cb
+STM8FLASH_PART:=stm8s105c6
 STM8FLASH_PROGRAMMER:=stlinkv2
 ENDIANNESS:=big
 
