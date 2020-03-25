@@ -17,7 +17,7 @@ enum
    HardwareVersion = 1,
    ImageId = 1,
 
-   ApplicationHeaderSize = sizeof(ImageHeader_t) - sizeof(FlashPageRecord_t) * (ImageHeaderMaxFlashPageCount - 1)
+   ApplicationHeaderSize = sizeof(ImageHeader_t)
 };
 
 static const ImageHeader_t __at(ApplicationHeaderAddress) applicationHeader =
@@ -45,7 +45,7 @@ static const ImageHeader_t __at(ApplicationHeaderAddress) applicationHeader =
 
       // The application vector table is placed right after the application
       // header using the --code-loc flag in the makefile
-      ApplicationStart + ApplicationHeaderSize,
+      ApplicationStart + sizeof(ImageHeader_t),
 
       ImageHeaderFillValue,
       ImageHeaderFillValue,
