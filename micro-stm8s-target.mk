@@ -88,8 +88,9 @@ target: $(OUTPUT_DIR)/$(TARGET).apl
 boot-loader:
 	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(TARGET)-boot-loader.mk RELEASE=Y DEBUG=N
 
+# Overlap is allowed during concatenate because the boot loader is not stripped
 $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot: target boot-loader
-	@$(LUA53) $(SREC_CONCATENATE) --input $(BOOT_LOADER_DIR)/build/$(TARGET)-boot-loader/$(TARGET)-boot-loader.mot $(OUTPUT_DIR)/$(TARGET).apl --output $@
+	@$(LUA53) $(SREC_CONCATENATE) --allow_overlap --input $(BOOT_LOADER_DIR)/build/$(TARGET)-boot-loader/$(TARGET)-boot-loader.mot $(OUTPUT_DIR)/$(TARGET).apl --output $@
 
 $(OUTPUT_DIR)/doc:
 	@mkdir -p $(OUTPUT_DIR)/doc

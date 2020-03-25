@@ -36,7 +36,7 @@ static const ImageHeader_t __at(ApplicationHeaderAddress) applicationHeader =
 
       HardwareVersion,
 
-      ImageType_BootLoader,
+      ImageType_Application,
       ImageHeaderFillValue,
 
       0,
@@ -45,7 +45,7 @@ static const ImageHeader_t __at(ApplicationHeaderAddress) applicationHeader =
 
       // The application vector table is placed right after the application
       // header using the --code-loc flag in the makefile
-      ApplicationHeaderAddress + ApplicationHeaderSize,
+      ApplicationStart + ApplicationHeaderSize,
 
       ImageHeaderFillValue,
       ImageHeaderFillValue,
