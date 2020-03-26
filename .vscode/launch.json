@@ -82,6 +82,22 @@
       "svdFile": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32F3xx/Libraries/CMSIS/SVD/STM32F303x.svd"
     },
     {
+      "name": "micro-stm8s",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceFolder}/build/micro-stm8s/micro-stm8s-debug.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "runToMain": true,
+      "armToolchainPath": "${workspaceFolder}/tools/sdcc-stm8/stm8-gdb/bin",
+      "serverpath": "${workspaceFolder}/tools/sdcc-stm8/openocd/bin/openocd",
+      "configFiles": [
+        "${workspaceFolder}/build/micro-stm8s/micro-stm8s_debug_openocd.cfg"
+      ],
+      "preLaunchTask": "micro-stm8s_vscode_debug",
+      "svdFile": "${workspaceFolder}/tools/sdcc-stm8/svd/STM8Sxxx.svd"
+    },
+    {
       "name": "nano-stm8s",
       "cwd": "${workspaceRoot}",
       "executable": "${workspaceFolder}/build/nano-stm8s/nano-stm8s-debug.elf",
