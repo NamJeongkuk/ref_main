@@ -62,7 +62,8 @@ INC_DIRS:=\
 
 PACKAGE_CONTENTS:=
 $(call add_to_package,$(OUTPUT_DIR)/binaries,binaries)
-$(call add_to_package,$(OUTPUT_DIR)/doc,doc)
+# fixme re-enable once we're generating erd_definitions
+# $(call add_to_package,$(OUTPUT_DIR)/doc,doc)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
