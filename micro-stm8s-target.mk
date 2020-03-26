@@ -8,7 +8,7 @@ PROJECT_DIR=src
 BOOT_LOADER_DIR=lib/boot-loaders
 
 # This needs to be the address _after_ the header
-# The application header is at 0xA000 and is 64 bytes
+# The application header is at 0xA000 and is 64 (0x40) bytes
 HEX_LINKER_OPTIONS=--code-loc 0xA040
 
 # Configures the STM8S headers for your part
