@@ -76,8 +76,9 @@ all: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration $(TARGET)_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 	@cat $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 
+# fixme re-enable erd_definitions once we have ERDs
 .PHONY: package
-package: all artifacts erd_definitions
+package: all artifacts #erd_definitions
 	$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 	@echo Archive complete
 
