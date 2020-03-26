@@ -57,7 +57,7 @@ SRC_DIRS:=\
 COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
-  $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/Ul \
+   $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/Ul \
    $(APPLCOMMON_TINY_DIR)/src/TinyLib \
 
 
