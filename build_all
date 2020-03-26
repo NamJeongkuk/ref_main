@@ -30,6 +30,9 @@ $RX_MAKE -f mini-rx231-target.mk -j16 RELEASE=Y DEBUG=N package
 make -f stm32f3-target.mk -j16 RELEASE=Y DEBUG=N clean
 make -f stm32f3-target.mk -j16 RELEASE=Y DEBUG=N package
 
+make -f micro-stm8s-target.mk -j16 RELEASE=Y DEBUG=N clean
+make -f micro-stm8s-target.mk -j16 RELEASE=Y DEBUG=N package
+
 make -f nano-stm8s-target.mk -j16 RELEASE=Y DEBUG=N clean
 make -f nano-stm8s-target.mk -j16 RELEASE=Y DEBUG=N package
 

@@ -13,7 +13,7 @@ Projects may also have a suffix indicating that they are configured for a specif
 General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html).
 
 | Memory     | Size   |
-| ---------- | ------ |
+|------------|--------|
 | Flash      | 512 KB |
 | RAM        | 48 KB  |
 | Data Flash | 8 KB   |
@@ -22,7 +22,7 @@ General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/u
 General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html) and a smaller, non-routing boot loader.
 
 | Memory     | Size   |
-| ---------- | ------ |
+|------------|--------|
 | Flash      | 512 KB |
 | RAM        | 48 KB  |
 | Data Flash | 8 KB   |
@@ -31,7 +31,7 @@ General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/u
 Sample project that is an ERD stream receiver using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html). Designed to work with `nano-stm8s-cap-touch`.
 
 | Memory     | Size   |
-| ---------- | ------ |
+|------------|--------|
 | Flash      | 512 KB |
 | RAM        | 48 KB  |
 | Data Flash | 8 KB   |
@@ -40,7 +40,7 @@ Sample project that is an ERD stream receiver using the [R5F51308ADFL](https://w
 General-purpose RX231 project using the [R5F52318ADFL](https://www.renesas.com/sg/en/products/microcontrollers-microprocessors/rx/rx200/rx231/device/R5F52318ADFL.html)
 
 | Memory     | Size   |
-| ---------- | ------ |
+|------------|--------|
 | Flash      | 512 KB |
 | RAM        | 64 KB  |
 | Data Flash | 8 KB   |
@@ -49,7 +49,7 @@ General-purpose RX231 project using the [R5F52318ADFL](https://www.renesas.com/s
 General-purpose RX231 project using the [R5F52318ADFL](https://www.renesas.com/sg/en/products/microcontrollers-microprocessors/rx/rx200/rx231/device/R5F52318ADFL.html) and a smaller, non-routing boot loader.
 
 | Memory     | Size   |
-| ---------- | ------ |
+|------------|--------|
 | Flash      | 512 KB |
 | RAM        | 64 KB  |
 | Data Flash | 8 KB   |
@@ -58,15 +58,24 @@ General-purpose RX231 project using the [R5F52318ADFL](https://www.renesas.com/s
 General-purpose STM32 project using the [STM32F303RB](https://www.st.com/en/microcontrollers-microprocessors/stm32f303rb.html).
 
 | Memory Type | Size   |
-| ----------- | ------ |
+|-------------|--------|
 | Flash       | 128 KB |
 | RAM         | 40 KB  |
+
+## micro-stm8s
+Small STM8S project using the [STM8S105C6T6](https://www.st.com/resource/en/datasheet/stm8s105c6.pdf) and a non-routing boot loader.
+
+| Memory Type | Size   |
+|-------------|--------|
+| Flash       | 32 KB  |
+| RAM         | 2 KB   |
+| EEPROM      | 1024 B |
 
 ## nano-stm8s
 STM8S project using the [STM8S003F3U6TR](https://www.st.com/en/microcontrollers-microprocessors/stm8s003f3.html). Uses the special-purpose STM8S boot loader and includes a tiny data source.
 
 | Memory Type | Size  |
-| ----------- | ----- |
+|-------------|-------|
 | Flash       | 8 KB  |
 | RAM         | 1 KB  |
 | EEPROM      | 128 B |
@@ -75,7 +84,7 @@ STM8S project using the [STM8S003F3U6TR](https://www.st.com/en/microcontrollers-
 STM8S project using the [STM8S003F3U6TR](https://www.st.com/en/microcontrollers-microprocessors/stm8s003f3.html). Uses the special-purpose STM8S boot loader. Supports cap touch and single ERD streaming.
 
 | Memory Type | Size  |
-| ----------- | ----- |
+|-------------|-------|
 | Flash       | 8 KB  |
 | RAM         | 1 KB  |
 | EEPROM      | 128 B |
