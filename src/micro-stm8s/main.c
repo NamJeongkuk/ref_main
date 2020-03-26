@@ -14,7 +14,7 @@
 #include "TinyTimer.h"
 #include "GeaStack.h"
 #include "Gea2Addresses.h"
-// #include "Ul.h"
+#include "Ul.h"
 #include "utils.h"
 
 enum
@@ -59,7 +59,7 @@ static void SendStartupMessage(I_TinyGea2Interface_t *gea2Interface)
 void main(void)
 {
 #ifndef DISABLE_UL_CHECKS
-   // Ul_Startup();
+   Ul_Startup();
 #endif
    Iwdg_Init();
    Clk_Init();
@@ -87,7 +87,7 @@ void main(void)
       TinyTimerModule_Run(&timerModule);
       GeaStack_Run(&geaStack);
 #ifndef DISABLE_UL_CHECKS
-      // Ul_Run();
+      Ul_Run();
 #endif
    }
 }
