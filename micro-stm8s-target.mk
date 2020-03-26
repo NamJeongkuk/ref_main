@@ -7,9 +7,18 @@ APPLCOMMON_DIR=$(APPLCOMMON_TINY_DIR)/lib/applcommon
 PROJECT_DIR=src
 BOOT_LOADER_DIR=lib/boot-loaders
 
+# These options are for the non-debug image
 # This needs to be the address _after_ the header
 # The application header is at 0xA000 and is 64 (0x40) bytes
 HEX_LINKER_OPTIONS=--code-loc 0xA040
+
+# These options are for the debug image
+# This places the fixed vector table at 0x8000 but places the code
+# after the header (which is hard-coded to 0xA000)
+# The application header is at 0xA000 and is 64 (0x40) bytes
+# The IVT follows and is 128 (0x80) bytes
+# 0xA000 + 0x40 + 0x80 => 0xA0C0
+ELF_LINKER_OPTIONS=-Wl-bGSINIT=0xA0C0
 
 # Configures the STM8S headers for your part
 DEVICE_TYPE:=STM8S105
