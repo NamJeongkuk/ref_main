@@ -64,7 +64,7 @@ void main(void)
          &geaStack,
          TinyUart_Uart2_Init(),
          &timerModule,
-         ChamgerlainGeaAddress);
+         Stm8sCapTouchGea2Address);
 
       CapSenseButton_Init(&timerModule);
    }

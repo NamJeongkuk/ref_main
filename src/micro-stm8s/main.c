@@ -75,7 +75,7 @@ void main(void)
       GeaStack_Init(
          &geaStack,
          TinyUart_Uart2_Init(),
-         BonzalezGeaAddress);
+         Stm8sGea2Address);
    }
    enableInterrupts();
 

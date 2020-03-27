@@ -87,7 +87,7 @@ void main(void)
          TinyUart_Uart1_Init(),
          dataSource,
          &timerModule,
-         BonzalezGeaAddress);
+         Stm8sGea2Address);
 
       Button_Init(dataSource, &timerModule, Erd_ButtonState);
       Led_Init(dataSource, Erd_LedState);

@@ -60,7 +60,7 @@ static KeyStreamPlugin_t keyStreamPlugin;
 
 static const uint8_t staticRoutingTable[] =
    {
-      ChamgerlainGeaAddress
+      Stm8sCapTouchGea2Address
    };
 
 static void UpdateBuildInfo(
@@ -131,7 +131,7 @@ int main(void)
       &geaStack,
       dataModel,
       SystemData_ExternalDataSource(&systemData),
-      WesreyGeaAddress,
+      Rx130CapTouchClientGea2Address,
       staticRoutingTable,
       ELEMENT_COUNT(staticRoutingTable));
 
@@ -143,7 +143,7 @@ int main(void)
    KeyStreamPlugin_Init(
       &keyStreamPlugin,
       dataModel,
-      ChamgerlainGeaAddress);
+      Stm8sCapTouchGea2Address);
 
    InvokeActionOnTimerPeriodic_Init(
       &watchdogPetter,
