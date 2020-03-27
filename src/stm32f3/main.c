@@ -58,7 +58,7 @@ static GeaStack_t geaStack;
 
 static const uint8_t staticRoutingTable[] =
    {
-      DugnuttGeaAddress
+      Rx130Gea2Address
    };
 
 static const uint32_t flashBlockAddresses[] =
@@ -134,7 +134,7 @@ int main(void)
       &geaStack,
       dataModel,
       SystemData_ExternalDataSource(&systemData),
-      McSriffGeaAddress,
+      Stm32f3Gea2Address,
       staticRoutingTable,
       ELEMENT_COUNT(staticRoutingTable));
 

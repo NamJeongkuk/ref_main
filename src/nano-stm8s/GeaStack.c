@@ -28,7 +28,7 @@ static const TinyErdHeartbeatErdPair_t erdHeartbeatPairs[] =
 
 static const TinyErdHeartbeatConfiguration_t erdHeartbeatConfig =
    {
-      .destination = TrukGeaAddress,
+      .destination = Rx231Gea2Address,
       .period = HeartbeatPeriodMsec,
       .pairs = erdHeartbeatPairs,
       .pairCount = NUM_ELEMENTS(erdHeartbeatPairs)
