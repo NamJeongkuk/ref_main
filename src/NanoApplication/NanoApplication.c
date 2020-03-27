@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "TinyApplication.h"
-#include "TinySystemErds.h"
+#include "NanoApplication.h"
+#include "NanoSystemErds.h"
 
 static const SwitchedLedPluginConfiguration_t ledPluginConfiguration =
    {
@@ -14,7 +14,7 @@ static const SwitchedLedPluginConfiguration_t ledPluginConfiguration =
       .buttonStateErd = Erd_ButtonState
    };
 
-void TinyApplication_Init(TinyApplication_t *instance, I_TinyDataSource_t *dataSource)
+void NanoApplication_Init(NanoApplication_t *instance, I_TinyDataSource_t *dataSource)
 {
    SwitchedLedPlugin_Init(&instance->_private.switchedLedPlugin, dataSource, &ledPluginConfiguration);
 }

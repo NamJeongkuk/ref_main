@@ -5,11 +5,11 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef TINYSYSTEMDATA_H
-#define TINYSYSTEMDATA_H
+#ifndef NANOSYSTEMDATA_H
+#define NANOSYSTEMDATA_H
 
 #include "TinyDataSource_Ram.h"
-#include "TinySystemErds.h"
+#include "NanoSystemErds.h"
 #include "utils.h"
 
 #define EXPAND_AS_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Stream, RemoteErd) \
@@ -27,17 +27,17 @@ typedef struct
       TinyDataSource_Ram_t tinyRamDataSource;
       TinyRamDataSourceStorage_t erdRam;
    } _private;
-} TinySystemData_t;
+} NanoSystemData_t;
 
 /*!
  * @param instance
  */
-void TinySystemData_Init(TinySystemData_t *instance);
+void NanoSystemData_Init(NanoSystemData_t *instance);
 
 /*!
  * @param instance
  * @return
  */
-I_TinyDataSource_t *TinySystemData_DataSource(TinySystemData_t *instance);
+I_TinyDataSource_t *NanoSystemData_DataSource(NanoSystemData_t *instance);
 
 #endif

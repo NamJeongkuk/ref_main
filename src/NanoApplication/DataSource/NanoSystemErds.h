@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef TINYSYSTEMERDS_H
-#define TINYSYSTEMERDS_H
+#ifndef NANOSYSTEMERDS_H
+#define NANOSYSTEMERDS_H
 
 #include "Version.h"
 #include "ErdStream.h"

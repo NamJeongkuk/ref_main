@@ -24,14 +24,13 @@ STM8FLASH_PROGRAMMER:=stlinkv2
 MAIN:=$(PROJECT_DIR)/$(TARGET)/main.c
 
 SRC_FILES:=\
-   $(PROJECT_DIR)/TinyApplication/Gea/TinyGeaStack.c \
 
 SRC_DIRS:=\
    $(PROJECT_DIR)/$(TARGET) \
    $(PROJECT_DIR)/$(TARGET)/Hardware \
-   $(PROJECT_DIR)/TinyApplication \
-   $(PROJECT_DIR)/TinyApplication/DataSource \
-   $(PROJECT_DIR)/TinyApplication/Plugins \
+   $(PROJECT_DIR)/NanoApplication \
+   $(PROJECT_DIR)/NanoApplication/DataSource \
+   $(PROJECT_DIR)/NanoApplication/Plugins \
 
 COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Core \
@@ -46,7 +45,6 @@ INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(PROJECT_DIR)/Application/Gea \
-   $(PROJECT_DIR)/TinyApplication/Gea \
 
 SOURCE_EXTENSIONS:=.c .s
 

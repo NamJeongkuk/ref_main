@@ -6,7 +6,7 @@
  */
 
 #include "SwitchedLedPlugin.h"
-#include "TinySystemErds.h"
+#include "NanoSystemErds.h"
 #include "utils.h"
 #include "Constants_Binary.h"
 

@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "TinySystemData.h"
+#include "NanoSystemData.h"
 
 #define EXPAND_AS_DATASOURCE_TINY_RAM_ERD_ENTRY(Name, Number, DataType, Stream, RemoteErd) \
    { Name, sizeof(DataType) },
@@ -21,7 +21,7 @@ static const TinyDataSource_RamConfiguration_t configuration =
       NUM_ELEMENTS(erdTable)
    };
 
-void TinySystemData_Init(TinySystemData_t *instance)
+void NanoSystemData_Init(NanoSystemData_t *instance)
 {
    TinyDataSource_Ram_Init(
       &instance->_private.tinyRamDataSource,
@@ -29,7 +29,7 @@ void TinySystemData_Init(TinySystemData_t *instance)
       &instance->_private.erdRam);
 }
 
-I_TinyDataSource_t *TinySystemData_DataSource(TinySystemData_t *instance)
+I_TinyDataSource_t *NanoSystemData_DataSource(NanoSystemData_t *instance)
 {
    return &instance->_private.tinyRamDataSource.interface;
 }

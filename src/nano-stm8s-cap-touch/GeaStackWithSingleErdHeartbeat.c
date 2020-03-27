@@ -6,7 +6,7 @@
  */
 
 #include <string.h>
-#include "TinyGeaStackWithSingleErdHeartbeat.h"
+#include "GeaStackWithSingleErdHeartbeat.h"
 #include "Gea2Addresses.h"
 #include "BootLoader.h"
 #include "TinyBootLoaderCommand.h"
@@ -41,7 +41,7 @@ static void PopulateTinyVersionResponse(void *context, Gea2Packet_t *packet)
    packet->payload[5] = version.minor;
 }
 
-static void HandleTinyVersionRequest(TinyGeaStackWithSingleErdHeartbeat_t *instance, const Gea2Packet_t *request)
+static void HandleTinyVersionRequest(GeaStackWithSingleErdHeartbeat_t *instance, const Gea2Packet_t *request)
 {
    TinyGea2Interface_Send(&instance->_private.gea2Interface.interface, 6, PopulateTinyVersionResponse, (void *)(request));
 }
@@ -55,7 +55,7 @@ static void PopulateCapSenseParametersResponse(void *context, Gea2Packet_t *pack
    TSL_GetParameters((TSL_GlobalParameters_t *)&packet->payload[1], (TSL_KeyParameters_t *)&packet->payload[10]);
 }
 
-static void HandleGetCapSenseParametersRequest(TinyGeaStackWithSingleErdHeartbeat_t *instance, const Gea2Packet_t *request)
+static void HandleGetCapSenseParametersRequest(GeaStackWithSingleErdHeartbeat_t *instance, const Gea2Packet_t *request)
 {
    TinyGea2Interface_Send(
       &instance->_private.gea2Interface.interface,
@@ -64,7 +64,7 @@ static void HandleGetCapSenseParametersRequest(TinyGeaStackWithSingleErdHeartbea
       (void *)request);
 }
 
-static void HandleSetCapSenseParametersRequest(TinyGeaStackWithSingleErdHeartbeat_t *instance, const Gea2Packet_t *request)
+static void HandleSetCapSenseParametersRequest(GeaStackWithSingleErdHeartbeat_t *instance, const Gea2Packet_t *request)
 {
    TSL_SetParameters(
       (const TSL_GlobalParameters_t *)&request->payload[1],
@@ -76,7 +76,7 @@ static void HandleSetCapSenseParametersRequest(TinyGeaStackWithSingleErdHeartbea
 
 static void GeaMessageReceived(void *context, const void *_args)
 {
-   REINTERPRET(instance, context, TinyGeaStackWithSingleErdHeartbeat_t *);
+   REINTERPRET(instance, context, GeaStackWithSingleErdHeartbeat_t *);
    REINTERPRET(args, _args, const TinyGea2InterfaceOnReceiveArgs_t *);
    const Gea2Packet_t *packet = args->packet;
    uint16_t command = packet->payload[0];
@@ -101,8 +101,8 @@ static void GeaMessageReceived(void *context, const void *_args)
    }
 }
 
-void TinyGeaStackWithSingleErdHeartbeat_Init(
-   TinyGeaStackWithSingleErdHeartbeat_t *instance,
+void GeaStackWithSingleErdHeartbeat_Init(
+   GeaStackWithSingleErdHeartbeat_t *instance,
    I_TinyUart_t *uart,
    TinyTimerModule_t *timerModule,
    uint8_t geaAddress)
@@ -127,7 +127,7 @@ void TinyGeaStackWithSingleErdHeartbeat_Init(
       &instance->_private.geaMessageSubscription);
 }
 
-void TinyGeaStackWithSingleErdHeartbeat_Run(TinyGeaStackWithSingleErdHeartbeat_t *instance)
+void GeaStackWithSingleErdHeartbeat_Run(GeaStackWithSingleErdHeartbeat_t *instance)
 {
    TinyGea2Interface_FullDuplex_Run(&instance->_private.gea2Interface);
 }

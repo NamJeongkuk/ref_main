@@ -24,7 +24,6 @@ STM8FLASH_PROGRAMMER:=stlinkv2
 MAIN:=$(PROJECT_DIR)/$(TARGET)/main.c
 
 SRC_FILES:=\
-   $(PROJECT_DIR)/TinyApplication/Gea/TinyGeaStackWithSingleErdHeartbeat.c \
 
 SRC_DIRS:=\
    $(PROJECT_DIR)/$(TARGET) \
@@ -45,7 +44,6 @@ INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/TouchSense/inc \
    $(PROJECT_DIR)/Application/Gea \
-   $(PROJECT_DIR)/TinyApplication/Gea \
 
 SOURCE_EXTENSIONS:=.c
 

@@ -5,14 +5,16 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef TINYGEASTACKWITHSINGLEERDHEARTBEAT_H
-#define TINYGEASTACK_H
+#ifndef GEASTACK_H
+#define GEASTACK_H
 
 #include "I_TinyUart.h"
 #include "I_TinyDataSource.h"
 #include "TinyGea2Interface_FullDuplex.h"
 #include "TinyEventSubscription.h"
-#include "TinySingleErdHeartbeatStream.h"
+#include "TinyErdGea2OpenLoopWriteApiRevision2.h"
+#include "TinyErdHeartbeat.h"
+#include "TinyErdStreamSender.h"
 
 enum
 {
@@ -25,11 +27,14 @@ typedef struct
    struct
    {
       TinyGea2Interface_FullDuplex_t gea2Interface;
+      TinyErdGea2OpenLoopWriteApiRevision2_t erdGea2OpenLoopWriteApi;
+      TinyErdHeartbeat_t erdHeartbeat;
+      TinyErdStreamSender_t erdStreamSender;
       TinyEventSubscription_t geaMessageSubscription;
       uint8_t sendBuffer[SendBufferSize];
       uint8_t receiveBuffer[ReceiveBufferSize];
    } _private;
-} TinyGeaStackWithSingleErdHeartbeat_t;
+} GeaStack_t;
 
 /*!
  * @param instance
@@ -38,15 +43,22 @@ typedef struct
  * @param timerModule
  * @param geaAddress
  */
-void TinyGeaStackWithSingleErdHeartbeat_Init(
-   TinyGeaStackWithSingleErdHeartbeat_t *instance,
+void GeaStack_Init(
+   GeaStack_t *instance,
    I_TinyUart_t *uart,
+   I_TinyDataSource_t *dataSource,
    TinyTimerModule_t *timerModule,
    uint8_t geaAddress);
 
 /*!
  * @param instance
+ * @return I_Gea2Interface_t
  */
-void TinyGeaStackWithSingleErdHeartbeat_Run(TinyGeaStackWithSingleErdHeartbeat_t *instance);
+I_TinyGea2Interface_t *GeaStack_GetGea2Interface(GeaStack_t *instance);
+
+/*!
+ * @param instance
+ */
+void GeaStack_Run(GeaStack_t *instance);
 
 #endif
