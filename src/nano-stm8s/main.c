@@ -15,9 +15,9 @@
 #include "TinyAdcGroup_Adc1.h"
 #include "TinyUart_Uart1.h"
 #include "TinyTimer.h"
-#include "TinyGeaStack.h"
-#include "TinySystemData.h"
-#include "TinyApplication.h"
+#include "GeaStack.h"
+#include "NanoSystemData.h"
+#include "NanoApplication.h"
 #include "Led.h"
 #include "Button.h"
 #include "I_TinyInterrupt.h"
@@ -32,9 +32,9 @@ enum
 
 static TinyTimerModule_t timerModule;
 static TinyTimer_t periodicWatchdogTimer;
-static TinyGeaStack_t geaStack;
-static TinySystemData_t systemData;
-static TinyApplication_t application;
+static GeaStack_t geaStack;
+static NanoSystemData_t systemData;
+static NanoApplication_t application;
 
 static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 {
@@ -79,10 +79,10 @@ void main(void)
 
       Pd4Heartbeat_Init(&timerModule);
 
-      TinySystemData_Init(&systemData);
-      I_TinyDataSource_t *dataSource = TinySystemData_DataSource(&systemData);
+      NanoSystemData_Init(&systemData);
+      I_TinyDataSource_t *dataSource = NanoSystemData_DataSource(&systemData);
 
-      TinyGeaStack_Init(
+      GeaStack_Init(
          &geaStack,
          TinyUart_Uart1_Init(),
          dataSource,
@@ -92,17 +92,17 @@ void main(void)
       Button_Init(dataSource, &timerModule, Erd_ButtonState);
       Led_Init(dataSource, Erd_LedState);
 
-      TinyApplication_Init(&application, dataSource);
+      NanoApplication_Init(&application, dataSource);
    }
    enableInterrupts();
 
-   SendStartupMessage(TinyGeaStack_GetGea2Interface(&geaStack));
+   SendStartupMessage(GeaStack_GetGea2Interface(&geaStack));
    KickWatchdog(NULL, &timerModule);
 
    while(1)
    {
       TinyTimerModule_Run(&timerModule);
-      TinyGeaStack_Run(&geaStack);
+      GeaStack_Run(&geaStack);
 #ifndef DISABLE_UL_CHECKS
       Ul_Run();
 #endif

@@ -15,7 +15,7 @@
 #include "TinyAdcGroup_Adc1.h"
 #include "TinyUart_Uart2.h"
 #include "TinyTimer.h"
-#include "TinyGeaStackWithSingleErdHeartbeat.h"
+#include "GeaStackWithSingleErdHeartbeat.h"
 #include "Led.h"
 #include "CapSenseButton.h"
 #include "I_TinyInterrupt.h"
@@ -32,7 +32,7 @@ enum
 
 static TinyTimerModule_t timerModule;
 static TinyTimer_t periodicWatchdogTimer;
-static TinyGeaStackWithSingleErdHeartbeat_t geaStack;
+static GeaStackWithSingleErdHeartbeat_t geaStack;
 
 static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 {
@@ -60,7 +60,7 @@ void main(void)
 
       Pd0Heartbeat_Init(&timerModule);
 
-      TinyGeaStackWithSingleErdHeartbeat_Init(
+      GeaStackWithSingleErdHeartbeat_Init(
          &geaStack,
          TinyUart_Uart2_Init(),
          &timerModule,
@@ -75,7 +75,7 @@ void main(void)
    while(1)
    {
       TinyTimerModule_Run(&timerModule);
-      TinyGeaStackWithSingleErdHeartbeat_Run(&geaStack);
+      GeaStackWithSingleErdHeartbeat_Run(&geaStack);
       TSL_Action();
    }
 }

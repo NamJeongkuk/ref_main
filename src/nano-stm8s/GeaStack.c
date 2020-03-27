@@ -6,9 +6,9 @@
  */
 
 #include <string.h>
-#include "TinyGeaStack.h"
+#include "GeaStack.h"
 #include "Gea2Addresses.h"
-#include "TinySystemErds.h"
+#include "NanoSystemErds.h"
 #include "BootLoader.h"
 #include "TinyBootLoaderCommand.h"
 #include "utils.h"
@@ -65,14 +65,14 @@ static void PopulateTinyVersionResponse(void *context, Gea2Packet_t *packet)
    packet->payload[5] = version.minor;
 }
 
-static void HandleTinyVersionRequest(TinyGeaStack_t *instance, const Gea2Packet_t *request)
+static void HandleTinyVersionRequest(GeaStack_t *instance, const Gea2Packet_t *request)
 {
    TinyGea2Interface_Send(&instance->_private.gea2Interface.interface, 6, PopulateTinyVersionResponse, (void *)(request));
 }
 
 static void GeaMessageReceived(void *context, const void *_args)
 {
-   REINTERPRET(instance, context, TinyGeaStack_t *);
+   REINTERPRET(instance, context, GeaStack_t *);
    REINTERPRET(args, _args, const TinyGea2InterfaceOnReceiveArgs_t *);
    const Gea2Packet_t *packet = args->packet;
    uint16_t command = packet->payload[0];
@@ -89,8 +89,8 @@ static void GeaMessageReceived(void *context, const void *_args)
    }
 }
 
-void TinyGeaStack_Init(
-   TinyGeaStack_t *instance,
+void GeaStack_Init(
+   GeaStack_t *instance,
    I_TinyUart_t *uart,
    I_TinyDataSource_t *dataSource,
    TinyTimerModule_t *timerModule,
@@ -129,12 +129,12 @@ void TinyGeaStack_Init(
       &instance->_private.geaMessageSubscription);
 }
 
-I_TinyGea2Interface_t *TinyGeaStack_GetGea2Interface(TinyGeaStack_t *instance)
+I_TinyGea2Interface_t *GeaStack_GetGea2Interface(GeaStack_t *instance)
 {
    return &instance->_private.gea2Interface.interface;
 }
 
-void TinyGeaStack_Run(TinyGeaStack_t *instance)
+void GeaStack_Run(GeaStack_t *instance)
 {
    TinyGea2Interface_FullDuplex_Run(&instance->_private.gea2Interface);
 }
