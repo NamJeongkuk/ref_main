@@ -1,5 +1,5 @@
 ; Where physical RAM ends
-RAM_END .equ 0xFFFF
+RAM_END .equ 0x07FF
 
 ; How many bytes should be checked each time the periodic
 ; RAM test is run
