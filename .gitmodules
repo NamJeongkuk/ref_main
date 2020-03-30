@@ -13,9 +13,6 @@
 [submodule "tools/sdcc-stm8"]
 	path = tools/sdcc-stm8
 	url = https://github.com/geappliances/build-tools.sdcc-stm8-release.git
-[submodule "lib/applcommon-tiny"]
-	path = lib/applcommon-tiny
-	url = https://github.com/geappliances/applcommon.tiny
 [submodule "lib/stm32-standard-peripherals"]
 	path = lib/stm32-standard-peripherals
 	url = https://github.com/geappliances/build-tools.stm32-standard-peripherals.git
@@ -28,3 +25,6 @@
 [submodule "tools/iar-stm8-wine"]
 	path = tools/iar-stm8-wine
 	url = https://github.com/geappliances/build-tools.iar-stm8-wine-tools-release.git
+[submodule "lib/applcommon.tiny"]
+	path = lib/applcommon.tiny
+	url = https://github.com/geappliances/applcommon.tiny

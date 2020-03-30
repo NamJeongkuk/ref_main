@@ -2,7 +2,7 @@ include tools/sdcc-stm8/sdcc-stm8.mk
 
 TARGET:=micro-stm8s
 OUTPUT_DIR:=build/$(TARGET)
-APPLCOMMON_TINY_DIR=lib/applcommon-tiny
+APPLCOMMON_TINY_DIR=lib/applcommon.tiny
 APPLCOMMON_DIR=$(APPLCOMMON_TINY_DIR)/lib/applcommon
 PROJECT_DIR=src
 BOOT_LOADER_DIR=lib/boot-loaders
