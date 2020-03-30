@@ -1,22 +1,22 @@
-PROJECT_NAME = multi-target-starter-kit
+PROJECT_NAME := multi-target-starter-kit
 
-APPLCOMMON_DIR = lib/applcommon
-PROJECT_DIR = src
-TESTING_DIR = test
-TESTS_DIR = test/Tests
-OUTPUT_DIR = test
+APPLCOMMON_DIR := lib/applcommon
+PROJECT_DIR := src
+TESTING_DIR := test
+TESTS_DIR := test/Tests
+OUTPUT_DIR := test
 
-RUN_APPLCOMMON_TESTS = N
+RUN_APPLCOMMON_TESTS := N
 
 # Specific files to include if you don't want the entire directory included
-SRC_FILES += \
+SRC_FILES := \
 
 # List of directories that contain your code under test
-SRC_DIRS = \
+SRC_DIRS := \
    $(PROJECT_DIR)/Application/DataSource \
 
 # List of directories that contain your tests and test helpers (mocks, fakes, etc.)
-TEST_SRC_DIRS = \
+TEST_SRC_DIRS := \
    $(TESTING_DIR) \
    $(TESTING_DIR)/Doubles \
    $(TESTING_DIR)/Mocks \
@@ -25,7 +25,7 @@ TEST_SRC_DIRS = \
    $(TESTS_DIR)/Application/DataSource \
 
 # List of include directories
-INCLUDE_DIRS = \
+INCLUDE_DIRS := \
    $(APPLCOMMON_DIR)/Hardware/Rx130 \
    $(APPLCOMMON_DIR)/Image \
    $(PROJECT_DIR)/Application/Plugins \
