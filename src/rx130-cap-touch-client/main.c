@@ -109,7 +109,7 @@ int main(void)
    }
    ContextProtector_Unprotect(ContextProtector_Rx2xx_GetInstance());
 
-   I_Action_t *watchdogKickAction = Action_Rx2xxWatchdog_Init();
+   I_Action_t *watchdogKickAction = Action_Rx2xxWatchdog_InitWithConfiguration(Rx2xxWatchdogConfiguration_2Seconds);
    I_Action_t *resetAction = Action_Rx2xxSystemReset_Init();
    TimerModule_t *timerModule = TimerModuleStack_Init(&timerModuleStack, Interrupt_Cmt0_Init());
 
