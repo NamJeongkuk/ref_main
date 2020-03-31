@@ -16,12 +16,12 @@
 
 // Set the DTC Receive Buffer Size: (230400 bits/sec) / 10 bits / 1000 msec = 23.04 bytes/msec ~= 25 bytes/msec
 // The buffer is serviced every msec, so double this number for safety: 25 * 2 = 50 bytes
-#define DTC_RECEIVE_BUFFER_SIZE_BYTES  (50)
-#define TRANSFER_BUFFER_SIZE_BYTES     (50)
-#define RECEIVE_REPEAT_COUNT           (uint16_t)((DTC_RECEIVE_BUFFER_SIZE_BYTES << 8) | DTC_RECEIVE_BUFFER_SIZE_BYTES)
+#define DTC_RECEIVE_BUFFER_SIZE_BYTES (50)
+#define TRANSFER_BUFFER_SIZE_BYTES (50)
+#define RECEIVE_REPEAT_COUNT (uint16_t)((DTC_RECEIVE_BUFFER_SIZE_BYTES << 8) | DTC_RECEIVE_BUFFER_SIZE_BYTES)
 
-volatile struct st_dtc_full uart5Receive __attribute__ ((section(".DtcTable")));
-volatile struct st_dtc_full uart5Transmit __attribute__ ((section(".DtcTable")));
+volatile struct st_dtc_full uart5Receive __attribute__((section(".dtcTransferInformation")));
+volatile struct st_dtc_full uart5Transmit __attribute__((section(".dtcTransferInformation")));
 
 typedef struct
 {
@@ -33,9 +33,9 @@ typedef struct
    uint8_t dtcRingBufferTail;
 } BufferedUartData_t;
 
-static BufferedUartData_t instance __attribute__ ((section(".DtcTable")));
+static BufferedUartData_t instance __attribute__((section(".dtcTransferInformation")));
 
-void SCI5_ERI5(void) __attribute__ ((interrupt));
+void SCI5_ERI5(void) __attribute__((interrupt));
 void SCI5_ERI5(void)
 {
    volatile uint8_t received_data = 0;
@@ -70,18 +70,18 @@ static void Transmit(I_BufferedUart_t *_instance, const uint8_t *data, const uin
    uart5Transmit.CR.CRA = byteCount - 1;
    uart5Transmit.SAR = (void *)&data[1];
    // DTC activation by SCI5 Tx interrupt request is enabled
-   DTCE(SCI5,TXI5) = (byteCount > 1);
+   DTCE(SCI5, TXI5) = (byteCount > 1);
    // Start the transfer by sending the first byte in the buffer
    SCI5.TDR = *data;
 }
 
-static I_Event_t * GetOnReceiveEvent(I_BufferedUart_t *_instance)
+static I_Event_t *GetOnReceiveEvent(I_BufferedUart_t *_instance)
 {
    IGNORE_ARG(_instance);
    return &instance.OnReceive.interface;
 }
 
-static I_Event_t * GetOnTransmitCompleteEvent(I_BufferedUart_t *_instance)
+static I_Event_t *GetOnTransmitCompleteEvent(I_BufferedUart_t *_instance)
 {
    IGNORE_ARG(_instance);
    return &instance.OnTransmit.interface;
@@ -125,25 +125,22 @@ static void Run(I_BufferedUart_t *_instance)
 
       if(index > 0)
       {
-         BufferedUartOnReceiveArgs_t args =
-            { localData, index };
+         BufferedUartOnReceiveArgs_t args = { localData, index };
          Event_SingleSubscriberSynchronous_Publish(&instance.OnReceive, &args);
       }
    }
 }
 
-static const I_BufferedUart_Api_t bufferedUartApi =
-   {
-      Transmit,
-      GetOnTransmitCompleteEvent,
-      GetOnReceiveEvent,
-      Run
-   };
+static const I_BufferedUart_Api_t bufferedUartApi = {
+   Transmit,
+   GetOnTransmitCompleteEvent,
+   GetOnReceiveEvent,
+   Run
+};
 
-I_BufferedUart_t * BufferedUart_Channel5_Init(void)
+I_BufferedUart_t *BufferedUart_Channel5_Init(void)
 {
-   uassert(sizeof(instance.dtcReceiveBuffer) >= ((RECEIVE_REPEAT_COUNT & 0xFF00) >> 8)
-      && (sizeof(instance.dtcReceiveBuffer) >= (RECEIVE_REPEAT_COUNT & 0xFF)));
+   uassert(sizeof(instance.dtcReceiveBuffer) >= ((RECEIVE_REPEAT_COUNT & 0xFF00) >> 8) && (sizeof(instance.dtcReceiveBuffer) >= (RECEIVE_REPEAT_COUNT & 0xFF)));
 
    Event_SingleSubscriberSynchronous_Init(&instance.OnReceive);
    Event_SingleSubscriberSynchronous_Init(&instance.OnTransmit);
@@ -248,15 +245,15 @@ I_BufferedUart_t * BufferedUart_Channel5_Init(void)
    // |#-------> MRB CHNS
    // #--------> MRB CHNE Chain transfer is disabled
 
-   uart5Receive.SAR = (void *)&SCI5.RDR;                    // Transfer source start address
-   uart5Receive.DAR = (void *)instance.dtcReceiveBuffer;    // Transfer destination start address
-   uart5Receive.CR.CRA = RECEIVE_REPEAT_COUNT;              // Transfer count: CRAL = CRAH = number of total byte transfers before wrapping round
-   uart5Receive.CR.CRB = 0x0000;                            // Not used in repeat transfer.
+   uart5Receive.SAR = (void *)&SCI5.RDR; // Transfer source start address
+   uart5Receive.DAR = (void *)instance.dtcReceiveBuffer; // Transfer destination start address
+   uart5Receive.CR.CRA = RECEIVE_REPEAT_COUNT; // Transfer count: CRAL = CRAH = number of total byte transfers before wrapping round
+   uart5Receive.CR.CRB = 0x0000; // Not used in repeat transfer.
 
-   DTCE(SCI5,RXI5) = 1;                                     // DTC activation by SCI5 Rx interrupt request is enabled
+   DTCE(SCI5, RXI5) = 1; // DTC activation by SCI5 Rx interrupt request is enabled
 
-   SCI5.SCR.BIT.RIE = 1;                                    // Receive Interrupt Enabled
-   SCI5.SCR.BIT.RE = 1;                                     // Receive Enabled
+   SCI5.SCR.BIT.RIE = 1; // Receive Interrupt Enabled
+   SCI5.SCR.BIT.RE = 1; // Receive Enabled
 
    uart5Transmit.MRA = 0x08;
    // 00001000b
@@ -274,16 +271,16 @@ I_BufferedUart_t * BufferedUart_Channel5_Init(void)
    // |#-------> MRB CHNS
    // #--------> MRB CHNE Chain transfer is disabled
 
-   uart5Transmit.SAR = NULL;                                // Transfer source start address - set up on send
-   uart5Transmit.DAR = (void *)&SCI5.TDR;                   // Transfer destination start address
-   uart5Transmit.CR.CRA = 0x0000;                           // Transfer count: normal mode this is a 16 bit number
-   uart5Transmit.CR.CRB = 0x0000;                           // Not used in repeat transfer.
+   uart5Transmit.SAR = NULL; // Transfer source start address - set up on send
+   uart5Transmit.DAR = (void *)&SCI5.TDR; // Transfer destination start address
+   uart5Transmit.CR.CRA = 0x0000; // Transfer count: normal mode this is a 16 bit number
+   uart5Transmit.CR.CRB = 0x0000; // Not used in repeat transfer.
 
-   DTCE(SCI5,TXI5) = 1;                                      // DTC activation by SCI5 Tx interrupt request is enabled
+   DTCE(SCI5, TXI5) = 1; // DTC activation by SCI5 Tx interrupt request is enabled
 
    // To avoid generating a transmit interrupt here, we must enable transmit before enabling the transmit interrupt.
-   SCI5.SCR.BIT.TE = 1;   // Transmit Enabled
-   SCI5.SCR.BIT.TIE = 1;  // Transmit Interrupt Enabled
+   SCI5.SCR.BIT.TE = 1; // Transmit Enabled
+   SCI5.SCR.BIT.TIE = 1; // Transmit Interrupt Enabled
 
    return &instance.interface;
 }
