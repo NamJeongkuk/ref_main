@@ -37,18 +37,18 @@ SECTIONS
 	{
 		KEEP(*(.dtcVectorTable))
 	} > DTC_VECTOR_TABLE
-	.fvectors :
+	.fixedVectorTable :
 	{
 		. = ALIGN(4);
 		__fixedVectorTableStart = .;
-		KEEP(*(.fvectors))
+		KEEP(*(.fixedVectorTable))
 		__fixedVectorTableEnd = .;
 	} > FIXED_VECTOR_TABLE
 	.data :
 	{
 		_data = .;
 		__dtcVectorTableStart = .;
-		*(.DtcTable)
+		*(.dtcTransferInformartion)
 		. = ALIGN(4);
 		__dtcVectorTableEnd = .;
 		*(.data)

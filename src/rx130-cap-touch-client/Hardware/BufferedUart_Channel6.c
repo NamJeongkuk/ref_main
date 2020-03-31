@@ -16,12 +16,12 @@
 
 // Set the DTC Receive Buffer Size: (230400 bits/sec) / 10 bits / 1000 msec = 23.04 bytes/msec ~= 25 bytes/msec
 // The buffer is serviced every msec, so double this number for safety: 25 * 2 = 50 bytes
-#define DTC_RECEIVE_BUFFER_SIZE_BYTES  (50)
-#define TRANSFER_BUFFER_SIZE_BYTES     (50)
-#define RECEIVE_REPEAT_COUNT           (uint16_t)((DTC_RECEIVE_BUFFER_SIZE_BYTES << 8) | DTC_RECEIVE_BUFFER_SIZE_BYTES)
+#define DTC_RECEIVE_BUFFER_SIZE_BYTES (50)
+#define TRANSFER_BUFFER_SIZE_BYTES (50)
+#define RECEIVE_REPEAT_COUNT (uint16_t)((DTC_RECEIVE_BUFFER_SIZE_BYTES << 8) | DTC_RECEIVE_BUFFER_SIZE_BYTES)
 
-volatile struct st_dtc_full uart6Receive __attribute__ ((section(".DtcTable")));
-volatile struct st_dtc_full uart6Transmit __attribute__ ((section(".DtcTable")));
+volatile struct st_dtc_full uart6Receive __attribute__((section(".dtcTransferInformation")));
+volatile struct st_dtc_full uart6Transmit __attribute__((section(".dtcTransferInformation")));
 
 typedef struct
 {
@@ -33,9 +33,9 @@ typedef struct
    uint8_t dtcRingBufferTail;
 } BufferedUartData_t;
 
-static BufferedUartData_t instance __attribute__ ((section(".DtcTable")));
+static BufferedUartData_t instance __attribute__((section(".dtcTransferInformation")));
 
-void SCI6_ERI6(void) __attribute__ ((interrupt));
+void SCI6_ERI6(void) __attribute__((interrupt));
 void SCI6_ERI6(void)
 {
    volatile uint8_t received_data = 0;
@@ -67,21 +67,21 @@ static void Transmit(I_BufferedUart_t *_instance, const uint8_t *data, const uin
 
    instance.waitingForTransmitToComplete = true;
 
-   uart6Transmit.CR.CRA = byteCount-1;
+   uart6Transmit.CR.CRA = byteCount - 1;
    uart6Transmit.SAR = (void *)&data[1];
    // DTC activation by SCI6 Tx interrupt request is enabled
-   DTCE(SCI6,TXI6) = (byteCount > 1);
+   DTCE(SCI6, TXI6) = (byteCount > 1);
    // Start the transfer by sending the first byte in the buffer
    SCI6.TDR = *data;
 }
 
-static I_Event_t * GetOnReceiveEvent(I_BufferedUart_t *_instance)
+static I_Event_t *GetOnReceiveEvent(I_BufferedUart_t *_instance)
 {
    IGNORE_ARG(_instance);
    return &instance.OnReceive.interface;
 }
 
-static I_Event_t * GetOnTransmitCompleteEvent(I_BufferedUart_t *_instance)
+static I_Event_t *GetOnTransmitCompleteEvent(I_BufferedUart_t *_instance)
 {
    IGNORE_ARG(_instance);
    return &instance.OnTransmit.interface;
@@ -107,7 +107,7 @@ static void Run(I_BufferedUart_t *_instance)
 {
    IGNORE_ARG(_instance);
    // Transmit Data Ready?
-   if (instance.waitingForTransmitToComplete && !uart6Transmit.CR.CRA && SCI6.SSR.BIT.TDRE)
+   if(instance.waitingForTransmitToComplete && !uart6Transmit.CR.CRA && SCI6.SSR.BIT.TDRE)
    {
       instance.waitingForTransmitToComplete = false;
       Event_SingleSubscriberSynchronous_Publish(&instance.OnTransmit, NULL);
@@ -125,25 +125,22 @@ static void Run(I_BufferedUart_t *_instance)
 
       if(index > 0)
       {
-         BufferedUartOnReceiveArgs_t args =
-            { localData, index };
+         BufferedUartOnReceiveArgs_t args = { localData, index };
          Event_SingleSubscriberSynchronous_Publish(&instance.OnReceive, &args);
       }
    }
 }
 
-static const I_BufferedUart_Api_t bufferedUartApi =
-   {
-      Transmit,
-      GetOnTransmitCompleteEvent,
-      GetOnReceiveEvent,
-      Run
-   };
+static const I_BufferedUart_Api_t bufferedUartApi = {
+   Transmit,
+   GetOnTransmitCompleteEvent,
+   GetOnReceiveEvent,
+   Run
+};
 
-I_BufferedUart_t * BufferedUart_Channel6_Init(void)
+I_BufferedUart_t *BufferedUart_Channel6_Init(void)
 {
-   uassert(sizeof(instance.dtcReceiveBuffer) >= ((RECEIVE_REPEAT_COUNT & 0xFF00) >> 8)
-      && (sizeof(instance.dtcReceiveBuffer) >= (RECEIVE_REPEAT_COUNT & 0xFF)));
+   uassert(sizeof(instance.dtcReceiveBuffer) >= ((RECEIVE_REPEAT_COUNT & 0xFF00) >> 8) && (sizeof(instance.dtcReceiveBuffer) >= (RECEIVE_REPEAT_COUNT & 0xFF)));
 
    Event_SingleSubscriberSynchronous_Init(&instance.OnReceive);
    Event_SingleSubscriberSynchronous_Init(&instance.OnTransmit);
@@ -248,15 +245,15 @@ I_BufferedUart_t * BufferedUart_Channel6_Init(void)
    // |#-------> MRB CHNS
    // #--------> MRB CHNE Chain transfer is disabled
 
-   uart6Receive.SAR = (void *)&SCI6.RDR;                    // Transfer source start address
-   uart6Receive.DAR = (void *)instance.dtcReceiveBuffer;    // Transfer destination start address
-   uart6Receive.CR.CRA = RECEIVE_REPEAT_COUNT;              // Transfer count: CRAL = CRAH = number of total byte transfers before wrapping round
-   uart6Receive.CR.CRB = 0x0000;                            // Not used in repeat transfer.
+   uart6Receive.SAR = (void *)&SCI6.RDR; // Transfer source start address
+   uart6Receive.DAR = (void *)instance.dtcReceiveBuffer; // Transfer destination start address
+   uart6Receive.CR.CRA = RECEIVE_REPEAT_COUNT; // Transfer count: CRAL = CRAH = number of total byte transfers before wrapping round
+   uart6Receive.CR.CRB = 0x0000; // Not used in repeat transfer.
 
-   DTCE(SCI6,RXI6) = 1;                                     // DTC activation by SCI6 Rx interrupt request is enabled
+   DTCE(SCI6, RXI6) = 1; // DTC activation by SCI6 Rx interrupt request is enabled
 
-   SCI6.SCR.BIT.RIE = 1;                                    // Receive Interrupt Enabled
-   SCI6.SCR.BIT.RE = 1;                                     // Receive Enabled
+   SCI6.SCR.BIT.RIE = 1; // Receive Interrupt Enabled
+   SCI6.SCR.BIT.RE = 1; // Receive Enabled
 
    uart6Transmit.MRA = 0x08;
    // 00001000b
@@ -274,16 +271,16 @@ I_BufferedUart_t * BufferedUart_Channel6_Init(void)
    // |#-------> MRB CHNS
    // #--------> MRB CHNE Chain transfer is disabled
 
-   uart6Transmit.SAR = NULL;                                // Transfer source start address - set up on send
-   uart6Transmit.DAR = (void *)&SCI6.TDR;                   // Transfer destination start address
-   uart6Transmit.CR.CRA = 0x0000;                           // Transfer count: normal mode this is a 16 bit number
-   uart6Transmit.CR.CRB = 0x0000;                           // Not used in repeat transfer.
+   uart6Transmit.SAR = NULL; // Transfer source start address - set up on send
+   uart6Transmit.DAR = (void *)&SCI6.TDR; // Transfer destination start address
+   uart6Transmit.CR.CRA = 0x0000; // Transfer count: normal mode this is a 16 bit number
+   uart6Transmit.CR.CRB = 0x0000; // Not used in repeat transfer.
 
-   DTCE(SCI6,TXI6) = 1;                                      // DTC activation by SCI6 Tx interrupt request is enabled
+   DTCE(SCI6, TXI6) = 1; // DTC activation by SCI6 Tx interrupt request is enabled
 
    // To avoid generating a transmit interrupt here, we must enable transmit before enabling the transmit interrupt.
-   SCI6.SCR.BIT.TE = 1;   // Transmit Enabled
-   SCI6.SCR.BIT.TIE = 1;  // Transmit Interrupt Enabled
+   SCI6.SCR.BIT.TE = 1; // Transmit Enabled
+   SCI6.SCR.BIT.TIE = 1; // Transmit Interrupt Enabled
 
    return &instance.interface;
 }

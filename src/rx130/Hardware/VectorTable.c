@@ -14,19 +14,19 @@ extern void PowerON_Reset(void);
 
 static void Default_Handler(void);
 
-void PrivilegedInstructionException (void) __attribute__ ((weak, alias("Default_Handler")));
-void AccessException (void) __attribute__ ((weak, alias("Default_Handler")));
-void UndefinedInstructionException (void) __attribute__ ((weak, alias("Default_Handler")));
-void FloatingPointException (void) __attribute__ ((weak, alias("Default_Handler")));
-void NonMaskableInterrupt (void) __attribute__ ((weak, alias("Default_Handler")));
+void PrivilegedInstructionException(void) __attribute__((weak, alias("Default_Handler")));
+void AccessException(void) __attribute__((weak, alias("Default_Handler")));
+void UndefinedInstructionException(void) __attribute__((weak, alias("Default_Handler")));
+void FloatingPointException(void) __attribute__((weak, alias("Default_Handler")));
+void NonMaskableInterrupt(void) __attribute__((weak, alias("Default_Handler")));
 
-const fp HardwareVectors[] __attribute__ ((section (".fvectors")))  = {
+const fp fixedVectorTable[] __attribute__((section(".fixedVectorTable"))) = {
 //;0xffffff80  MDES  Endian Select Register
 #ifdef __RX_LITTLE_ENDIAN__
-(fp)0xffffffff,
+   (fp)0xffffffff,
 #endif
 #ifdef __RX_BIG_ENDIAN__
-(fp)0xfffffff8,
+   (fp)0xfffffff8,
 #endif
    Default_Handler, // Reserved 0xffffff84
    (fp)0xffffffff, // OFS1 0xffffff88
@@ -35,10 +35,10 @@ const fp HardwareVectors[] __attribute__ ((section (".fvectors")))  = {
    Default_Handler, // Reserved 0xffffff94
    Default_Handler, // Reserved 0xffffff98
    Default_Handler, // Reserved 0xffffff9C
-   (fp)ID_CODE_LONG_1,  // Reserved ID Code 0xffffffA0
-   (fp)ID_CODE_LONG_2,  // Reserved ID Code 0xffffffA4
-   (fp)ID_CODE_LONG_3,  // Reserved ID Code 0xffffffA8
-   (fp)ID_CODE_LONG_4,  // Reserved ID Code 0xffffffAC
+   (fp)ID_CODE_LONG_1, // Reserved ID Code 0xffffffA0
+   (fp)ID_CODE_LONG_2, // Reserved ID Code 0xffffffA4
+   (fp)ID_CODE_LONG_3, // Reserved ID Code 0xffffffA8
+   (fp)ID_CODE_LONG_4, // Reserved ID Code 0xffffffAC
    Default_Handler, // Reserved 0xffffffB0
    Default_Handler, // Reserved 0xffffffB4
    Default_Handler, // Reserved 0xffffffB8
@@ -61,206 +61,207 @@ const fp HardwareVectors[] __attribute__ ((section (".fvectors")))  = {
    PowerON_Reset // Reset 0xfffffffc
 };
 
-static void Excep_BRK(void) __attribute__ ((interrupt));
-static void Excep_BRK(void) {
+static void Excep_BRK(void) __attribute__((interrupt));
+static void Excep_BRK(void)
+{
    __builtin_rx_wait();
 }
 
-void BSC_BUSERR (void) __attribute__ ((weak, alias("Ignore")));
-void FCU_FIFERR (void) __attribute__ ((weak, alias("Ignore")));
-void FCU_FRDYI (void) __attribute__ ((weak, alias("Ignore")));
-void ICU_SWINT (void) __attribute__ ((weak, alias("Ignore")));
-void CMT0_CMI0 (void) __attribute__ ((weak, alias("Ignore")));
-void CMT1_CMI1 (void) __attribute__ ((weak, alias("Ignore")));
-void CMT2_CMI2 (void) __attribute__ ((weak, alias("Ignore")));
-void CMT3_CMI3 (void) __attribute__ ((weak, alias("Ignore")));
-void CAC_FERRF (void) __attribute__ ((weak, alias("Ignore")));
-void CAC_MENDF (void) __attribute__ ((weak, alias("Ignore")));
-void CAC_OVFF (void) __attribute__ ((weak, alias("Ignore")));
-void USB0_D0FIFO0 (void) __attribute__ ((weak, alias("Ignore")));
-void USB1_D0FIFO0 (void) __attribute__ ((weak, alias("Ignore")));
-void USB0_USBI0 (void) __attribute__ ((weak, alias("Ignore")));
-void SDHI_SBFAI (void) __attribute__ ((weak, alias("Ignore")));
-void SDHI_CDETI (void) __attribute__ ((weak, alias("Ignore")));
-void SDHI_CACI (void) __attribute__ ((weak, alias("Ignore")));
-void SDHI_SDACI (void) __attribute__ ((weak, alias("Ignore")));
-void RSPI0_SPEI0 (void) __attribute__ ((weak, alias("Ignore")));
-void RSPI0_SPRI0 (void) __attribute__ ((weak, alias("Ignore")));
-void RSPI0_SPTI0 (void) __attribute__ ((weak, alias("Ignore")));
-void RSPI0_SPII0 (void) __attribute__ ((weak, alias("Ignore")));
-void CAN_COMFRXINT (void) __attribute__ ((weak, alias("Ignore")));
-void CAN_RXFINT (void) __attribute__ ((weak, alias("Ignore")));
-void CAN_TXINT (void) __attribute__ ((weak, alias("Ignore")));
-void CAN_CHERRINT (void) __attribute__ ((weak, alias("Ignore")));
-void CAN_GLERRINT (void) __attribute__ ((weak, alias("Ignore")));
-void DOC_DOPCF (void) __attribute__ ((weak, alias("Ignore")));
-void CMPB_CMPB0 (void) __attribute__ ((weak, alias("Ignore")));
-void CMPB_CMPB1 (void) __attribute__ ((weak, alias("Ignore")));
-void CTSU_CTSUWR (void) __attribute__ ((weak, alias("Ignore")));
-void CTSU_CTSURD (void) __attribute__ ((weak, alias("Ignore")));
-void CTSU_CTSUFN (void) __attribute__ ((weak, alias("Ignore")));
-void RTC_CUP (void) __attribute__ ((weak, alias("Ignore")));
-void ICU_IRQ0 (void) __attribute__ ((weak, alias("Ignore")));
-void ICU_IRQ1 (void) __attribute__ ((weak, alias("Ignore")));
-void ICU_IRQ2 (void) __attribute__ ((weak, alias("Ignore")));
-void ICU_IRQ3 (void) __attribute__ ((weak, alias("Ignore")));
-void ICU_IRQ4 (void) __attribute__ ((weak, alias("Ignore")));
-void ICU_IRQ5 (void) __attribute__ ((weak, alias("Ignore")));
-void ICU_IRQ6 (void) __attribute__ ((weak, alias("Ignore")));
-void ICU_IRQ7 (void) __attribute__ ((weak, alias("Ignore")));
-void ELC_ELSR8I (void) __attribute__ ((weak, alias("Ignore")));
-void LVD_LVD1 (void) __attribute__ ((weak, alias("Ignore")));
-void LVD_LVD2 (void) __attribute__ ((weak, alias("Ignore")));
-void USB0_USBR0 (void) __attribute__ ((weak, alias("Ignore")));
-void VBATT_VBTLVDI (void) __attribute__ ((weak, alias("Ignore")));
-void RTC_ALM (void) __attribute__ ((weak, alias("Ignore")));
-void RTC_PRD (void) __attribute__ ((weak, alias("Ignore")));
-void S12AD_S12ADI0 (void) __attribute__ ((weak, alias("Ignore")));
-void S12AD_GBADI (void) __attribute__ ((weak, alias("Ignore")));
-void CMPB1_CMPB2 (void) __attribute__ ((weak, alias("Ignore")));
-void CMPB1_CMPB3 (void) __attribute__ ((weak, alias("Ignore")));
-void ELC_ELSR18I (void) __attribute__ ((weak, alias("Ignore")));
-void ELC_ELSR19I (void) __attribute__ ((weak, alias("Ignore")));
-void SSI0_SSIF0 (void) __attribute__ ((weak, alias("Ignore")));
-void SSI0_SSIRXI0 (void) __attribute__ ((weak, alias("Ignore")));
-void SSI0_SSITXI0 (void) __attribute__ ((weak, alias("Ignore")));
-void Security_RD (void) __attribute__ ((weak, alias("Ignore")));
-void Security_WR (void) __attribute__ ((weak, alias("Ignore")));
-void Security_Error (void) __attribute__ ((weak, alias("Ignore")));
-void MTU0_TGIA0 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU0_TGIB0 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU0_TGIC0 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU0_TGID0 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU0_TCIV0 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU0_TGIE0 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU0_TGIF0 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU1_TGIA1 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU1_TGIB1 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU1_TCIV1 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU1_TCIU1 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU2_TGIA2 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU2_TGIB2 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU2_TCIV2 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU2_TCIU2 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU3_TGIA3 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU3_TGIB3 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU3_TGIC3 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU3_TGID3 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU3_TCIV3 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU4_TGIA4 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU4_TGIB4 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU4_TGIC4 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU4_TGID4 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU4_TCIV4 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU5_TGIU5 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU5_TGIV5 (void) __attribute__ ((weak, alias("Ignore")));
-void MTU5_TGIW5 (void) __attribute__ ((weak, alias("Ignore")));
-void TPU0_TGI0A (void) __attribute__ ((weak, alias("Ignore")));
-void TPU0_TGI0B (void) __attribute__ ((weak, alias("Ignore")));
-void TPU0_TGI0C (void) __attribute__ ((weak, alias("Ignore")));
-void TPU0_TGI0D (void) __attribute__ ((weak, alias("Ignore")));
-void TPU0_TCI0V (void) __attribute__ ((weak, alias("Ignore")));
-void TPU1_TGI1A (void) __attribute__ ((weak, alias("Ignore")));
-void TPU1_TGI1B (void) __attribute__ ((weak, alias("Ignore")));
-void TPU1_TCI1V (void) __attribute__ ((weak, alias("Ignore")));
-void TPU1_TCI1U (void) __attribute__ ((weak, alias("Ignore")));
-void TPU2_TGI2A (void) __attribute__ ((weak, alias("Ignore")));
-void TPU2_TGI2B (void) __attribute__ ((weak, alias("Ignore")));
-void TPU2_TCI2V (void) __attribute__ ((weak, alias("Ignore")));
-void TPU2_TCI2U (void) __attribute__ ((weak, alias("Ignore")));
-void TPU3_TGI3A (void) __attribute__ ((weak, alias("Ignore")));
-void TPU3_TGI3B (void) __attribute__ ((weak, alias("Ignore")));
-void TPU3_TGI3C (void) __attribute__ ((weak, alias("Ignore")));
-void TPU3_TGI3D (void) __attribute__ ((weak, alias("Ignore")));
-void TPU3_TCI3V (void) __attribute__ ((weak, alias("Ignore")));
-void TPU4_TGI4A (void) __attribute__ ((weak, alias("Ignore")));
-void TPU4_TGI4B (void) __attribute__ ((weak, alias("Ignore")));
-void TPU4_TCI4V (void) __attribute__ ((weak, alias("Ignore")));
-void TPU4_TCI4U (void) __attribute__ ((weak, alias("Ignore")));
-void TPU5_TGI5A (void) __attribute__ ((weak, alias("Ignore")));
-void TPU5_TGI5B (void) __attribute__ ((weak, alias("Ignore")));
-void TPU5_TCI5V (void) __attribute__ ((weak, alias("Ignore")));
-void TPU5_TCI5U (void) __attribute__ ((weak, alias("Ignore")));
-void POE_OEI1 (void) __attribute__ ((weak, alias("Ignore")));
-void POE_OEI2 (void) __attribute__ ((weak, alias("Ignore")));
-void TMR0_CMIA0 (void) __attribute__ ((weak, alias("Ignore")));
-void TMR0_CMIB0 (void) __attribute__ ((weak, alias("Ignore")));
-void TMR0_OVI0 (void) __attribute__ ((weak, alias("Ignore")));
-void TMR1_CMIA1 (void) __attribute__ ((weak, alias("Ignore")));
-void TMR1_CMIB1 (void) __attribute__ ((weak, alias("Ignore")));
-void TMR1_OVI1 (void) __attribute__ ((weak, alias("Ignore")));
-void TMR2_CMIA2 (void) __attribute__ ((weak, alias("Ignore")));
-void TMR2_CMIB2 (void) __attribute__ ((weak, alias("Ignore")));
-void TMR2_OVI2 (void) __attribute__ ((weak, alias("Ignore")));
-void TMR3_CMIA3 (void) __attribute__ ((weak, alias("Ignore")));
-void TMR3_CMIB3 (void) __attribute__ ((weak, alias("Ignore")));
-void TMR3_OVI3 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI2_ERI2 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI2_RXI2 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI2_TXI2 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI2_TEI2 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI3_ERI3 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI3_RXI3 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI3_TXI3 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI3_TEI3 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI4_ERI4 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI4_RXI4 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI4_TXI4 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI4_TEI4 (void) __attribute__ ((weak, alias("Ignore")));
-void DMAC_DMAC0I (void) __attribute__ ((weak, alias("Ignore")));
-void DMAC_DMAC1I (void) __attribute__ ((weak, alias("Ignore")));
-void DMAC_DMAC2I (void) __attribute__ ((weak, alias("Ignore")));
-void DMAC_DMAC3I (void) __attribute__ ((weak, alias("Ignore")));
-void SCI7_ERI7 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI7_RXI7 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI7_TXI7 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI7_TEI7 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI10_ERI10 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI10_RXI10 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI10_TXI10 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI10_TEI10 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI0_ERI0 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI0_RXI0 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI0_TXI0 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI0_TEI0 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI1_ERI1 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI1_RXI1 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI1_TXI1 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI1_TEI1 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI5_ERI5 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI5_RXI5 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI5_TXI5 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI5_TEI5 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI6_ERI6 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI6_RXI6 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI6_TXI6 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI6_TEI6 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI8_ERI8 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI8_RXI8 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI8_TXI8 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI8_TEI8 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI9_ERI9 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI9_RXI9 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI9_TXI9 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI9_TEI9 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI12_ERI12 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI12_RXI12 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI12_TXI12 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI12_TEI12 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI12_SCIX0 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI12_SCIX1 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI12_SCIX2 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI12_SCIX3 (void) __attribute__ ((weak, alias("Ignore")));
-void RIIC0_EEI0 (void) __attribute__ ((weak, alias("Ignore")));
-void RIIC0_RXI0 (void) __attribute__ ((weak, alias("Ignore")));
-void RIIC0_TXI0 (void) __attribute__ ((weak, alias("Ignore")));
-void RIIC0_TEI0 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI11_ERI11 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI11_RXI11 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI11_TXI11 (void) __attribute__ ((weak, alias("Ignore")));
-void SCI11_TEI11 (void) __attribute__ ((weak, alias("Ignore")));
+void BSC_BUSERR(void) __attribute__((weak, alias("Ignore")));
+void FCU_FIFERR(void) __attribute__((weak, alias("Ignore")));
+void FCU_FRDYI(void) __attribute__((weak, alias("Ignore")));
+void ICU_SWINT(void) __attribute__((weak, alias("Ignore")));
+void CMT0_CMI0(void) __attribute__((weak, alias("Ignore")));
+void CMT1_CMI1(void) __attribute__((weak, alias("Ignore")));
+void CMT2_CMI2(void) __attribute__((weak, alias("Ignore")));
+void CMT3_CMI3(void) __attribute__((weak, alias("Ignore")));
+void CAC_FERRF(void) __attribute__((weak, alias("Ignore")));
+void CAC_MENDF(void) __attribute__((weak, alias("Ignore")));
+void CAC_OVFF(void) __attribute__((weak, alias("Ignore")));
+void USB0_D0FIFO0(void) __attribute__((weak, alias("Ignore")));
+void USB1_D0FIFO0(void) __attribute__((weak, alias("Ignore")));
+void USB0_USBI0(void) __attribute__((weak, alias("Ignore")));
+void SDHI_SBFAI(void) __attribute__((weak, alias("Ignore")));
+void SDHI_CDETI(void) __attribute__((weak, alias("Ignore")));
+void SDHI_CACI(void) __attribute__((weak, alias("Ignore")));
+void SDHI_SDACI(void) __attribute__((weak, alias("Ignore")));
+void RSPI0_SPEI0(void) __attribute__((weak, alias("Ignore")));
+void RSPI0_SPRI0(void) __attribute__((weak, alias("Ignore")));
+void RSPI0_SPTI0(void) __attribute__((weak, alias("Ignore")));
+void RSPI0_SPII0(void) __attribute__((weak, alias("Ignore")));
+void CAN_COMFRXINT(void) __attribute__((weak, alias("Ignore")));
+void CAN_RXFINT(void) __attribute__((weak, alias("Ignore")));
+void CAN_TXINT(void) __attribute__((weak, alias("Ignore")));
+void CAN_CHERRINT(void) __attribute__((weak, alias("Ignore")));
+void CAN_GLERRINT(void) __attribute__((weak, alias("Ignore")));
+void DOC_DOPCF(void) __attribute__((weak, alias("Ignore")));
+void CMPB_CMPB0(void) __attribute__((weak, alias("Ignore")));
+void CMPB_CMPB1(void) __attribute__((weak, alias("Ignore")));
+void CTSU_CTSUWR(void) __attribute__((weak, alias("Ignore")));
+void CTSU_CTSURD(void) __attribute__((weak, alias("Ignore")));
+void CTSU_CTSUFN(void) __attribute__((weak, alias("Ignore")));
+void RTC_CUP(void) __attribute__((weak, alias("Ignore")));
+void ICU_IRQ0(void) __attribute__((weak, alias("Ignore")));
+void ICU_IRQ1(void) __attribute__((weak, alias("Ignore")));
+void ICU_IRQ2(void) __attribute__((weak, alias("Ignore")));
+void ICU_IRQ3(void) __attribute__((weak, alias("Ignore")));
+void ICU_IRQ4(void) __attribute__((weak, alias("Ignore")));
+void ICU_IRQ5(void) __attribute__((weak, alias("Ignore")));
+void ICU_IRQ6(void) __attribute__((weak, alias("Ignore")));
+void ICU_IRQ7(void) __attribute__((weak, alias("Ignore")));
+void ELC_ELSR8I(void) __attribute__((weak, alias("Ignore")));
+void LVD_LVD1(void) __attribute__((weak, alias("Ignore")));
+void LVD_LVD2(void) __attribute__((weak, alias("Ignore")));
+void USB0_USBR0(void) __attribute__((weak, alias("Ignore")));
+void VBATT_VBTLVDI(void) __attribute__((weak, alias("Ignore")));
+void RTC_ALM(void) __attribute__((weak, alias("Ignore")));
+void RTC_PRD(void) __attribute__((weak, alias("Ignore")));
+void S12AD_S12ADI0(void) __attribute__((weak, alias("Ignore")));
+void S12AD_GBADI(void) __attribute__((weak, alias("Ignore")));
+void CMPB1_CMPB2(void) __attribute__((weak, alias("Ignore")));
+void CMPB1_CMPB3(void) __attribute__((weak, alias("Ignore")));
+void ELC_ELSR18I(void) __attribute__((weak, alias("Ignore")));
+void ELC_ELSR19I(void) __attribute__((weak, alias("Ignore")));
+void SSI0_SSIF0(void) __attribute__((weak, alias("Ignore")));
+void SSI0_SSIRXI0(void) __attribute__((weak, alias("Ignore")));
+void SSI0_SSITXI0(void) __attribute__((weak, alias("Ignore")));
+void Security_RD(void) __attribute__((weak, alias("Ignore")));
+void Security_WR(void) __attribute__((weak, alias("Ignore")));
+void Security_Error(void) __attribute__((weak, alias("Ignore")));
+void MTU0_TGIA0(void) __attribute__((weak, alias("Ignore")));
+void MTU0_TGIB0(void) __attribute__((weak, alias("Ignore")));
+void MTU0_TGIC0(void) __attribute__((weak, alias("Ignore")));
+void MTU0_TGID0(void) __attribute__((weak, alias("Ignore")));
+void MTU0_TCIV0(void) __attribute__((weak, alias("Ignore")));
+void MTU0_TGIE0(void) __attribute__((weak, alias("Ignore")));
+void MTU0_TGIF0(void) __attribute__((weak, alias("Ignore")));
+void MTU1_TGIA1(void) __attribute__((weak, alias("Ignore")));
+void MTU1_TGIB1(void) __attribute__((weak, alias("Ignore")));
+void MTU1_TCIV1(void) __attribute__((weak, alias("Ignore")));
+void MTU1_TCIU1(void) __attribute__((weak, alias("Ignore")));
+void MTU2_TGIA2(void) __attribute__((weak, alias("Ignore")));
+void MTU2_TGIB2(void) __attribute__((weak, alias("Ignore")));
+void MTU2_TCIV2(void) __attribute__((weak, alias("Ignore")));
+void MTU2_TCIU2(void) __attribute__((weak, alias("Ignore")));
+void MTU3_TGIA3(void) __attribute__((weak, alias("Ignore")));
+void MTU3_TGIB3(void) __attribute__((weak, alias("Ignore")));
+void MTU3_TGIC3(void) __attribute__((weak, alias("Ignore")));
+void MTU3_TGID3(void) __attribute__((weak, alias("Ignore")));
+void MTU3_TCIV3(void) __attribute__((weak, alias("Ignore")));
+void MTU4_TGIA4(void) __attribute__((weak, alias("Ignore")));
+void MTU4_TGIB4(void) __attribute__((weak, alias("Ignore")));
+void MTU4_TGIC4(void) __attribute__((weak, alias("Ignore")));
+void MTU4_TGID4(void) __attribute__((weak, alias("Ignore")));
+void MTU4_TCIV4(void) __attribute__((weak, alias("Ignore")));
+void MTU5_TGIU5(void) __attribute__((weak, alias("Ignore")));
+void MTU5_TGIV5(void) __attribute__((weak, alias("Ignore")));
+void MTU5_TGIW5(void) __attribute__((weak, alias("Ignore")));
+void TPU0_TGI0A(void) __attribute__((weak, alias("Ignore")));
+void TPU0_TGI0B(void) __attribute__((weak, alias("Ignore")));
+void TPU0_TGI0C(void) __attribute__((weak, alias("Ignore")));
+void TPU0_TGI0D(void) __attribute__((weak, alias("Ignore")));
+void TPU0_TCI0V(void) __attribute__((weak, alias("Ignore")));
+void TPU1_TGI1A(void) __attribute__((weak, alias("Ignore")));
+void TPU1_TGI1B(void) __attribute__((weak, alias("Ignore")));
+void TPU1_TCI1V(void) __attribute__((weak, alias("Ignore")));
+void TPU1_TCI1U(void) __attribute__((weak, alias("Ignore")));
+void TPU2_TGI2A(void) __attribute__((weak, alias("Ignore")));
+void TPU2_TGI2B(void) __attribute__((weak, alias("Ignore")));
+void TPU2_TCI2V(void) __attribute__((weak, alias("Ignore")));
+void TPU2_TCI2U(void) __attribute__((weak, alias("Ignore")));
+void TPU3_TGI3A(void) __attribute__((weak, alias("Ignore")));
+void TPU3_TGI3B(void) __attribute__((weak, alias("Ignore")));
+void TPU3_TGI3C(void) __attribute__((weak, alias("Ignore")));
+void TPU3_TGI3D(void) __attribute__((weak, alias("Ignore")));
+void TPU3_TCI3V(void) __attribute__((weak, alias("Ignore")));
+void TPU4_TGI4A(void) __attribute__((weak, alias("Ignore")));
+void TPU4_TGI4B(void) __attribute__((weak, alias("Ignore")));
+void TPU4_TCI4V(void) __attribute__((weak, alias("Ignore")));
+void TPU4_TCI4U(void) __attribute__((weak, alias("Ignore")));
+void TPU5_TGI5A(void) __attribute__((weak, alias("Ignore")));
+void TPU5_TGI5B(void) __attribute__((weak, alias("Ignore")));
+void TPU5_TCI5V(void) __attribute__((weak, alias("Ignore")));
+void TPU5_TCI5U(void) __attribute__((weak, alias("Ignore")));
+void POE_OEI1(void) __attribute__((weak, alias("Ignore")));
+void POE_OEI2(void) __attribute__((weak, alias("Ignore")));
+void TMR0_CMIA0(void) __attribute__((weak, alias("Ignore")));
+void TMR0_CMIB0(void) __attribute__((weak, alias("Ignore")));
+void TMR0_OVI0(void) __attribute__((weak, alias("Ignore")));
+void TMR1_CMIA1(void) __attribute__((weak, alias("Ignore")));
+void TMR1_CMIB1(void) __attribute__((weak, alias("Ignore")));
+void TMR1_OVI1(void) __attribute__((weak, alias("Ignore")));
+void TMR2_CMIA2(void) __attribute__((weak, alias("Ignore")));
+void TMR2_CMIB2(void) __attribute__((weak, alias("Ignore")));
+void TMR2_OVI2(void) __attribute__((weak, alias("Ignore")));
+void TMR3_CMIA3(void) __attribute__((weak, alias("Ignore")));
+void TMR3_CMIB3(void) __attribute__((weak, alias("Ignore")));
+void TMR3_OVI3(void) __attribute__((weak, alias("Ignore")));
+void SCI2_ERI2(void) __attribute__((weak, alias("Ignore")));
+void SCI2_RXI2(void) __attribute__((weak, alias("Ignore")));
+void SCI2_TXI2(void) __attribute__((weak, alias("Ignore")));
+void SCI2_TEI2(void) __attribute__((weak, alias("Ignore")));
+void SCI3_ERI3(void) __attribute__((weak, alias("Ignore")));
+void SCI3_RXI3(void) __attribute__((weak, alias("Ignore")));
+void SCI3_TXI3(void) __attribute__((weak, alias("Ignore")));
+void SCI3_TEI3(void) __attribute__((weak, alias("Ignore")));
+void SCI4_ERI4(void) __attribute__((weak, alias("Ignore")));
+void SCI4_RXI4(void) __attribute__((weak, alias("Ignore")));
+void SCI4_TXI4(void) __attribute__((weak, alias("Ignore")));
+void SCI4_TEI4(void) __attribute__((weak, alias("Ignore")));
+void DMAC_DMAC0I(void) __attribute__((weak, alias("Ignore")));
+void DMAC_DMAC1I(void) __attribute__((weak, alias("Ignore")));
+void DMAC_DMAC2I(void) __attribute__((weak, alias("Ignore")));
+void DMAC_DMAC3I(void) __attribute__((weak, alias("Ignore")));
+void SCI7_ERI7(void) __attribute__((weak, alias("Ignore")));
+void SCI7_RXI7(void) __attribute__((weak, alias("Ignore")));
+void SCI7_TXI7(void) __attribute__((weak, alias("Ignore")));
+void SCI7_TEI7(void) __attribute__((weak, alias("Ignore")));
+void SCI10_ERI10(void) __attribute__((weak, alias("Ignore")));
+void SCI10_RXI10(void) __attribute__((weak, alias("Ignore")));
+void SCI10_TXI10(void) __attribute__((weak, alias("Ignore")));
+void SCI10_TEI10(void) __attribute__((weak, alias("Ignore")));
+void SCI0_ERI0(void) __attribute__((weak, alias("Ignore")));
+void SCI0_RXI0(void) __attribute__((weak, alias("Ignore")));
+void SCI0_TXI0(void) __attribute__((weak, alias("Ignore")));
+void SCI0_TEI0(void) __attribute__((weak, alias("Ignore")));
+void SCI1_ERI1(void) __attribute__((weak, alias("Ignore")));
+void SCI1_RXI1(void) __attribute__((weak, alias("Ignore")));
+void SCI1_TXI1(void) __attribute__((weak, alias("Ignore")));
+void SCI1_TEI1(void) __attribute__((weak, alias("Ignore")));
+void SCI5_ERI5(void) __attribute__((weak, alias("Ignore")));
+void SCI5_RXI5(void) __attribute__((weak, alias("Ignore")));
+void SCI5_TXI5(void) __attribute__((weak, alias("Ignore")));
+void SCI5_TEI5(void) __attribute__((weak, alias("Ignore")));
+void SCI6_ERI6(void) __attribute__((weak, alias("Ignore")));
+void SCI6_RXI6(void) __attribute__((weak, alias("Ignore")));
+void SCI6_TXI6(void) __attribute__((weak, alias("Ignore")));
+void SCI6_TEI6(void) __attribute__((weak, alias("Ignore")));
+void SCI8_ERI8(void) __attribute__((weak, alias("Ignore")));
+void SCI8_RXI8(void) __attribute__((weak, alias("Ignore")));
+void SCI8_TXI8(void) __attribute__((weak, alias("Ignore")));
+void SCI8_TEI8(void) __attribute__((weak, alias("Ignore")));
+void SCI9_ERI9(void) __attribute__((weak, alias("Ignore")));
+void SCI9_RXI9(void) __attribute__((weak, alias("Ignore")));
+void SCI9_TXI9(void) __attribute__((weak, alias("Ignore")));
+void SCI9_TEI9(void) __attribute__((weak, alias("Ignore")));
+void SCI12_ERI12(void) __attribute__((weak, alias("Ignore")));
+void SCI12_RXI12(void) __attribute__((weak, alias("Ignore")));
+void SCI12_TXI12(void) __attribute__((weak, alias("Ignore")));
+void SCI12_TEI12(void) __attribute__((weak, alias("Ignore")));
+void SCI12_SCIX0(void) __attribute__((weak, alias("Ignore")));
+void SCI12_SCIX1(void) __attribute__((weak, alias("Ignore")));
+void SCI12_SCIX2(void) __attribute__((weak, alias("Ignore")));
+void SCI12_SCIX3(void) __attribute__((weak, alias("Ignore")));
+void RIIC0_EEI0(void) __attribute__((weak, alias("Ignore")));
+void RIIC0_RXI0(void) __attribute__((weak, alias("Ignore")));
+void RIIC0_TXI0(void) __attribute__((weak, alias("Ignore")));
+void RIIC0_TEI0(void) __attribute__((weak, alias("Ignore")));
+void SCI11_ERI11(void) __attribute__((weak, alias("Ignore")));
+void SCI11_RXI11(void) __attribute__((weak, alias("Ignore")));
+void SCI11_TXI11(void) __attribute__((weak, alias("Ignore")));
+void SCI11_TEI11(void) __attribute__((weak, alias("Ignore")));
 
-const fp relocatableVectors[] __attribute__ ((section (".relocatableVectorTable")))  = {
+const fp relocatableVectorTable[] __attribute__((section(".relocatableVectorTable"))) = {
    Excep_BRK, // Reserved 0 0x0000
    0, // Reserved 1 0x0004
    0, // Reserved 2 0x0008
@@ -519,10 +520,13 @@ const fp relocatableVectors[] __attribute__ ((section (".relocatableVectorTable"
    0, // Reserved 255 0x03FC
 };
 
-static void Default_Handler(void) __attribute__ ((interrupt));
-static void Default_Handler(void) {
+static void Default_Handler(void) __attribute__((interrupt));
+static void Default_Handler(void)
+{
    Action_Invoke(Action_Rx2xxSystemReset_Init());
 }
 
-static void Ignore(void) __attribute__ ((interrupt));
-static void Ignore(void) {}
+static void Ignore(void) __attribute__((interrupt));
+static void Ignore(void)
+{
+}
