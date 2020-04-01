@@ -60,7 +60,6 @@ COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/Ul \
    $(APPLCOMMON_TINY_DIR)/src/TinyLib \
 
-
 INC_DIRS:=\
    $(APPLCOMMON_DIR)/Utilities \
    $(APPLCOMMON_TINY_DIR)/src/BootLoader \
