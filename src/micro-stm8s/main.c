@@ -8,9 +8,9 @@
 #include <string.h>
 #include "Clk.h"
 #include "Iwdg.h"
-#include "Pa4Heartbeat.h"
+#include "Pa3Heartbeat.h"
 #include "TinyTimeSource_Tim4SystemTick.h"
-#include "TinyUart_Uart2.h"
+#include "TinyUart_Uart3.h"
 #include "TinyTimer.h"
 #include "GeaStack.h"
 #include "Gea2Addresses.h"
@@ -70,11 +70,11 @@ void main(void)
          &timerModule,
          TinyTimeSource_Tim4SystemTick_Init());
 
-      Pa4Heartbeat_Init(&timerModule);
+      Pa3Heartbeat_Init(&timerModule);
 
       GeaStack_Init(
          &geaStack,
-         TinyUart_Uart2_Init(),
+         TinyUart_Uart3_Init(),
          Stm8sGea2Address);
    }
    enableInterrupts();
