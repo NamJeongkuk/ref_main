@@ -8,7 +8,6 @@
 #ifndef NANOSYSTEMERDS_H
 #define NANOSYSTEMERDS_H
 
-#include "Version.h"
 #include "ErdStream.h"
 #include "XMacroUtils.h"
 #include "utils.h"
@@ -35,7 +34,6 @@ enum
 
 // Name, Number, DataType, Stream, RemoteErd
 #define ERD_TABLE(ENTRY) \
-   ENTRY(Erd_ApplicationVersion,       0x003A, Version_t,               StreamNone,    NotMapped) \
    ENTRY(Erd_ErdStream,                0xF000, ErdStreamErd_t,          StreamNone,    NotMapped) \
    ENTRY(Erd_ErdStreamRequestedState,  0xF001, ErdStreamStateRequest_t, StreamNone,    NotMapped) \
    ENTRY(Erd_ButtonState,              0xF002, bool,                    StreamEvent,   0xA000) \

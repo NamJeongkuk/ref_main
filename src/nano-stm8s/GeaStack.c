@@ -11,6 +11,7 @@
 #include "NanoSystemErds.h"
 #include "BootLoader.h"
 #include "TinyBootLoaderCommand.h"
+#include "Version.h"
 #include "utils.h"
 
 extern Version_t version;
