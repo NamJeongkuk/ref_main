@@ -55,6 +55,7 @@ SRC_DIRS:=\
    $(PROJECT_DIR)/$(TARGET) \
 
 COMMON_LIB_DIRS:=\
+   $(APPLCOMMON_TINY_DIR)/src/BootLoader \
    $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/Ul \

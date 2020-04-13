@@ -74,6 +74,7 @@ void main(void)
 
       GeaStack_Init(
          &geaStack,
+         &timerModule,
          TinyUart_Uart3_Init(),
          Stm8sGea2Address);
    }

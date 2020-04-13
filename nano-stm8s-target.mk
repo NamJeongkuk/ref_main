@@ -33,6 +33,7 @@ SRC_DIRS:=\
    $(PROJECT_DIR)/NanoApplication/Plugins \
 
 COMMON_LIB_DIRS:=\
+   $(APPLCOMMON_TINY_DIR)/src/BootLoader \
    $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/Ul \
@@ -40,10 +41,8 @@ COMMON_LIB_DIRS:=\
 
 INC_DIRS:=\
    $(APPLCOMMON_DIR)/Constants \
-   $(APPLCOMMON_DIR)/Image \
    $(APPLCOMMON_DIR)/Utilities \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
-   $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(PROJECT_DIR)/Application/Gea \
 
 SOURCE_EXTENSIONS:=.c .s
