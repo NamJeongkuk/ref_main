@@ -15,7 +15,7 @@
 #include "SerialNumber.h"
 #include "ApplianceType.h"
 #include "AppliancePersonality.h"
-#include "ApplianceApiManifest.h"
+#include "ApplianceApi.h"
 #include "Version.h"
 #include "TinyTimer.h"
 #include "utils.h"

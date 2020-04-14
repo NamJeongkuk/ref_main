@@ -12,7 +12,14 @@
 #include "MemoryMap.h"
 #include "utils.h"
 
-static void ResetTimerExpired(void *context, TinyTimerModule_t *timerModule) {
+enum {
+   ModelParametricItem = 1,
+   SerialParametricItem = 2,
+   Personality = 0
+};
+
+static void ResetTimerExpired(void *context, TinyTimerModule_t *timerModule)
+{
    IGNORE(context);
    IGNORE(timerModule);
    Reset();
@@ -25,13 +32,10 @@ static void DataSourceChanged(void *context, const void *_args)
 
    if(args->erd == Erd_Reset)
    {
-      TinyTimerModule_t*timerModule;
+      TinyTimerModule_t *timerModule;
       TinyDataSource_Read(instance->_private.dataSource, Erd_TimerModule, &timerModule);
       TinyTimerModule_Start(timerModule, &instance->_private.resetTimer, *((uint8_t *)args->data), ResetTimerExpired, NULL);
    }
-
-   (void)instance;
-   (void)args;
 }
 
 void ApplianceApiPlugin_Init(
@@ -42,9 +46,9 @@ void ApplianceApiPlugin_Init(
 
    uint8_t length;
    ModelNumber_t modelSerial;
-   TinyBootLoaderParametric_ReadItem(BootLoaderHeaderAddress, 1, &modelSerial, &length);
+   TinyBootLoaderParametric_ReadItem(BootLoaderHeaderAddress, ModelParametricItem, &modelSerial, &length);
    TinyDataSource_Write(dataSource, Erd_ModelNumber, &modelSerial);
-   TinyBootLoaderParametric_ReadItem(BootLoaderHeaderAddress, 2, &modelSerial, &length);
+   TinyBootLoaderParametric_ReadItem(BootLoaderHeaderAddress, SerialParametricItem, &modelSerial, &length);
    TinyDataSource_Write(dataSource, Erd_SerialNumber, &modelSerial);
 
    ApplianceType_t applianceType = ApplianceType_Dishwasher;
@@ -56,7 +60,7 @@ void ApplianceApiPlugin_Init(
    AppliancePersonality_t personality = 0;
    TinyDataSource_Write(dataSource, Erd_Personality, &personality);
 
-   uint8_t supportedImageTypes = 3; // Boot loader + application
+   uint8_t supportedImageTypes = (1 << ImageType_BootLoader) | (1 << ImageType_Application);
    TinyDataSource_Write(dataSource, Erd_SupportedImageTypes, &supportedImageTypes);
 
    const ImageHeader_t *header = BootLoaderHeaderAddress;
@@ -64,7 +68,10 @@ void ApplianceApiPlugin_Init(
    header = ApplicationHeaderAddress;
    TinyDataSource_Write(dataSource, Erd_ApplicationVersion, &header->criticalMajorVersion);
 
-   ApplianceApiManifest_t applianceApiManifest = { 1, 0x01 | 0x04 }; // Revision 1; primary | boot loader
+   ApplianceApiManifest_t applianceApiManifest = {
+      1,
+      ApplianceApi_Version1_Primary | ApplianceApi_Version1_BootLoader
+   };
    TinyDataSource_Write(dataSource, Erd_ApplianceApiManifest, &applianceApiManifest);
 
    TinyEventSubscription_Init(&instance->_private.dataChangedSubscription, instance, DataSourceChanged);
