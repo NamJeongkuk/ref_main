@@ -22,12 +22,12 @@ static const TinyCommonCommandsConfiguration_t commonCommandsConfiguration = {
 };
 
 #define EXPAND_AS_PUBLIC_ERDS(Name, Number, DataType, Stream, RemoteErd) \
-   CONCAT(INCLUDE_PUBLIC_, Number)(Name COMMA)
+   CONCAT(INCLUDE_PUBLIC_, Number)                                       \
+   (Name COMMA)
 
-static const Erd_t publicErds[] =
-   {
-      ERD_TABLE(EXPAND_AS_PUBLIC_ERDS)
-   };
+static const Erd_t publicErds[] = {
+   ERD_TABLE(EXPAND_AS_PUBLIC_ERDS)
+};
 
 void GeaStack_Init(
    GeaStack_t *instance,

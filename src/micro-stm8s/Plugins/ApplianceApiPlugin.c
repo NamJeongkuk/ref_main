@@ -44,12 +44,14 @@ void ApplianceApiPlugin_Init(
 {
    instance->_private.dataSource = dataSource;
 
+#ifndef DEBUG
    uint8_t length;
    ModelNumber_t modelSerial;
    TinyBootLoaderParametric_ReadItem(BootLoaderHeaderAddress, ModelParametricItem, &modelSerial, &length);
    TinyDataSource_Write(dataSource, Erd_ModelNumber, &modelSerial);
    TinyBootLoaderParametric_ReadItem(BootLoaderHeaderAddress, SerialParametricItem, &modelSerial, &length);
    TinyDataSource_Write(dataSource, Erd_SerialNumber, &modelSerial);
+#endif
 
    ApplianceType_t applianceType = ApplianceType_Dishwasher;
    TinyDataSource_Write(dataSource, Erd_ApplianceType, &applianceType);
