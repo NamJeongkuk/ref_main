@@ -30,6 +30,7 @@ SRC_DIRS:=\
    $(PROJECT_DIR)/$(TARGET)/Hardware \
 
 COMMON_LIB_DIRS:=\
+   $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
    $(APPLCOMMON_TINY_DIR)/src/Application/Stm8CapTouch \
    $(APPLCOMMON_TINY_DIR)/src/BootLoader \
    $(APPLCOMMON_TINY_DIR)/src/Core \
@@ -39,7 +40,6 @@ COMMON_LIB_DIRS:=\
 
 INC_DIRS:=\
    $(APPLCOMMON_DIR)/Constants \
-   $(APPLCOMMON_DIR)/Utilities \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/TouchSense/inc \

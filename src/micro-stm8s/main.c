@@ -15,6 +15,8 @@
 #include "GeaStack.h"
 #include "Gea2Addresses.h"
 #include "Ul.h"
+#include "MicroApplication.h"
+#include "MicroSystemData.h"
 #include "utils.h"
 
 enum
@@ -25,6 +27,8 @@ enum
 static TinyTimerModule_t timerModule;
 static TinyTimer_t periodicWatchdogTimer;
 static GeaStack_t geaStack;
+static MicroSystemData_t systemData;
+static MicroApplication_t application;
 
 static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 {
@@ -37,23 +41,6 @@ static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
       WatchdogKickPeriodInMsec,
       KickWatchdog,
       NULL);
-}
-
-static void PopulateStartupMessage(void *context, Gea2Packet_t *packet)
-{
-   IGNORE(context);
-   packet->destination = 0xFF;
-   packet->payload[0] = 0x00;
-   packet->payload[1] = 0xDE;
-   packet->payload[2] = 0xAF;
-   packet->payload[3] = 0xBA;
-   packet->payload[4] = 0xBE;
-}
-
-// fixme marked for death
-static void SendStartupMessage(I_TinyGea2Interface_t *gea2Interface)
-{
-   TinyGea2Interface_Send(gea2Interface, 5, PopulateStartupMessage, NULL);
 }
 
 void main(void)
@@ -72,15 +59,19 @@ void main(void)
 
       Pa3Heartbeat_Init(&timerModule);
 
+      MicroSystemData_Init(&systemData, &timerModule);
+
       GeaStack_Init(
          &geaStack,
          &timerModule,
+         MicroSystemData_DataSource(&systemData),
          TinyUart_Uart3_Init(),
          Stm8sGea2Address);
+
+      MicroApplication_Init(&application, MicroSystemData_DataSource(&systemData));
    }
    enableInterrupts();
 
-   SendStartupMessage(GeaStack_GetGea2Interface(&geaStack));
    KickWatchdog(NULL, &timerModule);
 
    while(1)

@@ -41,7 +41,7 @@ IGNORE_WARNINGS=24 94
 ifeq ($(DEBUG), N)
 else
 ifeq ($(DEBUG), Y)
-   DEFINE_LIST+=DISABLE_UL_CHECKS
+   DEFINE_LIST+=DISABLE_UL_CHECKS DEBUG
 else
 $(error Please define DEBUG with Y or N.)
 endif
@@ -53,19 +53,21 @@ SRC_FILES:=\
 
 SRC_DIRS:=\
    $(PROJECT_DIR)/$(TARGET) \
+   $(PROJECT_DIR)/$(TARGET)/Plugins \
+   $(PROJECT_DIR)/MicroApplication \
+   $(PROJECT_DIR)/MicroApplication/DataSource \
+   $(PROJECT_DIR)/MicroApplication/GeaStack \
 
 COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/BootLoader \
+   $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
    $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/Ul \
    $(APPLCOMMON_TINY_DIR)/src/TinyLib \
 
 INC_DIRS:=\
-   $(APPLCOMMON_DIR)/Utilities \
-   $(APPLCOMMON_TINY_DIR)/src/BootLoader \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
-   $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(BOOT_LOADER_DIR)/src/$(TARGET)-boot-loader \
    $(PROJECT_DIR)/Application/Gea \
 

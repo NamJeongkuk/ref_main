@@ -9,7 +9,6 @@
 #define NANOAPPLICATION_H
 
 #include "SwitchedLedPlugin.h"
-#include "TinyErdStreamSender.h"
 #include "I_TinyDataSource.h"
 
 typedef struct
