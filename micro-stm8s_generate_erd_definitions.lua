@@ -8,7 +8,7 @@ tools.build_json({
     tools.parser.standard
   },
   erd_files = {
-    'src/micro-stm8s/DataSource/SystemErds.h'
+    'src/MicroApplication/DataSource/MicroSystemErds.h'
   },
   types_factory = Types,
   output = 'build/micro-stm8s/doc/erd-definitions.json'
