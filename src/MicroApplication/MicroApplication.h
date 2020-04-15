@@ -15,7 +15,7 @@ typedef struct
 {
    struct
    {
-      ApplianceApiPlugin_t ApplianceApiPlugin;
+      uint8_t dummy;
    } _private;
 } MicroApplication_t;
 
