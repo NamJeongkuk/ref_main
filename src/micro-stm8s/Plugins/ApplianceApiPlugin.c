@@ -65,7 +65,7 @@ void ApplianceApiPlugin_Init(
    bool readyToEnterBootLoader = true;
    TinyDataSource_Write(instance->_private.dataSource, Erd_ReadyToEnterBootLoader, &readyToEnterBootLoader);
 
-   AppliancePersonality_t personality = 0;
+   AppliancePersonality_t personality = Personality;
    TinyDataSource_Write(instance->_private.dataSource, Erd_Personality, &personality);
 
    uint8_t supportedImageTypes = (1 << ImageType_BootLoader) | (1 << ImageType_Application);
