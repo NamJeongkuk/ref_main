@@ -63,7 +63,7 @@ General-purpose STM32 project using the [STM32F303RB](https://www.st.com/en/micr
 | RAM         | 40 KB  |
 
 ## micro-stm8s
-Small STM8S project using the [STM8S105C6T6](https://www.st.com/resource/en/datasheet/stm8s105c6.pdf) and a non-routing boot loader.
+Small STM8S project using the [STM8S207CBT6](https://www.st.com/resource/en/datasheet/stm8s207cb.pdf) and a non-routing boot loader.
 
 | Memory Type | Size   |
 |-------------|--------|
