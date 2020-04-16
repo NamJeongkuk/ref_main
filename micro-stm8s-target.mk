@@ -73,8 +73,7 @@ INC_DIRS:=\
 
 PACKAGE_CONTENTS:=
 $(call add_to_package,$(OUTPUT_DIR)/binaries,binaries)
-# fixme re-enable once we're generating erd_definitions
-# $(call add_to_package,$(OUTPUT_DIR)/doc,doc)
+$(call add_to_package,$(OUTPUT_DIR)/doc,doc)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
@@ -88,9 +87,8 @@ all: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration $(TARGET)_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 	@cat $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 
-# fixme re-enable erd_definitions once we have ERDs
 .PHONY: package
-package: all artifacts #erd_definitions
+package: all artifacts erd_definitions
 	$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 	@echo Archive complete
 
@@ -124,6 +122,6 @@ include tools/sdcc-stm8/sdcc-stm8-makefile-worker.mk
 .PHONY: erd_definitions
 erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)
 	@echo Generating ERD definitions
-	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -P -MMD $(PROJECT_DIR)/Application/DataSource/SystemErds.h -o $(OUTPUT_DIR)/temporary.h
-	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output build/GeneratedTypes.lua
+	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -Wp -P $(PROJECT_DIR)/MicroApplication/DataSource/MicroSystemErds.h -o $(OUTPUT_DIR)/temporary.h
+	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output build/micro-stm8s/GeneratedTypes.lua
 	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
