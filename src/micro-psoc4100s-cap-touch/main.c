@@ -8,7 +8,7 @@
 #include "CyLib.h"
 #include "TinyTimer.h"
 #include "TinyTimeSource_SysTick.h"
-#include "Psoc4000Watchdog.h"
+#include "Watchdog.h"
 #include "CapTouchKeys.h"
 #include "TinyUart_Gea3.h"
 #include "utils.h"
@@ -30,7 +30,7 @@ static uint8_t receiveBuffer[100];
 static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 {
    IGNORE(context);
-   Psoc4000Watchdog_Kick();
+   Watchdog_Kick();
 
    TinyTimerModule_Start(
       timerModule,
@@ -42,7 +42,7 @@ static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 
 void main(void)
 {
-   Psoc4000Watchdog_InitWithDefaultConfiguration();
+   Watchdog_InitWithDefaultConfiguration();
 
    CyGlobalIntDisable;
    {

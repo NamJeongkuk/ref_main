@@ -51,7 +51,6 @@ SRC_DIRS:=\
    $(PROJECT_DIR)/$(TARGET)/Header \
    $(PROJECT_DIR)/$(TARGET)/PsocShim \
    $(PROJECT_DIR)/$(TARGET)/Plugins \
-   $(PROJECT_DIR)/MicroApplication \
    $(PROJECT_DIR)/MicroApplication/DataSource \
 
 COMMON_LIB_DIRS:=\
