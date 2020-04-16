@@ -11,7 +11,7 @@
 #include "CyLFClk.h"
 #include "CyLib.h"
 
-void Watchdog_InitWithDefaultConfiguration(void)
+void Watchdog_Init(void)
 {
    CySysWdtSetIgnoreBits(1);
    CySysWdtEnable();

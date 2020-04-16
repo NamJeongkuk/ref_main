@@ -12,7 +12,7 @@
 
 /*!
  */
-void Watchdog_InitWithDefaultConfiguration(void);
+void Watchdog_Init(void);
 
 /*!
  */

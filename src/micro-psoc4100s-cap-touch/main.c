@@ -9,12 +9,12 @@
 #include "TinyTimer.h"
 #include "TinyTimeSource_SysTick.h"
 #include "Watchdog.h"
-#include "CapTouchKeys.h"
 #include "TinyUart_Gea3.h"
 #include "utils.h"
-#include "CapTouchKeys.h"
-#include "TinySingleErdHeartbeatStream.h"
-#include "TinyGea2Interface_FullDuplex.h"
+#include "GeaStack.h"
+#include "Gea2Addresses.h"
+#include "Application.h"
+#include "SystemData.h"
 
 enum
 {
@@ -23,9 +23,6 @@ enum
 
 static TinyTimerModule_t timerModule;
 static TinyTimer_t periodicWatchdogTimer;
-static TinyGea2Interface_FullDuplex_t gea2Interface;
-static uint8_t sendBuffer[100];
-static uint8_t receiveBuffer[100];
 
 static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 {
@@ -42,31 +39,31 @@ static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 
 void main(void)
 {
-   Watchdog_InitWithDefaultConfiguration();
+   Watchdog_Init();
 
    CyGlobalIntDisable;
    {
-      TinyTimerModule_Init(&timerModule, TinyTimeSource_SysTick_Init());
-      TinyGea2Interface_FullDuplex_Init(
-         &gea2Interface,
+      TinyTimerModule_Init(
+         &timerModule,
+         TinyTimeSource_SysTick_Init());
+
+      GeaStack_Init(
+         &timerModule,
+         NULL,
          TinyUart_Gea3_Init(),
-         0xBD,
-         sendBuffer,
-         sizeof(sendBuffer),
-         receiveBuffer,
-         sizeof(receiveBuffer),
-         false);
-      TinySingleErdHeartbeatStream_Init(&gea2Interface.interface, &timerModule);
+         Psoc4100sGea2Address);
+
+      SystemData_Init(&timerModule);
    }
    CyGlobalIntEnable;
 
-   CapTouchKeys_Init(&timerModule);
+   Application_Init(SystemData_DataSource());
 
    KickWatchdog(NULL, &timerModule);
 
    while(1)
    {
       TinyTimerModule_Run(&timerModule);
-      TinyGea2Interface_FullDuplex_Run(&gea2Interface);
+      GeaStack_Run();
    }
 }

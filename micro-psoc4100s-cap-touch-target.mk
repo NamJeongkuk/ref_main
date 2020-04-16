@@ -47,15 +47,16 @@ SRC_FILES:=\
 SRC_DIRS:=\
    $(PROJECT_DIR) \
    $(PROJECT_DIR)/$(TARGET) \
+   $(PROJECT_DIR)/$(TARGET)/CapTouch \
+   $(PROJECT_DIR)/$(TARGET)/DataSource \
+   $(PROJECT_DIR)/$(TARGET)/GeaStack \
    $(PROJECT_DIR)/$(TARGET)/Hardware \
-   $(PROJECT_DIR)/$(TARGET)/Header \
    $(PROJECT_DIR)/$(TARGET)/PsocShim \
    $(PROJECT_DIR)/$(TARGET)/Plugins \
    $(PROJECT_DIR)/MicroApplication/DataSource \
 
 COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
-   $(APPLCOMMON_TINY_DIR)/src/Application/Stm8CapTouch \
    $(APPLCOMMON_TINY_DIR)/src/BootLoader \
    $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/TinyLib \

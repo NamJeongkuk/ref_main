@@ -8,14 +8,10 @@
 #include "CapTouchKeys.h"
 #include "CapSenseStatus.h"
 #include "CapSense.h"
-#include "Psoc4000Watchdog.h"
 #include "CapSensePollPeriodMsec.h"
 #include "Reset.h"
-#include "Constants_Binary.h"
 #include "CapSenseConfiguration.h"
 #include "utils.h"
-#include "TinySingleErdHeartbeatStream.h"
-#include "TinySingleErdHeartbeatStreamConfiguration.h"
 
 #define EXPAND_AS_SIZE_ENUM(Channel, Key) \
    derp##Channel,
@@ -200,7 +196,7 @@ static void PollCapTouchKeys(void *context, struct TinyTimerModule_t *timerModul
 
    if(statusCapSense.valid && (statusCapSense.word != lastWord))
    {
-      TinySingleErdHeartbeatStream_UpdateData(statusCapSense.word);
+      // fixme write to data source or something
       lastWord = statusCapSense.word;
    }
 
