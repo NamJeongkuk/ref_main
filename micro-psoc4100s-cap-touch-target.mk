@@ -4,6 +4,8 @@ TARGET:=micro-psoc4100s-cap-touch
 OUTPUT_DIR:=build/$(TARGET)
 APPLCOMMON_TINY_DIR=lib/applcommon.tiny
 APPLCOMMON_DIR=$(APPLCOMMON_TINY_DIR)/lib/applcommon
+BOOT_LOADER_DIR=lib/boot-loaders
+BOOT_LOADER_TARGET=micro-psoc4100s
 PROJECT_DIR=src
 # fixme dustice => $(TARGET)
 PSOC_CREATOR_DIR = src/$(TARGET)/PsocCreator/dustice.cydsn/Generated_Source/PSoC4
@@ -67,15 +69,15 @@ INC_DIRS:=\
 SOURCE_EXTENSIONS:=.c .s
 
 ARM_VERSION:=5-4-2016q3
-DEVICE:=CY8C4025XXX-SXXX
-DEVICE_PART_NUMBER:=CY8C4025LQI-S411
+DEVICE:=CY8C4147XXX-SXXX
+DEVICE_PART_NUMBER:=CY8C4147AZI-S455
 CPU:=cortex-m0plus
 CPU_ARCHITECTURE:=armv6-m
 ENDIANNESS:=little
 OPTIMIZE:=s
 C_STANDARD:=gnu99
 
-HEADER_ADDRESS = 0x00000200
+HEADER_ADDRESS = 0x00004000
 
 WARNINGS_TO_IGNORE:=no-sign-compare
 
@@ -84,15 +86,25 @@ $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).elf,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
 .PHONY: all
-all: target
+all: target $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 	@$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
+	@$(call make_directory,$(OUTPUT_DIR)/binaries)
+	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
+	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
+	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration $(TARGET)_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
-	@echo
 	@cat $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 
 .PHONY: package
 package: all artifacts
 	$(call create_artifacts,$(TARGET)_BN_$(BUILD_NUMBER).zip)
+
+.PHONY: $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot
+$(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot:
+	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N
+
+$(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot: target $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot
+	@$(LUA53) $(SREC_CONCATENATE) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot $(OUTPUT_DIR)/$(TARGET).apl --output $@
 
 .PHONY: upload
 upload: all jlink_tools
@@ -100,6 +112,6 @@ upload: all jlink_tools
 
 .PHONY: clean
 clean: target_clean
-	@echo Clean Complete.
+	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N clean
 
 include tools/gcc-arm-none-eabi/MakefileWorker.mk

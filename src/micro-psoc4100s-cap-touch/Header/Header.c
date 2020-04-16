@@ -15,7 +15,7 @@ enum
    HardwareVersion = 0xFF
 };
 
-extern void Reset(void);
+extern void PowerOnReset(void);
 
 // clang-format off
 static const ImageHeader_t bootLoaderHeader __attribute__((used, section(".applicationHeader"))) =
@@ -35,23 +35,23 @@ static const ImageHeader_t bootLoaderHeader __attribute__((used, section(".appli
       HardwareVersion,
 
       ImageType_Application,
-      ImageHeader_FillValue,
+      ImageHeaderFillValue,
 
       0,
       0,
 
-      { .pointer = NULL },
+      (ImageHeaderPointer_t)NULL,
 
-      { .pointer = Reset },
+      (ImageHeaderPointer_t)PowerOnReset,
 
-      ImageHeader_FillValue,
-      ImageHeader_FillValue,
+      ImageHeaderFillValue,
+      ImageHeaderFillValue,
 
       1,
       {
          {
-            0,
-            (32 * 1024) - 1
+            0x4000,
+            (64 * 1024) - 1
          }
       }
    };
