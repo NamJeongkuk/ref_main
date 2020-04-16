@@ -59,8 +59,8 @@ SRC_DIRS:=\
    $(PROJECT_DIR)/MicroApplication/GeaStack \
 
 COMMON_LIB_DIRS:=\
-   $(APPLCOMMON_TINY_DIR)/src/BootLoader \
    $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
+   $(APPLCOMMON_TINY_DIR)/src/BootLoader \
    $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/Ul \

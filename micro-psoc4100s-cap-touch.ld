@@ -66,12 +66,11 @@ SECTIONS
 {
     .text :
     {
-      _vectors_app_only = .;
-      KEEP(*(.vectors_app_only))
+      _fixedVectorTable = .;
+      KEEP(*(.fixedVectorTable))
       FILL(0xff)
-      . = 0x00000200;
-      _application_header = .;
-      KEEP(*(.application_header))
+      _applicationHeader = .;
+      KEEP(*(.applicationHeader))
       FILL(0xff)
       . = 0x00000300;
       CREATE_OBJECT_SYMBOLS
@@ -118,7 +117,6 @@ SECTIONS
     } >rom
 
     __exidx_end = .;
-
 
     .rodata : ALIGN (4)
     {
@@ -171,7 +169,6 @@ SECTIONS
       _etext = .;
     } >rom
 
-
     /***************************************************************************
     * Checksum Exclude Section for non-bootloadable projects. See below.
     ***************************************************************************/
@@ -187,11 +184,6 @@ SECTIONS
     {
       KEEP(*(.noinit))
     }
-
-    .RestartString (NOLOAD) :
-    {
-       KEEP(*(.RestartString))
-    } >ram
 
     .data : ALIGN(8)
     {

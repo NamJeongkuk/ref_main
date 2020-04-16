@@ -1,129 +1,111 @@
-include tools/sdcc-stm8/sdcc-stm8.mk
+include tools/gcc-arm-none-eabi/mc/makecommon.mk
 
 TARGET:=micro-psoc4100s-cap-touch
 OUTPUT_DIR:=build/$(TARGET)
 APPLCOMMON_TINY_DIR=lib/applcommon.tiny
 APPLCOMMON_DIR=$(APPLCOMMON_TINY_DIR)/lib/applcommon
 PROJECT_DIR=src
-BOOT_LOADER_DIR=lib/boot-loaders
+# fixme dustice => $(TARGET)
+PSOC_CREATOR_DIR = src/$(TARGET)/PsocCreator/dustice.cydsn/Generated_Source/PSoC4
 
-# These options are for the non-debug image
-# This needs to be the address _after_ the header
-# The application header is at 0xA000 and is 64 (0x40) bytes
-HEX_LINKER_OPTIONS=--code-loc 0xA040
-
-# These options are for the debug image
-# This places the fixed vector table at 0x8000 but places the code
-# after the header (which is hard-coded to 0xA000)
-# The application header is at 0xA000 and is 64 (0x40) bytes
-# The IVT follows and is 128 (0x80) bytes
-# 0xA000 + 0x40 + 0x80 => 0xA0C0
-ELF_LINKER_OPTIONS=-Wl-bGSINIT=0xA0C0
-
-# Configures the STM8S headers for your part
-DEVICE_TYPE:=STM8S207
-
-OPENOCD_TARGET:=target/stm8s.cfg
-STM8FLASH_PART:=stm8s207cb
-STM8FLASH_PROGRAMMER:=stlinkv2
-ENDIANNESS:=big
-
-SOURCE_EXTENSIONS:=.c .s
-
-TOOLCHAIN_VERSION:=3.9.0
-OPTIMIZE:=--opt-code-size
-IGNORE_WARNINGS=24 94
-
-# Update value to tweak optimization
-# In general, a higher number means longer build times but smaller code
-# OPTIMIZE_MAX_ALLOCS_PER_NODE:=50000
+# Set custom flags here
+BUILD_RELEASE=2
+BUILD_EMULATOR=1
 
 ifeq ($(DEBUG), N)
+DEFINE_LIST+=CONFIG_BUILD=$(BUILD_RELEASE) NDEBUG
 else
 ifeq ($(DEBUG), Y)
-   DEFINE_LIST+=DISABLE_UL_CHECKS DEBUG
+DEFINE_LIST+=CONFIG_BUILD=$(BUILD_EMULATOR) NDEBUG
 else
 $(error Please define DEBUG with Y or N.)
 endif
 endif
 
-MAIN:=$(PROJECT_DIR)/$(TARGET)/main.c
-
 SRC_FILES:=\
+   $(PSOC_CREATOR_DIR)/CapSense_Control.c \
+   $(PSOC_CREATOR_DIR)/CapSense_Filter.c \
+   $(PSOC_CREATOR_DIR)/CapSense_Processing.c \
+   $(PSOC_CREATOR_DIR)/CapSense_SelfTest.c \
+   $(PSOC_CREATOR_DIR)/CapSense_Sensing.c \
+   $(PSOC_CREATOR_DIR)/CapSense_SensingCSX_LL.c \
+   $(PSOC_CREATOR_DIR)/CapSense_Structure.c \
+   $(PSOC_CREATOR_DIR)/CyBootAsmGnu.s \
+   $(PSOC_CREATOR_DIR)/cyfitter_cfg.c \
+   $(PSOC_CREATOR_DIR)/CyLFClk.c \
+   $(PSOC_CREATOR_DIR)/CyLib.c \
+   $(PSOC_CREATOR_DIR)/CyFlash.c \
+   $(PSOC_CREATOR_DIR)/cymetadata.c \
+   $(PSOC_CREATOR_DIR)/cyutils.c \
+   $(PSOC_CREATOR_DIR)/Gea3_SPI_UART.c \
+   $(PSOC_CREATOR_DIR)/Gea3_UART.c \
+   $(PSOC_CREATOR_DIR)/Gea3.c \
+   $(PSOC_CREATOR_DIR)/Gea3_SPI_UART_INT.c \
+   $(PROJECT_DIR)/nano-stm8s/GeaStack.c \
 
 SRC_DIRS:=\
+   $(PROJECT_DIR) \
    $(PROJECT_DIR)/$(TARGET) \
-   $(PROJECT_DIR)/$(TARGET)/Plugins \
+   $(PROJECT_DIR)/$(TARGET)/Hardware \
+   $(PROJECT_DIR)/$(TARGET)/Header \
+   $(PROJECT_DIR)/$(TARGET)/PsocShim \
    $(PROJECT_DIR)/MicroApplication \
    $(PROJECT_DIR)/MicroApplication/DataSource \
-   $(PROJECT_DIR)/MicroApplication/GeaStack \
 
 COMMON_LIB_DIRS:=\
-   $(APPLCOMMON_TINY_DIR)/src/BootLoader \
    $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
+   $(APPLCOMMON_TINY_DIR)/src/Application/Stm8CapTouch \
+   $(APPLCOMMON_TINY_DIR)/src/BootLoader \
    $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/Ul \
    $(APPLCOMMON_TINY_DIR)/src/TinyLib \
 
 INC_DIRS:=\
+   $(APPLCOMMON_DIR)/BootLoader \
+   $(APPLCOMMON_DIR)/Constants \
+   $(APPLCOMMON_DIR)/Image \
+   $(APPLCOMMON_DIR)/Utilities \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
-   $(BOOT_LOADER_DIR)/src/$(TARGET)-boot-loader \
+   $(PSOC_CREATOR_DIR) \
    $(PROJECT_DIR)/Application/Gea \
 
+SOURCE_EXTENSIONS:=.c .s
+
+ARM_VERSION:=5-4-2016q3
+DEVICE:=CY8C4025XXX-SXXX
+DEVICE_PART_NUMBER:=CY8C4025LQI-S411
+CPU:=cortex-m0plus
+CPU_ARCHITECTURE:=armv6-m
+ENDIANNESS:=little
+OPTIMIZE:=s
+C_STANDARD:=gnu99
+
+HEADER_ADDRESS = 0x00000200
+
+WARNINGS_TO_IGNORE:=no-sign-compare
+
 PACKAGE_CONTENTS:=
-$(call add_to_package,$(OUTPUT_DIR)/binaries,binaries)
-# fixme re-enable once we're generating erd_definitions
-# $(call add_to_package,$(OUTPUT_DIR)/doc,doc)
-$(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
+$(call add_to_package,$(OUTPUT_DIR)/$(TARGET).elf,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
 .PHONY: all
-all: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
-	$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
-	$(call make_directory,$(OUTPUT_DIR)/binaries)
-	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness little --output_directory $(OUTPUT_DIR)/binaries
-	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot --endianness little --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
-	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_DIR)/build/$(TARGET)-boot-loader/$(TARGET)-boot-loader.mot --endianness little --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
+all: target
+	@$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration $(TARGET)_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
+	@echo
 	@cat $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 
-# fixme re-enable erd_definitions once we have ERDs
 .PHONY: package
-package: all artifacts #erd_definitions
-	$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
-	@echo Archive complete
-
-.PHONY: target
-target: $(OUTPUT_DIR)/$(TARGET).apl
-
-.PHONY: boot-loader
-boot-loader:
-	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(TARGET)-boot-loader.mk RELEASE=Y DEBUG=N
-
-# Overlap is allowed during concatenate because the boot loader is not stripped
-$(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot: target boot-loader
-	@$(LUA53) $(SREC_CONCATENATE) --allow_overlap --input $(BOOT_LOADER_DIR)/build/$(TARGET)-boot-loader/$(TARGET)-boot-loader.mot $(OUTPUT_DIR)/$(TARGET).apl --output $@
-
-$(OUTPUT_DIR)/doc:
-	@mkdir -p $(OUTPUT_DIR)/doc
-
-$(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot.hex: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
-	@$(LUA53) $(LUA_SREC_TO_INTEL_HEX) --input $< --output $@
+package: all artifacts
+	$(call create_artifacts,$(TARGET)_BN_$(BUILD_NUMBER).zip)
 
 .PHONY: upload
-upload: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot.hex stm8flash
-	$(call stm8flash_upload,$(STM8FLASH_PROGRAMMER),$(STM8FLASH_PART),$^)
+upload: all jlink_tools
+	$(call jlink_upload,$(OUTPUT_DIR)/$(TARGET).mot)
 
 .PHONY: clean
 clean: target_clean
-	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(TARGET)-boot-loader.mk RELEASE=Y DEBUG=N clean
+	@echo Clean Complete.
 
-include tools/sdcc-stm8/sdcc-stm8-makefile-worker.mk
-
-.PHONY: erd_definitions
-erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)
-	@echo Generating ERD definitions
-	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -P -MMD $(PROJECT_DIR)/Application/DataSource/SystemErds.h -o $(OUTPUT_DIR)/temporary.h
-	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output build/GeneratedTypes.lua
-	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
+include tools/gcc-arm-none-eabi/MakefileWorker.mk

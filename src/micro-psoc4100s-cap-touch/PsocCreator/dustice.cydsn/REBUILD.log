@@ -1,0 +1,61 @@
+--------------- Rebuild Started: 11/21/2019 16:04:47 Project: dustice, Configuration: ARM GCC 5.4-2016-q2-update Debug ---------------
+cydsfit.exe -.appdatapath "C:\Users\Ryan Hartlage\AppData\Local\Cypress Semiconductor\PSoC Creator\4.2" -.fdsnotice -.fdswarpdepfile=warp_dependencies.txt -.fdselabdepfile=elab_dependencies.txt -.fdsbldfile=generated_files.txt -.fdsreffile=referenced_files.txt -p C:\git\mts\src\dustice\PsocCreator\dustice.cydsn\dustice.cyprj -d CY8C4025LQI-S411 -s C:\git\mts\src\dustice\PsocCreator\dustice.cydsn\Generated_Source\PSoC4 -- -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE
+Elaborating Design...
+HDL Generation...
+Synthesis...
+Tech Mapping...
+Analog Placement...
+Analog Routing...
+Analog Code Generation...
+Digital Placement...
+Digital Routing...
+Bitstream Generation...
+Bitstream Verification...
+Static timing analysis...
+API Generation...
+Dependency Generation...
+Cleanup...
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/main.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c main.c -o .\..\..\..\Build\main.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/cyfitter_cfg.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\cyfitter_cfg.c -o .\..\..\..\Build\cyfitter_cfg.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/cymetadata.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\cymetadata.c -o .\..\..\..\Build\cymetadata.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/CapSense_Control.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\CapSense_Control.c -o .\..\..\..\Build\CapSense_Control.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/CapSense_Processing.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\CapSense_Processing.c -o .\..\..\..\Build\CapSense_Processing.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/CapSense_Structure.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\CapSense_Structure.c -o .\..\..\..\Build\CapSense_Structure.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/CapSense_Tuner.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\CapSense_Tuner.c -o .\..\..\..\Build\CapSense_Tuner.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/CapSense_Filter.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\CapSense_Filter.c -o .\..\..\..\Build\CapSense_Filter.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/CapSense_Sensing.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\CapSense_Sensing.c -o .\..\..\..\Build\CapSense_Sensing.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/CapSense_SensingCSX_LL.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\CapSense_SensingCSX_LL.c -o .\..\..\..\Build\CapSense_SensingCSX_LL.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/CapSense_SelfTest.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\CapSense_SelfTest.c -o .\..\..\..\Build\CapSense_SelfTest.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/CapSense_ISR.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\CapSense_ISR.c -o .\..\..\..\Build\CapSense_ISR.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/cy_em_eeprom.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\cy_em_eeprom.c -o .\..\..\..\Build\cy_em_eeprom.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/Cm0plusStart.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\Cm0plusStart.c -o .\..\..\..\Build\Cm0plusStart.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/CyFlash.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\CyFlash.c -o .\..\..\..\Build\CyFlash.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/CyLib.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\CyLib.c -o .\..\..\..\Build\CyLib.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/cyPm.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\cyPm.c -o .\..\..\..\Build\cyPm.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/cyutils.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\cyutils.c -o .\..\..\..\Build\cyutils.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/CyLFClk.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\CyLFClk.c -o .\..\..\..\Build\CyLFClk.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/Gea3.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\Gea3.c -o .\..\..\..\Build\Gea3.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/Gea3_SPI_UART.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\Gea3_SPI_UART.c -o .\..\..\..\Build\Gea3_SPI_UART.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/Gea3_SPI_UART_INT.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\Gea3_SPI_UART_INT.c -o .\..\..\..\Build\Gea3_SPI_UART_INT.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/Gea3_PM.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\Gea3_PM.c -o .\..\..\..\Build\Gea3_PM.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/Gea3_UART.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\Gea3_UART.c -o .\..\..\..\Build\Gea3_UART.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/Gea3_BOOT.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\Gea3_BOOT.c -o .\..\..\..\Build\Gea3_BOOT.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/Gea3_UART_BOOT.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\Gea3_UART_BOOT.c -o .\..\..\..\Build\Gea3_UART_BOOT.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/Gea3_SCBCLK.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\Gea3_SCBCLK.c -o .\..\..\..\Build\Gea3_SCBCLK.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/Gea3_tx.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\Gea3_tx.c -o .\..\..\..\Build\Gea3_tx.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/Gea3_tx_PM.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\Gea3_tx_PM.c -o .\..\..\..\Build\Gea3_tx_PM.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/Gea3_SCB_IRQ.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\Gea3_SCB_IRQ.c -o .\..\..\..\Build\Gea3_SCB_IRQ.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/Gea3_rx.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\Gea3_rx.c -o .\..\..\..\Build\Gea3_rx.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/Gea3_rx_PM.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\Gea3_rx_PM.c -o .\..\..\..\Build\Gea3_rx_PM.o
+arm-none-eabi-as.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -alh=.\..\..\..\Build/CyBootAsmGnu.lst -g -W -o .\..\..\..\Build\CyBootAsmGnu.o Generated_Source\PSoC4\CyBootAsmGnu.s
+arm-none-eabi-ar.exe -rs ..\..\..\Build\dustice.a .\..\..\..\Build\CapSense_Control.o .\..\..\..\Build\CapSense_Processing.o .\..\..\..\Build\CapSense_Structure.o .\..\..\..\Build\CapSense_Tuner.o .\..\..\..\Build\CapSense_Filter.o .\..\..\..\Build\CapSense_Sensing.o .\..\..\..\Build\CapSense_SensingCSX_LL.o .\..\..\..\Build\CapSense_SelfTest.o .\..\..\..\Build\CapSense_ISR.o .\..\..\..\Build\cy_em_eeprom.o .\..\..\..\Build\CyFlash.o .\..\..\..\Build\CyLib.o .\..\..\..\Build\cyPm.o .\..\..\..\Build\cyutils.o .\..\..\..\Build\CyLFClk.o .\..\..\..\Build\Gea3.o .\..\..\..\Build\Gea3_SPI_UART.o .\..\..\..\Build\Gea3_SPI_UART_INT.o .\..\..\..\Build\Gea3_PM.o .\..\..\..\Build\Gea3_UART.o .\..\..\..\Build\Gea3_BOOT.o .\..\..\..\Build\Gea3_UART_BOOT.o .\..\..\..\Build\Gea3_SCBCLK.o .\..\..\..\Build\Gea3_tx.o .\..\..\..\Build\Gea3_tx_PM.o .\..\..\..\Build\Gea3_SCB_IRQ.o .\..\..\..\Build\Gea3_rx.o .\..\..\..\Build\Gea3_rx_PM.o .\..\..\..\Build\CyBootAsmGnu.o
+arm-none-eabi-ar.exe: creating ..\..\..\Build\dustice.a
+arm-none-eabi-gcc.exe -Wl,--start-group -o C:\git\mts\src\dustice\PsocCreator\dustice.cydsn\..\..\..\Build\dustice.elf .\..\..\..\Build\main.o .\..\..\..\Build\cyfitter_cfg.o .\..\..\..\Build\cymetadata.o .\..\..\..\Build\Cm0plusStart.o ..\..\..\Build\dustice.a "C:\Users\Ryan Hartlage\Documents\PSoC Creator\4.2\Downloads ( 4.2).cylib\CapSense_P4_v6_0\PSoC4\Library\Capsense_P4Library_GCCp.a" -mcpu=cortex-m0plus -mthumb -L Generated_Source\PSoC4 -Wl,-Map,.\..\..\..\Build/dustice.map -T Generated_Source\PSoC4\cm0plusgcc.ld -specs=nano.specs -Wl,--gc-sections -g -ffunction-sections -Og -ffat-lto-objects -Wl,--end-group
+cyelftool.exe -C C:\git\mts\src\dustice\PsocCreator\dustice.cydsn\..\..\..\Build\dustice.elf --flash_row_size 128 --flash_size 32768 --flash_offset 0x00000000
+No ELF section .cychecksum found, creating one
+Application checksum calculated and stored in ELF section .cychecksum
+Checksum calculated and stored in ELF section .cymeta
+cyelftool.exe -S C:\git\mts\src\dustice\PsocCreator\dustice.cydsn\..\..\..\Build\dustice.elf
+Flash used: 1552 of 32768 bytes (4.7%).
+SRAM used: 1568 of 4096 bytes (38.3%). Stack: 1280 bytes. Heap: 0 bytes.
+--------------- Rebuild Succeeded: 11/21/2019 16:05:19 ---------------
