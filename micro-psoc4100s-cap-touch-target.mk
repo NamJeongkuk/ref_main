@@ -41,7 +41,6 @@ SRC_FILES:=\
    $(PSOC_CREATOR_DIR)/Gea3_UART.c \
    $(PSOC_CREATOR_DIR)/Gea3.c \
    $(PSOC_CREATOR_DIR)/Gea3_SPI_UART_INT.c \
-   $(PROJECT_DIR)/nano-stm8s/GeaStack.c \
 
 SRC_DIRS:=\
    $(PROJECT_DIR) \
@@ -49,6 +48,7 @@ SRC_DIRS:=\
    $(PROJECT_DIR)/$(TARGET)/Hardware \
    $(PROJECT_DIR)/$(TARGET)/Header \
    $(PROJECT_DIR)/$(TARGET)/PsocShim \
+   $(PROJECT_DIR)/$(TARGET)/Plugins \
    $(PROJECT_DIR)/MicroApplication \
    $(PROJECT_DIR)/MicroApplication/DataSource \
 
@@ -57,15 +57,9 @@ COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Application/Stm8CapTouch \
    $(APPLCOMMON_TINY_DIR)/src/BootLoader \
    $(APPLCOMMON_TINY_DIR)/src/Core \
-   $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
-   $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/Ul \
    $(APPLCOMMON_TINY_DIR)/src/TinyLib \
 
 INC_DIRS:=\
-   $(APPLCOMMON_DIR)/BootLoader \
-   $(APPLCOMMON_DIR)/Constants \
-   $(APPLCOMMON_DIR)/Image \
-   $(APPLCOMMON_DIR)/Utilities \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(PSOC_CREATOR_DIR) \
    $(PROJECT_DIR)/Application/Gea \

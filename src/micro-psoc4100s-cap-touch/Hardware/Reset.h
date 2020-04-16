@@ -5,11 +5,11 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef PSOC4100RESET_H
-#define PSOC4100RESET_H
+#ifndef RESET_H
+#define RESET_H
 
 /*!
  */
-void Psoc4100Reset(void);
+void Reset(void);
 
 #endif

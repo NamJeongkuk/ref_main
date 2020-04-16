@@ -31,7 +31,7 @@
 extern int end;
 
 void initialize_psoc(void);
-void Reset(void);
+void PowerOnReset(void);
 void NmiHandler(void);
 void HardfaultHandler(void);
 
@@ -128,14 +128,14 @@ __attribute__((used, section(".fixedVectorTable")))
 const cyisraddress TempRomVectors[CY_NUM_VECTORS] =
    {
       CY_SYS_INITIAL_STACK_POINTER,
-      (cyisraddress)&Reset
+      (cyisraddress)&PowerOnReset
    };
 
 __attribute__((used, section(".vectors")))
 const cyisraddress RomVectors[CY_NUM_VECTORS] =
    {
       CY_SYS_INITIAL_STACK_POINTER,
-      (cyisraddress)&Reset,
+      (cyisraddress)&PowerOnReset,
       (cyisraddress)&NmiHandler,
       (cyisraddress)&HardfaultHandler,
       &IntDefaultHandler,
@@ -183,7 +183,7 @@ __attribute__((constructor(101))) void initialize_psoc(void)
    (*(uint32 *)CYREG_CM0P_VTOR) = VECTOR_TABLE_ADDRESS;
 }
 
-void Reset(void)
+void PowerOnReset(void)
 {
    CySysWdtDisable();
    Start_c();

@@ -10,7 +10,7 @@
 #include "CapSense.h"
 #include "Psoc4000Watchdog.h"
 #include "CapSensePollPeriodMsec.h"
-#include "Psoc4100Reset.h"
+#include "Reset.h"
 #include "Constants_Binary.h"
 #include "CapSenseConfiguration.h"
 #include "utils.h"
@@ -60,18 +60,10 @@ typedef struct
    uint16_t aboveNoiseThresholdCounter;
 } SensorResetState_t;
 
-typedef struct
-{
-   I_TinyDataSource_t *dataSource;
-   Erd_t capTouchKeysErd;
-   TinyTimer_t pollTimer;
-   CapSenseStatus_t statusCapSense;
-} Instance_t;
-
-static Instance_t instance;
+static CapSenseStatus_t statusCapSense;
 static KeyWatchdogState_t watchdogStateKeys[WatchdogTotalKeys];
 static SensorResetState_t sensorResetState[CapSense_TOTAL_CSD_WIDGETS];
-
+static TinyTimer_t pollTimer;
 static uint16_t lastWord;
 
 static bool baselineHasDriftedOutOfBounds = false;
@@ -103,7 +95,7 @@ static void KeyWatchdogUpdate(void)
 
          if(watchdogStateKeys[key].counter >= KeyWatchdogCounterLimit)
          {
-            Psoc4100Reset();
+            Reset();
          }
       }
    }
@@ -111,14 +103,14 @@ static void KeyWatchdogUpdate(void)
 
 static void PollCapSense(void)
 {
-   instance.statusCapSense.word = 0;
+   statusCapSense.word = 0;
 
    for(int8_t key = 0; key < WatchdogTotalKeys; key++)
    {
       uint32_t capSenseState = CapSense_IsWidgetActive(capSenseId[key]);
       if(capSenseState)
       {
-         BIT_SET(instance.statusCapSense.word, key);
+         BIT_SET(statusCapSense.word, key);
       }
    }
 }
@@ -184,7 +176,7 @@ static void ReadCapTouchKeys(void)
 {
    if(CapSense_NOT_BUSY == CapSense_IsBusy())
    {
-      instance.statusCapSense.valid = true;
+      statusCapSense.valid = true;
 
       CapSense_ProcessAllWidgets();
 
@@ -196,7 +188,7 @@ static void ReadCapTouchKeys(void)
    }
    else
    {
-      instance.statusCapSense.valid = false;
+      statusCapSense.valid = false;
    }
 }
 
@@ -206,11 +198,10 @@ static void PollCapTouchKeys(void *context, struct TinyTimerModule_t *timerModul
 
    ReadCapTouchKeys();
 
-   if(instance.statusCapSense.valid && (instance.statusCapSense.word != lastWord))
+   if(statusCapSense.valid && (statusCapSense.word != lastWord))
    {
-      TinyDataSource_Write(instance.dataSource, instance.capTouchKeysErd, &instance.statusCapSense.word);
-      TinySingleErdHeartbeatStream_UpdateData(instance.statusCapSense.word);
-      lastWord = instance.statusCapSense.word;
+      TinySingleErdHeartbeatStream_UpdateData(statusCapSense.word);
+      lastWord = statusCapSense.word;
    }
 
    StartTimer(timerModule);
@@ -218,15 +209,13 @@ static void PollCapTouchKeys(void *context, struct TinyTimerModule_t *timerModul
 
 static void StartTimer(TinyTimerModule_t *timerModule)
 {
-   TinyTimerModule_Start(timerModule, &instance.pollTimer, CapTouchKeysPollPeriodMsec, PollCapTouchKeys, NULL);
+   TinyTimerModule_Start(timerModule, &pollTimer, CapTouchKeysPollPeriodMsec, PollCapTouchKeys, NULL);
 }
 
-void CapTouchKeys_Init(I_TinyDataSource_t *dataSource, TinyTimerModule_t *timerModule, Erd_t capTouchKeysErd)
+void CapTouchKeys_Init(TinyTimerModule_t *timerModule)
 {
-   instance.statusCapSense.valid = false;
-   instance.statusCapSense.word = 0;
-   instance.capTouchKeysErd = capTouchKeysErd;
-   instance.dataSource = dataSource;
+   statusCapSense.valid = false;
+   statusCapSense.word = 0;
    CapSense_Start();
    CapSense_ScanAllWidgets();
    StartTimer(timerModule);

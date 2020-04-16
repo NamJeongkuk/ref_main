@@ -13,10 +13,8 @@
 #include "TinyUart_Gea3.h"
 #include "utils.h"
 #include "CapTouchKeys.h"
-#include "MicroSystemData.h"
-#include "MicroApplication.h"
-#include "Gea2Addresses.h"
-#include "GeaStack.h"
+#include "TinySingleErdHeartbeatStream.h"
+#include "TinyGea2Interface_FullDuplex.h"
 
 enum
 {
@@ -25,9 +23,9 @@ enum
 
 static TinyTimerModule_t timerModule;
 static TinyTimer_t periodicWatchdogTimer;
-static MicroSystemData_t systemData;
-static MicroApplication_t application;
-static GeaStack_t geaStack;
+static TinyGea2Interface_FullDuplex_t gea2Interface;
+static uint8_t sendBuffer[100];
+static uint8_t receiveBuffer[100];
 
 static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 {
@@ -45,38 +43,30 @@ static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 void main(void)
 {
    Psoc4000Watchdog_InitWithDefaultConfiguration();
-   I_TinyDataSource_t *dataSource = MicroSystemData_DataSource(&systemData);
 
    CyGlobalIntDisable;
    {
       TinyTimerModule_Init(&timerModule, TinyTimeSource_SysTick_Init());
-      MicroSystemData_Init(&systemData);
-
-      GeaStack_Init(
-         &geaStack,
+      TinyGea2Interface_FullDuplex_Init(
+         &gea2Interface,
          TinyUart_Gea3_Init(),
-         &timerModule,
-         Psoc4100sGea2Address);
-
-      MicroApplication_Init(&application, dataSource);
+         0xBD,
+         sendBuffer,
+         sizeof(sendBuffer),
+         receiveBuffer,
+         sizeof(receiveBuffer),
+         false);
+      TinySingleErdHeartbeatStream_Init(&gea2Interface.interface, &timerModule);
    }
    CyGlobalIntEnable;
 
-   // CapTouchKeys_Init(dataSource, &timerModule, Erd_CapTouchKeysState);
+   CapTouchKeys_Init(&timerModule);
 
    KickWatchdog(NULL, &timerModule);
 
    while(1)
    {
       TinyTimerModule_Run(&timerModule);
-      GeaStack_Run(&geaStack);
+      TinyGea2Interface_FullDuplex_Run(&gea2Interface);
    }
 }
-
-const Version_t version =
-   {
-      CRIT_VERSION_MAJOR,
-      CRIT_VERSION_MINOR,
-      NONCRIT_VERSION_MAJOR,
-      NONCRIT_VERSION_MINOR
-   };
