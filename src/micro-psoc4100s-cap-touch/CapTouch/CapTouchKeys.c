@@ -5,10 +5,9 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include <stdbool.h>
 #include "CapTouchKeys.h"
-#include "CapSenseStatus.h"
 #include "CapSense.h"
-#include "CapSensePollPeriodMsec.h"
 #include "Reset.h"
 #include "CapSenseConfiguration.h"
 #include "utils.h"
@@ -55,6 +54,12 @@ typedef struct
    uint16_t noMansLandCounter;
    uint16_t aboveNoiseThresholdCounter;
 } SensorResetState_t;
+
+typedef struct
+{
+   bool valid;
+   uint16_t word;
+} CapSenseStatus_t;
 
 static CapSenseStatus_t statusCapSense;
 static KeyWatchdogState_t watchdogStateKeys[WatchdogTotalKeys];

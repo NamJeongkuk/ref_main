@@ -8,6 +8,11 @@
 #ifndef CAPSENSECONFIGURATION_H
 #define CAPSENSECONFIGURATION_H
 
+enum
+{
+   CapSensePollPeriodMsec = 5
+};
+
 #define CAP_SENSE_CONFIGURATION(ENTRY) \
    ENTRY(CapSense_U102, 102)           \
    ENTRY(CapSense_U103, 103)           \
