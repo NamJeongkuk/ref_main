@@ -17,6 +17,8 @@ enum
    CapTouchResultErd = Erd_KeyState
 };
 
+typedef uint32_t CapTouchState_t;
+
 #define CAP_TOUCH_KEYS(ENTRY) \
    ENTRY(CapSense_U102, 102)           \
    ENTRY(CapSense_U103, 103)           \

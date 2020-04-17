@@ -102,9 +102,9 @@ static void KeyWatchdogUpdate(void)
    }
 }
 
-static uint32_t KeyState(void)
+static CapTouchState_t KeyState(void)
 {
-   uint32_t keyState = 0;
+   CapTouchState_t keyState = 0;
 
    for(uint8_t key = 0; key < CapTouchKeyCount; key++)
    {
@@ -180,7 +180,7 @@ static void Poll(void *context, TinyTimerModule_t *timerModule)
    {
       CapTouch_ProcessAllWidgets();
 
-      uint32_t keyState = KeyState();
+      CapTouchState_t keyState = KeyState();
       KeyWatchdogUpdate();
       SensorResetUpdate();
 

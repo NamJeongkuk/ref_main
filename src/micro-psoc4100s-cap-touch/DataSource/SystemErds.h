@@ -22,7 +22,7 @@
 
 enum
 {
-   StreamedItemCount = 5
+   StreamedItemCount = 10
 };
 
 // clang-format off
@@ -41,12 +41,8 @@ enum
 
 // Name, Number, DataType, Stream, StreamRemoteErd
 #define ERD_TABLE(ENTRY) \
-   ENTRY(Erd_ModelNumber,              0x0001, ModelNumber_t,           StreamNone,    NotMapped) \
-   ENTRY(Erd_SerialNumber,             0x0002, SerialNumber_t,          StreamNone,    NotMapped) \
-   ENTRY(Erd_ApplianceType,            0x0008, ApplianceType_t,         StreamNone,    NotMapped) \
    ENTRY(Erd_ReadyToEnterBootLoader,   0x0030, bool,                    StreamNone,    NotMapped) \
    ENTRY(Erd_Reset,                    0x0032, uint8_t,                 StreamNone,    NotMapped) \
-   ENTRY(Erd_Personality,              0x0035, AppliancePersonality_t,  StreamNone,    NotMapped) \
    ENTRY(Erd_SupportedImageTypes,      0x0038, uint8_t,                 StreamNone,    NotMapped) \
    ENTRY(Erd_BootLoaderVersion,        0x0039, Version_t,               StreamNone,    NotMapped) \
    ENTRY(Erd_ApplicationVersion,       0x003A, Version_t,               StreamNone,    NotMapped) \
@@ -59,7 +55,10 @@ enum
    ENTRY(Erd_ErdStreamRequestedState,  0xF003, ErdStreamStateRequest_t, StreamNone,    NotMapped) \
    ENTRY(Erd_KeyState,                 0xF004, uint32_t,                StreamEvent,   0xF123) \
 
-// fixme key state may need to be redefined
+#define SWAPPED_FIELDS \
+   SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, revision), \
+   SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, features), \
+   SWAPPED_ERD(Erd_KeyState, sizeof(uint32_t)), \
 
 #define EXPAND_AS_STREAMED_ITEM_UNION(Name, Number, DataType, Stream, StreamRemoteErd) \
    CONCAT(INCLUDE_STREAM_, Stream)(DataType item##Name;)
