@@ -18,7 +18,7 @@
 enum
 {
    CAP_TOUCH_KEYS(EXPAND_AS_SIZE_ENUM)
-   CapTouchKeyCount
+      CapTouchKeyCount
 };
 
 enum
@@ -55,32 +55,31 @@ typedef struct
    uint16_t aboveNoiseThresholdCounter;
 } SensorResetState_t;
 
-typedef struct
-{
-   bool valid;
-   uint16_t word;
-} CapTouchStatus_t;
-
 static I_TinyDataSource_t *dataSource;
-static CapTouchStatus_t capTouchStatus;
 static KeyWatchdogState_t watchdogStateKeys[CapTouchKeyCount];
 static SensorResetState_t sensorResetState[CapTouch_TOTAL_CSD_WIDGETS];
 static TinyTimer_t pollTimer;
-static uint16_t lastWord;
 
-static bool baselineHasDriftedOutOfBounds = false;
+static const uint16_t *const capTouchRawKeys[] = {
+   CAP_TOUCH_KEYS(EXPAND_AS_CAP_SENSE_RAW_KEYS)
+};
 
-static const uint16_t *const capTouchRawKeys[] =
-   {
-      CAP_TOUCH_KEYS(EXPAND_AS_CAP_SENSE_RAW_KEYS)
-   };
+static const uint32_t capTouchId[] = {
+   CAP_TOUCH_KEYS(EXPAND_AS_CAP_SENSE_ID)
+};
 
-static const uint32_t capTouchId[] =
-   {
-      CAP_TOUCH_KEYS(EXPAND_AS_CAP_SENSE_ID)
-   };
+static void StartPollTimer(TinyTimerModule_t *timerModule);
 
-static void StartTimer(TinyTimerModule_t *timerModule);
+static void ResetCapTouch(void)
+{
+   CapTouch_Stop();
+   CapTouch_Start();
+   CapTouch_ScanAllWidgets();
+
+   TinyTimerModule_t *timerModule;
+   TinyDataSource_Read(dataSource, CapTouchTimerModuleErd, &timerModule);
+   StartPollTimer(timerModule);
+}
 
 static void KeyWatchdogUpdate(void)
 {
@@ -103,23 +102,24 @@ static void KeyWatchdogUpdate(void)
    }
 }
 
-static void PollCapTouch(void)
+static uint32_t KeyState(void)
 {
-   capTouchStatus.word = 0;
+   uint32_t keyState = 0;
 
-   for(int8_t key = 0; key < CapTouchKeyCount; key++)
+   for(uint8_t key = 0; key < CapTouchKeyCount; key++)
    {
       uint32_t capTouchState = CapTouch_IsWidgetActive(capTouchId[key]);
+
       if(capTouchState)
       {
-         BIT_SET(capTouchStatus.word, key);
+         BIT_SET(keyState, key);
       }
    }
 }
 
 static void SensorResetUpdate(void)
 {
-   baselineHasDriftedOutOfBounds = false;
+   bool baselineHasDriftedOutOfBounds = false;
 
    for(uint8_t i = 0; i < CapTouch_TOTAL_CSX_WIDGETS; i++)
    {
@@ -167,64 +167,38 @@ static void SensorResetUpdate(void)
          sensorResetState[i].aboveNoiseThresholdCounter--;
       }
    }
+
+   if(baselineHasDriftedOutOfBounds)
+   {
+      ResetCapTouch();
+   }
 }
 
-// fixme do this internally
-// bool CapTouchKeys_BaselineHasDriftedOutOfBounds(void)
-// {
-//    return baselineHasDriftedOutOfBounds;
-// }
-
-static void ReadCapTouchKeys(void)
+static void Poll(void *context, TinyTimerModule_t *timerModule)
 {
    if(CapTouch_NOT_BUSY == CapTouch_IsBusy())
    {
-      capTouchStatus.valid = true;
-
       CapTouch_ProcessAllWidgets();
 
-      PollCapTouch();
+      uint32_t keyState = KeyState();
       KeyWatchdogUpdate();
       SensorResetUpdate();
 
       CapTouch_ScanAllWidgets();
+
+      TinyDataSource_Write(dataSource, Erd_KeyState, &keyState);
    }
-   else
-   {
-      capTouchStatus.valid = false;
-   }
+
+   StartPollTimer(timerModule);
 }
 
-static void PollCapTouchKeys(void *context, struct TinyTimerModule_t *timerModule)
+static void StartPollTimer(TinyTimerModule_t *timerModule)
 {
-   IGNORE(context);
-
-   ReadCapTouchKeys();
-
-   if(capTouchStatus.valid && (capTouchStatus.word != lastWord))
-   {
-      // fixme write to data source or something
-      lastWord = capTouchStatus.word;
-   }
-
-   StartTimer(timerModule);
-}
-
-static void StartTimer(TinyTimerModule_t *timerModule)
-{
-   TinyTimerModule_Start(timerModule, &pollTimer, CapTouchKeysPollPeriodMsec, PollCapTouchKeys, NULL);
+   TinyTimerModule_Start(timerModule, &pollTimer, CapTouchKeysPollPeriodMsec, Poll, NULL);
 }
 
 void CapTouchPlugin_Init(I_TinyDataSource_t *_dataSource)
 {
    dataSource = _dataSource;
-   capTouchStatus.valid = false;
-   capTouchStatus.word = 0;
-
-   CapTouch_Start();
-   CapTouch_ScanAllWidgets();
-
-   TinyTimerModule_t *timerModule;
-   TinyDataSource_Read(dataSource, CapTouchTimerModuleErd, &timerModule);
-   StartTimer(timerModule);
+   ResetCapTouch();
 }

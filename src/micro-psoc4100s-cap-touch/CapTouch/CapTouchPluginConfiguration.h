@@ -14,8 +14,7 @@ enum
 {
    CapTouchPluginPollPeriodMsec = 5,
    CapTouchTimerModuleErd = Erd_TimerModule,
-   // fixme something like this
-   // CapTouchResultErd = Erd_CapTouchKeyState
+   CapTouchResultErd = Erd_KeyState
 };
 
 #define CAP_TOUCH_KEYS(ENTRY) \
