@@ -11,7 +11,8 @@ module.exports = {
       outputDirectories: [
         'build',
         'artifacts',
-        'lib/boot-loaders/build'
+        'lib/boot-loaders/build',
+        'lib/boot-loaders/lib/boot-loader-updater/build'
       ]
     }
   },
@@ -22,7 +23,8 @@ module.exports = {
       outputDirectories: [
         'build',
         'artifacts',
-        'lib/boot-loaders/build'
+        'lib/boot-loaders/build',
+        'lib/boot-loaders/lib/boot-loader-updater/build'
       ]
     }
   },
@@ -55,7 +57,32 @@ module.exports = {
       outputDirectories: [
         'build',
         'artifacts',
-        'lib/boot-loaders/build'
+        'lib/boot-loaders/build',
+        'lib/boot-loaders/lib/boot-loader-updater/build'
+      ]
+    }
+  },
+  'mini-rx130-target.mk': {
+    ...kpit_rx_base,
+    options: {
+      ...kpit_rx_base.options,
+      outputDirectories: [
+        'build',
+        'artifacts',
+        'lib/boot-loaders/build',
+        'lib/boot-loaders/lib/boot-loader-updater/build'
+      ]
+    }
+  },
+  'mini-rx231-target.mk': {
+    ...kpit_rx_base,
+    options: {
+      ...kpit_rx_base.options,
+      outputDirectories: [
+        'build',
+        'artifacts',
+        'lib/boot-loaders/build',
+        'lib/boot-loaders/lib/boot-loader-updater/build'
       ]
     }
   }
