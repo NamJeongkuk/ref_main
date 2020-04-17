@@ -11,15 +11,8 @@
 #include "TinyEventSubscription.h"
 #include "TinyBootLoaderParametric.h"
 #include "Reset.h"
-// #include "MemoryMap.h"
+#include "MemoryMap.h"
 #include "utils.h"
-
-enum
-{
-   ModelParametricItem = 1,
-   SerialParametricItem = 2,
-   Personality = 0
-};
 
 static I_TinyDataSource_t *dataSource;
 static TinyEventSubscription_t dataChangedSubscription;
@@ -54,35 +47,20 @@ void ApplianceApiPlugin_Init(I_TinyDataSource_t *_dataSource)
 {
    dataSource = _dataSource;
 
-// #ifndef DEBUG
-//    uint8_t length;
-//    ModelNumber_t modelSerial;
-//    TinyBootLoaderParametric_ReadItem(BootLoaderHeaderAddress, ModelParametricItem, &modelSerial, &length);
-//    TinyDataSource_Write(dataSource, Erd_ModelNumber, &modelSerial);
-//    TinyBootLoaderParametric_ReadItem(BootLoaderHeaderAddress, SerialParametricItem, &modelSerial, &length);
-//    TinyDataSource_Write(dataSource, Erd_SerialNumber, &modelSerial);
-// #endif
-
-   ApplianceType_t applianceType = ApplianceType_Dishwasher;
-   TinyDataSource_Write(dataSource, Erd_ApplianceType, &applianceType);
-
    bool readyToEnterBootLoader = true;
    TinyDataSource_Write(dataSource, Erd_ReadyToEnterBootLoader, &readyToEnterBootLoader);
-
-   AppliancePersonality_t personality = Personality;
-   TinyDataSource_Write(dataSource, Erd_Personality, &personality);
 
    uint8_t supportedImageTypes = (1 << ImageType_BootLoader) | (1 << ImageType_Application);
    TinyDataSource_Write(dataSource, Erd_SupportedImageTypes, &supportedImageTypes);
 
-   // const ImageHeader_t *header = BootLoaderHeaderAddress;
-   // TinyDataSource_Write(dataSource, Erd_BootLoaderVersion, &header->criticalMajorVersion);
-   // header = ApplicationHeaderAddress;
-   // TinyDataSource_Write(dataSource, Erd_ApplicationVersion, &header->criticalMajorVersion);
+   const ImageHeader_t *header = BootLoaderHeaderAddress;
+   TinyDataSource_Write(dataSource, Erd_BootLoaderVersion, &header->criticalMajorVersion);
+   header = ApplicationHeaderAddress;
+   TinyDataSource_Write(dataSource, Erd_ApplicationVersion, &header->criticalMajorVersion);
 
    ApplianceApiManifest_t applianceApiManifest = {
       1,
-      ApplianceApi_Version1_Primary | ApplianceApi_Version1_BootLoader
+      ApplianceApi_Version1_BootLoader
    };
    TinyDataSource_Write(dataSource, Erd_ApplianceApiManifest, &applianceApiManifest);
 
