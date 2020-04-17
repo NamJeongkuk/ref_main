@@ -125,48 +125,58 @@ void Start_c(void)
  * Rom Interrupt Vector table storage area. Must be 256-byte aligned.
  *******************************************************************************/
 __attribute__((used, section(".fixedVectorTable")))
-const cyisraddress TempRomVectors[CY_NUM_VECTORS] =
-   {
-      CY_SYS_INITIAL_STACK_POINTER,
-      (cyisraddress)&PowerOnReset
-   };
+const cyisraddress TempRomVectors[CY_NUM_VECTORS] = {
+   CY_SYS_INITIAL_STACK_POINTER,
+   (cyisraddress)&PowerOnReset
+};
 
 __attribute__((used, section(".vectors")))
-const cyisraddress RomVectors[CY_NUM_VECTORS] =
-   {
-      CY_SYS_INITIAL_STACK_POINTER,
-      (cyisraddress)&PowerOnReset,
-      (cyisraddress)&NmiHandler,
-      (cyisraddress)&HardfaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      (cyisraddress)&SysTickHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      (cyisraddress)&Gea3_SPI_UART_ISR,
-      &IntDefaultHandler,
-      (cyisraddress)&CapTouchIsrTrampoline,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-      &IntDefaultHandler,
-   };
+const cyisraddress RomVectors[CY_NUM_VECTORS] = {
+   CY_SYS_INITIAL_STACK_POINTER,
+   (cyisraddress)&PowerOnReset,
+   (cyisraddress)&NmiHandler,
+   (cyisraddress)&HardfaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   (cyisraddress)&SysTickHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   (cyisraddress)&Gea3_SPI_UART_ISR,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   (cyisraddress)&CapTouchIsrTrampoline,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler
+};
 
 /*******************************************************************************
  * Function Name: initialize_psoc
