@@ -7,8 +7,7 @@ APPLCOMMON_DIR=$(APPLCOMMON_TINY_DIR)/lib/applcommon
 BOOT_LOADER_DIR=lib/boot-loaders
 BOOT_LOADER_TARGET=micro-psoc4100s
 PROJECT_DIR=src
-# fixme dustice => $(TARGET)
-PSOC_CREATOR_DIR = src/$(TARGET)/PsocCreator/dustice.cydsn/Generated_Source/PSoC4
+PSOC_CREATOR_DIR = src/$(TARGET)/PsocCreator/$(TARGET).cydsn/Generated_Source/PSoC4
 
 # Set custom flags here
 BUILD_RELEASE=2
@@ -25,13 +24,13 @@ endif
 endif
 
 SRC_FILES:=\
-   $(PSOC_CREATOR_DIR)/CapSense_Control.c \
-   $(PSOC_CREATOR_DIR)/CapSense_Filter.c \
-   $(PSOC_CREATOR_DIR)/CapSense_Processing.c \
-   $(PSOC_CREATOR_DIR)/CapSense_SelfTest.c \
-   $(PSOC_CREATOR_DIR)/CapSense_Sensing.c \
-   $(PSOC_CREATOR_DIR)/CapSense_SensingCSX_LL.c \
-   $(PSOC_CREATOR_DIR)/CapSense_Structure.c \
+   $(PSOC_CREATOR_DIR)/CapTouch_Control.c \
+   $(PSOC_CREATOR_DIR)/CapTouch_Filter.c \
+   $(PSOC_CREATOR_DIR)/CapTouch_Processing.c \
+   $(PSOC_CREATOR_DIR)/CapTouch_SelfTest.c \
+   $(PSOC_CREATOR_DIR)/CapTouch_Sensing.c \
+   $(PSOC_CREATOR_DIR)/CapTouch_SensingCSX_LL.c \
+   $(PSOC_CREATOR_DIR)/CapTouch_Structure.c \
    $(PSOC_CREATOR_DIR)/CyBootAsmGnu.s \
    $(PSOC_CREATOR_DIR)/cyfitter_cfg.c \
    $(PSOC_CREATOR_DIR)/CyLFClk.c \

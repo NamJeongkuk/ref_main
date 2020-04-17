@@ -1,11 +1,11 @@
 /***************************************************************************//**
-* \file CapSense_Tuner.c
+* \file CapTouch_Tuner.c
 * \version 6.0
 *
 * \brief
 *   This file provides the source code for the Tuner module API of the Component.
 *
-* \see CapSense v6.0 Datasheet
+* \see CapTouch v6.0 Datasheet
 *
 *//*****************************************************************************
 * Copyright (2016-2018), Cypress Semiconductor Corporation.
@@ -38,10 +38,10 @@
 
 #include "cytypes.h"
 #include "CyLib.h"
-#include "CapSense_Structure.h"
-#include "CapSense_Tuner.h"
-#include "CapSense_Control.h"
-#include "CapSense_Configuration.h"
+#include "CapTouch_Structure.h"
+#include "CapTouch_Tuner.h"
+#include "CapTouch_Control.h"
+#include "CapTouch_Configuration.h"
 
 /* Tuner states definition */
 #define TU_FSM_RUNNING      (0u)
@@ -54,7 +54,7 @@
 
 
 /*******************************************************************************
-* Function Name: CapSense_TuInitialize
+* Function Name: CapTouch_TuInitialize
 ****************************************************************************//**
 *
 * \brief
@@ -62,19 +62,19 @@
 *
 * \details
 *   This API sets the tuner state machine to the default state. It is called by
-*   the CapSense_Start() API.
+*   the CapTouch_Start() API.
 *
 *******************************************************************************/
-void CapSense_TuInitialize(void)
+void CapTouch_TuInitialize(void)
 {
-    // volatile CapSense_RAM_STRUCT *ptrDsRam = &CapSense_dsRam;
+    // volatile CapTouch_RAM_STRUCT *ptrDsRam = &CapTouch_dsRam;
 
-    // ptrDsRam->tunerCmd = (uint16)CapSense_TU_CMD_NONE_E;
+    // ptrDsRam->tunerCmd = (uint16)CapTouch_TU_CMD_NONE_E;
     // tunerFsm = TU_FSM_RUNNING;
 }
 
 /*******************************************************************************
-* Function Name: CapSense_RunTuner
+* Function Name: CapTouch_RunTuner
 ****************************************************************************//**
 *
 * \brief
@@ -82,7 +82,7 @@ void CapSense_TuInitialize(void)
 *
 * \details
 *  This function is used to establish synchronized communication between the
-*  CapSense Component and Tuner application (or other host controllers).
+*  CapTouch Component and Tuner application (or other host controllers).
 *  This function is called periodically in the application program loop
 *  to serve the Tuner application (or host controller) requests and commands.
 *  In most cases, the best place to call this function is after processing and
@@ -106,25 +106,25 @@ void CapSense_TuInitialize(void)
 * \return
 *  In some cases, the application program may need to know if the Component was
 *  re-initialized. The return indicates if a restart command was executed or not:
-*    - CapSense_STATUS_RESTART_DONE - Based on a received command, the
+*    - CapTouch_STATUS_RESTART_DONE - Based on a received command, the
 *      Component was restarted.
-*    -  CapSense_STATUS_RESTART_NONE - No restart was executed by this
+*    -  CapTouch_STATUS_RESTART_NONE - No restart was executed by this
 *      function.
 *
 *******************************************************************************/
-uint32 CapSense_RunTuner(void)
+uint32 CapTouch_RunTuner(void)
 {
     // uint8 interruptState;
     // uint32 widgetId;
     // uint32 sensorId;
     // uint32 updateFlag = 0Lu;
-    // CapSense_TU_CMD_ENUM command;
-    // uint32 tunerStatus = CapSense_STATUS_RESTART_NONE;
+    // CapTouch_TU_CMD_ENUM command;
+    // uint32 tunerStatus = CapTouch_STATUS_RESTART_NONE;
 
-    // volatile CapSense_RAM_STRUCT *ptrDsRam;
-    // volatile CapSense_RAM_SNS_STRUCT *ptrSnsTmp;
+    // volatile CapTouch_RAM_STRUCT *ptrDsRam;
+    // volatile CapTouch_RAM_SNS_STRUCT *ptrSnsTmp;
 
-    // ptrDsRam = &CapSense_dsRam;
+    // ptrDsRam = &CapTouch_dsRam;
 
     // do
     // {
@@ -135,42 +135,42 @@ uint32 CapSense_RunTuner(void)
     //     if (TU_FSM_ONE_SCAN == tunerFsm)
     //     {
     //         interruptState = CyEnterCriticalSection();
-    //         ptrDsRam->tunerCmd = (uint16)CapSense_TU_CMD_SUSPEND_E;
+    //         ptrDsRam->tunerCmd = (uint16)CapTouch_TU_CMD_SUSPEND_E;
     //         CyExitCriticalSection(interruptState);
     //     }
-    //     command = (CapSense_TU_CMD_ENUM)ptrDsRam->tunerCmd;
+    //     command = (CapTouch_TU_CMD_ENUM)ptrDsRam->tunerCmd;
 
     //     /* Check command register */
     //     switch (command)
     //     {
-    //     case CapSense_TU_CMD_SUSPEND_E:
+    //     case CapTouch_TU_CMD_SUSPEND_E:
     //         tunerFsm = TU_FSM_SUSPENDED;
     //         updateFlag = 1Lu;
     //         break;
 
-    //     case CapSense_TU_CMD_RESUME_E:
+    //     case CapTouch_TU_CMD_RESUME_E:
     //         tunerFsm = TU_FSM_RUNNING;
     //         updateFlag = 1Lu;
     //         break;
 
-    //     case CapSense_TU_CMD_RESTART_E:
-    //         (void)CapSense_Start();
-    //         tunerStatus = CapSense_STATUS_RESTART_DONE;
+    //     case CapTouch_TU_CMD_RESTART_E:
+    //         (void)CapTouch_Start();
+    //         tunerStatus = CapTouch_STATUS_RESTART_DONE;
     //         tunerFsm = TU_FSM_RUNNING;
     //         updateFlag = 1Lu;
     //         break;
 
-    //     case CapSense_TU_CMD_RUN_SNR_TEST_E:
+    //     case CapTouch_TU_CMD_RUN_SNR_TEST_E:
     //         tunerFsm = TU_FSM_SNR_TEST;
     //         updateFlag = 1Lu;
     //         break;
 
-    //     case CapSense_TU_CMD_PING_E:
+    //     case CapTouch_TU_CMD_PING_E:
     //         tunerFsm = TU_FSM_RUNNING;
     //         updateFlag = 1Lu;
     //         break;
 
-    //     case CapSense_TU_CMD_ONE_SCAN_E:
+    //     case CapTouch_TU_CMD_ONE_SCAN_E:
     //         tunerFsm = TU_FSM_ONE_SCAN;
     //         updateFlag = 0Lu;
     //         break;
@@ -185,9 +185,9 @@ uint32 CapSense_RunTuner(void)
     //         interruptState = CyEnterCriticalSection();
 
     //         /* Check if command wasn't overwritten with new command */
-    //         if (command == (CapSense_TU_CMD_ENUM)ptrDsRam->tunerCmd)
+    //         if (command == (CapTouch_TU_CMD_ENUM)ptrDsRam->tunerCmd)
     //         {
-    //             ptrDsRam->tunerCmd |= CapSense_TU_CMD_COMPLETE_BIT;
+    //             ptrDsRam->tunerCmd |= CapTouch_TU_CMD_COMPLETE_BIT;
     //         }
     //         CyExitCriticalSection(interruptState);
 
@@ -204,12 +204,12 @@ uint32 CapSense_RunTuner(void)
     //     /* Check if widgetId and sensorId are in range,
     //      * and data was updated in RAM (scan counter changed)
     //      */
-    //     if ((widgetId < CapSense_TOTAL_WIDGETS)              &&
-    //         (sensorId < CapSense_GET_SENSOR_COUNT(widgetId)) &&
+    //     if ((widgetId < CapTouch_TOTAL_WIDGETS)              &&
+    //         (sensorId < CapTouch_GET_SENSOR_COUNT(widgetId)) &&
     //         (ptrDsRam->scanCounter != ptrDsRam->snrTestScanCounter))
     //     {
     //         /* Get access to the Sensor Object */
-    //         ptrSnsTmp = CapSense_dsFlash.wdgtArray[widgetId].ptr2SnsRam;
+    //         ptrSnsTmp = CapTouch_dsFlash.wdgtArray[widgetId].ptr2SnsRam;
     //         ptrSnsTmp += sensorId;
 
     //         /* Update data in SNR Test Object */
@@ -217,7 +217,7 @@ uint32 CapSense_RunTuner(void)
     //         ptrDsRam->snrTestScanCounter = ptrDsRam->scanCounter;
     //         ptrDsRam->snrTestRawCount[0u] = ptrSnsTmp->raw[0u];
 
-    //         #if (0u != CapSense_MULTI_FREQ_SCAN_EN)
+    //         #if (0u != CapTouch_MULTI_FREQ_SCAN_EN)
     //             ptrDsRam->snrTestRawCount[1u] = ptrSnsTmp->raw[1u];
     //             ptrDsRam->snrTestRawCount[2u] = ptrSnsTmp->raw[2u];
     //         #endif
