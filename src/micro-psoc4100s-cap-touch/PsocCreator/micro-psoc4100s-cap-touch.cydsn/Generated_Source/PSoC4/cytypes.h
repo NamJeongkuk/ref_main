@@ -224,10 +224,10 @@
             #define CY_IP_FS                (-1 == 2)
             #define CY_IP_FSLT              (-1 == 3)
         #else   /* CY_IP_CPUSSV3 */
-            #define CY_IP_FM                (1 == 0)
-            #define CY_IP_FMLT              (1 == 1)
-            #define CY_IP_FS                (1 == 2)
-            #define CY_IP_FSLT              (1 == 3)
+            #define CY_IP_FM                (3 == 0)
+            #define CY_IP_FMLT              (3 == 1)
+            #define CY_IP_FS                (3 == 2)
+            #define CY_IP_FSLT              (3 == 3)
         #endif  /* (CY_IP_CPUSSV2) */
     #else
         #define CY_IP_FM                (!CY_IP_FMLT)       /* Regular FLASH */
@@ -265,7 +265,7 @@
         #if (CY_IP_CPUSSV2)
             #define CY_IP_INT_NR            (-1u)
         #else   /* CY_IP_CPUSSV3 */
-            #define CY_IP_INT_NR            (16u)
+            #define CY_IP_INT_NR            (28u)
         #endif  /* (CY_IP_CPUSSV2) */
     #else
         #define CY_IP_INT_NR            (32u)
@@ -348,7 +348,7 @@
             #define CY_IP_ECO_BLESS         (0 != 0)
             #define CY_IP_ECO_BLESSV3       (0 != 0)
             #define CY_IP_ECO_SRSSV2        (-1 == 1)
-            #define CY_IP_ECO_SRSSLT        ((0 != 0) && (1 != 0))
+            #define CY_IP_ECO_SRSSLT        ((1 != 0) && (1 != 0))
         #endif  /* (CY_IP_BLESS) */
     #else
         #define CY_IP_ECO_BLESS             (0 != 0)
@@ -369,7 +369,7 @@
                                           -1u)
         
         #elif (CY_IP_SRSSLT)
-            #define CY_IP_PLL           (-1 == 1)
+            #define CY_IP_PLL           (1 == 1)
 
             #define CY_IP_PLL_NR        (1)
         #else
@@ -425,7 +425,7 @@
         #if (CY_IP_CPUSSV2)
             #define CY_IP_DMAC_PRESENT      (-1 == 1)
         #else
-            #define CY_IP_DMAC_PRESENT      (0 == 1)
+            #define CY_IP_DMAC_PRESENT      (1 == 1)
         #endif  /* (CY_IP_CPUSSV2) */
     #else
         #define CY_IP_DMAC_PRESENT          (0 != 0)
@@ -444,7 +444,7 @@
         #if (CY_IP_CPUSSV2)
             #define CY_IP_SL_NR             (-1)
         #else
-            #define CY_IP_SL_NR             (1)
+            #define CY_IP_SL_NR             (3)
         #endif  /* (CY_IP_CPUSSV2) */
     #else
         #define CY_IP_SL_NR                 (0)

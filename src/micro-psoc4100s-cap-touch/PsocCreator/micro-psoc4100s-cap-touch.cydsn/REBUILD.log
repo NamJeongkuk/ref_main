@@ -1,7 +1,45 @@
---------------- Rebuild Started: 04/17/2020 08:34:04 Project: micro-psoc4100s-cap-touch, Configuration: ARM GCC 5.4-2016-q2-update Debug ---------------
+--------------- Rebuild Started: 04/17/2020 14:36:20 Project: micro-psoc4100s-cap-touch, Configuration: ARM GCC 5.4-2016-q2-update Debug ---------------
+Deleting file "..\..\..\Build\main.o"
+Deleting file "..\..\..\Build\cyfitter_cfg.o"
+Deleting file "..\..\..\Build\cymetadata.o"
+Deleting file "..\..\..\Build\cy_em_eeprom.o"
+Deleting file "..\..\..\Build\Cm0plusStart.o"
+Deleting file "..\..\..\Build\CyFlash.o"
+Deleting file "..\..\..\Build\CyLib.o"
+Deleting file "..\..\..\Build\cyPm.o"
+Deleting file "..\..\..\Build\cyutils.o"
+Deleting file "..\..\..\Build\CyBootAsmGnu.o"
+Deleting file "..\..\..\Build\CyLFClk.o"
+Deleting file "..\..\..\Build\Gea3.o"
+Deleting file "..\..\..\Build\Gea3_SPI_UART.o"
+Deleting file "..\..\..\Build\Gea3_SPI_UART_INT.o"
+Deleting file "..\..\..\Build\Gea3_PM.o"
+Deleting file "..\..\..\Build\Gea3_UART.o"
+Deleting file "..\..\..\Build\Gea3_BOOT.o"
+Deleting file "..\..\..\Build\Gea3_UART_BOOT.o"
+Deleting file "..\..\..\Build\Gea3_SCBCLK.o"
+Deleting file "..\..\..\Build\Gea3_tx.o"
+Deleting file "..\..\..\Build\Gea3_tx_PM.o"
+Deleting file "..\..\..\Build\Gea3_SCB_IRQ.o"
+Deleting file "..\..\..\Build\Gea3_rx.o"
+Deleting file "..\..\..\Build\Gea3_rx_PM.o"
+Deleting file "..\..\..\Build\CapTouch_Control.o"
+Deleting file "..\..\..\Build\CapTouch_Processing.o"
+Deleting file "..\..\..\Build\CapTouch_Structure.o"
+Deleting file "..\..\..\Build\CapTouch_Tuner.o"
+Deleting file "..\..\..\Build\CapTouch_Filter.o"
+Deleting file "..\..\..\Build\CapTouch_Sensing.o"
+Deleting file "..\..\..\Build\CapTouch_SensingCSX_LL.o"
+Deleting file "..\..\..\Build\CapTouch_SelfTest.o"
+Deleting file "..\..\..\Build\CapTouch_ISR.o"
+Deleting file "..\..\..\Build\micro-psoc4100s-cap-touch.hex"
+Deleting file "..\..\..\Build\micro-psoc4100s-cap-touch.elf"
+Deleting file "..\..\..\Build\micro-psoc4100s-cap-touch.map"
 Deleting file ".\micro-psoc4100s-cap-touch.cycdx"
 Deleting file ".\micro-psoc4100s-cap-touch.rpt"
-cydsfit.exe -.appdatapath "C:\Users\Ryan Hartlage\AppData\Local\Cypress Semiconductor\PSoC Creator\4.2" -.fdsnotice -.fdswarpdepfile=warp_dependencies.txt -.fdselabdepfile=elab_dependencies.txt -.fdsbldfile=generated_files.txt -.fdsreffile=referenced_files.txt -p C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\micro-psoc4100s-cap-touch.cyprj -d CY8C4025LQI-S411 -s C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\Generated_Source\PSoC4 -- -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE
+Deleting file "..\..\..\Build\.deps\SOURCE_C__ARM_GCC_GENERIC.P"
+Deleting file "..\..\..\Build\.deps\SOURCE_ASM__ARM_GCC_GENERIC.P"
+cydsfit.exe -.appdatapath "C:\Users\Ryan Hartlage\AppData\Local\Cypress Semiconductor\PSoC Creator\4.2" -.fdsnotice -.fdswarpdepfile=warp_dependencies.txt -.fdselabdepfile=elab_dependencies.txt -.fdsbldfile=generated_files.txt -.fdsreffile=referenced_files.txt -p C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\micro-psoc4100s-cap-touch.cyprj -d CY8C4127AZI-S455 -s C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\Generated_Source\PSoC4 -- -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE
 Elaborating Design...
 HDL Generation...
 Synthesis...
@@ -49,15 +87,16 @@ arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -
 arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/CapTouch_SensingCSX_LL.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\CapTouch_SensingCSX_LL.c -o .\..\..\..\Build\CapTouch_SensingCSX_LL.o
 arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/CapTouch_SelfTest.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\CapTouch_SelfTest.c -o .\..\..\..\Build\CapTouch_SelfTest.o
 arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/CapTouch_ISR.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\CapTouch_ISR.c -o .\..\..\..\Build\CapTouch_ISR.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -Wa,-alh=.\..\..\..\Build/CyDMA.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c Generated_Source\PSoC4\CyDMA.c -o .\..\..\..\Build\CyDMA.o
 arm-none-eabi-as.exe -mcpu=cortex-m0plus -mthumb -I. -IGenerated_Source\PSoC4 -alh=.\..\..\..\Build/CyBootAsmGnu.lst -g -W -o .\..\..\..\Build\CyBootAsmGnu.o Generated_Source\PSoC4\CyBootAsmGnu.s
-arm-none-eabi-ar.exe -rs ..\..\..\Build\micro-psoc4100s-cap-touch.a .\..\..\..\Build\cy_em_eeprom.o .\..\..\..\Build\CyFlash.o .\..\..\..\Build\CyLib.o .\..\..\..\Build\cyPm.o .\..\..\..\Build\cyutils.o .\..\..\..\Build\CyLFClk.o .\..\..\..\Build\Gea3.o .\..\..\..\Build\Gea3_SPI_UART.o .\..\..\..\Build\Gea3_SPI_UART_INT.o .\..\..\..\Build\Gea3_PM.o .\..\..\..\Build\Gea3_UART.o .\..\..\..\Build\Gea3_BOOT.o .\..\..\..\Build\Gea3_UART_BOOT.o .\..\..\..\Build\Gea3_SCBCLK.o .\..\..\..\Build\Gea3_tx.o .\..\..\..\Build\Gea3_tx_PM.o .\..\..\..\Build\Gea3_SCB_IRQ.o .\..\..\..\Build\Gea3_rx.o .\..\..\..\Build\Gea3_rx_PM.o .\..\..\..\Build\CapTouch_Control.o .\..\..\..\Build\CapTouch_Processing.o .\..\..\..\Build\CapTouch_Structure.o .\..\..\..\Build\CapTouch_Tuner.o .\..\..\..\Build\CapTouch_Filter.o .\..\..\..\Build\CapTouch_Sensing.o .\..\..\..\Build\CapTouch_SensingCSX_LL.o .\..\..\..\Build\CapTouch_SelfTest.o .\..\..\..\Build\CapTouch_ISR.o .\..\..\..\Build\CyBootAsmGnu.o
+arm-none-eabi-ar.exe -rs ..\..\..\Build\micro-psoc4100s-cap-touch.a .\..\..\..\Build\cy_em_eeprom.o .\..\..\..\Build\CyFlash.o .\..\..\..\Build\CyLib.o .\..\..\..\Build\cyPm.o .\..\..\..\Build\cyutils.o .\..\..\..\Build\CyLFClk.o .\..\..\..\Build\Gea3.o .\..\..\..\Build\Gea3_SPI_UART.o .\..\..\..\Build\Gea3_SPI_UART_INT.o .\..\..\..\Build\Gea3_PM.o .\..\..\..\Build\Gea3_UART.o .\..\..\..\Build\Gea3_BOOT.o .\..\..\..\Build\Gea3_UART_BOOT.o .\..\..\..\Build\Gea3_SCBCLK.o .\..\..\..\Build\Gea3_tx.o .\..\..\..\Build\Gea3_tx_PM.o .\..\..\..\Build\Gea3_SCB_IRQ.o .\..\..\..\Build\Gea3_rx.o .\..\..\..\Build\Gea3_rx_PM.o .\..\..\..\Build\CapTouch_Control.o .\..\..\..\Build\CapTouch_Processing.o .\..\..\..\Build\CapTouch_Structure.o .\..\..\..\Build\CapTouch_Tuner.o .\..\..\..\Build\CapTouch_Filter.o .\..\..\..\Build\CapTouch_Sensing.o .\..\..\..\Build\CapTouch_SensingCSX_LL.o .\..\..\..\Build\CapTouch_SelfTest.o .\..\..\..\Build\CapTouch_ISR.o .\..\..\..\Build\CyDMA.o .\..\..\..\Build\CyBootAsmGnu.o
 arm-none-eabi-ar.exe: creating ..\..\..\Build\micro-psoc4100s-cap-touch.a
 arm-none-eabi-gcc.exe -Wl,--start-group -o C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\..\..\..\Build\micro-psoc4100s-cap-touch.elf .\..\..\..\Build\main.o .\..\..\..\Build\cyfitter_cfg.o .\..\..\..\Build\cymetadata.o .\..\..\..\Build\Cm0plusStart.o ..\..\..\Build\micro-psoc4100s-cap-touch.a "C:\Users\Ryan Hartlage\Documents\PSoC Creator\4.2\Downloads ( 4.2).cylib\CapSense_P4_v6_0\PSoC4\Library\Capsense_P4Library_GCCp.a" -mcpu=cortex-m0plus -mthumb -L Generated_Source\PSoC4 -Wl,-Map,.\..\..\..\Build/micro-psoc4100s-cap-touch.map -T Generated_Source\PSoC4\cm0plusgcc.ld -specs=nano.specs -Wl,--gc-sections -g -ffunction-sections -Og -ffat-lto-objects -Wl,--end-group
-cyelftool.exe -C C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\..\..\..\Build\micro-psoc4100s-cap-touch.elf --flash_row_size 128 --flash_size 32768 --flash_offset 0x00000000
+cyelftool.exe -C C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\..\..\..\Build\micro-psoc4100s-cap-touch.elf --flash_row_size 256 --flash_size 131072 --flash_offset 0x00000000
 No ELF section .cychecksum found, creating one
 Application checksum calculated and stored in ELF section .cychecksum
 Checksum calculated and stored in ELF section .cymeta
 cyelftool.exe -S C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\..\..\..\Build\micro-psoc4100s-cap-touch.elf
-Flash used: 1552 of 32768 bytes (4.7%).
-SRAM used: 1568 of 4096 bytes (38.3%). Stack: 1280 bytes. Heap: 0 bytes.
---------------- Rebuild Succeeded: 04/17/2020 08:34:31 ---------------
+Flash used: 2112 of 131072 bytes (1.6%).
+SRAM used: 1640 of 16384 bytes (10.0%). Stack: 1280 bytes. Heap: 0 bytes.
+--------------- Rebuild Succeeded: 04/17/2020 14:36:56 ---------------

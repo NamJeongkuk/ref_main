@@ -683,7 +683,7 @@ typedef uint16 CapTouch_THRESHOLD_TYPE;
 #define CapTouch_CSD_DUALIDAC_LEVEL           (50u)
 #define CapTouch_CSD_PRESCAN_SETTLING_TIME    (5u)
 #define CapTouch_CSD_SNSCLK_R_CONST           (1000u)
-#define CapTouch_CSD_VREF_MV                  (2743u)
+#define CapTouch_CSD_VREF_MV                  (2021u)
 
 /* CSD settings - Fourth-generation HW block */
 #define CapTouch_CSD_ANALOG_STARTUP_DELAY_US  (10u)
@@ -696,7 +696,7 @@ typedef uint16 CapTouch_THRESHOLD_TYPE;
 #define CapTouch_CSD_INIT_SWITCH_RES          (CapTouch_INIT_SW_RES_MEDIUM)
 #define CapTouch_CSD_SENSING_METHOD           (0)
 #define CapTouch_CSD_SHIELD_SWITCH_RES        (CapTouch_SHIELD_SW_RES_MEDIUM)
-#define CapTouch_CSD_GAIN                     (13Lu)
+#define CapTouch_CSD_GAIN                     (18Lu)
 
 #define CapTouch_CSD_MFS_METHOD               (u)
 #define CapTouch_CSD_MFS_DIVIDER_OFFSET_F1    (1u)
@@ -1079,13 +1079,13 @@ typedef uint16 CapTouch_THRESHOLD_TYPE;
 #define CapTouch_ADC_SELECT_AMUXB_CH          (0u)
 #define CapTouch_ADC_AZ_EN                    (1Lu)
 #define CapTouch_ADC_AZ_TIME                  (5u)
-#define CapTouch_ADC_VREF_MV                  (3840u)
-#define CapTouch_ADC_GAIN                     (9Lu)
-#define CapTouch_ADC_IDAC_DEFAULT             (27u)
+#define CapTouch_ADC_VREF_MV                  (2133u)
+#define CapTouch_ADC_GAIN                     (17Lu)
+#define CapTouch_ADC_IDAC_DEFAULT             (19u)
 #define CapTouch_ADC_MODCLK_DIV_DEFAULT       (1u)
 #define CapTouch_ADC_MEASURE_MODE             (CapTouch_ADC_FULLRANGE_MODE)
 #define CapTouch_ADC_ANALOG_STARTUP_DELAY_US  (5u)
-#define CapTouch_ADC_ACQUISITION_TIME_US      (10u)
+#define CapTouch_ADC_ACQUISITION_TIME_US      (13u)
 
 /*******************************************************************************
 * Built-In Self-Test Configuration
@@ -1146,9 +1146,9 @@ typedef uint16 CapTouch_THRESHOLD_TYPE;
 /* The minimum valid sense clock divider */
 #define CapTouch_TST_MIN_SNS_CLK_DIVIDER        (4u)
 /* VDDA measurement test configuration */
-#define CapTouch_TST_VDDA_VREF_MV               (3840u)
-#define CapTouch_TST_VDDA_VREF_GAIN             (9u)
-#define CapTouch_TST_VDDA_IDAC_DEFAULT          (27u)
+#define CapTouch_TST_VDDA_VREF_MV               (2133u)
+#define CapTouch_TST_VDDA_VREF_GAIN             (17u)
+#define CapTouch_TST_VDDA_IDAC_DEFAULT          (19u)
 
 #define CapTouch_TST_ANALOG_STARTUP_DELAY_US    (23u)
 

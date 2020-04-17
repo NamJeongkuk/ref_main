@@ -49,6 +49,7 @@
 #include "cytypes.h"
 #include "cypins.h"
 #include "core_cm0plus_psoc4.h"
+#include "CyDMA.h"
 #include "CyLFClk.h"
 
 /*[]*/

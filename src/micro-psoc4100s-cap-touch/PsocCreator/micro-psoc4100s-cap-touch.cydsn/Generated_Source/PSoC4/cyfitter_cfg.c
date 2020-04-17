@@ -21,6 +21,7 @@
 #include "cydevice_trm.h"
 #include "cyfitter.h"
 #include "CyLib.h"
+#include "CyLFClk.h"
 #include "cyfitter_cfg.h"
 #include "cyapicallbacks.h"
 
@@ -183,12 +184,16 @@ static void ClockSetup(void)
 	/* CYDEV_CLK_SELECT Starting address: CYDEV_CLK_SELECT */
 	CY_SET_REG32((void *)(CYREG_CLK_SELECT), 0x00000000u);
 
-	/* CYDEV_PERI_PCLK_CTL2 Starting address: CYDEV_PERI_PCLK_CTL2 */
-	CY_SET_REG32((void *)(CYREG_PERI_PCLK_CTL2), 0x00000040u);
+	/* CYDEV_PERI_PCLK_CTL5 Starting address: CYDEV_PERI_PCLK_CTL5 */
+	CY_SET_REG32((void *)(CYREG_PERI_PCLK_CTL5), 0x00000040u);
 
-	/* CYDEV_PERI_PCLK_CTL1 Starting address: CYDEV_PERI_PCLK_CTL1 */
-	CY_SET_REG32((void *)(CYREG_PERI_PCLK_CTL1), 0x00000041u);
+	/* CYDEV_PERI_PCLK_CTL3 Starting address: CYDEV_PERI_PCLK_CTL3 */
+	CY_SET_REG32((void *)(CYREG_PERI_PCLK_CTL3), 0x00000041u);
 
+	(void)CyIntSetVector(13u, &CySysTimerIsr);
+	CyIntEnable(13u);
+	CY_SET_REG32((void *)(CYREG_WCO_WDT_CONFIG), 0x00000000u);
+	CySysClkSetTimerSource(CY_SYS_CLK_TIMER_SRC_ILO);
 	/* Set Flash Cycles based on newly configured 24.00MHz HFCLK. */
 	CY_SET_REG32((void CYXDATA *)(CYREG_CPUSS_FLASH_CTL), (0x0011u));
 }
@@ -215,9 +220,12 @@ static void ClockSetup(void)
 static void AnalogSetDefault(void);
 static void AnalogSetDefault(void)
 {
+	CY_SET_XTND_REG32((void CYFAR *)CYREG_HSIOM_AMUX_SPLIT_CTL0, 0x00000003u);
 	CY_SET_XTND_REG32((void CYFAR *)CYREG_CSD_SW_BYP_SEL, 0x00001000u);
 	CY_SET_XTND_REG32((void CYFAR *)CYREG_CSD_SW_DSI_SEL, 0x00000011u);
-	/* Variable VDDA is selected; no pumps are enabled by default */
+	CY_SET_XTND_REG32((void CYFAR *)CYREG_CTBM0_DFT_CTRL, 0x00000003u);
+	CY_SET_XTND_REG32((void CYFAR *)CYREG_PASS_DSAB_DSAB_CTRL, 0x00000020u);
+	SetAnalogRoutingPumps(1);
 }
 
 
@@ -239,7 +247,7 @@ static void AnalogSetDefault(void)
 *******************************************************************************/
 void SetAnalogRoutingPumps(uint8 enabled)
 {
-	uint32 regValue = CY_GET_XTND_REG32((void *)(CYREG_HSIOM_PUMP_CTL));
+	uint32 regValue = CY_GET_XTND_REG32((void *)(CYREG_SAR_PUMP_CTRL));
 	if (enabled != 0u)
 	{
 		regValue |= 0x80000000u;
@@ -248,7 +256,7 @@ void SetAnalogRoutingPumps(uint8 enabled)
 	{
 		regValue &= ~0x80000000u;
 	}
-	CY_SET_XTND_REG32((void *)(CYREG_HSIOM_PUMP_CTL), regValue);
+	CY_SET_XTND_REG32((void *)(CYREG_SAR_PUMP_CTRL), regValue);
 	regValue = CY_GET_XTND_REG32((void *)(CYREG_CLK_SELECT));
 	if (enabled != 0u)
 	{
@@ -288,18 +296,18 @@ void cyfitter_cfg(void)
 
 	{
 		/* HSIOM Starting address: CYDEV_HSIOM_BASE */
-		CY_SET_REG32((void *)(CYDEV_HSIOM_BASE), 0x06990066u);
+		CY_SET_REG32((void *)(CYDEV_HSIOM_BASE), 0x06000066u);
 		CY_SET_REG32((void *)(CYREG_HSIOM_PORT_SEL1), 0x60000000u);
 		CY_SET_REG32((void *)(CYREG_HSIOM_PORT_SEL2), 0x66000066u);
 		CY_SET_REG32((void *)(CYREG_HSIOM_PORT_SEL3), 0x0000EE00u);
+		CY_SET_REG32((void *)(CYREG_HSIOM_PORT_SEL7), 0x00000099u);
 
 	}
 
 	/* Perform second pass device configuration. These items must be configured in specific order after the regular configuration is done. */
 	/* IOPINS0_0 Starting address: CYDEV_GPIO_PRT0_BASE */
-	CY_SET_REG32((void *)(CYDEV_GPIO_PRT0_BASE), 0x00000023u);
-	CY_SET_REG32((void *)(CYREG_GPIO_PRT0_PC), 0x00031000u);
-	CY_SET_REG32((void *)(CYREG_GPIO_PRT0_PC2), 0x00000063u);
+	CY_SET_REG32((void *)(CYDEV_GPIO_PRT0_BASE), 0x00000003u);
+	CY_SET_REG32((void *)(CYREG_GPIO_PRT0_PC2), 0x00000043u);
 
 	/* IOPINS0_1 Starting address: CYDEV_GPIO_PRT1_BASE */
 	CY_SET_REG32((void *)(CYREG_GPIO_PRT1_PC2), 0x00000080u);
@@ -313,6 +321,11 @@ void cyfitter_cfg(void)
 
 	/* IOPINS0_4 Starting address: CYDEV_GPIO_PRT4_BASE */
 	CY_SET_REG32((void *)(CYREG_GPIO_PRT4_PC2), 0x0000000Cu);
+
+	/* IOPINS0_7 Starting address: CYDEV_GPIO_PRT7_BASE */
+	CY_SET_REG32((void *)(CYDEV_GPIO_PRT7_BASE), 0x00000002u);
+	CY_SET_REG32((void *)(CYREG_GPIO_PRT7_PC), 0x00000031u);
+	CY_SET_REG32((void *)(CYREG_GPIO_PRT7_PC2), 0x00000002u);
 
 
 	/* Setup clocks based on selections from Clock DWR */

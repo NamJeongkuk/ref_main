@@ -20,7 +20,7 @@
 #include "cytypes.h"
 #include "cydevice_trm.h"
 
-#define CY_IP_WCO_WDT_EN           (-1 == 1)
+#define CY_IP_WCO_WDT_EN           (1 == 1)
 
 typedef enum
 {
