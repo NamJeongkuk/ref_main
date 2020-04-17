@@ -15,6 +15,7 @@
 #include "TinyCommonCommands.h"
 #include "TinyErdHeartbeat.h"
 #include "TinyErdStreamSender.h"
+#include "TinyErdGea2OpenLoopWriteApiRevision2.h"
 #include "TinyGea2Interface_FullDuplex.h"
 #include "utils.h"
 
@@ -37,6 +38,7 @@ static uint8_t receiveBuffer[Gea2ReceiveBufferSize];
 static TinyCommonCommands_t commonCommands;
 static TinyErdHeartbeat_t erdHeartbeat;
 static TinyErdStreamSender_t erdStreamSender;
+static TinyErdGea2OpenLoopWriteApiRevision2_t openLoopWriteApi;
 
 static const TinyCommonCommandsConfiguration_t commonCommandsConfiguration = {
    .bootLoaderHeader = BootLoaderHeaderAddress,
@@ -108,6 +110,11 @@ void GeaStack_Init(
       &erdStreamSender,
       externalDataSource,
       &erdStreamSenderConfiguration);
+
+   TinyErdGea2OpenLoopWriteApiRevision2_Init(
+      &openLoopWriteApi,
+      externalDataSource,
+      &gea2Interface.interface);
 }
 
 I_TinyGea2Interface_t *GeaStack_GetGea2Interface(void)
