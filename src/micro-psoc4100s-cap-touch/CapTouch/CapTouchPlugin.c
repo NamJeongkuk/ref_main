@@ -6,10 +6,10 @@
  */
 
 #include <stdbool.h>
-#include "CapTouchKeys.h"
+#include "CapTouchPlugin.h"
+#include "CapTouchPluginConfiguration.h"
 #include "CapSense.h"
 #include "Reset.h"
-#include "CapSenseConfiguration.h"
 #include "utils.h"
 
 #define EXPAND_AS_SIZE_ENUM(Channel, Key) \
@@ -17,20 +17,20 @@
 
 enum
 {
-   CAP_SENSE_CONFIGURATION(EXPAND_AS_SIZE_ENUM)
-   WatchdogTotalKeys
+   CAP_TOUCH_KEYS(EXPAND_AS_SIZE_ENUM)
+   CapTouchKeyCount
 };
 
 enum
 {
    KeyWatchdogTimeoutMsec = 5 * 60 * 1000,
-   KeyWatchdogCounterLimit = KeyWatchdogTimeoutMsec / CapSensePollPeriodMsec,
+   KeyWatchdogCounterLimit = KeyWatchdogTimeoutMsec / CapTouchPluginPollPeriodMsec,
 
    SensorResetNoMansLandTimeoutMsec = 5000,
-   SensorResetNoMansLandCounterLimit = SensorResetNoMansLandTimeoutMsec / CapSensePollPeriodMsec,
+   SensorResetNoMansLandCounterLimit = SensorResetNoMansLandTimeoutMsec / CapTouchPluginPollPeriodMsec,
 
    SensorResetAboveNoiseThresholdTimeoutMsec = 35000,
-   SensorResetAboveNoiseThresholdCounterLimit = SensorResetAboveNoiseThresholdTimeoutMsec / CapSensePollPeriodMsec,
+   SensorResetAboveNoiseThresholdCounterLimit = SensorResetAboveNoiseThresholdTimeoutMsec / CapTouchPluginPollPeriodMsec,
 
    AllowedBaselineDriftPercentageFromTarget = 30,
 
@@ -61,8 +61,9 @@ typedef struct
    uint16_t word;
 } CapSenseStatus_t;
 
+static I_TinyDataSource_t *dataSource;
 static CapSenseStatus_t statusCapSense;
-static KeyWatchdogState_t watchdogStateKeys[WatchdogTotalKeys];
+static KeyWatchdogState_t watchdogStateKeys[CapTouchKeyCount];
 static SensorResetState_t sensorResetState[CapSense_TOTAL_CSD_WIDGETS];
 static TinyTimer_t pollTimer;
 static uint16_t lastWord;
@@ -71,19 +72,19 @@ static bool baselineHasDriftedOutOfBounds = false;
 
 static const uint16_t *const capSenseRawKeys[] =
    {
-      CAP_SENSE_CONFIGURATION(EXPAND_AS_CAP_SENSE_RAW_KEYS)
+      CAP_TOUCH_KEYS(EXPAND_AS_CAP_SENSE_RAW_KEYS)
    };
 
 static const uint32_t capSenseId[] =
    {
-      CAP_SENSE_CONFIGURATION(EXPAND_AS_CAP_SENSE_ID)
+      CAP_TOUCH_KEYS(EXPAND_AS_CAP_SENSE_ID)
    };
 
 static void StartTimer(TinyTimerModule_t *timerModule);
 
 static void KeyWatchdogUpdate(void)
 {
-   for(uint8_t key = 0; key < WatchdogTotalKeys; key++)
+   for(uint8_t key = 0; key < CapTouchKeyCount; key++)
    {
       if(*capSenseRawKeys[key] != watchdogStateKeys[key].lastRaw)
       {
@@ -106,7 +107,7 @@ static void PollCapSense(void)
 {
    statusCapSense.word = 0;
 
-   for(int8_t key = 0; key < WatchdogTotalKeys; key++)
+   for(int8_t key = 0; key < CapTouchKeyCount; key++)
    {
       uint32_t capSenseState = CapSense_IsWidgetActive(capSenseId[key]);
       if(capSenseState)
@@ -168,10 +169,11 @@ static void SensorResetUpdate(void)
    }
 }
 
-bool CapTouchKeys_BaselineHasDriftedOutOfBounds(void)
-{
-   return baselineHasDriftedOutOfBounds;
-}
+// fixme do this internally
+// bool CapTouchKeys_BaselineHasDriftedOutOfBounds(void)
+// {
+//    return baselineHasDriftedOutOfBounds;
+// }
 
 static void ReadCapTouchKeys(void)
 {
@@ -213,11 +215,16 @@ static void StartTimer(TinyTimerModule_t *timerModule)
    TinyTimerModule_Start(timerModule, &pollTimer, CapTouchKeysPollPeriodMsec, PollCapTouchKeys, NULL);
 }
 
-void CapTouchKeys_Init(TinyTimerModule_t *timerModule)
+void CapTouchPlugin_Init(I_TinyDataSource_t *_dataSource)
 {
+   dataSource = _dataSource;
    statusCapSense.valid = false;
    statusCapSense.word = 0;
+
    CapSense_Start();
    CapSense_ScanAllWidgets();
+
+   TinyTimerModule_t *timerModule;
+   TinyDataSource_Read(dataSource, CapTouchTimerModuleErd, &timerModule);
    StartTimer(timerModule);
 }

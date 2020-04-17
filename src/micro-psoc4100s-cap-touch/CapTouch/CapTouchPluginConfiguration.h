@@ -5,15 +5,20 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef CAPSENSECONFIGURATION_H
-#define CAPSENSECONFIGURATION_H
+#ifndef CAPTOUCHPLUGINCONFIGURATION_H
+#define CAPTOUCHPLUGINCONFIGURATION_H
+
+#include "SystemErds.h"
 
 enum
 {
-   CapSensePollPeriodMsec = 5
+   CapTouchPluginPollPeriodMsec = 5,
+   CapTouchTimerModuleErd = Erd_TimerModule,
+   // fixme something like this
+   // CapTouchResultErd = Erd_CapTouchKeyState
 };
 
-#define CAP_SENSE_CONFIGURATION(ENTRY) \
+#define CAP_TOUCH_KEYS(ENTRY) \
    ENTRY(CapSense_U102, 102)           \
    ENTRY(CapSense_U103, 103)           \
    ENTRY(CapSense_U104, 104)           \
