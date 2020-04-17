@@ -16,13 +16,13 @@
 
 /*!
  * @param timerModule
- * @param dataSource
+ * @param externalDataSource
  * @param uart
  * @param geaAddress
  */
 void GeaStack_Init(
    TinyTimerModule_t *timerModule,
-   I_TinyDataSource_t *dataSource,
+   I_TinyDataSource_t *externalDataSource,
    I_TinyUart_t *uart,
    uint8_t geaAddress);
 

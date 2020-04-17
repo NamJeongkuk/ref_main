@@ -47,13 +47,13 @@ void main(void)
          &timerModule,
          TinyTimeSource_SysTick_Init());
 
+      SystemData_Init(&timerModule);
+
       GeaStack_Init(
          &timerModule,
-         NULL,
+         SystemData_ExternalDataSource(),
          TinyUart_Gea3_Init(),
          Psoc4100sGea2Address);
-
-      SystemData_Init(&timerModule);
    }
    CyGlobalIntEnable;
 

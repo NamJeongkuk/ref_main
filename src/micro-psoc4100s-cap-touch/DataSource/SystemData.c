@@ -19,6 +19,7 @@ typedef struct
 } DataSourceStorage_t;
 
 static TinyDataSource_Ram_t dataSource;
+// static TinyDataSource_EndiannessSwapped_t externalDataSource;
 static DataSourceStorage_t erdRam;
 
 #define EXPAND_AS_DATASOURCE_TINY_RAM_ERD_ENTRY(Name, Number, DataType, Stream, RemoteErd) \
@@ -50,3 +51,11 @@ I_TinyDataSource_t *SystemData_DataSource(void)
 {
    return &dataSource.interface;
 }
+
+I_TinyDataSource_t *SystemData_ExternalDataSource(void)
+{
+   // return &externalDataSource.interface;
+   return NULL;
+}
+
+// fixme need external data source

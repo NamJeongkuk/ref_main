@@ -21,4 +21,9 @@ void SystemData_Init(TinyTimerModule_t *timerModule);
  */
 I_TinyDataSource_t *SystemData_DataSource(void);
 
+/*!
+ * @return
+ */
+I_TinyDataSource_t *SystemData_ExternalDataSource(void);
+
 #endif
