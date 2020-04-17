@@ -73,7 +73,8 @@ SECTIONS
       _applicationHeader = .;
       KEEP(*(.applicationHeader))
       FILL(0xff)
-      . = 0x00004100;
+      . = ALIGN(0x100);
+      _relocatableVectorTableStart = .;
       CREATE_OBJECT_SYMBOLS
       PROVIDE(__cy_interrupt_vector = RomVectors);
       KEEP(*(.vectors))

@@ -19,8 +19,8 @@
 #include "CyLib.h"
 #include "cyfitter.h"
 
-// fixme use linker symbol
-#define VECTOR_TABLE_ADDRESS (0x00004100)
+extern char _relocatableVectorTableStart;
+#define VECTOR_TABLE_ADDRESS (uint32_t)(&_relocatableVectorTableStart)
 
 #define CY_NUM_VECTORS (CY_INT_IRQ_BASE + CY_NUM_INTERRUPTS)
 #define CY_NUM_ROM_VECTORS (4u)
