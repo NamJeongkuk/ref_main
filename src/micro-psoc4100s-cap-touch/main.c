@@ -13,6 +13,7 @@
 #include "utils.h"
 #include "GeaStack.h"
 #include "Gea2Addresses.h"
+#include "Heartbeat.h"
 #include "Application.h"
 #include "SystemData.h"
 
@@ -46,6 +47,8 @@ void main(void)
       TinyTimerModule_Init(
          &timerModule,
          TinyTimeSource_SysTick_Init());
+
+      Heartbeat_Init(&timerModule);
 
       SystemData_Init(&timerModule);
 

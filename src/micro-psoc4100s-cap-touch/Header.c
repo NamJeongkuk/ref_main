@@ -11,48 +11,45 @@
 enum
 {
    DummyCrc = 0x1234,
-   ImageId = 0xFFFF,
-   HardwareVersion = 0xFF
+   ImageId = 3,
+   HardwareVersion = 1
 };
 
 extern void PowerOnReset(void);
 
-// clang-format off
-static const ImageHeader_t bootLoaderHeader __attribute__((used, section(".applicationHeader"))) =
+static const ImageHeader_t bootLoaderHeader __attribute__((used, section(".applicationHeader"))) = {
+   DummyCrc,
+   DummyCrc,
+
+   CRIT_VERSION_MAJOR,
+   CRIT_VERSION_MINOR,
+   NONCRIT_VERSION_MAJOR,
+   NONCRIT_VERSION_MINOR,
+
+   ImageId,
+   ImageId,
+   ImageId,
+
+   HardwareVersion,
+
+   ImageType_Application,
+   ImageHeaderFillValue,
+
+   0,
+   0,
+
+   (ImageHeaderPointer_t)NULL,
+
+   (ImageHeaderPointer_t)PowerOnReset,
+
+   ImageHeaderFillValue,
+   ImageHeaderFillValue,
+
+   1,
    {
-      DummyCrc,
-      DummyCrc,
-
-      CRIT_VERSION_MAJOR,
-      CRIT_VERSION_MINOR,
-      NONCRIT_VERSION_MAJOR,
-      NONCRIT_VERSION_MINOR,
-
-      ImageId,
-      ImageId,
-      ImageId,
-
-      HardwareVersion,
-
-      ImageType_Application,
-      ImageHeaderFillValue,
-
-      0,
-      0,
-
-      (ImageHeaderPointer_t)NULL,
-
-      (ImageHeaderPointer_t)PowerOnReset,
-
-      ImageHeaderFillValue,
-      ImageHeaderFillValue,
-
-      1,
       {
-         {
-            0x4000,
-            (64 * 1024) - 1
-         }
-      }
-   };
-// clang-format on
+         0x4000,
+         0xFFFF,
+      },
+   },
+};

@@ -54,8 +54,7 @@ I_TinyDataSource_t *SystemData_DataSource(void)
 
 I_TinyDataSource_t *SystemData_ExternalDataSource(void)
 {
+   // fixme
    // return &externalDataSource.interface;
-   return NULL;
+   return &dataSource.interface;
 }
-
-// fixme need external data source
