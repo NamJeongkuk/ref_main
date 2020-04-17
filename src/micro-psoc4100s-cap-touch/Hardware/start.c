@@ -20,7 +20,7 @@
 #include "cyfitter.h"
 
 // fixme use linker symbol
-#define VECTOR_TABLE_ADDRESS (0x00000300)
+#define VECTOR_TABLE_ADDRESS (0x00004100)
 
 #define CY_NUM_VECTORS (CY_INT_IRQ_BASE + CY_NUM_INTERRUPTS)
 #define CY_NUM_ROM_VECTORS (4u)
@@ -156,9 +156,9 @@ const cyisraddress RomVectors[CY_NUM_VECTORS] = {
    &IntDefaultHandler,
    &IntDefaultHandler,
    &IntDefaultHandler,
+   &IntDefaultHandler,
+   &IntDefaultHandler,
    (cyisraddress)&Gea3_SPI_UART_ISR,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
    &IntDefaultHandler,
    &IntDefaultHandler,
    &IntDefaultHandler,
