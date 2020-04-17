@@ -2,12 +2,12 @@
 <CyXmlSerializer>
 <!--This file is machine generated and read. It is not intended to be edited by hand.-->
 <!--Due to this, there is no schema for this file.-->
-<CyGuid_2867d519-54d2-4c01-9830-c51cb08bc3dd type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtWorkspaceSerialize" version="5" xml_contents_version="3" name="ui-tl27-cap-sense-keys-only" persistent="ui-tl27-cap-sense-keys-only.cywrk" platform="NOT_USED">
-<current_project name=".\dustice.cydsn\dustice.cyprj" />
+<CyGuid_2867d519-54d2-4c01-9830-c51cb08bc3dd type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtWorkspaceSerialize" version="5" xml_contents_version="3" name="micro-psoc4100s-cap-touch" persistent="micro-psoc4100s-cap-touch.cywrk" platform="NOT_USED">
+<current_project name=".\micro-psoc4100s-cap-touch.cydsn\micro-psoc4100s-cap-touch.cyprj" />
 <wrkspc_folders />
 <files />
 <projects>
-<v>.\dustice.cydsn\dustice.cyprj</v>
+<v>.\micro-psoc4100s-cap-touch.cydsn\micro-psoc4100s-cap-touch.cyprj</v>
 </projects>
 <workspace_id v="38f22682-c61a-4e9c-a063-999cb7fbbede" />
 <WriteAppVersionLastSavedWith v="4.2.0.641" />
