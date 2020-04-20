@@ -42,20 +42,9 @@ build/
 test/Build
 
 Build_Creator
-src/micro-psoc4100s-cap-touch/PsocCreator/*.cydsn/codegentemp/
-src/micro-psoc4100s-cap-touch/PsocCreator/*.cydsn/Export/
-src/micro-psoc4100s-cap-touch/PsocCreator/*.cydsn/CortexM0p/
-src/micro-psoc4100s-cap-touch/PsocCreator/dustice.cywrk.*
-src/micro-psoc4100s-cap-touch/PsocCreator/ComponentUpdateLog.txt
-
-src/micro-psoc4100s-cap-touch/PsocCreator/*.cydsn/codegentemp/
-src/micro-psoc4100s-cap-touch/PsocCreator/*.cydsn/Export/
-src/micro-psoc4100s-cap-touch/PsocCreator/*.cydsn/CortexM0p/
-src/micro-psoc4100s-cap-touch/PsocCreator/dustice.cywrk.*
-src/micro-psoc4100s-cap-touch/PsocCreator/ComponentUpdateLog.txt
-
 src/*/PsocCreator/*.cydsn/codegentemp/
 src/*/PsocCreator/*.cydsn/Export/
 src/*/PsocCreator/*.cydsn/CortexM0p/
 src/*/PsocCreator/*.cywrk.*
 src/*/PsocCreator/ComponentUpdateLog.txt
+*.cyprj.*
