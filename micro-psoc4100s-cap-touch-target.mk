@@ -59,6 +59,8 @@ COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/BootLoader \
    $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/TinyLib \
+   $(APPLCOMMON_TINY_DIR)/src/Hardware/Psoc4100 \
+
 
 INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \

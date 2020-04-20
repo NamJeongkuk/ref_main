@@ -13,13 +13,14 @@
 #include "utils.h"
 #include "GeaStack.h"
 #include "Gea2Addresses.h"
-#include "Heartbeat.h"
+#include "HeartbeatPin5Port5.h"
 #include "Application.h"
 #include "SystemData.h"
 
 enum
 {
-   WatchdogKickPeriodInMsec = 1
+   WatchdogKickPeriodInMsec = 1,
+   OneHzHalfPeriod = 500
 };
 
 static TinyTimerModule_t timerModule;
@@ -40,7 +41,7 @@ static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 
 void main(void)
 {
-   Watchdog_Init();
+   Watchdog_Init(0);
 
    CyGlobalIntDisable;
    {
@@ -48,7 +49,7 @@ void main(void)
          &timerModule,
          TinyTimeSource_SysTick_Init());
 
-      Heartbeat_Init(&timerModule);
+      HeartbeatPin5Port5_Init(&timerModule, OneHzHalfPeriod);
 
       SystemData_Init(&timerModule);
 

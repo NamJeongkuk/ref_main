@@ -36,7 +36,7 @@ void NmiHandler(void);
 void HardfaultHandler(void);
 
 void Gea3_SPI_UART_ISR(void);
-void SysTickHandler(void);
+void SystemTick_ISR(void);
 void CapTouchIsrTrampoline(void);
 
 void initialize_psoc(void);
@@ -147,7 +147,7 @@ const cyisraddress RomVectors[CY_NUM_VECTORS] = {
    &IntDefaultHandler,
    &IntDefaultHandler,
    &IntDefaultHandler,
-   (cyisraddress)&SysTickHandler,
+   (cyisraddress)&SystemTick_ISR,
    &IntDefaultHandler,
    &IntDefaultHandler,
    &IntDefaultHandler,
