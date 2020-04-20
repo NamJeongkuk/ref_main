@@ -17,7 +17,7 @@ enum
 
 extern void PowerOnReset(void);
 
-static const ImageHeader_t bootLoaderHeader __attribute__((used, section(".applicationHeader"))) = {
+static const ImageHeader_t applicationHeader __attribute__((used, section(".applicationHeader"))) = {
    DummyCrc,
    DummyCrc,
 
@@ -48,8 +48,8 @@ static const ImageHeader_t bootLoaderHeader __attribute__((used, section(".appli
    1,
    {
       {
-         0x4000,
-         0xFFFF,
+         (ImageHeaderPointer_t)&applicationHeader,
+         128 * 1024 - 1,
       },
    },
 };
