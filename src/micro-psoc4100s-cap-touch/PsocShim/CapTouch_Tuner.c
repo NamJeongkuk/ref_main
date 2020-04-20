@@ -67,10 +67,6 @@
 *******************************************************************************/
 void CapTouch_TuInitialize(void)
 {
-    // volatile CapTouch_RAM_STRUCT *ptrDsRam = &CapTouch_dsRam;
-
-    // ptrDsRam->tunerCmd = (uint16)CapTouch_TU_CMD_NONE_E;
-    // tunerFsm = TU_FSM_RUNNING;
 }
 
 /*******************************************************************************
@@ -114,118 +110,6 @@ void CapTouch_TuInitialize(void)
 *******************************************************************************/
 uint32 CapTouch_RunTuner(void)
 {
-    // uint8 interruptState;
-    // uint32 widgetId;
-    // uint32 sensorId;
-    // uint32 updateFlag = 0Lu;
-    // CapTouch_TU_CMD_ENUM command;
-    // uint32 tunerStatus = CapTouch_STATUS_RESTART_NONE;
-
-    // volatile CapTouch_RAM_STRUCT *ptrDsRam;
-    // volatile CapTouch_RAM_SNS_STRUCT *ptrSnsTmp;
-
-    // ptrDsRam = &CapTouch_dsRam;
-
-    // do
-    // {
-    //     /* ONE_SCAN command could be interpreted as two commands:
-    //     * RESUME till next call of this function and then
-    //     * SUSPEND till next command receiving.
-    //     */
-    //     if (TU_FSM_ONE_SCAN == tunerFsm)
-    //     {
-    //         interruptState = CyEnterCriticalSection();
-    //         ptrDsRam->tunerCmd = (uint16)CapTouch_TU_CMD_SUSPEND_E;
-    //         CyExitCriticalSection(interruptState);
-    //     }
-    //     command = (CapTouch_TU_CMD_ENUM)ptrDsRam->tunerCmd;
-
-    //     /* Check command register */
-    //     switch (command)
-    //     {
-    //     case CapTouch_TU_CMD_SUSPEND_E:
-    //         tunerFsm = TU_FSM_SUSPENDED;
-    //         updateFlag = 1Lu;
-    //         break;
-
-    //     case CapTouch_TU_CMD_RESUME_E:
-    //         tunerFsm = TU_FSM_RUNNING;
-    //         updateFlag = 1Lu;
-    //         break;
-
-    //     case CapTouch_TU_CMD_RESTART_E:
-    //         (void)CapTouch_Start();
-    //         tunerStatus = CapTouch_STATUS_RESTART_DONE;
-    //         tunerFsm = TU_FSM_RUNNING;
-    //         updateFlag = 1Lu;
-    //         break;
-
-    //     case CapTouch_TU_CMD_RUN_SNR_TEST_E:
-    //         tunerFsm = TU_FSM_SNR_TEST;
-    //         updateFlag = 1Lu;
-    //         break;
-
-    //     case CapTouch_TU_CMD_PING_E:
-    //         tunerFsm = TU_FSM_RUNNING;
-    //         updateFlag = 1Lu;
-    //         break;
-
-    //     case CapTouch_TU_CMD_ONE_SCAN_E:
-    //         tunerFsm = TU_FSM_ONE_SCAN;
-    //         updateFlag = 0Lu;
-    //         break;
-
-    //     default:
-    //         break;
-    //     }
-
-    //     /* Set Complete flag in command register if needed */
-    //     if (0Lu != updateFlag)
-    //     {
-    //         interruptState = CyEnterCriticalSection();
-
-    //         /* Check if command wasn't overwritten with new command */
-    //         if (command == (CapTouch_TU_CMD_ENUM)ptrDsRam->tunerCmd)
-    //         {
-    //             ptrDsRam->tunerCmd |= CapTouch_TU_CMD_COMPLETE_BIT;
-    //         }
-    //         CyExitCriticalSection(interruptState);
-
-    //         updateFlag = 0Lu;
-    //     }
-    // } while (TU_FSM_SUSPENDED == tunerFsm);
-
-    // /* Check for SNR Test mode and do appropriate actions */
-    // if (TU_FSM_SNR_TEST == tunerFsm)
-    // {
-    //     widgetId = ptrDsRam->snrTestWidgetId;
-    //     sensorId = ptrDsRam->snrTestSensorId;
-
-    //     /* Check if widgetId and sensorId are in range,
-    //      * and data was updated in RAM (scan counter changed)
-    //      */
-    //     if ((widgetId < CapTouch_TOTAL_WIDGETS)              &&
-    //         (sensorId < CapTouch_GET_SENSOR_COUNT(widgetId)) &&
-    //         (ptrDsRam->scanCounter != ptrDsRam->snrTestScanCounter))
-    //     {
-    //         /* Get access to the Sensor Object */
-    //         ptrSnsTmp = CapTouch_dsFlash.wdgtArray[widgetId].ptr2SnsRam;
-    //         ptrSnsTmp += sensorId;
-
-    //         /* Update data in SNR Test Object */
-    //         interruptState = CyEnterCriticalSection();
-    //         ptrDsRam->snrTestScanCounter = ptrDsRam->scanCounter;
-    //         ptrDsRam->snrTestRawCount[0u] = ptrSnsTmp->raw[0u];
-
-    //         #if (0u != CapTouch_MULTI_FREQ_SCAN_EN)
-    //             ptrDsRam->snrTestRawCount[1u] = ptrSnsTmp->raw[1u];
-    //             ptrDsRam->snrTestRawCount[2u] = ptrSnsTmp->raw[2u];
-    //         #endif
-
-    //         CyExitCriticalSection(interruptState);
-    //     }
-    // }
-    // return tunerStatus;
     return 0;
 }
 

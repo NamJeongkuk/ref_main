@@ -29,7 +29,7 @@ return {
       srec = 'build/micro-psoc4100s-cap-touch/micro-psoc4100s-cap-touch.napl',
       apl = 'build/micro-psoc4100s-cap-touch/micro-psoc4100s-cap-touch.apl',
       type = 'arm-gcc',
-      total = 48 * 1024,
+      total = 112 * 1024,
       endianness = 'little'
     }
   }
