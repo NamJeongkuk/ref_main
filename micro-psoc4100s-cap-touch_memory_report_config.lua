@@ -2,25 +2,35 @@ return {
   BootLoader = {
     ram = {
       map = 'lib/boot-loaders/build/micro-psoc4100s-boot-loader/micro-psoc4100s-boot-loader.map',
-      type = 'sdcc',
-      total = 8 * 1024
+      type = 'arm-gcc',
+      total = 16 * 1024,
+      ram_sections = {
+        'ram'
+      }
     },
     rom = {
-      map = 'lib/boot-loaders/build/micro-psoc4100s-boot-loader/micro-psoc4100s-boot-loader.map',
-      type = 'sdcc',
-      total = 16 * 1024
+      srec = 'lib/boot-loaders/build/micro-psoc4100s-boot-loader/micro-psoc4100s-boot-loader.napl',
+      apl = 'lib/boot-loaders/build/micro-psoc4100s-boot-loader/micro-psoc4100s-boot-loader.apl',
+      type = 'arm-gcc',
+      total = 16 * 1024,
+      endianness = 'little'
     }
   },
   Application = {
     ram = {
       map = 'build/micro-psoc4100s-cap-touch/micro-psoc4100s-cap-touch.map',
-      type = 'sdcc',
-      total = 8 * 1024
+      type = 'arm-gcc',
+      total = 16 * 1024,
+      ram_sections = {
+        'ram'
+      }
     },
     rom = {
-      map = 'build/micro-psoc4100s-cap-touch/micro-psoc4100s-cap-touch.map',
-      type = 'sdcc',
-      total = 48 * 1024
+      srec = 'build/micro-psoc4100s-cap-touch/micro-psoc4100s-cap-touch.napl',
+      apl = 'build/micro-psoc4100s-cap-touch/micro-psoc4100s-cap-touch.apl',
+      type = 'arm-gcc',
+      total = 48 * 1024,
+      endianness = 'little'
     }
   }
 }
