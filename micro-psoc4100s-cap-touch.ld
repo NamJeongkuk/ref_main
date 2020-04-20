@@ -187,6 +187,13 @@ SECTIONS
       KEEP(*(.noinit))
     }
 
+    .noUlRamChecks (NOLOAD) :
+    {
+      __no_ul_ram_checks_start = .;
+      *(.noUlRamChecks)
+      __no_ul_ram_checks_end = .;
+    } >ram
+
     .data : ALIGN(8)
     {
       __cy_region_start_data = .;

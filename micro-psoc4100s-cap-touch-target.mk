@@ -50,8 +50,10 @@ SRC_DIRS:=\
    $(PROJECT_DIR)/$(TARGET)/DataSource \
    $(PROJECT_DIR)/$(TARGET)/GeaStack \
    $(PROJECT_DIR)/$(TARGET)/Hardware \
-   $(PROJECT_DIR)/$(TARGET)/PsocShim \
    $(PROJECT_DIR)/$(TARGET)/Plugins \
+   $(PROJECT_DIR)/$(TARGET)/PsocShim \
+   $(PROJECT_DIR)/$(TARGET)/Ul \
+   $(PROJECT_DIR)/$(TARGET)/Ul/Vendor \
    $(PROJECT_DIR)/MicroApplication/DataSource \
 
 COMMON_LIB_DIRS:=\
