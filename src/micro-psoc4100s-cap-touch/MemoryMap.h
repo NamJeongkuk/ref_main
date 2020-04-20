@@ -10,8 +10,7 @@
 
 #include "ImageHeader.h"
 
-// fixme this is obviously bullshit
-#define BootLoaderHeaderAddress ((const ImageHeader_t *)0)
-#define ApplicationHeaderAddress ((const ImageHeader_t *)0)
+#define BootLoaderHeaderAddress ((const ImageHeader_t *)0x000000B0)
+#define ApplicationHeaderAddress ((const ImageHeader_t *)0x00004000)
 
 #endif

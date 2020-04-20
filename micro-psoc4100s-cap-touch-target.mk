@@ -86,7 +86,6 @@ $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
 .PHONY: all
 all: target $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
-	@$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
 	@$(call make_directory,$(OUTPUT_DIR)/binaries)
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
@@ -107,7 +106,7 @@ $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot: target $(BOOT_LOADER_DIR)/build/$(BO
 
 .PHONY: upload
 upload: all jlink_tools
-	$(call jlink_upload,$(OUTPUT_DIR)/$(TARGET).mot)
+	$(call jlink_upload,$(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot)
 
 .PHONY: clean
 clean: target_clean
