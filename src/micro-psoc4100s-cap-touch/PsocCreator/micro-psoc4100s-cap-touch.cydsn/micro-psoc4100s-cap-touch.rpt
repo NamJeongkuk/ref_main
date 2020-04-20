@@ -1,0 +1,1714 @@
+Loading plugins phase: Elapsed time ==> 1s.526ms
+<CYPRESSTAG name="CyDsfit arguments...">
+cydsfit arguments: -.fdsnotice -.fdswarpdepfile=warp_dependencies.txt -.fdselabdepfile=elab_dependencies.txt -.fdsbldfile=generated_files.txt -.fdsreffile=referenced_files.txt -p C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\micro-psoc4100s-cap-touch.cyprj -d CY8C4127AZI-S455 -s C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\Generated_Source\PSoC4 -- -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE
+</CYPRESSTAG>
+<CYPRESSTAG name="Design elaboration results...">
+</CYPRESSTAG>
+Elaboration phase: Elapsed time ==> 5s.500ms
+<CYPRESSTAG name="HDL generation results...">
+</CYPRESSTAG>
+HDL generation phase: Elapsed time ==> 0s.094ms
+<CYPRESSTAG name="Synthesis results...">
+
+     | | | | | | |
+   _________________
+  -|               |-
+  -|               |-
+  -|               |-
+  -|    CYPRESS    |-
+  -|               |-
+  -|               |-   Warp Verilog Synthesis Compiler: Version 6.3 IR 41
+  -|               |-   Copyright (C) 1991-2001 Cypress Semiconductor
+   |_______________|
+     | | | | | | |
+
+======================================================================
+Compiling:  micro-psoc4100s-cap-touch.v
+Program  :   C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\bin\warp.exe
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\micro-psoc4100s-cap-touch.cyprj -dcpsoc3 micro-psoc4100s-cap-touch.v -verilog
+======================================================================
+
+======================================================================
+Compiling:  micro-psoc4100s-cap-touch.v
+Program  :   C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\bin\warp.exe
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\micro-psoc4100s-cap-touch.cyprj -dcpsoc3 micro-psoc4100s-cap-touch.v -verilog
+======================================================================
+
+======================================================================
+Compiling:  micro-psoc4100s-cap-touch.v
+Program  :   vlogfe
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\micro-psoc4100s-cap-touch.cyprj -dcpsoc3 -verilog micro-psoc4100s-cap-touch.v
+======================================================================
+
+vlogfe V6.3 IR 41:  Verilog parser
+Fri Apr 17 14:36:33 2020
+
+
+======================================================================
+Compiling:  micro-psoc4100s-cap-touch.v
+Program  :   vpp
+Options  :    -yv2 -q10 micro-psoc4100s-cap-touch.v
+======================================================================
+
+vpp V6.3 IR 41:  Verilog Pre-Processor
+Fri Apr 17 14:36:33 2020
+
+Flattening file 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\cy_analog_virtualmux_v1_0\cy_analog_virtualmux_v1_0.v'
+Flattening file 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\ZeroTerminal\ZeroTerminal.v'
+Flattening file 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\or_v1_0\or_v1_0.v'
+Flattening file 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\cy_virtualmux_v1_0\cy_virtualmux_v1_0.v'
+
+vpp:  No errors.
+
+Library 'work' => directory 'lcpsoc3'
+General_symbol_table
+General_symbol_table
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\std.vhd'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\cypress.vhd'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\work\cypress.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\ieee\work\stdlogic.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\lpmpkg.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\rtlpkg.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\mod_cnst.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\mod_mthv.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\mod_genv.vif'.
+Using control file 'micro-psoc4100s-cap-touch.ctl'.
+
+vlogfe:  No errors.
+
+
+======================================================================
+Compiling:  micro-psoc4100s-cap-touch.v
+Program  :   tovif
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\micro-psoc4100s-cap-touch.cyprj -dcpsoc3 -verilog micro-psoc4100s-cap-touch.v
+======================================================================
+
+tovif V6.3 IR 41:  High-level synthesis
+Fri Apr 17 14:36:33 2020
+
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\std.vhd'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\cypress.vhd'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\work\cypress.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\ieee\work\stdlogic.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\lpmpkg.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\rtlpkg.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\mod_cnst.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\mod_mthv.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\mod_genv.vif'.
+Linking 'C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\codegentemp\micro-psoc4100s-cap-touch.ctl'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\cy_analog_virtualmux_v1_0\cy_analog_virtualmux_v1_0.v'.
+Linking 'C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\codegentemp\micro-psoc4100s-cap-touch.v'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\ZeroTerminal\ZeroTerminal.v'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\or_v1_0\or_v1_0.v'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\cy_virtualmux_v1_0\cy_virtualmux_v1_0.v'.
+
+tovif:  No errors.
+
+
+======================================================================
+Compiling:  micro-psoc4100s-cap-touch.v
+Program  :   topld
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\micro-psoc4100s-cap-touch.cyprj -dcpsoc3 -verilog micro-psoc4100s-cap-touch.v
+======================================================================
+
+topld V6.3 IR 41:  Synthesis and optimization
+Fri Apr 17 14:36:34 2020
+
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\std.vhd'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\cypress.vhd'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\work\cypress.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\ieee\work\stdlogic.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\lpmpkg.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\rtlpkg.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\mod_cnst.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\mod_mthv.vif'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\mod_genv.vif'.
+Linking 'C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\codegentemp\micro-psoc4100s-cap-touch.ctl'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\cy_analog_virtualmux_v1_0\cy_analog_virtualmux_v1_0.v'.
+Linking 'C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\codegentemp\micro-psoc4100s-cap-touch.v'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\ZeroTerminal\ZeroTerminal.v'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\or_v1_0\or_v1_0.v'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\cy_virtualmux_v1_0\cy_virtualmux_v1_0.v'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\lcpsoc3\stdlogic\cpsoc3.vif'.
+
+----------------------------------------------------------
+Detecting unused logic.
+----------------------------------------------------------
+    User names
+	\CapTouch:Net_44\
+	\CapTouch:Net_46\
+	\CapTouch:Net_47\
+	\CapTouch:Net_48\
+	\CapTouch:Net_147\
+	\CapTouch:Net_146\
+	\Gea3:Net_1257\
+	\Gea3:uncfg_rx_irq\
+	\Gea3:Net_1099\
+	\Gea3:Net_1258\
+	Net_25
+	Net_34
+	Net_35
+	Net_36
+	Net_37
+	Net_38
+	Net_39
+	Net_40
+	Net_42
+	Net_45
+
+
+Deleted 20 User equations/components.
+Deleted 0 Synthesized equations/components.
+
+------------------------------------------------------
+Alias Detection
+------------------------------------------------------
+Aliasing \CapTouch:Net_94\ to \CapTouch:Net_95\
+Aliasing \CapTouch:Net_93\ to \CapTouch:Net_95\
+Aliasing \CapTouch:Net_92\ to \CapTouch:Net_95\
+Aliasing \CapTouch:tmpOE__Rx_net_3\ to \CapTouch:tmpOE__Rx_net_4\
+Aliasing \CapTouch:tmpOE__Rx_net_2\ to \CapTouch:tmpOE__Rx_net_4\
+Aliasing \CapTouch:tmpOE__Rx_net_1\ to \CapTouch:tmpOE__Rx_net_4\
+Aliasing \CapTouch:tmpOE__Rx_net_0\ to \CapTouch:tmpOE__Rx_net_4\
+Aliasing zero to \CapTouch:Net_95\
+Aliasing one to \CapTouch:tmpOE__Rx_net_4\
+Aliasing \CapTouch:tmpOE__CintA_net_0\ to \CapTouch:tmpOE__Rx_net_4\
+Aliasing \CapTouch:tmpOE__CintB_net_0\ to \CapTouch:tmpOE__Rx_net_4\
+Aliasing \CapTouch:Net_57\ to \CapTouch:Net_95\
+Aliasing \CapTouch:Net_56\ to \CapTouch:Net_95\
+Aliasing \CapTouch:Net_55\ to \CapTouch:Net_95\
+Aliasing \CapTouch:Net_54\ to \CapTouch:Net_95\
+Aliasing \CapTouch:tmpOE__Tx_net_2\ to \CapTouch:tmpOE__Rx_net_4\
+Aliasing \CapTouch:tmpOE__Tx_net_1\ to \CapTouch:tmpOE__Rx_net_4\
+Aliasing \CapTouch:tmpOE__Tx_net_0\ to \CapTouch:tmpOE__Rx_net_4\
+Aliasing \Gea3:select_s_wire\ to \CapTouch:Net_95\
+Aliasing \Gea3:sclk_s_wire\ to \CapTouch:Net_95\
+Aliasing \Gea3:mosi_s_wire\ to \CapTouch:Net_95\
+Aliasing \Gea3:miso_m_wire\ to \CapTouch:Net_95\
+Aliasing \Gea3:tmpOE__tx_net_0\ to \CapTouch:tmpOE__Rx_net_4\
+Aliasing \Gea3:tmpOE__rx_net_0\ to \CapTouch:tmpOE__Rx_net_4\
+Aliasing \Gea3:cts_wire\ to \CapTouch:Net_95\
+Removing Lhs of wire \CapTouch:Net_94\[25] = \CapTouch:Net_95\[24]
+Removing Lhs of wire \CapTouch:Net_93\[29] = \CapTouch:Net_95\[24]
+Removing Lhs of wire \CapTouch:Net_92\[49] = \CapTouch:Net_95\[24]
+Removing Lhs of wire \CapTouch:tmpOE__Rx_net_3\[53] = \CapTouch:tmpOE__Rx_net_4\[52]
+Removing Lhs of wire \CapTouch:tmpOE__Rx_net_2\[54] = \CapTouch:tmpOE__Rx_net_4\[52]
+Removing Lhs of wire \CapTouch:tmpOE__Rx_net_1\[55] = \CapTouch:tmpOE__Rx_net_4\[52]
+Removing Lhs of wire \CapTouch:tmpOE__Rx_net_0\[56] = \CapTouch:tmpOE__Rx_net_4\[52]
+Removing Rhs of wire zero[57] = \CapTouch:Net_95\[24]
+Removing Rhs of wire one[69] = \CapTouch:tmpOE__Rx_net_4\[52]
+Removing Lhs of wire \CapTouch:tmpOE__CintA_net_0\[72] = one[69]
+Removing Lhs of wire \CapTouch:tmpOE__CintB_net_0\[80] = one[69]
+Removing Lhs of wire \CapTouch:Net_57\[86] = zero[57]
+Removing Lhs of wire \CapTouch:Net_56\[87] = zero[57]
+Removing Lhs of wire \CapTouch:Net_55\[88] = zero[57]
+Removing Lhs of wire \CapTouch:Net_54\[89] = zero[57]
+Removing Lhs of wire \CapTouch:tmpOE__Tx_net_2\[95] = one[69]
+Removing Lhs of wire \CapTouch:tmpOE__Tx_net_1\[96] = one[69]
+Removing Lhs of wire \CapTouch:tmpOE__Tx_net_0\[97] = one[69]
+Removing Lhs of wire \Gea3:select_s_wire\[114] = zero[57]
+Removing Rhs of wire \Gea3:rx_wire\[115] = \Gea3:Net_1268\[116]
+Removing Lhs of wire \Gea3:Net_1170\[119] = \Gea3:Net_847\[113]
+Removing Lhs of wire \Gea3:sclk_s_wire\[120] = zero[57]
+Removing Lhs of wire \Gea3:mosi_s_wire\[121] = zero[57]
+Removing Lhs of wire \Gea3:miso_m_wire\[122] = zero[57]
+Removing Lhs of wire \Gea3:tmpOE__tx_net_0\[124] = one[69]
+Removing Lhs of wire \Gea3:tmpOE__rx_net_0\[135] = one[69]
+Removing Lhs of wire \Gea3:cts_wire\[139] = zero[57]
+
+------------------------------------------------------
+Aliased 0 equations, 27 wires.
+------------------------------------------------------
+
+----------------------------------------------------------
+Circuit simplification
+----------------------------------------------------------
+
+Substituting virtuals - pass 1:
+
+
+----------------------------------------------------------
+Circuit simplification results:
+
+	Expanded 0 signals.
+	Turned 0 signals into soft nodes.
+	Maximum default expansion cost was set at 3.
+----------------------------------------------------------
+
+topld:  No errors.
+
+CYPRESS_DIR    : C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp
+Warp Program   : C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\bin\warp.exe
+Warp Arguments : -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\micro-psoc4100s-cap-touch.cyprj -dcpsoc3 micro-psoc4100s-cap-touch.v -verilog
+</CYPRESSTAG>
+Warp synthesis phase: Elapsed time ==> 0s.609ms
+<CYPRESSTAG name="Fitter results...">
+<CYPRESSTAG name="Fitter startup details...">
+cyp3fit: V4.2.0.641, Family: PSoC3, Started at: Friday, 17 April 2020 14:36:34
+Options: -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\git\mtsk\src\micro-psoc4100s-cap-touch\PsocCreator\micro-psoc4100s-cap-touch.cydsn\micro-psoc4100s-cap-touch.cyprj -d CY8C4127AZI-S455 micro-psoc4100s-cap-touch.v -verilog
+</CYPRESSTAG>
+<CYPRESSTAG name="Design parsing">
+Design parsing phase: Elapsed time ==> 0s.015ms
+</CYPRESSTAG>
+<CYPRESSTAG name="Tech Mapping">
+<CYPRESSTAG name="Initial Mapping" icon="FILE_RPT_TECHM">
+<CYPRESSTAG name="Global Clock Selection" icon="FILE_RPT_TECHM">
+    Fixed Function Clock 5: Automatic-assigning  clock 'CapTouch_ModClk'. Signal=\CapTouch:Net_1423_ff5\
+    Fixed Function Clock 0: Automatic-assigning  clock 'Gea3_SCBCLK'. Signal=\Gea3:Net_847_ff0\
+<CYPRESSTAG name="UDB Clock/Enable Remapping Results">
+</CYPRESSTAG>
+</CYPRESSTAG>
+
+Removing unused cells resulting from optimization
+Done removing unused cells.
+<CYPRESSTAG name="Duplicate Macrocell detection">
+</CYPRESSTAG>
+</CYPRESSTAG>
+<CYPRESSTAG name="Duplicate Macrocell detection">
+</CYPRESSTAG>
+<CYPRESSTAG name="Design Equations" icon="FILE_RPT_EQUATION">
+
+------------------------------------------------------------
+Design Equations
+------------------------------------------------------------
+    <CYPRESSTAG name="Pin listing">
+
+    ------------------------------------------------------------
+    Pin listing
+    ------------------------------------------------------------
+
+    Pin : Name = \CapTouch:Rx(0)\
+        Attributes:
+            Alias: U102_Rx0
+            In Group/Port: True
+            In Sync Option: AUTO
+            Out Sync Option: AUTO
+            Interrupt generated: False
+            Interrupt mode: NONE
+            Drive mode: HI_Z_ANALOG
+            VTrip: EITHER
+            Slew: FAST
+            Input Sync needed: False
+            Output Sync needed: False
+            SC shield enabled: False
+            POR State: ANY
+            LCD Mode: COMMON
+            Register Mode: RegComb
+            CaSense Mode: NEITHER
+            Treat as pin: True
+            Is OE Registered: False
+            Uses Analog: True
+            Can contain Digital: False
+            Is SIO: False
+            SIO Output Buf: NONREGULATED
+            SIO Input Buf: SINGLE_ENDED
+            SIO HiFreq: LOW
+            SIO Hyst: DISABLED
+            SIO Vtrip: MULTIPLIER_0_5
+            SIO Multiplier Index: 0
+            SIO RefSel: VCC_IO
+            Required Capabilities: ANALOG
+            Initial Value: 0
+            IO Voltage: 0
+        PORT MAP (
+            pa_out => \CapTouch:Rx(0)\__PA ,
+            analog_term => \CapTouch:Net_13_0\ ,
+            pad => \CapTouch:Rx(0)_PAD\ );
+        Properties:
+        {
+        }
+
+    Pin : Name = \CapTouch:Rx(1)\
+        Attributes:
+            Alias: U105_Rx0
+            In Group/Port: True
+            In Sync Option: AUTO
+            Out Sync Option: AUTO
+            Interrupt generated: False
+            Interrupt mode: NONE
+            Drive mode: HI_Z_ANALOG
+            VTrip: EITHER
+            Slew: FAST
+            Input Sync needed: False
+            Output Sync needed: False
+            SC shield enabled: False
+            POR State: ANY
+            LCD Mode: COMMON
+            Register Mode: RegComb
+            CaSense Mode: NEITHER
+            Treat as pin: True
+            Is OE Registered: False
+            Uses Analog: True
+            Can contain Digital: False
+            Is SIO: False
+            SIO Output Buf: NONREGULATED
+            SIO Input Buf: SINGLE_ENDED
+            SIO HiFreq: LOW
+            SIO Hyst: DISABLED
+            SIO Vtrip: MULTIPLIER_0_5
+            SIO Multiplier Index: 0
+            SIO RefSel: VCC_IO
+            Required Capabilities: ANALOG
+            Initial Value: 1
+            IO Voltage: 0
+        PORT MAP (
+            pa_out => \CapTouch:Rx(1)\__PA ,
+            analog_term => \CapTouch:Net_13_0\ ,
+            pad => \CapTouch:Rx(1)_PAD\ );
+        Properties:
+        {
+        }
+
+    Pin : Name = \CapTouch:Rx(2)\
+        Attributes:
+            Alias: U108_Rx0
+            In Group/Port: True
+            In Sync Option: AUTO
+            Out Sync Option: AUTO
+            Interrupt generated: False
+            Interrupt mode: NONE
+            Drive mode: HI_Z_ANALOG
+            VTrip: EITHER
+            Slew: FAST
+            Input Sync needed: False
+            Output Sync needed: False
+            SC shield enabled: False
+            POR State: ANY
+            LCD Mode: COMMON
+            Register Mode: RegComb
+            CaSense Mode: NEITHER
+            Treat as pin: True
+            Is OE Registered: False
+            Uses Analog: True
+            Can contain Digital: False
+            Is SIO: False
+            SIO Output Buf: NONREGULATED
+            SIO Input Buf: SINGLE_ENDED
+            SIO HiFreq: LOW
+            SIO Hyst: DISABLED
+            SIO Vtrip: MULTIPLIER_0_5
+            SIO Multiplier Index: 0
+            SIO RefSel: VCC_IO
+            Required Capabilities: ANALOG
+            Initial Value: 1
+            IO Voltage: 0
+        PORT MAP (
+            pa_out => \CapTouch:Rx(2)\__PA ,
+            analog_term => \CapTouch:Net_13_0\ ,
+            pad => \CapTouch:Rx(2)_PAD\ );
+        Properties:
+        {
+        }
+
+    Pin : Name = \CapTouch:Rx(3)\
+        Attributes:
+            Alias: U111_Rx0
+            In Group/Port: True
+            In Sync Option: AUTO
+            Out Sync Option: AUTO
+            Interrupt generated: False
+            Interrupt mode: NONE
+            Drive mode: HI_Z_ANALOG
+            VTrip: EITHER
+            Slew: FAST
+            Input Sync needed: False
+            Output Sync needed: False
+            SC shield enabled: False
+            POR State: ANY
+            LCD Mode: COMMON
+            Register Mode: RegComb
+            CaSense Mode: NEITHER
+            Treat as pin: True
+            Is OE Registered: False
+            Uses Analog: True
+            Can contain Digital: False
+            Is SIO: False
+            SIO Output Buf: NONREGULATED
+            SIO Input Buf: SINGLE_ENDED
+            SIO HiFreq: LOW
+            SIO Hyst: DISABLED
+            SIO Vtrip: MULTIPLIER_0_5
+            SIO Multiplier Index: 0
+            SIO RefSel: VCC_IO
+            Required Capabilities: ANALOG
+            Initial Value: 1
+            IO Voltage: 0
+        PORT MAP (
+            pa_out => \CapTouch:Rx(3)\__PA ,
+            analog_term => \CapTouch:Net_13_0\ ,
+            pad => \CapTouch:Rx(3)_PAD\ );
+        Properties:
+        {
+        }
+
+    Pin : Name = \CapTouch:Rx(4)\
+        Attributes:
+            Alias: U113_Rx0
+            In Group/Port: True
+            In Sync Option: AUTO
+            Out Sync Option: AUTO
+            Interrupt generated: False
+            Interrupt mode: NONE
+            Drive mode: HI_Z_ANALOG
+            VTrip: EITHER
+            Slew: FAST
+            Input Sync needed: False
+            Output Sync needed: False
+            SC shield enabled: False
+            POR State: ANY
+            LCD Mode: COMMON
+            Register Mode: RegComb
+            CaSense Mode: NEITHER
+            Treat as pin: True
+            Is OE Registered: False
+            Uses Analog: True
+            Can contain Digital: False
+            Is SIO: False
+            SIO Output Buf: NONREGULATED
+            SIO Input Buf: SINGLE_ENDED
+            SIO HiFreq: LOW
+            SIO Hyst: DISABLED
+            SIO Vtrip: MULTIPLIER_0_5
+            SIO Multiplier Index: 0
+            SIO RefSel: VCC_IO
+            Required Capabilities: ANALOG
+            Initial Value: 1
+            IO Voltage: 0
+        PORT MAP (
+            pa_out => \CapTouch:Rx(4)\__PA ,
+            analog_term => \CapTouch:Net_13_0\ ,
+            pad => \CapTouch:Rx(4)_PAD\ );
+        Properties:
+        {
+        }
+
+    Pin : Name = \CapTouch:CintA(0)\
+        Attributes:
+            In Group/Port: True
+            In Sync Option: AUTO
+            Out Sync Option: AUTO
+            Interrupt generated: False
+            Interrupt mode: NONE
+            Drive mode: HI_Z_ANALOG
+            VTrip: EITHER
+            Slew: FAST
+            Input Sync needed: False
+            Output Sync needed: False
+            SC shield enabled: False
+            POR State: ANY
+            LCD Mode: COMMON
+            Register Mode: RegComb
+            CaSense Mode: NEITHER
+            Treat as pin: True
+            Is OE Registered: False
+            Uses Analog: True
+            Can contain Digital: False
+            Is SIO: False
+            SIO Output Buf: NONREGULATED
+            SIO Input Buf: SINGLE_ENDED
+            SIO HiFreq: LOW
+            SIO Hyst: DISABLED
+            SIO Vtrip: MULTIPLIER_0_5
+            SIO Multiplier Index: 0
+            SIO RefSel: VCC_IO
+            Required Capabilities: NONE
+            Initial Value: 0
+            IO Voltage: 0
+        PORT MAP (
+            pa_out => \CapTouch:CintA(0)\__PA ,
+            analog_term => \CapTouch:Net_86\ ,
+            pad => \CapTouch:CintA(0)_PAD\ );
+        Properties:
+        {
+        }
+
+    Pin : Name = \CapTouch:CintB(0)\
+        Attributes:
+            In Group/Port: True
+            In Sync Option: AUTO
+            Out Sync Option: AUTO
+            Interrupt generated: False
+            Interrupt mode: NONE
+            Drive mode: HI_Z_ANALOG
+            VTrip: EITHER
+            Slew: FAST
+            Input Sync needed: False
+            Output Sync needed: False
+            SC shield enabled: False
+            POR State: ANY
+            LCD Mode: COMMON
+            Register Mode: RegComb
+            CaSense Mode: NEITHER
+            Treat as pin: True
+            Is OE Registered: False
+            Uses Analog: True
+            Can contain Digital: False
+            Is SIO: False
+            SIO Output Buf: NONREGULATED
+            SIO Input Buf: SINGLE_ENDED
+            SIO HiFreq: LOW
+            SIO Hyst: DISABLED
+            SIO Vtrip: MULTIPLIER_0_5
+            SIO Multiplier Index: 0
+            SIO RefSel: VCC_IO
+            Required Capabilities: NONE
+            Initial Value: 0
+            IO Voltage: 0
+        PORT MAP (
+            pa_out => \CapTouch:CintB(0)\__PA ,
+            analog_term => \CapTouch:Net_84\ ,
+            pad => \CapTouch:CintB(0)_PAD\ );
+        Properties:
+        {
+        }
+
+    Pin : Name = \CapTouch:Tx(0)\
+        Attributes:
+            Alias: U102_Tx
+            In Group/Port: True
+            In Sync Option: AUTO
+            Out Sync Option: AUTO
+            Interrupt generated: False
+            Interrupt mode: NONE
+            Drive mode: HI_Z_ANALOG
+            VTrip: EITHER
+            Slew: FAST
+            Input Sync needed: False
+            Output Sync needed: False
+            SC shield enabled: False
+            POR State: ANY
+            LCD Mode: COMMON
+            Register Mode: RegComb
+            CaSense Mode: NEITHER
+            Treat as pin: True
+            Is OE Registered: False
+            Uses Analog: True
+            Can contain Digital: False
+            Is SIO: False
+            SIO Output Buf: NONREGULATED
+            SIO Input Buf: SINGLE_ENDED
+            SIO HiFreq: LOW
+            SIO Hyst: DISABLED
+            SIO Vtrip: MULTIPLIER_0_5
+            SIO Multiplier Index: 0
+            SIO RefSel: VCC_IO
+            Required Capabilities: ANALOG
+            Initial Value: 0
+            IO Voltage: 0
+        PORT MAP (
+            pa_out => \CapTouch:Tx(0)\__PA ,
+            analog_term => \CapTouch:Net_354_0\ ,
+            pad => \CapTouch:Tx(0)_PAD\ );
+        Properties:
+        {
+        }
+
+    Pin : Name = \CapTouch:Tx(1)\
+        Attributes:
+            Alias: U103_Tx
+            In Group/Port: True
+            In Sync Option: AUTO
+            Out Sync Option: AUTO
+            Interrupt generated: False
+            Interrupt mode: NONE
+            Drive mode: HI_Z_ANALOG
+            VTrip: EITHER
+            Slew: FAST
+            Input Sync needed: False
+            Output Sync needed: False
+            SC shield enabled: False
+            POR State: ANY
+            LCD Mode: COMMON
+            Register Mode: RegComb
+            CaSense Mode: NEITHER
+            Treat as pin: True
+            Is OE Registered: False
+            Uses Analog: True
+            Can contain Digital: False
+            Is SIO: False
+            SIO Output Buf: NONREGULATED
+            SIO Input Buf: SINGLE_ENDED
+            SIO HiFreq: LOW
+            SIO Hyst: DISABLED
+            SIO Vtrip: MULTIPLIER_0_5
+            SIO Multiplier Index: 0
+            SIO RefSel: VCC_IO
+            Required Capabilities: ANALOG
+            Initial Value: 1
+            IO Voltage: 0
+        PORT MAP (
+            pa_out => \CapTouch:Tx(1)\__PA ,
+            analog_term => \CapTouch:Net_354_0\ ,
+            pad => \CapTouch:Tx(1)_PAD\ );
+        Properties:
+        {
+        }
+
+    Pin : Name = \CapTouch:Tx(2)\
+        Attributes:
+            Alias: U104_Tx
+            In Group/Port: True
+            In Sync Option: AUTO
+            Out Sync Option: AUTO
+            Interrupt generated: False
+            Interrupt mode: NONE
+            Drive mode: HI_Z_ANALOG
+            VTrip: EITHER
+            Slew: FAST
+            Input Sync needed: False
+            Output Sync needed: False
+            SC shield enabled: False
+            POR State: ANY
+            LCD Mode: COMMON
+            Register Mode: RegComb
+            CaSense Mode: NEITHER
+            Treat as pin: True
+            Is OE Registered: False
+            Uses Analog: True
+            Can contain Digital: False
+            Is SIO: False
+            SIO Output Buf: NONREGULATED
+            SIO Input Buf: SINGLE_ENDED
+            SIO HiFreq: LOW
+            SIO Hyst: DISABLED
+            SIO Vtrip: MULTIPLIER_0_5
+            SIO Multiplier Index: 0
+            SIO RefSel: VCC_IO
+            Required Capabilities: ANALOG
+            Initial Value: 1
+            IO Voltage: 0
+        PORT MAP (
+            pa_out => \CapTouch:Tx(2)\__PA ,
+            analog_term => \CapTouch:Net_354_0\ ,
+            pad => \CapTouch:Tx(2)_PAD\ );
+        Properties:
+        {
+        }
+
+    Pin : Name = \Gea3:tx(0)\
+        Attributes:
+            In Group/Port: True
+            In Sync Option: NOSYNC
+            Out Sync Option: NOSYNC
+            Interrupt generated: False
+            Interrupt mode: NONE
+            Drive mode: CMOS_OUT
+            VTrip: CMOS
+            Slew: FAST
+            Input Sync needed: False
+            Output Sync needed: False
+            SC shield enabled: False
+            POR State: ANY
+            LCD Mode: COMMON
+            Register Mode: RegComb
+            CaSense Mode: NEITHER
+            Treat as pin: True
+            Is OE Registered: False
+            Uses Analog: False
+            Can contain Digital: True
+            Is SIO: False
+            SIO Output Buf: NONREGULATED
+            SIO Input Buf: SINGLE_ENDED
+            SIO HiFreq: LOW
+            SIO Hyst: DISABLED
+            SIO Vtrip: MULTIPLIER_0_5
+            SIO Multiplier Index: 0
+            SIO RefSel: VCC_IO
+            Required Capabilities: DIGITAL
+            Initial Value: 1
+            IO Voltage: 0
+        PORT MAP (
+            pa_out => \Gea3:tx(0)\__PA ,
+            pin_input => \Gea3:tx_wire\ ,
+            pad => \Gea3:tx(0)_PAD\ );
+        Properties:
+        {
+        }
+
+    Pin : Name = \Gea3:rx(0)\
+        Attributes:
+            In Group/Port: True
+            In Sync Option: NOSYNC
+            Out Sync Option: AUTO
+            Interrupt generated: False
+            Interrupt mode: NONE
+            Drive mode: HI_Z_DIGITAL
+            VTrip: CMOS
+            Slew: FAST
+            Input Sync needed: False
+            Output Sync needed: False
+            SC shield enabled: False
+            POR State: ANY
+            LCD Mode: COMMON
+            Register Mode: RegComb
+            CaSense Mode: NEITHER
+            Treat as pin: True
+            Is OE Registered: False
+            Uses Analog: False
+            Can contain Digital: True
+            Is SIO: False
+            SIO Output Buf: NONREGULATED
+            SIO Input Buf: SINGLE_ENDED
+            SIO HiFreq: LOW
+            SIO Hyst: DISABLED
+            SIO Vtrip: MULTIPLIER_0_5
+            SIO Multiplier Index: 0
+            SIO RefSel: VCC_IO
+            Required Capabilities: DIGITAL
+            Initial Value: 0
+            IO Voltage: 0
+        PORT MAP (
+            pa_out => \Gea3:rx(0)\__PA ,
+            fb => \Gea3:rx_wire\ ,
+            pad => \Gea3:rx(0)_PAD\ );
+        Properties:
+        {
+        }
+    </CYPRESSTAG>
+    <CYPRESSTAG name="Macrocell listing" icon="FILE_RPT_EQUATION">
+    </CYPRESSTAG>
+    <CYPRESSTAG name="Datapath listing">
+    </CYPRESSTAG>
+    <CYPRESSTAG name="Status register listing">
+    </CYPRESSTAG>
+    <CYPRESSTAG name="StatusI register listing">
+    </CYPRESSTAG>
+    <CYPRESSTAG name="Sync listing">
+    </CYPRESSTAG>
+    <CYPRESSTAG name="Control register listing">
+    </CYPRESSTAG>
+    <CYPRESSTAG name="Count7 listing">
+    </CYPRESSTAG>
+    <CYPRESSTAG name="DRQ listing">
+    </CYPRESSTAG>
+    <CYPRESSTAG name="Interrupt listing">
+
+    ------------------------------------------------------------
+    Interrupt listing
+    ------------------------------------------------------------
+
+    interrupt: Name =\CapTouch:ISR\
+        PORT MAP (
+            interrupt => \CapTouch:Net_120\ );
+        Properties:
+        {
+            int_type = "10"
+            is_nmi = 0
+        }
+
+    interrupt: Name =\Gea3:SCB_IRQ\
+        PORT MAP (
+            interrupt => Net_26 );
+        Properties:
+        {
+            int_type = "10"
+            is_nmi = 0
+        }
+    </CYPRESSTAG>
+</CYPRESSTAG>
+<CYPRESSTAG name="Technology mapping summary" expanded>
+
+------------------------------------------------------------
+Technology mapping summary
+------------------------------------------------------------
+
+Resource Type                 : Used : Free :  Max :  % Used
+============================================================
+Interrupts                    :    2 :   26 :   28 :  7.14 %
+IO                            :   14 :   40 :   54 : 25.93 %
+Segment LCD                   :    0 :    1 :    1 :  0.00 %
+CapSense                      :    1 :    0 :    1 : 100.00 %
+Die Temp                      :    0 :    1 :    1 :  0.00 %
+Serial Communication (SCB)    :    1 :    4 :    5 : 20.00 %
+DMA Channels                  :    0 :    8 :    8 :  0.00 %
+Timer/Counter/PWM             :    0 :    8 :    8 :  0.00 %
+Crypto                        :    0 :    1 :    1 :  0.00 %
+Smart IO Ports                :    0 :    3 :    3 :  0.00 %
+Comparator/Opamp              :    0 :    2 :    2 :  0.00 %
+Comparator                    :    1 :    0 :    1 : 100.00 %
+LP Comparator                 :    0 :    2 :    2 :  0.00 %
+SAR ADC                       :    0 :    1 :    1 :  0.00 %
+DAC                           :      :      :      :        
+  7-bit IDAC                  :    1 :    1 :    2 : 50.00 %
+</CYPRESSTAG>
+Technology Mapping: Elapsed time ==> 0s.048ms
+Tech Mapping phase: Elapsed time ==> 0s.079ms
+</CYPRESSTAG>
+<CYPRESSTAG name="Analog Placement">
+<CYPRESSTAG name="FFB & IO Pre Placement">
+<CYPRESSTAG name="Placement" icon="FILE_RPT_PLACEMENT">
+
+Cell                                : Block                              
+=========================================================================
+\CapTouch:Rx(0)\                    : [IOP=(1)][IoId=(7)]                
+\CapTouch:Rx(1)\                    : [IOP=(2)][IoId=(0)]                
+\CapTouch:Rx(2)\                    : [IOP=(2)][IoId=(1)]                
+\CapTouch:Rx(3)\                    : [IOP=(2)][IoId=(6)]                
+\CapTouch:Rx(4)\                    : [IOP=(2)][IoId=(7)]                
+\CapTouch:CintA(0)\                 : [IOP=(4)][IoId=(2)]                
+\CapTouch:CintB(0)\                 : [IOP=(4)][IoId=(3)]                
+\CapTouch:Tx(0)\                    : [IOP=(0)][IoId=(6)]                
+\CapTouch:Tx(1)\                    : [IOP=(0)][IoId=(1)]                
+\CapTouch:Tx(2)\                    : [IOP=(0)][IoId=(0)]                
+\Gea3:tx(0)\                        : [IOP=(7)][IoId=(1)]                
+\Gea3:rx(0)\                        : [IOP=(7)][IoId=(0)]                
+ClockGenBlock                       : CLK_GEN_[FFB(CLK_GEN,0)]           
+\CapTouch:CSD\                      : CSD_[FFB(CSD,0)]                   
+\Gea3:SCB\                          : SCB_[FFB(SCB,3)]                   
+\CapTouch:IDACMod\                  : CSIDAC7_[FFB(CSIDAC7,0)]           
+
+</CYPRESSTAG>
+</CYPRESSTAG>
+<CYPRESSTAG name="Real Analog Placement">
+Elapsed time ==> 0.2261280s
+</CYPRESSTAG>
+Analog Placement phase: Elapsed time ==> 0s.544ms
+</CYPRESSTAG>
+<CYPRESSTAG name="Analog Routing">
+<CYPRESSTAG name="Analog Routing">
+Route success=True, Iterations=1 Elapsed=0.0082312 secs
+</CYPRESSTAG>
+Analog Routing phase: Elapsed time ==> 0s.016ms
+</CYPRESSTAG>
+<CYPRESSTAG name="Analog Code Generation">
+============ Analog Final Answer Routes ============
+Dump of CyAnalogRoutingResultsDB
+Map of net to items {
+  Net: \CapTouch:Net_13_0\ {
+    CSD0_sense_internal
+    swh_7
+    sense0
+    BYA
+    amuxbusa_csd
+    AMUXSPLIT0_SWITCH_AA_SL
+    amuxbridge_a_csd_pass
+    AMUXSPLIT0_SWITCH_AA_SR
+    amuxbusa_pass
+    P1_P47
+    p1_7
+    P2_P47
+    p2_7
+    P2_P46
+    p2_6
+    P2_P40
+    p2_0
+    P2_P41
+    p2_1
+  }
+  Net: \CapTouch:Net_150\ {
+  }
+  Net: \CapTouch:Net_341\ {
+    idac0_out
+    swhv_3
+  }
+  Net: \CapTouch:Net_354_0\ {
+    P0_P40
+    p0_0
+    P0_P41
+    p0_1
+    P0_P46
+    p0_6
+  }
+  Net: \CapTouch:Net_84\ {
+    Net_44985
+    swh_4
+    p4_3
+    P4_P53
+  }
+  Net: \CapTouch:Net_86\ {
+    Net_45055
+    swh_3
+    p4_2
+    P4_P42
+  }
+}
+Map of item to net {
+  CSD0_sense_internal                              -> \CapTouch:Net_13_0\
+  swh_7                                            -> \CapTouch:Net_13_0\
+  sense0                                           -> \CapTouch:Net_13_0\
+  BYA                                              -> \CapTouch:Net_13_0\
+  amuxbusa_csd                                     -> \CapTouch:Net_13_0\
+  AMUXSPLIT0_SWITCH_AA_SL                          -> \CapTouch:Net_13_0\
+  amuxbridge_a_csd_pass                            -> \CapTouch:Net_13_0\
+  AMUXSPLIT0_SWITCH_AA_SR                          -> \CapTouch:Net_13_0\
+  amuxbusa_pass                                    -> \CapTouch:Net_13_0\
+  P1_P47                                           -> \CapTouch:Net_13_0\
+  p1_7                                             -> \CapTouch:Net_13_0\
+  P2_P47                                           -> \CapTouch:Net_13_0\
+  p2_7                                             -> \CapTouch:Net_13_0\
+  P2_P46                                           -> \CapTouch:Net_13_0\
+  p2_6                                             -> \CapTouch:Net_13_0\
+  P2_P40                                           -> \CapTouch:Net_13_0\
+  p2_0                                             -> \CapTouch:Net_13_0\
+  P2_P41                                           -> \CapTouch:Net_13_0\
+  p2_1                                             -> \CapTouch:Net_13_0\
+  idac0_out                                        -> \CapTouch:Net_341\
+  swhv_3                                           -> \CapTouch:Net_341\
+  P0_P40                                           -> \CapTouch:Net_354_0\
+  p0_0                                             -> \CapTouch:Net_354_0\
+  P0_P41                                           -> \CapTouch:Net_354_0\
+  p0_1                                             -> \CapTouch:Net_354_0\
+  P0_P46                                           -> \CapTouch:Net_354_0\
+  p0_6                                             -> \CapTouch:Net_354_0\
+  Net_44985                                        -> \CapTouch:Net_84\
+  swh_4                                            -> \CapTouch:Net_84\
+  p4_3                                             -> \CapTouch:Net_84\
+  P4_P53                                           -> \CapTouch:Net_84\
+  Net_45055                                        -> \CapTouch:Net_86\
+  swh_3                                            -> \CapTouch:Net_86\
+  p4_2                                             -> \CapTouch:Net_86\
+  P4_P42                                           -> \CapTouch:Net_86\
+}
+Mux Info {
+}
+Analog Code Generation phase: Elapsed time ==> 0s.015ms
+</CYPRESSTAG>
+<CYPRESSTAG name="Digital Placement">
+<CYPRESSTAG name="Detailed placement messages">
+I2076: Total run-time: 0.2 sec.
+
+</CYPRESSTAG>
+<CYPRESSTAG name="PLD Packing">
+<CYPRESSTAG name="PLD Packing Summary">
+No PLDs were packed.
+</CYPRESSTAG>
+PLD Packing: Elapsed time ==> 0s.000ms
+</CYPRESSTAG>
+<CYPRESSTAG name="Partitioning">
+<CYPRESSTAG name="Initial Partitioning Summary">
+Initial Partitioning Summary not displayed at this verbose level.</CYPRESSTAG>
+<CYPRESSTAG name="Final Partitioning Summary">
+Final Partitioning Summary not displayed at this verbose level.</CYPRESSTAG>
+Partitioning: Elapsed time ==> 0s.000ms
+</CYPRESSTAG>
+<CYPRESSTAG name="Final Placement Summary">
+
+------------------------------------------------------------
+Final Placement Summary
+------------------------------------------------------------
+
+       Resource Type :      Count : Avg Inputs : Avg Outputs
+    ========================================================
+                 UDB :          0 :       0.00 :       0.00
+<CYPRESSTAG name="Final Placement Details">
+<CYPRESSTAG name="Component Details">
+
+------------------------------------------------------------
+Component Placement Details
+------------------------------------------------------------
+Intr container @ [IntrContainer=(0)]: 
+  Intr@ [IntrContainer=(0)][IntrId=(10)] 
+    interrupt: Name =\Gea3:SCB_IRQ\
+        PORT MAP (
+            interrupt => Net_26 );
+        Properties:
+        {
+            int_type = "10"
+            is_nmi = 0
+        }
+  Intr@ [IntrContainer=(0)][IntrId=(16)] 
+    interrupt: Name =\CapTouch:ISR\
+        PORT MAP (
+            interrupt => \CapTouch:Net_120\ );
+        Properties:
+        {
+            int_type = "10"
+            is_nmi = 0
+        }
+Drq container @ [DrqContainer=(0)]: empty
+Port 0 contains the following IO cells:
+[IoId=0]: 
+Pin : Name = \CapTouch:Tx(2)\
+    Attributes:
+        Alias: U104_Tx
+        In Group/Port: True
+        In Sync Option: AUTO
+        Out Sync Option: AUTO
+        Interrupt generated: False
+        Interrupt mode: NONE
+        Drive mode: HI_Z_ANALOG
+        VTrip: EITHER
+        Slew: FAST
+        Input Sync needed: False
+        Output Sync needed: False
+        SC shield enabled: False
+        POR State: ANY
+        LCD Mode: COMMON
+        Register Mode: RegComb
+        CaSense Mode: NEITHER
+        Treat as pin: True
+        Is OE Registered: False
+        Uses Analog: True
+        Can contain Digital: False
+        Is SIO: False
+        SIO Output Buf: NONREGULATED
+        SIO Input Buf: SINGLE_ENDED
+        SIO HiFreq: LOW
+        SIO Hyst: DISABLED
+        SIO Vtrip: MULTIPLIER_0_5
+        SIO Multiplier Index: 0
+        SIO RefSel: VCC_IO
+        Required Capabilities: ANALOG
+        Initial Value: 1
+        IO Voltage: 0
+    PORT MAP (
+        pa_out => \CapTouch:Tx(2)\__PA ,
+        analog_term => \CapTouch:Net_2\ ,
+        pad => \CapTouch:Tx(2)_PAD\ );
+    Properties:
+    {
+    }
+
+[IoId=1]: 
+Pin : Name = \CapTouch:Tx(1)\
+    Attributes:
+        Alias: U103_Tx
+        In Group/Port: True
+        In Sync Option: AUTO
+        Out Sync Option: AUTO
+        Interrupt generated: False
+        Interrupt mode: NONE
+        Drive mode: HI_Z_ANALOG
+        VTrip: EITHER
+        Slew: FAST
+        Input Sync needed: False
+        Output Sync needed: False
+        SC shield enabled: False
+        POR State: ANY
+        LCD Mode: COMMON
+        Register Mode: RegComb
+        CaSense Mode: NEITHER
+        Treat as pin: True
+        Is OE Registered: False
+        Uses Analog: True
+        Can contain Digital: False
+        Is SIO: False
+        SIO Output Buf: NONREGULATED
+        SIO Input Buf: SINGLE_ENDED
+        SIO HiFreq: LOW
+        SIO Hyst: DISABLED
+        SIO Vtrip: MULTIPLIER_0_5
+        SIO Multiplier Index: 0
+        SIO RefSel: VCC_IO
+        Required Capabilities: ANALOG
+        Initial Value: 1
+        IO Voltage: 0
+    PORT MAP (
+        pa_out => \CapTouch:Tx(1)\__PA ,
+        analog_term => \CapTouch:Net_2\ ,
+        pad => \CapTouch:Tx(1)_PAD\ );
+    Properties:
+    {
+    }
+
+[IoId=6]: 
+Pin : Name = \CapTouch:Tx(0)\
+    Attributes:
+        Alias: U102_Tx
+        In Group/Port: True
+        In Sync Option: AUTO
+        Out Sync Option: AUTO
+        Interrupt generated: False
+        Interrupt mode: NONE
+        Drive mode: HI_Z_ANALOG
+        VTrip: EITHER
+        Slew: FAST
+        Input Sync needed: False
+        Output Sync needed: False
+        SC shield enabled: False
+        POR State: ANY
+        LCD Mode: COMMON
+        Register Mode: RegComb
+        CaSense Mode: NEITHER
+        Treat as pin: True
+        Is OE Registered: False
+        Uses Analog: True
+        Can contain Digital: False
+        Is SIO: False
+        SIO Output Buf: NONREGULATED
+        SIO Input Buf: SINGLE_ENDED
+        SIO HiFreq: LOW
+        SIO Hyst: DISABLED
+        SIO Vtrip: MULTIPLIER_0_5
+        SIO Multiplier Index: 0
+        SIO RefSel: VCC_IO
+        Required Capabilities: ANALOG
+        Initial Value: 0
+        IO Voltage: 0
+    PORT MAP (
+        pa_out => \CapTouch:Tx(0)\__PA ,
+        analog_term => \CapTouch:Net_2\ ,
+        pad => \CapTouch:Tx(0)_PAD\ );
+    Properties:
+    {
+    }
+
+Port 1 contains the following IO cells:
+[IoId=7]: 
+Pin : Name = \CapTouch:Rx(0)\
+    Attributes:
+        Alias: U102_Rx0
+        In Group/Port: True
+        In Sync Option: AUTO
+        Out Sync Option: AUTO
+        Interrupt generated: False
+        Interrupt mode: NONE
+        Drive mode: HI_Z_ANALOG
+        VTrip: EITHER
+        Slew: FAST
+        Input Sync needed: False
+        Output Sync needed: False
+        SC shield enabled: False
+        POR State: ANY
+        LCD Mode: COMMON
+        Register Mode: RegComb
+        CaSense Mode: NEITHER
+        Treat as pin: True
+        Is OE Registered: False
+        Uses Analog: True
+        Can contain Digital: False
+        Is SIO: False
+        SIO Output Buf: NONREGULATED
+        SIO Input Buf: SINGLE_ENDED
+        SIO HiFreq: LOW
+        SIO Hyst: DISABLED
+        SIO Vtrip: MULTIPLIER_0_5
+        SIO Multiplier Index: 0
+        SIO RefSel: VCC_IO
+        Required Capabilities: ANALOG
+        Initial Value: 0
+        IO Voltage: 0
+    PORT MAP (
+        pa_out => \CapTouch:Rx(0)\__PA ,
+        analog_term => \CapTouch:Net_2\ ,
+        pad => \CapTouch:Rx(0)_PAD\ );
+    Properties:
+    {
+    }
+
+Port 2 contains the following IO cells:
+[IoId=0]: 
+Pin : Name = \CapTouch:Rx(1)\
+    Attributes:
+        Alias: U105_Rx0
+        In Group/Port: True
+        In Sync Option: AUTO
+        Out Sync Option: AUTO
+        Interrupt generated: False
+        Interrupt mode: NONE
+        Drive mode: HI_Z_ANALOG
+        VTrip: EITHER
+        Slew: FAST
+        Input Sync needed: False
+        Output Sync needed: False
+        SC shield enabled: False
+        POR State: ANY
+        LCD Mode: COMMON
+        Register Mode: RegComb
+        CaSense Mode: NEITHER
+        Treat as pin: True
+        Is OE Registered: False
+        Uses Analog: True
+        Can contain Digital: False
+        Is SIO: False
+        SIO Output Buf: NONREGULATED
+        SIO Input Buf: SINGLE_ENDED
+        SIO HiFreq: LOW
+        SIO Hyst: DISABLED
+        SIO Vtrip: MULTIPLIER_0_5
+        SIO Multiplier Index: 0
+        SIO RefSel: VCC_IO
+        Required Capabilities: ANALOG
+        Initial Value: 1
+        IO Voltage: 0
+    PORT MAP (
+        pa_out => \CapTouch:Rx(1)\__PA ,
+        analog_term => \CapTouch:Net_2\ ,
+        pad => \CapTouch:Rx(1)_PAD\ );
+    Properties:
+    {
+    }
+
+[IoId=1]: 
+Pin : Name = \CapTouch:Rx(2)\
+    Attributes:
+        Alias: U108_Rx0
+        In Group/Port: True
+        In Sync Option: AUTO
+        Out Sync Option: AUTO
+        Interrupt generated: False
+        Interrupt mode: NONE
+        Drive mode: HI_Z_ANALOG
+        VTrip: EITHER
+        Slew: FAST
+        Input Sync needed: False
+        Output Sync needed: False
+        SC shield enabled: False
+        POR State: ANY
+        LCD Mode: COMMON
+        Register Mode: RegComb
+        CaSense Mode: NEITHER
+        Treat as pin: True
+        Is OE Registered: False
+        Uses Analog: True
+        Can contain Digital: False
+        Is SIO: False
+        SIO Output Buf: NONREGULATED
+        SIO Input Buf: SINGLE_ENDED
+        SIO HiFreq: LOW
+        SIO Hyst: DISABLED
+        SIO Vtrip: MULTIPLIER_0_5
+        SIO Multiplier Index: 0
+        SIO RefSel: VCC_IO
+        Required Capabilities: ANALOG
+        Initial Value: 1
+        IO Voltage: 0
+    PORT MAP (
+        pa_out => \CapTouch:Rx(2)\__PA ,
+        analog_term => \CapTouch:Net_2\ ,
+        pad => \CapTouch:Rx(2)_PAD\ );
+    Properties:
+    {
+    }
+
+[IoId=6]: 
+Pin : Name = \CapTouch:Rx(3)\
+    Attributes:
+        Alias: U111_Rx0
+        In Group/Port: True
+        In Sync Option: AUTO
+        Out Sync Option: AUTO
+        Interrupt generated: False
+        Interrupt mode: NONE
+        Drive mode: HI_Z_ANALOG
+        VTrip: EITHER
+        Slew: FAST
+        Input Sync needed: False
+        Output Sync needed: False
+        SC shield enabled: False
+        POR State: ANY
+        LCD Mode: COMMON
+        Register Mode: RegComb
+        CaSense Mode: NEITHER
+        Treat as pin: True
+        Is OE Registered: False
+        Uses Analog: True
+        Can contain Digital: False
+        Is SIO: False
+        SIO Output Buf: NONREGULATED
+        SIO Input Buf: SINGLE_ENDED
+        SIO HiFreq: LOW
+        SIO Hyst: DISABLED
+        SIO Vtrip: MULTIPLIER_0_5
+        SIO Multiplier Index: 0
+        SIO RefSel: VCC_IO
+        Required Capabilities: ANALOG
+        Initial Value: 1
+        IO Voltage: 0
+    PORT MAP (
+        pa_out => \CapTouch:Rx(3)\__PA ,
+        analog_term => \CapTouch:Net_2\ ,
+        pad => \CapTouch:Rx(3)_PAD\ );
+    Properties:
+    {
+    }
+
+[IoId=7]: 
+Pin : Name = \CapTouch:Rx(4)\
+    Attributes:
+        Alias: U113_Rx0
+        In Group/Port: True
+        In Sync Option: AUTO
+        Out Sync Option: AUTO
+        Interrupt generated: False
+        Interrupt mode: NONE
+        Drive mode: HI_Z_ANALOG
+        VTrip: EITHER
+        Slew: FAST
+        Input Sync needed: False
+        Output Sync needed: False
+        SC shield enabled: False
+        POR State: ANY
+        LCD Mode: COMMON
+        Register Mode: RegComb
+        CaSense Mode: NEITHER
+        Treat as pin: True
+        Is OE Registered: False
+        Uses Analog: True
+        Can contain Digital: False
+        Is SIO: False
+        SIO Output Buf: NONREGULATED
+        SIO Input Buf: SINGLE_ENDED
+        SIO HiFreq: LOW
+        SIO Hyst: DISABLED
+        SIO Vtrip: MULTIPLIER_0_5
+        SIO Multiplier Index: 0
+        SIO RefSel: VCC_IO
+        Required Capabilities: ANALOG
+        Initial Value: 1
+        IO Voltage: 0
+    PORT MAP (
+        pa_out => \CapTouch:Rx(4)\__PA ,
+        analog_term => \CapTouch:Net_2\ ,
+        pad => \CapTouch:Rx(4)_PAD\ );
+    Properties:
+    {
+    }
+
+Port 3 contains the following IO cells:
+Port 4 contains the following IO cells:
+[IoId=2]: 
+Pin : Name = \CapTouch:CintA(0)\
+    Attributes:
+        In Group/Port: True
+        In Sync Option: AUTO
+        Out Sync Option: AUTO
+        Interrupt generated: False
+        Interrupt mode: NONE
+        Drive mode: HI_Z_ANALOG
+        VTrip: EITHER
+        Slew: FAST
+        Input Sync needed: False
+        Output Sync needed: False
+        SC shield enabled: False
+        POR State: ANY
+        LCD Mode: COMMON
+        Register Mode: RegComb
+        CaSense Mode: NEITHER
+        Treat as pin: True
+        Is OE Registered: False
+        Uses Analog: True
+        Can contain Digital: False
+        Is SIO: False
+        SIO Output Buf: NONREGULATED
+        SIO Input Buf: SINGLE_ENDED
+        SIO HiFreq: LOW
+        SIO Hyst: DISABLED
+        SIO Vtrip: MULTIPLIER_0_5
+        SIO Multiplier Index: 0
+        SIO RefSel: VCC_IO
+        Required Capabilities: NONE
+        Initial Value: 0
+        IO Voltage: 0
+    PORT MAP (
+        pa_out => \CapTouch:CintA(0)\__PA ,
+        analog_term => \CapTouch:Net_86\ ,
+        pad => \CapTouch:CintA(0)_PAD\ );
+    Properties:
+    {
+    }
+
+[IoId=3]: 
+Pin : Name = \CapTouch:CintB(0)\
+    Attributes:
+        In Group/Port: True
+        In Sync Option: AUTO
+        Out Sync Option: AUTO
+        Interrupt generated: False
+        Interrupt mode: NONE
+        Drive mode: HI_Z_ANALOG
+        VTrip: EITHER
+        Slew: FAST
+        Input Sync needed: False
+        Output Sync needed: False
+        SC shield enabled: False
+        POR State: ANY
+        LCD Mode: COMMON
+        Register Mode: RegComb
+        CaSense Mode: NEITHER
+        Treat as pin: True
+        Is OE Registered: False
+        Uses Analog: True
+        Can contain Digital: False
+        Is SIO: False
+        SIO Output Buf: NONREGULATED
+        SIO Input Buf: SINGLE_ENDED
+        SIO HiFreq: LOW
+        SIO Hyst: DISABLED
+        SIO Vtrip: MULTIPLIER_0_5
+        SIO Multiplier Index: 0
+        SIO RefSel: VCC_IO
+        Required Capabilities: NONE
+        Initial Value: 0
+        IO Voltage: 0
+    PORT MAP (
+        pa_out => \CapTouch:CintB(0)\__PA ,
+        analog_term => \CapTouch:Net_84\ ,
+        pad => \CapTouch:CintB(0)_PAD\ );
+    Properties:
+    {
+    }
+
+Port 5 contains the following IO cells:
+Port 6 contains the following IO cells:
+Port 7 contains the following IO cells:
+[IoId=0]: 
+Pin : Name = \Gea3:rx(0)\
+    Attributes:
+        In Group/Port: True
+        In Sync Option: NOSYNC
+        Out Sync Option: AUTO
+        Interrupt generated: False
+        Interrupt mode: NONE
+        Drive mode: HI_Z_DIGITAL
+        VTrip: CMOS
+        Slew: FAST
+        Input Sync needed: False
+        Output Sync needed: False
+        SC shield enabled: False
+        POR State: ANY
+        LCD Mode: COMMON
+        Register Mode: RegComb
+        CaSense Mode: NEITHER
+        Treat as pin: True
+        Is OE Registered: False
+        Uses Analog: False
+        Can contain Digital: True
+        Is SIO: False
+        SIO Output Buf: NONREGULATED
+        SIO Input Buf: SINGLE_ENDED
+        SIO HiFreq: LOW
+        SIO Hyst: DISABLED
+        SIO Vtrip: MULTIPLIER_0_5
+        SIO Multiplier Index: 0
+        SIO RefSel: VCC_IO
+        Required Capabilities: DIGITAL
+        Initial Value: 0
+        IO Voltage: 0
+    PORT MAP (
+        pa_out => \Gea3:rx(0)\__PA ,
+        fb => \Gea3:rx_wire\ ,
+        pad => \Gea3:rx(0)_PAD\ );
+    Properties:
+    {
+    }
+
+[IoId=1]: 
+Pin : Name = \Gea3:tx(0)\
+    Attributes:
+        In Group/Port: True
+        In Sync Option: NOSYNC
+        Out Sync Option: NOSYNC
+        Interrupt generated: False
+        Interrupt mode: NONE
+        Drive mode: CMOS_OUT
+        VTrip: CMOS
+        Slew: FAST
+        Input Sync needed: False
+        Output Sync needed: False
+        SC shield enabled: False
+        POR State: ANY
+        LCD Mode: COMMON
+        Register Mode: RegComb
+        CaSense Mode: NEITHER
+        Treat as pin: True
+        Is OE Registered: False
+        Uses Analog: False
+        Can contain Digital: True
+        Is SIO: False
+        SIO Output Buf: NONREGULATED
+        SIO Input Buf: SINGLE_ENDED
+        SIO HiFreq: LOW
+        SIO Hyst: DISABLED
+        SIO Vtrip: MULTIPLIER_0_5
+        SIO Multiplier Index: 0
+        SIO RefSel: VCC_IO
+        Required Capabilities: DIGITAL
+        Initial Value: 1
+        IO Voltage: 0
+    PORT MAP (
+        pa_out => \Gea3:tx(0)\__PA ,
+        pin_input => \Gea3:tx_wire\ ,
+        pad => \Gea3:tx(0)_PAD\ );
+    Properties:
+    {
+    }
+
+Clock group 0: 
+    Clock Block @ F(Clock,0): 
+    m0s8clockblockcell: Name =ClockBlock
+        PORT MAP (
+            hfclk => ClockBlock_HFClk ,
+            imo => ClockBlock_IMO ,
+            ext => ClockBlock_ExtClk ,
+            sysclk => ClockBlock_SysClk ,
+            eco => ClockBlock_ECO ,
+            pll => ClockBlock_PLL0 ,
+            ilo => ClockBlock_ILO ,
+            lfclk => ClockBlock_LFClk ,
+            wco => ClockBlock_WCO ,
+            ff_div_5 => \CapTouch:Net_1423_ff5\ ,
+            ff_div_0 => \Gea3:Net_847_ff0\ );
+        Properties:
+        {
+        }
+LCD group 0: empty
+PICU group 0: empty
+Vref group 0: empty
+LPCOMP group 0: empty
+SCB group 0: 
+    SCB Block @ F(SCB,3): 
+    m0s8scbcell: Name =\Gea3:SCB\
+        PORT MAP (
+            clock => \Gea3:Net_847_ff0\ ,
+            interrupt => Net_26 ,
+            uart_rx => \Gea3:rx_wire\ ,
+            uart_tx => \Gea3:tx_wire\ ,
+            uart_rts => \Gea3:rts_wire\ ,
+            mosi_m => \Gea3:mosi_m_wire\ ,
+            select_m_3 => \Gea3:select_m_wire_3\ ,
+            select_m_2 => \Gea3:select_m_wire_2\ ,
+            select_m_1 => \Gea3:select_m_wire_1\ ,
+            select_m_0 => \Gea3:select_m_wire_0\ ,
+            sclk_m => \Gea3:sclk_m_wire\ ,
+            miso_s => \Gea3:miso_s_wire\ ,
+            tr_tx_req => Net_29 ,
+            tr_rx_req => Net_28 );
+        Properties:
+        {
+            cy_registers = ""
+            scb_mode = 2
+        }
+CSD group 0: 
+    CapSense @ F(CSD,0): 
+    p4csdcell: Name =\CapTouch:CSD\
+        PORT MAP (
+            source => \CapTouch:Net_2\ ,
+            shield => \CapTouch:Net_122\ ,
+            csh => \CapTouch:Net_84\ ,
+            cmod => \CapTouch:Net_86\ ,
+            shield_pad => \CapTouch:Net_15\ ,
+            vref_ext => \CapTouch:Net_150\ ,
+            sense_out => \CapTouch:Net_317\ ,
+            sample_out => \CapTouch:Net_316\ ,
+            dsi_csh_tank => \CapTouch:Net_323\ ,
+            dsi_cmod => \CapTouch:Net_322\ ,
+            dsi_hscmp => \CapTouch:Net_321\ ,
+            dsi_sampling => \CapTouch:Net_318\ ,
+            dsi_adc_on => \CapTouch:Net_319\ ,
+            tr_adc_done => \CapTouch:Net_355\ ,
+            dsi_count_15 => \CapTouch:Net_320_15\ ,
+            dsi_count_14 => \CapTouch:Net_320_14\ ,
+            dsi_count_13 => \CapTouch:Net_320_13\ ,
+            dsi_count_12 => \CapTouch:Net_320_12\ ,
+            dsi_count_11 => \CapTouch:Net_320_11\ ,
+            dsi_count_10 => \CapTouch:Net_320_10\ ,
+            dsi_count_9 => \CapTouch:Net_320_9\ ,
+            dsi_count_8 => \CapTouch:Net_320_8\ ,
+            dsi_count_7 => \CapTouch:Net_320_7\ ,
+            dsi_count_6 => \CapTouch:Net_320_6\ ,
+            dsi_count_5 => \CapTouch:Net_320_5\ ,
+            dsi_count_4 => \CapTouch:Net_320_4\ ,
+            dsi_count_3 => \CapTouch:Net_320_3\ ,
+            dsi_count_2 => \CapTouch:Net_320_2\ ,
+            dsi_count_1 => \CapTouch:Net_320_1\ ,
+            dsi_count_0 => \CapTouch:Net_320_0\ ,
+            clk => \CapTouch:Net_1423_ff5\ ,
+            irq => \CapTouch:Net_120\ );
+        Properties:
+        {
+            adc_channel_count = 1
+            cy_registers = ""
+            dedicated_io_count = 2
+            ganged_csx = 1
+            is_capsense = 1
+            is_cmod_charge = 0
+            is_csh_charge = 0
+            is_mutual = 0
+            rx_count = 5
+            sense_as_shield = 0
+            sensors_count = 1
+            shield_as_sense = 0
+            shield_count = 1
+            tx_count = 3
+        }
+CSIDAC7 group 0: 
+    7-bit IDAC @ F(CSIDAC7,0): 
+    p4csidacV2cell: Name =\CapTouch:IDACMod\
+        PORT MAP (
+            iout => \CapTouch:Net_2\ );
+        Properties:
+        {
+            cy_registers = ""
+            leg3_needed = 0
+        }
+TCPWM group 0: empty
+OA group 0: empty
+TEMP group 0: empty
+SARADC group 0: empty
+CLK_GEN group 0: 
+    M0S8 Clock Gen Block @ F(CLK_GEN,0): 
+    m0s8clockgenblockcell: Name =ClockGenBlock
+        PORT MAP (
+             );
+        Properties:
+        {
+        }
+LPCOMPBLOCK group 0: empty
+PASSBLOCK group 0: empty
+WCO group 0: empty
+SmartIO group 0: empty
+CRYPTO group 0: empty
+SRSS group 0: empty
+CPUSS group 0: empty
+IOSS group 0: empty
+EXCO group 0: empty
+</CYPRESSTAG>
+<CYPRESSTAG name="Port Configuration Details">
+
+------------------------------------------------------------
+Port Configuration report
+------------------------------------------------------------
+     |     |       | Interrupt |                  |                     | 
+Port | Pin | Fixed |      Type |       Drive Mode |                Name | Connections
+-----+-----+-------+-----------+------------------+---------------------+--------------------------
+   0 |   0 |     * |      NONE |      HI_Z_ANALOG |    \CapTouch:Tx(2)\ | Analog(\CapTouch:Net_2\)
+     |   1 |     * |      NONE |      HI_Z_ANALOG |    \CapTouch:Tx(1)\ | Analog(\CapTouch:Net_2\)
+     |   6 |     * |      NONE |      HI_Z_ANALOG |    \CapTouch:Tx(0)\ | Analog(\CapTouch:Net_2\)
+-----+-----+-------+-----------+------------------+---------------------+--------------------------
+   1 |   7 |     * |      NONE |      HI_Z_ANALOG |    \CapTouch:Rx(0)\ | Analog(\CapTouch:Net_2\)
+-----+-----+-------+-----------+------------------+---------------------+--------------------------
+   2 |   0 |     * |      NONE |      HI_Z_ANALOG |    \CapTouch:Rx(1)\ | Analog(\CapTouch:Net_2\)
+     |   1 |     * |      NONE |      HI_Z_ANALOG |    \CapTouch:Rx(2)\ | Analog(\CapTouch:Net_2\)
+     |   6 |     * |      NONE |      HI_Z_ANALOG |    \CapTouch:Rx(3)\ | Analog(\CapTouch:Net_2\)
+     |   7 |     * |      NONE |      HI_Z_ANALOG |    \CapTouch:Rx(4)\ | Analog(\CapTouch:Net_2\)
+-----+-----+-------+-----------+------------------+---------------------+--------------------------
+   4 |   2 |     * |      NONE |      HI_Z_ANALOG | \CapTouch:CintA(0)\ | Analog(\CapTouch:Net_86\)
+     |   3 |     * |      NONE |      HI_Z_ANALOG | \CapTouch:CintB(0)\ | Analog(\CapTouch:Net_84\)
+-----+-----+-------+-----------+------------------+---------------------+--------------------------
+   7 |   0 |     * |      NONE |     HI_Z_DIGITAL |        \Gea3:rx(0)\ | FB(\Gea3:rx_wire\)
+     |   1 |     * |      NONE |         CMOS_OUT |        \Gea3:tx(0)\ | In(\Gea3:tx_wire\)
+---------------------------------------------------------------------------------------------------
+</CYPRESSTAG>
+</CYPRESSTAG>
+</CYPRESSTAG>
+Digital component placer commit/Report: Elapsed time ==> 0s.031ms
+Digital Placement phase: Elapsed time ==> 0s.469ms
+</CYPRESSTAG>
+<CYPRESSTAG name="Digital Routing">
+"C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\bin/sjrouter.exe" --xml-path "C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\dev\psoc4/18/route_arch-rrg.cydata" --vh2-path "micro-psoc4100s-cap-touch_r.vh2" --pcf-path "micro-psoc4100s-cap-touch.pco" --des-name "micro-psoc4100s-cap-touch" --dsf-path "micro-psoc4100s-cap-touch.dsf"
+Routing successful.
+Digital Routing phase: Elapsed time ==> 0s.453ms
+</CYPRESSTAG>
+<CYPRESSTAG name="Bitstream Generation">
+Bitstream Generation phase: Elapsed time ==> 0s.217ms
+</CYPRESSTAG>
+<CYPRESSTAG name="Bitstream Verification">
+Bitstream Verification phase: Elapsed time ==> 0s.015ms
+</CYPRESSTAG>
+<CYPRESSTAG name="Static timing analysis">
+No timing parameter file available for CY8C4127AZI-S455
+Static timing analysis phase: Elapsed time ==> 0s.000ms
+</CYPRESSTAG>
+<CYPRESSTAG name="Data reporting">
+Data reporting phase: Elapsed time ==> 0s.000ms
+</CYPRESSTAG>
+<CYPRESSTAG name="Database update...">
+Design database save phase: Elapsed time ==> 0s.187ms
+</CYPRESSTAG>
+cydsfit: Elapsed time ==> 2s.093ms
+</CYPRESSTAG>
+Fitter phase: Elapsed time ==> 2s.093ms
+API generation phase: Elapsed time ==> 5s.050ms
+Dependency generation phase: Elapsed time ==> 0s.068ms
+Cleanup phase: Elapsed time ==> 0s.000ms

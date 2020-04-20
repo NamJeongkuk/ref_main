@@ -9,6 +9,14 @@ Projects are named after the target microcontroller and are broken down into 3 m
 
 Projects may also have a suffix indicating that they are configured for a specific application instead of being general-purpose.
 
+## micro-psoc4100s-cap-touch
+Small cap touch application using the [CY8C4127AZI-S455](https://www.cypress.com/part/cy8c4127azi-s455)
+
+| Memory | Size   |
+|--------|--------|
+| Flash  | 128 KB |
+| RAM    | 16 KB  |
+
 ## rx130
 General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html).
 
