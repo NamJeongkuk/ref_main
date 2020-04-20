@@ -46,7 +46,6 @@ SRC_FILES:=\
 SRC_DIRS:=\
    $(PROJECT_DIR) \
    $(PROJECT_DIR)/$(TARGET) \
-   $(PROJECT_DIR)/$(TARGET)/CapTouch \
    $(PROJECT_DIR)/$(TARGET)/DataSource \
    $(PROJECT_DIR)/$(TARGET)/GeaStack \
    $(PROJECT_DIR)/$(TARGET)/Hardware \
