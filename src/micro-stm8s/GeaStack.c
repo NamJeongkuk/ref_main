@@ -25,7 +25,8 @@ enum
 };
 
 #define EXPAND_AS_PUBLIC_ERD_COUNT_STRUCT_MEMBER(Name, Number, DataType, Stream, RemoteErd) \
-   CONCAT(INCLUDE_PUBLIC_, Number)(uint8_t Name;)
+   CONCAT(INCLUDE_PUBLIC_, Number)                                                          \
+   (uint8_t Name;)
 
 typedef struct
 {
@@ -34,12 +35,12 @@ typedef struct
 
 static struct
 {
-      TinyGea2Interface_FullDuplex_t gea2Interface;
-      TinyCommonCommands_t commonCommands;
-      TinyErdGea2PublicApiRevision2_t erdApi;
-      uint8_t subscriptionBuffer[sizeof(PublicErdCount_t) / 4 + 1];
-      uint8_t sendBuffer[SendBufferSize];
-      uint8_t receiveBuffer[ReceiveBufferSize];
+   TinyGea2Interface_FullDuplex_t gea2Interface;
+   TinyCommonCommands_t commonCommands;
+   TinyErdGea2PublicApiRevision2_t erdApi;
+   uint8_t subscriptionBuffer[sizeof(PublicErdCount_t) / 4 + 1];
+   uint8_t sendBuffer[SendBufferSize];
+   uint8_t receiveBuffer[ReceiveBufferSize];
 } instance;
 
 static const TinyCommonCommandsConfiguration_t commonCommandsConfiguration = {
