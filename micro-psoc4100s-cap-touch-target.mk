@@ -51,8 +51,6 @@ SRC_DIRS:=\
    $(PROJECT_DIR)/$(TARGET)/Hardware \
    $(PROJECT_DIR)/$(TARGET)/Plugins \
    $(PROJECT_DIR)/$(TARGET)/PsocShim \
-   $(PROJECT_DIR)/$(TARGET)/Ul \
-   $(PROJECT_DIR)/$(TARGET)/Ul/Vendor \
    $(PROJECT_DIR)/MicroApplication/DataSource \
 
 COMMON_LIB_DIRS:=\
@@ -61,7 +59,8 @@ COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/TinyLib \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Psoc4100 \
-
+   $(APPLCOMMON_TINY_DIR)/src/Hardware/Psoc4100/Ul \
+   $(APPLCOMMON_TINY_DIR)/src/Hardware/Psoc4100/Ul/Vendor \
 
 INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
