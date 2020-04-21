@@ -14,10 +14,10 @@ BUILD_RELEASE=2
 BUILD_EMULATOR=1
 
 ifeq ($(DEBUG), N)
-DEFINE_LIST+=CONFIG_BUILD=$(BUILD_RELEASE) NDEBUG
+DEFINE_LIST+=CONFIG_BUILD=$(BUILD_RELEASE)
 else
 ifeq ($(DEBUG), Y)
-DEFINE_LIST+=CONFIG_BUILD=$(BUILD_EMULATOR) NDEBUG
+DEFINE_LIST+=CONFIG_BUILD=$(BUILD_EMULATOR) DEBUG
 else
 $(error Please define DEBUG with Y or N.)
 endif
@@ -46,12 +46,11 @@ SRC_FILES:=\
 SRC_DIRS:=\
    $(PROJECT_DIR) \
    $(PROJECT_DIR)/$(TARGET) \
-   $(PROJECT_DIR)/$(TARGET)/CapTouch \
    $(PROJECT_DIR)/$(TARGET)/DataSource \
    $(PROJECT_DIR)/$(TARGET)/GeaStack \
    $(PROJECT_DIR)/$(TARGET)/Hardware \
-   $(PROJECT_DIR)/$(TARGET)/PsocShim \
    $(PROJECT_DIR)/$(TARGET)/Plugins \
+   $(PROJECT_DIR)/$(TARGET)/PsocShim \
    $(PROJECT_DIR)/MicroApplication/DataSource \
 
 COMMON_LIB_DIRS:=\
@@ -60,7 +59,8 @@ COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/TinyLib \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Psoc4100 \
-
+   $(APPLCOMMON_TINY_DIR)/src/Hardware/Psoc4100/Ul \
+   $(APPLCOMMON_TINY_DIR)/src/Hardware/Psoc4100/Ul/Vendor \
 
 INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \

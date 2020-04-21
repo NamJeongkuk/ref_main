@@ -127,6 +127,20 @@
         "${workspaceFolder}/build/nano-stm8s-cap-touch/nano-stm8s-cap-touch_debug_openocd.cfg"
       ],
       "preLaunchTask": "nano-stm8s-cap-touch_vscode_debug"
+    },
+    {
+      "name": "micro-psoc4100s-cap-touch",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "type": "cortex-debug",
+      "executable": "${workspaceFolder}/build/micro-psoc4100s-cap-touch/micro-psoc4100s-cap-touch.elf",
+      "device": "CY8C4127XXX-SXXX",
+      "servertype": "jlink",
+      "interface": "swd",
+      "armToolchainPath": "${workspaceFolder}/tools/gcc-arm-none-eabi/tc/bin/",
+      "serverpath": "${workspaceFolder}/build/micro-psoc4100s-cap-touch/jlink_gdb_server_wrapper.sh",
+      "preLaunchTask": "micro-psoc4100s-cap-touch_debug",
+      "svdFile": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32F3xx/Libraries/CMSIS/SVD/STM32F303x.svd"
     }
   ]
 }

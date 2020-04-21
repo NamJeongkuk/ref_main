@@ -16,11 +16,25 @@
 #include "HeartbeatPin5Port5.h"
 #include "Application.h"
 #include "SystemData.h"
+#include "MemoryMap.h"
+#include "UlTestsPlugin.h"
 
 enum
 {
    WatchdogKickPeriodInMsec = 1,
    OneHzHalfPeriod = 500
+};
+
+enum
+{
+   UlTestPeriod = 5,
+   UlBytesPerRomCheckStep = 10,
+   UlResourceWatchdogTimeout = 1000,
+#if DEBUG
+   UlRomCheckErrorEnabled = false,
+#else
+   UlRomCheckErrorEnabled = true,
+#endif
 };
 
 static TinyTimerModule_t timerModule;
@@ -60,6 +74,14 @@ void main(void)
          Psoc4100sGea2Address);
    }
    CyGlobalIntEnable;
+
+   UlTestsPlugin_Init(
+      &timerModule,
+      ApplicationHeaderAddress,
+      UlRomCheckErrorEnabled,
+      UlTestPeriod,
+      UlResourceWatchdogTimeout,
+      UlBytesPerRomCheckStep);
 
    Application_Init(SystemData_DataSource());
 
