@@ -1,10 +1,4 @@
-ifeq ($(TC), IAR)
-   STM8_MAKEFILE_LOCATION:=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-   include tools/iar-stm8-wine/iar-stm8-wine-tools.mk
-else
-   TC=SDCC
-   include tools/sdcc-stm8/sdcc-stm8.mk
-endif
+include tools/sdcc-stm8/sdcc-stm8.mk
 
 TARGET:=nano-stm8s
 OUTPUT_DIR:=build/$(TARGET)
@@ -47,27 +41,10 @@ INC_DIRS:=\
 
 SOURCE_EXTENSIONS:=.c .s
 
-ifeq ($(TC), IAR)
-   TOOLCHAIN_VERSION=1.04
-   OPTIMIZE:=hz
-   WARNINGS_TO_IGNORE:=Pe618,Pe236,Pa050
-   ENDIANNESS:=big
-
-   # Compiler optimization level (n - none, hs - High, favoring speed, hz - High, favoring size)
-   OPTIMIZE:=hz
-
-   # Code and data model size (small|medium|large)
-   CODE_MODEL:=small
-   DATA_MODEL:=medium
-
-   # Define how many virtual registers to use
-   VREGS:=16
-else
-   TOOLCHAIN_VERSION:=3.9.0
-   OPTIMIZE:=--opt-code-size
-   IGNORE_WARNINGS=24
-   HEX_LINKER_OPTIONS=--code-loc 0x8440
-endif
+TOOLCHAIN_VERSION:=3.9.0
+OPTIMIZE:=--opt-code-size
+IGNORE_WARNINGS=24
+HEX_LINKER_OPTIONS=--code-loc 0x8440
 
 ifeq ($(DEBUG), Y)
    DEFINE_LIST+=DISABLE_UL_CHECKS
@@ -111,8 +88,4 @@ clean: target_clean
 package: all artifacts
 	@$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 
-ifeq ($(TC), IAR)
-   include tools/iar-stm8-wine/iar-stm8-wine-tools-makefile-worker.mk
-else
-   include tools/sdcc-stm8/sdcc-stm8-makefile-worker.mk
-endif
+include tools/sdcc-stm8/sdcc-stm8-makefile-worker.mk
