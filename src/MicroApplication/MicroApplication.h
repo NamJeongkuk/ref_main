@@ -11,18 +11,9 @@
 #include "ApplianceApiPlugin.h"
 #include "I_TinyDataSource.h"
 
-typedef struct
-{
-   struct
-   {
-      uint8_t dummy;
-   } _private;
-} MicroApplication_t;
-
 /*!
- * @param instance
  * @param dataSource
  */
-void MicroApplication_Init(MicroApplication_t *instance, I_TinyDataSource_t *dataSource);
+void MicroApplication_Init(I_TinyDataSource_t *dataSource);
 
 #endif

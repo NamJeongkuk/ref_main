@@ -7,11 +7,41 @@
 
 #include <string.h>
 #include "GeaStack.h"
+#include "TinyGea2Interface_FullDuplex.h"
+#include "TinyCommonCommands.h"
+#include "TinyErdGea2PublicApiRevision2.h"
+#include "GeaStackXmacroUtils.h"
+#include "MicroSystemErds.h"
 #include "Gea2Addresses.h"
 #include "MemoryMap.h"
 #include "Reset.h"
 #include "ReadyToEnterBootLoader.h"
 #include "utils.h"
+
+enum
+{
+   SendBufferSize = 80,
+   ReceiveBufferSize = 80
+};
+
+#define EXPAND_AS_PUBLIC_ERD_COUNT_STRUCT_MEMBER(Name, Number, DataType, Stream, RemoteErd) \
+   CONCAT(INCLUDE_PUBLIC_, Number)                                                          \
+   (uint8_t Name;)
+
+typedef struct
+{
+   ERD_TABLE(EXPAND_AS_PUBLIC_ERD_COUNT_STRUCT_MEMBER)
+} PublicErdCount_t;
+
+static struct
+{
+   TinyGea2Interface_FullDuplex_t gea2Interface;
+   TinyCommonCommands_t commonCommands;
+   TinyErdGea2PublicApiRevision2_t erdApi;
+   uint8_t subscriptionBuffer[sizeof(PublicErdCount_t) / 4 + 1];
+   uint8_t sendBuffer[SendBufferSize];
+   uint8_t receiveBuffer[ReceiveBufferSize];
+} instance;
 
 static const TinyCommonCommandsConfiguration_t commonCommandsConfiguration = {
    .bootLoaderHeader = BootLoaderHeaderAddress,
@@ -30,44 +60,43 @@ static const Erd_t publicErds[] = {
 };
 
 void GeaStack_Init(
-   GeaStack_t *instance,
    TinyTimerModule_t *timerModule,
    I_TinyDataSource_t *dataSource,
    I_TinyUart_t *uart,
    uint8_t geaAddress)
 {
    TinyGea2Interface_FullDuplex_Init(
-      &instance->_private.gea2Interface,
+      &instance.gea2Interface,
       uart,
       geaAddress,
-      instance->_private.sendBuffer,
-      sizeof(instance->_private.sendBuffer),
-      instance->_private.receiveBuffer,
-      sizeof(instance->_private.receiveBuffer),
+      instance.sendBuffer,
+      sizeof(instance.sendBuffer),
+      instance.receiveBuffer,
+      sizeof(instance.receiveBuffer),
       false);
 
    TinyCommonCommands_Init(
-      &instance->_private.commonCommands,
-      &instance->_private.gea2Interface.interface,
+      &instance.commonCommands,
+      &instance.gea2Interface.interface,
       timerModule,
       &commonCommandsConfiguration);
 
    TinyErdGea2PublicApiRevision2_Init(
-      &instance->_private.erdApi,
+      &instance.erdApi,
       dataSource,
-      &instance->_private.gea2Interface.interface,
+      &instance.gea2Interface.interface,
       timerModule,
       publicErds,
       NUM_ELEMENTS(publicErds),
-      instance->_private.subscriptionBuffer);
+      instance.subscriptionBuffer);
 }
 
-I_TinyGea2Interface_t *GeaStack_GetGea2Interface(GeaStack_t *instance)
+I_TinyGea2Interface_t *GeaStack_GetGea2Interface(void)
 {
-   return &instance->_private.gea2Interface.interface;
+   return &instance.gea2Interface.interface;
 }
 
-void GeaStack_Run(GeaStack_t *instance)
+void GeaStack_Run(void)
 {
-   TinyGea2Interface_FullDuplex_Run(&instance->_private.gea2Interface);
+   TinyGea2Interface_FullDuplex_Run(&instance.gea2Interface);
 }

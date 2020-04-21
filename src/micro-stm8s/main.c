@@ -26,9 +26,6 @@ enum
 
 static TinyTimerModule_t timerModule;
 static TinyTimer_t periodicWatchdogTimer;
-static GeaStack_t geaStack;
-static MicroSystemData_t systemData;
-static MicroApplication_t application;
 
 static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 {
@@ -59,16 +56,15 @@ void main(void)
 
       Pa3Heartbeat_Init(&timerModule);
 
-      MicroSystemData_Init(&systemData, &timerModule);
+      MicroSystemData_Init(&timerModule);
 
       GeaStack_Init(
-         &geaStack,
          &timerModule,
-         MicroSystemData_DataSource(&systemData),
+         MicroSystemData_DataSource(),
          TinyUart_Uart3_Init(),
          Stm8sGea2Address);
 
-      MicroApplication_Init(&application, MicroSystemData_DataSource(&systemData));
+      MicroApplication_Init(MicroSystemData_DataSource());
    }
    enableInterrupts();
 
@@ -77,7 +73,7 @@ void main(void)
    while(1)
    {
       TinyTimerModule_Run(&timerModule);
-      GeaStack_Run(&geaStack);
+      GeaStack_Run();
 #ifndef DISABLE_UL_CHECKS
       Ul_Run();
 #endif
