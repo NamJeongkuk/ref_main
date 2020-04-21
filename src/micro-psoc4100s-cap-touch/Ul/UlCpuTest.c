@@ -12,7 +12,7 @@
 #include "Reset.h"
 
 #define uassert(condition) \
-   if(!condition) Reset()
+   if(!(condition)) Reset()
 
 void UlCpuTest_Init(void)
 {

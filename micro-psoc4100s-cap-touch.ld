@@ -24,7 +24,7 @@ GROUP(-lgcc -lc -lnosys)
 MEMORY
 {
     rom (rx) : ORIGIN = 0x0, LENGTH = 64K
-    ram (rwx) : ORIGIN = 0x20000000, LENGTH = 8K
+    ram (rwx) : ORIGIN = 0x20000000, LENGTH = 16K
 }
 
 CY_APPL_ORIGIN                  = 0;

@@ -29,7 +29,7 @@ enum
 {
    UlTestPeriod = 5,
    UlBytesPerRomCheckStep = 10,
-   UlResourceWatchdogTimeout = 100,
+   UlResourceWatchdogTimeout = 1000,
 #if DEBUG
    UlRomCheckErrorEnabled = false,
 #else

@@ -11,7 +11,7 @@
 #include "utils.h"
 
 #define uassert(condition) \
-   if(!condition)          \
+   if(!(condition))          \
    Reset()
 
 static struct
