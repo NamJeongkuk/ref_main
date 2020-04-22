@@ -115,6 +115,8 @@ static CapTouchState_t KeyState(void)
          BIT_SET(keyState, key);
       }
    }
+
+   return keyState;
 }
 
 static void SensorResetUpdate(void)
