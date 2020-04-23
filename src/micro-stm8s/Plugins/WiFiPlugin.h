@@ -13,6 +13,7 @@
 
 /*!
  * @param dataSource
+ * @param gea2Interface
  */
 void WiFiPlugin_Init(I_TinyDataSource_t *dataSource, I_TinyGea2Interface_t *gea2Interface);
 
