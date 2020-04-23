@@ -8,12 +8,13 @@
 #ifndef MICROAPPLICATION_H
 #define MICROAPPLICATION_H
 
-#include "ApplianceApiPlugin.h"
 #include "I_TinyDataSource.h"
+#include "I_TinyGea2Interface.h"
 
 /*!
  * @param dataSource
+ * @param gea2Interface
  */
-void MicroApplication_Init(I_TinyDataSource_t *dataSource);
+void MicroApplication_Init(I_TinyDataSource_t *dataSourceI_TinyGea2Interface_t *gea2Interface);
 
 #endif

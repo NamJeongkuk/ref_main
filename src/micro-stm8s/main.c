@@ -64,7 +64,9 @@ void main(void)
          TinyUart_Uart3_Init(),
          Stm8sGea2Address);
 
-      MicroApplication_Init(MicroSystemData_DataSource());
+      MicroApplication_Init(
+         MicroSystemData_DataSource(),
+         GeaStack_GetGea2Interface());
    }
    enableInterrupts();
 
