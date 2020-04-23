@@ -57,10 +57,11 @@ COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
    $(APPLCOMMON_TINY_DIR)/src/BootLoader \
    $(APPLCOMMON_TINY_DIR)/src/Core \
-   $(APPLCOMMON_TINY_DIR)/src/TinyLib \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Psoc4100 \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Psoc4100/Ul \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Psoc4100/Ul/Vendor \
+   $(APPLCOMMON_TINY_DIR)/src/TinyLib \
+   $(APPLCOMMON_TINY_DIR)/src/WiFi \
 
 INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
