@@ -64,10 +64,10 @@ static const ImageHeader_t applicationHeader __attribute__ ((used, section(".hea
       1,
       {
          {
-            (uint32_t)ApplicationStartAddress,
-            (uint32_t)ApplicationEndAddress
-         }
-      }
+            {(uint32_t)ApplicationStartAddress} ,
+            {(uint32_t)ApplicationEndAddress} ,
+         },
+      },
    };
 // clang-format on
 
@@ -83,14 +83,11 @@ static void EnterBootLoader(I_Action_t *_instance)
    bootLoaderJumpFunction();
 }
 
-static const I_Action_Api_t enterBootLoaderActionApi =
-   { EnterBootLoader };
+static const I_Action_Api_t enterBootLoaderActionApi = { EnterBootLoader };
 
 I_Action_t *Header_GetEnterBootLoaderAction(void)
 {
-   static I_Action_t action =
-      { &enterBootLoaderActionApi };
-
+   static I_Action_t action = { &enterBootLoaderActionApi };
    return &action;
 }
 
