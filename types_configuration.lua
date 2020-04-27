@@ -5,7 +5,8 @@ return {
     'Timer_t',
     'max_align_t',
     'KeyErdStreamData_t',
-    'StreamedErd_t'
+    'StreamedErd_t',
+    '_mbstate_t'
   },
 
   -- Types that can't be automatically generated but need to be defined
