@@ -55,6 +55,7 @@ SRC_DIRS:=\
 
 COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
+   $(APPLCOMMON_TINY_DIR)/src/Application/PsocCapTouch \
    $(APPLCOMMON_TINY_DIR)/src/BootLoader \
    $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/TinyLib \
