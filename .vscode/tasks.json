@@ -2,7 +2,8 @@
   // See https://go.microsoft.com/fwlink/?LinkId=733558
   // for the documentation about the tasks.json format
   "version": "2.0.0",
-  "tasks": [{
+  "tasks": [
+    {
       "label": "tdd_vscode_debug",
       "type": "shell",
       "command": "make RELEASE=Y -f tdd.mk test/Build/multi-target-starter-kit_tests",
@@ -18,7 +19,30 @@
     {
       "label": "rx130_vscode_debug",
       "type": "shell",
-      "command": "make RELEASE=N DEBUG=Y -f rx130-target.mk vscode_debug",
+      "linux": {
+        "command": "make RELEASE=N DEBUG=Y -f rx130-target.mk vscode_debug",
+      },
+      "osx": {
+        "command": "dmake RELEASE=N DEBUG=Y -f rx130-target.mk vscode_debug",
+      },
+      "presentation": {
+        "echo": false,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "mini-rx130_vscode_debug",
+      "type": "shell",
+      "linux": {
+        "command": "make RELEASE=N DEBUG=Y -f mini-rx130-target.mk vscode_debug",
+      },
+      "osx": {
+        "command": "dmake RELEASE=N DEBUG=Y -f mini-rx130-target.mk vscode_debug",
+      },
       "presentation": {
         "echo": false,
         "reveal": "silent",
@@ -31,7 +55,12 @@
     {
       "label": "rx130-cap-touch-client_vscode_debug",
       "type": "shell",
-      "command": "make RELEASE=N DEBUG=Y -f rx130-cap-touch-client-target.mk vscode_debug",
+      "linux": {
+        "command": "make RELEASE=N DEBUG=Y -f rx130-cap-touch-client-target.mk vscode_debug",
+      },
+      "osx": {
+        "command": "dmake RELEASE=N DEBUG=Y -f rx130-cap-touch-client-target.mk vscode_debug",
+      },
       "presentation": {
         "echo": false,
         "reveal": "silent",
@@ -44,7 +73,30 @@
     {
       "label": "rx231_vscode_debug",
       "type": "shell",
-      "command": "make RELEASE=N DEBUG=Y -f rx231-target.mk vscode_debug",
+      "linux": {
+        "command": "make RELEASE=N DEBUG=Y -f rx231-target.mk vscode_debug",
+      },
+      "osx": {
+        "command": "dmake RELEASE=N DEBUG=Y -f rx231-target.mk vscode_debug",
+      },
+      "presentation": {
+        "echo": false,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "mini-rx231_vscode_debug",
+      "type": "shell",
+      "linux": {
+        "command": "make RELEASE=N DEBUG=Y -f mini-rx231-target.mk vscode_debug",
+      },
+      "osx": {
+        "command": "dmake RELEASE=N DEBUG=Y -f mini-rx231-target.mk vscode_debug",
+      },
       "presentation": {
         "echo": false,
         "reveal": "silent",
@@ -70,7 +122,7 @@
     {
       "label": "micro-stm8s_vscode_debug",
       "type": "shell",
-      "command": "make -f micro-stm8s-target.mk RELEASE=N DEBUG=Y debug-vscode build/micro-stm8s/micro-stm8s-debug.elf",
+      "command": "make -f micro-stm8s-target.mk RELEASE=N DEBUG=Y vscode_debug",
       "presentation": {
         "echo": true,
         "reveal": "silent",
@@ -83,7 +135,7 @@
     {
       "label": "nano-stm8s_vscode_debug",
       "type": "shell",
-      "command": "make -f nano-stm8s-target.mk RELEASE=N DEBUG=Y debug-vscode build/nano-stm8s/nano-stm8s-debug.elf",
+      "command": "make -f nano-stm8s-target.mk RELEASE=N DEBUG=Y vscode_debug",
       "presentation": {
         "echo": true,
         "reveal": "silent",
@@ -96,7 +148,7 @@
     {
       "label": "nano-stm8s-cap-touch_vscode_debug",
       "type": "shell",
-      "command": "make -f nano-stm8s-cap-touch-target.mk RELEASE=N DEBUG=Y debug-vscode build/nano-stm8s-cap-touch/nano-stm8s-cap-touch-debug.elf",
+      "command": "make -f nano-stm8s-cap-touch-target.mk RELEASE=N DEBUG=Y vscode_debug",
       "presentation": {
         "echo": true,
         "reveal": "silent",

@@ -38,6 +38,21 @@
       "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx130.svd"
     },
     {
+      "name": "mini-rx130",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "type": "cortex-debug",
+      "executable": "${workspaceFolder}/build/mini-rx130/mini-rx130.elf",
+      "device": "R5F51308",
+      "servertype": "jlink",
+      "interface": "FINE",
+      "jlinkscript": "${workspaceFolder}/build/mini-rx130/debug.jlink",
+      "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
+      "serverpath": "${workspaceFolder}/build/mini-rx130/jlink_gdb_server_wrapper.sh",
+      "preLaunchTask": "mini-rx130_vscode_debug",
+      "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx130.svd"
+    },
+    {
       "name": "rx130-cap-touch-client",
       "cwd": "${workspaceRoot}",
       "request": "launch",
@@ -65,6 +80,21 @@
       "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
       "serverpath": "${workspaceFolder}/build/rx231/jlink_gdb_server_wrapper.sh",
       "preLaunchTask": "rx231_vscode_debug",
+      "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx231.svd"
+    },
+    {
+      "name": "mini-rx231",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "type": "cortex-debug",
+      "executable": "${workspaceFolder}/build/mini-rx231/mini-rx231.elf",
+      "device": "R5F52318",
+      "servertype": "jlink",
+      "interface": "FINE",
+      "jlinkscript": "${workspaceFolder}/build/mini-rx231/debug.jlink",
+      "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
+      "serverpath": "${workspaceFolder}/build/mini-rx231/jlink_gdb_server_wrapper.sh",
+      "preLaunchTask": "mini-rx231_vscode_debug",
       "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx231.svd"
     },
     {
