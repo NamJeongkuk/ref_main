@@ -122,7 +122,7 @@
     {
       "label": "micro-stm8s_vscode_debug",
       "type": "shell",
-      "command": "make -f micro-stm8s-target.mk RELEASE=N DEBUG=Y debug-vscode build/micro-stm8s/micro-stm8s-debug.elf",
+      "command": "make -f micro-stm8s-target.mk RELEASE=N DEBUG=Y vscode_debug",
       "presentation": {
         "echo": true,
         "reveal": "silent",
@@ -135,7 +135,7 @@
     {
       "label": "nano-stm8s_vscode_debug",
       "type": "shell",
-      "command": "make -f nano-stm8s-target.mk RELEASE=N DEBUG=Y debug-vscode build/nano-stm8s/nano-stm8s-debug.elf",
+      "command": "make -f nano-stm8s-target.mk RELEASE=N DEBUG=Y vscode_debug",
       "presentation": {
         "echo": true,
         "reveal": "silent",
@@ -148,7 +148,7 @@
     {
       "label": "nano-stm8s-cap-touch_vscode_debug",
       "type": "shell",
-      "command": "make -f nano-stm8s-cap-touch-target.mk RELEASE=N DEBUG=Y debug-vscode build/nano-stm8s-cap-touch/nano-stm8s-cap-touch-debug.elf",
+      "command": "make -f nano-stm8s-cap-touch-target.mk RELEASE=N DEBUG=Y vscode_debug",
       "presentation": {
         "echo": true,
         "reveal": "silent",
