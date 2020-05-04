@@ -169,8 +169,7 @@
       "interface": "swd",
       "armToolchainPath": "${workspaceFolder}/tools/gcc-arm-none-eabi/tc/bin/",
       "serverpath": "${workspaceFolder}/build/micro-psoc4100s-cap-touch/jlink_gdb_server_wrapper.sh",
-      "preLaunchTask": "micro-psoc4100s-cap-touch_debug",
-      "svdFile": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32F3xx/Libraries/CMSIS/SVD/STM32F303x.svd"
+      "preLaunchTask": "micro-psoc4100s-cap-touch_debug"
     }
   ]
 }
