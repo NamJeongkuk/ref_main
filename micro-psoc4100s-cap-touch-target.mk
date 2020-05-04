@@ -84,7 +84,9 @@ HEADER_ADDRESS = 0x00004000
 WARNINGS_TO_IGNORE:=no-sign-compare
 
 PACKAGE_CONTENTS:=
-$(call add_to_package,$(OUTPUT_DIR)/$(TARGET).elf,)
+$(call add_to_package,$(OUTPUT_DIR)/binaries,binaries)
+$(call add_to_package,$(OUTPUT_DIR)/doc,doc)
+$(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
 .PHONY: all
@@ -97,7 +99,7 @@ all: target $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 	@cat $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 
 .PHONY: package
-package: all artifacts
+package: all artifacts erd_definitions
 	$(call create_artifacts,$(TARGET)_BN_$(BUILD_NUMBER).zip)
 
 .PHONY: $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot
@@ -115,4 +117,14 @@ upload: all jlink_tools
 clean: target_clean
 	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N clean
 
+$(OUTPUT_DIR)/doc:
+	@mkdir -p $(OUTPUT_DIR)/doc
+
 include tools/gcc-arm-none-eabi/MakefileWorker.mk
+
+.PHONY: erd_definitions
+erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)
+	@echo Generating ERD definitions
+	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -P -MMD $(PROJECT_DIR)/$(TARGET)/DataSource/SystemErds.h -o $(OUTPUT_DIR)/temporary.h
+	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output $(OUTPUT_DIR)/GeneratedTypes.lua
+	@$(LUA53) $(TARGET)_generate_erd_definitions.lua

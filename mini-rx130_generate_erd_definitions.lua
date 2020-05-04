@@ -1,5 +1,5 @@
 local tools = require 'tools.lua-erd-documentation-tools.lua-erd-documentation-tools'
-local Types = require 'build.GeneratedTypes'
+local Types = require 'build.mini-rx130.GeneratedTypes'
 
 tools.build_json({
   namespace = 'mini-rx130',

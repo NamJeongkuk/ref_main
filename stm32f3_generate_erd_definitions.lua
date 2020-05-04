@@ -1,5 +1,5 @@
 local tools = require 'tools.lua-erd-documentation-tools.lua-erd-documentation-tools'
-local Types = require 'build.GeneratedTypes'
+local Types = require 'build.stm32f3.GeneratedTypes'
 
 tools.build_json(
   {
