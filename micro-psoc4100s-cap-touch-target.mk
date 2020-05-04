@@ -51,7 +51,6 @@ SRC_DIRS:=\
    $(PROJECT_DIR)/$(TARGET)/Hardware \
    $(PROJECT_DIR)/$(TARGET)/Plugins \
    $(PROJECT_DIR)/$(TARGET)/PsocShim \
-   $(PROJECT_DIR)/MicroApplication/DataSource \
 
 COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \

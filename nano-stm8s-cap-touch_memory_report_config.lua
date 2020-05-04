@@ -1,5 +1,5 @@
 return {
-  BootLoader = {
+  ['Boot Loader'] = {
     ram = {
       map = 'lib/stm8-boot-loader/build/boot-loader.map',
       type = 'sdcc',

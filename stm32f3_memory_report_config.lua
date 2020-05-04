@@ -1,5 +1,5 @@
 return {
-  BootLoader = {
+  ['Boot Loader'] = {
     ram = {
       map = 'lib/boot-loaders/build/stm32f3-boot-loader/stm32f3-boot-loader.map',
       type = 'arm-gcc',

@@ -1,5 +1,5 @@
 return {
-  BootLoader = {
+  ['Boot Loader'] = {
     ram = {
       map = 'lib/boot-loaders/build/rx231-boot-loader/rx231-boot-loader.map',
       type = 'rx-gcc',

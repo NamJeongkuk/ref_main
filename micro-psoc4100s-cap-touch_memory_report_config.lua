@@ -1,5 +1,5 @@
 return {
-  BootLoader = {
+  ['Boot Loader'] = {
     ram = {
       map = 'lib/boot-loaders/build/micro-psoc4100s-boot-loader/micro-psoc4100s-boot-loader.map',
       type = 'arm-gcc',

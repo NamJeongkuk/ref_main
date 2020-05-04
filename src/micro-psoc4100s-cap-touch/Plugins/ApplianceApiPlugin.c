@@ -6,7 +6,7 @@
  */
 
 #include "ApplianceApiPlugin.h"
-#include "MicroSystemErds.h"
+#include "SystemErds.h"
 #include "TinyTimer.h"
 #include "TinyEventSubscription.h"
 #include "TinyBootLoaderParametric.h"
