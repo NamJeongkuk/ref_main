@@ -569,7 +569,7 @@
 #define CapTouch_Tx__U104_Tx__PORT 0u
 #define CapTouch_Tx__U104_Tx__PS CYREG_GPIO_PRT0_PS
 #define CapTouch_Tx__U104_Tx__SHIFT 0u
-#define CY_PROJECT_NAME "micro-psoc4100s-cap-touch"
+#define CY_PROJECT_NAME "psoc"
 #define CY_VERSION "PSoC Creator  4.2"
 #define CYDEV_BANDGAP_VOLTAGE 1.200
 #define CYDEV_BCLK__HFCLK__HZ 24000000U

@@ -42,9 +42,11 @@ build/
 test/Build
 
 Build_Creator
-src/*/PsocCreator/*.cydsn/codegentemp/
+src/*/PsocCreator/*.cydsn/codegentemp/*
+!src/*/PsocCreator/*.cydsn/codegentemp/*.svd
 src/*/PsocCreator/*.cydsn/Export/
 src/*/PsocCreator/*.cydsn/CortexM0p/
 src/*/PsocCreator/*.cywrk.*
 src/*/PsocCreator/ComponentUpdateLog.txt
+REBUILD.log
 *.cyprj.*

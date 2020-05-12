@@ -7,7 +7,7 @@ APPLCOMMON_DIR=$(APPLCOMMON_TINY_DIR)/lib/applcommon
 BOOT_LOADER_DIR=lib/boot-loaders
 BOOT_LOADER_TARGET=micro-psoc4100s
 PROJECT_DIR=src
-PSOC_CREATOR_DIR = src/$(TARGET)/PsocCreator/$(TARGET).cydsn/Generated_Source/PSoC4
+PSOC_CREATOR_DIR = src/$(TARGET)/PsocCreator/psoc.cydsn/Generated_Source/PSoC4
 
 # Set custom flags here
 BUILD_RELEASE=2
