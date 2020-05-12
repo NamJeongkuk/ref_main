@@ -94,7 +94,7 @@
 
 enum
 {
-   ErdBaseId = 0xFD00
+   RamErdBase = 0xFD00
 };
 
 // Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId
@@ -237,7 +237,7 @@ enum
 enum
 {
    ERD_TABLE(EXPAND_AS_NON_RAM_ERD_ENUM)
-   Erd_Base = (ErdBaseId - 1),
+   Erd_RamBase = (RamErdBase - 1),
    ERD_TABLE(EXPAND_AS_INTERNAL_RAM_ERD_ENUM)
 };
 
