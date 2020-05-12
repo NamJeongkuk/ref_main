@@ -11,19 +11,17 @@
 #include "uassert.h"
 
 #define EXPAND_AS_CONFIGURATION(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_RAM_, StorageType)                                                                             \
+   CONCAT(INCLUDE_RAM_, StorageType)                                                                   \
    ({ Name COMMA OFFSET_OF(RamDataSourceStorage_t, MACRO_SAFE_CONCATENATE(erd, Name)) } COMMA)
 
-static const DataSource_RamErdConfigurationElement_t erds[] =
-   { ERD_TABLE(EXPAND_AS_CONFIGURATION) };
+static const DataSource_RamErdConfigurationElement_t erds[] = { ERD_TABLE(EXPAND_AS_CONFIGURATION) };
 
-static const ConstArrayMap_DirectIndexConfiguration_t erdMapConfiguration =
-   {
-      erds,
-      ELEMENT_SIZE(erds),
-      NUM_ELEMENTS(erds),
-      ErdBaseId
-   };
+static const ConstArrayMap_DirectIndexConfiguration_t erdMapConfiguration = {
+   erds,
+   ELEMENT_SIZE(erds),
+   NUM_ELEMENTS(erds),
+   RamErdBase
+};
 
 void RamDataSource_Init(RamDataSource_t *instance)
 {
@@ -38,7 +36,7 @@ void RamDataSource_Init(RamDataSource_t *instance)
       &instance->_private.erdMap.interface);
 }
 
-I_DataSource_t * RamDataSource_DataSource(RamDataSource_t *instance)
+I_DataSource_t *RamDataSource_DataSource(RamDataSource_t *instance)
 {
    return &instance->_private.dataSource.interface;
 }
