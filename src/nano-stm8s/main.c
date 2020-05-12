@@ -50,22 +50,6 @@ static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
       NULL);
 }
 
-static void PopulateStartupMessage(void *context, Gea2Packet_t *packet)
-{
-   IGNORE(context);
-   packet->destination = 0xFF;
-   packet->payload[0] = 0x00;
-   packet->payload[1] = 0xDE;
-   packet->payload[2] = 0xAF;
-   packet->payload[3] = 0xBA;
-   packet->payload[4] = 0xBE;
-}
-
-static void SendStartupMessage(I_TinyGea2Interface_t *gea2Interface)
-{
-   TinyGea2Interface_Send(gea2Interface, 5, PopulateStartupMessage, NULL);
-}
-
 void main(void)
 {
    Ul_Startup();
@@ -97,7 +81,6 @@ void main(void)
    }
    enableInterrupts();
 
-   SendStartupMessage(GeaStack_GetGea2Interface(&geaStack));
    KickWatchdog(NULL, &timerModule);
 
    while(1)
@@ -114,10 +97,9 @@ void main(void)
 static const uint16_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 1) crc = 0xDEAD;
 
 // ...and version is placed just before CRC
-const Version_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 5) version =
-   {
-      CRIT_VERSION_MAJOR,
-      CRIT_VERSION_MINOR,
-      NONCRIT_VERSION_MAJOR,
-      NONCRIT_VERSION_MINOR
-   };
+const Version_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 5) version = {
+   CRIT_VERSION_MAJOR,
+   CRIT_VERSION_MINOR,
+   NONCRIT_VERSION_MAJOR,
+   NONCRIT_VERSION_MINOR
+};

@@ -15,14 +15,14 @@
 #include "utils.h"
 
 #define CAP_SENSE_PARAMETERS_RESPONSE_PAYLOAD_SIZE \
-   sizeof(uint8_t) + \
-   sizeof(TSL_GlobalParameters_t) + \
-   sizeof(uint8_t) + \
-   (sizeof(TSL_KeyParameters_t) * NUMBER_OF_SINGLE_CHANNEL_KEYS)
+   sizeof(uint8_t) +                               \
+      sizeof(TSL_GlobalParameters_t) +             \
+      sizeof(uint8_t) +                            \
+      (sizeof(TSL_KeyParameters_t) * NUMBER_OF_SINGLE_CHANNEL_KEYS)
 
 enum
 {
-   SetCapSenseParametersRequest= 0xBB,
+   SetCapSenseParametersRequest = 0xBB,
    GetCapSenseParametersRequest = 0xBC,
    GetCapSenseParametersResponse = 0xBD
 };
@@ -32,7 +32,6 @@ extern Version_t version;
 static void PopulateTinyVersionResponse(void *context, Gea2Packet_t *packet)
 {
    REINTERPRET(sourcePacket, context, const Gea2Packet_t *);
-   packet->destination = sourcePacket->source;
    packet->payload[0] = TinyBootLoaderCommand_VersionResponse;
    packet->payload[1] = sourcePacket->payload[1];
    packet->payload[2] = version.criticalMajor;
@@ -43,13 +42,12 @@ static void PopulateTinyVersionResponse(void *context, Gea2Packet_t *packet)
 
 static void HandleTinyVersionRequest(GeaStackWithSingleErdHeartbeat_t *instance, const Gea2Packet_t *request)
 {
-   TinyGea2Interface_Send(&instance->_private.gea2Interface.interface, 6, PopulateTinyVersionResponse, (void *)(request));
+   TinyGea2Interface_Send(&instance->_private.gea2Interface.interface, request->source, 6, PopulateTinyVersionResponse, (void *)(request));
 }
 
 static void PopulateCapSenseParametersResponse(void *context, Gea2Packet_t *packet)
 {
    REINTERPRET(sourcePacket, context, const Gea2Packet_t *);
-   packet->destination = sourcePacket->source;
    packet->payload[0] = GetCapSenseParametersResponse;
    packet->payload[9] = NUMBER_OF_SINGLE_CHANNEL_KEYS;
    TSL_GetParameters((TSL_GlobalParameters_t *)&packet->payload[1], (TSL_KeyParameters_t *)&packet->payload[10]);
@@ -59,6 +57,7 @@ static void HandleGetCapSenseParametersRequest(GeaStackWithSingleErdHeartbeat_t 
 {
    TinyGea2Interface_Send(
       &instance->_private.gea2Interface.interface,
+      request->source,
       CAP_SENSE_PARAMETERS_RESPONSE_PAYLOAD_SIZE,
       PopulateCapSenseParametersResponse,
       (void *)request);

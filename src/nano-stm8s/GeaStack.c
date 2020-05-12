@@ -22,42 +22,37 @@ enum
    RemoteErdStreamErd = 0xF123
 };
 
-static const TinyErdHeartbeatErdPair_t erdHeartbeatPairs[] =
-   {
-      { Erd_ErdStream, RemoteErdStreamErd }
-   };
+static const TinyErdHeartbeatErdPair_t erdHeartbeatPairs[] = {
+   { Erd_ErdStream, RemoteErdStreamErd }
+};
 
-static const TinyErdHeartbeatConfiguration_t erdHeartbeatConfig =
-   {
-      .destination = Rx231Gea2Address,
-      .period = HeartbeatPeriodMsec,
-      .pairs = erdHeartbeatPairs,
-      .pairCount = NUM_ELEMENTS(erdHeartbeatPairs)
-   };
+static const TinyErdHeartbeatConfiguration_t erdHeartbeatConfig = {
+   .destination = Rx231Gea2Address,
+   .period = HeartbeatPeriodMsec,
+   .pairs = erdHeartbeatPairs,
+   .pairCount = NUM_ELEMENTS(erdHeartbeatPairs)
+};
 
 #define EXPAND_AS_LOCAL_TO_REMOTE_ERD_MAP(Name, Number, DataType, Stream, RemoteErd) \
    CONCAT(INCLUDE_STREAM_, Stream)                                                   \
    ({ Number COMMA RemoteErd COMMA CONCAT(INCLUDE_STREAM_EVENT_, Stream)(ErdStreamDataType_Event) CONCAT(INCLUDE_STREAM_LEVEL_, Stream)(ErdStreamDataType_Level) } COMMA)
 
-static const ErdStreamLocalToRemoteErdMap_t streamLocalToRemoteErdMap[] =
-   {
-      ERD_TABLE(EXPAND_AS_LOCAL_TO_REMOTE_ERD_MAP)
-   };
+static const ErdStreamLocalToRemoteErdMap_t streamLocalToRemoteErdMap[] = {
+   ERD_TABLE(EXPAND_AS_LOCAL_TO_REMOTE_ERD_MAP)
+};
 
-static const TinyErdStreamSenderConfiguration_t erdStreamSenderConfiguration =
-   {
-      .erdStreamErd = Erd_ErdStream,
-      .requestedStateErdFromReceiver = Erd_ErdStreamRequestedState,
-      .streamEntryCount = NumberOfStreamedErds,
-      .sizeOfLargestStreamedErd = sizeof(StreamedErd_t),
-      .mappings = streamLocalToRemoteErdMap,
-      .mappingCount = NUM_ELEMENTS(streamLocalToRemoteErdMap)
-   };
+static const TinyErdStreamSenderConfiguration_t erdStreamSenderConfiguration = {
+   .erdStreamErd = Erd_ErdStream,
+   .requestedStateErdFromReceiver = Erd_ErdStreamRequestedState,
+   .streamEntryCount = NumberOfStreamedErds,
+   .sizeOfLargestStreamedErd = sizeof(StreamedErd_t),
+   .mappings = streamLocalToRemoteErdMap,
+   .mappingCount = NUM_ELEMENTS(streamLocalToRemoteErdMap)
+};
 
 static void PopulateTinyVersionResponse(void *context, Gea2Packet_t *packet)
 {
    REINTERPRET(sourcePacket, context, const Gea2Packet_t *);
-   packet->destination = sourcePacket->source;
    packet->payload[0] = TinyBootLoaderCommand_VersionResponse;
    packet->payload[1] = sourcePacket->payload[1];
    packet->payload[2] = version.criticalMajor;
@@ -68,7 +63,7 @@ static void PopulateTinyVersionResponse(void *context, Gea2Packet_t *packet)
 
 static void HandleTinyVersionRequest(GeaStack_t *instance, const Gea2Packet_t *request)
 {
-   TinyGea2Interface_Send(&instance->_private.gea2Interface.interface, 6, PopulateTinyVersionResponse, (void *)(request));
+   TinyGea2Interface_Send(&instance->_private.gea2Interface.interface, request->source, 6, PopulateTinyVersionResponse, (void *)(request));
 }
 
 static void GeaMessageReceived(void *context, const void *_args)
