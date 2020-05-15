@@ -5,7 +5,6 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include <string.h>
 #include "stm8s_flash.h"
 #include "Clk.h"
 #include "Iwdg.h"

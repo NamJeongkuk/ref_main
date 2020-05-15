@@ -4,7 +4,6 @@ TARGET:=nano-stm8s
 OUTPUT_DIR:=build/$(TARGET)
 APPLCOMMON_TINY_DIR=lib/applcommon.tiny
 APPLCOMMON_DIR=$(APPLCOMMON_TINY_DIR)/lib/applcommon
-PROJECT_DIR=src
 BOOT_LOADER_DIR=lib/stm8-boot-loader
 BOOT_LOADER:=$(BOOT_LOADER_DIR)/build/boot-loader.hex
 
@@ -15,16 +14,16 @@ OPENOCD_TARGET:=target/stm8s003.cfg
 STM8FLASH_PART:=stm8s103f3
 STM8FLASH_PROGRAMMER:=stlinkv2
 
-MAIN:=$(PROJECT_DIR)/$(TARGET)/main.c
+MAIN:=src/$(TARGET)/main.c
 
 SRC_FILES:=\
 
 SRC_DIRS:=\
-   $(PROJECT_DIR)/$(TARGET) \
-   $(PROJECT_DIR)/$(TARGET)/Hardware \
-   $(PROJECT_DIR)/NanoApplication \
-   $(PROJECT_DIR)/NanoApplication/DataSource \
-   $(PROJECT_DIR)/NanoApplication/Plugins \
+   src/$(TARGET) \
+   src/$(TARGET)/Hardware \
+   src/NanoApplication \
+   src/NanoApplication/DataSource \
+   src/NanoApplication/Plugins \
 
 COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
@@ -37,7 +36,7 @@ COMMON_LIB_DIRS:=\
 INC_DIRS:=\
    $(APPLCOMMON_DIR)/Constants \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
-   $(PROJECT_DIR)/Application/Gea \
+   src/Application/Gea \
 
 SOURCE_EXTENSIONS:=.c .s
 

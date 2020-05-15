@@ -5,7 +5,6 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include <string.h>
 #include "stm8s_flash.h"
 #include "Clk.h"
 #include "Iwdg.h"
@@ -86,10 +85,9 @@ void main(void)
 static const uint16_t __at(0x9FFF - 1) crc = 0xDEAD;
 
 // ...and version is placed just before CRC
-const Version_t __at(0x9FFF - 5) version =
-   {
-      CRIT_VERSION_MAJOR,
-      CRIT_VERSION_MINOR,
-      NONCRIT_VERSION_MAJOR,
-      NONCRIT_VERSION_MINOR
-   };
+const Version_t __at(0x9FFF - 5) version = {
+   CRIT_VERSION_MAJOR,
+   CRIT_VERSION_MINOR,
+   NONCRIT_VERSION_MAJOR,
+   NONCRIT_VERSION_MINOR
+};

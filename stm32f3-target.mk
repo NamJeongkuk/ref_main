@@ -5,7 +5,6 @@ include tools/gcc-arm-none-eabi/mc/makecommon.mk
 TARGET:=stm32f3
 OUTPUT_DIR:=build/$(TARGET)
 APPLCOMMON_DIR:=lib/applcommon
-PROJECT_DIR:=src
 BOOT_LOADER_DIR=lib/boot-loaders
 
 # The STM32 CPU
@@ -82,17 +81,17 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_DIR)/Validator
 
 SRC_DIRS=\
-   $(PROJECT_DIR)/$(TARGET) \
-   $(PROJECT_DIR)/$(TARGET)/Bsp \
-   $(PROJECT_DIR)/$(TARGET)/Hardware \
-   $(PROJECT_DIR)/$(TARGET)/Hardware/Peripheral \
-   $(PROJECT_DIR)/$(TARGET)/Hardware/Platform \
-   $(PROJECT_DIR)/Application \
-   $(PROJECT_DIR)/Application/DataSource \
-   $(PROJECT_DIR)/Application/Gea \
-   $(PROJECT_DIR)/Application/Plugins \
-   $(PROJECT_DIR)/Application/ServiceDiagnostics \
-   $(PROJECT_DIR)/Application/TimerModule \
+   src/$(TARGET) \
+   src/$(TARGET)/Bsp \
+   src/$(TARGET)/Hardware \
+   src/$(TARGET)/Hardware/Peripheral \
+   src/$(TARGET)/Hardware/Platform \
+   src/Application \
+   src/Application/DataSource \
+   src/Application/Gea \
+   src/Application/Plugins \
+   src/Application/ServiceDiagnostics \
+   src/Application/TimerModule \
 
 # Additional include directories
 INC_DIRS=\
@@ -168,6 +167,6 @@ include tools/gcc-arm-none-eabi/MakefileWorker.mk
 .PHONY: erd_definitions
 erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)
 	@echo Generating ERD definitions
-	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -P -MMD $(PROJECT_DIR)/Application/DataSource/SystemErds.h -o $(OUTPUT_DIR)/temporary.h
+	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -P -MMD src/Application/DataSource/SystemErds.h -o $(OUTPUT_DIR)/temporary.h
 	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output $(OUTPUT_DIR)/GeneratedTypes.lua
 	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
