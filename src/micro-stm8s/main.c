@@ -5,7 +5,6 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include <string.h>
 #include "Clk.h"
 #include "Iwdg.h"
 #include "Pa3Heartbeat.h"

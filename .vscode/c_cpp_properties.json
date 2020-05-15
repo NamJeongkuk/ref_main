@@ -1,0 +1,187 @@
+{
+   "env": {
+      "applcommon-include": "${workspaceFolder}/lib/applcommon/**",
+      "tiny-include": "${workspaceFolder}/lib/applcommon.tiny/src/**",
+      "gcc-arm-include": "${workspaceFolder}/tools/gcc-arm-none-eabi/tc/lib/gcc/arm-none-eabi/7.2.1/include/**",
+      "kpit-rx-include": "${workspaceFolder}/tools/kpit-rx/tc/lib/gcc/rx-elf/4.8.4.201801-GNURX/include/**",
+      "sdcc-stm8-include": "${workspaceFolder}/tools/sdcc-stm8/lib/inc/**",
+      "stm32f3-peripheral-library-include": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32F3xx/**",
+      "stm8s-peripheral-library-include": "${workspaceFolder}/tools/sdcc-stm8/tc/share/sdcc/include/*"
+   },
+   "configurations": [
+      {
+         "name": "Generic",
+         "includePath": [
+            "${workspaceFolder}/**"
+         ],
+         "intelliSenseMode": "gcc-x64",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      },
+      {
+         "name": "micro-psoc4100s-cap-touch",
+         "defines": [],
+         "includePath": [
+            "${env:gcc-arm-include}",
+            "${env:tiny-include}",
+            "${workspaceFolder}/src/micro-psoc4100s-cap-touch/**",
+            "${workspaceFolder}/src/Application/**"
+         ],
+         "intelliSenseMode": "gcc-arm",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      },
+      {
+         "name": "rx130",
+         "defines": [
+            "__RX_LITTLE_ENDIAN__"
+         ],
+         "includePath": [
+            "${env:kpit-rx-include}",
+            "${env:applcommon-include}",
+            "${workspaceFolder}/src/rx130/**",
+            "${workspaceFolder}/src/Application/**"
+         ],
+         "intelliSenseMode": "gcc-x64",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      },
+      {
+         "name": "mini-rx130",
+         "defines": [
+            "__RX_LITTLE_ENDIAN__"
+         ],
+         "includePath": [
+            "${env:kpit-rx-include}",
+            "${env:applcommon-include}",
+            "${workspaceFolder}/src/mini-rx130/**",
+            "${workspaceFolder}/src/Application/**"
+         ],
+         "intelliSenseMode": "gcc-x64",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      },
+      {
+         "name": "rx130-cap-touch-client",
+         "defines": [
+            "__RX_LITTLE_ENDIAN__"
+         ],
+         "includePath": [
+            "${env:kpit-rx-include}",
+            "${env:applcommon-include}",
+            "${workspaceFolder}/src/rx130-cap-touch-client/**",
+            "${workspaceFolder}/src/Application/**"
+         ],
+         "intelliSenseMode": "gcc-x64",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      },
+      {
+         "name": "rx231",
+         "defines": [
+            "__RX_LITTLE_ENDIAN__"
+         ],
+         "includePath": [
+            "${env:kpit-rx-include}",
+            "${env:applcommon-include}",
+            "${workspaceFolder}/src/rx231/**",
+            "${workspaceFolder}/src/Application/**"
+         ],
+         "intelliSenseMode": "gcc-x64",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      },
+      {
+         "name": "mini-rx231",
+         "defines": [
+            "__RX_LITTLE_ENDIAN__"
+         ],
+         "includePath": [
+            "${env:kpit-rx-include}",
+            "${env:applcommon-include}",
+            "${workspaceFolder}/src/mini-rx231/**",
+            "${workspaceFolder}/src/Application/**"
+         ],
+         "intelliSenseMode": "gcc-x64",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      },
+      {
+         "name": "stm32f3",
+         "defines": [
+            "STM32F303xC",
+            "USE_HAL_DRIVER",
+            "HSI_VALUE=8000000"
+         ],
+         "includePath": [
+            "${env:gcc-arm-include}",
+            "${env:stm32f3-peripheral-library-include}",
+            "${env:applcommon-include}",
+            "${workspaceFolder}/src/stm32f3/**",
+            "${workspaceFolder}/src/Application/**"
+         ],
+         "intelliSenseMode": "gcc-arm",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      },
+      {
+         "name": "micro-stm8s",
+         "defines": [
+            "STM8S207",
+            "_SDCC_",
+            "__critical",
+            "__interrupt(x)="
+         ],
+         "includePath": [
+            "${env:stm8s-peripheral-library-include}",
+            "${env:sdcc-stm8-include}",
+            "${env:tiny-include}",
+            "${workspaceFolder}/src/micro-stm8s/**",
+            "${workspaceFolder}/src/MicroApplication/**",
+            "${workspaceFolder}/src/Application/Gea/*"
+         ],
+         "intelliSenseMode": "gcc-x64",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      },
+      {
+         "name": "nano-stm8s",
+         "defines": [
+            "STM8S003",
+            "_SDCC_",
+            "__critical",
+            "__interrupt(x)="
+         ],
+         "includePath": [
+            "${env:stm8s-peripheral-library-include}",
+            "${env:sdcc-stm8-include}",
+            "${env:tiny-include}",
+            "${workspaceFolder}/src/nano-stm8s/**",
+            "${workspaceFolder}/src/Application/Gea/*"
+         ],
+         "intelliSenseMode": "gcc-x64",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      },
+      {
+         "name": "nano-stm8s-cap-touch",
+         "defines": [
+            "STM8S105",
+            "_SDCC_",
+            "__critical",
+            "__interrupt(x)="
+         ],
+         "includePath": [
+            "${env:stm8s-peripheral-library-include}",
+            "${env:sdcc-stm8-include}",
+            "${env:tiny-include}",
+            "${workspaceFolder}/src/nano-stm8s-cap-touch/**",
+            "${workspaceFolder}/src/Application/Gea/*"
+         ],
+         "intelliSenseMode": "gcc-x64",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      }
+   ],
+   "version": 4
+}

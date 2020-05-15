@@ -6,7 +6,6 @@ APPLCOMMON_TINY_DIR=lib/applcommon.tiny
 APPLCOMMON_DIR=$(APPLCOMMON_TINY_DIR)/lib/applcommon
 BOOT_LOADER_DIR=lib/boot-loaders
 BOOT_LOADER_TARGET=micro-psoc4100s
-PROJECT_DIR=src
 PSOC_CREATOR_DIR = src/$(TARGET)/PsocCreator/psoc.cydsn/Generated_Source/PSoC4
 
 # Set custom flags here
@@ -44,13 +43,13 @@ SRC_FILES:=\
    $(PSOC_CREATOR_DIR)/Gea3_SPI_UART_INT.c \
 
 SRC_DIRS:=\
-   $(PROJECT_DIR) \
-   $(PROJECT_DIR)/$(TARGET) \
-   $(PROJECT_DIR)/$(TARGET)/DataSource \
-   $(PROJECT_DIR)/$(TARGET)/GeaStack \
-   $(PROJECT_DIR)/$(TARGET)/Hardware \
-   $(PROJECT_DIR)/$(TARGET)/Plugins \
-   $(PROJECT_DIR)/$(TARGET)/PsocShim \
+   src \
+   src/$(TARGET) \
+   src/$(TARGET)/DataSource \
+   src/$(TARGET)/GeaStack \
+   src/$(TARGET)/Hardware \
+   src/$(TARGET)/Plugins \
+   src/$(TARGET)/PsocShim \
 
 COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
@@ -66,7 +65,7 @@ COMMON_LIB_DIRS:=\
 INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(PSOC_CREATOR_DIR) \
-   $(PROJECT_DIR)/Application/Gea \
+   src/Application/Gea \
 
 SOURCE_EXTENSIONS:=.c .s
 
@@ -125,6 +124,6 @@ include tools/gcc-arm-none-eabi/MakefileWorker.mk
 .PHONY: erd_definitions
 erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)
 	@echo Generating ERD definitions
-	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -P -MMD $(PROJECT_DIR)/$(TARGET)/DataSource/SystemErds.h -o $(OUTPUT_DIR)/temporary.h
+	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -P -MMD src/$(TARGET)/DataSource/SystemErds.h -o $(OUTPUT_DIR)/temporary.h
 	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output $(OUTPUT_DIR)/GeneratedTypes.lua
 	@$(LUA53) $(TARGET)_generate_erd_definitions.lua

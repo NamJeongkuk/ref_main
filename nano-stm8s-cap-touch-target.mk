@@ -4,7 +4,6 @@ TARGET:=nano-stm8s-cap-touch
 OUTPUT_DIR:=build/$(TARGET)
 APPLCOMMON_TINY_DIR=lib/applcommon.tiny
 APPLCOMMON_DIR=$(APPLCOMMON_TINY_DIR)/lib/applcommon
-PROJECT_DIR=src
 BOOT_LOADER_DIR=lib/stm8-boot-loader
 BOOT_LOADER:=$(BOOT_LOADER_DIR)/build/boot-loader.hex
 
@@ -15,13 +14,13 @@ OPENOCD_TARGET:=target/stm8s105.cfg
 STM8FLASH_PART:=stm8s105?6
 STM8FLASH_PROGRAMMER:=stlinkv2
 
-MAIN:=$(PROJECT_DIR)/$(TARGET)/main.c
+MAIN:=src/$(TARGET)/main.c
 
 SRC_FILES:=\
 
 SRC_DIRS:=\
-   $(PROJECT_DIR)/$(TARGET) \
-   $(PROJECT_DIR)/$(TARGET)/Hardware \
+   src/$(TARGET) \
+   src/$(TARGET)/Hardware \
 
 COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
@@ -37,7 +36,7 @@ INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/TouchSense/inc \
-   $(PROJECT_DIR)/Application/Gea \
+   src/Application/Gea \
 
 SOURCE_EXTENSIONS:=.c
 

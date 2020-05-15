@@ -5,7 +5,6 @@ TARGET=rx231
 DEVICE:=R5F52318
 ID_CODE:=45CAFEC0FFEECAFEC0FFEECAFEC0FFEE
 
-PROJECT_DIR=src
 OUTPUT_DIR=build/$(TARGET)
 APPLCOMMON_DIR=lib/applcommon
 BOOT_LOADER_DIR=lib/boot-loaders
@@ -70,16 +69,16 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_DIR)/Validator \
 
 SRC_DIRS=\
-   $(PROJECT_DIR)/$(TARGET) \
-   $(PROJECT_DIR)/$(TARGET)/Bsp \
-   $(PROJECT_DIR)/$(TARGET)/Hardware \
-   $(PROJECT_DIR)/$(TARGET)/Hardware/Flash \
-   $(PROJECT_DIR)/Application \
-   $(PROJECT_DIR)/Application/DataSource \
-   $(PROJECT_DIR)/Application/Gea \
-   $(PROJECT_DIR)/Application/Plugins \
-   $(PROJECT_DIR)/Application/ServiceDiagnostics \
-   $(PROJECT_DIR)/Application/TimerModule \
+   src/$(TARGET) \
+   src/$(TARGET)/Bsp \
+   src/$(TARGET)/Hardware \
+   src/$(TARGET)/Hardware/Flash \
+   src/Application \
+   src/Application/DataSource \
+   src/Application/Gea \
+   src/Application/Plugins \
+   src/Application/ServiceDiagnostics \
+   src/Application/TimerModule \
 
 # Additional include directories
 INC_DIRS=\
@@ -159,6 +158,6 @@ include tools/kpit-rx/kpit-rx-makefile-worker.mk
 .PHONY: erd_definitions
 erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)
 	@echo Generating ERD definitions
-	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -P -MMD $(PROJECT_DIR)/Application/DataSource/SystemErds.h -o $(OUTPUT_DIR)/temporary.h
+	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -P -MMD src/Application/DataSource/SystemErds.h -o $(OUTPUT_DIR)/temporary.h
 	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output $(OUTPUT_DIR)/GeneratedTypes.lua
 	@$(LUA53) $(TARGET)_generate_erd_definitions.lua

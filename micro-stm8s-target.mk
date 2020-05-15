@@ -4,7 +4,6 @@ TARGET:=micro-stm8s
 OUTPUT_DIR:=build/$(TARGET)
 APPLCOMMON_TINY_DIR=lib/applcommon.tiny
 APPLCOMMON_DIR=$(APPLCOMMON_TINY_DIR)/lib/applcommon
-PROJECT_DIR=src
 BOOT_LOADER_DIR=lib/boot-loaders
 
 # These options are for the non-debug image
@@ -47,16 +46,16 @@ $(error Please define DEBUG with Y or N.)
 endif
 endif
 
-MAIN:=$(PROJECT_DIR)/$(TARGET)/main.c
+MAIN:=src/$(TARGET)/main.c
 
 SRC_FILES:=\
 
 SRC_DIRS:=\
-   $(PROJECT_DIR)/$(TARGET) \
-   $(PROJECT_DIR)/$(TARGET)/Plugins \
-   $(PROJECT_DIR)/MicroApplication \
-   $(PROJECT_DIR)/MicroApplication/DataSource \
-   $(PROJECT_DIR)/MicroApplication/GeaStack \
+   src/$(TARGET) \
+   src/$(TARGET)/Plugins \
+   src/MicroApplication \
+   src/MicroApplication/DataSource \
+   src/MicroApplication/GeaStack \
 
 COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
@@ -70,7 +69,7 @@ COMMON_LIB_DIRS:=\
 INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(BOOT_LOADER_DIR)/src/$(TARGET)-boot-loader \
-   $(PROJECT_DIR)/Application/Gea \
+   src/Application/Gea \
 
 PACKAGE_CONTENTS:=
 $(call add_to_package,$(OUTPUT_DIR)/binaries,binaries)
@@ -123,6 +122,6 @@ include tools/sdcc-stm8/sdcc-stm8-makefile-worker.mk
 .PHONY: erd_definitions
 erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)
 	@echo Generating ERD definitions
-	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -Wp -P $(PROJECT_DIR)/MicroApplication/DataSource/MicroSystemErds.h -o $(OUTPUT_DIR)/temporary.h
+	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -Wp -P src/MicroApplication/DataSource/MicroSystemErds.h -o $(OUTPUT_DIR)/temporary.h
 	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output $(OUTPUT_DIR)/GeneratedTypes.lua
 	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
