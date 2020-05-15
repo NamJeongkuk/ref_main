@@ -23,7 +23,10 @@ extern "C"
 #include "FlashBlocks.h"
 #include "FlashBlockGroup_Model.h"
 
-#define AllErds size_t i = 0; i < NUM_ELEMENTS(erdTable); i++
+#define AllErds                \
+   size_t i = 0;               \
+   i < NUM_ELEMENTS(erdTable); \
+   i++
 #define And
 
 enum
@@ -47,11 +50,11 @@ enum
 };
 
 #define ERD_EXPAND_AS_ENDIANNESS_AWARE_RAM_STORAGE(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_RAM_, StorageType)                                                                             \
+   CONCAT(INCLUDE_RAM_, StorageType)                                                                                      \
    ({ Name COMMA Number COMMA Swap COMMA Io } COMMA)
 
 #define ERD_EXPAND_AS_ENDIANNESS_AWARE_NV_STORAGE(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_NV_, StorageType)                                                                             \
+   CONCAT(INCLUDE_NV_, StorageType)                                                                                      \
    ({ Name COMMA Number COMMA Swap COMMA Io } COMMA)
 
 typedef struct
@@ -62,35 +65,31 @@ typedef struct
    uint8_t io;
 } ErdTableElement_t;
 
-static const ErdTableElement_t erdTable[] =
-   {
-      ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_RAM_STORAGE)
+static const ErdTableElement_t erdTable[] = {
+   ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_RAM_STORAGE)
       ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_NV_STORAGE)
-   };
+};
 
-static const FlashBlockItem_t flashBlockTable[] =
-   {
-      { Block0, BlockSize },
-      { Block1, BlockSize },
-      { Block2, BlockSize },
-      { Block3, BlockSize }
-   };
+static const FlashBlockItem_t flashBlockTable[] = {
+   { Block0, BlockSize },
+   { Block1, BlockSize },
+   { Block2, BlockSize },
+   { Block3, BlockSize }
+};
 
 static uint8_t block0Data[BlockSize];
 static uint8_t block1Data[BlockSize];
 static uint8_t block2Data[BlockSize];
 static uint8_t block3Data[BlockSize];
 
-static uint8_t *blockList[] =
-   { block0Data, block1Data, block2Data, block3Data };
+static uint8_t *blockList[] = { block0Data, block1Data, block2Data, block3Data };
 
 static uint8_t block0BlankStatus[BlockSize];
 static uint8_t block1BlankStatus[BlockSize];
 static uint8_t block2BlankStatus[BlockSize];
 static uint8_t block3BlankStatus[BlockSize];
 
-static uint8_t *blockBlankStatusList[] =
-   { block0BlankStatus, block1BlankStatus, block2BlankStatus, block3BlankStatus };
+static uint8_t *blockBlankStatusList[] = { block0BlankStatus, block1BlankStatus, block2BlankStatus, block3BlankStatus };
 
 static void RunTimerModule(void *context)
 {
@@ -210,7 +209,7 @@ TEST_GROUP(SystemData)
       DataModel_Read(dataModel, internalErd, dataFromInternalDataSource);
       DataSource_Read(externalDataSource, externalErd, dataFromExternalDataSource);
 
-      if(DataMatched == memcmp(dataFromInternalDataSource, dataFromExternalDataSource, DataSource_SizeOf(externalDataSource, internalErd)))
+      if(DataMatched == memcmp(dataFromInternalDataSource, dataFromExternalDataSource, DataSource_SizeOf(externalDataSource, externalErd)))
       {
          char error[50];
          sprintf(error, "ERD 0x%04X was not swapped but should be", externalErd);
@@ -223,7 +222,7 @@ TEST_GROUP(SystemData)
       DataModel_Read(dataModel, internalErd, dataFromInternalDataSource);
       DataSource_Read(externalDataSource, externalErd, dataFromExternalDataSource);
 
-      if(DataMatched != memcmp(dataFromInternalDataSource, dataFromExternalDataSource, DataSource_SizeOf(externalDataSource, internalErd)))
+      if(DataMatched != memcmp(dataFromInternalDataSource, dataFromExternalDataSource, DataSource_SizeOf(externalDataSource, externalErd)))
       {
          char error[50];
          sprintf(error, "ERD 0x%04X was swapped but shouldn't be", externalErd);
