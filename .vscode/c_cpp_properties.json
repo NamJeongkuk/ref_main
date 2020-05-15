@@ -1,4 +1,13 @@
 {
+   "env": {
+      "applcommon": "${workspaceFolder}/lib/applcommon/**",
+      "tiny": "${workspaceFolder}/lib/applcommon.tiny/src/**",
+      "gcc-arm-include": "${workspaceFolder}/tools/gcc-arm-none-eabi/tc/lib/gcc/arm-none-eabi/7.2.1/include/**",
+      "kpit-rx-include": "${workspaceFolder}/tools/kpit-rx/tc/lib/gcc/rx-elf/4.8.4.201801-GNURX/include/**",
+      "sdcc-stm8-include": "${workspaceFolder}/tools/sdcc-stm8/lib/inc/**",
+      "stm32f3-peripheral-library": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32F3xx/**",
+      "stm8s-peripheral-library": "${workspaceFolder}/tools/sdcc-stm8/tc/share/sdcc/include/*"
+   },
    "configurations": [
       {
          "name": "Generic",
@@ -13,8 +22,8 @@
          "name": "micro-psoc4100s-cap-touch",
          "defines": [],
          "includePath": [
-            "${workspaceFolder}/tools/gcc-arm-none-eabi/tc/lib/gcc/arm-none-eabi/7.2.1/include/**",
-            "${workspaceFolder}/lib/applcommon.tiny/src/**",
+            "${env:gcc-arm-include}",
+            "${env:tiny}",
             "${workspaceFolder}/src/micro-psoc4100s-cap-touch/**",
             "${workspaceFolder}/src/Application/**"
          ],
@@ -28,8 +37,8 @@
             "__RX_LITTLE_ENDIAN__"
          ],
          "includePath": [
-            "${workspaceFolder}/tools/kpit-rx/tc/lib/gcc/rx-elf/4.8.4.201801-GNURX/include/**",
-            "${workspaceFolder}/lib/applcommon/**",
+            "${env:kpit-rx-include}",
+            "${env:applcommon}",
             "${workspaceFolder}/src/rx130/**",
             "${workspaceFolder}/src/Application/**"
          ],
@@ -43,8 +52,8 @@
             "__RX_LITTLE_ENDIAN__"
          ],
          "includePath": [
-            "${workspaceFolder}/tools/kpit-rx/tc/lib/gcc/rx-elf/4.8.4.201801-GNURX/include/**",
-            "${workspaceFolder}/lib/applcommon/**",
+            "${env:kpit-rx-include}",
+            "${env:applcommon}",
             "${workspaceFolder}/src/mini-rx130/**",
             "${workspaceFolder}/src/Application/**"
          ],
@@ -58,8 +67,8 @@
             "__RX_LITTLE_ENDIAN__"
          ],
          "includePath": [
-            "${workspaceFolder}/tools/kpit-rx/tc/lib/gcc/rx-elf/4.8.4.201801-GNURX/include/**",
-            "${workspaceFolder}/lib/applcommon/**",
+            "${env:kpit-rx-include}",
+            "${env:applcommon}",
             "${workspaceFolder}/src/rx130-cap-touch-client/**",
             "${workspaceFolder}/src/Application/**"
          ],
@@ -73,8 +82,8 @@
             "__RX_LITTLE_ENDIAN__"
          ],
          "includePath": [
-            "${workspaceFolder}/tools/kpit-rx/tc/lib/gcc/rx-elf/4.8.4.201801-GNURX/include/**",
-            "${workspaceFolder}/lib/applcommon/**",
+            "${env:kpit-rx-include}",
+            "${env:applcommon}",
             "${workspaceFolder}/src/rx231/**",
             "${workspaceFolder}/src/Application/**"
          ],
@@ -88,8 +97,8 @@
             "__RX_LITTLE_ENDIAN__"
          ],
          "includePath": [
-            "${workspaceFolder}/tools/kpit-rx/tc/lib/gcc/rx-elf/4.8.4.201801-GNURX/include/**",
-            "${workspaceFolder}/lib/applcommon/**",
+            "${env:kpit-rx-include}",
+            "${env:applcommon}",
             "${workspaceFolder}/src/mini-rx231/**",
             "${workspaceFolder}/src/Application/**"
          ],
@@ -105,9 +114,9 @@
             "HSI_VALUE=8000000"
          ],
          "includePath": [
-            "${workspaceFolder}/tools/gcc-arm-none-eabi/tc/lib/gcc/arm-none-eabi/7.2.1/include/**",
-            "${workspaceFolder}/lib/stm32-standard-peripherals/STM32F3xx/**",
-            "${workspaceFolder}/lib/applcommon/**",
+            "${env:gcc-arm-include}",
+            "${env:stm32f3-peripheral-library}",
+            "${env:applcommon}",
             "${workspaceFolder}/src/stm32f3/**",
             "${workspaceFolder}/src/Application/**"
          ],
@@ -124,9 +133,9 @@
             "__interrupt(x)="
          ],
          "includePath": [
-            "${workspaceFolder}/tools/sdcc-stm8/tc/share/sdcc/include/*",
-            "${workspaceFolder}/tools/sdcc-stm8/lib/inc/**",
-            "${workspaceFolder}/lib/applcommon.tiny/src/**",
+            "${env:stm8s-peripheral-library}",
+            "${env:sdcc-stm8-include}",
+            "${env:tiny}",
             "${workspaceFolder}/src/micro-stm8s/**",
             "${workspaceFolder}/src/MicroApplication/**",
             "${workspaceFolder}/src/Application/Gea/*"
@@ -144,9 +153,9 @@
             "__interrupt(x)="
          ],
          "includePath": [
-            "${workspaceFolder}/tools/sdcc-stm8/tc/share/sdcc/include/*",
-            "${workspaceFolder}/tools/sdcc-stm8/lib/inc/**",
-            "${workspaceFolder}/lib/applcommon.tiny/src/**",
+            "${env:stm8s-peripheral-library}",
+            "${env:sdcc-stm8-include}",
+            "${env:tiny}",
             "${workspaceFolder}/src/nano-stm8s/**",
             "${workspaceFolder}/src/Application/Gea/*"
          ],
@@ -163,9 +172,9 @@
             "__interrupt(x)="
          ],
          "includePath": [
-            "${workspaceFolder}/tools/sdcc-stm8/tc/share/sdcc/include/*",
-            "${workspaceFolder}/tools/sdcc-stm8/lib/inc/**",
-            "${workspaceFolder}/lib/applcommon.tiny/src/**",
+            "${env:stm8s-peripheral-library}",
+            "${env:sdcc-stm8-include}",
+            "${env:tiny}",
             "${workspaceFolder}/src/nano-stm8s-cap-touch/**",
             "${workspaceFolder}/src/Application/Gea/*"
          ],
