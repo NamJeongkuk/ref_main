@@ -19,9 +19,6 @@
 #include "CyLib.h"
 #include "cyfitter.h"
 
-extern char _relocatableVectorTableStart;
-#define VECTOR_TABLE_ADDRESS (uint32_t)(&_relocatableVectorTableStart)
-
 #define CY_NUM_VECTORS (CY_INT_IRQ_BASE + CY_NUM_INTERRUPTS)
 #define CY_NUM_ROM_VECTORS (4u)
 
@@ -71,6 +68,19 @@ extern const struct __cy_region __cy_regions[];
 extern const char __cy_region_num __attribute__((weak));
 #define __cy_region_num ((size_t)&__cy_region_num)
 
+cyisraddress CyRamVectors[CY_NUM_VECTORS] __attribute__((section(".ramvectors")));
+
+/*******************************************************************************
+ * Rom Interrupt Vector table storage area. Must be 256-byte aligned.
+ *******************************************************************************/
+__attribute__((used, section(".romvectors")))
+const cyisraddress RomVectors[CY_NUM_VECTORS] = {
+   CY_SYS_INITIAL_STACK_POINTER,
+   (cyisraddress)&PowerOnReset,
+   (cyisraddress)&NmiHandler,
+   (cyisraddress)&HardfaultHandler
+};
+
 /*******************************************************************************
  * Function Name: Start_c
  ****************************************************************************/
@@ -111,86 +121,19 @@ void Start_c(void)
       rptr++;
    }
 
+   for(uint8_t i = 0; i < CY_NUM_VECTORS; i++)
+   {
+      CyRamVectors[i] = (i < CY_NUM_ROM_VECTORS) ? RomVectors[i] : &IntDefaultHandler;
+   }
+
    /* Invoke static objects constructors */
    cyfitter_cfg();
 
-   (*(uint32 *)CYREG_CM0P_VTOR) = VECTOR_TABLE_ADDRESS;
+   (*(uint32 *)CYREG_CM0P_VTOR) = (uint32_t)CyRamVectors;
    (void)main();
 
    while(1)
       ;
-}
-
-/*******************************************************************************
- * Rom Interrupt Vector table storage area. Must be 256-byte aligned.
- *******************************************************************************/
-__attribute__((used, section(".fixedVectorTable")))
-const cyisraddress TempRomVectors[CY_NUM_VECTORS] = {
-   CY_SYS_INITIAL_STACK_POINTER,
-   (cyisraddress)&PowerOnReset
-};
-
-__attribute__((used, section(".vectors")))
-const cyisraddress RomVectors[CY_NUM_VECTORS] = {
-   CY_SYS_INITIAL_STACK_POINTER,
-   (cyisraddress)&PowerOnReset,
-   (cyisraddress)&NmiHandler,
-   (cyisraddress)&HardfaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   (cyisraddress)&SystemTick_ISR,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   (cyisraddress)&Gea3_SPI_UART_ISR,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   (cyisraddress)&CapTouchIsrTrampoline,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler,
-   &IntDefaultHandler
-};
-
-/*******************************************************************************
- * Function Name: initialize_psoc
- ****************************************************************************/
-/**
- *
- * This function is used to initialize the PSoC chip before calling main.
- *
- *******************************************************************************/
-__attribute__((constructor(101))) void initialize_psoc(void)
-{
-   /* Initialize configuration registers. */
-   cyfitter_cfg();
-   (*(uint32 *)CYREG_CM0P_VTOR) = VECTOR_TABLE_ADDRESS;
 }
 
 void PowerOnReset(void)

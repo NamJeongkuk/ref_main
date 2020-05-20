@@ -6,7 +6,8 @@ APPLCOMMON_TINY_DIR=lib/applcommon.tiny
 APPLCOMMON_DIR=$(APPLCOMMON_TINY_DIR)/lib/applcommon
 BOOT_LOADER_DIR=lib/boot-loaders
 BOOT_LOADER_TARGET=micro-psoc4100s
-PSOC_CREATOR_DIR = src/$(TARGET)/PsocCreator/psoc.cydsn/Generated_Source/PSoC4
+PSOC_CREATOR_DIR=src/$(TARGET)/PsocCreator/psoc.cydsn
+PSOC_CREATOR_GENERATED_DIR=src/$(TARGET)/PsocCreator/psoc.cydsn/Generated_Source/PSoC4
 
 # Set custom flags here
 BUILD_RELEASE=2
@@ -23,24 +24,25 @@ endif
 endif
 
 SRC_FILES:=\
-   $(PSOC_CREATOR_DIR)/CapTouch_Control.c \
-   $(PSOC_CREATOR_DIR)/CapTouch_Filter.c \
-   $(PSOC_CREATOR_DIR)/CapTouch_Processing.c \
-   $(PSOC_CREATOR_DIR)/CapTouch_SelfTest.c \
-   $(PSOC_CREATOR_DIR)/CapTouch_Sensing.c \
-   $(PSOC_CREATOR_DIR)/CapTouch_SensingCSX_LL.c \
-   $(PSOC_CREATOR_DIR)/CapTouch_Structure.c \
-   $(PSOC_CREATOR_DIR)/CyBootAsmGnu.s \
-   $(PSOC_CREATOR_DIR)/cyfitter_cfg.c \
-   $(PSOC_CREATOR_DIR)/CyLFClk.c \
-   $(PSOC_CREATOR_DIR)/CyLib.c \
-   $(PSOC_CREATOR_DIR)/CyFlash.c \
-   $(PSOC_CREATOR_DIR)/cymetadata.c \
-   $(PSOC_CREATOR_DIR)/cyutils.c \
-   $(PSOC_CREATOR_DIR)/Gea3_SPI_UART.c \
-   $(PSOC_CREATOR_DIR)/Gea3_UART.c \
-   $(PSOC_CREATOR_DIR)/Gea3.c \
-   $(PSOC_CREATOR_DIR)/Gea3_SPI_UART_INT.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/CapTouch_Control.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/CapTouch_Filter.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/CapTouch_ISR.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/CapTouch_Processing.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/CapTouch_SelfTest.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/CapTouch_Sensing.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/CapTouch_SensingCSX_LL.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/CapTouch_Structure.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/CyBootAsmGnu.s \
+   $(PSOC_CREATOR_GENERATED_DIR)/cyfitter_cfg.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/CyLFClk.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/CyLib.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/CyFlash.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/cymetadata.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/cyutils.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/Gea3_SPI_UART.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/Gea3_UART.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/Gea3.c \
+   $(PSOC_CREATOR_GENERATED_DIR)/Gea3_SPI_UART_INT.c \
 
 SRC_DIRS:=\
    src \
@@ -49,7 +51,6 @@ SRC_DIRS:=\
    src/$(TARGET)/GeaStack \
    src/$(TARGET)/Hardware \
    src/$(TARGET)/Plugins \
-   src/$(TARGET)/PsocShim \
 
 COMMON_LIB_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
@@ -65,6 +66,7 @@ COMMON_LIB_DIRS:=\
 INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(PSOC_CREATOR_DIR) \
+   $(PSOC_CREATOR_GENERATED_DIR) \
    src/Application/Gea \
 
 SOURCE_EXTENSIONS:=.c .s

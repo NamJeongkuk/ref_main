@@ -66,18 +66,15 @@ SECTIONS
 {
     .text :
     {
-      _fixedVectorTable = .;
-      KEEP(*(.fixedVectorTable))
+      KEEP(*(.romvectors))
+      PROVIDE(__cy_interrupt_vector = RomVectors);
       FILL(0xff)
       . = 0x00004000;
       _applicationHeader = .;
       KEEP(*(.applicationHeader))
       FILL(0xff)
       . = ALIGN(0x100);
-      _relocatableVectorTableStart = .;
       CREATE_OBJECT_SYMBOLS
-      PROVIDE(__cy_interrupt_vector = RomVectors);
-      KEEP(*(.vectors))
 
       /* Make sure we pulled in an interrupt vector.  */
       ASSERT(. != __cy_interrupt_vector, "No interrupt vector");
@@ -178,21 +175,15 @@ SECTIONS
 
     .ramvectors (NOLOAD) : ALIGN(8)
     {
+      __no_ul_ram_checks_end = .;
       __cy_region_start_ram = .;
       KEEP(*(.ramvectors))
-    }
+    } > ram
 
     .noinit (NOLOAD) : ALIGN(8)
     {
       KEEP(*(.noinit))
     }
-
-    .noUlRamChecks (NOLOAD) :
-    {
-      __no_ul_ram_checks_start = .;
-      *(.noUlRamChecks)
-      __no_ul_ram_checks_end = .;
-    } >ram
 
     .data : ALIGN(8)
     {

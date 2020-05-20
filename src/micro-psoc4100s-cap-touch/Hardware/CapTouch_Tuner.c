@@ -1,4 +1,4 @@
-/***************************************************************************//**
+/***************************************************************************/ /**
 * \file CapTouch_Tuner.c
 * \version 6.0
 *
@@ -7,7 +7,8 @@
 *
 * \see CapTouch v6.0 Datasheet
 *
-*//*****************************************************************************
+*/
+/*****************************************************************************
 * Copyright (2016-2018), Cypress Semiconductor Corporation.
 ********************************************************************************
 * This software is owned by Cypress Semiconductor Corporation (Cypress) and is
@@ -44,18 +45,18 @@
 #include "CapTouch_Configuration.h"
 
 /* Tuner states definition */
-#define TU_FSM_RUNNING      (0u)
-#define TU_FSM_SUSPENDED    (1u)
-#define TU_FSM_SNR_TEST     (2u)
-#define TU_FSM_ONE_SCAN     (3u)
+#define TU_FSM_RUNNING (0u)
+#define TU_FSM_SUSPENDED (1u)
+#define TU_FSM_SNR_TEST (2u)
+#define TU_FSM_ONE_SCAN (3u)
 
 /* Tuner state variable */
 // static uint32 tunerFsm = TU_FSM_RUNNING;
 
-
 /*******************************************************************************
 * Function Name: CapTouch_TuInitialize
-****************************************************************************//**
+****************************************************************************/
+/**
 *
 * \brief
 *   This function initializes the communication interface with the Tuner GUI.
@@ -71,7 +72,8 @@ void CapTouch_TuInitialize(void)
 
 /*******************************************************************************
 * Function Name: CapTouch_RunTuner
-****************************************************************************//**
+****************************************************************************/
+/**
 *
 * \brief
 *  Establishes synchronized communication with the Tuner application.
@@ -110,8 +112,7 @@ void CapTouch_TuInitialize(void)
 *******************************************************************************/
 uint32 CapTouch_RunTuner(void)
 {
-    return 0;
+   return 0;
 }
-
 
 /* [] END OF FILE */
