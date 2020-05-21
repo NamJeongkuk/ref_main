@@ -17,7 +17,6 @@
  */
 
 OUTPUT_FORMAT("elf32-littlearm", "elf32-bigarm", "elf32-littlearm")
-ENTRY(Reset)
 SEARCH_DIR(.)
 GROUP(-lgcc -lc -lnosys)
 
@@ -78,10 +77,6 @@ SECTIONS
 
       /* Make sure we pulled in an interrupt vector.  */
       ASSERT(. != __cy_interrupt_vector, "No interrupt vector");
-
-      PROVIDE(__cy_reset = Reset);
-
-      *(.text.Reset)
 
       *(.psocinit)
 
