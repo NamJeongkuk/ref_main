@@ -11,9 +11,12 @@
 #include "Constants_Binary.h"
 #include "utils.h"
 
+// clang-format off
+
 #define EXPAND_AS_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_NV_, StorageType)                                                                              \
-   ({ Name COMMA sizeof(DataType) } COMMA)
+   CONCAT(INCLUDE_NV_, StorageType)({ Name COMMA sizeof(DataType) } COMMA)
+
+// clang-format on
 
 enum
 {
