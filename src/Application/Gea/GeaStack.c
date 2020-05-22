@@ -26,37 +26,34 @@ enum
    RetryCount = 3
 };
 
-#define EXPAND_AS_PUBLIC_ERDS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_PUBLIC_, Number)(Public##Name COMMA)
+#define EXPAND_AS_PUBLIC_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_PUBLIC_, Number)                                                                        \
+   (Public##Name COMMA)
 
-static const Erd_t publicErds[] =
-   {
-      ERD_TABLE(EXPAND_AS_PUBLIC_ERDS)
-   };
+static const Erd_t publicErds[] = {
+   ERD_TABLE(EXPAND_AS_PUBLIC_ERDS)
+};
 
-static const ConstArrayMap_BinarySearchConfiguration_t publicErdMapConfiguration =
-   {
-      publicErds,
-      NUM_ELEMENTS(publicErds),
-      ELEMENT_SIZE(publicErds),
-      sizeof(Erd_t),
-      0,
-      false
-   };
+static const ConstArrayMap_BinarySearchConfiguration_t publicErdMapConfiguration = {
+   publicErds,
+   NUM_ELEMENTS(publicErds),
+   ELEMENT_SIZE(publicErds),
+   sizeof(Erd_t),
+   0,
+   false
+};
 
-static const uint8_t rangeRestrictedValidatorRestrictedAddressTable[] =
-   {
-      EmbeddedWiFiGeaAddress,
-      ConnectPlusWiFiGeaAddress
-   };
+static const uint8_t rangeRestrictedValidatorRestrictedAddressTable[] = {
+   EmbeddedWiFiGeaAddress,
+   ConnectPlusWiFiGeaAddress
+};
 
-static const Validator_RestrictedRangeErdConfiguration_t restrictedRangeConfiguration =
-   {
-      rangeRestrictedValidatorRestrictedAddressTable,
-      NUM_ELEMENTS(rangeRestrictedValidatorRestrictedAddressTable),
-      RestrictedFullRangeErdStart,
-      RestrictedFullRangeErdEnd
-   };
+static const Validator_RestrictedRangeErdConfiguration_t restrictedRangeConfiguration = {
+   rangeRestrictedValidatorRestrictedAddressTable,
+   NUM_ELEMENTS(rangeRestrictedValidatorRestrictedAddressTable),
+   RestrictedFullRangeErdStart,
+   RestrictedFullRangeErdEnd
+};
 
 static void InitializeErdSecurityComponents(
    GeaStack_t *instance,

@@ -8,8 +8,8 @@
 #include "ExternalDataSource.h"
 #include "SystemErds.h"
 
-#define EXPAND_AS_MAPPED_ERD_PAIR(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_RAM_, StorageType)                                                                     \
+#define EXPAND_AS_MAPPED_ERD_PAIR(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_RAM_, StorageType)                                                                          \
    ({ Number COMMA Name } COMMA)
 
 static const DataSource_MappedErdPair_t internalExternalMappings[] = {

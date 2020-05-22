@@ -19,24 +19,27 @@
 #include "ConstArrayMap_BinarySearch.h"
 #include "InputGroup_NonVolatileDataSourceDefaultData.h"
 
-#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_READ_WRITE_BUFFER_MEMBERS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_NV_, StorageType)(uint8_t CONCAT(erd, Name)[sizeof(DataType)];)
+#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_READ_WRITE_BUFFER_MEMBERS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_NV_, StorageType)                                                                                                              \
+   (uint8_t CONCAT(erd, Name)[sizeof(DataType)];)
 
 typedef union
 {
    ERD_TABLE(EXPAND_AS_NON_VOLATILE_DATA_SOURCE_READ_WRITE_BUFFER_MEMBERS)
 } NonVolatileDataSourceReadWriteBuffer_t;
 
-#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_NV_, StorageType)(uint8_t CONCAT(erd, Name)[sizeof(DataType)];)
+#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_NV_, StorageType)                                                                                                         \
+   (uint8_t CONCAT(erd, Name)[sizeof(DataType)];)
 
 typedef struct
 {
    ERD_TABLE(EXPAND_AS_NON_VOLATILE_DATA_SOURCE_OFFSET_STRUCT_MEMBER)
 } NonVolatileDataSourceSyncCache_t;
 
-#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_COUNT_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_NV_, StorageType)(uint8_t CONCAT(erd, Name);)
+#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_COUNT_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_NV_, StorageType)                                                                                                        \
+   (uint8_t CONCAT(erd, Name);)
 
 typedef struct
 {
@@ -79,7 +82,7 @@ void NonVolatileDataSource_Init(
  * @param instance
  * @return
  */
-I_DataSource_t * NonVolatileDataSource_DataSource(
+I_DataSource_t *NonVolatileDataSource_DataSource(
    NonVolatileDataSource_t *instance);
 
 #endif

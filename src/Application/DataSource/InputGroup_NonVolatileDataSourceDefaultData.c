@@ -11,8 +11,14 @@
 #include "uassert.h"
 #include "Event_Unsupported.h"
 
-#define EXPAND_AS_NON_VOLATILE_DEFAULT_DATA_MAPPING(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+#define NotNv 0
+
+// clang-format off
+
+#define EXPAND_AS_NON_VOLATILE_DEFAULT_DATA_MAPPING(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_NV_, StorageType)({ Name COMMA NvDefaultData } COMMA)
+
+// clang-format on
 
 typedef struct
 {
@@ -20,10 +26,9 @@ typedef struct
    void (*GetDefaultData)(void *data, size_t dataSize);
 } DataMap_t;
 
-static const DataMap_t defaultDataMap[] =
-   {
-      ERD_TABLE(EXPAND_AS_NON_VOLATILE_DEFAULT_DATA_MAPPING)
-   };
+static const DataMap_t defaultDataMap[] = {
+   ERD_TABLE(EXPAND_AS_NON_VOLATILE_DEFAULT_DATA_MAPPING)
+};
 
 static uint16_t FindRecordIndexInTable(InputGroup_NonVolatileDataSourceDefaultData_t *instance, InputChannel_t channel)
 {
@@ -53,14 +58,13 @@ static void Read(I_InputGroup_t *_instance, InputChannel_t channel, void *value)
    }
 }
 
-static I_Event_t * GetOnChangeEvent(I_InputGroup_t *instance)
+static I_Event_t *GetOnChangeEvent(I_InputGroup_t *instance)
 {
    IGNORE(instance);
    return Event_Unsupported_GetInstance();
 }
 
-static const I_InputGroup_Api_t api =
-   { Read, GetOnChangeEvent };
+static const I_InputGroup_Api_t api = { Read, GetOnChangeEvent };
 
 void InputGroup_NonVolatileDataSourceDefaultData_Init(
    InputGroup_NonVolatileDataSourceDefaultData_t *instance,
