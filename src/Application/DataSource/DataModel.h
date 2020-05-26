@@ -21,8 +21,8 @@
 #define EXPAND_AS_OUTPUT_ERDS_TYPE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_OUTPUT_, Io)(uint8_t Name;)
 
-#define EXPAND_AS_OUTPUT_ERDS_TYPE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_OUTPUT_, Io)(uint8_t Name;)
+#define EXPAND_AS_SUBSCRIPTION_ERDS_TYPE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_SUBSCRIPTION_, Sub)(uint8_t Name;)
 
 // clang-format on
 
@@ -38,7 +38,7 @@ typedef struct
 
 typedef struct
 {
-   ERD_TABLE(EXPAND_AS_OUTPUT_ERDS_TYPE)
+   ERD_TABLE(EXPAND_AS_SUBSCRIPTION_ERDS_TYPE)
 } SystemDataSubscriptionListList_t;
 
 typedef struct
