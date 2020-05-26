@@ -26,9 +26,12 @@ enum
    RetryCount = 3
 };
 
+// clang-format off
+
 #define EXPAND_AS_PUBLIC_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_PUBLIC_, Number)                                                                        \
-   (Public##Name COMMA)
+   CONCAT(INCLUDE_PUBLIC_, Number)(Public##Name COMMA)
+
+// clang-format on
 
 static const Erd_t publicErds[] = {
    ERD_TABLE(EXPAND_AS_PUBLIC_ERDS)
