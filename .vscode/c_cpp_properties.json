@@ -12,7 +12,11 @@
       {
          "name": "Generic",
          "includePath": [
-            "${workspaceFolder}/**"
+            "${workspaceFolder}/lib/applcommon/**",
+            "${workspaceFolder}/lib/applcommon.tiny/**",
+            "${workspaceFolder}/lib/stm32-standard-peripherals/**",
+            "${workspaceFolder}/src/**",
+            "${workspaceFolder}/test/**"
          ],
          "intelliSenseMode": "gcc-x64",
          "cStandard": "c99",

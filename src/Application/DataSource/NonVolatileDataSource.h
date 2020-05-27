@@ -19,7 +19,9 @@
 #include "ConstArrayMap_BinarySearch.h"
 #include "InputGroup_NonVolatileDataSourceDefaultData.h"
 
-#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_READ_WRITE_BUFFER_MEMBERS(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+// clang-format off
+
+#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_READ_WRITE_BUFFER_MEMBERS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_NV_, StorageType)(uint8_t CONCAT(erd, Name)[sizeof(DataType)];)
 
 typedef union
@@ -27,7 +29,7 @@ typedef union
    ERD_TABLE(EXPAND_AS_NON_VOLATILE_DATA_SOURCE_READ_WRITE_BUFFER_MEMBERS)
 } NonVolatileDataSourceReadWriteBuffer_t;
 
-#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_NV_, StorageType)(uint8_t CONCAT(erd, Name)[sizeof(DataType)];)
 
 typedef struct
@@ -35,13 +37,15 @@ typedef struct
    ERD_TABLE(EXPAND_AS_NON_VOLATILE_DATA_SOURCE_OFFSET_STRUCT_MEMBER)
 } NonVolatileDataSourceSyncCache_t;
 
-#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_COUNT_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_COUNT_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_NV_, StorageType)(uint8_t CONCAT(erd, Name);)
 
 typedef struct
 {
    ERD_TABLE(EXPAND_AS_NON_VOLATILE_DATA_SOURCE_COUNT_STRUCT_MEMBER)
 } NonVolatileDataSourceErdCount_t;
+
+// clang-format on
 
 typedef NonVolatileDataSourceReadWriteBuffer_t NonVolatileDataSourceSyncWriteCache_t;
 
@@ -79,7 +83,7 @@ void NonVolatileDataSource_Init(
  * @param instance
  * @return
  */
-I_DataSource_t * NonVolatileDataSource_DataSource(
+I_DataSource_t *NonVolatileDataSource_DataSource(
    NonVolatileDataSource_t *instance);
 
 #endif

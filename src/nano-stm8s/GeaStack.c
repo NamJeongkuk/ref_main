@@ -33,9 +33,12 @@ static const TinyErdHeartbeatConfiguration_t erdHeartbeatConfig = {
    .pairCount = NUM_ELEMENTS(erdHeartbeatPairs)
 };
 
+// clang-format off
+
 #define EXPAND_AS_LOCAL_TO_REMOTE_ERD_MAP(Name, Number, DataType, Stream, RemoteErd) \
-   CONCAT(INCLUDE_STREAM_, Stream)                                                   \
-   ({ Number COMMA RemoteErd COMMA CONCAT(INCLUDE_STREAM_EVENT_, Stream)(ErdStreamDataType_Event) CONCAT(INCLUDE_STREAM_LEVEL_, Stream)(ErdStreamDataType_Level) } COMMA)
+   CONCAT(INCLUDE_STREAM_, Stream)({ Number COMMA RemoteErd COMMA CONCAT(INCLUDE_STREAM_EVENT_, Stream)(ErdStreamDataType_Event) CONCAT(INCLUDE_STREAM_LEVEL_, Stream)(ErdStreamDataType_Level) } COMMA)
+
+// clang-format on
 
 static const ErdStreamLocalToRemoteErdMap_t streamLocalToRemoteErdMap[] = {
    ERD_TABLE(EXPAND_AS_LOCAL_TO_REMOTE_ERD_MAP)

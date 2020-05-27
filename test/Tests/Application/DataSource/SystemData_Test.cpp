@@ -1,6 +1,6 @@
 /*!
  * @file
- * @brief Tests for System Data
+ * @brief
  *
  * Copyright GE Appliances - Confidential - All rights reserved
  */
@@ -49,13 +49,23 @@ enum
    BlockSize = 1024
 };
 
-#define ERD_EXPAND_AS_ENDIANNESS_AWARE_RAM_STORAGE(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_RAM_, StorageType)                                                                                      \
-   ({ Name COMMA Number COMMA Swap COMMA Io } COMMA)
+#define Swap_N 0
+#define Swap_Y 1
 
-#define ERD_EXPAND_AS_ENDIANNESS_AWARE_NV_STORAGE(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_NV_, StorageType)                                                                                      \
-   ({ Name COMMA Number COMMA Swap COMMA Io } COMMA)
+#define Io_None 0
+#define Io_O 1
+#define Io_All 2
+
+#define Sub_N 0
+#define Sub_Y 1
+
+// clang-format off
+
+#define ERD_EXPAND_AS_ENDIANNESS_AWARE_RAM_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_RAM_, StorageType)({ Name COMMA Number COMMA Swap COMMA Io COMMA Sub } COMMA)
+
+#define ERD_EXPAND_AS_ENDIANNESS_AWARE_NV_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_NV_, StorageType)({ Name COMMA Number COMMA Swap COMMA Io COMMA Sub } COMMA)
 
 typedef struct
 {
@@ -63,12 +73,15 @@ typedef struct
    Erd_t externalErd;
    bool endiannessNeedsToBeSwapped;
    uint8_t io;
+   uint8_t subscription;
 } ErdTableElement_t;
 
 static const ErdTableElement_t erdTable[] = {
    ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_RAM_STORAGE)
-      ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_NV_STORAGE)
+   ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_NV_STORAGE)
 };
+
+// clang-format on
 
 static const FlashBlockItem_t flashBlockTable[] = {
    { Block0, BlockSize },
@@ -248,6 +261,13 @@ TEST_GROUP(SystemData)
       CHECK(output != NULL);
    }
 
+   void DataModelShouldAllowSubscribeUnsubscribeFor(Erd_t erd)
+   {
+      EventSubscription_t subscription;
+      DataModel_Subscribe(dataModel, erd, &subscription);
+      DataModel_Unsubscribe(dataModel, erd, &subscription);
+   }
+
    void AssertionShouldFailWhenInputIsRequestedForErd(Erd_t erd)
    {
       ShouldFailAssertionWhen(DataModel_GetInput(dataModel, erd))
@@ -261,6 +281,12 @@ TEST_GROUP(SystemData)
    void AssertionShouldFailWhenOutputIsRequestedForErd(Erd_t erd)
    {
       ShouldFailAssertionWhen(DataModel_GetOutput(dataModel, erd));
+   }
+
+   void AssertionShouldFailWhenSubscribingToErd(Erd_t erd)
+   {
+      EventSubscription_t subscription;
+      ShouldFailAssertionWhen(DataModel_Subscribe(dataModel, erd, &subscription));
    }
 };
 
@@ -336,6 +362,26 @@ TEST(SystemData, ShouldSupportOutputsForSpecifiedErds)
       else
       {
          AssertionShouldFailWhenOutputIsRequestedForErd(erd);
+      }
+   }
+}
+
+TEST(SystemData, ShouldSupportSubscribeUnsubscribeForSpecifiedErds)
+{
+   GivenThatSystemDataIsInitialized();
+
+   for(AllErds)
+   {
+      Erd_t erd = erdTable[i].erd;
+      uint8_t subscriptionConfiguration = erdTable[i].subscription;
+
+      if(subscriptionConfiguration == Sub_Y)
+      {
+         DataModelShouldAllowSubscribeUnsubscribeFor(erd);
+      }
+      else
+      {
+         AssertionShouldFailWhenSubscribingToErd(erd);
       }
    }
 }

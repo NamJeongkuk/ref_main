@@ -13,32 +13,32 @@
 #include "SystemErds.h"
 #include "uassert.h"
 
-#define EXPAND_AS_BSP_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_BSP_, StorageType)                                                                              \
-   (uint8_t MACRO_SAFE_CONCATENATE(erd, Name)[sizeof(DataType)];)
+// clang-format off
 
-#define EXPAND_AS_BSP_CONFIGURATION(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_BSP_, StorageType)                                                                       \
-   ({ Name COMMA OFFSET_OF(DataSourceStorage_t, MACRO_SAFE_CONCATENATE(erd, Name)) } COMMA)
+#define EXPAND_AS_BSP_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_BSP_, StorageType)(uint8_t MACRO_SAFE_CONCATENATE(erd, Name)[sizeof(DataType)];)
+
+#define EXPAND_AS_BSP_CONFIGURATION(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_BSP_, StorageType)({ Name COMMA OFFSET_OF(DataSourceStorage_t, MACRO_SAFE_CONCATENATE(erd, Name)) } COMMA)
+
+// clang-format on
 
 typedef struct
 {
    ERD_TABLE(EXPAND_AS_BSP_OFFSET_STRUCT_MEMBER)
 } DataSourceStorage_t;
 
-static const DataSource_RamErdConfigurationElement_t erds[] =
-   {
-      ERD_TABLE(EXPAND_AS_BSP_CONFIGURATION)
-   };
+static const DataSource_RamErdConfigurationElement_t erds[] = {
+   ERD_TABLE(EXPAND_AS_BSP_CONFIGURATION)
+};
 
-static const ConstArrayMap_LinearSearchConfiguration_t constArrayMapConfig =
-   {
-      erds,
-      NUM_ELEMENTS(erds),
-      ELEMENT_SIZE(erds),
-      MEMBER_SIZE(DataSource_RamErdConfigurationElement_t, erd),
-      OFFSET_OF(DataSource_RamErdConfigurationElement_t, erd)
-   };
+static const ConstArrayMap_LinearSearchConfiguration_t constArrayMapConfig = {
+   erds,
+   NUM_ELEMENTS(erds),
+   ELEMENT_SIZE(erds),
+   MEMBER_SIZE(DataSource_RamErdConfigurationElement_t, erd),
+   OFFSET_OF(DataSource_RamErdConfigurationElement_t, erd)
+};
 
 static DataSource_Ram_t dataSource;
 static DataSourceStorage_t storage;
@@ -73,8 +73,7 @@ static uint8_t SizeOf(const I_DataSource_t *instance, const Erd_t erd)
    return DataSource_SizeOf(&dataSource.interface, erd);
 }
 
-static const I_DataSource_Api_t api =
-   { Read, Write, Has, SizeOf };
+static const I_DataSource_Api_t api = { Read, Write, Has, SizeOf };
 
 void BspDataSource_Init(
    BspDataSource_t *_instance,

@@ -34,8 +34,12 @@ enum
    DynamicRoutingTableBufferSize = 8,
 };
 
-#define EXPAND_AS_PUBLIC_ERD_COUNT_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
+// clang-format off
+
+#define EXPAND_AS_PUBLIC_ERD_COUNT_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_PUBLIC_, Number)(uint8_t Name;)
+
+// clang-format on
 
 typedef struct
 {

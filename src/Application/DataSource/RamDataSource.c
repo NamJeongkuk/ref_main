@@ -10,9 +10,12 @@
 #include "utils.h"
 #include "uassert.h"
 
-#define EXPAND_AS_CONFIGURATION(Name, Number, DataType, Swap, Io, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_RAM_, StorageType)                                                                   \
-   ({ Name COMMA OFFSET_OF(RamDataSourceStorage_t, MACRO_SAFE_CONCATENATE(erd, Name)) } COMMA)
+// clang-format off
+
+#define EXPAND_AS_CONFIGURATION(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_RAM_, StorageType)({ Name COMMA OFFSET_OF(RamDataSourceStorage_t, MACRO_SAFE_CONCATENATE(erd, Name)) } COMMA)
+
+// clang-format on
 
 static const DataSource_RamErdConfigurationElement_t erds[] = { ERD_TABLE(EXPAND_AS_CONFIGURATION) };
 
