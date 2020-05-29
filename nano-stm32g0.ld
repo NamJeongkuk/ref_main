@@ -1,14 +1,10 @@
 MEMORY
 {
   DEBUG (rx)       : ORIGIN = 0x08000000, LENGTH = 0x08
-  BOOT_HEADER (r)  : ORIGIN = 0x08000194, LENGTH = 0x40
-  NVDATA_1 (rw)    : ORIGIN = 0x08005000, LENGTH = 2K
-  NVDATA_2 (rw)    : ORIGIN = 0x08005800, LENGTH = 2K
-  HEADER (r)       : ORIGIN = 0x08006000, LENGTH = 0x40
-  VECTORS (rx)     : ORIGIN = 0x08006200, LENGTH = 0x194
+  HEADER (r)       : ORIGIN = 0x08003000, LENGTH = 0x40
+  VECTORS (rx)     : ORIGIN = 0x08003200, LENGTH = 0xB8
   FLASH (rx)       : ORIGIN = ORIGIN(VECTORS) + LENGTH(VECTORS), LENGTH = 0x08020000 - ORIGIN(FLASH)
   RAM (rwx)        : ORIGIN = 0x20000000, LENGTH = 32K
-  CCMRAM (rwx)     : ORIGIN = 0x10000000, LENGTH = 4K
 }
 
 ENTRY(Reset_Handler)
@@ -19,22 +15,6 @@ SECTIONS
    {
       KEEP(*(.debug_vector_table))
    } > DEBUG
-
-   .nv_data_1 :
-   {
-      . = ALIGN(4);
-      __NvData1_Location = .;
-      KEEP(*(.nv_data_1))
-      . = ALIGN(4);
-   } > NVDATA_1
-
-   .nv_data_2 :
-   {
-      . = ALIGN(4);
-      __NvData2_Location = .;
-      KEEP(*(.nv_data_2))
-      . = ALIGN(4);
-   } > NVDATA_2
 
    .header :
    {
@@ -53,6 +33,7 @@ SECTIONS
 
    .text :
    {
+      . = ALIGN(4);
       *(.text*)
       KEEP(*(.init))
       KEEP(*(.fini))
@@ -102,7 +83,6 @@ SECTIONS
    } > RAM AT>FLASH
 
    /* Helper variables for accessing sections from c code. */
-   __Boot_Header = ORIGIN(BOOT_HEADER);
    __Header = ORIGIN(HEADER);
    __StackTop = __stackCheckEnd;
    __StackBottom = ORIGIN(RAM) + LENGTH(RAM);

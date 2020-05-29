@@ -5,19 +5,16 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "Clk.h"
-#include "Iwdg.h"
-#include "Pd4Heartbeat.h"
+#include "Clock.h"
+#include "Watchdog.h"
+#include "Pa5Heartbeat.h"
 #include "Rst.h"
-#include "TinyTimeSource_Tim4SystemTick.h"
-#include "TinyAdcGroup_Adc1.h"
-#include "TinyUart_Uart1.h"
+#include "TinyTimeSource_SysTick.h"
+#include "TinyUart_Usart2.h"
 #include "TinyTimer.h"
 #include "GeaStack.h"
 #include "NanoSystemData.h"
 #include "NanoApplication.h"
-#include "Led.h"
-#include "Button.h"
 #include "I_TinyInterrupt.h"
 #include "Gea2Addresses.h"
 #include "Version.h"
@@ -38,7 +35,7 @@ static NanoApplication_t application;
 static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 {
    IGNORE(context);
-   Iwdg_Kick();
+   Watchdog_Kick();
 
    TinyTimerModule_Start(
       timerModule,
@@ -50,29 +47,26 @@ static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 
 void main(void)
 {
-   Iwdg_Init();
-   Clk_Init();
+   Watchdog_Init();
+   Clock_Init();
 
    disableInterrupts();
    {
       TinyTimerModule_Init(
          &timerModule,
-         TinyTimeSource_Tim4SystemTick_Init());
+         TinyTimeSource_SysTick_Init());
 
-      Pd4Heartbeat_Init(&timerModule);
+      Pa5Heartbeat_Init(&timerModule);
 
       NanoSystemData_Init(&systemData);
       I_TinyDataSource_t *dataSource = NanoSystemData_DataSource(&systemData);
 
       GeaStack_Init(
          &geaStack,
-         TinyUart_Uart1_Init(),
+         TinyUart_Usart2_Init(),
          dataSource,
          &timerModule,
          Stm8sGea2Address);
-
-      Button_Init(dataSource, &timerModule, Erd_ButtonState);
-      Led_Init(dataSource, Erd_LedState);
 
       NanoApplication_Init(&application, dataSource);
    }
