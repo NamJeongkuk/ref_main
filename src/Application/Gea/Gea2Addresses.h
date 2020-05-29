@@ -17,6 +17,7 @@ enum
    Stm8sGea2Address = 0xB3,
    Stm32f3Gea2Address = 0xB4,
    Stm8sCapTouchGea2Address = 0xB5,
+   Stm32g0Gea2Address = 0xB6,
    PcToolAddress = 0xE4,
    EmbeddedWiFiGeaAddress = 0xBF,
    ConnectPlusWiFiGeaAddress = 0xBE

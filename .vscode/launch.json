@@ -112,6 +112,20 @@
       "svdFile": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32F3xx/Libraries/CMSIS/SVD/STM32F303x.svd"
     },
     {
+      "name": "nano-stm32g0",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "type": "cortex-debug",
+      "executable": "${workspaceFolder}/build/nano-stm32g0/nano-stm32g0.elf",
+      "device": "STM32G070KB",
+      "servertype": "jlink",
+      "interface": "swd",
+      "armToolchainPath": "${workspaceFolder}/tools/gcc-arm-none-eabi/tc/bin/",
+      "serverpath": "${workspaceFolder}/build/nano-stm32g0/jlink_gdb_server_wrapper.sh",
+      "preLaunchTask": "nano-stm32g0_vscode_debug",
+      "svdFile": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32G0xx/Libraries/CMSIS/SVD/stm32g07x.svd"
+    },
+    {
       "name": "micro-stm8s",
       "cwd": "${workspaceRoot}",
       "executable": "${workspaceFolder}/build/micro-stm8s/micro-stm8s-debug.elf",

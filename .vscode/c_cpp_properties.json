@@ -6,6 +6,7 @@
       "kpit-rx-include": "${workspaceFolder}/tools/kpit-rx/tc/lib/gcc/rx-elf/4.8.4.201801-GNURX/include/**",
       "sdcc-stm8-include": "${workspaceFolder}/tools/sdcc-stm8/lib/inc/**",
       "stm32f3-peripheral-library-include": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32F3xx/**",
+      "stm32g0-peripheral-library-include": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32G0xx/**",
       "stm8s-peripheral-library-include": "${workspaceFolder}/tools/sdcc-stm8/tc/share/sdcc/include/*"
    },
    "configurations": [
@@ -123,6 +124,25 @@
             "${env:applcommon-include}",
             "${workspaceFolder}/src/stm32f3/**",
             "${workspaceFolder}/src/Application/**"
+         ],
+         "intelliSenseMode": "gcc-arm",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      },
+      {
+         "name": "nano-stm32g0",
+         "defines": [
+            "STM32G0XX",
+            "USE_FULL_LL_DRIVER=1",
+            "HSI_VALUE=8000000"
+         ],
+         "includePath": [
+            "${env:gcc-arm-include}",
+            "${env:stm32f3-peripheral-library-include}",
+            "${env:tiny-include}",
+            "${workspaceFolder}/src/nano-stm32g0/**",
+            "${workspaceFolder}/src/Application/Gea",
+            "${workspaceFolder}/src/NanoApplication/**"
          ],
          "intelliSenseMode": "gcc-arm",
          "cStandard": "c99",
