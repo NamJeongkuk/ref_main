@@ -30,7 +30,6 @@ typedef struct
       TinyErdGea2OpenLoopWriteApiRevision2_t erdGea2OpenLoopWriteApi;
       TinyErdHeartbeat_t erdHeartbeat;
       TinyErdStreamSender_t erdStreamSender;
-      TinyEventSubscription_t geaMessageSubscription;
       uint8_t sendBuffer[SendBufferSize];
       uint8_t receiveBuffer[ReceiveBufferSize];
    } _private;

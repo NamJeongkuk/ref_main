@@ -9,6 +9,7 @@
 #include "stm32g0xx_ll_gpio.h"
 #include "TinyUart_Usart2.h"
 #include "TinyEvent_Synchronous.h"
+#include "utils.h"
 
 static struct
 {
@@ -70,7 +71,7 @@ static I_TinyInterrupt_t *GetOnSendCompleteInterrupt(I_TinyUart_t *_instance)
 
 static const I_TinyUart_Api_t api = { Send, GetOnReceiveInterrupt, GetOnSendCompleteInterrupt };
 
-static inline InitializeGpio(void)
+static inline void InitializeGpio(void)
 {
    SET_BIT(RCC->IOPENR, RCC_IOPENR_GPIOAEN);
 
@@ -85,7 +86,7 @@ static inline InitializeGpio(void)
    LL_GPIO_Init(GPIOA, &gpio);
 }
 
-static inline InitializeUsart2(void)
+static inline void InitializeUsart2(void)
 {
    LL_USART_Disable(USART);
 

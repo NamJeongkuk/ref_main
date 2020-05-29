@@ -103,7 +103,7 @@ const Vector_t __Vectors[] __attribute__ ((section(".vectors"))) = {
   SPI2_IRQHandler,
   USART1_IRQHandler,
   USART2_IRQHandler,
-46*4
+  USART3_4_IRQHandler
 };
 // clang-format on
 

@@ -9,8 +9,6 @@
 #include "GeaStack.h"
 #include "Gea2Addresses.h"
 #include "NanoSystemErds.h"
-#include "BootLoader.h"
-#include "TinyBootLoaderCommand.h"
 #include "Version.h"
 #include "utils.h"
 
@@ -53,41 +51,6 @@ static const TinyErdStreamSenderConfiguration_t erdStreamSenderConfiguration = {
    .mappingCount = NUM_ELEMENTS(streamLocalToRemoteErdMap)
 };
 
-static void PopulateTinyVersionResponse(void *context, Gea2Packet_t *packet)
-{
-   REINTERPRET(sourcePacket, context, const Gea2Packet_t *);
-   packet->payload[0] = TinyBootLoaderCommand_VersionResponse;
-   packet->payload[1] = sourcePacket->payload[1];
-   packet->payload[2] = version.criticalMajor;
-   packet->payload[3] = version.criticalMinor;
-   packet->payload[4] = version.major;
-   packet->payload[5] = version.minor;
-}
-
-static void HandleTinyVersionRequest(GeaStack_t *instance, const Gea2Packet_t *request)
-{
-   TinyGea2Interface_Send(&instance->_private.gea2Interface.interface, request->source, 6, PopulateTinyVersionResponse, (void *)(request));
-}
-
-static void GeaMessageReceived(void *context, const void *_args)
-{
-   REINTERPRET(instance, context, GeaStack_t *);
-   REINTERPRET(args, _args, const TinyGea2InterfaceOnReceiveArgs_t *);
-   const Gea2Packet_t *packet = args->packet;
-   uint16_t command = packet->payload[0];
-
-   switch(command)
-   {
-      case TinyBootLoaderCommand_VersionRequest:
-         HandleTinyVersionRequest(instance, packet);
-         break;
-
-      case TinyBootLoaderCommand_JumpToBootLoader:
-         BootLoader_JumpToBootLoader();
-         break;
-   }
-}
-
 void GeaStack_Init(
    GeaStack_t *instance,
    I_TinyUart_t *uart,
@@ -121,11 +84,6 @@ void GeaStack_Init(
       &instance->_private.erdStreamSender,
       dataSource,
       &erdStreamSenderConfiguration);
-
-   TinyEventSubscription_Init(&instance->_private.geaMessageSubscription, instance, GeaMessageReceived);
-   TinyEvent_Subscribe(
-      TinyGea2Interface_GetOnReceiveEvent(&instance->_private.gea2Interface.interface),
-      &instance->_private.geaMessageSubscription);
 }
 
 I_TinyGea2Interface_t *GeaStack_GetGea2Interface(GeaStack_t *instance)

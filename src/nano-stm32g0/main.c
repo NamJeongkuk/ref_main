@@ -5,10 +5,10 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include "stm32g0xx.h"
 #include "Clock.h"
 #include "Watchdog.h"
 #include "Pa5Heartbeat.h"
-#include "Rst.h"
 #include "TinyTimeSource_SysTick.h"
 #include "TinyUart_Usart2.h"
 #include "TinyTimer.h"
@@ -18,7 +18,6 @@
 #include "I_TinyInterrupt.h"
 #include "Gea2Addresses.h"
 #include "Version.h"
-#include "Ul.h"
 #include "utils.h"
 
 enum
@@ -50,7 +49,7 @@ void main(void)
    Watchdog_Init();
    Clock_Init();
 
-   disableInterrupts();
+   __disable_irq();
    {
       TinyTimerModule_Init(
          &timerModule,
@@ -70,7 +69,7 @@ void main(void)
 
       NanoApplication_Init(&application, dataSource);
    }
-   enableInterrupts();
+   __enable_irq();
 
    KickWatchdog(NULL, &timerModule);
 

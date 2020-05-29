@@ -47,9 +47,9 @@ static const ImageHeader_t applicationHeader __attribute__((used, section(".head
    ImageParametricItemSize,
    ImageParametricItemCount,
 
-   { ImageParametricPointer },
+   ImageParametricPointer,
 
-   { Reset_Handler },
+   (ImageHeaderPointer_t)Reset_Handler,
 
    ImageHeaderFillValue,
    ImageHeaderFillValue,
@@ -57,8 +57,8 @@ static const ImageHeader_t applicationHeader __attribute__((used, section(".head
    1,
    {
       {
-         { (uint32_t)ApplicationStartAddress },
-         { (uint32_t)ApplicationEndAddress },
+         (uint32_t)ApplicationStartAddress,
+         (uint32_t)ApplicationEndAddress,
       },
    },
 };

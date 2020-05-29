@@ -4,8 +4,10 @@ include tools/gcc-arm-none-eabi/mc/makecommon.mk
 # Name of the project that is being built
 TARGET:=nano-stm32g0
 OUTPUT_DIR:=build/$(TARGET)
-APPLCOMMON_DIR:=lib/applcommon
+APPLCOMMON_TINY_DIR:=lib/applcommon.tiny
 BOOT_LOADER_DIR=lib/boot-loaders
+
+DISABLE_HAL=Y
 
 # The STM32 CPU
 DEVICE:=STM32G070KB
@@ -30,14 +32,21 @@ endif
 SRC_FILES=\
 
 COMMON_LIB_DIRS=\
+   $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
+   $(APPLCOMMON_TINY_DIR)/src/BootLoader \
    $(APPLCOMMON_TINY_DIR)/src/Core \
    $(APPLCOMMON_TINY_DIR)/src/TinyLib \
 
 SRC_DIRS=\
    src/$(TARGET) \
+   src/$(TARGET)/Hardware \
+   src/NanoApplication \
+   src/NanoApplication/DataSource \
+   src/NanoApplication/Plugins \
 
 INC_DIRS=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
+   src/Application/Gea \
 
 SOURCE_EXTENSIONS:=.c .s
 
@@ -60,7 +69,7 @@ $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 include lib/stm32-standard-peripherals/stm32-standard-peripherals.mk
 
 .PHONY: all
-all:
+all: target
 	$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
 	$(call make_directory,$(OUTPUT_DIR)/binaries)
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).mot --endianness little --output_directory $(OUTPUT_DIR)/binaries
