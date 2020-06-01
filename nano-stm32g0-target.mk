@@ -102,6 +102,6 @@ include tools/gcc-arm-none-eabi/MakefileWorker.mk
 .PHONY: erd_definitions
 erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)
 	@echo Generating ERD definitions
-	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -P -MMD src/$(TARGET)/SystemErds.h -o $(OUTPUT_DIR)/temporary.h
+	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -P -MMD src/NanoApplication/DataSource/NanoSystemErds.h -o $(OUTPUT_DIR)/temporary.h
 	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output $(OUTPUT_DIR)/GeneratedTypes.lua
 	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
