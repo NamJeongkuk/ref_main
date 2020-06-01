@@ -10,6 +10,9 @@
 
 #include "I_TinyUart.h"
 
+/*!
+ * @return
+ */
 I_TinyUart_t *TinyUart_Usart2_Init(void);
 
 #endif

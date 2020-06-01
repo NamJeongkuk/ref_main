@@ -13,7 +13,6 @@
 void Default_Handler(void); /* Default empty handler */
 void Reset_Handler(void); /* Reset Handler */
 
-// clang-format off
 // Cortex-M0+
 void NMI_Handler(void) __attribute__((weak, alias("Default_Handler")));
 void HardFault_Handler(void) __attribute__((weak, alias("Default_Handler")));
@@ -54,58 +53,57 @@ extern char __StackBottom;
 
 typedef void (*Vector_t)(void);
 
-const Vector_t __Vectors[] __attribute__ ((section(".vectors"))) = {
-  // Cortex-M0+
-  (Vector_t)&__StackBottom, // Initial Stack Pointer
-  Reset_Handler,
-  NMI_Handler,
-  HardFault_Handler,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  SVC_Handler,
-  0,
-  0,
-  PendSV_Handler,
-  SysTick_Handler,
+const Vector_t __Vectors[] __attribute__((section(".vectors"))) = {
+   // Cortex-M0+
+   (Vector_t)&__StackBottom, // Initial Stack Pointer
+   Reset_Handler,
+   NMI_Handler,
+   HardFault_Handler,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   SVC_Handler,
+   0,
+   0,
+   PendSV_Handler,
+   SysTick_Handler,
 
-  // Peripherals
-  WWDG_IRQHandler,
-  0,
-  RTC_TAMP_IRQHandler,
-  FLASH_IRQHandler,
-  RCC_IRQHandler,
-  EXTI0_1_IRQHandler,
-  EXTI2_3_IRQHandler,
-  EXTI4_15_IRQHandler,
-  0,
-  DMA1_Channel1_IRQHandler,
-  DMA1_Channel2_3_IRQHandler,
-  DMA1_Ch4_7_DMAMUX1_OVR_IRQHandler,
-  ADC1_IRQHandler,
-  TIM1_BRK_UP_TRG_COM_IRQHandler,
-  TIM1_CC_IRQHandler,
-  0,
-  TIM3_IRQHandler,
-  TIM6_IRQHandler,
-  TIM7_IRQHandler,
-  TIM14_IRQHandler,
-  TIM15_IRQHandler,
-  TIM16_IRQHandler,
-  TIM17_IRQHandler,
-  I2C1_IRQHandler,
-  I2C2_IRQHandler,
-  SPI1_IRQHandler,
-  SPI2_IRQHandler,
-  USART1_IRQHandler,
-  USART2_IRQHandler,
-  USART3_4_IRQHandler
+   // Peripherals
+   WWDG_IRQHandler,
+   0,
+   RTC_TAMP_IRQHandler,
+   FLASH_IRQHandler,
+   RCC_IRQHandler,
+   EXTI0_1_IRQHandler,
+   EXTI2_3_IRQHandler,
+   EXTI4_15_IRQHandler,
+   0,
+   DMA1_Channel1_IRQHandler,
+   DMA1_Channel2_3_IRQHandler,
+   DMA1_Ch4_7_DMAMUX1_OVR_IRQHandler,
+   ADC1_IRQHandler,
+   TIM1_BRK_UP_TRG_COM_IRQHandler,
+   TIM1_CC_IRQHandler,
+   0,
+   TIM3_IRQHandler,
+   TIM6_IRQHandler,
+   TIM7_IRQHandler,
+   TIM14_IRQHandler,
+   TIM15_IRQHandler,
+   TIM16_IRQHandler,
+   TIM17_IRQHandler,
+   I2C1_IRQHandler,
+   I2C2_IRQHandler,
+   SPI1_IRQHandler,
+   SPI2_IRQHandler,
+   USART1_IRQHandler,
+   USART2_IRQHandler,
+   USART3_4_IRQHandler
 };
-// clang-format on
 
 void Default_Handler(void)
 {
