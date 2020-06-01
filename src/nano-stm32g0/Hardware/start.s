@@ -54,6 +54,9 @@ Reset_Handler:
  *  All addresses must be aligned to 4 bytes boundary.
  */
 
+   movs  r1, #0
+   b     LoopCopyInitializedData
+
 CopyInitializedData:
    ldr 	r3, =__etext
    ldr 	r3, [r3, r1]

@@ -22,7 +22,7 @@
 
 enum
 {
-   WatchdogKickPeriodInMsec = 1
+   WatchdogKickPeriodInMsec = 50
 };
 
 static TinyTimerModule_t timerModule;

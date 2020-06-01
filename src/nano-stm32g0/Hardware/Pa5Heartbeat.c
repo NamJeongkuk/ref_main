@@ -31,10 +31,10 @@ void Pa5Heartbeat_Init(TinyTimerModule_t *timerModule)
 
    LL_GPIO_InitTypeDef gpio;
    gpio.Pin = LL_GPIO_PIN_5;
-   gpio.Mode = LL_GPIO_MODE_ALTERNATE;
+   gpio.Mode = LL_GPIO_MODE_OUTPUT;
    gpio.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
    gpio.Speed = LL_GPIO_SPEED_FREQ_VERY_HIGH;
-   gpio.Pull = LL_GPIO_PULL_UP;
+   gpio.Pull = LL_GPIO_PULL_NO;
    gpio.Alternate = LL_GPIO_AF_1;
    LL_GPIO_Init(GPIOA, &gpio);
 

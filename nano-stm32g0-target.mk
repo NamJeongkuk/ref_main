@@ -64,6 +64,8 @@ WARNINGS_TO_IGNORE:=no-array-bounds no-maybe-uninitialized no-type-limits no-imp
 
 HEADER_ADDRESS:=0x08003000
 
+JLINK_VERSION:=6.80a
+
 # Space delimited list, whole folders can also be included
 PACKAGE_CONTENTS=
 $(call add_to_package,$(OUTPUT_DIR)/binaries,binaries)
@@ -91,7 +93,7 @@ $(OUTPUT_DIR)/doc:
 
 .PHONY: upload
 upload: all jlink_tools
-	$(call jlink_upload,$(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot)
+	$(call jlink_upload,$(OUTPUT_DIR)/$(TARGET).mot)
 
 .PHONY: clean
 clean: target_clean
