@@ -54,6 +54,7 @@ INC_DIRS=\
 SOURCE_EXTENSIONS:=.c .s
 
 ARM_VERSION:=7-2017-q4-major
+JLINK_VERSION:=6.80a
 CPU:=cortex-m0plus
 CPU_ARCHITECTURE:=armv6-m
 ENDIANNESS:=little
@@ -63,8 +64,6 @@ C_STANDARD:=gnu99
 WARNINGS_TO_IGNORE:=no-array-bounds no-maybe-uninitialized no-type-limits no-implicit-fallthrough
 
 HEADER_ADDRESS:=0x08003000
-
-JLINK_VERSION:=6.80a
 
 # Space delimited list, whole folders can also be included
 PACKAGE_CONTENTS=
