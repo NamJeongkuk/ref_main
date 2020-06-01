@@ -1,6 +1,6 @@
 /*!
  * @file
- * @brief Foreground full duplex GEA communication stack
+ * @brief
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
