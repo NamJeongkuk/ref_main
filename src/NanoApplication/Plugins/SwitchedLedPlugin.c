@@ -8,7 +8,6 @@
 #include "SwitchedLedPlugin.h"
 #include "NanoSystemErds.h"
 #include "utils.h"
-#include "Constants_Binary.h"
 
 static void DataSourceChanged(void *context, const void *_args)
 {
