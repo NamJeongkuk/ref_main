@@ -8,6 +8,9 @@
 #ifndef CLOCK_H
 #define CLOCK_H
 
+/*!
+ * Configures HSI (high-speed internal) oscillator.
+ */
 void Clock_Init(void);
 
 #endif
