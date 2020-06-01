@@ -31,18 +31,18 @@
    POSSIBILITY OF SUCH DAMAGE.
    ---------------------------------------------------------------------------*/
 
-	.syntax 	unified
-	.arch		armv6-m
+   .syntax  unified
+   .arch    armv6-m
 
-	.text
-	.thumb
-	.thumb_func
-	.align	1
-	.globl	Reset_Handler
-	.type		Reset_Handler, %function
+   .text
+   .thumb
+   .thumb_func
+   .align   1
+   .globl   Reset_Handler
+   .type    Reset_Handler, %function
 
 Reset_Handler:
-	.global main
+   .global main
 
 /*  Single section scheme.
  *
@@ -58,19 +58,19 @@ Reset_Handler:
    b     LoopCopyInitializedData
 
 CopyInitializedData:
-   ldr 	r3, =__etext
-   ldr 	r3, [r3, r1]
-   str 	r3, [r0, r1]
-   adds 	r1, r1, #4
+   ldr   r3, =__etext
+   ldr   r3, [r3, r1]
+   str   r3, [r0, r1]
+   adds  r1, r1, #4
 
 LoopCopyInitializedData:
-   ldr 	r0, =__data_start__
-   ldr 	r3, =__data_end__
-   adds 	r2, r0, r1
-   cmp 	r2, r3
-   bcc 	CopyInitializedData
-   ldr 	r2, =__bss_start__
-   b 		LoopClearUninitializedData
+   ldr   r0, =__data_start__
+   ldr   r3, =__data_end__
+   adds  r2, r0, r1
+   cmp   r2, r3
+   bcc   CopyInitializedData
+   ldr   r2, =__bss_start__
+   b     LoopClearUninitializedData
 
 /*  Single BSS section scheme.
  *
@@ -82,27 +82,27 @@ LoopCopyInitializedData:
  */
 
 ClearUninitializedData:
-   movs 	r3, #0
-   str  	r3, [r2]
-   adds 	r2, r2, #4
+   movs  r3, #0
+   str   r3, [r2]
+   adds  r2, r2, #4
 
 LoopClearUninitializedData:
-   ldr 	r3, = __bss_end__
-   cmp 	r2, r3
-   bcc 	ClearUninitializedData
+   ldr   r3, = __bss_end__
+   cmp   r2, r3
+   bcc   ClearUninitializedData
 
 InitializeStackPointer:
    ldr   r0, =__StackBottom
    mov   sp, r0
 
 RelocateVectorTable:
-	ldr 	r1, =__Vectors_Start
-	ldr 	r2, =0xE000ED08 // Address of VTOR, Check the ARM Architecture Reference Manual
-	str 	r1, [r2]
+   ldr   r1, =__Vectors_Start
+   ldr   r2, =0xE000ED08 // Address of VTOR, Check the ARM Architecture Reference Manual
+   str   r1, [r2]
 
 JumpToMain:
-	bl		main
+   bl    main
 
-	.pool
-	.size	Reset_Handler, . - Reset_Handler
-	.end
+   .pool
+   .size Reset_Handler, . - Reset_Handler
+   .end
