@@ -9,6 +9,7 @@
 #define WATCHDOG_H
 
 /*!
+ * Configures a 1 second watchdog timeout.
  */
 void Watchdog_Init(void);
 
