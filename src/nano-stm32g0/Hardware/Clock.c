@@ -9,7 +9,7 @@
 #include "stm32g0xx_ll_system.h"
 #include "Clock.h"
 
-void ClockConfig_SetHOCO(void)
+void Clock_Init(void)
 {
    LL_FLASH_EnablePrefetch();
 

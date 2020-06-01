@@ -1,12 +1,11 @@
-/* File: startup_ARMCM4.S
- * Purpose: startup file for Cortex-M4 devices. Should use with
+/* File: startup_ARMCM0.S
+ * Purpose: startup file for Cortex-M0 devices. Should use with
  *   GCC for ARM Embedded Processors
  * Version: V2.01
  * Date: 12 June 2014
  *
  */
 /* Copyright (c) 2011 - 2014 ARM LIMITED
-
    All rights reserved.
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are met:
@@ -32,16 +31,15 @@
    POSSIBILITY OF SUCH DAMAGE.
    ---------------------------------------------------------------------------*/
 
-
-	.syntax	unified
-	.arch armv6-m
+	.syntax 	unified
+	.arch		armv6-m
 
 	.text
 	.thumb
 	.thumb_func
-	.align	2
+	.align	1
 	.globl	Reset_Handler
-	.type	Reset_Handler, %function
+	.type		Reset_Handler, %function
 
 Reset_Handler:
 	.global main
@@ -55,16 +53,21 @@ Reset_Handler:
  *
  *  All addresses must be aligned to 4 bytes boundary.
  */
-	ldr	r1, =__etext
-	ldr	r2, =__data_start__
-	ldr	r3, =__data_end__
 
-.L_loop1:
-	cmp	r2, r3
-	ittt	lt
-	ldrlt	r0, [r1], #4
-	strlt	r0, [r2], #4
-	blt	.L_loop1
+CopyInitializedData:
+   ldr 	r3, =__etext
+   ldr 	r3, [r3, r1]
+   str 	r3, [r0, r1]
+   adds 	r1, r1, #4
+
+LoopCopyInitializedData:
+   ldr 	r0, =__data_start__
+   ldr 	r3, =__data_end__
+   adds 	r2, r0, r1
+   cmp 	r2, r3
+   bcc 	CopyInitializedData
+   ldr 	r2, =__bss_start__
+   b 		LoopClearUninitializedData
 
 /*  Single BSS section scheme.
  *
@@ -74,27 +77,28 @@ Reset_Handler:
  *
  *  Both addresses must be aligned to 4 bytes boundary.
  */
-	ldr	r1, =__bss_start__
-	ldr	r2, =__bss_end__
 
-	movs	r0, 0
-.L_loop3:
-	cmp	r1, r2
-	itt	lt
-	strlt	r0, [r1], #4
-	blt	.L_loop3
+ClearUninitializedData:
+   movs 	r3, #0
+   str  	r3, [r2]
+   adds 	r2, r2, #4
 
-	// Set the Stack
-	LDR r1,=__StackBottom
-	//LDR r1,=0x20001000
-	MSR MSP,r1
+LoopClearUninitializedData:
+   ldr 	r3, = __bss_end__
+   cmp 	r2, r3
+   bcc 	ClearUninitializedData
 
-	// Set the relocatable vector table
-	LDR r1,=__Vectors_Start
-	LDR r2,=0xE000ED08 // Address of VTOR, Check the ARM Architecture Reference Manual
-	STR r1,[r2]
+InitializeStackPointer:
+   ldr   r0, =__StackBottom
+   mov   sp, r0
 
-	bl	main
+RelocateVectorTable:
+	ldr 	r1, =__Vectors_Start
+	ldr 	r2, =0xE000ED08 // Address of VTOR, Check the ARM Architecture Reference Manual
+	str 	r1, [r2]
+
+JumpToMain:
+	bl		main
 
 	.pool
 	.size	Reset_Handler, . - Reset_Handler

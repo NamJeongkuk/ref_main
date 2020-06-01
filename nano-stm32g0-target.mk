@@ -30,6 +30,9 @@ endif
 endif
 
 SRC_FILES=\
+   lib/stm32-standard-peripherals/STM32G0xx/Libraries/STM32G0xx_HAL_Driver/Src/stm32g0xx_ll_gpio.c \
+   lib/stm32-standard-peripherals/STM32G0xx/Libraries/STM32G0xx_HAL_Driver/Src/stm32g0xx_ll_rcc.c \
+   lib/stm32-standard-peripherals/STM32G0xx/Libraries/STM32G0xx_HAL_Driver/Src/stm32g0xx_ll_usart.c \
 
 COMMON_LIB_DIRS=\
    $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
@@ -58,6 +61,8 @@ OPTIMIZE:=s
 C_STANDARD:=gnu99
 
 WARNINGS_TO_IGNORE:=no-array-bounds no-maybe-uninitialized no-type-limits no-implicit-fallthrough
+
+HEADER_ADDRESS:=0x08003000
 
 # Space delimited list, whole folders can also be included
 PACKAGE_CONTENTS=
