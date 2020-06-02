@@ -84,11 +84,11 @@ void main(void)
 
 // CRC needs to be placed at the end of ROM and given a dummy value
 // Note: Normally we would use FLASH_PROG_END_PHYSICAL_ADDRESS, defined in
-// stm8s_flash.h. However, for simplicity we are using the same address as Bonzalez
-static const uint16_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 1) crc = 0xDEAD;
+// stm8s_flash.h. However, for simplicity we are using the same address as nano-stm8s
+static const uint16_t __at(0x9FFF - 1) crc = 0xDEAD;
 
 // ...and version is placed just before CRC
-const Version_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 5) version = {
+const Version_t __at(0x9FFF - 5) version = {
    CRIT_VERSION_MAJOR,
    CRIT_VERSION_MINOR,
    NONCRIT_VERSION_MAJOR,
@@ -96,7 +96,7 @@ const Version_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 5) version = {
 };
 
 // ...and HW ID is placed just before version
-static const uint16_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 7) hardwareId = HardwareId;
+static const uint16_t __at(0x9FFF - 7) hardwareId = HardwareId;
 
 // ...and image ID is placed just before HW ID
-static const uint16_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 9) imageId = ImageId;
+static const uint16_t __at(0x9FFF - 9) imageId = ImageId;
