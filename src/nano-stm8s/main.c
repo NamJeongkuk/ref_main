@@ -27,6 +27,9 @@
 
 enum
 {
+   HardwareId = 1,
+   ImageId = 0xFFFF,
+
    WatchdogKickPeriodInMsec = 1
 };
 
@@ -102,3 +105,9 @@ const Version_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 5) version = {
    NONCRIT_VERSION_MAJOR,
    NONCRIT_VERSION_MINOR
 };
+
+// ...and HW ID is placed just before version
+static const uint16_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 7) hardwareId = HardwareId;
+
+// ...and image ID is placed just before HW ID
+static const uint16_t __at(FLASH_PROG_END_PHYSICAL_ADDRESS - 9) imageId = ImageId;
