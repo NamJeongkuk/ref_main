@@ -26,6 +26,9 @@
 
 enum
 {
+   HardwareId = 1,
+   ImageId = 0xFFFF,
+
    WatchdogKickPeriodInMsec = 1
 };
 
@@ -81,7 +84,7 @@ void main(void)
 
 // CRC needs to be placed at the end of ROM and given a dummy value
 // Note: Normally we would use FLASH_PROG_END_PHYSICAL_ADDRESS, defined in
-// stm8s_flash.h. However, for simplicity we are using the same address as Bonzalez
+// stm8s_flash.h. However, for simplicity we are using the same address as nano-stm8s
 static const uint16_t __at(0x9FFF - 1) crc = 0xDEAD;
 
 // ...and version is placed just before CRC
@@ -91,3 +94,9 @@ const Version_t __at(0x9FFF - 5) version = {
    NONCRIT_VERSION_MAJOR,
    NONCRIT_VERSION_MINOR
 };
+
+// ...and HW ID is placed just before version
+static const uint16_t __at(0x9FFF - 7) hardwareId = HardwareId;
+
+// ...and image ID is placed just before HW ID
+static const uint16_t __at(0x9FFF - 9) imageId = ImageId;
