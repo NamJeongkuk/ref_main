@@ -9,7 +9,32 @@ Projects are named after the target microcontroller and are broken down into 3 m
 
 Projects may also have a suffix indicating that they are configured for a specific application instead of being general-purpose.
 
-## micro-psoc4100s-cap-touch
+## Choosing a Configuration
+A boot loader framework and an application framework must be chosen before creating a new project. Boot loader and application frameworks are cross-compatible so may be freely mixed and matched provided they meet the project's requirements.
+
+### Choosing a Boot Loader Framework
+There are three frameworks available for boot loaders:
+- The "large" framework uses the older `applcommon` boot loader libraries (see [`BootLoaderConfigurator.h`](https://github.com/geappliances/applcommon.applcommon/blob/master/BootLoader/BootLoaderConfigurator.h)). This framework has all of the capabilities available in `applcommon` available to implement routing or otherwise extend the boot loader's functionality. Large boot loaders are generally 20k+.
+- The "medium" framework uses the newer `applcommon` boot loader libraries (see [`TinyBootLoader.h`](https://github.com/geappliances/applcommon.applcommon/blob/master/BootLoader/TinyBootLoader.h)). This framework has all of the same capabilities as the large framework. Medium boot loaders are generally 15-20k.
+- The "small" framework uses the `applcommon.tiny` boot loader libraries (see [`TinyBootLoader.h`](https://github.com/geappliances/applcommon.tiny/blob/master/src/BootLoader/TinyBootLoader.h)). This framework has limited support for routing and a much smaller set of available libraries for extending the boot loader's functionality. It also has somewhat reduced performance and will generally drop a slightly larger percentage of packets. Small boot loaders are generally 6.5-12k.
+
+Large boot loaders should not be used for new projects since they provide no benefit over the medium framework. Most of the available targets that do not have a prefix have been migrated to the medium framework.
+
+Medium boot loaders should be used when routing or extended functionality is required (though extended functionality should be avoided in general as it adds risk to the OTA process). They are generally appropriate for central hub/pyramid point boards with a system.
+
+Small boot loaders should be used when no routing or only very limited routing is required. They are generally appropriate for "leaf" nodes within a system or single board systems and not for central hub/pyramid point nodes.
+
+### Choosing an Application Framework
+There are two application frameworks available:
+- [`applcommon`](https://github.com/geappliances/applcommon.applcommon) is a full-featured framework optimized for both size and performance and contains hundreds of modules. It is designed to scale from small to large applications.
+- [`applcommon.tiny`](https://github.com/geappliances/applcommon.tiny) is a much smaller framework optimized solely for size. It contains only the most widely used components and some application-specific components for building highly-optimized applications.
+
+`applcommon` should be considered the default application framework. It can be configured for good performance even in applications with hundreds of ERDs and maximizes the opportunities for re-use.
+
+`applcommon.tiny` should only be chosen for very small applications with limited functionality and when application size (cost) is the primary concern.
+
+## Available Projects
+### micro-psoc4100s-cap-touch
 Small cap touch application using the [CY8C4127AZI-S455](https://www.cypress.com/part/cy8c4127azi-s455)
 
 | Memory | Size   |
@@ -17,7 +42,7 @@ Small cap touch application using the [CY8C4127AZI-S455](https://www.cypress.com
 | Flash  | 128 KB |
 | RAM    | 16 KB  |
 
-## rx130
+### rx130
 General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html).
 
 | Memory     | Size   |
@@ -26,7 +51,7 @@ General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/u
 | RAM        | 48 KB  |
 | Data Flash | 8 KB   |
 
-## mini-rx130
+### mini-rx130
 General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html) and a smaller, non-routing boot loader.
 
 | Memory     | Size   |
@@ -35,7 +60,7 @@ General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/u
 | RAM        | 48 KB  |
 | Data Flash | 8 KB   |
 
-## rx130-cap-touch-client
+### rx130-cap-touch-client
 Sample project that is an ERD stream receiver using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html). Designed to work with `nano-stm8s-cap-touch`.
 
 | Memory     | Size   |
@@ -44,7 +69,7 @@ Sample project that is an ERD stream receiver using the [R5F51308ADFL](https://w
 | RAM        | 48 KB  |
 | Data Flash | 8 KB   |
 
-## rx231
+### rx231
 General-purpose RX231 project using the [R5F52318ADFL](https://www.renesas.com/sg/en/products/microcontrollers-microprocessors/rx/rx200/rx231/device/R5F52318ADFL.html)
 
 | Memory     | Size   |
@@ -53,7 +78,7 @@ General-purpose RX231 project using the [R5F52318ADFL](https://www.renesas.com/s
 | RAM        | 64 KB  |
 | Data Flash | 8 KB   |
 
-## mini-rx231
+### mini-rx231
 General-purpose RX231 project using the [R5F52318ADFL](https://www.renesas.com/sg/en/products/microcontrollers-microprocessors/rx/rx200/rx231/device/R5F52318ADFL.html) and a smaller, non-routing boot loader.
 
 | Memory     | Size   |
@@ -62,7 +87,7 @@ General-purpose RX231 project using the [R5F52318ADFL](https://www.renesas.com/s
 | RAM        | 64 KB  |
 | Data Flash | 8 KB   |
 
-## stm32f3
+### stm32f3
 General-purpose STM32 project using the [STM32F303RB](https://www.st.com/en/microcontrollers-microprocessors/stm32f303rb.html).
 
 | Memory Type | Size   |
@@ -70,7 +95,7 @@ General-purpose STM32 project using the [STM32F303RB](https://www.st.com/en/micr
 | Flash       | 128 KB |
 | RAM         | 40 KB  |
 
-## nano-stm3g0
+### nano-stm3g0
 STM32G0 project using the [STM32G070KB](https://www.st.com/en/microcontrollers-microprocessors/stm32g070kb.html). Includes no boot loader.
 
 | Memory Type | Size   |
@@ -78,7 +103,7 @@ STM32G0 project using the [STM32G070KB](https://www.st.com/en/microcontrollers-m
 | Flash       | 128 KB |
 | RAM         | 32 KB  |
 
-## micro-stm8s
+### micro-stm8s
 Small STM8S project using the [STM8S207CBT6](https://www.st.com/resource/en/datasheet/stm8s207cb.pdf) and a non-routing boot loader.
 
 | Memory Type | Size   |
@@ -87,7 +112,7 @@ Small STM8S project using the [STM8S207CBT6](https://www.st.com/resource/en/data
 | RAM         | 2 KB   |
 | EEPROM      | 1024 B |
 
-## nano-stm8s
+### nano-stm8s
 STM8S project using the [STM8S003F3U6TR](https://www.st.com/en/microcontrollers-microprocessors/stm8s003f3.html). Uses the special-purpose STM8S boot loader and includes a tiny data source.
 
 | Memory Type | Size  |
@@ -96,7 +121,7 @@ STM8S project using the [STM8S003F3U6TR](https://www.st.com/en/microcontrollers-
 | RAM         | 1 KB  |
 | EEPROM      | 128 B |
 
-## nano-stm8s-cap-touch
+### nano-stm8s-cap-touch
 STM8S project using the [STM8S003F3U6TR](https://www.st.com/en/microcontrollers-microprocessors/stm8s003f3.html). Uses the special-purpose STM8S boot loader. Supports cap touch and single ERD streaming.
 
 | Memory Type | Size  |
