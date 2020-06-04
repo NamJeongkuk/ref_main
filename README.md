@@ -9,8 +9,10 @@ Projects are named after the target microcontroller and are broken down into 3 m
 
 Projects may also have a suffix indicating that they are configured for a specific application instead of being general-purpose.
 
-## Choosing a Configuration
-A boot loader framework and an application framework must be chosen before creating a new project. Boot loader and application frameworks are cross-compatible so may be freely mixed and matched provided they meet the project's requirements.
+## Creating a New Project
+A boot loader framework (if applicable) and an application framework must be chosen before creating a new project. Boot loader and application frameworks are cross-compatible so may be freely mixed and matched provided they meet the project's requirements.
+
+Once frameworks have been chosen, new projects should be based on the most similar starter kit project. If there are no relevant projects available, a new project can be requested by creating a ticket in [`applcommon.help`](https://github.com/geappliances/applcommon.help/).
 
 ### Choosing a Boot Loader Framework
 There are three frameworks available for boot loaders:
