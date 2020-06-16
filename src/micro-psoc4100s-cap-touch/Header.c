@@ -49,7 +49,7 @@ static const ImageHeader_t applicationHeader __attribute__((used, section(".appl
    {
       {
          (ImageHeaderPointer_t)&applicationHeader,
-         128 * 1024 - 1,
+         64 * 1024 - 1,
       },
    },
 };
