@@ -18,6 +18,7 @@
 #include "cyfitter_cfg.h"
 #include "CyLib.h"
 #include "cyfitter.h"
+#include "cmsis_gcc.h" g
 
 #define CY_NUM_VECTORS (CY_INT_IRQ_BASE + CY_NUM_INTERRUPTS)
 #define CY_NUM_ROM_VECTORS (4u)
@@ -138,6 +139,7 @@ void Start_c(void)
 
 void PowerOnReset(void)
 {
+   __set_MSP((uint32_t)CY_SYS_INITIAL_STACK_POINTER);
    CySysWdtDisable();
    Start_c();
 }
