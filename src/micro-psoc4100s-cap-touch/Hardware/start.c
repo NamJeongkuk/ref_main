@@ -18,7 +18,7 @@
 #include "cyfitter_cfg.h"
 #include "CyLib.h"
 #include "cyfitter.h"
-#include "cmsis_gcc.h" g
+#include "cmsis_gcc.h"
 
 #define CY_NUM_VECTORS (CY_INT_IRQ_BASE + CY_NUM_INTERRUPTS)
 #define CY_NUM_ROM_VECTORS (4u)
