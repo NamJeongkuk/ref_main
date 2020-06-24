@@ -45,8 +45,7 @@ void USART2_IRQHandler(void)
    else if(LL_USART_IsActiveFlag_TXE(USART))
    {
       LL_USART_DisableIT_TXE(USART);
-      uint8_t byte = LL_USART_ReceiveData8(USART);
-      TinyEvent_Synchronous_Publish(&instance.receive, &byte);
+      TinyEvent_Synchronous_Publish(&instance.sendComplete, NULL);
    }
 }
 
