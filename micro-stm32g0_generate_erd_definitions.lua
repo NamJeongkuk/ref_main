@@ -1,17 +1,17 @@
 local tools = require 'tools.lua-erd-documentation-tools.lua-erd-documentation-tools'
-local Types = require 'build.nano-stm32g0.GeneratedTypes'
+local Types = require 'build.micro-stm32g0.GeneratedTypes'
 
 tools.build_json(
   {
-    namespace = 'nano-stm32g0',
+    namespace = 'micro-stm32g0',
     address = 0xB6,
     parsers = {
       tools.parser.standard
     },
     erd_files = {
-      'src/NanoApplication/DataSource/NanoSystemErds.h'
+      'src/MicroApplication/DataSource/MicroSystemErds.h'
     },
     types_factory = Types,
-    output = 'build/nano-stm32g0/doc/erd-definitions.json'
+    output = 'build/micro-stm32g0/doc/erd-definitions.json'
   }
 )

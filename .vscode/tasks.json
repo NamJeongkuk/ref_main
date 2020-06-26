@@ -120,9 +120,9 @@
       }
     },
     {
-      "label": "nano-stm32g0_vscode_debug",
+      "label": "micro-stm32g0_vscode_debug",
       "type": "shell",
-      "command": "make -f nano-stm32g0-target.mk RELEASE=N DEBUG=Y vscode_debug",
+      "command": "make -f micro-stm32g0-target.mk RELEASE=N DEBUG=Y vscode_debug",
       "presentation": {
         "echo": true,
         "reveal": "silent",

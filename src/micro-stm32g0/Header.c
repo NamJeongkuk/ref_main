@@ -14,10 +14,8 @@ enum
 {
    DummyCrc = 0x1234,
 
-   ApplicationImageId = 0xFFFF,
-   ParametricDataImageId = 0xFFFF,
-   AuxiliaryImageId = 0xFFFF,
-   HardwareVersion = 0xFFFF,
+   HardwareVersion = 42,
+   ImageId = 42,
 
    ImageParametricItemSize = 0,
    ImageParametricItemCount = 0,
@@ -35,9 +33,9 @@ static const ImageHeader_t applicationHeader __attribute__((used, section(".head
    NONCRIT_VERSION_MAJOR,
    NONCRIT_VERSION_MINOR,
 
-   ApplicationImageId,
-   ParametricDataImageId,
-   AuxiliaryImageId,
+   ImageId,
+   ImageId,
+   ImageId,
 
    HardwareVersion,
 

@@ -84,6 +84,8 @@ SECTIONS
 
    /* Helper variables for accessing sections from c code. */
    __Header = ORIGIN(HEADER);
+   __ApplicationStart = __Header;
+   __ApplicationEnd = ORIGIN(FLASH) + LENGTH(FLASH) - 1;
    __StackTop = __stackCheckEnd;
    __StackBottom = ORIGIN(RAM) + LENGTH(RAM);
    __StackSize = __StackBottom - __bss_end__;

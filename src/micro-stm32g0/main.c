@@ -13,8 +13,8 @@
 #include "TinyUart_Usart2.h"
 #include "TinyTimer.h"
 #include "GeaStack.h"
-#include "NanoSystemData.h"
-#include "NanoApplication.h"
+#include "MicroApplication.h"
+#include "MicroSystemData.h"
 #include "I_TinyInterrupt.h"
 #include "Gea2Addresses.h"
 #include "Version.h"
@@ -27,9 +27,6 @@ enum
 
 static TinyTimerModule_t timerModule;
 static TinyTimer_t periodicWatchdogTimer;
-static GeaStack_t geaStack;
-static NanoSystemData_t systemData;
-static NanoApplication_t application;
 
 static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 {
@@ -57,17 +54,17 @@ void main(void)
 
       Pa5Heartbeat_Init(&timerModule);
 
-      NanoSystemData_Init(&systemData);
-      I_TinyDataSource_t *dataSource = NanoSystemData_DataSource(&systemData);
+      MicroSystemData_Init(&timerModule);
 
       GeaStack_Init(
-         &geaStack,
-         TinyUart_Usart2_Init(),
-         dataSource,
          &timerModule,
-         Stm8sGea2Address);
+         MicroSystemData_DataSource(),
+         TinyUart_Usart2_Init(),
+         Stm32g0Gea2Address);
 
-      NanoApplication_Init(&application, dataSource);
+      MicroApplication_Init(
+         MicroSystemData_DataSource(),
+         GeaStack_GetGea2Interface());
    }
    __enable_irq();
 
@@ -76,6 +73,6 @@ void main(void)
    while(1)
    {
       TinyTimerModule_Run(&timerModule);
-      GeaStack_Run(&geaStack);
+      GeaStack_Run();
    }
 }
