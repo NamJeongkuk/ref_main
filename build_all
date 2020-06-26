@@ -33,6 +33,9 @@ make -f nano-stm32g0-target.mk -j16 RELEASE=Y DEBUG=N package
 make -f stm32f3-target.mk -j16 RELEASE=Y DEBUG=N clean
 make -f stm32f3-target.mk -j16 RELEASE=Y DEBUG=N package
 
+make -f mini-stm32f3-target.mk -j16 RELEASE=Y DEBUG=N clean
+make -f mini-stm32f3-target.mk -j16 RELEASE=Y DEBUG=N package
+
 make -f micro-stm8s-target.mk -j16 RELEASE=Y DEBUG=N clean
 make -f micro-stm8s-target.mk -j16 RELEASE=Y DEBUG=N package
 

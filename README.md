@@ -97,6 +97,14 @@ General-purpose STM32 project using the [STM32F303RB](https://www.st.com/en/micr
 | Flash       | 128 KB |
 | RAM         | 40 KB  |
 
+### mini-stm32f3
+General-purpose STM32 project using the [STM32F303RB](https://www.st.com/en/microcontrollers-microprocessors/stm32f303rb.html) and a smaller, non-routing boot loader.
+
+| Memory Type | Size   |
+|-------------|--------|
+| Flash       | 128 KB |
+| RAM         | 40 KB  |
+
 ### nano-stm3g0
 STM32G0 project using the [STM32G070KB](https://www.st.com/en/microcontrollers-microprocessors/stm32g070kb.html). Includes no boot loader.
 
