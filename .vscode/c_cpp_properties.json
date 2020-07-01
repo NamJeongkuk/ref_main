@@ -130,18 +130,18 @@
          "cppStandard": "c++11"
       },
       {
-         "name": "nano-stm32g0",
+         "name": "micro-stm32g0",
          "defines": [
             "STM32G070xx",
-            "USE_FULL_LL_DRIVER=1"
+            "USE_FULL_LL_DRIVER"
          ],
          "includePath": [
             "${env:gcc-arm-include}",
             "${env:stm32g0-peripheral-library-include}",
             "${env:tiny-include}",
-            "${workspaceFolder}/src/nano-stm32g0/**",
-            "${workspaceFolder}/src/Application/Gea",
-            "${workspaceFolder}/src/NanoApplication/**"
+            "${workspaceFolder}/src/micro-stm32g0/**",
+            "${workspaceFolder}/src/MicroApplication/**",
+            "${workspaceFolder}/src/Application/Gea/*"
          ],
          "intelliSenseMode": "gcc-arm",
          "cStandard": "c99",
