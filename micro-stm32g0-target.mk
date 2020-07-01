@@ -89,9 +89,6 @@ package: all artifacts erd_definitions
 	$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 	@echo Archive complete
 
-.PHONY: target
-target: $(OUTPUT_DIR)/$(TARGET).apl
-
 .PHONY: boot-loader
 boot-loader:
 	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N
