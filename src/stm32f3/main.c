@@ -1,6 +1,6 @@
 /*!
  * @file
- * @brief Main application entry point.
+ * @brief
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
@@ -56,16 +56,14 @@ static TimerModuleStack_t timerModuleStack;
 static InvokeActionOnTimerPeriodic_t watchdogPetter;
 static GeaStack_t geaStack;
 
-static const uint8_t staticRoutingTable[] =
-   {
-      Rx130Gea2Address
-   };
+static const uint8_t staticRoutingTable[] = {
+   Rx130Gea2Address
+};
 
-static const uint32_t flashBlockAddresses[] =
-   {
-      (uint32_t)&__NvData1_Location,
-      (uint32_t)&__NvData2_Location
-   };
+static const uint32_t flashBlockAddresses[] = {
+   (uint32_t)&__NvData1_Location,
+   (uint32_t)&__NvData2_Location
+};
 
 static void UpdateBuildInfo(
    I_DataModel_t *dataModel,

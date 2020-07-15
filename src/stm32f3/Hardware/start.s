@@ -41,10 +41,16 @@
 	.thumb_func
 	.align	2
 	.globl	Reset_Handler
-	.type	Reset_Handler, %function
+	.type		Reset_Handler, %function
+	.globl   _init
+	.type		_init, %function
+
+/* Needed by __libc_init_array */
+_init:
+	bx 	lr
 
 Reset_Handler:
-	.global main
+	.global 	main
 
 /*  Single section scheme.
  *
@@ -85,16 +91,17 @@ Reset_Handler:
 	blt	.L_loop3
 
 	// Set the Stack
-	LDR r1,=__StackBottom
-	//LDR r1,=0x20001000
-	MSR MSP,r1
+	ldr 	r1,=__StackBottom
+	msr 	MSP,r1
 
 	// Set the relocatable vector table
-	LDR r1,=__Vectors_Start
-	LDR r2,=0xE000ED08 // Address of VTOR, Check the ARM Architecture Reference Manual
-	STR r1,[r2]
+	ldr 	r1,=__Vectors_Start
+	ldr 	r2,=0xE000ED08 // Address of VTOR, Check the ARM Architecture Reference Manual
+	str 	r1,[r2]
 
-	bl	main
+   bl 	__libc_init_array
+
+	bl		main
 
 	.pool
 	.size	Reset_Handler, . - Reset_Handler

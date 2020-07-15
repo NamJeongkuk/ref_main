@@ -107,7 +107,7 @@ INC_DIRS=\
    $(APPLCOMMON_DIR)/Utilities \
    $(APPLCOMMON_DIR)/Validator \
 
-SOURCE_EXTENSIONS:=.c .s
+SOURCE_EXTENSIONS:=.c .s .cpp
 
 ARM_VERSION:=7-2017-q4-major
 CPU:=cortex-m4
