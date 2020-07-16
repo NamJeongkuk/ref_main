@@ -33,18 +33,24 @@
    ---------------------------------------------------------------------------*/
 
 
-	.syntax	unified
-	.arch	armv7e-m
+   .syntax     unified
+   .arch       armv7e-m
 
-	.text
-	.thumb
-	.thumb_func
-	.align	2
-	.globl	Reset_Handler
-	.type	Reset_Handler, %function
+   .text
+   .thumb
+   .thumb_func
+   .align      2
+   .globl      Reset_Handler
+   .type       Reset_Handler, %function
+   .globl      _init
+   .type       _init, %function
+
+/* Needed by __libc_init_array */
+_init:
+   bx    lr
 
 Reset_Handler:
-	.global main
+   .global     main
 
 /*  Single section scheme.
  *
@@ -55,16 +61,16 @@ Reset_Handler:
  *
  *  All addresses must be aligned to 4 bytes boundary.
  */
-	ldr	r1, =__etext
-	ldr	r2, =__data_start__
-	ldr	r3, =__data_end__
+   ldr   r1, =__etext
+   ldr   r2, =__data_start__
+   ldr   r3, =__data_end__
 
 .L_loop1:
-	cmp	r2, r3
-	ittt	lt
-	ldrlt	r0, [r1], #4
-	strlt	r0, [r2], #4
-	blt	.L_loop1
+   cmp   r2, r3
+   ittt  lt
+   ldrlt r0, [r1], #4
+   strlt r0, [r2], #4
+   blt   .L_loop1
 
 /*  Single BSS section scheme.
  *
@@ -74,28 +80,29 @@ Reset_Handler:
  *
  *  Both addresses must be aligned to 4 bytes boundary.
  */
-	ldr	r1, =__bss_start__
-	ldr	r2, =__bss_end__
+   ldr   r1, =__bss_start__
+   ldr   r2, =__bss_end__
 
-	movs	r0, 0
+   movs  r0, 0
 .L_loop3:
-	cmp	r1, r2
-	itt	lt
-	strlt	r0, [r1], #4
-	blt	.L_loop3
+   cmp   r1, r2
+   itt   lt
+   strlt r0, [r1], #4
+   blt   .L_loop3
 
-	// Set the Stack
-	LDR r1,=__StackBottom
-	//LDR r1,=0x20001000
-	MSR MSP,r1
+   // Set the Stack
+   ldr   r1,=__StackBottom
+   msr   MSP,r1
 
-	// Set the relocatable vector table
-	LDR r1,=__Vectors_Start
-	LDR r2,=0xE000ED08 // Address of VTOR, Check the ARM Architecture Reference Manual
-	STR r1,[r2]
+   // Set the relocatable vector table
+   ldr   r1,=__Vectors_Start
+   ldr   r2,=0xE000ED08 // Address of VTOR, Check the ARM Architecture Reference Manual
+   str   r1,[r2]
 
-	bl	main
+   bl    __libc_init_array
 
-	.pool
-	.size	Reset_Handler, . - Reset_Handler
-	.end
+   bl    main
+
+   .pool
+   .size    Reset_Handler, . - Reset_Handler
+   .end
