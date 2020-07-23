@@ -35,6 +35,12 @@ CY_APPL_LOADABLE                = 0;
 CY_CHECKSUM_EXCLUDE_SIZE        = ALIGN(0, CY_FLASH_ROW_SIZE);
 CY_APP_FOR_STACK_AND_COPIER     = 0;
 
+/*
+ * The size here _must_ match the configuration in PSoC Creator
+ * or you risk spraying RAM with garbage
+ */
+STACK_SIZE = 0x0800;
+
 /* These force the linker to search for particular symbols from
  * the start of the link process and thus ensure the user's
  * overrides are picked up
@@ -59,7 +65,7 @@ PROVIDE(__cy_region_num = (__cy_regions_end - __cy_regions) / 16);
  */
 PROVIDE(__cy_stack = ORIGIN(ram) + LENGTH(ram));
 
-PROVIDE(__cy_heap_end = __cy_stack - 0x0800);
+PROVIDE(__cy_heap_end = __cy_stack - STACK_SIZE);
 
 SECTIONS
 {
@@ -222,10 +228,10 @@ SECTIONS
       __cy_heap_limit = .;
     } >ram
 
-    .stack (__cy_stack - 0x0800) (NOLOAD) :
+    .stack (__cy_stack - STACK_SIZE) (NOLOAD) :
     {
       __cy_stack_limit = .;
-      . += 0x0000;
+      . += STACK_SIZE;
     } >ram
 
     /* Check if data + heap + stack exceeds RAM limit */

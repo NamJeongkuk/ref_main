@@ -1,15 +1,15 @@
 ;
 ; File Name: cyfitteriar.inc
-; 
+;
 ; PSoC Creator  4.2
 ;
 ; Description:
-; 
+;
 ;
 ;-------------------------------------------------------------------------------
 ; Copyright (c) 2007-2018 Cypress Semiconductor.  All rights reserved.
-; You may use this file only in accordance with the license, terms, conditions, 
-; disclaimers, and limitations in the end user license agreement accompanying 
+; You may use this file only in accordance with the license, terms, conditions,
+; disclaimers, and limitations in the end user license agreement accompanying
 ; the software package with which this file was provided.
 ;-------------------------------------------------------------------------------
 
@@ -716,7 +716,7 @@ CYDEV_PROJ_TYPE_LOADABLE EQU 2
 CYDEV_PROJ_TYPE_LOADABLEANDBOOTLOADER EQU 4
 CYDEV_PROJ_TYPE_MULTIAPPBOOTLOADER EQU 3
 CYDEV_PROJ_TYPE_STANDARD EQU 0
-CYDEV_STACK_SIZE EQU 0x0500
+CYDEV_STACK_SIZE EQU 0x0800
 CYDEV_USE_BUNDLED_CMSIS EQU 1
 CYDEV_VARIABLE_VDDA EQU 1
 CYDEV_VDDA_MV EQU 3300

@@ -72,7 +72,7 @@ PROVIDE(__cy_region_num = (__cy_regions_end - __cy_regions) / 16);
  */
 PROVIDE(__cy_stack = ORIGIN(ram) + LENGTH(ram));
 
-PROVIDE(__cy_heap_end = __cy_stack - 0x0500);
+PROVIDE(__cy_heap_end = __cy_stack - 0x0800);
 
 
 SECTIONS
@@ -210,7 +210,7 @@ SECTIONS
       KEEP(*(.ramvectors))
     }
 
-    
+
 
     .noinit (NOLOAD) : ALIGN(8)
     {
@@ -261,10 +261,10 @@ SECTIONS
       __cy_heap_limit = .;
     } >ram
 
-    .stack (__cy_stack - 0x0500) (NOLOAD) :
+    .stack (__cy_stack - 0x0800) (NOLOAD) :
     {
       __cy_stack_limit = .;
-      . += 0x0500;
+      . += 0x0800;
     } >ram
 
     /* Check if data + heap + stack exceeds RAM limit */
@@ -361,7 +361,7 @@ SECTIONS
      * | BTLDR                         |
      * |_______________________________|
      */
-    
+
 
 
     /* Bootloadable applications only: verify that size of the data in the section is within the specified limit. */
@@ -472,4 +472,3 @@ SECTIONS
     .ARM.attributes 0 : { KEEP (*(.ARM.attributes)) }
     /DISCARD/ : { *(.note.GNU-stack) }
 }
-
