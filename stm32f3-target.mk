@@ -76,7 +76,6 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_DIR)/Time \
    $(APPLCOMMON_DIR)/TimeOfDay \
    $(APPLCOMMON_DIR)/Ui \
-   $(APPLCOMMON_DIR)/Updater \
    $(APPLCOMMON_DIR)/Utilities \
    $(APPLCOMMON_DIR)/Validator
 
@@ -99,9 +98,7 @@ INC_DIRS=\
    $(APPLCOMMON_DIR)/ApplianceApi \
    $(APPLCOMMON_DIR)/BootLoader \
    $(APPLCOMMON_DIR)/Git \
-   $(APPLCOMMON_DIR)/Fingerprinter \
    $(APPLCOMMON_DIR)/Image \
-   $(APPLCOMMON_DIR)/Reset \
    $(APPLCOMMON_DIR)/ServiceMode \
    $(APPLCOMMON_DIR)/Signal \
    $(APPLCOMMON_DIR)/Utilities \
