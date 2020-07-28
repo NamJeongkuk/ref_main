@@ -27,6 +27,7 @@ typedef struct
       TimerModuleDiagnostics_t timerModuleDiagnostics;
       Input_StackUsageCalculator_t stackUsageCalculator;
       Timer_t stackUsageUpdateTimer;
+      Timer_t secondsSinceResetTimer;
    } _private;
 } Application_t;
 

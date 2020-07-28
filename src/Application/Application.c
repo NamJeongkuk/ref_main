@@ -60,4 +60,11 @@ void Application_Init(
       StackUsageUpdatePeriodInMsec,
       UpdateStackUsage,
       instance);
+
+   TimerModule_StartPeriodic(
+      timerModule,
+      &instance->_private.secondsSinceResetTimer,
+      1000,
+      UpdateSecondsSinceReset,
+      instance);
 }

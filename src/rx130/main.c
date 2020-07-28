@@ -36,6 +36,8 @@
 #include "StackConfigurator.h"
 #include "Interrupt_Cmt0.h"
 #include "Rx2xxResetSource.h"
+#include "ResetReason.h"
+#include "ResetCount.h"
 
 enum
 {
@@ -98,6 +100,43 @@ static void SendStartupMessage(I_Gea2PacketEndpoint_t *gea2PacketEndpoint)
 static void SetResetReason(I_DataModel_t *dataModel)
 {
    Rx2xxResetSource_t rx2xxResetSource = Rx2xxResetSource_GetResetSource();
+   ResetReason_t resetReason;
+   resetReason.metadata = rx2xxResetSource;
+
+   switch(rx2xxResetSource)
+   {
+      case Rx2xxResetSource_PowerOn:
+      case Rx2xxResetSource_ResetPin:
+      case Rx2xxResetSource_VoltageMonitor0:
+      case Rx2xxResetSource_VoltageMonitor1:
+      case Rx2xxResetSource_VoltageMonitor2:
+         resetReason.source = ResetSource_PowerOn;
+         break;
+
+      case Rx2xxResetSource_SoftwareReset:
+         resetReason.source = ResetSource_Software;
+         break;
+
+      case Rx2xxResetSource_IndependentWatchdogTimer:
+      case Rx2xxResetSource_WatchdogTimer:
+         resetReason.source = ResetSource_Watchdog;
+         break;
+
+      default:
+         resetReason.source = ResetSource_Unknown;
+         break;
+   }
+
+   DataModel_Write(dataModel, Erd_ResetReason, &resetReason);
+}
+
+static void IncrementResetCount(I_DataModel_t *dataModel)
+{
+   ResetCount_t resetCount;
+
+   DataModel_Read(dataModel, Erd_ResetCount, &resetCount);
+   resetCount++;
+   DataModel_Write(dataModel, Erd_ResetCount, &resetCount);
 }
 
 int main(void)
@@ -127,6 +166,7 @@ int main(void)
    TimerModuleStack_WritePointersToDataModel(&timerModuleStack, dataModel);
 
    SetResetReason(dataModel);
+   IncrementResetCount(dataModel);
 
    Hardware_InitializeStage2(dataModel);
 
