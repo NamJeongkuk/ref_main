@@ -16,7 +16,7 @@ enum
    // loader
    // This should be the address of the application image header
    // if using a full boot loader
-   RomCheckCrcAddress = 0x87FE,
+   RomCheckCrcAddress = 0x9FFE,
 
    // Where the ROM check should begin
    // This should be the first byte of the application image
@@ -27,7 +27,7 @@ enum
    RomCheckStart = 0x8440,
 
    // The last byte of ROM that will be checked
-   RomCheckStop = 0x87FD,
+   RomCheckStop = 0x9FFD,
 
    // How many bytes should be checked each time the periodic
    // ROM test is run
