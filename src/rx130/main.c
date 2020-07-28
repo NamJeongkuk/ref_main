@@ -35,6 +35,7 @@
 #include "InitializeStackMemory.h"
 #include "StackConfigurator.h"
 #include "Interrupt_Cmt0.h"
+#include "Rx2xxResetSource.h"
 
 enum
 {
@@ -56,17 +57,15 @@ static InvokeActionOnTimerPeriodic_t watchdogPetter;
 static GeaStack_t geaStack;
 static UlTestsPlugin_t ulTestsPlugin;
 
-static const uint8_t staticRoutingTable[] =
-   {
-      Stm8sGea2Address
-   };
+static const uint8_t staticRoutingTable[] = {
+   Stm8sGea2Address
+};
 
 static void UpdateBuildInfo(
    I_DataModel_t *dataModel,
    const ImageHeader_t *header)
 {
-   static const GitHash_t gitHash =
-      { GIT_HASH_U8_ARRAY_RX };
+   static const GitHash_t gitHash = { GIT_HASH_U8_ARRAY_RX };
    DataModel_Write(dataModel, Erd_GitHash, &gitHash);
 
    uint32_t buildNumber = BUILD_NUMBER;
@@ -96,6 +95,11 @@ static void SendStartupMessage(I_Gea2PacketEndpoint_t *gea2PacketEndpoint)
    Gea2PacketEndpoint_Send(gea2PacketEndpoint, packet, 2);
 }
 
+static void SetResetReason(I_DataModel_t *dataModel)
+{
+   Rx2xxResetSource_t rx2xxResetSource = Rx2xxResetSource_GetResetSource();
+}
+
 int main(void)
 {
    Hardware_InitializeStage1();
@@ -120,8 +124,9 @@ int main(void)
       resetAction);
 
    I_DataModel_t *dataModel = SystemData_DataModel(&systemData);
-
    TimerModuleStack_WritePointersToDataModel(&timerModuleStack, dataModel);
+
+   SetResetReason(dataModel);
 
    Hardware_InitializeStage2(dataModel);
 

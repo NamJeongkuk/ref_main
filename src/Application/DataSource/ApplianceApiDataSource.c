@@ -63,6 +63,17 @@ static DataSource_ApplianceApiRevision1Configuration_t applianceApiConfiguration
                   .readyToEnterBootLoader = Erd_ReadyToEnterBootLoader
                }
          },
+      .resetInformation =
+         {
+            .supported = true,
+            .erd =
+               {
+                  .resetCount = Erd_ResetCount,
+                  .resetReason = Erd_ResetReason,
+                  .secondsSinceLastReset = Erd_SecondsSinceLastReset,
+                  .programCounterAddressOfLastUassert = Erd_ProgramCounterAddressAtLastUassert
+               }
+         }
    };
 // clang-format on
 

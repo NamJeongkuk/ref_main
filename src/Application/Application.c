@@ -9,11 +9,22 @@
 #include "Application.h"
 #include "SystemErds.h"
 #include "DataModelErdPointerAccess.h"
+#include "SecondsSinceLastReset.h"
 
 enum
 {
    StackUsageUpdatePeriodInMsec = 1000
 };
+
+static void UpdateSecondsSinceReset(void *context)
+{
+   REINTERPRET(instance, context, Application_t *);
+   SecondsSinceLastReset_t secondsSinceLastReset;
+
+   DataModel_Read(instance->_private.dataModel, Erd_SecondsSinceLastReset, &secondsSinceLastReset);
+   secondsSinceLastReset++;
+   DataModel_Write(instance->_private.dataModel, Erd_SecondsSinceLastReset, &secondsSinceLastReset);
+}
 
 static void UpdateStackUsage(void *context)
 {
