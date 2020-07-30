@@ -38,6 +38,7 @@
 #include "Rx2xxResetSource.h"
 #include "ResetReason.h"
 #include "ResetCount.h"
+#include "uassert.h"
 
 enum
 {
@@ -164,6 +165,8 @@ int main(void)
 
    I_DataModel_t *dataModel = SystemData_DataModel(&systemData);
    TimerModuleStack_WritePointersToDataModel(&timerModuleStack, dataModel);
+
+   Uassert_Init(DataModel_GetOutput(dataModel, Erd_ProgramCounterAddressAtLastUassert));
 
    SetResetReason(dataModel);
    IncrementResetCount(dataModel);

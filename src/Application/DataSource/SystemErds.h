@@ -175,10 +175,10 @@ enum
    ENTRY(Erd_KeyStreamSenderStateRequest,                   0xF00B, ErdStreamStateRequest_t,                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_HeartbeatTick,                                 0xF00C, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_RemoteKeyState,                                0xF00D, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_ResetCount,                                    0xF00E, ResetCount_t,                                       Swap_Y, Io_None, Sub_Y, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_ResetReason,                                   0xF00F, ResetReason_t,                                      Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_SecondsSinceLastReset,                         0xF010, SecondsSinceLastReset_t,                            Swap_Y, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_ProgramCounterAddressAtLastUassert,            0xF011, ProgramCounterAddress_t,                            Swap_Y, Io_None, Sub_Y, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ResetCount,                                    0xF00E, ResetCount_t,                                       Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ResetReason,                                   0xF00F, ResetReason_t,                                      Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_SecondsSinceLastReset,                         0xF010, SecondsSinceLastReset_t,                            Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_ProgramCounterAddressAtLastUassert,            0xF011, ProgramCounterAddress_t,                            Swap_Y, Io_O,    Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
    ENTRY(Erd_SystemTickInterrupt,                           0xF100, I_Interrupt_t *,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_TimeSource,                                    0xF101, I_TimeSource_t *,                                   Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \

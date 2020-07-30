@@ -10,6 +10,7 @@
 #include "SystemErds.h"
 #include "DataModelErdPointerAccess.h"
 #include "SecondsSinceLastReset.h"
+#include "uassert.h"
 
 enum
 {
