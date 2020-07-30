@@ -9,7 +9,24 @@
 #include "iodefine.h"
 #include "ProgramCounterAddress.h"
 
-static I_Output_t *programCounterAddressOutput;
+enum
+{
+   DelayBeforeResetInMsec = 250
+};
+
+static struct
+{
+   I_Action_t *resetAction;
+   I_Output_t *programCounterAddressOutput;
+   TimerModule_t *timerModule;
+   Timer_t delayedRestartTimer;
+} instance;
+
+static void Reset(void *context)
+{
+   IGNORE(context);
+   Action_Invoke(instance.resetAction);
+}
 
 void __uassert_func(
    const char *fileName,
@@ -24,19 +41,19 @@ void __uassert_func(
 
    if(!condition)
    {
-      if(programCounterAddressOutput)
+      if(instance.programCounterAddressOutput)
       {
          ProgramCounterAddress_t programCounterAddress = (ProgramCounterAddress_t)programCounter;
-         Output_Write(programCounterAddressOutput, &programCounterAddress);
+         Output_Write(instance.programCounterAddressOutput, &programCounterAddress);
       }
 
-      while(1)
-      {
-      }
+      TimerModule_StartOneShot(instance.timerModule, &instance.delayedRestartTimer, DelayBeforeResetInMsec, Reset, NULL);
    }
 }
 
-void Uassert_Init(I_Output_t *_programCounterAddressOutput)
+void Uassert_Init(I_Action_t *resetAction, I_Output_t *programCounterAddressOutput, TimerModule_t *timerModule)
 {
-   programCounterAddressOutput = _programCounterAddressOutput;
+   instance.resetAction = resetAction;
+   instance.programCounterAddressOutput = programCounterAddressOutput;
+   instance.timerModule = timerModule;
 }

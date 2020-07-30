@@ -166,7 +166,7 @@ int main(void)
    I_DataModel_t *dataModel = SystemData_DataModel(&systemData);
    TimerModuleStack_WritePointersToDataModel(&timerModuleStack, dataModel);
 
-   Uassert_Init(DataModel_GetOutput(dataModel, Erd_ProgramCounterAddressAtLastUassert));
+   Uassert_Init(resetAction, DataModel_GetOutput(dataModel, Erd_ProgramCounterAddressAtLastUassert), timerModule);
 
    SetResetReason(dataModel);
    IncrementResetCount(dataModel);
