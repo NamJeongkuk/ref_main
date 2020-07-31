@@ -47,6 +47,11 @@ void __uassert_func(
       }
 
       TimerModule_StartOneShot(instance.timerModule, &instance.delayedRestartTimer, DelayBeforeResetInMsec, Reset, NULL);
+
+      while(1)
+      {
+         TimerModule_Run(instance.timerModule);
+      }
    }
 }
 
