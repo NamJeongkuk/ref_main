@@ -94,7 +94,6 @@ SRC_DIRS=\
 
 # Additional include directories
 INC_DIRS=\
-   $(APPLCOMMON_DIR)/Assert \
    $(APPLCOMMON_DIR)/ApplianceApi \
    $(APPLCOMMON_DIR)/BootLoader \
    $(APPLCOMMON_DIR)/Git \

@@ -6,7 +6,6 @@
  */
 
 #include "uassert.h"
-#include "iodefine.h"
 #include "ProgramCounterAddress.h"
 
 enum
