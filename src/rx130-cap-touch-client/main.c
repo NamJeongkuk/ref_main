@@ -36,6 +36,10 @@
 #include "StackConfigurator.h"
 #include "Interrupt_Cmt0.h"
 #include "KeyStreamPlugin.h"
+#include "Rx2xxResetSource.h"
+#include "ResetReason.h"
+#include "ResetCount.h"
+#include "uassert.h"
 
 enum
 {
@@ -58,17 +62,15 @@ static GeaStack_t geaStack;
 static UlTestsPlugin_t ulTestsPlugin;
 static KeyStreamPlugin_t keyStreamPlugin;
 
-static const uint8_t staticRoutingTable[] =
-   {
-      Stm8sCapTouchGea2Address
-   };
+static const uint8_t staticRoutingTable[] = {
+   Stm8sCapTouchGea2Address
+};
 
 static void UpdateBuildInfo(
    I_DataModel_t *dataModel,
    const ImageHeader_t *header)
 {
-   static const GitHash_t gitHash =
-      { GIT_HASH_U8_ARRAY_RX };
+   static const GitHash_t gitHash = { GIT_HASH_U8_ARRAY_RX };
    DataModel_Write(dataModel, Erd_GitHash, &gitHash);
 
    uint32_t buildNumber = BUILD_NUMBER;
@@ -98,6 +100,48 @@ static void SendStartupMessage(I_Gea2PacketEndpoint_t *gea2PacketEndpoint)
    Gea2PacketEndpoint_Send(gea2PacketEndpoint, packet, 2);
 }
 
+static void SetResetReason(I_DataModel_t *dataModel)
+{
+   Rx2xxResetSource_t rx2xxResetSource = Rx2xxResetSource_GetResetSource();
+   ResetReason_t resetReason;
+   resetReason.metadata = rx2xxResetSource;
+
+   switch(rx2xxResetSource)
+   {
+      case Rx2xxResetSource_PowerOn:
+      case Rx2xxResetSource_ResetPin:
+      case Rx2xxResetSource_VoltageMonitor0:
+      case Rx2xxResetSource_VoltageMonitor1:
+      case Rx2xxResetSource_VoltageMonitor2:
+         resetReason.source = ResetSource_PowerOn;
+         break;
+
+      case Rx2xxResetSource_SoftwareReset:
+         resetReason.source = ResetSource_Software;
+         break;
+
+      case Rx2xxResetSource_IndependentWatchdogTimer:
+      case Rx2xxResetSource_WatchdogTimer:
+         resetReason.source = ResetSource_Watchdog;
+         break;
+
+      default:
+         resetReason.source = ResetSource_Unknown;
+         break;
+   }
+
+   DataModel_Write(dataModel, Erd_ResetReason, &resetReason);
+}
+
+static void IncrementResetCount(I_DataModel_t *dataModel)
+{
+   ResetCount_t resetCount;
+
+   DataModel_Read(dataModel, Erd_ResetCount, &resetCount);
+   resetCount++;
+   DataModel_Write(dataModel, Erd_ResetCount, &resetCount);
+}
+
 int main(void)
 {
    Hardware_InitializeStage1();
@@ -124,6 +168,11 @@ int main(void)
    I_DataModel_t *dataModel = SystemData_DataModel(&systemData);
 
    TimerModuleStack_WritePointersToDataModel(&timerModuleStack, dataModel);
+
+   Uassert_Init(resetAction, DataModel_GetOutput(dataModel, Erd_ProgramCounterAddressAtLastUassert), timerModule);
+
+   SetResetReason(dataModel);
+   IncrementResetCount(dataModel);
 
    Hardware_InitializeStage2(dataModel);
 
