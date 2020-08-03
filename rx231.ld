@@ -48,7 +48,7 @@ SECTIONS
 	{
 		_data = .;
 		__dtcVectorTableStart = .;
-		*(.dtcVectorTable)
+		*(.dtcTransferInformation)
 		. = ALIGN(4);
 		__dtcVectorTableEnd = .;
 		*(.data)

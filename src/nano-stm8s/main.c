@@ -27,8 +27,8 @@
 
 enum
 {
-   HardwareId = 1,
-   ImageId = 0xFFFF,
+   HardwareId = 0x1234,
+   ImageId = 0x5678,
 
    WatchdogKickPeriodInMsec = 1
 };
