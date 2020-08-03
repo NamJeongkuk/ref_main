@@ -34,7 +34,6 @@
 #include "Crc16Calculator_Stm32.h"
 #include "Interrupt_Stm32SystemTick.h"
 #include "Stm32F3xxResetSource.h"
-#include "ResetReason.h"
 #include "ResetCount.h"
 #include "uassert.h"
 
@@ -105,34 +104,7 @@ static void SendStartupMessage(I_Gea2PacketEndpoint_t *gea2PacketEndpoint)
 
 static void SetResetReason(I_DataModel_t *dataModel)
 {
-   Stm32F3xxResetSource_t stm32ResetSource = Stm32F3xxResetSource_GetResetSource();
-   ResetReason_t resetReason;
-   resetReason.metadata = stm32ResetSource;
-
-   switch(stm32ResetSource)
-   {
-      case Stm32F3xxResetSource_LowPower:
-      case Stm32F3xxResetSource_PowerOn:
-      case Stm32F3xxResetSource_NrstPin:
-         resetReason.source = ResetSource_PowerOn;
-         break;
-
-      case Stm32F3xxResetSource_WindowWatchdog:
-      case Stm32F3xxResetSource_IndependentWindowWatchdog:
-         resetReason.source = ResetSource_Watchdog;
-         break;
-
-      case Stm32F3xxResetSource_Software:
-         resetReason.source = ResetSource_Software;
-         break;
-
-      case Stm32F3xxResetSource_OptionByteLoader:
-      case Stm32F3xxResetSource_Unknown:
-      default:
-         resetReason.source = ResetSource_Unknown;
-         break;
-   }
-
+   ResetReason_t resetReason = Stm32F3xxResetSource_GetResetReason();
    DataModel_Write(dataModel, Erd_ResetReason, &resetReason);
 }
 
