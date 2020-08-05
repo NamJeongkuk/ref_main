@@ -14,6 +14,7 @@
 #include "KeyStreamPlugin.h"
 #include "TimerModuleDiagnostics.h"
 #include "Input_StackUsageCalculator.h"
+#include "ApplianceApiDiagnostics.h"
 
 typedef struct
 {
@@ -26,8 +27,8 @@ typedef struct
       KeyStreamPlugin_t keyStreamPlugin;
       TimerModuleDiagnostics_t timerModuleDiagnostics;
       Input_StackUsageCalculator_t stackUsageCalculator;
+      ApplianceApiDiagnostics_t applianceApiDiagnostics;
       Timer_t stackUsageUpdateTimer;
-      Timer_t secondsSinceResetTimer;
    } _private;
 } Application_t;
 
@@ -35,10 +36,12 @@ typedef struct
  * Initialize Application
  * @param instance
  * @param dataModel
+ * @param resetReason
  */
 void Application_Init(
    Application_t *instance,
    I_DataModel_t *dataModel,
-   const StackConfiguration_t *stackConfiguration);
+   const StackConfiguration_t *stackConfiguration,
+   ResetReason_t resetReason);
 
 #endif

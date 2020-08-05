@@ -34,7 +34,6 @@
 #include "Crc16Calculator_Stm32.h"
 #include "Interrupt_Stm32SystemTick.h"
 #include "Stm32F3xxResetSource.h"
-#include "ResetCount.h"
 #include "uassert.h"
 
 extern char __NvData1_Location;
@@ -102,21 +101,6 @@ static void SendStartupMessage(I_Gea2PacketEndpoint_t *gea2PacketEndpoint)
    Gea2PacketEndpoint_Send(gea2PacketEndpoint, packet, 2);
 }
 
-static void SetResetReason(I_DataModel_t *dataModel)
-{
-   ResetReason_t resetReason = Stm32F3xxResetSource_GetResetReason();
-   DataModel_Write(dataModel, Erd_ResetReason, &resetReason);
-}
-
-static void IncrementResetCount(I_DataModel_t *dataModel)
-{
-   ResetCount_t resetCount;
-
-   DataModel_Read(dataModel, Erd_ResetCount, &resetCount);
-   resetCount++;
-   DataModel_Write(dataModel, Erd_ResetCount, &resetCount);
-}
-
 int main(void)
 {
    Hardware_InitializeStage1();
@@ -146,8 +130,6 @@ int main(void)
 
    Uassert_Init(resetAction, DataModel_GetOutput(dataModel, Erd_ProgramCounterAddressAtLastUassert), timerModule);
 
-   IncrementResetCount(dataModel);
-
    Hardware_InitializeStage2(dataModel);
 
    GeaStack_Init(
@@ -161,7 +143,8 @@ int main(void)
    Application_Init(
       &application,
       dataModel,
-      StackConfigurator_GetConfiguration());
+      StackConfigurator_GetConfiguration(),
+      Stm32F3xxResetSource_GetResetReason());
 
    InvokeActionOnTimerPeriodic_Init(
       &watchdogPetter,

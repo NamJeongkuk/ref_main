@@ -17,16 +17,6 @@ enum
    StackUsageUpdatePeriodInMsec = 1000
 };
 
-static void UpdateSecondsSinceReset(void *context)
-{
-   REINTERPRET(instance, context, Application_t *);
-   SecondsSinceLastReset_t secondsSinceLastReset;
-
-   DataModel_Read(instance->_private.dataModel, Erd_SecondsSinceLastReset, &secondsSinceLastReset);
-   secondsSinceLastReset++;
-   DataModel_Write(instance->_private.dataModel, Erd_SecondsSinceLastReset, &secondsSinceLastReset);
-}
-
 static void UpdateStackUsage(void *context)
 {
    REINTERPRET(instance, context, Application_t *);
@@ -39,7 +29,8 @@ static void UpdateStackUsage(void *context)
 void Application_Init(
    Application_t *instance,
    I_DataModel_t *dataModel,
-   const StackConfiguration_t *stackConfiguration)
+   const StackConfiguration_t *stackConfiguration,
+   ResetReason_t resetReason)
 {
    instance->_private.dataModel = dataModel;
 
@@ -62,10 +53,9 @@ void Application_Init(
       UpdateStackUsage,
       instance);
 
-   TimerModule_StartPeriodic(
+   ApplianceApiDiagnostics_Init(
+      &instance->_private.applianceApiDiagnostics,
+      dataModel,
       timerModule,
-      &instance->_private.secondsSinceResetTimer,
-      1000,
-      UpdateSecondsSinceReset,
-      instance);
+      resetReason);
 }

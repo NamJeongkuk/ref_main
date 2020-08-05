@@ -36,7 +36,6 @@
 #include "StackConfigurator.h"
 #include "Interrupt_Cmt0.h"
 #include "Rx2xxResetSource.h"
-#include "ResetCount.h"
 #include "uassert.h"
 
 enum
@@ -97,21 +96,6 @@ static void SendStartupMessage(I_Gea2PacketEndpoint_t *gea2PacketEndpoint)
    Gea2PacketEndpoint_Send(gea2PacketEndpoint, packet, 2);
 }
 
-static void SetResetReason(I_DataModel_t *dataModel)
-{
-   ResetReason_t resetReason = Rx2xxResetSource_GetResetReason();
-   DataModel_Write(dataModel, Erd_ResetReason, &resetReason);
-}
-
-static void IncrementResetCount(I_DataModel_t *dataModel)
-{
-   ResetCount_t resetCount;
-
-   DataModel_Read(dataModel, Erd_ResetCount, &resetCount);
-   resetCount++;
-   DataModel_Write(dataModel, Erd_ResetCount, &resetCount);
-}
-
 int main(void)
 {
    Hardware_InitializeStage1();
@@ -141,9 +125,6 @@ int main(void)
 
    Uassert_Init(resetAction, DataModel_GetOutput(dataModel, Erd_ProgramCounterAddressAtLastUassert), timerModule);
 
-   SetResetReason(dataModel);
-   IncrementResetCount(dataModel);
-
    Hardware_InitializeStage2(dataModel);
 
    GeaStack_Init(
@@ -157,7 +138,8 @@ int main(void)
    Application_Init(
       &application,
       dataModel,
-      StackConfigurator_GetConfiguration());
+      StackConfigurator_GetConfiguration(),
+      Rx2xxResetSource_GetResetReason());
 
    InvokeActionOnTimerPeriodic_Init(
       &watchdogPetter,
