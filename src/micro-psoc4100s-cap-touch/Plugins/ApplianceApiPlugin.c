@@ -47,7 +47,7 @@ void ApplianceApiPlugin_Init(I_TinyDataSource_t *_dataSource)
 {
    dataSource = _dataSource;
 
-   bool readyToEnterBootLoader = true;
+   ReadyToEnterBootLoaderState_t readyToEnterBootLoader = ReadyToEnterBootLoaderState_Ready;
    TinyDataSource_Write(dataSource, Erd_ReadyToEnterBootLoader, &readyToEnterBootLoader);
 
    uint8_t supportedImageTypes = (1 << ImageType_BootLoader) | (1 << ImageType_Application);

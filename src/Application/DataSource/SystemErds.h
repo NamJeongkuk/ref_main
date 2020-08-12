@@ -33,6 +33,7 @@
 #include "CycleHistoryRecord.h"
 #include "I_Adc.h"
 #include "KeyStreamPlugin.h"
+#include "ReadyToEnterBootLoaderState.h"
 
 // clang-format off
 
@@ -93,7 +94,7 @@ enum
    ENTRY(Erd_ModelNumber,                                   0x0001, ModelNumber_t,                                      Swap_N, Io_None, Sub_N, Virtual,  NotNv,                                    NotFault) \
    ENTRY(Erd_SerialNumber,                                  0x0002, SerialNumber_t,                                     Swap_N, Io_None, Sub_N, Virtual,  NotNv,                                    NotFault) \
    ENTRY(Erd_ApplianceType,                                 0x0008, ApplianceType_t,                                    Swap_N, Io_None, Sub_N, Virtual,  NotNv,                                    NotFault) \
-   ENTRY(Erd_ReadyToEnterBootLoader,                        0x0030, bool,                                               Swap_N, Io_All,  Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_ReadyToEnterBootLoader,                        0x0030, ReadyToEnterBootLoaderState_t,                      Swap_N, Io_All,  Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_BuildNumber,                                   0x0031, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_Reset,                                         0x0032, uint8_t,                                            Swap_N, Io_None, Sub_N, Virtual,  NotNv,                                    NotFault) \
    ENTRY(Erd_AppliancePersonality,                          0x0035, AppliancePersonality_t,                             Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \

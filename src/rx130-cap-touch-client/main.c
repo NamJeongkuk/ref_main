@@ -58,17 +58,15 @@ static GeaStack_t geaStack;
 static UlTestsPlugin_t ulTestsPlugin;
 static KeyStreamPlugin_t keyStreamPlugin;
 
-static const uint8_t staticRoutingTable[] =
-   {
-      Stm8sCapTouchGea2Address
-   };
+static const uint8_t staticRoutingTable[] = {
+   Stm8sCapTouchGea2Address
+};
 
 static void UpdateBuildInfo(
    I_DataModel_t *dataModel,
    const ImageHeader_t *header)
 {
-   static const GitHash_t gitHash =
-      { GIT_HASH_U8_ARRAY_RX };
+   static const GitHash_t gitHash = { GIT_HASH_U8_ARRAY_RX };
    DataModel_Write(dataModel, Erd_GitHash, &gitHash);
 
    uint32_t buildNumber = BUILD_NUMBER;
@@ -96,6 +94,12 @@ static void SendStartupMessage(I_Gea2PacketEndpoint_t *gea2PacketEndpoint)
    packet->payload[4] = 0xBE;
 
    Gea2PacketEndpoint_Send(gea2PacketEndpoint, packet, 2);
+}
+
+static void SetReadyToEnterBootLoader(I_DataModel_t *dataModel)
+{
+   ReadyToEnterBootLoaderState_t ready = ReadyToEnterBootLoaderState_Ready;
+   DataModel_Write(dataModel, Erd_ReadyToEnterBootLoader, &ready);
 }
 
 int main(void)
@@ -169,7 +173,7 @@ int main(void)
       BytesToCrcPerRomCheck,
       watchdogKickAction);
 
-   DataModel_Write(dataModel, Erd_ReadyToEnterBootLoader, enabled);
+   SetReadyToEnterBootLoader(dataModel);
 
    while(1)
    {
