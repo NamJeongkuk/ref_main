@@ -1,12 +1,12 @@
 return {
   ['Boot Loader'] = {
     ram = {
-      map = 'lib/boot-loaders/build/micro-stm8s-boot-loader/micro-stm8s-boot-loader.map',
+      map = 'lib/boot-loaders/build/small-stm8s-boot-loader/small-stm8s-boot-loader.map',
       type = 'sdcc',
       total = 2 * 1024
     },
     rom = {
-      map = 'lib/boot-loaders/build/micro-stm8s-boot-loader/micro-stm8s-boot-loader.map',
+      map = 'lib/boot-loaders/build/small-stm8s-boot-loader/small-stm8s-boot-loader.map',
       type = 'sdcc',
       total = 8 * 1024
     }

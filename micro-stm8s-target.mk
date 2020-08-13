@@ -1,6 +1,8 @@
 include tools/sdcc-stm8/sdcc-stm8.mk
 
 TARGET:=micro-stm8s
+BOOT_LOADER_TARGET=small-stm8s
+
 OUTPUT_DIR:=build/$(TARGET)
 APPLCOMMON_TINY_DIR=lib/applcommon.tiny
 APPLCOMMON_DIR=$(APPLCOMMON_TINY_DIR)/lib/applcommon
@@ -68,7 +70,7 @@ COMMON_LIB_DIRS:=\
 
 INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
-   $(BOOT_LOADER_DIR)/src/$(TARGET)-boot-loader \
+   $(BOOT_LOADER_DIR)/src/$(BOOT_LOADER_TARGET)-boot-loader \
    src/Application/Gea \
 
 PACKAGE_CONTENTS:=
@@ -83,7 +85,7 @@ all: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 	$(call make_directory,$(OUTPUT_DIR)/binaries)
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness little --output_directory $(OUTPUT_DIR)/binaries
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot --endianness little --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
-	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_DIR)/build/$(TARGET)-boot-loader/$(TARGET)-boot-loader.mot --endianness little --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
+	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot --endianness little --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration $(TARGET)_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 	@cat $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 
@@ -97,11 +99,11 @@ target: $(OUTPUT_DIR)/$(TARGET).apl
 
 .PHONY: boot-loader
 boot-loader:
-	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(TARGET)-boot-loader.mk RELEASE=Y DEBUG=N
+	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N
 
 # Overlap is allowed during concatenate because the boot loader is not stripped
 $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot: target boot-loader
-	@$(LUA53) $(SREC_CONCATENATE) --allow_overlap --input $(BOOT_LOADER_DIR)/build/$(TARGET)-boot-loader/$(TARGET)-boot-loader.mot $(OUTPUT_DIR)/$(TARGET).apl --output $@
+	@$(LUA53) $(SREC_CONCATENATE) --allow_overlap --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot $(OUTPUT_DIR)/$(TARGET).apl --output $@
 
 $(OUTPUT_DIR)/doc:
 	@mkdir -p $(OUTPUT_DIR)/doc
@@ -115,7 +117,7 @@ upload: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot.hex stm8flash
 
 .PHONY: clean
 clean: target_clean
-	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(TARGET)-boot-loader.mk RELEASE=Y DEBUG=N clean
+	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N clean
 
 include tools/sdcc-stm8/sdcc-stm8-makefile-worker.mk
 
