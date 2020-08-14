@@ -1,7 +1,7 @@
 return {
   ['Boot Loader'] = {
     ram = {
-      map = 'lib/boot-loaders/build/mini-rx231-boot-loader/mini-rx231-boot-loader.map',
+      map = 'lib/boot-loaders/build/small-rx231-boot-loader/small-rx231-boot-loader.map',
       type = 'rx-gcc',
       total = 64 * 1024,
       ram_sections = {
@@ -9,8 +9,8 @@ return {
       }
     },
     rom = {
-      srec = 'lib/boot-loaders/build/mini-rx231-boot-loader/mini-rx231-boot-loader.napl',
-      apl = 'lib/boot-loaders/build/mini-rx231-boot-loader/mini-rx231-boot-loader.apl',
+      srec = 'lib/boot-loaders/build/small-rx231-boot-loader/small-rx231-boot-loader.napl',
+      apl = 'lib/boot-loaders/build/small-rx231-boot-loader/small-rx231-boot-loader.apl',
       endianness = 'little'
     }
   },

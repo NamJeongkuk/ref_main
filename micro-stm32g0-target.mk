@@ -50,6 +50,7 @@ SRC_DIRS=\
    src/MicroApplication/DataSource \
 
 INC_DIRS=\
+   $(APPLCOMMON_TINY_DIR)/lib/applcommon/ApplianceApi \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    src/Application/Gea \
 

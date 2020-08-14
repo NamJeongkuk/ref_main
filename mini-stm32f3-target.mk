@@ -4,6 +4,8 @@ include tools/gcc-arm-none-eabi/mc/makecommon.mk
 # Name of the project that is being built
 TARGET:=mini-stm32f3
 BASE_TARGET:=stm32f3
+BOOT_LOADER_TARGET:=small-stm32f3
+
 OUTPUT_DIR:=build/$(TARGET)
 APPLCOMMON_DIR:=lib/applcommon
 BOOT_LOADER_DIR=lib/boot-loaders
@@ -134,7 +136,7 @@ all: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 	$(call make_directory,$(OUTPUT_DIR)/binaries)
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness little --output_directory $(OUTPUT_DIR)/binaries
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot --endianness little --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
-	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_DIR)/build/$(TARGET)-boot-loader/$(TARGET)-boot-loader.mot --endianness little --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
+	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot --endianness little --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration $(TARGET)_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 	@cat $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 
@@ -145,10 +147,10 @@ package: all artifacts erd_definitions
 
 .PHONY: boot-loader
 boot-loader:
-	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(TARGET)-boot-loader.mk RELEASE=Y DEBUG=N
+	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N
 
 $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot: target boot-loader
-	@$(LUA53) $(SREC_CONCATENATE) --input $(BOOT_LOADER_DIR)/build/$(TARGET)-boot-loader/$(TARGET)-boot-loader.mot $(OUTPUT_DIR)/$(TARGET).apl --output $@
+	@$(LUA53) $(SREC_CONCATENATE) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot $(OUTPUT_DIR)/$(TARGET).apl --output $@
 
 $(OUTPUT_DIR)/doc:
 	@mkdir -p $(OUTPUT_DIR)/doc
@@ -159,7 +161,7 @@ upload: all jlink_tools
 
 .PHONY: clean
 clean: target_clean
-	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(TARGET)-boot-loader.mk RELEASE=Y DEBUG=N clean
+	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N clean
 
 include tools/gcc-arm-none-eabi/MakefileWorker.mk
 

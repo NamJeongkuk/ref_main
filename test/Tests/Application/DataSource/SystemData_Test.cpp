@@ -67,6 +67,9 @@ enum
 #define ERD_EXPAND_AS_ENDIANNESS_AWARE_NV_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_NV_, StorageType)({ Name COMMA Number COMMA Swap COMMA Io COMMA Sub } COMMA)
 
+#define ERD_EXPAND_AS_ENDIANNESS_AWARE_BSP_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_BSP_, StorageType)({ Name COMMA Number COMMA Swap COMMA Io COMMA Sub } COMMA)
+
 typedef struct
 {
    Erd_t erd;
@@ -79,6 +82,7 @@ typedef struct
 static const ErdTableElement_t erdTable[] = {
    ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_RAM_STORAGE)
    ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_NV_STORAGE)
+   ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_BSP_STORAGE)
 };
 
 // clang-format on

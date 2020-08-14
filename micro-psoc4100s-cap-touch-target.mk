@@ -5,7 +5,7 @@ OUTPUT_DIR:=build/$(TARGET)
 APPLCOMMON_TINY_DIR=lib/applcommon.tiny
 APPLCOMMON_DIR=$(APPLCOMMON_TINY_DIR)/lib/applcommon
 BOOT_LOADER_DIR=lib/boot-loaders
-BOOT_LOADER_TARGET=micro-psoc4100s
+BOOT_LOADER_TARGET=small-psoc4100s
 PSOC_CREATOR_DIR=src/$(TARGET)/PsocCreator/psoc.cydsn
 PSOC_CREATOR_GENERATED_DIR=src/$(TARGET)/PsocCreator/psoc.cydsn/Generated_Source/PSoC4
 

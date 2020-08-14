@@ -1,7 +1,7 @@
 return {
   ['Boot Loader'] = {
     ram = {
-      map = 'lib/boot-loaders/build/mini-stm32f3-boot-loader/mini-stm32f3-boot-loader.map',
+      map = 'lib/boot-loaders/build/small-stm32f3-boot-loader/small-stm32f3-boot-loader.map',
       type = 'arm-gcc',
       total = 12 * 1024,
       ram_sections = {
@@ -9,8 +9,8 @@ return {
       }
     },
     rom = {
-      srec = 'lib/boot-loaders/build/mini-stm32f3-boot-loader/mini-stm32f3-boot-loader.napl',
-      apl = 'lib/boot-loaders/build/mini-stm32f3-boot-loader/mini-stm32f3-boot-loader.apl',
+      srec = 'lib/boot-loaders/build/small-stm32f3-boot-loader/small-stm32f3-boot-loader.napl',
+      apl = 'lib/boot-loaders/build/small-stm32f3-boot-loader/small-stm32f3-boot-loader.apl',
       endianness = 'little'
     }
   },

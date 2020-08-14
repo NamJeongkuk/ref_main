@@ -41,19 +41,19 @@ enum
 
 // Name, Number, DataType, Stream, StreamRemoteErd
 #define ERD_TABLE(ENTRY) \
-   ENTRY(Erd_ReadyToEnterBootLoader,   0x0030, bool,                    StreamNone,    NotMapped) \
-   ENTRY(Erd_Reset,                    0x0032, uint8_t,                 StreamNone,    NotMapped) \
-   ENTRY(Erd_SupportedImageTypes,      0x0038, uint8_t,                 StreamNone,    NotMapped) \
-   ENTRY(Erd_BootLoaderVersion,        0x0039, Version_t,               StreamNone,    NotMapped) \
-   ENTRY(Erd_ApplicationVersion,       0x003A, Version_t,               StreamNone,    NotMapped) \
-   ENTRY(Erd_ParametricVersion,        0x003B, Version_t,               StreamNone,    NotMapped) \
-   ENTRY(Erd_AuxiliaryVersion,         0x003C, Version_t,               StreamNone,    NotMapped) \
-   ENTRY(Erd_ApplianceApiManifest,     0x0092, ApplianceApiManifest_t,  StreamNone,    NotMapped) \
-   ENTRY(Erd_TimerModule,              0xF000, TinyTimerModule_t *,     StreamNone,    NotMapped) \
-   ENTRY(Erd_HeartbeatTick,            0xF001, uint8_t,                 StreamNone,    NotMapped) \
-   ENTRY(Erd_ErdStream,                0xF002, ErdStreamErd_t,          StreamNone,    NotMapped) \
-   ENTRY(Erd_ErdStreamRequestedState,  0xF003, ErdStreamStateRequest_t, StreamNone,    NotMapped) \
-   ENTRY(Erd_KeyState,                 0xF004, uint32_t,                StreamEvent,   0xF123) \
+   ENTRY(Erd_ReadyToEnterBootLoader,   0x0030, ReadyToEnterBootLoaderState_t,   StreamNone,    NotMapped) \
+   ENTRY(Erd_Reset,                    0x0032, uint8_t,                         StreamNone,    NotMapped) \
+   ENTRY(Erd_SupportedImageTypes,      0x0038, uint8_t,                         StreamNone,    NotMapped) \
+   ENTRY(Erd_BootLoaderVersion,        0x0039, Version_t,                       StreamNone,    NotMapped) \
+   ENTRY(Erd_ApplicationVersion,       0x003A, Version_t,                       StreamNone,    NotMapped) \
+   ENTRY(Erd_ParametricVersion,        0x003B, Version_t,                       StreamNone,    NotMapped) \
+   ENTRY(Erd_AuxiliaryVersion,         0x003C, Version_t,                       StreamNone,    NotMapped) \
+   ENTRY(Erd_ApplianceApiManifest,     0x0092, ApplianceApiManifest_t,          StreamNone,    NotMapped) \
+   ENTRY(Erd_TimerModule,              0xF000, TinyTimerModule_t *,             StreamNone,    NotMapped) \
+   ENTRY(Erd_HeartbeatTick,            0xF001, uint8_t,                         StreamNone,    NotMapped) \
+   ENTRY(Erd_ErdStream,                0xF002, ErdStreamErd_t,                  StreamNone,    NotMapped) \
+   ENTRY(Erd_ErdStreamRequestedState,  0xF003, ErdStreamStateRequest_t,         StreamNone,    NotMapped) \
+   ENTRY(Erd_KeyState,                 0xF004, uint32_t,                        StreamEvent,   0xF123) \
 
 #define SWAPPED_FIELDS \
    SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, revision), \

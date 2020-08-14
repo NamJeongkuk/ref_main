@@ -96,6 +96,12 @@ static void SendStartupMessage(I_Gea2PacketEndpoint_t *gea2PacketEndpoint)
    Gea2PacketEndpoint_Send(gea2PacketEndpoint, packet, 2);
 }
 
+static void SetReadyToEnterBootLoader(I_DataModel_t *dataModel)
+{
+   ReadyToEnterBootLoaderState_t ready = ReadyToEnterBootLoaderState_Ready;
+   DataModel_Write(dataModel, Erd_ReadyToEnterBootLoader, &ready);
+}
+
 int main(void)
 {
    Hardware_InitializeStage1();
@@ -164,7 +170,7 @@ int main(void)
       BytesToCrcPerRomCheck,
       watchdogKickAction);
 
-   DataModel_Write(dataModel, Erd_ReadyToEnterBootLoader, enabled);
+   SetReadyToEnterBootLoader(dataModel);
 
    while(1)
    {

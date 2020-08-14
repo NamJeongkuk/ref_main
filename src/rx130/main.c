@@ -35,6 +35,7 @@
 #include "InitializeStackMemory.h"
 #include "StackConfigurator.h"
 #include "Interrupt_Cmt0.h"
+#include "ReadyToEnterBootLoaderState.h"
 #include "Rx2xxResetSource.h"
 #include "uassert.h"
 
@@ -59,7 +60,7 @@ static GeaStack_t geaStack;
 static UlTestsPlugin_t ulTestsPlugin;
 
 static const uint8_t staticRoutingTable[] = {
-   Stm8sGea2Address
+      Stm8sGea2Address
 };
 
 static void UpdateBuildInfo(
@@ -94,6 +95,12 @@ static void SendStartupMessage(I_Gea2PacketEndpoint_t *gea2PacketEndpoint)
    packet->payload[4] = 0xBE;
 
    Gea2PacketEndpoint_Send(gea2PacketEndpoint, packet, 2);
+}
+
+static void SetReadyToEnterBootLoader(I_DataModel_t *dataModel)
+{
+   ReadyToEnterBootLoaderState_t ready = ReadyToEnterBootLoaderState_Ready;
+   DataModel_Write(dataModel, Erd_ReadyToEnterBootLoader, &ready);
 }
 
 int main(void)
@@ -165,7 +172,7 @@ int main(void)
       BytesToCrcPerRomCheck,
       watchdogKickAction);
 
-   DataModel_Write(dataModel, Erd_ReadyToEnterBootLoader, enabled);
+   SetReadyToEnterBootLoader(dataModel);
 
    while(1)
    {

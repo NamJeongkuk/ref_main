@@ -10,6 +10,7 @@
 #include "TinyTimer.h"
 #include "TinyEventSubscription.h"
 #include "TinyBootLoaderParametric.h"
+#include "ReadyToEnterBootLoaderState.h"
 #include "Reset.h"
 #include "MemoryMap.h"
 #include "utils.h"
@@ -66,7 +67,7 @@ void ApplianceApiPlugin_Init(I_TinyDataSource_t *_dataSource)
    ApplianceType_t applianceType = ApplianceType_Dishwasher;
    TinyDataSource_Write(dataSource, Erd_ApplianceType, &applianceType);
 
-   bool readyToEnterBootLoader = true;
+   ReadyToEnterBootLoaderState_t readyToEnterBootLoader = ReadyToEnterBootLoaderState_Ready;
    TinyDataSource_Write(dataSource, Erd_ReadyToEnterBootLoader, &readyToEnterBootLoader);
 
    AppliancePersonality_t personality = Personality;
