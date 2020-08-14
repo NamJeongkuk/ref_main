@@ -10,6 +10,7 @@
 #include "TinyTimer.h"
 #include "TinyEventSubscription.h"
 #include "TinyBootLoaderParametric.h"
+#include "ReadyToEnterBootLoaderState.h"
 #include "Reset.h"
 #include "MemoryMap.h"
 #include "utils.h"
