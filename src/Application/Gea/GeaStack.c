@@ -214,9 +214,6 @@ void GeaStack_Init(
 
    ConnectGea2MessageEndpointToDataSource(instance, dataModel, externalDataSource);
 
-   ReadyToEnterBootLoaderState_t ready = ReadyToEnterBootLoaderState_Ready;
-   DataModel_Write(dataModel, Erd_ReadyToEnterBootLoader, &ready);
-
    Gea2CommonCommands_Init(
       &instance->_private.commonCommands,
       instance->_private.packetEndpoint,
