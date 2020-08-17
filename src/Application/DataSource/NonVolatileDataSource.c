@@ -107,7 +107,8 @@ void NonVolatileDataSource_Init(
       &instance->_private.syncCache,
       sizeof(instance->_private.syncCache),
       &instance->_private.syncWriteCache,
-      &onReadyAction.interface);
+      &onReadyAction.interface,
+      Erd_NonVolatileDataSourceCacheSyncState);
 
    while(!ready)
    {

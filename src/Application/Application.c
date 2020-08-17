@@ -9,10 +9,18 @@
 #include "Application.h"
 #include "SystemErds.h"
 #include "DataModelErdPointerAccess.h"
+#include "SecondsSinceLastReset.h"
+#include "uassert.h"
 
 enum
 {
    StackUsageUpdatePeriodInMsec = 1000
+};
+
+static const ApplianceApiResetDiagnosticsConfiguration_t applianceApiResetDiagnosticsConfiguration = {
+   .resetReasonErd = Erd_ResetReason,
+   .resetCountErd = Erd_ResetCount,
+   .secondsSinceLastResetErd = Erd_SecondsSinceLastReset
 };
 
 static void UpdateStackUsage(void *context)
@@ -27,7 +35,8 @@ static void UpdateStackUsage(void *context)
 void Application_Init(
    Application_t *instance,
    I_DataModel_t *dataModel,
-   const StackConfiguration_t *stackConfiguration)
+   const StackConfiguration_t *stackConfiguration,
+   ResetReason_t resetReason)
 {
    instance->_private.dataModel = dataModel;
 
@@ -49,4 +58,11 @@ void Application_Init(
       StackUsageUpdatePeriodInMsec,
       UpdateStackUsage,
       instance);
+
+   ApplianceApiResetDiagnostics_Init(
+      &instance->_private.applianceApiResetDiagnostics,
+      dataModel,
+      timerModule,
+      resetReason,
+      &applianceApiResetDiagnosticsConfiguration);
 }

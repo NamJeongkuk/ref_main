@@ -33,6 +33,8 @@
 #include "FlashBlockGroup_Stm32F3xx.h"
 #include "Crc16Calculator_Stm32.h"
 #include "Interrupt_Stm32SystemTick.h"
+#include "Stm32F3xxResetSource.h"
+#include "uassert.h"
 
 extern char __NvData1_Location;
 extern char __NvData2_Location;
@@ -132,6 +134,8 @@ int main(void)
 
    TimerModuleStack_WritePointersToDataModel(&timerModuleStack, dataModel);
 
+   Uassert_Init(resetAction, DataModel_GetOutput(dataModel, Erd_ProgramCounterAddressAtLastUassert), timerModule);
+
    Hardware_InitializeStage2(dataModel);
 
    GeaStack_Init(
@@ -145,7 +149,8 @@ int main(void)
    Application_Init(
       &application,
       dataModel,
-      StackConfigurator_GetConfiguration());
+      StackConfigurator_GetConfiguration(),
+      Stm32F3xxResetSource_GetResetReason());
 
    InvokeActionOnTimerPeriodic_Init(
       &watchdogPetter,

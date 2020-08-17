@@ -67,6 +67,7 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_DIR)/Event \
    $(APPLCOMMON_DIR)/Filter \
    $(APPLCOMMON_DIR)/Git \
+   $(APPLCOMMON_DIR)/Hardware/Stm32F3xx \
    $(APPLCOMMON_DIR)/HardwareInterfaces \
    $(APPLCOMMON_DIR)/HardwareInterfaces/Adapters \
    $(APPLCOMMON_DIR)/Image \
@@ -80,7 +81,6 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_DIR)/Time \
    $(APPLCOMMON_DIR)/TimeOfDay \
    $(APPLCOMMON_DIR)/Ui \
-   $(APPLCOMMON_DIR)/Updater \
    $(APPLCOMMON_DIR)/Utilities \
    $(APPLCOMMON_DIR)/Validator
 
@@ -99,13 +99,10 @@ SRC_DIRS=\
 
 # Additional include directories
 INC_DIRS=\
-   $(APPLCOMMON_DIR)/Assert \
    $(APPLCOMMON_DIR)/ApplianceApi \
    $(APPLCOMMON_DIR)/BootLoader \
    $(APPLCOMMON_DIR)/Git \
-   $(APPLCOMMON_DIR)/Fingerprinter \
    $(APPLCOMMON_DIR)/Image \
-   $(APPLCOMMON_DIR)/Reset \
    $(APPLCOMMON_DIR)/ServiceMode \
    $(APPLCOMMON_DIR)/Signal \
    $(APPLCOMMON_DIR)/Utilities \

@@ -65,7 +65,6 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_DIR)/Ui \
    $(APPLCOMMON_DIR)/Ul \
    $(APPLCOMMON_DIR)/Ul/Plugins \
-   $(APPLCOMMON_DIR)/Updater \
    $(APPLCOMMON_DIR)/Utilities \
    $(APPLCOMMON_DIR)/Validator \
 
@@ -83,15 +82,12 @@ SRC_DIRS=\
 
 # Additional include directories
 INC_DIRS=\
-   $(APPLCOMMON_DIR)/Assert \
    $(APPLCOMMON_DIR)/ApplianceApi \
    $(APPLCOMMON_DIR)/BootLoader \
-   $(APPLCOMMON_DIR)/Fingerprinter \
    $(APPLCOMMON_DIR)/Git \
    $(APPLCOMMON_DIR)/Hardware/Rx231 \
    $(APPLCOMMON_DIR)/Hardware/Kpit/Rx231 \
    $(APPLCOMMON_DIR)/Image \
-   $(APPLCOMMON_DIR)/Reset \
    $(APPLCOMMON_DIR)/ServiceMode \
    $(APPLCOMMON_DIR)/Signal \
    $(APPLCOMMON_DIR)/Utilities \

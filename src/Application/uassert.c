@@ -6,12 +6,33 @@
  */
 
 #include "uassert.h"
+#include "ProgramCounterAddress.h"
+
+enum
+{
+   DelayBeforeResetInMsec = 250
+};
+
+static struct
+{
+   I_Action_t *resetAction;
+   I_Output_t *programCounterAddressOutput;
+   TimerModule_t *timerModule;
+   Timer_t delayedRestartTimer;
+} instance;
+
+static void Reset(void *context)
+{
+   IGNORE(context);
+   Action_Invoke(instance.resetAction);
+}
 
 void __uassert_func(
-   const char * fileName,
+   const char *fileName,
    const int lineNumber,
    const bool condition,
-   const char *conditionString)
+   const char *conditionString,
+   const void *programCounter)
 {
    (void)conditionString;
    (void)fileName;
@@ -19,9 +40,24 @@ void __uassert_func(
 
    if(!condition)
    {
+      if(instance.programCounterAddressOutput)
+      {
+         ProgramCounterAddress_t programCounterAddress = (ProgramCounterAddress_t)programCounter;
+         Output_Write(instance.programCounterAddressOutput, &programCounterAddress);
+      }
+
+      TimerModule_StartOneShot(instance.timerModule, &instance.delayedRestartTimer, DelayBeforeResetInMsec, Reset, NULL);
+
       while(1)
       {
-
+         TimerModule_Run(instance.timerModule);
       }
    }
+}
+
+void Uassert_Init(I_Action_t *resetAction, I_Output_t *programCounterAddressOutput, TimerModule_t *timerModule)
+{
+   instance.resetAction = resetAction;
+   instance.programCounterAddressOutput = programCounterAddressOutput;
+   instance.timerModule = timerModule;
 }
