@@ -180,6 +180,7 @@ enum
    ENTRY(Erd_ResetReason,                                   0xF00F, ResetReason_t,                                      Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_SecondsSinceLastReset,                         0xF010, SecondsSinceLastReset_t,                            Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_ProgramCounterAddressAtLastUassert,            0xF011, ProgramCounterAddress_t,                            Swap_Y, Io_O,    Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_NonVolatileDataSourceCacheSyncState,           0xF012, bool,                                               Swap_N, Io_None, Sub_N, Virtual,  NotNv,                                    NotFault) \
    \
    ENTRY(Erd_SystemTickInterrupt,                           0xF100, I_Interrupt_t *,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_TimeSource,                                    0xF101, I_TimeSource_t *,                                   Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \

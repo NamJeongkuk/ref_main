@@ -14,7 +14,7 @@
 #include "KeyStreamPlugin.h"
 #include "TimerModuleDiagnostics.h"
 #include "Input_StackUsageCalculator.h"
-#include "ApplianceApiDiagnostics.h"
+#include "ApplianceApiResetDiagnostics.h"
 
 typedef struct
 {
@@ -27,7 +27,7 @@ typedef struct
       KeyStreamPlugin_t keyStreamPlugin;
       TimerModuleDiagnostics_t timerModuleDiagnostics;
       Input_StackUsageCalculator_t stackUsageCalculator;
-      ApplianceApiDiagnostics_t applianceApiDiagnostics;
+      ApplianceApiResetDiagnostics_t applianceApiResetDiagnostics;
       Timer_t stackUsageUpdateTimer;
    } _private;
 } Application_t;

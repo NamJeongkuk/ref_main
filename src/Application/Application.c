@@ -17,6 +17,12 @@ enum
    StackUsageUpdatePeriodInMsec = 1000
 };
 
+static const ApplianceApiResetDiagnosticsConfiguration_t applianceApiResetDiagnosticsConfiguration = {
+   .resetReasonErd = Erd_ResetReason,
+   .resetCountErd = Erd_ResetCount,
+   .secondsSinceLastResetErd = Erd_SecondsSinceLastReset
+};
+
 static void UpdateStackUsage(void *context)
 {
    REINTERPRET(instance, context, Application_t *);
@@ -53,9 +59,10 @@ void Application_Init(
       UpdateStackUsage,
       instance);
 
-   ApplianceApiDiagnostics_Init(
-      &instance->_private.applianceApiDiagnostics,
+   ApplianceApiResetDiagnostics_Init(
+      &instance->_private.applianceApiResetDiagnostics,
       dataModel,
       timerModule,
-      resetReason);
+      resetReason,
+      &applianceApiResetDiagnosticsConfiguration);
 }
