@@ -74,7 +74,6 @@ SRC_DIRS=\
    src/$(TARGET)/Hardware \
    src/$(TARGET)/Hardware/Flash \
    src/Application \
-   src/Application/ApplianceApiDiagnostics \
    src/Application/DataSource \
    src/Application/Gea \
    src/Application/Plugins \

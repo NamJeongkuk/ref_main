@@ -89,7 +89,6 @@ SRC_DIRS=\
    src/$(TARGET)/Hardware/Peripheral \
    src/$(TARGET)/Hardware/Platform \
    src/Application \
-   src/Application/ApplianceApiDiagnostics \
    src/Application/DataSource \
    src/Application/Gea \
    src/Application/Plugins \
