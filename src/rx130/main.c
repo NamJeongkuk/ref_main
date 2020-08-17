@@ -60,7 +60,7 @@ static GeaStack_t geaStack;
 static UlTestsPlugin_t ulTestsPlugin;
 
 static const uint8_t staticRoutingTable[] = {
-      Stm8sGea2Address
+   Stm8sGea2Address
 };
 
 static void UpdateBuildInfo(
