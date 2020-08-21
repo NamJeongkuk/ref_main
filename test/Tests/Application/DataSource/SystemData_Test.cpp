@@ -117,9 +117,9 @@ static void RunTimerModule(void *context)
 TEST_GROUP(SystemData)
 {
    SystemData_t instance;
-   uint8_t blockOfRandomData[200];
-   uint8_t dataFromExternalDataSource[200];
-   uint8_t dataFromInternalDataSource[200];
+   uint8_t blockOfRandomData[UINT8_MAX];
+   uint8_t dataFromExternalDataSource[UINT8_MAX];
+   uint8_t dataFromInternalDataSource[UINT8_MAX];
    I_DataModel_t *dataModel;
    I_DataSource_t *externalDataSource;
 
