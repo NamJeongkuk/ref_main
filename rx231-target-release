@@ -11,4 +11,4 @@ else
   exit 1
 fi
 
-make -f rx231-target.mk -j8 RELEASE=Y DEBUG=N package
+$MAKE -f rx231-target.mk -j8 RELEASE=Y DEBUG=N package
