@@ -30,7 +30,8 @@ static const TinyErdHeartbeatConfiguration_t erdHeartbeatConfig = {
    .destination = Rx231Gea2Address,
    .period = HeartbeatPeriodMsec,
    .pairs = erdHeartbeatPairs,
-   .pairCount = NUM_ELEMENTS(erdHeartbeatPairs)
+   .pairCount = NUM_ELEMENTS(erdHeartbeatPairs),
+   .enableHeartbeat = Erd_Invalid
 };
 
 // clang-format off

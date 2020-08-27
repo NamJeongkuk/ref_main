@@ -57,7 +57,8 @@ static const TinyErdHeartbeatConfiguration_t erdHeartbeatConfiguration = {
    .destination = HeartbeatDestinationAddress,
    .period = HeartbeatPeriod,
    .pairs = erdHeartbeatPairs,
-   .pairCount = NUM_ELEMENTS(erdHeartbeatPairs)
+   .pairCount = NUM_ELEMENTS(erdHeartbeatPairs),
+   .enableHeartbeat = Erd_Invalid
 };
 
 #define EXPAND_AS_LOCAL_TO_REMOTE_ERD_MAP(Name, Number, DataType, Stream, StreamRemoteErd) \
