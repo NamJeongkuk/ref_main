@@ -18,6 +18,7 @@
 #include "ApplianceApi.h"
 #include "Version.h"
 #include "TinyTimer.h"
+#include "ReadyToEnterBootLoaderState.h"
 #include "utils.h"
 
 enum

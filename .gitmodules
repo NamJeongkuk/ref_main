@@ -25,3 +25,6 @@
 [submodule "lib/applcommon.tiny"]
 	path = lib/applcommon.tiny
 	url = https://github.com/geappliances/applcommon.tiny
+[submodule "lua-finalize-psoc4-apl"]
+	path = tools/lua-finalize-psoc4-apl
+	url = https://github.com/geappliances/applcommon.lua-finalize-psoc4-apl

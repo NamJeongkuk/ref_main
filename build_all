@@ -12,6 +12,9 @@ else
    exit 1
 fi
 
+make -f micro-psoc4100s-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N clean
+make -f micro-psoc4100s-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N package
+
 $RX_MAKE -f rx130-target.mk -j16 RELEASE=Y DEBUG=N clean
 $RX_MAKE -f rx130-target.mk -j16 RELEASE=Y DEBUG=N package
 

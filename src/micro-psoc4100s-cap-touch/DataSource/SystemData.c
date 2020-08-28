@@ -19,9 +19,15 @@ typedef struct
    ERD_TABLE(EXPAND_AS_OFFSET_STRUCT_MEMBER)
 } DataSourceStorage_t;
 
+typedef union
+{
+   ERD_TABLE(EXPAND_AS_OFFSET_STRUCT_MEMBER)
+} EndiannessSwapBuffer_t;
+
 static TinyDataSource_Ram_t dataSource;
 static TinyDataSource_EndiannessSwapped_t externalDataSource;
 static DataSourceStorage_t erdRam;
+static EndiannessSwapBuffer_t endiannessSwapBuffer;
 
 #define EXPAND_AS_DATASOURCE_TINY_RAM_ERD_ENTRY(Name, Number, DataType, Stream, RemoteErd) \
    { Name, sizeof(DataType) },
@@ -54,6 +60,7 @@ void SystemData_Init(TinyTimerModule_t *timerModule)
    TinyDataSource_EndiannessSwapped_Init(
       &externalDataSource,
       &dataSource.interface,
+      &endiannessSwapBuffer,
       &endiannessSwappedConfiguration);
 
    TinyDataSource_Write(

@@ -72,8 +72,8 @@ INC_DIRS:=\
 SOURCE_EXTENSIONS:=.c .s
 
 ARM_VERSION:=5-4-2016q3
-DEVICE:=CY8C4147XXX-SXXX
-DEVICE_PART_NUMBER:=CY8C4147AZI-S455
+DEVICE:=CY8C4127XXX-SXXX
+DEVICE_PART_NUMBER:=CY8C4127AZI-S455
 CPU:=cortex-m0plus
 CPU_ARCHITECTURE:=armv6-m
 ENDIANNESS:=little
@@ -83,6 +83,8 @@ C_STANDARD:=gnu99
 HEADER_ADDRESS = 0x00004000
 
 WARNINGS_TO_IGNORE:=no-sign-compare
+
+LUA_FINALIZE_PSOC4_APL:=tools/lua-finalize-psoc4-apl/lua-finalize-psoc4-apl.lua
 
 PACKAGE_CONTENTS:=
 $(call add_to_package,$(OUTPUT_DIR)/binaries,binaries)
@@ -96,6 +98,7 @@ all: target $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
+	@$(LUA53) $(LUA_FINALIZE_PSOC4_APL) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot --output $(OUTPUT_DIR)/binaries/$(TARGET).hex --device $(DEVICE_PART_NUMBER)
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration $(TARGET)_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 	@cat $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 
