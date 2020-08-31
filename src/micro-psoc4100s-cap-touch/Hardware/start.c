@@ -28,16 +28,9 @@
 #include <errno.h>
 extern int end;
 
-void initialize_psoc(void);
 void PowerOnReset(void);
 void NmiHandler(void);
 void HardfaultHandler(void);
-
-void Gea3_SPI_UART_ISR(void);
-void SystemTick_ISR(void);
-void CapTouchIsrTrampoline(void);
-
-void initialize_psoc(void);
 
 CY_NORETURN
 CY_ISR(IntDefaultHandler)
