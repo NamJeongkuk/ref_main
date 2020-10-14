@@ -12,6 +12,15 @@ APPLCOMMON_DIR=lib/applcommon
 BOOT_LOADER_DIR=lib/boot-loaders
 LINKER_SCRIPT=$(BASE_TARGET)
 
+ifeq ($(DEBUG), N)
+else
+ifeq ($(DEBUG), Y)
+DEFINE_LIST+=DEBUG
+else
+$(error Please define DEBUG with Y or N.)
+endif
+endif
+
 # Specific files to include if you don't want the entire directory included
 SRC_FILES=\
 

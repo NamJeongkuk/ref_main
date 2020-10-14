@@ -42,7 +42,7 @@ IGNORE_WARNINGS=24 94
 ifeq ($(DEBUG), N)
 else
 ifeq ($(DEBUG), Y)
-   DEFINE_LIST+=DISABLE_UL_CHECKS DEBUG
+DEFINE_LIST+=DEBUG
 else
 $(error Please define DEBUG with Y or N.)
 endif

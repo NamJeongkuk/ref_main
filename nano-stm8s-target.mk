@@ -14,6 +14,15 @@ OPENOCD_TARGET:=target/stm8s003.cfg
 STM8FLASH_PART:=stm8s103f3
 STM8FLASH_PROGRAMMER:=stlinkv2
 
+ifeq ($(DEBUG), N)
+else
+ifeq ($(DEBUG), Y)
+DEFINE_LIST+=DEBUG
+else
+$(error Please define DEBUG with Y or N.)
+endif
+endif
+
 MAIN:=src/$(TARGET)/main.c
 
 SRC_FILES:=\

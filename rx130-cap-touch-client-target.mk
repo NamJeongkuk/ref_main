@@ -11,6 +11,15 @@ APPLCOMMON_DIR=lib/applcommon
 BOOT_LOADER_DIR=lib/boot-loaders
 BOOT_LOADER_UPDATER_DIR=$(BOOT_LOADER_DIR)/lib/boot-loader-updater
 
+ifeq ($(DEBUG), N)
+else
+ifeq ($(DEBUG), Y)
+DEFINE_LIST+=DEBUG
+else
+$(error Please define DEBUG with Y or N.)
+endif
+endif
+
 # Specific files to include if you don't want the entire directory included
 SRC_FILES=\
 

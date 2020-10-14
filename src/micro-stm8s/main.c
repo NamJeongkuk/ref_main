@@ -41,7 +41,7 @@ static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 
 void main(void)
 {
-#ifndef DISABLE_UL_CHECKS
+#ifndef DEBUG
    Ul_Startup();
 #endif
    Iwdg_Init();
@@ -75,7 +75,7 @@ void main(void)
    {
       TinyTimerModule_Run(&timerModule);
       GeaStack_Run();
-#ifndef DISABLE_UL_CHECKS
+#ifndef DEBUG
       Ul_Run();
 #endif
    }
