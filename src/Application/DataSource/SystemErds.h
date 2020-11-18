@@ -93,7 +93,7 @@ enum
    RamErdBase = 0xFD00
 };
 
-// Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId
+//       Name,                                              Number, DataType,                                           Swap,   Io,      Sub,   StorageType, NvDefaultData,                         FaultId
 #define ERD_TABLE(ENTRY)  \
    ENTRY(Erd_ModelNumber,                                   0x0001, ModelNumber_t,                                      Swap_N, Io_None, Sub_N, Virtual,  NotNv,                                    NotFault) \
    ENTRY(Erd_SerialNumber,                                  0x0002, SerialNumber_t,                                     Swap_N, Io_None, Sub_N, Virtual,  NotNv,                                    NotFault) \
