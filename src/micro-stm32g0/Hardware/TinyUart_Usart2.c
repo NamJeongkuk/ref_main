@@ -35,6 +35,7 @@ void USART2_IRQHandler(void)
       if(LL_USART_IsActiveFlag_RXNE(USART))
       {
          uint8_t byte = LL_USART_ReceiveData8(USART);
+         (void)byte;
       }
    }
    else if(LL_USART_IsActiveFlag_RXNE(USART))

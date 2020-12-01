@@ -15,7 +15,7 @@
 
 enum
 {
-   StreamedItemCount = 5
+   StreamEntryCount = 5
 };
 
 // clang-format off
@@ -50,22 +50,13 @@ typedef union
 typedef struct
 {
    uint8_t erd[sizeof(Erd_t)];
-   uint8_t item[sizeof(StreamedErd_t)];
-} StreamedItem_t;
-
-#define EXPAND_AS_STREAM_COUNT_ENUM(Name, Number, DataType, Stream, RemoteErd) \
-   CONCAT(INCLUDE_STREAM_, Stream)(StreamCount##Name COMMA)
-
-enum
-{
-   ERD_TABLE(EXPAND_AS_STREAM_COUNT_ENUM)
-   NumberOfStreamedErds
-};
+   uint8_t data[sizeof(StreamedErd_t)];
+} StreamEntry_t;
 
 typedef struct
 {
    ErdStreamHeader_t header;
-   StreamedItem_t items[StreamedItemCount];
+   StreamEntry_t entries[StreamEntryCount];
 } ErdStreamErd_t;
 
 #define EXPAND_AS_ENUM(Name, Number, DataType, Stream, RemoteErd) \

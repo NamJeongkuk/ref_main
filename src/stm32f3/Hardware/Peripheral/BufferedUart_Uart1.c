@@ -47,7 +47,7 @@ static void Initialize(void);
 
 static void Transmit(I_BufferedUart_t *_instance, const uint8_t *data, const uint16_t byteCount)
 {
-   IGNORE_ARG(_instance);
+   IGNORE(_instance);
    uassert(!instance.waitingForTransmitToComplete);
 
    instance.waitingForTransmitToComplete = true;
@@ -57,13 +57,13 @@ static void Transmit(I_BufferedUart_t *_instance, const uint8_t *data, const uin
 
 static I_Event_t *GetOnReceiveEvent(I_BufferedUart_t *_instance)
 {
-   IGNORE_ARG(instance);
+   IGNORE(_instance);
    return &instance.receiveEvent.interface;
 }
 
 static I_Event_t *GetOnTransmitEvent(I_BufferedUart_t *_instance)
 {
-   IGNORE_ARG(instance);
+   IGNORE(_instance);
    return &instance.transmitEvent.interface;
 }
 
@@ -96,8 +96,7 @@ static void ProcessBytesReceivedByDma(void)
 
    if(index > 0)
    {
-      BufferedUartOnReceiveArgs_t args =
-         { localData, index };
+      BufferedUartOnReceiveArgs_t args = { localData, index };
       Event_Synchronous_Publish(&instance.receiveEvent, &args);
    }
 }
@@ -117,13 +116,12 @@ static void Run(I_BufferedUart_t *_instance)
    }
 }
 
-static const I_BufferedUart_Api_t uartApi =
-   {
-      .Transmit = Transmit,
-      .GetOnReceiveEvent = GetOnReceiveEvent,
-      .GetOnTransmitCompleteEvent = GetOnTransmitEvent,
-      .Run = Run
-   };
+static const I_BufferedUart_Api_t uartApi = {
+   .Transmit = Transmit,
+   .GetOnReceiveEvent = GetOnReceiveEvent,
+   .GetOnTransmitCompleteEvent = GetOnTransmitEvent,
+   .Run = Run
+};
 
 static void InitializePins(void)
 {

@@ -26,8 +26,9 @@ static CRC_HandleTypeDef crcPeripheral;
 
 static Crc16_t ProcessString(I_Crc16Calculator_t *instance, Crc16_t seed, const void *start, size_t count)
 {
-   IGNORE_ARG(instance);
-   REINTERPRET(current, start, uint8_t *);
+   IGNORE(instance);
+   IGNORE(seed);
+
    Crc16_t crc;
 
    ContextProtector_Protect(contextProtector);
@@ -37,13 +38,9 @@ static Crc16_t ProcessString(I_Crc16Calculator_t *instance, Crc16_t seed, const 
    return crc;
 }
 
-static const I_Crc16Calculator_Api_t api =
-   { ProcessString };
+static const I_Crc16Calculator_Api_t api = { ProcessString };
 
-static I_Crc16Calculator_t calculator =
-   {
-      &api
-   };
+static I_Crc16Calculator_t calculator = { &api };
 
 I_Crc16Calculator_t *Crc16Calculator_Stm32_Init(I_ContextProtector_t *_contextProtector)
 {

@@ -116,7 +116,13 @@ ENDIANNESS:=little
 OPTIMIZE:=s
 C_STANDARD:=gnu99
 
-WARNINGS_TO_IGNORE:=no-array-bounds no-maybe-uninitialized no-type-limits no-implicit-fallthrough
+WARNINGS_TO_IGNORE:=\
+  no-array-bounds \
+  no-maybe-uninitialized \
+  no-type-limits \
+  no-implicit-fallthrough \
+  no-unused-parameter \
+  no-strict-aliasing \
 
 HEADER_ADDRESS:=0x08006000
 

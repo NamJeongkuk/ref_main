@@ -53,7 +53,7 @@ static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
       NULL);
 }
 
-void main(void)
+int main(void)
 {
    Watchdog_Init(0);
 

@@ -107,8 +107,6 @@ const Vector_t __Vectors[] __attribute__((section(".vectors"))) = {
 
 void Default_Handler(void)
 {
-   volatile uint32_t activeVector = SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk;
-
    while(1)
    {
    }
