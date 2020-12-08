@@ -80,12 +80,12 @@ include lib/stm32-standard-peripherals/stm32-standard-peripherals.mk
 all: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 	$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
 	$(call make_directory,$(OUTPUT_DIR)/binaries)
-	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).mot --endianness little --output_directory $(OUTPUT_DIR)/binaries
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration $(TARGET)_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 	@cat $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 
 .PHONY: package
 package: all artifacts erd_definitions
+	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).mot --endianness little --output_directory $(OUTPUT_DIR)/binaries
 	$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 	@echo Archive complete
 

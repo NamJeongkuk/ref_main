@@ -129,15 +129,15 @@ $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 all: target $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 	$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
 	$(call make_directory,$(OUTPUT_DIR)/binaries)
-	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness little --output_directory $(OUTPUT_DIR)/binaries
-	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot --endianness little --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
-	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot --endianness little --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
-	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_UPDATER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader-updater/$(BOOT_LOADER_TARGET)-boot-loader-updater.apl --endianness little --output_directory $(OUTPUT_DIR)/binaries
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration $(TARGET)_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 	@cat $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 
 .PHONY: package
 package: all artifacts erd_definitions
+	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness little --output_directory $(OUTPUT_DIR)/binaries
+	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot --endianness little --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
+	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot --endianness little --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
+	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_UPDATER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader-updater/$(BOOT_LOADER_TARGET)-boot-loader-updater.apl --endianness little --output_directory $(OUTPUT_DIR)/binaries
 	$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 	@echo Archive complete
 
