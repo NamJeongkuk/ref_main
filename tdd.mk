@@ -35,8 +35,9 @@ INCLUDE_DIRS := \
 
 include $(APPLCOMMON_DIR)/Makefile
 
-artifacts: lcov_silent
+artifacts: lcov_silent pmccabe_report
 	@mkdir -p artifacts
 	@mv $(OUTPUT_DIR)/Lcov Lcov
 	@zip -r artifacts/lcov.zip Lcov
 	@rm -rf Lcov
+	@mv $(OUTPUT_DIR)/Pmccabe/pmccabe artifacts/pmccabe
