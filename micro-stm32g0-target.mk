@@ -85,7 +85,7 @@ all: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 
 .PHONY: package
 package: all artifacts erd_definitions
-	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).mot --endianness little --output_directory $(OUTPUT_DIR)/binaries
+	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
 	$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 	@echo Archive complete
 
