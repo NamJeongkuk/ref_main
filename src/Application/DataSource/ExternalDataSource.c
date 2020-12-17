@@ -40,6 +40,9 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_FIELD(PublicErd_ServiceDiagnosticsRevision3Manifest, ServiceDiagnosticsRevision3Manifest_t, entityMapStart),
    SWAPPED_FIELD(PublicErd_ApplianceApiManifest, ApplianceApiManifest_t, revision),
    SWAPPED_FIELD(PublicErd_ApplianceApiManifest, ApplianceApiManifest_t, features),
+   SWAPPED_ERD(PublicErd_ResetCount, sizeof(ResetCount_t)),
+   SWAPPED_ERD(PublicErd_SecondsSinceLastReset, sizeof(SecondsSinceLastReset_t)),
+   SWAPPED_ERD(PublicErd_ProgramCounterAddressAtLastUassert, sizeof(ProgramCounterAddress_t)),
 
    // 0xE000 range
    SWAPPED_ERD(PublicErd_ServiceDiagnosticsEntityLocation, sizeof(Erd_t)),
@@ -77,9 +80,6 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_FIELD(PublicErd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, averageLatency),
    SWAPPED_ERD(PublicErd_SomeData, sizeof(uint32_t)),
    SWAPPED_ERD(PublicErd_ApplianceRunTimeInMinutesUpdatedHourly, sizeof(ApplianceRunTimeMinutes_t)),
-   SWAPPED_ERD(PublicErd_ResetCount, sizeof(ResetCount_t)),
-   SWAPPED_ERD(PublicErd_SecondsSinceLastReset, sizeof(SecondsSinceLastReset_t)),
-   SWAPPED_ERD(PublicErd_ProgramCounterAddressAtLastUassert, sizeof(ProgramCounterAddress_t)),
 
    // 0xF200 range
    SWAPPED_ERD(PublicErd_SomeAnalogInput, sizeof(uint16_t)),

@@ -9,73 +9,65 @@
 #include "SystemErds.h"
 #include "Header.h"
 
-// clang-format off
-static DataSource_ApplianceApiRevision1Configuration_t applianceApiConfiguration =
-   {
-      .header =
-         {
-            .bootLoader = BootLoaderImageHeader,
-            .application = ApplicationImageHeader,
-            .parametric = ParametricImageHeader,
-            .auxiliary = NULL
-         },
+static const DataSource_ApplianceApiRevision1Configuration_t applianceApiConfiguration = {
+   .header = {
+      .bootLoader = BootLoaderImageHeader,
+      .application = ApplicationImageHeader,
+      .parametric = ParametricImageHeader,
+      .auxiliary = NULL,
+   },
 
-      .foundation =
-         {
-            .erd =
-               {
-                  .manifest = Erd_ApplianceApiManifest,
+   .foundation = {
+      .erd = {
+         .manifest = Erd_ApplianceApiManifest,
 
-                  .reset = Erd_Reset,
+         .reset = Erd_Reset,
 
-                  .supportedImageTypes = Erd_SupportedImageTypes,
+         .supportedImageTypes = Erd_SupportedImageTypes,
 
-                  .bootLoaderImageVersion = Erd_BootLoaderVersion,
-                  .applicationImageVersion = Erd_ApplicationVersion,
-                  .parametricImageVersion = Erd_ParametricVersion,
-                  .auxiliaryImageVersion = Erd_AuxiliaryVersion
-               },
-         },
+         .bootLoaderImageVersion = Erd_BootLoaderVersion,
+         .applicationImageVersion = Erd_ApplicationVersion,
+         .parametricImageVersion = Erd_ParametricVersion,
+         .auxiliaryImageVersion = Erd_AuxiliaryVersion,
+      },
+   },
 
-      .primary =
-         {
-            .supported = true,
-            .erd =
-               {
-                  .modelNumber = Erd_ModelNumber,
-                  .serialNumber = Erd_SerialNumber,
-                  .applianceType = Erd_ApplianceType,
-                  .appliancePersonality = Erd_AppliancePersonality,
-                  .applianceRunTime = Erd_ServiceDiagnosticsRunTimeInMinutes
-               }
-         },
+   .primary = {
+      .supported = true,
+      .erd = {
+         .modelNumber = Erd_ModelNumber,
+         .serialNumber = Erd_SerialNumber,
+         .applianceType = Erd_ApplianceType,
+         .appliancePersonality = Erd_AppliancePersonality,
+         .applianceRunTime = Erd_ServiceDiagnosticsRunTimeInMinutes,
+      },
+   },
 
-      .serviceMode =
-         {
-            .supported = false,
-         },
+   .serviceMode = {
+      .supported = false,
+   },
 
-      .bootLoader =
-         {
-            .supported = false,
-            .erd =
-               {
-                  .readyToEnterBootLoader = Erd_ReadyToEnterBootLoader
-               }
-         },
-      .resetInformation =
-         {
-            .supported = true,
-            .erd =
-               {
-                  .resetCount = Erd_ResetCount,
-                  .resetReason = Erd_ResetReason,
-                  .secondsSinceLastReset = Erd_SecondsSinceLastReset,
-                  .programCounterAddressOfLastUassert = Erd_ProgramCounterAddressAtLastUassert
-               }
-         }
-   };
-// clang-format on
+   .bootLoader = {
+      .supported = true,
+      .erd = {
+         .readyToEnterBootLoader = Erd_ReadyToEnterBootLoader,
+      },
+   },
+
+   .timeOfDay = {
+      .supported = false,
+   },
+
+   .resetInformation = {
+      .supported = true,
+      .erd = {
+         .resetCount = Erd_ResetCount,
+         .resetReason = Erd_ResetReason,
+         .secondsSinceLastReset = Erd_SecondsSinceLastReset,
+         .programCounterAddressOfLastUassert = Erd_ProgramCounterAddressAtLastUassert,
+      },
+   },
+};
 
 void ApplianceApiDataSource_Init(
    ApplianceApiDataSource_t *instance,
