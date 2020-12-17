@@ -110,6 +110,10 @@ CPU=rx200
 # Set endianness as big or little
 ENDIANNESS=little
 
+ifeq ($(ENDIANNESS), little)
+DEFINE_LIST+=LITTLE_ENDIAN
+endif
+
 # Warnings to ignore
 WARNINGS_TO_IGNORE=no-array-bounds
 

@@ -58,7 +58,7 @@ int main(void)
 
       GeaStack_Init(
          &timerModule,
-         MicroSystemData_DataSource(),
+         MicroSystemData_ExternalDataSource(),
          TinyUart_Usart2_Init(),
          Stm32g0Gea2Address);
 

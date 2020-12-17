@@ -60,6 +60,10 @@ enum
    ENTRY(Erd_WiFiServiceState,                  0xF002, TinyWiFiServiceState_t,     StreamNone,    NotMapped) \
    ENTRY(Erd_WiFiServiceConnectionEstablished,  0xF003, Signal_t,                   StreamNone,    NotMapped) \
 
+#define SWAPPED_FIELDS \
+   SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, revision), \
+   SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, features), \
+
 #define EXPAND_AS_STREAMED_ITEM_UNION(Name, Number, DataType, Stream, RemoteErd) \
    CONCAT(INCLUDE_STREAM_, Stream)(DataType item##Name;)
 

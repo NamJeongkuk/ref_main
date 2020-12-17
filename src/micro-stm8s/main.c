@@ -59,7 +59,7 @@ void main(void)
 
       GeaStack_Init(
          &timerModule,
-         MicroSystemData_DataSource(),
+         MicroSystemData_ExternalDataSource(),
          TinyUart_Uart3_Init(),
          Stm8sGea2Address);
 

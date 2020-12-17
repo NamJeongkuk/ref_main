@@ -63,6 +63,10 @@ ENDIANNESS:=little
 OPTIMIZE:=s
 C_STANDARD:=gnu99
 
+ifeq ($(ENDIANNESS), little)
+DEFINE_LIST+=LITTLE_ENDIAN
+endif
+
 WARNINGS_TO_IGNORE:=no-array-bounds no-maybe-uninitialized no-type-limits no-implicit-fallthrough
 
 HEADER_ADDRESS:=0x08003000
