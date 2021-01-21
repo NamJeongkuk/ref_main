@@ -44,6 +44,14 @@ Small cap touch application using the [CY8C4127AZI-S455](https://www.cypress.com
 | Flash  | 128 KB |
 | RAM    | 16 KB  |
 
+### micro-rl78
+Small RL78 application using the [R5F101AF](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rl78-low-power-8-16-bit-mcus)
+
+| Memory | Size  |
+|--------|-------|
+| Flash  | 96 KB |
+| RAM    | 8 KB  |
+
 ### rx130
 General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html).
 

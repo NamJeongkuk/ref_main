@@ -28,3 +28,6 @@
 [submodule "lua-finalize-psoc4-apl"]
 	path = tools/lua-finalize-psoc4-apl
 	url = https://github.com/geappliances/applcommon.lua-finalize-psoc4-apl
+[submodule "tools/kpit-rl78"]
+	path = tools/kpit-rl78
+	url = https://github.com/geappliances/build-tools.kpit-rl78-release

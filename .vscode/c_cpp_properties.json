@@ -4,6 +4,7 @@
       "tiny-include": "${workspaceFolder}/lib/applcommon.tiny/src/**",
       "gcc-arm-include": "${workspaceFolder}/tools/gcc-arm-none-eabi/tc/lib/gcc/arm-none-eabi/7.2.1/include/**",
       "kpit-rx-include": "${workspaceFolder}/tools/kpit-rx/tc/lib/gcc/rx-elf/4.8.4.201801-GNURX/include/**",
+      "kpit-r78-include": "${workspaceFolder}/tools/kpit-rl78/tc/lib/gcc/rl78-elf/4.9.2.202002-GNURL78/include/**",
       "sdcc-stm8-include": "${workspaceFolder}/tools/sdcc-stm8/lib/inc/**",
       "stm32f3-peripheral-library-include": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32F3xx/**",
       "stm32g0-peripheral-library-include": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32G0xx/**",
@@ -31,6 +32,20 @@
             "${env:tiny-include}",
             "${workspaceFolder}/src/micro-psoc4100s-cap-touch/**",
             "${workspaceFolder}/src/Application/**"
+         ],
+         "intelliSenseMode": "gcc-arm",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      },
+      {
+         "name": "micro-rl78",
+         "defines": [],
+         "includePath": [
+            "${workspaceFolder}/src/micro-rl78/**",
+            "${env:kpit-rl78-include}",
+            "${env:tiny-include}",
+            "${workspaceFolder}/src/MicroApplication/**",
+            "${workspaceFolder}/src/Application/Gea/*"
          ],
          "intelliSenseMode": "gcc-arm",
          "cStandard": "c99",

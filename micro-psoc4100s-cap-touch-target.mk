@@ -9,10 +9,6 @@ BOOT_LOADER_TARGET=small-psoc4100s
 PSOC_CREATOR_DIR=src/$(TARGET)/PsocCreator/psoc.cydsn
 PSOC_CREATOR_GENERATED_DIR=src/$(TARGET)/PsocCreator/psoc.cydsn/Generated_Source/PSoC4
 
-# Set custom flags here
-BUILD_RELEASE=2
-BUILD_EMULATOR=1
-
 ifeq ($(DEBUG), N)
 else
 ifeq ($(DEBUG), Y)

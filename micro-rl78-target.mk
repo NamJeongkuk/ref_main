@@ -2,19 +2,11 @@
 include tools/gcc-arm-none-eabi/mc/makecommon.mk
 
 # Name of the project that is being built
-TARGET:=micro-stm32g0
+TARGET:=micro-rl78
 OUTPUT_DIR:=build/$(TARGET)
 APPLCOMMON_TINY_DIR:=lib/applcommon.tiny
 BOOT_LOADER_DIR=lib/boot-loaders
-BOOT_LOADER_TARGET=small-stm32g0
-
-DISABLE_HAL=Y
-
-# The STM32 CPU
-DEVICE:=STM32G070KB
-
-DEFINE_LIST+=STM32G070xx
-DEFINE_LIST+=USE_FULL_LL_DRIVER
+BOOT_LOADER_TARGET=small-rl78
 
 ifeq ($(DEBUG), N)
 else
@@ -26,9 +18,6 @@ endif
 endif
 
 SRC_FILES=\
-   lib/stm32-standard-peripherals/STM32G0xx/Libraries/STM32G0xx_HAL_Driver/Src/stm32g0xx_ll_gpio.c \
-   lib/stm32-standard-peripherals/STM32G0xx/Libraries/STM32G0xx_HAL_Driver/Src/stm32g0xx_ll_rcc.c \
-   lib/stm32-standard-peripherals/STM32G0xx/Libraries/STM32G0xx_HAL_Driver/Src/stm32g0xx_ll_usart.c \
 
 COMMON_LIB_DIRS=\
    $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
@@ -49,23 +38,20 @@ INC_DIRS=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    src/Application/Gea \
 
+# RL78 micro being used (g10, g13, g14)
+CPU=g13
 SOURCE_EXTENSIONS:=.c .s
-
-ARM_VERSION:=7-2017-q4-major
-JLINK_VERSION:=6.80a
-CPU:=cortex-m0plus
-CPU_ARCHITECTURE:=armv6-m
-ENDIANNESS:=little
+TOOLCHAIN_VERSION:=4.9.2.202002
 OPTIMIZE:=s
-C_STANDARD:=gnu99
+ENDIANNESS:=little
 
 ifeq ($(ENDIANNESS), little)
 DEFINE_LIST+=LITTLE_ENDIAN
 endif
 
-WARNINGS_TO_IGNORE:=no-array-bounds no-maybe-uninitialized no-type-limits no-implicit-fallthrough
+WARNINGS_TO_IGNORE:=
 
-HEADER_ADDRESS:=0x08003000
+HEADER_ADDRESS:=0x3400
 
 # Space delimited list, whole folders can also be included
 PACKAGE_CONTENTS=
@@ -73,8 +59,6 @@ $(call add_to_package,$(OUTPUT_DIR)/binaries,binaries)
 $(call add_to_package,$(OUTPUT_DIR)/doc,doc)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
-
-include lib/stm32-standard-peripherals/stm32-standard-peripherals.mk
 
 .PHONY: all
 all: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
@@ -85,7 +69,8 @@ all: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 
 .PHONY: package
 package: all artifacts erd_definitions
-	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
+	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
+	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
 	$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 	@echo Archive complete
 
@@ -99,14 +84,10 @@ $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot: target boot-loader
 $(OUTPUT_DIR)/doc:
 	@mkdir -p $(OUTPUT_DIR)/doc
 
-.PHONY: upload
-upload: all jlink_tools
-	$(call jlink_upload,$(OUTPUT_DIR)/$(TARGET).mot)
-
 .PHONY: clean
 clean: target_clean
 
-include tools/gcc-arm-none-eabi/MakefileWorker.mk
+include tools/kpit-rl78/kpit-rl78-makefile-worker.mk
 
 .PHONY: erd_definitions
 erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)
