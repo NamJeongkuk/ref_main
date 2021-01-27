@@ -11,5 +11,5 @@ tools.build_json({
     'src/Application/DataSource/SystemErds.h'
   },
   types_factory = Types,
-  output = 'build/rx130/doc/erd-definitions.json'
+  output = 'build/mini-rx130/doc/erd-definitions.json'
 })

@@ -84,7 +84,7 @@ all: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 	@cat $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 
 .PHONY: package
-package: all artifacts erd_definitions
+package: all artifacts erd_definitions erd_lock
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
 	$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 	@echo Archive complete
@@ -107,6 +107,10 @@ upload: all jlink_tools
 clean: target_clean
 
 include tools/gcc-arm-none-eabi/MakefileWorker.mk
+
+.PHONY: erd_lock
+erd_lock: erd_definitions
+	@$(LUA53) $(LUA_ERD_LOCK_REPORT) --configuration micro_erd_lock_config.lua --locked_definitions micro-erd-lock.json --definitions $(OUTPUT_DIR)/doc/erd-definitions.json
 
 .PHONY: erd_definitions
 erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)

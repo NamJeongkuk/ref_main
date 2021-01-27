@@ -1,0 +1,306 @@
+{
+  "erds": [
+    {
+      "name": "Erd_ModelNumber",
+      "id": "0x0001",
+      "operations": [
+        "read",
+        "write"
+      ],
+      "data": [
+        {
+          "name": "Erd_ModelNumber.data",
+          "type": "string",
+          "offset": 0,
+          "size": 32
+        }
+      ]
+    },
+    {
+      "name": "Erd_SerialNumber",
+      "id": "0x0002",
+      "operations": [
+        "read",
+        "write"
+      ],
+      "data": [
+        {
+          "name": "Erd_SerialNumber.data",
+          "type": "string",
+          "offset": 0,
+          "size": 32
+        }
+      ]
+    },
+    {
+      "name": "Erd_ApplianceType",
+      "id": "0x0008",
+      "operations": [
+        "read",
+        "write"
+      ],
+      "data": [
+        {
+          "name": "Erd_ApplianceType",
+          "type": "enum",
+          "values": {
+            "0": "ApplianceType_WaterHeater",
+            "1": "ApplianceType_ClothesDryer",
+            "2": "ApplianceType_ClothesWasher",
+            "3": "ApplianceType_Refrigerator",
+            "4": "ApplianceType_Microwave",
+            "5": "ApplianceType_Advantium",
+            "6": "ApplianceType_Dishwasher",
+            "7": "ApplianceType_Oven",
+            "8": "ApplianceType_ElectricRange",
+            "9": "ApplianceType_GasRange",
+            "10": "ApplianceType_ThermostatRac",
+            "11": "ApplianceType_ElectricCooktop",
+            "12": "ApplianceType_PizzaOven",
+            "13": "ApplianceType_GasCooktop",
+            "14": "ApplianceType_SplitAirConditioner",
+            "15": "ApplianceType_Hood",
+            "16": "ApplianceType_PointOfEntryWaterFilter",
+            "17": "ApplianceType_InductionCooktop",
+            "18": "ApplianceType_DeliveryBox",
+            "19": "ApplianceType_KitchenHubVentHood",
+            "20": "ApplianceType_ZonelinePtac",
+            "21": "ApplianceType_WaterSoftener",
+            "22": "ApplianceType_PortableAc",
+            "255": "ApplianceType_Unknown"
+          },
+          "offset": 0,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "name": "Erd_ReadyToEnterBootLoader",
+      "id": "0x0030",
+      "operations": [
+        "read",
+        "write"
+      ],
+      "data": [
+        {
+          "name": "Erd_ReadyToEnterBootLoader",
+          "type": "enum",
+          "values": {
+            "0": "ReadyToEnterBootLoaderState_Unknown1",
+            "1": "ReadyToEnterBootLoaderState_Unknown2",
+            "2": "ReadyToEnterBootLoaderState_NotReady",
+            "3": "ReadyToEnterBootLoaderState_Ready"
+          },
+          "offset": 0,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "name": "Erd_Reset",
+      "id": "0x0032",
+      "operations": [
+        "read",
+        "write"
+      ],
+      "data": [
+        {
+          "name": "Erd_Reset",
+          "type": "u8",
+          "offset": 0,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "name": "Erd_Personality",
+      "id": "0x0035",
+      "operations": [
+        "read",
+        "write"
+      ],
+      "data": [
+        {
+          "name": "Erd_Personality",
+          "type": "u32",
+          "offset": 0,
+          "size": 4
+        }
+      ]
+    },
+    {
+      "name": "Erd_SupportedImageTypes",
+      "id": "0x0038",
+      "operations": [
+        "read",
+        "write"
+      ],
+      "data": [
+        {
+          "name": "Erd_SupportedImageTypes",
+          "type": "u8",
+          "offset": 0,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "name": "Erd_BootLoaderVersion",
+      "id": "0x0039",
+      "operations": [
+        "read",
+        "write"
+      ],
+      "data": [
+        {
+          "name": "Erd_BootLoaderVersion.criticalMajor",
+          "type": "u8",
+          "offset": 0,
+          "size": 1
+        },
+        {
+          "name": "Erd_BootLoaderVersion.criticalMinor",
+          "type": "u8",
+          "offset": 1,
+          "size": 1
+        },
+        {
+          "name": "Erd_BootLoaderVersion.major",
+          "type": "u8",
+          "offset": 2,
+          "size": 1
+        },
+        {
+          "name": "Erd_BootLoaderVersion.minor",
+          "type": "u8",
+          "offset": 3,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "name": "Erd_ApplicationVersion",
+      "id": "0x003A",
+      "operations": [
+        "read",
+        "write"
+      ],
+      "data": [
+        {
+          "name": "Erd_ApplicationVersion.criticalMajor",
+          "type": "u8",
+          "offset": 0,
+          "size": 1
+        },
+        {
+          "name": "Erd_ApplicationVersion.criticalMinor",
+          "type": "u8",
+          "offset": 1,
+          "size": 1
+        },
+        {
+          "name": "Erd_ApplicationVersion.major",
+          "type": "u8",
+          "offset": 2,
+          "size": 1
+        },
+        {
+          "name": "Erd_ApplicationVersion.minor",
+          "type": "u8",
+          "offset": 3,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "name": "Erd_ParametricVersion",
+      "id": "0x003B",
+      "operations": [
+        "read",
+        "write"
+      ],
+      "data": [
+        {
+          "name": "Erd_ParametricVersion.criticalMajor",
+          "type": "u8",
+          "offset": 0,
+          "size": 1
+        },
+        {
+          "name": "Erd_ParametricVersion.criticalMinor",
+          "type": "u8",
+          "offset": 1,
+          "size": 1
+        },
+        {
+          "name": "Erd_ParametricVersion.major",
+          "type": "u8",
+          "offset": 2,
+          "size": 1
+        },
+        {
+          "name": "Erd_ParametricVersion.minor",
+          "type": "u8",
+          "offset": 3,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "name": "Erd_AuxiliaryVersion",
+      "id": "0x003C",
+      "operations": [
+        "read",
+        "write"
+      ],
+      "data": [
+        {
+          "name": "Erd_AuxiliaryVersion.criticalMajor",
+          "type": "u8",
+          "offset": 0,
+          "size": 1
+        },
+        {
+          "name": "Erd_AuxiliaryVersion.criticalMinor",
+          "type": "u8",
+          "offset": 1,
+          "size": 1
+        },
+        {
+          "name": "Erd_AuxiliaryVersion.major",
+          "type": "u8",
+          "offset": 2,
+          "size": 1
+        },
+        {
+          "name": "Erd_AuxiliaryVersion.minor",
+          "type": "u8",
+          "offset": 3,
+          "size": 1
+        }
+      ]
+    },
+    {
+      "name": "Erd_ApplianceApiManifest",
+      "id": "0x0092",
+      "operations": [
+        "read",
+        "write"
+      ],
+      "data": [
+        {
+          "name": "Erd_ApplianceApiManifest.revision",
+          "type": "u32",
+          "offset": 0,
+          "size": 4
+        },
+        {
+          "name": "Erd_ApplianceApiManifest.features",
+          "type": "u32",
+          "offset": 4,
+          "size": 4
+        }
+      ]
+    }
+  ]
+}
