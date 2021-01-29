@@ -10,7 +10,7 @@ MEMORY
    ROM : ORIGIN = 0x3400, LENGTH = 0x8000
    MIRROR : ORIGIN = 0xF3000, LENGTH = 44800
    VECTOR_TABLE_CONFIGURATION : ORIGIN = 0xFDF00, LENGTH = 5
-   RAM : ORIGIN = 0xFDF05, LENGTH = 8192 - 5
+   RAM : ORIGIN = 0xFDF05, LENGTH = 0xFFEDF - 0xFDF05 + 1
 }
 
 SECTIONS
@@ -133,7 +133,7 @@ SECTIONS
       __isr_msb = .;
    } > VECTOR_TABLE_CONFIGURATION
 
-   .data 0xFDF00: AT(_mdata)
+   .data ORIGIN(RAM): AT(_mdata)
    {
       . = ALIGN(2);
       _data = .;
@@ -159,12 +159,13 @@ SECTIONS
    } > RAM
 
    PROVIDE(stack_size = 0x1000);
+   PROVIDE(stack_start = ORIGIN(RAM) + LENGTH(RAM) - 1);
 
    __ApplicationStart = ORIGIN(ROM);
    __ApplicationEnd = ORIGIN(ROM) + LENGTH(ROM) - 1;
    __Header = __ApplicationStart;
 
-   .stack 0xFFEDC (NOLOAD) : AT(0xFFEDC)
+   .stack stack_start (NOLOAD) : AT(stack_start)
    {
       _stack = .;
       ASSERT((_stack > (_end + stack_size)), "Error: Too much data - no room left for the stack");
