@@ -70,6 +70,15 @@ General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/u
 | RAM        | 48 KB  |
 | Data Flash | 8 KB   |
 
+### micro-rx130
+Small RX130 project using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html) and a smaller, non-routing boot loader.
+
+| Memory     | Size   |
+|------------|--------|
+| Flash      | 512 KB |
+| RAM        | 48 KB  |
+| Data Flash | 8 KB   |
+
 ### rx130-cap-touch-client
 Sample project that is an ERD stream receiver using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html). Designed to work with `nano-stm8s-cap-touch`.
 
