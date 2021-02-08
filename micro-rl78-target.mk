@@ -1,5 +1,5 @@
-# gcc-arm-none-eabi front end makefile.
-include tools/gcc-arm-none-eabi/mc/makecommon.mk
+# kpit-rl78 front end makefile.
+include tools/kpit-rl78/mc/makecommon.mk
 
 # Name of the project that is being built
 TARGET:=micro-rl78
