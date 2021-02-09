@@ -37,17 +37,9 @@ static CY_ISR(Gea3Handler)
 {
    if(Gea3_GetRxInterruptSourceMasked() == Gea3_INTR_RX_NOT_EMPTY)
    {
-      uint8_t received_data = Gea3_UartGetByte() & 0xFF;
-
-      TinyUartOnReceiveArgs_t args =
-         { received_data };
-
+      uint8_t receivedData = Gea3_RX_FIFO_RD_REG;
+      TinyUartOnReceiveArgs_t args = { receivedData };
       TinyEvent_SingleSubscriberSynchronous_Publish(&receiveInterrupt, &args);
-
-      if(Gea3_SpiUartGetRxBufferSize() == 0)
-      {
-         Gea3_ClearRxInterruptSource(Gea3_INTR_RX_NOT_EMPTY);
-      }
    }
    else if(Gea3_GetTxInterruptSourceMasked() == Gea3_INTR_TX_UART_DONE)
    {
@@ -56,8 +48,7 @@ static CY_ISR(Gea3Handler)
    }
 }
 
-static const I_TinyUart_Api_t api =
-   { Send, GetOnReceiveEvent, GetOnTransmitEvent };
+static const I_TinyUart_Api_t api = { Send, GetOnReceiveEvent, GetOnTransmitEvent };
 
 I_TinyUart_t *TinyUart_Gea3_Init(void)
 {
