@@ -17,6 +17,8 @@ $(error Please define DEBUG with Y or N.)
 endif
 endif
 
+TTY?=/dev/ttyUSB0
+
 SRC_FILES=\
 
 COMMON_LIB_DIRS=\
@@ -73,6 +75,10 @@ package: all artifacts erd_definitions erd_lock
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
 	$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 	@echo Archive complete
+
+.PHONY:
+upload: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
+	$(call rl78flash_upload,$<,$(TTY),1000000)
 
 .PHONY: boot-loader
 boot-loader:
