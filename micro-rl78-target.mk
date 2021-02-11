@@ -76,7 +76,7 @@ package: all artifacts erd_definitions erd_lock
 	$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 	@echo Archive complete
 
-.PHONY:
+.PHONY: upload
 upload: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 	$(call rl78flash_upload,$<,$(TTY),1000000)
 
