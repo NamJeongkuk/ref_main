@@ -9,8 +9,8 @@ MEMORY
    BOOT_ROM : ORIGIN = 0xD8, LENGTH = 0x3400 - 0xD8
    ROM : ORIGIN = 0x3400, LENGTH = 0x8000
    MIRROR : ORIGIN = 0xF3000, LENGTH = 44800
-   VECTOR_TABLE_CONFIGURATION : ORIGIN = 0xFDF00, LENGTH = 5
-   RAM : ORIGIN = 0xFDF05, LENGTH = 0xFFEDF - 0xFDF05 + 1
+   VECTOR_TABLE_CONFIGURATION : ORIGIN = 0xFDF00, LENGTH = 6 /* Must have an even size */
+   RAM : ORIGIN = 0xFDF06, LENGTH = 0xFFEDF - 0xFDF06 + 1
 }
 
 SECTIONS
@@ -131,6 +131,8 @@ SECTIONS
       __isr_lsb = .;
       . += 1;
       __isr_msb = .;
+      . += 1;
+      __align = .;
    } > VECTOR_TABLE_CONFIGURATION
 
    .data ORIGIN(RAM): AT(_mdata)
