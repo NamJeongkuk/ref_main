@@ -185,6 +185,19 @@
       "serverpath": "${workspaceFolder}/build/micro-psoc4100s-cap-touch/jlink_gdb_server_wrapper.sh",
       "preLaunchTask": "micro-psoc4100s-cap-touch_debug",
       "svdFile": "${workspaceFolder}/src/micro-psoc4100s-cap-touch/PsocCreator/psoc.cydsn/codegentemp/psoc.svd"
+    }, {
+      "name": "ra6m3",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "type": "cortex-debug",
+      "executable": "${workspaceFolder}/build/ra6m3/ra6m3.elf",
+      "device": "R7FA6M3AH",
+      "servertype": "jlink",
+      "interface": "swd",
+      "armToolchainPath": "${workspaceFolder}/tools/gcc-arm-none-eabi/tc/bin/",
+      "serverpath": "${workspaceFolder}/build/ra6m3/jlink_gdb_server_wrapper.sh",
+      "preLaunchTask": "ra6m3_vscode_debug",
+      "svdFile": "${workspaceFolder}/lib/renesas-ra-fsp/src/bsp/cmsis/Device/RENESAS/SVD/RA.svd"
     }
   ]
 }

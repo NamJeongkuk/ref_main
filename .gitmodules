@@ -31,3 +31,6 @@
 [submodule "tools/kpit-rl78"]
 	path = tools/kpit-rl78
 	url = https://github.com/geappliances/build-tools.kpit-rl78-release
+[submodule "lib/renesas-ra-fsp"]
+	path = lib/renesas-ra-fsp
+	url = https://github.com/geappliances/build-tools.renesas-ra-fsp

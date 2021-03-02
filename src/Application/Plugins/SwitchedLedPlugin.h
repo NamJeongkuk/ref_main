@@ -22,6 +22,7 @@ typedef struct
 
 void SwitchedLedPlugin_Init(
    SwitchedLedPlugin_t *instance,
-   I_DataModel_t *dataModel);
+   I_DataModel_t *dataModel,
+   Erd_t erd);
 
 #endif

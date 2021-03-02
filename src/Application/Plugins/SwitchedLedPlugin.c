@@ -21,12 +21,13 @@ static void ButtonStateChanged(void *context, const void *args)
 
 void SwitchedLedPlugin_Init(
    SwitchedLedPlugin_t *instance,
-   I_DataModel_t *dataModel)
+   I_DataModel_t *dataModel,
+   Erd_t erd)
 {
    instance->_private.dataModel = dataModel;
 
    EventSubscription_Init(&instance->_private.buttonPressSubscription, instance, ButtonStateChanged);
-   DataModel_Subscribe(dataModel, Erd_RemoteKeyState, &instance->_private.buttonPressSubscription);
+   DataModel_Subscribe(dataModel, erd, &instance->_private.buttonPressSubscription);
 
    bool initialState = ON;
    DataModel_Write(instance->_private.dataModel, Erd_OtherLed, &initialState);

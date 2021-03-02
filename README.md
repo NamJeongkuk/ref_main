@@ -156,3 +156,12 @@ STM8S project using the [STM8S003F3U6TR](https://www.st.com/en/microcontrollers-
 | Flash       | 8 KB  |
 | RAM         | 1 KB  |
 | EEPROM      | 128 B |
+
+### ra6m3
+General-purpose RA6M3 project using the [R7FA6M3AH3](https://www.renesas.com/eu/en/products/microcontrollers-microprocessors/ra-cortex-m-mcus/ra6m3-32-bit-microcontrollers-120mhz-usb-high-speed-ethernet-and-tft-controller) on the [EK-RA6M3 evaluation board](https://www.renesas.com/eu/en/products/microcontrollers-microprocessors/ra-cortex-m-mcus/ek-ra6m3-ra6m3-mcu-group-evaluation-board)
+
+| Memory Type | Size   |
+|-------------|--------|
+| Flash       | 2 MB   |
+| RAM         | 640 KB |
+| EEPROM      | 64 KB  |

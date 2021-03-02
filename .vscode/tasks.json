@@ -183,6 +183,18 @@
         "showReuseMessage": true,
         "clear": false
       }
+    }, {
+      "label": "ra6m3_vscode_debug",
+      "type": "shell",
+      "command": "make -f ra6m3-target.mk -j8 RELEASE=N DEBUG=Y vscode_debug",
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      }
     }
   ]
 }
