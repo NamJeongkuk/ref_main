@@ -163,6 +163,7 @@ SECTIONS
 
    .stack_sentinel :
    {
+      . = ALIGN(2);
       *(.stack_sentinel)
    } > RAM
 
