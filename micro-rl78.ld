@@ -10,7 +10,8 @@ MEMORY
    ROM : ORIGIN = 0x3400, LENGTH = 0x8000
    MIRROR : ORIGIN = 0xF3000, LENGTH = 44800
    VECTOR_TABLE_CONFIGURATION : ORIGIN = 0xFDF00, LENGTH = 6 /* Must have an even size */
-   RAM : ORIGIN = 0xFDF06, LENGTH = 0xFFEDF - 0xFDF06 + 1
+   RAM : ORIGIN = 0xFDF06, LENGTH = 0xFFEDB - 0xFDF06 + 1
+   UL_RAM_CHECK_BUFFER : ORIGIN = 0xFFEDB, LENGTH = 4
 }
 
 SECTIONS
@@ -160,12 +161,26 @@ SECTIONS
       _end = .;
    } > RAM
 
+   .stack_sentinel :
+   {
+      *(.stack_sentinel)
+   } > RAM
+
+   .ul_ram_check_buffer :
+   {
+      *(.ul_ram_check_buffer)
+   } > UL_RAM_CHECK_BUFFER
+
    PROVIDE(stack_size = 0x1000);
    PROVIDE(stack_start = ORIGIN(RAM) + LENGTH(RAM) - 1);
 
    __ApplicationStart = ORIGIN(ROM);
    __ApplicationEnd = ORIGIN(ROM) + LENGTH(ROM) - 1;
    __Header = __ApplicationStart;
+
+   __UlRamCheckStart = ORIGIN(VECTOR_TABLE_CONFIGURATION);
+   __UlRamCheckEnd = ORIGIN(VECTOR_TABLE_CONFIGURATION) + LENGTH(VECTOR_TABLE_CONFIGURATION) + LENGTH(RAM) - 1;
+   __UlRamCheckStepSize = LENGTH(UL_RAM_CHECK_BUFFER);
 
    .stack stack_start (NOLOAD) : AT(stack_start)
    {

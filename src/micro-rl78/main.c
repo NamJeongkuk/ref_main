@@ -20,6 +20,21 @@
 #include "MicroApplication.h"
 #include "MicroSystemData.h"
 #include "Gea2Addresses.h"
+#include "MemoryMap.h"
+#include "UlTestsPlugin.h"
+
+enum
+{
+   UlTestPeriod = 10,
+   UlTestResourceWatchdogTimeout = 1000,
+   UlBytesToCheckPerRomCheck = 10,
+
+#ifdef DEBUG
+   RomCheckErrorEnabled = false,
+#else
+   RomCheckErrorEnabled = true
+#endif
+};
 
 static TinyTimerModule_t timerModule;
 
@@ -52,6 +67,14 @@ int main(void)
       MicroApplication_Init(
          MicroSystemData_DataSource(),
          GeaStack_GetGea2Interface());
+
+      UlTestsPlugin_Init(
+         &timerModule,
+         ApplicationImageHeader,
+         RomCheckErrorEnabled,
+         UlTestPeriod,
+         UlTestResourceWatchdogTimeout,
+         UlBytesToCheckPerRomCheck);
    }
    Interrupts_Enable();
 

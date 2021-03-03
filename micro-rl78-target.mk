@@ -25,6 +25,9 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
    $(APPLCOMMON_TINY_DIR)/src/BootLoader \
    $(APPLCOMMON_TINY_DIR)/src/Core \
+   $(APPLCOMMON_TINY_DIR)/src/Hardware/Rl78/Kpit \
+   $(APPLCOMMON_TINY_DIR)/src/Hardware/Rl78/Kpit/Ul \
+   $(APPLCOMMON_TINY_DIR)/src/Hardware/Rl78/Kpit/Ul/Vendor \
    $(APPLCOMMON_TINY_DIR)/src/TinyLib \
    $(APPLCOMMON_TINY_DIR)/src/WiFi \
 
