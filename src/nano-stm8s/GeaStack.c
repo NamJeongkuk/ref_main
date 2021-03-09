@@ -104,6 +104,7 @@ void GeaStack_Init(
       sizeof(instance->_private.sendBuffer),
       instance->_private.receiveBuffer,
       sizeof(instance->_private.receiveBuffer),
+      false,
       false);
 
    TinyErdGea2OpenLoopWriteApiRevision2_Init(

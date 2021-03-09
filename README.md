@@ -37,7 +37,7 @@ There are two application frameworks available:
 
 ## Available Projects
 ### micro-psoc4100s-cap-touch
-Small cap touch application using the [CY8C4127AZI-S455](https://www.cypress.com/part/cy8c4127azi-s455)
+Small cap touch application using the [CY8C4127AZI-S455](https://www.cypress.com/part/cy8c4127azi-s455).
 
 | Memory | Size   |
 |--------|--------|
@@ -45,7 +45,15 @@ Small cap touch application using the [CY8C4127AZI-S455](https://www.cypress.com
 | RAM    | 16 KB  |
 
 ### micro-rl78
-Small RL78 application using the [R5F101AF](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rl78-low-power-8-16-bit-mcus)
+Small RL78 application using the [R5F101AF](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rl78-low-power-8-16-bit-mcus).
+
+| Memory | Size  |
+|--------|-------|
+| Flash  | 96 KB |
+| RAM    | 8 KB  |
+
+### nano-rl78
+Small RL78 application using the [R5F100LE](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rl78-low-power-8-16-bit-mcus). Includes no boot loader.
 
 | Memory | Size  |
 |--------|-------|
@@ -89,7 +97,7 @@ Sample project that is an ERD stream receiver using the [R5F51308ADFL](https://w
 | Data Flash | 8 KB   |
 
 ### rx231
-General-purpose RX231 project using the [R5F52318ADFL](https://www.renesas.com/sg/en/products/microcontrollers-microprocessors/rx/rx200/rx231/device/R5F52318ADFL.html)
+General-purpose RX231 project using the [R5F52318ADFL](https://www.renesas.com/sg/en/products/microcontrollers-microprocessors/rx/rx200/rx231/device/R5F52318ADFL.html).
 
 | Memory     | Size   |
 |------------|--------|
@@ -158,7 +166,7 @@ STM8S project using the [STM8S003F3U6TR](https://www.st.com/en/microcontrollers-
 | EEPROM      | 128 B |
 
 ### ra6m3
-General-purpose RA6M3 project using the [R7FA6M3AH3](https://www.renesas.com/eu/en/products/microcontrollers-microprocessors/ra-cortex-m-mcus/ra6m3-32-bit-microcontrollers-120mhz-usb-high-speed-ethernet-and-tft-controller) on the [EK-RA6M3 evaluation board](https://www.renesas.com/eu/en/products/microcontrollers-microprocessors/ra-cortex-m-mcus/ek-ra6m3-ra6m3-mcu-group-evaluation-board)
+General-purpose RA6M3 project using the [R7FA6M3AH3](https://www.renesas.com/eu/en/products/microcontrollers-microprocessors/ra-cortex-m-mcus/ra6m3-32-bit-microcontrollers-120mhz-usb-high-speed-ethernet-and-tft-controller) on the [EK-RA6M3 evaluation board](https://www.renesas.com/eu/en/products/microcontrollers-microprocessors/ra-cortex-m-mcus/ek-ra6m3-ra6m3-mcu-group-evaluation-board).
 
 | Memory Type | Size   |
 |-------------|--------|

@@ -52,6 +52,22 @@
          "cppStandard": "c++11"
       },
       {
+         "name": "nano-rl78",
+         "defines": [
+            "LITTLE_ENDIAN"
+         ],
+         "includePath": [
+            "${workspaceFolder}/src/nano-rl78/**",
+            "${env:kpit-rl78-include}",
+            "${env:tiny-include}",
+            "${workspaceFolder}/src/NanoApplication/**",
+            "${workspaceFolder}/src/Application/Gea/*"
+         ],
+         "intelliSenseMode": "gcc-arm",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      },
+      {
          "name": "rx130",
          "defines": [
             "__RX_LITTLE_ENDIAN__"

@@ -73,6 +73,7 @@ void GeaStack_Init(
       sizeof(instance.sendBuffer),
       instance.receiveBuffer,
       sizeof(instance.receiveBuffer),
+      false,
       false);
 
    TinyCommonCommands_Init(

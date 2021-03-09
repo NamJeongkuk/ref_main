@@ -39,6 +39,8 @@ enum
    ENTRY(Erd_ButtonState,              0xF002, bool,                    StreamEvent,   0xA000) \
    ENTRY(Erd_LedState,                 0xF003, bool,                    StreamEvent,   0xA001) \
 
+#define SWAPPED_FIELDS \
+
 #define EXPAND_AS_STREAMED_ITEM_UNION(Name, Number, DataType, Stream, RemoteErd) \
    CONCAT(INCLUDE_STREAM_, Stream)(DataType item##Name;)
 

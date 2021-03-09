@@ -92,6 +92,7 @@ void GeaStack_Init(
       sizeof(sendBuffer),
       receiveBuffer,
       sizeof(receiveBuffer),
+      false,
       false);
 
    TinyCommonCommands_Init(

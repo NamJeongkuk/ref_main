@@ -11,11 +11,9 @@
 #include "TinyCommonCommands.h"
 #include "TinyErdGea2PublicApiRevision2.h"
 #include "GeaStackXmacroUtils.h"
-#include "MicroSystemErds.h"
+#include "NanoSystemErds.h"
 #include "Gea2Addresses.h"
-#include "MemoryMap.h"
 #include "Reset.h"
-#include "ReadyToEnterBootLoader.h"
 #include "utils.h"
 
 enum
@@ -43,14 +41,6 @@ static struct
    uint8_t receiveBuffer[ReceiveBufferSize];
 } instance;
 
-static const TinyCommonCommandsConfiguration_t commonCommandsConfiguration = {
-   .bootLoaderHeader = BootLoaderHeaderAddress,
-   .applicationHeader = ApplicationHeaderAddress,
-   .parametricHeader = NULL,
-   .reset = Reset,
-   .readyToEnterBootLoader = ReadyToEnterBootLoader,
-};
-
 #define EXPAND_AS_PUBLIC_ERDS(Name, Number, DataType, Stream, RemoteErd) \
    CONCAT(INCLUDE_PUBLIC_, Number)                                       \
    (Name COMMA)
@@ -75,12 +65,6 @@ void GeaStack_Init(
       sizeof(instance.receiveBuffer),
       false,
       false);
-
-   TinyCommonCommands_Init(
-      &instance.commonCommands,
-      &instance.gea2Interface.interface,
-      timerModule,
-      &commonCommandsConfiguration);
 
    TinyErdGea2PublicApiRevision2_Init(
       &instance.erdApi,

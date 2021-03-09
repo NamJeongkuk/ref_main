@@ -114,6 +114,7 @@ void GeaStackWithSingleErdHeartbeat_Init(
       sizeof(instance->_private.sendBuffer),
       instance->_private.receiveBuffer,
       sizeof(instance->_private.receiveBuffer),
+      false,
       false);
 
    TinySingleErdHeartbeatStream_Init(
