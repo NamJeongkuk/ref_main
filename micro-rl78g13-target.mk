@@ -2,11 +2,11 @@
 include tools/kpit-rl78/mc/makecommon.mk
 
 # Name of the project that is being built
-TARGET:=micro-rl78
+TARGET:=micro-rl78g13
 OUTPUT_DIR:=build/$(TARGET)
 APPLCOMMON_TINY_DIR:=lib/applcommon.tiny
 BOOT_LOADER_DIR=lib/boot-loaders
-BOOT_LOADER_TARGET=small-rl78
+BOOT_LOADER_TARGET=small-rl78g13
 DEVICE:=R5F100LE
 
 ifeq ($(DEBUG), N)

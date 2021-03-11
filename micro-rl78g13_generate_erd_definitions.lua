@@ -1,17 +1,17 @@
 local tools = require 'tools.lua-erd-documentation-tools.lua-erd-documentation-tools'
-local Types = require 'build.nano-rl78.GeneratedTypes'
+local Types = require 'build.micro-rl78g13.GeneratedTypes'
 
 tools.build_json(
   {
-    namespace = 'nano-rl78',
+    namespace = 'micro-rl78g13',
     address = 0xB7,
     parsers = {
       tools.parser.standard
     },
     erd_files = {
-      'src/NanoApplication/DataSource/NanoSystemErds.h'
+      'src/MicroApplication/DataSource/MicroSystemErds.h'
     },
     types_factory = Types,
-    output = 'build/nano-rl78/doc/erd-definitions.json'
+    output = 'build/micro-rl78g13/doc/erd-definitions.json'
   }
 )

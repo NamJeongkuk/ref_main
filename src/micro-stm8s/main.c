@@ -41,31 +41,33 @@ static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 
 void main(void)
 {
-#ifndef DEBUG
-   Ul_Startup();
-#endif
+   // #ifndef DEBUG
+   //    Ul_Startup();
+   // #endif
    Iwdg_Init();
    Clk_Init();
 
    disableInterrupts();
    {
+      TinyUart_Uart3_Init();
+
       TinyTimerModule_Init(
          &timerModule,
          TinyTimeSource_Tim4SystemTick_Init());
 
       Pa3Heartbeat_Init(&timerModule);
 
-      MicroSystemData_Init(&timerModule);
+      // MicroSystemData_Init(&timerModule);
 
-      GeaStack_Init(
-         &timerModule,
-         MicroSystemData_ExternalDataSource(),
-         TinyUart_Uart3_Init(),
-         Stm8sGea2Address);
+      // GeaStack_Init(
+      //    &timerModule,
+      //    MicroSystemData_ExternalDataSource(),
+      //    TinyUart_Uart3_Init(),
+      //    Stm8sGea2Address);
 
-      MicroApplication_Init(
-         MicroSystemData_DataSource(),
-         GeaStack_GetGea2Interface());
+      // MicroApplication_Init(
+      //    MicroSystemData_DataSource(),
+      //    GeaStack_GetGea2Interface());
    }
    enableInterrupts();
 
@@ -74,9 +76,9 @@ void main(void)
    while(1)
    {
       TinyTimerModule_Run(&timerModule);
-      GeaStack_Run();
-#ifndef DEBUG
-      Ul_Run();
-#endif
+      // GeaStack_Run();
+      // #ifndef DEBUG
+      //       Ul_Run();
+      // #endif
    }
 }

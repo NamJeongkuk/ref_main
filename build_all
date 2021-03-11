@@ -17,11 +17,11 @@ fi
 make -f micro-psoc4100s-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N clean
 make -f micro-psoc4100s-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N package
 
-$RL78_MAKE -f micro-rl78-target.mk -j16 RELEASE=Y DEBUG=N clean
-$RL78_MAKE -f micro-rl78-target.mk -j16 RELEASE=Y DEBUG=N package
+$RL78_MAKE -f micro-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N clean
+$RL78_MAKE -f micro-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N package
 
-$RL78_MAKE -f nano-rl78-target.mk -j16 RELEASE=Y DEBUG=N clean
-$RL78_MAKE -f nano-rl78-target.mk -j16 RELEASE=Y DEBUG=N package
+$RL78_MAKE -f nano-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N clean
+$RL78_MAKE -f nano-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N package
 
 $RX_MAKE -f rx130-target.mk -j16 RELEASE=Y DEBUG=N clean
 $RX_MAKE -f rx130-target.mk -j16 RELEASE=Y DEBUG=N package

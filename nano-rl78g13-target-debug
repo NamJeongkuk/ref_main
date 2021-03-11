@@ -12,4 +12,4 @@ else
   exit 1
 fi
 
-$MAKE -f micro-rl78-target.mk -j8 RELEASE=N DEBUG=Y package
+$MAKE -f nano-rl78g13-target.mk -j8 RELEASE=N DEBUG=Y package
