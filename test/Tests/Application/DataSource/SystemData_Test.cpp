@@ -274,7 +274,7 @@ TEST_GROUP(SystemData)
 
    void AssertionShouldFailWhenInputIsRequestedForErd(Erd_t erd)
    {
-      ShouldFailAssertionWhen(DataModel_GetInput(dataModel, erd))
+      ShouldFailAssertionWhen(DataModel_GetInput(dataModel, erd));
    }
 
    void AssertionShouldFailWhenInputOutputIsRequestedForErd(Erd_t erd)
