@@ -44,7 +44,7 @@ INC_DIRS=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    src/Application/Gea \
 
-# RL78 micro being used (g10, g13, g14)
+# RL78 micro being used (g10, g11, g12, g13, g14)
 CPU=g13
 SOURCE_EXTENSIONS:=.c .s
 TOOLCHAIN_VERSION:=4.9.2.202002
