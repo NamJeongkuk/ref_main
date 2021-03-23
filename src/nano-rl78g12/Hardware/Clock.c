@@ -17,11 +17,11 @@
 
 // Operation speed mode control register (OSMC)
 // RTC macro operation clock (WUTMMCK0)
-#define _10_CG_RTC_CLK_FIL 0x10 // Use fIL clock
+#define _10_CG_RTC_CLK_FIL 0x10 // use fIL clock
 
 void Clock_Init(void)
 {
-   // Configured for 32MHz
+   // Configured for 24MHz
    HOCODIV = 0;
    // Set fMX
    CMC = _00_CG_HISYS_PORT | _00_CG_SYSOSC_DEFAULT;

@@ -38,10 +38,10 @@
          "cppStandard": "c++11"
       },
       {
-         "name": "micro-rl78",
+         "name": "micro-rl78g13",
          "defines": [],
          "includePath": [
-            "${workspaceFolder}/src/micro-rl78/**",
+            "${workspaceFolder}/src/micro-rl78g13/**",
             "${env:kpit-rl78-include}",
             "${env:tiny-include}",
             "${workspaceFolder}/src/MicroApplication/**",
@@ -52,12 +52,28 @@
          "cppStandard": "c++11"
       },
       {
-         "name": "nano-rl78",
+         "name": "nano-rl78g12",
          "defines": [
             "LITTLE_ENDIAN"
          ],
          "includePath": [
-            "${workspaceFolder}/src/nano-rl78/**",
+            "${workspaceFolder}/src/nano-rl78g12/**",
+            "${env:kpit-rl78-include}",
+            "${env:tiny-include}",
+            "${workspaceFolder}/src/NanoApplication/**",
+            "${workspaceFolder}/src/Application/Gea/*"
+         ],
+         "intelliSenseMode": "gcc-arm",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      },
+      {
+         "name": "nano-rl78g13",
+         "defines": [
+            "LITTLE_ENDIAN"
+         ],
+         "includePath": [
+            "${workspaceFolder}/src/nano-rl78g13/**",
             "${env:kpit-rl78-include}",
             "${env:tiny-include}",
             "${workspaceFolder}/src/NanoApplication/**",
