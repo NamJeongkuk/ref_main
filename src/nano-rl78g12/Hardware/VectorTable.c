@@ -37,8 +37,8 @@ const unsigned char Option_Bytes[] __attribute__((section(".option_bytes"))) = {
    // B6-B3   0000  Must be set to 0
    // B2         1  Must be set to 1
    // B1         0  Must be set to 0
-   // B0         1  OCDERSD - Erases data of flash memory in case of failures in authenticating
-   0x85
+   // B0         0  OCDERSD - Erases data of flash memory in case of failures in authenticating
+   0x84
 };
 
 const unsigned char Security_Id[] __attribute__((section(".security_id"))) = {
