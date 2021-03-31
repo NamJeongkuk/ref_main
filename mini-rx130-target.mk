@@ -56,6 +56,7 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_DIR)/Event \
    $(APPLCOMMON_DIR)/Filter \
    $(APPLCOMMON_DIR)/Git \
+   $(APPLCOMMON_DIR)/Hardware/Kpit/Rx \
    $(APPLCOMMON_DIR)/Hardware/Kpit/Rx/Ul \
    $(APPLCOMMON_DIR)/Hardware/Kpit/Rx/Ul/Vendor \
    $(APPLCOMMON_DIR)/Hardware/Kpit/Rx2xx \

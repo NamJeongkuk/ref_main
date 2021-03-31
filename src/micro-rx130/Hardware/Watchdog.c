@@ -2,36 +2,37 @@
  * @file
  * @brief
  *
- * Q.How can I calculate the expiration watchdog time?
+ * Q. How can I configure the watchdog timeout?
  *
- * A. IWDTCLK = 125 KHz (Fixed independent clock value)
- * Clock division ratio = IWDTCLK/16 = 7.8 KHz
- * After setting IWDTRR to 0xFF and Window start position to 100%, end position to 0%,
- * Watchdog expiration time = 1024 * 256/IWDCLK ~= 2097 msec
- * So, the system will reboot 131msec after the last time it was reset.
+ * A. The IWDT is clocked by IWDTCLK which uses a fixed 15 KHz frequency. The clock divider and
+ * timeout period for the IWDT are configurable and together determine the timeout:
  *
- * If you want to change the maximum expiration time for debugging issue,
- * you will be able to set U16_IWDTCR_CONFIG_MASK to 0x3353.
- * This gives you 256*16384/IWDTCLK = 33 second expiration time for watchdog.
+ *   Timeout = ClockDivider * TimeoutPeriod / IWDTCLK
+ *
+ * When the configuration mask is 0x3322 (windowing disabled, timeout of 1024 cycles, divide by 16),
+ * the timeout is:
+ *
+ *   Timeout = 16 * 1024 / 15000 = ~1.09 seconds
+ *
+ * See Table 26.2 (RX130) or Table 31.2 (RX231) in the hardware manual for help setting the clock
+ * divider and timeout.
  *
  * Copyright GE Appliances - Confidential - All rights reserved
  */
 
-#include <stdint.h>
-#include <stdbool.h>
 #include "Watchdog.h"
 #include "iodefine.h"
 #include "utils.h"
 
-#define U16_PRCR_ENABLE ((uint16_t)0xA50F)
-#define U16_PRCR_DISABLE ((uint16_t)0xA500)
+#define PRCR_ENABLE (0xA50F)
+#define PRCR_DISABLE (0xA500)
 
-#define B_LOCO_IWDT_CLOCK_START ((bool)0)
-#define B_LOCO_IWDT_CLOCK_STOP ((bool)1)
+#define LOCO_IWDT_CLOCK_START (0)
+#define LOCO_IWDT_CLOCK_STOP (1)
 
-#define U16_IWDTCR_CONFIG_MASK ((uint16_t)0x3352)
+#define IWDTCR_CONFIG_MASK (0x3323)
 // 0011001110100010B
-// XX||XX||||||XX|+---------- Time-Out Period Selection            : 1,024 cycles
+// XX||XX||||||XX|+---------- Time-Out Period Selection            : 2048 cycles
 // ||||||||||||||+----------- Time-Out Period Selection            : ---
 // |||||||||||||+------------ Reserved                             : Write 0
 // ||||||||||||+------------- Reserved                             : Write 0
@@ -62,21 +63,21 @@
 void Watchdog_Init(void)
 {
    // Enable register modification
-   SYSTEM.PRCR.WORD = U16_PRCR_ENABLE;
+   SYSTEM.PRCR.WORD = PRCR_ENABLE;
 
    // start low speed onchip clock for the independent watchdog timer
-   SYSTEM.ILOCOCR.BIT.ILCSTP = B_LOCO_IWDT_CLOCK_START;
+   SYSTEM.ILOCOCR.BIT.ILCSTP = LOCO_IWDT_CLOCK_START;
 
    // Disable register modification
-   SYSTEM.PRCR.WORD = U16_PRCR_DISABLE;
+   SYSTEM.PRCR.WORD = PRCR_DISABLE;
 
    // Write to the IWDT Control register
    // Timeout period selection
    // Clock cycle division ratio
    // Window Start position
    // Window End position
-   IWDT.IWDTCR.WORD = U16_IWDTCR_CONFIG_MASK;
-   while(IWDT.IWDTCR.WORD != U16_IWDTCR_CONFIG_MASK)
+   IWDT.IWDTCR.WORD = IWDTCR_CONFIG_MASK;
+   while(IWDT.IWDTCR.WORD != IWDTCR_CONFIG_MASK)
    {
    }
 
@@ -106,7 +107,7 @@ static void Invoke(I_TinyAction_t *instance)
 
 static const I_TinyAction_Api_t api = { Invoke };
 
-I_TinyAction_t * Watchdog_KickAction(void)
+I_TinyAction_t *Watchdog_KickAction(void)
 {
    static I_TinyAction_t instance;
    instance.api = &api;

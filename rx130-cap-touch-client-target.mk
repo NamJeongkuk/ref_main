@@ -55,6 +55,7 @@ COMMON_LIB_DIRS=\
    $(APPLCOMMON_DIR)/Event \
    $(APPLCOMMON_DIR)/Filter \
    $(APPLCOMMON_DIR)/Git \
+   $(APPLCOMMON_DIR)/Hardware/Kpit/Rx \
    $(APPLCOMMON_DIR)/Hardware/Kpit/Rx/Ul \
    $(APPLCOMMON_DIR)/Hardware/Kpit/Rx/Ul/Vendor \
    $(APPLCOMMON_DIR)/Hardware/Kpit/Rx2xx \
@@ -95,8 +96,8 @@ INC_DIRS=\
    $(APPLCOMMON_DIR)/ApplianceApi \
    $(APPLCOMMON_DIR)/BootLoader \
    $(APPLCOMMON_DIR)/Git \
-   $(APPLCOMMON_DIR)/Hardware/Rx130 \
    $(APPLCOMMON_DIR)/Hardware/Kpit/Rx130 \
+   $(APPLCOMMON_DIR)/Hardware/Rx130 \
    $(APPLCOMMON_DIR)/Image \
    $(APPLCOMMON_DIR)/ServiceMode \
    $(APPLCOMMON_DIR)/Signal \
