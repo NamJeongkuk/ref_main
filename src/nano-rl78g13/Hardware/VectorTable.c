@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-extern void PowerON_Reset(void);
+extern void start(void);
 
 const unsigned char Option_Bytes[] __attribute__((section(".option_bytes"))) = {
 // B7         0  WDTINIT, WDT interupt disabled
@@ -48,7 +48,7 @@ const unsigned char Security_Id[] __attribute__((section(".security_id"))) = {
 #define VEC __attribute__((section(".vec")))
 const void *HardwareVectors[] VEC = {
    // Address 0x0
-   PowerON_Reset,
+   start,
    // Secure for Debugging
    (void *)0xFFFF
 };

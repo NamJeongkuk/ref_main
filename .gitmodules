@@ -34,3 +34,6 @@
 [submodule "lib/renesas-ra-fsp"]
 	path = lib/renesas-ra-fsp
 	url = https://github.com/geappliances/build-tools.renesas-ra-fsp
+[submodule "tools/llvm-rl78"]
+	path = tools/llvm-rl78
+	url = https://github.com/geappliances/build-tools.llvm-rl78-release

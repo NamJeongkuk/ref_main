@@ -1,12 +1,10 @@
-/************************************************************************/
-/*    File Version: V1.05                                               */
-/*    Date Generated: 09/05/2019                                        */
-/************************************************************************/
+;/************************************************************************/
+;/*    File Version: V1.05                                               */
+;/*    Date Generated: 09/05/2019                                        */
+;/************************************************************************/
 
-    .list
-
-    .global _PowerON_Reset  /*! global Start routine */
-    .short _PowerON_Reset
+    .global _start  /*! global Start routine */
+    .short _start
 
 	.global __rl78_fini
 		__rl78_fini:
@@ -23,8 +21,8 @@
 
     .text
 
-/* call to _PowerON_Reset */
-_PowerON_Reset:
+/* call to _start */
+_start:
 /* initialise user stack pointer */
     movw sp,#_stack /* Set stack pointer */
 
