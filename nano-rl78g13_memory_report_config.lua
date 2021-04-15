@@ -2,27 +2,23 @@ return {
   Application = {
     ram = {
       map = 'build/nano-rl78g13/nano-rl78g13.map',
-      type = 'llvm-rl78',
+      type = 'rl78-gcc',
       total = 4 * 1024,
       sections = {
-        'bss',
-        'data'
+        'RAM'
       }
     },
     rom = {
       map = 'build/nano-rl78g13/nano-rl78g13.map',
-      type = 'llvm-rl78',
+      type = 'rl78-gcc',
       total = 64 * 1024,
       sections = {
-        'vec',
-        'vects',
-        'option_bytes',
-        'security_id',
-        'lowtext',
-        'tors',
-        'text',
-        'rodata',
-        'frodata'
+        'VEC',
+        'IVEC',
+        'OPT',
+        'SEC_ID',
+        'OCDSTAD',
+        'ROM'
       }
     }
   }
