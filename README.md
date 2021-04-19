@@ -52,13 +52,21 @@ Small RL78 application using the [R5F101AF](https://www.renesas.com/us/en/produc
 | Flash  | 96 KB |
 | RAM    | 8 KB  |
 
-### nano-rl78
+### nano-rl78g12
+Small RL78 application using the [R5F1026A](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rl78-low-power-8-16-bit-mcus). Includes no boot loader.
+
+| Memory | Size  |
+|--------|-------|
+| Flash  | 16 KB |
+| RAM    | 1.5 KB  |
+
+### nano-rl78g13
 Small RL78 application using the [R5F100LE](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rl78-low-power-8-16-bit-mcus). Includes no boot loader.
 
 | Memory | Size  |
 |--------|-------|
-| Flash  | 96 KB |
-| RAM    | 8 KB  |
+| Flash  | 64 KB |
+| RAM    | 4 KB  |
 
 ### rx130
 General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html).
