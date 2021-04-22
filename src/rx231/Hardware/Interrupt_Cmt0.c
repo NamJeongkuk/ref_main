@@ -9,7 +9,7 @@
 #include "iodefine.h"
 #include "I_Interrupt.h"
 #include "Interrupt_Cmt0.h"
-#include "Event_Synchronous.h"
+#include "Event_SingleSubscriberSynchronous.h"
 #include "utils.h"
 #include "InterruptPriorityLevel.h"
 #include "SystemClock.h"
@@ -37,7 +37,7 @@
 typedef struct
 {
    I_Interrupt_t interrupt;
-   Event_Synchronous_t OnInterrupt;
+   Event_SingleSubscriberSynchronous_t onInterrupt;
 } Cmt0Interrupt_t;
 
 static Cmt0Interrupt_t cmt0Interrupt;
@@ -52,15 +52,15 @@ void CMT0_CMI0(void)
    // Disable writing to the ELSEGR register. The bit pattern disables writing to the bit and writes to the bit.
    ELC.ELSEGR.BYTE = 0xBE;
 
-   Event_Synchronous_Publish(&cmt0Interrupt.OnInterrupt, NULL);
+   Event_SingleSubscriberSynchronous_Publish(&cmt0Interrupt.onInterrupt, NULL);
 }
 
 I_Interrupt_t *Interrupt_Cmt0_Init(void)
 {
    // Initialize the event first to account for the possibility of the interrupt firing right after
    // interrupts are enabled
-   Event_Synchronous_Init(&cmt0Interrupt.OnInterrupt);
-   cmt0Interrupt.interrupt.OnInterrupt = &cmt0Interrupt.OnInterrupt.interface;
+   Event_SingleSubscriberSynchronous_Init(&cmt0Interrupt.onInterrupt);
+   cmt0Interrupt.interrupt.OnInterrupt = &cmt0Interrupt.onInterrupt.interface;
 
    // PRCR write enabled
    SYSTEM.PRCR.WORD = U16_PRCR_ENABLE;
