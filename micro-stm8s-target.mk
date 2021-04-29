@@ -75,7 +75,7 @@ COMMON_LIB_DIRS:=\
 INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(BOOT_LOADER_DIR)/src/$(BOOT_LOADER_TARGET)-boot-loader \
-   src/Application/Gea \
+   src/Application \
 
 PACKAGE_CONTENTS:=
 $(call add_to_package,$(OUTPUT_DIR)/binaries,binaries)
@@ -92,18 +92,18 @@ all: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 
 .PHONY: package
 package: all artifacts erd_definitions erd_lock
+	@echo Creating package...
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
 	$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
-	@echo Archive complete
 
 .PHONY: target
 target: $(OUTPUT_DIR)/$(TARGET).apl
 
 .PHONY: boot-loader
 boot-loader:
-	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N
+	@$(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N
 
 # Overlap is allowed during concatenate because the boot loader is not stripped
 $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot: target boot-loader
@@ -121,7 +121,7 @@ upload: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot.hex stm8flash
 
 .PHONY: clean
 clean: target_clean
-	$(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N clean
+	@$(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N clean
 
 include tools/sdcc-stm8/sdcc-stm8-makefile-worker.mk
 
@@ -131,7 +131,7 @@ erd_lock: erd_definitions
 
 .PHONY: erd_definitions
 erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)
-	@echo Generating ERD definitions
+	@echo Generating ERD definitions...
 	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -Wp -P src/MicroApplication/DataSource/MicroSystemErds.h -o $(OUTPUT_DIR)/temporary.h
 	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output $(OUTPUT_DIR)/GeneratedTypes.lua
 	@$(LUA53) $(TARGET)_generate_erd_definitions.lua

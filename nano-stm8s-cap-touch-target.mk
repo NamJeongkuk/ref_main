@@ -45,7 +45,7 @@ INC_DIRS:=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/TouchSense/inc \
-   src/Application/Gea \
+   src/Application \
 
 SOURCE_EXTENSIONS:=.c
 
@@ -90,10 +90,11 @@ upload_boot_loader: $(BOOT_LOADER) stm8flash
 
 .PHONY: clean
 clean: target_clean
-	$(MAKE) -C $(BOOT_LOADER_DIR) -f target.mk RELEASE=Y DEBUG=N clean
+	@$(MAKE) -C $(BOOT_LOADER_DIR) -f target.mk RELEASE=Y DEBUG=N clean
 
 .PHONY: package
 package: all artifacts
+	@echo Creating package...
 	@$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 
 include tools/sdcc-stm8/sdcc-stm8-makefile-worker.mk

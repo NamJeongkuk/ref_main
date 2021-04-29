@@ -36,7 +36,7 @@ SRC_DIRS=\
 
 INC_DIRS=\
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
-   src/Application/Gea \
+   src/Application \
 
 # RL78 micro being used (g10, g11, g12, g13, g14)
 CPU=g12
@@ -63,8 +63,8 @@ all: $(OUTPUT_DIR)/$(TARGET).napl
 
 .PHONY: package
 package: all artifacts erd_definitions
+	@echo Creating package...
 	@$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
-	@echo Archive complete
 
 .PHONY: upload
 upload: $(OUTPUT_DIR)/$(TARGET).napl
@@ -80,7 +80,7 @@ include tools/kpit-rl78/kpit-rl78-makefile-worker.mk
 
 .PHONY: erd_definitions
 erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)
-	@echo Generating ERD definitions
+	@echo Generating ERD definitions...
 	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -P -MMD src/NanoApplication/DataSource/NanoSystemErds.h -o $(OUTPUT_DIR)/temporary.h
 	@sed -i '/typedef __size_t size_t/d' $(OUTPUT_DIR)/temporary.h
 	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output $(OUTPUT_DIR)/GeneratedTypes.lua

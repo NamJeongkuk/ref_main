@@ -42,7 +42,7 @@ SRC_DIRS=\
 INC_DIRS=\
    $(APPLCOMMON_TINY_DIR)/lib/applcommon/ApplianceApi \
    $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
-   src/Application/Gea \
+   src/Application \
 
 # RL78 micro being used (g10, g11, g12, g13, g14)
 CPU=g13
@@ -75,10 +75,10 @@ all: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 
 .PHONY: package
 package: all artifacts erd_definitions erd_lock
+	@echo Creating package...
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
 	@$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
-	@echo Archive complete
 
 .PHONY: upload
 upload: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
@@ -105,7 +105,7 @@ erd_lock: erd_definitions
 
 .PHONY: erd_definitions
 erd_definitions: $(OUTPUT_DIR)/doc $(TOOLCHAIN_LOCATION)
-	@echo Generating ERD definitions
+	@echo Generating ERD definitions...
 	@$(CC) $(addprefix -I, $(C_FILE_LOCATIONS)) -E -P -MMD src/MicroApplication/DataSource/MicroSystemErds.h -o $(OUTPUT_DIR)/temporary.h
 	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output $(OUTPUT_DIR)/GeneratedTypes.lua
 	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
