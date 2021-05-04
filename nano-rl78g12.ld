@@ -63,7 +63,7 @@ SECTIONS
       *(.text.*)
       etext = .;
       . = ALIGN(2);
-   } > ROM AT> ROM
+   } > ROM
 
    PROVIDE(__rl78_abs__ = 0);
 
@@ -138,7 +138,7 @@ SECTIONS
       . = ALIGN(2);
       _ebss = .;
       _end = .;
-   } > RAM AT> RAM
+   } > RAM
 
    PROVIDE(stack_size = 0x200);
    PROVIDE(stack_start = ORIGIN(RAM) + LENGTH(RAM) - 1);
