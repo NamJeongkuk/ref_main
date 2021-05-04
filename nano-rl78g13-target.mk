@@ -5,7 +5,6 @@ include tools/kpit-rl78/mc/makecommon.mk
 TARGET:=nano-rl78g13
 OUTPUT_DIR:=build/$(TARGET)
 APPLCOMMON_TINY_DIR:=lib/applcommon.tiny
-DEVICE:=R5F100LE
 
 ifeq ($(DEBUG), N)
 else

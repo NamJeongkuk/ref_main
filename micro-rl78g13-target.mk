@@ -7,7 +7,6 @@ OUTPUT_DIR:=build/$(TARGET)
 APPLCOMMON_TINY_DIR:=lib/applcommon.tiny
 BOOT_LOADER_DIR=lib/boot-loaders
 BOOT_LOADER_TARGET=small-rl78g13
-DEVICE:=R5F100LE
 
 ifeq ($(DEBUG), N)
 else
