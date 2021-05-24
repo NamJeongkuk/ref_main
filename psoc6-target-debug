@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -e
+
+make -f psoc6-target.mk -j8 RELEASE=N DEBUG=Y package

@@ -61,3 +61,6 @@ make -f nano-stm8s-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N package
 
 make -f ra6m3-target.mk -j16 RELEASE=Y DEBUG=N clean
 make -f ra6m3-target.mk -j16 RELEASE=Y DEBUG=N package
+
+make -f psoc6-target.mk -j16 RELEASE=Y DEBUG=N clean
+make -f psoc6-target.mk -j16 RELEASE=Y DEBUG=N package

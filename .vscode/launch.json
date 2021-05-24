@@ -198,6 +198,19 @@
       "serverpath": "${workspaceFolder}/build/ra6m3/jlink_gdb_server_wrapper.sh",
       "preLaunchTask": "ra6m3_vscode_debug",
       "svdFile": "${workspaceFolder}/lib/renesas-ra-fsp/src/bsp/cmsis/Device/RENESAS/SVD/RA.svd"
+    }, {
+      "name": "psoc6",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "type": "cortex-debug",
+      "executable": "${workspaceFolder}/build/psoc6/psoc6.elf",
+      "device": "CY8C6XXA_CM4",
+      "servertype": "jlink",
+      "interface": "swd",
+      "armToolchainPath": "${workspaceFolder}/tools/gcc-arm-none-eabi/tc/bin/",
+      "serverpath": "${workspaceFolder}/build/psoc6/jlink_gdb_server_wrapper.sh",
+      "preLaunchTask": "psoc6_vscode_debug",
+      "svdFile": "${workspaceFolder}/lib/cypress-psoc6-pdl/devices/COMPONENT_CAT1A/svd/psoc6_02.svd"
     }
   ]
 }

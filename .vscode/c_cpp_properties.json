@@ -8,7 +8,8 @@
       "sdcc-stm8-include": "${workspaceFolder}/tools/sdcc-stm8/lib/inc/**",
       "stm32f3-peripheral-library-include": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32F3xx/**",
       "stm32g0-peripheral-library-include": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32G0xx/**",
-      "stm8s-peripheral-library-include": "${workspaceFolder}/tools/sdcc-stm8/tc/share/sdcc/include/*"
+      "stm8s-peripheral-library-include": "${workspaceFolder}/tools/sdcc-stm8/tc/share/sdcc/include/*",
+      "psoc6-peripheral-library-include": "${workspaceFolder}/lib/cypress-psoc6-pdl/*"
    },
    "configurations": [
       {
@@ -269,6 +270,20 @@
             "${workspaceFolder}/src/Application/Gea/*"
          ],
          "intelliSenseMode": "gcc-x64",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      },
+      {
+         "name": "psoc6",
+         "defines": [],
+         "includePath": [
+            "${env:gcc-arm-include}",
+            "${env:applcommon-include}",
+            "${env:psoc6-peripheral-library-include}",
+            "${workspaceFolder}/src/psoc6/**",
+            "${workspaceFolder}/src/Application/**"
+         ],
+         "intelliSenseMode": "gcc-arm",
          "cStandard": "c99",
          "cppStandard": "c++11"
       }

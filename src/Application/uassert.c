@@ -46,11 +46,17 @@ void __uassert_func(
          Output_Write(instance.programCounterAddressOutput, &programCounterAddress);
       }
 
-      TimerModule_StartOneShot(instance.timerModule, &instance.delayedRestartTimer, DelayBeforeResetInMsec, Reset, NULL);
+      if(instance.timerModule)
+      {
+         TimerModule_StartOneShot(instance.timerModule, &instance.delayedRestartTimer, DelayBeforeResetInMsec, Reset, NULL);
+      }
 
       while(1)
       {
-         TimerModule_Run(instance.timerModule);
+         if(instance.timerModule)
+         {
+            TimerModule_Run(instance.timerModule);
+         }
       }
    }
 }

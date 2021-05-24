@@ -37,3 +37,9 @@
 [submodule "tools/llvm-rl78"]
 	path = tools/llvm-rl78
 	url = https://github.com/geappliances/build-tools.llvm-rl78-release
+[submodule "lib/cypress-psoc6-cm0p-prebuilts"]
+	path = lib/cypress-psoc6-cm0p-prebuilts
+	url = https://github.com/cypresssemiconductorco/psoc6cm0p
+[submodule "lib/cypress-psoc6-pdl"]
+	path = lib/cypress-psoc6-pdl
+	url = https://github.com/geappliances/build-tools.cypress-psoc6-pdl
