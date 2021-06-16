@@ -53,18 +53,18 @@
       "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx130.svd"
     },
     {
-      "name": "rx130-cap-touch-client",
+      "name": "micro-rx130-cap-touch",
       "cwd": "${workspaceRoot}",
       "request": "launch",
       "type": "cortex-debug",
-      "executable": "${workspaceFolder}/build/rx130-cap-touch-client/rx130-cap-touch-client.elf",
+      "executable": "${workspaceFolder}/build/micro-rx130-cap-touch/micro-rx130-cap-touch.elf",
       "device": "R5F51308",
       "servertype": "jlink",
       "interface": "FINE",
-      "jlinkscript": "${workspaceFolder}/build/rx130-cap-touch-client/debug.jlink",
+      "jlinkscript": "${workspaceFolder}/build/micro-rx130-cap-touch/debug.jlink",
       "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
-      "serverpath": "${workspaceFolder}/build/rx130-cap-touch-client/jlink_gdb_server_wrapper.sh",
-      "preLaunchTask": "rx130-cap-touch-client_vscode_debug",
+      "serverpath": "${workspaceFolder}/build/micro-rx130-cap-touch/jlink_gdb_server_wrapper.sh",
+      "preLaunchTask": "micro-rx130-cap-touch_vscode_debug",
       "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx130.svd"
     },
     {
@@ -185,7 +185,8 @@
       "serverpath": "${workspaceFolder}/build/micro-psoc4100s-cap-touch/jlink_gdb_server_wrapper.sh",
       "preLaunchTask": "micro-psoc4100s-cap-touch_debug",
       "svdFile": "${workspaceFolder}/src/micro-psoc4100s-cap-touch/PsocCreator/psoc.cydsn/codegentemp/psoc.svd"
-    }, {
+    },
+    {
       "name": "ra6m3",
       "cwd": "${workspaceRoot}",
       "request": "launch",
@@ -198,7 +199,8 @@
       "serverpath": "${workspaceFolder}/build/ra6m3/jlink_gdb_server_wrapper.sh",
       "preLaunchTask": "ra6m3_vscode_debug",
       "svdFile": "${workspaceFolder}/lib/renesas-ra-fsp/src/bsp/cmsis/Device/RENESAS/SVD/RA.svd"
-    }, {
+    },
+    {
       "name": "psoc6",
       "cwd": "${workspaceRoot}",
       "request": "launch",

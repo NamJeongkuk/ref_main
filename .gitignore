@@ -50,3 +50,7 @@ src/*/PsocCreator/*.cywrk.*
 src/*/PsocCreator/ComponentUpdateLog.txt
 REBUILD.log
 *.cyprj.*
+
+src/*/e2Studio/HardwareDebug
+src/*/e2Studio/trash
+src/*/e2Studio/QE-Touch/*.log

@@ -32,8 +32,8 @@ $RX_MAKE -f mini-rx130-target.mk -j16 RELEASE=Y DEBUG=N package
 $RX_MAKE -f micro-rx130-target.mk -j16 RELEASE=Y DEBUG=N clean
 $RX_MAKE -f micro-rx130-target.mk -j16 RELEASE=Y DEBUG=N package
 
-$RX_MAKE -f rx130-cap-touch-client-target.mk -j16 RELEASE=Y DEBUG=N clean
-$RX_MAKE -f rx130-cap-touch-client-target.mk -j16 RELEASE=Y DEBUG=N package
+$RX_MAKE -f micro-rx130-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N clean
+$RX_MAKE -f micro-rx130-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N package
 
 $RX_MAKE -f rx231-target.mk -j16 RELEASE=Y DEBUG=N clean
 $RX_MAKE -f rx231-target.mk -j16 RELEASE=Y DEBUG=N package

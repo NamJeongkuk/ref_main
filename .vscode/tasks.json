@@ -6,7 +6,7 @@
     {
       "label": "tdd_vscode_debug",
       "type": "shell",
-      "command": "make RELEASE=Y -f tdd.mk test/Build/multi-target-starter-kit_tests",
+      "command": "make -j8 RELEASE=Y -f tdd.mk test/Build/multi-target-starter-kit_tests",
       "presentation": {
         "echo": false,
         "reveal": "silent",
@@ -20,10 +20,10 @@
       "label": "rx130_vscode_debug",
       "type": "shell",
       "linux": {
-        "command": "make RELEASE=N DEBUG=Y -f rx130-target.mk vscode_debug",
+        "command": "make -j8 RELEASE=N DEBUG=Y -f rx130-target.mk vscode_debug",
       },
       "osx": {
-        "command": "dmake RELEASE=N DEBUG=Y -f rx130-target.mk vscode_debug",
+        "command": "dmake -j8 RELEASE=N DEBUG=Y -f rx130-target.mk vscode_debug",
       },
       "presentation": {
         "echo": false,
@@ -38,10 +38,10 @@
       "label": "mini-rx130_vscode_debug",
       "type": "shell",
       "linux": {
-        "command": "make RELEASE=N DEBUG=Y -f mini-rx130-target.mk vscode_debug",
+        "command": "make -j8 RELEASE=N DEBUG=Y -f mini-rx130-target.mk vscode_debug",
       },
       "osx": {
-        "command": "dmake RELEASE=N DEBUG=Y -f mini-rx130-target.mk vscode_debug",
+        "command": "dmake -j8 RELEASE=N DEBUG=Y -f mini-rx130-target.mk vscode_debug",
       },
       "presentation": {
         "echo": false,
@@ -53,13 +53,13 @@
       }
     },
     {
-      "label": "rx130-cap-touch-client_vscode_debug",
+      "label": "micro-rx130-cap-touch_vscode_debug",
       "type": "shell",
       "linux": {
-        "command": "make RELEASE=N DEBUG=Y -f rx130-cap-touch-client-target.mk vscode_debug",
+        "command": "make -j8 RELEASE=N DEBUG=Y -f micro-rx130-cap-touch-target.mk vscode_debug",
       },
       "osx": {
-        "command": "dmake RELEASE=N DEBUG=Y -f rx130-cap-touch-client-target.mk vscode_debug",
+        "command": "dmake -j8 RELEASE=N DEBUG=Y -f micro-rx130-cap-touch-target.mk vscode_debug",
       },
       "presentation": {
         "echo": false,
@@ -74,10 +74,10 @@
       "label": "rx231_vscode_debug",
       "type": "shell",
       "linux": {
-        "command": "make RELEASE=N DEBUG=Y -f rx231-target.mk vscode_debug",
+        "command": "make -j8 RELEASE=N DEBUG=Y -f rx231-target.mk vscode_debug",
       },
       "osx": {
-        "command": "dmake RELEASE=N DEBUG=Y -f rx231-target.mk vscode_debug",
+        "command": "dmake -j8 RELEASE=N DEBUG=Y -f rx231-target.mk vscode_debug",
       },
       "presentation": {
         "echo": false,
@@ -92,10 +92,10 @@
       "label": "mini-rx231_vscode_debug",
       "type": "shell",
       "linux": {
-        "command": "make RELEASE=N DEBUG=Y -f mini-rx231-target.mk vscode_debug",
+        "command": "make -j8 RELEASE=N DEBUG=Y -f mini-rx231-target.mk vscode_debug",
       },
       "osx": {
-        "command": "dmake RELEASE=N DEBUG=Y -f mini-rx231-target.mk vscode_debug",
+        "command": "dmake -j8 RELEASE=N DEBUG=Y -f mini-rx231-target.mk vscode_debug",
       },
       "presentation": {
         "echo": false,
@@ -109,7 +109,7 @@
     {
       "label": "stm32f3_vscode_debug",
       "type": "shell",
-      "command": "make -f stm32f3-target.mk RELEASE=N DEBUG=Y vscode_debug",
+      "command": "make -j8 -f stm32f3-target.mk RELEASE=N DEBUG=Y vscode_debug",
       "presentation": {
         "echo": true,
         "reveal": "silent",
@@ -122,7 +122,7 @@
     {
       "label": "micro-stm32g0_vscode_debug",
       "type": "shell",
-      "command": "make -f micro-stm32g0-target.mk RELEASE=N DEBUG=Y vscode_debug",
+      "command": "make -j8 -f micro-stm32g0-target.mk RELEASE=N DEBUG=Y vscode_debug",
       "presentation": {
         "echo": true,
         "reveal": "silent",
@@ -135,7 +135,7 @@
     {
       "label": "micro-stm8s_vscode_debug",
       "type": "shell",
-      "command": "make -f micro-stm8s-target.mk RELEASE=N DEBUG=Y vscode_debug",
+      "command": "make -j8 -f micro-stm8s-target.mk RELEASE=N DEBUG=Y vscode_debug",
       "presentation": {
         "echo": true,
         "reveal": "silent",
@@ -148,7 +148,7 @@
     {
       "label": "nano-stm8s_vscode_debug",
       "type": "shell",
-      "command": "make -f nano-stm8s-target.mk RELEASE=N DEBUG=Y vscode_debug",
+      "command": "make -j8 -f nano-stm8s-target.mk RELEASE=N DEBUG=Y vscode_debug",
       "presentation": {
         "echo": true,
         "reveal": "silent",
@@ -161,7 +161,7 @@
     {
       "label": "nano-stm8s-cap-touch_vscode_debug",
       "type": "shell",
-      "command": "make -f nano-stm8s-cap-touch-target.mk RELEASE=N DEBUG=Y vscode_debug",
+      "command": "make -j8 -f nano-stm8s-cap-touch-target.mk RELEASE=N DEBUG=Y vscode_debug",
       "presentation": {
         "echo": true,
         "reveal": "silent",
@@ -174,7 +174,7 @@
     {
       "label": "micro-psoc4100s-cap-touch_debug",
       "type": "shell",
-      "command": "make -f micro-psoc4100s-cap-touch-target.mk RELEASE=N DEBUG=Y vscode_debug",
+      "command": "make -j8 -f micro-psoc4100s-cap-touch-target.mk RELEASE=N DEBUG=Y vscode_debug",
       "presentation": {
         "echo": true,
         "reveal": "silent",
@@ -183,10 +183,11 @@
         "showReuseMessage": true,
         "clear": false
       }
-    }, {
+    },
+    {
       "label": "ra6m3_vscode_debug",
       "type": "shell",
-      "command": "make -f ra6m3-target.mk -j8 RELEASE=N DEBUG=Y vscode_debug",
+      "command": "make -j8 -f ra6m3-target.mk -j8 RELEASE=N DEBUG=Y vscode_debug",
       "presentation": {
         "echo": true,
         "reveal": "silent",
@@ -195,10 +196,11 @@
         "showReuseMessage": true,
         "clear": false
       }
-    }, {
+    },
+    {
       "label": "psoc6_vscode_debug",
       "type": "shell",
-      "command": "make -f psoc6-target.mk -j8 RELEASE=N DEBUG=Y vscode_debug",
+      "command": "make -j8 -f psoc6-target.mk -j8 RELEASE=N DEBUG=Y vscode_debug",
       "presentation": {
         "echo": true,
         "reveal": "silent",

@@ -29,18 +29,6 @@ module.exports = {
       ]
     }
   },
-  'rx130-cap-touch-client-target.mk': {
-    ...kpit_rx_base,
-    options: {
-      ...kpit_rx_base.options,
-      outputDirectories: [
-        'build',
-        'artifacts',
-        'lib/boot-loaders/build',
-        'lib/boot-loaders/lib/boot-loader-updater/build'
-      ]
-    }
-  },
   'mini-rx130-target.mk': {
     ...kpit_rx_base,
     options: {
@@ -78,6 +66,18 @@ module.exports = {
     }
   },
   'micro-rx130-target.mk': {
+    ...kpit_rx_base,
+    options: {
+      ...kpit_rx_base.options,
+      outputDirectories: [
+        'build',
+        'artifacts',
+        'lib/boot-loaders/build',
+        'lib/boot-loaders/lib/boot-loader-updater/build'
+      ]
+    }
+  },
+  'micro-rx130-cap-touch-target.mk': {
     ...kpit_rx_base,
     options: {
       ...kpit_rx_base.options,

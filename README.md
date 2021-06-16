@@ -69,7 +69,7 @@ Small RL78 application using the [R5F100LE](https://www.renesas.com/us/en/produc
 | RAM    | 4 KB  |
 
 ### rx130
-General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html).
+General-purpose RX130 project using the R5F51308ADFL.
 
 | Memory     | Size   |
 |------------|--------|
@@ -78,7 +78,7 @@ General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/u
 | Data Flash | 8 KB   |
 
 ### mini-rx130
-General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html) and a smaller, non-routing boot loader.
+General-purpose RX130 project using the R5F51308ADFL and a smaller, non-routing boot loader.
 
 | Memory     | Size   |
 |------------|--------|
@@ -87,7 +87,7 @@ General-purpose RX130 project using the [R5F51308ADFL](https://www.renesas.com/u
 | Data Flash | 8 KB   |
 
 ### micro-rx130
-Small RX130 project using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html) and a smaller, non-routing boot loader.
+Small RX130 project using the R5F51308ADFL and a smaller, non-routing boot loader.
 
 | Memory     | Size   |
 |------------|--------|
@@ -95,8 +95,8 @@ Small RX130 project using the [R5F51308ADFL](https://www.renesas.com/us/en/produ
 | RAM        | 48 KB  |
 | Data Flash | 8 KB   |
 
-### rx130-cap-touch-client
-Sample project that is an ERD stream receiver using the [R5F51308ADFL](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx/rx100/rx130/device/R5F51308ADFL.html). Designed to work with `nano-stm8s-cap-touch`.
+### mirco-rx130-cap-touch
+Sample project using Renesas Cap Touch using the [RX130 Starter kit](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx-32-bit-performance-efficiency-mcus/rx130-512kb-starter-kit-renesas-starter-kit-rx130-512kb).
 
 | Memory     | Size   |
 |------------|--------|
@@ -105,7 +105,7 @@ Sample project that is an ERD stream receiver using the [R5F51308ADFL](https://w
 | Data Flash | 8 KB   |
 
 ### rx231
-General-purpose RX231 project using the [R5F52318ADFL](https://www.renesas.com/sg/en/products/microcontrollers-microprocessors/rx/rx200/rx231/device/R5F52318ADFL.html).
+General-purpose RX231 project using the R5F52318ADFL.
 
 | Memory     | Size   |
 |------------|--------|
@@ -114,7 +114,7 @@ General-purpose RX231 project using the [R5F52318ADFL](https://www.renesas.com/s
 | Data Flash | 8 KB   |
 
 ### mini-rx231
-General-purpose RX231 project using the [R5F52318ADFL](https://www.renesas.com/sg/en/products/microcontrollers-microprocessors/rx/rx200/rx231/device/R5F52318ADFL.html) and a smaller, non-routing boot loader.
+General-purpose RX231 project using the R5F52318ADFL and a smaller, non-routing boot loader.
 
 | Memory     | Size   |
 |------------|--------|
