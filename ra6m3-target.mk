@@ -25,6 +25,7 @@ endif
 endif
 
 include tools/gcc-arm-none-eabi/defaults.mk
+include tools/gcc-arm-none-eabi/ra-hacks.mk
 
 SRC_FILES:=\
 
