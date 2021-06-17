@@ -10,7 +10,7 @@ qe_DEFINES:=$(DEFINES)
 
 qe_CPPFLAGS+=-Wno-array-bounds -Wno-unused-parameter -Wno-maybe-uninitialized -Wno-missing-braces
 
-INC_DIRS+=\
+qe_INC_DIRS+=\
   src/$(TARGET)/e2Studio/src \
   src/$(TARGET)/e2Studio/src/smc_gen/Config_PORT \
   src/$(TARGET)/e2Studio/src/smc_gen/general \
@@ -22,8 +22,6 @@ INC_DIRS+=\
   src/$(TARGET)/e2Studio/src/smc_gen/r_pincfg \
   src/$(TARGET)/e2Studio/src/smc_gen/r_touch_qe \
   src/$(TARGET)/e2Studio/src/smc_gen/r_touch_qe/src \
-
-qe_INC_DIRS+=$(INC_DIRS)
 
 qe_SYS_INC_DIRS+=\
 
@@ -43,4 +41,4 @@ qe_SRC_FILES+=\
   src/$(TARGET)/e2Studio/src/smc_gen/r_bsp/mcu/rx130/mcu_clocks.c \
   src/$(TARGET)/e2Studio/src/smc_gen/r_pincfg/r_ctsu_qe_pinset.c \
 
-INC_DIRS+=$(qe_SRC_DIRS)
+INC_DIRS+=$(qe_INC_DIRS)
