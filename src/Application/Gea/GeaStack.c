@@ -102,8 +102,10 @@ static void ConnectGea2MessageEndpointToDataSource(
       &instance->_private.erdSecurity.restrictedErdPacketRestrictor.interface,
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
       &instance->_private.publicErdMap.interface,
-      instance->_private.subscriptionBuffer,
-      sizeof(instance->_private.subscriptionBuffer));
+      instance->_private.subscriptionResources,
+      ErdApiV2SubscriptionClients,
+      &instance->_private.subscriptionBuffers[0][0],
+      sizeof(instance->_private.subscriptionBuffers[0]));
 }
 
 static void CreatePacketAndMessageEndpoints(

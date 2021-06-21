@@ -69,13 +69,13 @@ SYS_INC_DIRS:=\
   $(PSOC_CREATOR_DIR) \
   $(PSOC_CREATOR_DIR)/Generated_Source/PSoC4 \
 
-tiny_SYS_INC_DIRS+=$(SYS_INC_DIRS)
+tiny_EXTERNAL_INC_DIRS:=\
+  src/$(TARGET) \
 
-tiny_SRC_DIRS+=\
-  lib/applcommon.tiny/src/Application/PsocCapTouch \
-  lib/applcommon.tiny/src/Hardware/Psoc4100 \
-  lib/applcommon.tiny/src/Hardware/Psoc4100/Ul \
-  lib/applcommon.tiny/src/Hardware/Psoc4100/Ul/Vendor \
+tiny_EXTERNAL_SYS_INC_DIRS:=\
+  $(SYS_INC_DIRS) \
+
+include lib_tiny_psoc4100.mk
 
 LUA_FINALIZE_PSOC4_APL:=tools/lua-finalize-psoc4-apl/lua-finalize-psoc4-apl.lua
 
@@ -98,13 +98,14 @@ package: all artifacts erd_definitions erd_lock
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
-	$(call create_artifacts,$(TARGET)_BN_$(BUILD_NUMBER).zip)
+	@$(call create_artifacts,$(TARGET)_BN_$(BUILD_NUMBER).zip)
 
 .PHONY: $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot
 $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot:
 	@OUTPUT_PREFIX="\<BootLoader\>" $(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N
 
 $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot: target $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot
+	@echo Creating $@...
 	@$(LUA53) $(SREC_CONCATENATE) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot $(OUTPUT_DIR)/$(TARGET).apl --output $@
 
 .PHONY: upload
@@ -129,5 +130,4 @@ erd_definitions: $(OUTPUT_DIR)/doc toolchain
 	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output $(OUTPUT_DIR)/GeneratedTypes.lua
 	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
 
-include lib_tiny.mk
 include tools/gcc-arm-none-eabi/worker.mk

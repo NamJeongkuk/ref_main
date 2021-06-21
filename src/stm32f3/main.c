@@ -34,6 +34,7 @@
 #include "Crc16Calculator_Stm32.h"
 #include "Interrupt_Stm32SystemTick.h"
 #include "Stm32F3xxResetSource.h"
+#include "ApplicationUassert.h"
 #include "uassert.h"
 
 extern char __NvData1_Location;
@@ -134,7 +135,10 @@ int main(void)
 
    TimerModuleStack_WritePointersToDataModel(&timerModuleStack, dataModel);
 
-   Uassert_Init(resetAction, DataModel_GetOutput(dataModel, Erd_ProgramCounterAddressAtLastUassert), timerModule);
+   ApplicationUassert_Init(
+      resetAction,
+      DataModel_GetOutput(dataModel, Erd_ProgramCounterAddressAtLastUassert),
+      timerModule);
 
    Hardware_InitializeStage2(dataModel);
 

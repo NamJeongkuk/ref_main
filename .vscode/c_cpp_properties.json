@@ -146,21 +146,6 @@
          "cppStandard": "c++11"
       },
       {
-         "name": "rx130-cap-touch-client",
-         "defines": [
-            "__RX_LITTLE_ENDIAN__"
-         ],
-         "includePath": [
-            "${env:kpit-rx-include}",
-            "${env:applcommon-include}",
-            "${workspaceFolder}/src/rx130-cap-touch-client/**",
-            "${workspaceFolder}/src/Application/**"
-         ],
-         "intelliSenseMode": "gcc-x64",
-         "cStandard": "c99",
-         "cppStandard": "c++11"
-      },
-      {
          "name": "rx231",
          "defines": [
             "__RX_LITTLE_ENDIAN__"

@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include "ApplicationUassert.h"
 #include "uassert.h"
 #include "ProgramCounterAddress.h"
 
@@ -61,7 +62,10 @@ void __uassert_func(
    }
 }
 
-void Uassert_Init(I_Action_t *resetAction, I_Output_t *programCounterAddressOutput, TimerModule_t *timerModule)
+void ApplicationUassert_Init(
+   I_Action_t *resetAction,
+   I_Output_t *programCounterAddressOutput,
+   TimerModule_t *timerModule)
 {
    instance.resetAction = resetAction;
    instance.programCounterAddressOutput = programCounterAddressOutput;

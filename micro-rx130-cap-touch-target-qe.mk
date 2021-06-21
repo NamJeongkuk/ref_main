@@ -1,44 +1,38 @@
-LIBS+=qe
-
-qe_LIB_ROOT:=src/$(TARGET)/e2Studio
-
-qe_ASFLAGS:=$(ASFLAGS)
-qe_CPPFLAGS:=$(CPPFLAGS)
-qe_CFLAGS:=$(CFLAGS)
-qe_CXXFLAGS:=$(CXXFLAGS)
-qe_DEFINES:=$(DEFINES)
+$(call create_library_with_defaults,qe,src/$(TARGET)/e2Studio/)
 
 qe_CPPFLAGS+=-Wno-array-bounds -Wno-unused-parameter -Wno-maybe-uninitialized -Wno-missing-braces
 
-qe_INC_DIRS+=\
-  src/$(TARGET)/e2Studio/src \
-  src/$(TARGET)/e2Studio/src/smc_gen/Config_PORT \
-  src/$(TARGET)/e2Studio/src/smc_gen/general \
-  src/$(TARGET)/e2Studio/src/smc_gen/r_bsp \
-  src/$(TARGET)/e2Studio/src/smc_gen/r_bsp/mcu/all \
-  src/$(TARGET)/e2Studio/src/smc_gen/r_config \
-  src/$(TARGET)/e2Studio/src/smc_gen/r_ctsu_qe \
-  src/$(TARGET)/e2Studio/src/smc_gen/r_ctsu_qe/src \
-  src/$(TARGET)/e2Studio/src/smc_gen/r_pincfg \
-  src/$(TARGET)/e2Studio/src/smc_gen/r_touch_qe \
-  src/$(TARGET)/e2Studio/src/smc_gen/r_touch_qe/src \
+qe_INC_DIRS:=\
+  $(qe_LIB_ROOT)/../Override \
+  $(qe_LIB_ROOT)/../Override/mcu/all \
+  $(qe_LIB_ROOT)/src \
+  $(qe_LIB_ROOT)/src/smc_gen/Config_PORT \
+  $(qe_LIB_ROOT)/src/smc_gen/general \
+  $(qe_LIB_ROOT)/src/smc_gen/r_bsp \
+  $(qe_LIB_ROOT)/src/smc_gen/r_bsp/mcu/all \
+  $(qe_LIB_ROOT)/src/smc_gen/r_config \
+  $(qe_LIB_ROOT)/src/smc_gen/r_ctsu_qe \
+  $(qe_LIB_ROOT)/src/smc_gen/r_ctsu_qe/src \
+  $(qe_LIB_ROOT)/src/smc_gen/r_pincfg \
+  $(qe_LIB_ROOT)/src/smc_gen/r_touch_qe \
+  $(qe_LIB_ROOT)/src/smc_gen/r_touch_qe/src \
 
-qe_SYS_INC_DIRS+=\
+qe_SYS_INC_DIRS:=\
 
-qe_SRC_DIRS+=\
-  src/$(TARGET)/e2Studio/src/smc_gen/r_touch_qe/src \
-  src/$(TARGET)/e2Studio/src/smc_gen/r_ctsu_qe/src \
+qe_SRC_DIRS:=\
+  $(qe_LIB_ROOT)/src/smc_gen/r_touch_qe/src \
+  $(qe_LIB_ROOT)/src/smc_gen/r_ctsu_qe/src \
 
-qe_SRC_FILES+=\
-  src/$(TARGET)/e2Studio/src/qe_common.c \
-  src/$(TARGET)/e2Studio/src/qe_config01.c \
-  src/$(TARGET)/e2Studio/src/smc_gen/r_bsp/mcu/all/r_bsp_common.c \
-  src/$(TARGET)/e2Studio/src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c \
-  src/$(TARGET)/e2Studio/src/smc_gen/r_bsp/mcu/all/r_bsp_interrupts.c \
-  src/$(TARGET)/e2Studio/src/smc_gen/r_bsp/mcu/all/r_bsp_locking.c \
-  src/$(TARGET)/e2Studio/src/smc_gen/r_bsp/mcu/all/r_rx_intrinsic_functions.c \
-  src/$(TARGET)/e2Studio/src/smc_gen/r_bsp/mcu/rx130/mcu_interrupts.c \
-  src/$(TARGET)/e2Studio/src/smc_gen/r_bsp/mcu/rx130/mcu_clocks.c \
-  src/$(TARGET)/e2Studio/src/smc_gen/r_pincfg/r_ctsu_qe_pinset.c \
+qe_SRC_FILES:=\
+  $(qe_LIB_ROOT)/src/qe_common.c \
+  $(qe_LIB_ROOT)/src/qe_config01.c \
+  $(qe_LIB_ROOT)/src/smc_gen/r_bsp/mcu/all/r_bsp_common.c \
+  $(qe_LIB_ROOT)/src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c \
+  $(qe_LIB_ROOT)/src/smc_gen/r_bsp/mcu/all/r_bsp_interrupts.c \
+  $(qe_LIB_ROOT)/src/smc_gen/r_bsp/mcu/all/r_bsp_locking.c \
+  $(qe_LIB_ROOT)/src/smc_gen/r_bsp/mcu/all/r_rx_intrinsic_functions.c \
+  $(qe_LIB_ROOT)/src/smc_gen/r_bsp/mcu/rx130/mcu_interrupts.c \
+  $(qe_LIB_ROOT)/src/smc_gen/r_bsp/mcu/rx130/mcu_clocks.c \
+  $(qe_LIB_ROOT)/src/smc_gen/r_pincfg/r_ctsu_qe_pinset.c \
 
 INC_DIRS+=$(qe_INC_DIRS)

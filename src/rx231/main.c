@@ -36,6 +36,7 @@
 #include "StackConfigurator.h"
 #include "Interrupt_Cmt0.h"
 #include "Rx2xxResetSource.h"
+#include "ApplicationUassert.h"
 #include "uassert.h"
 
 enum
@@ -128,7 +129,10 @@ int main(void)
    I_DataModel_t *dataModel = SystemData_DataModel(&systemData);
    TimerModuleStack_WritePointersToDataModel(&timerModuleStack, dataModel);
 
-   Uassert_Init(resetAction, DataModel_GetOutput(dataModel, Erd_ProgramCounterAddressAtLastUassert), timerModule);
+   ApplicationUassert_Init(
+      resetAction,
+      DataModel_GetOutput(dataModel, Erd_ProgramCounterAddressAtLastUassert),
+      timerModule);
 
    Hardware_InitializeStage2(dataModel);
 

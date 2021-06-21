@@ -55,6 +55,12 @@ INC_DIRS:=\
   src/$(TARGET)/Hardware/Platform \
   src/$(TARGET)/FspConfiguration \
 
+applcommon_EXTERNAL_INC_DIRS:=\
+  src/Application \
+
+include lib_applcommon.mk
+include lib/renesas-ra-fsp/lib_fsp.mk
+
 PACKAGE_CONTENTS=
 $(call add_to_package,$(OUTPUT_DIR)/binaries,binaries)
 $(call add_to_package,$(OUTPUT_DIR)/doc,doc)
@@ -74,13 +80,14 @@ package: all artifacts erd_definitions erd_lock
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
-	$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
+	@$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 
 .PHONY: boot-loader
 boot-loader:
 	@OUTPUT_PREFIX="\<BootLoader\>" $(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N
 
 $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot: target boot-loader
+	@echo Creating $@...
 	@$(LUA53) $(SREC_CONCATENATE) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot $(OUTPUT_DIR)/$(TARGET).apl --output $@
 
 $(OUTPUT_DIR)/doc:
@@ -105,6 +112,4 @@ erd_definitions: $(OUTPUT_DIR)/doc toolchain
 	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output $(OUTPUT_DIR)/GeneratedTypes.lua
 	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
 
-include lib_applcommon.mk
-include lib/renesas-ra-fsp/lib_fsp.mk
 include tools/gcc-arm-none-eabi/worker.mk

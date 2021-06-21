@@ -32,6 +32,7 @@ enum
    ReceiveBufferSize = 251,
    PacketQueueStorageSize = 300,
    DynamicRoutingTableBufferSize = 8,
+   ErdApiV2SubscriptionClients = 1
 };
 
 // clang-format off
@@ -55,7 +56,8 @@ typedef struct
       Gea2CommonCommands_t commonCommands;
       ErdGea2ReadWriteApiRevision2_t erdApiRevision2ReadWrite;
       ErdGea2SubscriptionApiRevision2_t erdApiRevision2Subscription;
-      uint8_t subscriptionBuffer[sizeof(GeaStackPublicErdCount_t) / 4 + 1];
+      ErdGea2SubscriptionApiRevision2SubscriptionResources_t subscriptionResources[ErdApiV2SubscriptionClients];
+      uint8_t subscriptionBuffers[ErdApiV2SubscriptionClients][sizeof(GeaStackPublicErdCount_t) / 4 + 1];
       ConstArrayMap_BinarySearch_t publicErdMap;
       ErdStreamReceiver_t erdStreamReceiver;
 

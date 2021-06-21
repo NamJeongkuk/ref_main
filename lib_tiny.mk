@@ -1,25 +1,19 @@
-LIBS+=tiny
+$(call create_library_with_defaults,tiny,lib/applcommon.tiny/src/)
 
-tiny_LIB_ROOT:=lib/applcommon.tiny
+tiny_INC_DIRS:=\
+  $(tiny_EXTERNAL_INC_DIRS) \
+  $(tiny_LIB_ROOT)/Hardware/Hal \
 
-tiny_ASFLAGS:=$(ASFLAGS)
-tiny_CPPFLAGS:=$(CPPFLAGS)
-tiny_CFLAGS:=$(CFLAGS)
-tiny_CXXFLAGS:=$(CXXFLAGS)
-tiny_DEFINES:=$(DEFINES)
+tiny_SYS_INC_DIRS:=\
+  $(tiny_EXTERNAL_SYS_INC_DIRS) \
+
+tiny_SRC_DIRS:=\
+  $(tiny_LIB_ROOT)/ApplianceApi \
+  $(tiny_LIB_ROOT)/BootLoader \
+  $(tiny_LIB_ROOT)/Core \
+  $(tiny_LIB_ROOT)/TinyLib \
+  $(tiny_LIB_ROOT)/WiFi \
 
 INC_DIRS+=\
-  lib/applcommon.tiny/src/Hardware/Hal \
-
-tiny_INC_DIRS+=$(INC_DIRS)
-
-tiny_SYS_INC_DIRS+=\
-
-tiny_SRC_DIRS+=\
-  lib/applcommon.tiny/src/ApplianceApi \
-  lib/applcommon.tiny/src/BootLoader \
-  lib/applcommon.tiny/src/Core \
-  lib/applcommon.tiny/src/TinyLib \
-  lib/applcommon.tiny/src/WiFi \
-
-INC_DIRS+=$(tiny_SRC_DIRS)
+  $(tiny_INC_DIRS) \
+  $(tiny_SRC_DIRS) \

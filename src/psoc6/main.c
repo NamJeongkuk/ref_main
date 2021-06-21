@@ -33,6 +33,7 @@
 #include "FlashBlockGroup_Psoc6.h"
 #include "FlashBlockGroup_MergedBlocks.h"
 #include "Psoc6ResetReason.h"
+#include "ApplicationUassert.h"
 #include "uassert.h"
 
 enum
@@ -120,19 +121,22 @@ int main(void)
       FlashBlockGroup_Psoc6_Init(Action_Null_GetInstance(), timerModule),
       2);
 
-      SystemData_Init(
-         &systemData,
-         timerModule,
-         &mergedFlashBlockGroup.interface,
-         Crc16Calculator_Table,
-         watchdogKickAction,
-         resetAction);
+   SystemData_Init(
+      &systemData,
+      timerModule,
+      &mergedFlashBlockGroup.interface,
+      Crc16Calculator_Table,
+      watchdogKickAction,
+      resetAction);
 
    I_DataModel_t *dataModel = SystemData_DataModel(&systemData);
 
    TimerModuleStack_WritePointersToDataModel(&timerModuleStack, dataModel);
 
-   Uassert_Init(resetAction, DataModel_GetOutput(dataModel, Erd_ProgramCounterAddressAtLastUassert), timerModule);
+   ApplicationUassert_Init(
+      resetAction,
+      DataModel_GetOutput(dataModel, Erd_ProgramCounterAddressAtLastUassert),
+      timerModule);
 
    Hardware_InitializeStage2(dataModel);
 
