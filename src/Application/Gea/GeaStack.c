@@ -129,6 +129,43 @@ static void CreatePacketAndMessageEndpoints(
    DataModelErdPointerAccess_Write(dataModel, Erd_Gea2MessageEndpoint, &instance->_private.messageEndpointAdapter.interface);
 }
 
+static void CreateSingleWireNode(
+   GeaStack_t *instance,
+   I_DataModel_t *dataModel,
+   uint8_t geaAddress)
+{
+   I_Uart_t *uart = DataModelErdPointerAccess_GetUart(dataModel, Erd_SingleWireUart);
+   I_ContextProtector_t *contextProtector = DataModelErdPointerAccess_GetContextProtector(dataModel, Erd_ContextProtector);
+
+   if(uart && contextProtector)
+   {
+      Gea2Configurator_CreateCustomForegroundSingleWireUartInterfaceNode(
+         &instance->_private.configurator,
+         &instance->_private.singleWire.node,
+         &instance->_private.singleWire.nodeResources,
+         uart,
+         DataModelErdPointerAccess_GetTimeSource(dataModel, Erd_TimeSource),
+         DataModelErdPointerAccess_GetCrc16Calculator(dataModel, Erd_CrcCalcTable),
+         contextProtector,
+         DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_SystemTickInterrupt),
+         geaAddress,
+         RetryCount,
+         instance->_private.singleWire.buffers.sendReceiveBuffer,
+         sizeof(instance->_private.singleWire.buffers.sendReceiveBuffer),
+         instance->_private.singleWire.buffers.sentPacketQueueStorage,
+         sizeof(instance->_private.singleWire.buffers.sentPacketQueueStorage),
+         instance->_private.singleWire.buffers.receivedPacketQueueStorage,
+         sizeof(instance->_private.singleWire.buffers.receivedPacketQueueStorage));
+
+      Gea2Configurator_AddDynamicRoutingTableWithReplacementToNode(
+         &instance->_private.configurator,
+         &instance->_private.singleWire.node,
+         &instance->_private.singleWire.dynamicRoutingResources,
+         instance->_private.singleWire.dynamicRoutingTable,
+         ELEMENT_COUNT(instance->_private.singleWire.dynamicRoutingTable));
+   }
+}
+
 static void CreateInternalNode(
    GeaStack_t *instance,
    I_DataModel_t *dataModel,
@@ -209,6 +246,7 @@ void GeaStack_Init(
 {
    Gea2Configurator_Init(&instance->_private.configurator);
 
+   CreateSingleWireNode(instance, dataModel, geaAddress);
    CreateInternalNode(instance, dataModel, geaAddress, staticRoutingTable, staticRoutingTableEntryCount);
    CreateExternalNode(instance, dataModel, geaAddress);
 

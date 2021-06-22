@@ -13,7 +13,9 @@
 #include "AsyncDataSource_FlashBlockGroup.h"
 #include "Crc16Calculator_Table.h"
 #include "GitHash.h"
+#include "I_Uart.h"
 #include "I_BufferedUart.h"
+#include "I_ContextProtector.h"
 #include "I_Gea2MessageEndpoint.h"
 #include "I_GpioGroup.h"
 #include "I_Interrupt.h"
@@ -193,6 +195,8 @@ enum
    ENTRY(Erd_SystemResetAction,                             0xF108, I_Action_t *,                                       Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_ExternalDataSource,                            0xF109, I_DataSource_t *,                                   Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_FaultCodeTableInputGroup,                      0xF10A, I_InputGroup_t *,                                   Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_SingleWireUart,                                0xF10B, I_Uart_t *,                                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_ContextProtector,                              0xF10C, I_ContextProtector_t *,                             Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,      NotNv,                                    NotFault) \
    ENTRY(Erd_OtherLed,                                      0xF201, bool,                                               Swap_N, Io_None, Sub_N, Bsp,      NotNv,                                    NotFault) \

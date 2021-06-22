@@ -30,6 +30,7 @@ enum
    MaxNumberOfSubscriptions = 5,
    SendBufferSize = 251,
    ReceiveBufferSize = 251,
+   SendReceiveBufferSize = Gea2Interface_SingleWireMaxSendReceiveBufferSize,
    PacketQueueStorageSize = 300,
    DynamicRoutingTableBufferSize = 8,
    ErdApiV2SubscriptionClients = 1
@@ -64,6 +65,21 @@ typedef struct
       Gea2Configurator_t configurator;
       Gea2ConfiguratorNode_t applicationNode;
       Gea2ConfiguratorPacketEndpointNodeResources_t applicationPacketEndpointResources;
+
+      struct
+      {
+         Gea2ConfiguratorNode_t node;
+         Gea2ConfiguratorCustomForegroundSingleWireUartInterfaceNodeResources_t nodeResources;
+         Gea2ConfiguratorStaticRoutingTableResources_t staticRoutingResources;
+         Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
+         uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
+         struct
+         {
+            uint8_t sendReceiveBuffer[SendReceiveBufferSize];
+            uint8_t sentPacketQueueStorage[PacketQueueStorageSize];
+            uint8_t receivedPacketQueueStorage[PacketQueueStorageSize];
+         } buffers;
+      } singleWire;
 
       struct
       {
