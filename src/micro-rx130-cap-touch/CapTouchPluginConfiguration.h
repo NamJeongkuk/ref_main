@@ -18,7 +18,18 @@
 
 enum
 {
-   CapTouchPollPeriodMsec = 20,
+   // Nominal poll/scan rate
+   CapTouchPollPeriodMsec = 5,
+
+   // If it takes longer than this to complete a diagnostics check then
+   // we assume the worst and reset
+   CapTouchDiagnosticsScanMaximumPeriodMsec = 1000,
+
+   // The number of consecutive CTSU diagnostics failures before we throw
+   // in the towel and reset
+   // 30 was taken from RC19
+   CapTouchDiagnosticsConsecutiveFailureLimit = 30,
+
    CapTouchTimerModuleErd = Erd_TimerModule,
    CapTouchResultErd = Erd_KeyState
 };

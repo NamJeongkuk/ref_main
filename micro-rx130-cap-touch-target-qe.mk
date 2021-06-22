@@ -16,12 +16,14 @@ qe_INC_DIRS:=\
   $(qe_LIB_ROOT)/src/smc_gen/r_pincfg \
   $(qe_LIB_ROOT)/src/smc_gen/r_touch_qe \
   $(qe_LIB_ROOT)/src/smc_gen/r_touch_qe/src \
+  $(qe_LIB_ROOT)/../QeDiagnostics \
 
 qe_SYS_INC_DIRS:=\
 
 qe_SRC_DIRS:=\
   $(qe_LIB_ROOT)/src/smc_gen/r_touch_qe/src \
   $(qe_LIB_ROOT)/src/smc_gen/r_ctsu_qe/src \
+  $(qe_LIB_ROOT)/../QeDiagnostics \
 
 qe_SRC_FILES:=\
   $(qe_LIB_ROOT)/src/qe_common.c \
