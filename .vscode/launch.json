@@ -53,6 +53,21 @@
       "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx130.svd"
     },
     {
+      "name": "mini-rx130-cap-touch",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "type": "cortex-debug",
+      "executable": "${workspaceFolder}/build/mini-rx130-cap-touch/mini-rx130-cap-touch.elf",
+      "device": "R5F51308",
+      "servertype": "jlink",
+      "interface": "FINE",
+      "jlinkscript": "${workspaceFolder}/build/mini-rx130-cap-touch/debug.jlink",
+      "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
+      "serverpath": "${workspaceFolder}/build/mini-rx130-cap-touch/jlink_gdb_server_wrapper.sh",
+      "preLaunchTask": "mini-rx130-cap-touch_vscode_debug",
+      "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx130.svd"
+    },
+    {
       "name": "micro-rx130-cap-touch",
       "cwd": "${workspaceRoot}",
       "request": "launch",
