@@ -55,10 +55,10 @@ Small RL78 application using the [R5F101AF](https://www.renesas.com/us/en/produc
 ### nano-rl78g12
 Small RL78 application using the [R5F1026A](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rl78-low-power-8-16-bit-mcus). Includes no boot loader.
 
-| Memory | Size  |
-|--------|-------|
-| Flash  | 16 KB |
-| RAM    | 1.5 KB  |
+| Memory | Size   |
+|--------|--------|
+| Flash  | 16 KB  |
+| RAM    | 1.5 KB |
 
 ### nano-rl78g13
 Small RL78 application using the [R5F100LE](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rl78-low-power-8-16-bit-mcus). Includes no boot loader.
@@ -86,6 +86,15 @@ General-purpose RX130 project using the R5F51308ADFL and a smaller, non-routing 
 | RAM        | 48 KB  |
 | Data Flash | 8 KB   |
 
+### mini-rx130-cap-touch
+Sample project using Renesas Cap Touch using the [RX130 Starter kit](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx-32-bit-performance-efficiency-mcus/rx130-512kb-starter-kit-renesas-starter-kit-rx130-512kb).
+
+| Memory     | Size   |
+|------------|--------|
+| Flash      | 512 KB |
+| RAM        | 48 KB  |
+| Data Flash | 8 KB   |
+
 ### micro-rx130
 Small RX130 project using the R5F51308ADFL and a smaller, non-routing boot loader.
 
@@ -95,7 +104,7 @@ Small RX130 project using the R5F51308ADFL and a smaller, non-routing boot loade
 | RAM        | 48 KB  |
 | Data Flash | 8 KB   |
 
-### mirco-rx130-cap-touch
+### micro-rx130-cap-touch
 Sample project using Renesas Cap Touch using the [RX130 Starter kit](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rx-32-bit-performance-efficiency-mcus/rx130-512kb-starter-kit-renesas-starter-kit-rx130-512kb).
 
 | Memory     | Size   |
