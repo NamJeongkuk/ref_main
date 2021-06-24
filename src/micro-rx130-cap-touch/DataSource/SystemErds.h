@@ -22,6 +22,9 @@
 #include "Signal.h"
 #include "ReadyToEnterBootLoaderState.h"
 #include "KeyState.h"
+#include "CapTouchDebugRawCounts.h"
+#include "CapTouchDebugCounts.h"
+#include "CapTouchDebugDeltas.h"
 #include "utils.h"
 
 enum
@@ -69,6 +72,9 @@ enum
    ENTRY(Erd_HeartbeatTick,                     0xF200, uint8_t,                       StreamNone,    NotMapped) \
    ENTRY(Erd_ErdStream,                         0xF201, ErdStreamErd_t,                StreamNone,    NotMapped) \
    ENTRY(Erd_ErdStreamRequestedState,           0xF202, ErdStreamStateRequest_t,       StreamNone,    NotMapped) \
+   ENTRY(Erd_CapTouchDebugRawCounts,            0xF300, CapTouchDebugRawCounts_t,      StreamNone,    NotMapped) \
+   ENTRY(Erd_CapTouchDebugCounts,               0xF301, CapTouchDebugCounts_t,         StreamNone,    NotMapped) \
+   ENTRY(Erd_CapTouchDebugDeltas,               0xF302, CapTouchDebugDeltas_t,         StreamNone,    NotMapped) \
 
 #define SWAPPED_FIELDS \
    SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, revision), \

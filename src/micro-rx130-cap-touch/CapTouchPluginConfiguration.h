@@ -31,16 +31,24 @@ enum
    CapTouchDiagnosticsConsecutiveFailureLimit = 30,
 
    CapTouchTimerModuleErd = Erd_TimerModule,
-   CapTouchResultErd = Erd_KeyState
+   CapTouchResultErd = Erd_KeyState,
+};
+
+enum
+{
+   // Period at which debug data is updated when the debug plugin is enabled
+   CapTouchDebugPollPeriodMsec = 100,
+
+   // These can be set to Erd_Invalid to disable writing the corresponding value
+   CapTouchDebugRawCountsErd = Erd_CapTouchDebugRawCounts,
+   CapTouchDebugCountsErd = Erd_CapTouchDebugCounts,
+   CapTouchDebugDeltasErd = Erd_CapTouchDebugDeltas,
 };
 
 typedef KeyState_t CapTouchState_t;
 
 #define CapTouchSystemReset() Reset()
 
-// ENTRY(keyId)
-#define CAP_TOUCH_KEYS(ENTRY) \
-   ENTRY(KEY1)                \
-   ENTRY(KEY2)
+#include "CapTouchKeys.h"
 
 #endif

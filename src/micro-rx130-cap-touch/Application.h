@@ -11,6 +11,7 @@
 #include "ApplianceApiPlugin.h"
 #include "McCommunicationPlugin.h"
 #include "CapTouchPlugin.h"
+#include "CapTouchDebugPlugin.h"
 
 static inline void Application_Init(
    I_TinyDataSource_t *dataSource,
@@ -20,6 +21,7 @@ static inline void Application_Init(
    ApplianceApiPlugin_Init(dataSource);
    McCommunicationPlugin_Init(dataSource, externalDataSource, gea2Interface);
    CapTouchPlugin_Init(dataSource);
+   CapTouchDebugPlugin_Init(dataSource);
 }
 
 #endif
