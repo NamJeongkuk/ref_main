@@ -21,26 +21,38 @@ enum
    // Nominal poll/scan rate
    CapTouchPollPeriodMsec = 5,
 
-   // If it takes longer than this to complete a diagnostics check then
-   // we assume the worst and reset
-   CapTouchDiagnosticsScanMaximumPeriodMsec = 1000,
+   // Diagnostics checks for all safety critical keys are performed on this period
+   // with individual steps taken on CapTouchPollPeriodMsec
+   // If it takes longer than this to complete a diagnostics check then we assume
+   // the worst and reset
+   CapTouchDiagnosticsPeriodMsec = 1000,
 
-   // The number of consecutive CTSU diagnostics failures before we throw
-   // in the towel and reset
-   // 30 was taken from RC19
+   // The number of consecutive CTSU diagnostics failures for a given safety
+   // critical key before we throw in the towel and reset
    CapTouchDiagnosticsConsecutiveFailureLimit = 30,
 
    CapTouchTimerModuleErd = Erd_TimerModule,
-   CapTouchResultErd = Erd_KeyState
+   CapTouchResultErd = Erd_KeyState,
+
+   // This can be set to Erd_Invalid to disable writing the corresponding value
+   CapTouchDiagnosticsResultsErd = Erd_CapTouchDiagnosticsResult
+};
+
+enum
+{
+   // Period at which debug data is updated when the debug plugin is enabled
+   CapTouchDebugPollPeriodMsec = 100,
+
+   // These can be set to Erd_Invalid to disable writing the corresponding value
+   CapTouchDebugRawCountsErd = Erd_CapTouchDebugRawCounts,
+   CapTouchDebugCountsErd = Erd_CapTouchDebugCounts,
+   CapTouchDebugDeltasErd = Erd_CapTouchDebugDeltas,
 };
 
 typedef KeyState_t CapTouchState_t;
 
 #define CapTouchSystemReset() Reset()
 
-// ENTRY(keyId)
-#define CAP_TOUCH_KEYS(ENTRY) \
-   ENTRY(KEY1)                \
-   ENTRY(KEY2)
+#include "CapTouchKeys.h"
 
 #endif

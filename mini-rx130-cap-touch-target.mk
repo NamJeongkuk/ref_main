@@ -93,7 +93,7 @@ erd_lock: erd_definitions
 .PHONY: erd_definitions
 erd_definitions: $(OUTPUT_DIR)/doc toolchain
 	@echo Generating ERD definitions...
-	@$(CC) $(addprefix -I,$(INC_DIRS) $(SRC_DIRS)) -E -P -MMD src/$(TARGET)/DataSource/SystemErds.h -o $(OUTPUT_DIR)/temporary.h
+	@$(CC) $(addprefix -I,$(INC_DIRS) $(SRC_DIRS)) $(CPPFLAGS) $(CFLAGS) -E -P -MMD src/$(TARGET)/DataSource/SystemErds.h -o $(OUTPUT_DIR)/temporary.h
 	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output $(OUTPUT_DIR)/GeneratedTypes.lua
 	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
 

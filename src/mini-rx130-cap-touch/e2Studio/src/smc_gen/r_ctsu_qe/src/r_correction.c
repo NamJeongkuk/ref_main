@@ -34,8 +34,6 @@
 *                                     -call custom callback if configured
 *                                     -reset data_update flag on err in case using ext trig and Touch did not process
 *                                       last scan yet
-*              : 09.01.2020 1.11    Replaced correction_CTSU_register_txd_set() switch statement with if-else statement
-*                                     to fix RX231 13.5 PLL multiplier compile-time error.
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -139,7 +137,7 @@ static uint8_t g_ctsutrimr_def;
 #endif
 
 static void    configure_correction_method(void);
-static qe_err_t correction_CTSU_register_txd_set(void);
+static void    correction_CTSU_register_txd_set(void);
 static void    R_Set_CTSU_Correction_Mode(uint8_t mode);
 static qe_err_t correction_CTSU_measurement_start(void);
 static void    correction_CTSU_1st_coefficient_create(void);
@@ -169,8 +167,6 @@ R_BSP_ATTRIB_SECTION_CHANGE(P, _QE_TOUCH_DRIVER)
 *                   Sensor overflow error detected during correction
 *                QE_ERR_SENSOR_SATURATION -
 *                   Initial sensor value beyond linear portion of correction curve
-*                QE_ERR_UNSUPPORTED_CLK_CFG -
-*                   No correction parameters available for selected clock frequency
 ***********************************************************************************************************************/
 qe_err_t correction_CTSU_sensor_ico( void )
 {
@@ -193,13 +189,8 @@ qe_err_t correction_CTSU_sensor_ico( void )
 
     while (CTSU_PRV_1_CORRECTION == g_correction_mode)
     {
-        err = correction_CTSU_register_txd_set();              /* CTSU correction parameter setting by DTC.       */
-        if (QE_SUCCESS != err)
-        {
-            break;
-        }
-
-        R_Set_CTSU_Correction_Mode(CTSU_PRV_1_CORRECTION);     /* Sensor ICO correction measurement setting       */
+        correction_CTSU_register_txd_set();                    /* CTSU correction parameter setting by DTC.       */
+        R_Set_CTSU_Correction_Mode(CTSU_PRV_1_CORRECTION);             /* Sensor ICO correction measurement setting       */
         g_ctsu_ctrl.state = CTSU_STATE_READY;                  /* CTSU measurement ready mode setting             */
         err = correction_CTSU_measurement_start();             /* Sensor ICO gain correction measurement start    */
         if (QE_SUCCESS != err)
@@ -341,44 +332,53 @@ R_BSP_ATTRIB_SECTION_CHANGE(P, _QE_TOUCH_DRIVER)
 * Function Name: correction_CTSU_register_txd_set
 * Description  : CTSU correction parameters transmit setting by DTC.
 * Arguments    : None
-* Return Value : QE_SUCCESS-
-*                   Correction parameter set.
-*                QE_ERR_UNSUPPORTED_CLK_CFG-
-*                   No correction parameter available for clock speed.
+* Return Value : None
 ***********************************************************************************************************************/
-static qe_err_t correction_CTSU_register_txd_set( void )
+static void correction_CTSU_register_txd_set( void )
 {
-    qe_err_t    err = QE_SUCCESS;
-
-
     if (0 == g_correct_value_measure)
     {
         g_correction_dtc_txd[0] = 0x0700;
         g_correction_dtc_txd[1] = 0x0000;
 
-        if (CTSU_INPUT_FREQUENCY_DIV == 32)
+        switch (CTSU_INPUT_FREQUENCY_DIV)
         {
-            g_correction_dtc_txd[2] = 0x3F0F;       /* 32 / 64 = 0.5MHz              */
-        }
-        else if (CTSU_INPUT_FREQUENCY_DIV == 27)
-        {
-            g_correction_dtc_txd[2] = 0x3A0F;       /* 27 / 54 = 0.5MHz              */
-        }
-        else if (CTSU_INPUT_FREQUENCY_DIV == 24)
-        {
-            g_correction_dtc_txd[2] = 0x370F;       /* 24 / 48 = 0.5MHz              */
-        }
-        else if (CTSU_INPUT_FREQUENCY_DIV == 16)
-        {
-            g_correction_dtc_txd[2] = 0x2F0F;       /* 16 / 32 = 0.5MHz              */
-        }
-        else if (CTSU_INPUT_FREQUENCY_DIV == 8)
-        {
-            g_correction_dtc_txd[2] = 0x270F;       /*  8 / 16 = 0.5MHz              */
-        }
-        else
-        {
-            err = QE_ERR_UNSUPPORTED_CLK_CFG;
+            case 32:
+            {
+                g_correction_dtc_txd[2] = 0x3F0F;       /* 32 / 64 = 0.5MHz              */
+                break;
+            }
+            case 27:
+            {
+                g_correction_dtc_txd[2] = 0x3A0F;       /* 27 / 54 = 0.5MHz              */
+                break;
+            }
+            case 24:
+            {
+                g_correction_dtc_txd[2] = 0x370F;       /* 24 / 48 = 0.5MHz              */
+                break;
+            }
+            case 16:
+            {
+                g_correction_dtc_txd[2] = 0x2F0F;       /* 16 / 32 = 0.5MHz              */
+                break;
+            }
+            case 8:
+            {
+                g_correction_dtc_txd[2] = 0x270F;       /*  8 / 16 = 0.5MHz              */
+                break;
+            }
+            default:
+#if ((CTSU_INPUT_FREQUENCY_DIV != 32) \
+  && (CTSU_INPUT_FREQUENCY_DIV != 27) \
+  && (CTSU_INPUT_FREQUENCY_DIV != 24) \
+  && (CTSU_INPUT_FREQUENCY_DIV != 16) \
+  && (CTSU_INPUT_FREQUENCY_DIV != 8))
+#error "Unsupported clock frequency detected."
+#endif
+            {
+                break;
+            }
         }
 
 #ifdef BSP_MCU_RX23_ALL
@@ -388,8 +388,6 @@ static qe_err_t correction_CTSU_register_txd_set( void )
         }
 #endif
     }
-
-    return err;
 }    /* End of function correction_CTSU_register_txd_set() */
 
 

@@ -40,10 +40,6 @@
 *                                     (User will need to call R_CTSU_StartScan() in this case, like low power).
 *                                   Added #pragma sections and removed g_calib_info[][].
 *                                   Modified for GCC/IAR compatibility.
-*              : 09.01.2020 1.11    Added Control() command TOUCH_CMD_CLEAR_TOUCH_STATES for low power applications.
-*                                   Added control_private() command TOUCH_PCMD_CLEAR_TUNING_FLAGS.
-*                                   Added API function R_TOUCH_GetBtnBaselines.
-*                                   Added error code QE_ERR_UNSUPPORTED_CLK_CFG to R_TOUCH_Open().
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -197,8 +193,6 @@ R_BSP_ATTRIB_SECTION_CHANGE(P, _QE_TOUCH_DRIVER)
 *                    Tuning window too small. SO0 adjustments keep counts outside of window.
 *                QE_ERR_OT_MAX_ATTEMPTS -
 *                    Maximum scans performed and all sensors still not in target window.
-*                QE_ERR_UNSUPPORTED_CLK_CFG -
-*                   Unsupported clock speed. Cannot perform CTSU correction.
 ***********************************************************************************************************************/
 qe_err_t R_TOUCH_Open(ctsu_cfg_t *p_ctsu_cfgs[], touch_cfg_t *p_touch_cfgs[], uint8_t num_methods, qe_trig_t trigger)
 {
@@ -646,9 +640,11 @@ R_BSP_ATTRIB_SECTION_CHANGE(P, _QE_TOUCH_DRIVER)
 #endif
 /***********************************************************************************************************************
 * Function Name: R_TOUCH_UpdateDataAndStartScan
-* Description  : This function is used when software-trigger is specified at Open(). It should be called each time
-*                a periodic timer expires. This function updates the sensor data, determines if any touches occurred,
-*                sets the method to be run on the next scan if appropriate, and starts another scan.
+* Description  : This function is used when software-trigger is specified at open.
+*                It should be called each time a periodic timer expires.
+*                The first several calls are used to establish a baseline for the sensors. Once that is complete,
+*                normal processing of the data from the last scan occurs. If a different method should be run on
+*                the next scan, that is set up as well, then the next scan is started.
 * Arguments    : None
 * Return Value : QE_SUCCESS -
 *                    API initialized successfully.
@@ -689,10 +685,11 @@ R_BSP_ATTRIB_SECTION_CHANGE(P, _QE_TOUCH_DRIVER)
 #endif
 /***********************************************************************************************************************
 * Function Name: R_TOUCH_UpdateData
-* Description  : This function is used when external-trigger is specified at Open(), when only a single method is
-*                running due to a TOUCH_CMD_SET_METHOD, or non-periodic scanning is implemented. It should be called
-*                each time a scan completes. This function updates the sensor data, determines if any touches occurred,
-*                and sets the method to be run on the next scan if appropriate.
+* Description  : This function is used when external-trigger is specified at open.
+*                It should be called each time a scan completes ("timer flag" automatically set).
+*                The first several calls are used to establish a baseline for the sensors. Once that is complete,
+*                normal processing of the data from the last scan occurs. If a different method should be run on
+*                the next scan, that is set up as well.
 * Arguments    : None
 * Return Value : QE_SUCCESS -
 *                    API initialized successfully.
@@ -721,10 +718,10 @@ R_BSP_ATTRIB_SECTION_CHANGE(P, _QE_TOUCH_DRIVER)
 #endif
 /***********************************************************************************************************************
 * Function Name: update_data
-* Description  : This function 1) Saves the raw scan data, applies correction and filter (4-deep moving average), then
-*                2) Determines if any buttons, sliders, or wheels were touched and calculates results, and 3) Determines
-*                if the method needs to be changed before the next scan starts, either because methods are being cycled
-*                through or a TOUCH_CMD_SET_METHOD command changed the desired method.
+* Description  : The first several calls to this function establish a baseline for the sensors in the system. Once that
+*                is complete, this function 1) Determines if any buttons, sliders, or wheels were touched and calculates
+*                results, and 2) Determines if the method needs to be changed before the next scan starts, either because
+*                methods are being cycled through or a TOUCH_CMD_SET_METHOD command changed the desired method.
 * Arguments    : None
 * Return Value : QE_SUCCESS -
 *                    API initialized successfully.
@@ -1623,13 +1620,12 @@ R_BSP_ATTRIB_SECTION_CHANGE(P, _QE_TOUCH_DRIVER)
 *                for public use.
 * Arguments    : cmd -
 *                    TOUCH_PCMD_PERFORM_OFFSET_TUNING
+*                    TOUCH_PCMD_CONTINUE_OFFSET_TUNING
 *                       Performs offset tuning and sets reference count for all methods
-*                    TOUCH_PCMD_CLEAR_TUNING_FLAGS
-*                       Clears tuning flags so can perform offset tuning again if desired.
 *                p_arg -
 *                    Pointer to command-specific argument.
 *                    TOUCH_PCMD_PERFORM_OFFSET_TUNING........    (none)
-*                    TOUCH_PCMD_CLEAR_TUNING_FLAGS...........    (none)
+*                    TOUCH_PCMD_CONTINUE_OFFSET_TUNING.......    (none)
 *
 * Return Value : QE_SUCCESS -
 *                    Command performed successfully.
@@ -1657,35 +1653,14 @@ static qe_err_t r_touch_control_private(touch_pcmd_t pcmd, void *p_arg)
 {
     qe_err_t        err=QE_SUCCESS;
     uint8_t         i;
-    uint8_t         j;
 
 
     switch (pcmd)
     {
-        case TOUCH_PCMD_CLEAR_TUNING_FLAGS:
-        {
-            for (i=0; i < g_open_num_methods; i++)
-            {
-                for (j=0; j < gp_ctsu_configs[i]->num_elements; j++)
-                {
-                    g_touch_tuning_info[i].result[j] = 0;   // window tune count
-                    g_touch_tuning_info[i].ctsuso[j] = 0;   // tuning direction
-                }
-
-                g_touch_function[i].flag.tuning = 0;        // show method not tuned
-                g_touch_function[i].flag.average = 0;       // show method has no running average
-            }
-
-            break;
-        }
-
         case TOUCH_PCMD_PERFORM_OFFSET_TUNING:
+        case TOUCH_PCMD_CONTINUE_OFFSET_TUNING:
         {
-            /* WARNING! BUSY will be returned if a scan is in progress when this is called.
-             *          Be sure to set CTSU method to desired method when this completes,
-             *            have the Touch method correspond, and ensure cycling/non-cycling
-             *            is set up as needed.
-             */
+            /* WARNING! BUSY will be returned if a scan is in progress when this is called */
             for (i=0; (i < g_open_num_methods) && (QE_SUCCESS == err); i++)
             {
                 err = R_CTSU_Control(CTSU_CMD_SET_METHOD, i, NULL);
@@ -1734,8 +1709,6 @@ R_BSP_ATTRIB_SECTION_CHANGE(P, _QE_TOUCH_DRIVER)
 *                       Starts cycling through specified list of methods only.
 *                    TOUCH_CMD_GET_FAILED_SENSOR:
 *                       Loads correction or offset tuning error details after Open() failure.
-*                    TOUCH_CMD_CLEAR_TOUCH_STATES:
-*                       Sets all touch states and related counters to 0 for specified method.
 *                p_arg -
 *                    Pointer to command-specific argument.
 *                    TOUCH_CMD_SET_METHOD               uint8_t *
@@ -1743,7 +1716,6 @@ R_BSP_ATTRIB_SECTION_CHANGE(P, _QE_TOUCH_DRIVER)
 *                    TOUCH_CMD_CYCLE_METHOD_LIST        touch_mlist_t *
 *                    TOUCH_CMD_GET_FAILED_SENSOR        touch_sensor_t *
 *                    TOUCH_CMD_GET_LAST_SCAN_METHOD     uint8_t *
-*                    TOUCH_CMD_CLEAR_TOUCH_STATES       uint8_t *
 *
 * Return Value : QE_SUCCESS -
 *                    Command performed successfully.
@@ -1758,7 +1730,6 @@ qe_err_t R_TOUCH_Control(touch_cmd_t cmd, void *p_arg)
     touch_mlist_t   *p_list=(touch_mlist_t *)p_arg;
     touch_sensor_t  *p_bad_sensor=(touch_sensor_t *)p_arg;
     uint8_t         *p_last_method=(uint8_t *)p_arg;
-    uint8_t         *p_clr_states_method=(uint8_t *)p_arg;
 
     qe_err_t        err=QE_SUCCESS;
     uint8_t         i;
@@ -1770,8 +1741,7 @@ qe_err_t R_TOUCH_Control(touch_cmd_t cmd, void *p_arg)
     }
 
     if ((cmd >= TOUCH_CMD_END_ENUM)
-     || (((TOUCH_CMD_SET_METHOD == cmd) || (TOUCH_CMD_CLEAR_TOUCH_STATES == cmd))
-     && ((*p_set_method) >= g_open_num_methods)))
+     || ((TOUCH_CMD_SET_METHOD == cmd) && ((*p_set_method) >= g_open_num_methods)))
     {
         return QE_ERR_INVALID_ARG;
     }
@@ -1798,37 +1768,6 @@ qe_err_t R_TOUCH_Control(touch_cmd_t cmd, void *p_arg)
         case TOUCH_CMD_GET_FAILED_SENSOR:
         {
             *p_bad_sensor = g_bad_sensor;       // structure value assignment
-            break;
-        }
-        case TOUCH_CMD_CLEAR_TOUCH_STATES:
-        {
-            /* clear buttons */
-            for (i=0; i < g_key_info[*p_clr_states_method].key_num; i++)
-            {
-                g_key_info[*p_clr_states_method].touch_cnt[i] = 0;
-                g_key_info[*p_clr_states_method].non_touch_cnt[i] = 0;
-            }
-
-            for (i=0; i < g_key_info[*p_clr_states_method].key_max_group; i++)
-            {
-                g_key_info[*p_clr_states_method].in_touch[i] = 0;
-                g_key_info[*p_clr_states_method].out_touch[i] = 0;
-                g_key_info[*p_clr_states_method].touch_result[i] = 0;
-            }
-
-            /* clear sliders and wheels */
-#if (QE_MAX_SLIDERS != 0)
-            for (i=0; i < gp_touch_configs[*p_clr_states_method]->num_sliders; i++)
-            {
-                gp_touch_configs[*p_clr_states_method]->p_sliders[i].value = 0xFFFF;
-            }
-#endif
-#if (QE_MAX_WHEELS != 0)
-            for (i=0; i < gp_touch_configs[*p_clr_states_method]->num_wheels; i++)
-            {
-                gp_touch_configs[*p_clr_states_method]->p_wheels[i].value = 0xFFFF;
-            }
-#endif
             break;
         }
         case TOUCH_CMD_SET_METHOD:
@@ -1885,7 +1824,7 @@ R_BSP_ATTRIB_SECTION_CHANGE(P, _QE_TOUCH_DRIVER)
 #endif
 /***********************************************************************************************************************
 * Function Name: R_TOUCH_GetRawData
-* Description  : This function gets the sensor values as scanned by the CTSU (correction and filter not applied).
+* Description  : This function gets the sensor values as scanned by the CTSU (correction not applied).
 * Arguments    : method -
 *                    Method to get data for.
 *                p_buf -
@@ -1951,7 +1890,7 @@ R_BSP_ATTRIB_SECTION_CHANGE(P, _QE_TOUCH_DRIVER)
 #endif
 /***********************************************************************************************************************
 * Function Name: R_TOUCH_GetData
-* Description  : This function gets the sensor values after correction and 4-deep moving average (filter) is applied.
+* Description  : This function gets the sensor values after correction is applied.
 * Arguments    : method -
 *                    Method to get data for.
 *                p_buf -
@@ -2001,63 +1940,6 @@ qe_err_t R_TOUCH_GetData(uint8_t method, uint16_t *p_buf, uint8_t *p_cnt)
 
     return QE_SUCCESS;
 } /* End of function R_TOUCH_GetData() */
-
-
-#if ((!defined(R_BSP_VERSION_MAJOR) || (R_BSP_VERSION_MAJOR < 5)) && (TOUCH_CFG_SAFETY_LINKAGE_ENABLE))
-#pragma section _QE_TOUCH_DRIVER
-#elif (TOUCH_CFG_SAFETY_LINKAGE_ENABLE)
-R_BSP_ATTRIB_SECTION_CHANGE(P, _QE_TOUCH_DRIVER)
-#endif
-/***********************************************************************************************************************
-* Function Name: R_TOUCH_GetBtnBaselines
-* Description  : This function gets the long term moving average values (values which touch judgment compares against)
-*                for button elements only. The values are loaded into the buffer in their respective element index
-*                locations (same as GetData()).
-* Arguments    : method -
-*                    Method to get data for.
-*                p_buf -
-*                    Pointer to buffer to load data into.
-*                    (Non-button sensor locations are not loaded).
-*                p_cnt -
-*                    Pointer to variable to load word-size of buffer
-* Return Value : QE_SUCCESS -
-*                    Command performed successfully.
-*                QE_ERR_INVALID_ARG -
-*                    "method" is invalid.
-*                QE_ERR_NULL_PTR -
-*                    "p_buf" or "p_cnt" is NULL.
-***********************************************************************************************************************/
-qe_err_t R_TOUCH_GetBtnBaselines(uint8_t method, uint16_t *p_buf, uint8_t *p_cnt)
-{
-    uint8_t     i;
-    uint8_t     j;
-
-
-#if (TOUCH_CFG_PARAM_CHECKING_ENABLE == 1)
-    if (method >= g_open_num_methods)
-    {
-        return QE_ERR_INVALID_ARG;
-    }
-
-    if ((NULL == p_buf) || (NULL == p_cnt))
-    {
-        return QE_ERR_NULL_PTR;
-    }
-#endif
-
-    /* load expected size of buffer passed in */
-    *p_cnt = g_key_info[method].ena_num;
-
-
-    /* poke button baseline values into passed-in buffer */
-    for (i=0; i < gp_touch_cfgs[method]->num_buttons; i++)
-    {
-        j = gp_touch_cfgs[method]->p_buttons[i].elem_index;     // get buffer index
-        p_buf[j] = g_key_info[method].ref[i];                   // poke baseline value
-    }
-
-    return QE_SUCCESS;
-} /* End of function R_TOUCH_GetBtnBaselines() */
 
 
 #if ((!defined(R_BSP_VERSION_MAJOR) || (R_BSP_VERSION_MAJOR < 5)) && (TOUCH_CFG_SAFETY_LINKAGE_ENABLE))

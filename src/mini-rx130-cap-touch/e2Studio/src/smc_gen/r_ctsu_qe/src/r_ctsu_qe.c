@@ -32,8 +32,6 @@
 *                                   Added Control() commands CTSU_CMD_GET_METHOD_MODE and CTSU_CMD_GET_SCAN_INFO.
 *                                   Added 128us delay after setting CTSUPON in init_method().
 *                                   Added #pragma sections and ported to GCC/IAR.
-*              : 09.01.2020 1.11    Fixed bug where custom callback function was called twice.
-*                                     Removed call from ctsu_ctsufn_isr().
 ***********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -102,8 +100,6 @@ R_BSP_ATTRIB_SECTION_CHANGE(P, _QE_TOUCH_DRIVER)
 *                   Sensor overflow error detected during correction
 *                QE_ERR_SENSOR_SATURATION -
 *                   Initial sensor value beyond linear portion of correction curve
-*                QE_ERR_UNSUPPORTED_CLK_CFG -
-*                   Unsupported clock speed. Cannot perform CTSU correction.
 ***********************************************************************************************************************/
 qe_err_t R_CTSU_Open(ctsu_cfg_t *p_ctsu_cfgs[], uint8_t num_methods, qe_trig_t trigger)
 {
@@ -436,15 +432,35 @@ R_BSP_PRAGMA_STATIC_INTERRUPT(ctsu_ctsufn_isr, VECT(CTSU,CTSUFN))
 R_BSP_ATTRIB_STATIC_INTERRUPT void ctsu_ctsufn_isr(void)
 #endif
 {
+    ctsu_isr_evt_t  event=CTSU_EVT_SCAN_COMPLETE;
 
     /* Call main interrupt handler (primarily for correction) */
     CTSUInterrupt();
+
+    /* if callback present, check for error and do callback */
+    if (NULL != g_ctsu_ctrl.p_callback)
+    {
+        if (1 == CTSU.CTSUST.BIT.CTSUSOVF)
+        {
+            event = CTSU_EVT_OVERFLOW;
+        }
+        else if (1 == CTSU.CTSUERRS.BIT.CTSUICOMP)
+        {
+            event = CTSU_EVT_VOLT_ERR;
+        }
+        else
+        {
+            ;   // coding standard requirement
+        }
+
+        g_ctsu_ctrl.p_callback(event, NULL);
+    }
+
 
     /* reset indexes */
     g_ctsu_ctrl.wr_index = 0;
     g_ctsu_ctrl.rd_index = 0;
 
-    /* mark CTSU as no longer busy */
     R_BSP_SoftwareUnlock(&g_ctsu_ctrl.lock);
 
 } /* End of function ctsu_ctsufn_isr() */
@@ -1149,8 +1165,6 @@ R_BSP_ATTRIB_SECTION_CHANGE(P, _QE_TOUCH_DRIVER)
 *                    CTSU_CMD_SET_METHOD            NULL
 *                    CTSU_CMD_GET_METHOD_MODE       ctsu_mode_t *
 *                    CTSU_CMD_GET_SCAN_INFO         scan_info_t *
-*                    CTSU_CMD_SNOOZE_ENABLE         NULL
-*                    CTSU_CMD_SNOZZE_DISABLE        NULL
 *
 * Return Value : QE_SUCCESS -
 *                    Command completed successfully
@@ -1176,8 +1190,7 @@ qe_err_t R_CTSU_Control(ctsu_cmd_t cmd, uint8_t method, void *p_arg)
         return QE_ERR_INVALID_ARG;      // command out of range
     }
 
-    if (((CTSU_CMD_SET_CALLBACK != cmd) && (CTSU_CMD_GET_STATE != cmd) &&
-         (CTSU_CMD_SNOOZE_ENABLE != cmd) && (CTSU_CMD_SNOOZE_DISABLE != cmd))
+    if (((CTSU_CMD_SET_CALLBACK != cmd) && (CTSU_CMD_GET_STATE != cmd))
       && ((method >= g_ctsu_ctrl.num_methods) && (QE_CUR_METHOD != method)))
     {
         return QE_ERR_INVALID_ARG;      // method out of range
@@ -1249,25 +1262,6 @@ qe_err_t R_CTSU_Control(ctsu_cmd_t cmd, uint8_t method, void *p_arg)
         case CTSU_CMD_GET_SCAN_INFO:
         {
             *p_scan_info = g_pvt_scan_info[method];       // structure value assignment
-            break;
-        }
-        case CTSU_CMD_SNOOZE_ENABLE:
-        {
-#if BSP_MCU_SERIES_RX100
-            CTSU.CTSUCR0.BIT.CTSUSNZ = 1;
-#else
-            err = QE_ERR_INVALID_ARG;                     // snooze unavailable on RX231/23W
-#endif
-            break;
-        }
-        case CTSU_CMD_SNOOZE_DISABLE:
-        {
-#if BSP_MCU_SERIES_RX100
-            CTSU.CTSUCR0.BIT.CTSUSNZ = 0;
-            R_BSP_SoftwareDelay(16, BSP_DELAY_MICROSECS); // wait for CTSU "wake up"; REQUIRED BY HARDWARE!
-#else
-            err = QE_ERR_INVALID_ARG;                     // snooze unavailable on RX231/23W
-#endif
             break;
         }
         default:
