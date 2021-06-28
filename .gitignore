@@ -49,6 +49,7 @@ src/*/PsocCreator/*.cydsn/CortexM0p/
 src/*/PsocCreator/*.cywrk.*
 src/*/PsocCreator/ComponentUpdateLog.txt
 REBUILD.log
+BUILD.log
 *.cyprj.*
 
 src/*/e2Studio/HardwareDebug
