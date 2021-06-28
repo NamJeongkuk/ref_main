@@ -12,8 +12,15 @@
 #include "r_touch_qe_if.h"
 #include "r_ctsu_qe_pinset.h"
 #include "r_qetouch_diagnostics_if.h"
+#include "CapTouchVersionCheck.h"
 #include "KeyState.h"
 #include "utils.h"
+
+enum
+{
+   RawCountsWatchdogTimeoutMsec = 5 * 60 * 1000,
+   RawCountsWatchdogCounterLimit = RawCountsWatchdogTimeoutMsec / CapTouchPollPeriodMsec,
+};
 
 enum
 {
@@ -22,6 +29,12 @@ enum
    DiagnosticsState_Complete
 };
 typedef uint8_t DiagnosticsState_t;
+
+typedef struct
+{
+   uint16_t lastRaw;
+   uint16_t counter;
+} RawCountsWatchdogState_t;
 
 #define EXPAND_AS_KEY_MASKS(keyId) \
    CONCAT(CONCAT(CapTouchConfigName, _MASK_), keyId),
@@ -37,10 +50,20 @@ static const uint8_t safetyCriticalKeyIndexes[] = {
    SAFETY_CRITICAL_CAP_TOUCH_KEYS(EXPAND_AS_KEY_INDEXES)
 };
 
+enum
+{
+   CapTouchKeyCount = ELEMENT_COUNT(keyMasks)
+};
+
 static struct
 {
    TinyTimer_t timer;
 } poll;
+
+static struct
+{
+   RawCountsWatchdogState_t state[CapTouchKeyCount];
+} rawCountsWatchdog;
 
 static struct
 {
@@ -99,6 +122,31 @@ static void RunDiagnostics(I_TinyDataSource_t *dataSource)
    }
 }
 
+static void UpdateRawCountsWatchdog(void)
+{
+   uint8_t count;
+   uint16_t rawCounts[CapTouchKeyCount];
+   R_TOUCH_GetRawData(CONCAT(QE_METHOD_, CapTouchConfigName), rawCounts, &count);
+
+   for(uint8_t key = 0; key < CapTouchKeyCount; key++)
+   {
+      if(rawCounts[key] != rawCountsWatchdog.state[key].lastRaw)
+      {
+         rawCountsWatchdog.state[key].counter = 0;
+         rawCountsWatchdog.state[key].lastRaw = rawCounts[key];
+      }
+      else
+      {
+         rawCountsWatchdog.state[key].counter++;
+
+         if(rawCountsWatchdog.state[key].counter >= RawCountsWatchdogCounterLimit)
+         {
+            CapTouchSystemReset();
+         }
+      }
+   }
+}
+
 static inline void StartScan(void)
 {
    R_TOUCH_UpdateDataAndStartScan();
@@ -129,6 +177,8 @@ static void Poll(void *context, struct TinyTimerModule_t *timerModule)
    {
       RunDiagnostics(dataSource);
    }
+
+   UpdateRawCountsWatchdog();
 
    CaptureScanResults(dataSource);
    StartScan();

@@ -9,6 +9,7 @@
 #include "CapTouchPluginConfiguration.h"
 #include "TinyTimer.h"
 #include "r_touch_qe_if.h"
+#include "CapTouchVersionCheck.h"
 #include "QeDebug.h"
 
 #define EXPAND_AS_KEY_COUNT_FIELDS(keyId) \
