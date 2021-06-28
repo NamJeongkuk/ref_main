@@ -5,12 +5,12 @@ r_touch_qe
 
 Document Number 
 ---------------
-r01an4470eu0111
-r01an4470ju0111
+r01an4470eu0110
+r01an4470ju0110
 
 Version
 -------
-v1.11
+v1.10
 
 Overview
 --------
@@ -59,7 +59,7 @@ Peripherals Used Directly
 Required Packages
 -----------------
 * r_bsp      v4.24
-* r_ctsu_qe  v1.11
+* r_ctsu_qe  v1.10
 
 
 Toolchain(s) Used
@@ -69,15 +69,15 @@ Toolchain(s) Used
 
 File Structure
 --------------
-r_touch_qe (v1.11)
+r_touch_qe (v1.10)
 |   +-- readme.txt
-|   +-- r_touch_qe_if.h (v1.11)
+|   +-- r_touch_qe_if.h (v1.10)
 |
 +---doc
 |   +-- en
-|   |   +-- r01an4470eu0111-rx.pdf
+|   |   +-- r01an4470eu0110-rx.pdf
 |   +-- ja
-|       +-- r01an4470ju0111-rx.pdf
+|       +-- r01an4470ju0110-rx.pdf
 |
 +---ref
 |   +-- r_touch_qe_config_reference.h (v1.10)
@@ -85,8 +85,8 @@ r_touch_qe (v1.11)
 +---src
     +-- r_monitor.c (v1.20)
     +-- r_monitor.h (v1.10)
-    +-- r_touch_qe_private.h (v1.11)
-    +-- r_touch_qe.c (v1.11)
+    +-- r_touch_qe_private.h (v1.10)
+    +-- r_touch_qe.c (v1.10)
     +-- r_widgets.c (v1.10)
 
 r_config

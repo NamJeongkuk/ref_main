@@ -22,7 +22,7 @@
 * Version      : 1.6.103
 * Device(s)    : R5F51308AxFP
 * Description  : CGC setting header file.
-* Creation Date: 2021-06-14
+* Creation Date: 2021-06-28
 ***********************************************************************************************************************/
 
 #ifndef SMC_CGC_H

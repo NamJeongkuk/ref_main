@@ -22,7 +22,7 @@
 * Device(s)    : R5F51308AxFP
 * Tool-Chain   : RXC toolchain
 * Description  : Setting of port and mpc registers
-* Creation Date: 2021-06-14
+* Creation Date: 2021-06-28
 ***********************************************************************************************************************/
 
 #ifndef R_CTSU_QE_H

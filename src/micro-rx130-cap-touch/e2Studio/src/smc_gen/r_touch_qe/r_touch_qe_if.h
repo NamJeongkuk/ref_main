@@ -34,9 +34,6 @@
 *                              Fixed slider touch judgment bug hardcoded for 4 sensors.
 *                              Added #pragma sections for diagnostic/safety code.
 *                              Modified for GCC/IAR compatibility.
-*         : 09.01.2020 1.11    Added Control() command TOUCH_CMD_CLEAR_TOUCH_STATES for low power applications.
-*                              Added control_private() command TOUCH_PCMD_CLEAR_TUNING_FLAGS.
-*                              Added API function R_TOUCH_GetBtnBaselines().
 ***********************************************************************************************************************/
 #ifndef QETOUCH_RX_IF_H_FILE
 #define QETOUCH_RX_IF_H_FILE
@@ -50,7 +47,7 @@
 ***********************************************************************************************************************/
 /* Driver Version Number. */
 #define QETOUCH_RX_VERSION_MAJOR    (1)
-#define QETOUCH_RX_VERSION_MINOR    (11)
+#define QETOUCH_RX_VERSION_MINOR    (10)
 
 
 /***********************************************************************************************************************
@@ -65,7 +62,6 @@ typedef enum e_touch_cmd
     TOUCH_CMD_CYCLE_METHOD_LIST,            // scan/cycle through specified method list
     TOUCH_CMD_GET_FAILED_SENSOR,            // identify sensor in error (if possible)
     TOUCH_CMD_GET_LAST_SCAN_METHOD,
-    TOUCH_CMD_CLEAR_TOUCH_STATES,           // set touch states and related counters to 0
     TOUCH_CMD_END_ENUM
 } touch_cmd_t;
 
@@ -97,12 +93,11 @@ typedef struct st_touch_sensor
 * Exported global functions
 ***********************************************************************************************************************/
 qe_err_t R_TOUCH_Open(ctsu_cfg_t *p_ctsu_cfgs[], touch_cfg_t *p_touch_cfgs[], uint8_t num_methods, qe_trig_t trigger);
-qe_err_t R_TOUCH_UpdateDataAndStartScan(void);                                  // for software triggers and method cycling
-qe_err_t R_TOUCH_UpdateData(void);                                              // for external triggers or set methods
+qe_err_t R_TOUCH_UpdateDataAndStartScan(void);                                  // for software triggers
+qe_err_t R_TOUCH_UpdateData(void);                                              // for external triggers
 qe_err_t R_TOUCH_Control(touch_cmd_t cmd, void *p_arg);
-qe_err_t R_TOUCH_GetRawData(uint8_t method, uint16_t *p_buf, uint8_t *p_cnt);       // for advanced debugging
-qe_err_t R_TOUCH_GetData(uint8_t method, uint16_t *p_buf, uint8_t *p_cnt);          // for advanced debugging
-qe_err_t R_TOUCH_GetBtnBaselines(uint8_t method, uint16_t *p_buf, uint8_t *p_cnt);  // for advanced debugging
+qe_err_t R_TOUCH_GetRawData(uint8_t method, uint16_t *p_buf, uint8_t *p_cnt);   // for advanced debugging
+qe_err_t R_TOUCH_GetData(uint8_t method, uint16_t *p_buf, uint8_t *p_cnt);      // for advanced debugging
 qe_err_t R_TOUCH_GetAllBtnStates(uint8_t method, uint64_t *p_mask);
 qe_err_t R_TOUCH_GetSliderPosition(uint16_t slider_id, uint16_t *p_position);
 qe_err_t R_TOUCH_GetWheelPosition(uint16_t wheel_id, uint16_t *p_position);

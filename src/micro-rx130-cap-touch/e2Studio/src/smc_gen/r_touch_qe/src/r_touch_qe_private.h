@@ -31,7 +31,6 @@
 *              :                    Removed unused variables from former offset tuning and ref count initialization.
 *              :                    Added touch_pcmd_t.
 *              :                    Removed extern g_calib_info[][] declaration.
-*              : 31.10.2019 1.11    Renamed TOUCH_PCMD_CONTINUE_OFFSET_TUNING to TOUCH_PCMD_CLEAR_TUNING_FLAGS.
 ***********************************************************************************************************************/
 #ifndef QETOUCH_RX_PRIVATE_H
 #define QETOUCH_RX_PRIVATE_H
@@ -81,7 +80,7 @@
 typedef enum e_touch_pcmd
 {
     TOUCH_PCMD_PERFORM_OFFSET_TUNING,
-    TOUCH_PCMD_CLEAR_TUNING_FLAGS,      // if want to do offset tuning again, call this first
+    TOUCH_PCMD_CONTINUE_OFFSET_TUNING,      // if max attempts for offset tuning reached in Open(), try again.
     TOUCH_PCMD_END_ENUM
 } touch_pcmd_t;
 

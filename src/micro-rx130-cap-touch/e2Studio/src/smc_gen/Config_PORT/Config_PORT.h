@@ -22,7 +22,7 @@
 * Version      : 2.1.3
 * Device(s)    : R5F51308AxFP
 * Description  : This file implements device driver for Config_PORT.
-* Creation Date: 2021-06-14
+* Creation Date: 2021-06-28
 ***********************************************************************************************************************/
 
 #ifndef CFG_Config_PORT_H
