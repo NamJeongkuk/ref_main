@@ -17,10 +17,11 @@
 
 enum
 {
-   DiagnosticsScanInProgressLimit = CapTouchDiagnosticsScanMaximumPeriodMsec / CapTouchPollPeriodMsec
+   DiagnosticsState_Idle,
+   DiagnosticsState_InProgress,
+   DiagnosticsState_Complete
 };
-
-#define COMMA ,
+typedef uint8_t DiagnosticsState_t;
 
 #define EXPAND_AS_KEY_MASKS(keyId) \
    CONCAT(CONCAT(CapTouchConfigName, _MASK_), keyId),
@@ -29,43 +30,71 @@ static const uint64_t keyMasks[] = {
    CAP_TOUCH_KEYS(EXPAND_AS_KEY_MASKS)
 };
 
-static TinyTimer_t pollTimer;
-static uint16_t diagnosticsFailureCount;
-static uint16_t diagnosticsScanInProgressCount;
+#define EXPAND_AS_KEY_INDEXES(keyId) \
+   CONCAT(CONCAT(CapTouchConfigName, _INDEX_), keyId),
 
+static const uint8_t safetyCriticalKeyIndexes[] = {
+   SAFETY_CRITICAL_CAP_TOUCH_KEYS(EXPAND_AS_KEY_INDEXES)
+};
+
+static struct
+{
+   TinyTimer_t timer;
+} poll;
+
+static struct
+{
+   TinyTimer_t timer;
+   DiagnosticsState_t state;
+   uint16_t failureCount[ELEMENT_COUNT(safetyCriticalKeyIndexes)];
+   uint8_t currentKey;
+   uint8_t results[ELEMENT_COUNT(safetyCriticalKeyIndexes)];
+} diagnostics;
+
+static void ArmDiagnosticsTimer(I_TinyDataSource_t *dataSource, TinyTimerModule_t *timerModule);
 static void ArmPollTimer(I_TinyDataSource_t *dataSource, TinyTimerModule_t *timerModule);
 
-static void RunDiagnostics(void)
+static void RunDiagnostics(I_TinyDataSource_t *dataSource)
 {
-   e_diagerr_t result = R_CTSU_DiagAll(CONCAT(QE_METHOD_, CapTouchConfigName));
+   if(NUM_ELEMENTS(safetyCriticalKeyIndexes) == 0)
+   {
+      diagnostics.state = DiagnosticsState_Complete;
+      return;
+   }
+
+   e_diagerr_t result = R_CTSU_DiagSingle(
+      CONCAT(QE_METHOD_, CapTouchConfigName),
+      safetyCriticalKeyIndexes[diagnostics.currentKey]);
 
    if(result == DIAG_CTSU_SCAN_IN_PROGRESS)
    {
-      diagnosticsScanInProgressCount++;
+      return;
+   }
+   else if(result == DIAG_ALL_CHECK_SUCCESS)
+   {
+      diagnostics.failureCount[diagnostics.currentKey] = 0;
+   }
+   else
+   {
+      diagnostics.failureCount[diagnostics.currentKey]++;
 
-      if(diagnosticsScanInProgressCount > DiagnosticsScanInProgressLimit)
+      if(diagnostics.failureCount[diagnostics.currentKey] > CapTouchDiagnosticsConsecutiveFailureLimit)
       {
          CapTouchSystemReset();
       }
-
-      return;
-   }
-   else
-   {
-      diagnosticsScanInProgressCount = 0;
    }
 
-   if(result == DIAG_ALL_CHECK_SUCCESS)
-   {
-      diagnosticsFailureCount = 0;
-   }
-   else
-   {
-      diagnosticsFailureCount++;
+   diagnostics.results[diagnostics.currentKey] = result;
 
-      if(diagnosticsFailureCount > CapTouchDiagnosticsConsecutiveFailureLimit)
+   diagnostics.currentKey++;
+
+   if(diagnostics.currentKey == ELEMENT_COUNT(safetyCriticalKeyIndexes))
+   {
+      diagnostics.state = DiagnosticsState_Complete;
+
+      if(CapTouchDiagnosticsResultsErd != (Erd_t)Erd_Invalid)
       {
-         CapTouchSystemReset();
+         TinyDataSource_Write(dataSource, CapTouchDiagnosticsResultsErd, diagnostics.results);
       }
    }
 }
@@ -96,7 +125,11 @@ static void Poll(void *context, struct TinyTimerModule_t *timerModule)
    IGNORE(context);
    REINTERPRET(dataSource, context, I_TinyDataSource_t *);
 
-   RunDiagnostics();
+   if(diagnostics.state == DiagnosticsState_InProgress)
+   {
+      RunDiagnostics(dataSource);
+   }
+
    CaptureScanResults(dataSource);
    StartScan();
 
@@ -107,9 +140,34 @@ static void ArmPollTimer(I_TinyDataSource_t *dataSource, TinyTimerModule_t *time
 {
    TinyTimerModule_Start(
       timerModule,
-      &pollTimer,
+      &poll.timer,
       CapTouchPollPeriodMsec,
       Poll,
+      dataSource);
+}
+
+static void StartDiagnostics(void *context, struct TinyTimerModule_t *timerModule)
+{
+   REINTERPRET(dataSource, context, I_TinyDataSource_t *);
+
+   if(diagnostics.state == DiagnosticsState_InProgress)
+   {
+      CapTouchSystemReset();
+   }
+
+   diagnostics.state = DiagnosticsState_InProgress;
+   diagnostics.currentKey = 0;
+
+   ArmDiagnosticsTimer(dataSource, timerModule);
+}
+
+static void ArmDiagnosticsTimer(I_TinyDataSource_t *dataSource, TinyTimerModule_t *timerModule)
+{
+   TinyTimerModule_Start(
+      timerModule,
+      &diagnostics.timer,
+      CapTouchDiagnosticsPeriodMsec,
+      StartDiagnostics,
       dataSource);
 }
 
@@ -125,4 +183,5 @@ void CapTouchPlugin_Init(I_TinyDataSource_t *dataSource)
    StartScan();
 
    ArmPollTimer(dataSource, TinyDataSource_ReadPointer(dataSource, CapTouchTimerModuleErd));
+   ArmDiagnosticsTimer(dataSource, TinyDataSource_ReadPointer(dataSource, CapTouchTimerModuleErd));
 }

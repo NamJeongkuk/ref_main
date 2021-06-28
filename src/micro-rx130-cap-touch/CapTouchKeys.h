@@ -13,4 +13,7 @@
    ENTRY(KEY1)                \
    ENTRY(KEY2)
 
+#define SAFETY_CRITICAL_CAP_TOUCH_KEYS(ENTRY) \
+   ENTRY(KEY2)
+
 #endif

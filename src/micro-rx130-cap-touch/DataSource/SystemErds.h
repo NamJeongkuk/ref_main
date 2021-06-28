@@ -25,6 +25,7 @@
 #include "CapTouchDebugRawCounts.h"
 #include "CapTouchDebugCounts.h"
 #include "CapTouchDebugDeltas.h"
+#include "CapTouchDiagnosticsResults.h"
 #include "utils.h"
 
 enum
@@ -75,6 +76,7 @@ enum
    ENTRY(Erd_CapTouchDebugRawCounts,            0xF300, CapTouchDebugRawCounts_t,      StreamNone,    NotMapped) \
    ENTRY(Erd_CapTouchDebugCounts,               0xF301, CapTouchDebugCounts_t,         StreamNone,    NotMapped) \
    ENTRY(Erd_CapTouchDebugDeltas,               0xF302, CapTouchDebugDeltas_t,         StreamNone,    NotMapped) \
+   ENTRY(Erd_CapTouchDiagnosticsResult,         0xF303, CapTouchDiagnosticsResults_t,  StreamNone,    NotMapped) \
 
 #define SWAPPED_FIELDS \
    SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, revision), \
