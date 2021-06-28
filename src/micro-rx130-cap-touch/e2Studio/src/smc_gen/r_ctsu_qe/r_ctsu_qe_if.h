@@ -35,9 +35,6 @@
 *                              Added error checking in correction_CTSU_register_txd_set() switch default.
 *                              Added #pragma sections for diagnostic/safety code.
 *                              Modified for GCC/IAR compatibility.
-*           09.01.2020 1.11    Fixed bug where custom callback function was called twice.
-*                              Added Control() commands CTSU_CMD_SNOOZE_ENABLE and CTSU_CMD_SNOOZE_DISABLE.
-*                              Fixed compile-time bug when PLL multiplier of 13.5 is selected for RX231.
 ***********************************************************************************************************************/
 
 #ifndef R_CTSU_QE_IF_H
@@ -53,7 +50,7 @@ Macro definitions
 ***********************************************************************************************************************/
 /* Driver Version Number. */
 #define QECTSU_RX_VERSION_MAJOR         (1)
-#define QECTSU_RX_VERSION_MINOR         (11)
+#define QECTSU_RX_VERSION_MINOR         (10)
 
 #define CTSU_INPUT_FREQUENCY_DIV        (BSP_PCLKB_HZ / 1000000)
 
@@ -111,8 +108,6 @@ typedef enum e_ctsu_cmd
     CTSU_CMD_SET_METHOD,                    // change scan configuration
     CTSU_CMD_GET_METHOD_MODE,
     CTSU_CMD_GET_SCAN_INFO,
-    CTSU_CMD_SNOOZE_ENABLE,
-    CTSU_CMD_SNOOZE_DISABLE,
     CTSU_CMD_END_ENUM
 } ctsu_cmd_t;
 

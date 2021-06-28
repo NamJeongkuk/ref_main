@@ -5,12 +5,12 @@ r_ctsu_qe
 
 Document Number 
 ---------------
-r01an4469eu0111
-r01an4469ju0111
+r01an4469eu0110
+r01an4469ju0110
 
 Version
 -------
-v1.11
+v1.10
 
 Overview
 --------
@@ -58,7 +58,7 @@ Peripherals Used Directly
 Required Packages
 -----------------
 * r_bsp       v4.24
-* r_touch_qe  v1.11
+* r_touch_qe  v1.10
 
 
 Toolchain(s) Used
@@ -68,24 +68,24 @@ Toolchain(s) Used
 
 File Structure
 --------------
-r_ctsu_qe (v1.11)
+r_ctsu_qe (v1.10)
 |   +-- readme.txt
-|   +-- r_ctsu_qe_if.h (v1.11)
+|   +-- r_ctsu_qe_if.h (v1.10)
 |   +-- r_typedefs_qe.h (v1.10)
 |
 +---doc
 |   +-- en
-|   |   +-- r01an4469eu0111-rx.pdf
+|   |   +-- r01an4469eu0110-rx.pdf
 |   +-- ja
-|       +-- r01an4469ju0111-rx.pdf
+|       +-- r01an4469ju0110-rx.pdf
 |
 +---ref
 |   +-- r_ctsu_qe_config_reference.h (v1.10)
 |
 +---src
-    +-- r_correction.c (v1.11)
+    +-- r_correction.c (v1.10)
     +-- r_ctsu_qe_private.h (v1.10)
-    +-- r_ctsu_qe.c (v1.11)
+    +-- r_ctsu_qe.c (v1.10)
     +-- r_dtc.c (v1.10)
     +-- r_dtc.h (v1.10)
 
