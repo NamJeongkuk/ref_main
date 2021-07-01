@@ -3,9 +3,9 @@ $(call create_library_with_defaults,qe,src/$(TARGET)/e2Studio/)
 qe_CPPFLAGS+=-Wno-array-bounds -Wno-unused-parameter -Wno-maybe-uninitialized -Wno-missing-braces
 
 qe_INC_DIRS:=\
-  $(qe_LIB_ROOT)/../QeHacks/Debug \
-  $(qe_LIB_ROOT)/../QeHacks/Override \
-  $(qe_LIB_ROOT)/../QeHacks/Override/mcu/all \
+  $(qe_LIB_ROOT)/../../../lib/applcommon/Hardware/Rx130/CapTouch/QeHacks/Debug \
+  $(qe_LIB_ROOT)/../../../lib/applcommon/Hardware/Rx130/CapTouch/QeHacks/Override \
+  $(qe_LIB_ROOT)/../../../lib/applcommon/Hardware/Rx130/CapTouch/QeHacks/Override/mcu/all \
   $(qe_LIB_ROOT)/src \
   $(qe_LIB_ROOT)/src/smc_gen/Config_PORT \
   $(qe_LIB_ROOT)/src/smc_gen/general \
@@ -17,15 +17,15 @@ qe_INC_DIRS:=\
   $(qe_LIB_ROOT)/src/smc_gen/r_pincfg \
   $(qe_LIB_ROOT)/src/smc_gen/r_touch_qe \
   $(qe_LIB_ROOT)/src/smc_gen/r_touch_qe/src \
-  $(qe_LIB_ROOT)/../QeDiagnostics \
+  $(qe_LIB_ROOT)/../../../lib/applcommon/Hardware/Rx130/CapTouch/QeDiagnostics \
 
 qe_SYS_INC_DIRS:=\
 
 qe_SRC_DIRS:=\
-  $(qe_LIB_ROOT)/../QeHacks/Debug \
+  $(qe_LIB_ROOT)/../../../lib/applcommon/Hardware/Rx130/CapTouch/QeHacks/Debug \
   $(qe_LIB_ROOT)/src/smc_gen/r_touch_qe/src \
   $(qe_LIB_ROOT)/src/smc_gen/r_ctsu_qe/src \
-  $(qe_LIB_ROOT)/../QeDiagnostics \
+  $(qe_LIB_ROOT)/../../../lib/applcommon/Hardware/Rx130/CapTouch/QeDiagnostics \
 
 qe_SRC_FILES:=\
   $(qe_LIB_ROOT)/src/qe_common.c \

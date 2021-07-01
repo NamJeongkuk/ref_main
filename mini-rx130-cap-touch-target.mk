@@ -32,6 +32,7 @@ SRC_DIRS:=\
   src/$(TARGET)/Hardware \
   src/$(TARGET)/Hardware/Flash \
   src/$(TARGET)/Plugins \
+  src/../lib/applcommon/Hardware/Rx130/CapTouch \
 
 INC_DIRS:=\
   src/$(TARGET)/Types \
