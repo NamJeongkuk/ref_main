@@ -31,6 +31,7 @@ SRC_DIRS:=\
   src/$(TARGET)/GeaStack \
   src/$(TARGET)/Hardware \
   src/$(TARGET)/Plugins \
+  src/../lib/applcommon.tiny/src/Application/Rx130CapTouch \
 
 INC_DIRS:=\
   src/$(TARGET)/Types \
