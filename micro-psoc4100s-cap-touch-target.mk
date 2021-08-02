@@ -55,6 +55,7 @@ SRC_DIRS:=\
   src/$(TARGET)/GeaStack \
   src/$(TARGET)/Hardware \
   src/$(TARGET)/Plugins \
+  src/../lib/applcommon.tiny/src/Application/PsocCapTouch
 
 INC_DIRS:=\
   src/Application \
