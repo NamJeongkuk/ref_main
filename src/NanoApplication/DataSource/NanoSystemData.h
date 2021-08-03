@@ -10,6 +10,7 @@
 
 #include "TinyDataSource_Ram.h"
 #include "NanoSystemErds.h"
+#include "TinyDataSource_EndiannessSwapped.h"
 #include "utils.h"
 
 #define EXPAND_AS_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Stream, RemoteErd) \
