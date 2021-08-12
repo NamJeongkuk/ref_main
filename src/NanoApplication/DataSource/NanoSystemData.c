@@ -36,6 +36,14 @@ void NanoSystemData_Init(NanoSystemData_t *instance)
       &instance->_private.tinyRamDataSource,
       &configuration,
       &instance->_private.erdRam);
+
+#ifdef LITTLE_ENDIAN
+   TinyDataSource_EndiannessSwapped_Init(
+      &instance->_private.swappedDataSource,
+      &instance->_private.tinyRamDataSource.interface,
+      &instance->_private.endiannessSwapBuffer,
+      &endiannessSwappedConfiguration);
+#endif
 }
 
 I_TinyDataSource_t *NanoSystemData_DataSource(NanoSystemData_t *instance)
