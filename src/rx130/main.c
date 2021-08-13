@@ -38,6 +38,7 @@
 #include "ReadyToEnterBootLoaderState.h"
 #include "Rx2xxResetSource.h"
 #include "ApplicationUassert.h"
+#include "Interrupts.h"
 #include "uassert.h"
 
 enum
@@ -180,7 +181,11 @@ int main(void)
 
    while(1)
    {
-      TimerModule_Run(timerModule);
       GeaStack_Run(&geaStack);
+
+      if(!TimerModule_Run(timerModule))
+      {
+         Interrupts_WaitForInterrupt();
+      }
    }
 }

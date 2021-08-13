@@ -35,7 +35,10 @@ SRC_DIRS=\
 INC_DIRS=\
   src/Application \
 
-include lib_tiny.mk
+tiny_EXTERNAL_INC_DIRS:=\
+  src/$(TARGET)/Hardware \
+
+include lib_tiny_rx130.mk
 
 PACKAGE_CONTENTS=
 $(call add_to_package,$(OUTPUT_DIR)/binaries,binaries)

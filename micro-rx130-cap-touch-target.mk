@@ -37,8 +37,11 @@ INC_DIRS:=\
   src/$(TARGET)/Types \
   src/Application \
 
+tiny_EXTERNAL_INC_DIRS:=\
+  src/$(TARGET)/Hardware \
+
+include lib_tiny_rx130.mk
 include micro-rx130-cap-touch-target-qe.mk
-include lib_tiny.mk
 
 PACKAGE_CONTENTS:=
 $(call add_to_package,$(OUTPUT_DIR)/binaries,binaries)
