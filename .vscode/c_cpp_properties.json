@@ -191,6 +191,22 @@
          "cppStandard": "c++11"
       },
       {
+         "name": "micro-rx62t",
+         "defines": [
+            "__RX_LITTLE_ENDIAN__"
+         ],
+         "includePath": [
+            "${env:kpit-rx-include}",
+            "${env:tiny-include}",
+            "${workspaceFolder}/src/micro-rx62t/**",
+            "${workspaceFolder}/src/MicroApplication/**",
+            "${workspaceFolder}/src/Application/Gea/*"
+         ],
+         "intelliSenseMode": "gcc-x64",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      },
+      {
          "name": "stm32f3",
          "defines": [
             "STM32F303xC",
