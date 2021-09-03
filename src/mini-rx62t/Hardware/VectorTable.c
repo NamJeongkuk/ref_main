@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "Reset.h"
+#include "Rx62tReset.h"
 #include "IdCode.h"
 
 typedef void (*fp)(void);
@@ -439,7 +439,7 @@ const fp relocatableVectorTable[] __attribute__((section(".relocatableVectorTabl
 static void Default_Handler(void) __attribute__((interrupt));
 static void Default_Handler(void)
 {
-   Reset();
+   Rx62tReset();
 }
 
 static void Ignore(void) __attribute__((interrupt));

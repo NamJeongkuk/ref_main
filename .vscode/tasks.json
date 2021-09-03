@@ -143,6 +143,24 @@
       }
     },
     {
+      "label": "mini-rx62t_vscode_debug",
+      "type": "shell",
+      "linux": {
+        "command": "make -j8 RELEASE=N DEBUG=Y -f mini-rx62t-target.mk vscode_debug",
+      },
+      "osx": {
+        "command": "dmake -j8 RELEASE=N DEBUG=Y -f mini-rx62t-target.mk vscode_debug",
+      },
+      "presentation": {
+        "echo": false,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false
+      }
+    },
+    {
       "label": "stm32f3_vscode_debug",
       "type": "shell",
       "command": "make -j8 -f stm32f3-target.mk RELEASE=N DEBUG=Y vscode_debug",

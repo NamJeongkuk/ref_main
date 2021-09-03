@@ -129,9 +129,6 @@ I_TinyUart_t *TinyUart_Uart0_Init(void)
    // No divisor on PCLK
    SCI0.SMR.BIT.CKS = 0;
 
-   // // Baud rate configured for ~230400 with 3.11% error (240383.6)
-   // SCI0.BRR = 6;
-
    // Baud rate configured for ~19200 with 0.47% error (19530.3)
    SCI0.BRR = 80;
 

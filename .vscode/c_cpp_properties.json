@@ -207,6 +207,21 @@
          "cppStandard": "c++11"
       },
       {
+         "name": "mini-rx62t",
+         "defines": [
+            "__RX_LITTLE_ENDIAN__"
+         ],
+         "includePath": [
+            "${env:kpit-rx-include}",
+            "${env:applcommon-include}",
+            "${workspaceFolder}/src/mini-rx62t/**",
+            "${workspaceFolder}/src/Application/**"
+         ],
+         "intelliSenseMode": "gcc-x64",
+         "cStandard": "c99",
+         "cppStandard": "c++11"
+      },
+      {
          "name": "stm32f3",
          "defines": [
             "STM32F303xC",

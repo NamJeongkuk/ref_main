@@ -10,10 +10,15 @@
 
 #include "ImageHeader.h"
 
-#define BootLoaderImageHeader ((const ImageHeader_t *)(intptr_t)0xFFFFD000)
+extern char bootLoaderStart;
 
-#define ApplicationStartAddress (0xFFFC0000)
-#define ApplicationEndAddress (0xFFFFCFFF)
+extern char applicationStart;
+extern char applicationEnd;
+
+#define BootLoaderImageHeader ((const ImageHeader_t *)&bootLoaderStart)
+
+#define ApplicationStartAddress ((uintptr_t)&applicationStart)
+#define ApplicationEndAddress ((uintptr_t)&applicationEnd)
 #define ApplicationImageHeader (const ImageHeader_t *)(intptr_t)(ApplicationStartAddress)
 
 #endif

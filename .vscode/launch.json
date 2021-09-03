@@ -127,6 +127,20 @@
       "preLaunchTask": "micro-rx62t_vscode_debug"
     },
     {
+      "name": "mini-rx62t",
+      "cwd": "${workspaceRoot}",
+      "request": "launch",
+      "type": "cortex-debug",
+      "executable": "${workspaceFolder}/build/mini-rx62t/mini-rx62t.elf",
+      "device": "R5F562TA",
+      "servertype": "jlink",
+      "interface": "JTAG -JTAGConf -1,-1",
+      "jlinkscript": "${workspaceFolder}/build/mini-rx62t/debug.jlink",
+      "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
+      "serverpath": "${workspaceFolder}/build/mini-rx62t/jlink_gdb_server_wrapper.sh",
+      "preLaunchTask": "mini-rx62t_vscode_debug"
+    },
+    {
       "name": "stm32f3",
       "cwd": "${workspaceRoot}",
       "request": "launch",
