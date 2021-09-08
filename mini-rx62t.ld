@@ -18,6 +18,7 @@ SECTIONS
 		KEEP(*(.applicationHeader))
 		*(.text)
 		*(.text.*)
+		*(.flashCode)
 		*(P)
 		. = ALIGN(4);
 		__relocatableVectorTableStart = .;
@@ -60,13 +61,8 @@ SECTIONS
 		*(D)
 		*(D_1)
 		*(D_2)
-	} > RAM AT>ROM
-
-	.flashCode :
-	{
-		*(.flashCode)
 		_edata = .;
-	}  > RAM AT>ROM
+	} > RAM AT>ROM
 
 	.restartString :
 	{
