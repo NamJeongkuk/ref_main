@@ -24,9 +24,14 @@
 #define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_READ_WRITE_BUFFER_MEMBERS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_NV_, StorageType)(uint8_t CONCAT(erd, Name)[sizeof(DataType)];)
 
-typedef union
+typedef struct
 {
-   ERD_TABLE(EXPAND_AS_NON_VOLATILE_DATA_SOURCE_READ_WRITE_BUFFER_MEMBERS)
+   union
+   {
+      ERD_TABLE(EXPAND_AS_NON_VOLATILE_DATA_SOURCE_READ_WRITE_BUFFER_MEMBERS)
+   };
+
+   uint8_t paddingToCoverAlignment[8];
 } NonVolatileDataSourceReadWriteBuffer_t;
 
 #define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
