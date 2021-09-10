@@ -6,6 +6,7 @@
  */
 
 #include "CyLib.h"
+#include "cmsis_gcc.h"
 #include "TinyTimer.h"
 #include "TinyTimeSource_SysTick.h"
 #include "Watchdog.h"
@@ -89,7 +90,11 @@ int main(void)
 
    while(1)
    {
-      TinyTimerModule_Run(&timerModule);
       GeaStack_Run();
+
+      if(!TinyTimerModule_Run(&timerModule))
+      {
+         __WFI();
+      }
    }
 }

@@ -7,6 +7,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "cmsis_gcc.h"
 #include "Action_Null.h"
 #include "Application.h"
 #include "SystemData.h"
@@ -170,7 +171,11 @@ int main(void)
 
    while(1)
    {
-      TimerModule_Run(timerModule);
       GeaStack_Run(&geaStack);
+
+      if(!TimerModule_Run(timerModule))
+      {
+         __WFI();
+      }
    }
 }

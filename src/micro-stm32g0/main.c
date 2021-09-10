@@ -72,7 +72,11 @@ int main(void)
 
    while(1)
    {
-      TinyTimerModule_Run(&timerModule);
       GeaStack_Run();
+
+      if(!TinyTimerModule_Run(&timerModule))
+      {
+         __WFI();
+      }
    }
 }
