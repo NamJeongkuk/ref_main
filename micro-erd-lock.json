@@ -76,6 +76,11 @@
             "29": "ApplianceType_Dehumidifer",
             "30": "ApplianceType_UnderCounterIceMaker",
             "31": "ApplianceType_ThroughWallAc",
+            "32": "ApplianceType_FpaDishDrawer",
+            "33": "ApplianceType_EspressoCoffeeMaker",
+            "34": "ApplianceType_ToasterOven",
+            "35": "ApplianceType_ZonelineVertical",
+            "36": "ApplianceType_CentralDfsController",
             "255": "ApplianceType_Unknown"
           },
           "offset": 0,
