@@ -44,7 +44,7 @@ Small cap touch application using the [CY8C4127AZI-S455](https://www.cypress.com
 | Flash  | 128 KB |
 | RAM    | 16 KB  |
 
-### micro-rl78
+### micro-rl78g13
 Small RL78 application using the [R5F101AF](https://www.renesas.com/us/en/products/microcontrollers-microprocessors/rl78-low-power-8-16-bit-mcus).
 
 | Memory | Size  |
