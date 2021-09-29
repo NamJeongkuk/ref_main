@@ -22,7 +22,7 @@ enum
    ImageParametricPointer = 0
 };
 
-extern void PowerON_Reset(void);
+extern void start(void);
 
 typedef struct
 {
@@ -92,7 +92,7 @@ static const ImageHeaderHack_t applicationHeader __attribute__((used, section(".
 
    { .pointer = NULL, .zeros = 0 },
 
-   { .pointer = PowerON_Reset, .zeros = 0 },
+   { .pointer = start, .zeros = 0 },
 
    ImageHeaderFillValue,
    ImageHeaderFillValue,

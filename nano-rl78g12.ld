@@ -117,6 +117,9 @@ SECTIONS
 
    .data ORIGIN(RAM): AT(_mdata)
    {
+      /* llvm-rl78 uses __data to find the start of RAM */
+      __data = .;
+
       . = ALIGN(2);
       _data = .;
       *(.data)
@@ -127,7 +130,7 @@ SECTIONS
 
    PROVIDE(__romdatacopysize = SIZEOF(.data));
 
-   .bss :
+   .bss (NOLOAD):
    {
       . = ALIGN(2);
       _bss = .;

@@ -5,6 +5,11 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+static void Ignore(void) __attribute__((interrupt));
+static void Ignore(void)
+{
+}
+
 void INT_WDTI(void) __attribute__((weak, alias("Ignore")));
 void INT_LVI(void) __attribute__((weak, alias("Ignore")));
 void INT_P0(void) __attribute__((weak, alias("Ignore")));
@@ -166,8 +171,3 @@ const void *const appVectors[] = {
    //INT_BRK_I (0x7E)
    INT_BRK_I,
 };
-
-static void Ignore(void) __attribute__((interrupt));
-static void Ignore(void)
-{
-}

@@ -125,6 +125,9 @@ SECTIONS
 
    .vectorTableConfiguration (NOLOAD) :
    {
+      /* llvm-rl78 uses __data to find the start of RAM */
+      __data = .;
+
       __vtor = .;
       . += 2;
       __br = .;
@@ -148,7 +151,7 @@ SECTIONS
 
    PROVIDE(__romdatacopysize = SIZEOF(.data));
 
-   .bss :
+   .bss (NOLOAD):
    {
       . = ALIGN(2);
       _bss = .;
@@ -161,13 +164,13 @@ SECTIONS
       _end = .;
    } > RAM
 
-   .stack_sentinel :
+   .stack_sentinel (NOLOAD):
    {
       . = ALIGN(2);
       *(.stack_sentinel)
    } > RAM
 
-   .ul_ram_check_buffer :
+   .ul_ram_check_buffer (NOLOAD):
    {
       *(.ul_ram_check_buffer)
    } > UL_RAM_CHECK_BUFFER
@@ -185,7 +188,7 @@ SECTIONS
 
    .stack stack_start (NOLOAD) : AT(stack_start)
    {
-      _stack = .;
+      _stack = stack_start;
       ASSERT((_stack > (_end + stack_size)), "Error: Too much data - no room left for the stack");
    } > RAM
 }

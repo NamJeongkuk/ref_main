@@ -19,12 +19,28 @@ echo -e "\033[1m> Building micro-psoc4100s-cap-touch-target...\033[0m"
 make -f micro-psoc4100s-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N package
 
 echo
-echo -e "\033[1m> Building micro-rl78g13-target...\033[0m"
-$RL78_MAKE -f micro-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N package
+echo -e "\033[1m> Building micro-rl78g13-target (kpit-rl78)...\033[0m"
+$RL78_MAKE -f micro-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N BUILD_TOOLS=kpit-rl78 package
 
 echo
-echo -e "\033[1m> Building nano-rl78g13-target...\033[0m"
-$RL78_MAKE -f nano-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N package
+echo -e "\033[1m> Building micro-rl78g13-target (llvm-rl78)...\033[0m"
+$RL78_MAKE -f micro-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N BUILD_TOOLS=llvm-rl78 package
+
+echo
+echo -e "\033[1m> Building nano-rl78g12-target (kpit-rl78)...\033[0m"
+$RL78_MAKE -f nano-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N BUILD_TOOLS=kpit-rl78 package
+
+echo
+echo -e "\033[1m> Building nano-rl78g12-target (llvm-rl78)...\033[0m"
+$RL78_MAKE -f nano-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N BUILD_TOOLS=llvm-rl78 package
+
+echo
+echo -e "\033[1m> Building nano-rl78g13-target (kpit-rl78)...\033[0m"
+$RL78_MAKE -f nano-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N BUILD_TOOLS=kpit-rl78 package
+
+echo
+echo -e "\033[1m> Building nano-rl78g13-target (llvm-rl78)...\033[0m"
+$RL78_MAKE -f nano-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N BUILD_TOOLS=llvm-rl78 package
 
 echo
 echo -e "\033[1m> Building rx130-target...\033[0m"

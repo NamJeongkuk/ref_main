@@ -1,4 +1,6 @@
-include tools/kpit-rl78/setup.mk
+export BUILD_TOOLS?=kpit-rl78
+
+include tools/$(BUILD_TOOLS)/setup.mk
 
 TARGET:=micro-rl78g13
 OUTPUT_DIR:=build/$(TARGET)
@@ -9,7 +11,11 @@ LINKER_SCRIPT:=$(TARGET).ld
 # RL78 micro being used (g10, g13, g14)
 CPU:=g13
 DEVICE:=R5F101AF
+ifeq ($(BUILD_TOOLS),llvm-rl78)
+TOOLCHAIN_VERSION:=10.0.0.202107
+else
 TOOLCHAIN_VERSION:=4.9.2.202002
+endif
 TTY?=/dev/ttyUSB0
 HEADER_ADDRESS:=0x3400
 
@@ -22,7 +28,7 @@ $(error Please define DEBUG with Y or N.)
 endif
 endif
 
-include tools/kpit-rl78/defaults.mk
+include tools/$(BUILD_TOOLS)/defaults.mk
 
 SRC_FILES:=\
 
@@ -88,7 +94,8 @@ erd_lock: erd_definitions
 erd_definitions: $(OUTPUT_DIR)/doc toolchain
 	@echo Generating ERD definitions...
 	@$(CC) $(addprefix -I, $(SRC_DIRS) $(INC_DIRS)) -E -P -MMD src/MicroApplication/DataSource/MicroSystemErds.h -o $(OUTPUT_DIR)/temporary.h
+	@sed -i '/typedef __size_t size_t/d' $(OUTPUT_DIR)/temporary.h
 	@$(LUA53) $(LUA_C_DATA_TYPE_GENERATOR) --header $(OUTPUT_DIR)/temporary.h --configuration types_configuration.lua --output $(OUTPUT_DIR)/GeneratedTypes.lua
 	@$(LUA53) $(TARGET)_generate_erd_definitions.lua
 
-include tools/kpit-rl78/worker.mk
+include tools/$(BUILD_TOOLS)/worker.mk
