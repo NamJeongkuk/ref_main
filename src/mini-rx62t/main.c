@@ -7,7 +7,6 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-
 #include "Action_Null.h"
 #include "Action_Rx62tReset.h"
 #include "Watchdog.h"
