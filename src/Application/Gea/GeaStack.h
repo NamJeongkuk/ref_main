@@ -134,7 +134,7 @@ void GeaStack_Init(
 
 /*!
  * @param instance
- * @return Gea2 Packet Endpoint
+ * @return
  */
 I_Gea2PacketEndpoint_t *GeaStack_GetGea2PacketEndpoint(GeaStack_t *instance);
 

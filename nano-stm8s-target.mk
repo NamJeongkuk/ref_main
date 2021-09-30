@@ -64,9 +64,15 @@ $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
 .PHONY: all
-all: $(OUTPUT_DIR)/$(TARGET)_combined.hex $(OUTPUT_DIR)/$(TARGET).tiny
-	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration $(TARGET)_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
+all: info
+
+.PHONY: info
+info: build
 	@cat $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
+
+.PHONY: build
+build: $(OUTPUT_DIR)/$(TARGET)_combined.hex $(OUTPUT_DIR)/$(TARGET).tiny
+	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration $(TARGET)_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 
 .PHONY: target
 target: $(OUTPUT_DIR)/$(TARGET).htiny
@@ -93,7 +99,7 @@ clean: target_clean
 	@$(MAKE) -C $(BOOT_LOADER_DIR) -f target.mk RELEASE=Y DEBUG=N clean
 
 .PHONY: package
-package: all artifacts
+package: build artifacts
 	@echo Creating package...
 	@$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 

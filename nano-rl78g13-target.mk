@@ -51,14 +51,20 @@ $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
 .PHONY: all
-all: $(OUTPUT_DIR)/$(TARGET).napl
+all: info
+
+.PHONY: info
+info: build
+	@cat $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
+
+.PHONY: build
+build: $(OUTPUT_DIR)/$(TARGET).napl
 	@$(call make_directory,$(OUTPUT_DIR)/binaries)
 	@$(call copy_file,$(OUTPUT_DIR)/$(TARGET).napl,$(OUTPUT_DIR)/binaries/$(TARGET).mot)
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration $(TARGET)_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
-	@cat $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 
 .PHONY: package
-package: all artifacts erd_definitions
+package: build artifacts erd_definitions
 	@echo Creating package...
 	@$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 
