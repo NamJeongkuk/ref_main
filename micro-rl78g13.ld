@@ -168,6 +168,7 @@ SECTIONS
    {
       . = ALIGN(2);
       *(.stack_sentinel)
+      __stackEnd = .;
    } > RAM
 
    .ul_ram_check_buffer (NOLOAD):
@@ -175,8 +176,10 @@ SECTIONS
       *(.ul_ram_check_buffer)
    } > UL_RAM_CHECK_BUFFER
 
+   __stackStart = ORIGIN(RAM) + LENGTH(RAM) - 1;
+
    PROVIDE(stack_size = 0x1000);
-   PROVIDE(stack_start = ORIGIN(RAM) + LENGTH(RAM) - 1);
+   PROVIDE(stack_start = __stackStart);
 
    __ApplicationStart = ORIGIN(ROM);
    __ApplicationEnd = ORIGIN(ROM) + LENGTH(ROM) - 1;

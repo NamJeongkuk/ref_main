@@ -60,6 +60,7 @@ enum
    ENTRY(Erd_WiFiServiceRequest,                0xF001, TinyWiFiServiceRequest_t,      StreamNone,    NotMapped) \
    ENTRY(Erd_WiFiServiceState,                  0xF002, TinyWiFiServiceState_t,        StreamNone,    NotMapped) \
    ENTRY(Erd_WiFiServiceConnectionEstablished,  0xF003, Signal_t,                      StreamNone,    NotMapped) \
+   ENTRY(Erd_StackUsagePercentFree,             0xF100, uint8_t,                       StreamNone,    NotMapped) \
 
 #define SWAPPED_FIELDS \
    SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, revision), \

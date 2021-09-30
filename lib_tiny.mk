@@ -9,6 +9,7 @@ tiny_SYS_INC_DIRS+=\
 
 tiny_SRC_DIRS+=\
   $(tiny_LIB_ROOT)/ApplianceApi \
+  $(tiny_LIB_ROOT)/Application/StackAnalysis \
   $(tiny_LIB_ROOT)/BootLoader \
   $(tiny_LIB_ROOT)/Core \
   $(tiny_LIB_ROOT)/TinyLib \

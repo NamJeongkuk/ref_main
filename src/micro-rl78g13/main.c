@@ -7,6 +7,7 @@
 
 #include <stddef.h>
 #include "Interrupts.h"
+#undef MIN
 #include "RamParityCheck.h"
 #include "Clock.h"
 #include "Watchdog.h"
@@ -19,9 +20,11 @@
 #include "ApplicationVectorTable.h"
 #include "MicroApplication.h"
 #include "MicroSystemData.h"
+#include "MicroSystemErds.h"
 #include "Gea2Addresses.h"
 #include "MemoryMap.h"
 #include "UlTestsPlugin.h"
+#include "TinyStackUsageService.h"
 
 enum
 {
@@ -37,6 +40,15 @@ enum
 };
 
 static TinyTimerModule_t timerModule;
+static TinyStackUsageService_t stackUsageService;
+
+extern char _stackStart;
+extern char _stackEnd;
+static const TinyStackUsageServiceConfiguration_t stackUsageServiceConfiguration = {
+   .start = (uintptr_t)&_stackStart,
+   .end = (uintptr_t)&_stackEnd,
+   .percentFreeErd = Erd_StackUsagePercentFree
+};
 
 int main(void)
 {
@@ -48,6 +60,9 @@ int main(void)
 
       Clock_Init();
 
+      TinyStackUsageService_InitializeStack(
+         &stackUsageServiceConfiguration);
+
       TinyTimerModule_Init(
          &timerModule,
          TinyTimeSource_Tau0Channel3_Init());
@@ -57,6 +72,12 @@ int main(void)
       Heartbeat_Init(&timerModule);
 
       MicroSystemData_Init(&timerModule);
+
+      TinyStackUsageService_Init(
+         &stackUsageService,
+         &timerModule,
+         MicroSystemData_DataSource(),
+         &stackUsageServiceConfiguration);
 
       GeaStack_Init(
          &timerModule,

@@ -91,6 +91,7 @@ SECTIONS
 		__stackCheckStart = .;
 		*(.stackCheck)
 		__stackCheckEnd = .;
+		__stackEnd = .;
 	} > RAM AT>ROM
 
 	/*
@@ -112,5 +113,6 @@ SECTIONS
 
 	_ustack = ORIGIN(RAM) + LENGTH(RAM) - 4;
 	_istack = ORIGIN(RAM) + LENGTH(RAM) - 4;
-	__iStackSize = _istack - _ebss;
+
+   __stackStart = _ustack;
 }

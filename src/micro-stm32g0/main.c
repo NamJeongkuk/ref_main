@@ -15,9 +15,11 @@
 #include "GeaStack.h"
 #include "MicroApplication.h"
 #include "MicroSystemData.h"
+#include "MicroSystemErds.h"
 #include "I_TinyInterrupt.h"
 #include "Gea2Addresses.h"
 #include "Version.h"
+#include "TinyStackUsageService.h"
 #include "utils.h"
 
 enum
@@ -27,6 +29,15 @@ enum
 
 static TinyTimerModule_t timerModule;
 static TinyTimer_t periodicWatchdogTimer;
+static TinyStackUsageService_t stackUsageService;
+
+extern char __stackStart;
+extern char __stackEnd;
+static const TinyStackUsageServiceConfiguration_t stackUsageServiceConfiguration = {
+   .start = (uintptr_t)&__stackStart,
+   .end = (uintptr_t)&__stackEnd,
+   .percentFreeErd = Erd_StackUsagePercentFree
+};
 
 static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 {
@@ -43,11 +54,14 @@ static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 
 int main(void)
 {
-   Watchdog_Init();
-   Clock_Init();
-
    __disable_irq();
    {
+      Watchdog_Init();
+      Clock_Init();
+
+      TinyStackUsageService_InitializeStack(
+         &stackUsageServiceConfiguration);
+
       TinyTimerModule_Init(
          &timerModule,
          TinyTimeSource_SysTick_Init());
@@ -55,6 +69,12 @@ int main(void)
       Pa5Heartbeat_Init(&timerModule);
 
       MicroSystemData_Init(&timerModule);
+
+      TinyStackUsageService_Init(
+         &stackUsageService,
+         &timerModule,
+         MicroSystemData_DataSource(),
+         &stackUsageServiceConfiguration);
 
       GeaStack_Init(
          &timerModule,

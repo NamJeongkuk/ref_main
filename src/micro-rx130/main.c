@@ -16,7 +16,9 @@
 #include "TinyUart_Uart6.h"
 #include "MicroApplication.h"
 #include "MicroSystemData.h"
+#include "MicroSystemErds.h"
 #include "Gea2Addresses.h"
+#include "TinyStackUsageService.h"
 #include "utils.h"
 
 enum
@@ -26,6 +28,15 @@ enum
 
 static TinyTimerModule_t timerModule;
 static TinyTimer_t periodicWatchdogTimer;
+static TinyStackUsageService_t stackUsageService;
+
+extern char _stackStart;
+extern char _stackEnd;
+static const TinyStackUsageServiceConfiguration_t stackUsageServiceConfiguration = {
+   .start = (uintptr_t)&_stackStart,
+   .end = (uintptr_t)&_stackEnd,
+   .percentFreeErd = Erd_StackUsagePercentFree
+};
 
 static void KickWatchdog(void *context, struct TinyTimerModule_t *timerModule)
 {
@@ -46,6 +57,9 @@ int main(void)
    {
       Clock_Init();
 
+      TinyStackUsageService_InitializeStack(
+         &stackUsageServiceConfiguration);
+
       TinyTimerModule_Init(
          &timerModule,
          TinyTimeSource_Cmt0_Init());
@@ -55,6 +69,12 @@ int main(void)
       Heartbeat_Init(&timerModule);
 
       MicroSystemData_Init(&timerModule);
+
+      TinyStackUsageService_Init(
+         &stackUsageService,
+         &timerModule,
+         MicroSystemData_DataSource(),
+         &stackUsageServiceConfiguration);
 
       GeaStack_Init(
          &timerModule,

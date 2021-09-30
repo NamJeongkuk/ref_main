@@ -77,6 +77,7 @@ enum
    ENTRY(Erd_CapTouchDebugCounts,               0xF301, CapTouchDebugCounts_t,         StreamNone,    NotMapped) \
    ENTRY(Erd_CapTouchDebugDeltas,               0xF302, CapTouchDebugDeltas_t,         StreamNone,    NotMapped) \
    ENTRY(Erd_CapTouchDiagnosticsResult,         0xF303, CapTouchDiagnosticsResults_t,  StreamNone,    NotMapped) \
+   ENTRY(Erd_StackUsagePercentFree,             0xF400, uint8_t,                       StreamNone,    NotMapped) \
 
 #define SWAPPED_FIELDS \
    SWAPPED_FIELD(Erd_ApplianceApiManifest, ApplianceApiManifest_t, revision), \

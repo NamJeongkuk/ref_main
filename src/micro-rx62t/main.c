@@ -16,16 +16,30 @@
 #include "TinyUart_Uart0.h"
 #include "MicroApplication.h"
 #include "MicroSystemData.h"
+#include "MicroSystemErds.h"
 #include "Gea2Addresses.h"
+#include "TinyStackUsageService.h"
 #include "utils.h"
 
 static TinyTimerModule_t timerModule;
+static TinyStackUsageService_t stackUsageService;
+
+extern char _stackStart;
+extern char _stackEnd;
+static const TinyStackUsageServiceConfiguration_t stackUsageServiceConfiguration = {
+   .start = (uintptr_t)&_stackStart,
+   .end = (uintptr_t)&_stackEnd,
+   .percentFreeErd = Erd_StackUsagePercentFree
+};
 
 int main(void)
 {
    Interrupts_Disable();
    {
       Clock_Init();
+
+      TinyStackUsageService_InitializeStack(
+         &stackUsageServiceConfiguration);
 
       TinyTimerModule_Init(
          &timerModule,
@@ -37,6 +51,12 @@ int main(void)
       HeartbeatLed_Init(&timerModule);
 
       MicroSystemData_Init(&timerModule);
+
+      TinyStackUsageService_Init(
+         &stackUsageService,
+         &timerModule,
+         MicroSystemData_DataSource(),
+         &stackUsageServiceConfiguration);
 
       GeaStack_Init(
          &timerModule,

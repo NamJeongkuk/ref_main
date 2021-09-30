@@ -89,4 +89,6 @@ SECTIONS
    __StackTop = __stackCheckEnd;
    __StackBottom = ORIGIN(RAM) + LENGTH(RAM);
    __StackSize = __StackBottom - __bss_end__;
+   __stackStart = __StackTop;
+   __stackEnd = __StackBottom;
 }
