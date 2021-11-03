@@ -49,6 +49,19 @@ SECTIONS
 		__fixedVectorTableEnd = .;
 	} > FIXED_VECTOR_TABLE
 
+	.bss (NOLOAD):
+	{
+		_bss = .;
+		*(.bss)
+		*(.bss.*)
+		*(COMMON)
+		*(B)
+		*(B_1)
+		*(B_2)
+		_ebss = .;
+		_end = .;
+	} > RAM
+
 	.data :
 	{
 		_data = .;
@@ -63,24 +76,6 @@ SECTIONS
 		*(D_2)
 		_edata = .;
 	} > RAM AT>ROM
-
-	.restartString :
-	{
-		*(.restartString)
-	} > RAM
-
-	.bss :
-	{
-		_bss = .;
-		*(.bss)
-		*(.bss.*)
-		*(COMMON)
-		*(B)
-		*(B_1)
-		*(B_2)
-		_ebss = .;
-		_end = .;
-	} > RAM
 
 	.stackCheck :
 	{

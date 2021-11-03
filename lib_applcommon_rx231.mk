@@ -1,5 +1,7 @@
 include lib_applcommon.mk
 
+applcommon_CFLAGS+=-Wno-unused-const-variable
+
 applcommon_INC_DIRS+=\
   $(applcommon_LIB_ROOT)/Hardware/Rx231 \
   $(applcommon_LIB_ROOT)/Hardware/Kpit/Rx231 \

@@ -35,9 +35,6 @@ _PowerON_Reset:
 /* initialise interrupt stack pointer */
     mvtc    #_istack,ISP
 
-/* Setup Fixed Vector Table    */
-    mvtc    #__fixedVectorTableStart, extb
-
 /* setup relocateable vector table */
     mvtc    #__relocatableVectorTableStart, intb
 
