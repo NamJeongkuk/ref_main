@@ -17,7 +17,8 @@
 
 enum
 {
-   ReceiveBufferSize = 128,
+   ReceiveBufferSize = CY_SCB_FIFO_SIZE,
+   RefillTxBufferThreshold = CY_SCB_FIFO_SIZE - 1,
 };
 
 static struct
@@ -25,22 +26,38 @@ static struct
    I_BufferedUart_t interface;
    Event_Synchronous_t receiveEvent;
    Event_SingleSubscriberSynchronous_t transmitEvent;
-   bool waitingForTransmitToComplete;
-   bool transmitComplete;
    bool errorOccurred;
+   struct
+   {
+      bool inProgress;
+      const uint8_t *data;
+      uint16_t bytesRemaining;
+   } transmit;
 } instance;
 
 static cy_stc_scb_uart_context_t uartContext;
 
+static void LoadHardwareTransmitBuffer(void)
+{
+   uint16_t bytesSent = (uint16_t)Cy_SCB_UART_PutArray(
+      BASE_PERIPHERAL,
+      (uint8_t *)instance.transmit.data,
+      instance.transmit.bytesRemaining);
+
+   uassert(bytesSent <= instance.transmit.bytesRemaining);
+   instance.transmit.bytesRemaining -= bytesSent;
+}
+
 static void Transmit(I_BufferedUart_t *_instance, const uint8_t *data, const uint16_t byteCount)
 {
-   IGNORE_ARG(_instance);
-   uassert(!instance.waitingForTransmitToComplete);
+   IGNORE(_instance);
+   uassert(!instance.transmit.inProgress);
 
-   instance.waitingForTransmitToComplete = true;
-   instance.transmitComplete = false;
+   instance.transmit.inProgress = true;
+   instance.transmit.data = data;
+   instance.transmit.bytesRemaining = byteCount;
 
-   Cy_SCB_UART_PutArray(BASE_PERIPHERAL, (uint8_t *)data, byteCount);
+   LoadHardwareTransmitBuffer();
 }
 
 static I_Event_t *GetOnReceiveEvent(I_BufferedUart_t *_instance)
@@ -68,21 +85,38 @@ static void ProcessBytesReceived(void)
    }
 }
 
+static bool ThereAreBytesInTheSoftwareTxBuffer(void)
+{
+   return instance.transmit.bytesRemaining > 0;
+}
+
+static bool TheHardwareBufferHasSpace(void)
+{
+   return Cy_SCB_GetNumInTxFifo(BASE_PERIPHERAL) <= RefillTxBufferThreshold;
+}
+
+static bool TheHardwareBufferIsEmpty(void)
+{
+   return Cy_SCB_GetNumInTxFifo(BASE_PERIPHERAL) == 0;
+}
+
 static void Run(I_BufferedUart_t *_instance)
 {
    IGNORE(_instance);
 
    ProcessBytesReceived();
 
-   if(instance.waitingForTransmitToComplete && (Cy_SCB_GetNumInTxFifo(BASE_PERIPHERAL) == 0))
+   if(instance.transmit.inProgress)
    {
-      instance.transmitComplete = true;
-   }
-
-   if(instance.waitingForTransmitToComplete && instance.transmitComplete)
-   {
-      instance.waitingForTransmitToComplete = false;
-      Event_SingleSubscriberSynchronous_Publish(&instance.transmitEvent, NULL);
+      if(ThereAreBytesInTheSoftwareTxBuffer() && TheHardwareBufferHasSpace())
+      {
+         LoadHardwareTransmitBuffer();
+      }
+      else if(TheHardwareBufferIsEmpty())
+      {
+         instance.transmit.inProgress = false;
+         Event_SingleSubscriberSynchronous_Publish(&instance.transmitEvent, NULL);
+      }
    }
 }
 
