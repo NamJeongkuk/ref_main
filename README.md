@@ -1,4 +1,4 @@
-# applcommon.multi-target-starter-kit
+# applcommon.embedded-starter-kit
 This includes starter kit projects for most commonly-used microcontrollers.
 
 Projects are named after the target microcontroller and are broken down into 3 main categories:

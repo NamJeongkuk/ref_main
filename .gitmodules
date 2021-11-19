@@ -9,7 +9,7 @@
 	url = https://github.com/geappliances/applcommon.lua-erd-documentation-tools
 [submodule "lib/boot-loaders"]
 	path = lib/boot-loaders
-	url = https://github.com/geappliances/applcommon.multi-target-starter-kit-boot-loaders.git
+	url = https://github.com/geappliances/applcommon.embedded-starter-kit-boot-loaders.git
 [submodule "tools/sdcc-stm8"]
 	path = tools/sdcc-stm8
 	url = https://github.com/geappliances/build-tools.sdcc-stm8-release.git
