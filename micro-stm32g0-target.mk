@@ -61,7 +61,7 @@ build: $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 
 .PHONY: package
 package: build artifacts erd_definitions erd_lock
-	@echo Creating package...
+	@echo Creating artifacts/$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip...
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
 	@$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 

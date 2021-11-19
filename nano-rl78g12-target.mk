@@ -65,7 +65,7 @@ build: $(OUTPUT_DIR)/$(TARGET).napl
 
 .PHONY: package
 package: build artifacts erd_definitions
-	@echo Creating package...
+	@echo Creating artifacts/$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip...
 	@$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 
 .PHONY: upload

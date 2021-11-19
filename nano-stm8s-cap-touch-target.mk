@@ -100,7 +100,7 @@ clean: target_clean
 
 .PHONY: package
 package: build artifacts
-	@echo Creating package...
+	@echo Creating artifacts/$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip...
 	@$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip)
 
 include tools/sdcc-stm8/sdcc-stm8-makefile-worker.mk
