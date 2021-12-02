@@ -10,10 +10,11 @@
 
 #include <stdbool.h>
 #include "utils.h"
+#include "ProgramCounterAddress.h"
 
 #define uassert(condition) \
-   CONCAT(addr, __LINE__) : __uassert_func(__FILE__, __LINE__, (bool)(!!(condition)), #condition, &&CONCAT(addr, __LINE__));
+   CONCAT(addr, __LINE__) : __uassert_func((bool)(!!(condition)), (ProgramCounterAddress_t)(uintptr_t)(&&CONCAT(addr, __LINE__)));
 
-extern void __uassert_func(const char *fileName, int lineNumber, bool condition, const char *conditionString, const void *programCounter);
+extern void __uassert_func(bool condition, ProgramCounterAddress_t programCounter);
 
 #endif

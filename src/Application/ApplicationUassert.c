@@ -29,22 +29,14 @@ static void Reset(void *context)
 }
 
 void __uassert_func(
-   const char *fileName,
-   const int lineNumber,
    const bool condition,
-   const char *conditionString,
-   const void *programCounter)
+   ProgramCounterAddress_t programCounter)
 {
-   (void)conditionString;
-   (void)fileName;
-   (void)lineNumber;
-
    if(!condition)
    {
       if(instance.programCounterAddressOutput)
       {
-         ProgramCounterAddress_t programCounterAddress = (ProgramCounterAddress_t)programCounter;
-         Output_Write(instance.programCounterAddressOutput, &programCounterAddress);
+         Output_Write(instance.programCounterAddressOutput, &programCounter);
       }
 
       if(instance.timerModule)
