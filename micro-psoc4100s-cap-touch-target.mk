@@ -76,7 +76,9 @@ tiny_EXTERNAL_INC_DIRS:=\
 tiny_EXTERNAL_SYS_INC_DIRS:=\
   $(SYS_INC_DIRS) \
 
-include lib_tiny_psoc4100.mk
+tiny_INCLUDE_HARDWARE:=Y
+tiny_INCLUDED_APPLICATIONS:=StackAnalysis
+include lib/applcommon.tiny/lib_tiny.mk
 
 LUA_FINALIZE_PSOC4_APL:=tools/lua-finalize-psoc4-apl/lua-finalize-psoc4-apl.lua
 

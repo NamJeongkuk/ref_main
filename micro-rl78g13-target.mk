@@ -45,7 +45,9 @@ INC_DIRS:=\
 tiny_EXTERNAL_INC_DIRS:=\
   src/$(TARGET)/Hardware \
 
-include lib_tiny_rl78.mk
+tiny_INCLUDE_HARDWARE:=Y
+tiny_INCLUDED_APPLICATIONS:=StackAnalysis
+include lib/applcommon.tiny/lib_tiny.mk
 
 # Space delimited list, whole folders can also be included
 PACKAGE_CONTENTS=

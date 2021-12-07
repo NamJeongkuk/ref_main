@@ -81,6 +81,7 @@
             "34": "ApplianceType_ToasterOven",
             "35": "ApplianceType_ZonelineVertical",
             "36": "ApplianceType_CentralDfsController",
+            "37": "ApplianceType_BleMeshGateway",
             "255": "ApplianceType_Unknown"
           },
           "offset": 0,

@@ -36,7 +36,9 @@ SRC_DIRS=\
 INC_DIRS=\
   src/Application \
 
-include lib_tiny_rx62t.mk
+tiny_INCLUDE_HARDWARE:=Y
+tiny_INCLUDED_APPLICATIONS:=StackAnalysis
+include lib/applcommon.tiny/lib_tiny.mk
 
 PACKAGE_CONTENTS=
 $(call add_to_package,$(OUTPUT_DIR)/binaries,binaries)

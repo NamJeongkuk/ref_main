@@ -57,25 +57,30 @@ MAIN:=src/$(TARGET)/main.c
 SRC_FILES:=\
 
 SRC_DIRS:=\
-   src/$(TARGET) \
-   src/$(TARGET)/Plugins \
-   src/MicroApplication \
-   src/MicroApplication/DataSource \
-   src/MicroApplication/GeaStack \
+  src/$(TARGET) \
+  src/$(TARGET)/Plugins \
+  src/MicroApplication \
+  src/MicroApplication/DataSource \
+  src/MicroApplication/GeaStack \
 
 COMMON_LIB_DIRS:=\
-   $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
-   $(APPLCOMMON_TINY_DIR)/src/BootLoader \
-   $(APPLCOMMON_TINY_DIR)/src/Core \
-   $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
-   $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/Ul \
-   $(APPLCOMMON_TINY_DIR)/src/TinyLib \
-   $(APPLCOMMON_TINY_DIR)/src/WiFi \
+  $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
+  $(APPLCOMMON_TINY_DIR)/src/BootLoader \
+  $(APPLCOMMON_TINY_DIR)/src/Communication/ErdApi/Revision2 \
+  $(APPLCOMMON_TINY_DIR)/src/Communication/Gea2 \
+  $(APPLCOMMON_TINY_DIR)/src/Core \
+  $(APPLCOMMON_TINY_DIR)/src/DataSource \
+  $(APPLCOMMON_TINY_DIR)/src/ErdStream \
+  $(APPLCOMMON_TINY_DIR)/src/ErdHeartbeat \
+  $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
+  $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/Ul \
+  $(APPLCOMMON_TINY_DIR)/src/TinyLib \
+  $(APPLCOMMON_TINY_DIR)/src/WiFi \
 
 INC_DIRS:=\
-   $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
-   $(BOOT_LOADER_DIR)/src/$(BOOT_LOADER_TARGET)-boot-loader \
-   src/Application \
+  $(APPLCOMMON_TINY_DIR)/src/Core/Hal \
+  $(BOOT_LOADER_DIR)/src/$(BOOT_LOADER_TARGET)-boot-loader \
+  src/Application \
 
 PACKAGE_CONTENTS:=
 $(call add_to_package,$(OUTPUT_DIR)/binaries,binaries)

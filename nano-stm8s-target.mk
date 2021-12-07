@@ -28,24 +28,29 @@ MAIN:=src/$(TARGET)/main.c
 SRC_FILES:=\
 
 SRC_DIRS:=\
-   src/$(TARGET) \
-   src/$(TARGET)/Hardware \
-   src/NanoApplication \
-   src/NanoApplication/DataSource \
-   src/NanoApplication/Plugins \
+  src/$(TARGET) \
+  src/$(TARGET)/Hardware \
+  src/NanoApplication \
+  src/NanoApplication/DataSource \
+  src/NanoApplication/Plugins \
 
 COMMON_LIB_DIRS:=\
-   $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
-   $(APPLCOMMON_TINY_DIR)/src/BootLoader \
-   $(APPLCOMMON_TINY_DIR)/src/Core \
-   $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
-   $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/Ul \
-   $(APPLCOMMON_TINY_DIR)/src/TinyLib \
+  $(APPLCOMMON_TINY_DIR)/src/ApplianceApi \
+  $(APPLCOMMON_TINY_DIR)/src/BootLoader \
+  $(APPLCOMMON_TINY_DIR)/src/Communication/ErdApi/Revision2 \
+  $(APPLCOMMON_TINY_DIR)/src/Communication/Gea2 \
+  $(APPLCOMMON_TINY_DIR)/src/Core \
+  $(APPLCOMMON_TINY_DIR)/src/DataSource \
+  $(APPLCOMMON_TINY_DIR)/src/ErdStream \
+  $(APPLCOMMON_TINY_DIR)/src/ErdHeartbeat \
+  $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8 \
+  $(APPLCOMMON_TINY_DIR)/src/Hardware/Stm8/Ul \
+  $(APPLCOMMON_TINY_DIR)/src/TinyLib \
 
 INC_DIRS:=\
-   $(APPLCOMMON_DIR)/Constants \
-   $(APPLCOMMON_TINY_DIR)/src/Hardware/Hal \
-   src/Application \
+  $(APPLCOMMON_DIR)/Constants \
+  $(APPLCOMMON_TINY_DIR)/src/Core/Hal \
+  src/Application \
 
 SOURCE_EXTENSIONS:=.c .s
 
@@ -55,7 +60,7 @@ IGNORE_WARNINGS=24
 HEX_LINKER_OPTIONS=--code-loc 0x8440
 
 ifeq ($(DEBUG), Y)
-   DEFINE_LIST+=DISABLE_UL_CHECKS
+  DEFINE_LIST+=DISABLE_UL_CHECKS
 endif
 
 PACKAGE_CONTENTS:=

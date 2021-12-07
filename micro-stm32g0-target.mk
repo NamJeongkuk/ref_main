@@ -37,7 +37,8 @@ INC_DIRS:=\
   src/Application \
   lib/boot-loaders/src/small-stm32g0-boot-loader/Hardware \
 
-include lib_tiny.mk
+tiny_INCLUDED_APPLICATIONS:=StackAnalysis
+include lib/applcommon.tiny/lib_tiny.mk
 include lib/stm32-standard-peripherals/lib_stm32.mk
 
 PACKAGE_CONTENTS=
