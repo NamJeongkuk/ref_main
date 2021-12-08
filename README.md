@@ -131,6 +131,24 @@ General-purpose RX231 project using the R5F52318ADFL and a smaller, non-routing 
 | RAM        | 64 KB  |
 | Data Flash | 8 KB   |
 
+### micro-rx62T
+Small RX62T project using the R5F562TAADFP and a smaller, non-routing boot loader.
+
+| Memory     | Size   |
+|------------|--------|
+| Flash      | 256 KB |
+| RAM        | 16 KB  |
+| Data Flash | 32 KB  |
+
+### mini-rx62T
+General-purpose RX62T project using the R5F562TAADFP and a smaller, non-routing boot loader.
+
+| Memory     | Size   |
+|------------|--------|
+| Flash      | 256 KB |
+| RAM        | 16 KB  |
+| Data Flash | 32 KB  |
+
 ### stm32f3
 General-purpose STM32 project using the [STM32F303RB](https://www.st.com/en/microcontrollers-microprocessors/stm32f303rb.html).
 

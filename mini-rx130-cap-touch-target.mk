@@ -67,7 +67,7 @@ build: target $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot
 target: erd_definitions
 
 .PHONY: package
-package: build artifacts erd_lock
+package: build artifacts
 	@echo Creating artifacts/$(TARGET)_$(GIT_SHORT_HASH)_BN_$(BUILD_NUMBER).zip...
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
@@ -92,10 +92,6 @@ upload: $(call upload_deps,all jlink_tools)
 .PHONY: clean
 clean: target_clean
 	@$(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N clean
-
-.PHONY: erd_lock
-erd_lock: erd_definitions
-	@$(LUA53) $(LUA_ERD_LOCK_REPORT) --configuration micro_erd_lock_config.lua --locked_definitions micro-erd-lock.json --definitions $(OUTPUT_DIR)/doc/erd-definitions.json
 
 .PHONY: erd_definitions
 erd_definitions: $(OUTPUT_DIR)/doc toolchain

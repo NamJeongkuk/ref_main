@@ -51,6 +51,10 @@ echo -e "\033[1m> Building mini-rx130-target...\033[0m"
 $RX_MAKE -f mini-rx130-target.mk -j16 RELEASE=Y DEBUG=N package
 
 echo
+echo -e "\033[1m> Building mini-rx130-cap-touch-target...\033[0m"
+$RX_MAKE -f mini-rx130-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N package
+
+echo
 echo -e "\033[1m> Building micro-rx130-target...\033[0m"
 $RX_MAKE -f micro-rx130-target.mk -j16 RELEASE=Y DEBUG=N package
 

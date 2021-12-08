@@ -68,9 +68,9 @@ int main(void)
 
    while(1)
    {
-      GeaStack_Run();
+      GeaStack_Run(&geaStack);
 
-      if(!TinyTimerModule_Run(&timerModule))
+      if(!TimerModule_Run(&timerModule))
       {
          Interrupts_WaitForInterrupt();
       }
