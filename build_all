@@ -5,106 +5,20 @@ OPERATING_SYSTEM=$(uname)
 
 if [[ $OPERATING_SYSTEM == 'Linux' ]]; then
    RX_MAKE=make
-   RL78_MAKE=make
 elif [[ $OPERATING_SYSTEM == 'Darwin' ]]; then
    RX_MAKE=dmake
-   RL78_MAKE=dmake
 else
    echo 'Unsupported operating system!'
    exit 1
 fi
 
 echo
-echo -e "\033[1m> Building micro-psoc4100s-cap-touch-target...\033[0m"
-make -f micro-psoc4100s-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N package
-
-echo
-echo -e "\033[1m> Building micro-rl78g13-target (kpit-rl78)...\033[0m"
-$RL78_MAKE -f micro-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N BUILD_TOOLS=kpit-rl78 package
-
-echo
-echo -e "\033[1m> Building micro-rl78g13-target (llvm-rl78)...\033[0m"
-$RL78_MAKE -f micro-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N BUILD_TOOLS=llvm-rl78 package
-
-echo
-echo -e "\033[1m> Building nano-rl78g12-target (kpit-rl78)...\033[0m"
-$RL78_MAKE -f nano-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N BUILD_TOOLS=kpit-rl78 package
-
-echo
-echo -e "\033[1m> Building nano-rl78g12-target (llvm-rl78)...\033[0m"
-$RL78_MAKE -f nano-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N BUILD_TOOLS=llvm-rl78 package
-
-echo
-echo -e "\033[1m> Building nano-rl78g13-target (kpit-rl78)...\033[0m"
-$RL78_MAKE -f nano-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N BUILD_TOOLS=kpit-rl78 package
-
-echo
-echo -e "\033[1m> Building nano-rl78g13-target (llvm-rl78)...\033[0m"
-$RL78_MAKE -f nano-rl78g13-target.mk -j16 RELEASE=Y DEBUG=N BUILD_TOOLS=llvm-rl78 package
-
-echo
 echo -e "\033[1m> Building rx130-target...\033[0m"
 $RX_MAKE -f rx130-target.mk -j16 RELEASE=Y DEBUG=N package
 
 echo
-echo -e "\033[1m> Building mini-rx130-target...\033[0m"
-$RX_MAKE -f mini-rx130-target.mk -j16 RELEASE=Y DEBUG=N package
-
-echo
-echo -e "\033[1m> Building mini-rx130-cap-touch-target...\033[0m"
-$RX_MAKE -f mini-rx130-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N package
-
-echo
-echo -e "\033[1m> Building micro-rx130-target...\033[0m"
-$RX_MAKE -f micro-rx130-target.mk -j16 RELEASE=Y DEBUG=N package
-
-echo
-echo -e "\033[1m> Building micro-rx130-cap-touch-target...\033[0m"
-$RX_MAKE -f micro-rx130-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N package
-
-echo
 echo -e "\033[1m> Building rx231-target...\033[0m"
 $RX_MAKE -f rx231-target.mk -j16 RELEASE=Y DEBUG=N package
-
-echo
-echo -e "\033[1m> Building mini-rx231-target...\033[0m"
-$RX_MAKE -f mini-rx231-target.mk -j16 RELEASE=Y DEBUG=N package
-
-echo
-echo -e "\033[1m> Building micro-rx62t-target...\033[0m"
-$RX_MAKE -f micro-rx62t-target.mk -j16 RELEASE=Y DEBUG=N package
-
-echo
-echo -e "\033[1m> Building micro-stm32g0-target...\033[0m"
-make -f micro-stm32g0-target.mk -j16 RELEASE=Y DEBUG=N package
-
-echo
-echo -e "\033[1m> Building stm32f3-target...\033[0m"
-make -f stm32f3-target.mk -j16 RELEASE=Y DEBUG=N package
-
-echo
-echo -e "\033[1m> Building mini-stm32f3-target...\033[0m"
-make -f mini-stm32f3-target.mk -j16 RELEASE=Y DEBUG=N package
-
-echo
-echo -e "\033[1m> Building micro-stm8s-target...\033[0m"
-make -f micro-stm8s-target.mk -j16 RELEASE=Y DEBUG=N package
-
-echo
-echo -e "\033[1m> Building nano-stm8s-target...\033[0m"
-make -f nano-stm8s-target.mk -j16 RELEASE=Y DEBUG=N package
-
-echo
-echo -e "\033[1m> Building nano-stm8s-cap-touch-target...\033[0m"
-make -f nano-stm8s-cap-touch-target.mk -j16 RELEASE=Y DEBUG=N package
-
-echo
-echo -e "\033[1m> Building ra6m3-target...\033[0m"
-make -f ra6m3-target.mk -j16 RELEASE=Y DEBUG=N package
-
-echo
-echo -e "\033[1m> Building psoc6-target...\033[0m"
-make -f psoc6-target.mk -j16 RELEASE=Y DEBUG=N package
 
 echo
 echo -e "\033[1m> All builds completed successfully\033[0m"
