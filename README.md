@@ -1,6 +1,6 @@
 # refrigeration.rockhopper-mainboard
 
-[The Rockhopper Penguin](/doc/rockhopper.jpeg "Rockhopper penguin")
+![The Rockhopper Penguin](/doc/rockhopper.jpeg "Rockhopper penguin")
 
 ## Confluence
 
