@@ -215,6 +215,8 @@ enum
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData8,     0xF508, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData9,     0xF509, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
+   ENTRY(Erd_TestEeprom,                                    0xF510, uint8_t,                                            Swap_N, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   \
    ENTRY(Erd_SomeFault,                                     0xF600, bool,                                               Swap_N, Io_None, Sub_N, Fault,    NotNv,                                    FaultId_SomeFault) \
    ENTRY(Erd_SomeOtherFault,                                0xF601, bool,                                               Swap_N, Io_None, Sub_N, Fault,    NotNv,                                    FaultId_SomeOtherFault) \
    \

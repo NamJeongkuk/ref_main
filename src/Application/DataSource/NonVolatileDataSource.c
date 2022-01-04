@@ -92,14 +92,6 @@ void NonVolatileDataSource_Init(
       TimerTicksBetweenRetriesInMsec,
       NumberOfRetriesBeforeErase);
 
-   while(!ready)
-   {
-      Action_Invoke(watchdog);
-      TimerModule_Run(timerModule);
-   }
-
-   ready = false;
-
    ConstArrayMap_BinarySearch_Init(&instance->_private.syncMap, &syncMapConfiguration);
 
    DataSource_CachedAsyncDataSource_Init(
