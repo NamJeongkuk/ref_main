@@ -61,6 +61,12 @@ typedef struct
       uint8_t subscriptionBuffers[ErdApiV2SubscriptionClients][sizeof(GeaStackPublicErdCount_t) / 4 + 1];
       ConstArrayMap_BinarySearch_t publicErdMap;
       ErdStreamReceiver_t erdStreamReceiver;
+      DataSourcePacketReadWriteManager_Simple_t dataSourceReadWriteManager;
+      DataSourcePacketGea2MessageEndpointConnector_t dataSourceEndpointConnector;
+      DataSourcePacketSubscriptionFrontEnd_Simple_t dataSourceSubscriptionFrontEnd;
+      DataSourcePacketSubscriptionManager_Simple_SubscriptionListItem_t subscriptionList[MaxNumberOfSubscriptions];
+      DataSourcePacketSubscriptionManager_Simple_t dataSourceSubscriptionManager;
+      ErdGea2ReadWriteApiRevision2_t erdApiRevision2;
 
       Gea2Configurator_t configurator;
       Gea2ConfiguratorNode_t applicationNode;
