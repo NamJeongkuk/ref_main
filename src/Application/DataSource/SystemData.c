@@ -93,7 +93,7 @@ static void InitializeDataModel(Instance_t *instance)
 void SystemData_Init(
    SystemData_t *instance,
    TimerModule_t *timerModule,
-   I_FlashBlockGroup_t *flashBlockGroup,
+   I_Eeprom_t *eeprom,
    I_Crc16Calculator_t *crcCalculator,
    I_Action_t *systemActionForStartup,
    I_Action_t *resetAction)
@@ -101,7 +101,7 @@ void SystemData_Init(
    InitializeInternalDataSource(
       instance,
       timerModule,
-      flashBlockGroup,
+      eeprom,
       crcCalculator,
       systemActionForStartup,
       resetAction);

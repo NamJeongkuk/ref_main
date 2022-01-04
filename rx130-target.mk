@@ -29,6 +29,7 @@ SRC_DIRS:=\
   src/$(TARGET) \
   src/$(TARGET)/Bsp \
   src/$(TARGET)/Hardware \
+  src/$(TARGET)/Hardware/Eeprom \
   src/$(TARGET)/Hardware/Flash \
   src/Application \
   src/Application/DataSource \

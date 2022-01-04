@@ -21,7 +21,9 @@
 enum
 {
    ClientVersion = 1,
-   BitsPerByte = 8
+   BitsPerByte = 8,
+   TimerTicksBetweenRetriesInMsec = 100,
+   NumberOfRetriesBeforeErase = 10
 };
 
 static const AsyncDataSource_FlashBlockGroupErdInfo_t asyncMapElements[] = { ERD_TABLE(EXPAND_AS_ASYNC_MAP_ELEMENTS) };
@@ -76,25 +78,19 @@ void NonVolatileDataSource_Init(
       asyncMapElements,
       NUM_ELEMENTS(asyncMapElements));
 
-   AsyncDataSource_FlashBlockGroup_Init(
-      &instance->_private.async,
-      flashBlockGroup,
-      crc16Calculator,
-      &instance->_private.asyncMap.interface,
-      &instance->_private.defaultDataInputGroup.interface,
-      &instance->_private.asyncReadWriteBuffer,
-      sizeof(instance->_private.asyncReadWriteBuffer),
-      Erd_NvMetadata,
-      &onReadyAction.interface,
-      timerModule,
-      ClientVersion);
-
    AsyncDataSource_Eeprom_Init(
       &instance->_private.eepromAsyncDataSource,
       &instance->_private.asyncMap.interface,
       eeprom,
       crc16Calculator,
-      &instance->_private.defaultDataInputGroup.interface);
+      &instance->_private.defaultDataInputGroup.interface,
+      &instance->_private.asyncReadWriteBuffer,
+      sizeof(instance->_private.asyncReadWriteBuffer),
+      Erd_NvMetadata,
+      ClientVersion,
+      timerModule,
+      TimerTicksBetweenRetriesInMsec,
+      NumberOfRetriesBeforeErase);
 
    while(!ready)
    {
@@ -108,7 +104,7 @@ void NonVolatileDataSource_Init(
 
    DataSource_CachedAsyncDataSource_Init(
       &instance->_private.sync,
-      &instance->_private.async.interface,
+      &instance->_private.eepromAsyncDataSource.interface,
       &instance->_private.syncMap.interface,
       &instance->_private.syncMetadataCache,
       &instance->_private.syncCache,

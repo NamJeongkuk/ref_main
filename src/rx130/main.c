@@ -126,7 +126,7 @@ int main(void)
    SystemData_Init(
       &systemData,
       timerModule,
-      EepromStack_GetEeprom(timerModule),
+      EepromStack_GetEeprom(),
       Crc16Calculator_Table,
       watchdogKickAction,
       resetAction);

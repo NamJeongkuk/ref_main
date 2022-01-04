@@ -58,7 +58,6 @@ typedef struct
 {
    struct
    {
-      // AsyncDataSource_FlashBlockGroup_t async;
       AsyncDataSource_Eeprom_t eepromAsyncDataSource;
       ConstArrayMap_BinarySearch_t asyncMap;
       NonVolatileDataSourceReadWriteBuffer_t asyncReadWriteBuffer;
@@ -83,7 +82,7 @@ void NonVolatileDataSource_Init(
    TimerModule_t *timerModule,
    I_Action_t *watchdog,
    I_Crc16Calculator_t *crc16Calculator,
-   I_FlashBlockGroup_t *flashBlockGroup);
+   I_Eeprom_t *eeprom);
 
 /*!
  * @param instance
