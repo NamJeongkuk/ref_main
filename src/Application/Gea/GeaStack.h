@@ -90,7 +90,6 @@ typedef struct
       struct
       {
          Gea2ConfiguratorNode_t node;
-         // Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t nodeResources;
          Gea2ConfiguratorDefaultForegroundSingleWireUartInterfaceNodeResources_t nodeResources;
          Gea2ConfiguratorStaticRoutingTableResources_t staticRoutingResources;
          Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
@@ -106,7 +105,6 @@ typedef struct
       struct
       {
          Gea2ConfiguratorNode_t node;
-         // Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t nodeResources;
          Gea2ConfiguratorDefaultForegroundSingleWireUartInterfaceNodeResources_t nodeResources;
          Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
          uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
