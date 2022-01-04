@@ -14,7 +14,7 @@
 #include "I_Crc16Calculator.h"
 #include "I_FlashBlockGroup.h"
 #include "SystemErds.h"
-#include "AsyncDataSource_FlashBlockGroup.h"
+#include "AsyncDataSource_Eeprom.h"
 #include "DataSource_CachedAsyncDataSource.h"
 #include "ConstArrayMap_BinarySearch.h"
 #include "InputGroup_NonVolatileDataSourceDefaultData.h"
@@ -58,7 +58,8 @@ typedef struct
 {
    struct
    {
-      AsyncDataSource_FlashBlockGroup_t async;
+      // AsyncDataSource_FlashBlockGroup_t async;
+      AsyncDataSource_Eeprom_t eepromAsyncDataSource;
       ConstArrayMap_BinarySearch_t asyncMap;
       NonVolatileDataSourceReadWriteBuffer_t asyncReadWriteBuffer;
       DataSource_CachedAsyncDataSource_t sync;

@@ -126,7 +126,7 @@ int main(void)
    SystemData_Init(
       &systemData,
       timerModule,
-      FlashBlockGroup_Rx130_Init(watchdogKickAction, Action_Null_GetInstance(), timerModule),
+      EepromStack_GetEeprom(timerModule),
       Crc16Calculator_Table,
       watchdogKickAction,
       resetAction);

@@ -63,7 +63,7 @@ void NonVolatileDataSource_Init(
    TimerModule_t *timerModule,
    I_Action_t *watchdog,
    I_Crc16Calculator_t *crc16Calculator,
-   I_FlashBlockGroup_t *flashBlockGroup)
+   I_Eeprom_t *eeprom)
 {
    bool ready = false;
    Action_Context_t onReadyAction;
@@ -88,6 +88,13 @@ void NonVolatileDataSource_Init(
       &onReadyAction.interface,
       timerModule,
       ClientVersion);
+
+   AsyncDataSource_Eeprom_Init(
+      &instance->_private.eepromAsyncDataSource,
+      &instance->_private.asyncMap.interface,
+      eeprom,
+      crc16Calculator,
+      &instance->_private.defaultDataInputGroup.interface);
 
    while(!ready)
    {
