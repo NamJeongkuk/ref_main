@@ -149,7 +149,6 @@ static void CreateInternalNode(
 
    if(uart)
    {
-      // change to background
       Gea2Configurator_CreateDefaultForegroundSingleWireUartInterfaceNode(
          &instance->_private.configurator,
          &instance->_private.internal.node,
@@ -182,7 +181,6 @@ static void CreateExternalNode(
    I_DataModel_t *dataModel,
    uint8_t geaAddress)
 {
-   // change to background
    Gea2Configurator_CreateDefaultForegroundSingleWireUartInterfaceNode(
       &instance->_private.configurator,
       &instance->_private.external.node,
@@ -200,8 +198,6 @@ static void CreateExternalNode(
       &instance->_private.external.dynamicRoutingResources,
       instance->_private.external.dynamicRoutingTable,
       ELEMENT_COUNT(instance->_private.external.dynamicRoutingTable));
-
-   // sprout has more stuff, do we need it?
 }
 
 void GeaStack_Init(
