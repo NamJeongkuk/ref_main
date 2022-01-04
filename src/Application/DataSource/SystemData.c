@@ -27,8 +27,6 @@ static void InitializeInternalDataSource(
    I_Action_t *systemActionForStartup,
    I_Action_t *resetAction)
 {
-   IGNORE(resetAction);
-
    DataSource_Composite_Init(&instance->_private.dataSource.composite);
 
    RamDataSource_Init(
@@ -57,25 +55,25 @@ static void InitializeInternalDataSource(
       BspDataSource_DataSource(&instance->_private.dataSource.bsp),
       &instance->_private.dataSource.bspComponent);
 
-   // ApplianceApiDataSource_Init(
-   //    &instance->_private.dataSource.applianceApi,
-   //    &instance->_private.dataSource.composite.interface,
-   //    timerModule,
-   //    resetAction,
-   //    crcCalculator);
-   // AddDataSourceToComposite(
-   //    instance,
-   //    ApplianceApiDataSource_DataSource(&instance->_private.dataSource.applianceApi),
-   //    &instance->_private.dataSource.applianceApiComponent);
+   ApplianceApiDataSource_Init(
+      &instance->_private.dataSource.applianceApi,
+      &instance->_private.dataSource.composite.interface,
+      timerModule,
+      resetAction,
+      crcCalculator);
+   AddDataSourceToComposite(
+      instance,
+      ApplianceApiDataSource_DataSource(&instance->_private.dataSource.applianceApi),
+      &instance->_private.dataSource.applianceApiComponent);
 
-   // ServiceDiagnosticsDataSource_Init(
-   //    &instance->_private.dataSource.serviceDiagnostics,
-   //    &instance->_private.dataSource.composite.interface,
-   //    timerModule);
-   // AddDataSourceToComposite(
-   //    instance,
-   //    ServiceDiagnosticsDataSource_DataSource(&instance->_private.dataSource.serviceDiagnostics),
-   //    &instance->_private.dataSource.serviceDiagnosticsComponent);
+   ServiceDiagnosticsDataSource_Init(
+      &instance->_private.dataSource.serviceDiagnostics,
+      &instance->_private.dataSource.composite.interface,
+      timerModule);
+   AddDataSourceToComposite(
+      instance,
+      ServiceDiagnosticsDataSource_DataSource(&instance->_private.dataSource.serviceDiagnostics),
+      &instance->_private.dataSource.serviceDiagnosticsComponent);
 }
 
 static void InitializeExternalDataSource(Instance_t *instance)

@@ -17,11 +17,11 @@ enum
    StackUsageUpdatePeriodInMsec = 1000
 };
 
-// static const ApplianceApiResetDiagnosticsConfiguration_t applianceApiResetDiagnosticsConfiguration = {
-//    .resetReasonErd = Erd_ResetReason,
-//    .resetCountErd = Erd_ResetCount,
-//    .secondsSinceLastResetErd = Erd_SecondsSinceLastReset
-// };
+static const ApplianceApiResetDiagnosticsConfiguration_t applianceApiResetDiagnosticsConfiguration = {
+   .resetReasonErd = Erd_ResetReason,
+   .resetCountErd = Erd_ResetCount,
+   .secondsSinceLastResetErd = Erd_SecondsSinceLastReset
+};
 
 static void UpdateStackUsage(void *context)
 {
@@ -38,8 +38,6 @@ void Application_Init(
    const StackConfiguration_t *stackConfiguration,
    ResetReason_t resetReason)
 {
-   IGNORE(resetReason);
-
    instance->_private.dataModel = dataModel;
 
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
@@ -61,10 +59,10 @@ void Application_Init(
       UpdateStackUsage,
       instance);
 
-   // ApplianceApiResetDiagnostics_Init(
-   //    &instance->_private.applianceApiResetDiagnostics,
-   //    dataModel,
-   //    timerModule,
-   //    resetReason,
-   //    &applianceApiResetDiagnosticsConfiguration);
+   ApplianceApiResetDiagnostics_Init(
+      &instance->_private.applianceApiResetDiagnostics,
+      dataModel,
+      timerModule,
+      resetReason,
+      &applianceApiResetDiagnosticsConfiguration);
 }
