@@ -75,31 +75,10 @@ typedef struct
       struct
       {
          Gea2ConfiguratorNode_t node;
-         Gea2ConfiguratorCustomForegroundSingleWireUartInterfaceNodeResources_t nodeResources;
-         Gea2ConfiguratorStaticRoutingTableResources_t staticRoutingResources;
-         Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
-         uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
-         struct
-         {
-            uint8_t sendReceiveBuffer[SendReceiveBufferSize];
-            uint8_t sentPacketQueueStorage[PacketQueueStorageSize];
-            uint8_t receivedPacketQueueStorage[PacketQueueStorageSize];
-         } buffers;
-      } singleWire;
-
-      struct
-      {
-         Gea2ConfiguratorNode_t node;
          Gea2ConfiguratorDefaultForegroundSingleWireUartInterfaceNodeResources_t nodeResources;
          Gea2ConfiguratorStaticRoutingTableResources_t staticRoutingResources;
          Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
          uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
-         struct
-         {
-            uint8_t sendBuffer[SendBufferSize];
-            uint8_t receiveBuffer[ReceiveBufferSize];
-            uint8_t packetQueueStorage[PacketQueueStorageSize];
-         } buffers;
       } internal;
 
       struct
@@ -108,12 +87,6 @@ typedef struct
          Gea2ConfiguratorDefaultForegroundSingleWireUartInterfaceNodeResources_t nodeResources;
          Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
          uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
-         struct
-         {
-            uint8_t sendBuffer[SendBufferSize];
-            uint8_t receiveBuffer[ReceiveBufferSize];
-            uint8_t packetQueueStorage[PacketQueueStorageSize];
-         } buffers;
       } external;
 
       struct
