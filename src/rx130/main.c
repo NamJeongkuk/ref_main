@@ -40,6 +40,7 @@
 #include "ApplicationUassert.h"
 #include "Interrupts.h"
 #include "uassert.h"
+#include "EepromStack.h"
 
 enum
 {
@@ -119,6 +120,8 @@ int main(void)
    I_Action_t *watchdogKickAction = Action_RxWatchdog_InitWithConfiguration(Action_RxWatchdogConfiguration_2Seconds);
    I_Action_t *resetAction = Action_Rx2xxSystemReset_Init();
    TimerModule_t *timerModule = TimerModuleStack_Init(&timerModuleStack, Interrupt_Cmt0_Init());
+
+   EepromStack_Init(watchdogKickAction, timerModule);
 
    SystemData_Init(
       &systemData,
