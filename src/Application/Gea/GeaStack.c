@@ -173,7 +173,7 @@ static void CreateInternalNode(
    const uint8_t *staticRoutingTable,
    uint8_t staticRoutingTableEntryCount)
 {
-   I_BufferedUart_t *uart = DataModelErdPointerAccess_GetBufferedUart(dataModel, Erd_InternalBufferedUart);
+   I_BufferedUart_t *uart = DataModelErdPointerAccess_GetBufferedUart(dataModel, Erd_InternalUart);
 
    if(uart)
    {
@@ -217,7 +217,7 @@ static void CreateExternalNode(
       &instance->_private.configurator,
       &instance->_private.external.node,
       &instance->_private.external.nodeResources,
-      DataModelErdPointerAccess_GetBufferedUart(dataModel, Erd_ExternalBufferedUart),
+      DataModelErdPointerAccess_GetBufferedUart(dataModel, Erd_ExternalUart),
       DataModelErdPointerAccess_GetCrc16Calculator(dataModel, Erd_CrcCalcTable),
       geaAddress,
       RetryCount,

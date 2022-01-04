@@ -9,15 +9,15 @@
 
 #include "Hardware.h"
 #include "Action_Rx2xxSystemReset.h"
-#include "BufferedUart_Channel5.h"
-#include "BufferedUart_Channel6.h"
 #include "Crc16Calculator_Table.h"
 #include "DataModelErdPointerAccess.h"
-#include "Dtc.h"
 #include "Header.h"
 #include "I_Interrupt.h"
 #include "SystemClock.h"
 #include "SystemErds.h"
+#include "Uart_Channel0.h"
+#include "Uart_Channel6.h"
+#include "SystemClock.h"
 
 void Hardware_InitializeStage1(void)
 {
@@ -27,13 +27,11 @@ void Hardware_InitializeStage1(void)
 
 void Hardware_InitializeStage2(I_DataModel_t *dataModel)
 {
-   Dtc_Init();
+   I_Uart_t *internalUart = Uart_Channel6_GetInstance(U32_PCLKB);
+   DataModelErdPointerAccess_Write(dataModel, Erd_InternalUart, internalUart);
 
-   I_BufferedUart_t *internalUart = BufferedUart_Channel5_Init();
-   DataModelErdPointerAccess_Write(dataModel, Erd_InternalBufferedUart, internalUart);
-
-   I_BufferedUart_t *externalUart = BufferedUart_Channel6_Init();
-   DataModelErdPointerAccess_Write(dataModel, Erd_ExternalBufferedUart, externalUart);
+   I_Uart_t *externalUart = Uart_Channel0_GetInstance(U32_PCLKB);
+   DataModelErdPointerAccess_Write(dataModel, Erd_ExternalUart, externalUart);
 
    I_Crc16Calculator_t *crcCalcTable = Crc16Calculator_Table;
    DataModelErdPointerAccess_Write(dataModel, Erd_CrcCalcTable, crcCalcTable);
