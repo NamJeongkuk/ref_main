@@ -14,6 +14,7 @@
 #include "Constants_Time.h"
 #include "XMacroUtils.h"
 #include "uassert.h"
+#include "ContextProtector_Rx2xx.h"
 
 enum
 {
@@ -173,24 +174,21 @@ static void CreateInternalNode(
    const uint8_t *staticRoutingTable,
    uint8_t staticRoutingTableEntryCount)
 {
-   I_BufferedUart_t *uart = DataModelErdPointerAccess_GetBufferedUart(dataModel, Erd_InternalUart);
+   I_Uart_t *uart = DataModelErdPointerAccess_GetUart(dataModel, Erd_InternalUart);
 
    if(uart)
    {
-      Gea2Configurator_CreateCustomBufferedFullDuplexUartInterfaceNode(
+      // change to background
+      Gea2Configurator_CreateDefaultForegroundSingleWireUartInterfaceNode(
          &instance->_private.configurator,
          &instance->_private.internal.node,
          &instance->_private.internal.nodeResources,
          uart,
+         DataModelErdPointerAccess_GetTimeSource(dataModel, Erd_TimeSource),
          DataModelErdPointerAccess_GetCrc16Calculator(dataModel, Erd_CrcCalcTable),
-         geaAddress,
-         RetryCount,
-         instance->_private.internal.buffers.sendBuffer,
-         sizeof(instance->_private.internal.buffers.sendBuffer),
-         instance->_private.internal.buffers.receiveBuffer,
-         sizeof(instance->_private.internal.buffers.receiveBuffer),
-         instance->_private.internal.buffers.packetQueueStorage,
-         sizeof(instance->_private.internal.buffers.packetQueueStorage));
+         ContextProtector_Rx2xx_GetInstance(),
+         DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_SystemTickInterrupt),
+         geaAddress);
 
       Gea2Configurator_AddDynamicRoutingTableWithReplacementToNode(
          &instance->_private.configurator,
@@ -213,20 +211,17 @@ static void CreateExternalNode(
    I_DataModel_t *dataModel,
    uint8_t geaAddress)
 {
-   Gea2Configurator_CreateCustomBufferedFullDuplexUartInterfaceNode(
+   // change to background
+   Gea2Configurator_CreateDefaultForegroundSingleWireUartInterfaceNode(
       &instance->_private.configurator,
       &instance->_private.external.node,
       &instance->_private.external.nodeResources,
-      DataModelErdPointerAccess_GetBufferedUart(dataModel, Erd_ExternalUart),
+      DataModelErdPointerAccess_GetUart(dataModel, Erd_ExternalUart),
+      DataModelErdPointerAccess_GetTimeSource(dataModel, Erd_TimeSource),
       DataModelErdPointerAccess_GetCrc16Calculator(dataModel, Erd_CrcCalcTable),
-      geaAddress,
-      RetryCount,
-      instance->_private.external.buffers.sendBuffer,
-      sizeof(instance->_private.external.buffers.sendBuffer),
-      instance->_private.external.buffers.receiveBuffer,
-      sizeof(instance->_private.external.buffers.receiveBuffer),
-      instance->_private.external.buffers.packetQueueStorage,
-      sizeof(instance->_private.external.buffers.packetQueueStorage));
+      ContextProtector_Rx2xx_GetInstance(),
+      DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_SystemTickInterrupt),
+      geaAddress);
 
    Gea2Configurator_AddDynamicRoutingTableWithReplacementToNode(
       &instance->_private.configurator,
@@ -234,6 +229,8 @@ static void CreateExternalNode(
       &instance->_private.external.dynamicRoutingResources,
       instance->_private.external.dynamicRoutingTable,
       ELEMENT_COUNT(instance->_private.external.dynamicRoutingTable));
+
+   // sprout has more stuff, do we need it?
 }
 
 void GeaStack_Init(
