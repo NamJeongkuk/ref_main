@@ -11,12 +11,13 @@
 #include "Eeprom_HardwareEeprom.h"
 #include "HardwareEeprom_DelayedPageOperationWrapper.h"
 #include "HardwareEeprom_I2c.h"
+#include "utils.h"
 
 typedef struct
 {
    HardwareEeprom_I2c_t *hardwareEepromI2c;
    Eeprom_HardwareEeprom_t eepromHardwareEepromAdapter;
-   HardwareEeprom_DelayedPageOperationWrapper_t eepromDelayedPageOperationWrapper;
+   // HardwareEeprom_DelayedPageOperationWrapper_t eepromDelayedPageOperationWrapper;
    bool readFaultData;
    bool writeFaultData;
    bool eraseFaultData;
@@ -31,6 +32,7 @@ void EepromStack_Init(
    I_Action_t *watchdogKickAction,
    TimerModule_t *timerModule)
 {
+   IGNORE(timerModule);
    instance.hardwareEepromI2c = HardwareEeprom_I2c_Init(watchdogKickAction);
 
    InputOutput_Simple_Init(&instance.readFaultIo, &instance.readFaultData, sizeof(instance.readFaultData));
