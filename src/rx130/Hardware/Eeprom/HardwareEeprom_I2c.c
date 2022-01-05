@@ -20,10 +20,10 @@
       }                                   \
    }
 
-#define DECREASE_COUNT_EXIT_IF_ZERO(x)      \
-   do                                       \
-   {                                        \
-      if(--x == 0)                          \
+#define DECREASE_COUNT_EXIT_IF_ZERO(x)                      \
+   do                                                       \
+   {                                                        \
+      if(--x == 0)                                          \
          return HardwareEepromErrorSource_OperationTimeOut; \
    } while(0)
 
