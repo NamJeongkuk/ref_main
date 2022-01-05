@@ -129,6 +129,7 @@ TEST_GROUP(SystemData)
       timerModule = TimerModule_TestDouble_GetTimerModule(&timerModuleDouble);
       Action_Context_Init(&runTimerModuleAction, &timerModuleDouble.timerModule, RunTimerModule);
 
+      memset(eeprom, 0, sizeof(eeprom));
       Eeprom_Model_Init(
          &eepromModel,
          eeprom,
