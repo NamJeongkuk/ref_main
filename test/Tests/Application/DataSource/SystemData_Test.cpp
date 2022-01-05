@@ -173,7 +173,7 @@ TEST_GROUP(SystemData)
 
    void AfterFlashBlockGroupWriteCompletes()
    {
-      After(WriteTime * 4);
+      After(WriteTime * 100);
    }
 
    void SystemDataIsReset()
