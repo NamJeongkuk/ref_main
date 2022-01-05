@@ -37,14 +37,14 @@ void EepromStack_Init(
    InputOutput_Simple_Init(&instance.writeFaultIo, &instance.writeFaultData, sizeof(instance.writeFaultData));
    InputOutput_Simple_Init(&instance.eraseFaultIo, &instance.eraseFaultData, sizeof(instance.eraseFaultData));
 
-   HardwareEeprom_DelayedPageOperationWrapper_Init(
-      &instance.eepromDelayedPageOperationWrapper, 
-      &instance.hardwareEepromI2c->interface,
-      timerModule);
+   // HardwareEeprom_DelayedPageOperationWrapper_Init(
+   //    &instance.eepromDelayedPageOperationWrapper,
+   //    &instance.hardwareEepromI2c->interface,
+   //    timerModule);
 
    Eeprom_HardwareEeprom_Init(
       &instance.eepromHardwareEepromAdapter,
-      &instance.eepromDelayedPageOperationWrapper.interface,
+      &instance.hardwareEepromI2c->interface,
       InputOutput_AsOutput(&instance.readFaultIo.interface),
       InputOutput_AsOutput(&instance.writeFaultIo.interface),
       InputOutput_AsOutput(&instance.eraseFaultIo.interface));
