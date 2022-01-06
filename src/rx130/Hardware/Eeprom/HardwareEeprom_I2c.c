@@ -153,10 +153,10 @@ static void InitializeEepromHardware(void)
    RIIC0.ICBRH.BYTE = 0xEF;
 
    /* Configure the bus mode register 2:
-    Timeout detection uses a 16-bit timer
-    Count is disable for both high and low level on the SCL0 line
-    No SDA output delays used
-    Output delay clock source set to internal IIC reference clock */
+   Timeout detection uses a 16-bit timer
+   Count is disable for both high and low level on the SCL0 line
+   No SDA output delays used
+   Output delay clock source set to internal IIC reference clock */
    RIIC0.ICMR2.BYTE = 0x00u;
 
    /* Hold the clock line low after each received byte in receive mode */

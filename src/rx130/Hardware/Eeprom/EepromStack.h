@@ -5,21 +5,18 @@
  * Copyright GE Appliances - Confidential - All rights reserved
  */
 
-#ifndef EEPROMSTACK_H 
+#ifndef EEPROMSTACK_H
 #define EEPROMSTACK_H
 
-#include "Timer.h"
 #include "I_Action.h"
 #include "I_Eeprom.h"
 #include "I_Input.h"
 
 /*!
  * @param watchdogKickAction
- * @param timerModule
  */
 void EepromStack_Init(
-   I_Action_t *watchdogKickAction,
-   TimerModule_t *timerModule);
+   I_Action_t *watchdogKickAction);
 
 /*!
  * Returns I_Eeprom_t interfaces
