@@ -11,20 +11,21 @@
 #include "Constants_Binary.h"
 #include "utils.h"
 
-// clang-format off
-
-#define EXPAND_AS_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_NV_, StorageType)({ Name COMMA sizeof(DataType) } COMMA)
-
-// clang-format on
-
 enum
 {
    ClientVersion = 1,
    BitsPerByte = 8,
    TimerTicksBetweenRetriesInMsec = 100,
-   NumberOfRetriesBeforeErase = 10
+   NumberOfRetriesBeforeErase = 10,
+   NumberOfRecordBackups = 1
 };
+
+// clang-format off
+
+#define EXPAND_AS_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_NV_, StorageType)({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
+
+// clang-format on
 
 static const AsyncDataSource_EepromErdInfo_t asyncMapElements[] = { ERD_TABLE(EXPAND_AS_ASYNC_MAP_ELEMENTS) };
 
