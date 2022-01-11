@@ -14,7 +14,6 @@
 
 typedef struct
 {
-   HardwareEeprom_I2c_t *hardwareEepromI2c;
    Eeprom_HardwareEeprom_t eepromHardwareEepromAdapter;
    bool readFaultData;
    bool writeFaultData;
@@ -28,7 +27,8 @@ static EepromStack_t instance;
 
 void EepromStack_Init(I_Action_t *watchdogKickAction)
 {
-   instance.hardwareEepromI2c = HardwareEeprom_I2c_Init(watchdogKickAction);
+   HardwareEeprom_I2c_t *hardwareEepromI2c;
+   hardwareEepromI2c = HardwareEeprom_I2c_Init(watchdogKickAction);
 
    InputOutput_Simple_Init(&instance.readFaultIo, &instance.readFaultData, sizeof(instance.readFaultData));
    InputOutput_Simple_Init(&instance.writeFaultIo, &instance.writeFaultData, sizeof(instance.writeFaultData));
@@ -36,7 +36,7 @@ void EepromStack_Init(I_Action_t *watchdogKickAction)
 
    Eeprom_HardwareEeprom_Init(
       &instance.eepromHardwareEepromAdapter,
-      &instance.hardwareEepromI2c->interface,
+      &hardwareEepromI2c->interface,
       InputOutput_AsOutput(&instance.readFaultIo.interface),
       InputOutput_AsOutput(&instance.writeFaultIo.interface),
       InputOutput_AsOutput(&instance.eraseFaultIo.interface));

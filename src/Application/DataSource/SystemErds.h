@@ -220,7 +220,7 @@ enum
    ENTRY(Erd_SomeOtherFault,                                0xF601, bool,                                               Swap_N, Io_None, Sub_N, Fault,    NotNv,                                    FaultId_SomeOtherFault) \
    \
    ENTRY(Erd_NvReserved,                                    0xFCFD, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,       NotNv,                                    NotFault) \
-   ENTRY(Erd_NvMetadata,                                    0xFCFE, AsyncDataSource_EepromMetadata_t,                   Swap_N, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_NvMetadata,                                    0xFCFE, AsyncDataSource_EepromMetadata_t,                   Swap_N, Io_None, Sub_N, Nv,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
 
 #define EXPAND_AS_INTERNAL_RAM_ERD_ENUM(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)(Name COMMA)

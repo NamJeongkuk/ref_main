@@ -26,14 +26,14 @@ enum
    NumberOfRetriesBeforeErase = 10
 };
 
-static const AsyncDataSource_FlashBlockGroupErdInfo_t asyncMapElements[] = { ERD_TABLE(EXPAND_AS_ASYNC_MAP_ELEMENTS) };
+static const AsyncDataSource_EepromErdInfo_t asyncMapElements[] = { ERD_TABLE(EXPAND_AS_ASYNC_MAP_ELEMENTS) };
 
 static const ConstArrayMap_BinarySearchConfiguration_t asyncMapConfiguration = {
    asyncMapElements,
    NUM_ELEMENTS(asyncMapElements),
    ELEMENT_SIZE(asyncMapElements),
    sizeof(asyncMapElements[0].erd),
-   OFFSET_OF(AsyncDataSource_FlashBlockGroupErdInfo_t, erd),
+   OFFSET_OF(AsyncDataSource_EepromErdInfo_t, erd),
    IS_SIGNED(Erd_t)
 };
 
