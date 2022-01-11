@@ -188,13 +188,13 @@ int main(void)
    HardwareEeprom_I2c_t *hardwareEepromI2c;
    hardwareEepromI2c = HardwareEeprom_I2c_Init(watchdogKickAction);
    // uint8_t writeBuffer[] = {0xA5};
-   uint8_t writeBuffer[] = { 0xA5 };
+   uint8_t writeBuffer[] = { 0xA5, 0xB5 };
    // hardwareeeprom_write(..., writeBuffer, sizeof(writeBuffer))
-   HardwareEeprom_Write(&hardwareEepromI2c->interface, 0, 1, writeBuffer);
+   HardwareEeprom_Write(&hardwareEepromI2c->interface, 4, 2, writeBuffer);
    // uint8_t readBuffer[sizeof(writeBuffer)];
    uint8_t readBuffer[sizeof(writeBuffer)];
    // hardwareeeprom_read(..., readBuffer, sizeof(readBuffer))
-   HardwareEeprom_Read(&hardwareEepromI2c->interface, 0, 1, readBuffer);
+   HardwareEeprom_Read(&hardwareEepromI2c->interface, 4, 2, readBuffer);
    // check whether what you wrote is what you read back
    if(readBuffer[0] == writeBuffer[0])
    {
