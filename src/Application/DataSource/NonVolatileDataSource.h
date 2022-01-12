@@ -22,7 +22,7 @@
 // clang-format off
 
 #define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_READ_WRITE_BUFFER_MEMBERS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_NV_, StorageType)(uint8_t CONCAT(erd, Name)[sizeof(DataType)];)
+   CONCAT(INCLUDE_NV_, StorageType)(uint8_t CONCAT(erd, Name)[sizeof(DataType) + sizeof(Crc16_t)];)
 
 typedef struct
 {

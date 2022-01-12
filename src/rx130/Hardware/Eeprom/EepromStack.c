@@ -15,7 +15,9 @@
 
 typedef struct
 {
+   HardwareEeprom_I2c_t *hardwareEepromI2c;
    Eeprom_HardwareEeprom_t eepromHardwareEepromAdapter;
+   HardwareEeprom_DelayedPageOperationWrapper_t eepromDelayedPageOperationWrapper;
    bool readFaultData;
    bool writeFaultData;
    bool eraseFaultData;
@@ -28,22 +30,30 @@ static EepromStack_t instance;
 
 void EepromStack_Init(I_Action_t *watchdogKickAction, TimerModule_t *timerModule)
 {
-   HardwareEeprom_DelayedPageOperationWrapper_t eepromDelayedPageOperationWrapper;
-   HardwareEeprom_I2c_t *hardwareEepromI2c;
-   hardwareEepromI2c = HardwareEeprom_I2c_Init(watchdogKickAction);
+   instance.hardwareEepromI2c = HardwareEeprom_I2c_Init(watchdogKickAction);
+
+   volatile uint8_t counter = 0;
+   uint8_t readBuffer[sizeof(4)];
+
+   HardwareEeprom_Read(&instance.hardwareEepromI2c->interface, 12, 4, readBuffer);
+
+   if(readBuffer[0])
+   {
+      counter += 1;
+   }
 
    InputOutput_Simple_Init(&instance.readFaultIo, &instance.readFaultData, sizeof(instance.readFaultData));
    InputOutput_Simple_Init(&instance.writeFaultIo, &instance.writeFaultData, sizeof(instance.writeFaultData));
    InputOutput_Simple_Init(&instance.eraseFaultIo, &instance.eraseFaultData, sizeof(instance.eraseFaultData));
 
    HardwareEeprom_DelayedPageOperationWrapper_Init(
-      &eepromDelayedPageOperationWrapper,
-      &hardwareEepromI2c->interface,
+      &instance.eepromDelayedPageOperationWrapper,
+      &instance.hardwareEepromI2c->interface,
       timerModule);
 
    Eeprom_HardwareEeprom_Init(
       &instance.eepromHardwareEepromAdapter,
-      &eepromDelayedPageOperationWrapper.interface,
+      &instance.eepromDelayedPageOperationWrapper.interface,
       InputOutput_AsOutput(&instance.readFaultIo.interface),
       InputOutput_AsOutput(&instance.writeFaultIo.interface),
       InputOutput_AsOutput(&instance.eraseFaultIo.interface));
