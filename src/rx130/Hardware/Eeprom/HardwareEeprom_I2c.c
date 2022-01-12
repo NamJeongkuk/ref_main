@@ -519,6 +519,11 @@ static void Read(I_HardwareEeprom_t *_instance, uint16_t offset, uint16_t numByt
    IGNORE(_instance);
    HardwareEepromErrorSource_t errorSource = Read_Eeprom_Hardware(offset, readBuffer, numBytes);
 
+   // start a timer with a callback
+   // in the callback publish the event
+   // this will send execution back to the main loop
+   // and reset the stack
+
    HardwareEepromEventArgs_t eventArgs = {
       .mode = HardwareEepromMode_Read,
       .source = errorSource
@@ -531,6 +536,11 @@ static void Write(I_HardwareEeprom_t *_instance, uint16_t offset, uint16_t numBy
    IGNORE(_instance);
 
    HardwareEepromErrorSource_t errorSource = Write_Eeprom_Hardware(offset, (const uint8_t *)writeBuffer, numBytes, false);
+
+   // start a timer with a callback
+   // in the callback publish the event
+   // this will send execution back to the main loop
+   // and reset the stack
 
    HardwareEepromEventArgs_t eventArgs = {
       .mode = HardwareEepromMode_Write,
@@ -572,6 +582,11 @@ static void Erase(I_HardwareEeprom_t *_instance)
 
       Action_SafeInvoke(instance._private.watchdogKickAction);
    }
+
+   // start a timer with a callback
+   // in the callback publish the event
+   // this will send execution back to the main loop
+   // and reset the stack
 
    HardwareEepromEventArgs_t eventArgs = {
       .mode = HardwareEepromMode_Erase,

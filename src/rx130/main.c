@@ -56,56 +56,56 @@ enum
 #endif
 };
 
-// static SystemData_t systemData;
-// static Application_t application;
+static SystemData_t systemData;
+static Application_t application;
 static TimerModuleStack_t timerModuleStack;
 static InvokeActionOnTimerPeriodic_t watchdogPetter;
-// static GeaStack_t geaStack;
+static GeaStack_t geaStack;
 static UlTestsPlugin_t ulTestsPlugin;
 
-// static const uint8_t staticRoutingTable[] = {
-//    Stm8sGea2Address
-// };
+static const uint8_t staticRoutingTable[] = {
+   Stm8sGea2Address
+};
 
-// static void UpdateBuildInfo(
-//    I_DataModel_t *dataModel,
-//    const ImageHeader_t *header)
-// {
-//    static const GitHash_t gitHash = { GIT_HASH_U8_ARRAY_RX };
-//    DataModel_Write(dataModel, Erd_GitHash, &gitHash);
+static void UpdateBuildInfo(
+   I_DataModel_t *dataModel,
+   const ImageHeader_t *header)
+{
+   static const GitHash_t gitHash = { GIT_HASH_U8_ARRAY_RX };
+   DataModel_Write(dataModel, Erd_GitHash, &gitHash);
 
-//    uint32_t buildNumber = BUILD_NUMBER;
-//    DataModel_Write(dataModel, Erd_BuildNumber, &buildNumber);
+   uint32_t buildNumber = BUILD_NUMBER;
+   DataModel_Write(dataModel, Erd_BuildNumber, &buildNumber);
 
-//    if(header)
-//    {
-//       Version_t version;
-//       version.criticalMajor = header->criticalMajorVersion;
-//       version.criticalMinor = header->criticalMinorVersion;
-//       version.major = header->majorVersion;
-//       version.minor = header->minorVersion;
-//       DataModel_Write(dataModel, Erd_OldApplicationVersion, &version);
-//    }
-// }
+   if(header)
+   {
+      Version_t version;
+      version.criticalMajor = header->criticalMajorVersion;
+      version.criticalMinor = header->criticalMinorVersion;
+      version.major = header->majorVersion;
+      version.minor = header->minorVersion;
+      DataModel_Write(dataModel, Erd_OldApplicationVersion, &version);
+   }
+}
 
-// static void SendStartupMessage(I_Gea2PacketEndpoint_t *gea2PacketEndpoint)
-// {
-//    STACK_ALLOC_GEA2PACKET(packet, 5);
-//    packet->destination = 0xFF;
-//    packet->payload[0] = 0x00;
-//    packet->payload[1] = 0xDE;
-//    packet->payload[2] = 0xAF;
-//    packet->payload[3] = 0xBA;
-//    packet->payload[4] = 0xBE;
+static void SendStartupMessage(I_Gea2PacketEndpoint_t *gea2PacketEndpoint)
+{
+   STACK_ALLOC_GEA2PACKET(packet, 5);
+   packet->destination = 0xFF;
+   packet->payload[0] = 0x00;
+   packet->payload[1] = 0xDE;
+   packet->payload[2] = 0xAF;
+   packet->payload[3] = 0xBA;
+   packet->payload[4] = 0xBE;
 
-//    Gea2PacketEndpoint_Send(gea2PacketEndpoint, packet, 2);
-// }
+   Gea2PacketEndpoint_Send(gea2PacketEndpoint, packet, 2);
+}
 
-// static void SetReadyToEnterBootLoader(I_DataModel_t *dataModel)
-// {
-//    ReadyToEnterBootLoaderState_t ready = ReadyToEnterBootLoaderState_Ready;
-//    DataModel_Write(dataModel, Erd_ReadyToEnterBootLoader, &ready);
-// }
+static void SetReadyToEnterBootLoader(I_DataModel_t *dataModel)
+{
+   ReadyToEnterBootLoaderState_t ready = ReadyToEnterBootLoaderState_Ready;
+   DataModel_Write(dataModel, Erd_ReadyToEnterBootLoader, &ready);
+}
 
 int main(void)
 {
@@ -122,40 +122,40 @@ int main(void)
    I_Action_t *resetAction = Action_Rx2xxSystemReset_Init();
    TimerModule_t *timerModule = TimerModuleStack_Init(&timerModuleStack, Interrupt_Cmt0_Init());
 
-   // EepromStack_Init(watchdogKickAction);
+   EepromStack_Init(watchdogKickAction);
 
-   // SystemData_Init(
-   //    &systemData,
-   //    timerModule,
-   //    EepromStack_GetEeprom(),
-   //    Crc16Calculator_Table,
-   //    watchdogKickAction,
-   //    resetAction);
+   SystemData_Init(
+      &systemData,
+      timerModule,
+      EepromStack_GetEeprom(),
+      Crc16Calculator_Table,
+      watchdogKickAction,
+      resetAction);
 
-   // I_DataModel_t *dataModel = SystemData_DataModel(&systemData);
+   I_DataModel_t *dataModel = SystemData_DataModel(&systemData);
 
-   // TimerModuleStack_WritePointersToDataModel(&timerModuleStack, dataModel);
+   TimerModuleStack_WritePointersToDataModel(&timerModuleStack, dataModel);
 
-   // ApplicationUassert_Init(
-   //    resetAction,
-   //    DataModel_GetOutput(dataModel, Erd_ProgramCounterAddressAtLastUassert),
-   //    timerModule);
+   ApplicationUassert_Init(
+      resetAction,
+      DataModel_GetOutput(dataModel, Erd_ProgramCounterAddressAtLastUassert),
+      timerModule);
 
-   // Hardware_InitializeStage2(dataModel);
+   Hardware_InitializeStage2(dataModel);
 
-   // GeaStack_Init(
-   //    &geaStack,
-   //    dataModel,
-   //    SystemData_ExternalDataSource(&systemData),
-   //    Rx130Gea2Address,
-   //    staticRoutingTable,
-   //    ELEMENT_COUNT(staticRoutingTable));
+   GeaStack_Init(
+      &geaStack,
+      dataModel,
+      SystemData_ExternalDataSource(&systemData),
+      Rx130Gea2Address,
+      staticRoutingTable,
+      ELEMENT_COUNT(staticRoutingTable));
 
-   // Application_Init(
-   //    &application,
-   //    dataModel,
-   //    StackConfigurator_GetConfiguration(),
-   //    Rx2xxResetSource_GetResetReason());
+   Application_Init(
+      &application,
+      dataModel,
+      StackConfigurator_GetConfiguration(),
+      Rx2xxResetSource_GetResetReason());
 
    InvokeActionOnTimerPeriodic_Init(
       &watchdogPetter,
@@ -163,11 +163,11 @@ int main(void)
       timerModule,
       1);
 
-   // SendStartupMessage(GeaStack_GetGea2PacketEndpoint(&geaStack));
+   SendStartupMessage(GeaStack_GetGea2PacketEndpoint(&geaStack));
 
-   // UpdateBuildInfo(
-   //    dataModel,
-   //    Header_GetImageHeader(ImageType_Application));
+   UpdateBuildInfo(
+      dataModel,
+      Header_GetImageHeader(ImageType_Application));
 
    UlTestsPlugin_Init(
       &ulTestsPlugin,
@@ -181,29 +181,29 @@ int main(void)
       BytesToCrcPerRomCheck,
       watchdogKickAction);
 
-   // SetReadyToEnterBootLoader(dataModel);
+   SetReadyToEnterBootLoader(dataModel);
 
    // init hardware eeprom i2c
-   volatile uint8_t counter = 0;
-   HardwareEeprom_I2c_t *hardwareEepromI2c;
-   hardwareEepromI2c = HardwareEeprom_I2c_Init(watchdogKickAction);
-   // uint8_t writeBuffer[] = {0xA5};
+   // volatile uint8_t counter = 0;
+   // HardwareEeprom_I2c_t *hardwareEepromI2c;
+   // hardwareEepromI2c = HardwareEeprom_I2c_Init(watchdogKickAction);
+   // // uint8_t writeBuffer[] = {0xA5};
    // uint8_t writeBuffer[] = { 0xA5, 0xB5, 0xC3, 0xB8 };
-   // // hardwareeeprom_write(..., writeBuffer, sizeof(writeBuffer))
-   // HardwareEeprom_Write(&hardwareEepromI2c->interface, 12, 4, writeBuffer);
+   // // // hardwareeeprom_write(..., writeBuffer, sizeof(writeBuffer))
+   // // HardwareEeprom_Write(&hardwareEepromI2c->interface, 12, 4, writeBuffer);
+   // // uint8_t readBuffer[sizeof(writeBuffer)];
    // uint8_t readBuffer[sizeof(writeBuffer)];
-   uint8_t readBuffer[sizeof(writeBuffer)];
-   // hardwareeeprom_read(..., readBuffer, sizeof(readBuffer))
-   HardwareEeprom_Read(&hardwareEepromI2c->interface, 12, 4, readBuffer);
-   // check whether what you wrote is what you read back
-   if(readBuffer[0] == writeBuffer[0])
-   {
-      counter += 1;
-   }
+   // // hardwareeeprom_read(..., readBuffer, sizeof(readBuffer))
+   // HardwareEeprom_Read(&hardwareEepromI2c->interface, 12, 4, readBuffer);
+   // // check whether what you wrote is what you read back
+   // if(readBuffer[0] == writeBuffer[0])
+   // {
+   //    counter += 1;
+   // }
 
    while(1)
    {
-      // GeaStack_Run(&geaStack);
+      GeaStack_Run(&geaStack);
 
       if(!TimerModule_Run(timerModule))
       {
