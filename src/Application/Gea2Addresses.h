@@ -10,7 +10,7 @@
 
 enum
 {
-   Rx130Gea2Address = 0xB0,
+   MainboardGea2Address = 0x00,
    Rx130CapTouchClientGea2Address = 0xB0,
    Rx231Gea2Address = 0xB1,
    Psoc4100sGea2Address = 0xB2,
