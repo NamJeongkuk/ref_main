@@ -10,36 +10,9 @@
 [submodule "lib/boot-loaders"]
 	path = lib/boot-loaders
 	url = https://github.com/geappliances/applcommon.embedded-starter-kit-boot-loaders.git
-[submodule "tools/sdcc-stm8"]
-	path = tools/sdcc-stm8
-	url = https://github.com/geappliances/build-tools.sdcc-stm8-release.git
-[submodule "lib/stm32-standard-peripherals"]
-	path = lib/stm32-standard-peripherals
-	url = https://github.com/geappliances/build-tools.stm32-standard-peripherals.git
 [submodule "tools/gcc-arm-none-eabi"]
 	path = tools/gcc-arm-none-eabi
 	url = https://github.com/geappliances/build-tools.gcc-arm-none-eabi-release
-[submodule "lib/stm8-boot-loader"]
-	path = lib/stm8-boot-loader
-	url = https://github.com/geappliances/applcommon.stm8-boot-loader.git
 [submodule "lib/applcommon.tiny"]
 	path = lib/applcommon.tiny
 	url = https://github.com/geappliances/applcommon.tiny
-[submodule "lua-finalize-psoc4-apl"]
-	path = tools/lua-finalize-psoc4-apl
-	url = https://github.com/geappliances/applcommon.lua-finalize-psoc4-apl
-[submodule "tools/kpit-rl78"]
-	path = tools/kpit-rl78
-	url = https://github.com/geappliances/build-tools.kpit-rl78-release
-[submodule "lib/renesas-ra-fsp"]
-	path = lib/renesas-ra-fsp
-	url = https://github.com/geappliances/build-tools.renesas-ra-fsp
-[submodule "tools/llvm-rl78"]
-	path = tools/llvm-rl78
-	url = https://github.com/geappliances/build-tools.llvm-rl78-release
-[submodule "lib/cypress-psoc6-cm0p-prebuilts"]
-	path = lib/cypress-psoc6-cm0p-prebuilts
-	url = https://github.com/cypresssemiconductorco/psoc6cm0p
-[submodule "lib/cypress-psoc6-pdl"]
-	path = lib/cypress-psoc6-pdl
-	url = https://github.com/geappliances/build-tools.cypress-psoc6-pdl
