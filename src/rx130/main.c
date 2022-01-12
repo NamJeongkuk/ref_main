@@ -143,7 +143,7 @@ int main(void)
       &geaStack,
       dataModel,
       SystemData_ExternalDataSource(&systemData),
-      MainboardGea2Address,
+      Gea2Address_Mainboard,
       staticRoutingTable,
       ELEMENT_COUNT(staticRoutingTable));
 
