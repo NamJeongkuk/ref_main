@@ -520,9 +520,16 @@ static void Read(I_HardwareEeprom_t *_instance, uint16_t offset, uint16_t numByt
    HardwareEepromErrorSource_t errorSource = Read_Eeprom_Hardware(offset, readBuffer, numBytes);
 
    // start a timer with a callback
+   // TimerModule_StartOneShot(
+   // instance->_private.timerModule,
+   // &instance->_private.delayTimer,
+   // EEPROM_WRITE_ACCESS_DELAY_MSEC,
+   // EventWrittenPublishCallback,
+   // instance);
    // in the callback publish the event
-   // this will send execution back to the main loop
+   // this will send execution back to the main loop (timer can be just 1 ms, doesn't matter)
    // and reset the stack
+   // this could fill up the stack and overflow and need to not do that
 
    HardwareEepromEventArgs_t eventArgs = {
       .mode = HardwareEepromMode_Read,

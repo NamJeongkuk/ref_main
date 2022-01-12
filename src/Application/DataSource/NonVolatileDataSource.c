@@ -17,7 +17,7 @@ enum
    BitsPerByte = 8,
    TimerTicksBetweenRetriesInMsec = 100,
    NumberOfRetriesBeforeErase = 10,
-   NumberOfRecordBackups = 1
+   NumberOfRecordBackups = 0
 };
 
 // clang-format off
