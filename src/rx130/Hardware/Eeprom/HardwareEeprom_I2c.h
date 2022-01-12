@@ -11,9 +11,10 @@
 #include "I_HardwareEeprom.h"
 #include "I_Action.h"
 #include "Event_SafeSynchronous.h"
+#include "Timer.h"
 
-#define HardwareEeprom_I2c_Size_In_Bytes          (16384)
-#define HardwareEeprom_I2c_Page_Size_In_Bytes     (64)
+#define HardwareEeprom_I2c_Size_In_Bytes (16384)
+#define HardwareEeprom_I2c_Page_Size_In_Bytes (64)
 
 typedef struct
 {
@@ -23,12 +24,13 @@ typedef struct
    {
       uint8_t receiveDataCount;
       uint8_t totalReadBytes;
-      uint8_t* readBuffer;
+      uint8_t *readBuffer;
       I_Action_t *watchdogKickAction;
+      // Timer_t delayTimer;
       Event_SafeSynchronous_t readCompleteEvent;
       Event_SafeSynchronous_t writeCompleteEvent;
       Event_SafeSynchronous_t eraseCompleteEvent;
-   }_private;
+   } _private;
 } HardwareEeprom_I2c_t;
 
 /*!
@@ -36,6 +38,6 @@ typedef struct
  * @param Watchdog refresh action
  * @return Eeprom I2c instance pointer
  */
-HardwareEeprom_I2c_t *HardwareEeprom_I2c_Init(I_Action_t* watchdogKickAction);
+HardwareEeprom_I2c_t *HardwareEeprom_I2c_Init(I_Action_t *watchdogKickAction);
 
 #endif

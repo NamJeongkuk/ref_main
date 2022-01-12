@@ -122,7 +122,7 @@ int main(void)
    I_Action_t *resetAction = Action_Rx2xxSystemReset_Init();
    TimerModule_t *timerModule = TimerModuleStack_Init(&timerModuleStack, Interrupt_Cmt0_Init());
 
-   EepromStack_Init(watchdogKickAction);
+   EepromStack_Init(watchdogKickAction, timerModule);
 
    SystemData_Init(
       &systemData,

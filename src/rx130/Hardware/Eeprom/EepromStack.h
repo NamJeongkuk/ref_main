@@ -11,12 +11,14 @@
 #include "I_Action.h"
 #include "I_Eeprom.h"
 #include "I_Input.h"
+#include "Timer.h"
 
 /*!
  * @param watchdogKickAction
  */
 void EepromStack_Init(
-   I_Action_t *watchdogKickAction);
+   I_Action_t *watchdogKickAction,
+   TimerModule_t *timerModule);
 
 /*!
  * Returns I_Eeprom_t interfaces

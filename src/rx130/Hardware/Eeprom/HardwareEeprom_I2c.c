@@ -548,6 +548,11 @@ static void Write(I_HardwareEeprom_t *_instance, uint16_t offset, uint16_t numBy
    // in the callback publish the event
    // this will send execution back to the main loop
    // and reset the stack
+   // TimerModule_StartOneShot(
+   //    timerModule,
+   //    &instance._private.delayTimer,
+
+   // );
 
    HardwareEepromEventArgs_t eventArgs = {
       .mode = HardwareEepromMode_Write,
