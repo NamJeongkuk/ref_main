@@ -11,6 +11,8 @@
 #include "Rx130Defines.h"
 #include "Event_Null.h"
 
+uint32_t delayErrors = 0;
+
 #define DELAY(delay)                      \
    {                                      \
       volatile uint32_t dcnt;             \
@@ -20,11 +22,14 @@
       }                                   \
    }
 
-#define DECREASE_COUNT_EXIT_IF_ZERO(x, errorSource) \
-   do                                               \
-   {                                                \
-      if(--x == 0)                                  \
-         return errorSource;                        \
+#define DECREASE_COUNT_EXIT_IF_ZERO(x, errorSource)         \
+   do                                                       \
+   {                                                        \
+      if(--x == 0)                                          \
+      {                                                     \
+         delayErrors = delayErrors | (1 << errorSource);    \
+         return HardwareEepromErrorSource_OperationTimeOut; \
+      }                                                     \
    } while(0)
 
 enum
