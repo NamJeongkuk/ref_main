@@ -172,7 +172,7 @@ TEST_GROUP(SystemData)
       externalDataSource = SystemData_ExternalDataSource(&instance);
    }
 
-   void AfterFlashBlockGroupWriteCompletes()
+   void AfterEepromWriteCompletes()
    {
       After(WriteTime * 100);
    }
@@ -416,7 +416,7 @@ TEST(SystemData, NvErdsShouldPersistAfterReset)
    GivenThatSystemDataIsInitialized();
 
    WhenDataIsWrittenViaInternalDataModel(Erd_SomeData, &expected);
-   AfterFlashBlockGroupWriteCompletes();
+   AfterEepromWriteCompletes();
    SystemDataIsReset();
 
    InternalDataModelShouldReturnDataEqualTo(Erd_SomeData, &expected);

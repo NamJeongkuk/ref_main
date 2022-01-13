@@ -26,7 +26,6 @@ typedef struct
       uint8_t totalReadBytes;
       uint8_t *readBuffer;
       I_Action_t *watchdogKickAction;
-      // Timer_t delayTimer;
       Event_SafeSynchronous_t readCompleteEvent;
       Event_SafeSynchronous_t writeCompleteEvent;
       Event_SafeSynchronous_t eraseCompleteEvent;

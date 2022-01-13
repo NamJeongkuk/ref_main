@@ -41,7 +41,6 @@
 #include "Interrupts.h"
 #include "uassert.h"
 #include "EepromStack.h"
-#include "HardwareEeprom_I2c.h"
 
 enum
 {
@@ -182,24 +181,6 @@ int main(void)
       watchdogKickAction);
 
    SetReadyToEnterBootLoader(dataModel);
-
-   // init hardware eeprom i2c
-   // volatile uint8_t counter = 0;
-   // HardwareEeprom_I2c_t *hardwareEepromI2c;
-   // hardwareEepromI2c = HardwareEeprom_I2c_Init(watchdogKickAction);
-   // // uint8_t writeBuffer[] = {0xA5};
-   // uint8_t writeBuffer[] = { 0xA5, 0xB5, 0xC3, 0xB8 };
-   // // // hardwareeeprom_write(..., writeBuffer, sizeof(writeBuffer))
-   // // HardwareEeprom_Write(&hardwareEepromI2c->interface, 12, 4, writeBuffer);
-   // // uint8_t readBuffer[sizeof(writeBuffer)];
-   // uint8_t readBuffer[sizeof(writeBuffer)];
-   // // hardwareeeprom_read(..., readBuffer, sizeof(readBuffer))
-   // HardwareEeprom_Read(&hardwareEepromI2c->interface, 12, 4, readBuffer);
-   // // check whether what you wrote is what you read back
-   // if(readBuffer[0] == writeBuffer[0])
-   // {
-   //    counter += 1;
-   // }
 
    while(1)
    {

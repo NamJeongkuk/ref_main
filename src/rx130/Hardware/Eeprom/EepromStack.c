@@ -32,16 +32,6 @@ void EepromStack_Init(I_Action_t *watchdogKickAction, TimerModule_t *timerModule
 {
    instance.hardwareEepromI2c = HardwareEeprom_I2c_Init(watchdogKickAction);
 
-   volatile uint8_t counter = 0;
-   uint8_t readBuffer[sizeof(4)];
-
-   HardwareEeprom_Read(&instance.hardwareEepromI2c->interface, 12, 4, readBuffer);
-
-   if(readBuffer[0])
-   {
-      counter += 1;
-   }
-
    InputOutput_Simple_Init(&instance.readFaultIo, &instance.readFaultData, sizeof(instance.readFaultData));
    InputOutput_Simple_Init(&instance.writeFaultIo, &instance.writeFaultData, sizeof(instance.writeFaultData));
    InputOutput_Simple_Init(&instance.eraseFaultIo, &instance.eraseFaultData, sizeof(instance.eraseFaultData));
