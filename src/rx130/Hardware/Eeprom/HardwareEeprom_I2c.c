@@ -11,8 +11,6 @@
 #include "Rx130Defines.h"
 #include "Event_Null.h"
 
-uint32_t delayErrors = 0;
-
 #define DELAY(delay)                      \
    {                                      \
       volatile uint32_t dcnt;             \
@@ -221,7 +219,6 @@ static HardwareEepromErrorSource_t Read_Eeprom_Hardware(
    /* Declare a dummy variable */
    volatile uint8_t dummyRead = 0;
    volatile uint32_t u32WaitCount = EepromMaxWaitingCount;
-   volatile uint32_t specialWaitCount = 4 * EepromMaxWaitingCount;
 
    /* Reset the data received counter */
    instance._private.receiveDataCount = 0;
@@ -320,7 +317,7 @@ static HardwareEepromErrorSource_t Read_Eeprom_Hardware(
    /* Wait until all expected data has been
     received or until a NACKF has been detected */
    while(!AllBytesHaveBeenRead() && (RIIC0.ICSR2.BIT.NACKF == 0))
-      DECREASE_COUNT_EXIT_IF_ZERO(specialWaitCount);
+      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
 
    /* Reception was terminated due to NACK reception */
    if(1 == RIIC0.ICSR2.BIT.NACKF)
