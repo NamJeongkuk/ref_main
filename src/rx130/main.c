@@ -64,7 +64,7 @@ static GeaStack_t geaStack;
 static UlTestsPlugin_t ulTestsPlugin;
 
 static const uint8_t staticRoutingTable[] = {
-   Stm8sGea2Address
+   Gea2Address_DoorBoard
 };
 
 static void UpdateBuildInfo(
@@ -147,7 +147,7 @@ int main(void)
       &geaStack,
       dataModel,
       SystemData_ExternalDataSource(&systemData),
-      Rx130Gea2Address,
+      Gea2Address_Mainboard,
       staticRoutingTable,
       ELEMENT_COUNT(staticRoutingTable));
 
