@@ -20,11 +20,11 @@
       }                                   \
    }
 
-#define DECREASE_COUNT_EXIT_IF_ZERO(x)                      \
-   do                                                       \
-   {                                                        \
-      if(--x == 0)                                          \
-         return HardwareEepromErrorSource_OperationTimeOut; \
+#define DECREASE_COUNT_EXIT_IF_ZERO(x, errorSource) \
+   do                                               \
+   {                                                \
+      if(--x == 0)                                  \
+         return errorSource;                        \
    } while(0)
 
 enum
@@ -229,14 +229,14 @@ static HardwareEepromErrorSource_t Read_Eeprom_Hardware(
 
    /* Check if the IIC bus is busy */
    while(RIIC0.ICCR2.BIT.BBSY == 1)
-      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_1);
 
    /* Issue a start condition */
    RIIC0.ICCR2.BIT.ST = 0x1;
 
    /* Confirm issue of start condition */
    while((RIIC0.ICCR2.BIT.BBSY == 0) && (RIIC0.ICSR2.BIT.START == 0) && (RIIC0.ICCR2.BIT.ST == 1))
-      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_2);
 
    /* check if transmit buffer is empty */
    if(RIIC0.ICSR2.BIT.TDRE == 1)
@@ -247,11 +247,11 @@ static HardwareEepromErrorSource_t Read_Eeprom_Hardware(
 
    /* wait for client acknowledgement */
    while(RIIC0.ICMR3.BIT.ACKBR == 1)
-      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_3);
 
    /* Ensure the transmit buffer is empty */
    while(RIIC0.ICSR2.BIT.TEND == 0)
-      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_4);
 
    hiAddr = (uint8_t)(address >> 8);
 
@@ -264,11 +264,11 @@ static HardwareEepromErrorSource_t Read_Eeprom_Hardware(
 
    /* wait for client acknowledgement */
    while(RIIC0.ICMR3.BIT.ACKBR == 1)
-      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_5);
 
    /* Ensure the transmit buffer is empty */
    while(RIIC0.ICSR2.BIT.TEND == 0)
-      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_6);
 
    loAddr = (uint8_t)(address);
 
@@ -281,11 +281,11 @@ static HardwareEepromErrorSource_t Read_Eeprom_Hardware(
 
    /* wait for client acknowledgement */
    while(RIIC0.ICMR3.BIT.ACKBR == 1)
-      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_7);
 
    /* Ensure the transmit buffer is empty */
    while(RIIC0.ICSR2.BIT.TEND == 0)
-      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_8);
 
    /* Issue a restart condition */
    RIIC0.ICCR2.BIT.RS = 0x1;
@@ -295,7 +295,7 @@ static HardwareEepromErrorSource_t Read_Eeprom_Hardware(
 
    /* Check if the IIC bus is occupied */
    while(RIIC0.ICCR2.BIT.BBSY == 0)
-      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_9);
 
    /* Check if transmit buffer is empty */
    if(RIIC0.ICSR2.BIT.TDRE == 1)
@@ -306,16 +306,16 @@ static HardwareEepromErrorSource_t Read_Eeprom_Hardware(
 
    /* wait for client acknowledgement */
    while(RIIC0.ICMR3.BIT.ACKBR == 1)
-      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_10);
 
    /* Wait for the dummy byte's reception */
    while(RIIC0.ICSR2.BIT.RDRF == 1)
-      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_11);
 
    /* Wait until all expected data has been
     received or until a NACKF has been detected */
    while(!AllBytesHaveBeenRead() && (RIIC0.ICSR2.BIT.NACKF == 0))
-      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_12);
 
    /* Reception was terminated due to NACK reception */
    if(1 == RIIC0.ICSR2.BIT.NACKF)
@@ -332,7 +332,7 @@ static HardwareEepromErrorSource_t Read_Eeprom_Hardware(
 
    /* Ensure the stop condition has been issued */
    while(RIIC0.ICSR2.BIT.STOP == 0x0)
-      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_13);
 
    /* Clear the NACKF flag */
    RIIC0.ICSR2.BIT.NACKF = 0;
@@ -376,14 +376,14 @@ static HardwareEepromErrorSource_t Write_Eeprom_Hardware(
 
    /* Check if the IIC bus is busy */
    while(RIIC0.ICCR2.BIT.BBSY == 1)
-      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_14);
 
    /* Issue a start condition */
    RIIC0.ICCR2.BIT.ST = 0x1u;
 
    /* Confirm issue of start condition */
    while((RIIC0.ICCR2.BIT.BBSY == 0) && (RIIC0.ICSR2.BIT.START == 0) && (RIIC0.ICCR2.BIT.ST == 1))
-      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_15);
 
    /* If no acknowledgement received or all data have been sent,
     stop transmission */
@@ -403,11 +403,11 @@ static HardwareEepromErrorSource_t Write_Eeprom_Hardware(
 
          /* Wait whilst data is being transmitted */
          while(RIIC0.ICSR2.BIT.TEND == 0)
-            DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+            DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_16);
 
          /* wait for client acknowledgement */
          while(RIIC0.ICMR3.BIT.ACKBR == 1)
-            DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+            DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_17);
 
          hiAddr = (uint8_t)(address >> 8);
 
@@ -419,11 +419,11 @@ static HardwareEepromErrorSource_t Write_Eeprom_Hardware(
          }
          /* Wait whilst data is being transmitted  */
          while(RIIC0.ICSR2.BIT.TEND == 0)
-            DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+            DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_18);
 
          /* wait for client acknowledgement */
          while(RIIC0.ICMR3.BIT.ACKBR == 1)
-            DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+            DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_19);
 
          loAddr = (uint8_t)address;
 
@@ -436,11 +436,11 @@ static HardwareEepromErrorSource_t Write_Eeprom_Hardware(
 
          /* Wait whilst data is being transmitted  */
          while(RIIC0.ICSR2.BIT.TEND == 0)
-            DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+            DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_20);
 
          /* wait for client acknowledgement */
          while(RIIC0.ICMR3.BIT.ACKBR == 1)
-            DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+            DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_21);
 
          /* Reconfigure a count variable (about 30ms) for writing data transaction sequence */
          u32WaitCount = EepromMaxWaitingCount;
@@ -466,11 +466,11 @@ static HardwareEepromErrorSource_t Write_Eeprom_Hardware(
 
          /* Ensure transmission has ended */
          while(RIIC0.ICSR2.BIT.TEND == 0)
-            DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+            DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_22);
 
          /* wait for client acknowledgement */
          while(RIIC0.ICMR3.BIT.ACKBR == 1)
-            DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+            DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_23);
 
          /* Check if the desired number of bytes sent has been reached */
          if(++i == numBytes)
@@ -500,7 +500,7 @@ static HardwareEepromErrorSource_t Write_Eeprom_Hardware(
 
    /* Ensure the stop condition has been issued */
    while(RIIC0.ICSR2.BIT.STOP == 0x0)
-      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount);
+      DECREASE_COUNT_EXIT_IF_ZERO(u32WaitCount, HardwareEepromErrorSource_24);
 
    /* Clear the NACKF flag */
    RIIC0.ICSR2.BIT.NACKF = 0;
