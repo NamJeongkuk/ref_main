@@ -290,134 +290,134 @@ TEST(SystemData, ShouldSupportReadsAndWritesToInternalDataModel)
 {
    GivenThatSystemDataIsInitialized();
 
-   // for(AllErds)
-   // {
-   //    WhenDataIsWrittenViaInternalDataModel(erdTable[i].erd, blockOfRandomData);
-   //    InternalDataModelShouldReturnDataEqualTo(erdTable[i].erd, blockOfRandomData);
-   // }
+   for(AllErds)
+   {
+      WhenDataIsWrittenViaInternalDataModel(erdTable[i].erd, blockOfRandomData);
+      InternalDataModelShouldReturnDataEqualTo(erdTable[i].erd, blockOfRandomData);
+   }
 }
 
-// TEST(SystemData, ShouldSwapEndiannessOfSpecifiedErds)
-// {
-//    GivenThatSystemDataIsInitialized();
+TEST(SystemData, ShouldSwapEndiannessOfSpecifiedErds)
+{
+   GivenThatSystemDataIsInitialized();
 
-//    for(AllErds)
-//    {
-//       Erd_t internalErd = erdTable[i].erd;
-//       Erd_t externalErd = erdTable[i].externalErd;
-//       bool endiannessNeedsToBeSwapped = erdTable[i].endiannessNeedsToBeSwapped;
+   for(AllErds)
+   {
+      Erd_t internalErd = erdTable[i].erd;
+      Erd_t externalErd = erdTable[i].externalErd;
+      bool endiannessNeedsToBeSwapped = erdTable[i].endiannessNeedsToBeSwapped;
 
-//       WhenDataIsWrittenViaInternalDataModel(internalErd, blockOfRandomData);
+      WhenDataIsWrittenViaInternalDataModel(internalErd, blockOfRandomData);
 
-//       if(endiannessNeedsToBeSwapped)
-//       {
-//          EndiannessShouldBeSwapped(internalErd, externalErd);
-//       }
-//       else
-//       {
-//          EndiannessShouldNotBeSwapped(internalErd, externalErd);
-//       }
-//    }
-// }
+      if(endiannessNeedsToBeSwapped)
+      {
+         EndiannessShouldBeSwapped(internalErd, externalErd);
+      }
+      else
+      {
+         EndiannessShouldNotBeSwapped(internalErd, externalErd);
+      }
+   }
+}
 
-// TEST(SystemData, ShouldSupportInputsAndInputOutputsForSpecifiedErds)
-// {
-//    GivenThatSystemDataIsInitialized();
+TEST(SystemData, ShouldSupportInputsAndInputOutputsForSpecifiedErds)
+{
+   GivenThatSystemDataIsInitialized();
 
-//    for(AllErds)
-//    {
-//       Erd_t erd = erdTable[i].erd;
-//       uint8_t ioConfiguration = erdTable[i].io;
+   for(AllErds)
+   {
+      Erd_t erd = erdTable[i].erd;
+      uint8_t ioConfiguration = erdTable[i].io;
 
-//       if(ioConfiguration == InputAndOutputAreEnabled)
-//       {
-//          DataModelShouldReturnInputForErd(erd);
-//          And DataModelShouldReturnInputOutputForErd(erd);
-//       }
-//       else
-//       {
-//          AssertionShouldFailWhenInputIsRequestedForErd(erd);
-//          And AssertionShouldFailWhenInputOutputIsRequestedForErd(erd);
-//       }
-//    }
-// }
+      if(ioConfiguration == InputAndOutputAreEnabled)
+      {
+         DataModelShouldReturnInputForErd(erd);
+         And DataModelShouldReturnInputOutputForErd(erd);
+      }
+      else
+      {
+         AssertionShouldFailWhenInputIsRequestedForErd(erd);
+         And AssertionShouldFailWhenInputOutputIsRequestedForErd(erd);
+      }
+   }
+}
 
-// TEST(SystemData, ShouldSupportOutputsForSpecifiedErds)
-// {
-//    GivenThatSystemDataIsInitialized();
+TEST(SystemData, ShouldSupportOutputsForSpecifiedErds)
+{
+   GivenThatSystemDataIsInitialized();
 
-//    for(AllErds)
-//    {
-//       Erd_t erd = erdTable[i].erd;
-//       uint8_t ioConfiguration = erdTable[i].io;
+   for(AllErds)
+   {
+      Erd_t erd = erdTable[i].erd;
+      uint8_t ioConfiguration = erdTable[i].io;
 
-//       if(ioConfiguration == OutputIsEnabled || ioConfiguration == InputAndOutputAreEnabled)
-//       {
-//          DataModelShouldReturnOutputForErd(erd);
-//       }
-//       else
-//       {
-//          AssertionShouldFailWhenOutputIsRequestedForErd(erd);
-//       }
-//    }
-// }
+      if(ioConfiguration == OutputIsEnabled || ioConfiguration == InputAndOutputAreEnabled)
+      {
+         DataModelShouldReturnOutputForErd(erd);
+      }
+      else
+      {
+         AssertionShouldFailWhenOutputIsRequestedForErd(erd);
+      }
+   }
+}
 
-// TEST(SystemData, ShouldSupportSubscribeUnsubscribeForSpecifiedErds)
-// {
-//    GivenThatSystemDataIsInitialized();
+TEST(SystemData, ShouldSupportSubscribeUnsubscribeForSpecifiedErds)
+{
+   GivenThatSystemDataIsInitialized();
 
-//    for(AllErds)
-//    {
-//       Erd_t erd = erdTable[i].erd;
-//       uint8_t subscriptionConfiguration = erdTable[i].subscription;
+   for(AllErds)
+   {
+      Erd_t erd = erdTable[i].erd;
+      uint8_t subscriptionConfiguration = erdTable[i].subscription;
 
-//       if(subscriptionConfiguration == Sub_Y)
-//       {
-//          DataModelShouldAllowSubscribeUnsubscribeFor(erd);
-//       }
-//       else
-//       {
-//          AssertionShouldFailWhenSubscribingToErd(erd);
-//       }
-//    }
-// }
+      if(subscriptionConfiguration == Sub_Y)
+      {
+         DataModelShouldAllowSubscribeUnsubscribeFor(erd);
+      }
+      else
+      {
+         AssertionShouldFailWhenSubscribingToErd(erd);
+      }
+   }
+}
 
-// TEST(SystemData, ShouldSupportReadAndWriteToBspErdsViaExternalDataSource)
-// {
-//    AdcCounts_t expected = 0x1234;
-//    GivenThatSystemDataIsInitialized();
+TEST(SystemData, ShouldSupportReadAndWriteToBspErdsViaExternalDataSource)
+{
+   AdcCounts_t expected = 0x1234;
+   GivenThatSystemDataIsInitialized();
 
-//    WhenDataIsWrittenViaExternalDataSource(Erd_SomeAnalogInput, &expected);
+   WhenDataIsWrittenViaExternalDataSource(Erd_SomeAnalogInput, &expected);
 
-//    ExternalDataModelShouldReturnDataEqualTo(Erd_SomeAnalogInput, &expected);
-// }
+   ExternalDataModelShouldReturnDataEqualTo(Erd_SomeAnalogInput, &expected);
+}
 
-// TEST(SystemData, ShouldSupportReadAndWriteToBspErdsViaInternalDataSource)
-// {
-//    AdcCounts_t expected = 0x4321;
-//    GivenThatSystemDataIsInitialized();
+TEST(SystemData, ShouldSupportReadAndWriteToBspErdsViaInternalDataSource)
+{
+   AdcCounts_t expected = 0x4321;
+   GivenThatSystemDataIsInitialized();
 
-//    WhenDataIsWrittenViaInternalDataModel(Erd_SomeAnalogInput, &expected);
+   WhenDataIsWrittenViaInternalDataModel(Erd_SomeAnalogInput, &expected);
 
-//    InternalDataModelShouldReturnDataEqualTo(Erd_SomeAnalogInput, &expected);
-// }
+   InternalDataModelShouldReturnDataEqualTo(Erd_SomeAnalogInput, &expected);
+}
 
-// TEST(SystemData, ShouldSetNvErdDataToDefaultValues)
-// {
-//    uint32_t expected = 0xC0DECAFE;
-//    GivenThatSystemDataIsInitialized();
+TEST(SystemData, ShouldSetNvErdDataToDefaultValues)
+{
+   uint32_t expected = 0xC0DECAFE;
+   GivenThatSystemDataIsInitialized();
 
-//    InternalDataModelShouldReturnDataEqualTo(Erd_SomeData, &expected);
-// }
+   InternalDataModelShouldReturnDataEqualTo(Erd_SomeData, &expected);
+}
 
-// TEST(SystemData, NvErdsShouldPersistAfterReset)
-// {
-//    uint32_t expected = 0xAAAABBBB;
-//    GivenThatSystemDataIsInitialized();
+TEST(SystemData, NvErdsShouldPersistAfterReset)
+{
+   uint32_t expected = 0xAAAABBBB;
+   GivenThatSystemDataIsInitialized();
 
-//    WhenDataIsWrittenViaInternalDataModel(Erd_SomeData, &expected);
-//    AfterEepromWriteCompletes();
-//    SystemDataIsReset();
+   WhenDataIsWrittenViaInternalDataModel(Erd_SomeData, &expected);
+   AfterEepromWriteCompletes();
+   SystemDataIsReset();
 
-//    InternalDataModelShouldReturnDataEqualTo(Erd_SomeData, &expected);
-// }
+   InternalDataModelShouldReturnDataEqualTo(Erd_SomeData, &expected);
+}
