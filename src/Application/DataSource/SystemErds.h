@@ -167,7 +167,7 @@ enum
    ENTRY(Erd_DiagnosticsCycleHistoryRecord7,                0xE12C, CycleHistoryRecord_t,                               Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_DiagnosticsCycleHistoryRecord8,                0xE12D, CycleHistoryRecord_t,                               Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_DiagnosticsCycleHistoryRecord9,                0xE12E, CycleHistoryRecord_t,                               Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_ServiceDiagnosticsCycleHistoryAddEntry,        0xE12F, CycleHistoryRecord_t,                               Swap_Y, Io_O,    Sub_N, Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_ServiceDiagnosticsCycleHistoryAddEntry,        0xE12F, CycleHistoryRecord_t,                               Swap_Y, Io_O,    Sub_N, Virtual,  NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
    ENTRY(Erd_OldApplicationVersion,                         0xF000, Version_t,                                          Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_TimerModuleDiagnosticsEnable,                  0xF001, bool,                                               Swap_N, Io_All,  Sub_N, Ram,      NotNv,                                    NotFault) \
