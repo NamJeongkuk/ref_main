@@ -16,6 +16,7 @@ ifeq ($(DEBUG), N)
 else
 ifeq ($(DEBUG), Y)
 DEFINES+=DEBUG
+#ASSEMBLY_LISTING=Y
 else
 $(error Please define DEBUG with Y or N.)
 endif
