@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 #include "Interrupt_Cmt0.h"
-#include "Event_SingleSubscriberSynchronous.h"
+#include "Event_Synchronous.h"
 #include "I_Interrupt.h"
 #include "iodefine.h"
 #include "SystemClock.h"
@@ -39,7 +39,7 @@
 typedef struct
 {
    I_Interrupt_t interrupt;
-   Event_SingleSubscriberSynchronous_t onInterrupt;
+   Event_Synchronous_t onInterrupt;
 } Cmt0Interrupt_t;
 
 static Cmt0Interrupt_t cmt0Interrupt;
@@ -50,7 +50,7 @@ static Cmt0Interrupt_t cmt0Interrupt;
 void CMT0_CMI0(void) __attribute__((interrupt));
 void CMT0_CMI0(void)
 {
-   Event_SingleSubscriberSynchronous_Publish(&cmt0Interrupt.onInterrupt, NULL);
+   Event_Synchronous_Publish(&cmt0Interrupt.onInterrupt, NULL);
 }
 
 I_Interrupt_t *Interrupt_Cmt0_Init(void)
@@ -76,7 +76,7 @@ I_Interrupt_t *Interrupt_Cmt0_Init(void)
    CMT0.CMCNT = U16_RESET_CMCNT;
    CMT.CMSTR0.BIT.STR0 = U8_CMT_START;
 
-   Event_SingleSubscriberSynchronous_Init(&cmt0Interrupt.onInterrupt);
+   Event_Synchronous_Init(&cmt0Interrupt.onInterrupt);
    cmt0Interrupt.interrupt.OnInterrupt = &cmt0Interrupt.onInterrupt.interface;
 
    return &cmt0Interrupt.interrupt;
