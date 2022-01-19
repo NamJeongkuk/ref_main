@@ -27,22 +27,23 @@ include tools/kpit-rx/defaults.mk
 SRC_FILES:=\
 
 SRC_DIRS:=\
-  src/$(TARGET) \
-  src/$(TARGET)/Bsp \
-  src/$(TARGET)/Hardware \
-  src/$(TARGET)/Hardware/Flash \
-  src/Application \
-  src/Application/DataSource \
-  src/Application/Gea \
-  src/Application/Plugins \
-  src/Application/ServiceDiagnostics \
-  src/Application/TimerModule \
+	src/$(TARGET) \
+	src/$(TARGET)/Bsp \
+	src/$(TARGET)/Hardware \
+	src/$(TARGET)/Hardware/Flash \
+	src/Application \
+	src/Application/DataSource \
+	src/Application/Gea \
+	src/Application/ParametricData \
+	src/Application/Plugins \
+	src/Application/ServiceDiagnostics \
+	src/Application/TimerModule \
 
 INC_DIRS:=\
 
 applcommon_EXTERNAL_INC_DIRS:=\
-  src/Application \
-  src/$(TARGET)/Hardware/Flash \
+	src/Application \
+	src/$(TARGET)/Hardware/Flash \
 
 include lib_applcommon_rx130.mk
 
