@@ -68,7 +68,7 @@ static const I_InputGroup_Api_t api = { Read, GetOnChangeEvent };
 
 void InputGroup_NonVolatileDataSourceDefaultData_Init(
    InputGroup_NonVolatileDataSourceDefaultData_t *instance,
-   const AsyncDataSource_FlashBlockGroupErdInfo_t *erdInfoTable,
+   const AsyncDataSource_EepromErdInfo_t *erdInfoTable,
    const uint16_t erdCount)
 {
    instance->interface.api = &api;

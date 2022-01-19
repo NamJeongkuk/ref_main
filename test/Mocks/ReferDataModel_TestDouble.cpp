@@ -9,6 +9,8 @@ extern "C"
 {
 #include "DataModelErdPointerAccess.h"
 #include "Action_Null.h"
+#include "Action_Context.h"
+#include "SystemData.h"
 }
 
 #include "ReferDataModel_TestDouble.h"
@@ -48,7 +50,7 @@ void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance)
    SystemData_Init(
       &instance->_private.systemData,
       &instance->_private.timerModuleTestDouble.timerModule,
-      eeprom,
+      &instance->_private.eepromModel.interface,
       Crc16Calculator_Table,
       &instance->_private.runTimerModuleAction.interface,
       Action_Null_GetInstance());
