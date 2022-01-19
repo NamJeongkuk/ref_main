@@ -40,6 +40,7 @@
 #include "SecondsSinceLastReset.h"
 #include "ProgramCounterAddress.h"
 #include "ReadyToEnterBootLoaderState.h"
+#include "AsyncDataSource_Eeprom.h"
 
 // clang-format off
 
@@ -204,6 +205,10 @@ enum
    ENTRY(Erd_SomeAnalogInput,                               0xF203, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,      NotNv,                                    NotFault) \
    ENTRY(Erd_AnotherAnalogInput,                            0xF204, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,      NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_Fault_EepromReadFailure,                       0xF300, bool,                                               Swap_N, Io_All,  Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_Fault_EepromWriteFailure,                      0xF301, bool,                                               Swap_N, Io_All,  Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_Fault_EepromEraseFailure,                      0xF302, bool,                                               Swap_N, Io_All,  Sub_N, Ram,      NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData0,     0xF500, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData1,     0xF501, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData2,     0xF502, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
@@ -219,7 +224,7 @@ enum
    ENTRY(Erd_SomeOtherFault,                                0xF601, bool,                                               Swap_N, Io_None, Sub_N, Fault,    NotNv,                                    FaultId_SomeOtherFault) \
    \
    ENTRY(Erd_NvReserved,                                    0xFCFD, uint8_t,                                            Swap_N, Io_None, Sub_N, Nv,       NotNv,                                    NotFault) \
-   ENTRY(Erd_NvMetadata,                                    0xFCFE, AsyncDataSource_FlashBlockGroupMetadata_t,          Swap_N, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_NvMetadata,                                    0xFCFE, AsyncDataSource_EepromMetadata_t,                   Swap_N, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
 
 #define EXPAND_AS_INTERNAL_RAM_ERD_ENUM(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)(Name COMMA)

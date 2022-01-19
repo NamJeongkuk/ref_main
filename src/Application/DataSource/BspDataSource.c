@@ -8,33 +8,30 @@
 #include "BspDataSource.h"
 #include "SystemErds.h"
 
-static const DataSource_MappedErdPair_t applicationToBspMappedPairs[] =
-   {
-      { Erd_HeartbeatLed, Erd_BspGpio_HeartbeatLed },
-      { Erd_OtherLed, Erd_BspGpio_OtherLed },
-      { Erd_PushButtonSwitch, Erd_BspGpio_PushButtonSwitch },
-      { Erd_SomeAnalogInput, Erd_BspAdc_SomeAnalogInput },
-      { Erd_AnotherAnalogInput, Erd_BspAdc_AnotherAnalogInput }
-   };
+static const DataSource_MappedErdPair_t applicationToBspMappedPairs[] = {
+   { Erd_HeartbeatLed, Erd_BspGpio_HeartbeatLed },
+   { Erd_OtherLed, Erd_BspGpio_OtherLed },
+   { Erd_PushButtonSwitch, Erd_BspGpio_PushButtonSwitch },
+   { Erd_SomeAnalogInput, Erd_BspAdc_SomeAnalogInput },
+   { Erd_AnotherAnalogInput, Erd_BspAdc_AnotherAnalogInput }
+};
 
-static const ConstArrayMap_BinarySearchConfiguration_t bspToApplicationMapConfiguration =
-   {
-      applicationToBspMappedPairs,
-      NUM_ELEMENTS(applicationToBspMappedPairs),
-      ELEMENT_SIZE(applicationToBspMappedPairs),
-      MEMBER_SIZE(DataSource_MappedErdPair_t, baseErdId),
-      OFFSET_OF(DataSource_MappedErdPair_t, baseErdId),
-      IS_SIGNED(Erd_t)
-   };
+static const ConstArrayMap_BinarySearchConfiguration_t bspToApplicationMapConfiguration = {
+   applicationToBspMappedPairs,
+   NUM_ELEMENTS(applicationToBspMappedPairs),
+   ELEMENT_SIZE(applicationToBspMappedPairs),
+   MEMBER_SIZE(DataSource_MappedErdPair_t, baseErdId),
+   OFFSET_OF(DataSource_MappedErdPair_t, baseErdId),
+   IS_SIGNED(Erd_t)
+};
 
-static const ConstArrayMap_LinearSearchConfiguration_t applicationToBspMapConfiguration =
-   {
-      applicationToBspMappedPairs,
-      NUM_ELEMENTS(applicationToBspMappedPairs),
-      ELEMENT_SIZE(applicationToBspMappedPairs),
-      MEMBER_SIZE(DataSource_MappedErdPair_t, mappedErdId),
-      OFFSET_OF(DataSource_MappedErdPair_t, mappedErdId)
-   };
+static const ConstArrayMap_LinearSearchConfiguration_t applicationToBspMapConfiguration = {
+   applicationToBspMappedPairs,
+   NUM_ELEMENTS(applicationToBspMappedPairs),
+   ELEMENT_SIZE(applicationToBspMappedPairs),
+   MEMBER_SIZE(DataSource_MappedErdPair_t, mappedErdId),
+   OFFSET_OF(DataSource_MappedErdPair_t, mappedErdId)
+};
 
 void BspDataSource_Init(
    BspDataSource_t *instance,

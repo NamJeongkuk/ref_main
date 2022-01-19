@@ -14,7 +14,7 @@
 #include "I_Crc16Calculator.h"
 #include "I_FlashBlockGroup.h"
 #include "SystemErds.h"
-#include "AsyncDataSource_FlashBlockGroup.h"
+#include "AsyncDataSource_Eeprom.h"
 #include "DataSource_CachedAsyncDataSource.h"
 #include "ConstArrayMap_BinarySearch.h"
 #include "InputGroup_NonVolatileDataSourceDefaultData.h"
@@ -22,7 +22,7 @@
 // clang-format off
 
 #define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_READ_WRITE_BUFFER_MEMBERS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_NV_, StorageType)(uint8_t CONCAT(erd, Name)[sizeof(DataType)];)
+   CONCAT(INCLUDE_NV_, StorageType)(uint8_t CONCAT(erd, Name)[sizeof(DataType) + sizeof(Crc16_t)];)
 
 typedef struct
 {
@@ -58,7 +58,7 @@ typedef struct
 {
    struct
    {
-      AsyncDataSource_FlashBlockGroup_t async;
+      AsyncDataSource_Eeprom_t eepromAsyncDataSource;
       ConstArrayMap_BinarySearch_t asyncMap;
       NonVolatileDataSourceReadWriteBuffer_t asyncReadWriteBuffer;
       DataSource_CachedAsyncDataSource_t sync;
@@ -82,7 +82,7 @@ void NonVolatileDataSource_Init(
    TimerModule_t *timerModule,
    I_Action_t *watchdog,
    I_Crc16Calculator_t *crc16Calculator,
-   I_FlashBlockGroup_t *flashBlockGroup);
+   I_Eeprom_t *eeprom);
 
 /*!
  * @param instance

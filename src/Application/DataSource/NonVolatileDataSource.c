@@ -11,27 +11,30 @@
 #include "Constants_Binary.h"
 #include "utils.h"
 
-// clang-format off
-
-#define EXPAND_AS_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_NV_, StorageType)({ Name COMMA sizeof(DataType) } COMMA)
-
-// clang-format on
-
 enum
 {
    ClientVersion = 1,
-   BitsPerByte = 8
+   BitsPerByte = 8,
+   TimerTicksBetweenRetriesInMsec = 100,
+   NumberOfRetriesBeforeErase = 10,
+   NumberOfRecordBackups = 1
 };
 
-static const AsyncDataSource_FlashBlockGroupErdInfo_t asyncMapElements[] = { ERD_TABLE(EXPAND_AS_ASYNC_MAP_ELEMENTS) };
+// clang-format off
+
+#define EXPAND_AS_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_NV_, StorageType)({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
+
+// clang-format on
+
+static const AsyncDataSource_EepromErdInfo_t asyncMapElements[] = { ERD_TABLE(EXPAND_AS_ASYNC_MAP_ELEMENTS) };
 
 static const ConstArrayMap_BinarySearchConfiguration_t asyncMapConfiguration = {
    asyncMapElements,
    NUM_ELEMENTS(asyncMapElements),
    ELEMENT_SIZE(asyncMapElements),
    sizeof(asyncMapElements[0].erd),
-   OFFSET_OF(AsyncDataSource_FlashBlockGroupErdInfo_t, erd),
+   OFFSET_OF(AsyncDataSource_EepromErdInfo_t, erd),
    IS_SIGNED(Erd_t)
 };
 
@@ -63,7 +66,7 @@ void NonVolatileDataSource_Init(
    TimerModule_t *timerModule,
    I_Action_t *watchdog,
    I_Crc16Calculator_t *crc16Calculator,
-   I_FlashBlockGroup_t *flashBlockGroup)
+   I_Eeprom_t *eeprom)
 {
    bool ready = false;
    Action_Context_t onReadyAction;
@@ -76,32 +79,25 @@ void NonVolatileDataSource_Init(
       asyncMapElements,
       NUM_ELEMENTS(asyncMapElements));
 
-   AsyncDataSource_FlashBlockGroup_Init(
-      &instance->_private.async,
-      flashBlockGroup,
-      crc16Calculator,
+   AsyncDataSource_Eeprom_Init(
+      &instance->_private.eepromAsyncDataSource,
       &instance->_private.asyncMap.interface,
+      eeprom,
+      crc16Calculator,
       &instance->_private.defaultDataInputGroup.interface,
       &instance->_private.asyncReadWriteBuffer,
       sizeof(instance->_private.asyncReadWriteBuffer),
       Erd_NvMetadata,
-      &onReadyAction.interface,
+      ClientVersion,
       timerModule,
-      ClientVersion);
-
-   while(!ready)
-   {
-      Action_Invoke(watchdog);
-      TimerModule_Run(timerModule);
-   }
-
-   ready = false;
+      TimerTicksBetweenRetriesInMsec,
+      NumberOfRetriesBeforeErase);
 
    ConstArrayMap_BinarySearch_Init(&instance->_private.syncMap, &syncMapConfiguration);
 
    DataSource_CachedAsyncDataSource_Init(
       &instance->_private.sync,
-      &instance->_private.async.interface,
+      &instance->_private.eepromAsyncDataSource.interface,
       &instance->_private.syncMap.interface,
       &instance->_private.syncMetadataCache,
       &instance->_private.syncCache,

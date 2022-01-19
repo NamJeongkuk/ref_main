@@ -69,7 +69,7 @@ typedef struct
 void SystemData_Init(
    SystemData_t *instance,
    TimerModule_t *timerModule,
-   I_FlashBlockGroup_t *flashBlockGroup,
+   I_Eeprom_t *eeprom,
    I_Crc16Calculator_t *crcCalculator,
    I_Action_t *systemActionForStartup,
    I_Action_t *resetAction);
@@ -78,21 +78,21 @@ void SystemData_Init(
  * @param instance
  * @return
  */
-I_DataSource_t * SystemData_InternalDataSource(
+I_DataSource_t *SystemData_InternalDataSource(
    SystemData_t *instance);
 
 /*!
  * @param instance
  * @return
  */
-I_DataSource_t * SystemData_ExternalDataSource(
+I_DataSource_t *SystemData_ExternalDataSource(
    SystemData_t *instance);
 
 /*!
  * @param instance
  * @return
  */
-I_DataModel_t * SystemData_DataModel(
+I_DataModel_t *SystemData_DataModel(
    SystemData_t *instance);
 
 #endif

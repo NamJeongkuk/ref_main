@@ -20,8 +20,11 @@ extern "C"
 #include "TimerModule_TestDouble.h"
 #include "Action_Mock.h"
 #include "Crc16Calculator_TestDouble.h"
-#include "FlashBlocks.h"
-#include "FlashBlockGroup_Model.h"
+#include "Eeprom_Model.h"
+
+#define SIZE_1K 1024
+
+static uint8_t eeprom[SIZE_1K];
 
 #define AllErds                \
    size_t i = 0;               \
@@ -87,27 +90,6 @@ static const ErdTableElement_t erdTable[] = {
 
 // clang-format on
 
-static const FlashBlockItem_t flashBlockTable[] = {
-   { Block0, BlockSize },
-   { Block1, BlockSize },
-   { Block2, BlockSize },
-   { Block3, BlockSize }
-};
-
-static uint8_t block0Data[BlockSize];
-static uint8_t block1Data[BlockSize];
-static uint8_t block2Data[BlockSize];
-static uint8_t block3Data[BlockSize];
-
-static uint8_t *blockList[] = { block0Data, block1Data, block2Data, block3Data };
-
-static uint8_t block0BlankStatus[BlockSize];
-static uint8_t block1BlankStatus[BlockSize];
-static uint8_t block2BlankStatus[BlockSize];
-static uint8_t block3BlankStatus[BlockSize];
-
-static uint8_t *blockBlankStatusList[] = { block0BlankStatus, block1BlankStatus, block2BlankStatus, block3BlankStatus };
-
 static void RunTimerModule(void *context)
 {
    REINTERPRET(timerModule, context, TimerModule_TestDouble_t *);
@@ -123,31 +105,41 @@ TEST_GROUP(SystemData)
    I_DataModel_t *dataModel;
    I_DataSource_t *externalDataSource;
 
+   TimerModule_t *timerModule;
    TimerModule_TestDouble_t timerModuleDouble;
-   FlashBlockGroup_Model_t flashBlockGroupModel;
+   Eeprom_Model_t eepromModel;
    Action_Context_t runTimerModuleAction;
+
+   TimerTicks_t readTime;
+   TimerTicks_t writeTime;
+   TimerTicks_t eraseTime;
+
+   uint16_t alignment;
+   uint16_t startAddress;
 
    void setup()
    {
+      alignment = 1;
+      startAddress = 0;
+      readTime = 10;
+      writeTime = 5;
+      eraseTime = 20;
+
       TimerModule_TestDouble_Init(&timerModuleDouble);
+      timerModule = TimerModule_TestDouble_GetTimerModule(&timerModuleDouble);
       Action_Context_Init(&runTimerModuleAction, &timerModuleDouble.timerModule, RunTimerModule);
 
-      for(FlashBlockCount_t i = 0; i < BlockCount; i++)
-      {
-         memset(blockList[i], 0x00, flashBlockTable[i].size);
-         memset(blockBlankStatusList[i], 0x00, flashBlockTable[i].size);
-      }
-
-      FlashBlockGroup_Model_Init(
-         &flashBlockGroupModel,
-         flashBlockTable,
-         blockList,
-         blockBlankStatusList,
-         BlockCount,
-         &timerModuleDouble.timerModule,
-         WriteTime,
-         EraseTime,
-         MinAllowableBytes);
+      memset(eeprom, 0, sizeof(eeprom));
+      Eeprom_Model_Init(
+         &eepromModel,
+         eeprom,
+         alignment,
+         startAddress,
+         sizeof(eeprom),
+         timerModule,
+         readTime,
+         writeTime,
+         eraseTime);
 
       memset(dataFromExternalDataSource, 0, sizeof(dataFromExternalDataSource));
       FillBlockOfRandomData();
@@ -171,7 +163,7 @@ TEST_GROUP(SystemData)
       SystemData_Init(
          &instance,
          &timerModuleDouble.timerModule,
-         &flashBlockGroupModel.interface,
+         &eepromModel.interface,
          Crc16Calculator_Table,
          &runTimerModuleAction.interface,
          Action_Null_GetInstance());
@@ -180,9 +172,9 @@ TEST_GROUP(SystemData)
       externalDataSource = SystemData_ExternalDataSource(&instance);
    }
 
-   void AfterFlashBlockGroupWriteCompletes()
+   void AfterEepromWriteCompletes()
    {
-      After(WriteTime * 4);
+      After(WriteTime * 100);
    }
 
    void SystemDataIsReset()
@@ -424,7 +416,7 @@ TEST(SystemData, NvErdsShouldPersistAfterReset)
    GivenThatSystemDataIsInitialized();
 
    WhenDataIsWrittenViaInternalDataModel(Erd_SomeData, &expected);
-   AfterFlashBlockGroupWriteCompletes();
+   AfterEepromWriteCompletes();
    SystemDataIsReset();
 
    InternalDataModelShouldReturnDataEqualTo(Erd_SomeData, &expected);
