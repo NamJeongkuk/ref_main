@@ -23,6 +23,7 @@ TEST_SRC_DIRS := \
    $(TESTING_DIR)/Mocks/Bsp \
    $(TESTS_DIR) \
    $(TESTS_DIR)/Application/DataSource \
+   $(TESTS_DIR)/Application/ \
 
 # List of include directories
 INCLUDE_DIRS := \
