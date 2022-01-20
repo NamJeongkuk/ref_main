@@ -25,25 +25,35 @@ TEST_GROUP(Test)
       dataModel = dataModelTestDouble.dataModel;
    }
 
-   void WriteToEepromErd(uint32_t data)
+   template <typename T>
+   void ErdIs(Erd_t erd, T value)
    {
-      DataModel_Write(dataModel, Erd_SomeData, &data);
+      DataModel_Write(dataModel, erd, &value);
    }
 
-   void ReadEepromErd(uint32_t expectedData)
+   template <typename T>
+   void ErdShouldBe(Erd_t erd, T expected)
    {
-      uint32_t actualData;
-      DataModel_Read(dataModel, Erd_SomeData, &actualData);
-
-      CHECK_EQUAL(expectedData, actualData);
+      T actual;
+      DataModel_Read(dataModel, erd, &actual);
+      CHECK_EQUAL(expected, actual);
    }
 };
 
-TEST(Test, ShouldDoTheNeedful)
+TEST(Test, ShouldWriteToErd)
 {
-   WriteToEepromErd(12345);
-   ReadEepromErd(12345);
+   ErdIs(Erd_OtherLed, true);
+   ErdShouldBe(Erd_OtherLed, true);
 
-   WriteToEepromErd(26);
-   ReadEepromErd(26);
+   ErdIs(Erd_OtherLed, false);
+   ErdShouldBe(Erd_OtherLed, false);
+}
+
+TEST(Test, ShouldWriteToAnotherErd)
+{
+   ErdIs(Erd_SomeData, 1234);
+   ErdShouldBe(Erd_SomeData, 1234);
+
+   ErdIs(Erd_SomeData, 26);
+   ErdShouldBe(Erd_SomeData, 26);
 }
