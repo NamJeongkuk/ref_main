@@ -35,6 +35,7 @@ SRC_DIRS:=\
   src/Application \
   src/Application/DataSource \
   src/Application/Gea \
+  src/Application/ParametricData \
   src/Application/Plugins \
   src/Application/ServiceDiagnostics \
   src/Application/TimerModule \
