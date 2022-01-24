@@ -183,6 +183,8 @@ int main(void)
 
    SetReadyToEnterBootLoader(dataModel);
 
+   ParametricData_GetParametricData();
+
    while(1)
    {
       GeaStack_Run(&geaStack);
