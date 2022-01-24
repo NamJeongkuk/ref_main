@@ -23,11 +23,13 @@ TEST_SRC_DIRS := \
    $(TESTING_DIR)/Mocks/Bsp \
    $(TESTS_DIR) \
    $(TESTS_DIR)/Application/DataSource \
+   $(TESTS_DIR)/Application/ \
 
 # List of include directories
 INCLUDE_DIRS := \
    $(APPLCOMMON_DIR)/Hardware/Rx130 \
    $(APPLCOMMON_DIR)/Image \
+   $(PROJECT_DIR)/Application/ParametricData \
    $(PROJECT_DIR)/Application/Plugins \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \
    $(PROJECT_DIR)/rx130/Bsp \

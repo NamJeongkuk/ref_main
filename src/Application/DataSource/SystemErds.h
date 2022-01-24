@@ -40,6 +40,7 @@
 #include "SecondsSinceLastReset.h"
 #include "ProgramCounterAddress.h"
 #include "ReadyToEnterBootLoaderState.h"
+#include "PersonalityParametricData.h"
 #include "AsyncDataSource_Eeprom.h"
 
 // clang-format off
@@ -183,6 +184,7 @@ enum
    ENTRY(Erd_KeyStreamSenderStateRequest,                   0xF00B, ErdStreamStateRequest_t,                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_HeartbeatTick,                                 0xF00C, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_RemoteKeyState,                                0xF00D, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_PersonalityParametricData,                     0xF00E, PersonalityParametricData_t *,                      Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_NonVolatileDataSourceCacheSyncState,           0xF012, bool,                                               Swap_N, Io_None, Sub_N, Virtual,  NotNv,                                    NotFault) \
    \
    ENTRY(Erd_SystemTickInterrupt,                           0xF100, I_Interrupt_t *,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
