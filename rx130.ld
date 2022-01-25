@@ -2,7 +2,6 @@ MEMORY
 {
 	RAM (rx) : ORIGIN = 0x10, LENGTH = 0xBFF0
 	ROM (rx) : ORIGIN = 0xFFF80000, LENGTH = 0x76800
-	DTC_VECTOR_TABLE (rx) : ORIGIN = 0xFFFF5800, LENGTH = 0x400
 	PARAMETRIC_DATA (r) : ORIGIN = 0xFFFF6000, LENGTH = 0x6000
 	FIXED_VECTOR_TABLE (rx) : ORIGIN = 0xFFFFFF80, LENGTH = 0x80
 }
@@ -39,11 +38,6 @@ SECTIONS
 	{
 		*(.parametric_data)
 	} > PARAMETRIC_DATA
-
-	.dtcVectorTable :
-	{
-		KEEP(*(.dtcVectorTable))
-	} > DTC_VECTOR_TABLE
 
 	.fixedVectorTable :
 	{
