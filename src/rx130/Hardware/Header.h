@@ -19,11 +19,11 @@
 #define ApplicationImageHeader (const ImageHeader_t *)(intptr_t)(ApplicationHeaderAddress)
 
 #define ParametricStartAddress   (0xFFFF6000)
-#define ParametricEndAddress     (0xFFFFAFFF)
+#define ParametricEndAddress     (0xFFFFBFFF)
 #define ParametricHeaderAddress ParametricStartAddress
 #define ParametricImageHeader (const ImageHeader_t *)(intptr_t)(ParametricHeaderAddress)
 
-#define BootLoaderStartAddress   (0xFFFFB000)
+#define BootLoaderStartAddress   (0xFFFFC000)
 #define BootLoaderEndAddress     (0xFFFFFFFF)
 #define BootLoaderHeaderAddress BootLoaderStartAddress
 #define BootLoaderImageHeader (const ImageHeader_t *)(intptr_t)(BootLoaderHeaderAddress)
