@@ -41,6 +41,7 @@
 #include "Interrupts.h"
 #include "uassert.h"
 #include "EepromStack.h"
+#include "ParametricData.h"
 
 enum
 {
@@ -181,6 +182,8 @@ int main(void)
       watchdogKickAction);
 
    SetReadyToEnterBootLoader(dataModel);
+
+   ParametricData_GetParametricData();
 
    while(1)
    {

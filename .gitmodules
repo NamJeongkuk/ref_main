@@ -10,3 +10,6 @@
 [submodule "lib/boot-loaders"]
 	path = lib/boot-loaders
 	url = https://github.com/geappliances/applcommon.embedded-starter-kit-boot-loaders.git
+[submodule "Parametric"]
+	path = Parametric
+	url = https://github.com/geappliances/refrigeration.rockhopper-parametric

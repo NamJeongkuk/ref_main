@@ -12,6 +12,9 @@ LINKER_SCRIPT:=$(TARGET).ld
 DEVICE:=R5F51308
 ID_CODE:=45CAFEC0FFEECAFEC0FFEECAFEC0FFEE
 
+PATH_TO_BUILD_PARAMETRIC:=./Parametric
+PARAMETRIC_DIRS:=Parametric/data/
+
 ifeq ($(DEBUG), N)
 else
 ifeq ($(DEBUG), Y)
@@ -39,6 +42,7 @@ SRC_DIRS:=\
   src/Application/Plugins \
   src/Application/ServiceDiagnostics \
   src/Application/TimerModule \
+  Parametric/data/ \
 
 INC_DIRS:=\
 

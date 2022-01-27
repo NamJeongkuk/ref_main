@@ -14,16 +14,16 @@
 #include "ImageHeader.h"
 
 #define ApplicationStartAddress  (0xFFF80000)
-#define ApplicationEndAddress    (0xFFFF5FFF)
+#define ApplicationEndAddress    (0xFFFF3FFF)
 #define ApplicationHeaderAddress ApplicationStartAddress
 #define ApplicationImageHeader (const ImageHeader_t *)(intptr_t)(ApplicationHeaderAddress)
 
-#define ParametricStartAddress   (0xFFFF6000)
-#define ParametricEndAddress     (0xFFFFAFFF)
-#define ParametricHeaderAddress ParametricStartAddress
+#define ParametricStartAddress   (0xFFFF4000)
+#define ParametricEndAddress     (0xFFFF9FFF)
 #define ParametricImageHeader (const ImageHeader_t *)(intptr_t)(ParametricHeaderAddress)
+#define ParametricHeaderAddress ParametricStartAddress
 
-#define BootLoaderStartAddress   (0xFFFFB000)
+#define BootLoaderStartAddress   (0xFFFFA000)
 #define BootLoaderEndAddress     (0xFFFFFFFF)
 #define BootLoaderHeaderAddress BootLoaderStartAddress
 #define BootLoaderImageHeader (const ImageHeader_t *)(intptr_t)(BootLoaderHeaderAddress)
