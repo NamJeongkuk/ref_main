@@ -10,8 +10,8 @@ module.exports = {
       outputDirectories: [
         'build',
         'artifacts',
-        'lib/boot-loaders/build',
-        'lib/boot-loaders/lib/boot-loader-updater/build'
+        'lib/rockhopper-boot-loader/build',
+        'lib/rockhopper-boot-loader/lib/boot-loader-updater/build'
       ]
     }
   }

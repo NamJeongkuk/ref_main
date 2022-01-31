@@ -1,7 +1,7 @@
 return {
   ['Boot Loader'] = {
     ram = {
-      map = 'lib/boot-loaders/build/medium-rx130-boot-loader/medium-rx130-boot-loader.map',
+      map = 'lib/rockhopper-boot-loader/build/rockhopper-boot-loader/rockhopper-boot-loader.map',
       type = 'rx-gcc',
       total = 48 * 1024,
       ram_sections = {
@@ -9,8 +9,8 @@ return {
       }
     },
     rom = {
-      srec = 'lib/boot-loaders/build/medium-rx130-boot-loader/medium-rx130-boot-loader.napl',
-      apl = 'lib/boot-loaders/build/medium-rx130-boot-loader/medium-rx130-boot-loader.apl',
+      srec = 'lib/rockhopper-boot-loader/build/rockhopper-boot-loader/rockhopper-boot-loader.napl',
+      apl = 'lib/rockhopper-boot-loader/build/rockhopper-boot-loader/rockhopper-boot-loader.apl',
       endianness = 'little'
     }
   },

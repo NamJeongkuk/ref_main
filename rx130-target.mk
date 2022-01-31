@@ -2,8 +2,8 @@ include tools/kpit-rx/setup.mk
 
 export TARGET:=rx130
 OUTPUT_DIR:=build/$(TARGET)
-BOOT_LOADER_DIR:=lib/boot-loaders
-BOOT_LOADER_TARGET:=medium-rx130
+BOOT_LOADER_DIR:=lib/rockhopper-boot-loader
+BOOT_LOADER_TARGET:=rockhopper
 BOOT_LOADER_UPDATER_DIR:=$(BOOT_LOADER_DIR)/lib/boot-loader-updater
 CPU:=rx100
 TOOLCHAIN_VERSION:=4.8.4.201801
