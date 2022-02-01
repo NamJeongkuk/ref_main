@@ -10,6 +10,7 @@
 #include "SystemErds.h"
 #include "DataModelErdPointerAccess.h"
 #include "SecondsSinceLastReset.h"
+#include "ParametricDataErds.h"
 #include "uassert.h"
 
 enum
@@ -39,6 +40,13 @@ void Application_Init(
    ResetReason_t resetReason)
 {
    instance->_private.dataModel = dataModel;
+
+   ParametricDataErds_Init(
+      dataModel,
+      Erd_AppliancePersonality,
+      Erd_PersonalityParametricData,
+      Erd_PersonalityIdOutOfRangeFlag,
+      DataModelErdPointerAccess_GetAction(dataModel, Erd_JumpToBootLoaderAction));
 
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
    SwitchedLedPlugin_Init(&instance->_private.switchedLedPlugin, dataModel, Erd_PushButtonSwitch);

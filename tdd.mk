@@ -13,6 +13,7 @@ SRC_FILES := \
 
 # List of directories that contain your code under test
 SRC_DIRS := \
+   $(PROJECT_DIR)/Application/ParametricData \
    $(PROJECT_DIR)/Application/DataSource \
 
 # List of directories that contain your tests and test helpers (mocks, fakes, etc.)
@@ -23,6 +24,7 @@ TEST_SRC_DIRS := \
    $(TESTING_DIR)/Mocks/Bsp \
    $(TESTS_DIR) \
    $(TESTS_DIR)/Application/DataSource \
+   $(TESTS_DIR)/Application/ParametricData \
    $(TESTS_DIR)/Application/ \
 
 # List of include directories
