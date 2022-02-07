@@ -12,13 +12,15 @@
 #include "I_Eeprom.h"
 #include "I_Input.h"
 #include "Timer.h"
+#include "TimeSource_Rockhopper.h"
 
 /*!
  * @param watchdogKickAction
  */
 void EepromStack_Init(
    I_Action_t *watchdogKickAction,
-   TimerModule_t *timerModule);
+   TimerModule_t *timerModule,
+   TimeSource_Interrupt_t *timeSourceInterrupt);
 
 /*!
  * Returns I_Eeprom_t interfaces

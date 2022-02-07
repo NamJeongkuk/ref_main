@@ -12,6 +12,7 @@
 #include "I_Action.h"
 #include "Event_SafeSynchronous.h"
 #include "Timer.h"
+#include "TimeSource_Rockhopper.h"
 
 #define HardwareEeprom_I2c_Size_In_Bytes (16384)
 #define HardwareEeprom_I2c_Page_Size_In_Bytes (64)
@@ -29,6 +30,7 @@ typedef struct
       Event_SafeSynchronous_t readCompleteEvent;
       Event_SafeSynchronous_t writeCompleteEvent;
       Event_SafeSynchronous_t eraseCompleteEvent;
+      TimeSource_Interrupt_t *timeSourceInterrupt;
    } _private;
 } HardwareEeprom_I2c_t;
 
@@ -37,6 +39,6 @@ typedef struct
  * @param Watchdog refresh action
  * @return Eeprom I2c instance pointer
  */
-HardwareEeprom_I2c_t *HardwareEeprom_I2c_Init(I_Action_t *watchdogKickAction);
+HardwareEeprom_I2c_t *HardwareEeprom_I2c_Init(I_Action_t *watchdogKickAction, TimeSource_Interrupt_t *timeSourceInterrupt);
 
 #endif

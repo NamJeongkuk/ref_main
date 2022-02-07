@@ -28,9 +28,12 @@ typedef struct
 
 static EepromStack_t instance;
 
-void EepromStack_Init(I_Action_t *watchdogKickAction, TimerModule_t *timerModule)
+void EepromStack_Init(
+   I_Action_t *watchdogKickAction,
+   TimerModule_t *timerModule,
+   TimeSource_Interrupt_t *timeSourceInterrupt)
 {
-   instance.hardwareEepromI2c = HardwareEeprom_I2c_Init(watchdogKickAction);
+   instance.hardwareEepromI2c = HardwareEeprom_I2c_Init(watchdogKickAction, timeSourceInterrupt);
 
    InputOutput_Simple_Init(&instance.readFaultIo, &instance.readFaultData, sizeof(instance.readFaultData));
    InputOutput_Simple_Init(&instance.writeFaultIo, &instance.writeFaultData, sizeof(instance.writeFaultData));

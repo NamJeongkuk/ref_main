@@ -42,6 +42,7 @@
 #include "uassert.h"
 #include "EepromStack.h"
 #include "ParametricData.h"
+#include "TimeSource_Rockhopper.h"
 
 enum
 {
@@ -120,9 +121,13 @@ int main(void)
 
    I_Action_t *watchdogKickAction = Action_RxWatchdog_InitWithConfiguration(Action_RxWatchdogConfiguration_2Seconds);
    I_Action_t *resetAction = Action_Rx2xxSystemReset_Init();
-   TimerModule_t *timerModule = TimerModuleStack_Init(&timerModuleStack, Interrupt_Cmt0_Init());
 
-   EepromStack_Init(watchdogKickAction, timerModule);
+   I_Interrupt_t *interrupt = Interrupt_Cmt0_Init();
+   TimerModule_t *timerModule = TimerModuleStack_Init(&timerModuleStack, interrupt);
+
+   TimeSource_Interrupt_t *timeSourceInterrupt = TimeSource_Rockhopper_Init(interrupt);
+
+   EepromStack_Init(watchdogKickAction, timerModule, timeSourceInterrupt);
 
    SystemData_Init(
       &systemData,
