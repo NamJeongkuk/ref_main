@@ -13,3 +13,6 @@
 [submodule "lib/rockhopper-boot-loader"]
 	path = lib/rockhopper-boot-loader
 	url = https://github.com/geappliances/refrigeration.rockhopper-boot-loader.git
+[submodule "lib/Common"]
+	path = lib/Common
+	url = https://github.com/geappliances/refrigeration.Common

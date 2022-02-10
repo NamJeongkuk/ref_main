@@ -1,6 +1,7 @@
 PROJECT_NAME := multi-target-starter-kit
 
 APPLCOMMON_DIR := lib/applcommon
+REFERCOMMON_DIR = lib/Common
 PROJECT_DIR := src
 TESTING_DIR := test
 TESTS_DIR := test/Tests
@@ -15,6 +16,7 @@ SRC_FILES := \
 SRC_DIRS := \
    $(PROJECT_DIR)/Application/ParametricData \
    $(PROJECT_DIR)/Application/DataSource \
+   $(PROJECT_DIR)/Application/Grid \
 
 # List of directories that contain your tests and test helpers (mocks, fakes, etc.)
 TEST_SRC_DIRS := \
@@ -24,6 +26,7 @@ TEST_SRC_DIRS := \
    $(TESTING_DIR)/Mocks/Bsp \
    $(TESTS_DIR) \
    $(TESTS_DIR)/Application/DataSource \
+   $(TESTS_DIR)/Application/Grid \
    $(TESTS_DIR)/Application/ParametricData \
    $(TESTS_DIR)/Application/ \
 
@@ -34,8 +37,13 @@ INCLUDE_DIRS := \
    $(PROJECT_DIR)/Application/ParametricData \
    $(PROJECT_DIR)/Application/Plugins \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \
+   $(PROJECT_DIR)/Application/Compressor \
+   $(PROJECT_DIR)/Application/Grid \
+   $(PROJECT_DIR)/Application/Fan \
+   $(PROJECT_DIR)/Application/Valve \
    $(PROJECT_DIR)/rx130/Bsp \
    $(PROJECT_DIR)/rx130/Hardware \
+   $(REFERCOMMON_DIR)/Source/Temperature \
 
 include $(APPLCOMMON_DIR)/Makefile
 

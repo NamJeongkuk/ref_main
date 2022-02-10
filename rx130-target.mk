@@ -37,6 +37,7 @@ SRC_DIRS:=\
   src/$(TARGET)/Hardware/Flash \
   src/Application \
   src/Application/DataSource \
+  src/Application/Grid \
   src/Application/Gea \
   src/Application/ParametricData \
   src/Application/Plugins \
@@ -45,6 +46,11 @@ SRC_DIRS:=\
   Parametric/data/ \
 
 INC_DIRS:=\
+  src/Application/Grid \
+  src/Application/Compressor \
+  src/Application/Fan \
+  src/Application/Valve \
+  lib/Common/Source/Temperature/ \
 
 applcommon_EXTERNAL_INC_DIRS:=\
   src/Application \

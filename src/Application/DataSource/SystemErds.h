@@ -42,6 +42,13 @@
 #include "ReadyToEnterBootLoaderState.h"
 #include "PersonalityParametricData.h"
 #include "AsyncDataSource_Eeprom.h"
+#include "CompressorSpeed.h"
+#include "FanState.h"
+#include "FanSpeed.h"
+#include "GridBlockNumber.h"
+#include "TemperatureDegFx100.h"
+#include "GridLines.h"
+#include "ValvePosition.h"
 
 // clang-format off
 
@@ -206,6 +213,39 @@ enum
    ENTRY(Erd_PushButtonSwitch,                              0xF202, bool,                                               Swap_N, Io_All,  Sub_Y, Bsp,      NotNv,                                    NotFault) \
    ENTRY(Erd_SomeAnalogInput,                               0xF203, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,      NotNv,                                    NotFault) \
    ENTRY(Erd_AnotherAnalogInput,                            0xF204, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,      NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_CompressorSpeed_ResolvedVote,                  0xF210, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorSpeed_WinningVoteErd,                0xF211, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorSpeed_FactoryVote,                   0xF212, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorSpeed_GridVote,                      0xF223, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_CondenserFanState_ResolvedVote,                0xF230, FanVotedState_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CondenserFanState_WinningVoteErd,              0xF231, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CondenserFanState_FactoryVote,                 0xF232, FanVotedState_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CondenserFanState_GridVote,                    0xF241, FanVotedState_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_ValvePosition_ResolvedVote,                    0xF250, ValveVotedPosition_t,                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_ValvePosition_WinningVoteErd,                  0xF251, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_ValvePosition_FactoryVote,                     0xF252, ValveVotedPosition_t,                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_ValvePosition_GridVote,                        0xF25E, ValveVotedPosition_t,                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FreshFoodEvapFanSpeed_ResolvedVote,            0xF260, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvapFanSpeed_WinningVoteErd,          0xF261, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvapFanSpeed_FactoryVote,             0xF262, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvapFanSpeed_GridVote,                0xF274, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FreezerEvapFanSpeed_ResolvedVote,              0xF280, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapFanSpeed_WinningVoteErd,            0xF281, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapFanSpeed_FactoryVote,               0xF282, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapFanSpeed_GridVote,                  0xF29A, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_Grid_BlockNumber,                              0xF2A0, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_Grid_PreviousBlocks,                           0xF2A1, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_Grid_CalculatedGridLines,                      0xF2A2, CalculatedGridLines_t,                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFood_FilteredTemperature,                 0xF2A3, TemperatureDegFx100_t,                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_FilteredTemperature,                   0xF2A4, TemperatureDegFx100_t,                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFood_AdjustedSetpoint,                    0xF2A5, TemperatureDegFx100_t,                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_AdjustedSetpoint,                      0xF2A6, TemperatureDegFx100_t,                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Fault_EepromReadFailure,                       0xF300, bool,                                               Swap_N, Io_All,  Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_Fault_EepromWriteFailure,                      0xF301, bool,                                               Swap_N, Io_All,  Sub_N, Ram,      NotNv,                                    NotFault) \
