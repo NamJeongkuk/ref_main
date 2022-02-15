@@ -242,10 +242,10 @@ enum
    ENTRY(Erd_Grid_BlockNumber,                              0xF2A0, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_Grid_PreviousBlocks,                           0xF2A1, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_Grid_CalculatedGridLines,                      0xF2A2, CalculatedGridLines_t,                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFood_FilteredTemperature,                 0xF2A3, TemperatureDegFx100_t,                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_Freezer_FilteredTemperature,                   0xF2A4, TemperatureDegFx100_t,                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFood_AdjustedSetpoint,                    0xF2A5, TemperatureDegFx100_t,                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_Freezer_AdjustedSetpoint,                      0xF2A6, TemperatureDegFx100_t,                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFood_FilteredTemperature,                 0xF2A3, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_FilteredTemperature,                   0xF2A4, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFood_AdjustedSetpoint,                    0xF2A5, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_AdjustedSetpoint,                      0xF2A6, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Fault_EepromReadFailure,                       0xF300, bool,                                               Swap_N, Io_All,  Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_Fault_EepromWriteFailure,                      0xF301, bool,                                               Swap_N, Io_All,  Sub_N, Ram,      NotNv,                                    NotFault) \
