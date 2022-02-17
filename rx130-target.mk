@@ -38,6 +38,7 @@ SRC_DIRS:=\
   src/Application \
   src/Application/DataSource \
   src/Application/Grid \
+  src/Application/Grid/GridFunctions \
   src/Application/Gea \
   src/Application/ParametricData \
   src/Application/Plugins \
@@ -47,6 +48,7 @@ SRC_DIRS:=\
 
 INC_DIRS:=\
   src/Application/Grid \
+  src/Application/Grid/GridFunctions \
   src/Application/Compressor \
   src/Application/Fan \
   src/Application/Valve \

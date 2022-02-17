@@ -246,6 +246,9 @@ enum
    ENTRY(Erd_Freezer_FilteredTemperature,                   0xF2A4, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFood_AdjustedSetpoint,                    0xF2A5, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_Freezer_AdjustedSetpoint,                      0xF2A6, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_GridLoopThreeDoorRun_Test,                     0xF2A7, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_GridLoopFourDoorRun_Test,                      0xF2A8, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_GridLoopQuadDoorRun_Test,                      0xF2A9, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Fault_EepromReadFailure,                       0xF300, bool,                                               Swap_N, Io_All,  Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_Fault_EepromWriteFailure,                      0xF301, bool,                                               Swap_N, Io_All,  Sub_N, Ram,      NotNv,                                    NotFault) \

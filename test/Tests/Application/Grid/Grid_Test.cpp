@@ -30,13 +30,20 @@ void Grid_ThreeDoor(void *context)
    IGNORE(context);
    mock().actualCall("Grid_ThreeDoor");
 }
+
+void Grid_FourDoor(void *context)
+{
+   IGNORE(context);
+   mock().actualCall("Grid_FourDoor");
+}
+
 void Grid_QuadDoor(void *context)
 {
    IGNORE(context);
    mock().actualCall("Grid_QuadDoor");
 }
 
-static const GridFunction_t grids[] = { Grid_ThreeDoor, Grid_QuadDoor };
+static const GridFunction_t grids[] = { Grid_ThreeDoor, Grid_FourDoor, Grid_QuadDoor };
 
 static const GridFunctionArray_t functionArray = {
    grids,
@@ -116,6 +123,18 @@ TEST(Grid, ShouldRunGridFunctionAfterGivenPeriod)
 TEST(Grid, ShouldRunDifferentGridFunctionAfterGivenPeriod)
 {
    GivenGridIdIs(1);
+   WhenTheModuleIsInitialized();
+
+   NothingShouldHappen();
+   After(OneSecondInMs - 1);
+
+   GridFunctionShouldBeCalled("Grid_FourDoor");
+   After(1);
+}
+
+TEST(Grid, ShouldRunAnotherGridFunctionAfterGivenPeriod)
+{
+   GivenGridIdIs(2);
    WhenTheModuleIsInitialized();
 
    NothingShouldHappen();

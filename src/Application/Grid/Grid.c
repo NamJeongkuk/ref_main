@@ -21,7 +21,7 @@ static void Grid_Run(void *context)
 
    REINTERPRET(instance, context, Grid_t *);
 
-   (*instance->_private.configuration->gridFunctions->grids[instance->_private.configuration->gridId])(instance);
+   instance->_private.configuration->gridFunctions->grids[instance->_private.configuration->gridId](instance);
 }
 
 void Grid_Init(

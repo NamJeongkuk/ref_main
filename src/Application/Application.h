@@ -15,6 +15,7 @@
 #include "TimerModuleDiagnostics.h"
 #include "Input_StackUsageCalculator.h"
 #include "ApplianceApiResetDiagnostics.h"
+#include "GridPlugin.h"
 
 typedef struct
 {
@@ -25,6 +26,7 @@ typedef struct
       HeartbeatLedPlugin_t heartbeatLedPlugin;
       SwitchedLedPlugin_t switchedLedPlugin;
       KeyStreamPlugin_t keyStreamPlugin;
+      GridPlugin_t gridPlugin;
       TimerModuleDiagnostics_t timerModuleDiagnostics;
       Input_StackUsageCalculator_t stackUsageCalculator;
       ApplianceApiResetDiagnostics_t applianceApiResetDiagnostics;

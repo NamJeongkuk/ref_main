@@ -17,6 +17,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/ParametricData \
    $(PROJECT_DIR)/Application/DataSource \
    $(PROJECT_DIR)/Application/Grid \
+   $(PROJECT_DIR)/Application/Grid/GridFunctions \
 
 # List of directories that contain your tests and test helpers (mocks, fakes, etc.)
 TEST_SRC_DIRS := \
@@ -39,6 +40,7 @@ INCLUDE_DIRS := \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \
    $(PROJECT_DIR)/Application/Compressor \
    $(PROJECT_DIR)/Application/Grid \
+   $(PROJECT_DIR)/Application/Grid/GridFunctions \
    $(PROJECT_DIR)/Application/Fan \
    $(PROJECT_DIR)/Application/Valve \
    $(PROJECT_DIR)/rx130/Bsp \
