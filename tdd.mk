@@ -16,6 +16,7 @@ SRC_FILES := \
 SRC_DIRS := \
    $(PROJECT_DIR)/Application/ParametricData \
    $(PROJECT_DIR)/Application/DataSource \
+   $(PROJECT_DIR)/Application/Defrost \
    $(PROJECT_DIR)/Application/Grid \
    $(PROJECT_DIR)/Application/Grid/GridFunctions \
 
@@ -27,6 +28,7 @@ TEST_SRC_DIRS := \
    $(TESTING_DIR)/Mocks/Bsp \
    $(TESTS_DIR) \
    $(TESTS_DIR)/Application/DataSource \
+   $(TESTS_DIR)/Application/Defrost \
    $(TESTS_DIR)/Application/Grid \
    $(TESTS_DIR)/Application/ParametricData \
    $(TESTS_DIR)/Application/ \
@@ -35,6 +37,7 @@ TEST_SRC_DIRS := \
 INCLUDE_DIRS := \
    $(APPLCOMMON_DIR)/Hardware/Rx130 \
    $(APPLCOMMON_DIR)/Image \
+   $(PROJECT_DIR)/Application/Defrost \
    $(PROJECT_DIR)/Application/ParametricData \
    $(PROJECT_DIR)/Application/Plugins \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \

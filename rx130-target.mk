@@ -37,6 +37,7 @@ SRC_DIRS:=\
   src/$(TARGET)/Hardware/Flash \
   src/Application \
   src/Application/DataSource \
+  src/Application/Defrost \
   src/Application/Grid \
   src/Application/Grid/GridFunctions \
   src/Application/Gea \
