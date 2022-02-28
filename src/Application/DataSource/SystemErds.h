@@ -49,6 +49,9 @@
 #include "TemperatureDegFx100.h"
 #include "GridLines.h"
 #include "ValvePosition.h"
+#include "DefrostState.h"
+#include "DefrostHsmState.h"
+#include "DefrostRequest.h"
 
 // clang-format off
 
@@ -207,6 +210,10 @@ enum
    ENTRY(Erd_FaultCodeTableInputGroup,                      0xF10A, I_InputGroup_t *,                                   Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_SingleWireUart,                                0xF10B, I_Uart_t *,                                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_ContextProtector,                              0xF10C, I_ContextProtector_t *,                             Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_DefrostState,                                  0xF10D, DefrostState_t,                                     Swap_N, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_DefrostHsmState,                               0xF10E, DefrostHsmState_t,                                  Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostRequest,                                0xF10F, DefrostRequest_t,                                   Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,      NotNv,                                    NotFault) \
    ENTRY(Erd_OtherLed,                                      0xF201, bool,                                               Swap_N, Io_None, Sub_N, Bsp,      NotNv,                                    NotFault) \
