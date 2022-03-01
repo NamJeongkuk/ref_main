@@ -53,6 +53,7 @@ INC_DIRS:=\
   src/Application/Compressor \
   src/Application/Fan \
   src/Application/Valve \
+  src/Application/Temperature \
   lib/Common/Source/Temperature/ \
 
 applcommon_EXTERNAL_INC_DIRS:=\

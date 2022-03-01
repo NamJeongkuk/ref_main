@@ -47,8 +47,9 @@
 #include "FanSpeed.h"
 #include "GridBlockNumber.h"
 #include "TemperatureDegFx100.h"
-#include "GridLines.h"
+#include "CalculatedGridLines.h"
 #include "ValvePosition.h"
+#include "Setpoint.h"
 #include "DefrostState.h"
 #include "DefrostHsmState.h"
 #include "DefrostRequest.h"
@@ -246,16 +247,31 @@ enum
    ENTRY(Erd_FreezerEvapFanSpeed_FactoryVote,               0xF282, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerEvapFanSpeed_GridVote,                  0xF29A, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_Grid_BlockNumber,                              0xF2A0, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_Grid_PreviousBlocks,                           0xF2A1, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_Grid_BlockNumber,                              0xF2A0, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_Grid_PreviousBlocks,                           0xF2A1, PreviousGridBlockNumbers_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_Grid_CalculatedGridLines,                      0xF2A2, CalculatedGridLines_t,                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFood_FilteredTemperature,                 0xF2A3, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_Freezer_FilteredTemperature,                   0xF2A4, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFood_AdjustedSetpoint,                    0xF2A5, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_Freezer_AdjustedSetpoint,                      0xF2A6, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_GridLoopThreeDoorRun_Test,                     0xF2A7, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_GridLoopFourDoorRun_Test,                      0xF2A8, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_GridLoopQuadDoorRun_Test,                      0xF2A9, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_GridLoopThreeDoorRun_Test,                     0xF2A3, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_GridLoopFourDoorRun_Test,                      0xF2A4, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_GridLoopQuadDoorRun_Test,                      0xF2A5, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FreshFood_FilteredTemperature,                 0xF2B0, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFood_AdjustedSetpoint,                    0xF2B1, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFood_Offset,                              0xF2B3, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFood_Shift,                               0xF2B4, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_FilteredTemperature,                   0xF2B5, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_AdjustedSetpoint,                      0xF2B6, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_Offset,                                0xF2B7, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_Shift,                                 0xF2B8, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FzSetpoint_ResolvedVote,                       0xF2C0, SetpointVotedTemperature_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FzSetpoint_WinningVoteErd,                     0xF2C1, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FzSetpoint_FactoryVote,                        0xF2C2, SetpointVotedTemperature_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FzSetpoint_UserSetpoint,                       0xF2C6, SetpointVotedTemperature_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FfSetpoint_ResolvedVote,                       0xF2D0, SetpointVotedTemperature_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FfSetpoint_WinningVoteErd,                     0xF2D1, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FfSetpoint_FactoryVote,                        0xF2D2, SetpointVotedTemperature_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FfSetpoint_UserSetpoint,                       0xF2D5, SetpointVotedTemperature_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Fault_EepromReadFailure,                       0xF300, bool,                                               Swap_N, Io_All,  Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_Fault_EepromWriteFailure,                      0xF301, bool,                                               Swap_N, Io_All,  Sub_N, Ram,      NotNv,                                    NotFault) \

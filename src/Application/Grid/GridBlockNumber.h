@@ -10,6 +10,22 @@
 
 #include <stdint.h>
 
+enum
+{
+   GridBlockNumber_Max = UINT8_MAX
+};
 typedef uint8_t GridBlockNumber_t;
+
+enum
+{
+   PreviousGridBlockNumbers_MaxBlockNumbers = 5
+};
+
+typedef struct
+{
+   uint8_t maxSize;
+   uint8_t currentNumberOfBlocksStored;
+   GridBlockNumber_t blockNumbers[PreviousGridBlockNumbers_MaxBlockNumbers];
+} PreviousGridBlockNumbers_t;
 
 #endif

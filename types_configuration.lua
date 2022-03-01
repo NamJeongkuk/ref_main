@@ -11,5 +11,6 @@ return {
 
   -- Types that can't be automatically generated but need to be defined
   type_overrides = {
+    GridBlockNumber_t = 'uint8_t'
   }
 }

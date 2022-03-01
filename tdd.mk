@@ -46,6 +46,7 @@ INCLUDE_DIRS := \
    $(PROJECT_DIR)/Application/Grid/GridFunctions \
    $(PROJECT_DIR)/Application/Fan \
    $(PROJECT_DIR)/Application/Valve \
+   $(PROJECT_DIR)/Application/Temperature \
    $(PROJECT_DIR)/rx130/Bsp \
    $(PROJECT_DIR)/rx130/Hardware \
    $(REFERCOMMON_DIR)/Source/Temperature \

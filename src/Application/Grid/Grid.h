@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include "I_DataModel.h"
 #include "Timer.h"
-#include "GridLines.h"
+#include "DeltaGridLines.h"
 
 typedef void (*GridFunction_t)(void *context);
 
@@ -30,7 +30,9 @@ typedef struct
    TimerTicks_t periodicGridLineCalcRate;
    const GridFunctionArray_t *gridFunctions;
    GridId_t gridId;
-   const GridLines_t *parametricGridLines;
+   const DeltaGridLines_t *parametricGridLines;
+   const TemperatureDegFx100_t *ffSettings;
+   const TemperatureDegFx100_t *fzSettings;
 } GridConfiguration_t;
 
 typedef struct

@@ -17,8 +17,6 @@ static bool GridIdIsValid(const GridConfiguration_t *config)
 
 static void Grid_Run(void *context)
 {
-   // Calc Grid Block and Write to Block Erd Function called here
-
    REINTERPRET(instance, context, Grid_t *);
 
    instance->_private.configuration->gridFunctions->grids[instance->_private.configuration->gridId](instance);
