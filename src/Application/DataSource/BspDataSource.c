@@ -10,10 +10,9 @@
 
 static const DataSource_MappedErdPair_t applicationToBspMappedPairs[] = {
    { Erd_HeartbeatLed, Erd_BspGpio_HeartbeatLed },
-   { Erd_OtherLed, Erd_BspGpio_OtherLed },
-   { Erd_PushButtonSwitch, Erd_BspGpio_PushButtonSwitch },
    { Erd_SomeAnalogInput, Erd_BspAdc_SomeAnalogInput },
-   { Erd_AnotherAnalogInput, Erd_BspAdc_AnotherAnalogInput }
+   { Erd_AnotherAnalogInput, Erd_BspAdc_AnotherAnalogInput },
+   { Erd_AppliancePersonality, Erd_Bsp_Personality },
 };
 
 static const ConstArrayMap_BinarySearchConfiguration_t bspToApplicationMapConfiguration = {

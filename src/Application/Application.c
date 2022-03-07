@@ -50,7 +50,6 @@ void Application_Init(
       DataModelErdPointerAccess_GetAction(dataModel, Erd_JumpToBootLoaderAction));
 
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
-   SwitchedLedPlugin_Init(&instance->_private.switchedLedPlugin, dataModel, Erd_PushButtonSwitch);
    GridPlugin_Init(&instance->_private.gridPlugin, dataModel);
    DefrostPlugin_Init(dataModel);
 
