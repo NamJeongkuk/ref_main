@@ -53,6 +53,7 @@
 #include "DefrostState.h"
 #include "DefrostHsmState.h"
 #include "DefrostRequest.h"
+#include "DefrostTimerRequest.h"
 
 // clang-format off
 
@@ -215,6 +216,12 @@ enum
    ENTRY(Erd_DefrostState,                                  0xF10D, DefrostState_t,                                     Swap_N, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_DefrostHsmState,                               0xF10E, DefrostHsmState_t,                                  Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_DefrostRequest,                                0xF10F, DefrostRequest_t,                                   Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostDoorHoldOffRequest,                     0xF110, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostTimerRequest,                           0xF111, DefrostTimerRequest_t,                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FzDefrostWasAbnormal,                          0xF112, bool,                                               Swap_N, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_FzAbnormalDefrostCycleCount,                   0xF113, uint16_t,                                           Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_FzDefrostCycleCount,                           0xF114, uint16_t,                                           Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_NumberofFzAbnormalDefrostCycles,               0xF115, uint16_t,                                           Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
    ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,      NotNv,                                    NotFault) \
    ENTRY(Erd_OtherLed,                                      0xF201, bool,                                               Swap_N, Io_None, Sub_N, Bsp,      NotNv,                                    NotFault) \

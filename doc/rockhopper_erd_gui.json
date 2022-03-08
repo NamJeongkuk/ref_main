@@ -1,0 +1,95 @@
+{
+  "name": "Rockhopper GUI",
+  "tabs": [
+    {
+      "title": "Versions",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "MB Boot",
+          "name": "Erd_BootLoaderVersion",
+          "read": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "MB Application",
+          "name": "Erd_ApplicationVersion",
+          "read": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "MB Parametric",
+          "name": "Erd_ParametricVersion",
+          "read": true
+        }
+      ]
+    },
+    {
+      "title": "Defrost",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Filtered Temperature",
+          "name": "Erd_Freezer_FilteredTemperature",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Defrost State (EEPROM)",
+          "name": "Erd_DefrostState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Defrost HSM State",
+          "name": "Erd_DefrostHsmState",
+          "read": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fz Defrost Was Abnormal (EEPROM)",
+          "name": "Erd_FzDefrostWasAbnormal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Number of Fz Abnormal Defrost Cycles (EEPROM)",
+          "name": "Erd_NumberofFzAbnormalDefrostCycles",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fz Abnormal Defrost Cycle Count (EEPROM)",
+          "name": "Erd_FzAbnormalDefrostCycleCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fz Defrost Cycle Count (EEPROM)",
+          "name": "Erd_FzDefrostCycleCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Defrost Door Holdoff Request",
+          "name": "Erd_DefrostDoorHoldOffRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Defrost Timer Request",
+          "name": "Erd_DefrostTimerRequest",
+          "read": true,
+          "write": true
+        }
+      ]
+    }
+  ]
+}
