@@ -10,10 +10,12 @@
 
 #include "I_DataModel.h"
 #include "DefrostData.h"
+#include "SabbathData.h"
 
 typedef struct
 {
    const DefrostData_t *defrostData;
+   const SabbathData_t *sabbathData;
 } PersonalityParametricData_t;
 
 const PersonalityParametricData_t *PersonalityParametricData_Get(I_DataModel_t *dataModel);

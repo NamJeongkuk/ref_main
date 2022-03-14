@@ -48,12 +48,13 @@ SRC_DIRS:=\
   Parametric/data/ \
 
 INC_DIRS:=\
-  src/Application/Grid \
-  src/Application/Grid/GridFunctions \
   src/Application/Compressor \
   src/Application/Fan \
-  src/Application/Valve \
+  src/Application/Grid \
+  src/Application/Grid/GridFunctions \
+  src/Application/Sabbath \
   src/Application/Temperature \
+  src/Application/Valve \
   lib/Common/Source/Temperature/ \
 
 applcommon_EXTERNAL_INC_DIRS:=\

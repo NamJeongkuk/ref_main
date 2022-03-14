@@ -95,6 +95,10 @@ static const DefrostData_t defrostData = {
    .defrostPeriodicTimeoutInSeconds = 60,
 };
 
+static const SabbathData_t sabbathData = {
+   .maxTimeBetweenDefrostsInMinutes = 16 * MINUTES_PER_HOUR
+};
+
 enum
 {
    SixGridLines = 6,
@@ -139,6 +143,7 @@ TEST_GROUP(Defrost)
 
       PersonalityParametricData_TestDouble_Init(&personalityParametricData);
       PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);
+      PersonalityParametricData_TestDouble_SetSabbath(&personalityParametricData, &sabbathData);
       DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
    }
 

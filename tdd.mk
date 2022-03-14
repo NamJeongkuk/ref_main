@@ -37,16 +37,17 @@ TEST_SRC_DIRS := \
 INCLUDE_DIRS := \
    $(APPLCOMMON_DIR)/Hardware/Rx130 \
    $(APPLCOMMON_DIR)/Image \
-   $(PROJECT_DIR)/Application/Defrost \
-   $(PROJECT_DIR)/Application/ParametricData \
-   $(PROJECT_DIR)/Application/Plugins \
-   $(PROJECT_DIR)/Application/ServiceDiagnostics \
    $(PROJECT_DIR)/Application/Compressor \
+   $(PROJECT_DIR)/Application/Defrost \
+   $(PROJECT_DIR)/Application/Fan \
    $(PROJECT_DIR)/Application/Grid \
    $(PROJECT_DIR)/Application/Grid/GridFunctions \
-   $(PROJECT_DIR)/Application/Fan \
-   $(PROJECT_DIR)/Application/Valve \
+   $(PROJECT_DIR)/Application/ParametricData \
+   $(PROJECT_DIR)/Application/Plugins \
+   $(PROJECT_DIR)/Application/Sabbath \
+   $(PROJECT_DIR)/Application/ServiceDiagnostics \
    $(PROJECT_DIR)/Application/Temperature \
+   $(PROJECT_DIR)/Application/Valve \
    $(PROJECT_DIR)/rx130/Bsp \
    $(PROJECT_DIR)/rx130/Hardware \
    $(REFERCOMMON_DIR)/Source/Temperature \

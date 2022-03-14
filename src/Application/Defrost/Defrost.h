@@ -10,6 +10,7 @@
 
 #include "I_DataModel.h"
 #include "DefrostData.h"
+#include "SabbathData.h"
 #include "Timer.h"
 #include "Hsm.h"
 
@@ -37,6 +38,7 @@ typedef struct
       Timer_t timer;
       const DefrostConfiguration_t *config;
       const DefrostData_t *defrostParametricData;
+      const SabbathData_t *sabbathParametricData;
    } _private;
 } Defrost_t;
 
