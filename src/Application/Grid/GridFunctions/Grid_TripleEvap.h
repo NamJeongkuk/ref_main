@@ -5,11 +5,11 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef GRID_QUADDOOR_H
-#define GRID_QUADDOOR_H
+#ifndef GRID_TRIPLEEVAP_H
+#define GRID_TRIPLEEVAP_H
 
 #include "utils.h"
 
-void Grid_QuadDoor(void *context);
+void Grid_TripleEvap(void *context);
 
 #endif

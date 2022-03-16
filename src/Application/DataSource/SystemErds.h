@@ -199,6 +199,14 @@ enum
    ENTRY(Erd_PersonalityParametricData,                     0xF00E, PersonalityParametricData_t *,                      Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_NonVolatileDataSourceCacheSyncState,           0xF012, bool,                                               Swap_N, Io_None, Sub_N, Virtual,  NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_DelayCcCooling,                                0xF013, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CoolCcBeforeOff,                               0xF014, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DelayedCcCoolingLowSpeed,                      0xF015, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_IceMakersEnabled,                              0xF016, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodPulldownOffsetEnabled,                0xF017, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_MaxValveTimeInPosAEnabled,                     0xF018, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentGridBlockNumber,         0xF019, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_SystemTickInterrupt,                           0xF100, I_Interrupt_t *,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_TimeSource,                                    0xF101, I_TimeSource_t *,                                   Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_TimerModule,                                   0xF102, TimerModule_t *,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
@@ -234,10 +242,10 @@ enum
    ENTRY(Erd_CompressorSpeed_FactoryVote,                   0xF212, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorSpeed_GridVote,                      0xF223, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_CondenserFanState_ResolvedVote,                0xF230, FanVotedState_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_CondenserFanState_WinningVoteErd,              0xF231, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_CondenserFanState_FactoryVote,                 0xF232, FanVotedState_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_CondenserFanState_GridVote,                    0xF241, FanVotedState_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CondenserFanSpeed_ResolvedVote,                0xF230, FanVotedState_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CondenserFanSpeed_WinningVoteErd,              0xF231, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CondenserFanSpeed_FactoryVote,                 0xF232, FanVotedState_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CondenserFanSpeed_GridVote,                    0xF241, FanVotedState_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ValvePosition_ResolvedVote,                    0xF250, ValveVotedPosition_t,                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_ValvePosition_WinningVoteErd,                  0xF251, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
@@ -257,9 +265,9 @@ enum
    ENTRY(Erd_Grid_BlockNumber,                              0xF2A0, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_Grid_PreviousBlocks,                           0xF2A1, PreviousGridBlockNumbers_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_Grid_CalculatedGridLines,                      0xF2A2, CalculatedGridLines_t,                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_GridLoopThreeDoorRun_Test,                     0xF2A3, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_GridLoopFourDoorRun_Test,                      0xF2A4, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_GridLoopQuadDoorRun_Test,                      0xF2A5, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_GridLoopMultiDoorRun_Test,                     0xF2A3, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_GridLoopDualEvapRun_Test,                      0xF2A4, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_GridLoopTripleEvapRun_Test,                    0xF2A5, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFood_FilteredTemperature,                 0xF2B0, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFood_AdjustedSetpoint,                    0xF2B1, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \

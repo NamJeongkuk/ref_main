@@ -5,11 +5,11 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef GRID_FOURDOOR_H
-#define GRID_FOURDOOR_H
+#ifndef GRID_DUALEVAP_H
+#define GRID_DUALEVAP_H
 
 #include "utils.h"
 
-void Grid_FourDoor(void *context);
+void Grid_DualEvap(void *context);
 
 #endif

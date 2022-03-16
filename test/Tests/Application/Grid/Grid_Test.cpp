@@ -25,25 +25,25 @@ enum
    OneSecondInMs = 1000
 };
 
-void Grid_ThreeDoor(void *context)
+void Grid_MultiDoor(void *context)
 {
    IGNORE(context);
-   mock().actualCall("Grid_ThreeDoor");
+   mock().actualCall("Grid_MultiDoor");
 }
 
-void Grid_FourDoor(void *context)
+void Grid_DualEvap(void *context)
 {
    IGNORE(context);
-   mock().actualCall("Grid_FourDoor");
+   mock().actualCall("Grid_DualEvap");
 }
 
-void Grid_QuadDoor(void *context)
+void Grid_TripleEvap(void *context)
 {
    IGNORE(context);
-   mock().actualCall("Grid_QuadDoor");
+   mock().actualCall("Grid_TripleEvap");
 }
 
-static const GridFunction_t grids[] = { Grid_ThreeDoor, Grid_FourDoor, Grid_QuadDoor };
+static const GridFunction_t grids[] = { Grid_MultiDoor, Grid_DualEvap, Grid_TripleEvap };
 
 static const GridFunctionArray_t functionArray = {
    grids,
@@ -116,7 +116,7 @@ TEST(Grid, ShouldRunGridFunctionAfterGivenPeriod)
    NothingShouldHappen();
    After(OneSecondInMs - 1);
 
-   GridFunctionShouldBeCalled("Grid_ThreeDoor");
+   GridFunctionShouldBeCalled("Grid_MultiDoor");
    After(1);
 }
 
@@ -128,7 +128,7 @@ TEST(Grid, ShouldRunDifferentGridFunctionAfterGivenPeriod)
    NothingShouldHappen();
    After(OneSecondInMs - 1);
 
-   GridFunctionShouldBeCalled("Grid_FourDoor");
+   GridFunctionShouldBeCalled("Grid_DualEvap");
    After(1);
 }
 
@@ -140,7 +140,7 @@ TEST(Grid, ShouldRunAnotherGridFunctionAfterGivenPeriod)
    NothingShouldHappen();
    After(OneSecondInMs - 1);
 
-   GridFunctionShouldBeCalled("Grid_QuadDoor");
+   GridFunctionShouldBeCalled("Grid_TripleEvap");
    After(1);
 }
 

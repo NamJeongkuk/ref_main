@@ -8,9 +8,9 @@
 #include "GridPlugin.h"
 #include "SystemErds.h"
 #include "Constants_Time.h"
-#include "Grid_ThreeDoor.h"
-#include "Grid_QuadDoor.h"
-#include "Grid_FourDoor.h"
+#include "Grid_MultiDoor.h"
+#include "Grid_TripleEvap.h"
+#include "Grid_DualEvap.h"
 
 enum
 {
@@ -22,7 +22,7 @@ enum
    TwoDimensional = 2
 };
 
-static const GridFunction_t grids[] = { Grid_ThreeDoor, Grid_FourDoor, Grid_QuadDoor };
+static const GridFunction_t grids[] = { Grid_MultiDoor, Grid_DualEvap, Grid_TripleEvap };
 
 static const GridFunctionArray_t gridFunctionArray = {
    grids,
