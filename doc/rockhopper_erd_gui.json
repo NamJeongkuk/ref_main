@@ -88,6 +88,67 @@
           "name": "Erd_DefrostTimerRequest",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Door Acceleration Request",
+          "name": "Erd_DoorAccelerationRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Door Acceleration FSM State",
+          "name": "Erd_DoorAccelerationFsmState",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "FZ Door Acceleration Count",
+          "name": "Erd_DefrostFzDoorAccelerationCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "FF Door Acceleration Count",
+          "name": "Erd_DefrostFfDoorAccelerationCount",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
+      "title": "Doors",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "Left FF Door Is Open",
+          "name": "Erd_LeftHandFfDoorIsOpen",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Right FF Door Is Open",
+          "name": "Erd_RightHandFfDoorIsOpen",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Door In Door Is Open",
+          "name": "Erd_DoorInDoorIsOpen",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "FZ Door Is Open",
+          "name": "Erd_FzDoorIsOpen",
+          "read": true,
+          "write": true
         }
       ]
     }

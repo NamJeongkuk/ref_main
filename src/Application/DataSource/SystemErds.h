@@ -54,6 +54,8 @@
 #include "DefrostHsmState.h"
 #include "DefrostRequest.h"
 #include "DefrostTimerRequest.h"
+#include "DoorAccelerationRequest.h"
+#include "DoorAccelerationFsmState.h"
 
 // clang-format off
 
@@ -230,6 +232,15 @@ enum
    ENTRY(Erd_FzAbnormalDefrostCycleCount,                   0xF113, uint16_t,                                           Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_FzDefrostCycleCount,                           0xF114, uint16_t,                                           Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NumberofFzAbnormalDefrostCycles,               0xF115, uint16_t,                                           Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_DefrostFzDoorAccelerationCount,                0xF116, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostFfDoorAccelerationCount,                0xF117, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DoorAccelerationRequest,                       0xF118, DoorAccelerationRequest_t,                          Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DoorAccelerationFsmState,                      0xF119, DoorAccelerationFsmState_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_LeftHandFfDoorIsOpen,                          0xF130, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_RightHandFfDoorIsOpen,                         0xF131, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DoorInDoorIsOpen,                              0xF132, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FzDoorIsOpen,                                  0xF133, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,      NotNv,                                    NotFault) \
    ENTRY(Erd_OtherLed,                                      0xF201, bool,                                               Swap_N, Io_None, Sub_N, Bsp,      NotNv,                                    NotFault) \
