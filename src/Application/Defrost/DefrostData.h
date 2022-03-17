@@ -13,8 +13,8 @@
 
 typedef struct
 {
-   uint16_t fzDoorIncrementCount;
-   uint16_t ffDoorIncrementCount;
+   uint16_t fzDoorIncrementFactorInSecondsPerSecond;
+   uint16_t ffDoorIncrementFactorInSecondsPerSecond;
    uint16_t fzAbnormalRunTimeInMinutes;
    uint16_t maxTimeBetweenDefrostsInMinutes;
    TemperatureDegFx100_t dmFzDefrostTemperatureInDegFx100;
@@ -44,19 +44,13 @@ typedef struct
    uint8_t defrostDwellTimeInMinutes;
    TemperatureDegFx100_t ffAndFzPostDwellFzExitTemperatureInDegFx100;
    uint8_t ffAndFzPostDwellFzExitTimeInMinutes;
-   ValvePosition_t postDwellValvePositionForFfAndFz;
-   TemperatureDegFx100_t ffPostDefrostShiftInDegFx100;
-   TemperatureDegFx100_t fzPostDefrostShiftInDegFx100;
-   uint16_t minimumFfPostDefrostPullDownTimeInSeconds;
-   uint16_t maximumFfPostDefrostPullDownTimeInSeconds;
+   ValvePosition_t dwellThreeWayValvePosition;
+   ValvePosition_t postDwellThreeWayValvePositionForFfAndFz;
    TemperatureDegFx100_t ffPostDefrostPullDownExitTemperatureInDegFx100;
-   uint16_t minimumFzPostDefrostPullDownTimeInSeconds;
-   uint16_t maximumFzPostDefrostPullDownTimeInSeconds;
    TemperatureDegFx100_t fzPostDefrostPullDownExitTemperatureInDegFx100;
    uint8_t numberOfFfDefrostsBeforeFzDefrost;
    uint8_t numberOfFfDefrostsBeforeAbnormalFzDefrost;
    uint8_t doorHoldoffTimeForFfAndFzInMinutes;
-   uint8_t maxFzPrechillTimeForFfOnlyDefrostInMinutes;
    uint8_t ffOnlyPostDwellExitTimeInMinutes;
    TemperatureDegFx100_t dsmFzSetpointTemperatureInDegFx100;
    uint8_t defrostPeriodicTimeoutInSeconds;
