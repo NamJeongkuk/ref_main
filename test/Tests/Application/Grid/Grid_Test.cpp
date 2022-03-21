@@ -16,6 +16,7 @@ extern "C"
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 #include "ReferDataModel_TestDouble.h"
+#include "PersonalityParametricData_TestDouble.h"
 #include "uassert_test.h"
 
 #define And
@@ -52,9 +53,12 @@ static const GridFunctionArray_t functionArray = {
 
 static GridConfiguration_t gridConfig = {
    .timerModuleErd = Erd_TimerModule,
-   .personalityParametricDataErd = Erd_PersonalityParametricData,
-   .periodicGridLineCalcRate = OneSecondInMs,
    .gridFunctions = &functionArray
+};
+
+static GridData_t gridData = {
+   .gridId = 1,
+   .gridPeriodicRunRateInMSec = OneSecondInMs
 };
 
 TEST_GROUP(Grid)
@@ -63,6 +67,7 @@ TEST_GROUP(Grid)
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
+   PersonalityParametricData_t personalityParametricData;
 
    void setup()
    {
@@ -71,11 +76,15 @@ TEST_GROUP(Grid)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
+
+      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
+      PersonalityParametricData_TestDouble_SetGrid(&personalityParametricData, &gridData);
+      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
    }
 
    void GivenGridIdIs(GridId_t id)
    {
-      gridConfig.gridId = id;
+      gridData.gridId = id;
    }
 
    void WhenTheModuleIsInitialized()

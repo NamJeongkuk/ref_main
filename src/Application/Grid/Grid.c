@@ -10,16 +10,16 @@
 #include "DataModelErdPointerAccess.h"
 #include "GridBlockNumber.h"
 
-static bool GridIdIsValid(const GridConfiguration_t *config)
+static bool GridIdIsValid(Grid_t *instance)
 {
-   return (config->gridId < config->gridFunctions->numOfGrids);
+   return (instance->_private.gridData->gridId < instance->_private.configuration->gridFunctions->numOfGrids);
 }
 
 static void Grid_Run(void *context)
 {
    REINTERPRET(instance, context, Grid_t *);
 
-   instance->_private.configuration->gridFunctions->grids[instance->_private.configuration->gridId](instance->_private.dataModel);
+   instance->_private.configuration->gridFunctions->grids[instance->_private.gridData->gridId](instance->_private.dataModel);
 }
 
 void Grid_Init(
@@ -29,13 +29,14 @@ void Grid_Init(
 {
    instance->_private.dataModel = dataModel;
    instance->_private.configuration = configuration;
+   instance->_private.gridData = PersonalityParametricData_Get(instance->_private.dataModel)->gridData;
 
-   if(GridIdIsValid(configuration))
+   if(GridIdIsValid(instance))
    {
       TimerModule_StartPeriodic(
          DataModelErdPointerAccess_GetTimerModule(dataModel, instance->_private.configuration->timerModuleErd),
          &instance->_private.gridTimer,
-         configuration->periodicGridLineCalcRate,
+         instance->_private.gridData->gridPeriodicRunRateInMSec,
          Grid_Run,
          instance);
    }

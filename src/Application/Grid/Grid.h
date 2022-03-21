@@ -12,6 +12,7 @@
 #include "I_DataModel.h"
 #include "Timer.h"
 #include "DeltaGridLines.h"
+#include "PersonalityParametricData.h"
 
 typedef void (*GridFunction_t)(void *context);
 
@@ -26,13 +27,7 @@ typedef struct
 typedef struct
 {
    Erd_t timerModuleErd;
-   Erd_t personalityParametricDataErd;
-   TimerTicks_t periodicGridLineCalcRate;
    const GridFunctionArray_t *gridFunctions;
-   GridId_t gridId;
-   const DeltaGridLines_t *parametricGridLines;
-   const TemperatureDegFx100_t *ffSettings;
-   const TemperatureDegFx100_t *fzSettings;
 } GridConfiguration_t;
 
 typedef struct
@@ -40,6 +35,7 @@ typedef struct
    struct
    {
       const GridConfiguration_t *configuration;
+      const GridData_t *gridData;
       I_DataModel_t *dataModel;
       Timer_t gridTimer;
    } _private;

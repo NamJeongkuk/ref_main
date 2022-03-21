@@ -13,6 +13,11 @@ void PersonalityParametricData_TestDouble_SetDefrost(PersonalityParametricData_t
    instance->defrostData = defrostData;
 }
 
+void PersonalityParametricData_TestDouble_SetGrid(PersonalityParametricData_t *instance, const GridData_t *gridData)
+{
+   instance->gridData = gridData;
+}
+
 void PersonalityParametricData_TestDouble_SetSabbath(PersonalityParametricData_t *instance, const SabbathData_t *sabbathData)
 {
    instance->sabbathData = sabbathData;

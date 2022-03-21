@@ -14,8 +14,6 @@
 
 enum
 {
-   GridRunCallbackRate = 1000,
-   GridId = 1,
    FivePreviousBlocks = 5,
    Zero = 0,
    SixGridLines = 6,
@@ -31,10 +29,7 @@ static const GridFunctionArray_t gridFunctionArray = {
 
 static const GridConfiguration_t gridConfig = {
    .timerModuleErd = Erd_TimerModule,
-   .personalityParametricDataErd = Erd_PersonalityParametricData,
-   .periodicGridLineCalcRate = GridRunCallbackRate, // get this from parametric
    .gridFunctions = &gridFunctionArray,
-   .gridId = GridId, // get this from parametric
 };
 
 static const GridLineErds_t ffErds = {
@@ -49,30 +44,6 @@ static const GridLineErds_t fzErds = {
    .offsetErd = Erd_Freezer_Offset,
    .shiftErd = Erd_Freezer_Shift,
    .adjustedSetpointErd = Erd_Freezer_AdjustedSetpoint
-};
-
-static const TemperatureDegFx100_t ffAxisGridLines[] = { 0, -450, 150, 450, 950, 1150 }; // from parametric
-static const DeltaGridLines_BitMapping_t ffBitMap[] = { 0b0010, 0b1000, 0b1000, 0b1000, 0b1000, 0b1000 }; // from parametric
-
-static const TemperatureDegFx100_t fzAxisGridLines[] = { -250, 0, 250, 600, 750, 5500 }; // from parametric
-static const DeltaGridLines_BitMapping_t fzBitMap[] = { 0b1000, 0b1000, 0b1000, 0b1000, 0b1000, 0b0010 }; // from parametric
-
-static const DeltaAxisGridLines_t ffAxis = {
-   .numberOfLines = SixGridLines,
-   .gridLinesDegFx100 = ffAxisGridLines,
-   .bitMappings = ffBitMap
-};
-
-static const DeltaAxisGridLines_t fzAxis = {
-   .numberOfLines = SixGridLines,
-   .gridLinesDegFx100 = fzAxisGridLines,
-   .bitMappings = fzBitMap
-};
-
-static const DeltaAxisGridLines_t parametricGrid[] = { ffAxis, fzAxis };
-static const DeltaGridLines_t deltaGrid = {
-   .dimensions = TwoDimensional,
-   .gridLines = parametricGrid
 };
 
 static TemperatureDegFx100_t ffCalcAxisGridLines[SixGridLines] = { 0 };
@@ -103,9 +74,7 @@ static const GridBlockAndLinesConfig_t calcConfig = {
    .fzFilteredTempErd = Erd_Freezer_FilteredTemperature,
    .timerModuleErd = Erd_TimerModule,
    .fzErds = fzErds,
-   .ffErds = ffErds,
-   .parametricGridLines = deltaGrid,
-   .gridBlockCalcRate = MSEC_PER_SEC // from parametric
+   .ffErds = ffErds
 };
 
 static GridBlockNumber_t ringBufferNumbers[FivePreviousBlocks] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };

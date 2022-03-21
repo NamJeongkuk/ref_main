@@ -15,6 +15,7 @@
 #include "Timer.h"
 #include "RingBuffer.h"
 #include "EventSubscription.h"
+#include "PersonalityParametricData.h"
 
 typedef struct
 {
@@ -34,8 +35,6 @@ typedef struct
    Erd_t timerModuleErd;
    const GridLineErds_t fzErds;
    const GridLineErds_t ffErds;
-   const DeltaGridLines_t parametricGridLines;
-   const TimerTicks_t gridBlockCalcRate;
 } GridBlockAndLinesConfig_t;
 
 typedef struct
@@ -48,6 +47,7 @@ typedef struct
       GridBlockNumber_t lastBlock;
       RingBuffer_t *bufferInstance;
       const GridBlockAndLinesConfig_t *config;
+      const GridData_t *gridData;
       I_DataModel_t *dataModel;
       Timer_t timer;
    } _private;

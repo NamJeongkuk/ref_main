@@ -253,7 +253,7 @@ TEST_GROUP(Defrost)
    void DefrostInitializedWithFzTempAboveExtremeHysteresis()
    {
       Given DefrostTimerRequestIs(DefrostTimer_Enable, 0);
-      Given FilteredFreezerCabinetTemperatureIs(fzCalcAxisGridLines[5] + 1);
+      Given FilteredFreezerCabinetTemperatureIs(fzCalcAxisGridLines[GridLine_FzExtremeHigh] + 1);
       Given CalculatedGridLinesAre(calcGridLines);
       Given DefrostIsInitialized();
    }

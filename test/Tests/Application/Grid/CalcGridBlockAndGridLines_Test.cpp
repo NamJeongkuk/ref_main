@@ -17,6 +17,7 @@ extern "C"
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 #include "ReferDataModel_TestDouble.h"
+#include "PersonalityParametricData_TestDouble.h"
 #include "uassert_test.h"
 
 #define And
@@ -28,32 +29,6 @@ enum
    TwoDimensional = 2,
    FivePreviousBlocks = 5,
    Zero = 0
-};
-
-enum
-{
-   Ff,
-   Fz,
-};
-
-enum
-{
-   Nfl,
-   FfLowHyst,
-   FfLowHystDelta,
-   FfHighHyst,
-   FfExtraHigh,
-   FfSuperHigh
-};
-
-enum
-{
-   FzLowHyst,
-   FzDelta,
-   FzHighHyst,
-   FzExtraHigh,
-   FzSuperHigh,
-   FzExtremeHigh
 };
 
 static const GridLineErds_t ffErds = {
@@ -70,28 +45,80 @@ static const GridLineErds_t fzErds = {
    .adjustedSetpointErd = Erd_Freezer_AdjustedSetpoint
 };
 
-static const TemperatureDegFx100_t ffAxisGridLines[] = { 0, -450, 150, 450, 950, 1150 };
-static const DeltaGridLines_BitMapping_t ffBitMap[] = { 0b0010, 0b1000, 0b1000, 0b1000, 0b1000, 0b1000 };
+static const DeltaGridLineData_t ffGridLineData[] = {
+   {
+      .gridLinesDegFx100 = 0,
+      .bitMapping = 0b0010,
+   },
+   {
+      .gridLinesDegFx100 = -450,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 150,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 450,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 950,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 1150,
+      .bitMapping = 0b1000,
+   },
+};
 
-static const TemperatureDegFx100_t fzAxisGridLines[] = { -250, 0, 250, 600, 750, 5500 };
-static const DeltaGridLines_BitMapping_t fzBitMap[] = { 0b1000, 0b1000, 0b1000, 0b1000, 0b1000, 0b0010 };
+static const DeltaGridLineData_t fzGridLineData[] = {
+   {
+      .gridLinesDegFx100 = -250,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 0,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 250,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 600,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 750,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 5500,
+      .bitMapping = 0b0010,
+   },
+};
 
 static const DeltaAxisGridLines_t ffAxis = {
    .numberOfLines = SixGridLines,
-   .gridLinesDegFx100 = ffAxisGridLines,
-   .bitMappings = ffBitMap
+   .gridLineData = ffGridLineData
 };
 
 static const DeltaAxisGridLines_t fzAxis = {
    .numberOfLines = SixGridLines,
-   .gridLinesDegFx100 = fzAxisGridLines,
-   .bitMappings = fzBitMap
+   .gridLineData = fzGridLineData
 };
 
 static DeltaAxisGridLines_t parametricGrid[] = { ffAxis, fzAxis };
-static const DeltaGridLines_t deltaGrid = {
+static DeltaGridLines_t deltaGrid = {
    .dimensions = TwoDimensional,
    .gridLines = parametricGrid
+};
+
+static const GridData_t gridData = {
+   .gridId = 0,
+   .deltaGridLines = &deltaGrid,
+   .gridPeriodicRunRateInMSec = MSEC_PER_SEC
 };
 
 static TemperatureDegFx100_t ffCalcAxisGridLines[SixGridLines] = { 0 };
@@ -122,9 +149,7 @@ static const GridBlockAndLinesConfig_t config = {
    .fzFilteredTempErd = Erd_Freezer_FilteredTemperature,
    .timerModuleErd = Erd_TimerModule,
    .fzErds = fzErds,
-   .ffErds = ffErds,
-   .parametricGridLines = deltaGrid,
-   .gridBlockCalcRate = MSEC_PER_SEC
+   .ffErds = ffErds
 };
 
 static GridBlockNumber_t ringBufferNumbers[FivePreviousBlocks] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
@@ -141,6 +166,7 @@ TEST_GROUP(CalcGridBlockAndGridLines)
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
    RingBuffer_t bufferInstance;
+   PersonalityParametricData_t personalityParametricData;
 
    void setup()
    {
@@ -149,6 +175,10 @@ TEST_GROUP(CalcGridBlockAndGridLines)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
+
+      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
+      PersonalityParametricData_TestDouble_SetGrid(&personalityParametricData, &gridData);
+      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
    }
 
    void teardown()
@@ -181,19 +211,19 @@ TEST_GROUP(CalcGridBlockAndGridLines)
 
    void CalculatedGridLinesShouldBeZero()
    {
-      CalculatedGridLineTempShouldBe(0, Ff, Nfl);
-      And CalculatedGridLineTempShouldBe(0, Ff, FfLowHyst);
-      And CalculatedGridLineTempShouldBe(0, Ff, FfLowHystDelta);
-      And CalculatedGridLineTempShouldBe(0, Ff, FfHighHyst);
-      And CalculatedGridLineTempShouldBe(0, Ff, FfExtraHigh);
-      And CalculatedGridLineTempShouldBe(0, Ff, FfSuperHigh);
+      CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_Nfl);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfLowHyst);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfLowHystDelta);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfHighHyst);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfExtraHigh);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfSuperHigh);
 
-      And CalculatedGridLineTempShouldBe(0, Fz, FzLowHyst);
-      And CalculatedGridLineTempShouldBe(0, Fz, FzDelta);
-      And CalculatedGridLineTempShouldBe(0, Fz, FzHighHyst);
-      And CalculatedGridLineTempShouldBe(0, Fz, FzExtraHigh);
-      And CalculatedGridLineTempShouldBe(0, Fz, FzSuperHigh);
-      And CalculatedGridLineTempShouldBe(0, Fz, FzExtremeHigh);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzLowHyst);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzDelta);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzHighHyst);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzExtraHigh);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzSuperHigh);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzExtremeHigh);
    }
 
    void NothingShouldHappen()
@@ -307,19 +337,19 @@ TEST(CalcGridBlockAndGridLines, ShouldInitCalculatedGridLinesToZero)
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
 
-   CalculatedGridLineTempShouldBe(0, Ff, Nfl);
-   And CalculatedGridLineTempShouldBe(0, Ff, FfLowHyst);
-   And CalculatedGridLineTempShouldBe(0, Ff, FfLowHystDelta);
-   And CalculatedGridLineTempShouldBe(0, Ff, FfHighHyst);
-   And CalculatedGridLineTempShouldBe(0, Ff, FfExtraHigh);
-   And CalculatedGridLineTempShouldBe(0, Ff, FfSuperHigh);
+   CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_Nfl);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfLowHyst);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfLowHystDelta);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfHighHyst);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfExtraHigh);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfSuperHigh);
 
-   And CalculatedGridLineTempShouldBe(0, Fz, FzLowHyst);
-   And CalculatedGridLineTempShouldBe(0, Fz, FzDelta);
-   And CalculatedGridLineTempShouldBe(0, Fz, FzHighHyst);
-   And CalculatedGridLineTempShouldBe(0, Fz, FzExtraHigh);
-   And CalculatedGridLineTempShouldBe(0, Fz, FzSuperHigh);
-   And CalculatedGridLineTempShouldBe(0, Fz, FzExtremeHigh);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzLowHyst);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzDelta);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzHighHyst);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzExtraHigh);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzSuperHigh);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzExtremeHigh);
 }
 
 TEST(CalcGridBlockAndGridLines, ShouldCalculateGridLinesAfterOneSecond)
@@ -331,19 +361,19 @@ TEST(CalcGridBlockAndGridLines, ShouldCalculateGridLinesAfterOneSecond)
    CalculatedGridLinesShouldBeZero();
 
    After(1);
-   CalculatedGridLineTempShouldBe(190, Ff, Nfl);
-   And CalculatedGridLineTempShouldBe(3440, Ff, FfLowHyst);
-   And CalculatedGridLineTempShouldBe(4040, Ff, FfLowHystDelta);
-   And CalculatedGridLineTempShouldBe(4340, Ff, FfHighHyst);
-   And CalculatedGridLineTempShouldBe(4840, Ff, FfExtraHigh);
-   And CalculatedGridLineTempShouldBe(5040, Ff, FfSuperHigh);
+   CalculatedGridLineTempShouldBe(190, GridDelta_Ff, GridLine_Nfl);
+   And CalculatedGridLineTempShouldBe(3440, GridDelta_Ff, GridLine_FfLowHyst);
+   And CalculatedGridLineTempShouldBe(4040, GridDelta_Ff, GridLine_FfLowHystDelta);
+   And CalculatedGridLineTempShouldBe(4340, GridDelta_Ff, GridLine_FfHighHyst);
+   And CalculatedGridLineTempShouldBe(4840, GridDelta_Ff, GridLine_FfExtraHigh);
+   And CalculatedGridLineTempShouldBe(5040, GridDelta_Ff, GridLine_FfSuperHigh);
 
-   And CalculatedGridLineTempShouldBe(190, Fz, FzLowHyst);
-   And CalculatedGridLineTempShouldBe(440, Fz, FzDelta);
-   And CalculatedGridLineTempShouldBe(690, Fz, FzHighHyst);
-   And CalculatedGridLineTempShouldBe(1040, Fz, FzExtraHigh);
-   And CalculatedGridLineTempShouldBe(1190, Fz, FzSuperHigh);
-   And CalculatedGridLineTempShouldBe(5950, Fz, FzExtremeHigh);
+   And CalculatedGridLineTempShouldBe(190, GridDelta_Fz, GridLine_FzLowHyst);
+   And CalculatedGridLineTempShouldBe(440, GridDelta_Fz, GridLine_FzDelta);
+   And CalculatedGridLineTempShouldBe(690, GridDelta_Fz, GridLine_FzHighHyst);
+   And CalculatedGridLineTempShouldBe(1040, GridDelta_Fz, GridLine_FzExtraHigh);
+   And CalculatedGridLineTempShouldBe(1190, GridDelta_Fz, GridLine_FzSuperHigh);
+   And CalculatedGridLineTempShouldBe(5950, GridDelta_Fz, GridLine_FzExtremeHigh);
 }
 
 TEST(CalcGridBlockAndGridLines, ShouldReCalculateGridLinesAfterOneSecondWhenAdjSetpointsChange)
@@ -355,37 +385,37 @@ TEST(CalcGridBlockAndGridLines, ShouldReCalculateGridLinesAfterOneSecondWhenAdjS
    CalculatedGridLinesShouldBeZero();
 
    After(1);
-   CalculatedGridLineTempShouldBe(190, Ff, Nfl);
-   And CalculatedGridLineTempShouldBe(3440, Ff, FfLowHyst);
-   And CalculatedGridLineTempShouldBe(4040, Ff, FfLowHystDelta);
-   And CalculatedGridLineTempShouldBe(4340, Ff, FfHighHyst);
-   And CalculatedGridLineTempShouldBe(4840, Ff, FfExtraHigh);
-   And CalculatedGridLineTempShouldBe(5040, Ff, FfSuperHigh);
+   CalculatedGridLineTempShouldBe(190, GridDelta_Ff, GridLine_Nfl);
+   And CalculatedGridLineTempShouldBe(3440, GridDelta_Ff, GridLine_FfLowHyst);
+   And CalculatedGridLineTempShouldBe(4040, GridDelta_Ff, GridLine_FfLowHystDelta);
+   And CalculatedGridLineTempShouldBe(4340, GridDelta_Ff, GridLine_FfHighHyst);
+   And CalculatedGridLineTempShouldBe(4840, GridDelta_Ff, GridLine_FfExtraHigh);
+   And CalculatedGridLineTempShouldBe(5040, GridDelta_Ff, GridLine_FfSuperHigh);
 
-   And CalculatedGridLineTempShouldBe(190, Fz, FzLowHyst);
-   And CalculatedGridLineTempShouldBe(440, Fz, FzDelta);
-   And CalculatedGridLineTempShouldBe(690, Fz, FzHighHyst);
-   And CalculatedGridLineTempShouldBe(1040, Fz, FzExtraHigh);
-   And CalculatedGridLineTempShouldBe(1190, Fz, FzSuperHigh);
-   And CalculatedGridLineTempShouldBe(5950, Fz, FzExtremeHigh);
+   And CalculatedGridLineTempShouldBe(190, GridDelta_Fz, GridLine_FzLowHyst);
+   And CalculatedGridLineTempShouldBe(440, GridDelta_Fz, GridLine_FzDelta);
+   And CalculatedGridLineTempShouldBe(690, GridDelta_Fz, GridLine_FzHighHyst);
+   And CalculatedGridLineTempShouldBe(1040, GridDelta_Fz, GridLine_FzExtraHigh);
+   And CalculatedGridLineTempShouldBe(1190, GridDelta_Fz, GridLine_FzSuperHigh);
+   And CalculatedGridLineTempShouldBe(5950, GridDelta_Fz, GridLine_FzExtremeHigh);
 
    GivenTheFFAdjustedSetpointIs(4690);
    And GivenTheFZAdjustedSetpointIs(-60);
 
    After(MSEC_PER_SEC);
-   CalculatedGridLineTempShouldBe(190, Ff, Nfl);
-   And CalculatedGridLineTempShouldBe(4240, Ff, FfLowHyst);
-   And CalculatedGridLineTempShouldBe(4840, Ff, FfLowHystDelta);
-   And CalculatedGridLineTempShouldBe(5140, Ff, FfHighHyst);
-   And CalculatedGridLineTempShouldBe(5640, Ff, FfExtraHigh);
-   And CalculatedGridLineTempShouldBe(5840, Ff, FfSuperHigh);
+   CalculatedGridLineTempShouldBe(190, GridDelta_Ff, GridLine_Nfl);
+   And CalculatedGridLineTempShouldBe(4240, GridDelta_Ff, GridLine_FfLowHyst);
+   And CalculatedGridLineTempShouldBe(4840, GridDelta_Ff, GridLine_FfLowHystDelta);
+   And CalculatedGridLineTempShouldBe(5140, GridDelta_Ff, GridLine_FfHighHyst);
+   And CalculatedGridLineTempShouldBe(5640, GridDelta_Ff, GridLine_FfExtraHigh);
+   And CalculatedGridLineTempShouldBe(5840, GridDelta_Ff, GridLine_FfSuperHigh);
 
-   And CalculatedGridLineTempShouldBe(-310, Fz, FzLowHyst);
-   And CalculatedGridLineTempShouldBe(-60, Fz, FzDelta);
-   And CalculatedGridLineTempShouldBe(190, Fz, FzHighHyst);
-   And CalculatedGridLineTempShouldBe(540, Fz, FzExtraHigh);
-   And CalculatedGridLineTempShouldBe(690, Fz, FzSuperHigh);
-   And CalculatedGridLineTempShouldBe(5950, Fz, FzExtremeHigh);
+   And CalculatedGridLineTempShouldBe(-310, GridDelta_Fz, GridLine_FzLowHyst);
+   And CalculatedGridLineTempShouldBe(-60, GridDelta_Fz, GridLine_FzDelta);
+   And CalculatedGridLineTempShouldBe(190, GridDelta_Fz, GridLine_FzHighHyst);
+   And CalculatedGridLineTempShouldBe(540, GridDelta_Fz, GridLine_FzExtraHigh);
+   And CalculatedGridLineTempShouldBe(690, GridDelta_Fz, GridLine_FzSuperHigh);
+   And CalculatedGridLineTempShouldBe(5950, GridDelta_Fz, GridLine_FzExtremeHigh);
 }
 
 TEST(CalcGridBlockAndGridLines, PreviousGridBlocksShouldBeEmptyOnInit)

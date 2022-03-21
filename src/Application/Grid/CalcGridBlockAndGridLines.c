@@ -14,8 +14,6 @@
 
 enum
 {
-   Ff,
-   Fz,
    InvertingMultiplier = -1,
    NotInverted = false,
    Inverted = true
@@ -29,30 +27,30 @@ static void CalculateAxisGridLines(
 {
    for(int i = 0; i < parametricAxisGridLines->numberOfLines; i++)
    {
-      calcAxisGridlines->gridLinesDegFx100[i] = parametricAxisGridLines->gridLinesDegFx100[i];
+      calcAxisGridlines->gridLinesDegFx100[i] = parametricAxisGridLines->gridLineData[i].gridLinesDegFx100;
 
-      if(parametricAxisGridLines->bitMappings[i] & DeltaGridLines_BitMapping_SetpointBitMask)
+      if(parametricAxisGridLines->gridLineData[i].bitMapping & DeltaGridLines_BitMapping_SetpointBitMask)
       {
          SetpointVotedTemperature_t rawSetpoint;
          DataModel_Read(dataModel, erds.rawSetpointErd, &rawSetpoint);
          calcAxisGridlines->gridLinesDegFx100[i] += rawSetpoint.temperature;
       }
 
-      if(parametricAxisGridLines->bitMappings[i] & DeltaGridLines_BitMapping_OffsetBitMask)
+      if(parametricAxisGridLines->gridLineData[i].bitMapping & DeltaGridLines_BitMapping_OffsetBitMask)
       {
          TemperatureDegFx100_t offset;
          DataModel_Read(dataModel, erds.offsetErd, &offset);
          calcAxisGridlines->gridLinesDegFx100[i] += offset;
       }
 
-      if(parametricAxisGridLines->bitMappings[i] & DeltaGridLines_BitMapping_ShiftBitMask)
+      if(parametricAxisGridLines->gridLineData[i].bitMapping & DeltaGridLines_BitMapping_ShiftBitMask)
       {
          TemperatureDegFx100_t shift;
          DataModel_Read(dataModel, erds.shiftErd, &shift);
          calcAxisGridlines->gridLinesDegFx100[i] += shift;
       }
 
-      if(parametricAxisGridLines->bitMappings[i] & DeltaGridLines_BitMapping_AdjSetpointBitMask)
+      if(parametricAxisGridLines->gridLineData[i].bitMapping & DeltaGridLines_BitMapping_AdjSetpointBitMask)
       {
          TemperatureDegFx100_t adjSetpoint;
          DataModel_Read(dataModel, erds.adjustedSetpointErd, &adjSetpoint);
@@ -63,8 +61,16 @@ static void CalculateAxisGridLines(
 
 static void UpdateGridLines(CalcGridBlockAndLines_t *instance)
 {
-   CalculateAxisGridLines(&instance->_private.calcGridLines->gridLines[Ff], &instance->_private.config->parametricGridLines.gridLines[Ff], instance->_private.dataModel, instance->_private.config->ffErds);
-   CalculateAxisGridLines(&instance->_private.calcGridLines->gridLines[Fz], &instance->_private.config->parametricGridLines.gridLines[Fz], instance->_private.dataModel, instance->_private.config->fzErds);
+   CalculateAxisGridLines(
+      &instance->_private.calcGridLines->gridLines[GridDelta_Ff],
+      &instance->_private.gridData->deltaGridLines->gridLines[GridDelta_Ff],
+      instance->_private.dataModel,
+      instance->_private.config->ffErds);
+   CalculateAxisGridLines(
+      &instance->_private.calcGridLines->gridLines[GridDelta_Fz],
+      &instance->_private.gridData->deltaGridLines->gridLines[GridDelta_Fz],
+      instance->_private.dataModel,
+      instance->_private.config->fzErds);
 
    DataModel_Write(instance->_private.dataModel, instance->_private.config->calculatedGridLinesErd, instance->_private.calcGridLines);
 }
@@ -102,10 +108,10 @@ static void UpdateGridBlock(CalcGridBlockAndLines_t *instance)
    TemperatureDegFx100_t fzFilteredTemp;
    DataModel_Read(instance->_private.dataModel, instance->_private.config->fzFilteredTempErd, &fzFilteredTemp);
 
-   uint8_t colIndex = GetLocationIndex(ffFilteredTemp, Ff, instance->_private.calcGridLines, NotInverted);
-   uint8_t rowIndex = GetLocationIndex(fzFilteredTemp, Fz, instance->_private.calcGridLines, Inverted);
+   uint8_t colIndex = GetLocationIndex(ffFilteredTemp, GridDelta_Ff, instance->_private.calcGridLines, NotInverted);
+   uint8_t rowIndex = GetLocationIndex(fzFilteredTemp, GridDelta_Fz, instance->_private.calcGridLines, Inverted);
 
-   GridBlockNumber_t newBlockNumber = CalculateGridBlock(rowIndex, colIndex, instance->_private.config->parametricGridLines.gridLines[Ff].numberOfLines + 1);
+   GridBlockNumber_t newBlockNumber = CalculateGridBlock(rowIndex, colIndex, instance->_private.gridData->deltaGridLines->gridLines[GridDelta_Ff].numberOfLines + 1);
 
    DataModel_Write(instance->_private.dataModel, instance->_private.config->calculatedGridBlockErd, &newBlockNumber);
 }
@@ -165,6 +171,7 @@ void CalcGridBlockAndGridLines_Init(
    instance->_private.bufferInstance = bufferInstance;
    instance->_private.previousGridBlocks = prevGridBlocks;
    instance->_private.lastBlock = GridBlockNumber_Max;
+   instance->_private.gridData = PersonalityParametricData_Get(dataModel)->gridData;
 
    RingBuffer_Clear(instance->_private.bufferInstance);
    ClearPreviousGridBlocks(instance->_private.previousGridBlocks);
@@ -188,7 +195,7 @@ void CalcGridBlockAndGridLines_Init(
          dataModel,
          instance->_private.config->timerModuleErd),
       &instance->_private.timer,
-      instance->_private.config->gridBlockCalcRate,
+      instance->_private.gridData->gridPeriodicRunRateInMSec,
       UpdateGridBlockAndGridLines,
       instance);
 }

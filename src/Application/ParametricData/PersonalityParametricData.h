@@ -11,10 +11,12 @@
 #include "I_DataModel.h"
 #include "DefrostData.h"
 #include "SabbathData.h"
+#include "GridData.h"
 
 typedef struct
 {
    const DefrostData_t *defrostData;
+   const GridData_t *gridData;
    const SabbathData_t *sabbathData;
 } PersonalityParametricData_t;
 

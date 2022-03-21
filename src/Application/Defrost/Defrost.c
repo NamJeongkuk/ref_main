@@ -18,12 +18,6 @@
 
 enum
 {
-   Ff = 0,
-   Fz = 1
-};
-
-enum
-{
    PowerUpDelayInMs = 5 * MSEC_PER_SEC
 };
 
@@ -145,7 +139,7 @@ static bool LastDefrostWasAbnormalBecauseOfAbnormalFilteredFzCabinetTemperature(
       instance->_private.config->calculatedGridLinesErd,
       &calcGridLines);
 
-   TemperatureDegFx100_t gridFzExtremeHystTemperature = calcGridLines.gridLines[Fz].gridLinesDegFx100[calcGridLines.gridLines[Fz].numberOfLines - 1];
+   TemperatureDegFx100_t gridFzExtremeHystTemperature = calcGridLines.gridLines[GridDelta_Fz].gridLinesDegFx100[GridLine_FzExtremeHigh];
 
    return (fzFilteredTemperature > gridFzExtremeHystTemperature ||
       fzFilteredTemperature >= instance->_private.defrostParametricData->fzDefrostTerminationTemperatureInDegFx100);
