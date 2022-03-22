@@ -54,6 +54,7 @@ applcommon_SRC_DIRS:=\
   $(applcommon_LIB_ROOT)/RecordStorage \
   $(applcommon_LIB_ROOT)/ResourceWatchdog \
   $(applcommon_LIB_ROOT)/Selector \
+  $(applcommon_LIB_ROOT)/Sha256/ \
   $(applcommon_LIB_ROOT)/Signal \
   $(applcommon_LIB_ROOT)/StateMachines \
   $(applcommon_LIB_ROOT)/Time \
