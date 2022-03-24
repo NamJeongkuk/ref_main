@@ -29,7 +29,7 @@
       "erds": [
         {
           "namespace": "rx130",
-          "displayName": "Freezer Filtered Temperature",
+          "displayName": "Freezer Filtered Temperature DegFx100",
           "name": "Erd_Freezer_FilteredTemperature",
           "read": true,
           "write": true

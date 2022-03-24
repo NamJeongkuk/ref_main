@@ -13,6 +13,7 @@ extern "C"
 #include "ValvePosition.h"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
+#include "GridData.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -25,11 +26,6 @@ extern "C"
 #define When
 #define Then
 #define And
-
-enum
-{
-   PowerUpDelayInMs = 5 * MSEC_PER_SEC
-};
 
 static const DefrostConfiguration_t defrostConfig = {
    .defrostHsmStateErd = Erd_DefrostHsmState,
@@ -93,6 +89,12 @@ static const SabbathData_t sabbathData = {
    .maxTimeBetweenDefrostsInMinutes = 16 * MINUTES_PER_HOUR
 };
 
+static const GridData_t gridData = {
+   .gridPeriodicRunRateInMSec = 1 * MSEC_PER_SEC
+};
+
+#define PowerUpDelayInMs 5 * gridData.gridPeriodicRunRateInMSec
+
 enum
 {
    SixGridLines = 6,
@@ -138,6 +140,7 @@ TEST_GROUP(Defrost)
       PersonalityParametricData_TestDouble_Init(&personalityParametricData);
       PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);
       PersonalityParametricData_TestDouble_SetSabbath(&personalityParametricData, &sabbathData);
+      PersonalityParametricData_TestDouble_SetGrid(&personalityParametricData, &gridData);
       DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
    }
 

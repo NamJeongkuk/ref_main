@@ -18,7 +18,7 @@
 
 enum
 {
-   PowerUpDelayInMs = 5 * MSEC_PER_SEC
+   PowerUpFactor = 5
 };
 
 enum
@@ -174,7 +174,10 @@ static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_PowerUp);
          SetDoorHoldoffRequestTo(instance, ENABLED);
-         StartTimer(instance, PowerUpDelayInMs, PowerUpDelay);
+         StartTimer(
+            instance,
+            instance->_private.gridParametricData->gridPeriodicRunRateInMSec * PowerUpFactor,
+            PowerUpDelay);
          break;
 
       case Signal_PowerUpDelayComplete:
@@ -341,6 +344,7 @@ void Defrost_Init(
    instance->_private.config = defrostConfig;
    instance->_private.defrostParametricData = PersonalityParametricData_Get(dataModel)->defrostData;
    instance->_private.sabbathParametricData = PersonalityParametricData_Get(dataModel)->sabbathData;
+   instance->_private.gridParametricData = PersonalityParametricData_Get(dataModel)->gridData;
 
    Hsm_Init(&instance->_private.hsm, &hsmConfiguration, State_PowerUp);
 }
