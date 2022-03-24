@@ -13,6 +13,7 @@
 #include "ParametricDataErds.h"
 #include "uassert.h"
 #include "DefrostPlugin.h"
+#include "SabbathPlugin.h"
 
 enum
 {
@@ -49,6 +50,7 @@ void Application_Init(
       Erd_PersonalityIdOutOfRangeFlag,
       DataModelErdPointerAccess_GetAction(dataModel, Erd_JumpToBootLoaderAction));
 
+   SabbathPlugin_Init(dataModel);
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
    GridPlugin_Init(&instance->_private.gridPlugin, dataModel);
    DefrostPlugin_Init(dataModel);

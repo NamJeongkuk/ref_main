@@ -19,6 +19,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Defrost \
    $(PROJECT_DIR)/Application/Grid \
    $(PROJECT_DIR)/Application/Grid/GridFunctions \
+   $(PROJECT_DIR)/Application/Sabbath \
 
 # List of directories that contain your tests and test helpers (mocks, fakes, etc.)
 TEST_SRC_DIRS := \
@@ -30,6 +31,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/DataSource \
    $(TESTS_DIR)/Application/Defrost \
    $(TESTS_DIR)/Application/Grid \
+   $(TESTS_DIR)/Application/Sabbath \
    $(TESTS_DIR)/Application/ParametricData \
    $(TESTS_DIR)/Application/ \
 

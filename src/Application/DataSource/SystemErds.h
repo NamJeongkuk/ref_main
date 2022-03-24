@@ -116,6 +116,7 @@ enum
    ENTRY(Erd_ModelNumber,                                   0x0001, ModelNumber_t,                                      Swap_N, Io_None, Sub_N, Virtual,  NotNv,                                    NotFault) \
    ENTRY(Erd_SerialNumber,                                  0x0002, SerialNumber_t,                                     Swap_N, Io_None, Sub_N, Virtual,  NotNv,                                    NotFault) \
    ENTRY(Erd_ApplianceType,                                 0x0008, ApplianceType_t,                                    Swap_N, Io_None, Sub_N, Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_SabbathMode,                                   0x0009, bool,                                               Swap_N, Io_All,  Sub_Y, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ReadyToEnterBootLoader,                        0x0030, ReadyToEnterBootLoaderState_t,                      Swap_N, Io_All,  Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_BuildNumber,                                   0x0031, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_Reset,                                         0x0032, uint8_t,                                            Swap_N, Io_None, Sub_N, Virtual,  NotNv,                                    NotFault) \
@@ -236,6 +237,7 @@ enum
    ENTRY(Erd_DefrostFfDoorAccelerationCount,                0xF117, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_DoorAccelerationRequest,                       0xF118, DoorAccelerationRequest_t,                          Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_DoorAccelerationFsmState,                      0xF119, DoorAccelerationFsmState_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_MaxTimeBetweenDefrostsInMinutes,               0xF11A, uint16_t,                                           Swap_Y, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_LeftHandFfDoorIsOpen,                          0xF130, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_RightHandFfDoorIsOpen,                         0xF131, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \

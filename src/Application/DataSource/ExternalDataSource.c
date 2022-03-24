@@ -87,6 +87,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_NumberofFzAbnormalDefrostCycles, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_DefrostFzDoorAccelerationCount, sizeof(uint32_t)),
    SWAPPED_ERD(PublicErd_DefrostFfDoorAccelerationCount, sizeof(uint32_t)),
+   SWAPPED_ERD(PublicErd_MaxTimeBetweenDefrostsInMinutes, sizeof(uint16_t)),
 
    // 0xF200 range
    SWAPPED_ERD(PublicErd_SomeAnalogInput, sizeof(uint16_t)),
