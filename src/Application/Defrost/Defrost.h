@@ -19,7 +19,7 @@ typedef struct
 {
    Erd_t defrostHsmStateErd; // DefrostHsmState_t
    Erd_t defrostDoorHoldoffRequestErd; // bool
-   Erd_t defrostTimerRequestErd; // DefrostTimerRequest_t
+   Erd_t defrostTimerCounterRequestErd; // DefrostTimerCounterRequest_t
    Erd_t freezerFilteredTemperatureErd; // TemperatureDegFx100_t
    Erd_t calculatedGridLinesErd; // CalculatedGridLines_t
    Erd_t defrostStateErd; // DefrostState_t

@@ -9,18 +9,20 @@
 #include "Defrost.h"
 #include "DefrostStateOnCompareMatch.h"
 #include "DoorAcceleration.h"
+#include "DefrostTimerCounter.h"
 #include "SystemErds.h"
 
 static struct
 {
    Defrost_t defrost;
    DoorAccelerationCalculator_t doorAcceleration;
+   DefrostTimerCounter_t defrostTimerCounter;
 } instance;
 
 static const DefrostConfiguration_t defrostConfig = {
    .defrostHsmStateErd = Erd_DefrostHsmState,
    .defrostDoorHoldoffRequestErd = Erd_DefrostDoorHoldOffRequest,
-   .defrostTimerRequestErd = Erd_DefrostTimerRequest,
+   .defrostTimerCounterRequestErd = Erd_DefrostTimerCounterRequest,
    .freezerFilteredTemperatureErd = Erd_Freezer_FilteredTemperature,
    .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
    .defrostStateErd = Erd_DefrostState,
@@ -43,11 +45,29 @@ static const DoorAccelerationConfig_t doorAccelerationConfig = {
    .timerModuleErd = Erd_TimerModule
 };
 
+static const DefrostTimerCounterConfig_t defrostTimerCounterConfig = {
+   .defrostTimerCounterFsmStateErd = Erd_DefrostTimerCounterFsmState,
+   .defrostTimerCounterRequestErd = Erd_DefrostTimerCounterRequest,
+   .defrostTimerCountInSecondsErd = Erd_DefrostTimerCountInSeconds,
+   .doorAccelerationRequestErd = Erd_DoorAccelerationRequest,
+   .ffDoorAccelerationCountsErd = Erd_DefrostFfDoorAccelerationCount,
+   .fzDoorAccelerationCountsErd = Erd_DefrostFzDoorAccelerationCount,
+   .defrostTimerIsSatisfiedMonitorRequestErd = Erd_DefrostTimerIsSatisfiedMonitorRequest,
+   .compressorResolvedSpeedErd = Erd_CompressorSpeed_ResolvedVote,
+   .compressorSpeedConfigErd = Erd_CompressorSpeedConfig,
+   .sabbathModeErd = Erd_SabbathMode,
+   .fzDefrostWasAbnormalErd = Erd_FzDefrostWasAbnormal,
+   .maxTimeBetweenDefrostsInMinutesErd = Erd_MaxTimeBetweenDefrostsInMinutes,
+   .timerModuleErd = Erd_TimerModule,
+};
+
 void DefrostPlugin_Init(I_DataModel_t *dataModel)
 {
    DefrostStateOnCompareMatch(dataModel);
 
    DoorAcceleration_Init(&instance.doorAcceleration, dataModel, &doorAccelerationConfig);
+
+   DefrostTimerCounter_Init(&instance.defrostTimerCounter, dataModel, &defrostTimerCounterConfig);
 
    Defrost_Init(&instance.defrost, dataModel, &defrostConfig);
 }

@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved
  */
 
-#ifndef COMPRESSORSPEED_H
-#define COMPRESSORSPEED_H
+#ifndef COMPRESSORVOTEDSPEED_H
+#define COMPRESSORVOTEDSPEED_H
 
 #include <stdint.h>
 

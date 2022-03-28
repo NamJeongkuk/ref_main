@@ -25,6 +25,37 @@
       ]
     },
     {
+      "title": "System Modes",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "Sabbath Mode",
+          "name": "Erd_SabbathMode",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
+      "title": "Compressor",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "Compressor Speed Resolved Vote",
+          "name": "Erd_CompressorSpeed_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Compressor Speed Config",
+          "name": "Erd_CompressorSpeedConfig",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
       "title": "Defrost",
       "erds": [
         {
@@ -84,13 +115,6 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Defrost Timer Request",
-          "name": "Erd_DefrostTimerRequest",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
           "displayName": "Door Acceleration Request",
           "name": "Erd_DoorAccelerationRequest",
           "read": true,
@@ -114,6 +138,34 @@
           "namespace": "rx130",
           "displayName": "FF Door Acceleration Count",
           "name": "Erd_DefrostFfDoorAccelerationCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Defrost Timer Counter FSM State",
+          "name": "Erd_DefrostTimerCounterFsmState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Defrost Timer Counter Request",
+          "name": "Erd_DefrostTimerCounterRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Defrost Timer Count In Seconds",
+          "name": "Erd_DefrostTimerCountInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Defrost Timer Is Satisfied Monitor",
+          "name": "Erd_DefrostTimerIsSatisfiedMonitorRequest",
           "read": true,
           "write": true
         }

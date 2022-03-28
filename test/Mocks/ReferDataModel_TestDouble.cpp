@@ -36,6 +36,8 @@ void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance)
    TimerTicks_t writeTime = 5;
    TimerTicks_t eraseTime = 20;
 
+   memset(eeprom, 0, SIZE_1K);
+
    Eeprom_Model_Init(
       &instance->_private.eepromModel,
       eeprom,

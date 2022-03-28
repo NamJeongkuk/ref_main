@@ -30,7 +30,7 @@ extern "C"
 static const DefrostConfiguration_t defrostConfig = {
    .defrostHsmStateErd = Erd_DefrostHsmState,
    .defrostDoorHoldoffRequestErd = Erd_DefrostDoorHoldOffRequest,
-   .defrostTimerRequestErd = Erd_DefrostTimerRequest,
+   .defrostTimerCounterRequestErd = Erd_DefrostTimerCounterRequest,
    .freezerFilteredTemperatureErd = Erd_Freezer_FilteredTemperature,
    .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
    .defrostStateErd = Erd_DefrostState,
@@ -172,16 +172,16 @@ TEST_GROUP(Defrost)
 
    void DefrostTimerRequestIs(DefrostTimer_t request, Signal_t id)
    {
-      DefrostTimerRequest_t defrostTimerRequest;
+      DefrostTimerCounterRequest_t defrostTimerRequest;
       defrostTimerRequest.request = request;
       defrostTimerRequest.requestId = id;
-      DataModel_Write(dataModel, Erd_DefrostTimerRequest, &defrostTimerRequest);
+      DataModel_Write(dataModel, Erd_DefrostTimerCounterRequest, &defrostTimerRequest);
    }
 
    void DefrostTimerRequestShouldBe(DefrostTimer_t expectedRequest, Signal_t expectedId)
    {
-      DefrostTimerRequest_t actualRequest;
-      DataModel_Read(dataModel, Erd_DefrostTimerRequest, &actualRequest);
+      DefrostTimerCounterRequest_t actualRequest;
+      DataModel_Read(dataModel, Erd_DefrostTimerCounterRequest, &actualRequest);
 
       CHECK_EQUAL(expectedRequest, actualRequest.request);
       CHECK_EQUAL(expectedId, actualRequest.requestId);

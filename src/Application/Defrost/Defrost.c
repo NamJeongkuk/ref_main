@@ -11,7 +11,7 @@
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
 #include "CalculatedGridLines.h"
-#include "DefrostTimerRequest.h"
+#include "DefrostTimerCounterRequest.h"
 #include "DataModelErdPointerAccess.h"
 #include "DefrostState.h"
 #include "utils.h"
@@ -64,19 +64,19 @@ static void SetDoorHoldoffRequestTo(Defrost_t *instance, DefrostHsmState_t state
 
 static void ResetDefrostTimerModule(Defrost_t *instance)
 {
-   DefrostTimerRequest_t defrostTimerRequest;
+   DefrostTimerCounterRequest_t defrostTimerCounterRequest;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->defrostTimerRequestErd,
-      &defrostTimerRequest);
+      instance->_private.config->defrostTimerCounterRequestErd,
+      &defrostTimerCounterRequest);
 
-   defrostTimerRequest.request = DefrostTimer_Reset;
-   defrostTimerRequest.requestId++;
+   defrostTimerCounterRequest.request = DefrostTimer_Reset;
+   defrostTimerCounterRequest.requestId++;
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->defrostTimerRequestErd,
-      &defrostTimerRequest);
+      instance->_private.config->defrostTimerCounterRequestErd,
+      &defrostTimerCounterRequest);
 };
 
 static void SaveFzAbnormalDefrostData(Defrost_t *instance)

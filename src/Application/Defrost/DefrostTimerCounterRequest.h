@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef DEFROSTTIMERREQUEST_H
-#define DEFROSTTIMERREQUEST_H
+#ifndef DEFROSTTIMERCOUNTERREQUEST_H
+#define DEFROSTTIMERCOUNTERREQUEST_H
 
 #include "Signal.h"
 #include <stdint.h>
@@ -23,6 +23,6 @@ typedef struct
 {
    DefrostTimer_t request;
    Signal_t requestId;
-} DefrostTimerRequest_t;
+} DefrostTimerCounterRequest_t;
 
 #endif

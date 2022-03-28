@@ -42,7 +42,7 @@
 #include "ReadyToEnterBootLoaderState.h"
 #include "PersonalityParametricData.h"
 #include "AsyncDataSource_Eeprom.h"
-#include "CompressorSpeed.h"
+#include "CompressorVotedSpeed.h"
 #include "FanState.h"
 #include "FanSpeed.h"
 #include "GridBlockNumber.h"
@@ -53,9 +53,12 @@
 #include "DefrostState.h"
 #include "DefrostHsmState.h"
 #include "DefrostRequest.h"
-#include "DefrostTimerRequest.h"
+#include "DefrostTimerCounterRequest.h"
 #include "DoorAccelerationRequest.h"
 #include "DoorAccelerationFsmState.h"
+#include "DefrostTimerCounterFsmState.h"
+#include "CompressorSpeedConfig.h"
+#include "DefrostTimerIsSatisfiedMonitorRequest.h"
 
 // clang-format off
 
@@ -201,14 +204,15 @@ enum
    ENTRY(Erd_RemoteKeyState,                                0xF00D, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_PersonalityParametricData,                     0xF00E, PersonalityParametricData_t *,                      Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_NonVolatileDataSourceCacheSyncState,           0xF012, bool,                                               Swap_N, Io_None, Sub_N, Virtual,  NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorSpeedConfig,                         0xF013, CompressorSpeedConfig_t,                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_DelayCcCooling,                                0xF013, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_CoolCcBeforeOff,                               0xF014, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_DelayedCcCoolingLowSpeed,                      0xF015, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_IceMakersEnabled,                              0xF016, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodPulldownOffsetEnabled,                0xF017, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_MaxValveTimeInPosAEnabled,                     0xF018, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentGridBlockNumber,         0xF019, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DelayCcCooling,                                0xF014, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CoolCcBeforeOff,                               0xF015, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DelayedCcCoolingLowSpeed,                      0xF016, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_IceMakersEnabled,                              0xF017, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodPulldownOffsetEnabled,                0xF018, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_MaxValveTimeInPosAEnabled,                     0xF019, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentGridBlockNumber,         0xF01A, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_SystemTickInterrupt,                           0xF100, I_Interrupt_t *,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_TimeSource,                                    0xF101, I_TimeSource_t *,                                   Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
@@ -228,7 +232,7 @@ enum
    ENTRY(Erd_DefrostHsmState,                               0xF10E, DefrostHsmState_t,                                  Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_DefrostRequest,                                0xF10F, DefrostRequest_t,                                   Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_DefrostDoorHoldOffRequest,                     0xF110, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_DefrostTimerRequest,                           0xF111, DefrostTimerRequest_t,                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostTimerCounterRequest,                    0xF111, DefrostTimerCounterRequest_t,                       Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_FzDefrostWasAbnormal,                          0xF112, bool,                                               Swap_N, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_FzAbnormalDefrostCycleCount,                   0xF113, uint16_t,                                           Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_FzDefrostCycleCount,                           0xF114, uint16_t,                                           Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
@@ -237,7 +241,10 @@ enum
    ENTRY(Erd_DefrostFfDoorAccelerationCount,                0xF117, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_DoorAccelerationRequest,                       0xF118, DoorAccelerationRequest_t,                          Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_DoorAccelerationFsmState,                      0xF119, DoorAccelerationFsmState_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_MaxTimeBetweenDefrostsInMinutes,               0xF11A, uint16_t,                                           Swap_Y, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostTimerCounterFsmState,                   0xF11A, DefrostTimerCounterFsmState_t,                      Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostTimerCountInSeconds,                    0xF11B, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostTimerIsSatisfiedMonitorRequest,         0xF11C, DefrostTimerIsSatisfiedMonitorRequest_t,            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_MaxTimeBetweenDefrostsInMinutes,               0xF11D, uint16_t,                                           Swap_Y, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_LeftHandFfDoorIsOpen,                          0xF130, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_RightHandFfDoorIsOpen,                         0xF131, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
