@@ -46,6 +46,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
 
    // 0xE000 range
    SWAPPED_ERD(PublicErd_ServiceDiagnosticsEntityLocation, sizeof(Erd_t)),
+   SWAPPED_ERD(PublicErd_Eeprom_DefrostTimerCountInSeconds, sizeof(uint32_t)),
    SWAPPED_FIELD(PublicErd_ServiceDiagnosticsEntityManifest, ServiceDiagnosticsRevision3EntityManifest_t, featureBitmap),
    SWAPPED_FIELD(PublicErd_ServiceDiagnosticsEntityManifest, ServiceDiagnosticsRevision3EntityManifest_t, entryCount.faultTable),
    SWAPPED_FIELD(PublicErd_ServiceDiagnosticsEntityManifest, ServiceDiagnosticsRevision3EntityManifest_t, entryCount.faultSequence),

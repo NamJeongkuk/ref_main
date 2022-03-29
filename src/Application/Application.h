@@ -16,6 +16,7 @@
 #include "Input_StackUsageCalculator.h"
 #include "ApplianceApiResetDiagnostics.h"
 #include "GridPlugin.h"
+#include "PeriodicNvUpdaterPlugin.h"
 
 typedef struct
 {
@@ -30,6 +31,7 @@ typedef struct
       TimerModuleDiagnostics_t timerModuleDiagnostics;
       Input_StackUsageCalculator_t stackUsageCalculator;
       ApplianceApiResetDiagnostics_t applianceApiResetDiagnostics;
+      PeriodicNvUpdaterPlugin_t periodicNvUpdaterPlugin;
       Timer_t stackUsageUpdateTimer;
    } _private;
 } Application_t;

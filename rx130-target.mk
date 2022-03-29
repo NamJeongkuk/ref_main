@@ -45,6 +45,7 @@ SRC_DIRS:=\
   src/Application/Plugins \
   src/Application/Sabbath \
   src/Application/ServiceDiagnostics \
+  src/Application/SystemMonitor \
   src/Application/TimerModule \
   Parametric/data/ \
 
@@ -54,6 +55,7 @@ INC_DIRS:=\
   src/Application/Grid \
   src/Application/Grid/GridFunctions \
   src/Application/Sabbath \
+  src/Application/SystemMonitor \
   src/Application/Temperature \
   src/Application/Valve \
   lib/Common/Source/Temperature/ \
