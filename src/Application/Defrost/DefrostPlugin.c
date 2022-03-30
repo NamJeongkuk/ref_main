@@ -10,6 +10,7 @@
 #include "DefrostStateOnCompareMatch.h"
 #include "DoorAcceleration.h"
 #include "DefrostTimerCounter.h"
+#include "DefrostTimerIsSatisfiedMonitor.h"
 #include "SystemErds.h"
 
 static struct
@@ -17,6 +18,7 @@ static struct
    Defrost_t defrost;
    DoorAccelerationCalculator_t doorAcceleration;
    DefrostTimerCounter_t defrostTimerCounter;
+   DefrostTimerIsSatisfiedMonitor_t defrostTimerIsSatisfiedMonitor;
 } instance;
 
 static const DefrostConfiguration_t defrostConfig = {
@@ -61,6 +63,18 @@ static const DefrostTimerCounterConfig_t defrostTimerCounterConfig = {
    .timerModuleErd = Erd_TimerModule,
 };
 
+static const DefrostTimerIsSatisfiedMonitorConfig_t defrostTimerIsSatisfiedMonitorConfig = {
+   .defrostTimerIsSatisfiedMonitorFsmStateErd = Erd_DefrostTimerIsSatisfiedMonitorFsmState,
+   .defrostTimerCountInSecondsErd = Erd_DefrostTimerCountInSeconds,
+   .defrostTimerIsSatisfiedMonitorRequestErd = Erd_DefrostTimerIsSatisfiedMonitorRequest,
+   .defrostTimerIsSatisfiedErd = Erd_DefrostTimerIsSatisfied,
+   .sabbathModeErd = Erd_SabbathMode,
+   .fzDefrostWasAbnormalErd = Erd_FzDefrostWasAbnormal,
+   .ffDefrostWasAbnormalErd = Erd_FfDefrostWasAbnormal,
+   .demandResponseLevelErd = Erd_DemandResponseLevel,
+   .maxTimeBetweenDefrostsInMinutesErd = Erd_MaxTimeBetweenDefrostsInMinutes
+};
+
 void DefrostPlugin_Init(I_DataModel_t *dataModel)
 {
    DefrostStateOnCompareMatch(dataModel);
@@ -68,6 +82,8 @@ void DefrostPlugin_Init(I_DataModel_t *dataModel)
    DoorAcceleration_Init(&instance.doorAcceleration, dataModel, &doorAccelerationConfig);
 
    DefrostTimerCounter_Init(&instance.defrostTimerCounter, dataModel, &defrostTimerCounterConfig);
+
+   DefrostTimerIsSatisfiedMonitor_Init(&instance.defrostTimerIsSatisfiedMonitor, dataModel, &defrostTimerIsSatisfiedMonitorConfig);
 
    Defrost_Init(&instance.defrost, dataModel, &defrostConfig);
 }

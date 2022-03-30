@@ -98,7 +98,7 @@ static void SendDoorAccelerationRequestTo(DefrostTimerCounter_t *instance, DoorA
       &doorAccelerationRequest);
 }
 
-static void SendDefrostTimerIsSatisfiedMonitorRequestTo(DefrostTimerCounter_t *instance, DefrostTimerIsSatisfiedMonitor_t request)
+static void SendDefrostTimerIsSatisfiedMonitorRequestTo(DefrostTimerCounter_t *instance, DefrostTimerIsSatisfied_t request)
 {
    DefrostTimerIsSatisfiedMonitorRequest_t defrostTimerIsSatisfiedMonitorRequest;
 
@@ -251,7 +251,7 @@ static void State_Enabled(Fsm_t *fsm, const FsmSignal_t signal, const void *data
       case Fsm_Entry:
          SetFsmStateTo(instance, DefrostTimerCounterFsmState_Enabled);
          SendDoorAccelerationRequestTo(instance, DoorAcceleration_Enable);
-         SendDefrostTimerIsSatisfiedMonitorRequestTo(instance, DefrostTimerIsSatisfiedMonitor_Enable);
+         SendDefrostTimerIsSatisfiedMonitorRequestTo(instance, DefrostTimerIsSatisfied_Enable);
          StartPeriodicTimer(instance);
          break;
 
@@ -262,7 +262,7 @@ static void State_Enabled(Fsm_t *fsm, const FsmSignal_t signal, const void *data
       case Signal_ResetRequested:
          ResetDefrostTimerCount(instance);
          SendDoorAccelerationRequestTo(instance, DoorAcceleration_Reset);
-         SendDefrostTimerIsSatisfiedMonitorRequestTo(instance, DefrostTimerIsSatisfiedMonitor_Reset);
+         SendDefrostTimerIsSatisfiedMonitorRequestTo(instance, DefrostTimerIsSatisfied_Reset);
          break;
 
       case Signal_PeriodicTimerComplete:
@@ -289,7 +289,7 @@ static void State_Disabled(Fsm_t *fsm, const FsmSignal_t signal, const void *dat
          SetFsmStateTo(instance, DefrostTimerCounterFsmState_Disabled);
          ResetDefrostTimerCount(instance);
          SendDoorAccelerationRequestTo(instance, DoorAcceleration_Disable);
-         SendDefrostTimerIsSatisfiedMonitorRequestTo(instance, DefrostTimerIsSatisfiedMonitor_Disable);
+         SendDefrostTimerIsSatisfiedMonitorRequestTo(instance, DefrostTimerIsSatisfied_Disable);
          break;
 
       case Signal_EnableRequested:

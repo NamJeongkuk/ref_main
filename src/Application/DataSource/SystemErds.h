@@ -59,6 +59,8 @@
 #include "DefrostTimerCounterFsmState.h"
 #include "CompressorSpeedConfig.h"
 #include "DefrostTimerIsSatisfiedMonitorRequest.h"
+#include "EnergyDemandLevel.h"
+#include "DefrostTimerIsSatisfiedMonitorFsmState.h"
 
 // clang-format off
 
@@ -137,6 +139,7 @@ enum
    ENTRY(Erd_ResetReason,                                   0x0701, ResetReason_t,                                      Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_SecondsSinceLastReset,                         0x0702, SecondsSinceLastReset_t,                            Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_ProgramCounterAddressAtLastUassert,            0x0703, ProgramCounterAddress_t,                            Swap_Y, Io_O,    Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_DemandResponseLevel,                           0xD006, EnergyDemandLevel_t,                                Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ServiceDiagnosticsEntityLocation,              0xE000, Erd_t,                                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_Eeprom_DefrostTimerCountInSeconds,             0xE001, uint32_t,                                           Swap_Y, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
@@ -247,6 +250,9 @@ enum
    ENTRY(Erd_DefrostTimerCountInSeconds,                    0xF11B, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_DefrostTimerIsSatisfiedMonitorRequest,         0xF11C, DefrostTimerIsSatisfiedMonitorRequest_t,            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_MaxTimeBetweenDefrostsInMinutes,               0xF11D, uint16_t,                                           Swap_Y, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostTimerIsSatisfiedMonitorFsmState,        0xF11E, DefrostTimerIsSatisfiedMonitorFsmState_t,           Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FfDefrostWasAbnormal,                          0xF11F, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostTimerIsSatisfied,                       0xF120, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_LeftHandFfDoorIsOpen,                          0xF130, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_RightHandFfDoorIsOpen,                         0xF131, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \

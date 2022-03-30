@@ -1,6 +1,6 @@
 /*!
  * @file
- * @brief
+ * @brief Monitors door openings and accumulates door acceleration time
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */

@@ -51,6 +51,7 @@ SRC_DIRS:=\
 
 INC_DIRS:=\
   src/Application/Compressor \
+  src/Application/DemandResponse \
   src/Application/Fan \
   src/Application/Grid \
   src/Application/Grid/GridFunctions \

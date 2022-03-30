@@ -1,6 +1,7 @@
 /*!
  * @file
- * @brief
+ * @brief Counts time that compressor is on or in Sabbath mode and adds door accelerations
+ * to the time when appropriate
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */

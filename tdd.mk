@@ -41,6 +41,7 @@ INCLUDE_DIRS := \
    $(APPLCOMMON_DIR)/Image \
    $(PROJECT_DIR)/Application/Compressor \
    $(PROJECT_DIR)/Application/Defrost \
+   $(PROJECT_DIR)/Application/DemandResponse \
    $(PROJECT_DIR)/Application/Fan \
    $(PROJECT_DIR)/Application/Grid \
    $(PROJECT_DIR)/Application/Grid/GridFunctions \

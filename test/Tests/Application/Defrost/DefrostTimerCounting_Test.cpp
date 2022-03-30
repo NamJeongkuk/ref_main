@@ -167,7 +167,7 @@ TEST_GROUP(DefrostTimerCounter)
       CHECK_EQUAL(id, doorAccelerationRequest.requestId);
    }
 
-   void DefrostTimerIsSatisfiedMonitorRequestShouldBe(DefrostTimerIsSatisfiedMonitor_t request, Signal_t id)
+   void DefrostTimerIsSatisfiedMonitorRequestShouldBe(DefrostTimerIsSatisfied_t request, Signal_t id)
    {
       DefrostTimerIsSatisfiedMonitorRequest_t defrostTimerIsSatisfiedMonitorRequest;
       DataModel_Read(dataModel, Erd_DefrostTimerIsSatisfiedMonitorRequest, &defrostTimerIsSatisfiedMonitorRequest);
@@ -329,13 +329,13 @@ TEST(DefrostTimerCounter, ShouldSendDisableDoorAccelerationRequestOnInit)
 TEST(DefrostTimerCounter, ShouldSendDisableDefrostTimerIsSatisfiedMonitorRequestOnInit)
 {
    Given DefrostTimerCounterIsInitialized();
-   DefrostTimerIsSatisfiedMonitorRequestShouldBe(DefrostTimerIsSatisfiedMonitor_Disable, 1);
+   DefrostTimerIsSatisfiedMonitorRequestShouldBe(DefrostTimerIsSatisfied_Disable, 1);
 }
 
 TEST(DefrostTimerCounter, ShouldSendDefrostTimerIsSatisfiedRequestWhenEnabled)
 {
    Given DefrostTimerIsEnabled();
-   DefrostTimerIsSatisfiedMonitorRequestShouldBe(DefrostTimerIsSatisfiedMonitor_Enable, 2);
+   DefrostTimerIsSatisfiedMonitorRequestShouldBe(DefrostTimerIsSatisfied_Enable, 2);
 }
 
 TEST(DefrostTimerCounter, ShouldSendEnableDoorAccelerationRequestWhenEnabled)
@@ -368,7 +368,7 @@ TEST(DefrostTimerCounter, ShouldSendDisableDefrostTimerIsSatisfiedMonitorRequest
    Given DefrostTimerIsEnabled();
 
    When DefrostTimerCounterRequestIs(DefrostTimer_Disable, 2);
-   DefrostTimerIsSatisfiedMonitorRequestShouldBe(DefrostTimerIsSatisfiedMonitor_Disable, 3);
+   DefrostTimerIsSatisfiedMonitorRequestShouldBe(DefrostTimerIsSatisfied_Disable, 3);
 }
 
 TEST(DefrostTimerCounter, ShouldResetDefrostTimerCountToZeroWhenRequestedToResetWhileEnabled)
@@ -394,7 +394,7 @@ TEST(DefrostTimerCounter, ShouldSendResetDefrostTimerIsSatisfiedMonitorRequestWh
    Given DefrostTimerIsEnabled();
 
    And DefrostTimerCounterRequestIs(DefrostTimer_Reset, 2);
-   DefrostTimerIsSatisfiedMonitorRequestShouldBe(DefrostTimerIsSatisfiedMonitor_Reset, 3);
+   DefrostTimerIsSatisfiedMonitorRequestShouldBe(DefrostTimerIsSatisfied_Reset, 3);
 }
 
 TEST(DefrostTimerCounter, ShouldIncrementDefrostTimerCountWhenEnabledAndInSabbathModeAfterPeriodicTimeout)

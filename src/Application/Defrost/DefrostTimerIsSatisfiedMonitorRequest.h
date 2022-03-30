@@ -13,15 +13,15 @@
 
 enum
 {
-   DefrostTimerIsSatisfiedMonitor_Reset,
-   DefrostTimerIsSatisfiedMonitor_Enable,
-   DefrostTimerIsSatisfiedMonitor_Disable
+   DefrostTimerIsSatisfied_Reset,
+   DefrostTimerIsSatisfied_Enable,
+   DefrostTimerIsSatisfied_Disable
 };
-typedef uint8_t DefrostTimerIsSatisfiedMonitor_t;
+typedef uint8_t DefrostTimerIsSatisfied_t;
 
 typedef struct
 {
-   DefrostTimerIsSatisfiedMonitor_t request;
+   DefrostTimerIsSatisfied_t request;
    Signal_t requestId;
 } DefrostTimerIsSatisfiedMonitorRequest_t;
 

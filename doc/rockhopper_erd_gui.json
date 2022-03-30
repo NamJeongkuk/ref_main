@@ -33,6 +33,13 @@
           "name": "Erd_SabbathMode",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Demand Response Level",
+          "name": "Erd_DemandResponseLevel",
+          "read": true,
+          "write": true
         }
       ]
     },
@@ -108,6 +115,13 @@
         },
         {
           "namespace": "rx130",
+          "displayName": "Ff Defrost Was Abnormal (EEPROM)",
+          "name": "Erd_FfDefrostWasAbnormal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "Defrost Door Holdoff Request",
           "name": "Erd_DefrostDoorHoldOffRequest",
           "read": true,
@@ -164,8 +178,22 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Defrost Timer Is Satisfied Monitor",
+          "displayName": "Defrost Timer Is Satisfied Monitor FSM State",
+          "name": "Erd_DefrostTimerIsSatisfiedMonitorFsmState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Defrost Timer Is Satisfied Monitor Request",
           "name": "Erd_DefrostTimerIsSatisfiedMonitorRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Defrost Timer Is Satisfied",
+          "name": "Erd_DefrostTimerIsSatisfied",
           "read": true,
           "write": true
         }
