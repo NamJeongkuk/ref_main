@@ -9,6 +9,8 @@ assignees: ''
 
 **Issue Description:**
 
+**Binary**
+
 **Definition of Done:**
 - [ ] Bench test
 
