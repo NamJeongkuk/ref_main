@@ -59,6 +59,7 @@
 #include "DefrostTimerCounterFsmState.h"
 #include "CompressorSpeedConfig.h"
 #include "DefrostTimerIsSatisfiedMonitorRequest.h"
+#include "DoorHoldoffFsmState.h"
 #include "EnergyDemandLevel.h"
 #include "DefrostTimerIsSatisfiedMonitorFsmState.h"
 
@@ -258,6 +259,10 @@ enum
    ENTRY(Erd_RightHandFfDoorIsOpen,                         0xF131, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_DoorInDoorIsOpen,                              0xF132, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_FzDoorIsOpen,                                  0xF133, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CcDoorIsOpen,                                  0xF134, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostDoorHoldoffTimeSatisfied,               0xF135, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostIsFreshFoodOnly,                        0xF136, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostDoorHoldoffTimerFsmState,               0xF137, DefrostDoorHoldoffTimerFsmState_t,                  Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,      NotNv,                                    NotFault) \
    ENTRY(Erd_OtherLed,                                      0xF201, bool,                                               Swap_N, Io_None, Sub_N, Bsp,      NotNv,                                    NotFault) \

@@ -38,6 +38,7 @@ SRC_DIRS:=\
   src/Application \
   src/Application/DataSource \
   src/Application/Defrost \
+  src/Application/Evaporator \
   src/Application/Grid \
   src/Application/Grid/GridFunctions \
   src/Application/Gea \

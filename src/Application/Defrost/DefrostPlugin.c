@@ -12,11 +12,13 @@
 #include "DefrostTimerCounter.h"
 #include "DefrostTimerIsSatisfiedMonitor.h"
 #include "SystemErds.h"
+#include "DefrostDoorHoldoffTimer.h"
 
 static struct
 {
    Defrost_t defrost;
    DoorAccelerationCalculator_t doorAcceleration;
+   DefrostDoorHoldoffTimer_t doorHoldoffTimer;
    DefrostTimerCounter_t defrostTimerCounter;
    DefrostTimerIsSatisfiedMonitor_t defrostTimerIsSatisfiedMonitor;
 } instance;
@@ -45,6 +47,17 @@ static const DoorAccelerationConfig_t doorAccelerationConfig = {
    .doorInDoorIsOpenErd = Erd_DoorInDoorIsOpen,
    .fzDoorIsOpenErd = Erd_FzDoorIsOpen,
    .timerModuleErd = Erd_TimerModule
+};
+
+DefrostDoorHoldoffTimerConfiguration_t doorHoldoffTimerConfiguration = {
+   .freshFoodLeftDoorOpenState = Erd_LeftHandFfDoorIsOpen,
+   .freshFoodRightDoorOpenState = Erd_RightHandFfDoorIsOpen,
+   .freezerDoorOpenState = Erd_FzDoorIsOpen,
+   .ccDoorOpenState = Erd_CcDoorIsOpen,
+   .doorHoldoffRequest = Erd_DefrostDoorHoldOffRequest,
+   .doorHoldoffSatisfied = Erd_DefrostDoorHoldoffTimeSatisfied,
+   .freshFoodOnlyDefrost = Erd_DefrostIsFreshFoodOnly,
+   .doorHoldoffTimerFsmState = Erd_DefrostDoorHoldoffTimerFsmState
 };
 
 static const DefrostTimerCounterConfig_t defrostTimerCounterConfig = {
@@ -80,6 +93,10 @@ void DefrostPlugin_Init(I_DataModel_t *dataModel)
    DefrostStateOnCompareMatch(dataModel);
 
    DoorAcceleration_Init(&instance.doorAcceleration, dataModel, &doorAccelerationConfig);
+
+   DefrostDoorHoldoffTimer_Init(&instance.doorHoldoffTimer,
+      &doorHoldoffTimerConfiguration,
+      dataModel);
 
    DefrostTimerCounter_Init(&instance.defrostTimerCounter, dataModel, &defrostTimerCounterConfig);
 

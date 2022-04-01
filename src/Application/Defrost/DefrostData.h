@@ -25,6 +25,7 @@ typedef struct
    TemperatureDegFx100_t prechillCcEvapExitTemperatureInDegFx100;
    uint8_t maxPrechillTimeInMinutes;
    uint8_t defrostDoorHoldoffTimeForFfAndFzInMinutes;
+   uint8_t defrostDoorHoldoffTimeForFfOnlyInMinutes;
    uint16_t defrostMaxHoldoffTimeInMinutes;
    uint16_t maxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds;
    TemperatureDegFx100_t ffFanDefrostFfEvapExitTemperatureInDegFx100;

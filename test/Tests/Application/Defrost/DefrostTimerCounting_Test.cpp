@@ -71,7 +71,7 @@ static const DefrostData_t defrostData = {
    .doorHoldoffTimeForFfAndFzInMinutes = 60,
    .ffOnlyPostDwellExitTimeInMinutes = 10,
    .dsmFzSetpointTemperatureInDegFx100 = 200,
-   .defrostPeriodicTimeoutInSeconds = 1,
+   .defrostPeriodicTimeoutInSeconds = 1
 };
 
 static const SabbathData_t sabbathData = {

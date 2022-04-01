@@ -12,6 +12,7 @@
 #include "DefrostData.h"
 #include "SabbathData.h"
 #include "GridData.h"
+#include "EvaporatorData.h"
 #include "SystemMonitorData.h"
 
 typedef struct
@@ -19,6 +20,7 @@ typedef struct
    const DefrostData_t *defrostData;
    const GridData_t *gridData;
    const SabbathData_t *sabbathData;
+   const EvaporatorData_t *evaporatorData;
    const SystemMonitorData_t *systemMonitorData;
 } PersonalityParametricData_t;
 

@@ -54,6 +54,7 @@ static const DefrostData_t defrostData = {
    .prechillCcEvapExitTemperatureInDegFx100 = -3000,
    .maxPrechillTimeInMinutes = 10,
    .defrostDoorHoldoffTimeForFfAndFzInMinutes = 60,
+   .defrostDoorHoldoffTimeForFfOnlyInMinutes = 50,
    .defrostMaxHoldoffTimeInMinutes = 60,
    .maxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds = 0,
    .ffFanDefrostFfEvapExitTemperatureInDegFx100 = 3600,
@@ -82,7 +83,7 @@ static const DefrostData_t defrostData = {
    .doorHoldoffTimeForFfAndFzInMinutes = 60,
    .ffOnlyPostDwellExitTimeInMinutes = 10,
    .dsmFzSetpointTemperatureInDegFx100 = 200,
-   .defrostPeriodicTimeoutInSeconds = 1,
+   .defrostPeriodicTimeoutInSeconds = 1
 };
 
 static const SabbathData_t sabbathData = {

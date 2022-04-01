@@ -10,6 +10,8 @@
 
 #include "PersonalityParametricData.h"
 
+void PersonalityParametricData_TestDouble_SetEvaporator(PersonalityParametricData_t *instance, const EvaporatorData_t *evaporatorData);
+
 void PersonalityParametricData_TestDouble_SetDefrost(PersonalityParametricData_t *instance, const DefrostData_t *defrostData);
 
 void PersonalityParametricData_TestDouble_SetGrid(PersonalityParametricData_t *instance, const GridData_t *gridData);
