@@ -28,6 +28,11 @@ void PersonalityParametricData_TestDouble_SetSabbath(PersonalityParametricData_t
    instance->sabbathData = sabbathData;
 }
 
+void PersonalityParametricData_TestDouble_SetSensors(PersonalityParametricData_t *instance, const SensorData_t *sensorData)
+{
+   instance->sensorData = sensorData;
+}
+
 void PersonalityParametricData_TestDouble_SetSystemMonitor(PersonalityParametricData_t *instance, const SystemMonitorData_t *systemMonitorData)
 {
    instance->systemMonitorData = systemMonitorData;

@@ -51,6 +51,7 @@ INCLUDE_DIRS := \
    $(PROJECT_DIR)/Application/ParametricData \
    $(PROJECT_DIR)/Application/Plugins \
    $(PROJECT_DIR)/Application/Sabbath \
+   $(PROJECT_DIR)/Application/Sensor \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \
    $(PROJECT_DIR)/Application/SystemMonitor \
    $(PROJECT_DIR)/Application/Temperature \

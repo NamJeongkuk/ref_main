@@ -44,6 +44,7 @@ SRC_DIRS:=\
   src/Application/Gea \
   src/Application/ParametricData \
   src/Application/Plugins \
+  src/Application/Sensor \
   src/Application/Sabbath \
   src/Application/ServiceDiagnostics \
   src/Application/SystemMonitor \

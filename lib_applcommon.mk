@@ -51,6 +51,7 @@ applcommon_SRC_DIRS:=\
   $(applcommon_LIB_ROOT)/Image \
   $(applcommon_LIB_ROOT)/KeyManager \
   $(applcommon_LIB_ROOT)/NonVolatile \
+  $(applcommon_LIB_ROOT)/Mapper \
   $(applcommon_LIB_ROOT)/RecordStorage \
   $(applcommon_LIB_ROOT)/ResourceWatchdog \
   $(applcommon_LIB_ROOT)/Selector \
