@@ -9,7 +9,7 @@
 #include "Constants_Time.h"
 #include "Constants_Binary.h"
 #include "DataModelErdPointerAccess.h"
-#include "DoorHoldoffFsmState.h"
+#include "DefrostDoorHoldoffTimerFsmState.h"
 
 enum
 {
@@ -210,7 +210,7 @@ static void State_Disabled(Fsm_t *fsm, const FsmSignal_t signal, const void *dat
    {
       case Fsm_Entry:
          StopHoldoffTimer(instance);
-         SetDoorHoldoffFsmStateErdTo(instance, DoorHoldoffFsmState_Disabled);
+         SetDoorHoldoffFsmStateErdTo(instance, DefrostDoorHoldoffTimerFsmState_Disabled);
          break;
 
       case Signal_RequestedOn:
@@ -230,7 +230,7 @@ static void State_Enabled(Fsm_t *fsm, const FsmSignal_t signal, const void *data
    switch(signal)
    {
       case Fsm_Entry:
-         SetDoorHoldoffFsmStateErdTo(instance, DoorHoldoffFsmState_Enabled);
+         SetDoorHoldoffFsmStateErdTo(instance, DefrostDoorHoldoffTimerFsmState_Enabled);
          if(HoldoffTimerShouldStart(instance))
          {
             StartHoldoffTimer(instance);

@@ -55,3 +55,5 @@ BUILD.log
 src/*/e2Studio/HardwareDebug
 src/*/e2Studio/trash
 src/*/e2Studio/QE-Touch/*.log
+
+test/Lcov/

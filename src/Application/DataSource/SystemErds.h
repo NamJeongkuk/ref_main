@@ -59,9 +59,10 @@
 #include "DefrostTimerCounterFsmState.h"
 #include "CompressorSpeedConfig.h"
 #include "DefrostTimerIsSatisfiedMonitorRequest.h"
-#include "DoorHoldoffFsmState.h"
+#include "HeaterVotedState.h"
 #include "EnergyDemandLevel.h"
 #include "DefrostTimerIsSatisfiedMonitorFsmState.h"
+#include "DefrostDoorHoldoffTimerFsmState.h"
 
 // clang-format off
 
@@ -265,6 +266,8 @@ enum
    ENTRY(Erd_DefrostDoorHoldoffTimerFsmState,               0xF137, DefrostDoorHoldoffTimerFsmState_t,                  Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_AllFreshFoodDoorsAreClosed,                    0xF138, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_SealedSystemValvePosition,                     0xF139, ValvePosition_t,                                    Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,      NotNv,                                    NotFault) \
    ENTRY(Erd_OtherLed,                                      0xF201, bool,                                               Swap_N, Io_None, Sub_N, Bsp,      NotNv,                                    NotFault) \
    ENTRY(Erd_PushButtonSwitch,                              0xF202, bool,                                               Swap_N, Io_All,  Sub_Y, Bsp,      NotNv,                                    NotFault) \
@@ -321,6 +324,16 @@ enum
    ENTRY(Erd_FfSetpoint_WinningVoteErd,                     0xF2D1, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_FfSetpoint_FactoryVote,                        0xF2D2, SetpointVotedTemperature_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_FfSetpoint_UserSetpoint,                       0xF2D5, SetpointVotedTemperature_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FfDefrostHeater_ResolvedVote,                  0xF2E0, HeaterVotedState_t,                                 Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FfDefrostHeater_WinningVoteErd,                0xF2E1, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FfDefrostHeater_FactoryVote,                   0xF2E2, HeaterVotedState_t,                                 Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FfDefrostHeater_DefrostVote,                   0xF2E3, HeaterVotedState_t,                                 Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FzDefrostHeater_ResolvedVote,                  0xF2F0, HeaterVotedState_t,                                 Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FzDefrostHeater_WinningVoteErd,                0xF2F1, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FzDefrostHeater_FactoryVote,                   0xF2F2, HeaterVotedState_t,                                 Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FzDefrostHeater_DefrostVote,                   0xF2F3, HeaterVotedState_t,                                 Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Fault_EepromReadFailure,                       0xF300, bool,                                               Swap_N, Io_All,  Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_Fault_EepromWriteFailure,                      0xF301, bool,                                               Swap_N, Io_All,  Sub_N, Ram,      NotNv,                                    NotFault) \

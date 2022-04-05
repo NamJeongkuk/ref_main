@@ -216,7 +216,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks0And1And2)
       The FreshFoodFanSpeedVoteShouldBe(FanSpeed_Off);
       And FreezerFanSpeedVoteShouldBe(FanSpeed_Low);
       And CondenserFanSpeedVoteShouldBe(FanSpeed_SuperHigh);
-      And ValvePositionVoteShouldBe(ValvePos_B);
+      And ValvePositionVoteShouldBe(ValvePosition_B);
       And IceMakersEnabledShouldBe(DISABLED);
       And DelayCcCoolingShouldBe(DISABLED);
       And CoolCcBeforeOffShouldBe(DISABLED);
@@ -235,7 +235,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks3And4And5And6)
       And The GridIsRun();
 
       The CondenserFanSpeedVoteShouldBe(FanSpeed_SuperHigh);
-      And ValvePositionVoteShouldBe(ValvePos_A);
+      And ValvePositionVoteShouldBe(ValvePosition_A);
       And IceMakersEnabledShouldBe(DISABLED);
       And DelayCcCoolingShouldBe(DISABLED);
       And CoolCcBeforeOffShouldBe(DISABLED);
@@ -256,7 +256,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks7And8And9)
       The FreshFoodFanSpeedVoteShouldBe(FanSpeed_Off);
       And FreezerFanSpeedVoteShouldBe(FanSpeed_High);
       And CondenserFanSpeedVoteShouldBe(FanSpeed_High);
-      And ValvePositionVoteShouldBe(ValvePos_B);
+      And ValvePositionVoteShouldBe(ValvePosition_B);
       And IceMakersEnabledShouldBe(ENABLED);
       And DelayCcCoolingShouldBe(DISABLED);
       And CoolCcBeforeOffShouldBe(DISABLED);
@@ -274,13 +274,13 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks10And11)
       When GridBlockBecomes(gridBlockNumber);
 
       // Need to test when valve is in non B or B position
-      And The ActualValvePositionIs(ValvePos_C);
+      And The ActualValvePositionIs(ValvePosition_C);
       And The GridIsRun();
 
       The FreshFoodFanSpeedVoteShouldBe(FanSpeed_High);
       And FreezerFanSpeedVoteShouldBe(FanSpeed_High);
       And CondenserFanSpeedVoteShouldBe(FanSpeed_High);
-      And ValvePositionVoteShouldBe(ValvePos_A);
+      And ValvePositionVoteShouldBe(ValvePosition_A);
       And DelayCcCoolingShouldBe(DISABLED);
       And CoolCcBeforeOffShouldBe(DISABLED);
       And UseDelayedCcCoolingLowSpeedShouldBe(DISABLED);
@@ -288,10 +288,10 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks10And11)
       And MaxTimeInValvePositionAShouldBe(DISABLED);
 
       // Test Valve B position
-      When The ActualValvePositionIs(ValvePos_B);
+      When The ActualValvePositionIs(ValvePosition_B);
       And The GridIsRun();
 
-      And ValvePositionVoteShouldBe(ValvePos_B);
+      And ValvePositionVoteShouldBe(ValvePosition_B);
       The FreshFoodFanSpeedVoteShouldBe(FanSpeed_Off);
    }
 }
@@ -307,7 +307,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks12And19)
       And FreezerFanSpeedVoteShouldBe(FanSpeed_High);
       And CondenserFanSpeedVoteShouldBe(FanSpeed_High);
 
-      And ValvePositionVoteShouldBe(ValvePos_A);
+      And ValvePositionVoteShouldBe(ValvePosition_A);
       And DelayCcCoolingShouldBe(DISABLED);
       And CoolCcBeforeOffShouldBe(DISABLED);
       And UseDelayedCcCoolingLowSpeedShouldBe(DISABLED);
@@ -343,7 +343,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks14And15And16)
       And The CondenserFanSpeedVoteShouldBe(FanSpeed_High);
       And The CompressorSpeedVoteShouldBe(CompressorSpeed_High);
       The FreshFoodFanSpeedVoteShouldBe(FanSpeed_Off);
-      The ValvePositionVoteShouldBe(ValvePos_B);
+      The ValvePositionVoteShouldBe(ValvePosition_B);
       And FreshFoodPulldownOffsetENABLEDShouldBe(DISABLED);
       The IceMakersEnabledShouldBe(ENABLED);
       And The DelayCcCoolingShouldBe(ENABLED);
@@ -366,14 +366,14 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks17And18)
    {
       When GridBlockBecomes(gridBlockNumber);
       And ActualCompressorSpeedIs(CompressorSpeed_High);
-      And ActualValvePositionIs(ValvePos_B);
+      And ActualValvePositionIs(ValvePosition_B);
       And GridIsRun();
 
       MaxTimeInValvePositionAShouldBe(DISABLED);
       And CoolCcBeforeOffShouldBe(DISABLED);
       And UseDelayedCcCoolingLowSpeedShouldBe(DISABLED);
 
-      The ValvePositionVoteShouldBe(ValvePos_B);
+      The ValvePositionVoteShouldBe(ValvePosition_B);
       The FreezerFanSpeedVoteShouldBe(FanSpeed_High);
       And The CondenserFanSpeedVoteShouldBe(FanSpeed_High);
 
@@ -381,10 +381,10 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks17And18)
 
       The FreshFoodFanSpeedVoteShouldBe(FanSpeed_Off);
 
-      When The ActualValvePositionIs(ValvePos_C);
+      When The ActualValvePositionIs(ValvePosition_C);
       And GridIsRun();
 
-      The ValvePositionVoteShouldBe(ValvePos_A);
+      The ValvePositionVoteShouldBe(ValvePosition_A);
 
       The FreshFoodFanSpeedVoteShouldBe(FanSpeed_High);
 
@@ -410,7 +410,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock20)
 
    And The FreshFoodFanSpeedVoteShouldBe(FanSpeed_Low);
 
-   And The ValvePositionVoteShouldBe(ValvePos_A);
+   And The ValvePositionVoteShouldBe(ValvePosition_A);
    MaxTimeInValvePositionAShouldBe(DISABLED);
    And DelayCcCoolingShouldBe(DISABLED);
    And CoolCcBeforeOffShouldBe(DISABLED);
@@ -465,7 +465,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks24And25And32)
    {
       When GridBlockBecomes(gridblockNumbers[i]);
       And ActualCompressorSpeedIs(CompressorSpeed_High);
-      And ActualValvePositionIs(ValvePos_B);
+      And ActualValvePositionIs(ValvePosition_B);
       And GridIsRun();
 
       MaxTimeInValvePositionAShouldBe(ENABLED);
@@ -473,17 +473,17 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks24And25And32)
       And CoolCcBeforeOffShouldBe(DISABLED);
       And UseDelayedCcCoolingLowSpeedShouldBe(DISABLED);
 
-      The ValvePositionVoteShouldBe(ValvePos_B);
+      The ValvePositionVoteShouldBe(ValvePosition_B);
       The FreezerFanSpeedVoteShouldBe(FanSpeed_High);
       And The CondenserFanSpeedVoteShouldBe(FanSpeed_High);
       The CompressorSpeedVoteShouldBe(CompressorSpeed_High);
 
       The FreshFoodFanSpeedVoteShouldBe(FanSpeed_Off);
 
-      When The ActualValvePositionIs(ValvePos_C);
+      When The ActualValvePositionIs(ValvePosition_C);
       And GridIsRun();
 
-      The ValvePositionVoteShouldBe(ValvePos_A);
+      The ValvePositionVoteShouldBe(ValvePosition_A);
 
       The FreshFoodFanSpeedVoteShouldBe(FanSpeed_High);
 
@@ -496,7 +496,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks24And25And32)
 
       The FreshFoodFanSpeedVoteShouldBe(FanSpeed_Medium);
 
-      When The ActualValvePositionIs(ValvePos_B);
+      When The ActualValvePositionIs(ValvePosition_B);
       And GridIsRun();
 
       The FreshFoodFanSpeedVoteShouldBe(FanSpeed_Off);
@@ -510,7 +510,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks24And25And32)
       The FreshFoodFanSpeedVoteShouldBe(FanSpeed_Off);
       And The FreezerFanSpeedVoteShouldBe(FanSpeed_Low);
 
-      When The ActualValvePositionIs(ValvePos_A);
+      When The ActualValvePositionIs(ValvePosition_A);
       And GridIsRun();
 
       The FreshFoodFanSpeedVoteShouldBe(FanSpeed_Low);
@@ -525,7 +525,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock26)
    And The ActualCompressorSpeedIs(CompressorSpeed_High);
    And GridIsRun();
 
-   The ValvePositionVoteShouldBe(ValvePos_A);
+   The ValvePositionVoteShouldBe(ValvePosition_A);
    MaxTimeInValvePositionAShouldBe(ENABLED);
    And DelayCcCoolingShouldBe(DISABLED);
    And CoolCcBeforeOffShouldBe(DISABLED);
@@ -555,7 +555,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock27)
 
    And CompressorSpeedVoteShouldBe(CompressorSpeed_High);
    And CondenserFanSpeedVoteShouldBe(FanSpeed_High);
-   And ValvePositionVoteShouldBe(ValvePos_A);
+   And ValvePositionVoteShouldBe(ValvePosition_A);
    And MaxTimeInValvePositionAShouldBe(DISABLED);
    And DelayCcCoolingShouldBe(DISABLED);
    And CoolCcBeforeOffShouldBe(DISABLED);
@@ -579,7 +579,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks28And29And30)
       And CoolCcBeforeOffShouldBe(DISABLED);
       And UseDelayedCcCoolingLowSpeedShouldBe(DISABLED);
 
-      The ValvePositionVoteShouldBe(ValvePos_D);
+      The ValvePositionVoteShouldBe(ValvePosition_D);
 
       And CompressorSpeedVoteShouldBe(CompressorSpeed_Off);
       And FreezerFanSpeedVoteShouldBe(FanSpeed_Off);
@@ -612,7 +612,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock31)
 {
    When GridBlockBecomes(31);
    And ActualCompressorSpeedIs(CompressorSpeed_Off);
-   And ActualValvePositionIs(ValvePos_A);
+   And ActualValvePositionIs(ValvePosition_A);
    And ActualCompressorSpeedIs(FanSpeed_Off);
    And ActualFreezerEvapSpeedIs(FanSpeed_Off);
    And ActualFreshFoodEvapSpeedIs(FanSpeed_Off);
@@ -627,19 +627,19 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock31)
    FreshFoodFanSpeedVoteShouldBe(FanSpeed_Off);
    CondenserFanSpeedVoteShouldBe(FanSpeed_Off);
    CompressorSpeedVoteShouldBe(CompressorSpeed_Off);
-   ValvePositionVoteShouldBe(ValvePos_D);
+   ValvePositionVoteShouldBe(ValvePosition_D);
 
    When ActualCompressorSpeedIs(CompressorSpeed_Low);
    And GridIsRun();
 
-   ValvePositionVoteShouldBe(ValvePos_A);
+   ValvePositionVoteShouldBe(ValvePosition_A);
    FreshFoodFanSpeedVoteShouldBe(FanSpeed_Low);
    CondenserFanSpeedVoteShouldBe(FanSpeed_Low);
 
-   When ActualValvePositionIs(ValvePos_B);
+   When ActualValvePositionIs(ValvePosition_B);
    And GridIsRun();
 
-   ValvePositionVoteShouldBe(ValvePos_B);
+   ValvePositionVoteShouldBe(ValvePosition_B);
    And FreezerFanSpeedVoteShouldBe(FanSpeed_Low);
 }
 
@@ -682,7 +682,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks34And41)
       FreezerFanSpeedVoteShouldBe(FanSpeed_Low);
       CondenserFanSpeedVoteShouldBe(FanSpeed_High);
       CompressorSpeedVoteShouldBe(CompressorSpeed_High);
-      ValvePositionVoteShouldBe(ValvePos_A);
+      ValvePositionVoteShouldBe(ValvePosition_A);
       MaxTimeInValvePositionAShouldBe(DISABLED);
       DelayCcCoolingShouldBe(DISABLED);
       CoolCcBeforeOffShouldBe(DISABLED);
@@ -710,7 +710,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesFor35And36And37)
       FreezerFanSpeedVoteShouldBe(FanSpeed_Off);
       CondenserFanSpeedVoteShouldBe(FanSpeed_Off);
       CompressorSpeedVoteShouldBe(CompressorSpeed_Off);
-      ValvePositionVoteShouldBe(ValvePos_D);
+      ValvePositionVoteShouldBe(ValvePosition_D);
 
       When ActualCompressorSpeedIs(CompressorSpeed_Low);
       And GridIsRun();
@@ -737,7 +737,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock38)
 
    When ActualCompressorSpeedIs(CompressorSpeed_High);
    And ActualCcGridBlockIs(0);
-   And ActualValvePositionIs(ValvePos_A);
+   And ActualValvePositionIs(ValvePosition_A);
    And ActualFreezerEvapSpeedIs(FanSpeed_High);
    And ActualFreshFoodEvapSpeedIs(FanSpeed_High);
    And ActualCoolCCBeforeOffIs(ENABLED);
@@ -800,7 +800,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks42And43And44)
       FreezerFanSpeedVoteShouldBe(FanSpeed_High);
       CompressorSpeedVoteShouldBe(CompressorSpeed_Low);
       CondenserFanSpeedVoteShouldBe(FanSpeed_Low);
-      ValvePositionVoteShouldBe(ValvePos_B);
+      ValvePositionVoteShouldBe(ValvePosition_B);
       UseDelayedCcCoolingLowSpeedShouldBe(ON);
 
       And ActualCoolCCBeforeOffIs(DISABLED);
@@ -809,7 +809,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks42And43And44)
       FreezerFanSpeedVoteShouldBe(FanSpeed_Off);
       And CompressorSpeedVoteShouldBe(CompressorSpeed_Off);
       And CondenserFanSpeedVoteShouldBe(FanSpeed_Off);
-      And ValvePositionVoteShouldBe(ValvePos_D);
+      And ValvePositionVoteShouldBe(ValvePosition_D);
       And UseDelayedCcCoolingLowSpeedShouldBe(DISABLED);
 
       When ActualCcGridBlockIs(4);
@@ -824,7 +824,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks45)
    When GridBlockBecomes(45);
    And ActualDelayCcCoolingIs(ENABLED);
    And ActualCoolCCBeforeOffIs(ENABLED);
-   ActualValvePositionIs(ValvePos_A);
+   ActualValvePositionIs(ValvePosition_A);
    And ActualCcGridBlockIs(3);
    And ActualCompressorSpeedIs(CompressorSpeed_High);
    And GridIsRun();
@@ -834,7 +834,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks45)
    FreshFoodFanSpeedVoteShouldBe(FanSpeed_Off);
    CompressorSpeedVoteShouldBe(CompressorSpeed_Low);
    CondenserFanSpeedVoteShouldBe(FanSpeed_Low);
-   ValvePositionVoteShouldBe(ValvePos_B);
+   ValvePositionVoteShouldBe(ValvePosition_B);
    UseDelayedCcCoolingLowSpeedShouldBe(ENABLED);
 
    When ActualDelayCcCoolingIs(DISABLED);
@@ -843,9 +843,9 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks45)
    FreshFoodFanSpeedVoteShouldBe(FanSpeed_Low);
    CompressorSpeedVoteShouldBe(CompressorSpeed_Low);
    CondenserFanSpeedVoteShouldBe(FanSpeed_Low);
-   ValvePositionVoteShouldBe(ValvePos_A);
+   ValvePositionVoteShouldBe(ValvePosition_A);
 
-   When ActualValvePositionIs(ValvePos_B);
+   When ActualValvePositionIs(ValvePosition_B);
    And GridIsRun();
 
    When ActualCompressorSpeedIs(CompressorSpeed_Off);
@@ -854,7 +854,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks45)
    FreshFoodFanSpeedVoteShouldBe(FanSpeed_Off);
    CompressorSpeedVoteShouldBe(CompressorSpeed_Off);
    CondenserFanSpeedVoteShouldBe(FanSpeed_Off);
-   ValvePositionVoteShouldBe(ValvePos_D);
+   ValvePositionVoteShouldBe(ValvePosition_D);
 
    When ActualCoolCCBeforeOffIs(ENABLED);
    And ActualCcGridBlockIs(0);
@@ -864,7 +864,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks45)
    FreshFoodFanSpeedVoteShouldBe(FanSpeed_Off);
    CompressorSpeedVoteShouldBe(CompressorSpeed_Low);
    CondenserFanSpeedVoteShouldBe(FanSpeed_Low);
-   ValvePositionVoteShouldBe(ValvePos_B);
+   ValvePositionVoteShouldBe(ValvePosition_B);
 }
 
 TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks46)
@@ -908,7 +908,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks47)
    CoolCcBeforeOffShouldBe(DISABLED);
    UseDelayedCcCoolingLowSpeedShouldBe(DISABLED);
    FreezerFanSpeedVoteShouldBe(FanSpeed_Off);
-   ValvePositionVoteShouldBe(ValvePos_A);
+   ValvePositionVoteShouldBe(ValvePosition_A);
 
    CondenserFanSpeedVoteShouldBe(FanSpeed_High);
    FreshFoodFanSpeedVoteShouldBe(FanSpeed_High);
@@ -932,7 +932,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks48)
    CoolCcBeforeOffShouldBe(DISABLED);
    UseDelayedCcCoolingLowSpeedShouldBe(DISABLED);
    FreezerFanSpeedVoteShouldBe(FanSpeed_Off);
-   ValvePositionVoteShouldBe(ValvePos_A);
+   ValvePositionVoteShouldBe(ValvePosition_A);
    CondenserFanSpeedVoteShouldBe(FanSpeed_High);
    FreshFoodFanSpeedVoteShouldBe(FanSpeed_High);
    CompressorSpeedVoteShouldBe(CompressorSpeed_High);

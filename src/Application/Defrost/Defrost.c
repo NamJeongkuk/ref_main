@@ -14,6 +14,8 @@
 #include "DefrostTimerCounterRequest.h"
 #include "DataModelErdPointerAccess.h"
 #include "DefrostState.h"
+#include "HeaterVotedState.h"
+#include "DefrostTimerCounterFsmState.h"
 #include "utils.h"
 
 enum
@@ -23,7 +25,10 @@ enum
 
 enum
 {
-   Signal_PowerUpDelayComplete = Hsm_UserSignalStart
+   Signal_PowerUpDelayComplete = Hsm_UserSignalStart,
+   Signal_MaxTimeBetweenDefrostsComplete,
+   Signal_PeriodicTimeoutComplete,
+   Signal_MaxPrechillHoldoffTimeComplete
 };
 
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -60,23 +65,6 @@ static void SetHsmStateTo(Defrost_t *instance, DefrostHsmState_t state)
 static void SetDoorHoldoffRequestTo(Defrost_t *instance, DefrostHsmState_t state)
 {
    DataModel_Write(instance->_private.dataModel, instance->_private.config->defrostDoorHoldoffRequestErd, &state);
-};
-
-static void ResetDefrostTimerModule(Defrost_t *instance)
-{
-   DefrostTimerCounterRequest_t defrostTimerCounterRequest;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->defrostTimerCounterRequestErd,
-      &defrostTimerCounterRequest);
-
-   defrostTimerCounterRequest.request = DefrostTimer_Reset;
-   defrostTimerCounterRequest.requestId++;
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->defrostTimerCounterRequestErd,
-      &defrostTimerCounterRequest);
 };
 
 static void SaveFzAbnormalDefrostData(Defrost_t *instance)
@@ -145,28 +133,210 @@ static bool LastDefrostWasAbnormalBecauseOfAbnormalFilteredFzCabinetTemperature(
       fzFilteredTemperature >= instance->_private.defrostParametricData->fzDefrostTerminationTemperatureInDegFx100);
 };
 
-static void PowerUpDelay(void *context)
+static void StartTimer(Defrost_t *instance, Timer_t *timer, TimerTicks_t ticks, TimerCallback_t callback)
+{
+   TimerModule_StartOneShot(
+      DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, instance->_private.config->timerModuleErd),
+      timer,
+      ticks,
+      callback,
+      instance);
+};
+
+static void VoteForFfDefrostHeater(Defrost_t *instance, bool state)
+{
+   HeaterVotedState_t vote;
+   vote.state = state;
+   vote.care = true;
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->ffDefrostHeaterDefrostVoteErd,
+      &vote);
+}
+
+static void VoteForFzDefrostHeater(Defrost_t *instance, bool state)
+{
+   HeaterVotedState_t vote;
+   vote.state = state;
+   vote.care = true;
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->fzDefrostHeaterDefrostVoteErd,
+      &vote);
+}
+
+static DefrostState_t LastDefrostState(Defrost_t *instance)
+{
+   DefrostState_t lastDefrostState;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->defrostStateErd,
+      &lastDefrostState);
+
+   return lastDefrostState;
+}
+
+static bool FzDefrostWasAbnormal(Defrost_t *instance)
+{
+   bool defrostWasAbnormal;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->fzDefrostWasAbnormalErd,
+      &defrostWasAbnormal);
+
+   return defrostWasAbnormal;
+}
+
+static bool DefrostTimerCounterIsDisabled(Defrost_t *instance)
+{
+   DefrostTimerCounterFsmState_t state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->defrostTimerCounterFsmStateErd,
+      &state);
+
+   return (state == DefrostTimerCounterFsmState_Disabled);
+}
+
+static void RequestDefrostTimerCounterTo(Defrost_t *instance, DefrostTimer_t request)
+{
+   DefrostTimerCounterRequest_t defrostTimerCounterRequest;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->defrostTimerCounterRequestErd,
+      &defrostTimerCounterRequest);
+
+   defrostTimerCounterRequest.request = request;
+   defrostTimerCounterRequest.requestId++;
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->defrostTimerCounterRequestErd,
+      &defrostTimerCounterRequest);
+}
+
+static void PowerUpDelayComplete(void *context)
 {
    REINTERPRET(instance, context, Defrost_t *);
 
    Hsm_SendSignal(&instance->_private.hsm, Signal_PowerUpDelayComplete, NULL);
 };
 
-static void StartTimer(Defrost_t *instance, TimerTicks_t ticks, TimerCallback_t callback)
+static void StartPowerUpDelayTimer(Defrost_t *instance)
 {
-   TimerModule_StartOneShot(
+   StartTimer(
+      instance,
+      &instance->_private.powerUpDelayTimer,
+      instance->_private.gridParametricData->gridPeriodicRunRateInMSec * PowerUpFactor,
+      PowerUpDelayComplete);
+}
+
+static void SetFlagToResetRequiredWhenEnablingDefrostTimerCounterTo(Defrost_t *instance, bool state)
+{
+   instance->_private.resetRequiredWhenEnablingDefrostTimerCounter = state;
+}
+
+static bool DefrostTimerCounterResetRequiredFromPowerUp(Defrost_t *instance)
+{
+   return instance->_private.resetRequiredWhenEnablingDefrostTimerCounter;
+}
+
+static void MaxTimeBetweenDefrostsComplete(void *context)
+{
+   REINTERPRET(instance, context, Defrost_t *);
+
+   Hsm_SendSignal(&instance->_private.hsm, Signal_MaxTimeBetweenDefrostsComplete, NULL);
+}
+
+static void StartMaxTimeBetweenDefrostsTimer(Defrost_t *instance)
+{
+   StartTimer(
+      instance,
+      &instance->_private.timeBetweenDefrostsTimer,
+      instance->_private.defrostParametricData->maxTimeBetweenDefrostsInMinutes * MSEC_PER_MIN,
+      MaxTimeBetweenDefrostsComplete);
+}
+
+static void PeriodicTimeoutComplete(void *context)
+{
+   REINTERPRET(instance, context, Defrost_t *);
+
+   Hsm_SendSignal(&instance->_private.hsm, Signal_PeriodicTimeoutComplete, NULL);
+}
+
+static void StartPeriodicTimer(Defrost_t *instance)
+{
+   TimerModule_StartPeriodic(
       DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, instance->_private.config->timerModuleErd),
-      &instance->_private.timer,
-      ticks,
-      callback,
+      &instance->_private.periodicTimer,
+      instance->_private.defrostParametricData->defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC,
+      PeriodicTimeoutComplete,
       instance);
-};
+}
+
+static bool DefrostTimerIsSatisfied(Defrost_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->defrostTimerIsSatisfiedErd,
+      &state);
+
+   return state;
+}
+
+static bool SealedSystemIsInValvePosition(Defrost_t *instance, ValvePosition_t expectedPosition)
+{
+   ValvePosition_t actualPosition;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->sealedSystemValvePositionErd,
+      &actualPosition);
+
+   return actualPosition == expectedPosition;
+}
+
+static void MaxPrechillHoldoffTimeComplete(void *context)
+{
+   REINTERPRET(instance, context, Defrost_t *);
+
+   Hsm_SendSignal(&instance->_private.hsm, Signal_MaxPrechillHoldoffTimeComplete, NULL);
+}
+
+static void StartPrechillHoldoffTimer(Defrost_t *instance)
+{
+   StartTimer(
+      instance,
+      &instance->_private.prechillHoldoffTimer,
+      instance->_private.defrostParametricData->maxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds * MSEC_PER_SEC,
+      MaxPrechillHoldoffTimeComplete);
+}
+
+static bool PrechillHoldoffTimerIsNotRunning(Defrost_t *instance)
+{
+   return !TimerModule_IsRunning(
+      DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, instance->_private.config->timerModuleErd),
+      &instance->_private.prechillHoldoffTimer);
+}
+
+static void StopPrechillHoldoffTimer(Defrost_t *instance)
+{
+   TimerModule_Stop(
+      DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, instance->_private.config->timerModuleErd),
+      &instance->_private.prechillHoldoffTimer);
+}
+
+static ValvePosition_t PositionToExitIdle(Defrost_t *instance)
+{
+   return instance->_private.defrostParametricData->threeWayValvePositionToExitIdle;
+}
 
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
    DefrostState_t lastDefrostState;
-   bool defrostWasAbnormal;
    IGNORE(data);
 
    switch(signal)
@@ -174,26 +344,15 @@ static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_PowerUp);
          SetDoorHoldoffRequestTo(instance, ENABLED);
-         StartTimer(
-            instance,
-            instance->_private.gridParametricData->gridPeriodicRunRateInMSec * PowerUpFactor,
-            PowerUpDelay);
+         StartPowerUpDelayTimer(instance);
          break;
 
       case Signal_PowerUpDelayComplete:
-         DataModel_Read(
-            instance->_private.dataModel,
-            instance->_private.config->defrostStateErd,
-            &lastDefrostState);
-
-         DataModel_Read(
-            instance->_private.dataModel,
-            instance->_private.config->fzDefrostWasAbnormalErd,
-            &defrostWasAbnormal);
+         lastDefrostState = LastDefrostState(instance);
 
          if(LastDefrostWasAbnormalBecauseOfAbnormalFilteredFzCabinetTemperature(instance))
          {
-            ResetDefrostTimerModule(instance);
+            SetFlagToResetRequiredWhenEnablingDefrostTimerCounterTo(instance, true);
             SaveFzAbnormalDefrostData(instance);
 
             (lastDefrostState == DefrostState_HeaterOn) ? Hsm_Transition(hsm, State_Dwell) : Hsm_Transition(hsm, State_Idle);
@@ -202,7 +361,7 @@ static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          {
             if(lastDefrostState == DefrostState_Prechill)
             {
-               (defrostWasAbnormal) ? Hsm_Transition(hsm, State_PostPrechill) : Hsm_Transition(hsm, State_PrechillPrep);
+               (FzDefrostWasAbnormal(instance)) ? Hsm_Transition(hsm, State_PostPrechill) : Hsm_Transition(hsm, State_PrechillPrep);
             }
             else if(lastDefrostState == DefrostState_HeaterOn)
             {
@@ -235,9 +394,53 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Idle);
+
+         VoteForFfDefrostHeater(instance, OFF);
+         VoteForFzDefrostHeater(instance, OFF);
+
+         if(DefrostTimerCounterIsDisabled(instance))
+         {
+            RequestDefrostTimerCounterTo(instance, DefrostTimer_Enable);
+
+            if(DefrostTimerCounterResetRequiredFromPowerUp(instance))
+            {
+               RequestDefrostTimerCounterTo(instance, DefrostTimer_Reset);
+               SetFlagToResetRequiredWhenEnablingDefrostTimerCounterTo(instance, false);
+            }
+         }
+
+         StartMaxTimeBetweenDefrostsTimer(instance);
+         StartPeriodicTimer(instance);
+         break;
+
+      case Signal_PeriodicTimeoutComplete:
+         if(DefrostTimerIsSatisfied(instance))
+         {
+            if(SealedSystemIsInValvePosition(instance, PositionToExitIdle(instance)))
+            {
+               Hsm_Transition(hsm, State_PrechillPrep);
+            }
+            else
+            {
+               if(PrechillHoldoffTimerIsNotRunning(instance))
+               {
+                  StartPrechillHoldoffTimer(instance);
+               }
+            }
+         }
+         break;
+
+      case Signal_MaxTimeBetweenDefrostsComplete:
+         Hsm_Transition(hsm, State_PrechillPrep);
+         break;
+
+      case Signal_MaxPrechillHoldoffTimeComplete:
+         Hsm_Transition(hsm, State_PrechillPrep);
          break;
 
       case Hsm_Exit:
+         StopPrechillHoldoffTimer(instance);
+         RequestDefrostTimerCounterTo(instance, DefrostTimer_Disable);
          break;
 
       default:

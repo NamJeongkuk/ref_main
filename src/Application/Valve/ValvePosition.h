@@ -12,12 +12,12 @@
 
 enum
 {
-   ValvePos_A,
-   ValvePos_B,
-   ValvePos_C,
-   ValvePos_D,
-   ValvePos_E,
-   ValvePos_Home
+   ValvePosition_A,
+   ValvePosition_B,
+   ValvePosition_C,
+   ValvePosition_D,
+   ValvePosition_E,
+   ValvePosition_Home
 };
 typedef uint8_t ValvePosition_t;
 

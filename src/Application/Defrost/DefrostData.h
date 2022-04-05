@@ -55,6 +55,7 @@ typedef struct
    uint8_t ffOnlyPostDwellExitTimeInMinutes;
    TemperatureDegFx100_t dsmFzSetpointTemperatureInDegFx100;
    uint8_t defrostPeriodicTimeoutInSeconds;
+   ValvePosition_t threeWayValvePositionToExitIdle;
 } DefrostData_t;
 
 #endif

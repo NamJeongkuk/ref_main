@@ -34,6 +34,11 @@ static const DefrostConfiguration_t defrostConfig = {
    .fzDefrostWasAbnormalErd = Erd_FzDefrostWasAbnormal,
    .fzAbnormalDefrostCycleCountErd = Erd_FzAbnormalDefrostCycleCount,
    .fzDefrostCycleCountErd = Erd_FzDefrostCycleCount,
+   .ffDefrostHeaterDefrostVoteErd = Erd_FfDefrostHeater_DefrostVote,
+   .fzDefrostHeaterDefrostVoteErd = Erd_FzDefrostHeater_DefrostVote,
+   .defrostTimerCounterFsmStateErd = Erd_DefrostTimerCounterFsmState,
+   .sealedSystemValvePositionErd = Erd_SealedSystemValvePosition,
+   .defrostTimerIsSatisfiedErd = Erd_DefrostTimerIsSatisfied,
    .timerModuleErd = Erd_TimerModule
 };
 

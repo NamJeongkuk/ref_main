@@ -63,6 +63,18 @@
       ]
     },
     {
+      "title": "Sealed System Valve",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "Sealed System Valve Position",
+          "name": "Erd_SealedSystemValvePosition",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
       "title": "Defrost",
       "erds": [
         {
@@ -194,6 +206,20 @@
           "namespace": "rx130",
           "displayName": "Defrost Timer Is Satisfied",
           "name": "Erd_DefrostTimerIsSatisfied",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "FF Defrost Heater Defrost Vote",
+          "name": "Erd_FfDefrostHeater_DefrostVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "FZ Defrost Heater Defrost Vote",
+          "name": "Erd_FzDefrostHeater_DefrostVote",
           "read": true,
           "write": true
         }

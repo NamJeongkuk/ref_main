@@ -131,7 +131,7 @@ void Grid_DualEvap(void *context)
          VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Low);
          VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_SuperHigh);
          VoteCompressorSpeed(dataModel, CompressorSpeed_Low);
-         VoteValvePosition(dataModel, ValvePos_B);
+         VoteValvePosition(dataModel, ValvePosition_B);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
          SetDelayCcCooling(dataModel, DISABLED);
          SetCoolCcBeforeOff(dataModel, DISABLED);
@@ -146,7 +146,7 @@ void Grid_DualEvap(void *context)
       case 6:
          VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_SuperHigh);
          VoteCompressorSpeed(dataModel, CompressorSpeed_Low);
-         VoteValvePosition(dataModel, ValvePos_A);
+         VoteValvePosition(dataModel, ValvePosition_A);
          SetFreshFoodPulldownOffsetEnabled(dataModel, ENABLED);
          SetIceMakersEnabled(dataModel, DISABLED);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
@@ -162,7 +162,7 @@ void Grid_DualEvap(void *context)
          VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_High);
          VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_High);
          VoteCompressorSpeed(dataModel, CompressorSpeed_High);
-         VoteValvePosition(dataModel, ValvePos_B);
+         VoteValvePosition(dataModel, ValvePosition_B);
          SetFreshFoodPulldownOffsetEnabled(dataModel, DISABLED);
          SetIceMakersEnabled(dataModel, ENABLED);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
@@ -173,14 +173,14 @@ void Grid_DualEvap(void *context)
 
       case 10:
       case 11:
-         if(GetValvePosition(dataModel) == ValvePos_B)
+         if(GetValvePosition(dataModel) == ValvePosition_B)
          {
-            VoteValvePosition(dataModel, ValvePos_B);
+            VoteValvePosition(dataModel, ValvePosition_B);
             VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
          }
          else
          {
-            VoteValvePosition(dataModel, ValvePos_A);
+            VoteValvePosition(dataModel, ValvePosition_A);
             VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_High);
          }
 
@@ -198,7 +198,7 @@ void Grid_DualEvap(void *context)
          VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_High);
          VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_High);
          VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_High);
-         VoteValvePosition(dataModel, ValvePos_A);
+         VoteValvePosition(dataModel, ValvePosition_A);
          SetCoolCcBeforeOff(dataModel, DISABLED);
          SetDelayCcCooling(dataModel, DISABLED);
          SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
@@ -238,7 +238,7 @@ void Grid_DualEvap(void *context)
          SetCoolCcBeforeOff(dataModel, DISABLED);
          SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
          SetIceMakersEnabled(dataModel, ENABLED);
-         VoteValvePosition(dataModel, ValvePos_B);
+         VoteValvePosition(dataModel, ValvePosition_B);
          SetFreshFoodPulldownOffsetEnabled(dataModel, DISABLED);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
          break;
@@ -250,18 +250,18 @@ void Grid_DualEvap(void *context)
          SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
          SetIceMakersEnabled(dataModel, ENABLED);
 
-         if(GetValvePosition(dataModel) == ValvePos_B)
+         if(GetValvePosition(dataModel) == ValvePosition_B)
          {
-            VoteValvePosition(dataModel, ValvePos_B);
+            VoteValvePosition(dataModel, ValvePosition_B);
          }
          else
          {
-            VoteValvePosition(dataModel, ValvePos_A);
+            VoteValvePosition(dataModel, ValvePosition_A);
          }
 
          if(GetCompressorSpeed(dataModel) == CompressorSpeed_High)
          {
-            if(GetValvePosition(dataModel) == ValvePos_B)
+            if(GetValvePosition(dataModel) == ValvePosition_B)
             {
                VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
             }
@@ -275,7 +275,7 @@ void Grid_DualEvap(void *context)
          }
          else
          {
-            if(GetValvePosition(dataModel) == ValvePos_B)
+            if(GetValvePosition(dataModel) == ValvePosition_B)
             {
                VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
             }
@@ -303,7 +303,7 @@ void Grid_DualEvap(void *context)
             VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_High);
          }
 
-         VoteValvePosition(dataModel, ValvePos_A);
+         VoteValvePosition(dataModel, ValvePosition_A);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
          SetDelayCcCooling(dataModel, DISABLED);
          SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
@@ -313,7 +313,7 @@ void Grid_DualEvap(void *context)
       case 22:
       case 23:
          VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
-         VoteValvePosition(dataModel, ValvePos_B);
+         VoteValvePosition(dataModel, ValvePosition_B);
          SetFreshFoodPulldownOffsetEnabled(dataModel, DISABLED);
          SetIceMakersEnabled(dataModel, ENABLED);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
@@ -350,18 +350,18 @@ void Grid_DualEvap(void *context)
          SetCoolCcBeforeOff(dataModel, DISABLED);
          SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
 
-         if(GetValvePosition(dataModel) == ValvePos_B)
+         if(GetValvePosition(dataModel) == ValvePosition_B)
          {
-            VoteValvePosition(dataModel, ValvePos_B);
+            VoteValvePosition(dataModel, ValvePosition_B);
          }
          else
          {
-            VoteValvePosition(dataModel, ValvePos_A);
+            VoteValvePosition(dataModel, ValvePosition_A);
          }
 
          if(GetCompressorSpeed(dataModel) == CompressorSpeed_High)
          {
-            if(GetValvePosition(dataModel) == ValvePos_B)
+            if(GetValvePosition(dataModel) == ValvePosition_B)
             {
                VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
             }
@@ -376,7 +376,7 @@ void Grid_DualEvap(void *context)
          }
          else if(GetCompressorSpeed(dataModel) == CompressorSpeed_Mid)
          {
-            if(GetValvePosition(dataModel) == ValvePos_B)
+            if(GetValvePosition(dataModel) == ValvePosition_B)
             {
                VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
             }
@@ -391,7 +391,7 @@ void Grid_DualEvap(void *context)
          }
          else
          {
-            if(GetValvePosition(dataModel) == ValvePos_B)
+            if(GetValvePosition(dataModel) == ValvePosition_B)
             {
                VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
                VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Low);
@@ -408,7 +408,7 @@ void Grid_DualEvap(void *context)
          break;
 
       case 26:
-         VoteValvePosition(dataModel, ValvePos_A);
+         VoteValvePosition(dataModel, ValvePosition_A);
          SetMaxValveTimeInPosAEnabled(dataModel, ENABLED);
          SetDelayCcCooling(dataModel, DISABLED);
          SetCoolCcBeforeOff(dataModel, DISABLED);
@@ -436,7 +436,7 @@ void Grid_DualEvap(void *context)
          VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_High);
          VoteCompressorSpeed(dataModel, CompressorSpeed_High);
          VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_High);
-         VoteValvePosition(dataModel, ValvePos_A);
+         VoteValvePosition(dataModel, ValvePosition_A);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
          SetDelayCcCooling(dataModel, DISABLED);
          SetCoolCcBeforeOff(dataModel, DISABLED);
@@ -462,35 +462,35 @@ void Grid_DualEvap(void *context)
          switch(GetCompressorSpeed(dataModel))
          {
             case CompressorSpeed_High:
-               VoteValvePosition(dataModel, ValvePos_B);
+               VoteValvePosition(dataModel, ValvePosition_B);
                VoteCompressorSpeed(dataModel, CompressorSpeed_High);
                VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_High);
                VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_High);
                break;
 
             case CompressorSpeed_Mid:
-               VoteValvePosition(dataModel, ValvePos_B);
+               VoteValvePosition(dataModel, ValvePosition_B);
                VoteCompressorSpeed(dataModel, CompressorSpeed_Mid);
                VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Medium);
                VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Medium);
                break;
 
             case CompressorSpeed_Low:
-               VoteValvePosition(dataModel, ValvePos_B);
+               VoteValvePosition(dataModel, ValvePosition_B);
                VoteCompressorSpeed(dataModel, CompressorSpeed_Low);
                VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Low);
                VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Low);
                break;
 
             case CompressorSpeed_Off:
-               VoteValvePosition(dataModel, ValvePos_D);
+               VoteValvePosition(dataModel, ValvePosition_D);
                VoteCompressorSpeed(dataModel, CompressorSpeed_Off);
                VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Off);
                VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Off);
                break;
 
             default:
-               VoteValvePosition(dataModel, ValvePos_B);
+               VoteValvePosition(dataModel, ValvePosition_B);
                VoteCompressorSpeed(dataModel, CompressorSpeed_Off);
                VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Off);
                VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Off);
@@ -506,21 +506,21 @@ void Grid_DualEvap(void *context)
 
          if(GetCompressorSpeed(dataModel) != CompressorSpeed_Off)
          {
-            if(GetValvePosition(dataModel) == ValvePos_B)
+            if(GetValvePosition(dataModel) == ValvePosition_B)
             {
-               VoteValvePosition(dataModel, ValvePos_B);
+               VoteValvePosition(dataModel, ValvePosition_B);
             }
             else
             {
-               VoteValvePosition(dataModel, ValvePos_A);
+               VoteValvePosition(dataModel, ValvePosition_A);
             }
 
-            if(GetFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_ResolvedVote) == FanSpeed_Off && GetValvePosition(dataModel) == ValvePos_A)
+            if(GetFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_ResolvedVote) == FanSpeed_Off && GetValvePosition(dataModel) == ValvePosition_A)
             {
                VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Low);
             }
 
-            if(GetFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_ResolvedVote) == FanSpeed_Off && GetValvePosition(dataModel) == ValvePos_B)
+            if(GetFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_ResolvedVote) == FanSpeed_Off && GetValvePosition(dataModel) == ValvePosition_B)
             {
                VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Low);
             }
@@ -536,14 +536,14 @@ void Grid_DualEvap(void *context)
             VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
             VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Off);
             VoteCompressorSpeed(dataModel, CompressorSpeed_Off);
-            VoteValvePosition(dataModel, ValvePos_D);
+            VoteValvePosition(dataModel, ValvePosition_D);
          }
          break;
 
       case 33:
       case 40:
          VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Low);
-         VoteValvePosition(dataModel, ValvePos_A);
+         VoteValvePosition(dataModel, ValvePosition_A);
          SetMaxValveTimeInPosAEnabled(dataModel, ENABLED);
          SetDelayCcCooling(dataModel, DISABLED);
          SetCoolCcBeforeOff(dataModel, DISABLED);
@@ -569,7 +569,7 @@ void Grid_DualEvap(void *context)
          VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Low);
          VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_High);
          VoteCompressorSpeed(dataModel, CompressorSpeed_High);
-         VoteValvePosition(dataModel, ValvePos_A);
+         VoteValvePosition(dataModel, ValvePosition_A);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
          SetDelayCcCooling(dataModel, DISABLED);
          SetCoolCcBeforeOff(dataModel, DISABLED);
@@ -592,14 +592,14 @@ void Grid_DualEvap(void *context)
             VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Low);
             VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Low);
             VoteCompressorSpeed(dataModel, CompressorSpeed_Low);
-            VoteValvePosition(dataModel, ValvePos_B);
+            VoteValvePosition(dataModel, ValvePosition_B);
          }
          else
          {
             VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Off);
             VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Off);
             VoteCompressorSpeed(dataModel, CompressorSpeed_Off);
-            VoteValvePosition(dataModel, ValvePos_D);
+            VoteValvePosition(dataModel, ValvePosition_D);
          }
          break;
 
@@ -613,22 +613,22 @@ void Grid_DualEvap(void *context)
             VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Off);
             VoteCompressorSpeed(dataModel, CompressorSpeed_Off);
             VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
-            VoteValvePosition(dataModel, ValvePos_D);
+            VoteValvePosition(dataModel, ValvePosition_D);
             SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
             SetCoolCcBeforeOff(dataModel, DISABLED);
          }
          else
          {
-            if(GetValvePosition(dataModel) == ValvePos_B)
+            if(GetValvePosition(dataModel) == ValvePosition_B)
             {
-               VoteValvePosition(dataModel, ValvePos_B);
+               VoteValvePosition(dataModel, ValvePosition_B);
             }
             else
             {
-               VoteValvePosition(dataModel, ValvePos_A);
+               VoteValvePosition(dataModel, ValvePosition_A);
             }
 
-            if(GetFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_ResolvedVote) > FanSpeed_Low && GetValvePosition(dataModel) == ValvePos_A)
+            if(GetFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_ResolvedVote) > FanSpeed_Low && GetValvePosition(dataModel) == ValvePosition_A)
             {
                VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Low);
             }
@@ -699,7 +699,7 @@ void Grid_DualEvap(void *context)
                VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_High);
                VoteCompressorSpeed(dataModel, CompressorSpeed_Low);
                VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Low);
-               VoteValvePosition(dataModel, ValvePos_B);
+               VoteValvePosition(dataModel, ValvePosition_B);
                SetDelayCcCoolingLowSpeedTo(dataModel, ENABLED);
             }
             else
@@ -714,7 +714,7 @@ void Grid_DualEvap(void *context)
             VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Off);
             VoteCompressorSpeed(dataModel, CompressorSpeed_Off);
             VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Off);
-            VoteValvePosition(dataModel, ValvePos_D);
+            VoteValvePosition(dataModel, ValvePosition_D);
             SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
          }
          break;
@@ -734,7 +734,7 @@ void Grid_DualEvap(void *context)
             VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
             VoteCompressorSpeed(dataModel, CompressorSpeed_Low);
             VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Low);
-            VoteValvePosition(dataModel, ValvePos_B);
+            VoteValvePosition(dataModel, ValvePosition_B);
             SetDelayCcCoolingLowSpeedTo(dataModel, ENABLED);
          }
          else
@@ -748,19 +748,19 @@ void Grid_DualEvap(void *context)
             VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Off);
             if(GetCompressorSpeed(dataModel) != CompressorSpeed_Off)
             {
-               if(GetValvePosition(dataModel) == ValvePos_A)
+               if(GetValvePosition(dataModel) == ValvePosition_A)
                {
                   VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Low);
                   VoteCompressorSpeed(dataModel, CompressorSpeed_Low);
                   VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Low);
-                  VoteValvePosition(dataModel, ValvePos_A);
+                  VoteValvePosition(dataModel, ValvePosition_A);
                }
                else
                {
                   VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
                   VoteCompressorSpeed(dataModel, CompressorSpeed_Off);
                   VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Off);
-                  VoteValvePosition(dataModel, ValvePos_D);
+                  VoteValvePosition(dataModel, ValvePosition_D);
                }
             }
             else
@@ -768,7 +768,7 @@ void Grid_DualEvap(void *context)
                VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
                VoteCompressorSpeed(dataModel, CompressorSpeed_Off);
                VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Off);
-               VoteValvePosition(dataModel, ValvePos_D);
+               VoteValvePosition(dataModel, ValvePosition_D);
             }
          }
          break;
@@ -807,7 +807,7 @@ void Grid_DualEvap(void *context)
          SetCoolCcBeforeOff(dataModel, DISABLED);
          SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
          VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Off);
-         VoteValvePosition(dataModel, ValvePos_A);
+         VoteValvePosition(dataModel, ValvePosition_A);
 
          if(GetCompressorSpeed(dataModel) == CompressorSpeed_High)
          {
@@ -832,7 +832,7 @@ void Grid_DualEvap(void *context)
          VoteCompressorSpeed(dataModel, CompressorSpeed_High);
          VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_High);
          VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_High);
-         VoteValvePosition(dataModel, ValvePos_A);
+         VoteValvePosition(dataModel, ValvePosition_A);
          break;
 
       default:
