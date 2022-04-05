@@ -263,6 +263,7 @@ enum
    ENTRY(Erd_DefrostDoorHoldoffTimeSatisfied,               0xF135, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_DefrostIsFreshFoodOnly,                        0xF136, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_DefrostDoorHoldoffTimerFsmState,               0xF137, DefrostDoorHoldoffTimerFsmState_t,                  Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_AllFreshFoodDoorsAreClosed,                    0xF138, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,      NotNv,                                    NotFault) \
    ENTRY(Erd_OtherLed,                                      0xF201, bool,                                               Swap_N, Io_None, Sub_N, Bsp,      NotNv,                                    NotFault) \

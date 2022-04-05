@@ -1,3 +1,10 @@
+/*!
+ * @file
+ * @brief
+ *
+ * Copyright GE Appliances - Confidential - All rights reserved.
+ */
+
 #include "DefrostDoorHoldoffTimer.h"
 #include "Constants_Time.h"
 #include "Constants_Binary.h"
@@ -100,17 +107,12 @@ static bool CcDoorIsClosed(DefrostDoorHoldoffTimer_t *instance)
 
 static bool AllFreshFoodDoorsAreClosed(DefrostDoorHoldoffTimer_t *instance)
 {
-   bool lHFreshFoodDoor;
-   bool rHFreshFoodDoor;
+   bool allFreshFoodDoorsClosed;
    DataModel_Read(instance->_private.dataModel,
-      instance->_private.config->freshFoodLeftDoorOpenState,
-      &lHFreshFoodDoor);
+      instance->_private.config->allFreshFoodDoorsAreClosedState,
+      &allFreshFoodDoorsClosed);
 
-   DataModel_Read(instance->_private.dataModel,
-      instance->_private.config->freshFoodRightDoorOpenState,
-      &rHFreshFoodDoor);
-
-   return (!lHFreshFoodDoor && !rHFreshFoodDoor);
+   return allFreshFoodDoorsClosed;
 }
 
 static bool HoldoffTimerShouldStart(DefrostDoorHoldoffTimer_t *instance)
@@ -163,27 +165,15 @@ static void DataModelUpdated(void *context, const void *_args)
       }
    }
 
-   else if(args->erd == instance->_private.config->freshFoodLeftDoorOpenState)
+   else if(args->erd == instance->_private.config->allFreshFoodDoorsAreClosedState)
    {
       if(*state)
       {
-         Fsm_SendSignal(&instance->_private.fsm, Signal_DoorOpened, NULL);
+         Fsm_SendSignal(&instance->_private.fsm, Signal_DoorClosed, NULL);
       }
       else
       {
-         Fsm_SendSignal(&instance->_private.fsm, Signal_DoorClosed, NULL);
-      }
-   }
-
-   else if(args->erd == instance->_private.config->freshFoodRightDoorOpenState)
-   {
-      if(*state)
-      {
          Fsm_SendSignal(&instance->_private.fsm, Signal_DoorOpened, NULL);
-      }
-      else
-      {
-         Fsm_SendSignal(&instance->_private.fsm, Signal_DoorClosed, NULL);
       }
    }
 

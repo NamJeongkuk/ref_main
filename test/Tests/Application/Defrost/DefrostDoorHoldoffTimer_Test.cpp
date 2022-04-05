@@ -53,8 +53,7 @@ static const EvaporatorData_t dualEvapData = {
 
 static const DefrostDoorHoldoffTimerConfiguration_t configuration = {
 
-   .freshFoodLeftDoorOpenState = Erd_LeftHandFfDoorIsOpen,
-   .freshFoodRightDoorOpenState = Erd_RightHandFfDoorIsOpen,
+   .allFreshFoodDoorsAreClosedState = Erd_AllFreshFoodDoorsAreClosed,
    .freezerDoorOpenState = Erd_FzDoorIsOpen,
    .ccDoorOpenState = Erd_CcDoorIsOpen,
 
@@ -101,14 +100,16 @@ TEST_GROUP(DefrostDoorHoldoffTimer)
       DefrostDoorHoldoffTimer_Init(&instance, &configuration, dataModel);
    }
 
-   void RightFreshFoodDoor(bool state)
+   void AllFreshFoodDoorAreClosed()
    {
-      DataModel_Write(dataModel, Erd_RightHandFfDoorIsOpen, &state);
+      bool state = true;
+      DataModel_Write(dataModel, Erd_AllFreshFoodDoorsAreClosed, &state);
    }
 
-   void LeftFreshFoodDoor(bool state)
+   void AFreshFoodDoorOpens()
    {
-      DataModel_Write(dataModel, Erd_LeftHandFfDoorIsOpen, &state);
+      bool state = false;
+      DataModel_Write(dataModel, Erd_AllFreshFoodDoorsAreClosed, &state);
    }
 
    void FreezerDoor(bool state)
@@ -167,8 +168,7 @@ TEST(DefrostDoorHoldoffTimer, ShouldInitialize)
 
 TEST(DefrostDoorHoldoffTimer, ShouldSatisfyWhenDoorRemainsClosedAndDefrostIsFfAndFz)
 {
-   Given LeftFreshFoodDoor(CLOSES);
-   And RightFreshFoodDoor(CLOSES);
+   Given AllFreshFoodDoorAreClosed();
    And FreezerDoor(CLOSES);
 
    And DoorHoldoffRequestIs(DISABLED);
@@ -207,10 +207,11 @@ TEST(DefrostDoorHoldoffTimer, ShouldSatisfyWhenDoorRemainsClosedAndDefrostIsFfOn
 
 TEST(DefrostDoorHoldoffTimer, ShouldRestartTimerWhenFreezerDoorsAreClosed)
 {
-   Given PersonalityInitializedWith(&dualEvapData);
-   And FreezerDoor(OPENS);
-   And DefrostHoldoffTimeIsInitialized();
+   Given AllFreshFoodDoorAreClosed();
+   And PersonalityInitializedWith(&dualEvapData);
 
+   When FreezerDoor(OPENS);
+   And DefrostHoldoffTimeIsInitialized();
    And DoorHoldoffRequestIs(ENABLED);
 
    After(FfAndFzHoldoffTimeInMinutes - 1);
@@ -227,7 +228,9 @@ TEST(DefrostDoorHoldoffTimer, ShouldRestartTimerWhenFreezerDoorsAreClosed)
 
 TEST(DefrostDoorHoldoffTimer, ShouldStopTimerWhenFreezerDoorOpens)
 {
-   Given PersonalityInitializedWith(&dualEvapData);
+   Given AllFreshFoodDoorAreClosed();
+   And FreezerDoor(CLOSES);
+   And PersonalityInitializedWith(&dualEvapData);
    And DefrostHoldoffTimeIsInitialized();
 
    When DoorHoldoffRequestIs(ENABLED);
@@ -240,11 +243,13 @@ TEST(DefrostDoorHoldoffTimer, ShouldStopTimerWhenFreezerDoorOpens)
 
 TEST(DefrostDoorHoldoffTimer, ShouldStopTimerWhenFreshFoodDoorOpens)
 {
-   Given PersonalityInitializedWith(&dualEvapData);
+   Given AllFreshFoodDoorAreClosed();
+   And FreezerDoor(CLOSES);
+   And PersonalityInitializedWith(&dualEvapData);
    And DefrostHoldoffTimeIsInitialized();
 
    When DoorHoldoffRequestIs(ENABLED);
-   And RightFreshFoodDoor(OPENS);
+   And AFreshFoodDoorOpens();
 
    DoorHoldoffTimeSatisfiedShouldBe(DISABLED);
    After(FfAndFzHoldoffTimeInMinutes * MSEC_PER_MIN);
@@ -253,16 +258,18 @@ TEST(DefrostDoorHoldoffTimer, ShouldStopTimerWhenFreshFoodDoorOpens)
 
 TEST(DefrostDoorHoldoffTimer, ShouldSetSatisfiedToTrueAfterMaxTimeoutRegardlessOfTheDoorsBeingOpenedOrClosed)
 {
-   Given PersonalityInitializedWith(&dualEvapData);
+   Given AllFreshFoodDoorAreClosed();
+   And FreezerDoor(CLOSES);
+   And PersonalityInitializedWith(&dualEvapData);
    And DefrostHoldoffTimeIsInitialized();
 
    When DoorHoldoffRequestIs(ENABLED);
    After(1);
-   And RightFreshFoodDoor(OPENS);
+   And AFreshFoodDoorOpens();
    After(1);
    FreezerDoor(OPENS);
    After(1);
-   RightFreshFoodDoor(CLOSES);
+   AllFreshFoodDoorAreClosed();
    After(1);
 
    After(MaxHoldoffTimeInMinutes * MSEC_PER_MIN - 5);
@@ -274,23 +281,18 @@ TEST(DefrostDoorHoldoffTimer, ShouldSetSatisfiedToTrueAfterMaxTimeoutRegardlessO
 
 TEST(DefrostDoorHoldoffTimer, ShouldRestartTimerWhenFreshFoodDoorsAreClosedForSingleEvap)
 {
-   Given PersonalityInitializedWith(&singleEvapData);
+   Given AllFreshFoodDoorAreClosed();
    And FreezerDoor(CLOSES);
-   And FreshFoodOnlyDefrostIs(DISABLED);
+   And PersonalityInitializedWith(&singleEvapData);
    And DefrostHoldoffTimeIsInitialized();
 
    When DoorHoldoffRequestIs(ENABLED);
-   And RightFreshFoodDoor(OPENS);
-   And LeftFreshFoodDoor(OPENS);
+   And AFreshFoodDoorOpens();
 
    After(FfAndFzHoldoffTimeInMinutes * MSEC_PER_MIN);
    DoorHoldoffTimeSatisfiedShouldBe(DISABLED);
 
-   When RightFreshFoodDoor(CLOSES);
-   After(FfAndFzHoldoffTimeInMinutes * MSEC_PER_MIN);
-   DoorHoldoffTimeSatisfiedShouldBe(DISABLED);
-
-   When LeftFreshFoodDoor(CLOSES);
+   When AllFreshFoodDoorAreClosed();
    After(FfAndFzHoldoffTimeInMinutes * MSEC_PER_MIN - 1);
    DoorHoldoffTimeSatisfiedShouldBe(DISABLED);
 
@@ -298,39 +300,16 @@ TEST(DefrostDoorHoldoffTimer, ShouldRestartTimerWhenFreshFoodDoorsAreClosedForSi
    DoorHoldoffTimeSatisfiedShouldBe(ENABLED);
 }
 
-TEST(DefrostDoorHoldoffTimer, ShouldNotRestartHoldoffTimerWhenOneFreshFoodDoorRemainsOpen)
-{
-   Given PersonalityInitializedWith(&singleEvapData);
-   And FreezerDoor(CLOSES);
-   And FreshFoodOnlyDefrostIs(DISABLED);
-   And DefrostHoldoffTimeIsInitialized();
-
-   When DoorHoldoffRequestIs(ENABLED);
-   And RightFreshFoodDoor(OPENS);
-   And LeftFreshFoodDoor(OPENS);
-
-   After(FfAndFzHoldoffTimeInMinutes * MSEC_PER_MIN);
-   DoorHoldoffTimeSatisfiedShouldBe(DISABLED);
-
-   When RightFreshFoodDoor(CLOSES);
-   After(FfAndFzHoldoffTimeInMinutes * MSEC_PER_MIN - 1);
-   DoorHoldoffTimeSatisfiedShouldBe(DISABLED);
-
-   After(1);
-   DoorHoldoffTimeSatisfiedShouldBe(DISABLED);
-}
-
 TEST(DefrostDoorHoldoffTimer, ShouldSatisfyHoldoffRequestAfterMaxTimeEvenIfDoorRemainsOpen)
 {
-   Given PersonalityInitializedWith(&singleEvapData);
+   Given AllFreshFoodDoorAreClosed();
    And FreezerDoor(CLOSES);
-   And LeftFreshFoodDoor(CLOSES);
-   And RightFreshFoodDoor(CLOSES);
+   And PersonalityInitializedWith(&singleEvapData);
    And FreshFoodOnlyDefrostIs(DISABLED);
    And DefrostHoldoffTimeIsInitialized();
 
    When DoorHoldoffRequestIs(ENABLED);
-   And RightFreshFoodDoor(OPENS);
+   And AFreshFoodDoorOpens();
 
    After(MaxHoldoffTimeInMinutes * MSEC_PER_MIN - 1);
    DoorHoldoffTimeSatisfiedShouldBe(DISABLED);
@@ -343,8 +322,7 @@ TEST(DefrostDoorHoldoffTimer, ShouldNotSatisfyHoldoffForDualEvapUnlessCcDrawerRe
 {
    Given PersonalityInitializedWith(&dualEvapData);
    And FreezerDoor(CLOSES);
-   And LeftFreshFoodDoor(CLOSES);
-   And RightFreshFoodDoor(CLOSES);
+   And AllFreshFoodDoorAreClosed();
    And CcDoor(CLOSES);
    And FreshFoodOnlyDefrostIs(DISABLED);
    And DefrostHoldoffTimeIsInitialized();
@@ -367,12 +345,15 @@ TEST(DefrostDoorHoldoffTimer, ShouldNotSatisfyHoldoffForDualEvapUnlessCcDrawerRe
 TEST(DefrostDoorHoldoffTimer, ShouldEnableDoorHoldoffTimeSatisfiedWhenFreezerDoorClosesAfterHoldoffTimeEvenIfFreshFoodDoorsOpenInDualEvap)
 {
    Given PersonalityInitializedWith(&dualEvapData);
+   And FreezerDoor(CLOSES);
+   And AllFreshFoodDoorAreClosed();
+   And CcDoor(CLOSES);
+   And FreshFoodOnlyDefrostIs(DISABLED);
    And DefrostHoldoffTimeIsInitialized();
 
-   And LeftFreshFoodDoor(OPENS);
-   And RightFreshFoodDoor(OPENS);
-   The FreezerDoor(OPENS);
-   When DoorHoldoffRequestIs(ENABLED);
+   When AFreshFoodDoorOpens();
+   And The FreezerDoor(OPENS);
+   And DoorHoldoffRequestIs(ENABLED);
 
    After(FfAndFzHoldoffTimeInMinutes * MSEC_PER_MIN);
    DoorHoldoffTimeSatisfiedShouldBe(DISABLED);

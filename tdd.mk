@@ -17,6 +17,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/ParametricData \
    $(PROJECT_DIR)/Application/DataSource \
    $(PROJECT_DIR)/Application/Defrost \
+   $(PROJECT_DIR)/Application/Door \
    $(PROJECT_DIR)/Application/Evaporator \
    $(PROJECT_DIR)/Application/Grid \
    $(PROJECT_DIR)/Application/Grid/GridFunctions \
@@ -31,6 +32,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR) \
    $(TESTS_DIR)/Application/DataSource \
    $(TESTS_DIR)/Application/Defrost \
+   $(TESTS_DIR)/Application/Door \
    $(TESTS_DIR)/Application/Evaporator \
    $(TESTS_DIR)/Application/Grid \
    $(TESTS_DIR)/Application/Sabbath \
@@ -43,6 +45,7 @@ INCLUDE_DIRS := \
    $(APPLCOMMON_DIR)/Image \
    $(PROJECT_DIR)/Application/Compressor \
    $(PROJECT_DIR)/Application/Defrost \
+   $(PROJECT_DIR)/Application/Door \
    $(PROJECT_DIR)/Application/Evaporator \
    $(PROJECT_DIR)/Application/DemandResponse \
    $(PROJECT_DIR)/Application/Fan \

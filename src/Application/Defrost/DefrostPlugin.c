@@ -50,8 +50,7 @@ static const DoorAccelerationConfig_t doorAccelerationConfig = {
 };
 
 DefrostDoorHoldoffTimerConfiguration_t doorHoldoffTimerConfiguration = {
-   .freshFoodLeftDoorOpenState = Erd_LeftHandFfDoorIsOpen,
-   .freshFoodRightDoorOpenState = Erd_RightHandFfDoorIsOpen,
+   .allFreshFoodDoorsAreClosedState = Erd_AllFreshFoodDoorsAreClosed,
    .freezerDoorOpenState = Erd_FzDoorIsOpen,
    .ccDoorOpenState = Erd_CcDoorIsOpen,
    .doorHoldoffRequest = Erd_DefrostDoorHoldOffRequest,

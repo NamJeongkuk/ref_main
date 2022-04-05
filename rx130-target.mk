@@ -38,6 +38,7 @@ SRC_DIRS:=\
   src/Application \
   src/Application/DataSource \
   src/Application/Defrost \
+  src/Application/Door \
   src/Application/Evaporator \
   src/Application/Grid \
   src/Application/Grid/GridFunctions \
@@ -54,6 +55,7 @@ SRC_DIRS:=\
 INC_DIRS:=\
   src/Application/Compressor \
   src/Application/DemandResponse \
+  src/Application/Door \
   src/Application/Fan \
   src/Application/Grid \
   src/Application/Grid/GridFunctions \

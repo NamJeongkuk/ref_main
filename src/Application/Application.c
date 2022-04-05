@@ -14,6 +14,7 @@
 #include "uassert.h"
 #include "DefrostPlugin.h"
 #include "SabbathPlugin.h"
+#include "DoorPlugin.h"
 #include "SensorFilteredReadingPlugin.h"
 
 enum
@@ -55,6 +56,7 @@ void Application_Init(
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
    SensorFilteredReadingPlugin_Init(dataModel);
    GridPlugin_Init(&instance->_private.gridPlugin, dataModel);
+   DoorPlugin_Init(dataModel);
    DefrostPlugin_Init(dataModel);
    PeriodicNvUpdaterPlugin_Init(&instance->_private.periodicNvUpdaterPlugin, dataModel);
 
