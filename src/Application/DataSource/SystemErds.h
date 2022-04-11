@@ -253,7 +253,7 @@ enum
    ENTRY(Erd_DefrostTimerIsSatisfiedMonitorRequest,         0xF11C, DefrostTimerIsSatisfiedMonitorRequest_t,            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_MaxTimeBetweenDefrostsInMinutes,               0xF11D, uint16_t,                                           Swap_Y, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_DefrostTimerIsSatisfiedMonitorFsmState,        0xF11E, DefrostTimerIsSatisfiedMonitorFsmState_t,           Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_FfDefrostWasAbnormal,                          0xF11F, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FfDefrostWasAbnormal,                          0xF11F, bool,                                               Swap_N, Io_None, Sub_N, Nv,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_DefrostTimerIsSatisfied,                       0xF120, bool,                                               Swap_N, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_LeftHandFfDoorIsOpen,                          0xF130, bool,                                               Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \

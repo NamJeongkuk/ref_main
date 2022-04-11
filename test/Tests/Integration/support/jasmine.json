@@ -1,0 +1,11 @@
+{
+   "spec_dir": "test/Tests/Integration",
+   "spec_files": [
+      "**/*[iI]nt.js"
+   ],
+   "helpers": [
+      "preTest/testSetup.js"
+   ],
+   "stopSpecOnExpectationFailure": false,
+   "random": true
+}
