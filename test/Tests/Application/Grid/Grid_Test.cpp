@@ -104,9 +104,9 @@ TEST_GROUP(Grid)
       mock().expectOneCall(functionName);
    }
 
-   void After(TimerTicks_t ticks)
+   void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
    {
-      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
    }
 };
 

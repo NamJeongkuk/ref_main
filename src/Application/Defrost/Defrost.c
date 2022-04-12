@@ -62,11 +62,6 @@ static void SetHsmStateTo(Defrost_t *instance, DefrostHsmState_t state)
    DataModel_Write(instance->_private.dataModel, instance->_private.config->defrostHsmStateErd, &state);
 };
 
-static void SetDoorHoldoffRequestTo(Defrost_t *instance, DefrostHsmState_t state)
-{
-   DataModel_Write(instance->_private.dataModel, instance->_private.config->defrostDoorHoldoffRequestErd, &state);
-};
-
 static void SaveFzAbnormalDefrostData(Defrost_t *instance)
 {
    bool fzDefrostWasAbnormal;
@@ -343,7 +338,6 @@ static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_PowerUp);
-         SetDoorHoldoffRequestTo(instance, ENABLED);
          StartPowerUpDelayTimer(instance);
          break;
 

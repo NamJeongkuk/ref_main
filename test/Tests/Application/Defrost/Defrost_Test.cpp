@@ -491,13 +491,6 @@ TEST(Defrost, ShouldInitializeIntoPowerUpHsmState)
    DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
 }
 
-TEST(Defrost, ShouldRequestToEnableDoorHoldoffWhenPoweringUp)
-{
-   Given CalculatedGridLinesAre(calcGridLines);
-   Given DefrostIsInitialized();
-   DoorHoldoffRequestShouldBe(ENABLED);
-}
-
 TEST(Defrost, ShouldRequestEnableThenResetOfDefrostTimerCounterWhenFilteredFzCabinetTemperatureIsGreaterThanExtremeHysteresisAfterPowerUpDelay)
 {
    Given DefrostInitializedWithFzTempAboveExtremeHysteresis();
