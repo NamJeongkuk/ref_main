@@ -1,96 +1,106 @@
-MEMORY
-{
-	RAM (rx) : ORIGIN = 0x10, LENGTH = 0xBFF0
-	ROM (rx) : ORIGIN = 0xFFF80000, LENGTH = 0xFFFF4000 - 0xFFF80000
-	PARAMETRIC_DATA (r) : ORIGIN = 0xFFFF4000, LENGTH = 0x6000
-	FIXED_VECTOR_TABLE (rx) : ORIGIN = 0xFFFFFF80, LENGTH = 0x80
-}
+INCLUDE lib/rockhopper-boot-loader/rockhopper-boot-loader-memory.ld
+
 OUTPUT_ARCH(rx)
 ENTRY(_PowerON_Reset)
 
 SECTIONS
 {
-	.text :
-	{
-		. = ALIGN(4);
-		__applicationHeaderStart = .;
-		KEEP(*(.applicationHeader))
-		*(.text)
-		*(.text.*)
-		*(P)
-		. = ALIGN(4);
-		__relocatableVectorTableStart = .;
-		KEEP(*(.relocatableVectorTable))
-	} > ROM
+   __bootLoaderHeaderStart = BootLoaderHeaderAddress;
 
-	.rodata :
-	{
-		*(.rodata)
-		*(.rodata.*)
-		*(C_1)
-		*(C_2)
-		*(C)
-		_mdata = .;
-		_etext = .;
-	} > ROM
+   __applicationStart = ORIGIN(APPLICATION_ROM);
+   __applicationEnd = ORIGIN(APPLICATION_ROM) + LENGTH(APPLICATION_ROM) - 1;
+   __applicationHeaderStart = __applicationStart;
 
-	.parametricData :
-	{
-		*(.parametric_data)
-	} > PARAMETRIC_DATA
+   __parametricStart = ORIGIN(PARAMETRIC_ROM);
+   __parametricEnd = ORIGIN(PARAMETRIC_ROM) + LENGTH(PARAMETRIC_ROM) - 1;
+   __parametricHeaderStart = __parametricStart;
 
-	.fixedVectorTable :
-	{
-		. = ALIGN(4);
-		__fixedVectorTableStart = .;
-		KEEP(*(.fixedVectorTable))
-		__fixedVectorTableEnd = .;
-	} > FIXED_VECTOR_TABLE
+   .text :
+   {
+      . = ALIGN(4);
+      __applicationHeaderStart = .;
+      KEEP(*(.applicationHeader))
+      *(.text)
+      *(.text.*)
+      *(P)
+      . = ALIGN(4);
+      __relocatableVectorTableStart = .;
+      KEEP(*(.relocatableVectorTable))
+   } > APPLICATION_ROM
 
-	.bss (NOLOAD):
-	{
-		_bss = .;
-		*(.bss)
-		*(.bss.*)
-		*(COMMON)
-		*(B)
-		*(B_1)
-		*(B_2)
-		_ebss = .;
-		_end = .;
-	} > RAM
+   .rodata :
+   {
+      *(.rodata)
+      *(.rodata.*)
+      *(C_1)
+      *(C_2)
+      *(C)
+      _mdata = .;
+      _etext = .;
+   } > APPLICATION_ROM
 
-	.data :
-	{
-		_data = .;
-		__dtcVectorTableStart = .;
-		*(.dtcTransferInformation)
-		. = ALIGN(4);
-		__dtcVectorTableEnd = .;
-		*(.data)
-		*(.data.*)
-		*(D)
-		*(D_1)
-		*(D_2)
-	} > RAM AT>ROM
+   .bss (NOLOAD):
+   {
+      _bss = .;
+      *(.bss)
+      *(.bss.*)
+      *(COMMON)
+      *(B)
+      *(B_1)
+      *(B_2)
+      _ebss = .;
+      _end = .;
+   } > RAM
 
-	.flashCode :
-	{
-		*(.flashCode)
-		_edata = .;
-	}  > RAM AT>ROM
+   .data :
+   {
+      _data = .;
+      __dtcVectorTableStart = .;
+      *(.dtcTransferInformation)
+      . = ALIGN(4);
+      __dtcVectorTableEnd = .;
+      *(.data)
+      *(.data.*)
+      *(D)
+      *(D_1)
+      *(D_2)
+   } > RAM AT>APPLICATION_ROM
 
-	.stackCheck :
-	{
-		__stackCheckStart = .;
-		*(.stackCheck)
-		__stackCheckEnd = .;
-		__stackEnd = .;
-	} > RAM AT>ROM
+   .flashCode :
+   {
+      *(.flashCode)
+      _edata = .;
+   }  > RAM AT>APPLICATION_ROM
 
-	_ustack = ORIGIN(RAM) + LENGTH(RAM) - 4;
-	_istack = ORIGIN(RAM) + LENGTH(RAM) - 4;
-	__iStackSize = _istack - _ebss;
+   .stackCheck :
+   {
+      __stackCheckStart = .;
+      *(.stackCheck)
+      __stackCheckEnd = .;
+      __stackEnd = .;
+   } > RAM AT>APPLICATION_ROM
+
+   .dtcVectorTable :
+   {
+      . = ALIGN(1024);
+      KEEP(*(.dtcVectorTable))
+   } > APPLICATION_ROM
+
+   .parametricData :
+   {
+      *(.parametric_data)
+   } > PARAMETRIC_ROM
+
+   .fixedVectorTable FixedVectorTableAddress :
+   {
+      __fixedVectorTableStart = .;
+      KEEP(*(.fixedVectorTable))
+      __fixedVectorTableEnd = .;
+   } > BOOT_LOADER_ROM
+
+   _ustack = ORIGIN(RAM) + LENGTH(RAM) - 4;
+   _istack = ORIGIN(RAM) + LENGTH(RAM) - 4;
+   __iStackSize = _istack - _ebss;
 
    __stackStart = _ustack;
 }

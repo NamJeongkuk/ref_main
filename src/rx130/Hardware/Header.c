@@ -93,13 +93,13 @@ const ImageHeader_t *Header_GetImageHeader(ImageType_t imageType)
    switch(imageType)
    {
       case ImageType_BootLoader:
-         return (const ImageHeader_t *)BootLoaderHeaderAddress;
+         return BootLoaderImageHeader;
 
       case ImageType_Application:
          return &applicationHeader;
 
       case ImageType_Parametric:
-         return (const ImageHeader_t *)ParametricHeaderAddress;
+         return ParametricImageHeader;
 
       default:
          return NULL;

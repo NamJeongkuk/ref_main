@@ -12,21 +12,7 @@
 #include "I_Action.h"
 #include "Rx130FlashInfo.h"
 #include "ImageHeader.h"
-
-#define ApplicationStartAddress (0xFFF80000)
-#define ApplicationEndAddress (0xFFFF3FFF)
-#define ApplicationHeaderAddress ApplicationStartAddress
-#define ApplicationImageHeader (const ImageHeader_t *)(intptr_t)(ApplicationHeaderAddress)
-
-#define ParametricStartAddress (0xFFFF4000)
-#define ParametricEndAddress (0xFFFF9FFF)
-#define ParametricImageHeader (const ImageHeader_t *)(intptr_t)(ParametricHeaderAddress)
-#define ParametricHeaderAddress ParametricStartAddress
-
-#define BootLoaderStartAddress (0xFFFFA000)
-#define BootLoaderEndAddress (0xFFFFFFFF)
-#define BootLoaderHeaderAddress BootLoaderStartAddress
-#define BootLoaderImageHeader (const ImageHeader_t *)(intptr_t)(BootLoaderHeaderAddress)
+#include "MemoryMap.h"
 
 /*!
  * Get the Action that is used to enter the Boot Loader
