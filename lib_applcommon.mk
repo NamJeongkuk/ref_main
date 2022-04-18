@@ -50,6 +50,7 @@ applcommon_SRC_DIRS:=\
   $(applcommon_LIB_ROOT)/HardwareInterfaces/Adapters \
   $(applcommon_LIB_ROOT)/Image \
   $(applcommon_LIB_ROOT)/KeyManager \
+  $(applcommon_LIB_ROOT)/Mapper \
   $(applcommon_LIB_ROOT)/NonVolatile \
   $(applcommon_LIB_ROOT)/Mapper \
   $(applcommon_LIB_ROOT)/RecordStorage \

@@ -50,6 +50,7 @@ SRC_DIRS:=\
   src/Application/Sensor \
   src/Application/Sabbath \
   src/Application/ServiceDiagnostics \
+  src/Application/Sensor \
   src/Application/SystemMonitor \
   src/Application/TimerModule \
   Parametric/data/ \

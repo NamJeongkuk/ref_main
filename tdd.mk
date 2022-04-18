@@ -8,6 +8,7 @@ TESTS_DIR := test/Tests
 OUTPUT_DIR := test
 
 RUN_APPLCOMMON_TESTS := N
+DISPLAY_ASCII_ART_RESULTS?=Y
 
 # Specific files to include if you don't want the entire directory included
 SRC_FILES := \
@@ -21,6 +22,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Evaporator \
    $(PROJECT_DIR)/Application/Grid \
    $(PROJECT_DIR)/Application/Grid/GridFunctions \
+   $(PROJECT_DIR)/Application/Sensor \
    $(PROJECT_DIR)/Application/Sabbath \
 
 # List of directories that contain your tests and test helpers (mocks, fakes, etc.)
@@ -37,6 +39,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/Grid \
    $(TESTS_DIR)/Application/Sabbath \
    $(TESTS_DIR)/Application/ParametricData \
+   $(TESTS_DIR)/Application/Sensor \
    $(TESTS_DIR)/Application/ \
 
 # List of include directories
