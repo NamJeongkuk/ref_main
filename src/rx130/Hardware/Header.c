@@ -12,15 +12,8 @@
 enum
 {
    DummyCrc = 0x1234,
-   TargetMemorySizeInK = 512,
 
-   ApplicationIncluded = true,
-   ParametricIncluded = false,
-   AuxiliaryIncluded = false,
-
-   ApplicationImageId = 1,
-   ParametricDataImageId = 1,
-   AuxiliaryImageId = 1,
+   ImageId = 0x0139,
 
    HardwareVersion = 1,
 
@@ -40,9 +33,9 @@ static const ImageHeader_t applicationHeader __attribute__((section(".applicatio
    NONCRIT_VERSION_MAJOR,
    NONCRIT_VERSION_MINOR,
 
-   ApplicationImageId,
-   ParametricDataImageId,
-   AuxiliaryImageId,
+   ImageId,
+   ImageId,
+   ImageId,
 
    HardwareVersion,
 
