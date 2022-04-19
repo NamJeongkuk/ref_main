@@ -3,7 +3,7 @@ local Types = require 'build.rx130.GeneratedTypes'
 
 tools.build_json({
   namespace = 'rx130',
-  address = 0x00,
+  address = 0xC0,
   parsers = {
     tools.parser.standard
   },

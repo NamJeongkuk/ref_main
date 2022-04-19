@@ -8,7 +8,7 @@
 #include "GeaStack.h"
 #include "DataModelErdPointerAccess.h"
 #include "Gea2Message.h"
-#include "Gea2Addresses.h"
+#include "Gea2RefAddresses.h"
 #include "Header.h"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
@@ -48,8 +48,8 @@ static const ConstArrayMap_BinarySearchConfiguration_t publicErdMapConfiguration
 };
 
 static const uint8_t rangeRestrictedValidatorRestrictedAddressTable[] = {
-   EmbeddedWiFiGeaAddress,
-   ConnectPlusWiFiGeaAddress
+   Gea2Address_EmbeddedWiFi,
+   Gea2Address_ConnectPlusWiFi
 };
 
 static const Validator_RestrictedRangeErdConfiguration_t restrictedRangeConfiguration = {

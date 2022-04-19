@@ -74,6 +74,8 @@ applcommon_EXTERNAL_INC_DIRS:=\
 
 include lib_applcommon_rx130.mk
 
+include lib_refercommon.mk
+
 PACKAGE_CONTENTS:=
 $(call add_to_package,$(OUTPUT_DIR)/binaries,binaries)
 $(call add_to_package,$(OUTPUT_DIR)/doc,doc)

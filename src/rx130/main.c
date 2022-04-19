@@ -27,7 +27,7 @@
 #include "Timer.h"
 #include "TimerModuleStack.h"
 #include "Version.h"
-#include "Gea2Addresses.h"
+#include "Gea2RefAddresses.h"
 #include "Crc16Calculator_Rx2xx.h"
 #include "ContextProtector_Rx2xx.h"
 #include "UlTestsPlugin.h"
@@ -152,7 +152,7 @@ int main(void)
       &geaStack,
       dataModel,
       SystemData_ExternalDataSource(&systemData),
-      Gea2Address_Mainboard,
+      Gea2Address_ReferMainBoard,
       staticRoutingTable,
       ELEMENT_COUNT(staticRoutingTable));
 

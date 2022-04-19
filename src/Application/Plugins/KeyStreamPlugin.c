@@ -7,7 +7,7 @@
 
 #include "KeyStreamPlugin.h"
 #include "DataModelErdPointerAccess.h"
-#include "Gea2Addresses.h"
+#include "Gea2RefAddresses.h"
 #include "Gea2Message.h"
 #include "SystemErds.h"
 
@@ -17,16 +17,15 @@ enum
    HeartbeatTickPeriodInMsec = 100
 };
 
-static const ErdStreamReceiverConfiguration_t erdStreamReceiverConfiguration =
-   {
-      .erdStreamErd = PublicErd_KeyErdStream,
-      .lastSequenceNumberProcessedErd = Erd_KeyStreamSequenceNumber,
-      .missedEventSignalErd = Erd_KeyStreamMissedEventSignal,
-      .senderResetSignalErd = Erd_KeyStreamSenderResetSignal,
-      .senderStateRequest = Erd_KeyStreamSenderStateRequest,
-      .maxNumberOfErdsInBuffer = ErdStreamEntryCount,
-      .numberOfBytesInLargestErdToWrite = sizeof(bool)
-   };
+static const ErdStreamReceiverConfiguration_t erdStreamReceiverConfiguration = {
+   .erdStreamErd = PublicErd_KeyErdStream,
+   .lastSequenceNumberProcessedErd = Erd_KeyStreamSequenceNumber,
+   .missedEventSignalErd = Erd_KeyStreamMissedEventSignal,
+   .senderResetSignalErd = Erd_KeyStreamSenderResetSignal,
+   .senderStateRequest = Erd_KeyStreamSenderStateRequest,
+   .maxNumberOfErdsInBuffer = ErdStreamEntryCount,
+   .numberOfBytesInLargestErdToWrite = sizeof(bool)
+};
 
 static void HeartbeatTick(void *context)
 {
