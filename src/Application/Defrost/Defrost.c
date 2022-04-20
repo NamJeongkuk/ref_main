@@ -238,22 +238,6 @@ static bool DefrostTimerCounterResetRequiredFromPowerUp(Defrost_t *instance)
    return instance->_private.resetRequiredWhenEnablingDefrostTimerCounter;
 }
 
-static void MaxTimeBetweenDefrostsComplete(void *context)
-{
-   REINTERPRET(instance, context, Defrost_t *);
-
-   Hsm_SendSignal(&instance->_private.hsm, Signal_MaxTimeBetweenDefrostsComplete, NULL);
-}
-
-static void StartMaxTimeBetweenDefrostsTimer(Defrost_t *instance)
-{
-   StartTimer(
-      instance,
-      &instance->_private.timeBetweenDefrostsTimer,
-      instance->_private.defrostParametricData->maxTimeBetweenDefrostsInMinutes * MSEC_PER_MIN,
-      MaxTimeBetweenDefrostsComplete);
-}
-
 static void PeriodicTimeoutComplete(void *context)
 {
    REINTERPRET(instance, context, Defrost_t *);
@@ -403,7 +387,6 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
             }
          }
 
-         StartMaxTimeBetweenDefrostsTimer(instance);
          StartPeriodicTimer(instance);
          break;
 
@@ -422,10 +405,6 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
                }
             }
          }
-         break;
-
-      case Signal_MaxTimeBetweenDefrostsComplete:
-         Hsm_Transition(hsm, State_PrechillPrep);
          break;
 
       case Signal_MaxPrechillHoldoffTimeComplete:

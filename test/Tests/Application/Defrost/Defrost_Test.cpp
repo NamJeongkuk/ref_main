@@ -772,18 +772,6 @@ TEST(Defrost, ShouldNotSendEnableDefrostTimerCounterRequestWhenDefrostTimerCount
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost, ShouldSendDisableDefrostTimerCounterRequestWhenGoingToPrechillPrepAfterMaxTimeBetweenDefrosts)
-{
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
-
-   After(defrostData.maxTimeBetweenDefrostsInMinutes * MSEC_PER_MIN - 1);
-   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
-
-   DisableDefrostTimerCounterRequestShouldBeSent();
-   After(1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
-}
-
 TEST(Defrost, ShouldGoToPrechillPrepWhenDefrostTimerIsSatisfiedAndSealedSystemValveIsInParametricDefinedPositionAfterPeriodicTimeout)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
