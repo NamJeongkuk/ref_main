@@ -183,8 +183,15 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Defrost Timer Count In Seconds",
+          "displayName": "RAM Defrost Timer Count In Seconds",
           "name": "Erd_DefrostTimerCountInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "EEPROM Defrost Timer Count In Seconds",
+          "name": "Erd_Eeprom_DefrostTimerCountInSeconds",
           "read": true,
           "write": true
         },

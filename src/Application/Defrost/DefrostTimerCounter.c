@@ -70,13 +70,23 @@ static void RequestReceived(void *context, const void *args)
    DefrostTimerCounterRequested(instance, request);
 }
 
-static void ResetDefrostTimerCount(DefrostTimerCounter_t *instance)
+static void ResetRamDefrostTimerCount(DefrostTimerCounter_t *instance)
 {
    uint32_t count = 0;
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->defrostTimerCountInSecondsErd,
+      instance->_private.config->ramDefrostTimerCountInSecondsErd,
+      &count);
+}
+
+static void ResetEepromDefrostTimerCount(DefrostTimerCounter_t *instance)
+{
+   uint32_t count = 0;
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->eepromDefrostTimerCountInSecondsErd,
       &count);
 }
 
@@ -176,14 +186,14 @@ static void IncrementDefrostTimerCount(DefrostTimerCounter_t *instance)
    uint32_t count;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->defrostTimerCountInSecondsErd,
+      instance->_private.config->ramDefrostTimerCountInSecondsErd,
       &count);
 
    count = TRUNCATE_UNSIGNED_ADDITION(count, 1, UINT32_MAX);
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->defrostTimerCountInSecondsErd,
+      instance->_private.config->ramDefrostTimerCountInSecondsErd,
       &count);
 }
 
@@ -204,7 +214,7 @@ static void AddAllDoorAccelerationsToCount(DefrostTimerCounter_t *instance, uint
    uint32_t adjustedCount = count + ffDoorAcceleration + fzDoorAcceleration;
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->defrostTimerCountInSecondsErd,
+      instance->_private.config->ramDefrostTimerCountInSecondsErd,
       &adjustedCount);
 }
 
@@ -219,7 +229,7 @@ static void ResetOrAddDoorAccelerationsToDefrostTimerCount(DefrostTimerCounter_t
    uint32_t count;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->defrostTimerCountInSecondsErd,
+      instance->_private.config->ramDefrostTimerCountInSecondsErd,
       &count);
 
    uint16_t maxTimeBetweenDefrostsInMinutes;
@@ -260,7 +270,8 @@ static void State_Enabled(Fsm_t *fsm, const FsmSignal_t signal, const void *data
          break;
 
       case Signal_ResetRequested:
-         ResetDefrostTimerCount(instance);
+         ResetRamDefrostTimerCount(instance);
+         ResetEepromDefrostTimerCount(instance);
          SendDoorAccelerationRequestTo(instance, DoorAcceleration_Reset);
          SendDefrostTimerIsSatisfiedMonitorRequestTo(instance, DefrostTimerIsSatisfied_Reset);
          break;
@@ -287,7 +298,6 @@ static void State_Disabled(Fsm_t *fsm, const FsmSignal_t signal, const void *dat
    {
       case Fsm_Entry:
          SetFsmStateTo(instance, DefrostTimerCounterFsmState_Disabled);
-         ResetDefrostTimerCount(instance);
          SendDoorAccelerationRequestTo(instance, DoorAcceleration_Disable);
          SendDefrostTimerIsSatisfiedMonitorRequestTo(instance, DefrostTimerIsSatisfied_Disable);
          break;

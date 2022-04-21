@@ -24,6 +24,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Grid/GridFunctions \
    $(PROJECT_DIR)/Application/Sensor \
    $(PROJECT_DIR)/Application/Sabbath \
+   $(PROJECT_DIR)/Application/SystemMonitor \
 
 # List of directories that contain your tests and test helpers (mocks, fakes, etc.)
 TEST_SRC_DIRS := \

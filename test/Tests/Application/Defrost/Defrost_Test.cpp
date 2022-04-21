@@ -323,7 +323,6 @@ TEST_GROUP(Defrost)
 
    void DefrostInitializedWithFzTempAboveExtremeHysteresis()
    {
-      Given DefrostTimerRequestIs(DefrostTimer_Enable, 0);
       Given FilteredFreezerCabinetTemperatureIs(fzCalcAxisGridLines[GridLine_FzExtremeHigh] + 1);
       Given CalculatedGridLinesAre(calcGridLines);
       Given DefrostIsInitialized();
@@ -331,7 +330,6 @@ TEST_GROUP(Defrost)
 
    void DefrostInitializedWithFzTempAboveTerminationTemp()
    {
-      Given DefrostTimerRequestIs(DefrostTimer_Enable, 0);
       Given FilteredFreezerCabinetTemperatureIs(defrostData.fzDefrostTerminationTemperatureInDegFx100 + 1);
       Given CalculatedGridLinesAre(calcGridLines);
       Given DefrostIsInitialized();
@@ -339,7 +337,6 @@ TEST_GROUP(Defrost)
 
    void DefrostInitializedWithFzTempEqualToTerminationTemp()
    {
-      Given DefrostTimerRequestIs(DefrostTimer_Enable, 0);
       Given FilteredFreezerCabinetTemperatureIs(defrostData.fzDefrostTerminationTemperatureInDegFx100);
       Given CalculatedGridLinesAre(calcGridLines);
       Given DefrostIsInitialized();
@@ -496,7 +493,7 @@ TEST(Defrost, ShouldRequestEnableThenResetOfDefrostTimerCounterWhenFilteredFzCab
    Given DefrostInitializedWithFzTempAboveExtremeHysteresis();
 
    After(PowerUpDelayInMs - 1);
-   DefrostTimerRequestShouldBe(DefrostTimer_Enable, 0);
+   DefrostTimerRequestShouldBe(DefrostTimer_Reset, 0);
 
    EnableThenResetDefrostTimerCounterRequestsShouldBeSent();
    After(1);
@@ -507,7 +504,7 @@ TEST(Defrost, ShouldRequestEnableThenResetOfDefrostTimerWhenFilteredFzCabinetTem
    Given DefrostInitializedWithFzTempAboveTerminationTemp();
 
    After(PowerUpDelayInMs - 1);
-   DefrostTimerRequestShouldBe(DefrostTimer_Enable, 0);
+   DefrostTimerRequestShouldBe(DefrostTimer_Reset, 0);
 
    EnableThenResetDefrostTimerCounterRequestsShouldBeSent();
    After(1);
@@ -518,7 +515,7 @@ TEST(Defrost, ShouldRequestEnableThenResetOfDefrostTimerWhenFilteredFzCabinetTem
    Given DefrostInitializedWithFzTempEqualToTerminationTemp();
 
    After(PowerUpDelayInMs - 1);
-   DefrostTimerRequestShouldBe(DefrostTimer_Enable, 0);
+   DefrostTimerRequestShouldBe(DefrostTimer_Reset, 0);
 
    EnableThenResetDefrostTimerCounterRequestsShouldBeSent();
    After(1);

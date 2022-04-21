@@ -87,7 +87,7 @@ static const SabbathData_t sabbathData = {
 
 static const DefrostTimerIsSatisfiedMonitorConfig_t config = {
    .defrostTimerIsSatisfiedMonitorFsmStateErd = Erd_DefrostTimerIsSatisfiedMonitorFsmState,
-   .defrostTimerCountInSecondsErd = Erd_DefrostTimerCountInSeconds,
+   .ramDefrostTimerCountInSecondsErd = Erd_DefrostTimerCountInSeconds,
    .defrostTimerIsSatisfiedMonitorRequestErd = Erd_DefrostTimerIsSatisfiedMonitorRequest,
    .defrostTimerIsSatisfiedErd = Erd_DefrostTimerIsSatisfied,
    .sabbathModeErd = Erd_SabbathMode,

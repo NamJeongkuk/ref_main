@@ -18,7 +18,7 @@
 typedef struct
 {
    Erd_t defrostTimerIsSatisfiedMonitorFsmStateErd; // DefrostTimerIsSatisfiedMonitorFsmState_t
-   Erd_t defrostTimerCountInSecondsErd; // uint32_t
+   Erd_t ramDefrostTimerCountInSecondsErd; // uint32_t
    Erd_t defrostTimerIsSatisfiedMonitorRequestErd; // DefrostTimerIsSatisfiedMonitorRequest_t
    Erd_t defrostTimerIsSatisfiedErd; // bool
    Erd_t sabbathModeErd; // bool

@@ -30,6 +30,11 @@ enum
    SomeDoorAccelerationCounts = 50
 };
 
+enum
+{
+   SomeDefrostCounts = 999
+};
+
 static const DefrostData_t defrostData = {
    .fzDoorIncrementFactorInSecondsPerSecond = 348,
    .ffDoorIncrementFactorInSecondsPerSecond = 87,
@@ -89,7 +94,7 @@ static const SabbathData_t sabbathData = {
 static const DefrostTimerCounterConfig_t config = {
    .defrostTimerCounterFsmStateErd = Erd_DefrostTimerCounterFsmState,
    .defrostTimerCounterRequestErd = Erd_DefrostTimerCounterRequest,
-   .defrostTimerCountInSecondsErd = Erd_DefrostTimerCountInSeconds,
+   .ramDefrostTimerCountInSecondsErd = Erd_DefrostTimerCountInSeconds,
    .doorAccelerationRequestErd = Erd_DoorAccelerationRequest,
    .ffDoorAccelerationCountsErd = Erd_DefrostFfDoorAccelerationCount,
    .fzDoorAccelerationCountsErd = Erd_DefrostFzDoorAccelerationCount,
@@ -99,6 +104,7 @@ static const DefrostTimerCounterConfig_t config = {
    .sabbathModeErd = Erd_SabbathMode,
    .fzDefrostWasAbnormalErd = Erd_FzDefrostWasAbnormal,
    .maxTimeBetweenDefrostsInMinutesErd = Erd_MaxTimeBetweenDefrostsInMinutes,
+   .eepromDefrostTimerCountInSecondsErd = Erd_Eeprom_DefrostTimerCountInSeconds,
    .timerModuleErd = Erd_TimerModule,
 };
 
@@ -150,10 +156,23 @@ TEST_GROUP(DefrostTimerCounter)
       DataModel_Write(dataModel, Erd_DefrostTimerCountInSeconds, &count);
    }
 
+   void EepromDefrostTimerCountIs(uint32_t count)
+   {
+      DataModel_Write(dataModel, Erd_Eeprom_DefrostTimerCountInSeconds, &count);
+   }
+
    void DefrostTimerCountShouldBe(uint32_t expectedCount)
    {
       uint32_t actualCount;
       DataModel_Read(dataModel, Erd_DefrostTimerCountInSeconds, &actualCount);
+
+      CHECK_EQUAL(expectedCount, actualCount);
+   }
+
+   void EepromDefrostTimerCountShouldBe(uint32_t expectedCount)
+   {
+      uint32_t actualCount;
+      DataModel_Read(dataModel, Erd_Eeprom_DefrostTimerCountInSeconds, &actualCount);
 
       CHECK_EQUAL(expectedCount, actualCount);
    }
@@ -312,14 +331,6 @@ TEST(DefrostTimerCounter, ShouldDisableWhenDisableRequestReceivedWhileEnabled)
    DefrostTimerCounterFsmStateShouldBe(DefrostTimerCounterFsmState_Disabled);
 }
 
-TEST(DefrostTimerCounter, ShouldResetDefrostTimerCountToZeroOnInit)
-{
-   Given DefrostTimerCountIs(999);
-
-   When DefrostTimerCounterIsInitialized();
-   DefrostTimerCountShouldBe(0);
-}
-
 TEST(DefrostTimerCounter, ShouldSendDisableDoorAccelerationRequestOnInit)
 {
    Given DefrostTimerCounterIsInitialized();
@@ -344,15 +355,15 @@ TEST(DefrostTimerCounter, ShouldSendEnableDoorAccelerationRequestWhenEnabled)
    DoorAccelerationRequestShouldBe(DoorAcceleration_Enable, 2);
 }
 
-TEST(DefrostTimerCounter, ShouldResetDefrostTimerCountToZeroWhenDisabled)
+TEST(DefrostTimerCounter, ShouldNotResetDefrostTimerCountToZeroWhenDisabled)
 {
    Given DefrostTimerIsEnabled();
 
-   When DefrostTimerCountIs(999);
+   When DefrostTimerCountIs(SomeDefrostCounts);
    And DefrostTimerCounterRequestIs(DefrostTimer_Disable, 2);
 
    DefrostTimerCounterFsmStateShouldBe(DefrostTimerCounterFsmState_Disabled);
-   DefrostTimerCountShouldBe(0);
+   DefrostTimerCountShouldBe(SomeDefrostCounts);
 }
 
 TEST(DefrostTimerCounter, ShouldSendDisableDoorAccelerationRequestWhenDisabled)
@@ -375,7 +386,7 @@ TEST(DefrostTimerCounter, ShouldResetDefrostTimerCountToZeroWhenRequestedToReset
 {
    Given DefrostTimerIsEnabled();
 
-   When DefrostTimerCountIs(999);
+   When DefrostTimerCountIs(SomeDefrostCounts);
    And DefrostTimerCounterRequestIs(DefrostTimer_Reset, 2);
 
    DefrostTimerCountShouldBe(0);
@@ -830,4 +841,31 @@ TEST(DefrostTimerCounter, ShouldNotSendResetDoorAccelerationRequestWhenDefrostTi
 
    After(1);
    DoorAccelerationRequestShouldBe(DoorAcceleration_Enable, 2);
+}
+
+TEST(DefrostTimerCounter, ShouldResetEepromDefrostCountAndRamDefrostCountWhenDefrostTimerCounterIsResetWhileEnabled)
+{
+   Given DefrostTimerIsEnabled();
+   And EepromDefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   And DefrostTimerCountIs(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds);
+
+   When DefrostTimerCounterRequestIs(DefrostTimer_Reset, 1);
+   DefrostTimerCountShouldBe(0);
+   EepromDefrostTimerCountShouldBe(0);
+}
+
+TEST(DefrostTimerCounter, ShouldNotResetDefrostCountsToZeroWhenDisabledAndTheyShouldBeTheSameWhenEnabledAgain)
+{
+   Given DefrostTimerIsEnabled();
+   And EepromDefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   And DefrostTimerCountIs(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds);
+
+   When DefrostTimerCounterRequestIs(DefrostTimer_Disable, 2);
+   DefrostTimerCounterFsmStateShouldBe(DefrostTimerCounterFsmState_Disabled);
+   EepromDefrostTimerCountShouldBe(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   DefrostTimerCountShouldBe(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds);
+
+   When DefrostTimerCounterRequestIs(DefrostTimer_Enable, 3);
+   EepromDefrostTimerCountShouldBe(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   DefrostTimerCountShouldBe(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds);
 }

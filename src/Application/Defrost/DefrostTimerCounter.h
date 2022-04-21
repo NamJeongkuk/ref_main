@@ -19,7 +19,7 @@ typedef struct
 {
    Erd_t defrostTimerCounterFsmStateErd; // DefrostTimerCounterFsmState_t
    Erd_t defrostTimerCounterRequestErd; // DefrostTimerCounterRequest_t
-   Erd_t defrostTimerCountInSecondsErd; // uint32_t
+   Erd_t ramDefrostTimerCountInSecondsErd; // uint32_t
    Erd_t doorAccelerationRequestErd; // DoorAccelerationRequest_t
    Erd_t ffDoorAccelerationCountsErd; // uint16_t
    Erd_t fzDoorAccelerationCountsErd; // uint16_t
@@ -29,6 +29,7 @@ typedef struct
    Erd_t sabbathModeErd; // bool
    Erd_t fzDefrostWasAbnormalErd; // bool
    Erd_t maxTimeBetweenDefrostsInMinutesErd; // uint16_t
+   Erd_t eepromDefrostTimerCountInSecondsErd; // uint32_t
    Erd_t timerModuleErd; // TimerModule_t *
 } DefrostTimerCounterConfig_t;
 

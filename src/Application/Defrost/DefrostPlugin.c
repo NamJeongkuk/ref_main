@@ -67,7 +67,7 @@ DefrostDoorHoldoffTimerConfiguration_t doorHoldoffTimerConfiguration = {
 static const DefrostTimerCounterConfig_t defrostTimerCounterConfig = {
    .defrostTimerCounterFsmStateErd = Erd_DefrostTimerCounterFsmState,
    .defrostTimerCounterRequestErd = Erd_DefrostTimerCounterRequest,
-   .defrostTimerCountInSecondsErd = Erd_DefrostTimerCountInSeconds,
+   .ramDefrostTimerCountInSecondsErd = Erd_DefrostTimerCountInSeconds,
    .doorAccelerationRequestErd = Erd_DoorAccelerationRequest,
    .ffDoorAccelerationCountsErd = Erd_DefrostFfDoorAccelerationCount,
    .fzDoorAccelerationCountsErd = Erd_DefrostFzDoorAccelerationCount,
@@ -77,12 +77,13 @@ static const DefrostTimerCounterConfig_t defrostTimerCounterConfig = {
    .sabbathModeErd = Erd_SabbathMode,
    .fzDefrostWasAbnormalErd = Erd_FzDefrostWasAbnormal,
    .maxTimeBetweenDefrostsInMinutesErd = Erd_MaxTimeBetweenDefrostsInMinutes,
+   .eepromDefrostTimerCountInSecondsErd = Erd_Eeprom_DefrostTimerCountInSeconds,
    .timerModuleErd = Erd_TimerModule,
 };
 
 static const DefrostTimerIsSatisfiedMonitorConfig_t defrostTimerIsSatisfiedMonitorConfig = {
    .defrostTimerIsSatisfiedMonitorFsmStateErd = Erd_DefrostTimerIsSatisfiedMonitorFsmState,
-   .defrostTimerCountInSecondsErd = Erd_DefrostTimerCountInSeconds,
+   .ramDefrostTimerCountInSecondsErd = Erd_DefrostTimerCountInSeconds,
    .defrostTimerIsSatisfiedMonitorRequestErd = Erd_DefrostTimerIsSatisfiedMonitorRequest,
    .defrostTimerIsSatisfiedErd = Erd_DefrostTimerIsSatisfied,
    .sabbathModeErd = Erd_SabbathMode,

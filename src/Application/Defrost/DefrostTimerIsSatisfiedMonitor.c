@@ -103,7 +103,7 @@ static void DataModelChanged(void *context, const void *args)
 
       DefrostTimerIsSatisfiedMonitorRequested(instance, request);
    }
-   else if(erd == instance->_private.config->defrostTimerCountInSecondsErd)
+   else if(erd == instance->_private.config->ramDefrostTimerCountInSecondsErd)
    {
       REINTERPRET(defrostTimerCountsInSeconds, onChangeData->data, const uint32_t *);
 
