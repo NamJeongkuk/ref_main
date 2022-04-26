@@ -37,7 +37,7 @@ typedef struct
 
 typedef struct
 {
-   bool clampingEnabled;
+   bool slewRateEnabled;
    int32_t slewRatePerSecondx100;
 } SensorFilteredReadingClampData_t;
 

@@ -142,7 +142,7 @@ TEST_GROUP(SensorFilteredReading)
 
          channelData[channel].filter = &filter[channel].interface;
          channelData[channel].filterInvalidValue = BadFilterValue;
-         channelData[channel].clampData.clampingEnabled = true;
+         channelData[channel].clampData.slewRateEnabled = true;
          channelData[channel].clampData.slewRatePerSecondx100 = slewRatePerSecondx100;
          channelData[channel].fallbackData.sensorState = SensorIsGood;
          channelData[channel].adcMapper = &mapper.interface;
@@ -221,6 +221,15 @@ TEST_GROUP(SensorFilteredReading)
 
          After(FilterSamplingTimeInMsec - 1);
          startPoint += slewRatePerSecondx100;
+      }
+   }
+
+   void TheFilteredErdShouldBeAtForSeconds(Erd_t erd, TemperatureDegFx100_t temperature, uint16_t seconds)
+   {
+      for(uint16_t index = 0; index < seconds; index++)
+      {
+         After(FilterSamplingTimeInMsec);
+         TheFilteredOutputErdShouldBe(erd, temperature);
       }
    }
 
@@ -574,4 +583,34 @@ TEST(SensorFilteredReading, WhenInitedWithGoodSensorsShouldOnlySwitchToFallbackF
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, FreezerFallbackDegFx100);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, BadTempValue);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp2, BadTempValue);
+}
+
+TEST(SensorFilteredReading, ShouldResetAndReSeedFilterAfterEveryBadSensorToGoodSensorTransition)
+{
+   GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
+   WhenTheModuleIsInitialized();
+
+   Then GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
+   TheFilteredErdShouldBeAtForSeconds(Erd_FilteredTemp1 AND MappedValue1 For Periods(99));
+
+   After(FilterSamplingTimeInMsec);
+   TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, FreshFoodFallbackDegFx100);
+
+   Then GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount2);
+   TheFilteredErdShouldBeAtForSeconds(Erd_FilteredTemp1 AND FreshFoodFallbackDegFx100 For Periods(99));
+
+   After(FilterSamplingTimeInMsec);
+   TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue2);
+
+   Then GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
+   TheFilteredErdShouldBeAtForSeconds(Erd_FilteredTemp1 AND MappedValue2 For Periods(99));
+
+   After(FilterSamplingTimeInMsec);
+   TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, FreshFoodFallbackDegFx100);
+
+   Then GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount3);
+   TheFilteredErdShouldBeAtForSeconds(Erd_FilteredTemp1 AND FreshFoodFallbackDegFx100 For Periods(99));
+
+   After(FilterSamplingTimeInMsec);
+   TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue3);
 }

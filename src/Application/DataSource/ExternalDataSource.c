@@ -107,8 +107,8 @@ static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableSnapshot0, PublicErd_ServiceDiagnosticsFaultTableSnapshot9),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultSequenceEntry0, PublicErd_ServiceDiagnosticsFaultSequenceEntry7),
    SWAPPED_FIELD_RANGE(PublicErd_DiagnosticsCycleHistoryRecord0, PublicErd_DiagnosticsCycleHistoryRecord9),
-   SWAPPED_FIELD_RANGE(PublicErd_FreshFoodThermistor_AdcCount, PublicErd_FreezerThermistor_AdcCount),
-   SWAPPED_FIELD_RANGE(PublicErd_FreshFood_UnfilteredTemperature, PublicErd_Freezer_FilteredTemperature),
+   SWAPPED_FIELD_RANGE(PublicErd_FreshFoodThermistor_AdcCount, PublicErd_CcEvapThermistor_AdcCount),
+   SWAPPED_FIELD_RANGE(PublicErd_FreshFood_UnfilteredTemperature, PublicErd_CcEvap_FilteredTemperature),
    SWAPPED_FIELD_RANGE(PublicErd_FreshFood_AdjustedSetpoint, PublicErd_Freezer_Shift),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableSnapshotData0, PublicErd_ServiceDiagnosticsFaultTableSnapshotData9),
 };

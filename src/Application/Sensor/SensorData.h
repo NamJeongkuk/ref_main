@@ -10,6 +10,13 @@
 
 #include "Mapper_LookupTable.h"
 #include <stdint.h>
+#include <stdbool.h>
+
+typedef struct
+{
+   bool slewRateEnabled;
+   int16_t slewRatePerSecondx100;
+} SensorDataSlewRateData_t;
 
 typedef struct
 {
@@ -18,20 +25,20 @@ typedef struct
    uint8_t alphaNum;
    uint8_t alphaDenom;
    uint8_t windowSize;
-   int16_t slewRateDegFx100PerSecond;
+   SensorDataSlewRateData_t clampData;
    uint16_t goodReadingCounterMax;
    uint16_t badReadingCounterMax;
-} SensorType_t;
+} SensorDataSensorType_t;
 
 typedef struct
 {
-   SensorType_t *fzCabinetThermistor;
-   SensorType_t *ffCabinetThermistor;
-   SensorType_t *fzEvapThermistor;
-   SensorType_t *ffEvapThermistor;
-   SensorType_t *ccThermistor;
-   SensorType_t *ambientThermistor;
-   SensorType_t *ccEvapThermistor;
+   SensorDataSensorType_t *fzCabinetThermistor;
+   SensorDataSensorType_t *ffCabinetThermistor;
+   SensorDataSensorType_t *fzEvapThermistor;
+   SensorDataSensorType_t *ffEvapThermistor;
+   SensorDataSensorType_t *ccCabinetThermistor;
+   SensorDataSensorType_t *ambientThermistor;
+   SensorDataSensorType_t *ccEvapThermistor;
    uint16_t periodicUpdateRate;
 } SensorData_t;
 

@@ -264,6 +264,158 @@
           "write": true
         }
       ]
+    },
+    {
+      "title": "Sensors",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "FreshFood Thermistor AdcCount",
+          "name": "Erd_FreshFoodThermistor_AdcCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Thermistor AdcCount",
+          "name": "Erd_FreezerThermistor_AdcCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "FreshFoodEvap Thermistor AdcCount",
+          "name": "Erd_FreshFoodEvapThermistor_AdcCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "FreezerEvap Thermistor AdcCount",
+          "name": "Erd_FreezerEvapThermistor_AdcCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "ConvertibleCompartment Thermistor AdcCount",
+          "name": "Erd_CcThermistor_AdcCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Ambient Thermistor AdcCount",
+          "name": "Erd_AmbientThermistor_AdcCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "CCEvap Thermistor AdcCount",
+          "name": "Erd_CcEvapThermistor_AdcCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "FreshFood UnfilteredTemp",
+          "name": "Erd_FreshFood_UnfilteredTemperature",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "FreshFood FilteredTemp",
+          "name": "Erd_FreshFood_FilteredTemperature",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer UnfilteredTemp",
+          "name": "Erd_Freezer_UnfilteredTemperature",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer FilteredTemp",
+          "name": "Erd_Freezer_FilteredTemperature",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "FreshFoodEvap UnfilteredTemp",
+          "name": "Erd_FreshFoodEvap_UnfilteredTemperature",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "FreshFoodEvap FilteredTemp",
+          "name": "Erd_FreshFoodEvap_FilteredTemperature",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "FreezerEvap UnfilteredTemp",
+          "name": "Erd_FreezerEvap_UnfilteredTemperature",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "FreezerEvap FilteredTemp",
+          "name": "Erd_FreezerEvap_FilteredTemperature",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "ConvertibleCompartment UnfilteredTemp",
+          "name": "Erd_Cc_UnfilteredTemperature",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "ConvertibleCompartment FilteredTemp",
+          "name": "Erd_Cc_FilteredTemperature",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Ambient UnfilteredTemp",
+          "name": "Erd_Ambient_UnfilteredTemperature",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Ambient FilteredTemp",
+          "name": "Erd_Ambient_FilteredTemperature",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "CCEvap UnfilteredTemp",
+          "name": "Erd_CcEvap_UnfilteredTemperature",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "CCEvap FilteredTemp",
+          "name": "Erd_CcEvap_FilteredTemperature",
+          "read": true,
+          "write": true
+        }
+      ]
     }
   ]
 }

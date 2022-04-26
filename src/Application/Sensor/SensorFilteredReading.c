@@ -19,7 +19,7 @@ enum
 
 enum
 {
-   PrecisionScalingFactor = INT16_MAX
+   PrecisionScalingFactor = UINT8_MAX
 };
 
 enum
@@ -73,6 +73,12 @@ static void UpdateFilter(
    }
 }
 
+static void ResetFilter(SensorFilteredReadingChannelData_t *channelData)
+{
+   Filter_Reset(channelData->filter);
+   channelData->filterHasBeenSeeded = false;
+}
+
 static void DownscaleValueUsingPrecisionScalingFactorThenWriteToErd(I_DataModel_t *dataModel, Erd_t erd, int32_t value)
 {
    int16_t downscaledValue = (int16_t)GetAdjustedValueUsingPrecisionScalingFactor(ScalingOption_Downscale, value);
@@ -97,7 +103,7 @@ static int32_t ReadErdValueThenUpscaleUsingPrecisionScalingFactor(I_DataModel_t 
 
 static int32_t SlewRateFilter(SensorFilteredReadingChannelData_t *channelData, int32_t newUnfilteredValue, int32_t previousFilteredValue)
 {
-   if(channelData->clampData.clampingEnabled)
+   if(channelData->clampData.slewRateEnabled)
    {
       if((newUnfilteredValue - previousFilteredValue) > channelData->clampData.slewRatePerSecondx100)
       {
@@ -134,7 +140,6 @@ static void WriteUpdatedFilteredDegFx100ValueToFilteredErdUsingSlewAndEWMAFilter
 
 static void WriteUnfilteredDegFx100ValueToFilteredErd(I_DataModel_t *dataModel, SensorFilteredReadingChannelData_t *channelData, int32_t unfilteredValue)
 {
-   UpdateFilter(channelData, unfilteredValue);
    DownscaleValueUsingPrecisionScalingFactorThenWriteToErd(dataModel, channelData->erds.filteredOutputErd, unfilteredValue);
 }
 
@@ -196,6 +201,8 @@ static void UpdateFilteredValues(SensorFilteredReadingChannelData_t *channelData
    }
    else if(writeToFilteredErd == ForceUpdateFilteredErd)
    {
+      ResetFilter(channelData);
+      UpdateFilter(channelData, unfilteredValue);
       WriteUnfilteredDegFx100ValueToFilteredErd(dataModel, channelData, unfilteredValue);
    }
 }
