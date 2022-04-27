@@ -92,11 +92,20 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_MaxTimeBetweenDefrostsInMinutes, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_FreshFoodThermistor_AdcCount, sizeof(AdcCounts_t)),
    SWAPPED_ERD(PublicErd_FreshFood_UnfilteredTemperature, sizeof(TemperatureDegFx100_t)),
+   SWAPPED_FIELD(PublicErd_CcSetpoint_ResolvedVote, SetpointVotedTemperature_t, temperature),
+   SWAPPED_FIELD(PublicErd_CcSetpoint_FactoryVote, SetpointVotedTemperature_t, temperature),
+   SWAPPED_FIELD(PublicErd_CcSetpoint_UserSetpoint, SetpointVotedTemperature_t, temperature),
 
    // 0xF200 range
    SWAPPED_ERD(PublicErd_SomeAnalogInput, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_AnotherAnalogInput, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_FreshFood_AdjustedSetpoint, sizeof(TemperatureDegFx100_t)),
+   SWAPPED_FIELD(PublicErd_FzSetpoint_ResolvedVote, SetpointVotedTemperature_t, temperature),
+   SWAPPED_FIELD(PublicErd_FzSetpoint_FactoryVote, SetpointVotedTemperature_t, temperature),
+   SWAPPED_FIELD(PublicErd_FzSetpoint_UserSetpoint, SetpointVotedTemperature_t, temperature),
+   SWAPPED_FIELD(PublicErd_FfSetpoint_ResolvedVote, SetpointVotedTemperature_t, temperature),
+   SWAPPED_FIELD(PublicErd_FfSetpoint_FactoryVote, SetpointVotedTemperature_t, temperature),
+   SWAPPED_FIELD(PublicErd_FfSetpoint_UserSetpoint, SetpointVotedTemperature_t, temperature),
 
    // 0xF500 range
    SWAPPED_FIELD(PublicErd_ServiceDiagnosticsFaultTableSnapshotData0, FaultSnapshotData_t, someData)

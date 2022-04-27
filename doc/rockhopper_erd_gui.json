@@ -416,6 +416,25 @@
           "write": true
         }
       ]
+    },
+    {
+      "title": "Convertible Compartment",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "CcCabinet Resolved Setpoint",
+          "name": "Erd_CcSetpoint_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "CcCabinet State",
+          "name": "Erd_CcCabinetState",
+          "read": true,
+          "write": true
+        }
+      ]
     }
   ]
 }

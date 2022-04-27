@@ -17,6 +17,7 @@
 #include "ApplianceApiResetDiagnostics.h"
 #include "GridPlugin.h"
 #include "PeriodicNvUpdaterPlugin.h"
+#include "CcCabinetStatePlugin.h"
 
 typedef struct
 {
@@ -32,6 +33,7 @@ typedef struct
       Input_StackUsageCalculator_t stackUsageCalculator;
       ApplianceApiResetDiagnostics_t applianceApiResetDiagnostics;
       PeriodicNvUpdaterPlugin_t periodicNvUpdaterPlugin;
+      CcCabinetStatePlugin_t ccCabinetStatePlugin;
       Timer_t stackUsageUpdateTimer;
    } _private;
 } Application_t;

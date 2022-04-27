@@ -38,6 +38,7 @@ SRC_DIRS:=\
   src/$(TARGET)/Hardware/Eeprom \
   src/$(TARGET)/Hardware/Flash \
   src/Application \
+  src/Application/ConvertibleCompartment \
   src/Application/DataSource \
   src/Application/Defrost \
   src/Application/Door \
@@ -57,6 +58,7 @@ SRC_DIRS:=\
 
 INC_DIRS:=\
   src/Application/Compressor \
+  src/Application/ConvertibleCompartment \
   src/Application/DemandResponse \
   src/Application/Door \
   src/Application/Fan \

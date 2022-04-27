@@ -54,6 +54,7 @@ void Application_Init(
 
    SabbathPlugin_Init(dataModel);
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
+   CcCabinetStatePlugin_Init(&instance->_private.ccCabinetStatePlugin, dataModel);
    SensorFilteredReadingPlugin_Init(dataModel);
    GridPlugin_Init(&instance->_private.gridPlugin, dataModel);
    DoorPlugin_Init(dataModel);

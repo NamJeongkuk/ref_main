@@ -292,6 +292,12 @@ enum
    ENTRY(Erd_Ambient_FilteredTemperature,                   0xF14D, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_CcEvap_FilteredTemperature,                    0xF14E, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_CcCabinetState,                                0xF150, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CcSetpoint_ResolvedVote,                       0xF151, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_Y, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CcSetpoint_WinningVoteErd,                     0xF152, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CcSetpoint_FactoryVote,                        0xF153, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_CcSetpoint_UserSetpoint,                       0xF156, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,      NotNv,                                    NotFault) \
    ENTRY(Erd_OtherLed,                                      0xF201, bool,                                               Swap_N, Io_None, Sub_N, Bsp,      NotNv,                                    NotFault) \
    ENTRY(Erd_PushButtonSwitch,                              0xF202, bool,                                               Swap_N, Io_All,  Sub_Y, Bsp,      NotNv,                                    NotFault) \
@@ -337,15 +343,15 @@ enum
    ENTRY(Erd_Freezer_Offset,                                0xF2B4, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_Freezer_Shift,                                 0xF2B5, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FzSetpoint_ResolvedVote,                       0xF2C0, SetpointVotedTemperature_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FzSetpoint_ResolvedVote,                       0xF2C0, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_FzSetpoint_WinningVoteErd,                     0xF2C1, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_FzSetpoint_FactoryVote,                        0xF2C2, SetpointVotedTemperature_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_FzSetpoint_UserSetpoint,                       0xF2C6, SetpointVotedTemperature_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FzSetpoint_FactoryVote,                        0xF2C2, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FzSetpoint_UserSetpoint,                       0xF2C6, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FfSetpoint_ResolvedVote,                       0xF2D0, SetpointVotedTemperature_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FfSetpoint_ResolvedVote,                       0xF2D0, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_FfSetpoint_WinningVoteErd,                     0xF2D1, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_FfSetpoint_FactoryVote,                        0xF2D2, SetpointVotedTemperature_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
-   ENTRY(Erd_FfSetpoint_UserSetpoint,                       0xF2D5, SetpointVotedTemperature_t,                         Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FfSetpoint_FactoryVote,                        0xF2D2, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
+   ENTRY(Erd_FfSetpoint_UserSetpoint,                       0xF2D5, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FfDefrostHeater_ResolvedVote,                  0xF2E0, HeaterVotedState_t,                                 Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
    ENTRY(Erd_FfDefrostHeater_WinningVoteErd,                0xF2E1, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,      NotNv,                                    NotFault) \
