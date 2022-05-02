@@ -43,6 +43,8 @@
 #include "EepromStack.h"
 #include "ParametricData.h"
 #include "TimeSource_Rockhopper.h"
+#include "NonVolatileAsyncDataSource.h"
+#include "AsyncNvMapConfigurations.h"
 
 enum
 {
@@ -63,6 +65,7 @@ static TimerModuleStack_t timerModuleStack;
 static InvokeActionOnTimerPeriodic_t watchdogPetter;
 static GeaStack_t geaStack;
 static UlTestsPlugin_t ulTestsPlugin;
+static NonVolatileAsyncDataSource_t nvAsyncDataSource;
 
 static const uint8_t staticRoutingTable[] = {
    Gea2Address_DoorBoard
@@ -129,10 +132,22 @@ int main(void)
 
    EepromStack_Init(watchdogKickAction, timerModule, timeSourceInterrupt);
 
+   AsyncNvMapConfigurations_Init();
+
+   NonVolatileAsyncDataSource_Init(
+      &nvAsyncDataSource,
+      Crc16Calculator_Table,
+      timerModule,
+      EepromStack_GetEeprom(),
+      EepromPartitionConfiguration_Init(),
+      AsyncNvMapConfigurations_GetInputGroup(),
+      AsyncNvMapConfigurations_GetAsyncDataSourceResources(),
+      AsyncNvMapConfigurations_GetAsyncDataSourceConfiguration());
+
    SystemData_Init(
       &systemData,
       timerModule,
-      EepromStack_GetEeprom(),
+      NonVolatileAsyncDataSource_GetAsyncDataSource(&nvAsyncDataSource),
       Crc16Calculator_Table,
       watchdogKickAction,
       resetAction);

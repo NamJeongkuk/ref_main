@@ -15,10 +15,6 @@ extern "C"
 
 #include "ReferDataModel_TestDouble.h"
 
-#define SIZE_1K 1024
-
-static uint8_t eeprom[SIZE_1K];
-
 static void RunTimerModule(void *context)
 {
    REINTERPRET(timerModule, context, TimerModule_TestDouble_t *);
@@ -30,29 +26,15 @@ void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance)
    TimerModule_TestDouble_Init(&instance->_private.timerModuleTestDouble);
    Action_Context_Init(&instance->_private.runTimerModuleAction, &instance->_private.timerModuleTestDouble.timerModule, RunTimerModule);
 
-   uint16_t alignment = 1;
-   uint16_t startAddress = 0;
-   TimerTicks_t readTime = 10;
-   TimerTicks_t writeTime = 5;
-   TimerTicks_t eraseTime = 20;
-
-   memset(eeprom, 0, SIZE_1K);
-
-   Eeprom_Model_Init(
-      &instance->_private.eepromModel,
-      eeprom,
-      alignment,
-      startAddress,
-      sizeof(eeprom),
+   AsyncDataSource_Eeprom_TestDouble_Init(
+      &instance->_private.asyncEepromTestDouble,
       &instance->_private.timerModuleTestDouble.timerModule,
-      readTime,
-      writeTime,
-      eraseTime);
+      Crc16Calculator_Table);
 
    SystemData_Init(
       &instance->_private.systemData,
       &instance->_private.timerModuleTestDouble.timerModule,
-      &instance->_private.eepromModel.interface,
+      AsyncDataSource_Eeprom_TestDouble_GetAsyncDataSource(&instance->_private.asyncEepromTestDouble),
       Crc16Calculator_Table,
       &instance->_private.runTimerModuleAction.interface,
       Action_Null_GetInstance());

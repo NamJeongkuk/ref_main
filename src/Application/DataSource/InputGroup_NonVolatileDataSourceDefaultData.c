@@ -16,7 +16,7 @@
 // clang-format off
 
 #define EXPAND_AS_NON_VOLATILE_DEFAULT_DATA_MAPPING(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_NV_, StorageType)({ Name COMMA NvDefaultData } COMMA)
+   CONCAT(INCLUDE_NVALL_, StorageType)({ Name COMMA NvDefaultData } COMMA)
 
 // clang-format on
 

@@ -20,16 +20,13 @@ extern "C"
 #include "TimerModule_TestDouble.h"
 #include "Action_Mock.h"
 #include "Crc16Calculator_TestDouble.h"
-#include "Eeprom_Model.h"
-
-#define SIZE_1K 1024
-
-static uint8_t eeprom[SIZE_1K];
+#include "AsyncDataSource_Eeprom_TestDouble.h"
 
 #define AllErds                \
-   size_t i = 0;               \
+   size_t i = 1;               \
    i < NUM_ELEMENTS(erdTable); \
    i++
+
 #define And
 
 enum
@@ -68,10 +65,13 @@ enum
    CONCAT(INCLUDE_RAM_, StorageType)({ Name COMMA Number COMMA Swap COMMA Io COMMA Sub } COMMA)
 
 #define ERD_EXPAND_AS_ENDIANNESS_AWARE_NV_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_NV_, StorageType)({ Name COMMA Number COMMA Swap COMMA Io COMMA Sub } COMMA)
+   CONCAT(INCLUDE_NVALL_, StorageType)({ Name COMMA Number COMMA Swap COMMA Io COMMA Sub } COMMA)
 
 #define ERD_EXPAND_AS_ENDIANNESS_AWARE_BSP_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_BSP_, StorageType)({ Name COMMA Number COMMA Swap COMMA Io COMMA Sub } COMMA)
+
+#define ERD_EXPAND_NUMBER_SIZE_NV_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, FaultId) \
+   CONCAT(INCLUDE_NVALL_, StorageType)({ Number COMMA sizeof(DataType) } COMMA)
 
 typedef struct
 {
@@ -83,8 +83,8 @@ typedef struct
 } ErdTableElement_t;
 
 static const ErdTableElement_t erdTable[] = {
-   ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_RAM_STORAGE)
    ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_NV_STORAGE)
+   ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_RAM_STORAGE)
    ERD_TABLE(ERD_EXPAND_AS_ENDIANNESS_AWARE_BSP_STORAGE)
 };
 
@@ -107,7 +107,7 @@ TEST_GROUP(SystemData)
 
    TimerModule_t *timerModule;
    TimerModule_TestDouble_t timerModuleDouble;
-   Eeprom_Model_t eepromModel;
+   AsyncDataSource_Eeprom_TestDouble_t nvAsyncDataSource;
    Action_Context_t runTimerModuleAction;
 
    TimerTicks_t readTime;
@@ -129,17 +129,10 @@ TEST_GROUP(SystemData)
       timerModule = TimerModule_TestDouble_GetTimerModule(&timerModuleDouble);
       Action_Context_Init(&runTimerModuleAction, &timerModuleDouble.timerModule, RunTimerModule);
 
-      memset(eeprom, 0, sizeof(eeprom));
-      Eeprom_Model_Init(
-         &eepromModel,
-         eeprom,
-         alignment,
-         startAddress,
-         sizeof(eeprom),
-         timerModule,
-         readTime,
-         writeTime,
-         eraseTime);
+      AsyncDataSource_Eeprom_TestDouble_Init(
+         &nvAsyncDataSource,
+         &timerModuleDouble.timerModule,
+         Crc16Calculator_Table);
 
       memset(dataFromExternalDataSource, 0, sizeof(dataFromExternalDataSource));
       FillBlockOfRandomData();
@@ -163,7 +156,7 @@ TEST_GROUP(SystemData)
       SystemData_Init(
          &instance,
          &timerModuleDouble.timerModule,
-         &eepromModel.interface,
+         AsyncDataSource_Eeprom_TestDouble_GetAsyncDataSource(&nvAsyncDataSource),
          Crc16Calculator_Table,
          &runTimerModuleAction.interface,
          Action_Null_GetInstance());

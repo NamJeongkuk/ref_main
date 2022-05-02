@@ -266,6 +266,60 @@
       ]
     },
     {
+      "title": "Nv Data",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "Nv Erase Request Signal",
+          "name": "Erd_EepromEraseRequestSignal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Some Protected Data",
+          "name": "Erd_ProtectedSomeData",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Some Unit Setting Data",
+          "name": "Erd_UnitSettingSomeData",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Some User Setting Data",
+          "name": "Erd_UserSettingSomeData",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Some Rfid Data",
+          "name": "Erd_RfidSomeData",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Some Fault Snapshot Data",
+          "name": "Erd_FaultSnapshotSomeData",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Some Cycle History Data",
+          "name": "Erd_CycleHistorySomeData",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
       "title": "Sensors",
       "erds": [
         {

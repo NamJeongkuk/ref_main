@@ -22,7 +22,7 @@ static void AddDataSourceToComposite(
 static void InitializeInternalDataSource(
    Instance_t *instance,
    TimerModule_t *timerModule,
-   I_Eeprom_t *eeprom,
+   I_AsyncDataSource_t *async,
    I_Crc16Calculator_t *crcCalculator,
    I_Action_t *systemActionForStartup,
    I_Action_t *resetAction)
@@ -40,8 +40,8 @@ static void InitializeInternalDataSource(
       &instance->_private.dataSource.nv,
       timerModule,
       systemActionForStartup,
-      crcCalculator,
-      eeprom);
+      async);
+
    AddDataSourceToComposite(
       instance,
       NonVolatileDataSource_DataSource(&instance->_private.dataSource.nv),
@@ -93,7 +93,7 @@ static void InitializeDataModel(Instance_t *instance)
 void SystemData_Init(
    SystemData_t *instance,
    TimerModule_t *timerModule,
-   I_Eeprom_t *eeprom,
+   I_AsyncDataSource_t *async,
    I_Crc16Calculator_t *crcCalculator,
    I_Action_t *systemActionForStartup,
    I_Action_t *resetAction)
@@ -101,7 +101,7 @@ void SystemData_Init(
    InitializeInternalDataSource(
       instance,
       timerModule,
-      eeprom,
+      async,
       crcCalculator,
       systemActionForStartup,
       resetAction);

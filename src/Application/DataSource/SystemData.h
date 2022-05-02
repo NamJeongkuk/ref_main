@@ -61,7 +61,7 @@ typedef struct
 /*!
  * @param instance
  * @param timerModule
- * @param flashBlockGroup
+ * @param async
  * @param crcCalculator
  * @param systemActionForStartup
  * @param resetAction
@@ -69,7 +69,7 @@ typedef struct
 void SystemData_Init(
    SystemData_t *instance,
    TimerModule_t *timerModule,
-   I_Eeprom_t *eeprom,
+   I_AsyncDataSource_t *async,
    I_Crc16Calculator_t *crcCalculator,
    I_Action_t *systemActionForStartup,
    I_Action_t *resetAction);

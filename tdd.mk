@@ -33,6 +33,7 @@ TEST_SRC_DIRS := \
    $(TESTING_DIR)/Doubles \
    $(TESTING_DIR)/Mocks \
    $(TESTING_DIR)/Mocks/Bsp \
+   $(TESTING_DIR)/Mocks/DataSource \
    $(TESTS_DIR) \
    $(TESTS_DIR)/Application/DataSource \
    $(TESTS_DIR)/Application/Defrost \
@@ -67,6 +68,7 @@ INCLUDE_DIRS := \
    $(PROJECT_DIR)/Application/Valve \
    $(PROJECT_DIR)/rx130/Bsp \
    $(PROJECT_DIR)/rx130/Hardware \
+   $(PROJECT_DIR)/rx130/Hardware/Eeprom \
    $(REFERCOMMON_DIR)/Source/Temperature \
 
 include $(APPLCOMMON_DIR)/Makefile

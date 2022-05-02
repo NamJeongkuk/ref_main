@@ -16,6 +16,7 @@
 #include "SabbathPlugin.h"
 #include "DoorPlugin.h"
 #include "SensorFilteredReadingPlugin.h"
+#include "EepromAppPlugin.h"
 
 enum
 {
@@ -51,7 +52,7 @@ void Application_Init(
       Erd_PersonalityParametricData,
       Erd_PersonalityIdOutOfRangeFlag,
       DataModelErdPointerAccess_GetAction(dataModel, Erd_JumpToBootLoaderAction));
-
+   EepromAppPlugin_Init(dataModel);
    SabbathPlugin_Init(dataModel);
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
    CcCabinetStatePlugin_Init(&instance->_private.ccCabinetStatePlugin, dataModel);

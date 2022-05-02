@@ -15,6 +15,7 @@
 #include "TimerModule_TestDouble.h"
 #include "Action_Context.h"
 #include "Eeprom_Model.h"
+#include "AsyncDataSource_Eeprom_TestDouble.h"
 
 typedef struct
 {
@@ -26,7 +27,8 @@ typedef struct
       SystemData_t systemData;
       TimerModule_TestDouble_t timerModuleTestDouble;
       Action_Context_t runTimerModuleAction;
-      Eeprom_Model_t eepromModel;
+      Action_Context_t resetAction;
+      AsyncDataSource_Eeprom_TestDouble_t asyncEepromTestDouble;
    } _private;
 } ReferDataModel_TestDouble_t;
 
