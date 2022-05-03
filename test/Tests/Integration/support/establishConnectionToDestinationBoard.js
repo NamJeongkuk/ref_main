@@ -55,7 +55,7 @@ module.exports = async (geaNode) => {
    };
 
    const hostList = [
-      { host: 'rx130', address: 0x00, type: 'primary' },
+      { host: 'rx130', address: 0xC0, type: 'primary' },
    ];
 
    await ConnectionTools.resetBootloader(geaNode);

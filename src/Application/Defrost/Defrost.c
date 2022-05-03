@@ -17,6 +17,8 @@
 #include "HeaterVotedState.h"
 #include "DefrostTimerCounterFsmState.h"
 #include "utils.h"
+#include "FanSpeed.h"
+#include "Setpoint.h"
 
 enum
 {
@@ -28,12 +30,15 @@ enum
    Signal_PowerUpDelayComplete = Hsm_UserSignalStart,
    Signal_MaxTimeBetweenDefrostsComplete,
    Signal_PeriodicTimeoutComplete,
-   Signal_MaxPrechillHoldoffTimeComplete
+   Signal_MaxPrechillHoldoffTimeComplete,
+   Signal_FreezerEvaporatorThermistorIsInvalid
 };
 
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data);
+static bool State_PrechillParent(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data);
+static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_PostPrechill(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -42,9 +47,11 @@ static const HsmStateHierarchyDescriptor_t stateList[] = {
    { State_PowerUp, HSM_NO_PARENT },
    { State_Idle, HSM_NO_PARENT },
    { State_Dwell, HSM_NO_PARENT },
-   { State_PrechillPrep, HSM_NO_PARENT },
-   { State_PostPrechill, HSM_NO_PARENT },
-   { State_HeaterOnEntry, HSM_NO_PARENT }
+   { State_PrechillParent, HSM_NO_PARENT },
+   { State_PrechillPrep, State_PrechillParent },
+   { State_Prechill, State_PrechillParent },
+   { State_PostPrechill, State_PrechillParent },
+   { State_HeaterOnEntry, State_PrechillParent }
 };
 
 static const HsmConfiguration_t hsmConfiguration = {
@@ -55,12 +62,29 @@ static const HsmConfiguration_t hsmConfiguration = {
 static Defrost_t *InstanceFromHsm(Hsm_t *hsm)
 {
    return CONTAINER_OF(Defrost_t, _private.hsm, hsm);
-};
+}
 
 static void SetHsmStateTo(Defrost_t *instance, DefrostHsmState_t state)
 {
    DataModel_Write(instance->_private.dataModel, instance->_private.config->defrostHsmStateErd, &state);
-};
+}
+
+static void DataModelChanged(void *context, const void *args)
+{
+   REINTERPRET(instance, context, Defrost_t *);
+   REINTERPRET(onChangeData, args, const DataModelOnDataChangeArgs_t *);
+   REINTERPRET(erd, onChangeData->erd, Erd_t);
+
+   if(erd == instance->_private.config->freezerEvaporatorThermistorIsValidErd)
+   {
+      REINTERPRET(valid, onChangeData->data, const bool *);
+
+      if(!*valid)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerEvaporatorThermistorIsInvalid, NULL);
+      }
+   }
+}
 
 static void SaveFzAbnormalDefrostData(Defrost_t *instance)
 {
@@ -106,7 +130,7 @@ static void SaveFzAbnormalDefrostData(Defrost_t *instance)
       instance->_private.dataModel,
       instance->_private.config->fzDefrostWasAbnormalErd,
       set);
-};
+}
 
 static bool LastDefrostWasAbnormalBecauseOfAbnormalFilteredFzCabinetTemperature(Defrost_t *instance)
 {
@@ -126,7 +150,7 @@ static bool LastDefrostWasAbnormalBecauseOfAbnormalFilteredFzCabinetTemperature(
 
    return (fzFilteredTemperature > gridFzExtremeHystTemperature ||
       fzFilteredTemperature >= instance->_private.defrostParametricData->fzDefrostTerminationTemperatureInDegFx100);
-};
+}
 
 static void StartTimer(Defrost_t *instance, Timer_t *timer, TimerTicks_t ticks, TimerCallback_t callback)
 {
@@ -136,7 +160,7 @@ static void StartTimer(Defrost_t *instance, Timer_t *timer, TimerTicks_t ticks, 
       ticks,
       callback,
       instance);
-};
+}
 
 static void VoteForFfDefrostHeater(Defrost_t *instance, bool state)
 {
@@ -159,6 +183,18 @@ static void VoteForFzDefrostHeater(Defrost_t *instance, bool state)
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->fzDefrostHeaterDefrostVoteErd,
+      &vote);
+}
+
+static void VoteForIceCabinetFan(Defrost_t *instance, FanSpeed_t speed)
+{
+   FanVotedSpeed_t vote;
+   vote.speed = speed;
+   vote.care = true;
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->iceCabinetFanDefrostVoteErd,
       &vote);
 }
 
@@ -217,7 +253,7 @@ static void PowerUpDelayComplete(void *context)
    REINTERPRET(instance, context, Defrost_t *);
 
    Hsm_SendSignal(&instance->_private.hsm, Signal_PowerUpDelayComplete, NULL);
-};
+}
 
 static void StartPowerUpDelayTimer(Defrost_t *instance)
 {
@@ -312,6 +348,64 @@ static ValvePosition_t PositionToExitIdle(Defrost_t *instance)
    return instance->_private.defrostParametricData->threeWayValvePositionToExitIdle;
 }
 
+static bool FreezerEvaporatorThermistorIsInvalid(Defrost_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerEvaporatorThermistorIsValidErd,
+      &state);
+
+   return !state;
+}
+
+static void IncrementNumberOfFreshFoodDefrostsBeforeAFreezerDefrost(Defrost_t *instance)
+{
+   uint8_t number;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd,
+      &number);
+
+   number++;
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd,
+      &number);
+}
+
+static uint8_t NumberOfEvaporators(Defrost_t *instance)
+{
+   return instance->_private.evaporatorParametricData->numberOfEvaporators;
+}
+
+static void VoteForFreezerSetpoint(Defrost_t *instance)
+{
+   SetpointVotedTemperature_t resolvedSetPoint;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerResolvedSetpointErd,
+      &resolvedSetPoint);
+
+   SetpointVotedTemperature_t vote;
+   vote.care = true;
+   vote.temperature = instance->_private.defrostParametricData->prechillFzSetpointInDegFx100;
+
+   if(NumberOfEvaporators(instance) == 1)
+   {
+      if(resolvedSetPoint.temperature < instance->_private.defrostParametricData->prechillFzSetpointInDegFx100)
+      {
+         vote.temperature = resolvedSetPoint.temperature;
+      }
+   }
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freezerSetpointDefrostVoteErd,
+      &vote);
+}
+
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
@@ -366,7 +460,6 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
    IGNORE(data);
-   IGNORE(instance);
 
    switch(signal)
    {
@@ -423,16 +516,73 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    return HsmSignalConsumed;
 }
 
+static bool State_PrechillParent(Hsm_t *hsm, HsmSignal_t signal, const void *data)
+{
+   Defrost_t *instance = InstanceFromHsm(hsm);
+   IGNORE(instance);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Hsm_Entry:
+         break;
+
+      case Signal_FreezerEvaporatorThermistorIsInvalid:
+         Hsm_Transition(hsm, State_HeaterOnEntry);
+         break;
+
+      case Hsm_Exit:
+         break;
+
+      default:
+         return HsmSignalDeferred;
+   }
+
+   return HsmSignalConsumed;
+}
+
 static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
    IGNORE(data);
-   IGNORE(instance);
 
    switch(signal)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_PrechillPrep);
+         if(FreezerEvaporatorThermistorIsInvalid(instance))
+         {
+            Hsm_Transition(hsm, State_HeaterOnEntry);
+         }
+         else
+         {
+            IncrementNumberOfFreshFoodDefrostsBeforeAFreezerDefrost(instance);
+            VoteForFfDefrostHeater(instance, OFF);
+            VoteForFzDefrostHeater(instance, OFF);
+            VoteForIceCabinetFan(instance, FanSpeed_High);
+            VoteForFreezerSetpoint(instance);
+         }
+         break;
+
+      case Hsm_Exit:
+         break;
+
+      default:
+         return HsmSignalDeferred;
+   }
+
+   return HsmSignalConsumed;
+}
+
+static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
+{
+   Defrost_t *instance = InstanceFromHsm(hsm);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Hsm_Entry:
+         SetHsmStateTo(instance, DefrostHsmState_Prechill);
          break;
 
       case Hsm_Exit:
@@ -449,7 +599,6 @@ static bool State_PostPrechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
    IGNORE(data);
-   IGNORE(instance);
 
    switch(signal)
    {
@@ -471,7 +620,6 @@ static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
    IGNORE(data);
-   IGNORE(instance);
 
    switch(signal)
    {
@@ -493,7 +641,6 @@ static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
    IGNORE(data);
-   IGNORE(instance);
 
    switch(signal)
    {
@@ -521,6 +668,15 @@ void Defrost_Init(
    instance->_private.defrostParametricData = PersonalityParametricData_Get(dataModel)->defrostData;
    instance->_private.sabbathParametricData = PersonalityParametricData_Get(dataModel)->sabbathData;
    instance->_private.gridParametricData = PersonalityParametricData_Get(dataModel)->gridData;
+   instance->_private.evaporatorParametricData = PersonalityParametricData_Get(dataModel)->evaporatorData;
 
    Hsm_Init(&instance->_private.hsm, &hsmConfiguration, State_PowerUp);
+
+   EventSubscription_Init(
+      &instance->_private.dataModelSubscription,
+      instance,
+      DataModelChanged);
+
+   Event_Subscribe(dataModel->OnDataChange,
+      &instance->_private.dataModelSubscription);
 }

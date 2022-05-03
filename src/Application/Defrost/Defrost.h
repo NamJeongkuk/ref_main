@@ -12,6 +12,7 @@
 #include "DefrostData.h"
 #include "SabbathData.h"
 #include "GridData.h"
+#include "EvaporatorData.h"
 #include "Timer.h"
 #include "Hsm.h"
 
@@ -32,6 +33,11 @@ typedef struct
    Erd_t defrostTimerCounterFsmStateErd; // DefrostTimerCounterFsmState_t
    Erd_t sealedSystemValvePositionErd; // ValvePosition_t
    Erd_t defrostTimerIsSatisfiedErd; // bool
+   Erd_t freezerEvaporatorThermistorIsValidErd; // bool
+   Erd_t numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd; // uint8_t
+   Erd_t iceCabinetFanDefrostVoteErd; // FanVotedSpeed_t
+   Erd_t freezerSetpointDefrostVoteErd; // SetpointVotedTemperature_t
+   Erd_t freezerResolvedSetpointErd; // SetpointVotedTemperature_t
    Erd_t timerModuleErd; // TimerModule_t *
 } DefrostConfiguration_t;
 
@@ -48,11 +54,13 @@ typedef struct
       };
       Timer_t periodicTimer;
       Timer_t prechillHoldoffTimer;
-      bool resetRequiredWhenEnablingDefrostTimerCounter;
+      EventSubscription_t dataModelSubscription;
       const DefrostConfiguration_t *config;
       const DefrostData_t *defrostParametricData;
       const SabbathData_t *sabbathParametricData;
       const GridData_t *gridParametricData;
+      const EvaporatorData_t *evaporatorParametricData;
+      bool resetRequiredWhenEnablingDefrostTimerCounter;
    } _private;
 } Defrost_t;
 

@@ -79,6 +79,13 @@
       "erds": [
         {
           "namespace": "rx130",
+          "displayName": "Freezer Evaporator Thermistor Is Valid",
+          "name": "Erd_FreezerEvaporatorThermistorIsValid",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "Freezer Filtered Temperature DegFx100",
           "name": "Erd_Freezer_FilteredTemperature",
           "read": true,
@@ -218,6 +225,13 @@
         },
         {
           "namespace": "rx130",
+          "displayName": "Number of Fresh Food Defrosts Before A Freezer Defrost",
+          "name": "Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "FF Defrost Heater Defrost Vote",
           "name": "Erd_FfDefrostHeater_DefrostVote",
           "read": true,
@@ -227,6 +241,13 @@
           "namespace": "rx130",
           "displayName": "FZ Defrost Heater Defrost Vote",
           "name": "Erd_FzDefrostHeater_DefrostVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Ice Cabinet Fan Speed Defrost Vote",
+          "name": "Erd_IceCabinetFanSpeed_DefrostVote",
           "read": true,
           "write": true
         }
@@ -353,7 +374,7 @@
         {
           "namespace": "rx130",
           "displayName": "ConvertibleCompartment Thermistor AdcCount",
-          "name": "Erd_CcThermistor_AdcCount",
+          "name": "Erd_CcCompartmentThermistor_AdcCount",
           "read": true,
           "write": true
         },
@@ -430,14 +451,14 @@
         {
           "namespace": "rx130",
           "displayName": "ConvertibleCompartment UnfilteredTemp",
-          "name": "Erd_Cc_UnfilteredTemperature",
+          "name": "Erd_CcCompartment_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
           "displayName": "ConvertibleCompartment FilteredTemp",
-          "name": "Erd_Cc_FilteredTemperature",
+          "name": "Erd_CcCompartment_FilteredTemperature",
           "read": true,
           "write": true
         },
@@ -472,11 +493,30 @@
       ]
     },
     {
+      "title": "Freezer Compartment",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Cabinet Resolved Setpoint",
+          "name": "Erd_FzSetpoint_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Cabinet Defrost Vote for Setpoint",
+          "name": "Erd_FzSetpoint_DefrostVote",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
       "title": "Convertible Compartment",
       "erds": [
         {
           "namespace": "rx130",
-          "displayName": "CcCabinet Resolved Setpoint",
+          "displayName": "Convertible Compartment Cabinet Resolved Setpoint",
           "name": "Erd_CcSetpoint_ResolvedVote",
           "read": true,
           "write": true
