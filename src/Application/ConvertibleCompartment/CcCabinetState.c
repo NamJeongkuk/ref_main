@@ -9,10 +9,11 @@
 #include "utils.h"
 #include "Setpoint.h"
 #include "PersonalityParametricData.h"
+#include "CcCabinetStateType.h"
 
 static void ChangeCcStateUsingSetpoint(CcCabinetState_t *instance, TemperatureDegFx100_t ccSetpoint)
 {
-   uint8_t ccCabinetState;
+   CcCabinetStateType_t ccCabinetState;
    if(ccSetpoint >= instance->_private.ccCabinetData->ccCabinetThresholdDegFx100)
    {
       ccCabinetState = CcCabinetState_FreshFood;

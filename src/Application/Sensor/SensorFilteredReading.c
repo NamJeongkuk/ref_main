@@ -276,6 +276,26 @@ static void UpdateSensorValues(void *context)
    }
 }
 
+static void SetCcCabinetThermistorFallbackValue(SensorFilteredReading_t *instance, const uint8_t ccCabinetState)
+{
+   if(ccCabinetState == CcCabinetState_FreshFood)
+   {
+      instance->_private.configuration->channelData[instance->_private.configuration->convertibleCompartmentCabinetIndex].fallbackData.fallbackValue = instance->_private.configuration->ccSensorData->ffFallbackValueDegFx100;
+   }
+   else // CcCabinetState_Freezer
+   {
+      instance->_private.configuration->channelData[instance->_private.configuration->convertibleCompartmentCabinetIndex].fallbackData.fallbackValue = instance->_private.configuration->ccSensorData->fzFallbackValueDegFx100;
+   }
+}
+
+static void CcCabinetStateChangedCallback(void *context, const void *args)
+{
+   REINTERPRET(instance, context, SensorFilteredReading_t *);
+   REINTERPRET(ccCabinetState, args, const CcCabinetStateType_t *);
+
+   SetCcCabinetThermistorFallbackValue(instance, *ccCabinetState);
+}
+
 static void InitializeFilter(SensorFilteredReading_t *instance)
 {
    SensorFilteredReadingChannelData_t *channelData;
@@ -300,6 +320,13 @@ static void InitializeFilter(SensorFilteredReading_t *instance)
    }
 }
 
+static void InitializeCcCabinetFallbackValue(SensorFilteredReading_t *instance)
+{
+   CcCabinetStateType_t ccCabinetState;
+   DataModel_Read(instance->_private.dataModel, instance->_private.configuration->ccCabinetStateErd, &ccCabinetState);
+   SetCcCabinetThermistorFallbackValue(instance, ccCabinetState);
+}
+
 void SensorFilteredReading_Init(
    SensorFilteredReading_t *instance,
    I_DataModel_t *dataModel,
@@ -308,7 +335,17 @@ void SensorFilteredReading_Init(
    instance->_private.configuration = config;
    instance->_private.dataModel = dataModel;
 
+   InitializeCcCabinetFallbackValue(instance);
    InitializeFilter(instance);
+
+   EventSubscription_Init(
+      &instance->_private.onCcCabinetStateChanged,
+      instance,
+      CcCabinetStateChangedCallback);
+   DataModel_Subscribe(
+      instance->_private.dataModel,
+      instance->_private.configuration->ccCabinetStateErd,
+      &instance->_private.onCcCabinetStateChanged);
 
    TimerModule_StartPeriodic(
       DataModelErdPointerAccess_GetTimerModule(dataModel, instance->_private.configuration->timerModule),

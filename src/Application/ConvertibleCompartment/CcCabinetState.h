@@ -13,12 +13,6 @@
 #include "I_DataModel.h"
 #include "CcCabinetData.h"
 
-enum
-{
-   CcCabinetState_FreshFood,
-   CcCabinetState_Freezer
-};
-
 typedef struct
 {
    Erd_t ccResolvedSetpointErd;
