@@ -24,6 +24,7 @@ typedef struct
    TemperatureDegFx100_t prechillFzEvapExitTemperatureInDegFx100;
    TemperatureDegFx100_t prechillCcEvapExitTemperatureInDegFx100;
    uint8_t maxPrechillTimeInMinutes;
+   uint8_t maxPrechillTimeForFreshFoodOnlyDefrostInMinutes;
    uint8_t defrostDoorHoldoffTimeForFfAndFzInMinutes;
    uint8_t defrostDoorHoldoffTimeForFfOnlyInMinutes;
    uint16_t defrostMaxHoldoffTimeInMinutes;
@@ -56,6 +57,8 @@ typedef struct
    TemperatureDegFx100_t dsmFzSetpointTemperatureInDegFx100;
    uint8_t defrostPeriodicTimeoutInSeconds;
    ValvePosition_t threeWayValvePositionToExitIdle;
+   ValvePosition_t threeWayValvePositionForMaxPrechillHoldoff;
+   ValvePosition_t threeWayValvePositionToTerminateFreshFoodCycleDefrost;
 } DefrostData_t;
 
 #endif
