@@ -60,6 +60,10 @@ static const DefrostConfiguration_t defrostConfig = {
    .iceCabinetFanDefrostVoteErd = Erd_IceCabinetFanSpeed_DefrostVote,
    .freezerSetpointDefrostVoteErd = Erd_FzSetpoint_DefrostVote,
    .freezerResolvedSetpointErd = Erd_FzSetpoint_ResolvedVote,
+   .sealedSystemValvePositionDefrostVoteErd = Erd_ValvePosition_DefrostVote,
+   .defrostIsFreshFoodOnlyErd = Erd_DefrostIsFreshFoodOnly,
+   .freshFoodSetpointDefrostVoteErd = Erd_FfSetpoint_DefrostVote,
+   .extendDefrostSignalErd = Erd_ExtendDefrostSignal,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -75,6 +79,7 @@ static const DefrostData_t defrostData = {
    .prechillFzEvapExitTemperatureInDegFx100 = -3000,
    .prechillCcEvapExitTemperatureInDegFx100 = -3000,
    .maxPrechillTimeInMinutes = 10,
+   .maxPrechillTimeForFreshFoodOnlyDefrostInMinutes = 20,
    .defrostDoorHoldoffTimeForFfAndFzInMinutes = 60,
    .defrostDoorHoldoffTimeForFfOnlyInMinutes = 50,
    .defrostMaxHoldoffTimeInMinutes = 60,
@@ -106,7 +111,9 @@ static const DefrostData_t defrostData = {
    .ffOnlyPostDwellExitTimeInMinutes = 10,
    .dsmFzSetpointTemperatureInDegFx100 = 200,
    .defrostPeriodicTimeoutInSeconds = 1,
-   .threeWayValvePositionToExitIdle = ValvePosition_B
+   .threeWayValvePositionToExitIdle = ValvePosition_B,
+   .threeWayValvePositionForMaxPrechillHoldoff = ValvePosition_B,
+   .threeWayValvePositionToExtendDefrostWithFreshFoodCycleDefrost = ValvePosition_B
 };
 
 static const DefrostData_t defrostDataWithZeroMaxPrechillHoldoffTime = {
@@ -121,6 +128,7 @@ static const DefrostData_t defrostDataWithZeroMaxPrechillHoldoffTime = {
    .prechillFzEvapExitTemperatureInDegFx100 = -3000,
    .prechillCcEvapExitTemperatureInDegFx100 = -3000,
    .maxPrechillTimeInMinutes = 10,
+   .maxPrechillTimeForFreshFoodOnlyDefrostInMinutes = 20,
    .defrostDoorHoldoffTimeForFfAndFzInMinutes = 60,
    .defrostMaxHoldoffTimeInMinutes = 60,
    .maxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds = 0,
@@ -151,7 +159,9 @@ static const DefrostData_t defrostDataWithZeroMaxPrechillHoldoffTime = {
    .ffOnlyPostDwellExitTimeInMinutes = 10,
    .dsmFzSetpointTemperatureInDegFx100 = 200,
    .defrostPeriodicTimeoutInSeconds = 1,
-   .threeWayValvePositionToExitIdle = ValvePosition_B
+   .threeWayValvePositionToExitIdle = ValvePosition_B,
+   .threeWayValvePositionForMaxPrechillHoldoff = ValvePosition_B,
+   .threeWayValvePositionToExtendDefrostWithFreshFoodCycleDefrost = ValvePosition_B
 };
 
 static const SabbathData_t sabbathData = {
@@ -394,14 +404,12 @@ TEST_GROUP(Defrost_SingleEvap)
 
          case DefrostHsmState_PrechillPrep:
             Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
             When DefrostTimerIsSatisfiedIs(true);
             And SealedSystemValveIsInPosition(ValvePosition_C);
 
-            After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC);
-            SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
-
             After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-            DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+            SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
 
             DisableDefrostTimerCounterRequestShouldBeSent();
             After(1);
@@ -601,6 +609,87 @@ TEST_GROUP(Defrost_SingleEvap)
       vote.temperature = temperature;
       vote.care = true;
       DataModel_Write(dataModel, Erd_FzSetpoint_ResolvedVote, &vote);
+   }
+
+   void ValvePositionShouldBeVotedWith(ValvePosition_t expectedPosition)
+   {
+      ValveVotedPosition_t vote;
+      DataModel_Read(dataModel, Erd_ValvePosition_DefrostVote, &vote);
+
+      CHECK_EQUAL(expectedPosition, vote.position);
+      CHECK_TRUE(vote.care);
+   }
+
+   void ValvePositionShouldNotBeVotedFor()
+   {
+      ValveVotedPosition_t vote;
+      DataModel_Read(dataModel, Erd_ValvePosition_DefrostVote, &vote);
+
+      CHECK_FALSE(vote.care);
+   }
+
+   void CurrentDefrostIsFreshFoodOnly()
+   {
+      bool currentDefrostIsFreshFoodOnly = true;
+      DataModel_Write(dataModel, Erd_DefrostIsFreshFoodOnly, &currentDefrostIsFreshFoodOnly);
+   }
+
+   void CurrentDefrostIsNotFreshFoodOnly()
+   {
+      bool currentDefrostIsFreshFoodOnly = false;
+      DataModel_Write(dataModel, Erd_DefrostIsFreshFoodOnly, &currentDefrostIsFreshFoodOnly);
+   }
+
+   void FreshFoodSetpointShouldBeVotedWith(TemperatureDegFx100_t expectedTemperature)
+   {
+      SetpointVotedTemperature_t actualVote;
+      DataModel_Read(dataModel, Erd_FfSetpoint_DefrostVote, &actualVote);
+
+      CHECK_EQUAL(expectedTemperature, actualVote.temperature);
+      CHECK_TRUE(actualVote.care);
+   }
+
+   void FreshFoodSetpointShouldNotBeVotedFor()
+   {
+      SetpointVotedTemperature_t vote;
+      DataModel_Read(dataModel, Erd_FfSetpoint_DefrostVote, &vote);
+
+      CHECK_FALSE(vote.care);
+   }
+
+   void ValveIsNotInPositionUponExitOfIdleAndOnEntryToPrechillPrep()
+   {
+      Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+      When DefrostTimerIsSatisfiedIs(true);
+      And SealedSystemValveIsInPosition(ValvePosition_C);
+
+      After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC + defrostData.maxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds * MSEC_PER_SEC - 1); // this timing has to be flipped for the max time of 0 b/c can't do -1
+      DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+      DisableDefrostTimerCounterRequestShouldBeSent();
+      After(1);
+      DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+   }
+
+   void ResetExtendDefrostSignalToZero()
+   {
+      Signal_t signal = 0;
+      DataModel_Write(dataModel, Erd_ExtendDefrostSignal, &signal);
+   }
+
+   void ExtendDefrostSignalShouldBeSent()
+   {
+      Signal_t signal;
+      DataModel_Read(dataModel, Erd_ExtendDefrostSignal, &signal);
+      CHECK_EQUAL(signal, 1);
+   }
+
+   void ExtendDefrostSignalShouldNotBeSent()
+   {
+      Signal_t signal;
+      DataModel_Read(dataModel, Erd_ExtendDefrostSignal, &signal);
+      CHECK_EQUAL(signal, 0);
    }
 };
 
@@ -1071,6 +1160,66 @@ TEST(Defrost_SingleEvap, ShouldVoteForFreezerSetPointWithPrechillFreezerSetpoint
    FreezerSetPointShouldBeVotedWith(defrostData.prechillFzSetpointInDegFx100);
 }
 
+TEST(Defrost_SingleEvap, ShouldVoteForValvePositionIfMaxPrechillHoldoffTimeIsGreaterThanZeroOnEntryToPrechillPrep)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   ValvePositionShouldBeVotedWith(defrostData.threeWayValvePositionForMaxPrechillHoldoff);
+}
+
+TEST(Defrost_SingleEvap, ShouldNotVoteForValvePositionIfMaxPrechillHoldoffTimeIsEqualToZeroOnEntryToPrechillPrep)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostParametricSetWithMaxPrechillHoldoffOfZero();
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   ValvePositionShouldNotBeVotedFor();
+}
+
+TEST(Defrost_SingleEvap, ShouldVoteForFreshFoodSetpointIfCurrentDefrostIsNotFreshFoodOnlyOnEntryToPrechillPrep)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given CurrentDefrostIsNotFreshFoodOnly();
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   FreshFoodSetpointShouldBeVotedWith(defrostData.prechillFfSetpointInDegFx100);
+}
+
+TEST(Defrost_SingleEvap, ShouldNotVoteForFreshFoodSetpointIfCurrentDefrostIsFreshFoodOnlyOnEntryToPrechillPrep)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given CurrentDefrostIsFreshFoodOnly();
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   FreshFoodSetpointShouldNotBeVotedFor();
+}
+
+TEST(Defrost_SingleEvap, ShouldRequestToExtendDefrostWithFreshFoodCycleDefrostIfCurrentValvePositionIsInPositionToExtendDefrostOnEntryToPrechillPrep)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExtendDefrostWithFreshFoodCycleDefrost);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   ExtendDefrostSignalShouldBeSent();
+}
+
+TEST(Defrost_SingleEvap, ShouldNotRequestToExtendDefrostWithFreshFoodCycleDefrostIfCurrentValvePositionIsNotInPositionToExtendDefrostOnEntryToPrechillPrep)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given ValveIsNotInPositionUponExitOfIdleAndOnEntryToPrechillPrep();
+
+   ExtendDefrostSignalShouldNotBeSent();
+}
+
+TEST(Defrost_SingleEvap, ShouldRequestToEnableDoorHoldoffOnEntryToPrechillPrep)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   DoorHoldoffRequestShouldBe(enabled);
+}
+
 TEST_GROUP(Defrost_DualEvap)
 {
    ReferDataModel_TestDouble_t dataModelDouble;
@@ -1131,14 +1280,6 @@ TEST_GROUP(Defrost_DualEvap)
    {
       DefrostHsmState_t actualState;
       DataModel_Read(dataModel, Erd_DefrostHsmState, &actualState);
-
-      CHECK_EQUAL(expectedState, actualState);
-   }
-
-   void DoorHoldoffRequestShouldBe(bool expectedState)
-   {
-      bool actualState;
-      DataModel_Read(dataModel, Erd_DefrostDoorHoldOffRequest, &actualState);
 
       CHECK_EQUAL(expectedState, actualState);
    }
@@ -1204,14 +1345,12 @@ TEST_GROUP(Defrost_DualEvap)
 
          case DefrostHsmState_PrechillPrep:
             Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
             When DefrostTimerIsSatisfiedIs(true);
             And SealedSystemValveIsInPosition(ValvePosition_C);
 
-            After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC);
-            SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
-
             After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-            DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+            SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
 
             DisableDefrostTimerCounterRequestShouldBeSent();
             After(1);

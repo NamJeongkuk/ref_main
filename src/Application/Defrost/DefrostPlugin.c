@@ -44,6 +44,10 @@ static const DefrostConfiguration_t defrostConfig = {
    .iceCabinetFanDefrostVoteErd = Erd_IceCabinetFanSpeed_DefrostVote,
    .freezerSetpointDefrostVoteErd = Erd_FzSetpoint_DefrostVote,
    .freezerResolvedSetpointErd = Erd_FzSetpoint_ResolvedVote,
+   .sealedSystemValvePositionDefrostVoteErd = Erd_ValvePosition_DefrostVote,
+   .defrostIsFreshFoodOnlyErd = Erd_DefrostIsFreshFoodOnly,
+   .freshFoodSetpointDefrostVoteErd = Erd_FfSetpoint_DefrostVote,
+   .extendDefrostSignalErd = Erd_ExtendDefrostSignal,
    .timerModuleErd = Erd_TimerModule
 };
 

@@ -250,6 +250,13 @@
           "name": "Erd_IceCabinetFanSpeed_DefrostVote",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Valve Position Defrost Vote",
+          "name": "Erd_ValvePosition_DefrostVote",
+          "read": true,
+          "write": true
         }
       ]
     },
@@ -506,6 +513,25 @@
           "namespace": "rx130",
           "displayName": "Freezer Cabinet Defrost Vote for Setpoint",
           "name": "Erd_FzSetpoint_DefrostVote",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
+      "title": "Fresh Food Compartment",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "Fresh Food Cabinet Resolved Setpoint",
+          "name": "Erd_FfSetpoint_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fresh Food Cabinet Defrost Vote for Setpoint",
+          "name": "Erd_FfSetpoint_DefrostVote",
           "read": true,
           "write": true
         }

@@ -38,6 +38,10 @@ typedef struct
    Erd_t iceCabinetFanDefrostVoteErd; // FanVotedSpeed_t
    Erd_t freezerSetpointDefrostVoteErd; // SetpointVotedTemperature_t
    Erd_t freezerResolvedSetpointErd; // SetpointVotedTemperature_t
+   Erd_t sealedSystemValvePositionDefrostVoteErd; // ValveVotedPosition_t
+   Erd_t defrostIsFreshFoodOnlyErd; // bool
+   Erd_t freshFoodSetpointDefrostVoteErd; // SetpointVotedTemperature_t
+   Erd_t extendDefrostSignalErd; // Signal_t
    Erd_t timerModuleErd; // TimerModule_t *
 } DefrostConfiguration_t;
 
@@ -53,7 +57,7 @@ typedef struct
          Timer_t timeBetweenDefrostsTimer;
       };
       Timer_t periodicTimer;
-      Timer_t prechillHoldoffTimer;
+      Timer_t maxPrechillHoldoffTimer;
       EventSubscription_t dataModelSubscription;
       const DefrostConfiguration_t *config;
       const DefrostData_t *defrostParametricData;

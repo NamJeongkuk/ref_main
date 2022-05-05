@@ -49,7 +49,9 @@ static const DefrostData_t defrostData = {
    .prechillFzEvapExitTemperatureInDegFx100 = -3000,
    .prechillCcEvapExitTemperatureInDegFx100 = -3000,
    .maxPrechillTimeInMinutes = 10,
+   .maxPrechillTimeForFreshFoodOnlyDefrostInMinutes = 20,
    .defrostDoorHoldoffTimeForFfAndFzInMinutes = 60,
+   .defrostDoorHoldoffTimeForFfOnlyInMinutes = 50,
    .defrostMaxHoldoffTimeInMinutes = 60,
    .maxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds = 0,
    .ffFanDefrostFfEvapExitTemperatureInDegFx100 = 3600,
@@ -78,7 +80,10 @@ static const DefrostData_t defrostData = {
    .doorHoldoffTimeForFfAndFzInMinutes = 60,
    .ffOnlyPostDwellExitTimeInMinutes = 10,
    .dsmFzSetpointTemperatureInDegFx100 = 200,
-   .defrostPeriodicTimeoutInSeconds = 1
+   .defrostPeriodicTimeoutInSeconds = 1,
+   .threeWayValvePositionToExitIdle = ValvePosition_B,
+   .threeWayValvePositionForMaxPrechillHoldoff = ValvePosition_B,
+   .threeWayValvePositionToExtendDefrostWithFreshFoodCycleDefrost = ValvePosition_B
 };
 
 static const DoorAccelerationConfig_t config = {

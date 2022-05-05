@@ -320,27 +320,27 @@ static void MaxPrechillHoldoffTimeComplete(void *context)
    Hsm_SendSignal(&instance->_private.hsm, Signal_MaxPrechillHoldoffTimeComplete, NULL);
 }
 
-static void StartPrechillHoldoffTimer(Defrost_t *instance)
+static void StartMaxPrechillHoldoffTimer(Defrost_t *instance)
 {
    StartTimer(
       instance,
-      &instance->_private.prechillHoldoffTimer,
+      &instance->_private.maxPrechillHoldoffTimer,
       instance->_private.defrostParametricData->maxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds * MSEC_PER_SEC,
       MaxPrechillHoldoffTimeComplete);
 }
 
-static bool PrechillHoldoffTimerIsNotRunning(Defrost_t *instance)
+static bool MaxPrechillHoldoffTimerIsNotRunning(Defrost_t *instance)
 {
    return !TimerModule_IsRunning(
       DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, instance->_private.config->timerModuleErd),
-      &instance->_private.prechillHoldoffTimer);
+      &instance->_private.maxPrechillHoldoffTimer);
 }
 
-static void StopPrechillHoldoffTimer(Defrost_t *instance)
+static void StopMaxPrechillHoldoffTimer(Defrost_t *instance)
 {
    TimerModule_Stop(
       DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, instance->_private.config->timerModuleErd),
-      &instance->_private.prechillHoldoffTimer);
+      &instance->_private.maxPrechillHoldoffTimer);
 }
 
 static ValvePosition_t PositionToExitIdle(Defrost_t *instance)
@@ -404,6 +404,73 @@ static void VoteForFreezerSetpoint(Defrost_t *instance)
       instance->_private.dataModel,
       instance->_private.config->freezerSetpointDefrostVoteErd,
       &vote);
+}
+
+static bool MaxPrechillHoldoffTimeGreaterThanZero(Defrost_t *instance)
+{
+   return instance->_private.defrostParametricData->maxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds > 0;
+}
+
+static void VoteForMaxPrechillHoldoffValvePosition(Defrost_t *instance)
+{
+   ValveVotedPosition_t vote;
+   vote.position = instance->_private.defrostParametricData->threeWayValvePositionForMaxPrechillHoldoff;
+   vote.care = true;
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->sealedSystemValvePositionDefrostVoteErd,
+      &vote);
+}
+
+static bool CurrentDefrostIsNotFreshFoodOnly(Defrost_t *instance)
+{
+   bool freshFoodOnly;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->defrostIsFreshFoodOnlyErd,
+      &freshFoodOnly);
+
+   return !freshFoodOnly;
+}
+
+static void VoteForFreshFoodSetpoint(Defrost_t *instance)
+{
+   SetpointVotedTemperature_t vote;
+   vote.care = true;
+   vote.temperature = instance->_private.defrostParametricData->prechillFfSetpointInDegFx100;
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freshFoodSetpointDefrostVoteErd,
+      &vote);
+}
+
+static bool ValveIsInPositionToExtendDefrost(Defrost_t *instance)
+{
+   ValvePosition_t position;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->sealedSystemValvePositionErd,
+      &position);
+
+   return position == instance->_private.defrostParametricData->threeWayValvePositionToExtendDefrostWithFreshFoodCycleDefrost;
+}
+
+static void SendExtendDefrostSignal(Defrost_t *instance)
+{
+   Signal_SendViaErd(
+      DataModel_AsDataSource(instance->_private.dataModel),
+      instance->_private.config->extendDefrostSignalErd);
+}
+
+static void SendDoorHoldoffEnableRequest(Defrost_t *instance)
+{
+   bool request = enabled;
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->defrostDoorHoldoffRequestErd,
+      &request);
 }
 
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
@@ -492,9 +559,9 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
             }
             else
             {
-               if(PrechillHoldoffTimerIsNotRunning(instance))
+               if(MaxPrechillHoldoffTimerIsNotRunning(instance))
                {
-                  StartPrechillHoldoffTimer(instance);
+                  StartMaxPrechillHoldoffTimer(instance);
                }
             }
          }
@@ -505,7 +572,7 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Hsm_Exit:
-         StopPrechillHoldoffTimer(instance);
+         StopMaxPrechillHoldoffTimer(instance);
          RequestDefrostTimerCounterTo(instance, DefrostTimer_Disable);
          break;
 
@@ -557,10 +624,27 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          else
          {
             IncrementNumberOfFreshFoodDefrostsBeforeAFreezerDefrost(instance);
+
             VoteForFfDefrostHeater(instance, OFF);
             VoteForFzDefrostHeater(instance, OFF);
             VoteForIceCabinetFan(instance, FanSpeed_High);
             VoteForFreezerSetpoint(instance);
+            SendDoorHoldoffEnableRequest(instance);
+
+            if(MaxPrechillHoldoffTimeGreaterThanZero(instance))
+            {
+               VoteForMaxPrechillHoldoffValvePosition(instance);
+            }
+
+            if(CurrentDefrostIsNotFreshFoodOnly(instance))
+            {
+               VoteForFreshFoodSetpoint(instance);
+            }
+
+            if(ValveIsInPositionToExtendDefrost(instance))
+            {
+               SendExtendDefrostSignal(instance);
+            }
          }
          break;
 

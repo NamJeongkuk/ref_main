@@ -58,7 +58,7 @@ typedef struct
    uint8_t defrostPeriodicTimeoutInSeconds;
    ValvePosition_t threeWayValvePositionToExitIdle;
    ValvePosition_t threeWayValvePositionForMaxPrechillHoldoff;
-   ValvePosition_t threeWayValvePositionToTerminateFreshFoodCycleDefrost;
+   ValvePosition_t threeWayValvePositionToExtendDefrostWithFreshFoodCycleDefrost;
 } DefrostData_t;
 
 #endif

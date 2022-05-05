@@ -254,6 +254,51 @@ describe("Defrost", () => {
       expect(actual.care).toEqual(true);
    };
 
+   const theValvePositionShouldBeVotedFor = async (position) => {
+      const actual = await rx130.read("Erd_ValvePosition_DefrostVote");
+      expect(actual.position).toEqual(position);
+      expect(actual.care).toEqual(true);
+   };
+
+   const theValvePositionShouldNotBeVotedFor = async () => {
+      const actual = await rx130.read("Erd_ValvePosition_DefrostVote");
+      expect(actual.care).toEqual(false);
+   };
+
+   const theCurrentDefrostIsNotFreshFoodOnly = async () => {
+      await rx130.write("Erd_DefrostIsFreshFoodOnly", false);
+   };
+
+   const theCurrentDefrostIsFreshFoodOnly = async () => {
+      await rx130.write("Erd_DefrostIsFreshFoodOnly", true);
+   };
+
+   const theFreshFoodSetpointShouldBeVotedWith = async (temperature) => {
+      const actual = await rx130.read("Erd_FfSetpoint_DefrostVote");
+      expect(actual.temperature).toEqual(temperature);
+      expect(actual.care).toEqual(true);
+   };
+
+   const theFreshFoodSetpointShouldNotBeVotedFor = async () => {
+      const actual = await rx130.read("Erd_FfSetpoint_DefrostVote");
+      expect(actual.care).toEqual(false);
+   };
+
+   const requestToExtendDefrostShouldBeSent = async () => {
+      const actual = await rx130.read("Erd_ExtendDefrostSignal");
+      expect(actual).toEqual(1);
+   };
+
+   const requestToExtendDefrostShouldNotBeSent = async () => {
+      const actual = await rx130.read("Erd_ExtendDefrostSignal");
+      expect(actual).toEqual(0);
+   };
+
+   const requestToEnableDoorHoldoffShouldBeSent = async () => {
+      const actual = await rx130.read("Erd_DefrostDoorHoldOffRequest");
+      expect(actual).toEqual(true);
+   };
+
    it("should enter Idle state when in Idle before power cycle and FZ temp is normal", async () => {
       await providedTheEepromDefrostStateAtStartUpIs(defrostState.defrostStateIdle);
       await providedTheFilteredFreezerCabinetTemperatureIs(300);
@@ -541,5 +586,325 @@ describe("Defrost", () => {
       await theFreshFoodHeaterShouldBeVoted(constants.off);
       await theFreezerHeaterShouldBeVoted(constants.off);
       await theIceCabinetFanShouldBeVoted(fanSpeed.fanSpeedHigh);
+   });
+
+   it("should vote for valve position if max prechill holdoff time is greater than zero on entry to prechill prep", async () => {
+      /*
+      Parametric data must be modified so you're not waiting forever
+      times used for this test are:
+
+      defrost.lua
+      fz_abnormal_run_time_in_minutes = 1 (60 seconds)
+      max_time_between_defrosts_in_minutes = 2 (120 seconds)
+      max_prechill_holdoff_time_after_defrost_timer_satisfied_in_seconds = 30
+      prechill_fz_setpoint_in_degfx100 = -600 (should match what you check for)
+      three_way_valve_position_for_max_prechill_holdoff = three_way_valve_position_type.position_B,
+
+      evaporator.lua
+      number_evaporators = 1
+      */
+
+      await providedDefrostIsEnabledAndInIdleState();
+      await freezerEvaporatorThermistorIsValid();
+      await theDefrostTimerCounterModulesShouldBe(constants.enabled);
+      await theFreezerDefrostResolvedSetpointIs(-400);
+
+      // increment defrost counter by waiting some amount of time
+      await waitTimeInSeconds(50);
+      // there's some unknown time between reset ERD being written and board coming back up so I'm checking that the count is changing and at least 50
+      await defrostTimerCountShouldBeAtLeast(50);
+
+      // door opening
+      await leftHandFfDoorIs(constants.open);
+
+      // once count reaches max time between defrosts in seconds (120 seconds or greater)
+      // timer is satisfied should be set
+      await waitTimeInSeconds(10 + 30); // 30 for the max holdoff time
+      // door open for 10 seconds => door acceleration is 10 * 87 = 870
+      // once count is > fz abnormal run time (but still less than max time between defrosts), it'll add the door acceleration to the count
+      // count is now ~ 60 + 870 = 930
+      // once count is > max time between defrosts, it'll set defrost timer is satisfied (930 > 120)
+      // after it's set, defrost will exit Idle which also causes the timer is satisfied flag to be cleared
+      // so you can't capture when it actually is set
+
+      // defrost should transition to prechill prep after the defrost timer is satisfied flag is set
+      await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechillPrep);
+      await theValvePositionShouldBeVotedFor(valvePosition.valvePositionB);
+   });
+
+   it("should not vote for valve position if max prechill holdoff time is equal to zero on entry to prechill prep", async () => {
+      /*
+      Parametric data must be modified so you're not waiting forever
+      times used for this test are:
+
+      defrost.lua
+      fz_abnormal_run_time_in_minutes = 1 (60 seconds)
+      max_time_between_defrosts_in_minutes = 2 (120 seconds)
+      max_prechill_holdoff_time_after_defrost_timer_satisfied_in_seconds = 0
+      prechill_fz_setpoint_in_degfx100 = -600 (should match what you check for)
+      three_way_valve_position_for_max_prechill_holdoff = three_way_valve_position_type.position_B,
+
+      evaporator.lua
+      number_evaporators = 1
+      */
+
+      await providedDefrostIsEnabledAndInIdleState();
+      await freezerEvaporatorThermistorIsValid();
+      await theDefrostTimerCounterModulesShouldBe(constants.enabled);
+      await theFreezerDefrostResolvedSetpointIs(-400);
+
+      // increment defrost counter by waiting some amount of time
+      await waitTimeInSeconds(50);
+      // there's some unknown time between reset ERD being written and board coming back up so I'm checking that the count is changing and at least 50
+      await defrostTimerCountShouldBeAtLeast(50);
+
+      // door opening
+      await leftHandFfDoorIs(constants.open);
+
+      // once count reaches max time between defrosts in seconds (120 seconds or greater)
+      // timer is satisfied should be set
+      await waitTimeInSeconds(10);
+      // door open for 10 seconds => door acceleration is 10 * 87 = 870
+      // once count is > fz abnormal run time (but still less than max time between defrosts), it'll add the door acceleration to the count
+      // count is now ~ 60 + 870 = 930
+      // once count is > max time between defrosts, it'll set defrost timer is satisfied (930 > 120)
+      // after it's set, defrost will exit Idle which also causes the timer is satisfied flag to be cleared
+      // so you can't capture when it actually is set
+
+      // defrost should transition to prechill prep after the defrost timer is satisfied flag is set
+      await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechillPrep);
+      await theValvePositionShouldNotBeVotedFor();
+   });
+
+   it("should vote for fresh food setpoint if current defrost is not fresh food only on entry to prechill prep", async () => {
+      /*
+      Parametric data must be modified so you're not waiting forever
+      times used for this test are:
+
+      defrost.lua
+      fz_abnormal_run_time_in_minutes = 1 (60 seconds)
+      max_time_between_defrosts_in_minutes = 2 (120 seconds)
+      max_prechill_holdoff_time_after_defrost_timer_satisfied_in_seconds = 0
+      prechill_fz_setpoint_in_degfx100 = -600 (should match what you check for)
+      three_way_valve_position_for_max_prechill_holdoff = three_way_valve_position_type.position_B,
+      prechill_fresh_food_setpoint_in_degfx100 = 4600,
+
+      evaporator.lua
+      number_evaporators = 1
+      */
+
+      await providedDefrostIsEnabledAndInIdleState();
+      await freezerEvaporatorThermistorIsValid();
+      await theDefrostTimerCounterModulesShouldBe(constants.enabled);
+      await theFreezerDefrostResolvedSetpointIs(-400);
+      await theCurrentDefrostIsNotFreshFoodOnly();
+
+      // increment defrost counter by waiting some amount of time
+      await waitTimeInSeconds(50);
+      // there's some unknown time between reset ERD being written and board coming back up so I'm checking that the count is changing and at least 50
+      await defrostTimerCountShouldBeAtLeast(50);
+
+      // door opening
+      await leftHandFfDoorIs(constants.open);
+
+      // once count reaches max time between defrosts in seconds (120 seconds or greater)
+      // timer is satisfied should be set
+      await waitTimeInSeconds(10);
+      // door open for 10 seconds => door acceleration is 10 * 87 = 870
+      // once count is > fz abnormal run time (but still less than max time between defrosts), it'll add the door acceleration to the count
+      // count is now ~ 60 + 870 = 930
+      // once count is > max time between defrosts, it'll set defrost timer is satisfied (930 > 120)
+      // after it's set, defrost will exit Idle which also causes the timer is satisfied flag to be cleared
+      // so you can't capture when it actually is set
+
+      // defrost should transition to prechill prep after the defrost timer is satisfied flag is set
+      await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechillPrep);
+      await theFreshFoodSetpointShouldBeVotedWith(4600); // matches prechill_fresh_food_setpoint_in_degfx100
+   });
+
+   it("should not vote for fresh food setpoint if current defrost is fresh food only on entry to prechill prep", async () => {
+      /*
+      Parametric data must be modified so you're not waiting forever
+      times used for this test are:
+
+      defrost.lua
+      fz_abnormal_run_time_in_minutes = 1 (60 seconds)
+      max_time_between_defrosts_in_minutes = 2 (120 seconds)
+      max_prechill_holdoff_time_after_defrost_timer_satisfied_in_seconds = 0
+      prechill_fz_setpoint_in_degfx100 = -600 (should match what you check for)
+      three_way_valve_position_for_max_prechill_holdoff = three_way_valve_position_type.position_B,
+      prechill_fresh_food_setpoint_in_degfx100 = 4600,
+
+      evaporator.lua
+      number_evaporators = 1
+      */
+
+      await providedDefrostIsEnabledAndInIdleState();
+      await freezerEvaporatorThermistorIsValid();
+      await theDefrostTimerCounterModulesShouldBe(constants.enabled);
+      await theFreezerDefrostResolvedSetpointIs(-400);
+      await theCurrentDefrostIsFreshFoodOnly();
+
+      // increment defrost counter by waiting some amount of time
+      await waitTimeInSeconds(50);
+      // there's some unknown time between reset ERD being written and board coming back up so I'm checking that the count is changing and at least 50
+      await defrostTimerCountShouldBeAtLeast(50);
+
+      // door opening
+      await leftHandFfDoorIs(constants.open);
+
+      // once count reaches max time between defrosts in seconds (120 seconds or greater)
+      // timer is satisfied should be set
+      await waitTimeInSeconds(10);
+      // door open for 10 seconds => door acceleration is 10 * 87 = 870
+      // once count is > fz abnormal run time (but still less than max time between defrosts), it'll add the door acceleration to the count
+      // count is now ~ 60 + 870 = 930
+      // once count is > max time between defrosts, it'll set defrost timer is satisfied (930 > 120)
+      // after it's set, defrost will exit Idle which also causes the timer is satisfied flag to be cleared
+      // so you can't capture when it actually is set
+
+      // defrost should transition to prechill prep after the defrost timer is satisfied flag is set
+      await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechillPrep);
+      await theFreshFoodSetpointShouldNotBeVotedFor();
+   });
+
+   it("should request to extend defrost if current valve position is in position to extend defrost on entry to prechill prep", async () => {
+      /*
+      Parametric data must be modified so you're not waiting forever
+      times used for this test are:
+
+      defrost.lua
+      fz_abnormal_run_time_in_minutes = 1 (60 seconds)
+      max_time_between_defrosts_in_minutes = 2 (120 seconds)
+      max_prechill_holdoff_time_after_defrost_timer_satisfied_in_seconds = 0
+      prechill_fz_setpoint_in_degfx100 = -600 (should match what you check for)
+      three_way_valve_position_for_max_prechill_holdoff = three_way_valve_position_type.position_B,
+      three_way_valve_position_to_extend_defrost_with_fresh_food_cycle_defrost = three_way_valve_position_type.position_B
+      prechill_fresh_food_setpoint_in_degfx100 = 4600,
+
+      evaporator.lua
+      number_evaporators = 1
+      */
+
+      await providedDefrostIsEnabledAndInIdleState();
+      await freezerEvaporatorThermistorIsValid();
+      await theDefrostTimerCounterModulesShouldBe(constants.enabled);
+      await theFreezerDefrostResolvedSetpointIs(-400);
+
+      // increment defrost counter by waiting some amount of time
+      await waitTimeInSeconds(50);
+      // there's some unknown time between reset ERD being written and board coming back up so I'm checking that the count is changing and at least 50
+      await defrostTimerCountShouldBeAtLeast(50);
+
+      // door opening
+      await leftHandFfDoorIs(constants.open);
+
+      await await providedTheSealedSystemValveIsIn(valvePosition.valvePositionB); // matches three_way_valve_position_to_extend_defrost_with_fresh_food_cycle_defrost
+
+      // once count reaches max time between defrosts in seconds (120 seconds or greater)
+      // timer is satisfied should be set
+      await waitTimeInSeconds(10);
+      // door open for 10 seconds => door acceleration is 10 * 87 = 870
+      // once count is > fz abnormal run time (but still less than max time between defrosts), it'll add the door acceleration to the count
+      // count is now ~ 60 + 870 = 930
+      // once count is > max time between defrosts, it'll set defrost timer is satisfied (930 > 120)
+      // after it's set, defrost will exit Idle which also causes the timer is satisfied flag to be cleared
+      // so you can't capture when it actually is set
+
+      // defrost should transition to prechill prep after the defrost timer is satisfied flag is set
+      await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechillPrep);
+      await requestToExtendDefrostShouldBeSent();
+   });
+
+   it("should not request to extend defrost if current valve position is not in position to extend defrost on entry to prechill prep", async () => {
+      /*
+      Parametric data must be modified so you're not waiting forever
+      times used for this test are:
+
+      defrost.lua
+      fz_abnormal_run_time_in_minutes = 1 (60 seconds)
+      max_time_between_defrosts_in_minutes = 2 (120 seconds)
+      max_prechill_holdoff_time_after_defrost_timer_satisfied_in_seconds = 0
+      prechill_fz_setpoint_in_degfx100 = -600 (should match what you check for)
+      three_way_valve_position_for_max_prechill_holdoff = three_way_valve_position_type.position_B,
+      three_way_valve_position_to_extend_defrost_with_fresh_food_cycle_defrost = three_way_valve_position_type.position_B
+      prechill_fresh_food_setpoint_in_degfx100 = 4600,
+
+      evaporator.lua
+      number_evaporators = 1
+      */
+
+      await providedDefrostIsEnabledAndInIdleState(); // valve is in position C, it doesn't match three_way_valve_position_to_extend_defrost_with_fresh_food_cycle_defrost
+      await freezerEvaporatorThermistorIsValid();
+      await theDefrostTimerCounterModulesShouldBe(constants.enabled);
+      await theFreezerDefrostResolvedSetpointIs(-400);
+
+      // increment defrost counter by waiting some amount of time
+      await waitTimeInSeconds(50);
+      // there's some unknown time between reset ERD being written and board coming back up so I'm checking that the count is changing and at least 50
+      await defrostTimerCountShouldBeAtLeast(50);
+
+      // door opening
+      await leftHandFfDoorIs(constants.open);
+
+      // once count reaches max time between defrosts in seconds (120 seconds or greater)
+      // timer is satisfied should be set
+      await waitTimeInSeconds(10);
+      // door open for 10 seconds => door acceleration is 10 * 87 = 870
+      // once count is > fz abnormal run time (but still less than max time between defrosts), it'll add the door acceleration to the count
+      // count is now ~ 60 + 870 = 930
+      // once count is > max time between defrosts, it'll set defrost timer is satisfied (930 > 120)
+      // after it's set, defrost will exit Idle which also causes the timer is satisfied flag to be cleared
+      // so you can't capture when it actually is set
+
+      // defrost should transition to prechill prep after the defrost timer is satisfied flag is set
+      await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechillPrep);
+      await requestToExtendDefrostShouldNotBeSent();
+   });
+
+   it("should request to enable door holdoff on entry to prechill prep", async () => {
+      /*
+      Parametric data must be modified so you're not waiting forever
+      times used for this test are:
+
+      defrost.lua
+      fz_abnormal_run_time_in_minutes = 1 (60 seconds)
+      max_time_between_defrosts_in_minutes = 2 (120 seconds)
+      max_prechill_holdoff_time_after_defrost_timer_satisfied_in_seconds = 0
+      prechill_fz_setpoint_in_degfx100 = -600 (should match what you check for)
+      three_way_valve_position_for_max_prechill_holdoff = three_way_valve_position_type.position_B,
+      three_way_valve_position_to_extend_defrost_with_fresh_food_cycle_defrost = three_way_valve_position_type.position_B
+      prechill_fresh_food_setpoint_in_degfx100 = 4600,
+
+      evaporator.lua
+      number_evaporators = 1
+      */
+
+      await providedDefrostIsEnabledAndInIdleState(); // valve is in position C, it doesn't match three_way_valve_position_to_extend_defrost_with_fresh_food_cycle_defrost
+      await freezerEvaporatorThermistorIsValid();
+      await theDefrostTimerCounterModulesShouldBe(constants.enabled);
+      await theFreezerDefrostResolvedSetpointIs(-400);
+
+      // increment defrost counter by waiting some amount of time
+      await waitTimeInSeconds(50);
+      // there's some unknown time between reset ERD being written and board coming back up so I'm checking that the count is changing and at least 50
+      await defrostTimerCountShouldBeAtLeast(50);
+
+      // door opening
+      await leftHandFfDoorIs(constants.open);
+
+      // once count reaches max time between defrosts in seconds (120 seconds or greater)
+      // timer is satisfied should be set
+      await waitTimeInSeconds(10);
+      // door open for 10 seconds => door acceleration is 10 * 87 = 870
+      // once count is > fz abnormal run time (but still less than max time between defrosts), it'll add the door acceleration to the count
+      // count is now ~ 60 + 870 = 930
+      // once count is > max time between defrosts, it'll set defrost timer is satisfied (930 > 120)
+      // after it's set, defrost will exit Idle which also causes the timer is satisfied flag to be cleared
+      // so you can't capture when it actually is set
+
+      // defrost should transition to prechill prep after the defrost timer is satisfied flag is set
+      await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechillPrep);
+      await requestToEnableDoorHoldoffShouldBeSent();
    });
 });
