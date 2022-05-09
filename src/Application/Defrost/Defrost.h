@@ -42,6 +42,7 @@ typedef struct
    Erd_t defrostIsFreshFoodOnlyErd; // bool
    Erd_t freshFoodSetpointDefrostVoteErd; // SetpointVotedTemperature_t
    Erd_t extendDefrostSignalErd; // Signal_t
+   Erd_t compressorStateErd; // CompressorState_t
    Erd_t timerModuleErd; // TimerModule_t *
 } DefrostConfiguration_t;
 

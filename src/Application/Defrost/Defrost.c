@@ -19,6 +19,7 @@
 #include "utils.h"
 #include "FanSpeed.h"
 #include "Setpoint.h"
+#include "CompressorState.h"
 
 enum
 {
@@ -31,7 +32,9 @@ enum
    Signal_MaxTimeBetweenDefrostsComplete,
    Signal_PeriodicTimeoutComplete,
    Signal_MaxPrechillHoldoffTimeComplete,
-   Signal_FreezerEvaporatorThermistorIsInvalid
+   Signal_FreezerEvaporatorThermistorIsInvalid,
+   Signal_FreezerDefrostIsAbnormal,
+   Signal_CompressorStateTimeIsSatisfied
 };
 
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -82,6 +85,26 @@ static void DataModelChanged(void *context, const void *args)
       if(!*valid)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerEvaporatorThermistorIsInvalid, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->fzDefrostWasAbnormalErd)
+   {
+      REINTERPRET(state, onChangeData->data, const bool *);
+
+      if(*state)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerDefrostIsAbnormal, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->compressorStateErd)
+   {
+      REINTERPRET(state, onChangeData->data, const CompressorState_t *);
+
+      if((*state != CompressorState_MinimumOffTime) &&
+         (*state != CompressorState_MinimumOnTime) &&
+         (*state != CompressorState_MinimumRunTime))
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_CompressorStateTimeIsSatisfied, NULL);
       }
    }
 }
@@ -646,6 +669,14 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
                SendExtendDefrostSignal(instance);
             }
          }
+         break;
+
+      case Signal_FreezerDefrostIsAbnormal:
+         Hsm_Transition(hsm, State_PostPrechill);
+         break;
+
+      case Signal_CompressorStateTimeIsSatisfied:
+         Hsm_Transition(hsm, State_Prechill);
          break;
 
       case Hsm_Exit:

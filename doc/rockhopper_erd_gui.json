@@ -59,6 +59,13 @@
           "name": "Erd_CompressorSpeedConfig",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Compressor State",
+          "name": "Erd_CompressorState",
+          "read": true,
+          "write": true
         }
       ]
     },

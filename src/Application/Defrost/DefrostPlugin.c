@@ -48,6 +48,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .defrostIsFreshFoodOnlyErd = Erd_DefrostIsFreshFoodOnly,
    .freshFoodSetpointDefrostVoteErd = Erd_FfSetpoint_DefrostVote,
    .extendDefrostSignalErd = Erd_ExtendDefrostSignal,
+   .compressorStateErd = Erd_CompressorState,
    .timerModuleErd = Erd_TimerModule
 };
 
