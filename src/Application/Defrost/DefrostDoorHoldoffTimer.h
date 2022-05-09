@@ -15,7 +15,7 @@ typedef struct
 {
    Erd_t allFreshFoodDoorsAreClosedState; // bool
    Erd_t freezerDoorOpenState; // bool
-   Erd_t ccDoorOpenState; // bool
+   Erd_t convertibleCompartmentDoorOpenState; // bool
 
    Erd_t doorHoldoffRequest; // bool
    Erd_t doorHoldoffSatisfied; // bool

@@ -13,28 +13,28 @@
 
 enum
 {
-   GridDelta_Ff,
-   GridDelta_Fz,
+   GridDelta_FreshFood,
+   GridDelta_Freezer,
 };
 
 enum
 {
    GridLine_Nfl,
-   GridLine_FfLowHyst,
-   GridLine_FfLowHystDelta,
-   GridLine_FfHighHyst,
-   GridLine_FfExtraHigh,
-   GridLine_FfSuperHigh
+   GridLine_FreshFoodLowHyst,
+   GridLine_FreshFoodLowHystDelta,
+   GridLine_FreshFoodHighHyst,
+   GridLine_FreshFoodExtraHigh,
+   GridLine_FreshFoodSuperHigh
 };
 
 enum
 {
-   GridLine_FzLowHyst,
-   GridLine_FzDelta,
-   GridLine_FzHighHyst,
-   GridLine_FzExtraHigh,
-   GridLine_FzSuperHigh,
-   GridLine_FzExtremeHigh
+   GridLine_FreezerLowHyst,
+   GridLine_FreezerDelta,
+   GridLine_FreezerHighHyst,
+   GridLine_FreezerExtraHigh,
+   GridLine_FreezerSuperHigh,
+   GridLine_FreezerExtremeHigh
 };
 
 enum

@@ -199,19 +199,19 @@ static void IncrementDefrostTimerCount(DefrostTimerCounter_t *instance)
 
 static void AddAllDoorAccelerationsToCount(DefrostTimerCounter_t *instance, uint32_t count)
 {
-   uint32_t ffDoorAcceleration;
+   uint32_t freshFoodDoorAcceleration;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->ffDoorAccelerationCountsErd,
-      &ffDoorAcceleration);
+      instance->_private.config->freshFoodDoorAccelerationCountsErd,
+      &freshFoodDoorAcceleration);
 
-   uint32_t fzDoorAcceleration;
+   uint32_t freezerDoorAcceleration;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->fzDoorAccelerationCountsErd,
-      &fzDoorAcceleration);
+      instance->_private.config->freezerDoorAccelerationCountsErd,
+      &freezerDoorAcceleration);
 
-   uint32_t adjustedCount = count + ffDoorAcceleration + fzDoorAcceleration;
+   uint32_t adjustedCount = count + freshFoodDoorAcceleration + freezerDoorAcceleration;
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->ramDefrostTimerCountInSecondsErd,
@@ -220,11 +220,11 @@ static void AddAllDoorAccelerationsToCount(DefrostTimerCounter_t *instance, uint
 
 static void ResetOrAddDoorAccelerationsToDefrostTimerCount(DefrostTimerCounter_t *instance)
 {
-   bool fzDefrostWasAbnormal;
+   bool freezerDefrostWasAbnormal;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->fzDefrostWasAbnormalErd,
-      &fzDefrostWasAbnormal);
+      instance->_private.config->freezerDefrostWasAbnormalErd,
+      &freezerDefrostWasAbnormal);
 
    uint32_t count;
    DataModel_Read(
@@ -238,9 +238,9 @@ static void ResetOrAddDoorAccelerationsToDefrostTimerCount(DefrostTimerCounter_t
       instance->_private.config->maxTimeBetweenDefrostsInMinutesErd,
       &maxTimeBetweenDefrostsInMinutes);
 
-   if(!fzDefrostWasAbnormal)
+   if(!freezerDefrostWasAbnormal)
    {
-      if(count >= instance->_private.defrostParametricData->fzAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
+      if(count >= instance->_private.defrostParametricData->freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
       {
          if(count < maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE)
          {

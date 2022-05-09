@@ -26,48 +26,48 @@ extern "C"
 #define And
 
 static const DefrostData_t defrostData = {
-   .fzDoorIncrementFactorInSecondsPerSecond = 348,
-   .ffDoorIncrementFactorInSecondsPerSecond = 87,
-   .fzAbnormalRunTimeInMinutes = 6 * MINUTES_PER_HOUR,
+   .freezerDoorIncrementFactorInSecondsPerSecond = 348,
+   .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
+   .freezerAbnormalRunTimeInMinutes = 6 * MINUTES_PER_HOUR,
    .maxTimeBetweenDefrostsInMinutes = 32 * MINUTES_PER_HOUR,
-   .dmFzDefrostTemperatureInDegFx100 = 1500,
-   .prechillFzSetpointInDegFx100 = 600,
-   .prechillFfSetpointInDegFx100 = 4600,
-   .prechillCcSetpointInDegFx100 = 600,
-   .prechillFzEvapExitTemperatureInDegFx100 = -3000,
-   .prechillCcEvapExitTemperatureInDegFx100 = -3000,
+   .dmFreezerDefrostTemperatureInDegFx100 = 1500,
+   .prechillFreezerSetpointInDegFx100 = 600,
+   .prechillFreshFoodSetpointInDegFx100 = 4600,
+   .prechillConvertibleCompartmentSetpointInDegFx100 = 600,
+   .prechillFreezerEvapExitTemperatureInDegFx100 = -3000,
+   .prechillConvertibleCompartmentEvapExitTemperatureInDegFx100 = -3000,
    .maxPrechillTimeInMinutes = 10,
    .maxPrechillTimeForFreshFoodOnlyDefrostInMinutes = 20,
-   .defrostDoorHoldoffTimeForFfAndFzInMinutes = 60,
-   .defrostDoorHoldoffTimeForFfOnlyInMinutes = 50,
+   .defrostDoorHoldoffTimeForFreshFoodAndFreezerInMinutes = 60,
+   .defrostDoorHoldoffTimeForFreshFoodOnlyInMinutes = 50,
    .defrostMaxHoldoffTimeInMinutes = 60,
    .maxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds = 0,
-   .ffFanDefrostFfEvapExitTemperatureInDegFx100 = 3600,
-   .ffFanDefrostFfFanMaxOnTimeInMinutes = 10,
-   .ccFanDefrostCcEvapExitTemperatureInDegFx100 = 3200,
-   .ccFanDefrostCcFanMaxOnTimeInMinutes = 10,
-   .fzDefrostHeaterMaxOnTimeInMinutes = 60,
-   .fzAbnormalDefrostHeaterMaxOnTimeInMinutes = 32,
-   .fzDefrostTerminationTemperatureInDegFx100 = 5900,
-   .ffDefrostTerminationTemperatureInDegFx100 = 4460,
-   .ccDefrostTerminationTemperatureInDegFx100 = 4460,
-   .ffDefrostHeaterMaxOnTimeInMinutes = 60,
-   .ffAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
-   .ccDefrostHeaterMaxOnTimeInMinutes = 60,
-   .ccAsFfAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
-   .ccAsFzAbnormalDefrostHeaterMaxOnTimeInMinutes = 35,
+   .freshFoodFanDefrostFreshFoodEvapExitTemperatureInDegFx100 = 3600,
+   .freshFoodFanDefrostFreshFoodFanMaxOnTimeInMinutes = 10,
+   .convertibleCompartmentFanDefrostConvertibleCompartmentEvapExitTemperatureInDegFx100 = 3200,
+   .convertibleCompartmentFanDefrostConvertibleCompartmentFanMaxOnTimeInMinutes = 10,
+   .freezerDefrostHeaterMaxOnTimeInMinutes = 60,
+   .freezerAbnormalDefrostHeaterMaxOnTimeInMinutes = 32,
+   .freezerDefrostTerminationTemperatureInDegFx100 = 5900,
+   .freshFoodDefrostTerminationTemperatureInDegFx100 = 4460,
+   .convertibleCompartmentDefrostTerminationTemperatureInDegFx100 = 4460,
+   .freshFoodDefrostHeaterMaxOnTimeInMinutes = 60,
+   .freshFoodAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
+   .convertibleCompartmentDefrostHeaterMaxOnTimeInMinutes = 60,
+   .convertibleCompartmentAsFreshFoodAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
+   .convertibleCompartmentAsFreezerAbnormalDefrostHeaterMaxOnTimeInMinutes = 35,
    .defrostDwellTimeInMinutes = 7,
-   .ffAndFzPostDwellFzExitTemperatureInDegFx100 = -1000,
-   .ffAndFzPostDwellFzExitTimeInMinutes = 10,
+   .freshFoodAndFreezerPostDwellFreezerExitTemperatureInDegFx100 = -1000,
+   .freshFoodAndFreezerPostDwellFreezerExitTimeInMinutes = 10,
    .dwellThreeWayValvePosition = ValvePosition_A,
-   .postDwellThreeWayValvePositionForFfAndFz = ValvePosition_A,
-   .ffPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
-   .fzPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
-   .numberOfFfDefrostsBeforeFzDefrost = 2,
-   .numberOfFfDefrostsBeforeAbnormalFzDefrost = 1,
-   .doorHoldoffTimeForFfAndFzInMinutes = 60,
-   .ffOnlyPostDwellExitTimeInMinutes = 10,
-   .dsmFzSetpointTemperatureInDegFx100 = 200,
+   .postDwellThreeWayValvePositionForFreshFoodAndFreezer = ValvePosition_A,
+   .freshFoodPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
+   .freezerPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
+   .numberOfFreshFoodDefrostsBeforeFreezerDefrost = 2,
+   .numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost = 1,
+   .doorHoldoffTimeForFreshFoodAndFreezerInMinutes = 60,
+   .freshFoodOnlyPostDwellExitTimeInMinutes = 10,
+   .dsmFreezerSetpointTemperatureInDegFx100 = 200,
    .defrostPeriodicTimeoutInSeconds = 1,
    .threeWayValvePositionToExitIdle = ValvePosition_B,
    .threeWayValvePositionForMaxPrechillHoldoff = ValvePosition_B,
@@ -78,10 +78,10 @@ static const SabbathData_t sabbathData = {
    .maxTimeBetweenDefrostsInMinutes = 33 * MINUTES_PER_HOUR
 };
 
-#define CountLessThanFzAbnormalDefrostRunTimeInSeconds (defrostData.fzAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 1)
-#define CountEqualToFzAbnormalDefrostRunTimeInSeconds (defrostData.fzAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
-#define CountGreaterThanFzAbnormalDefrostRunTimeInSeconds (defrostData.fzAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1)
-#define CountBetweenMaxTimeBetweenDefrostsAndFzAbnormalDefrostRunTimeInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.fzAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
+#define CountLessThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 1)
+#define CountEqualToFreezerAbnormalDefrostRunTimeInSeconds (defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
+#define CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1)
+#define CountBetweenMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
 #define CountLessThanMaxTimeBetweenDefrostsInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - 1)
 #define CountEqualToMaxTimeBetweenDefrostsInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE)
 #define CountGreaterThanMaxTimeBetweenDefrostsInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE + 1)
@@ -96,8 +96,8 @@ static const DefrostTimerIsSatisfiedMonitorConfig_t config = {
    .defrostTimerIsSatisfiedMonitorRequestErd = Erd_DefrostTimerIsSatisfiedMonitorRequest,
    .defrostTimerIsSatisfiedErd = Erd_DefrostTimerIsSatisfied,
    .sabbathModeErd = Erd_SabbathMode,
-   .fzDefrostWasAbnormalErd = Erd_FzDefrostWasAbnormal,
-   .ffDefrostWasAbnormalErd = Erd_FfDefrostWasAbnormal,
+   .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
+   .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
    .demandResponseLevelErd = Erd_DemandResponseLevel,
    .maxTimeBetweenDefrostsInMinutesErd = Erd_MaxTimeBetweenDefrostsInMinutes
 };
@@ -196,28 +196,28 @@ TEST_GROUP(DefrostTimerIsSatisfiedMonitor)
       }
    }
 
-   void LastFzDefrostWasNormal()
+   void LastFreezerDefrostWasNormal()
    {
       bool state = false;
-      DataModel_Write(dataModel, Erd_FzDefrostWasAbnormal, &state);
+      DataModel_Write(dataModel, Erd_FreezerDefrostWasAbnormal, &state);
    }
 
-   void LastFzDefrostWasAbnormal()
+   void LastFreezerDefrostWasAbnormal()
    {
       bool state = true;
-      DataModel_Write(dataModel, Erd_FzDefrostWasAbnormal, &state);
+      DataModel_Write(dataModel, Erd_FreezerDefrostWasAbnormal, &state);
    }
 
-   void LastFfDefrostWasNormal()
+   void LastFreshFoodDefrostWasNormal()
    {
       bool state = false;
-      DataModel_Write(dataModel, Erd_FfDefrostWasAbnormal, &state);
+      DataModel_Write(dataModel, Erd_FreshFoodDefrostWasAbnormal, &state);
    }
 
-   void LastFfDefrostWasAbnormal()
+   void LastFreshFoodDefrostWasAbnormal()
    {
       bool state = true;
-      DataModel_Write(dataModel, Erd_FfDefrostWasAbnormal, &state);
+      DataModel_Write(dataModel, Erd_FreshFoodDefrostWasAbnormal, &state);
    }
 
    void DemandResponseLevelIs(EnergyDemandLevel_t level)
@@ -302,102 +302,102 @@ TEST(DefrostTimerIsSatisfiedMonitor, ShouldClearDefrostTimerIsSatisfiedErdWhenDi
    When DefrostTimerIsSatisfiedMonitorRequestIs(DefrostTimerIsSatisfied_Disable, 1);
 }
 
-TEST(DefrostTimerIsSatisfiedMonitor, ShouldSetDefrostTimerIsSatisfiedErdWhenDefrostTimerCountReachesFzAbnormalRunTimeAndDemandResponseLevelIsOffAndLastFzDefrostWasAbnormalAndSabbathIsDisabled)
+TEST(DefrostTimerIsSatisfiedMonitor, ShouldSetDefrostTimerIsSatisfiedErdWhenDefrostTimerCountReachesFreezerAbnormalRunTimeAndDemandResponseLevelIsOffAndLastFreezerDefrostWasAbnormalAndSabbathIsDisabled)
 {
-   Given LastFzDefrostWasAbnormal();
+   Given LastFreezerDefrostWasAbnormal();
    And DemandResponseLevelIs(EnergyDemandLevel_Off);
    And SabbathModeIs(DISABLED);
    And DefrostTimerIsSatisfiedMonitorIsEnabled();
 
-   When DefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 
    DefrostTimerIsSatisfiedShouldBeWrittenWith(SET);
-   When DefrostTimerCountIs(CountEqualToFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountEqualToFreezerAbnormalDefrostRunTimeInSeconds);
 }
 
-TEST(DefrostTimerIsSatisfiedMonitor, ShouldSetDefrostTimerIsSatisfiedErdWhenDefrostTimerCountReachesGreaterThanFzAbnormalRunTimeButLessThanMaxTimeBetweenDefrostsAndDemandResponseLevelIsOffAndLastFzDefrostWasAbnormalAndSabbathIsDisabled)
+TEST(DefrostTimerIsSatisfiedMonitor, ShouldSetDefrostTimerIsSatisfiedErdWhenDefrostTimerCountReachesGreaterThanFreezerAbnormalRunTimeButLessThanMaxTimeBetweenDefrostsAndDemandResponseLevelIsOffAndLastFreezerDefrostWasAbnormalAndSabbathIsDisabled)
 {
-   Given LastFzDefrostWasAbnormal();
+   Given LastFreezerDefrostWasAbnormal();
    And DemandResponseLevelIs(EnergyDemandLevel_Off);
    And SabbathModeIs(DISABLED);
    And DefrostTimerIsSatisfiedMonitorIsEnabled();
 
-   When DefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 
    DefrostTimerIsSatisfiedShouldBeWrittenWith(SET);
-   When DefrostTimerCountIs(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds);
 }
 
-TEST(DefrostTimerIsSatisfiedMonitor, ShouldSetDefrostTimerIsSatisfiedErdWhenDefrostTimerCountReachesFzAbnormalRunTimeAndDemandResponseLevelIsOffAndLastFfDefrostWasAbnormalAndSabbathIsDisabled)
+TEST(DefrostTimerIsSatisfiedMonitor, ShouldSetDefrostTimerIsSatisfiedErdWhenDefrostTimerCountReachesFreezerAbnormalRunTimeAndDemandResponseLevelIsOffAndLastFreshFoodDefrostWasAbnormalAndSabbathIsDisabled)
 {
-   Given LastFfDefrostWasAbnormal();
+   Given LastFreshFoodDefrostWasAbnormal();
    And DemandResponseLevelIs(EnergyDemandLevel_Off);
    And SabbathModeIs(DISABLED);
    And DefrostTimerIsSatisfiedMonitorIsEnabled();
 
-   When DefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 
    DefrostTimerIsSatisfiedShouldBeWrittenWith(SET);
-   When DefrostTimerCountIs(CountEqualToFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountEqualToFreezerAbnormalDefrostRunTimeInSeconds);
 }
 
-TEST(DefrostTimerIsSatisfiedMonitor, ShouldNotSetDefrostTimerIsSatisfiedErdWhenDefrostTimerCountReachesFzAbnormalRunTimeAndDemandResponseLevelIsOffAndLastFzDefrostWasAbnormalAndSabbathIsEnabled)
+TEST(DefrostTimerIsSatisfiedMonitor, ShouldNotSetDefrostTimerIsSatisfiedErdWhenDefrostTimerCountReachesFreezerAbnormalRunTimeAndDemandResponseLevelIsOffAndLastFreezerDefrostWasAbnormalAndSabbathIsEnabled)
 {
-   Given LastFzDefrostWasAbnormal();
+   Given LastFreezerDefrostWasAbnormal();
    And DemandResponseLevelIs(EnergyDemandLevel_Off);
    And SabbathModeIs(ENABLED);
    And DefrostTimerIsSatisfiedMonitorIsEnabled();
 
-   When DefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 
-   When DefrostTimerCountIs(CountEqualToFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountEqualToFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 }
 
-TEST(DefrostTimerIsSatisfiedMonitor, ShouldNotSetDefrostTimerIsSatisfiedErdWhenDefrostTimerCountReachesFzAbnormalRunTimeAndDemandResponseLevelIsOffAndLastFfDefrostWasAbnormalAndSabbathIsEnabled)
+TEST(DefrostTimerIsSatisfiedMonitor, ShouldNotSetDefrostTimerIsSatisfiedErdWhenDefrostTimerCountReachesFreezerAbnormalRunTimeAndDemandResponseLevelIsOffAndLastFreshFoodDefrostWasAbnormalAndSabbathIsEnabled)
 {
-   Given LastFfDefrostWasAbnormal();
+   Given LastFreshFoodDefrostWasAbnormal();
    And DemandResponseLevelIs(EnergyDemandLevel_Off);
    And SabbathModeIs(ENABLED);
    And DefrostTimerIsSatisfiedMonitorIsEnabled();
 
-   When DefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 
-   When DefrostTimerCountIs(CountEqualToFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountEqualToFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 }
 
-TEST(DefrostTimerIsSatisfiedMonitor, ShouldNotSetDefrostTimerIsSatisfiedErdWhenDefrostTimerCountReachesFzAbnormalRunTimeAndDemandResponseLevelIsNotOffAndLastFzDefrostWasAbnormalAndSabbathIsDisabled)
+TEST(DefrostTimerIsSatisfiedMonitor, ShouldNotSetDefrostTimerIsSatisfiedErdWhenDefrostTimerCountReachesFreezerAbnormalRunTimeAndDemandResponseLevelIsNotOffAndLastFreezerDefrostWasAbnormalAndSabbathIsDisabled)
 {
-   Given LastFzDefrostWasAbnormal();
+   Given LastFreezerDefrostWasAbnormal();
    And DemandResponseLevelIs(EnergyDemandLevel_Low);
    And SabbathModeIs(DISABLED);
    And DefrostTimerIsSatisfiedMonitorIsEnabled();
 
-   When DefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 
-   When DefrostTimerCountIs(CountEqualToFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountEqualToFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 }
 
-TEST(DefrostTimerIsSatisfiedMonitor, ShouldNotSetDefrostTimerIsSatisfiedErdWhenDefrostTimerCountReachesFzAbnormalRunTimeAndDemandResponseLevelIsOffAndLastFfAndFzDefrostsWereNormalAndSabbathIsDisabled)
+TEST(DefrostTimerIsSatisfiedMonitor, ShouldNotSetDefrostTimerIsSatisfiedErdWhenDefrostTimerCountReachesFreezerAbnormalRunTimeAndDemandResponseLevelIsOffAndLastFreshFoodAndFreezerDefrostsWereNormalAndSabbathIsDisabled)
 {
-   Given LastFzDefrostWasNormal();
-   And LastFfDefrostWasNormal();
+   Given LastFreezerDefrostWasNormal();
+   And LastFreshFoodDefrostWasNormal();
    And DemandResponseLevelIs(EnergyDemandLevel_Off);
    And SabbathModeIs(DISABLED);
    And DefrostTimerIsSatisfiedMonitorIsEnabled();
 
-   When DefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 
-   When DefrostTimerCountIs(CountEqualToFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountEqualToFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 }
 
@@ -483,14 +483,14 @@ TEST(DefrostTimerIsSatisfiedMonitor, ShouldNotSetDefrostTimerIsSatisfiedUntilDef
 {
    Given DemandResponseLevelIs(EnergyDemandLevel_Off);
    And SabbathModeIs(DISABLED);
-   And LastFfDefrostWasNormal();
-   And LastFzDefrostWasNormal();
+   And LastFreshFoodDefrostWasNormal();
+   And LastFreezerDefrostWasNormal();
    And DefrostTimerIsSatisfiedMonitorIsEnabled();
 
-   When DefrostTimerCountIs(CountEqualToFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountEqualToFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 
-   When DefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 
    DefrostTimerIsSatisfiedShouldBeWrittenWith(SET);
@@ -501,11 +501,11 @@ TEST(DefrostTimerIsSatisfiedMonitor, ShouldNotSetDefrostTimerIsSatisfiedUntilDef
 {
    Given DemandResponseLevelIs(EnergyDemandLevel_Off);
    And SabbathModeIs(ENABLED);
-   And LastFfDefrostWasNormal();
-   And LastFzDefrostWasNormal();
+   And LastFreshFoodDefrostWasNormal();
+   And LastFreezerDefrostWasNormal();
    And DefrostTimerIsSatisfiedMonitorIsEnabled();
 
-   When DefrostTimerCountIs(CountEqualToFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountEqualToFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 
    When DefrostTimerCountIs(CountLessThanSabbathMaxTimeBetweenDefrostsInSeconds);
@@ -515,21 +515,21 @@ TEST(DefrostTimerIsSatisfiedMonitor, ShouldNotSetDefrostTimerIsSatisfiedUntilDef
    When DefrostTimerCountIs(CountEqualToSabbathMaxTimeBetweenDefrostsInSeconds);
 }
 
-TEST(DefrostTimerIsSatisfiedMonitor, ShouldOnlySetDefrostTimerIsSatisfiedOnceWhenCountBecomesGreaterThanFzAbnormalRunTime)
+TEST(DefrostTimerIsSatisfiedMonitor, ShouldOnlySetDefrostTimerIsSatisfiedOnceWhenCountBecomesGreaterThanFreezerAbnormalRunTime)
 {
-   Given LastFfDefrostWasAbnormal();
+   Given LastFreshFoodDefrostWasAbnormal();
    And DemandResponseLevelIs(EnergyDemandLevel_Off);
    And SabbathModeIs(DISABLED);
    And DefrostTimerIsSatisfiedMonitorIsEnabled();
 
-   When DefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 
    DefrostTimerIsSatisfiedShouldBeWrittenWith(SET);
-   When DefrostTimerCountIs(CountEqualToFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountEqualToFreezerAbnormalDefrostRunTimeInSeconds);
 
    DefrostTimerIsSatisfiedShouldNotBeWrittenAgain();
-   When DefrostTimerCountIs(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds);
 }
 
 TEST(DefrostTimerIsSatisfiedMonitor, ShouldOnlySetDefrostTimerIsSatisfiedOnceWhenCountBecomesGreaterThanMaxTimeBetweenDefrosts)
@@ -566,47 +566,47 @@ TEST(DefrostTimerIsSatisfiedMonitor, ShouldOnlySetDefrostTimerIsSatisfiedOnceWhe
 
 TEST(DefrostTimerIsSatisfiedMonitor, ShouldBeAbleToSetDefrostTimerIsSatisfiedErdAfterBeingDisabledThenReenabled)
 {
-   Given LastFfDefrostWasAbnormal();
+   Given LastFreshFoodDefrostWasAbnormal();
    And DemandResponseLevelIs(EnergyDemandLevel_Off);
    And SabbathModeIs(DISABLED);
    And DefrostTimerIsSatisfiedMonitorIsEnabled();
 
-   When DefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 
    DefrostTimerIsSatisfiedShouldBeWrittenWith(SET);
-   When DefrostTimerCountIs(CountEqualToFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountEqualToFreezerAbnormalDefrostRunTimeInSeconds);
 
    DefrostTimerIsSatisfiedShouldBeWrittenWith(CLEAR);
    When DefrostTimerIsSatisfiedMonitorRequestIs(DefrostTimerIsSatisfied_Disable, 1);
    And DefrostTimerIsSatisfiedMonitorRequestIs(DefrostTimerIsSatisfied_Enable, 2);
 
-   When DefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 
    DefrostTimerIsSatisfiedShouldBeWrittenWith(SET);
-   When DefrostTimerCountIs(CountEqualToFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountEqualToFreezerAbnormalDefrostRunTimeInSeconds);
 }
 
 TEST(DefrostTimerIsSatisfiedMonitor, ShouldBeAbleToSetDefrostTimerIsSatisfiedErdAfterBeingResetWhileEnabled)
 {
-   Given LastFfDefrostWasAbnormal();
+   Given LastFreshFoodDefrostWasAbnormal();
    And DemandResponseLevelIs(EnergyDemandLevel_Off);
    And SabbathModeIs(DISABLED);
    And DefrostTimerIsSatisfiedMonitorIsEnabled();
 
-   When DefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 
    DefrostTimerIsSatisfiedShouldBeWrittenWith(SET);
-   When DefrostTimerCountIs(CountEqualToFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountEqualToFreezerAbnormalDefrostRunTimeInSeconds);
 
    DefrostTimerIsSatisfiedShouldBeWrittenWith(CLEAR);
    When DefrostTimerIsSatisfiedMonitorRequestIs(DefrostTimerIsSatisfied_Reset, 1);
 
-   When DefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
    DefrostTimerIsSatisfiedErdShouldBe(CLEAR);
 
    DefrostTimerIsSatisfiedShouldBeWrittenWith(SET);
-   When DefrostTimerCountIs(CountEqualToFzAbnormalDefrostRunTimeInSeconds);
+   When DefrostTimerCountIs(CountEqualToFreezerAbnormalDefrostRunTimeInSeconds);
 }

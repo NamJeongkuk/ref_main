@@ -28,17 +28,17 @@ static void State_Enabled(Fsm_t *fsm, const FsmSignal_t signal, const void *data
 
 static TimerTicks_t GetDoorHoldoffTime(DefrostDoorHoldoffTimer_t *instance)
 {
-   bool ffIsDefrostOnly;
+   bool freshFoodIsDefrostOnly;
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->freshFoodOnlyDefrost,
-      &ffIsDefrostOnly);
+      &freshFoodIsDefrostOnly);
 
-   if(ffIsDefrostOnly)
+   if(freshFoodIsDefrostOnly)
    {
-      return instance->_private.defrostParametricData->defrostDoorHoldoffTimeForFfOnlyInMinutes * MSEC_PER_MIN;
+      return instance->_private.defrostParametricData->defrostDoorHoldoffTimeForFreshFoodOnlyInMinutes * MSEC_PER_MIN;
    }
-   return instance->_private.defrostParametricData->defrostDoorHoldoffTimeForFfAndFzInMinutes * MSEC_PER_MIN;
+   return instance->_private.defrostParametricData->defrostDoorHoldoffTimeForFreshFoodAndFreezerInMinutes * MSEC_PER_MIN;
 }
 
 static TimerTicks_t GetMaxHoldoffTime(DefrostDoorHoldoffTimer_t *instance)
@@ -94,12 +94,12 @@ static bool FreezerDoorIsClosed(DefrostDoorHoldoffTimer_t *instance)
    return !actual;
 }
 
-static bool CcDoorIsClosed(DefrostDoorHoldoffTimer_t *instance)
+static bool ConvertibleCompartmentDoorIsClosed(DefrostDoorHoldoffTimer_t *instance)
 {
    bool actual;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->ccDoorOpenState,
+      instance->_private.config->convertibleCompartmentDoorOpenState,
       &actual);
 
    return !actual;
@@ -118,7 +118,7 @@ static bool AllFreshFoodDoorsAreClosed(DefrostDoorHoldoffTimer_t *instance)
 static bool HoldoffTimerShouldStart(DefrostDoorHoldoffTimer_t *instance)
 {
    return ((GetNumberOfEvaporators(instance) == 1) && (AllFreshFoodDoorsAreClosed(instance))) ||
-      ((GetNumberOfEvaporators(instance) == 2) && (FreezerDoorIsClosed(instance) && CcDoorIsClosed(instance)));
+      ((GetNumberOfEvaporators(instance) == 2) && (FreezerDoorIsClosed(instance) && ConvertibleCompartmentDoorIsClosed(instance)));
 }
 
 static void StartHoldoffTimer(DefrostDoorHoldoffTimer_t *instance)
@@ -188,7 +188,7 @@ static void DataModelUpdated(void *context, const void *_args)
          Fsm_SendSignal(&instance->_private.fsm, Signal_DoorClosed, NULL);
       }
    }
-   else if(args->erd == instance->_private.config->ccDoorOpenState)
+   else if(args->erd == instance->_private.config->convertibleCompartmentDoorOpenState)
    {
       if(*state)
       {

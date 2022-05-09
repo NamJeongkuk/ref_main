@@ -30,11 +30,11 @@ typedef struct
    Erd_t calculatedGridBlockErd;
    Erd_t previousGridBlocksErd;
    Erd_t calculatedGridLinesErd;
-   Erd_t ffFilteredTempErd;
-   Erd_t fzFilteredTempErd;
+   Erd_t freshFoodFilteredTempErd;
+   Erd_t freezerFilteredTempErd;
    Erd_t timerModuleErd;
-   const GridLineErds_t fzErds;
-   const GridLineErds_t ffErds;
+   const GridLineErds_t freezerErds;
+   const GridLineErds_t freshFoodErds;
 } GridBlockAndLinesConfig_t;
 
 typedef struct

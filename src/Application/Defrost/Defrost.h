@@ -24,12 +24,12 @@ typedef struct
    Erd_t freezerFilteredTemperatureErd; // TemperatureDegFx100_t
    Erd_t calculatedGridLinesErd; // CalculatedGridLines_t
    Erd_t defrostStateErd; // DefrostState_t
-   Erd_t numberOfFzAbnormalDefrostCyclesErd; // uint16_t
-   Erd_t fzDefrostWasAbnormalErd; // bool
-   Erd_t fzAbnormalDefrostCycleCountErd; // uint16_t
-   Erd_t fzDefrostCycleCountErd; // uint16_t
-   Erd_t ffDefrostHeaterDefrostVoteErd; // HeaterVotedState_t
-   Erd_t fzDefrostHeaterDefrostVoteErd; // HeaterVotedState_t
+   Erd_t numberOfFreezerAbnormalDefrostCyclesErd; // uint16_t
+   Erd_t freezerDefrostWasAbnormalErd; // bool
+   Erd_t freezerAbnormalDefrostCycleCountErd; // uint16_t
+   Erd_t freezerDefrostCycleCountErd; // uint16_t
+   Erd_t freshFoodDefrostHeaterDefrostVoteErd; // HeaterVotedState_t
+   Erd_t freezerDefrostHeaterDefrostVoteErd; // HeaterVotedState_t
    Erd_t defrostTimerCounterFsmStateErd; // DefrostTimerCounterFsmState_t
    Erd_t sealedSystemValvePositionErd; // ValvePosition_t
    Erd_t defrostTimerIsSatisfiedErd; // bool

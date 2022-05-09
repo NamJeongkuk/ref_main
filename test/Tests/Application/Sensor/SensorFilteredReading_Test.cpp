@@ -49,8 +49,8 @@ enum
    BadTempValue = BadFilterValue,
    FreshFoodFallbackDegFx100 = -500,
    FreezerFallbackDegFx100 = 500,
-   CcFreshFoodFallbackDegFx100 = FreshFoodFallbackDegFx100,
-   CcFreezerFallbackDegFx100 = 50,
+   ConvertibleCompartmentFreshFoodFallbackDegFx100 = FreshFoodFallbackDegFx100,
+   ConvertibleCompartmentFreezerFallbackDegFx100 = 50,
 
    AdcRawCount1 = 127,
    AdcRawCount2 = 255,
@@ -86,7 +86,7 @@ enum
    Erd_ConvertibleCompartmentFilteredTemp,
 
    Erd_TimerModuleDouble,
-   Erd_CcCabinetState,
+   Erd_ConvertibleCompartmentCabinetState,
 
    FilterSamplingTimeInMsec = 1 * MSEC_PER_SEC,
 
@@ -103,7 +103,7 @@ static const DataModel_TestDoubleConfigurationEntry_t erdTable[] = {
    { Erd_ConvertibleCompartmentUnfilteredTemp, sizeof(TemperatureDegFx100_t) },
    { Erd_ConvertibleCompartmentFilteredTemp, sizeof(TemperatureDegFx100_t) },
    { Erd_TimerModuleDouble, sizeof(TimerModule_t *) },
-   { Erd_CcCabinetState, sizeof(uint8_t) }
+   { Erd_ConvertibleCompartmentCabinetState, sizeof(uint8_t) }
 };
 
 static const Mapper_SmallLookupTableMapping_t mappingsForFilter[] = {
@@ -123,9 +123,9 @@ static const Mapper_SmallLookupTableConfiguration_t configurationForMappings = {
    NUM_ELEMENTS(mappingsForFilter)
 };
 
-static const SensorDataCcSensorType_t ccSensorData = {
-   .ffFallbackValueDegFx100 = -500,
-   .fzFallbackValueDegFx100 = 50
+static const SensorDataConvertibleCompartmentSensorType_t convertibleCompartmentSensorData = {
+   .freshFoodFallbackValueDegFx100 = -500,
+   .freezerFallbackValueDegFx100 = 50
 };
 
 TEST_GROUP(SensorFilteredReading)
@@ -187,9 +187,9 @@ TEST_GROUP(SensorFilteredReading)
       config.channelData = channelData;
       config.channelDataCount = NUM_ELEMENTS(channelData);
       config.timerModule = Erd_TimerModuleDouble;
-      config.ccCabinetStateErd = Erd_CcCabinetState;
+      config.convertibleCompartmentCabinetStateErd = Erd_ConvertibleCompartmentCabinetState;
       config.convertibleCompartmentCabinetIndex = 2;
-      config.ccSensorData = &ccSensorData;
+      config.convertibleCompartmentSensorData = &convertibleCompartmentSensorData;
       config.periodicCheckRateInMsec = FilterSamplingTimeInMsec;
    }
 
@@ -210,10 +210,10 @@ TEST_GROUP(SensorFilteredReading)
       DataModel_Write(dataModel, erd, &adcCounts);
    }
 
-   void GivenCcCabinetStateIsA(uint8_t state)
+   void GivenConvertibleCompartmentCabinetStateIsA(uint8_t state)
    {
       uint8_t cabinetState = state;
-      DataModel_Write(dataModel, Erd_CcCabinetState, &cabinetState);
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentCabinetState, &cabinetState);
    }
 
    void TheFilteredOutputErdShouldBe(Erd_t erd, TemperatureDegFx100_t temperature)
@@ -649,34 +649,34 @@ TEST(SensorFilteredReading, ShouldResetAndReSeedFilterAfterEveryBadSensorToGoodS
 TEST(SensorFilteredReading, ShouldInitWithFreezerFallbackTempForConvertibleCompartmentWhenBadAdcCountAndCabinetIsActingLikeFreezer)
 {
    GivenRawAdcCountErdIs(Erd_ConvertibleCompartmentRawAdcCount, AdcCountForBadMapping);
-   And GivenCcCabinetStateIsA(CcCabinetState_Freezer);
+   And GivenConvertibleCompartmentCabinetStateIsA(ConvertibleCompartmentCabinetState_Freezer);
    WhenTheModuleIsInitialized();
 
    TheUnfilteredErdShouldBe(Erd_ConvertibleCompartmentUnfilteredTemp, BadTempValue);
-   TheFilteredOutputErdShouldBe(Erd_ConvertibleCompartmentFilteredTemp, CcFreezerFallbackDegFx100);
+   TheFilteredOutputErdShouldBe(Erd_ConvertibleCompartmentFilteredTemp, ConvertibleCompartmentFreezerFallbackDegFx100);
 }
 
 TEST(SensorFilteredReading, ShouldInitWithFreshFoodFallbackTempForConvertibleCompartmentWhenBadAdcCountAndCabinetIsActingLikeFreshFood)
 {
    GivenRawAdcCountErdIs(Erd_ConvertibleCompartmentRawAdcCount, AdcCountForBadMapping);
-   And GivenCcCabinetStateIsA(CcCabinetState_FreshFood);
+   And GivenConvertibleCompartmentCabinetStateIsA(ConvertibleCompartmentCabinetState_FreshFood);
    WhenTheModuleIsInitialized();
 
    TheUnfilteredErdShouldBe(Erd_ConvertibleCompartmentUnfilteredTemp, BadTempValue);
-   TheFilteredOutputErdShouldBe(Erd_ConvertibleCompartmentFilteredTemp, CcFreshFoodFallbackDegFx100);
+   TheFilteredOutputErdShouldBe(Erd_ConvertibleCompartmentFilteredTemp, ConvertibleCompartmentFreshFoodFallbackDegFx100);
 }
 
 TEST(SensorFilteredReading, ShouldChangeFallbackValueForConvertibleCompartmentWhenCabinetStateChanges)
 {
    GivenRawAdcCountErdIs(Erd_ConvertibleCompartmentRawAdcCount, AdcCountForBadMapping);
-   And GivenCcCabinetStateIsA(CcCabinetState_FreshFood);
+   And GivenConvertibleCompartmentCabinetStateIsA(ConvertibleCompartmentCabinetState_FreshFood);
    WhenTheModuleIsInitialized();
 
    TheUnfilteredErdShouldBe(Erd_ConvertibleCompartmentUnfilteredTemp, BadTempValue);
-   TheFilteredOutputErdShouldBe(Erd_ConvertibleCompartmentFilteredTemp, CcFreshFoodFallbackDegFx100);
+   TheFilteredOutputErdShouldBe(Erd_ConvertibleCompartmentFilteredTemp, ConvertibleCompartmentFreshFoodFallbackDegFx100);
 
-   Now GivenCcCabinetStateIsA(CcCabinetState_Freezer);
+   Now GivenConvertibleCompartmentCabinetStateIsA(ConvertibleCompartmentCabinetState_Freezer);
    After(FilterSamplingTimeInMsec);
    TheUnfilteredErdShouldBe(Erd_ConvertibleCompartmentUnfilteredTemp, BadTempValue);
-   TheFilteredOutputErdShouldBe(Erd_ConvertibleCompartmentFilteredTemp, CcFreezerFallbackDegFx100);
+   TheFilteredOutputErdShouldBe(Erd_ConvertibleCompartmentFilteredTemp, ConvertibleCompartmentFreezerFallbackDegFx100);
 }

@@ -17,12 +17,12 @@ typedef struct
 {
    Erd_t doorAccelerationRequestErd; // DoorAccelerationRequest_t
    Erd_t doorAccelerationFsmStateErd; // DoorAccelerationFsmState_t
-   Erd_t fzDoorAccelerationCountsErd; // uint32_t
-   Erd_t ffDoorAccelerationCountsErd; // uint32_t
-   Erd_t leftHandFfDoorIsOpenErd; // bool
-   Erd_t rightHandFfDoorIsOpenErd; // bool
+   Erd_t freezerDoorAccelerationCountsErd; // uint32_t
+   Erd_t freshFoodDoorAccelerationCountsErd; // uint32_t
+   Erd_t leftHandFreshFoodDoorIsOpenErd; // bool
+   Erd_t rightHandFreshFoodDoorIsOpenErd; // bool
    Erd_t doorInDoorIsOpenErd; // bool
-   Erd_t fzDoorIsOpenErd; // bool
+   Erd_t freezerDoorIsOpenErd; // bool
    Erd_t timerModuleErd; // TimerModule_t *
 } DoorAccelerationConfig_t;
 

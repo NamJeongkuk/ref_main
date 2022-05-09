@@ -21,13 +21,13 @@ typedef struct
    Erd_t defrostTimerCounterRequestErd; // DefrostTimerCounterRequest_t
    Erd_t ramDefrostTimerCountInSecondsErd; // uint32_t
    Erd_t doorAccelerationRequestErd; // DoorAccelerationRequest_t
-   Erd_t ffDoorAccelerationCountsErd; // uint16_t
-   Erd_t fzDoorAccelerationCountsErd; // uint16_t
+   Erd_t freshFoodDoorAccelerationCountsErd; // uint16_t
+   Erd_t freezerDoorAccelerationCountsErd; // uint16_t
    Erd_t defrostTimerIsSatisfiedMonitorRequestErd; // DefrostTimerIsSatisfiedMonitorRequest_t
    Erd_t compressorResolvedSpeedErd; // CompressorVotedSpeed_t
    Erd_t compressorSpeedConfigErd; // CompressorSpeedConfig_t
    Erd_t sabbathModeErd; // bool
-   Erd_t fzDefrostWasAbnormalErd; // bool
+   Erd_t freezerDefrostWasAbnormalErd; // bool
    Erd_t maxTimeBetweenDefrostsInMinutesErd; // uint16_t
    Erd_t eepromDefrostTimerCountInSecondsErd; // uint32_t
    Erd_t timerModuleErd; // TimerModule_t *

@@ -276,24 +276,24 @@ static void UpdateSensorValues(void *context)
    }
 }
 
-static void SetCcCabinetThermistorFallbackValue(SensorFilteredReading_t *instance, const uint8_t ccCabinetState)
+static void SetConvertibleCompartmentCabinetThermistorFallbackValue(SensorFilteredReading_t *instance, const uint8_t convertibleCompartmentCabinetState)
 {
-   if(ccCabinetState == CcCabinetState_FreshFood)
+   if(convertibleCompartmentCabinetState == ConvertibleCompartmentCabinetState_FreshFood)
    {
-      instance->_private.configuration->channelData[instance->_private.configuration->convertibleCompartmentCabinetIndex].fallbackData.fallbackValue = instance->_private.configuration->ccSensorData->ffFallbackValueDegFx100;
+      instance->_private.configuration->channelData[instance->_private.configuration->convertibleCompartmentCabinetIndex].fallbackData.fallbackValue = instance->_private.configuration->convertibleCompartmentSensorData->freshFoodFallbackValueDegFx100;
    }
-   else // CcCabinetState_Freezer
+   else // ConvertibleCompartmentCabinetState_Freezer
    {
-      instance->_private.configuration->channelData[instance->_private.configuration->convertibleCompartmentCabinetIndex].fallbackData.fallbackValue = instance->_private.configuration->ccSensorData->fzFallbackValueDegFx100;
+      instance->_private.configuration->channelData[instance->_private.configuration->convertibleCompartmentCabinetIndex].fallbackData.fallbackValue = instance->_private.configuration->convertibleCompartmentSensorData->freezerFallbackValueDegFx100;
    }
 }
 
-static void CcCabinetStateChangedCallback(void *context, const void *args)
+static void ConvertibleCompartmentCabinetStateChangedCallback(void *context, const void *args)
 {
    REINTERPRET(instance, context, SensorFilteredReading_t *);
-   REINTERPRET(ccCabinetState, args, const CcCabinetStateType_t *);
+   REINTERPRET(convertibleCompartmentCabinetState, args, const ConvertibleCompartmentCabinetStateType_t *);
 
-   SetCcCabinetThermistorFallbackValue(instance, *ccCabinetState);
+   SetConvertibleCompartmentCabinetThermistorFallbackValue(instance, *convertibleCompartmentCabinetState);
 }
 
 static void InitializeFilter(SensorFilteredReading_t *instance)
@@ -320,11 +320,11 @@ static void InitializeFilter(SensorFilteredReading_t *instance)
    }
 }
 
-static void InitializeCcCabinetFallbackValue(SensorFilteredReading_t *instance)
+static void InitializeConvertibleCompartmentCabinetFallbackValue(SensorFilteredReading_t *instance)
 {
-   CcCabinetStateType_t ccCabinetState;
-   DataModel_Read(instance->_private.dataModel, instance->_private.configuration->ccCabinetStateErd, &ccCabinetState);
-   SetCcCabinetThermistorFallbackValue(instance, ccCabinetState);
+   ConvertibleCompartmentCabinetStateType_t convertibleCompartmentCabinetState;
+   DataModel_Read(instance->_private.dataModel, instance->_private.configuration->convertibleCompartmentCabinetStateErd, &convertibleCompartmentCabinetState);
+   SetConvertibleCompartmentCabinetThermistorFallbackValue(instance, convertibleCompartmentCabinetState);
 }
 
 void SensorFilteredReading_Init(
@@ -335,17 +335,17 @@ void SensorFilteredReading_Init(
    instance->_private.configuration = config;
    instance->_private.dataModel = dataModel;
 
-   InitializeCcCabinetFallbackValue(instance);
+   InitializeConvertibleCompartmentCabinetFallbackValue(instance);
    InitializeFilter(instance);
 
    EventSubscription_Init(
-      &instance->_private.onCcCabinetStateChanged,
+      &instance->_private.onConvertibleCompartmentCabinetStateChanged,
       instance,
-      CcCabinetStateChangedCallback);
+      ConvertibleCompartmentCabinetStateChangedCallback);
    DataModel_Subscribe(
       instance->_private.dataModel,
-      instance->_private.configuration->ccCabinetStateErd,
-      &instance->_private.onCcCabinetStateChanged);
+      instance->_private.configuration->convertibleCompartmentCabinetStateErd,
+      &instance->_private.onConvertibleCompartmentCabinetStateChanged);
 
    TimerModule_StartPeriodic(
       DataModelErdPointerAccess_GetTimerModule(dataModel, instance->_private.configuration->timerModule),

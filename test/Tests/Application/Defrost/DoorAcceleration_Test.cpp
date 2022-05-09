@@ -38,48 +38,48 @@ enum
 };
 
 static const DefrostData_t defrostData = {
-   .fzDoorIncrementFactorInSecondsPerSecond = 348,
-   .ffDoorIncrementFactorInSecondsPerSecond = 87,
-   .fzAbnormalRunTimeInMinutes = 6 * 60,
+   .freezerDoorIncrementFactorInSecondsPerSecond = 348,
+   .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
+   .freezerAbnormalRunTimeInMinutes = 6 * 60,
    .maxTimeBetweenDefrostsInMinutes = 32 * 60,
-   .dmFzDefrostTemperatureInDegFx100 = 1500,
-   .prechillFzSetpointInDegFx100 = 600,
-   .prechillFfSetpointInDegFx100 = 4600,
-   .prechillCcSetpointInDegFx100 = 600,
-   .prechillFzEvapExitTemperatureInDegFx100 = -3000,
-   .prechillCcEvapExitTemperatureInDegFx100 = -3000,
+   .dmFreezerDefrostTemperatureInDegFx100 = 1500,
+   .prechillFreezerSetpointInDegFx100 = 600,
+   .prechillFreshFoodSetpointInDegFx100 = 4600,
+   .prechillConvertibleCompartmentSetpointInDegFx100 = 600,
+   .prechillFreezerEvapExitTemperatureInDegFx100 = -3000,
+   .prechillConvertibleCompartmentEvapExitTemperatureInDegFx100 = -3000,
    .maxPrechillTimeInMinutes = 10,
    .maxPrechillTimeForFreshFoodOnlyDefrostInMinutes = 20,
-   .defrostDoorHoldoffTimeForFfAndFzInMinutes = 60,
-   .defrostDoorHoldoffTimeForFfOnlyInMinutes = 50,
+   .defrostDoorHoldoffTimeForFreshFoodAndFreezerInMinutes = 60,
+   .defrostDoorHoldoffTimeForFreshFoodOnlyInMinutes = 50,
    .defrostMaxHoldoffTimeInMinutes = 60,
    .maxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds = 0,
-   .ffFanDefrostFfEvapExitTemperatureInDegFx100 = 3600,
-   .ffFanDefrostFfFanMaxOnTimeInMinutes = 10,
-   .ccFanDefrostCcEvapExitTemperatureInDegFx100 = 3200,
-   .ccFanDefrostCcFanMaxOnTimeInMinutes = 10,
-   .fzDefrostHeaterMaxOnTimeInMinutes = 60,
-   .fzAbnormalDefrostHeaterMaxOnTimeInMinutes = 32,
-   .fzDefrostTerminationTemperatureInDegFx100 = 5900,
-   .ffDefrostTerminationTemperatureInDegFx100 = 4460,
-   .ccDefrostTerminationTemperatureInDegFx100 = 4460,
-   .ffDefrostHeaterMaxOnTimeInMinutes = 60,
-   .ffAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
-   .ccDefrostHeaterMaxOnTimeInMinutes = 60,
-   .ccAsFfAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
-   .ccAsFzAbnormalDefrostHeaterMaxOnTimeInMinutes = 35,
+   .freshFoodFanDefrostFreshFoodEvapExitTemperatureInDegFx100 = 3600,
+   .freshFoodFanDefrostFreshFoodFanMaxOnTimeInMinutes = 10,
+   .convertibleCompartmentFanDefrostConvertibleCompartmentEvapExitTemperatureInDegFx100 = 3200,
+   .convertibleCompartmentFanDefrostConvertibleCompartmentFanMaxOnTimeInMinutes = 10,
+   .freezerDefrostHeaterMaxOnTimeInMinutes = 60,
+   .freezerAbnormalDefrostHeaterMaxOnTimeInMinutes = 32,
+   .freezerDefrostTerminationTemperatureInDegFx100 = 5900,
+   .freshFoodDefrostTerminationTemperatureInDegFx100 = 4460,
+   .convertibleCompartmentDefrostTerminationTemperatureInDegFx100 = 4460,
+   .freshFoodDefrostHeaterMaxOnTimeInMinutes = 60,
+   .freshFoodAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
+   .convertibleCompartmentDefrostHeaterMaxOnTimeInMinutes = 60,
+   .convertibleCompartmentAsFreshFoodAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
+   .convertibleCompartmentAsFreezerAbnormalDefrostHeaterMaxOnTimeInMinutes = 35,
    .defrostDwellTimeInMinutes = 7,
-   .ffAndFzPostDwellFzExitTemperatureInDegFx100 = -1000,
-   .ffAndFzPostDwellFzExitTimeInMinutes = 10,
+   .freshFoodAndFreezerPostDwellFreezerExitTemperatureInDegFx100 = -1000,
+   .freshFoodAndFreezerPostDwellFreezerExitTimeInMinutes = 10,
    .dwellThreeWayValvePosition = ValvePosition_A,
-   .postDwellThreeWayValvePositionForFfAndFz = ValvePosition_A,
-   .ffPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
-   .fzPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
-   .numberOfFfDefrostsBeforeFzDefrost = 2,
-   .numberOfFfDefrostsBeforeAbnormalFzDefrost = 1,
-   .doorHoldoffTimeForFfAndFzInMinutes = 60,
-   .ffOnlyPostDwellExitTimeInMinutes = 10,
-   .dsmFzSetpointTemperatureInDegFx100 = 200,
+   .postDwellThreeWayValvePositionForFreshFoodAndFreezer = ValvePosition_A,
+   .freshFoodPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
+   .freezerPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
+   .numberOfFreshFoodDefrostsBeforeFreezerDefrost = 2,
+   .numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost = 1,
+   .doorHoldoffTimeForFreshFoodAndFreezerInMinutes = 60,
+   .freshFoodOnlyPostDwellExitTimeInMinutes = 10,
+   .dsmFreezerSetpointTemperatureInDegFx100 = 200,
    .defrostPeriodicTimeoutInSeconds = 1,
    .threeWayValvePositionToExitIdle = ValvePosition_B,
    .threeWayValvePositionForMaxPrechillHoldoff = ValvePosition_B,
@@ -89,12 +89,12 @@ static const DefrostData_t defrostData = {
 static const DoorAccelerationConfig_t config = {
    .doorAccelerationRequestErd = Erd_DoorAccelerationRequest,
    .doorAccelerationFsmStateErd = Erd_DoorAccelerationFsmState,
-   .fzDoorAccelerationCountsErd = Erd_DefrostFzDoorAccelerationCount,
-   .ffDoorAccelerationCountsErd = Erd_DefrostFfDoorAccelerationCount,
-   .leftHandFfDoorIsOpenErd = Erd_LeftHandFfDoorIsOpen,
-   .rightHandFfDoorIsOpenErd = Erd_RightHandFfDoorIsOpen,
+   .freezerDoorAccelerationCountsErd = Erd_DefrostFreezerDoorAccelerationCount,
+   .freshFoodDoorAccelerationCountsErd = Erd_DefrostFreshFoodDoorAccelerationCount,
+   .leftHandFreshFoodDoorIsOpenErd = Erd_LeftHandFreshFoodDoorIsOpen,
+   .rightHandFreshFoodDoorIsOpenErd = Erd_RightHandFreshFoodDoorIsOpen,
    .doorInDoorIsOpenErd = Erd_DoorInDoorIsOpen,
-   .fzDoorIsOpenErd = Erd_FzDoorIsOpen,
+   .freezerDoorIsOpenErd = Erd_FreezerDoorIsOpen,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -148,40 +148,40 @@ TEST_GROUP(DoorAcceleration)
       DoorAccelerationFsmStateShouldBe(DoorAccelerationFsmState_Enabled);
    }
 
-   void FzDoorAccelerationIs(uint32_t count)
+   void FreezerDoorAccelerationIs(uint32_t count)
    {
-      DataModel_Write(dataModel, Erd_DefrostFzDoorAccelerationCount, &count);
+      DataModel_Write(dataModel, Erd_DefrostFreezerDoorAccelerationCount, &count);
    }
 
-   void FfDoorAccelerationIs(uint32_t count)
+   void FreshFoodDoorAccelerationIs(uint32_t count)
    {
-      DataModel_Write(dataModel, Erd_DefrostFfDoorAccelerationCount, &count);
+      DataModel_Write(dataModel, Erd_DefrostFreshFoodDoorAccelerationCount, &count);
    }
 
-   void FzDoorAccelerationShouldBe(uint32_t expectedCount)
+   void FreezerDoorAccelerationShouldBe(uint32_t expectedCount)
    {
       uint32_t actualCount;
-      DataModel_Read(dataModel, Erd_DefrostFzDoorAccelerationCount, &actualCount);
+      DataModel_Read(dataModel, Erd_DefrostFreezerDoorAccelerationCount, &actualCount);
 
       CHECK_EQUAL(expectedCount, actualCount);
    }
 
-   void FfDoorAccelerationShouldBe(uint32_t expectedCount)
+   void FreshFoodDoorAccelerationShouldBe(uint32_t expectedCount)
    {
       uint32_t actualCount;
-      DataModel_Read(dataModel, Erd_DefrostFfDoorAccelerationCount, &actualCount);
+      DataModel_Read(dataModel, Erd_DefrostFreshFoodDoorAccelerationCount, &actualCount);
 
       CHECK_EQUAL(expectedCount, actualCount);
    }
 
-   void LeftFfDoorIs(bool state)
+   void LeftFreshFoodDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_LeftHandFfDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_LeftHandFreshFoodDoorIsOpen, &state);
    }
 
-   void RightFfDoorIs(bool state)
+   void RightFreshFoodDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_RightHandFfDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_RightHandFreshFoodDoorIsOpen, &state);
    }
 
    void DoorInDoorDoorIs(bool state)
@@ -189,9 +189,9 @@ TEST_GROUP(DoorAcceleration)
       DataModel_Write(dataModel, Erd_DoorInDoorIsOpen, &state);
    }
 
-   void FzDoorIs(bool state)
+   void FreezerDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_FzDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_FreezerDoorIsOpen, &state);
    }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
@@ -208,13 +208,13 @@ TEST(DoorAcceleration, ShouldInitializeAndBeDisabled)
 
 TEST(DoorAcceleration, ShouldResetDoorAccelerationsToZeroWhenInitialized)
 {
-   Given FfDoorAccelerationIs(SomeRandomAcceleration);
-   Given FzDoorAccelerationIs(AnotherRandomAcceleration);
+   Given FreshFoodDoorAccelerationIs(SomeRandomAcceleration);
+   Given FreezerDoorAccelerationIs(AnotherRandomAcceleration);
 
    When DoorAccelerationIsInitialized();
 
-   FfDoorAccelerationShouldBe(0);
-   FzDoorAccelerationShouldBe(0);
+   FreshFoodDoorAccelerationShouldBe(0);
+   FreezerDoorAccelerationShouldBe(0);
 }
 
 TEST(DoorAcceleration, ShouldEnableWhenEnableRequestReceivedWhileDisabled)
@@ -243,109 +243,109 @@ TEST(DoorAcceleration, ShouldDisableWhenDisableRequestReceivedWhileEnabled)
 
 TEST(DoorAcceleration, ShouldResetDoorAccelerationsToZeroWhenDisabled)
 {
-   Given FfDoorAccelerationIs(SomeRandomAcceleration);
-   Given FzDoorAccelerationIs(AnotherRandomAcceleration);
+   Given FreshFoodDoorAccelerationIs(SomeRandomAcceleration);
+   Given FreezerDoorAccelerationIs(AnotherRandomAcceleration);
    Given DoorAccelerationIsEnabled();
 
    When DoorAccelerationRequestIs(DoorAcceleration_Disable, 2);
 
-   FfDoorAccelerationShouldBe(0);
-   FzDoorAccelerationShouldBe(0);
+   FreshFoodDoorAccelerationShouldBe(0);
+   FreezerDoorAccelerationShouldBe(0);
    DoorAccelerationFsmStateShouldBe(DoorAccelerationFsmState_Disabled);
 }
 
 TEST(DoorAcceleration, ShouldResetDoorAccelerationsToZeroWhenResetWhileEnabled)
 {
    Given DoorAccelerationIsEnabled();
-   Given FfDoorAccelerationIs(SomeRandomAcceleration);
-   Given FzDoorAccelerationIs(AnotherRandomAcceleration);
+   Given FreshFoodDoorAccelerationIs(SomeRandomAcceleration);
+   Given FreezerDoorAccelerationIs(AnotherRandomAcceleration);
 
    When DoorAccelerationRequestIs(DoorAcceleration_Reset, 2);
 
-   FfDoorAccelerationShouldBe(0);
-   FzDoorAccelerationShouldBe(0);
+   FreshFoodDoorAccelerationShouldBe(0);
+   FreezerDoorAccelerationShouldBe(0);
    DoorAccelerationFsmStateShouldBe(DoorAccelerationFsmState_Enabled);
 }
 
-TEST(DoorAcceleration, ShouldIncrementFfDoorAccelerationWhenLeftHandFfDoorIsOpenAfterPeriodicTimeout)
+TEST(DoorAcceleration, ShouldIncrementFreshFoodDoorAccelerationWhenLeftHandFreshFoodDoorIsOpenAfterPeriodicTimeout)
 {
-   Given FfDoorAccelerationIs(0);
+   Given FreshFoodDoorAccelerationIs(0);
    Given DoorAccelerationIsEnabled();
 
-   When LeftFfDoorIs(Open);
+   When LeftFreshFoodDoorIs(Open);
 
    After(1 * MSEC_PER_SEC - 1);
-   FfDoorAccelerationShouldBe(0);
+   FreshFoodDoorAccelerationShouldBe(0);
 
    After(1);
-   FfDoorAccelerationShouldBe(0 + defrostData.ffDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationShouldBe(0 + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 }
 
-TEST(DoorAcceleration, ShouldIncrementFfDoorAccelerationWhenRightHandFfDoorIsOpenAfterPeriodicTimeout)
+TEST(DoorAcceleration, ShouldIncrementFreshFoodDoorAccelerationWhenRightHandFreshFoodDoorIsOpenAfterPeriodicTimeout)
 {
-   Given FfDoorAccelerationIs(0);
+   Given FreshFoodDoorAccelerationIs(0);
    Given DoorAccelerationIsEnabled();
 
-   When RightFfDoorIs(Open);
+   When RightFreshFoodDoorIs(Open);
 
    After(1 * MSEC_PER_SEC - 1);
-   FfDoorAccelerationShouldBe(0);
+   FreshFoodDoorAccelerationShouldBe(0);
 
    After(1);
-   FfDoorAccelerationShouldBe(0 + defrostData.ffDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationShouldBe(0 + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 }
 
-TEST(DoorAcceleration, ShouldIncrementFfDoorAccelerationWhenDoorInDoorIsOpenAfterPeriodicTimeout)
+TEST(DoorAcceleration, ShouldIncrementFreshFoodDoorAccelerationWhenDoorInDoorIsOpenAfterPeriodicTimeout)
 {
-   Given FfDoorAccelerationIs(0);
+   Given FreshFoodDoorAccelerationIs(0);
    Given DoorAccelerationIsEnabled();
 
    When DoorInDoorDoorIs(Open);
 
    After(1 * MSEC_PER_SEC - 1);
-   FfDoorAccelerationShouldBe(0);
+   FreshFoodDoorAccelerationShouldBe(0);
 
    After(1);
-   FfDoorAccelerationShouldBe(0 + defrostData.ffDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationShouldBe(0 + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 }
 
-TEST(DoorAcceleration, ShouldIncrementFfDoorAccelerationWhenLeftHandFfDoorIsOpenForMultipleSeconds)
+TEST(DoorAcceleration, ShouldIncrementFreshFoodDoorAccelerationWhenLeftHandFreshFoodDoorIsOpenForMultipleSeconds)
 {
-   Given FfDoorAccelerationIs(0);
+   Given FreshFoodDoorAccelerationIs(0);
    Given DoorAccelerationIsEnabled();
 
-   When LeftFfDoorIs(Open);
+   When LeftFreshFoodDoorIs(Open);
 
    for(uint8_t i = 0; i < 10; i++)
    {
       After(1 * MSEC_PER_SEC - 1);
-      FfDoorAccelerationShouldBe(i * defrostData.ffDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationShouldBe(i * defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
       After(1);
-      FfDoorAccelerationShouldBe((i + 1) * defrostData.ffDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationShouldBe((i + 1) * defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    }
 }
 
-TEST(DoorAcceleration, ShouldIncrementFfDoorAccelerationWhenRightHandFfDoorIsOpenForMultipleSeconds)
+TEST(DoorAcceleration, ShouldIncrementFreshFoodDoorAccelerationWhenRightHandFreshFoodDoorIsOpenForMultipleSeconds)
 {
-   Given FfDoorAccelerationIs(0);
+   Given FreshFoodDoorAccelerationIs(0);
    Given DoorAccelerationIsEnabled();
 
-   When RightFfDoorIs(Open);
+   When RightFreshFoodDoorIs(Open);
 
    for(uint8_t i = 0; i < 10; i++)
    {
       After(1 * MSEC_PER_SEC - 1);
-      FfDoorAccelerationShouldBe(i * defrostData.ffDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationShouldBe(i * defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
       After(1);
-      FfDoorAccelerationShouldBe((i + 1) * defrostData.ffDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationShouldBe((i + 1) * defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    }
 }
 
-TEST(DoorAcceleration, ShouldIncrementFfDoorAccelerationWhenDoorInDoorIsOpenForMultipleSeconds)
+TEST(DoorAcceleration, ShouldIncrementFreshFoodDoorAccelerationWhenDoorInDoorIsOpenForMultipleSeconds)
 {
-   Given FfDoorAccelerationIs(0);
+   Given FreshFoodDoorAccelerationIs(0);
    Given DoorAccelerationIsEnabled();
 
    When DoorInDoorDoorIs(Open);
@@ -353,144 +353,144 @@ TEST(DoorAcceleration, ShouldIncrementFfDoorAccelerationWhenDoorInDoorIsOpenForM
    for(uint8_t i = 0; i < 10; i++)
    {
       After(1 * MSEC_PER_SEC - 1);
-      FfDoorAccelerationShouldBe(i * defrostData.ffDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationShouldBe(i * defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
       After(1);
-      FfDoorAccelerationShouldBe((i + 1) * defrostData.ffDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationShouldBe((i + 1) * defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    }
 }
 
-TEST(DoorAcceleration, ShouldIncrementFzDoorAccelerationWhenFzDoorIsOpenAfterPeriodicTimeout)
+TEST(DoorAcceleration, ShouldIncrementFreezerDoorAccelerationWhenFreezerDoorIsOpenAfterPeriodicTimeout)
 {
-   Given FzDoorAccelerationIs(0);
+   Given FreezerDoorAccelerationIs(0);
    Given DoorAccelerationIsEnabled();
 
-   When FzDoorIs(Open);
+   When FreezerDoorIs(Open);
 
    After(1 * MSEC_PER_SEC - 1);
-   FzDoorAccelerationShouldBe(0);
+   FreezerDoorAccelerationShouldBe(0);
 
    After(1);
-   FzDoorAccelerationShouldBe(0 + defrostData.fzDoorIncrementFactorInSecondsPerSecond);
+   FreezerDoorAccelerationShouldBe(0 + defrostData.freezerDoorIncrementFactorInSecondsPerSecond);
 }
 
-TEST(DoorAcceleration, ShouldIncrementFzDoorAccelerationWhenFzDoorIsOpenForMultipleSeconds)
+TEST(DoorAcceleration, ShouldIncrementFreezerDoorAccelerationWhenFreezerDoorIsOpenForMultipleSeconds)
 {
-   Given FzDoorAccelerationIs(0);
+   Given FreezerDoorAccelerationIs(0);
    Given DoorAccelerationIsEnabled();
 
-   When FzDoorIs(Open);
+   When FreezerDoorIs(Open);
 
    for(uint8_t i = 0; i < 10; i++)
    {
       After(1 * MSEC_PER_SEC - 1);
-      FzDoorAccelerationShouldBe(i * defrostData.fzDoorIncrementFactorInSecondsPerSecond);
+      FreezerDoorAccelerationShouldBe(i * defrostData.freezerDoorIncrementFactorInSecondsPerSecond);
 
       After(1);
-      FzDoorAccelerationShouldBe((i + 1) * defrostData.fzDoorIncrementFactorInSecondsPerSecond);
+      FreezerDoorAccelerationShouldBe((i + 1) * defrostData.freezerDoorIncrementFactorInSecondsPerSecond);
    }
 }
 
-TEST(DoorAcceleration, ShouldIncrementBothFfAndFzDoorAccelerationsWhenAFfDoorIsOpenAndAFzDoorIsOpenAfterPeriodicTimeout)
+TEST(DoorAcceleration, ShouldIncrementBothFreshFoodAndFreezerDoorAccelerationsWhenAFreshFoodDoorIsOpenAndAFreezerDoorIsOpenAfterPeriodicTimeout)
 {
-   Given FfDoorAccelerationIs(0);
-   Given FzDoorAccelerationIs(0);
+   Given FreshFoodDoorAccelerationIs(0);
+   Given FreezerDoorAccelerationIs(0);
    Given DoorAccelerationIsEnabled();
 
-   When LeftFfDoorIs(Open);
-   When FzDoorIs(Open);
+   When LeftFreshFoodDoorIs(Open);
+   When FreezerDoorIs(Open);
 
    After(1 * MSEC_PER_SEC - 1);
-   FfDoorAccelerationShouldBe(0);
-   FzDoorAccelerationShouldBe(0);
+   FreshFoodDoorAccelerationShouldBe(0);
+   FreezerDoorAccelerationShouldBe(0);
 
    After(1);
-   FfDoorAccelerationShouldBe(0 + defrostData.ffDoorIncrementFactorInSecondsPerSecond);
-   FzDoorAccelerationShouldBe(0 + defrostData.fzDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationShouldBe(0 + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+   FreezerDoorAccelerationShouldBe(0 + defrostData.freezerDoorIncrementFactorInSecondsPerSecond);
 }
 
-TEST(DoorAcceleration, ShouldIncrementBothFfAndFzDoorAccelerationsWhenAFfDoorIsOpenAndAFzDoorIsOpenForMultipleSeconds)
+TEST(DoorAcceleration, ShouldIncrementBothFreshFoodAndFreezerDoorAccelerationsWhenAFreshFoodDoorIsOpenAndAFreezerDoorIsOpenForMultipleSeconds)
 {
-   Given FfDoorAccelerationIs(0);
-   Given FzDoorAccelerationIs(0);
+   Given FreshFoodDoorAccelerationIs(0);
+   Given FreezerDoorAccelerationIs(0);
    Given DoorAccelerationIsEnabled();
 
-   When LeftFfDoorIs(Open);
-   When FzDoorIs(Open);
+   When LeftFreshFoodDoorIs(Open);
+   When FreezerDoorIs(Open);
 
    for(uint8_t i = 0; i < 10; i++)
    {
       After(1 * MSEC_PER_SEC - 1);
-      FfDoorAccelerationShouldBe(i * defrostData.ffDoorIncrementFactorInSecondsPerSecond);
-      FzDoorAccelerationShouldBe(i * defrostData.fzDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationShouldBe(i * defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+      FreezerDoorAccelerationShouldBe(i * defrostData.freezerDoorIncrementFactorInSecondsPerSecond);
 
       After(1);
-      FfDoorAccelerationShouldBe((i + 1) * defrostData.ffDoorIncrementFactorInSecondsPerSecond);
-      FzDoorAccelerationShouldBe((i + 1) * defrostData.fzDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationShouldBe((i + 1) * defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+      FreezerDoorAccelerationShouldBe((i + 1) * defrostData.freezerDoorIncrementFactorInSecondsPerSecond);
    }
 }
 
-TEST(DoorAcceleration, ShouldStopIncrementingFfDoorAccelerationWhenAllFfDoorsAreClosed)
+TEST(DoorAcceleration, ShouldStopIncrementingFreshFoodDoorAccelerationWhenAllFreshFoodDoorsAreClosed)
 {
-   Given FfDoorAccelerationIs(0);
+   Given FreshFoodDoorAccelerationIs(0);
    Given DoorAccelerationIsEnabled();
 
-   When LeftFfDoorIs(Open);
+   When LeftFreshFoodDoorIs(Open);
 
    for(uint8_t i = 0; i < 10; i++)
    {
       After(1 * MSEC_PER_SEC - 1);
-      FfDoorAccelerationShouldBe(i * defrostData.ffDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationShouldBe(i * defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
       After(1);
-      FfDoorAccelerationShouldBe((i + 1) * defrostData.ffDoorIncrementFactorInSecondsPerSecond);
+      FreshFoodDoorAccelerationShouldBe((i + 1) * defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond);
    }
 
-   When LeftFfDoorIs(Closed);
+   When LeftFreshFoodDoorIs(Closed);
 
    After(1 * MSEC_PER_SEC - 1);
-   FfDoorAccelerationShouldBe((10) * defrostData.ffDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationShouldBe((10) * defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
    After(1);
-   FfDoorAccelerationShouldBe((10) * defrostData.ffDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationShouldBe((10) * defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 }
 
-TEST(DoorAcceleration, ShouldStopIncrementingFzDoorAccelerationWhenFzDoorIsClosed)
+TEST(DoorAcceleration, ShouldStopIncrementingFreezerDoorAccelerationWhenFreezerDoorIsClosed)
 {
-   Given FzDoorAccelerationIs(0);
+   Given FreezerDoorAccelerationIs(0);
    Given DoorAccelerationIsEnabled();
 
-   When FzDoorIs(Open);
+   When FreezerDoorIs(Open);
 
    for(uint8_t i = 0; i < 10; i++)
    {
       After(1 * MSEC_PER_SEC - 1);
-      FzDoorAccelerationShouldBe(i * defrostData.fzDoorIncrementFactorInSecondsPerSecond);
+      FreezerDoorAccelerationShouldBe(i * defrostData.freezerDoorIncrementFactorInSecondsPerSecond);
 
       After(1);
-      FzDoorAccelerationShouldBe((i + 1) * defrostData.fzDoorIncrementFactorInSecondsPerSecond);
+      FreezerDoorAccelerationShouldBe((i + 1) * defrostData.freezerDoorIncrementFactorInSecondsPerSecond);
    }
 
-   When FzDoorIs(Closed);
+   When FreezerDoorIs(Closed);
 
    After(1 * MSEC_PER_SEC - 1);
-   FzDoorAccelerationShouldBe((10) * defrostData.fzDoorIncrementFactorInSecondsPerSecond);
+   FreezerDoorAccelerationShouldBe((10) * defrostData.freezerDoorIncrementFactorInSecondsPerSecond);
 
    After(1);
-   FzDoorAccelerationShouldBe((10) * defrostData.fzDoorIncrementFactorInSecondsPerSecond);
+   FreezerDoorAccelerationShouldBe((10) * defrostData.freezerDoorIncrementFactorInSecondsPerSecond);
 }
 
-TEST(DoorAcceleration, ShouldOnlyIncrementFfDoorAccelerationByOneTimesTheFactorPerSecondEvenIfMultipleFfDoorAreOpen)
+TEST(DoorAcceleration, ShouldOnlyIncrementFreshFoodDoorAccelerationByOneTimesTheFactorPerSecondEvenIfMultipleFreshFoodDoorAreOpen)
 {
-   Given FfDoorAccelerationIs(0);
+   Given FreshFoodDoorAccelerationIs(0);
    Given DoorAccelerationIsEnabled();
 
-   When LeftFfDoorIs(Open);
-   When RightFfDoorIs(Open);
+   When LeftFreshFoodDoorIs(Open);
+   When RightFreshFoodDoorIs(Open);
 
    After(1 * MSEC_PER_SEC - 1);
-   FfDoorAccelerationShouldBe(0);
+   FreshFoodDoorAccelerationShouldBe(0);
 
    After(1);
-   FfDoorAccelerationShouldBe(0 + defrostData.ffDoorIncrementFactorInSecondsPerSecond);
+   FreshFoodDoorAccelerationShouldBe(0 + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 }

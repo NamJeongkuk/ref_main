@@ -98,7 +98,7 @@ describe("Defrost", () => {
       await rx130.write("Erd_CompressorSpeedConfig", compressorSpeedConfig.compressorSpeedConfigSingleSpeed);
    };
 
-   const providedTheCompressorSpeedIs = async(speed) => {
+   const providedTheCompressorSpeedIs = async (speed) => {
       const vote = {
          speed: speed,
          care: true
@@ -106,19 +106,19 @@ describe("Defrost", () => {
       await rx130.write("Erd_CompressorSpeed_ResolvedVote", vote);
    };
 
-   const providedSabbathModeIs = async(state) => {
+   const providedSabbathModeIs = async (state) => {
       await rx130.write("Erd_SabbathMode", state);
    };
 
-   const providedTheLastFzDefrostWas = async(state) => {
-      await rx130.write("Erd_FzDefrostWasAbnormal", state);
+   const providedTheLastFreezerDefrostWas = async (state) => {
+      await rx130.write("Erd_FreezerDefrostWasAbnormal", state);
    };
 
-   const providedTheLastFfDefrostWas = async(state) => {
-      await rx130.write("Erd_FfDefrostWasAbnormal", state);
+   const providedTheLastFreshFoodDefrostWas = async (state) => {
+      await rx130.write("Erd_FreshFoodDefrostWasAbnormal", state);
    };
 
-   const providedTheDemandResponseLevelIs = async(level) => {
+   const providedTheDemandResponseLevelIs = async (level) => {
       await rx130.write("Erd_DemandResponseLevel", level);
    };
 
@@ -157,8 +157,8 @@ describe("Defrost", () => {
 
       await providedSabbathModeIs(constants.disabled);
 
-      await providedTheLastFfDefrostWas(constants.abnormal);
-      await providedTheLastFzDefrostWas(constants.normal);
+      await providedTheLastFreshFoodDefrostWas(constants.abnormal);
+      await providedTheLastFreezerDefrostWas(constants.normal);
 
       await providedTheDemandResponseLevelIs(energyDemandLevel.energyDemandLevelOff);
 
@@ -169,14 +169,12 @@ describe("Defrost", () => {
    };
 
    const theDefrostTimerCounterModulesShouldBe = async (state) => {
-      if(state)
-      {
+      if (state) {
          await theDefrostTimerCounterShouldBe(defrostTimerCounterFsmState.defrostTimerCounterFsmStateEnabled);
          await theDoorAccelerationShouldBe(doorAccelerationFsmState.doorAccelerationFsmStateEnabled);
          await theDefrostIsSatisfiedMonitorShouldBe(defrostTimerIsSatisfiedMonitorFsmState.defrostTimerIsSatisfiedMonitorFsmStateEnabled);
       }
-      else
-      {
+      else {
          await theDefrostTimerCounterShouldBe(defrostTimerCounterFsmState.defrostTimerCounterFsmStateDisabled);
          await theDoorAccelerationShouldBe(doorAccelerationFsmState.doorAccelerationFsmStateDisabled);
          await theDefrostIsSatisfiedMonitorShouldBe(defrostTimerIsSatisfiedMonitorFsmState.defrostTimerIsSatisfiedMonitorFsmStateDisabled);
@@ -189,7 +187,7 @@ describe("Defrost", () => {
    };
 
    const freshFoodDoorAccelerationShouldBe = async (acceleration) => {
-      const actual = await rx130.read("Erd_DefrostFfDoorAccelerationCount");
+      const actual = await rx130.read("Erd_DefrostFreshFoodDoorAccelerationCount");
       expect(actual).toEqual(acceleration);
    };
 
@@ -218,8 +216,8 @@ describe("Defrost", () => {
       expect(actual).toEqual(state);
    };
 
-   const leftHandFfDoorIs = async (state) => {
-      await rx130.write("Erd_LeftHandFfDoorIsOpen", state);
+   const leftHandFreshFoodDoorIs = async (state) => {
+      await rx130.write("Erd_LeftHandFreshFoodDoorIsOpen", state);
    };
 
    const afterPowerUpDelay = async () => {
@@ -235,23 +233,23 @@ describe("Defrost", () => {
          temperature: temperatureDegFx100,
          care: true
       };
-      await rx130.write("Erd_FzSetpoint_ResolvedVote", vote);
+      await rx130.write("Erd_FreezerSetpoint_ResolvedVote", vote);
    };
 
    const theFreezerDefrostSetpointVoteShouldBe = async (temperatureDegFx100) => {
-      const actual = await rx130.read("Erd_FzSetpoint_DefrostVote");
+      const actual = await rx130.read("Erd_FreezerSetpoint_DefrostVote");
       expect(actual.temperature).toEqual(temperatureDegFx100);
       expect(actual.care).toEqual(true);
    };
 
    const theFreshFoodHeaterShouldBeVoted = async (state) => {
-      const actual = await rx130.read("Erd_FzDefrostHeater_DefrostVote");
+      const actual = await rx130.read("Erd_FreezerDefrostHeater_DefrostVote");
       expect(actual.state).toEqual(state);
       expect(actual.care).toEqual(true);
    };
 
    const theFreezerHeaterShouldBeVoted = async (state) => {
-      const actual = await rx130.read("Erd_FfDefrostHeater_DefrostVote");
+      const actual = await rx130.read("Erd_FreshFoodDefrostHeater_DefrostVote");
       expect(actual.state).toEqual(state);
       expect(actual.care).toEqual(true);
    };
@@ -392,13 +390,13 @@ describe("Defrost", () => {
       await defrostTimerCountShouldBeAtLeast(50);
 
       // door opening
-      await leftHandFfDoorIs(constants.open);
+      await leftHandFreshFoodDoorIs(constants.open);
 
       // once count reaches max time between defrosts in seconds (120 seconds or greater)
       // timer is satisfied should be set
       await waitTimeInSeconds(10);
       // door open for 10 seconds => door acceleration is 10 * 87 = 870
-      // once count is > fz abnormal run time (but still less than max time between defrosts), it'll add the door acceleration to the count
+      // once count is > freezer abnormal run time (but still less than max time between defrosts), it'll add the door acceleration to the count
       // count is now ~ 60 + 870 = 930
       // once count is > max time between defrosts, it'll set defrost timer is satisfied (930 > 120)
       // after it's set, defrost will exit Idle which also causes the timer is satisfied flag to be cleared
@@ -440,13 +438,13 @@ describe("Defrost", () => {
       await defrostTimerCountShouldBeAtLeast(50);
 
       // door opening
-      await leftHandFfDoorIs(constants.open);
+      await leftHandFreshFoodDoorIs(constants.open);
 
       // once count reaches max time between defrosts in seconds (120 seconds or greater)
       // timer is satisfied should be set
       await waitTimeInSeconds(10);
       // door open for 10 seconds => door acceleration is 10 * 87 = 870
-      // once count is > fz abnormal run time (but still less than max time between defrosts), it'll add the door acceleration to the count
+      // once count is > freezer abnormal run time (but still less than max time between defrosts), it'll add the door acceleration to the count
       // count is now ~ 60 + 870 = 930
       // once count is > max time between defrosts, it'll set defrost timer is satisfied (930 > 120)
       // after it's set, defrost will exit Idle which also causes the timer is satisfied flag to be cleared
@@ -472,13 +470,13 @@ describe("Defrost", () => {
       await defrostTimerCountShouldBeAtLeast(50);
 
       // door opening
-      await leftHandFfDoorIs(constants.open);
+      await leftHandFreshFoodDoorIs(constants.open);
 
       // once count reaches max time between defrosts in seconds (120 seconds or greater)
       // timer is satisfied should be set
       await waitTimeInSeconds(10);
       // door open for 10 seconds => door acceleration is 10 * 87 = 870
-      // once count is > fz abnormal run time (but still less than max time between defrosts), it'll add the door acceleration to the count
+      // once count is > freezer abnormal run time (but still less than max time between defrosts), it'll add the door acceleration to the count
       // count is now ~ 60 + 870 = 930
       // once count is > max time between defrosts, it'll set defrost timer is satisfied (930 > 120)
       // after it's set, defrost will exit Idle which also causes the timer is satisfied flag to be cleared
@@ -504,13 +502,13 @@ describe("Defrost", () => {
       await defrostTimerCountShouldBeAtLeast(50);
 
       // door opening
-      await leftHandFfDoorIs(constants.open);
+      await leftHandFreshFoodDoorIs(constants.open);
 
       // once count reaches max time between defrosts in seconds (120 seconds or greater)
       // timer is satisfied should be set
       await waitTimeInSeconds(10);
       // door open for 10 seconds => door acceleration is 10 * 87 = 870
-      // once count is > fz abnormal run time (but still less than max time between defrosts), it'll add the door acceleration to the count
+      // once count is > freezer abnormal run time (but still less than max time between defrosts), it'll add the door acceleration to the count
       // count is now ~ 60 + 870 = 930
       // once count is > max time between defrosts, it'll set defrost timer is satisfied (930 > 120)
       // after it's set, defrost will exit Idle which also causes the timer is satisfied flag to be cleared

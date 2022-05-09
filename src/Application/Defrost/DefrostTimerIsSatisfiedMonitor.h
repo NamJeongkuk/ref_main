@@ -22,8 +22,8 @@ typedef struct
    Erd_t defrostTimerIsSatisfiedMonitorRequestErd; // DefrostTimerIsSatisfiedMonitorRequest_t
    Erd_t defrostTimerIsSatisfiedErd; // bool
    Erd_t sabbathModeErd; // bool
-   Erd_t fzDefrostWasAbnormalErd; // bool
-   Erd_t ffDefrostWasAbnormalErd; // bool
+   Erd_t freezerDefrostWasAbnormalErd; // bool
+   Erd_t freshFoodDefrostWasAbnormalErd; // bool
    Erd_t demandResponseLevelErd; // EnergyDemandLevel_t
    Erd_t maxTimeBetweenDefrostsInMinutesErd; // uint16_t
 } DefrostTimerIsSatisfiedMonitorConfig_t;

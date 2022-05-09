@@ -113,36 +113,36 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Fz Defrost Was Abnormal (EEPROM)",
-          "name": "Erd_FzDefrostWasAbnormal",
+          "displayName": "Freezer Defrost Was Abnormal (EEPROM)",
+          "name": "Erd_FreezerDefrostWasAbnormal",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Number of Fz Abnormal Defrost Cycles (EEPROM)",
-          "name": "Erd_NumberofFzAbnormalDefrostCycles",
+          "displayName": "Number of Freezer Abnormal Defrost Cycles (EEPROM)",
+          "name": "Erd_NumberofFreezerAbnormalDefrostCycles",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Fz Abnormal Defrost Cycle Count (EEPROM)",
-          "name": "Erd_FzAbnormalDefrostCycleCount",
+          "displayName": "Freezer Abnormal Defrost Cycle Count (EEPROM)",
+          "name": "Erd_FreezerAbnormalDefrostCycleCount",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Fz Defrost Cycle Count (EEPROM)",
-          "name": "Erd_FzDefrostCycleCount",
+          "displayName": "Freezer Defrost Cycle Count (EEPROM)",
+          "name": "Erd_FreezerDefrostCycleCount",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Ff Defrost Was Abnormal (EEPROM)",
-          "name": "Erd_FfDefrostWasAbnormal",
+          "displayName": "Fresh Food Defrost Was Abnormal (EEPROM)",
+          "name": "Erd_FreshFoodDefrostWasAbnormal",
           "read": true,
           "write": true
         },
@@ -169,15 +169,15 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "FZ Door Acceleration Count",
-          "name": "Erd_DefrostFzDoorAccelerationCount",
+          "displayName": "Freezer Door Acceleration Count",
+          "name": "Erd_DefrostFreezerDoorAccelerationCount",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "FF Door Acceleration Count",
-          "name": "Erd_DefrostFfDoorAccelerationCount",
+          "displayName": "Fresh Food Door Acceleration Count",
+          "name": "Erd_DefrostFreshFoodDoorAccelerationCount",
           "read": true,
           "write": true
         },
@@ -239,15 +239,15 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "FF Defrost Heater Defrost Vote",
-          "name": "Erd_FfDefrostHeater_DefrostVote",
+          "displayName": "Fresh Food Defrost Heater Defrost Vote",
+          "name": "Erd_FreshFoodDefrostHeater_DefrostVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "FZ Defrost Heater Defrost Vote",
-          "name": "Erd_FzDefrostHeater_DefrostVote",
+          "displayName": "Freezer Defrost Heater Defrost Vote",
+          "name": "Erd_FreezerDefrostHeater_DefrostVote",
           "read": true,
           "write": true
         },
@@ -272,15 +272,15 @@
       "erds": [
         {
           "namespace": "rx130",
-          "displayName": "Left FF Door Is Open",
-          "name": "Erd_LeftHandFfDoorIsOpen",
+          "displayName": "Left Fresh Food Door Is Open",
+          "name": "Erd_LeftHandFreshFoodDoorIsOpen",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Right FF Door Is Open",
-          "name": "Erd_RightHandFfDoorIsOpen",
+          "displayName": "Right Fresh Food Door Is Open",
+          "name": "Erd_RightHandFreshFoodDoorIsOpen",
           "read": true,
           "write": true
         },
@@ -293,8 +293,8 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "FZ Door Is Open",
-          "name": "Erd_FzDoorIsOpen",
+          "displayName": "Freezer Door Is Open",
+          "name": "Erd_FreezerDoorIsOpen",
           "read": true,
           "write": true
         }
@@ -359,7 +359,7 @@
       "erds": [
         {
           "namespace": "rx130",
-          "displayName": "FreshFood Thermistor AdcCount",
+          "displayName": "Fresh Food Thermistor AdcCount",
           "name": "Erd_FreshFoodThermistor_AdcCount",
           "read": true,
           "write": true
@@ -373,22 +373,22 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "FreshFoodEvap Thermistor AdcCount",
+          "displayName": "Fresh Food Evap Thermistor AdcCount",
           "name": "Erd_FreshFoodEvapThermistor_AdcCount",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "FreezerEvap Thermistor AdcCount",
+          "displayName": "Freezer Evap Thermistor AdcCount",
           "name": "Erd_FreezerEvapThermistor_AdcCount",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "ConvertibleCompartment Thermistor AdcCount",
-          "name": "Erd_CcCompartmentThermistor_AdcCount",
+          "displayName": "Convertible Compartment Thermistor AdcCount",
+          "name": "Erd_ConvertibleCompartmentThermistor_AdcCount",
           "read": true,
           "write": true
         },
@@ -401,56 +401,56 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "CCEvap Thermistor AdcCount",
-          "name": "Erd_CcEvapThermistor_AdcCount",
+          "displayName": "Convertible Compartment Evap Thermistor AdcCount",
+          "name": "Erd_ConvertibleCompartmentEvapThermistor_AdcCount",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "FreshFood UnfilteredTemp",
+          "displayName": "Fresh Food Unfiltered Temp",
           "name": "Erd_FreshFood_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "FreshFood FilteredTemp",
+          "displayName": "Fresh Food Filtered Temp",
           "name": "Erd_FreshFood_FilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Freezer UnfilteredTemp",
+          "displayName": "Freezer Unfiltered Temp",
           "name": "Erd_Freezer_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Freezer FilteredTemp",
+          "displayName": "Freezer Filtered Temp",
           "name": "Erd_Freezer_FilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "FreshFoodEvap UnfilteredTemp",
+          "displayName": "Fresh Food Evap Unfiltered Temp",
           "name": "Erd_FreshFoodEvap_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "FreshFoodEvap FilteredTemp",
+          "displayName": "Fresh Food Evap Filtered Temp",
           "name": "Erd_FreshFoodEvap_FilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "FreezerEvap UnfilteredTemp",
+          "displayName": "Freezer Evap Unfiltered Temp",
           "name": "Erd_FreezerEvap_UnfilteredTemperature",
           "read": true,
           "write": true
@@ -464,43 +464,43 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "ConvertibleCompartment UnfilteredTemp",
-          "name": "Erd_CcCompartment_UnfilteredTemperature",
+          "displayName": "Convertible Compartment Unfiltered Temp",
+          "name": "Erd_ConvertibleCompartment_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "ConvertibleCompartment FilteredTemp",
-          "name": "Erd_CcCompartment_FilteredTemperature",
+          "displayName": "Convertible Compartment Filtered Temp",
+          "name": "Erd_ConvertibleCompartment_FilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Ambient UnfilteredTemp",
+          "displayName": "Ambient Unfiltered Temp",
           "name": "Erd_Ambient_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Ambient FilteredTemp",
+          "displayName": "Ambient Filtered Temp",
           "name": "Erd_Ambient_FilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "CCEvap UnfilteredTemp",
-          "name": "Erd_CcEvap_UnfilteredTemperature",
+          "displayName": "Convertible Compartment Evap Unfiltered Temp",
+          "name": "Erd_ConvertibleCompartmentEvap_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "CCEvap FilteredTemp",
-          "name": "Erd_CcEvap_FilteredTemperature",
+          "displayName": "Convertible Compartment Evap Filtered Temp",
+          "name": "Erd_ConvertibleCompartmentEvap_FilteredTemperature",
           "read": true,
           "write": true
         }
@@ -512,14 +512,14 @@
         {
           "namespace": "rx130",
           "displayName": "Freezer Cabinet Resolved Setpoint",
-          "name": "Erd_FzSetpoint_ResolvedVote",
+          "name": "Erd_FreezerSetpoint_ResolvedVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
           "displayName": "Freezer Cabinet Defrost Vote for Setpoint",
-          "name": "Erd_FzSetpoint_DefrostVote",
+          "name": "Erd_FreezerSetpoint_DefrostVote",
           "read": true,
           "write": true
         }
@@ -531,14 +531,14 @@
         {
           "namespace": "rx130",
           "displayName": "Fresh Food Cabinet Resolved Setpoint",
-          "name": "Erd_FfSetpoint_ResolvedVote",
+          "name": "Erd_FreshFoodSetpoint_ResolvedVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
           "displayName": "Fresh Food Cabinet Defrost Vote for Setpoint",
-          "name": "Erd_FfSetpoint_DefrostVote",
+          "name": "Erd_FreshFoodSetpoint_DefrostVote",
           "read": true,
           "write": true
         }
@@ -549,15 +549,15 @@
       "erds": [
         {
           "namespace": "rx130",
-          "displayName": "Convertible Compartment Cabinet Resolved Setpoint",
-          "name": "Erd_CcSetpoint_ResolvedVote",
+          "displayName": "Convertible Compartment Resolved Setpoint",
+          "name": "Erd_ConvertibleCompartmentSetpoint_ResolvedVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "CcCabinet State",
-          "name": "Erd_CcCabinetState",
+          "displayName": "Convertible Compartment Cabinet State",
+          "name": "Erd_ConvertibleCompartmentCabinetState",
           "read": true,
           "write": true
         }

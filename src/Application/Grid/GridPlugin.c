@@ -32,34 +32,34 @@ static const GridConfiguration_t gridConfig = {
    .gridFunctions = &gridFunctionArray,
 };
 
-static const GridLineErds_t ffErds = {
-   .rawSetpointErd = Erd_FfSetpoint_ResolvedVote,
+static const GridLineErds_t freshFoodErds = {
+   .rawSetpointErd = Erd_FreshFoodSetpoint_ResolvedVote,
    .offsetErd = Erd_FreshFood_Offset,
    .shiftErd = Erd_FreshFood_Shift,
    .adjustedSetpointErd = Erd_FreshFood_AdjustedSetpoint
 };
 
-static const GridLineErds_t fzErds = {
-   .rawSetpointErd = Erd_FzSetpoint_ResolvedVote,
+static const GridLineErds_t freezerErds = {
+   .rawSetpointErd = Erd_FreezerSetpoint_ResolvedVote,
    .offsetErd = Erd_Freezer_Offset,
    .shiftErd = Erd_Freezer_Shift,
    .adjustedSetpointErd = Erd_Freezer_AdjustedSetpoint
 };
 
-static TemperatureDegFx100_t ffCalcAxisGridLines[SixGridLines] = { 0 };
-static TemperatureDegFx100_t fzCalcAxisGridLines[SixGridLines] = { 0 };
+static TemperatureDegFx100_t freshFoodCalcAxisGridLines[SixGridLines] = { 0 };
+static TemperatureDegFx100_t freezerCalcAxisGridLines[SixGridLines] = { 0 };
 
-static const CalculatedAxisGridLines_t ffCalcAxis = {
+static const CalculatedAxisGridLines_t freshFoodCalcAxis = {
    .numberOfLines = SixGridLines,
-   .gridLinesDegFx100 = ffCalcAxisGridLines
+   .gridLinesDegFx100 = freshFoodCalcAxisGridLines
 };
 
-static const CalculatedAxisGridLines_t fzCalcAxis = {
+static const CalculatedAxisGridLines_t freezerCalcAxis = {
    .numberOfLines = SixGridLines,
-   .gridLinesDegFx100 = fzCalcAxisGridLines
+   .gridLinesDegFx100 = freezerCalcAxisGridLines
 };
 
-static CalculatedAxisGridLines_t calcGrid[] = { ffCalcAxis, fzCalcAxis };
+static CalculatedAxisGridLines_t calcGrid[] = { freshFoodCalcAxis, freezerCalcAxis };
 
 static CalculatedGridLines_t calcGridLines = {
    .dimensions = TwoDimensional,
@@ -70,11 +70,11 @@ static const GridBlockAndLinesConfig_t calcConfig = {
    .calculatedGridBlockErd = Erd_Grid_BlockNumber,
    .previousGridBlocksErd = Erd_Grid_PreviousBlocks,
    .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
-   .ffFilteredTempErd = Erd_FreshFood_FilteredTemperature,
-   .fzFilteredTempErd = Erd_Freezer_FilteredTemperature,
+   .freshFoodFilteredTempErd = Erd_FreshFood_FilteredTemperature,
+   .freezerFilteredTempErd = Erd_Freezer_FilteredTemperature,
    .timerModuleErd = Erd_TimerModule,
-   .fzErds = fzErds,
-   .ffErds = ffErds
+   .freezerErds = freezerErds,
+   .freshFoodErds = freshFoodErds
 };
 
 static GridBlockNumber_t ringBufferNumbers[FivePreviousBlocks] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };

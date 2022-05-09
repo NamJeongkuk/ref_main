@@ -31,21 +31,21 @@ enum
    Zero = 0
 };
 
-static const GridLineErds_t ffErds = {
-   .rawSetpointErd = Erd_FfSetpoint_ResolvedVote,
+static const GridLineErds_t freshFoodErds = {
+   .rawSetpointErd = Erd_FreshFoodSetpoint_ResolvedVote,
    .offsetErd = Erd_FreshFood_Offset,
    .shiftErd = Erd_FreshFood_Shift,
    .adjustedSetpointErd = Erd_FreshFood_AdjustedSetpoint
 };
 
-static const GridLineErds_t fzErds = {
-   .rawSetpointErd = Erd_FzSetpoint_ResolvedVote,
+static const GridLineErds_t freezerErds = {
+   .rawSetpointErd = Erd_FreezerSetpoint_ResolvedVote,
    .offsetErd = Erd_Freezer_Offset,
    .shiftErd = Erd_Freezer_Shift,
    .adjustedSetpointErd = Erd_Freezer_AdjustedSetpoint
 };
 
-static const DeltaGridLineData_t ffGridLineData[] = {
+static const DeltaGridLineData_t freshFoodGridLineData[] = {
    {
       .gridLinesDegFx100 = 0,
       .bitMapping = 0b0010,
@@ -72,7 +72,7 @@ static const DeltaGridLineData_t ffGridLineData[] = {
    },
 };
 
-static const DeltaGridLineData_t fzGridLineData[] = {
+static const DeltaGridLineData_t freezerGridLineData[] = {
    {
       .gridLinesDegFx100 = -250,
       .bitMapping = 0b1000,
@@ -99,17 +99,17 @@ static const DeltaGridLineData_t fzGridLineData[] = {
    },
 };
 
-static const DeltaAxisGridLines_t ffAxis = {
+static const DeltaAxisGridLines_t freshFoodAxis = {
    .numberOfLines = SixGridLines,
-   .gridLineData = ffGridLineData
+   .gridLineData = freshFoodGridLineData
 };
 
-static const DeltaAxisGridLines_t fzAxis = {
+static const DeltaAxisGridLines_t freezerAxis = {
    .numberOfLines = SixGridLines,
-   .gridLineData = fzGridLineData
+   .gridLineData = freezerGridLineData
 };
 
-static DeltaAxisGridLines_t parametricGrid[] = { ffAxis, fzAxis };
+static DeltaAxisGridLines_t parametricGrid[] = { freshFoodAxis, freezerAxis };
 static DeltaGridLines_t deltaGrid = {
    .dimensions = TwoDimensional,
    .gridLines = parametricGrid
@@ -121,20 +121,20 @@ static const GridData_t gridData = {
    .gridPeriodicRunRateInMSec = MSEC_PER_SEC
 };
 
-static TemperatureDegFx100_t ffCalcAxisGridLines[SixGridLines] = { 0 };
-static TemperatureDegFx100_t fzCalcAxisGridLines[SixGridLines] = { 0 };
+static TemperatureDegFx100_t freshFoodCalcAxisGridLines[SixGridLines] = { 0 };
+static TemperatureDegFx100_t freezerCalcAxisGridLines[SixGridLines] = { 0 };
 
-static CalculatedAxisGridLines_t ffCalcAxis = {
+static CalculatedAxisGridLines_t freshFoodCalcAxis = {
    .numberOfLines = SixGridLines,
-   .gridLinesDegFx100 = ffCalcAxisGridLines
+   .gridLinesDegFx100 = freshFoodCalcAxisGridLines
 };
 
-static CalculatedAxisGridLines_t fzCalcAxis = {
+static CalculatedAxisGridLines_t freezerCalcAxis = {
    .numberOfLines = SixGridLines,
-   .gridLinesDegFx100 = fzCalcAxisGridLines
+   .gridLinesDegFx100 = freezerCalcAxisGridLines
 };
 
-static CalculatedAxisGridLines_t calcGrid[] = { ffCalcAxis, fzCalcAxis };
+static CalculatedAxisGridLines_t calcGrid[] = { freshFoodCalcAxis, freezerCalcAxis };
 
 static CalculatedGridLines_t calcGridLines = {
    .dimensions = TwoDimensional,
@@ -145,11 +145,11 @@ static const GridBlockAndLinesConfig_t config = {
    .calculatedGridBlockErd = Erd_Grid_BlockNumber,
    .previousGridBlocksErd = Erd_Grid_PreviousBlocks,
    .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
-   .ffFilteredTempErd = Erd_FreshFood_FilteredTemperature,
-   .fzFilteredTempErd = Erd_Freezer_FilteredTemperature,
+   .freshFoodFilteredTempErd = Erd_FreshFood_FilteredTemperature,
+   .freezerFilteredTempErd = Erd_Freezer_FilteredTemperature,
    .timerModuleErd = Erd_TimerModule,
-   .fzErds = fzErds,
-   .ffErds = ffErds
+   .freezerErds = freezerErds,
+   .freshFoodErds = freshFoodErds
 };
 
 static GridBlockNumber_t ringBufferNumbers[FivePreviousBlocks] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
@@ -211,55 +211,55 @@ TEST_GROUP(CalcGridBlockAndGridLines)
 
    void CalculatedGridLinesShouldBeZero()
    {
-      CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_Nfl);
-      And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfLowHyst);
-      And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfLowHystDelta);
-      And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfHighHyst);
-      And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfExtraHigh);
-      And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfSuperHigh);
+      CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_Nfl);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_FreshFoodLowHyst);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_FreshFoodLowHystDelta);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_FreshFoodHighHyst);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_FreshFoodExtraHigh);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_FreshFoodSuperHigh);
 
-      And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzLowHyst);
-      And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzDelta);
-      And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzHighHyst);
-      And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzExtraHigh);
-      And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzSuperHigh);
-      And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzExtremeHigh);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerLowHyst);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerDelta);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerHighHyst);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerExtraHigh);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerSuperHigh);
+      And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerExtremeHigh);
    }
 
    void NothingShouldHappen()
    {
    }
 
-   void GivenTheFFAdjustedSetpointIs(TemperatureDegFx100_t setpoint)
+   void GivenTheFreshFoodAdjustedSetpointIs(TemperatureDegFx100_t setpoint)
    {
       DataModel_Write(dataModel, Erd_FreshFood_AdjustedSetpoint, &setpoint);
    }
 
-   void GivenTheFZAdjustedSetpointIs(TemperatureDegFx100_t setpoint)
+   void GivenTheFreezerAdjustedSetpointIs(TemperatureDegFx100_t setpoint)
    {
       DataModel_Write(dataModel, Erd_Freezer_AdjustedSetpoint, &setpoint);
    }
 
    void GivenAdjustedSetpointsAreInitialized()
    {
-      GivenTheFFAdjustedSetpointIs(3890);
-      GivenTheFZAdjustedSetpointIs(440);
+      GivenTheFreshFoodAdjustedSetpointIs(3890);
+      GivenTheFreezerAdjustedSetpointIs(440);
    }
 
-   void GivenTheFFOffsetIs(TemperatureDegFx100_t offset)
+   void GivenTheFreshFoodOffsetIs(TemperatureDegFx100_t offset)
    {
       DataModel_Write(dataModel, Erd_FreshFood_Offset, &offset);
    }
 
-   void GivenTheFZOffsetIs(TemperatureDegFx100_t offset)
+   void GivenTheFreezerOffsetIs(TemperatureDegFx100_t offset)
    {
       DataModel_Write(dataModel, Erd_Freezer_Offset, &offset);
    }
 
    void GivenOffsetsAreInitialized()
    {
-      GivenTheFFOffsetIs(190);
-      GivenTheFZOffsetIs(450);
+      GivenTheFreshFoodOffsetIs(190);
+      GivenTheFreezerOffsetIs(450);
    }
 
    void GivenGridErdsAreInitialized()
@@ -337,19 +337,19 @@ TEST(CalcGridBlockAndGridLines, ShouldInitCalculatedGridLinesToZero)
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
 
-   CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_Nfl);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfLowHyst);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfLowHystDelta);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfHighHyst);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfExtraHigh);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_Ff, GridLine_FfSuperHigh);
+   CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_Nfl);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_FreshFoodLowHyst);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_FreshFoodLowHystDelta);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_FreshFoodHighHyst);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_FreshFoodExtraHigh);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_FreshFoodSuperHigh);
 
-   And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzLowHyst);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzDelta);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzHighHyst);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzExtraHigh);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzSuperHigh);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_Fz, GridLine_FzExtremeHigh);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerLowHyst);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerDelta);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerHighHyst);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerExtraHigh);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerSuperHigh);
+   And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerExtremeHigh);
 }
 
 TEST(CalcGridBlockAndGridLines, ShouldCalculateGridLinesAfterOneSecond)
@@ -361,19 +361,19 @@ TEST(CalcGridBlockAndGridLines, ShouldCalculateGridLinesAfterOneSecond)
    CalculatedGridLinesShouldBeZero();
 
    After(1);
-   CalculatedGridLineTempShouldBe(190, GridDelta_Ff, GridLine_Nfl);
-   And CalculatedGridLineTempShouldBe(3440, GridDelta_Ff, GridLine_FfLowHyst);
-   And CalculatedGridLineTempShouldBe(4040, GridDelta_Ff, GridLine_FfLowHystDelta);
-   And CalculatedGridLineTempShouldBe(4340, GridDelta_Ff, GridLine_FfHighHyst);
-   And CalculatedGridLineTempShouldBe(4840, GridDelta_Ff, GridLine_FfExtraHigh);
-   And CalculatedGridLineTempShouldBe(5040, GridDelta_Ff, GridLine_FfSuperHigh);
+   CalculatedGridLineTempShouldBe(190, GridDelta_FreshFood, GridLine_Nfl);
+   And CalculatedGridLineTempShouldBe(3440, GridDelta_FreshFood, GridLine_FreshFoodLowHyst);
+   And CalculatedGridLineTempShouldBe(4040, GridDelta_FreshFood, GridLine_FreshFoodLowHystDelta);
+   And CalculatedGridLineTempShouldBe(4340, GridDelta_FreshFood, GridLine_FreshFoodHighHyst);
+   And CalculatedGridLineTempShouldBe(4840, GridDelta_FreshFood, GridLine_FreshFoodExtraHigh);
+   And CalculatedGridLineTempShouldBe(5040, GridDelta_FreshFood, GridLine_FreshFoodSuperHigh);
 
-   And CalculatedGridLineTempShouldBe(190, GridDelta_Fz, GridLine_FzLowHyst);
-   And CalculatedGridLineTempShouldBe(440, GridDelta_Fz, GridLine_FzDelta);
-   And CalculatedGridLineTempShouldBe(690, GridDelta_Fz, GridLine_FzHighHyst);
-   And CalculatedGridLineTempShouldBe(1040, GridDelta_Fz, GridLine_FzExtraHigh);
-   And CalculatedGridLineTempShouldBe(1190, GridDelta_Fz, GridLine_FzSuperHigh);
-   And CalculatedGridLineTempShouldBe(5950, GridDelta_Fz, GridLine_FzExtremeHigh);
+   And CalculatedGridLineTempShouldBe(190, GridDelta_Freezer, GridLine_FreezerLowHyst);
+   And CalculatedGridLineTempShouldBe(440, GridDelta_Freezer, GridLine_FreezerDelta);
+   And CalculatedGridLineTempShouldBe(690, GridDelta_Freezer, GridLine_FreezerHighHyst);
+   And CalculatedGridLineTempShouldBe(1040, GridDelta_Freezer, GridLine_FreezerExtraHigh);
+   And CalculatedGridLineTempShouldBe(1190, GridDelta_Freezer, GridLine_FreezerSuperHigh);
+   And CalculatedGridLineTempShouldBe(5950, GridDelta_Freezer, GridLine_FreezerExtremeHigh);
 }
 
 TEST(CalcGridBlockAndGridLines, ShouldReCalculateGridLinesAfterOneSecondWhenAdjSetpointsChange)
@@ -385,37 +385,37 @@ TEST(CalcGridBlockAndGridLines, ShouldReCalculateGridLinesAfterOneSecondWhenAdjS
    CalculatedGridLinesShouldBeZero();
 
    After(1);
-   CalculatedGridLineTempShouldBe(190, GridDelta_Ff, GridLine_Nfl);
-   And CalculatedGridLineTempShouldBe(3440, GridDelta_Ff, GridLine_FfLowHyst);
-   And CalculatedGridLineTempShouldBe(4040, GridDelta_Ff, GridLine_FfLowHystDelta);
-   And CalculatedGridLineTempShouldBe(4340, GridDelta_Ff, GridLine_FfHighHyst);
-   And CalculatedGridLineTempShouldBe(4840, GridDelta_Ff, GridLine_FfExtraHigh);
-   And CalculatedGridLineTempShouldBe(5040, GridDelta_Ff, GridLine_FfSuperHigh);
+   CalculatedGridLineTempShouldBe(190, GridDelta_FreshFood, GridLine_Nfl);
+   And CalculatedGridLineTempShouldBe(3440, GridDelta_FreshFood, GridLine_FreshFoodLowHyst);
+   And CalculatedGridLineTempShouldBe(4040, GridDelta_FreshFood, GridLine_FreshFoodLowHystDelta);
+   And CalculatedGridLineTempShouldBe(4340, GridDelta_FreshFood, GridLine_FreshFoodHighHyst);
+   And CalculatedGridLineTempShouldBe(4840, GridDelta_FreshFood, GridLine_FreshFoodExtraHigh);
+   And CalculatedGridLineTempShouldBe(5040, GridDelta_FreshFood, GridLine_FreshFoodSuperHigh);
 
-   And CalculatedGridLineTempShouldBe(190, GridDelta_Fz, GridLine_FzLowHyst);
-   And CalculatedGridLineTempShouldBe(440, GridDelta_Fz, GridLine_FzDelta);
-   And CalculatedGridLineTempShouldBe(690, GridDelta_Fz, GridLine_FzHighHyst);
-   And CalculatedGridLineTempShouldBe(1040, GridDelta_Fz, GridLine_FzExtraHigh);
-   And CalculatedGridLineTempShouldBe(1190, GridDelta_Fz, GridLine_FzSuperHigh);
-   And CalculatedGridLineTempShouldBe(5950, GridDelta_Fz, GridLine_FzExtremeHigh);
+   And CalculatedGridLineTempShouldBe(190, GridDelta_Freezer, GridLine_FreezerLowHyst);
+   And CalculatedGridLineTempShouldBe(440, GridDelta_Freezer, GridLine_FreezerDelta);
+   And CalculatedGridLineTempShouldBe(690, GridDelta_Freezer, GridLine_FreezerHighHyst);
+   And CalculatedGridLineTempShouldBe(1040, GridDelta_Freezer, GridLine_FreezerExtraHigh);
+   And CalculatedGridLineTempShouldBe(1190, GridDelta_Freezer, GridLine_FreezerSuperHigh);
+   And CalculatedGridLineTempShouldBe(5950, GridDelta_Freezer, GridLine_FreezerExtremeHigh);
 
-   GivenTheFFAdjustedSetpointIs(4690);
-   And GivenTheFZAdjustedSetpointIs(-60);
+   GivenTheFreshFoodAdjustedSetpointIs(4690);
+   And GivenTheFreezerAdjustedSetpointIs(-60);
 
    After(MSEC_PER_SEC);
-   CalculatedGridLineTempShouldBe(190, GridDelta_Ff, GridLine_Nfl);
-   And CalculatedGridLineTempShouldBe(4240, GridDelta_Ff, GridLine_FfLowHyst);
-   And CalculatedGridLineTempShouldBe(4840, GridDelta_Ff, GridLine_FfLowHystDelta);
-   And CalculatedGridLineTempShouldBe(5140, GridDelta_Ff, GridLine_FfHighHyst);
-   And CalculatedGridLineTempShouldBe(5640, GridDelta_Ff, GridLine_FfExtraHigh);
-   And CalculatedGridLineTempShouldBe(5840, GridDelta_Ff, GridLine_FfSuperHigh);
+   CalculatedGridLineTempShouldBe(190, GridDelta_FreshFood, GridLine_Nfl);
+   And CalculatedGridLineTempShouldBe(4240, GridDelta_FreshFood, GridLine_FreshFoodLowHyst);
+   And CalculatedGridLineTempShouldBe(4840, GridDelta_FreshFood, GridLine_FreshFoodLowHystDelta);
+   And CalculatedGridLineTempShouldBe(5140, GridDelta_FreshFood, GridLine_FreshFoodHighHyst);
+   And CalculatedGridLineTempShouldBe(5640, GridDelta_FreshFood, GridLine_FreshFoodExtraHigh);
+   And CalculatedGridLineTempShouldBe(5840, GridDelta_FreshFood, GridLine_FreshFoodSuperHigh);
 
-   And CalculatedGridLineTempShouldBe(-310, GridDelta_Fz, GridLine_FzLowHyst);
-   And CalculatedGridLineTempShouldBe(-60, GridDelta_Fz, GridLine_FzDelta);
-   And CalculatedGridLineTempShouldBe(190, GridDelta_Fz, GridLine_FzHighHyst);
-   And CalculatedGridLineTempShouldBe(540, GridDelta_Fz, GridLine_FzExtraHigh);
-   And CalculatedGridLineTempShouldBe(690, GridDelta_Fz, GridLine_FzSuperHigh);
-   And CalculatedGridLineTempShouldBe(5950, GridDelta_Fz, GridLine_FzExtremeHigh);
+   And CalculatedGridLineTempShouldBe(-310, GridDelta_Freezer, GridLine_FreezerLowHyst);
+   And CalculatedGridLineTempShouldBe(-60, GridDelta_Freezer, GridLine_FreezerDelta);
+   And CalculatedGridLineTempShouldBe(190, GridDelta_Freezer, GridLine_FreezerHighHyst);
+   And CalculatedGridLineTempShouldBe(540, GridDelta_Freezer, GridLine_FreezerExtraHigh);
+   And CalculatedGridLineTempShouldBe(690, GridDelta_Freezer, GridLine_FreezerSuperHigh);
+   And CalculatedGridLineTempShouldBe(5950, GridDelta_Freezer, GridLine_FreezerExtremeHigh);
 }
 
 TEST(CalcGridBlockAndGridLines, PreviousGridBlocksShouldBeEmptyOnInit)
@@ -500,7 +500,7 @@ TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock42WhenFreshFoodAndFreezerTemp
    And PreviousGridBlocksSizeShouldBe(0);
 }
 
-TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock0WhenBelowFfNflAndAboveFzExtremeHigh)
+TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock0WhenBelowFreshFoodNflAndAboveFreezerExtremeHigh)
 {
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
@@ -516,7 +516,7 @@ TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock0WhenBelowFfNflAndAboveFzExtr
    And PreviousGridBlocksSizeShouldBe(0);
 }
 
-TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock48WhenAboveFfSuperHighAndBelowFzLowHyst)
+TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock48WhenAboveFreshFoodSuperHighAndBelowFreezerLowHyst)
 {
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
@@ -532,7 +532,7 @@ TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock48WhenAboveFfSuperHighAndBelo
    And PreviousGridBlocksSizeShouldBe(0);
 }
 
-TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock6WhenAboveFfSuperHighAndAboveFzExtremeHigh)
+TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock6WhenAboveFreshFoodSuperHighAndAboveFreezerExtremeHigh)
 {
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
@@ -548,7 +548,7 @@ TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock6WhenAboveFfSuperHighAndAbove
    And PreviousGridBlocksSizeShouldBe(0);
 }
 
-TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock25WhenAboveFfHighHystAndAboveFzHighHyst)
+TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock25WhenAboveFreshFoodHighHystAndAboveFreezerHighHyst)
 {
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
@@ -564,7 +564,7 @@ TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock25WhenAboveFfHighHystAndAbove
    And PreviousGridBlocksSizeShouldBe(0);
 }
 
-TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock30WhenEqualToFfLowHystDeltaAndEqualToFzHighHyst)
+TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock30WhenEqualToFreshFoodLowHystDeltaAndEqualToFreezerHighHyst)
 {
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
@@ -580,7 +580,7 @@ TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock30WhenEqualToFfLowHystDeltaAn
    And PreviousGridBlocksSizeShouldBe(0);
 }
 
-TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock46WhenAboveFfHighHystAndBelowFzLowHyst)
+TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock46WhenAboveFreshFoodHighHystAndBelowFreezerLowHyst)
 {
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
@@ -596,7 +596,7 @@ TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock46WhenAboveFfHighHystAndBelow
    And PreviousGridBlocksSizeShouldBe(0);
 }
 
-TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock14WhenBelowFfNflAndAboveFzExtraHighThenChangeToGridBlock15WhenTempsChange)
+TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock14WhenBelowFreshFoodNflAndAboveFreezerExtraHighThenChangeToGridBlock15WhenTempsChange)
 {
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();

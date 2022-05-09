@@ -77,19 +77,19 @@ static void DataModelChanged(void *context, const void *args)
    }
 }
 
-static bool FfDoorIsOpen(DoorAccelerationCalculator_t *instance)
+static bool FreshFoodDoorIsOpen(DoorAccelerationCalculator_t *instance)
 {
-   bool leftHandFfDoorIsOpen;
+   bool leftHandFreshFoodDoorIsOpen;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->leftHandFfDoorIsOpenErd,
-      &leftHandFfDoorIsOpen);
+      instance->_private.config->leftHandFreshFoodDoorIsOpenErd,
+      &leftHandFreshFoodDoorIsOpen);
 
-   bool rightHandFfDoorIsOpen;
+   bool rightHandFreshFoodDoorIsOpen;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->rightHandFfDoorIsOpenErd,
-      &rightHandFfDoorIsOpen);
+      instance->_private.config->rightHandFreshFoodDoorIsOpenErd,
+      &rightHandFreshFoodDoorIsOpen);
 
    bool doorInDoorIsOpen;
    DataModel_Read(
@@ -97,18 +97,18 @@ static bool FfDoorIsOpen(DoorAccelerationCalculator_t *instance)
       instance->_private.config->doorInDoorIsOpenErd,
       &doorInDoorIsOpen);
 
-   return (leftHandFfDoorIsOpen || rightHandFfDoorIsOpen || doorInDoorIsOpen);
+   return (leftHandFreshFoodDoorIsOpen || rightHandFreshFoodDoorIsOpen || doorInDoorIsOpen);
 }
 
-static bool FzDoorIsOpen(DoorAccelerationCalculator_t *instance)
+static bool FreezerDoorIsOpen(DoorAccelerationCalculator_t *instance)
 {
-   bool fzDoorIsOpen;
+   bool freezerDoorIsOpen;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->fzDoorIsOpenErd,
-      &fzDoorIsOpen);
+      instance->_private.config->freezerDoorIsOpenErd,
+      &freezerDoorIsOpen);
 
-   return fzDoorIsOpen;
+   return freezerDoorIsOpen;
 }
 
 static void ResetDoorAccelerationCounts(DoorAccelerationCalculator_t *instance)
@@ -117,44 +117,44 @@ static void ResetDoorAccelerationCounts(DoorAccelerationCalculator_t *instance)
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->fzDoorAccelerationCountsErd,
+      instance->_private.config->freezerDoorAccelerationCountsErd,
       &counts);
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->ffDoorAccelerationCountsErd,
+      instance->_private.config->freshFoodDoorAccelerationCountsErd,
       &counts);
 }
 
-static void IncrementFfDoorAcceleration(DoorAccelerationCalculator_t *instance)
+static void IncrementFreshFoodDoorAcceleration(DoorAccelerationCalculator_t *instance)
 {
    uint32_t acceleration;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->ffDoorAccelerationCountsErd,
+      instance->_private.config->freshFoodDoorAccelerationCountsErd,
       &acceleration);
 
-   acceleration += instance->_private.defrostParametricData->ffDoorIncrementFactorInSecondsPerSecond;
+   acceleration += instance->_private.defrostParametricData->freshFoodDoorIncrementFactorInSecondsPerSecond;
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->ffDoorAccelerationCountsErd,
+      instance->_private.config->freshFoodDoorAccelerationCountsErd,
       &acceleration);
 }
 
-static void IncrementFzDoorAcceleration(DoorAccelerationCalculator_t *instance)
+static void IncrementFreezerDoorAcceleration(DoorAccelerationCalculator_t *instance)
 {
    uint32_t acceleration;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->fzDoorAccelerationCountsErd,
+      instance->_private.config->freezerDoorAccelerationCountsErd,
       &acceleration);
 
-   acceleration += instance->_private.defrostParametricData->fzDoorIncrementFactorInSecondsPerSecond;
+   acceleration += instance->_private.defrostParametricData->freezerDoorIncrementFactorInSecondsPerSecond;
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->fzDoorAccelerationCountsErd,
+      instance->_private.config->freezerDoorAccelerationCountsErd,
       &acceleration);
 }
 
@@ -198,13 +198,13 @@ static void State_Enabled(Fsm_t *fsm, const FsmSignal_t signal, const void *data
          break;
 
       case Signal_PeriodicTimerComplete:
-         if(FfDoorIsOpen(instance))
+         if(FreshFoodDoorIsOpen(instance))
          {
-            IncrementFfDoorAcceleration(instance);
+            IncrementFreshFoodDoorAcceleration(instance);
          }
-         if(FzDoorIsOpen(instance))
+         if(FreezerDoorIsOpen(instance))
          {
-            IncrementFzDoorAcceleration(instance);
+            IncrementFreezerDoorAcceleration(instance);
          }
          break;
 

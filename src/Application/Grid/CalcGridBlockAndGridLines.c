@@ -62,15 +62,15 @@ static void CalculateAxisGridLines(
 static void UpdateGridLines(CalcGridBlockAndLines_t *instance)
 {
    CalculateAxisGridLines(
-      &instance->_private.calcGridLines->gridLines[GridDelta_Ff],
-      &instance->_private.gridData->deltaGridLines->gridLines[GridDelta_Ff],
+      &instance->_private.calcGridLines->gridLines[GridDelta_FreshFood],
+      &instance->_private.gridData->deltaGridLines->gridLines[GridDelta_FreshFood],
       instance->_private.dataModel,
-      instance->_private.config->ffErds);
+      instance->_private.config->freshFoodErds);
    CalculateAxisGridLines(
-      &instance->_private.calcGridLines->gridLines[GridDelta_Fz],
-      &instance->_private.gridData->deltaGridLines->gridLines[GridDelta_Fz],
+      &instance->_private.calcGridLines->gridLines[GridDelta_Freezer],
+      &instance->_private.gridData->deltaGridLines->gridLines[GridDelta_Freezer],
       instance->_private.dataModel,
-      instance->_private.config->fzErds);
+      instance->_private.config->freezerErds);
 
    DataModel_Write(instance->_private.dataModel, instance->_private.config->calculatedGridLinesErd, instance->_private.calcGridLines);
 }
@@ -102,16 +102,16 @@ static GridBlockNumber_t CalculateGridBlock(uint8_t rowIndex, uint8_t colIndex, 
 
 static void UpdateGridBlock(CalcGridBlockAndLines_t *instance)
 {
-   TemperatureDegFx100_t ffFilteredTemp;
-   DataModel_Read(instance->_private.dataModel, instance->_private.config->ffFilteredTempErd, &ffFilteredTemp);
+   TemperatureDegFx100_t freshFoodFilteredTemp;
+   DataModel_Read(instance->_private.dataModel, instance->_private.config->freshFoodFilteredTempErd, &freshFoodFilteredTemp);
 
-   TemperatureDegFx100_t fzFilteredTemp;
-   DataModel_Read(instance->_private.dataModel, instance->_private.config->fzFilteredTempErd, &fzFilteredTemp);
+   TemperatureDegFx100_t freezerFilteredTemp;
+   DataModel_Read(instance->_private.dataModel, instance->_private.config->freezerFilteredTempErd, &freezerFilteredTemp);
 
-   uint8_t colIndex = GetLocationIndex(ffFilteredTemp, GridDelta_Ff, instance->_private.calcGridLines, NotInverted);
-   uint8_t rowIndex = GetLocationIndex(fzFilteredTemp, GridDelta_Fz, instance->_private.calcGridLines, Inverted);
+   uint8_t colIndex = GetLocationIndex(freshFoodFilteredTemp, GridDelta_FreshFood, instance->_private.calcGridLines, NotInverted);
+   uint8_t rowIndex = GetLocationIndex(freezerFilteredTemp, GridDelta_Freezer, instance->_private.calcGridLines, Inverted);
 
-   GridBlockNumber_t newBlockNumber = CalculateGridBlock(rowIndex, colIndex, instance->_private.gridData->deltaGridLines->gridLines[GridDelta_Ff].numberOfLines + 1);
+   GridBlockNumber_t newBlockNumber = CalculateGridBlock(rowIndex, colIndex, instance->_private.gridData->deltaGridLines->gridLines[GridDelta_FreshFood].numberOfLines + 1);
 
    DataModel_Write(instance->_private.dataModel, instance->_private.config->calculatedGridBlockErd, &newBlockNumber);
 }

@@ -30,8 +30,8 @@ enum
 };
 
 static const AllFreshFoodDoorStatusConfiguration_t AllFreshFoodDoorStatusConfiguration = {
-   .rightFreshDoorIsOpenErd = Erd_RightHandFfDoorIsOpen,
-   .leftFreshDoorIsOpenErd = Erd_LeftHandFfDoorIsOpen,
+   .rightFreshDoorIsOpenErd = Erd_RightHandFreshFoodDoorIsOpen,
+   .leftFreshDoorIsOpenErd = Erd_LeftHandFreshFoodDoorIsOpen,
    .allFreshFoodDoorsAreClosedErd = Erd_AllFreshFoodDoorsAreClosed
 };
 
@@ -54,12 +54,12 @@ TEST_GROUP(AllFreshFoodDoorStatus)
 
    void RightFreshFoodDoorIs(bool actual)
    {
-      DataModel_Write(dataModel, Erd_RightHandFfDoorIsOpen, &actual);
+      DataModel_Write(dataModel, Erd_RightHandFreshFoodDoorIsOpen, &actual);
    }
 
    void LeftFreshFoodDoorIs(bool actual)
    {
-      DataModel_Write(dataModel, Erd_LeftHandFfDoorIsOpen, &actual);
+      DataModel_Write(dataModel, Erd_LeftHandFreshFoodDoorIsOpen, &actual);
    }
 
    void BothFreshFoodDoorsAre(bool actual)

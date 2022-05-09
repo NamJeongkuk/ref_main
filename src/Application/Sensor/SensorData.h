@@ -33,25 +33,25 @@ typedef struct
 typedef struct
 {
    Mapper_LookupTableConfiguration_t *lookupTable;
-   int16_t ffFallbackValueDegFx100;
-   int16_t fzFallbackValueDegFx100;
+   int16_t freshFoodFallbackValueDegFx100;
+   int16_t freezerFallbackValueDegFx100;
    uint8_t alphaNum;
    uint8_t alphaDenom;
    uint8_t windowSize;
    SensorDataSlewRateData_t clampData;
    uint16_t goodReadingCounterMax;
    uint16_t badReadingCounterMax;
-} SensorDataCcSensorType_t;
+} SensorDataConvertibleCompartmentSensorType_t;
 
 typedef struct
 {
-   SensorDataSensorType_t *fzCabinetThermistor;
-   SensorDataSensorType_t *ffCabinetThermistor;
-   SensorDataSensorType_t *fzEvapThermistor;
-   SensorDataSensorType_t *ffEvapThermistor;
-   SensorDataCcSensorType_t *ccCabinetThermistor;
+   SensorDataSensorType_t *freezerCabinetThermistor;
+   SensorDataSensorType_t *freshFoodCabinetThermistor;
+   SensorDataSensorType_t *freezerEvapThermistor;
+   SensorDataSensorType_t *freshFoodEvapThermistor;
+   SensorDataConvertibleCompartmentSensorType_t *convertibleCompartmentCabinetThermistor;
    SensorDataSensorType_t *ambientThermistor;
-   SensorDataSensorType_t *ccEvapThermistor;
+   SensorDataSensorType_t *convertibleCompartmentEvapThermistor;
    uint16_t periodicUpdateRate;
 } SensorData_t;
 

@@ -13,10 +13,10 @@ enum
    DefrostRequest_Idle,
    DefrostRequest_Disable,
    DefrostRequest_Enable,
-   DefrostRequest_ForceFfPrechill,
-   DefrostRequest_ForceFfAndFzPrechill,
-   DefrostRequest_AhamSetUpForFfPrechill,
-   DefrostRequest_AhamSetUpForFfAndFzPrechill
+   DefrostRequest_ForceFreshFoodPrechill,
+   DefrostRequest_ForceFreshFoodAndFreezerPrechill,
+   DefrostRequest_AhamSetUpForFreshFoodPrechill,
+   DefrostRequest_AhamSetUpForFreshFoodAndFreezerPrechill
 };
 typedef uint8_t DefrostRequest_t;
 

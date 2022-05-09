@@ -36,19 +36,19 @@ static void VoteValvePosition(I_DataModel_t *dataModel, ValvePosition_t position
    ValveVotedPosition_t positionVote = { .care = true, .position = position };
    DataModel_Write(dataModel, Erd_ValvePosition_GridVote, &positionVote);
 }
-static void SetDelayCcCooling(I_DataModel_t *dataModel, bool state)
+static void SetDelayConvertibleCompartmentCooling(I_DataModel_t *dataModel, bool state)
 {
-   DataModel_Write(dataModel, Erd_DelayCcCooling, &state);
+   DataModel_Write(dataModel, Erd_DelayConvertibleCompartmentCooling, &state);
 }
 
-static void SetCoolCcBeforeOff(I_DataModel_t *dataModel, bool state)
+static void SetCoolConvertibleCompartmentBeforeOff(I_DataModel_t *dataModel, bool state)
 {
-   DataModel_Write(dataModel, Erd_CoolCcBeforeOff, &state);
+   DataModel_Write(dataModel, Erd_CoolConvertibleCompartmentBeforeOff, &state);
 }
 
-static void SetDelayCcCoolingLowSpeedTo(I_DataModel_t *dataModel, bool state)
+static void SetDelayConvertibleCompartmentCoolingLowSpeedTo(I_DataModel_t *dataModel, bool state)
 {
-   DataModel_Write(dataModel, Erd_DelayedCcCoolingLowSpeed, &state);
+   DataModel_Write(dataModel, Erd_DelayedConvertibleCompartmentCoolingLowSpeed, &state);
 }
 
 static void SetIceMakersEnabled(I_DataModel_t *dataModel, bool state)
@@ -93,24 +93,24 @@ static FanSpeed_t GetFanSpeed(I_DataModel_t *dataModel, Erd_t erd)
    return actual.speed;
 }
 
-static bool GetCoolCcBeforeOff(I_DataModel_t *dataModel)
+static bool GetCoolConvertibleCompartmentBeforeOff(I_DataModel_t *dataModel)
 {
    bool actual;
-   DataModel_Read(dataModel, Erd_CoolCcBeforeOff, &actual);
+   DataModel_Read(dataModel, Erd_CoolConvertibleCompartmentBeforeOff, &actual);
    return actual;
 }
 
-static GridBlockNumber_t GetCcGridBlockNumber(I_DataModel_t *dataModel)
+static GridBlockNumber_t GetConvertibleCompartmentGridBlockNumber(I_DataModel_t *dataModel)
 {
    GridBlockNumber_t actual;
    DataModel_Read(dataModel, Erd_ConvertibleCompartmentGridBlockNumber, &actual);
    return actual;
 }
 
-static bool GetDelayCcCooling(I_DataModel_t *dataModel)
+static bool GetDelayConvertibleCompartmentCooling(I_DataModel_t *dataModel)
 {
    bool actual;
-   DataModel_Write(dataModel, Erd_DelayCcCooling, &actual);
+   DataModel_Write(dataModel, Erd_DelayConvertibleCompartmentCooling, &actual);
    return actual;
 }
 
@@ -133,9 +133,9 @@ void Grid_DualEvap(void *context)
          VoteCompressorSpeed(dataModel, CompressorSpeed_Low);
          VoteValvePosition(dataModel, ValvePosition_B);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
-         SetDelayCcCooling(dataModel, DISABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
          SetIceMakersEnabled(dataModel, DISABLED);
          SetFreshFoodPulldownOffsetEnabled(dataModel, DISABLED);
          break;
@@ -150,9 +150,9 @@ void Grid_DualEvap(void *context)
          SetFreshFoodPulldownOffsetEnabled(dataModel, ENABLED);
          SetIceMakersEnabled(dataModel, DISABLED);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
-         SetDelayCcCooling(dataModel, DISABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
          break;
 
       case 7:
@@ -166,9 +166,9 @@ void Grid_DualEvap(void *context)
          SetFreshFoodPulldownOffsetEnabled(dataModel, DISABLED);
          SetIceMakersEnabled(dataModel, ENABLED);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
-         SetDelayCcCooling(dataModel, DISABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
          break;
 
       case 10:
@@ -187,9 +187,9 @@ void Grid_DualEvap(void *context)
          VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_High);
          VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_High);
          VoteCompressorSpeed(dataModel, CompressorSpeed_High);
-         SetDelayCcCooling(dataModel, DISABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
          break;
 
@@ -199,9 +199,9 @@ void Grid_DualEvap(void *context)
          VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_High);
          VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_High);
          VoteValvePosition(dataModel, ValvePosition_A);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCooling(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
          VoteCompressorSpeed(dataModel, CompressorSpeed_High);
          break;
@@ -212,9 +212,9 @@ void Grid_DualEvap(void *context)
          VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_SuperHigh);
          VoteCompressorSpeed(dataModel, CompressorSpeed_High);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
-         SetDelayCcCooling(dataModel, DISABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
          break;
 
       case 14:
@@ -234,9 +234,9 @@ void Grid_DualEvap(void *context)
          }
 
          VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
-         SetDelayCcCooling(dataModel, ENABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, ENABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
          SetIceMakersEnabled(dataModel, ENABLED);
          VoteValvePosition(dataModel, ValvePosition_B);
          SetFreshFoodPulldownOffsetEnabled(dataModel, DISABLED);
@@ -245,9 +245,9 @@ void Grid_DualEvap(void *context)
 
       case 17:
       case 18:
-         SetDelayCcCooling(dataModel, ENABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, ENABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
          SetIceMakersEnabled(dataModel, ENABLED);
 
          if(GetValvePosition(dataModel) == ValvePosition_B)
@@ -305,8 +305,8 @@ void Grid_DualEvap(void *context)
 
          VoteValvePosition(dataModel, ValvePosition_A);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
-         SetDelayCcCooling(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
          break;
 
       case 21:
@@ -317,9 +317,9 @@ void Grid_DualEvap(void *context)
          SetFreshFoodPulldownOffsetEnabled(dataModel, DISABLED);
          SetIceMakersEnabled(dataModel, ENABLED);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
-         SetDelayCcCooling(dataModel, ENABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, ENABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
          switch(GetCompressorSpeed(dataModel))
          {
             case CompressorSpeed_High:
@@ -346,9 +346,9 @@ void Grid_DualEvap(void *context)
       case 25:
       case 32:
          SetMaxValveTimeInPosAEnabled(dataModel, ENABLED);
-         SetDelayCcCooling(dataModel, ENABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, ENABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
 
          if(GetValvePosition(dataModel) == ValvePosition_B)
          {
@@ -410,9 +410,9 @@ void Grid_DualEvap(void *context)
       case 26:
          VoteValvePosition(dataModel, ValvePosition_A);
          SetMaxValveTimeInPosAEnabled(dataModel, ENABLED);
-         SetDelayCcCooling(dataModel, DISABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
 
          if(GetFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_ResolvedVote) < FanSpeed_Medium)
          {
@@ -438,9 +438,9 @@ void Grid_DualEvap(void *context)
          VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_High);
          VoteValvePosition(dataModel, ValvePosition_A);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
-         SetDelayCcCooling(dataModel, DISABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
 
          if(GetFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_ResolvedVote) < FanSpeed_Medium)
          {
@@ -453,9 +453,9 @@ void Grid_DualEvap(void *context)
       case 30:
          SetIceMakersEnabled(dataModel, ENABLED);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
-         SetDelayCcCooling(dataModel, ENABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, ENABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
          VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
          SetFreshFoodPulldownOffsetEnabled(dataModel, DISABLED);
 
@@ -500,9 +500,9 @@ void Grid_DualEvap(void *context)
 
       case 31:
          SetMaxValveTimeInPosAEnabled(dataModel, ENABLED);
-         SetDelayCcCooling(dataModel, ENABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, ENABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
 
          if(GetCompressorSpeed(dataModel) != CompressorSpeed_Off)
          {
@@ -545,9 +545,9 @@ void Grid_DualEvap(void *context)
          VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Low);
          VoteValvePosition(dataModel, ValvePosition_A);
          SetMaxValveTimeInPosAEnabled(dataModel, ENABLED);
-         SetDelayCcCooling(dataModel, DISABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
 
          if(GetCompressorSpeed(dataModel) == CompressorSpeed_High)
          {
@@ -571,9 +571,9 @@ void Grid_DualEvap(void *context)
          VoteCompressorSpeed(dataModel, CompressorSpeed_High);
          VoteValvePosition(dataModel, ValvePosition_A);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
-         SetDelayCcCooling(dataModel, DISABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
          break;
 
       case 35:
@@ -583,9 +583,9 @@ void Grid_DualEvap(void *context)
          SetFreshFoodPulldownOffsetEnabled(dataModel, DISABLED);
          SetIceMakersEnabled(dataModel, ENABLED);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
-         SetDelayCcCooling(dataModel, DISABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
 
          if(GetCompressorSpeed(dataModel) != CompressorSpeed_Off)
          {
@@ -605,7 +605,7 @@ void Grid_DualEvap(void *context)
 
       case 38:
          SetMaxValveTimeInPosAEnabled(dataModel, ENABLED);
-         SetDelayCcCooling(dataModel, ENABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, ENABLED);
 
          if(GetCompressorSpeed(dataModel) == CompressorSpeed_Off)
          {
@@ -614,8 +614,8 @@ void Grid_DualEvap(void *context)
             VoteCompressorSpeed(dataModel, CompressorSpeed_Off);
             VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
             VoteValvePosition(dataModel, ValvePosition_D);
-            SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
-            SetCoolCcBeforeOff(dataModel, DISABLED);
+            SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
+            SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
          }
          else
          {
@@ -645,19 +645,19 @@ void Grid_DualEvap(void *context)
                VoteCompressorSpeed(dataModel, CompressorSpeed_Off);
             }
 
-            if(GetCoolCcBeforeOff(dataModel) == ENABLED && GetCcGridBlockNumber(dataModel) >= 4)
+            if(GetCoolConvertibleCompartmentBeforeOff(dataModel) == ENABLED && GetConvertibleCompartmentGridBlockNumber(dataModel) >= 4)
             {
-               SetCoolCcBeforeOff(dataModel, DISABLED);
-               SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+               SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+               SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
             }
          }
          break;
 
       case 39:
          SetMaxValveTimeInPosAEnabled(dataModel, ENABLED);
-         SetDelayCcCooling(dataModel, DISABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
 
          if(GetCompressorSpeed(dataModel) < CompressorSpeed_Mid)
          {
@@ -692,58 +692,58 @@ void Grid_DualEvap(void *context)
          SetIceMakersEnabled(dataModel, ENABLED);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
 
-         if(GetCoolCcBeforeOff(dataModel))
+         if(GetCoolConvertibleCompartmentBeforeOff(dataModel))
          {
-            if(GetCcGridBlockNumber(dataModel) < 4) // CC is still Enabledly cooling
+            if(GetConvertibleCompartmentGridBlockNumber(dataModel) < 4) // ConvertibleCompartment is still Enabledly cooling
             {
                VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_High);
                VoteCompressorSpeed(dataModel, CompressorSpeed_Low);
                VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Low);
                VoteValvePosition(dataModel, ValvePosition_B);
-               SetDelayCcCoolingLowSpeedTo(dataModel, ENABLED);
+               SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, ENABLED);
             }
             else
             {
-               SetCoolCcBeforeOff(dataModel, DISABLED);
-               SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+               SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+               SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
             }
          }
 
-         if(!GetCoolCcBeforeOff(dataModel))
+         if(!GetCoolConvertibleCompartmentBeforeOff(dataModel))
          {
             VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Off);
             VoteCompressorSpeed(dataModel, CompressorSpeed_Off);
             VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Off);
             VoteValvePosition(dataModel, ValvePosition_D);
-            SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+            SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
          }
          break;
 
       case 45:
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
 
-         if(GetDelayCcCooling(dataModel) == ENABLED && GetCcGridBlockNumber(dataModel) < 2)
+         if(GetDelayConvertibleCompartmentCooling(dataModel) == ENABLED && GetConvertibleCompartmentGridBlockNumber(dataModel) < 2)
          {
-            SetCoolCcBeforeOff(dataModel, ENABLED);
+            SetCoolConvertibleCompartmentBeforeOff(dataModel, ENABLED);
          }
-         SetDelayCcCooling(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
 
-         if(GetCcGridBlockNumber(dataModel) < 4)
+         if(GetConvertibleCompartmentGridBlockNumber(dataModel) < 4)
          {
             VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_High);
             VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
             VoteCompressorSpeed(dataModel, CompressorSpeed_Low);
             VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Low);
             VoteValvePosition(dataModel, ValvePosition_B);
-            SetDelayCcCoolingLowSpeedTo(dataModel, ENABLED);
+            SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, ENABLED);
          }
          else
          {
-            SetCoolCcBeforeOff(dataModel, DISABLED);
-            SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+            SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+            SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
          }
 
-         if(GetCoolCcBeforeOff(dataModel) == DISABLED)
+         if(GetCoolConvertibleCompartmentBeforeOff(dataModel) == DISABLED)
          {
             VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Off);
             if(GetCompressorSpeed(dataModel) != CompressorSpeed_Off)
@@ -775,9 +775,9 @@ void Grid_DualEvap(void *context)
 
       case 46:
          SetMaxValveTimeInPosAEnabled(dataModel, ENABLED);
-         SetDelayCcCooling(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
 
          switch(GetCompressorSpeed(dataModel))
          {
@@ -803,9 +803,9 @@ void Grid_DualEvap(void *context)
 
       case 47:
          SetMaxValveTimeInPosAEnabled(dataModel, ENABLED);
-         SetDelayCcCooling(dataModel, DISABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
          VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Off);
          VoteValvePosition(dataModel, ValvePosition_A);
 
@@ -825,9 +825,9 @@ void Grid_DualEvap(void *context)
 
       case 48:
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
-         SetDelayCcCooling(dataModel, DISABLED);
-         SetCoolCcBeforeOff(dataModel, DISABLED);
-         SetDelayCcCoolingLowSpeedTo(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
+         SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+         SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
          VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Off);
          VoteCompressorSpeed(dataModel, CompressorSpeed_High);
          VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_High);

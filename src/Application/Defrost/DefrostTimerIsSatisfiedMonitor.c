@@ -19,7 +19,7 @@ enum
    Signal_EnableRequested = Fsm_UserSignalStart,
    Signal_DisableRequested,
    Signal_ResetRequested,
-   Signal_FzAbnormalRunTimeReached,
+   Signal_FreezerAbnormalRunTimeReached,
    Signal_MaxTimeBetweenDefrostsReached
 };
 
@@ -109,10 +109,10 @@ static void DataModelChanged(void *context, const void *args)
 
       uint32_t maxTimeBetweenDefrostsInSeconds = MaxTimeBetweenDefrostsInSeconds(instance);
 
-      if((*defrostTimerCountsInSeconds >= instance->_private.defrostParametricData->fzAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE) &&
+      if((*defrostTimerCountsInSeconds >= instance->_private.defrostParametricData->freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE) &&
          (*defrostTimerCountsInSeconds < maxTimeBetweenDefrostsInSeconds))
       {
-         SendSignalOnce(instance, Signal_FzAbnormalRunTimeReached);
+         SendSignalOnce(instance, Signal_FreezerAbnormalRunTimeReached);
       }
       else if(*defrostTimerCountsInSeconds >= maxTimeBetweenDefrostsInSeconds)
       {
@@ -142,7 +142,7 @@ static void ClearDefrostTimerIsSatisfied(DefrostTimerIsSatisfiedMonitor_t *insta
       clear);
 }
 
-static void DetermineIfDefrostTimerIsSatisfiedWhenFzAbnormalRunTimeIsReached(DefrostTimerIsSatisfiedMonitor_t *instance)
+static void DetermineIfDefrostTimerIsSatisfiedWhenFreezerAbnormalRunTimeIsReached(DefrostTimerIsSatisfiedMonitor_t *instance)
 {
    EnergyDemandLevel_t level;
    DataModel_Read(
@@ -150,20 +150,20 @@ static void DetermineIfDefrostTimerIsSatisfiedWhenFzAbnormalRunTimeIsReached(Def
       instance->_private.config->demandResponseLevelErd,
       &level);
 
-   bool lastFzDefrostWasAbnormal;
+   bool lastFreezerDefrostWasAbnormal;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->fzDefrostWasAbnormalErd,
-      &lastFzDefrostWasAbnormal);
+      instance->_private.config->freezerDefrostWasAbnormalErd,
+      &lastFreezerDefrostWasAbnormal);
 
-   bool lastFfDefrostWasAbnormal;
+   bool lastFreshFoodDefrostWasAbnormal;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->ffDefrostWasAbnormalErd,
-      &lastFfDefrostWasAbnormal);
+      instance->_private.config->freshFoodDefrostWasAbnormalErd,
+      &lastFreshFoodDefrostWasAbnormal);
 
    if((level == EnergyDemandLevel_Off) &&
-      (lastFzDefrostWasAbnormal || lastFfDefrostWasAbnormal) &&
+      (lastFreezerDefrostWasAbnormal || lastFreshFoodDefrostWasAbnormal) &&
       !SabbathModeIsEnabled(instance))
    {
       SetDefrostTimerIsSatisfied(instance);
@@ -205,8 +205,8 @@ static void State_Enabled(Fsm_t *fsm, const FsmSignal_t signal, const void *data
          ClearDefrostTimerIsSatisfied(instance);
          break;
 
-      case Signal_FzAbnormalRunTimeReached:
-         DetermineIfDefrostTimerIsSatisfiedWhenFzAbnormalRunTimeIsReached(instance);
+      case Signal_FreezerAbnormalRunTimeReached:
+         DetermineIfDefrostTimerIsSatisfiedWhenFreezerAbnormalRunTimeIsReached(instance);
          break;
 
       case Signal_MaxTimeBetweenDefrostsReached:

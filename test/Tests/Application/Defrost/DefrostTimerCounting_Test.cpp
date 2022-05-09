@@ -36,48 +36,48 @@ enum
 };
 
 static const DefrostData_t defrostData = {
-   .fzDoorIncrementFactorInSecondsPerSecond = 348,
-   .ffDoorIncrementFactorInSecondsPerSecond = 87,
-   .fzAbnormalRunTimeInMinutes = 6 * 60,
+   .freezerDoorIncrementFactorInSecondsPerSecond = 348,
+   .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
+   .freezerAbnormalRunTimeInMinutes = 6 * 60,
    .maxTimeBetweenDefrostsInMinutes = 32 * 60,
-   .dmFzDefrostTemperatureInDegFx100 = 1500,
-   .prechillFzSetpointInDegFx100 = 600,
-   .prechillFfSetpointInDegFx100 = 4600,
-   .prechillCcSetpointInDegFx100 = 600,
-   .prechillFzEvapExitTemperatureInDegFx100 = -3000,
-   .prechillCcEvapExitTemperatureInDegFx100 = -3000,
+   .dmFreezerDefrostTemperatureInDegFx100 = 1500,
+   .prechillFreezerSetpointInDegFx100 = 600,
+   .prechillFreshFoodSetpointInDegFx100 = 4600,
+   .prechillConvertibleCompartmentSetpointInDegFx100 = 600,
+   .prechillFreezerEvapExitTemperatureInDegFx100 = -3000,
+   .prechillConvertibleCompartmentEvapExitTemperatureInDegFx100 = -3000,
    .maxPrechillTimeInMinutes = 10,
    .maxPrechillTimeForFreshFoodOnlyDefrostInMinutes = 20,
-   .defrostDoorHoldoffTimeForFfAndFzInMinutes = 60,
-   .defrostDoorHoldoffTimeForFfOnlyInMinutes = 50,
+   .defrostDoorHoldoffTimeForFreshFoodAndFreezerInMinutes = 60,
+   .defrostDoorHoldoffTimeForFreshFoodOnlyInMinutes = 50,
    .defrostMaxHoldoffTimeInMinutes = 60,
    .maxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds = 0,
-   .ffFanDefrostFfEvapExitTemperatureInDegFx100 = 3600,
-   .ffFanDefrostFfFanMaxOnTimeInMinutes = 10,
-   .ccFanDefrostCcEvapExitTemperatureInDegFx100 = 3200,
-   .ccFanDefrostCcFanMaxOnTimeInMinutes = 10,
-   .fzDefrostHeaterMaxOnTimeInMinutes = 60,
-   .fzAbnormalDefrostHeaterMaxOnTimeInMinutes = 32,
-   .fzDefrostTerminationTemperatureInDegFx100 = 5900,
-   .ffDefrostTerminationTemperatureInDegFx100 = 4460,
-   .ccDefrostTerminationTemperatureInDegFx100 = 4460,
-   .ffDefrostHeaterMaxOnTimeInMinutes = 60,
-   .ffAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
-   .ccDefrostHeaterMaxOnTimeInMinutes = 60,
-   .ccAsFfAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
-   .ccAsFzAbnormalDefrostHeaterMaxOnTimeInMinutes = 35,
+   .freshFoodFanDefrostFreshFoodEvapExitTemperatureInDegFx100 = 3600,
+   .freshFoodFanDefrostFreshFoodFanMaxOnTimeInMinutes = 10,
+   .convertibleCompartmentFanDefrostConvertibleCompartmentEvapExitTemperatureInDegFx100 = 3200,
+   .convertibleCompartmentFanDefrostConvertibleCompartmentFanMaxOnTimeInMinutes = 10,
+   .freezerDefrostHeaterMaxOnTimeInMinutes = 60,
+   .freezerAbnormalDefrostHeaterMaxOnTimeInMinutes = 32,
+   .freezerDefrostTerminationTemperatureInDegFx100 = 5900,
+   .freshFoodDefrostTerminationTemperatureInDegFx100 = 4460,
+   .convertibleCompartmentDefrostTerminationTemperatureInDegFx100 = 4460,
+   .freshFoodDefrostHeaterMaxOnTimeInMinutes = 60,
+   .freshFoodAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
+   .convertibleCompartmentDefrostHeaterMaxOnTimeInMinutes = 60,
+   .convertibleCompartmentAsFreshFoodAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
+   .convertibleCompartmentAsFreezerAbnormalDefrostHeaterMaxOnTimeInMinutes = 35,
    .defrostDwellTimeInMinutes = 7,
-   .ffAndFzPostDwellFzExitTemperatureInDegFx100 = -1000,
-   .ffAndFzPostDwellFzExitTimeInMinutes = 10,
+   .freshFoodAndFreezerPostDwellFreezerExitTemperatureInDegFx100 = -1000,
+   .freshFoodAndFreezerPostDwellFreezerExitTimeInMinutes = 10,
    .dwellThreeWayValvePosition = ValvePosition_A,
-   .postDwellThreeWayValvePositionForFfAndFz = ValvePosition_A,
-   .ffPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
-   .fzPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
-   .numberOfFfDefrostsBeforeFzDefrost = 2,
-   .numberOfFfDefrostsBeforeAbnormalFzDefrost = 1,
-   .doorHoldoffTimeForFfAndFzInMinutes = 60,
-   .ffOnlyPostDwellExitTimeInMinutes = 10,
-   .dsmFzSetpointTemperatureInDegFx100 = 200,
+   .postDwellThreeWayValvePositionForFreshFoodAndFreezer = ValvePosition_A,
+   .freshFoodPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
+   .freezerPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
+   .numberOfFreshFoodDefrostsBeforeFreezerDefrost = 2,
+   .numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost = 1,
+   .doorHoldoffTimeForFreshFoodAndFreezerInMinutes = 60,
+   .freshFoodOnlyPostDwellExitTimeInMinutes = 10,
+   .dsmFreezerSetpointTemperatureInDegFx100 = 200,
    .defrostPeriodicTimeoutInSeconds = 1,
    .threeWayValvePositionToExitIdle = ValvePosition_B,
    .threeWayValvePositionForMaxPrechillHoldoff = ValvePosition_B,
@@ -88,12 +88,12 @@ static const SabbathData_t sabbathData = {
    .maxTimeBetweenDefrostsInMinutes = 33 * MINUTES_PER_HOUR
 };
 
-#define CountLessThanFzAbnormalDefrostRunTimeInSeconds (defrostData.fzAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 2)
-#define CountGreaterThanFzAbnormalDefrostRunTimeInSeconds (defrostData.fzAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1)
-#define CountBetweenMaxTimeBetweenDefrostsAndFzAbnormalDefrostRunTimeInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.fzAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
+#define CountLessThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 2)
+#define CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1)
+#define CountBetweenMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
 #define CountGreaterThanMaxTimeBetweenDefrostsInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE + 1)
 
-#define CountBetweenSabbathMaxTimeBetweenDefrostsAndFzAbnormalDefrostRunTimeInSeconds (sabbathData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.fzAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
+#define CountBetweenSabbathMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds (sabbathData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
 #define CountGreaterThanSabbathMaxTimeBetweenDefrostsInSeconds (sabbathData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE + 1)
 
 static const DefrostTimerCounterConfig_t config = {
@@ -101,13 +101,13 @@ static const DefrostTimerCounterConfig_t config = {
    .defrostTimerCounterRequestErd = Erd_DefrostTimerCounterRequest,
    .ramDefrostTimerCountInSecondsErd = Erd_DefrostTimerCountInSeconds,
    .doorAccelerationRequestErd = Erd_DoorAccelerationRequest,
-   .ffDoorAccelerationCountsErd = Erd_DefrostFfDoorAccelerationCount,
-   .fzDoorAccelerationCountsErd = Erd_DefrostFzDoorAccelerationCount,
+   .freshFoodDoorAccelerationCountsErd = Erd_DefrostFreshFoodDoorAccelerationCount,
+   .freezerDoorAccelerationCountsErd = Erd_DefrostFreezerDoorAccelerationCount,
    .defrostTimerIsSatisfiedMonitorRequestErd = Erd_DefrostTimerIsSatisfiedMonitorRequest,
    .compressorResolvedSpeedErd = Erd_CompressorSpeed_ResolvedVote,
    .compressorSpeedConfigErd = Erd_CompressorSpeedConfig,
    .sabbathModeErd = Erd_SabbathMode,
-   .fzDefrostWasAbnormalErd = Erd_FzDefrostWasAbnormal,
+   .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .maxTimeBetweenDefrostsInMinutesErd = Erd_MaxTimeBetweenDefrostsInMinutes,
    .eepromDefrostTimerCountInSecondsErd = Erd_Eeprom_DefrostTimerCountInSeconds,
    .timerModuleErd = Erd_TimerModule,
@@ -278,16 +278,16 @@ TEST_GROUP(DefrostTimerCounter)
       }
    }
 
-   void LastFzDefrostWasNormal()
+   void LastFreezerDefrostWasNormal()
    {
       bool state = false;
-      DataModel_Write(dataModel, Erd_FzDefrostWasAbnormal, &state);
+      DataModel_Write(dataModel, Erd_FreezerDefrostWasAbnormal, &state);
    }
 
-   void LastFzDefrostWasAbnormal()
+   void LastFreezerDefrostWasAbnormal()
    {
       bool state = true;
-      DataModel_Write(dataModel, Erd_FzDefrostWasAbnormal, &state);
+      DataModel_Write(dataModel, Erd_FreezerDefrostWasAbnormal, &state);
    }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
@@ -295,14 +295,14 @@ TEST_GROUP(DefrostTimerCounter)
       TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
    }
 
-   void FzDoorAccelerationIs(uint32_t count)
+   void FreezerDoorAccelerationIs(uint32_t count)
    {
-      DataModel_Write(dataModel, Erd_DefrostFzDoorAccelerationCount, &count);
+      DataModel_Write(dataModel, Erd_DefrostFreezerDoorAccelerationCount, &count);
    }
 
-   void FfDoorAccelerationIs(uint32_t count)
+   void FreshFoodDoorAccelerationIs(uint32_t count)
    {
-      DataModel_Write(dataModel, Erd_DefrostFfDoorAccelerationCount, &count);
+      DataModel_Write(dataModel, Erd_DefrostFreshFoodDoorAccelerationCount, &count);
    }
 };
 
@@ -527,31 +527,31 @@ TEST(DefrostTimerCounter, ShouldNotIncrementDefrostTimerCountWhenEnabledAndNotIn
 }
 
 // Sabbath mode disabled
-TEST(DefrostTimerCounter, ShouldAddDoorAccelerationsToDefrostTimerCountWhenLastFzDefrostWasNormalAndDefrostTimerCountIsBetweenFzAbnormalRunTimeAndMaxTimeBetweenDefrosts)
+TEST(DefrostTimerCounter, ShouldAddDoorAccelerationsToDefrostTimerCountWhenLastFreezerDefrostWasNormalAndDefrostTimerCountIsBetweenFreezerAbnormalRunTimeAndMaxTimeBetweenDefrosts)
 {
    Given SabbathModeIs(DISABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasNormal();
+   Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
-   Given FfDoorAccelerationIs(SomeDoorAccelerationCounts);
-   Given FzDoorAccelerationIs(SomeDoorAccelerationCounts);
-   Given DefrostTimerCountIs(CountBetweenMaxTimeBetweenDefrostsAndFzAbnormalDefrostRunTimeInSeconds);
+   Given FreshFoodDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given FreezerDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given DefrostTimerCountIs(CountBetweenMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-   DefrostTimerCountShouldBe(CountBetweenMaxTimeBetweenDefrostsAndFzAbnormalDefrostRunTimeInSeconds);
+   DefrostTimerCountShouldBe(CountBetweenMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds);
 
    After(1);
-   DefrostTimerCountShouldBe(CountBetweenMaxTimeBetweenDefrostsAndFzAbnormalDefrostRunTimeInSeconds + 2 * SomeDoorAccelerationCounts);
+   DefrostTimerCountShouldBe(CountBetweenMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds + 2 * SomeDoorAccelerationCounts);
 }
 
-TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLastFzDefrostWasNormalAndDefrostTimerCountIsEqualToMaxTimeBetweenDefrosts)
+TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLastFreezerDefrostWasNormalAndDefrostTimerCountIsEqualToMaxTimeBetweenDefrosts)
 {
    Given SabbathModeIs(DISABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasNormal();
+   Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
-   Given FfDoorAccelerationIs(SomeDoorAccelerationCounts);
-   Given FzDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given FreshFoodDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given FreezerDoorAccelerationIs(SomeDoorAccelerationCounts);
    Given DefrostTimerCountIs(defrostData.maxTimeBetweenDefrostsInMinutes);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
@@ -561,14 +561,14 @@ TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLa
    DefrostTimerCountShouldBe(defrostData.maxTimeBetweenDefrostsInMinutes);
 }
 
-TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLastFzDefrostWasNormalAndDefrostTimerCountIsGreaterThanMaxTimeBetweenDefrosts)
+TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLastFreezerDefrostWasNormalAndDefrostTimerCountIsGreaterThanMaxTimeBetweenDefrosts)
 {
    Given SabbathModeIs(DISABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasNormal();
+   Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
-   Given FfDoorAccelerationIs(SomeDoorAccelerationCounts);
-   Given FzDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given FreshFoodDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given FreezerDoorAccelerationIs(SomeDoorAccelerationCounts);
    Given DefrostTimerCountIs(CountGreaterThanMaxTimeBetweenDefrostsInSeconds);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
@@ -578,47 +578,47 @@ TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLa
    DefrostTimerCountShouldBe(CountGreaterThanMaxTimeBetweenDefrostsInSeconds);
 }
 
-TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLastFzDefrostWasAbnormalAndDefrostTimerCountIsGreaterThanFzAbnormalDefrostRunTime)
+TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLastFreezerDefrostWasAbnormalAndDefrostTimerCountIsGreaterThanFreezerAbnormalDefrostRunTime)
 {
    Given SabbathModeIs(DISABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasAbnormal();
+   Given LastFreezerDefrostWasAbnormal();
    Given DefrostTimerIsEnabled();
-   Given FfDoorAccelerationIs(SomeDoorAccelerationCounts);
-   Given FzDoorAccelerationIs(SomeDoorAccelerationCounts);
-   Given DefrostTimerCountIs(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds);
+   Given FreshFoodDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given FreezerDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given DefrostTimerCountIs(CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-   DefrostTimerCountShouldBe(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds);
+   DefrostTimerCountShouldBe(CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds);
 
    After(1);
-   DefrostTimerCountShouldBe(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds);
+   DefrostTimerCountShouldBe(CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds);
 }
 
-TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLastFzDefrostWasNormalAndDefrostTimerCountIsLessThanFzAbnormalDefrostRunTime)
+TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLastFreezerDefrostWasNormalAndDefrostTimerCountIsLessThanFreezerAbnormalDefrostRunTime)
 {
    Given SabbathModeIs(DISABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasNormal();
+   Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
-   Given FfDoorAccelerationIs(SomeDoorAccelerationCounts);
-   Given FzDoorAccelerationIs(SomeDoorAccelerationCounts);
-   Given DefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   Given FreshFoodDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given FreezerDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given DefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-   DefrostTimerCountShouldBe(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   DefrostTimerCountShouldBe(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
 
    After(1);
-   DefrostTimerCountShouldBe(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   DefrostTimerCountShouldBe(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
 }
 
-TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFzDefrostWasNormalAndDefrostTimerCountIsEqualToFzAbnormalRunTime)
+TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFreezerDefrostWasNormalAndDefrostTimerCountIsEqualToFreezerAbnormalRunTime)
 {
    Given SabbathModeIs(DISABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasNormal();
+   Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
-   Given DefrostTimerCountIs(defrostData.fzAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
+   Given DefrostTimerCountIs(defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
    DoorAccelerationRequestShouldBe(DoorAcceleration_Enable, 2);
@@ -627,11 +627,11 @@ TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFzDefros
    DoorAccelerationRequestShouldBe(DoorAcceleration_Reset, 3);
 }
 
-TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFzDefrostWasNormalAndDefrostTimerCountIsEqualToMaxTimeBetweenDefrost)
+TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFreezerDefrostWasNormalAndDefrostTimerCountIsEqualToMaxTimeBetweenDefrost)
 {
    Given SabbathModeIs(DISABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasNormal();
+   Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
    Given DefrostTimerCountIs(defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE);
 
@@ -642,11 +642,11 @@ TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFzDefros
    DoorAccelerationRequestShouldBe(DoorAcceleration_Reset, 3);
 }
 
-TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFzDefrostWasNormalAndDefrostTimerCountIsGreaterThanMaxTimeBetweenDefrost)
+TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFreezerDefrostWasNormalAndDefrostTimerCountIsGreaterThanMaxTimeBetweenDefrost)
 {
    Given SabbathModeIs(DISABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasNormal();
+   Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
    Given DefrostTimerCountIs(CountGreaterThanMaxTimeBetweenDefrostsInSeconds);
 
@@ -657,13 +657,13 @@ TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFzDefros
    DoorAccelerationRequestShouldBe(DoorAcceleration_Reset, 3);
 }
 
-TEST(DefrostTimerCounter, ShouldNotSendResetDoorAccelerationRequestWhenLastFzDefrostWasAbnormalAndDefrostTimerCountIsGreaterThanFzAbnormalRunTime)
+TEST(DefrostTimerCounter, ShouldNotSendResetDoorAccelerationRequestWhenLastFreezerDefrostWasAbnormalAndDefrostTimerCountIsGreaterThanFreezerAbnormalRunTime)
 {
    Given SabbathModeIs(DISABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasAbnormal();
+   Given LastFreezerDefrostWasAbnormal();
    Given DefrostTimerIsEnabled();
-   Given DefrostTimerCountIs(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds);
+   Given DefrostTimerCountIs(CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
    DoorAccelerationRequestShouldBe(DoorAcceleration_Enable, 2);
@@ -672,13 +672,13 @@ TEST(DefrostTimerCounter, ShouldNotSendResetDoorAccelerationRequestWhenLastFzDef
    DoorAccelerationRequestShouldBe(DoorAcceleration_Enable, 2);
 }
 
-TEST(DefrostTimerCounter, ShouldNotSendResetDoorAccelerationRequestWhenDefrostTimerCounterIsLessThanFzAbnormalRunTime)
+TEST(DefrostTimerCounter, ShouldNotSendResetDoorAccelerationRequestWhenDefrostTimerCounterIsLessThanFreezerAbnormalRunTime)
 {
    Given SabbathModeIs(DISABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasNormal();
+   Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
-   Given DefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   Given DefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
    DoorAccelerationRequestShouldBe(DoorAcceleration_Enable, 2);
@@ -688,31 +688,31 @@ TEST(DefrostTimerCounter, ShouldNotSendResetDoorAccelerationRequestWhenDefrostTi
 }
 
 // Sabbath mode enabled
-TEST(DefrostTimerCounter, ShouldAddDoorAccelerationsToDefrostTimerCountWhenLastFzDefrostWasNormalAndDefrostTimerCountIsBetweenFzAbnormalRunTimeAndSabbathMaxTimeBetweenDefrostsWhenSabbathIsEnabled)
+TEST(DefrostTimerCounter, ShouldAddDoorAccelerationsToDefrostTimerCountWhenLastFreezerDefrostWasNormalAndDefrostTimerCountIsBetweenFreezerAbnormalRunTimeAndSabbathMaxTimeBetweenDefrostsWhenSabbathIsEnabled)
 {
    Given SabbathModeIs(ENABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasNormal();
+   Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
-   Given FfDoorAccelerationIs(SomeDoorAccelerationCounts);
-   Given FzDoorAccelerationIs(SomeDoorAccelerationCounts);
-   Given DefrostTimerCountIs(CountBetweenSabbathMaxTimeBetweenDefrostsAndFzAbnormalDefrostRunTimeInSeconds);
+   Given FreshFoodDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given FreezerDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given DefrostTimerCountIs(CountBetweenSabbathMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-   DefrostTimerCountShouldBe(CountBetweenSabbathMaxTimeBetweenDefrostsAndFzAbnormalDefrostRunTimeInSeconds);
+   DefrostTimerCountShouldBe(CountBetweenSabbathMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds);
 
    After(1);
-   DefrostTimerCountShouldBe(CountBetweenSabbathMaxTimeBetweenDefrostsAndFzAbnormalDefrostRunTimeInSeconds + 2 * SomeDoorAccelerationCounts + 1);
+   DefrostTimerCountShouldBe(CountBetweenSabbathMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds + 2 * SomeDoorAccelerationCounts + 1);
 }
 
-TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLastFzDefrostWasNormalAndDefrostTimerCountIsEqualToSabbathMaxTimeBetweenDefrostsWhenSabbathIsEnabled)
+TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLastFreezerDefrostWasNormalAndDefrostTimerCountIsEqualToSabbathMaxTimeBetweenDefrostsWhenSabbathIsEnabled)
 {
    Given SabbathModeIs(ENABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasNormal();
+   Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
-   Given FfDoorAccelerationIs(SomeDoorAccelerationCounts);
-   Given FzDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given FreshFoodDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given FreezerDoorAccelerationIs(SomeDoorAccelerationCounts);
    Given DefrostTimerCountIs(sabbathData.maxTimeBetweenDefrostsInMinutes);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
@@ -722,14 +722,14 @@ TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLa
    DefrostTimerCountShouldBe(sabbathData.maxTimeBetweenDefrostsInMinutes + 1);
 }
 
-TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLastFzDefrostWasNormalAndDefrostTimerCountIsGreaterThanSabbathMaxTimeBetweenDefrostsWhenSabbathIsEnabled)
+TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLastFreezerDefrostWasNormalAndDefrostTimerCountIsGreaterThanSabbathMaxTimeBetweenDefrostsWhenSabbathIsEnabled)
 {
    Given SabbathModeIs(ENABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasNormal();
+   Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
-   Given FfDoorAccelerationIs(SomeDoorAccelerationCounts);
-   Given FzDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given FreshFoodDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given FreezerDoorAccelerationIs(SomeDoorAccelerationCounts);
    Given DefrostTimerCountIs(CountGreaterThanSabbathMaxTimeBetweenDefrostsInSeconds);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
@@ -739,47 +739,47 @@ TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLa
    DefrostTimerCountShouldBe(CountGreaterThanSabbathMaxTimeBetweenDefrostsInSeconds + 1);
 }
 
-TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLastFzDefrostWasAbnormalAndDefrostTimerCountIsGreaterThanFzAbnormalDefrostRunTimeWhenSabbathIsEnabled)
+TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLastFreezerDefrostWasAbnormalAndDefrostTimerCountIsGreaterThanFreezerAbnormalDefrostRunTimeWhenSabbathIsEnabled)
 {
    Given SabbathModeIs(ENABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasAbnormal();
+   Given LastFreezerDefrostWasAbnormal();
    Given DefrostTimerIsEnabled();
-   Given FfDoorAccelerationIs(SomeDoorAccelerationCounts);
-   Given FzDoorAccelerationIs(SomeDoorAccelerationCounts);
-   Given DefrostTimerCountIs(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds);
+   Given FreshFoodDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given FreezerDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given DefrostTimerCountIs(CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-   DefrostTimerCountShouldBe(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds);
+   DefrostTimerCountShouldBe(CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds);
 
    After(1);
-   DefrostTimerCountShouldBe(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds + 1);
+   DefrostTimerCountShouldBe(CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds + 1);
 }
 
-TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLastFzDefrostWasNormalAndDefrostTimerCountIsLessThanFzAbnormalDefrostRunTimeWhenSabbathIsEnabled)
+TEST(DefrostTimerCounter, ShouldNotAddDoorAccelerationsToDefrostTimerCountWhenLastFreezerDefrostWasNormalAndDefrostTimerCountIsLessThanFreezerAbnormalDefrostRunTimeWhenSabbathIsEnabled)
 {
    Given SabbathModeIs(ENABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasNormal();
+   Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
-   Given FfDoorAccelerationIs(SomeDoorAccelerationCounts);
-   Given FzDoorAccelerationIs(SomeDoorAccelerationCounts);
-   Given DefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   Given FreshFoodDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given FreezerDoorAccelerationIs(SomeDoorAccelerationCounts);
+   Given DefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-   DefrostTimerCountShouldBe(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   DefrostTimerCountShouldBe(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
 
    After(1);
-   DefrostTimerCountShouldBe(CountLessThanFzAbnormalDefrostRunTimeInSeconds + 1);
+   DefrostTimerCountShouldBe(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds + 1);
 }
 
-TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFzDefrostWasNormalAndDefrostTimerCountIsEqualToFzAbnormalRunTimeWhenSabbathIsEnabled)
+TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFreezerDefrostWasNormalAndDefrostTimerCountIsEqualToFreezerAbnormalRunTimeWhenSabbathIsEnabled)
 {
    Given SabbathModeIs(ENABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasNormal();
+   Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
-   Given DefrostTimerCountIs(defrostData.fzAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
+   Given DefrostTimerCountIs(defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
    DoorAccelerationRequestShouldBe(DoorAcceleration_Enable, 2);
@@ -788,11 +788,11 @@ TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFzDefros
    DoorAccelerationRequestShouldBe(DoorAcceleration_Reset, 3);
 }
 
-TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFzDefrostWasNormalAndDefrostTimerCountIsEqualToSabbathMaxTimeBetweenDefrostWhenSabbathIsEnabled)
+TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFreezerDefrostWasNormalAndDefrostTimerCountIsEqualToSabbathMaxTimeBetweenDefrostWhenSabbathIsEnabled)
 {
    Given SabbathModeIs(ENABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasNormal();
+   Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
    Given DefrostTimerCountIs(sabbathData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE);
 
@@ -803,11 +803,11 @@ TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFzDefros
    DoorAccelerationRequestShouldBe(DoorAcceleration_Reset, 3);
 }
 
-TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFzDefrostWasNormalAndDefrostTimerCountIsGreaterThanSabbathMaxTimeBetweenDefrostWhenSabbathIsEnabled)
+TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFreezerDefrostWasNormalAndDefrostTimerCountIsGreaterThanSabbathMaxTimeBetweenDefrostWhenSabbathIsEnabled)
 {
    Given SabbathModeIs(ENABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasNormal();
+   Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
    Given DefrostTimerCountIs(CountGreaterThanSabbathMaxTimeBetweenDefrostsInSeconds);
 
@@ -818,13 +818,13 @@ TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFzDefros
    DoorAccelerationRequestShouldBe(DoorAcceleration_Reset, 3);
 }
 
-TEST(DefrostTimerCounter, ShouldNotSendResetDoorAccelerationRequestWhenLastFzDefrostWasAbnormalAndDefrostTimerCountIsGreaterThanFzAbnormalRunTimeWhenSabbathIsEnabled)
+TEST(DefrostTimerCounter, ShouldNotSendResetDoorAccelerationRequestWhenLastFreezerDefrostWasAbnormalAndDefrostTimerCountIsGreaterThanFreezerAbnormalRunTimeWhenSabbathIsEnabled)
 {
    Given SabbathModeIs(ENABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasAbnormal();
+   Given LastFreezerDefrostWasAbnormal();
    Given DefrostTimerIsEnabled();
-   Given DefrostTimerCountIs(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds);
+   Given DefrostTimerCountIs(CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
    DoorAccelerationRequestShouldBe(DoorAcceleration_Enable, 2);
@@ -833,13 +833,13 @@ TEST(DefrostTimerCounter, ShouldNotSendResetDoorAccelerationRequestWhenLastFzDef
    DoorAccelerationRequestShouldBe(DoorAcceleration_Enable, 2);
 }
 
-TEST(DefrostTimerCounter, ShouldNotSendResetDoorAccelerationRequestWhenDefrostTimerCounterIsLessthanFzAbnormalRunTimeWhenSabbathIsEnabled)
+TEST(DefrostTimerCounter, ShouldNotSendResetDoorAccelerationRequestWhenDefrostTimerCounterIsLessthanFreezerAbnormalRunTimeWhenSabbathIsEnabled)
 {
    Given SabbathModeIs(ENABLED);
    Given SingleSpeedCompressorIsOff();
-   Given LastFzDefrostWasNormal();
+   Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
-   Given DefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
+   Given DefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
    DoorAccelerationRequestShouldBe(DoorAcceleration_Enable, 2);
@@ -851,8 +851,8 @@ TEST(DefrostTimerCounter, ShouldNotSendResetDoorAccelerationRequestWhenDefrostTi
 TEST(DefrostTimerCounter, ShouldResetEepromDefrostCountAndRamDefrostCountWhenDefrostTimerCounterIsResetWhileEnabled)
 {
    Given DefrostTimerIsEnabled();
-   And EepromDefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
-   And DefrostTimerCountIs(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds);
+   And EepromDefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
+   And DefrostTimerCountIs(CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds);
 
    When DefrostTimerCounterRequestIs(DefrostTimer_Reset, 1);
    DefrostTimerCountShouldBe(0);
@@ -862,15 +862,15 @@ TEST(DefrostTimerCounter, ShouldResetEepromDefrostCountAndRamDefrostCountWhenDef
 TEST(DefrostTimerCounter, ShouldNotResetDefrostCountsToZeroWhenDisabledAndTheyShouldBeTheSameWhenEnabledAgain)
 {
    Given DefrostTimerIsEnabled();
-   And EepromDefrostTimerCountIs(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
-   And DefrostTimerCountIs(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds);
+   And EepromDefrostTimerCountIs(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
+   And DefrostTimerCountIs(CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds);
 
    When DefrostTimerCounterRequestIs(DefrostTimer_Disable, 2);
    DefrostTimerCounterFsmStateShouldBe(DefrostTimerCounterFsmState_Disabled);
-   EepromDefrostTimerCountShouldBe(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
-   DefrostTimerCountShouldBe(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds);
+   EepromDefrostTimerCountShouldBe(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
+   DefrostTimerCountShouldBe(CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds);
 
    When DefrostTimerCounterRequestIs(DefrostTimer_Enable, 3);
-   EepromDefrostTimerCountShouldBe(CountLessThanFzAbnormalDefrostRunTimeInSeconds);
-   DefrostTimerCountShouldBe(CountGreaterThanFzAbnormalDefrostRunTimeInSeconds);
+   EepromDefrostTimerCountShouldBe(CountLessThanFreezerAbnormalDefrostRunTimeInSeconds);
+   DefrostTimerCountShouldBe(CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds);
 }

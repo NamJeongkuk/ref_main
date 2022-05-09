@@ -43,12 +43,12 @@ enum
 
 #define PowerUpDelayInMs (5 * gridData.gridPeriodicRunRateInMSec)
 
-#define CountLessThanFzAbnormalDefrostRunTimeInSeconds (defrostData.fzAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 2)
-#define CountGreaterThanFzAbnormalDefrostRunTimeInSeconds (defrostData.fzAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1)
-#define CountBetweenMaxTimeBetweenDefrostsAndFzAbnormalDefrostRunTimeInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.fzAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
+#define CountLessThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 2)
+#define CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1)
+#define CountBetweenMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
 #define CountGreaterThanMaxTimeBetweenDefrostsInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE + 1)
 
-#define CountBetweenSabbathMaxTimeBetweenDefrostsAndFzAbnormalDefrostRunTimeInSeconds (sabbathData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.fzAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
+#define CountBetweenSabbathMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds (sabbathData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
 #define CountGreaterThanSabbathMaxTimeBetweenDefrostsInSeconds (sabbathData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE + 1)
 
 static const DefrostTimerCounterConfig_t config = {
@@ -56,13 +56,13 @@ static const DefrostTimerCounterConfig_t config = {
    .defrostTimerCounterRequestErd = Erd_DefrostTimerCounterRequest,
    .ramDefrostTimerCountInSecondsErd = Erd_DefrostTimerCountInSeconds,
    .doorAccelerationRequestErd = Erd_DoorAccelerationRequest,
-   .ffDoorAccelerationCountsErd = Erd_DefrostFfDoorAccelerationCount,
-   .fzDoorAccelerationCountsErd = Erd_DefrostFzDoorAccelerationCount,
+   .freshFoodDoorAccelerationCountsErd = Erd_DefrostFreshFoodDoorAccelerationCount,
+   .freezerDoorAccelerationCountsErd = Erd_DefrostFreezerDoorAccelerationCount,
    .defrostTimerIsSatisfiedMonitorRequestErd = Erd_DefrostTimerIsSatisfiedMonitorRequest,
    .compressorResolvedSpeedErd = Erd_CompressorSpeed_ResolvedVote,
    .compressorSpeedConfigErd = Erd_CompressorSpeedConfig,
    .sabbathModeErd = Erd_SabbathMode,
-   .fzDefrostWasAbnormalErd = Erd_FzDefrostWasAbnormal,
+   .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .maxTimeBetweenDefrostsInMinutesErd = Erd_MaxTimeBetweenDefrostsInMinutes,
    .eepromDefrostTimerCountInSecondsErd = Erd_Eeprom_DefrostTimerCountInSeconds,
    .timerModuleErd = Erd_TimerModule,
@@ -75,12 +75,12 @@ static const DefrostConfiguration_t defrostConfig = {
    .freezerFilteredTemperatureErd = Erd_Freezer_FilteredTemperature,
    .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
    .defrostStateErd = Erd_DefrostState,
-   .numberOfFzAbnormalDefrostCyclesErd = Erd_NumberofFzAbnormalDefrostCycles,
-   .fzDefrostWasAbnormalErd = Erd_FzDefrostWasAbnormal,
-   .fzAbnormalDefrostCycleCountErd = Erd_FzAbnormalDefrostCycleCount,
-   .fzDefrostCycleCountErd = Erd_FzDefrostCycleCount,
-   .ffDefrostHeaterDefrostVoteErd = Erd_FfDefrostHeater_DefrostVote,
-   .fzDefrostHeaterDefrostVoteErd = Erd_FzDefrostHeater_DefrostVote,
+   .numberOfFreezerAbnormalDefrostCyclesErd = Erd_NumberofFreezerAbnormalDefrostCycles,
+   .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
+   .freezerAbnormalDefrostCycleCountErd = Erd_FreezerAbnormalDefrostCycleCount,
+   .freezerDefrostCycleCountErd = Erd_FreezerDefrostCycleCount,
+   .freshFoodDefrostHeaterDefrostVoteErd = Erd_FreshFoodDefrostHeater_DefrostVote,
+   .freezerDefrostHeaterDefrostVoteErd = Erd_FreezerDefrostHeater_DefrostVote,
    .defrostTimerCounterFsmStateErd = Erd_DefrostTimerCounterFsmState,
    .sealedSystemValvePositionErd = Erd_SealedSystemValvePosition,
    .defrostTimerIsSatisfiedErd = Erd_DefrostTimerIsSatisfied,
@@ -88,48 +88,48 @@ static const DefrostConfiguration_t defrostConfig = {
 };
 
 static const DefrostData_t defrostData = {
-   .fzDoorIncrementFactorInSecondsPerSecond = 348,
-   .ffDoorIncrementFactorInSecondsPerSecond = 87,
-   .fzAbnormalRunTimeInMinutes = 6 * 60,
+   .freezerDoorIncrementFactorInSecondsPerSecond = 348,
+   .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
+   .freezerAbnormalRunTimeInMinutes = 6 * 60,
    .maxTimeBetweenDefrostsInMinutes = 32 * 60,
-   .dmFzDefrostTemperatureInDegFx100 = 1500,
-   .prechillFzSetpointInDegFx100 = -600,
-   .prechillFfSetpointInDegFx100 = 4600,
-   .prechillCcSetpointInDegFx100 = -600,
-   .prechillFzEvapExitTemperatureInDegFx100 = -3000,
-   .prechillCcEvapExitTemperatureInDegFx100 = -3000,
+   .dmFreezerDefrostTemperatureInDegFx100 = 1500,
+   .prechillFreezerSetpointInDegFx100 = -600,
+   .prechillFreshFoodSetpointInDegFx100 = 4600,
+   .prechillConvertibleCompartmentSetpointInDegFx100 = -600,
+   .prechillFreezerEvapExitTemperatureInDegFx100 = -3000,
+   .prechillConvertibleCompartmentEvapExitTemperatureInDegFx100 = -3000,
    .maxPrechillTimeInMinutes = 10,
    .maxPrechillTimeForFreshFoodOnlyDefrostInMinutes = 20,
-   .defrostDoorHoldoffTimeForFfAndFzInMinutes = 60,
-   .defrostDoorHoldoffTimeForFfOnlyInMinutes = 50,
+   .defrostDoorHoldoffTimeForFreshFoodAndFreezerInMinutes = 60,
+   .defrostDoorHoldoffTimeForFreshFoodOnlyInMinutes = 50,
    .defrostMaxHoldoffTimeInMinutes = 60,
    .maxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds = 60,
-   .ffFanDefrostFfEvapExitTemperatureInDegFx100 = 3600,
-   .ffFanDefrostFfFanMaxOnTimeInMinutes = 10,
-   .ccFanDefrostCcEvapExitTemperatureInDegFx100 = 3200,
-   .ccFanDefrostCcFanMaxOnTimeInMinutes = 10,
-   .fzDefrostHeaterMaxOnTimeInMinutes = 60,
-   .fzAbnormalDefrostHeaterMaxOnTimeInMinutes = 32,
-   .fzDefrostTerminationTemperatureInDegFx100 = 5900,
-   .ffDefrostTerminationTemperatureInDegFx100 = 4460,
-   .ccDefrostTerminationTemperatureInDegFx100 = 4460,
-   .ffDefrostHeaterMaxOnTimeInMinutes = 60,
-   .ffAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
-   .ccDefrostHeaterMaxOnTimeInMinutes = 60,
-   .ccAsFfAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
-   .ccAsFzAbnormalDefrostHeaterMaxOnTimeInMinutes = 35,
+   .freshFoodFanDefrostFreshFoodEvapExitTemperatureInDegFx100 = 3600,
+   .freshFoodFanDefrostFreshFoodFanMaxOnTimeInMinutes = 10,
+   .convertibleCompartmentFanDefrostConvertibleCompartmentEvapExitTemperatureInDegFx100 = 3200,
+   .convertibleCompartmentFanDefrostConvertibleCompartmentFanMaxOnTimeInMinutes = 10,
+   .freezerDefrostHeaterMaxOnTimeInMinutes = 60,
+   .freezerAbnormalDefrostHeaterMaxOnTimeInMinutes = 32,
+   .freezerDefrostTerminationTemperatureInDegFx100 = 5900,
+   .freshFoodDefrostTerminationTemperatureInDegFx100 = 4460,
+   .convertibleCompartmentDefrostTerminationTemperatureInDegFx100 = 4460,
+   .freshFoodDefrostHeaterMaxOnTimeInMinutes = 60,
+   .freshFoodAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
+   .convertibleCompartmentDefrostHeaterMaxOnTimeInMinutes = 60,
+   .convertibleCompartmentAsFreshFoodAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
+   .convertibleCompartmentAsFreezerAbnormalDefrostHeaterMaxOnTimeInMinutes = 35,
    .defrostDwellTimeInMinutes = 7,
-   .ffAndFzPostDwellFzExitTemperatureInDegFx100 = -1000,
-   .ffAndFzPostDwellFzExitTimeInMinutes = 10,
+   .freshFoodAndFreezerPostDwellFreezerExitTemperatureInDegFx100 = -1000,
+   .freshFoodAndFreezerPostDwellFreezerExitTimeInMinutes = 10,
    .dwellThreeWayValvePosition = ValvePosition_A,
-   .postDwellThreeWayValvePositionForFfAndFz = ValvePosition_A,
-   .ffPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
-   .fzPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
-   .numberOfFfDefrostsBeforeFzDefrost = 2,
-   .numberOfFfDefrostsBeforeAbnormalFzDefrost = 1,
-   .doorHoldoffTimeForFfAndFzInMinutes = 60,
-   .ffOnlyPostDwellExitTimeInMinutes = 10,
-   .dsmFzSetpointTemperatureInDegFx100 = 200,
+   .postDwellThreeWayValvePositionForFreshFoodAndFreezer = ValvePosition_A,
+   .freshFoodPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
+   .freezerPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
+   .numberOfFreshFoodDefrostsBeforeFreezerDefrost = 2,
+   .numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost = 1,
+   .doorHoldoffTimeForFreshFoodAndFreezerInMinutes = 60,
+   .freshFoodOnlyPostDwellExitTimeInMinutes = 10,
+   .dsmFreezerSetpointTemperatureInDegFx100 = 200,
    .defrostPeriodicTimeoutInSeconds = 1,
    .threeWayValvePositionToExitIdle = ValvePosition_B,
    .threeWayValvePositionForMaxPrechillHoldoff = ValvePosition_B,
@@ -144,20 +144,20 @@ static const GridData_t gridData = {
    .gridPeriodicRunRateInMSec = 1 * MSEC_PER_SEC
 };
 
-static TemperatureDegFx100_t ffCalcAxisGridLines[] = { 0, -450, 150, 450, 950, 1150 };
-static TemperatureDegFx100_t fzCalcAxisGridLines[] = { -250, 0, 250, 600, 750, 5500 };
+static TemperatureDegFx100_t freshFoodCalcAxisGridLines[] = { 0, -450, 150, 450, 950, 1150 };
+static TemperatureDegFx100_t freezerCalcAxisGridLines[] = { -250, 0, 250, 600, 750, 5500 };
 
-static const CalculatedAxisGridLines_t ffCalcAxis = {
+static const CalculatedAxisGridLines_t freshFoodCalcAxis = {
    .numberOfLines = SixGridLines,
-   .gridLinesDegFx100 = ffCalcAxisGridLines
+   .gridLinesDegFx100 = freshFoodCalcAxisGridLines
 };
 
-static const CalculatedAxisGridLines_t fzCalcAxis = {
+static const CalculatedAxisGridLines_t freezerCalcAxis = {
    .numberOfLines = SixGridLines,
-   .gridLinesDegFx100 = fzCalcAxisGridLines
+   .gridLinesDegFx100 = freezerCalcAxisGridLines
 };
 
-static CalculatedAxisGridLines_t calcGrid[] = { ffCalcAxis, fzCalcAxis };
+static CalculatedAxisGridLines_t calcGrid[] = { freshFoodCalcAxis, freezerCalcAxis };
 
 static const CalculatedGridLines_t calcGridLines = {
    .dimensions = TwoDimensional,
@@ -244,16 +244,16 @@ TEST_GROUP(DefrostIntegration)
          .withParameter("request->requestId", request.requestId);
    }
 
-   void DefrostInitializedWithFzTempAboveExtremeHysteresis()
+   void DefrostInitializedWithFreezerTempAboveExtremeHysteresis()
    {
-      Given FilteredFreezerCabinetTemperatureIs(fzCalcAxisGridLines[GridLine_FzExtremeHigh] + 1);
+      Given FilteredFreezerCabinetTemperatureIs(freezerCalcAxisGridLines[GridLine_FreezerExtremeHigh] + 1);
       Given CalculatedGridLinesAre(calcGridLines);
       Given DefrostIsInitialized();
    }
 
-   void DefrostInitializedWithFzTempBelowExtremeHysteresis()
+   void DefrostInitializedWithFreezerTempBelowExtremeHysteresis()
    {
-      Given FilteredFreezerCabinetTemperatureIs(fzCalcAxisGridLines[GridLine_FzExtremeHigh] - 1);
+      Given FilteredFreezerCabinetTemperatureIs(freezerCalcAxisGridLines[GridLine_FreezerExtremeHigh] - 1);
       Given CalculatedGridLinesAre(calcGridLines);
       Given DefrostIsInitialized();
    }
@@ -350,19 +350,19 @@ TEST_GROUP(DefrostIntegration)
       DataModel_Write(dataModel, Erd_Eeprom_DefrostTimerCountInSeconds, &count);
    }
 
-   void DefrostIsInPowerUpAndDefrostTimerCounterIsDisabledWithFzTempAboveExtremeHysteresis()
+   void DefrostIsInPowerUpAndDefrostTimerCounterIsDisabledWithFreezerTempAboveExtremeHysteresis()
    {
       Given DefrostTimerCounterIsInitialized();
-      And DefrostInitializedWithFzTempAboveExtremeHysteresis();
+      And DefrostInitializedWithFreezerTempAboveExtremeHysteresis();
 
       DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
       DefrostTimerCounterFsmStateShouldBe(DefrostTimerCounterFsmState_Disabled);
    }
 
-   void DefrostIsInPowerUpAndDefrostTimerCounterIsDisabledWithFzTempBelowExtremeHysteresis()
+   void DefrostIsInPowerUpAndDefrostTimerCounterIsDisabledWithFreezerTempBelowExtremeHysteresis()
    {
       Given DefrostTimerCounterIsInitialized();
-      And DefrostInitializedWithFzTempBelowExtremeHysteresis();
+      And DefrostInitializedWithFreezerTempBelowExtremeHysteresis();
 
       DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
       DefrostTimerCounterFsmStateShouldBe(DefrostTimerCounterFsmState_Disabled);
@@ -371,7 +371,7 @@ TEST_GROUP(DefrostIntegration)
 
 TEST(DefrostIntegration, ShouldEnableDefrostTimerCounterAfterPowerUp)
 {
-   Given DefrostIsInPowerUpAndDefrostTimerCounterIsDisabledWithFzTempAboveExtremeHysteresis();
+   Given DefrostIsInPowerUpAndDefrostTimerCounterIsDisabledWithFreezerTempAboveExtremeHysteresis();
 
    After(PowerUpDelayInMs - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
@@ -383,12 +383,12 @@ TEST(DefrostIntegration, ShouldEnableDefrostTimerCounterAfterPowerUp)
    DefrostTimerCounterFsmStateShouldBe(DefrostTimerCounterFsmState_Enabled);
 }
 
-TEST(DefrostIntegration, ShouldResetBothDefrostTimerCountsToZeroWhenFzTempIsAboveExtremeHysteresisOnPowerUp)
+TEST(DefrostIntegration, ShouldResetBothDefrostTimerCountsToZeroWhenFreezerTempIsAboveExtremeHysteresisOnPowerUp)
 {
    Given EepromDefrostTimerCountIs(SomeDefrostCount);
    And DefrostTimerCountIs(SomeOtherDefrostCount);
    And PeriodicNvUpdaterPluginIsInitialized();
-   And DefrostIsInPowerUpAndDefrostTimerCounterIsDisabledWithFzTempAboveExtremeHysteresis();
+   And DefrostIsInPowerUpAndDefrostTimerCounterIsDisabledWithFreezerTempAboveExtremeHysteresis();
 
    After(PowerUpDelayInMs - 1);
 
@@ -402,11 +402,11 @@ TEST(DefrostIntegration, ShouldResetBothDefrostTimerCountsToZeroWhenFzTempIsAbov
    EepromDefrostTimerCountShouldBe(0);
 }
 
-TEST(DefrostIntegration, ShouldCopyEepromDefrostTimerCountToRamOnPowerUpAndKeepValuesTheSameWhenDefrostTimerCounterIsInitializedAndFzTempIsBelowExtremeHysteresis)
+TEST(DefrostIntegration, ShouldCopyEepromDefrostTimerCountToRamOnPowerUpAndKeepValuesTheSameWhenDefrostTimerCounterIsInitializedAndFreezerTempIsBelowExtremeHysteresis)
 {
    Given EepromDefrostTimerCountIs(SomeDefrostCount);
    And DefrostTimerCountIs(SomeOtherDefrostCount);
-   And DefrostIsInPowerUpAndDefrostTimerCounterIsDisabledWithFzTempBelowExtremeHysteresis();
+   And DefrostIsInPowerUpAndDefrostTimerCounterIsDisabledWithFreezerTempBelowExtremeHysteresis();
    And PeriodicNvUpdaterPluginIsInitialized();
 
    DefrostTimerCountShouldBe(SomeDefrostCount);

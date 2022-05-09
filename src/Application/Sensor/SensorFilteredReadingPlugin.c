@@ -15,23 +15,23 @@
 #include "uassert.h"
 
 // (type, sensorType , countErd, unfilteredErd, filteredErd, IsSigned)
-#define SENSOR_FILTERING_TABLE_ALL(ENTRY)                                                                                                                  \
-   ENTRY(Local, fzCabinetThermistor, Erd_FreezerThermistor_AdcCount, Erd_Freezer_UnfilteredTemperature, Erd_Freezer_FilteredTemperature)                   \
-   ENTRY(Local, ffCabinetThermistor, Erd_FreshFoodThermistor_AdcCount, Erd_FreshFood_UnfilteredTemperature, Erd_FreshFood_FilteredTemperature)             \
-   ENTRY(Local, fzEvapThermistor, Erd_FreezerEvapThermistor_AdcCount, Erd_FreezerEvap_UnfilteredTemperature, Erd_FreezerEvap_FilteredTemperature)          \
-   ENTRY(Local, ffEvapThermistor, Erd_FreshFoodEvapThermistor_AdcCount, Erd_FreshFoodEvap_UnfilteredTemperature, Erd_FreshFoodEvap_FilteredTemperature)    \
-   ENTRY(Local, ccCabinetThermistor, Erd_CcCompartmentThermistor_AdcCount, Erd_CcCompartment_UnfilteredTemperature, Erd_CcCompartment_FilteredTemperature) \
-   ENTRY(Local, ambientThermistor, Erd_AmbientThermistor_AdcCount, Erd_Ambient_UnfilteredTemperature, Erd_Ambient_FilteredTemperature)                     \
-   ENTRY(Local, ccEvapThermistor, Erd_CcEvapThermistor_AdcCount, Erd_CcEvap_UnfilteredTemperature, Erd_CcEvap_FilteredTemperature)
+#define SENSOR_FILTERING_TABLE_ALL(ENTRY)                                                                                                                                                                 \
+   ENTRY(Local, freezerCabinetThermistor, Erd_FreezerThermistor_AdcCount, Erd_Freezer_UnfilteredTemperature, Erd_Freezer_FilteredTemperature)                                                             \
+   ENTRY(Local, freshFoodCabinetThermistor, Erd_FreshFoodThermistor_AdcCount, Erd_FreshFood_UnfilteredTemperature, Erd_FreshFood_FilteredTemperature)                                                     \
+   ENTRY(Local, freezerEvapThermistor, Erd_FreezerEvapThermistor_AdcCount, Erd_FreezerEvap_UnfilteredTemperature, Erd_FreezerEvap_FilteredTemperature)                                                    \
+   ENTRY(Local, freshFoodEvapThermistor, Erd_FreshFoodEvapThermistor_AdcCount, Erd_FreshFoodEvap_UnfilteredTemperature, Erd_FreshFoodEvap_FilteredTemperature)                                            \
+   ENTRY(Local, convertibleCompartmentCabinetThermistor, Erd_ConvertibleCompartmentThermistor_AdcCount, Erd_ConvertibleCompartment_UnfilteredTemperature, Erd_ConvertibleCompartment_FilteredTemperature) \
+   ENTRY(Local, ambientThermistor, Erd_AmbientThermistor_AdcCount, Erd_Ambient_UnfilteredTemperature, Erd_Ambient_FilteredTemperature)                                                                    \
+   ENTRY(Local, convertibleCompartmentEvapThermistor, Erd_ConvertibleCompartmentEvapThermistor_AdcCount, Erd_ConvertibleCompartmentEvap_UnfilteredTemperature, Erd_ConvertibleCompartmentEvap_FilteredTemperature)
 
 // (type, sensorType)
-#define SENSOR_FILTERING_TABLE_NON_CC_CABINET(ENTRY) \
-   ENTRY(Local, fzCabinetThermistor)                 \
-   ENTRY(Local, ffCabinetThermistor)                 \
-   ENTRY(Local, fzEvapThermistor)                    \
-   ENTRY(Local, ffEvapThermistor)                    \
-   ENTRY(Local, ambientThermistor)                   \
-   ENTRY(Local, ccEvapThermistor)
+#define SENSOR_FILTERING_TABLE_NON_CONVERTIBLE_COMPARTMENT_CABINET(ENTRY) \
+   ENTRY(Local, freezerCabinetThermistor)                                 \
+   ENTRY(Local, freshFoodCabinetThermistor)                               \
+   ENTRY(Local, freezerEvapThermistor)                                    \
+   ENTRY(Local, freshFoodEvapThermistor)                                  \
+   ENTRY(Local, ambientThermistor)                                        \
+   ENTRY(Local, convertibleCompartmentEvapThermistor)
 
 // clang-format off
 #define EXPAND_AS_SET_CHANNEL_DATA(type, sensorType, countErd, unfilteredErd, filteredErd)                                                                             \
@@ -62,7 +62,7 @@
    Mapper_LookupTable_Init(&instance.channelReadingMapper[ChannelConfig_##sensorType], instance.sensorData->sensorType->lookupTable);
 // clang-format on
 
-#define EXPAND_AS_CHANNEL_SET_DATA_FALLBACK_VALUES_NON_CC_CABINET(type, sensorType) \
+#define EXPAND_AS_CHANNEL_SET_DATA_FALLBACK_VALUES_NON_CONVERTIBLE_COMPARTMENT_CABINET(type, sensorType) \
    instance.sensorChannelData[ChannelConfig_##sensorType].fallbackData.fallbackValue = instance.sensorData->sensorType->fallbackValueDegFx100;
 
 #define EXPAND_AS_CHANNEL_ENUM(type, sensorType, countErd, unfilteredErd, filteredErd) \
@@ -95,14 +95,14 @@ void SensorFilteredReadingPlugin_Init(I_DataModel_t *dataModel)
 {
    instance.sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
    SENSOR_FILTERING_TABLE_ALL(EXPAND_AS_SET_CHANNEL_DATA);
-   SENSOR_FILTERING_TABLE_NON_CC_CABINET(EXPAND_AS_CHANNEL_SET_DATA_FALLBACK_VALUES_NON_CC_CABINET);
+   SENSOR_FILTERING_TABLE_NON_CONVERTIBLE_COMPARTMENT_CABINET(EXPAND_AS_CHANNEL_SET_DATA_FALLBACK_VALUES_NON_CONVERTIBLE_COMPARTMENT_CABINET);
 
    instance.sensorConfig.channelData = instance.sensorChannelData;
    instance.sensorConfig.channelDataCount = ChannelConfig_MaxNumberOfChannels;
    instance.sensorConfig.timerModule = Erd_TimerModule;
-   instance.sensorConfig.convertibleCompartmentCabinetIndex = ChannelConfig_ccCabinetThermistor;
-   instance.sensorConfig.ccCabinetStateErd = Erd_CcCabinetState;
-   instance.sensorConfig.ccSensorData = PersonalityParametricData_Get(dataModel)->sensorData->ccCabinetThermistor;
+   instance.sensorConfig.convertibleCompartmentCabinetIndex = ChannelConfig_convertibleCompartmentCabinetThermistor;
+   instance.sensorConfig.convertibleCompartmentCabinetStateErd = Erd_ConvertibleCompartmentCabinetState;
+   instance.sensorConfig.convertibleCompartmentSensorData = PersonalityParametricData_Get(dataModel)->sensorData->convertibleCompartmentCabinetThermistor;
    instance.sensorConfig.periodicCheckRateInMsec = instance.sensorData->periodicUpdateRate;
 
    SensorFilteredReading_Init(

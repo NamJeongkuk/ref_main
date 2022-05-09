@@ -28,9 +28,9 @@ void PersonalityParametricData_TestDouble_SetSabbath(PersonalityParametricData_t
    instance->sabbathData = sabbathData;
 }
 
-void PersonalityParametricData_TestDouble_SetCcCabinet(PersonalityParametricData_t *instance, const CcCabinetData_t *ccCabinetData)
+void PersonalityParametricData_TestDouble_SetConvertibleCompartmentCabinet(PersonalityParametricData_t *instance, const ConvertibleCompartmentCabinetData_t *convertibleCompartmentCabinetData)
 {
-   instance->ccCabinetData = ccCabinetData;
+   instance->convertibleCompartmentCabinetData = convertibleCompartmentCabinetData;
 }
 
 void PersonalityParametricData_TestDouble_SetSensors(PersonalityParametricData_t *instance, const SensorData_t *sensorData)

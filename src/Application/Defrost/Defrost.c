@@ -87,7 +87,7 @@ static void DataModelChanged(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerEvaporatorThermistorIsInvalid, NULL);
       }
    }
-   else if(erd == instance->_private.config->fzDefrostWasAbnormalErd)
+   else if(erd == instance->_private.config->freezerDefrostWasAbnormalErd)
    {
       REINTERPRET(state, onChangeData->data, const bool *);
 
@@ -109,59 +109,59 @@ static void DataModelChanged(void *context, const void *args)
    }
 }
 
-static void SaveFzAbnormalDefrostData(Defrost_t *instance)
+static void SaveFreezerAbnormalDefrostData(Defrost_t *instance)
 {
-   bool fzDefrostWasAbnormal;
+   bool freezerDefrostWasAbnormal;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->fzDefrostWasAbnormalErd,
-      &fzDefrostWasAbnormal);
+      instance->_private.config->freezerDefrostWasAbnormalErd,
+      &freezerDefrostWasAbnormal);
 
-   uint16_t fzAbnormalDefrostCycleCount;
+   uint16_t freezerAbnormalDefrostCycleCount;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->fzAbnormalDefrostCycleCountErd,
-      &fzAbnormalDefrostCycleCount);
+      instance->_private.config->freezerAbnormalDefrostCycleCountErd,
+      &freezerAbnormalDefrostCycleCount);
 
-   uint16_t fzDefrostCycleCount;
+   uint16_t freezerDefrostCycleCount;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->fzDefrostCycleCountErd,
-      &fzDefrostCycleCount);
+      instance->_private.config->freezerDefrostCycleCountErd,
+      &freezerDefrostCycleCount);
 
-   if(fzAbnormalDefrostCycleCount != fzDefrostCycleCount)
+   if(freezerAbnormalDefrostCycleCount != freezerDefrostCycleCount)
    {
-      uint16_t numberOfFzAbnormalDefrostCycles;
+      uint16_t numberOfFreezerAbnormalDefrostCycles;
       DataModel_Read(
          instance->_private.dataModel,
-         instance->_private.config->numberOfFzAbnormalDefrostCyclesErd,
-         &numberOfFzAbnormalDefrostCycles);
+         instance->_private.config->numberOfFreezerAbnormalDefrostCyclesErd,
+         &numberOfFreezerAbnormalDefrostCycles);
 
-      numberOfFzAbnormalDefrostCycles++;
+      numberOfFreezerAbnormalDefrostCycles++;
       DataModel_Write(
          instance->_private.dataModel,
-         instance->_private.config->numberOfFzAbnormalDefrostCyclesErd,
-         &numberOfFzAbnormalDefrostCycles);
+         instance->_private.config->numberOfFreezerAbnormalDefrostCyclesErd,
+         &numberOfFreezerAbnormalDefrostCycles);
    }
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->fzAbnormalDefrostCycleCountErd,
-      &fzDefrostCycleCount);
+      instance->_private.config->freezerAbnormalDefrostCycleCountErd,
+      &freezerDefrostCycleCount);
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->fzDefrostWasAbnormalErd,
+      instance->_private.config->freezerDefrostWasAbnormalErd,
       set);
 }
 
-static bool LastDefrostWasAbnormalBecauseOfAbnormalFilteredFzCabinetTemperature(Defrost_t *instance)
+static bool LastDefrostWasAbnormalBecauseOfAbnormalFilteredFreezerCabinetTemperature(Defrost_t *instance)
 {
-   TemperatureDegFx100_t fzFilteredTemperature;
+   TemperatureDegFx100_t freezerFilteredTemperature;
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->freezerFilteredTemperatureErd,
-      &fzFilteredTemperature);
+      &freezerFilteredTemperature);
 
    CalculatedGridLines_t calcGridLines;
    DataModel_Read(
@@ -169,10 +169,10 @@ static bool LastDefrostWasAbnormalBecauseOfAbnormalFilteredFzCabinetTemperature(
       instance->_private.config->calculatedGridLinesErd,
       &calcGridLines);
 
-   TemperatureDegFx100_t gridFzExtremeHystTemperature = calcGridLines.gridLines[GridDelta_Fz].gridLinesDegFx100[GridLine_FzExtremeHigh];
+   TemperatureDegFx100_t gridFreezerExtremeHystTemperature = calcGridLines.gridLines[GridDelta_Freezer].gridLinesDegFx100[GridLine_FreezerExtremeHigh];
 
-   return (fzFilteredTemperature > gridFzExtremeHystTemperature ||
-      fzFilteredTemperature >= instance->_private.defrostParametricData->fzDefrostTerminationTemperatureInDegFx100);
+   return (freezerFilteredTemperature > gridFreezerExtremeHystTemperature ||
+      freezerFilteredTemperature >= instance->_private.defrostParametricData->freezerDefrostTerminationTemperatureInDegFx100);
 }
 
 static void StartTimer(Defrost_t *instance, Timer_t *timer, TimerTicks_t ticks, TimerCallback_t callback)
@@ -185,7 +185,7 @@ static void StartTimer(Defrost_t *instance, Timer_t *timer, TimerTicks_t ticks, 
       instance);
 }
 
-static void VoteForFfDefrostHeater(Defrost_t *instance, bool state)
+static void VoteForFreshFoodDefrostHeater(Defrost_t *instance, bool state)
 {
    HeaterVotedState_t vote;
    vote.state = state;
@@ -193,11 +193,11 @@ static void VoteForFfDefrostHeater(Defrost_t *instance, bool state)
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->ffDefrostHeaterDefrostVoteErd,
+      instance->_private.config->freshFoodDefrostHeaterDefrostVoteErd,
       &vote);
 }
 
-static void VoteForFzDefrostHeater(Defrost_t *instance, bool state)
+static void VoteForFreezerDefrostHeater(Defrost_t *instance, bool state)
 {
    HeaterVotedState_t vote;
    vote.state = state;
@@ -205,7 +205,7 @@ static void VoteForFzDefrostHeater(Defrost_t *instance, bool state)
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->fzDefrostHeaterDefrostVoteErd,
+      instance->_private.config->freezerDefrostHeaterDefrostVoteErd,
       &vote);
 }
 
@@ -232,12 +232,12 @@ static DefrostState_t LastDefrostState(Defrost_t *instance)
    return lastDefrostState;
 }
 
-static bool FzDefrostWasAbnormal(Defrost_t *instance)
+static bool FreezerDefrostWasAbnormal(Defrost_t *instance)
 {
    bool defrostWasAbnormal;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->fzDefrostWasAbnormalErd,
+      instance->_private.config->freezerDefrostWasAbnormalErd,
       &defrostWasAbnormal);
 
    return defrostWasAbnormal;
@@ -413,11 +413,11 @@ static void VoteForFreezerSetpoint(Defrost_t *instance)
 
    SetpointVotedTemperature_t vote;
    vote.care = true;
-   vote.temperature = instance->_private.defrostParametricData->prechillFzSetpointInDegFx100;
+   vote.temperature = instance->_private.defrostParametricData->prechillFreezerSetpointInDegFx100;
 
    if(NumberOfEvaporators(instance) == 1)
    {
-      if(resolvedSetPoint.temperature < instance->_private.defrostParametricData->prechillFzSetpointInDegFx100)
+      if(resolvedSetPoint.temperature < instance->_private.defrostParametricData->prechillFreezerSetpointInDegFx100)
       {
          vote.temperature = resolvedSetPoint.temperature;
       }
@@ -461,7 +461,7 @@ static void VoteForFreshFoodSetpoint(Defrost_t *instance)
 {
    SetpointVotedTemperature_t vote;
    vote.care = true;
-   vote.temperature = instance->_private.defrostParametricData->prechillFfSetpointInDegFx100;
+   vote.temperature = instance->_private.defrostParametricData->prechillFreshFoodSetpointInDegFx100;
 
    DataModel_Write(
       instance->_private.dataModel,
@@ -512,10 +512,10 @@ static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Signal_PowerUpDelayComplete:
          lastDefrostState = LastDefrostState(instance);
 
-         if(LastDefrostWasAbnormalBecauseOfAbnormalFilteredFzCabinetTemperature(instance))
+         if(LastDefrostWasAbnormalBecauseOfAbnormalFilteredFreezerCabinetTemperature(instance))
          {
             SetFlagToResetRequiredWhenEnablingDefrostTimerCounterTo(instance, true);
-            SaveFzAbnormalDefrostData(instance);
+            SaveFreezerAbnormalDefrostData(instance);
 
             (lastDefrostState == DefrostState_HeaterOn) ? Hsm_Transition(hsm, State_Dwell) : Hsm_Transition(hsm, State_Idle);
          }
@@ -523,7 +523,7 @@ static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          {
             if(lastDefrostState == DefrostState_Prechill)
             {
-               (FzDefrostWasAbnormal(instance)) ? Hsm_Transition(hsm, State_PostPrechill) : Hsm_Transition(hsm, State_PrechillPrep);
+               (FreezerDefrostWasAbnormal(instance)) ? Hsm_Transition(hsm, State_PostPrechill) : Hsm_Transition(hsm, State_PrechillPrep);
             }
             else if(lastDefrostState == DefrostState_HeaterOn)
             {
@@ -556,8 +556,8 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Idle);
 
-         VoteForFfDefrostHeater(instance, OFF);
-         VoteForFzDefrostHeater(instance, OFF);
+         VoteForFreshFoodDefrostHeater(instance, OFF);
+         VoteForFreezerDefrostHeater(instance, OFF);
 
          if(DefrostTimerCounterIsDisabled(instance))
          {
@@ -647,9 +647,8 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          else
          {
             IncrementNumberOfFreshFoodDefrostsBeforeAFreezerDefrost(instance);
-
-            VoteForFfDefrostHeater(instance, OFF);
-            VoteForFzDefrostHeater(instance, OFF);
+            VoteForFreshFoodDefrostHeater(instance, OFF);
+            VoteForFreezerDefrostHeater(instance, OFF);
             VoteForIceCabinetFan(instance, FanSpeed_High);
             VoteForFreezerSetpoint(instance);
             SendDoorHoldoffEnableRequest(instance);
