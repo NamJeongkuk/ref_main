@@ -16,5 +16,8 @@ A clear and concise description of what you want to happen.
 **Describe alternatives you've considered**
 A clear and concise description of any alternative solutions or features you've considered.
 
+**Logic Replaced**
+If applicable, describe which logic this feature request would replace. Please include any relevant information about the old logic including names,ticket numbers, and parametric information.
+
 **Additional context**
 Add any other context or screenshots about the feature request here.
