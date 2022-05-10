@@ -52,7 +52,6 @@ typedef struct
    TemperatureDegFx100_t freezerPostDefrostPullDownExitTemperatureInDegFx100;
    uint8_t numberOfFreshFoodDefrostsBeforeFreezerDefrost;
    uint8_t numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost;
-   uint8_t doorHoldoffTimeForFreshFoodAndFreezerInMinutes;
    uint8_t freshFoodOnlyPostDwellExitTimeInMinutes;
    TemperatureDegFx100_t dsmFreezerSetpointTemperatureInDegFx100;
    uint8_t defrostPeriodicTimeoutInSeconds;
