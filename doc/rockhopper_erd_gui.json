@@ -562,6 +562,39 @@
           "write": true
         }
       ]
+    },
+    {
+      "title": "FaultWrapper",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "Set Request",
+          "name": "Erd_TestFaultSetRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Clear Request",
+          "name": "Erd_TestFaultClearRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Reset Request",
+          "name": "Erd_TestFaultResetRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fault Erd",
+          "name": "Erd_SomeFault",
+          "read": true,
+          "write": false
+        }
+      ]
     }
   ]
 }

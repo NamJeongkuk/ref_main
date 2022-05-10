@@ -17,6 +17,7 @@
 #include "DoorPlugin.h"
 #include "SensorFilteredReadingPlugin.h"
 #include "EepromAppPlugin.h"
+#include "FaultWrapperPlugin.h"
 
 enum
 {
@@ -60,6 +61,7 @@ void Application_Init(
    GridPlugin_Init(&instance->_private.gridPlugin, dataModel);
    DoorPlugin_Init(dataModel);
    DefrostPlugin_Init(dataModel);
+   FaultWrapperPlugin_Init(dataModel);
 
    PeriodicNvUpdaterPlugin_Init(&instance->_private.periodicNvUpdaterPlugin, dataModel);
 

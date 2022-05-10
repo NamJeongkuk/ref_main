@@ -63,6 +63,7 @@
 #include "EnergyDemandLevel.h"
 #include "DefrostTimerIsSatisfiedMonitorFsmState.h"
 #include "DefrostDoorHoldoffTimerFsmState.h"
+#include "I_FaultWrapper.h"
 #include "ConvertibleCompartmentCabinetStateType.h"
 #include "CompressorState.h"
 
@@ -510,6 +511,11 @@ enum
    ENTRY(Erd_Fault_EepromWriteFailure,                      0xF301, bool,                                               Swap_N, Io_All,  Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Fault_EepromEraseFailure,                      0xF302, bool,                                               Swap_N, Io_All,  Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_PersonalityIdOutOfRangeFlag,                   0xF303, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FaultWrapperInterfaceArray,                    0xF310, I_FaultWrapper_t *,                                 Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TestFaultSetRequest,                           0xF311, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TestFaultClearRequest,                         0xF312, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TestFaultResetRequest,                         0xF313, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData0,     0xF500, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData1,     0xF501, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \

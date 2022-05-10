@@ -25,6 +25,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Grid/GridFunctions \
    $(PROJECT_DIR)/Application/Sensor \
    $(PROJECT_DIR)/Application/Sabbath \
+   $(PROJECT_DIR)/Application/ServiceDiagnostics \
    $(PROJECT_DIR)/Application/SystemMonitor \
 
 # List of directories that contain your tests and test helpers (mocks, fakes, etc.)
@@ -44,6 +45,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/Sabbath \
    $(TESTS_DIR)/Application/ParametricData \
    $(TESTS_DIR)/Application/Sensor \
+   $(TESTS_DIR)/Application/ServiceDiagnostics \
    $(TESTS_DIR)/Application/ \
 
 # List of include directories
