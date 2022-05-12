@@ -387,6 +387,9 @@ enum
    ENTRY(Erd_DefrostTimerIsSatisfied,                       0xF120, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost,0xF121, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ExtendDefrostSignal,                           0xF122, Signal_t,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDefrostHeaterMaxOnTimeInMinutes,      0xF123, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,        0xF124, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentDefrostHeaterMaxOnTimeInMinutes, 0xF125, uint8_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_LeftHandFreshFoodDoorIsOpen,                   0xF130, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RightHandFreshFoodDoorIsOpen,                  0xF131, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -431,6 +434,8 @@ enum
    ENTRY(Erd_ConvertibleCompartmentSetpoint_UserSetpoint,   0xF156, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreezerEvaporatorThermistorIsValid,            0xF157, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvaporatorThermistorIsValid,          0xF158, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentEvaporatorThermistorIsValid, 0xF159, bool,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_OtherLed,                                      0xF201, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \

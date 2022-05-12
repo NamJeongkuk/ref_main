@@ -34,11 +34,13 @@ typedef struct
    TemperatureDegFx100_t convertibleCompartmentFanDefrostConvertibleCompartmentEvapExitTemperatureInDegFx100;
    uint16_t convertibleCompartmentFanDefrostConvertibleCompartmentFanMaxOnTimeInMinutes;
    uint8_t freezerDefrostHeaterMaxOnTimeInMinutes;
+   uint8_t freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes;
    uint8_t freezerAbnormalDefrostHeaterMaxOnTimeInMinutes;
    TemperatureDegFx100_t freezerDefrostTerminationTemperatureInDegFx100;
    TemperatureDegFx100_t freshFoodDefrostTerminationTemperatureInDegFx100;
    TemperatureDegFx100_t convertibleCompartmentDefrostTerminationTemperatureInDegFx100;
    uint8_t freshFoodDefrostHeaterMaxOnTimeInMinutes;
+   uint8_t freshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes;
    uint8_t freshFoodAbnormalDefrostHeaterMaxOnTimeInMinutes;
    uint8_t convertibleCompartmentDefrostHeaterMaxOnTimeInMinutes;
    uint8_t convertibleCompartmentAsFreshFoodAbnormalDefrostHeaterMaxOnTimeInMinutes;

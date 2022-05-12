@@ -13,6 +13,7 @@
 #include "DefrostTimerIsSatisfiedMonitor.h"
 #include "SystemErds.h"
 #include "DefrostDoorHoldoffTimer.h"
+#include "DefrostHeaterMaxOnTime.h"
 
 static struct
 {
@@ -21,6 +22,7 @@ static struct
    DefrostDoorHoldoffTimer_t doorHoldoffTimer;
    DefrostTimerCounter_t defrostTimerCounter;
    DefrostTimerIsSatisfiedMonitor_t defrostTimerIsSatisfiedMonitor;
+   DefrostHeaterMaxOnTime_t defrostHeaterMaxOnTime;
 } instance;
 
 static const DefrostConfiguration_t defrostConfig = {
@@ -103,9 +105,21 @@ static const DefrostTimerIsSatisfiedMonitorConfig_t defrostTimerIsSatisfiedMonit
    .maxTimeBetweenDefrostsInMinutesErd = Erd_MaxTimeBetweenDefrostsInMinutes
 };
 
+static const DefrostHeaterMaxOnTimeConfiguration_t defrostHeaterMaxOnTimeConfig = {
+   .freezerEvaporatorThermistorIsValidErd = Erd_FreezerEvaporatorThermistorIsValid,
+   .freshFoodEvaporatorThermistorIsValidErd = Erd_FreshFoodEvaporatorThermistorIsValid,
+   .convertibleCompartmentEvaporatorThermistorIsValidErd = Erd_ConvertibleCompartmentEvaporatorThermistorIsValid,
+   .convertibleCompartmentCabinetStateErd = Erd_ConvertibleCompartmentCabinetState,
+   .freshFoodDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreshFoodDefrostHeaterMaxOnTimeInMinutes,
+   .freezerDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,
+   .convertibleCompartmentDefrostHeaterMaxOnTimeInMinutesErd = Erd_ConvertibleCompartmentDefrostHeaterMaxOnTimeInMinutes
+};
+
 void DefrostPlugin_Init(I_DataModel_t *dataModel)
 {
    DefrostStateOnCompareMatch(dataModel);
+
+   DefrostHeaterMaxOnTime_Init(&instance.defrostHeaterMaxOnTime, dataModel, &defrostHeaterMaxOnTimeConfig);
 
    DoorAcceleration_Init(&instance.doorAcceleration, dataModel, &doorAccelerationConfig);
 
