@@ -72,6 +72,13 @@ static void SetHsmStateTo(Defrost_t *instance, DefrostHsmState_t state)
    DataModel_Write(instance->_private.dataModel, instance->_private.config->defrostHsmStateErd, &state);
 }
 
+static bool CompressorStateTimeIsSatisfiedFor(CompressorState_t state)
+{
+   return ((state != CompressorState_MinimumOffTime) &&
+      (state != CompressorState_MinimumOnTime) &&
+      (state != CompressorState_MinimumRunTime));
+}
+
 static void DataModelChanged(void *context, const void *args)
 {
    REINTERPRET(instance, context, Defrost_t *);
@@ -100,9 +107,7 @@ static void DataModelChanged(void *context, const void *args)
    {
       REINTERPRET(state, onChangeData->data, const CompressorState_t *);
 
-      if((*state != CompressorState_MinimumOffTime) &&
-         (*state != CompressorState_MinimumOnTime) &&
-         (*state != CompressorState_MinimumRunTime))
+      if(CompressorStateTimeIsSatisfiedFor(*state))
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_CompressorStateTimeIsSatisfied, NULL);
       }
@@ -178,7 +183,9 @@ static bool LastDefrostWasAbnormalBecauseOfAbnormalFilteredFreezerCabinetTempera
 static void StartTimer(Defrost_t *instance, Timer_t *timer, TimerTicks_t ticks, TimerCallback_t callback)
 {
    TimerModule_StartOneShot(
-      DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, instance->_private.config->timerModuleErd),
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         instance->_private.config->timerModuleErd),
       timer,
       ticks,
       callback,
@@ -307,11 +314,34 @@ static void PeriodicTimeoutComplete(void *context)
 static void StartPeriodicTimer(Defrost_t *instance)
 {
    TimerModule_StartPeriodic(
-      DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, instance->_private.config->timerModuleErd),
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         instance->_private.config->timerModuleErd),
       &instance->_private.periodicTimer,
       instance->_private.defrostParametricData->defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC,
       PeriodicTimeoutComplete,
       instance);
+}
+
+static void StartOneMinutePeriodicTimer(Defrost_t *instance)
+{
+   TimerModule_StartPeriodic(
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         instance->_private.config->timerModuleErd),
+      &instance->_private.periodicTimer,
+      1 * MSEC_PER_MIN,
+      PeriodicTimeoutComplete,
+      instance);
+}
+
+static void StopOneMinutePeriodicTimer(Defrost_t *instance)
+{
+   TimerModule_Stop(
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         instance->_private.config->timerModuleErd),
+      &instance->_private.periodicTimer);
 }
 
 static bool DefrostTimerIsSatisfied(Defrost_t *instance)
@@ -355,14 +385,18 @@ static void StartMaxPrechillHoldoffTimer(Defrost_t *instance)
 static bool MaxPrechillHoldoffTimerIsNotRunning(Defrost_t *instance)
 {
    return !TimerModule_IsRunning(
-      DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, instance->_private.config->timerModuleErd),
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         instance->_private.config->timerModuleErd),
       &instance->_private.maxPrechillHoldoffTimer);
 }
 
 static void StopMaxPrechillHoldoffTimer(Defrost_t *instance)
 {
    TimerModule_Stop(
-      DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, instance->_private.config->timerModuleErd),
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         instance->_private.config->timerModuleErd),
       &instance->_private.maxPrechillHoldoffTimer);
 }
 
@@ -489,11 +523,64 @@ static void SendExtendDefrostSignal(Defrost_t *instance)
 
 static void SendDoorHoldoffEnableRequest(Defrost_t *instance)
 {
-   bool request = enabled;
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->defrostDoorHoldoffRequestErd,
-      &request);
+      enabled);
+}
+
+static void SendDoorHoldoffDisableRequest(Defrost_t *instance)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->defrostDoorHoldoffRequestErd,
+      disabled);
+}
+
+static bool CompressorStateTimeIsSatisfied(Defrost_t *instance)
+{
+   CompressorState_t state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->compressorStateErd,
+      &state);
+
+   return CompressorStateTimeIsSatisfiedFor(state);
+}
+
+static void ResetPrechillRunCounterInMinutesToZero(Defrost_t *instance)
+{
+   uint16_t prechillRunCounterInMinutes = 0;
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->defrostPrechillRunCounterInMinutesErd,
+      &prechillRunCounterInMinutes);
+}
+
+static void SetDefrostMaxHoldoffMetTo(Defrost_t *instance, const bool *state)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->defrostMaxHoldoffMetErd,
+      state);
+}
+
+static uint16_t IncrementThenGetPrechillRunCounterInMinutes(Defrost_t *instance)
+{
+   uint16_t prechillRunCounterInMinutes;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->defrostPrechillRunCounterInMinutesErd,
+      &prechillRunCounterInMinutes);
+
+   prechillRunCounterInMinutes++;
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->defrostPrechillRunCounterInMinutesErd,
+      &prechillRunCounterInMinutes);
+
+   return prechillRunCounterInMinutes;
 }
 
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
@@ -667,6 +754,18 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
             {
                SendExtendDefrostSignal(instance);
             }
+
+            if(FreezerDefrostWasAbnormal(instance))
+            {
+               Hsm_Transition(hsm, State_PostPrechill);
+            }
+            else
+            {
+               if(CompressorStateTimeIsSatisfied(instance))
+               {
+                  Hsm_Transition(hsm, State_Prechill);
+               }
+            }
          }
          break;
 
@@ -697,9 +796,22 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Prechill);
+         ResetPrechillRunCounterInMinutesToZero(instance);
+         SetDefrostMaxHoldoffMetTo(instance, clear);
+         StartOneMinutePeriodicTimer(instance);
+         break;
+
+      case Signal_PeriodicTimeoutComplete:
+         if(IncrementThenGetPrechillRunCounterInMinutes(instance) >=
+            instance->_private.defrostParametricData->defrostMaxHoldoffTimeInMinutes)
+         {
+            SetDefrostMaxHoldoffMetTo(instance, set);
+         }
          break;
 
       case Hsm_Exit:
+         StopOneMinutePeriodicTimer(instance);
+         SendDoorHoldoffDisableRequest(instance);
          break;
 
       default:
@@ -791,6 +903,7 @@ void Defrost_Init(
       instance,
       DataModelChanged);
 
-   Event_Subscribe(dataModel->OnDataChange,
+   Event_Subscribe(
+      dataModel->OnDataChange,
       &instance->_private.dataModelSubscription);
 }

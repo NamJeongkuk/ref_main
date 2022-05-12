@@ -65,6 +65,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .freshFoodSetpointDefrostVoteErd = Erd_FreshFoodSetpoint_DefrostVote,
    .extendDefrostSignalErd = Erd_ExtendDefrostSignal,
    .compressorStateErd = Erd_CompressorState,
+   .defrostMaxHoldoffMetErd = Erd_DefrostMaxHoldoffMet,
+   .defrostPrechillRunCounterInMinutesErd = Erd_DefrostPrechillRunCounterInMinutes,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -410,6 +412,7 @@ TEST_GROUP(Defrost_SingleEvap)
 
             When DefrostTimerIsSatisfiedIs(true);
             And SealedSystemValveIsInPosition(ValvePosition_C);
+            And CompressorStateIs(CompressorState_MinimumOffTime);
 
             After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
             SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
@@ -705,6 +708,56 @@ TEST_GROUP(Defrost_SingleEvap)
    {
       DataModel_Write(dataModel, Erd_CompressorState, &state);
    }
+
+   void PrechillRunCounterInMinutesShouldBe(uint16_t expectedMinutes)
+   {
+      uint16_t actualMinutes;
+      DataModel_Read(dataModel, Erd_DefrostPrechillRunCounterInMinutes, &actualMinutes);
+
+      CHECK_EQUAL(expectedMinutes, actualMinutes);
+   }
+
+   void DefrostMaxHoldoffIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_DefrostMaxHoldoffMet, &state);
+   }
+
+   void DefrostMaxHoldoffShouldBe(bool expectedState)
+   {
+      bool actualState;
+      DataModel_Read(dataModel, Erd_DefrostMaxHoldoffMet, &actualState);
+      CHECK_EQUAL(expectedState, actualState);
+   }
+
+   void DefrostPowersBackUpIntoPrechillPrepAndCompressorStateIsMinimumOff()
+   {
+      Given FreezerEvaporatorThermistorValidityIs(VALID);
+      Given DefrostStateIs(DefrostState_Prechill);
+      Given CompressorStateIs(CompressorState_MinimumOffTime);
+      Given LastFreezerDefrostWasNormalBasedOnAbnormalFreezerCabinetTemperature();
+      Given DefrostIsInitialized();
+
+      After(PowerUpDelayInMs - 1);
+      DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
+
+      After(1);
+      DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+   }
+
+   void DefrostIsInPrechillAndDefrostMaxHoldoffHasBeenSet()
+   {
+      Given FreezerEvaporatorThermistorValidityIs(VALID);
+      Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+      When CompressorStateTimeIsSatisfied();
+      DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+
+      After((defrostData.defrostMaxHoldoffTimeInMinutes) * MSEC_PER_MIN - 1);
+      DefrostMaxHoldoffShouldBe(CLEAR);
+
+      After(1);
+      DefrostMaxHoldoffShouldBe(SET);
+   }
 };
 
 TEST(Defrost_SingleEvap, ShouldInitializeIntoPowerUpHsmState)
@@ -896,6 +949,7 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenLastFreezerDefrostWasNormalAn
 {
    Given FreezerEvaporatorThermistorValidityIs(VALID);
    Given DefrostStateIs(DefrostState_Prechill);
+   Given CompressorStateIs(CompressorState_MinimumOffTime);
    Given LastFreezerDefrostWasNormalBasedOnAbnormalFreezerCabinetTemperature();
    Given DefrostIsInitialized();
 
@@ -1000,6 +1054,7 @@ TEST(Defrost_SingleEvap, ShouldNotSendEnableDefrostTimerCounterRequestWhenDefros
 TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenDefrostTimerIsSatisfiedAndSealedSystemValveIsInParametricDefinedPositionAfterPeriodicTimeout)
 {
    Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given CompressorStateIs(CompressorState_MinimumOffTime);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
    When DefrostTimerIsSatisfiedIs(true);
@@ -1016,6 +1071,7 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenDefrostTimerIsSatisfiedAndSea
 TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenDefrostTimerIsSatisfiedAndSealedSystemValveIsNeverInParametricDefinedPositionAfterPeriodicTimeoutAndMaxPrechillHoldoffTime)
 {
    Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given CompressorStateIs(CompressorState_MinimumOffTime);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
    When DefrostTimerIsSatisfiedIs(true);
@@ -1032,6 +1088,7 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenDefrostTimerIsSatisfiedAndSea
 TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenDefrostTimerIsSatisfiedAndSealedSystemValveMovesIntoParametricDefinedPositionBeforeTheMaxPrechillHoldoffTimeExpires)
 {
    Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given CompressorStateIs(CompressorState_MinimumOffTime);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
    When DefrostTimerIsSatisfiedIs(true);
@@ -1051,6 +1108,7 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenDefrostTimerIsSatisfiedAndSea
 TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenDefrostTimerIsSatisfiedAndSealedSystemValveIsNotInParametricDefinedPositionWhenMaxPrechillHoldoffTimeIsZero)
 {
    Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given CompressorStateIs(CompressorState_MinimumOffTime);
    Given DefrostParametricSetWithMaxPrechillHoldoffOfZero();
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
@@ -1094,7 +1152,14 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryWhenFreezerEvapThermisto
 
 TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryWhenFreezerEvapThermistorBecomesInvalidDuringPrechill)
 {
-   // TBD
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   When CompressorStateTimeIsSatisfied();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+
+   When FreezerEvaporatorThermistorValidityIs(INVALID);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
 TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryWhenFreezerEvapThermistorBecomesInvalidDuringPostPrechill)
@@ -1221,6 +1286,7 @@ TEST(Defrost_SingleEvap, ShouldRequestToExtendDefrostWithFreshFoodCycleDefrostIf
 TEST(Defrost_SingleEvap, ShouldNotRequestToExtendDefrostWithFreshFoodCycleDefrostIfCurrentValvePositionIsNotInPositionToExtendDefrostOnEntryToPrechillPrep)
 {
    Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given CompressorStateIs(CompressorState_MinimumOffTime);
    Given ValveIsNotInPositionUponExitOfIdleAndOnEntryToPrechillPrep();
 
    ExtendDefrostSignalShouldNotBeSent();
@@ -1231,7 +1297,7 @@ TEST(Defrost_SingleEvap, ShouldRequestToEnableDoorHoldoffOnEntryToPrechillPrep)
    Given FreezerEvaporatorThermistorValidityIs(VALID);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
-   DoorHoldoffRequestShouldBe(enabled);
+   DoorHoldoffRequestShouldBe(ENABLED);
 }
 
 TEST(Defrost_SingleEvap, ShouldTransitionToPostPrechillFromPrechillPrepWhenLastDefrostChangesFromNormalToAbnormal)
@@ -1277,6 +1343,170 @@ TEST(Defrost_SingleEvap, ShouldNotTransitionFromPrechillPrepWhenCompressorStateI
 
    When CompressorStateIs(CompressorState_MinimumRunTime);
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_SingleEvap, ShouldIncrementPrechillRunCounterEveryMinuteWhileInPrechill)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   When CompressorStateTimeIsSatisfied();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+
+   for(uint8_t i = 0; i < 10; i++)
+   {
+      After(1 * MSEC_PER_MIN - 1);
+      PrechillRunCounterInMinutesShouldBe(i);
+
+      After(1);
+      PrechillRunCounterInMinutesShouldBe(i + 1);
+   }
+}
+
+TEST(Defrost_SingleEvap, ShouldSetDefrostMaxHoldoffErdAfterInPrechillStateForDefrostMaxHoldoffTime)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   When CompressorStateTimeIsSatisfied();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+
+   After((defrostData.defrostMaxHoldoffTimeInMinutes) * MSEC_PER_MIN - 1);
+   DefrostMaxHoldoffShouldBe(CLEAR);
+
+   After(1);
+   DefrostMaxHoldoffShouldBe(SET);
+}
+
+TEST(Defrost_SingleEvap, ShouldClearDefrostMaxHoldoffErdOnEntryToPrechillState)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostMaxHoldoffIs(SET);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   When CompressorStateTimeIsSatisfied();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+   DefrostMaxHoldoffShouldBe(CLEAR);
+}
+
+TEST(Defrost_SingleEvap, ShouldSetDefrostMaxHoldoffErdAfterInPrechillStateForDefrostMaxHoldoffTimeAgain)
+{
+   Given DefrostIsInPrechillAndDefrostMaxHoldoffHasBeenSet();
+
+   When DefrostPowersBackUpIntoPrechillPrepAndCompressorStateIsMinimumOff();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+
+   When CompressorStateTimeIsSatisfied();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+
+   After((defrostData.defrostMaxHoldoffTimeInMinutes) * MSEC_PER_MIN - 1);
+   DefrostMaxHoldoffShouldBe(CLEAR);
+
+   After(1);
+   DefrostMaxHoldoffShouldBe(SET);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionToPostPrechillIfFreezerDefrostAndCompressorStateTimeIsNotSatisfiedIsAbnormalOnEntryToPrechillPrep)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   When DefrostTimerIsSatisfiedIs(true);
+   And CompressorStateIs(CompressorState_MinimumOffTime);
+   And SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
+
+   After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
+   LastFreezerDefrostWasAbnormal();
+
+   DisableDefrostTimerCounterRequestShouldBeSent();
+   After(1);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionToPostPrechillIfFreezerDefrostIsAbnormalAndCompressorStateTimeIsSatisfiedOnEntryToPrechillPrep)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   When DefrostTimerIsSatisfiedIs(true);
+   And CompressorStateIs(CompressorState_MinimumOffTime);
+   And SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
+
+   After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
+   LastFreezerDefrostWasAbnormal();
+   CompressorStateIs(CompressorSpeed_On);
+
+   DisableDefrostTimerCounterRequestShouldBeSent();
+   After(1);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionToPrechillIfFreezerDefrostIsNormalAndCompressorStateTimeIsSatisfiedOnEntryToPrechillPrep)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   When DefrostTimerIsSatisfiedIs(true);
+   And CompressorStateIs(CompressorState_MinimumOffTime);
+   And SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
+
+   After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
+   And CompressorStateIs(CompressorState_On);
+
+   DisableDefrostTimerCounterRequestShouldBeSent();
+   After(1);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_SingleEvap, ShouldNotTransitionIfFreezerDefrostIsNormalAndCompressorStateTimeIsNotSatisfiedOnEntryToPrechillPrep)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   When DefrostTimerIsSatisfiedIs(true);
+   And CompressorStateIs(CompressorState_MinimumOffTime);
+   And SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
+
+   After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
+
+   DisableDefrostTimerCounterRequestShouldBeSent();
+   After(1);
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_SingleEvap, ShouldNotSetDefrostMaxHoldoffMetErdWhenInAStateOtherThanPrechill)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   When CompressorStateTimeIsSatisfied();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+
+   After((defrostData.defrostMaxHoldoffTimeInMinutes) * MSEC_PER_MIN - 1);
+   DefrostMaxHoldoffShouldBe(CLEAR);
+
+   When FreezerEvaporatorThermistorValidityIs(INVALID);
+   After(1);
+   DefrostMaxHoldoffShouldBe(CLEAR);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvap, ShouldRequestToDisableDoorHoldoffOnExitOfPrechill)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   DoorHoldoffRequestShouldBe(ENABLED);
+
+   When CompressorStateTimeIsSatisfied();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+
+   After((defrostData.defrostMaxHoldoffTimeInMinutes) * MSEC_PER_MIN - 1);
+   When FreezerEvaporatorThermistorValidityIs(INVALID);
+
+   After(1);
+   DoorHoldoffRequestShouldBe(DISABLED);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
 TEST_GROUP(Defrost_DualEvap)
@@ -1475,11 +1705,17 @@ TEST_GROUP(Defrost_DualEvap)
       vote.care = true;
       DataModel_Write(dataModel, Erd_FreezerSetpoint_ResolvedVote, &vote);
    }
+
+   void CompressorStateIs(CompressorState_t state)
+   {
+      DataModel_Write(dataModel, Erd_CompressorState, &state);
+   }
 };
 
 TEST(Defrost_DualEvap, ShouldVoteForFreezerSetPointWithPrechillFreezerSetpointOnEntryToPrechillPrep)
 {
    Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given CompressorStateIs(CompressorState_MinimumOffTime);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
    FreezerSetPointShouldBeVotedWith(defrostData.prechillFreezerSetpointInDegFx100);

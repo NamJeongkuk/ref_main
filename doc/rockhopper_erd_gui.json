@@ -264,6 +264,20 @@
           "name": "Erd_ValvePosition_DefrostVote",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Defrost Max Holdoff Met",
+          "name": "Erd_DefrostMaxHoldoffMet",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Defrost Prechill Run Counter In Minutes",
+          "name": "Erd_DefrostPrechillRunCounterInMinutes",
+          "read": true,
+          "write": true
         }
       ]
     },

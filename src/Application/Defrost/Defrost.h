@@ -43,6 +43,8 @@ typedef struct
    Erd_t freshFoodSetpointDefrostVoteErd; // SetpointVotedTemperature_t
    Erd_t extendDefrostSignalErd; // Signal_t
    Erd_t compressorStateErd; // CompressorState_t
+   Erd_t defrostMaxHoldoffMetErd; // bool
+   Erd_t defrostPrechillRunCounterInMinutesErd; // uint16_t
    Erd_t timerModuleErd; // TimerModule_t *
 } DefrostConfiguration_t;
 
@@ -60,6 +62,7 @@ typedef struct
       Timer_t periodicTimer;
       Timer_t maxPrechillHoldoffTimer;
       EventSubscription_t dataModelSubscription;
+      uint32_t prechillRunCounterInMinutes;
       const DefrostConfiguration_t *config;
       const DefrostData_t *defrostParametricData;
       const SabbathData_t *sabbathParametricData;
