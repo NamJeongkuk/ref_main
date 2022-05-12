@@ -11,12 +11,14 @@
 
 static bool ConsecutiveSetRequestExceedLimit(FaultWrapper_Consecutive_t *instance)
 {
-   return ((++instance->_private.consecutiveSetRequestCounts) >= (instance->_private.configuration->consecutiveRequestsToSetFault));
+   return ((++instance->_private.consecutiveSetRequestCounts) >=
+      (instance->_private.configuration->consecutiveRequestsToSetFault));
 }
 
 static bool ConsecutiveClearRequestExceedLimit(FaultWrapper_Consecutive_t *instance)
 {
-   return ((++instance->_private.consecutiveClearRequestCounts) >= (instance->_private.configuration->consecutiveRequestsToClearFault));
+   return ((++instance->_private.consecutiveClearRequestCounts) >=
+      (instance->_private.configuration->consecutiveRequestsToClearFault));
 }
 
 static bool FaultIsSet(FaultWrapper_Consecutive_t *instance)

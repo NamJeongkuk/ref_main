@@ -603,8 +603,15 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Fault Erd",
+          "displayName": "Some Fault Erd",
           "name": "Erd_SomeFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Some Other Fault Erd",
+          "name": "Erd_SomeOtherFault",
           "read": true,
           "write": false
         }

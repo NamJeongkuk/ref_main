@@ -7,7 +7,7 @@
 
 extern "C"
 {
-#include "FaultWrapper_Consecutive.h"
+#include "FaultWrapper_Count.h"
 #include "Constants_Binary.h"
 }
 
@@ -27,43 +27,42 @@ enum
    Erd_AFault,
 
    RequestsToSetFault = 3,
-   RequestsToClearFault = 3
+   TotalRequestsConsidered = 10
 };
 
 static const DataModel_TestDoubleConfigurationEntry_t erdTable[] = {
    { Erd_AFault, sizeof(bool) },
 };
 
-static FaultWrapper_Consecutive_Configuration_t aConsecutiveFaultWrapperConfiguration = {
-   .consecutiveRequestsToSetFault = RequestsToSetFault,
-   .consecutiveRequestsToClearFault = RequestsToClearFault,
-   .faultOutputErd = Erd_AFault
+static const FaultWrapper_Count_Configuration_t aCountFaultWrapperConfiguration = {
+   .requestsToSetFault = RequestsToSetFault,
+   .totalRequestsToConsider = TotalRequestsConsidered,
+   .faultOutputErd = Erd_AFault,
 };
 
-TEST_GROUP(FaultWrapper_Consecutive)
+TEST_GROUP(FaultWrapper_Count)
 {
    DataModel_TestDouble_t dataModelTestDouble;
    I_DataModel_t *dataModel;
-   FaultWrapper_Consecutive_t instance;
+   FaultWrapper_Count_t instance;
 
    void setup()
    {
       DataModel_TestDouble_Init(&dataModelTestDouble,
          erdTable,
          NUM_ELEMENTS(erdTable));
-
       dataModel = &dataModelTestDouble.interface;
    }
 
    void ModuleIsInitialized(void)
    {
-      FaultWrapper_Consecutive_Init(
+      FaultWrapper_Count_Init(
          &instance,
-         &aConsecutiveFaultWrapperConfiguration,
+         &aCountFaultWrapperConfiguration,
          dataModel);
    }
 
-   void NothingShouldHappen()
+   void NothingShouldHappen(void)
    {
    }
 
@@ -74,22 +73,22 @@ TEST_GROUP(FaultWrapper_Consecutive)
       CHECK_EQUAL(expected, actual);
    }
 
-   void FaultSetIsRequested()
+   void FaultSetIsRequested(void)
    {
       FaultWrapper_SetRequest(&instance.interface);
    }
 
-   void FaultClearIsRequested()
+   void FaultClearIsRequested(void)
    {
       FaultWrapper_ClearRequest(&instance.interface);
    }
 
-   void FaultWrapperIsReset()
+   void FaultWrapperIsReset(void)
    {
       FaultWrapper_Reset(&instance.interface);
    }
 
-   void FaultIsAlreadySet()
+   void FaultIsAlreadySet(void)
    {
       When for(int i = 0; i < RequestsToSetFault; i++)
       {
@@ -98,63 +97,62 @@ TEST_GROUP(FaultWrapper_Consecutive)
    }
 };
 
-TEST(FaultWrapper_Consecutive, ShouldInitialize)
+TEST(FaultWrapper_Count, ShouldInitialize)
 {
    Given The ModuleIsInitialized();
    NothingShouldHappen();
-};
+}
 
-TEST(FaultWrapper_Consecutive, ShouldSetFaultAfterConsecutiveRequests)
+TEST(FaultWrapper_Count, ShouldSetFaultAfterConsecutiveRequests)
 {
    Given The ModuleIsInitialized();
 
    When for(int i = 0; i < (RequestsToSetFault - 1); i++)
    {
       FaultSetIsRequested();
+      OutputFaultShouldBe(CLEAR);
    }
 
-   OutputFaultShouldBe(CLEAR);
-
-   FaultSetIsRequested();
-   OutputFaultShouldBe(SET);
+   When The FaultSetIsRequested();
+   The OutputFaultShouldBe(SET);
 }
 
-TEST(FaultWrapper_Consecutive, ShouldClearFaultAfterConsecutiveRequests)
+TEST(FaultWrapper_Count, ShouldSetFaultAfterNonConsecutiveSetRequests)
+{
+   Given The ModuleIsInitialized();
+
+   When for(int i = 0; i < (RequestsToSetFault - 1); i++)
+   {
+      FaultSetIsRequested();
+      OutputFaultShouldBe(CLEAR);
+   }
+
+   When for(int i = 0; i < (TotalRequestsConsidered - RequestsToSetFault - 1); i++)
+   {
+      FaultClearIsRequested();
+      The OutputFaultShouldBe(CLEAR);
+   }
+
+   When FaultSetIsRequested();
+   The OutputFaultShouldBe(SET);
+}
+
+TEST(FaultWrapper_Count, ShouldClearASetFaultWithEnoughClearRequestsToOvertakeTheQueue)
 {
    Given The ModuleIsInitialized();
    And The FaultIsAlreadySet();
 
-   OutputFaultShouldBe(SET);
-
-   When for(int i = 0; i < (RequestsToSetFault - 1); i++)
+   When for(int i = 0; i < (TotalRequestsConsidered - RequestsToSetFault); i++)
    {
       FaultClearIsRequested();
+      OutputFaultShouldBe(SET);
    }
-
-   OutputFaultShouldBe(SET);
 
    When FaultClearIsRequested();
    OutputFaultShouldBe(CLEAR);
 }
 
-TEST(FaultWrapper_Consecutive, ShouldResetSetRequestCountsWhenClientResetsFaultWrapper)
-{
-   Given The ModuleIsInitialized();
-
-   When for(int i = 0; i < (RequestsToSetFault - 1); i++)
-   {
-      FaultSetIsRequested();
-   }
-   OutputFaultShouldBe(CLEAR);
-
-   When FaultWrapperIsReset();
-   OutputFaultShouldBe(CLEAR);
-
-   When FaultSetIsRequested();
-   OutputFaultShouldBe(CLEAR);
-}
-
-TEST(FaultWrapper_Consecutive, ShouldResetASetFaultAndClearAllCountsIfClientResetsFaultWrapper)
+TEST(FaultWrapper_Count, ShouldResetASetFaultAndClearAllCountsIfClientResetsFaultWrapper)
 {
    Given The ModuleIsInitialized();
    And FaultIsAlreadySet();
@@ -172,46 +170,22 @@ TEST(FaultWrapper_Consecutive, ShouldResetASetFaultAndClearAllCountsIfClientRese
    OutputFaultShouldBe(SET);
 }
 
-TEST(FaultWrapper_Consecutive, ShouldResetSetRequestCountToZeroWhenClearRequestHappens)
+TEST(FaultWrapper_Count, ShouldResetASetFaultAndClearAllCountsEvenAfterManyFaultSetsAndClears)
 {
    Given The ModuleIsInitialized();
-
-   When for(int i = 0; i < (RequestsToSetFault - 1); i++)
-   {
-      When FaultSetIsRequested();
-   }
-   And The FaultClearIsRequested();
-
-   When for(int i = 0; i < (RequestsToSetFault - 1); i++)
+   When for(int i = 0; i < TotalRequestsConsidered; i++)
    {
       When FaultSetIsRequested();
    }
 
-   The OutputFaultShouldBe(CLEAR);
-
-   And The FaultSetIsRequested();
    The OutputFaultShouldBe(SET);
-}
 
-TEST(FaultWrapper_Consecutive, ShouldResetClearRequestCountToZeroWhenSetRequestHappens)
-{
-   Given The ModuleIsInitialized();
-   And The FaultIsAlreadySet();
-
-   When for(int i = 0; i < (RequestsToClearFault - 1); i++)
+   When for(int i = 0; i < (TotalRequestsConsidered - RequestsToSetFault); i++)
    {
       When FaultClearIsRequested();
+      The OutputFaultShouldBe(SET);
    }
 
-   The OutputFaultShouldBe(SET);
-   When FaultSetIsRequested();
-
-   When for(int i = 0; i < (RequestsToClearFault - 1); i++)
-   {
-      When FaultClearIsRequested();
-   }
-   The OutputFaultShouldBe(SET);
-
-   And The FaultClearIsRequested();
+   When FaultClearIsRequested();
    The OutputFaultShouldBe(CLEAR);
 }
