@@ -14,6 +14,7 @@
 #include "Application.h"
 #include "SystemData.h"
 #include "Constants_Binary.h"
+#include "Constants_Time.h"
 #include "Crc16Calculator_Table.h"
 #include "DataModelErdPointerAccess.h"
 #include "DataSource_ApplianceApiRevision1.h"
@@ -48,8 +49,8 @@
 
 enum
 {
-   UlTestsRunPeriodInMSec = 10,
-   UlTestsWatchdogTimeoutInMSec = 1000,
+   UlTestsRunPeriodInMSec = 500,
+   UlTestsWatchdogTimeoutInMSec = 50 * MSEC_PER_SEC,
    BytesToCrcPerRomCheck = 1024,
 
 #ifdef DEBUG

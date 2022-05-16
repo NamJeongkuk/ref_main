@@ -509,7 +509,6 @@ static void Read(I_HardwareEeprom_t *_instance, uint16_t offset, uint16_t numByt
 static void Write(I_HardwareEeprom_t *_instance, uint16_t offset, uint16_t numBytes, const void *writeBuffer)
 {
    IGNORE(_instance);
-
    HardwareEepromErrorSource_t errorSource = Write_Eeprom_Hardware(offset, (const uint8_t *)writeBuffer, numBytes, false);
 
    HardwareEepromEventArgs_t eventArgs = {
@@ -524,32 +523,15 @@ static void Erase(I_HardwareEeprom_t *_instance)
    IGNORE(_instance);
 
    uint16_t offset = 0;
-   uint8_t retries = 0;
-   bool isNotFirstAccess = false;
-
    HardwareEepromErrorSource_t errorSource = HardwareEepromErrorSource_None;
 
    while((offset < EepromEraseSize) && (errorSource == HardwareEepromErrorSource_None))
    {
-      /* Wait about 5ms time when it's not first slice of erase operation */
-      if(isNotFirstAccess)
-      {
-         DELAY(EepromWaitingForNextWriteAccess);
-         Action_SafeInvoke(instance._private.watchdogKickAction);
-      }
-
       /* Consider page boundaries, erase each page */
       errorSource = Write_Eeprom_Hardware(offset, NULL, HardwareEeprom_I2c_Page_Size_In_Bytes, true);
+      offset += HardwareEeprom_I2c_Page_Size_In_Bytes;
 
-      /* Shift to next sequence when operation succeeded */
-      retries += 1;
-      if(errorSource == HardwareEepromErrorSource_None)
-      {
-         offset += HardwareEeprom_I2c_Page_Size_In_Bytes;
-         retries = 0;
-         isNotFirstAccess = true;
-      }
-
+      DELAY(EepromWaitingForNextWriteAccess);
       Action_SafeInvoke(instance._private.watchdogKickAction);
    }
 

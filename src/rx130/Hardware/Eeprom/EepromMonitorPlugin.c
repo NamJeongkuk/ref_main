@@ -10,12 +10,14 @@
 #include "InputOutputConnector.h"
 #include "Constants_Binary.h"
 #include "SystemErds.h"
+#include "EepromEraser.h"
 
 static struct
 {
    InputOutputConnector_t readFaultErdConnector;
    InputOutputConnector_t writeFaultErdConnector;
    InputOutputConnector_t eraseFaultErdConnector;
+   EepromEraser_t eepromEraser;
 } instance;
 
 void EepromMonitorPlugin_Init(I_DataModel_t *dataModel)
@@ -39,4 +41,10 @@ void EepromMonitorPlugin_Init(I_DataModel_t *dataModel)
       EepromStack_GetEraseFaultInput(),
       DataModel_GetOutput(dataModel, Erd_Fault_EepromEraseFailure),
       sizeof(bool));
+   EepromEraser_Init(
+      &instance.eepromEraser,
+      dataModel,
+      EepromStack_GetEeprom(),
+      Erd_EepromEraseRequestSignal,
+      Erd_SystemResetAction);
 }

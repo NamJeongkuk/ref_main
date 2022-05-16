@@ -9,8 +9,10 @@ extern "C"
 {
 #include "EepromEraser.h"
 #include "Signal.h"
+#include "DataModelErdPointerAccess.h"
 }
-#include "Eeprom_Mock.h"
+#include "Eeprom_TestDouble.h"
+#include "Action_Mock.h"
 #include "DataModel_TestDouble.h"
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
@@ -23,11 +25,13 @@ extern "C"
 
 enum
 {
-   Erd_EepromEraseRequestSignal
+   Erd_EepromEraseRequestSignal,
+   Erd_SystemResetAction
 };
 
 static const DataModel_TestDoubleConfigurationEntry_t dataModelConfig[] = {
-   { Erd_EepromEraseRequestSignal, sizeof(Signal_t) }
+   { Erd_EepromEraseRequestSignal, sizeof(Signal_t) },
+   { Erd_SystemResetAction, sizeof(I_Action_t *) }
 };
 
 TEST_GROUP(EepromEraser)
@@ -35,27 +39,35 @@ TEST_GROUP(EepromEraser)
    EepromEraser_t instance;
 
    DataModel_TestDouble_t dataModelTestDouble;
-   Eeprom_Mock_t eepromMock;
+   Eeprom_TestDouble_t eepromTestDouble;
+   Action_Mock_t resetActionMock;
 
    I_DataModel_t *dataModel;
    I_Eeprom_t *eeprom;
+   I_Action_t *resetAction;
 
    void setup()
    {
       DataModel_TestDouble_Init(&dataModelTestDouble, dataModelConfig, NUM_ELEMENTS(dataModelConfig));
       dataModel = dataModelTestDouble.dataModel;
 
-      Eeprom_Mock_Init(&eepromMock);
-      eeprom = &eepromMock.interface;
+      Eeprom_TestDouble_Init(&eepromTestDouble);
+      eeprom = &eepromTestDouble.interface;
+
+      Action_Mock_Init(&resetActionMock);
+      resetAction = &resetActionMock.interface;
    }
 
    void ModuleInitialized()
    {
+      DataModelErdPointerAccess_Write(dataModel, Erd_SystemResetAction, resetAction);
+
       EepromEraser_Init(
          &instance,
          dataModel,
          eeprom,
-         Erd_EepromEraseRequestSignal);
+         Erd_EepromEraseRequestSignal,
+         Erd_SystemResetAction);
    }
 
    template <typename T>
@@ -81,6 +93,16 @@ TEST_GROUP(EepromEraser)
    {
       mock().expectOneCall("Erase").onObject(eeprom);
    }
+
+   void EepromErasedEventOccurs()
+   {
+      Eeprom_TestDouble_TriggerReceiveErasedEvent(&eepromTestDouble);
+   }
+
+   void ResetActionToBeInvoked()
+   {
+      mock().expectOneCall("Invoke").onObject(resetAction);
+   }
 };
 
 TEST(EepromEraser, ShouldInitialize)
@@ -95,4 +117,12 @@ TEST(EepromEraser, ShouldEraseEepromWhenRequestedErase)
 
    Expect EepromEraseCalled();
    When EepromEraseRequstSignalIs(1);
+}
+
+TEST(EepromEraser, ShouldInvokeResetActionWhenEepromErasedEventOccurs)
+{
+   Given ModuleInitialized();
+
+   Expect ResetActionToBeInvoked();
+   When EepromErasedEventOccurs();
 }
