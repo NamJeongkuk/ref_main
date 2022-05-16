@@ -23,7 +23,7 @@ typedef struct
    TemperatureDegFx100_t prechillConvertibleCompartmentSetpointInDegFx100;
    TemperatureDegFx100_t prechillFreezerEvapExitTemperatureInDegFx100;
    TemperatureDegFx100_t prechillConvertibleCompartmentEvapExitTemperatureInDegFx100;
-   uint8_t maxPrechillTimeInMinutes;
+   uint8_t maxPrechillTimeForFreshFoodAndFreezerDefrostsInMinutes;
    uint8_t maxPrechillTimeForFreshFoodOnlyDefrostInMinutes;
    uint8_t defrostDoorHoldoffTimeForFreshFoodAndFreezerInMinutes;
    uint8_t defrostDoorHoldoffTimeForFreshFoodOnlyInMinutes;
@@ -47,13 +47,13 @@ typedef struct
    uint8_t convertibleCompartmentAsFreezerAbnormalDefrostHeaterMaxOnTimeInMinutes;
    uint8_t defrostDwellTimeInMinutes;
    TemperatureDegFx100_t freshFoodAndFreezerPostDwellFreezerExitTemperatureInDegFx100;
-   uint8_t freshFoodAndFreezerPostDwellFreezerExitTimeInMinutes;
    ValvePosition_t dwellThreeWayValvePosition;
    ValvePosition_t postDwellThreeWayValvePositionForFreshFoodAndFreezer;
    TemperatureDegFx100_t freshFoodPostDefrostPullDownExitTemperatureInDegFx100;
    TemperatureDegFx100_t freezerPostDefrostPullDownExitTemperatureInDegFx100;
    uint8_t numberOfFreshFoodDefrostsBeforeFreezerDefrost;
    uint8_t numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost;
+   uint8_t freshFoodAndFreezerPostDwellFreezerExitTimeInMinutes;
    uint8_t freshFoodOnlyPostDwellExitTimeInMinutes;
    TemperatureDegFx100_t dsmFreezerSetpointTemperatureInDegFx100;
    uint8_t defrostPeriodicTimeoutInSeconds;

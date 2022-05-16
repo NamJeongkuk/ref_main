@@ -274,6 +274,27 @@
         },
         {
           "namespace": "rx130",
+          "displayName": "Defrost Is Fresh Food Only",
+          "name": "Erd_DefrostIsFreshFoodOnly",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Max Prechill Time In Minutes",
+          "name": "Erd_MaxPrechillTimeInMinutes",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Post Dwell Exit Time In Minutes",
+          "name": "Erd_PostDwellExitTimeInMinutes",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "Defrost Prechill Run Counter In Minutes",
           "name": "Erd_DefrostPrechillRunCounterInMinutes",
           "read": true,

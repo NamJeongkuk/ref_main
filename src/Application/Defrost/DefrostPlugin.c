@@ -13,6 +13,7 @@
 #include "DefrostTimerIsSatisfiedMonitor.h"
 #include "SystemErds.h"
 #include "DefrostDoorHoldoffTimer.h"
+#include "DefrostParameterSelector.h"
 #include "DefrostHeaterMaxOnTime.h"
 
 static struct
@@ -119,6 +120,8 @@ static const DefrostHeaterMaxOnTimeConfiguration_t defrostHeaterMaxOnTimeConfig 
 
 void DefrostPlugin_Init(I_DataModel_t *dataModel)
 {
+   DefrostParameterSelector_Init(dataModel);
+
    DefrostStateOnCompareMatch(dataModel);
 
    DefrostHeaterMaxOnTime_Init(&instance.defrostHeaterMaxOnTime, dataModel, &defrostHeaterMaxOnTimeConfig);
