@@ -1,16 +1,16 @@
 /*!
  * @file
- * @brief ConvertibleCompartmentCabinet state tests
+ * @brief ConvertibleCompartment state tests
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
 extern "C"
 {
-#include "ConvertibleCompartmentCabinetState.h"
+#include "ConvertibleCompartmentState.h"
 #include "SystemErds.h"
 #include "Setpoint.h"
-#include "ConvertibleCompartmentCabinetData.h"
+#include "ConvertibleCompartmentData.h"
 #include "DataModelErdPointerAccess.h"
 }
 
@@ -33,18 +33,18 @@ enum
    AtThreshold = 2000
 };
 
-static const ConvertibleCompartmentCabinetStateConfig_t config = {
+static const ConvertibleCompartmentStateConfig_t config = {
    .convertibleCompartmentResolvedSetpointErd = Erd_ConvertibleCompartmentSetpoint_ResolvedVote,
-   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentCabinetState
+   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState
 };
 
-static const ConvertibleCompartmentCabinetData_t convertibleCompartmentCabinetData = {
-   .convertibleCompartmentCabinetThresholdDegFx100 = CabinetThresholdDegFx100
+static const ConvertibleCompartmentData_t convertibleCompartmentData = {
+   .convertibleCompartmentThresholdDegFx100 = CabinetThresholdDegFx100
 };
 
-TEST_GROUP(ConvertibleCompartmentCabinetState)
+TEST_GROUP(ConvertibleCompartmentState)
 {
-   ConvertibleCompartmentCabinetState_t instance;
+   ConvertibleCompartmentState_t instance;
    ReferDataModel_TestDouble_t dataModelTestDouble;
    I_DataModel_t *dataModel;
    PersonalityParametricData_t personalityParametricData;
@@ -54,19 +54,19 @@ TEST_GROUP(ConvertibleCompartmentCabinetState)
       ReferDataModel_TestDouble_Init(&dataModelTestDouble);
       dataModel = dataModelTestDouble.dataModel;
       PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetConvertibleCompartmentCabinet(&personalityParametricData, &convertibleCompartmentCabinetData);
+      PersonalityParametricData_TestDouble_SetConvertibleCompartment(&personalityParametricData, &convertibleCompartmentData);
       DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
    }
 
-   void GivenConvertibleCompartmentCabinetStateIsInitialized()
+   void GivenConvertibleCompartmentStateIsInitialized()
    {
-      ConvertibleCompartmentCabinetState_Init(&instance, dataModel, &config);
+      ConvertibleCompartmentState_Init(&instance, dataModel, &config);
    }
 
-   void ConvertibleCompartmentCabinetStateShouldBeA(uint8_t expectedCabinetState)
+   void ConvertibleCompartmentStateShouldBeA(uint8_t expectedCabinetState)
    {
       uint8_t realCabinetState;
-      DataModel_Read(dataModel, Erd_ConvertibleCompartmentCabinetState, &realCabinetState);
+      DataModel_Read(dataModel, Erd_ConvertibleCompartmentState, &realCabinetState);
       CHECK_EQUAL(expectedCabinetState, realCabinetState);
    }
 
@@ -79,43 +79,43 @@ TEST_GROUP(ConvertibleCompartmentCabinetState)
    }
 };
 
-TEST(ConvertibleCompartmentCabinetState, ShouldSetCabinetStateWhenInitialized)
+TEST(ConvertibleCompartmentState, ShouldSetCabinetStateWhenInitialized)
 {
    GivenConvertibleCompartmentSetpointIsNow(BelowThreshold);
-   And GivenConvertibleCompartmentCabinetStateIsInitialized();
+   And GivenConvertibleCompartmentStateIsInitialized();
 
-   The ConvertibleCompartmentCabinetStateShouldBeA(ConvertibleCompartmentCabinetState_Freezer);
+   The ConvertibleCompartmentStateShouldBeA(ConvertibleCompartmentState_Freezer);
 }
 
-TEST(ConvertibleCompartmentCabinetState, ShouldChangeCabinetStateWhenSetpointChangesFromBelowThresholdToAboveThreshold)
+TEST(ConvertibleCompartmentState, ShouldChangeCabinetStateWhenSetpointChangesFromBelowThresholdToAboveThreshold)
 {
    GivenConvertibleCompartmentSetpointIsNow(BelowThreshold);
-   And GivenConvertibleCompartmentCabinetStateIsInitialized();
+   And GivenConvertibleCompartmentStateIsInitialized();
 
-   The ConvertibleCompartmentCabinetStateShouldBeA(ConvertibleCompartmentCabinetState_Freezer);
+   The ConvertibleCompartmentStateShouldBeA(ConvertibleCompartmentState_Freezer);
 
    GivenConvertibleCompartmentSetpointIsNow(AboveThreshold);
-   The ConvertibleCompartmentCabinetStateShouldBeA(ConvertibleCompartmentCabinetState_FreshFood);
+   The ConvertibleCompartmentStateShouldBeA(ConvertibleCompartmentState_FreshFood);
 }
 
-TEST(ConvertibleCompartmentCabinetState, ShouldChangeCabinetStateWhenSetpointChangesFromAboveThresholdToBelowThreshold)
+TEST(ConvertibleCompartmentState, ShouldChangeCabinetStateWhenSetpointChangesFromAboveThresholdToBelowThreshold)
 {
    GivenConvertibleCompartmentSetpointIsNow(AboveThreshold);
-   And GivenConvertibleCompartmentCabinetStateIsInitialized();
+   And GivenConvertibleCompartmentStateIsInitialized();
 
-   The ConvertibleCompartmentCabinetStateShouldBeA(ConvertibleCompartmentCabinetState_FreshFood);
+   The ConvertibleCompartmentStateShouldBeA(ConvertibleCompartmentState_FreshFood);
 
    GivenConvertibleCompartmentSetpointIsNow(BelowThreshold);
-   The ConvertibleCompartmentCabinetStateShouldBeA(ConvertibleCompartmentCabinetState_Freezer);
+   The ConvertibleCompartmentStateShouldBeA(ConvertibleCompartmentState_Freezer);
 }
 
-TEST(ConvertibleCompartmentCabinetState, ShouldSetCabinetStateToFreshFoodWhenEqualToThreshold)
+TEST(ConvertibleCompartmentState, ShouldSetCabinetStateToFreshFoodWhenEqualToThreshold)
 {
    GivenConvertibleCompartmentSetpointIsNow(BelowThreshold);
-   And GivenConvertibleCompartmentCabinetStateIsInitialized();
+   And GivenConvertibleCompartmentStateIsInitialized();
 
-   The ConvertibleCompartmentCabinetStateShouldBeA(ConvertibleCompartmentCabinetState_Freezer);
+   The ConvertibleCompartmentStateShouldBeA(ConvertibleCompartmentState_Freezer);
 
    GivenConvertibleCompartmentSetpointIsNow(AtThreshold);
-   The ConvertibleCompartmentCabinetStateShouldBeA(ConvertibleCompartmentCabinetState_FreshFood);
+   The ConvertibleCompartmentStateShouldBeA(ConvertibleCompartmentState_FreshFood);
 }

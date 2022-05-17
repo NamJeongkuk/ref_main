@@ -276,24 +276,24 @@ static void UpdateSensorValues(void *context)
    }
 }
 
-static void SetConvertibleCompartmentCabinetThermistorFallbackValue(SensorFilteredReading_t *instance, const uint8_t convertibleCompartmentCabinetState)
+static void SetConvertibleCompartmentCabinetThermistorFallbackValue(SensorFilteredReading_t *instance, const uint8_t convertibleCompartmentState)
 {
-   if(convertibleCompartmentCabinetState == ConvertibleCompartmentCabinetState_FreshFood)
+   if(convertibleCompartmentState == ConvertibleCompartmentState_FreshFood)
    {
-      instance->_private.configuration->channelData[instance->_private.configuration->convertibleCompartmentCabinetIndex].fallbackData.fallbackValue = instance->_private.configuration->convertibleCompartmentSensorData->freshFoodFallbackValueDegFx100;
+      instance->_private.configuration->channelData[instance->_private.configuration->convertibleCompartmentIndex].fallbackData.fallbackValue = instance->_private.configuration->convertibleCompartmentSensorData->freshFoodFallbackValueDegFx100;
    }
-   else // ConvertibleCompartmentCabinetState_Freezer
+   else // ConvertibleCompartmentState_Freezer
    {
-      instance->_private.configuration->channelData[instance->_private.configuration->convertibleCompartmentCabinetIndex].fallbackData.fallbackValue = instance->_private.configuration->convertibleCompartmentSensorData->freezerFallbackValueDegFx100;
+      instance->_private.configuration->channelData[instance->_private.configuration->convertibleCompartmentIndex].fallbackData.fallbackValue = instance->_private.configuration->convertibleCompartmentSensorData->freezerFallbackValueDegFx100;
    }
 }
 
-static void ConvertibleCompartmentCabinetStateChangedCallback(void *context, const void *args)
+static void ConvertibleCompartmentStateChangedCallback(void *context, const void *args)
 {
    REINTERPRET(instance, context, SensorFilteredReading_t *);
-   REINTERPRET(convertibleCompartmentCabinetState, args, const ConvertibleCompartmentCabinetStateType_t *);
+   REINTERPRET(convertibleCompartmentState, args, const ConvertibleCompartmentStateType_t *);
 
-   SetConvertibleCompartmentCabinetThermistorFallbackValue(instance, *convertibleCompartmentCabinetState);
+   SetConvertibleCompartmentCabinetThermistorFallbackValue(instance, *convertibleCompartmentState);
 }
 
 static void InitializeFilter(SensorFilteredReading_t *instance)
@@ -320,11 +320,11 @@ static void InitializeFilter(SensorFilteredReading_t *instance)
    }
 }
 
-static void InitializeConvertibleCompartmentCabinetFallbackValue(SensorFilteredReading_t *instance)
+static void InitializeConvertibleCompartmentFallbackValue(SensorFilteredReading_t *instance)
 {
-   ConvertibleCompartmentCabinetStateType_t convertibleCompartmentCabinetState;
-   DataModel_Read(instance->_private.dataModel, instance->_private.configuration->convertibleCompartmentCabinetStateErd, &convertibleCompartmentCabinetState);
-   SetConvertibleCompartmentCabinetThermistorFallbackValue(instance, convertibleCompartmentCabinetState);
+   ConvertibleCompartmentStateType_t convertibleCompartmentState;
+   DataModel_Read(instance->_private.dataModel, instance->_private.configuration->convertibleCompartmentStateErd, &convertibleCompartmentState);
+   SetConvertibleCompartmentCabinetThermistorFallbackValue(instance, convertibleCompartmentState);
 }
 
 void SensorFilteredReading_Init(
@@ -335,17 +335,17 @@ void SensorFilteredReading_Init(
    instance->_private.configuration = config;
    instance->_private.dataModel = dataModel;
 
-   InitializeConvertibleCompartmentCabinetFallbackValue(instance);
+   InitializeConvertibleCompartmentFallbackValue(instance);
    InitializeFilter(instance);
 
    EventSubscription_Init(
-      &instance->_private.onConvertibleCompartmentCabinetStateChanged,
+      &instance->_private.onConvertibleCompartmentStateChanged,
       instance,
-      ConvertibleCompartmentCabinetStateChangedCallback);
+      ConvertibleCompartmentStateChangedCallback);
    DataModel_Subscribe(
       instance->_private.dataModel,
-      instance->_private.configuration->convertibleCompartmentCabinetStateErd,
-      &instance->_private.onConvertibleCompartmentCabinetStateChanged);
+      instance->_private.configuration->convertibleCompartmentStateErd,
+      &instance->_private.onConvertibleCompartmentStateChanged);
 
    TimerModule_StartPeriodic(
       DataModelErdPointerAccess_GetTimerModule(dataModel, instance->_private.configuration->timerModule),

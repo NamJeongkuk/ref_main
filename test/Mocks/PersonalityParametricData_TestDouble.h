@@ -18,7 +18,7 @@ void PersonalityParametricData_TestDouble_SetGrid(PersonalityParametricData_t *i
 
 void PersonalityParametricData_TestDouble_SetSabbath(PersonalityParametricData_t *instance, const SabbathData_t *sabbathData);
 
-void PersonalityParametricData_TestDouble_SetConvertibleCompartmentCabinet(PersonalityParametricData_t *instance, const ConvertibleCompartmentCabinetData_t *convertibleCompartmentCabinetData);
+void PersonalityParametricData_TestDouble_SetConvertibleCompartment(PersonalityParametricData_t *instance, const ConvertibleCompartmentData_t *convertibleCompartmentData);
 
 void PersonalityParametricData_TestDouble_SetSensors(PersonalityParametricData_t *instance, const SensorData_t *sensorData);
 

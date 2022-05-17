@@ -20,7 +20,7 @@
 #include "I_Mapper.h"
 #include "EventSubscription.h"
 #include "SensorData.h"
-#include "ConvertibleCompartmentCabinetStateType.h"
+#include "ConvertibleCompartmentStateType.h"
 
 enum
 {
@@ -68,9 +68,9 @@ typedef struct
 {
    SensorFilteredReadingChannelData_t *channelData;
    uint8_t channelDataCount;
-   uint8_t convertibleCompartmentCabinetIndex;
+   uint8_t convertibleCompartmentIndex;
    Erd_t timerModule;
-   Erd_t convertibleCompartmentCabinetStateErd;
+   Erd_t convertibleCompartmentStateErd;
    TimerTicks_t periodicCheckRateInMsec;
    const SensorDataConvertibleCompartmentSensorType_t *convertibleCompartmentSensorData;
 } SensorFilteredReadingConfiguration_t;
@@ -82,7 +82,7 @@ typedef struct
       const SensorFilteredReadingConfiguration_t *configuration;
       I_DataModel_t *dataModel;
       Timer_t filterTimer;
-      EventSubscription_t onConvertibleCompartmentCabinetStateChanged;
+      EventSubscription_t onConvertibleCompartmentStateChanged;
    } _private;
 } SensorFilteredReading_t;
 

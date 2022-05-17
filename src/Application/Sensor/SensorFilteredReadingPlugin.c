@@ -20,7 +20,7 @@
    ENTRY(Local, freshFoodCabinetThermistor, Erd_FreshFoodThermistor_AdcCount, Erd_FreshFood_UnfilteredTemperature, Erd_FreshFood_FilteredTemperature)                                                     \
    ENTRY(Local, freezerEvapThermistor, Erd_FreezerEvapThermistor_AdcCount, Erd_FreezerEvap_UnfilteredTemperature, Erd_FreezerEvap_FilteredTemperature)                                                    \
    ENTRY(Local, freshFoodEvapThermistor, Erd_FreshFoodEvapThermistor_AdcCount, Erd_FreshFoodEvap_UnfilteredTemperature, Erd_FreshFoodEvap_FilteredTemperature)                                            \
-   ENTRY(Local, convertibleCompartmentCabinetThermistor, Erd_ConvertibleCompartmentThermistor_AdcCount, Erd_ConvertibleCompartment_UnfilteredTemperature, Erd_ConvertibleCompartment_FilteredTemperature) \
+   ENTRY(Local, convertibleCompartmentCabinetThermistor, Erd_ConvertibleCompartmentCabinetThermistor_AdcCount, Erd_ConvertibleCompartment_UnfilteredTemperature, Erd_ConvertibleCompartment_FilteredTemperature) \
    ENTRY(Local, ambientThermistor, Erd_AmbientThermistor_AdcCount, Erd_Ambient_UnfilteredTemperature, Erd_Ambient_FilteredTemperature)                                                                    \
    ENTRY(Local, convertibleCompartmentEvapThermistor, Erd_ConvertibleCompartmentEvapThermistor_AdcCount, Erd_ConvertibleCompartmentEvap_UnfilteredTemperature, Erd_ConvertibleCompartmentEvap_FilteredTemperature)
 
@@ -100,8 +100,8 @@ void SensorFilteredReadingPlugin_Init(I_DataModel_t *dataModel)
    instance.sensorConfig.channelData = instance.sensorChannelData;
    instance.sensorConfig.channelDataCount = ChannelConfig_MaxNumberOfChannels;
    instance.sensorConfig.timerModule = Erd_TimerModule;
-   instance.sensorConfig.convertibleCompartmentCabinetIndex = ChannelConfig_convertibleCompartmentCabinetThermistor;
-   instance.sensorConfig.convertibleCompartmentCabinetStateErd = Erd_ConvertibleCompartmentCabinetState;
+   instance.sensorConfig.convertibleCompartmentIndex = ChannelConfig_convertibleCompartmentCabinetThermistor;
+   instance.sensorConfig.convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState;
    instance.sensorConfig.convertibleCompartmentSensorData = PersonalityParametricData_Get(dataModel)->sensorData->convertibleCompartmentCabinetThermistor;
    instance.sensorConfig.periodicCheckRateInMsec = instance.sensorData->periodicUpdateRate;
 

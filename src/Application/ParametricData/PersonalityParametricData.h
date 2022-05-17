@@ -12,7 +12,7 @@
 #include "DefrostData.h"
 #include "SabbathData.h"
 #include "GridData.h"
-#include "ConvertibleCompartmentCabinetData.h"
+#include "ConvertibleCompartmentData.h"
 #include "SensorData.h"
 #include "EvaporatorData.h"
 #include "SystemMonitorData.h"
@@ -22,7 +22,7 @@ typedef struct
    const DefrostData_t *defrostData;
    const GridData_t *gridData;
    const SabbathData_t *sabbathData;
-   const ConvertibleCompartmentCabinetData_t *convertibleCompartmentCabinetData;
+   const ConvertibleCompartmentData_t *convertibleCompartmentData;
    const EvaporatorData_t *evaporatorData;
    const SensorData_t *sensorData;
    const SystemMonitorData_t *systemMonitorData;

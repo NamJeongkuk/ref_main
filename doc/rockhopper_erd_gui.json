@@ -423,7 +423,7 @@
         {
           "namespace": "rx130",
           "displayName": "Convertible Compartment Thermistor AdcCount",
-          "name": "Erd_ConvertibleCompartmentThermistor_AdcCount",
+          "name": "Erd_ConvertibleCompartmentCabinetThermistor_AdcCount",
           "read": true,
           "write": true
         },
@@ -591,8 +591,8 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Convertible Compartment Cabinet State",
-          "name": "Erd_ConvertibleCompartmentCabinetState",
+          "displayName": "Convertible Compartment State",
+          "name": "Erd_ConvertibleCompartmentState",
           "read": true,
           "write": true
         }

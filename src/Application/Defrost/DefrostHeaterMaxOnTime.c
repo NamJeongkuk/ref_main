@@ -6,7 +6,7 @@
  */
 
 #include "DefrostHeaterMaxOnTime.h"
-#include "ConvertibleCompartmentCabinetStateType.h"
+#include "ConvertibleCompartmentStateType.h"
 #include "utils.h"
 #include "PersonalityParametricData.h"
 
@@ -49,7 +49,7 @@ static void ResolveFreshFoodDefrostHeaterMaxOnTime(DefrostHeaterMaxOnTime_t *ins
 static void ResolveConvertibleCompartmentDefrostHeaterMaxOnTime(
    DefrostHeaterMaxOnTime_t *instance,
    bool convertibleCompartmentIsValid,
-   ConvertibleCompartmentCabinetStateType_t convertibleCompartmentCabinetState)
+   ConvertibleCompartmentStateType_t convertibleCompartmentState)
 {
    if(convertibleCompartmentIsValid)
    {
@@ -60,7 +60,7 @@ static void ResolveConvertibleCompartmentDefrostHeaterMaxOnTime(
    }
    else
    {
-      if(convertibleCompartmentCabinetState == ConvertibleCompartmentCabinetState_Freezer)
+      if(convertibleCompartmentState == ConvertibleCompartmentState_Freezer)
       {
          DataModel_Write(
             instance->_private.dataModel,
@@ -96,19 +96,19 @@ static void DataModelChanged(void *context, const void *_args)
    else if(erd == instance->_private.config->convertibleCompartmentEvaporatorThermistorIsValidErd)
    {
       REINTERPRET(isValid, args->data, bool *);
-      ConvertibleCompartmentCabinetStateType_t convertibleCompartmentCabinetState;
+      ConvertibleCompartmentStateType_t convertibleCompartmentState;
       DataModel_Read(
          instance->_private.dataModel,
-         instance->_private.config->convertibleCompartmentCabinetStateErd,
-         &convertibleCompartmentCabinetState);
+         instance->_private.config->convertibleCompartmentStateErd,
+         &convertibleCompartmentState);
       ResolveConvertibleCompartmentDefrostHeaterMaxOnTime(
          instance,
          *isValid,
-         convertibleCompartmentCabinetState);
+         convertibleCompartmentState);
    }
-   else if(erd == instance->_private.config->convertibleCompartmentCabinetStateErd)
+   else if(erd == instance->_private.config->convertibleCompartmentStateErd)
    {
-      REINTERPRET(convertibleCompartmentCabinetState, args->data, ConvertibleCompartmentCabinetStateType_t *);
+      REINTERPRET(convertibleCompartmentState, args->data, ConvertibleCompartmentStateType_t *);
       bool convertibleCompartmentIsValid;
       DataModel_Read(
          instance->_private.dataModel,
@@ -117,7 +117,7 @@ static void DataModelChanged(void *context, const void *_args)
       ResolveConvertibleCompartmentDefrostHeaterMaxOnTime(
          instance,
          convertibleCompartmentIsValid,
-         *convertibleCompartmentCabinetState);
+         *convertibleCompartmentState);
    }
 }
 
@@ -141,7 +141,7 @@ void DefrostHeaterMaxOnTime_Init(
    bool freezerIsValid;
    bool freshFoodIsValid;
    bool convertibleCompartmentIsValid;
-   ConvertibleCompartmentCabinetStateType_t convertibleCompartmentCabinetState;
+   ConvertibleCompartmentStateType_t convertibleCompartmentState;
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->freezerEvaporatorThermistorIsValidErd,
@@ -156,13 +156,13 @@ void DefrostHeaterMaxOnTime_Init(
       &convertibleCompartmentIsValid);
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->convertibleCompartmentCabinetStateErd,
-      &convertibleCompartmentCabinetState);
+      instance->_private.config->convertibleCompartmentStateErd,
+      &convertibleCompartmentState);
 
    ResolveFreezerDefrostHeaterMaxOnTime(instance, freezerIsValid);
    ResolveFreshFoodDefrostHeaterMaxOnTime(instance, freshFoodIsValid);
    ResolveConvertibleCompartmentDefrostHeaterMaxOnTime(
       instance,
       convertibleCompartmentIsValid,
-      convertibleCompartmentCabinetState);
+      convertibleCompartmentState);
 }
