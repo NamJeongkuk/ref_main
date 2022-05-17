@@ -685,7 +685,7 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Idle);
-
+         SendDoorHoldoffEnableRequest(instance);
          VoteForFreshFoodDefrostHeater(instance, OFF);
          VoteForFreezerDefrostHeater(instance, OFF);
 

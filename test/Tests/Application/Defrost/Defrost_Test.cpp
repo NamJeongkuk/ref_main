@@ -896,6 +896,12 @@ TEST(Defrost_SingleEvap, ShouldGoToDwellWhenFilteredFreezerCabinetTemperatureIsG
    DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
 }
 
+TEST(Defrost_SingleEvap, ShouldEnableDoorHoldoffRequestOnEntryToIdle)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   DoorHoldoffRequestShouldBe(ENABLED);
+}
+
 TEST(Defrost_SingleEvap, ShouldGoToIdleWhenFilteredFreezerCabinetTemperatureIsGreaterThanExtremeHysteresisAndDefrostStateIsPrechillAfterPowerUpDelay)
 {
    Given DefrostStateIs(DefrostState_Prechill);
