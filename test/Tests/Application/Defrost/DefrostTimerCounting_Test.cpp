@@ -82,7 +82,9 @@ static const DefrostData_t defrostData = {
    .defrostPeriodicTimeoutInSeconds = 1,
    .threeWayValvePositionToExitIdle = ValvePosition_B,
    .threeWayValvePositionForMaxPrechillHoldoff = ValvePosition_B,
-   .threeWayValvePositionToExtendDefrostWithFreshFoodCycleDefrost = ValvePosition_B
+   .threeWayValvePositionToExtendDefrostWithFreshFoodCycleDefrost = ValvePosition_B,
+   .threeWayValvePositionToCountAsPrechillTime = ValvePosition_B,
+   .threeWayValveTimePriorToPrechillCountsAsPrechillTime = true
 };
 
 static const SabbathData_t sabbathData = {

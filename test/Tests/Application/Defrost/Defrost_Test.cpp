@@ -37,6 +37,7 @@ enum
 {
    TemperatureLessThanPrechillFreezerSetpoint = -700,
    TemperatureGreaterThanPrechillFreezerSetpoint = -500,
+   SomeMaxPrechillTimeInMinutes = 5
 };
 
 static const DefrostConfiguration_t defrostConfig = {
@@ -67,6 +68,9 @@ static const DefrostConfiguration_t defrostConfig = {
    .compressorStateErd = Erd_CompressorState,
    .defrostMaxHoldoffMetErd = Erd_DefrostMaxHoldoffMet,
    .defrostPrechillRunCounterInMinutesErd = Erd_DefrostPrechillRunCounterInMinutes,
+   .timeInMinutesInValvePositionBErd = Erd_TimeInMinutesInValvePositionB,
+   .prechillTimeMetErd = Erd_PrechillTimeMet,
+   .maxPrechillTimeInMinutesErd = Erd_MaxPrechillTimeInMinutes,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -117,7 +121,9 @@ static const DefrostData_t defrostData = {
    .defrostPeriodicTimeoutInSeconds = 1,
    .threeWayValvePositionToExitIdle = ValvePosition_B,
    .threeWayValvePositionForMaxPrechillHoldoff = ValvePosition_B,
-   .threeWayValvePositionToExtendDefrostWithFreshFoodCycleDefrost = ValvePosition_B
+   .threeWayValvePositionToExtendDefrostWithFreshFoodCycleDefrost = ValvePosition_B,
+   .threeWayValvePositionToCountAsPrechillTime = ValvePosition_B,
+   .threeWayValveTimePriorToPrechillCountsAsPrechillTime = true
 };
 
 static const DefrostData_t defrostDataWithZeroMaxPrechillHoldoffTime = {
@@ -166,7 +172,61 @@ static const DefrostData_t defrostDataWithZeroMaxPrechillHoldoffTime = {
    .defrostPeriodicTimeoutInSeconds = 1,
    .threeWayValvePositionToExitIdle = ValvePosition_B,
    .threeWayValvePositionForMaxPrechillHoldoff = ValvePosition_B,
-   .threeWayValvePositionToExtendDefrostWithFreshFoodCycleDefrost = ValvePosition_B
+   .threeWayValvePositionToExtendDefrostWithFreshFoodCycleDefrost = ValvePosition_B,
+   .threeWayValvePositionToCountAsPrechillTime = ValvePosition_B,
+   .threeWayValveTimePriorToPrechillCountsAsPrechillTime = true
+};
+
+static const DefrostData_t defrostDataWithThreeWayValveTimePriorToPrechillCountsAsPrechillTimeCleared = {
+   .freezerDoorIncrementFactorInSecondsPerSecond = 348,
+   .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
+   .freezerAbnormalRunTimeInMinutes = 6 * 60,
+   .maxTimeBetweenDefrostsInMinutes = 32 * 60,
+   .dmFreezerDefrostTemperatureInDegFx100 = 1500,
+   .prechillFreezerSetpointInDegFx100 = -600,
+   .prechillFreshFoodSetpointInDegFx100 = 4600,
+   .prechillConvertibleCompartmentSetpointInDegFx100 = -600,
+   .prechillFreezerEvapExitTemperatureInDegFx100 = -3000,
+   .prechillConvertibleCompartmentEvapExitTemperatureInDegFx100 = -3000,
+   .maxPrechillTimeForFreshFoodAndFreezerDefrostsInMinutes = 10,
+   .maxPrechillTimeForFreshFoodOnlyDefrostInMinutes = 20,
+   .defrostDoorHoldoffTimeForFreshFoodAndFreezerInMinutes = 60,
+   .defrostDoorHoldoffTimeForFreshFoodOnlyInMinutes = 50,
+   .defrostMaxHoldoffTimeInMinutes = 60,
+   .maxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds = 60,
+   .freshFoodFanDefrostFreshFoodEvapExitTemperatureInDegFx100 = 3600,
+   .freshFoodFanDefrostFreshFoodFanMaxOnTimeInMinutes = 10,
+   .convertibleCompartmentFanDefrostConvertibleCompartmentEvapExitTemperatureInDegFx100 = 3200,
+   .convertibleCompartmentFanDefrostConvertibleCompartmentFanMaxOnTimeInMinutes = 10,
+   .freezerDefrostHeaterMaxOnTimeInMinutes = 60,
+   .freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 30,
+   .freezerAbnormalDefrostHeaterMaxOnTimeInMinutes = 32,
+   .freezerDefrostTerminationTemperatureInDegFx100 = 5900,
+   .freshFoodDefrostTerminationTemperatureInDegFx100 = 4460,
+   .convertibleCompartmentDefrostTerminationTemperatureInDegFx100 = 4460,
+   .freshFoodDefrostHeaterMaxOnTimeInMinutes = 60,
+   .freshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 20,
+   .freshFoodAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
+   .convertibleCompartmentDefrostHeaterMaxOnTimeInMinutes = 60,
+   .convertibleCompartmentAsFreshFoodAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
+   .convertibleCompartmentAsFreezerAbnormalDefrostHeaterMaxOnTimeInMinutes = 35,
+   .defrostDwellTimeInMinutes = 7,
+   .freshFoodAndFreezerPostDwellFreezerExitTemperatureInDegFx100 = -1000,
+   .dwellThreeWayValvePosition = ValvePosition_A,
+   .postDwellThreeWayValvePositionForFreshFoodAndFreezer = ValvePosition_A,
+   .freshFoodPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
+   .freezerPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
+   .numberOfFreshFoodDefrostsBeforeFreezerDefrost = 2,
+   .numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost = 1,
+   .freshFoodAndFreezerPostDwellFreezerExitTimeInMinutes = 10,
+   .freshFoodOnlyPostDwellExitTimeInMinutes = 10,
+   .dsmFreezerSetpointTemperatureInDegFx100 = 200,
+   .defrostPeriodicTimeoutInSeconds = 1,
+   .threeWayValvePositionToExitIdle = ValvePosition_B,
+   .threeWayValvePositionForMaxPrechillHoldoff = ValvePosition_B,
+   .threeWayValvePositionToExtendDefrostWithFreshFoodCycleDefrost = ValvePosition_B,
+   .threeWayValvePositionToCountAsPrechillTime = ValvePosition_B,
+   .threeWayValveTimePriorToPrechillCountsAsPrechillTime = false
 };
 
 static const SabbathData_t sabbathData = {
@@ -261,6 +321,11 @@ TEST_GROUP(Defrost_SingleEvap)
    void DefrostParametricSetWithMaxPrechillHoldoffOfZero()
    {
       PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostDataWithZeroMaxPrechillHoldoffTime);
+   }
+
+   void DefrostParametricSetWithThreeWayValveTimePriorToPrechillCountsAsPrechillTimeCleared()
+   {
+      PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostDataWithThreeWayValveTimePriorToPrechillCountsAsPrechillTimeCleared);
    }
 
    void DefrostHsmStateShouldBe(DefrostHsmState_t expectedState)
@@ -757,6 +822,24 @@ TEST_GROUP(Defrost_SingleEvap)
 
       After(1);
       DefrostMaxHoldoffShouldBe(SET);
+   }
+
+   void MaxPrechillTimeInMinutesIs(uint8_t minutes)
+   {
+      DataModel_Write(dataModel, Erd_MaxPrechillTimeInMinutes, &minutes);
+   }
+
+   void PrechillTimeMetErdShouldBe(bool expectedState)
+   {
+      bool actualState;
+      DataModel_Read(dataModel, Erd_PrechillTimeMet, &actualState);
+
+      CHECK_EQUAL(expectedState, actualState);
+   }
+
+   void ValveHasBeenInPositionForThisManyMinutes(uint16_t minutes)
+   {
+      DataModel_Write(dataModel, Erd_TimeInMinutesInValvePositionB, &minutes);
    }
 };
 
@@ -1371,7 +1454,7 @@ TEST(Defrost_SingleEvap, ShouldSetDefrostMaxHoldoffErdAfterInPrechillStateForDef
    When CompressorStateTimeIsSatisfied();
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
 
-   After((defrostData.defrostMaxHoldoffTimeInMinutes) * MSEC_PER_MIN - 1);
+   After((defrostData.defrostMaxHoldoffTimeInMinutes * MSEC_PER_MIN) - 1);
    DefrostMaxHoldoffShouldBe(CLEAR);
 
    After(1);
@@ -1507,6 +1590,56 @@ TEST(Defrost_SingleEvap, ShouldRequestToDisableDoorHoldoffOnExitOfPrechill)
    After(1);
    DoorHoldoffRequestShouldBe(DISABLED);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvap, ShouldSetPrechillTimeMetErdWhenPrechillMinuteRunCounterReachesMaxPrechillTime)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given MaxPrechillTimeInMinutesIs(SomeMaxPrechillTimeInMinutes);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   When CompressorStateTimeIsSatisfied();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+
+   After((SomeMaxPrechillTimeInMinutes * MSEC_PER_MIN) - 1);
+   PrechillTimeMetErdShouldBe(CLEAR);
+
+   After(1);
+   PrechillRunCounterInMinutesShouldBe(SomeMaxPrechillTimeInMinutes);
+   PrechillTimeMetErdShouldBe(SET);
+}
+
+TEST(Defrost_SingleEvap, ShouldSetPrechillTimeMetWhenThreeWayValveTimePriorToPrechillCountsAsPrechillTimeIsSetInParametricAndValveHasBeenInPositionForMaxPrechillTime)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given MaxPrechillTimeInMinutesIs(SomeMaxPrechillTimeInMinutes);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   When CompressorStateTimeIsSatisfied();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+
+   When ValveHasBeenInPositionForThisManyMinutes(SomeMaxPrechillTimeInMinutes - 1);
+   PrechillTimeMetErdShouldBe(CLEAR);
+
+   When ValveHasBeenInPositionForThisManyMinutes(SomeMaxPrechillTimeInMinutes);
+   PrechillTimeMetErdShouldBe(SET);
+}
+
+TEST(Defrost_SingleEvap, ShouldNotSetPrechillTimeMetIfThreeWayValveTimePriorToPrechillCountsAsPrechillTimeIsClearInParametricAndValveHasBeenInPositionForMaxPrechillTime)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given MaxPrechillTimeInMinutesIs(SomeMaxPrechillTimeInMinutes);
+   Given DefrostParametricSetWithThreeWayValveTimePriorToPrechillCountsAsPrechillTimeCleared();
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   When CompressorStateTimeIsSatisfied();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+
+   When ValveHasBeenInPositionForThisManyMinutes(SomeMaxPrechillTimeInMinutes - 1);
+   PrechillTimeMetErdShouldBe(CLEAR);
+
+   When ValveHasBeenInPositionForThisManyMinutes(SomeMaxPrechillTimeInMinutes);
+   PrechillTimeMetErdShouldBe(CLEAR);
 }
 
 TEST_GROUP(Defrost_DualEvap)

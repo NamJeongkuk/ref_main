@@ -54,6 +54,9 @@ static const DefrostConfiguration_t defrostConfig = {
    .compressorStateErd = Erd_CompressorState,
    .defrostMaxHoldoffMetErd = Erd_DefrostMaxHoldoffMet,
    .defrostPrechillRunCounterInMinutesErd = Erd_DefrostPrechillRunCounterInMinutes,
+   .timeInMinutesInValvePositionBErd = Erd_TimeInMinutesInValvePositionB,
+   .prechillTimeMetErd = Erd_PrechillTimeMet,
+   .maxPrechillTimeInMinutesErd = Erd_MaxPrechillTimeInMinutes,
    .timerModuleErd = Erd_TimerModule
 };
 

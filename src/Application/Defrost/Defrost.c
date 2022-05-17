@@ -34,7 +34,8 @@ enum
    Signal_MaxPrechillHoldoffTimeComplete,
    Signal_FreezerEvaporatorThermistorIsInvalid,
    Signal_FreezerDefrostIsAbnormal,
-   Signal_CompressorStateTimeIsSatisfied
+   Signal_CompressorStateTimeIsSatisfied,
+   Signal_ValveHasBeenInPositionForPrechillTime
 };
 
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -79,6 +80,17 @@ static bool CompressorStateTimeIsSatisfiedFor(CompressorState_t state)
       (state != CompressorState_MinimumRunTime));
 }
 
+static uint8_t MaxPrechillTimeInMinutes(Defrost_t *instance)
+{
+   uint8_t maxPrechillTimeInMinutes;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->maxPrechillTimeInMinutesErd,
+      &maxPrechillTimeInMinutes);
+
+   return maxPrechillTimeInMinutes;
+}
+
 static void DataModelChanged(void *context, const void *args)
 {
    REINTERPRET(instance, context, Defrost_t *);
@@ -110,6 +122,18 @@ static void DataModelChanged(void *context, const void *args)
       if(CompressorStateTimeIsSatisfiedFor(*state))
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_CompressorStateTimeIsSatisfied, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->timeInMinutesInValvePositionBErd)
+   {
+      if(instance->_private.defrostParametricData->threeWayValvePositionToCountAsPrechillTime == ValvePosition_B)
+      {
+         REINTERPRET(minutes, onChangeData->data, const uint16_t *);
+
+         if(*minutes >= MaxPrechillTimeInMinutes(instance))
+         {
+            Hsm_SendSignal(&instance->_private.hsm, Signal_ValveHasBeenInPositionForPrechillTime, NULL);
+         }
       }
    }
 }
@@ -557,15 +581,23 @@ static void ResetPrechillRunCounterInMinutesToZero(Defrost_t *instance)
       &prechillRunCounterInMinutes);
 }
 
-static void SetDefrostMaxHoldoffMetTo(Defrost_t *instance, const bool *state)
+static void SetDefrostMaxHoldoffMetTo(Defrost_t *instance, bool state)
 {
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->defrostMaxHoldoffMetErd,
-      state);
+      &state);
 }
 
-static uint16_t IncrementThenGetPrechillRunCounterInMinutes(Defrost_t *instance)
+static void SetPrechillTimeMetTo(Defrost_t *instance, bool state)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->prechillTimeMetErd,
+      &state);
+}
+
+static uint16_t IncrementAndReturnPrechillRunCounterInMinutes(Defrost_t *instance)
 {
    uint16_t prechillRunCounterInMinutes;
    DataModel_Read(
@@ -581,6 +613,17 @@ static uint16_t IncrementThenGetPrechillRunCounterInMinutes(Defrost_t *instance)
       &prechillRunCounterInMinutes);
 
    return prechillRunCounterInMinutes;
+}
+
+static bool TimeReachedDefrostMaxHoldoffTimeInMinutes(Defrost_t *instance, uint16_t prechillRunCounterInMinutes)
+{
+   return prechillRunCounterInMinutes >=
+      instance->_private.defrostParametricData->defrostMaxHoldoffTimeInMinutes;
+}
+
+static bool TimeReachedMaxPrechillTimeInMinutes(Defrost_t *instance, uint16_t prechillRunCounterInMinutes)
+{
+   return prechillRunCounterInMinutes >= MaxPrechillTimeInMinutes(instance);
 }
 
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
@@ -791,21 +834,35 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
    IGNORE(data);
+   uint16_t prechillRunCounterInMinutes;
 
    switch(signal)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Prechill);
          ResetPrechillRunCounterInMinutesToZero(instance);
-         SetDefrostMaxHoldoffMetTo(instance, clear);
+         SetDefrostMaxHoldoffMetTo(instance, CLEAR);
          StartOneMinutePeriodicTimer(instance);
          break;
 
       case Signal_PeriodicTimeoutComplete:
-         if(IncrementThenGetPrechillRunCounterInMinutes(instance) >=
-            instance->_private.defrostParametricData->defrostMaxHoldoffTimeInMinutes)
+         prechillRunCounterInMinutes = IncrementAndReturnPrechillRunCounterInMinutes(instance);
+
+         if(TimeReachedDefrostMaxHoldoffTimeInMinutes(instance, prechillRunCounterInMinutes))
          {
-            SetDefrostMaxHoldoffMetTo(instance, set);
+            SetDefrostMaxHoldoffMetTo(instance, SET);
+         }
+
+         if(TimeReachedMaxPrechillTimeInMinutes(instance, prechillRunCounterInMinutes))
+         {
+            SetPrechillTimeMetTo(instance, SET);
+         }
+         break;
+
+      case Signal_ValveHasBeenInPositionForPrechillTime:
+         if(instance->_private.defrostParametricData->threeWayValveTimePriorToPrechillCountsAsPrechillTime)
+         {
+            SetPrechillTimeMetTo(instance, SET);
          }
          break;
 

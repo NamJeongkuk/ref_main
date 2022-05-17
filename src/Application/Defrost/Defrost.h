@@ -45,6 +45,9 @@ typedef struct
    Erd_t compressorStateErd; // CompressorState_t
    Erd_t defrostMaxHoldoffMetErd; // bool
    Erd_t defrostPrechillRunCounterInMinutesErd; // uint16_t
+   Erd_t timeInMinutesInValvePositionBErd; // uint32_t
+   Erd_t prechillTimeMetErd; // bool
+   Erd_t maxPrechillTimeInMinutesErd; // uint8_t
    Erd_t timerModuleErd; // TimerModule_t *
 } DefrostConfiguration_t;
 

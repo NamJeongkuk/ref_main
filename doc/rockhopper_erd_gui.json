@@ -78,6 +78,13 @@
           "name": "Erd_SealedSystemValvePosition",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Time In Minutes In Position B",
+          "name": "Erd_TimeInMinutesInValvePositionB",
+          "read": true,
+          "write": true
         }
       ]
     },
@@ -297,6 +304,13 @@
           "namespace": "rx130",
           "displayName": "Defrost Prechill Run Counter In Minutes",
           "name": "Erd_DefrostPrechillRunCounterInMinutes",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Prechill Time Met",
+          "name": "Erd_PrechillTimeMet",
           "read": true,
           "write": true
         }

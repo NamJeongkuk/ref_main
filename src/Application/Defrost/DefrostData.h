@@ -60,6 +60,8 @@ typedef struct
    ValvePosition_t threeWayValvePositionToExitIdle;
    ValvePosition_t threeWayValvePositionForMaxPrechillHoldoff;
    ValvePosition_t threeWayValvePositionToExtendDefrostWithFreshFoodCycleDefrost;
+   ValvePosition_t threeWayValvePositionToCountAsPrechillTime;
+   bool threeWayValveTimePriorToPrechillCountsAsPrechillTime;
 } DefrostData_t;
 
 #endif
