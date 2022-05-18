@@ -30,7 +30,6 @@ static const DefrostData_t defrostData = {
    .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
    .freezerAbnormalRunTimeInMinutes = 6 * MINUTES_PER_HOUR,
    .maxTimeBetweenDefrostsInMinutes = 32 * MINUTES_PER_HOUR,
-   .dmFreezerDefrostTemperatureInDegFx100 = 1500,
    .prechillFreezerSetpointInDegFx100 = 600,
    .prechillFreshFoodSetpointInDegFx100 = 4600,
    .prechillConvertibleCompartmentSetpointInDegFx100 = 600,
@@ -68,12 +67,11 @@ static const DefrostData_t defrostData = {
    .numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost = 1,
    .freshFoodAndFreezerPostDwellFreezerExitTimeInMinutes = 10,
    .freshFoodOnlyPostDwellExitTimeInMinutes = 10,
-   .dsmFreezerSetpointTemperatureInDegFx100 = 200,
    .defrostPeriodicTimeoutInSeconds = 1,
    .threeWayValvePositionToExitIdle = ValvePosition_B,
    .threeWayValvePositionForMaxPrechillHoldoff = ValvePosition_B,
    .threeWayValvePositionToExtendDefrostWithFreshFoodCycleDefrost = ValvePosition_B,
-      .threeWayValvePositionToCountAsPrechillTime = ValvePosition_B,
+   .threeWayValvePositionToCountAsPrechillTime = ValvePosition_B,
    .threeWayValveTimePriorToPrechillCountsAsPrechillTime = true
 };
 
