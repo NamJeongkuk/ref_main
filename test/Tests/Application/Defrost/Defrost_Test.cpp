@@ -71,6 +71,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .timeInMinutesInValvePositionBErd = Erd_TimeInMinutesInValvePositionB,
    .prechillTimeMetErd = Erd_PrechillTimeMet,
    .maxPrechillTimeInMinutesErd = Erd_MaxPrechillTimeInMinutes,
+   .freezerEvaporatorFilteredTemperatureErd = Erd_FreezerEvap_FilteredTemperatureResolved,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -487,6 +488,14 @@ TEST_GROUP(Defrost_SingleEvap)
             DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
             break;
 
+         case DefrostHsmState_Prechill:
+            Given FreezerEvaporatorThermistorValidityIs(VALID);
+            Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+            When CompressorStateTimeIsSatisfied();
+            DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+            break;
+
          case DefrostHsmState_PostPrechill:
             Given DefrostStateIs(DefrostState_Prechill);
             Given LastFreezerDefrostWasAbnormalButCurrentFreezerCabinetTemperatureIsNotAbnormal();
@@ -840,6 +849,11 @@ TEST_GROUP(Defrost_SingleEvap)
    void ValveHasBeenInPositionForThisManyMinutes(uint16_t minutes)
    {
       DataModel_Write(dataModel, Erd_TimeInMinutesInValvePositionB, &minutes);
+   }
+
+   void FreezerEvaporatorFilteredTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_FreezerEvap_FilteredTemperatureResolved, &temperature);
    }
 };
 
@@ -1648,6 +1662,26 @@ TEST(Defrost_SingleEvap, ShouldNotSetPrechillTimeMetIfThreeWayValveTimePriorToPr
    PrechillTimeMetErdShouldBe(CLEAR);
 }
 
+TEST(Defrost_SingleEvap, ShouldTransitionToPostPrechillWhenFreezerEvaporatorTemperatureUpdatesToLessThanPrechillExitFreezerTemperatureDuringPrechill)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   Given FreezerEvaporatorFilteredTemperatureIs(-2000);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+
+   When FreezerEvaporatorFilteredTemperatureIs(-3001);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
+}
+
+TEST(Defrost_SingleEvap, ShouldNotTransitionToPostPrechillWhenFreezerEvaporatorTemperatureUpdatesToPrechillExitFreezerTemperatureDuringPrechill)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   Given FreezerEvaporatorFilteredTemperatureIs(-2000);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+
+   When FreezerEvaporatorFilteredTemperatureIs(-3000);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
 TEST_GROUP(Defrost_DualEvap)
 {
    ReferDataModel_TestDouble_t dataModelDouble;
@@ -1776,6 +1810,7 @@ TEST_GROUP(Defrost_DualEvap)
 
             When DefrostTimerIsSatisfiedIs(true);
             And SealedSystemValveIsInPosition(ValvePosition_C);
+            And CompressorStateIs(CompressorState_MinimumOffTime);
 
             After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
             SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
@@ -1783,6 +1818,14 @@ TEST_GROUP(Defrost_DualEvap)
             DisableDefrostTimerCounterRequestShouldBeSent();
             After(1);
             DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+            break;
+
+         case DefrostHsmState_Prechill:
+            Given FreezerEvaporatorThermistorValidityIs(VALID);
+            Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+            When CompressorStateTimeIsSatisfied();
+            DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
             break;
       }
    }
@@ -1847,6 +1890,12 @@ TEST_GROUP(Defrost_DualEvap)
 
    void CompressorStateIs(CompressorState_t state)
    {
+      DataModel_Write(dataModel, Erd_CompressorState, &state);
+   }
+
+   void CompressorStateTimeIsSatisfied()
+   {
+      CompressorState_t state = CompressorState_On;
       DataModel_Write(dataModel, Erd_CompressorState, &state);
    }
 };

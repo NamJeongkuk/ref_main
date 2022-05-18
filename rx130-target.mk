@@ -46,6 +46,7 @@ SRC_DIRS:=\
   src/Application/Grid \
   src/Application/Grid/GridFunctions \
   src/Application/Gea \
+  src/Application/OverrideArbiters \
   src/Application/ParametricData \
   src/Application/Plugins \
   src/Application/Sensor \

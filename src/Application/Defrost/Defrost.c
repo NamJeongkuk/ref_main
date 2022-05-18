@@ -35,7 +35,8 @@ enum
    Signal_FreezerEvaporatorThermistorIsInvalid,
    Signal_FreezerDefrostIsAbnormal,
    Signal_CompressorStateTimeIsSatisfied,
-   Signal_ValveHasBeenInPositionForPrechillTime
+   Signal_ValveHasBeenInPositionForPrechillTime,
+   Signal_FreezerEvaporatorTemperatureIsBelowPrechillFreezerEvaporatorExitTemperature
 };
 
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -134,6 +135,15 @@ static void DataModelChanged(void *context, const void *args)
          {
             Hsm_SendSignal(&instance->_private.hsm, Signal_ValveHasBeenInPositionForPrechillTime, NULL);
          }
+      }
+   }
+   else if(erd == instance->_private.config->freezerEvaporatorFilteredTemperatureErd)
+   {
+      REINTERPRET(temperatureDegFx100, onChangeData->data, const TemperatureDegFx100_t *);
+
+      if(*temperatureDegFx100 < instance->_private.defrostParametricData->prechillFreezerEvapExitTemperatureInDegFx100)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerEvaporatorTemperatureIsBelowPrechillFreezerEvaporatorExitTemperature, NULL);
       }
    }
 }
@@ -864,6 +874,10 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          {
             SetPrechillTimeMetTo(instance, SET);
          }
+         break;
+
+      case Signal_FreezerEvaporatorTemperatureIsBelowPrechillFreezerEvaporatorExitTemperature:
+         Hsm_Transition(hsm, State_PostPrechill);
          break;
 
       case Hsm_Exit:

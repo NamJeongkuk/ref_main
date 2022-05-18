@@ -48,6 +48,7 @@ typedef struct
    Erd_t timeInMinutesInValvePositionBErd; // uint32_t
    Erd_t prechillTimeMetErd; // bool
    Erd_t maxPrechillTimeInMinutesErd; // uint8_t
+   Erd_t freezerEvaporatorFilteredTemperatureErd; // TemperatureDegFx100_t
    Erd_t timerModuleErd; // TimerModule_t *
 } DefrostConfiguration_t;
 

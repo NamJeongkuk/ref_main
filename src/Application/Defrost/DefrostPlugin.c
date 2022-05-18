@@ -57,6 +57,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .timeInMinutesInValvePositionBErd = Erd_TimeInMinutesInValvePositionB,
    .prechillTimeMetErd = Erd_PrechillTimeMet,
    .maxPrechillTimeInMinutesErd = Erd_MaxPrechillTimeInMinutes,
+   .freezerEvaporatorFilteredTemperatureErd = Erd_FreezerEvap_FilteredTemperatureResolved,
    .timerModuleErd = Erd_TimerModule
 };
 

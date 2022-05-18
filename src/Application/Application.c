@@ -18,6 +18,7 @@
 #include "SensorFilteredReadingPlugin.h"
 #include "EepromAppPlugin.h"
 #include "FaultWrapperPlugin.h"
+#include "OverrideArbiterPlugin.h"
 
 enum
 {
@@ -58,6 +59,7 @@ void Application_Init(
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
    ConvertibleCompartmentStatePlugin_Init(&instance->_private.convertibleCompartmentStatePlugin, dataModel);
    SensorFilteredReadingPlugin_Init(dataModel);
+   OverrideArbiterPlugin_Init(dataModel);
    GridPlugin_Init(&instance->_private.gridPlugin, dataModel);
    DoorPlugin_Init(dataModel);
    DefrostPlugin_Init(dataModel);

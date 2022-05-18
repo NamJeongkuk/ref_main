@@ -513,6 +513,27 @@
         },
         {
           "namespace": "rx130",
+          "displayName": "FreezerEvap FilteredTemp Override Request",
+          "name": "Erd_FreezerEvap_FilteredTemperatureOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "FreezerEvap FilteredTemp Override Value",
+          "name": "Erd_FreezerEvap_FilteredTemperatureOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "FreezerEvap FilteredTemp Resolved",
+          "name": "Erd_FreezerEvap_FilteredTemperatureResolved",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "Convertible Compartment Unfiltered Temp",
           "name": "Erd_ConvertibleCompartment_UnfilteredTemperature",
           "read": true,
