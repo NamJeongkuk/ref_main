@@ -35,16 +35,23 @@ enum
 
 enum
 {
+   SixGridLines = 6,
+   TwoDimensional = 2,
+};
+
+enum
+{
    TemperatureLessThanPrechillFreezerSetpoint = -700,
    TemperatureGreaterThanPrechillFreezerSetpoint = -500,
-   SomeMaxPrechillTimeInMinutes = 5
+   SomeMaxPrechillTimeInMinutes = 5,
+   SomeAdjustedFreezerSetpointDegFx100 = 100
 };
 
 static const DefrostConfiguration_t defrostConfig = {
    .defrostHsmStateErd = Erd_DefrostHsmState,
    .defrostDoorHoldoffRequestErd = Erd_DefrostDoorHoldOffRequest,
    .defrostTimerCounterRequestErd = Erd_DefrostTimerCounterRequest,
-   .freezerFilteredTemperatureErd = Erd_Freezer_FilteredTemperature,
+   .freezerFilteredTemperatureResolvedErd = Erd_Freezer_FilteredTemperatureResolved,
    .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
    .defrostStateErd = Erd_DefrostState,
    .numberOfFreezerAbnormalDefrostCyclesErd = Erd_NumberofFreezerAbnormalDefrostCycles,
@@ -72,6 +79,9 @@ static const DefrostConfiguration_t defrostConfig = {
    .prechillTimeMetErd = Erd_PrechillTimeMet,
    .maxPrechillTimeInMinutesErd = Erd_MaxPrechillTimeInMinutes,
    .freezerEvaporatorFilteredTemperatureErd = Erd_FreezerEvap_FilteredTemperatureResolved,
+   .adjustedFreezerSetpointErd = Erd_Freezer_AdjustedSetpoint,
+   .doorHoldoffTimeIsSatisfiedErd = Erd_DefrostDoorHoldoffTimeSatisfied,
+   .noFreezeLimitIsActiveErd = Erd_NoFreezeLimitIsActive,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -228,7 +238,79 @@ static const SabbathData_t sabbathData = {
    .maxTimeBetweenDefrostsInMinutes = 16 * MINUTES_PER_HOUR
 };
 
+static const DeltaGridLineData_t freshFoodGridLineData[] = {
+   {
+      .gridLinesDegFx100 = 0,
+      .bitMapping = 0b0010,
+   },
+   {
+      .gridLinesDegFx100 = -450,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 150,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 450,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 950,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 1150,
+      .bitMapping = 0b1000,
+   },
+};
+
+static const DeltaGridLineData_t freezerGridLineData[] = {
+   {
+      .gridLinesDegFx100 = -250,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 0,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 250,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 600,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 750,
+      .bitMapping = 0b1000,
+   },
+   {
+      .gridLinesDegFx100 = 5500,
+      .bitMapping = 0b0010,
+   },
+};
+
+static const DeltaAxisGridLines_t freshFoodAxis = {
+   .numberOfLines = SixGridLines,
+   .gridLineData = freshFoodGridLineData
+};
+
+static const DeltaAxisGridLines_t freezerAxis = {
+   .numberOfLines = SixGridLines,
+   .gridLineData = freezerGridLineData
+};
+
+static DeltaAxisGridLines_t parametricGrid[] = { freshFoodAxis, freezerAxis };
+static DeltaGridLines_t deltaGrid = {
+   .dimensions = TwoDimensional,
+   .gridLines = parametricGrid
+};
+
 static const GridData_t gridData = {
+   .gridId = 0,
+   .deltaGridLines = &deltaGrid,
    .gridPeriodicRunRateInMSec = 1 * MSEC_PER_SEC
 };
 
@@ -241,12 +323,6 @@ static const EvaporatorData_t dualEvaporatorData = {
 };
 
 #define PowerUpDelayInMs 5 * gridData.gridPeriodicRunRateInMSec
-
-enum
-{
-   SixGridLines = 6,
-   TwoDimensional = 2,
-};
 
 static TemperatureDegFx100_t freshFoodCalcAxisGridLines[] = { 0, -450, 150, 450, 950, 1150 };
 static TemperatureDegFx100_t freezerCalcAxisGridLines[] = { -250, 0, 250, 600, 750, 5500 };
@@ -350,7 +426,7 @@ TEST_GROUP(Defrost_SingleEvap)
 
    void FilteredFreezerCabinetTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperature, &temperature);
+      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolved, &temperature);
    }
 
    void CalculatedGridLinesAre(CalculatedGridLines_t gridLines)
@@ -815,6 +891,7 @@ TEST_GROUP(Defrost_SingleEvap)
    void DefrostIsInPrechillAndDefrostMaxHoldoffHasBeenSet()
    {
       Given FreezerEvaporatorThermistorValidityIs(VALID);
+      Given MaxPrechillTimeInMinutesIs(defrostData.defrostMaxHoldoffTimeInMinutes);
       Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
       When CompressorStateTimeIsSatisfied();
@@ -848,6 +925,26 @@ TEST_GROUP(Defrost_SingleEvap)
    void FreezerEvaporatorFilteredTemperatureIs(TemperatureDegFx100_t temperature)
    {
       DataModel_Write(dataModel, Erd_FreezerEvap_FilteredTemperatureResolved, &temperature);
+   }
+
+   void FreshFoodCabinetTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperature, &temperature);
+   }
+
+   void FreezerAdjustedSetpointIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_Freezer_AdjustedSetpoint, &temperature);
+   }
+
+   void PrechillTimeMetErdIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_PrechillTimeMet, &state);
+   }
+
+   void NoFreezeLimitIsActive()
+   {
+      DataModel_Write(dataModel, Erd_NoFreezeLimitIsActive, set);
    }
 };
 
@@ -1406,6 +1503,15 @@ TEST(Defrost_SingleEvap, ShouldTransitionToPostPrechillFromPrechillPrepWhenLastD
    DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
 }
 
+TEST(Defrost_SingleEvap, ShouldTransitionToPostPrechillFromPrechillWhenLastDefrostChangesFromNormalToAbnormal)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+
+   When LastFreezerDefrostWasAbnormal();
+   DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
+}
+
 TEST(Defrost_SingleEvap, ShouldTransitionToPrechillFromPrechillPrepWhenCompressorStateTimeIsSatisfied)
 {
    Given FreezerEvaporatorThermistorValidityIs(VALID);
@@ -1445,6 +1551,7 @@ TEST(Defrost_SingleEvap, ShouldNotTransitionFromPrechillPrepWhenCompressorStateI
 TEST(Defrost_SingleEvap, ShouldIncrementPrechillRunCounterEveryMinuteWhileInPrechill)
 {
    Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given MaxPrechillTimeInMinutesIs(defrostData.defrostMaxHoldoffTimeInMinutes);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
    When CompressorStateTimeIsSatisfied();
@@ -1463,6 +1570,7 @@ TEST(Defrost_SingleEvap, ShouldIncrementPrechillRunCounterEveryMinuteWhileInPrec
 TEST(Defrost_SingleEvap, ShouldSetDefrostMaxHoldoffErdAfterInPrechillStateForDefrostMaxHoldoffTime)
 {
    Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given MaxPrechillTimeInMinutesIs(defrostData.defrostMaxHoldoffTimeInMinutes);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
    When CompressorStateTimeIsSatisfied();
@@ -1659,21 +1767,87 @@ TEST(Defrost_SingleEvap, ShouldNotSetPrechillTimeMetIfThreeWayValveTimePriorToPr
 TEST(Defrost_SingleEvap, ShouldTransitionToPostPrechillWhenFreezerEvaporatorTemperatureUpdatesToLessThanPrechillExitFreezerTemperatureDuringPrechill)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
-   Given FreezerEvaporatorFilteredTemperatureIs(-2000);
+   Given FreezerEvaporatorFilteredTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100);
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
 
-   When FreezerEvaporatorFilteredTemperatureIs(-3001);
+   When FreezerEvaporatorFilteredTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100 - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
 }
 
 TEST(Defrost_SingleEvap, ShouldNotTransitionToPostPrechillWhenFreezerEvaporatorTemperatureUpdatesToPrechillExitFreezerTemperatureDuringPrechill)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
-   Given FreezerEvaporatorFilteredTemperatureIs(-2000);
+   Given FreezerEvaporatorFilteredTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100);
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
 
-   When FreezerEvaporatorFilteredTemperatureIs(-3000);
+   When FreezerEvaporatorFilteredTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100);
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryWhenNoFreezeLimitIsActiveDuringPrechill)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+
+   When NoFreezeLimitIsActive();
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvap, ShouldNotTransitionToPostPrechillWhenFreezerCabinetTemperatureUpdatesToLessThanAdjustedFreezerSetpointDuringPrechill)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   Given FreezerAdjustedSetpointIs(SomeAdjustedFreezerSetpointDegFx100);
+   Given FilteredFreezerCabinetTemperatureIs(SomeAdjustedFreezerSetpointDegFx100 + 1);
+
+   When FilteredFreezerCabinetTemperatureIs(SomeAdjustedFreezerSetpointDegFx100 - 1);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionToPostPrechillWhenCompressorTurnsOffDuringPrechill)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   Given CompressorStateIs(CompressorState_On);
+
+   When CompressorStateIs(CompressorState_Off);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionToPostPrechillWhenPrechillTimeMetDuringPrechill)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+
+   When PrechillTimeMetErdIs(SET);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryWhenNoFreezeLimitIsActiveAndCompressorIsNotOffOnEntryToPrechill)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   When NoFreezeLimitIsActive();
+   When CompressorStateTimeIsSatisfied();
+
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionToPostPrechillWhenCompressorIsOffAndNoFreezeLimitIsActiveOnEntryToPrechill)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   When NoFreezeLimitIsActive();
+   When CompressorStateIs(CompressorState_Off);
+
+   DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionToPostPrechillWhenCompressorIsOffAndNoFreezeLimitIsNotActiveOnEntryToPrechill)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   When CompressorStateIs(CompressorState_Off);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
 }
 
 TEST_GROUP(Defrost_DualEvap)
@@ -1742,7 +1916,7 @@ TEST_GROUP(Defrost_DualEvap)
 
    void FilteredFreezerCabinetTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperature, &temperature);
+      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolved, &temperature);
    }
 
    void CalculatedGridLinesAre(CalculatedGridLines_t gridLines)
@@ -1892,6 +2066,31 @@ TEST_GROUP(Defrost_DualEvap)
       CompressorState_t state = CompressorState_On;
       DataModel_Write(dataModel, Erd_CompressorState, &state);
    }
+
+   void FreezerAdjustedSetpointIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, Erd_Freezer_AdjustedSetpoint, &temperature);
+   }
+
+   void DoorHoldoffTimeIsSatisfiedIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_DefrostDoorHoldoffTimeSatisfied, &state);
+   }
+
+   void DefrostMaxHoldoffIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_DefrostMaxHoldoffMet, &state);
+   }
+
+   void PrechillTimeMetErdIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_PrechillTimeMet, &state);
+   }
+
+   void NoFreezeLimitIsActive()
+   {
+      DataModel_Write(dataModel, Erd_NoFreezeLimitIsActive, set);
+   }
 };
 
 TEST(Defrost_DualEvap, ShouldVoteForFreezerSetPointWithPrechillFreezerSetpointOnEntryToPrechillPrep)
@@ -1901,4 +2100,116 @@ TEST(Defrost_DualEvap, ShouldVoteForFreezerSetPointWithPrechillFreezerSetpointOn
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
    FreezerSetPointShouldBeVotedWith(defrostData.prechillFreezerSetpointInDegFx100);
+}
+
+TEST(Defrost_DualEvap, ShouldTransitionToPostPrechillWhenFreezerCabinetTemperatureUpdatesToLessThanAdjustedFreezerSetpointDuringPrechill)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   Given FreezerAdjustedSetpointIs(SomeAdjustedFreezerSetpointDegFx100);
+   Given FilteredFreezerCabinetTemperatureIs(SomeAdjustedFreezerSetpointDegFx100 + 1);
+
+   When FilteredFreezerCabinetTemperatureIs(SomeAdjustedFreezerSetpointDegFx100 - 1);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
+}
+
+TEST(Defrost_DualEvap, ShouldNotTransitionToPostPrechillWhenFreezerCabinetTemperatureUpdatesToAdjustedFreezerSetpointDuringPrechill)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   Given FreezerAdjustedSetpointIs(SomeAdjustedFreezerSetpointDegFx100);
+   Given FilteredFreezerCabinetTemperatureIs(SomeAdjustedFreezerSetpointDegFx100 + 1);
+
+   When FilteredFreezerCabinetTemperatureIs(SomeAdjustedFreezerSetpointDegFx100);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_DualEvap, ShouldNotTransitionToPostPrechillWhenCompressorTurnsOffDuringPrechill)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   Given CompressorStateIs(CompressorState_On);
+
+   When CompressorStateIs(CompressorState_Off);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_DualEvap, ShouldNotTransitionToPostPrechillWhenJustPrechillTimeMetDuringPrechill)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+
+   When PrechillTimeMetErdIs(SET);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_DualEvap, ShouldTransitionToPostPrechillWhenDoorHoldoffMetThenPrechillTimeMetAndDuringPrechill)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+
+   When DoorHoldoffTimeIsSatisfiedIs(true);
+   When PrechillTimeMetErdIs(SET);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
+}
+
+TEST(Defrost_DualEvap, ShouldTransitionToPostPrechillWhenMaxHoldoffMetThenPrechillTimeMetDuringPrechill)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+
+   When DefrostMaxHoldoffIs(SET);
+   When PrechillTimeMetErdIs(SET);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
+}
+
+TEST(Defrost_DualEvap, ShouldTransitionToPostPrechillWhenPrechillTimeMetThenDoorHoldoffMetDuringPrechill)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+
+   When PrechillTimeMetErdIs(SET);
+   When DoorHoldoffTimeIsSatisfiedIs(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
+}
+
+TEST(Defrost_DualEvap, ShouldTransitionToPostPrechillWhenPrechillTimeMetThenMaxHoldoffMetDuringPrechill)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+
+   When PrechillTimeMetErdIs(SET);
+   When DefrostMaxHoldoffIs(SET);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
+}
+
+TEST(Defrost_DualEvap, ShouldNotTransitionToHeaterOnEntryWhenNoFreezeLimitIsActiveDuringPrechill)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+
+   When NoFreezeLimitIsActive();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_DualEvap, ShouldNotTransitionToHeaterOnEntryWhenNoFreezeLimitIsActiveOnEntryToPrechill)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   When NoFreezeLimitIsActive();
+   When CompressorStateTimeIsSatisfied();
+
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_DualEvap, ShouldNotTransitionToPostPrechillWhenCompressorIsOffAndNoFreezeLimitIsActiveOnEntryToPrechill)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   When NoFreezeLimitIsActive();
+   When CompressorStateIs(CompressorState_Off);
+
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_DualEvap, ShouldNotTransitionToPostPrechillWhenCompressorIsOffAndNoFreezeLimitIsNotActiveOnEntryToPrechill)
+{
+   Given FreezerEvaporatorThermistorValidityIs(VALID);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   When CompressorStateIs(CompressorState_Off);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
 }

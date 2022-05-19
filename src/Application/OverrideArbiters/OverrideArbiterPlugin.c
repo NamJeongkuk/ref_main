@@ -21,12 +21,28 @@ static const OverrideArbiterConfiguration_t freezerEvaporatorFilteredTemperature
    freezerEvaporatorFilteredTemperatureOverrideRequestErdList,
    freezerEvaporatorFilteredTemperatureValueErdList,
    Erd_FreezerEvap_FilteredTemperatureResolved,
-   NUM_ELEMENTS(freezerEvaporatorFilteredTemperatureValueErdList)
+   NUM_ELEMENTS(freezerEvaporatorFilteredTemperatureOverrideRequestErdList)
 };
 
+static const Erd_t freezerCabinetFilteredTemperatureOverrideRequestErdList[] = {
+   Erd_Freezer_FilteredTemperatureOverrideRequest
+};
+
+static const Erd_t freezerCabinetFilteredTemperatureValueErdList[] = {
+   Erd_Freezer_FilteredTemperature,
+   Erd_Freezer_FilteredTemperatureOverrideValue
+};
+
+static const OverrideArbiterConfiguration_t freezerCabinetFilteredTemperatureArbiterConfiguration = {
+   freezerCabinetFilteredTemperatureOverrideRequestErdList,
+   freezerCabinetFilteredTemperatureValueErdList,
+   Erd_Freezer_FilteredTemperatureResolved,
+   NUM_ELEMENTS(freezerCabinetFilteredTemperatureOverrideRequestErdList)
+};
 static struct
 {
    OverrideArbiter_t freezerEvaporatorFilteredTemperatureArbiter;
+   OverrideArbiter_t freezerCabinetFilteredTemperatureArbiter;
 } instance;
 
 void OverrideArbiterPlugin_Init(I_DataModel_t *dataModel)
@@ -35,4 +51,9 @@ void OverrideArbiterPlugin_Init(I_DataModel_t *dataModel)
       &instance.freezerEvaporatorFilteredTemperatureArbiter,
       DataModel_AsDataSource(dataModel),
       &freezerEvaporatorFilteredTemperatureArbiterConfiguration);
+
+   OverrideArbiter_Init(
+      &instance.freezerCabinetFilteredTemperatureArbiter,
+      DataModel_AsDataSource(dataModel),
+      &freezerCabinetFilteredTemperatureArbiterConfiguration);
 }

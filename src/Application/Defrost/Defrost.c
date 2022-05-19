@@ -36,7 +36,13 @@ enum
    Signal_FreezerDefrostIsAbnormal,
    Signal_CompressorStateTimeIsSatisfied,
    Signal_ValveHasBeenInPositionForPrechillTime,
-   Signal_FreezerEvaporatorTemperatureIsBelowPrechillFreezerEvaporatorExitTemperature
+   Signal_FreezerEvaporatorTemperatureIsBelowPrechillFreezerEvaporatorExitTemperature,
+   Signal_NoFreezeLimitIsActive,
+   Signal_FreezerCabinetTemperatureIsBelowAdjustedFreezerSetpoint,
+   Signal_PrechillTimeIsMet,
+   Signal_DoorHoldoffTimeIsMet,
+   Signal_MaxHoldoffTimeIsMet,
+   Signal_CompressorIsOff
 };
 
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -124,6 +130,11 @@ static void DataModelChanged(void *context, const void *args)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_CompressorStateTimeIsSatisfied, NULL);
       }
+
+      if(*state == CompressorState_Off)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_CompressorIsOff, NULL);
+      }
    }
    else if(erd == instance->_private.config->timeInMinutesInValvePositionBErd)
    {
@@ -144,6 +155,57 @@ static void DataModelChanged(void *context, const void *args)
       if(*temperatureDegFx100 < instance->_private.defrostParametricData->prechillFreezerEvapExitTemperatureInDegFx100)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerEvaporatorTemperatureIsBelowPrechillFreezerEvaporatorExitTemperature, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->noFreezeLimitIsActiveErd)
+   {
+      REINTERPRET(state, onChangeData->data, const bool *);
+
+      if(*state)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_NoFreezeLimitIsActive, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->freezerFilteredTemperatureResolvedErd)
+   {
+      REINTERPRET(temperatureDegFx100, onChangeData->data, const TemperatureDegFx100_t *);
+
+      TemperatureDegFx100_t adjustedFreezerSetpointDegFx100;
+      DataModel_Read(
+         instance->_private.dataModel,
+         instance->_private.config->adjustedFreezerSetpointErd,
+         &adjustedFreezerSetpointDegFx100);
+
+      if(*temperatureDegFx100 < adjustedFreezerSetpointDegFx100)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerCabinetTemperatureIsBelowAdjustedFreezerSetpoint, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->prechillTimeMetErd)
+   {
+      REINTERPRET(state, onChangeData->data, const bool *);
+
+      if(*state)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_PrechillTimeIsMet, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->doorHoldoffTimeIsSatisfiedErd)
+   {
+      REINTERPRET(state, onChangeData->data, const bool *);
+
+      if(*state)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_DoorHoldoffTimeIsMet, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->defrostMaxHoldoffMetErd)
+   {
+      REINTERPRET(state, onChangeData->data, const bool *);
+
+      if(*state)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_MaxHoldoffTimeIsMet, NULL);
       }
    }
 }
@@ -199,7 +261,7 @@ static bool LastDefrostWasAbnormalBecauseOfAbnormalFilteredFreezerCabinetTempera
    TemperatureDegFx100_t freezerFilteredTemperature;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerFilteredTemperatureErd,
+      instance->_private.config->freezerFilteredTemperatureResolvedErd,
       &freezerFilteredTemperature);
 
    CalculatedGridLines_t calcGridLines;
@@ -636,6 +698,56 @@ static bool TimeReachedMaxPrechillTimeInMinutes(Defrost_t *instance, uint16_t pr
    return prechillRunCounterInMinutes >= MaxPrechillTimeInMinutes(instance);
 }
 
+static bool DoorHoldoffOrMaxHoldoffAreMet(Defrost_t *instance)
+{
+   bool doorHoldoffMet;
+   bool maxHoldoffMet;
+
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->doorHoldoffTimeIsSatisfiedErd,
+      &doorHoldoffMet);
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->defrostMaxHoldoffMetErd,
+      &maxHoldoffMet);
+
+   return doorHoldoffMet || maxHoldoffMet;
+}
+
+static bool PrechillTimeIsMet(Defrost_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->prechillTimeMetErd,
+      &state);
+
+   return state;
+}
+
+static bool NoFreezeLimitIsActive(Defrost_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->noFreezeLimitIsActiveErd,
+      &state);
+
+   return state;
+}
+
+static bool CompressorIsOff(Defrost_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->compressorStateErd,
+      &state);
+
+   return (state == CompressorState_Off);
+}
+
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
@@ -761,6 +873,10 @@ static bool State_PrechillParent(Hsm_t *hsm, HsmSignal_t signal, const void *dat
          Hsm_Transition(hsm, State_HeaterOnEntry);
          break;
 
+      case Signal_FreezerDefrostIsAbnormal:
+         Hsm_Transition(hsm, State_PostPrechill);
+         break;
+
       case Hsm_Exit:
          break;
 
@@ -822,10 +938,6 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          }
          break;
 
-      case Signal_FreezerDefrostIsAbnormal:
-         Hsm_Transition(hsm, State_PostPrechill);
-         break;
-
       case Signal_CompressorStateTimeIsSatisfied:
          Hsm_Transition(hsm, State_Prechill);
          break;
@@ -853,6 +965,18 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          ResetPrechillRunCounterInMinutesToZero(instance);
          SetDefrostMaxHoldoffMetTo(instance, CLEAR);
          StartOneMinutePeriodicTimer(instance);
+
+         if(NumberOfEvaporators(instance) == 1)
+         {
+            if(CompressorIsOff(instance))
+            {
+               Hsm_Transition(hsm, State_PostPrechill);
+            }
+            else if(NoFreezeLimitIsActive(instance))
+            {
+               Hsm_Transition(hsm, State_HeaterOnEntry);
+            }
+         }
          break;
 
       case Signal_PeriodicTimeoutComplete:
@@ -878,6 +1002,52 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 
       case Signal_FreezerEvaporatorTemperatureIsBelowPrechillFreezerEvaporatorExitTemperature:
          Hsm_Transition(hsm, State_PostPrechill);
+         break;
+
+      case Signal_NoFreezeLimitIsActive:
+         if(NumberOfEvaporators(instance) == 1)
+         {
+            Hsm_Transition(hsm, State_HeaterOnEntry);
+         }
+         break;
+
+      case Signal_PrechillTimeIsMet:
+         if(NumberOfEvaporators(instance) == 1)
+         {
+            Hsm_Transition(hsm, State_PostPrechill);
+         }
+         else if(NumberOfEvaporators(instance) == 2)
+         {
+            if(DoorHoldoffOrMaxHoldoffAreMet(instance))
+            {
+               Hsm_Transition(hsm, State_PostPrechill);
+            }
+         }
+         break;
+
+      case Signal_DoorHoldoffTimeIsMet:
+      case Signal_MaxHoldoffTimeIsMet:
+         if(NumberOfEvaporators(instance) == 2)
+         {
+            if(PrechillTimeIsMet(instance))
+            {
+               Hsm_Transition(hsm, State_PostPrechill);
+            }
+         }
+         break;
+
+      case Signal_FreezerCabinetTemperatureIsBelowAdjustedFreezerSetpoint:
+         if(NumberOfEvaporators(instance) == 2)
+         {
+            Hsm_Transition(hsm, State_PostPrechill);
+         }
+         break;
+
+      case Signal_CompressorIsOff:
+         if(NumberOfEvaporators(instance) == 1)
+         {
+            Hsm_Transition(hsm, State_PostPrechill);
+         }
          break;
 
       case Hsm_Exit:

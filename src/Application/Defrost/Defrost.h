@@ -21,7 +21,7 @@ typedef struct
    Erd_t defrostHsmStateErd; // DefrostHsmState_t
    Erd_t defrostDoorHoldoffRequestErd; // bool
    Erd_t defrostTimerCounterRequestErd; // DefrostTimerCounterRequest_t
-   Erd_t freezerFilteredTemperatureErd; // TemperatureDegFx100_t
+   Erd_t freezerFilteredTemperatureResolvedErd; // TemperatureDegFx100_t
    Erd_t calculatedGridLinesErd; // CalculatedGridLines_t
    Erd_t defrostStateErd; // DefrostState_t
    Erd_t numberOfFreezerAbnormalDefrostCyclesErd; // uint16_t
@@ -49,6 +49,9 @@ typedef struct
    Erd_t prechillTimeMetErd; // bool
    Erd_t maxPrechillTimeInMinutesErd; // uint8_t
    Erd_t freezerEvaporatorFilteredTemperatureErd; // TemperatureDegFx100_t
+   Erd_t adjustedFreezerSetpointErd; // TemperatureDegFx100_t
+   Erd_t doorHoldoffTimeIsSatisfiedErd; // bool
+   Erd_t noFreezeLimitIsActiveErd; // bool
    Erd_t timerModuleErd; // TimerModule_t *
 } DefrostConfiguration_t;
 

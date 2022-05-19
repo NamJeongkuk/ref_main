@@ -30,7 +30,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .defrostHsmStateErd = Erd_DefrostHsmState,
    .defrostDoorHoldoffRequestErd = Erd_DefrostDoorHoldOffRequest,
    .defrostTimerCounterRequestErd = Erd_DefrostTimerCounterRequest,
-   .freezerFilteredTemperatureErd = Erd_Freezer_FilteredTemperature,
+   .freezerFilteredTemperatureResolvedErd = Erd_Freezer_FilteredTemperatureResolved,
    .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
    .defrostStateErd = Erd_DefrostState,
    .numberOfFreezerAbnormalDefrostCyclesErd = Erd_NumberofFreezerAbnormalDefrostCycles,
@@ -58,6 +58,9 @@ static const DefrostConfiguration_t defrostConfig = {
    .prechillTimeMetErd = Erd_PrechillTimeMet,
    .maxPrechillTimeInMinutesErd = Erd_MaxPrechillTimeInMinutes,
    .freezerEvaporatorFilteredTemperatureErd = Erd_FreezerEvap_FilteredTemperatureResolved,
+   .adjustedFreezerSetpointErd = Erd_Freezer_AdjustedSetpoint,
+   .doorHoldoffTimeIsSatisfiedErd = Erd_DefrostDoorHoldoffTimeSatisfied,
+   .noFreezeLimitIsActiveErd = Erd_NoFreezeLimitIsActive,
    .timerModuleErd = Erd_TimerModule
 };
 

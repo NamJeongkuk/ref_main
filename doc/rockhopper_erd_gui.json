@@ -89,6 +89,18 @@
       ]
     },
     {
+      "title": "Cooling",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "No Freeze Limit Is Active",
+          "name": "Erd_NoFreezeLimitIsActive",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
       "title": "Defrost",
       "erds": [
         {
@@ -157,6 +169,13 @@
           "namespace": "rx130",
           "displayName": "Defrost Door Holdoff Request",
           "name": "Erd_DefrostDoorHoldOffRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Door Holdoff Time Satisfied",
+          "name": "Erd_DefrostDoorHoldoffTimeSatisfied",
           "read": true,
           "write": true
         },
@@ -485,6 +504,27 @@
         },
         {
           "namespace": "rx130",
+          "displayName": "Freezer FilteredTemp Override Request",
+          "name": "Erd_Freezer_FilteredTemperatureOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer FilteredTemp Override Value",
+          "name": "Erd_Freezer_FilteredTemperatureOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer FilteredTemp Resolved",
+          "name": "Erd_Freezer_FilteredTemperatureResolved",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "Fresh Food Evap Unfiltered Temp",
           "name": "Erd_FreshFoodEvap_UnfilteredTemperature",
           "read": true,
@@ -590,6 +630,13 @@
           "namespace": "rx130",
           "displayName": "Freezer Cabinet Defrost Vote for Setpoint",
           "name": "Erd_FreezerSetpoint_DefrostVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Adjusted Setpoint",
+          "name": "Erd_Freezer_AdjustedSetpoint",
           "read": true,
           "write": true
         }

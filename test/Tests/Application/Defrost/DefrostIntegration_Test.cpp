@@ -72,7 +72,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .defrostHsmStateErd = Erd_DefrostHsmState,
    .defrostDoorHoldoffRequestErd = Erd_DefrostDoorHoldOffRequest,
    .defrostTimerCounterRequestErd = Erd_DefrostTimerCounterRequest,
-   .freezerFilteredTemperatureErd = Erd_Freezer_FilteredTemperature,
+   .freezerFilteredTemperatureResolvedErd = Erd_Freezer_FilteredTemperatureResolved,
    .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
    .defrostStateErd = Erd_DefrostState,
    .numberOfFreezerAbnormalDefrostCyclesErd = Erd_NumberofFreezerAbnormalDefrostCycles,
@@ -301,7 +301,7 @@ TEST_GROUP(DefrostIntegration)
 
    void FilteredFreezerCabinetTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperature, &temperature);
+      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolved, &temperature);
    }
 
    void CalculatedGridLinesAre(CalculatedGridLines_t gridLines)
