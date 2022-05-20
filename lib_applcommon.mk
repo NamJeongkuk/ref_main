@@ -20,6 +20,7 @@ applcommon_SRC_DIRS:=\
   $(applcommon_LIB_ROOT)/Allocator \
   $(applcommon_LIB_ROOT)/ApplianceApi \
   $(applcommon_LIB_ROOT)/Audio \
+  $(applcommon_LIB_ROOT)/BootLoopDefender \
   $(applcommon_LIB_ROOT)/Communications/Gea2 \
   $(applcommon_LIB_ROOT)/Communications/Gea2/Commands \
   $(applcommon_LIB_ROOT)/Communications/Gea2/MessageLayer \

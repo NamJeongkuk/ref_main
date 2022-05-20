@@ -39,6 +39,12 @@ SECTIONS
       _etext = .;
    } > APPLICATION_ROM
 
+   .bootLoopDefenderState (NOLOAD):
+   {
+      . = ALIGN(4);
+      *(.bootLoopDefenderState)
+   } > BOOT_LOOP_DEFENDER_RAM
+
    .bss (NOLOAD):
    {
       _bss = .;

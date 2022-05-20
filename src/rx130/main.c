@@ -46,6 +46,8 @@
 #include "TimeSource_Rockhopper.h"
 #include "NonVolatileAsyncDataSource.h"
 #include "AsyncNvMapConfigurations.h"
+#include "BootLoopDefender.h"
+#include "MemoryMap.h"
 
 enum
 {
@@ -70,6 +72,17 @@ static NonVolatileAsyncDataSource_t nvAsyncDataSource;
 
 static const uint8_t staticRoutingTable[] = {
    Gea2Address_DoorBoard
+};
+
+static BootLoopDefender_t bootLoopDefender;
+
+static BootLoopDefenderState_t bootLoopDefenderState __attribute__((section(".bootLoopDefenderState")));
+
+static const BootLoopDefenderConfiguration_t bootLoopDefenderConfiguration = {
+   .failedBootLimit = 3,
+   .ticksUntilSuccess = 3000,
+   .bootLoaderHeader = BootLoaderImageHeader,
+   .state = &bootLoopDefenderState
 };
 
 static void UpdateBuildInfo(
@@ -128,6 +141,11 @@ int main(void)
 
    I_Interrupt_t *interrupt = Interrupt_Cmt0_Init();
    TimerModule_t *timerModule = TimerModuleStack_Init(&timerModuleStack, interrupt);
+
+   BootLoopDefender_Init(
+      &bootLoopDefender,
+      timerModule,
+      &bootLoopDefenderConfiguration);
 
    TimeSource_Interrupt_t *timeSourceInterrupt = TimeSource_Rockhopper_Init(interrupt);
 
