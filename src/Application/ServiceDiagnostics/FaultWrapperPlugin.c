@@ -12,7 +12,6 @@
 #include "FaultWrapper_Count.h"
 #include "SystemErds.h"
 #include "DataModelErdPointerAccess.h"
-#include "EventSubscription.h"
 
 // clang-format off
 // (name, faultOutputErd, consecutiveSets, consecutiveClears)
@@ -27,7 +26,7 @@
    FaultWrapperIndex_##name,                                                                                 \
 
 #define EXPAND_AS_FAULT_WRAPPER_COUNT_ENUM(name, _faultOutputErd, requestsToSet, numberRequestsToConsider)   \
-   FaultWrapperIndex_##name,        
+   FaultWrapperIndex_##name,
 
 #define EXPAND_AS_FAULT_WRAPPER_CONSECUTIVE_DATA(name, _faultOutputErd, consecutiveSets, consecutiveClears)  \
    static const FaultWrapper_Consecutive_Configuration_t consecutiveFaultWrapperConfiguration_##name = {     \
@@ -58,7 +57,7 @@
       dataModel);                                                                                                 \
    faultWrapperArray[FaultWrapperIndex_##name] = &countFaultWrapper_##name.interface;                             \
 
-enum 
+enum
 {
    FAULT_WRAPPER_CONSECUTIVE_TABLE(EXPAND_AS_FAULT_WRAPPER_CONSECUTIVE_ENUM)
    FAULT_WRAPPER_COUNT_TABLE(EXPAND_AS_FAULT_WRAPPER_COUNT_ENUM)
@@ -67,33 +66,10 @@ enum
 // clang-format on
 
 static I_FaultWrapper_t *faultWrapperArray[FaultWrapperIndex_Max];
-static EventSubscription_t dataSourceChangeSubscription;
-
-static void DataSourceChanged(void *context, const void *_args)
-{
-   IGNORE(context);
-   REINTERPRET(args, _args, const DataSourceOnDataChangeArgs_t *);
-
-   if(args->erd == Erd_TestFaultSetRequest)
-   {
-      FaultWrapper_SetRequest(faultWrapperArray[FaultWrapperIndex_SomeOtherFault]);
-   }
-   else if(args->erd == Erd_TestFaultClearRequest)
-   {
-      FaultWrapper_ClearRequest(faultWrapperArray[FaultWrapperIndex_SomeOtherFault]);
-   }
-   else if(args->erd == Erd_TestFaultResetRequest)
-   {
-      FaultWrapper_Reset(faultWrapperArray[FaultWrapperIndex_SomeOtherFault]);
-   }
-}
 
 void FaultWrapperPlugin_Init(I_DataModel_t *dataModel)
 {
    FAULT_WRAPPER_CONSECUTIVE_TABLE(EXPAND_AS_FAULT_WRAPPER_CONSECUTIVE_DATA)
    FAULT_WRAPPER_COUNT_TABLE(EXPAND_AS_FAULT_WRAPPER_COUNT_DATA)
    DataModelErdPointerAccess_Write(dataModel, Erd_FaultWrapperInterfaceArray, &faultWrapperArray);
-
-   EventSubscription_Init(&dataSourceChangeSubscription, NULL, DataSourceChanged);
-   Event_Subscribe(dataModel->OnDataChange, &dataSourceChangeSubscription);
 }
