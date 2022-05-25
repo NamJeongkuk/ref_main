@@ -61,6 +61,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .adjustedFreezerSetpointErd = Erd_Freezer_AdjustedSetpoint,
    .doorHoldoffTimeIsSatisfiedErd = Erd_DefrostDoorHoldoffTimeSatisfied,
    .noFreezeLimitIsActiveErd = Erd_NoFreezeLimitIsActive,
+   .freezerEvapFanDefrostVoteErd = Erd_FreezerEvapFanSpeed_DefrostVote,
+   .freshFoodEvapFanDefrostVoteErd = Erd_FreshFoodEvapFanSpeed_DefrostVote,
    .timerModuleErd = Erd_TimerModule
 };
 

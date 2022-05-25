@@ -101,6 +101,32 @@
       ]
     },
     {
+      "title": "Fans",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "Fresh Food Evap Fan Speed Defrost Vote",
+          "name": "Erd_FreshFoodEvapFanSpeed_DefrostVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Evap Fan Speed Defrost Vote",
+          "name": "Erd_FreezerEvapFanSpeed_DefrostVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Ice Cabinet Fan Speed Defrost Vote",
+          "name": "Erd_IceCabinetFanSpeed_DefrostVote",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
       "title": "Defrost",
       "erds": [
         {
@@ -274,13 +300,6 @@
           "namespace": "rx130",
           "displayName": "Freezer Defrost Heater Defrost Vote",
           "name": "Erd_FreezerDefrostHeater_DefrostVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
-          "displayName": "Ice Cabinet Fan Speed Defrost Vote",
-          "name": "Erd_IceCabinetFanSpeed_DefrostVote",
           "read": true,
           "write": true
         },

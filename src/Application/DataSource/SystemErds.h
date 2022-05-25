@@ -484,11 +484,13 @@ enum
    ENTRY(Erd_FreshFoodEvapFanSpeed_ResolvedVote,            0xF260, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodEvapFanSpeed_WinningVoteErd,          0xF261, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodEvapFanSpeed_FactoryVote,             0xF262, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvapFanSpeed_DefrostVote,             0xF263, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodEvapFanSpeed_GridVote,                0xF274, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreezerEvapFanSpeed_ResolvedVote,              0xF280, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerEvapFanSpeed_WinningVoteErd,            0xF281, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerEvapFanSpeed_FactoryVote,               0xF282, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapFanSpeed_DefrostVote,               0xF283, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerEvapFanSpeed_GridVote,                  0xF29A, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Grid_BlockNumber,                              0xF2A0, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \

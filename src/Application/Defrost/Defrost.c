@@ -28,13 +28,18 @@ enum
 
 enum
 {
+   DontCare = false,
+   Care = true
+};
+
+enum
+{
    Signal_PowerUpDelayComplete = Hsm_UserSignalStart,
    Signal_MaxTimeBetweenDefrostsComplete,
    Signal_PeriodicTimeoutComplete,
    Signal_MaxPrechillHoldoffTimeComplete,
    Signal_FreezerEvaporatorThermistorIsInvalid,
    Signal_FreezerDefrostIsAbnormal,
-   Signal_CompressorStateTimeIsSatisfied,
    Signal_ValveHasBeenInPositionForPrechillTime,
    Signal_FreezerEvaporatorTemperatureIsBelowPrechillFreezerEvaporatorExitTemperature,
    Signal_NoFreezeLimitIsActive,
@@ -42,7 +47,11 @@ enum
    Signal_PrechillTimeIsMet,
    Signal_DoorHoldoffTimeIsMet,
    Signal_MaxHoldoffTimeIsMet,
-   Signal_CompressorIsOff
+   Signal_CompressorStateIsOff,
+   Signal_CompressorStateIsOn,
+   Signal_CompressorStateIsMinimumOnTime,
+   Signal_CompressorStateIsMinimumOffTime,
+   Signal_CompressorStateIsMinimumRunTime
 };
 
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -62,7 +71,7 @@ static const HsmStateHierarchyDescriptor_t stateList[] = {
    { State_PrechillPrep, State_PrechillParent },
    { State_Prechill, State_PrechillParent },
    { State_PostPrechill, State_PrechillParent },
-   { State_HeaterOnEntry, State_PrechillParent }
+   { State_HeaterOnEntry, HSM_NO_PARENT }
 };
 
 static const HsmConfiguration_t hsmConfiguration = {
@@ -126,14 +135,27 @@ static void DataModelChanged(void *context, const void *args)
    {
       REINTERPRET(state, onChangeData->data, const CompressorState_t *);
 
-      if(CompressorStateTimeIsSatisfiedFor(*state))
+      switch(*state)
       {
-         Hsm_SendSignal(&instance->_private.hsm, Signal_CompressorStateTimeIsSatisfied, NULL);
-      }
+         case CompressorState_Off:
+            Hsm_SendSignal(&instance->_private.hsm, Signal_CompressorStateIsOff, NULL);
+            break;
 
-      if(*state == CompressorState_Off)
-      {
-         Hsm_SendSignal(&instance->_private.hsm, Signal_CompressorIsOff, NULL);
+         case CompressorState_On:
+            Hsm_SendSignal(&instance->_private.hsm, Signal_CompressorStateIsOn, NULL);
+            break;
+
+         case CompressorState_MinimumOnTime:
+            Hsm_SendSignal(&instance->_private.hsm, Signal_CompressorStateIsMinimumOnTime, NULL);
+            break;
+
+         case CompressorState_MinimumOffTime:
+            Hsm_SendSignal(&instance->_private.hsm, Signal_CompressorStateIsMinimumOffTime, NULL);
+            break;
+
+         case CompressorState_MinimumRunTime:
+            Hsm_SendSignal(&instance->_private.hsm, Signal_CompressorStateIsMinimumRunTime, NULL);
+            break;
       }
    }
    else if(erd == instance->_private.config->timeInMinutesInValvePositionBErd)
@@ -288,11 +310,11 @@ static void StartTimer(Defrost_t *instance, Timer_t *timer, TimerTicks_t ticks, 
       instance);
 }
 
-static void VoteForFreshFoodDefrostHeater(Defrost_t *instance, bool state)
+static void VoteForFreshFoodDefrostHeater(Defrost_t *instance, bool state, bool care)
 {
    HeaterVotedState_t vote;
    vote.state = state;
-   vote.care = true;
+   vote.care = care;
 
    DataModel_Write(
       instance->_private.dataModel,
@@ -300,11 +322,11 @@ static void VoteForFreshFoodDefrostHeater(Defrost_t *instance, bool state)
       &vote);
 }
 
-static void VoteForFreezerDefrostHeater(Defrost_t *instance, bool state)
+static void VoteForFreezerDefrostHeater(Defrost_t *instance, bool state, bool care)
 {
    HeaterVotedState_t vote;
    vote.state = state;
-   vote.care = true;
+   vote.care = care;
 
    DataModel_Write(
       instance->_private.dataModel,
@@ -312,11 +334,11 @@ static void VoteForFreezerDefrostHeater(Defrost_t *instance, bool state)
       &vote);
 }
 
-static void VoteForIceCabinetFan(Defrost_t *instance, FanSpeed_t speed)
+static void VoteForIceCabinetFan(Defrost_t *instance, FanSpeed_t speed, bool care)
 {
    FanVotedSpeed_t vote;
    vote.speed = speed;
-   vote.care = true;
+   vote.care = care;
 
    DataModel_Write(
       instance->_private.dataModel,
@@ -644,6 +666,17 @@ static bool CompressorStateTimeIsSatisfied(Defrost_t *instance)
    return CompressorStateTimeIsSatisfiedFor(state);
 }
 
+static bool CompressorStateIsNotMinimumOnTime(Defrost_t *instance)
+{
+   CompressorState_t state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->compressorStateErd,
+      &state);
+
+   return (state != CompressorState_MinimumOnTime);
+}
+
 static void ResetPrechillRunCounterInMinutesToZero(Defrost_t *instance)
 {
    uint16_t prechillRunCounterInMinutes = 0;
@@ -748,6 +781,45 @@ static bool CompressorIsOff(Defrost_t *instance)
    return (state == CompressorState_Off);
 }
 
+static void VoteForFreezerEvapFan(Defrost_t *instance, FanSpeed_t speed, bool care)
+{
+   FanVotedSpeed_t vote;
+   vote.speed = speed;
+   vote.care = care;
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freezerEvapFanDefrostVoteErd,
+      &vote);
+}
+
+static void VoteForFreshFoodEvapFan(Defrost_t *instance, FanSpeed_t speed, bool care)
+{
+   FanVotedSpeed_t vote;
+   vote.speed = speed;
+   vote.care = care;
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freshFoodEvapFanDefrostVoteErd,
+      &vote);
+}
+
+static void VoteDontCareForValvePosition(Defrost_t *instance)
+{
+   ValveVotedPosition_t vote;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->sealedSystemValvePositionDefrostVoteErd,
+      &vote);
+   vote.care = false;
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->sealedSystemValvePositionDefrostVoteErd,
+      &vote);
+}
+
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
@@ -808,8 +880,8 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Idle);
          SendDoorHoldoffEnableRequest(instance);
-         VoteForFreshFoodDefrostHeater(instance, OFF);
-         VoteForFreezerDefrostHeater(instance, OFF);
+         VoteForFreshFoodDefrostHeater(instance, OFF, Care);
+         VoteForFreezerDefrostHeater(instance, OFF, Care);
 
          if(DefrostTimerCounterIsDisabled(instance))
          {
@@ -867,6 +939,9 @@ static bool State_PrechillParent(Hsm_t *hsm, HsmSignal_t signal, const void *dat
    switch(signal)
    {
       case Hsm_Entry:
+         VoteForFreshFoodDefrostHeater(instance, OFF, Care);
+         VoteForFreezerDefrostHeater(instance, OFF, Care);
+         VoteForIceCabinetFan(instance, FanSpeed_High, Care);
          break;
 
       case Signal_FreezerEvaporatorThermistorIsInvalid:
@@ -878,6 +953,12 @@ static bool State_PrechillParent(Hsm_t *hsm, HsmSignal_t signal, const void *dat
          break;
 
       case Hsm_Exit:
+         VoteForFreezerDefrostHeater(instance, OFF, DontCare);
+         VoteForFreshFoodDefrostHeater(instance, OFF, DontCare);
+         VoteForIceCabinetFan(instance, FanSpeed_Off, DontCare);
+         VoteForFreezerEvapFan(instance, FanSpeed_Off, DontCare);
+         VoteForFreshFoodEvapFan(instance, FanSpeed_Off, DontCare);
+         VoteDontCareForValvePosition(instance);
          break;
 
       default:
@@ -903,9 +984,6 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          else
          {
             IncrementNumberOfFreshFoodDefrostsBeforeAFreezerDefrost(instance);
-            VoteForFreshFoodDefrostHeater(instance, OFF);
-            VoteForFreezerDefrostHeater(instance, OFF);
-            VoteForIceCabinetFan(instance, FanSpeed_High);
             VoteForFreezerSetpoint(instance);
             SendDoorHoldoffEnableRequest(instance);
 
@@ -928,21 +1006,21 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
             {
                Hsm_Transition(hsm, State_PostPrechill);
             }
-            else
+            else if(CompressorStateTimeIsSatisfied(instance))
             {
-               if(CompressorStateTimeIsSatisfied(instance))
-               {
-                  Hsm_Transition(hsm, State_Prechill);
-               }
+               Hsm_Transition(hsm, State_Prechill);
             }
          }
          break;
 
-      case Signal_CompressorStateTimeIsSatisfied:
-         Hsm_Transition(hsm, State_Prechill);
-         break;
-
-      case Hsm_Exit:
+      case Signal_CompressorStateIsOff:
+      case Signal_CompressorStateIsOn:
+      case Signal_CompressorStateIsMinimumOffTime:
+      case Signal_CompressorStateIsMinimumRunTime:
+         if(CompressorStateTimeIsSatisfied(instance))
+         {
+            Hsm_Transition(hsm, State_Prechill);
+         }
          break;
 
       default:
@@ -1043,10 +1121,10 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          }
          break;
 
-      case Signal_CompressorIsOff:
+      case Signal_CompressorStateIsOff:
          if(NumberOfEvaporators(instance) == 1)
          {
-            Hsm_Transition(hsm, State_PostPrechill);
+            Hsm_Transition(hsm, State_HeaterOnEntry);
          }
          break;
 
@@ -1071,6 +1149,29 @@ static bool State_PostPrechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_PostPrechill);
+
+         if(MaxPrechillHoldoffTimeGreaterThanZero(instance))
+         {
+            VoteForMaxPrechillHoldoffValvePosition(instance);
+         }
+
+         if(NumberOfEvaporators(instance) == 1)
+         {
+            VoteForFreezerEvapFan(instance, FanSpeed_Low, Care);
+            VoteForFreshFoodEvapFan(instance, FanSpeed_Off, Care);
+         }
+
+         if(CompressorStateIsNotMinimumOnTime(instance))
+         {
+            Hsm_Transition(hsm, State_HeaterOnEntry);
+         }
+         break;
+
+      case Signal_CompressorStateIsOff:
+      case Signal_CompressorStateIsOn:
+      case Signal_CompressorStateIsMinimumOffTime:
+      case Signal_CompressorStateIsMinimumRunTime:
+         Hsm_Transition(hsm, State_HeaterOnEntry);
          break;
 
       case Hsm_Exit:

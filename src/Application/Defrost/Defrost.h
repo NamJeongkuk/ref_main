@@ -52,6 +52,8 @@ typedef struct
    Erd_t adjustedFreezerSetpointErd; // TemperatureDegFx100_t
    Erd_t doorHoldoffTimeIsSatisfiedErd; // bool
    Erd_t noFreezeLimitIsActiveErd; // bool
+   Erd_t freezerEvapFanDefrostVoteErd; // FanVotedSpeed_t
+   Erd_t freshFoodEvapFanDefrostVoteErd; // FanVotedSpeed_t
    Erd_t timerModuleErd; // TimerModule_t *
 } DefrostConfiguration_t;
 
