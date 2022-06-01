@@ -12,7 +12,7 @@
 #include "DataModelErdPointerAccess.h"
 
 static const PeriodicNvUpdateServiceConfigurationEntry_t periodicNvUpdateTableEntries[] = {
-   { Erd_DefrostTimerCountInSeconds, Erd_Eeprom_DefrostTimerCountInSeconds }
+   { Erd_DefrostTimerCountInSeconds, Erd_Eeprom_DefrostTimerCountInSeconds },
 };
 
 static const PeriodicNvUpdateServiceConfiguration_t periodicNvUpdateConfiguration = {

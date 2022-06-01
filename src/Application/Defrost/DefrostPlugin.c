@@ -15,6 +15,7 @@
 #include "DefrostDoorHoldoffTimer.h"
 #include "DefrostParameterSelector.h"
 #include "DefrostHeaterMaxOnTime.h"
+#include "FreshFoodOnlyDefrostArbitrator.h"
 
 static struct
 {
@@ -24,6 +25,7 @@ static struct
    DefrostTimerCounter_t defrostTimerCounter;
    DefrostTimerIsSatisfiedMonitor_t defrostTimerIsSatisfiedMonitor;
    DefrostHeaterMaxOnTime_t defrostHeaterMaxOnTime;
+   FreshFoodOnlyDefrostArbitrator_t freshFoodOnlyDefrostArbitrator;
 } instance;
 
 static const DefrostConfiguration_t defrostConfig = {
@@ -127,6 +129,12 @@ static const DefrostHeaterMaxOnTimeConfiguration_t defrostHeaterMaxOnTimeConfig 
    .convertibleCompartmentDefrostHeaterMaxOnTimeInMinutesErd = Erd_ConvertibleCompartmentDefrostHeaterMaxOnTimeInMinutes
 };
 
+static const FreshFoodOnlyDefrostArbitratorConfiguration_t freshFoodOnlyDefrostArbitratorConfig = {
+   .numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd = Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost,
+   .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
+   .defrostIsFreshFoodOnlyErd = Erd_DefrostIsFreshFoodOnly
+};
+
 void DefrostPlugin_Init(I_DataModel_t *dataModel)
 {
    DefrostParameterSelector_Init(dataModel);
@@ -136,6 +144,8 @@ void DefrostPlugin_Init(I_DataModel_t *dataModel)
    DefrostHeaterMaxOnTime_Init(&instance.defrostHeaterMaxOnTime, dataModel, &defrostHeaterMaxOnTimeConfig);
 
    DoorAcceleration_Init(&instance.doorAcceleration, dataModel, &doorAccelerationConfig);
+
+   FreshFoodOnlyDefrostArbitrator_Init(&instance.freshFoodOnlyDefrostArbitrator, dataModel, &freshFoodOnlyDefrostArbitratorConfig);
 
    DefrostDoorHoldoffTimer_Init(&instance.doorHoldoffTimer,
       &doorHoldoffTimerConfiguration,
