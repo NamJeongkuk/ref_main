@@ -36,6 +36,29 @@
       "serverpath": "${workspaceFolder}/build/rx130/jlink_gdb_server_wrapper.sh",
       "preLaunchTask": "rx130_vscode_debug",
       "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx130.svd"
+    },
+    {
+      "type": "node",
+      "cwd": "${workspaceRoot}",
+      "runtimeVersion": "18.3.0",
+      "request": "launch",
+      "name": "Integration Test",
+      "program": "${workspaceFolder}/node_modules/.bin/jasmine",
+      "args": [
+        "--config=${workspaceFolder}/test/Tests/Integration/support/jasmine.json"
+      ],
+    },
+    {
+      "type": "node",
+      "cwd": "${workspaceRoot}",
+      "runtimeVersion": "18.3.0",
+      "request": "launch",
+      "name": "Integration Test Current File",
+      "program": "${workspaceFolder}/node_modules/.bin/jasmine",
+      "args": [
+        "--config=${workspaceFolder}/test/Tests/Integration/support/jasmine.json",
+        "${file}"
+      ],
     }
   ]
 }
