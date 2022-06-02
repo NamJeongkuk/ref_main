@@ -146,7 +146,7 @@ static const GridBlockAndLinesConfig_t config = {
    .previousGridBlocksErd = Erd_Grid_PreviousBlocks,
    .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
    .freshFoodFilteredTempErd = Erd_FreshFood_FilteredTemperature,
-   .freezerFilteredTempErd = Erd_Freezer_FilteredTemperature,
+   .freezerFilteredTempErd = Erd_Freezer_FilteredTemperatureResolved,
    .timerModuleErd = Erd_TimerModule,
    .freezerErds = freezerErds,
    .freshFoodErds = freshFoodErds
@@ -289,7 +289,7 @@ TEST_GROUP(CalcGridBlockAndGridLines)
 
    void FreezerFilteredTempIs(TemperatureDegFx100_t temp)
    {
-      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperature, &temp);
+      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolved, &temp);
    }
 
    TemperatureDegFx100_t GridLineTemp(int compartmentType, int gridLineType)
