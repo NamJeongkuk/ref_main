@@ -43,6 +43,11 @@ void PersonalityParametricData_TestDouble_SetSystemMonitor(PersonalityParametric
    instance->systemMonitorData = systemMonitorData;
 }
 
+void PersonalityParametricData_TestDouble_SetEnhancedSabbath(PersonalityParametricData_t *instance, const EnhancedSabbathData_t *enhancedSabbathData)
+{
+   instance->enhancedSabbathData = enhancedSabbathData;
+}
+
 void PersonalityParametricData_TestDouble_Init(PersonalityParametricData_t *instance)
 {
    memset(instance, 0, sizeof(PersonalityParametricData_t));

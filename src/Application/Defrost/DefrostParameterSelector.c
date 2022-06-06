@@ -10,12 +10,35 @@
 #include "DefrostData.h"
 #include "EvaporatorData.h"
 #include "SystemErds.h"
+#include "EnhancedSabbathData.h"
 
 static struct
 {
    EventSubscription_t dataModelSubscription;
    I_DataModel_t *dataModel;
 } instance;
+
+static void SetNumberOfFreshFoodDefrostsBeforeAFreezerDefrostWhenEnhancedSabbathModeIs(bool enhancedSabbathMode)
+{
+   uint8_t numberOfFreshFoodDefrostsBeforeAFreezerDefrost;
+
+   const DefrostData_t *defrostData = PersonalityParametricData_Get(instance.dataModel)->defrostData;
+   const EnhancedSabbathData_t *enhancedSabbathData = PersonalityParametricData_Get(instance.dataModel)->enhancedSabbathData;
+
+   if(enhancedSabbathMode)
+   {
+      numberOfFreshFoodDefrostsBeforeAFreezerDefrost = enhancedSabbathData->numberOfFreshFoodDefrostsBeforeFreezerDefrost;
+   }
+   else
+   {
+      numberOfFreshFoodDefrostsBeforeAFreezerDefrost = defrostData->numberOfFreshFoodDefrostsBeforeFreezerDefrost;
+   }
+
+   DataModel_Write(
+      instance.dataModel,
+      Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost,
+      &numberOfFreshFoodDefrostsBeforeAFreezerDefrost);
+}
 
 static void SetMaxPrechillTimeInMinutes(bool defrostIsFreshFoodOnly)
 {
@@ -80,6 +103,11 @@ static void DataModelChanged(void *context, const void *args)
       SetMaxPrechillTimeInMinutes(*defrostIsFreshFoodOnly);
       SetPostDwellExitTimeInMinutes(*defrostIsFreshFoodOnly);
    }
+   else if(erd == Erd_EnhancedSabbathMode)
+   {
+      REINTERPRET(enhancedSabbathMode, onChangeData->data, const bool *);
+      SetNumberOfFreshFoodDefrostsBeforeAFreezerDefrostWhenEnhancedSabbathModeIs(*enhancedSabbathMode);
+   }
 }
 
 void DefrostParameterSelector_Init(I_DataModel_t *dataModel)
@@ -92,6 +120,13 @@ void DefrostParameterSelector_Init(I_DataModel_t *dataModel)
       Erd_DefrostIsFreshFoodOnly,
       &defrostIsFreshFoodOnly);
 
+   bool enhancedSabbathMode;
+   DataModel_Read(
+      instance.dataModel,
+      Erd_EnhancedSabbathMode,
+      &enhancedSabbathMode);
+
+   SetNumberOfFreshFoodDefrostsBeforeAFreezerDefrostWhenEnhancedSabbathModeIs(enhancedSabbathMode);
    SetMaxPrechillTimeInMinutes(defrostIsFreshFoodOnly);
    SetPostDwellExitTimeInMinutes(defrostIsFreshFoodOnly);
 

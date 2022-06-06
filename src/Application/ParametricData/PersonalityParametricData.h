@@ -16,10 +16,12 @@
 #include "SensorData.h"
 #include "EvaporatorData.h"
 #include "SystemMonitorData.h"
+#include "EnhancedSabbathData.h"
 
 typedef struct
 {
    const DefrostData_t *defrostData;
+   const EnhancedSabbathData_t *enhancedSabbathData;
    const GridData_t *gridData;
    const SabbathData_t *sabbathData;
    const ConvertibleCompartmentData_t *convertibleCompartmentData;

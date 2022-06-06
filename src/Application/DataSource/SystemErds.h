@@ -552,6 +552,8 @@ enum
    \
    ENTRY(Erd_CacheSyncState,                                0xF7FF, bool,                                               Swap_N, Io_None, Sub_N, Virtual,               NotNv,                        NotFault) \
    \
+   ENTRY(Erd_EnhancedSabbathMode,                           0xF800, bool,                                               Swap_N, Io_None, Sub_Y, NvUserSetting,         NotNv,                        NotFault) \
+   \
    ENTRY(Erd_EepromEraseRequestSignal,                      0xFAFF, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                   NotNv,                        NotFault) \
    \
    ENTRY(Erd_ProtectedSomeData,                             0xFB00, uint32_t,                                           Swap_N, Io_None, Sub_Y, NvProtected,           NonVolatileDataSourceDefaultData_Zeros,                        NotFault) \

@@ -24,6 +24,8 @@ void PersonalityParametricData_TestDouble_SetSensors(PersonalityParametricData_t
 
 void PersonalityParametricData_TestDouble_SetSystemMonitor(PersonalityParametricData_t *instance, const SystemMonitorData_t *systemMonitorData);
 
+void PersonalityParametricData_TestDouble_SetEnhancedSabbath(PersonalityParametricData_t *instance, const EnhancedSabbathData_t *enhancedSabbathData);
+
 void PersonalityParametricData_TestDouble_Init(PersonalityParametricData_t *instance);
 
 #endif
