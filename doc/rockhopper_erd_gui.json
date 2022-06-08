@@ -151,6 +151,12 @@
         },
         {
           "namespace": "rx130",
+          "displayName": "Actively Waiting For Next Defrost",
+          "name": "Erd_ActivelyWaitingForNextDefrost",
+          "read": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "Freezer Defrost Was Abnormal (EEPROM)",
           "name": "Erd_FreezerDefrostWasAbnormal",
           "read": true,

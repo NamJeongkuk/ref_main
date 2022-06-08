@@ -13,6 +13,7 @@
 #include "DefrostParameterSelector.h"
 #include "DefrostHeaterMaxOnTime.h"
 #include "FreshFoodOnlyDefrostArbitrator.h"
+#include "ActivelyWaitingForDefrostOnCompareMatch.h"
 
 static struct
 {
@@ -90,6 +91,8 @@ void DefrostPlugin_Init(I_DataModel_t *dataModel)
    DefrostParameterSelector_Init(dataModel);
 
    DefrostStateOnCompareMatch(dataModel);
+
+   ActivelyWaitingForDefrostOnCompareMatch(dataModel);
 
    DefrostHeaterMaxOnTime_Init(&instance.defrostHeaterMaxOnTime, dataModel, &defrostHeaterMaxOnTimeConfig);
 
