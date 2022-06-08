@@ -46,7 +46,6 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
 
    // 0xE000 range
    SWAPPED_ERD(PublicErd_ServiceDiagnosticsEntityLocation, sizeof(Erd_t)),
-   SWAPPED_ERD(PublicErd_Eeprom_DefrostTimerCountInSeconds, sizeof(uint32_t)),
    SWAPPED_FIELD(PublicErd_ServiceDiagnosticsEntityManifest, ServiceDiagnosticsRevision3EntityManifest_t, featureBitmap),
    SWAPPED_FIELD(PublicErd_ServiceDiagnosticsEntityManifest, ServiceDiagnosticsRevision3EntityManifest_t, entryCount.faultTable),
    SWAPPED_FIELD(PublicErd_ServiceDiagnosticsEntityManifest, ServiceDiagnosticsRevision3EntityManifest_t, entryCount.faultSequence),
@@ -110,11 +109,13 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_FIELD(PublicErd_FreshFoodSetpoint_FactoryVote, SetpointVotedTemperature_t, temperature),
 
    // 0xF500 range
-   SWAPPED_FIELD(PublicErd_ServiceDiagnosticsFaultTableSnapshotData0, FaultSnapshotData_t, someData)
+   SWAPPED_FIELD(PublicErd_ServiceDiagnosticsFaultTableSnapshotData0, FaultSnapshotData_t, someData),
+
+   // 0xFB00 range
+   SWAPPED_ERD(PublicErd_Eeprom_DefrostTimerCountInSeconds, sizeof(uint32_t))
 };
 
 static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
-   SWAPPED_FIELD_RANGE(PublicErd_Eeprom_DefrostTimerCountInSeconds, PublicErd_Eeprom_DefrostConvertibleCompartmentDoorAccelerationCount),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableEntry0, PublicErd_ServiceDiagnosticsFaultTableEntry9),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableSnapshot0, PublicErd_ServiceDiagnosticsFaultTableSnapshot9),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultSequenceEntry0, PublicErd_ServiceDiagnosticsFaultSequenceEntry7),
@@ -128,6 +129,7 @@ static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
    SWAPPED_FIELD_RANGE(PublicErd_FreezerSetpoint_FactoryVote, PublicErd_FreezerSetpoint_UserSetpoint),
    SWAPPED_FIELD_RANGE(PublicErd_FreshFoodSetpoint_FactoryVote, PublicErd_FreshFoodSetpoint_UserSetpoint),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableSnapshotData0, PublicErd_ServiceDiagnosticsFaultTableSnapshotData9),
+   SWAPPED_FIELD_RANGE(PublicErd_Eeprom_DefrostTimerCountInSeconds, PublicErd_Eeprom_DefrostConvertibleCompartmentDoorAccelerationCount),
 };
 
 static const DataSource_EndiannessSwappedSwappedRangesConfiguration_t endianessSwappedSwappedRangesConfiguration = {

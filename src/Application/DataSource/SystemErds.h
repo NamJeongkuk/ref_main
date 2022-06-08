@@ -268,10 +268,6 @@ enum
    ENTRY(Erd_DemandResponseLevel,                           0xD006, EnergyDemandLevel_t,                                Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ServiceDiagnosticsEntityLocation,              0xE000, Erd_t,                                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Eeprom_DefrostTimerCountInSeconds,             0xE001, uint32_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_Eeprom_DefrostFreezerDoorAccelerationCount,    0xE002, uint32_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_Eeprom_DefrostFreshFoodDoorAccelerationCount,  0xE003, uint32_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_Eeprom_DefrostConvertibleCompartmentDoorAccelerationCount, 0xE004, uint32_t,                               Swap_Y, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
    ENTRY(Erd_ServiceDiagnosticsEntityManifest,              0xE100, ServiceDiagnosticsRevision3EntityManifest_t,        Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ServiceDiagnosticsEntityCycleCount,            0xE101, uint32_t,                                           Swap_Y, Io_All,  Sub_N, NvCycleHistory,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
@@ -542,25 +538,29 @@ enum
    ENTRY(Erd_SomeFault,                                     0xF600, bool,                                               Swap_N, Io_None, Sub_N, Fault,                 NotNv,                                    FaultId_SomeFault) \
    ENTRY(Erd_SomeOtherFault,                                0xF601, bool,                                               Swap_N, Io_None, Sub_N, Fault,                 NotNv,                                    FaultId_SomeOtherFault) \
    \
-   ENTRY(Erd_CacheSyncState,                                0xF7FF, bool,                                               Swap_N, Io_None, Sub_N, Virtual,               NotNv,                        NotFault) \
+   ENTRY(Erd_CacheSyncState,                                0xF7FF, bool,                                               Swap_N, Io_None, Sub_N, Virtual,               NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_EnhancedSabbathMode,                           0xF800, bool,                                               Swap_N, Io_None, Sub_Y, NvUserSetting,         NotNv,                        NotFault) \
+   ENTRY(Erd_EnhancedSabbathMode,                           0xF800, bool,                                               Swap_N, Io_None, Sub_Y, NvUserSetting,         NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_EepromEraseRequestSignal,                      0xFAFF, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                   NotNv,                        NotFault) \
+   ENTRY(Erd_EepromEraseRequestSignal,                      0xFAFF, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                   NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_ProtectedSomeData,                             0xFB00, uint32_t,                                           Swap_N, Io_None, Sub_Y, NvProtected,           NonVolatileDataSourceDefaultData_Zeros,                        NotFault) \
-   ENTRY(Erd_UnitSettingSomeData,                           0xFB01, uint32_t,                                           Swap_N, Io_None, Sub_Y, NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,                        NotFault) \
-   ENTRY(Erd_UserSettingSomeData,                           0xFB02, uint32_t,                                           Swap_N, Io_None, Sub_Y, NvUserSetting,         NonVolatileDataSourceDefaultData_Zeros,                        NotFault) \
-   ENTRY(Erd_RfidSomeData,                                  0xFB03, uint32_t,                                           Swap_N, Io_None, Sub_Y, NvRfid,                NonVolatileDataSourceDefaultData_Zeros,                        NotFault) \
-   ENTRY(Erd_FaultSnapshotSomeData,                         0xFB04, uint32_t,                                           Swap_N, Io_None, Sub_Y, NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,                        NotFault) \
-   ENTRY(Erd_CycleHistorySomeData,                          0xFB05, uint32_t,                                           Swap_N, Io_None, Sub_Y, NvCycleHistory,        NonVolatileDataSourceDefaultData_Zeros,                        NotFault) \
+   ENTRY(Erd_ProtectedSomeData,                             0xFB00, uint32_t,                                           Swap_N, Io_None, Sub_Y, NvProtected,           NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_UnitSettingSomeData,                           0xFB01, uint32_t,                                           Swap_N, Io_None, Sub_Y, NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_UserSettingSomeData,                           0xFB02, uint32_t,                                           Swap_N, Io_None, Sub_Y, NvUserSetting,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_RfidSomeData,                                  0xFB03, uint32_t,                                           Swap_N, Io_None, Sub_Y, NvRfid,                NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_FaultSnapshotSomeData,                         0xFB04, uint32_t,                                           Swap_N, Io_None, Sub_Y, NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_CycleHistorySomeData,                          0xFB05, uint32_t,                                           Swap_N, Io_None, Sub_Y, NvCycleHistory,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_DefrostTimerCountInSeconds,             0xFB06, uint32_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_DefrostFreezerDoorAccelerationCount,    0xFB07, uint32_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_DefrostFreshFoodDoorAccelerationCount,  0xFB08, uint32_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_DefrostConvertibleCompartmentDoorAccelerationCount, 0xFB09, uint32_t,                               Swap_Y, Io_None, Sub_N, NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
-   ENTRY(Erd_NvReservedProtected,                           0xFCFA, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvProtected,           NonVolatileDataSourceDefaultData_Zeros,                        NotFault) \
-   ENTRY(Erd_NvReservedUnitSetting,                         0xFCFB, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,                        NotFault) \
-   ENTRY(Erd_NvReservedUserSetting,                         0xFCFC, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvUserSetting,         NonVolatileDataSourceDefaultData_Zeros,                        NotFault) \
-   ENTRY(Erd_NvReservedRfid,                                0xFCFD, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvRfid,                NonVolatileDataSourceDefaultData_Zeros,                        NotFault) \
-   ENTRY(Erd_NvReservedFaultSnapshot,                       0xFCFE, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,                        NotFault) \
-   ENTRY(Erd_NvReservedCycleHistory,                        0xFCFF, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvCycleHistory,        NonVolatileDataSourceDefaultData_Zeros,                        NotFault) \
+   ENTRY(Erd_NvReservedProtected,                           0xFCFA, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvProtected,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_NvReservedUnitSetting,                         0xFCFB, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvUnitSetting,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_NvReservedUserSetting,                         0xFCFC, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvUserSetting,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_NvReservedRfid,                                0xFCFD, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvRfid,               NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_NvReservedFaultSnapshot,                       0xFCFE, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvFaultSnapshot,      NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_NvReservedCycleHistory,                        0xFCFF, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvCycleHistory,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
 
 #define EXPAND_AS_INTERNAL_RAM_ERD_ENUM(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)(Name COMMA)
