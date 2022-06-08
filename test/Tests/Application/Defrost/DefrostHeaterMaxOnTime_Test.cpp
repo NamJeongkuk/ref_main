@@ -32,7 +32,7 @@ enum
 static const DefrostData_t defrostData = {
    .freezerDoorIncrementFactorInSecondsPerSecond = 348,
    .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
-   .freezerAbnormalRunTimeInMinutes = 6 * MINUTES_PER_HOUR,
+   .minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes = 6 * MINUTES_PER_HOUR,
    .maxTimeBetweenDefrostsInMinutes = 32 * MINUTES_PER_HOUR,
    .prechillFreezerSetpointInDegFx100 = 600,
    .prechillFreshFoodSetpointInDegFx100 = 4600,

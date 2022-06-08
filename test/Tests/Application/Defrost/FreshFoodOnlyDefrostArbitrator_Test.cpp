@@ -25,7 +25,7 @@ extern "C"
 static const DefrostData_t defrostData = {
    .freezerDoorIncrementFactorInSecondsPerSecond = 348,
    .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
-   .freezerAbnormalRunTimeInMinutes = 6 * 60,
+   .minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes = 6 * 60,
    .maxTimeBetweenDefrostsInMinutes = 32 * 60,
    .prechillFreezerSetpointInDegFx100 = -600,
    .prechillFreshFoodSetpointInDegFx100 = 4600,

@@ -240,7 +240,7 @@ static void ResetOrAddDoorAccelerationsToDefrostTimerCount(DefrostTimerCounter_t
 
    if(!freezerDefrostWasAbnormal)
    {
-      if(count >= instance->_private.defrostParametricData->freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
+      if(count >= instance->_private.defrostParametricData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
       {
          if(count < maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE)
          {

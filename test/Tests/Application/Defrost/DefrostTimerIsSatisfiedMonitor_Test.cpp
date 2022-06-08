@@ -28,7 +28,7 @@ extern "C"
 static const DefrostData_t defrostData = {
    .freezerDoorIncrementFactorInSecondsPerSecond = 348,
    .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
-   .freezerAbnormalRunTimeInMinutes = 6 * MINUTES_PER_HOUR,
+   .minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes = 6 * MINUTES_PER_HOUR,
    .maxTimeBetweenDefrostsInMinutes = 32 * MINUTES_PER_HOUR,
    .prechillFreezerSetpointInDegFx100 = 600,
    .prechillFreshFoodSetpointInDegFx100 = 4600,
@@ -79,10 +79,10 @@ static const SabbathData_t sabbathData = {
    .maxTimeBetweenDefrostsInMinutes = 33 * MINUTES_PER_HOUR
 };
 
-#define CountLessThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 1)
-#define CountEqualToFreezerAbnormalDefrostRunTimeInSeconds (defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
-#define CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1)
-#define CountBetweenMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
+#define CountLessThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 1)
+#define CountEqualToFreezerAbnormalDefrostRunTimeInSeconds (defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
+#define CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1)
+#define CountBetweenMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
 #define CountLessThanMaxTimeBetweenDefrostsInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - 1)
 #define CountEqualToMaxTimeBetweenDefrostsInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE)
 #define CountGreaterThanMaxTimeBetweenDefrostsInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE + 1)

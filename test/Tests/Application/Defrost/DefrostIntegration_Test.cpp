@@ -43,12 +43,12 @@ enum
 
 #define PowerUpDelayInMs (5 * gridData.gridPeriodicRunRateInMSec)
 
-#define CountLessThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 2)
-#define CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1)
-#define CountBetweenMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
+#define CountLessThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 2)
+#define CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1)
+#define CountBetweenMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
 #define CountGreaterThanMaxTimeBetweenDefrostsInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE + 1)
 
-#define CountBetweenSabbathMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds (sabbathData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
+#define CountBetweenSabbathMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds (sabbathData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
 #define CountGreaterThanSabbathMaxTimeBetweenDefrostsInSeconds (sabbathData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE + 1)
 
 static const DefrostTimerCounterConfig_t config = {
@@ -90,7 +90,7 @@ static const DefrostConfiguration_t defrostConfig = {
 static const DefrostData_t defrostData = {
    .freezerDoorIncrementFactorInSecondsPerSecond = 348,
    .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
-   .freezerAbnormalRunTimeInMinutes = 6 * 60,
+   .minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes = 6 * 60,
    .maxTimeBetweenDefrostsInMinutes = 32 * 60,
    .prechillFreezerSetpointInDegFx100 = -600,
    .prechillFreshFoodSetpointInDegFx100 = 4600,

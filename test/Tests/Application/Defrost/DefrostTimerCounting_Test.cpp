@@ -38,7 +38,7 @@ enum
 static const DefrostData_t defrostData = {
    .freezerDoorIncrementFactorInSecondsPerSecond = 348,
    .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
-   .freezerAbnormalRunTimeInMinutes = 6 * 60,
+   .minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes = 6 * 60,
    .maxTimeBetweenDefrostsInMinutes = 32 * 60,
    .prechillFreezerSetpointInDegFx100 = 600,
    .prechillFreshFoodSetpointInDegFx100 = 4600,
@@ -89,12 +89,12 @@ static const SabbathData_t sabbathData = {
    .maxTimeBetweenDefrostsInMinutes = 33 * MINUTES_PER_HOUR
 };
 
-#define CountLessThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 2)
-#define CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1)
-#define CountBetweenMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
+#define CountLessThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 2)
+#define CountGreaterThanFreezerAbnormalDefrostRunTimeInSeconds (defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1)
+#define CountBetweenMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
 #define CountGreaterThanMaxTimeBetweenDefrostsInSeconds (defrostData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE + 1)
 
-#define CountBetweenSabbathMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds (sabbathData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
+#define CountBetweenSabbathMaxTimeBetweenDefrostsAndFreezerAbnormalDefrostRunTimeInSeconds (sabbathData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
 #define CountGreaterThanSabbathMaxTimeBetweenDefrostsInSeconds (sabbathData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE + 1)
 
 static const DefrostTimerCounterConfig_t config = {
@@ -619,7 +619,7 @@ TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFreezerD
    Given SingleSpeedCompressorIsOff();
    Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
-   Given DefrostTimerCountIs(defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
+   Given DefrostTimerCountIs(defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
    DoorAccelerationRequestShouldBe(DoorAcceleration_Enable, 2);
@@ -780,7 +780,7 @@ TEST(DefrostTimerCounter, ShouldSendResetDoorAccelerationRequestWhenLastFreezerD
    Given SingleSpeedCompressorIsOff();
    Given LastFreezerDefrostWasNormal();
    Given DefrostTimerIsEnabled();
-   Given DefrostTimerCountIs(defrostData.freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
+   Given DefrostTimerCountIs(defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
 
    After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
    DoorAccelerationRequestShouldBe(DoorAcceleration_Enable, 2);

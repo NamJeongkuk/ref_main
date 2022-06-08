@@ -15,7 +15,7 @@ typedef struct
 {
    uint16_t freezerDoorIncrementFactorInSecondsPerSecond;
    uint16_t freshFoodDoorIncrementFactorInSecondsPerSecond;
-   uint16_t freezerAbnormalRunTimeInMinutes;
+   uint16_t minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes;
    uint16_t maxTimeBetweenDefrostsInMinutes;
    TemperatureDegFx100_t prechillFreezerSetpointInDegFx100;
    TemperatureDegFx100_t prechillFreshFoodSetpointInDegFx100;

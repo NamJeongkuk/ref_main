@@ -109,7 +109,7 @@ static void DataModelChanged(void *context, const void *args)
 
       uint32_t maxTimeBetweenDefrostsInSeconds = MaxTimeBetweenDefrostsInSeconds(instance);
 
-      if((*defrostTimerCountsInSeconds >= instance->_private.defrostParametricData->freezerAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE) &&
+      if((*defrostTimerCountsInSeconds >= instance->_private.defrostParametricData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE) &&
          (*defrostTimerCountsInSeconds < maxTimeBetweenDefrostsInSeconds))
       {
          SendSignalOnce(instance, Signal_FreezerAbnormalRunTimeReached);
