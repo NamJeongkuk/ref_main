@@ -228,8 +228,36 @@
         },
         {
           "namespace": "rx130",
+          "displayName": "EEPROM Freezer Door Acceleration Count",
+          "name": "Erd_Eeprom_DefrostFreezerDoorAccelerationCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "Fresh Food Door Acceleration Count",
           "name": "Erd_DefrostFreshFoodDoorAccelerationCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "EEPROM Fresh Food Door Acceleration Count",
+          "name": "Erd_Eeprom_DefrostFreshFoodDoorAccelerationCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Convertible Compartment Door Acceleration Count",
+          "name": "Erd_DefrostConvertibleCompartmentDoorAccelerationCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "EEPROM Convertible Compartment Door Acceleration Count",
+          "name": "Erd_Eeprom_DefrostConvertibleCompartmentDoorAccelerationCount",
           "read": true,
           "write": true
         },

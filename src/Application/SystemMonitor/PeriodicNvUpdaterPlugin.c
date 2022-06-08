@@ -13,6 +13,9 @@
 
 static const PeriodicNvUpdateServiceConfigurationEntry_t periodicNvUpdateTableEntries[] = {
    { Erd_DefrostTimerCountInSeconds, Erd_Eeprom_DefrostTimerCountInSeconds },
+   { Erd_DefrostFreezerDoorAccelerationCount, Erd_Eeprom_DefrostFreezerDoorAccelerationCount },
+   { Erd_DefrostFreshFoodDoorAccelerationCount, Erd_Eeprom_DefrostFreshFoodDoorAccelerationCount },
+   { Erd_DefrostConvertibleCompartmentDoorAccelerationCount, Erd_Eeprom_DefrostConvertibleCompartmentDoorAccelerationCount }
 };
 
 static const PeriodicNvUpdateServiceConfiguration_t periodicNvUpdateConfiguration = {

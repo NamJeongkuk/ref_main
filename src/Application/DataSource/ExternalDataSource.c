@@ -91,6 +91,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_DefrostTimerCountInSeconds, sizeof(uint32_t)),
    SWAPPED_ERD(PublicErd_MaxTimeBetweenDefrostsInMinutes, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_DefrostPrechillRunCounterInMinutes, sizeof(uint16_t)),
+   SWAPPED_ERD(PublicErd_DefrostConvertibleCompartmentDoorAccelerationCount, sizeof(uint32_t)),
    SWAPPED_ERD(PublicErd_FreshFoodThermistor_AdcCount, sizeof(AdcCounts_t)),
    SWAPPED_ERD(PublicErd_FreshFood_UnfilteredTemperature, sizeof(TemperatureDegFx100_t)),
    SWAPPED_FIELD(PublicErd_ConvertibleCompartmentSetpoint_ResolvedVote, SetpointVotedTemperature_t, temperature),
@@ -113,6 +114,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
 };
 
 static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
+   SWAPPED_FIELD_RANGE(PublicErd_Eeprom_DefrostTimerCountInSeconds, PublicErd_Eeprom_DefrostConvertibleCompartmentDoorAccelerationCount),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableEntry0, PublicErd_ServiceDiagnosticsFaultTableEntry9),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableSnapshot0, PublicErd_ServiceDiagnosticsFaultTableSnapshot9),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultSequenceEntry0, PublicErd_ServiceDiagnosticsFaultSequenceEntry7),
