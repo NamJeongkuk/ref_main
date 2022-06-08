@@ -11,15 +11,14 @@
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
 #include "CalculatedGridLines.h"
-#include "DefrostTimerCounterRequest.h"
 #include "DataModelErdPointerAccess.h"
 #include "DefrostState.h"
 #include "HeaterVotedState.h"
-#include "DefrostTimerCounterFsmState.h"
 #include "utils.h"
 #include "FanSpeed.h"
 #include "Setpoint.h"
 #include "CompressorState.h"
+#include "Signal.h"
 
 enum
 {
@@ -35,9 +34,7 @@ enum
 enum
 {
    Signal_PowerUpDelayComplete = Hsm_UserSignalStart,
-   Signal_MaxTimeBetweenDefrostsComplete,
    Signal_PeriodicTimeoutComplete,
-   Signal_MaxPrechillHoldoffTimeComplete,
    Signal_FreezerEvaporatorThermistorIsInvalid,
    Signal_FreezerDefrostIsAbnormal,
    Signal_ValveHasBeenInPositionForPrechillTime,
@@ -368,34 +365,6 @@ static bool FreezerDefrostWasAbnormal(Defrost_t *instance)
    return defrostWasAbnormal;
 }
 
-static bool DefrostTimerCounterIsDisabled(Defrost_t *instance)
-{
-   DefrostTimerCounterFsmState_t state;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->defrostTimerCounterFsmStateErd,
-      &state);
-
-   return (state == DefrostTimerCounterFsmState_Disabled);
-}
-
-static void RequestDefrostTimerCounterTo(Defrost_t *instance, DefrostTimer_t request)
-{
-   DefrostTimerCounterRequest_t defrostTimerCounterRequest;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->defrostTimerCounterRequestErd,
-      &defrostTimerCounterRequest);
-
-   defrostTimerCounterRequest.request = request;
-   defrostTimerCounterRequest.requestId++;
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->defrostTimerCounterRequestErd,
-      &defrostTimerCounterRequest);
-}
-
 static void PowerUpDelayComplete(void *context)
 {
    REINTERPRET(instance, context, Defrost_t *);
@@ -417,28 +386,11 @@ static void SetFlagToResetRequiredWhenEnablingDefrostTimerCounterTo(Defrost_t *i
    instance->_private.resetRequiredWhenEnablingDefrostTimerCounter = state;
 }
 
-static bool DefrostTimerCounterResetRequiredFromPowerUp(Defrost_t *instance)
-{
-   return instance->_private.resetRequiredWhenEnablingDefrostTimerCounter;
-}
-
 static void PeriodicTimeoutComplete(void *context)
 {
    REINTERPRET(instance, context, Defrost_t *);
 
    Hsm_SendSignal(&instance->_private.hsm, Signal_PeriodicTimeoutComplete, NULL);
-}
-
-static void StartPeriodicTimer(Defrost_t *instance)
-{
-   TimerModule_StartPeriodic(
-      DataModelErdPointerAccess_GetTimerModule(
-         instance->_private.dataModel,
-         instance->_private.config->timerModuleErd),
-      &instance->_private.periodicTimer,
-      instance->_private.defrostParametricData->defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC,
-      PeriodicTimeoutComplete,
-      instance);
 }
 
 static void StartOneMinutePeriodicTimer(Defrost_t *instance)
@@ -460,67 +412,6 @@ static void StopOneMinutePeriodicTimer(Defrost_t *instance)
          instance->_private.dataModel,
          instance->_private.config->timerModuleErd),
       &instance->_private.periodicTimer);
-}
-
-static bool DefrostTimerIsSatisfied(Defrost_t *instance)
-{
-   bool state;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->defrostTimerIsSatisfiedErd,
-      &state);
-
-   return state;
-}
-
-static bool SealedSystemIsInValvePosition(Defrost_t *instance, ValvePosition_t expectedPosition)
-{
-   ValvePosition_t actualPosition;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->sealedSystemValvePositionErd,
-      &actualPosition);
-
-   return actualPosition == expectedPosition;
-}
-
-static void MaxPrechillHoldoffTimeComplete(void *context)
-{
-   REINTERPRET(instance, context, Defrost_t *);
-
-   Hsm_SendSignal(&instance->_private.hsm, Signal_MaxPrechillHoldoffTimeComplete, NULL);
-}
-
-static void StartMaxPrechillHoldoffTimer(Defrost_t *instance)
-{
-   StartTimer(
-      instance,
-      &instance->_private.maxPrechillHoldoffTimer,
-      instance->_private.defrostParametricData->maxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds * MSEC_PER_SEC,
-      MaxPrechillHoldoffTimeComplete);
-}
-
-static bool MaxPrechillHoldoffTimerIsNotRunning(Defrost_t *instance)
-{
-   return !TimerModule_IsRunning(
-      DataModelErdPointerAccess_GetTimerModule(
-         instance->_private.dataModel,
-         instance->_private.config->timerModuleErd),
-      &instance->_private.maxPrechillHoldoffTimer);
-}
-
-static void StopMaxPrechillHoldoffTimer(Defrost_t *instance)
-{
-   TimerModule_Stop(
-      DataModelErdPointerAccess_GetTimerModule(
-         instance->_private.dataModel,
-         instance->_private.config->timerModuleErd),
-      &instance->_private.maxPrechillHoldoffTimer);
-}
-
-static ValvePosition_t PositionToExitIdle(Defrost_t *instance)
-{
-   return instance->_private.defrostParametricData->threeWayValvePositionToExitIdle;
 }
 
 static bool FreezerEvaporatorThermistorIsInvalid(Defrost_t *instance)
@@ -874,53 +765,15 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
    IGNORE(data);
+   IGNORE(instance);
 
    switch(signal)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Idle);
-         SendDoorHoldoffEnableRequest(instance);
-         VoteForFreshFoodDefrostHeater(instance, OFF, Care);
-         VoteForFreezerDefrostHeater(instance, OFF, Care);
-
-         if(DefrostTimerCounterIsDisabled(instance))
-         {
-            RequestDefrostTimerCounterTo(instance, DefrostTimer_Enable);
-
-            if(DefrostTimerCounterResetRequiredFromPowerUp(instance))
-            {
-               RequestDefrostTimerCounterTo(instance, DefrostTimer_Reset);
-               SetFlagToResetRequiredWhenEnablingDefrostTimerCounterTo(instance, false);
-            }
-         }
-
-         StartPeriodicTimer(instance);
-         break;
-
-      case Signal_PeriodicTimeoutComplete:
-         if(DefrostTimerIsSatisfied(instance))
-         {
-            if(SealedSystemIsInValvePosition(instance, PositionToExitIdle(instance)))
-            {
-               Hsm_Transition(hsm, State_PrechillPrep);
-            }
-            else
-            {
-               if(MaxPrechillHoldoffTimerIsNotRunning(instance))
-               {
-                  StartMaxPrechillHoldoffTimer(instance);
-               }
-            }
-         }
-         break;
-
-      case Signal_MaxPrechillHoldoffTimeComplete:
-         Hsm_Transition(hsm, State_PrechillPrep);
          break;
 
       case Hsm_Exit:
-         StopMaxPrechillHoldoffTimer(instance);
-         RequestDefrostTimerCounterTo(instance, DefrostTimer_Disable);
          break;
 
       default:

@@ -138,13 +138,6 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Freezer Filtered Temperature DegFx100",
-          "name": "Erd_Freezer_FilteredTemperature",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
           "displayName": "Defrost State (EEPROM)",
           "name": "Erd_DefrostState",
           "read": true,
@@ -207,20 +200,6 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Door Acceleration Request",
-          "name": "Erd_DoorAccelerationRequest",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
-          "displayName": "Door Acceleration FSM State",
-          "name": "Erd_DoorAccelerationFsmState",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "rx130",
           "displayName": "Freezer Door Acceleration Count",
           "name": "Erd_DefrostFreezerDoorAccelerationCount",
           "read": true,
@@ -242,41 +221,6 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "EEPROM Fresh Food Door Acceleration Count",
-          "name": "Erd_Eeprom_DefrostFreshFoodDoorAccelerationCount",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
-          "displayName": "Convertible Compartment Door Acceleration Count",
-          "name": "Erd_DefrostConvertibleCompartmentDoorAccelerationCount",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
-          "displayName": "EEPROM Convertible Compartment Door Acceleration Count",
-          "name": "Erd_Eeprom_DefrostConvertibleCompartmentDoorAccelerationCount",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
-          "displayName": "Defrost Timer Counter FSM State",
-          "name": "Erd_DefrostTimerCounterFsmState",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
-          "displayName": "Defrost Timer Counter Request",
-          "name": "Erd_DefrostTimerCounterRequest",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
           "displayName": "RAM Defrost Timer Count In Seconds",
           "name": "Erd_DefrostTimerCountInSeconds",
           "read": true,
@@ -286,27 +230,6 @@
           "namespace": "rx130",
           "displayName": "EEPROM Defrost Timer Count In Seconds",
           "name": "Erd_Eeprom_DefrostTimerCountInSeconds",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
-          "displayName": "Defrost Timer Is Satisfied Monitor FSM State",
-          "name": "Erd_DefrostTimerIsSatisfiedMonitorFsmState",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
-          "displayName": "Defrost Timer Is Satisfied Monitor Request",
-          "name": "Erd_DefrostTimerIsSatisfiedMonitorRequest",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
-          "displayName": "Defrost Timer Is Satisfied",
-          "name": "Erd_DefrostTimerIsSatisfied",
           "read": true,
           "write": true
         },

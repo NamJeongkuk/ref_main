@@ -20,7 +20,6 @@ typedef struct
 {
    Erd_t defrostHsmStateErd; // DefrostHsmState_t
    Erd_t defrostDoorHoldoffRequestErd; // bool
-   Erd_t defrostTimerCounterRequestErd; // DefrostTimerCounterRequest_t
    Erd_t freezerFilteredTemperatureResolvedErd; // TemperatureDegFx100_t
    Erd_t calculatedGridLinesErd; // CalculatedGridLines_t
    Erd_t defrostStateErd; // DefrostState_t
@@ -30,9 +29,7 @@ typedef struct
    Erd_t freezerDefrostCycleCountErd; // uint16_t
    Erd_t freshFoodDefrostHeaterDefrostVoteErd; // HeaterVotedState_t
    Erd_t freezerDefrostHeaterDefrostVoteErd; // HeaterVotedState_t
-   Erd_t defrostTimerCounterFsmStateErd; // DefrostTimerCounterFsmState_t
    Erd_t sealedSystemValvePositionErd; // ValvePosition_t
-   Erd_t defrostTimerIsSatisfiedErd; // bool
    Erd_t freezerEvaporatorThermistorIsValidErd; // bool
    Erd_t numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd; // uint8_t
    Erd_t iceCabinetFanDefrostVoteErd; // FanVotedSpeed_t
@@ -63,13 +60,8 @@ typedef struct
    {
       I_DataModel_t *dataModel;
       Hsm_t hsm;
-      union
-      {
-         Timer_t powerUpDelayTimer;
-         Timer_t timeBetweenDefrostsTimer;
-      };
+      Timer_t powerUpDelayTimer;
       Timer_t periodicTimer;
-      Timer_t maxPrechillHoldoffTimer;
       EventSubscription_t dataModelSubscription;
       uint32_t prechillRunCounterInMinutes;
       const DefrostConfiguration_t *config;

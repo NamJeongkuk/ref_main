@@ -56,7 +56,6 @@ enum
 static const DefrostConfiguration_t defrostConfig = {
    .defrostHsmStateErd = Erd_DefrostHsmState,
    .defrostDoorHoldoffRequestErd = Erd_DefrostDoorHoldOffRequest,
-   .defrostTimerCounterRequestErd = Erd_DefrostTimerCounterRequest,
    .freezerFilteredTemperatureResolvedErd = Erd_Freezer_FilteredTemperatureResolved,
    .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
    .defrostStateErd = Erd_DefrostState,
@@ -66,9 +65,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .freezerDefrostCycleCountErd = Erd_FreezerDefrostCycleCount,
    .freshFoodDefrostHeaterDefrostVoteErd = Erd_FreshFoodDefrostHeater_DefrostVote,
    .freezerDefrostHeaterDefrostVoteErd = Erd_FreezerDefrostHeater_DefrostVote,
-   .defrostTimerCounterFsmStateErd = Erd_DefrostTimerCounterFsmState,
    .sealedSystemValvePositionErd = Erd_SealedSystemValvePosition,
-   .defrostTimerIsSatisfiedErd = Erd_DefrostTimerIsSatisfied,
    .freezerEvaporatorThermistorIsValidErd = Erd_FreezerEvaporatorThermistorIsValid,
    .numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd = Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost,
    .iceCabinetFanDefrostVoteErd = Erd_IceCabinetFanSpeed_DefrostVote,
@@ -359,7 +356,6 @@ TEST_GROUP(Defrost_SingleEvap)
    TimerModule_TestDouble_t *timerModuleTestDouble;
    PersonalityParametricData_t personalityParametricData;
    Defrost_t instance;
-   EventSubscription_t defrostTimerCounterRequestSubscription;
 
    void setup()
    {
@@ -385,16 +381,6 @@ TEST_GROUP(Defrost_SingleEvap)
    void DefrostIsInitialized()
    {
       Defrost_Init(&instance, dataModel, &defrostConfig);
-
-      EventSubscription_Init(
-         &defrostTimerCounterRequestSubscription,
-         &instance,
-         DefrostTimerCounterRequestSent);
-
-      DataModel_Subscribe(
-         dataModel,
-         Erd_DefrostTimerCounterRequest,
-         &defrostTimerCounterRequestSubscription);
    }
 
    void DefrostParametricSetWithMaxPrechillHoldoffOfZero()
@@ -421,15 +407,6 @@ TEST_GROUP(Defrost_SingleEvap)
       DataModel_Read(dataModel, Erd_DefrostDoorHoldOffRequest, &actualState);
 
       CHECK_EQUAL(expectedState, actualState);
-   }
-
-   void DefrostTimerRequestShouldBe(DefrostTimer_t expectedRequest, Signal_t expectedId)
-   {
-      DefrostTimerCounterRequest_t actualRequest;
-      DataModel_Read(dataModel, Erd_DefrostTimerCounterRequest, &actualRequest);
-
-      CHECK_EQUAL(expectedRequest, actualRequest.request);
-      CHECK_EQUAL(expectedId, actualRequest.requestId);
    }
 
    void FilteredFreezerCabinetTemperatureIs(TemperatureDegFx100_t temperature)
@@ -519,19 +496,10 @@ TEST_GROUP(Defrost_SingleEvap)
       Given DefrostIsInitialized();
    }
 
-   void LastFreezerDefrostWasNormalBasedOnAbnormalFreezerCabinetTemperature()
+   void DefrostInitializedWithNormalFreezerCabinetTemperatures()
    {
       Given FilteredFreezerCabinetTemperatureIs(1000);
       Given CalculatedGridLinesAre(calcGridLines);
-      Given LastFreezerDefrostWasNormal();
-      Given DefrostIsInitialized();
-   }
-
-   void LastFreezerDefrostWasAbnormalButCurrentFreezerCabinetTemperatureIsNotAbnormal()
-   {
-      Given FilteredFreezerCabinetTemperatureIs(1000);
-      Given CalculatedGridLinesAre(calcGridLines);
-      Given LastFreezerDefrostWasAbnormal();
       Given DefrostIsInitialized();
    }
 
@@ -559,29 +527,24 @@ TEST_GROUP(Defrost_SingleEvap)
       {
          case DefrostHsmState_Idle:
             Given DefrostStateIs(DefrostState_Idle);
-            Given LastFreezerDefrostWasNormalBasedOnAbnormalFreezerCabinetTemperature();
+            Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
 
             After(PowerUpDelayInMs - 1);
             DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
 
-            EnableDefrostTimerCounterRequestShouldBeSent();
             After(1);
             DefrostHsmStateShouldBe(DefrostHsmState_Idle);
             break;
 
          case DefrostHsmState_PrechillPrep:
-            Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+            Given DefrostStateIs(DefrostState_Prechill);
+            Given FreezerEvaporatorThermistorValidityIs(VALID);
+            Given CompressorStateIs(CompressorState_MinimumOnTime);
+            Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
 
-            When DefrostTimerIsSatisfiedIs(true);
-            And SealedSystemValveIsInPosition(ValvePosition_C);
-            And CompressorStateIs(CompressorState_MinimumOffTime);
-            And FreshFoodDefrostHeaterVoteIs(ON, Care);
-            And FreezerDefrostHeaterVoteIs(ON, Care);
+            After(PowerUpDelayInMs - 1);
+            DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
 
-            After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-            SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
-
-            DisableDefrostTimerCounterRequestShouldBeSent();
             After(1);
             DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
             break;
@@ -597,7 +560,8 @@ TEST_GROUP(Defrost_SingleEvap)
          case DefrostHsmState_PostPrechill:
             Given DefrostStateIs(DefrostState_Prechill);
             Given CompressorStateIs(CompressorState_MinimumOnTime);
-            Given LastFreezerDefrostWasAbnormalButCurrentFreezerCabinetTemperatureIsNotAbnormal();
+            Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
+            Given LastFreezerDefrostWasAbnormal();
             And FreshFoodDefrostHeaterVoteIs(ON, Care);
             And FreezerDefrostHeaterVoteIs(ON, Care);
 
@@ -615,18 +579,14 @@ TEST_GROUP(Defrost_SingleEvap)
 
    void FreezerEvaporatorThermistorIsInvalidAndPrechillIsSkippedAndInHeaterOnEntryState()
    {
+      Given DefrostStateIs(DefrostState_Prechill);
       Given FreezerEvaporatorThermistorValidityIs(INVALID);
-      Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
-      When DefrostTimerIsSatisfiedIs(true);
-      And SealedSystemValveIsInPosition(ValvePosition_C);
+      Given CompressorStateIs(CompressorState_MinimumOnTime);
+      Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
 
-      After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC);
-      SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
+      After(PowerUpDelayInMs - 1);
+      DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
 
-      After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-      DefrostHsmStateShouldBe(DefrostHsmState_Idle);
-
-      DisableDefrostTimerCounterRequestShouldBeSent();
       After(1);
       DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
    }
@@ -649,80 +609,8 @@ TEST_GROUP(Defrost_SingleEvap)
       CHECK_TRUE(actualVote.care);
    }
 
-   void DefrostTimerCounterIs(bool state)
-   {
-      DefrostTimerCounterFsmState_t fsmState = state ? DefrostTimerCounterFsmState_Enabled : DefrostTimerCounterFsmState_Disabled;
-      DataModel_Write(dataModel, Erd_DefrostTimerCounterFsmState, &fsmState);
-   }
-
-   void DefrostTimerCounterRequestShouldBe(DefrostTimer_t expectedRequest, Signal_t expectedRequestId)
-   {
-      DefrostTimerCounterRequest_t actualRequest;
-      DataModel_Read(dataModel, Erd_DefrostTimerCounterRequest, &actualRequest);
-
-      CHECK_EQUAL(expectedRequest, actualRequest.request);
-      CHECK_EQUAL(expectedRequestId, actualRequest.requestId);
-   }
-
-   static void DefrostTimerCounterRequestSent(void *context, const void *_args)
-   {
-      IGNORE(context);
-      REINTERPRET(request, _args, const DefrostTimerCounterRequest_t *);
-
-      mock()
-         .actualCall("DefrostTimerCounterRequestSent")
-         .withParameter("request->request", request->request)
-         .withParameter("request->requestId", request->requestId);
-   }
-
-   void DefrostTimerCounterRequestShouldBeWrittenWith(DefrostTimerCounterRequest_t request)
-   {
-      mock()
-         .expectOneCall("DefrostTimerCounterRequestSent")
-         .withParameter("request->request", request.request)
-         .withParameter("request->requestId", request.requestId);
-   }
-
-   void EnableDefrostTimerCounterRequestShouldBeSent()
-   {
-      DefrostTimerCounterRequest_t enableRequest;
-      enableRequest.request = DefrostTimer_Enable;
-      enableRequest.requestId = 1;
-
-      DefrostTimerCounterRequestShouldBeWrittenWith(enableRequest);
-   }
-
-   void EnableThenResetDefrostTimerCounterRequestsShouldBeSent()
-   {
-      DefrostTimerCounterRequest_t enableRequest;
-      enableRequest.request = DefrostTimer_Enable;
-      enableRequest.requestId = 1;
-
-      DefrostTimerCounterRequestShouldBeWrittenWith(enableRequest);
-
-      DefrostTimerCounterRequest_t resetRequest;
-      resetRequest.request = DefrostTimer_Reset;
-      resetRequest.requestId = 2;
-
-      DefrostTimerCounterRequestShouldBeWrittenWith(resetRequest);
-   }
-
-   void DisableDefrostTimerCounterRequestShouldBeSent()
-   {
-      DefrostTimerCounterRequest_t disableRequest;
-      disableRequest.request = DefrostTimer_Disable;
-      disableRequest.requestId = 2;
-
-      DefrostTimerCounterRequestShouldBeWrittenWith(disableRequest);
-   }
-
    void NothingShouldHappen()
    {
-   }
-
-   void DefrostTimerIsSatisfiedIs(bool state)
-   {
-      DataModel_Write(dataModel, Erd_DefrostTimerIsSatisfied, &state);
    }
 
    void SealedSystemValveIsInPosition(ValvePosition_t position)
@@ -838,21 +726,6 @@ TEST_GROUP(Defrost_SingleEvap)
       CHECK_FALSE(vote.care);
    }
 
-   void ValveIsNotInPositionUponExitOfIdleAndOnEntryToPrechillPrep()
-   {
-      Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
-
-      When DefrostTimerIsSatisfiedIs(true);
-      And SealedSystemValveIsInPosition(ValvePosition_C);
-
-      After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC + defrostData.maxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds * MSEC_PER_SEC - 1); // this timing has to be flipped for the max time of 0 b/c can't do -1
-      DefrostHsmStateShouldBe(DefrostHsmState_Idle);
-
-      DisableDefrostTimerCounterRequestShouldBeSent();
-      After(1);
-      DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
-   }
-
    void ResetExtendDefrostSignalToZero()
    {
       Signal_t signal = 0;
@@ -917,8 +790,7 @@ TEST_GROUP(Defrost_SingleEvap)
       Given FreezerEvaporatorThermistorValidityIs(VALID);
       Given DefrostStateIs(DefrostState_Prechill);
       Given CompressorStateIs(CompressorState_MinimumOffTime);
-      Given LastFreezerDefrostWasNormalBasedOnAbnormalFreezerCabinetTemperature();
-      Given DefrostIsInitialized();
+      Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
 
       After(PowerUpDelayInMs - 1);
       DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
@@ -1053,37 +925,9 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoPowerUpHsmState)
    DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
 }
 
-TEST(Defrost_SingleEvap, ShouldRequestEnableThenResetOfDefrostTimerCounterWhenFilteredFreezerCabinetTemperatureIsGreaterThanExtremeHysteresisAfterPowerUpDelay)
+TEST(Defrost_SingleEvap, ShouldTransitionToPrechillPrepAtPowerUpWhenLastDefrostStateWasPrechill)
 {
-   Given DefrostInitializedWithFreezerTempAboveExtremeHysteresis();
-
-   After(PowerUpDelayInMs - 1);
-   DefrostTimerRequestShouldBe(DefrostTimer_Reset, 0);
-
-   EnableThenResetDefrostTimerCounterRequestsShouldBeSent();
-   After(1);
-}
-
-TEST(Defrost_SingleEvap, ShouldRequestEnableThenResetOfDefrostTimerWhenFilteredFreezerCabinetTemperatureIsGreaterThanFreezerDefrostTerminationTemperatureAfterPowerUpDelay)
-{
-   Given DefrostInitializedWithFreezerTempAboveTerminationTemp();
-
-   After(PowerUpDelayInMs - 1);
-   DefrostTimerRequestShouldBe(DefrostTimer_Reset, 0);
-
-   EnableThenResetDefrostTimerCounterRequestsShouldBeSent();
-   After(1);
-}
-
-TEST(Defrost_SingleEvap, ShouldRequestEnableThenResetOfDefrostTimerWhenFilteredFreezerCabinetTemperatureIsEqualToFreezerDefrostTerminationTemperatureAfterPowerUpDelay)
-{
-   Given DefrostInitializedWithFreezerTempEqualToTerminationTemp();
-
-   After(PowerUpDelayInMs - 1);
-   DefrostTimerRequestShouldBe(DefrostTimer_Reset, 0);
-
-   EnableThenResetDefrostTimerCounterRequestsShouldBeSent();
-   After(1);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
 }
 
 TEST(Defrost_SingleEvap, ShouldGoToDwellWhenFilteredFreezerCabinetTemperatureIsGreaterThanExtremeHysteresisAndDefrostStateWasHeaterOnAfterPowerUpDelay)
@@ -1098,12 +942,6 @@ TEST(Defrost_SingleEvap, ShouldGoToDwellWhenFilteredFreezerCabinetTemperatureIsG
    DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
 }
 
-TEST(Defrost_SingleEvap, ShouldEnableDoorHoldoffRequestOnEntryToIdle)
-{
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
-   DoorHoldoffRequestShouldBe(ENABLED);
-}
-
 TEST(Defrost_SingleEvap, ShouldGoToIdleWhenFilteredFreezerCabinetTemperatureIsGreaterThanExtremeHysteresisAndDefrostStateIsPrechillAfterPowerUpDelay)
 {
    Given DefrostStateIs(DefrostState_Prechill);
@@ -1112,7 +950,6 @@ TEST(Defrost_SingleEvap, ShouldGoToIdleWhenFilteredFreezerCabinetTemperatureIsGr
    After(PowerUpDelayInMs - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
 
-   EnableThenResetDefrostTimerCounterRequestsShouldBeSent();
    After(1);
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
@@ -1125,7 +962,6 @@ TEST(Defrost_SingleEvap, ShouldGoToIdleWhenFilteredFreezerCabinetTemperatureIsGr
    After(PowerUpDelayInMs - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
 
-   EnableThenResetDefrostTimerCounterRequestsShouldBeSent();
    After(1);
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
@@ -1138,7 +974,6 @@ TEST(Defrost_SingleEvap, ShouldGoToIdleWhenFilteredFreezerCabinetTemperatureIsGr
    After(PowerUpDelayInMs - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
 
-   EnableThenResetDefrostTimerCounterRequestsShouldBeSent();
    After(1);
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
@@ -1151,7 +986,6 @@ TEST(Defrost_SingleEvap, ShouldGoToIdleWhenFilteredFreezerCabinetTemperatureIsGr
    After(PowerUpDelayInMs - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
 
-   EnableThenResetDefrostTimerCounterRequestsShouldBeSent();
    After(1);
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
@@ -1167,7 +1001,6 @@ TEST(Defrost_SingleEvap, ShouldIncrementFreezerAbnormalDefrostCountWhenFilteredF
    After(PowerUpDelayInMs - 1);
    FreezerAbnormalDefrostCountShouldBe(0);
 
-   EnableThenResetDefrostTimerCounterRequestsShouldBeSent();
    After(1);
    FreezerAbnormalDefrostCountShouldBe(1);
 }
@@ -1183,7 +1016,6 @@ TEST(Defrost_SingleEvap, ShouldSetLastFreezerDefrostAsAbnormalWhenFilteredFreeze
    After(PowerUpDelayInMs - 1);
    LastFreezerDefrostWasNormal();
 
-   EnableThenResetDefrostTimerCounterRequestsShouldBeSent();
    After(1);
    LastFreezerDefrostShouldBeAbnormal();
 }
@@ -1199,7 +1031,6 @@ TEST(Defrost_SingleEvap, ShouldSaveLastFreezerAbnormalDefrostCountWhenFilteredFr
    After(PowerUpDelayInMs - 1);
    LastAbnormalFreezerDefrostCycleShouldBe(32);
 
-   EnableThenResetDefrostTimerCounterRequestsShouldBeSent();
    After(1);
    LastAbnormalFreezerDefrostCycleShouldBe(35);
 }
@@ -1215,7 +1046,6 @@ TEST(Defrost_SingleEvap, ShouldSetLastFreezerDefrostAsAbnormalWhenFilteredFreeze
    After(PowerUpDelayInMs - 1);
    LastFreezerDefrostWasNormal();
 
-   EnableThenResetDefrostTimerCounterRequestsShouldBeSent();
    After(1);
    LastFreezerDefrostShouldBeAbnormal();
 }
@@ -1231,7 +1061,6 @@ TEST(Defrost_SingleEvap, ShouldSaveLastFreezerAbnormalDefrostCountWhenFilteredFr
    After(PowerUpDelayInMs - 1);
    LastAbnormalFreezerDefrostCycleShouldBe(32);
 
-   EnableThenResetDefrostTimerCounterRequestsShouldBeSent();
    After(1);
    LastAbnormalFreezerDefrostCycleShouldBe(35);
 }
@@ -1241,8 +1070,7 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenLastFreezerDefrostWasNormalAn
    Given FreezerEvaporatorThermistorValidityIs(VALID);
    Given DefrostStateIs(DefrostState_Prechill);
    Given CompressorStateIs(CompressorState_MinimumOffTime);
-   Given LastFreezerDefrostWasNormalBasedOnAbnormalFreezerCabinetTemperature();
-   Given DefrostIsInitialized();
+   Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
 
    After(PowerUpDelayInMs - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
@@ -1255,7 +1083,8 @@ TEST(Defrost_SingleEvap, ShouldGoToPostPrechillWhenLastFreezerDefrostWasAbnormal
 {
    Given DefrostStateIs(DefrostState_Prechill);
    Given CompressorStateIs(CompressorState_MinimumOnTime);
-   Given LastFreezerDefrostWasAbnormalButCurrentFreezerCabinetTemperatureIsNotAbnormal();
+   Given LastFreezerDefrostWasAbnormal();
+   Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
 
    After(PowerUpDelayInMs - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
@@ -1267,8 +1096,7 @@ TEST(Defrost_SingleEvap, ShouldGoToPostPrechillWhenLastFreezerDefrostWasAbnormal
 TEST(Defrost_SingleEvap, ShouldGoToHeaterOnWhenLastFreezerDefrostWasNormalAndDefrostStateWasHeaterOnAfterPowerUpDelay)
 {
    Given DefrostStateIs(DefrostState_HeaterOn);
-   Given LastFreezerDefrostWasNormalBasedOnAbnormalFreezerCabinetTemperature();
-   Given DefrostIsInitialized();
+   Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
 
    After(PowerUpDelayInMs - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
@@ -1280,13 +1108,11 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnWhenLastFreezerDefrostWasNormalAndDef
 TEST(Defrost_SingleEvap, ShouldGoToIdleWhenLastFreezerDefrostWasNormalAndDefrostStateWasDwellAfterPowerUpDelay)
 {
    Given DefrostStateIs(DefrostState_Dwell);
-   Given LastFreezerDefrostWasNormalBasedOnAbnormalFreezerCabinetTemperature();
-   Given DefrostIsInitialized();
+   Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
 
    After(PowerUpDelayInMs - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
 
-   EnableDefrostTimerCounterRequestShouldBeSent();
    After(1);
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
@@ -1294,141 +1120,25 @@ TEST(Defrost_SingleEvap, ShouldGoToIdleWhenLastFreezerDefrostWasNormalAndDefrost
 TEST(Defrost_SingleEvap, ShouldGoToIdleWhenLastFreezerDefrostWasNormalAndDefrostStateWasDisabledAfterPowerUpDelay)
 {
    Given DefrostStateIs(DefrostState_Disabled);
-   Given LastFreezerDefrostWasNormalBasedOnAbnormalFreezerCabinetTemperature();
-   Given DefrostIsInitialized();
+   Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
 
    After(PowerUpDelayInMs - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
 
-   EnableDefrostTimerCounterRequestShouldBeSent();
    After(1);
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
-}
-
-TEST(Defrost_SingleEvap, ShouldGoToIdleAndSendEnableDefrostTimerCounterRequestWhenLastFreezerDefrostWasNormalAndDefrostStateWasIdleAfterPowerUpDelay)
-{
-   Given DefrostTimerCounterIs(DISABLED);
-   And DefrostStateIs(DefrostState_Idle);
-   And LastFreezerDefrostWasNormalBasedOnAbnormalFreezerCabinetTemperature();
-   And DefrostIsInitialized();
-
-   After(PowerUpDelayInMs - 1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
-
-   EnableDefrostTimerCounterRequestShouldBeSent();
-   After(1);
-   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
-}
-
-TEST(Defrost_SingleEvap, ShouldVoteForFreshFoodAndFreezerDefrostHeatersOffWhenEnteringIdle)
-{
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
-
-   FreshFoodDefrostHeaterVoteShouldBe(OFF);
-   FreezerDefrostHeaterVoteShouldBe(OFF);
-}
-
-TEST(Defrost_SingleEvap, ShouldNotSendEnableDefrostTimerCounterRequestWhenDefrostTimerCountingIsEnabled)
-{
-   Given DefrostTimerCounterIs(ENABLED);
-   And DefrostStateIs(DefrostState_Idle);
-   And LastFreezerDefrostWasNormalBasedOnAbnormalFreezerCabinetTemperature();
-   And DefrostIsInitialized();
-
-   After(PowerUpDelayInMs - 1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
-
-   NothingShouldHappen();
-   After(1);
-   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
-}
-
-TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenDefrostTimerIsSatisfiedAndSealedSystemValveIsInParametricDefinedPositionAfterPeriodicTimeout)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given CompressorStateIs(CompressorState_MinimumOffTime);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
-
-   When DefrostTimerIsSatisfiedIs(true);
-   And SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
-
-   After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
-
-   DisableDefrostTimerCounterRequestShouldBeSent();
-   After(1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
-}
-
-TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenDefrostTimerIsSatisfiedAndSealedSystemValveIsNeverInParametricDefinedPositionAfterPeriodicTimeoutAndMaxPrechillHoldoffTime)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given CompressorStateIs(CompressorState_MinimumOffTime);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
-
-   When DefrostTimerIsSatisfiedIs(true);
-   And SealedSystemValveIsInPosition(ValvePosition_C);
-
-   After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC + defrostData.maxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds * MSEC_PER_SEC - 1); // this timing has to be flipped for the max time of 0 b/c can't do -1
-   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
-
-   DisableDefrostTimerCounterRequestShouldBeSent();
-   After(1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
-}
-
-TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenDefrostTimerIsSatisfiedAndSealedSystemValveMovesIntoParametricDefinedPositionBeforeTheMaxPrechillHoldoffTimeExpires)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given CompressorStateIs(CompressorState_MinimumOffTime);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
-
-   When DefrostTimerIsSatisfiedIs(true);
-   And SealedSystemValveIsInPosition(ValvePosition_C);
-
-   After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC);
-   SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
-
-   After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
-
-   DisableDefrostTimerCounterRequestShouldBeSent();
-   After(1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
-}
-
-TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenDefrostTimerIsSatisfiedAndSealedSystemValveIsNotInParametricDefinedPositionWhenMaxPrechillHoldoffTimeIsZero)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given CompressorStateIs(CompressorState_MinimumOffTime);
-   Given DefrostParametricSetWithMaxPrechillHoldoffOfZero();
-   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
-
-   When DefrostTimerIsSatisfiedIs(true);
-   And SealedSystemValveIsInPosition(ValvePosition_C);
-
-   After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
-
-   DisableDefrostTimerCounterRequestShouldBeSent();
-   After(1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
 }
 
 TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryWhenFreezerEvapThermistorIsInvalidOnEntryToPrechillPrep)
 {
+   Given DefrostStateIs(DefrostState_Prechill);
    Given FreezerEvaporatorThermistorValidityIs(INVALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
-   When DefrostTimerIsSatisfiedIs(true);
-   And SealedSystemValveIsInPosition(ValvePosition_C);
+   Given CompressorStateIs(CompressorState_MinimumOnTime);
+   Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
 
-   After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC);
-   SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
+   After(PowerUpDelayInMs - 1);
+   DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
 
-   After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
-
-   DisableDefrostTimerCounterRequestShouldBeSent();
    After(1);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
@@ -1602,8 +1312,8 @@ TEST(Defrost_SingleEvap, ShouldRequestToExtendDefrostWithFreshFoodCycleDefrostIf
 TEST(Defrost_SingleEvap, ShouldNotRequestToExtendDefrostWithFreshFoodCycleDefrostIfCurrentValvePositionIsNotInPositionToExtendDefrostOnEntryToPrechillPrep)
 {
    Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given CompressorStateIs(CompressorState_MinimumOffTime);
-   Given ValveIsNotInPositionUponExitOfIdleAndOnEntryToPrechillPrep();
+   Given SealedSystemValveIsInPosition(ValvePosition_C);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
    ExtendDefrostSignalShouldNotBeSent();
 }
@@ -1737,52 +1447,31 @@ TEST(Defrost_SingleEvap, ShouldSetDefrostMaxHoldoffErdAfterInPrechillStateForDef
 
 TEST(Defrost_SingleEvap, ShouldTransitionToPostPrechillIfFreezerDefrostIsAbnormalAndCompressorStateTimeIsNotSatisfiedOnEntryToPrechillPrep)
 {
+   Given DefrostStateIs(DefrostState_Prechill);
+   Given LastFreezerDefrostWasAbnormal();
    Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorStateIs(CompressorState_MinimumOnTime);
+   Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
 
-   When DefrostTimerIsSatisfiedIs(true);
-   And CompressorStateIs(CompressorState_MinimumOnTime);
-   And SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
+   After(PowerUpDelayInMs - 1);
+   DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
 
-   After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-   LastFreezerDefrostWasAbnormal();
-
-   DisableDefrostTimerCounterRequestShouldBeSent();
    After(1);
    DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
 }
 
 TEST(Defrost_SingleEvap, ShouldTransitionToPrechillIfFreezerDefrostIsNormalAndCompressorStateTimeIsSatisfiedOnEntryToPrechillPrep)
 {
+   Given DefrostStateIs(DefrostState_Prechill);
    Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorStateIs(CompressorState_On);
+   Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
 
-   When DefrostTimerIsSatisfiedIs(true);
-   And CompressorStateIs(CompressorState_MinimumOffTime);
-   And SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
+   After(PowerUpDelayInMs - 1);
+   DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
 
-   After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-   And CompressorStateIs(CompressorState_On);
-
-   DisableDefrostTimerCounterRequestShouldBeSent();
    After(1);
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
-}
-
-TEST(Defrost_SingleEvap, ShouldNotTransitionIfFreezerDefrostIsNormalAndCompressorStateTimeIsNotSatisfiedOnEntryToPrechillPrep)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
-
-   When DefrostTimerIsSatisfiedIs(true);
-   And CompressorStateIs(CompressorState_MinimumOffTime);
-   And SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
-
-   After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-
-   DisableDefrostTimerCounterRequestShouldBeSent();
-   After(1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
 }
 
 TEST(Defrost_SingleEvap, ShouldNotSetDefrostMaxHoldoffMetErdWhenInAStateOtherThanPrechill)
@@ -2109,7 +1798,6 @@ TEST_GROUP(Defrost_DualEvap)
    TimerModule_TestDouble_t *timerModuleTestDouble;
    PersonalityParametricData_t personalityParametricData;
    Defrost_t instance;
-   EventSubscription_t defrostTimerCounterRequestSubscription;
 
    void setup()
    {
@@ -2135,27 +1823,6 @@ TEST_GROUP(Defrost_DualEvap)
    void DefrostIsInitialized()
    {
       Defrost_Init(&instance, dataModel, &defrostConfig);
-
-      EventSubscription_Init(
-         &defrostTimerCounterRequestSubscription,
-         &instance,
-         DefrostTimerCounterRequestSent);
-
-      DataModel_Subscribe(
-         dataModel,
-         Erd_DefrostTimerCounterRequest,
-         &defrostTimerCounterRequestSubscription);
-   }
-
-   static void DefrostTimerCounterRequestSent(void *context, const void *_args)
-   {
-      IGNORE(context);
-      REINTERPRET(request, _args, const DefrostTimerCounterRequest_t *);
-
-      mock()
-         .actualCall("DefrostTimerCounterRequestSent")
-         .withParameter("request->request", request->request)
-         .withParameter("request->requestId", request->requestId);
    }
 
    void DefrostHsmStateShouldBe(DefrostHsmState_t expectedState)
@@ -2193,7 +1860,7 @@ TEST_GROUP(Defrost_DualEvap)
       DataModel_Write(dataModel, Erd_FreezerDefrostWasAbnormal, &state);
    }
 
-   void LastFreezerDefrostWasNormalBasedOnAbnormalFreezerCabinetTemperature()
+   void DefrostInitializedWithNormalFreezerCabinetTemperatures()
    {
       Given FilteredFreezerCabinetTemperatureIs(1000);
       Given CalculatedGridLinesAre(calcGridLines);
@@ -2215,27 +1882,24 @@ TEST_GROUP(Defrost_DualEvap)
       {
          case DefrostHsmState_Idle:
             Given DefrostStateIs(DefrostState_Idle);
-            Given LastFreezerDefrostWasNormalBasedOnAbnormalFreezerCabinetTemperature();
+            Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
 
             After(PowerUpDelayInMs - 1);
             DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
 
-            EnableDefrostTimerCounterRequestShouldBeSent();
             After(1);
             DefrostHsmStateShouldBe(DefrostHsmState_Idle);
             break;
 
          case DefrostHsmState_PrechillPrep:
-            Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+            Given DefrostStateIs(DefrostState_Prechill);
+            Given FreezerEvaporatorThermistorValidityIs(VALID);
+            Given CompressorStateIs(CompressorState_MinimumOnTime);
+            Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
 
-            When DefrostTimerIsSatisfiedIs(true);
-            And SealedSystemValveIsInPosition(ValvePosition_C);
-            And CompressorStateIs(CompressorState_MinimumOffTime);
+            After(PowerUpDelayInMs - 1);
+            DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
 
-            After(defrostData.defrostPeriodicTimeoutInSeconds * MSEC_PER_SEC - 1);
-            SealedSystemValveIsInPosition(defrostData.threeWayValvePositionToExitIdle);
-
-            DisableDefrostTimerCounterRequestShouldBeSent();
             After(1);
             DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
             break;
@@ -2250,40 +1914,9 @@ TEST_GROUP(Defrost_DualEvap)
       }
    }
 
-   void EnableDefrostTimerCounterRequestShouldBeSent()
-   {
-      DefrostTimerCounterRequest_t enableRequest;
-      enableRequest.request = DefrostTimer_Enable;
-      enableRequest.requestId = 1;
-
-      DefrostTimerCounterRequestShouldBeWrittenWith(enableRequest);
-   }
-
-   void DefrostTimerIsSatisfiedIs(bool state)
-   {
-      DataModel_Write(dataModel, Erd_DefrostTimerIsSatisfied, &state);
-   }
-
    void SealedSystemValveIsInPosition(ValvePosition_t position)
    {
       DataModel_Write(dataModel, Erd_SealedSystemValvePosition, &position);
-   }
-
-   void DefrostTimerCounterRequestShouldBeWrittenWith(DefrostTimerCounterRequest_t request)
-   {
-      mock()
-         .expectOneCall("DefrostTimerCounterRequestSent")
-         .withParameter("request->request", request.request)
-         .withParameter("request->requestId", request.requestId);
-   }
-
-   void DisableDefrostTimerCounterRequestShouldBeSent()
-   {
-      DefrostTimerCounterRequest_t disableRequest;
-      disableRequest.request = DefrostTimer_Disable;
-      disableRequest.requestId = 2;
-
-      DefrostTimerCounterRequestShouldBeWrittenWith(disableRequest);
    }
 
    void FreezerEvaporatorThermistorValidityIs(bool state)
