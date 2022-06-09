@@ -38,6 +38,7 @@ SRC_DIRS:=\
   src/$(TARGET)/Hardware/Eeprom \
   src/$(TARGET)/Hardware/Flash \
   src/Application \
+  src/Application/Compressor \
   src/Application/ConvertibleCompartment \
   src/Application/DataSource \
   src/Application/Defrost \

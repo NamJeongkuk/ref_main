@@ -19,6 +19,7 @@
 #include "EepromAppPlugin.h"
 #include "FaultWrapperPlugin.h"
 #include "OverrideArbiterPlugin.h"
+#include "CompressorPlugin.h"
 
 enum
 {
@@ -64,6 +65,7 @@ void Application_Init(
    DoorPlugin_Init(dataModel);
    DefrostPlugin_Init(dataModel);
    FaultWrapperPlugin_Init(dataModel);
+   CompressorPlugin_Init(dataModel);
 
    PeriodicNvUpdaterPlugin_Init(&instance->_private.periodicNvUpdaterPlugin, dataModel);
 

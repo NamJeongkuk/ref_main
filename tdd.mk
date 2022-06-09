@@ -15,17 +15,18 @@ SRC_FILES := \
 
 # List of directories that contain your code under test
 SRC_DIRS := \
-   $(PROJECT_DIR)/Application/ParametricData \
+   $(PROJECT_DIR)/Application/Compressor \
+   $(PROJECT_DIR)/Application/ConvertibleCompartment \
    $(PROJECT_DIR)/Application/DataSource \
    $(PROJECT_DIR)/Application/Defrost \
    $(PROJECT_DIR)/Application/Door \
-   $(PROJECT_DIR)/Application/ConvertibleCompartment \
    $(PROJECT_DIR)/Application/EnhancedSabbath \
    $(PROJECT_DIR)/Application/Evaporator \
    $(PROJECT_DIR)/Application/Grid \
    $(PROJECT_DIR)/Application/Grid/GridFunctions \
-   $(PROJECT_DIR)/Application/Sensor \
+   $(PROJECT_DIR)/Application/ParametricData \
    $(PROJECT_DIR)/Application/Sabbath \
+   $(PROJECT_DIR)/Application/Sensor \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \
    $(PROJECT_DIR)/Application/SystemMonitor \
 
@@ -37,6 +38,7 @@ TEST_SRC_DIRS := \
    $(TESTING_DIR)/Mocks/Bsp \
    $(TESTING_DIR)/Mocks/DataSource \
    $(TESTS_DIR) \
+   $(TESTS_DIR)/Application/Compressor \
    $(TESTS_DIR)/Application/DataSource \
    $(TESTS_DIR)/Application/Defrost \
    $(TESTS_DIR)/Application/Door \
