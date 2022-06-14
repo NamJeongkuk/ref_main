@@ -15,15 +15,14 @@
 #include "uassert.h"
 
 // (type, sensorType , countErd, unfilteredErd, filteredErd, IsSigned)
-#define SENSOR_FILTERING_TABLE_ALL(ENTRY)                                                                                                                                                                 \
-   ENTRY(Local, freezerCabinetThermistor, Erd_FreezerThermistor_AdcCount, Erd_Freezer_UnfilteredTemperature, Erd_Freezer_FilteredTemperature)                                                             \
-   ENTRY(Local, freshFoodCabinetThermistor, Erd_FreshFoodThermistor_AdcCount, Erd_FreshFood_UnfilteredTemperature, Erd_FreshFood_FilteredTemperature)                                                     \
-   ENTRY(Local, freezerEvapThermistor, Erd_FreezerEvapThermistor_AdcCount, Erd_FreezerEvap_UnfilteredTemperature, Erd_FreezerEvap_FilteredTemperature)                                                    \
-   ENTRY(Local, freshFoodEvapThermistor, Erd_FreshFoodEvapThermistor_AdcCount, Erd_FreshFoodEvap_UnfilteredTemperature, Erd_FreshFoodEvap_FilteredTemperature)                                            \
+#define SENSOR_FILTERING_TABLE_ALL(ENTRY)                                                                                                                                                                        \
+   ENTRY(Local, freezerCabinetThermistor, Erd_FreezerThermistor_AdcCount, Erd_Freezer_UnfilteredTemperature, Erd_Freezer_FilteredTemperature)                                                                    \
+   ENTRY(Local, freshFoodCabinetThermistor, Erd_FreshFoodThermistor_AdcCount, Erd_FreshFood_UnfilteredTemperature, Erd_FreshFood_FilteredTemperature)                                                            \
+   ENTRY(Local, freezerEvapThermistor, Erd_FreezerEvapThermistor_AdcCount, Erd_FreezerEvap_UnfilteredTemperature, Erd_FreezerEvap_FilteredTemperature)                                                           \
+   ENTRY(Local, freshFoodEvapThermistor, Erd_FreshFoodEvapThermistor_AdcCount, Erd_FreshFoodEvap_UnfilteredTemperature, Erd_FreshFoodEvap_FilteredTemperature)                                                   \
    ENTRY(Local, convertibleCompartmentCabinetThermistor, Erd_ConvertibleCompartmentCabinetThermistor_AdcCount, Erd_ConvertibleCompartment_UnfilteredTemperature, Erd_ConvertibleCompartment_FilteredTemperature) \
-   ENTRY(Local, ambientThermistor, Erd_AmbientThermistor_AdcCount, Erd_Ambient_UnfilteredTemperature, Erd_Ambient_FilteredTemperature)                                                                    \
+   ENTRY(Local, ambientThermistor, Erd_AmbientThermistor_AdcCount, Erd_Ambient_UnfilteredTemperature, Erd_Ambient_FilteredTemperature)                                                                           \
    ENTRY(Local, convertibleCompartmentEvapThermistor, Erd_ConvertibleCompartmentEvapThermistor_AdcCount, Erd_ConvertibleCompartmentEvap_UnfilteredTemperature, Erd_ConvertibleCompartmentEvap_FilteredTemperature)
-
 // (type, sensorType)
 #define SENSOR_FILTERING_TABLE_NON_CONVERTIBLE_COMPARTMENT_CABINET(ENTRY) \
    ENTRY(Local, freezerCabinetThermistor)                                 \

@@ -21,6 +21,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Defrost \
    $(PROJECT_DIR)/Application/Door \
    $(PROJECT_DIR)/Application/EnhancedSabbath \
+   $(PROJECT_DIR)/Application/Setpoints \
    $(PROJECT_DIR)/Application/Evaporator \
    $(PROJECT_DIR)/Application/Grid \
    $(PROJECT_DIR)/Application/Grid/GridFunctions \
@@ -44,6 +45,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/Door \
    $(TESTS_DIR)/Application/ConvertibleCompartment \
    $(TESTS_DIR)/Application/EnhancedSabbath \
+   $(TESTS_DIR)/Application/Setpoints \
    $(TESTS_DIR)/Application/Evaporator \
    $(TESTS_DIR)/Application/Grid \
    $(TESTS_DIR)/Application/Sabbath \
@@ -60,6 +62,7 @@ INCLUDE_DIRS := \
    $(PROJECT_DIR)/Application/Defrost \
    $(PROJECT_DIR)/Application/Door \
    $(PROJECT_DIR)/Application/EnhancedSabbath \
+   $(PROJECT_DIR)/Application/Setpoints \
    $(PROJECT_DIR)/Application/Evaporator \
    $(PROJECT_DIR)/Application/DemandResponse \
    $(PROJECT_DIR)/Application/Fan \

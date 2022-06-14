@@ -622,6 +622,13 @@
           "name": "Erd_Freezer_AdjustedSetpoint",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Cabinet Setpoint Winning Vote",
+          "name": "Erd_FreezerSetpoint_WinningVoteErd",
+          "read": true,
+          "write": true
         }
       ]
     },
@@ -641,6 +648,13 @@
           "name": "Erd_FreshFoodSetpoint_DefrostVote",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fresh Food Cabinet Setpoint Winning Vote",
+          "name": "Erd_FreshFoodSetpoint_WinningVoteErd",
+          "read": true,
+          "write": true
         }
       ]
     },
@@ -658,6 +672,13 @@
           "namespace": "rx130",
           "displayName": "Convertible Compartment State",
           "name": "Erd_ConvertibleCompartmentState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Convertible Compartment Setpoint Winning Vote",
+          "name": "Erd_ConvertibleCompartment_WinningVoteErd",
           "read": true,
           "write": true
         }
