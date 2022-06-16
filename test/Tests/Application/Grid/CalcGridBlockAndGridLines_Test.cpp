@@ -22,6 +22,8 @@ extern "C"
 
 #define And
 #define Then
+#define When
+#define Given
 
 enum
 {
@@ -145,7 +147,7 @@ static const GridBlockAndLinesConfig_t config = {
    .calculatedGridBlockErd = Erd_Grid_BlockNumber,
    .previousGridBlocksErd = Erd_Grid_PreviousBlocks,
    .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
-   .freshFoodFilteredTempErd = Erd_FreshFood_FilteredTemperature,
+   .freshFoodFilteredTempErd = Erd_FreshFood_FilteredTemperatureResolved,
    .freezerFilteredTempErd = Erd_Freezer_FilteredTemperatureResolved,
    .timerModuleErd = Erd_TimerModule,
    .freezerErds = freezerErds,
@@ -284,7 +286,7 @@ TEST_GROUP(CalcGridBlockAndGridLines)
 
    void FreshFoodFilteredTempIs(TemperatureDegFx100_t temp)
    {
-      DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperature, &temp);
+      DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperatureResolved, &temp);
    }
 
    void FreezerFilteredTempIs(TemperatureDegFx100_t temp)
@@ -300,19 +302,19 @@ TEST_GROUP(CalcGridBlockAndGridLines)
       return calcLines.gridLines[compartmentType].gridLinesDegFx100[gridLineType];
    }
 
-   void GivenTheGridBlockIsNow(GridBlockNumber_t blockNumber)
-   {
-      DataModel_Write(dataModel, Erd_Grid_BlockNumber, &blockNumber);
-   }
-
-   void PreviousGridBlocksArrayShouldBe(GridBlockNumber_t firstBlock, GridBlockNumber_t secondBlock, GridBlockNumber_t thirdBlock, GridBlockNumber_t fourthBlock, GridBlockNumber_t fifthBlock)
+   void PreviousGridBlocksArrayShouldBe(
+      GridBlockNumber_t firstBlock,
+      GridBlockNumber_t secondBlock,
+      GridBlockNumber_t thirdBlock,
+      GridBlockNumber_t fourthBlock,
+      GridBlockNumber_t fifthBlock)
    {
       PreviousGridBlockNumbers_t prevBlocks;
       DataModel_Read(dataModel, Erd_Grid_PreviousBlocks, &prevBlocks);
 
       GridBlockNumber_t blocks[FivePreviousBlocks] = { firstBlock, secondBlock, thirdBlock, fourthBlock, fifthBlock };
 
-      for(unsigned i = 0; i < prevBlocks.currentNumberOfBlocksStored; i++)
+      for(unsigned i = 0; i < FivePreviousBlocks; i++)
       {
          CHECK_EQUAL(blocks[i], prevBlocks.blockNumbers[i]);
       }
@@ -330,37 +332,90 @@ TEST_GROUP(CalcGridBlockAndGridLines)
    {
       TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
    }
+
+   void PreviousGridBlocksHasOneElement()
+   {
+      GivenGridErdsAreInitialized();
+      WhenTheModuleIsInitialized();
+      And FreshFoodFilteredTempIs(4040);
+      And FreezerFilteredTempIs(690);
+
+      CalculatedGridBlockShouldBe(42);
+      PreviousGridBlocksArrayShouldBe(0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
+      And PreviousGridBlocksSizeShouldBe(0);
+
+      When FreshFoodFilteredTempIs(4040);
+      And FreezerFilteredTempIs(-690);
+
+      After(gridData.gridPeriodicRunRateInMSec - 1);
+      CalculatedGridBlockShouldBe(42);
+
+      After(1);
+      CalculatedGridBlockShouldBe(44);
+
+      PreviousGridBlocksArrayShouldBe(42, 0xFF, 0xFF, 0xFF, 0xFF);
+      And PreviousGridBlocksSizeShouldBe(1);
+   }
+
+   void PreviousGridBlocksIsFullWithFiveElements()
+   {
+      PreviousGridBlocksHasOneElement();
+
+      When FreshFoodFilteredTempIs(4040);
+      And FreezerFilteredTempIs(690);
+
+      After(gridData.gridPeriodicRunRateInMSec - 1);
+      CalculatedGridBlockShouldBe(44);
+
+      After(1);
+      CalculatedGridBlockShouldBe(30);
+
+      PreviousGridBlocksArrayShouldBe(42, 44, 0xFF, 0xFF, 0xFF);
+      And PreviousGridBlocksSizeShouldBe(2);
+
+      When FreshFoodFilteredTempIs(4040);
+      And FreezerFilteredTempIs(-690);
+
+      After(gridData.gridPeriodicRunRateInMSec - 1);
+      CalculatedGridBlockShouldBe(30);
+
+      After(1);
+      CalculatedGridBlockShouldBe(44);
+
+      PreviousGridBlocksArrayShouldBe(42, 44, 30, 0xFF, 0xFF);
+      And PreviousGridBlocksSizeShouldBe(3);
+
+      When FreshFoodFilteredTempIs(4040);
+      And FreezerFilteredTempIs(690);
+
+      After(gridData.gridPeriodicRunRateInMSec - 1);
+      CalculatedGridBlockShouldBe(44);
+
+      After(1);
+      CalculatedGridBlockShouldBe(30);
+
+      PreviousGridBlocksArrayShouldBe(42, 44, 30, 44, 0xFF);
+      And PreviousGridBlocksSizeShouldBe(4);
+
+      When FreshFoodFilteredTempIs(4040);
+      And FreezerFilteredTempIs(-690);
+
+      After(gridData.gridPeriodicRunRateInMSec - 1);
+      CalculatedGridBlockShouldBe(30);
+
+      After(1);
+      CalculatedGridBlockShouldBe(44);
+
+      PreviousGridBlocksArrayShouldBe(42, 44, 30, 44, 30);
+      And PreviousGridBlocksSizeShouldBe(5);
+   }
 };
 
-TEST(CalcGridBlockAndGridLines, ShouldInitCalculatedGridLinesToZero)
+TEST(CalcGridBlockAndGridLines, ShouldCalculateGridLinesAndGridBlockOnInit)
 {
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
 
-   CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_Nfl);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_FreshFoodLowHyst);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_FreshFoodLowHystDelta);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_FreshFoodHighHyst);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_FreshFoodExtraHigh);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_FreshFood, GridLine_FreshFoodSuperHigh);
-
-   And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerLowHyst);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerDelta);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerHighHyst);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerExtraHigh);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerSuperHigh);
-   And CalculatedGridLineTempShouldBe(0, GridDelta_Freezer, GridLine_FreezerExtremeHigh);
-}
-
-TEST(CalcGridBlockAndGridLines, ShouldCalculateGridLinesAfterOneSecond)
-{
-   GivenGridErdsAreInitialized();
-   WhenTheModuleIsInitialized();
-
-   After(MSEC_PER_SEC - 1);
-   CalculatedGridLinesShouldBeZero();
-
-   After(1);
    CalculatedGridLineTempShouldBe(190, GridDelta_FreshFood, GridLine_Nfl);
    And CalculatedGridLineTempShouldBe(3440, GridDelta_FreshFood, GridLine_FreshFoodLowHyst);
    And CalculatedGridLineTempShouldBe(4040, GridDelta_FreshFood, GridLine_FreshFoodLowHystDelta);
@@ -374,35 +429,36 @@ TEST(CalcGridBlockAndGridLines, ShouldCalculateGridLinesAfterOneSecond)
    And CalculatedGridLineTempShouldBe(1040, GridDelta_Freezer, GridLine_FreezerExtraHigh);
    And CalculatedGridLineTempShouldBe(1190, GridDelta_Freezer, GridLine_FreezerSuperHigh);
    And CalculatedGridLineTempShouldBe(5950, GridDelta_Freezer, GridLine_FreezerExtremeHigh);
+
+   And CalculatedGridBlockShouldBe(42);
 }
 
-TEST(CalcGridBlockAndGridLines, ShouldReCalculateGridLinesAfterOneSecondWhenAdjSetpointsChange)
+TEST(CalcGridBlockAndGridLines, ShouldRecalculateGridLinesAndGridBlockAfterOneSecondIfAdjSetpointsHaveChanged)
 {
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
-
-   After(MSEC_PER_SEC - 1);
-   CalculatedGridLinesShouldBeZero();
-
-   After(1);
-   CalculatedGridLineTempShouldBe(190, GridDelta_FreshFood, GridLine_Nfl);
-   And CalculatedGridLineTempShouldBe(3440, GridDelta_FreshFood, GridLine_FreshFoodLowHyst);
-   And CalculatedGridLineTempShouldBe(4040, GridDelta_FreshFood, GridLine_FreshFoodLowHystDelta);
-   And CalculatedGridLineTempShouldBe(4340, GridDelta_FreshFood, GridLine_FreshFoodHighHyst);
-   And CalculatedGridLineTempShouldBe(4840, GridDelta_FreshFood, GridLine_FreshFoodExtraHigh);
-   And CalculatedGridLineTempShouldBe(5040, GridDelta_FreshFood, GridLine_FreshFoodSuperHigh);
-
-   And CalculatedGridLineTempShouldBe(190, GridDelta_Freezer, GridLine_FreezerLowHyst);
-   And CalculatedGridLineTempShouldBe(440, GridDelta_Freezer, GridLine_FreezerDelta);
-   And CalculatedGridLineTempShouldBe(690, GridDelta_Freezer, GridLine_FreezerHighHyst);
-   And CalculatedGridLineTempShouldBe(1040, GridDelta_Freezer, GridLine_FreezerExtraHigh);
-   And CalculatedGridLineTempShouldBe(1190, GridDelta_Freezer, GridLine_FreezerSuperHigh);
-   And CalculatedGridLineTempShouldBe(5950, GridDelta_Freezer, GridLine_FreezerExtremeHigh);
 
    GivenTheFreshFoodAdjustedSetpointIs(4690);
    And GivenTheFreezerAdjustedSetpointIs(-60);
 
-   After(MSEC_PER_SEC);
+   After(gridData.gridPeriodicRunRateInMSec - 1);
+   CalculatedGridLineTempShouldBe(190, GridDelta_FreshFood, GridLine_Nfl);
+   And CalculatedGridLineTempShouldBe(3440, GridDelta_FreshFood, GridLine_FreshFoodLowHyst);
+   And CalculatedGridLineTempShouldBe(4040, GridDelta_FreshFood, GridLine_FreshFoodLowHystDelta);
+   And CalculatedGridLineTempShouldBe(4340, GridDelta_FreshFood, GridLine_FreshFoodHighHyst);
+   And CalculatedGridLineTempShouldBe(4840, GridDelta_FreshFood, GridLine_FreshFoodExtraHigh);
+   And CalculatedGridLineTempShouldBe(5040, GridDelta_FreshFood, GridLine_FreshFoodSuperHigh);
+
+   And CalculatedGridLineTempShouldBe(190, GridDelta_Freezer, GridLine_FreezerLowHyst);
+   And CalculatedGridLineTempShouldBe(440, GridDelta_Freezer, GridLine_FreezerDelta);
+   And CalculatedGridLineTempShouldBe(690, GridDelta_Freezer, GridLine_FreezerHighHyst);
+   And CalculatedGridLineTempShouldBe(1040, GridDelta_Freezer, GridLine_FreezerExtraHigh);
+   And CalculatedGridLineTempShouldBe(1190, GridDelta_Freezer, GridLine_FreezerSuperHigh);
+   And CalculatedGridLineTempShouldBe(5950, GridDelta_Freezer, GridLine_FreezerExtremeHigh);
+
+   And CalculatedGridBlockShouldBe(42);
+
+   After(1);
    CalculatedGridLineTempShouldBe(190, GridDelta_FreshFood, GridLine_Nfl);
    And CalculatedGridLineTempShouldBe(4240, GridDelta_FreshFood, GridLine_FreshFoodLowHyst);
    And CalculatedGridLineTempShouldBe(4840, GridDelta_FreshFood, GridLine_FreshFoodLowHystDelta);
@@ -416,6 +472,8 @@ TEST(CalcGridBlockAndGridLines, ShouldReCalculateGridLinesAfterOneSecondWhenAdjS
    And CalculatedGridLineTempShouldBe(540, GridDelta_Freezer, GridLine_FreezerExtraHigh);
    And CalculatedGridLineTempShouldBe(690, GridDelta_Freezer, GridLine_FreezerSuperHigh);
    And CalculatedGridLineTempShouldBe(5950, GridDelta_Freezer, GridLine_FreezerExtremeHigh);
+
+   And CalculatedGridBlockShouldBe(28);
 }
 
 TEST(CalcGridBlockAndGridLines, PreviousGridBlocksShouldBeEmptyOnInit)
@@ -429,190 +487,145 @@ TEST(CalcGridBlockAndGridLines, PreviousGridBlocksShouldBeEmptyOnInit)
    And PreviousGridBlocksSizeShouldBe(0);
 }
 
-TEST(CalcGridBlockAndGridLines, PreviousGridBlocksShouldBeEmptyAfterGridBlockErdChangesOnce)
+TEST(CalcGridBlockAndGridLines, PreviousGridBlocksShouldHaveOneElementAfterGridBlockErdChangesOnce)
 {
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
    And FreshFoodFilteredTempIs(4040);
    And FreezerFilteredTempIs(690);
 
+   CalculatedGridBlockShouldBe(42);
    PreviousGridBlocksArrayShouldBe(0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
    And PreviousGridBlocksSizeShouldBe(0);
 
-   GivenTheGridBlockIsNow(0);
-   PreviousGridBlocksArrayShouldBe(0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
-   And PreviousGridBlocksSizeShouldBe(0);
-}
+   When FreshFoodFilteredTempIs(4040);
+   And FreezerFilteredTempIs(-690);
 
-TEST(CalcGridBlockAndGridLines, PreviousGridBlocksShouldHaveOneElementAfterGridBlockErdChangesTwice)
-{
-   GivenGridErdsAreInitialized();
-   WhenTheModuleIsInitialized();
-   And FreshFoodFilteredTempIs(4040);
-   And FreezerFilteredTempIs(690);
+   After(gridData.gridPeriodicRunRateInMSec - 1);
+   CalculatedGridBlockShouldBe(42);
 
-   PreviousGridBlocksArrayShouldBe(0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
-   And PreviousGridBlocksSizeShouldBe(0);
+   After(1);
+   CalculatedGridBlockShouldBe(44);
 
-   GivenTheGridBlockIsNow(0);
-   PreviousGridBlocksArrayShouldBe(0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
-   And PreviousGridBlocksSizeShouldBe(0);
-
-   GivenTheGridBlockIsNow(1);
-   PreviousGridBlocksArrayShouldBe(0, 0xFF, 0xFF, 0xFF, 0xFF);
+   PreviousGridBlocksArrayShouldBe(42, 0xFF, 0xFF, 0xFF, 0xFF);
    And PreviousGridBlocksSizeShouldBe(1);
 }
 
-TEST(CalcGridBlockAndGridLines, PreviousGridBlocksShouldStorePreviousFiveBlockNumbersAndOnSixthNewBlockNumberReplaceOldestBlockNumber)
+TEST(CalcGridBlockAndGridLines, PreviousGridBlocksShouldHaveTwoElementsAfterGridBlockErdChangesTwice)
 {
-   GivenGridErdsAreInitialized();
-   WhenTheModuleIsInitialized();
-   And FreshFoodFilteredTempIs(4040);
+   PreviousGridBlocksHasOneElement();
+
+   When FreshFoodFilteredTempIs(4040);
    And FreezerFilteredTempIs(690);
 
-   GivenTheGridBlockIsNow(0);
-   GivenTheGridBlockIsNow(1);
-   GivenTheGridBlockIsNow(2);
-   GivenTheGridBlockIsNow(3);
-   GivenTheGridBlockIsNow(4);
-   GivenTheGridBlockIsNow(5);
-   PreviousGridBlocksArrayShouldBe(0, 1, 2, 3, 4);
-   And PreviousGridBlocksSizeShouldBe(5);
+   After(gridData.gridPeriodicRunRateInMSec - 1);
+   CalculatedGridBlockShouldBe(44);
 
-   GivenTheGridBlockIsNow(6);
-   PreviousGridBlocksArrayShouldBe(1, 2, 3, 4, 5);
+   After(1);
+   CalculatedGridBlockShouldBe(30);
+
+   PreviousGridBlocksArrayShouldBe(42, 44, 0xFF, 0xFF, 0xFF);
+   And PreviousGridBlocksSizeShouldBe(2);
+}
+
+TEST(CalcGridBlockAndGridLines, PreviousGridBlocksShouldStorePreviousFiveBlockNumbersAndOnSixthNewBlockNumberReplacesOldestBlockNumber)
+{
+   PreviousGridBlocksIsFullWithFiveElements();
+
+   When FreshFoodFilteredTempIs(4040);
+   And FreezerFilteredTempIs(690);
+
+   After(gridData.gridPeriodicRunRateInMSec - 1);
+   CalculatedGridBlockShouldBe(44);
+
+   After(1);
+   CalculatedGridBlockShouldBe(30);
+
+   PreviousGridBlocksArrayShouldBe(44, 30, 44, 30, 44);
    And PreviousGridBlocksSizeShouldBe(5);
 }
 
 TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock42WhenFreshFoodAndFreezerTempAreZero)
 {
+   Given FreshFoodFilteredTempIs(0);
+   And FreezerFilteredTempIs(0);
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
-   And FreshFoodFilteredTempIs(0);
-   And FreezerFilteredTempIs(0);
 
-   After(MSEC_PER_SEC - 1);
-   NothingShouldHappen();
-
-   After(1);
    CalculatedGridBlockShouldBe(42);
-   And PreviousGridBlocksArrayShouldBe(0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
-   And PreviousGridBlocksSizeShouldBe(0);
 }
 
 TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock0WhenBelowFreshFoodNflAndAboveFreezerExtremeHigh)
 {
+   Given FreshFoodFilteredTempIs(189);
+   And FreezerFilteredTempIs(5951);
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
-   And FreshFoodFilteredTempIs(189);
-   And FreezerFilteredTempIs(5951);
 
-   After(MSEC_PER_SEC - 1);
-   NothingShouldHappen();
-
-   After(1);
    CalculatedGridBlockShouldBe(0);
-   And PreviousGridBlocksArrayShouldBe(0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
-   And PreviousGridBlocksSizeShouldBe(0);
 }
 
 TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock48WhenAboveFreshFoodSuperHighAndBelowFreezerLowHyst)
 {
+   Given FreshFoodFilteredTempIs(5041);
+   And FreezerFilteredTempIs(189);
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
-   And FreshFoodFilteredTempIs(5041);
-   And FreezerFilteredTempIs(189);
 
-   After(MSEC_PER_SEC - 1);
-   NothingShouldHappen();
-
-   After(1);
    CalculatedGridBlockShouldBe(48);
-   And PreviousGridBlocksArrayShouldBe(0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
-   And PreviousGridBlocksSizeShouldBe(0);
 }
 
 TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock6WhenAboveFreshFoodSuperHighAndAboveFreezerExtremeHigh)
 {
+   Given FreshFoodFilteredTempIs(5041);
+   And FreezerFilteredTempIs(5951);
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
-   And FreshFoodFilteredTempIs(5041);
-   And FreezerFilteredTempIs(5951);
 
-   After(MSEC_PER_SEC - 1);
-   NothingShouldHappen();
-
-   After(1);
    CalculatedGridBlockShouldBe(6);
-   And PreviousGridBlocksArrayShouldBe(0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
-   And PreviousGridBlocksSizeShouldBe(0);
 }
 
 TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock25WhenAboveFreshFoodHighHystAndAboveFreezerHighHyst)
 {
+   Given FreshFoodFilteredTempIs(4341);
+   And FreezerFilteredTempIs(691);
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
-   And FreshFoodFilteredTempIs(4341);
-   And FreezerFilteredTempIs(691);
 
-   After(MSEC_PER_SEC - 1);
-   NothingShouldHappen();
-
-   After(1);
    CalculatedGridBlockShouldBe(25);
-   And PreviousGridBlocksArrayShouldBe(0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
-   And PreviousGridBlocksSizeShouldBe(0);
 }
 
 TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock30WhenEqualToFreshFoodLowHystDeltaAndEqualToFreezerHighHyst)
 {
+   Given FreshFoodFilteredTempIs(4040);
+   And FreezerFilteredTempIs(690);
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
-   And FreshFoodFilteredTempIs(4040);
-   And FreezerFilteredTempIs(690);
 
-   After(MSEC_PER_SEC - 1);
-   NothingShouldHappen();
-
-   After(1);
    CalculatedGridBlockShouldBe(30);
-   And PreviousGridBlocksArrayShouldBe(0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
-   And PreviousGridBlocksSizeShouldBe(0);
 }
 
 TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock46WhenAboveFreshFoodHighHystAndBelowFreezerLowHyst)
 {
+   Given FreshFoodFilteredTempIs(4341);
+   And FreezerFilteredTempIs(189);
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
-   And FreshFoodFilteredTempIs(4341);
-   And FreezerFilteredTempIs(189);
 
-   After(MSEC_PER_SEC - 1);
-   NothingShouldHappen();
-
-   After(1);
    CalculatedGridBlockShouldBe(46);
-   And PreviousGridBlocksArrayShouldBe(0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
-   And PreviousGridBlocksSizeShouldBe(0);
 }
 
 TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock14WhenBelowFreshFoodNflAndAboveFreezerExtraHighThenChangeToGridBlock15WhenTempsChange)
 {
+   Given FreshFoodFilteredTempIs(189);
+   And FreezerFilteredTempIs(1041);
    GivenGridErdsAreInitialized();
    WhenTheModuleIsInitialized();
-   And FreshFoodFilteredTempIs(189);
-   And FreezerFilteredTempIs(1041);
 
-   After(MSEC_PER_SEC - 1);
-   NothingShouldHappen();
-
-   After(1);
    CalculatedGridBlockShouldBe(14);
-   And PreviousGridBlocksArrayShouldBe(0xFF, 0xFF, 0xFF, 0xFF, 0xFF);
-   And PreviousGridBlocksSizeShouldBe(0);
 
    After(MSEC_PER_SEC - 1);
-   FreshFoodFilteredTempIs(191);
+   When FreshFoodFilteredTempIs(191);
    And FreezerFilteredTempIs(1041);
 
    After(1);

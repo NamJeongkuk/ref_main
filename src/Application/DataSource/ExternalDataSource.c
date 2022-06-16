@@ -100,6 +100,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_TimeInMinutesInValvePositionB, sizeof(uint32_t)),
    SWAPPED_ERD(PublicErd_FreezerEvap_FilteredTemperatureOverrideValue, sizeof(TemperatureDegFx100_t)),
    SWAPPED_ERD(PublicErd_Freezer_FilteredTemperatureOverrideValue, sizeof(TemperatureDegFx100_t)),
+   SWAPPED_ERD(PublicErd_FreshFood_FilteredTemperatureOverrideValue, sizeof(TemperatureDegFx100_t)),
 
    // 0xF200 range
    SWAPPED_ERD(PublicErd_SomeAnalogInput, sizeof(uint16_t)),
@@ -135,6 +136,7 @@ static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
    SWAPPED_FIELD_RANGE(PublicErd_ConvertibleCompartmentSetpoint_FactoryVote, PublicErd_ConvertibleCompartmentSetpoint_UserSetpoint),
    SWAPPED_FIELD_RANGE(PublicErd_FreezerEvap_FilteredTemperatureOverrideValue, PublicErd_FreezerEvap_FilteredTemperatureResolved),
    SWAPPED_FIELD_RANGE(PublicErd_Freezer_FilteredTemperatureOverrideValue, PublicErd_Freezer_FilteredTemperatureResolved),
+   SWAPPED_FIELD_RANGE(PublicErd_FreshFood_FilteredTemperatureOverrideValue, PublicErd_FreshFood_FilteredTemperatureResolved),
    SWAPPED_FIELD_RANGE(PublicErd_FreezerSetpoint_FactoryVote, PublicErd_FreezerSetpoint_UserSetpoint),
    SWAPPED_FIELD_RANGE(PublicErd_FreshFoodSetpoint_FactoryVote, PublicErd_FreshFoodSetpoint_UserSetpoint),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableSnapshotData0, PublicErd_ServiceDiagnosticsFaultTableSnapshotData9),

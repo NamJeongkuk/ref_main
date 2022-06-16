@@ -39,10 +39,28 @@ static const OverrideArbiterConfiguration_t freezerCabinetFilteredTemperatureArb
    Erd_Freezer_FilteredTemperatureResolved,
    NUM_ELEMENTS(freezerCabinetFilteredTemperatureOverrideRequestErdList)
 };
+
+static const Erd_t freshFoodCabinetFilteredTemperatureOverrideRequestErdList[] = {
+   Erd_FreshFood_FilteredTemperatureOverrideRequest
+};
+
+static const Erd_t freshFoodCabinetFilteredTemperatureValueErdList[] = {
+   Erd_FreshFood_FilteredTemperature,
+   Erd_FreshFood_FilteredTemperatureOverrideValue
+};
+
+static const OverrideArbiterConfiguration_t freshFoodCabinetFilteredTemperatureArbiterConfiguration = {
+   freshFoodCabinetFilteredTemperatureOverrideRequestErdList,
+   freshFoodCabinetFilteredTemperatureValueErdList,
+   Erd_FreshFood_FilteredTemperatureResolved,
+   NUM_ELEMENTS(freshFoodCabinetFilteredTemperatureOverrideRequestErdList)
+};
+
 static struct
 {
    OverrideArbiter_t freezerEvaporatorFilteredTemperatureArbiter;
    OverrideArbiter_t freezerCabinetFilteredTemperatureArbiter;
+   OverrideArbiter_t freshFoodCabinetFilteredTemperatureArbiter;
 } instance;
 
 void OverrideArbiterPlugin_Init(I_DataModel_t *dataModel)
@@ -56,4 +74,9 @@ void OverrideArbiterPlugin_Init(I_DataModel_t *dataModel)
       &instance.freezerCabinetFilteredTemperatureArbiter,
       DataModel_AsDataSource(dataModel),
       &freezerCabinetFilteredTemperatureArbiterConfiguration);
+
+   OverrideArbiter_Init(
+      &instance.freshFoodCabinetFilteredTemperatureArbiter,
+      DataModel_AsDataSource(dataModel),
+      &freshFoodCabinetFilteredTemperatureArbiterConfiguration);
 }

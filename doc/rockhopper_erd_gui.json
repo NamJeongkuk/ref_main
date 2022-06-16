@@ -473,6 +473,27 @@
         },
         {
           "namespace": "rx130",
+          "displayName": "FreshFood FilteredTemp Override Request",
+          "name": "Erd_FreshFood_FilteredTemperatureOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "FreshFood FilteredTemp Override Value",
+          "name": "Erd_FreshFood_FilteredTemperatureOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "FreshFood FilteredTemp Resolved",
+          "name": "Erd_FreshFood_FilteredTemperatureResolved",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "Freezer Unfiltered Temp",
           "name": "Erd_Freezer_UnfilteredTemperature",
           "read": true,

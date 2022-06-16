@@ -840,7 +840,7 @@ TEST_GROUP(Defrost_SingleEvap)
 
    void FreshFoodCabinetTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperature, &temperature);
+      DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperatureResolved, &temperature);
    }
 
    void FreezerAdjustedSetpointIs(TemperatureDegFx100_t temperature)

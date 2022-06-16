@@ -25,7 +25,7 @@ static void CalculateAxisGridLines(
    I_DataModel_t *dataModel,
    GridLineErds_t erds)
 {
-   for(int i = 0; i < parametricAxisGridLines->numberOfLines; i++)
+   for(uint8_t i = 0; i < parametricAxisGridLines->numberOfLines; i++)
    {
       calcAxisGridlines->gridLinesDegFx100[i] = parametricAxisGridLines->gridLineData[i].gridLinesDegFx100;
 
@@ -72,10 +72,17 @@ static void UpdateGridLines(CalcGridBlockAndLines_t *instance)
       instance->_private.dataModel,
       instance->_private.config->freezerErds);
 
-   DataModel_Write(instance->_private.dataModel, instance->_private.config->calculatedGridLinesErd, instance->_private.calcGridLines);
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->calculatedGridLinesErd,
+      instance->_private.calcGridLines);
 }
 
-static uint8_t GetLocationIndex(TemperatureDegFx100_t temperature, uint8_t compartmentType, CalculatedGridLines_t *gridLines, bool inverted)
+static uint8_t GetLocationIndex(
+   TemperatureDegFx100_t temperature,
+   uint8_t compartmentType,
+   CalculatedGridLines_t *gridLines,
+   bool inverted)
 {
    uint8_t index;
 
@@ -95,7 +102,10 @@ static uint8_t GetLocationIndex(TemperatureDegFx100_t temperature, uint8_t compa
    return index;
 }
 
-static GridBlockNumber_t CalculateGridBlock(uint8_t rowIndex, uint8_t colIndex, uint8_t numCols)
+static GridBlockNumber_t CalculateGridBlock(
+   uint8_t rowIndex,
+   uint8_t colIndex,
+   uint8_t numCols)
 {
    return rowIndex * numCols + colIndex % numCols;
 }
@@ -103,23 +113,32 @@ static GridBlockNumber_t CalculateGridBlock(uint8_t rowIndex, uint8_t colIndex, 
 static void UpdateGridBlock(CalcGridBlockAndLines_t *instance)
 {
    TemperatureDegFx100_t freshFoodFilteredTemp;
-   DataModel_Read(instance->_private.dataModel, instance->_private.config->freshFoodFilteredTempErd, &freshFoodFilteredTemp);
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freshFoodFilteredTempErd,
+      &freshFoodFilteredTemp);
 
    TemperatureDegFx100_t freezerFilteredTemp;
-   DataModel_Read(instance->_private.dataModel, instance->_private.config->freezerFilteredTempErd, &freezerFilteredTemp);
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerFilteredTempErd,
+      &freezerFilteredTemp);
 
    uint8_t colIndex = GetLocationIndex(freshFoodFilteredTemp, GridDelta_FreshFood, instance->_private.calcGridLines, NotInverted);
    uint8_t rowIndex = GetLocationIndex(freezerFilteredTemp, GridDelta_Freezer, instance->_private.calcGridLines, Inverted);
 
    GridBlockNumber_t newBlockNumber = CalculateGridBlock(rowIndex, colIndex, instance->_private.gridData->deltaGridLines->gridLines[GridDelta_FreshFood].numberOfLines + 1);
 
-   DataModel_Write(instance->_private.dataModel, instance->_private.config->calculatedGridBlockErd, &newBlockNumber);
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->calculatedGridBlockErd,
+      &newBlockNumber);
 }
 
 static void UpdatePreviousGridBlocks(void *context, const void *_args)
 {
-   REINTERPRET(instance, context, CalcGridBlockAndLines_t *);
-   REINTERPRET(blockNumber, _args, const GridBlockNumber_t *);
+   CalcGridBlockAndLines_t *instance = context;
+   const GridBlockNumber_t *blockNumber = _args;
 
    if(instance->_private.lastBlock != GridBlockNumber_Max)
    {
@@ -133,7 +152,10 @@ static void UpdatePreviousGridBlocks(void *context, const void *_args)
          instance->_private.previousGridBlocks->blockNumbers[i] = number;
       }
 
-      DataModel_Write(instance->_private.dataModel, instance->_private.config->previousGridBlocksErd, instance->_private.previousGridBlocks);
+      DataModel_Write(
+         instance->_private.dataModel,
+         instance->_private.config->previousGridBlocksErd,
+         instance->_private.previousGridBlocks);
    }
 
    instance->_private.lastBlock = *blockNumber;
@@ -141,7 +163,7 @@ static void UpdatePreviousGridBlocks(void *context, const void *_args)
 
 static void UpdateGridBlockAndGridLines(void *context)
 {
-   REINTERPRET(instance, context, CalcGridBlockAndLines_t *);
+   CalcGridBlockAndLines_t *instance = context;
 
    UpdateGridLines(instance);
    UpdateGridBlock(instance);
@@ -157,6 +179,14 @@ static void ClearPreviousGridBlocks(PreviousGridBlockNumbers_t *prevBlocks)
    }
 }
 
+static void UpdateLastBlockWithCurrentBlock(CalcGridBlockAndLines_t *instance)
+{
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->calculatedGridBlockErd,
+      &instance->_private.lastBlock);
+}
+
 void CalcGridBlockAndGridLines_Init(
    CalcGridBlockAndLines_t *instance,
    const GridBlockAndLinesConfig_t *config,
@@ -170,21 +200,23 @@ void CalcGridBlockAndGridLines_Init(
    instance->_private.calcGridLines = calcGridLines;
    instance->_private.bufferInstance = bufferInstance;
    instance->_private.previousGridBlocks = prevGridBlocks;
-   instance->_private.lastBlock = GridBlockNumber_Max;
    instance->_private.gridData = PersonalityParametricData_Get(dataModel)->gridData;
 
    RingBuffer_Clear(instance->_private.bufferInstance);
    ClearPreviousGridBlocks(instance->_private.previousGridBlocks);
 
-   DataModel_Write(instance->_private.dataModel, instance->_private.config->calculatedGridBlockErd, &instance->_private.lastBlock);
-   DataModel_Write(instance->_private.dataModel, instance->_private.config->previousGridBlocksErd, instance->_private.previousGridBlocks);
-   DataModel_Write(instance->_private.dataModel, instance->_private.config->calculatedGridLinesErd, instance->_private.calcGridLines);
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->previousGridBlocksErd,
+      instance->_private.previousGridBlocks);
+
+   UpdateGridBlockAndGridLines(instance);
+   UpdateLastBlockWithCurrentBlock(instance);
 
    EventSubscription_Init(
       &instance->_private.gridBlockSubscription,
       instance,
       UpdatePreviousGridBlocks);
-
    DataModel_Subscribe(
       instance->_private.dataModel,
       instance->_private.config->calculatedGridBlockErd,
