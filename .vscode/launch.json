@@ -1,64 +1,66 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "TDD",
-      "type": "cppdbg",
-      "request": "launch",
-      "program": "${workspaceFolder}/test/Build/multi-target-starter-kit_tests",
-      "args": [],
-      "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
-      "environment": [],
-      "externalConsole": false,
-      "linux": {
-        "MIMode": "gdb"
+   "configurations": [
+      {
+         "args": [
+            "--config=${workspaceFolder}/test/Tests/Integration/support/jasmine.json"
+         ],
+         "cwd": "${workspaceRoot}",
+         "name": "Integration Test",
+         "program": "${workspaceFolder}/node_modules/.bin/jasmine",
+         "request": "launch",
+         "runtimeVersion": "18.3.0",
+         "type": "node"
       },
-      "osx": {
-        "MIMode": "lldb"
+      {
+         "args": [
+            "--config=${workspaceFolder}/test/Tests/Integration/support/jasmine.json",
+            "${file}"
+         ],
+         "cwd": "${workspaceRoot}",
+         "name": "Integration Test Current File",
+         "program": "${workspaceFolder}/node_modules/.bin/jasmine",
+         "request": "launch",
+         "runtimeVersion": "18.3.0",
+         "type": "node"
       },
-      "preLaunchTask": "tdd_vscode_debug",
-    },
-    {
-      "name": "rx130",
-      "cwd": "${workspaceRoot}",
-      "request": "launch",
-      "type": "cortex-debug",
-      "executable": "${workspaceFolder}/build/rx130/rx130.elf",
-      "device": "R5F51308",
-      "servertype": "jlink",
-      "interface": "FINE",
-      "jlinkscript": "${workspaceFolder}/build/rx130/debug.jlink",
-      "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin/",
-      "serverpath": "${workspaceFolder}/build/rx130/jlink_gdb_server_wrapper.sh",
-      "preLaunchTask": "rx130_vscode_debug",
-      "svdFile": "${workspaceFolder}/tools/kpit-rx/svd/rx130.svd"
-    },
-    {
-      "type": "node",
-      "cwd": "${workspaceRoot}",
-      "runtimeVersion": "18.3.0",
-      "request": "launch",
-      "name": "Integration Test",
-      "program": "${workspaceFolder}/node_modules/.bin/jasmine",
-      "args": [
-        "--config=${workspaceFolder}/test/Tests/Integration/support/jasmine.json"
-      ],
-    },
-    {
-      "type": "node",
-      "cwd": "${workspaceRoot}",
-      "runtimeVersion": "18.3.0",
-      "request": "launch",
-      "name": "Integration Test Current File",
-      "program": "${workspaceFolder}/node_modules/.bin/jasmine",
-      "args": [
-        "--config=${workspaceFolder}/test/Tests/Integration/support/jasmine.json",
-        "${file}"
-      ],
-    }
-  ]
+      {
+         "args": {},
+         "cwd": "${workspaceFolder}",
+         "environment": {},
+         "externalConsole": false,
+         "linux": {
+            "MIMode": "gdb"
+         },
+         "name": "TDD",
+         "osx": {
+            "MIMode": "lldb"
+         },
+         "preLaunchTask": "tdd_vscode_debug",
+         "program": "${workspaceFolder}/test/Build/multi-target-starter-kit_tests",
+         "request": "launch",
+         "stopAtEntry": false,
+         "type": "cppdbg"
+      },
+      {
+         "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin",
+         "cwd": "${workspaceRoot}",
+         "device": "R5F51308",
+         "executable": "${workspaceFolder}/build/rx130/rx130.elf",
+         "interface": "FINE",
+         "jlinkscript": "build/rx130/debug.jlink",
+         "name": "rx130",
+         "preLaunchTask": "rx130_vscode_debug",
+         "request": "launch",
+         "runToEntryPoint": "main",
+         "serverArgs": [
+            "-speed",
+            "1000"
+         ],
+         "serverpath": "${workspaceFolder}/build/rx130/JLinkGDBServer",
+         "servertype": "jlink",
+         "svdFile": "tools/kpit-rx/svd/rx130.svd",
+         "type": "cortex-debug"
+      }
+   ],
+   "version": "0.2.0"
 }
