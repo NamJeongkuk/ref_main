@@ -459,14 +459,14 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Fresh Food Unfiltered Temp",
+          "displayName": "Fresh Food Unfiltered Temperature",
           "name": "Erd_FreshFood_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Fresh Food Filtered Temp",
+          "displayName": "Fresh Food Filtered Temperature",
           "name": "Erd_FreshFood_FilteredTemperature",
           "read": true,
           "write": true
@@ -494,14 +494,14 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Freezer Unfiltered Temp",
+          "displayName": "Freezer Unfiltered Temperature",
           "name": "Erd_Freezer_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Freezer Filtered Temp",
+          "displayName": "Freezer Filtered Temperature",
           "name": "Erd_Freezer_FilteredTemperature",
           "read": true,
           "write": true
@@ -529,28 +529,28 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Fresh Food Evap Unfiltered Temp",
+          "displayName": "Fresh Food Evap Unfiltered Temperature",
           "name": "Erd_FreshFoodEvap_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Fresh Food Evap Filtered Temp",
+          "displayName": "Fresh Food Evap Filtered Temperature",
           "name": "Erd_FreshFoodEvap_FilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Freezer Evap Unfiltered Temp",
+          "displayName": "Freezer Evap Unfiltered Temperature",
           "name": "Erd_FreezerEvap_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "FreezerEvap FilteredTemp",
+          "displayName": "FreezerEvap FilteredTemperature",
           "name": "Erd_FreezerEvap_FilteredTemperature",
           "read": true,
           "write": true
@@ -578,42 +578,42 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Convertible Compartment Unfiltered Temp",
+          "displayName": "Convertible Compartment Unfiltered Temperature",
           "name": "Erd_ConvertibleCompartment_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Convertible Compartment Filtered Temp",
+          "displayName": "Convertible Compartment Filtered Temperature",
           "name": "Erd_ConvertibleCompartment_FilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Ambient Unfiltered Temp",
+          "displayName": "Ambient Unfiltered Temperature",
           "name": "Erd_Ambient_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Ambient Filtered Temp",
+          "displayName": "Ambient Filtered Temperature",
           "name": "Erd_Ambient_FilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Convertible Compartment Evap Unfiltered Temp",
+          "displayName": "Convertible Compartment Evap Unfiltered Temperature",
           "name": "Erd_ConvertibleCompartmentEvap_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Convertible Compartment Evap Filtered Temp",
+          "displayName": "Convertible Compartment Evap Filtered Temperature",
           "name": "Erd_ConvertibleCompartmentEvap_FilteredTemperature",
           "read": true,
           "write": true
@@ -742,6 +742,25 @@
           "name": "Erd_SomeOtherFault",
           "read": true,
           "write": false
+        }
+      ]
+    },
+    {
+      "title": "Cabinet Temperature Override",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "Current Grid Block Number",
+          "name": "Erd_Grid_BlockNumber",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Erd_Grid_PreviousBlocks",
+          "name": "Erd_Grid_PreviousBlocks",
+          "read": true,
+          "write": true
         }
       ]
     }

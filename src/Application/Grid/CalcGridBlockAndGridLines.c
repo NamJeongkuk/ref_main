@@ -16,8 +16,35 @@ enum
 {
    InvertingMultiplier = -1,
    NotInverted = false,
-   Inverted = true
+   Inverted = true,
+   CabinetGridLineCount = 6
 };
+
+static TemperatureDegFx100_t freshFoodCalculatedAxisGridLines[CabinetGridLineCount] = { 0 };
+static TemperatureDegFx100_t freezerCalculatedAxisGridLines[CabinetGridLineCount] = { 0 };
+
+static const CalculatedAxisGridLines_t freshFoodCalculatedAxis = {
+   .numberOfLines = ELEMENT_COUNT(freshFoodCalculatedAxisGridLines),
+   .gridLinesDegFx100 = freshFoodCalculatedAxisGridLines
+};
+
+static const CalculatedAxisGridLines_t freezerCalculatedAxis = {
+   .numberOfLines = ELEMENT_COUNT(freezerCalculatedAxisGridLines),
+   .gridLinesDegFx100 = freezerCalculatedAxisGridLines
+};
+
+static CalculatedAxisGridLines_t calculatedGrid[] = { freshFoodCalculatedAxis, freezerCalculatedAxis };
+
+static CalculatedGridLines_t calculatedGridLines = {
+   .dimensions = ELEMENT_COUNT(calculatedGrid),
+   .gridLines = calculatedGrid
+};
+
+static PreviousGridBlockNumbers_t previousGridBlocks = {
+   .currentNumberOfBlocksStored = 0
+};
+
+static GridBlockNumber_t ringBufferBuffer[PreviousGridBlockNumbers_MaxBlockNumbers] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 
 static void CalculateAxisGridLines(
    CalculatedAxisGridLines_t *calcAxisGridlines,
@@ -62,20 +89,20 @@ static void CalculateAxisGridLines(
 static void UpdateGridLines(CalcGridBlockAndLines_t *instance)
 {
    CalculateAxisGridLines(
-      &instance->_private.calcGridLines->gridLines[GridDelta_FreshFood],
+      &calculatedGridLines.gridLines[GridDelta_FreshFood],
       &instance->_private.gridData->deltaGridLines->gridLines[GridDelta_FreshFood],
       instance->_private.dataModel,
-      instance->_private.config->freshFoodErds);
+      instance->_private.config->freshFoodGridLineErds);
    CalculateAxisGridLines(
-      &instance->_private.calcGridLines->gridLines[GridDelta_Freezer],
+      &calculatedGridLines.gridLines[GridDelta_Freezer],
       &instance->_private.gridData->deltaGridLines->gridLines[GridDelta_Freezer],
       instance->_private.dataModel,
-      instance->_private.config->freezerErds);
+      instance->_private.config->freezerGridLineErds);
 
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->calculatedGridLinesErd,
-      instance->_private.calcGridLines);
+      &calculatedGridLines);
 }
 
 static uint8_t GetLocationIndex(
@@ -124,10 +151,12 @@ static void UpdateGridBlock(CalcGridBlockAndLines_t *instance)
       instance->_private.config->freezerFilteredTempErd,
       &freezerFilteredTemp);
 
-   uint8_t colIndex = GetLocationIndex(freshFoodFilteredTemp, GridDelta_FreshFood, instance->_private.calcGridLines, NotInverted);
-   uint8_t rowIndex = GetLocationIndex(freezerFilteredTemp, GridDelta_Freezer, instance->_private.calcGridLines, Inverted);
+   uint8_t colIndex = GetLocationIndex(freshFoodFilteredTemp, GridDelta_FreshFood, &calculatedGridLines, NotInverted);
+   uint8_t rowIndex = GetLocationIndex(freezerFilteredTemp, GridDelta_Freezer, &calculatedGridLines, Inverted);
 
-   GridBlockNumber_t newBlockNumber = CalculateGridBlock(rowIndex, colIndex, instance->_private.gridData->deltaGridLines->gridLines[GridDelta_FreshFood].numberOfLines + 1);
+   GridBlockNumber_t newBlockNumber = CalculateGridBlock(rowIndex,
+      colIndex,
+      instance->_private.gridData->deltaGridLines->gridLines[GridDelta_FreshFood].numberOfLines + 1);
 
    DataModel_Write(
       instance->_private.dataModel,
@@ -142,20 +171,20 @@ static void UpdatePreviousGridBlocks(void *context, const void *_args)
 
    if(instance->_private.lastBlock != GridBlockNumber_Max)
    {
-      RingBuffer_Add(instance->_private.bufferInstance, &instance->_private.lastBlock);
-      instance->_private.previousGridBlocks->currentNumberOfBlocksStored = RingBuffer_Count(instance->_private.bufferInstance);
+      RingBuffer_Add(&instance->_private.bufferInstance, &instance->_private.lastBlock);
+      previousGridBlocks.currentNumberOfBlocksStored = RingBuffer_Count(&instance->_private.bufferInstance);
 
-      for(uint8_t i = 0; i < instance->_private.previousGridBlocks->currentNumberOfBlocksStored; i++)
+      for(uint8_t i = 0; i < previousGridBlocks.currentNumberOfBlocksStored; i++)
       {
          GridBlockNumber_t number;
-         RingBuffer_At(instance->_private.bufferInstance, &number, i);
-         instance->_private.previousGridBlocks->blockNumbers[i] = number;
+         RingBuffer_At(&instance->_private.bufferInstance, &number, i);
+         previousGridBlocks.blockNumbers[i] = number;
       }
 
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->previousGridBlocksErd,
-         instance->_private.previousGridBlocks);
+         &previousGridBlocks);
    }
 
    instance->_private.lastBlock = *blockNumber;
@@ -169,13 +198,13 @@ static void UpdateGridBlockAndGridLines(void *context)
    UpdateGridBlock(instance);
 }
 
-static void ClearPreviousGridBlocks(PreviousGridBlockNumbers_t *prevBlocks)
+static void ClearPreviousGridBlocks(void)
 {
-   prevBlocks->currentNumberOfBlocksStored = 0;
+   previousGridBlocks.currentNumberOfBlocksStored = 0;
 
-   for(int i = 0; i < prevBlocks->maxSize; i++)
+   for(uint8_t i = 0; i < NUM_ELEMENTS(previousGridBlocks.blockNumbers); i++)
    {
-      prevBlocks->blockNumbers[i] = 0xFF;
+      previousGridBlocks.blockNumbers[i] = 0xFF;
    }
 }
 
@@ -190,25 +219,25 @@ static void UpdateLastBlockWithCurrentBlock(CalcGridBlockAndLines_t *instance)
 void CalcGridBlockAndGridLines_Init(
    CalcGridBlockAndLines_t *instance,
    const GridBlockAndLinesConfig_t *config,
-   I_DataModel_t *dataModel,
-   CalculatedGridLines_t *calcGridLines,
-   RingBuffer_t *bufferInstance,
-   PreviousGridBlockNumbers_t *prevGridBlocks)
+   I_DataModel_t *dataModel)
 {
    instance->_private.config = config;
    instance->_private.dataModel = dataModel;
-   instance->_private.calcGridLines = calcGridLines;
-   instance->_private.bufferInstance = bufferInstance;
-   instance->_private.previousGridBlocks = prevGridBlocks;
+
+   RingBuffer_Init(
+      &instance->_private.bufferInstance,
+      ringBufferBuffer,
+      PreviousGridBlockNumbers_MaxBlockNumbers,
+      ELEMENT_SIZE(ringBufferBuffer));
+
    instance->_private.gridData = PersonalityParametricData_Get(dataModel)->gridData;
 
-   RingBuffer_Clear(instance->_private.bufferInstance);
-   ClearPreviousGridBlocks(instance->_private.previousGridBlocks);
+   ClearPreviousGridBlocks();
 
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->previousGridBlocksErd,
-      instance->_private.previousGridBlocks);
+      &previousGridBlocks);
 
    UpdateGridBlockAndGridLines(instance);
    UpdateLastBlockWithCurrentBlock(instance);
@@ -217,6 +246,7 @@ void CalcGridBlockAndGridLines_Init(
       &instance->_private.gridBlockSubscription,
       instance,
       UpdatePreviousGridBlocks);
+
    DataModel_Subscribe(
       instance->_private.dataModel,
       instance->_private.config->calculatedGridBlockErd,

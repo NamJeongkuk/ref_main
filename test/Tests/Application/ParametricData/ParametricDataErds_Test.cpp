@@ -72,7 +72,7 @@ TEST_GROUP(ParametricDataErds)
       appliancePersonality = PersonalityId_Default;
       DataModel_Write(dataModel, Erd_AppliancePersonality, &appliancePersonality);
 
-      for(int i = 0; i < PersonalityId_Max; i++)
+      for(uint8_t i = 0; i < PersonalityId_Max; i++)
       {
          personalites[i] = &personalitesData[i];
       }

@@ -44,7 +44,11 @@ void Grid_TripleEvap(void *context)
    mock().actualCall("Grid_TripleEvap");
 }
 
-static const GridFunction_t grids[] = { Grid_MultiDoor, Grid_DualEvap, Grid_TripleEvap };
+static const GridFunction_t grids[] = {
+   Grid_MultiDoor,
+   Grid_DualEvap,
+   Grid_TripleEvap
+};
 
 static const GridFunctionArray_t functionArray = {
    grids,

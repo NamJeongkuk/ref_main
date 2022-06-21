@@ -16,10 +16,11 @@
 typedef struct
 {
    Grid_t gridInstance;
-   RingBuffer_t bufferInstance;
    CalcGridBlockAndLines_t calcGridBlockAndGridLinesInstance;
 } GridPlugin_t;
 
-void GridPlugin_Init(GridPlugin_t *instance, I_DataModel_t *dataModel);
+void GridPlugin_Init(
+   GridPlugin_t *instance,
+   I_DataModel_t *dataModel);
 
 #endif

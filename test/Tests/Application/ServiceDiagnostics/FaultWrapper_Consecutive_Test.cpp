@@ -91,7 +91,7 @@ TEST_GROUP(FaultWrapper_Consecutive)
 
    void FaultIsAlreadySet()
    {
-      When for(int i = 0; i < RequestsToSetFault; i++)
+      When for(uint8_t i = 0; i < RequestsToSetFault; i++)
       {
          FaultSetIsRequested();
       }
@@ -108,7 +108,7 @@ TEST(FaultWrapper_Consecutive, ShouldSetFaultAfterConsecutiveRequests)
 {
    Given The ModuleIsInitialized();
 
-   When for(int i = 0; i < (RequestsToSetFault - 1); i++)
+   When for(uint8_t i = 0; i < (RequestsToSetFault - 1); i++)
    {
       FaultSetIsRequested();
    }
@@ -126,7 +126,7 @@ TEST(FaultWrapper_Consecutive, ShouldClearFaultAfterConsecutiveRequests)
 
    OutputFaultShouldBe(SET);
 
-   When for(int i = 0; i < (RequestsToSetFault - 1); i++)
+   When for(uint8_t i = 0; i < (RequestsToSetFault - 1); i++)
    {
       FaultClearIsRequested();
    }
@@ -141,7 +141,7 @@ TEST(FaultWrapper_Consecutive, ShouldResetSetRequestCountsWhenClientResetsFaultW
 {
    Given The ModuleIsInitialized();
 
-   When for(int i = 0; i < (RequestsToSetFault - 1); i++)
+   When for(uint8_t i = 0; i < (RequestsToSetFault - 1); i++)
    {
       FaultSetIsRequested();
    }
@@ -162,7 +162,7 @@ TEST(FaultWrapper_Consecutive, ShouldResetASetFaultAndClearAllCountsIfClientRese
    When The FaultWrapperIsReset();
    OutputFaultShouldBe(CLEAR);
 
-   When for(int i = 0; i < (RequestsToSetFault - 1); i++)
+   When for(uint8_t i = 0; i < (RequestsToSetFault - 1); i++)
    {
       When FaultSetIsRequested();
    }
@@ -176,13 +176,13 @@ TEST(FaultWrapper_Consecutive, ShouldResetSetRequestCountToZeroWhenClearRequestH
 {
    Given The ModuleIsInitialized();
 
-   When for(int i = 0; i < (RequestsToSetFault - 1); i++)
+   When for(uint8_t i = 0; i < (RequestsToSetFault - 1); i++)
    {
       When FaultSetIsRequested();
    }
    And The FaultClearIsRequested();
 
-   When for(int i = 0; i < (RequestsToSetFault - 1); i++)
+   When for(uint8_t i = 0; i < (RequestsToSetFault - 1); i++)
    {
       When FaultSetIsRequested();
    }
@@ -198,7 +198,7 @@ TEST(FaultWrapper_Consecutive, ShouldResetClearRequestCountToZeroWhenSetRequestH
    Given The ModuleIsInitialized();
    And The FaultIsAlreadySet();
 
-   When for(int i = 0; i < (RequestsToClearFault - 1); i++)
+   When for(uint8_t i = 0; i < (RequestsToClearFault - 1); i++)
    {
       When FaultClearIsRequested();
    }
@@ -206,7 +206,7 @@ TEST(FaultWrapper_Consecutive, ShouldResetClearRequestCountToZeroWhenSetRequestH
    The OutputFaultShouldBe(SET);
    When FaultSetIsRequested();
 
-   When for(int i = 0; i < (RequestsToClearFault - 1); i++)
+   When for(uint8_t i = 0; i < (RequestsToClearFault - 1); i++)
    {
       When FaultClearIsRequested();
    }

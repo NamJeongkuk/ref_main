@@ -33,14 +33,14 @@ enum
    Zero = 0
 };
 
-static const GridLineErds_t freshFoodErds = {
+static const GridLineErds_t freshFoodGridLineErds = {
    .rawSetpointErd = Erd_FreshFoodSetpoint_ResolvedVote,
    .offsetErd = Erd_FreshFood_Offset,
    .shiftErd = Erd_FreshFood_Shift,
    .adjustedSetpointErd = Erd_FreshFood_AdjustedSetpoint
 };
 
-static const GridLineErds_t freezerErds = {
+static const GridLineErds_t freezerGridLineErds = {
    .rawSetpointErd = Erd_FreezerSetpoint_ResolvedVote,
    .offsetErd = Erd_Freezer_Offset,
    .shiftErd = Erd_Freezer_Shift,
@@ -123,26 +123,6 @@ static const GridData_t gridData = {
    .gridPeriodicRunRateInMSec = MSEC_PER_SEC
 };
 
-static TemperatureDegFx100_t freshFoodCalcAxisGridLines[SixGridLines] = { 0 };
-static TemperatureDegFx100_t freezerCalcAxisGridLines[SixGridLines] = { 0 };
-
-static CalculatedAxisGridLines_t freshFoodCalcAxis = {
-   .numberOfLines = SixGridLines,
-   .gridLinesDegFx100 = freshFoodCalcAxisGridLines
-};
-
-static CalculatedAxisGridLines_t freezerCalcAxis = {
-   .numberOfLines = SixGridLines,
-   .gridLinesDegFx100 = freezerCalcAxisGridLines
-};
-
-static CalculatedAxisGridLines_t calcGrid[] = { freshFoodCalcAxis, freezerCalcAxis };
-
-static CalculatedGridLines_t calcGridLines = {
-   .dimensions = TwoDimensional,
-   .gridLines = calcGrid
-};
-
 static const GridBlockAndLinesConfig_t config = {
    .calculatedGridBlockErd = Erd_Grid_BlockNumber,
    .previousGridBlocksErd = Erd_Grid_PreviousBlocks,
@@ -150,15 +130,8 @@ static const GridBlockAndLinesConfig_t config = {
    .freshFoodFilteredTempErd = Erd_FreshFood_FilteredTemperatureResolved,
    .freezerFilteredTempErd = Erd_Freezer_FilteredTemperatureResolved,
    .timerModuleErd = Erd_TimerModule,
-   .freezerErds = freezerErds,
-   .freshFoodErds = freshFoodErds
-};
-
-static GridBlockNumber_t ringBufferNumbers[FivePreviousBlocks] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-
-static PreviousGridBlockNumbers_t prevGridBlocks = {
-   .maxSize = FivePreviousBlocks,
-   .currentNumberOfBlocksStored = Zero
+   .freezerGridLineErds = freezerGridLineErds,
+   .freshFoodGridLineErds = freshFoodGridLineErds
 };
 
 TEST_GROUP(CalcGridBlockAndGridLines)
@@ -183,32 +156,12 @@ TEST_GROUP(CalcGridBlockAndGridLines)
       DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
    }
 
-   void teardown()
-   {
-      for(uint8_t i = 0; i < calcGridLines.dimensions; i++)
-      {
-         for(uint8_t j = 0; j < calcGridLines.gridLines[i].numberOfLines; j++)
-         {
-            calcGridLines.gridLines[i].gridLinesDegFx100[j] = 0;
-         }
-      }
-   }
-
    void WhenTheModuleIsInitialized()
    {
-      RingBufferIsInitialized();
       CalcGridBlockAndGridLines_Init(
          &instance,
          &config,
-         dataModel,
-         &calcGridLines,
-         &bufferInstance,
-         &prevGridBlocks);
-   }
-
-   void RingBufferIsInitialized()
-   {
-      RingBuffer_Init(&bufferInstance, ringBufferNumbers, prevGridBlocks.maxSize, ELEMENT_SIZE(ringBufferNumbers));
+         dataModel);
    }
 
    void CalculatedGridLinesShouldBeZero()
@@ -264,13 +217,13 @@ TEST_GROUP(CalcGridBlockAndGridLines)
       GivenTheFreezerOffsetIs(450);
    }
 
-   void GivenGridErdsAreInitialized()
+   void GivenGridLineCalculationInformationIsInitialized()
    {
       GivenAdjustedSetpointsAreInitialized();
       GivenOffsetsAreInitialized();
    }
 
-   void CalculatedGridLineTempShouldBe(TemperatureDegFx100_t temp, int index, int index2)
+   void CalculatedGridLineTempShouldBe(TemperatureDegFx100_t temp, uint8_t index, uint8_t index2)
    {
       CalculatedGridLines_t calcLines;
       DataModel_Read(dataModel, Erd_Grid_CalculatedGridLines, &calcLines);
@@ -294,7 +247,7 @@ TEST_GROUP(CalcGridBlockAndGridLines)
       DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolved, &temp);
    }
 
-   TemperatureDegFx100_t GridLineTemp(int compartmentType, int gridLineType)
+   TemperatureDegFx100_t GridLineTemp(uint8_t compartmentType, uint8_t gridLineType)
    {
       CalculatedGridLines_t calcLines;
       DataModel_Read(dataModel, Erd_Grid_CalculatedGridLines, &calcLines);
@@ -314,7 +267,7 @@ TEST_GROUP(CalcGridBlockAndGridLines)
 
       GridBlockNumber_t blocks[FivePreviousBlocks] = { firstBlock, secondBlock, thirdBlock, fourthBlock, fifthBlock };
 
-      for(unsigned i = 0; i < FivePreviousBlocks; i++)
+      for(uint8_t i = 0; i < FivePreviousBlocks; i++)
       {
          CHECK_EQUAL(blocks[i], prevBlocks.blockNumbers[i]);
       }
@@ -335,7 +288,7 @@ TEST_GROUP(CalcGridBlockAndGridLines)
 
    void PreviousGridBlocksHasOneElement()
    {
-      GivenGridErdsAreInitialized();
+      GivenGridLineCalculationInformationIsInitialized();
       WhenTheModuleIsInitialized();
       And FreshFoodFilteredTempIs(4040);
       And FreezerFilteredTempIs(690);
@@ -413,7 +366,7 @@ TEST_GROUP(CalcGridBlockAndGridLines)
 
 TEST(CalcGridBlockAndGridLines, ShouldCalculateGridLinesAndGridBlockOnInit)
 {
-   GivenGridErdsAreInitialized();
+   GivenGridLineCalculationInformationIsInitialized();
    WhenTheModuleIsInitialized();
 
    CalculatedGridLineTempShouldBe(190, GridDelta_FreshFood, GridLine_Nfl);
@@ -435,7 +388,7 @@ TEST(CalcGridBlockAndGridLines, ShouldCalculateGridLinesAndGridBlockOnInit)
 
 TEST(CalcGridBlockAndGridLines, ShouldRecalculateGridLinesAndGridBlockAfterOneSecondIfAdjSetpointsHaveChanged)
 {
-   GivenGridErdsAreInitialized();
+   GivenGridLineCalculationInformationIsInitialized();
    WhenTheModuleIsInitialized();
 
    GivenTheFreshFoodAdjustedSetpointIs(4690);
@@ -478,7 +431,7 @@ TEST(CalcGridBlockAndGridLines, ShouldRecalculateGridLinesAndGridBlockAfterOneSe
 
 TEST(CalcGridBlockAndGridLines, PreviousGridBlocksShouldBeEmptyOnInit)
 {
-   GivenGridErdsAreInitialized();
+   GivenGridLineCalculationInformationIsInitialized();
    WhenTheModuleIsInitialized();
    And FreshFoodFilteredTempIs(4040);
    And FreezerFilteredTempIs(690);
@@ -489,7 +442,7 @@ TEST(CalcGridBlockAndGridLines, PreviousGridBlocksShouldBeEmptyOnInit)
 
 TEST(CalcGridBlockAndGridLines, PreviousGridBlocksShouldHaveOneElementAfterGridBlockErdChangesOnce)
 {
-   GivenGridErdsAreInitialized();
+   GivenGridLineCalculationInformationIsInitialized();
    WhenTheModuleIsInitialized();
    And FreshFoodFilteredTempIs(4040);
    And FreezerFilteredTempIs(690);
@@ -549,7 +502,7 @@ TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock42WhenFreshFoodAndFreezerTemp
 {
    Given FreshFoodFilteredTempIs(0);
    And FreezerFilteredTempIs(0);
-   GivenGridErdsAreInitialized();
+   GivenGridLineCalculationInformationIsInitialized();
    WhenTheModuleIsInitialized();
 
    CalculatedGridBlockShouldBe(42);
@@ -559,7 +512,7 @@ TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock0WhenBelowFreshFoodNflAndAbov
 {
    Given FreshFoodFilteredTempIs(189);
    And FreezerFilteredTempIs(5951);
-   GivenGridErdsAreInitialized();
+   GivenGridLineCalculationInformationIsInitialized();
    WhenTheModuleIsInitialized();
 
    CalculatedGridBlockShouldBe(0);
@@ -569,7 +522,7 @@ TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock48WhenAboveFreshFoodSuperHigh
 {
    Given FreshFoodFilteredTempIs(5041);
    And FreezerFilteredTempIs(189);
-   GivenGridErdsAreInitialized();
+   GivenGridLineCalculationInformationIsInitialized();
    WhenTheModuleIsInitialized();
 
    CalculatedGridBlockShouldBe(48);
@@ -579,7 +532,7 @@ TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock6WhenAboveFreshFoodSuperHighA
 {
    Given FreshFoodFilteredTempIs(5041);
    And FreezerFilteredTempIs(5951);
-   GivenGridErdsAreInitialized();
+   GivenGridLineCalculationInformationIsInitialized();
    WhenTheModuleIsInitialized();
 
    CalculatedGridBlockShouldBe(6);
@@ -589,7 +542,7 @@ TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock25WhenAboveFreshFoodHighHystA
 {
    Given FreshFoodFilteredTempIs(4341);
    And FreezerFilteredTempIs(691);
-   GivenGridErdsAreInitialized();
+   GivenGridLineCalculationInformationIsInitialized();
    WhenTheModuleIsInitialized();
 
    CalculatedGridBlockShouldBe(25);
@@ -599,7 +552,7 @@ TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock30WhenEqualToFreshFoodLowHyst
 {
    Given FreshFoodFilteredTempIs(4040);
    And FreezerFilteredTempIs(690);
-   GivenGridErdsAreInitialized();
+   GivenGridLineCalculationInformationIsInitialized();
    WhenTheModuleIsInitialized();
 
    CalculatedGridBlockShouldBe(30);
@@ -609,7 +562,7 @@ TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock46WhenAboveFreshFoodHighHystA
 {
    Given FreshFoodFilteredTempIs(4341);
    And FreezerFilteredTempIs(189);
-   GivenGridErdsAreInitialized();
+   GivenGridLineCalculationInformationIsInitialized();
    WhenTheModuleIsInitialized();
 
    CalculatedGridBlockShouldBe(46);
@@ -619,7 +572,7 @@ TEST(CalcGridBlockAndGridLines, ShouldBeInGridBlock14WhenBelowFreshFoodNflAndAbo
 {
    Given FreshFoodFilteredTempIs(189);
    And FreezerFilteredTempIs(1041);
-   GivenGridErdsAreInitialized();
+   GivenGridLineCalculationInformationIsInitialized();
    WhenTheModuleIsInitialized();
 
    CalculatedGridBlockShouldBe(14);

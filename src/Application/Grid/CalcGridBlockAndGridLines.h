@@ -33,19 +33,18 @@ typedef struct
    Erd_t freshFoodFilteredTempErd;
    Erd_t freezerFilteredTempErd;
    Erd_t timerModuleErd;
-   const GridLineErds_t freezerErds;
-   const GridLineErds_t freshFoodErds;
+   const GridLineErds_t freezerGridLineErds;
+   const GridLineErds_t freshFoodGridLineErds;
 } GridBlockAndLinesConfig_t;
 
 typedef struct
 {
    struct
    {
-      CalculatedGridLines_t *calcGridLines;
       EventSubscription_t gridBlockSubscription;
       PreviousGridBlockNumbers_t *previousGridBlocks;
       GridBlockNumber_t lastBlock;
-      RingBuffer_t *bufferInstance;
+      RingBuffer_t bufferInstance;
       const GridBlockAndLinesConfig_t *config;
       const GridData_t *gridData;
       I_DataModel_t *dataModel;
@@ -56,9 +55,6 @@ typedef struct
 void CalcGridBlockAndGridLines_Init(
    CalcGridBlockAndLines_t *instance,
    const GridBlockAndLinesConfig_t *config,
-   I_DataModel_t *dataModel,
-   CalculatedGridLines_t *calcGridLines,
-   RingBuffer_t *bufferInstance,
-   PreviousGridBlockNumbers_t *prevGridBlocks);
+   I_DataModel_t *dataModel);
 
 #endif

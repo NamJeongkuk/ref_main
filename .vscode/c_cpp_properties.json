@@ -2,354 +2,81 @@
    "configurations": [
       {
          "cStandard": "c99",
-         "cppStandard": "c++11",
-         "includePath": [
-            "${workspaceFolder}/lib/applcommon/**",
-            "${workspaceFolder}/lib/applcommon.tiny/**",
-            "${workspaceFolder}/lib/stm32-standard-peripherals/**",
-            "${workspaceFolder}/src/**",
-            "${workspaceFolder}/test/**"
-         ],
-         "intelliSenseMode": "gcc-x64",
-         "name": "Generic"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": {},
-         "includePath": [
-            "${env:gcc-arm-include}",
-            "${env:tiny-include}",
-            "${workspaceFolder}/src/micro-psoc4100s-cap-touch/**",
-            "${workspaceFolder}/src/Application/**"
-         ],
-         "intelliSenseMode": "gcc-arm",
-         "name": "micro-psoc4100s-cap-touch"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": {},
-         "includePath": [
-            "${workspaceFolder}/src/micro-rl78g13/**",
-            "${env:kpit-rl78-include}",
-            "${env:tiny-include}",
-            "${workspaceFolder}/src/MicroApplication/**",
-            "${workspaceFolder}/src/Application/Gea/*"
-         ],
-         "intelliSenseMode": "gcc-arm",
-         "name": "micro-rl78g13"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": [
-            "__RX_LITTLE_ENDIAN__"
-         ],
-         "includePath": [
-            "${env:kpit-rx-include}",
-            "${env:tiny-include}",
-            "${workspaceFolder}/src/micro-rx130/**",
-            "${workspaceFolder}/src/MicroApplication/**",
-            "${workspaceFolder}/src/Application/Gea/*"
-         ],
-         "intelliSenseMode": "gcc-x64",
-         "name": "micro-rx130"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": [
-            "__RX_LITTLE_ENDIAN__"
-         ],
-         "includePath": [
-            "${env:kpit-rx-include}",
-            "${env:tiny-include}",
-            "${workspaceFolder}/src/micro-rx130-cap-touch/**",
-            "${workspaceFolder}/src/Application/*"
-         ],
-         "intelliSenseMode": "gcc-x64",
-         "name": "micro-rx130-cap-touch"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": [
-            "__RX_LITTLE_ENDIAN__"
-         ],
-         "includePath": [
-            "${env:kpit-rx-include}",
-            "${env:tiny-include}",
-            "${workspaceFolder}/src/micro-rx62t/**",
-            "${workspaceFolder}/src/MicroApplication/**",
-            "${workspaceFolder}/src/Application/Gea/*"
-         ],
-         "intelliSenseMode": "gcc-x64",
-         "name": "micro-rx62t"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": [
-            "STM32G070xx",
-            "USE_FULL_LL_DRIVER",
-            "LITTLE_ENDIAN"
-         ],
-         "includePath": [
-            "${env:gcc-arm-include}",
-            "${env:stm32g0-peripheral-library-include}",
-            "${env:tiny-include}",
-            "${workspaceFolder}/src/micro-stm32g0/**",
-            "${workspaceFolder}/src/MicroApplication/**",
-            "${workspaceFolder}/src/Application/Gea/*"
-         ],
-         "intelliSenseMode": "gcc-arm",
-         "name": "micro-stm32g0"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": [
-            "STM8S207",
-            "_SDCC_",
-            "__critical",
-            "__interrupt(x)=",
-            "__at(x)="
-         ],
-         "includePath": [
-            "${env:stm8s-peripheral-library-include}",
-            "${env:sdcc-stm8-include}",
-            "${env:tiny-include}",
-            "${workspaceFolder}/src/micro-stm8s/**",
-            "${workspaceFolder}/src/MicroApplication/**",
-            "${workspaceFolder}/src/Application/Gea/*"
-         ],
-         "intelliSenseMode": "gcc-x64",
-         "name": "micro-stm8s"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": [
-            "__RX_LITTLE_ENDIAN__"
-         ],
-         "includePath": [
-            "${env:kpit-rx-include}",
-            "${env:applcommon-include}",
-            "${workspaceFolder}/src/mini-rx130/**",
-            "${workspaceFolder}/src/Application/**"
-         ],
-         "intelliSenseMode": "gcc-x64",
-         "name": "mini-rx130"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": [
-            "__RX_LITTLE_ENDIAN__"
-         ],
-         "includePath": [
-            "${env:kpit-rx-include}",
-            "${env:applcommon-include}",
-            "${workspaceFolder}/src/mini-rx130-cap-touch/**",
-            "${workspaceFolder}/src/Application/**"
-         ],
-         "intelliSenseMode": "gcc-x64",
-         "name": "mini-rx130-cap-touch"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": [
-            "__RX_LITTLE_ENDIAN__"
-         ],
-         "includePath": [
-            "${env:kpit-rx-include}",
-            "${env:applcommon-include}",
-            "${workspaceFolder}/src/mini-rx231/**",
-            "${workspaceFolder}/src/Application/**"
-         ],
-         "intelliSenseMode": "gcc-x64",
-         "name": "mini-rx231"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": [
-            "__RX_LITTLE_ENDIAN__"
-         ],
-         "includePath": [
-            "${env:kpit-rx-include}",
-            "${env:applcommon-include}",
-            "${workspaceFolder}/src/mini-rx62t/**",
-            "${workspaceFolder}/src/Application/**"
-         ],
-         "intelliSenseMode": "gcc-x64",
-         "name": "mini-rx62t"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": [
-            "LITTLE_ENDIAN"
-         ],
-         "includePath": [
-            "${workspaceFolder}/src/nano-rl78g12/**",
-            "${env:kpit-rl78-include}",
-            "${env:tiny-include}",
-            "${workspaceFolder}/src/NanoApplication/**",
-            "${workspaceFolder}/src/Application/Gea/*"
-         ],
-         "intelliSenseMode": "gcc-arm",
-         "name": "nano-rl78g12"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": [
-            "LITTLE_ENDIAN"
-         ],
-         "includePath": [
-            "${workspaceFolder}/src/nano-rl78g13/**",
-            "${env:kpit-rl78-include}",
-            "${env:tiny-include}",
-            "${workspaceFolder}/src/NanoApplication/**",
-            "${workspaceFolder}/src/Application/Gea/*"
-         ],
-         "intelliSenseMode": "gcc-arm",
-         "name": "nano-rl78g13"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": [
-            "STM8S003",
-            "_SDCC_",
-            "__critical",
-            "__interrupt(x)=",
-            "__at(x)="
-         ],
-         "includePath": [
-            "${env:stm8s-peripheral-library-include}",
-            "${env:sdcc-stm8-include}",
-            "${env:tiny-include}",
-            "${workspaceFolder}/src/nano-stm8s/**",
-            "${workspaceFolder}/src/Application/Gea/*"
-         ],
-         "intelliSenseMode": "gcc-x64",
-         "name": "nano-stm8s"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": [
-            "STM8S105",
-            "_SDCC_",
-            "__critical",
-            "__interrupt(x)=",
-            "__at(x)="
-         ],
-         "includePath": [
-            "${env:stm8s-peripheral-library-include}",
-            "${env:sdcc-stm8-include}",
-            "${env:tiny-include}",
-            "${workspaceFolder}/src/nano-stm8s-cap-touch/**",
-            "${workspaceFolder}/src/Application/Gea/*"
-         ],
-         "intelliSenseMode": "gcc-x64",
-         "name": "nano-stm8s-cap-touch"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": {},
-         "includePath": [
-            "${env:gcc-arm-include}",
-            "${env:applcommon-include}",
-            "${env:psoc6-peripheral-library-include}",
-            "${workspaceFolder}/src/psoc6/**",
-            "${workspaceFolder}/src/Application/**"
-         ],
-         "intelliSenseMode": "gcc-arm",
-         "name": "psoc6"
-      },
-      {
-         "cStandard": "c99",
          "cppStandard": "c++17",
          "defines": [
-            "GIT_LONG_HASH=9d82f2493e918158b18b2a403ca989a1b359c6c3",
-            "GIT_SHORT_HASH=9d82f249",
-            "GIT_HASH_ARRAY_RX0=0x9d",
-            "GIT_HASH_ARRAY_RX1=0x82",
-            "GIT_HASH_ARRAY_RX2=0xf2",
-            "GIT_HASH_ARRAY_RX3=0x49",
-            "GIT_HASH_ARRAY_RX4=0x3e",
-            "GIT_HASH_ARRAY_RX5=0x91",
-            "GIT_HASH_ARRAY_RX6=0x81",
-            "GIT_HASH_ARRAY_RX7=0x58",
-            "GIT_HASH_ARRAY_RX8=0xb1",
-            "GIT_HASH_ARRAY_RX9=0x8b",
-            "GIT_HASH_ARRAY_RX10=0x2a",
-            "GIT_HASH_ARRAY_RX11=0x40",
-            "GIT_HASH_ARRAY_RX12=0x3c",
-            "GIT_HASH_ARRAY_RX13=0xa9",
-            "GIT_HASH_ARRAY_RX14=0x89",
-            "GIT_HASH_ARRAY_RX15=0xa1",
-            "GIT_HASH_ARRAY_RX16=0xb3",
-            "GIT_HASH_ARRAY_RX17=0x59",
-            "GIT_HASH_ARRAY_RX18=0xc6",
-            "GIT_HASH_ARRAY_RX19=0xc3",
+            "GIT_LONG_HASH=7b456d24eba12aa8e672f5d015e3fccb0bfdf3b1",
+            "GIT_SHORT_HASH=7b456d2",
+            "GIT_HASH_ARRAY_RX0=0x7b",
+            "GIT_HASH_ARRAY_RX1=0x45",
+            "GIT_HASH_ARRAY_RX2=0x6d",
+            "GIT_HASH_ARRAY_RX3=0x24",
+            "GIT_HASH_ARRAY_RX4=0xeb",
+            "GIT_HASH_ARRAY_RX5=0xa1",
+            "GIT_HASH_ARRAY_RX6=0x2a",
+            "GIT_HASH_ARRAY_RX7=0xa8",
+            "GIT_HASH_ARRAY_RX8=0xe6",
+            "GIT_HASH_ARRAY_RX9=0x72",
+            "GIT_HASH_ARRAY_RX10=0xf5",
+            "GIT_HASH_ARRAY_RX11=0xd0",
+            "GIT_HASH_ARRAY_RX12=0x15",
+            "GIT_HASH_ARRAY_RX13=0xe3",
+            "GIT_HASH_ARRAY_RX14=0xfc",
+            "GIT_HASH_ARRAY_RX15=0xcb",
+            "GIT_HASH_ARRAY_RX16=0x0b",
+            "GIT_HASH_ARRAY_RX17=0xfd",
+            "GIT_HASH_ARRAY_RX18=0xf3",
+            "GIT_HASH_ARRAY_RX19=0xb1",
             "LITTLE_ENDIAN",
-            "CRIT_VERSION_MAJOR=0",
+            "CRIT_VERSION_MAJOR=1",
             "CRIT_VERSION_MINOR=0",
-            "NONCRIT_VERSION_MAJOR=0",
+            "NONCRIT_VERSION_MAJOR=1",
             "NONCRIT_VERSION_MINOR=0",
             "BUILD_NUMBER=0",
-            "GIT_LONG_HASH=9d82f2493e918158b18b2a403ca989a1b359c6c3",
-            "GIT_SHORT_HASH=9d82f249",
-            "GIT_HASH_ARRAY_RX0=0x9d",
-            "GIT_HASH_ARRAY_RX1=0x82",
-            "GIT_HASH_ARRAY_RX2=0xf2",
-            "GIT_HASH_ARRAY_RX3=0x49",
-            "GIT_HASH_ARRAY_RX4=0x3e",
-            "GIT_HASH_ARRAY_RX5=0x91",
-            "GIT_HASH_ARRAY_RX6=0x81",
-            "GIT_HASH_ARRAY_RX7=0x58",
-            "GIT_HASH_ARRAY_RX8=0xb1",
-            "GIT_HASH_ARRAY_RX9=0x8b",
-            "GIT_HASH_ARRAY_RX10=0x2a",
-            "GIT_HASH_ARRAY_RX11=0x40",
-            "GIT_HASH_ARRAY_RX12=0x3c",
-            "GIT_HASH_ARRAY_RX13=0xa9",
-            "GIT_HASH_ARRAY_RX14=0x89",
-            "GIT_HASH_ARRAY_RX15=0xa1",
-            "GIT_HASH_ARRAY_RX16=0xb3",
-            "GIT_HASH_ARRAY_RX17=0x59",
-            "GIT_HASH_ARRAY_RX18=0xc6",
-            "GIT_HASH_ARRAY_RX19=0xc3",
+            "GIT_LONG_HASH=7b456d24eba12aa8e672f5d015e3fccb0bfdf3b1",
+            "GIT_SHORT_HASH=7b456d2",
+            "GIT_HASH_ARRAY_RX0=0x7b",
+            "GIT_HASH_ARRAY_RX1=0x45",
+            "GIT_HASH_ARRAY_RX2=0x6d",
+            "GIT_HASH_ARRAY_RX3=0x24",
+            "GIT_HASH_ARRAY_RX4=0xeb",
+            "GIT_HASH_ARRAY_RX5=0xa1",
+            "GIT_HASH_ARRAY_RX6=0x2a",
+            "GIT_HASH_ARRAY_RX7=0xa8",
+            "GIT_HASH_ARRAY_RX8=0xe6",
+            "GIT_HASH_ARRAY_RX9=0x72",
+            "GIT_HASH_ARRAY_RX10=0xf5",
+            "GIT_HASH_ARRAY_RX11=0xd0",
+            "GIT_HASH_ARRAY_RX12=0x15",
+            "GIT_HASH_ARRAY_RX13=0xe3",
+            "GIT_HASH_ARRAY_RX14=0xfc",
+            "GIT_HASH_ARRAY_RX15=0xcb",
+            "GIT_HASH_ARRAY_RX16=0x0b",
+            "GIT_HASH_ARRAY_RX17=0xfd",
+            "GIT_HASH_ARRAY_RX18=0xf3",
+            "GIT_HASH_ARRAY_RX19=0xb1",
             "LITTLE_ENDIAN",
-            "GIT_LONG_HASH=9d82f2493e918158b18b2a403ca989a1b359c6c3",
-            "GIT_SHORT_HASH=9d82f249",
-            "GIT_HASH_ARRAY_RX0=0x9d",
-            "GIT_HASH_ARRAY_RX1=0x82",
-            "GIT_HASH_ARRAY_RX2=0xf2",
-            "GIT_HASH_ARRAY_RX3=0x49",
-            "GIT_HASH_ARRAY_RX4=0x3e",
-            "GIT_HASH_ARRAY_RX5=0x91",
-            "GIT_HASH_ARRAY_RX6=0x81",
-            "GIT_HASH_ARRAY_RX7=0x58",
-            "GIT_HASH_ARRAY_RX8=0xb1",
-            "GIT_HASH_ARRAY_RX9=0x8b",
-            "GIT_HASH_ARRAY_RX10=0x2a",
-            "GIT_HASH_ARRAY_RX11=0x40",
-            "GIT_HASH_ARRAY_RX12=0x3c",
-            "GIT_HASH_ARRAY_RX13=0xa9",
-            "GIT_HASH_ARRAY_RX14=0x89",
-            "GIT_HASH_ARRAY_RX15=0xa1",
-            "GIT_HASH_ARRAY_RX16=0xb3",
-            "GIT_HASH_ARRAY_RX17=0x59",
-            "GIT_HASH_ARRAY_RX18=0xc6",
-            "GIT_HASH_ARRAY_RX19=0xc3",
+            "GIT_LONG_HASH=7b456d24eba12aa8e672f5d015e3fccb0bfdf3b1",
+            "GIT_SHORT_HASH=7b456d2",
+            "GIT_HASH_ARRAY_RX0=0x7b",
+            "GIT_HASH_ARRAY_RX1=0x45",
+            "GIT_HASH_ARRAY_RX2=0x6d",
+            "GIT_HASH_ARRAY_RX3=0x24",
+            "GIT_HASH_ARRAY_RX4=0xeb",
+            "GIT_HASH_ARRAY_RX5=0xa1",
+            "GIT_HASH_ARRAY_RX6=0x2a",
+            "GIT_HASH_ARRAY_RX7=0xa8",
+            "GIT_HASH_ARRAY_RX8=0xe6",
+            "GIT_HASH_ARRAY_RX9=0x72",
+            "GIT_HASH_ARRAY_RX10=0xf5",
+            "GIT_HASH_ARRAY_RX11=0xd0",
+            "GIT_HASH_ARRAY_RX12=0x15",
+            "GIT_HASH_ARRAY_RX13=0xe3",
+            "GIT_HASH_ARRAY_RX14=0xfc",
+            "GIT_HASH_ARRAY_RX15=0xcb",
+            "GIT_HASH_ARRAY_RX16=0x0b",
+            "GIT_HASH_ARRAY_RX17=0xfd",
+            "GIT_HASH_ARRAY_RX18=0xf3",
+            "GIT_HASH_ARRAY_RX19=0xb1",
             "LITTLE_ENDIAN"
          ],
          "includePath": [
@@ -595,52 +322,7 @@
          ],
          "intelliSenseMode": "gcc-arm",
          "name": "rx130"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": [
-            "__RX_LITTLE_ENDIAN__"
-         ],
-         "includePath": [
-            "${env:kpit-rx-include}",
-            "${env:applcommon-include}",
-            "${workspaceFolder}/src/rx231/**",
-            "${workspaceFolder}/src/Application/**"
-         ],
-         "intelliSenseMode": "gcc-x64",
-         "name": "rx231"
-      },
-      {
-         "cStandard": "c99",
-         "cppStandard": "c++11",
-         "defines": [
-            "STM32F303xC",
-            "USE_HAL_DRIVER",
-            "HSI_VALUE=8000000"
-         ],
-         "includePath": [
-            "${env:gcc-arm-include}",
-            "${env:stm32f3-peripheral-library-include}",
-            "${env:applcommon-include}",
-            "${workspaceFolder}/src/stm32f3/**",
-            "${workspaceFolder}/src/Application/**"
-         ],
-         "intelliSenseMode": "gcc-arm",
-         "name": "stm32f3"
       }
    ],
-   "env": {
-      "applcommon-include": "${workspaceFolder}/lib/applcommon/**",
-      "gcc-arm-include": "${workspaceFolder}/tools/gcc-arm-none-eabi/tc/lib/gcc/arm-none-eabi/7.2.1/include/**",
-      "kpit-rl78-include": "${workspaceFolder}/tools/kpit-rl78/tc/lib/gcc/rl78-elf/4.9.2.202002-GNURL78/include/**",
-      "kpit-rx-include": "${workspaceFolder}/tools/kpit-rx/tc/lib/gcc/rx-elf/4.8.4.201801-GNURX/include/**",
-      "psoc6-peripheral-library-include": "${workspaceFolder}/lib/cypress-psoc6-pdl/*",
-      "sdcc-stm8-include": "${workspaceFolder}/tools/sdcc-stm8/lib/inc/**",
-      "stm32f3-peripheral-library-include": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32F3xx/**",
-      "stm32g0-peripheral-library-include": "${workspaceFolder}/lib/stm32-standard-peripherals/STM32G0xx/**",
-      "stm8s-peripheral-library-include": "${workspaceFolder}/tools/sdcc-stm8/tc/share/sdcc/include/*",
-      "tiny-include": "${workspaceFolder}/lib/applcommon.tiny/src/**"
-   },
    "version": 4
 }

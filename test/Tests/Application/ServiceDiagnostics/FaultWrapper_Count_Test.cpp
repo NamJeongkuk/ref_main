@@ -90,7 +90,7 @@ TEST_GROUP(FaultWrapper_Count)
 
    void FaultIsAlreadySet(void)
    {
-      When for(int i = 0; i < RequestsToSetFault; i++)
+      When for(uint8_t i = 0; i < RequestsToSetFault; i++)
       {
          FaultSetIsRequested();
       }
@@ -107,7 +107,7 @@ TEST(FaultWrapper_Count, ShouldSetFaultAfterConsecutiveRequests)
 {
    Given The ModuleIsInitialized();
 
-   When for(int i = 0; i < (RequestsToSetFault - 1); i++)
+   When for(uint8_t i = 0; i < (RequestsToSetFault - 1); i++)
    {
       FaultSetIsRequested();
       OutputFaultShouldBe(CLEAR);
@@ -121,13 +121,13 @@ TEST(FaultWrapper_Count, ShouldSetFaultAfterNonConsecutiveSetRequests)
 {
    Given The ModuleIsInitialized();
 
-   When for(int i = 0; i < (RequestsToSetFault - 1); i++)
+   When for(uint8_t i = 0; i < (RequestsToSetFault - 1); i++)
    {
       FaultSetIsRequested();
       OutputFaultShouldBe(CLEAR);
    }
 
-   When for(int i = 0; i < (TotalRequestsConsidered - RequestsToSetFault - 1); i++)
+   When for(uint8_t i = 0; i < (TotalRequestsConsidered - RequestsToSetFault - 1); i++)
    {
       FaultClearIsRequested();
       The OutputFaultShouldBe(CLEAR);
@@ -142,7 +142,7 @@ TEST(FaultWrapper_Count, ShouldClearASetFaultWithEnoughClearRequestsToOvertakeTh
    Given The ModuleIsInitialized();
    And The FaultIsAlreadySet();
 
-   When for(int i = 0; i < (TotalRequestsConsidered - RequestsToSetFault); i++)
+   When for(uint8_t i = 0; i < (TotalRequestsConsidered - RequestsToSetFault); i++)
    {
       FaultClearIsRequested();
       OutputFaultShouldBe(SET);
@@ -160,7 +160,7 @@ TEST(FaultWrapper_Count, ShouldResetASetFaultAndClearAllCountsIfClientResetsFaul
    When The FaultWrapperIsReset();
    OutputFaultShouldBe(CLEAR);
 
-   When for(int i = 0; i < (RequestsToSetFault - 1); i++)
+   When for(uint8_t i = 0; i < (RequestsToSetFault - 1); i++)
    {
       When FaultSetIsRequested();
    }
@@ -173,14 +173,14 @@ TEST(FaultWrapper_Count, ShouldResetASetFaultAndClearAllCountsIfClientResetsFaul
 TEST(FaultWrapper_Count, ShouldResetASetFaultAndClearAllCountsEvenAfterManyFaultSetsAndClears)
 {
    Given The ModuleIsInitialized();
-   When for(int i = 0; i < TotalRequestsConsidered; i++)
+   When for(uint8_t i = 0; i < TotalRequestsConsidered; i++)
    {
       When FaultSetIsRequested();
    }
 
    The OutputFaultShouldBe(SET);
 
-   When for(int i = 0; i < (TotalRequestsConsidered - RequestsToSetFault); i++)
+   When for(uint8_t i = 0; i < (TotalRequestsConsidered - RequestsToSetFault); i++)
    {
       When FaultClearIsRequested();
       The OutputFaultShouldBe(SET);
