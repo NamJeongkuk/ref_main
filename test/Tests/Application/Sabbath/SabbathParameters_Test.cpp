@@ -17,16 +17,13 @@ extern "C"
 #include "CppUTestExt/MockSupport.h"
 #include "ReferDataModel_TestDouble.h"
 #include "PersonalityParametricData_TestDouble.h"
+#include "DefrostData_TestDouble.h"
 #include "uassert_test.h"
 
 #define Given
 #define When
 #define Then
 #define And
-
-static const DefrostData_t defrostData = {
-   .maxTimeBetweenDefrostsInMinutes = 32 * 60,
-};
 
 static const SabbathData_t sabbathData = {
    .maxTimeBetweenDefrostsInMinutes = 16 * 60
@@ -43,12 +40,14 @@ TEST_GROUP(SabbathParameters)
    I_DataModel_t *dataModel;
    PersonalityParametricData_t personalityParametricData;
    SabbathParameters_t instance;
+   DefrostData_t defrostData;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
 
+      DefrostData_TestDouble_Init(&defrostData);
       PersonalityParametricData_TestDouble_Init(&personalityParametricData);
       PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);
       PersonalityParametricData_TestDouble_SetSabbath(&personalityParametricData, &sabbathData);

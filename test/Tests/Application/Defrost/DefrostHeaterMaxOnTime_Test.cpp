@@ -19,6 +19,7 @@ extern "C"
 #include "uassert_test.h"
 #include "ReferDataModel_TestDouble.h"
 #include "PersonalityParametricData_TestDouble.h"
+#include "DefrostData_TestDouble.h"
 
 #define Given
 #define When
@@ -27,56 +28,6 @@ enum
 {
    Invalid = false,
    Valid = true,
-};
-
-static const DefrostData_t defrostData = {
-   .freezerDoorIncrementFactorInSecondsPerSecond = 348,
-   .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
-   .minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes = 6 * MINUTES_PER_HOUR,
-   .maxTimeBetweenDefrostsInMinutes = 32 * MINUTES_PER_HOUR,
-   .prechillFreezerSetpointInDegFx100 = 600,
-   .prechillFreshFoodSetpointInDegFx100 = 4600,
-   .prechillConvertibleCompartmentSetpointInDegFx100 = 600,
-   .prechillFreezerEvapExitTemperatureInDegFx100 = -3000,
-   .prechillConvertibleCompartmentEvapExitTemperatureInDegFx100 = -3000,
-   .maxPrechillTimeForFreshFoodAndFreezerDefrostsInMinutes = 10,
-   .maxPrechillTimeForFreshFoodOnlyDefrostInMinutes = 20,
-   .defrostDoorHoldoffTimeForFreshFoodAndFreezerInMinutes = 60,
-   .defrostDoorHoldoffTimeForFreshFoodOnlyInMinutes = 50,
-   .defrostMaxHoldoffTimeInMinutes = 60,
-   .maxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds = 0,
-   .freshFoodFanDefrostFreshFoodEvapExitTemperatureInDegFx100 = 3600,
-   .freshFoodFanDefrostFreshFoodFanMaxOnTimeInMinutes = 10,
-   .convertibleCompartmentFanDefrostConvertibleCompartmentEvapExitTemperatureInDegFx100 = 3200,
-   .convertibleCompartmentFanDefrostConvertibleCompartmentFanMaxOnTimeInMinutes = 10,
-   .freezerDefrostHeaterMaxOnTimeInMinutes = 60,
-   .freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 30,
-   .freezerAbnormalDefrostHeaterMaxOnTimeInMinutes = 32,
-   .freezerDefrostTerminationTemperatureInDegFx100 = 5900,
-   .freshFoodDefrostTerminationTemperatureInDegFx100 = 4460,
-   .convertibleCompartmentDefrostTerminationTemperatureInDegFx100 = 4460,
-   .freshFoodDefrostHeaterMaxOnTimeInMinutes = 60,
-   .freshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 20,
-   .freshFoodAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
-   .convertibleCompartmentDefrostHeaterMaxOnTimeInMinutes = 60,
-   .convertibleCompartmentAsFreshFoodAbnormalDefrostHeaterMaxOnTimeInMinutes = 21,
-   .convertibleCompartmentAsFreezerAbnormalDefrostHeaterMaxOnTimeInMinutes = 35,
-   .defrostDwellTimeInMinutes = 7,
-   .freshFoodAndFreezerPostDwellFreezerExitTemperatureInDegFx100 = -1000,
-   .dwellThreeWayValvePosition = ValvePosition_A,
-   .postDwellThreeWayValvePositionForFreshFoodAndFreezer = ValvePosition_A,
-   .freshFoodPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
-   .freezerPostDefrostPullDownExitTemperatureInDegFx100 = 4000,
-   .numberOfFreshFoodDefrostsBeforeFreezerDefrost = 2,
-   .numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost = 1,
-   .freshFoodAndFreezerPostDwellFreezerExitTimeInMinutes = 10,
-   .freshFoodOnlyPostDwellExitTimeInMinutes = 10,
-   .defrostPeriodicTimeoutInSeconds = 1,
-   .threeWayValvePositionToExitIdle = ValvePosition_B,
-   .threeWayValvePositionForMaxPrechillHoldoff = ValvePosition_B,
-   .threeWayValvePositionToExtendDefrostWithFreshFoodCycleDefrost = ValvePosition_B,
-   .threeWayValvePositionToCountAsPrechillTime = ValvePosition_B,
-   .threeWayValveTimePriorToPrechillCountsAsPrechillTime = true
 };
 
 static const DefrostHeaterMaxOnTimeConfiguration_t config = {
@@ -96,11 +47,16 @@ TEST_GROUP(DefrostHeaterMaxOnTime)
    TimerModule_TestDouble_t *timerModuleTestDouble;
    PersonalityParametricData_t personalityParametricData;
    DefrostHeaterMaxOnTime_t instance;
+   DefrostData_t defrostData;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
+
+      DefrostData_TestDouble_Init(&defrostData);
+      DefrostData_TestDouble_SetPrechillFreezerSetpointInDegFx100(&defrostData, 600);
+      DefrostData_TestDouble_SetPrechillConvertibleCompartmentSetpointInDegFx100(&defrostData, 600);
 
       PersonalityParametricData_TestDouble_Init(&personalityParametricData);
       PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);

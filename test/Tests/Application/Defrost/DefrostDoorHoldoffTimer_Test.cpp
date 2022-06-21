@@ -19,6 +19,7 @@ extern "C"
 #include "CppUTestExt/MockSupport.h"
 #include "ReferDataModel_TestDouble.h"
 #include "PersonalityParametricData_TestDouble.h"
+#include "DefrostData_TestDouble.h"
 #include "uassert_test.h"
 
 #define OPENS true
@@ -37,20 +38,6 @@ enum
    ALongTime = 1000 * MSEC_PER_MIN
 };
 
-static const DefrostData_t defrostData = {
-   .defrostDoorHoldoffTimeForFreshFoodAndFreezerInMinutes = FreshFoodAndFreezerHoldoffTimeInMinutes,
-   .defrostDoorHoldoffTimeForFreshFoodOnlyInMinutes = FreshFoodOnlyHoldoffTimeInMinutes,
-   .defrostMaxHoldoffTimeInMinutes = MaxHoldoffTimeInMinutes
-};
-
-static const EvaporatorData_t singleEvapData = {
-   .numberOfEvaporators = 1
-};
-
-static const EvaporatorData_t dualEvapData = {
-   .numberOfEvaporators = 2
-};
-
 static const DefrostDoorHoldoffTimerConfiguration_t configuration = {
 
    .allFreshFoodDoorsAreClosedState = Erd_AllFreshFoodDoorsAreClosed,
@@ -65,6 +52,14 @@ static const DefrostDoorHoldoffTimerConfiguration_t configuration = {
    .doorHoldoffTimerFsmState = Erd_DefrostDoorHoldoffTimerFsmState
 };
 
+static const EvaporatorData_t singleEvapData = {
+   .numberOfEvaporators = 1
+};
+
+static const EvaporatorData_t dualEvapData = {
+   .numberOfEvaporators = 2
+};
+
 TEST_GROUP(DefrostDoorHoldoffTimer)
 {
    ReferDataModel_TestDouble_t dataModelDouble;
@@ -74,12 +69,16 @@ TEST_GROUP(DefrostDoorHoldoffTimer)
 
    DefrostDoorHoldoffTimer_t instance;
 
+   DefrostData_t defrostData;
+
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
+      DefrostData_TestDouble_Init(&defrostData);
+      DefrostData_TestDouble_SetDefrostMaxHoldoffTimeInMinutes(&defrostData, MaxHoldoffTimeInMinutes);
    }
 
    void PersonalityInitializedWith(const EvaporatorData_t *evapData)

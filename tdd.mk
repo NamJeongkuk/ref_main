@@ -38,6 +38,7 @@ TEST_SRC_DIRS := \
    $(TESTING_DIR)/Mocks \
    $(TESTING_DIR)/Mocks/Bsp \
    $(TESTING_DIR)/Mocks/DataSource \
+   $(TESTING_DIR)/Mocks/ParametricTestDoubles \
    $(TESTS_DIR) \
    $(TESTS_DIR)/Application/Compressor \
    $(TESTS_DIR)/Application/DataSource \
