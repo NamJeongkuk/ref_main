@@ -22,35 +22,19 @@ enum
    PrecisionScalingFactor = UINT8_MAX
 };
 
-enum
-{
-   ScalingOption_Downscale,
-   ScalingOption_Upscale
-};
-
-static int32_t GetAdjustedSlewRateByFilterAlphaValue(SensorFilteredReadingChannelData_t *channelData)
+static int32_t AdjustedSlewRateByFilterAlphaValue(SensorFilteredReadingChannelData_t *channelData)
 {
    return channelData->clampData.slewRatePerSecondx100 * channelData->filterAlphax100;
 }
 
-static int32_t GetAdjustedValueUsingPrecisionScalingFactor(uint8_t scalingOption, int32_t unadjustedValue)
+static bool ValueIsValid(
+   SensorFilteredReadingChannelData_t *channelData,
+   int32_t value)
 {
-   if(scalingOption == ScalingOption_Downscale)
-   {
-      return unadjustedValue / PrecisionScalingFactor;
-   }
-   else // ScalingOption_Upscale
-   {
-      return unadjustedValue * PrecisionScalingFactor;
-   }
+   return value != channelData->filterInvalidValue;
 }
 
-static bool PreviousFilterValueIsValid(SensorFilteredReadingChannelData_t *channelData, int32_t unfilteredValue)
-{
-   return unfilteredValue != channelData->filterInvalidValue;
-}
-
-static int32_t GetUpdatedFilteredValueFromFilter(I_Filter_t *filter)
+static int32_t FilteredValue(I_Filter_t *filter)
 {
    int32_t filteredValue;
    Filter_Read(filter, &filteredValue);
@@ -79,29 +63,20 @@ static void ResetFilter(SensorFilteredReadingChannelData_t *channelData)
    channelData->filterHasBeenSeeded = false;
 }
 
-static void DownscaleValueUsingPrecisionScalingFactorThenWriteToErd(I_DataModel_t *dataModel, Erd_t erd, int32_t value)
+static int16_t DownscaledByPrecisionScalingFactor(int32_t value)
 {
-   int16_t downscaledValue = (int16_t)GetAdjustedValueUsingPrecisionScalingFactor(ScalingOption_Downscale, value);
-
-   DataModel_Write(
-      dataModel,
-      erd,
-      &downscaledValue);
+   return (int16_t)(value / PrecisionScalingFactor);
 }
 
-static int32_t ReadErdValueThenUpscaleUsingPrecisionScalingFactor(I_DataModel_t *dataModel, Erd_t erd)
+static int32_t UpscaledByPrecisionScalingFactor(int32_t value)
 {
-   int16_t value;
-
-   DataModel_Read(
-      dataModel,
-      erd,
-      &value);
-
-   return GetAdjustedValueUsingPrecisionScalingFactor(ScalingOption_Upscale, (int16_t)value);
+   return ((int16_t)value) * PrecisionScalingFactor;
 }
 
-static int32_t SlewRateFilter(SensorFilteredReadingChannelData_t *channelData, int32_t newUnfilteredValue, int32_t previousFilteredValue)
+static int32_t SlewRateLimited(
+   SensorFilteredReadingChannelData_t *channelData,
+   int32_t newUnfilteredValue,
+   int32_t previousFilteredValue)
 {
    if(channelData->clampData.slewRateEnabled)
    {
@@ -118,32 +93,7 @@ static int32_t SlewRateFilter(SensorFilteredReadingChannelData_t *channelData, i
    return newUnfilteredValue;
 }
 
-static void WriteFallbackDegFx100ValueToFilteredErd(I_DataModel_t *dataModel, SensorFilteredReadingChannelData_t *channelData)
-{
-   DataModel_Write(
-      dataModel,
-      channelData->erds.filteredOutputErd,
-      &channelData->fallbackData.fallbackValue);
-}
-
-static void WriteUpdatedFilteredDegFx100ValueToFilteredErdUsingSlewAndEWMAFilters(
-   I_DataModel_t *dataModel,
-   SensorFilteredReadingChannelData_t *channelData,
-   int32_t unfilteredValue,
-   int32_t previousFilteredValue)
-{
-   int32_t slewFilteredValue = SlewRateFilter(channelData, unfilteredValue, previousFilteredValue);
-   UpdateFilter(channelData, slewFilteredValue);
-   int32_t ewmaFilteredValue = GetUpdatedFilteredValueFromFilter(channelData->filter);
-   DownscaleValueUsingPrecisionScalingFactorThenWriteToErd(dataModel, channelData->erds.filteredOutputErd, ewmaFilteredValue);
-}
-
-static void WriteUnfilteredDegFx100ValueToFilteredErd(I_DataModel_t *dataModel, SensorFilteredReadingChannelData_t *channelData, int32_t unfilteredValue)
-{
-   DownscaleValueUsingPrecisionScalingFactorThenWriteToErd(dataModel, channelData->erds.filteredOutputErd, unfilteredValue);
-}
-
-static int32_t GetAdcMappedTemperatureDegFx100Value(
+static int32_t AdcMappedTemperatureDegFx100Value(
    SensorFilteredReading_t *instance,
    SensorFilteredReadingChannelData_t *channelData)
 {
@@ -160,78 +110,39 @@ static int32_t GetAdcMappedTemperatureDegFx100Value(
    return mappedAdcValue;
 }
 
-static SensorFilteredReadingChannelData_t *GetChannelDataAndUpdateUnfilteredErdWithNewMappedValue(SensorFilteredReading_t *instance, uint8_t index)
+static uint8_t FilteredErdUpdateMethodFlagBasedOnGoodReadingCounter(
+   SensorFilteredReadingChannelData_t *channelData)
 {
-   SensorFilteredReadingChannelData_t *channelData = &instance->_private.configuration->channelData[index];
-   int32_t unfilteredValue = GetAdjustedValueUsingPrecisionScalingFactor(
-      ScalingOption_Upscale,
-      GetAdcMappedTemperatureDegFx100Value(
-         instance,
-         channelData));
+   uint8_t writeToFilteredErd;
 
-   channelData->previousFilterValueIsValid = PreviousFilterValueIsValid(
-      channelData,
-      GetAdjustedValueUsingPrecisionScalingFactor(
-         ScalingOption_Downscale,
-         unfilteredValue));
-
-   DownscaleValueUsingPrecisionScalingFactorThenWriteToErd(
-      instance->_private.dataModel,
-      channelData->erds.unfilteredOutputErd,
-      unfilteredValue);
-
-   return channelData;
-}
-
-static void UpdateFilteredValues(SensorFilteredReadingChannelData_t *channelData, I_DataModel_t *dataModel, uint8_t writeToFilteredErd)
-{
-   int32_t unfilteredValue;
-   int32_t previousFilteredValue;
-
-   previousFilteredValue = ReadErdValueThenUpscaleUsingPrecisionScalingFactor(dataModel, channelData->erds.filteredOutputErd);
-   unfilteredValue = ReadErdValueThenUpscaleUsingPrecisionScalingFactor(dataModel, channelData->erds.unfilteredOutputErd);
-
-   if(writeToFilteredErd == UpdateFilteredErdUsingFilter)
-   {
-      WriteUpdatedFilteredDegFx100ValueToFilteredErdUsingSlewAndEWMAFilters(dataModel, channelData, unfilteredValue, previousFilteredValue);
-   }
-   else if(writeToFilteredErd == UpdateFilteredErdWithFallback)
-   {
-      WriteFallbackDegFx100ValueToFilteredErd(dataModel, channelData);
-   }
-   else if(writeToFilteredErd == ForceUpdateFilteredErd)
-   {
-      ResetFilter(channelData);
-      UpdateFilter(channelData, unfilteredValue);
-      WriteUnfilteredDegFx100ValueToFilteredErd(dataModel, channelData, unfilteredValue);
-   }
-}
-
-static void SetFilteredErdFlagAndSensorStateBasedOnGoodReadingCounter(SensorFilteredReadingChannelData_t *channelData, uint8_t *writeToFilteredErd)
-{
    channelData->fallbackData.badReadingCounter = 0;
 
    if(channelData->fallbackData.sensorState == SensorIsGood)
    {
-      *writeToFilteredErd = UpdateFilteredErdUsingFilter;
+      writeToFilteredErd = UpdateFilteredErdUsingFilter;
    }
    else
    {
       if(channelData->fallbackData.goodReadingCounter < channelData->fallbackData.goodReadingMaxValue - 1)
       {
          channelData->fallbackData.goodReadingCounter += 1;
-         *writeToFilteredErd = UpdateFilteredErdWithFallback;
+         writeToFilteredErd = UpdateFilteredErdWithFallback;
       }
       else
       {
-         *writeToFilteredErd = ForceUpdateFilteredErd;
          channelData->fallbackData.sensorState = SensorIsGood;
+         writeToFilteredErd = ForceUpdateFilteredErd;
       }
    }
+
+   return writeToFilteredErd;
 }
 
-static void SetFilteredErdFlagAndSensorStateBasedOnBadReadingCounter(SensorFilteredReadingChannelData_t *channelData, uint8_t *writeToFilteredErd)
+static uint8_t FilteredErdUpdateMethodFlagBasedOnBadReadingCounter(
+   SensorFilteredReadingChannelData_t *channelData)
 {
+   uint8_t writeToFilteredErd;
+
    channelData->fallbackData.goodReadingCounter = 0;
 
    if(channelData->fallbackData.sensorState == SensorIsGood)
@@ -239,92 +150,169 @@ static void SetFilteredErdFlagAndSensorStateBasedOnBadReadingCounter(SensorFilte
       if(channelData->fallbackData.badReadingCounter < channelData->fallbackData.badReadingMaxValue - 1)
       {
          channelData->fallbackData.badReadingCounter += 1;
+         writeToFilteredErd = DontUpdateFilteredErd;
       }
       else
       {
          channelData->fallbackData.sensorState = SensorIsBad;
-         *writeToFilteredErd = UpdateFilteredErdWithFallback;
+         writeToFilteredErd = UpdateFilteredErdWithFallback;
       }
    }
    else
    {
-      *writeToFilteredErd = UpdateFilteredErdWithFallback;
+      writeToFilteredErd = UpdateFilteredErdWithFallback;
    }
+
+   return writeToFilteredErd;
 }
 
 static void UpdateSensorValues(void *context)
 {
-   REINTERPRET(instance, context, SensorFilteredReading_t *);
-   SensorFilteredReadingChannelData_t *channelData;
-   uint8_t writeToFilteredErd;
+   SensorFilteredReading_t *instance = context;
 
    for(uint8_t index = 0; index < instance->_private.configuration->channelDataCount; index++)
    {
-      channelData = GetChannelDataAndUpdateUnfilteredErdWithNewMappedValue(instance, index);
-      writeToFilteredErd = DontUpdateFilteredErd;
+      uint8_t writeToFilteredErd;
 
-      if(channelData->previousFilterValueIsValid)
+      SensorFilteredReadingChannelData_t *channelData = &instance->_private.configuration->channelData[index];
+
+      int32_t unfilteredValue = AdcMappedTemperatureDegFx100Value(
+         instance,
+         channelData);
+      DataModel_Write(
+         instance->_private.dataModel,
+         channelData->erds.unfilteredOutputErd,
+         &unfilteredValue);
+
+      if(ValueIsValid(channelData, unfilteredValue))
       {
-         SetFilteredErdFlagAndSensorStateBasedOnGoodReadingCounter(channelData, &writeToFilteredErd);
+         writeToFilteredErd = FilteredErdUpdateMethodFlagBasedOnGoodReadingCounter(channelData);
       }
       else
       {
-         SetFilteredErdFlagAndSensorStateBasedOnBadReadingCounter(channelData, &writeToFilteredErd);
+         writeToFilteredErd = FilteredErdUpdateMethodFlagBasedOnBadReadingCounter(channelData);
       }
 
-      UpdateFilteredValues(channelData, instance->_private.dataModel, writeToFilteredErd);
+      if(writeToFilteredErd == UpdateFilteredErdUsingFilter)
+      {
+         int32_t previousFilteredValue;
+         DataModel_Read(
+            instance->_private.dataModel,
+            channelData->erds.filteredOutputErd,
+            &previousFilteredValue);
+
+         int32_t slewRateLimited = SlewRateLimited(
+            channelData,
+            UpscaledByPrecisionScalingFactor(unfilteredValue),
+            UpscaledByPrecisionScalingFactor(previousFilteredValue));
+
+         UpdateFilter(channelData, slewRateLimited);
+
+         int16_t downscaledFilteredValue = DownscaledByPrecisionScalingFactor(
+            FilteredValue(channelData->filter));
+         DataModel_Write(
+            instance->_private.dataModel,
+            channelData->erds.filteredOutputErd,
+            &downscaledFilteredValue);
+      }
+      else if(writeToFilteredErd == UpdateFilteredErdWithFallback)
+      {
+         DataModel_Write(
+            instance->_private.dataModel,
+            channelData->erds.filteredOutputErd,
+            &channelData->fallbackData.fallbackValue);
+      }
+      else if(writeToFilteredErd == ForceUpdateFilteredErd)
+      {
+         ResetFilter(channelData);
+         UpdateFilter(channelData, UpscaledByPrecisionScalingFactor(unfilteredValue));
+
+         DataModel_Write(
+            instance->_private.dataModel,
+            channelData->erds.filteredOutputErd,
+            &unfilteredValue);
+      }
    }
 }
 
-static void SetConvertibleCompartmentCabinetThermistorFallbackValue(SensorFilteredReading_t *instance, const uint8_t convertibleCompartmentState)
+static void SetWhichConvertibleCompartmentThermistorFallbackValueToUseDependingOnState(
+   SensorFilteredReading_t *instance,
+   const uint8_t convertibleCompartmentState)
 {
    if(convertibleCompartmentState == ConvertibleCompartmentState_FreshFood)
    {
-      instance->_private.configuration->channelData[instance->_private.configuration->convertibleCompartmentIndex].fallbackData.fallbackValue = instance->_private.configuration->convertibleCompartmentSensorData->freshFoodFallbackValueDegFx100;
+      instance->_private.configuration->channelData[instance->_private.configuration->convertibleCompartmentIndex].fallbackData.fallbackValue =
+         instance->_private.configuration->convertibleCompartmentSensorData->freshFoodFallbackValueDegFx100;
    }
-   else // ConvertibleCompartmentState_Freezer
+   else if(convertibleCompartmentState == ConvertibleCompartmentState_Freezer)
    {
-      instance->_private.configuration->channelData[instance->_private.configuration->convertibleCompartmentIndex].fallbackData.fallbackValue = instance->_private.configuration->convertibleCompartmentSensorData->freezerFallbackValueDegFx100;
+      instance->_private.configuration->channelData[instance->_private.configuration->convertibleCompartmentIndex].fallbackData.fallbackValue =
+         instance->_private.configuration->convertibleCompartmentSensorData->freezerFallbackValueDegFx100;
    }
 }
 
 static void ConvertibleCompartmentStateChangedCallback(void *context, const void *args)
 {
-   REINTERPRET(instance, context, SensorFilteredReading_t *);
-   REINTERPRET(convertibleCompartmentState, args, const ConvertibleCompartmentStateType_t *);
+   SensorFilteredReading_t *instance = context;
+   const ConvertibleCompartmentStateType_t *convertibleCompartmentState = args;
 
-   SetConvertibleCompartmentCabinetThermistorFallbackValue(instance, *convertibleCompartmentState);
+   SetWhichConvertibleCompartmentThermistorFallbackValueToUseDependingOnState(instance, *convertibleCompartmentState);
+}
+
+static void SetSlewRatePerSecondx100PerChannel(SensorFilteredReading_t *instance)
+{
+   for(uint8_t index = 0; index < instance->_private.configuration->channelDataCount; index++)
+   {
+      SensorFilteredReadingChannelData_t *channelData = &instance->_private.configuration->channelData[index];
+
+      channelData->clampData.slewRatePerSecondx100 = UpscaledByPrecisionScalingFactor(
+         AdjustedSlewRateByFilterAlphaValue(channelData));
+   }
+}
+
+static void SetFilterHasNotBeenSeededForEachChannel(SensorFilteredReading_t *instance)
+{
+   for(uint8_t index = 0; index < instance->_private.configuration->channelDataCount; index++)
+   {
+      SensorFilteredReadingChannelData_t *channelData = &instance->_private.configuration->channelData[index];
+
+      channelData->filterHasBeenSeeded = false;
+   }
 }
 
 static void InitializeFilter(SensorFilteredReading_t *instance)
 {
-   SensorFilteredReadingChannelData_t *channelData;
-
    for(uint8_t index = 0; index < instance->_private.configuration->channelDataCount; index++)
    {
-      channelData = GetChannelDataAndUpdateUnfilteredErdWithNewMappedValue(instance, index);
-      channelData->clampData.slewRatePerSecondx100 = GetAdjustedValueUsingPrecisionScalingFactor(ScalingOption_Upscale, GetAdjustedSlewRateByFilterAlphaValue(channelData));
-      channelData->filterHasBeenSeeded = false;
+      SensorFilteredReadingChannelData_t *channelData = &instance->_private.configuration->channelData[index];
 
-      if(channelData->previousFilterValueIsValid)
+      int32_t unfilteredValue = AdcMappedTemperatureDegFx100Value(
+         instance,
+         channelData);
+      DataModel_Write(
+         instance->_private.dataModel,
+         channelData->erds.unfilteredOutputErd,
+         &unfilteredValue);
+
+      if(ValueIsValid(channelData, unfilteredValue))
       {
-         int32_t unfilteredValue = ReadErdValueThenUpscaleUsingPrecisionScalingFactor(instance->_private.dataModel, channelData->erds.unfilteredOutputErd);
-         UpdateFilter(channelData, unfilteredValue);
-         DownscaleValueUsingPrecisionScalingFactorThenWriteToErd(instance->_private.dataModel, channelData->erds.filteredOutputErd, unfilteredValue);
+         UpdateFilter(channelData, UpscaledByPrecisionScalingFactor(unfilteredValue));
+
+         DataModel_Write(
+            instance->_private.dataModel,
+            channelData->erds.filteredOutputErd,
+            &unfilteredValue);
       }
       else
       {
          channelData->fallbackData.sensorState = SensorIsBad;
-         WriteFallbackDegFx100ValueToFilteredErd(instance->_private.dataModel, channelData);
+
+         DataModel_Write(
+            instance->_private.dataModel,
+            channelData->erds.filteredOutputErd,
+            &channelData->fallbackData.fallbackValue);
       }
    }
-}
-
-static void InitializeConvertibleCompartmentFallbackValue(SensorFilteredReading_t *instance)
-{
-   ConvertibleCompartmentStateType_t convertibleCompartmentState;
-   DataModel_Read(instance->_private.dataModel, instance->_private.configuration->convertibleCompartmentStateErd, &convertibleCompartmentState);
-   SetConvertibleCompartmentCabinetThermistorFallbackValue(instance, convertibleCompartmentState);
 }
 
 void SensorFilteredReading_Init(
@@ -335,7 +323,15 @@ void SensorFilteredReading_Init(
    instance->_private.configuration = config;
    instance->_private.dataModel = dataModel;
 
-   InitializeConvertibleCompartmentFallbackValue(instance);
+   ConvertibleCompartmentStateType_t convertibleCompartmentState;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.configuration->convertibleCompartmentStateErd,
+      &convertibleCompartmentState);
+   SetWhichConvertibleCompartmentThermistorFallbackValueToUseDependingOnState(instance, convertibleCompartmentState);
+
+   SetSlewRatePerSecondx100PerChannel(instance);
+   SetFilterHasNotBeenSeededForEachChannel(instance);
    InitializeFilter(instance);
 
    EventSubscription_Init(
@@ -348,7 +344,9 @@ void SensorFilteredReading_Init(
       &instance->_private.onConvertibleCompartmentStateChanged);
 
    TimerModule_StartPeriodic(
-      DataModelErdPointerAccess_GetTimerModule(dataModel, instance->_private.configuration->timerModule),
+      DataModelErdPointerAccess_GetTimerModule(
+         dataModel,
+         instance->_private.configuration->timerModule),
       &instance->_private.filterTimer,
       instance->_private.configuration->periodicCheckRateInMsec,
       UpdateSensorValues,

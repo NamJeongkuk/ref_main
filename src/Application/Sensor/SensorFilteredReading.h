@@ -57,7 +57,6 @@ typedef struct
    I_Filter_t *filter;
    bool filterHasBeenSeeded;
    I_Mapper_t *adcMapper;
-   bool previousFilterValueIsValid;
    SensorFilteredReadingClampData_t clampData;
    SensorFilteredReadingFallbackData_t fallbackData;
    uint16_t filterInvalidValue;

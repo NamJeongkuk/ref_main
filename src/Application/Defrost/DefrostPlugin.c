@@ -14,6 +14,7 @@
 #include "DefrostHeaterMaxOnTime.h"
 #include "FreshFoodOnlyDefrostArbitrator.h"
 #include "ActivelyWaitingForDefrostOnCompareMatch.h"
+#include "uassert.h"
 
 static struct
 {
@@ -88,6 +89,14 @@ static const FreshFoodOnlyDefrostArbitratorConfiguration_t freshFoodOnlyDefrostA
 
 void DefrostPlugin_Init(I_DataModel_t *dataModel)
 {
+   bool sensorsReadyToBeRead;
+   DataModel_Read(
+      dataModel,
+      Erd_SensorsReadyToBeRead,
+      &sensorsReadyToBeRead);
+
+   uassert(sensorsReadyToBeRead);
+
    DefrostParameterSelector_Init(dataModel);
 
    DefrostStateOnCompareMatch(dataModel);

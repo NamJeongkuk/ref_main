@@ -56,11 +56,13 @@ void Application_Init(
       Erd_PersonalityParametricData,
       Erd_PersonalityIdOutOfRangeFlag,
       DataModelErdPointerAccess_GetAction(dataModel, Erd_JumpToBootLoaderAction));
+
+   SensorFilteredReadingPlugin_Init(dataModel);
+
+   HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
    EepromAppPlugin_Init(dataModel);
    SabbathPlugin_Init(dataModel);
-   HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
    ConvertibleCompartmentStatePlugin_Init(&instance->_private.convertibleCompartmentStatePlugin, dataModel);
-   SensorFilteredReadingPlugin_Init(dataModel);
    OverrideArbiterPlugin_Init(dataModel);
    GridPlugin_Init(&instance->_private.gridPlugin, dataModel);
    DoorPlugin_Init(dataModel);

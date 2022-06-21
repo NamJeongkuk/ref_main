@@ -13,6 +13,7 @@
 #include "SystemErds.h"
 #include "utils.h"
 #include "uassert.h"
+#include "Constants_Binary.h"
 
 // (type, sensorType , countErd, unfilteredErd, filteredErd, IsSigned)
 #define SENSOR_FILTERING_TABLE_ALL(ENTRY)                                                                                                                                                                        \
@@ -108,4 +109,9 @@ void SensorFilteredReadingPlugin_Init(I_DataModel_t *dataModel)
       &instance.sensorFilteredReadingInstance,
       dataModel,
       &instance.sensorConfig);
+
+   DataModel_Write(
+      dataModel,
+      Erd_SensorsReadyToBeRead,
+      set);
 }

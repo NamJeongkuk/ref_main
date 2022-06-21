@@ -193,7 +193,7 @@ TEST_GROUP(SensorFilteredReading)
       config.periodicCheckRateInMsec = FilterSamplingTimeInMsec;
    }
 
-   void WhenTheModuleIsInitialized()
+   void GivenTheModuleIsInitialized()
    {
       SensorFilteredReading_Init(
          &instance,
@@ -208,6 +208,11 @@ TEST_GROUP(SensorFilteredReading)
    void GivenRawAdcCountErdIs(Erd_t erd, AdcCounts_t adcCounts)
    {
       DataModel_Write(dataModel, erd, &adcCounts);
+   }
+
+   void WhenRawAdcCountErdIs(Erd_t erd, AdcCounts_t adcCounts)
+   {
+      GivenRawAdcCountErdIs(erd, adcCounts);
    }
 
    void GivenConvertibleCompartmentStateIsA(uint8_t state)
@@ -291,7 +296,7 @@ TEST(SensorFilteredReading, ShouldInitWithFallbackTempsForFilteredAndBadTempsFor
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, 0);
    GivenRawAdcCountErdIs(Erd_RawAdcCount2, 0);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, BadTempValue);
    TheUnfilteredErdShouldBe(Erd_UnfilteredTemp2, BadTempValue);
@@ -304,7 +309,7 @@ TEST(SensorFilteredReading, ShouldInitWithGoodTempsForFilteredAndUnfilteredWhenG
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
    GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount2);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue1);
    TheUnfilteredErdShouldBe(Erd_UnfilteredTemp2, MappedValue2);
@@ -316,13 +321,13 @@ TEST(SensorFilteredReading, ShouldInitWithGoodTempsForFilteredAndUnfilteredWhenG
 TEST(SensorFilteredReading, ShouldFilterSampleWithoutClampingAfter1PeriodOfGoodAdcReadings)
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount3);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    After(FilterSamplingTimeInMsec - 1);
    TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue3);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue3);
 
-   GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount4);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount4);
    After(1);
    TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue4);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, ExponentiallyFilteredValueFromMappedValue3To4);
@@ -331,11 +336,11 @@ TEST(SensorFilteredReading, ShouldFilterSampleWithoutClampingAfter1PeriodOfGoodA
 TEST(SensorFilteredReading, ShoulBringAverageCloseToSampleAfterMultipleOfTheSameReadings)
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount3);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue3);
 
-   GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount4);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount4);
    After(FilterSamplingTimeInMsec - 1);
 
    After(1);
@@ -349,13 +354,13 @@ TEST(SensorFilteredReading, ShoulBringAverageCloseToSampleAfterMultipleOfTheSame
 TEST(SensorFilteredReading, ShouldApplyClampingThenEwmaFilterOnFilteredTempErdAfter1SecondWhenNewSampleAverageIncreasedGreaterThanSlewRateTimesAlpha)
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    After(FilterSamplingTimeInMsec - 1);
    TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue1);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue1);
 
-   GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount5);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount5);
    After(1);
    TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue5);
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, ExponentiallyFilteredValueFromMappedValue1To5WithClamping);
@@ -364,13 +369,13 @@ TEST(SensorFilteredReading, ShouldApplyClampingThenEwmaFilterOnFilteredTempErdAf
 TEST(SensorFilteredReading, ShouldClampFilteredTempErdAfter1SecondWhenNewSampleAverageDecreasedGreaterThanSlewRateTimesAlpha)
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount5);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    After(FilterSamplingTimeInMsec - 1);
    TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue5);
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue5);
 
-   GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
    After(1);
    TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue1);
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, ExponentiallyFilteredValueFromMappedValue5To1WithClamping);
@@ -379,17 +384,17 @@ TEST(SensorFilteredReading, ShouldClampFilteredTempErdAfter1SecondWhenNewSampleA
 TEST(SensorFilteredReading, ShouldStillClampFilteredTempErdAfter2SecondWhenNewSampleAverageIncreasesGreaterThanSlewRateTimesAlpha)
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    After(FilterSamplingTimeInMsec - 1);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue1);
 
-   GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount2);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount2);
    After(1);
    TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue2);
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, ExponentiallyFilteredValueFromMappedValue1To2WithClamping);
 
-   GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount3);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount3);
    After(FilterSamplingTimeInMsec);
    TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue3);
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, ExponentiallyFilteredValueFromMappedValue1To3WithClamping);
@@ -398,12 +403,12 @@ TEST(SensorFilteredReading, ShouldStillClampFilteredTempErdAfter2SecondWhenNewSa
 TEST(SensorFilteredReading, ShouldNotChangeFilteredTempErdWhenGoodReadingFollowingByBadReading)
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    After(FilterSamplingTimeInMsec);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue1);
 
-   GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
 
    After(FilterSamplingTimeInMsec - 1);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue1);
@@ -418,14 +423,14 @@ TEST(SensorFilteredReading, ShouldNotChangeFilteredTempErdWhenGoodReadingFollowi
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
    GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount1);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    After(FilterSamplingTimeInMsec);
    TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue1);
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue1);
 
-   GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
-   GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
    TheFilteredAndUnfilteredTemperaturesShouldBe(MappedValue1 AND BadFilterValue For Periods(98));
 
    After(FilterSamplingTimeInMsec);
@@ -437,14 +442,14 @@ TEST(SensorFilteredReading, ShouldChangeFilteredTempErdToFallbackWhenGoodReading
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
    GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount1);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    After(FilterSamplingTimeInMsec);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue1);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, MappedValue1);
 
-   GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
-   And GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
+   And WhenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
    TheFilteredAndUnfilteredTemperaturesShouldBe(MappedValue1 AND BadFilterValue For Periods(99));
 
    After(FilterSamplingTimeInMsec);
@@ -458,15 +463,15 @@ TEST(SensorFilteredReading, ShouldKeepFilteredTempErdAtFallbackValueWhenSensorIs
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
    GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, FreshFoodFallbackDegFx100);
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, FreezerFallbackDegFx100);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, BadTempValue);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp2, BadTempValue);
 
-   Then GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
-   And GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount1);
+   Then WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
+   And WhenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount1);
 
    After(FilterSamplingTimeInMsec);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, FreshFoodFallbackDegFx100);
@@ -479,15 +484,15 @@ TEST(SensorFilteredReading, ShouldKeepFilteredTempErdAtFallbackValueWhenSensorIs
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
    GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, FreshFoodFallbackDegFx100);
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, FreezerFallbackDegFx100);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, BadTempValue);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp2, BadTempValue);
 
-   GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
-   GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount1);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount1);
    TheFilteredTemperaturesShouldBeAtFallbackForPeriods(98);
 
    After(FilterSamplingTimeInMsec);
@@ -501,15 +506,15 @@ TEST(SensorFilteredReading, ShouldChangeFilteredTempToMostRecentGoodReadingWhenS
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
    GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, FreshFoodFallbackDegFx100);
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, FreezerFallbackDegFx100);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, BadTempValue);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp2, BadTempValue);
 
-   GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount2);
-   GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount2);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount2);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount2);
    TheFilteredTemperaturesShouldBeAtFallbackForPeriods(99);
 
    After(FilterSamplingTimeInMsec);
@@ -523,15 +528,15 @@ TEST(SensorFilteredReading, ShouldFilterFilteredTempWhenSensorIsInitedWithBadRea
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
    GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, FreshFoodFallbackDegFx100);
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, FreezerFallbackDegFx100);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, BadTempValue);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp2, BadTempValue);
 
-   GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount2);
-   GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount2);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount2);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount2);
    TheFilteredTemperaturesShouldBeAtFallbackForPeriods(99);
 
    After(FilterSamplingTimeInMsec);
@@ -540,8 +545,8 @@ TEST(SensorFilteredReading, ShouldFilterFilteredTempWhenSensorIsInitedWithBadRea
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue2);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp2, MappedValue2);
 
-   GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount3);
-   GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount3);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount3);
+   WhenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount3);
    After(FilterSamplingTimeInMsec);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, ExponentiallyFilteredValueFromMappedValue2To3WithClamping);
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, ExponentiallyFilteredValueFromMappedValue2To3WithClamping);
@@ -551,7 +556,7 @@ TEST(SensorFilteredReading, ShouldFilterFilteredTempWhenSensorIsInitedWithBadRea
 
 TEST(SensorFilteredReading, WhenInitedWithBadSensorsShouldOnlySwitchToGoodFilteredTempAfter100ConsecutiveGoodReadings)
 {
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
    GivenTheSensorsAreBad();
 
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, FreshFoodFallbackDegFx100);
@@ -559,20 +564,20 @@ TEST(SensorFilteredReading, WhenInitedWithBadSensorsShouldOnlySwitchToGoodFilter
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, BadTempValue);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp2, BadTempValue);
 
-   Then GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount2);
-   And GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount2);
+   Then WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount2);
+   And WhenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount2);
    TheFilteredTemperaturesShouldBeAtFallbackForPeriods(99);
 
-   Then GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
-   And GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
+   Then WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
+   And WhenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
    After(FilterSamplingTimeInMsec);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, FreshFoodFallbackDegFx100);
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, FreezerFallbackDegFx100);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, BadTempValue);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp2, BadTempValue);
 
-   Then GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount2);
-   And GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount2);
+   Then WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount2);
+   And WhenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount2);
    TheFilteredTemperaturesShouldBeAtFallbackForPeriods(99);
 
    After(FilterSamplingTimeInMsec);
@@ -586,27 +591,27 @@ TEST(SensorFilteredReading, WhenInitedWithGoodSensorsShouldOnlySwitchToFallbackF
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount3);
    And GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount3);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue3);
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, MappedValue3);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue3);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp2, MappedValue3);
 
-   Then GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
-   And GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
+   Then WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
+   And WhenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
    TheFilteredAndUnfilteredTemperaturesShouldBe(MappedValue3 AND BadTempValue For Periods(99));
 
-   Then GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount4);
-   And GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount4);
+   Then WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount4);
+   And WhenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount4);
    After(FilterSamplingTimeInMsec);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, ExponentiallyFilteredValueFromMappedValue3To4);
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, ExponentiallyFilteredValueFromMappedValue3To4);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue4);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp2, MappedValue4);
 
-   Then GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
-   And GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
+   Then WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
+   And WhenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
    TheFilteredAndUnfilteredTemperaturesShouldBe(ExponentiallyFilteredValueFromMappedValue3To4 AND BadTempValue For Periods(99));
 
    After(FilterSamplingTimeInMsec);
@@ -619,27 +624,27 @@ TEST(SensorFilteredReading, WhenInitedWithGoodSensorsShouldOnlySwitchToFallbackF
 TEST(SensorFilteredReading, ShouldResetAndReSeedFilterAfterEveryBadSensorToGoodSensorTransition)
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
-   Then GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
+   Then WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
    TheFilteredErdShouldBeAtForSeconds(Erd_FilteredTemp1 AND MappedValue1 For Periods(99));
 
    After(FilterSamplingTimeInMsec);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, FreshFoodFallbackDegFx100);
 
-   Then GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount2);
+   Then WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount2);
    TheFilteredErdShouldBeAtForSeconds(Erd_FilteredTemp1 AND FreshFoodFallbackDegFx100 For Periods(99));
 
    After(FilterSamplingTimeInMsec);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue2);
 
-   Then GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
+   Then WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
    TheFilteredErdShouldBeAtForSeconds(Erd_FilteredTemp1 AND MappedValue2 For Periods(99));
 
    After(FilterSamplingTimeInMsec);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, FreshFoodFallbackDegFx100);
 
-   Then GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount3);
+   Then WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount3);
    TheFilteredErdShouldBeAtForSeconds(Erd_FilteredTemp1 AND FreshFoodFallbackDegFx100 For Periods(99));
 
    After(FilterSamplingTimeInMsec);
@@ -650,7 +655,7 @@ TEST(SensorFilteredReading, ShouldInitWithFreezerFallbackTempForConvertibleCompa
 {
    GivenRawAdcCountErdIs(Erd_ConvertibleCompartmentRawAdcCount, AdcCountForBadMapping);
    And GivenConvertibleCompartmentStateIsA(ConvertibleCompartmentState_Freezer);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    TheUnfilteredErdShouldBe(Erd_ConvertibleCompartmentUnfilteredTemp, BadTempValue);
    TheFilteredOutputErdShouldBe(Erd_ConvertibleCompartmentFilteredTemp, ConvertibleCompartmentFreezerFallbackDegFx100);
@@ -660,7 +665,7 @@ TEST(SensorFilteredReading, ShouldInitWithFreshFoodFallbackTempForConvertibleCom
 {
    GivenRawAdcCountErdIs(Erd_ConvertibleCompartmentRawAdcCount, AdcCountForBadMapping);
    And GivenConvertibleCompartmentStateIsA(ConvertibleCompartmentState_FreshFood);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    TheUnfilteredErdShouldBe(Erd_ConvertibleCompartmentUnfilteredTemp, BadTempValue);
    TheFilteredOutputErdShouldBe(Erd_ConvertibleCompartmentFilteredTemp, ConvertibleCompartmentFreshFoodFallbackDegFx100);
@@ -670,7 +675,7 @@ TEST(SensorFilteredReading, ShouldChangeFallbackValueForConvertibleCompartmentWh
 {
    GivenRawAdcCountErdIs(Erd_ConvertibleCompartmentRawAdcCount, AdcCountForBadMapping);
    And GivenConvertibleCompartmentStateIsA(ConvertibleCompartmentState_FreshFood);
-   WhenTheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    TheUnfilteredErdShouldBe(Erd_ConvertibleCompartmentUnfilteredTemp, BadTempValue);
    TheFilteredOutputErdShouldBe(Erd_ConvertibleCompartmentFilteredTemp, ConvertibleCompartmentFreshFoodFallbackDegFx100);

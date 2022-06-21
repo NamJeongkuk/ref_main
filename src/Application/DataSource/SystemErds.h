@@ -345,6 +345,8 @@ enum
    ENTRY(Erd_ConvertibleCompartmentGridBlockNumber,         0xF01A, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorIsOn,                                0xF01B, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_SensorsReadyToBeRead,                          0xF020, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_SystemTickInterrupt,                           0xF100, I_Interrupt_t *,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TimeSource,                                    0xF101, I_TimeSource_t *,                                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TimerModule,                                   0xF102, TimerModule_t *,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -548,7 +550,7 @@ enum
    \
    ENTRY(Erd_CacheSyncState,                                0xF7FF, bool,                                               Swap_N, Io_None, Sub_N, Virtual,               NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_EnhancedSabbathMode,                           0xF800, bool,                                               Swap_N, Io_None, Sub_Y, NvUserSetting,         NotNv,                                    NotFault) \
+   ENTRY(Erd_EnhancedSabbathMode,                           0xF800, bool,                                               Swap_N, Io_None, Sub_Y, NvUserSetting,         NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    \
    ENTRY(Erd_EepromEraseRequestSignal,                      0xFAFF, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                   NotNv,                                    NotFault) \
    \

@@ -11,6 +11,7 @@
 #include "Grid_MultiDoor.h"
 #include "Grid_TripleEvap.h"
 #include "Grid_DualEvap.h"
+#include "uassert.h"
 
 static const GridFunction_t grids[] = {
    Grid_MultiDoor,
@@ -57,6 +58,14 @@ void GridPlugin_Init(
    GridPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
+   bool sensorsReadyToBeRead;
+   DataModel_Read(
+      dataModel,
+      Erd_SensorsReadyToBeRead,
+      &sensorsReadyToBeRead);
+
+   uassert(sensorsReadyToBeRead);
+
    CalcGridBlockAndGridLines_Init(
       &instance->calcGridBlockAndGridLinesInstance,
       &calcConfig,
