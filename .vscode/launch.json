@@ -24,9 +24,9 @@
          "type": "node"
       },
       {
-         "args": {},
+         "args": [],
          "cwd": "${workspaceFolder}",
-         "environment": {},
+         "environment": [],
          "externalConsole": false,
          "linux": {
             "MIMode": "gdb"
