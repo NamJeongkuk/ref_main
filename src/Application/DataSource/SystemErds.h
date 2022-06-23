@@ -60,6 +60,7 @@
 #include "I_FaultWrapper.h"
 #include "ConvertibleCompartmentStateType.h"
 #include "CompressorState.h"
+#include "DefrostCompressorOnTimeCounterFsmState.h"
 
 // clang-format off
 
@@ -346,6 +347,11 @@ enum
    ENTRY(Erd_CompressorIsOn,                                0xF01B, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_SensorsReadyToBeRead,                          0xF020, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_SetpointResolverReady,                         0xF021, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentStateResolverReady,      0xF022, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_OverrideArbiterReady,                          0xF023, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_GridPluginReady,                               0xF024, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_PeriodicNvUpdaterReady,                        0xF025, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_SystemTickInterrupt,                           0xF100, I_Interrupt_t *,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TimeSource,                                    0xF101, I_TimeSource_t *,                                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -371,22 +377,23 @@ enum
    ENTRY(Erd_NumberofFreezerAbnormalDefrostCycles,          0xF115, uint16_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_DefrostFreezerDoorAccelerationCount,           0xF116, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DefrostFreshFoodDoorAccelerationCount,         0xF117, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DefrostTimerCountInSeconds,                    0xF11B, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_MaxTimeBetweenDefrostsInMinutes,               0xF11D, uint16_t,                                           Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodDefrostWasAbnormal,                   0xF11F, bool,                                               Swap_N, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost,0xF121, uint8_t,                                            Swap_N, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_ExtendDefrostSignal,                           0xF122, Signal_t,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DefrostMaxHoldoffMet,                          0xF123, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_MaxPrechillTimeInMinutes,                      0xF124, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_PostDwellExitTimeInMinutes,                    0xF125, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DefrostPrechillRunCounterInMinutes,            0xF126, uint16_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodDefrostHeaterMaxOnTimeInMinutes,      0xF127, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,        0xF128, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentDefrostHeaterMaxOnTimeInMinutes, 0xF129, uint8_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_PrechillTimeMet,                               0xF12A, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_NoFreezeLimitIsActive,                         0xF12B, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DefrostConvertibleCompartmentDoorAccelerationCount, 0xF12C, uint32_t,                                      Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ActivelyWaitingForNextDefrost,                 0xF12D, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_MaxTimeBetweenDefrostsInMinutes,               0xF118, uint16_t,                                           Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDefrostWasAbnormal,                   0xF119, bool,                                               Swap_N, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost,0xF11A, uint8_t,                                            Swap_N, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_ExtendDefrostSignal,                           0xF11B, Signal_t,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostMaxHoldoffMet,                          0xF11C, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_MaxPrechillTimeInMinutes,                      0xF11D, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_PostDwellExitTimeInMinutes,                    0xF11E, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostPrechillRunCounterInMinutes,            0xF11F, uint16_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDefrostHeaterMaxOnTimeInMinutes,      0xF120, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,        0xF121, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentDefrostHeaterMaxOnTimeInMinutes, 0xF122, uint8_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_PrechillTimeMet,                               0xF123, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_NoFreezeLimitIsActive,                         0xF124, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostConvertibleCompartmentDoorAccelerationCount, 0xF125, uint32_t,                                      Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ActivelyWaitingForNextDefrost,                 0xF126, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostCompressorOnTimeInSeconds,              0xF127, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostCompressorOnTimeCounterFsmState,        0xF128, DefrostCompressorOnTimeCounterFsmState_t,           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_LeftHandFreshFoodDoorIsOpen,                   0xF130, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RightHandFreshFoodDoorIsOpen,                  0xF131, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -560,7 +567,7 @@ enum
    ENTRY(Erd_RfidSomeData,                                  0xFB03, uint32_t,                                           Swap_N, Io_None, Sub_Y, NvRfid,                NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_FaultSnapshotSomeData,                         0xFB04, uint32_t,                                           Swap_N, Io_None, Sub_Y, NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_CycleHistorySomeData,                          0xFB05, uint32_t,                                           Swap_N, Io_None, Sub_Y, NvCycleHistory,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_Eeprom_DefrostTimerCountInSeconds,             0xFB06, uint32_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_DefrostCompressorOnTimeInSeconds,       0xFB06, uint32_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_DefrostFreezerDoorAccelerationCount,    0xFB07, uint32_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_DefrostFreshFoodDoorAccelerationCount,  0xFB08, uint32_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_DefrostConvertibleCompartmentDoorAccelerationCount, 0xFB09, uint32_t,                               Swap_Y, Io_None, Sub_N, NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \

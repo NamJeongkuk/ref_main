@@ -8,12 +8,12 @@
 #ifndef SETPOINTRESOLVERPLUGIN_H
 #define SETPOINTRESOLVERPLUGIN_H
 
-#include "I_DataSource.h"
+#include "I_DataModel.h"
 
 /*!
  *
- * @param dataSource
+ * @param dataModel
  */
-void SetpointResolverPlugin_Init(I_DataSource_t *dataSource);
+void SetpointResolverPlugin_Init(I_DataModel_t *dataModel);
 
 #endif

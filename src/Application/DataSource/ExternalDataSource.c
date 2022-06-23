@@ -87,10 +87,10 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_NumberofFreezerAbnormalDefrostCycles, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_DefrostFreezerDoorAccelerationCount, sizeof(uint32_t)),
    SWAPPED_ERD(PublicErd_DefrostFreshFoodDoorAccelerationCount, sizeof(uint32_t)),
-   SWAPPED_ERD(PublicErd_DefrostTimerCountInSeconds, sizeof(uint32_t)),
    SWAPPED_ERD(PublicErd_MaxTimeBetweenDefrostsInMinutes, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_DefrostPrechillRunCounterInMinutes, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_DefrostConvertibleCompartmentDoorAccelerationCount, sizeof(uint32_t)),
+   SWAPPED_ERD(PublicErd_DefrostCompressorOnTimeInSeconds, sizeof(uint32_t)),
    SWAPPED_ERD(PublicErd_FreshFoodThermistor_AdcCount, sizeof(AdcCounts_t)),
    SWAPPED_ERD(PublicErd_FreshFood_UnfilteredTemperature, sizeof(TemperatureDegFx100_t)),
    SWAPPED_FIELD(PublicErd_ConvertibleCompartmentSetpoint_ResolvedVote, SetpointVotedTemperature_t, temperature),
@@ -122,7 +122,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_FIELD(PublicErd_ServiceDiagnosticsFaultTableSnapshotData0, FaultSnapshotData_t, someData),
 
    // 0xFB00 range
-   SWAPPED_ERD(PublicErd_Eeprom_DefrostTimerCountInSeconds, sizeof(uint32_t))
+   SWAPPED_ERD(PublicErd_Eeprom_DefrostCompressorOnTimeInSeconds, sizeof(uint32_t))
 };
 
 static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
@@ -140,7 +140,7 @@ static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
    SWAPPED_FIELD_RANGE(PublicErd_FreezerSetpoint_FactoryVote, PublicErd_FreezerSetpoint_UserSetpoint),
    SWAPPED_FIELD_RANGE(PublicErd_FreshFoodSetpoint_FactoryVote, PublicErd_FreshFoodSetpoint_UserSetpoint),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableSnapshotData0, PublicErd_ServiceDiagnosticsFaultTableSnapshotData9),
-   SWAPPED_FIELD_RANGE(PublicErd_Eeprom_DefrostTimerCountInSeconds, PublicErd_Eeprom_DefrostConvertibleCompartmentDoorAccelerationCount),
+   SWAPPED_FIELD_RANGE(PublicErd_Eeprom_DefrostCompressorOnTimeInSeconds, PublicErd_Eeprom_DefrostConvertibleCompartmentDoorAccelerationCount),
 };
 
 static const DataSource_EndiannessSwappedSwappedRangesConfiguration_t endianessSwappedSwappedRangesConfiguration = {

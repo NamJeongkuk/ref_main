@@ -14,6 +14,7 @@
 #include "DefrostHeaterMaxOnTime.h"
 #include "FreshFoodOnlyDefrostArbitrator.h"
 #include "ActivelyWaitingForDefrostOnCompareMatch.h"
+#include "DefrostCompressorOnTimeCounter.h"
 #include "uassert.h"
 
 static struct
@@ -22,6 +23,7 @@ static struct
    DefrostDoorHoldoffTimer_t doorHoldoffTimer;
    DefrostHeaterMaxOnTime_t defrostHeaterMaxOnTime;
    FreshFoodOnlyDefrostArbitrator_t freshFoodOnlyDefrostArbitrator;
+   DefrostCompressorOnTimeCounter_t defrostCompressorOnTimeCounter;
 } instance;
 
 static const DefrostConfiguration_t defrostConfig = {
@@ -87,6 +89,16 @@ static const FreshFoodOnlyDefrostArbitratorConfiguration_t freshFoodOnlyDefrostA
    .defrostIsFreshFoodOnlyErd = Erd_DefrostIsFreshFoodOnly
 };
 
+static const DefrostCompressorOnTimeCounterConfiguration_t defrostCompressorOnTimeCounterConfig = {
+   .compressorIsOnErd = Erd_CompressorIsOn,
+   .activelyWaitingForNextDefrostErd = Erd_ActivelyWaitingForNextDefrost,
+   .freezerFilteredTemperatureResolvedErd = Erd_Freezer_FilteredTemperatureResolved,
+   .defrostCompressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
+   .defrostCompressorOnTimeCounterFsmStateErd = Erd_DefrostCompressorOnTimeCounterFsmState,
+   .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
+   .timerModuleErd = Erd_TimerModule
+};
+
 void DefrostPlugin_Init(I_DataModel_t *dataModel)
 {
    bool sensorsReadyToBeRead;
@@ -95,7 +107,37 @@ void DefrostPlugin_Init(I_DataModel_t *dataModel)
       Erd_SensorsReadyToBeRead,
       &sensorsReadyToBeRead);
 
-   uassert(sensorsReadyToBeRead);
+   bool setpointResolverReady;
+   DataModel_Read(
+      dataModel,
+      Erd_SetpointResolverReady,
+      &setpointResolverReady);
+
+   bool convertibleCompartmentStateResolverReady;
+   DataModel_Read(
+      dataModel,
+      Erd_ConvertibleCompartmentStateResolverReady,
+      &convertibleCompartmentStateResolverReady);
+
+   bool overrideArbiterReady;
+   DataModel_Read(
+      dataModel,
+      Erd_OverrideArbiterReady,
+      &overrideArbiterReady);
+
+   bool gridPluginReady;
+   DataModel_Read(
+      dataModel,
+      Erd_GridPluginReady,
+      &gridPluginReady);
+
+   bool periodicNvUpdaterReady;
+   DataModel_Read(
+      dataModel,
+      Erd_PeriodicNvUpdaterReady,
+      &periodicNvUpdaterReady);
+
+   uassert(sensorsReadyToBeRead && setpointResolverReady && convertibleCompartmentStateResolverReady && overrideArbiterReady && gridPluginReady && periodicNvUpdaterReady);
 
    DefrostParameterSelector_Init(dataModel);
 
@@ -103,13 +145,25 @@ void DefrostPlugin_Init(I_DataModel_t *dataModel)
 
    ActivelyWaitingForDefrostOnCompareMatch(dataModel);
 
-   DefrostHeaterMaxOnTime_Init(&instance.defrostHeaterMaxOnTime, dataModel, &defrostHeaterMaxOnTimeConfig);
+   DefrostHeaterMaxOnTime_Init(
+      &instance.defrostHeaterMaxOnTime,
+      dataModel,
+      &defrostHeaterMaxOnTimeConfig);
 
-   FreshFoodOnlyDefrostArbitrator_Init(&instance.freshFoodOnlyDefrostArbitrator, dataModel, &freshFoodOnlyDefrostArbitratorConfig);
+   FreshFoodOnlyDefrostArbitrator_Init(
+      &instance.freshFoodOnlyDefrostArbitrator,
+      dataModel,
+      &freshFoodOnlyDefrostArbitratorConfig);
 
-   DefrostDoorHoldoffTimer_Init(&instance.doorHoldoffTimer,
+   DefrostDoorHoldoffTimer_Init(
+      &instance.doorHoldoffTimer,
       &doorHoldoffTimerConfiguration,
       dataModel);
+
+   DefrostCompressorOnTimeCounter_Init(
+      &instance.defrostCompressorOnTimeCounter,
+      dataModel,
+      &defrostCompressorOnTimeCounterConfig);
 
    Defrost_Init(&instance.defrost, dataModel, &defrostConfig);
 }

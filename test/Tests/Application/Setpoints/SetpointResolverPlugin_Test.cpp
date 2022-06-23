@@ -31,25 +31,27 @@ static const SetpointVotedTemperature_t dontCareData = {
 
 TEST_GROUP(ErdResolverPlugin)
 {
-   ReferDataModel_TestDouble_t referTestDouble;
+   ReferDataModel_TestDouble_t dataModelDouble;
+   I_DataModel_t *dataModel;
 
    void setup()
    {
-      ReferDataModel_TestDouble_Init(&referTestDouble);
+      ReferDataModel_TestDouble_Init(&dataModelDouble);
+      dataModel = dataModelDouble.dataModel;
    }
 
    void SetErdToCare(Erd_t erd)
    {
-      DataSource_Write(
-         DataModel_AsDataSource(referTestDouble.dataModel),
+      DataModel_Write(
+         dataModel,
          erd,
          &careData);
    }
 
    void SetErdToNotCare(Erd_t erd)
    {
-      DataSource_Write(
-         DataModel_AsDataSource(referTestDouble.dataModel),
+      DataModel_Write(
+         dataModel,
          erd,
          &dontCareData);
    }
@@ -57,8 +59,8 @@ TEST_GROUP(ErdResolverPlugin)
    void WinningVoteShouldBe(Erd_t expected)
    {
       Erd_t actual;
-      DataSource_Read(
-         DataModel_AsDataSource(referTestDouble.dataModel),
+      DataModel_Read(
+         dataModel,
          Erd_FreshFoodSetpoint_WinningVoteErd,
          &actual);
 
@@ -68,8 +70,8 @@ TEST_GROUP(ErdResolverPlugin)
    void ResolvedVoteCareShouldBe(bool expected)
    {
       SetpointVotedTemperature_t actual;
-      DataSource_Read(
-         DataModel_AsDataSource(referTestDouble.dataModel),
+      DataModel_Read(
+         dataModel,
          Erd_FreshFoodSetpoint_ResolvedVote,
          &actual);
 
@@ -79,8 +81,8 @@ TEST_GROUP(ErdResolverPlugin)
    void ResolvedVoteTemperatureShouldBe(TemperatureDegFx100_t expected)
    {
       SetpointVotedTemperature_t actual;
-      DataSource_Read(
-         DataModel_AsDataSource(referTestDouble.dataModel),
+      DataModel_Read(
+         dataModel,
          Erd_FreshFoodSetpoint_ResolvedVote,
          &actual);
 
@@ -89,7 +91,7 @@ TEST_GROUP(ErdResolverPlugin)
 
    void TheModuleIsInitialized()
    {
-      SetpointResolverPlugin_Init(DataModel_AsDataSource(referTestDouble.dataModel));
+      SetpointResolverPlugin_Init(dataModel);
    }
 };
 

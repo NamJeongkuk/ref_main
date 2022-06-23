@@ -7,6 +7,8 @@
 
 #include "OverrideArbiter.h"
 #include "SystemErds.h"
+#include "Constants_Binary.h"
+#include "uassert.h"
 
 static const Erd_t freezerEvaporatorFilteredTemperatureOverrideRequestErdList[] = {
    Erd_FreezerEvap_FilteredTemperatureOverrideRequest
@@ -65,6 +67,14 @@ static struct
 
 void OverrideArbiterPlugin_Init(I_DataModel_t *dataModel)
 {
+   bool sensorsReadyToBeRead;
+   DataModel_Read(
+      dataModel,
+      Erd_SensorsReadyToBeRead,
+      &sensorsReadyToBeRead);
+
+   uassert(sensorsReadyToBeRead);
+
    OverrideArbiter_Init(
       &instance.freezerEvaporatorFilteredTemperatureArbiter,
       DataModel_AsDataSource(dataModel),
@@ -79,4 +89,9 @@ void OverrideArbiterPlugin_Init(I_DataModel_t *dataModel)
       &instance.freshFoodCabinetFilteredTemperatureArbiter,
       DataModel_AsDataSource(dataModel),
       &freshFoodCabinetFilteredTemperatureArbiterConfiguration);
+
+   DataModel_Write(
+      dataModel,
+      Erd_OverrideArbiterReady,
+      set);
 }

@@ -62,16 +62,15 @@ void Application_Init(
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
    EepromAppPlugin_Init(dataModel);
    SabbathPlugin_Init(dataModel);
+   SetpointResolverPlugin_Init(dataModel);
    ConvertibleCompartmentStatePlugin_Init(&instance->_private.convertibleCompartmentStatePlugin, dataModel);
    OverrideArbiterPlugin_Init(dataModel);
    GridPlugin_Init(&instance->_private.gridPlugin, dataModel);
    DoorPlugin_Init(dataModel);
+   PeriodicNvUpdaterPlugin_Init(&instance->_private.periodicNvUpdaterPlugin, dataModel);
    DefrostPlugin_Init(dataModel);
    FaultWrapperPlugin_Init(dataModel);
-   SetpointResolverPlugin_Init(DataModel_AsDataSource(dataModel));
    CompressorPlugin_Init(dataModel);
-
-   PeriodicNvUpdaterPlugin_Init(&instance->_private.periodicNvUpdaterPlugin, dataModel);
 
    TimerModule_t *timerModule = DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule);
    TimerModuleDiagnostics_Init(

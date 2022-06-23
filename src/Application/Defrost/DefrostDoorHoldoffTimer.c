@@ -270,6 +270,7 @@ static void State_Enabled(Fsm_t *fsm, const FsmSignal_t signal, const void *data
          break;
    }
 }
+
 void DefrostDoorHoldoffTimer_Init(DefrostDoorHoldoffTimer_t *instance,
    const DefrostDoorHoldoffTimerConfiguration_t *config,
    I_DataModel_t *dataModel)

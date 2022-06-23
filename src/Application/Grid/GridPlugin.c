@@ -12,6 +12,7 @@
 #include "Grid_TripleEvap.h"
 #include "Grid_DualEvap.h"
 #include "uassert.h"
+#include "Constants_Binary.h"
 
 static const GridFunction_t grids[] = {
    Grid_MultiDoor,
@@ -64,7 +65,19 @@ void GridPlugin_Init(
       Erd_SensorsReadyToBeRead,
       &sensorsReadyToBeRead);
 
-   uassert(sensorsReadyToBeRead);
+   bool setpointResolverReady;
+   DataModel_Read(
+      dataModel,
+      Erd_SetpointResolverReady,
+      &setpointResolverReady);
+
+   bool overrideArbiterReady;
+   DataModel_Read(
+      dataModel,
+      Erd_OverrideArbiterReady,
+      &overrideArbiterReady);
+
+   uassert(sensorsReadyToBeRead && setpointResolverReady & overrideArbiterReady);
 
    CalcGridBlockAndGridLines_Init(
       &instance->calcGridBlockAndGridLinesInstance,
@@ -75,4 +88,9 @@ void GridPlugin_Init(
       &instance->gridInstance,
       &gridConfig,
       dataModel);
+
+   DataModel_Write(
+      dataModel,
+      Erd_GridPluginReady,
+      set);
 }

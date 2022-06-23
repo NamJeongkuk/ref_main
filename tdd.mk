@@ -53,6 +53,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/ParametricData \
    $(TESTS_DIR)/Application/Sensor \
    $(TESTS_DIR)/Application/ServiceDiagnostics \
+   $(TESTS_DIR)/Application/SystemMonitor \
    $(TESTS_DIR)/Application/ \
 
 # List of include directories

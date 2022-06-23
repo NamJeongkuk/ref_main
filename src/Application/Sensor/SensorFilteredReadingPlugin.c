@@ -12,7 +12,6 @@
 #include "Filter_ExponentiallyWeightedMovingAverage.h"
 #include "SystemErds.h"
 #include "utils.h"
-#include "uassert.h"
 #include "Constants_Binary.h"
 
 // (type, sensorType , countErd, unfilteredErd, filteredErd, IsSigned)

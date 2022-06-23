@@ -108,6 +108,18 @@
       ]
     },
     {
+      "title": "Grid",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "Calculated Grid Lines",
+          "name": "Erd_Grid_CalculatedGridLines",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
       "title": "Fans",
       "erds": [
         {
@@ -154,13 +166,15 @@
           "namespace": "rx130",
           "displayName": "Defrost HSM State",
           "name": "Erd_DefrostHsmState",
-          "read": true
+          "read": true,
+          "write": true
         },
         {
           "namespace": "rx130",
           "displayName": "Actively Waiting For Next Defrost",
           "name": "Erd_ActivelyWaitingForNextDefrost",
-          "read": true
+          "read": true,
+          "write": true
         },
         {
           "namespace": "rx130",
@@ -213,6 +227,27 @@
         },
         {
           "namespace": "rx130",
+          "displayName": "Defrost Compressor On Time Counter Fsm State",
+          "name": "Erd_DefrostCompressorOnTimeCounterFsmState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Defrost Compressor On Time In Seconds",
+          "name": "Erd_DefrostCompressorOnTimeInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "EEPROM Defrost Compressor On Time In Seconds",
+          "name": "Erd_Eeprom_DefrostCompressorOnTimeInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "Freezer Door Acceleration Count",
           "name": "Erd_DefrostFreezerDoorAccelerationCount",
           "read": true,
@@ -234,15 +269,22 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "RAM Defrost Timer Count In Seconds",
-          "name": "Erd_DefrostTimerCountInSeconds",
+          "displayName": "EEPROM Fresh Food Door Acceleration Count",
+          "name": "Erd_Eeprom_DefrostFreshFoodDoorAccelerationCount",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "EEPROM Defrost Timer Count In Seconds",
-          "name": "Erd_Eeprom_DefrostTimerCountInSeconds",
+          "displayName": "Convertible Compartment Door Acceleration Count",
+          "name": "Erd_DefrostConvertibleCompartmentDoorAccelerationCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "EEPROM Convertible Compartment Door Acceleration Count",
+          "name": "Erd_Eeprom_DefrostConvertibleCompartmentDoorAccelerationCount",
           "read": true,
           "write": true
         },

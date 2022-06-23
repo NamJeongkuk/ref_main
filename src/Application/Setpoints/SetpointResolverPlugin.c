@@ -8,6 +8,7 @@
 #include "SetpointResolverPlugin.h"
 #include "SystemErds.h"
 #include "ErdResolver.h"
+#include "Constants_Binary.h"
 
 // (name, winningVoteErd, resolvedStateErd, numberVotingErds)
 #define ERD_RESOLVER_TABLE(ENTRY)                                                                                                                                                                                                                           \
@@ -25,7 +26,7 @@
    };                                                                                    \
                                                                                          \
    static ErdResolver_t name##Resolver;                                                  \
-   ErdResolver_Init(&name##Resolver, dataSource, &name##ResolverConfiguration);
+   ErdResolver_Init(&name##Resolver, DataModel_AsDataSource(dataModel), &name##ResolverConfiguration);
 
 static const SetpointVotedTemperature_t defaultData = {
    .temperature = INT16_MAX,
@@ -38,7 +39,12 @@ static bool VotingErdCareDelegate(const void *votingErdData)
    return (data->care);
 }
 
-void SetpointResolverPlugin_Init(I_DataSource_t *dataSource)
+void SetpointResolverPlugin_Init(I_DataModel_t *dataModel)
 {
    ERD_RESOLVER_TABLE(EXPAND_AS_RESOLVERS);
+
+   DataModel_Write(
+      dataModel,
+      Erd_SetpointResolverReady,
+      set);
 }
