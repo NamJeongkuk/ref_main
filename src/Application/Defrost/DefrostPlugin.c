@@ -15,6 +15,7 @@
 #include "FreshFoodOnlyDefrostArbitrator.h"
 #include "ActivelyWaitingForDefrostOnCompareMatch.h"
 #include "DefrostCompressorOnTimeCounter.h"
+#include "DoorAccelerationCounter.h"
 #include "uassert.h"
 
 static struct
@@ -24,6 +25,7 @@ static struct
    DefrostHeaterMaxOnTime_t defrostHeaterMaxOnTime;
    FreshFoodOnlyDefrostArbitrator_t freshFoodOnlyDefrostArbitrator;
    DefrostCompressorOnTimeCounter_t defrostCompressorOnTimeCounter;
+   DoorAccelerationCounter_t doorAccelerationCounter;
 } instance;
 
 static const DefrostConfiguration_t defrostConfig = {
@@ -99,6 +101,23 @@ static const DefrostCompressorOnTimeCounterConfiguration_t defrostCompressorOnTi
    .timerModuleErd = Erd_TimerModule
 };
 
+static const DoorAccelerationCounterConfiguration_t doorAccelerationCounterConfig = {
+   .activelyWaitingForNextDefrostErd = Erd_ActivelyWaitingForNextDefrost,
+   .freezerFilteredTemperatureResolvedErd = Erd_Freezer_FilteredTemperatureResolved,
+   .doorAccelerationCounterFsmStateErd = Erd_DoorAccelerationCounterFsmState,
+   .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
+   .freshFoodDoorAccelerationCountErd = Erd_DefrostFreshFoodDoorAccelerationCount,
+   .freezerDoorAccelerationCountErd = Erd_DefrostFreezerDoorAccelerationCount,
+   .convertibleCompartmentDoorAccelerationCountErd = Erd_DefrostConvertibleCompartmentDoorAccelerationCount,
+   .leftHandFreshFoodDoorIsOpenErd = Erd_LeftHandFreshFoodDoorIsOpen,
+   .rightHandFreshFoodDoorIsOpenErd = Erd_RightHandFreshFoodDoorIsOpen,
+   .doorInDoorIsOpenErd = Erd_DoorInDoorIsOpen,
+   .freezerDoorIsOpenErd = Erd_FreezerDoorIsOpen,
+   .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorIsOpen,
+   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
+   .timerModuleErd = Erd_TimerModule
+};
+
 void DefrostPlugin_Init(I_DataModel_t *dataModel)
 {
    bool sensorsReadyToBeRead;
@@ -164,6 +183,11 @@ void DefrostPlugin_Init(I_DataModel_t *dataModel)
       &instance.defrostCompressorOnTimeCounter,
       dataModel,
       &defrostCompressorOnTimeCounterConfig);
+
+   DoorAccelerationCounter_Init(
+      &instance.doorAccelerationCounter,
+      dataModel,
+      &doorAccelerationCounterConfig);
 
    Defrost_Init(&instance.defrost, dataModel, &defrostConfig);
 }

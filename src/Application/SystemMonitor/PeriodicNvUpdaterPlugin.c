@@ -25,16 +25,16 @@ static const PeriodicNvUpdateServiceConfiguration_t periodicNvUpdateConfiguratio
    NUM_ELEMENTS(periodicNvUpdateTableEntries)
 };
 
-static const ResetNvErdImmediatelyWhenRamErdChangesToZeroEntry_t ResetNvErdImmediatelyWhenRamErdChangesToZeroEntries[] = {
+static const ResetNvErdImmediatelyWhenRamErdChangesToZeroEntry_t resetNvErdImmediatelyWhenRamErdChangesToZeroEntries[] = {
    { Erd_DefrostCompressorOnTimeInSeconds, Erd_Eeprom_DefrostCompressorOnTimeInSeconds },
    { Erd_DefrostFreezerDoorAccelerationCount, Erd_Eeprom_DefrostFreezerDoorAccelerationCount },
    { Erd_DefrostFreshFoodDoorAccelerationCount, Erd_Eeprom_DefrostFreshFoodDoorAccelerationCount },
    { Erd_DefrostConvertibleCompartmentDoorAccelerationCount, Erd_Eeprom_DefrostConvertibleCompartmentDoorAccelerationCount }
 };
 
-static const ResetNvErdImmediatelyWhenRamErdChangesToZeroConfiguration_t ResetNvErdImmediatelyWhenRamErdChangesToZeroConfiguration = {
-   ResetNvErdImmediatelyWhenRamErdChangesToZeroEntries,
-   NUM_ELEMENTS(ResetNvErdImmediatelyWhenRamErdChangesToZeroEntries)
+static const ResetNvErdImmediatelyWhenRamErdChangesToZeroConfiguration_t resetNvErdImmediatelyWhenRamErdChangesToZeroConfiguration = {
+   resetNvErdImmediatelyWhenRamErdChangesToZeroEntries,
+   NUM_ELEMENTS(resetNvErdImmediatelyWhenRamErdChangesToZeroEntries)
 };
 
 void PeriodicNvUpdaterPlugin_Init(PeriodicNvUpdaterPlugin_t *instance, I_DataModel_t *dataModel)
@@ -50,7 +50,7 @@ void PeriodicNvUpdaterPlugin_Init(PeriodicNvUpdaterPlugin_t *instance, I_DataMod
 
    ResetNvErdImmediatelyWhenRamErdChangesToZero_Init(
       dataModel,
-      &ResetNvErdImmediatelyWhenRamErdChangesToZeroConfiguration);
+      &resetNvErdImmediatelyWhenRamErdChangesToZeroConfiguration);
 
    DataModel_Write(
       dataModel,

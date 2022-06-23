@@ -234,6 +234,13 @@
         },
         {
           "namespace": "rx130",
+          "displayName": "Door Acceleration Counter Fsm State",
+          "name": "Erd_DoorAccelerationCounterFsmState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "Defrost Compressor On Time In Seconds",
           "name": "Erd_DefrostCompressorOnTimeInSeconds",
           "read": true,
@@ -388,6 +395,13 @@
           "namespace": "rx130",
           "displayName": "Freezer Door Is Open",
           "name": "Erd_FreezerDoorIsOpen",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Convertible Compartment Door Is Open",
+          "name": "Erd_ConvertibleCompartmentDoorIsOpen",
           "read": true,
           "write": true
         }
