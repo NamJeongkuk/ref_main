@@ -156,7 +156,19 @@ void DefrostPlugin_Init(I_DataModel_t *dataModel)
       Erd_PeriodicNvUpdaterReady,
       &periodicNvUpdaterReady);
 
-   uassert(sensorsReadyToBeRead && setpointResolverReady && convertibleCompartmentStateResolverReady && overrideArbiterReady && gridPluginReady && periodicNvUpdaterReady);
+   bool sabbathPluginReady;
+   DataModel_Read(
+      dataModel,
+      Erd_SabbathPluginReady,
+      &sabbathPluginReady);
+
+   uassert(sensorsReadyToBeRead &&
+      setpointResolverReady &&
+      convertibleCompartmentStateResolverReady &&
+      overrideArbiterReady &&
+      gridPluginReady &&
+      periodicNvUpdaterReady &&
+      sabbathPluginReady);
 
    DefrostParameterSelector_Init(dataModel);
 

@@ -25,6 +25,11 @@ extern "C"
 #define Then
 #define And
 
+enum
+{
+   SomeMoreMinutes = 100
+};
+
 static const EnhancedSabbathData_t enhancedSabbathData = {
    .numberOfFreshFoodDefrostsBeforeFreezerDefrost = 3
 };
@@ -113,6 +118,50 @@ TEST_GROUP(DefrostParameterSelector_SingleEvap)
    {
       DataModel_Write(dataModel, Erd_EnhancedSabbathMode, clear);
    }
+
+   void PreviousDefrostsAreNormal()
+   {
+      DataModel_Write(dataModel, Erd_FreshFoodDefrostWasAbnormal, clear);
+      DataModel_Write(dataModel, Erd_FreezerDefrostWasAbnormal, clear);
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentDefrostWasAbnormal, clear);
+   }
+
+   void TimeWhenDefrostTimerIsSatisfiedInMinutesShouldBe(uint16_t expectedTimeInMinutes)
+   {
+      uint16_t actualTimeInMinutes;
+      DataModel_Read(dataModel, Erd_TimeInMinutesWhenDefrostTimerIsSatisfied, &actualTimeInMinutes);
+
+      CHECK_EQUAL(expectedTimeInMinutes, actualTimeInMinutes);
+   }
+
+   void PreviousFreshFoodDefrostIsAbnormal()
+   {
+      DataModel_Write(dataModel, Erd_FreshFoodDefrostWasAbnormal, set);
+   }
+
+   void PreviousFreezerDefrostIsAbnormal()
+   {
+      DataModel_Write(dataModel, Erd_FreezerDefrostWasAbnormal, set);
+   }
+
+   void PreviousConvertibleCompartmentDefrostIsAbnormal()
+   {
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentDefrostWasAbnormal, set);
+   }
+
+   void MaxTimeBetweenDefrostsInMinutesIs(uint16_t timeInMinutes)
+   {
+      DataModel_Write(dataModel, Erd_MaxTimeBetweenDefrostsInMinutes, &timeInMinutes);
+   }
+
+   void PreviousDefrostsAreNormalAndTimeWhenDefrostTimerIsSatisfiedIsMaximumTimeBetweenDefrostsInMinutes()
+   {
+      Given PreviousDefrostsAreNormal();
+      And MaxTimeBetweenDefrostsInMinutesIs(defrostData.maxTimeBetweenDefrostsInMinutes);
+      And DefrostParameterSelectorIsInitialized();
+
+      TimeWhenDefrostTimerIsSatisfiedInMinutesShouldBe(defrostData.maxTimeBetweenDefrostsInMinutes);
+   }
 };
 
 TEST(DefrostParameterSelector_SingleEvap, ShouldSetMaxPrechillTimeToMaxPrechillTimeForFreshFoodOnlyIfCurrentDefrostIsFreshFoodOnlyOnInit)
@@ -196,6 +245,75 @@ TEST(DefrostParameterSelector_SingleEvap, ShouldSetNumberOfFreshFoodDefrostsBefo
 
    When EnhancedSabbathIsDisabled();
    NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+}
+
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostTimerIsSatisfiedInMinutesShouldBeMaxTimeBetweenDefrostsWhenPreviousDefrostsWereNormal)
+{
+   Given PreviousDefrostsAreNormal();
+   And MaxTimeBetweenDefrostsInMinutesIs(defrostData.maxTimeBetweenDefrostsInMinutes);
+   And DefrostParameterSelectorIsInitialized();
+
+   TimeWhenDefrostTimerIsSatisfiedInMinutesShouldBe(defrostData.maxTimeBetweenDefrostsInMinutes);
+}
+
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostTimerIsSatisfiedInMinutesShouldBeMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousFreshFoodDefrostWasAbnormal)
+{
+   Given PreviousFreshFoodDefrostIsAbnormal();
+   And DefrostParameterSelectorIsInitialized();
+
+   TimeWhenDefrostTimerIsSatisfiedInMinutesShouldBe(defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+}
+
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostTimerIsSatisfiedInMinutesShouldBeMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousFreezerDefrostWasAbnormal)
+{
+   Given PreviousFreezerDefrostIsAbnormal();
+   And DefrostParameterSelectorIsInitialized();
+
+   TimeWhenDefrostTimerIsSatisfiedInMinutesShouldBe(defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+}
+
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostTimerIsSatisfiedInMinutesShouldBeMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousConvertibleCompartmentDefrostWasAbnormal)
+{
+   Given PreviousConvertibleCompartmentDefrostIsAbnormal();
+   And DefrostParameterSelectorIsInitialized();
+
+   TimeWhenDefrostTimerIsSatisfiedInMinutesShouldBe(defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+}
+
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostTimerIsSatisfiedShouldUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousFreshFoodDefrostIsAbnormal)
+{
+   Given PreviousDefrostsAreNormalAndTimeWhenDefrostTimerIsSatisfiedIsMaximumTimeBetweenDefrostsInMinutes();
+
+   When PreviousFreshFoodDefrostIsAbnormal();
+   TimeWhenDefrostTimerIsSatisfiedInMinutesShouldBe(defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+}
+
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostTimerIsSatisfiedShouldUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousFreezerDefrostIsAbnormal)
+{
+   Given PreviousDefrostsAreNormalAndTimeWhenDefrostTimerIsSatisfiedIsMaximumTimeBetweenDefrostsInMinutes();
+
+   When PreviousFreezerDefrostIsAbnormal();
+   TimeWhenDefrostTimerIsSatisfiedInMinutesShouldBe(defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+}
+
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostTimerIsSatisfiedShouldUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousConvertibleCompartmentDefrostIsAbnormal)
+{
+   Given PreviousDefrostsAreNormalAndTimeWhenDefrostTimerIsSatisfiedIsMaximumTimeBetweenDefrostsInMinutes();
+
+   When PreviousConvertibleCompartmentDefrostIsAbnormal();
+   TimeWhenDefrostTimerIsSatisfiedInMinutesShouldBe(defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+}
+
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostTimerIsSatisfiedShouldUpdateToADifferentMaxTimeBetweenDefrostsWhenMaxTimeBetweenDefrostsChanges)
+{
+   Given PreviousDefrostsAreNormal();
+   And MaxTimeBetweenDefrostsInMinutesIs(defrostData.maxTimeBetweenDefrostsInMinutes);
+   And DefrostParameterSelectorIsInitialized();
+
+   TimeWhenDefrostTimerIsSatisfiedInMinutesShouldBe(defrostData.maxTimeBetweenDefrostsInMinutes);
+
+   When MaxTimeBetweenDefrostsInMinutesIs(defrostData.maxTimeBetweenDefrostsInMinutes + SomeMoreMinutes);
+   TimeWhenDefrostTimerIsSatisfiedInMinutesShouldBe(defrostData.maxTimeBetweenDefrostsInMinutes + SomeMoreMinutes);
 }
 
 TEST_GROUP(DefrostParameterSelector_DualEvap)

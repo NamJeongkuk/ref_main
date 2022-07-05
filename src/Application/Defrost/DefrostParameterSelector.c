@@ -90,23 +90,74 @@ static void SetPostDwellExitTimeInMinutes(bool defrostIsFreshFoodOnly)
       &postDwellExitTimeInMinutes);
 }
 
+static void SetTimeWhenDefrostTimerIsSatisfiedInMinutes(void)
+{
+   bool freshFoodDefrostWasAbnormal;
+   DataModel_Read(
+      instance.dataModel,
+      Erd_FreshFoodDefrostWasAbnormal,
+      &freshFoodDefrostWasAbnormal);
+
+   bool freezerDefrostWasAbnormal;
+   DataModel_Read(
+      instance.dataModel,
+      Erd_FreezerDefrostWasAbnormal,
+      &freezerDefrostWasAbnormal);
+
+   bool convertibleCompartmentDefrostWasAbnormal;
+   DataModel_Read(
+      instance.dataModel,
+      Erd_ConvertibleCompartmentDefrostWasAbnormal,
+      &convertibleCompartmentDefrostWasAbnormal);
+
+   if(freshFoodDefrostWasAbnormal || freezerDefrostWasAbnormal || convertibleCompartmentDefrostWasAbnormal)
+   {
+      const DefrostData_t *defrostData = PersonalityParametricData_Get(instance.dataModel)->defrostData;
+
+      DataModel_Write(
+         instance.dataModel,
+         Erd_TimeInMinutesWhenDefrostTimerIsSatisfied,
+         &defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+   }
+   else
+   {
+      uint16_t maxTimeBetweenDefrostsInMinutes;
+      DataModel_Read(
+         instance.dataModel,
+         Erd_MaxTimeBetweenDefrostsInMinutes,
+         &maxTimeBetweenDefrostsInMinutes);
+
+      DataModel_Write(
+         instance.dataModel,
+         Erd_TimeInMinutesWhenDefrostTimerIsSatisfied,
+         &maxTimeBetweenDefrostsInMinutes);
+   }
+}
+
 static void DataModelChanged(void *context, const void *args)
 {
    IGNORE(context);
 
-   REINTERPRET(onChangeData, args, const DataModelOnDataChangeArgs_t *);
-   REINTERPRET(erd, onChangeData->erd, Erd_t);
+   const DataModelOnDataChangeArgs_t *onChangeData = args;
+   Erd_t erd = onChangeData->erd;
 
    if(erd == Erd_DefrostIsFreshFoodOnly)
    {
-      REINTERPRET(defrostIsFreshFoodOnly, onChangeData->data, const bool *);
+      const bool *defrostIsFreshFoodOnly = onChangeData->data;
       SetMaxPrechillTimeInMinutes(*defrostIsFreshFoodOnly);
       SetPostDwellExitTimeInMinutes(*defrostIsFreshFoodOnly);
    }
    else if(erd == Erd_EnhancedSabbathMode)
    {
-      REINTERPRET(enhancedSabbathMode, onChangeData->data, const bool *);
+      const bool *enhancedSabbathMode = onChangeData->data;
       SetNumberOfFreshFoodDefrostsBeforeAFreezerDefrostWhenEnhancedSabbathModeIs(*enhancedSabbathMode);
+   }
+   else if(erd == Erd_FreshFoodDefrostWasAbnormal ||
+      erd == Erd_FreezerDefrostWasAbnormal ||
+      erd == Erd_ConvertibleCompartmentDefrostWasAbnormal ||
+      erd == Erd_MaxTimeBetweenDefrostsInMinutes)
+   {
+      SetTimeWhenDefrostTimerIsSatisfiedInMinutes();
    }
 }
 
@@ -129,6 +180,7 @@ void DefrostParameterSelector_Init(I_DataModel_t *dataModel)
    SetNumberOfFreshFoodDefrostsBeforeAFreezerDefrostWhenEnhancedSabbathModeIs(enhancedSabbathMode);
    SetMaxPrechillTimeInMinutes(defrostIsFreshFoodOnly);
    SetPostDwellExitTimeInMinutes(defrostIsFreshFoodOnly);
+   SetTimeWhenDefrostTimerIsSatisfiedInMinutes();
 
    EventSubscription_Init(
       &instance.dataModelSubscription,
