@@ -297,6 +297,20 @@
         },
         {
           "namespace": "rx130",
+          "displayName": "Time In Minutes When Defrost Timer Is Satisfied",
+          "name": "Erd_TimeInMinutesWhenDefrostTimerIsSatisfied",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Defrost Timer Is Satisfied",
+          "name": "Erd_DefrostTimerIsSatisfied",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "Number of Fresh Food Defrosts Before A Freezer Defrost",
           "name": "Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost",
           "read": true,
