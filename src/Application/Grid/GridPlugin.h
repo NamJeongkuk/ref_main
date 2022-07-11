@@ -9,14 +9,16 @@
 #define GRIDPLUGIN_H
 
 #include "Grid.h"
-#include "CalcGridBlockAndGridLines.h"
 #include "I_DataModel.h"
 #include "RingBuffer.h"
+#include "GridLineCalculator.h"
+#include "GridBlockCalculator.h"
 
 typedef struct
 {
    Grid_t gridInstance;
-   CalcGridBlockAndLines_t calcGridBlockAndGridLinesInstance;
+   GridLineCalculator_t gridLineCalculator;
+   GridBlockCalculator_t gridBlockCalculator;
 } GridPlugin_t;
 
 void GridPlugin_Init(

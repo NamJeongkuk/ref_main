@@ -30,29 +30,35 @@ static const GridConfiguration_t gridConfig = {
    .gridFunctions = &gridFunctionArray,
 };
 
-static const GridLineErds_t freshFoodGridLineErds = {
+static const GridLineAdjustmentErds_t freshFoodGridLineAdjustmentErds = {
    .rawSetpointErd = Erd_FreshFoodSetpoint_ResolvedVote,
    .offsetErd = Erd_FreshFood_Offset,
    .shiftErd = Erd_FreshFood_Shift,
    .adjustedSetpointErd = Erd_FreshFood_AdjustedSetpoint
 };
 
-static const GridLineErds_t freezerGridLineErds = {
+static const GridLineAdjustmentErds_t freezerGridLineAdjustmentErds = {
    .rawSetpointErd = Erd_FreezerSetpoint_ResolvedVote,
    .offsetErd = Erd_Freezer_Offset,
    .shiftErd = Erd_Freezer_Shift,
-   .adjustedSetpointErd = Erd_Freezer_AdjustedSetpoint
+   .adjustedSetpointErd = Erd_Freezer_AdjustedSetpoint,
 };
 
-static const GridBlockAndLinesConfig_t calcConfig = {
-   .calculatedGridBlockErd = Erd_Grid_BlockNumber,
-   .previousGridBlocksErd = Erd_Grid_PreviousBlocks,
-   .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
+static const GridLineCalculatorConfiguration_t gridLineCalculatorConfig = {
+   .calculatedGridLineErd = Erd_Grid_CalculatedGridLines,
    .freshFoodFilteredTempErd = Erd_FreshFood_FilteredTemperatureResolved,
-   .freezerFilteredTempErd = Erd_Freezer_FilteredTemperatureResolved,
-   .timerModuleErd = Erd_TimerModule,
-   .freezerGridLineErds = freezerGridLineErds,
-   .freshFoodGridLineErds = freshFoodGridLineErds
+   .freezerFilteredTemperatureErd = Erd_Freezer_FilteredTemperatureResolved,
+   .gridLineAdjustmentErds = {
+      freshFoodGridLineAdjustmentErds,
+      freezerGridLineAdjustmentErds, }
+};
+
+static const GridBlockCalculatorConfiguration_t gridBlockCalculatorConfig = {
+   .freshFoodFilteredResolvedTemperature = Erd_FreshFood_FilteredTemperatureResolved,
+   .freezerFilteredResolvedTemperature = Erd_Freezer_FilteredTemperatureResolved,
+   .currentGridBlockNumberErd = Erd_Grid_BlockNumber,
+   .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
+   .previousGridBlockNumbersErd = Erd_Grid_PreviousBlocks
 };
 
 void GridPlugin_Init(
@@ -79,9 +85,14 @@ void GridPlugin_Init(
 
    uassert(sensorsReadyToBeRead && setpointResolverReady & overrideArbiterReady);
 
-   CalcGridBlockAndGridLines_Init(
-      &instance->calcGridBlockAndGridLinesInstance,
-      &calcConfig,
+   GridLineCalculator_Init(
+      &instance->gridLineCalculator,
+      &gridLineCalculatorConfig,
+      dataModel);
+
+   GridBlockCalculator_Init(
+      &instance->gridBlockCalculator,
+      &gridBlockCalculatorConfig,
       dataModel);
 
    Grid_Init(

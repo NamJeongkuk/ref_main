@@ -116,6 +116,20 @@
           "name": "Erd_Grid_CalculatedGridLines",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Current Grid Block",
+          "name": "Erd_Grid_BlockNumber",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Previous Grid Blocks",
+          "name": "Erd_Grid_PreviousBlocks",
+          "read": true,
+          "write": true
         }
       ]
     },

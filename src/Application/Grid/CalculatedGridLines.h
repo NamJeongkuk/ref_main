@@ -11,6 +11,14 @@
 #include <stdint.h>
 #include "TemperatureDegFx100.h"
 
+enum
+{
+   FreshFoodGridLineDimension = 0,
+   FreezerGridLineDimension = 1,
+   NumberGridDimensions,
+   NumberOfGridLinesPerAxis = 6,
+};
+
 typedef struct
 {
    uint8_t numberOfLines;

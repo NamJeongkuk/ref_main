@@ -29,8 +29,8 @@
     .extern _exit
 
 _PowerON_Reset:
-/* initialise user stack pointer */
     mvtc    #_ustack,USP
+/* initialise user stack pointer */
 
 /* initialise interrupt stack pointer */
     mvtc    #_istack,ISP

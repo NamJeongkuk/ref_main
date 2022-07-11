@@ -23,7 +23,7 @@ enum
 
 typedef struct
 {
-   uint8_t currentNumberOfBlocksStored;
+   uint8_t count;
    GridBlockNumber_t blockNumbers[PreviousGridBlockNumbers_MaxBlockNumbers];
 } PreviousGridBlockNumbers_t;
 
