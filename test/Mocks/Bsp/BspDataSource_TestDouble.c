@@ -61,13 +61,13 @@ static void Write(I_DataSource_t *instance, const Erd_t erd, const void *data)
    DataSource_Write(&dataSource.interface, erd, data);
 }
 
-static bool Has(const I_DataSource_t *instance, const Erd_t erd)
+static bool Has(I_DataSource_t *instance, const Erd_t erd)
 {
    IGNORE(instance);
    return DataSource_Has(&dataSource.interface, erd);
 }
 
-static uint8_t SizeOf(const I_DataSource_t *instance, const Erd_t erd)
+static uint8_t SizeOf(I_DataSource_t *instance, const Erd_t erd)
 {
    IGNORE(instance);
    return DataSource_SizeOf(&dataSource.interface, erd);

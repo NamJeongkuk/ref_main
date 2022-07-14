@@ -35,7 +35,7 @@ static const SetpointVotedTemperature_t defaultData = {
 
 static bool VotingErdCareDelegate(const void *votingErdData)
 {
-   REINTERPRET(data, votingErdData, SetpointVotedTemperature_t *);
+   REINTERPRET(data, votingErdData, const SetpointVotedTemperature_t *);
    return (data->care);
 }
 

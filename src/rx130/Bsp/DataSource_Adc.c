@@ -31,7 +31,7 @@
 
 #define EXPAND_AS_ERD_ADC_CHANNEL_PAIRS(name, port, bit, channel) \
    {                                                              \
-      name, channel                                  \
+      name, channel                                               \
    },
 
 enum
@@ -45,19 +45,17 @@ typedef struct
    AdcChannel_t channel;
 } ErdAdcChannelPair_t;
 
-static const ErdAdcChannelPair_t erdAdcChannelPairs[] =
-   {
-      ADC_TABLE(EXPAND_AS_ERD_ADC_CHANNEL_PAIRS)
-   };
+static const ErdAdcChannelPair_t erdAdcChannelPairs[] = {
+   ADC_TABLE(EXPAND_AS_ERD_ADC_CHANNEL_PAIRS)
+};
 
-static const ConstArrayMap_LinearSearchConfiguration_t erdToAdcChannelMapConfiguration =
-   {
-      erdAdcChannelPairs,
-      NUM_ELEMENTS(erdAdcChannelPairs),
-      ELEMENT_SIZE(erdAdcChannelPairs),
-      MEMBER_SIZE(ErdAdcChannelPair_t, erd),
-      OFFSET_OF(ErdAdcChannelPair_t, erd)
-   };
+static const ConstArrayMap_LinearSearchConfiguration_t erdToAdcChannelMapConfiguration = {
+   erdAdcChannelPairs,
+   NUM_ELEMENTS(erdAdcChannelPairs),
+   ELEMENT_SIZE(erdAdcChannelPairs),
+   MEMBER_SIZE(ErdAdcChannelPair_t, erd),
+   OFFSET_OF(ErdAdcChannelPair_t, erd)
+};
 
 static struct
 {
@@ -166,13 +164,13 @@ static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
    IGNORE(data);
 }
 
-static bool Has(const I_DataSource_t *_instance, const Erd_t erd)
+static bool Has(I_DataSource_t *_instance, const Erd_t erd)
 {
    IGNORE(_instance);
    return ERD_IS_IN_RANGE(erd);
 }
 
-static uint8_t SizeOf(const I_DataSource_t *_instance, const Erd_t erd)
+static uint8_t SizeOf(I_DataSource_t *_instance, const Erd_t erd)
 {
    IGNORE(_instance);
    uassert(ERD_IS_IN_RANGE(erd));
@@ -180,8 +178,7 @@ static uint8_t SizeOf(const I_DataSource_t *_instance, const Erd_t erd)
    return sizeof(AdcCounts_t);
 }
 
-static const I_DataSource_Api_t api =
-   { Read, Write, Has, SizeOf };
+static const I_DataSource_Api_t api = { Read, Write, Has, SizeOf };
 
 I_DataSource_t *DataSource_Adc_Init(void)
 {

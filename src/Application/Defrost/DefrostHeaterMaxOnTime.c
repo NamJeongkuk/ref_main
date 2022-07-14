@@ -85,17 +85,17 @@ static void DataModelChanged(void *context, const void *_args)
 
    if(erd == instance->_private.config->freezerEvaporatorThermistorIsValidErd)
    {
-      REINTERPRET(isValid, args->data, bool *);
+      REINTERPRET(isValid, args->data, const bool *);
       ResolveFreezerDefrostHeaterMaxOnTime(instance, *isValid);
    }
    else if(erd == instance->_private.config->freshFoodEvaporatorThermistorIsValidErd)
    {
-      REINTERPRET(isValid, args->data, bool *);
+      REINTERPRET(isValid, args->data, const bool *);
       ResolveFreshFoodDefrostHeaterMaxOnTime(instance, *isValid);
    }
    else if(erd == instance->_private.config->convertibleCompartmentEvaporatorThermistorIsValidErd)
    {
-      REINTERPRET(isValid, args->data, bool *);
+      REINTERPRET(isValid, args->data, const bool *);
       ConvertibleCompartmentStateType_t convertibleCompartmentState;
       DataModel_Read(
          instance->_private.dataModel,
@@ -108,7 +108,7 @@ static void DataModelChanged(void *context, const void *_args)
    }
    else if(erd == instance->_private.config->convertibleCompartmentStateErd)
    {
-      REINTERPRET(convertibleCompartmentState, args->data, ConvertibleCompartmentStateType_t *);
+      REINTERPRET(convertibleCompartmentState, args->data, const ConvertibleCompartmentStateType_t *);
       bool convertibleCompartmentIsValid;
       DataModel_Read(
          instance->_private.dataModel,

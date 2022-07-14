@@ -73,22 +73,21 @@ typedef struct
 #define GPIO_PORT_ADDRESS_ENTRY_WITHOUT_DSCR(__port) \
    (uint8_t *)&__port.PODR, (uint8_t *)&__port.PIDR, (uint8_t *)&__port.PDR, (uint8_t *)&__port.PMR, (uint8_t *)&__port.PCR, (uint8_t *)NULL
 
-static const GpioPortAddresses_t gpioPortAddresses[] =
-   {
-      { GPIO_PORT_ADDRESS_ENTRY_WITHOUT_DSCR(PORT0) },
-      { GPIO_PORT_ADDRESS_ENTRY(PORT1) },
-      { GPIO_PORT_ADDRESS_ENTRY(PORT2) },
-      { GPIO_PORT_ADDRESS_ENTRY(PORT3) },
-      { GPIO_PORT_ADDRESS_ENTRY_WITHOUT_DSCR(PORT4) },
-      { GPIO_PORT_ADDRESS_ENTRY(PORT5) },
-      { GPIO_PORT_ADDRESS_ENTRY(PORTA) },
-      { GPIO_PORT_ADDRESS_ENTRY(PORTB) },
-      { GPIO_PORT_ADDRESS_ENTRY(PORTC) },
-      { GPIO_PORT_ADDRESS_ENTRY(PORTD) },
-      { GPIO_PORT_ADDRESS_ENTRY(PORTE) },
-      { GPIO_PORT_ADDRESS_ENTRY(PORTH) },
-      { GPIO_PORT_ADDRESS_ENTRY(PORTJ) }
-   };
+static const GpioPortAddresses_t gpioPortAddresses[] = {
+   { GPIO_PORT_ADDRESS_ENTRY_WITHOUT_DSCR(PORT0) },
+   { GPIO_PORT_ADDRESS_ENTRY(PORT1) },
+   { GPIO_PORT_ADDRESS_ENTRY(PORT2) },
+   { GPIO_PORT_ADDRESS_ENTRY(PORT3) },
+   { GPIO_PORT_ADDRESS_ENTRY_WITHOUT_DSCR(PORT4) },
+   { GPIO_PORT_ADDRESS_ENTRY(PORT5) },
+   { GPIO_PORT_ADDRESS_ENTRY(PORTA) },
+   { GPIO_PORT_ADDRESS_ENTRY(PORTB) },
+   { GPIO_PORT_ADDRESS_ENTRY(PORTC) },
+   { GPIO_PORT_ADDRESS_ENTRY(PORTD) },
+   { GPIO_PORT_ADDRESS_ENTRY(PORTE) },
+   { GPIO_PORT_ADDRESS_ENTRY(PORTH) },
+   { GPIO_PORT_ADDRESS_ENTRY(PORTJ) }
+};
 
 typedef struct
 {
@@ -102,10 +101,9 @@ typedef struct
 
 #define EXPAND_PORTS_AND_PINS(channel, direction, pullUp, driveCapacity, port, pin, inverted) { direction, pullUp, driveCapacity, port, pin, inverted },
 
-static const GpioDirectionPortsAndPins_t gpioPortsAndPins[] =
-   {
-      GPIO_TABLE(EXPAND_PORTS_AND_PINS)
-   };
+static const GpioDirectionPortsAndPins_t gpioPortsAndPins[] = {
+   GPIO_TABLE(EXPAND_PORTS_AND_PINS)
+};
 
 static struct
 {
@@ -205,19 +203,18 @@ static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
    {
       WriteGpio(channel, *state);
 
-      DataSourceOnDataChangeArgs_t args =
-         { erd, data };
+      DataSourceOnDataChangeArgs_t args = { erd, data };
       Event_Synchronous_Publish(instance.onChangeEvent, &args);
    }
 }
 
-static bool Has(const I_DataSource_t *_instance, const Erd_t erd)
+static bool Has(I_DataSource_t *_instance, const Erd_t erd)
 {
    IGNORE(_instance);
    return ERD_IS_IN_RANGE(erd);
 }
 
-static uint8_t SizeOf(const I_DataSource_t *_instance, const Erd_t erd)
+static uint8_t SizeOf(I_DataSource_t *_instance, const Erd_t erd)
 {
    IGNORE(_instance);
    uassert(ERD_IS_IN_RANGE(erd));
@@ -225,8 +222,7 @@ static uint8_t SizeOf(const I_DataSource_t *_instance, const Erd_t erd)
    return sizeof(bool);
 }
 
-static const I_DataSource_Api_t api =
-   { Read, Write, Has, SizeOf };
+static const I_DataSource_Api_t api = { Read, Write, Has, SizeOf };
 
 static void PollInputs(void *context)
 {
@@ -241,8 +237,7 @@ static void PollInputs(void *context)
          {
             BIT_WRITE(instance.inputCache[channel / BitsPerByte], channel % BitsPerByte, state);
 
-            DataSourceOnDataChangeArgs_t args =
-               { ERD_FROM_CHANNEL(channel), &state };
+            DataSourceOnDataChangeArgs_t args = { ERD_FROM_CHANNEL(channel), &state };
             Event_Synchronous_Publish(instance.onChangeEvent, &args);
          }
       }

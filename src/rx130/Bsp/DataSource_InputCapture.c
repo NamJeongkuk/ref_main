@@ -34,13 +34,13 @@ static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
    IGNORE(data);
 }
 
-static bool Has(const I_DataSource_t *_instance, const Erd_t erd)
+static bool Has(I_DataSource_t *_instance, const Erd_t erd)
 {
    IGNORE(_instance);
    return ERD_IS_IN_RANGE(erd);
 }
 
-static uint8_t SizeOf(const I_DataSource_t *_instance, const Erd_t erd)
+static uint8_t SizeOf(I_DataSource_t *_instance, const Erd_t erd)
 {
    IGNORE(_instance);
    IGNORE(erd);

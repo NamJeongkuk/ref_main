@@ -20,7 +20,7 @@ static void Read(I_Eeprom_t *instance, uint16_t offset, uint16_t numBytes, void 
 
 static void Write(I_Eeprom_t *instance, uint16_t offset, uint16_t numBytes, const void *writeBuffer)
 {
-   mock().actualCall("Write").onObject(instance).withParameter("offset", offset).withParameter("numBytes", numBytes).withParameter("writeBuffer", (void *)writeBuffer);
+   mock().actualCall("Write").onObject(instance).withParameter("offset", offset).withParameter("numBytes", numBytes).withParameter("writeBuffer", (const void *)writeBuffer);
 }
 
 static void Erase(I_Eeprom_t *instance)
