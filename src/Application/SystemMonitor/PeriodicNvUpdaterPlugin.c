@@ -15,9 +15,9 @@
 
 static const PeriodicNvUpdateServiceConfigurationEntry_t periodicNvUpdateTableEntries[] = {
    { Erd_DefrostCompressorOnTimeInSeconds, Erd_Eeprom_DefrostCompressorOnTimeInSeconds },
-   { Erd_DefrostFreezerDoorAccelerationCount, Erd_Eeprom_DefrostFreezerDoorAccelerationCount },
-   { Erd_DefrostFreshFoodDoorAccelerationCount, Erd_Eeprom_DefrostFreshFoodDoorAccelerationCount },
-   { Erd_DefrostConvertibleCompartmentDoorAccelerationCount, Erd_Eeprom_DefrostConvertibleCompartmentDoorAccelerationCount }
+   { Erd_DefrostFreezerScaledDoorAccelerationInSeconds, Erd_Eeprom_DefrostFreezerScaledDoorAccelerationInSeconds },
+   { Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_DefrostFreshFoodScaledDoorAccelerationInSeconds },
+   { Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds, Erd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds }
 };
 
 static const PeriodicNvUpdateServiceConfiguration_t periodicNvUpdateConfiguration = {
@@ -27,9 +27,9 @@ static const PeriodicNvUpdateServiceConfiguration_t periodicNvUpdateConfiguratio
 
 static const ResetNvErdImmediatelyWhenRamErdChangesToZeroEntry_t resetNvErdImmediatelyWhenRamErdChangesToZeroEntries[] = {
    { Erd_DefrostCompressorOnTimeInSeconds, Erd_Eeprom_DefrostCompressorOnTimeInSeconds },
-   { Erd_DefrostFreezerDoorAccelerationCount, Erd_Eeprom_DefrostFreezerDoorAccelerationCount },
-   { Erd_DefrostFreshFoodDoorAccelerationCount, Erd_Eeprom_DefrostFreshFoodDoorAccelerationCount },
-   { Erd_DefrostConvertibleCompartmentDoorAccelerationCount, Erd_Eeprom_DefrostConvertibleCompartmentDoorAccelerationCount }
+   { Erd_DefrostFreezerScaledDoorAccelerationInSeconds, Erd_Eeprom_DefrostFreezerScaledDoorAccelerationInSeconds },
+   { Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_DefrostFreshFoodScaledDoorAccelerationInSeconds },
+   { Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds, Erd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds }
 };
 
 static const ResetNvErdImmediatelyWhenRamErdChangesToZeroConfiguration_t resetNvErdImmediatelyWhenRamErdChangesToZeroConfiguration = {

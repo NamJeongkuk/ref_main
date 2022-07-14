@@ -58,30 +58,30 @@ static void ActivelyWaitingForNextDefrostChanged(void *context, const void *args
    }
 }
 
-static void ResetFreshFoodDoorAccelerationCountToZero(DoorAccelerationCounter_t *instance)
+static void ResetFreshFoodScaledDoorAccelerationInSecondsToZero(DoorAccelerationCounter_t *instance)
 {
    uint32_t count = 0;
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->freshFoodDoorAccelerationCountErd,
+      instance->_private.config->freshFoodScaledDoorAccelerationInSecondsErd,
       &count);
 }
 
-static void ResetFreezerDoorAccelerationCountToZero(DoorAccelerationCounter_t *instance)
+static void ResetFreezerScaledDoorAccelerationInSecondsToZero(DoorAccelerationCounter_t *instance)
 {
    uint32_t count = 0;
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->freezerDoorAccelerationCountErd,
+      instance->_private.config->freezerScaledDoorAccelerationInSecondsErd,
       &count);
 }
 
-static void ResetConvertibleCompartmentDoorAccelerationCountToZero(DoorAccelerationCounter_t *instance)
+static void ResetConvertibleCompartmentScaledDoorAccelerationInSecondsToZero(DoorAccelerationCounter_t *instance)
 {
    uint32_t count = 0;
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->convertibleCompartmentDoorAccelerationCountErd,
+      instance->_private.config->convertibleCompartmentScaledDoorAccelerationInSecondsErd,
       &count);
 }
 
@@ -149,12 +149,12 @@ static bool ConvertibleCompartmentDoorIsOpen(DoorAccelerationCounter_t *instance
    return convertibleCompartmentDoorIsOpen;
 }
 
-static void IncrementFreshFoodDoorAccelerationCount(DoorAccelerationCounter_t *instance)
+static void IncrementFreshFoodScaledDoorAccelerationInSeconds(DoorAccelerationCounter_t *instance)
 {
    uint32_t count;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freshFoodDoorAccelerationCountErd,
+      instance->_private.config->freshFoodScaledDoorAccelerationInSecondsErd,
       &count);
 
    count = TRUNCATE_UNSIGNED_ADDITION(
@@ -164,16 +164,16 @@ static void IncrementFreshFoodDoorAccelerationCount(DoorAccelerationCounter_t *i
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->freshFoodDoorAccelerationCountErd,
+      instance->_private.config->freshFoodScaledDoorAccelerationInSecondsErd,
       &count);
 }
 
-static void IncrementFreezerDoorAccelerationCount(DoorAccelerationCounter_t *instance)
+static void IncrementFreezerScaledDoorAccelerationInSeconds(DoorAccelerationCounter_t *instance)
 {
    uint32_t count;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerDoorAccelerationCountErd,
+      instance->_private.config->freezerScaledDoorAccelerationInSecondsErd,
       &count);
 
    count = TRUNCATE_UNSIGNED_ADDITION(
@@ -183,16 +183,16 @@ static void IncrementFreezerDoorAccelerationCount(DoorAccelerationCounter_t *ins
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->freezerDoorAccelerationCountErd,
+      instance->_private.config->freezerScaledDoorAccelerationInSecondsErd,
       &count);
 }
 
-static void IncrementConvertibleCompartmentDoorAccelerationCount(DoorAccelerationCounter_t *instance)
+static void IncrementConvertibleCompartmentScaledDoorAccelerationInSeconds(DoorAccelerationCounter_t *instance)
 {
    uint32_t count;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->convertibleCompartmentDoorAccelerationCountErd,
+      instance->_private.config->convertibleCompartmentScaledDoorAccelerationInSecondsErd,
       &count);
 
    ConvertibleCompartmentStateType_t state;
@@ -218,7 +218,7 @@ static void IncrementConvertibleCompartmentDoorAccelerationCount(DoorAcceleratio
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->convertibleCompartmentDoorAccelerationCountErd,
+      instance->_private.config->convertibleCompartmentScaledDoorAccelerationInSecondsErd,
       &count);
 }
 
@@ -241,17 +241,17 @@ static void State_Run(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
       case Signal_PeriodicTimeout:
          if(AnyFreshFoodDoorIsOpen(instance))
          {
-            IncrementFreshFoodDoorAccelerationCount(instance);
+            IncrementFreshFoodScaledDoorAccelerationInSeconds(instance);
          }
 
          if(FreezerDoorIsOpen(instance))
          {
-            IncrementFreezerDoorAccelerationCount(instance);
+            IncrementFreezerScaledDoorAccelerationInSeconds(instance);
          }
 
          if(ConvertibleCompartmentDoorIsOpen(instance))
          {
-            IncrementConvertibleCompartmentDoorAccelerationCount(instance);
+            IncrementConvertibleCompartmentScaledDoorAccelerationInSeconds(instance);
          }
          break;
 
@@ -289,9 +289,9 @@ static void State_Stop(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
    {
       case Fsm_Entry:
          SetFsmStateTo(instance, DoorAccelerationCounterFsmState_Stop);
-         ResetFreshFoodDoorAccelerationCountToZero(instance);
-         ResetFreezerDoorAccelerationCountToZero(instance);
-         ResetConvertibleCompartmentDoorAccelerationCountToZero(instance);
+         ResetFreshFoodScaledDoorAccelerationInSecondsToZero(instance);
+         ResetFreezerScaledDoorAccelerationInSecondsToZero(instance);
+         ResetConvertibleCompartmentScaledDoorAccelerationInSecondsToZero(instance);
          break;
 
       case Signal_ActivelyWaitingForNextDefrost:

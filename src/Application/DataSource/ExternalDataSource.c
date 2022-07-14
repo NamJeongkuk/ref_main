@@ -85,9 +85,9 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_FreezerAbnormalDefrostCycleCount, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_FreezerDefrostCycleCount, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_NumberofFreezerAbnormalDefrostCycles, sizeof(uint16_t)),
-   SWAPPED_ERD(PublicErd_DefrostFreezerDoorAccelerationCount, sizeof(uint32_t)),
-   SWAPPED_ERD(PublicErd_DefrostFreshFoodDoorAccelerationCount, sizeof(uint32_t)),
-   SWAPPED_ERD(PublicErd_DefrostConvertibleCompartmentDoorAccelerationCount, sizeof(uint32_t)),
+   SWAPPED_ERD(PublicErd_DefrostFreezerScaledDoorAccelerationInSeconds, sizeof(uint32_t)),
+   SWAPPED_ERD(PublicErd_DefrostFreshFoodScaledDoorAccelerationInSeconds, sizeof(uint32_t)),
+   SWAPPED_ERD(PublicErd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds, sizeof(uint32_t)),
    SWAPPED_ERD(PublicErd_MaxTimeBetweenDefrostsInMinutes, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_DefrostPrechillRunCounterInMinutes, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_DefrostCompressorOnTimeInSeconds, sizeof(uint32_t)),
@@ -141,7 +141,7 @@ static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
    SWAPPED_FIELD_RANGE(PublicErd_FreezerSetpoint_FactoryVote, PublicErd_FreezerSetpoint_UserSetpoint),
    SWAPPED_FIELD_RANGE(PublicErd_FreshFoodSetpoint_FactoryVote, PublicErd_FreshFoodSetpoint_UserSetpoint),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableSnapshotData0, PublicErd_ServiceDiagnosticsFaultTableSnapshotData9),
-   SWAPPED_FIELD_RANGE(PublicErd_Eeprom_DefrostCompressorOnTimeInSeconds, PublicErd_Eeprom_DefrostConvertibleCompartmentDoorAccelerationCount),
+   SWAPPED_FIELD_RANGE(PublicErd_Eeprom_DefrostCompressorOnTimeInSeconds, PublicErd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds),
 };
 
 static const DataSource_EndiannessSwappedSwappedRangesConfiguration_t endianessSwappedSwappedRangesConfiguration = {

@@ -108,9 +108,9 @@ static const DoorAccelerationCounterConfiguration_t doorAccelerationCounterConfi
    .freezerFilteredTemperatureResolvedErd = Erd_Freezer_FilteredTemperatureResolved,
    .doorAccelerationCounterFsmStateErd = Erd_DoorAccelerationCounterFsmState,
    .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
-   .freshFoodDoorAccelerationCountErd = Erd_DefrostFreshFoodDoorAccelerationCount,
-   .freezerDoorAccelerationCountErd = Erd_DefrostFreezerDoorAccelerationCount,
-   .convertibleCompartmentDoorAccelerationCountErd = Erd_DefrostConvertibleCompartmentDoorAccelerationCount,
+   .freshFoodScaledDoorAccelerationInSecondsErd = Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds,
+   .freezerScaledDoorAccelerationInSecondsErd = Erd_DefrostFreezerScaledDoorAccelerationInSeconds,
+   .convertibleCompartmentScaledDoorAccelerationInSecondsErd = Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds,
    .leftHandFreshFoodDoorIsOpenErd = Erd_LeftHandFreshFoodDoorIsOpen,
    .rightHandFreshFoodDoorIsOpenErd = Erd_RightHandFreshFoodDoorIsOpen,
    .doorInDoorIsOpenErd = Erd_DoorInDoorIsOpen,
@@ -122,9 +122,9 @@ static const DoorAccelerationCounterConfiguration_t doorAccelerationCounterConfi
 
 static DefrostReadyTimerIsSatisfiedConfiguration_t defrostReadyTimerIsSatisfiedConfig = {
    .compressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
-   .freshFoodDoorAccelerationCountErd = Erd_DefrostFreshFoodDoorAccelerationCount,
-   .freezerDoorAccelerationCountErd = Erd_DefrostFreezerDoorAccelerationCount,
-   .convertibleCompartmentDoorAccelerationCountErd = Erd_DefrostConvertibleCompartmentDoorAccelerationCount,
+   .freshFoodScaledDoorAccelerationInSecondsErd = Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds,
+   .freezerScaledDoorAccelerationInSecondsErd = Erd_DefrostFreezerScaledDoorAccelerationInSeconds,
+   .convertibleCompartmentScaledDoorAccelerationInSecondsErd = Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds,
    .defrostReadyTimerIsSatisfiedErd = Erd_DefrostReadyTimerIsSatisfied,
    .timeInMinutesWhenDefrostReadyTimerIsSatisfiedErd = Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied
 };

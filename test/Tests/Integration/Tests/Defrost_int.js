@@ -195,7 +195,7 @@ describe("Defrost", () => {
    };
 
    const freshFoodDoorAccelerationShouldBe = async (acceleration) => {
-      const actual = await rx130.read("Erd_DefrostFreshFoodDoorAccelerationCount");
+      const actual = await rx130.read("Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds");
       expect(actual).toEqual(acceleration);
    };
 

@@ -31,9 +31,9 @@ extern "C"
 
 static DefrostReadyTimerIsSatisfiedConfiguration_t config = {
    .compressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
-   .freshFoodDoorAccelerationCountErd = Erd_DefrostFreshFoodDoorAccelerationCount,
-   .freezerDoorAccelerationCountErd = Erd_DefrostFreezerDoorAccelerationCount,
-   .convertibleCompartmentDoorAccelerationCountErd = Erd_DefrostConvertibleCompartmentDoorAccelerationCount,
+   .freshFoodScaledDoorAccelerationInSecondsErd = Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds,
+   .freezerScaledDoorAccelerationInSecondsErd = Erd_DefrostFreezerScaledDoorAccelerationInSeconds,
+   .convertibleCompartmentScaledDoorAccelerationInSecondsErd = Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds,
    .defrostReadyTimerIsSatisfiedErd = Erd_DefrostReadyTimerIsSatisfied,
    .timeInMinutesWhenDefrostReadyTimerIsSatisfiedErd = Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied
 };
@@ -79,17 +79,17 @@ TEST_GROUP(DefrostReadyTimerIsSatisfied)
 
    void FreshFoodDoorAccelerationIs(uint32_t count)
    {
-      DataModel_Write(dataModel, Erd_DefrostFreshFoodDoorAccelerationCount, &count);
+      DataModel_Write(dataModel, Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds, &count);
    }
 
    void FreezerDoorAccelerationIs(uint32_t count)
    {
-      DataModel_Write(dataModel, Erd_DefrostFreezerDoorAccelerationCount, &count);
+      DataModel_Write(dataModel, Erd_DefrostFreezerScaledDoorAccelerationInSeconds, &count);
    }
 
    void ConvertibleCompartmentDoorAccelerationIs(uint32_t count)
    {
-      DataModel_Write(dataModel, Erd_DefrostConvertibleCompartmentDoorAccelerationCount, &count);
+      DataModel_Write(dataModel, Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds, &count);
    }
 
    void DefrostReadyTimerIsSatisfiedShouldBe(bool expectedState)

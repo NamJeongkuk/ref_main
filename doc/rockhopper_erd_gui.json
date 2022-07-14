@@ -269,43 +269,43 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Freezer Door Acceleration Count",
-          "name": "Erd_DefrostFreezerDoorAccelerationCount",
+          "displayName": "Freezer Scaled Door Acceleration In Seconds",
+          "name": "Erd_DefrostFreezerScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "EEPROM Freezer Door Acceleration Count",
-          "name": "Erd_Eeprom_DefrostFreezerDoorAccelerationCount",
+          "displayName": "EEPROM Freezer Scaled Door Acceleration In Seconds",
+          "name": "Erd_Eeprom_DefrostFreezerScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Fresh Food Door Acceleration Count",
-          "name": "Erd_DefrostFreshFoodDoorAccelerationCount",
+          "displayName": "Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "EEPROM Fresh Food Door Acceleration Count",
-          "name": "Erd_Eeprom_DefrostFreshFoodDoorAccelerationCount",
+          "displayName": "EEPROM Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_Eeprom_DefrostFreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Convertible Compartment Door Acceleration Count",
-          "name": "Erd_DefrostConvertibleCompartmentDoorAccelerationCount",
+          "displayName": "Convertible Compartment Scaled Door Acceleration In Seconds",
+          "name": "Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "EEPROM Convertible Compartment Door Acceleration Count",
-          "name": "Erd_Eeprom_DefrostConvertibleCompartmentDoorAccelerationCount",
+          "displayName": "EEPROM Convertible Compartment Scaled Door Acceleration In Seconds",
+          "name": "Erd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },

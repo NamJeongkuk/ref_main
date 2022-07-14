@@ -22,9 +22,9 @@ typedef struct
    Erd_t freezerFilteredTemperatureResolvedErd; // TemperatureDegFx100_t
    Erd_t doorAccelerationCounterFsmStateErd; // DefrostCompressorOnTimeCounterFsmState_t
    Erd_t calculatedGridLinesErd; // CalculatedGridLines_t
-   Erd_t freshFoodDoorAccelerationCountErd; // uint32_t
-   Erd_t freezerDoorAccelerationCountErd; // uint32_t
-   Erd_t convertibleCompartmentDoorAccelerationCountErd; // uint32_t
+   Erd_t freshFoodScaledDoorAccelerationInSecondsErd; // uint32_t
+   Erd_t freezerScaledDoorAccelerationInSecondsErd; // uint32_t
+   Erd_t convertibleCompartmentScaledDoorAccelerationInSecondsErd; // uint32_t
    Erd_t leftHandFreshFoodDoorIsOpenErd; // bool
    Erd_t rightHandFreshFoodDoorIsOpenErd; // bool
    Erd_t doorInDoorIsOpenErd; // bool

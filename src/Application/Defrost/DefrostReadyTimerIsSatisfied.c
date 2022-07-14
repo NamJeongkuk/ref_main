@@ -12,24 +12,26 @@
 
 static uint32_t DoorAccelerations(DefrostReadyTimerIsSatisfied_t *instance)
 {
-   uint32_t freshFoodDoorAccelerationCount;
-   uint32_t freezerDoorAccelerationCount;
-   uint32_t convertibleCompartmentDoorAccelerationCount;
+   uint32_t freshFoodScaledDoorAccelerationInSeconds;
+   uint32_t freezerScaledDoorAccelerationInSeconds;
+   uint32_t convertibleCompartmentScaledDoorAccelerationInSeconds;
 
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freshFoodDoorAccelerationCountErd,
-      &freshFoodDoorAccelerationCount);
+      instance->_private.config->freshFoodScaledDoorAccelerationInSecondsErd,
+      &freshFoodScaledDoorAccelerationInSeconds);
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerDoorAccelerationCountErd,
-      &freezerDoorAccelerationCount);
+      instance->_private.config->freezerScaledDoorAccelerationInSecondsErd,
+      &freezerScaledDoorAccelerationInSeconds);
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->convertibleCompartmentDoorAccelerationCountErd,
-      &convertibleCompartmentDoorAccelerationCount);
+      instance->_private.config->convertibleCompartmentScaledDoorAccelerationInSecondsErd,
+      &convertibleCompartmentScaledDoorAccelerationInSeconds);
 
-   return freshFoodDoorAccelerationCount + freezerDoorAccelerationCount + convertibleCompartmentDoorAccelerationCount;
+   return freshFoodScaledDoorAccelerationInSeconds +
+      freezerScaledDoorAccelerationInSeconds +
+      convertibleCompartmentScaledDoorAccelerationInSeconds;
 }
 
 static uint32_t TimeInSecondsWhenDefrostReadyTimerIsSatisfied(DefrostReadyTimerIsSatisfied_t *instance)
@@ -93,9 +95,9 @@ static void DataModelChanged(void *context, const void *args)
    Erd_t erd = onChangeData->erd;
 
    if(erd == instance->_private.config->compressorOnTimeInSecondsErd ||
-      erd == instance->_private.config->freshFoodDoorAccelerationCountErd ||
-      erd == instance->_private.config->freezerDoorAccelerationCountErd ||
-      erd == instance->_private.config->convertibleCompartmentDoorAccelerationCountErd ||
+      erd == instance->_private.config->freshFoodScaledDoorAccelerationInSecondsErd ||
+      erd == instance->_private.config->freezerScaledDoorAccelerationInSecondsErd ||
+      erd == instance->_private.config->convertibleCompartmentScaledDoorAccelerationInSecondsErd ||
       erd == instance->_private.config->timeInMinutesWhenDefrostReadyTimerIsSatisfiedErd)
    {
       UpdateDefrostReadyTimerIsSatisfiedErd(instance);

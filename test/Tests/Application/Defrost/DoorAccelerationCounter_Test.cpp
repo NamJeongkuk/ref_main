@@ -151,9 +151,9 @@ static const DoorAccelerationCounterConfiguration_t config = {
    .freezerFilteredTemperatureResolvedErd = Erd_Freezer_FilteredTemperatureResolved,
    .doorAccelerationCounterFsmStateErd = Erd_DoorAccelerationCounterFsmState,
    .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
-   .freshFoodDoorAccelerationCountErd = Erd_DefrostFreshFoodDoorAccelerationCount,
-   .freezerDoorAccelerationCountErd = Erd_DefrostFreezerDoorAccelerationCount,
-   .convertibleCompartmentDoorAccelerationCountErd = Erd_DefrostConvertibleCompartmentDoorAccelerationCount,
+   .freshFoodScaledDoorAccelerationInSecondsErd = Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds,
+   .freezerScaledDoorAccelerationInSecondsErd = Erd_DefrostFreezerScaledDoorAccelerationInSeconds,
+   .convertibleCompartmentScaledDoorAccelerationInSecondsErd = Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds,
    .leftHandFreshFoodDoorIsOpenErd = Erd_LeftHandFreshFoodDoorIsOpen,
    .rightHandFreshFoodDoorIsOpenErd = Erd_RightHandFreshFoodDoorIsOpen,
    .doorInDoorIsOpenErd = Erd_DoorInDoorIsOpen,
@@ -218,23 +218,23 @@ TEST_GROUP(DoorAccelerationCounter)
 
    void FreshFoodDoorAccelerationIs(uint32_t count)
    {
-      DataModel_Write(dataModel, Erd_DefrostFreshFoodDoorAccelerationCount, &count);
+      DataModel_Write(dataModel, Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds, &count);
    }
 
    void FreezerDoorAccelerationIs(uint32_t count)
    {
-      DataModel_Write(dataModel, Erd_DefrostFreezerDoorAccelerationCount, &count);
+      DataModel_Write(dataModel, Erd_DefrostFreezerScaledDoorAccelerationInSeconds, &count);
    }
 
    void ConvertibleCompartmentDoorAccelerationIs(uint32_t count)
    {
-      DataModel_Write(dataModel, Erd_DefrostConvertibleCompartmentDoorAccelerationCount, &count);
+      DataModel_Write(dataModel, Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds, &count);
    }
 
    void FreshFoodDoorAccelerationShouldBe(uint32_t expectedCount)
    {
       uint32_t actualCount;
-      DataModel_Read(dataModel, Erd_DefrostFreshFoodDoorAccelerationCount, &actualCount);
+      DataModel_Read(dataModel, Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds, &actualCount);
 
       CHECK_EQUAL(expectedCount, actualCount);
    }
@@ -242,7 +242,7 @@ TEST_GROUP(DoorAccelerationCounter)
    void FreezerDoorAccelerationShouldBe(uint32_t expectedCount)
    {
       uint32_t actualCount;
-      DataModel_Read(dataModel, Erd_DefrostFreezerDoorAccelerationCount, &actualCount);
+      DataModel_Read(dataModel, Erd_DefrostFreezerScaledDoorAccelerationInSeconds, &actualCount);
 
       CHECK_EQUAL(expectedCount, actualCount);
    }
@@ -250,7 +250,7 @@ TEST_GROUP(DoorAccelerationCounter)
    void ConvertibleCompartmentDoorAccelerationShouldBe(uint32_t expectedCount)
    {
       uint32_t actualCount;
-      DataModel_Read(dataModel, Erd_DefrostConvertibleCompartmentDoorAccelerationCount, &actualCount);
+      DataModel_Read(dataModel, Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds, &actualCount);
 
       CHECK_EQUAL(expectedCount, actualCount);
    }
@@ -437,7 +437,7 @@ TEST(DoorAccelerationCounter, ShouldTransitionToStopFromRunWhenActivelyWaitingFo
    DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Stop);
 }
 
-TEST(DoorAccelerationCounter, ShouldIncrementFreshFoodDoorAccelerationCountWhileInRunStateWhenLeftHandFreshFoodDoorIsOpen)
+TEST(DoorAccelerationCounter, ShouldIncrementFreshFoodScaledDoorAccelerationInSecondsWhileInRunStateWhenLeftHandFreshFoodDoorIsOpen)
 {
    Given FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
    And LeftHandFreshFoodDoorIs(Open);
@@ -453,7 +453,7 @@ TEST(DoorAccelerationCounter, ShouldIncrementFreshFoodDoorAccelerationCountWhile
    }
 }
 
-TEST(DoorAccelerationCounter, ShouldIncrementFreshFoodDoorAccelerationCountWhileInRunStateWhenRightHandFreshFoodDoorIsOpen)
+TEST(DoorAccelerationCounter, ShouldIncrementFreshFoodScaledDoorAccelerationInSecondsWhileInRunStateWhenRightHandFreshFoodDoorIsOpen)
 {
    Given FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
    And RightHandFreshFoodDoorIs(Open);
@@ -469,7 +469,7 @@ TEST(DoorAccelerationCounter, ShouldIncrementFreshFoodDoorAccelerationCountWhile
    }
 }
 
-TEST(DoorAccelerationCounter, ShouldIncrementFreshFoodDoorAccelerationCountWhileInRunStateWhenDoorInDoorIsOpen)
+TEST(DoorAccelerationCounter, ShouldIncrementFreshFoodScaledDoorAccelerationInSecondsWhileInRunStateWhenDoorInDoorIsOpen)
 {
    Given FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
    And DoorInDoorIs(Open);
@@ -485,7 +485,7 @@ TEST(DoorAccelerationCounter, ShouldIncrementFreshFoodDoorAccelerationCountWhile
    }
 }
 
-TEST(DoorAccelerationCounter, ShouldIncrementFreshFoodDoorAccelerationCountWhileInRunStateWhenFreezerDoorIsOpen)
+TEST(DoorAccelerationCounter, ShouldIncrementFreshFoodScaledDoorAccelerationInSecondsWhileInRunStateWhenFreezerDoorIsOpen)
 {
    Given FreezerDoorAccelerationIs(SomeFreezerDoorAcceleration);
    And FreezerDoorIs(Open);
@@ -562,7 +562,7 @@ TEST(DoorAccelerationCounter, ShouldIncrementAllDoorAccelerationsWhileInRunState
    }
 }
 
-TEST(DoorAccelerationCounter, ShouldOnlyIncrementFreshFoodDoorAccelerationCountByOneTimesTheFactorPerSecondEvenIfMultipleFreshFoodDoorsAreOpenWhileInRunState)
+TEST(DoorAccelerationCounter, ShouldOnlyIncrementFreshFoodScaledDoorAccelerationInSecondsByOneTimesTheFactorPerSecondEvenIfMultipleFreshFoodDoorsAreOpenWhileInRunState)
 {
    Given FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
 
