@@ -63,9 +63,9 @@ describe("Defrost", () => {
       doorAccelerationFsmStateEnabled: "DoorAccelerationFsmState_Enabled"
    };
 
-   const defrostTimerIsSatisfiedMonitorFsmState = {
-      defrostTimerIsSatisfiedMonitorFsmStateDisabled: "DefrostTimerIsSatisfiedMonitorFsmState_Disabled",
-      defrostTimerIsSatisfiedMonitorFsmStateEnabled: "DefrostTimerIsSatisfiedMonitorFsmState_Enabled"
+   const defrostReadyTimerIsSatisfiedMonitorFsmState = {
+      defrostReadyTimerIsSatisfiedMonitorFsmStateDisabled: "DefrostReadyTimerIsSatisfiedMonitorFsmState_Disabled",
+      defrostReadyTimerIsSatisfiedMonitorFsmStateEnabled: "DefrostReadyTimerIsSatisfiedMonitorFsmState_Enabled"
    };
 
    const valvePosition = {
@@ -180,12 +180,12 @@ describe("Defrost", () => {
       if (state) {
          await theDefrostTimerCounterShouldBe(defrostTimerCounterFsmState.defrostTimerCounterFsmStateEnabled);
          await theDoorAccelerationShouldBe(doorAccelerationFsmState.doorAccelerationFsmStateEnabled);
-         await theDefrostIsSatisfiedMonitorShouldBe(defrostTimerIsSatisfiedMonitorFsmState.defrostTimerIsSatisfiedMonitorFsmStateEnabled);
+         await theDefrostIsSatisfiedMonitorShouldBe(defrostReadyTimerIsSatisfiedMonitorFsmState.defrostReadyTimerIsSatisfiedMonitorFsmStateEnabled);
       }
       else {
          await theDefrostTimerCounterShouldBe(defrostTimerCounterFsmState.defrostTimerCounterFsmStateDisabled);
          await theDoorAccelerationShouldBe(doorAccelerationFsmState.doorAccelerationFsmStateDisabled);
-         await theDefrostIsSatisfiedMonitorShouldBe(defrostTimerIsSatisfiedMonitorFsmState.defrostTimerIsSatisfiedMonitorFsmStateDisabled);
+         await theDefrostIsSatisfiedMonitorShouldBe(defrostReadyTimerIsSatisfiedMonitorFsmState.defrostReadyTimerIsSatisfiedMonitorFsmStateDisabled);
       }
    };
 
@@ -200,7 +200,7 @@ describe("Defrost", () => {
    };
 
    const timerIsSatisfiedShouldBe = async (state) => {
-      const actual = await rx130.read("Erd_DefrostTimerIsSatisfied");
+      const actual = await rx130.read("Erd_DefrostReadyTimerIsSatisfied");
       expect(actual).toEqual(state);
    };
 
@@ -220,7 +220,7 @@ describe("Defrost", () => {
    };
 
    const theDefrostIsSatisfiedMonitorShouldBe = async (state) => {
-      const actual = await rx130.read("Erd_DefrostTimerIsSatisfiedMonitorFsmState");
+      const actual = await rx130.read("Erd_DefrostReadyTimerIsSatisfiedMonitorFsmState");
       expect(actual).toEqual(state);
    };
 

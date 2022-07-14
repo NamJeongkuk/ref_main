@@ -311,15 +311,15 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Time In Minutes When Defrost Timer Is Satisfied",
-          "name": "Erd_TimeInMinutesWhenDefrostTimerIsSatisfied",
+          "displayName": "Time In Minutes When Defrost Ready Timer Is Satisfied",
+          "name": "Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Defrost Timer Is Satisfied",
-          "name": "Erd_DefrostTimerIsSatisfied",
+          "displayName": "Defrost Ready Timer Is Satisfied",
+          "name": "Erd_DefrostReadyTimerIsSatisfied",
           "read": true,
           "write": true
         },

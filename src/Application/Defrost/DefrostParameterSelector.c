@@ -90,7 +90,7 @@ static void SetPostDwellExitTimeInMinutes(bool defrostIsFreshFoodOnly)
       &postDwellExitTimeInMinutes);
 }
 
-static void SetTimeWhenDefrostTimerIsSatisfiedInMinutes(void)
+static void SetTimeWhenDefrostReadyTimerIsSatisfiedInMinutes(void)
 {
    bool freshFoodDefrostWasAbnormal;
    DataModel_Read(
@@ -116,7 +116,7 @@ static void SetTimeWhenDefrostTimerIsSatisfiedInMinutes(void)
 
       DataModel_Write(
          instance.dataModel,
-         Erd_TimeInMinutesWhenDefrostTimerIsSatisfied,
+         Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied,
          &defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
    }
    else
@@ -129,7 +129,7 @@ static void SetTimeWhenDefrostTimerIsSatisfiedInMinutes(void)
 
       DataModel_Write(
          instance.dataModel,
-         Erd_TimeInMinutesWhenDefrostTimerIsSatisfied,
+         Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied,
          &maxTimeBetweenDefrostsInMinutes);
    }
 }
@@ -157,7 +157,7 @@ static void DataModelChanged(void *context, const void *args)
       erd == Erd_ConvertibleCompartmentDefrostWasAbnormal ||
       erd == Erd_MaxTimeBetweenDefrostsInMinutes)
    {
-      SetTimeWhenDefrostTimerIsSatisfiedInMinutes();
+      SetTimeWhenDefrostReadyTimerIsSatisfiedInMinutes();
    }
 }
 
@@ -180,7 +180,7 @@ void DefrostParameterSelector_Init(I_DataModel_t *dataModel)
    SetNumberOfFreshFoodDefrostsBeforeAFreezerDefrostWhenEnhancedSabbathModeIs(enhancedSabbathMode);
    SetMaxPrechillTimeInMinutes(defrostIsFreshFoodOnly);
    SetPostDwellExitTimeInMinutes(defrostIsFreshFoodOnly);
-   SetTimeWhenDefrostTimerIsSatisfiedInMinutes();
+   SetTimeWhenDefrostReadyTimerIsSatisfiedInMinutes();
 
    EventSubscription_Init(
       &instance.dataModelSubscription,

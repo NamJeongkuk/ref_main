@@ -16,7 +16,7 @@
 #include "ActivelyWaitingForDefrostOnCompareMatch.h"
 #include "DefrostCompressorOnTimeCounter.h"
 #include "DoorAccelerationCounter.h"
-#include "DefrostTimerIsSatisfied.h"
+#include "DefrostReadyTimerIsSatisfied.h"
 #include "uassert.h"
 
 static struct
@@ -27,7 +27,7 @@ static struct
    FreshFoodOnlyDefrostArbitrator_t freshFoodOnlyDefrostArbitrator;
    DefrostCompressorOnTimeCounter_t defrostCompressorOnTimeCounter;
    DoorAccelerationCounter_t doorAccelerationCounter;
-   DefrostTimerIsSatisfied_t defrostTimerIsSatisfied;
+   DefrostReadyTimerIsSatisfied_t defrostReadyTimerIsSatisfied;
 } instance;
 
 static const DefrostConfiguration_t defrostConfig = {
@@ -120,13 +120,13 @@ static const DoorAccelerationCounterConfiguration_t doorAccelerationCounterConfi
    .timerModuleErd = Erd_TimerModule
 };
 
-static DefrostTimerIsSatisfiedConfiguration_t defrostTimerIsSatisfiedConfig = {
+static DefrostReadyTimerIsSatisfiedConfiguration_t defrostReadyTimerIsSatisfiedConfig = {
    .compressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
    .freshFoodDoorAccelerationCountErd = Erd_DefrostFreshFoodDoorAccelerationCount,
    .freezerDoorAccelerationCountErd = Erd_DefrostFreezerDoorAccelerationCount,
    .convertibleCompartmentDoorAccelerationCountErd = Erd_DefrostConvertibleCompartmentDoorAccelerationCount,
-   .defrostTimerIsSatisfiedErd = Erd_DefrostTimerIsSatisfied,
-   .timeInMinutesWhenDefrostTimerIsSatisfiedErd = Erd_TimeInMinutesWhenDefrostTimerIsSatisfied
+   .defrostReadyTimerIsSatisfiedErd = Erd_DefrostReadyTimerIsSatisfied,
+   .timeInMinutesWhenDefrostReadyTimerIsSatisfiedErd = Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied
 };
 
 void DefrostPlugin_Init(I_DataModel_t *dataModel)
@@ -212,10 +212,10 @@ void DefrostPlugin_Init(I_DataModel_t *dataModel)
       dataModel,
       &doorAccelerationCounterConfig);
 
-   DefrostTimerIsSatisfied_Init(
-      &instance.defrostTimerIsSatisfied,
+   DefrostReadyTimerIsSatisfied_Init(
+      &instance.defrostReadyTimerIsSatisfied,
       dataModel,
-      &defrostTimerIsSatisfiedConfig);
+      &defrostReadyTimerIsSatisfiedConfig);
 
    Defrost_Init(&instance.defrost, dataModel, &defrostConfig);
 }

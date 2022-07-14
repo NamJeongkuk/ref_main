@@ -5,12 +5,12 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "DefrostTimerIsSatisfied.h"
+#include "DefrostReadyTimerIsSatisfied.h"
 #include "PersonalityParametricData.h"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
 
-static uint32_t DoorAccelerations(DefrostTimerIsSatisfied_t *instance)
+static uint32_t DoorAccelerations(DefrostReadyTimerIsSatisfied_t *instance)
 {
    uint32_t freshFoodDoorAccelerationCount;
    uint32_t freezerDoorAccelerationCount;
@@ -32,18 +32,18 @@ static uint32_t DoorAccelerations(DefrostTimerIsSatisfied_t *instance)
    return freshFoodDoorAccelerationCount + freezerDoorAccelerationCount + convertibleCompartmentDoorAccelerationCount;
 }
 
-static uint32_t TimeInSecondsWhenDefrostTimerIsSatisfied(DefrostTimerIsSatisfied_t *instance)
+static uint32_t TimeInSecondsWhenDefrostReadyTimerIsSatisfied(DefrostReadyTimerIsSatisfied_t *instance)
 {
-   uint16_t timeInMinutesWhenDefrostTimerIsSatisfied;
+   uint16_t timeInMinutesWhenDefrostReadyTimerIsSatisfied;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->timeInMinutesWhenDefrostTimerIsSatisfiedErd,
-      &timeInMinutesWhenDefrostTimerIsSatisfied);
+      instance->_private.config->timeInMinutesWhenDefrostReadyTimerIsSatisfiedErd,
+      &timeInMinutesWhenDefrostReadyTimerIsSatisfied);
 
-   return (uint32_t)timeInMinutesWhenDefrostTimerIsSatisfied * SECONDS_PER_MINUTE;
+   return (uint32_t)timeInMinutesWhenDefrostReadyTimerIsSatisfied * SECONDS_PER_MINUTE;
 }
 
-static uint32_t CompressorOnTimeInSeconds(DefrostTimerIsSatisfied_t *instance)
+static uint32_t CompressorOnTimeInSeconds(DefrostReadyTimerIsSatisfied_t *instance)
 {
    uint32_t compressorOnTimeInSeconds;
    DataModel_Read(
@@ -54,14 +54,14 @@ static uint32_t CompressorOnTimeInSeconds(DefrostTimerIsSatisfied_t *instance)
    return compressorOnTimeInSeconds;
 }
 
-static bool DefrostTimerIsSatisfied(DefrostTimerIsSatisfied_t *instance)
+static bool DefrostReadyTimerIsSatisfied(DefrostReadyTimerIsSatisfied_t *instance)
 {
    const DefrostData_t *defrostData = PersonalityParametricData_Get(instance->_private.dataModel)->defrostData;
    uint32_t compressorOnTimeInSeconds = CompressorOnTimeInSeconds(instance);
 
    if(compressorOnTimeInSeconds >= ((uint32_t)defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE))
    {
-      if((compressorOnTimeInSeconds + DoorAccelerations(instance)) >= TimeInSecondsWhenDefrostTimerIsSatisfied(instance))
+      if((compressorOnTimeInSeconds + DoorAccelerations(instance)) >= TimeInSecondsWhenDefrostReadyTimerIsSatisfied(instance))
       {
          return true;
       }
@@ -76,18 +76,18 @@ static bool DefrostTimerIsSatisfied(DefrostTimerIsSatisfied_t *instance)
    }
 }
 
-static void UpdateDefrostTimerIsSatisfiedErd(DefrostTimerIsSatisfied_t *instance)
+static void UpdateDefrostReadyTimerIsSatisfiedErd(DefrostReadyTimerIsSatisfied_t *instance)
 {
-   bool defrostTimerIsSatisfied = DefrostTimerIsSatisfied(instance);
+   bool defrostReadyTimerIsSatisfied = DefrostReadyTimerIsSatisfied(instance);
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->defrostTimerIsSatisfiedErd,
-      &defrostTimerIsSatisfied);
+      instance->_private.config->defrostReadyTimerIsSatisfiedErd,
+      &defrostReadyTimerIsSatisfied);
 }
 
 static void DataModelChanged(void *context, const void *args)
 {
-   DefrostTimerIsSatisfied_t *instance = context;
+   DefrostReadyTimerIsSatisfied_t *instance = context;
 
    const DataModelOnDataChangeArgs_t *onChangeData = args;
    Erd_t erd = onChangeData->erd;
@@ -96,21 +96,21 @@ static void DataModelChanged(void *context, const void *args)
       erd == instance->_private.config->freshFoodDoorAccelerationCountErd ||
       erd == instance->_private.config->freezerDoorAccelerationCountErd ||
       erd == instance->_private.config->convertibleCompartmentDoorAccelerationCountErd ||
-      erd == instance->_private.config->timeInMinutesWhenDefrostTimerIsSatisfiedErd)
+      erd == instance->_private.config->timeInMinutesWhenDefrostReadyTimerIsSatisfiedErd)
    {
-      UpdateDefrostTimerIsSatisfiedErd(instance);
+      UpdateDefrostReadyTimerIsSatisfiedErd(instance);
    }
 }
 
-void DefrostTimerIsSatisfied_Init(
-   DefrostTimerIsSatisfied_t *instance,
+void DefrostReadyTimerIsSatisfied_Init(
+   DefrostReadyTimerIsSatisfied_t *instance,
    I_DataModel_t *dataModel,
-   const DefrostTimerIsSatisfiedConfiguration_t *config)
+   const DefrostReadyTimerIsSatisfiedConfiguration_t *config)
 {
    instance->_private.config = config;
    instance->_private.dataModel = dataModel;
 
-   UpdateDefrostTimerIsSatisfiedErd(instance);
+   UpdateDefrostReadyTimerIsSatisfiedErd(instance);
 
    EventSubscription_Init(
       &instance->_private.dataModelSubscription,

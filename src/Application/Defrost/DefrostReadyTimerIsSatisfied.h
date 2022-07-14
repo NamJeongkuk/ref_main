@@ -7,8 +7,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef DEFROSTTIMERISSATISFIED_H
-#define DEFROSTTIMERISSATISFIED_H
+#ifndef DEFROSTREADYTIMERISSATISFIED_H
+#define DEFROSTREADYTIMERISSATISFIED_H
 
 #include "I_DataModel.h"
 #include "DefrostData.h"
@@ -19,9 +19,9 @@ typedef struct
    Erd_t freshFoodDoorAccelerationCountErd; // uint32_t
    Erd_t freezerDoorAccelerationCountErd; // uint32_t
    Erd_t convertibleCompartmentDoorAccelerationCountErd; // uint32_t
-   Erd_t defrostTimerIsSatisfiedErd; // bool
-   Erd_t timeInMinutesWhenDefrostTimerIsSatisfiedErd; // uint16_t
-} DefrostTimerIsSatisfiedConfiguration_t;
+   Erd_t defrostReadyTimerIsSatisfiedErd; // bool
+   Erd_t timeInMinutesWhenDefrostReadyTimerIsSatisfiedErd; // uint16_t
+} DefrostReadyTimerIsSatisfiedConfiguration_t;
 
 typedef struct
 {
@@ -29,14 +29,14 @@ typedef struct
    {
       I_DataModel_t *dataModel;
       EventSubscription_t dataModelSubscription;
-      const DefrostTimerIsSatisfiedConfiguration_t *config;
+      const DefrostReadyTimerIsSatisfiedConfiguration_t *config;
       const DefrostData_t *defrostParametricData;
    } _private;
-} DefrostTimerIsSatisfied_t;
+} DefrostReadyTimerIsSatisfied_t;
 
-void DefrostTimerIsSatisfied_Init(
-   DefrostTimerIsSatisfied_t *instance,
+void DefrostReadyTimerIsSatisfied_Init(
+   DefrostReadyTimerIsSatisfied_t *instance,
    I_DataModel_t *dataModel,
-   const DefrostTimerIsSatisfiedConfiguration_t *config);
+   const DefrostReadyTimerIsSatisfiedConfiguration_t *config);
 
 #endif
