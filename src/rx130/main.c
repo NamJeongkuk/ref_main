@@ -48,6 +48,7 @@
 #include "AsyncNvMapConfigurations.h"
 #include "BootLoopDefender.h"
 #include "MemoryMap.h"
+#include "RelayWatchdog.h"
 
 enum
 {
@@ -181,6 +182,8 @@ int main(void)
       timerModule);
 
    Hardware_InitializeStage2(dataModel);
+
+   RelayWatchdogPlugin_Init(dataModel);
 
    GeaStack_Init(
       &geaStack,

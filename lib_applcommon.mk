@@ -49,6 +49,7 @@ applcommon_SRC_DIRS:=\
   $(applcommon_LIB_ROOT)/Git \
   $(applcommon_LIB_ROOT)/HardwareInterfaces \
   $(applcommon_LIB_ROOT)/HardwareInterfaces/Adapters \
+  $(applcommon_LIB_ROOT)/HardwareInterfaces/Relays \
   $(applcommon_LIB_ROOT)/Image \
   $(applcommon_LIB_ROOT)/KeyManager \
   $(applcommon_LIB_ROOT)/Mapper \

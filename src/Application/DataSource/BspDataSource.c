@@ -10,6 +10,7 @@
 
 static const DataSource_MappedErdPair_t applicationToBspMappedPairs[] = {
    { Erd_HeartbeatLed, Erd_BspGpio_HeartbeatLed },
+   { Erd_RelayWatchdog, Erd_BspGpio_RelayWatchdog },
    { Erd_SomeAnalogInput, Erd_BspAdc_SomeAnalogInput },
    { Erd_AnotherAnalogInput, Erd_BspAdc_AnotherAnalogInput },
    { Erd_AppliancePersonality, Erd_Bsp_Personality },
