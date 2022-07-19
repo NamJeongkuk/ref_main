@@ -37,12 +37,7 @@ typedef struct
       EventSubscription_t dataModelSubscription;
       const GridLineCalculatorConfiguration_t *config;
       const GridData_t *gridData;
-      CalculatedAxisGridLines_t freshFoodCalculatedAxis;
-      CalculatedAxisGridLines_t freezerCalculatedAxis;
-      CalculatedAxisGridLines_t calculatedGridLines[NumberGridDimensions];
       CalculatedGridLines_t calculatedGridLineOutput;
-      TemperatureDegFx100_t calculatedFreshFoodGridLines[NumberOfGridLinesPerAxis];
-      TemperatureDegFx100_t calculatedFreezerGridLines[NumberOfGridLinesPerAxis];
       I_DataModel_t *dataModel;
    } _private;
 } GridLineCalculator_t;

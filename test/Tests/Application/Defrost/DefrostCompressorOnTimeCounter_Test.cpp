@@ -118,24 +118,17 @@ static const GridData_t gridData = {
    .gridPeriodicRunRateInMSec = 1 * MSEC_PER_SEC
 };
 
-static TemperatureDegFx100_t freshFoodCalcAxisGridLines[] = { 0, -450, 150, 450, 950, 1150 };
-static TemperatureDegFx100_t freezerCalcAxisGridLines[] = { -250, 0, 250, 600, 750, 5500 };
-
 static CalculatedAxisGridLines_t freshFoodCalcAxis = {
-   .numberOfLines = SixGridLines,
-   .gridLinesDegFx100 = freshFoodCalcAxisGridLines
+   .gridLinesDegFx100 = { 0, -450, 150, 450, 950, 1150 }
 };
 
 static CalculatedAxisGridLines_t freezerCalcAxis = {
-   .numberOfLines = SixGridLines,
-   .gridLinesDegFx100 = freezerCalcAxisGridLines
+   .gridLinesDegFx100 = { -250, 0, 250, 600, 750, 5500 }
 };
 
-static CalculatedAxisGridLines_t calcGrid[] = { freshFoodCalcAxis, freezerCalcAxis };
-
 static CalculatedGridLines_t calcGridLines = {
-   .dimensions = TwoDimensional,
-   .gridLines = calcGrid
+   .freshFoodGridLine = freshFoodCalcAxis,
+   .freezerGridLine = freezerCalcAxis
 };
 
 static const DefrostCompressorOnTimeCounterConfiguration_t config = {
@@ -216,7 +209,7 @@ TEST_GROUP(DefrostCompressorOnTimeCounter)
 
    void DefrostCompressorOnTimeCounterIsInPauseState()
    {
-      Given FilteredFreezerCabinetTemperatureIs(freezerCalcAxisGridLines[GridLine_FreezerExtremeHigh]);
+      Given FilteredFreezerCabinetTemperatureIs(freezerCalcAxis.gridLinesDegFx100[GridLine_FreezerExtremeHigh]);
       And CalculatedGridLinesAre(calcGridLines);
       And DefrostCompressorOnTimeCounterIsInitialized();
 
@@ -270,7 +263,7 @@ TEST_GROUP(DefrostCompressorOnTimeCounter)
 
 TEST(DefrostCompressorOnTimeCounter, ShouldInitializeIntoStopStateIfFreezerFilteredTemperatureIsAboveGridFreezerExtremeHysteresis)
 {
-   Given FilteredFreezerCabinetTemperatureIs(freezerCalcAxisGridLines[GridLine_FreezerExtremeHigh] + 1);
+   Given FilteredFreezerCabinetTemperatureIs(freezerCalcAxis.gridLinesDegFx100[GridLine_FreezerExtremeHigh] + 1);
    And CalculatedGridLinesAre(calcGridLines);
    And DefrostCompressorOnTimeCounterIsInitialized();
 
@@ -279,7 +272,7 @@ TEST(DefrostCompressorOnTimeCounter, ShouldInitializeIntoStopStateIfFreezerFilte
 
 TEST(DefrostCompressorOnTimeCounter, ShouldInitializeIntoPauseStateIfFreezerFilteredTemperatureIsEqualToGridFreezerExtremeHysteresis)
 {
-   Given FilteredFreezerCabinetTemperatureIs(freezerCalcAxisGridLines[GridLine_FreezerExtremeHigh]);
+   Given FilteredFreezerCabinetTemperatureIs(freezerCalcAxis.gridLinesDegFx100[GridLine_FreezerExtremeHigh]);
    And CalculatedGridLinesAre(calcGridLines);
    And DefrostCompressorOnTimeCounterIsInitialized();
 

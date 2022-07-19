@@ -18,7 +18,7 @@ enum
    InvertedGridLine = 1,
 };
 
-static CalculatedAxisGridLines_t *CalculatedGridLine(
+static CalculatedAxisGridLines_t CalculatedGridLine(
    GridBlockCalculator_t *instance,
    uint8_t gridLineDimension)
 {
@@ -29,7 +29,14 @@ static CalculatedAxisGridLines_t *CalculatedGridLine(
       instance->_private.config->calculatedGridLinesErd,
       &calculatedGridLines);
 
-   return &calculatedGridLines.gridLines[gridLineDimension];
+   if(gridLineDimension == FreshFoodGridLineDimension)
+   {
+      return calculatedGridLines.freshFoodGridLine;
+   }
+   else
+   {
+      return calculatedGridLines.freezerGridLine;
+   }
 }
 
 static uint8_t GridLineIndex(
@@ -38,12 +45,12 @@ static uint8_t GridLineIndex(
    bool gridLineIsInverted,
    uint8_t gridLineDimension)
 {
-   CalculatedAxisGridLines_t *calculatedGridLine = CalculatedGridLine(instance, gridLineDimension);
+   CalculatedAxisGridLines_t calculatedGridLine = CalculatedGridLine(instance, gridLineDimension);
    uint8_t index;
 
-   for(index = 0; index < calculatedGridLine->numberOfLines; index++)
+   for(index = 0; index < NumberOfGridLinesPerAxis; index++)
    {
-      if(temperature <= calculatedGridLine->gridLinesDegFx100[index])
+      if(temperature <= calculatedGridLine.gridLinesDegFx100[index])
       {
          break;
       }
@@ -51,7 +58,7 @@ static uint8_t GridLineIndex(
 
    if(gridLineIsInverted)
    {
-      index = calculatedGridLine->numberOfLines - index;
+      index = NumberOfGridLinesPerAxis - index;
    }
 
    return index;

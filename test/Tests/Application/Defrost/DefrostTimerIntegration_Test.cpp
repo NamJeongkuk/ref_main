@@ -148,24 +148,17 @@ static const EvaporatorData_t dualEvaporatorData = {
 
 #define PowerUpDelayInMs 5 * gridData.gridPeriodicRunRateInMSec
 
-static TemperatureDegFx100_t freshFoodCalcAxisGridLines[] = { 0, -450, 150, 450, 950, 1150 };
-static TemperatureDegFx100_t freezerCalcAxisGridLines[] = { -250, 0, 250, 600, 750, 5500 };
-
 static CalculatedAxisGridLines_t freshFoodCalcAxis = {
-   .numberOfLines = SixGridLines,
-   .gridLinesDegFx100 = freshFoodCalcAxisGridLines
+   .gridLinesDegFx100 = { 0, -450, 150, 450, 950, 1150 }
 };
 
 static CalculatedAxisGridLines_t freezerCalcAxis = {
-   .numberOfLines = SixGridLines,
-   .gridLinesDegFx100 = freezerCalcAxisGridLines
+   .gridLinesDegFx100 = { -250, 0, 250, 600, 750, 5500 }
 };
 
-static CalculatedAxisGridLines_t calcGrid[] = { freshFoodCalcAxis, freezerCalcAxis };
-
 static CalculatedGridLines_t calcGridLines = {
-   .dimensions = TwoDimensional,
-   .gridLines = calcGrid
+   .freshFoodGridLine = freshFoodCalcAxis,
+   .freezerGridLine = freezerCalcAxis
 };
 
 static SystemMonitorData_t systemMonitorData = {
@@ -350,7 +343,7 @@ TEST(DefrostTimerIntegration, ShouldResetEepromCompressorOnTimeToZeroWhenRamErdI
    CompressorOnTimeInSecondsShouldBe(3600);
 
    // Reset board and now FZ cabinet is too warm
-   FilteredFreezerCabinetTemperatureIs(freezerCalcAxisGridLines[GridLine_FreezerExtremeHigh] + 1);
+   FilteredFreezerCabinetTemperatureIs(freezerCalcAxis.gridLinesDegFx100[GridLine_FreezerExtremeHigh] + 1);
    PluginsAreInitializedAndDefrostHsmStateIsIdle();
    // EEPROM is copied to RAM and RAM is 3594
 

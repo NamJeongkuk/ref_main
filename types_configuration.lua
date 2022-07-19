@@ -11,6 +11,26 @@ return {
 
   -- Types that can't be automatically generated but need to be defined
   type_overrides = {
-    GridBlockNumber_t = 'uint8_t'
+    GridBlockNumber_t = 'uint8_t',
+    FreshFoodCalculatedAxisGridLines_t = [[
+      struct {
+        TemperatureDegFx100_t 'nflGridLinesDegFx100',
+        TemperatureDegFx100_t 'lowHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'lowHystDeltaGridLinesDegFx100',
+        TemperatureDegFx100_t 'highHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'extraHighGridLinesDegFx100',
+        TemperatureDegFx100_t 'superHighGridLinesDegFx100',
+      }
+    ]],
+    FreezerCalculatedAxisGridLines_t = [[
+      struct {
+        TemperatureDegFx100_t 'lowHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'deltaGridLinesDegFx100',
+        TemperatureDegFx100_t 'highHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'extraHighGridLinesDegFx100',
+        TemperatureDegFx100_t 'superHighGridLinesDegFx100',
+        TemperatureDegFx100_t 'extremeHighGridLinesDegFx100',
+      }
+    ]],
   }
 }

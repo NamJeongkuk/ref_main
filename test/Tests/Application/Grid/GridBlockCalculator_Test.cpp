@@ -122,42 +122,30 @@ static const GridData_t gridData = {
    .gridPeriodicRunRateInMSec = MSEC_PER_SEC
 };
 
-static TemperatureDegFx100_t freshFoodCalculatedGridLines[] = { 0, 150, 250, 350, 450, 5500 };
-static TemperatureDegFx100_t freezerCalculatedGridLines[] = { -250, 0, 150, 250, 350, 2150 };
-
-static TemperatureDegFx100_t differentFreshFoodCalculatedGridLines[] = { 150, 250, 350, 450, 550, 5500 };
-static TemperatureDegFx100_t differentFreezerCalculatedGridLines[] = { 0, 150, 250, 350, 450, 2150 };
-
 static CalculatedAxisGridLines_t freshFoodCalculatedAxis = {
-   .numberOfLines = NumberOfGridLinesPerAxis,
-   .gridLinesDegFx100 = freshFoodCalculatedGridLines
+   .gridLinesDegFx100 = { 0, 150, 250, 350, 450, 5500 }
 };
 
 static CalculatedAxisGridLines_t freezerCalculatedAxis = {
-   .numberOfLines = NumberOfGridLinesPerAxis,
-   .gridLinesDegFx100 = freezerCalculatedGridLines
+   .gridLinesDegFx100 = { -250, 0, 150, 250, 350, 2150 }
 };
 
 static CalculatedAxisGridLines_t differentFreshFoodCalculatedAxis = {
-   .numberOfLines = NumberOfGridLinesPerAxis,
-   .gridLinesDegFx100 = differentFreshFoodCalculatedGridLines
+   .gridLinesDegFx100 = { 150, 250, 350, 450, 550, 5500 }
 };
 
 static CalculatedAxisGridLines_t differentFreezerCalculatedAxis = {
-   .numberOfLines = NumberOfGridLinesPerAxis,
-   .gridLinesDegFx100 = differentFreezerCalculatedGridLines
+   .gridLinesDegFx100 = { 0, 150, 250, 350, 450, 2150 }
 };
 
-static CalculatedAxisGridLines_t calculatedGrid[] = { freshFoodCalculatedAxis, freezerCalculatedAxis };
 static CalculatedGridLines_t calculatedGridLines = {
-   .dimensions = NumberGridDimensions,
-   .gridLines = calculatedGrid
+   .freshFoodGridLine = freshFoodCalculatedAxis,
+   .freezerGridLine = freezerCalculatedAxis
 };
 
-static CalculatedAxisGridLines_t differentCalculatedGrid[] = { differentFreshFoodCalculatedAxis, differentFreezerCalculatedAxis };
 static CalculatedGridLines_t differentCalculatedGridLines = {
-   .dimensions = NumberGridDimensions,
-   .gridLines = differentCalculatedGrid
+   .freshFoodGridLine = differentFreshFoodCalculatedAxis,
+   .freezerGridLine = differentFreezerCalculatedAxis
 };
 
 static const GridBlockCalculatorConfiguration_t config = {

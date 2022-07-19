@@ -62,22 +62,8 @@ static void CalculateAxisGridLines(
 static void ConfigureGridLines(
    GridLineCalculator_t *instance)
 {
-   CalculateAxisGridLines(instance, &instance->_private.freshFoodCalculatedAxis, FreshFoodGridLineDimension);
-   CalculateAxisGridLines(instance, &instance->_private.freezerCalculatedAxis, FreezerGridLineDimension);
-
-   instance->_private.calculatedGridLines[FreshFoodGridLineDimension].numberOfLines = NumberOfGridLinesPerAxis;
-   instance->_private.calculatedGridLines[FreezerGridLineDimension].numberOfLines = NumberOfGridLinesPerAxis;
-
-   instance->_private.calculatedGridLines[FreshFoodGridLineDimension].gridLinesDegFx100 =
-      instance->_private.calculatedFreshFoodGridLines;
-
-   instance->_private.calculatedGridLines[FreezerGridLineDimension].gridLinesDegFx100 =
-      instance->_private.calculatedFreezerGridLines;
-
-   instance->_private.calculatedGridLineOutput.gridLines =
-      instance->_private.calculatedGridLines;
-
-   instance->_private.calculatedGridLineOutput.dimensions = NumberGridDimensions;
+   CalculateAxisGridLines(instance, &instance->_private.calculatedGridLineOutput.freshFoodGridLine, FreshFoodGridLineDimension);
+   CalculateAxisGridLines(instance, &instance->_private.calculatedGridLineOutput.freezerGridLine, FreezerGridLineDimension);
 
    DataModel_Write(instance->_private.dataModel, instance->_private.config->calculatedGridLineErd, &instance->_private.calculatedGridLineOutput);
 };
@@ -108,12 +94,7 @@ void GridLineCalculator_Init(GridLineCalculator_t *instance,
    instance->_private.config = config;
    instance->_private.dataModel = dataModel;
    instance->_private.gridData = PersonalityParametricData_Get(dataModel)->gridData;
-
-   instance->_private.freshFoodCalculatedAxis.gridLinesDegFx100 = instance->_private.calculatedFreshFoodGridLines;
-   instance->_private.freshFoodCalculatedAxis.numberOfLines = NumberOfGridLinesPerAxis;
-
-   instance->_private.freezerCalculatedAxis.gridLinesDegFx100 = instance->_private.calculatedFreezerGridLines;
-   instance->_private.freezerCalculatedAxis.numberOfLines = NumberOfGridLinesPerAxis;
+   memset(&instance->_private.calculatedGridLineOutput, 0, sizeof(CalculatedGridLines_t));
 
    ConfigureGridLines(instance);
 

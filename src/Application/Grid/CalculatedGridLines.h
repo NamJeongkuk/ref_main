@@ -21,14 +21,16 @@ enum
 
 typedef struct
 {
-   uint8_t numberOfLines;
-   TemperatureDegFx100_t *gridLinesDegFx100;
+   TemperatureDegFx100_t gridLinesDegFx100[NumberOfGridLinesPerAxis];
 } CalculatedAxisGridLines_t;
+
+typedef CalculatedAxisGridLines_t FreshFoodCalculatedAxisGridLines_t;
+typedef CalculatedAxisGridLines_t FreezerCalculatedAxisGridLines_t;
 
 typedef struct
 {
-   uint8_t dimensions;
-   CalculatedAxisGridLines_t *gridLines;
+   FreshFoodCalculatedAxisGridLines_t freshFoodGridLine;
+   FreezerCalculatedAxisGridLines_t freezerGridLine;
 } CalculatedGridLines_t;
 
 #endif

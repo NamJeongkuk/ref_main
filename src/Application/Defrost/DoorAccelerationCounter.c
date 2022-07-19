@@ -317,7 +317,7 @@ static FsmState_t InitStateBasedOnFreezerFilteredTemperature(DoorAccelerationCou
       instance->_private.config->calculatedGridLinesErd,
       &calcGridLines);
 
-   TemperatureDegFx100_t gridFreezerExtremeHystTemperature = calcGridLines.gridLines[GridDelta_Freezer].gridLinesDegFx100[GridLine_FreezerExtremeHigh];
+   TemperatureDegFx100_t gridFreezerExtremeHystTemperature = calcGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtremeHigh];
 
    if(freezerFilteredResolvedTemperature > gridFreezerExtremeHystTemperature ||
       freezerFilteredResolvedTemperature >= instance->_private.defrostParametricData->freezerDefrostTerminationTemperatureInDegFx100)

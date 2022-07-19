@@ -289,7 +289,7 @@ static bool LastDefrostWasAbnormalBecauseOfAbnormalFilteredFreezerCabinetTempera
       instance->_private.config->calculatedGridLinesErd,
       &calcGridLines);
 
-   TemperatureDegFx100_t gridFreezerExtremeHystTemperature = calcGridLines.gridLines[GridDelta_Freezer].gridLinesDegFx100[GridLine_FreezerExtremeHigh];
+   TemperatureDegFx100_t gridFreezerExtremeHystTemperature = calcGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtremeHigh];
 
    return (freezerFilteredTemperature > gridFreezerExtremeHystTemperature ||
       freezerFilteredTemperature >= instance->_private.defrostParametricData->freezerDefrostTerminationTemperatureInDegFx100);

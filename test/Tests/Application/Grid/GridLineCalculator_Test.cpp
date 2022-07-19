@@ -309,8 +309,16 @@ TEST_GROUP(GridLineCalculator)
          Erd_Grid_CalculatedGridLines,
          &calcLines);
 
-      CHECK_EQUAL(temperature,
-         calcLines.gridLines[dimension].gridLinesDegFx100[gridLineIndex]);
+      if(dimension == FreshFoodGridLineDimension)
+      {
+         CHECK_EQUAL(temperature,
+            calcLines.freshFoodGridLine.gridLinesDegFx100[gridLineIndex]);
+      }
+      else
+      {
+         CHECK_EQUAL(temperature,
+            calcLines.freezerGridLine.gridLinesDegFx100[gridLineIndex]);
+      }
    }
 
    void GridLineTemperaturesShouldBeInitializedValues()

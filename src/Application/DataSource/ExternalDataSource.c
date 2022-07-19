@@ -7,6 +7,7 @@
 
 #include "ExternalDataSource.h"
 #include "SystemErds.h"
+#include "DeltaGridLines.h"
 
 #define EXPAND_AS_MAPPED_ERD_PAIR(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)                                                                          \
@@ -106,6 +107,18 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    // 0xF200 range
    SWAPPED_ERD(PublicErd_SomeAnalogInput, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_AnotherAnalogInput, sizeof(uint16_t)),
+   SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freshFoodGridLine.gridLinesDegFx100[GridLine_Nfl]),
+   SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHyst]),
+   SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHystDelta]),
+   SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodHighHyst]),
+   SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodExtraHigh]),
+   SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodSuperHigh]),
+   SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freezerGridLine.gridLinesDegFx100[GridLine_FreezerLowHyst]),
+   SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freezerGridLine.gridLinesDegFx100[GridLine_FreezerDelta]),
+   SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freezerGridLine.gridLinesDegFx100[GridLine_FreezerHighHyst]),
+   SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtraHigh]),
+   SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freezerGridLine.gridLinesDegFx100[GridLine_FreezerSuperHigh]),
+   SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtremeHigh]),
    SWAPPED_ERD(PublicErd_FreshFood_AdjustedSetpoint, sizeof(TemperatureDegFx100_t)),
    SWAPPED_FIELD(PublicErd_FreezerSetpoint_ResolvedVote, SetpointVotedTemperature_t, temperature),
    SWAPPED_FIELD(PublicErd_FreezerSetpoint_FactoryVote, SetpointVotedTemperature_t, temperature),
