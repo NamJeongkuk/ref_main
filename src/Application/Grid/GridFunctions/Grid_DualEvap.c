@@ -109,9 +109,9 @@ static GridBlockNumber_t GetConvertibleCompartmentGridBlockNumber(I_DataModel_t 
 
 static bool GetDelayConvertibleCompartmentCooling(I_DataModel_t *dataModel)
 {
-   bool actual;
-   DataModel_Write(dataModel, Erd_DelayConvertibleCompartmentCooling, &actual);
-   return actual;
+   bool delayConvertibleCompartmentCoolingData;
+   DataModel_Read(dataModel, Erd_DelayConvertibleCompartmentCooling, &delayConvertibleCompartmentCoolingData);
+   return delayConvertibleCompartmentCoolingData;
 }
 
 void Grid_DualEvap(void *context)
@@ -728,22 +728,24 @@ void Grid_DualEvap(void *context)
          }
          SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);
 
-         if(GetConvertibleCompartmentGridBlockNumber(dataModel) < 4)
+         if(GetCoolConvertibleCompartmentBeforeOff(dataModel))
          {
-            VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_High);
-            VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
-            VoteCompressorSpeed(dataModel, CompressorSpeed_Low);
-            VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Low);
-            VoteValvePosition(dataModel, ValvePosition_B);
-            SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, ENABLED);
+            if(GetConvertibleCompartmentGridBlockNumber(dataModel) < 4)
+            {
+               VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_High);
+               VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
+               VoteCompressorSpeed(dataModel, CompressorSpeed_Low);
+               VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Low);
+               VoteValvePosition(dataModel, ValvePosition_B);
+               SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, ENABLED);
+            }
+            else
+            {
+               SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
+               SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
+            }
          }
          else
-         {
-            SetCoolConvertibleCompartmentBeforeOff(dataModel, DISABLED);
-            SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
-         }
-
-         if(GetCoolConvertibleCompartmentBeforeOff(dataModel) == DISABLED)
          {
             VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Off);
             if(GetCompressorSpeed(dataModel) != CompressorSpeed_Off)
@@ -770,6 +772,7 @@ void Grid_DualEvap(void *context)
                VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Off);
                VoteValvePosition(dataModel, ValvePosition_D);
             }
+            SetDelayConvertibleCompartmentCoolingLowSpeedTo(dataModel, DISABLED);
          }
          break;
 
