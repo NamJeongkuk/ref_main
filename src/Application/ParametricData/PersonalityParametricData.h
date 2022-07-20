@@ -11,6 +11,7 @@
 #include "I_DataModel.h"
 #include "DefrostData.h"
 #include "SabbathData.h"
+#include "FanData.h"
 #include "GridData.h"
 #include "ConvertibleCompartmentData.h"
 #include "SensorData.h"
@@ -22,6 +23,7 @@ typedef struct
 {
    const DefrostData_t *defrostData;
    const EnhancedSabbathData_t *enhancedSabbathData;
+   const FanData_t *fanData;
    const GridData_t *gridData;
    const SabbathData_t *sabbathData;
    const ConvertibleCompartmentData_t *convertibleCompartmentData;

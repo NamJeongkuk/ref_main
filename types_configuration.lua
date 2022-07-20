@@ -6,7 +6,10 @@ return {
     'max_align_t',
     'KeyErdStreamData_t',
     'StreamedErd_t',
-    '_mbstate_t'
+    '_mbstate_t',
+    'ValveDependentFanData_t',
+    'ValveFanData_t',
+    'FanControl_t'
   },
 
   -- Types that can't be automatically generated but need to be defined

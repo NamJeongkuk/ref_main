@@ -14,6 +14,8 @@ void PersonalityParametricData_TestDouble_SetEvaporator(PersonalityParametricDat
 
 void PersonalityParametricData_TestDouble_SetDefrost(PersonalityParametricData_t *instance, const DefrostData_t *defrostData);
 
+void PersonalityParametricData_TestDouble_SetFans(PersonalityParametricData_t *instance, const FanData_t *fanData);
+
 void PersonalityParametricData_TestDouble_SetGrid(PersonalityParametricData_t *instance, const GridData_t *gridData);
 
 void PersonalityParametricData_TestDouble_SetSabbath(PersonalityParametricData_t *instance, const SabbathData_t *sabbathData);

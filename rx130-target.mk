@@ -45,6 +45,7 @@ SRC_DIRS:=\
   src/Application/Defrost \
   src/Application/Door \
   src/Application/EnhancedSabbath \
+  src/Application/Fan \
   src/Application/Setpoints \
   src/Application/Evaporator \
   src/Application/Grid \
@@ -68,7 +69,6 @@ INC_DIRS:=\
   src/Application/Door \
   src/Application/EnhancedSabbath \
   src/Application/Setpoints \
-  src/Application/Fan \
   src/Application/Grid \
   src/Application/Grid/GridFunctions \
   src/Application/Sabbath \
