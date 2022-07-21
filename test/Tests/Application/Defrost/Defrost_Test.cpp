@@ -993,36 +993,6 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryWhenFreezerEvapThermisto
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryWhenFreezerEvapThermistorBecomesInvalidDuringPrechillPrep)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-
-   When FreezerEvaporatorThermistorValidityIs(INVALID);
-   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
-}
-
-TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryWhenFreezerEvapThermistorBecomesInvalidDuringPrechill)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-
-   When CompressorStateTimeIsSatisfied();
-   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
-
-   When FreezerEvaporatorThermistorValidityIs(INVALID);
-   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
-}
-
-TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryWhenFreezerEvapThermistorBecomesInvalidDuringPostPrechill)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostPrechill);
-
-   When FreezerEvaporatorThermistorValidityIs(INVALID);
-   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
-}
-
 TEST(Defrost_SingleEvap, ShouldIncrementNumberOfFreshFoodDefrostsBeforeAFreezerDefrostOnEntryToPrechillPrep)
 {
    Given FreezerEvaporatorThermistorValidityIs(VALID);
@@ -1038,54 +1008,6 @@ TEST(Defrost_SingleEvap, ShouldNotIncrementNumberOfFreshFoodDefrostsBeforeAFreez
    Given FreezerEvaporatorThermistorIsInvalidAndPrechillIsSkippedAndInHeaterOnEntryState();
 
    NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(0);
-}
-
-TEST(Defrost_SingleEvap, ShouldVoteForFreshFoodHeaterOffOnEntryToPrechillPrep)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-
-   FreshFoodHeaterShouldBeVoted(OFF);
-}
-
-TEST(Defrost_SingleEvap, ShouldVoteForFreezerHeaterOffOnEntryToPrechillPrep)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-
-   FreezerHeaterShouldBeVoted(OFF);
-}
-
-TEST(Defrost_SingleEvap, ShouldVoteForIceCabinetFanHighOnEntryToPrechillPrep)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-
-   IceCabinetFanShouldBeVoted(FanSpeed_High);
-}
-
-TEST(Defrost_SingleEvap, ShouldVoteForFreshFoodHeaterOffOnEntryToPostPrechill)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostPrechill);
-
-   FreshFoodHeaterShouldBeVoted(OFF);
-}
-
-TEST(Defrost_SingleEvap, ShouldVoteForFreezerHeaterOffOnEntryToPostPrechill)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostPrechill);
-
-   FreezerHeaterShouldBeVoted(OFF);
-}
-
-TEST(Defrost_SingleEvap, ShouldVoteForIceCabinetFanHighOnEntryToPostPrechill)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostPrechill);
-
-   IceCabinetFanShouldBeVoted(FanSpeed_High);
 }
 
 TEST(Defrost_SingleEvap, ShouldVoteForFreezerSetPointWithResolvedFreezerSetpointOnEntryToPrechillPrepAndResolvedFreezerSetpointIsLessThanPrechillSetpoint)
@@ -1174,26 +1096,6 @@ TEST(Defrost_SingleEvap, ShouldRequestToEnableDoorHoldoffOnEntryToPrechillPrep)
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
    DoorHoldoffRequestShouldBe(ENABLED);
-}
-
-TEST(Defrost_SingleEvap, ShouldTransitionToPostPrechillFromPrechillPrepWhenLastDefrostChangesFromNormalToAbnormal)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-
-   When CompressorStateIs(CompressorState_MinimumOnTime);
-   When LastFreezerDefrostWasAbnormal();
-   DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
-}
-
-TEST(Defrost_SingleEvap, ShouldTransitionToPostPrechillFromPrechillWhenLastDefrostChangesFromNormalToAbnormal)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
-
-   When CompressorStateIs(CompressorState_MinimumOnTime);
-   When LastFreezerDefrostWasAbnormal();
-   DefrostHsmStateShouldBe(DefrostHsmState_PostPrechill);
 }
 
 TEST(Defrost_SingleEvap, ShouldTransitionToPrechillFromPrechillPrepWhenCompressorStateTimeIsSatisfied)
@@ -1560,31 +1462,6 @@ TEST(Defrost_SingleEvap, ShouldVoteForFreezerEvapFanLowAndFreshFoodEvapFanOffOnE
    FreshFoodEvapFanShouldBeVotedWith(FanSpeed_Off);
 }
 
-TEST(Defrost_SingleEvap, ShouldVoteDontCareForDefrostHeatersAndIceBoxFanOnExitOfPrechillPrepToHeaterOnEntry)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-
-   When FreezerEvaporatorThermistorValidityIs(INVALID);
-   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
-
-   FreshFoodDefrostHeaterVoteShouldBeDontCare();
-   FreezerDefrostHeaterVoteShouldBeDontCare();
-   IceCabinetFanVoteShouldBeDontCare();
-}
-
-TEST(Defrost_SingleEvap, ShouldVoteDontCareForFreezerAndFreshFoodEvapFansOnExitOfPrechillPrepToHeaterOnEntry)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-
-   When FreezerEvaporatorThermistorValidityIs(INVALID);
-   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
-
-   FreezerEvapFanVoteShouldBeDontCare();
-   FreshFoodEvapFanVoteShouldBeDontCare();
-}
-
 TEST(Defrost_SingleEvap, ShouldVoteDontCareForDefrostHeatersAndIceBoxFanOnExitOfPrechillToHeaterOnEntry)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
@@ -1606,39 +1483,6 @@ TEST(Defrost_SingleEvap, ShouldVoteDontCareForFreezerAndFreshFoodEvapFansOnExitO
 
    FreezerEvapFanVoteShouldBeDontCare();
    FreshFoodEvapFanVoteShouldBeDontCare();
-}
-
-TEST(Defrost_SingleEvap, ShouldVoteDontCareForDefrostHeatersAndIceBoxFanOnExitOfPostPrechillToHeaterOnEntry)
-{
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostPrechill);
-
-   When CompressorStateIs(CompressorState_Off);
-   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
-
-   FreshFoodDefrostHeaterVoteShouldBeDontCare();
-   FreezerDefrostHeaterVoteShouldBeDontCare();
-   IceCabinetFanVoteShouldBeDontCare();
-}
-
-TEST(Defrost_SingleEvap, ShouldVoteDontCareForFreezerAndFreshFoodEvapFansOnExitOfPostPrechillToHeaterOnEntry)
-{
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostPrechill);
-
-   When CompressorStateIs(CompressorState_Off);
-   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
-
-   FreezerEvapFanVoteShouldBeDontCare();
-   FreshFoodEvapFanVoteShouldBeDontCare();
-}
-
-TEST(Defrost_SingleEvap, ShouldVoteDontCareForValvePositionOnExitOfPostPrechillToHeaterOnEntry)
-{
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostPrechill);
-
-   When CompressorStateIs(CompressorState_Off);
-   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
-
-   ValvePositionShouldBeDontCare();
 }
 
 TEST_GROUP(Defrost_DualEvap)

@@ -53,7 +53,6 @@ enum
 
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data);
-static bool State_PrechillParent(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_PostPrechill(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -64,10 +63,9 @@ static const HsmStateHierarchyDescriptor_t stateList[] = {
    { State_PowerUp, HSM_NO_PARENT },
    { State_Idle, HSM_NO_PARENT },
    { State_Dwell, HSM_NO_PARENT },
-   { State_PrechillParent, HSM_NO_PARENT },
-   { State_PrechillPrep, State_PrechillParent },
-   { State_Prechill, State_PrechillParent },
-   { State_PostPrechill, State_PrechillParent },
+   { State_PrechillPrep, HSM_NO_PARENT },
+   { State_Prechill, HSM_NO_PARENT },
+   { State_PostPrechill, HSM_NO_PARENT },
    { State_HeaterOnEntry, HSM_NO_PARENT }
 };
 
@@ -305,42 +303,6 @@ static void StartTimer(Defrost_t *instance, Timer_t *timer, TimerTicks_t ticks, 
       ticks,
       callback,
       instance);
-}
-
-static void VoteForFreshFoodDefrostHeater(Defrost_t *instance, bool state, bool care)
-{
-   HeaterVotedState_t vote;
-   vote.state = state;
-   vote.care = care;
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->freshFoodDefrostHeaterDefrostVoteErd,
-      &vote);
-}
-
-static void VoteForFreezerDefrostHeater(Defrost_t *instance, bool state, bool care)
-{
-   HeaterVotedState_t vote;
-   vote.state = state;
-   vote.care = care;
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->freezerDefrostHeaterDefrostVoteErd,
-      &vote);
-}
-
-static void VoteForIceCabinetFan(Defrost_t *instance, FanSpeed_t speed, bool care)
-{
-   FanVotedSpeed_t vote;
-   vote.speed = speed;
-   vote.care = care;
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->iceCabinetFanDefrostVoteErd,
-      &vote);
 }
 
 static DefrostState_t LastDefrostState(Defrost_t *instance)
@@ -696,21 +658,6 @@ static void VoteForFreshFoodEvapFan(Defrost_t *instance, FanSpeed_t speed, bool 
       &vote);
 }
 
-static void VoteDontCareForValvePosition(Defrost_t *instance)
-{
-   ValveVotedPosition_t vote;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->sealedSystemValvePositionDefrostVoteErd,
-      &vote);
-   vote.care = false;
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->sealedSystemValvePositionDefrostVoteErd,
-      &vote);
-}
-
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
@@ -774,44 +721,6 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Hsm_Exit:
-         break;
-
-      default:
-         return HsmSignalDeferred;
-   }
-
-   return HsmSignalConsumed;
-}
-
-static bool State_PrechillParent(Hsm_t *hsm, HsmSignal_t signal, const void *data)
-{
-   Defrost_t *instance = InstanceFromHsm(hsm);
-   IGNORE(instance);
-   IGNORE(data);
-
-   switch(signal)
-   {
-      case Hsm_Entry:
-         VoteForFreshFoodDefrostHeater(instance, OFF, Care);
-         VoteForFreezerDefrostHeater(instance, OFF, Care);
-         VoteForIceCabinetFan(instance, FanSpeed_High, Care);
-         break;
-
-      case Signal_FreezerEvaporatorThermistorIsInvalid:
-         Hsm_Transition(hsm, State_HeaterOnEntry);
-         break;
-
-      case Signal_FreezerDefrostIsAbnormal:
-         Hsm_Transition(hsm, State_PostPrechill);
-         break;
-
-      case Hsm_Exit:
-         VoteForFreezerDefrostHeater(instance, OFF, DontCare);
-         VoteForFreshFoodDefrostHeater(instance, OFF, DontCare);
-         VoteForIceCabinetFan(instance, FanSpeed_Off, DontCare);
-         VoteForFreezerEvapFan(instance, FanSpeed_Off, DontCare);
-         VoteForFreshFoodEvapFan(instance, FanSpeed_Off, DontCare);
-         VoteDontCareForValvePosition(instance);
          break;
 
       default:
