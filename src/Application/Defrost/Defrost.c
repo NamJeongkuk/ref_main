@@ -48,7 +48,8 @@ enum
    Signal_CompressorStateIsOn,
    Signal_CompressorStateIsMinimumOnTime,
    Signal_CompressorStateIsMinimumOffTime,
-   Signal_CompressorStateIsMinimumRunTime
+   Signal_CompressorStateIsMinimumRunTime,
+   Signal_DefrostReadyTimerIsSatisfied
 };
 
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -104,13 +105,13 @@ static uint8_t MaxPrechillTimeInMinutes(Defrost_t *instance)
 
 static void DataModelChanged(void *context, const void *args)
 {
-   REINTERPRET(instance, context, Defrost_t *);
-   REINTERPRET(onChangeData, args, const DataModelOnDataChangeArgs_t *);
-   REINTERPRET(erd, onChangeData->erd, Erd_t);
+   Defrost_t *instance = context;
+   const DataModelOnDataChangeArgs_t *onChangeData = args;
+   Erd_t erd = onChangeData->erd;
 
    if(erd == instance->_private.config->freezerEvaporatorThermistorIsValidErd)
    {
-      REINTERPRET(valid, onChangeData->data, const bool *);
+      const bool *valid = onChangeData->data;
 
       if(!*valid)
       {
@@ -119,7 +120,7 @@ static void DataModelChanged(void *context, const void *args)
    }
    else if(erd == instance->_private.config->freezerDefrostWasAbnormalErd)
    {
-      REINTERPRET(state, onChangeData->data, const bool *);
+      const bool *state = onChangeData->data;
 
       if(*state)
       {
@@ -128,7 +129,7 @@ static void DataModelChanged(void *context, const void *args)
    }
    else if(erd == instance->_private.config->compressorStateErd)
    {
-      REINTERPRET(state, onChangeData->data, const CompressorState_t *);
+      const CompressorState_t *state = onChangeData->data;
 
       switch(*state)
       {
@@ -157,7 +158,7 @@ static void DataModelChanged(void *context, const void *args)
    {
       if(instance->_private.defrostParametricData->threeWayValvePositionToCountAsPrechillTime == ValvePosition_B)
       {
-         REINTERPRET(minutes, onChangeData->data, const uint16_t *);
+         const uint16_t *minutes = onChangeData->data;
 
          if(*minutes >= MaxPrechillTimeInMinutes(instance))
          {
@@ -167,7 +168,7 @@ static void DataModelChanged(void *context, const void *args)
    }
    else if(erd == instance->_private.config->freezerEvaporatorFilteredTemperatureErd)
    {
-      REINTERPRET(temperatureDegFx100, onChangeData->data, const TemperatureDegFx100_t *);
+      const TemperatureDegFx100_t *temperatureDegFx100 = onChangeData->data;
 
       if(*temperatureDegFx100 < instance->_private.defrostParametricData->prechillFreezerEvapExitTemperatureInDegFx100)
       {
@@ -176,7 +177,7 @@ static void DataModelChanged(void *context, const void *args)
    }
    else if(erd == instance->_private.config->noFreezeLimitIsActiveErd)
    {
-      REINTERPRET(state, onChangeData->data, const bool *);
+      const bool *state = onChangeData->data;
 
       if(*state)
       {
@@ -185,7 +186,7 @@ static void DataModelChanged(void *context, const void *args)
    }
    else if(erd == instance->_private.config->freezerFilteredTemperatureResolvedErd)
    {
-      REINTERPRET(temperatureDegFx100, onChangeData->data, const TemperatureDegFx100_t *);
+      const TemperatureDegFx100_t *temperatureDegFx100 = onChangeData->data;
 
       TemperatureDegFx100_t adjustedFreezerSetpointDegFx100;
       DataModel_Read(
@@ -200,7 +201,7 @@ static void DataModelChanged(void *context, const void *args)
    }
    else if(erd == instance->_private.config->prechillTimeMetErd)
    {
-      REINTERPRET(state, onChangeData->data, const bool *);
+      const bool *state = onChangeData->data;
 
       if(*state)
       {
@@ -209,7 +210,7 @@ static void DataModelChanged(void *context, const void *args)
    }
    else if(erd == instance->_private.config->doorHoldoffTimeIsSatisfiedErd)
    {
-      REINTERPRET(state, onChangeData->data, const bool *);
+      const bool *state = onChangeData->data;
 
       if(*state)
       {
@@ -218,11 +219,20 @@ static void DataModelChanged(void *context, const void *args)
    }
    else if(erd == instance->_private.config->defrostMaxHoldoffMetErd)
    {
-      REINTERPRET(state, onChangeData->data, const bool *);
+      const bool *state = onChangeData->data;
 
       if(*state)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_MaxHoldoffTimeIsMet, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->defrostReadyTimerIsSatisfied)
+   {
+      const bool *state = onChangeData->data;
+
+      if(*state)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_DefrostReadyTimerIsSatisfied, NULL);
       }
    }
 }
@@ -316,6 +326,17 @@ static DefrostState_t LastDefrostState(Defrost_t *instance)
    return lastDefrostState;
 }
 
+static bool FreshFoodDefrostWasAbnormal(Defrost_t *instance)
+{
+   bool defrostWasAbnormal;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freshFoodDefrostWasAbnormalErd,
+      &defrostWasAbnormal);
+
+   return defrostWasAbnormal;
+}
+
 static bool FreezerDefrostWasAbnormal(Defrost_t *instance)
 {
    bool defrostWasAbnormal;
@@ -327,9 +348,27 @@ static bool FreezerDefrostWasAbnormal(Defrost_t *instance)
    return defrostWasAbnormal;
 }
 
+static bool ConvertibleCompartmentDefrostWasAbnormal(Defrost_t *instance)
+{
+   bool defrostWasAbnormal;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->convertibleCompartmentDefrostWasAbnormalErd,
+      &defrostWasAbnormal);
+
+   return defrostWasAbnormal;
+}
+
+static bool AnyPreviousDefrostWasAbnormal(Defrost_t *instance)
+{
+   return (FreshFoodDefrostWasAbnormal(instance) ||
+      FreezerDefrostWasAbnormal(instance) ||
+      ConvertibleCompartmentDefrostWasAbnormal(instance));
+}
+
 static void PowerUpDelayComplete(void *context)
 {
-   REINTERPRET(instance, context, Defrost_t *);
+   Defrost_t *instance = context;
 
    Hsm_SendSignal(&instance->_private.hsm, Signal_PowerUpDelayComplete, NULL);
 }
@@ -343,14 +382,9 @@ static void StartPowerUpDelayTimer(Defrost_t *instance)
       PowerUpDelayComplete);
 }
 
-static void SetFlagToResetRequiredWhenEnablingDefrostTimerCounterTo(Defrost_t *instance, bool state)
-{
-   instance->_private.resetRequiredWhenEnablingDefrostTimerCounter = state;
-}
-
 static void PeriodicTimeoutComplete(void *context)
 {
-   REINTERPRET(instance, context, Defrost_t *);
+   Defrost_t *instance = context;
 
    Hsm_SendSignal(&instance->_private.hsm, Signal_PeriodicTimeoutComplete, NULL);
 }
@@ -658,6 +692,25 @@ static void VoteForFreshFoodEvapFan(Defrost_t *instance, FanSpeed_t speed, bool 
       &vote);
 }
 
+static bool FreezerCompartmentWasTooWarmOnPowerUp(Defrost_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
+      &state);
+
+   return state;
+}
+
+static void ResetFreezerCompartmentWasTooWarmOnPowerUp(Defrost_t *instance)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
+      clear);
+}
+
 static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
@@ -676,7 +729,6 @@ static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 
          if(LastDefrostWasAbnormalBecauseOfAbnormalFilteredFreezerCabinetTemperature(instance))
          {
-            SetFlagToResetRequiredWhenEnablingDefrostTimerCounterTo(instance, true);
             SaveFreezerAbnormalDefrostData(instance);
 
             (lastDefrostState == DefrostState_HeaterOn) ? Hsm_Transition(hsm, State_Dwell) : Hsm_Transition(hsm, State_Idle);
@@ -718,6 +770,22 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Idle);
+         break;
+
+      case Signal_DefrostReadyTimerIsSatisfied:
+         if(FreezerCompartmentWasTooWarmOnPowerUp(instance))
+         {
+            ResetFreezerCompartmentWasTooWarmOnPowerUp(instance);
+         }
+
+         if(AnyPreviousDefrostWasAbnormal(instance) || FreezerCompartmentWasTooWarmOnPowerUp(instance))
+         {
+            Hsm_Transition(hsm, State_HeaterOnEntry);
+         }
+         else
+         {
+            Hsm_Transition(hsm, State_PrechillPrep);
+         }
          break;
 
       case Hsm_Exit:

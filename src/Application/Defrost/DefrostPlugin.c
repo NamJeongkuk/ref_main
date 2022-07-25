@@ -17,6 +17,7 @@
 #include "DefrostCompressorOnTimeCounter.h"
 #include "DoorAccelerationCounter.h"
 #include "DefrostReadyTimerIsSatisfied.h"
+#include "FreezerFilteredTemperatureTooWarmOnPowerUp.h"
 #include "uassert.h"
 
 static struct
@@ -39,6 +40,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .numberOfFreezerAbnormalDefrostCyclesErd = Erd_NumberofFreezerAbnormalDefrostCycles,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .freezerAbnormalDefrostCycleCountErd = Erd_FreezerAbnormalDefrostCycleCount,
+   .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
+   .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
    .freezerDefrostCycleCountErd = Erd_FreezerDefrostCycleCount,
    .freshFoodDefrostHeaterDefrostVoteErd = Erd_FreshFoodDefrostHeater_DefrostVote,
    .freezerDefrostHeaterDefrostVoteErd = Erd_FreezerDefrostHeater_DefrostVote,
@@ -64,6 +67,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .noFreezeLimitIsActiveErd = Erd_NoFreezeLimitIsActive,
    .freezerEvapFanDefrostVoteErd = Erd_FreezerEvapFanSpeed_DefrostVote,
    .freshFoodEvapFanDefrostVoteErd = Erd_FreshFoodEvapFanSpeed_DefrostVote,
+   .defrostReadyTimerIsSatisfied = Erd_DefrostReadyTimerIsSatisfied,
+   .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -96,18 +101,15 @@ static const FreshFoodOnlyDefrostArbitratorConfiguration_t freshFoodOnlyDefrostA
 static const DefrostCompressorOnTimeCounterConfiguration_t defrostCompressorOnTimeCounterConfig = {
    .compressorIsOnErd = Erd_CompressorIsOn,
    .activelyWaitingForNextDefrostErd = Erd_ActivelyWaitingForNextDefrost,
-   .freezerFilteredTemperatureResolvedErd = Erd_Freezer_FilteredTemperatureResolved,
    .defrostCompressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
    .defrostCompressorOnTimeCounterFsmStateErd = Erd_DefrostCompressorOnTimeCounterFsmState,
-   .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
+   .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .timerModuleErd = Erd_TimerModule
 };
 
 static const DoorAccelerationCounterConfiguration_t doorAccelerationCounterConfig = {
    .activelyWaitingForNextDefrostErd = Erd_ActivelyWaitingForNextDefrost,
-   .freezerFilteredTemperatureResolvedErd = Erd_Freezer_FilteredTemperatureResolved,
    .doorAccelerationCounterFsmStateErd = Erd_DoorAccelerationCounterFsmState,
-   .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
    .freshFoodScaledDoorAccelerationInSecondsErd = Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds,
    .freezerScaledDoorAccelerationInSecondsErd = Erd_DefrostFreezerScaledDoorAccelerationInSeconds,
    .convertibleCompartmentScaledDoorAccelerationInSecondsErd = Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds,
@@ -117,6 +119,7 @@ static const DoorAccelerationCounterConfiguration_t doorAccelerationCounterConfi
    .freezerDoorIsOpenErd = Erd_FreezerDoorIsOpen,
    .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorIsOpen,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
+   .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -180,6 +183,8 @@ void DefrostPlugin_Init(I_DataModel_t *dataModel)
       gridPluginReady &&
       periodicNvUpdaterReady &&
       sabbathPluginReady);
+
+   FreezerFilteredTemperatureTooWarmOnPowerUp_Init(dataModel);
 
    DefrostParameterSelector_Init(dataModel);
 

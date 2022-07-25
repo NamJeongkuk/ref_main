@@ -227,6 +227,13 @@
         },
         {
           "namespace": "rx130",
+          "displayName": "Convertible Compartment Defrost Was Abnormal (EEPROM)",
+          "name": "Erd_ConvertibleCompartmentDefrostWasAbnormal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "Defrost Door Holdoff Request",
           "name": "Erd_DefrostDoorHoldOffRequest",
           "read": true,
@@ -390,6 +397,13 @@
           "namespace": "rx130",
           "displayName": "Prechill Time Met",
           "name": "Erd_PrechillTimeMet",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Filtered Temperature Too Warm At Power Up",
+          "name": "Erd_FreezerFilteredTemperatureTooWarmAtPowerUp",
           "read": true,
           "write": true
         }

@@ -19,10 +19,9 @@ typedef struct
 {
    Erd_t compressorIsOnErd; // bool
    Erd_t activelyWaitingForNextDefrostErd; // bool
-   Erd_t freezerFilteredTemperatureResolvedErd; // TemperatureDegFx100_t
    Erd_t defrostCompressorOnTimeInSecondsErd; // uint32_t
    Erd_t defrostCompressorOnTimeCounterFsmStateErd; // DefrostCompressorOnTimeCounterFsmState_t
-   Erd_t calculatedGridLinesErd; // CalculatedGridLines_t
+   Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
    Erd_t timerModuleErd; // TimerModule_t *
 } DefrostCompressorOnTimeCounterConfiguration_t;
 
@@ -35,8 +34,6 @@ typedef struct
       Timer_t periodicTimer;
       EventSubscription_t subscription;
       const DefrostCompressorOnTimeCounterConfiguration_t *config;
-      const DefrostData_t *defrostParametricData;
-      const GridData_t *gridParametricData;
    } _private;
 } DefrostCompressorOnTimeCounter_t;
 

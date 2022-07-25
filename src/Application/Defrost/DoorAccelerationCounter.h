@@ -19,9 +19,7 @@
 typedef struct
 {
    Erd_t activelyWaitingForNextDefrostErd; // bool
-   Erd_t freezerFilteredTemperatureResolvedErd; // TemperatureDegFx100_t
    Erd_t doorAccelerationCounterFsmStateErd; // DefrostCompressorOnTimeCounterFsmState_t
-   Erd_t calculatedGridLinesErd; // CalculatedGridLines_t
    Erd_t freshFoodScaledDoorAccelerationInSecondsErd; // uint32_t
    Erd_t freezerScaledDoorAccelerationInSecondsErd; // uint32_t
    Erd_t convertibleCompartmentScaledDoorAccelerationInSecondsErd; // uint32_t
@@ -31,6 +29,7 @@ typedef struct
    Erd_t freezerDoorIsOpenErd; // bool
    Erd_t convertibleCompartmentDoorIsOpenErd; // bool
    Erd_t convertibleCompartmentStateErd; // ConvertibleCompartmentState_t
+   Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
    Erd_t timerModuleErd; // TimerModule_t *
 } DoorAccelerationCounterConfiguration_t;
 
@@ -44,7 +43,6 @@ typedef struct
       EventSubscription_t subscription;
       const DoorAccelerationCounterConfiguration_t *config;
       const DefrostData_t *defrostParametricData;
-      const GridData_t *gridParametricData;
    } _private;
 } DoorAccelerationCounter_t;
 

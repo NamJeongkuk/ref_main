@@ -44,106 +44,9 @@ enum
    PeriodicTimerTicksInMs = 1 * MSEC_PER_SEC
 };
 
-enum
-{
-   SixGridLines = 6,
-   TwoDimensional = 2,
-};
-
-static const DeltaGridLineData_t freshFoodGridLineData[] = {
-   {
-      .gridLinesDegFx100 = 0,
-      .bitMapping = 0b0010,
-   },
-   {
-      .gridLinesDegFx100 = -450,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 150,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 450,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 950,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 1150,
-      .bitMapping = 0b1000,
-   },
-};
-
-static const DeltaGridLineData_t freezerGridLineData[] = {
-   {
-      .gridLinesDegFx100 = -250,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 0,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 250,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 600,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 750,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 5500,
-      .bitMapping = 0b0010,
-   },
-};
-
-static const DeltaAxisGridLines_t freshFoodAxis = {
-   .numberOfLines = SixGridLines,
-   .gridLineData = freshFoodGridLineData
-};
-
-static const DeltaAxisGridLines_t freezerAxis = {
-   .numberOfLines = SixGridLines,
-   .gridLineData = freezerGridLineData
-};
-
-static DeltaAxisGridLines_t parametricGrid[] = { freshFoodAxis, freezerAxis };
-static DeltaGridLines_t deltaGrid = {
-   .dimensions = TwoDimensional,
-   .gridLines = parametricGrid
-};
-
-static const GridData_t gridData = {
-   .gridId = 0,
-   .deltaGridLines = &deltaGrid,
-   .gridPeriodicRunRateInMSec = 1 * MSEC_PER_SEC
-};
-
-static CalculatedAxisGridLines_t freshFoodCalcAxis = {
-   .gridLinesDegFx100 = { 0, -450, 150, 450, 950, 1150 }
-};
-
-static CalculatedAxisGridLines_t freezerCalcAxis = {
-   .gridLinesDegFx100 = { -250, 0, 250, 600, 750, 5500 }
-};
-
-static CalculatedGridLines_t calcGridLines = {
-   .freshFoodGridLine = freshFoodCalcAxis,
-   .freezerGridLine = freezerCalcAxis
-};
-
 static const DoorAccelerationCounterConfiguration_t config = {
    .activelyWaitingForNextDefrostErd = Erd_ActivelyWaitingForNextDefrost,
-   .freezerFilteredTemperatureResolvedErd = Erd_Freezer_FilteredTemperatureResolved,
    .doorAccelerationCounterFsmStateErd = Erd_DoorAccelerationCounterFsmState,
-   .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
    .freshFoodScaledDoorAccelerationInSecondsErd = Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds,
    .freezerScaledDoorAccelerationInSecondsErd = Erd_DefrostFreezerScaledDoorAccelerationInSeconds,
    .convertibleCompartmentScaledDoorAccelerationInSecondsErd = Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds,
@@ -153,6 +56,7 @@ static const DoorAccelerationCounterConfiguration_t config = {
    .freezerDoorIsOpenErd = Erd_FreezerDoorIsOpen,
    .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorIsOpen,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
+   .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -177,7 +81,6 @@ TEST_GROUP(DoorAccelerationCounter)
 
       PersonalityParametricData_TestDouble_Init(&personalityParametricData);
       PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);
-      PersonalityParametricData_TestDouble_SetGrid(&personalityParametricData, &gridData);
       DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
    }
 
@@ -189,16 +92,6 @@ TEST_GROUP(DoorAccelerationCounter)
    void DoorAccelerationCounterIsInitialized()
    {
       DoorAccelerationCounter_Init(&instance, dataModel, &config);
-   }
-
-   void CalculatedGridLinesAre(CalculatedGridLines_t gridLines)
-   {
-      DataModel_Write(dataModel, Erd_Grid_CalculatedGridLines, &gridLines);
-   }
-
-   void FilteredFreezerCabinetTemperatureIs(TemperatureDegFx100_t temperature)
-   {
-      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolved, &temperature);
    }
 
    void DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_t expectedState)
@@ -250,8 +143,7 @@ TEST_GROUP(DoorAccelerationCounter)
 
    void DoorAccelerationCounterIsInStopState()
    {
-      Given FilteredFreezerCabinetTemperatureIs(defrostData.freezerDefrostTerminationTemperatureInDegFx100);
-      And CalculatedGridLinesAre(calcGridLines);
+      Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
       And DoorAccelerationCounterIsInitialized();
 
       DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Stop);
@@ -259,8 +151,7 @@ TEST_GROUP(DoorAccelerationCounter)
 
    void DoorAccelerationCounterIsInPauseState()
    {
-      Given FilteredFreezerCabinetTemperatureIs(freezerCalcAxis.gridLinesDegFx100[GridLine_FreezerExtremeHigh]);
-      And CalculatedGridLinesAre(calcGridLines);
+      Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
       And DoorAccelerationCounterIsInitialized();
 
       DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Pause);
@@ -344,42 +235,27 @@ TEST_GROUP(DoorAccelerationCounter)
          ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
       }
    }
+
+   void FreezerFilteredTemperatureTooWarmOnPowerUpIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmAtPowerUp, &state);
+   }
 };
 
-TEST(DoorAccelerationCounter, ShouldInitializeIntoStopStateIfFreezerFilteredTemperatureIsAboveGridFreezerExtremeHysteresis)
+TEST(DoorAccelerationCounter, ShouldInitializeIntoStopStateWhenFreezerFilteredTemperatureWasTooWarmOnPowerUp)
 {
-   Given FilteredFreezerCabinetTemperatureIs(freezerCalcAxis.gridLinesDegFx100[GridLine_FreezerExtremeHigh] + 1);
-   And CalculatedGridLinesAre(calcGridLines);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And DoorAccelerationCounterIsInitialized();
 
    DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Stop);
 }
 
-TEST(DoorAccelerationCounter, ShouldInitializeIntoPauseStateIfFreezerFilteredTemperatureIsEqualToGridFreezerExtremeHysteresis)
+TEST(DoorAccelerationCounter, ShouldInitializeIntoPauseStateWhenFreezerFilteredTemperatureWasNotTooWarmOnPowerUp)
 {
-   Given FilteredFreezerCabinetTemperatureIs(freezerCalcAxis.gridLinesDegFx100[GridLine_FreezerExtremeHigh]);
-   And CalculatedGridLinesAre(calcGridLines);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DoorAccelerationCounterIsInitialized();
 
    DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Pause);
-}
-
-TEST(DoorAccelerationCounter, ShouldInitializeIntoStopStateIfFreezerFilteredTemperatureIsAboveFreezerDefrostTerminationTemperature)
-{
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.freezerDefrostTerminationTemperatureInDegFx100 + 1);
-   And CalculatedGridLinesAre(calcGridLines);
-   And DoorAccelerationCounterIsInitialized();
-
-   DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Stop);
-}
-
-TEST(DoorAccelerationCounter, ShouldInitializeIntoStopStateIfFreezerFilteredTemperatureIsEqualToFreezerDefrostTerminationTemperature)
-{
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.freezerDefrostTerminationTemperatureInDegFx100);
-   And CalculatedGridLinesAre(calcGridLines);
-   And DoorAccelerationCounterIsInitialized();
-
-   DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Stop);
 }
 
 TEST(DoorAccelerationCounter, ShouldResetDoorAccelerationsToZeroWhenEnteringStopState)

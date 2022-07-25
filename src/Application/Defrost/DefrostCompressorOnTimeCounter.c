@@ -183,22 +183,13 @@ static void State_Stop(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
 
 static FsmState_t InitStateBasedOnFreezerFilteredTemperature(DefrostCompressorOnTimeCounter_t *instance)
 {
-   TemperatureDegFx100_t freezerFilteredResolvedTemperatureInDegFx100;
+   bool freezerWasTooWarmOnPowerUp;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerFilteredTemperatureResolvedErd,
-      &freezerFilteredResolvedTemperatureInDegFx100);
+      instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
+      &freezerWasTooWarmOnPowerUp);
 
-   CalculatedGridLines_t calcGridLines;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->calculatedGridLinesErd,
-      &calcGridLines);
-
-   TemperatureDegFx100_t gridFreezerExtremeHystTemperature = calcGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtremeHigh];
-
-   if(freezerFilteredResolvedTemperatureInDegFx100 > gridFreezerExtremeHystTemperature ||
-      freezerFilteredResolvedTemperatureInDegFx100 >= instance->_private.defrostParametricData->freezerDefrostTerminationTemperatureInDegFx100)
+   if(freezerWasTooWarmOnPowerUp)
    {
       return State_Stop;
    }
@@ -215,9 +206,6 @@ void DefrostCompressorOnTimeCounter_Init(
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
-
-   instance->_private.defrostParametricData = PersonalityParametricData_Get(dataModel)->defrostData;
-   instance->_private.gridParametricData = PersonalityParametricData_Get(dataModel)->gridData;
 
    FsmState_t state = InitStateBasedOnFreezerFilteredTemperature(instance);
    Fsm_Init(&instance->_private.fsm, state);

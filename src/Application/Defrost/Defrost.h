@@ -26,6 +26,8 @@ typedef struct
    Erd_t numberOfFreezerAbnormalDefrostCyclesErd; // uint16_t
    Erd_t freezerDefrostWasAbnormalErd; // bool
    Erd_t freezerAbnormalDefrostCycleCountErd; // uint16_t
+   Erd_t freshFoodDefrostWasAbnormalErd; // bool
+   Erd_t convertibleCompartmentDefrostWasAbnormalErd; // bool
    Erd_t freezerDefrostCycleCountErd; // uint16_t
    Erd_t freshFoodDefrostHeaterDefrostVoteErd; // HeaterVotedState_t
    Erd_t freezerDefrostHeaterDefrostVoteErd; // HeaterVotedState_t
@@ -51,6 +53,8 @@ typedef struct
    Erd_t noFreezeLimitIsActiveErd; // bool
    Erd_t freezerEvapFanDefrostVoteErd; // FanVotedSpeed_t
    Erd_t freshFoodEvapFanDefrostVoteErd; // FanVotedSpeed_t
+   Erd_t defrostReadyTimerIsSatisfied; // bool
+   Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
    Erd_t timerModuleErd; // TimerModule_t *
 } DefrostConfiguration_t;
 
@@ -69,7 +73,6 @@ typedef struct
       const SabbathData_t *sabbathParametricData;
       const GridData_t *gridParametricData;
       const EvaporatorData_t *evaporatorParametricData;
-      bool resetRequiredWhenEnablingDefrostTimerCounter;
    } _private;
 } Defrost_t;
 

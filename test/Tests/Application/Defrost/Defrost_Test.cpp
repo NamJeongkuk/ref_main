@@ -62,6 +62,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .numberOfFreezerAbnormalDefrostCyclesErd = Erd_NumberofFreezerAbnormalDefrostCycles,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .freezerAbnormalDefrostCycleCountErd = Erd_FreezerAbnormalDefrostCycleCount,
+   .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
+   .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
    .freezerDefrostCycleCountErd = Erd_FreezerDefrostCycleCount,
    .freshFoodDefrostHeaterDefrostVoteErd = Erd_FreshFoodDefrostHeater_DefrostVote,
    .freezerDefrostHeaterDefrostVoteErd = Erd_FreezerDefrostHeater_DefrostVote,
@@ -87,6 +89,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .noFreezeLimitIsActiveErd = Erd_NoFreezeLimitIsActive,
    .freezerEvapFanDefrostVoteErd = Erd_FreezerEvapFanSpeed_DefrostVote,
    .freshFoodEvapFanDefrostVoteErd = Erd_FreshFoodEvapFanSpeed_DefrostVote,
+   .defrostReadyTimerIsSatisfied = Erd_DefrostReadyTimerIsSatisfied,
+   .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -285,6 +289,30 @@ TEST_GROUP(Defrost_SingleEvap)
       DataModel_Read(dataModel, Erd_NumberofFreezerAbnormalDefrostCycles, &actualCount);
 
       CHECK_EQUAL(expectedCount, actualCount);
+   }
+
+   void LastFreshFoodDefrostWasNormal()
+   {
+      bool state = false;
+      DataModel_Write(dataModel, Erd_FreshFoodDefrostWasAbnormal, &state);
+   }
+
+   void LastFreshFoodDefrostWasAbnormal()
+   {
+      bool state = true;
+      DataModel_Write(dataModel, Erd_FreshFoodDefrostWasAbnormal, &state);
+   }
+
+   void LastConvertibleCompartmentDefrostWasNormal()
+   {
+      bool state = false;
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentDefrostWasAbnormal, &state);
+   }
+
+   void LastConvertibleCompartmentDefrostWasAbnormal()
+   {
+      bool state = true;
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentDefrostWasAbnormal, &state);
    }
 
    void LastFreezerDefrostWasNormal()
@@ -765,6 +793,24 @@ TEST_GROUP(Defrost_SingleEvap)
 
       CHECK_FALSE(actualVote.care);
    }
+
+   void DefrostReadyTimerIsSatisfied()
+   {
+      DataModel_Write(dataModel, Erd_DefrostReadyTimerIsSatisfied, set);
+   }
+
+   void FreezerFilteredTemperatureTooWarmOnPowerUpIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmAtPowerUp, &state);
+   }
+
+   void FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(bool expectedState)
+   {
+      bool actualState;
+      DataModel_Read(dataModel, Erd_FreezerFilteredTemperatureTooWarmAtPowerUp, &actualState);
+
+      CHECK_EQUAL(expectedState, actualState);
+   }
 };
 
 TEST(Defrost_SingleEvap, ShouldInitializeIntoPowerUpHsmState)
@@ -913,6 +959,68 @@ TEST(Defrost_SingleEvap, ShouldSaveLastFreezerAbnormalDefrostCountWhenFilteredFr
 
    After(1);
    LastAbnormalFreezerDefrostCycleShouldBe(35);
+}
+
+TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenDefrostReadyTimerIsSatisfiedAndLastFreshFoodDefrostWasAbnormal)
+{
+   Given LastFreshFoodDefrostWasAbnormal();
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   When DefrostReadyTimerIsSatisfied();
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenDefrostReadyTimerIsSatisfiedAndLastFreezerDefrostWasAbnormal)
+{
+   Given LastFreezerDefrostWasAbnormal();
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   When DefrostReadyTimerIsSatisfied();
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenDefrostReadyTimerIsSatisfiedAndLastConvertibleCompartmentDefrostWasAbnormal)
+{
+   Given LastConvertibleCompartmentDefrostWasAbnormal();
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   When DefrostReadyTimerIsSatisfied();
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenDefrostReadyTimerIsSatisfiedAndFreezerWasTooWarmAtPowerUpAndResetFreezerWasTooWarmErdToFalse)
+{
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   When DefrostReadyTimerIsSatisfied();
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
+}
+
+TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenDefrostReadyTimerIsSatisfiedAndFreezerWasTooWarmAtPowerUpAndLastFreezerDefrostWasAbnormalAndResetFreezerWasTooWarmErdToFalse)
+{
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+   And LastFreezerDefrostWasAbnormal();
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   When DefrostReadyTimerIsSatisfied();
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
+}
+
+TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenDefrostReadyTimerIsSatisfiedAndLastDefrostsWereNormal)
+{
+   Given LastFreshFoodDefrostWasNormal();
+   And LastFreezerDefrostWasNormal();
+   And LastConvertibleCompartmentDefrostWasNormal();
+   And FreezerEvaporatorThermistorValidityIs(VALID);
+   And CompressorStateIs(CompressorState_MinimumOffTime);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   When DefrostReadyTimerIsSatisfied();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
 }
 
 TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenLastFreezerDefrostWasNormalAndDefrostStateWasPrechillAfterPowerUpDelay)
