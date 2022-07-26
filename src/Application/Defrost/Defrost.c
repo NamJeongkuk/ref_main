@@ -85,13 +85,6 @@ static void SetHsmStateTo(Defrost_t *instance, DefrostHsmState_t state)
    DataModel_Write(instance->_private.dataModel, instance->_private.config->defrostHsmStateErd, &state);
 }
 
-static bool CompressorStateTimeIsSatisfiedFor(CompressorState_t state)
-{
-   return ((state != CompressorState_MinimumOffTime) &&
-      (state != CompressorState_MinimumOnTime) &&
-      (state != CompressorState_MinimumRunTime));
-}
-
 static uint8_t MaxPrechillTimeInMinutes(Defrost_t *instance)
 {
    uint8_t maxPrechillTimeInMinutes;
@@ -410,62 +403,9 @@ static void StopOneMinutePeriodicTimer(Defrost_t *instance)
       &instance->_private.periodicTimer);
 }
 
-static bool FreezerEvaporatorThermistorIsInvalid(Defrost_t *instance)
-{
-   bool state;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->freezerEvaporatorThermistorIsValidErd,
-      &state);
-
-   return !state;
-}
-
-static void IncrementNumberOfFreshFoodDefrostsBeforeAFreezerDefrost(Defrost_t *instance)
-{
-   uint8_t number;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd,
-      &number);
-
-   number++;
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd,
-      &number);
-}
-
 static uint8_t NumberOfEvaporators(Defrost_t *instance)
 {
    return instance->_private.evaporatorParametricData->numberOfEvaporators;
-}
-
-static void VoteForFreezerSetpoint(Defrost_t *instance)
-{
-   SetpointVotedTemperature_t resolvedSetPoint;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->freezerResolvedSetpointErd,
-      &resolvedSetPoint);
-
-   SetpointVotedTemperature_t vote;
-   vote.care = true;
-   vote.temperature = instance->_private.defrostParametricData->prechillFreezerSetpointInDegFx100;
-
-   if(NumberOfEvaporators(instance) == 1)
-   {
-      if(resolvedSetPoint.temperature < instance->_private.defrostParametricData->prechillFreezerSetpointInDegFx100)
-      {
-         vote.temperature = resolvedSetPoint.temperature;
-      }
-   }
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->freezerSetpointDefrostVoteErd,
-      &vote);
 }
 
 static bool MaxPrechillHoldoffTimeGreaterThanZero(Defrost_t *instance)
@@ -485,72 +425,12 @@ static void VoteForMaxPrechillHoldoffValvePosition(Defrost_t *instance)
       &vote);
 }
 
-static bool CurrentDefrostIsNotFreshFoodOnly(Defrost_t *instance)
-{
-   bool freshFoodOnly;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->defrostIsFreshFoodOnlyErd,
-      &freshFoodOnly);
-
-   return !freshFoodOnly;
-}
-
-static void VoteForFreshFoodSetpoint(Defrost_t *instance)
-{
-   SetpointVotedTemperature_t vote;
-   vote.care = true;
-   vote.temperature = instance->_private.defrostParametricData->prechillFreshFoodSetpointInDegFx100;
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->freshFoodSetpointDefrostVoteErd,
-      &vote);
-}
-
-static bool ValveIsInPositionToExtendDefrost(Defrost_t *instance)
-{
-   ValvePosition_t position;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->sealedSystemValvePositionErd,
-      &position);
-
-   return position == instance->_private.defrostParametricData->threeWayValvePositionToExtendDefrostWithFreshFoodCycleDefrost;
-}
-
-static void SendExtendDefrostSignal(Defrost_t *instance)
-{
-   Signal_SendViaErd(
-      DataModel_AsDataSource(instance->_private.dataModel),
-      instance->_private.config->extendDefrostSignalErd);
-}
-
-static void SendDoorHoldoffEnableRequest(Defrost_t *instance)
-{
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->defrostDoorHoldoffRequestErd,
-      enabled);
-}
-
 static void SendDoorHoldoffDisableRequest(Defrost_t *instance)
 {
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->defrostDoorHoldoffRequestErd,
       disabled);
-}
-
-static bool CompressorStateTimeIsSatisfied(Defrost_t *instance)
-{
-   CompressorState_t state;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->compressorStateErd,
-      &state);
-
-   return CompressorStateTimeIsSatisfiedFor(state);
 }
 
 static bool CompressorStateIsNotMinimumOnTime(Defrost_t *instance)
@@ -807,50 +687,6 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_PrechillPrep);
-         if(FreezerEvaporatorThermistorIsInvalid(instance))
-         {
-            Hsm_Transition(hsm, State_HeaterOnEntry);
-         }
-         else
-         {
-            IncrementNumberOfFreshFoodDefrostsBeforeAFreezerDefrost(instance);
-            VoteForFreezerSetpoint(instance);
-            SendDoorHoldoffEnableRequest(instance);
-
-            if(MaxPrechillHoldoffTimeGreaterThanZero(instance))
-            {
-               VoteForMaxPrechillHoldoffValvePosition(instance);
-            }
-
-            if(CurrentDefrostIsNotFreshFoodOnly(instance))
-            {
-               VoteForFreshFoodSetpoint(instance);
-            }
-
-            if(ValveIsInPositionToExtendDefrost(instance))
-            {
-               SendExtendDefrostSignal(instance);
-            }
-
-            if(FreezerDefrostWasAbnormal(instance))
-            {
-               Hsm_Transition(hsm, State_PostPrechill);
-            }
-            else if(CompressorStateTimeIsSatisfied(instance))
-            {
-               Hsm_Transition(hsm, State_Prechill);
-            }
-         }
-         break;
-
-      case Signal_CompressorStateIsOff:
-      case Signal_CompressorStateIsOn:
-      case Signal_CompressorStateIsMinimumOffTime:
-      case Signal_CompressorStateIsMinimumRunTime:
-         if(CompressorStateTimeIsSatisfied(instance))
-         {
-            Hsm_Transition(hsm, State_Prechill);
-         }
          break;
 
       default:
