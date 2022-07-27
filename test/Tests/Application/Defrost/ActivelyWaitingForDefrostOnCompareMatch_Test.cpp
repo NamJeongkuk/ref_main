@@ -97,14 +97,6 @@ TEST(ActivelyWaitingForDefrostOnCompareMatch, ShouldSetActivelyWaitingForDefrost
    ActivelyWaitingForDefrostShouldBe(false);
 }
 
-TEST(ActivelyWaitingForDefrostOnCompareMatch, ShouldSetActivelyWaitingForDefrostToFalseWhenDefrostHsmStateIsPostPrechill)
-{
-   GivenDefrostHsmStateIs(DefrostHsmState_PostPrechill);
-   ActivelyWaitingForDefrostOnCompareMatchIsInitialized();
-
-   ActivelyWaitingForDefrostShouldBe(false);
-}
-
 TEST(ActivelyWaitingForDefrostOnCompareMatch, ShouldSetActivelyWaitingForDefrostToFalseWhenDefrostHsmStateIsHeaterOnEntry)
 {
    GivenDefrostHsmStateIs(DefrostHsmState_HeaterOnEntry);

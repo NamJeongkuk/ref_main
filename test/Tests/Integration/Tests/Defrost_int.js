@@ -16,7 +16,6 @@ describe("Defrost", () => {
       defrostHsmStateIdle: "DefrostHsmState_Idle",
       defrostHsmStatePrechillPrep: "DefrostHsmState_PrechillPrep",
       defrostHsmStatePrechill: "DefrostHsmState_Prechill",
-      defrostHsmStatePostPrechill: "DefrostHsmState_PostPrechill",
       defrostHsmStateHeaterOnEntry: "DefrostHsmState_HeaterOnEntry",
       defrostHsmStateHeaterOnHeat: "DefrostHsmState_HeaterOnHeat",
       defrostHsmStateDwell: "DefrostHsmState_Dwell",

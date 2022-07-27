@@ -26,7 +26,6 @@ static const DefrostHsmState_t hsmStatePowerUp = DefrostHsmState_PowerUp;
 static const DefrostHsmState_t hsmStateIdle = DefrostHsmState_Idle;
 static const DefrostHsmState_t hsmStatePrechillPrep = DefrostHsmState_PrechillPrep;
 static const DefrostHsmState_t hsmStatePrechill = DefrostHsmState_Prechill;
-static const DefrostHsmState_t hsmStatePostPrechill = DefrostHsmState_PostPrechill;
 static const DefrostHsmState_t hsmStateHeaterOnEntry = DefrostHsmState_HeaterOnEntry;
 static const DefrostHsmState_t hsmStateHeaterOnHeat = DefrostHsmState_HeaterOnHeat;
 static const DefrostHsmState_t hsmStateDwell = DefrostHsmState_Dwell;
@@ -56,12 +55,6 @@ static const ErdWriterOnCompareMatchConfigurationEntry_t configurationEntries[] 
       Erd_DefrostHsmState,
       Erd_DefrostState,
       &hsmStatePrechill,
-      &statePrechill,
-   },
-   {
-      Erd_DefrostHsmState,
-      Erd_DefrostState,
-      &hsmStatePostPrechill,
       &statePrechill,
    },
    {

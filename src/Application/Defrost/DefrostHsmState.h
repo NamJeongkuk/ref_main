@@ -16,7 +16,6 @@ enum
    DefrostHsmState_Idle,
    DefrostHsmState_PrechillPrep,
    DefrostHsmState_Prechill,
-   DefrostHsmState_PostPrechill,
    DefrostHsmState_HeaterOnEntry,
    DefrostHsmState_HeaterOnHeat,
    DefrostHsmState_Dwell,
