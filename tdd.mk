@@ -23,6 +23,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/EnhancedSabbath \
    $(PROJECT_DIR)/Application/Setpoints \
    $(PROJECT_DIR)/Application/Evaporator \
+   $(PROJECT_DIR)/Application/Fan \
    $(PROJECT_DIR)/Application/Grid \
    $(PROJECT_DIR)/Application/Grid/GridFunctions \
    $(PROJECT_DIR)/Application/ParametricData \
@@ -48,6 +49,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/EnhancedSabbath \
    $(TESTS_DIR)/Application/Setpoints \
    $(TESTS_DIR)/Application/Evaporator \
+   $(TESTS_DIR)/Application/Fan \
    $(TESTS_DIR)/Application/Grid \
    $(TESTS_DIR)/Application/Sabbath \
    $(TESTS_DIR)/Application/ParametricData \
@@ -76,6 +78,7 @@ INCLUDE_DIRS := \
    $(PROJECT_DIR)/Application/Sabbath \
    $(PROJECT_DIR)/Application/Sensor \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \
+   $(PROJECT_DIR)/Application/Setpoints \
    $(PROJECT_DIR)/Application/SystemMonitor \
    $(PROJECT_DIR)/Application/Temperature \
    $(PROJECT_DIR)/Application/Valve \

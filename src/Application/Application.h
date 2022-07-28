@@ -18,6 +18,7 @@
 #include "GridPlugin.h"
 #include "PeriodicNvUpdaterPlugin.h"
 #include "ConvertibleCompartmentStatePlugin.h"
+#include "FanPlugin.h"
 
 typedef struct
 {
@@ -34,6 +35,7 @@ typedef struct
       ApplianceApiResetDiagnostics_t applianceApiResetDiagnostics;
       PeriodicNvUpdaterPlugin_t periodicNvUpdaterPlugin;
       ConvertibleCompartmentStatePlugin_t convertibleCompartmentStatePlugin;
+      FanPlugin_t fanPlugin;
       Timer_t stackUsageUpdateTimer;
    } _private;
 } Application_t;

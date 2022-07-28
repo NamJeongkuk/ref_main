@@ -8,8 +8,7 @@ return {
     'StreamedErd_t',
     '_mbstate_t',
     'ValveDependentFanData_t',
-    'ValveFanData_t',
-    'FanControl_t'
+    'ValveFanData_t'
   },
 
   -- Types that can't be automatically generated but need to be defined
@@ -33,6 +32,12 @@ return {
         TemperatureDegFx100_t 'extraHighGridLinesDegFx100',
         TemperatureDegFx100_t 'superHighGridLinesDegFx100',
         TemperatureDegFx100_t 'extremeHighGridLinesDegFx100',
+      }
+    ]],
+    FanControl_t = [[
+      struct {
+        FanControlType_t 'type',
+        FanRpm_t 'rpmOrDutyCycle',
       }
     ]],
   }

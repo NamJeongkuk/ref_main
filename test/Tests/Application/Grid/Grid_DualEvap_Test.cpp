@@ -215,7 +215,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks0And1And2)
 
       The FreshFoodFanSpeedVoteShouldBe(FanSpeed_Off);
       And FreezerFanSpeedVoteShouldBe(FanSpeed_Low);
-      And CondenserFanSpeedVoteShouldBe(FanSpeed_SuperHigh);
+      And CondenserFanSpeedVoteShouldBe(FanSpeed_Max);
       And ValvePositionVoteShouldBe(ValvePosition_B);
       And IceMakersEnabledShouldBe(DISABLED);
       And DelayConvertibleCompartmentCoolingShouldBe(DISABLED);
@@ -234,7 +234,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks3And4And5And6)
       When GridBlockBecomes(gridBlockNumber);
       And The GridIsRun();
 
-      The CondenserFanSpeedVoteShouldBe(FanSpeed_SuperHigh);
+      The CondenserFanSpeedVoteShouldBe(FanSpeed_Max);
       And ValvePositionVoteShouldBe(ValvePosition_A);
       And IceMakersEnabledShouldBe(DISABLED);
       And DelayConvertibleCompartmentCoolingShouldBe(DISABLED);
@@ -323,7 +323,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock13)
 
    The FreshFoodFanSpeedVoteShouldBe(FanSpeed_High);
    And FreezerFanSpeedVoteShouldBe(FanSpeed_High);
-   And CondenserFanSpeedVoteShouldBe(FanSpeed_SuperHigh);
+   And CondenserFanSpeedVoteShouldBe(FanSpeed_Max);
    And CompressorSpeedVoteShouldBe(CompressorSpeed_High);
    And MaxTimeInValvePositionAShouldBe(DISABLED);
    And DelayConvertibleCompartmentCoolingShouldBe(DISABLED);

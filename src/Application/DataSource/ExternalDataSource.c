@@ -104,6 +104,11 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_FreezerEvap_FilteredTemperatureOverrideValue, sizeof(TemperatureDegFx100_t)),
    SWAPPED_ERD(PublicErd_Freezer_FilteredTemperatureOverrideValue, sizeof(TemperatureDegFx100_t)),
    SWAPPED_ERD(PublicErd_FreshFood_FilteredTemperatureOverrideValue, sizeof(TemperatureDegFx100_t)),
+   SWAPPED_FIELD(PublicErd_CalculatedFreezerFanSpeed, FanControl_t, rpm),
+   SWAPPED_FIELD(PublicErd_CalculatedCondenserFanSpeed, FanControl_t, rpm),
+   SWAPPED_FIELD(PublicErd_CalculatedFreshFoodFanSpeed, FanControl_t, rpm),
+   SWAPPED_FIELD(PublicErd_CalculatedIceCabinetFanSpeed, FanControl_t, rpm),
+   SWAPPED_FIELD(PublicErd_CalculatedConvertibleCompartmentFanSpeed, FanControl_t, rpm),
 
    // 0xF200 range
    SWAPPED_ERD(PublicErd_SomeAnalogInput, sizeof(uint16_t)),

@@ -39,7 +39,7 @@ typedef struct
          FanControl_t lowSpeedWithWarmSetpointValveA;
          FanControl_t lowSpeedWithWarmSetpointValveB;
          FanControl_t lowSpeedWithWarmSetpointValveC;
-      };
+      } setpointSpeeds;
 
       struct
       {
@@ -52,8 +52,8 @@ typedef struct
          FanControl_t unused4;
          FanControl_t unused5;
          FanControl_t unused6;
-      };
-   };
+      } nonSetpointSpeeds;
+   } careAboutSetpointData;
    FanControl_t mediumSpeedValveA;
    FanControl_t mediumSpeedValveB;
    FanControl_t mediumSpeedValveC;

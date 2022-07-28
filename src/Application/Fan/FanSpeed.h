@@ -13,12 +13,12 @@
 enum
 {
    FanSpeed_Off,
-   FanSpeed_SuperLow,
+   FanSpeed_Min,
    FanSpeed_On,
    FanSpeed_Low = FanSpeed_On,
    FanSpeed_Medium,
    FanSpeed_High,
-   FanSpeed_SuperHigh,
+   FanSpeed_Max,
    FanSpeed_NumberOfSpeeds
 };
 typedef uint8_t FanSpeed_t;

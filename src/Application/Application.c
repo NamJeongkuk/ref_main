@@ -21,7 +21,6 @@
 #include "OverrideArbiterPlugin.h"
 #include "SetpointResolverPlugin.h"
 #include "CompressorPlugin.h"
-#include "FanPlugin.h"
 
 enum
 {
@@ -62,7 +61,7 @@ void Application_Init(
 
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
    EepromAppPlugin_Init(dataModel);
-   FanPlugin_Init(dataModel);
+   FanPlugin_Init(&instance->_private.fanPlugin, dataModel);
    SabbathPlugin_Init(dataModel);
    SetpointResolverPlugin_Init(dataModel);
    ConvertibleCompartmentStatePlugin_Init(&instance->_private.convertibleCompartmentStatePlugin, dataModel);
