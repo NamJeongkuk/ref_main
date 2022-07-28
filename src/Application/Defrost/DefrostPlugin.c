@@ -9,7 +9,6 @@
 #include "Defrost.h"
 #include "DefrostStateOnCompareMatch.h"
 #include "SystemErds.h"
-#include "DefrostDoorHoldoffTimer.h"
 #include "DefrostParameterSelector.h"
 #include "DefrostHeaterMaxOnTime.h"
 #include "FreshFoodOnlyDefrostArbitrator.h"
@@ -24,7 +23,6 @@
 static struct
 {
    Defrost_t defrost;
-   DefrostDoorHoldoffTimer_t doorHoldoffTimer;
    DefrostHeaterMaxOnTime_t defrostHeaterMaxOnTime;
    FreshFoodOnlyDefrostArbitrator_t freshFoodOnlyDefrostArbitrator;
    DefrostCompressorOnTimeCounter_t defrostCompressorOnTimeCounter;
@@ -47,16 +45,6 @@ static const DefrostConfiguration_t defrostConfig = {
    .defrostReadyTimerIsSatisfied = Erd_DefrostReadyTimerIsSatisfied,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .timerModuleErd = Erd_TimerModule
-};
-
-DefrostDoorHoldoffTimerConfiguration_t doorHoldoffTimerConfiguration = {
-   .allFreshFoodDoorsAreClosedState = Erd_AllFreshFoodDoorsAreClosed,
-   .freezerDoorOpenState = Erd_FreezerDoorIsOpen,
-   .convertibleCompartmentDoorOpenState = Erd_ConvertibleCompartmentDoorIsOpen,
-   .doorHoldoffRequest = Erd_DefrostDoorHoldOffRequest,
-   .doorHoldoffSatisfied = Erd_DefrostDoorHoldoffTimeSatisfied,
-   .freshFoodOnlyDefrost = Erd_DefrostIsFreshFoodOnly,
-   .doorHoldoffTimerFsmState = Erd_DefrostDoorHoldoffTimerFsmState
 };
 
 static const DefrostHeaterMaxOnTimeConfiguration_t defrostHeaterMaxOnTimeConfig = {
@@ -186,11 +174,6 @@ void DefrostPlugin_Init(I_DataModel_t *dataModel)
       &instance.freshFoodOnlyDefrostArbitrator,
       dataModel,
       &freshFoodOnlyDefrostArbitratorConfig);
-
-   DefrostDoorHoldoffTimer_Init(
-      &instance.doorHoldoffTimer,
-      &doorHoldoffTimerConfiguration,
-      dataModel);
 
    DefrostCompressorOnTimeCounter_Init(
       &instance.defrostCompressorOnTimeCounter,

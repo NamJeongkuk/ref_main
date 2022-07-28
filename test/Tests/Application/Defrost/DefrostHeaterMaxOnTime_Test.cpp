@@ -55,8 +55,6 @@ TEST_GROUP(DefrostHeaterMaxOnTime)
       dataModel = dataModelDouble.dataModel;
 
       DefrostData_TestDouble_Init(&defrostData);
-      DefrostData_TestDouble_SetPrechillFreezerSetpointInDegFx100(&defrostData, 600);
-      DefrostData_TestDouble_SetPrechillConvertibleCompartmentSetpointInDegFx100(&defrostData, 600);
 
       PersonalityParametricData_TestDouble_Init(&personalityParametricData);
       PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);

@@ -182,7 +182,6 @@ TEST_GROUP(Defrost_SingleEvap)
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
 
       DefrostData_TestDouble_Init(&defrostData);
-      DefrostData_TestDouble_SetMaxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds(&defrostData, 60);
 
       PersonalityParametricData_TestDouble_Init(&personalityParametricData);
       PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);
@@ -200,12 +199,6 @@ TEST_GROUP(Defrost_SingleEvap)
    void DefrostIsInitialized()
    {
       Defrost_Init(&instance, dataModel, &defrostConfig);
-   }
-
-   void DefrostParametricSetWithMaxPrechillHoldoffOfZero()
-   {
-      DefrostData_TestDouble_SetMaxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds(&defrostData, 0);
-      PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);
    }
 
    void DefrostHsmStateShouldBe(DefrostHsmState_t expectedState)
@@ -313,43 +306,11 @@ TEST_GROUP(Defrost_SingleEvap)
       Given DefrostIsInitialized();
    }
 
-   void DefrostInitializedWithFreezerTempAboveTerminationTemp()
-   {
-      Given FilteredFreezerCabinetTemperatureIs(defrostData.freezerDefrostTerminationTemperatureInDegFx100 + 1);
-      Given CalculatedGridLinesAre(calcGridLines);
-      Given DefrostIsInitialized();
-   }
-
-   void DefrostInitializedWithFreezerTempEqualToTerminationTemp()
-   {
-      Given FilteredFreezerCabinetTemperatureIs(defrostData.freezerDefrostTerminationTemperatureInDegFx100);
-      Given CalculatedGridLinesAre(calcGridLines);
-      Given DefrostIsInitialized();
-   }
-
    void DefrostInitializedWithNormalFreezerCabinetTemperatures()
    {
       Given FilteredFreezerCabinetTemperatureIs(1000);
       Given CalculatedGridLinesAre(calcGridLines);
       Given DefrostIsInitialized();
-   }
-
-   void FreshFoodDefrostHeaterVoteIs(bool state, bool care)
-   {
-      HeaterVotedState_t vote;
-      vote.state = state;
-      vote.care = care;
-
-      DataModel_Write(dataModel, Erd_FreshFoodDefrostHeater_DefrostVote, &vote);
-   }
-
-   void FreezerDefrostHeaterVoteIs(bool state, bool care)
-   {
-      HeaterVotedState_t vote;
-      vote.state = state;
-      vote.care = care;
-
-      DataModel_Write(dataModel, Erd_FreezerDefrostHeater_DefrostVote, &vote);
    }
 
    void DefrostIsInitializedAndStateIs(DefrostHsmState_t state)
@@ -367,54 +328,9 @@ TEST_GROUP(Defrost_SingleEvap)
             DefrostHsmStateShouldBe(DefrostHsmState_Idle);
             break;
 
-         case DefrostHsmState_PrechillPrep:
-            Given DefrostStateIs(DefrostState_Prechill);
-            Given FreezerEvaporatorThermistorValidityIs(VALID);
-            Given CompressorStateIs(CompressorState_MinimumOnTime);
-            Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
-
-            After(PowerUpDelayInMs - 1);
-            DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
-
-            After(1);
-            DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
-            break;
-
          default:
             break;
       }
-   }
-
-   void FreezerEvaporatorThermistorIsInvalidAndPrechillIsSkippedAndInHeaterOnEntryState()
-   {
-      Given DefrostStateIs(DefrostState_Prechill);
-      Given FreezerEvaporatorThermistorValidityIs(INVALID);
-      Given CompressorStateIs(CompressorState_MinimumOnTime);
-      Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
-
-      After(PowerUpDelayInMs - 1);
-      DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
-
-      After(1);
-      DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
-   }
-
-   void FreshFoodDefrostHeaterVoteShouldBe(bool expectedState)
-   {
-      HeaterVotedState_t actualVote;
-      DataModel_Read(dataModel, Erd_FreshFoodDefrostHeater_DefrostVote, &actualVote);
-
-      CHECK_EQUAL(expectedState, actualVote.state);
-      CHECK_TRUE(actualVote.care);
-   }
-
-   void FreezerDefrostHeaterVoteShouldBe(bool expectedState)
-   {
-      HeaterVotedState_t actualVote;
-      DataModel_Read(dataModel, Erd_FreezerDefrostHeater_DefrostVote, &actualVote);
-
-      CHECK_EQUAL(expectedState, actualVote.state);
-      CHECK_TRUE(actualVote.care);
    }
 
    void NothingShouldHappen()
@@ -434,72 +350,6 @@ TEST_GROUP(Defrost_SingleEvap)
    void FreezerEvaporatorThermistorValidityIs(bool state)
    {
       DataModel_Write(dataModel, Erd_FreezerEvaporatorThermistorIsValid, &state);
-   }
-
-   void ValvePositionShouldBeVotedWith(ValvePosition_t expectedPosition)
-   {
-      ValveVotedPosition_t vote;
-      DataModel_Read(dataModel, Erd_ValvePosition_DefrostVote, &vote);
-
-      CHECK_EQUAL(expectedPosition, vote.position);
-      CHECK_TRUE(vote.care);
-   }
-
-   void ValvePositionShouldBeDontCare()
-   {
-      ValveVotedPosition_t vote;
-      DataModel_Read(dataModel, Erd_ValvePosition_DefrostVote, &vote);
-
-      CHECK_FALSE(vote.care);
-   }
-
-   void CurrentDefrostIsFreshFoodOnly()
-   {
-      bool currentDefrostIsFreshFoodOnly = true;
-      DataModel_Write(dataModel, Erd_DefrostIsFreshFoodOnly, &currentDefrostIsFreshFoodOnly);
-   }
-
-   void CurrentDefrostIsNotFreshFoodOnly()
-   {
-      bool currentDefrostIsFreshFoodOnly = false;
-      DataModel_Write(dataModel, Erd_DefrostIsFreshFoodOnly, &currentDefrostIsFreshFoodOnly);
-   }
-
-   void FreshFoodSetpointShouldBeVotedWith(TemperatureDegFx100_t expectedTemperature)
-   {
-      SetpointVotedTemperature_t actualVote;
-      DataModel_Read(dataModel, Erd_FreshFoodSetpoint_DefrostVote, &actualVote);
-
-      CHECK_EQUAL(expectedTemperature, actualVote.temperature);
-      CHECK_TRUE(actualVote.care);
-   }
-
-   void FreshFoodSetpointShouldNotBeVotedFor()
-   {
-      SetpointVotedTemperature_t vote;
-      DataModel_Read(dataModel, Erd_FreshFoodSetpoint_DefrostVote, &vote);
-
-      CHECK_FALSE(vote.care);
-   }
-
-   void ResetExtendDefrostSignalToZero()
-   {
-      Signal_t signal = 0;
-      DataModel_Write(dataModel, Erd_ExtendDefrostSignal, &signal);
-   }
-
-   void ExtendDefrostSignalShouldBeSent()
-   {
-      Signal_t signal;
-      DataModel_Read(dataModel, Erd_ExtendDefrostSignal, &signal);
-      CHECK_EQUAL(signal, 1);
-   }
-
-   void ExtendDefrostSignalShouldNotBeSent()
-   {
-      Signal_t signal;
-      DataModel_Read(dataModel, Erd_ExtendDefrostSignal, &signal);
-      CHECK_EQUAL(signal, 0);
    }
 
    void CompressorStateIs(CompressorState_t state)
@@ -781,60 +631,6 @@ TEST(Defrost_SingleEvap, ShouldGoToIdleWhenLastFreezerDefrostWasNormalAndDefrost
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotVoteForValvePositionIfMaxPrechillHoldoffTimeIsEqualToZeroOnEntryToPrechillPrep)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostParametricSetWithMaxPrechillHoldoffOfZero();
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-
-   ValvePositionShouldBeDontCare();
-}
-
-TEST(Defrost_SingleEvap, ShouldNotVoteForFreshFoodSetpointIfCurrentDefrostIsFreshFoodOnlyOnEntryToPrechillPrep)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given CurrentDefrostIsFreshFoodOnly();
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-
-   FreshFoodSetpointShouldNotBeVotedFor();
-}
-
-TEST(Defrost_SingleEvap, ShouldNotRequestToExtendDefrostWithFreshFoodCycleDefrostIfCurrentValvePositionIsNotInPositionToExtendDefrostOnEntryToPrechillPrep)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given SealedSystemValveIsInPosition(ValvePosition_C);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-
-   ExtendDefrostSignalShouldNotBeSent();
-}
-
-TEST(Defrost_SingleEvap, ShouldNotTransitionFromPrechillPrepWhenCompressorStateIsMinimumOffTime)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-
-   When CompressorStateIs(CompressorState_MinimumOffTime);
-   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
-}
-
-TEST(Defrost_SingleEvap, ShouldNotTransitionFromPrechillPrepWhenCompressorStateIsMinimumOnTime)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-
-   When CompressorStateIs(CompressorState_MinimumOnTime);
-   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
-}
-
-TEST(Defrost_SingleEvap, ShouldNotTransitionFromPrechillPrepWhenCompressorStateIsMinimumRunTime)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-
-   When CompressorStateIs(CompressorState_MinimumRunTime);
-   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
-}
-
 TEST_GROUP(Defrost_DualEvap)
 {
    ReferDataModel_TestDouble_t dataModelDouble;
@@ -853,7 +649,6 @@ TEST_GROUP(Defrost_DualEvap)
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
 
       DefrostData_TestDouble_Init(&defrostData);
-      DefrostData_TestDouble_SetMaxPrechillHoldoffTimeAfterDefrostTimerSatisfiedInSeconds(&defrostData, 60);
 
       PersonalityParametricData_TestDouble_Init(&personalityParametricData);
       PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);

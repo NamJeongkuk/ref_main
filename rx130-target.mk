@@ -65,6 +65,7 @@ SRC_DIRS:=\
 INC_DIRS:=\
   src/Application/Compressor \
   src/Application/ConvertibleCompartment \
+  src/Application/Damper \
   src/Application/DemandResponse \
   src/Application/Door \
   src/Application/EnhancedSabbath \

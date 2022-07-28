@@ -90,6 +90,7 @@ typedef struct
    ValveFanData_t freezerFan;
    ValveFanData_t convertibleCompartmentFan;
    ValveFanData_t iceCabinetFan;
+   ValveFanData_t deliPanFan;
 } FanData_t;
 
 #endif

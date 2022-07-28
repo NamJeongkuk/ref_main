@@ -42,23 +42,23 @@ static void SetNumberOfFreshFoodDefrostsBeforeAFreezerDefrostWhenEnhancedSabbath
 
 static void SetMaxPrechillTimeInMinutes(bool defrostIsFreshFoodOnly)
 {
-   uint8_t maxPrechillTimeForFreshFoodAndFreezerDefrostsInMinutes;
+   uint8_t maxPrechillTimeInMinutes;
 
    const DefrostData_t *defrostData = PersonalityParametricData_Get(instance.dataModel)->defrostData;
 
    if(defrostIsFreshFoodOnly)
    {
-      maxPrechillTimeForFreshFoodAndFreezerDefrostsInMinutes = defrostData->maxPrechillTimeForFreshFoodOnlyDefrostInMinutes;
+      maxPrechillTimeInMinutes = defrostData->maxPrechillTimeForFreshFoodOnlyDefrostInMinutes;
    }
    else
    {
-      maxPrechillTimeForFreshFoodAndFreezerDefrostsInMinutes = defrostData->maxPrechillTimeForFreshFoodAndFreezerDefrostsInMinutes;
+      maxPrechillTimeInMinutes = defrostData->maxPrechillTimeInMinutes;
    }
 
    DataModel_Write(
       instance.dataModel,
       Erd_MaxPrechillTimeInMinutes,
-      &maxPrechillTimeForFreshFoodAndFreezerDefrostsInMinutes);
+      &maxPrechillTimeInMinutes);
 }
 
 static void SetPostDwellExitTimeInMinutes(bool defrostIsFreshFoodOnly)
@@ -70,7 +70,7 @@ static void SetPostDwellExitTimeInMinutes(bool defrostIsFreshFoodOnly)
 
    if(evaporatorData->numberOfEvaporators == 1)
    {
-      postDwellExitTimeInMinutes = defrostData->freshFoodAndFreezerPostDwellFreezerExitTimeInMinutes;
+      postDwellExitTimeInMinutes = defrostData->postDwellExitTimeInMinutes;
    }
    else
    {
@@ -80,7 +80,7 @@ static void SetPostDwellExitTimeInMinutes(bool defrostIsFreshFoodOnly)
       }
       else
       {
-         postDwellExitTimeInMinutes = defrostData->freshFoodAndFreezerPostDwellFreezerExitTimeInMinutes;
+         postDwellExitTimeInMinutes = defrostData->postDwellExitTimeInMinutes;
       }
    }
 
