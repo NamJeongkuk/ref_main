@@ -201,14 +201,14 @@ static void IncrementConvertibleCompartmentScaledDoorAccelerationInSeconds(DoorA
       instance->_private.config->convertibleCompartmentStateErd,
       &state);
 
-   if(state == ConvertibleCompartmentState_FreshFood)
+   if(state == ConvertibleCompartmentStateType_FreshFood)
    {
       count = TRUNCATE_UNSIGNED_ADDITION(
          count,
          instance->_private.defrostParametricData->freshFoodDoorIncrementFactorInSecondsPerSecond,
          UINT32_MAX);
    }
-   else if(state == ConvertibleCompartmentState_Freezer)
+   else if(state == ConvertibleCompartmentStateType_Freezer)
    {
       count = TRUNCATE_UNSIGNED_ADDITION(
          count,

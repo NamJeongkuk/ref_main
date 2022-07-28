@@ -237,14 +237,14 @@ static void UpdateSensorValues(void *context)
 
 static void SetWhichConvertibleCompartmentThermistorFallbackValueToUseDependingOnState(
    SensorFilteredReading_t *instance,
-   const uint8_t convertibleCompartmentState)
+   const ConvertibleCompartmentStateType_t convertibleCompartmentState)
 {
-   if(convertibleCompartmentState == ConvertibleCompartmentState_FreshFood)
+   if(convertibleCompartmentState == ConvertibleCompartmentStateType_FreshFood)
    {
       instance->_private.configuration->channelData[instance->_private.configuration->convertibleCompartmentIndex].fallbackData.fallbackValue =
          instance->_private.configuration->convertibleCompartmentSensorData->freshFoodFallbackValueDegFx100;
    }
-   else if(convertibleCompartmentState == ConvertibleCompartmentState_Freezer)
+   else if(convertibleCompartmentState == ConvertibleCompartmentStateType_Freezer)
    {
       instance->_private.configuration->channelData[instance->_private.configuration->convertibleCompartmentIndex].fallbackData.fallbackValue =
          instance->_private.configuration->convertibleCompartmentSensorData->freezerFallbackValueDegFx100;

@@ -60,7 +60,7 @@ static void ResolveConvertibleCompartmentDefrostHeaterMaxOnTime(
    }
    else
    {
-      if(convertibleCompartmentState == ConvertibleCompartmentState_Freezer)
+      if(convertibleCompartmentState == ConvertibleCompartmentStateType_Freezer)
       {
          DataModel_Write(
             instance->_private.dataModel,

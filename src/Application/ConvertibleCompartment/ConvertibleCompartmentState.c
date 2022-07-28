@@ -16,11 +16,11 @@ static void ChangeConvertibleCompartmentStateUsingSetpoint(ConvertibleCompartmen
    ConvertibleCompartmentStateType_t convertibleCompartmentState;
    if(convertibleCompartmentSetpoint >= instance->_private.convertibleCompartmentData->convertibleCompartmentThresholdDegFx100)
    {
-      convertibleCompartmentState = ConvertibleCompartmentState_FreshFood;
+      convertibleCompartmentState = ConvertibleCompartmentStateType_FreshFood;
    }
    else
    {
-      convertibleCompartmentState = ConvertibleCompartmentState_Freezer;
+      convertibleCompartmentState = ConvertibleCompartmentStateType_Freezer;
    }
    DataModel_Write(instance->_private.dataModel, instance->_private.config->convertibleCompartmentStateErd, &convertibleCompartmentState);
 }

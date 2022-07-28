@@ -12,8 +12,8 @@
 
 enum
 {
-   ConvertibleCompartmentState_FreshFood,
-   ConvertibleCompartmentState_Freezer
+   ConvertibleCompartmentStateType_FreshFood,
+   ConvertibleCompartmentStateType_Freezer
 };
 typedef uint8_t ConvertibleCompartmentStateType_t;
 

@@ -17,6 +17,7 @@
 #include "DefrostCompressorOnTimeCounter.h"
 #include "DoorAccelerationCounter.h"
 #include "DefrostReadyTimerIsSatisfied.h"
+#include "TimeThatPrechillConditionsAreMet.h"
 #include "FreezerFilteredTemperatureTooWarmOnPowerUp.h"
 #include "uassert.h"
 
@@ -29,6 +30,7 @@ static struct
    DefrostCompressorOnTimeCounter_t defrostCompressorOnTimeCounter;
    DoorAccelerationCounter_t doorAccelerationCounter;
    DefrostReadyTimerIsSatisfied_t defrostReadyTimerIsSatisfied;
+   TimeThatPrechillConditionsAreMet_t timeThatPrechillConditionsAreMet;
 } instance;
 
 static const DefrostConfiguration_t defrostConfig = {
@@ -105,6 +107,14 @@ static DefrostReadyTimerIsSatisfiedConfiguration_t defrostReadyTimerIsSatisfiedC
    .convertibleCompartmentScaledDoorAccelerationInSecondsErd = Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds,
    .defrostReadyTimerIsSatisfiedErd = Erd_DefrostReadyTimerIsSatisfied,
    .timeInMinutesWhenDefrostReadyTimerIsSatisfiedErd = Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied
+};
+
+static const TimeThatPrechillConditionsAreMetConfiguration_t timeThatPrechillConditionsAreMetConfig = {
+   .compressorIsOnErd = Erd_CompressorIsOn,
+   .sealedSystemValvePositionResolvedVoteErd = Erd_ValvePosition_ResolvedVote,
+   .timeThatPrechillConditionsAreMetInMinutesErd = Erd_TimeThatPrechillConditionsAreMetInMinutes,
+   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
+   .timerModuleErd = Erd_TimerModule
 };
 
 void DefrostPlugin_Init(I_DataModel_t *dataModel)
@@ -196,6 +206,11 @@ void DefrostPlugin_Init(I_DataModel_t *dataModel)
       &instance.defrostReadyTimerIsSatisfied,
       dataModel,
       &defrostReadyTimerIsSatisfiedConfig);
+
+   TimeThatPrechillConditionsAreMet_Init(
+      &instance.timeThatPrechillConditionsAreMet,
+      dataModel,
+      &timeThatPrechillConditionsAreMetConfig);
 
    Defrost_Init(&instance.defrost, dataModel, &defrostConfig);
 }

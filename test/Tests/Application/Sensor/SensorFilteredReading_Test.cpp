@@ -654,7 +654,7 @@ TEST(SensorFilteredReading, ShouldResetAndReSeedFilterAfterEveryBadSensorToGoodS
 TEST(SensorFilteredReading, ShouldInitWithFreezerFallbackTempForConvertibleCompartmentWhenBadAdcCountAndCabinetIsActingLikeFreezer)
 {
    GivenRawAdcCountErdIs(Erd_ConvertibleCompartmentRawAdcCount, AdcCountForBadMapping);
-   And GivenConvertibleCompartmentStateIsA(ConvertibleCompartmentState_Freezer);
+   And GivenConvertibleCompartmentStateIsA(ConvertibleCompartmentStateType_Freezer);
    GivenTheModuleIsInitialized();
 
    TheUnfilteredErdShouldBe(Erd_ConvertibleCompartmentUnfilteredTemp, BadTempValue);
@@ -664,7 +664,7 @@ TEST(SensorFilteredReading, ShouldInitWithFreezerFallbackTempForConvertibleCompa
 TEST(SensorFilteredReading, ShouldInitWithFreshFoodFallbackTempForConvertibleCompartmentWhenBadAdcCountAndCabinetIsActingLikeFreshFood)
 {
    GivenRawAdcCountErdIs(Erd_ConvertibleCompartmentRawAdcCount, AdcCountForBadMapping);
-   And GivenConvertibleCompartmentStateIsA(ConvertibleCompartmentState_FreshFood);
+   And GivenConvertibleCompartmentStateIsA(ConvertibleCompartmentStateType_FreshFood);
    GivenTheModuleIsInitialized();
 
    TheUnfilteredErdShouldBe(Erd_ConvertibleCompartmentUnfilteredTemp, BadTempValue);
@@ -674,13 +674,13 @@ TEST(SensorFilteredReading, ShouldInitWithFreshFoodFallbackTempForConvertibleCom
 TEST(SensorFilteredReading, ShouldChangeFallbackValueForConvertibleCompartmentWhenCabinetStateChanges)
 {
    GivenRawAdcCountErdIs(Erd_ConvertibleCompartmentRawAdcCount, AdcCountForBadMapping);
-   And GivenConvertibleCompartmentStateIsA(ConvertibleCompartmentState_FreshFood);
+   And GivenConvertibleCompartmentStateIsA(ConvertibleCompartmentStateType_FreshFood);
    GivenTheModuleIsInitialized();
 
    TheUnfilteredErdShouldBe(Erd_ConvertibleCompartmentUnfilteredTemp, BadTempValue);
    TheFilteredOutputErdShouldBe(Erd_ConvertibleCompartmentFilteredTemp, ConvertibleCompartmentFreshFoodFallbackDegFx100);
 
-   Now GivenConvertibleCompartmentStateIsA(ConvertibleCompartmentState_Freezer);
+   Now GivenConvertibleCompartmentStateIsA(ConvertibleCompartmentStateType_Freezer);
    After(FilterSamplingTimeInMsec);
    TheUnfilteredErdShouldBe(Erd_ConvertibleCompartmentUnfilteredTemp, BadTempValue);
    TheFilteredOutputErdShouldBe(Erd_ConvertibleCompartmentFilteredTemp, ConvertibleCompartmentFreezerFallbackDegFx100);

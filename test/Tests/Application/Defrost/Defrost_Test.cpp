@@ -423,7 +423,12 @@ TEST_GROUP(Defrost_SingleEvap)
 
    void SealedSystemValveIsInPosition(ValvePosition_t position)
    {
-      DataModel_Write(dataModel, Erd_SealedSystemValvePosition, &position);
+      ValveVotedPosition_t vote = {
+         .position = position,
+         .care = true
+      };
+
+      DataModel_Write(dataModel, Erd_ValvePosition_ResolvedVote, &vote);
    }
 
    void FreezerEvaporatorThermistorValidityIs(bool state)

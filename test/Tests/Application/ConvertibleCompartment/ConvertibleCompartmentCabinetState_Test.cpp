@@ -63,7 +63,7 @@ TEST_GROUP(ConvertibleCompartmentState)
       ConvertibleCompartmentState_Init(&instance, dataModel, &config);
    }
 
-   void ConvertibleCompartmentStateShouldBeA(uint8_t expectedCabinetState)
+   void ConvertibleCompartmentStateTypeShouldBeA(uint8_t expectedCabinetState)
    {
       uint8_t realCabinetState;
       DataModel_Read(dataModel, Erd_ConvertibleCompartmentState, &realCabinetState);
@@ -84,7 +84,7 @@ TEST(ConvertibleCompartmentState, ShouldSetCabinetStateWhenInitialized)
    GivenConvertibleCompartmentSetpointIsNow(BelowThreshold);
    And GivenConvertibleCompartmentStateIsInitialized();
 
-   The ConvertibleCompartmentStateShouldBeA(ConvertibleCompartmentState_Freezer);
+   The ConvertibleCompartmentStateTypeShouldBeA(ConvertibleCompartmentStateType_Freezer);
 }
 
 TEST(ConvertibleCompartmentState, ShouldChangeCabinetStateWhenSetpointChangesFromBelowThresholdToAboveThreshold)
@@ -92,10 +92,10 @@ TEST(ConvertibleCompartmentState, ShouldChangeCabinetStateWhenSetpointChangesFro
    GivenConvertibleCompartmentSetpointIsNow(BelowThreshold);
    And GivenConvertibleCompartmentStateIsInitialized();
 
-   The ConvertibleCompartmentStateShouldBeA(ConvertibleCompartmentState_Freezer);
+   The ConvertibleCompartmentStateTypeShouldBeA(ConvertibleCompartmentStateType_Freezer);
 
    GivenConvertibleCompartmentSetpointIsNow(AboveThreshold);
-   The ConvertibleCompartmentStateShouldBeA(ConvertibleCompartmentState_FreshFood);
+   The ConvertibleCompartmentStateTypeShouldBeA(ConvertibleCompartmentStateType_FreshFood);
 }
 
 TEST(ConvertibleCompartmentState, ShouldChangeCabinetStateWhenSetpointChangesFromAboveThresholdToBelowThreshold)
@@ -103,10 +103,10 @@ TEST(ConvertibleCompartmentState, ShouldChangeCabinetStateWhenSetpointChangesFro
    GivenConvertibleCompartmentSetpointIsNow(AboveThreshold);
    And GivenConvertibleCompartmentStateIsInitialized();
 
-   The ConvertibleCompartmentStateShouldBeA(ConvertibleCompartmentState_FreshFood);
+   The ConvertibleCompartmentStateTypeShouldBeA(ConvertibleCompartmentStateType_FreshFood);
 
    GivenConvertibleCompartmentSetpointIsNow(BelowThreshold);
-   The ConvertibleCompartmentStateShouldBeA(ConvertibleCompartmentState_Freezer);
+   The ConvertibleCompartmentStateTypeShouldBeA(ConvertibleCompartmentStateType_Freezer);
 }
 
 TEST(ConvertibleCompartmentState, ShouldSetCabinetStateToFreshFoodWhenEqualToThreshold)
@@ -114,8 +114,8 @@ TEST(ConvertibleCompartmentState, ShouldSetCabinetStateToFreshFoodWhenEqualToThr
    GivenConvertibleCompartmentSetpointIsNow(BelowThreshold);
    And GivenConvertibleCompartmentStateIsInitialized();
 
-   The ConvertibleCompartmentStateShouldBeA(ConvertibleCompartmentState_Freezer);
+   The ConvertibleCompartmentStateTypeShouldBeA(ConvertibleCompartmentStateType_Freezer);
 
    GivenConvertibleCompartmentSetpointIsNow(AtThreshold);
-   The ConvertibleCompartmentStateShouldBeA(ConvertibleCompartmentState_FreshFood);
+   The ConvertibleCompartmentStateTypeShouldBeA(ConvertibleCompartmentStateType_FreshFood);
 }

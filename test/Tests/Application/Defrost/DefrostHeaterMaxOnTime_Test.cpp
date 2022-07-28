@@ -83,7 +83,7 @@ TEST_GROUP(DefrostHeaterMaxOnTime)
       DataModel_Write(dataModel, Erd_ConvertibleCompartmentEvaporatorThermistorIsValid, &valid);
    }
 
-   void ConvertibleCompartmentStateChangesTo(ConvertibleCompartmentStateType_t type)
+   void ConvertibleCompartmentStateTypeChangesTo(ConvertibleCompartmentStateType_t type)
    {
       DataModel_Write(dataModel, Erd_ConvertibleCompartmentState, &type);
    }
@@ -178,7 +178,7 @@ TEST(DefrostHeaterMaxOnTime, ShouldSetConvertibleCompartmentMaxOnTimeErdToMaxOnT
 TEST(DefrostHeaterMaxOnTime, ShouldSetConvertibleCompartmentMaxOnTimeErdToInvalidFreshFoodMaxOnTimeWhenConvertibleCompartmentEvaporatorThermistorIsInvalidAndConvertibleCompartmentIsActingAsFreshFoodOnInit)
 {
    Given ConvertibleCompartmentEvaporatorThermistorValidityChangesTo(Invalid);
-   Given ConvertibleCompartmentStateChangesTo(ConvertibleCompartmentState_FreshFood);
+   Given ConvertibleCompartmentStateTypeChangesTo(ConvertibleCompartmentStateType_FreshFood);
    DefrostHeaterMaxOnTimeIsInitialized();
 
    TheConvertibleCompartmentDefrostHeaterMaxOnTimeInMinutesShouldBe(defrostData.freshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes);
@@ -187,7 +187,7 @@ TEST(DefrostHeaterMaxOnTime, ShouldSetConvertibleCompartmentMaxOnTimeErdToInvali
 TEST(DefrostHeaterMaxOnTime, ShouldSetConvertibleCompartmentMaxOnTimeErdToInvalidFreezerMaxOnTimeWhenConvertibleCompartmentEvaporatorThermistorIsInvalidAndConvertibleCompartmentIsActingAsFreshFoodOnInit)
 {
    Given ConvertibleCompartmentEvaporatorThermistorValidityChangesTo(Invalid);
-   Given ConvertibleCompartmentStateChangesTo(ConvertibleCompartmentState_Freezer);
+   Given ConvertibleCompartmentStateTypeChangesTo(ConvertibleCompartmentStateType_Freezer);
    DefrostHeaterMaxOnTimeIsInitialized();
 
    TheConvertibleCompartmentDefrostHeaterMaxOnTimeInMinutesShouldBe(defrostData.freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes);
@@ -196,7 +196,7 @@ TEST(DefrostHeaterMaxOnTime, ShouldSetConvertibleCompartmentMaxOnTimeErdToInvali
 TEST(DefrostHeaterMaxOnTime, ShouldUpdateConvertibleCompartmentMaxOnTimeErdWhenValidityChanges)
 {
    Given ConvertibleCompartmentEvaporatorThermistorValidityChangesTo(Invalid);
-   Given ConvertibleCompartmentStateChangesTo(ConvertibleCompartmentState_Freezer);
+   Given ConvertibleCompartmentStateTypeChangesTo(ConvertibleCompartmentStateType_Freezer);
    DefrostHeaterMaxOnTimeIsInitialized();
 
    TheConvertibleCompartmentDefrostHeaterMaxOnTimeInMinutesShouldBe(defrostData.freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes);
@@ -208,11 +208,11 @@ TEST(DefrostHeaterMaxOnTime, ShouldUpdateConvertibleCompartmentMaxOnTimeErdWhenV
 TEST(DefrostHeaterMaxOnTime, ShouldUpdateConvertibleCompartmentMaxOnTimeErdWhenConvertibleCompartmentStateChanges)
 {
    Given ConvertibleCompartmentEvaporatorThermistorValidityChangesTo(Invalid);
-   Given ConvertibleCompartmentStateChangesTo(ConvertibleCompartmentState_Freezer);
+   Given ConvertibleCompartmentStateTypeChangesTo(ConvertibleCompartmentStateType_Freezer);
    DefrostHeaterMaxOnTimeIsInitialized();
 
    TheConvertibleCompartmentDefrostHeaterMaxOnTimeInMinutesShouldBe(defrostData.freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes);
 
-   Given ConvertibleCompartmentStateChangesTo(ConvertibleCompartmentState_FreshFood);
+   Given ConvertibleCompartmentStateTypeChangesTo(ConvertibleCompartmentStateType_FreshFood);
    TheConvertibleCompartmentDefrostHeaterMaxOnTimeInMinutesShouldBe(defrostData.freshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes);
 }

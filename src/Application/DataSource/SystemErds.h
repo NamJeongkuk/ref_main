@@ -400,7 +400,8 @@ enum
    ENTRY(Erd_ConvertibleCompartmentDefrostWasAbnormal,      0xF12A, bool,                                               Swap_N, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied, 0xF12B, uint16_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DefrostReadyTimerIsSatisfied,                  0xF12C, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,    0xF12D, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TimeThatPrechillConditionsAreMetInMinutes,     0xF12D, uint16_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,    0xF12E, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_LeftHandFreshFoodDoorIsOpen,                   0xF130, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RightHandFreshFoodDoorIsOpen,                  0xF131, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -411,8 +412,6 @@ enum
    ENTRY(Erd_DefrostIsFreshFoodOnly,                        0xF136, bool,                                               Swap_N, Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_DefrostDoorHoldoffTimerFsmState,               0xF137, DefrostDoorHoldoffTimerFsmState_t,                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AllFreshFoodDoorsAreClosed,                    0xF138, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   \
-   ENTRY(Erd_SealedSystemValvePosition,                     0xF139, ValvePosition_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodThermistor_AdcCount,                  0xF13A, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerThermistor_AdcCount,                    0xF13B, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

@@ -195,7 +195,7 @@ TEST_GROUP(DoorAccelerationCounter)
       DataModel_Write(dataModel, Erd_ConvertibleCompartmentDoorIsOpen, &state);
    }
 
-   void ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_t state)
+   void ConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_t state)
    {
       DataModel_Write(dataModel, Erd_ConvertibleCompartmentState, &state);
    }
@@ -370,10 +370,10 @@ TEST(DoorAccelerationCounter, ShouldIncrementFreshFoodScaledDoorAccelerationInSe
    }
 }
 
-TEST(DoorAccelerationCounter, ShouldIncrementConvertibleCompartmentAccelerationCountWithFreshFoodIncrementFactorWhileInRunStateWhenConvertibleCompartmentDoorIsOpenWhenConvertibleCompartmentStateIsActingAsFreshFood)
+TEST(DoorAccelerationCounter, ShouldIncrementConvertibleCompartmentAccelerationCountWithFreshFoodIncrementFactorWhileInRunStateWhenConvertibleCompartmentDoorIsOpenWhenConvertibleCompartmentStateTypeIsActingAsFreshFood)
 {
    Given ConvertibleCompartmentDoorAccelerationIs(SomeConvertibleCompartmentDoorAcceleration);
-   And ConvertibleCompartmentStateIs(ConvertibleCompartmentState_FreshFood);
+   And ConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_FreshFood);
    And ConvertibleCompartmentDoorIs(Open);
    And DoorAccelerationCounterIsInRunState();
 
@@ -387,10 +387,10 @@ TEST(DoorAccelerationCounter, ShouldIncrementConvertibleCompartmentAccelerationC
    }
 }
 
-TEST(DoorAccelerationCounter, ShouldIncrementConvertibleCompartmentAccelerationCountWithFreezerIncrementFactorWhileInRunStateWhenConvertibleCompartmentDoorIsOpenWhenConvertibleCompartmentStateIsActingAsFreezer)
+TEST(DoorAccelerationCounter, ShouldIncrementConvertibleCompartmentAccelerationCountWithFreezerIncrementFactorWhileInRunStateWhenConvertibleCompartmentDoorIsOpenWhenConvertibleCompartmentStateTypeIsActingAsFreezer)
 {
    Given ConvertibleCompartmentDoorAccelerationIs(SomeConvertibleCompartmentDoorAcceleration);
-   And ConvertibleCompartmentStateIs(ConvertibleCompartmentState_Freezer);
+   And ConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_Freezer);
    And ConvertibleCompartmentDoorIs(Open);
    And DoorAccelerationCounterIsInRunState();
 
@@ -413,7 +413,7 @@ TEST(DoorAccelerationCounter, ShouldIncrementAllDoorAccelerationsWhileInRunState
    And LeftHandFreshFoodDoorIs(Open);
    And FreezerDoorIs(Open);
    And ConvertibleCompartmentDoorIs(Open);
-   And ConvertibleCompartmentStateIs(ConvertibleCompartmentState_FreshFood);
+   And ConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_FreshFood);
 
    And DoorAccelerationCounterIsInRunState();
 
@@ -494,7 +494,7 @@ TEST(DoorAccelerationCounter, ShouldStopIncrementingWhenFreezerFoodDoorClosesWhi
 TEST(DoorAccelerationCounter, ShouldStopIncrementingWhenConvertibleCompartmentDoorClosesWhileInRunState)
 {
    Given ConvertibleCompartmentDoorAccelerationIs(SomeConvertibleCompartmentDoorAcceleration);
-   And ConvertibleCompartmentStateIs(ConvertibleCompartmentState_FreshFood);
+   And ConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_FreshFood);
    And ConvertibleCompartmentDoorIs(Open);
    And DoorAccelerationCounterIsInRunState();
 

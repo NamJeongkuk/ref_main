@@ -81,8 +81,36 @@
       "erds": [
         {
           "namespace": "rx130",
-          "displayName": "Sealed System Valve Position",
-          "name": "Erd_SealedSystemValvePosition",
+          "displayName": "Valve Position Resolved Vote",
+          "name": "Erd_ValvePosition_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Valve Position Winning Vote ERD",
+          "name": "Erd_ValvePosition_WinningVoteErd",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Valve Position Factory Vote",
+          "name": "Erd_ValvePosition_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Valve Position Defrost Vote",
+          "name": "Erd_ValvePosition_DefrostVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Valve Position Grid Vote",
+          "name": "Erd_ValvePosition_GridVote",
           "read": true,
           "write": true
         },
@@ -397,6 +425,13 @@
           "namespace": "rx130",
           "displayName": "Prechill Time Met",
           "name": "Erd_PrechillTimeMet",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Time That Prechill Conditions Are Met In Minutes",
+          "name": "Erd_TimeThatPrechillConditionsAreMetInMinutes",
           "read": true,
           "write": true
         },
@@ -789,15 +824,15 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Convertible Compartment State",
-          "name": "Erd_ConvertibleCompartmentState",
+          "displayName": "Convertible Compartment Setpoint Winning Vote",
+          "name": "Erd_ConvertibleCompartmentSetpoint_WinningVoteErd",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Convertible Compartment Setpoint Winning Vote",
-          "name": "Erd_ConvertibleCompartment_WinningVoteErd",
+          "displayName": "Convertible Compartment State",
+          "name": "Erd_ConvertibleCompartmentState",
           "read": true,
           "write": true
         }
