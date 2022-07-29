@@ -20,6 +20,7 @@ extern "C"
 #include "ReferDataModel_TestDouble.h"
 #include "PersonalityParametricData_TestDouble.h"
 #include "DefrostData_TestDouble.h"
+#include "GridData_TestDouble.h"
 #include "uassert_test.h"
 
 #define Given
@@ -27,16 +28,12 @@ extern "C"
 #define Then
 #define And
 
+#define PowerUpDelayInMs(_gridPeriodicRunRateInMSec) (5 * _gridPeriodicRunRateInMSec)
+
 enum
 {
    INVALID = false,
    VALID = true
-};
-
-enum
-{
-   SixGridLines = 6,
-   TwoDimensional = 2,
 };
 
 enum
@@ -62,82 +59,6 @@ static const SabbathData_t sabbathData = {
    .maxTimeBetweenDefrostsInMinutes = 16 * MINUTES_PER_HOUR
 };
 
-static const DeltaGridLineData_t freshFoodGridLineData[] = {
-   {
-      .gridLinesDegFx100 = 0,
-      .bitMapping = 0b0010,
-   },
-   {
-      .gridLinesDegFx100 = -450,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 150,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 450,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 950,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 1150,
-      .bitMapping = 0b1000,
-   },
-};
-
-static const DeltaGridLineData_t freezerGridLineData[] = {
-   {
-      .gridLinesDegFx100 = -250,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 0,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 250,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 600,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 750,
-      .bitMapping = 0b1000,
-   },
-   {
-      .gridLinesDegFx100 = 5500,
-      .bitMapping = 0b0010,
-   },
-};
-
-static const DeltaAxisGridLines_t freshFoodAxis = {
-   .numberOfLines = SixGridLines,
-   .gridLineData = freshFoodGridLineData
-};
-
-static const DeltaAxisGridLines_t freezerAxis = {
-   .numberOfLines = SixGridLines,
-   .gridLineData = freezerGridLineData
-};
-
-static DeltaAxisGridLines_t parametricGrid[] = { freshFoodAxis, freezerAxis };
-static DeltaGridLines_t deltaGrid = {
-   .dimensions = TwoDimensional,
-   .gridLines = parametricGrid
-};
-
-static const GridData_t gridData = {
-   .gridId = 0,
-   .deltaGridLines = &deltaGrid,
-   .gridPeriodicRunRateInMSec = 1 * MSEC_PER_SEC
-};
-
 static const EvaporatorData_t singleEvaporatorData = {
    .numberOfEvaporators = 1
 };
@@ -145,8 +66,6 @@ static const EvaporatorData_t singleEvaporatorData = {
 static const EvaporatorData_t dualEvaporatorData = {
    .numberOfEvaporators = 2
 };
-
-#define PowerUpDelayInMs 5 * gridData.gridPeriodicRunRateInMSec
 
 static CalculatedAxisGridLines_t freshFoodCalcAxis = {
    .gridLinesDegFx100 = { 0, -450, 150, 450, 950, 1150 }
@@ -172,6 +91,7 @@ TEST_GROUP(DefrostTimerIntegration)
    TimerModule_TestDouble_t *timerModuleTestDouble;
    PersonalityParametricData_t personalityParametricData;
    DefrostData_t defrostData;
+   GridData_t gridData;
 
    PeriodicNvUpdaterPlugin_t periodicNvUpdaterPlugin;
 
@@ -184,6 +104,8 @@ TEST_GROUP(DefrostTimerIntegration)
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
 
       DefrostData_TestDouble_Init(&defrostData);
+
+      GridData_TestDouble_Init(&gridData);
 
       PersonalityParametricData_TestDouble_Init(&personalityParametricData);
       PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);
@@ -270,7 +192,7 @@ TEST_GROUP(DefrostTimerIntegration)
       Given DefrostStateIs(DefrostState_Idle);
       And PluginsAreInitialized();
 
-      After(PowerUpDelayInMs - 1);
+      After(PowerUpDelayInMs(gridData.gridPeriodicRunRateInMSec) - 1);
       DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
 
       After(1);
