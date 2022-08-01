@@ -463,6 +463,9 @@ enum
    ENTRY(Erd_CalculatedFreshFoodFanSpeed,                   0xF172, FanControl_t,                                       Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CalculatedIceCabinetFanSpeed,                  0xF173, FanControl_t,                                       Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CalculatedConvertibleCompartmentFanSpeed,      0xF174, FanControl_t,                                       Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CalculatedDeliFanSpeed,                        0xF175, FanControl_t,                                       Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CalculatedFreezerEvapFanSpeed,                 0xF176, FanControl_t,                                       Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CalculatedFreshFoodEvapFanSpeed,               0xF177, FanControl_t,                                       Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RelayWatchdog,                                 0xF201, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,                    NotNv,                                    NotFault) \
@@ -557,6 +560,24 @@ enum
    ENTRY(Erd_ConvertibleCompartmentFanSpeed_FactoryVote,    0xF322, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentFanSpeed_DefrostVote,    0xF323, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentFanSpeed_GridVote,       0xF324, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FreezerFanSpeed_ResolvedVote,                  0xF330, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerFanSpeed_WinningVoteErd,                0xF331, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerFanSpeed_FactoryVote,                   0xF332, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerFanSpeed_DefrostVote,                   0xF333, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerFanSpeed_GridVote,                      0xF334, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FreshFoodFanSpeed_ResolvedVote,                0xF340, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodFanSpeed_WinningVoteErd,              0xF341, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodFanSpeed_FactoryVote,                 0xF342, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodFanSpeed_DefrostVote,                 0xF343, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodFanSpeed_GridVote,                    0xF344, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_DeliFanSpeed_ResolvedVote,                     0xF350, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DeliFanSpeed_WinningVoteErd,                   0xF351, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DeliFanSpeed_FactoryVote,                      0xF352, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DeliFanSpeed_DefrostVote,                      0xF353, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DeliFanSpeed_GridVote,                         0xF354, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData0,     0xF500, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData1,     0xF501, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \

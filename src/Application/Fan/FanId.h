@@ -17,6 +17,9 @@ enum
    FanId_FreshFood,
    FanId_IceCabinet,
    FanId_ConvertibleCompartment,
+   FanId_Deli,
+   FanId_FreezerEvap,
+   FanId_FreshFoodEvap,
    FanId_NumerOfFans
 };
 typedef uint8_t FanId_t;

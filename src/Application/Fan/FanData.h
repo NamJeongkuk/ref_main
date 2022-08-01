@@ -46,12 +46,6 @@ typedef struct
          FanControl_t lowSpeedValveA;
          FanControl_t lowSpeedValveB;
          FanControl_t lowSpeedValveC;
-         FanControl_t unused1;
-         FanControl_t unused2;
-         FanControl_t unused3;
-         FanControl_t unused4;
-         FanControl_t unused5;
-         FanControl_t unused6;
       } nonSetpointSpeeds;
    } careAboutSetpointData;
    FanControl_t mediumSpeedValveA;
@@ -91,6 +85,8 @@ typedef struct
    ValveFanData_t convertibleCompartmentFan;
    ValveFanData_t iceCabinetFan;
    ValveFanData_t deliPanFan;
+   ValveFanData_t freezerEvapFan;
+   ValveFanData_t freshFoodEvapFan;
 } FanData_t;
 
 #endif

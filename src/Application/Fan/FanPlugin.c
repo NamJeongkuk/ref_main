@@ -12,8 +12,16 @@
 #include "SystemErds.h"
 #include "utils.h"
 
-static const FanSpeedResolverConfig_t freezerConfig = {
+static const FanSpeedResolverConfig_t freezerEvapConfig = {
    .resolvedFanSpeedVoteErd = Erd_FreezerEvapFanSpeed_ResolvedVote,
+   .resolvedValvePositionVoteErd = Erd_ValvePosition_ResolvedVote,
+   .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
+   .calculatedRequestFanControlErd = Erd_CalculatedFreezerEvapFanSpeed,
+   .ambientTempErd = Erd_Ambient_FilteredTemperature,
+};
+
+static const FanSpeedResolverConfig_t freezerConfig = {
+   .resolvedFanSpeedVoteErd = Erd_FreezerFanSpeed_ResolvedVote,
    .resolvedValvePositionVoteErd = Erd_ValvePosition_ResolvedVote,
    .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
    .calculatedRequestFanControlErd = Erd_CalculatedFreezerFanSpeed,
@@ -30,6 +38,14 @@ static const FanSpeedResolverConfig_t condenserConfig = {
 
 static const FanSpeedResolverConfig_t freshFoodEvapConfig = {
    .resolvedFanSpeedVoteErd = Erd_FreshFoodEvapFanSpeed_ResolvedVote,
+   .resolvedValvePositionVoteErd = Erd_ValvePosition_ResolvedVote,
+   .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
+   .calculatedRequestFanControlErd = Erd_CalculatedFreshFoodEvapFanSpeed,
+   .ambientTempErd = Erd_Ambient_FilteredTemperature,
+};
+
+static const FanSpeedResolverConfig_t freshFoodConfig = {
+   .resolvedFanSpeedVoteErd = Erd_FreshFoodFanSpeed_ResolvedVote,
    .resolvedValvePositionVoteErd = Erd_ValvePosition_ResolvedVote,
    .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
    .calculatedRequestFanControlErd = Erd_CalculatedFreshFoodFanSpeed,
@@ -52,13 +68,17 @@ static const FanSpeedResolverConfig_t convertibleCompartmentConfig = {
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
 };
 
-void FanPlugin_Init(
-   FanPlugin_t *instance,
-   I_DataModel_t *dataModel)
+static const FanSpeedResolverConfig_t deliConfig = {
+   .resolvedFanSpeedVoteErd = Erd_DeliFanSpeed_ResolvedVote,
+   .resolvedValvePositionVoteErd = Erd_ValvePosition_ResolvedVote,
+   .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
+   .calculatedRequestFanControlErd = Erd_CalculatedDeliFanSpeed,
+   .ambientTempErd = Erd_Ambient_FilteredTemperature,
+};
+
+static void InitializeFanSpeedResolvers(FanPlugin_t *instance, I_DataModel_t *dataModel)
 {
    const FanData_t *fanData = PersonalityParametricData_Get(dataModel)->fanData;
-
-   FanSpeedVoteResolverPlugin_Init(dataModel);
 
    FanSpeedResolver_Init(
       &instance->_private.fanSpeedResolver[FanId_Freezer],
@@ -76,7 +96,7 @@ void FanPlugin_Init(
       &instance->_private.fanSpeedResolver[FanId_FreshFood],
       dataModel,
       &fanData->freshFoodFan,
-      &freshFoodEvapConfig);
+      &freshFoodConfig);
 
    FanSpeedResolver_Init(
       &instance->_private.fanSpeedResolver[FanId_IceCabinet],
@@ -89,4 +109,30 @@ void FanPlugin_Init(
       dataModel,
       &fanData->convertibleCompartmentFan,
       &convertibleCompartmentConfig);
+
+   FanSpeedResolver_Init(
+      &instance->_private.fanSpeedResolver[FanId_Deli],
+      dataModel,
+      &fanData->deliPanFan,
+      &deliConfig);
+
+   FanSpeedResolver_Init(
+      &instance->_private.fanSpeedResolver[FanId_FreezerEvap],
+      dataModel,
+      &fanData->freezerEvapFan,
+      &freezerEvapConfig);
+
+   FanSpeedResolver_Init(
+      &instance->_private.fanSpeedResolver[FanId_FreshFoodEvap],
+      dataModel,
+      &fanData->freshFoodEvapFan,
+      &freshFoodEvapConfig);
+}
+
+void FanPlugin_Init(
+   FanPlugin_t *instance,
+   I_DataModel_t *dataModel)
+{
+   FanSpeedVoteResolverPlugin_Init(dataModel);
+   InitializeFanSpeedResolvers(instance, dataModel);
 }

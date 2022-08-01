@@ -109,6 +109,9 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_FIELD(PublicErd_CalculatedFreshFoodFanSpeed, FanControl_t, rpm),
    SWAPPED_FIELD(PublicErd_CalculatedIceCabinetFanSpeed, FanControl_t, rpm),
    SWAPPED_FIELD(PublicErd_CalculatedConvertibleCompartmentFanSpeed, FanControl_t, rpm),
+   SWAPPED_FIELD(PublicErd_CalculatedDeliFanSpeed, FanControl_t, rpm),
+   SWAPPED_FIELD(PublicErd_CalculatedFreezerEvapFanSpeed, FanControl_t, rpm),
+   SWAPPED_FIELD(PublicErd_CalculatedFreshFoodEvapFanSpeed, FanControl_t, rpm),
 
    // 0xF200 range
    SWAPPED_ERD(PublicErd_SomeAnalogInput, sizeof(uint16_t)),
