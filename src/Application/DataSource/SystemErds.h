@@ -57,7 +57,6 @@
 #include "CompressorSpeedConfig.h"
 #include "HeaterVotedState.h"
 #include "EnergyDemandLevel.h"
-#include "DefrostDoorHoldoffTimerFsmState.h"
 #include "I_FaultWrapper.h"
 #include "ConvertibleCompartmentStateType.h"
 #include "CompressorState.h"
@@ -373,7 +372,6 @@ enum
    ENTRY(Erd_DefrostState,                                  0xF10D, DefrostState_t,                                     Swap_N, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_DefrostHsmState,                               0xF10E, DefrostHsmState_t,                                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DefrostRequest,                                0xF10F, DefrostRequest_t,                                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DefrostDoorHoldOffRequest,                     0xF110, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerDefrostWasAbnormal,                     0xF112, bool,                                               Swap_N, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_FreezerAbnormalDefrostCycleCount,              0xF113, uint16_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_FreezerDefrostCycleCount,                      0xF114, uint16_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
@@ -409,9 +407,7 @@ enum
    ENTRY(Erd_DoorInDoorIsOpen,                              0xF132, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerDoorIsOpen,                             0xF133, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentDoorIsOpen,              0xF134, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DefrostDoorHoldoffTimeSatisfied,               0xF135, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DefrostIsFreshFoodOnly,                        0xF136, bool,                                               Swap_N, Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
-   ENTRY(Erd_DefrostDoorHoldoffTimerFsmState,               0xF137, DefrostDoorHoldoffTimerFsmState_t,                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AllFreshFoodDoorsAreClosed,                    0xF138, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodThermistor_AdcCount,                  0xF13A, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

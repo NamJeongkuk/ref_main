@@ -307,11 +307,6 @@ describe("Defrost", () => {
       expect(actual).toEqual(0);
    };
 
-   const requestToEnableDoorHoldoffShouldBeSent = async () => {
-      const actual = await rx130.read("Erd_DefrostDoorHoldOffRequest");
-      expect(actual).toEqual(true);
-   };
-
    const theCompressorStateIs = async (state) => {
       await rx130.write("Erd_CompressorState", state);
    };
@@ -532,7 +527,6 @@ describe("Defrost", () => {
       await theIceCabinetFanShouldBeVoted(fanSpeed.fanSpeedHigh);
    });
 
-
    it("should not vote for valve position if max prechill holdoff time is equal to zero on entry to prechill prep", async () => {
       await providedDefrostIsEnabledAndInIdleState();
       await freezerEvaporatorThermistorIsValid();
@@ -591,6 +585,7 @@ describe("Defrost", () => {
       await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechillPrep);
       await theFreshFoodSetpointShouldBeVotedWith(4600); // matches prechill_fresh_food_setpoint_in_degfx100
    });
+
    it("should not vote for fresh food setpoint if current defrost is fresh food only on entry to prechill prep", async () => {
       await providedDefrostIsEnabledAndInIdleState();
       await freezerEvaporatorThermistorIsValid();
@@ -657,12 +652,6 @@ describe("Defrost", () => {
 
       await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechillPrep);
       await requestToExtendDefrostShouldNotBeSent();
-   });
-
-   it("should request to enable door holdoff on entry to prechill prep", async () => {
-      await defrostIsInPrechillPrep();
-      await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechillPrep);
-      await requestToEnableDoorHoldoffShouldBeSent();
    });
 
    it("should transition to post prechill from prechill prep when last defrost changes from normal to abnormal", async () => {
