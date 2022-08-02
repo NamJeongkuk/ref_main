@@ -85,6 +85,10 @@ enum
    Erd_FilteredTemp2,
    Erd_ConvertibleCompartmentFilteredTemp,
 
+   Erd_ThermistorValidErd1,
+   Erd_ThermistorValidErd2,
+   Erd_ConvertibleCompartmentThermistorValid,
+
    Erd_TimerModuleDouble,
    Erd_ConvertibleCompartmentState,
 
@@ -96,12 +100,15 @@ static const DataModel_TestDoubleConfigurationEntry_t erdTable[] = {
    { Erd_RawAdcCount1, sizeof(AdcCounts_t) },
    { Erd_UnfilteredTemp1, sizeof(TemperatureDegFx100_t) },
    { Erd_FilteredTemp1, sizeof(TemperatureDegFx100_t) },
+   { Erd_ThermistorValidErd1, sizeof(bool) },
    { Erd_RawAdcCount2, sizeof(AdcCounts_t) },
    { Erd_UnfilteredTemp2, sizeof(TemperatureDegFx100_t) },
    { Erd_FilteredTemp2, sizeof(TemperatureDegFx100_t) },
+   { Erd_ThermistorValidErd2, sizeof(bool) },
    { Erd_ConvertibleCompartmentRawAdcCount, sizeof(AdcCounts_t) },
    { Erd_ConvertibleCompartmentUnfilteredTemp, sizeof(TemperatureDegFx100_t) },
    { Erd_ConvertibleCompartmentFilteredTemp, sizeof(TemperatureDegFx100_t) },
+   { Erd_ConvertibleCompartmentThermistorValid, sizeof(bool) },
    { Erd_TimerModuleDouble, sizeof(TimerModule_t *) },
    { Erd_ConvertibleCompartmentState, sizeof(uint8_t) }
 };
@@ -162,7 +169,6 @@ TEST_GROUP(SensorFilteredReading)
          channelData[channel].filterInvalidValue = BadFilterValue;
          channelData[channel].clampData.slewRateEnabled = true;
          channelData[channel].clampData.slewRatePerSecondx100 = slewRatePerSecondx100;
-         channelData[channel].fallbackData.sensorState = SensorIsGood;
          channelData[channel].adcMapper = &mapper.interface;
          channelData[channel].filterAlphax100 = 100 - ((AlphaNum * 100) / AlphaDenom);
          channelData[channel].fallbackData.goodReadingMaxValue = SensorFiltering_GoodReadingMax;
@@ -172,16 +178,19 @@ TEST_GROUP(SensorFilteredReading)
       channelData[0].erds.rawAdcCountErd = Erd_RawAdcCount1;
       channelData[0].erds.unfilteredOutputErd = Erd_UnfilteredTemp1;
       channelData[0].erds.filteredOutputErd = Erd_FilteredTemp1;
+      channelData[0].erds.thermistorValidErd = Erd_ThermistorValidErd1;
       channelData[0].fallbackData.fallbackValue = FreshFoodFallbackDegFx100;
 
       channelData[1].erds.rawAdcCountErd = Erd_RawAdcCount2;
       channelData[1].erds.unfilteredOutputErd = Erd_UnfilteredTemp2;
       channelData[1].erds.filteredOutputErd = Erd_FilteredTemp2;
+      channelData[1].erds.thermistorValidErd = Erd_ThermistorValidErd2;
       channelData[1].fallbackData.fallbackValue = FreezerFallbackDegFx100;
 
       channelData[2].erds.rawAdcCountErd = Erd_ConvertibleCompartmentRawAdcCount;
       channelData[2].erds.unfilteredOutputErd = Erd_ConvertibleCompartmentUnfilteredTemp;
       channelData[2].erds.filteredOutputErd = Erd_ConvertibleCompartmentFilteredTemp;
+      channelData[2].erds.thermistorValidErd = Erd_ConvertibleCompartmentThermistorValid;
 
       Mapper_SmallLookupTable_Init(&mapper, &configurationForMappings);
       config.channelData = channelData;
@@ -226,6 +235,13 @@ TEST_GROUP(SensorFilteredReading)
       TemperatureDegFx100_t realTemp;
       DataModel_Read(dataModel, erd, &realTemp);
       CHECK_EQUAL(temperature, realTemp);
+   }
+
+   void TheThermistorValidErdShouldBe(Erd_t erd, bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, erd, &actual);
+      CHECK_EQUAL(actual, expected);
    }
 
    void TheUnfilteredErdShouldBe(Erd_t erd, TemperatureDegFx100_t temperature)
@@ -292,7 +308,7 @@ TEST_GROUP(SensorFilteredReading)
    }
 };
 
-TEST(SensorFilteredReading, ShouldInitWithFallbackTempsForFilteredAndBadTempsForUnfilteredWhenBadAdcReading)
+TEST(SensorFilteredReading, ShouldInitWithFallbackTempsForFilteredAndBadTempsForUnfilteredWhenBadAdcReadingAndSetThermistorValidErdToFalse)
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, 0);
    GivenRawAdcCountErdIs(Erd_RawAdcCount2, 0);
@@ -303,9 +319,12 @@ TEST(SensorFilteredReading, ShouldInitWithFallbackTempsForFilteredAndBadTempsFor
 
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, FreshFoodFallbackDegFx100);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, FreezerFallbackDegFx100);
+
+   TheThermistorValidErdShouldBe(Erd_ThermistorValidErd1, false);
+   TheThermistorValidErdShouldBe(Erd_ThermistorValidErd2, false);
 }
 
-TEST(SensorFilteredReading, ShouldInitWithGoodTempsForFilteredAndUnfilteredWhenGoodAdcReadings)
+TEST(SensorFilteredReading, ShouldInitWithGoodTempsForFilteredAndUnfilteredWhenGoodAdcReadingsAndSetThermistorValidErdToTrue)
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
    GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount2);
@@ -316,6 +335,9 @@ TEST(SensorFilteredReading, ShouldInitWithGoodTempsForFilteredAndUnfilteredWhenG
 
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue1);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, MappedValue2);
+
+   TheThermistorValidErdShouldBe(Erd_ThermistorValidErd1, true);
+   TheThermistorValidErdShouldBe(Erd_ThermistorValidErd2, true);
 }
 
 TEST(SensorFilteredReading, ShouldFilterSampleWithoutClampingAfter1PeriodOfGoodAdcReadings)
@@ -400,26 +422,29 @@ TEST(SensorFilteredReading, ShouldStillClampFilteredTempErdAfter2SecondWhenNewSa
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, ExponentiallyFilteredValueFromMappedValue1To3WithClamping);
 }
 
-TEST(SensorFilteredReading, ShouldNotChangeFilteredTempErdWhenGoodReadingFollowingByBadReading)
+TEST(SensorFilteredReading, ShouldNotChangeFilteredTempErdOrThermistorValidErdWhenGoodReadingFollowedByBadReading)
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
    GivenTheModuleIsInitialized();
 
    After(FilterSamplingTimeInMsec);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue1);
+   And TheThermistorValidErdShouldBe(Erd_ThermistorValidErd1, true);
 
    WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
 
    After(FilterSamplingTimeInMsec - 1);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue1);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue1);
+   And TheThermistorValidErdShouldBe(Erd_ThermistorValidErd1, true);
 
    After(1);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue1);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, BadTempValue);
+   And TheThermistorValidErdShouldBe(Erd_ThermistorValidErd1, true);
 }
 
-TEST(SensorFilteredReading, ShouldNotChangeFilteredTempErdWhenGoodReadingFollowingBy99BadReadings)
+TEST(SensorFilteredReading, ShouldNotChangeFilteredTempErdOrThermistorValidErdWhenGoodReadingFollowedBy99BadReadings)
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
    GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount1);
@@ -428,6 +453,8 @@ TEST(SensorFilteredReading, ShouldNotChangeFilteredTempErdWhenGoodReadingFollowi
    After(FilterSamplingTimeInMsec);
    TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue1);
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue1);
+   TheThermistorValidErdShouldBe(Erd_ThermistorValidErd1, true);
+   TheThermistorValidErdShouldBe(Erd_ThermistorValidErd2, true);
 
    WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
    WhenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
@@ -436,9 +463,11 @@ TEST(SensorFilteredReading, ShouldNotChangeFilteredTempErdWhenGoodReadingFollowi
    After(FilterSamplingTimeInMsec);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue1);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, BadTempValue);
+   And TheThermistorValidErdShouldBe(Erd_ThermistorValidErd1, true);
+   And TheThermistorValidErdShouldBe(Erd_ThermistorValidErd2, true);
 }
 
-TEST(SensorFilteredReading, ShouldChangeFilteredTempErdToFallbackWhenGoodReadingFollowingBy100BadReadings)
+TEST(SensorFilteredReading, ShouldChangeFilteredTempErdToFallbackAndClearThermistorValidErdWhenGoodReadingFollowedBy100BadReadings)
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount1);
    GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount1);
@@ -447,6 +476,8 @@ TEST(SensorFilteredReading, ShouldChangeFilteredTempErdToFallbackWhenGoodReading
    After(FilterSamplingTimeInMsec);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue1);
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, MappedValue1);
+   And TheThermistorValidErdShouldBe(Erd_ThermistorValidErd1, true);
+   And TheThermistorValidErdShouldBe(Erd_ThermistorValidErd2, true);
 
    WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
    And WhenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
@@ -457,9 +488,11 @@ TEST(SensorFilteredReading, ShouldChangeFilteredTempErdToFallbackWhenGoodReading
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, FreezerFallbackDegFx100);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, BadTempValue);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp2, BadTempValue);
+   And TheThermistorValidErdShouldBe(Erd_ThermistorValidErd1, false);
+   And TheThermistorValidErdShouldBe(Erd_ThermistorValidErd2, false);
 }
 
-TEST(SensorFilteredReading, ShouldKeepFilteredTempErdAtFallbackValueWhenSensorIsInitedWithBadReadingAndThenFollowedByGoodReading)
+TEST(SensorFilteredReading, ShouldKeepFilteredTempErdAtFallbackValueAndThermistorValidErdClearWhenSensorIsInitedWithBadReadingAndThenFollowedByGoodReading)
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
    GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
@@ -478,9 +511,11 @@ TEST(SensorFilteredReading, ShouldKeepFilteredTempErdAtFallbackValueWhenSensorIs
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, FreezerFallbackDegFx100);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue1);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp2, MappedValue1);
+   And TheThermistorValidErdShouldBe(Erd_ThermistorValidErd1, false);
+   And TheThermistorValidErdShouldBe(Erd_ThermistorValidErd2, false);
 }
 
-TEST(SensorFilteredReading, ShouldKeepFilteredTempErdAtFallbackValueWhenSensorIsInitedWithBadReadingAndThenFollowedBy99GoodReadings)
+TEST(SensorFilteredReading, ShouldKeepFilteredTempErdAtFallbackValueAndThermistorValidErdClearWhenSensorIsInitedWithBadReadingAndThenFollowedBy99GoodReadings)
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
    GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
@@ -500,9 +535,11 @@ TEST(SensorFilteredReading, ShouldKeepFilteredTempErdAtFallbackValueWhenSensorIs
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, FreezerFallbackDegFx100);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue1);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp2, MappedValue1);
+   And TheThermistorValidErdShouldBe(Erd_ThermistorValidErd1, false);
+   And TheThermistorValidErdShouldBe(Erd_ThermistorValidErd2, false);
 }
 
-TEST(SensorFilteredReading, ShouldChangeFilteredTempToMostRecentGoodReadingWhenSensorIsInitedWithBadReadingAndThenFollowedBy100GoodReadings)
+TEST(SensorFilteredReading, ShouldChangeFilteredTempToMostRecentGoodReadingAndSetThermistorValidErdWhenSensorIsInitedWithBadReadingAndThenFollowedBy100GoodReadings)
 {
    GivenRawAdcCountErdIs(Erd_RawAdcCount1, AdcCountForBadMapping);
    GivenRawAdcCountErdIs(Erd_RawAdcCount2, AdcCountForBadMapping);
@@ -512,6 +549,8 @@ TEST(SensorFilteredReading, ShouldChangeFilteredTempToMostRecentGoodReadingWhenS
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, FreezerFallbackDegFx100);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, BadTempValue);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp2, BadTempValue);
+   And TheThermistorValidErdShouldBe(Erd_ThermistorValidErd1, false);
+   And TheThermistorValidErdShouldBe(Erd_ThermistorValidErd2, false);
 
    WhenRawAdcCountErdIs(Erd_RawAdcCount1, AdcRawCount2);
    WhenRawAdcCountErdIs(Erd_RawAdcCount2, AdcRawCount2);
@@ -522,6 +561,8 @@ TEST(SensorFilteredReading, ShouldChangeFilteredTempToMostRecentGoodReadingWhenS
    And TheFilteredOutputErdShouldBe(Erd_FilteredTemp2, MappedValue2);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp1, MappedValue2);
    And TheUnfilteredErdShouldBe(Erd_UnfilteredTemp2, MappedValue2);
+   And TheThermistorValidErdShouldBe(Erd_ThermistorValidErd1, true);
+   And TheThermistorValidErdShouldBe(Erd_ThermistorValidErd2, true);
 }
 
 TEST(SensorFilteredReading, ShouldFilterFilteredTempWhenSensorIsInitedWithBadReadingAndThenFollowedBy101GoodReadings)
@@ -651,7 +692,7 @@ TEST(SensorFilteredReading, ShouldResetAndReSeedFilterAfterEveryBadSensorToGoodS
    TheFilteredOutputErdShouldBe(Erd_FilteredTemp1, MappedValue3);
 }
 
-TEST(SensorFilteredReading, ShouldInitWithFreezerFallbackTempForConvertibleCompartmentWhenBadAdcCountAndCabinetIsActingLikeFreezer)
+TEST(SensorFilteredReading, ShouldInitWithFreezerFallbackTempAndClearThermistorValidErdForConvertibleCompartmentWhenBadAdcCountAndCabinetIsActingLikeFreezer)
 {
    GivenRawAdcCountErdIs(Erd_ConvertibleCompartmentRawAdcCount, AdcCountForBadMapping);
    And GivenConvertibleCompartmentStateIsA(ConvertibleCompartmentStateType_Freezer);
@@ -659,9 +700,10 @@ TEST(SensorFilteredReading, ShouldInitWithFreezerFallbackTempForConvertibleCompa
 
    TheUnfilteredErdShouldBe(Erd_ConvertibleCompartmentUnfilteredTemp, BadTempValue);
    TheFilteredOutputErdShouldBe(Erd_ConvertibleCompartmentFilteredTemp, ConvertibleCompartmentFreezerFallbackDegFx100);
+   TheThermistorValidErdShouldBe(Erd_ConvertibleCompartmentThermistorValid, false);
 }
 
-TEST(SensorFilteredReading, ShouldInitWithFreshFoodFallbackTempForConvertibleCompartmentWhenBadAdcCountAndCabinetIsActingLikeFreshFood)
+TEST(SensorFilteredReading, ShouldInitWithFreshFoodFallbackTempAndClearThermistorValidErdForConvertibleCompartmentWhenBadAdcCountAndCabinetIsActingLikeFreshFood)
 {
    GivenRawAdcCountErdIs(Erd_ConvertibleCompartmentRawAdcCount, AdcCountForBadMapping);
    And GivenConvertibleCompartmentStateIsA(ConvertibleCompartmentStateType_FreshFood);
@@ -669,6 +711,7 @@ TEST(SensorFilteredReading, ShouldInitWithFreshFoodFallbackTempForConvertibleCom
 
    TheUnfilteredErdShouldBe(Erd_ConvertibleCompartmentUnfilteredTemp, BadTempValue);
    TheFilteredOutputErdShouldBe(Erd_ConvertibleCompartmentFilteredTemp, ConvertibleCompartmentFreshFoodFallbackDegFx100);
+   TheThermistorValidErdShouldBe(Erd_ConvertibleCompartmentThermistorValid, false);
 }
 
 TEST(SensorFilteredReading, ShouldChangeFallbackValueForConvertibleCompartmentWhenCabinetStateChanges)

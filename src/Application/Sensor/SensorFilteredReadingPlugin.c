@@ -14,15 +14,15 @@
 #include "utils.h"
 #include "Constants_Binary.h"
 
-// (type, sensorType , countErd, unfilteredErd, filteredErd, IsSigned)
-#define SENSOR_FILTERING_TABLE_ALL(ENTRY)                                                                                                                                                                        \
-   ENTRY(Local, freezerCabinetThermistor, Erd_FreezerThermistor_AdcCount, Erd_Freezer_UnfilteredTemperature, Erd_Freezer_FilteredTemperature)                                                                    \
-   ENTRY(Local, freshFoodCabinetThermistor, Erd_FreshFoodThermistor_AdcCount, Erd_FreshFood_UnfilteredTemperature, Erd_FreshFood_FilteredTemperature)                                                            \
-   ENTRY(Local, freezerEvapThermistor, Erd_FreezerEvapThermistor_AdcCount, Erd_FreezerEvap_UnfilteredTemperature, Erd_FreezerEvap_FilteredTemperature)                                                           \
-   ENTRY(Local, freshFoodEvapThermistor, Erd_FreshFoodEvapThermistor_AdcCount, Erd_FreshFoodEvap_UnfilteredTemperature, Erd_FreshFoodEvap_FilteredTemperature)                                                   \
-   ENTRY(Local, convertibleCompartmentCabinetThermistor, Erd_ConvertibleCompartmentCabinetThermistor_AdcCount, Erd_ConvertibleCompartment_UnfilteredTemperature, Erd_ConvertibleCompartment_FilteredTemperature) \
-   ENTRY(Local, ambientThermistor, Erd_AmbientThermistor_AdcCount, Erd_Ambient_UnfilteredTemperature, Erd_Ambient_FilteredTemperature)                                                                           \
-   ENTRY(Local, convertibleCompartmentEvapThermistor, Erd_ConvertibleCompartmentEvapThermistor_AdcCount, Erd_ConvertibleCompartmentEvap_UnfilteredTemperature, Erd_ConvertibleCompartmentEvap_FilteredTemperature)
+// (type, sensorType , countErd, unfilteredErd, filteredErd, thermistorIsValidErd)
+#define SENSOR_FILTERING_TABLE_ALL(ENTRY)                                                                                                                                                                                                                      \
+   ENTRY(Local, freezerCabinetThermistor, Erd_FreezerThermistor_AdcCount, Erd_Freezer_UnfilteredTemperature, Erd_Freezer_FilteredTemperature, Erd_Freezer_ThermistorIsValid)                                                                                   \
+   ENTRY(Local, freshFoodCabinetThermistor, Erd_FreshFoodThermistor_AdcCount, Erd_FreshFood_UnfilteredTemperature, Erd_FreshFood_FilteredTemperature, Erd_FreshFood_ThermistorIsValid)                                                                         \
+   ENTRY(Local, freezerEvapThermistor, Erd_FreezerEvapThermistor_AdcCount, Erd_FreezerEvap_UnfilteredTemperature, Erd_FreezerEvap_FilteredTemperature, Erd_FreezerEvaporatorThermistorIsValid)                                                                 \
+   ENTRY(Local, freshFoodEvapThermistor, Erd_FreshFoodEvapThermistor_AdcCount, Erd_FreshFoodEvap_UnfilteredTemperature, Erd_FreshFoodEvap_FilteredTemperature, Erd_FreshFoodEvaporatorThermistorIsValid)                                                       \
+   ENTRY(Local, convertibleCompartmentCabinetThermistor, Erd_ConvertibleCompartmentCabinetThermistor_AdcCount, Erd_ConvertibleCompartment_UnfilteredTemperature, Erd_ConvertibleCompartment_FilteredTemperature, Erd_ConvertibleCompartment_ThermistorIsValid) \
+   ENTRY(Local, ambientThermistor, Erd_AmbientThermistor_AdcCount, Erd_Ambient_UnfilteredTemperature, Erd_Ambient_FilteredTemperature, Erd_Ambient_ThermistorIsValid)                                                                                          \
+   ENTRY(Local, convertibleCompartmentEvapThermistor, Erd_ConvertibleCompartmentEvapThermistor_AdcCount, Erd_ConvertibleCompartmentEvap_UnfilteredTemperature, Erd_ConvertibleCompartmentEvap_FilteredTemperature, Erd_ConvertibleCompartmentEvaporatorThermistorIsValid)
 // (type, sensorType)
 #define SENSOR_FILTERING_TABLE_NON_CONVERTIBLE_COMPARTMENT_CABINET(ENTRY) \
    ENTRY(Local, freezerCabinetThermistor)                                 \
@@ -33,7 +33,7 @@
    ENTRY(Local, convertibleCompartmentEvapThermistor)
 
 // clang-format off
-#define EXPAND_AS_SET_CHANNEL_DATA(type, sensorType, countErd, unfilteredErd, filteredErd)                                                                             \
+#define EXPAND_AS_SET_CHANNEL_DATA(type, sensorType, countErd, unfilteredErd, filteredErd, thermistorIsValidErd)                                                                             \
    instance.sensorChannelData[ChannelConfig_##sensorType].adcMapper = &instance.channelReadingMapper[ChannelConfig_##sensorType].interface;                            \
    instance.sensorChannelData[ChannelConfig_##sensorType].filterInvalidValue =                                                                                         \
       instance.sensorData->sensorType->lookupTable->mappings[instance.sensorData->sensorType->lookupTable->mappingCount - 1].y;                                        \
@@ -47,6 +47,7 @@
    instance.sensorChannelData[ChannelConfig_##sensorType].erds.rawAdcCountErd = countErd;                                                                              \
    instance.sensorChannelData[ChannelConfig_##sensorType].erds.unfilteredOutputErd = unfilteredErd;                                                                    \
    instance.sensorChannelData[ChannelConfig_##sensorType].erds.filteredOutputErd = filteredErd;                                                                        \
+   instance.sensorChannelData[ChannelConfig_##sensorType].erds.thermistorValidErd = thermistorIsValidErd;                                                                \
    \
    instance.sensorChannelData[ChannelConfig_##sensorType].fallbackData.goodReadingMaxValue = instance.sensorData->sensorType->goodReadingCounterMax;                   \
    instance.sensorChannelData[ChannelConfig_##sensorType].fallbackData.badReadingMaxValue = instance.sensorData->sensorType->badReadingCounterMax;                     \
@@ -64,7 +65,7 @@
 #define EXPAND_AS_CHANNEL_SET_DATA_FALLBACK_VALUES_NON_CONVERTIBLE_COMPARTMENT_CABINET(type, sensorType) \
    instance.sensorChannelData[ChannelConfig_##sensorType].fallbackData.fallbackValue = instance.sensorData->sensorType->fallbackValueDegFx100;
 
-#define EXPAND_AS_CHANNEL_ENUM(type, sensorType, countErd, unfilteredErd, filteredErd) \
+#define EXPAND_AS_CHANNEL_ENUM(type, sensorType, countErd, unfilteredErd, filteredErd, thermistorValidErd) \
    ChannelConfig_##sensorType,
 
 enum

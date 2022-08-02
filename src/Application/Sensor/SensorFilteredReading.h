@@ -49,6 +49,7 @@ typedef struct
    Erd_t rawAdcCountErd;
    Erd_t unfilteredOutputErd;
    Erd_t filteredOutputErd;
+   Erd_t thermistorValidErd;
 } SensorFilteredReadingErds_t;
 
 typedef struct

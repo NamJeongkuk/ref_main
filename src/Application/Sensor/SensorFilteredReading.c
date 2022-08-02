@@ -8,6 +8,7 @@
 #include "SensorFilteredReading.h"
 #include "DataModelErdPointerAccess.h"
 #include "TemperatureDegFx100.h"
+#include "Constants_Binary.h"
 
 enum
 {
@@ -111,6 +112,7 @@ static int32_t AdcMappedTemperatureDegFx100Value(
 }
 
 static uint8_t FilteredErdUpdateMethodFlagBasedOnGoodReadingCounter(
+   SensorFilteredReading_t *instance,
    SensorFilteredReadingChannelData_t *channelData)
 {
    uint8_t writeToFilteredErd;
@@ -132,6 +134,11 @@ static uint8_t FilteredErdUpdateMethodFlagBasedOnGoodReadingCounter(
       {
          channelData->fallbackData.sensorState = SensorIsGood;
          writeToFilteredErd = ForceUpdateFilteredErd;
+
+         DataModel_Write(
+            instance->_private.dataModel,
+            channelData->erds.thermistorValidErd,
+            set);
       }
    }
 
@@ -139,6 +146,7 @@ static uint8_t FilteredErdUpdateMethodFlagBasedOnGoodReadingCounter(
 }
 
 static uint8_t FilteredErdUpdateMethodFlagBasedOnBadReadingCounter(
+   SensorFilteredReading_t *instance,
    SensorFilteredReadingChannelData_t *channelData)
 {
    uint8_t writeToFilteredErd;
@@ -156,6 +164,11 @@ static uint8_t FilteredErdUpdateMethodFlagBasedOnBadReadingCounter(
       {
          channelData->fallbackData.sensorState = SensorIsBad;
          writeToFilteredErd = UpdateFilteredErdWithFallback;
+
+         DataModel_Write(
+            instance->_private.dataModel,
+            channelData->erds.thermistorValidErd,
+            clear);
       }
    }
    else
@@ -186,11 +199,11 @@ static void UpdateSensorValues(void *context)
 
       if(ValueIsValid(channelData, unfilteredValue))
       {
-         writeToFilteredErd = FilteredErdUpdateMethodFlagBasedOnGoodReadingCounter(channelData);
+         writeToFilteredErd = FilteredErdUpdateMethodFlagBasedOnGoodReadingCounter(instance, channelData);
       }
       else
       {
-         writeToFilteredErd = FilteredErdUpdateMethodFlagBasedOnBadReadingCounter(channelData);
+         writeToFilteredErd = FilteredErdUpdateMethodFlagBasedOnBadReadingCounter(instance, channelData);
       }
 
       if(writeToFilteredErd == UpdateFilteredErdUsingFilter)
@@ -298,10 +311,17 @@ static void InitializeFilter(SensorFilteredReading_t *instance)
       {
          UpdateFilter(channelData, UpscaledByPrecisionScalingFactor(unfilteredValue));
 
+         channelData->fallbackData.sensorState = SensorIsGood;
+
          DataModel_Write(
             instance->_private.dataModel,
             channelData->erds.filteredOutputErd,
             &unfilteredValue);
+
+         DataModel_Write(
+            instance->_private.dataModel,
+            channelData->erds.thermistorValidErd,
+            set);
       }
       else
       {
@@ -311,6 +331,11 @@ static void InitializeFilter(SensorFilteredReading_t *instance)
             instance->_private.dataModel,
             channelData->erds.filteredOutputErd,
             &channelData->fallbackData.fallbackValue);
+
+         DataModel_Write(
+            instance->_private.dataModel,
+            channelData->erds.thermistorValidErd,
+            clear);
       }
    }
 }
