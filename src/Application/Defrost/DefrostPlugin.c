@@ -39,6 +39,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
    .defrostReadyTimerIsSatisfied = Erd_DefrostReadyTimerIsSatisfied,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
+   .compressorIsOnErd = Erd_CompressorIsOn,
    .timerModuleErd = Erd_TimerModule
 };
 

@@ -49,6 +49,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
    .defrostReadyTimerIsSatisfied = Erd_DefrostReadyTimerIsSatisfied,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
+   .compressorIsOnErd = Erd_CompressorIsOn,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -187,6 +188,13 @@ TEST_GROUP(Defrost_SingleEvap)
             DefrostHsmStateShouldBe(DefrostHsmState_Idle);
             break;
 
+         case DefrostHsmState_PrechillPrep:
+            Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+            When DefrostReadyTimerIsSatisfied();
+            DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+            break;
+
          default:
             break;
       }
@@ -232,6 +240,11 @@ TEST_GROUP(Defrost_SingleEvap)
       DataModel_Read(dataModel, Erd_FreezerFilteredTemperatureTooWarmAtPowerUp, &actualState);
 
       CHECK_EQUAL(expectedState, actualState);
+   }
+
+   void CompressorIsOn()
+   {
+      DataModel_Write(dataModel, Erd_CompressorIsOn, on);
    }
 };
 
@@ -365,6 +378,34 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenDefrostReadyTimerIsSatisfiedA
 
    When DefrostReadyTimerIsSatisfied();
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_SingleEvap, ShouldGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAlreadyMet)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given CompressorIsOn();
+
+   When DefrostReadyTimerIsSatisfied();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_SingleEvap, ShouldGoToPrechillWhenPrechillConditionsMetWhileInPrechillPrep)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   When CompressorIsOn();
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_SingleEvap, ShouldGoToPrechillWhenPrechillPrepTimerExpiresWhileInPrechillPrep)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   After((defrostData.maxPrechillPrepTimeInMinutes * MSEC_PER_MIN) - 1);
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+
+   After(1);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
 }
 
 TEST_GROUP(Defrost_DualEvap)

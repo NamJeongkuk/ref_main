@@ -33,7 +33,9 @@ enum
 
 enum
 {
-   Signal_DefrostReadyTimerIsSatisfied = Hsm_UserSignalStart
+   Signal_DefrostReadyTimerIsSatisfied = Hsm_UserSignalStart,
+   Signal_CompressorIsOn,
+   Signal_MaxPrechillPrepTimerExpired
 };
 
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -80,6 +82,36 @@ static void DataModelChanged(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_DefrostReadyTimerIsSatisfied, NULL);
       }
    }
+   else if(erd == instance->_private.config->compressorIsOnErd)
+   {
+      const bool *state = onChangeData->data;
+
+      if(*state)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_CompressorIsOn, NULL);
+      }
+   }
+}
+
+static void StartTimer(Defrost_t *instance, Timer_t *timer, TimerTicks_t ticks, TimerCallback_t callback)
+{
+   TimerModule_StartOneShot(
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         instance->_private.config->timerModuleErd),
+      timer,
+      ticks,
+      callback,
+      instance);
+}
+
+static void StopTimer(Defrost_t *instance, Timer_t *timer)
+{
+   TimerModule_Stop(
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         instance->_private.config->timerModuleErd),
+      timer);
 }
 
 static bool FreshFoodDefrostWasAbnormal(Defrost_t *instance)
@@ -122,6 +154,16 @@ static bool AnyPreviousDefrostWasAbnormal(Defrost_t *instance)
       ConvertibleCompartmentDefrostWasAbnormal(instance));
 }
 
+static bool CompressorIsOn(Defrost_t *instance)
+{
+   bool compressorIsOn;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->compressorIsOnErd,
+      &compressorIsOn);
+   return compressorIsOn;
+}
+
 static bool FreezerCompartmentWasTooWarmOnPowerUp(Defrost_t *instance)
 {
    bool state;
@@ -139,6 +181,13 @@ static void ResetFreezerCompartmentWasTooWarmOnPowerUp(Defrost_t *instance)
       instance->_private.dataModel,
       instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
       clear);
+}
+
+static void MaxPrechillPrepTimerExpired(void *context)
+{
+   Defrost_t *instance = context;
+
+   Hsm_SendSignal(&instance->_private.hsm, Signal_MaxPrechillPrepTimerExpired, NULL);
 }
 
 static HsmState_t InitialState(Defrost_t *instance)
@@ -224,6 +273,28 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_PrechillPrep);
+
+         if(CompressorIsOn(instance))
+         {
+            Hsm_Transition(hsm, State_Prechill);
+         }
+         else
+         {
+            StartTimer(
+               instance,
+               &instance->_private.prechillPrepTimer,
+               instance->_private.defrostParametricData->maxPrechillPrepTimeInMinutes * MSEC_PER_MIN,
+               MaxPrechillPrepTimerExpired);
+         }
+         break;
+
+      case Signal_CompressorIsOn:
+      case Signal_MaxPrechillPrepTimerExpired:
+         Hsm_Transition(hsm, State_Prechill);
+         break;
+
+      case Hsm_Exit:
+         StopTimer(instance, &instance->_private.prechillPrepTimer);
          break;
 
       default:

@@ -25,6 +25,7 @@ typedef struct
    Erd_t convertibleCompartmentDefrostWasAbnormalErd; // bool
    Erd_t defrostReadyTimerIsSatisfied; // bool
    Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
+   Erd_t compressorIsOnErd; // bool
    Erd_t timerModuleErd; // TimerModule_t *
 } DefrostConfiguration_t;
 
@@ -34,6 +35,7 @@ typedef struct
    {
       I_DataModel_t *dataModel;
       Hsm_t hsm;
+      Timer_t prechillPrepTimer;
       EventSubscription_t dataModelSubscription;
       const DefrostConfiguration_t *config;
       const DefrostData_t *defrostParametricData;
