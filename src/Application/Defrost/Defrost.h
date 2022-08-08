@@ -19,15 +19,10 @@
 typedef struct
 {
    Erd_t defrostHsmStateErd; // DefrostHsmState_t
-   Erd_t freezerFilteredTemperatureResolvedErd; // TemperatureDegFx100_t
-   Erd_t calculatedGridLinesErd; // CalculatedGridLines_t
    Erd_t defrostStateErd; // DefrostState_t
-   Erd_t numberOfFreezerAbnormalDefrostCyclesErd; // uint16_t
    Erd_t freezerDefrostWasAbnormalErd; // bool
-   Erd_t freezerAbnormalDefrostCycleCountErd; // uint16_t
    Erd_t freshFoodDefrostWasAbnormalErd; // bool
    Erd_t convertibleCompartmentDefrostWasAbnormalErd; // bool
-   Erd_t freezerDefrostCycleCountErd; // uint16_t
    Erd_t defrostReadyTimerIsSatisfied; // bool
    Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
    Erd_t timerModuleErd; // TimerModule_t *
@@ -39,10 +34,7 @@ typedef struct
    {
       I_DataModel_t *dataModel;
       Hsm_t hsm;
-      Timer_t powerUpDelayTimer;
-      Timer_t periodicTimer;
       EventSubscription_t dataModelSubscription;
-      uint32_t prechillRunCounterInMinutes;
       const DefrostConfiguration_t *config;
       const DefrostData_t *defrostParametricData;
       const SabbathData_t *sabbathParametricData;

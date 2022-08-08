@@ -244,7 +244,7 @@ TEST(DefrostTimerIntegration, ShouldInitialize)
    PluginsAreInitialized();
 }
 
-TEST(DefrostTimerIntegration, ShouldResetEepromCompressorOnTimeToZeroWhenRamErdIsSetToZeroSoOldCompressorOnTimeValueIsNotHeldOnToIfMainboardResetsMultipleTimes)
+IGNORE_TEST(DefrostTimerIntegration, ShouldResetEepromCompressorOnTimeToZeroWhenRamErdIsSetToZeroSoOldCompressorOnTimeValueIsNotHeldOnToIfMainboardResetsMultipleTimes)
 {
    Given EepromCompressorOnTimeInSecondsIs(0);
    And FilteredFreezerCabinetTemperatureIs(1000);

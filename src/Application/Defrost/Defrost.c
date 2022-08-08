@@ -33,11 +33,9 @@ enum
 
 enum
 {
-   Signal_PowerUpDelayComplete = Hsm_UserSignalStart,
-   Signal_DefrostReadyTimerIsSatisfied
+   Signal_DefrostReadyTimerIsSatisfied = Hsm_UserSignalStart
 };
 
-static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -45,7 +43,6 @@ static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data
 static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 
 static const HsmStateHierarchyDescriptor_t stateList[] = {
-   { State_PowerUp, HSM_NO_PARENT },
    { State_Idle, HSM_NO_PARENT },
    { State_Dwell, HSM_NO_PARENT },
    { State_PrechillPrep, HSM_NO_PARENT },
@@ -83,95 +80,6 @@ static void DataModelChanged(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_DefrostReadyTimerIsSatisfied, NULL);
       }
    }
-}
-
-static void SaveFreezerAbnormalDefrostData(Defrost_t *instance)
-{
-   bool freezerDefrostWasAbnormal;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->freezerDefrostWasAbnormalErd,
-      &freezerDefrostWasAbnormal);
-
-   uint16_t freezerAbnormalDefrostCycleCount;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->freezerAbnormalDefrostCycleCountErd,
-      &freezerAbnormalDefrostCycleCount);
-
-   uint16_t freezerDefrostCycleCount;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->freezerDefrostCycleCountErd,
-      &freezerDefrostCycleCount);
-
-   if(freezerAbnormalDefrostCycleCount != freezerDefrostCycleCount)
-   {
-      uint16_t numberOfFreezerAbnormalDefrostCycles;
-      DataModel_Read(
-         instance->_private.dataModel,
-         instance->_private.config->numberOfFreezerAbnormalDefrostCyclesErd,
-         &numberOfFreezerAbnormalDefrostCycles);
-
-      numberOfFreezerAbnormalDefrostCycles++;
-      DataModel_Write(
-         instance->_private.dataModel,
-         instance->_private.config->numberOfFreezerAbnormalDefrostCyclesErd,
-         &numberOfFreezerAbnormalDefrostCycles);
-   }
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->freezerAbnormalDefrostCycleCountErd,
-      &freezerDefrostCycleCount);
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->freezerDefrostWasAbnormalErd,
-      set);
-}
-
-static bool LastDefrostWasAbnormalBecauseOfAbnormalFilteredFreezerCabinetTemperature(Defrost_t *instance)
-{
-   TemperatureDegFx100_t freezerFilteredTemperature;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->freezerFilteredTemperatureResolvedErd,
-      &freezerFilteredTemperature);
-
-   CalculatedGridLines_t calcGridLines;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->calculatedGridLinesErd,
-      &calcGridLines);
-
-   TemperatureDegFx100_t gridFreezerExtremeHystTemperature = calcGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtremeHigh];
-
-   return (freezerFilteredTemperature > gridFreezerExtremeHystTemperature ||
-      freezerFilteredTemperature >= instance->_private.defrostParametricData->freezerDefrostTerminationTemperatureInDegFx100);
-}
-
-static void StartTimer(Defrost_t *instance, Timer_t *timer, TimerTicks_t ticks, TimerCallback_t callback)
-{
-   TimerModule_StartOneShot(
-      DataModelErdPointerAccess_GetTimerModule(
-         instance->_private.dataModel,
-         instance->_private.config->timerModuleErd),
-      timer,
-      ticks,
-      callback,
-      instance);
-}
-
-static DefrostState_t LastDefrostState(Defrost_t *instance)
-{
-   DefrostState_t lastDefrostState;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->defrostStateErd,
-      &lastDefrostState);
-
-   return lastDefrostState;
 }
 
 static bool FreshFoodDefrostWasAbnormal(Defrost_t *instance)
@@ -214,22 +122,6 @@ static bool AnyPreviousDefrostWasAbnormal(Defrost_t *instance)
       ConvertibleCompartmentDefrostWasAbnormal(instance));
 }
 
-static void PowerUpDelayComplete(void *context)
-{
-   Defrost_t *instance = context;
-
-   Hsm_SendSignal(&instance->_private.hsm, Signal_PowerUpDelayComplete, NULL);
-}
-
-static void StartPowerUpDelayTimer(Defrost_t *instance)
-{
-   StartTimer(
-      instance,
-      &instance->_private.powerUpDelayTimer,
-      instance->_private.gridParametricData->gridPeriodicRunRateInMSec * PowerUpFactor,
-      PowerUpDelayComplete);
-}
-
 static bool FreezerCompartmentWasTooWarmOnPowerUp(Defrost_t *instance)
 {
    bool state;
@@ -249,56 +141,42 @@ static void ResetFreezerCompartmentWasTooWarmOnPowerUp(Defrost_t *instance)
       clear);
 }
 
-static bool State_PowerUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
+static HsmState_t InitialState(Defrost_t *instance)
 {
-   Defrost_t *instance = InstanceFromHsm(hsm);
-   DefrostState_t lastDefrostState;
-   IGNORE(data);
+   bool freezerFilteredTemperatureTooWarmAtPowerUp;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
+      &freezerFilteredTemperatureTooWarmAtPowerUp);
 
-   switch(signal)
+   DefrostState_t defrostState;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->defrostStateErd,
+      &defrostState);
+
+   HsmState_t initialState = State_Idle;
+
+   if(freezerFilteredTemperatureTooWarmAtPowerUp)
    {
-      case Hsm_Entry:
-         SetHsmStateTo(instance, DefrostHsmState_PowerUp);
-         StartPowerUpDelayTimer(instance);
-         break;
-
-      case Signal_PowerUpDelayComplete:
-         lastDefrostState = LastDefrostState(instance);
-
-         if(LastDefrostWasAbnormalBecauseOfAbnormalFilteredFreezerCabinetTemperature(instance))
-         {
-            SaveFreezerAbnormalDefrostData(instance);
-
-            (lastDefrostState == DefrostState_HeaterOn) ? Hsm_Transition(hsm, State_Dwell) : Hsm_Transition(hsm, State_Idle);
-         }
-         else
-         {
-            if(lastDefrostState == DefrostState_Prechill)
-            {
-               if(!FreezerDefrostWasAbnormal(instance))
-               {
-                  Hsm_Transition(hsm, State_PrechillPrep);
-               }
-            }
-            else if(lastDefrostState == DefrostState_HeaterOn)
-            {
-               Hsm_Transition(hsm, State_HeaterOnEntry);
-            }
-            else
-            {
-               Hsm_Transition(hsm, State_Idle);
-            }
-         }
-         break;
-
-      case Hsm_Exit:
-         break;
-
-      default:
-         return HsmSignalDeferred;
+      if(defrostState == DefrostState_HeaterOn)
+      {
+         initialState = State_Dwell;
+      }
+   }
+   else
+   {
+      if(defrostState == DefrostState_Dwell)
+      {
+         initialState = State_Dwell;
+      }
+      else if(defrostState == DefrostState_Prechill || defrostState == DefrostState_HeaterOn)
+      {
+         initialState = State_HeaterOnEntry;
+      }
    }
 
-   return HsmSignalConsumed;
+   return initialState;
 }
 
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
@@ -430,7 +308,7 @@ void Defrost_Init(
    instance->_private.gridParametricData = PersonalityParametricData_Get(dataModel)->gridData;
    instance->_private.evaporatorParametricData = PersonalityParametricData_Get(dataModel)->evaporatorData;
 
-   Hsm_Init(&instance->_private.hsm, &hsmConfiguration, State_PowerUp);
+   Hsm_Init(&instance->_private.hsm, &hsmConfiguration, InitialState(instance));
 
    EventSubscription_Init(
       &instance->_private.dataModelSubscription,

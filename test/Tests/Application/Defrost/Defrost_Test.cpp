@@ -43,15 +43,10 @@ enum
 
 static const DefrostConfiguration_t defrostConfig = {
    .defrostHsmStateErd = Erd_DefrostHsmState,
-   .freezerFilteredTemperatureResolvedErd = Erd_Freezer_FilteredTemperatureResolved,
-   .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
    .defrostStateErd = Erd_DefrostState,
-   .numberOfFreezerAbnormalDefrostCyclesErd = Erd_NumberofFreezerAbnormalDefrostCycles,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
-   .freezerAbnormalDefrostCycleCountErd = Erd_FreezerAbnormalDefrostCycleCount,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
-   .freezerDefrostCycleCountErd = Erd_FreezerDefrostCycleCount,
    .defrostReadyTimerIsSatisfied = Erd_DefrostReadyTimerIsSatisfied,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .timerModuleErd = Erd_TimerModule
@@ -130,32 +125,19 @@ TEST_GROUP(Defrost_SingleEvap)
       CHECK_EQUAL(expectedState, actualState);
    }
 
+   void FreezerFilteredTemperatureTooWarmAtPowerUpIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmAtPowerUp, &state);
+   }
+
    void FilteredFreezerCabinetTemperatureIs(TemperatureDegFx100_t temperature)
    {
       DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolved, &temperature);
    }
 
-   void CalculatedGridLinesAre(CalculatedGridLines_t gridLines)
-   {
-      DataModel_Write(dataModel, Erd_Grid_CalculatedGridLines, &gridLines);
-   }
-
    void DefrostStateIs(DefrostState_t state)
    {
       DataModel_Write(dataModel, Erd_DefrostState, &state);
-   }
-
-   void FreezerAbnormalDefrostCountIs(uint16_t count)
-   {
-      DataModel_Write(dataModel, Erd_NumberofFreezerAbnormalDefrostCycles, &count);
-   }
-
-   void FreezerAbnormalDefrostCountShouldBe(uint16_t expectedCount)
-   {
-      uint16_t actualCount;
-      DataModel_Read(dataModel, Erd_NumberofFreezerAbnormalDefrostCycles, &actualCount);
-
-      CHECK_EQUAL(expectedCount, actualCount);
    }
 
    void LastFreshFoodDefrostWasNormal()
@@ -194,58 +176,14 @@ TEST_GROUP(Defrost_SingleEvap)
       DataModel_Write(dataModel, Erd_FreezerDefrostWasAbnormal, &state);
    }
 
-   void LastFreezerDefrostShouldBeAbnormal()
-   {
-      bool actualState;
-      DataModel_Read(dataModel, Erd_FreezerDefrostWasAbnormal, &actualState);
-
-      CHECK_EQUAL(true, actualState);
-   }
-
-   void LastAbnormalFreezerDefrostCycleWas(uint16_t count)
-   {
-      DataModel_Write(dataModel, Erd_FreezerAbnormalDefrostCycleCount, &count);
-   }
-
-   void LastAbnormalFreezerDefrostCycleShouldBe(uint16_t expectedCount)
-   {
-      uint16_t actualCount;
-      DataModel_Read(dataModel, Erd_FreezerAbnormalDefrostCycleCount, &actualCount);
-
-      CHECK_EQUAL(expectedCount, actualCount);
-   }
-
-   void CurrentDefrostCountIs(uint16_t count)
-   {
-      DataModel_Write(dataModel, Erd_FreezerDefrostCycleCount, &count);
-   }
-
-   void DefrostInitializedWithFreezerTempAboveExtremeHysteresis()
-   {
-      Given FilteredFreezerCabinetTemperatureIs(freezerCalcAxis.gridLinesDegFx100[GridLine_FreezerExtremeHigh] + 1);
-      Given CalculatedGridLinesAre(calcGridLines);
-      Given DefrostIsInitialized();
-   }
-
-   void DefrostInitializedWithNormalFreezerCabinetTemperatures()
-   {
-      Given FilteredFreezerCabinetTemperatureIs(1000);
-      Given CalculatedGridLinesAre(calcGridLines);
-      Given DefrostIsInitialized();
-   }
-
    void DefrostIsInitializedAndStateIs(DefrostHsmState_t state)
    {
       switch(state)
       {
          case DefrostHsmState_Idle:
             Given DefrostStateIs(DefrostState_Idle);
-            Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
+            And DefrostIsInitialized();
 
-            After(PowerUpDelayInMs(gridData.gridPeriodicRunRateInMSec) - 1);
-            DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
-
-            After(1);
             DefrostHsmStateShouldBe(DefrostHsmState_Idle);
             break;
 
@@ -297,147 +235,76 @@ TEST_GROUP(Defrost_SingleEvap)
    }
 };
 
-TEST(Defrost_SingleEvap, ShouldInitializeIntoPowerUpHsmState)
+TEST(Defrost_SingleEvap, ShouldInitializeIntoDwellHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasHeaterOn)
 {
-   Given CalculatedGridLinesAre(calcGridLines);
-   Given DefrostIsInitialized();
+   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(true);
+   And DefrostStateIs(DefrostState_HeaterOn);
+   And DefrostIsInitialized();
 
-   DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
-}
-
-TEST(Defrost_SingleEvap, ShouldGoToDwellWhenFilteredFreezerCabinetTemperatureIsGreaterThanExtremeHysteresisAndDefrostStateWasHeaterOnAfterPowerUpDelay)
-{
-   Given DefrostStateIs(DefrostState_HeaterOn);
-   Given DefrostInitializedWithFreezerTempAboveExtremeHysteresis();
-
-   After(PowerUpDelayInMs(gridData.gridPeriodicRunRateInMSec) - 1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
-
-   After(1);
    DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToIdleWhenFilteredFreezerCabinetTemperatureIsGreaterThanExtremeHysteresisAndDefrostStateIsPrechillAfterPowerUpDelay)
+TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasIdle)
 {
-   Given DefrostStateIs(DefrostState_Prechill);
-   Given DefrostInitializedWithFreezerTempAboveExtremeHysteresis();
+   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(true);
+   And DefrostStateIs(DefrostState_Idle);
+   And DefrostIsInitialized();
 
-   After(PowerUpDelayInMs(gridData.gridPeriodicRunRateInMSec) - 1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
-
-   After(1);
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToIdleWhenFilteredFreezerCabinetTemperatureIsGreaterThanExtremeHysteresisAndDefrostStateIsIdleAfterPowerUpDelay)
+TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasPrechill)
 {
-   Given DefrostStateIs(DefrostState_Idle);
-   Given DefrostInitializedWithFreezerTempAboveExtremeHysteresis();
+   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(true);
+   And DefrostStateIs(DefrostState_Prechill);
+   And DefrostIsInitialized();
 
-   After(PowerUpDelayInMs(gridData.gridPeriodicRunRateInMSec) - 1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
-
-   After(1);
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToIdleWhenFilteredFreezerCabinetTemperatureIsGreaterThanExtremeHysteresisAndDefrostStateIsDwellAfterPowerUpDelay)
+TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasDwell)
 {
-   Given DefrostStateIs(DefrostState_Dwell);
-   Given DefrostInitializedWithFreezerTempAboveExtremeHysteresis();
+   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(true);
+   And DefrostStateIs(DefrostState_Dwell);
+   And DefrostIsInitialized();
 
-   After(PowerUpDelayInMs(gridData.gridPeriodicRunRateInMSec) - 1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
-
-   After(1);
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToIdleWhenFilteredFreezerCabinetTemperatureIsGreaterThanExtremeHysteresisAndDefrostStateIsDisabledAfterPowerUpDelay)
+TEST(Defrost_SingleEvap, ShouldInitializeIntoHeaterOnHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasPrechill)
 {
-   Given DefrostStateIs(DefrostState_Disabled);
-   Given DefrostInitializedWithFreezerTempAboveExtremeHysteresis();
+   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(false);
+   And DefrostStateIs(DefrostState_Prechill);
+   And DefrostIsInitialized();
 
-   After(PowerUpDelayInMs(gridData.gridPeriodicRunRateInMSec) - 1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
 
-   After(1);
+TEST(Defrost_SingleEvap, ShouldInitializeIntoHeaterOnHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasHeaterOn)
+{
+   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(false);
+   And DefrostStateIs(DefrostState_HeaterOn);
+   And DefrostIsInitialized();
+
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvap, ShouldInitializeIntoDwellHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasDwell)
+{
+   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(false);
+   And DefrostStateIs(DefrostState_Dwell);
+   And DefrostIsInitialized();
+
+   DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
+}
+
+TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasIdle)
+{
+   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(false);
+   And DefrostStateIs(DefrostState_Idle);
+   And DefrostIsInitialized();
+
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
-}
-
-TEST(Defrost_SingleEvap, ShouldIncrementFreezerAbnormalDefrostCountWhenFilteredFreezerCabinetTemperatureIsGreaterThanExtremeHysteresisAndLastFreezerDefrostWasNormalAndLastFreezerDefrostCycleCountThatWasAbnormalDoesNotEqualCurrentDefrostCountAfterPowerUpDelay)
-{
-   Given FreezerAbnormalDefrostCountIs(0);
-   Given LastFreezerDefrostWasNormal();
-   Given LastAbnormalFreezerDefrostCycleWas(32);
-   Given CurrentDefrostCountIs(35);
-   Given DefrostInitializedWithFreezerTempAboveExtremeHysteresis();
-
-   After(PowerUpDelayInMs(gridData.gridPeriodicRunRateInMSec) - 1);
-   FreezerAbnormalDefrostCountShouldBe(0);
-
-   After(1);
-   FreezerAbnormalDefrostCountShouldBe(1);
-}
-
-TEST(Defrost_SingleEvap, ShouldSetLastFreezerDefrostAsAbnormalWhenFilteredFreezerCabinetTemperatureIsGreaterThanExtremeHysteresisAndLastFreezerDefrostWasNormalAndLastFreezerDefrostCycleCountThatWasAbnormalDoesNotEqualCurrentDefrostCountAfterPowerUpDelay)
-{
-   Given FreezerAbnormalDefrostCountIs(0);
-   Given LastFreezerDefrostWasNormal();
-   Given LastAbnormalFreezerDefrostCycleWas(32);
-   Given CurrentDefrostCountIs(35);
-   Given DefrostInitializedWithFreezerTempAboveExtremeHysteresis();
-
-   After(PowerUpDelayInMs(gridData.gridPeriodicRunRateInMSec) - 1);
-   LastFreezerDefrostWasNormal();
-
-   After(1);
-   LastFreezerDefrostShouldBeAbnormal();
-}
-
-TEST(Defrost_SingleEvap, ShouldSaveLastFreezerAbnormalDefrostCountWhenFilteredFreezerCabinetTemperatureIsGreaterThanExtremeHysteresisAndLastFreezerDefrostWasNormalAndLastFreezerDefrostCycleCountThatWasAbnormalDoesNotEqualCurrentDefrostCountAfterPowerUpDelay)
-{
-   Given FreezerAbnormalDefrostCountIs(0);
-   Given LastFreezerDefrostWasNormal();
-   Given LastAbnormalFreezerDefrostCycleWas(32);
-   Given CurrentDefrostCountIs(35);
-   Given DefrostInitializedWithFreezerTempAboveExtremeHysteresis();
-
-   After(PowerUpDelayInMs(gridData.gridPeriodicRunRateInMSec) - 1);
-   LastAbnormalFreezerDefrostCycleShouldBe(32);
-
-   After(1);
-   LastAbnormalFreezerDefrostCycleShouldBe(35);
-}
-
-TEST(Defrost_SingleEvap, ShouldSetLastFreezerDefrostAsAbnormalWhenFilteredFreezerCabinetTemperatureIsGreaterThanExtremeHysteresisAndLastFreezerDefrostWasNormalAndLastFreezerDefrostCycleCountThatWasAbnormalEqualsCurrentDefrostCountAfterPowerUpDelay)
-{
-   Given FreezerAbnormalDefrostCountIs(0);
-   Given LastFreezerDefrostWasNormal();
-   Given LastAbnormalFreezerDefrostCycleWas(35);
-   Given CurrentDefrostCountIs(35);
-   Given DefrostInitializedWithFreezerTempAboveExtremeHysteresis();
-
-   After(PowerUpDelayInMs(gridData.gridPeriodicRunRateInMSec) - 1);
-   LastFreezerDefrostWasNormal();
-
-   After(1);
-   LastFreezerDefrostShouldBeAbnormal();
-}
-
-TEST(Defrost_SingleEvap, ShouldSaveLastFreezerAbnormalDefrostCountWhenFilteredFreezerCabinetTemperatureIsGreaterThanExtremeHysteresisAndLastFreezerDefrostWasAbnormalAndLastFreezerDefrostCycleCountThatWasAbnormalDoesNotEqualCurrentDefrostCountAfterPowerUpDelay)
-{
-   Given FreezerAbnormalDefrostCountIs(0);
-   Given LastFreezerDefrostWasAbnormal();
-   Given LastAbnormalFreezerDefrostCycleWas(32);
-   Given CurrentDefrostCountIs(35);
-   Given DefrostInitializedWithFreezerTempAboveExtremeHysteresis();
-
-   After(PowerUpDelayInMs(gridData.gridPeriodicRunRateInMSec) - 1);
-   LastAbnormalFreezerDefrostCycleShouldBe(32);
-
-   After(1);
-   LastAbnormalFreezerDefrostCycleShouldBe(35);
 }
 
 TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenDefrostReadyTimerIsSatisfiedAndLastFreshFoodDefrostWasAbnormal)
@@ -493,63 +360,11 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenDefrostReadyTimerIsSatisfiedA
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
    And LastConvertibleCompartmentDefrostWasNormal();
-   And FreezerEvaporatorThermistorValidityIs(VALID);
-   And CompressorStateIs(CompressorState_MinimumOffTime);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
    When DefrostReadyTimerIsSatisfied();
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
-}
-
-TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenLastFreezerDefrostWasNormalAndDefrostStateWasPrechillAfterPowerUpDelay)
-{
-   Given FreezerEvaporatorThermistorValidityIs(VALID);
-   Given DefrostStateIs(DefrostState_Prechill);
-   Given CompressorStateIs(CompressorState_MinimumOffTime);
-   Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
-
-   After(PowerUpDelayInMs(gridData.gridPeriodicRunRateInMSec) - 1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
-
-   After(1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
-}
-
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnWhenLastFreezerDefrostWasNormalAndDefrostStateWasHeaterOnAfterPowerUpDelay)
-{
-   Given DefrostStateIs(DefrostState_HeaterOn);
-   Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
-
-   After(PowerUpDelayInMs(gridData.gridPeriodicRunRateInMSec) - 1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
-
-   After(1);
-   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
-}
-
-TEST(Defrost_SingleEvap, ShouldGoToIdleWhenLastFreezerDefrostWasNormalAndDefrostStateWasDwellAfterPowerUpDelay)
-{
-   Given DefrostStateIs(DefrostState_Dwell);
-   Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
-
-   After(PowerUpDelayInMs(gridData.gridPeriodicRunRateInMSec) - 1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
-
-   After(1);
-   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
-}
-
-TEST(Defrost_SingleEvap, ShouldGoToIdleWhenLastFreezerDefrostWasNormalAndDefrostStateWasDisabledAfterPowerUpDelay)
-{
-   Given DefrostStateIs(DefrostState_Disabled);
-   Given DefrostInitializedWithNormalFreezerCabinetTemperatures();
-
-   After(PowerUpDelayInMs(gridData.gridPeriodicRunRateInMSec) - 1);
-   DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
-
-   After(1);
-   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
 TEST_GROUP(Defrost_DualEvap)
@@ -592,3 +407,8 @@ TEST_GROUP(Defrost_DualEvap)
       Defrost_Init(&instance, dataModel, &defrostConfig);
    }
 };
+
+TEST(Defrost_DualEvap, ShouldInitialize)
+{
+   DefrostIsInitialized();
+}
