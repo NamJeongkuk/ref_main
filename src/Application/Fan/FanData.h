@@ -13,55 +13,58 @@
 
 typedef struct
 {
-   FanControl_t minSpeed;
+   bool careAboutHighAmbientTemperature;
+   FanControl_t superLowSpeed;
    FanControl_t lowSpeed;
    FanControl_t mediumSpeed;
    FanControl_t highSpeed;
-   FanControl_t maxSpeed;
-} ValveIndependentFanData_t;
+   FanControl_t superHighSpeed;
+   FanControl_t superLowSpeedHighAmbientTemperature;
+} FanSpeedData_t;
 
 typedef struct
 {
    bool careAboutSetpoint;
-   FanControl_t minSpeed;
-   FanControl_t minSpeedHighAmbientTemperature;
-
    union
    {
       struct
       {
-         FanControl_t lowSpeedWithColdSetpointValveA;
-         FanControl_t lowSpeedWithColdSetpointValveB;
-         FanControl_t lowSpeedWithColdSetpointValveC;
-         FanControl_t lowSpeedWithMediumSetpointValveA;
-         FanControl_t lowSpeedWithMediumSetpointValveB;
-         FanControl_t lowSpeedWithMediumSetpointValveC;
-         FanControl_t lowSpeedWithWarmSetpointValveA;
-         FanControl_t lowSpeedWithWarmSetpointValveB;
-         FanControl_t lowSpeedWithWarmSetpointValveC;
+         FanControl_t superLowSpeed;
+         FanControl_t lowSpeedFreshFood;
+         FanControl_t lowSpeedFreezerWithColdSetpoint;
+         FanControl_t lowSpeedFreezerWithMediumSetpoint;
+         FanControl_t lowSpeedFreezerWithWarmSetpoint;
+         FanControl_t lowSpeedConvertibleCompartmentWithColdSetpoint;
+         FanControl_t lowSpeedConvertibleCompartmentWithMediumSetpoint;
+         FanControl_t lowSpeedConvertibleCompartmentWithWarmSetpoint;
+         FanControl_t mediumSpeedFreshFood;
+         FanControl_t mediumSpeedFreezer;
+         FanControl_t mediumSpeedConvertibleCompartment;
+         FanControl_t highSpeedSpeedFreshFood;
+         FanControl_t highSpeedSpeedFreezer;
+         FanControl_t highSpeedSpeedConvertibleCompartment;
+         FanControl_t superHighSpeed;
       } setpointSpeeds;
 
       struct
       {
-         FanControl_t lowSpeedValveA;
-         FanControl_t lowSpeedValveB;
-         FanControl_t lowSpeedValveC;
+         FanControl_t superLowSpeed;
+         FanControl_t lowSpeedFreshFood;
+         FanControl_t lowSpeedFreezer;
+         FanControl_t mediumSpeedFreshFood;
+         FanControl_t mediumSpeedFreezer;
+         FanControl_t highSpeedSpeedFreshFood;
+         FanControl_t highSpeedSpeedFreezer;
+         FanControl_t superHighSpeed;
       } nonSetpointSpeeds;
    } careAboutSetpointData;
-   FanControl_t mediumSpeedValveA;
-   FanControl_t mediumSpeedValveB;
-   FanControl_t mediumSpeedValveC;
-   FanControl_t highSpeedValveA;
-   FanControl_t highSpeedValveB;
-   FanControl_t highSpeedValveC;
-   FanControl_t maxSpeed;
-} ValveDependentFanData_t;
+} FanCareAboutCoolingModeSpeedData_t;
 
 typedef struct
 {
    uint8_t fanId;
-   uint8_t numberOfPoles;
-   bool valveDependent;
+   uint8_t pulsesPerRevolution;
+   bool careAboutCoolingMode;
    uint16_t powerUsageInWatts;
    PidControllerGains_t gains;
    int32_t lowerLimit;
@@ -72,21 +75,21 @@ typedef struct
 
    union
    {
-      ValveIndependentFanData_t independentData;
-      ValveDependentFanData_t dependentData;
+      FanSpeedData_t speedData;
+      FanCareAboutCoolingModeSpeedData_t careAboutCoolingModeSpeedData;
    };
-} ValveFanData_t;
+} FanData_t;
 
 typedef struct
 {
-   ValveFanData_t condenserFan;
-   ValveFanData_t freshFoodFan;
-   ValveFanData_t freezerFan;
-   ValveFanData_t convertibleCompartmentFan;
-   ValveFanData_t iceCabinetFan;
-   ValveFanData_t deliPanFan;
-   ValveFanData_t freezerEvapFan;
-   ValveFanData_t freshFoodEvapFan;
-} FanData_t;
+   FanData_t condenserFan;
+   FanData_t freshFoodFan;
+   FanData_t freezerFan;
+   FanData_t convertibleCompartmentFan;
+   FanData_t iceCabinetFan;
+   FanData_t deliPanFan;
+   FanData_t freezerEvapFan;
+   FanData_t freshFoodEvapFan;
+} CombinedFanData_t;
 
 #endif

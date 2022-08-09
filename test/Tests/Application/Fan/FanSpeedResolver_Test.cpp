@@ -9,10 +9,10 @@ extern "C"
 {
 #include "FanSpeedResolver.h"
 #include "FanSpeed.h"
-#include "ValvePosition.h"
 #include "TemperatureDegFx100.h"
 #include "Setpoint.h"
 #include "FreezerSetpoint.h"
+#include "CoolingMode.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -23,44 +23,42 @@ extern "C"
 enum
 {
    Erd_ResolvedSpeedVote,
-   Erd_ResolvedValvePostionVote,
+   Erd_CoolingMode,
    Erd_FreezerSetpoint,
    Erd_CalculatedRequestFanControlSpeed,
    Erd_AmbientTemperature,
 
-   MinSpeed = 0,
+   SuperLowSpeed = 0,
    LowSpeed = 10,
    MediumSpeed = 1000,
    HighSpeed = 2000,
    MaxSpeed = 2500,
 
-   MinSpeedHighAmbientTemp = MinSpeed + 1,
-   LowSpeedA = LowSpeed + 10,
-   LowSpeedB = LowSpeed + 20,
-   LowSpeedC = LowSpeed + 30,
-   MediumSpeedA = MediumSpeed + 10,
-   MediumSpeedB = MediumSpeed + 20,
-   MediumSpeedC = MediumSpeed + 30,
-   HighSpeedA = HighSpeed + 10,
-   HighSpeedB = HighSpeed + 20,
-   HighSpeedC = HighSpeed + 30,
+   SuperLowSpeedHighAmbientTemp = SuperLowSpeed + 1,
+   LowSpeedFreshFood = LowSpeed + 10,
+   LowSpeedFreezer = LowSpeed + 20,
+   LowSpeedConvertibleCompartment = LowSpeed + 30,
+   MediumSpeedFreshFood = MediumSpeed + 10,
+   MediumSpeedFreezer = MediumSpeed + 20,
+   MediumSpeedConvertibleCompartment = MediumSpeed + 30,
+   HighSpeedFreshFood = HighSpeed + 10,
+   HighSpeedFreezer = HighSpeed + 20,
+   HighSpeedConvertibleCompartment = HighSpeed + 30,
 
-   ColdTempSpeedA = LowSpeedA + 10,
-   ColdTempSpeedB = LowSpeedB + 20,
-   ColdTempSpeedC = LowSpeedC + 30,
-   MediumTempSpeedA = ColdTempSpeedA + 10,
-   MediumTempSpeedB = ColdTempSpeedB + 20,
-   MediumTempSpeedC = ColdTempSpeedC + 30,
-   WarmTempSpeedA = MediumTempSpeedA + 10,
-   WarmTempSpeedB = MediumTempSpeedB + 20,
-   WarmTempSpeedC = MediumTempSpeedC + 30,
+   LowColdTempSpeedFreshFood = LowSpeedFreshFood + 10,
+   LowColdTempSpeedFreezer = LowSpeedFreezer + 20,
+   LowColdTempSpeedConvertibleCompartment = LowSpeedConvertibleCompartment + 30,
+   LowMediumTempSpeedFreezer = LowColdTempSpeedFreezer + 20,
+   LowMediumTempSpeedConvertibleCompartment = LowColdTempSpeedConvertibleCompartment + 30,
+   LowWarmTempSpeedFreezer = LowMediumTempSpeedFreezer + 20,
+   LowWarmTempSpeedConvertibleCompartment = LowMediumTempSpeedConvertibleCompartment + 30,
 
    HighAmbientTempDegFx100 = 4500
 };
 
 static const DataModel_TestDoubleConfigurationEntry_t erds[] = {
    { Erd_ResolvedSpeedVote, sizeof(FanVotedSpeed_t) },
-   { Erd_ResolvedValvePostionVote, sizeof(ValveVotedPosition_t) },
+   { Erd_CoolingMode, sizeof(CoolingMode_t) },
    { Erd_FreezerSetpoint, sizeof(FreezerSetpoint_t) },
    { Erd_CalculatedRequestFanControlSpeed, sizeof(FanControl_t) },
    { Erd_AmbientTemperature, sizeof(TemperatureDegFx100_t) },
@@ -81,10 +79,11 @@ static const PidControllerGains_t gains = {
    }
 };
 
-static const ValveIndependentFanData_t independentValveData = {
-   .minSpeed = {
+static const FanSpeedData_t speedData = {
+   .careAboutHighAmbientTemperature = true,
+   .superLowSpeed = {
       .type = FanControlType_Rpm,
-      .rpm = MinSpeed,
+      .rpm = SuperLowSpeed,
    },
    .lowSpeed = {
       .type = FanControlType_Rpm,
@@ -98,152 +97,128 @@ static const ValveIndependentFanData_t independentValveData = {
       .type = FanControlType_Rpm,
       .rpm = HighSpeed,
    },
-   .maxSpeed = {
+   .superHighSpeed = {
       .type = FanControlType_Rpm,
       .rpm = MaxSpeed,
+   },
+   .superLowSpeedHighAmbientTemperature = {
+      .type = FanControlType_Rpm,
+      .rpm = SuperLowSpeedHighAmbientTemp,
    }
 };
 
-static const ValveDependentFanData_t dependentValveDataNoCareAboutSetpoint = {
+static const FanCareAboutCoolingModeSpeedData_t speedDataNoCareAboutSetpoint = {
    .careAboutSetpoint = false,
-   .minSpeed = {
-      .type = FanControlType_Rpm,
-      .rpm = MinSpeed,
-   },
-   .minSpeedHighAmbientTemperature = {
-      .type = FanControlType_Rpm,
-      .rpm = MinSpeedHighAmbientTemp,
-   },
    .careAboutSetpointData = {
       .nonSetpointSpeeds = {
-         .lowSpeedValveA = {
+         .superLowSpeed = {
             .type = FanControlType_Rpm,
-            .rpm = LowSpeedA,
+            .rpm = SuperLowSpeed,
          },
-         .lowSpeedValveB = {
+         .lowSpeedFreshFood = {
             .type = FanControlType_Rpm,
-            .rpm = LowSpeedB,
+            .rpm = LowSpeedFreshFood,
          },
-         .lowSpeedValveC = {
+         .lowSpeedFreezer = {
             .type = FanControlType_Rpm,
-            .rpm = LowSpeedC,
+            .rpm = LowSpeedFreezer,
+         },
+         .mediumSpeedFreshFood = {
+            .type = FanControlType_Rpm,
+            .rpm = MediumSpeedFreshFood,
+         },
+         .mediumSpeedFreezer = {
+            .type = FanControlType_Rpm,
+            .rpm = MediumSpeedFreezer,
+         },
+         .highSpeedSpeedFreshFood = {
+            .type = FanControlType_Rpm,
+            .rpm = HighSpeedFreshFood,
+         },
+         .highSpeedSpeedFreezer = {
+            .type = FanControlType_Rpm,
+            .rpm = HighSpeedFreezer,
+         },
+         .superHighSpeed = {
+            .type = FanControlType_Rpm,
+            .rpm = MaxSpeed,
          },
       },
    },
-   .mediumSpeedValveA = {
-      .type = FanControlType_Rpm,
-      .rpm = MediumSpeedA,
-   },
-   .mediumSpeedValveB = {
-      .type = FanControlType_Rpm,
-      .rpm = MediumSpeedB,
-   },
-   .mediumSpeedValveC = {
-      .type = FanControlType_Rpm,
-      .rpm = MediumSpeedC,
-   },
-   .highSpeedValveA = {
-      .type = FanControlType_Rpm,
-      .rpm = HighSpeedA,
-   },
-   .highSpeedValveB = {
-      .type = FanControlType_Rpm,
-      .rpm = HighSpeedB,
-   },
-   .highSpeedValveC = {
-      .type = FanControlType_Rpm,
-      .rpm = HighSpeedC,
-   },
-   .maxSpeed = {
-      .type = FanControlType_Rpm,
-      .rpm = MaxSpeed,
-   },
 };
 
-static const ValveDependentFanData_t dependentValveDataCareAboutSetpoint = {
+static const FanCareAboutCoolingModeSpeedData_t speedDataCareAboutSetpoint = {
    .careAboutSetpoint = true,
-   .minSpeed = {
-      .type = FanControlType_Rpm,
-      .rpm = MinSpeed,
-   },
-   .minSpeedHighAmbientTemperature = {
-      .type = FanControlType_Rpm,
-      .rpm = MinSpeedHighAmbientTemp,
-   },
    .careAboutSetpointData = {
       .setpointSpeeds = {
-         .lowSpeedWithColdSetpointValveA = {
+         .superLowSpeed = {
             .type = FanControlType_Rpm,
-            .rpm = ColdTempSpeedA,
+            .rpm = SuperLowSpeed,
          },
-         .lowSpeedWithColdSetpointValveB = {
+         .lowSpeedFreshFood = {
             .type = FanControlType_Rpm,
-            .rpm = ColdTempSpeedB,
+            .rpm = LowColdTempSpeedFreshFood,
          },
-         .lowSpeedWithColdSetpointValveC = {
+         .lowSpeedFreezerWithColdSetpoint = {
             .type = FanControlType_Rpm,
-            .rpm = ColdTempSpeedC,
+            .rpm = LowColdTempSpeedFreezer,
          },
-         .lowSpeedWithMediumSetpointValveA = {
+         .lowSpeedFreezerWithMediumSetpoint = {
             .type = FanControlType_Rpm,
-            .rpm = MediumTempSpeedA,
+            .rpm = LowMediumTempSpeedFreezer,
          },
-         .lowSpeedWithMediumSetpointValveB = {
+         .lowSpeedFreezerWithWarmSetpoint = {
             .type = FanControlType_Rpm,
-            .rpm = MediumTempSpeedB,
+            .rpm = LowWarmTempSpeedFreezer,
          },
-         .lowSpeedWithMediumSetpointValveC = {
+         .lowSpeedConvertibleCompartmentWithColdSetpoint = {
             .type = FanControlType_Rpm,
-            .rpm = MediumTempSpeedC,
+            .rpm = LowColdTempSpeedConvertibleCompartment,
          },
-         .lowSpeedWithWarmSetpointValveA = {
+         .lowSpeedConvertibleCompartmentWithMediumSetpoint = {
             .type = FanControlType_Rpm,
-            .rpm = WarmTempSpeedA,
+            .rpm = LowMediumTempSpeedConvertibleCompartment,
          },
-         .lowSpeedWithWarmSetpointValveB = {
+         .lowSpeedConvertibleCompartmentWithWarmSetpoint = {
             .type = FanControlType_Rpm,
-            .rpm = WarmTempSpeedB,
+            .rpm = LowWarmTempSpeedConvertibleCompartment,
          },
-         .lowSpeedWithWarmSetpointValveC = {
+         .mediumSpeedFreshFood = {
             .type = FanControlType_Rpm,
-            .rpm = WarmTempSpeedC,
+            .rpm = MediumSpeedFreshFood,
+         },
+         .mediumSpeedFreezer = {
+            .type = FanControlType_Rpm,
+            .rpm = MediumSpeedFreezer,
+         },
+         .mediumSpeedConvertibleCompartment = {
+            .type = FanControlType_Rpm,
+            .rpm = MediumSpeedConvertibleCompartment,
+         },
+         .highSpeedSpeedFreshFood = {
+            .type = FanControlType_Rpm,
+            .rpm = HighSpeedFreshFood,
+         },
+         .highSpeedSpeedFreezer = {
+            .type = FanControlType_Rpm,
+            .rpm = HighSpeedFreezer,
+         },
+         .highSpeedSpeedConvertibleCompartment = {
+            .type = FanControlType_Rpm,
+            .rpm = HighSpeedConvertibleCompartment,
+         },
+         .superHighSpeed = {
+            .type = FanControlType_Rpm,
+            .rpm = MaxSpeed,
          },
       },
    },
-   .mediumSpeedValveA = {
-      .type = FanControlType_Rpm,
-      .rpm = MediumSpeedA,
-   },
-   .mediumSpeedValveB = {
-      .type = FanControlType_Rpm,
-      .rpm = MediumSpeedB,
-   },
-   .mediumSpeedValveC = {
-      .type = FanControlType_Rpm,
-      .rpm = MediumSpeedC,
-   },
-   .highSpeedValveA = {
-      .type = FanControlType_Rpm,
-      .rpm = HighSpeedA,
-   },
-   .highSpeedValveB = {
-      .type = FanControlType_Rpm,
-      .rpm = HighSpeedB,
-   },
-   .highSpeedValveC = {
-      .type = FanControlType_Rpm,
-      .rpm = HighSpeedC,
-   },
-   .maxSpeed = {
-      .type = FanControlType_Rpm,
-      .rpm = MaxSpeed,
-   },
 };
 
-static const ValveFanData_t independentValve = {
+static const FanData_t speedDataWithoutCoolingMode = {
    .fanId = 2,
-   .numberOfPoles = 2,
-   .valveDependent = false,
+   .pulsesPerRevolution = 2,
+   .careAboutCoolingMode = false,
    .powerUsageInWatts = 8,
    .gains = gains,
    .lowerLimit = 0,
@@ -251,13 +226,13 @@ static const ValveFanData_t independentValve = {
    .fanMissedTargetFaultTimeoutInSeconds = 60,
    .missingFanFeedbackFaultTimeoutInSeconds = 60,
    .feedbackPresentWhenFanIsOffTimeoutInSeconds = 60,
-   .independentData = independentValveData
+   .speedData = speedData
 };
 
-static const ValveFanData_t dependentValveNoCareAboutSetpoint = {
+static const FanData_t coolingModeSpeedDataNoCareAboutSetpoint = {
    .fanId = 2,
-   .numberOfPoles = 2,
-   .valveDependent = true,
+   .pulsesPerRevolution = 2,
+   .careAboutCoolingMode = true,
    .powerUsageInWatts = 8,
    .gains = gains,
    .lowerLimit = 0xFFFF,
@@ -265,13 +240,13 @@ static const ValveFanData_t dependentValveNoCareAboutSetpoint = {
    .fanMissedTargetFaultTimeoutInSeconds = 60,
    .missingFanFeedbackFaultTimeoutInSeconds = 60,
    .feedbackPresentWhenFanIsOffTimeoutInSeconds = 60,
-   .dependentData = dependentValveDataNoCareAboutSetpoint
+   .careAboutCoolingModeSpeedData = speedDataNoCareAboutSetpoint
 };
 
-static const ValveFanData_t dependentValveCareAboutSetpoint = {
+static const FanData_t coolingModeSpeedDataCareAboutSetpoint = {
    .fanId = 2,
-   .numberOfPoles = 2,
-   .valveDependent = true,
+   .pulsesPerRevolution = 2,
+   .careAboutCoolingMode = true,
    .powerUsageInWatts = 8,
    .gains = gains,
    .lowerLimit = 0,
@@ -279,26 +254,26 @@ static const ValveFanData_t dependentValveCareAboutSetpoint = {
    .fanMissedTargetFaultTimeoutInSeconds = 60,
    .missingFanFeedbackFaultTimeoutInSeconds = 60,
    .feedbackPresentWhenFanIsOffTimeoutInSeconds = 60,
-   .dependentData = dependentValveDataCareAboutSetpoint
+   .careAboutCoolingModeSpeedData = speedDataCareAboutSetpoint
 };
 
-static const FanSpeedResolverConfig_t independentConfig = {
+static const FanSpeedResolverConfig_t nonCoolingModeConfig = {
    .resolvedFanSpeedVoteErd = Erd_ResolvedSpeedVote,
-   .resolvedValvePositionVoteErd = Erd_ResolvedValvePostionVote,
+   .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_FreezerSetpoint,
    .calculatedRequestFanControlErd = Erd_CalculatedRequestFanControlSpeed,
    .ambientTempErd = Erd_AmbientTemperature,
 };
 
-static const FanSpeedResolverConfig_t dependentConfig = {
+static const FanSpeedResolverConfig_t coolingModeConfig = {
    .resolvedFanSpeedVoteErd = Erd_ResolvedSpeedVote,
-   .resolvedValvePositionVoteErd = Erd_ResolvedValvePostionVote,
+   .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_FreezerSetpoint,
    .calculatedRequestFanControlErd = Erd_CalculatedRequestFanControlSpeed,
    .ambientTempErd = Erd_AmbientTemperature,
 };
 
-TEST_GROUP(FanSpeedResolver_Independent)
+TEST_GROUP(FanSpeedResolver_NoCoolingMode)
 {
    DataModel_TestDouble_t dataModelTestDouble;
    I_DataModel_t *dataModel;
@@ -315,8 +290,8 @@ TEST_GROUP(FanSpeedResolver_Independent)
       FanSpeedResolver_Init(
          &instance,
          dataModel,
-         &independentValve,
-         &independentConfig);
+         &speedDataWithoutCoolingMode,
+         &nonCoolingModeConfig);
    }
 
    void WhenResolvedFanSpeedVoteIs(FanSpeed_t speed)
@@ -329,6 +304,11 @@ TEST_GROUP(FanSpeedResolver_Independent)
       DataModel_Write(dataModel, Erd_ResolvedSpeedVote, &votedSpeed);
    }
 
+   void GivenAmbientTemperatureIsSetTo(TemperatureDegFx100_t temp)
+   {
+      DataModel_Write(dataModel, Erd_AmbientTemperature, &temp);
+   }
+
    void CalculatedFanControlSpeedShouldBe(uint16_t expectedSpeed)
    {
       FanControl_t actual;
@@ -338,7 +318,7 @@ TEST_GROUP(FanSpeedResolver_Independent)
    }
 };
 
-TEST(FanSpeedResolver_Independent, CalculatedSpeedShouldBeLowWhenRequestedLow)
+TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeLowWhenRequestedLow)
 {
    GivenInitialization();
 
@@ -346,7 +326,7 @@ TEST(FanSpeedResolver_Independent, CalculatedSpeedShouldBeLowWhenRequestedLow)
    CalculatedFanControlSpeedShouldBe(LowSpeed);
 }
 
-TEST(FanSpeedResolver_Independent, CalculatedSpeedShouldBeMediumWhenRequestedMedium)
+TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeMediumWhenRequestedMedium)
 {
    GivenInitialization();
 
@@ -354,7 +334,7 @@ TEST(FanSpeedResolver_Independent, CalculatedSpeedShouldBeMediumWhenRequestedMed
    CalculatedFanControlSpeedShouldBe(MediumSpeed);
 }
 
-TEST(FanSpeedResolver_Independent, CalculatedSpeedShouldBeHighWhenRequestedHigh)
+TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeHighWhenRequestedHigh)
 {
    GivenInitialization();
 
@@ -362,29 +342,47 @@ TEST(FanSpeedResolver_Independent, CalculatedSpeedShouldBeHighWhenRequestedHigh)
    CalculatedFanControlSpeedShouldBe(HighSpeed);
 }
 
-TEST(FanSpeedResolver_Independent, CalculatedSpeedShouldBeMaxWhenRequestedSuperHigh)
+TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeMaxWhenRequestedSuperHigh)
 {
    GivenInitialization();
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Max);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperHigh);
    CalculatedFanControlSpeedShouldBe(MaxSpeed);
 }
 
-TEST(FanSpeedResolver_Independent, CalculatedSpeedShouldBeMinWhenRequestedSuperLow)
+TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeSuperLowWhenRequestedSuperLow)
 {
    GivenInitialization();
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Min);
-   CalculatedFanControlSpeedShouldBe(MinSpeed);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(SuperLowSpeed);
 }
 
-TEST(FanSpeedResolver_Independent, CalculatedSpeedShouldBeZeroOnInitialization)
+TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeSuperLowWithHighAmbientTemperatureWhenRequestedSuperLowAndAmbientTemperatureIsHigh)
+{
+   GivenInitialization();
+   GivenAmbientTemperatureIsSetTo(HighAmbientTempDegFx100);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(SuperLowSpeedHighAmbientTemp);
+}
+
+TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeSuperLowWhenRequestedIsSuperLowAndAmbientTemperatureIsBelowThreshold)
+{
+   GivenInitialization();
+   GivenAmbientTemperatureIsSetTo(HighAmbientTempDegFx100 - 1);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(SuperLowSpeed);
+}
+
+TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeZeroOnInitialization)
 {
    GivenInitialization();
    CalculatedFanControlSpeedShouldBe(0);
 }
 
-TEST_GROUP(FanSpeedResolver_Dependent)
+TEST_GROUP(FanSpeedResolver_CoolingMode)
 {
    DataModel_TestDouble_t dataModelTestDouble;
    I_DataModel_t *dataModel;
@@ -406,19 +404,9 @@ TEST_GROUP(FanSpeedResolver_Dependent)
       DataModel_Write(dataModel, Erd_ResolvedSpeedVote, &votedSpeed);
    }
 
-   void GivenResolvedValvePositionIsSetTo(ValvePosition_t position)
+   void GivenCoolingModeIs(CoolingMode_t coolingMode)
    {
-      ValveVotedPosition_t votedPosition = {
-         .position = position,
-         .care = true,
-      };
-
-      DataModel_Write(dataModel, Erd_ResolvedValvePostionVote, &votedPosition);
-   }
-
-   void GivenAmbientTemperatureIsSetTo(TemperatureDegFx100_t temp)
-   {
-      DataModel_Write(dataModel, Erd_AmbientTemperature, &temp);
+      DataModel_Write(dataModel, Erd_CoolingMode, &coolingMode);
    }
 
    void GivenFreezerSetpointIsSetTo(FreezerSetpoint_t setpoint)
@@ -439,8 +427,8 @@ TEST_GROUP(FanSpeedResolver_Dependent)
       FanSpeedResolver_Init(
          &instance,
          dataModel,
-         &dependentValveNoCareAboutSetpoint,
-         &dependentConfig);
+         &coolingModeSpeedDataNoCareAboutSetpoint,
+         &coolingModeConfig);
    }
 
    void GivenInitializationCaringAboutSetpoint()
@@ -448,204 +436,187 @@ TEST_GROUP(FanSpeedResolver_Dependent)
       FanSpeedResolver_Init(
          &instance,
          dataModel,
-         &dependentValveCareAboutSetpoint,
-         &dependentConfig);
+         &coolingModeSpeedDataCareAboutSetpoint,
+         &coolingModeConfig);
    }
 };
 
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeLowWithValveAWhenRequestedLowWithValveSetToA)
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowFreshFoodWhenRequestedLowWithCoolingModeSetToFreshFood)
 {
    GivenInitializationWithoutCaringAboutSetpoint();
-   GivenResolvedValvePositionIsSetTo(ValvePosition_A);
+   GivenCoolingModeIs(CoolingMode_FreshFood);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(LowSpeedA);
+   CalculatedFanControlSpeedShouldBe(LowSpeedFreshFood);
 }
 
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeLowWithValveBWhenRequestedLowWithValveSetToB)
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowFreezerWhenRequestedLowWithCoolingModeSetToFreezer)
 {
    GivenInitializationWithoutCaringAboutSetpoint();
-   GivenResolvedValvePositionIsSetTo(ValvePosition_B);
+   GivenCoolingModeIs(CoolingMode_Freezer);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(LowSpeedB);
+   CalculatedFanControlSpeedShouldBe(LowSpeedFreezer);
 }
 
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeLowWithValveCWhenRequestedLowWithValveSetToC)
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeMediumFreezerWhenRequestedMediumWithCoolingModeSetToFreezer)
 {
    GivenInitializationWithoutCaringAboutSetpoint();
-   GivenResolvedValvePositionIsSetTo(ValvePosition_C);
-
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(LowSpeedC);
-}
-
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeMediumWithValveAWhenRequestedMediumWithValveSetToA)
-{
-   GivenInitializationWithoutCaringAboutSetpoint();
-   GivenResolvedValvePositionIsSetTo(ValvePosition_A);
+   GivenCoolingModeIs(CoolingMode_Freezer);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
-   CalculatedFanControlSpeedShouldBe(MediumSpeedA);
+   CalculatedFanControlSpeedShouldBe(MediumSpeedFreezer);
 }
 
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeMediumWithValveBWhenRequestedMediumWithValveSetToB)
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeHighFreshFoodWhenRequestedHighWithCoolingModeSetToFreshFood)
 {
    GivenInitializationWithoutCaringAboutSetpoint();
-   GivenResolvedValvePositionIsSetTo(ValvePosition_B);
-
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
-   CalculatedFanControlSpeedShouldBe(MediumSpeedB);
-}
-
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeMediumWithValveCWhenRequestedMediumWithValveSetToC)
-{
-   GivenInitializationWithoutCaringAboutSetpoint();
-   GivenResolvedValvePositionIsSetTo(ValvePosition_C);
-
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
-   CalculatedFanControlSpeedShouldBe(MediumSpeedC);
-}
-
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeHighWithValveAWhenRequestedHighWithValveSetToA)
-{
-   GivenInitializationWithoutCaringAboutSetpoint();
-   GivenResolvedValvePositionIsSetTo(ValvePosition_A);
+   GivenCoolingModeIs(CoolingMode_FreshFood);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_High);
-   CalculatedFanControlSpeedShouldBe(HighSpeedA);
+   CalculatedFanControlSpeedShouldBe(HighSpeedFreshFood);
 }
 
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeHighWithValveBWhenRequestedHighWithValveSetToB)
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeHighFreezerWhenRequestedHighWithCoolingModeSetToFreezer)
 {
    GivenInitializationWithoutCaringAboutSetpoint();
-   GivenResolvedValvePositionIsSetTo(ValvePosition_B);
+   GivenCoolingModeIs(CoolingMode_Freezer);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_High);
-   CalculatedFanControlSpeedShouldBe(HighSpeedB);
+   CalculatedFanControlSpeedShouldBe(HighSpeedFreezer);
 }
 
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeHighWithValveCWhenRequestedHighWithValveSetToC)
-{
-   GivenInitializationWithoutCaringAboutSetpoint();
-   GivenResolvedValvePositionIsSetTo(ValvePosition_C);
-
-   WhenResolvedFanSpeedVoteIs(FanSpeed_High);
-   CalculatedFanControlSpeedShouldBe(HighSpeedC);
-}
-
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeMaxWhenRequestedIsSuperHigh)
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeMaxWhenRequestedIsSuperHigh)
 {
    GivenInitializationWithoutCaringAboutSetpoint();
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Max);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperHigh);
    CalculatedFanControlSpeedShouldBe(MaxSpeed);
 }
 
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeMinWhenRequestedIsSuperLowAndAmbientTemperatureIsBelowThreshold)
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreshFoodWhenRequestedLowWithCoolingModeSetToFreshFoodAndSetPointIsCold)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Cold);
+   GivenCoolingModeIs(CoolingMode_FreshFood);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(LowColdTempSpeedFreshFood);
+}
+
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreezerWhenRequestedLowWithCoolingModeSetToFreezerAndSetPointIsCold)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Cold);
+   GivenCoolingModeIs(CoolingMode_Freezer);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(LowColdTempSpeedFreezer);
+}
+
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdConvertibleCompartmentWhenRequestedLowWithCoolingModeSetToConvertibleCompartmentAndSetPointIsCold)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Cold);
+   GivenCoolingModeIs(CoolingMode_ConvertibleCompartment);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(LowColdTempSpeedConvertibleCompartment);
+}
+
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumFreezerWhenRequestedLowWithCoolingModeSetToFreezerAndSetPointIsMedium)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Medium);
+   GivenCoolingModeIs(CoolingMode_Freezer);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(LowMediumTempSpeedFreezer);
+}
+
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumConvertibleCompartmentWhenRequestedLowWithCoolingModeSetToConvertibleCompartmentAndSetPointIsMedium)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Medium);
+   GivenCoolingModeIs(CoolingMode_ConvertibleCompartment);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(LowMediumTempSpeedConvertibleCompartment);
+}
+
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmFreezerWhenRequestedLowWithCoolingModeSetToFreezerAndSetPointIsWarm)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Warm);
+   GivenCoolingModeIs(CoolingMode_Freezer);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(LowWarmTempSpeedFreezer);
+}
+
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmConvertibleCompartmentWhenRequestedLowWithCoolingModeSetToConvertibleCompartmentAndSetPointIsWarm)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Warm);
+   GivenCoolingModeIs(CoolingMode_ConvertibleCompartment);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(LowWarmTempSpeedConvertibleCompartment);
+}
+
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreezerWhenRequestedLowWithDefaultCaseCoolingModeAndSetPointIsCold)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Cold);
+   GivenCoolingModeIs(CoolingMode_Unknown);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(LowColdTempSpeedFreezer);
+}
+
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumFreezerWhenRequestedLowWithDefaultCaseCoolingModeAndSetPointIsMedium)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Medium);
+   GivenCoolingModeIs(CoolingMode_Unknown);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(LowMediumTempSpeedFreezer);
+}
+
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmFreezerWhenRequestedLowWithDefaultCaseCoolingModeAndSetPointIsWarm)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Warm);
+   GivenCoolingModeIs(CoolingMode_Unknown);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(LowWarmTempSpeedFreezer);
+}
+
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowFreezerWhenRequestedLowWithDefaultCaseCoolingMode)
 {
    GivenInitializationWithoutCaringAboutSetpoint();
-   GivenAmbientTemperatureIsSetTo(HighAmbientTempDegFx100 - 1);
+   GivenCoolingModeIs(CoolingMode_Unknown);
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Min);
-   CalculatedFanControlSpeedShouldBe(MinSpeed);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(LowSpeedFreezer);
 }
 
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeMinWithHighAmbientTempWhenRequestedIsSuperLowAndAmbientTemperatureIsAtThreshold)
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeMediumFreezerWhenRequestedLowWithDefaultCaseCoolingMode)
 {
    GivenInitializationWithoutCaringAboutSetpoint();
-   GivenAmbientTemperatureIsSetTo(HighAmbientTempDegFx100);
+   GivenCoolingModeIs(CoolingMode_Unknown);
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Min);
-   CalculatedFanControlSpeedShouldBe(MinSpeedHighAmbientTemp);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
+   CalculatedFanControlSpeedShouldBe(MediumSpeedFreezer);
 }
 
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeColdLowWithValveAWhenRequestedLowWithValveSetToAndSetPointIsCold)
+TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeHighFreezerWhenRequestedLowWithDefaultCaseCoolingMode)
 {
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Cold);
-   GivenResolvedValvePositionIsSetTo(ValvePosition_A);
+   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenCoolingModeIs(CoolingMode_Unknown);
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(ColdTempSpeedA);
-}
-
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeColdLowWithValveBWhenRequestedLowWithValveSetToBAndSetPointIsCold)
-{
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Cold);
-   GivenResolvedValvePositionIsSetTo(ValvePosition_B);
-
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(ColdTempSpeedB);
-}
-
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeColdLowWithValveCWhenRequestedLowWithValveSetToCAndSetPointIsCold)
-{
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Cold);
-   GivenResolvedValvePositionIsSetTo(ValvePosition_C);
-
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(ColdTempSpeedC);
-}
-
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeMediumLowWithValveAWhenRequestedLowWithValveSetToAndSetPointIsMedium)
-{
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Medium);
-   GivenResolvedValvePositionIsSetTo(ValvePosition_A);
-
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(MediumTempSpeedA);
-}
-
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeMediumLowWithValveBWhenRequestedLowWithValveSetToBAndSetPointIsMedium)
-{
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Medium);
-   GivenResolvedValvePositionIsSetTo(ValvePosition_B);
-
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(MediumTempSpeedB);
-}
-
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeMediumLowWithValveCWhenRequestedLowWithValveSetToCAndSetPointIsMedium)
-{
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Medium);
-   GivenResolvedValvePositionIsSetTo(ValvePosition_C);
-
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(MediumTempSpeedC);
-}
-
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeWarmLowWithValveAWhenRequestedLowWithValveSetToAndSetPointIsWarm)
-{
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Warm);
-   GivenResolvedValvePositionIsSetTo(ValvePosition_A);
-
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(WarmTempSpeedA);
-}
-
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeWarmLowWithValveBWhenRequestedLowWithValveSetToBAndSetPointIsWarm)
-{
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Warm);
-   GivenResolvedValvePositionIsSetTo(ValvePosition_B);
-
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(WarmTempSpeedB);
-}
-
-TEST(FanSpeedResolver_Dependent, CalculatedSpeedShouldBeWarmLowWithValveCWhenRequestedLowWithValveSetToCAndSetPointIsWarm)
-{
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Warm);
-   GivenResolvedValvePositionIsSetTo(ValvePosition_C);
-
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(WarmTempSpeedC);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_High);
+   CalculatedFanControlSpeedShouldBe(HighSpeedFreezer);
 }

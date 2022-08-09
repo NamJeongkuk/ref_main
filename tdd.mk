@@ -63,6 +63,7 @@ INCLUDE_DIRS := \
    $(APPLCOMMON_DIR)/Hardware/Rx130 \
    $(APPLCOMMON_DIR)/Image \
    $(PROJECT_DIR)/Application/Compressor \
+   $(PROJECT_DIR)/Application/Cooling \
    $(PROJECT_DIR)/Application/Damper \
    $(PROJECT_DIR)/Application/Defrost \
    $(PROJECT_DIR)/Application/Door \

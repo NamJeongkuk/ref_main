@@ -7,8 +7,8 @@ return {
     'KeyErdStreamData_t',
     'StreamedErd_t',
     '_mbstate_t',
-    'ValveDependentFanData_t',
-    'ValveFanData_t'
+    'FanCareAboutCoolingModeSpeedData_t',
+    'FanData_t'
   },
 
   -- Types that can't be automatically generated but need to be defined

@@ -14,7 +14,7 @@
 
 static const FanSpeedResolverConfig_t freezerEvapConfig = {
    .resolvedFanSpeedVoteErd = Erd_FreezerEvapFanSpeed_ResolvedVote,
-   .resolvedValvePositionVoteErd = Erd_ValvePosition_ResolvedVote,
+   .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
    .calculatedRequestFanControlErd = Erd_CalculatedFreezerEvapFanSpeed,
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
@@ -22,7 +22,7 @@ static const FanSpeedResolverConfig_t freezerEvapConfig = {
 
 static const FanSpeedResolverConfig_t freezerConfig = {
    .resolvedFanSpeedVoteErd = Erd_FreezerFanSpeed_ResolvedVote,
-   .resolvedValvePositionVoteErd = Erd_ValvePosition_ResolvedVote,
+   .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
    .calculatedRequestFanControlErd = Erd_CalculatedFreezerFanSpeed,
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
@@ -30,7 +30,7 @@ static const FanSpeedResolverConfig_t freezerConfig = {
 
 static const FanSpeedResolverConfig_t condenserConfig = {
    .resolvedFanSpeedVoteErd = Erd_CondenserFanSpeed_ResolvedVote,
-   .resolvedValvePositionVoteErd = Erd_ValvePosition_ResolvedVote,
+   .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
    .calculatedRequestFanControlErd = Erd_CalculatedCondenserFanSpeed,
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
@@ -38,7 +38,7 @@ static const FanSpeedResolverConfig_t condenserConfig = {
 
 static const FanSpeedResolverConfig_t freshFoodEvapConfig = {
    .resolvedFanSpeedVoteErd = Erd_FreshFoodEvapFanSpeed_ResolvedVote,
-   .resolvedValvePositionVoteErd = Erd_ValvePosition_ResolvedVote,
+   .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
    .calculatedRequestFanControlErd = Erd_CalculatedFreshFoodEvapFanSpeed,
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
@@ -46,7 +46,7 @@ static const FanSpeedResolverConfig_t freshFoodEvapConfig = {
 
 static const FanSpeedResolverConfig_t freshFoodConfig = {
    .resolvedFanSpeedVoteErd = Erd_FreshFoodFanSpeed_ResolvedVote,
-   .resolvedValvePositionVoteErd = Erd_ValvePosition_ResolvedVote,
+   .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
    .calculatedRequestFanControlErd = Erd_CalculatedFreshFoodFanSpeed,
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
@@ -54,7 +54,7 @@ static const FanSpeedResolverConfig_t freshFoodConfig = {
 
 static const FanSpeedResolverConfig_t iceCabinetConfig = {
    .resolvedFanSpeedVoteErd = Erd_IceCabinetFanSpeed_ResolvedVote,
-   .resolvedValvePositionVoteErd = Erd_ValvePosition_ResolvedVote,
+   .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
    .calculatedRequestFanControlErd = Erd_CalculatedIceCabinetFanSpeed,
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
@@ -62,7 +62,7 @@ static const FanSpeedResolverConfig_t iceCabinetConfig = {
 
 static const FanSpeedResolverConfig_t convertibleCompartmentConfig = {
    .resolvedFanSpeedVoteErd = Erd_ConvertibleCompartmentFanSpeed_ResolvedVote,
-   .resolvedValvePositionVoteErd = Erd_ValvePosition_ResolvedVote,
+   .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
    .calculatedRequestFanControlErd = Erd_CalculatedConvertibleCompartmentFanSpeed,
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
@@ -70,7 +70,7 @@ static const FanSpeedResolverConfig_t convertibleCompartmentConfig = {
 
 static const FanSpeedResolverConfig_t deliConfig = {
    .resolvedFanSpeedVoteErd = Erd_DeliFanSpeed_ResolvedVote,
-   .resolvedValvePositionVoteErd = Erd_ValvePosition_ResolvedVote,
+   .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
    .calculatedRequestFanControlErd = Erd_CalculatedDeliFanSpeed,
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
@@ -78,7 +78,7 @@ static const FanSpeedResolverConfig_t deliConfig = {
 
 static void InitializeFanSpeedResolvers(FanPlugin_t *instance, I_DataModel_t *dataModel)
 {
-   const FanData_t *fanData = PersonalityParametricData_Get(dataModel)->fanData;
+   const CombinedFanData_t *fanData = PersonalityParametricData_Get(dataModel)->fanData;
 
    FanSpeedResolver_Init(
       &instance->_private.fanSpeedResolver[FanId_Freezer],

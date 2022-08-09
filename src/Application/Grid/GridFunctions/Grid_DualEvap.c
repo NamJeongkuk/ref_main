@@ -129,7 +129,7 @@ void Grid_DualEvap(void *context)
       case 2:
          VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_Off);
          VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_Low);
-         VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Max);
+         VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_SuperHigh);
          VoteCompressorSpeed(dataModel, CompressorSpeed_Low);
          VoteValvePosition(dataModel, ValvePosition_B);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
@@ -144,7 +144,7 @@ void Grid_DualEvap(void *context)
       case 4:
       case 5:
       case 6:
-         VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Max);
+         VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_SuperHigh);
          VoteCompressorSpeed(dataModel, CompressorSpeed_Low);
          VoteValvePosition(dataModel, ValvePosition_A);
          SetFreshFoodPulldownOffsetEnabled(dataModel, ENABLED);
@@ -209,7 +209,7 @@ void Grid_DualEvap(void *context)
       case 13:
          VoteFanSpeed(dataModel, Erd_FreshFoodEvapFanSpeed_GridVote, FanSpeed_High);
          VoteFanSpeed(dataModel, Erd_FreezerEvapFanSpeed_GridVote, FanSpeed_High);
-         VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_Max);
+         VoteFanSpeed(dataModel, Erd_CondenserFanSpeed_GridVote, FanSpeed_SuperHigh);
          VoteCompressorSpeed(dataModel, CompressorSpeed_High);
          SetMaxValveTimeInPosAEnabled(dataModel, DISABLED);
          SetDelayConvertibleCompartmentCooling(dataModel, DISABLED);

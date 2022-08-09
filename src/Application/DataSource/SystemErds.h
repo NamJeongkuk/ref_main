@@ -60,6 +60,7 @@
 #include "I_FaultWrapper.h"
 #include "ConvertibleCompartmentStateType.h"
 #include "CompressorState.h"
+#include "CoolingMode.h"
 #include "DefrostCompressorOnTimeCounterFsmState.h"
 #include "DoorAccelerationCounterFsmState.h"
 
@@ -453,6 +454,7 @@ enum
    ENTRY(Erd_FreshFood_FilteredTemperatureOverrideValue,    0xF168, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFood_FilteredTemperatureResolved,         0xF169, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_EnumeratedFreezerSetpoint,                     0xF16A, FreezerSetpoint_t,                                  Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CoolingMode,                                   0xF16B, CoolingMode_t,                                      Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_CalculatedFreezerFanSpeed,                     0xF170, FanControl_t,                                       Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CalculatedCondenserFanSpeed,                   0xF171, FanControl_t,                                       Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

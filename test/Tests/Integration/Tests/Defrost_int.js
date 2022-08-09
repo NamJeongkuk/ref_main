@@ -81,8 +81,8 @@ describe("Defrost", () => {
       fanSpeedLow: "FanSpeed_Low",
       fanSpeedMedium: "FanSpeed_Medium",
       fanSpeedHigh: "FanSpeed_High",
-      fanSpeedSuperHigh: "FanSpeed_Max",
-      fanSpeedSuperLow: "FanSpeed_Min"
+      fanSpeedSuperHigh: "FanSpeed_SuperHigh",
+      fanSpeedSuperLow: "FanSpeed_SuperLow"
    };
 
    const compressorState = {

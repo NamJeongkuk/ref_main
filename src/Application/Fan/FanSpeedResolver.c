@@ -8,7 +8,7 @@
 #include "FanSpeedResolver.h"
 #include "FanSpeed.h"
 #include "FreezerSetpoint.h"
-#include "ValvePosition.h"
+#include "CoolingMode.h"
 #include "TemperatureDegFx100.h"
 #include "utils.h"
 
@@ -17,17 +17,40 @@ enum
    HighAmbientTempDegFx100 = 4500,
 };
 
-static bool FanDataIsDependentOnValvePosition(FanSpeedResolver_t *instance)
+static bool CareAboutHighAmbientTemperature(FanSpeedResolver_t *instance)
 {
-   return instance->_private.fanData->valveDependent;
+   return instance->_private.fanData->speedData.careAboutHighAmbientTemperature;
+}
+
+static bool FanDataCaresAboutCoolingMode(FanSpeedResolver_t *instance)
+{
+   return instance->_private.fanData->careAboutCoolingMode;
 }
 
 static bool CareAboutSetpoint(FanSpeedResolver_t *instance)
 {
-   return instance->_private.fanData->dependentData.careAboutSetpoint;
+   return instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpoint;
 }
 
-static void CalculateIndependentValveSpeed(FanSpeedResolver_t *instance)
+static FanControl_t FanControlFromAmbientTemperature(FanSpeedResolver_t *instance)
+{
+   TemperatureDegFx100_t ambientTemp;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->ambientTempErd,
+      &ambientTemp);
+
+   if(CareAboutHighAmbientTemperature(instance) && ambientTemp >= HighAmbientTempDegFx100)
+   {
+      return instance->_private.fanData->speedData.superLowSpeedHighAmbientTemperature;
+   }
+   else
+   {
+      return instance->_private.fanData->speedData.superLowSpeed;
+   }
+}
+
+static void CalculateFanSpeed(FanSpeedResolver_t *instance)
 {
    FanVotedSpeed_t votedSpeed;
    DataModel_Read(
@@ -42,24 +65,24 @@ static void CalculateIndependentValveSpeed(FanSpeedResolver_t *instance)
 
    switch(votedSpeed.speed)
    {
-      case FanSpeed_Min:
-         control = instance->_private.fanData->independentData.minSpeed;
+      case FanSpeed_SuperLow:
+         control = FanControlFromAmbientTemperature(instance);
          break;
 
       case FanSpeed_Low:
-         control = instance->_private.fanData->independentData.lowSpeed;
+         control = instance->_private.fanData->speedData.lowSpeed;
          break;
 
       case FanSpeed_Medium:
-         control = instance->_private.fanData->independentData.mediumSpeed;
+         control = instance->_private.fanData->speedData.mediumSpeed;
          break;
 
       case FanSpeed_High:
-         control = instance->_private.fanData->independentData.highSpeed;
+         control = instance->_private.fanData->speedData.highSpeed;
          break;
 
-      case FanSpeed_Max:
-         control = instance->_private.fanData->independentData.maxSpeed;
+      case FanSpeed_SuperHigh:
+         control = instance->_private.fanData->speedData.superHighSpeed;
          break;
 
       default:
@@ -72,25 +95,10 @@ static void CalculateIndependentValveSpeed(FanSpeedResolver_t *instance)
       &control);
 }
 
-static FanControl_t FanControlFromAmbientTemperature(FanSpeedResolver_t *instance)
-{
-   TemperatureDegFx100_t ambientTemp;
-   DataModel_Read(instance->_private.dataModel, instance->_private.config->ambientTempErd, &ambientTemp);
-
-   if(ambientTemp >= HighAmbientTempDegFx100)
-   {
-      return instance->_private.fanData->dependentData.minSpeedHighAmbientTemperature;
-   }
-   else
-   {
-      return instance->_private.fanData->dependentData.minSpeed;
-   }
-}
-
-static FanControl_t FanControlFromSetpointAndValve(FanSpeedResolver_t *instance)
+static FanControl_t FanControlFromCoolingModeAndFreezerSetpoint(FanSpeedResolver_t *instance)
 {
    FreezerSetpoint_t freezerSetpoint;
-   ValveVotedPosition_t votedValve;
+   CoolingMode_t coolingMode;
 
    FanControl_t control = {
       .type = FanControlType_DutyCycle,
@@ -103,62 +111,51 @@ static FanControl_t FanControlFromSetpointAndValve(FanSpeedResolver_t *instance)
       &freezerSetpoint);
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->resolvedValvePositionVoteErd,
-      &votedValve);
+      instance->_private.config->coolingModeErd,
+      &coolingMode);
 
-   if(votedValve.position == ValvePosition_A)
+   if(coolingMode == CoolingMode_FreshFood)
+   {
+      control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood;
+   }
+   else if(coolingMode == CoolingMode_ConvertibleCompartment)
    {
       if(freezerSetpoint == FreezerSetpoint_Cold)
       {
-         control = instance->_private.fanData->dependentData.careAboutSetpointData.setpointSpeeds.lowSpeedWithColdSetpointValveA;
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithColdSetpoint;
       }
       else if(freezerSetpoint == FreezerSetpoint_Medium)
       {
-         control = instance->_private.fanData->dependentData.careAboutSetpointData.setpointSpeeds.lowSpeedWithMediumSetpointValveA;
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithMediumSetpoint;
       }
       else if(freezerSetpoint == FreezerSetpoint_Warm)
       {
-         control = instance->_private.fanData->dependentData.careAboutSetpointData.setpointSpeeds.lowSpeedWithWarmSetpointValveA;
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithWarmSetpoint;
       }
    }
-   else if(votedValve.position == ValvePosition_B)
+   else
    {
       if(freezerSetpoint == FreezerSetpoint_Cold)
       {
-         control = instance->_private.fanData->dependentData.careAboutSetpointData.setpointSpeeds.lowSpeedWithColdSetpointValveB;
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint;
       }
       else if(freezerSetpoint == FreezerSetpoint_Medium)
       {
-         control = instance->_private.fanData->dependentData.careAboutSetpointData.setpointSpeeds.lowSpeedWithMediumSetpointValveB;
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithMediumSetpoint;
       }
       else if(freezerSetpoint == FreezerSetpoint_Warm)
       {
-         control = instance->_private.fanData->dependentData.careAboutSetpointData.setpointSpeeds.lowSpeedWithWarmSetpointValveB;
-      }
-   }
-   else if(votedValve.position == ValvePosition_C)
-   {
-      if(freezerSetpoint == FreezerSetpoint_Cold)
-      {
-         control = instance->_private.fanData->dependentData.careAboutSetpointData.setpointSpeeds.lowSpeedWithColdSetpointValveC;
-      }
-      else if(freezerSetpoint == FreezerSetpoint_Medium)
-      {
-         control = instance->_private.fanData->dependentData.careAboutSetpointData.setpointSpeeds.lowSpeedWithMediumSetpointValveC;
-      }
-      else if(freezerSetpoint == FreezerSetpoint_Warm)
-      {
-         control = instance->_private.fanData->dependentData.careAboutSetpointData.setpointSpeeds.lowSpeedWithWarmSetpointValveC;
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithWarmSetpoint;
       }
    }
 
    return control;
 }
 
-static void CalculateDependentValveSpeed(FanSpeedResolver_t *instance)
+static FanControl_t CoolingModeFanSpeedWithSetpoint(FanSpeedResolver_t *instance)
 {
    FanVotedSpeed_t votedSpeed;
-   ValveVotedPosition_t votedValve;
+   CoolingMode_t coolingMode;
 
    DataModel_Read(
       instance->_private.dataModel,
@@ -166,8 +163,8 @@ static void CalculateDependentValveSpeed(FanSpeedResolver_t *instance)
       &votedSpeed);
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->resolvedValvePositionVoteErd,
-      &votedValve);
+      instance->_private.config->coolingModeErd,
+      &coolingMode);
 
    FanControl_t control = {
       .type = FanControlType_DutyCycle,
@@ -176,66 +173,138 @@ static void CalculateDependentValveSpeed(FanSpeedResolver_t *instance)
 
    switch(votedSpeed.speed)
    {
-      case FanSpeed_Min:
-         control = FanControlFromAmbientTemperature(instance);
+      case FanSpeed_SuperLow:
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.superLowSpeed;
          break;
 
       case FanSpeed_Low:
-         if(CareAboutSetpoint(instance))
-         {
-            control = FanControlFromSetpointAndValve(instance);
-         }
-         else if(votedValve.position == ValvePosition_A)
-         {
-            control = instance->_private.fanData->dependentData.careAboutSetpointData.nonSetpointSpeeds.lowSpeedValveA;
-         }
-         else if(votedValve.position == ValvePosition_B)
-         {
-            control = instance->_private.fanData->dependentData.careAboutSetpointData.nonSetpointSpeeds.lowSpeedValveB;
-         }
-         else if(votedValve.position == ValvePosition_C)
-         {
-            control = instance->_private.fanData->dependentData.careAboutSetpointData.nonSetpointSpeeds.lowSpeedValveC;
-         }
-
+         control = FanControlFromCoolingModeAndFreezerSetpoint(instance);
          break;
 
       case FanSpeed_Medium:
-         if(votedValve.position == ValvePosition_A)
+         if(coolingMode == CoolingMode_FreshFood)
          {
-            control = instance->_private.fanData->dependentData.mediumSpeedValveA;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.mediumSpeedFreezer;
          }
-         else if(votedValve.position == ValvePosition_B)
+         else if(coolingMode == CoolingMode_ConvertibleCompartment)
          {
-            control = instance->_private.fanData->dependentData.mediumSpeedValveB;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.mediumSpeedConvertibleCompartment;
          }
-         else if(votedValve.position == ValvePosition_C)
+         else
          {
-            control = instance->_private.fanData->dependentData.mediumSpeedValveC;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.mediumSpeedFreezer;
          }
          break;
 
       case FanSpeed_High:
-         if(votedValve.position == ValvePosition_A)
+         if(coolingMode == CoolingMode_FreshFood)
          {
-            control = instance->_private.fanData->dependentData.highSpeedValveA;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.highSpeedSpeedFreshFood;
          }
-         else if(votedValve.position == ValvePosition_B)
+         else if(coolingMode == CoolingMode_ConvertibleCompartment)
          {
-            control = instance->_private.fanData->dependentData.highSpeedValveB;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.highSpeedSpeedConvertibleCompartment;
          }
-         else if(votedValve.position == ValvePosition_C)
+         else
          {
-            control = instance->_private.fanData->dependentData.highSpeedValveC;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.highSpeedSpeedFreezer;
          }
          break;
 
-      case FanSpeed_Max:
-         control = instance->_private.fanData->dependentData.maxSpeed;
+      case FanSpeed_SuperHigh:
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.superHighSpeed;
          break;
 
       default:
          break;
+   }
+
+   return control;
+}
+
+static FanControl_t CoolingModeFanSpeedWithoutSetpoint(FanSpeedResolver_t *instance)
+{
+   FanVotedSpeed_t votedSpeed;
+   CoolingMode_t coolingMode;
+
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->resolvedFanSpeedVoteErd,
+      &votedSpeed);
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->coolingModeErd,
+      &coolingMode);
+
+   FanControl_t control = {
+      .type = FanControlType_DutyCycle,
+      .dutyCycle = 0,
+   };
+
+   switch(votedSpeed.speed)
+   {
+      case FanSpeed_SuperLow:
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.nonSetpointSpeeds.superLowSpeed;
+         break;
+
+      case FanSpeed_Low:
+         if(coolingMode == CoolingMode_FreshFood)
+         {
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreshFood;
+         }
+         else
+         {
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreezer;
+         }
+         break;
+
+      case FanSpeed_Medium:
+         if(coolingMode == CoolingMode_FreshFood)
+         {
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.nonSetpointSpeeds.mediumSpeedFreezer;
+         }
+         else
+         {
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.nonSetpointSpeeds.mediumSpeedFreezer;
+         }
+         break;
+
+      case FanSpeed_High:
+         if(coolingMode == CoolingMode_FreshFood)
+         {
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.nonSetpointSpeeds.highSpeedSpeedFreshFood;
+         }
+         else
+         {
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.nonSetpointSpeeds.highSpeedSpeedFreezer;
+         }
+         break;
+
+      case FanSpeed_SuperHigh:
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.nonSetpointSpeeds.superHighSpeed;
+         break;
+
+      default:
+         break;
+   }
+
+   return control;
+};
+
+static void CalculateCoolingModeFanSpeed(FanSpeedResolver_t *instance)
+{
+   FanControl_t control = {
+      .type = FanControlType_DutyCycle,
+      .dutyCycle = 0,
+   };
+
+   if(CareAboutSetpoint(instance))
+   {
+      control = CoolingModeFanSpeedWithSetpoint(instance);
+   }
+   else
+   {
+      control = CoolingModeFanSpeedWithoutSetpoint(instance);
    }
 
    DataModel_Write(
@@ -246,13 +315,13 @@ static void CalculateDependentValveSpeed(FanSpeedResolver_t *instance)
 
 static void CalculateResolvedFanSpeedBasedOnDependence(FanSpeedResolver_t *instance)
 {
-   if(FanDataIsDependentOnValvePosition(instance))
+   if(FanDataCaresAboutCoolingMode(instance))
    {
-      CalculateDependentValveSpeed(instance);
+      CalculateCoolingModeFanSpeed(instance);
    }
    else
    {
-      CalculateIndependentValveSpeed(instance);
+      CalculateFanSpeed(instance);
    }
 }
 
@@ -267,7 +336,7 @@ static void ResolvedFanSpeedVoteChanged(void *context, const void *args)
 void FanSpeedResolver_Init(
    FanSpeedResolver_t *instance,
    I_DataModel_t *dataModel,
-   const ValveFanData_t *fanData,
+   const FanData_t *fanData,
    const FanSpeedResolverConfig_t *config)
 {
    instance->_private.dataModel = dataModel;
