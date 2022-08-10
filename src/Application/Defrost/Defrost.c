@@ -35,7 +35,8 @@ enum
 {
    Signal_DefrostReadyTimerIsSatisfied = Hsm_UserSignalStart,
    Signal_CompressorIsOn,
-   Signal_MaxPrechillPrepTimerExpired
+   Signal_MaxPrechillPrepTimerExpired,
+   Signal_MaxPrechillTimerExpired
 };
 
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -190,6 +191,44 @@ static void MaxPrechillPrepTimerExpired(void *context)
    Hsm_SendSignal(&instance->_private.hsm, Signal_MaxPrechillPrepTimerExpired, NULL);
 }
 
+static void MaxPrechillTimerExpired(void *context)
+{
+   Defrost_t *instance = context;
+
+   Hsm_SendSignal(&instance->_private.hsm, Signal_MaxPrechillTimerExpired, NULL);
+}
+
+static void StartMaxPrechillTimer(Defrost_t *instance, uint8_t maxPrechillTimeInMinutes)
+{
+   StartTimer(
+      instance,
+      &instance->_private.maxPrechillTimer,
+      maxPrechillTimeInMinutes * MSEC_PER_MIN,
+      MaxPrechillTimerExpired);
+}
+
+static uint8_t GetMaxPrechillTime(Defrost_t *instance)
+{
+   uint8_t maxPrechillTime;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->maxPrechillTimeInMinutesErd,
+      &maxPrechillTime);
+
+   return maxPrechillTime;
+}
+
+static uint16_t GetTimeThatPrechillConditionsAreMet(Defrost_t *instance)
+{
+   uint16_t timeThatPrechillConditionsAreMet;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->timeThatPrechillConditionsAreMetInMinutesErd,
+      &timeThatPrechillConditionsAreMet);
+
+   return timeThatPrechillConditionsAreMet;
+}
+
 static HsmState_t InitialState(Defrost_t *instance)
 {
    bool freezerFilteredTemperatureTooWarmAtPowerUp;
@@ -313,6 +352,20 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Prechill);
+         if(GetTimeThatPrechillConditionsAreMet(instance) >= GetMaxPrechillTime(instance))
+         {
+            Hsm_Transition(hsm, State_HeaterOnEntry);
+         }
+         else
+         {
+            StartMaxPrechillTimer(
+               instance,
+               TRUNCATE_UNSIGNED_SUBTRACTION((uint16_t)GetMaxPrechillTime(instance), GetTimeThatPrechillConditionsAreMet(instance)));
+         }
+         break;
+
+      case Signal_MaxPrechillTimerExpired:
+         Hsm_Transition(hsm, State_HeaterOnEntry);
          break;
 
       case Hsm_Exit:

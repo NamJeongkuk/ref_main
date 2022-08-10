@@ -40,6 +40,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .defrostReadyTimerIsSatisfied = Erd_DefrostReadyTimerIsSatisfied,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .compressorIsOnErd = Erd_CompressorIsOn,
+   .maxPrechillTimeInMinutesErd = Erd_MaxPrechillTimeInMinutes,
+   .timeThatPrechillConditionsAreMetInMinutesErd = Erd_TimeThatPrechillConditionsAreMetInMinutes,
    .timerModuleErd = Erd_TimerModule
 };
 
