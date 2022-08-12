@@ -10,7 +10,7 @@
 
 #include "TemperatureDegFx100.h"
 #include "ValvePosition.h"
-#include "DamperPosition.h"
+#include "DamperVotedPosition.h"
 #include "FanSpeed.h"
 
 typedef struct

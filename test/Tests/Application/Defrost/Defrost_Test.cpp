@@ -62,6 +62,9 @@ static const DefrostConfiguration_t defrostConfig = {
    .compressorIsOnErd = Erd_CompressorIsOn,
    .maxPrechillTimeInMinutesErd = Erd_MaxPrechillTimeInMinutes,
    .timeThatPrechillConditionsAreMetInMinutesErd = Erd_TimeThatPrechillConditionsAreMetInMinutes,
+   .compressorSpeedVoteErd = Erd_CompressorSpeed_DefrostVote,
+   .freezerFanSpeedVoteErd = Erd_FreezerFanSpeed_DefrostVote,
+   .freshFoodDamperPositionVoteErd = Erd_FreshFoodDamperPosition_DefrostVote,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -275,6 +278,33 @@ TEST_GROUP(Defrost_SingleEvap)
    {
       DataModel_Write(dataModel, Erd_TimeThatPrechillConditionsAreMetInMinutes, &timeThatPrechillConditionsAreMet);
    }
+
+   void CompressorSpeedVoteShouldBe(CompressorSpeed_t expected)
+   {
+      CompressorVotedSpeed_t actual;
+      DataModel_Read(dataModel, Erd_CompressorSpeed_DefrostVote, &actual);
+
+      CHECK_EQUAL(expected, actual.speed);
+      CHECK_TRUE(actual.care);
+   }
+
+   void FreezerFanSpeedVoteShouldBe(FanSpeed_t expected)
+   {
+      FanVotedSpeed_t actual;
+      DataModel_Read(dataModel, Erd_FreezerFanSpeed_DefrostVote, &actual);
+
+      CHECK_EQUAL(expected, actual.speed);
+      CHECK_TRUE(actual.care);
+   }
+
+   void FreshFoodDamperPositionVoteShouldBe(DamperPosition_t expected)
+   {
+      DamperVotedPosition_t actual;
+      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_DefrostVote, &actual);
+
+      CHECK_EQUAL(expected, actual.position);
+      CHECK_TRUE(actual.care);
+   }
 };
 
 TEST(Defrost_SingleEvap, ShouldInitializeIntoDwellHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasHeaterOn)
@@ -487,6 +517,17 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndPrechillC
 
    When CompressorIsOn();
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvap, ShouldVoteForLoadsOnEntryToPrechill)
+{
+   Given MaxPrechillTimeInMinutesIs(TenMinutes);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+
+   CompressorSpeedVoteShouldBe(defrostData.prechillCompressorSpeed);
+   FreezerFanSpeedVoteShouldBe(defrostData.prechillFreezerFanSpeed);
+   FreshFoodDamperPositionVoteShouldBe(defrostData.prechillFreshFoodDamperPosition);
 }
 
 TEST_GROUP(Defrost_DualEvap)

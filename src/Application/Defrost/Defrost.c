@@ -18,6 +18,7 @@
 #include "FanSpeed.h"
 #include "Setpoint.h"
 #include "CompressorState.h"
+#include "CompressorVotedSpeed.h"
 #include "Signal.h"
 
 enum
@@ -229,6 +230,36 @@ static uint16_t GetTimeThatPrechillConditionsAreMet(Defrost_t *instance)
    return timeThatPrechillConditionsAreMet;
 }
 
+static void VoteForPrechillLoads(Defrost_t *instance)
+{
+   CompressorVotedSpeed_t compressorVote = {
+      .speed = instance->_private.defrostParametricData->prechillCompressorSpeed,
+      .care = true
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->compressorSpeedVoteErd,
+      &compressorVote);
+
+   FanVotedSpeed_t freezerFanVote = {
+      .speed = instance->_private.defrostParametricData->prechillFreezerFanSpeed,
+      .care = true
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freezerFanSpeedVoteErd,
+      &freezerFanVote);
+
+   DamperVotedPosition_t damperVote = {
+      .position = instance->_private.defrostParametricData->prechillFreshFoodDamperPosition,
+      .care = true
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freshFoodDamperPositionVoteErd,
+      &damperVote);
+}
+
 static HsmState_t InitialState(Defrost_t *instance)
 {
    bool freezerFilteredTemperatureTooWarmAtPowerUp;
@@ -352,6 +383,8 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Prechill);
+         VoteForPrechillLoads(instance);
+
          if(GetTimeThatPrechillConditionsAreMet(instance) >= GetMaxPrechillTime(instance))
          {
             Hsm_Transition(hsm, State_HeaterOnEntry);

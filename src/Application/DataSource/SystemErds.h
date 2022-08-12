@@ -485,7 +485,8 @@ enum
    ENTRY(Erd_CompressorSpeed_ResolvedVote,                  0xF210, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorSpeed_WinningVoteErd,                0xF211, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorSpeed_FactoryVote,                   0xF212, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CompressorSpeed_GridVote,                      0xF223, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorSpeed_DefrostVote,                   0xF223, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorSpeed_GridVote,                      0xF224, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_CondenserFanSpeed_ResolvedVote,                0xF230, FanVotedState_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CondenserFanSpeed_WinningVoteErd,              0xF231, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -584,6 +585,11 @@ enum
    ENTRY(Erd_DeliFanSpeed_FactoryVote,                      0xF352, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DeliFanSpeed_DefrostVote,                      0xF353, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DeliFanSpeed_GridVote,                         0xF354, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FreshFoodDamperPosition_ResolvedVote,          0xF360, DamperVotedPosition_t,                              Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperPosition_WinningVoteErd,        0xF361, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperPosition_FactoryVote,           0xF362, DamperVotedPosition_t,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperPosition_DefrostVote,           0xF363, DamperVotedPosition_t,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData0,     0xF500, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData1,     0xF501, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \

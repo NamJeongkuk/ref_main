@@ -28,6 +28,9 @@ typedef struct
    Erd_t compressorIsOnErd; // bool
    Erd_t maxPrechillTimeInMinutesErd; // uint8_t
    Erd_t timeThatPrechillConditionsAreMetInMinutesErd; // uint16_t
+   Erd_t compressorSpeedVoteErd; // CompressorVotedSpeed_t
+   Erd_t freezerFanSpeedVoteErd; // FanVotedSpeed_t
+   Erd_t freshFoodDamperPositionVoteErd; // DamperVotedPosition_t
    Erd_t timerModuleErd; // TimerModule_t *
 } DefrostConfiguration_t;
 

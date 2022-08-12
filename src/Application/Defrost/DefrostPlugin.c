@@ -42,6 +42,9 @@ static const DefrostConfiguration_t defrostConfig = {
    .compressorIsOnErd = Erd_CompressorIsOn,
    .maxPrechillTimeInMinutesErd = Erd_MaxPrechillTimeInMinutes,
    .timeThatPrechillConditionsAreMetInMinutesErd = Erd_TimeThatPrechillConditionsAreMetInMinutes,
+   .compressorSpeedVoteErd = Erd_CompressorSpeed_DefrostVote,
+   .freezerFanSpeedVoteErd = Erd_FreezerFanSpeed_DefrostVote,
+   .freshFoodDamperPositionVoteErd = Erd_FreshFoodDamperPosition_DefrostVote,
    .timerModuleErd = Erd_TimerModule
 };
 

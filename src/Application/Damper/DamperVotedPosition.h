@@ -17,4 +17,10 @@ enum
 };
 typedef uint8_t DamperPosition_t;
 
+typedef struct
+{
+   DamperPosition_t position;
+   bool care;
+} DamperVotedPosition_t;
+
 #endif
