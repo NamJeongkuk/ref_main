@@ -17,6 +17,7 @@ typedef struct
    Erd_t numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd; // uint8_t
    Erd_t freezerDefrostWasAbnormalErd; // bool
    Erd_t defrostIsFreshFoodOnlyErd; // bool
+   Erd_t defrostParameterSelectorReadyErd; // bool
 } FreshFoodOnlyDefrostArbitratorConfiguration_t;
 
 typedef struct

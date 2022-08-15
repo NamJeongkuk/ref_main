@@ -8,6 +8,7 @@
 #include "FreshFoodOnlyDefrostArbitrator.h"
 #include "PersonalityParametricData.h"
 #include "utils.h"
+#include "uassert.h"
 
 static void UpdateFreshFoodOnlyDefrostErd(FreshFoodOnlyDefrostArbitrator_t *instance)
 {
@@ -55,6 +56,14 @@ void FreshFoodOnlyDefrostArbitrator_Init(
    I_DataModel_t *dataModel,
    const FreshFoodOnlyDefrostArbitratorConfiguration_t *configuration)
 {
+   bool defrostParameterSelectorReady;
+   DataModel_Read(
+      dataModel,
+      configuration->defrostParameterSelectorReadyErd,
+      &defrostParameterSelectorReady);
+
+   uassert(defrostParameterSelectorReady);
+
    instance->_private.dataModel = dataModel;
    instance->_private.configuration = configuration;
    instance->_private.defrostParametricData = PersonalityParametricData_Get(dataModel)->defrostData;

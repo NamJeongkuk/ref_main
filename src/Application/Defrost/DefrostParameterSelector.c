@@ -11,6 +11,7 @@
 #include "EvaporatorData.h"
 #include "SystemErds.h"
 #include "EnhancedSabbathData.h"
+#include "Constants_Binary.h"
 
 static struct
 {
@@ -190,4 +191,9 @@ void DefrostParameterSelector_Init(I_DataModel_t *dataModel)
    Event_Subscribe(
       dataModel->OnDataChange,
       &instance.dataModelSubscription);
+
+   DataModel_Write(
+      instance.dataModel,
+      Erd_DefrostParameterSelectorReady,
+      set);
 }

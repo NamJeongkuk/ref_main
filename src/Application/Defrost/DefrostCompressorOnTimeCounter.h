@@ -14,6 +14,7 @@
 #include "DefrostData.h"
 #include "GridData.h"
 #include "Timer.h"
+#include "Constants_Binary.h"
 
 typedef struct
 {
@@ -22,6 +23,9 @@ typedef struct
    Erd_t defrostCompressorOnTimeInSecondsErd; // uint32_t
    Erd_t defrostCompressorOnTimeCounterFsmStateErd; // DefrostCompressorOnTimeCounterFsmState_t
    Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
+   Erd_t activelyWaitingForDefrostOnCompareMatchReadyErd; // bool
+   Erd_t freezerFilteredTemperatureTooWarmOnPowerUpReadyErd; // bool
+   Erd_t defrostCompressorOnTimeCounterReadyErd; // bool
    Erd_t timerModuleErd; // TimerModule_t *
 } DefrostCompressorOnTimeCounterConfiguration_t;
 

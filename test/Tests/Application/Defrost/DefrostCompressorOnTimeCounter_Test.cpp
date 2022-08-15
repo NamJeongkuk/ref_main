@@ -41,6 +41,9 @@ static const DefrostCompressorOnTimeCounterConfiguration_t config = {
    .defrostCompressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
    .defrostCompressorOnTimeCounterFsmStateErd = Erd_DefrostCompressorOnTimeCounterFsmState,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
+   .activelyWaitingForDefrostOnCompareMatchReadyErd = Erd_ActivelyWaitingForDefrostOnCompareMatchReady,
+   .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
+   .defrostCompressorOnTimeCounterReadyErd = Erd_DefrostCompressorOnTimeCounterReady,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -67,6 +70,9 @@ TEST_GROUP(DefrostCompressorOnTimeCounter)
 
    void DefrostCompressorOnTimeCounterIsInitialized()
    {
+      DataModel_Write(dataModel, Erd_ActivelyWaitingForDefrostOnCompareMatchReady, set);
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+
       DefrostCompressorOnTimeCounter_Init(&instance, dataModel, &config);
    }
 

@@ -35,7 +35,9 @@ static DefrostReadyTimerIsSatisfiedConfiguration_t config = {
    .freezerScaledDoorAccelerationInSecondsErd = Erd_DefrostFreezerScaledDoorAccelerationInSeconds,
    .convertibleCompartmentScaledDoorAccelerationInSecondsErd = Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds,
    .defrostReadyTimerIsSatisfiedErd = Erd_DefrostReadyTimerIsSatisfied,
-   .timeInMinutesWhenDefrostReadyTimerIsSatisfiedErd = Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied
+   .timeInMinutesWhenDefrostReadyTimerIsSatisfiedErd = Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied,
+   .defrostCompressorOnTimeCounterReadyErd = Erd_DefrostCompressorOnTimeCounterReady,
+   .doorAccelerationCounterReadyErd = Erd_DoorAccelerationCounterReady
 };
 
 TEST_GROUP(DefrostReadyTimerIsSatisfied)
@@ -64,6 +66,9 @@ TEST_GROUP(DefrostReadyTimerIsSatisfied)
 
    void DefrostReadyTimerIsSatisfiedModuleIsInitialized()
    {
+      DataModel_Write(dataModel, Erd_DefrostCompressorOnTimeCounterReady, set);
+      DataModel_Write(dataModel, Erd_DoorAccelerationCounterReady, set);
+
       DefrostReadyTimerIsSatisfied_Init(&instance, dataModel, &config);
    }
 

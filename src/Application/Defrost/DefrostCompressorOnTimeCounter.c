@@ -13,6 +13,7 @@
 #include "Constants_Time.h"
 #include "CompressorVotedSpeed.h"
 #include "utils.h"
+#include "uassert.h"
 
 enum
 {
@@ -213,6 +214,21 @@ void DefrostCompressorOnTimeCounter_Init(
    I_DataModel_t *dataModel,
    const DefrostCompressorOnTimeCounterConfiguration_t *config)
 {
+   bool activelyWaitingForDefrostOnCompareMatchReady;
+   DataModel_Read(
+      dataModel,
+      config->activelyWaitingForDefrostOnCompareMatchReadyErd,
+      &activelyWaitingForDefrostOnCompareMatchReady);
+
+   bool freezerFilteredTemperatureTooWarmOnPowerUpReady;
+   DataModel_Read(
+      dataModel,
+      config->freezerFilteredTemperatureTooWarmOnPowerUpReadyErd,
+      &freezerFilteredTemperatureTooWarmOnPowerUpReady);
+
+   uassert(activelyWaitingForDefrostOnCompareMatchReady &&
+      freezerFilteredTemperatureTooWarmOnPowerUpReady);
+
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
 
@@ -227,4 +243,9 @@ void DefrostCompressorOnTimeCounter_Init(
       instance->_private.dataModel,
       instance->_private.config->activelyWaitingForNextDefrostErd,
       &instance->_private.subscription);
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->defrostCompressorOnTimeCounterReadyErd,
+      set);
 }

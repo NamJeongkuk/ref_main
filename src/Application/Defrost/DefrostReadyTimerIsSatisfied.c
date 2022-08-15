@@ -9,6 +9,7 @@
 #include "PersonalityParametricData.h"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
+#include "uassert.h"
 
 static uint32_t DoorAccelerations(DefrostReadyTimerIsSatisfied_t *instance)
 {
@@ -109,6 +110,21 @@ void DefrostReadyTimerIsSatisfied_Init(
    I_DataModel_t *dataModel,
    const DefrostReadyTimerIsSatisfiedConfiguration_t *config)
 {
+   bool defrostCompressorOnTimeCounterReady;
+   DataModel_Read(
+      dataModel,
+      config->defrostCompressorOnTimeCounterReadyErd,
+      &defrostCompressorOnTimeCounterReady);
+
+   bool doorAccelerationCounterReady;
+   DataModel_Read(
+      dataModel,
+      config->doorAccelerationCounterReadyErd,
+      &doorAccelerationCounterReady);
+
+   uassert(defrostCompressorOnTimeCounterReady &&
+      doorAccelerationCounterReady);
+
    instance->_private.config = config;
    instance->_private.dataModel = dataModel;
 

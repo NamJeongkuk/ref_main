@@ -57,6 +57,9 @@ static const DoorAccelerationCounterConfiguration_t config = {
    .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorIsOpen,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
+   .activelyWaitingForDefrostOnCompareMatchReadyErd = Erd_ActivelyWaitingForDefrostOnCompareMatchReady,
+   .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
+   .doorAccelerationCounterReadyErd = Erd_DoorAccelerationCounterReady,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -91,6 +94,9 @@ TEST_GROUP(DoorAccelerationCounter)
 
    void DoorAccelerationCounterIsInitialized()
    {
+      DataModel_Write(dataModel, Erd_ActivelyWaitingForDefrostOnCompareMatchReady, set);
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+
       DoorAccelerationCounter_Init(&instance, dataModel, &config);
    }
 

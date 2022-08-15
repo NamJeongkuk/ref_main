@@ -13,6 +13,8 @@
 #include "utils.h"
 #include "Constants_Time.h"
 #include "ConvertibleCompartmentStateType.h"
+#include "uassert.h"
+#include "Constants_Binary.h"
 
 enum
 {
@@ -337,6 +339,21 @@ void DoorAccelerationCounter_Init(
    I_DataModel_t *dataModel,
    const DoorAccelerationCounterConfiguration_t *config)
 {
+   bool activelyWaitingForDefrostOnCompareMatchReady;
+   DataModel_Read(
+      dataModel,
+      config->activelyWaitingForDefrostOnCompareMatchReadyErd,
+      &activelyWaitingForDefrostOnCompareMatchReady);
+
+   bool freezerFilteredTemperatureTooWarmOnPowerUpReady;
+   DataModel_Read(
+      dataModel,
+      config->freezerFilteredTemperatureTooWarmOnPowerUpReadyErd,
+      &freezerFilteredTemperatureTooWarmOnPowerUpReady);
+
+   uassert(activelyWaitingForDefrostOnCompareMatchReady &&
+      freezerFilteredTemperatureTooWarmOnPowerUpReady);
+
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
 
@@ -353,4 +370,9 @@ void DoorAccelerationCounter_Init(
       instance->_private.dataModel,
       instance->_private.config->activelyWaitingForNextDefrostErd,
       &instance->_private.subscription);
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->doorAccelerationCounterReadyErd,
+      set);
 }

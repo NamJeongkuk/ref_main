@@ -60,6 +60,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .defrostReadyTimerIsSatisfied = Erd_DefrostReadyTimerIsSatisfied,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .compressorIsOnErd = Erd_CompressorIsOn,
+   .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
    .maxPrechillTimeInMinutesErd = Erd_MaxPrechillTimeInMinutes,
    .timeThatPrechillConditionsAreMetInMinutesErd = Erd_TimeThatPrechillConditionsAreMetInMinutes,
    .compressorSpeedVoteErd = Erd_CompressorSpeed_DefrostVote,
@@ -130,6 +131,7 @@ TEST_GROUP(Defrost_SingleEvap)
 
    void DefrostIsInitialized()
    {
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
       Defrost_Init(&instance, dataModel, &defrostConfig);
    }
 
@@ -567,6 +569,7 @@ TEST_GROUP(Defrost_DualEvap)
 
    void DefrostIsInitialized()
    {
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
       Defrost_Init(&instance, dataModel, &defrostConfig);
    }
 };

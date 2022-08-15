@@ -9,6 +9,7 @@ extern "C"
 {
 #include "FreshFoodOnlyDefrostArbitrator.h"
 #include "DataModelErdPointerAccess.h"
+#include "Constants_Binary.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -26,7 +27,8 @@ extern "C"
 static const FreshFoodOnlyDefrostArbitratorConfiguration_t config = {
    .numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd = Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
-   .defrostIsFreshFoodOnlyErd = Erd_DefrostIsFreshFoodOnly
+   .defrostIsFreshFoodOnlyErd = Erd_DefrostIsFreshFoodOnly,
+   .defrostParameterSelectorReadyErd = Erd_DefrostParameterSelectorReady
 };
 
 TEST_GROUP(FreshFoodOnlyDefrostArbitrator)
@@ -49,6 +51,7 @@ TEST_GROUP(FreshFoodOnlyDefrostArbitrator)
 
    void Initialization()
    {
+      DataModel_Write(dataModel, Erd_DefrostParameterSelectorReady, set);
       FreshFoodOnlyDefrostArbitrator_Init(
          &instance,
          dataModel,

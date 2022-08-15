@@ -40,4 +40,9 @@ static void SetErdIfFreezerFilteredTemperatureIsTooWarm(I_DataModel_t *dataModel
 void FreezerFilteredTemperatureTooWarmOnPowerUp_Init(I_DataModel_t *dataModel)
 {
    SetErdIfFreezerFilteredTemperatureIsTooWarm(dataModel);
+
+   DataModel_Write(
+      dataModel,
+      Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
+      set);
 }

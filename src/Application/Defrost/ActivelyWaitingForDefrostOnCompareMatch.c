@@ -54,4 +54,9 @@ void ActivelyWaitingForDefrostOnCompareMatch(I_DataModel_t *dataModel)
       dataModel,
       Erd_DefrostHsmState,
       &instance.subscription);
+
+   DataModel_Write(
+      dataModel,
+      Erd_ActivelyWaitingForDefrostOnCompareMatchReady,
+      set);
 }

@@ -30,6 +30,9 @@ typedef struct
    Erd_t convertibleCompartmentDoorIsOpenErd; // bool
    Erd_t convertibleCompartmentStateErd; // ConvertibleCompartmentState_t
    Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
+   Erd_t activelyWaitingForDefrostOnCompareMatchReadyErd; // bool
+   Erd_t freezerFilteredTemperatureTooWarmOnPowerUpReadyErd; // bool
+   Erd_t doorAccelerationCounterReadyErd; // bool
    Erd_t timerModuleErd; // TimerModule_t *
 } DoorAccelerationCounterConfiguration_t;
 

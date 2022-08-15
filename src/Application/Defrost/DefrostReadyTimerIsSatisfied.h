@@ -21,6 +21,8 @@ typedef struct
    Erd_t convertibleCompartmentScaledDoorAccelerationInSecondsErd; // uint32_t
    Erd_t defrostReadyTimerIsSatisfiedErd; // bool
    Erd_t timeInMinutesWhenDefrostReadyTimerIsSatisfiedErd; // uint16_t
+   Erd_t defrostCompressorOnTimeCounterReadyErd; // bool
+   Erd_t doorAccelerationCounterReadyErd; // bool
 } DefrostReadyTimerIsSatisfiedConfiguration_t;
 
 typedef struct

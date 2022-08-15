@@ -20,6 +20,7 @@
 #include "CompressorState.h"
 #include "CompressorVotedSpeed.h"
 #include "Signal.h"
+#include "uassert.h"
 
 enum
 {
@@ -458,6 +459,14 @@ void Defrost_Init(
    I_DataModel_t *dataModel,
    const DefrostConfiguration_t *defrostConfig)
 {
+   bool freezerFilteredTemperatureTooWarmOnPowerUpReady;
+   DataModel_Read(
+      dataModel,
+      defrostConfig->freezerFilteredTemperatureTooWarmOnPowerUpReadyErd,
+      &freezerFilteredTemperatureTooWarmOnPowerUpReady);
+
+   uassert(freezerFilteredTemperatureTooWarmOnPowerUpReady);
+
    instance->_private.dataModel = dataModel;
    instance->_private.config = defrostConfig;
    instance->_private.defrostParametricData = PersonalityParametricData_Get(dataModel)->defrostData;
