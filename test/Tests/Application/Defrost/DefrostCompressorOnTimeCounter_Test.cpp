@@ -101,9 +101,13 @@ TEST_GROUP(DefrostCompressorOnTimeCounter)
 
    void DefrostCompressorOnTimeCounterIsInStopState()
    {
-      Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+      Given ActivelyWaitingForNextDefrostIs(true);
+      And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
       And DefrostCompressorOnTimeCounterIsInitialized();
 
+      DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Run);
+
+      When ActivelyWaitingForNextDefrostIs(false);
       DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Stop);
    }
 
@@ -148,20 +152,24 @@ TEST_GROUP(DefrostCompressorOnTimeCounter)
    }
 };
 
-TEST(DefrostCompressorOnTimeCounter, ShouldInitializeIntoStopStateWhenFreezerFilteredTemperatureWasTooWarmOnPowerUp)
-{
-   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
-   And DefrostCompressorOnTimeCounterIsInitialized();
-
-   DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Stop);
-}
-
 TEST(DefrostCompressorOnTimeCounter, ShouldInitializeIntoPauseStateWhenFreezerFilteredTemperatureWasNotTooWarmOnPowerUp)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostCompressorOnTimeCounterIsInitialized();
 
    DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Pause);
+}
+
+TEST(DefrostCompressorOnTimeCounter, ShouldTransitionToStopStateFromRunStateWhenActivelyWaitingForNextDefrostBecomesFalse)
+{
+   Given ActivelyWaitingForNextDefrostIs(true);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   And DefrostCompressorOnTimeCounterIsInitialized();
+
+   DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Run);
+
+   When ActivelyWaitingForNextDefrostIs(false);
+   DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Stop);
 }
 
 TEST(DefrostCompressorOnTimeCounter, ShouldResetCompressorOnTimeInSecondsToZeroWhenEnteringStopState)
@@ -178,6 +186,80 @@ TEST(DefrostCompressorOnTimeCounter, ShouldNotResetCompressorOnTimeInSecondsToZe
    And DefrostCompressorOnTimeCounterIsInPauseState();
 
    CompressorOnTimeInSecondsShouldBe(SomeCompressorOnTimeInSeconds);
+}
+
+TEST(DefrostCompressorOnTimeCounter, ShouldResetCompressorOnTimeInSecondsWhenFreezerFilteredTemperatureTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsTrue)
+{
+   Given ActivelyWaitingForNextDefrostIs(true);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+   And CompressorOnTimeInSecondsIs(SomeCompressorOnTimeInSeconds);
+   And DefrostCompressorOnTimeCounterIsInitialized();
+
+   CompressorOnTimeInSecondsShouldBe(0);
+}
+
+TEST(DefrostCompressorOnTimeCounter, ShouldThenStartCountingCompressorOnTimeWhenFreezerFilteredTemperatureTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsTrue)
+{
+   Given ActivelyWaitingForNextDefrostIs(true);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+   And CompressorOnTimeInSecondsIs(SomeCompressorOnTimeInSeconds);
+   And CompressorIsOn();
+   And DefrostCompressorOnTimeCounterIsInitialized();
+
+   for(uint8_t i = 0; i < 10; i++)
+   {
+      After(PeriodicTimerTicksInMs - 1);
+      CompressorOnTimeInSecondsShouldBe(i);
+
+      After(1);
+      CompressorOnTimeInSecondsShouldBe(i + 1);
+   }
+}
+
+TEST(DefrostCompressorOnTimeCounter, ShouldNotResetCompressorOnTimeInSecondsWhenFreezerFilteredTemperatureIsNotTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsTrue)
+{
+   Given ActivelyWaitingForNextDefrostIs(true);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   And CompressorOnTimeInSecondsIs(SomeCompressorOnTimeInSeconds);
+   And DefrostCompressorOnTimeCounterIsInitialized();
+
+   CompressorOnTimeInSecondsShouldBe(SomeCompressorOnTimeInSeconds);
+}
+
+TEST(DefrostCompressorOnTimeCounter, ShouldThenStartCountingCompressorOnTimeWhenFreezerFilteredTemperatureIsNotTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsTrue)
+{
+   Given ActivelyWaitingForNextDefrostIs(true);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   And CompressorOnTimeInSecondsIs(SomeCompressorOnTimeInSeconds);
+   And CompressorIsOn();
+   And DefrostCompressorOnTimeCounterIsInitialized();
+
+   for(uint8_t i = 0; i < 10; i++)
+   {
+      After(PeriodicTimerTicksInMs - 1);
+      CompressorOnTimeInSecondsShouldBe(SomeCompressorOnTimeInSeconds + i);
+
+      After(1);
+      CompressorOnTimeInSecondsShouldBe(SomeCompressorOnTimeInSeconds + i + 1);
+   }
+}
+
+TEST(DefrostCompressorOnTimeCounter, ShouldNotStartCountingCompressorOnTimeWhenFreezerFilteredTemperatureTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsFalse)
+{
+   Given ActivelyWaitingForNextDefrostIs(false);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+   And CompressorOnTimeInSecondsIs(SomeCompressorOnTimeInSeconds);
+   And CompressorIsOn();
+   And DefrostCompressorOnTimeCounterIsInitialized();
+
+   for(uint8_t i = 0; i < 10; i++)
+   {
+      After(PeriodicTimerTicksInMs - 1);
+      CompressorOnTimeInSecondsShouldBe(0);
+
+      After(1);
+      CompressorOnTimeInSecondsShouldBe(0);
+   }
 }
 
 TEST(DefrostCompressorOnTimeCounter, ShouldTransitionToRunFromStopWhenActivelyWaitingForNextDefrostBecomesTrue)

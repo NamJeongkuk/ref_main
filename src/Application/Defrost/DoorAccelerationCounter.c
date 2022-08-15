@@ -311,14 +311,25 @@ static FsmState_t InitStateBasedOnFreezerFilteredTemperature(DoorAccelerationCou
       instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
       &freezerWasTooWarmOnPowerUp);
 
+   bool activelyWaitingForNextDefrost;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->activelyWaitingForNextDefrostErd,
+      &activelyWaitingForNextDefrost);
+
    if(freezerWasTooWarmOnPowerUp)
    {
-      return State_Stop;
+      ResetFreshFoodScaledDoorAccelerationInSecondsToZero(instance);
+      ResetFreezerScaledDoorAccelerationInSecondsToZero(instance);
+      ResetConvertibleCompartmentScaledDoorAccelerationInSecondsToZero(instance);
    }
-   else
+
+   if(activelyWaitingForNextDefrost)
    {
-      return State_Pause;
+      return State_Run;
    }
+
+   return State_Pause;
 }
 
 void DoorAccelerationCounter_Init(

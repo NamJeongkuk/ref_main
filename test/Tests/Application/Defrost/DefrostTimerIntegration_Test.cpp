@@ -182,6 +182,14 @@ TEST_GROUP(DefrostTimerIntegration)
       CHECK_EQUAL(expectedState, actualState);
    }
 
+   void DefrostStateShouldBe(DefrostState_t expectedState)
+   {
+      DefrostState_t actualState;
+      DataModel_Read(dataModel, Erd_DefrostState, &actualState);
+
+      CHECK_EQUAL(expectedState, actualState);
+   }
+
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1)
    {
       TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
@@ -192,10 +200,6 @@ TEST_GROUP(DefrostTimerIntegration)
       Given DefrostStateIs(DefrostState_Idle);
       And PluginsAreInitialized();
 
-      After(PowerUpDelayInMs(gridData.gridPeriodicRunRateInMSec) - 1);
-      DefrostHsmStateShouldBe(DefrostHsmState_PowerUp);
-
-      After(1);
       DefrostHsmStateShouldBe(DefrostHsmState_Idle);
    }
 
@@ -237,6 +241,59 @@ TEST_GROUP(DefrostTimerIntegration)
 
       CHECK_EQUAL(expectedSeconds, actualSeconds);
    }
+
+   void BoardHasBeenRunningForOneHour()
+   {
+      Given DefrostStateIs(DefrostState_Idle);
+      And CompressorIsOn();
+
+      When PluginsAreInitialized();
+
+      DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+      DefrostStateShouldBe(DefrostState_Idle);
+      DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Run);
+
+      After(60 * MSEC_PER_MIN - 1);
+      CompressorOnTimeInSecondsShouldBe(3599);
+
+      After(1);
+      CompressorOnTimeInSecondsShouldBe(3600);
+   }
+
+   void BoardResetsAndFreezerIsTooWarm()
+   {
+      FilteredFreezerCabinetTemperatureIs(freezerCalcAxis.gridLinesDegFx100[GridLine_FreezerExtremeHigh] + 1);
+      PluginsAreInitializedAndDefrostHsmStateIsIdle();
+   }
+
+   void BoardResetsAndFreezerIsNormalTemperature()
+   {
+      FilteredFreezerCabinetTemperatureIs(1000);
+      PluginsAreInitializedAndDefrostHsmStateIsIdle();
+   }
+
+   void CompressorIsOnForOneHour()
+   {
+      After(60 * MSEC_PER_MIN - 1);
+      CompressorOnTimeInSecondsShouldBe(3599);
+      EepromCompressorOnTimeInSecondsShouldBe(0);
+
+      After(1);
+      CompressorOnTimeInSecondsShouldBe(3600);
+      EepromCompressorOnTimeInSecondsShouldBe(3599);
+   }
+
+   void CompressorIsOnForLessThanOneHour()
+   {
+      // Before the 60 minute copy of RAM to NV
+      After(50 * MSEC_PER_MIN - 1);
+      CompressorOnTimeInSecondsShouldBe(2999);
+      EepromCompressorOnTimeInSecondsShouldBe(0);
+
+      After(1);
+      CompressorOnTimeInSecondsShouldBe(3000);
+      EepromCompressorOnTimeInSecondsShouldBe(0);
+   }
 };
 
 TEST(DefrostTimerIntegration, ShouldInitialize)
@@ -244,75 +301,47 @@ TEST(DefrostTimerIntegration, ShouldInitialize)
    PluginsAreInitialized();
 }
 
-IGNORE_TEST(DefrostTimerIntegration, ShouldResetEepromCompressorOnTimeToZeroWhenRamErdIsSetToZeroSoOldCompressorOnTimeValueIsNotHeldOnToIfMainboardResetsMultipleTimes)
+TEST(DefrostTimerIntegration, ShouldCountWhenDefrostStateIsIdleOnStartUp)
 {
-   Given EepromCompressorOnTimeInSecondsIs(0);
-   And FilteredFreezerCabinetTemperatureIs(1000);
+   Given DefrostStateIs(DefrostState_Idle);
    And CompressorIsOn();
-   And PluginsAreInitializedAndDefrostHsmStateIsIdle();
 
+   When PluginsAreInitialized();
+
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+   DefrostStateShouldBe(DefrostState_Idle);
    DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Run);
-   CompressorOnTimeInSecondsShouldBe(0);
-   EepromCompressorOnTimeInSecondsShouldBe(0);
 
    After(60 * MSEC_PER_MIN - 1);
-   EepromCompressorOnTimeInSecondsShouldBe(3594);
    CompressorOnTimeInSecondsShouldBe(3599);
+   EepromCompressorOnTimeInSecondsShouldBe(0);
 
    After(1);
-   EepromCompressorOnTimeInSecondsShouldBe(3594); // off by 6 b/c periodic NV starts its timer before defrost starts counting (defrost power up delay - that will be removed later)
    CompressorOnTimeInSecondsShouldBe(3600);
+   EepromCompressorOnTimeInSecondsShouldBe(3599);
+}
 
-   // Reset board and now FZ cabinet is too warm
-   FilteredFreezerCabinetTemperatureIs(freezerCalcAxis.gridLinesDegFx100[GridLine_FreezerExtremeHigh] + 1);
-   PluginsAreInitializedAndDefrostHsmStateIsIdle();
-   // EEPROM is copied to RAM and RAM is 3594
+TEST(DefrostTimerIntegration, ShouldResetCountWhenBoardResetsIntoDefrostStateIdleAndFreezerTemperatureIsTooWarm)
+{
+   Given BoardHasBeenRunningForOneHour();
 
-   CompressorOnTimeInSecondsShouldBe(0); // Compressor on time writes RAM to 0 b/c it's too warm
-   EepromCompressorOnTimeInSecondsShouldBe(0); // when RAM ERD is set to 0, it'll update EEPROM ERD to 0 immediately
-   // (if this didn't reset EEPROM to 0 too, it would be 3594)
+   BoardResetsAndFreezerIsTooWarm();
+   CompressorOnTimeInSecondsShouldBe(0);
+   EepromCompressorOnTimeInSecondsShouldBe(0);
+}
 
-   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
-   DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Run);
+TEST(DefrostTimerIntegration, ShouldResetEepromErdToZeroWhenRamErdIsResetToZeroToPreventCarryOverBetweenResets)
+{
+   Given BoardHasBeenRunningForOneHour();
 
-   // RAM ERD starts counting from 0
-   After(50 * MSEC_PER_MIN - 1);
-   CompressorOnTimeInSecondsShouldBe(2999);
+   BoardResetsAndFreezerIsTooWarm();
+   CompressorOnTimeInSecondsShouldBe(0);
    EepromCompressorOnTimeInSecondsShouldBe(0);
 
-   After(1);
-   CompressorOnTimeInSecondsShouldBe(3000);
-   EepromCompressorOnTimeInSecondsShouldBe(0);
+   CompressorIsOnForLessThanOneHour();
 
-   // Resets before 60 minutes where the periodic NV ERD transferer would've transferred RAM to EEPROM
-   // FZ cabinet is normal temperature
-   FilteredFreezerCabinetTemperatureIs(1000);
-   PluginsAreInitializedAndDefrostHsmStateIsIdle();
-
-   // If it hadn't reset the EEPROM ERD to 0 it'd be 3594 for both RAM and EEPROM ERDs, then RAM would have been reset to 0 b/c FZ is too warm
+   BoardResetsAndFreezerIsNormalTemperature();
+   // If it hadn't reset the EEPROM ERD to 0 it'd be 3599 for both RAM and EEPROM ERDs, then RAM would have been reset to 0 b/c FZ is too warm
    CompressorOnTimeInSecondsShouldBe(0);
    EepromCompressorOnTimeInSecondsShouldBe(0); // when RAM ERD is set to 0, it'll update EEPROM ERD to 0 immediately
-
-   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
-   DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Run);
-
-   // Would have started from 3594 instead of 0 if EEPROM value hadn't been reset to 0
-   After(50 * MSEC_PER_MIN - 1);
-   EepromCompressorOnTimeInSecondsShouldBe(0);
-   CompressorOnTimeInSecondsShouldBe(2999);
-
-   After(1);
-   EepromCompressorOnTimeInSecondsShouldBe(0);
-   CompressorOnTimeInSecondsShouldBe(3000);
-
-   // It eventually updates the EEPROM value
-   // Timing is off between the two b/c the NV periodic transfer timer starts ~ 5 seconds before the defrost counter
-   // Defrost delay will be removed with rewrite
-   After(10 * MSEC_PER_MIN - 1);
-   EepromCompressorOnTimeInSecondsShouldBe(3594);
-   CompressorOnTimeInSecondsShouldBe(3599);
-
-   After(1);
-   EepromCompressorOnTimeInSecondsShouldBe(3594);
-   CompressorOnTimeInSecondsShouldBe(3600);
 }

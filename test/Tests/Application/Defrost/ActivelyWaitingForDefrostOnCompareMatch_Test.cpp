@@ -73,14 +73,6 @@ TEST(ActivelyWaitingForDefrostOnCompareMatch, ShouldSetActivelyWaitingForDefrost
    ActivelyWaitingForDefrostShouldBe(true);
 }
 
-TEST(ActivelyWaitingForDefrostOnCompareMatch, ShouldSetActivelyWaitingForDefrostToFalseWhenDefrostHsmStateIsPowerUp)
-{
-   GivenDefrostHsmStateIs(DefrostHsmState_PowerUp);
-   ActivelyWaitingForDefrostOnCompareMatchIsInitialized();
-
-   ActivelyWaitingForDefrostShouldBe(false);
-}
-
 TEST(ActivelyWaitingForDefrostOnCompareMatch, ShouldSetActivelyWaitingForDefrostToFalseWhenDefrostHsmStateIsPrechillPrep)
 {
    GivenDefrostHsmStateIs(DefrostHsmState_PrechillPrep);
@@ -131,7 +123,7 @@ TEST(ActivelyWaitingForDefrostOnCompareMatch, ShouldSetActivelyWaitingForDefrost
 
 TEST(ActivelyWaitingForDefrostOnCompareMatch, ShouldSetActivelyWaitingForDefrostToTrueWhenDefrostHsmStateChangesToIdle)
 {
-   GivenDefrostHsmStateIs(DefrostHsmState_PowerUp);
+   GivenDefrostHsmStateIs(DefrostHsmState_Disabled);
    ActivelyWaitingForDefrostOnCompareMatchIsInitialized();
    ActivelyWaitingForDefrostShouldBe(false);
 
@@ -142,7 +134,7 @@ TEST(ActivelyWaitingForDefrostOnCompareMatch, ShouldSetActivelyWaitingForDefrost
 
 TEST(ActivelyWaitingForDefrostOnCompareMatch, ShouldSetActivelyWaitingForDefrostToTrueWhenDefrostHsmStateChangesToPostDwell)
 {
-   GivenDefrostHsmStateIs(DefrostHsmState_PowerUp);
+   GivenDefrostHsmStateIs(DefrostHsmState_Disabled);
    ActivelyWaitingForDefrostOnCompareMatchIsInitialized();
    ActivelyWaitingForDefrostShouldBe(false);
 

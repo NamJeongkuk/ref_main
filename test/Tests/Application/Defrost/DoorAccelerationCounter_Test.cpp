@@ -143,9 +143,13 @@ TEST_GROUP(DoorAccelerationCounter)
 
    void DoorAccelerationCounterIsInStopState()
    {
-      Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+      Given ActivelyWaitingForNextDefrostIs(true);
+      And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
       And DoorAccelerationCounterIsInitialized();
 
+      DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Run);
+
+      When ActivelyWaitingForNextDefrostIs(false);
       DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Stop);
    }
 
@@ -242,11 +246,15 @@ TEST_GROUP(DoorAccelerationCounter)
    }
 };
 
-TEST(DoorAccelerationCounter, ShouldInitializeIntoStopStateWhenFreezerFilteredTemperatureWasTooWarmOnPowerUp)
+TEST(DoorAccelerationCounter, ShouldTransitionToStopStateFromRunStateWhenActivelyWaitingForNextDefrostBecomesFalse)
 {
-   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+   Given ActivelyWaitingForNextDefrostIs(true);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DoorAccelerationCounterIsInitialized();
 
+   DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Run);
+
+   When ActivelyWaitingForNextDefrostIs(false);
    DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Stop);
 }
 
@@ -273,13 +281,99 @@ TEST(DoorAccelerationCounter, ShouldResetDoorAccelerationsToZeroWhenEnteringStop
 TEST(DoorAccelerationCounter, ShouldNotResetDoorAccelerationsToZeroWhenEnteringPauseState)
 {
    Given FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
-   And FreezerDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
+   And FreezerDoorAccelerationIs(SomeFreezerDoorAcceleration);
    And ConvertibleCompartmentDoorAccelerationIs(SomeConvertibleCompartmentDoorAcceleration);
    And DoorAccelerationCounterIsInPauseState();
 
    FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration);
-   And FreezerDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration);
+   And FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration);
    And ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration);
+}
+
+TEST(DoorAccelerationCounter, ShouldResetDoorAccelerationsToZeroWhenFreezerFilteredTemperatureTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsTrue)
+{
+   Given ActivelyWaitingForNextDefrostIs(true);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+   And FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
+   And FreezerDoorAccelerationIs(SomeFreezerDoorAcceleration);
+   And ConvertibleCompartmentDoorAccelerationIs(SomeConvertibleCompartmentDoorAcceleration);
+   And DoorAccelerationCounterIsInitialized();
+
+   FreshFoodDoorAccelerationShouldBe(0);
+   And FreezerDoorAccelerationShouldBe(0);
+   And ConvertibleCompartmentDoorAccelerationShouldBe(0);
+}
+
+TEST(DoorAccelerationCounter, ShouldThenStartCountingDoorAccelerationWhenFreezerFilteredTemperatureTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsTrue)
+{
+   Given ActivelyWaitingForNextDefrostIs(true);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+   And FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
+   And FreezerDoorAccelerationIs(SomeFreezerDoorAcceleration);
+   And ConvertibleCompartmentDoorAccelerationIs(SomeConvertibleCompartmentDoorAcceleration);
+   And LeftHandFreshFoodDoorIs(Open);
+   And FreezerDoorIs(Open);
+   And ConvertibleCompartmentDoorIs(Open);
+   And ConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_FreshFood);
+   And DoorAccelerationCounterIsInitialized();
+
+   DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Run);
+
+   for(uint8_t i = 0; i < 10; i++)
+   {
+      After(PeriodicTimerTicksInMs - 1);
+      FreshFoodDoorAccelerationShouldBe(defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
+      FreezerDoorAccelerationShouldBe(defrostData.freezerDoorIncrementFactorInSecondsPerSecond * i);
+      ConvertibleCompartmentDoorAccelerationShouldBe(defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
+
+      After(1);
+      FreshFoodDoorAccelerationShouldBe(defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      FreezerDoorAccelerationShouldBe(defrostData.freezerDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      ConvertibleCompartmentDoorAccelerationShouldBe(defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
+   }
+}
+
+TEST(DoorAccelerationCounter, ShouldNotResetDoorAccelerationsToZeroWhenFreezerFilteredTemperatureIsNotTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsTrue)
+{
+   Given ActivelyWaitingForNextDefrostIs(true);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   And FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
+   And FreezerDoorAccelerationIs(SomeFreezerDoorAcceleration);
+   And ConvertibleCompartmentDoorAccelerationIs(SomeConvertibleCompartmentDoorAcceleration);
+   And DoorAccelerationCounterIsInitialized();
+
+   FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration);
+   And FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration);
+   And ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration);
+}
+
+TEST(DoorAccelerationCounter, ShouldThenStartCountingDoorAccelerationWhenFreezerFilteredTemperatureIsNotTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsTrue)
+{
+   Given ActivelyWaitingForNextDefrostIs(true);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   And FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
+   And FreezerDoorAccelerationIs(SomeFreezerDoorAcceleration);
+   And ConvertibleCompartmentDoorAccelerationIs(SomeConvertibleCompartmentDoorAcceleration);
+   And LeftHandFreshFoodDoorIs(Open);
+   And FreezerDoorIs(Open);
+   And ConvertibleCompartmentDoorIs(Open);
+   And ConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_FreshFood);
+   And DoorAccelerationCounterIsInitialized();
+
+   DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Run);
+
+   for(uint8_t i = 0; i < 10; i++)
+   {
+      After(PeriodicTimerTicksInMs - 1);
+      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
+      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData.freezerDoorIncrementFactorInSecondsPerSecond * i);
+      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
+
+      After(1);
+      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData.freezerDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
+   }
 }
 
 TEST(DoorAccelerationCounter, ShouldTransitionToRunFromStopWhenActivelyWaitingForNextDefrostBecomesTrue)

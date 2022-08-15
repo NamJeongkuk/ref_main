@@ -189,14 +189,23 @@ static FsmState_t InitStateBasedOnFreezerFilteredTemperature(DefrostCompressorOn
       instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
       &freezerWasTooWarmOnPowerUp);
 
+   bool activelyWaitingForNextDefrost;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->activelyWaitingForNextDefrostErd,
+      &activelyWaitingForNextDefrost);
+
    if(freezerWasTooWarmOnPowerUp)
    {
-      return State_Stop;
+      ResetCompressorOnTimeInSecondsToZero(instance);
    }
-   else
+
+   if(activelyWaitingForNextDefrost)
    {
-      return State_Pause;
+      return State_Run;
    }
+
+   return State_Pause;
 }
 
 void DefrostCompressorOnTimeCounter_Init(

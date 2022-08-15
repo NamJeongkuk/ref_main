@@ -158,23 +158,29 @@ void DefrostPlugin_Init(I_DataModel_t *dataModel)
       periodicNvUpdaterReady &&
       sabbathPluginReady);
 
-   FreezerFilteredTemperatureTooWarmOnPowerUp_Init(dataModel);
-
-   DefrostParameterSelector_Init(dataModel);
-
-   DefrostStateOnCompareMatch(dataModel);
-
-   ActivelyWaitingForDefrostOnCompareMatch(dataModel);
-
    DefrostHeaterMaxOnTime_Init(
       &instance.defrostHeaterMaxOnTime,
       dataModel,
       &defrostHeaterMaxOnTimeConfig);
 
+   TimeThatPrechillConditionsAreMet_Init(
+      &instance.timeThatPrechillConditionsAreMet,
+      dataModel,
+      &timeThatPrechillConditionsAreMetConfig);
+
+   FreezerFilteredTemperatureTooWarmOnPowerUp_Init(dataModel);
+
+   DefrostParameterSelector_Init(dataModel);
+
    FreshFoodOnlyDefrostArbitrator_Init(
       &instance.freshFoodOnlyDefrostArbitrator,
       dataModel,
       &freshFoodOnlyDefrostArbitratorConfig);
+
+   DefrostStateOnCompareMatch(dataModel);
+   Defrost_Init(&instance.defrost, dataModel, &defrostConfig);
+
+   ActivelyWaitingForDefrostOnCompareMatch(dataModel);
 
    DefrostCompressorOnTimeCounter_Init(
       &instance.defrostCompressorOnTimeCounter,
@@ -190,11 +196,4 @@ void DefrostPlugin_Init(I_DataModel_t *dataModel)
       &instance.defrostReadyTimerIsSatisfied,
       dataModel,
       &defrostReadyTimerIsSatisfiedConfig);
-
-   TimeThatPrechillConditionsAreMet_Init(
-      &instance.timeThatPrechillConditionsAreMet,
-      dataModel,
-      &timeThatPrechillConditionsAreMetConfig);
-
-   Defrost_Init(&instance.defrost, dataModel, &defrostConfig);
 }

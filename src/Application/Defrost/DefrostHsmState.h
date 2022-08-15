@@ -12,7 +12,6 @@
 
 enum
 {
-   DefrostHsmState_PowerUp,
    DefrostHsmState_Idle,
    DefrostHsmState_PrechillPrep,
    DefrostHsmState_Prechill,
