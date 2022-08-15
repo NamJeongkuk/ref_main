@@ -12,12 +12,14 @@
 
 enum
 {
-   CompressorState_Off,
-   CompressorState_On,
+   CompressorState_OffAndReadyToChange,
+   CompressorState_OnAndReadyToChange,
    CompressorState_MinimumOnTime,
    CompressorState_MinimumOffTime,
-   CompressorState_MinimumRunTime,
-   CompressorState_Max,
+   CompressorState_VariableSpeedMinimumRunTime,
+   CompressorState_RemainOffAfterValveMove,
+   CompressorState_StartupOnTime,
+   CompressorState_Max
 };
 typedef uint8_t CompressorState_t;
 

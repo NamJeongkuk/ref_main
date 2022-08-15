@@ -55,8 +55,8 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Compressor Speed Config",
-          "name": "Erd_CompressorSpeedConfig",
+          "displayName": "Compressor Is Single Speed",
+          "name": "Erd_CompressorIsSingleSpeed",
           "read": true,
           "write": true
         },

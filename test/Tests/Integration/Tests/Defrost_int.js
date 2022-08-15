@@ -32,11 +32,6 @@ describe("Defrost", () => {
       compressorSpeedSuperHigh: "CompressorSpeed_SuperHigh"
    };
 
-   const compressorSpeedConfig = {
-      compressorSpeedConfigSingleSpeed: "CompressorSpeedConfig_SingleSpeed",
-      compressorSpeedConfigVariableSpeed: "CompressorSpeedConfig_VariableSpeed"
-   };
-
    const energyDemandLevel = {
       energyDemandLevelOff: "EnergyDemandLevel_Off",
       energyDemandLevelLow: "EnergyDemandLevel_Low",
@@ -86,15 +81,15 @@ describe("Defrost", () => {
    };
 
    const compressorState = {
-      compressorStateOff: "CompressorState_Off",
-      compressorStateOn: "CompressorState_On",
+      compressorStateOffAndReadyToChange: "CompressorState_OffAndReadyToChange",
+      compressorStateOnAndReadyToChange: "CompressorState_OnAndReadyToChange",
       compressorStateMinimumOnTime: "CompressorState_MinimumOnTime",
       compressorStateMinimumOffTime: "CompressorState_MinimumOffTime",
-      compressorStateMinimumRunTime: "CompressorState_MinimumRunTime",
+      compressorStateVariableSpeedMinimumRunTime: "CompressorState_VariableSpeedMinimumRunTime",
    };
 
    const providedTheCompressorIsSingleSpeed = async () => {
-      await rx130.write("Erd_CompressorSpeedConfig", compressorSpeedConfig.compressorSpeedConfigSingleSpeed);
+      await rx130.write("Erd_CompressorIsSingleSpeed", true);
    };
 
    const providedTheCompressorSpeedIs = async (speed) => {
@@ -380,7 +375,7 @@ describe("Defrost", () => {
       await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechillPrep);
 
       //Once prechill compressor on time is satisfied, go to prechill state
-      await theCompressorStateIs(compressorState.compressorStateOn);
+      await theCompressorStateIs(compressorState.compressorStateOnAndReadyToChange);
       await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechill);
    });
 
@@ -665,7 +660,7 @@ describe("Defrost", () => {
    it("should transition to prechill from prechill prep when compressor run time is satisfied", async () => {
       await defrostIsInPrechillPrep();
       await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechillPrep);
-      await theCompressorStateIs(compressorState.compressorStateOn);
+      await theCompressorStateIs(compressorState.compressorStateOnAndReadyToChange);
 
       await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechill);
    });
@@ -689,7 +684,7 @@ describe("Defrost", () => {
    it("should not transition from prechill prep when compressor state is minimum run time", async () => {
       await defrostIsInPrechillPrep();
       await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechillPrep);
-      await theCompressorStateIs(compressorState.compressorStateMinimumRunTime);
+      await theCompressorStateIs(compressorState.compressorStateVariableSpeedMinimumRunTime);
 
       await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechillPrep);
    });

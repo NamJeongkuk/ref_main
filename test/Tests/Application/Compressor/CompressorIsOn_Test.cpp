@@ -56,17 +56,33 @@ TEST(CompressorIsOn, ShouldInitialize)
    CompressorIsOnIsInitialized();
 }
 
-TEST(CompressorIsOn, ShouldBeFalseWhenStateIsOff)
+TEST(CompressorIsOn, ShouldBeFalseWhenStateIsRemainOffAfterValveMove)
 {
-   Given CompressorStateIs(CompressorState_Off);
+   Given CompressorStateIs(CompressorState_RemainOffAfterValveMove);
    And CompressorIsOnIsInitialized();
 
    CompressorIsOnShouldBe(false);
 }
 
-TEST(CompressorIsOn, ShouldBeTrueWhenStateIsOn)
+TEST(CompressorIsOn, ShouldBeFalseWhenStateIsOffAndReadyToChange)
 {
-   Given CompressorStateIs(CompressorState_On);
+   Given CompressorStateIs(CompressorState_OffAndReadyToChange);
+   And CompressorIsOnIsInitialized();
+
+   CompressorIsOnShouldBe(false);
+}
+
+TEST(CompressorIsOn, ShouldBeTrueWhenStateIsOnAndReadyToChange)
+{
+   Given CompressorStateIs(CompressorState_OnAndReadyToChange);
+   And CompressorIsOnIsInitialized();
+
+   CompressorIsOnShouldBe(true);
+}
+
+TEST(CompressorIsOn, ShouldBeTrueWhenStateIsOnVariableSpeedMinimumRunTime)
+{
+   Given CompressorStateIs(CompressorState_VariableSpeedMinimumRunTime);
    And CompressorIsOnIsInitialized();
 
    CompressorIsOnShouldBe(true);
@@ -75,14 +91,6 @@ TEST(CompressorIsOn, ShouldBeTrueWhenStateIsOn)
 TEST(CompressorIsOn, ShouldBeTrueWhenStateIsMinimumOnTime)
 {
    Given CompressorStateIs(CompressorState_MinimumOnTime);
-   And CompressorIsOnIsInitialized();
-
-   CompressorIsOnShouldBe(true);
-}
-
-TEST(CompressorIsOn, ShouldBeTrueWhenStateIsMinimumRunTime)
-{
-   Given CompressorStateIs(CompressorState_MinimumRunTime);
    And CompressorIsOnIsInitialized();
 
    CompressorIsOnShouldBe(true);
@@ -106,7 +114,7 @@ TEST(CompressorIsOn, ShouldBeFalseWhenStateIsOutOfBounds)
 
 TEST(CompressorIsOn, ShouldChangeToTrueWhenFalseAndCompressorTurnsOn)
 {
-   Given CompressorStateIs(CompressorState_Off);
+   Given CompressorStateIs(CompressorState_OffAndReadyToChange);
    And CompressorIsOnIsInitialized();
    CompressorIsOnShouldBe(false);
 
@@ -116,7 +124,7 @@ TEST(CompressorIsOn, ShouldChangeToTrueWhenFalseAndCompressorTurnsOn)
 
 TEST(CompressorIsOn, ShouldChangeToFalseWhenTrueAndCompressorTurnsOff)
 {
-   Given CompressorStateIs(CompressorState_On);
+   Given CompressorStateIs(CompressorState_OnAndReadyToChange);
    And CompressorIsOnIsInitialized();
    CompressorIsOnShouldBe(true);
 

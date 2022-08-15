@@ -54,7 +54,6 @@
 #include "DefrostState.h"
 #include "DefrostHsmState.h"
 #include "DefrostRequest.h"
-#include "CompressorSpeedConfig.h"
 #include "HeaterVotedState.h"
 #include "EnergyDemandLevel.h"
 #include "I_FaultWrapper.h"
@@ -336,7 +335,7 @@ enum
    ENTRY(Erd_RemoteKeyState,                                0xF00D, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_PersonalityParametricData,                     0xF00E, PersonalityParametricData_t *,                      Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_NonVolatileDataSourceCacheSyncState,           0xF012, bool,                                               Swap_N, Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
-   ENTRY(Erd_CompressorSpeedConfig,                         0xF013, CompressorSpeedConfig_t,                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorIsSingleSpeed,                       0xF013, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_DelayConvertibleCompartmentCooling,            0xF014, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CoolConvertibleCompartmentBeforeOff,           0xF015, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \

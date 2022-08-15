@@ -21,9 +21,9 @@ static void UpdateCompressorIsOnBasedOnCompressorState(void *context, const void
    I_DataModel_t *dataModel = context;
    const CompressorState_t *state = args;
 
-   if(*state == CompressorState_On ||
+   if(*state == CompressorState_OnAndReadyToChange ||
       *state == CompressorState_MinimumOnTime ||
-      *state == CompressorState_MinimumRunTime)
+      *state == CompressorState_VariableSpeedMinimumRunTime)
    {
       DataModel_Write(
          dataModel,
