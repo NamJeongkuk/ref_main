@@ -32,6 +32,9 @@ typedef struct
    Erd_t compressorSpeedVoteErd; // CompressorVotedSpeed_t
    Erd_t freezerFanSpeedVoteErd; // FanVotedSpeed_t
    Erd_t freshFoodDamperPositionVoteErd; // DamperVotedPosition_t
+   Erd_t freezerEvaporatorFilteredTemperatureResolvedErd; // TemperatureDegFx100_t
+   Erd_t freezerFilteredTemperatureResolvedErd; // TemperatureDegFx100_t
+   Erd_t freshFoodFilteredTemperatureResolvedErd; // TemperatureDegFx100_t
    Erd_t timerModuleErd; // TimerModule_t *
 } DefrostConfiguration_t;
 
