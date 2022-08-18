@@ -260,11 +260,11 @@ static uint16_t GetTimeThatPrechillConditionsAreMet(Defrost_t *instance)
    return timeThatPrechillConditionsAreMet;
 }
 
-static void VoteForPrechillLoads(Defrost_t *instance)
+static void VoteForPrechillLoads(Defrost_t *instance, bool care)
 {
    CompressorVotedSpeed_t compressorVote = {
       .speed = instance->_private.defrostParametricData->prechillCompressorSpeed,
-      .care = true
+      .care = care
    };
    DataModel_Write(
       instance->_private.dataModel,
@@ -273,7 +273,7 @@ static void VoteForPrechillLoads(Defrost_t *instance)
 
    FanVotedSpeed_t freezerFanVote = {
       .speed = instance->_private.defrostParametricData->prechillFreezerFanSpeed,
-      .care = true
+      .care = care
    };
    DataModel_Write(
       instance->_private.dataModel,
@@ -282,7 +282,7 @@ static void VoteForPrechillLoads(Defrost_t *instance)
 
    DamperVotedPosition_t damperVote = {
       .position = instance->_private.defrostParametricData->prechillFreshFoodDamperPosition,
-      .care = true
+      .care = care
    };
    DataModel_Write(
       instance->_private.dataModel,
@@ -442,7 +442,7 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Prechill);
-         VoteForPrechillLoads(instance);
+         VoteForPrechillLoads(instance, Care);
 
          if(GetTimeThatPrechillConditionsAreMet(instance) >= GetMaxPrechillTime(instance))
          {
@@ -464,6 +464,7 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Hsm_Exit:
+         VoteForPrechillLoads(instance, DontCare);
          break;
 
       default:

@@ -232,6 +232,18 @@ TEST_GROUP(Defrost_SingleEvap)
             DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
             break;
 
+         case DefrostHsmState_HeaterOnEntry:
+            Given MaxPrechillTimeInMinutesIs(TenMinutes);
+            Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
+            Given FilteredFreezerEvapTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+            Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillFreezerMinTempInDegFx100 + 1);
+            Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMinTempInDegFx100 + 1);
+            Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+
+            After(TenMinutes * MSEC_PER_MIN);
+            DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+            break;
+
          default:
             break;
       }
@@ -319,6 +331,22 @@ TEST_GROUP(Defrost_SingleEvap)
 
       CHECK_EQUAL(expected, actual.position);
       CHECK_TRUE(actual.care);
+   }
+
+   void PrechillLoadVotesShouldBeDontCare()
+   {
+      CompressorVotedSpeed_t compressorVote;
+      DataModel_Read(dataModel, Erd_CompressorSpeed_DefrostVote, &compressorVote);
+
+      FanVotedSpeed_t fanVote;
+      DataModel_Read(dataModel, Erd_FreezerFanSpeed_DefrostVote, &fanVote);
+
+      DamperVotedPosition_t damperVote;
+      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_DefrostVote, &damperVote);
+
+      CHECK_FALSE(compressorVote.care);
+      CHECK_FALSE(fanVote.care);
+      CHECK_FALSE(damperVote.care);
    }
 };
 
@@ -657,6 +685,12 @@ TEST(Defrost_SingleEvap, ShouldVoteForLoadsOnEntryToPrechill)
    CompressorSpeedVoteShouldBe(defrostData.prechillCompressorSpeed);
    FreezerFanSpeedVoteShouldBe(defrostData.prechillFreezerFanSpeed);
    FreshFoodDamperPositionVoteShouldBe(defrostData.prechillFreshFoodDamperPosition);
+}
+
+TEST(Defrost_SingleEvap, ShouldVoteDontCareOnExitOfPrechill)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
+   PrechillLoadVotesShouldBeDontCare();
 }
 
 TEST_GROUP(Defrost_DualEvap)
