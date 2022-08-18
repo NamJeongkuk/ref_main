@@ -15,6 +15,7 @@ assignees: ''
 - [ ] Update Confluence design page with any changes from implementation
 - [ ] Add integration tests
 - [ ] Run integration tests to ensure they still pass
+- [ ] Update GUI and ERD logger with new/changed ERDs
 - [ ] Bench test
 
 **Link to requirement(s):**
