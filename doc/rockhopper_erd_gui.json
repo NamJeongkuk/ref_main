@@ -744,15 +744,8 @@
       "erds": [
         {
           "namespace": "rx130",
-          "displayName": "Freezer Cabinet Resolved Setpoint",
+          "displayName": "Freezer Cabinet Resolved Vote for Setpoint",
           "name": "Erd_FreezerSetpoint_ResolvedVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
-          "displayName": "Freezer Cabinet Defrost Vote for Setpoint",
-          "name": "Erd_FreezerSetpoint_DefrostVote",
           "read": true,
           "write": true
         },
@@ -765,8 +758,50 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Freezer Cabinet Setpoint Winning Vote",
+          "displayName": "Freezer Cabinet Setpoint Winning Vote ERD",
           "name": "Erd_FreezerSetpoint_WinningVoteErd",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Cabinet Factory Vote for Setpoint",
+          "name": "Erd_FreezerSetpoint_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Cabinet Enhanced Sabbath Vote for Setpoint",
+          "name": "Erd_FreezerSetpoint_EnhancedSabbathVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Cabinet Turbo Freeze Vote for Setpoint",
+          "name": "Erd_FreezerSetpoint_TurboFreezeVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Cabinet Ice In Door Vote for Setpoint",
+          "name": "Erd_FreezerSetpoint_IceInDoorVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Cabinet Freezer Ice Maker Vote for Setpoint",
+          "name": "Erd_FreezerSetpoint_FreezerIceMakerVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Cabinet User Vote for Setpoint",
+          "name": "Erd_FreezerSetpoint_UserVote",
           "read": true,
           "write": true
         }
@@ -777,22 +812,43 @@
       "erds": [
         {
           "namespace": "rx130",
-          "displayName": "Fresh Food Cabinet Resolved Setpoint",
+          "displayName": "Fresh Food Cabinet Resolved Vote for Setpoint",
           "name": "Erd_FreshFoodSetpoint_ResolvedVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Fresh Food Cabinet Defrost Vote for Setpoint",
-          "name": "Erd_FreshFoodSetpoint_DefrostVote",
+          "displayName": "Fresh Food Cabinet Setpoint Winning Vote ERD",
+          "name": "Erd_FreshFoodSetpoint_WinningVoteErd",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Fresh Food Cabinet Setpoint Winning Vote",
-          "name": "Erd_FreshFoodSetpoint_WinningVoteErd",
+          "displayName": "Fresh Food Cabinet Factory Vote for Setpoint",
+          "name": "Erd_FreshFoodSetpoint_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fresh Food Cabinet Enhanced Sabbath Vote for Setpoint",
+          "name": "Erd_FreshFoodSetpoint_EnhancedSabbathVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fresh Food Cabinet Turbo Cool Vote for Setpoint",
+          "name": "Erd_FreshFoodSetpoint_TurboCoolVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fresh Food Cabinet User Vote for Setpoint",
+          "name": "Erd_FreshFoodSetpoint_UserVote",
           "read": true,
           "write": true
         }
@@ -803,14 +859,14 @@
       "erds": [
         {
           "namespace": "rx130",
-          "displayName": "Convertible Compartment Resolved Setpoint",
+          "displayName": "Convertible Compartment Resolved Vote for Setpoint",
           "name": "Erd_ConvertibleCompartmentSetpoint_ResolvedVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Convertible Compartment Setpoint Winning Vote",
+          "displayName": "Convertible Compartment Setpoint Winning Vote ERD",
           "name": "Erd_ConvertibleCompartmentSetpoint_WinningVoteErd",
           "read": true,
           "write": true
@@ -819,6 +875,20 @@
           "namespace": "rx130",
           "displayName": "Convertible Compartment State",
           "name": "Erd_ConvertibleCompartmentState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Convertible Compartment Factory Vote for Setpoint",
+          "name": "Erd_ConvertibleCompartmentSetpoint_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Convertible Compartment User Vote for Setpoint",
+          "name": "Erd_ConvertibleCompartmentSetpoint_UserVote",
           "read": true,
           "write": true
         }

@@ -11,10 +11,10 @@
 #include "Constants_Binary.h"
 
 // (name, winningVoteErd, resolvedStateErd, numberVotingErds)
-#define ERD_RESOLVER_TABLE(ENTRY)                                                                                                                                                                                                                           \
-   ENTRY(convertibleCompartmentSetPointResolver, Erd_ConvertibleCompartmentSetpoint_WinningVoteErd, Erd_ConvertibleCompartmentSetpoint_ResolvedVote, (Erd_ConvertibleCompartmentSetpoint_UserSetpoint - Erd_ConvertibleCompartmentSetpoint_WinningVoteErd)) \
-   ENTRY(freezerSetPointResolver, Erd_FreezerSetpoint_WinningVoteErd, Erd_FreezerSetpoint_ResolvedVote, (Erd_FreezerSetpoint_UserSetpoint - Erd_FreezerSetpoint_WinningVoteErd))                                                                            \
-   ENTRY(freshFoodSetPointResolver, Erd_FreshFoodSetpoint_WinningVoteErd, Erd_FreshFoodSetpoint_ResolvedVote, (Erd_FreshFoodSetpoint_UserSetpoint - Erd_FreshFoodSetpoint_WinningVoteErd))
+#define ERD_RESOLVER_TABLE(ENTRY)                                                                                                                                                                                                                       \
+   ENTRY(convertibleCompartmentSetPointResolver, Erd_ConvertibleCompartmentSetpoint_WinningVoteErd, Erd_ConvertibleCompartmentSetpoint_ResolvedVote, (Erd_ConvertibleCompartmentSetpoint_UserVote - Erd_ConvertibleCompartmentSetpoint_WinningVoteErd)) \
+   ENTRY(freezerSetPointResolver, Erd_FreezerSetpoint_WinningVoteErd, Erd_FreezerSetpoint_ResolvedVote, (Erd_FreezerSetpoint_UserVote - Erd_FreezerSetpoint_WinningVoteErd))                                                                            \
+   ENTRY(freshFoodSetPointResolver, Erd_FreshFoodSetpoint_WinningVoteErd, Erd_FreshFoodSetpoint_ResolvedVote, (Erd_FreshFoodSetpoint_UserVote - Erd_FreshFoodSetpoint_WinningVoteErd))
 
 #define EXPAND_AS_RESOLVERS(name, _winningVoteErd, _resolvedStateErd, _numberVotingErds) \
    static const ErdResolverConfiguration_t name##ResolverConfiguration = {               \

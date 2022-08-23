@@ -104,15 +104,15 @@ TEST(ErdResolverPlugin, ShouldChangeWinningVoteToErdFreshFoodSetpointTurboCoolWh
 {
    Given TheModuleIsInitialized();
 
-   When SetErdToCare(Erd_FreshFoodSetpoint_TurboCool);
-   WinningVoteShouldBe(Erd_FreshFoodSetpoint_TurboCool);
+   When SetErdToCare(Erd_FreshFoodSetpoint_TurboCoolVote);
+   WinningVoteShouldBe(Erd_FreshFoodSetpoint_TurboCoolVote);
 }
 
 TEST(ErdResolverPlugin, ShouldChangeTheWinningVoteWhenAHigherPriorityErdIsSetToCare)
 {
    Given TheModuleIsInitialized();
 
-   SetErdToCare(Erd_FreshFoodSetpoint_TurboCool);
+   SetErdToCare(Erd_FreshFoodSetpoint_TurboCoolVote);
 
    When SetErdToCare(Erd_FreshFoodSetpoint_FactoryVote);
    WinningVoteShouldBe(Erd_FreshFoodSetpoint_FactoryVote);
@@ -122,10 +122,10 @@ TEST(ErdResolverPlugin, ShouldNotChangeTheWinningVoteWhenALowerPriorityErdIsSetT
 {
    Given TheModuleIsInitialized();
 
-   SetErdToCare(Erd_FreshFoodSetpoint_TurboCool);
+   SetErdToCare(Erd_FreshFoodSetpoint_TurboCoolVote);
 
-   When SetErdToCare(Erd_FreshFoodSetpoint_UserSetpoint);
-   WinningVoteShouldBe(Erd_FreshFoodSetpoint_TurboCool);
+   When SetErdToCare(Erd_FreshFoodSetpoint_UserVote);
+   WinningVoteShouldBe(Erd_FreshFoodSetpoint_TurboCoolVote);
 }
 
 TEST(ErdResolverPlugin, ShouldSetResolvedVoteToNotCareOnInit)
@@ -139,7 +139,7 @@ TEST(ErdResolverPlugin, ShouldSetResolvedVoteToNotCareWhenThereAreNoVotesThatCar
 {
    Given TheModuleIsInitialized();
 
-   SetErdToNotCare(Erd_FreshFoodSetpoint_TurboCool);
+   SetErdToNotCare(Erd_FreshFoodSetpoint_TurboCoolVote);
 
    ResolvedVoteCareShouldBe(false);
 }
@@ -148,7 +148,7 @@ TEST(ErdResolverPlugin, ShouldSetResolvedVoteTemperatureToTheValueOfErdFreshFood
 {
    Given TheModuleIsInitialized();
 
-   SetErdToCare(Erd_FreshFoodSetpoint_TurboCool);
+   SetErdToCare(Erd_FreshFoodSetpoint_TurboCoolVote);
 
    ResolvedVoteCareShouldBe(careData.temperature);
 }
