@@ -10,6 +10,7 @@
 
 #include "I_DataModel.h"
 #include "FanSpeedResolver.h"
+#include "FanController.h"
 #include "FanId.h"
 
 typedef struct
