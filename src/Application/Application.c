@@ -15,12 +15,12 @@
 #include "DefrostPlugin.h"
 #include "SabbathPlugin.h"
 #include "DoorPlugin.h"
-#include "SensorFilteredReadingPlugin.h"
 #include "EepromAppPlugin.h"
 #include "FaultWrapperPlugin.h"
 #include "OverrideArbiterPlugin.h"
 #include "SetpointResolverPlugin.h"
 #include "CompressorPlugin.h"
+#include "Constants_Binary.h"
 
 enum
 {
@@ -57,7 +57,11 @@ void Application_Init(
       Erd_PersonalityIdOutOfRangeFlag,
       DataModelErdPointerAccess_GetAction(dataModel, Erd_JumpToBootLoaderAction));
 
-   SensorFilteredReadingPlugin_Init(dataModel);
+   // Will fix with new plugin
+   DataModel_Write(
+      dataModel,
+      Erd_SetpointResolverReady,
+      set);
 
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
    EepromAppPlugin_Init(dataModel);
