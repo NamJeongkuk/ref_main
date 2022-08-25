@@ -60,7 +60,7 @@ void Application_Init(
    // Will fix with new plugin
    DataModel_Write(
       dataModel,
-      Erd_SetpointResolverReady,
+      Erd_SensorsReadyToBeRead,
       set);
 
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
