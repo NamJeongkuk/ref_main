@@ -24,11 +24,6 @@
 
 enum
 {
-   PowerUpFactor = 5
-};
-
-enum
-{
    DontCare = false,
    Care = true
 };
@@ -39,10 +34,13 @@ enum
    Signal_CompressorIsOn,
    Signal_MaxPrechillPrepTimerExpired,
    Signal_MaxPrechillTimerExpired,
-   Signal_PrechillTemperatureExitConditionMet
+   Signal_PrechillTemperatureExitConditionMet,
+   Signal_FreshFoodThermistorIsInvalid,
+   Signal_FreezerEvaporatorThermistorIsInvalid
 };
 
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data);
+static bool State_PrechillParent(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -51,8 +49,9 @@ static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static const HsmStateHierarchyDescriptor_t stateList[] = {
    { State_Idle, HSM_NO_PARENT },
    { State_Dwell, HSM_NO_PARENT },
-   { State_PrechillPrep, HSM_NO_PARENT },
-   { State_Prechill, HSM_NO_PARENT },
+   { State_PrechillParent, HSM_NO_PARENT },
+   { State_PrechillPrep, State_PrechillParent },
+   { State_Prechill, State_PrechillParent },
    { State_HeaterOnEntry, HSM_NO_PARENT }
 };
 
@@ -93,6 +92,24 @@ static void DataModelChanged(void *context, const void *args)
       if(*state)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_CompressorIsOn, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->freshFoodThermistorIsValidErd)
+   {
+      const bool *freshFoodThermistorIsValid = onChangeData->data;
+
+      if(!(*freshFoodThermistorIsValid))
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_FreshFoodThermistorIsInvalid, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->freezerEvaporatorThermistorIsValidErd)
+   {
+      const bool *freezerEvaporatorThermistorIsValid = onChangeData->data;
+
+      if(!(*freezerEvaporatorThermistorIsValid))
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerEvaporatorThermistorIsInvalid, NULL);
       }
    }
    else if(erd == instance->_private.config->freezerEvaporatorFilteredTemperatureResolvedErd)
@@ -213,6 +230,26 @@ static void ResetFreezerCompartmentWasTooWarmOnPowerUp(Defrost_t *instance)
       instance->_private.dataModel,
       instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
       clear);
+}
+
+static bool FreezerEvaporatorThermistorIsValid(Defrost_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerEvaporatorThermistorIsValidErd,
+      &state);
+   return state;
+}
+
+static bool FreshFoodThermistorIsValid(Defrost_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freshFoodThermistorIsValidErd,
+      &state);
+   return state;
 }
 
 static void MaxPrechillPrepTimerExpired(void *context)
@@ -369,7 +406,9 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_DefrostReadyTimerIsSatisfied:
-         if(AnyPreviousDefrostWasAbnormal(instance) || FreezerCompartmentWasTooWarmOnPowerUp(instance))
+         if(AnyPreviousDefrostWasAbnormal(instance) ||
+            FreezerCompartmentWasTooWarmOnPowerUp(instance) ||
+            !FreezerEvaporatorThermistorIsValid(instance))
          {
             if(FreezerCompartmentWasTooWarmOnPowerUp(instance))
             {
@@ -393,6 +432,30 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    return HsmSignalConsumed;
 }
 
+static bool State_PrechillParent(Hsm_t *hsm, HsmSignal_t signal, const void *data)
+{
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Hsm_Entry:
+         break;
+
+      case Signal_FreshFoodThermistorIsInvalid:
+      case Signal_FreezerEvaporatorThermistorIsInvalid:
+         Hsm_Transition(hsm, State_HeaterOnEntry);
+         break;
+
+      case Hsm_Exit:
+         break;
+
+      default:
+         return HsmSignalDeferred;
+   }
+
+   return HsmSignalConsumed;
+}
+
 static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
@@ -403,7 +466,11 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_PrechillPrep);
 
-         if(CompressorIsOn(instance))
+         if(!FreshFoodThermistorIsValid(instance))
+         {
+            Hsm_Transition(hsm, State_HeaterOnEntry);
+         }
+         else if(CompressorIsOn(instance))
          {
             Hsm_Transition(hsm, State_Prechill);
          }

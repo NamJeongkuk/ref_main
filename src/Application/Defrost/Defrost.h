@@ -25,6 +25,8 @@ typedef struct
    Erd_t convertibleCompartmentDefrostWasAbnormalErd; // bool
    Erd_t defrostReadyTimerIsSatisfied; // bool
    Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
+   Erd_t freezerEvaporatorThermistorIsValidErd; // bool
+   Erd_t freshFoodThermistorIsValidErd; // bool
    Erd_t compressorIsOnErd; // bool
    Erd_t freezerFilteredTemperatureTooWarmOnPowerUpReadyErd; // bool
    Erd_t maxPrechillTimeInMinutesErd; // uint8_t

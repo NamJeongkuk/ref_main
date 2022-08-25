@@ -111,7 +111,16 @@ static void SetTimeWhenDefrostReadyTimerIsSatisfiedInMinutes(void)
       Erd_ConvertibleCompartmentDefrostWasAbnormal,
       &convertibleCompartmentDefrostWasAbnormal);
 
-   if(freshFoodDefrostWasAbnormal || freezerDefrostWasAbnormal || convertibleCompartmentDefrostWasAbnormal)
+   bool freezerEvaporatorThermistorIsValid;
+   DataModel_Read(
+      instance.dataModel,
+      Erd_FreezerEvaporatorThermistorIsValid,
+      &freezerEvaporatorThermistorIsValid);
+
+   if(freshFoodDefrostWasAbnormal ||
+      freezerDefrostWasAbnormal ||
+      convertibleCompartmentDefrostWasAbnormal ||
+      !freezerEvaporatorThermistorIsValid)
    {
       const DefrostData_t *defrostData = PersonalityParametricData_Get(instance.dataModel)->defrostData;
 
@@ -156,7 +165,8 @@ static void DataModelChanged(void *context, const void *args)
    else if(erd == Erd_FreshFoodDefrostWasAbnormal ||
       erd == Erd_FreezerDefrostWasAbnormal ||
       erd == Erd_ConvertibleCompartmentDefrostWasAbnormal ||
-      erd == Erd_MaxTimeBetweenDefrostsInMinutes)
+      erd == Erd_MaxTimeBetweenDefrostsInMinutes ||
+      erd == Erd_FreezerEvaporatorThermistorIsValid)
    {
       SetTimeWhenDefrostReadyTimerIsSatisfiedInMinutes();
    }
