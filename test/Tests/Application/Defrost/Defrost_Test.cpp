@@ -64,6 +64,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .maxPrechillTimeInMinutesErd = Erd_MaxPrechillTimeInMinutes,
    .timeThatPrechillConditionsAreMetInMinutesErd = Erd_TimeThatPrechillConditionsAreMetInMinutes,
    .compressorSpeedVoteErd = Erd_CompressorSpeed_DefrostVote,
+   .condenserFanSpeedVoteErd = Erd_CondenserFanSpeed_DefrostVote,
    .freezerFanSpeedVoteErd = Erd_FreezerFanSpeed_DefrostVote,
    .freshFoodDamperPositionVoteErd = Erd_FreshFoodDamperPosition_DefrostVote,
    .freezerEvaporatorFilteredTemperatureResolvedErd = Erd_FreezerEvap_FilteredTemperatureResolved,
@@ -322,6 +323,15 @@ TEST_GROUP(Defrost_SingleEvap)
       CHECK_TRUE(actual.care);
    }
 
+   void CondenserFanSpeedVoteShouldBe(FanSpeed_t expected)
+   {
+      FanVotedSpeed_t actual;
+      DataModel_Read(dataModel, Erd_CondenserFanSpeed_DefrostVote, &actual);
+
+      CHECK_EQUAL(expected, actual.speed);
+      CHECK_TRUE(actual.care);
+   }
+
    void FreezerFanSpeedVoteShouldBe(FanSpeed_t expected)
    {
       FanVotedSpeed_t actual;
@@ -353,6 +363,14 @@ TEST_GROUP(Defrost_SingleEvap)
 
       CHECK_FALSE(compressorVote.care);
       CHECK_FALSE(fanVote.care);
+      CHECK_FALSE(damperVote.care);
+   }
+
+   void DamperVoteShouldBeDontCare()
+   {
+      DamperVotedPosition_t damperVote;
+      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_DefrostVote, &damperVote);
+
       CHECK_FALSE(damperVote.care);
    }
 };
@@ -775,10 +793,25 @@ TEST(Defrost_SingleEvap, ShouldVoteForLoadsOnEntryToPrechill)
    FreshFoodDamperPositionVoteShouldBe(defrostData.prechillFreshFoodDamperPosition);
 }
 
-TEST(Defrost_SingleEvap, ShouldVoteDontCareOnExitOfPrechill)
+TEST(Defrost_SingleEvap, ShouldTurnOffCompressorAndFansAndNotCareAboutDamperVoteOnHeaterOnEntryState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
-   PrechillLoadVotesShouldBeDontCare();
+
+   DamperVoteShouldBeDontCare();
+   CompressorSpeedVoteShouldBe(CompressorSpeed_Off);
+   CondenserFanSpeedVoteShouldBe(FanSpeed_Off);
+   FreezerFanSpeedVoteShouldBe(FanSpeed_Off);
+}
+
+TEST(Defrost_SingleEvap, ShouldExitOnHeaterEntryStateAfterDefrostHeaterOnDelayTimerExpired)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
+
+   After(defrostData.defrostHeaterOnDelayAfterCompressorOffInSeconds * MSEC_PER_SEC - 1);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+
+   After(1);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOn);
 }
 
 TEST_GROUP(Defrost_DualEvap)

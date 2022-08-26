@@ -99,7 +99,7 @@ TEST(ActivelyWaitingForDefrostOnCompareMatch, ShouldSetActivelyWaitingForDefrost
 
 TEST(ActivelyWaitingForDefrostOnCompareMatch, ShouldSetActivelyWaitingForDefrostToFalseWhenDefrostHsmStateIsHeaterOnHeat)
 {
-   GivenDefrostHsmStateIs(DefrostHsmState_HeaterOnHeat);
+   GivenDefrostHsmStateIs(DefrostHsmState_HeaterOn);
    ActivelyWaitingForDefrostOnCompareMatchIsInitialized();
 
    ActivelyWaitingForDefrostShouldBe(false);

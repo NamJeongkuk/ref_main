@@ -32,6 +32,7 @@ typedef struct
    Erd_t maxPrechillTimeInMinutesErd; // uint8_t
    Erd_t timeThatPrechillConditionsAreMetInMinutesErd; // uint16_t
    Erd_t compressorSpeedVoteErd; // CompressorVotedSpeed_t
+   Erd_t condenserFanSpeedVoteErd; // FanVotedSpeed_t
    Erd_t freezerFanSpeedVoteErd; // FanVotedSpeed_t
    Erd_t freshFoodDamperPositionVoteErd; // DamperVotedPosition_t
    Erd_t freezerEvaporatorFilteredTemperatureResolvedErd; // TemperatureDegFx100_t
@@ -46,8 +47,7 @@ typedef struct
    {
       I_DataModel_t *dataModel;
       Hsm_t hsm;
-      Timer_t prechillPrepTimer;
-      Timer_t maxPrechillTimer;
+      Timer_t defrostTimer;
       EventSubscription_t dataModelSubscription;
       const DefrostConfiguration_t *config;
       const DefrostData_t *defrostParametricData;

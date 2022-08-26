@@ -32,11 +32,10 @@ enum
 {
    Signal_DefrostReadyTimerIsSatisfied = Hsm_UserSignalStart,
    Signal_CompressorIsOn,
-   Signal_MaxPrechillPrepTimerExpired,
-   Signal_MaxPrechillTimerExpired,
+   Signal_DefrostTimerExpired,
    Signal_PrechillTemperatureExitConditionMet,
    Signal_FreshFoodThermistorIsInvalid,
-   Signal_FreezerEvaporatorThermistorIsInvalid
+   Signal_FreezerEvaporatorThermistorIsInvalid,
 };
 
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -45,14 +44,16 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data);
+static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 
 static const HsmStateHierarchyDescriptor_t stateList[] = {
    { State_Idle, HSM_NO_PARENT },
    { State_Dwell, HSM_NO_PARENT },
+   { State_HeaterOnEntry, HSM_NO_PARENT },
+   { State_HeaterOn, HSM_NO_PARENT },
    { State_PrechillParent, HSM_NO_PARENT },
    { State_PrechillPrep, State_PrechillParent },
    { State_Prechill, State_PrechillParent },
-   { State_HeaterOnEntry, HSM_NO_PARENT }
 };
 
 static const HsmConfiguration_t hsmConfiguration = {
@@ -252,29 +253,6 @@ static bool FreshFoodThermistorIsValid(Defrost_t *instance)
    return state;
 }
 
-static void MaxPrechillPrepTimerExpired(void *context)
-{
-   Defrost_t *instance = context;
-
-   Hsm_SendSignal(&instance->_private.hsm, Signal_MaxPrechillPrepTimerExpired, NULL);
-}
-
-static void MaxPrechillTimerExpired(void *context)
-{
-   Defrost_t *instance = context;
-
-   Hsm_SendSignal(&instance->_private.hsm, Signal_MaxPrechillTimerExpired, NULL);
-}
-
-static void StartMaxPrechillTimer(Defrost_t *instance, uint8_t maxPrechillTimeInMinutes)
-{
-   StartTimer(
-      instance,
-      &instance->_private.maxPrechillTimer,
-      maxPrechillTimeInMinutes * MSEC_PER_MIN,
-      MaxPrechillTimerExpired);
-}
-
 static uint8_t GetMaxPrechillTime(Defrost_t *instance)
 {
    uint8_t maxPrechillTime;
@@ -295,6 +273,22 @@ static uint16_t GetTimeThatPrechillConditionsAreMet(Defrost_t *instance)
       &timeThatPrechillConditionsAreMet);
 
    return timeThatPrechillConditionsAreMet;
+}
+
+static void DefrostTimerExpired(void *context)
+{
+   Defrost_t *instance = context;
+
+   Hsm_SendSignal(&instance->_private.hsm, Signal_DefrostTimerExpired, NULL);
+}
+
+static void StartDefrostTimer(Defrost_t *instance, TimerTicks_t ticks)
+{
+   StartTimer(
+      instance,
+      &instance->_private.defrostTimer,
+      ticks,
+      DefrostTimerExpired);
 }
 
 static void VoteForPrechillLoads(Defrost_t *instance, bool care)
@@ -325,6 +319,32 @@ static void VoteForPrechillLoads(Defrost_t *instance, bool care)
       instance->_private.dataModel,
       instance->_private.config->freshFoodDamperPositionVoteErd,
       &damperVote);
+}
+
+static void VoteForHeaterOnEntryLoads(Defrost_t *instance, bool care)
+{
+   CompressorVotedSpeed_t compressorVote = {
+      .speed = CompressorSpeed_Off,
+      .care = care,
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->compressorSpeedVoteErd,
+      &compressorVote);
+
+   FanVotedSpeed_t fanVote = {
+      .speed = FanSpeed_Off,
+      .care = care,
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->condenserFanSpeedVoteErd,
+      &fanVote);
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freezerFanSpeedVoteErd,
+      &fanVote);
 }
 
 static void CheckIfPrechillTemperatureExitConditionMet(Defrost_t *instance)
@@ -476,21 +496,17 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          }
          else
          {
-            StartTimer(
-               instance,
-               &instance->_private.prechillPrepTimer,
-               instance->_private.defrostParametricData->maxPrechillPrepTimeInMinutes * MSEC_PER_MIN,
-               MaxPrechillPrepTimerExpired);
+            StartDefrostTimer(instance, instance->_private.defrostParametricData->maxPrechillPrepTimeInMinutes * MSEC_PER_MIN);
          }
          break;
 
       case Signal_CompressorIsOn:
-      case Signal_MaxPrechillPrepTimerExpired:
+      case Signal_DefrostTimerExpired:
          Hsm_Transition(hsm, State_Prechill);
          break;
 
       case Hsm_Exit:
-         StopTimer(instance, &instance->_private.prechillPrepTimer);
+         StopTimer(instance, &instance->_private.defrostTimer);
          break;
 
       default:
@@ -517,21 +533,20 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          }
          else
          {
-            StartMaxPrechillTimer(
-               instance,
-               TRUNCATE_UNSIGNED_SUBTRACTION((uint16_t)GetMaxPrechillTime(instance), GetTimeThatPrechillConditionsAreMet(instance)));
+            StartDefrostTimer(instance, TRUNCATE_UNSIGNED_SUBTRACTION((uint16_t)GetMaxPrechillTime(instance), GetTimeThatPrechillConditionsAreMet(instance)) * MSEC_PER_MIN);
          }
 
          CheckIfPrechillTemperatureExitConditionMet(instance);
          break;
 
       case Signal_PrechillTemperatureExitConditionMet:
-      case Signal_MaxPrechillTimerExpired:
+      case Signal_DefrostTimerExpired:
          Hsm_Transition(hsm, State_HeaterOnEntry);
          break;
 
       case Hsm_Exit:
          VoteForPrechillLoads(instance, DontCare);
+         StopTimer(instance, &instance->_private.defrostTimer);
          break;
 
       default:
@@ -550,9 +565,16 @@ static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_HeaterOnEntry);
+         VoteForHeaterOnEntryLoads(instance, Care);
+         StartDefrostTimer(instance, instance->_private.defrostParametricData->defrostHeaterOnDelayAfterCompressorOffInSeconds * MSEC_PER_SEC);
+         break;
+
+      case Signal_DefrostTimerExpired:
+         Hsm_Transition(hsm, State_HeaterOn);
          break;
 
       case Hsm_Exit:
+         StopTimer(instance, &instance->_private.defrostTimer);
          break;
 
       default:
@@ -571,6 +593,27 @@ static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Dwell);
+         break;
+
+      case Hsm_Exit:
+         break;
+
+      default:
+         return HsmSignalDeferred;
+   }
+
+   return HsmSignalConsumed;
+}
+
+static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
+{
+   Defrost_t *instance = InstanceFromHsm(hsm);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Hsm_Entry:
+         SetHsmStateTo(instance, DefrostHsmState_HeaterOn);
          break;
 
       case Hsm_Exit:
