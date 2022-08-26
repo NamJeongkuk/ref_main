@@ -952,6 +952,39 @@
           "write": true
         }
       ]
+    },
+    {
+      "title": "Setpoints voting",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "Erd_FreezerSetpoint_ResolvedVote",
+          "name": "Erd_FreezerSetpoint_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Erd_FreezerSetpoint_WinningVoteErd",
+          "name": "Erd_FreezerSetpoint_WinningVoteErd",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Erd_FreezerSetpoint_FactoryVote",
+          "name": "Erd_FreezerSetpoint_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Erd_FreezerSetpoint_TurboFreezeVote",
+          "name": "Erd_FreezerSetpoint_TurboFreezeVote",
+          "read": true,
+          "write": true
+        }
+      ]
     }
   ]
 }
