@@ -94,7 +94,7 @@ static void EventPublishCallback(Event_SafeSynchronous_t event, HardwareEepromMo
 {
    HardwareEepromEventArgs_t callbackArgs = {
       .mode = mode,
-      .source = errorSource 
+      .source = errorSource
    };
    Event_SafeSynchronous_Publish(&event, &callbackArgs);
 }

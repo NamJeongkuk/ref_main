@@ -26,6 +26,7 @@ typedef struct
       uint8_t receiveDataCount;
       uint8_t totalReadBytes;
       uint8_t *readBuffer;
+      bool blockWriteRequests;
       I_Action_t *watchdogKickAction;
       Event_SafeSynchronous_t readCompleteEvent;
       Event_SafeSynchronous_t writeCompleteEvent;

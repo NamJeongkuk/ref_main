@@ -509,13 +509,17 @@ static void Read(I_HardwareEeprom_t *_instance, uint16_t offset, uint16_t numByt
 static void Write(I_HardwareEeprom_t *_instance, uint16_t offset, uint16_t numBytes, const void *writeBuffer)
 {
    IGNORE(_instance);
-   HardwareEepromErrorSource_t errorSource = Write_Eeprom_Hardware(offset, (const uint8_t *)writeBuffer, numBytes, false);
 
-   HardwareEepromEventArgs_t eventArgs = {
-      .mode = HardwareEepromMode_Write,
-      .source = errorSource
-   };
-   Event_SafeSynchronous_Publish(&instance._private.writeCompleteEvent, &eventArgs);
+   if(!instance._private.blockWriteRequests)
+   {
+      HardwareEepromErrorSource_t errorSource = Write_Eeprom_Hardware(offset, (const uint8_t *)writeBuffer, numBytes, false);
+
+      HardwareEepromEventArgs_t eventArgs = {
+         .mode = HardwareEepromMode_Write,
+         .source = errorSource
+      };
+      Event_SafeSynchronous_Publish(&instance._private.writeCompleteEvent, &eventArgs);
+   }
 }
 
 static void Erase(I_HardwareEeprom_t *_instance)
@@ -524,6 +528,7 @@ static void Erase(I_HardwareEeprom_t *_instance)
 
    uint16_t offset = 0;
    HardwareEepromErrorSource_t errorSource = HardwareEepromErrorSource_None;
+   instance._private.blockWriteRequests = true;
 
    while((offset < EepromEraseSize) && (errorSource == HardwareEepromErrorSource_None))
    {
@@ -588,6 +593,7 @@ HardwareEeprom_I2c_t *HardwareEeprom_I2c_Init(I_Action_t *watchdogKickAction, Ti
    instance.interface.api = &api;
    instance._private.watchdogKickAction = watchdogKickAction;
    instance._private.timeSourceInterrupt = timeSourceInterrupt;
+   instance._private.blockWriteRequests = false;
 
    Event_SafeSynchronous_Init(&instance._private.readCompleteEvent);
    Event_SafeSynchronous_Init(&instance._private.writeCompleteEvent);
