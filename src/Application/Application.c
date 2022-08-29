@@ -20,7 +20,7 @@
 #include "OverrideArbiterPlugin.h"
 #include "SetpointResolverPlugin.h"
 #include "CompressorPlugin.h"
-#include "Constants_Binary.h"
+#include "SensorFilterPlugin.h"
 
 enum
 {
@@ -57,11 +57,7 @@ void Application_Init(
       Erd_PersonalityIdOutOfRangeFlag,
       DataModelErdPointerAccess_GetAction(dataModel, Erd_JumpToBootLoaderAction));
 
-   // Will fix with new plugin
-   DataModel_Write(
-      dataModel,
-      Erd_SensorsReadyToBeRead,
-      set);
+   SensorFilterPlugin(dataModel);
 
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
    EepromAppPlugin_Init(dataModel);

@@ -14,7 +14,7 @@
 
 typedef struct
 {
-   bool slewRateEnabled;
+   bool slewRateFilterEnabled;
    int16_t slewRatePerSecondx100;
 } SensorDataSlewRateData_t;
 
@@ -52,7 +52,7 @@ typedef struct
    SensorDataConvertibleCompartmentSensorType_t *convertibleCompartmentCabinetThermistor;
    SensorDataSensorType_t *ambientThermistor;
    SensorDataSensorType_t *convertibleCompartmentEvapThermistor;
-   uint16_t periodicUpdateRate;
+   uint16_t periodicUpdateRateInMs;
 } SensorData_t;
 
 #endif

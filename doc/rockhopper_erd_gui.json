@@ -536,48 +536,6 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Freezer Thermistor AdcCount",
-          "name": "Erd_FreezerThermistor_AdcCount",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
-          "displayName": "Fresh Food Evap Thermistor AdcCount",
-          "name": "Erd_FreshFoodEvapThermistor_AdcCount",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
-          "displayName": "Freezer Evap Thermistor AdcCount",
-          "name": "Erd_FreezerEvapThermistor_AdcCount",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
-          "displayName": "Convertible Compartment Thermistor AdcCount",
-          "name": "Erd_ConvertibleCompartmentCabinetThermistor_AdcCount",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
-          "displayName": "Ambient Thermistor AdcCount",
-          "name": "Erd_AmbientThermistor_AdcCount",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
-          "displayName": "Convertible Compartment Evap Thermistor AdcCount",
-          "name": "Erd_ConvertibleCompartmentEvapThermistor_AdcCount",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
           "displayName": "Fresh Food Unfiltered Temperature",
           "name": "Erd_FreshFood_UnfilteredTemperature",
           "read": true,
@@ -608,6 +566,13 @@
           "namespace": "rx130",
           "displayName": "FreshFood FilteredTemp Resolved",
           "name": "Erd_FreshFood_FilteredTemperatureResolved",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Thermistor AdcCount",
+          "name": "Erd_FreezerThermistor_AdcCount",
           "read": true,
           "write": true
         },
@@ -648,6 +613,13 @@
         },
         {
           "namespace": "rx130",
+          "displayName": "Fresh Food Evap Thermistor AdcCount",
+          "name": "Erd_FreshFoodEvapThermistor_AdcCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "Fresh Food Evap Unfiltered Temperature",
           "name": "Erd_FreshFoodEvap_UnfilteredTemperature",
           "read": true,
@@ -657,6 +629,13 @@
           "namespace": "rx130",
           "displayName": "Fresh Food Evap Filtered Temperature",
           "name": "Erd_FreshFoodEvap_FilteredTemperature",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Evap Thermistor AdcCount",
+          "name": "Erd_FreezerEvapThermistor_AdcCount",
           "read": true,
           "write": true
         },
@@ -697,6 +676,13 @@
         },
         {
           "namespace": "rx130",
+          "displayName": "Convertible Compartment Thermistor AdcCount",
+          "name": "Erd_ConvertibleCompartmentCabinetThermistor_AdcCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "Convertible Compartment Unfiltered Temperature",
           "name": "Erd_ConvertibleCompartment_UnfilteredTemperature",
           "read": true,
@@ -711,6 +697,13 @@
         },
         {
           "namespace": "rx130",
+          "displayName": "Ambient Thermistor AdcCount",
+          "name": "Erd_AmbientThermistor_AdcCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "Ambient Unfiltered Temperature",
           "name": "Erd_Ambient_UnfilteredTemperature",
           "read": true,
@@ -720,6 +713,13 @@
           "namespace": "rx130",
           "displayName": "Ambient Filtered Temperature",
           "name": "Erd_Ambient_FilteredTemperature",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Convertible Compartment Evap Thermistor AdcCount",
+          "name": "Erd_ConvertibleCompartmentEvapThermistor_AdcCount",
           "read": true,
           "write": true
         },
