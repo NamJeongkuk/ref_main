@@ -162,7 +162,6 @@ TEST_GROUP(GridBlockCalculator)
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
-   PersonalityParametricData_t personalityParametricData;
 
    void setup()
    {
@@ -173,12 +172,6 @@ TEST_GROUP(GridBlockCalculator)
          dataModel,
          Erd_TimerModule,
          &timerModuleTestDouble->timerModule);
-
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetGrid(&personalityParametricData, &gridData);
-      DataModelErdPointerAccess_Write(dataModel,
-         Erd_PersonalityParametricData,
-         &personalityParametricData);
    }
 
    void ModuleIsInitialized(void)

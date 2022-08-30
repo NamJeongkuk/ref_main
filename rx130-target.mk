@@ -14,7 +14,7 @@ SVD:=tools/kpit-rx/svd/rx130.svd
 ID_CODE:=45C0C0AC1C1AC2C2AC3C3AC4C4AC5C5A
 
 PATH_TO_BUILD_PARAMETRIC:=./Parametric
-PARAMETRIC_DIRS:=Parametric/data/
+PARAMETRIC_DIRS:=Parametric/data/Production/
 
 BUILD_DEPS+=$(BOOT_LOADER_DIR)/$(BOOT_LOADER_TARGET)-boot-loader-memory.ld
 
@@ -60,7 +60,7 @@ SRC_DIRS:=\
   src/Application/Sensor \
   src/Application/SystemMonitor \
   src/Application/TimerModule \
-  Parametric/data/ \
+  Parametric/data/Production/ \
 
 INC_DIRS:=\
   src/Application/Compressor \
@@ -122,7 +122,7 @@ $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)
 
 $(OUTPUT_DIR)/$(TARGET)_bootloader_app_parametric.mot: target $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot build_parametric
 	@echo Creating $@...
-	@$(LUA53) $(SREC_CONCATENATE) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot $(OUTPUT_DIR)/$(TARGET).apl $(OUTPUT_DIR)/Parametric/data/rockhopper.parametric.apl --output $@
+	@$(LUA53) $(SREC_CONCATENATE) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot $(OUTPUT_DIR)/$(TARGET).apl $(OUTPUT_DIR)/Parametric/data/Production/rockhopper.parametric.apl --output $@
 
 $(OUTPUT_DIR)/doc:
 	@mkdir -p $(OUTPUT_DIR)/doc

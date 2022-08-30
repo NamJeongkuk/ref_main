@@ -26,8 +26,8 @@ extern "C"
 #define Then
 #define And
 
-#define MinTimeBetweenDefrostsInMinutes (defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes)
-#define MinTimeBetweenDefrostsInSeconds (defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
+#define MinTimeBetweenDefrostsInMinutes (defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes)
+#define MinTimeBetweenDefrostsInSeconds (defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
 
 static DefrostReadyTimerIsSatisfiedConfiguration_t config = {
    .compressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
@@ -45,8 +45,8 @@ TEST_GROUP(DefrostReadyTimerIsSatisfied)
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
-   PersonalityParametricData_t personalityParametricData;
-   DefrostData_t defrostData;
+   const DefrostData_t *defrostData;
+
    DefrostReadyTimerIsSatisfied_t instance;
 
    void setup()
@@ -57,11 +57,7 @@ TEST_GROUP(DefrostReadyTimerIsSatisfied)
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
 
-      DefrostData_TestDouble_Init(&defrostData);
-
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
+      defrostData = PersonalityParametricData_Get(dataModel)->defrostData;
    }
 
    void DefrostReadyTimerIsSatisfiedModuleIsInitialized()

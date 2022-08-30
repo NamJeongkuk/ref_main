@@ -47,15 +47,11 @@ TEST_GROUP(ConvertibleCompartmentState)
    ConvertibleCompartmentState_t instance;
    ReferDataModel_TestDouble_t dataModelTestDouble;
    I_DataModel_t *dataModel;
-   PersonalityParametricData_t personalityParametricData;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelTestDouble);
       dataModel = dataModelTestDouble.dataModel;
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetConvertibleCompartment(&personalityParametricData, &convertibleCompartmentData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
    }
 
    void GivenConvertibleCompartmentStateIsInitialized()

@@ -70,7 +70,7 @@ TEST_GROUP(DoorAccelerationCounter)
    TimerModule_TestDouble_t *timerModuleTestDouble;
    PersonalityParametricData_t personalityParametricData;
    DoorAccelerationCounter_t instance;
-   DefrostData_t defrostData;
+   const DefrostData_t *defrostData;
 
    void setup()
    {
@@ -80,11 +80,7 @@ TEST_GROUP(DoorAccelerationCounter)
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
 
-      DefrostData_TestDouble_Init(&defrostData);
-
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
+      defrostData = PersonalityParametricData_Get(dataModel)->defrostData;
    }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
@@ -215,10 +211,10 @@ TEST_GROUP(DoorAccelerationCounter)
       for(uint8_t i = 0; i < 10; i++)
       {
          After(PeriodicTimerTicksInMs - 1);
-         FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
+         FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * i);
 
          After(1);
-         FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
+         FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
       }
    }
 
@@ -227,10 +223,10 @@ TEST_GROUP(DoorAccelerationCounter)
       for(uint8_t i = 0; i < 10; i++)
       {
          After(PeriodicTimerTicksInMs - 1);
-         FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData.freezerDoorIncrementFactorInSecondsPerSecond * i);
+         FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData->freezerDoorIncrementFactorInSecondsPerSecond * i);
 
          After(1);
-         FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData.freezerDoorIncrementFactorInSecondsPerSecond * (i + 1));
+         FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData->freezerDoorIncrementFactorInSecondsPerSecond * (i + 1));
       }
    }
 
@@ -239,10 +235,10 @@ TEST_GROUP(DoorAccelerationCounter)
       for(uint8_t i = 0; i < 10; i++)
       {
          After(PeriodicTimerTicksInMs - 1);
-         ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
+         ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * i);
 
          After(1);
-         ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
+         ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
       }
    }
 
@@ -328,14 +324,14 @@ TEST(DoorAccelerationCounter, ShouldThenStartCountingDoorAccelerationWhenFreezer
    for(uint8_t i = 0; i < 10; i++)
    {
       After(PeriodicTimerTicksInMs - 1);
-      FreshFoodDoorAccelerationShouldBe(defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
-      FreezerDoorAccelerationShouldBe(defrostData.freezerDoorIncrementFactorInSecondsPerSecond * i);
-      ConvertibleCompartmentDoorAccelerationShouldBe(defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
+      FreshFoodDoorAccelerationShouldBe(defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * i);
+      FreezerDoorAccelerationShouldBe(defrostData->freezerDoorIncrementFactorInSecondsPerSecond * i);
+      ConvertibleCompartmentDoorAccelerationShouldBe(defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * i);
 
       After(1);
-      FreshFoodDoorAccelerationShouldBe(defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
-      FreezerDoorAccelerationShouldBe(defrostData.freezerDoorIncrementFactorInSecondsPerSecond * (i + 1));
-      ConvertibleCompartmentDoorAccelerationShouldBe(defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      FreshFoodDoorAccelerationShouldBe(defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      FreezerDoorAccelerationShouldBe(defrostData->freezerDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      ConvertibleCompartmentDoorAccelerationShouldBe(defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
    }
 }
 
@@ -371,14 +367,14 @@ TEST(DoorAccelerationCounter, ShouldThenStartCountingDoorAccelerationWhenFreezer
    for(uint8_t i = 0; i < 10; i++)
    {
       After(PeriodicTimerTicksInMs - 1);
-      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
-      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData.freezerDoorIncrementFactorInSecondsPerSecond * i);
-      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
+      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * i);
+      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData->freezerDoorIncrementFactorInSecondsPerSecond * i);
+      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * i);
 
       After(1);
-      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
-      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData.freezerDoorIncrementFactorInSecondsPerSecond * (i + 1));
-      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData->freezerDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
    }
 }
 
@@ -415,10 +411,10 @@ TEST(DoorAccelerationCounter, ShouldIncrementFreshFoodScaledDoorAccelerationInSe
    for(uint8_t i = 0; i < 10; i++)
    {
       After(PeriodicTimerTicksInMs - 1);
-      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
+      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * i);
 
       After(1);
-      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
    }
 }
 
@@ -431,10 +427,10 @@ TEST(DoorAccelerationCounter, ShouldIncrementFreshFoodScaledDoorAccelerationInSe
    for(uint8_t i = 0; i < 10; i++)
    {
       After(PeriodicTimerTicksInMs - 1);
-      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
+      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * i);
 
       After(1);
-      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
    }
 }
 
@@ -447,10 +443,10 @@ TEST(DoorAccelerationCounter, ShouldIncrementFreshFoodScaledDoorAccelerationInSe
    for(uint8_t i = 0; i < 10; i++)
    {
       After(PeriodicTimerTicksInMs - 1);
-      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
+      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * i);
 
       After(1);
-      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
    }
 }
 
@@ -463,10 +459,10 @@ TEST(DoorAccelerationCounter, ShouldIncrementFreshFoodScaledDoorAccelerationInSe
    for(uint8_t i = 0; i < 10; i++)
    {
       After(PeriodicTimerTicksInMs - 1);
-      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData.freezerDoorIncrementFactorInSecondsPerSecond * i);
+      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData->freezerDoorIncrementFactorInSecondsPerSecond * i);
 
       After(1);
-      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData.freezerDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData->freezerDoorIncrementFactorInSecondsPerSecond * (i + 1));
    }
 }
 
@@ -480,10 +476,10 @@ TEST(DoorAccelerationCounter, ShouldIncrementConvertibleCompartmentAccelerationC
    for(uint8_t i = 0; i < 10; i++)
    {
       After(PeriodicTimerTicksInMs - 1);
-      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
+      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * i);
 
       After(1);
-      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
    }
 }
 
@@ -497,10 +493,10 @@ TEST(DoorAccelerationCounter, ShouldIncrementConvertibleCompartmentAccelerationC
    for(uint8_t i = 0; i < 10; i++)
    {
       After(PeriodicTimerTicksInMs - 1);
-      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData.freezerDoorIncrementFactorInSecondsPerSecond * i);
+      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData->freezerDoorIncrementFactorInSecondsPerSecond * i);
 
       After(1);
-      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData.freezerDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData->freezerDoorIncrementFactorInSecondsPerSecond * (i + 1));
    }
 }
 
@@ -520,14 +516,14 @@ TEST(DoorAccelerationCounter, ShouldIncrementAllDoorAccelerationsWhileInRunState
    for(uint8_t i = 0; i < 10; i++)
    {
       After(PeriodicTimerTicksInMs - 1);
-      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
-      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData.freezerDoorIncrementFactorInSecondsPerSecond * i);
-      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
+      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * i);
+      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData->freezerDoorIncrementFactorInSecondsPerSecond * i);
+      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * i);
 
       After(1);
-      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
-      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData.freezerDoorIncrementFactorInSecondsPerSecond * (i + 1));
-      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData->freezerDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
    }
 }
 
@@ -544,10 +540,10 @@ TEST(DoorAccelerationCounter, ShouldOnlyIncrementFreshFoodScaledDoorAcceleration
    for(uint8_t i = 0; i < 10; i++)
    {
       After(PeriodicTimerTicksInMs - 1);
-      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
+      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * i);
 
       After(1);
-      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
+      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * (i + 1));
    }
 }
 
@@ -564,10 +560,10 @@ TEST(DoorAccelerationCounter, ShouldStopIncrementingWhenFreshFoodDoorClosesWhile
    for(uint8_t i = 0; i < 10; i++)
    {
       After(PeriodicTimerTicksInMs - 1);
-      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * 10);
+      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * 10);
 
       After(1);
-      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * 10);
+      FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * 10);
    }
 }
 
@@ -584,10 +580,10 @@ TEST(DoorAccelerationCounter, ShouldStopIncrementingWhenFreezerFoodDoorClosesWhi
    for(uint8_t i = 0; i < 10; i++)
    {
       After(PeriodicTimerTicksInMs - 1);
-      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData.freezerDoorIncrementFactorInSecondsPerSecond * 10);
+      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData->freezerDoorIncrementFactorInSecondsPerSecond * 10);
 
       After(1);
-      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData.freezerDoorIncrementFactorInSecondsPerSecond * 10);
+      FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData->freezerDoorIncrementFactorInSecondsPerSecond * 10);
    }
 }
 
@@ -605,9 +601,9 @@ TEST(DoorAccelerationCounter, ShouldStopIncrementingWhenConvertibleCompartmentDo
    for(uint8_t i = 0; i < 10; i++)
    {
       After(PeriodicTimerTicksInMs - 1);
-      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * 10);
+      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * 10);
 
       After(1);
-      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData.freshFoodDoorIncrementFactorInSecondsPerSecond * 10);
+      ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData->freshFoodDoorIncrementFactorInSecondsPerSecond * 10);
    }
 }

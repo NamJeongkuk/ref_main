@@ -50,16 +50,11 @@ TEST_GROUP(ResetNvErdImmediatelyWhenRamErdChangesToZero)
 {
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
-   PersonalityParametricData_t personalityParametricData;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
-
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetSystemMonitor(&personalityParametricData, &systemMonitorData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
    }
 
    void Initialize()

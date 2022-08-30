@@ -14,6 +14,12 @@ extern "C"
 }
 
 #include "ReferDataModel_TestDouble.h"
+#include "ParametricDataTestDouble.h"
+
+enum
+{
+   DefaultPersonalityForTest = Personality_TddDevelopment
+};
 
 static void RunTimerModule(void *context)
 {
@@ -22,6 +28,11 @@ static void RunTimerModule(void *context)
 }
 
 void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance)
+{
+   ReferDataModel_TestDouble_Init(instance, DefaultPersonalityForTest);
+}
+
+void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance, PersonalityId_t personalityIdForTest)
 {
    TimerModule_TestDouble_Init(&instance->_private.timerModuleTestDouble);
    Action_Context_Init(&instance->_private.runTimerModuleAction, &instance->_private.timerModuleTestDouble.timerModule, RunTimerModule);
@@ -43,6 +54,9 @@ void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance)
    instance->externalDataSource = SystemData_ExternalDataSource(&instance->_private.systemData);
 
    DataModelErdPointerAccess_Write(instance->dataModel, Erd_TimerModule, &instance->_private.timerModuleTestDouble.timerModule);
+
+   instance->_private.personalityParametricData = (PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(personalityIdForTest);
+   DataModelErdPointerAccess_Write(instance->dataModel, Erd_PersonalityParametricData, instance->_private.personalityParametricData);
 }
 
 TimerModule_TestDouble_t *ReferDataModel_TestDouble_GetTimerModuleTestDouble(ReferDataModel_TestDouble_t *instance)

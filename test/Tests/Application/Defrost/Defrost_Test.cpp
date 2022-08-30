@@ -105,8 +105,8 @@ TEST_GROUP(Defrost_SingleEvap)
    TimerModule_TestDouble_t *timerModuleTestDouble;
    PersonalityParametricData_t personalityParametricData;
    Defrost_t instance;
-   DefrostData_t defrostData;
-   GridData_t gridData;
+   const DefrostData_t *defrostData;
+   const GridData_t *gridData;
 
    void setup()
    {
@@ -116,16 +116,8 @@ TEST_GROUP(Defrost_SingleEvap)
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
 
-      DefrostData_TestDouble_Init(&defrostData);
-
-      GridData_TestDouble_Init(&gridData);
-
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);
-      PersonalityParametricData_TestDouble_SetSabbath(&personalityParametricData, &sabbathData);
-      PersonalityParametricData_TestDouble_SetGrid(&personalityParametricData, &gridData);
-      PersonalityParametricData_TestDouble_SetEvaporator(&personalityParametricData, &singleEvaporatorData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
+      defrostData = PersonalityParametricData_Get(dataModel)->defrostData;
+      gridData = PersonalityParametricData_Get(dataModel)->gridData;
    }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
@@ -238,9 +230,9 @@ TEST_GROUP(Defrost_SingleEvap)
          case DefrostHsmState_HeaterOnEntry:
             Given MaxPrechillTimeInMinutesIs(TenMinutes);
             Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-            Given FilteredFreezerEvapTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-            Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillFreezerMinTempInDegFx100 + 1);
-            Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMinTempInDegFx100 + 1);
+            Given FilteredFreezerEvapTemperatureIs(defrostData->prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+            Given FilteredFreezerCabinetTemperatureIs(defrostData->prechillFreezerMinTempInDegFx100 + 1);
+            Given FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillFreshFoodMinTempInDegFx100 + 1);
             Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
 
             After(TenMinutes * MSEC_PER_MIN);
@@ -526,9 +518,9 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillWhenEnteringPrechillPrepAndPrechillCo
 {
    Given MaxPrechillTimeInMinutesIs(TenMinutes);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FilteredFreezerEvapTemperatureIs(defrostData->prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillFreshFoodMinTempInDegFx100 + 1);
    Given FreezerEvaporatorThermistorValidityIs(Valid);
    Given FreshFoodThermistorValidityIs(Valid);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
@@ -542,9 +534,9 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillWhenPrechillConditionsMetWhileInPrech
 {
    Given MaxPrechillTimeInMinutesIs(TenMinutes);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FilteredFreezerEvapTemperatureIs(defrostData->prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillFreshFoodMinTempInDegFx100 + 1);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
    When CompressorIsOn();
@@ -555,12 +547,12 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillWhenPrechillPrepTimerExpiresWhileInPr
 {
    Given MaxPrechillTimeInMinutesIs(TenMinutes);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FilteredFreezerEvapTemperatureIs(defrostData->prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillFreshFoodMinTempInDegFx100 + 1);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
-   After((defrostData.maxPrechillPrepTimeInMinutes * MSEC_PER_MIN) - 1);
+   After((defrostData->maxPrechillPrepTimeInMinutes * MSEC_PER_MIN) - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
 
    After(1);
@@ -605,9 +597,9 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeWhileTimeTha
 {
    Given MaxPrechillTimeInMinutesIs(TenMinutes);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FilteredFreezerEvapTemperatureIs(defrostData->prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillFreshFoodMinTempInDegFx100 + 1);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
 
    After(TenMinutes * MSEC_PER_MIN - 1);
@@ -621,9 +613,9 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeMinusTimeTha
 {
    Given MaxPrechillTimeInMinutesIs(TenMinutes);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(NineMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FilteredFreezerEvapTemperatureIs(defrostData->prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillFreshFoodMinTempInDegFx100 + 1);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
 
    After(OneMinute * MSEC_PER_MIN - 1);
@@ -657,12 +649,12 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenInPrechillAndFreezerEvapTemp
 {
    Given MaxPrechillTimeInMinutesIs(TenMinutes);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FilteredFreezerEvapTemperatureIs(defrostData->prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillFreshFoodMinTempInDegFx100 + 1);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
 
-   When FilteredFreezerEvapTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100);
+   When FilteredFreezerEvapTemperatureIs(defrostData->prechillFreezerEvapExitTemperatureInDegFx100);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
@@ -671,7 +663,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndFreezerEv
    Given MaxPrechillTimeInMinutesIs(TenMinutes);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100);
+   Given FilteredFreezerEvapTemperatureIs(defrostData->prechillFreezerEvapExitTemperatureInDegFx100);
 
    When CompressorIsOn();
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
@@ -681,12 +673,12 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenInPrechillAndFreezerTemperat
 {
    Given MaxPrechillTimeInMinutesIs(TenMinutes);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FilteredFreezerEvapTemperatureIs(defrostData->prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillFreshFoodMinTempInDegFx100 + 1);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
 
-   When FilteredFreezerCabinetTemperatureIs(defrostData.prechillFreezerMinTempInDegFx100);
+   When FilteredFreezerCabinetTemperatureIs(defrostData->prechillFreezerMinTempInDegFx100);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
@@ -695,7 +687,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndFreezerTe
    Given MaxPrechillTimeInMinutesIs(TenMinutes);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillFreezerMinTempInDegFx100);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->prechillFreezerMinTempInDegFx100);
 
    When CompressorIsOn();
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
@@ -705,12 +697,12 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenInPrechillAndFreshFoodTemper
 {
    Given MaxPrechillTimeInMinutesIs(TenMinutes);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FilteredFreezerEvapTemperatureIs(defrostData->prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillFreshFoodMinTempInDegFx100 + 1);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
 
-   When FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMinTempInDegFx100);
+   When FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillFreshFoodMinTempInDegFx100);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
@@ -719,7 +711,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndFreshFood
    Given MaxPrechillTimeInMinutesIs(TenMinutes);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMinTempInDegFx100);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillFreshFoodMinTempInDegFx100);
 
    When CompressorIsOn();
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
@@ -729,12 +721,12 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenInPrechillAndFreshFoodTemper
 {
    Given MaxPrechillTimeInMinutesIs(TenMinutes);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMaxTempInDegFx100 - 1);
+   Given FilteredFreezerEvapTemperatureIs(defrostData->prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillFreshFoodMaxTempInDegFx100 - 1);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
 
-   When FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMaxTempInDegFx100);
+   When FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillFreshFoodMaxTempInDegFx100);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
@@ -743,7 +735,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndFreshFood
    Given MaxPrechillTimeInMinutesIs(TenMinutes);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMaxTempInDegFx100);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillFreshFoodMaxTempInDegFx100);
 
    When CompressorIsOn();
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
@@ -753,9 +745,9 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenFreshFoodThermistorBecomesIn
 {
    Given MaxPrechillTimeInMinutesIs(TenMinutes);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FilteredFreezerEvapTemperatureIs(defrostData->prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillFreshFoodMinTempInDegFx100 + 1);
    Given FreshFoodThermistorValidityIs(Valid);
    Given FreezerEvaporatorThermistorValidityIs(Valid);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
@@ -768,9 +760,9 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenFreezerEvapThermistorBecomes
 {
    Given MaxPrechillTimeInMinutesIs(TenMinutes);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FilteredFreezerEvapTemperatureIs(defrostData->prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillFreshFoodMinTempInDegFx100 + 1);
    Given FreshFoodThermistorValidityIs(Valid);
    Given FreezerEvaporatorThermistorValidityIs(Valid);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
@@ -783,14 +775,14 @@ TEST(Defrost_SingleEvap, ShouldVoteForLoadsOnEntryToPrechill)
 {
    Given MaxPrechillTimeInMinutesIs(TenMinutes);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
-   Given FilteredFreezerEvapTemperatureIs(defrostData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillFreezerMinTempInDegFx100 + 1);
-   Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given FilteredFreezerEvapTemperatureIs(defrostData->prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillFreshFoodMinTempInDegFx100 + 1);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
 
-   CompressorSpeedVoteShouldBe(defrostData.prechillCompressorSpeed);
-   FreezerFanSpeedVoteShouldBe(defrostData.prechillFreezerFanSpeed);
-   FreshFoodDamperPositionVoteShouldBe(defrostData.prechillFreshFoodDamperPosition);
+   CompressorSpeedVoteShouldBe(defrostData->prechillCompressorSpeed);
+   FreezerFanSpeedVoteShouldBe(defrostData->prechillFreezerFanSpeed);
+   FreshFoodDamperPositionVoteShouldBe(defrostData->prechillFreshFoodDamperPosition);
 }
 
 TEST(Defrost_SingleEvap, ShouldTurnOffCompressorAndFansAndNotCareAboutDamperVoteOnHeaterOnEntryState)
@@ -807,7 +799,7 @@ TEST(Defrost_SingleEvap, ShouldExitOnHeaterEntryStateAfterDefrostHeaterOnDelayTi
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
 
-   After(defrostData.defrostHeaterOnDelayAfterCompressorOffInSeconds * MSEC_PER_SEC - 1);
+   After(defrostData->defrostHeaterOnDelayAfterCompressorOffInSeconds * MSEC_PER_SEC - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 
    After(1);
@@ -819,10 +811,7 @@ TEST_GROUP(Defrost_DualEvap)
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
-   PersonalityParametricData_t personalityParametricData;
    Defrost_t instance;
-   DefrostData_t defrostData;
-   GridData_t gridData;
 
    void setup()
    {
@@ -831,17 +820,6 @@ TEST_GROUP(Defrost_DualEvap)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
-
-      DefrostData_TestDouble_Init(&defrostData);
-
-      GridData_TestDouble_Init(&gridData);
-
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);
-      PersonalityParametricData_TestDouble_SetSabbath(&personalityParametricData, &sabbathData);
-      PersonalityParametricData_TestDouble_SetGrid(&personalityParametricData, &gridData);
-      PersonalityParametricData_TestDouble_SetEvaporator(&personalityParametricData, &dualEvaporatorData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
    }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)

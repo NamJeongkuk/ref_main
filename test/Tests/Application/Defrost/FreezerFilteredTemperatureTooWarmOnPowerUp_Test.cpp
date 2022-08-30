@@ -51,7 +51,7 @@ TEST_GROUP(FreezerFilteredTemperatureTooWarmOnPowerUp)
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
    PersonalityParametricData_t personalityParametricData;
-   DefrostData_t defrostData;
+   const DefrostData_t *defrostData;
 
    void setup()
    {
@@ -61,11 +61,7 @@ TEST_GROUP(FreezerFilteredTemperatureTooWarmOnPowerUp)
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
 
-      DefrostData_TestDouble_Init(&defrostData);
-
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
+      defrostData = PersonalityParametricData_Get(dataModel)->defrostData;
    }
 
    void CalculatedGridLinesAre(CalculatedGridLines_t gridLines)
@@ -119,7 +115,7 @@ TEST(FreezerFilteredTemperatureTooWarmOnPowerUp, ShouldSetErdToFalseWhenFreezerF
 
 TEST(FreezerFilteredTemperatureTooWarmOnPowerUp, ShouldSetErdToTrueWhenFreezerFilteredTemperatureIsAboveFreezerDefrostTerminationTemperature)
 {
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.freezerDefrostTerminationTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->freezerDefrostTerminationTemperatureInDegFx100 + 1);
    And CalculatedGridLinesAre(calcGridLines);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIsInitialized();
@@ -129,7 +125,7 @@ TEST(FreezerFilteredTemperatureTooWarmOnPowerUp, ShouldSetErdToTrueWhenFreezerFi
 
 TEST(FreezerFilteredTemperatureTooWarmOnPowerUp, ShouldSetErdToTrueWhenFreezerFilteredTemperatureIsEqualToFreezerDefrostTerminationTemperature)
 {
-   Given FilteredFreezerCabinetTemperatureIs(defrostData.freezerDefrostTerminationTemperatureInDegFx100);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->freezerDefrostTerminationTemperatureInDegFx100);
    And CalculatedGridLinesAre(calcGridLines);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIsInitialized();

@@ -16,6 +16,7 @@
 #include "Action_Context.h"
 #include "Eeprom_Model.h"
 #include "AsyncDataSource_Eeprom_TestDouble.h"
+#include "PersonalityId.h"
 
 typedef struct
 {
@@ -25,6 +26,7 @@ typedef struct
    struct
    {
       SystemData_t systemData;
+      PersonalityParametricData_t *personalityParametricData;
       TimerModule_TestDouble_t timerModuleTestDouble;
       Action_Context_t runTimerModuleAction;
       Action_Context_t resetAction;
@@ -34,9 +36,17 @@ typedef struct
 
 /*!
  * @brief Refer DataModel TestDouble
+ * Uses default personality for test file
  * @param instance of refer datamodel testdouble
  */
 void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance);
+
+/*!
+ * @brief Refer DataModel TestDouble
+ * @param instance of refer datamodel testdouble
+ * @param instance of personality id for test. Matching Lua file will be loaded into personality parametric ERD
+ */
+void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance, PersonalityId_t personalityIdForTest);
 
 /*!
  * @brief TimerModule TestDouble

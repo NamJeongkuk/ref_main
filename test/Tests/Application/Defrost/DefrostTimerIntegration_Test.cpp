@@ -55,18 +55,6 @@ enum
    SomeAdjustedFreezerSetpointDegFx100 = 100
 };
 
-static const SabbathData_t sabbathData = {
-   .maxTimeBetweenDefrostsInMinutes = 16 * MINUTES_PER_HOUR
-};
-
-static const EvaporatorData_t singleEvaporatorData = {
-   .numberOfEvaporators = 1
-};
-
-static const EvaporatorData_t dualEvaporatorData = {
-   .numberOfEvaporators = 2
-};
-
 static CalculatedAxisGridLines_t freshFoodCalcAxis = {
    .gridLinesDegFx100 = { 0, -450, 150, 450, 950, 1150 }
 };
@@ -80,18 +68,12 @@ static CalculatedGridLines_t calcGridLines = {
    .freezerGridLine = freezerCalcAxis
 };
 
-static SystemMonitorData_t systemMonitorData = {
-   .periodicNvUpdateInMinutes = 60
-};
-
 TEST_GROUP(DefrostTimerIntegration)
 {
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
    PersonalityParametricData_t personalityParametricData;
-   DefrostData_t defrostData;
-   GridData_t gridData;
 
    PeriodicNvUpdaterPlugin_t periodicNvUpdaterPlugin;
 
@@ -102,18 +84,6 @@ TEST_GROUP(DefrostTimerIntegration)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
-
-      DefrostData_TestDouble_Init(&defrostData);
-
-      GridData_TestDouble_Init(&gridData);
-
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);
-      PersonalityParametricData_TestDouble_SetSabbath(&personalityParametricData, &sabbathData);
-      PersonalityParametricData_TestDouble_SetGrid(&personalityParametricData, &gridData);
-      PersonalityParametricData_TestDouble_SetEvaporator(&personalityParametricData, &singleEvaporatorData);
-      PersonalityParametricData_TestDouble_SetSystemMonitor(&personalityParametricData, &systemMonitorData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
    }
 
    void CalculatedGridLinesAre(CalculatedGridLines_t gridLines)

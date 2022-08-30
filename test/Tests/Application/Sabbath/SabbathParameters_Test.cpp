@@ -40,18 +40,14 @@ TEST_GROUP(SabbathParameters)
    I_DataModel_t *dataModel;
    PersonalityParametricData_t personalityParametricData;
    SabbathParameters_t instance;
-   DefrostData_t defrostData;
+   const DefrostData_t *defrostData;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
 
-      DefrostData_TestDouble_Init(&defrostData);
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);
-      PersonalityParametricData_TestDouble_SetSabbath(&personalityParametricData, &sabbathData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
+      defrostData = PersonalityParametricData_Get(dataModel)->defrostData;
    }
 
    void SabbathParametersAreInitialized()
@@ -92,7 +88,7 @@ TEST_GROUP(SabbathParameters)
       And SabbathModeIs(DISABLED);
 
       When SabbathParametersAreInitialized();
-      MaxTimeBetweenDefrostsInMinutesShouldBe(defrostData.maxTimeBetweenDefrostsInMinutes);
+      MaxTimeBetweenDefrostsInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes);
    }
 };
 
@@ -107,7 +103,7 @@ TEST(SabbathParameters, ShouldSetMaxTimeBetweenDefrostsToNormalTimeWhenSabbathIs
    And SabbathModeIs(DISABLED);
 
    When SabbathParametersAreInitialized();
-   MaxTimeBetweenDefrostsInMinutesShouldBe(defrostData.maxTimeBetweenDefrostsInMinutes);
+   MaxTimeBetweenDefrostsInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes);
 }
 
 TEST(SabbathParameters, ShouldSetMaxTimeBetweenDefrostsToSabbathTimeWhenSabbathIsEnabledOnInit)
@@ -124,7 +120,7 @@ TEST(SabbathParameters, ShouldUpdateMaxTimeBetweenDefrostsToNormalTimeWhenSabbat
    Given SabbathAndSabbathParametersAreEnabled();
 
    When SabbathModeIs(DISABLED);
-   MaxTimeBetweenDefrostsInMinutesShouldBe(defrostData.maxTimeBetweenDefrostsInMinutes);
+   MaxTimeBetweenDefrostsInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes);
 }
 
 TEST(SabbathParameters, ShouldSetMaxTimeBetweenDefrostsToSabbathTimeWhenSabbathIsEnabled)
