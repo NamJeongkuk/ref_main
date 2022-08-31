@@ -62,21 +62,8 @@ static bool DefrostReadyTimerIsSatisfied(DefrostReadyTimerIsSatisfied_t *instanc
    const DefrostData_t *defrostData = PersonalityParametricData_Get(instance->_private.dataModel)->defrostData;
    uint32_t compressorOnTimeInSeconds = CompressorOnTimeInSeconds(instance);
 
-   if(compressorOnTimeInSeconds >= ((uint32_t)defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE))
-   {
-      if((compressorOnTimeInSeconds + DoorAccelerations(instance)) >= TimeInSecondsWhenDefrostReadyTimerIsSatisfied(instance))
-      {
-         return true;
-      }
-      else
-      {
-         return false;
-      }
-   }
-   else
-   {
-      return false;
-   }
+   return (compressorOnTimeInSeconds >= ((uint32_t)defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)) &&
+      ((compressorOnTimeInSeconds + DoorAccelerations(instance)) >= TimeInSecondsWhenDefrostReadyTimerIsSatisfied(instance));
 }
 
 static void UpdateDefrostReadyTimerIsSatisfiedErd(DefrostReadyTimerIsSatisfied_t *instance)

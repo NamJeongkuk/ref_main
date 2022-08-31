@@ -32,7 +32,6 @@ typedef struct
       I_DataModel_t *dataModel;
       EventSubscription_t dataModelSubscription;
       const DefrostReadyTimerIsSatisfiedConfiguration_t *config;
-      const DefrostData_t *defrostParametricData;
    } _private;
 } DefrostReadyTimerIsSatisfied_t;
 
