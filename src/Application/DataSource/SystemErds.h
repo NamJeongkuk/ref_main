@@ -478,6 +478,30 @@ enum
    ENTRY(Erd_Ambient_ThermistorIsValid,                     0xF185, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartment_ThermistorIsValid,      0xF186, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_FreshFoodThermistor_IsValidOverrideValue,                           0xF190, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerThermistor_IsValidOverrideValue,                             0xF191, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvapThermistor_IsValidOverrideValue,                       0xF192, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapThermistor_IsValidOverrideValue,                         0xF193, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideValue,       0xF194, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AmbientThermistor_IsValidOverrideValue,                             0xF195, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentEvapThermistor_IsValidOverrideValue,          0xF196, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FreshFoodThermistor_IsValidResolved,                           0xF197, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerThermistor_IsValidResolved,                             0xF198, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvapThermistor_IsValidResolved,                       0xF199, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapThermistor_IsValidResolved,                         0xF19A, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved,       0xF19B, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AmbientThermistor_IsValidResolved,                             0xF19C, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentEvapThermistor_IsValidResolved,          0xF19D, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FreshFoodThermistor_IsValidOverrideRequest,                     0xF19E, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerThermistor_IsValidOverrideRequest,                       0xF19F, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvapThermistor_IsValidOverrideRequest,                 0xF1A0, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapThermistor_IsValidOverrideRequest,                   0xF1A1, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideRequest, 0xF1A2, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AmbientThermistor_IsValidOverrideRequest,                       0xF1A3, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentEvapThermistor_IsValidOverrideRequest,    0xF1A4, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RelayWatchdog,                                 0xF201, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_OtherLed,                                      0xF202, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
@@ -493,11 +517,11 @@ enum
    ENTRY(Erd_CompressorSpeed_DefrostVote,                   0xF223, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorSpeed_GridVote,                      0xF224, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_CondenserFanSpeed_ResolvedVote,                0xF230, FanVotedState_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CondenserFanSpeed_ResolvedVote,                0xF230, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CondenserFanSpeed_WinningVoteErd,              0xF231, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CondenserFanSpeed_FactoryVote,                 0xF232, FanVotedState_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CondenserFanSpeed_DefrostVote,                 0xF233, FanVotedState_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CondenserFanSpeed_GridVote,                    0xF234, FanVotedState_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CondenserFanSpeed_FactoryVote,                 0xF232, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CondenserFanSpeed_DefrostVote,                 0xF233, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CondenserFanSpeed_GridVote,                    0xF234, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_IceCabinetFanSpeed_ResolvedVote,               0xF240, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceCabinetFanSpeed_WinningVoteErd,             0xF241, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

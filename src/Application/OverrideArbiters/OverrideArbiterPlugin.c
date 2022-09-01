@@ -58,23 +58,134 @@ static const OverrideArbiterConfiguration_t freshFoodCabinetFilteredTemperatureA
    NUM_ELEMENTS(freshFoodCabinetFilteredTemperatureOverrideRequestErdList)
 };
 
+static const Erd_t freshFoodThermistorValidOverrideArbiterRequestErdLis[] = {
+   Erd_FreshFoodThermistor_IsValidOverrideRequest
+};
+
+static const Erd_t freshFoodThermistorValidValueErdList[] = {
+   Erd_FreshFood_ThermistorIsValid,
+   Erd_FreshFoodThermistor_IsValidOverrideValue
+};
+
+static const OverrideArbiterConfiguration_t freshFoodThermistorValidArbiterConfiguration = {
+   freshFoodThermistorValidOverrideArbiterRequestErdLis,
+   freshFoodThermistorValidValueErdList,
+   Erd_FreshFoodThermistor_IsValidResolved,
+   NUM_ELEMENTS(freshFoodThermistorValidOverrideArbiterRequestErdLis)
+};
+
+static const Erd_t freezerThermistorValidOverrideArbiterRequestErdLis[] = {
+   Erd_FreezerThermistor_IsValidOverrideRequest
+};
+
+static const Erd_t freezerThermistorValidValueErdList[] = {
+   Erd_Freezer_ThermistorIsValid,
+   Erd_FreezerThermistor_IsValidOverrideValue
+};
+
+static const OverrideArbiterConfiguration_t freezerThermistorValidArbiterConfiguration = {
+   freezerThermistorValidOverrideArbiterRequestErdLis,
+   freezerThermistorValidValueErdList,
+   Erd_FreezerThermistor_IsValidResolved,
+   NUM_ELEMENTS(freezerThermistorValidOverrideArbiterRequestErdLis)
+};
+
+static const Erd_t freshFoodEvapThermistorValidOverrideArbiterRequestErdLis[] = {
+   Erd_FreshFoodEvapThermistor_IsValidOverrideRequest
+};
+
+static const Erd_t freshFoodEvapThermistorValidValueErdList[] = {
+   Erd_FreshFoodEvaporatorThermistorIsValid,
+   Erd_FreshFoodEvapThermistor_IsValidOverrideValue
+};
+
+static const OverrideArbiterConfiguration_t freshFoodEvapThermistorValidArbiterConfiguration = {
+   freshFoodEvapThermistorValidOverrideArbiterRequestErdLis,
+   freshFoodEvapThermistorValidValueErdList,
+   Erd_FreshFoodEvapThermistor_IsValidResolved,
+   NUM_ELEMENTS(freshFoodEvapThermistorValidOverrideArbiterRequestErdLis)
+};
+
+static const Erd_t freezerEvapThermistorValidOverrideArbiterRequestErdLis[] = {
+   Erd_FreezerEvapThermistor_IsValidOverrideRequest
+};
+
+static const Erd_t freezerEvapThermistorValidValueErdList[] = {
+   Erd_FreezerEvaporatorThermistorIsValid,
+   Erd_FreezerEvapThermistor_IsValidOverrideValue
+};
+
+static const OverrideArbiterConfiguration_t freezerEvapThermistorValidArbiterConfiguration = {
+   freezerEvapThermistorValidOverrideArbiterRequestErdLis,
+   freezerEvapThermistorValidValueErdList,
+   Erd_FreezerEvapThermistor_IsValidResolved,
+   NUM_ELEMENTS(freezerEvapThermistorValidOverrideArbiterRequestErdLis)
+};
+
+static const Erd_t convertibleCompartmentCabinetThermistorValidOverrideArbiterRequestErdLis[] = {
+   Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideRequest
+};
+
+static const Erd_t convertibleCompartmentCabinetThermistorValidValueErdList[] = {
+   Erd_ConvertibleCompartment_ThermistorIsValid,
+   Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideValue
+};
+
+static const OverrideArbiterConfiguration_t convertibleCompartmentCabinetThermistorValidArbiterConfiguration = {
+   convertibleCompartmentCabinetThermistorValidOverrideArbiterRequestErdLis,
+   convertibleCompartmentCabinetThermistorValidValueErdList,
+   Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved,
+   NUM_ELEMENTS(convertibleCompartmentCabinetThermistorValidOverrideArbiterRequestErdLis)
+};
+
+static const Erd_t ambientThermistorValidOverrideArbiterRequestErdLis[] = {
+   Erd_AmbientThermistor_IsValidOverrideRequest
+};
+
+static const Erd_t ambientThermistorValidValueErdList[] = {
+   Erd_Ambient_ThermistorIsValid,
+   Erd_AmbientThermistor_IsValidOverrideValue
+};
+
+static const OverrideArbiterConfiguration_t ambientThermistorValidArbiterConfiguration = {
+   ambientThermistorValidOverrideArbiterRequestErdLis,
+   ambientThermistorValidValueErdList,
+   Erd_AmbientThermistor_IsValidResolved,
+   NUM_ELEMENTS(ambientThermistorValidOverrideArbiterRequestErdLis)
+};
+
+static const Erd_t convertibleCompartmentEvapThermistorValidOverrideArbiterRequestErdLis[] = {
+   Erd_ConvertibleCompartmentEvapThermistor_IsValidOverrideRequest
+};
+
+static const Erd_t convertibleCompartmentEvapThermistorValidValueErdList[] = {
+   Erd_ConvertibleCompartmentEvaporatorThermistorIsValid,
+   Erd_ConvertibleCompartmentEvapThermistor_IsValidOverrideValue
+};
+
+static const OverrideArbiterConfiguration_t convertibleCompartmentEvapThermistorValidArbiterConfiguration = {
+   convertibleCompartmentEvapThermistorValidOverrideArbiterRequestErdLis,
+   convertibleCompartmentEvapThermistorValidValueErdList,
+   Erd_ConvertibleCompartmentEvapThermistor_IsValidResolved,
+   NUM_ELEMENTS(convertibleCompartmentEvapThermistorValidOverrideArbiterRequestErdLis)
+};
+
 static struct
 {
    OverrideArbiter_t freezerEvaporatorFilteredTemperatureArbiter;
    OverrideArbiter_t freezerCabinetFilteredTemperatureArbiter;
    OverrideArbiter_t freshFoodCabinetFilteredTemperatureArbiter;
+   OverrideArbiter_t freshFoodThermistorValidArbiter;
+   OverrideArbiter_t freezerThermistorValidArbiter;
+   OverrideArbiter_t freshFoodEvapThermistorValidArbiter;
+   OverrideArbiter_t freezerEvapThermistorValidArbiter;
+   OverrideArbiter_t convertibleCompartmentCabinetThermistorValidArbiter;
+   OverrideArbiter_t ambientThermistorValidArbiter;
+   OverrideArbiter_t convertibleCompartmentEvapThermistorValidArbiter;
 } instance;
 
-void OverrideArbiterPlugin_Init(I_DataModel_t *dataModel)
+static void InitializeFilteredTemperatureArbiters(I_DataModel_t *dataModel)
 {
-   bool sensorsReadyToBeRead;
-   DataModel_Read(
-      dataModel,
-      Erd_SensorsReadyToBeRead,
-      &sensorsReadyToBeRead);
-
-   uassert(sensorsReadyToBeRead);
-
    OverrideArbiter_Init(
       &instance.freezerEvaporatorFilteredTemperatureArbiter,
       DataModel_AsDataSource(dataModel),
@@ -89,6 +200,58 @@ void OverrideArbiterPlugin_Init(I_DataModel_t *dataModel)
       &instance.freshFoodCabinetFilteredTemperatureArbiter,
       DataModel_AsDataSource(dataModel),
       &freshFoodCabinetFilteredTemperatureArbiterConfiguration);
+}
+
+static void InitializeThermistorIsValidArbiters(I_DataModel_t *dataModel)
+{
+   OverrideArbiter_Init(
+      &instance.freshFoodThermistorValidArbiter,
+      DataModel_AsDataSource(dataModel),
+      &freshFoodThermistorValidArbiterConfiguration);
+
+   OverrideArbiter_Init(
+      &instance.freezerThermistorValidArbiter,
+      DataModel_AsDataSource(dataModel),
+      &freezerThermistorValidArbiterConfiguration);
+
+   OverrideArbiter_Init(
+      &instance.freshFoodEvapThermistorValidArbiter,
+      DataModel_AsDataSource(dataModel),
+      &freshFoodEvapThermistorValidArbiterConfiguration);
+
+   OverrideArbiter_Init(
+      &instance.freezerEvapThermistorValidArbiter,
+      DataModel_AsDataSource(dataModel),
+      &freezerEvapThermistorValidArbiterConfiguration);
+
+   OverrideArbiter_Init(
+      &instance.convertibleCompartmentCabinetThermistorValidArbiter,
+      DataModel_AsDataSource(dataModel),
+      &convertibleCompartmentCabinetThermistorValidArbiterConfiguration);
+
+   OverrideArbiter_Init(
+      &instance.ambientThermistorValidArbiter,
+      DataModel_AsDataSource(dataModel),
+      &ambientThermistorValidArbiterConfiguration);
+
+   OverrideArbiter_Init(
+      &instance.convertibleCompartmentEvapThermistorValidArbiter,
+      DataModel_AsDataSource(dataModel),
+      &convertibleCompartmentEvapThermistorValidArbiterConfiguration);
+}
+
+void OverrideArbiterPlugin_Init(I_DataModel_t *dataModel)
+{
+   bool sensorsReadyToBeRead;
+   DataModel_Read(
+      dataModel,
+      Erd_SensorsReadyToBeRead,
+      &sensorsReadyToBeRead);
+
+   uassert(sensorsReadyToBeRead);
+
+   InitializeFilteredTemperatureArbiters(dataModel);
+   InitializeThermistorIsValidArbiters(dataModel);
 
    DataModel_Write(
       dataModel,
