@@ -1,0 +1,540 @@
+{
+   "name": "Lighthouse GUI",
+   "tabs": [
+      {
+         "title": "Versions",
+         "erds": [
+            {
+               "namespace": "rx130",
+               "displayName": "MB Boot",
+               "name": "Erd_BootLoaderVersion",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "MB Application",
+               "name": "Erd_ApplicationVersion",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "MB Parametric",
+               "name": "Erd_ParametricVersion",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "MB Personality",
+               "name": "Erd_AppliancePersonality",
+               "read": true
+            }
+         ]
+      },
+      {
+         "title": "Sabbath",
+         "erds": [
+            {
+               "namespace": "rx130",
+               "displayName": "Sabbath Mode",
+               "name": "Erd_SabbathMode",
+               "read": true,
+               "write": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Enhanced Sabbath Mode",
+               "name": "Erd_EnhancedSabbathMode",
+               "read": true,
+               "write": true
+            }
+         ]
+      },
+      {
+         "title": "Compressor",
+         "erds": [
+            {
+               "namespace": "rx130",
+               "displayName": "Compressor State",
+               "name": "Erd_CompressorState",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Compressor Speed Resolved Vote",
+               "name": "Erd_CompressorSpeed_ResolvedVote",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Compressor Winning Vote Erd",
+               "name": "Erd_CompressorSpeed_WinningVoteErd",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Compressor Speed Factory Vote",
+               "name": "Erd_CompressorSpeed_FactoryVote",
+               "read": true,
+               "write": true
+            }
+         ]
+      },
+      {
+         "title": "Damper",
+         "erds": [
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Damper Resolved State",
+               "name": "Erd_FreshFoodDamperPosition_ResolvedVote",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Damper Winning Vote Erd",
+               "name": "Erd_FreshFoodDamperPosition_WinningVoteErd",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Damper Factory Vote",
+               "name": "Erd_FreshFoodDamperPosition_FactoryVote",
+               "read": true,
+               "write": true
+            }
+         ]
+      },
+      {
+         "title": "Grid",
+         "erds": [
+            {
+               "namespace": "rx130",
+               "displayName": "Current Grid Block",
+               "name": "Erd_Grid_BlockNumber",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Previous Grid Blocks",
+               "name": "Erd_Grid_PreviousBlocks",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Calculated Grid Lines",
+               "name": "Erd_Grid_CalculatedGridLines",
+               "read": true
+            }
+         ]
+      },
+      {
+         "title": "Fresh Food Settings",
+         "erds": [
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Adjusted Setpoint",
+               "name": "Erd_FreshFood_AdjustedSetpoint",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food User Setpoint Vote",
+               "name": "Erd_FreshFoodSetpoint_UserVote",
+               "read": true,
+               "write": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Resolved Setpoint Vote",
+               "name": "Erd_FreshFoodSetpoint_ResolvedVote",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Setpoint Shift",
+               "name": "Erd_FreshFood_Shift",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Setpoint Offset",
+               "name": "Erd_FreshFood_Offset",
+               "read": true
+            }
+         ]
+      },
+      {
+         "title": "Freezer Settings",
+         "erds": [
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Adjusted Setpoint",
+               "name": "Erd_Freezer_AdjustedSetpoint",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer User Setpoint Vote",
+               "name": "Erd_FreezerSetpoint_UserVote",
+               "read": true,
+               "write": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Resolved Setpoint Vote",
+               "name": "Erd_FreezerSetpoint_ResolvedVote",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Setpoint Shift",
+               "name": "Erd_Freezer_Shift",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Setpoint Offset",
+               "name": "Erd_Freezer_Offset",
+               "read": true
+            }
+         ]
+      },
+      {
+         "title": "Fans",
+         "erds": [
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Fan Resolved Speed",
+               "name": "Erd_FreezerFanSpeed_ResolvedVote",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Fan Actual RPM",
+               "name": "Erd_FreezerFan_ActualRpm",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Fan Target RPM/PWM",
+               "name": "Erd_CalculatedFreezerFanControl",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Fan Winning Vote Erd",
+               "name": "Erd_FreezerFanSpeed_WinningVoteErd",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Fan Factory Vote",
+               "name": "Erd_FreezerFanSpeed_FactoryVote",
+               "read": true,
+               "write": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Condenser Fan Resolved Speed",
+               "name": "Erd_CondenserFanSpeed_ResolvedVote",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Condenser Fan Actual RPM",
+               "name": "Erd_CondenserFan_ActualRpm",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Condenser Fan Target RPM/PWM",
+               "name": "Erd_CalculatedCondenserFanControl",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Condenser Fan Winning Vote Erd",
+               "name": "Erd_CondenserFanSpeed_WinningVoteErd",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Condenser Fan Factory Vote",
+               "name": "Erd_CondenserFanSpeed_FactoryVote",
+               "read": true,
+               "write": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Fan Resolved Speed",
+               "name": "Erd_FreshFoodFanSpeed_ResolvedVote",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Fan Actual RPM",
+               "name": "Erd_FreshFoodFan_ActualRpm",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Fan Target RPM/PWM",
+               "name": "Erd_CalculatedFreshFoodFanControl",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Fan Winning Vote Erd",
+               "name": "Erd_FreshFoodFanSpeed_WinningVoteErd",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Fan Factory Vote",
+               "name": "Erd_FreshFoodFanSpeed_FactoryVote",
+               "read": true,
+               "write": true
+            }
+         ]
+      },
+      {
+         "title": "Defrost",
+         "erds": [
+            {
+               "namespace": "rx130",
+               "displayName": "Defrost State (EEPROM)",
+               "name": "Erd_DefrostState",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Defrost Was Abnormal (EEPROM)",
+               "name": "Erd_FreezerDefrostWasAbnormal",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Defrost Compressor On Time In Seconds",
+               "name": "Erd_DefrostCompressorOnTimeInSeconds",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Scaled Door Acceleration In Seconds",
+               "name": "Erd_DefrostFreezerScaledDoorAccelerationInSeconds",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Scaled Door Acceleration In Seconds",
+               "name": "Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Time In Minutes When Defrost Ready Timer Is Satisfied",
+               "name": "Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Number of Fresh Food Defrosts Before A Freezer Defrost",
+               "name": "Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Defrost Heater Defrost Vote",
+               "name": "Erd_FreezerDefrostHeater_DefrostVote",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Defrost Is Fresh Food Only",
+               "name": "Erd_DefrostIsFreshFoodOnly",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Max Prechill Time In Minutes",
+               "name": "Erd_MaxPrechillTimeInMinutes",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Post Dwell Exit Time In Minutes",
+               "name": "Erd_PostDwellExitTimeInMinutes",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Time That Prechill Conditions Are Met In Minutes",
+               "name": "Erd_TimeThatPrechillConditionsAreMetInMinutes",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Number of Freezer Abnormal Defrost Cycles (EEPROM)",
+               "name": "Erd_NumberOfFreezerAbnormalDefrostCycles",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Defrost Cycle Count (EEPROM)",
+               "name": "Erd_FreezerDefrostCycleCount",
+               "read": true
+            }
+         ]
+      },
+      {
+         "title": "Doors",
+         "erds": [
+            {
+               "namespace": "rx130",
+               "displayName": "Left Fresh Food Door Is Open",
+               "name": "Erd_LeftHandFreshFoodDoorIsOpen",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Right Fresh Food Door Is Open",
+               "name": "Erd_RightHandFreshFoodDoorIsOpen",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Door Is Open",
+               "name": "Erd_FreezerDoorIsOpen",
+               "read": true
+            }
+         ]
+      },
+      {
+         "title": "Thermistors",
+         "erds": [
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Thermistor AdcCount",
+               "name": "Erd_FreshFoodThermistor_AdcCount",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Unfiltered Temperature",
+               "name": "Erd_FreshFood_UnfilteredTemperature",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Filtered Temperature",
+               "name": "Erd_FreshFood_FilteredTemperature",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Thermistor AdcCount",
+               "name": "Erd_FreezerThermistor_AdcCount",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Unfiltered Temperature",
+               "name": "Erd_Freezer_UnfilteredTemperature",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Filtered Temperature",
+               "name": "Erd_Freezer_FilteredTemperature",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Evap Thermistor AdcCount",
+               "name": "Erd_FreshFoodEvapThermistor_AdcCount",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Evap Unfiltered Temperature",
+               "name": "Erd_FreshFoodEvap_UnfilteredTemperature",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Evap Filtered Temperature",
+               "name": "Erd_FreshFoodEvap_FilteredTemperature",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Evap Thermistor AdcCount",
+               "name": "Erd_FreezerEvapThermistor_AdcCount",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Evap Unfiltered Temperature",
+               "name": "Erd_FreezerEvap_UnfilteredTemperature",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "FreezerEvap FilteredTemperature",
+               "name": "Erd_FreezerEvap_FilteredTemperature",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Ambient Thermistor AdcCount",
+               "name": "Erd_AmbientThermistor_AdcCount",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Ambient Unfiltered Temperature",
+               "name": "Erd_Ambient_UnfilteredTemperature",
+               "read": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Ambient Filtered Temperature",
+               "name": "Erd_Ambient_FilteredTemperature",
+               "read": true
+            }
+         ]
+      },
+      {
+         "title": "Factory",
+         "erds": [
+            {
+               "namespace": "rx130",
+               "displayName": "Compressor Speed Factory Vote",
+               "name": "Erd_CompressorSpeed_FactoryVote",
+               "read": true,
+               "write": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Fresh Food Damper Factory Vote",
+               "name": "Erd_FreshFoodDamperPosition_FactoryVote",
+               "read": true,
+               "write": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Freezer Fan Factory Vote",
+               "name": "Erd_FreezerFanSpeed_FactoryVote",
+               "read": true,
+               "write": true
+            },
+            {
+               "namespace": "rx130",
+               "displayName": "Condenser Fan Factory Vote",
+               "name": "Erd_CondenserFanSpeed_FactoryVote",
+               "read": true,
+               "write": true
+            }
+         ]
+      }
+   ]
+}
