@@ -36,6 +36,9 @@ enum
    Signal_PrechillTemperatureExitConditionMet,
    Signal_FreshFoodThermistorIsInvalid,
    Signal_FreezerEvaporatorThermistorIsInvalid,
+   Signal_FreezerEvaporatorTemperatureReachedHeaterOnTerminationTemperature,
+   Signal_FreezerHeaterMaxOnTimeReached,
+   Signal_FreezerAbnormalHeaterOnTimeReached
 };
 
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -69,6 +72,17 @@ static Defrost_t *InstanceFromHsm(Hsm_t *hsm)
 static void SetHsmStateTo(Defrost_t *instance, DefrostHsmState_t state)
 {
    DataModel_Write(instance->_private.dataModel, instance->_private.config->defrostHsmStateErd, &state);
+}
+
+static uint8_t FreezerDefrostHeaterMaxOnTimeInMinutes(Defrost_t *instance)
+{
+   uint8_t maxOnTimeInMinutes;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerDefrostHeaterMaxOnTimeInMinutesErd,
+      &maxOnTimeInMinutes);
+
+   return maxOnTimeInMinutes;
 }
 
 static void DataModelChanged(void *context, const void *args)
@@ -121,6 +135,10 @@ static void DataModelChanged(void *context, const void *args)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_PrechillTemperatureExitConditionMet, NULL);
       }
+      else if(*freezerEvaporatorTemperature >= instance->_private.defrostParametricData->freezerDefrostTerminationTemperatureInDegFx100)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerEvaporatorTemperatureReachedHeaterOnTerminationTemperature, NULL);
+      }
    }
    else if(erd == instance->_private.config->freezerFilteredTemperatureResolvedErd)
    {
@@ -139,6 +157,20 @@ static void DataModelChanged(void *context, const void *args)
          *freshFoodTemperature >= instance->_private.defrostParametricData->prechillFreshFoodMaxTempInDegFx100)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_PrechillTemperatureExitConditionMet, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->freezerDefrostHeaterOnTimeInMinutesErd)
+   {
+      const uint8_t *freezerDefrostHeaterOnTimeInMinutes = onChangeData->data;
+
+      if(*freezerDefrostHeaterOnTimeInMinutes >= FreezerDefrostHeaterMaxOnTimeInMinutes(instance))
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerHeaterMaxOnTimeReached, NULL);
+      }
+      else if(*freezerDefrostHeaterOnTimeInMinutes ==
+         instance->_private.defrostParametricData->freezerHeaterOnTimeToSetAbnormalDefrostInMinutes)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerAbnormalHeaterOnTimeReached, NULL);
       }
    }
 }
@@ -345,6 +377,26 @@ static void VoteForHeaterOnEntryLoads(Defrost_t *instance, bool care)
       instance->_private.dataModel,
       instance->_private.config->freezerFanSpeedVoteErd,
       &fanVote);
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->iceCabinetFanSpeedVoteErd,
+      &fanVote);
+}
+
+static void VoteForFreezerDefrostHeater(
+   Defrost_t *instance,
+   HeaterState_t state,
+   bool care)
+{
+   HeaterVotedState_t heaterVote = {
+      .state = state,
+      .care = care
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freezerDefrostHeaterVoteErd,
+      &heaterVote);
 }
 
 static void CheckIfPrechillTemperatureExitConditionMet(Defrost_t *instance)
@@ -374,6 +426,78 @@ static void CheckIfPrechillTemperatureExitConditionMet(Defrost_t *instance)
    {
       Hsm_SendSignal(&instance->_private.hsm, Signal_PrechillTemperatureExitConditionMet, NULL);
    }
+}
+
+static void IncrementFreezerDefrostCycleCount(Defrost_t *instance)
+{
+   uint16_t freezerDefrostCycleCount;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerDefrostCycleCountErd,
+      &freezerDefrostCycleCount);
+
+   freezerDefrostCycleCount++;
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freezerDefrostCycleCountErd,
+      &freezerDefrostCycleCount);
+}
+
+static void SetFreezerDefrostWasAbnormal(Defrost_t *instance)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freezerDefrostWasAbnormalErd,
+      set);
+}
+
+static void ClearFreezerDefrostWasAbnormal(Defrost_t *instance)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freezerDefrostWasAbnormalErd,
+      clear);
+}
+
+static void IncrementNumberOfFreezerAbnormalDefrostCycleCount(Defrost_t *instance)
+{
+   uint16_t numberOfFreezerAbnormalDefrostCycleCount;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->numberOfFreezerAbnormalDefrostCycleCountErd,
+      &numberOfFreezerAbnormalDefrostCycleCount);
+
+   numberOfFreezerAbnormalDefrostCycleCount++;
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->numberOfFreezerAbnormalDefrostCycleCountErd,
+      &numberOfFreezerAbnormalDefrostCycleCount);
+}
+
+static void SaveTheFreezerDefrostCountAsTheLastFreezerAbnormalDefrostCount(Defrost_t *instance)
+{
+   uint16_t freezerDefrostCycleCount;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerDefrostCycleCountErd,
+      &freezerDefrostCycleCount);
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freezerAbnormalDefrostCycleCountErd,
+      &freezerDefrostCycleCount);
+}
+
+static bool FreezerDefrostHeaterOnTimeLessThanAbnormalDefrostTime(Defrost_t *instance)
+{
+   uint8_t freezerHeaterOnTimeInMinutes;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerDefrostHeaterOnTimeInMinutesErd,
+      &freezerHeaterOnTimeInMinutes);
+
+   return freezerHeaterOnTimeInMinutes <
+      instance->_private.defrostParametricData->freezerHeaterOnTimeToSetAbnormalDefrostInMinutes;
 }
 
 static HsmState_t InitialState(Defrost_t *instance)
@@ -584,27 +708,6 @@ static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data
    return HsmSignalConsumed;
 }
 
-static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
-{
-   Defrost_t *instance = InstanceFromHsm(hsm);
-   IGNORE(data);
-
-   switch(signal)
-   {
-      case Hsm_Entry:
-         SetHsmStateTo(instance, DefrostHsmState_Dwell);
-         break;
-
-      case Hsm_Exit:
-         break;
-
-      default:
-         return HsmSignalDeferred;
-   }
-
-   return HsmSignalConsumed;
-}
-
 static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
@@ -614,6 +717,49 @@ static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_HeaterOn);
+         VoteForFreezerDefrostHeater(instance, HeaterState_On, Care);
+         break;
+
+      case Signal_FreezerHeaterMaxOnTimeReached:
+         Hsm_Transition(hsm, State_Dwell);
+         break;
+
+      case Signal_FreezerAbnormalHeaterOnTimeReached:
+         IncrementNumberOfFreezerAbnormalDefrostCycleCount(instance);
+         SetFreezerDefrostWasAbnormal(instance);
+         SaveTheFreezerDefrostCountAsTheLastFreezerAbnormalDefrostCount(instance);
+         break;
+
+      case Signal_FreezerEvaporatorTemperatureReachedHeaterOnTerminationTemperature:
+         if(FreezerDefrostHeaterOnTimeLessThanAbnormalDefrostTime(instance))
+         {
+            ClearFreezerDefrostWasAbnormal(instance);
+         }
+
+         Hsm_Transition(hsm, State_Dwell);
+         break;
+
+      case Hsm_Exit:
+         VoteForFreezerDefrostHeater(instance, HeaterState_Off, Care);
+         IncrementFreezerDefrostCycleCount(instance);
+         break;
+
+      default:
+         return HsmSignalDeferred;
+   }
+
+   return HsmSignalConsumed;
+}
+
+static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
+{
+   Defrost_t *instance = InstanceFromHsm(hsm);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Hsm_Entry:
+         SetHsmStateTo(instance, DefrostHsmState_Dwell);
          break;
 
       case Hsm_Exit:

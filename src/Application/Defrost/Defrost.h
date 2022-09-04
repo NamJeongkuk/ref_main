@@ -34,10 +34,17 @@ typedef struct
    Erd_t compressorSpeedVoteErd; // CompressorVotedSpeed_t
    Erd_t condenserFanSpeedVoteErd; // FanVotedSpeed_t
    Erd_t freezerFanSpeedVoteErd; // FanVotedSpeed_t
+   Erd_t iceCabinetFanSpeedVoteErd; // FanVotedSpeed_t
    Erd_t freshFoodDamperPositionVoteErd; // DamperVotedPosition_t
    Erd_t freezerEvaporatorFilteredTemperatureResolvedErd; // TemperatureDegFx100_t
    Erd_t freezerFilteredTemperatureResolvedErd; // TemperatureDegFx100_t
    Erd_t freshFoodFilteredTemperatureResolvedErd; // TemperatureDegFx100_t
+   Erd_t freezerDefrostHeaterVoteErd; // HeaterVotedState_t
+   Erd_t freezerDefrostCycleCountErd; // uint16_t
+   Erd_t freezerAbnormalDefrostCycleCountErd; // uint16_t
+   Erd_t numberOfFreezerAbnormalDefrostCycleCountErd; // uint16_t
+   Erd_t freezerDefrostHeaterOnTimeInMinutesErd; // uint8_t
+   Erd_t freezerDefrostHeaterMaxOnTimeInMinutesErd; // uint8_t
    Erd_t timerModuleErd; // TimerModule_t *
 } DefrostConfiguration_t;
 
