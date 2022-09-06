@@ -254,7 +254,7 @@ TEST_GROUP(Defrost_SingleEvap)
          case DefrostHsmState_HeaterOn:
             Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
 
-            After(defrostData.defrostHeaterOnDelayAfterCompressorOffInSeconds * MSEC_PER_SEC);
+            After(defrostData->defrostHeaterOnDelayAfterCompressorOffInSeconds * MSEC_PER_SEC);
             DefrostHsmStateShouldBe(DefrostHsmState_HeaterOn);
             break;
 
@@ -912,7 +912,7 @@ TEST(Defrost_SingleEvap, ShouldTurnOffDefrostHeaterAndIncrementFreezerDefrostCou
    Given FreezerDefrostCycleCountIs(1);
    FreezerDefrostHeaterVoteShouldBe(HeaterState_On);
 
-   When FilteredFreezerEvapTemperatureIs(defrostData.freezerDefrostTerminationTemperatureInDegFx100);
+   When FilteredFreezerEvapTemperatureIs(defrostData->freezerDefrostTerminationTemperatureInDegFx100);
    FreezerDefrostHeaterVoteShouldBe(HeaterState_Off);
    And FreezerDefrostCycleCountShouldBe(2);
    And DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
@@ -923,9 +923,9 @@ TEST(Defrost_SingleEvap, ShouldClearFreezerDefrostWasAbnormalWhenFreezerHeaterOn
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    Given LastFreezerDefrostWasAbnormal();
    Given FreezerDefrostHeaterMaxOnTimeInMinutesIs(FreezerDefrostHeaterMaxOnTimeInMinutes);
-   Given FreezerDefrostHeaterOnTimeInMinutesIs(defrostData.freezerHeaterOnTimeToSetAbnormalDefrostInMinutes - 1);
+   Given FreezerDefrostHeaterOnTimeInMinutesIs(defrostData->freezerHeaterOnTimeToSetAbnormalDefrostInMinutes - 1);
 
-   When FilteredFreezerEvapTemperatureIs(defrostData.freezerDefrostTerminationTemperatureInDegFx100);
+   When FilteredFreezerEvapTemperatureIs(defrostData->freezerDefrostTerminationTemperatureInDegFx100);
    FreezerDefrostWasAbnormalFlagShouldBe(CLEAR);
 }
 
@@ -934,9 +934,9 @@ TEST(Defrost_SingleEvap, ShouldNotClearFreezerDefrostWasAbnormalWhenFreezerHeate
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    Given LastFreezerDefrostWasAbnormal();
    Given FreezerDefrostHeaterMaxOnTimeInMinutesIs(FreezerDefrostHeaterMaxOnTimeInMinutes);
-   Given FreezerDefrostHeaterOnTimeInMinutesIs(defrostData.freezerHeaterOnTimeToSetAbnormalDefrostInMinutes);
+   Given FreezerDefrostHeaterOnTimeInMinutesIs(defrostData->freezerHeaterOnTimeToSetAbnormalDefrostInMinutes);
 
-   When FilteredFreezerEvapTemperatureIs(defrostData.freezerDefrostTerminationTemperatureInDegFx100);
+   When FilteredFreezerEvapTemperatureIs(defrostData->freezerDefrostTerminationTemperatureInDegFx100);
    FreezerDefrostWasAbnormalFlagShouldBe(SET);
 }
 
@@ -962,7 +962,7 @@ TEST(Defrost_SingleEvap, ShouldIncrementNumberOfFreezerAbnormalDefrostCycleCount
    Given FreezerDefrostCycleCountIs(3);
    FreezerDefrostHeaterVoteShouldBe(HeaterState_On);
 
-   When FreezerDefrostHeaterOnTimeInMinutesIs(defrostData.freezerHeaterOnTimeToSetAbnormalDefrostInMinutes);
+   When FreezerDefrostHeaterOnTimeInMinutesIs(defrostData->freezerHeaterOnTimeToSetAbnormalDefrostInMinutes);
    NumberOfFreezerAbnormalDefrostCycleCountShouldBe(2);
    And FreezerDefrostWasAbnormalFlagShouldBe(SET);
    And FreezerAbnormalDefrostCycleCountShouldBe(3);
@@ -975,10 +975,10 @@ TEST(Defrost_SingleEvap, ShouldIncrementNumberOfFreezerAbnormalDefrostCycleCount
    Given FreezerDefrostHeaterMaxOnTimeInMinutesIs(FreezerDefrostHeaterMaxOnTimeInMinutes);
    FreezerDefrostHeaterVoteShouldBe(HeaterState_On);
 
-   When FreezerDefrostHeaterOnTimeInMinutesIs(defrostData.freezerHeaterOnTimeToSetAbnormalDefrostInMinutes);
+   When FreezerDefrostHeaterOnTimeInMinutesIs(defrostData->freezerHeaterOnTimeToSetAbnormalDefrostInMinutes);
    NumberOfFreezerAbnormalDefrostCycleCountShouldBe(2);
 
-   When FreezerDefrostHeaterOnTimeInMinutesIs(defrostData.freezerHeaterOnTimeToSetAbnormalDefrostInMinutes + 1);
+   When FreezerDefrostHeaterOnTimeInMinutesIs(defrostData->freezerHeaterOnTimeToSetAbnormalDefrostInMinutes + 1);
    NumberOfFreezerAbnormalDefrostCycleCountShouldBe(2);
 }
 
