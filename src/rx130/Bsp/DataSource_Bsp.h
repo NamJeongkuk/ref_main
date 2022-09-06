@@ -12,6 +12,8 @@
 #include "Timer.h"
 #include "DataSource_Gpio.h"
 #include "DataSource_Adc.h"
+#include "DataSource_Pwm.h"
+#include "DataSource_InputCapture.h"
 #include "DataSource_Personality.h"
 
 /*!

@@ -13,6 +13,13 @@ static const DataSource_MappedErdPair_t applicationToBspMappedPairs[] = {
    { Erd_RelayWatchdog, Erd_BspGpio_RelayWatchdog },
    { Erd_SomeAnalogInput, Erd_BspAdc_SomeAnalogInput },
    { Erd_AnotherAnalogInput, Erd_BspAdc_AnotherAnalogInput },
+   { Erd_DeliFan_Pwm, Erd_BspPwm_PWM_0 },
+   { Erd_FreezerFan_Pwm, Erd_BspPwm_PWM_1 },
+   { Erd_IceCabinetFan_Pwm, Erd_BspPwm_PWM_2 },
+   { Erd_CondenserFan_Pwm, Erd_BspPwm_PWM_4 },
+   { Erd_FreshFoodFan_Pwm, Erd_BspPwm_PWM_5 },
+   { Erd_FreezerFan_InputCaptureTime, Erd_BspFanInputCapture_CAPT_1 },
+   { Erd_IceCabinetFan_InputCaptureTime, Erd_BspFanInputCapture_CAPT_2 },
    { Erd_AppliancePersonality, Erd_Bsp_Personality },
 };
 
