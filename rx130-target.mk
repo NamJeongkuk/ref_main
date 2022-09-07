@@ -115,6 +115,7 @@ package: build artifacts erd_lock
 	@echo Creating artifacts/$(TARGET)_$(GIT_SHORT_HASH).zip...
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app_parametric.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
+	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(PARAMETRIC_DIRS)rockhopper.parametric.apl --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).apl
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_UPDATER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader-updater/$(BOOT_LOADER_TARGET)-boot-loader-updater.apl --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
 	@$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH).zip)
