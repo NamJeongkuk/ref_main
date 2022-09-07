@@ -58,7 +58,8 @@ typedef struct
    uint8_t convertibleCompartmentAsFreezerHeaterOnTimeToSetAbnormalDefrostInMinutes;
    uint8_t convertibleCompartmentAsFreshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes;
    uint8_t convertibleCompartmentAsFreezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes;
-   uint8_t defrostDwellTimeInMinutes;
+   uint8_t dwellTimeInMinutes;
+   DamperPosition_t dwellFreshFoodDamperPosition;
    ValvePosition_t dwellRefrigerantValvePosition;
    uint8_t postDwellExitTimeInMinutes;
    uint8_t freshFoodOnlyPostDwellExitTimeInMinutes;

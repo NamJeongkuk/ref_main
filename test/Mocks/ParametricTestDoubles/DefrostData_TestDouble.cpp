@@ -61,7 +61,7 @@ void DefrostData_TestDouble_Init(DefrostData_t *defrostData)
    defrostData->convertibleCompartmentAsFreezerHeaterOnTimeToSetAbnormalDefrostInMinutes = 35;
    defrostData->convertibleCompartmentAsFreshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 2;
    defrostData->convertibleCompartmentAsFreezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 25;
-   defrostData->defrostDwellTimeInMinutes = 7;
+   defrostData->dwellTimeInMinutes = 7;
    defrostData->dwellRefrigerantValvePosition = ValvePosition_B;
    defrostData->postDwellExitTimeInMinutes = 10;
    defrostData->freshFoodOnlyPostDwellExitTimeInMinutes = 10;

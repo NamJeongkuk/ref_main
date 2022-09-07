@@ -2,7 +2,7 @@
 
 const delay = require("javascript-common").util.delay;
 const { Console } = require("console");
-const { msPerSec } = require("../support/constants");
+const { msPerSec, msPerMin } = require("../support/constants");
 const constants = require("../support/constants");
 
 describe("Defrost", () => {
@@ -45,6 +45,8 @@ describe("Defrost", () => {
    const someTemperatureThatLiesInTheMiddleOfTheBounds = 4000;
    const someLowerTemperatureBound = 0;
    const defrostHeaterOnDelayAfterCompressorOffInSeconds = 2;
+   const dwellFreshFoodDamperPosition = "DamperPosition_Closed";
+   const dwellTimeInMinutes = 1;
 
    beforeEach(async () => {
       await rx130.write("Erd_Reset", 1);
@@ -52,7 +54,8 @@ describe("Defrost", () => {
    });
 
    const providedTheFilteredFreezerCabinetTemperatureIs = async (tempDegFx100) => {
-      await rx130.write("Erd_Freezer_FilteredTemperatureResolved", tempDegFx100);
+      await rx130.write("Erd_Freezer_FilteredTemperatureOverrideRequest", true);
+      await rx130.write("Erd_Freezer_FilteredTemperatureOverrideValue", tempDegFx100);
    };
 
    const providedTheEepromDefrostStateAtStartUpIs = async (state) => {
@@ -63,12 +66,18 @@ describe("Defrost", () => {
    };
 
    const providedDefrostIsEnabledAndInIdleState = async () => {
-      await providedFreezerEvaporatorThermistorIs().valid();
       await providedTheFilteredFreezerCabinetTemperatureIs(300);
       await theCompressorStateIs(compressorState.compressorStateMinimumOnTime);
 
       await providedTheEepromDefrostStateAtStartUpIs(defrostState.defrostStateIdle);
       await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateIdle);
+   };
+
+   const providedDefrostIsEnabledAndInDwellState = async () => {
+      await providedTheFilteredFreezerCabinetTemperatureIs(300);
+
+      await providedTheEepromDefrostStateAtStartUpIs(defrostState.defrostStateDwell);
+      await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateDwell);
    };
 
    const providedTheDefrostReadySatisfactionTimeIs = async (timeInMinutes) => {
@@ -90,6 +99,9 @@ describe("Defrost", () => {
       },
       inSec: async () => {
          await delay(time * msPerSec);
+      },
+      inMinutes: async () => {
+         await delay(time * msPerMin);
       }
    });
 
@@ -207,6 +219,20 @@ describe("Defrost", () => {
             expect(actual.position).toEqual(expectedPosition);
          }
          expect(actual.care).toEqual(expectedCare);
+      },
+      FreezerDefrostHeaterShouldBe: async (expectedCare, expectedState = null) => {
+         const actual = await rx130.read("Erd_FreezerDefrostHeater_DefrostVote");
+         if (expectedState != null) {
+            expect(actual.state).toEqual(expectedState);
+         }
+         expect(actual.care).toEqual(expectedCare);
+      },
+      IceCabinetFanSpeedShouldBe: async (expectedCare, expectedSpeed = null) => {
+         const actual = await rx130.read("Erd_IceCabinetFanSpeed_DefrostVote");
+         if (expectedSpeed != null) {
+            expect(actual.speed).toEqual(expectedSpeed);
+         }
+         expect(actual.care).toEqual(expectedCare);
       }
    });
 
@@ -313,6 +339,24 @@ describe("Defrost", () => {
       await after(defrostHeaterOnDelayAfterCompressorOffInSeconds).inSec();
 
       await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateHeaterOn);
+   });
 
+   it("should vote to turn off freezer defrost heater, compressor, and all fans and vote for parametric position for fresh food damper when entering dwell", async () => {
+      await providedDefrostIsEnabledAndInDwellState();
+
+      await theVoteFor().FreezerDefrostHeaterShouldBe(true, "HeaterState_Off");
+      await theVoteFor().CompressorSpeedShouldBe(true, "CompressorSpeed_Off");
+      await theVoteFor().FreezerFanSpeedShouldBe(true, "FanSpeed_Off");
+      await theVoteFor().CondenserFanSpeedShouldBe(true, "FanSpeed_Off");
+      await theVoteFor().IceCabinetFanSpeedShouldBe(true, "FanSpeed_Off");
+
+      await theVoteFor().DamperPositionShouldBe(true, dwellFreshFoodDamperPosition);
+   });
+
+   it("should transition to post dwell after dwell time has passed", async () => {
+      await providedDefrostIsEnabledAndInDwellState();
+
+      await after(dwellTimeInMinutes).inMinutes();
+      await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePostDwell);
    });
 });

@@ -46,17 +46,19 @@ static bool State_PrechillParent(Hsm_t *hsm, HsmSignal_t signal, const void *dat
 static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data);
-static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data);
+static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data);
+static bool State_PostDwell(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 
 static const HsmStateHierarchyDescriptor_t stateList[] = {
    { State_Idle, HSM_NO_PARENT },
-   { State_Dwell, HSM_NO_PARENT },
-   { State_HeaterOnEntry, HSM_NO_PARENT },
-   { State_HeaterOn, HSM_NO_PARENT },
    { State_PrechillParent, HSM_NO_PARENT },
    { State_PrechillPrep, State_PrechillParent },
    { State_Prechill, State_PrechillParent },
+   { State_HeaterOnEntry, HSM_NO_PARENT },
+   { State_HeaterOn, HSM_NO_PARENT },
+   { State_Dwell, HSM_NO_PARENT },
+   { State_PostDwell, HSM_NO_PARENT }
 };
 
 static const HsmConfiguration_t hsmConfiguration = {
@@ -399,6 +401,55 @@ static void VoteForFreezerDefrostHeater(
       &heaterVote);
 }
 
+static void VoteForDwellLoads(Defrost_t *instance, bool care)
+{
+   HeaterVotedState_t heaterVote = {
+      .state = HeaterState_Off,
+      .care = care
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freezerDefrostHeaterVoteErd,
+      &heaterVote);
+
+   CompressorVotedSpeed_t compressorVote = {
+      .speed = CompressorSpeed_Off,
+      .care = care,
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->compressorSpeedVoteErd,
+      &compressorVote);
+
+   FanVotedSpeed_t fanVote = {
+      .speed = FanSpeed_Off,
+      .care = care,
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->condenserFanSpeedVoteErd,
+      &fanVote);
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freezerFanSpeedVoteErd,
+      &fanVote);
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->iceCabinetFanSpeedVoteErd,
+      &fanVote);
+
+   DamperVotedPosition_t damperVote = {
+      .position = instance->_private.defrostParametricData->dwellFreshFoodDamperPosition,
+      .care = care
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freshFoodDamperPositionVoteErd,
+      &damperVote);
+}
+
 static void CheckIfPrechillTemperatureExitConditionMet(Defrost_t *instance)
 {
    TemperatureDegFx100_t freezerEvaporatorTemperature;
@@ -657,7 +708,11 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          }
          else
          {
-            StartDefrostTimer(instance, TRUNCATE_UNSIGNED_SUBTRACTION((uint16_t)GetMaxPrechillTime(instance), GetTimeThatPrechillConditionsAreMet(instance)) * MSEC_PER_MIN);
+            StartDefrostTimer(
+               instance,
+               TRUNCATE_UNSIGNED_SUBTRACTION((uint16_t)GetMaxPrechillTime(instance),
+                  GetTimeThatPrechillConditionsAreMet(instance)) *
+                  MSEC_PER_MIN);
          }
 
          CheckIfPrechillTemperatureExitConditionMet(instance);
@@ -690,7 +745,9 @@ static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_HeaterOnEntry);
          VoteForHeaterOnEntryLoads(instance, Care);
-         StartDefrostTimer(instance, instance->_private.defrostParametricData->defrostHeaterOnDelayAfterCompressorOffInSeconds * MSEC_PER_SEC);
+         StartDefrostTimer(
+            instance,
+            instance->_private.defrostParametricData->defrostHeaterOnDelayAfterCompressorOffInSeconds * MSEC_PER_SEC);
          break;
 
       case Signal_DefrostTimerExpired:
@@ -760,6 +817,36 @@ static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Dwell);
+         VoteForDwellLoads(instance, Care);
+         StartDefrostTimer(
+            instance,
+            instance->_private.defrostParametricData->dwellTimeInMinutes * MSEC_PER_MIN);
+         break;
+
+      case Signal_DefrostTimerExpired:
+         Hsm_Transition(hsm, State_PostDwell);
+         break;
+
+      case Hsm_Exit:
+         StopTimer(instance, &instance->_private.defrostTimer);
+         break;
+
+      default:
+         return HsmSignalDeferred;
+   }
+
+   return HsmSignalConsumed;
+}
+
+static bool State_PostDwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
+{
+   Defrost_t *instance = InstanceFromHsm(hsm);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Hsm_Entry:
+         SetHsmStateTo(instance, DefrostHsmState_PostDwell);
          break;
 
       case Hsm_Exit:

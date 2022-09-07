@@ -258,6 +258,14 @@ TEST_GROUP(Defrost_SingleEvap)
             DefrostHsmStateShouldBe(DefrostHsmState_HeaterOn);
             break;
 
+         case DefrostHsmState_Dwell:
+            Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(false);
+            And DefrostStateIs(DefrostState_Dwell);
+            And DefrostIsInitialized();
+
+            DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
+            break;
+
          default:
             break;
       }
@@ -352,15 +360,6 @@ TEST_GROUP(Defrost_SingleEvap)
       CHECK_TRUE(actual.care);
    }
 
-   void IceCabinetFanSpeedVoteShouldBe(FanSpeed_t expected)
-   {
-      FanVotedSpeed_t actual;
-      DataModel_Read(dataModel, Erd_IceCabinetFanSpeed_DefrostVote, &actual);
-
-      CHECK_EQUAL(expected, actual.speed);
-      CHECK_TRUE(actual.care);
-   }
-
    void FreshFoodDamperPositionVoteShouldBe(DamperPosition_t expected)
    {
       DamperVotedPosition_t actual;
@@ -408,6 +407,15 @@ TEST_GROUP(Defrost_SingleEvap)
       DataModel_Read(dataModel, Erd_FreezerDefrostHeater_DefrostVote, &actual);
 
       CHECK_EQUAL(expected, actual.state);
+      CHECK_TRUE(actual.care);
+   }
+
+   void IceCabinetFanSpeedVoteShouldBe(FanSpeed_t expected)
+   {
+      FanVotedSpeed_t actual;
+      DataModel_Read(dataModel, Erd_IceCabinetFanSpeed_DefrostVote, &actual);
+
+      CHECK_EQUAL(expected, actual.speed);
       CHECK_TRUE(actual.care);
    }
 
@@ -980,6 +988,34 @@ TEST(Defrost_SingleEvap, ShouldIncrementNumberOfFreezerAbnormalDefrostCycleCount
 
    When FreezerDefrostHeaterOnTimeInMinutesIs(defrostData->freezerHeaterOnTimeToSetAbnormalDefrostInMinutes + 1);
    NumberOfFreezerAbnormalDefrostCycleCountShouldBe(2);
+}
+
+TEST(Defrost_SingleEvap, ShouldTurnOffFreezerDefrostHeaterCompressorAndAllFansWhenEnteringDwell)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
+
+   FreezerDefrostHeaterVoteShouldBe(HeaterState_Off);
+   CompressorSpeedVoteShouldBe(CompressorSpeed_Off);
+   FreezerFanSpeedVoteShouldBe(FanSpeed_Off);
+   CondenserFanSpeedVoteShouldBe(FanSpeed_Off);
+   IceCabinetFanSpeedVoteShouldBe(FanSpeed_Off);
+}
+
+TEST(Defrost_SingleEvap, ShouldVoteForFreshFoodDamperWhenEnteringDwell)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
+   FreshFoodDamperPositionVoteShouldBe(defrostData->dwellFreshFoodDamperPosition);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionToPostDwellAfterDwellTimeHasPassed)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
+
+   After(defrostData->dwellTimeInMinutes * MSEC_PER_MIN - 1);
+   DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
+
+   After(1);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
 }
 
 TEST_GROUP(Defrost_DualEvap)
