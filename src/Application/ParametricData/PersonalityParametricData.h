@@ -19,6 +19,7 @@
 #include "SystemMonitorData.h"
 #include "EnhancedSabbathData.h"
 #include "CompressorData.h"
+#include "SetpointData.h"
 
 typedef struct
 {
@@ -32,6 +33,7 @@ typedef struct
    const SensorData_t *sensorData;
    const SystemMonitorData_t *systemMonitorData;
    const CompressorData_t *compressorData;
+   const SetpointData_t *setpointData;
 } PersonalityParametricData_t;
 
 const PersonalityParametricData_t *PersonalityParametricData_Get(I_DataModel_t *dataModel);

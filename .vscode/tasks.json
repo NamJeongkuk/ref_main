@@ -1,7 +1,12 @@
 {
    "tasks": [
       {
-         "command": "make -j16 -f rx130-target.mk RELEASE=N DEBUG=Y vscode_debug",
+         "osx": {
+            "command": "dmake -j16 -f rx130-target.mk RELEASE=N DEBUG=Y vscode_debug"
+         },
+         "linux": {
+            "command": "make -j16 -f rx130-target.mk RELEASE=N DEBUG=Y vscode_debug"
+         },
          "label": "rx130_vscode_debug",
          "presentation": {
             "clear": false,
@@ -11,7 +16,12 @@
             "reveal": "silent",
             "showReuseMessage": false
          },
-         "type": "shell"
+         "type": "shell",
+         "options": {
+            "env": {
+               "PATH": "${env:PATH}"
+            }
+         }
       },
       {
          "command": "make -j8 RELEASE=Y -f tdd.mk test/Build/multi-target-starter-kit_tests",
