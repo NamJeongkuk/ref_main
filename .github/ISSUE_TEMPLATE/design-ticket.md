@@ -10,9 +10,9 @@ assignees: ''
 **Issue Description:**
 
 **Definition of Done:**
-- [ ] Add design to Confluence
+- [ ] Add design to Confluence and add link(s) to this ticket
 - [ ] Review with team
-- [ ] Create implementation ticket
+- [ ] Create implementation ticket and add link(s) to this ticket
 
 **Logic Replaced**
 If applicable, describe which logic this design would replace. Please include any relevant information about the old logic including names,ticket numbers, and parametric information. 
