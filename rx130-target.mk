@@ -47,6 +47,7 @@ SRC_DIRS:=\
   src/Application/EnhancedSabbath \
   src/Application/Fan \
   src/Application/Setpoints \
+  src/Application/StepperMotor \
   src/Application/Evaporator \
   src/Application/Grid \
   src/Application/Grid/GridFunctions \
@@ -71,6 +72,7 @@ INC_DIRS:=\
   src/Application/Door \
   src/Application/EnhancedSabbath \
   src/Application/Setpoints \
+  src/Application/StepperMotor \
   src/Application/Grid \
   src/Application/Grid/GridFunctions \
   src/Application/Sabbath \

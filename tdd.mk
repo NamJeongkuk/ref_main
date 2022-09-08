@@ -17,11 +17,13 @@ SRC_FILES := \
 SRC_DIRS := \
    $(PROJECT_DIR)/Application/Compressor \
    $(PROJECT_DIR)/Application/ConvertibleCompartment \
+   $(PROJECT_DIR)/Application/Damper \
    $(PROJECT_DIR)/Application/DataSource \
    $(PROJECT_DIR)/Application/Defrost \
    $(PROJECT_DIR)/Application/Door \
    $(PROJECT_DIR)/Application/EnhancedSabbath \
    $(PROJECT_DIR)/Application/Setpoints \
+   $(PROJECT_DIR)/Application/StepperMotor \
    $(PROJECT_DIR)/Application/Evaporator \
    $(PROJECT_DIR)/Application/Fan \
    $(PROJECT_DIR)/Application/Grid \
@@ -42,12 +44,14 @@ TEST_SRC_DIRS := \
    $(TESTING_DIR)/Mocks/ParametricTestDoubles \
    $(TESTS_DIR) \
    $(TESTS_DIR)/Application/Compressor \
+   $(TESTS_DIR)/Application/Damper \
    $(TESTS_DIR)/Application/DataSource \
    $(TESTS_DIR)/Application/Defrost \
    $(TESTS_DIR)/Application/Door \
    $(TESTS_DIR)/Application/ConvertibleCompartment \
    $(TESTS_DIR)/Application/EnhancedSabbath \
    $(TESTS_DIR)/Application/Setpoints \
+   $(TESTS_DIR)/Application/StepperMotor \
    $(TESTS_DIR)/Application/Evaporator \
    $(TESTS_DIR)/Application/Fan \
    $(TESTS_DIR)/Application/Grid \

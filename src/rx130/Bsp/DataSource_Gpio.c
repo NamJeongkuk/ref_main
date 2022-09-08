@@ -108,6 +108,7 @@ static const GpioDirectionPortsAndPins_t gpioPortsAndPins[] = {
 static struct
 {
    I_DataSource_t interface;
+   I_GpioGroup_t gpioGroupInterface;
    Event_Synchronous_t *onChangeEvent;
    Timer_t timer;
    uint8_t inputCache[((GpioCount - 1) / BitsPerByte) + 1];
@@ -185,10 +186,17 @@ static void WriteGpio(const GpioChannel_t channel, bool state)
 static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
 {
    IGNORE(_instance);
-   uassert(ERD_IS_IN_RANGE(erd));
+   uassert(ERD_IS_IN_RANGE(erd) || erd == Erd_GpioGroupInterface);
 
-   bool value = ReadGpio(CHANNEL_FROM_ERD(erd));
-   memcpy(data, &value, sizeof(bool));
+   if(erd == Erd_GpioGroupInterface)
+   {
+      data = &instance.gpioGroupInterface;
+   }
+   else
+   {
+      bool value = ReadGpio(CHANNEL_FROM_ERD(erd));
+      memcpy(data, &value, sizeof(bool));
+   }
 }
 
 static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
@@ -196,33 +204,68 @@ static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
    IGNORE(_instance);
    REINTERPRET(state, data, bool *);
 
-   uassert(ERD_IS_IN_RANGE(erd));
+   uassert(ERD_IS_IN_RANGE(erd) || erd == Erd_GpioGroupInterface);
 
-   GpioChannel_t channel = CHANNEL_FROM_ERD(erd);
-   if(ReadGpio(channel) != *state)
+   if(erd != Erd_GpioGroupInterface)
    {
-      WriteGpio(channel, *state);
+      GpioChannel_t channel = CHANNEL_FROM_ERD(erd);
+      if(ReadGpio(channel) != *state)
+      {
+         WriteGpio(channel, *state);
 
-      DataSourceOnDataChangeArgs_t args = { erd, data };
-      Event_Synchronous_Publish(instance.onChangeEvent, &args);
+         DataSourceOnDataChangeArgs_t args = { erd, data };
+         Event_Synchronous_Publish(instance.onChangeEvent, &args);
+      }
    }
 }
 
 static bool Has(I_DataSource_t *_instance, const Erd_t erd)
 {
    IGNORE(_instance);
-   return ERD_IS_IN_RANGE(erd);
+   return ERD_IS_IN_RANGE(erd) || erd == Erd_GpioGroupInterface;
 }
 
 static uint8_t SizeOf(I_DataSource_t *_instance, const Erd_t erd)
 {
    IGNORE(_instance);
-   uassert(ERD_IS_IN_RANGE(erd));
+   uassert(ERD_IS_IN_RANGE(erd) || erd == Erd_GpioGroupInterface);
 
-   return sizeof(bool);
+   if(erd == Erd_GpioGroupInterface)
+   {
+      return sizeof(I_GpioGroup_t *);
+   }
+   else
+   {
+      return sizeof(bool);
+   }
 }
 
 static const I_DataSource_Api_t api = { Read, Write, Has, SizeOf };
+
+bool ReadGpioGroup(I_GpioGroup_t *instance, const GpioChannel_t channel)
+{
+   IGNORE(instance);
+   uassert(ERD_IS_IN_RANGE(channel));
+
+   return ReadGpio(CHANNEL_FROM_ERD(channel));
+}
+
+void WriteGpioGroup(I_GpioGroup_t *instance, const GpioChannel_t channel, const bool state)
+{
+   IGNORE(instance);
+   uassert(ERD_IS_IN_RANGE(channel));
+
+   WriteGpio(CHANNEL_FROM_ERD(channel), state);
+}
+
+void SetDirectionGpioGroup(I_GpioGroup_t *instance, const GpioChannel_t channel, const GpioDirection_t direction)
+{
+   IGNORE(instance);
+   IGNORE(channel);
+   IGNORE(direction);
+}
+
+static const I_GpioGroup_Api_t apiGpioGroup = { ReadGpioGroup, WriteGpioGroup, SetDirectionGpioGroup };
 
 static void PollInputs(void *context)
 {
@@ -272,6 +315,7 @@ I_DataSource_t *DataSource_Gpio_Init(
    Event_Synchronous_t *onChangeEvent)
 {
    instance.interface.api = &api;
+   instance.gpioGroupInterface.api = &apiGpioGroup;
    instance.interface.OnDataChange = &onChangeEvent->interface;
    instance.onChangeEvent = onChangeEvent;
 

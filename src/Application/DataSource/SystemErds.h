@@ -64,6 +64,7 @@
 #include "InputCaptureType.h"
 #include "DefrostCompressorOnTimeCounterFsmState.h"
 #include "DoorAccelerationCounterFsmState.h"
+#include "StepperPositionRequest.h"
 
 // clang-format off
 
@@ -593,6 +594,7 @@ enum
    ENTRY(Erd_PersonalityIdOutOfRangeFlag,                   0xF303, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FaultWrapperInterfaceArray,                    0xF310, I_FaultWrapper_t *,                                 Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_GpioGroupInterface,                            0xF311, I_GpioGroup_t *,                                    Swap_N, Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ConvertibleCompartmentFanSpeed_ResolvedVote,   0xF320, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentFanSpeed_WinningVoteErd, 0xF321, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -649,6 +651,8 @@ enum
    ENTRY(Erd_FreshFoodDamperPosition_WinningVoteErd,        0xF381, WinningVoteErd_t,                                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperPosition_FactoryVote,           0xF382, DamperVotedPosition_t,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperPosition_DefrostVote,           0xF383, DamperVotedPosition_t,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_DamperMotorPositionRequest,                    0xF390, StepperPositionRequest_t,                           Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData0,     0xF500, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData1,     0xF501, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
