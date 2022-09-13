@@ -154,6 +154,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
 
    // 0xF300 range
    SWAPPED_ERD(PublicErd_ConvertibleCompartmentFanSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
+   SWAPPED_ERD(PublicErd_FreezerFanSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_FreshFoodFanSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_DeliFanSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_FreezerFan_Pwm, sizeof(PwmDutyCycle_t)),

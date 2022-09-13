@@ -603,7 +603,7 @@ enum
    ENTRY(Erd_ConvertibleCompartmentFanSpeed_GridVote,       0xF324, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreezerFanSpeed_ResolvedVote,                  0xF330, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerFanSpeed_WinningVoteErd,                0xF331, Erd_t,                                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerFanSpeed_WinningVoteErd,                0xF331, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerFanSpeed_FactoryVote,                   0xF332, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerFanSpeed_DefrostVote,                   0xF333, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerFanSpeed_GridVote,                      0xF334, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -648,7 +648,7 @@ enum
    ENTRY(Erd_FreshFoodEvapFan_InputCaptureTime,             0xF377, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodDamperPosition_ResolvedVote,          0xF380, DamperVotedPosition_t,                              Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodDamperPosition_WinningVoteErd,        0xF381, WinningVoteErd_t,                                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperPosition_WinningVoteErd,        0xF381, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperPosition_FactoryVote,           0xF382, DamperVotedPosition_t,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperPosition_DefrostVote,           0xF383, DamperVotedPosition_t,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
