@@ -18,37 +18,14 @@ extern "C"
 #include "CppUTestExt/MockSupport.h"
 #include "uassert_test.h"
 #include "ReferDataModel_TestDouble.h"
+#include "ParametricData_TestDouble.h"
 #include "Action_Mock.h"
 
 enum
 {
-   PersonalityId_Max = 3
+   PersonalityId_Max = 3,
+   ImageCrc = 0x1234
 };
-
-enum
-{
-   Critical_ValidMajorVersion = 0,
-   Critical_ValidMinorVersion = 0,
-   Critical_InvalidMajorVersion = Critical_ValidMajorVersion + 1,
-   Critical_InvalidMinorVersion = Critical_ValidMinorVersion + 1,
-};
-
-static ImageHeader_t imageHeader;
-static PersonalityParametricData_t *personalites[PersonalityId_Max];
-static ParametricDataTableOfContents_t parametricData = {
-   .numberOfPersonalities = PersonalityId_Max,
-   .personalities = personalites
-};
-
-const ImageHeader_t *ParametricData_GetParametricHeader(void)
-{
-   return &imageHeader;
-}
-
-const ParametricDataTableOfContents_t *ParametricData_GetParametricTableOfContents(void)
-{
-   return &parametricData;
-}
 
 TEST_GROUP(ParametricDataErds)
 {
@@ -59,7 +36,6 @@ TEST_GROUP(ParametricDataErds)
    I_Action_t *action;
 
    AppliancePersonality_t appliancePersonality;
-   PersonalityParametricData_t personalitesData[PersonalityId_Max];
 
    void setup()
    {
@@ -72,20 +48,17 @@ TEST_GROUP(ParametricDataErds)
       appliancePersonality = PersonalityId_Default;
       DataModel_Write(dataModel, Erd_AppliancePersonality, &appliancePersonality);
 
-      for(uint8_t i = 0; i < PersonalityId_Max; i++)
-      {
-         personalites[i] = &personalitesData[i];
-      }
+      PersonalityParametricData_TestDouble_Init();
    }
 
    void Init(void)
    {
       ParametricDataErds_Init(
          dataModel,
+         Erd_ParametricDataImageCrc,
          Erd_AppliancePersonality,
          Erd_PersonalityParametricData,
-         Erd_PersonalityIdOutOfRangeFlag,
-         action);
+         Erd_PersonalityIdOutOfRangeFlag);
    }
 
    void ActionShouldBeInvoked()
@@ -98,31 +71,16 @@ TEST_GROUP(ParametricDataErds)
       DataModel_Write(dataModel, Erd_PersonalityIdOutOfRangeFlag, &state);
    }
 
-   void WhenInitializedWithCriticalMajorVersion(uint8_t version)
+   void PersonalityParametricDataShouldBe(const PersonalityParametricData_t *data)
    {
-      imageHeader.criticalMajorVersion = version;
-      imageHeader.criticalMinorVersion = Critical_ValidMinorVersion;
-      Init();
-   }
-
-   void WhenInitializedWithCriticalMinorVersion(uint8_t version)
-   {
-      imageHeader.criticalMajorVersion = Critical_ValidMajorVersion;
-      imageHeader.criticalMinorVersion = version;
-      Init();
-   }
-
-   void PersonalityParametricDataShouldBe(const void *data)
-   {
-      void *pointer;
+      PersonalityParametricData_t *pointer;
       DataModel_Read(dataModel, Erd_PersonalityParametricData, &pointer);
+
       POINTERS_EQUAL(data, pointer);
    }
 
    void InitializedWithPersonality(PersonalityId_t personality)
    {
-      imageHeader.criticalMajorVersion = Critical_ValidMajorVersion;
-      imageHeader.criticalMinorVersion = Critical_ValidMinorVersion;
       DataModel_Write(dataModel, Erd_AppliancePersonality, &personality);
       Init();
    }
@@ -131,30 +89,31 @@ TEST_GROUP(ParametricDataErds)
    {
       bool actualState;
       DataModel_Read(dataModel, Erd_PersonalityIdOutOfRangeFlag, &actualState);
+
       CHECK_EQUAL(state, actualState);
    }
+
+   void TheParametricImageCrcShouldBe(uint16_t crc)
+   {
+      uint16_t actualCrc;
+      DataModel_Read(dataModel, Erd_ParametricDataImageCrc, &actualCrc);
+
+      CHECK_EQUAL(crc, actualCrc);
+   }
+
+   void SetImageHeaderCrcTo(uint16_t crc)
+   {
+      SetImageHeaderCrc(crc);
+   }
 };
-
-TEST(ParametricDataErds, ShouldInvokeActionWhenCriticalMajorVersionIsInvalid)
-{
-   ActionShouldBeInvoked();
-
-   WhenInitializedWithCriticalMajorVersion(Critical_InvalidMajorVersion);
-}
-
-TEST(ParametricDataErds, ShouldInvokeActionWhenCriticalMinorVersionIsInvalid)
-{
-   ActionShouldBeInvoked();
-
-   WhenInitializedWithCriticalMinorVersion(Critical_InvalidMinorVersion);
-}
 
 TEST(ParametricDataErds, ShouldUseDefaultPersonalityParametricDataAndSetPersonalityIdOutOfRangeWhenInitializedWithInvalidPersonality)
 {
    GivenThePersonalityIdOutOfRangeIs(CLEAR);
    InitializedWithPersonality(PersonalityId_Max);
 
-   PersonalityParametricDataShouldBe(&personalitesData[PersonalityId_Default]);
+   const ParametricDataTableOfContents_t *personalityParametricData = ParametricData_GetParametricTableOfContents();
+   PersonalityParametricDataShouldBe(personalityParametricData->personalities[PersonalityId_Default]);
    ThePersonalityIdOutOfRangeShouldBe(SET);
 }
 
@@ -165,7 +124,24 @@ TEST(ParametricDataErds, ShouldDefinePersonalityParametricDataErdWhenInitialized
       GivenThePersonalityIdOutOfRangeIs(SET);
       InitializedWithPersonality(i);
 
-      PersonalityParametricDataShouldBe(&personalitesData[i]);
+      const ParametricDataTableOfContents_t *personalityParametricData = ParametricData_GetParametricTableOfContents();
+      PersonalityParametricDataShouldBe(personalityParametricData->personalities[i]);
       ThePersonalityIdOutOfRangeShouldBe(CLEAR);
    }
+}
+
+TEST(ParametricDataErds, ShouldWriteParametricImageCrcToErdWhenPersonalityIdIsOutOfRange)
+{
+   SetImageHeaderCrcTo(ImageCrc);
+   InitializedWithPersonality(PersonalityId_Max);
+
+   TheParametricImageCrcShouldBe(ImageCrc);
+}
+
+TEST(ParametricDataErds, ShouldWriteParametricImageCrcToErdWhenPersonalityIdIsInRange)
+{
+   SetImageHeaderCrcTo(ImageCrc);
+   InitializedWithPersonality(PersonalityId_Max - 1);
+
+   TheParametricImageCrcShouldBe(ImageCrc);
 }

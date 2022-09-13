@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "ParametricDataTestDouble.h"
+#include "PersonalityParametricDataTestDouble.h"
 #include <iostream>
 #include <sstream>
 #include <stdbool.h>

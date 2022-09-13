@@ -52,10 +52,10 @@ void Application_Init(
 
    ParametricDataErds_Init(
       dataModel,
+      Erd_ParametricDataImageCrc,
       Erd_AppliancePersonality,
       Erd_PersonalityParametricData,
-      Erd_PersonalityIdOutOfRangeFlag,
-      DataModelErdPointerAccess_GetAction(dataModel, Erd_JumpToBootLoaderAction));
+      Erd_PersonalityIdOutOfRangeFlag);
 
    SensorFilterPlugin(dataModel);
    OverrideArbiterPlugin_Init(dataModel);

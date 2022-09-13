@@ -79,6 +79,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    // 0xF000 range
    SWAPPED_FIELD(PublicErd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, maximumLatency),
    SWAPPED_FIELD(PublicErd_TimerModuleDiagnosticsResult, TimerModuleDiagnosticsResults_t, averageLatency),
+   SWAPPED_ERD(PublicErd_ParametricDataImageCrc, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_SomeData, sizeof(uint32_t)),
    SWAPPED_ERD(PublicErd_ApplianceRunTimeInMinutesUpdatedHourly, sizeof(ApplianceRunTimeMinutes_t)),
 

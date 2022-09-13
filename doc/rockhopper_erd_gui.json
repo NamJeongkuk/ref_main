@@ -21,6 +21,18 @@
           "displayName": "MB Parametric",
           "name": "Erd_ParametricVersion",
           "read": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "MB Parametric Image CRC",
+          "name": "Erd_ParametricDataImageCrc",
+          "read": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "MB Personality",
+          "name": "Erd_AppliancePersonality",
+          "read": true
         }
       ]
     },

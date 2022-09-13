@@ -49,6 +49,7 @@
 #include "BootLoopDefender.h"
 #include "MemoryMap.h"
 #include "RelayWatchdog.h"
+#include "ParametricDataVersionCheck.h"
 
 enum
 {
@@ -139,6 +140,7 @@ int main(void)
 
    I_Action_t *watchdogKickAction = Action_RxWatchdog_InitWithConfiguration(Action_RxWatchdogConfiguration_2Seconds);
    I_Action_t *resetAction = Action_Rx2xxSystemReset_Init();
+   I_Action_t *jumpToBootLoaderAction = Header_GetEnterBootLoaderAction();
 
    I_Interrupt_t *interrupt = Interrupt_Cmt0_Init();
    TimerModule_t *timerModule = TimerModuleStack_Init(&timerModuleStack, interrupt);
@@ -163,6 +165,8 @@ int main(void)
       AsyncNvMapConfigurations_GetInputGroup(),
       AsyncNvMapConfigurations_GetAsyncDataSourceResources(),
       AsyncNvMapConfigurations_GetAsyncDataSourceConfiguration());
+
+   ParametricDataVersionCheck_Init(jumpToBootLoaderAction);
 
    SystemData_Init(
       &systemData,

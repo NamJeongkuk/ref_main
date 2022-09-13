@@ -14,7 +14,7 @@ extern "C"
 }
 
 #include "ReferDataModel_TestDouble.h"
-#include "ParametricDataTestDouble.h"
+#include "PersonalityParametricDataTestDouble.h"
 
 enum
 {

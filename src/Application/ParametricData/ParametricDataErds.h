@@ -13,9 +13,9 @@
 
 void ParametricDataErds_Init(
    I_DataModel_t *dataModel,
+   Erd_t parametricCrcErd,
    Erd_t personalityIdErd,
    Erd_t personalityParametricErd,
-   Erd_t personalityIdOutOfRangeErd,
-   I_Action_t *jumpToBootloaderAction);
+   Erd_t personalityIdOutOfRangeErd);
 
 #endif

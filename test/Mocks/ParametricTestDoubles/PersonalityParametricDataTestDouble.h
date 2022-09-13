@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef PARAMETRICDATATESTDOUBLE_H
-#define PARAMETRICDATATESTDOUBLE_H
+#ifndef PERSONALITYPARAMETRICDATATESTDOUBLE_H
+#define PERSONALITYPARAMETRICDATATESTDOUBLE_H
 
 #include "PersonalityId.h"
 
