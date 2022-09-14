@@ -75,7 +75,8 @@ describe("Defrost", () => {
    const someLowerTemperatureBound = 0;
    const defrostHeaterOnDelayAfterCompressorOffInSeconds = 2;
    const dwellFreshFoodDamperPosition = damperPosition.damperPositionClosed;
-   const dwellTimeInMinutes = 1;
+   const dwellTimeInMinutes = 7;
+   const dwellTimeInSeconds = dwellTimeInMinutes * constants.secondsPerMin + 1;
 
    beforeEach(async () => {
       await rx130.write("Erd_Reset", 1);
@@ -385,7 +386,7 @@ describe("Defrost", () => {
    it("should transition to post dwell after dwell time has passed", async () => {
       await providedDefrostIsEnabledAndInDwellState();
 
-      await after(dwellTimeInMinutes).inMinutes();
+      await after(dwellTimeInSeconds).inSec();
       await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePostDwell);
    });
 });
