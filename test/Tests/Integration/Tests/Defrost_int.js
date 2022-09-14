@@ -34,6 +34,35 @@ describe("Defrost", () => {
       compressorStateVariableSpeedMinimumRunTime: "CompressorState_VariableSpeedMinimumRunTime",
    };
 
+   const compressorSpeed = {
+      compressorSpeedOff: "CompressorSpeed_Off",
+      compressorSpeedOn: "CompressorSpeed_On",
+      compressorSpeedSuperLow: "CompressorSpeed_SuperLow",
+      compressorSpeedLow: "CompressorSpeed_MaxNumberOfSpeedsInSingleType", // CompressorSpeed_MaxNumberOfSpeedsInSingleType = CompressorSpeed_Low in CompressorSpeed_t enum
+      compressorSpeedMedium: "CompressorSpeed_Medium",
+      compressorSpeedHigh: "CompressorSpeed_High",
+      compressorSpeedSuperHigh: "CompressorSpeed_SuperHigh"
+   };
+
+   const fanSpeed = {
+      fanSpeedOff: "FanSpeed_Off",
+      fanSpeedSuperLow: "FanSpeed_SuperLow",
+      fanSpeedLow: "FanSpeed_Low",
+      fanSpeedMedium: "FanSpeed_Medium",
+      fanSpeedHigh: "FanSpeed_High",
+      fanSpeedSuperHigh: "FanSpeed_SuperHigh"
+   };
+
+   const damperPosition = {
+      damperPositionClosed: "DamperPosition_Closed",
+      damperPositionOpen: "DamperPosition_Open"
+   };
+
+   const heaterState = {
+      heaterStateOff: "HeaterState_Off",
+      heaterStateOn: "HeaterState_On"
+   };
+
    const powerUpDelayInMsec = 5 * constants.msPerSec;
 
    //minimum_time_between_defrosts_abnormal_run_time_in_minutes * seconds_per_minute
@@ -45,7 +74,7 @@ describe("Defrost", () => {
    const someTemperatureThatLiesInTheMiddleOfTheBounds = 4000;
    const someLowerTemperatureBound = 0;
    const defrostHeaterOnDelayAfterCompressorOffInSeconds = 2;
-   const dwellFreshFoodDamperPosition = "DamperPosition_Closed";
+   const dwellFreshFoodDamperPosition = damperPosition.damperPositionClosed;
    const dwellTimeInMinutes = 1;
 
    beforeEach(async () => {
@@ -290,9 +319,9 @@ describe("Defrost", () => {
 
       await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateHeaterOnEntry);
 
-      await theVoteFor().CompressorSpeedShouldBe(true, "CompressorSpeed_Off");
-      await theVoteFor().FreezerFanSpeedShouldBe(true, "FanSpeed_Off");
-      await theVoteFor().CondenserFanSpeedShouldBe(true, "FanSpeed_Off");
+      await theVoteFor().CompressorSpeedShouldBe(true, compressorSpeed.compressorSpeedOff);
+      await theVoteFor().FreezerFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
+      await theVoteFor().CondenserFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
    });
 
    it("should transition from prechill prep to prechill and vote loads", async () => {
@@ -316,9 +345,9 @@ describe("Defrost", () => {
 
       await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechill);
 
-      await theVoteFor().CompressorSpeedShouldBe(true, "CompressorSpeed_On");
-      await theVoteFor().FreezerFanSpeedShouldBe(true, "FanSpeed_SuperLow");
-      await theVoteFor().DamperPositionShouldBe(true, "DamperPosition_Closed");
+      await theVoteFor().CompressorSpeedShouldBe(true, compressorSpeed.compressorSpeedLow);
+      await theVoteFor().FreezerFanSpeedShouldBe(true, fanSpeed.fanSpeedSuperLow);
+      await theVoteFor().DamperPositionShouldBe(true, damperPosition.damperPositionClosed);
    });
 
    it("should transition from heater on entry to heater on after defrost heater on delay after compressor is off", async () => {
@@ -344,11 +373,11 @@ describe("Defrost", () => {
    it("should vote to turn off freezer defrost heater, compressor, and all fans and vote for parametric position for fresh food damper when entering dwell", async () => {
       await providedDefrostIsEnabledAndInDwellState();
 
-      await theVoteFor().FreezerDefrostHeaterShouldBe(true, "HeaterState_Off");
-      await theVoteFor().CompressorSpeedShouldBe(true, "CompressorSpeed_Off");
-      await theVoteFor().FreezerFanSpeedShouldBe(true, "FanSpeed_Off");
-      await theVoteFor().CondenserFanSpeedShouldBe(true, "FanSpeed_Off");
-      await theVoteFor().IceCabinetFanSpeedShouldBe(true, "FanSpeed_Off");
+      await theVoteFor().FreezerDefrostHeaterShouldBe(true, heaterState.heaterStateOff);
+      await theVoteFor().CompressorSpeedShouldBe(true, compressorSpeed.compressorSpeedOff);
+      await theVoteFor().FreezerFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
+      await theVoteFor().CondenserFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
+      await theVoteFor().IceCabinetFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
 
       await theVoteFor().DamperPositionShouldBe(true, dwellFreshFoodDamperPosition);
    });

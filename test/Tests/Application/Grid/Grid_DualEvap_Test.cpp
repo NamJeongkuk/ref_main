@@ -356,7 +356,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks14And15And16)
 
       The FreezerFanSpeedVoteShouldBe(FanSpeed_Medium);
       And The CondenserFanSpeedVoteShouldBe(FanSpeed_Medium);
-      And The CompressorSpeedVoteShouldBe(CompressorSpeed_Mid);
+      And The CompressorSpeedVoteShouldBe(CompressorSpeed_Medium);
    }
 }
 
@@ -388,13 +388,13 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks17And18)
 
       The FreshFoodFanSpeedVoteShouldBe(FanSpeed_High);
 
-      When ActualCompressorSpeedIs(CompressorSpeed_Mid);
+      When ActualCompressorSpeedIs(CompressorSpeed_Medium);
       And GridIsRun();
 
       The FreezerFanSpeedVoteShouldBe(FanSpeed_Medium);
       And The CondenserFanSpeedVoteShouldBe(FanSpeed_Medium);
 
-      The CompressorSpeedVoteShouldBe(CompressorSpeed_Mid);
+      The CompressorSpeedVoteShouldBe(CompressorSpeed_Medium);
    }
 }
 
@@ -442,10 +442,10 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks21And22And23)
       And The CondenserFanSpeedVoteShouldBe(FanSpeed_High);
       And The FreezerFanSpeedVoteShouldBe(FanSpeed_High);
 
-      When The ActualCompressorSpeedIs(CompressorSpeed_Mid);
+      When The ActualCompressorSpeedIs(CompressorSpeed_Medium);
       And GridIsRun();
 
-      The CompressorSpeedVoteShouldBe(CompressorSpeed_Mid);
+      The CompressorSpeedVoteShouldBe(CompressorSpeed_Medium);
       The CondenserFanSpeedVoteShouldBe(FanSpeed_Medium);
       And The FreezerFanSpeedVoteShouldBe(FanSpeed_Medium);
 
@@ -487,12 +487,12 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks24And25And32)
 
       The FreshFoodFanSpeedVoteShouldBe(FanSpeed_High);
 
-      When ActualCompressorSpeedIs(CompressorSpeed_Mid);
+      When ActualCompressorSpeedIs(CompressorSpeed_Medium);
       And GridIsRun();
 
       The FreezerFanSpeedVoteShouldBe(FanSpeed_Medium);
       And The CondenserFanSpeedVoteShouldBe(FanSpeed_Medium);
-      And The CompressorSpeedVoteShouldBe(CompressorSpeed_Mid);
+      And The CompressorSpeedVoteShouldBe(CompressorSpeed_Medium);
 
       The FreshFoodFanSpeedVoteShouldBe(FanSpeed_Medium);
 
@@ -540,7 +540,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock26)
    When The ActualCompressorSpeedIs(CompressorSpeed_Low);
    And GridIsRun();
 
-   The CompressorSpeedVoteShouldBe(CompressorSpeed_Mid);
+   The CompressorSpeedVoteShouldBe(CompressorSpeed_Medium);
    The CondenserFanSpeedVoteShouldBe(FanSpeed_Medium);
    The FreshFoodFanSpeedVoteShouldBe(FanSpeed_Medium);
 }
@@ -592,10 +592,10 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks28And29And30)
       FreezerFanSpeedVoteShouldBe(FanSpeed_Low);
       CondenserFanSpeedVoteShouldBe(FanSpeed_Low);
 
-      When ActualCompressorSpeedIs(CompressorSpeed_Mid);
+      When ActualCompressorSpeedIs(CompressorSpeed_Medium);
       And GridIsRun();
 
-      CompressorSpeedVoteShouldBe(CompressorSpeed_Mid);
+      CompressorSpeedVoteShouldBe(CompressorSpeed_Medium);
       FreezerFanSpeedVoteShouldBe(FanSpeed_Medium);
       CondenserFanSpeedVoteShouldBe(FanSpeed_Medium);
 
@@ -661,10 +661,10 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks33And40)
       FreshFoodFanSpeedVoteShouldBe(FanSpeed_High);
       CondenserFanSpeedVoteShouldBe(FanSpeed_High);
 
-      When ActualCompressorSpeedIs(CompressorSpeed_Mid);
+      When ActualCompressorSpeedIs(CompressorSpeed_Medium);
       And GridIsRun();
 
-      CompressorSpeedVoteShouldBe(CompressorSpeed_Mid);
+      CompressorSpeedVoteShouldBe(CompressorSpeed_Medium);
       FreshFoodFanSpeedVoteShouldBe(FanSpeed_Medium);
       CondenserFanSpeedVoteShouldBe(FanSpeed_Medium);
    }
@@ -768,12 +768,12 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlock39)
    FreshFoodFanSpeedVoteShouldBe(FanSpeed_High);
    CompressorSpeedVoteShouldBe(CompressorSpeed_High);
 
-   When ActualCompressorSpeedIs(CompressorSpeed_Mid);
+   When ActualCompressorSpeedIs(CompressorSpeed_Medium);
    And GridIsRun();
 
    CondenserFanSpeedVoteShouldBe(FanSpeed_Medium);
    FreshFoodFanSpeedVoteShouldBe(FanSpeed_Medium);
-   CompressorSpeedVoteShouldBe(CompressorSpeed_Mid);
+   CompressorSpeedVoteShouldBe(CompressorSpeed_Medium);
 
    When ActualCompressorSpeedIs(CompressorSpeed_Low);
    And GridIsRun();
@@ -894,12 +894,12 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks46)
    CondenserFanSpeedVoteShouldBe(FanSpeed_High);
    CompressorSpeedVoteShouldBe(CompressorSpeed_High);
 
-   When ActualCompressorSpeedIs(CompressorSpeed_Mid);
+   When ActualCompressorSpeedIs(CompressorSpeed_Medium);
    And GridIsRun();
 
    FreshFoodFanSpeedVoteShouldBe(FanSpeed_Medium);
    CondenserFanSpeedVoteShouldBe(FanSpeed_Medium);
-   CompressorSpeedVoteShouldBe(CompressorSpeed_Mid);
+   CompressorSpeedVoteShouldBe(CompressorSpeed_Medium);
 
    When ActualCompressorSpeedIs(CompressorSpeed_Low);
    And GridIsRun();
@@ -931,7 +931,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks47)
 
    CondenserFanSpeedVoteShouldBe(FanSpeed_Medium);
    FreshFoodFanSpeedVoteShouldBe(FanSpeed_Medium);
-   CompressorSpeedVoteShouldBe(CompressorSpeed_Mid);
+   CompressorSpeedVoteShouldBe(CompressorSpeed_Medium);
 }
 
 TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks48)

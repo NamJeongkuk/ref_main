@@ -17,7 +17,7 @@ enum
    CompressorSpeed_MaxNumberOfSpeedsInSingleType,
    CompressorSpeed_SuperLow = CompressorSpeed_On,
    CompressorSpeed_Low,
-   CompressorSpeed_Mid,
+   CompressorSpeed_Medium,
    CompressorSpeed_High,
    CompressorSpeed_SuperHigh,
    CompressorSpeed_MaxNumberOfSpeedsInVariableType,

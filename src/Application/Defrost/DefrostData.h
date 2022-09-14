@@ -12,6 +12,7 @@
 #include "ValvePosition.h"
 #include "DamperVotedPosition.h"
 #include "FanSpeed.h"
+#include "CompressorVotedSpeed.h"
 
 typedef struct
 {
@@ -26,7 +27,7 @@ typedef struct
    uint8_t maxPrechillTimeInMinutes;
    uint8_t maxPrechillTimeForFreshFoodOnlyDefrostInMinutes;
    ValvePosition_t prechillRefrigerantValvePosition;
-   uint8_t prechillCompressorSpeed;
+   CompressorSpeed_t prechillCompressorSpeed;
    FanSpeed_t prechillFreezerFanSpeed;
    FanSpeed_t prechillFreshFoodFanSpeed;
    FanSpeed_t prechillIceBoxFanSpeed;
