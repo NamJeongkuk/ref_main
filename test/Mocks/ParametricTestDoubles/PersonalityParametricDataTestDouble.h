@@ -10,12 +10,6 @@
 
 #include "PersonalityId.h"
 
-enum
-{
-   Personality_TddDevelopment,
-   Personality_Max
-};
-
 /*!
  * @param personalityForTest Requested personality for this test
  */

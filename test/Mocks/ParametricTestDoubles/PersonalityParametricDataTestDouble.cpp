@@ -6,6 +6,7 @@
  */
 
 #include "PersonalityParametricDataTestDouble.h"
+#include "TddPersonality.h"
 #include <iostream>
 #include <sstream>
 #include <stdbool.h>
@@ -17,15 +18,16 @@ using namespace std;
 
 enum
 {
-   NumberOfPersonalities = 1,
+   NumberOfPersonalities = TddPersonality_MaxDevelopment,
    DirectoryOfPersonality = 0,
    ScriptNameOfPersonality = 1,
-   DirectoryAndScriptName = 2,
-   DefaultPersonalityForTest = Personality_TddDevelopment,
+   DirectoryAndScriptName = 2
 };
 
 static const string filePathByPersonality[NumberOfPersonalities][DirectoryAndScriptName] = {
-   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvap.lua" }
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvap.lua" },
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentDualEvap.lua" },
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentTripleEvap.lua" },
 };
 
 static bool loaded[NumberOfPersonalities];

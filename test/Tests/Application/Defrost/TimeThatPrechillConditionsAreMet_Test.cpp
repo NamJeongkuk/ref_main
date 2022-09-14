@@ -18,25 +18,13 @@ extern "C"
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 #include "ReferDataModel_TestDouble.h"
-#include "PersonalityParametricData_TestDouble.h"
+#include "TddPersonality.h"
 #include "uassert_test.h"
 
 #define Given
 #define When
 #define Then
 #define And
-
-static const EvaporatorData_t singleEvaporatorData = {
-   .numberOfEvaporators = 1
-};
-
-static const EvaporatorData_t dualEvaporatorData = {
-   .numberOfEvaporators = 2
-};
-
-static const EvaporatorData_t tripleEvaporatorData = {
-   .numberOfEvaporators = 3
-};
 
 static const TimeThatPrechillConditionsAreMetConfiguration_t config = {
    .compressorIsOnErd = Erd_CompressorIsOn,
@@ -51,20 +39,15 @@ TEST_GROUP(TimeThatPrechillConditionsAreMet_SingleEvap)
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
-   PersonalityParametricData_t personalityParametricData;
    TimeThatPrechillConditionsAreMet_t instance;
 
    void setup()
    {
-      ReferDataModel_TestDouble_Init(&dataModelDouble);
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentSingleEvaporator);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
-
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetEvaporator(&personalityParametricData, &singleEvaporatorData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
    }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
@@ -189,20 +172,15 @@ TEST_GROUP(TimeThatPrechillConditionsAreMet_DualEvap)
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
-   PersonalityParametricData_t personalityParametricData;
    TimeThatPrechillConditionsAreMet_t instance;
 
    void setup()
    {
-      ReferDataModel_TestDouble_Init(&dataModelDouble);
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentDualEvaporator);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
-
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetEvaporator(&personalityParametricData, &dualEvaporatorData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
    }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
@@ -345,20 +323,15 @@ TEST_GROUP(TimeThatPrechillConditionsAreMet_TripleEvap)
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
-   PersonalityParametricData_t personalityParametricData;
    TimeThatPrechillConditionsAreMet_t instance;
 
    void setup()
    {
-      ReferDataModel_TestDouble_Init(&dataModelDouble);
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentTripleEvaporator);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
-
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetEvaporator(&personalityParametricData, &tripleEvaporatorData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
    }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)

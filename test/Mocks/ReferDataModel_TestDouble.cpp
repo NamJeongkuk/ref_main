@@ -15,10 +15,11 @@ extern "C"
 
 #include "ReferDataModel_TestDouble.h"
 #include "PersonalityParametricDataTestDouble.h"
+#include "TddPersonality.h"
 
 enum
 {
-   DefaultPersonalityForTest = Personality_TddDevelopment
+   DefaultPersonalityForTest = TddPersonality_DevelopmentSingleEvaporator
 };
 
 static void RunTimerModule(void *context)
