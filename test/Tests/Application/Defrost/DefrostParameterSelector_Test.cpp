@@ -16,8 +16,7 @@ extern "C"
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 #include "ReferDataModel_TestDouble.h"
-#include "PersonalityParametricData_TestDouble.h"
-#include "DefrostData_TestDouble.h"
+#include "TddPersonality.h"
 #include "uassert_test.h"
 
 #define Given
@@ -36,43 +35,23 @@ enum
    SomeMoreMinutes = 100
 };
 
-static const EnhancedSabbathData_t enhancedSabbathData = {
-   .numberOfFreshFoodDefrostsBeforeFreezerDefrost = 3
-};
-
-static const EvaporatorData_t singleEvaporatorData = {
-   .numberOfEvaporators = 1
-};
-
-static const EvaporatorData_t dualEvaporatorData = {
-   .numberOfEvaporators = 2
-};
-
 TEST_GROUP(DefrostParameterSelector_SingleEvap)
 {
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
-   PersonalityParametricData_t personalityParametricData;
-
-   DefrostData_t defrostData;
+   const DefrostData_t *defrostData;
+   const EnhancedSabbathData_t *enhancedSabbathData;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
-
-      DefrostData_TestDouble_Init(&defrostData);
-      DefrostData_TestDouble_SetFreshFoodOnlyPostDwellExitTimeInMinutes(&defrostData, 20);
-
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
 
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);
-      PersonalityParametricData_TestDouble_SetEnhancedSabbath(&personalityParametricData, &enhancedSabbathData);
-      PersonalityParametricData_TestDouble_SetEvaporator(&personalityParametricData, &singleEvaporatorData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
+      defrostData = PersonalityParametricData_Get(dataModel)->defrostData;
+      enhancedSabbathData = PersonalityParametricData_Get(dataModel)->enhancedSabbathData;
    }
 
    void DefrostParameterSelectorIsInitialized()
@@ -167,11 +146,11 @@ TEST_GROUP(DefrostParameterSelector_SingleEvap)
    void PreviousDefrostsAreNormalAndTimeWhenDefrostReadyTimerIsSatisfiedIsMaximumTimeBetweenDefrostsInMinutes()
    {
       Given PreviousDefrostsAreNormal();
-      And MaxTimeBetweenDefrostsInMinutesIs(defrostData.maxTimeBetweenDefrostsInMinutes);
+      And MaxTimeBetweenDefrostsInMinutesIs(defrostData->maxTimeBetweenDefrostsInMinutes);
       And FreezerEvaporatorThermistorValidityIs(Valid);
       And DefrostParameterSelectorIsInitialized();
 
-      TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData.maxTimeBetweenDefrostsInMinutes);
+      TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes);
    }
 };
 
@@ -180,7 +159,7 @@ TEST(DefrostParameterSelector_SingleEvap, ShouldSetMaxPrechillTimeToMaxPrechillT
    Given CurrentDefrostIsFreshFoodOnly();
    And DefrostParameterSelectorIsInitialized();
 
-   MaxPrechillTimeInMinutesShouldBe(defrostData.maxPrechillTimeForFreshFoodOnlyDefrostInMinutes);
+   MaxPrechillTimeInMinutesShouldBe(defrostData->maxPrechillTimeForFreshFoodOnlyDefrostInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, ShouldSetMaxPrechillTimeToMaxPrechillTimeIfCurrentDefrostIsNotFreshFoodOnlyOnInit)
@@ -188,7 +167,7 @@ TEST(DefrostParameterSelector_SingleEvap, ShouldSetMaxPrechillTimeToMaxPrechillT
    Given CurrentDefrostIsNotFreshFoodOnly();
    And DefrostParameterSelectorIsInitialized();
 
-   MaxPrechillTimeInMinutesShouldBe(defrostData.maxPrechillTimeInMinutes);
+   MaxPrechillTimeInMinutesShouldBe(defrostData->maxPrechillTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, ShouldSetMaxPrechillTimeToMaxPrechillTimeForFreshFoodOnlyIfCurrentDefrostIsFreshFoodOnlyChangesFromFalseToTrue)
@@ -196,11 +175,11 @@ TEST(DefrostParameterSelector_SingleEvap, ShouldSetMaxPrechillTimeToMaxPrechillT
    Given CurrentDefrostIsNotFreshFoodOnly();
    And DefrostParameterSelectorIsInitialized();
 
-   MaxPrechillTimeInMinutesShouldBe(defrostData.maxPrechillTimeInMinutes);
+   MaxPrechillTimeInMinutesShouldBe(defrostData->maxPrechillTimeInMinutes);
 
    When CurrentDefrostIsFreshFoodOnly();
 
-   MaxPrechillTimeInMinutesShouldBe(defrostData.maxPrechillTimeForFreshFoodOnlyDefrostInMinutes);
+   MaxPrechillTimeInMinutesShouldBe(defrostData->maxPrechillTimeForFreshFoodOnlyDefrostInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, ShouldSetMaxPrechillTimeToMaxPrechillTimeIfCurrentDefrostIsFreshFoodOnlyChangesFromTrueToFalse)
@@ -208,18 +187,18 @@ TEST(DefrostParameterSelector_SingleEvap, ShouldSetMaxPrechillTimeToMaxPrechillT
    Given CurrentDefrostIsFreshFoodOnly();
    And DefrostParameterSelectorIsInitialized();
 
-   MaxPrechillTimeInMinutesShouldBe(defrostData.maxPrechillTimeForFreshFoodOnlyDefrostInMinutes);
+   MaxPrechillTimeInMinutesShouldBe(defrostData->maxPrechillTimeForFreshFoodOnlyDefrostInMinutes);
 
    When CurrentDefrostIsNotFreshFoodOnly();
 
-   MaxPrechillTimeInMinutesShouldBe(defrostData.maxPrechillTimeInMinutes);
+   MaxPrechillTimeInMinutesShouldBe(defrostData->maxPrechillTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, ShouldSetPostDwellExitTimeToPostDwellExitTimeWhenUnitIsSingleEvap)
 {
    Given DefrostParameterSelectorIsInitialized();
 
-   PostDwellExitTimeInMinutesShouldBe(defrostData.postDwellExitTimeInMinutes);
+   PostDwellExitTimeInMinutesShouldBe(defrostData->postDwellExitTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, ShouldSetNumberOfFreshFoodDefrostsBeforeAFreezerDefrostToDefrostParametricWhenEnhancedSabbathIsDisabledOnInit)
@@ -227,7 +206,7 @@ TEST(DefrostParameterSelector_SingleEvap, ShouldSetNumberOfFreshFoodDefrostsBefo
    Given EnhancedSabbathIsDisabled();
    And DefrostParameterSelectorIsInitialized();
 
-   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->numberOfFreshFoodDefrostsBeforeFreezerDefrost);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, ShouldSetNumberOfFreshFoodDefrostsBeforeAFreezerDefrostToEnhancedSabbathParametricWhenEnhancedSabbathIsEnabledOnInit)
@@ -235,7 +214,7 @@ TEST(DefrostParameterSelector_SingleEvap, ShouldSetNumberOfFreshFoodDefrostsBefo
    Given EnhancedSabbathIsEnabled();
    And DefrostParameterSelectorIsInitialized();
 
-   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(enhancedSabbathData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(enhancedSabbathData->numberOfFreshFoodDefrostsBeforeFreezerDefrost);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, ShouldSetNumberOfFreshFoodDefrostsBeforeAFreezerDefrostToEnhancedSabbathParametricWhenEnhancedSabbathIsEnabled)
@@ -243,10 +222,10 @@ TEST(DefrostParameterSelector_SingleEvap, ShouldSetNumberOfFreshFoodDefrostsBefo
    Given EnhancedSabbathIsDisabled();
    And DefrostParameterSelectorIsInitialized();
 
-   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->numberOfFreshFoodDefrostsBeforeFreezerDefrost);
 
    When EnhancedSabbathIsEnabled();
-   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(enhancedSabbathData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(enhancedSabbathData->numberOfFreshFoodDefrostsBeforeFreezerDefrost);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, ShouldSetNumberOfFreshFoodDefrostsBeforeAFreezerDefrostToDefrostParametricWhenEnhancedSabbathIsDisabled)
@@ -255,17 +234,17 @@ TEST(DefrostParameterSelector_SingleEvap, ShouldSetNumberOfFreshFoodDefrostsBefo
    And DefrostParameterSelectorIsInitialized();
 
    When EnhancedSabbathIsDisabled();
-   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->numberOfFreshFoodDefrostsBeforeFreezerDefrost);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBeMaxTimeBetweenDefrostsWhenPreviousDefrostsWereNormalAndFreezerEvaporatorThermistorIsValid)
 {
    Given PreviousDefrostsAreNormal();
    And FreezerEvaporatorThermistorValidityIs(Valid);
-   And MaxTimeBetweenDefrostsInMinutesIs(defrostData.maxTimeBetweenDefrostsInMinutes);
+   And MaxTimeBetweenDefrostsInMinutesIs(defrostData->maxTimeBetweenDefrostsInMinutes);
    And DefrostParameterSelectorIsInitialized();
 
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData.maxTimeBetweenDefrostsInMinutes);
+   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBeMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousFreshFoodDefrostWasAbnormal)
@@ -273,7 +252,7 @@ TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedIn
    Given PreviousFreshFoodDefrostIsAbnormal();
    And DefrostParameterSelectorIsInitialized();
 
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBeMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousFreezerDefrostWasAbnormal)
@@ -281,7 +260,7 @@ TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedIn
    Given PreviousFreezerDefrostIsAbnormal();
    And DefrostParameterSelectorIsInitialized();
 
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBeMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousConvertibleCompartmentDefrostWasAbnormal)
@@ -289,7 +268,7 @@ TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedIn
    Given PreviousConvertibleCompartmentDefrostIsAbnormal();
    And DefrostParameterSelectorIsInitialized();
 
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedShouldUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousFreshFoodDefrostIsAbnormal)
@@ -297,7 +276,7 @@ TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedSh
    Given PreviousDefrostsAreNormalAndTimeWhenDefrostReadyTimerIsSatisfiedIsMaximumTimeBetweenDefrostsInMinutes();
 
    When PreviousFreshFoodDefrostIsAbnormal();
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedShouldUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousFreezerDefrostIsAbnormal)
@@ -305,7 +284,7 @@ TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedSh
    Given PreviousDefrostsAreNormalAndTimeWhenDefrostReadyTimerIsSatisfiedIsMaximumTimeBetweenDefrostsInMinutes();
 
    When PreviousFreezerDefrostIsAbnormal();
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedShouldUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousConvertibleCompartmentDefrostIsAbnormal)
@@ -313,7 +292,7 @@ TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedSh
    Given PreviousDefrostsAreNormalAndTimeWhenDefrostReadyTimerIsSatisfiedIsMaximumTimeBetweenDefrostsInMinutes();
 
    When PreviousConvertibleCompartmentDefrostIsAbnormal();
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedShouldUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenFreezerEvaporatorThermistorBecomesInvalid)
@@ -321,20 +300,20 @@ TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedSh
    Given PreviousDefrostsAreNormalAndTimeWhenDefrostReadyTimerIsSatisfiedIsMaximumTimeBetweenDefrostsInMinutes();
 
    When FreezerEvaporatorThermistorValidityIs(Invalid);
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedShouldUpdateToADifferentMaxTimeBetweenDefrostsWhenMaxTimeBetweenDefrostsChangesWhileFreezerEvaporatorThermistorIsValid)
 {
    Given PreviousDefrostsAreNormal();
    And FreezerEvaporatorThermistorValidityIs(Valid);
-   And MaxTimeBetweenDefrostsInMinutesIs(defrostData.maxTimeBetweenDefrostsInMinutes);
+   And MaxTimeBetweenDefrostsInMinutesIs(defrostData->maxTimeBetweenDefrostsInMinutes);
    And DefrostParameterSelectorIsInitialized();
 
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData.maxTimeBetweenDefrostsInMinutes);
+   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes);
 
-   When MaxTimeBetweenDefrostsInMinutesIs(defrostData.maxTimeBetweenDefrostsInMinutes + SomeMoreMinutes);
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData.maxTimeBetweenDefrostsInMinutes + SomeMoreMinutes);
+   When MaxTimeBetweenDefrostsInMinutesIs(defrostData->maxTimeBetweenDefrostsInMinutes + SomeMoreMinutes);
+   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes + SomeMoreMinutes);
 }
 
 TEST_GROUP(DefrostParameterSelector_DualEvap)
@@ -342,24 +321,16 @@ TEST_GROUP(DefrostParameterSelector_DualEvap)
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
-   PersonalityParametricData_t personalityParametricData;
-   DefrostData_t defrostData;
+   const DefrostData_t *defrostData;
 
    void setup()
    {
-      ReferDataModel_TestDouble_Init(&dataModelDouble);
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentDualEvaporator);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
-
-      DefrostData_TestDouble_Init(&defrostData);
-      DefrostData_TestDouble_SetFreshFoodOnlyPostDwellExitTimeInMinutes(&defrostData, 20);
-
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
 
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);
-      PersonalityParametricData_TestDouble_SetEvaporator(&personalityParametricData, &dualEvaporatorData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
+      defrostData = PersonalityParametricData_Get(dataModel)->defrostData;
    }
 
    void DefrostParameterSelectorIsInitialized()
@@ -391,7 +362,7 @@ TEST(DefrostParameterSelector_DualEvap, ShouldSetPostDwellExitTimeToPostDwellExi
    Given CurrentDefrostIsNotFreshFoodOnly();
    And DefrostParameterSelectorIsInitialized();
 
-   PostDwellExitTimeInMinutesShouldBe(defrostData.postDwellExitTimeInMinutes);
+   PostDwellExitTimeInMinutesShouldBe(defrostData->postDwellExitTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_DualEvap, ShouldSetPostDwellExitTimeToFreshFoodOnlyPostDwellExitTimeWhenUnitIsDualEvapAndCurrentDefrostIsFreshFoodOnlyOnInit)
@@ -399,7 +370,7 @@ TEST(DefrostParameterSelector_DualEvap, ShouldSetPostDwellExitTimeToFreshFoodOnl
    Given CurrentDefrostIsFreshFoodOnly();
    And DefrostParameterSelectorIsInitialized();
 
-   PostDwellExitTimeInMinutesShouldBe(defrostData.freshFoodOnlyPostDwellExitTimeInMinutes);
+   PostDwellExitTimeInMinutesShouldBe(defrostData->freshFoodOnlyPostDwellExitTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_DualEvap, ShouldSetPostDwellExitTimeToPostDwellExitTimeWhenUnitIsDualEvapAndCurrentDefrostIsFreshFoodOnlyChangesFromTrueToFalse)
@@ -407,11 +378,11 @@ TEST(DefrostParameterSelector_DualEvap, ShouldSetPostDwellExitTimeToPostDwellExi
    Given CurrentDefrostIsFreshFoodOnly();
    And DefrostParameterSelectorIsInitialized();
 
-   PostDwellExitTimeInMinutesShouldBe(defrostData.freshFoodOnlyPostDwellExitTimeInMinutes);
+   PostDwellExitTimeInMinutesShouldBe(defrostData->freshFoodOnlyPostDwellExitTimeInMinutes);
 
    When CurrentDefrostIsNotFreshFoodOnly();
 
-   PostDwellExitTimeInMinutesShouldBe(defrostData.postDwellExitTimeInMinutes);
+   PostDwellExitTimeInMinutesShouldBe(defrostData->postDwellExitTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_DualEvap, ShouldSetPostDwellExitTimeToFreshFoodOnlyPostDwellExitTimeWhenUnitIsDualEvapAndCurrentDefrostIsFreshFoodOnlyChangesFromFalseToTrue)
@@ -419,9 +390,9 @@ TEST(DefrostParameterSelector_DualEvap, ShouldSetPostDwellExitTimeToFreshFoodOnl
    Given CurrentDefrostIsNotFreshFoodOnly();
    And DefrostParameterSelectorIsInitialized();
 
-   PostDwellExitTimeInMinutesShouldBe(defrostData.postDwellExitTimeInMinutes);
+   PostDwellExitTimeInMinutesShouldBe(defrostData->postDwellExitTimeInMinutes);
 
    When CurrentDefrostIsFreshFoodOnly();
 
-   PostDwellExitTimeInMinutesShouldBe(defrostData.freshFoodOnlyPostDwellExitTimeInMinutes);
+   PostDwellExitTimeInMinutesShouldBe(defrostData->freshFoodOnlyPostDwellExitTimeInMinutes);
 }

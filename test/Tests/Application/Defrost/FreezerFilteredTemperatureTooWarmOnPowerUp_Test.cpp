@@ -15,8 +15,6 @@ extern "C"
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 #include "ReferDataModel_TestDouble.h"
-#include "PersonalityParametricData_TestDouble.h"
-#include "DefrostData_TestDouble.h"
 #include "uassert_test.h"
 
 #define Given
