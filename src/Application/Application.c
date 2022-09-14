@@ -21,6 +21,7 @@
 #include "SetpointResolverPlugin.h"
 #include "CompressorPlugin.h"
 #include "SensorFilterPlugin.h"
+#include "AdjustedSetpointPlugin.h"
 
 enum
 {
@@ -57,6 +58,7 @@ void Application_Init(
       Erd_PersonalityParametricData,
       Erd_PersonalityIdOutOfRangeFlag);
 
+   AdjustedSetpointPlugin_Init(dataModel);
    SensorFilterPlugin(dataModel);
    OverrideArbiterPlugin_Init(dataModel);
 
