@@ -112,7 +112,6 @@ TEST_GROUP(Defrost_SingleEvap)
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
-   PersonalityParametricData_t personalityParametricData;
    Defrost_t instance;
    const DefrostData_t *defrostData;
    const GridData_t *gridData;
@@ -122,8 +121,6 @@ TEST_GROUP(Defrost_SingleEvap)
       ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
-
-      DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
 
       defrostData = PersonalityParametricData_Get(dataModel)->defrostData;
       gridData = PersonalityParametricData_Get(dataModel)->gridData;

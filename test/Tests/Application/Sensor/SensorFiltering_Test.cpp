@@ -10,25 +10,28 @@ extern "C"
 #include "SensorFiltering.h"
 #include "SensorData.h"
 #include "DataModelErdPointerAccess.h"
+#include "PersonalityParametricData.h"
 }
 
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 #include "ReferDataModel_TestDouble.h"
-#include "PersonalityParametricData_TestDouble.h"
-#include "SensorData_TestDouble.h"
 #include "uassert_test.h"
 
 enum
 {
-   ValidAdcCount = 22656,
-   MappedValidTemperature = 1314,
    InvalidAdcCount = 5375,
    InvalidTemperature = 30000,
-   AnotherValidAdcCount = 22780,
-   AnotherMappedValidTemperature = 1320,
-   SomeOtherValidAdcCount = 26432,
-   SomeOtherMappedValidTemperature = 2137
+   ValidAdcCount1 = 22656,
+   MappedValidTemperature1 = 1314,
+   ValidAdcCount2 = 22700,
+   MappedValidTemperature2 = 1323,
+   ValidAdcCount3 = 26432,
+   MappedValidTemperature3 = 2137,
+   ValidAdcCount4 = 26470,
+   MappedValidTemperature4 = 2145,
+   ValidAdcCount5 = 30336,
+   MappedValidTemperature5 = 2977,
 };
 
 static const SensorFilteringConfig_t sensorConfigWithSlewRateFilterEnabled = {
@@ -51,11 +54,9 @@ TEST_GROUP(SensorFiltering_SlewEnabled)
 {
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
-   PersonalityParametricData_t personalityParametricData;
    TimerModule_TestDouble_t *timerModuleTestDouble;
    SensorFiltering_t instance;
-
-   SensorData_t sensorData;
+   const SensorData_t *sensorData;
 
    void setup()
    {
@@ -63,11 +64,7 @@ TEST_GROUP(SensorFiltering_SlewEnabled)
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
-      SensorData_TestDouble_Init(&sensorData);
-
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetSensors(&personalityParametricData, &sensorData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
+      sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
    }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
@@ -81,8 +78,8 @@ TEST_GROUP(SensorFiltering_SlewEnabled)
          &instance,
          dataModel,
          &sensorConfigWithSlewRateFilterEnabled,
-         sensorData.ambientThermistor,
-         sensorData.periodicUpdateRateInMs);
+         sensorData->ambientThermistor,
+         sensorData->periodicUpdateRateInMs);
    }
 
    void GivenInitialAdcCountsAre(AdcCounts_t counts)
@@ -116,47 +113,47 @@ TEST_GROUP(SensorFiltering_SlewEnabled)
       GivenInitialAdcCountsAre(InvalidAdcCount);
       GivenSensorWithSlewRateFilterEnabledIsInitialized();
 
-      FilteredTemperatureShouldBe(sensorData.ambientThermistor->fallbackValueDegFx100);
+      FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
    }
 
    void GivenThermistorWasSeededWithValidValueAndSlewRateOfTenDegFx100()
    {
-      GivenInitialAdcCountsAre(ValidAdcCount);
+      GivenInitialAdcCountsAre(ValidAdcCount1);
       GivenSensorWithSlewRateFilterEnabledIsInitialized();
 
-      FilteredTemperatureShouldBe(MappedValidTemperature);
+      FilteredTemperatureShouldBe(MappedValidTemperature1);
    }
 
    void WhenBadReadingCounterMaxNumberOfBadReadingsHappen()
    {
-      for(uint8_t i = 0; i < sensorData.ambientThermistor->badReadingCounterMax; i++)
+      for(uint8_t i = 0; i < sensorData->ambientThermistor->badReadingCounterMax; i++)
       {
          WhenAdcCountChangesTo(InvalidAdcCount);
-         After(sensorData.periodicUpdateRateInMs);
+         After(sensorData->periodicUpdateRateInMs);
       }
    }
 
    void AfterFilteredTemperatureIsSnappedToTheUnfilteredTemperatureAfterBecomingValidAgain()
    {
-      for(uint8_t i = 0; i < sensorData.ambientThermistor->goodReadingCounterMax - 1; i++)
+      for(uint8_t i = 0; i < sensorData->ambientThermistor->goodReadingCounterMax - 1; i++)
       {
-         WhenAdcCountChangesTo(AnotherValidAdcCount);
+         WhenAdcCountChangesTo(ValidAdcCount3);
 
-         After(sensorData.periodicUpdateRateInMs - 1);
-         FilteredTemperatureShouldBe(sensorData.ambientThermistor->fallbackValueDegFx100);
+         After(sensorData->periodicUpdateRateInMs - 1);
+         FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
 
          After(1);
-         FilteredTemperatureShouldBe(sensorData.ambientThermistor->fallbackValueDegFx100);
+         FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
       }
 
-      WhenAdcCountChangesTo(AnotherValidAdcCount);
+      WhenAdcCountChangesTo(ValidAdcCount3);
 
-      After(sensorData.periodicUpdateRateInMs - 1);
-      FilteredTemperatureShouldBe(sensorData.ambientThermistor->fallbackValueDegFx100);
+      After(sensorData->periodicUpdateRateInMs - 1);
+      FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
 
       After(1);
-      UnfilteredTemperatureShouldBe(AnotherMappedValidTemperature);
-      FilteredTemperatureShouldBe(AnotherMappedValidTemperature);
+      UnfilteredTemperatureShouldBe(MappedValidTemperature3);
+      FilteredTemperatureShouldBe(MappedValidTemperature3);
    }
 };
 
@@ -167,18 +164,18 @@ TEST(SensorFiltering_SlewEnabled, ShouldInitialize)
 
 TEST(SensorFiltering_SlewEnabled, ShouldWriteUnfilteredTemperatureToFilteredTemperatureWhenSeededWithValidValue)
 {
-   GivenInitialAdcCountsAre(ValidAdcCount);
+   GivenInitialAdcCountsAre(ValidAdcCount1);
    GivenSensorWithSlewRateFilterEnabledIsInitialized();
 
-   FilteredTemperatureShouldBe(MappedValidTemperature);
+   FilteredTemperatureShouldBe(MappedValidTemperature1);
 }
 
 TEST(SensorFiltering_SlewEnabled, ShouldWriteUnfilteredTemperatureToUnfilteredTemperatureErdOnInit)
 {
-   GivenInitialAdcCountsAre(ValidAdcCount);
+   GivenInitialAdcCountsAre(ValidAdcCount1);
    GivenSensorWithSlewRateFilterEnabledIsInitialized();
 
-   UnfilteredTemperatureShouldBe(MappedValidTemperature);
+   UnfilteredTemperatureShouldBe(MappedValidTemperature1);
 }
 
 TEST(SensorFiltering_SlewEnabled, ShouldWriteTheFallbackTemperatureAsTheFilteredTemperatureWhenSeededWithInvalidValue)
@@ -186,7 +183,7 @@ TEST(SensorFiltering_SlewEnabled, ShouldWriteTheFallbackTemperatureAsTheFiltered
    GivenInitialAdcCountsAre(InvalidAdcCount);
    GivenSensorWithSlewRateFilterEnabledIsInitialized();
 
-   FilteredTemperatureShouldBe(sensorData.ambientThermistor->fallbackValueDegFx100);
+   FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
 }
 
 TEST(SensorFiltering_SlewEnabled, ShouldWriteTheInvalidMappedTemperatureToUnfilteredTemperatureErdWhenSeededWithInvalidValue)
@@ -194,21 +191,21 @@ TEST(SensorFiltering_SlewEnabled, ShouldWriteTheInvalidMappedTemperatureToUnfilt
    GivenInitialAdcCountsAre(InvalidAdcCount);
    GivenSensorWithSlewRateFilterEnabledIsInitialized();
 
-   UnfilteredTemperatureShouldBe(sensorData.ambientThermistor->lookupTable->mappings[sensorData.ambientThermistor->lookupTable->mappingCount - 1].y);
+   UnfilteredTemperatureShouldBe(sensorData->ambientThermistor->lookupTable->mappings[sensorData->ambientThermistor->lookupTable->mappingCount - 1].y);
 }
 
 TEST(SensorFiltering_SlewEnabled, ShouldWriteUnfilteredTemperatureToFilteredTemperatureAfterFinallySeedingWithValidValue)
 {
    GivenThermistorWasSeededWithInvalidValue();
 
-   WhenAdcCountChangesTo(ValidAdcCount);
+   WhenAdcCountChangesTo(ValidAdcCount1);
 
-   After(sensorData.periodicUpdateRateInMs - 1);
-   FilteredTemperatureShouldBe(sensorData.ambientThermistor->fallbackValueDegFx100);
+   After(sensorData->periodicUpdateRateInMs - 1);
+   FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
 
    After(1);
-   UnfilteredTemperatureShouldBe(MappedValidTemperature);
-   FilteredTemperatureShouldBe(MappedValidTemperature);
+   UnfilteredTemperatureShouldBe(MappedValidTemperature1);
+   FilteredTemperatureShouldBe(MappedValidTemperature1);
 }
 
 TEST(SensorFiltering_SlewEnabled, ShouldSlewTheFilteredTemperatureValueIfItChangesMoreThanTheSlewLimitInEitherDirection)
@@ -217,35 +214,35 @@ TEST(SensorFiltering_SlewEnabled, ShouldSlewTheFilteredTemperatureValueIfItChang
 
    WhenAdcCountChangesTo(44352);
 
-   After(sensorData.periodicUpdateRateInMs - 1);
-   FilteredTemperatureShouldBe(MappedValidTemperature);
+   After(sensorData->periodicUpdateRateInMs - 1);
+   FilteredTemperatureShouldBe(MappedValidTemperature1);
 
    After(1);
-   FilteredTemperatureShouldBe(MappedValidTemperature + sensorData.ambientThermistor->clampData.slewRatePerSecondx100);
+   FilteredTemperatureShouldBe(MappedValidTemperature1 + sensorData->ambientThermistor->clampData.slewRatePerSecondx100);
 
    WhenAdcCountChangesTo(45248);
 
-   After(sensorData.periodicUpdateRateInMs - 1);
-   FilteredTemperatureShouldBe(MappedValidTemperature + sensorData.ambientThermistor->clampData.slewRatePerSecondx100);
+   After(sensorData->periodicUpdateRateInMs - 1);
+   FilteredTemperatureShouldBe(MappedValidTemperature1 + sensorData->ambientThermistor->clampData.slewRatePerSecondx100);
 
    After(1);
-   FilteredTemperatureShouldBe(MappedValidTemperature + 2 * sensorData.ambientThermistor->clampData.slewRatePerSecondx100);
+   FilteredTemperatureShouldBe(MappedValidTemperature1 + 2 * sensorData->ambientThermistor->clampData.slewRatePerSecondx100);
 
    WhenAdcCountChangesTo(44352);
 
-   After(sensorData.periodicUpdateRateInMs - 1);
-   FilteredTemperatureShouldBe(MappedValidTemperature + 2 * sensorData.ambientThermistor->clampData.slewRatePerSecondx100);
+   After(sensorData->periodicUpdateRateInMs - 1);
+   FilteredTemperatureShouldBe(MappedValidTemperature1 + 2 * sensorData->ambientThermistor->clampData.slewRatePerSecondx100);
 
    After(1);
-   FilteredTemperatureShouldBe(MappedValidTemperature + 3 * sensorData.ambientThermistor->clampData.slewRatePerSecondx100);
+   FilteredTemperatureShouldBe(MappedValidTemperature1 + 3 * sensorData->ambientThermistor->clampData.slewRatePerSecondx100);
 
    WhenAdcCountChangesTo(19072);
 
-   After(sensorData.periodicUpdateRateInMs - 1);
-   FilteredTemperatureShouldBe(MappedValidTemperature + 3 * sensorData.ambientThermistor->clampData.slewRatePerSecondx100);
+   After(sensorData->periodicUpdateRateInMs - 1);
+   FilteredTemperatureShouldBe(MappedValidTemperature1 + 3 * sensorData->ambientThermistor->clampData.slewRatePerSecondx100);
 
    After(1);
-   FilteredTemperatureShouldBe(MappedValidTemperature + 4 * sensorData.ambientThermistor->clampData.slewRatePerSecondx100);
+   FilteredTemperatureShouldBe(MappedValidTemperature1 + 4 * sensorData->ambientThermistor->clampData.slewRatePerSecondx100);
 }
 
 TEST(SensorFiltering_SlewEnabled, ShouldUpdateUnfilteredTemperatureAsAdcCountsChangeToMappedTemperature)
@@ -254,7 +251,7 @@ TEST(SensorFiltering_SlewEnabled, ShouldUpdateUnfilteredTemperatureAsAdcCountsCh
 
    WhenAdcCountChangesTo(44352);
 
-   After(sensorData.periodicUpdateRateInMs - 1);
+   After(sensorData->periodicUpdateRateInMs - 1);
    UnfilteredTemperatureShouldBe(1314);
 
    After(1);
@@ -262,7 +259,7 @@ TEST(SensorFiltering_SlewEnabled, ShouldUpdateUnfilteredTemperatureAsAdcCountsCh
 
    WhenAdcCountChangesTo(26432);
 
-   After(sensorData.periodicUpdateRateInMs - 1);
+   After(sensorData->periodicUpdateRateInMs - 1);
    UnfilteredTemperatureShouldBe(6270);
 
    After(1);
@@ -273,25 +270,25 @@ TEST(SensorFiltering_SlewEnabled, ShouldSetTheFallbackValueAsTheFilteredTemperat
 {
    GivenThermistorWasSeededWithValidValueAndSlewRateOfTenDegFx100();
 
-   for(uint8_t i = 0; i < sensorData.ambientThermistor->badReadingCounterMax - 1; i++)
+   for(uint8_t i = 0; i < sensorData->ambientThermistor->badReadingCounterMax - 1; i++)
    {
       WhenAdcCountChangesTo(InvalidAdcCount);
 
-      After(sensorData.periodicUpdateRateInMs - 1);
-      FilteredTemperatureShouldBe(MappedValidTemperature);
+      After(sensorData->periodicUpdateRateInMs - 1);
+      FilteredTemperatureShouldBe(MappedValidTemperature1);
 
       After(1);
-      FilteredTemperatureShouldBe(MappedValidTemperature);
+      FilteredTemperatureShouldBe(MappedValidTemperature1);
    }
 
    WhenAdcCountChangesTo(InvalidAdcCount);
 
-   After(sensorData.periodicUpdateRateInMs - 1);
-   FilteredTemperatureShouldBe(MappedValidTemperature);
+   After(sensorData->periodicUpdateRateInMs - 1);
+   FilteredTemperatureShouldBe(MappedValidTemperature1);
 
    After(1);
-   FilteredTemperatureShouldBe(sensorData.ambientThermistor->fallbackValueDegFx100);
-   UnfilteredTemperatureShouldBe(sensorData.ambientThermistor->lookupTable->mappings[sensorData.ambientThermistor->lookupTable->mappingCount - 1].y);
+   FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
+   UnfilteredTemperatureShouldBe(sensorData->ambientThermistor->lookupTable->mappings[sensorData->ambientThermistor->lookupTable->mappingCount - 1].y);
 }
 
 TEST(SensorFiltering_SlewEnabled, ShouldSetTheUnfilteredValueAsTheFilteredTemperatureAfterGoodReadingCounterMaxNumberOfValidValuesWhenTheThermistorIsInvalid)
@@ -300,103 +297,117 @@ TEST(SensorFiltering_SlewEnabled, ShouldSetTheUnfilteredValueAsTheFilteredTemper
 
    WhenBadReadingCounterMaxNumberOfBadReadingsHappen();
 
-   for(uint8_t i = 0; i < sensorData.ambientThermistor->goodReadingCounterMax - 1; i++)
+   for(uint8_t i = 0; i < sensorData->ambientThermistor->goodReadingCounterMax - 1; i++)
    {
-      WhenAdcCountChangesTo(AnotherValidAdcCount);
+      WhenAdcCountChangesTo(ValidAdcCount3);
 
-      After(sensorData.periodicUpdateRateInMs - 1);
-      FilteredTemperatureShouldBe(sensorData.ambientThermistor->fallbackValueDegFx100);
+      After(sensorData->periodicUpdateRateInMs - 1);
+      FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
 
       After(1);
-      FilteredTemperatureShouldBe(sensorData.ambientThermistor->fallbackValueDegFx100);
+      FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
    }
 
-   WhenAdcCountChangesTo(AnotherValidAdcCount);
+   WhenAdcCountChangesTo(ValidAdcCount3);
 
-   After(sensorData.periodicUpdateRateInMs - 1);
-   FilteredTemperatureShouldBe(sensorData.ambientThermistor->fallbackValueDegFx100);
+   After(sensorData->periodicUpdateRateInMs - 1);
+   FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
 
    After(1);
-   FilteredTemperatureShouldBe(AnotherMappedValidTemperature);
-   UnfilteredTemperatureShouldBe(AnotherMappedValidTemperature);
+   FilteredTemperatureShouldBe(MappedValidTemperature3);
+   UnfilteredTemperatureShouldBe(MappedValidTemperature3);
+}
+
+TEST(SensorFiltering_SlewEnabled, ShouldSlewFromUnfilteredAndFilteredValueAfterFilteredTemperatureIsSnappedToUnfilteredTemperature)
+{
+   GivenThermistorWasSeededWithValidValueAndSlewRateOfTenDegFx100();
+
+   WhenBadReadingCounterMaxNumberOfBadReadingsHappen();
+   FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
+
+   AfterFilteredTemperatureIsSnappedToTheUnfilteredTemperatureAfterBecomingValidAgain();
+
+   WhenAdcCountChangesTo(ValidAdcCount5);
+
+   After(sensorData->periodicUpdateRateInMs - 1);
+   FilteredTemperatureShouldBe(MappedValidTemperature3);
+   UnfilteredTemperatureShouldBe(MappedValidTemperature3);
+
+   After(1);
+   FilteredTemperatureShouldBe(MappedValidTemperature3 + sensorData->ambientThermistor->clampData.slewRatePerSecondx100);
+   UnfilteredTemperatureShouldBe(MappedValidTemperature5);
 }
 
 TEST(SensorFiltering_SlewEnabled, ShouldDoTheExponentialWeightedMovingAverage)
 {
    GivenThermistorWasSeededWithValidValueAndSlewRateOfTenDegFx100();
 
-   WhenAdcCountChangesTo(AnotherValidAdcCount);
+   WhenAdcCountChangesTo(ValidAdcCount2);
 
-   After(sensorData.periodicUpdateRateInMs - 1);
-   FilteredTemperatureShouldBe(MappedValidTemperature);
-
-   After(1);
-   FilteredTemperatureShouldBe(MappedValidTemperature);
-
-   After(sensorData.periodicUpdateRateInMs - 1);
-   FilteredTemperatureShouldBe(MappedValidTemperature);
+   After(sensorData->periodicUpdateRateInMs - 1);
+   FilteredTemperatureShouldBe(MappedValidTemperature1);
 
    After(1);
-   FilteredTemperatureShouldBe(MappedValidTemperature + 1);
+   FilteredTemperatureShouldBe(MappedValidTemperature1);
 
-   After(sensorData.periodicUpdateRateInMs - 1);
-   FilteredTemperatureShouldBe(MappedValidTemperature + 1);
-
-   After(1);
-   FilteredTemperatureShouldBe(MappedValidTemperature + 1);
-
-   After(sensorData.periodicUpdateRateInMs - 1);
-   FilteredTemperatureShouldBe(MappedValidTemperature + 1);
+   After(sensorData->periodicUpdateRateInMs - 1);
+   FilteredTemperatureShouldBe(MappedValidTemperature1);
 
    After(1);
-   FilteredTemperatureShouldBe(MappedValidTemperature + 2);
+   FilteredTemperatureShouldBe(MappedValidTemperature1 + 1);
 
-   After(sensorData.periodicUpdateRateInMs - 1);
-   FilteredTemperatureShouldBe(MappedValidTemperature + 2);
+   After(sensorData->periodicUpdateRateInMs - 1);
+   FilteredTemperatureShouldBe(MappedValidTemperature1 + 1);
 
    After(1);
-   FilteredTemperatureShouldBe(MappedValidTemperature + 2);
+   FilteredTemperatureShouldBe(MappedValidTemperature1 + 2);
 
-   After(sensorData.periodicUpdateRateInMs * 75);
-   FilteredTemperatureShouldBe(AnotherMappedValidTemperature);
+   After(sensorData->periodicUpdateRateInMs - 1);
+   FilteredTemperatureShouldBe(MappedValidTemperature1 + 2);
+
+   After(1);
+   FilteredTemperatureShouldBe(MappedValidTemperature1 + 3);
+
+   After(sensorData->periodicUpdateRateInMs * 75);
+   FilteredTemperatureShouldBe(MappedValidTemperature2);
 }
 
-TEST(SensorFiltering_SlewEnabled, ShouldDoTheExponentialWeightedMovingAverageAfterFilteredTemperatureIsSnappedToUnfilteredTemperature)
+TEST(SensorFiltering_SlewEnabled, ShouldDoOnlyExponentialWeightedMovingAverageAfterFilteredTemperatureIsSnappedToUnfilteredTemperatureWhenNewChangeIsLessThanSlewRateThenFinallyReachTheUnfilteredTemperature)
 {
    GivenThermistorWasSeededWithValidValueAndSlewRateOfTenDegFx100();
 
    WhenBadReadingCounterMaxNumberOfBadReadingsHappen();
-   FilteredTemperatureShouldBe(sensorData.ambientThermistor->fallbackValueDegFx100);
+   FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
 
    AfterFilteredTemperatureIsSnappedToTheUnfilteredTemperatureAfterBecomingValidAgain();
 
-   WhenAdcCountChangesTo(SomeOtherValidAdcCount);
+   WhenAdcCountChangesTo(ValidAdcCount4);
+   UnfilteredTemperatureShouldBe(MappedValidTemperature3);
 
-   After(sensorData.periodicUpdateRateInMs - 1);
-   FilteredTemperatureShouldBe(AnotherMappedValidTemperature);
-
-   After(1);
-   FilteredTemperatureShouldBe(AnotherMappedValidTemperature + sensorData.ambientThermistor->clampData.slewRatePerSecondx100);
-
-   After(sensorData.periodicUpdateRateInMs - 1);
-   FilteredTemperatureShouldBe(AnotherMappedValidTemperature + sensorData.ambientThermistor->clampData.slewRatePerSecondx100);
+   After(sensorData->periodicUpdateRateInMs - 1);
+   FilteredTemperatureShouldBe(MappedValidTemperature3);
 
    After(1);
-   FilteredTemperatureShouldBe(AnotherMappedValidTemperature + 2 * sensorData.ambientThermistor->clampData.slewRatePerSecondx100);
+   FilteredTemperatureShouldBe(MappedValidTemperature3);
 
-   After(sensorData.periodicUpdateRateInMs * 120);
-   FilteredTemperatureShouldBe(SomeOtherMappedValidTemperature);
+   After(sensorData->periodicUpdateRateInMs * 10);
+   FilteredTemperatureShouldBe(MappedValidTemperature3 + 5);
+
+   After(sensorData->periodicUpdateRateInMs * 10);
+   FilteredTemperatureShouldBe(MappedValidTemperature3 + 7);
+
+   After(sensorData->periodicUpdateRateInMs * 57);
+   FilteredTemperatureShouldBe(MappedValidTemperature4);
 }
 
 TEST_GROUP(SensorFiltering_SlewDisabled)
 {
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
-   PersonalityParametricData_t personalityParametricData;
    TimerModule_TestDouble_t *timerModuleTestDouble;
    SensorFiltering_t instance;
 
-   SensorData_t sensorData;
+   const SensorData_t *sensorData;
 
    void setup()
    {
@@ -404,11 +415,7 @@ TEST_GROUP(SensorFiltering_SlewDisabled)
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
-      SensorData_TestDouble_Init(&sensorData);
-
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetSensors(&personalityParametricData, &sensorData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
+      sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
    }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
@@ -418,14 +425,14 @@ TEST_GROUP(SensorFiltering_SlewDisabled)
 
    void GivenSensorWithSlewRateDisabledIsInitializedWithSlewRateOf(int16_t slewRatePerSecondx100)
    {
-      sensorData.freezerEvapThermistor->clampData.slewRatePerSecondx100 = slewRatePerSecondx100;
+      sensorData->freezerEvapThermistor->clampData.slewRatePerSecondx100 = slewRatePerSecondx100;
 
       SensorFiltering_Init(
          &instance,
          dataModel,
          &sensorConfigWithSlewRateDisabled,
-         sensorData.freezerEvapThermistor,
-         sensorData.periodicUpdateRateInMs);
+         sensorData->freezerEvapThermistor,
+         sensorData->periodicUpdateRateInMs);
    }
 
    void GivenInitialAdcCountsAre(AdcCounts_t counts)
@@ -472,7 +479,7 @@ TEST(SensorFiltering_SlewDisabled, ShouldNotLimitSlewRateWhichAllowsFilteredTemp
 
    WhenAdcCountChangesTo(44352);
 
-   After(sensorData.periodicUpdateRateInMs - 1);
+   After(sensorData->periodicUpdateRateInMs - 1);
    FilteredTemperatureShouldBe(1314);
 
    After(1);

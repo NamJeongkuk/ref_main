@@ -263,6 +263,26 @@ TEST(Filter_Slew, ShouldSlewWithSlewRateGreaterThanInt16Max)
    TheFilterShouldRead(-28768);
 }
 
+TEST(Filter_Slew, ShouldReadSeedValueWhenReseededAndNotSlewedValueFromPreviousValues)
+{
+   GivenTheFilterHasBeenInitializedWithSlewRateLimit(2);
+
+   WhenTheWrappedFilterCurrentFilterValueIs(20);
+   TheFilterShouldRead(20);
+
+   WhenTheWrappedFilterCurrentFilterValueIs(40);
+   TheFilterShouldRead(22);
+
+   WhenTheWrappedFilterCurrentFilterValueIs(20);
+   TheFilterShouldRead(20);
+
+   AfterTheFilterIsSeededWith(999);
+   TheWrappedFilterShouldHaveBeenSeededWith(999);
+
+   WhenTheWrappedFilterCurrentFilterValueIs(999);
+   TheFilterShouldRead(999);
+}
+
 TEST(Filter_Slew, ShouldBeReadyWhenWrappedFilterIsReady)
 {
    GivenTheFilterHasBeenInitializedWithSlewRateLimit(2);

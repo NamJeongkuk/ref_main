@@ -11,6 +11,7 @@
 static void Seed(I_Filter_t *_instance, const void *_seedValue)
 {
    REINTERPRET(instance, _instance, Filter_Slew_t *);
+   instance->_private.hasAPreviousValue = false;
 
    const int16_t *seedValue = _seedValue;
    Filter_Seed(instance->_private.wrappedFilter, seedValue);
