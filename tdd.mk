@@ -37,6 +37,7 @@ SRC_DIRS := \
 # List of directories that contain your tests and test helpers (mocks, fakes, etc.)
 TEST_SRC_DIRS := \
    $(TESTING_DIR) \
+   $(TESTING_DIR)/Utils \
    $(TESTING_DIR)/Doubles \
    $(TESTING_DIR)/Mocks \
    $(TESTING_DIR)/Mocks/Bsp \

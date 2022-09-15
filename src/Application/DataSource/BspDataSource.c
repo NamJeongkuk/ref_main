@@ -7,52 +7,26 @@
 
 #include "BspDataSource.h"
 #include "SystemErds.h"
-
-static const DataSource_MappedErdPair_t applicationToBspMappedPairs[] = {
-   { Erd_HeartbeatLed, Erd_BspGpio_HeartbeatLed },
-   { Erd_RelayWatchdog, Erd_BspGpio_RelayWatchdog },
-   { Erd_SomeAnalogInput, Erd_BspAdc_SomeAnalogInput },
-   { Erd_AnotherAnalogInput, Erd_BspAdc_AnotherAnalogInput },
-   { Erd_DeliFan_Pwm, Erd_BspPwm_PWM_0 },
-   { Erd_FreezerFan_Pwm, Erd_BspPwm_PWM_1 },
-   { Erd_IceCabinetFan_Pwm, Erd_BspPwm_PWM_2 },
-   { Erd_CondenserFan_Pwm, Erd_BspPwm_PWM_4 },
-   { Erd_FreshFoodFan_Pwm, Erd_BspPwm_PWM_5 },
-   { Erd_FreezerFan_InputCaptureTime, Erd_BspFanInputCapture_CAPT_1 },
-   { Erd_IceCabinetFan_InputCaptureTime, Erd_BspFanInputCapture_CAPT_2 },
-   { Erd_AppliancePersonality, Erd_Bsp_Personality },
-};
-
-static const ConstArrayMap_BinarySearchConfiguration_t bspToApplicationMapConfiguration = {
-   applicationToBspMappedPairs,
-   NUM_ELEMENTS(applicationToBspMappedPairs),
-   ELEMENT_SIZE(applicationToBspMappedPairs),
-   MEMBER_SIZE(DataSource_MappedErdPair_t, baseErdId),
-   OFFSET_OF(DataSource_MappedErdPair_t, baseErdId),
-   IS_SIGNED(Erd_t)
-};
-
-static const ConstArrayMap_LinearSearchConfiguration_t applicationToBspMapConfiguration = {
-   applicationToBspMappedPairs,
-   NUM_ELEMENTS(applicationToBspMappedPairs),
-   ELEMENT_SIZE(applicationToBspMappedPairs),
-   MEMBER_SIZE(DataSource_MappedErdPair_t, mappedErdId),
-   OFFSET_OF(DataSource_MappedErdPair_t, mappedErdId)
-};
+#include "PersonalityId.h"
+#include "ParametricDataTableOfContents.h"
+#include "ParametricData.h"
 
 void BspDataSource_Init(
    BspDataSource_t *instance,
    TimerModule_t *timerModule)
 {
+   const ParametricDataTableOfContents_t *parametricData = ParametricData_GetParametricTableOfContents();
+
    instance->_private.dataSource = DataSource_Bsp_Init(timerModule);
+   instance->_private.bspParametricConfiguration = parametricData->personalities[PersonalityId_Default]->bspConfigurationData;
 
    ConstArrayMap_LinearSearch_Init(
       &instance->_private.applicationToBspMap,
-      &applicationToBspMapConfiguration);
+      instance->_private.bspParametricConfiguration->applicationToBspMapConfiguration);
 
    ConstArrayMap_BinarySearch_Init(
       &instance->_private.bspToApplicationMap,
-      &bspToApplicationMapConfiguration);
+      instance->_private.bspParametricConfiguration->bspToApplicationMapConfiguration);
 
    ConstBidirectionalMap_ConstArrayMap_Init(
       &instance->_private.applicationToBspBiDirectionalMap,

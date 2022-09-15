@@ -13,6 +13,7 @@
 #include "ConstArrayMap_LinearSearch.h"
 #include "ConstArrayMap_BinarySearch.h"
 #include "ConstBidirectionalMap_ConstArrayMap.h"
+#include "BspParametricConfiguration.h"
 #include "Timer.h"
 
 typedef struct
@@ -22,6 +23,7 @@ typedef struct
       I_DataSource_t *dataSource;
       DataSource_Mapped_t mappedDataSource;
 
+      const BspParametricConfiguration_t *bspParametricConfiguration;
       ConstArrayMap_LinearSearch_t applicationToBspMap;
       ConstArrayMap_BinarySearch_t bspToApplicationMap;
       ConstBidirectionalMap_ConstArrayMap_t applicationToBspBiDirectionalMap;
