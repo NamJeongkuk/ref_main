@@ -18,6 +18,7 @@
 #include "EepromAppPlugin.h"
 #include "FaultWrapperPlugin.h"
 #include "OverrideArbiterPlugin.h"
+#include "AdjustedSetpointPlugin.h"
 #include "SetpointResolverPlugin.h"
 #include "CompressorPlugin.h"
 #include "SensorFilterPlugin.h"

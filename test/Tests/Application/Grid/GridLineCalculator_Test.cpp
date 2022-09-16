@@ -138,14 +138,14 @@ static const GridLineAdjustmentErds_t freshFoodGridLineAdjustmentErds{
    .rawSetpointErd = Erd_FreshFoodSetpoint_ResolvedVote,
    .offsetErd = Erd_FreshFood_Offset,
    .shiftErd = Erd_FreshFood_Shift,
-   .adjustedSetpointErd = Erd_FreshFood_AdjustedSetpoint
+   .adjustedSetpointErd = Erd_FreshFood_AdjustedSetpointInDegFx100
 };
 
 static const GridLineAdjustmentErds_t freezerGridLineAdjustmentErds{
    .rawSetpointErd = Erd_FreezerSetpoint_ResolvedVote,
    .offsetErd = Erd_Freezer_Offset,
    .shiftErd = Erd_Freezer_Shift,
-   .adjustedSetpointErd = Erd_Freezer_AdjustedSetpoint,
+   .adjustedSetpointErd = Erd_Freezer_AdjustedSetpointInDegFx100,
 };
 
 static const GridLineCalculatorConfiguration_t config{
@@ -189,14 +189,14 @@ TEST_GROUP(GridLineCalculator)
    void FreshFoodAdjustedSetpointIs(TemperatureDegFx100_t setpoint)
    {
       DataModel_Write(dataModel,
-         Erd_FreshFood_AdjustedSetpoint,
+         Erd_FreshFood_AdjustedSetpointInDegFx100,
          &setpoint);
    }
 
    void FreezerAdjustedSetpointIs(TemperatureDegFx100_t setpoint)
    {
       DataModel_Write(dataModel,
-         Erd_Freezer_AdjustedSetpoint,
+         Erd_Freezer_AdjustedSetpointInDegFx100,
          &setpoint);
    }
 
