@@ -13,7 +13,8 @@
 enum
 {
    DamperPosition_Closed,
-   DamperPosition_Open
+   DamperPosition_Open,
+   DamperPosition_Home
 };
 typedef uint8_t DamperPosition_t;
 
