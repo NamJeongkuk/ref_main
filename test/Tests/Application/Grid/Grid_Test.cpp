@@ -17,6 +17,7 @@ extern "C"
 #include "CppUTestExt/MockSupport.h"
 #include "ReferDataModel_TestDouble.h"
 #include "PersonalityParametricData_TestDouble.h"
+#include "TddPersonality.h"
 #include "uassert_test.h"
 
 #define And
@@ -26,10 +27,10 @@ enum
    OneSecondInMs = 1000
 };
 
-void Grid_MultiDoor(void *context)
+void Grid_SingleEvap(void *context)
 {
    IGNORE(context);
-   mock().actualCall("Grid_MultiDoor");
+   mock().actualCall("Grid_SingleEvap");
 }
 
 void Grid_DualEvap(void *context)
@@ -45,7 +46,7 @@ void Grid_TripleEvap(void *context)
 }
 
 static const GridFunction_t grids[] = {
-   Grid_MultiDoor,
+   Grid_SingleEvap,
    Grid_DualEvap,
    Grid_TripleEvap
 };
@@ -55,17 +56,12 @@ static const GridFunctionArray_t functionArray = {
    NUM_ELEMENTS(grids)
 };
 
-static GridConfiguration_t gridConfig = {
+static const GridConfiguration_t gridConfig = {
    .timerModuleErd = Erd_TimerModule,
    .gridFunctions = &functionArray
 };
 
-static GridData_t gridData = {
-   .gridId = 1,
-   .gridPeriodicRunRateInMSec = OneSecondInMs
-};
-
-TEST_GROUP(Grid)
+TEST_GROUP(Grid_SingleEvap)
 {
    Grid_t instance;
    ReferDataModel_TestDouble_t dataModelDouble;
@@ -75,20 +71,9 @@ TEST_GROUP(Grid)
 
    void setup()
    {
-      ReferDataModel_TestDouble_Init(&dataModelDouble);
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentSingleEvaporator);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
-
-      DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
-
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetGrid(&personalityParametricData, &gridData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
-   }
-
-   void GivenGridIdIs(GridId_t id)
-   {
-      gridData.gridId = id;
    }
 
    void WhenTheModuleIsInitialized()
@@ -114,28 +99,69 @@ TEST_GROUP(Grid)
    }
 };
 
-TEST(Grid, ShouldNotRunCallbackOnInit)
+TEST(Grid_SingleEvap, ShouldNotRunCallbackOnInit)
 {
-   GivenGridIdIs(0);
    WhenTheModuleIsInitialized();
    NothingShouldHappen();
 }
 
-TEST(Grid, ShouldRunGridFunctionAfterGivenPeriod)
+TEST(Grid_SingleEvap, ShouldRunGridFunctionAfterGivenPeriod)
 {
-   GivenGridIdIs(0);
    WhenTheModuleIsInitialized();
 
    NothingShouldHappen();
    After(OneSecondInMs - 1);
 
-   GridFunctionShouldBeCalled("Grid_MultiDoor");
+   GridFunctionShouldBeCalled("Grid_SingleEvap");
    After(1);
 }
 
-TEST(Grid, ShouldRunDifferentGridFunctionAfterGivenPeriod)
+TEST_GROUP(Grid_DualEvap)
 {
-   GivenGridIdIs(1);
+   Grid_t instance;
+   ReferDataModel_TestDouble_t dataModelDouble;
+   I_DataModel_t *dataModel;
+   TimerModule_TestDouble_t *timerModuleTestDouble;
+   PersonalityParametricData_t personalityParametricData;
+
+   void setup()
+   {
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentDualEvaporator);
+      dataModel = dataModelDouble.dataModel;
+      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+   }
+
+   void WhenTheModuleIsInitialized()
+   {
+      Grid_Init(
+         &instance,
+         &gridConfig,
+         dataModel);
+   }
+
+   void NothingShouldHappen()
+   {
+   }
+
+   void GridFunctionShouldBeCalled(SimpleString functionName)
+   {
+      mock().expectOneCall(functionName);
+   }
+
+   void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
+   {
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
+   }
+};
+
+TEST(Grid_DualEvap, ShouldNotRunCallbackOnInit)
+{
+   WhenTheModuleIsInitialized();
+   NothingShouldHappen();
+}
+
+TEST(Grid_DualEvap, ShouldRunGridFunctionAfterGivenPeriod)
+{
    WhenTheModuleIsInitialized();
 
    NothingShouldHappen();
@@ -143,25 +169,4 @@ TEST(Grid, ShouldRunDifferentGridFunctionAfterGivenPeriod)
 
    GridFunctionShouldBeCalled("Grid_DualEvap");
    After(1);
-}
-
-TEST(Grid, ShouldRunAnotherGridFunctionAfterGivenPeriod)
-{
-   GivenGridIdIs(2);
-   WhenTheModuleIsInitialized();
-
-   NothingShouldHappen();
-   After(OneSecondInMs - 1);
-
-   GridFunctionShouldBeCalled("Grid_TripleEvap");
-   After(1);
-}
-
-TEST(Grid, ShouldNotRunAnyGridFunctionIfGridIdIsInvalid)
-{
-   GivenGridIdIs(30);
-   WhenTheModuleIsInitialized();
-
-   NothingShouldHappen();
-   After(OneSecondInMs);
 }

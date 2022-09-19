@@ -7,17 +7,15 @@
 
 #include "Grid.h"
 #include "utils.h"
+#include "Grid_SingleEvap.h"
+#include "Grid_TripleEvap.h"
+#include "Grid_DualEvap.h"
 #include "DataModelErdPointerAccess.h"
 #include "GridBlockNumber.h"
 
-static bool GridIdIsValid(Grid_t *instance)
-{
-   return (instance->_private.gridData->gridId < instance->_private.configuration->gridFunctions->numOfGrids);
-}
-
 static void Grid_Run(void *context)
 {
-   REINTERPRET(instance, context, Grid_t *);
+   Grid_t *instance = context;
 
    instance->_private.configuration->gridFunctions->grids[instance->_private.gridData->gridId](instance->_private.dataModel);
 }
@@ -31,13 +29,10 @@ void Grid_Init(
    instance->_private.configuration = configuration;
    instance->_private.gridData = PersonalityParametricData_Get(instance->_private.dataModel)->gridData;
 
-   if(GridIdIsValid(instance))
-   {
-      TimerModule_StartPeriodic(
-         DataModelErdPointerAccess_GetTimerModule(dataModel, instance->_private.configuration->timerModuleErd),
-         &instance->_private.gridTimer,
-         instance->_private.gridData->gridPeriodicRunRateInMSec,
-         Grid_Run,
-         instance);
-   }
+   TimerModule_StartPeriodic(
+      DataModelErdPointerAccess_GetTimerModule(dataModel, instance->_private.configuration->timerModuleErd),
+      &instance->_private.gridTimer,
+      instance->_private.gridData->gridPeriodicRunRateInMSec,
+      Grid_Run,
+      instance);
 }

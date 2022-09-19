@@ -16,6 +16,12 @@
 
 typedef void (*GridFunction_t)(void *context);
 
+enum
+{
+   GridId_SingleEvap,
+   GridId_DualEvap,
+   GridId_TripleEvap
+};
 typedef uint8_t GridId_t;
 
 typedef struct

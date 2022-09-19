@@ -8,21 +8,32 @@
 #include "GridPlugin.h"
 #include "SystemErds.h"
 #include "Constants_Time.h"
-#include "Grid_MultiDoor.h"
-#include "Grid_TripleEvap.h"
+#include "Grid_SingleEvap.h"
 #include "Grid_DualEvap.h"
+#include "Grid_TripleEvap.h"
 #include "uassert.h"
 #include "Constants_Binary.h"
 
-static const GridFunction_t grids[] = {
-   Grid_MultiDoor,
-   Grid_DualEvap,
-   Grid_TripleEvap
+typedef struct
+{
+   GridFunction_t singleEvap;
+   GridFunction_t dualEvap;
+   GridFunction_t tripleEvap;
+} GridFunctions_t;
+
+STATIC_ASSERT(OFFSET_OF(GridFunctions_t, singleEvap) / sizeof(GridFunction_t) == GridId_SingleEvap);
+STATIC_ASSERT(OFFSET_OF(GridFunctions_t, dualEvap) / sizeof(GridFunction_t) == GridId_DualEvap);
+STATIC_ASSERT(OFFSET_OF(GridFunctions_t, tripleEvap) / sizeof(GridFunction_t) == GridId_TripleEvap);
+
+static const GridFunctions_t gridFunctions = {
+   .singleEvap = Grid_SingleEvap,
+   .dualEvap = Grid_DualEvap,
+   .tripleEvap = Grid_TripleEvap
 };
 
 static const GridFunctionArray_t gridFunctionArray = {
-   grids,
-   NUM_ELEMENTS(grids)
+   (const GridFunction_t *)&gridFunctions,
+   sizeof(gridFunctions) / sizeof(GridFunction_t)
 };
 
 static const GridConfiguration_t gridConfig = {

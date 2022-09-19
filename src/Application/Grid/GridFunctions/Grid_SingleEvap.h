@@ -5,11 +5,11 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef GRID_MULTIDOOR_H
-#define GRID_MULTIDOOR_H
+#ifndef GRID_SINGLEEVAP_H
+#define GRID_SINGLEEVAP_H
 
 #include "utils.h"
 
-void Grid_MultiDoor(void *context);
+void Grid_SingleEvap(void *context);
 
 #endif
