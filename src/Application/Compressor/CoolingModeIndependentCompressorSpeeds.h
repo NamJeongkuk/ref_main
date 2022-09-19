@@ -8,13 +8,13 @@
 #ifndef COOLINGMODEINDEPENDENTCOMPRESSORSPEEDS_H
 #define COOLINGMODEINDEPENDENTCOMPRESSORSPEEDS_H
 
-#include "utils.h"
+#include "CompressorSpeedFrequencyInHz.h"
 
 typedef struct
 {
-   uint8_t lowSpeedFrequencyInHz;
-   uint8_t mediumSpeedFrequencyInHz;
-   uint8_t highSpeedFrequencyInHz;
+   CompressorSpeedFrequencyInHz_t lowSpeedFrequencyInHz;
+   CompressorSpeedFrequencyInHz_t mediumSpeedFrequencyInHz;
+   CompressorSpeedFrequencyInHz_t highSpeedFrequencyInHz;
 } CoolingModeIndependentCompressorSpeeds_t;
 
 #endif

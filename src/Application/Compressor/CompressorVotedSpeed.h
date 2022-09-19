@@ -13,15 +13,13 @@
 enum
 {
    CompressorSpeed_Off,
-   CompressorSpeed_On,
-   CompressorSpeed_MaxNumberOfSpeedsInSingleType,
-   CompressorSpeed_SuperLow = CompressorSpeed_On,
+   CompressorSpeed_SuperLow,
    CompressorSpeed_Low,
    CompressorSpeed_Medium,
    CompressorSpeed_High,
    CompressorSpeed_SuperHigh,
-   CompressorSpeed_MaxNumberOfSpeedsInVariableType,
-   CompressorSpeed_MaxNumberOfSpeeds = CompressorSpeed_MaxNumberOfSpeedsInVariableType,
+   CompressorSpeed_Startup,
+   CompressorSpeed_MaxNumberOfSpeeds
 };
 typedef uint8_t CompressorSpeed_t;
 

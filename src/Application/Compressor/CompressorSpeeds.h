@@ -11,15 +11,14 @@
 #include <stdint.h>
 #include "CoolingModeDependentCompressorSpeeds.h"
 #include "CoolingModeIndependentCompressorSpeeds.h"
-
-typedef uint16_t CompressorRpm_t;
+#include "CompressorSpeedFrequencyInHz.h"
 
 typedef struct
 {
    bool coolingModeDependent;
-   uint8_t startupSpeedFrequencyInHz;
-   uint8_t superLowSpeedFrequencyInHz;
-   uint8_t superHighSpeedFrequencyInHz;
+   CompressorSpeedFrequencyInHz_t startupSpeedFrequencyInHz;
+   CompressorSpeedFrequencyInHz_t superLowSpeedFrequencyInHz;
+   CompressorSpeedFrequencyInHz_t superHighSpeedFrequencyInHz;
 
    union
    {

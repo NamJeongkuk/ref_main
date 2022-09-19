@@ -64,6 +64,7 @@
 #include "InputCaptureType.h"
 #include "DefrostCompressorOnTimeCounterFsmState.h"
 #include "DoorAccelerationCounterFsmState.h"
+#include "CompressorSpeedFrequencyInHz.h"
 #include "StepperPositionRequest.h"
 
 // clang-format off
@@ -514,11 +515,12 @@ enum
    \
    ENTRY(Erd_CompressorState,                               0xF20F, CompressorState_t,                                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_CompressorSpeed_ResolvedVote,                  0xF210, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CompressorSpeed_WinningVoteErd,                0xF211, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CompressorSpeed_FactoryVote,                   0xF212, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CompressorSpeed_DefrostVote,                   0xF223, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CompressorSpeed_GridVote,                      0xF224, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorSpeedRequestInHz,                    0xF210, CompressorSpeedFrequencyInHz_t,                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorSpeed_ResolvedVote,                  0xF211, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorSpeed_WinningVoteErd,                0xF212, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorSpeed_FactoryVote,                   0xF213, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorSpeed_DefrostVote,                   0xF214, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorSpeed_GridVote,                      0xF215, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_CondenserFanSpeed_ResolvedVote,                0xF230, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CondenserFanSpeed_WinningVoteErd,              0xF231, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

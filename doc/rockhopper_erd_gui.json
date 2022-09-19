@@ -85,6 +85,13 @@
           "name": "Erd_CompressorIsOn",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Compressor Speed Request In Hz",
+          "name": "Erd_CompressorSpeedRequestInHz",
+          "read": true,
+          "write": false
         }
       ]
     },
