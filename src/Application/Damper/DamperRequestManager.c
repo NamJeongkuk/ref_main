@@ -32,25 +32,23 @@ static DamperRequestManager_t *InstanceFromFsm(Fsm_t *fsm)
    return CONTAINER_OF(DamperRequestManager_t, _private.fsm, fsm);
 }
 
-static DamperVotedPosition_t ReadDamperRequestedPosition(DamperRequestManager_t *instance)
+static DamperVotedPosition_t DamperRequestedPosition(DamperRequestManager_t *instance)
 {
    DamperVotedPosition_t damperVotedPosition;
-
    DataModel_Read(
       instance->_private.dataModel,
-      Erd_FreshFoodDamperPosition_ResolvedVote,
+      instance->_private.configuration->damperPositionRequestResolvedVoteErd,
       &damperVotedPosition);
 
    return damperVotedPosition;
 }
 
-static DamperPosition_t ReadCurrentDamperPosition(DamperRequestManager_t *instance)
+static DamperPosition_t CurrentDamperPosition(DamperRequestManager_t *instance)
 {
    DamperPosition_t damperCurrentPosition;
-
    DataModel_Read(
       instance->_private.dataModel,
-      Erd_FreshFoodDamperCurrentPosition,
+      instance->_private.configuration->damperCurrentPositionErd,
       &damperCurrentPosition);
 
    return damperCurrentPosition;
@@ -58,33 +56,31 @@ static DamperPosition_t ReadCurrentDamperPosition(DamperRequestManager_t *instan
 
 static void InitializeDamperPositionAtStartup(DamperRequestManager_t *instance)
 {
-   DamperPosition_t damperCurrentPosition = ReadDamperRequestedPosition(instance).position;
-
+   DamperPosition_t damperCurrentPosition = DamperRequestedPosition(instance).position;
    DataModel_Write(
       instance->_private.dataModel,
-      Erd_FreshFoodDamperCurrentPosition,
+      instance->_private.configuration->damperCurrentPositionErd,
       &damperCurrentPosition);
 }
 
-static void WriteDamperStepRequest(DamperRequestManager_t *instance, StepperPositionRequest_t stepsToMove)
+static void SetDamperStepperMotorPositionRequest(DamperRequestManager_t *instance, StepperPositionRequest_t stepsToMove)
 {
    DataModel_Write(
       instance->_private.dataModel,
-      Erd_FreshFoodDamperStepperMotorPositionRequest,
+      instance->_private.configuration->damperStepperMotorPositionRequestErd,
       &stepsToMove);
 }
 
-static void WriteHomingStateDamperMotorSettings(DamperRequestManager_t *instance)
+static void SetStepperPositionRequestForHoming(DamperRequestManager_t *instance)
 {
    StepperPositionRequest_t stepRequest;
-
-   stepRequest.direction = CounterClockwise;
+   stepRequest.direction = TurningDirection_CounterClockwise;
    stepRequest.stepsToMove = FutureParametricsStepsToHome;
 
-   WriteDamperStepRequest(instance, stepRequest);
+   SetDamperStepperMotorPositionRequest(instance, stepRequest);
 }
 
-static void WriteCurrentDamperPositionTo(DamperRequestManager_t *instance, DamperPosition_t currentPosition)
+static void SetCurrentDamperPositionTo(DamperRequestManager_t *instance, DamperPosition_t currentPosition)
 {
    DataModel_Write(
       instance->_private.dataModel,
@@ -99,19 +95,19 @@ static void SetCurrentPositionRequestTo(DamperRequestManager_t *instance, Damper
 
    if(requestedPosition.position == DamperPosition_Open)
    {
-      stepRequest.direction = Clockwise;
+      stepRequest.direction = TurningDirection_Clockwise;
       stepRequest.stepsToMove = FutureParametricsStepsToOpen;
       damperCurrentPosition = DamperPosition_Open;
    }
    else if(requestedPosition.position == DamperPosition_Closed)
    {
-      stepRequest.direction = CounterClockwise;
+      stepRequest.direction = TurningDirection_CounterClockwise;
       stepRequest.stepsToMove = FutureParametricsStepsToClose;
       damperCurrentPosition = DamperPosition_Closed;
    }
 
-   WriteCurrentDamperPositionTo(instance, damperCurrentPosition);
-   WriteDamperStepRequest(instance, stepRequest);
+   SetCurrentDamperPositionTo(instance, damperCurrentPosition);
+   SetDamperStepperMotorPositionRequest(instance, stepRequest);
 }
 
 static void State_Idle(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
@@ -122,7 +118,7 @@ static void State_Idle(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Fsm_Entry:
-         if(ReadCurrentDamperPosition(instance) != ReadDamperRequestedPosition(instance).position)
+         if(CurrentDamperPosition(instance) != DamperRequestedPosition(instance).position)
          {
             Fsm_Transition(fsm, State_Moving);
          }
@@ -149,8 +145,8 @@ static void State_Homing(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Fsm_Entry:
-         WriteHomingStateDamperMotorSettings(instance);
-         WriteCurrentDamperPositionTo(instance, DamperPosition_Closed);
+         SetStepperPositionRequestForHoming(instance);
+         SetCurrentDamperPositionTo(instance, DamperPosition_Closed);
          break;
 
       case Signal_StepRequestCompleted:
@@ -171,7 +167,7 @@ static void State_Moving(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Fsm_Entry:
-         SetCurrentPositionRequestTo(instance, ReadDamperRequestedPosition(instance));
+         SetCurrentPositionRequestTo(instance, DamperRequestedPosition(instance));
          break;
 
       case Signal_StepRequestCompleted:
@@ -199,11 +195,11 @@ static void OnDataModelChange(void *context, const void *_args)
    DamperRequestManager_t *instance = context;
    const DataModelOnDataChangeArgs_t *args = _args;
 
-   if(args->erd == Erd_FreshFoodDamperPosition_ResolvedVote)
+   if(args->erd == instance->_private.configuration->damperPositionRequestResolvedVoteErd)
    {
       Fsm_SendSignal(&instance->_private.fsm, Signal_PositionRequested, NULL);
    }
-   else if(args->erd == Erd_FreshFoodDamperStepperMotorPositionRequest)
+   else if(args->erd == instance->_private.configuration->damperStepperMotorPositionRequestErd)
    {
       const StepperPositionRequest_t *motorPosition = args->data;
       if(motorPosition->stepsToMove == 0)
@@ -211,7 +207,7 @@ static void OnDataModelChange(void *context, const void *_args)
          Fsm_SendSignal(&instance->_private.fsm, Signal_StepRequestCompleted, NULL);
       }
    }
-   else if(args->erd == Erd_FreshFoodDamperHomingRequest)
+   else if(args->erd == instance->_private.configuration->damperHomingRequestErd)
    {
       Fsm_SendSignal(&instance->_private.fsm, Signal_HomeRequested, NULL);
    }
@@ -229,6 +225,6 @@ void DamperRequestManager_Init(
 
    InitializeDamperPositionAtStartup(instance);
 
-   EventSubscription_Init(&instance->_private.dataModelSubsciption, instance, OnDataModelChange);
-   Event_Subscribe(dataModel->OnDataChange, &instance->_private.dataModelSubsciption);
+   EventSubscription_Init(&instance->_private.dataModelSubscription, instance, OnDataModelChange);
+   Event_Subscribe(dataModel->OnDataChange, &instance->_private.dataModelSubscription);
 }

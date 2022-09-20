@@ -29,7 +29,7 @@ typedef struct
       I_DataModel_t *dataModel;
       Fsm_t fsm;
       bool homingRequired;
-      EventSubscription_t dataModelSubsciption;
+      EventSubscription_t dataModelSubscription;
       const DamperRequestManagerConfiguration_t *configuration;
    } _private;
 } DamperRequestManager_t;

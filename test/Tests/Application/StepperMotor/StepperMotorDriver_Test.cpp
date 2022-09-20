@@ -181,7 +181,7 @@ TEST_GROUP(StepperMotorDriver)
 TEST(StepperMotorDriver, ShouldInitializeToAllPinsOff)
 {
    Given ThePinsAre(pinState[Position1]);
-   And WhenTheDirectionIsSetTo(CounterClockwise);
+   And WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
 
    When TheModuleIsInitialized();
    ThePinsShouldBe(pinState[AllOff]);
@@ -198,7 +198,7 @@ TEST(StepperMotorDriver, ShouldGoToPositionOneWhenFirstGettingRequestChange)
 TEST(StepperMotorDriver, ShouldOnlyGetNewPositionAfterEveryTwoEvents)
 {
    Given TheModuleIsInitialized();
-   And WhenTheDirectionIsSetTo(Clockwise);
+   And WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
 
    And WhenTheRequestedStepsAreSetTo(StepsToOpen);
 
@@ -212,7 +212,7 @@ TEST(StepperMotorDriver, ShouldOnlyGetNewPositionAfterEveryTwoEvents)
 TEST(StepperMotorDriver, ShouldCorrectlyStartOpeningWhenRequestedStepsChange)
 {
    Given TheModuleIsInitialized();
-   And WhenTheDirectionIsSetTo(Clockwise);
+   And WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
 
    WhenTheRequestedStepsAreSetTo(StepsToOpen);
 
@@ -223,7 +223,7 @@ TEST(StepperMotorDriver, ShouldCorrectlyStartOpeningWhenRequestedStepsChange)
 TEST(StepperMotorDriver, ShouldCorrectlyStartClosingWhenRequestedStepsChange)
 {
    Given TheModuleIsInitialized();
-   And WhenTheDirectionIsSetTo(CounterClockwise);
+   And WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
 
    WhenTheRequestedStepsAreSetTo(StepsToClose);
 
@@ -234,7 +234,7 @@ TEST(StepperMotorDriver, ShouldCorrectlyStartClosingWhenRequestedStepsChange)
 TEST(StepperMotorDriver, ShouldCorrectlyCycleThroughPositionsInClockwiseDirection)
 {
    Given TheModuleIsInitialized();
-   And WhenTheDirectionIsSetTo(Clockwise);
+   And WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
    And WhenTheRequestedStepsAreSetTo(StepsToOpen);
    ThePinsShouldBe(pinState[Position1]);
 
@@ -254,7 +254,7 @@ TEST(StepperMotorDriver, ShouldCorrectlyCycleThroughPositionsInClockwiseDirectio
 TEST(StepperMotorDriver, ShouldCorrectlyCycleThroughPositionsInCounterClockwiseDirection)
 {
    Given TheModuleIsInitialized();
-   And WhenTheDirectionIsSetTo(CounterClockwise);
+   And WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
    And WhenTheRequestedStepsAreSetTo(StepsToClose);
    ThePinsShouldBe(pinState[Position1]);
 
@@ -277,7 +277,7 @@ TEST(StepperMotorDriver, ShouldCorrectlyCycleThroughPositionsInCounterClockwiseD
 TEST(StepperMotorDriver, ShouldSetPinsToAllOffAfterCompletingAnOpenRequest)
 {
    Given TheModuleIsInitialized();
-   WhenTheDirectionIsSetTo(Clockwise);
+   WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
    WhenTheRequestedStepsAreSetTo(StepsToOpen);
 
    After RunForNSteps(StepsToOpen);
@@ -288,7 +288,7 @@ TEST(StepperMotorDriver, ShouldSetPinsToAllOffAfterCompletingAnOpenRequest)
 TEST(StepperMotorDriver, ShouldSetPinsToAllOffAfterCompletingACloseRequest)
 {
    Given TheModuleIsInitialized();
-   WhenTheDirectionIsSetTo(CounterClockwise);
+   WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
    WhenTheRequestedStepsAreSetTo(StepsToClose);
 
    After RunForNSteps(StepsToClose);
@@ -299,7 +299,7 @@ TEST(StepperMotorDriver, ShouldSetPinsToAllOffAfterCompletingACloseRequest)
 TEST(StepperMotorDriver, ShouldStopRunningAfterCompletingARequest)
 {
    Given TheModuleIsInitialized();
-   WhenTheDirectionIsSetTo(CounterClockwise);
+   WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
    WhenTheRequestedStepsAreSetTo(StepsToClose);
 
    After RunForNSteps(StepsToClose);
@@ -313,17 +313,17 @@ TEST(StepperMotorDriver, ShouldHandleConsecutiveRequests)
 {
    Given TheModuleIsInitialized();
 
-   WhenTheDirectionIsSetTo(Clockwise);
+   WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
    WhenTheRequestedStepsAreSetTo(StepsToOpen);
    RunForNSteps(StepsToOpen);
    ShouldStopOnNextTimeout();
 
-   WhenTheDirectionIsSetTo(CounterClockwise);
+   WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
    WhenTheRequestedStepsAreSetTo(StepsToClose);
    RunForNSteps(StepsToClose);
    ShouldStopOnNextTimeout();
 
-   WhenTheDirectionIsSetTo(Clockwise);
+   WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
    WhenTheRequestedStepsAreSetTo(StepsToOpen);
    RunForNSteps(StepsToOpen);
    ShouldStopOnNextTimeout();
@@ -332,7 +332,7 @@ TEST(StepperMotorDriver, ShouldHandleConsecutiveRequests)
 TEST(StepperMotorDriver, ShouldNotListenToChangesInStepRequestWhileRunning)
 {
    Given TheModuleIsInitialized();
-   WhenTheDirectionIsSetTo(Clockwise);
+   WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
    WhenTheRequestedStepsAreSetTo(StepsToOpen);
    RunForNSteps(StepsToOpen - 10);
 
@@ -344,13 +344,13 @@ TEST(StepperMotorDriver, ShouldNotListenToChangesInStepRequestWhileRunning)
 TEST(StepperMotorDriver, ShouldNotListenToChangesInDirectionRequestWhileRunning)
 {
    Given TheModuleIsInitialized();
-   WhenTheDirectionIsSetTo(Clockwise);
+   WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
    WhenTheRequestedStepsAreSetTo(StepsToOpen);
 
    WhenStepEventIsRaisedTwice();
    ThePinsShouldBe(pinState[Position2]);
 
-   WhenTheDirectionIsSetTo(CounterClockwise);
+   WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
    WhenStepEventIsRaisedTwice();
    ThePinsShouldBe(pinState[Position3]);
 }

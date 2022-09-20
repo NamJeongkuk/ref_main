@@ -12,8 +12,8 @@
 
 enum
 {
-   Clockwise = true,
-   CounterClockwise = false
+   TurningDirection_CounterClockwise,
+   TurningDirection_Clockwise
 };
 typedef bool TurningDirection_t;
 

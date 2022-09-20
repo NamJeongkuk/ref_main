@@ -97,7 +97,7 @@ static void OnDamperPositionRequestChange(void *context, const void *args)
 
 static void GetNextStep(StepperMotorDriver_t *instance)
 {
-   if(instance->_private.directionToTurn == Clockwise)
+   if(instance->_private.directionToTurn == TurningDirection_Clockwise)
    {
       instance->_private.currentStepPosition++;
    }
