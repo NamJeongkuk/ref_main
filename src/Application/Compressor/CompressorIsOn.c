@@ -23,7 +23,7 @@ static void UpdateCompressorIsOnBasedOnCompressorState(void *context, const void
 
    if(*state == CompressorState_OnAndReadyToChange ||
       *state == CompressorState_MinimumOnTime ||
-      *state == CompressorState_VariableSpeedMinimumRunTime)
+      *state == CompressorState_On)
    {
       DataModel_Write(
          dataModel,

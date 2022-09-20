@@ -80,14 +80,6 @@ TEST(CompressorIsOn, ShouldBeTrueWhenStateIsOnAndReadyToChange)
    CompressorIsOnShouldBe(true);
 }
 
-TEST(CompressorIsOn, ShouldBeTrueWhenStateIsOnVariableSpeedMinimumRunTime)
-{
-   Given CompressorStateIs(CompressorState_VariableSpeedMinimumRunTime);
-   And CompressorIsOnIsInitialized();
-
-   CompressorIsOnShouldBe(true);
-}
-
 TEST(CompressorIsOn, ShouldBeTrueWhenStateIsMinimumOnTime)
 {
    Given CompressorStateIs(CompressorState_MinimumOnTime);
@@ -129,5 +121,23 @@ TEST(CompressorIsOn, ShouldChangeToFalseWhenTrueAndCompressorTurnsOff)
    CompressorIsOnShouldBe(true);
 
    When CompressorStateIs(CompressorState_MinimumOffTime);
+   CompressorIsOnShouldBe(false);
+}
+
+TEST(CompressorIsOn, ShouldBeTrueWhenStateIsOn)
+{
+   Given CompressorStateIs(CompressorState_On);
+   And CompressorIsOnIsInitialized();
+
+   CompressorIsOnShouldBe(true);
+}
+
+TEST(CompressorIsOn, ShouldBeFalseWhenStateIsOff)
+{
+   Given CompressorStateIs(CompressorState_On);
+   And CompressorIsOnIsInitialized();
+   CompressorIsOnShouldBe(true);
+
+   When CompressorStateIs(CompressorState_Off);
    CompressorIsOnShouldBe(false);
 }

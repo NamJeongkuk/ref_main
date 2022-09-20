@@ -14,11 +14,13 @@
 #include "Timer.h"
 #include "I_DataModel.h"
 #include "CompressorData.h"
+#include "Hsm.h"
 
 typedef struct
 {
-   Erd_t compressorSpeedRequestErd;
-   Erd_t compressorSpeedResolvedVoteErd;
+   Erd_t compressorStateErd; // CompressorState_t
+   Erd_t compressorSpeedRequestErd; // CompressorSpeedFrequencyInHz_t
+   Erd_t compressorSpeedResolvedVoteErd; // CompressorVotedSpeed_t
 } CompressorSpeedControllerConfiguration_t;
 
 typedef struct
@@ -30,19 +32,18 @@ typedef struct
       const CompressorSpeedControllerConfiguration_t *config;
       Timer_t startupTimer;
       TimerModule_t *timerModule;
+      Hsm_t hsm;
    } _private;
 } CompressorSpeedController_t;
 
 /*!
  * @param instance the compressor speed controller instance
  * @param dataModel
- * @param timerMOdule
  * @param config the compressor speed controller configuration
  */
 void CompressorSpeedController_Init(
    CompressorSpeedController_t *instance,
    I_DataModel_t *dataModel,
-   TimerModule_t *timerModule,
    const CompressorSpeedControllerConfiguration_t *config);
 
 #endif

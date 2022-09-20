@@ -31,7 +31,6 @@ describe("Defrost", () => {
       compressorStateOnAndReadyToChange: "CompressorState_OnAndReadyToChange",
       compressorStateMinimumOnTime: "CompressorState_MinimumOnTime",
       compressorStateMinimumOffTime: "CompressorState_MinimumOffTime",
-      compressorStateVariableSpeedMinimumRunTime: "CompressorState_VariableSpeedMinimumRunTime",
    };
 
    const compressorSpeed = {
