@@ -18,7 +18,7 @@ extern "C"
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 #include "ReferDataModel_TestDouble.h"
-#include "PersonalityParametricData_TestDouble.h"
+#include "TddPersonality.h"
 #include "uassert_test.h"
 
 #define And
@@ -54,86 +54,6 @@ enum
    AnotherFreezerAdjustedSetpointTemperature = 18 * 2,
 };
 
-static const DeltaGridLineData_t freshFoodGridLineData[] = {
-   {
-      .gridLinesDegFx100 = 0,
-      .bitMapping = DeltaGridLines_BitMapping_OffsetBitMask,
-   },
-   {
-      .gridLinesDegFx100 = -450,
-      .bitMapping = DeltaGridLines_BitMapping_AdjSetpointBitMask,
-   },
-   {
-      .gridLinesDegFx100 = 150,
-      .bitMapping = DeltaGridLines_BitMapping_ShiftBitMask,
-   },
-   {
-      .gridLinesDegFx100 = 450,
-      .bitMapping = DeltaGridLines_BitMapping_SetpointBitMask,
-   },
-   {
-      .gridLinesDegFx100 = 950,
-      .bitMapping = DeltaGridLines_BitMapping_AdjSetpointBitMask,
-   },
-   {
-      .gridLinesDegFx100 = 1150,
-      .bitMapping = DeltaGridLines_BitMapping_AdjSetpointBitMask,
-   },
-};
-
-static const DeltaGridLineData_t freezerGridLineData[] = {
-   {
-      .gridLinesDegFx100 = -250,
-      .bitMapping = DeltaGridLines_BitMapping_AdjSetpointBitMask,
-   },
-   {
-      .gridLinesDegFx100 = 0,
-      .bitMapping = DeltaGridLines_BitMapping_OffsetBitMask,
-   },
-   {
-      .gridLinesDegFx100 = 250,
-      .bitMapping = DeltaGridLines_BitMapping_SetpointBitMask,
-   },
-   {
-      .gridLinesDegFx100 = 600,
-      .bitMapping = DeltaGridLines_BitMapping_ShiftBitMask,
-   },
-   {
-      .gridLinesDegFx100 = 750,
-      .bitMapping = DeltaGridLines_BitMapping_AdjSetpointBitMask |
-         DeltaGridLines_BitMapping_OffsetBitMask,
-   },
-   {
-      .gridLinesDegFx100 = 5500,
-      .bitMapping = DeltaGridLines_BitMapping_OffsetBitMask,
-   },
-};
-
-static const DeltaAxisGridLines_t freshFoodAxis = {
-   .numberOfLines = NumberOfGridLinesPerAxis,
-   .gridLineData = freshFoodGridLineData,
-};
-
-static const DeltaAxisGridLines_t freezerAxis = {
-   .numberOfLines = NumberOfGridLinesPerAxis,
-   .gridLineData = freezerGridLineData
-};
-
-static DeltaAxisGridLines_t parametricGrid[] = {
-   freshFoodAxis,
-   freezerAxis
-};
-
-static DeltaGridLines_t deltaGrid = {
-   .dimensions = NumberGridDimensions,
-   .gridLines = parametricGrid
-};
-
-static const GridData_t gridData = {
-   .gridId = 0,
-   .deltaGridLines = &deltaGrid,
-   .gridPeriodicRunRateInMSec = MSEC_PER_SEC
-};
 static const GridLineAdjustmentErds_t freshFoodGridLineAdjustmentErds{
    .rawSetpointErd = Erd_FreshFoodSetpoint_ResolvedVote,
    .offsetErd = Erd_FreshFood_Offset,
@@ -164,18 +84,13 @@ TEST_GROUP(GridLineCalculator)
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
-   PersonalityParametricData_t personalityParametricData;
 
    void setup()
    {
-      ReferDataModel_TestDouble_Init(&dataModelDouble);
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentSingleEvaporator);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
-
-      PersonalityParametricData_TestDouble_Init(&personalityParametricData);
-      PersonalityParametricData_TestDouble_SetGrid(&personalityParametricData, &gridData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
    }
 
    void ModuleIsInitialized()
@@ -433,8 +348,15 @@ TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenShiftChanges)
    When FreshFoodShiftIs(AnotherFreshFoodShiftTemperature);
    And FreezerShiftIs(AnotherFreezerShiftTemperature);
 
-   CalculatedGridLineTempShouldBe((150 + AnotherFreshFoodShiftTemperature), FreshFoodGridLineDimension, GridLine_FreshFoodLowHystDelta);
-   And CalculatedGridLineTempShouldBe((600 + AnotherFreezerShiftTemperature), GridDelta_Freezer, GridLine_FreezerExtraHigh);
+   CalculatedGridLineTempShouldBe(
+      (150 + AnotherFreshFoodShiftTemperature),
+      FreshFoodGridLineDimension,
+      GridLine_FreshFoodLowHystDelta);
+
+   And CalculatedGridLineTempShouldBe(
+      (600 + AnotherFreezerShiftTemperature),
+      GridDelta_Freezer,
+      GridLine_FreezerExtraHigh);
 }
 
 TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenSetpointChanges)
