@@ -56,6 +56,62 @@
          ]
       },
       {
+         "title": "WiFi",
+         "erds": [
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Version",
+               "name": "Erd_ApplicationVersion",
+               "read": true
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Mac Address",
+               "name": "Erd_MacAddress",
+               "read": true
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "SSID",
+               "name": "Erd_WiFiApSsid",
+               "read": true
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Password",
+               "name": "Erd_WiFiApPassword",
+               "read": true
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Network State",
+               "name": "Erd_NetworkState",
+               "read": true,
+               "write": true
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Server",
+               "name": "Erd_HeartbeatServerType",
+               "read": true,
+               "write": true
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "AP Service",
+               "name": "Erd_ApServiceModeRequest",
+               "read": true,
+               "write": true
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Network SSID",
+               "name": "Erd_ConnectedNetworkSSID",
+               "read": true
+            }
+         ]
+      },
+      {
          "title": "Compressor",
          "erds": [
             {
@@ -419,12 +475,6 @@
          "erds": [
             {
                "namespace": "rx130",
-               "displayName": "Fresh Food Thermistor AdcCount",
-               "name": "Erd_FreshFoodThermistor_AdcCount",
-               "read": true
-            },
-            {
-               "namespace": "rx130",
                "displayName": "Fresh Food Unfiltered Temperature",
                "name": "Erd_FreshFood_UnfilteredTemperature",
                "read": true
@@ -433,12 +483,6 @@
                "namespace": "rx130",
                "displayName": "Fresh Food Filtered Temperature",
                "name": "Erd_FreshFood_FilteredTemperature",
-               "read": true
-            },
-            {
-               "namespace": "rx130",
-               "displayName": "Freezer Thermistor AdcCount",
-               "name": "Erd_FreezerThermistor_AdcCount",
                "read": true
             },
             {
@@ -455,12 +499,6 @@
             },
             {
                "namespace": "rx130",
-               "displayName": "Fresh Food Evap Thermistor AdcCount",
-               "name": "Erd_FreshFoodEvapThermistor_AdcCount",
-               "read": true
-            },
-            {
-               "namespace": "rx130",
                "displayName": "Fresh Food Evap Unfiltered Temperature",
                "name": "Erd_FreshFoodEvap_UnfilteredTemperature",
                "read": true
@@ -473,12 +511,6 @@
             },
             {
                "namespace": "rx130",
-               "displayName": "Freezer Evap Thermistor AdcCount",
-               "name": "Erd_FreezerEvapThermistor_AdcCount",
-               "read": true
-            },
-            {
-               "namespace": "rx130",
                "displayName": "Freezer Evap Unfiltered Temperature",
                "name": "Erd_FreezerEvap_UnfilteredTemperature",
                "read": true
@@ -487,12 +519,6 @@
                "namespace": "rx130",
                "displayName": "FreezerEvap FilteredTemperature",
                "name": "Erd_FreezerEvap_FilteredTemperature",
-               "read": true
-            },
-            {
-               "namespace": "rx130",
-               "displayName": "Ambient Thermistor AdcCount",
-               "name": "Erd_AmbientThermistor_AdcCount",
                "read": true
             },
             {

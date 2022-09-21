@@ -1,0 +1,165 @@
+{
+   "namespace": "WiFi-Module",
+   "address": "0xbf",
+   "erds": [
+      {
+         "name": "Erd_ApplicationVersion",
+         "id": "0x003A",
+         "operations": [
+            "read",
+            "write"
+         ],
+         "data": [
+            {
+               "name": "Erd_ApplicationVersion.criticalMajor",
+               "type": "u8",
+               "offset": 0,
+               "size": 1
+            },
+            {
+               "name": "Erd_ApplicationVersion.criticalMinor",
+               "type": "u8",
+               "offset": 1,
+               "size": 1
+            },
+            {
+               "name": "Erd_ApplicationVersion.major",
+               "type": "u8",
+               "offset": 2,
+               "size": 1
+            },
+            {
+               "name": "Erd_ApplicationVersion.minor",
+               "type": "u8",
+               "offset": 3,
+               "size": 1
+            }
+         ]
+      },
+      {
+         "name": "Erd_MacAddress",
+         "id": "0x6000",
+         "operations": [
+            "read"
+         ],
+         "data": [
+            {
+               "name": "MacAddress",
+               "type": "raw",
+               "offset": 0,
+               "size": 6
+            }
+         ]
+      },
+      {
+         "name": "Erd_WiFiApSsid",
+         "id": "0x6001",
+         "operations": [
+            "read"
+         ],
+         "data": [
+            {
+               "name": "ApSsid",
+               "type": "string",
+               "offset": 0,
+               "size": 32
+            }
+         ]
+      },
+      {
+         "name": "Erd_WiFiApPassword",
+         "id": "0x6002",
+         "operations": [
+            "read"
+         ],
+         "data": [
+            {
+               "name": "ApPassword",
+               "type": "string",
+               "offset": 0,
+               "size": 32
+            }
+         ]
+      },
+      {
+         "name": "Erd_NetworkState",
+         "id": "0x6003",
+         "operations": [
+            "read",
+            "write"
+         ],
+         "data": [
+            {
+               "name": "NetworkState",
+               "type": "enum",
+               "values": {
+                  "0": "Off",
+                  "1": "Access point",
+                  "2": "Connecting",
+                  "3": "Connected",
+                  "4": "Connected but off",
+                  "5": "Scanning",
+                  "6": "Reconnecting"
+               },
+               "offset": 0,
+               "size": 1
+            }
+         ]
+      },
+      {
+         "name": "Erd_HeartbeatServerType",
+         "id": "0x600D",
+         "operations": [
+            "read",
+            "write"
+         ],
+         "data": [
+            {
+               "name": "HeartbeatServerType",
+               "type": "enum",
+               "values": {
+                  "0": "Production",
+                  "1": "Field"
+               },
+               "offset": 0,
+               "size": 1
+            }
+         ]
+      },
+      {
+         "name": "Erd_ConnectedNetworkSSID",
+         "id": "0x6027",
+         "operations": [
+            "read"
+         ],
+         "data": [
+            {
+               "name": "ConnectedNetworkSsid",
+               "type": "string",
+               "offset": 0,
+               "size": 32
+            }
+         ]
+      },
+      {
+         "name": "Erd_ApServiceModeRequest",
+         "id": "0x6210",
+         "operations": [
+            "read",
+            "write"
+         ],
+         "data": [
+            {
+               "name": "ApServiceModeRequest",
+               "type": "enum",
+               "values": {
+                  "0": "Off",
+                  "1": "On"
+               },
+               "offset": 0,
+               "size": 1
+            }
+         ]
+      }
+   ]
+}
