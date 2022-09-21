@@ -11,13 +11,6 @@
 
 enum
 {
-   FutureParametricsStepsToOpen = 650,
-   FutureParametricsStepsToClose = 700,
-   FutureParametricsStepsToHome = 1850
-};
-
-enum
-{
    Signal_PositionRequested = Fsm_UserSignalStart,
    Signal_StepRequestCompleted,
    Signal_HomeRequested
@@ -75,7 +68,7 @@ static void SetStepperPositionRequestForHoming(DamperRequestManager_t *instance)
 {
    StepperPositionRequest_t stepRequest;
    stepRequest.direction = TurningDirection_CounterClockwise;
-   stepRequest.stepsToMove = FutureParametricsStepsToHome;
+   stepRequest.stepsToMove = instance->_private.freshFoodDamperParametricData->stepsToHome;
 
    SetDamperStepperMotorPositionRequest(instance, stepRequest);
 }
@@ -96,13 +89,13 @@ static void SetCurrentPositionRequestTo(DamperRequestManager_t *instance, Damper
    if(requestedPosition.position == DamperPosition_Open)
    {
       stepRequest.direction = TurningDirection_Clockwise;
-      stepRequest.stepsToMove = FutureParametricsStepsToOpen;
+      stepRequest.stepsToMove = instance->_private.freshFoodDamperParametricData->stepsToOpen;
       damperCurrentPosition = DamperPosition_Open;
    }
    else if(requestedPosition.position == DamperPosition_Closed)
    {
       stepRequest.direction = TurningDirection_CounterClockwise;
-      stepRequest.stepsToMove = FutureParametricsStepsToClose;
+      stepRequest.stepsToMove = instance->_private.freshFoodDamperParametricData->stepsToClose;
       damperCurrentPosition = DamperPosition_Closed;
    }
 
@@ -220,6 +213,7 @@ void DamperRequestManager_Init(
 {
    instance->_private.dataModel = dataModel;
    instance->_private.configuration = config;
+   instance->_private.freshFoodDamperParametricData = PersonalityParametricData_Get(dataModel)->freshFoodDamperData;
 
    Fsm_Init(&instance->_private.fsm, State_Homing);
 

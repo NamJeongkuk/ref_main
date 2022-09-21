@@ -21,6 +21,7 @@
 #include "CompressorData.h"
 #include "SetpointData.h"
 #include "BspParametricConfiguration.h"
+#include "SingleDamperData.h"
 
 typedef struct
 {
@@ -36,6 +37,7 @@ typedef struct
    const CompressorData_t *compressorData;
    const SetpointData_t *setpointData;
    const BspParametricConfiguration_t *bspConfigurationData;
+   const SingleDamperData_t *freshFoodDamperData;
 } PersonalityParametricData_t;
 
 const PersonalityParametricData_t *PersonalityParametricData_Get(I_DataModel_t *dataModel);

@@ -7,6 +7,7 @@
 
 #include "StepperMotorDriver.h"
 #include "Constants_Binary.h"
+#include "PersonalityParametricData.h"
 #include "StepperPositionRequest.h"
 #include "utils.h"
 
@@ -16,9 +17,7 @@ enum
    Position1,
    Position2,
    Position3,
-   Position4,
-
-   DelayBetweenStepEvents = 1
+   Position4
 };
 
 static void SetPinsToStates(StepperMotorDriver_t *instance, bool pin1, bool pin2, bool pin3, bool pin4)
@@ -147,7 +146,7 @@ static void StepTimeChange(void *context, const void *args)
    StepperMotorDriver_t *instance = context;
    IGNORE(args);
 
-   if(instance->_private.countBetweenSteps < DelayBetweenStepEvents)
+   if(instance->_private.countBetweenSteps < instance->_private.freshFoodDamperParametricData->delayBetweenStepEventsInMs)
    {
       instance->_private.countBetweenSteps++;
    }
@@ -172,6 +171,7 @@ void StepperMotorDriver_Init(
    instance->_private.currentStepPosition = Position1;
    instance->_private.stepsToRun = 0;
    instance->_private.countBetweenSteps = 0;
+   instance->_private.freshFoodDamperParametricData = PersonalityParametricData_Get(dataModel)->freshFoodDamperData;
 
    SetPinsToPosition(instance, AllOff);
 

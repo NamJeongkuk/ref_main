@@ -13,6 +13,7 @@
 #include "DamperVotedPosition.h"
 #include "EventSubscription.h"
 #include "StepperPositionRequest.h"
+#include "SingleDamperData.h"
 
 typedef struct
 {
@@ -31,6 +32,7 @@ typedef struct
       bool homingRequired;
       EventSubscription_t dataModelSubscription;
       const DamperRequestManagerConfiguration_t *configuration;
+      const SingleDamperData_t *freshFoodDamperParametricData;
    } _private;
 } DamperRequestManager_t;
 

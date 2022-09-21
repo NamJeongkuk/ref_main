@@ -11,6 +11,7 @@
 #include "Erd.h"
 #include "I_DataModel.h"
 #include "I_GpioGroup.h"
+#include "SingleDamperData.h"
 
 typedef struct
 {
@@ -38,6 +39,7 @@ typedef struct
       uint16_t stepsToRun;
       bool directionToTurn;
       uint8_t countBetweenSteps;
+      const SingleDamperData_t *freshFoodDamperParametricData;
    } _private;
 } StepperMotorDriver_t;
 
