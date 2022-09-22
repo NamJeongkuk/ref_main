@@ -15,6 +15,7 @@ typedef struct
 {
    bool compressorIsSingleSpeed;
    int16_t lowAmbientTriggerTemperatureInDegFx100;
+   bool variableSpeedCompressorRelayIsEnabled;
    CompressorTimes_t compressorTimes;
    CompressorSpeeds_t compressorSpeeds;
 } CompressorData_t;
