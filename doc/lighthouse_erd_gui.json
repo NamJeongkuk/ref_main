@@ -56,6 +56,71 @@
          ]
       },
       {
+         "title": "Rfid",
+         "erds": [
+            {
+               "namespace": "Rfid",
+               "displayName": "Read Request",
+               "name": "Erd_RfidReadSignal",
+               "read": true,
+               "write": true
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Result",
+               "name": "Erd_ReadWriteResult",
+               "read": true
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "UID",
+               "name": "Erd_TagUid",
+               "read": true
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Filter Identifier",
+               "name": "Erd_TagFilterIdentifier",
+               "read": true
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Ounces x100",
+               "name": "Erd_TagVolume",
+               "read": true
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Calendar Seconds",
+               "name": "Erd_TagCalendarUsage",
+               "read": true
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Leak Seconds",
+               "name": "Erd_TagLeakDetectedTime",
+               "read": true
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Number of writes",
+               "name": "Erd_TagWriteOperations",
+               "read": true
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Status Bits",
+               "name": "Erd_TagFilterStatusBitmap",
+               "read": true
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Init Error Bits",
+               "name": "Erd_InitializationErrorBitfield",
+            }
+         ]
+      },
+      {
          "title": "WiFi",
          "erds": [
             {
