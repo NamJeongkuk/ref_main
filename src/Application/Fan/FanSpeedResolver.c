@@ -7,7 +7,7 @@
 
 #include "FanSpeedResolver.h"
 #include "FanSpeed.h"
-#include "FreezerSetpoint.h"
+#include "SetpointZone.h"
 #include "CoolingMode.h"
 #include "TemperatureDegFx100.h"
 #include "utils.h"
@@ -97,7 +97,7 @@ static void CalculateFanSpeed(FanSpeedResolver_t *instance)
 
 static FanControl_t FanControlFromCoolingModeAndFreezerSetpoint(FanSpeedResolver_t *instance)
 {
-   FreezerSetpoint_t freezerSetpoint;
+   SetpointZone_t freezerSetpointZone;
    CoolingMode_t coolingMode;
 
    FanControl_t control = {
@@ -108,7 +108,7 @@ static FanControl_t FanControlFromCoolingModeAndFreezerSetpoint(FanSpeedResolver
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->freezerSetpointErd,
-      &freezerSetpoint);
+      &freezerSetpointZone);
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->coolingModeErd,
@@ -120,30 +120,30 @@ static FanControl_t FanControlFromCoolingModeAndFreezerSetpoint(FanSpeedResolver
    }
    else if(coolingMode == CoolingMode_ConvertibleCompartment)
    {
-      if(freezerSetpoint == FreezerSetpoint_Cold)
+      if(freezerSetpointZone == SetpointZone_Cold)
       {
          control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithColdSetpoint;
       }
-      else if(freezerSetpoint == FreezerSetpoint_Medium)
+      else if(freezerSetpointZone == SetpointZone_Middle)
       {
          control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithMediumSetpoint;
       }
-      else if(freezerSetpoint == FreezerSetpoint_Warm)
+      else if(freezerSetpointZone == SetpointZone_Warm)
       {
          control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithWarmSetpoint;
       }
    }
    else
    {
-      if(freezerSetpoint == FreezerSetpoint_Cold)
+      if(freezerSetpointZone == SetpointZone_Cold)
       {
          control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint;
       }
-      else if(freezerSetpoint == FreezerSetpoint_Medium)
+      else if(freezerSetpointZone == SetpointZone_Middle)
       {
          control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithMediumSetpoint;
       }
-      else if(freezerSetpoint == FreezerSetpoint_Warm)
+      else if(freezerSetpointZone == SetpointZone_Warm)
       {
          control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithWarmSetpoint;
       }

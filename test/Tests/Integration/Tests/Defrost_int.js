@@ -1,7 +1,6 @@
 "use strict";
 
 const delay = require("javascript-common").util.delay;
-const { Console } = require("console");
 const { msPerSec, msPerMin } = require("../support/constants");
 const constants = require("../support/constants");
 

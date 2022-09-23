@@ -68,6 +68,7 @@ void Application_Init(
    FanPlugin_Init(&instance->_private.fanPlugin, dataModel);
    SabbathPlugin_Init(dataModel);
    SetpointResolverPlugin_Init(dataModel);
+   SetpointZonePlugin_Init(&instance->_private.setpointZonePlugin, dataModel);
    ConvertibleCompartmentStatePlugin_Init(&instance->_private.convertibleCompartmentStatePlugin, dataModel);
    GridPlugin_Init(&instance->_private.gridPlugin, dataModel);
    DoorPlugin_Init(dataModel);

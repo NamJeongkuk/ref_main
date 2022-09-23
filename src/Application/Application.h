@@ -19,6 +19,7 @@
 #include "PeriodicNvUpdaterPlugin.h"
 #include "ConvertibleCompartmentStatePlugin.h"
 #include "FanPlugin.h"
+#include "SetpointZonePlugin.h"
 
 typedef struct
 {
@@ -36,6 +37,7 @@ typedef struct
       PeriodicNvUpdaterPlugin_t periodicNvUpdaterPlugin;
       ConvertibleCompartmentStatePlugin_t convertibleCompartmentStatePlugin;
       FanPlugin_t fanPlugin;
+      SetpointZonePlugin_t setpointZonePlugin;
       Timer_t stackUsageUpdateTimer;
    } _private;
 } Application_t;

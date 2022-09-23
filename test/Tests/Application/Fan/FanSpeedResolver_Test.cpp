@@ -11,7 +11,7 @@ extern "C"
 #include "FanSpeed.h"
 #include "TemperatureDegFx100.h"
 #include "Setpoint.h"
-#include "FreezerSetpoint.h"
+#include "SetpointZone.h"
 #include "CoolingMode.h"
 }
 
@@ -24,7 +24,7 @@ enum
 {
    Erd_ResolvedSpeedVote,
    Erd_CoolingMode,
-   Erd_FreezerSetpoint,
+   Erd_FreezerSetpointZone,
    Erd_CalculatedRequestFanControlSpeed,
    Erd_AmbientTemperature,
 
@@ -59,7 +59,7 @@ enum
 static const DataModel_TestDoubleConfigurationEntry_t erds[] = {
    { Erd_ResolvedSpeedVote, sizeof(FanVotedSpeed_t) },
    { Erd_CoolingMode, sizeof(CoolingMode_t) },
-   { Erd_FreezerSetpoint, sizeof(FreezerSetpoint_t) },
+   { Erd_FreezerSetpointZone, sizeof(SetpointZone_t) },
    { Erd_CalculatedRequestFanControlSpeed, sizeof(FanControl_t) },
    { Erd_AmbientTemperature, sizeof(TemperatureDegFx100_t) },
 };
@@ -260,7 +260,7 @@ static const FanData_t coolingModeSpeedDataCareAboutSetpoint = {
 static const FanSpeedResolverConfig_t nonCoolingModeConfig = {
    .resolvedFanSpeedVoteErd = Erd_ResolvedSpeedVote,
    .coolingModeErd = Erd_CoolingMode,
-   .freezerSetpointErd = Erd_FreezerSetpoint,
+   .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedRequestFanControlSpeed,
    .ambientTempErd = Erd_AmbientTemperature,
 };
@@ -268,7 +268,7 @@ static const FanSpeedResolverConfig_t nonCoolingModeConfig = {
 static const FanSpeedResolverConfig_t coolingModeConfig = {
    .resolvedFanSpeedVoteErd = Erd_ResolvedSpeedVote,
    .coolingModeErd = Erd_CoolingMode,
-   .freezerSetpointErd = Erd_FreezerSetpoint,
+   .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedRequestFanControlSpeed,
    .ambientTempErd = Erd_AmbientTemperature,
 };
@@ -409,9 +409,9 @@ TEST_GROUP(FanSpeedResolver_CoolingMode)
       DataModel_Write(dataModel, Erd_CoolingMode, &coolingMode);
    }
 
-   void GivenFreezerSetpointIsSetTo(FreezerSetpoint_t setpoint)
+   void GivenFreezerSetpointIsSetTo(SetpointZone_t setpoint)
    {
-      DataModel_Write(dataModel, Erd_FreezerSetpoint, &setpoint);
+      DataModel_Write(dataModel, Erd_FreezerSetpointZone, &setpoint);
    }
 
    void CalculatedFanControlSpeedShouldBe(uint16_t expectedSpeed)
@@ -497,7 +497,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeMaxWhenRequestedIsSupe
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreshFoodWhenRequestedLowWithCoolingModeSetToFreshFoodAndSetPointIsCold)
 {
    GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Cold);
+   GivenFreezerSetpointIsSetTo(SetpointZone_Cold);
    GivenCoolingModeIs(CoolingMode_FreshFood);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
@@ -507,7 +507,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreshFoodWhenRe
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreezerWhenRequestedLowWithCoolingModeSetToFreezerAndSetPointIsCold)
 {
    GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Cold);
+   GivenFreezerSetpointIsSetTo(SetpointZone_Cold);
    GivenCoolingModeIs(CoolingMode_Freezer);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
@@ -517,7 +517,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreezerWhenRequ
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdConvertibleCompartmentWhenRequestedLowWithCoolingModeSetToConvertibleCompartmentAndSetPointIsCold)
 {
    GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Cold);
+   GivenFreezerSetpointIsSetTo(SetpointZone_Cold);
    GivenCoolingModeIs(CoolingMode_ConvertibleCompartment);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
@@ -527,7 +527,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdConvertibleComp
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumFreezerWhenRequestedLowWithCoolingModeSetToFreezerAndSetPointIsMedium)
 {
    GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Medium);
+   GivenFreezerSetpointIsSetTo(SetpointZone_Middle);
    GivenCoolingModeIs(CoolingMode_Freezer);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
@@ -537,7 +537,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumFreezerWhenRe
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumConvertibleCompartmentWhenRequestedLowWithCoolingModeSetToConvertibleCompartmentAndSetPointIsMedium)
 {
    GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Medium);
+   GivenFreezerSetpointIsSetTo(SetpointZone_Middle);
    GivenCoolingModeIs(CoolingMode_ConvertibleCompartment);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
@@ -547,7 +547,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumConvertibleCo
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmFreezerWhenRequestedLowWithCoolingModeSetToFreezerAndSetPointIsWarm)
 {
    GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Warm);
+   GivenFreezerSetpointIsSetTo(SetpointZone_Warm);
    GivenCoolingModeIs(CoolingMode_Freezer);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
@@ -557,7 +557,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmFreezerWhenRequ
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmConvertibleCompartmentWhenRequestedLowWithCoolingModeSetToConvertibleCompartmentAndSetPointIsWarm)
 {
    GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Warm);
+   GivenFreezerSetpointIsSetTo(SetpointZone_Warm);
    GivenCoolingModeIs(CoolingMode_ConvertibleCompartment);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
@@ -567,7 +567,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmConvertibleComp
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreezerWhenRequestedLowWithDefaultCaseCoolingModeAndSetPointIsCold)
 {
    GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Cold);
+   GivenFreezerSetpointIsSetTo(SetpointZone_Cold);
    GivenCoolingModeIs(CoolingMode_Unknown);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
@@ -577,7 +577,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreezerWhenRequ
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumFreezerWhenRequestedLowWithDefaultCaseCoolingModeAndSetPointIsMedium)
 {
    GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Medium);
+   GivenFreezerSetpointIsSetTo(SetpointZone_Middle);
    GivenCoolingModeIs(CoolingMode_Unknown);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
@@ -587,7 +587,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumFreezerWhenRe
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmFreezerWhenRequestedLowWithDefaultCaseCoolingModeAndSetPointIsWarm)
 {
    GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(FreezerSetpoint_Warm);
+   GivenFreezerSetpointIsSetTo(SetpointZone_Warm);
    GivenCoolingModeIs(CoolingMode_Unknown);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);

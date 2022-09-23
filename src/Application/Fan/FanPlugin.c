@@ -16,7 +16,7 @@
 static const FanSpeedResolverConfig_t freezerEvapConfig = {
    .resolvedFanSpeedVoteErd = Erd_FreezerEvapFanSpeed_ResolvedVote,
    .coolingModeErd = Erd_CoolingMode,
-   .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
+   .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedFreezerEvapFanControl,
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
 };
@@ -24,7 +24,7 @@ static const FanSpeedResolverConfig_t freezerEvapConfig = {
 static const FanSpeedResolverConfig_t freezerConfig = {
    .resolvedFanSpeedVoteErd = Erd_FreezerFanSpeed_ResolvedVote,
    .coolingModeErd = Erd_CoolingMode,
-   .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
+   .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedFreezerFanControl,
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
 };
@@ -32,7 +32,7 @@ static const FanSpeedResolverConfig_t freezerConfig = {
 static const FanSpeedResolverConfig_t condenserConfig = {
    .resolvedFanSpeedVoteErd = Erd_CondenserFanSpeed_ResolvedVote,
    .coolingModeErd = Erd_CoolingMode,
-   .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
+   .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedCondenserFanControl,
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
 };
@@ -40,7 +40,7 @@ static const FanSpeedResolverConfig_t condenserConfig = {
 static const FanSpeedResolverConfig_t freshFoodEvapConfig = {
    .resolvedFanSpeedVoteErd = Erd_FreshFoodEvapFanSpeed_ResolvedVote,
    .coolingModeErd = Erd_CoolingMode,
-   .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
+   .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedFreshFoodEvapFanControl,
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
 };
@@ -48,7 +48,7 @@ static const FanSpeedResolverConfig_t freshFoodEvapConfig = {
 static const FanSpeedResolverConfig_t freshFoodConfig = {
    .resolvedFanSpeedVoteErd = Erd_FreshFoodFanSpeed_ResolvedVote,
    .coolingModeErd = Erd_CoolingMode,
-   .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
+   .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedFreshFoodFanControl,
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
 };
@@ -56,7 +56,7 @@ static const FanSpeedResolverConfig_t freshFoodConfig = {
 static const FanSpeedResolverConfig_t iceCabinetConfig = {
    .resolvedFanSpeedVoteErd = Erd_IceCabinetFanSpeed_ResolvedVote,
    .coolingModeErd = Erd_CoolingMode,
-   .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
+   .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedIceCabinetFanControl,
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
 };
@@ -64,7 +64,7 @@ static const FanSpeedResolverConfig_t iceCabinetConfig = {
 static const FanSpeedResolverConfig_t convertibleCompartmentConfig = {
    .resolvedFanSpeedVoteErd = Erd_ConvertibleCompartmentFanSpeed_ResolvedVote,
    .coolingModeErd = Erd_CoolingMode,
-   .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
+   .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedConvertibleCompartmentFanControl,
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
 };
@@ -72,7 +72,7 @@ static const FanSpeedResolverConfig_t convertibleCompartmentConfig = {
 static const FanSpeedResolverConfig_t deliConfig = {
    .resolvedFanSpeedVoteErd = Erd_DeliFanSpeed_ResolvedVote,
    .coolingModeErd = Erd_CoolingMode,
-   .freezerSetpointErd = Erd_EnumeratedFreezerSetpoint,
+   .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedDeliFanControl,
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
 };
