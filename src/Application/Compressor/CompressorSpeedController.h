@@ -31,6 +31,8 @@ typedef struct
       const CompressorData_t *compressorData;
       const CompressorSpeedControllerConfiguration_t *config;
       Timer_t startupTimer;
+      Timer_t remainOffAfterValveMoveTimer;
+      Timer_t minimumOffTimer;
       TimerModule_t *timerModule;
       Hsm_t hsm;
    } _private;

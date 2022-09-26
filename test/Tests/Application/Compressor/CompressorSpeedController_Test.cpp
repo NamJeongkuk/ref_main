@@ -57,6 +57,20 @@ TEST_GROUP(CompressorSpeedController)
       CompressorSpeedController_Init(&instance, dataModel, &config);
    }
 
+   void TheCompressorSpeedControllerIsInitializedIntoRemainOffAfterValveMoveBeforeTheMiniumOffTimeHasExpired()
+   {
+      Given TheCompressorSpeedControllerIsInitialized();
+      // some stuff that has not happened yet
+      TheCompressorStateShouldBe(CompressorState_RemainOffAfterValveMove);
+   }
+
+   void TheCompressorSpeedControllerIsInitializedIntoRemainOffAfterBeingInOffAndReadyToChange()
+   {
+      Given TheCompressorSpeedControllerIsInitialized();
+      // some stuff that has not happened yet
+      TheCompressorStateShouldBe(CompressorState_RemainOffAfterValveMove);
+   }
+
    void CompressorSpeedRequestShouldBe(CompressorSpeedFrequencyInHz_t expected)
    {
       CompressorSpeedFrequencyInHz_t actual;
@@ -92,4 +106,26 @@ TEST(CompressorSpeedController, ShouldSetCompressorStateAsStartupOnInitializatio
    Given TheCompressorSpeedControllerIsInitialized();
 
    TheCompressorStateShouldBe(CompressorState_Startup);
+}
+
+IGNORE_TEST(CompressorSpeedController, ShouldTransitionToMiniumOffTimeAfterRemainOffAfterValveMoveTimeAndTheMinimumOffTimeHasNotCompleted)
+{
+   Given TheCompressorSpeedControllerIsInitializedIntoRemainOffAfterValveMoveBeforeTheMiniumOffTimeHasExpired();
+
+   After((compressorData->compressorTimes.remainOffAfterValveMoveTimeInMinutes * MSEC_PER_MIN) - 1);
+   TheCompressorStateShouldBe(CompressorState_RemainOffAfterValveMove);
+
+   After(1);
+   TheCompressorStateShouldBe(CompressorState_MinimumOffTime);
+}
+
+IGNORE_TEST(CompressorSpeedController, ShouldTransitionToOffAndReadyToChangeAfterRemainOffAfterValveMoveTime)
+{
+   Given TheCompressorSpeedControllerIsInitializedIntoRemainOffAfterBeingInOffAndReadyToChange();
+
+   After((compressorData->compressorTimes.remainOffAfterValveMoveTimeInMinutes * MSEC_PER_MIN) - 1);
+   TheCompressorStateShouldBe(CompressorState_RemainOffAfterValveMove);
+
+   After(1);
+   TheCompressorStateShouldBe(CompressorState_OffAndReadyToChange);
 }
