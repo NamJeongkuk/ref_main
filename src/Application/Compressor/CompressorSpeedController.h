@@ -19,8 +19,9 @@
 typedef struct
 {
    Erd_t compressorStateErd; // CompressorState_t
-   Erd_t compressorSpeedRequestErd; // CompressorSpeedFrequencyInHz_t
+   Erd_t compressorSpeedRequestErd; // CompressorState_t
    Erd_t compressorSpeedResolvedVoteErd; // CompressorVotedSpeed_t
+   Erd_t disableMinimumTimeRequestErd; // bool
 } CompressorSpeedControllerConfiguration_t;
 
 typedef struct

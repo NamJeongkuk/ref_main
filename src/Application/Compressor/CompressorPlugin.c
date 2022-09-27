@@ -12,8 +12,9 @@
 
 static const CompressorSpeedControllerConfiguration_t compressorSpeedControllerConfig = {
    .compressorStateErd = Erd_CompressorState,
-   .compressorSpeedRequestErd = Erd_CompressorSpeedRequestInHz,
-   .compressorSpeedResolvedVoteErd = Erd_CompressorSpeed_ResolvedVote
+   .compressorSpeedRequestErd = Erd_CompressorControllerSpeed,
+   .compressorSpeedResolvedVoteErd = Erd_CompressorSpeed_ResolvedVote,
+   .disableMinimumTimeRequestErd = Erd_DisableMinimumCompressorTimes
 };
 
 static CompressorSpeedController_t compressorSpeedControllerInstance;

@@ -27,7 +27,7 @@ extern "C"
 
 static const CompressorSpeedControllerConfiguration_t config = {
    .compressorStateErd = Erd_CompressorState,
-   .compressorSpeedRequestErd = Erd_CompressorSpeedRequestInHz,
+   .compressorSpeedRequestErd = Erd_CompressorControllerSpeed,
    .compressorSpeedResolvedVoteErd = Erd_CompressorSpeed_ResolvedVote
 };
 
@@ -73,8 +73,8 @@ TEST_GROUP(CompressorSpeedController)
 
    void CompressorSpeedRequestShouldBe(CompressorSpeedFrequencyInHz_t expected)
    {
-      CompressorSpeedFrequencyInHz_t actual;
-      DataModel_Read(dataModel, Erd_CompressorSpeedRequestInHz, &actual);
+      CompressorSpeed_t actual;
+      DataModel_Read(dataModel, Erd_CompressorControllerSpeed, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -85,13 +85,21 @@ TEST_GROUP(CompressorSpeedController)
       CHECK_EQUAL(expected, actual);
    }
 
-   void ResolvedCompressorSpeedVoteIs(CompressorSpeed_t speed)
+   void ResolvedCompressorSpeedVoteCareIs(bool care)
    {
-      CompressorVotedSpeed_t vote = {
-         .speed = speed,
-         .care = true,
-      };
+      CompressorVotedSpeed_t vote;
+      DataModel_Read(dataModel, Erd_CompressorSpeed_ResolvedVote, &vote);
 
+      vote.care = care;
+      DataModel_Write(dataModel, Erd_CompressorSpeed_ResolvedVote, &vote);
+   }
+
+   void ResolvedCompressorSpeedVoteSpeedIs(CompressorSpeed_t speed)
+   {
+      CompressorVotedSpeed_t vote;
+      DataModel_Read(dataModel, Erd_CompressorSpeed_ResolvedVote, &vote);
+
+      vote.speed = speed;
       DataModel_Write(dataModel, Erd_CompressorSpeed_ResolvedVote, &vote);
    }
 
