@@ -55,6 +55,14 @@ static void InitializeInternalDataSource(
       BspDataSource_DataSource(&instance->_private.dataSource.bsp),
       &instance->_private.dataSource.bspComponent);
 
+   // UnmappedBspDataSource Must be added to the DataSource Composite after BspDataSource
+   UnmappedBspDataSource_Init(
+      &instance->_private.dataSource.unmappedBsp);
+   AddDataSourceToComposite(
+      instance,
+      UnmappedBspDataSource_DataSource(&instance->_private.dataSource.unmappedBsp),
+      &instance->_private.dataSource.unmappedBspComponent);
+
    ApplianceApiDataSource_Init(
       &instance->_private.dataSource.applianceApi,
       &instance->_private.dataSource.composite.interface,

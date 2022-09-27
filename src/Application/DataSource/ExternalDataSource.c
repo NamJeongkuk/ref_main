@@ -167,8 +167,11 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_DamperMotorPositionRequest, sizeof(StepperPositionRequest_t)),
    SWAPPED_ERD(PublicErd_FreshFood_ResolvedSetpointInDegFx100, sizeof(TemperatureDegFx100_t)),
 
-   // 0xF400
+   // 0xF400 range
    SWAPPED_FIELD(PublicErd_FreshFoodDamperStepperMotorPositionRequest, StepperPositionRequest_t, stepsToMove),
+   SWAPPED_ERD(PublicErd_ApplicationToBspPwm_PWM_0, sizeof(PwmDutyCycle_t)),
+   SWAPPED_ERD(PublicErd_ApplicationToBspInputCapture_CAPT_0, sizeof(InputCaptureMicroSeconds_t)),
+   SWAPPED_ERD(PublicErd_ApplicationToBspAdc_ADC_0, sizeof(AdcCounts_t)),
 
    // 0xF500 range
    SWAPPED_FIELD(PublicErd_ServiceDiagnosticsFaultTableSnapshotData0, FaultSnapshotData_t, someData),
@@ -196,6 +199,9 @@ static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
    SWAPPED_FIELD_RANGE(PublicErd_FreezerSetpoint_TemperatureBounds, PublicErd_ConvertibleCompartmentSetpoint_TemperatureBounds),
    SWAPPED_FIELD_RANGE(PublicErd_FreezerSetpoint_FactoryVote, PublicErd_FreezerSetpoint_UserVote),
    SWAPPED_FIELD_RANGE(PublicErd_FreshFoodSetpoint_FactoryVote, PublicErd_FreshFoodSetpoint_UserVote),
+   SWAPPED_FIELD_RANGE(PublicErd_ApplicationToBspPwm_PWM_0, PublicErd_ApplicationToBspPwm_PWM_5),
+   SWAPPED_FIELD_RANGE(PublicErd_ApplicationToBspInputCapture_CAPT_0, PublicErd_ApplicationToBspInputCapture_CAPT_5),
+   SWAPPED_FIELD_RANGE(PublicErd_ApplicationToBspAdc_ADC_0, PublicErd_ApplicationToBspAdc_ADC_1),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableSnapshotData0, PublicErd_ServiceDiagnosticsFaultTableSnapshotData9),
    SWAPPED_FIELD_RANGE(PublicErd_Eeprom_DefrostCompressorOnTimeInSeconds, PublicErd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds),
 };

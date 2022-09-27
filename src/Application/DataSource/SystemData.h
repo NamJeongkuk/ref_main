@@ -11,6 +11,7 @@
 #include "RamDataSource.h"
 #include "NonVolatileDataSource.h"
 #include "BspDataSource.h"
+#include "UnmappedBspDataSource.h"
 #include "ApplianceApiDataSource.h"
 #include "DataSource_Composite.h"
 #include "DataModel_DataSource.h"
@@ -46,6 +47,9 @@ typedef struct
 
          BspDataSource_t bsp;
          DataSource_CompositeComponent_t bspComponent;
+
+         UnmappedBspDataSource_t unmappedBsp;
+         DataSource_CompositeComponent_t unmappedBspComponent;
 
          ApplianceApiDataSource_t applianceApi;
          DataSource_CompositeComponent_t applianceApiComponent;

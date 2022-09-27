@@ -110,114 +110,82 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
 
 TEST_GROUP(ParametricDataBspErds_Output){};
 
-TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspGpioHeartbeatLed)
-{
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_BspGpio_HeartbeatLed)");
-
-   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_BspGpio_HeartbeatLed);
-}
-
-TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspGpioRelayWatchdog)
-{
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_BspGpio_RelayWatchdog)");
-
-   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_BspGpio_RelayWatchdog);
-}
-
-TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspGpioOtherLed)
-{
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_BspGpio_OtherLed)");
-
-   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_BspGpio_OtherLed);
-}
-
-TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspGpioPushButtonSwitch)
-{
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_BspGpio_PushButtonSwitch)");
-
-   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_BspGpio_PushButtonSwitch);
-}
-
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspPwm0)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_BspPwm_PWM_0)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_ApplicationToBspPwm_PWM_0)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_BspPwm_PWM_0);
+   CHECK_EQUAL(*erd, Erd_ApplicationToBspPwm_PWM_0);
 }
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspPwm1)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_BspPwm_PWM_1)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_ApplicationToBspPwm_PWM_1)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_BspPwm_PWM_1);
+   CHECK_EQUAL(*erd, Erd_ApplicationToBspPwm_PWM_1);
 }
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspPwm2)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_BspPwm_PWM_2)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_ApplicationToBspPwm_PWM_2)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_BspPwm_PWM_2);
+   CHECK_EQUAL(*erd, Erd_ApplicationToBspPwm_PWM_2);
 }
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspPwm4)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_BspPwm_PWM_4)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_ApplicationToBspPwm_PWM_4)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_BspPwm_PWM_4);
+   CHECK_EQUAL(*erd, Erd_ApplicationToBspPwm_PWM_4);
 }
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspPwm5)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_BspPwm_PWM_5)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_ApplicationToBspPwm_PWM_5)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_BspPwm_PWM_5);
+   CHECK_EQUAL(*erd, Erd_ApplicationToBspPwm_PWM_5);
 }
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspFanInputCapture0)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_BspFanInputCapture_CAPT_0)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_ApplicationToBspInputCapture_CAPT_0)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_BspFanInputCapture_CAPT_0);
+   CHECK_EQUAL(*erd, Erd_ApplicationToBspInputCapture_CAPT_0);
 }
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspFanInputCapture1)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_BspFanInputCapture_CAPT_1)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_ApplicationToBspInputCapture_CAPT_1)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_BspFanInputCapture_CAPT_1);
+   CHECK_EQUAL(*erd, Erd_ApplicationToBspInputCapture_CAPT_1);
 }
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspFanInputCapture2)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_BspFanInputCapture_CAPT_2)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_ApplicationToBspInputCapture_CAPT_2)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_BspFanInputCapture_CAPT_2);
+   CHECK_EQUAL(*erd, Erd_ApplicationToBspInputCapture_CAPT_2);
 }
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspFanInputCapture4)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_BspFanInputCapture_CAPT_4)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_ApplicationToBspInputCapture_CAPT_4)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_BspFanInputCapture_CAPT_4);
+   CHECK_EQUAL(*erd, Erd_ApplicationToBspInputCapture_CAPT_4);
 }
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspFanInputCapture5)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_BspFanInputCapture_CAPT_5)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_ApplicationToBspInputCapture_CAPT_5)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_BspFanInputCapture_CAPT_5);
+   CHECK_EQUAL(*erd, Erd_ApplicationToBspInputCapture_CAPT_5);
 }

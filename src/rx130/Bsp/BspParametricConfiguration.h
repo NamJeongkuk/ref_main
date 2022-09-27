@@ -13,8 +13,8 @@
 
 typedef struct
 {
-   const ConstArrayMap_BinarySearchConfiguration_t *bspToApplicationMapConfiguration;
-   const ConstArrayMap_LinearSearchConfiguration_t *applicationToBspMapConfiguration;
+   const ConstArrayMap_BinarySearchConfiguration_t *bspToParametricMapConfiguration;
+   const ConstArrayMap_LinearSearchConfiguration_t *parametricToBspMapConfiguration;
 } BspParametricConfiguration_t;
 
 #endif

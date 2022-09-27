@@ -82,6 +82,7 @@
 #define INCLUDE_RAM_NvCycleHistory(_x)
 #define INCLUDE_RAM_Fault(_x)
 #define INCLUDE_RAM_Bsp(_x)
+#define INCLUDE_RAM_MappedBsp(_x)
 
 #define INCLUDE_VIRTUAL_Ram(_x)
 #define INCLUDE_VIRTUAL_Virtual(_x) _x
@@ -94,12 +95,14 @@
 #define INCLUDE_VIRTUAL_NvCycleHistory(_x)
 #define INCLUDE_VIRTUAL_Fault(_x)
 #define INCLUDE_VIRTUAL_Bsp(_x)
+#define INCLUDE_VIRTUAL_MappedBsp(_x)
 
 #define INCLUDE_NV_Ram(_x)
 #define INCLUDE_NV_Virtual(_x)
 #define INCLUDE_NV_Nv(_x) _x
 #define INCLUDE_NV_Fault(_x)
 #define INCLUDE_NV_Bsp(_x)
+#define INCLUDE_NV_MappedBsp(_x)
 
 #define INCLUDE_FAULT_Ram(_x)
 #define INCLUDE_FAULT_Virtual(_x)
@@ -112,6 +115,7 @@
 #define INCLUDE_FAULT_NvCycleHistory(_x)
 #define INCLUDE_FAULT_Fault(_x) _x
 #define INCLUDE_FAULT_Bsp(_x)
+#define INCLUDE_FAULT_MappedBsp(_x)
 
 #define INCLUDE_BSP_Ram(_x)
 #define INCLUDE_BSP_Virtual(_x)
@@ -124,6 +128,7 @@
 #define INCLUDE_BSP_NvCycleHistory(_x)
 #define INCLUDE_BSP_Fault(_x)
 #define INCLUDE_BSP_Bsp(_x) _x
+#define INCLUDE_BSP_MappedBsp(_x)
 
 #define INCLUDE_NVONLY_Ram(_x)
 #define INCLUDE_NVONLY_Virtual(_x)
@@ -136,6 +141,7 @@
 #define INCLUDE_NVONLY_NvCycleHistory(_x)
 #define INCLUDE_NVONLY_Fault(_x)
 #define INCLUDE_NVONLY_Bsp(_x)
+#define INCLUDE_NVONLY_MappedBsp(_x)
 
 #define INCLUDE_NVALL_Ram(_x)
 #define INCLUDE_NVALL_Virtual(_x)
@@ -148,6 +154,7 @@
 #define INCLUDE_NVALL_NvCycleHistory(_x) _x
 #define INCLUDE_NVALL_Fault(_x)
 #define INCLUDE_NVALL_Bsp(_x)
+#define INCLUDE_NVALL_MappedBsp(_x)
 
 #define INCLUDE_NVPROTECTED_Ram(_x)
 #define INCLUDE_NVPROTECTED_Virtual(_x)
@@ -160,6 +167,7 @@
 #define INCLUDE_NVPROTECTED_NvCycleHistory(_x)
 #define INCLUDE_NVPROTECTED_Fault(_x)
 #define INCLUDE_NVPROTECTED_Bsp(_x)
+#define INCLUDE_NVPROTECTED_MappedBsp(_x)
 
 #define INCLUDE_NVUNITSETTING_Ram(_x)
 #define INCLUDE_NVUNITSETTING_Virtual(_x)
@@ -172,6 +180,7 @@
 #define INCLUDE_NVUNITSETTING_NvCycleHistory(_x)
 #define INCLUDE_NVUNITSETTING_Fault(_x)
 #define INCLUDE_NVUNITSETTING_Bsp(_x)
+#define INCLUDE_NVUNITSETTING_MappedBsp(_x)
 
 #define INCLUDE_NVUSERSETTING_Ram(_x)
 #define INCLUDE_NVUSERSETTING_Virtual(_x)
@@ -184,6 +193,7 @@
 #define INCLUDE_NVUSERSETTING_NvCycleHistory(_x)
 #define INCLUDE_NVUSERSETTING_Fault(_x)
 #define INCLUDE_NVUSERSETTING_Bsp(_x)
+#define INCLUDE_NVUSERSETTING_MappedBsp(_x)
 
 #define INCLUDE_NVRFID_Ram(_x)
 #define INCLUDE_NVRFID_Virtual(_x)
@@ -196,6 +206,7 @@
 #define INCLUDE_NVRFID_NvCycleHistory(_x)
 #define INCLUDE_NVRFID_Fault(_x)
 #define INCLUDE_NVRFID_Bsp(_x)
+#define INCLUDE_NVRFID_MappedBsp(_x)
 
 #define INCLUDE_NVFAULTSNAPSHOT_Ram(_x)
 #define INCLUDE_NVFAULTSNAPSHOT_Virtual(_x)
@@ -208,6 +219,7 @@
 #define INCLUDE_NVFAULTSNAPSHOT_NvCycleHistory(_x)
 #define INCLUDE_NVFAULTSNAPSHOT_Fault(_x)
 #define INCLUDE_NVFAULTSNAPSHOT_Bsp(_x)
+#define INCLUDE_NVFAULTSNAPSHOT_MappedBsp(_x)
 
 #define INCLUDE_NVCYCLEHISTORY_Ram(_x)
 #define INCLUDE_NVCYCLEHISTORY_Virtual(_x)
@@ -220,6 +232,7 @@
 #define INCLUDE_NVCYCLEHISTORY_NvCycleHistory(_x)  _x
 #define INCLUDE_NVCYCLEHISTORY_Fault(_x)
 #define INCLUDE_NVCYCLEHISTORY_Bsp(_x)
+#define INCLUDE_NVCYCLEHISTORY_MappedBsp(_x)
 
 #define INCLUDE_NON_RAM_Ram(_x)
 #define INCLUDE_NON_RAM_Virtual(_x) _x
@@ -232,6 +245,20 @@
 #define INCLUDE_NON_RAM_NvCycleHistory(_x) _x
 #define INCLUDE_NON_RAM_Fault(_x) _x
 #define INCLUDE_NON_RAM_Bsp(_x) _x
+#define INCLUDE_NON_RAM_MappedBsp(_x) _x
+
+#define INCLUDE_MAPPED_BSP_Ram(_x)
+#define INCLUDE_MAPPED_BSP_Virtual(_x)
+#define INCLUDE_MAPPED_BSP_Nv(_x)
+#define INCLUDE_MAPPED_BSP_NvProtected(_x)
+#define INCLUDE_MAPPED_BSP_NvUnitSetting(_x)
+#define INCLUDE_MAPPED_BSP_NvUserSetting(_x)
+#define INCLUDE_MAPPED_BSP_NvRfid(_x)
+#define INCLUDE_MAPPED_BSP_NvFaultSnapshot(_x)
+#define INCLUDE_MAPPED_BSP_NvCycleHistory(_x)
+#define INCLUDE_MAPPED_BSP_Fault(_x)
+#define INCLUDE_MAPPED_BSP_Bsp(_x)
+#define INCLUDE_MAPPED_BSP_MappedBsp(_x) _x
 
 #define INCLUDE_INPUT_OUTPUT_Io_None(_x)
 #define INCLUDE_INPUT_OUTPUT_Io_O(_x)
@@ -634,14 +661,14 @@ enum
    ENTRY(Erd_DeliFanSpeed_DefrostVote,                      0xF353, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DeliFanSpeed_GridVote,                         0xF354, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FreezerFan_Pwm,                                0xF360, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CondenserFan_Pwm,                              0xF361, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodFan_Pwm,                              0xF362, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_IceCabinetFan_Pwm,                             0xF363, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentFan_Pwm,                 0xF364, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DeliFan_Pwm,                                   0xF365, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerEvapFan_Pwm,                            0xF366, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodEvapFan_Pwm,                          0xF367, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerFan_Pwm,                                0xF360, PwmDutyCycle_t,                                     Swap_Y, Io_O,    Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_CondenserFan_Pwm,                              0xF361, PwmDutyCycle_t,                                     Swap_Y, Io_O,    Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodFan_Pwm,                              0xF362, PwmDutyCycle_t,                                     Swap_Y, Io_O,    Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_IceCabinetFan_Pwm,                             0xF363, PwmDutyCycle_t,                                     Swap_Y, Io_O,    Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentFan_Pwm,                 0xF364, PwmDutyCycle_t,                                     Swap_Y, Io_O,    Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_DeliFan_Pwm,                                   0xF365, PwmDutyCycle_t,                                     Swap_Y, Io_O,    Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapFan_Pwm,                            0xF366, PwmDutyCycle_t,                                     Swap_Y, Io_O,    Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvapFan_Pwm,                          0xF367, PwmDutyCycle_t,                                     Swap_Y, Io_O,    Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreezerFan_ActualRpm,                          0xF368, FanRpm_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CondenserFan_ActualRpm,                        0xF369, FanRpm_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -652,14 +679,14 @@ enum
    ENTRY(Erd_FreezerEvapFan_ActualRpm,                      0xF36E, FanRpm_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodEvapFan_ActualRpm,                    0xF36F, FanRpm_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FreezerFan_InputCaptureTime,                   0xF370, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CondenserFan_InputCaptureTime,                 0xF371, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodFan_InputCaptureTime,                 0xF372, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_IceCabinetFan_InputCaptureTime,                0xF373, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentFan_InputCaptureTime,    0xF374, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DeliFan_InputCaptureTime,                      0xF375, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerEvapFan_InputCaptureTime,               0xF376, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodEvapFan_InputCaptureTime,             0xF377, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerFan_InputCaptureTime,                   0xF370, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_CondenserFan_InputCaptureTime,                 0xF371, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodFan_InputCaptureTime,                 0xF372, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_IceCabinetFan_InputCaptureTime,                0xF373, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentFan_InputCaptureTime,    0xF374, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_DeliFan_InputCaptureTime,                      0xF375, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapFan_InputCaptureTime,               0xF376, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvapFan_InputCaptureTime,             0xF377, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodDamperPosition_ResolvedVote,          0xF380, DamperVotedPosition_t,                              Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperPosition_WinningVoteErd,        0xF381, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -694,9 +721,24 @@ enum
    ENTRY(Erd_DeliPan_SetpointOffsetInDegFx100,              0xF3B3, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DeliPan_ThermalShiftInDegFx100,                0xF3B4, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FreshFoodDamperStepperMotorPositionRequest,    0xF400, StepperPositionRequest_t,                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodDamperHomingRequest,                  0xF401, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodDamperCurrentPosition,                0xF402, DamperPosition_t,                                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperStepperMotorPositionRequest,    0xF3C0, StepperPositionRequest_t,                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperHomingRequest,                  0xF3C1, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperCurrentPosition,                0xF3C2, DamperPosition_t,                                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_ApplicationToBspPwm_PWM_0,                     0xF400, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplicationToBspPwm_PWM_1,                     0xF401, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplicationToBspPwm_PWM_2,                     0xF402, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplicationToBspPwm_PWM_4,                     0xF403, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplicationToBspPwm_PWM_5,                     0xF404, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_ApplicationToBspInputCapture_CAPT_0,           0xF410, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplicationToBspInputCapture_CAPT_1,           0xF411, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplicationToBspInputCapture_CAPT_2,           0xF412, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplicationToBspInputCapture_CAPT_4,           0xF413, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplicationToBspInputCapture_CAPT_5,           0xF414, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_ApplicationToBspAdc_ADC_0,                     0xF420, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplicationToBspAdc_ADC_1,                     0xF421, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData0,     0xF500, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData1,     0xF501, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
