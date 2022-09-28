@@ -9,6 +9,9 @@
 #define SETPOINT_H
 
 #include "TemperatureDegFx100.h"
+#include <stdint.h>
+
+typedef int8_t Setpoint_t;
 
 typedef struct
 {

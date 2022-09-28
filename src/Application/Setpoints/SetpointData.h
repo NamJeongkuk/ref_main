@@ -10,11 +10,13 @@
 
 #include "AdjustedSetpointData.h"
 #include "SetpointZoneData.h"
+#include "UserSetpointData.h"
 
 typedef struct
 {
    const SetpointZoneData_t *setpointZoneData;
    const AdjustedSetpointData_t *adjustedSetpointData;
+   const UserSetpointData_t *userSetpointData;
 } SetpointData_t;
 
 #endif
