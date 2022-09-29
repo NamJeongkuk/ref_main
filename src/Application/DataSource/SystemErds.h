@@ -638,6 +638,7 @@ enum
    \
    ENTRY(Erd_FaultWrapperInterfaceArray,                    0xF310, I_FaultWrapper_t *,                                 Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_GpioGroupInterface,                            0xF311, I_GpioGroup_t *,                                    Swap_N, Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
+   ENTRY(Erd_CoolingStatesGridVotesConstArrayMapInterface,  0xF312, I_ConstArrayMap_t *,                                Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ConvertibleCompartmentFanSpeed_ResolvedVote,   0xF320, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentFanSpeed_WinningVoteErd, 0xF321, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

@@ -23,6 +23,7 @@
 #include "CompressorPlugin.h"
 #include "SensorFilterPlugin.h"
 #include "AdjustedSetpointPlugin.h"
+#include "SideBySideSingleEvaporatorCoolingSystemPlugin.h"
 
 enum
 {
@@ -70,7 +71,7 @@ void Application_Init(
    SetpointResolverPlugin_Init(dataModel);
    SetpointZonePlugin_Init(&instance->_private.setpointZonePlugin, dataModel);
    ConvertibleCompartmentStatePlugin_Init(&instance->_private.convertibleCompartmentStatePlugin, dataModel);
-   GridPlugin_Init(&instance->_private.gridPlugin, dataModel);
+   SideBySideSingleEvaporatorCoolingSystemPlugin_Init(&instance->_private.sideBySideCoolingSystemPlugin, dataModel);
    DoorPlugin_Init(dataModel);
    PeriodicNvUpdaterPlugin_Init(&instance->_private.periodicNvUpdaterPlugin, dataModel);
    DefrostPlugin_Init(dataModel);

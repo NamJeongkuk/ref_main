@@ -21,6 +21,7 @@
 #include "ConvertibleCompartmentStatePlugin.h"
 #include "FanPlugin.h"
 #include "SetpointZonePlugin.h"
+#include "SideBySideSingleEvaporatorCoolingSystemPlugin.h"
 
 typedef struct
 {
@@ -32,12 +33,12 @@ typedef struct
       HeartbeatLedPlugin_t heartbeatLedPlugin;
       SwitchedLedPlugin_t switchedLedPlugin;
       KeyStreamPlugin_t keyStreamPlugin;
-      GridPlugin_t gridPlugin;
       TimerModuleDiagnostics_t timerModuleDiagnostics;
       Input_StackUsageCalculator_t stackUsageCalculator;
       ApplianceApiResetDiagnostics_t applianceApiResetDiagnostics;
       PeriodicNvUpdaterPlugin_t periodicNvUpdaterPlugin;
       ConvertibleCompartmentStatePlugin_t convertibleCompartmentStatePlugin;
+      SideBySideSingleEvaporatorCoolingSystemPlugin_t sideBySideCoolingSystemPlugin;
       FanPlugin_t fanPlugin;
       SetpointZonePlugin_t setpointZonePlugin;
       Timer_t stackUsageUpdateTimer;

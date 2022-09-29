@@ -40,6 +40,7 @@ SRC_DIRS:=\
   src/$(TARGET)/Hardware/Flash \
   src/Application \
   src/Application/Compressor \
+  src/Application/ConfigurationPlugins \
   src/Application/ConvertibleCompartment \
   src/Application/DataSource \
   src/Application/Defrost \
@@ -51,6 +52,7 @@ SRC_DIRS:=\
   src/Application/Evaporator \
   src/Application/Grid \
   src/Application/Grid/GridFunctions \
+  src/Application/Grid/GridStateTables \
   src/Application/Gea \
   src/Application/OverrideArbiters \
   src/Application/ParametricData \
