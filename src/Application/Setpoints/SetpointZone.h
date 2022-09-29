@@ -14,7 +14,7 @@ enum
 {
    SetpointZone_Cold,
    SetpointZone_Middle,
-   SetpointZone_Warm,
+   SetpointZone_Warm
 };
 typedef uint8_t SetpointZone_t;
 

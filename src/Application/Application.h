@@ -9,6 +9,7 @@
 #define APPLICATION_H
 
 #include "I_DataModel.h"
+#include "AdjustedSetpointPlugin.h"
 #include "HeartbeatLedPlugin.h"
 #include "SwitchedLedPlugin.h"
 #include "KeyStreamPlugin.h"
@@ -27,6 +28,7 @@ typedef struct
    {
       I_DataModel_t *dataModel;
 
+      AdjustedSetpointPlugin_t adjustedSetpointPlugin;
       HeartbeatLedPlugin_t heartbeatLedPlugin;
       SwitchedLedPlugin_t switchedLedPlugin;
       KeyStreamPlugin_t keyStreamPlugin;

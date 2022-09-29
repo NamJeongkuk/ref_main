@@ -59,7 +59,7 @@ void Application_Init(
       Erd_PersonalityParametricData,
       Erd_PersonalityIdOutOfRangeFlag);
 
-   AdjustedSetpointPlugin_Init(dataModel);
+   AdjustedSetpointPlugin_Init(&instance->_private.adjustedSetpointPlugin, dataModel);
    SensorFilterPlugin(dataModel);
    OverrideArbiterPlugin_Init(dataModel);
 

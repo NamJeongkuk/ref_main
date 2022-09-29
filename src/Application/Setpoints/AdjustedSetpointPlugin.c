@@ -64,30 +64,78 @@ static const Erd_t deliPanAdjustedSetpointErds[] = {
    Erd_DeliPan_ThermalShiftInDegFx100
 };
 
-static void InitializeCabinetOffsetErds(I_DataModel_t *dataModel)
+static const SetpointZone_t coldZone = SetpointZone_Cold;
+static const SetpointZone_t middleZone = SetpointZone_Middle;
+static const SetpointZone_t warmZone = SetpointZone_Warm;
+static TemperatureDegFx100_t coldSetpointOffsetInDegFx100;
+static TemperatureDegFx100_t middleSetpointOffsetInDegFx100 = 0;
+static TemperatureDegFx100_t warmSetpointOffsetInDegFx100;
+
+// clang-format off
+static ErdWriterOnCompareMatchConfigurationEntry_t erdWriteOnCompareMatchEntries[] =
 {
-   const AdjustedSetpointData_t *adjustedSetpointData =
-      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData;
+   {
+      .erdToCompare = Erd_FreshFoodSetpointZone,
+      .erdToWrite = Erd_FreshFood_SetpointOffsetInDegFx100,
+      .valueToCompare = &coldZone,
+      .valueToWrite = &coldSetpointOffsetInDegFx100
+   },
+   {
+      .erdToCompare = Erd_FreshFoodSetpointZone,
+      .erdToWrite = Erd_FreshFood_SetpointOffsetInDegFx100,
+      .valueToCompare = &middleZone,
+      .valueToWrite = &middleSetpointOffsetInDegFx100
+   },
+   {
+      .erdToCompare = Erd_FreshFoodSetpointZone,
+      .erdToWrite = Erd_FreshFood_SetpointOffsetInDegFx100,
+      .valueToCompare = &warmZone,
+      .valueToWrite = &warmSetpointOffsetInDegFx100
+   }
+};
+// clang-format on
 
+static const ErdWriterOnCompareMatchConfiguration_t erdWriteOnCompareMatchConfiguration = {
+   erdWriteOnCompareMatchEntries,
+   NUM_ELEMENTS(erdWriteOnCompareMatchEntries)
+};
+
+static void InitializeCabinetOffsetErds(AdjustedSetpointPlugin_t *instance)
+{
    DataModel_Write(
-      dataModel,
+      instance->_private.dataModel,
       Erd_FreshFood_CabinetOffsetInDegFx100,
-      &adjustedSetpointData->freshFoodAdjustedSetpointData->cabinetOffsetInDegFx100);
+      &instance->_private.adjustedSetpointData->freshFoodAdjustedSetpointData->cabinetOffsetInDegFx100);
 
    DataModel_Write(
-      dataModel,
+      instance->_private.dataModel,
       Erd_Freezer_CabinetOffsetInDegFx100,
-      &adjustedSetpointData->freezerAdjustedSetpointData->cabinetOffsetInDegFx100);
+      &instance->_private.adjustedSetpointData->freezerAdjustedSetpointData->cabinetOffsetInDegFx100);
 
    DataModel_Write(
-      dataModel,
+      instance->_private.dataModel,
       Erd_IceBox_CabinetOffsetInDegFx100,
-      &adjustedSetpointData->iceBoxAdjustedSetpointData->cabinetOffsetInDegFx100);
+      &instance->_private.adjustedSetpointData->iceBoxAdjustedSetpointData->cabinetOffsetInDegFx100);
 }
 
-void AdjustedSetpointPlugin_Init(I_DataModel_t *dataModel)
+static void InitializeSetpointOffsetErds(AdjustedSetpointPlugin_t *instance)
 {
-   InitializeCabinetOffsetErds(dataModel);
+   coldSetpointOffsetInDegFx100 = instance->_private.adjustedSetpointData->freshFoodAdjustedSetpointData->setpointOffsetData->coldOffsetInDegFx100;
+   warmSetpointOffsetInDegFx100 = instance->_private.adjustedSetpointData->freshFoodAdjustedSetpointData->setpointOffsetData->warmOffsetInDegFx100;
+   ErdWriterOnCompareMatch_Init(
+      &instance->_private.erdWriterOnCompareMatchForAdjustedSetpoint,
+      DataModel_AsDataSource(instance->_private.dataModel),
+      &erdWriteOnCompareMatchConfiguration);
+}
+
+void AdjustedSetpointPlugin_Init(AdjustedSetpointPlugin_t *instance, I_DataModel_t *dataModel)
+{
+   instance->_private.dataModel = dataModel;
+   instance->_private.adjustedSetpointData =
+      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData;
+
+   InitializeCabinetOffsetErds(instance);
+   InitializeSetpointOffsetErds(instance);
 
    ERD_ADDER_TABLE(EXPAND_AS_ADDERS);
 }
