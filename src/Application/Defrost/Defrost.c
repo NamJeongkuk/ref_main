@@ -30,7 +30,7 @@ enum
 
 enum
 {
-   Signal_DefrostReadyTimerIsSatisfied = Hsm_UserSignalStart,
+   Signal_ReadyToDefrost = Hsm_UserSignalStart,
    Signal_CompressorIsOn,
    Signal_DefrostTimerExpired,
    Signal_PrechillTemperatureExitConditionMet,
@@ -93,13 +93,13 @@ static void DataModelChanged(void *context, const void *args)
    const DataModelOnDataChangeArgs_t *onChangeData = args;
    Erd_t erd = onChangeData->erd;
 
-   if(erd == instance->_private.config->defrostReadyTimerIsSatisfied)
+   if(erd == instance->_private.config->readyToDefrost)
    {
       const bool *state = onChangeData->data;
 
       if(*state)
       {
-         Hsm_SendSignal(&instance->_private.hsm, Signal_DefrostReadyTimerIsSatisfied, NULL);
+         Hsm_SendSignal(&instance->_private.hsm, Signal_ReadyToDefrost, NULL);
       }
    }
    else if(erd == instance->_private.config->compressorIsOnErd)
@@ -600,7 +600,7 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          SetHsmStateTo(instance, DefrostHsmState_Idle);
          break;
 
-      case Signal_DefrostReadyTimerIsSatisfied:
+      case Signal_ReadyToDefrost:
          if(AnyPreviousDefrostWasAbnormal(instance) ||
             FreezerCompartmentWasTooWarmOnPowerUp(instance) ||
             !FreezerEvaporatorThermistorIsValid(instance))

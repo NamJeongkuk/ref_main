@@ -15,7 +15,7 @@
 #include "ActivelyWaitingForDefrostOnCompareMatch.h"
 #include "DefrostCompressorOnTimeCounter.h"
 #include "DoorAccelerationCounter.h"
-#include "DefrostReadyTimerIsSatisfied.h"
+#include "ReadyToDefrost.h"
 #include "TimeThatPrechillConditionsAreMet.h"
 #include "FreezerFilteredTemperatureTooWarmOnPowerUp.h"
 #include "uassert.h"
@@ -27,7 +27,7 @@ static struct
    FreshFoodOnlyDefrostArbitrator_t freshFoodOnlyDefrostArbitrator;
    DefrostCompressorOnTimeCounter_t defrostCompressorOnTimeCounter;
    DoorAccelerationCounter_t doorAccelerationCounter;
-   DefrostReadyTimerIsSatisfied_t defrostReadyTimerIsSatisfied;
+   ReadyToDefrost_t readyToDefrost;
    TimeThatPrechillConditionsAreMet_t timeThatPrechillConditionsAreMet;
 } instance;
 
@@ -37,7 +37,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
-   .defrostReadyTimerIsSatisfied = Erd_DefrostReadyTimerIsSatisfied,
+   .readyToDefrost = Erd_ReadyToDefrost,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .freezerEvaporatorThermistorIsValidErd = Erd_FreezerEvapThermistor_IsValidResolved,
    .freshFoodThermistorIsValidErd = Erd_FreshFoodThermistor_IsValidResolved,
@@ -110,13 +110,13 @@ static const DoorAccelerationCounterConfiguration_t doorAccelerationCounterConfi
    .timerModuleErd = Erd_TimerModule
 };
 
-static DefrostReadyTimerIsSatisfiedConfiguration_t defrostReadyTimerIsSatisfiedConfig = {
+static ReadyToDefrostConfiguration_t readyToDefrostConfig = {
    .compressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
    .freshFoodScaledDoorAccelerationInSecondsErd = Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds,
    .freezerScaledDoorAccelerationInSecondsErd = Erd_DefrostFreezerScaledDoorAccelerationInSeconds,
    .convertibleCompartmentScaledDoorAccelerationInSecondsErd = Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds,
-   .defrostReadyTimerIsSatisfiedErd = Erd_DefrostReadyTimerIsSatisfied,
-   .timeInMinutesWhenDefrostReadyTimerIsSatisfiedErd = Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied,
+   .readyToDefrostErd = Erd_ReadyToDefrost,
+   .timeInMinutesUntilReadyToDefrostErd = Erd_TimeInMinutesUntilReadyToDefrost,
    .defrostCompressorOnTimeCounterReadyErd = Erd_DefrostCompressorOnTimeCounterReady,
    .doorAccelerationCounterReadyErd = Erd_DoorAccelerationCounterReady
 };
@@ -216,8 +216,8 @@ void DefrostPlugin_Init(I_DataModel_t *dataModel)
       dataModel,
       &doorAccelerationCounterConfig);
 
-   DefrostReadyTimerIsSatisfied_Init(
-      &instance.defrostReadyTimerIsSatisfied,
+   ReadyToDefrost_Init(
+      &instance.readyToDefrost,
       dataModel,
-      &defrostReadyTimerIsSatisfiedConfig);
+      &readyToDefrostConfig);
 }

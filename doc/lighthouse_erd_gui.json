@@ -458,8 +458,8 @@
             },
             {
                "namespace": "rx130",
-               "displayName": "Time In Minutes When Defrost Ready Timer Is Satisfied",
-               "name": "Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied",
+               "displayName": "Time In Minutes Until Ready To Defrost",
+               "name": "Erd_TimeInMinutesUntilReadyToDefrost",
                "read": true
             },
             {

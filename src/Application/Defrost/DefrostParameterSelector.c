@@ -126,7 +126,7 @@ static void SetTimeWhenDefrostReadyTimerIsSatisfiedInMinutes(void)
 
       DataModel_Write(
          instance.dataModel,
-         Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied,
+         Erd_TimeInMinutesUntilReadyToDefrost,
          &defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
    }
    else
@@ -139,7 +139,7 @@ static void SetTimeWhenDefrostReadyTimerIsSatisfiedInMinutes(void)
 
       DataModel_Write(
          instance.dataModel,
-         Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied,
+         Erd_TimeInMinutesUntilReadyToDefrost,
          &maxTimeBetweenDefrostsInMinutes);
    }
 }

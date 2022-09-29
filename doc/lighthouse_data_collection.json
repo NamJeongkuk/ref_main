@@ -158,7 +158,7 @@
       },
       {
          "namespace": "rx130",
-         "name": "Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied",
+         "name": "Erd_TimeInMinutesUntilReadyToDefrost",
          "interval": 60000
       },
       {

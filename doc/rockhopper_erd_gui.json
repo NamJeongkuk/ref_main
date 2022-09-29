@@ -247,7 +247,7 @@
         {
           "namespace": "rx130",
           "displayName": "Number of Freezer Abnormal Defrost Cycles (EEPROM)",
-          "name": "Erd_NumberofFreezerAbnormalDefrostCycles",
+          "name": "Erd_NumberOfFreezerAbnormalDefrostCycles",
           "read": true,
           "write": true
         },
@@ -351,15 +351,15 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Time In Minutes When Defrost Ready Timer Is Satisfied",
-          "name": "Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied",
+          "displayName": "Time In Minutes Until Ready To Defrost",
+          "name": "Erd_TimeInMinutesUntilReadyToDefrost",
           "read": true,
           "write": true
         },
         {
           "namespace": "rx130",
-          "displayName": "Defrost Ready Timer Is Satisfied",
-          "name": "Erd_DefrostReadyTimerIsSatisfied",
+          "displayName": "Ready To Defrost",
+          "name": "Erd_ReadyToDefrost",
           "read": true,
           "write": true
         },
@@ -771,7 +771,7 @@
         {
           "namespace": "rx130",
           "displayName": "Freezer Adjusted Setpoint",
-          "name": "Erd_Freezer_AdjustedSetpoint",
+          "name": "Erd_Freezer_AdjustedSetpointInDegFx100",
           "read": true,
           "write": true
         },
@@ -916,27 +916,6 @@
     {
       "title": "FaultWrapper",
       "erds": [
-        {
-          "namespace": "rx130",
-          "displayName": "Set Request",
-          "name": "Erd_TestFaultSetRequest",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
-          "displayName": "Clear Request",
-          "name": "Erd_TestFaultClearRequest",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rx130",
-          "displayName": "Reset Request",
-          "name": "Erd_TestFaultResetRequest",
-          "read": true,
-          "write": true
-        },
         {
           "namespace": "rx130",
           "displayName": "Some Fault Erd",

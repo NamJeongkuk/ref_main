@@ -57,7 +57,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
-   .defrostReadyTimerIsSatisfied = Erd_DefrostReadyTimerIsSatisfied,
+   .readyToDefrost = Erd_ReadyToDefrost,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .freezerEvaporatorThermistorIsValidErd = Erd_FreezerEvaporatorThermistorIsValid,
    .freshFoodThermistorIsValidErd = Erd_FreshFood_ThermistorIsValid,
@@ -222,7 +222,7 @@ TEST_GROUP(Defrost_SingleEvap)
             Given FreezerEvaporatorThermistorValidityIs(Valid);
             Given FreshFoodThermistorValidityIs(Valid);
 
-            When DefrostReadyTimerIsSatisfied();
+            When ReadyToDefrost();
             DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
             break;
 
@@ -294,9 +294,9 @@ TEST_GROUP(Defrost_SingleEvap)
       DataModel_Write(dataModel, Erd_CompressorState, &state);
    }
 
-   void DefrostReadyTimerIsSatisfied()
+   void ReadyToDefrost()
    {
-      DataModel_Write(dataModel, Erd_DefrostReadyTimerIsSatisfied, set);
+      DataModel_Write(dataModel, Erd_ReadyToDefrost, set);
    }
 
    void FreezerFilteredTemperatureTooWarmOnPowerUpIs(bool state)
@@ -538,55 +538,55 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemp
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenDefrostReadyTimerIsSatisfiedAndLastFreshFoodDefrostWasAbnormal)
+TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndLastFreshFoodDefrostWasAbnormal)
 {
    Given LastFreshFoodDefrostWasAbnormal();
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
-   When DefrostReadyTimerIsSatisfied();
+   When ReadyToDefrost();
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenDefrostReadyTimerIsSatisfiedAndLastFreezerDefrostWasAbnormal)
+TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndLastFreezerDefrostWasAbnormal)
 {
    Given LastFreezerDefrostWasAbnormal();
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
-   When DefrostReadyTimerIsSatisfied();
+   When ReadyToDefrost();
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenDefrostReadyTimerIsSatisfiedAndLastConvertibleCompartmentDefrostWasAbnormal)
+TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndLastConvertibleCompartmentDefrostWasAbnormal)
 {
    Given LastConvertibleCompartmentDefrostWasAbnormal();
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
-   When DefrostReadyTimerIsSatisfied();
+   When ReadyToDefrost();
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenDefrostReadyTimerIsSatisfiedAndFreezerWasTooWarmAtPowerUpAndResetFreezerWasTooWarmErdToFalse)
+TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerWasTooWarmAtPowerUpAndResetFreezerWasTooWarmErdToFalse)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
-   When DefrostReadyTimerIsSatisfied();
+   When ReadyToDefrost();
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
    FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenDefrostReadyTimerIsSatisfiedAndFreezerWasTooWarmAtPowerUpAndLastFreezerDefrostWasAbnormalAndResetFreezerWasTooWarmErdToFalse)
+TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerWasTooWarmAtPowerUpAndLastFreezerDefrostWasAbnormalAndResetFreezerWasTooWarmErdToFalse)
 {
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And LastFreezerDefrostWasAbnormal();
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
-   When DefrostReadyTimerIsSatisfied();
+   When ReadyToDefrost();
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
    FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenDefrostReadyTimerIsSatisfiedAndFreezerEvapThermistorIsInvalid)
+TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerEvapThermistorIsInvalid)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -595,11 +595,11 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenDefrostReadyTimerIsSatisfied
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
    And FreezerEvaporatorThermistorValidityIs(Invalid);
 
-   When DefrostReadyTimerIsSatisfied();
+   When ReadyToDefrost();
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenDefrostReadyTimerIsSatisfiedAndLastDefrostsWereNormalAndThermistorsAreValid)
+TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenReadyToDefrostAndLastDefrostsWereNormalAndThermistorsAreValid)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -609,7 +609,7 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenDefrostReadyTimerIsSatisfiedA
    And FreshFoodThermistorValidityIs(Valid);
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
-   When DefrostReadyTimerIsSatisfied();
+   When ReadyToDefrost();
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
 }
 
@@ -625,7 +625,7 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillWhenEnteringPrechillPrepAndPrechillCo
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
    Given CompressorIsOn();
 
-   When DefrostReadyTimerIsSatisfied();
+   When ReadyToDefrost();
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
 }
 
@@ -668,7 +668,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillPrepAndFresh
    And FreezerEvaporatorThermistorValidityIs(Valid);
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
-   When DefrostReadyTimerIsSatisfied();
+   When ReadyToDefrost();
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 

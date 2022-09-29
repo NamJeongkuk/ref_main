@@ -23,7 +23,7 @@ typedef struct
    Erd_t freezerDefrostWasAbnormalErd; // bool
    Erd_t freshFoodDefrostWasAbnormalErd; // bool
    Erd_t convertibleCompartmentDefrostWasAbnormalErd; // bool
-   Erd_t defrostReadyTimerIsSatisfied; // bool
+   Erd_t readyToDefrost; // bool
    Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
    Erd_t freezerEvaporatorThermistorIsValidErd; // bool
    Erd_t freshFoodThermistorIsValidErd; // bool

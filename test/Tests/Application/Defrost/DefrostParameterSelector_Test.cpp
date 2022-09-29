@@ -110,10 +110,10 @@ TEST_GROUP(DefrostParameterSelector_SingleEvap)
       DataModel_Write(dataModel, Erd_ConvertibleCompartmentDefrostWasAbnormal, clear);
    }
 
-   void TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(uint16_t expectedTimeInMinutes)
+   void TimeWhenReadyToDefrostInMinutesShouldBe(uint16_t expectedTimeInMinutes)
    {
       uint16_t actualTimeInMinutes;
-      DataModel_Read(dataModel, Erd_TimeInMinutesWhenDefrostReadyTimerIsSatisfied, &actualTimeInMinutes);
+      DataModel_Read(dataModel, Erd_TimeInMinutesUntilReadyToDefrost, &actualTimeInMinutes);
 
       CHECK_EQUAL(expectedTimeInMinutes, actualTimeInMinutes);
    }
@@ -143,14 +143,14 @@ TEST_GROUP(DefrostParameterSelector_SingleEvap)
       DataModel_Write(dataModel, Erd_MaxTimeBetweenDefrostsInMinutes, &timeInMinutes);
    }
 
-   void PreviousDefrostsAreNormalAndTimeWhenDefrostReadyTimerIsSatisfiedIsMaximumTimeBetweenDefrostsInMinutes()
+   void PreviousDefrostsAreNormalAndTimeWhenReadyToDefrostIsMaximumTimeBetweenDefrostsInMinutes()
    {
       Given PreviousDefrostsAreNormal();
       And MaxTimeBetweenDefrostsInMinutesIs(defrostData->maxTimeBetweenDefrostsInMinutes);
       And FreezerEvaporatorThermistorValidityIs(Valid);
       And DefrostParameterSelectorIsInitialized();
 
-      TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes);
+      TimeWhenReadyToDefrostInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes);
    }
 };
 
@@ -237,83 +237,83 @@ TEST(DefrostParameterSelector_SingleEvap, ShouldSetNumberOfFreshFoodDefrostsBefo
    NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->numberOfFreshFoodDefrostsBeforeFreezerDefrost);
 }
 
-TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBeMaxTimeBetweenDefrostsWhenPreviousDefrostsWereNormalAndFreezerEvaporatorThermistorIsValid)
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenReadyToDefrostInMinutesShouldBeMaxTimeBetweenDefrostsWhenPreviousDefrostsWereNormalAndFreezerEvaporatorThermistorIsValid)
 {
    Given PreviousDefrostsAreNormal();
    And FreezerEvaporatorThermistorValidityIs(Valid);
    And MaxTimeBetweenDefrostsInMinutesIs(defrostData->maxTimeBetweenDefrostsInMinutes);
    And DefrostParameterSelectorIsInitialized();
 
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes);
+   TimeWhenReadyToDefrostInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes);
 }
 
-TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBeMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousFreshFoodDefrostWasAbnormal)
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenReadyToDefrostInMinutesShouldBeMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousFreshFoodDefrostWasAbnormal)
 {
    Given PreviousFreshFoodDefrostIsAbnormal();
    And DefrostParameterSelectorIsInitialized();
 
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+   TimeWhenReadyToDefrostInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
 }
 
-TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBeMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousFreezerDefrostWasAbnormal)
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenReadyToDefrostInMinutesShouldBeMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousFreezerDefrostWasAbnormal)
 {
    Given PreviousFreezerDefrostIsAbnormal();
    And DefrostParameterSelectorIsInitialized();
 
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+   TimeWhenReadyToDefrostInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
 }
 
-TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBeMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousConvertibleCompartmentDefrostWasAbnormal)
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenReadyToDefrostInMinutesShouldBeMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousConvertibleCompartmentDefrostWasAbnormal)
 {
    Given PreviousConvertibleCompartmentDefrostIsAbnormal();
    And DefrostParameterSelectorIsInitialized();
 
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+   TimeWhenReadyToDefrostInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
 }
 
-TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedShouldUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousFreshFoodDefrostIsAbnormal)
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenReadyToDefrostShouldUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousFreshFoodDefrostIsAbnormal)
 {
-   Given PreviousDefrostsAreNormalAndTimeWhenDefrostReadyTimerIsSatisfiedIsMaximumTimeBetweenDefrostsInMinutes();
+   Given PreviousDefrostsAreNormalAndTimeWhenReadyToDefrostIsMaximumTimeBetweenDefrostsInMinutes();
 
    When PreviousFreshFoodDefrostIsAbnormal();
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+   TimeWhenReadyToDefrostInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
 }
 
-TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedShouldUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousFreezerDefrostIsAbnormal)
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenReadyToDefrostShouldUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousFreezerDefrostIsAbnormal)
 {
-   Given PreviousDefrostsAreNormalAndTimeWhenDefrostReadyTimerIsSatisfiedIsMaximumTimeBetweenDefrostsInMinutes();
+   Given PreviousDefrostsAreNormalAndTimeWhenReadyToDefrostIsMaximumTimeBetweenDefrostsInMinutes();
 
    When PreviousFreezerDefrostIsAbnormal();
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+   TimeWhenReadyToDefrostInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
 }
 
-TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedShouldUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousConvertibleCompartmentDefrostIsAbnormal)
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenReadyToDefrostShouldUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousConvertibleCompartmentDefrostIsAbnormal)
 {
-   Given PreviousDefrostsAreNormalAndTimeWhenDefrostReadyTimerIsSatisfiedIsMaximumTimeBetweenDefrostsInMinutes();
+   Given PreviousDefrostsAreNormalAndTimeWhenReadyToDefrostIsMaximumTimeBetweenDefrostsInMinutes();
 
    When PreviousConvertibleCompartmentDefrostIsAbnormal();
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+   TimeWhenReadyToDefrostInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
 }
 
-TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedShouldUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenFreezerEvaporatorThermistorBecomesInvalid)
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenReadyToDefrostShouldUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenFreezerEvaporatorThermistorBecomesInvalid)
 {
-   Given PreviousDefrostsAreNormalAndTimeWhenDefrostReadyTimerIsSatisfiedIsMaximumTimeBetweenDefrostsInMinutes();
+   Given PreviousDefrostsAreNormalAndTimeWhenReadyToDefrostIsMaximumTimeBetweenDefrostsInMinutes();
 
    When FreezerEvaporatorThermistorValidityIs(Invalid);
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+   TimeWhenReadyToDefrostInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
 }
 
-TEST(DefrostParameterSelector_SingleEvap, TimeWhenDefrostReadyTimerIsSatisfiedShouldUpdateToADifferentMaxTimeBetweenDefrostsWhenMaxTimeBetweenDefrostsChangesWhileFreezerEvaporatorThermistorIsValid)
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenReadyToDefrostShouldUpdateToADifferentMaxTimeBetweenDefrostsWhenMaxTimeBetweenDefrostsChangesWhileFreezerEvaporatorThermistorIsValid)
 {
    Given PreviousDefrostsAreNormal();
    And FreezerEvaporatorThermistorValidityIs(Valid);
    And MaxTimeBetweenDefrostsInMinutesIs(defrostData->maxTimeBetweenDefrostsInMinutes);
    And DefrostParameterSelectorIsInitialized();
 
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes);
+   TimeWhenReadyToDefrostInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes);
 
    When MaxTimeBetweenDefrostsInMinutesIs(defrostData->maxTimeBetweenDefrostsInMinutes + SomeMoreMinutes);
-   TimeWhenDefrostReadyTimerIsSatisfiedInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes + SomeMoreMinutes);
+   TimeWhenReadyToDefrostInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes + SomeMoreMinutes);
 }
 
 TEST_GROUP(DefrostParameterSelector_DualEvap)
