@@ -6,11 +6,14 @@
  */
 
 #include "RelayWatchdog.h"
-#include "DigitalOutput_OutputAdapter.h"
+#include "DigitalOutput_GpioGroupAdapter.h"
 #include "RelayWatchdogKicker.h"
 #include "DataModelErdPointerAccess.h"
 #include "Timer.h"
 #include "SystemErds.h"
+#include "DataSource_Gpio.h"
+
+#define CHANNEL_FROM_ERD(erd) (erd - Erd_BspGpio_Start - 1)
 
 enum
 {
@@ -21,7 +24,7 @@ enum
 struct
 {
    RelayWatchdogKicker_t relayWatchdogKicker;
-   DigitalOutput_OutputAdapter_t digitalOutputAdapter;
+   DigitalOutput_GpioGroupAdapter_t digitalOutputAdapter;
    Timer_t relayWatchdogKickTimer;
 } instance;
 
@@ -33,9 +36,10 @@ static void KickRelayWatchdog(void *context)
 
 void RelayWatchdogPlugin_Init(I_DataModel_t *dataModel)
 {
-   DigitalOutput_OutputAdapter_Init(
+   DigitalOutput_GpioGroupAdapter_Init(
       &instance.digitalOutputAdapter,
-      DataModel_GetOutput(dataModel, Erd_RelayWatchdog));
+      DataModelErdPointerAccess_GetGpioGroup(dataModel, Erd_GpioGroupInterface),
+      Erd_BspGpio_RelayWatchdog);
 
    RelayWatchdogKicker_Init(
       &instance.relayWatchdogKicker,

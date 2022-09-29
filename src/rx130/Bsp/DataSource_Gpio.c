@@ -190,7 +190,7 @@ static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
 
    if(erd == Erd_GpioGroupInterface)
    {
-      data = &instance.gpioGroupInterface;
+      *((I_GpioGroup_t **)data) = &instance.gpioGroupInterface;
    }
    else
    {
@@ -261,8 +261,9 @@ void WriteGpioGroup(I_GpioGroup_t *instance, const GpioChannel_t channel, const 
 void SetDirectionGpioGroup(I_GpioGroup_t *instance, const GpioChannel_t channel, const GpioDirection_t direction)
 {
    IGNORE(instance);
-   IGNORE(channel);
-   IGNORE(direction);
+   uassert(ERD_IS_IN_RANGE(channel));
+
+   SetDirection(CHANNEL_FROM_ERD(channel), direction);
 }
 
 static const I_GpioGroup_Api_t apiGpioGroup = { ReadGpioGroup, WriteGpioGroup, SetDirectionGpioGroup };
