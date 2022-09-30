@@ -18,7 +18,6 @@ extern "C"
 #include "CppUTestExt/MockSupport.h"
 #include "uassert_test.h"
 #include "ReferDataModel_TestDouble.h"
-#include "PersonalityParametricData_TestDouble.h"
 
 #define Given
 #define When

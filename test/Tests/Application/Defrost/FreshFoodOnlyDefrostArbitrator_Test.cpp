@@ -15,8 +15,6 @@ extern "C"
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 #include "ReferDataModel_TestDouble.h"
-#include "PersonalityParametricData_TestDouble.h"
-#include "DefrostData_TestDouble.h"
 #include "uassert_test.h"
 
 #define Given
@@ -36,17 +34,11 @@ TEST_GROUP(FreshFoodOnlyDefrostArbitrator)
    FreshFoodOnlyDefrostArbitrator_t instance;
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
-   PersonalityParametricData_t personalityParametricData;
-   DefrostData_t defrostData;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
-
-      DefrostData_TestDouble_Init(&defrostData);
-      PersonalityParametricData_TestDouble_SetDefrost(&personalityParametricData, &defrostData);
-      DataModelErdPointerAccess_Write(dataModel, Erd_PersonalityParametricData, &personalityParametricData);
    }
 
    void Initialization()
