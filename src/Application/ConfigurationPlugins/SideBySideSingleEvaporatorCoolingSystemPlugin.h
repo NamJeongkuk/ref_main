@@ -13,6 +13,7 @@
 #include "ConstArrayMap_SideBySideSingleEvap.h"
 #include "CompressorPlugin.h"
 #include "DefrostPlugin.h"
+#include "FreshFoodDamperMotorPlugin.h"
 
 typedef struct
 {
@@ -22,6 +23,7 @@ typedef struct
       ConstArrayMap_SideBySideSingleEvap_t coolingStateBasedGridVotesTable;
       CompressorPlugin_t compressorPlugin;
       DefrostPlugin_t defrostPlugin;
+      FreshFoodDamperMotorPlugin_t freshFoodDamperPlugin;
    } _private;
 } SideBySideSingleEvaporatorCoolingSystemPlugin_t;
 

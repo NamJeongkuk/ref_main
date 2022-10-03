@@ -164,7 +164,6 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_FreezerFan_ActualRpm, sizeof(FanRpm_t)),
    SWAPPED_ERD(PublicErd_FreezerFan_InputCaptureTime, sizeof(InputCaptureMicroSeconds_t)),
    SWAPPED_ERD(PublicErd_FreshFoodDamperPosition_WinningVoteErd, sizeof(WinningVoteErd_t)),
-   SWAPPED_ERD(PublicErd_DamperMotorPositionRequest, sizeof(StepperPositionRequest_t)),
    SWAPPED_ERD(PublicErd_FreshFood_ResolvedSetpointInDegFx100, sizeof(TemperatureDegFx100_t)),
 
    // 0xF400 range

@@ -43,6 +43,7 @@ SRC_DIRS:=\
   src/Application/Configurations \
   src/Application/ConfigurationPlugins \
   src/Application/ConvertibleCompartment \
+  src/Application/Damper \
   src/Application/DataSource \
   src/Application/Defrost \
   src/Application/Door \

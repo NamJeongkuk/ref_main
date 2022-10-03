@@ -24,10 +24,11 @@
    ENTRY(Erd_BspGpio_Io5,                 GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, Port3, 1,  NonInverted) \
    ENTRY(Erd_BspGpio_Io6,                 GpioDirection_Input,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortE, 3,  NonInverted) \
    ENTRY(Erd_BspGpio_PushButtonSwitch,    GpioDirection_Input,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortC, 5,  NonInverted) \
-   ENTRY(GpioChannel_FFDamperPin1,        GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortJ, 9,  NonInverted) \
-   ENTRY(GpioChannel_FFDamperPin2,        GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortJ, 10, NonInverted) \
-   ENTRY(GpioChannel_FFDamperPin3,        GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortJ, 11, NonInverted) \
-   ENTRY(GpioChannel_FFDamperPin4,        GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortJ, 12, NonInverted)
+   ENTRY(Erd_BspGpio_MotorPinB2,          GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortB, 2,  NonInverted) \
+   ENTRY(Erd_BspGpio_MotorPinB6,          GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortB, 6,  NonInverted) \
+   ENTRY(Erd_BspGpio_MotorPinB0,          GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortB, 0,  NonInverted) \
+   ENTRY(Erd_BspGpio_MotorPinB4,          GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortB, 4,  NonInverted) \
+   ENTRY(Erd_BspGpio_MotorPinC0,          GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortC, 0,  NonInverted)
 
 // clang-format on
 

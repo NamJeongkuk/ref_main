@@ -20,12 +20,13 @@ enum
    Position4
 };
 
-static void SetPinsToStates(StepperMotorDriver_t *instance, bool pin1, bool pin2, bool pin3, bool pin4)
+static void SetPinsToStates(StepperMotorDriver_t *instance, bool pin1, bool pin2, bool pin3, bool pin4, bool pin5)
 {
    GpioGroup_Write(instance->_private.gpioGroup, instance->_private.config->pinArray->pins[0], pin1);
    GpioGroup_Write(instance->_private.gpioGroup, instance->_private.config->pinArray->pins[1], pin2);
    GpioGroup_Write(instance->_private.gpioGroup, instance->_private.config->pinArray->pins[2], pin3);
    GpioGroup_Write(instance->_private.gpioGroup, instance->_private.config->pinArray->pins[3], pin4);
+   GpioGroup_Write(instance->_private.gpioGroup, instance->_private.config->pinArray->pins[4], pin5);
 }
 
 static void SetPinsToPosition(StepperMotorDriver_t *instance, uint8_t position)
@@ -33,23 +34,23 @@ static void SetPinsToPosition(StepperMotorDriver_t *instance, uint8_t position)
    switch(position)
    {
       case AllOff:
-         SetPinsToStates(instance, OFF, OFF, OFF, OFF);
+         SetPinsToStates(instance, OFF, OFF, OFF, OFF, OFF);
          break;
 
       case Position1:
-         SetPinsToStates(instance, ON, ON, OFF, OFF);
+         SetPinsToStates(instance, ON, ON, OFF, OFF, ON);
          break;
 
       case Position2:
-         SetPinsToStates(instance, OFF, ON, ON, OFF);
+         SetPinsToStates(instance, OFF, ON, ON, OFF, ON);
          break;
 
       case Position3:
-         SetPinsToStates(instance, OFF, OFF, ON, ON);
+         SetPinsToStates(instance, OFF, OFF, ON, ON, ON);
          break;
 
       case Position4:
-         SetPinsToStates(instance, ON, OFF, OFF, ON);
+         SetPinsToStates(instance, ON, OFF, OFF, ON, ON);
          break;
 
       default:
@@ -119,26 +120,9 @@ static void MoveToNextStep(void *context)
 {
    StepperMotorDriver_t *instance = context;
 
-   if(instance->_private.stepsToRun == 0)
-   {
-      Event_Unsubscribe(
-         instance->_private.stepEvent,
-         &instance->_private.stepEventSubscription);
-
-      SetPinsToPosition(instance, AllOff);
-      ClearStepCountRequest(instance);
-
-      DataModel_Subscribe(
-         instance->_private.dataModel,
-         instance->_private.config->stepperMotorPositionRequestErd,
-         &instance->_private.erdChangeSubscription);
-   }
-   else
-   {
-      GetNextStep(instance);
-      SetPinsToPosition(instance, instance->_private.currentStepPosition);
-      instance->_private.stepsToRun--;
-   }
+   GetNextStep(instance);
+   SetPinsToPosition(instance, instance->_private.currentStepPosition);
+   instance->_private.stepsToRun--;
 }
 
 static void StepTimeChange(void *context, const void *args)
@@ -146,7 +130,21 @@ static void StepTimeChange(void *context, const void *args)
    StepperMotorDriver_t *instance = context;
    IGNORE(args);
 
-   if(instance->_private.countBetweenSteps < instance->_private.freshFoodDamperParametricData->delayBetweenStepEventsInMs)
+   if(instance->_private.stepsToRun == 0)
+   {
+      Event_Unsubscribe(
+         instance->_private.stepEvent,
+         &instance->_private.stepEventSubscription);
+
+      DataModel_Subscribe(
+         instance->_private.dataModel,
+         instance->_private.config->stepperMotorPositionRequestErd,
+         &instance->_private.erdChangeSubscription);
+
+      SetPinsToPosition(instance, AllOff);
+      ClearStepCountRequest(instance);
+   }
+   else if(instance->_private.countBetweenSteps < instance->_private.freshFoodDamperParametricData->delayBetweenStepEventsInMs)
    {
       instance->_private.countBetweenSteps++;
    }

@@ -7,7 +7,7 @@
 
 extern "C"
 {
-#include "DamperRequestManager.h"
+#include "FreshFoodDamperRequestManager.h"
 #include "SystemErds.h"
 #include "Constants_Binary.h"
 }
@@ -30,16 +30,16 @@ enum
    StepsToHome = 1850
 };
 
-static const DamperRequestManagerConfiguration_t config = {
+static const FreshFoodDamperRequestManagerConfiguration_t config = {
    .damperPositionRequestResolvedVoteErd = Erd_FreshFoodDamperPosition_ResolvedVote,
    .damperStepperMotorPositionRequestErd = Erd_FreshFoodDamperStepperMotorPositionRequest,
    .damperHomingRequestErd = Erd_FreshFoodDamperHomingRequest,
    .damperCurrentPositionErd = Erd_FreshFoodDamperCurrentPosition
 };
 
-TEST_GROUP(DamperRequestManager)
+TEST_GROUP(FreshFoodDamperRequestManager)
 {
-   DamperRequestManager_t instance;
+   FreshFoodDamperRequestManager_t instance;
 
    ReferDataModel_TestDouble_t dataModelDouble;
 
@@ -50,15 +50,25 @@ TEST_GROUP(DamperRequestManager)
 
    void TheModuleIsInitialized()
    {
-      DamperRequestManager_Init(&instance, dataModelDouble.dataModel, &config);
+      FreshFoodDamperRequestManager_Init(&instance, dataModelDouble.dataModel, &config);
    }
 
-   void HomingIsRequested()
+   void HomingErdIsSetTo(bool status)
    {
       DataModel_Write(
          dataModelDouble.dataModel,
          Erd_FreshFoodDamperHomingRequest,
-         set);
+         &status);
+   }
+
+   void HomingErdShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(
+         dataModelDouble.dataModel,
+         Erd_FreshFoodDamperHomingRequest,
+         &actual);
+      CHECK_EQUAL(expected, actual);
    }
 
    void DamperMotorRequestedStepsShouldBe(uint16_t expected)
@@ -153,12 +163,20 @@ TEST_GROUP(DamperRequestManager)
    }
 };
 
-TEST(DamperRequestManager, ShouldInitializeTheModule)
+TEST(FreshFoodDamperRequestManager, ShouldInitializeTheModule)
 {
    TheModuleIsInitialized();
 }
 
-TEST(DamperRequestManager, ShouldSetMotorStepsToOpenAndDirectionToClockwiseWhenOpenPositionRequested)
+TEST(FreshFoodDamperRequestManager, ShouldRequestHomingStepsAndDirectionToCounterClockwiseOnInitialization)
+{
+   Given TheModuleIsInitialized();
+
+   DamperMotorRequestedStepsShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+}
+
+TEST(FreshFoodDamperRequestManager, ShouldSetMotorStepsToOpenAndDirectionToClockwiseWhenOpenPositionRequested)
 {
    Given TheRequestedPositionIs(DamperPosition_Closed);
    And TheModuleIsInitialized();
@@ -166,20 +184,20 @@ TEST(DamperRequestManager, ShouldSetMotorStepsToOpenAndDirectionToClockwiseWhenO
    And TheRequestedPositionIs(DamperPosition_Open);
 
    DamperMotorRequestedStepsShouldBe(StepsToOpen);
-   DirectionShouldBe(TurningDirection_Clockwise);
+   DirectionShouldBe(TurningDirection_CounterClockwise);
 }
 
-TEST(DamperRequestManager, ShouldSetMotorStepsToCloseAndDirectionToCounterClockwiseWhenClosedPositionRequested)
+TEST(FreshFoodDamperRequestManager, ShouldSetMotorStepsToCloseAndDirectionToCounterClockwiseWhenClosedPositionRequested)
 {
    Given TheModuleIsInitialized();
    StepsAreSetToZero();
    When TheRequestedPositionIs(DamperPosition_Closed);
 
    DamperMotorRequestedStepsShouldBe(StepsToClose);
-   DirectionShouldBe(TurningDirection_CounterClockwise);
+   DirectionShouldBe(TurningDirection_Clockwise);
 }
 
-TEST(DamperRequestManager, ShouldHandleConsecutiveRequests)
+TEST(FreshFoodDamperRequestManager, ShouldHandleConsecutiveRequests)
 {
    Given TheModuleIsInitialized();
    StepsAreSetToZero();
@@ -189,10 +207,10 @@ TEST(DamperRequestManager, ShouldHandleConsecutiveRequests)
    And TheRequestedPositionIs(DamperPosition_Closed);
 
    DamperMotorRequestedStepsShouldBe(StepsToClose);
-   DirectionShouldBe(TurningDirection_CounterClockwise);
+   DirectionShouldBe(TurningDirection_Clockwise);
 }
 
-TEST(DamperRequestManager, ShouldHandleLatestRequestThatOccurredWhileMoving)
+TEST(FreshFoodDamperRequestManager, ShouldHandleLatestRequestThatOccurredWhileMoving)
 {
    Given TheModuleIsInitialized();
    StepsAreSetToZero();
@@ -200,36 +218,42 @@ TEST(DamperRequestManager, ShouldHandleLatestRequestThatOccurredWhileMoving)
    And TheRequestedPositionIs(DamperPosition_Open);
    And TheRequestedPositionIs(DamperPosition_Closed);
 
-   DirectionShouldBe(TurningDirection_Clockwise);
+   DirectionShouldBe(TurningDirection_CounterClockwise);
 
    When StepsAreSetToZero();
 
    DamperMotorRequestedStepsShouldBe(StepsToClose);
-   DirectionShouldBe(TurningDirection_CounterClockwise);
+   DirectionShouldBe(TurningDirection_Clockwise);
 }
 
-TEST(DamperRequestManager, ShouldSetMotorStepsToHomeAndDirectionToCounterClockwiseWhenHomingIsRequested)
+TEST(FreshFoodDamperRequestManager, ShouldSetMotorStepsToHomeAndDirectionToCounterClockwiseWhenHomingIsRequested)
 {
    Given TheModuleIsInitialized();
    StepsAreSetToZero();
-   And HomingIsRequested();
+   And HomingErdIsSetTo(true);
 
    DamperMotorRequestedStepsShouldBe(StepsToHome);
-   DirectionShouldBe(TurningDirection_CounterClockwise);
+   DirectionShouldBe(TurningDirection_Clockwise);
+
+   When StepsAreSetToZero();
+   HomingErdShouldBe(false);
 }
 
-TEST(DamperRequestManager, ShouldSetPositionToClosedAfterHoming)
+TEST(FreshFoodDamperRequestManager, ShouldSetPositionToClosedAfterHoming)
 {
    Given TheModuleIsInitialized();
    StepsAreSetToZero();
-   And HomingIsRequested();
+   And HomingErdIsSetTo(true);
 
+   DamperMotorRequestedStepsShouldBe(StepsToHome);
+   DirectionShouldBe(TurningDirection_Clockwise);
+
+   When StepsAreSetToZero();
    TheCurrentPositionShouldBe(DamperPosition_Closed);
-   DamperMotorRequestedStepsShouldBe(StepsToHome);
-   DirectionShouldBe(TurningDirection_CounterClockwise);
+   HomingErdShouldBe(false);
 }
 
-TEST(DamperRequestManager, ShouldOpenCloseThenOpenAgain)
+TEST(FreshFoodDamperRequestManager, ShouldOpenCloseThenOpenAgain)
 {
    Given TheModuleIsInitialized();
    StepsAreSetToZero();
@@ -238,5 +262,5 @@ TEST(DamperRequestManager, ShouldOpenCloseThenOpenAgain)
    And TheRequestedPositionIs(DamperPosition_Open);
 
    DamperMotorRequestedStepsShouldBe(StepsToOpen);
-   DirectionShouldBe(TurningDirection_Clockwise);
+   DirectionShouldBe(TurningDirection_CounterClockwise);
 }

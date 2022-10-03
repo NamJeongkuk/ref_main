@@ -186,7 +186,7 @@ static void WriteGpio(const GpioChannel_t channel, bool state)
 static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
 {
    IGNORE(_instance);
-   uassert(ERD_IS_IN_RANGE(erd) || erd == Erd_GpioGroupInterface);
+   uassert(ERD_IS_IN_RANGE(erd) || (erd == Erd_GpioGroupInterface));
 
    if(erd == Erd_GpioGroupInterface)
    {
@@ -204,7 +204,7 @@ static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
    IGNORE(_instance);
    REINTERPRET(state, data, bool *);
 
-   uassert(ERD_IS_IN_RANGE(erd) || erd == Erd_GpioGroupInterface);
+   uassert(ERD_IS_IN_RANGE(erd) || (erd == Erd_GpioGroupInterface));
 
    if(erd != Erd_GpioGroupInterface)
    {
@@ -222,13 +222,13 @@ static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
 static bool Has(I_DataSource_t *_instance, const Erd_t erd)
 {
    IGNORE(_instance);
-   return ERD_IS_IN_RANGE(erd) || erd == Erd_GpioGroupInterface;
+   return (ERD_IS_IN_RANGE(erd) || (erd == Erd_GpioGroupInterface));
 }
 
 static uint8_t SizeOf(I_DataSource_t *_instance, const Erd_t erd)
 {
    IGNORE(_instance);
-   uassert(ERD_IS_IN_RANGE(erd) || erd == Erd_GpioGroupInterface);
+   uassert(ERD_IS_IN_RANGE(erd) || (erd == Erd_GpioGroupInterface));
 
    if(erd == Erd_GpioGroupInterface)
    {
