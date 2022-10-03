@@ -10,11 +10,6 @@
 #include "SystemErds.h"
 #include "Constants_Binary.h"
 
-static struct
-{
-   EventSubscription_t subscription;
-} instance;
-
 static void UpdateActivelyWaitingForNextDefrostBasedOnDefrostHsmState(void *context, const void *args)
 {
    I_DataModel_t *dataModel = context;
@@ -36,7 +31,7 @@ static void UpdateActivelyWaitingForNextDefrostBasedOnDefrostHsmState(void *cont
    }
 }
 
-void ActivelyWaitingForDefrostOnCompareMatch(I_DataModel_t *dataModel)
+void ActivelyWaitingForDefrostOnCompareMatch_Init(ActivelyWaitingForDefrostOnCompareMatch_t *instance, I_DataModel_t *dataModel)
 {
    DefrostHsmState_t state;
    DataModel_Read(
@@ -47,13 +42,13 @@ void ActivelyWaitingForDefrostOnCompareMatch(I_DataModel_t *dataModel)
    UpdateActivelyWaitingForNextDefrostBasedOnDefrostHsmState(dataModel, &state);
 
    EventSubscription_Init(
-      &instance.subscription,
+      &instance->_private.subscription,
       dataModel,
       UpdateActivelyWaitingForNextDefrostBasedOnDefrostHsmState);
    DataModel_Subscribe(
       dataModel,
       Erd_DefrostHsmState,
-      &instance.subscription);
+      &instance->_private.subscription);
 
    DataModel_Write(
       dataModel,

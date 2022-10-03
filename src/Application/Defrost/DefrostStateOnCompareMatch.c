@@ -6,15 +6,9 @@
  */
 
 #include "DefrostStateOnCompareMatch.h"
-#include "ErdWriterOnCompareMatch.h"
 #include "DefrostState.h"
 #include "DefrostHsmState.h"
 #include "SystemErds.h"
-
-static struct
-{
-   ErdWriterOnCompareMatch_t erdWriterOnCompareMatch;
-} instance;
 
 static const DefrostState_t stateIdle = DefrostState_Idle;
 static const DefrostState_t statePrechill = DefrostState_Prechill;
@@ -87,10 +81,10 @@ static const ErdWriterOnCompareMatchConfiguration_t config = {
    NUM_ELEMENTS(configurationEntries)
 };
 
-void DefrostStateOnCompareMatch(I_DataModel_t *dataModel)
+void DefrostStateOnCompareMatch(DefrostStateOnCompareMatch_t *instance, I_DataModel_t *dataModel)
 {
    ErdWriterOnCompareMatch_Init(
-      &instance.erdWriterOnCompareMatch,
+      &instance->_private.erdWriterOnCompareMatch,
       DataModel_AsDataSource(dataModel),
       &config);
 }

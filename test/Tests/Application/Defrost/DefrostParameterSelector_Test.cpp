@@ -37,6 +37,8 @@ enum
 
 TEST_GROUP(DefrostParameterSelector_SingleEvap)
 {
+   DefrostParameterSelector_t instance;
+
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
@@ -56,7 +58,7 @@ TEST_GROUP(DefrostParameterSelector_SingleEvap)
 
    void DefrostParameterSelectorIsInitialized()
    {
-      DefrostParameterSelector_Init(dataModel);
+      DefrostParameterSelector_Init(&instance, dataModel);
    }
 
    void MaxPrechillTimeInMinutesShouldBe(uint8_t expectedMinutes)
@@ -318,6 +320,8 @@ TEST(DefrostParameterSelector_SingleEvap, TimeWhenReadyToDefrostShouldUpdateToAD
 
 TEST_GROUP(DefrostParameterSelector_DualEvap)
 {
+   DefrostParameterSelector_t instance;
+
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
@@ -335,7 +339,7 @@ TEST_GROUP(DefrostParameterSelector_DualEvap)
 
    void DefrostParameterSelectorIsInitialized()
    {
-      DefrostParameterSelector_Init(dataModel);
+      DefrostParameterSelector_Init(&instance, dataModel);
    }
 
    void PostDwellExitTimeInMinutesShouldBe(uint8_t expectedMinutes)

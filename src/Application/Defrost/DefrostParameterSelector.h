@@ -11,7 +11,17 @@
 #define DEFROSTPARAMETERSELECTOR_H
 
 #include "I_DataModel.h"
+#include "EventSubscription.h"
 
-void DefrostParameterSelector_Init(I_DataModel_t *dataModel);
+typedef struct
+{
+   struct
+   {
+      EventSubscription_t dataModelSubscription;
+      I_DataModel_t *dataModel;
+   } _private;
+} DefrostParameterSelector_t;
+
+void DefrostParameterSelector_Init(DefrostParameterSelector_t *instance, I_DataModel_t *dataModel);
 
 #endif

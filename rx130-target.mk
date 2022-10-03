@@ -40,6 +40,7 @@ SRC_DIRS:=\
   src/$(TARGET)/Hardware/Flash \
   src/Application \
   src/Application/Compressor \
+  src/Application/Configurations \
   src/Application/ConfigurationPlugins \
   src/Application/ConvertibleCompartment \
   src/Application/DataSource \

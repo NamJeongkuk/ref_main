@@ -9,7 +9,16 @@
 #define DEFROSTSTATEONCOMPAREMATCH_H
 
 #include "I_DataModel.h"
+#include "ErdWriterOnCompareMatch.h"
 
-void DefrostStateOnCompareMatch(I_DataModel_t *dataModel);
+typedef struct
+{
+   struct
+   {
+      ErdWriterOnCompareMatch_t erdWriterOnCompareMatch;
+   } _private;
+} DefrostStateOnCompareMatch_t;
+
+void DefrostStateOnCompareMatch(DefrostStateOnCompareMatch_t *instance, I_DataModel_t *dataModel);
 
 #endif

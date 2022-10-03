@@ -19,6 +19,8 @@ extern "C"
 
 TEST_GROUP(ActivelyWaitingForDefrostOnCompareMatch)
 {
+   ActivelyWaitingForDefrostOnCompareMatch_t instance;
+
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
 
@@ -30,7 +32,7 @@ TEST_GROUP(ActivelyWaitingForDefrostOnCompareMatch)
 
    void ActivelyWaitingForDefrostOnCompareMatchIsInitialized()
    {
-      ActivelyWaitingForDefrostOnCompareMatch(dataModel);
+      ActivelyWaitingForDefrostOnCompareMatch_Init(&instance, dataModel);
    }
 
    void GivenDefrostHsmStateIs(DefrostHsmState_t state)

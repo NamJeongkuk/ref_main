@@ -21,14 +21,18 @@
 #include "ConvertibleCompartmentStatePlugin.h"
 #include "FanPlugin.h"
 #include "SetpointZonePlugin.h"
-#include "SideBySideSingleEvaporatorCoolingSystemPlugin.h"
+#include "SideBySideConfigurationPlugin.h"
 
 typedef struct
 {
    struct
    {
-      I_DataModel_t *dataModel;
+      union
+      {
+         SideBySideConfigurationPlugin_t sideBySidePlugin;
+      } platformConfigurations;
 
+      I_DataModel_t *dataModel;
       AdjustedSetpointPlugin_t adjustedSetpointPlugin;
       HeartbeatLedPlugin_t heartbeatLedPlugin;
       SwitchedLedPlugin_t switchedLedPlugin;
@@ -38,7 +42,6 @@ typedef struct
       ApplianceApiResetDiagnostics_t applianceApiResetDiagnostics;
       PeriodicNvUpdaterPlugin_t periodicNvUpdaterPlugin;
       ConvertibleCompartmentStatePlugin_t convertibleCompartmentStatePlugin;
-      SideBySideSingleEvaporatorCoolingSystemPlugin_t sideBySideCoolingSystemPlugin;
       FanPlugin_t fanPlugin;
       SetpointZonePlugin_t setpointZonePlugin;
       Timer_t stackUsageUpdateTimer;

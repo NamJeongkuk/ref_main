@@ -10,7 +10,16 @@
 #define ACTIVELYWAITINGFORDEFROSTONCOMPAREMATCH_H
 
 #include "I_DataModel.h"
+#include "EventSubscription.h"
 
-void ActivelyWaitingForDefrostOnCompareMatch(I_DataModel_t *dataModel);
+typedef struct
+{
+   struct
+   {
+      EventSubscription_t subscription;
+   } _private;
+} ActivelyWaitingForDefrostOnCompareMatch_t;
+
+void ActivelyWaitingForDefrostOnCompareMatch_Init(ActivelyWaitingForDefrostOnCompareMatch_t *instance, I_DataModel_t *dataModel);
 
 #endif

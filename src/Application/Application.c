@@ -23,7 +23,7 @@
 #include "CompressorPlugin.h"
 #include "SensorFilterPlugin.h"
 #include "AdjustedSetpointPlugin.h"
-#include "SideBySideSingleEvaporatorCoolingSystemPlugin.h"
+#include "SideBySideConfigurationPlugin.h"
 
 enum
 {
@@ -71,12 +71,11 @@ void Application_Init(
    SetpointResolverPlugin_Init(dataModel);
    SetpointZonePlugin_Init(&instance->_private.setpointZonePlugin, dataModel);
    ConvertibleCompartmentStatePlugin_Init(&instance->_private.convertibleCompartmentStatePlugin, dataModel);
-   SideBySideSingleEvaporatorCoolingSystemPlugin_Init(&instance->_private.sideBySideCoolingSystemPlugin, dataModel);
    DoorPlugin_Init(dataModel);
    PeriodicNvUpdaterPlugin_Init(&instance->_private.periodicNvUpdaterPlugin, dataModel);
-   DefrostPlugin_Init(dataModel);
    FaultWrapperPlugin_Init(dataModel);
-   CompressorPlugin_Init(dataModel);
+
+   SideBySideConfigurationPlugin_Init(&instance->_private.platformConfigurations.sideBySidePlugin, dataModel);
 
    TimerModule_t *timerModule = DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule);
    TimerModuleDiagnostics_Init(

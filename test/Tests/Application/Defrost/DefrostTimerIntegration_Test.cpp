@@ -67,6 +67,8 @@ static CalculatedGridLines_t calcGridLines = {
 
 TEST_GROUP(DefrostTimerIntegration)
 {
+   DefrostPlugin_t instance;
+
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
@@ -128,7 +130,7 @@ TEST_GROUP(DefrostTimerIntegration)
          set);
 
       PeriodicNvUpdaterPlugin_Init(&periodicNvUpdaterPlugin, dataModel);
-      DefrostPlugin_Init(dataModel);
+      DefrostPlugin_Init(&instance, dataModel);
    }
 
    void FilteredFreezerCabinetTemperatureIs(TemperatureDegFx100_t temperature)

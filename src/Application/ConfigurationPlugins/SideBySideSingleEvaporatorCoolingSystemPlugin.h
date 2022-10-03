@@ -11,6 +11,8 @@
 #include "I_DataModel.h"
 #include "GridPlugin.h"
 #include "ConstArrayMap_SideBySideSingleEvap.h"
+#include "CompressorPlugin.h"
+#include "DefrostPlugin.h"
 
 typedef struct
 {
@@ -18,6 +20,8 @@ typedef struct
    {
       GridPlugin_t gridPlugin;
       ConstArrayMap_SideBySideSingleEvap_t coolingStateBasedGridVotesTable;
+      CompressorPlugin_t compressorPlugin;
+      DefrostPlugin_t defrostPlugin;
    } _private;
 } SideBySideSingleEvaporatorCoolingSystemPlugin_t;
 

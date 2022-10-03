@@ -7,7 +7,6 @@
 
 #include "CompressorPlugin.h"
 #include "CompressorIsOn.h"
-#include "CompressorSpeedController.h"
 #include "SystemErds.h"
 
 static const CompressorSpeedControllerConfiguration_t compressorSpeedControllerConfig = {
@@ -17,13 +16,11 @@ static const CompressorSpeedControllerConfiguration_t compressorSpeedControllerC
    .disableMinimumTimeRequestErd = Erd_DisableMinimumCompressorTimes
 };
 
-static CompressorSpeedController_t compressorSpeedControllerInstance;
-
-void CompressorPlugin_Init(I_DataModel_t *dataModel)
+void CompressorPlugin_Init(CompressorPlugin_t *instance, I_DataModel_t *dataModel)
 {
    CompressorIsOn_Init(dataModel);
    CompressorSpeedController_Init(
-      &compressorSpeedControllerInstance,
+      &instance->_private.compressorSpeedController,
       dataModel,
       &compressorSpeedControllerConfig);
 }

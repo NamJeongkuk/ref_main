@@ -6,30 +6,11 @@
  */
 
 #include "DefrostPlugin.h"
-#include "Defrost.h"
-#include "DefrostStateOnCompareMatch.h"
-#include "SystemErds.h"
 #include "DefrostParameterSelector.h"
-#include "DefrostHeaterMaxOnTime.h"
-#include "FreshFoodOnlyDefrostArbitrator.h"
 #include "ActivelyWaitingForDefrostOnCompareMatch.h"
-#include "DefrostCompressorOnTimeCounter.h"
-#include "DoorAccelerationCounter.h"
-#include "ReadyToDefrost.h"
-#include "TimeThatPrechillConditionsAreMet.h"
 #include "FreezerFilteredTemperatureTooWarmOnPowerUp.h"
+#include "SystemErds.h"
 #include "uassert.h"
-
-static struct
-{
-   Defrost_t defrost;
-   DefrostHeaterMaxOnTime_t defrostHeaterMaxOnTime;
-   FreshFoodOnlyDefrostArbitrator_t freshFoodOnlyDefrostArbitrator;
-   DefrostCompressorOnTimeCounter_t defrostCompressorOnTimeCounter;
-   DoorAccelerationCounter_t doorAccelerationCounter;
-   ReadyToDefrost_t readyToDefrost;
-   TimeThatPrechillConditionsAreMet_t timeThatPrechillConditionsAreMet;
-} instance;
 
 static const DefrostConfiguration_t defrostConfig = {
    .defrostHsmStateErd = Erd_DefrostHsmState,
@@ -129,7 +110,7 @@ static const TimeThatPrechillConditionsAreMetConfiguration_t timeThatPrechillCon
    .timerModuleErd = Erd_TimerModule
 };
 
-void DefrostPlugin_Init(I_DataModel_t *dataModel)
+void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
 {
    bool sensorsReadyToBeRead;
    DataModel_Read(
@@ -182,42 +163,42 @@ void DefrostPlugin_Init(I_DataModel_t *dataModel)
       sabbathPluginReady);
 
    DefrostHeaterMaxOnTime_Init(
-      &instance.defrostHeaterMaxOnTime,
+      &instance->_private.defrostHeaterMaxOnTime,
       dataModel,
       &defrostHeaterMaxOnTimeConfig);
 
    TimeThatPrechillConditionsAreMet_Init(
-      &instance.timeThatPrechillConditionsAreMet,
+      &instance->_private.timeThatPrechillConditionsAreMet,
       dataModel,
       &timeThatPrechillConditionsAreMetConfig);
 
    FreezerFilteredTemperatureTooWarmOnPowerUp_Init(dataModel);
 
-   DefrostParameterSelector_Init(dataModel);
+   DefrostParameterSelector_Init(&instance->_private.defrostParameterSelector, dataModel);
 
    FreshFoodOnlyDefrostArbitrator_Init(
-      &instance.freshFoodOnlyDefrostArbitrator,
+      &instance->_private.freshFoodOnlyDefrostArbitrator,
       dataModel,
       &freshFoodOnlyDefrostArbitratorConfig);
 
-   DefrostStateOnCompareMatch(dataModel);
+   DefrostStateOnCompareMatch(&instance->_private.defrostStateOnCompareMatch, dataModel);
 
-   Defrost_Init(&instance.defrost, dataModel, &defrostConfig);
+   Defrost_Init(&instance->_private.defrost, dataModel, &defrostConfig);
 
-   ActivelyWaitingForDefrostOnCompareMatch(dataModel);
+   ActivelyWaitingForDefrostOnCompareMatch_Init(&instance->_private.activelyWaitingForDefrostOnCompareMatch, dataModel);
 
    DefrostCompressorOnTimeCounter_Init(
-      &instance.defrostCompressorOnTimeCounter,
+      &instance->_private.defrostCompressorOnTimeCounter,
       dataModel,
       &defrostCompressorOnTimeCounterConfig);
 
    DoorAccelerationCounter_Init(
-      &instance.doorAccelerationCounter,
+      &instance->_private.doorAccelerationCounter,
       dataModel,
       &doorAccelerationCounterConfig);
 
    ReadyToDefrost_Init(
-      &instance.readyToDefrost,
+      &instance->_private.readyToDefrost,
       dataModel,
       &readyToDefrostConfig);
 }
