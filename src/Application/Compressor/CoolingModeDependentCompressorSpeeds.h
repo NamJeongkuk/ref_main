@@ -32,7 +32,7 @@ typedef struct
    CompressorSpeedFrequencyInHz_t mediumSpeedConvertibleCompartmentColdFrequencyInHz;
    CompressorSpeedFrequencyInHz_t highSpeedFreshFoodFrequencyInHz;
    CompressorSpeedFrequencyInHz_t highSpeedFreezerFrequencyInHz;
-   CompressorSpeedFrequencyInHz_t highSpeedConvertibleCompartmentFrequencyIn_Hz;
+   CompressorSpeedFrequencyInHz_t highSpeedConvertibleCompartmentFrequencyInHz;
 } CoolingModeDependentCompressorSpeeds_t;
 
 #endif

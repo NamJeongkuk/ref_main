@@ -10,11 +10,13 @@
 
 #include "I_DataModel.h"
 #include "CompressorSpeedController.h"
+#include "CompressorSpeedDriver.h"
 
 typedef struct
 {
    struct
    {
+      CompressorSpeedDriver_t compressorSpeedDriver;
       CompressorSpeedController_t compressorSpeedController;
    } _private;
 } CompressorPlugin_t;

@@ -13,6 +13,9 @@ enum
    TddPersonality_DevelopmentSingleEvaporator,
    TddPersonality_DevelopmentDualEvaporator,
    TddPersonality_DevelopmentTripleEvaporator,
+   TddPersonality_DevelopmentSingleSpeedCompressor,
+   TddPersonality_DevelopmentVariableSpeedCoolingModeIndependentCompressor,
+   TddPersonality_DevelopmentVariableSpeedCoolingModeDependentCompressor,
    TddPersonality_MaxDevelopment
 };
 

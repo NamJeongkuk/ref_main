@@ -49,7 +49,6 @@
 #include "TemperatureDegFx100.h"
 #include "CalculatedGridLines.h"
 #include "ValvePosition.h"
-#include "FreezerSetpoint.h"
 #include "Setpoint.h"
 #include "DefrostState.h"
 #include "DefrostHsmState.h"
@@ -547,12 +546,14 @@ enum
    ENTRY(Erd_PushButtonSwitch,                              0xF203, bool,                                               Swap_N, Io_All,  Sub_Y, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_SomeAnalogInput,                               0xF204, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AnotherAnalogInput,                            0xF205, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorInverterDriver,                      0xF206, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorRelay,                               0xF207, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_DisableMinimumCompressorTimes,                 0xF20E, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_CompressorState,                               0xF20F, CompressorState_t,                                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_CompressorControllerSpeed,                     0xF210, CompressorSpeed_t,                                  Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorControllerSpeed,                     0xF210, CompressorSpeed_t,                                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorSpeed_ResolvedVote,                  0xF211, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorSpeed_WinningVoteErd,                0xF212, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorSpeed_FactoryVote,                   0xF213, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

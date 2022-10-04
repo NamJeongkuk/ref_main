@@ -34,7 +34,12 @@
             "reveal": "silent",
             "showReuseMessage": false
          },
-         "type": "shell"
+         "type": "shell",
+         "options": {
+            "env": {
+               "PATH": "${env:PATH}"
+            }
+         }
       }
    ],
    "version": "2.0.0"
