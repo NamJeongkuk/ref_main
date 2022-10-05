@@ -299,6 +299,14 @@ enum
    ENTRY(Erd_ResetReason,                                   0x0701, ResetReason_t,                                      Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_SecondsSinceLastReset,                         0x0702, SecondsSinceLastReset_t,                            Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ProgramCounterAddressAtLastUassert,            0x0703, ProgramCounterAddress_t,                            Swap_Y, Io_O,    Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   \
+   ENTRY(Erd_FreshFoodSetpointRequest,                      0x1200, Setpoint_t,                                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                      NotFault) \
+   ENTRY(Erd_FreshFoodSetpointRangeData,                    0x1201, UserSetpointRangeData_t,                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                      NotFault) \
+   ENTRY(Erd_FreshFoodSetpointStatus,                       0x1202, Setpoint_t,                                         Swap_N, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Int8Max,   NotFault) \
+   ENTRY(Erd_FreezerSetpointRequest,                        0x1210, Setpoint_t,                                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                      NotFault) \
+   ENTRY(Erd_FreezerSetpointRangeData,                      0x1211, UserSetpointRangeData_t,                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                      NotFault) \
+   ENTRY(Erd_FreezerSetpointStatus,                         0x1212, Setpoint_t,                                         Swap_N, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Int8Max,   NotFault) \
+   \
    ENTRY(Erd_DemandResponseLevel,                           0xD006, EnergyDemandLevel_t,                                Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ServiceDiagnosticsEntityLocation,              0xE000, Erd_t,                                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

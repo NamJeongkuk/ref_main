@@ -823,6 +823,13 @@
           "name": "Erd_FreezerSetpoint_UserVote",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Cabinet User Setpoint Request",
+          "name": "Erd_FreezerSetpointRequest",
+          "read": true,
+          "write": true
         }
       ]
     },
@@ -868,6 +875,13 @@
           "namespace": "rx130",
           "displayName": "Fresh Food Cabinet User Vote for Setpoint",
           "name": "Erd_FreshFoodSetpoint_UserVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fresh Food Cabinet User Setpoint Request",
+          "name": "Erd_FreshFoodSetpointRequest",
           "read": true,
           "write": true
         }

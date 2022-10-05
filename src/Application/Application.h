@@ -21,6 +21,7 @@
 #include "ConvertibleCompartmentStatePlugin.h"
 #include "FanPlugin.h"
 #include "SetpointZonePlugin.h"
+#include "UserSetpointPlugin.h"
 #include "SideBySideConfigurationPlugin.h"
 
 typedef struct
@@ -44,6 +45,7 @@ typedef struct
       ConvertibleCompartmentStatePlugin_t convertibleCompartmentStatePlugin;
       FanPlugin_t fanPlugin;
       SetpointZonePlugin_t setpointZonePlugin;
+      UserSetpointPlugin_t userSetpointPlugin;
       Timer_t stackUsageUpdateTimer;
    } _private;
 } Application_t;

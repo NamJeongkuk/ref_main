@@ -76,6 +76,7 @@ void Application_Init(
    FaultWrapperPlugin_Init(dataModel);
 
    SideBySideConfigurationPlugin_Init(&instance->_private.platformConfigurations.sideBySidePlugin, dataModel);
+   UserSetpointPlugin_Init(&instance->_private.userSetpointPlugin, dataModel);
 
    TimerModule_t *timerModule = DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule);
    TimerModuleDiagnostics_Init(
