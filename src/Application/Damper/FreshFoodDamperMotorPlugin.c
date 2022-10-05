@@ -35,6 +35,25 @@ static const FreshFoodDamperRequestManagerConfiguration_t requestManagerConfig =
    .damperCurrentPositionErd = Erd_FreshFoodDamperCurrentPosition
 };
 
+static const DamperVotedPosition_t defaultData = {
+   .position = DamperPosition_Closed,
+   .care = false
+};
+
+static bool VotingErdCareDelegate(const void *votingErdData)
+{
+   const DamperVotedPosition_t *data = votingErdData;
+   return (data->care);
+}
+
+static const ErdResolverConfiguration_t damperErdResolverConfiguration = {
+   .votingErdCare = VotingErdCareDelegate,
+   .defaultData = &defaultData,
+   .winningVoterErd = Erd_FreshFoodDamperPosition_WinningVoteErd,
+   .resolvedStateErd = Erd_FreshFoodDamperPosition_ResolvedVote,
+   .numberOfVotingErds = (Erd_FreshFoodDamperPosition_GridVote - Erd_FreshFoodDamperPosition_WinningVoteErd)
+};
+
 static void TriggerStepEvent(void *context)
 {
    FreshFoodDamperMotorPlugin_t *instance = context;
@@ -44,6 +63,11 @@ static void TriggerStepEvent(void *context)
 void FreshFoodDamperMotorPlugin_Init(FreshFoodDamperMotorPlugin_t *instance, I_DataModel_t *dataModel)
 {
    Event_Synchronous_Init(&instance->_private.damperStepEvent);
+
+   ErdResolver_Init(
+      &instance->_private.damperErdResolver,
+      DataModel_AsDataSource(dataModel),
+      &damperErdResolverConfiguration);
 
    StepperMotorDriver_Init(
       &instance->_private.stepperMotorDriver,

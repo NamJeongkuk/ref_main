@@ -11,6 +11,7 @@
 #include "I_DataModel.h"
 #include "StepperMotorDriver.h"
 #include "FreshFoodDamperRequestManager.h"
+#include "ErdResolver.h"
 #include "Event_Synchronous.h"
 
 typedef struct
@@ -21,6 +22,7 @@ typedef struct
       FreshFoodDamperRequestManager_t damperRequestManager;
       Event_Synchronous_t damperStepEvent;
       Timer_t stepEventTimer;
+      ErdResolver_t damperErdResolver;
    } _private;
 } FreshFoodDamperMotorPlugin_t;
 
