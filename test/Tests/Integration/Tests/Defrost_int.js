@@ -36,7 +36,7 @@ describe("Defrost", () => {
     compressorSpeedOff: "CompressorSpeed_Off",
     compressorSpeedOn: "CompressorSpeed_On",
     compressorSpeedSuperLow: "CompressorSpeed_SuperLow",
-    compressorSpeedLow: "CompressorSpeed_MaxNumberOfSpeedsInSingleType", // CompressorSpeed_MaxNumberOfSpeedsInSingleType = CompressorSpeed_Low in CompressorSpeed_t enum
+    compressorSpeedLow: "CompressorSpeed_Low",
     compressorSpeedMedium: "CompressorSpeed_Medium",
     compressorSpeedHigh: "CompressorSpeed_High",
     compressorSpeedSuperHigh: "CompressorSpeed_SuperHigh"
