@@ -928,6 +928,46 @@
       ]
     },
     {
+      "title": "Ice Maker",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "Fill Tube Heater Resolved Vote",
+          "name": "Erd_FillTubeHeater_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fill Tube Heater Winning Vote ERD",
+          "name": "Erd_FillTubeHeater_WinningVoteErd",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fill Tube Heater Factory Vote",
+          "name": "Erd_FillTubeHeater_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fill Tube Heater Ice Maker Harvest Vote",
+          "name": "Erd_FillTubeHeater_IceMakerHarvestVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fill Tube Heater Continuous Vote",
+          "name": "Erd_FillTubeHeater_ContinuousVote",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
       "title": "FaultWrapper",
       "erds": [
         {

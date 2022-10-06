@@ -160,6 +160,11 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_CondenserFan_ActualRpm, sizeof(FanRpm_t)),
    SWAPPED_ERD(PublicErd_CondenserFan_InputCaptureTime, sizeof(InputCaptureMicroSeconds_t)),
    SWAPPED_ERD(PublicErd_FreshFoodDamperPosition_WinningVoteErd, sizeof(WinningVoteErd_t)),
+   SWAPPED_FIELD(PublicErd_FillTubeHeater_ResolvedVote, FillTubeHeaterVotedDutyCycle_t, dutyCycle),
+   SWAPPED_ERD(PublicErd_FillTubeHeater_WinningVoteErd, sizeof(WinningVoteErd_t)),
+   SWAPPED_FIELD(PublicErd_FillTubeHeater_FactoryVote, FillTubeHeaterVotedDutyCycle_t, dutyCycle),
+   SWAPPED_FIELD(PublicErd_FillTubeHeater_IceMakerHarvestVote, FillTubeHeaterVotedDutyCycle_t, dutyCycle),
+   SWAPPED_FIELD(PublicErd_FillTubeHeater_ContinuousVote, FillTubeHeaterVotedDutyCycle_t, dutyCycle),
    SWAPPED_ERD(PublicErd_FreshFood_ResolvedSetpointInDegFx100, sizeof(TemperatureDegFx100_t)),
 
    // 0xF400 range

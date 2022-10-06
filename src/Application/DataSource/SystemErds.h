@@ -67,6 +67,7 @@
 #include "StepperPositionRequest.h"
 #include "SetpointZone.h"
 #include "SetpointZoneTemperatureBounds.h"
+#include "FillTubeHeaterVotedDutyCycle.h"
 
 // clang-format off
 
@@ -687,6 +688,12 @@ enum
    ENTRY(Erd_FreshFoodDamperPosition_DamperFreezePreventionVote, 0xF384, DamperVotedPosition_t,                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperPosition_MaxOpenTimeVote,            0xF385, DamperVotedPosition_t,                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperPosition_GridVote,                   0xF386, DamperVotedPosition_t,                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FillTubeHeater_ResolvedVote,                   0xF390, FillTubeHeaterVotedDutyCycle_t,                     Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FillTubeHeater_WinningVoteErd,                 0xF391, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FillTubeHeater_FactoryVote,                    0xF392, FillTubeHeaterVotedDutyCycle_t,                     Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FillTubeHeater_IceMakerHarvestVote,            0xF393, FillTubeHeaterVotedDutyCycle_t,                     Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FillTubeHeater_ContinuousVote,                 0xF394, FillTubeHeaterVotedDutyCycle_t,                     Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFood_ResolvedSetpointInDegFx100,          0xF3A0, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFood_CabinetOffsetInDegFx100,             0xF3A1, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

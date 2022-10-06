@@ -49,6 +49,7 @@ SRC_DIRS:=\
   src/Application/Door \
   src/Application/EnhancedSabbath \
   src/Application/Fan \
+  src/Application/IceMaker/AluminumMoldIceMaker \
   src/Application/Setpoints \
   src/Application/StepperMotor \
   src/Application/Evaporator \

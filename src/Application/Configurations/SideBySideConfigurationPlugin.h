@@ -10,12 +10,14 @@
 
 #include "SideBySideSingleEvaporatorCoolingSystemPlugin.h"
 #include "I_DataModel.h"
+#include "AluminumMoldIceMakerPlugin.h"
 
 typedef struct
 {
    struct
    {
       SideBySideSingleEvaporatorCoolingSystemPlugin_t coolingSystemPlugin;
+      AluminumMoldIceMakerPlugin_t aluminumMoldIceMakerPlugin;
    } _private;
 } SideBySideConfigurationPlugin_t;
 

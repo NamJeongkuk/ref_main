@@ -10,4 +10,5 @@
 void SideBySideConfigurationPlugin_Init(SideBySideConfigurationPlugin_t *instance, I_DataModel_t *dataModel)
 {
    SideBySideSingleEvaporatorCoolingSystemPlugin_Init(&instance->_private.coolingSystemPlugin, dataModel);
+   AluminumMoldIceMakerPlugin_Init(&instance->_private.aluminumMoldIceMakerPlugin, dataModel);
 }
