@@ -117,6 +117,7 @@
                "namespace": "Rfid",
                "displayName": "Init Error Bits",
                "name": "Erd_InitializationErrorBitfield",
+               "read": true
             }
          ]
       },
@@ -330,32 +331,32 @@
          "erds": [
             {
                "namespace": "rx130",
-               "displayName": "Freezer Fan Resolved Speed",
-               "name": "Erd_FreezerFanSpeed_ResolvedVote",
+               "displayName": "Freezer Evap Fan Resolved Speed",
+               "name": "Erd_FreezerEvapFanSpeed_ResolvedVote",
                "read": true
             },
             {
                "namespace": "rx130",
-               "displayName": "Freezer Fan Actual RPM",
-               "name": "Erd_FreezerFan_ActualRpm",
+               "displayName": "Freezer Evap Fan Actual RPM",
+               "name": "Erd_FreezerEvapFan_ActualRpm",
                "read": true
             },
             {
                "namespace": "rx130",
-               "displayName": "Freezer Fan Target RPM/PWM",
-               "name": "Erd_CalculatedFreezerFanControl",
+               "displayName": "Freezer Evap Fan Target RPM/PWM",
+               "name": "Erd_CalculatedFreezerEvapFanControl",
                "read": true
             },
             {
                "namespace": "rx130",
-               "displayName": "Freezer Fan Winning Vote Erd",
-               "name": "Erd_FreezerFanSpeed_WinningVoteErd",
+               "displayName": "Freezer Evap Fan Winning Vote Erd",
+               "name": "Erd_FreezerEvapFanSpeed_WinningVoteErd",
                "read": true
             },
             {
                "namespace": "rx130",
-               "displayName": "Freezer Fan Factory Vote",
-               "name": "Erd_FreezerFanSpeed_FactoryVote",
+               "displayName": "Freezer Evap Fan Factory Vote",
+               "name": "Erd_FreezerEvapFanSpeed_FactoryVote",
                "read": true,
                "write": true
             },
@@ -392,32 +393,32 @@
             },
             {
                "namespace": "rx130",
-               "displayName": "Fresh Food Fan Resolved Speed",
-               "name": "Erd_FreshFoodFanSpeed_ResolvedVote",
+               "displayName": "Fresh Food Evap Fan Resolved Speed",
+               "name": "Erd_FreshFoodEvapFanSpeed_ResolvedVote",
                "read": true
             },
             {
                "namespace": "rx130",
-               "displayName": "Fresh Food Fan Actual RPM",
-               "name": "Erd_FreshFoodFan_ActualRpm",
+               "displayName": "Fresh Food Evap Fan Actual RPM",
+               "name": "Erd_FreshFoodEvapFan_ActualRpm",
                "read": true
             },
             {
                "namespace": "rx130",
-               "displayName": "Fresh Food Fan Target RPM/PWM",
-               "name": "Erd_CalculatedFreshFoodFanControl",
+               "displayName": "Fresh Food Evap Fan Target RPM/PWM",
+               "name": "Erd_CalculatedFreshFoodEvapFanControl",
                "read": true
             },
             {
                "namespace": "rx130",
-               "displayName": "Fresh Food Fan Winning Vote Erd",
-               "name": "Erd_FreshFoodFanSpeed_WinningVoteErd",
+               "displayName": "Fresh Food Evap Fan Winning Vote Erd",
+               "name": "Erd_FreshFoodEvapFanSpeed_WinningVoteErd",
                "read": true
             },
             {
                "namespace": "rx130",
-               "displayName": "Fresh Food Fan Factory Vote",
-               "name": "Erd_FreshFoodFanSpeed_FactoryVote",
+               "displayName": "Fresh Food Evap Fan Factory Vote",
+               "name": "Erd_FreshFoodEvapFanSpeed_FactoryVote",
                "read": true,
                "write": true
             }
@@ -619,8 +620,8 @@
             },
             {
                "namespace": "rx130",
-               "displayName": "Freezer Fan Factory Vote",
-               "name": "Erd_FreezerFanSpeed_FactoryVote",
+               "displayName": "Freezer Evap Fan Factory Vote",
+               "name": "Erd_FreezerEvapFanSpeed_FactoryVote",
                "read": true,
                "write": true
             },

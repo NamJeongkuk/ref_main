@@ -12,9 +12,7 @@
 
 enum
 {
-   FanId_Freezer,
    FanId_Condenser,
-   FanId_FreshFood,
    FanId_IceCabinet,
    FanId_ConvertibleCompartment,
    FanId_Deli,

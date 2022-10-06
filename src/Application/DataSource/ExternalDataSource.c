@@ -105,9 +105,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_FreezerEvap_FilteredTemperatureOverrideValue, sizeof(TemperatureDegFx100_t)),
    SWAPPED_ERD(PublicErd_Freezer_FilteredTemperatureOverrideValue, sizeof(TemperatureDegFx100_t)),
    SWAPPED_ERD(PublicErd_FreshFood_FilteredTemperatureOverrideValue, sizeof(TemperatureDegFx100_t)),
-   SWAPPED_FIELD(PublicErd_CalculatedFreezerFanControl, FanControl_t, rpm),
    SWAPPED_FIELD(PublicErd_CalculatedCondenserFanControl, FanControl_t, rpm),
-   SWAPPED_FIELD(PublicErd_CalculatedFreshFoodFanControl, FanControl_t, rpm),
    SWAPPED_FIELD(PublicErd_CalculatedIceCabinetFanControl, FanControl_t, rpm),
    SWAPPED_FIELD(PublicErd_CalculatedConvertibleCompartmentFanControl, FanControl_t, rpm),
    SWAPPED_FIELD(PublicErd_CalculatedDeliFanControl, FanControl_t, rpm),
@@ -157,12 +155,10 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
 
    // 0xF300 range
    SWAPPED_ERD(PublicErd_ConvertibleCompartmentFanSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
-   SWAPPED_ERD(PublicErd_FreezerFanSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
-   SWAPPED_ERD(PublicErd_FreshFoodFanSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_DeliFanSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
-   SWAPPED_ERD(PublicErd_FreezerFan_Pwm, sizeof(PwmDutyCycle_t)),
-   SWAPPED_ERD(PublicErd_FreezerFan_ActualRpm, sizeof(FanRpm_t)),
-   SWAPPED_ERD(PublicErd_FreezerFan_InputCaptureTime, sizeof(InputCaptureMicroSeconds_t)),
+   SWAPPED_ERD(PublicErd_CondenserFan_Pwm, sizeof(PwmDutyCycle_t)),
+   SWAPPED_ERD(PublicErd_CondenserFan_ActualRpm, sizeof(FanRpm_t)),
+   SWAPPED_ERD(PublicErd_CondenserFan_InputCaptureTime, sizeof(InputCaptureMicroSeconds_t)),
    SWAPPED_ERD(PublicErd_FreshFoodDamperPosition_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_FreshFood_ResolvedSetpointInDegFx100, sizeof(TemperatureDegFx100_t)),
 
@@ -180,9 +176,9 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
 };
 
 static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
-   SWAPPED_FIELD_RANGE(PublicErd_FreezerFan_Pwm, PublicErd_FreshFoodEvapFan_Pwm),
-   SWAPPED_FIELD_RANGE(PublicErd_FreezerFan_ActualRpm, PublicErd_FreshFoodEvapFan_ActualRpm),
-   SWAPPED_FIELD_RANGE(PublicErd_FreezerFan_InputCaptureTime, PublicErd_FreshFoodEvapFan_InputCaptureTime),
+   SWAPPED_FIELD_RANGE(PublicErd_CondenserFan_Pwm, PublicErd_FreshFoodEvapFan_Pwm),
+   SWAPPED_FIELD_RANGE(PublicErd_CondenserFan_ActualRpm, PublicErd_FreshFoodEvapFan_ActualRpm),
+   SWAPPED_FIELD_RANGE(PublicErd_CondenserFan_InputCaptureTime, PublicErd_FreshFoodEvapFan_InputCaptureTime),
    SWAPPED_FIELD_RANGE(PublicErd_FreshFood_ResolvedSetpointInDegFx100, PublicErd_DeliPan_ThermalShiftInDegFx100),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableEntry0, PublicErd_ServiceDiagnosticsFaultTableEntry9),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableSnapshot0, PublicErd_ServiceDiagnosticsFaultTableSnapshot9),

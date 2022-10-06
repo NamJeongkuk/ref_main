@@ -64,8 +64,8 @@ describe("Defrost", () => {
   const powerUpDelayInMsec = 5 * constants.msPerSec;
 
   //minimum_time_between_defrosts_abnormal_run_time_in_minutes * seconds_per_minute
-  //6 * 60 * 60 = 21600
-  const minimumDefrostReadySatisfactionTimeInMinutes = 21600;
+  //6 * 60 = 3600
+  const minimumDefrostReadySatisfactionTimeInMinutes = 6 * 60;
   const minimumDefrostReadyOnTimeInSec =
     minimumDefrostReadySatisfactionTimeInMinutes * 60;
 
@@ -162,6 +162,17 @@ describe("Defrost", () => {
     }
   });
 
+  const providedFreezerThermistorIs = () => ({
+    valid: async () => {
+      await rx130.write("Erd_FreezerThermistor_IsValidOverrideRequest", true);
+      await rx130.write("Erd_FreezerThermistor_IsValidOverrideValue", true);
+    },
+    invalid: async () => {
+      await rx130.write("Erd_FreezerThermistor_IsValidOverrideValue", false);
+      await rx130.write("Erd_FreezerThermistor_IsValidOverrideRequest", false);
+    }
+  });
+
   const providedFreshFoodThermistorIs = () => ({
     valid: async () => {
       await rx130.write("Erd_FreshFoodThermistor_IsValidOverrideRequest", true);
@@ -228,8 +239,8 @@ describe("Defrost", () => {
       }
       expect(actual.care).toEqual(expectedCare);
     },
-    FreezerFanSpeedShouldBe: async (expectedCare, expectedSpeed = null) => {
-      const actual = await rx130.read("Erd_FreezerFanSpeed_DefrostVote");
+    FreezerEvapFanSpeedShouldBe: async (expectedCare, expectedSpeed = null) => {
+      const actual = await rx130.read("Erd_FreezerEvapFanSpeed_DefrostVote");
       if (expectedSpeed != null) {
         expect(actual.speed).toEqual(expectedSpeed);
       }
@@ -320,7 +331,7 @@ describe("Defrost", () => {
     await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateHeaterOnEntry);
 
     await theVoteFor().CompressorSpeedShouldBe(true, compressorSpeed.compressorSpeedOff);
-    await theVoteFor().FreezerFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
+    await theVoteFor().FreezerEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
     await theVoteFor().CondenserFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
   });
 
@@ -346,7 +357,7 @@ describe("Defrost", () => {
     await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechill);
 
     await theVoteFor().CompressorSpeedShouldBe(true, compressorSpeed.compressorSpeedLow);
-    await theVoteFor().FreezerFanSpeedShouldBe(true, fanSpeed.fanSpeedSuperLow);
+    await theVoteFor().FreezerEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedSuperLow);
     await theVoteFor().DamperPositionShouldBe(true, damperPosition.damperPositionClosed);
   });
 
@@ -375,7 +386,7 @@ describe("Defrost", () => {
 
     await theVoteFor().FreezerDefrostHeaterShouldBe(true, heaterState.heaterStateOff);
     await theVoteFor().CompressorSpeedShouldBe(true, compressorSpeed.compressorSpeedOff);
-    await theVoteFor().FreezerFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
+    await theVoteFor().FreezerEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
     await theVoteFor().CondenserFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
     await theVoteFor().IceCabinetFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
 

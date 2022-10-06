@@ -28,8 +28,8 @@ typedef struct
    uint8_t maxPrechillTimeForFreshFoodOnlyDefrostInMinutes;
    ValvePosition_t prechillRefrigerantValvePosition;
    CompressorSpeed_t prechillCompressorSpeed;
-   FanSpeed_t prechillFreezerFanSpeed;
-   FanSpeed_t prechillFreshFoodFanSpeed;
+   FanSpeed_t prechillFreezerEvapFanSpeed;
+   FanSpeed_t prechillFreshFoodEvapFanSpeed;
    FanSpeed_t prechillIceBoxFanSpeed;
    FanSpeed_t prechillDeliFanSpeed;
    DamperPosition_t prechillConvertibleCompartmentDamperPosition;

@@ -503,9 +503,7 @@ enum
    ENTRY(Erd_FreshFoodSetpointZone,                         0xF16C, SetpointZone_t,                                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentSetpointZone,            0xF16D, SetpointZone_t,                                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_CalculatedFreezerFanControl,                   0xF170, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CalculatedCondenserFanControl,                 0xF171, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CalculatedFreshFoodFanControl,                 0xF172, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CalculatedIceCabinetFanControl,                0xF173, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CalculatedConvertibleCompartmentFanControl,    0xF174, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CalculatedDeliFanControl,                      0xF175, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
@@ -655,45 +653,27 @@ enum
    ENTRY(Erd_ConvertibleCompartmentFanSpeed_DefrostVote,    0xF323, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentFanSpeed_GridVote,       0xF324, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FreezerFanSpeed_ResolvedVote,                  0xF330, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerFanSpeed_WinningVoteErd,                0xF331, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerFanSpeed_FactoryVote,                   0xF332, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerFanSpeed_DefrostVote,                   0xF333, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerFanSpeed_GridVote,                      0xF334, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   \
-   ENTRY(Erd_FreshFoodFanSpeed_ResolvedVote,                0xF340, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodFanSpeed_WinningVoteErd,              0xF341, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodFanSpeed_FactoryVote,                 0xF342, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodFanSpeed_DefrostVote,                 0xF343, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodFanSpeed_GridVote,                    0xF344, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   \
    ENTRY(Erd_DeliFanSpeed_ResolvedVote,                     0xF350, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DeliFanSpeed_WinningVoteErd,                   0xF351, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DeliFanSpeed_FactoryVote,                      0xF352, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DeliFanSpeed_DefrostVote,                      0xF353, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DeliFanSpeed_GridVote,                         0xF354, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FreezerFan_Pwm,                                0xF360, PwmDutyCycle_t,                                     Swap_Y, Io_O,    Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_CondenserFan_Pwm,                              0xF361, PwmDutyCycle_t,                                     Swap_Y, Io_O,    Sub_N, MappedBsp,              NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodFan_Pwm,                              0xF362, PwmDutyCycle_t,                                     Swap_Y, Io_O,    Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_IceCabinetFan_Pwm,                             0xF363, PwmDutyCycle_t,                                     Swap_Y, Io_O,    Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentFan_Pwm,                 0xF364, PwmDutyCycle_t,                                     Swap_Y, Io_O,    Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_DeliFan_Pwm,                                   0xF365, PwmDutyCycle_t,                                     Swap_Y, Io_O,    Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerEvapFan_Pwm,                            0xF366, PwmDutyCycle_t,                                     Swap_Y, Io_O,    Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodEvapFan_Pwm,                          0xF367, PwmDutyCycle_t,                                     Swap_Y, Io_O,    Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FreezerFan_ActualRpm,                          0xF368, FanRpm_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CondenserFan_ActualRpm,                        0xF369, FanRpm_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodFan_ActualRpm,                        0xF36A, FanRpm_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceCabinetFan_ActualRpm,                       0xF36B, FanRpm_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentFan_ActualRpm,           0xF36C, FanRpm_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DeliFan_ActualRpm,                             0xF36D, FanRpm_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerEvapFan_ActualRpm,                      0xF36E, FanRpm_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodEvapFan_ActualRpm,                    0xF36F, FanRpm_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FreezerFan_InputCaptureTime,                   0xF370, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_CondenserFan_InputCaptureTime,                 0xF371, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodFan_InputCaptureTime,                 0xF372, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_IceCabinetFan_InputCaptureTime,                0xF373, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentFan_InputCaptureTime,    0xF374, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_DeliFan_InputCaptureTime,                      0xF375, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \

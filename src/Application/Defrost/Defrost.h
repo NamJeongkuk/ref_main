@@ -33,7 +33,7 @@ typedef struct
    Erd_t timeThatPrechillConditionsAreMetInMinutesErd; // uint16_t
    Erd_t compressorSpeedVoteErd; // CompressorVotedSpeed_t
    Erd_t condenserFanSpeedVoteErd; // FanVotedSpeed_t
-   Erd_t freezerFanSpeedVoteErd; // FanVotedSpeed_t
+   Erd_t freezerEvapFanSpeedVoteErd; // FanVotedSpeed_t
    Erd_t iceCabinetFanSpeedVoteErd; // FanVotedSpeed_t
    Erd_t freshFoodDamperPositionVoteErd; // DamperVotedPosition_t
    Erd_t freezerEvaporatorFilteredTemperatureResolvedErd; // TemperatureDegFx100_t

@@ -83,8 +83,6 @@ typedef struct
 typedef struct
 {
    FanData_t condenserFan;
-   FanData_t freshFoodFan;
-   FanData_t freezerFan;
    FanData_t convertibleCompartmentFan;
    FanData_t iceCabinetFan;
    FanData_t deliPanFan;

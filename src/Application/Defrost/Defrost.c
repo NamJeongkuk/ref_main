@@ -336,14 +336,14 @@ static void VoteForPrechillLoads(Defrost_t *instance, bool care)
       instance->_private.config->compressorSpeedVoteErd,
       &compressorVote);
 
-   FanVotedSpeed_t freezerFanVote = {
-      .speed = instance->_private.defrostParametricData->prechillFreezerFanSpeed,
+   FanVotedSpeed_t freezerEvapFanVote = {
+      .speed = instance->_private.defrostParametricData->prechillFreezerEvapFanSpeed,
       .care = care
    };
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->freezerFanSpeedVoteErd,
-      &freezerFanVote);
+      instance->_private.config->freezerEvapFanSpeedVoteErd,
+      &freezerEvapFanVote);
 
    DamperVotedPosition_t damperVote = {
       .position = instance->_private.defrostParametricData->prechillFreshFoodDamperPosition,
@@ -377,7 +377,7 @@ static void VoteForHeaterOnEntryLoads(Defrost_t *instance, bool care)
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->freezerFanSpeedVoteErd,
+      instance->_private.config->freezerEvapFanSpeedVoteErd,
       &fanVote);
 
    DataModel_Write(
@@ -432,7 +432,7 @@ static void VoteForDwellLoads(Defrost_t *instance, bool care)
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->freezerFanSpeedVoteErd,
+      instance->_private.config->freezerEvapFanSpeedVoteErd,
       &fanVote);
 
    DataModel_Write(

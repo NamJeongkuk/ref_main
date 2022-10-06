@@ -16,8 +16,6 @@
 // ENTRY(parametricDataName,        _calculatedFanSpeedErd,                       _inputCaptureErd,                               _fanPwmErd,                        _actualRpmErd)
 #define FAN_CONTROLLER_TABLE(ENTRY)                                                                                                                                                                           \
    ENTRY(condenserFan,              Erd_CalculatedCondenserFanControl,              Erd_CondenserFan_InputCaptureTime,              Erd_CondenserFan_Pwm,              Erd_CondenserFan_ActualRpm)              \
-   ENTRY(freshFoodFan,              Erd_CalculatedFreshFoodFanControl,              Erd_FreshFoodFan_InputCaptureTime,              Erd_FreshFoodFan_Pwm,              Erd_FreshFoodFan_ActualRpm)              \
-   ENTRY(freezerFan,                Erd_CalculatedFreezerFanControl,                Erd_FreezerFan_InputCaptureTime,                Erd_FreezerFan_Pwm,                Erd_FreezerFan_ActualRpm)                \
    ENTRY(convertibleCompartmentFan, Erd_CalculatedConvertibleCompartmentFanControl, Erd_ConvertibleCompartmentFan_InputCaptureTime, Erd_ConvertibleCompartmentFan_Pwm, Erd_ConvertibleCompartmentFan_ActualRpm) \
    ENTRY(iceCabinetFan,             Erd_CalculatedIceCabinetFanControl,             Erd_IceCabinetFan_InputCaptureTime,             Erd_IceCabinetFan_Pwm,             Erd_IceCabinetFan_ActualRpm)             \
    ENTRY(deliPanFan,                Erd_CalculatedDeliFanControl,                   Erd_DeliFan_InputCaptureTime,                   Erd_DeliFan_Pwm,                   Erd_DeliFan_ActualRpm)                   \

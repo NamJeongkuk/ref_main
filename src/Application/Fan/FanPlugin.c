@@ -21,14 +21,6 @@ static const FanSpeedResolverConfig_t freezerEvapConfig = {
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
 };
 
-static const FanSpeedResolverConfig_t freezerConfig = {
-   .resolvedFanSpeedVoteErd = Erd_FreezerFanSpeed_ResolvedVote,
-   .coolingModeErd = Erd_CoolingMode,
-   .freezerSetpointErd = Erd_FreezerSetpointZone,
-   .calculatedRequestFanControlErd = Erd_CalculatedFreezerFanControl,
-   .ambientTempErd = Erd_Ambient_FilteredTemperature,
-};
-
 static const FanSpeedResolverConfig_t condenserConfig = {
    .resolvedFanSpeedVoteErd = Erd_CondenserFanSpeed_ResolvedVote,
    .coolingModeErd = Erd_CoolingMode,
@@ -42,14 +34,6 @@ static const FanSpeedResolverConfig_t freshFoodEvapConfig = {
    .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedFreshFoodEvapFanControl,
-   .ambientTempErd = Erd_Ambient_FilteredTemperature,
-};
-
-static const FanSpeedResolverConfig_t freshFoodConfig = {
-   .resolvedFanSpeedVoteErd = Erd_FreshFoodFanSpeed_ResolvedVote,
-   .coolingModeErd = Erd_CoolingMode,
-   .freezerSetpointErd = Erd_FreezerSetpointZone,
-   .calculatedRequestFanControlErd = Erd_CalculatedFreshFoodFanControl,
    .ambientTempErd = Erd_Ambient_FilteredTemperature,
 };
 
@@ -82,22 +66,10 @@ static void InitializeFanSpeedResolvers(FanPlugin_t *instance, I_DataModel_t *da
    const CombinedFanData_t *fanData = PersonalityParametricData_Get(dataModel)->fanData;
 
    FanSpeedResolver_Init(
-      &instance->_private.fanSpeedResolver[FanId_Freezer],
-      dataModel,
-      &fanData->freezerFan,
-      &freezerConfig);
-
-   FanSpeedResolver_Init(
       &instance->_private.fanSpeedResolver[FanId_Condenser],
       dataModel,
       &fanData->condenserFan,
       &condenserConfig);
-
-   FanSpeedResolver_Init(
-      &instance->_private.fanSpeedResolver[FanId_FreshFood],
-      dataModel,
-      &fanData->freshFoodFan,
-      &freshFoodConfig);
 
    FanSpeedResolver_Init(
       &instance->_private.fanSpeedResolver[FanId_IceCabinet],

@@ -8,22 +8,22 @@
    "erds": [
       {
          "namespace": "rx130",
-         "name": "Erd_FreezerFanSpeed_ResolvedVote",
+         "name": "Erd_FreezerEvapFanSpeed_ResolvedVote",
          "interval": 60000
       },
       {
          "namespace": "rx130",
-         "name": "Erd_FreezerFan_ActualRpm",
+         "name": "Erd_FreezerEvapFan_ActualRpm",
          "interval": 60000
       },
       {
          "namespace": "rx130",
-         "name": "Erd_CalculatedFreezerFanControl",
+         "name": "Erd_CalculatedFreezerEvapFanControl",
          "interval": 60000
       },
       {
          "namespace": "rx130",
-         "name": "Erd_FreezerFanSpeed_WinningVoteErd",
+         "name": "Erd_FreezerEvapFanSpeed_WinningVoteErd",
          "interval": 60000
       },
       {
@@ -48,17 +48,17 @@
       },
       {
          "namespace": "rx130",
-         "name": "Erd_FreshFoodFanSpeed_ResolvedVote",
+         "name": "Erd_FreshFoodEvapFanSpeed_ResolvedVote",
          "interval": 60000
       },
       {
          "namespace": "rx130",
-         "name": "Erd_FreshFoodFan_ActualRpm",
+         "name": "Erd_FreshFoodEvapFan_ActualRpm",
          "interval": 60000
       },
       {
          "namespace": "rx130",
-         "name": "Erd_CalculatedFreshFoodFanControl",
+         "name": "Erd_CalculatedFreshFoodEvapFanControl",
          "interval": 60000
       },
       {

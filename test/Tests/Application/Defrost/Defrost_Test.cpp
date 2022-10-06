@@ -67,7 +67,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .timeThatPrechillConditionsAreMetInMinutesErd = Erd_TimeThatPrechillConditionsAreMetInMinutes,
    .compressorSpeedVoteErd = Erd_CompressorSpeed_DefrostVote,
    .condenserFanSpeedVoteErd = Erd_CondenserFanSpeed_DefrostVote,
-   .freezerFanSpeedVoteErd = Erd_FreezerFanSpeed_DefrostVote,
+   .freezerEvapFanSpeedVoteErd = Erd_FreezerEvapFanSpeed_DefrostVote,
    .iceCabinetFanSpeedVoteErd = Erd_IceCabinetFanSpeed_DefrostVote,
    .freshFoodDamperPositionVoteErd = Erd_FreshFoodDamperPosition_DefrostVote,
    .freezerEvaporatorFilteredTemperatureResolvedErd = Erd_FreezerEvap_FilteredTemperatureResolved,
@@ -345,10 +345,10 @@ TEST_GROUP(Defrost_SingleEvap)
       CHECK_TRUE(actual.care);
    }
 
-   void FreezerFanSpeedVoteShouldBe(FanSpeed_t expected)
+   void FreezerEvapFanSpeedVoteShouldBe(FanSpeed_t expected)
    {
       FanVotedSpeed_t actual;
-      DataModel_Read(dataModel, Erd_FreezerFanSpeed_DefrostVote, &actual);
+      DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_DefrostVote, &actual);
 
       CHECK_EQUAL(expected, actual.speed);
       CHECK_TRUE(actual.care);
@@ -369,7 +369,7 @@ TEST_GROUP(Defrost_SingleEvap)
       DataModel_Read(dataModel, Erd_CompressorSpeed_DefrostVote, &compressorVote);
 
       FanVotedSpeed_t fanVote;
-      DataModel_Read(dataModel, Erd_FreezerFanSpeed_DefrostVote, &fanVote);
+      DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_DefrostVote, &fanVote);
 
       DamperVotedPosition_t damperVote;
       DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_DefrostVote, &damperVote);
@@ -880,7 +880,7 @@ TEST(Defrost_SingleEvap, ShouldVoteForLoadsOnEntryToPrechill)
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
 
    CompressorSpeedVoteShouldBe(defrostData->prechillCompressorSpeed);
-   FreezerFanSpeedVoteShouldBe(defrostData->prechillFreezerFanSpeed);
+   FreezerEvapFanSpeedVoteShouldBe(defrostData->prechillFreezerEvapFanSpeed);
    FreshFoodDamperPositionVoteShouldBe(defrostData->prechillFreshFoodDamperPosition);
 }
 
@@ -891,7 +891,7 @@ TEST(Defrost_SingleEvap, ShouldTurnOffCompressorAndFansAndNotCareAboutDamperVote
    DamperVoteShouldBeDontCare();
    CompressorSpeedVoteShouldBe(CompressorSpeed_Off);
    CondenserFanSpeedVoteShouldBe(FanSpeed_Off);
-   FreezerFanSpeedVoteShouldBe(FanSpeed_Off);
+   FreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off);
    IceCabinetFanSpeedVoteShouldBe(FanSpeed_Off);
 }
 
@@ -990,7 +990,7 @@ TEST(Defrost_SingleEvap, ShouldTurnOffFreezerDefrostHeaterCompressorAndAllFansWh
 
    FreezerDefrostHeaterVoteShouldBe(HeaterState_Off);
    CompressorSpeedVoteShouldBe(CompressorSpeed_Off);
-   FreezerFanSpeedVoteShouldBe(FanSpeed_Off);
+   FreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off);
    CondenserFanSpeedVoteShouldBe(FanSpeed_Off);
    IceCabinetFanSpeedVoteShouldBe(FanSpeed_Off);
 }
