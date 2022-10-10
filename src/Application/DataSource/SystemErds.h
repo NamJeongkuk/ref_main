@@ -45,6 +45,7 @@
 #include "CompressorVotedSpeed.h"
 #include "FanState.h"
 #include "FanSpeed.h"
+#include "GridArea.h"
 #include "GridBlockNumber.h"
 #include "TemperatureDegFx100.h"
 #include "CalculatedGridLines.h"
@@ -59,6 +60,7 @@
 #include "ConvertibleCompartmentStateType.h"
 #include "CompressorState.h"
 #include "CoolingMode.h"
+#include "CoolingSpeed.h"
 #include "PwmDutyCycle.h"
 #include "InputCaptureType.h"
 #include "DefrostCompressorOnTimeCounterFsmState.h"
@@ -387,6 +389,7 @@ enum
    ENTRY(Erd_MaxValveTimeInPosAEnabled,                     0xF019, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentGridBlockNumber,         0xF01A, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorIsOn,                                0xF01B, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CoolingSpeed,                                  0xF01C, CoolingSpeed_t,                                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_SensorsReadyToBeRead,                          0xF020, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_SetpointResolverReady,                         0xF021, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
@@ -602,6 +605,7 @@ enum
    ENTRY(Erd_GridLoopSingleEvapRun_Test,                    0xF2A3, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_GridLoopDualEvapRun_Test,                      0xF2A4, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_GridLoopTripleEvapRun_Test,                    0xF2A5, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_GridArea,                                      0xF2A6, GridArea_t,                                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFood_AdjustedSetpointInDegFx100,          0xF2B0, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFood_Offset,                              0xF2B1, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
