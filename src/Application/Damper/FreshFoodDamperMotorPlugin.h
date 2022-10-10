@@ -11,6 +11,7 @@
 #include "I_DataModel.h"
 #include "StepperMotorDriver.h"
 #include "FreshFoodDamperRequestManager.h"
+#include "Timer.h"
 #include "ErdResolver.h"
 #include "Event_Synchronous.h"
 

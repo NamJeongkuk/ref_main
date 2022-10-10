@@ -1037,6 +1037,46 @@
           "write": true
         }
       ]
+    },
+    {
+      "title": "Damper",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "Fresh Food Damper Heater Resolved Vote",
+          "name": "Erd_FreshFoodDamperHeater_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fresh Food Damper Heater Winning Vote ERD",
+          "name": "Erd_FreshFoodDamperHeater_WinningVoteErd",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fresh Food Damper Heater Factory Vote",
+          "name": "Erd_FreshFoodDamperHeater_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fresh Food Damper Heater Damper Freeze Prevention Vote",
+          "name": "Erd_FreshFoodDamperHeater_DamperFreezePreventionVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fresh Food Damper Heater Defrost Heater Sync Vote",
+          "name": "Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote",
+          "read": true,
+          "write": true
+        }
+      ]
     }
   ]
 }
