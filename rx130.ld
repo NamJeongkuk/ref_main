@@ -48,6 +48,10 @@ SECTIONS
    .bss (NOLOAD):
    {
       _bss = .;
+      __dtcVectorTableStart = .;
+      *(.dtcTransferInformation)
+      . = ALIGN(4);
+      __dtcVectorTableEnd = .;
       *(.bss)
       *(.bss.*)
       *(COMMON)
@@ -61,10 +65,6 @@ SECTIONS
    .data :
    {
       _data = .;
-      __dtcVectorTableStart = .;
-      *(.dtcTransferInformation)
-      . = ALIGN(4);
-      __dtcVectorTableEnd = .;
       *(.data)
       *(.data.*)
       *(D)
