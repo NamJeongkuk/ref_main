@@ -9,8 +9,7 @@ return {
     '_mbstate_t',
     'FanCareAboutCoolingModeSpeedData_t',
     'FanData_t',
-    'CompressorSpeeds_t',
-    'PwmDutyCycle_t'
+    'CompressorSpeeds_t'
   },
 
   -- Types that can't be automatically generated but need to be defined
@@ -42,5 +41,6 @@ return {
         FanRpm_t 'rpmOrDutyCycle',
       }
     ]],
+    PwmDutyCycle_t = 'uint16_t'
   }
 }
