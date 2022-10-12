@@ -24,6 +24,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .freshFoodThermistorIsValidErd = Erd_FreshFoodThermistor_IsValidResolved,
    .compressorIsOnErd = Erd_CompressorIsOn,
    .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
+   .disableMinimumTimeRequestErd = Erd_DisableMinimumCompressorTimes,
    .maxPrechillTimeInMinutesErd = Erd_MaxPrechillTimeInMinutes,
    .timeThatPrechillConditionsAreMetInMinutesErd = Erd_TimeThatPrechillConditionsAreMetInMinutes,
    .compressorSpeedVoteErd = Erd_CompressorSpeed_DefrostVote,

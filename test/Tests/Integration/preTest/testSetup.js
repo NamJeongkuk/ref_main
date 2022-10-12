@@ -32,4 +32,4 @@ global["geaSource"] = address;
 const featureManager = FeatureManager(geaNode);
 jasmine.getEnv().addReporter(featureManager);
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10 * msPerMin;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 20 * msPerMin;

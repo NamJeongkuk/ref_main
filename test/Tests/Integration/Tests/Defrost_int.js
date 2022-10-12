@@ -76,6 +76,11 @@ describe("Defrost", () => {
   const dwellFreshFoodDamperPosition = damperPosition.damperPositionClosed;
   const dwellTimeInMinutes = 7;
   const dwellTimeInSeconds = dwellTimeInMinutes * constants.secondsPerMin + 1;
+  const postDwellTimeInMinutes = 10;
+
+  const postDwellFreezerEvapExitTemperatureInDegFx100 = -1000;
+  const postDwellCompressorSpeed = compressorSpeed.compressorSpeedLow;
+  const postDwellDamperPosition = damperPosition.damperPositionClosed;
 
   beforeEach(async () => {
     await rx130.write("Erd_Reset", 1);
@@ -86,6 +91,11 @@ describe("Defrost", () => {
     await rx130.write("Erd_Freezer_FilteredTemperatureOverrideRequest", true);
     await rx130.write("Erd_Freezer_FilteredTemperatureOverrideValue", tempDegFx100);
   };
+
+  const providedTheFilteredFreezerEvaporatorTemperatureIs = async (tempDegFx100) => {
+    await rx130.write("Erd_FreezerEvap_FilteredTemperatureOverrideRequest", true);
+    await rx130.write("Erd_FreezerEvap_FilteredTemperatureOverrideValue", tempDegFx100);
+  }
 
   const providedTheEepromDefrostStateAtStartUpIs = async (state) => {
     await rx130.write("Erd_DefrostState", state);
@@ -109,9 +119,22 @@ describe("Defrost", () => {
     await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateDwell);
   };
 
+  const providedDefrostIsEnabledAndInPostDwellState = async () => {
+    await providedTheFilteredFreezerCabinetTemperatureIs(300);
+
+    await providedTheEepromDefrostStateAtStartUpIs(defrostState.defrostStateDwell);
+    await after(dwellTimeInMinutes).inMinutes();
+    await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePostDwell);
+  };
+
   const providedTheDefrostReadySatisfactionTimeIs = async (timeInMinutes) => {
     await rx130.write("Erd_TimeInMinutesUntilReadyToDefrost", timeInMinutes);
   };
+
+  const disableMinimumCompressorTimesShouldBe = async (state) => {
+    const actual = await rx130.read("Erd_DisableMinimumCompressorTimes");
+    expect(actual).toEqual(state);
+  }
 
   const theDefrostHsmStateShouldBe = async (state) => {
     const actual = await rx130.read("Erd_DefrostHsmState");
@@ -398,5 +421,44 @@ describe("Defrost", () => {
 
     await after(dwellTimeInSeconds).inSec();
     await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePostDwell);
+  });
+
+  it("should vote to set compressor, condenser fan and damper position and disable minimum compressor times when entering post dwell", async () => {
+    await providedDefrostIsEnabledAndInPostDwellState();
+
+    await theVoteFor().CompressorSpeedShouldBe(true, postDwellCompressorSpeed);
+    await theVoteFor().CondenserFanSpeedShouldBe(true, fanSpeed.fanSpeedLow);
+    await theVoteFor().DamperPositionShouldBe(true, postDwellDamperPosition);
+    await disableMinimumCompressorTimesShouldBe(true);
+  });
+
+  it("should transition to idle when freezer evaporator temperature is less than or equal to the exit temperature", async () => {
+    await providedDefrostIsEnabledAndInPostDwellState();
+
+    await providedTheFilteredFreezerEvaporatorTemperatureIs(postDwellFreezerEvapExitTemperatureInDegFx100 - 1);
+    await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateIdle);
+  });
+
+  it("should transition to idle after post dwell time has passed", async () => {
+    await providedDefrostIsEnabledAndInPostDwellState();
+
+    await after(postDwellTimeInMinutes).inMinutes();
+    await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateIdle);
+  });
+
+  it("should vote don't care to freezer defrost heater, compressor, fresh food damper and all fans and enable minimum compressor times when exiting post dwell", async () => {
+    await providedDefrostIsEnabledAndInPostDwellState();
+
+    await providedTheFilteredFreezerEvaporatorTemperatureIs(postDwellFreezerEvapExitTemperatureInDegFx100 - 1);
+    await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateIdle);
+
+    await theVoteFor().FreezerDefrostHeaterShouldBe(false);
+    await theVoteFor().CompressorSpeedShouldBe(false);
+    await theVoteFor().DamperPositionShouldBe(false);
+    await theVoteFor().CondenserFanSpeedShouldBe(false);
+    await theVoteFor().FreezerEvapFanSpeedShouldBe(false);
+    await theVoteFor().IceCabinetFanSpeedShouldBe(false);
+
+    await disableMinimumCompressorTimesShouldBe(false);
   });
 });

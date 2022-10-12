@@ -15,8 +15,8 @@ enum
 {
    FanSpeed_Off,
    FanSpeed_SuperLow,
-   FanSpeed_On,
-   FanSpeed_Low = FanSpeed_On,
+   FanSpeed_Low,
+   FanSpeed_On = FanSpeed_Low,
    FanSpeed_Medium,
    FanSpeed_High,
    FanSpeed_SuperHigh,

@@ -67,8 +67,9 @@ typedef struct
    TemperatureDegFx100_t postDwellFreezerEvapExitTemperatureInDegFx100;
    TemperatureDegFx100_t freshFoodOnlyPostDwellFreezerEvapExitTemperatureInDegFx100;
    ValvePosition_t postDwellRefrigerantValvePosition;
-   uint8_t postDwellCompressorSpeed;
+   CompressorSpeed_t postDwellCompressorSpeed;
    FanSpeed_t postDwellCondenserFanSpeed;
+   DamperPosition_t postDwellFreshFoodDamperPosition;
 } DefrostData_t;
 
 #endif

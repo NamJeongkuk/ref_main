@@ -63,6 +63,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .freshFoodThermistorIsValidErd = Erd_FreshFood_ThermistorIsValid,
    .compressorIsOnErd = Erd_CompressorIsOn,
    .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
+   .disableMinimumTimeRequestErd = Erd_DisableMinimumCompressorTimes,
    .maxPrechillTimeInMinutesErd = Erd_MaxPrechillTimeInMinutes,
    .timeThatPrechillConditionsAreMetInMinutesErd = Erd_TimeThatPrechillConditionsAreMetInMinutes,
    .compressorSpeedVoteErd = Erd_CompressorSpeed_DefrostVote,
@@ -260,6 +261,13 @@ TEST_GROUP(Defrost_SingleEvap)
             DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
             break;
 
+         case DefrostHsmState_PostDwell:
+            Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
+
+            After(defrostData->dwellTimeInMinutes * MSEC_PER_MIN);
+            DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
+            break;
+
          default:
             break;
       }
@@ -392,6 +400,36 @@ TEST_GROUP(Defrost_SingleEvap)
       HeaterVotedState_t actual;
       DataModel_Read(dataModel, Erd_FreezerDefrostHeater_DefrostVote, &actual);
 
+      CHECK_FALSE(actual.care);
+   }
+
+   void CompressorSpeedVoteShouldBeDontCare()
+   {
+      CompressorVotedSpeed_t actual;
+      DataModel_Read(dataModel, Erd_CompressorSpeed_DefrostVote, &actual);
+
+      CHECK_FALSE(actual.care);
+   }
+
+   void DisableMinimumCompressorTimesShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_DisableMinimumCompressorTimes, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void FanSpeedVotesShouldBeDontCare()
+   {
+      FanVotedSpeed_t actual;
+
+      DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_DefrostVote, &actual);
+      CHECK_FALSE(actual.care);
+
+      DataModel_Read(dataModel, Erd_IceCabinetFanSpeed_DefrostVote, &actual);
+      CHECK_FALSE(actual.care);
+
+      DataModel_Read(dataModel, Erd_CondenserFanSpeed_DefrostVote, &actual);
       CHECK_FALSE(actual.care);
    }
 
@@ -1010,6 +1048,56 @@ TEST(Defrost_SingleEvap, ShouldTransitionToPostDwellAfterDwellTimeHasPassed)
 
    After(1);
    DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
+}
+
+TEST(Defrost_SingleEvap, ShouldVoteForCompressorAndCondenserFanAndDamperAndDisableMinimumCompressorTimesWhenEnteringPostDwell)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
+
+   CompressorSpeedVoteShouldBe(defrostData->postDwellCompressorSpeed);
+   CondenserFanSpeedVoteShouldBe(defrostData->postDwellCondenserFanSpeed);
+   FreshFoodDamperPositionVoteShouldBe(defrostData->postDwellFreshFoodDamperPosition);
+   DisableMinimumCompressorTimesShouldBe(true);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionToIdleAfterPostDwellTimeHasPassed)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
+
+   After(defrostData->postDwellExitTimeInMinutes * MSEC_PER_MIN - 1);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
+
+   After(1);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionToIdleWhenFreezerEvaporatorTemperatureIsLessThanExitTemperature)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
+
+   When FilteredFreezerEvapTemperatureIs(defrostData->postDwellFreezerEvapExitTemperatureInDegFx100 - 1);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionToIdleWhenFreezerEvaporatorTemperatureIsEqualToExitTemperature)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
+
+   When FilteredFreezerEvapTemperatureIs(defrostData->postDwellFreezerEvapExitTemperatureInDegFx100);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+}
+
+TEST(Defrost_SingleEvap, ShouldNotCareAboutFreezerDefrostHeaterCompressorAndDamperAndAllFansAndEnableMinimumCompressorTimesWhenEnteringIdleFromPostDwell)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
+   When FilteredFreezerEvapTemperatureIs(defrostData->postDwellFreezerEvapExitTemperatureInDegFx100 - 1);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+   FreezerDefrostHeaterVoteShouldBeDontCare();
+   CompressorSpeedVoteShouldBeDontCare();
+   DamperVoteShouldBeDontCare();
+   FanSpeedVotesShouldBeDontCare();
+   DisableMinimumCompressorTimesShouldBe(false);
 }
 
 TEST_GROUP(Defrost_DualEvap)

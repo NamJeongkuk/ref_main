@@ -34,6 +34,7 @@ enum
    Signal_CompressorIsOn,
    Signal_DefrostTimerExpired,
    Signal_PrechillTemperatureExitConditionMet,
+   Signal_PostDwellTemperatureExitConditionMet,
    Signal_FreshFoodThermistorIsInvalid,
    Signal_FreezerEvaporatorThermistorIsInvalid,
    Signal_FreezerEvaporatorTemperatureReachedHeaterOnTerminationTemperature,
@@ -137,9 +138,15 @@ static void DataModelChanged(void *context, const void *args)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_PrechillTemperatureExitConditionMet, NULL);
       }
-      else if(*freezerEvaporatorTemperature >= instance->_private.defrostParametricData->freezerDefrostTerminationTemperatureInDegFx100)
+
+      if(*freezerEvaporatorTemperature >= instance->_private.defrostParametricData->freezerDefrostTerminationTemperatureInDegFx100)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerEvaporatorTemperatureReachedHeaterOnTerminationTemperature, NULL);
+      }
+
+      if(*freezerEvaporatorTemperature <= instance->_private.defrostParametricData->postDwellFreezerEvapExitTemperatureInDegFx100)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_PostDwellTemperatureExitConditionMet, NULL);
       }
    }
    else if(erd == instance->_private.config->freezerFilteredTemperatureResolvedErd)
@@ -325,6 +332,66 @@ static void StartDefrostTimer(Defrost_t *instance, TimerTicks_t ticks)
       DefrostTimerExpired);
 }
 
+static void VoteForCompressorSpeed(Defrost_t *instance, CompressorSpeed_t speed, bool care)
+{
+   CompressorVotedSpeed_t compressorVote = {
+      .speed = speed,
+      .care = care
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->compressorSpeedVoteErd,
+      &compressorVote);
+}
+
+static void VoteForFreezerEvapFanSpeed(Defrost_t *instance, FanSpeed_t speed, bool care)
+{
+   FanVotedSpeed_t freezerEvapFanVote = {
+      .speed = speed,
+      .care = care
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freezerEvapFanSpeedVoteErd,
+      &freezerEvapFanVote);
+}
+
+static void VoteForCondenserFanSpeed(Defrost_t *instance, FanSpeed_t speed, bool care)
+{
+   FanVotedSpeed_t fanVote = {
+      .speed = speed,
+      .care = care
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->condenserFanSpeedVoteErd,
+      &fanVote);
+}
+
+static void VoteForIceCabinetFanSpeed(Defrost_t *instance, FanSpeed_t speed, bool care)
+{
+   FanVotedSpeed_t fanVote = {
+      .speed = speed,
+      .care = care
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->iceCabinetFanSpeedVoteErd,
+      &fanVote);
+}
+
+static void VoteForDamperPosition(Defrost_t *instance, DamperPosition_t position, bool care)
+{
+   DamperVotedPosition_t damperVote = {
+      .position = position,
+      .care = care
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freshFoodDamperPositionVoteErd,
+      &damperVote);
+}
+
 static void VoteForPrechillLoads(Defrost_t *instance, bool care)
 {
    CompressorVotedSpeed_t compressorVote = {
@@ -448,6 +515,33 @@ static void VoteForDwellLoads(Defrost_t *instance, bool care)
       instance->_private.dataModel,
       instance->_private.config->freshFoodDamperPositionVoteErd,
       &damperVote);
+}
+
+static void SetDisableMinimumCompressorTimes(Defrost_t *instance, bool state)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->disableMinimumTimeRequestErd,
+      &state);
+}
+
+static void VoteForPostDwellLoads(Defrost_t *instance, bool care)
+{
+   VoteForCompressorSpeed(instance, instance->_private.defrostParametricData->postDwellCompressorSpeed, care);
+   VoteForCondenserFanSpeed(instance, instance->_private.defrostParametricData->postDwellCondenserFanSpeed, care);
+   VoteForDamperPosition(instance, instance->_private.defrostParametricData->postDwellFreshFoodDamperPosition, care);
+   SetDisableMinimumCompressorTimes(instance, true);
+}
+
+static void VoteDontCareForPostDwellLoads(Defrost_t *instance)
+{
+   VoteForFreezerDefrostHeater(instance, HeaterState_Off, DontCare);
+   VoteForCompressorSpeed(instance, CompressorSpeed_Off, DontCare);
+   VoteForIceCabinetFanSpeed(instance, FanSpeed_Off, DontCare);
+   VoteForCondenserFanSpeed(instance, FanSpeed_Off, DontCare);
+   VoteForFreezerEvapFanSpeed(instance, FanSpeed_Off, DontCare);
+   VoteForDamperPosition(instance, DamperPosition_Closed, DontCare);
+   SetDisableMinimumCompressorTimes(instance, false);
 }
 
 static void CheckIfPrechillTemperatureExitConditionMet(Defrost_t *instance)
@@ -847,9 +941,20 @@ static bool State_PostDwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_PostDwell);
+         VoteForPostDwellLoads(instance, Care);
+         StartDefrostTimer(
+            instance,
+            instance->_private.defrostParametricData->postDwellExitTimeInMinutes * MSEC_PER_MIN);
+         break;
+
+      case Signal_DefrostTimerExpired:
+      case Signal_PostDwellTemperatureExitConditionMet:
+         Hsm_Transition(hsm, State_Idle);
          break;
 
       case Hsm_Exit:
+         VoteDontCareForPostDwellLoads(instance);
+         StopTimer(instance, &instance->_private.defrostTimer);
          break;
 
       default:
