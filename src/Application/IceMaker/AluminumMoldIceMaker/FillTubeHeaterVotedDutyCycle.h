@@ -8,11 +8,11 @@
 #ifndef FILLTUBEHEATERVOTEDDUTYCYCLE_H
 #define FILLTUBEHEATERVOTEDDUTYCYCLE_H
 
-#include "PwmDutyCycle.h"
+#include "PercentageDutyCycle.h"
 
 typedef struct
 {
-   PwmDutyCycle_t dutyCycle;
+   PercentageDutyCycle_t dutyCycle;
    bool care;
 } FillTubeHeaterVotedDutyCycle_t;
 

@@ -41,6 +41,7 @@ return {
         FanRpm_t 'rpmOrDutyCycle',
       }
     ]],
-    PwmDutyCycle_t = 'uint16_t'
+    PwmDutyCycle_t = 'uint16_t',
+    PercentageDutyCycle_t = 'uint8_t'
   }
 }
