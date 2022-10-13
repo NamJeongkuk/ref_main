@@ -185,6 +185,13 @@
       "erds": [
         {
           "namespace": "rx130",
+          "displayName": "Condenser Fan Startup Vote",
+          "name": "Erd_CondenserFanSpeed_CompressorStartUpVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "Fresh Food Evap Fan Speed Defrost Vote",
           "name": "Erd_FreshFoodEvapFanSpeed_DefrostVote",
           "read": true,
@@ -192,8 +199,22 @@
         },
         {
           "namespace": "rx130",
+          "displayName": "Fresh Food Evap Fan Speed Compressor Startup Vote",
+          "name": "Erd_FreshFoodEvapFanSpeed_CompressorStartUpVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
           "displayName": "Freezer Evap Fan Speed Defrost Vote",
           "name": "Erd_FreezerEvapFanSpeed_DefrostVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Evap Fan Speed Compressor Startup Vote",
+          "name": "Erd_FreezerEvapFanSpeed_CompressorStartUpVote",
           "read": true,
           "write": true
         },

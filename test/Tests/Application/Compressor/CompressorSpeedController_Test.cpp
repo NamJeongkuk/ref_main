@@ -112,7 +112,7 @@ TEST(CompressorSpeedController, ShouldSetCompressorStateAsStartupOnInitializatio
 {
    Given TheCompressorSpeedControllerIsInitialized();
 
-   TheCompressorStateShouldBe(CompressorState_Startup);
+   TheCompressorStateShouldBe(CompressorState_OffAndReadyToChange);
 }
 
 IGNORE_TEST(CompressorSpeedController, ShouldTransitionToMiniumOffTimeAfterRemainOffAfterValveMoveTimeAndTheMinimumOffTimeHasNotCompleted)

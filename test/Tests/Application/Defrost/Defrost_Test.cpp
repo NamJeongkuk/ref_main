@@ -12,6 +12,7 @@ extern "C"
 #include "SystemErds.h"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
+#include "Vote.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -28,12 +29,6 @@ enum
 {
    Invalid = false,
    Valid = true
-};
-
-enum
-{
-   DontCare = false,
-   Care = true
 };
 
 enum

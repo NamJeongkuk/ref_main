@@ -84,6 +84,7 @@ INC_DIRS:=\
   src/Application/SystemMonitor \
   src/Application/Temperature \
   src/Application/Valve \
+  src/Application/Voting \
   lib/Common/Source/Temperature/ \
 
 applcommon_EXTERNAL_INC_DIRS:=\

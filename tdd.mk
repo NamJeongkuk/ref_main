@@ -89,6 +89,7 @@ INCLUDE_DIRS := \
    $(PROJECT_DIR)/Application/SystemMonitor \
    $(PROJECT_DIR)/Application/Temperature \
    $(PROJECT_DIR)/Application/Valve \
+   $(PROJECT_DIR)/Application/Voting \
    $(PROJECT_DIR)/rx130/Bsp \
    $(PROJECT_DIR)/rx130/Hardware \
    $(PROJECT_DIR)/rx130/Hardware/Eeprom \

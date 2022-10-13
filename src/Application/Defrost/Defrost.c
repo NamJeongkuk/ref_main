@@ -21,12 +21,7 @@
 #include "CompressorVotedSpeed.h"
 #include "Signal.h"
 #include "uassert.h"
-
-enum
-{
-   DontCare = false,
-   Care = true
-};
+#include "Vote.h"
 
 enum
 {
@@ -794,7 +789,7 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Prechill);
-         VoteForPrechillLoads(instance, Care);
+         VoteForPrechillLoads(instance, Vote_Care);
 
          if(GetTimeThatPrechillConditionsAreMet(instance) >= GetMaxPrechillTime(instance))
          {
@@ -818,7 +813,7 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Hsm_Exit:
-         VoteForPrechillLoads(instance, DontCare);
+         VoteForPrechillLoads(instance, Vote_DontCare);
          StopTimer(instance, &instance->_private.defrostTimer);
          break;
 
@@ -838,7 +833,7 @@ static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_HeaterOnEntry);
-         VoteForHeaterOnEntryLoads(instance, Care);
+         VoteForHeaterOnEntryLoads(instance, Vote_Care);
          StartDefrostTimer(
             instance,
             instance->_private.defrostParametricData->defrostHeaterOnDelayAfterCompressorOffInSeconds * MSEC_PER_SEC);
@@ -868,7 +863,7 @@ static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_HeaterOn);
-         VoteForFreezerDefrostHeater(instance, HeaterState_On, Care);
+         VoteForFreezerDefrostHeater(instance, HeaterState_On, Vote_Care);
          break;
 
       case Signal_FreezerHeaterMaxOnTimeReached:
@@ -891,7 +886,7 @@ static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Hsm_Exit:
-         VoteForFreezerDefrostHeater(instance, HeaterState_Off, Care);
+         VoteForFreezerDefrostHeater(instance, HeaterState_Off, Vote_Care);
          IncrementFreezerDefrostCycleCount(instance);
          break;
 
@@ -911,7 +906,7 @@ static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Dwell);
-         VoteForDwellLoads(instance, Care);
+         VoteForDwellLoads(instance, Vote_Care);
          StartDefrostTimer(
             instance,
             instance->_private.defrostParametricData->dwellTimeInMinutes * MSEC_PER_MIN);

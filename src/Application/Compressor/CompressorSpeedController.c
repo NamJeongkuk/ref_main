@@ -267,5 +267,5 @@ void CompressorSpeedController_Init(
    instance->_private.compressorData = PersonalityParametricData_Get(dataModel)->compressorData;
    instance->_private.config = config;
 
-   Hsm_Init(&instance->_private.hsm, &hsmConfiguration, State_StartUp);
+   Hsm_Init(&instance->_private.hsm, &hsmConfiguration, State_OffAndReadyToChange);
 }

@@ -9,6 +9,7 @@ extern "C"
 {
 #include "UserSetpointRequestHandler.h"
 #include "SystemErds.h"
+#include "Vote.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -32,9 +33,6 @@ enum
 
    ResetValue = INT8_MAX,
    ScalingFactorDegFx100 = 100,
-
-   Care = true,
-   DontCare = false,
 };
 
 static const DataModel_TestDoubleConfigurationEntry_t erds[] = {
@@ -127,27 +125,27 @@ TEST(UserSetpointRequestHandler, ShouldVoteForUserSetpointBasedOffOfTheUserSetpo
    GivenInitialization();
    WhenTheRequestedSetpointChangesTo(SomeSetpointBetweenTheBounds);
    TheSetpointStatusShouldBe(SomeSetpointBetweenTheBounds);
-   TheVotedSetpointShouldBe(SomeSetpointBetweenTheBounds * ScalingFactorDegFx100, Care);
+   TheVotedSetpointShouldBe(SomeSetpointBetweenTheBounds * ScalingFactorDegFx100, Vote_Care);
 }
 
 TEST(UserSetpointRequestHandler, ShouldNotVoteForUserSetpointWhenTheUserSetpointRequestIsAboveTheUpperBound)
 {
    GivenInitialization();
-   TheVotedSetpointShouldBe(0, Care);
+   TheVotedSetpointShouldBe(0, Vote_Care);
 
    WhenTheRequestedSetpointChangesTo(SomeHighTemperatureBound + 1);
    TheSetpointStatusShouldBe(0);
-   TheVotedSetpointShouldBe(0, Care);
+   TheVotedSetpointShouldBe(0, Vote_Care);
 }
 
 TEST(UserSetpointRequestHandler, ShouldNotVoteForUserSetpointWhenTheUserSetpointRequestIsBelowTheLowerBound)
 {
    GivenInitialization();
-   TheVotedSetpointShouldBe(0, Care);
+   TheVotedSetpointShouldBe(0, Vote_Care);
 
    WhenTheRequestedSetpointChangesTo(SomeLowTemperatureBound - 1);
    TheSetpointStatusShouldBe(0);
-   TheVotedSetpointShouldBe(0, Care);
+   TheVotedSetpointShouldBe(0, Vote_Care);
 }
 
 TEST(UserSetpointRequestHandler, ShouldBeAbleToVoteMultipleTimes)
@@ -155,19 +153,19 @@ TEST(UserSetpointRequestHandler, ShouldBeAbleToVoteMultipleTimes)
    GivenInitialization();
    WhenTheRequestedSetpointChangesTo(SomeSetpointBetweenTheBounds);
    TheSetpointStatusShouldBe(SomeSetpointBetweenTheBounds);
-   TheVotedSetpointShouldBe(SomeSetpointBetweenTheBounds * ScalingFactorDegFx100, Care);
+   TheVotedSetpointShouldBe(SomeSetpointBetweenTheBounds * ScalingFactorDegFx100, Vote_Care);
 
    WhenTheRequestedSetpointChangesTo(SomeHighTemperatureBound + 1);
    TheSetpointStatusShouldBe(SomeSetpointBetweenTheBounds);
-   TheVotedSetpointShouldBe(SomeSetpointBetweenTheBounds * ScalingFactorDegFx100, Care);
+   TheVotedSetpointShouldBe(SomeSetpointBetweenTheBounds * ScalingFactorDegFx100, Vote_Care);
 
    WhenTheRequestedSetpointChangesTo(SomeOtherSetpointBetweenTheBounds);
    TheSetpointStatusShouldBe(SomeOtherSetpointBetweenTheBounds);
-   TheVotedSetpointShouldBe(SomeOtherSetpointBetweenTheBounds * ScalingFactorDegFx100, Care);
+   TheVotedSetpointShouldBe(SomeOtherSetpointBetweenTheBounds * ScalingFactorDegFx100, Vote_Care);
 
    WhenTheRequestedSetpointChangesTo(SomeLowTemperatureBound - 1);
    TheSetpointStatusShouldBe(SomeOtherSetpointBetweenTheBounds);
-   TheVotedSetpointShouldBe(SomeOtherSetpointBetweenTheBounds * ScalingFactorDegFx100, Care);
+   TheVotedSetpointShouldBe(SomeOtherSetpointBetweenTheBounds * ScalingFactorDegFx100, Vote_Care);
 }
 
 TEST(UserSetpointRequestHandler, RequestedSetpointShouldChangeBackToItsResetValueAfterEachChange)
@@ -187,7 +185,7 @@ TEST(UserSetpointRequestHandler, ShouldVoteOnInitialization)
    GivenTheSetpointStatusIs(SomeSetpointBetweenTheBounds);
    GivenInitialization();
 
-   TheVotedSetpointShouldBe(SomeSetpointBetweenTheBounds * ScalingFactorDegFx100, Care);
+   TheVotedSetpointShouldBe(SomeSetpointBetweenTheBounds * ScalingFactorDegFx100, Vote_Care);
 }
 
 TEST(UserSetpointRequestHandler, ShouldSetStatusToDefaultRangeDataIfStatusIsTheResetValueOnInitialization)
@@ -195,6 +193,6 @@ TEST(UserSetpointRequestHandler, ShouldSetStatusToDefaultRangeDataIfStatusIsTheR
    GivenTheSetpointStatusIs(ResetValue);
    GivenInitialization();
 
-   TheVotedSetpointShouldBe(SomeDefaultTemperature * ScalingFactorDegFx100, Care);
+   TheVotedSetpointShouldBe(SomeDefaultTemperature * ScalingFactorDegFx100, Vote_Care);
    TheSetpointStatusShouldBe(SomeDefaultTemperature);
 }

@@ -11,6 +11,7 @@
 #include "I_DataModel.h"
 #include "CompressorSpeedController.h"
 #include "CompressorSpeedDriver.h"
+#include "CompressorStartupFanVotes.h"
 
 typedef struct
 {
@@ -18,6 +19,7 @@ typedef struct
    {
       CompressorSpeedDriver_t compressorSpeedDriver;
       CompressorSpeedController_t compressorSpeedController;
+      CompressorStartupFanVotes_t compressorStartupFanVotes;
    } _private;
 } CompressorPlugin_t;
 

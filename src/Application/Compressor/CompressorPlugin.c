@@ -24,8 +24,21 @@ static const CompressorSpeedControllerConfiguration_t compressorSpeedControllerC
    .disableMinimumTimeRequestErd = Erd_DisableMinimumCompressorTimes
 };
 
+static CompressorStartupFanVotesConfiguration_t compressorStartupFanVotesConfig = {
+   .compressorStateErd = Erd_CompressorState,
+   .condenserFanSpeedVoteErd = Erd_CondenserFanSpeed_CompressorStartUpVote,
+   .freezerEvaporatorFanSpeedVoteErd = Erd_FreezerEvapFanSpeed_CompressorStartUpVote,
+   .freshFoodEvaporatorFanSpeedVoteErd = Erd_FreshFoodEvapFanSpeed_CompressorStartUpVote,
+   .coolingModeErd = Erd_CoolingMode
+};
+
 void CompressorPlugin_Init(CompressorPlugin_t *instance, I_DataModel_t *dataModel)
 {
+   CompressorStartupFanVotes_Init(
+      &instance->_private.compressorStartupFanVotes,
+      dataModel,
+      &compressorStartupFanVotesConfig);
+
    CompressorIsOn_Init(dataModel);
 
    CompressorSpeedDriver_Init(
