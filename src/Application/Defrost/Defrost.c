@@ -34,7 +34,7 @@ enum
    Signal_FreezerEvaporatorThermistorIsInvalid,
    Signal_FreezerEvaporatorTemperatureReachedHeaterOnTerminationTemperature,
    Signal_FreezerHeaterMaxOnTimeReached,
-   Signal_FreezerAbnormalHeaterOnTimeReached
+   Signal_FreezerAbnormalHeaterOnTimeReached,
 };
 
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -530,12 +530,12 @@ static void VoteForPostDwellLoads(Defrost_t *instance, bool care)
 
 static void VoteDontCareForPostDwellLoads(Defrost_t *instance)
 {
-   VoteForFreezerDefrostHeater(instance, HeaterState_Off, DontCare);
-   VoteForCompressorSpeed(instance, CompressorSpeed_Off, DontCare);
-   VoteForIceCabinetFanSpeed(instance, FanSpeed_Off, DontCare);
-   VoteForCondenserFanSpeed(instance, FanSpeed_Off, DontCare);
-   VoteForFreezerEvapFanSpeed(instance, FanSpeed_Off, DontCare);
-   VoteForDamperPosition(instance, DamperPosition_Closed, DontCare);
+   VoteForFreezerDefrostHeater(instance, HeaterState_Off, Vote_DontCare);
+   VoteForCompressorSpeed(instance, CompressorSpeed_Off, Vote_DontCare);
+   VoteForIceCabinetFanSpeed(instance, FanSpeed_Off, Vote_DontCare);
+   VoteForCondenserFanSpeed(instance, FanSpeed_Off, Vote_DontCare);
+   VoteForFreezerEvapFanSpeed(instance, FanSpeed_Off, Vote_DontCare);
+   VoteForDamperPosition(instance, DamperPosition_Closed, Vote_DontCare);
    SetDisableMinimumCompressorTimes(instance, false);
 }
 
@@ -936,7 +936,7 @@ static bool State_PostDwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_PostDwell);
-         VoteForPostDwellLoads(instance, Care);
+         VoteForPostDwellLoads(instance, Vote_Care);
          StartDefrostTimer(
             instance,
             instance->_private.defrostParametricData->postDwellExitTimeInMinutes * MSEC_PER_MIN);
