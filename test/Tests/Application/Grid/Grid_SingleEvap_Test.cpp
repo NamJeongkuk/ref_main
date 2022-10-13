@@ -26,6 +26,12 @@ extern "C"
 #define And
 #define The
 
+enum
+{
+   Active = true,
+   InActive = false,
+};
+
 TEST_GROUP(Grid_SingleEvap_Test)
 {
    ReferDataModel_TestDouble_t dataModelDouble;
@@ -69,6 +75,24 @@ TEST_GROUP(Grid_SingleEvap_Test)
       DataModel_Write(dataModel, Erd_CoolingSpeed, &coolingSpeed);
    }
 
+   void CoolingSpeedShouldBe(CoolingSpeed_t expected)
+   {
+      CoolingSpeed_t actual;
+      DataModel_Read(dataModel, Erd_CoolingSpeed, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void PullDownIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_SingleEvaporatorPulldownActive, &state);
+   }
+
+   void CompressorTripMitigationIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_CompressorTripMitigationActive, &state);
+   }
+
    void GridAreaIs(GridArea_t gridArea)
    {
       DataModel_Write(dataModel, Erd_GridArea, &gridArea);
@@ -87,12 +111,13 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks0And1)
 {
    for(GridBlockNumber_t gridBlockNumber = 0; gridBlockNumber <= 1; gridBlockNumber++)
    {
-      When GridBlockIs(gridBlockNumber);
+      Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Unknown);
       And GridAreaIs(GridArea_Unknown);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
+      CoolingSpeedShouldBe(CoolingSpeed_PullDown);
       GridAreaShouldBe(GridArea_1);
    }
 }
@@ -101,11 +126,12 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks2And3)
 {
    for(GridBlockNumber_t gridBlockNumber = 2; gridBlockNumber <= 3; gridBlockNumber++)
    {
-      When GridBlockIs(gridBlockNumber);
+      Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Unknown);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Unknown);
+      CoolingSpeedShouldBe(CoolingSpeed_PullDown);
    }
 }
 
@@ -113,12 +139,13 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks4And5And6)
 {
    for(GridBlockNumber_t gridBlockNumber = 4; gridBlockNumber <= 6; gridBlockNumber++)
    {
-      When GridBlockIs(gridBlockNumber);
+      Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Unknown);
       And GridAreaIs(GridArea_Unknown);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
+      CoolingSpeedShouldBe(CoolingSpeed_PullDown);
       GridAreaShouldBe(GridArea_2);
    }
 }
@@ -128,12 +155,13 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks7And8And14)
    GridBlockNumber_t gridBlockNumbers[] = { 7, 8, 14 };
    for(uint8_t i = 0; i < 3; i++)
    {
-      When GridBlockIs(gridBlockNumbers[i]);
+      Given GridBlockIs(gridBlockNumbers[i]);
       And CoolingModeIs(CoolingMode_Unknown);
       And GridAreaIs(GridArea_Unknown);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
+      CoolingSpeedShouldBe(CoolingSpeed_High);
       GridAreaShouldBe(GridArea_1);
    }
 }
@@ -142,57 +170,108 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10)
 {
    for(GridBlockNumber_t gridBlockNumber = 9; gridBlockNumber <= 10; gridBlockNumber++)
    {
-      When GridBlockIs(gridBlockNumber);
+      Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Unknown);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Unknown);
    }
 }
 
-TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks11And12And13)
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks11And12And13IfPullDownAndCompressorTripMitigationIsNotActive)
 {
    for(GridBlockNumber_t gridBlockNumber = 11; gridBlockNumber <= 13; gridBlockNumber++)
    {
-      When GridBlockIs(gridBlockNumber);
+      Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Unknown);
       And GridAreaIs(GridArea_Unknown);
-      And The GridIsRun();
+      And PullDownIs(InActive);
+      And CompressorTripMitigationIs(InActive);
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
+      CoolingSpeedShouldBe(CoolingSpeed_High);
       GridAreaShouldBe(GridArea_2);
    }
 }
 
-TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock15)
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks11And12And13IfPullDownAndCompressorTripMitigationIsActive)
 {
-   When GridBlockIs(15);
+   for(GridBlockNumber_t gridBlockNumber = 11; gridBlockNumber <= 13; gridBlockNumber++)
+   {
+      Given GridBlockIs(gridBlockNumber);
+      And CoolingModeIs(CoolingMode_Unknown);
+      And GridAreaIs(GridArea_Unknown);
+      And PullDownIs(Active);
+      And CompressorTripMitigationIs(Active);
+      When The GridIsRun();
+
+      CoolingModeShouldBe(CoolingMode_FreshFood);
+      CoolingSpeedShouldBe(CoolingSpeed_Mid);
+      GridAreaShouldBe(GridArea_2);
+   }
+}
+
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock15IfCoolingSpeedIsHigh)
+{
+   Given GridBlockIs(15);
    And CoolingModeIs(CoolingMode_Unknown);
    And GridAreaIs(GridArea_Unknown);
-   And The GridIsRun();
+   And CoolingSpeedIs(CoolingSpeed_High);
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
+   CoolingSpeedShouldBe(CoolingSpeed_High);
    GridAreaShouldBe(GridArea_1);
 }
 
-TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks16And17)
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock15IfCoolingSpeedIsNotHigh)
+{
+   Given GridBlockIs(15);
+   And CoolingModeIs(CoolingMode_Unknown);
+   And GridAreaIs(GridArea_Unknown);
+   And CoolingSpeedIs(CoolingSpeed_Low);
+   When The GridIsRun();
+
+   CoolingModeShouldBe(CoolingMode_Freezer);
+   CoolingSpeedShouldBe(CoolingSpeed_Mid);
+   GridAreaShouldBe(GridArea_1);
+}
+
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks16And17IfCoolingSpeedIsHigh)
 {
    for(GridBlockNumber_t gridBlockNumber = 16; gridBlockNumber <= 17; gridBlockNumber++)
    {
-      When GridBlockIs(gridBlockNumber);
+      Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Unknown);
-      And The GridIsRun();
+      And CoolingSpeedIs(CoolingSpeed_High);
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Unknown);
+      CoolingSpeedShouldBe(CoolingSpeed_High);
+   }
+}
+
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks16And17IfCoolingSpeedIsNotHigh)
+{
+   for(GridBlockNumber_t gridBlockNumber = 16; gridBlockNumber <= 17; gridBlockNumber++)
+   {
+      Given GridBlockIs(gridBlockNumber);
+      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingSpeedIs(CoolingSpeed_Low);
+      When The GridIsRun();
+
+      CoolingModeShouldBe(CoolingMode_Unknown);
+      CoolingSpeedShouldBe(CoolingSpeed_Mid);
    }
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock18)
 {
-   When GridBlockIs(18);
+   Given GridBlockIs(18);
    And CoolingModeIs(CoolingMode_Unknown);
    And GridAreaIs(GridArea_Unknown);
-   And The GridIsRun();
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
    GridAreaShouldBe(GridArea_2);
@@ -203,35 +282,52 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks19And20And27And34An
    GridBlockNumber_t gridBlockNumbers[] = { 19, 20, 27, 34, 41 };
    for(uint8_t i = 0; i < 5; i++)
    {
-      When GridBlockIs(gridBlockNumbers[i]);
+      Given GridBlockIs(gridBlockNumbers[i]);
       And CoolingModeIs(CoolingMode_Unknown);
       And GridAreaIs(GridArea_Unknown);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
+      CoolingSpeedShouldBe(CoolingSpeed_High);
       GridAreaShouldBe(GridArea_2);
    }
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock21)
 {
-   When GridBlockIs(21);
+   Given GridBlockIs(21);
    And CoolingModeIs(CoolingMode_Unknown);
    And GridAreaIs(GridArea_Unknown);
-   And The GridIsRun();
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
+   CoolingSpeedShouldBe(CoolingSpeed_Low);
    GridAreaShouldBe(GridArea_1);
 }
 
-TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock22)
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock22IfCoolingSpeedIsNotLow)
 {
-   When GridBlockIs(22);
+   Given GridBlockIs(22);
    And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingSpeedIs(CoolingSpeed_High);
    And GridAreaIs(GridArea_Unknown);
-   And The GridIsRun();
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
+   CoolingSpeedShouldBe(CoolingSpeed_Low);
+   GridAreaShouldBe(GridArea_1);
+}
+
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock22IfCoolingSpeedIsLow)
+{
+   Given GridBlockIs(22);
+   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingSpeedIs(CoolingSpeed_Low);
+   And GridAreaIs(GridArea_Unknown);
+   When The GridIsRun();
+
+   CoolingModeShouldBe(CoolingMode_Freezer);
+   CoolingSpeedShouldBe(CoolingSpeed_Low);
    GridAreaShouldBe(GridArea_1);
 }
 
@@ -239,12 +335,13 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks23And24WhenCoolingS
 {
    for(GridBlockNumber_t gridBlockNumber = 23; gridBlockNumber <= 24; gridBlockNumber++)
    {
-      When GridBlockIs(gridBlockNumber);
+      Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Unknown);
       And CoolingSpeedIs(CoolingSpeed_Off);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
+      CoolingSpeedShouldBe(CoolingSpeed_Low);
    }
 }
 
@@ -252,191 +349,250 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks23And24WhenCoolingS
 {
    for(GridBlockNumber_t gridBlockNumber = 23; gridBlockNumber <= 24; gridBlockNumber++)
    {
-      When GridBlockIs(gridBlockNumber);
+      Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Unknown);
       And CoolingSpeedIs(CoolingSpeed_Low);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Unknown);
+      CoolingSpeedShouldBe(CoolingSpeed_Low);
 
       CoolingModeIs(CoolingMode_Unknown);
       And CoolingSpeedIs(CoolingSpeed_Mid);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Unknown);
+      CoolingSpeedShouldBe(CoolingSpeed_Mid);
 
       CoolingModeIs(CoolingMode_Unknown);
       And CoolingSpeedIs(CoolingSpeed_High);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Unknown);
+      CoolingSpeedShouldBe(CoolingSpeed_High);
 
       CoolingModeIs(CoolingMode_Unknown);
       And CoolingSpeedIs(CoolingSpeed_PullDown);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Unknown);
+      CoolingSpeedShouldBe(CoolingSpeed_PullDown);
    }
 }
 
-TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks25And32And39)
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks25And32And39WhenCoolingSpeedIsOff)
 {
    for(GridBlockNumber_t gridBlockNumber = 25; gridBlockNumber <= 39; gridBlockNumber += 7)
    {
-      When GridBlockIs(gridBlockNumber);
+      Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingSpeedIs(CoolingSpeed_Off);
       And GridAreaIs(GridArea_Unknown);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
+      CoolingSpeedShouldBe(CoolingSpeed_Low);
       GridAreaShouldBe(GridArea_2);
    }
 }
 
-TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks26And33And40)
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks25And32And39WhenCoolingSpeedIsNotOff)
+{
+   for(GridBlockNumber_t gridBlockNumber = 25; gridBlockNumber <= 39; gridBlockNumber += 7)
+   {
+      Given GridBlockIs(gridBlockNumber);
+      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingSpeedIs(CoolingSpeed_High);
+      And GridAreaIs(GridArea_Unknown);
+      When The GridIsRun();
+
+      CoolingModeShouldBe(CoolingMode_FreshFood);
+      CoolingSpeedShouldBe(CoolingSpeed_High);
+      GridAreaShouldBe(GridArea_2);
+   }
+}
+
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks26And33And40WhenCoolingSpeedIsHigh)
 {
    for(GridBlockNumber_t gridBlockNumber = 26; gridBlockNumber <= 40; gridBlockNumber += 7)
    {
-      When GridBlockIs(gridBlockNumber);
+      Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingSpeedIs(CoolingSpeed_High);
       And GridAreaIs(GridArea_Unknown);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
+      CoolingSpeedShouldBe(CoolingSpeed_High);
       GridAreaShouldBe(GridArea_2);
    }
 }
 
-TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks28And29And35)
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks28And29And35WhenCoolingSpeedIsNotHigh)
 {
    GridBlockNumber_t gridBlockNumbers[] = { 28, 29, 35 };
    for(uint8_t i = 0; i < 3; i++)
    {
-      When GridBlockIs(gridBlockNumbers[i]);
+      Given GridBlockIs(gridBlockNumbers[i]);
       And CoolingModeIs(CoolingMode_Unknown);
       And GridAreaIs(GridArea_Unknown);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
+      CoolingSpeedShouldBe(CoolingSpeed_High);
       GridAreaShouldBe(GridArea_1);
    }
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock30)
 {
-   When GridBlockIs(30);
+   Given GridBlockIs(30);
    And CoolingModeIs(CoolingMode_Unknown);
-   And The GridIsRun();
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Unknown);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock31WhenCoolingModeIsOff)
 {
-   When GridBlockIs(31);
+   Given GridBlockIs(31);
    And CoolingModeIs(CoolingMode_Unknown);
    And CoolingSpeedIs(CoolingSpeed_Off);
-   And The GridIsRun();
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock31WhenCoolingModeIsNotOff)
 {
-   When GridBlockIs(31);
+   Given GridBlockIs(31);
    And CoolingModeIs(CoolingMode_Unknown);
    And CoolingSpeedIs(CoolingSpeed_Low);
-   And The GridIsRun();
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
 
    CoolingModeIs(CoolingMode_Unknown);
    And CoolingSpeedIs(CoolingSpeed_Mid);
-   And The GridIsRun();
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
 
    CoolingModeIs(CoolingMode_Unknown);
    And CoolingSpeedIs(CoolingSpeed_High);
-   And The GridIsRun();
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
 
    CoolingModeIs(CoolingMode_Unknown);
    And CoolingSpeedIs(CoolingSpeed_PullDown);
-   And The GridIsRun();
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
 }
 
-TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock36)
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock36WhenCoolingSpeedIsOff)
 {
-   When GridBlockIs(36);
+   Given GridBlockIs(36);
    And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingSpeedIs(CoolingSpeed_Off);
    And GridAreaIs(GridArea_Unknown);
-   And The GridIsRun();
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
+   CoolingSpeedShouldBe(CoolingSpeed_Off);
    GridAreaShouldBe(GridArea_1);
 }
 
-TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock37)
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock36WhenCoolingSpeedIsNotOff)
 {
-   When GridBlockIs(37);
+   Given GridBlockIs(36);
    And CoolingModeIs(CoolingMode_Unknown);
-   And The GridIsRun();
+   And CoolingSpeedIs(CoolingSpeed_High);
+   And GridAreaIs(GridArea_Unknown);
+   When The GridIsRun();
+
+   CoolingModeShouldBe(CoolingMode_Freezer);
+   CoolingSpeedShouldBe(CoolingSpeed_Low);
+   GridAreaShouldBe(GridArea_1);
+}
+
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock37WhenCoolingSpeedIsNotOff)
+{
+   Given GridBlockIs(37);
+   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingSpeedIs(CoolingSpeed_High);
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Unknown);
+   CoolingSpeedShouldBe(CoolingSpeed_Low);
+}
+
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock37WhenCoolingSpeedIsOff)
+{
+   Given GridBlockIs(37);
+   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingSpeedIs(CoolingSpeed_Off);
+   When The GridIsRun();
+
+   CoolingModeShouldBe(CoolingMode_Unknown);
+   CoolingSpeedShouldBe(CoolingSpeed_Off);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock38WhenCoolingSpeedIsOff)
 {
-   When GridBlockIs(38);
+   Given GridBlockIs(38);
    And CoolingModeIs(CoolingMode_Unknown);
    And CoolingSpeedIs(CoolingSpeed_Off);
-   And The GridIsRun();
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
+   CoolingSpeedShouldBe(CoolingSpeed_Off);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock38WhenCoolingSpeedIsNotOff)
 {
-   When GridBlockIs(38);
+   Given GridBlockIs(38);
    And CoolingModeIs(CoolingMode_Unknown);
    And CoolingSpeedIs(CoolingSpeed_Low);
-   And The GridIsRun();
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
+   CoolingSpeedShouldBe(CoolingSpeed_Low);
 
    And CoolingModeIs(CoolingMode_Unknown);
    And CoolingSpeedIs(CoolingSpeed_Mid);
-   And The GridIsRun();
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
+   CoolingSpeedShouldBe(CoolingSpeed_Low);
 
    And CoolingModeIs(CoolingMode_Unknown);
    And CoolingSpeedIs(CoolingSpeed_High);
-   And The GridIsRun();
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
+   CoolingSpeedShouldBe(CoolingSpeed_Low);
 
    And CoolingModeIs(CoolingMode_Unknown);
    And CoolingSpeedIs(CoolingSpeed_PullDown);
-   And The GridIsRun();
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
+   CoolingSpeedShouldBe(CoolingSpeed_Low);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock42And43)
 {
    for(GridBlockNumber_t gridBlockNumber = 42; gridBlockNumber <= 43; gridBlockNumber++)
    {
-      When GridBlockIs(gridBlockNumber);
+      Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Unknown);
       And GridAreaIs(GridArea_Unknown);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
+      CoolingSpeedShouldBe(CoolingSpeed_Off);
       GridAreaShouldBe(GridArea_1);
    }
 }
@@ -445,12 +601,13 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock44And45WhenAreaIsOne
 {
    for(GridBlockNumber_t gridBlockNumber = 44; gridBlockNumber <= 45; gridBlockNumber++)
    {
-      When GridBlockIs(gridBlockNumber);
+      Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Unknown);
       And GridAreaIs(GridArea_1);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
+      CoolingSpeedShouldBe(CoolingSpeed_Off);
    }
 }
 
@@ -458,18 +615,20 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock44And45WhenAreaIsNot
 {
    for(GridBlockNumber_t gridBlockNumber = 44; gridBlockNumber <= 45; gridBlockNumber++)
    {
-      When GridBlockIs(gridBlockNumber);
+      Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Unknown);
       And GridAreaIs(GridArea_2);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
+      CoolingSpeedShouldBe(CoolingSpeed_Off);
 
       CoolingModeIs(CoolingMode_Unknown);
       And GridAreaIs(GridArea_Unknown);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
+      CoolingSpeedShouldBe(CoolingSpeed_Off);
    }
 }
 
@@ -477,24 +636,26 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock46And47)
 {
    for(GridBlockNumber_t gridBlockNumber = 46; gridBlockNumber <= 47; gridBlockNumber++)
    {
-      When GridBlockIs(gridBlockNumber);
+      Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Unknown);
       And GridAreaIs(GridArea_Unknown);
-      And The GridIsRun();
+      When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
+      CoolingSpeedShouldBe(CoolingSpeed_Low);
       GridAreaShouldBe(GridArea_2);
    }
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock48)
 {
-   When GridBlockIs(48);
+   Given GridBlockIs(48);
    And CoolingModeIs(CoolingMode_Unknown);
    And GridAreaIs(GridArea_Unknown);
 
-   And The GridIsRun();
+   When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
+   CoolingSpeedShouldBe(CoolingSpeed_Mid);
    GridAreaShouldBe(GridArea_2);
 }

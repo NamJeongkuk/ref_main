@@ -390,6 +390,8 @@ enum
    ENTRY(Erd_ConvertibleCompartmentGridBlockNumber,         0xF01A, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorIsOn,                                0xF01B, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CoolingSpeed,                                  0xF01C, CoolingSpeed_t,                                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_SingleEvaporatorPulldownActive,                0xF01D, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorTripMitigationActive,                0xF01E, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_SensorsReadyToBeRead,                          0xF020, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_SetpointResolverReady,                         0xF021, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \

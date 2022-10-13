@@ -368,6 +368,7 @@ TEST(FanController, ShouldResetPidWhenCalculatedFanControlIsZero)
    GivenInitialization();
 
    PidShouldReset();
+
    WhenTheCalculatedClosedLoopFanSpeedChangesTo(0);
 }
 
