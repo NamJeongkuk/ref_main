@@ -88,8 +88,8 @@
         },
         {
           "namespace": "rx130",
-          "displayName": "Compressor Speed Request In Hz",
-          "name": "Erd_CompressorSpeedRequestInHz",
+          "displayName": "Compressor Controller Speed Request",
+          "name": "Erd_CompressorControllerSpeedRequest",
           "read": true,
           "write": false
         }

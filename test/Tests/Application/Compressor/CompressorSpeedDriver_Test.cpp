@@ -25,7 +25,7 @@ static const CompressorSpeedDriverConfig_t config = {
    .compressorFrequencyErd = Erd_CompressorInverterDriver,
    .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointZoneErd = Erd_FreezerSetpointZone,
-   .compressorControllerSpeedErd = Erd_CompressorControllerSpeed
+   .compressorControllerSpeedErd = Erd_CompressorControllerSpeedRequest
 };
 
 static CompressorSpeedDriver_t instance;
@@ -61,7 +61,7 @@ TEST_GROUP(CompressorSpeedDriver_SingleSpeed)
 
    void CompressorSpeedIs(CompressorSpeed_t speed)
    {
-      DataModel_Write(dataModel, Erd_CompressorControllerSpeed, &speed);
+      DataModel_Write(dataModel, Erd_CompressorControllerSpeedRequest, &speed);
    }
 };
 
@@ -165,7 +165,7 @@ TEST_GROUP(CompressorSpeedDriver_VariableSpeedCoolingModeIndependentAndRelayEnab
 
    void CompressorSpeedIs(CompressorSpeed_t speed)
    {
-      DataModel_Write(dataModel, Erd_CompressorControllerSpeed, &speed);
+      DataModel_Write(dataModel, Erd_CompressorControllerSpeedRequest, &speed);
    }
 
    void CompressorFrequencyShouldBe(uint8_t expected)
@@ -351,7 +351,7 @@ TEST_GROUP(CompressorSpeedDriver_VariableSpeedCoolingModeDependentAndRelayDisabl
 
    void CompressorSpeedIs(CompressorSpeed_t speed)
    {
-      DataModel_Write(dataModel, Erd_CompressorControllerSpeed, &speed);
+      DataModel_Write(dataModel, Erd_CompressorControllerSpeedRequest, &speed);
    }
 
    void CoolingModeIs(CoolingMode_t mode)

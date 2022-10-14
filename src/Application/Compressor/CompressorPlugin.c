@@ -9,19 +9,43 @@
 #include "CompressorIsOn.h"
 #include "SystemErds.h"
 
+enum
+{
+   CompressorSabbathDelayTimeInSeconds = 20
+};
+
 static const CompressorSpeedDriverConfig_t compressorSpeedDriverConfig = {
    .compressorRelayErd = Erd_CompressorRelay,
    .compressorFrequencyErd = Erd_CompressorInverterDriver,
    .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointZoneErd = Erd_FreezerSetpointZone,
-   .compressorControllerSpeedErd = Erd_CompressorControllerSpeed
+   .compressorControllerSpeedErd = Erd_CompressorControllerSpeedRequest
 };
 
 static const CompressorSpeedControllerConfiguration_t compressorSpeedControllerConfig = {
    .compressorStateErd = Erd_CompressorState,
-   .compressorSpeedRequestErd = Erd_CompressorControllerSpeed,
+   .compressorSpeedRequestErd = Erd_CompressorControllerSpeedRequest,
    .compressorSpeedResolvedVoteErd = Erd_CompressorSpeed_ResolvedVote,
-   .disableMinimumTimeRequestErd = Erd_DisableMinimumCompressorTimes
+   .sabbathDelayTimeInSeconds = CompressorSabbathDelayTimeInSeconds,
+};
+
+static bool VotingErdCareDelegate(const void *votingErdData)
+{
+   const CompressorVotedSpeed_t *data = votingErdData;
+   return (data->care);
+}
+
+static const CompressorVotedSpeed_t defaultCompressorSpeedData = {
+   .speed = CompressorSpeed_Off,
+   .care = false
+};
+
+static const ErdResolverConfiguration_t compressorSpeedVoteResolverConfig = {
+   .votingErdCare = VotingErdCareDelegate,
+   .defaultData = &defaultCompressorSpeedData,
+   .winningVoterErd = Erd_CompressorSpeed_WinningVoteErd,
+   .resolvedStateErd = Erd_CompressorSpeed_ResolvedVote,
+   .numberOfVotingErds = (Erd_CompressorSpeed_GridVote - Erd_CompressorSpeed_WinningVoteErd)
 };
 
 static CompressorStartupFanVotesConfiguration_t compressorStartupFanVotesConfig = {
@@ -34,6 +58,11 @@ static CompressorStartupFanVotesConfiguration_t compressorStartupFanVotesConfig 
 
 void CompressorPlugin_Init(CompressorPlugin_t *instance, I_DataModel_t *dataModel)
 {
+   ErdResolver_Init(
+      &instance->_private.compressorSpeedErdResolver,
+      DataModel_AsDataSource(dataModel),
+      &compressorSpeedVoteResolverConfig);
+
    CompressorStartupFanVotes_Init(
       &instance->_private.compressorStartupFanVotes,
       dataModel,

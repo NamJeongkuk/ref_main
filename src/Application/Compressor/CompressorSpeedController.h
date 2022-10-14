@@ -14,14 +14,15 @@
 #include "Timer.h"
 #include "I_DataModel.h"
 #include "CompressorData.h"
+#include "CompressorVotedSpeed.h"
 #include "Hsm.h"
 
 typedef struct
 {
    Erd_t compressorStateErd; // CompressorState_t
-   Erd_t compressorSpeedRequestErd; // CompressorState_t
+   Erd_t compressorSpeedRequestErd; // CompressorSpeed_t
    Erd_t compressorSpeedResolvedVoteErd; // CompressorVotedSpeed_t
-   Erd_t disableMinimumTimeRequestErd; // bool
+   uint8_t sabbathDelayTimeInSeconds; // uint8_t
 } CompressorSpeedControllerConfiguration_t;
 
 typedef struct
@@ -32,10 +33,11 @@ typedef struct
       const CompressorData_t *compressorData;
       const CompressorSpeedControllerConfiguration_t *config;
       Timer_t startupTimer;
-      Timer_t remainOffAfterValveMoveTimer;
-      Timer_t minimumOffTimer;
+      Timer_t sabbathTimer;
       TimerModule_t *timerModule;
       Hsm_t hsm;
+      CompressorSpeed_t cacheSpeedFromResolvedVote;
+      EventSubscription_t dataModelChangedSubscription;
    } _private;
 } CompressorSpeedController_t;
 
