@@ -13,6 +13,7 @@
 #include "Grid_TripleEvap.h"
 #include "uassert.h"
 #include "Constants_Binary.h"
+#include "ParametricData.h"
 
 typedef struct
 {
@@ -116,4 +117,9 @@ void GridPlugin_Init(
       dataModel,
       Erd_GridPluginReady,
       set);
+
+   DataModel_Write(
+      dataModel,
+      Erd_PulldownInMediumCompressorSpeedEnabled,
+      &PersonalityParametricData_Get(dataModel)->pulldownData->pulldownInMediumCompressorSpeed);
 }

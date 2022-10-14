@@ -60,6 +60,7 @@ SRC_DIRS:=\
   src/Application/OverrideArbiters \
   src/Application/ParametricData \
   src/Application/Plugins \
+  src/Application/Pulldown \
   src/Application/Sensor \
   src/Application/Sabbath \
   src/Application/ServiceDiagnostics \

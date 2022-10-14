@@ -30,6 +30,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Grid \
    $(PROJECT_DIR)/Application/Grid/GridFunctions \
    $(PROJECT_DIR)/Application/ParametricData \
+   $(PROJECT_DIR)/Application/Pulldown \
    $(PROJECT_DIR)/Application/Sabbath \
    $(PROJECT_DIR)/Application/Sensor \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \

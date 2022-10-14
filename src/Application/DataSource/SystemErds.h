@@ -454,6 +454,7 @@ enum
    ENTRY(Erd_ReadyToDefrost,                                0xF12C, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TimeThatPrechillConditionsAreMetInMinutes,     0xF12D, uint16_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,    0xF12E, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_PulldownInMediumCompressorSpeedEnabled,        0xF12F, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_LeftHandFreshFoodDoorIsOpen,                   0xF130, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RightHandFreshFoodDoorIsOpen,                  0xF131, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
