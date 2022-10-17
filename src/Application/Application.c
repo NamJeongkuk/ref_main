@@ -24,6 +24,7 @@
 #include "SensorFilterPlugin.h"
 #include "AdjustedSetpointPlugin.h"
 #include "SideBySideConfigurationPlugin.h"
+#include "ShiftOffsetCalculatorPlugin.h"
 
 enum
 {
@@ -61,6 +62,7 @@ void Application_Init(
       Erd_PersonalityIdOutOfRangeFlag);
 
    AdjustedSetpointPlugin_Init(&instance->_private.adjustedSetpointPlugin, dataModel);
+   ShiftOffsetCalculatorPlugin_Init(&instance->_private.shiftOffsetCalculatorPlugin, dataModel);
    SensorFilterPlugin(dataModel);
    OverrideArbiterPlugin_Init(dataModel);
 

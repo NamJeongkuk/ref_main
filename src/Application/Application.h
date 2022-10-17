@@ -23,6 +23,7 @@
 #include "SetpointZonePlugin.h"
 #include "UserSetpointPlugin.h"
 #include "SideBySideConfigurationPlugin.h"
+#include "ShiftOffsetCalculatorPlugin.h"
 
 typedef struct
 {
@@ -46,6 +47,7 @@ typedef struct
       FanPlugin_t fanPlugin;
       SetpointZonePlugin_t setpointZonePlugin;
       UserSetpointPlugin_t userSetpointPlugin;
+      ShiftOffsetCalculatorPlugin_t shiftOffsetCalculatorPlugin;
       Timer_t stackUsageUpdateTimer;
    } _private;
 } Application_t;
