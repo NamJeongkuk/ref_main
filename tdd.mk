@@ -35,6 +35,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Sensor \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \
    $(PROJECT_DIR)/Application/SystemMonitor \
+   $(PROJECT_DIR)/rx130/Hardware/SoftPwm \
 
 # List of directories that contain your tests and test helpers (mocks, fakes, etc.)
 TEST_SRC_DIRS := \
@@ -64,6 +65,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/ServiceDiagnostics \
    $(TESTS_DIR)/Application/SystemMonitor \
    $(TESTS_DIR)/Application/ \
+   $(TESTS_DIR)/Hardware/SoftPwm \
 
 # List of include directories
 INCLUDE_DIRS := \

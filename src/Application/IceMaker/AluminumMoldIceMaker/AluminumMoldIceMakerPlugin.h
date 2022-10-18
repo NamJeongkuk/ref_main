@@ -10,12 +10,14 @@
 
 #include "I_DataModel.h"
 #include "FillTubeHeaterVotingFrameworkPlugin.h"
+#include "SoftPwm.h"
 
 typedef struct
 {
    struct
    {
       FillTubeHeaterVotingFrameworkPlugin_t fillTubeHeaterVotingFrameworkPlugin;
+      SoftPwm_t fillTubeHeaterSoftPwm;
    } _private;
 } AluminumMoldIceMakerPlugin_t;
 

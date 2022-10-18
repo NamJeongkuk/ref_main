@@ -38,6 +38,7 @@ SRC_DIRS:=\
   src/$(TARGET)/Hardware \
   src/$(TARGET)/Hardware/Eeprom \
   src/$(TARGET)/Hardware/Flash \
+  src/$(TARGET)/Hardware/SoftPwm \
   src/Application \
   src/Application/Compressor \
   src/Application/Configurations \

@@ -562,6 +562,7 @@ enum
    ENTRY(Erd_AnotherAnalogInput,                            0xF205, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorInverterDriver,                      0xF206, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorRelay,                               0xF207, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FillTubeHeater,                                0xF208, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_DisableMinimumCompressorTimes,                 0xF20E, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
@@ -741,6 +742,8 @@ enum
    ENTRY(Erd_FreshFoodDamperHeater_FactoryVote,                0xF3D2, HeaterVotedState_t,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperHeater_DamperFreezePreventionVote, 0xF3D3, HeaterVotedState_t,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote,      0xF3D4, HeaterVotedState_t,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FillTubeHeaterPwmDutyCycle,                    0xF3E0, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ApplicationToBspPwm_PWM_0,                     0xF400, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
    ENTRY(Erd_ApplicationToBspPwm_PWM_1,                     0xF401, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \

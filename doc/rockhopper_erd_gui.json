@@ -985,6 +985,21 @@
           "name": "Erd_FillTubeHeater_ContinuousVote",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fill Tube Heater (Load)",
+          "name": "Erd_FillTubeHeater",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fill Tube Heater Pwm Duty Cycle (Out of 65535)",
+          "description": "Out of 65535",
+          "name": "Erd_FillTubeHeaterPwmDutyCycle",
+          "read": true,
+          "write": true
         }
       ]
     },
