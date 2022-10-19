@@ -10,7 +10,13 @@
 #include "PersonalityId.h"
 #include "ParametricDataTableOfContents.h"
 #include "ParametricData.h"
+#include "DataSource_Gpio.h"
+#include "DataSource_Adc.h"
+#include "DataSource_OldHw_Pwm.h"
+#include "DataSource_OldHw_InputCapture.h"
+#include "DataSource_OldHw_Personality.h"
 
+#ifdef OLD_HW
 static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_GpioGroupInterface, Erd_GpioGroupInterface },
    { Erd_HeartbeatLed, Erd_BspGpio_HeartbeatLed },
@@ -28,6 +34,12 @@ static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_ApplicationToBspInputCapture_CAPT_4, Erd_BspFanInputCapture_CAPT_4 },
    { Erd_ApplicationToBspInputCapture_CAPT_5, Erd_BspFanInputCapture_CAPT_5 },
 };
+#else
+static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
+   { Erd_GpioGroupInterface, Erd_GpioGroupInterface },
+   { Erd_HeartbeatLed, Erd_BspGpio_HeartbeatLed },
+};
+#endif
 
 static const ConstArrayMap_BinarySearchConfiguration_t bspToApplicationMapConfiguration = {
    applicationBspToBspMappedPairs,

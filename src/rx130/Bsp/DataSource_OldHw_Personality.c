@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "DataSource_Personality.h"
+#include "DataSource_OldHw_Personality.h"
 #include "PersonalityId.h"
 #include "iodefine.h"
 #include "I_DataSource.h"
@@ -120,7 +120,7 @@ static uint8_t SizeOf(I_DataSource_t *_instance, const Erd_t erd)
 
 static const I_DataSource_Api_t api = { Read, Write, Has, SizeOf };
 
-I_DataSource_t *DataSource_Personality_Init()
+I_DataSource_t *DataSource_OldHw_Personality_Init()
 {
    InitializeInputs();
    instance.personality = GetPersonalityId();

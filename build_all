@@ -14,7 +14,7 @@ fi
 
 echo
 echo -e "\033[1m> Building rx130-target...\033[0m"
-$RX_MAKE -f rx130-target.mk -j16 RELEASE=Y DEBUG=N package
+$RX_MAKE -f rx130-target.mk -j16 RELEASE=Y DEBUG=N OLD_HW=Y package
 
 echo
 echo -e "\033[1m> All builds completed successfully\033[0m"

@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef DATASOURCE_PWM_H
-#define DATASOURCE_PWM_H
+#ifndef DATASOURCE_OLDHW_PWM_H
+#define DATASOURCE_OLDHW_PWM_H
 
 #include "I_DataSource.h"
 #include "BspErdRanges.h"
@@ -37,6 +37,6 @@ enum
  * @param timerModule
  * @return
  */
-I_DataSource_t *DataSource_Pwm_Init(void);
+I_DataSource_t *DataSource_OldHw_Pwm_Init(void);
 
 #endif

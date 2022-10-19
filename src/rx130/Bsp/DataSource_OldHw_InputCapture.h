@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef DATASOURCE_INPUTCAPTURE
-#define DATASOURCE_INPUTCAPTURE
+#ifndef DATASOURCE_OLDHW_INPUTCAPTURE
+#define DATASOURCE_OLDHW_INPUTCAPTURE
 
 #include "I_DataSource.h"
 #include "BspErdRanges.h"
@@ -61,7 +61,7 @@ enum
 };
 // clang-format on
 
-I_DataSource_t *DataSource_InputCapture_Init(
+I_DataSource_t *DataSource_OldHw_InputCapture_Init(
    TimerModule_t *timerModule,
    Event_Synchronous_t *onChangeEvent);
 

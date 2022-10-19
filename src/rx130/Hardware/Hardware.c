@@ -27,11 +27,19 @@ void Hardware_InitializeStage1(void)
 
 void Hardware_InitializeStage2(I_DataModel_t *dataModel)
 {
+#ifdef OLD_HW
    I_Uart_t *internalUart = Uart_Channel6_GetInstance(U32_PCLKB);
    DataModelErdPointerAccess_Write(dataModel, Erd_InternalUart, internalUart);
 
    I_Uart_t *externalUart = Uart_Channel0_GetInstance(U32_PCLKB);
    DataModelErdPointerAccess_Write(dataModel, Erd_ExternalUart, externalUart);
+#else
+   I_Uart_t *internalUart = Uart_Channel6_GetInstance(U32_PCLKB);
+   DataModelErdPointerAccess_Write(dataModel, Erd_InternalUart, internalUart);
+
+   I_Uart_t *externalUart = Uart_Channel0_GetInstance(U32_PCLKB);
+   DataModelErdPointerAccess_Write(dataModel, Erd_ExternalUart, externalUart);
+#endif
 
    I_Crc16Calculator_t *crcCalcTable = Crc16Calculator_Table;
    DataModelErdPointerAccess_Write(dataModel, Erd_CrcCalcTable, crcCalcTable);

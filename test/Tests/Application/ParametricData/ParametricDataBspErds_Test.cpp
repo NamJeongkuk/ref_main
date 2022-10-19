@@ -9,8 +9,8 @@ extern "C"
 {
 #include "SystemErds.h"
 #include "DataSource_Gpio.h"
-#include "DataSource_Pwm.h"
-#include "DataSource_InputCapture.h"
+#include "DataSource_OldHw_Pwm.h"
+#include "DataSource_OldHw_InputCapture.h"
 }
 
 #include "CppUTest/TestHarness.h"

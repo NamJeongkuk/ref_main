@@ -8,7 +8,7 @@
  */
 
 #include <string.h>
-#include "DataSource_Pwm.h"
+#include "DataSource_OldHw_Pwm.h"
 #include "I_Pwm.h"
 #include "iodefine.h"
 #include "uassert.h"
@@ -496,7 +496,7 @@ static struct
 
 static const I_DataSource_Api_t api = { Read, Write, Has, SizeOf };
 
-I_DataSource_t *DataSource_Pwm_Init(void)
+I_DataSource_t *DataSource_OldHw_Pwm_Init(void)
 {
    instance.interface.api = &api;
 

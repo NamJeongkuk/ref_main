@@ -28,6 +28,15 @@ $(error Please define DEBUG with Y or N.)
 endif
 endif
 
+ifeq ($(OLD_HW), N)
+else
+ifeq ($(OLD_HW), Y)
+DEFINES+=OLD_HW
+else
+$(error Please define OLD_HW with Y or N.)
+endif
+endif
+
 include tools/kpit-rx/defaults.mk
 
 SRC_FILES:=\

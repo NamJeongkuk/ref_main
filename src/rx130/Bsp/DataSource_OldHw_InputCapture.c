@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "DataSource_InputCapture.h"
+#include "DataSource_OldHw_InputCapture.h"
 #include "Event_Null.h"
 #include "Hardware.h"
 #include "iodefine.h"
@@ -470,7 +470,7 @@ static void PollAngularDegrees(void *context)
    };
 }
 
-I_DataSource_t *DataSource_InputCapture_Init(
+I_DataSource_t *DataSource_OldHw_InputCapture_Init(
    TimerModule_t *timerModule,
    Event_Synchronous_t *onChangeEvent)
 {

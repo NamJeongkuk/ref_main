@@ -12,9 +12,9 @@
 #include "Event_Synchronous.h"
 #include "DataSource_Gpio.h"
 #include "DataSource_Adc.h"
-#include "DataSource_Pwm.h"
-#include "DataSource_InputCapture.h"
-#include "DataSource_Personality.h"
+#include "DataSource_OldHw_Pwm.h"
+#include "DataSource_OldHw_InputCapture.h"
+#include "DataSource_OldHw_Personality.h"
 
 enum
 {
@@ -83,11 +83,17 @@ I_DataSource_t *DataSource_Bsp_Init(TimerModule_t *timerModule)
    Event_Synchronous_Init(&instance.OnDataChange);
 
    uint8_t index = 0;
-   instance.dataSources[index++] = DataSource_Personality_Init();
    instance.dataSources[index++] = DataSource_Gpio_Init(timerModule, &instance.OnDataChange);
    instance.dataSources[index++] = DataSource_Adc_Init();
-   instance.dataSources[index++] = DataSource_Pwm_Init();
-   instance.dataSources[index++] = DataSource_InputCapture_Init(timerModule, &instance.OnDataChange);
+#ifdef OLD_HW
+   instance.dataSources[index++] = DataSource_OldHw_Personality_Init();
+   instance.dataSources[index++] = DataSource_OldHw_Pwm_Init();
+   instance.dataSources[index++] = DataSource_OldHw_InputCapture_Init(timerModule, &instance.OnDataChange);
+#else
+   // instance.dataSources[index++] = DataSource_Personality_Init();
+   // instance.dataSources[index++] = DataSource_Pwm_Init();
+   // instance.dataSources[index++] = DataSource_InputCapture_Init(timerModule, &instance.OnDataChange);
+#endif
 
    uassert(index <= NUM_ELEMENTS(instance.dataSources));
 
