@@ -660,6 +660,13 @@ enum
    ENTRY(Erd_GpioGroupInterface,                            0xF311, I_GpioGroup_t *,                                    Swap_N, Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
    ENTRY(Erd_CoolingStatesGridVotesConstArrayMapInterface,  0xF312, I_ConstArrayMap_t *,                                Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_TestFaultWrapperCountSetRequest,               0xF313, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TestFaultWrapperCountClearRequest,             0xF314, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TestFaultWrapperCountResetRequest,             0xF315, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TestFaultWrapperConsecutiveSetRequest,         0xF316, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TestFaultWrapperConsecutiveClearRequest,       0xF317, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TestFaultWrapperConsecutiveResetRequest,       0xF318, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_ConvertibleCompartmentFanSpeed_ResolvedVote,   0xF320, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentFanSpeed_WinningVoteErd, 0xF321, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentFanSpeed_FactoryVote,    0xF322, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

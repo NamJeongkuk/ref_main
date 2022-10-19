@@ -67,9 +67,48 @@ enum
 
 static I_FaultWrapper_t *faultWrapperArray[FaultWrapperIndex_Max];
 
+static EventSubscription_t dataSourceChangeSubscription;
+
+static void DataSourceChanged(void *context, const void *_args)
+{
+   IGNORE(context);
+   REINTERPRET(args, _args, const DataSourceOnDataChangeArgs_t *);
+
+   if(args->erd == Erd_TestFaultWrapperCountSetRequest)
+   {
+      FaultWrapper_SetRequest(faultWrapperArray[FaultWrapperIndex_SomeOtherFault]);
+   }
+   else if(args->erd == Erd_TestFaultWrapperCountClearRequest)
+   {
+      FaultWrapper_ClearRequest(faultWrapperArray[FaultWrapperIndex_SomeOtherFault]);
+   }
+   else if(args->erd == Erd_TestFaultWrapperCountResetRequest)
+   {
+      FaultWrapper_Reset(faultWrapperArray[FaultWrapperIndex_SomeOtherFault]);
+   }
+   else if(args->erd == Erd_TestFaultWrapperConsecutiveSetRequest)
+   {
+      FaultWrapper_SetRequest(faultWrapperArray[FaultWrapperIndex_SomeFault]);
+   }
+   else if(args->erd == Erd_TestFaultWrapperConsecutiveClearRequest)
+   {
+      FaultWrapper_ClearRequest(faultWrapperArray[FaultWrapperIndex_SomeFault]);
+   }
+   else if(args->erd == Erd_TestFaultWrapperConsecutiveResetRequest)
+   {
+      FaultWrapper_Reset(faultWrapperArray[FaultWrapperIndex_SomeFault]);
+   }
+}
+
+/*!
+ * @param dataModel
+ */
 void FaultWrapperPlugin_Init(I_DataModel_t *dataModel)
 {
    FAULT_WRAPPER_CONSECUTIVE_TABLE(EXPAND_AS_FAULT_WRAPPER_CONSECUTIVE_DATA)
    FAULT_WRAPPER_COUNT_TABLE(EXPAND_AS_FAULT_WRAPPER_COUNT_DATA)
    DataModelErdPointerAccess_Write(dataModel, Erd_FaultWrapperInterfaceArray, &faultWrapperArray);
+
+   EventSubscription_Init(&dataSourceChangeSubscription, NULL, DataSourceChanged);
+   Event_Subscribe(dataModel->OnDataChange, &dataSourceChangeSubscription);
 }

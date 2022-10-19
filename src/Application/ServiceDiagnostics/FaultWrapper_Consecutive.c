@@ -28,6 +28,7 @@ static bool FaultIsSet(FaultWrapper_Consecutive_t *instance)
       instance->_private.dataModel,
       instance->_private.configuration->faultOutputErd,
       &faultIsSet);
+
    return faultIsSet;
 }
 
@@ -65,6 +66,7 @@ static void SetRequest(I_FaultWrapper_t *interface)
 static void ClearRequest(I_FaultWrapper_t *interface)
 {
    REINTERPRET(instance, interface, FaultWrapper_Consecutive_t *);
+
    if(!FaultIsSet(instance))
    {
       instance->_private.consecutiveSetRequestCounts = 0;
@@ -79,6 +81,7 @@ static void ClearRequest(I_FaultWrapper_t *interface)
 static void Reset(I_FaultWrapper_t *interface)
 {
    REINTERPRET(instance, interface, FaultWrapper_Consecutive_t *);
+
    instance->_private.consecutiveClearRequestCounts = 0;
    instance->_private.consecutiveSetRequestCounts = 0;
    ClearFault(instance);
@@ -86,6 +89,11 @@ static void Reset(I_FaultWrapper_t *interface)
 
 static const I_FaultWrapper_Api_t api = { SetRequest, ClearRequest, Reset };
 
+/*!
+ * @param instance
+ * @param configuration
+ * @param dataModel
+ */
 void FaultWrapper_Consecutive_Init(
    FaultWrapper_Consecutive_t *instance,
    const FaultWrapper_Consecutive_Configuration_t *configuration,

@@ -77,6 +77,7 @@ static void PushFaultToQueue(
 static void SetRequest(I_FaultWrapper_t *interface)
 {
    REINTERPRET(instance, interface, FaultWrapper_Count_t *);
+
    PushFaultToQueue(instance, SET);
 }
 
@@ -89,18 +90,25 @@ static void ResetFaultBitQueue(FaultWrapper_Count_t *instance)
 static void ClearRequest(I_FaultWrapper_t *interface)
 {
    REINTERPRET(instance, interface, FaultWrapper_Count_t *);
+
    PushFaultToQueue(instance, CLEAR);
 }
 
 static void Reset(I_FaultWrapper_t *interface)
 {
    REINTERPRET(instance, interface, FaultWrapper_Count_t *);
+
    ClearFault(instance);
    ResetFaultBitQueue(instance);
 }
 
 static const I_FaultWrapper_Api_t api = { SetRequest, ClearRequest, Reset };
 
+/*!
+ * @param instance
+ * @param configuration
+ * @param dataModel
+ */
 void FaultWrapper_Count_Init(
    FaultWrapper_Count_t *instance,
    const FaultWrapper_Count_Configuration_t *configuration,
