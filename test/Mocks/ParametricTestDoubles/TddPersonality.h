@@ -16,6 +16,7 @@ enum
    TddPersonality_DevelopmentSingleSpeedCompressor,
    TddPersonality_DevelopmentVariableSpeedCoolingModeIndependentCompressor,
    TddPersonality_DevelopmentVariableSpeedCoolingModeDependentCompressor,
+   TddPersonality_DevelopmentMaxOpenDamperTimerZero,
    TddPersonality_MaxDevelopment
 };
 

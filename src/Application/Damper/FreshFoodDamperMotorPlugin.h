@@ -11,6 +11,8 @@
 #include "I_DataModel.h"
 #include "StepperMotorDriver.h"
 #include "FreshFoodDamperRequestManager.h"
+#include "DamperMaxOpenTimeMonitor.h"
+#include "SingleDamperData.h"
 #include "Timer.h"
 #include "ErdResolver.h"
 #include "Event_Synchronous.h"
@@ -21,6 +23,7 @@ typedef struct
    {
       StepperMotorDriver_t stepperMotorDriver;
       FreshFoodDamperRequestManager_t damperRequestManager;
+      DamperMaxOpenTime_t damperMaxOpenTime;
       Event_Synchronous_t damperStepEvent;
       Timer_t stepEventTimer;
       ErdResolver_t damperErdResolver;

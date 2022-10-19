@@ -35,6 +35,11 @@ static const FreshFoodDamperRequestManagerConfiguration_t requestManagerConfig =
    .damperCurrentPositionErd = Erd_FreshFoodDamperCurrentPosition
 };
 
+static const DamperMaxOpenTimeConfiguration_t maxOpenDamperConfig = {
+   .damperPositionMaxOpenTimeVoteErd = Erd_FreshFoodDamperPosition_MaxOpenTimeVote,
+   .damperCurrentPositionErd = Erd_FreshFoodDamperCurrentPosition
+};
+
 static const DamperVotedPosition_t defaultData = {
    .position = DamperPosition_Closed,
    .care = false
@@ -80,6 +85,12 @@ void FreshFoodDamperMotorPlugin_Init(FreshFoodDamperMotorPlugin_t *instance, I_D
       &instance->_private.damperRequestManager,
       dataModel,
       &requestManagerConfig);
+
+   DamperMaxOpenTimeMonitor_Init(
+      &instance->_private.damperMaxOpenTime,
+      dataModel,
+      &maxOpenDamperConfig,
+      PersonalityParametricData_Get(dataModel)->freshFoodDamperData);
 
    TimerModule_StartPeriodic(
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
