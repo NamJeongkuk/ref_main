@@ -32,8 +32,7 @@ typedef struct
       I_DataModel_t *dataModel;
       const CompressorData_t *compressorData;
       const CompressorSpeedControllerConfiguration_t *config;
-      Timer_t startupTimer;
-      Timer_t sabbathTimer;
+      Timer_t compressorTimer;
       TimerModule_t *timerModule;
       Hsm_t hsm;
       CompressorSpeed_t cacheSpeedFromResolvedVote;

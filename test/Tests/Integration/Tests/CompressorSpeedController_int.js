@@ -1,7 +1,7 @@
 "use strict";
 
 const delay = require("javascript-common").util.delay;
-const { msPerSec } = require("../support/constants");
+const { msPerSec, msPerMin } = require("../support/constants");
 const constants = require("../support/constants");
 
 const after = (time) => ({
@@ -10,6 +10,9 @@ const after = (time) => ({
    },
    inSec: async () => {
       await delay(time * msPerSec);
+   },
+   inMin: async () => {
+      await delay(time * msPerMin);
    }
 });
 
@@ -39,6 +42,7 @@ describe("CompressorSpeedController,", () => {
 
    const sabbathTimeInSeconds = 20;
    const startupTimeInSeconds = 100;
+   const minimumOnTimeInMinutes = 15;
 
    const providedTheFactorySpeedCompressorVoteSpeedIs = async (requestedSpeed) => {
       let requestedVote = { speed: requestedSpeed, care: true };
@@ -146,6 +150,28 @@ describe("CompressorSpeedController,", () => {
       await providedTheFactorySpeedCompressorVoteSpeedIs(compressorSpeed.medium);
 
       await after(1).inSec();
+      await theCompressorSpeedRequestShouldBe(compressorSpeed.low);
+   });
+
+   it("should transition to on and ready to change from minimum on time after minimum on timer expires", async () => {
+      await providedTheFactorySpeedCompressorVoteSpeedIs(compressorSpeed.low);
+      await after(sabbathTimeInSeconds + startupTimeInSeconds).inSec();
+      await theCompressorStateShouldBe(compressorState.minimumOnTime);
+
+      await after(minimumOnTimeInMinutes - 1).inMin();
+      await theCompressorStateShouldBe(compressorState.minimumOnTime);
+
+      await after(1).inMin();
+      await theCompressorStateShouldBe(compressorState.onAndReadyToChange);
+   });
+
+   it("should not request compressor speed in transition from minimum on time to on and ready to change", async () => {
+      await providedTheFactorySpeedCompressorVoteSpeedIs(compressorSpeed.low);
+      await after(sabbathTimeInSeconds + startupTimeInSeconds).inSec();
+      await theCompressorStateShouldBe(compressorState.minimumOnTime);
+      await theCompressorSpeedRequestShouldBe(compressorSpeed.low);
+
+      await after(minimumOnTimeInMinutes).inMin();
       await theCompressorSpeedRequestShouldBe(compressorSpeed.low);
    });
 });

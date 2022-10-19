@@ -267,3 +267,25 @@ TEST(CompressorSpeedController, ShouldNotTransitionFromOffAndReadyToChangeIfVote
    When The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
    The CompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
 }
+
+TEST(CompressorSpeedController, ShouldTransitionFromMinimumOnTimeToOnAndReadyToChangeAfterMinimumOnTimerExpires)
+{
+   Given The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOnTime);
+
+   After(compressorData->compressorTimes.minimumOnTimeInMinutes * MSEC_PER_MIN - 1);
+   The CompressorHsmStateShouldBe(CompressorState_MinimumOnTime);
+
+   After(1);
+   The CompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
+}
+
+TEST(CompressorSpeedController, ShouldNotRequestCompressorSpeedInTransitionFromMinimumOnTimeToOnAndReadyToChange)
+{
+   Given The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOnTime);
+   CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Low);
+
+   After(compressorData->compressorTimes.minimumOnTimeInMinutes * MSEC_PER_MIN);
+   CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Low);
+}

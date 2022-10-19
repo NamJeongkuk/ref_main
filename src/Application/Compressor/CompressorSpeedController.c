@@ -91,11 +91,21 @@ static void SabbathDelayTimerCompleted(void *context)
       NULL);
 }
 
+static void MinimumOnTimerCompleted(void *context)
+{
+   CompressorSpeedController_t *instance = context;
+
+   Hsm_SendSignal(
+      &instance->_private.hsm,
+      Signal_MinimumOnTimerComplete,
+      NULL);
+}
+
 static void StartStartupTimer(CompressorSpeedController_t *instance)
 {
    TimerModule_StartOneShot(
       instance->_private.timerModule,
-      &instance->_private.startupTimer,
+      &instance->_private.compressorTimer,
       instance->_private.compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC,
       StartupTimerCompleted,
       instance);
@@ -105,9 +115,19 @@ static void StartSabbathDelayTimer(CompressorSpeedController_t *instance)
 {
    TimerModule_StartOneShot(
       instance->_private.timerModule,
-      &instance->_private.sabbathTimer,
+      &instance->_private.compressorTimer,
       instance->_private.config->sabbathDelayTimeInSeconds * MSEC_PER_SEC,
       SabbathDelayTimerCompleted,
+      instance);
+}
+
+static void StartMinimumOnTimer(CompressorSpeedController_t *instance)
+{
+   TimerModule_StartOneShot(
+      instance->_private.timerModule,
+      &instance->_private.compressorTimer,
+      instance->_private.compressorData->compressorTimes.minimumOnTimeInMinutes * MSEC_PER_MIN,
+      MinimumOnTimerCompleted,
       instance);
 }
 
@@ -235,6 +255,11 @@ static bool State_MinimumOnTime(Hsm_t *hsm, HsmSignal_t signal, const void *data
       case Hsm_Entry:
          SetHsmStateTo(instance, CompressorState_MinimumOnTime);
          RequestCompressorSpeed(instance, CachedVotedSpeed(instance));
+         StartMinimumOnTimer(instance);
+         break;
+
+      case Signal_MinimumOnTimerComplete:
+         Hsm_Transition(hsm, State_OnAndReadyToChange);
          break;
 
       case Hsm_Exit:
