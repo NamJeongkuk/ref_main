@@ -35,11 +35,13 @@ typedef struct
 /*!
  * @param instance
  * @param dataModel
+ * @param configuration
+ * @param singleDamperData
  */
 void DamperMaxOpenTimeMonitor_Init(
-   DamperMaxOpenTime_t *,
-   I_DataModel_t *,
-   const DamperMaxOpenTimeConfiguration_t *,
-   const SingleDamperData_t *);
+   DamperMaxOpenTime_t *instance,
+   I_DataModel_t *dataModel,
+   const DamperMaxOpenTimeConfiguration_t *configuration,
+   const SingleDamperData_t *singleDamperData);
 
 #endif
