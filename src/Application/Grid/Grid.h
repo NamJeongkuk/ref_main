@@ -33,6 +33,8 @@ typedef struct
 typedef struct
 {
    Erd_t timerModuleErd;
+   Erd_t gridOverrideSignalErd; // Signal_t
+   Erd_t gridOverrideEnableErd; // bool
    const GridFunctionArray_t *gridFunctions;
 } GridConfiguration_t;
 
@@ -44,6 +46,8 @@ typedef struct
       const GridData_t *gridData;
       I_DataModel_t *dataModel;
       Timer_t gridTimer;
+      EventSubscription_t gridOverrideEnableSubscription;
+      EventSubscription_t gridOverrideSignalSubscription;
    } _private;
 } Grid_t;
 

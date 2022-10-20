@@ -57,6 +57,8 @@ static const GridFunctionArray_t functionArray = {
 
 static const GridConfiguration_t gridConfig = {
    .timerModuleErd = Erd_TimerModule,
+   .gridOverrideSignalErd = Erd_GridOverrideSignal,
+   .gridOverrideEnableErd = Erd_GridOverrideEnable,
    .gridFunctions = &functionArray
 };
 
@@ -87,6 +89,20 @@ TEST_GROUP(Grid_SingleEvap)
    {
    }
 
+   void WhenTheGridOverrideEnableIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_GridOverrideEnable, &state);
+   }
+
+   void WhenTheGridOverrideSignalChanges()
+   {
+      Signal_t overrideSignal;
+      DataModel_Read(dataModel, Erd_GridOverrideSignal, &overrideSignal);
+
+      overrideSignal++;
+      DataModel_Write(dataModel, Erd_GridOverrideSignal, &overrideSignal);
+   }
+
    void GridFunctionShouldBeCalled(SimpleString functionName)
    {
       mock().expectOneCall(functionName);
@@ -107,6 +123,53 @@ TEST(Grid_SingleEvap, ShouldNotRunCallbackOnInit)
 TEST(Grid_SingleEvap, ShouldRunGridFunctionAfterGivenPeriod)
 {
    WhenTheModuleIsInitialized();
+
+   NothingShouldHappen();
+   After(OneSecondInMs - 1);
+
+   GridFunctionShouldBeCalled("Grid_SingleEvap");
+   After(1);
+}
+
+TEST(Grid_SingleEvap, ShouldNotRunGridFunctionAfterOverrideIsEnabled)
+{
+   WhenTheModuleIsInitialized();
+   WhenTheGridOverrideEnableIs(true);
+
+   NothingShouldHappen();
+   After(OneSecondInMs - 1);
+
+   NothingShouldHappen();
+   After(1);
+}
+
+TEST(Grid_SingleEvap, ShouldRunGridFunctionWhenOverrideSignalIsDetectedIfOverrideIsEnabled)
+{
+   WhenTheModuleIsInitialized();
+   WhenTheGridOverrideEnableIs(true);
+
+   GridFunctionShouldBeCalled("Grid_SingleEvap");
+   WhenTheGridOverrideSignalChanges();
+}
+
+TEST(Grid_SingleEvap, ShouldNotRunGridFunctionWhenOverrideSignalIsDetectedIfOverrideIsDisabled)
+{
+   WhenTheModuleIsInitialized();
+   WhenTheGridOverrideEnableIs(false);
+
+   NothingShouldHappen();
+   WhenTheGridOverrideSignalChanges();
+}
+
+TEST(Grid_SingleEvap, ShouldReenablePeriodicGridFunctionWhenOverrideIsEnabledThenDisabled)
+{
+   WhenTheModuleIsInitialized();
+   WhenTheGridOverrideEnableIs(true);
+
+   GridFunctionShouldBeCalled("Grid_SingleEvap");
+   WhenTheGridOverrideSignalChanges();
+
+   WhenTheGridOverrideEnableIs(false);
 
    NothingShouldHappen();
    After(OneSecondInMs - 1);
@@ -142,6 +205,20 @@ TEST_GROUP(Grid_DualEvap)
    {
    }
 
+   void WhenTheGridOverrideEnableIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_GridOverrideEnable, &state);
+   }
+
+   void WhenTheGridOverrideSignalChanges()
+   {
+      Signal_t overrideSignal;
+      DataModel_Read(dataModel, Erd_GridOverrideSignal, &overrideSignal);
+
+      overrideSignal++;
+      DataModel_Write(dataModel, Erd_GridOverrideSignal, &overrideSignal);
+   }
+
    void GridFunctionShouldBeCalled(SimpleString functionName)
    {
       mock().expectOneCall(functionName);
@@ -162,6 +239,53 @@ TEST(Grid_DualEvap, ShouldNotRunCallbackOnInit)
 TEST(Grid_DualEvap, ShouldRunGridFunctionAfterGivenPeriod)
 {
    WhenTheModuleIsInitialized();
+
+   NothingShouldHappen();
+   After(OneSecondInMs - 1);
+
+   GridFunctionShouldBeCalled("Grid_DualEvap");
+   After(1);
+}
+
+TEST(Grid_DualEvap, ShouldNotRunGridFunctionAfterOverrideIsEnabled)
+{
+   WhenTheModuleIsInitialized();
+   WhenTheGridOverrideEnableIs(true);
+
+   NothingShouldHappen();
+   After(OneSecondInMs - 1);
+
+   NothingShouldHappen();
+   After(1);
+}
+
+TEST(Grid_DualEvap, ShouldRunGridFunctionWhenOverrideSignalIsDetectedIfOverrideIsEnabled)
+{
+   WhenTheModuleIsInitialized();
+   WhenTheGridOverrideEnableIs(true);
+
+   GridFunctionShouldBeCalled("Grid_DualEvap");
+   WhenTheGridOverrideSignalChanges();
+}
+
+TEST(Grid_DualEvap, ShouldNotRunGridFunctionWhenOverrideSignalIsDetectedIfOverrideIsDisabled)
+{
+   WhenTheModuleIsInitialized();
+   WhenTheGridOverrideEnableIs(false);
+
+   NothingShouldHappen();
+   WhenTheGridOverrideSignalChanges();
+}
+
+TEST(Grid_DualEvap, ShouldReenablePeriodicGridFunctionWhenOverrideIsEnabledThenDisabled)
+{
+   WhenTheModuleIsInitialized();
+   WhenTheGridOverrideEnableIs(true);
+
+   GridFunctionShouldBeCalled("Grid_DualEvap");
+   WhenTheGridOverrideSignalChanges();
+
+   WhenTheGridOverrideEnableIs(false);
 
    NothingShouldHappen();
    After(OneSecondInMs - 1);

@@ -9,6 +9,8 @@
 #include "SystemErds.h"
 #include "utils.h"
 #include "Grid.h"
+#include "ConstArrayMap_SideBySideSingleEvap.h"
+#include "DataModelErdPointerAccess.h"
 #include "Constants_Binary.h"
 
 static void SetCoolingMode(I_DataModel_t *dataModel, CoolingMode_t currentCoolingMode)
@@ -64,6 +66,76 @@ static bool GetPulldownActive(I_DataModel_t *dataModel)
    bool active;
    DataModel_Read(dataModel, Erd_SingleEvaporatorPulldownActive, &active);
    return active;
+}
+
+static void ExecuteGridVote(I_DataModel_t *dataModel, SideBySideSingleEvaporatorVotes_t votes)
+{
+   CompressorVotedSpeed_t compressorVotedSpeed = {
+      .speed = votes.compressorSpeed,
+      .care = true
+   };
+   FanVotedSpeed_t condenserFanVotedSpeed = {
+      .speed = votes.condenserFanSpeed,
+      .care = true
+   };
+   FanVotedSpeed_t freezerEvapFanVotedSpeed = {
+      .speed = votes.freezerEvapFanSpeed,
+      .care = true
+   };
+   DamperVotedPosition_t freshFoodDamperPositionVotedSpeed = {
+      .position = votes.freshFoodDamperPosition,
+      .care = true
+   };
+
+   DataModel_Write(dataModel, Erd_CompressorSpeed_GridVote, &compressorVotedSpeed);
+   DataModel_Write(dataModel, Erd_CondenserFanSpeed_GridVote, &condenserFanVotedSpeed);
+   DataModel_Write(dataModel, Erd_FreezerEvapFanSpeed_GridVote, &freezerEvapFanVotedSpeed);
+   DataModel_Write(dataModel, Erd_FreshFoodDamperPosition_GridVote, &freshFoodDamperPositionVotedSpeed);
+}
+
+static void ApplyGridBlockOverrides(I_DataModel_t *dataModel, GridBlockNumber_t blockNumber, SideBySideSingleEvaporatorVotes_t *votes)
+{
+   bool pulldownInMediumCompressorSpeedEnabled;
+   DataModel_Read(dataModel, Erd_PulldownInMediumCompressorSpeedEnabled, &pulldownInMediumCompressorSpeedEnabled);
+
+   switch(blockNumber)
+   {
+      case 0:
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+         votes->compressorSpeed = pulldownInMediumCompressorSpeedEnabled ? CompressorSpeed_Medium : CompressorSpeed_High;
+         break;
+
+      case 11:
+      case 12:
+      case 13:
+         votes->condenserFanSpeed = FanSpeed_High;
+         break;
+
+      default:
+         break;
+   }
+}
+
+static void SearchSideBySideTableAndPublishGridVotes(I_DataModel_t *dataModel, GridBlockNumber_t blockNumber)
+{
+   SideBySideSingleEvaporatorStatesTable_t foundTableEntry;
+   memset(&foundTableEntry, 0, sizeof(SideBySideSingleEvaporatorStatesTable_t));
+
+   CoolingMapKey_t coolingKey;
+   DataModel_Read(dataModel, Erd_CoolingMode, &coolingKey.mode);
+   DataModel_Read(dataModel, Erd_CoolingSpeed, &coolingKey.speed);
+
+   uint16_t searchIndex;
+   I_ConstArrayMap_t *coolingStateMap = DataModelErdPointerAccess_GetPointer(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface);
+   ConstArrayMap_Find(coolingStateMap, &coolingKey, &searchIndex, &foundTableEntry);
+
+   ApplyGridBlockOverrides(dataModel, blockNumber, &foundTableEntry.votes);
+   ExecuteGridVote(dataModel, foundTableEntry.votes);
 }
 
 void Grid_SingleEvap(void *context)
@@ -266,4 +338,5 @@ void Grid_SingleEvap(void *context)
       default:
          break;
    }
+   SearchSideBySideTableAndPublishGridVotes(dataModel, blockNumber);
 }

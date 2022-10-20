@@ -13,6 +13,7 @@ extern "C"
 #include "SystemErds.h"
 #include "utils.h"
 #include "Constants_Binary.h"
+#include "ConstArrayMap_SideBySideSingleEvap.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -37,6 +38,7 @@ TEST_GROUP(Grid_SingleEvap_Test)
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
+   ConstArrayMap_SideBySideSingleEvap_t sideBySideConstArrayMap;
 
    void setup()
    {
@@ -45,6 +47,7 @@ TEST_GROUP(Grid_SingleEvap_Test)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
+      DataModelErdPointerAccess_Write(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface, ConstArrayMap_SideBySideSingleEvap_Init(&sideBySideConstArrayMap));
    }
 
    void GridBlockIs(GridBlockNumber_t actual)
@@ -88,6 +91,11 @@ TEST_GROUP(Grid_SingleEvap_Test)
       DataModel_Write(dataModel, Erd_SingleEvaporatorPulldownActive, &state);
    }
 
+   void PullDownInMediumCompressorSpeedIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_PulldownInMediumCompressorSpeedEnabled, &state);
+   }
+
    void CompressorTripMitigationIs(bool state)
    {
       DataModel_Write(dataModel, Erd_CompressorTripMitigationActive, &state);
@@ -96,6 +104,33 @@ TEST_GROUP(Grid_SingleEvap_Test)
    void GridAreaIs(GridArea_t gridArea)
    {
       DataModel_Write(dataModel, Erd_GridArea, &gridArea);
+   }
+
+   void GridVotesShouldBe(
+      CompressorSpeed_t expectedCompressorSpeed,
+      FanSpeed_t expectedCondenserFanSpeed,
+      FanSpeed_t expectedFreezerEvapFanSpeed,
+      DamperPosition_t expectedFreshFoodDamperPosition)
+   {
+      CompressorVotedSpeed_t actualCompressorVotedSpeed;
+      FanVotedSpeed_t actualCondenserFanVotedSpeed;
+      FanVotedSpeed_t actualFreezerEvapFanVotedSpeed;
+      DamperVotedPosition_t actualFreshFoodDamperPositionVotedSpeed;
+
+      DataModel_Read(dataModel, Erd_CompressorSpeed_GridVote, &actualCompressorVotedSpeed);
+      DataModel_Read(dataModel, Erd_CondenserFanSpeed_GridVote, &actualCondenserFanVotedSpeed);
+      DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_GridVote, &actualFreezerEvapFanVotedSpeed);
+      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_GridVote, &actualFreshFoodDamperPositionVotedSpeed);
+
+      CHECK_EQUAL(expectedCompressorSpeed, actualCompressorVotedSpeed.speed);
+      CHECK_EQUAL(expectedCondenserFanSpeed, actualCondenserFanVotedSpeed.speed);
+      CHECK_EQUAL(expectedFreezerEvapFanSpeed, actualFreezerEvapFanVotedSpeed.speed);
+      CHECK_EQUAL(expectedFreshFoodDamperPosition, actualFreshFoodDamperPositionVotedSpeed.position);
+
+      CHECK_TRUE(actualCompressorVotedSpeed.care);
+      CHECK_TRUE(actualCondenserFanVotedSpeed.care);
+      CHECK_TRUE(actualFreezerEvapFanVotedSpeed.care);
+      CHECK_TRUE(actualFreshFoodDamperPositionVotedSpeed.care);
    }
 
    void GridAreaShouldBe(GridArea_t expected)
@@ -112,13 +147,19 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks0And1)
    for(GridBlockNumber_t gridBlockNumber = 0; gridBlockNumber <= 1; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And PullDownInMediumCompressorSpeedIs(DISABLED);
+      And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_PullDown);
       GridAreaShouldBe(GridArea_1);
+      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Closed);
+
+      When PullDownInMediumCompressorSpeedIs(ENABLED);
+      When The GridIsRun();
+      GridVotesShouldBe(CompressorSpeed_Medium, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Closed);
    }
 }
 
@@ -127,11 +168,17 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks2And3)
    for(GridBlockNumber_t gridBlockNumber = 2; gridBlockNumber <= 3; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And PullDownInMediumCompressorSpeedIs(DISABLED);
+      And CoolingModeIs(CoolingMode_Freezer);
       When The GridIsRun();
 
-      CoolingModeShouldBe(CoolingMode_Unknown);
+      CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_PullDown);
+      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Closed);
+
+      When PullDownInMediumCompressorSpeedIs(ENABLED);
+      When The GridIsRun();
+      GridVotesShouldBe(CompressorSpeed_Medium, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Closed);
    }
 }
 
@@ -140,13 +187,20 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks4And5And6)
    for(GridBlockNumber_t gridBlockNumber = 4; gridBlockNumber <= 6; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And PullDownInMediumCompressorSpeedIs(DISABLED);
+      And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
       CoolingSpeedShouldBe(CoolingSpeed_PullDown);
       GridAreaShouldBe(GridArea_2);
+
+      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Open);
+
+      When PullDownInMediumCompressorSpeedIs(ENABLED);
+      When The GridIsRun();
+      GridVotesShouldBe(CompressorSpeed_Medium, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Open);
    }
 }
 
@@ -156,25 +210,87 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks7And8And14)
    for(uint8_t i = 0; i < 3; i++)
    {
       Given GridBlockIs(gridBlockNumbers[i]);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_High);
       GridAreaShouldBe(GridArea_1);
+
+      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Closed);
    }
 }
 
-TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10)
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10IfPulldownAndTripMitigationIsActiveAndCoolingSpeedIsNotHigh)
 {
    for(GridBlockNumber_t gridBlockNumber = 9; gridBlockNumber <= 10; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingModeIs(CoolingMode_Freezer);
+      And CoolingSpeedIs(CoolingSpeed_Off);
+      And PullDownIs(Active);
+      And CompressorTripMitigationIs(Active);
       When The GridIsRun();
 
-      CoolingModeShouldBe(CoolingMode_Unknown);
+      CoolingModeShouldBe(CoolingMode_Freezer);
+      CoolingSpeedShouldBe(CoolingSpeed_High);
+
+      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Closed);
+   }
+}
+
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10IfPulldownAndTripMitigationIsActiveAndCoolingSpeedIsHigh)
+{
+   for(GridBlockNumber_t gridBlockNumber = 9; gridBlockNumber <= 10; gridBlockNumber++)
+   {
+      Given GridBlockIs(gridBlockNumber);
+      And CoolingModeIs(CoolingMode_Freezer);
+      And CoolingSpeedIs(CoolingSpeed_High);
+      And PullDownIs(Active);
+      And CompressorTripMitigationIs(Active);
+      When The GridIsRun();
+
+      CoolingModeShouldBe(CoolingMode_Freezer);
+      CoolingSpeedShouldBe(CoolingSpeed_High);
+
+      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Closed);
+   }
+}
+
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10IfPulldownAndTripMitigationIsNotActiveAndCoolingSpeedIsNotHigh)
+{
+   for(GridBlockNumber_t gridBlockNumber = 9; gridBlockNumber <= 10; gridBlockNumber++)
+   {
+      Given GridBlockIs(gridBlockNumber);
+      And CoolingModeIs(CoolingMode_Freezer);
+      And CoolingSpeedIs(CoolingSpeed_Off);
+      And PullDownIs(InActive);
+      And CompressorTripMitigationIs(InActive);
+      When The GridIsRun();
+
+      CoolingModeShouldBe(CoolingMode_Freezer);
+      CoolingSpeedShouldBe(CoolingSpeed_Mid);
+
+      GridVotesShouldBe(CompressorSpeed_Medium, FanSpeed_Medium, FanSpeed_Medium, DamperPosition_Closed);
+   }
+}
+
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10IfPulldownAndTripMitigationIsNotActiveAndCoolingSpeedIsHigh)
+{
+   for(GridBlockNumber_t gridBlockNumber = 9; gridBlockNumber <= 10; gridBlockNumber++)
+   {
+      Given GridBlockIs(gridBlockNumber);
+      And CoolingModeIs(CoolingMode_Freezer);
+      And CoolingSpeedIs(CoolingSpeed_High);
+      And PullDownIs(InActive);
+      And CompressorTripMitigationIs(InActive);
+      When The GridIsRun();
+
+      CoolingModeShouldBe(CoolingMode_Freezer);
+      CoolingSpeedShouldBe(CoolingSpeed_High);
+
+      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Closed);
    }
 }
 
@@ -183,7 +299,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks11And12And13IfPullD
    for(GridBlockNumber_t gridBlockNumber = 11; gridBlockNumber <= 13; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
       And PullDownIs(InActive);
       And CompressorTripMitigationIs(InActive);
@@ -192,6 +308,8 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks11And12And13IfPullD
       CoolingModeShouldBe(CoolingMode_FreshFood);
       CoolingSpeedShouldBe(CoolingSpeed_High);
       GridAreaShouldBe(GridArea_2);
+
+      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Open);
    }
 }
 
@@ -200,7 +318,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks11And12And13IfPullD
    for(GridBlockNumber_t gridBlockNumber = 11; gridBlockNumber <= 13; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
       And PullDownIs(Active);
       And CompressorTripMitigationIs(Active);
@@ -209,13 +327,15 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks11And12And13IfPullD
       CoolingModeShouldBe(CoolingMode_FreshFood);
       CoolingSpeedShouldBe(CoolingSpeed_Mid);
       GridAreaShouldBe(GridArea_2);
+
+      GridVotesShouldBe(CompressorSpeed_Medium, FanSpeed_High, FanSpeed_Medium, DamperPosition_Open);
    }
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock15IfCoolingSpeedIsHigh)
 {
    Given GridBlockIs(15);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Freezer);
    And GridAreaIs(GridArea_Unknown);
    And CoolingSpeedIs(CoolingSpeed_High);
    When The GridIsRun();
@@ -223,12 +343,14 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock15IfCoolingSpeedIsHi
    CoolingModeShouldBe(CoolingMode_Freezer);
    CoolingSpeedShouldBe(CoolingSpeed_High);
    GridAreaShouldBe(GridArea_1);
+
+   GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Closed);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock15IfCoolingSpeedIsNotHigh)
 {
    Given GridBlockIs(15);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Freezer);
    And GridAreaIs(GridArea_Unknown);
    And CoolingSpeedIs(CoolingSpeed_Low);
    When The GridIsRun();
@@ -236,6 +358,8 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock15IfCoolingSpeedIsNo
    CoolingModeShouldBe(CoolingMode_Freezer);
    CoolingSpeedShouldBe(CoolingSpeed_Mid);
    GridAreaShouldBe(GridArea_1);
+
+   GridVotesShouldBe(CompressorSpeed_Medium, FanSpeed_Medium, FanSpeed_Medium, DamperPosition_Closed);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks16And17IfCoolingSpeedIsHigh)
@@ -243,12 +367,14 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks16And17IfCoolingSpe
    for(GridBlockNumber_t gridBlockNumber = 16; gridBlockNumber <= 17; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingModeIs(CoolingMode_Freezer);
       And CoolingSpeedIs(CoolingSpeed_High);
       When The GridIsRun();
 
-      CoolingModeShouldBe(CoolingMode_Unknown);
+      CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_High);
+
+      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Closed);
    }
 }
 
@@ -257,24 +383,29 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks16And17IfCoolingSpe
    for(GridBlockNumber_t gridBlockNumber = 16; gridBlockNumber <= 17; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingModeIs(CoolingMode_Freezer);
       And CoolingSpeedIs(CoolingSpeed_Low);
       When The GridIsRun();
 
-      CoolingModeShouldBe(CoolingMode_Unknown);
+      CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_Mid);
+
+      GridVotesShouldBe(CompressorSpeed_Medium, FanSpeed_Medium, FanSpeed_Medium, DamperPosition_Closed);
    }
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock18)
 {
    Given GridBlockIs(18);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Freezer);
+   And CoolingSpeedIs(CoolingSpeed_High);
    And GridAreaIs(GridArea_Unknown);
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
    GridAreaShouldBe(GridArea_2);
+
+   GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Open);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks19And20And27And34And41)
@@ -283,32 +414,36 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks19And20And27And34An
    for(uint8_t i = 0; i < 5; i++)
    {
       Given GridBlockIs(gridBlockNumbers[i]);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
       CoolingSpeedShouldBe(CoolingSpeed_High);
       GridAreaShouldBe(GridArea_2);
+
+      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Open);
    }
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock21)
 {
    Given GridBlockIs(21);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Freezer);
    And GridAreaIs(GridArea_Unknown);
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
    CoolingSpeedShouldBe(CoolingSpeed_Low);
    GridAreaShouldBe(GridArea_1);
+
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, DamperPosition_Closed);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock22IfCoolingSpeedIsNotLow)
 {
    Given GridBlockIs(22);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_High);
    And GridAreaIs(GridArea_Unknown);
    When The GridIsRun();
@@ -316,12 +451,14 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock22IfCoolingSpeedIsNo
    CoolingModeShouldBe(CoolingMode_Freezer);
    CoolingSpeedShouldBe(CoolingSpeed_Low);
    GridAreaShouldBe(GridArea_1);
+
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, DamperPosition_Closed);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock22IfCoolingSpeedIsLow)
 {
    Given GridBlockIs(22);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_Low);
    And GridAreaIs(GridArea_Unknown);
    When The GridIsRun();
@@ -329,6 +466,8 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock22IfCoolingSpeedIsLo
    CoolingModeShouldBe(CoolingMode_Freezer);
    CoolingSpeedShouldBe(CoolingSpeed_Low);
    GridAreaShouldBe(GridArea_1);
+
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, DamperPosition_Closed);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks23And24WhenCoolingSpeedIsOff)
@@ -336,12 +475,14 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks23And24WhenCoolingS
    for(GridBlockNumber_t gridBlockNumber = 23; gridBlockNumber <= 24; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingModeIs(CoolingMode_Freezer);
       And CoolingSpeedIs(CoolingSpeed_Off);
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
       CoolingSpeedShouldBe(CoolingSpeed_Low);
+
+      GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, DamperPosition_Open);
    }
 }
 
@@ -350,33 +491,41 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks23And24WhenCoolingS
    for(GridBlockNumber_t gridBlockNumber = 23; gridBlockNumber <= 24; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingModeIs(CoolingMode_Freezer);
       And CoolingSpeedIs(CoolingSpeed_Low);
       When The GridIsRun();
 
-      CoolingModeShouldBe(CoolingMode_Unknown);
+      CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_Low);
 
-      CoolingModeIs(CoolingMode_Unknown);
+      GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, DamperPosition_Closed);
+
+      CoolingModeIs(CoolingMode_Freezer);
       And CoolingSpeedIs(CoolingSpeed_Mid);
       When The GridIsRun();
 
-      CoolingModeShouldBe(CoolingMode_Unknown);
+      CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_Mid);
 
-      CoolingModeIs(CoolingMode_Unknown);
+      GridVotesShouldBe(CompressorSpeed_Medium, FanSpeed_Medium, FanSpeed_Medium, DamperPosition_Closed);
+
+      CoolingModeIs(CoolingMode_Freezer);
       And CoolingSpeedIs(CoolingSpeed_High);
       When The GridIsRun();
 
-      CoolingModeShouldBe(CoolingMode_Unknown);
+      CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_High);
 
-      CoolingModeIs(CoolingMode_Unknown);
+      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Closed);
+
+      CoolingModeIs(CoolingMode_Freezer);
       And CoolingSpeedIs(CoolingSpeed_PullDown);
       When The GridIsRun();
 
-      CoolingModeShouldBe(CoolingMode_Unknown);
+      CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_PullDown);
+
+      GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Closed);
    }
 }
 
@@ -385,7 +534,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks25And32And39WhenCoo
    for(GridBlockNumber_t gridBlockNumber = 25; gridBlockNumber <= 39; gridBlockNumber += 7)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingModeIs(CoolingMode_Freezer);
       And CoolingSpeedIs(CoolingSpeed_Off);
       And GridAreaIs(GridArea_Unknown);
       When The GridIsRun();
@@ -393,6 +542,8 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks25And32And39WhenCoo
       CoolingModeShouldBe(CoolingMode_FreshFood);
       CoolingSpeedShouldBe(CoolingSpeed_Low);
       GridAreaShouldBe(GridArea_2);
+
+      GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, DamperPosition_Open);
    }
 }
 
@@ -401,7 +552,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks25And32And39WhenCoo
    for(GridBlockNumber_t gridBlockNumber = 25; gridBlockNumber <= 39; gridBlockNumber += 7)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingModeIs(CoolingMode_Freezer);
       And CoolingSpeedIs(CoolingSpeed_High);
       And GridAreaIs(GridArea_Unknown);
       When The GridIsRun();
@@ -409,6 +560,8 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks25And32And39WhenCoo
       CoolingModeShouldBe(CoolingMode_FreshFood);
       CoolingSpeedShouldBe(CoolingSpeed_High);
       GridAreaShouldBe(GridArea_2);
+
+      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Open);
    }
 }
 
@@ -417,7 +570,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks26And33And40WhenCoo
    for(GridBlockNumber_t gridBlockNumber = 26; gridBlockNumber <= 40; gridBlockNumber += 7)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingModeIs(CoolingMode_Freezer);
       And CoolingSpeedIs(CoolingSpeed_High);
       And GridAreaIs(GridArea_Unknown);
       When The GridIsRun();
@@ -425,6 +578,8 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks26And33And40WhenCoo
       CoolingModeShouldBe(CoolingMode_FreshFood);
       CoolingSpeedShouldBe(CoolingSpeed_High);
       GridAreaShouldBe(GridArea_2);
+
+      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Open);
    }
 }
 
@@ -434,67 +589,82 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks28And29And35WhenCoo
    for(uint8_t i = 0; i < 3; i++)
    {
       Given GridBlockIs(gridBlockNumbers[i]);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_High);
       GridAreaShouldBe(GridArea_1);
+
+      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Closed);
    }
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock30)
 {
    Given GridBlockIs(30);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Freezer);
+   And CoolingSpeedIs(CoolingSpeed_Off);
    When The GridIsRun();
 
-   CoolingModeShouldBe(CoolingMode_Unknown);
+   CoolingModeShouldBe(CoolingMode_Freezer);
+
+   GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Off, DamperPosition_Closed);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock31WhenCoolingModeIsOff)
 {
    Given GridBlockIs(31);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_Off);
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
+
+   GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Off, DamperPosition_Closed);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock31WhenCoolingModeIsNotOff)
 {
    Given GridBlockIs(31);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_Low);
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
 
-   CoolingModeIs(CoolingMode_Unknown);
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, DamperPosition_Open);
+
+   CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_Mid);
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
 
-   CoolingModeIs(CoolingMode_Unknown);
+   GridVotesShouldBe(CompressorSpeed_Medium, FanSpeed_Medium, FanSpeed_Medium, DamperPosition_Open);
+
+   CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_High);
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
 
-   CoolingModeIs(CoolingMode_Unknown);
+   GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Open);
+
+   CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_PullDown);
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
+
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Open);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock36WhenCoolingSpeedIsOff)
 {
    Given GridBlockIs(36);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_Off);
    And GridAreaIs(GridArea_Unknown);
    When The GridIsRun();
@@ -502,12 +672,14 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock36WhenCoolingSpeedIs
    CoolingModeShouldBe(CoolingMode_Freezer);
    CoolingSpeedShouldBe(CoolingSpeed_Off);
    GridAreaShouldBe(GridArea_1);
+
+   GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Off, DamperPosition_Closed);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock36WhenCoolingSpeedIsNotOff)
 {
    Given GridBlockIs(36);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_High);
    And GridAreaIs(GridArea_Unknown);
    When The GridIsRun();
@@ -515,71 +687,87 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock36WhenCoolingSpeedIs
    CoolingModeShouldBe(CoolingMode_Freezer);
    CoolingSpeedShouldBe(CoolingSpeed_Low);
    GridAreaShouldBe(GridArea_1);
+
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, DamperPosition_Closed);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock37WhenCoolingSpeedIsNotOff)
 {
    Given GridBlockIs(37);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_High);
    When The GridIsRun();
 
-   CoolingModeShouldBe(CoolingMode_Unknown);
+   CoolingModeShouldBe(CoolingMode_Freezer);
    CoolingSpeedShouldBe(CoolingSpeed_Low);
+
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, DamperPosition_Closed);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock37WhenCoolingSpeedIsOff)
 {
    Given GridBlockIs(37);
-   And CoolingModeIs(CoolingMode_Unknown);
-   And CoolingSpeedIs(CoolingSpeed_Off);
-   When The GridIsRun();
-
-   CoolingModeShouldBe(CoolingMode_Unknown);
-   CoolingSpeedShouldBe(CoolingSpeed_Off);
-}
-
-TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock38WhenCoolingSpeedIsOff)
-{
-   Given GridBlockIs(38);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_Off);
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
    CoolingSpeedShouldBe(CoolingSpeed_Off);
+
+   GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Off, DamperPosition_Closed);
+}
+
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock38WhenCoolingSpeedIsOff)
+{
+   Given GridBlockIs(38);
+   And CoolingModeIs(CoolingMode_Freezer);
+   And CoolingSpeedIs(CoolingSpeed_Off);
+   When The GridIsRun();
+
+   CoolingModeShouldBe(CoolingMode_Freezer);
+   CoolingSpeedShouldBe(CoolingSpeed_Off);
+
+   GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Off, DamperPosition_Closed);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock38WhenCoolingSpeedIsNotOff)
 {
    Given GridBlockIs(38);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_Low);
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
    CoolingSpeedShouldBe(CoolingSpeed_Low);
 
-   And CoolingModeIs(CoolingMode_Unknown);
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, DamperPosition_Open);
+
+   And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_Mid);
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
    CoolingSpeedShouldBe(CoolingSpeed_Low);
 
-   And CoolingModeIs(CoolingMode_Unknown);
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, DamperPosition_Open);
+
+   And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_High);
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
    CoolingSpeedShouldBe(CoolingSpeed_Low);
 
-   And CoolingModeIs(CoolingMode_Unknown);
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, DamperPosition_Open);
+
+   And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_PullDown);
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
    CoolingSpeedShouldBe(CoolingSpeed_Low);
+
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, DamperPosition_Open);
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock42And43)
@@ -587,13 +775,15 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock42And43)
    for(GridBlockNumber_t gridBlockNumber = 42; gridBlockNumber <= 43; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_Off);
       GridAreaShouldBe(GridArea_1);
+
+      GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Off, DamperPosition_Closed);
    }
 }
 
@@ -602,12 +792,14 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock44And45WhenAreaIsOne
    for(GridBlockNumber_t gridBlockNumber = 44; gridBlockNumber <= 45; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_1);
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_Off);
+
+      GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Off, DamperPosition_Closed);
    }
 }
 
@@ -616,19 +808,21 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock44And45WhenAreaIsNot
    for(GridBlockNumber_t gridBlockNumber = 44; gridBlockNumber <= 45; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_2);
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
       CoolingSpeedShouldBe(CoolingSpeed_Off);
 
-      CoolingModeIs(CoolingMode_Unknown);
+      CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
       CoolingSpeedShouldBe(CoolingSpeed_Off);
+
+      GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Low, DamperPosition_Open);
    }
 }
 
@@ -637,20 +831,22 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock46And47)
    for(GridBlockNumber_t gridBlockNumber = 46; gridBlockNumber <= 47; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Unknown);
+      And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
       CoolingSpeedShouldBe(CoolingSpeed_Low);
       GridAreaShouldBe(GridArea_2);
+
+      GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, DamperPosition_Open);
    }
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock48)
 {
    Given GridBlockIs(48);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Freezer);
    And GridAreaIs(GridArea_Unknown);
 
    When The GridIsRun();
@@ -658,4 +854,18 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock48)
    CoolingModeShouldBe(CoolingMode_FreshFood);
    CoolingSpeedShouldBe(CoolingSpeed_Mid);
    GridAreaShouldBe(GridArea_2);
+
+   GridVotesShouldBe(CompressorSpeed_Medium, FanSpeed_Medium, FanSpeed_Medium, DamperPosition_Open);
+}
+
+TEST(Grid_SingleEvap_Test, ShouldVoteAllOffIfInvalidSearchWasPerformed)
+{
+   Given GridBlockIs(0xFF);
+   And CoolingModeIs(0xFF);
+   And CoolingSpeedIs(0xFF);
+   And GridAreaIs(GridArea_Unknown);
+
+   When The GridIsRun();
+
+   GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Off, DamperPosition_Closed);
 }

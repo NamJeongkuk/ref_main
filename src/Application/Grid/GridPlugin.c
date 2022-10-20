@@ -39,6 +39,8 @@ static const GridFunctionArray_t gridFunctionArray = {
 
 static const GridConfiguration_t gridConfig = {
    .timerModuleErd = Erd_TimerModule,
+   .gridOverrideSignalErd = Erd_GridOverrideSignal,
+   .gridOverrideEnableErd = Erd_GridOverrideEnable,
    .gridFunctions = &gridFunctionArray,
 };
 
