@@ -29,9 +29,11 @@ endif
 endif
 
 ifeq ($(OLD_HW), N)
+HW_VERSION:=new-hw
 else
 ifeq ($(OLD_HW), Y)
 DEFINES+=OLD_HW
+HW_VERSION:=old-hw
 else
 $(error Please define OLD_HW with Y or N.)
 endif
@@ -137,7 +139,7 @@ package: build artifacts erd_lock
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(PARAMETRIC_DIRS)rockhopper.parametric.apl --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).apl
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
 	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_UPDATER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader-updater/$(BOOT_LOADER_TARGET)-boot-loader-updater.apl --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
-	@$(call create_artifacts,$(TARGET)_$(GIT_SHORT_HASH).zip)
+	@$(call create_artifacts,$(TARGET)_$(HW_VERSION)_$(GIT_SHORT_HASH).zip)
 
 $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot:
 	@OUTPUT_PREFIX="\<BootLoader\>" $(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N build
