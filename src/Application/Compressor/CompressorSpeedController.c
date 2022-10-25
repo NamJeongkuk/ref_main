@@ -34,6 +34,7 @@ static bool State_OffAndReadyToChange(Hsm_t *hsm, HsmSignal_t signal, const void
 static bool State_MinimumOffTime(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_RemainOffAfterValveMove(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_SabbathDelay(Hsm_t *hsm, HsmSignal_t signal, const void *data);
+static bool State_VariableSpeedMinimumRunTime(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 
 static const HsmStateHierarchyDescriptor_t stateList[] = {
    { State_On, HSM_NO_PARENT },
@@ -45,6 +46,7 @@ static const HsmStateHierarchyDescriptor_t stateList[] = {
    { State_MinimumOffTime, State_Off },
    { State_RemainOffAfterValveMove, State_Off },
    { State_SabbathDelay, State_Off },
+   { State_VariableSpeedMinimumRunTime, State_On }
 };
 
 static const HsmConfiguration_t hsmConfiguration = {
@@ -155,6 +157,11 @@ static CompressorSpeed_t CachedVotedSpeed(CompressorSpeedController_t *instance)
    return instance->_private.cacheSpeedFromResolvedVote;
 }
 
+static bool CompressorIsSingleSpeed(CompressorSpeedController_t *instance)
+{
+   return instance->_private.compressorData->compressorIsSingleSpeed;
+}
+
 static bool State_StartUp(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    CompressorSpeedController_t *instance = InstanceFromHsm(hsm);
@@ -212,6 +219,7 @@ static bool State_Off(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Hsm_Entry:
+         RequestCompressorSpeed(instance, CompressorSpeed_Off);
          break;
 
       case Hsm_Exit:
@@ -227,13 +235,26 @@ static bool State_Off(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 static bool State_OnAndReadyToChange(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    CompressorSpeedController_t *instance = InstanceFromHsm(hsm);
-   IGNORE(data);
 
    switch(signal)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, CompressorState_OnAndReadyToChange);
          break;
+
+      case Signal_ResolvedSpeedVoteChanged: {
+         const CompressorSpeed_t *votedSpeed = data;
+         if(*votedSpeed == CompressorSpeed_Off)
+         {
+            Hsm_Transition(hsm, State_MinimumOffTime);
+         }
+         else if(!CompressorIsSingleSpeed(instance))
+         {
+            CacheCompressorVotedSpeed(instance);
+            Hsm_Transition(hsm, State_VariableSpeedMinimumRunTime);
+         }
+      }
+      break;
 
       case Hsm_Exit:
          break;
@@ -358,6 +379,27 @@ static bool State_SabbathDelay(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 
       case Signal_SabbathDelayTimerComplete:
          Hsm_Transition(hsm, State_StartUp);
+         break;
+
+      case Hsm_Exit:
+         break;
+
+      default:
+         return HsmSignalDeferred;
+   }
+   return HsmSignalConsumed;
+}
+
+static bool State_VariableSpeedMinimumRunTime(Hsm_t *hsm, HsmSignal_t signal, const void *data)
+{
+   CompressorSpeedController_t *instance = InstanceFromHsm(hsm);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Hsm_Entry:
+         SetHsmStateTo(instance, CompressorState_VariableSpeedMinimumRunTime);
+         RequestCompressorSpeed(instance, CachedVotedSpeed(instance));
          break;
 
       case Hsm_Exit:

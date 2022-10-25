@@ -21,6 +21,7 @@ enum
    CompressorState_MinimumOffTime,
    CompressorState_RemainOffAfterValveMove,
    CompressorState_SabbathDelay,
+   CompressorState_VariableSpeedMinimumRunTime,
    CompressorState_Max
 };
 typedef uint8_t CompressorState_t;
