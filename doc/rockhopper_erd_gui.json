@@ -1113,6 +1113,88 @@
           "write": true
         }
       ]
+    },
+    {
+      "title": "Shift offset",
+      "erds": [
+        {
+          "namespace": "rx130",
+          "displayName": "Post Dwell Completion Signal",
+          "name": "Erd_PostDwellCompletionSignal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fresh Food Long Term Average",
+          "name": "Erd_FreshFood_LongTermAverageInDegFx100",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Long Term Average",
+          "name": "Erd_Freezer_LongTermAverageInDegFx100",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Convertible Compartment Long Term Average",
+          "name": "Erd_ConvertibleCompartment_LongTermAverageInDegFx100",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Ice Box Long Term Average",
+          "name": "Erd_IceBox_LongTermAverageInDegFx100",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Deli Pan Long Term Average",
+          "name": "Erd_DeliPan_LongTermAverageInDegFx100",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Fresh Food Reset Thermal Shift Offset Signal",
+          "name": "Erd_FreshFood_ResetThermalShiftOffsetSignal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Freezer Reset Thermal Shift Offset Signal",
+          "name": "Erd_Freezer_ResetThermalShiftOffsetSignal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Convertible Compartment Reset Thermal Shift Offset Signal",
+          "name": "Erd_ConvertibleCompartment_ResetThermalShiftOffsetSignal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Ice Box Reset Thermal Shift Offset Signal",
+          "name": "Erd_IceBox_ResetThermalShiftOffsetSignal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rx130",
+          "displayName": "Deli Pan Reset Thermal Shift Offset Signal",
+          "name": "Erd_DeliPan_ResetThermalShiftOffsetSignal",
+          "read": true,
+          "write": true
+        }
+      ]
     }
   ]
 }

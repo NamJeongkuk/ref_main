@@ -5,26 +5,17 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include <stdint.h>
 #include "Application.h"
 #include "SystemErds.h"
 #include "DataModelErdPointerAccess.h"
-#include "SecondsSinceLastReset.h"
 #include "ParametricDataErds.h"
-#include "uassert.h"
-#include "DefrostPlugin.h"
 #include "SabbathPlugin.h"
 #include "DoorPlugin.h"
 #include "EepromAppPlugin.h"
 #include "FaultWrapperPlugin.h"
 #include "OverrideArbiterPlugin.h"
-#include "AdjustedSetpointPlugin.h"
 #include "SetpointResolverPlugin.h"
-#include "CompressorPlugin.h"
 #include "SensorFilterPlugin.h"
-#include "AdjustedSetpointPlugin.h"
-#include "SideBySideConfigurationPlugin.h"
-#include "ShiftOffsetCalculatorPlugin.h"
 
 enum
 {
@@ -62,7 +53,7 @@ void Application_Init(
       Erd_PersonalityIdOutOfRangeFlag);
 
    AdjustedSetpointPlugin_Init(&instance->_private.adjustedSetpointPlugin, dataModel);
-   ShiftOffsetCalculatorPlugin_Init(&instance->_private.shiftOffsetCalculatorPlugin, dataModel);
+   ShiftOffsetCalculatorCommonPlugin_Init(&instance->_private.shiftOffsetCalculatorCommonPlugin, dataModel);
    SensorFilterPlugin(dataModel);
    OverrideArbiterPlugin_Init(dataModel);
 

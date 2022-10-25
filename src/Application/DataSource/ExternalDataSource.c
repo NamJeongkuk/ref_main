@@ -82,6 +82,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_ParametricDataImageCrc, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_SomeData, sizeof(uint32_t)),
    SWAPPED_ERD(PublicErd_ApplianceRunTimeInMinutesUpdatedHourly, sizeof(ApplianceRunTimeMinutes_t)),
+   SWAPPED_ERD(PublicErd_FreshFood_LongTermAverageInDegFx100, sizeof(TemperatureDegFx100_t)),
 
    // 0xF100 range
    SWAPPED_ERD(PublicErd_FreezerAbnormalDefrostCycleCount, sizeof(uint16_t)),
@@ -179,6 +180,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
 };
 
 static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
+   SWAPPED_FIELD_RANGE(PublicErd_FreshFood_LongTermAverageInDegFx100, PublicErd_DeliPan_LongTermAverageInDegFx100),
    SWAPPED_FIELD_RANGE(PublicErd_CondenserFan_Pwm, PublicErd_FreshFoodEvapFan_Pwm),
    SWAPPED_FIELD_RANGE(PublicErd_CondenserFan_ActualRpm, PublicErd_FreshFoodEvapFan_ActualRpm),
    SWAPPED_FIELD_RANGE(PublicErd_CondenserFan_InputCaptureTime, PublicErd_FreshFoodEvapFan_InputCaptureTime),
@@ -188,7 +190,7 @@ static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultSequenceEntry0, PublicErd_ServiceDiagnosticsFaultSequenceEntry7),
    SWAPPED_FIELD_RANGE(PublicErd_DiagnosticsCycleHistoryRecord0, PublicErd_DiagnosticsCycleHistoryRecord9),
    SWAPPED_FIELD_RANGE(PublicErd_FreshFoodThermistor_AdcCount, PublicErd_ConvertibleCompartmentEvapThermistor_AdcCount),
-   SWAPPED_FIELD_RANGE(PublicErd_FreshFood_UnfilteredTemperature, PublicErd_ConvertibleCompartmentEvap_FilteredTemperature),
+   SWAPPED_FIELD_RANGE(PublicErd_FreshFood_UnfilteredTemperature, PublicErd_DeliPan_FilteredTemperature),
    SWAPPED_FIELD_RANGE(PublicErd_FreshFood_AdjustedSetpointInDegFx100, PublicErd_DeliPan_AdjustedSetpointInDegFx100),
    SWAPPED_FIELD_RANGE(PublicErd_ConvertibleCompartmentSetpoint_FactoryVote, PublicErd_ConvertibleCompartmentSetpoint_UserVote),
    SWAPPED_FIELD_RANGE(PublicErd_FreezerEvap_FilteredTemperatureOverrideValue, PublicErd_FreezerEvap_FilteredTemperatureResolved),

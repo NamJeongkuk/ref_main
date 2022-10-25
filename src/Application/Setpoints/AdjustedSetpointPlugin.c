@@ -6,6 +6,7 @@
  */
 
 #include "AdjustedSetpointPlugin.h"
+#include "Constants_Binary.h"
 #include "I16ErdAdder.h"
 #include "PersonalityParametricData.h"
 #include "SystemErds.h"
@@ -138,4 +139,6 @@ void AdjustedSetpointPlugin_Init(AdjustedSetpointPlugin_t *instance, I_DataModel
    InitializeSetpointOffsetErds(instance);
 
    ERD_ADDER_TABLE(EXPAND_AS_ADDERS);
+
+   DataModel_Write(dataModel, Erd_AdjustedSetpointPluginReady, set);
 }

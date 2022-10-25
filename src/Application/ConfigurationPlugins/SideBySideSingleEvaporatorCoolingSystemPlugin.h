@@ -14,6 +14,8 @@
 #include "CompressorPlugin.h"
 #include "DefrostPlugin.h"
 #include "FreshFoodDamperPlugin.h"
+#include "FreshFoodShiftOffsetCalculatorPlugin.h"
+#include "FreezerShiftOffsetCalculatorPlugin.h"
 
 typedef struct
 {
@@ -24,6 +26,8 @@ typedef struct
       CompressorPlugin_t compressorPlugin;
       DefrostPlugin_t defrostPlugin;
       FreshFoodDamperPlugin_t freshFoodDamperPlugin;
+      FreshFoodShiftOffsetCalculatorPlugin_t freshFoodShiftOffsetCalculatorPlugin;
+      FreezerShiftOffsetCalculatorPlugin_t freezerShiftOffsetCalculatorPlugin;
    } _private;
 } SideBySideSingleEvaporatorCoolingSystemPlugin_t;
 
