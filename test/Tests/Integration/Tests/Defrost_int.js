@@ -83,24 +83,24 @@ describe("Defrost", () => {
   const postDwellDamperPosition = damperPosition.damperPositionClosed;
 
   beforeEach(async () => {
-    await rx130.write("Erd_Reset", 1);
+    await rockhopper.write("Erd_Reset", 1);
     await delay(constants.oneSecondInMsec * 5);
   });
 
   const providedTheFilteredFreezerCabinetTemperatureIs = async (tempDegFx100) => {
-    await rx130.write("Erd_Freezer_FilteredTemperatureOverrideRequest", true);
-    await rx130.write("Erd_Freezer_FilteredTemperatureOverrideValue", tempDegFx100);
+    await rockhopper.write("Erd_Freezer_FilteredTemperatureOverrideRequest", true);
+    await rockhopper.write("Erd_Freezer_FilteredTemperatureOverrideValue", tempDegFx100);
   };
 
   const providedTheFilteredFreezerEvaporatorTemperatureIs = async (tempDegFx100) => {
-    await rx130.write("Erd_FreezerEvap_FilteredTemperatureOverrideRequest", true);
-    await rx130.write("Erd_FreezerEvap_FilteredTemperatureOverrideValue", tempDegFx100);
+    await rockhopper.write("Erd_FreezerEvap_FilteredTemperatureOverrideRequest", true);
+    await rockhopper.write("Erd_FreezerEvap_FilteredTemperatureOverrideValue", tempDegFx100);
   }
 
   const providedTheEepromDefrostStateAtStartUpIs = async (state) => {
-    await rx130.write("Erd_DefrostState", state);
+    await rockhopper.write("Erd_DefrostState", state);
     await after(powerUpDelayInMsec).inMsec();
-    await rx130.write("Erd_Reset", 2);
+    await rockhopper.write("Erd_Reset", 2);
     await after(powerUpDelayInMsec).inMsec();
   };
 
@@ -128,21 +128,21 @@ describe("Defrost", () => {
   };
 
   const providedTheDefrostReadySatisfactionTimeIs = async (timeInMinutes) => {
-    await rx130.write("Erd_TimeInMinutesUntilReadyToDefrost", timeInMinutes);
+    await rockhopper.write("Erd_TimeInMinutesUntilReadyToDefrost", timeInMinutes);
   };
 
   const disableMinimumCompressorTimesShouldBe = async (state) => {
-    const actual = await rx130.read("Erd_DisableMinimumCompressorTimes");
+    const actual = await rockhopper.read("Erd_DisableMinimumCompressorTimes");
     expect(actual).toEqual(state);
   }
 
   const theDefrostHsmStateShouldBe = async (state) => {
-    const actual = await rx130.read("Erd_DefrostHsmState");
+    const actual = await rockhopper.read("Erd_DefrostHsmState");
     expect(actual).toEqual(state);
   };
 
   const theCompressorStateIs = async (state) => {
-    await rx130.write("Erd_CompressorState", state);
+    await rockhopper.write("Erd_CompressorState", state);
   };
 
   const after = (time) => ({
@@ -158,140 +158,140 @@ describe("Defrost", () => {
   });
 
   const providedThereWasNoPreviousAbnormalDefrost = async () => {
-    await rx130.write("Erd_FreezerDefrostWasAbnormal", false);
-    await rx130.write("Erd_FreshFoodDefrostWasAbnormal", false);
-    await rx130.write("Erd_ConvertibleCompartmentDefrostWasAbnormal", false);
+    await rockhopper.write("Erd_FreezerDefrostWasAbnormal", false);
+    await rockhopper.write("Erd_FreshFoodDefrostWasAbnormal", false);
+    await rockhopper.write("Erd_ConvertibleCompartmentDefrostWasAbnormal", false);
   };
 
   const providedFreezerEvaporatorThermistorIs = () => ({
     valid: async () => {
-      await rx130.write("Erd_FreezerEvapThermistor_IsValidOverrideRequest", true);
-      await rx130.write("Erd_FreezerEvapThermistor_IsValidOverrideValue", true);
+      await rockhopper.write("Erd_FreezerEvapThermistor_IsValidOverrideRequest", true);
+      await rockhopper.write("Erd_FreezerEvapThermistor_IsValidOverrideValue", true);
     },
     invalid: async () => {
-      await rx130.write("Erd_FreezerEvapThermistor_IsValidOverrideValue", false);
-      await rx130.write("Erd_FreezerEvapThermistor_IsValidOverrideRequest", false);
+      await rockhopper.write("Erd_FreezerEvapThermistor_IsValidOverrideValue", false);
+      await rockhopper.write("Erd_FreezerEvapThermistor_IsValidOverrideRequest", false);
     }
   });
 
   const providedFreshFoodEvaporatorThermistorIs = () => ({
     valid: async () => {
-      await rx130.write("Erd_FreshFoodEvapThermistor_IsValidOverrideRequest", true);
-      await rx130.write("Erd_FreshFoodEvapThermistor_IsValidOverrideValue", true);
+      await rockhopper.write("Erd_FreshFoodEvapThermistor_IsValidOverrideRequest", true);
+      await rockhopper.write("Erd_FreshFoodEvapThermistor_IsValidOverrideValue", true);
     },
     invalid: async () => {
-      await rx130.write("Erd_FreshFoodEvapThermistor_IsValidOverrideValue", false);
-      await rx130.write("Erd_FreshFoodEvapThermistor_IsValidOverrideRequest", false);
+      await rockhopper.write("Erd_FreshFoodEvapThermistor_IsValidOverrideValue", false);
+      await rockhopper.write("Erd_FreshFoodEvapThermistor_IsValidOverrideRequest", false);
     }
   });
 
   const providedFreezerThermistorIs = () => ({
     valid: async () => {
-      await rx130.write("Erd_FreezerThermistor_IsValidOverrideRequest", true);
-      await rx130.write("Erd_FreezerThermistor_IsValidOverrideValue", true);
+      await rockhopper.write("Erd_FreezerThermistor_IsValidOverrideRequest", true);
+      await rockhopper.write("Erd_FreezerThermistor_IsValidOverrideValue", true);
     },
     invalid: async () => {
-      await rx130.write("Erd_FreezerThermistor_IsValidOverrideValue", false);
-      await rx130.write("Erd_FreezerThermistor_IsValidOverrideRequest", false);
+      await rockhopper.write("Erd_FreezerThermistor_IsValidOverrideValue", false);
+      await rockhopper.write("Erd_FreezerThermistor_IsValidOverrideRequest", false);
     }
   });
 
   const providedFreshFoodThermistorIs = () => ({
     valid: async () => {
-      await rx130.write("Erd_FreshFoodThermistor_IsValidOverrideRequest", true);
-      await rx130.write("Erd_FreshFoodThermistor_IsValidOverrideValue", true);
+      await rockhopper.write("Erd_FreshFoodThermistor_IsValidOverrideRequest", true);
+      await rockhopper.write("Erd_FreshFoodThermistor_IsValidOverrideValue", true);
     },
     invalid: async () => {
-      await rx130.write("Erd_FreshFoodThermistor_IsValidOverrideValue", false);
-      await rx130.write("Erd_FreshFoodThermistor_IsValidOverrideRequest", false);
+      await rockhopper.write("Erd_FreshFoodThermistor_IsValidOverrideValue", false);
+      await rockhopper.write("Erd_FreshFoodThermistor_IsValidOverrideRequest", false);
     }
   });
 
   const providedTheCompressor = () => ({
     isOn: async () => {
-      await rx130.write("Erd_CompressorIsOn", true);
+      await rockhopper.write("Erd_CompressorIsOn", true);
     },
     isOff: async () => {
-      await rx130.write("Erd_CompressorIsOn", false);
+      await rockhopper.write("Erd_CompressorIsOn", false);
     }
   });
 
   const providedCompartmentWasNotTooWarmOnPowerUp = async () => {
-    await rx130.write("Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady", false);
+    await rockhopper.write("Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady", false);
   };
 
   const providedTimeThatPrechillConditionsAreMetIs = async (timeInMinutes) => {
-    await rx130.write("Erd_TimeThatPrechillConditionsAreMetInMinutes", timeInMinutes);
+    await rockhopper.write("Erd_TimeThatPrechillConditionsAreMetInMinutes", timeInMinutes);
   };
 
   const whenTheCompressorHasBeenOnFor = (timeInSec) => ({
     seconds: async () => {
-      await rx130.write("Erd_DefrostCompressorOnTimeInSeconds", timeInSec);
+      await rockhopper.write("Erd_DefrostCompressorOnTimeInSeconds", timeInSec);
     }
   });
 
   const whenTheDoorAccelerationTimeForThe = () => ({
     FreshFoodCompartmentIs: async (timeInSec) => {
-      await rx130.write("Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds", timeInSec);
+      await rockhopper.write("Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds", timeInSec);
     },
     FreezerCompartmentIs: async (timeInSec) => {
-      await rx130.write("Erd_DefrostFreezerScaledDoorAccelerationInSeconds", timeInSec);
+      await rockhopper.write("Erd_DefrostFreezerScaledDoorAccelerationInSeconds", timeInSec);
     },
     ConvertibleCompartmentIs: async (timeInSec) => {
-      await rx130.write("Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds", timeInSec);
+      await rockhopper.write("Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds", timeInSec);
     }
   });
 
   const providedTheFilteredResolvedTemperatureFor = () => ({
     TheFreshFoodThermistorIs: async (temperature) => {
-      await rx130.write("Erd_FreshFood_FilteredTemperatureResolved", temperature);
+      await rockhopper.write("Erd_FreshFood_FilteredTemperatureResolved", temperature);
     },
     TheFreezerThermistorIs: async (temperature) => {
-      await rx130.write("Erd_Freezer_FilteredTemperatureResolved", temperature);
+      await rockhopper.write("Erd_Freezer_FilteredTemperatureResolved", temperature);
     },
     TheFreezerEvapThermistorIs: async (temperature) => {
-      await rx130.write("Erd_FreezerEvap_FilteredTemperatureResolved", temperature);
+      await rockhopper.write("Erd_FreezerEvap_FilteredTemperatureResolved", temperature);
     }
   });
 
   const theVoteFor = () => ({
     CompressorSpeedShouldBe: async (expectedCare, expectedSpeed = null) => {
-      const actual = await rx130.read("Erd_CompressorSpeed_DefrostVote");
+      const actual = await rockhopper.read("Erd_CompressorSpeed_DefrostVote");
       if (expectedSpeed != null) {
         expect(actual.speed).toEqual(expectedSpeed);
       }
       expect(actual.care).toEqual(expectedCare);
     },
     FreezerEvapFanSpeedShouldBe: async (expectedCare, expectedSpeed = null) => {
-      const actual = await rx130.read("Erd_FreezerEvapFanSpeed_DefrostVote");
+      const actual = await rockhopper.read("Erd_FreezerEvapFanSpeed_DefrostVote");
       if (expectedSpeed != null) {
         expect(actual.speed).toEqual(expectedSpeed);
       }
       expect(actual.care).toEqual(expectedCare);
     },
     CondenserFanSpeedShouldBe: async (expectedCare, expectedSpeed = null) => {
-      const actual = await rx130.read("Erd_CondenserFanSpeed_DefrostVote");
+      const actual = await rockhopper.read("Erd_CondenserFanSpeed_DefrostVote");
       if (expectedSpeed != null) {
         expect(actual.speed).toEqual(expectedSpeed);
       }
       expect(actual.care).toEqual(expectedCare);
     },
     DamperPositionShouldBe: async (expectedCare, expectedPosition = null) => {
-      const actual = await rx130.read("Erd_FreshFoodDamperPosition_DefrostVote");
+      const actual = await rockhopper.read("Erd_FreshFoodDamperPosition_DefrostVote");
       if (expectedPosition != null) {
         expect(actual.position).toEqual(expectedPosition);
       }
       expect(actual.care).toEqual(expectedCare);
     },
     FreezerDefrostHeaterShouldBe: async (expectedCare, expectedState = null) => {
-      const actual = await rx130.read("Erd_FreezerDefrostHeater_DefrostVote");
+      const actual = await rockhopper.read("Erd_FreezerDefrostHeater_DefrostVote");
       if (expectedState != null) {
         expect(actual.state).toEqual(expectedState);
       }
       expect(actual.care).toEqual(expectedCare);
     },
     IceCabinetFanSpeedShouldBe: async (expectedCare, expectedSpeed = null) => {
-      const actual = await rx130.read("Erd_IceCabinetFanSpeed_DefrostVote");
+      const actual = await rockhopper.read("Erd_IceCabinetFanSpeed_DefrostVote");
       if (expectedSpeed != null) {
         expect(actual.speed).toEqual(expectedSpeed);
       }

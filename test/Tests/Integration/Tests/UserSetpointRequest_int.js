@@ -28,46 +28,46 @@ const defaultStatusValue = 127;
 
 describe("UserSetpointRequest", () => {
    beforeEach(async () => {
-      await rx130.write("Erd_Reset", 1);
+      await rockhopper.write("Erd_Reset", 1);
       await delay(constants.oneSecondInMsec * 5);
    });
 
    const providedTheSetpointRequestForThe = () => ({
       FreezerCompartmentIs: async (setpointInDegF) => {
-         await rx130.write("Erd_FreezerSetpointRequest", setpointInDegF);
+         await rockhopper.write("Erd_FreezerSetpointRequest", setpointInDegF);
       },
       FreshFoodCompartmentIs: async (setpointInDegF) => {
-         await rx130.write("Erd_FreshFoodSetpointRequest", setpointInDegF);
+         await rockhopper.write("Erd_FreshFoodSetpointRequest", setpointInDegF);
       }
    });
 
    const providedTheSetpointStatusForThe = () => ({
       FreezerCompartmentIs: async (setpointInDegF) => {
-         await rx130.write("Erd_FreezerSetpointStatus", setpointInDegF);
+         await rockhopper.write("Erd_FreezerSetpointStatus", setpointInDegF);
       },
       FreshFoodCompartmentIs: async (setpointInDegF) => {
-         await rx130.write("Erd_FreshFoodSetpointStatus", setpointInDegF);
+         await rockhopper.write("Erd_FreshFoodSetpointStatus", setpointInDegF);
       }
    });
 
    const theUserVotedSetpointForThe = () => ({
       FreezerCompartmentShouldBe: async (setpointInDegFx100) => {
-         const actual = await rx130.read("Erd_FreezerSetpoint_UserVote");
+         const actual = await rockhopper.read("Erd_FreezerSetpoint_UserVote");
          expect(actual.temperature).toEqual(setpointInDegFx100);
       },
       FreshFoodCompartmentShouldBe: async (setpointInDegFx100) => {
-         const actual = await rx130.read("Erd_FreshFoodSetpoint_UserVote");
+         const actual = await rockhopper.read("Erd_FreshFoodSetpoint_UserVote");
          expect(actual.temperature).toEqual(setpointInDegFx100);
       }
    });
 
    const theSetpointStatusForThe = () => ({
       FreezerCompartmentShouldBe: async (setpointInDegF) => {
-         const actual = await rx130.read("Erd_FreezerSetpointStatus");
+         const actual = await rockhopper.read("Erd_FreezerSetpointStatus");
          expect(actual).toEqual(setpointInDegF);
       },
       FreshFoodCompartmentShouldBe: async (setpointInDegF) => {
-         const actual = await rx130.read("Erd_FreshFoodSetpointStatus");
+         const actual = await rockhopper.read("Erd_FreshFoodSetpointStatus");
          expect(actual).toEqual(setpointInDegF);
       }
    });
@@ -84,7 +84,7 @@ describe("UserSetpointRequest", () => {
       await theUserVotedSetpointForThe().FreezerCompartmentShouldBe(someSetpointWithinTheFreezerBoundsInDegFx100);
       await theSetpointStatusForThe().FreezerCompartmentShouldBe(someSetpointWithinTheFreezerBoundsInDegF);
 
-      await rx130.write("Erd_Reset", 1);
+      await rockhopper.write("Erd_Reset", 1);
       await delay(constants.oneSecondInMsec * 5);
 
       await theUserVotedSetpointForThe().FreezerCompartmentShouldBe(someSetpointWithinTheFreezerBoundsInDegFx100);
@@ -95,7 +95,7 @@ describe("UserSetpointRequest", () => {
       await providedTheSetpointStatusForThe().FreezerCompartmentIs(defaultStatusValue);
       await delay(constants.oneSecondInMsec);
 
-      await rx130.write("Erd_Reset", 1);
+      await rockhopper.write("Erd_Reset", 1);
       await delay(constants.oneSecondInMsec * 5);
 
       await theUserVotedSetpointForThe().FreezerCompartmentShouldBe(freezerDefaultTemperatureInDegFx100);
@@ -144,7 +144,7 @@ describe("UserSetpointRequest", () => {
       await theUserVotedSetpointForThe().FreshFoodCompartmentShouldBe(someSetpointWithinTheFreshFoodBoundsInDegFx100);
       await theSetpointStatusForThe().FreshFoodCompartmentShouldBe(someSetpointWithinTheFreshFoodBoundsInDegF);
 
-      await rx130.write("Erd_Reset", 1);
+      await rockhopper.write("Erd_Reset", 1);
       await delay(constants.oneSecondInMsec * 5);
 
       await theUserVotedSetpointForThe().FreshFoodCompartmentShouldBe(someSetpointWithinTheFreshFoodBoundsInDegFx100);
@@ -155,7 +155,7 @@ describe("UserSetpointRequest", () => {
       await providedTheSetpointStatusForThe().FreshFoodCompartmentIs(defaultStatusValue);
       await delay(constants.oneSecondInMsec);
 
-      await rx130.write("Erd_Reset", 1);
+      await rockhopper.write("Erd_Reset", 1);
       await delay(constants.oneSecondInMsec * 5);
 
       await theUserVotedSetpointForThe().FreshFoodCompartmentShouldBe(freshFoodDefaultTemperatureInDegFx100);

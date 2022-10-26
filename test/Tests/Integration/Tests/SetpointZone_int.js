@@ -7,36 +7,36 @@ const constants = require("../support/constants");
 describe("SetpointZone", () => {
 
    beforeEach(async () => {
-      await rx130.write("Erd_Reset", 1);
+      await rockhopper.write("Erd_Reset", 1);
       await delay(constants.oneSecondInMsec * 5);
    });
 
    const providedTheVotedTemperatureOfThe = () => ({
       FreezerCompartmentIs: async (temperature, care) => {
          let votedTemperature = { temperature: temperature, care: care };
-         await rx130.write("Erd_FreezerSetpoint_FactoryVote", votedTemperature)
+         await rockhopper.write("Erd_FreezerSetpoint_FactoryVote", votedTemperature)
       },
       FreshFoodCompartmentIs: async (temperature, care) => {
          let votedTemperature = { temperature: temperature, care: care };
-         await rx130.write("Erd_FreshFoodSetpoint_FactoryVote", votedTemperature)
+         await rockhopper.write("Erd_FreshFoodSetpoint_FactoryVote", votedTemperature)
       },
       ConvertibleCompartmentCompartmentIs: async (temperature, care) => {
          let votedTemperature = { temperature: temperature, care: care };
-         await rx130.write("Erd_ConvertibleCompartmentSetpoint_FactoryVote", votedTemperature)
+         await rockhopper.write("Erd_ConvertibleCompartmentSetpoint_FactoryVote", votedTemperature)
       }
    });
 
    const theSetpointZoneFor = () => ({
       FreezerCompartmentShouldBe: async (setpointZone) => {
-         const actual = await rx130.read("Erd_FreezerSetpointZone");
+         const actual = await rockhopper.read("Erd_FreezerSetpointZone");
          expect(actual).toEqual(setpointZone);
       },
       FreshFoodCompartmentShouldBe: async (setpointZone) => {
-         const actual = await rx130.read("Erd_FreshFoodSetpointZone");
+         const actual = await rockhopper.read("Erd_FreshFoodSetpointZone");
          expect(actual).toEqual(setpointZone);
       },
       ConvertibleCompartmentCompartmentShouldBe: async (setpointZone) => {
-         const actual = await rx130.read("Erd_ConvertibleCompartmentSetpointZone");
+         const actual = await rockhopper.read("Erd_ConvertibleCompartmentSetpointZone");
          expect(actual).toEqual(setpointZone);
       }
    });

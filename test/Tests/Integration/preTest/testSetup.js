@@ -17,7 +17,7 @@ const client = Client({
    infoSphere,
 });
 
-const rx130 = {
+const rockhopper = {
    write: async (erdName, data) => {
       await client.write({ host, erd: erdName, data });
    },
@@ -26,7 +26,7 @@ const rx130 = {
    },
 };
 
-global["rx130"] = rx130;
+global["rockhopper"] = rockhopper;
 global["geaSource"] = address;
 
 const featureManager = FeatureManager(geaNode);

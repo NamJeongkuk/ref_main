@@ -5,7 +5,7 @@ const path = require('path');
 module.exports = () => {
    const infoSphere = ErdInfoSphere();
 
-   const jsonDirectory = path.join(__dirname, '../../../../build/rx130/doc/');
+   const jsonDirectory = path.join(__dirname, '../../../../build/rockhopper/doc/');
    try {
       fs.readdirSync(jsonDirectory).forEach(file => {
          if (file.endsWith('.json')) {
@@ -13,7 +13,7 @@ module.exports = () => {
          }
       });
    } catch (e) {
-      throw 'Could not access build/rx130/doc, ensure that the folder exists and contains .json files';
+      throw 'Could not access build/rockhopper/doc, ensure that the folder exists and contains .json files';
    }
    return infoSphere;
 };

@@ -7,267 +7,267 @@
    },
    "erds": [
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreezerEvapFanSpeed_ResolvedVote",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreezerEvapFan_ActualRpm",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_CalculatedFreezerEvapFanControl",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreezerEvapFanSpeed_WinningVoteErd",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_CondenserFanSpeed_ResolvedVote",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_CondenserFan_ActualRpm",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_CalculatedCondenserFanControl",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_CondenserFanSpeed_WinningVoteErd",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreshFoodEvapFanSpeed_ResolvedVote",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreshFoodEvapFan_ActualRpm",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_CalculatedFreshFoodEvapFanControl",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_CompressorSpeed_ResolvedVote",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_CompressorState",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_CompressorSpeed_WinningVoteErd",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreshFoodDamperPosition_ResolvedVote",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreshFoodDamperPosition_WinningVoteErd",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreshFood_FilteredTemperature",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreshFoodEvap_FilteredTemperature",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_Freezer_FilteredTemperature",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreezerEvap_FilteredTemperature",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreshFood_AdjustedSetpoint",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreshFoodSetpoint_ResolvedVote",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreshFood_Shift",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreshFood_Offset",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_Freezer_AdjustedSetpoint",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreezerSetpoint_ResolvedVote",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_Freezer_Shift",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_Freezer_Offset",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_Grid_BlockNumber",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_Grid_PreviousBlocks",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_TimeInMinutesUntilReadyToDefrost",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_DefrostCompressorOnTimeInSeconds",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_DefrostFreezerScaledDoorAccelerationInSeconds",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_DefrostState",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreezerDefrostHeater_ResolvedVote",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreezerDefrostWasAbnormal",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_Grid_CalculatedGridLines",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_FreshFoodPulldownOffsetEnabled",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_ApplicationVersion",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_ParametricVersion",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_SabbathMode",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_EnhancedSabbathMode",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_ServiceDiagnosticsFaultTableEntry0",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_ServiceDiagnosticsFaultTableEntry1",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_ServiceDiagnosticsFaultTableEntry2",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_ServiceDiagnosticsFaultTableEntry3",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_ServiceDiagnosticsFaultTableEntry4",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_ServiceDiagnosticsFaultTableEntry5",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_ServiceDiagnosticsFaultTableEntry6",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_ServiceDiagnosticsFaultTableEntry7",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_ServiceDiagnosticsFaultTableEntry8",
          "interval": 60000
       },
       {
-         "namespace": "rx130",
+         "namespace": "rockhopper",
          "name": "Erd_ServiceDiagnosticsFaultTableEntry9",
          "interval": 60000
       }

@@ -1,8 +1,8 @@
 local tools = require 'tools.lua-erd-documentation-tools.lua-erd-documentation-tools'
-local Types = require 'build.rx130.GeneratedTypes'
+local Types = require 'build.rockhopper.GeneratedTypes'
 
 tools.build_json({
-  namespace = 'rx130',
+  namespace = 'rockhopper',
   address = 0xC0,
   parsers = {
     tools.parser.standard
@@ -11,5 +11,5 @@ tools.build_json({
     'src/Application/DataSource/SystemErds.h'
   },
   types_factory = Types,
-  output = 'build/rx130/doc/erd-definitions.json'
+  output = 'build/rockhopper/doc/erd-definitions.json'
 })

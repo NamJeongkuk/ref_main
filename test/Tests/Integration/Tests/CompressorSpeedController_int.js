@@ -48,7 +48,7 @@ describe("CompressorSpeedController,", () => {
 
    const providedTheFactorySpeedCompressorVoteSpeedIs = async (requestedSpeed) => {
       let requestedVote = { speed: requestedSpeed, care: true };
-      await rx130.write("Erd_CompressorSpeed_FactoryVote", requestedVote);
+      await rockhopper.write("Erd_CompressorSpeed_FactoryVote", requestedVote);
    };
 
    const providedTheCompressorSpeedControllerIsInitializedAndGetsIntoState = async (requestedCompressorState, requestedSpeed) => {
@@ -82,17 +82,17 @@ describe("CompressorSpeedController,", () => {
    };
 
    const theCompressorStateShouldBe = async (expected) => {
-      const actual = await rx130.read("Erd_CompressorState");
+      const actual = await rockhopper.read("Erd_CompressorState");
       expect(actual).toEqual(expected);
    };
 
    const theCompressorSpeedRequestShouldBe = async (expected) => {
-      const actual = await rx130.read("Erd_CompressorControllerSpeedRequest");
+      const actual = await rockhopper.read("Erd_CompressorControllerSpeedRequest");
       expect(actual).toEqual(expected);
    };
 
    beforeEach(async () => {
-      await rx130.write("Erd_Reset", 1);
+      await rockhopper.write("Erd_Reset", 1);
       await delay(constants.oneSecondInMsec * 5);
    });
 

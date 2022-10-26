@@ -38,30 +38,30 @@ describe("CompressorStartupFanVotes,", () => {
    });
 
    const theCompressorStateIs = async (state) => {
-      await rx130.write("Erd_CompressorState", state);
+      await rockhopper.write("Erd_CompressorState", state);
    };
 
    const theCoolingModeIs = async (state) => {
-      await rx130.write("Erd_CoolingMode", state);
+      await rockhopper.write("Erd_CoolingMode", state);
    };
 
    const theVoteFor = () => ({
       FreezerEvapFanSpeedShouldBe: async (expectedCare, expectedSpeed = null) => {
-         const actual = await rx130.read("Erd_FreezerEvapFanSpeed_CompressorStartUpVote");
+         const actual = await rockhopper.read("Erd_FreezerEvapFanSpeed_CompressorStartUpVote");
             if (expectedSpeed != null) {
                expect(actual.speed).toEqual(expectedSpeed);
          }
          expect(actual.care).toEqual(expectedCare);
       },
       FreshFoodEvapFanSpeedShouldBe: async (expectedCare, expectedSpeed = null) => {
-         const actual = await rx130.read("Erd_FreshFoodEvapFanSpeed_CompressorStartUpVote");
+         const actual = await rockhopper.read("Erd_FreshFoodEvapFanSpeed_CompressorStartUpVote");
             if (expectedSpeed != null) {
                expect(actual.speed).toEqual(expectedSpeed);
          }
          expect(actual.care).toEqual(expectedCare);
       },
       CondenserFanSpeedShouldBe: async (expectedCare, expectedSpeed = null) => {
-         const actual = await rx130.read("Erd_CondenserFanSpeed_CompressorStartUpVote");
+         const actual = await rockhopper.read("Erd_CondenserFanSpeed_CompressorStartUpVote");
             if (expectedSpeed != null) {
                expect(actual.speed).toEqual(expectedSpeed);
          }
@@ -70,7 +70,7 @@ describe("CompressorStartupFanVotes,", () => {
    });
 
    beforeEach(async () => {
-      await rx130.write("Erd_Reset", 1);
+      await rockhopper.write("Erd_Reset", 1);
       await delay(constants.oneSecondInMsec * 5);
    });
 

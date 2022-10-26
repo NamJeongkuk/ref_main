@@ -36,7 +36,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Sensor \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \
    $(PROJECT_DIR)/Application/SystemMonitor \
-   $(PROJECT_DIR)/rx130/Hardware/SoftPwm \
+   $(PROJECT_DIR)/Hardware/SoftPwm \
 
 # List of directories that contain your tests and test helpers (mocks, fakes, etc.)
 TEST_SRC_DIRS := \
@@ -95,9 +95,9 @@ INCLUDE_DIRS := \
    $(PROJECT_DIR)/Application/Temperature \
    $(PROJECT_DIR)/Application/Valve \
    $(PROJECT_DIR)/Application/Voting \
-   $(PROJECT_DIR)/rx130/Bsp \
-   $(PROJECT_DIR)/rx130/Hardware \
-   $(PROJECT_DIR)/rx130/Hardware/Eeprom \
+   $(PROJECT_DIR)/Bsp \
+   $(PROJECT_DIR)/Hardware \
+   $(PROJECT_DIR)/Hardware/Eeprom \
    $(REFERCOMMON_DIR)/Source/Temperature \
 
 include $(APPLCOMMON_DIR)/Makefile

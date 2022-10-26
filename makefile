@@ -1,9 +1,9 @@
 UNAME := $(shell uname)
 
 ifeq ($(UNAME), Linux)
-MAKE=make -f rx130-target.mk
+MAKE=make -f rockhopper-target.mk
 else
-MAKE=dmake -f rx130-target.mk
+MAKE=dmake -f rockhopper-target.mk
 endif
 MAKE_RELEASE=$(MAKE) RELEASE=Y DEBUG=N OLD_HW=Y package
 MAKE_NO_RELEASE=$(MAKE) RELEASE=N

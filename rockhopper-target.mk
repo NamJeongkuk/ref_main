@@ -1,6 +1,6 @@
 include tools/kpit-rx/setup.mk
 
-export TARGET:=rx130
+export TARGET:=rockhopper
 OUTPUT_DIR:=build/$(TARGET)
 BOOT_LOADER_DIR:=lib/rockhopper-boot-loader
 BOOT_LOADER_TARGET:=rockhopper
@@ -44,12 +44,12 @@ include tools/kpit-rx/defaults.mk
 SRC_FILES:=\
 
 SRC_DIRS:=\
-  src/$(TARGET) \
-  src/$(TARGET)/Bsp \
-  src/$(TARGET)/Hardware \
-  src/$(TARGET)/Hardware/Eeprom \
-  src/$(TARGET)/Hardware/Flash \
-  src/$(TARGET)/Hardware/SoftPwm \
+  src \
+  src/Bsp \
+  src/Hardware \
+  src/Hardware/Eeprom \
+  src/Hardware/Flash \
+  src/Hardware/SoftPwm \
   src/Application \
   src/Application/Compressor \
   src/Application/Configurations \
@@ -102,7 +102,7 @@ INC_DIRS:=\
 
 applcommon_EXTERNAL_INC_DIRS:=\
   src/Application \
-  src/$(TARGET)/Hardware/Flash \
+  src/Hardware/Flash \
 
 include lib_applcommon_rx130.mk
 

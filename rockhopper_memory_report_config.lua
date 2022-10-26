@@ -16,7 +16,7 @@ return {
   },
   Application = {
     ram = {
-      map = 'build/rx130/rx130.map',
+      map = 'build/rockhopper/rockhopper.map',
       type = 'rx-gcc',
       total = 48 * 1024,
       ram_sections = {
@@ -24,8 +24,8 @@ return {
       }
     },
     rom = {
-      srec = 'build/rx130/rx130.napl',
-      apl = 'build/rx130/rx130.apl',
+      srec = 'build/rockhopper/rockhopper.napl',
+      apl = 'build/rockhopper/rockhopper.apl',
       endianness = 'little'
     }
   }

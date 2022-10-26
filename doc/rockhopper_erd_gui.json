@@ -5,31 +5,31 @@
       "title": "Versions",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "MB Boot",
           "name": "Erd_BootLoaderVersion",
           "read": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "MB Application",
           "name": "Erd_ApplicationVersion",
           "read": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "MB Parametric",
           "name": "Erd_ParametricVersion",
           "read": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "MB Parametric Image CRC",
           "name": "Erd_ParametricDataImageCrc",
           "read": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "MB Personality",
           "name": "Erd_AppliancePersonality",
           "read": true
@@ -40,14 +40,14 @@
       "title": "System Modes",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Sabbath Mode",
           "name": "Erd_SabbathMode",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Demand Response Level",
           "name": "Erd_DemandResponseLevel",
           "read": true,
@@ -59,35 +59,35 @@
       "title": "Compressor",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Compressor Speed Resolved Vote",
           "name": "Erd_CompressorSpeed_ResolvedVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Compressor Is Single Speed",
           "name": "Erd_CompressorIsSingleSpeed",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Compressor State",
           "name": "Erd_CompressorState",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Compressor Is On",
           "name": "Erd_CompressorIsOn",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Compressor Controller Speed Request",
           "name": "Erd_CompressorControllerSpeedRequest",
           "read": true,
@@ -99,42 +99,42 @@
       "title": "Sealed System Valve",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Valve Position Resolved Vote",
           "name": "Erd_ValvePosition_ResolvedVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Valve Position Winning Vote ERD",
           "name": "Erd_ValvePosition_WinningVoteErd",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Valve Position Factory Vote",
           "name": "Erd_ValvePosition_FactoryVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Valve Position Defrost Vote",
           "name": "Erd_ValvePosition_DefrostVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Valve Position Grid Vote",
           "name": "Erd_ValvePosition_GridVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Time In Minutes In Position B",
           "name": "Erd_TimeInMinutesInValvePositionB",
           "read": true,
@@ -146,7 +146,7 @@
       "title": "Cooling",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "No Freeze Limit Is Active",
           "name": "Erd_NoFreezeLimitIsActive",
           "read": true,
@@ -158,21 +158,21 @@
       "title": "Grid",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Calculated Grid Lines",
           "name": "Erd_Grid_CalculatedGridLines",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Current Grid Block",
           "name": "Erd_Grid_BlockNumber",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Previous Grid Blocks",
           "name": "Erd_Grid_PreviousBlocks",
           "read": true,
@@ -184,42 +184,42 @@
       "title": "Fans",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Condenser Fan Startup Vote",
           "name": "Erd_CondenserFanSpeed_CompressorStartUpVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Evap Fan Speed Defrost Vote",
           "name": "Erd_FreshFoodEvapFanSpeed_DefrostVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Evap Fan Speed Compressor Startup Vote",
           "name": "Erd_FreshFoodEvapFanSpeed_CompressorStartUpVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Evap Fan Speed Defrost Vote",
           "name": "Erd_FreezerEvapFanSpeed_DefrostVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Evap Fan Speed Compressor Startup Vote",
           "name": "Erd_FreezerEvapFanSpeed_CompressorStartUpVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Ice Cabinet Fan Speed Defrost Vote",
           "name": "Erd_IceCabinetFanSpeed_DefrostVote",
           "read": true,
@@ -231,238 +231,238 @@
       "title": "Defrost",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Evaporator Thermistor Is Valid",
           "name": "Erd_FreezerEvaporatorThermistorIsValid",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Defrost State (EEPROM)",
           "name": "Erd_DefrostState",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Defrost HSM State",
           "name": "Erd_DefrostHsmState",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Actively Waiting For Next Defrost",
           "name": "Erd_ActivelyWaitingForNextDefrost",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Defrost Was Abnormal (EEPROM)",
           "name": "Erd_FreezerDefrostWasAbnormal",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Number of Freezer Abnormal Defrost Cycles (EEPROM)",
           "name": "Erd_NumberOfFreezerAbnormalDefrostCycles",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Abnormal Defrost Cycle Count (EEPROM)",
           "name": "Erd_FreezerAbnormalDefrostCycleCount",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Defrost Cycle Count (EEPROM)",
           "name": "Erd_FreezerDefrostCycleCount",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Defrost Was Abnormal (EEPROM)",
           "name": "Erd_FreshFoodDefrostWasAbnormal",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Convertible Compartment Defrost Was Abnormal (EEPROM)",
           "name": "Erd_ConvertibleCompartmentDefrostWasAbnormal",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Defrost Compressor On Time Counter Fsm State",
           "name": "Erd_DefrostCompressorOnTimeCounterFsmState",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Door Acceleration Counter Fsm State",
           "name": "Erd_DoorAccelerationCounterFsmState",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Defrost Compressor On Time In Seconds",
           "name": "Erd_DefrostCompressorOnTimeInSeconds",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "EEPROM Defrost Compressor On Time In Seconds",
           "name": "Erd_Eeprom_DefrostCompressorOnTimeInSeconds",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Scaled Door Acceleration In Seconds",
           "name": "Erd_DefrostFreezerScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "EEPROM Freezer Scaled Door Acceleration In Seconds",
           "name": "Erd_Eeprom_DefrostFreezerScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Scaled Door Acceleration In Seconds",
           "name": "Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "EEPROM Fresh Food Scaled Door Acceleration In Seconds",
           "name": "Erd_Eeprom_DefrostFreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Convertible Compartment Scaled Door Acceleration In Seconds",
           "name": "Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "EEPROM Convertible Compartment Scaled Door Acceleration In Seconds",
           "name": "Erd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Time In Minutes Until Ready To Defrost",
           "name": "Erd_TimeInMinutesUntilReadyToDefrost",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Ready To Defrost",
           "name": "Erd_ReadyToDefrost",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Number of Fresh Food Defrosts Before A Freezer Defrost",
           "name": "Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Defrost Heater Defrost Vote",
           "name": "Erd_FreshFoodDefrostHeater_DefrostVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Defrost Heater Defrost Vote",
           "name": "Erd_FreezerDefrostHeater_DefrostVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Valve Position Defrost Vote",
           "name": "Erd_ValvePosition_DefrostVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Defrost Max Holdoff Met",
           "name": "Erd_DefrostMaxHoldoffMet",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Defrost Is Fresh Food Only",
           "name": "Erd_DefrostIsFreshFoodOnly",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Max Prechill Time In Minutes",
           "name": "Erd_MaxPrechillTimeInMinutes",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Post Dwell Exit Time In Minutes",
           "name": "Erd_PostDwellExitTimeInMinutes",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Defrost Prechill Run Counter In Minutes",
           "name": "Erd_DefrostPrechillRunCounterInMinutes",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Prechill Time Met",
           "name": "Erd_PrechillTimeMet",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Time That Prechill Conditions Are Met In Minutes",
           "name": "Erd_TimeThatPrechillConditionsAreMetInMinutes",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Filtered Temperature Too Warm At Power Up",
           "name": "Erd_FreezerFilteredTemperatureTooWarmAtPowerUp",
           "read": true,
@@ -474,35 +474,35 @@
       "title": "Doors",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Left Fresh Food Door Is Open",
           "name": "Erd_LeftHandFreshFoodDoorIsOpen",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Right Fresh Food Door Is Open",
           "name": "Erd_RightHandFreshFoodDoorIsOpen",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Door In Door Is Open",
           "name": "Erd_DoorInDoorIsOpen",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Door Is Open",
           "name": "Erd_FreezerDoorIsOpen",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Convertible Compartment Door Is Open",
           "name": "Erd_ConvertibleCompartmentDoorIsOpen",
           "read": true,
@@ -514,49 +514,49 @@
       "title": "Nv Data",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Nv Erase Request Signal",
           "name": "Erd_EepromEraseRequestSignal",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Some Protected Data",
           "name": "Erd_ProtectedSomeData",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Some Unit Setting Data",
           "name": "Erd_UnitSettingSomeData",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Some User Setting Data",
           "name": "Erd_UserSettingSomeData",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Some Rfid Data",
           "name": "Erd_RfidSomeData",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Some Fault Snapshot Data",
           "name": "Erd_FaultSnapshotSomeData",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Some Cycle History Data",
           "name": "Erd_CycleHistorySomeData",
           "read": true,
@@ -568,210 +568,210 @@
       "title": "Sensors",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Thermistor AdcCount",
           "name": "Erd_FreshFoodThermistor_AdcCount",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Unfiltered Temperature",
           "name": "Erd_FreshFood_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Filtered Temperature",
           "name": "Erd_FreshFood_FilteredTemperature",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "FreshFood FilteredTemp Override Request",
           "name": "Erd_FreshFood_FilteredTemperatureOverrideRequest",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "FreshFood FilteredTemp Override Value",
           "name": "Erd_FreshFood_FilteredTemperatureOverrideValue",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "FreshFood FilteredTemp Resolved",
           "name": "Erd_FreshFood_FilteredTemperatureResolved",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Thermistor AdcCount",
           "name": "Erd_FreezerThermistor_AdcCount",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Unfiltered Temperature",
           "name": "Erd_Freezer_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Filtered Temperature",
           "name": "Erd_Freezer_FilteredTemperature",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer FilteredTemp Override Request",
           "name": "Erd_Freezer_FilteredTemperatureOverrideRequest",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer FilteredTemp Override Value",
           "name": "Erd_Freezer_FilteredTemperatureOverrideValue",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer FilteredTemp Resolved",
           "name": "Erd_Freezer_FilteredTemperatureResolved",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Evap Thermistor AdcCount",
           "name": "Erd_FreshFoodEvapThermistor_AdcCount",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Evap Unfiltered Temperature",
           "name": "Erd_FreshFoodEvap_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Evap Filtered Temperature",
           "name": "Erd_FreshFoodEvap_FilteredTemperature",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Evap Thermistor AdcCount",
           "name": "Erd_FreezerEvapThermistor_AdcCount",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Evap Unfiltered Temperature",
           "name": "Erd_FreezerEvap_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "FreezerEvap FilteredTemperature",
           "name": "Erd_FreezerEvap_FilteredTemperature",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "FreezerEvap FilteredTemp Override Request",
           "name": "Erd_FreezerEvap_FilteredTemperatureOverrideRequest",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "FreezerEvap FilteredTemp Override Value",
           "name": "Erd_FreezerEvap_FilteredTemperatureOverrideValue",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "FreezerEvap FilteredTemp Resolved",
           "name": "Erd_FreezerEvap_FilteredTemperatureResolved",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Convertible Compartment Thermistor AdcCount",
           "name": "Erd_ConvertibleCompartmentCabinetThermistor_AdcCount",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Convertible Compartment Unfiltered Temperature",
           "name": "Erd_ConvertibleCompartment_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Convertible Compartment Filtered Temperature",
           "name": "Erd_ConvertibleCompartment_FilteredTemperature",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Ambient Thermistor AdcCount",
           "name": "Erd_AmbientThermistor_AdcCount",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Ambient Unfiltered Temperature",
           "name": "Erd_Ambient_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Ambient Filtered Temperature",
           "name": "Erd_Ambient_FilteredTemperature",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Convertible Compartment Evap Thermistor AdcCount",
           "name": "Erd_ConvertibleCompartmentEvapThermistor_AdcCount",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Convertible Compartment Evap Unfiltered Temperature",
           "name": "Erd_ConvertibleCompartmentEvap_UnfilteredTemperature",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Convertible Compartment Evap Filtered Temperature",
           "name": "Erd_ConvertibleCompartmentEvap_FilteredTemperature",
           "read": true,
@@ -783,70 +783,70 @@
       "title": "Freezer Compartment",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Cabinet Resolved Vote for Setpoint",
           "name": "Erd_FreezerSetpoint_ResolvedVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Adjusted Setpoint",
           "name": "Erd_Freezer_AdjustedSetpointInDegFx100",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Cabinet Setpoint Winning Vote ERD",
           "name": "Erd_FreezerSetpoint_WinningVoteErd",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Cabinet Factory Vote for Setpoint",
           "name": "Erd_FreezerSetpoint_FactoryVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Cabinet Enhanced Sabbath Vote for Setpoint",
           "name": "Erd_FreezerSetpoint_EnhancedSabbathVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Cabinet Turbo Freeze Vote for Setpoint",
           "name": "Erd_FreezerSetpoint_TurboFreezeVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Cabinet Ice In Door Vote for Setpoint",
           "name": "Erd_FreezerSetpoint_IceInDoorVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Cabinet Freezer Ice Maker Vote for Setpoint",
           "name": "Erd_FreezerSetpoint_FreezerIceMakerVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Cabinet User Vote for Setpoint",
           "name": "Erd_FreezerSetpoint_UserVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Cabinet User Setpoint Request",
           "name": "Erd_FreezerSetpointRequest",
           "read": true,
@@ -858,49 +858,49 @@
       "title": "Fresh Food Compartment",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Cabinet Resolved Vote for Setpoint",
           "name": "Erd_FreshFoodSetpoint_ResolvedVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Cabinet Setpoint Winning Vote ERD",
           "name": "Erd_FreshFoodSetpoint_WinningVoteErd",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Cabinet Factory Vote for Setpoint",
           "name": "Erd_FreshFoodSetpoint_FactoryVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Cabinet Enhanced Sabbath Vote for Setpoint",
           "name": "Erd_FreshFoodSetpoint_EnhancedSabbathVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Cabinet Turbo Cool Vote for Setpoint",
           "name": "Erd_FreshFoodSetpoint_TurboCoolVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Cabinet User Vote for Setpoint",
           "name": "Erd_FreshFoodSetpoint_UserVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Cabinet User Setpoint Request",
           "name": "Erd_FreshFoodSetpointRequest",
           "read": true,
@@ -912,35 +912,35 @@
       "title": "Convertible Compartment",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Convertible Compartment Resolved Vote for Setpoint",
           "name": "Erd_ConvertibleCompartmentSetpoint_ResolvedVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Convertible Compartment Setpoint Winning Vote ERD",
           "name": "Erd_ConvertibleCompartmentSetpoint_WinningVoteErd",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Convertible Compartment State",
           "name": "Erd_ConvertibleCompartmentState",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Convertible Compartment Factory Vote for Setpoint",
           "name": "Erd_ConvertibleCompartmentSetpoint_FactoryVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Convertible Compartment User Vote for Setpoint",
           "name": "Erd_ConvertibleCompartmentSetpoint_UserVote",
           "read": true,
@@ -952,49 +952,49 @@
       "title": "Ice Maker",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fill Tube Heater Resolved Vote",
           "name": "Erd_FillTubeHeater_ResolvedVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fill Tube Heater Winning Vote ERD",
           "name": "Erd_FillTubeHeater_WinningVoteErd",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fill Tube Heater Factory Vote",
           "name": "Erd_FillTubeHeater_FactoryVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fill Tube Heater Ice Maker Harvest Vote",
           "name": "Erd_FillTubeHeater_IceMakerHarvestVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fill Tube Heater Continuous Vote",
           "name": "Erd_FillTubeHeater_ContinuousVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fill Tube Heater (Load)",
           "name": "Erd_FillTubeHeater",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fill Tube Heater Pwm Duty Cycle (Out of 65535)",
           "description": "Out of 65535",
           "name": "Erd_FillTubeHeaterPwmDutyCycle",
@@ -1007,14 +1007,14 @@
       "title": "FaultWrapper",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Some Fault Erd",
           "name": "Erd_SomeFault",
           "read": true,
           "write": false
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Some Other Fault Erd",
           "name": "Erd_SomeOtherFault",
           "read": true,
@@ -1026,14 +1026,14 @@
       "title": "Cabinet Temperature Override",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Current Grid Block Number",
           "name": "Erd_Grid_BlockNumber",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Erd_Grid_PreviousBlocks",
           "name": "Erd_Grid_PreviousBlocks",
           "read": true,
@@ -1045,28 +1045,28 @@
       "title": "Setpoints voting",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Erd_FreezerSetpoint_ResolvedVote",
           "name": "Erd_FreezerSetpoint_ResolvedVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Erd_FreezerSetpoint_WinningVoteErd",
           "name": "Erd_FreezerSetpoint_WinningVoteErd",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Erd_FreezerSetpoint_FactoryVote",
           "name": "Erd_FreezerSetpoint_FactoryVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Erd_FreezerSetpoint_TurboFreezeVote",
           "name": "Erd_FreezerSetpoint_TurboFreezeVote",
           "read": true,
@@ -1078,35 +1078,35 @@
       "title": "Damper",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Damper Heater Resolved Vote",
           "name": "Erd_FreshFoodDamperHeater_ResolvedVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Damper Heater Winning Vote ERD",
           "name": "Erd_FreshFoodDamperHeater_WinningVoteErd",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Damper Heater Factory Vote",
           "name": "Erd_FreshFoodDamperHeater_FactoryVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Damper Heater Damper Freeze Prevention Vote",
           "name": "Erd_FreshFoodDamperHeater_DamperFreezePreventionVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Damper Heater Defrost Heater Sync Vote",
           "name": "Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote",
           "read": true,

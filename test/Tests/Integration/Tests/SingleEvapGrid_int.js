@@ -10,7 +10,7 @@ describe("SingleEvapGrid", () => {
    let block = [];
 
    const generateGridBlocks = async () => {
-      const calculatedGridLines = await rx130.read("Erd_Grid_CalculatedGridLines");
+      const calculatedGridLines = await rockhopper.read("Erd_Grid_CalculatedGridLines");
       block = [
          { freezer: calculatedGridLines.freezerGridLine.extremeHighGridLinesDegFx100 + 1, freshFood: calculatedGridLines.freshFoodGridLine.nflGridLinesDegFx100 - 1 },
          { freezer: calculatedGridLines.freezerGridLine.extremeHighGridLinesDegFx100 + 1, freshFood: calculatedGridLines.freshFoodGridLine.lowHystGridLinesDegFx100 - 1 },
@@ -72,23 +72,23 @@ describe("SingleEvapGrid", () => {
 
    beforeAll(async () => {
       await generateGridBlocks();
-      await rx130.write("Erd_GridOverrideEnable", true);
-      await rx130.write("Erd_Freezer_FilteredTemperatureOverrideRequest", true);
-      await rx130.write("Erd_FreshFood_FilteredTemperatureOverrideRequest", true);
+      await rockhopper.write("Erd_GridOverrideEnable", true);
+      await rockhopper.write("Erd_Freezer_FilteredTemperatureOverrideRequest", true);
+      await rockhopper.write("Erd_FreshFood_FilteredTemperatureOverrideRequest", true);
    });
 
    afterAll(async () => {
-      await rx130.write("Erd_GridOverrideEnable", false);
-      await rx130.write("Erd_Freezer_FilteredTemperatureOverrideRequest", false);
-      await rx130.write("Erd_FreshFood_FilteredTemperatureOverrideRequest", false);
+      await rockhopper.write("Erd_GridOverrideEnable", false);
+      await rockhopper.write("Erd_Freezer_FilteredTemperatureOverrideRequest", false);
+      await rockhopper.write("Erd_FreshFood_FilteredTemperatureOverrideRequest", false);
    });
 
    const providedTheResolvedFilteredTemperatureForThe = () => ({
       FreezerCompartmentIs: async (temperatureDegFx100) => {
-         await rx130.write("Erd_Freezer_FilteredTemperatureOverrideValue", temperatureDegFx100);
+         await rockhopper.write("Erd_Freezer_FilteredTemperatureOverrideValue", temperatureDegFx100);
       },
       FreshFoodCompartmentIs: async (temperatureDegFx100) => {
-         await rx130.write("Erd_FreshFood_FilteredTemperatureOverrideValue", temperatureDegFx100);
+         await rockhopper.write("Erd_FreshFood_FilteredTemperatureOverrideValue", temperatureDegFx100);
       }
    });
 
@@ -98,63 +98,63 @@ describe("SingleEvapGrid", () => {
    }
 
    const theGridBlockShouldBe = async (expectedBlockNumber) => {
-      const actual = await rx130.read("Erd_Grid_BlockNumber");
+      const actual = await rockhopper.read("Erd_Grid_BlockNumber");
       expect(actual).toEqual(expectedBlockNumber);
    }
 
    const providedTheCoolingModeIs = async (coolingMode) => {
-      await rx130.write("Erd_CoolingMode", coolingMode);
+      await rockhopper.write("Erd_CoolingMode", coolingMode);
    }
 
    const providedTheCoolingSpeedIs = async (coolingSpeed) => {
-      await rx130.write("Erd_CoolingSpeed", coolingSpeed);
+      await rockhopper.write("Erd_CoolingSpeed", coolingSpeed);
    }
 
    const providedTheSingleEvapPulldownAndTripMitigationIs = async (state) => {
-      await rx130.write("Erd_SingleEvaporatorPulldownActive", state);
-      await rx130.write("Erd_CompressorTripMitigationActive", state);
+      await rockhopper.write("Erd_SingleEvaporatorPulldownActive", state);
+      await rockhopper.write("Erd_CompressorTripMitigationActive", state);
    }
 
    const providedThePulldownInMediumCompressorSpeedIs = async (state) => {
-      await rx130.write("Erd_PulldownInMediumCompressorSpeedEnabled", state);
+      await rockhopper.write("Erd_PulldownInMediumCompressorSpeedEnabled", state);
    }
 
    const theCoolingModeShouldBe = async (expected) => {
-      const actual = await rx130.read("Erd_CoolingMode");
+      const actual = await rockhopper.read("Erd_CoolingMode");
       expect(actual).toEqual(expected);
    }
 
    const theCoolingSpeedShouldBe = async (expected) => {
-      const actual = await rx130.read("Erd_CoolingSpeed");
+      const actual = await rockhopper.read("Erd_CoolingSpeed");
       expect(actual).toEqual(expected);
    }
 
    const thePulldownStateShouldBe = async (expected) => {
-      const actual = await rx130.read("Erd_SingleEvaporatorPulldownActive");
+      const actual = await rockhopper.read("Erd_SingleEvaporatorPulldownActive");
       expect(actual).toEqual(expected);
    }
 
    const providedTheGridAreaIs = async (gridArea) => {
-      await rx130.write("Erd_GridArea", gridArea);
+      await rockhopper.write("Erd_GridArea", gridArea);
    }
 
    const afterTheGridRuns = async () => {
-      let signal = await rx130.read("Erd_GridOverrideSignal");
+      let signal = await rockhopper.read("Erd_GridOverrideSignal");
       signal++;
 
-      await rx130.write("Erd_GridOverrideSignal", signal);
+      await rockhopper.write("Erd_GridOverrideSignal", signal);
    }
 
    const theGridAreaShouldBe = async (expected) => {
-      const actual = await rx130.read("Erd_GridArea");
+      const actual = await rockhopper.read("Erd_GridArea");
       expect(actual).toEqual(expected);
    }
 
    const theGridVotesShouldBe = async (expectedCompressorSpeed, expectedCondenserFanSpeed, expectedFreezerEvapFanSpeed, expectedFreshFoodDamperPosition) => {
-      const actualCompressorVotedSpeed = await rx130.read("Erd_CompressorSpeed_GridVote");
-      const actualCondenserFanVotedSpeed = await rx130.read("Erd_CondenserFanSpeed_GridVote");
-      const actualFreezerEvapFanVotedSpeed = await rx130.read("Erd_FreezerEvapFanSpeed_GridVote");
-      const actualFreshFoodDamperVotedPosition = await rx130.read("Erd_FreshFoodDamperPosition_GridVote");
+      const actualCompressorVotedSpeed = await rockhopper.read("Erd_CompressorSpeed_GridVote");
+      const actualCondenserFanVotedSpeed = await rockhopper.read("Erd_CondenserFanSpeed_GridVote");
+      const actualFreezerEvapFanVotedSpeed = await rockhopper.read("Erd_FreezerEvapFanSpeed_GridVote");
+      const actualFreshFoodDamperVotedPosition = await rockhopper.read("Erd_FreshFoodDamperPosition_GridVote");
 
       expect(actualCompressorVotedSpeed.speed).toEqual(expectedCompressorSpeed);
       expect(actualCondenserFanVotedSpeed.speed).toEqual(expectedCondenserFanSpeed);

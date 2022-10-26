@@ -45,20 +45,20 @@
          "armToolchainPath": "${workspaceFolder}/tools/kpit-rx/tc/bin",
          "cwd": "${workspaceRoot}",
          "device": "R5F51308",
-         "executable": "${workspaceFolder}/build/rx130/rx130.elf",
+         "executable": "${workspaceFolder}/build/rockhopper/rockhopper.elf",
          "interface": "FINE",
-         "jlinkscript": "build/rx130/debug.jlink",
-         "name": "rx130",
-         "preLaunchTask": "rx130_vscode_debug",
+         "jlinkscript": "build/rockhopper/debug.jlink",
+         "name": "rockhopper",
+         "preLaunchTask": "rockhopper_vscode_debug",
          "request": "launch",
          "runToEntryPoint": "main",
          "serverArgs": [
             "-speed",
             "1000"
          ],
-         "serverpath": "${workspaceFolder}/build/rx130/JLinkGDBServer",
+         "serverpath": "${workspaceFolder}/build/rockhopper/JLinkGDBServer",
          "servertype": "jlink",
-         "svdFile": "tools/kpit-rx/svd/rx130.svd",
+         "svdFile": "tools/kpit-rx/svd/rockhopper.svd",
          "type": "cortex-debug"
       }
    ],
