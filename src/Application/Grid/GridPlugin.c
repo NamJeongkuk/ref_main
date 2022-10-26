@@ -100,6 +100,16 @@ void GridPlugin_Init(
 
    uassert(sensorsReadyToBeRead && setpointResolverReady & overrideArbiterReady);
 
+   DataModel_Write(
+      dataModel,
+      Erd_CompressorTripMitigationActive,
+      &PersonalityParametricData_Get(dataModel)->pulldownData->compressorTripMitigationEnable);
+
+   DataModel_Write(
+      dataModel,
+      Erd_PulldownInMediumCompressorSpeedEnabled,
+      &PersonalityParametricData_Get(dataModel)->pulldownData->pulldownInMediumCompressorSpeed);
+
    GridLineCalculator_Init(
       &instance->gridLineCalculator,
       &gridLineCalculatorConfig,
@@ -119,9 +129,4 @@ void GridPlugin_Init(
       dataModel,
       Erd_GridPluginReady,
       set);
-
-   DataModel_Write(
-      dataModel,
-      Erd_PulldownInMediumCompressorSpeedEnabled,
-      &PersonalityParametricData_Get(dataModel)->pulldownData->pulldownInMediumCompressorSpeed);
 }

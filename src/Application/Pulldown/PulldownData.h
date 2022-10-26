@@ -13,6 +13,7 @@
 typedef struct
 {
    bool pulldownInMediumCompressorSpeed;
+   bool compressorTripMitigationEnable;
 } PulldownData_t;
 
 #endif
