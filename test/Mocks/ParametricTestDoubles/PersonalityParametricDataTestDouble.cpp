@@ -31,7 +31,9 @@ static const string filePathByPersonality[NumberOfPersonalities][DirectoryAndScr
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleSpeedCompressor.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentVariableSpeedCoolingModeIndependentCompressor.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentVariableSpeedCoolingModeDependentCompressor.lua" },
-   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentMaxOpenDamperTimerZero.lua" }
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentMaxOpenDamperTimerZero.lua" },
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentDamperHeaterOnWhenDefrostHeaterIsOnIsFalse.lua" },
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentDamperHeaterZeroOnTimeMinutes.lua" }
 };
 
 static bool loaded[NumberOfPersonalities];

@@ -5,15 +5,16 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef FILLTUBEHEATERVOTEDDUTYCYCLE_H
-#define FILLTUBEHEATERVOTEDDUTYCYCLE_H
+#ifndef HEATERVOTEDDUTYCYCLE_H
+#define HEATERVOTEDDUTYCYCLE_H
 
 #include "PercentageDutyCycle.h"
+#include "Vote.h"
 
 typedef struct
 {
    PercentageDutyCycle_t dutyCycle;
-   bool care;
-} FillTubeHeaterVotedDutyCycle_t;
+   Vote_t care;
+} HeaterVotedDutyCycle_t;
 
 #endif

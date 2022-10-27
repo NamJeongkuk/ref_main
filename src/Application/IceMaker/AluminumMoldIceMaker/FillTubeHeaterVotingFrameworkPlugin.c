@@ -7,16 +7,16 @@
 
 #include "SystemErds.h"
 #include "FillTubeHeaterVotingFrameworkPlugin.h"
-#include "FillTubeHeaterVotedDutyCycle.h"
+#include "HeaterVotedDutyCycle.h"
 
-static const FillTubeHeaterVotedDutyCycle_t defaultData = {
+static const HeaterVotedDutyCycle_t defaultData = {
    .dutyCycle = 0,
    .care = false
 };
 
 static bool VotingErdCareDelegate(const void *votingErdData)
 {
-   const FillTubeHeaterVotedDutyCycle_t *data = votingErdData;
+   const HeaterVotedDutyCycle_t *data = votingErdData;
    return (data->care);
 }
 

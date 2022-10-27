@@ -40,6 +40,12 @@ static const DamperMaxOpenTimeConfiguration_t maxOpenDamperConfig = {
    .damperCurrentPositionErd = Erd_FreshFoodDamperCurrentPosition
 };
 
+static const DamperHeaterDefrostControlConfig_t freshFoodDamperHeaterDefrostControlConfig = {
+   .defrostHeaterStateErd = Erd_FreezerDefrostHeaterRelay,
+   .damperHeaterDefrostHeaterSyncVoteErd = Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote,
+   .defrostHeaterVoteErd = Erd_FreezerDefrostHeater_DefrostVote
+};
+
 static const DamperVotedPosition_t defaultData = {
    .position = DamperPosition_Closed,
    .care = false
@@ -91,6 +97,13 @@ void FreshFoodDamperMotorPlugin_Init(FreshFoodDamperMotorPlugin_t *instance, I_D
       dataModel,
       &maxOpenDamperConfig,
       PersonalityParametricData_Get(dataModel)->freshFoodDamperData);
+
+   DamperHeaterDefrostControl_Init(
+      &instance->_private.freshFoodDamperHeaterDefrostControl,
+      dataModel,
+      &freshFoodDamperHeaterDefrostControlConfig,
+      DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
+      PersonalityParametricData_Get(dataModel)->damperHeaterData);
 
    TimerModule_StartPeriodic(
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),

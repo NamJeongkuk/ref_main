@@ -8,6 +8,8 @@
 #ifndef SINGLEDAMPERDATA_H
 #define SINGLEDAMPERDATA_H
 
+#include <stdint.h>
+
 typedef struct
 {
    uint16_t stepsToOpen;

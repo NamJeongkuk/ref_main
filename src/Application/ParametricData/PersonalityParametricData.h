@@ -22,6 +22,7 @@
 #include "SetpointData.h"
 #include "BspParametricConfiguration.h"
 #include "SingleDamperData.h"
+#include "DamperHeaterData.h"
 #include "PulldownData.h"
 
 typedef struct
@@ -39,6 +40,7 @@ typedef struct
    const SetpointData_t *setpointData;
    const BspParametricConfiguration_t *bspConfigurationData;
    const SingleDamperData_t *freshFoodDamperData;
+   const DamperHeaterData_t *damperHeaterData;
    const PulldownData_t *pulldownData;
 } PersonalityParametricData_t;
 
