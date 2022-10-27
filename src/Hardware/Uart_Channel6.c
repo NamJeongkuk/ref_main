@@ -14,7 +14,9 @@
 #include "utils.h"
 #include "Uart_Channel6.h"
 
-#define U32_TARGET_BAUD_RATE        ((uint32_t)19200)
+#define U32_TARGET_BAUD_RATE ((uint32_t)19200)
+
+#ifdef OLD_HW
 
 static void Send(I_Uart_t *instance, const uint8_t byte);
 
@@ -39,33 +41,32 @@ static void Send(I_Uart_t *instance, const uint8_t byte)
    SCI6.TDR = byte;
 }
 
-static I_Event_t * GetOnReceiveEvent(I_Uart_t *instance)
+static I_Event_t *GetOnReceiveEvent(I_Uart_t *instance)
 {
    IGNORE(instance);
    return (&uartData.OnReceiveEvent.interface);
 }
 
-static I_Event_t * GetOnTransmitEvent(I_Uart_t *instance)
+static I_Event_t *GetOnTransmitEvent(I_Uart_t *instance)
 {
    IGNORE(instance);
    return (&uartData.OnTransmitEvent.interface);
 }
 
-static I_Event_t * GetOnErrorEvent(I_Uart_t *instance)
+static I_Event_t *GetOnErrorEvent(I_Uart_t *instance)
 {
    IGNORE(instance);
    return (&uartData.OnErrorEvent.interface);
 }
 
-static const I_Uart_Api_t Uart_Api =
-   {
-      Send, GetOnReceiveEvent, GetOnTransmitEvent, GetOnErrorEvent
-   };
+static const I_Uart_Api_t Uart_Api = {
+   Send, GetOnReceiveEvent, GetOnTransmitEvent, GetOnErrorEvent
+};
 
 /*!
  * Interrupt service routine for UART6 rx data
  */
-void SCI6_RXI6(void) __attribute__ ((interrupt));
+void SCI6_RXI6(void) __attribute__((interrupt));
 void SCI6_RXI6(void)
 {
    uint8_t receivedData;
@@ -73,8 +74,7 @@ void SCI6_RXI6(void)
    receivedData = SCI6.RDR;
 
    {
-      UartOnReceiveArgs_t args =
-         { receivedData };
+      UartOnReceiveArgs_t args = { receivedData };
       Event_SingleSubscriberSynchronous_Publish(&uartData.OnReceiveEvent, &args);
    }
 }
@@ -82,7 +82,7 @@ void SCI6_RXI6(void)
 /*!
  * Interrupt service routine for GEA2_UART rx error
  */
-void SCI6_ERI6(void) __attribute__ ((interrupt));
+void SCI6_ERI6(void) __attribute__((interrupt));
 void SCI6_ERI6(void)
 {
    uint8_t received_data;
@@ -108,7 +108,7 @@ void SCI6_ERI6(void)
 /*!
  * Interrupt service routine for GEA2_UART tx error
  */
-void SCI6_TEI6(void) __attribute__ ((interrupt));
+void SCI6_TEI6(void) __attribute__((interrupt));
 void SCI6_TEI6(void)
 {
    uint8_t received_data;
@@ -131,12 +131,15 @@ void SCI6_TEI6(void)
    Event_SingleSubscriberSynchronous_Publish(&uartData.OnErrorEvent, NULL);
 }
 
+#endif
+
 /*!
  * Initialize GEA2_UART as GEA2 port - 19200, 8,n,1 with no Tx interrupts
  * @return
  */
 I_Uart_t *Uart_Channel6_GetInstance(uint32_t clockFrequency)
 {
+#ifdef OLD_HW
    if(!uartData.interface.api)
    {
       uartData.interface.api = &Uart_Api;
@@ -211,11 +214,15 @@ I_Uart_t *Uart_Channel6_GetInstance(uint32_t clockFrequency)
       ICU.IR[IR_SCI6_TXI6].BIT.IR = 0;
 
       // Finally, enable UART rx and interrupts
-      SCI6.SCR.BIT.TIE = 0;  // Transmit Interrupt Disabled
-      SCI6.SCR.BIT.RIE = 1;  // Receive Interrupt Enabled
-      SCI6.SCR.BIT.TE = 1;   // Transmit Enabled
-      SCI6.SCR.BIT.RE = 1;   // Receive Enabled
+      SCI6.SCR.BIT.TIE = 0; // Transmit Interrupt Disabled
+      SCI6.SCR.BIT.RIE = 1; // Receive Interrupt Enabled
+      SCI6.SCR.BIT.TE = 1; // Transmit Enabled
+      SCI6.SCR.BIT.RE = 1; // Receive Enabled
    }
 
    return &uartData.interface;
+#else
+   IGNORE(clockFrequency);
+   return NULL;
+#endif
 }

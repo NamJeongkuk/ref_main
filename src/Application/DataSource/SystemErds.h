@@ -420,6 +420,12 @@ enum
    ENTRY(Erd_IceBox_ResetThermalShiftOffsetSignal,          0xF039, Signal_t,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DeliPan_ResetThermalShiftOffsetSignal,         0xF03A, Signal_t,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_WifiBufferedUart,                              0xF040, I_BufferedUart_t *,                                 Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FactoryBufferedUart,                           0xF041, I_BufferedUart_t *,                                 Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DoorBufferedUart,                              0xF042, I_BufferedUart_t *,                                 Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CaseBufferedUart,                              0xF043, I_BufferedUart_t *,                                 Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Gea2Uart,                                      0xF044, I_Uart_t *,                                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_SystemTickInterrupt,                           0xF100, I_Interrupt_t *,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TimeSource,                                    0xF101, I_TimeSource_t *,                                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TimerModule,                                   0xF102, TimerModule_t *,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

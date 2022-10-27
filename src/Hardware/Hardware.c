@@ -17,6 +17,11 @@
 #include "SystemErds.h"
 #include "Uart_Channel0.h"
 #include "Uart_Channel6.h"
+#include "Uart_Channel12.h"
+#include "BufferedUart_Channel1.h"
+#include "BufferedUart_Channel5.h"
+#include "BufferedUart_Channel6.h"
+#include "BufferedUart_Channel9.h"
 #include "SystemClock.h"
 
 void Hardware_InitializeStage1(void)
@@ -34,11 +39,20 @@ void Hardware_InitializeStage2(I_DataModel_t *dataModel)
    I_Uart_t *externalUart = Uart_Channel0_GetInstance(U32_PCLKB);
    DataModelErdPointerAccess_Write(dataModel, Erd_ExternalUart, externalUart);
 #else
-   I_Uart_t *internalUart = Uart_Channel6_GetInstance(U32_PCLKB);
-   DataModelErdPointerAccess_Write(dataModel, Erd_InternalUart, internalUart);
+   I_BufferedUart_t *wifiBufferedUart = BufferedUart_Channel1_Init();
+   DataModelErdPointerAccess_Write(dataModel, Erd_WifiBufferedUart, wifiBufferedUart);
 
-   I_Uart_t *externalUart = Uart_Channel0_GetInstance(U32_PCLKB);
-   DataModelErdPointerAccess_Write(dataModel, Erd_ExternalUart, externalUart);
+   I_BufferedUart_t *factoryBufferedUart = BufferedUart_Channel5_Init();
+   DataModelErdPointerAccess_Write(dataModel, Erd_FactoryBufferedUart, factoryBufferedUart);
+
+   I_BufferedUart_t *doorBufferedUart = BufferedUart_Channel6_Init();
+   DataModelErdPointerAccess_Write(dataModel, Erd_DoorBufferedUart, doorBufferedUart);
+
+   I_BufferedUart_t *caseBufferedUart = BufferedUart_Channel9_Init();
+   DataModelErdPointerAccess_Write(dataModel, Erd_CaseBufferedUart, caseBufferedUart);
+
+   I_Uart_t *gea2Uart = Uart_Channel12_GetInstance(U32_PCLKB);
+   DataModelErdPointerAccess_Write(dataModel, Erd_Gea2Uart, gea2Uart);
 #endif
 
    I_Crc16Calculator_t *crcCalcTable = Crc16Calculator_Table;

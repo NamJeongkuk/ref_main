@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef GEASTACK_H
-#define GEASTACK_H
+#ifndef OLDGEASTACK_H
+#define OLDGEASTACK_H
 
 #include "Gea2Configurator.h"
 #include "Gea2MessageEndpoint_Gea2PacketEndpointAdapter.h"
@@ -46,7 +46,7 @@ enum
 typedef struct
 {
    ERD_TABLE(EXPAND_AS_PUBLIC_ERD_COUNT_STRUCT_MEMBER)
-} GeaStackPublicErdCount_t;
+} OldGeaStackPublicErdCount_t;
 
 typedef struct
 {
@@ -58,7 +58,7 @@ typedef struct
       ErdGea2ReadWriteApiRevision2_t erdApiRevision2ReadWrite;
       ErdGea2SubscriptionApiRevision2_t erdApiRevision2Subscription;
       ErdGea2SubscriptionApiRevision2SubscriptionResources_t subscriptionResources[ErdApiV2SubscriptionClients];
-      uint8_t subscriptionBuffers[ErdApiV2SubscriptionClients][sizeof(GeaStackPublicErdCount_t) / 4 + 1];
+      uint8_t subscriptionBuffers[ErdApiV2SubscriptionClients][sizeof(OldGeaStackPublicErdCount_t) / 4 + 1];
       ConstArrayMap_BinarySearch_t publicErdMap;
       ErdStreamReceiver_t erdStreamReceiver;
       DataSourcePacketReadWriteManager_Simple_t dataSourceReadWriteManager;
@@ -75,70 +75,19 @@ typedef struct
       struct
       {
          Gea2ConfiguratorNode_t node;
-         Gea2ConfiguratorDefaultBackgroundSingleWireUartInterfaceNodeResources_t nodeResources;
+         Gea2ConfiguratorDefaultForegroundSingleWireUartInterfaceNodeResources_t nodeResources;
+         Gea2ConfiguratorStaticRoutingTableResources_t staticRoutingResources;
          Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
          uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
-      } gea2Bus;
+      } internal;
 
       struct
       {
          Gea2ConfiguratorNode_t node;
-         Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t nodeResources;
+         Gea2ConfiguratorDefaultForegroundSingleWireUartInterfaceNodeResources_t nodeResources;
          Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
          uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
-
-         struct
-         {
-            uint8_t sendBuffer[SendBufferSize];
-            uint8_t receiveBuffer[ReceiveBufferSize];
-            uint8_t packetQueueStorage[PacketQueueStorageSize];
-         } buffers;
-      } wifi;
-
-      struct
-      {
-         Gea2ConfiguratorNode_t node;
-         Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t nodeResources;
-         Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
-         uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
-
-         struct
-         {
-            uint8_t sendBuffer[SendBufferSize];
-            uint8_t receiveBuffer[ReceiveBufferSize];
-            uint8_t packetQueueStorage[PacketQueueStorageSize];
-         } buffers;
-      } factory;
-
-      struct
-      {
-         Gea2ConfiguratorNode_t node;
-         Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t nodeResources;
-         Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
-         uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
-
-         struct
-         {
-            uint8_t sendBuffer[SendBufferSize];
-            uint8_t receiveBuffer[ReceiveBufferSize];
-            uint8_t packetQueueStorage[PacketQueueStorageSize];
-         } buffers;
-      } door;
-
-      struct
-      {
-         Gea2ConfiguratorNode_t node;
-         Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t nodeResources;
-         Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
-         uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
-
-         struct
-         {
-            uint8_t sendBuffer[SendBufferSize];
-            uint8_t receiveBuffer[ReceiveBufferSize];
-            uint8_t packetQueueStorage[PacketQueueStorageSize];
-         } buffers;
-      } caseBus;
+      } external;
 
       struct
       {
@@ -147,28 +96,30 @@ typedef struct
          Validator_RestrictedRangeErd_t restrictedRangeErdValidator;
       } erdSecurity;
    } _private;
-} GeaStack_t;
+} OldGeaStack_t;
 
 /*!
  * @param instance
  * @param dataModel
  * @param externalDataSource
  */
-void GeaStack_Init(
-   GeaStack_t *instance,
+void OldGeaStack_Init(
+   OldGeaStack_t *instance,
    I_DataModel_t *dataModel,
    I_DataSource_t *externalDataSource,
-   uint8_t geaAddress);
+   uint8_t geaAddress,
+   const uint8_t *staticRoutingTable,
+   uint8_t staticRoutingTableEntryCount);
 
 /*!
  * @param instance
  * @return
  */
-I_Gea2PacketEndpoint_t *GeaStack_GetGea2PacketEndpoint(GeaStack_t *instance);
+I_Gea2PacketEndpoint_t *OldGeaStack_GetGea2PacketEndpoint(OldGeaStack_t *instance);
 
 /*!
  * @param instance
  */
-void GeaStack_Run(GeaStack_t *instance);
+void OldGeaStack_Run(OldGeaStack_t *instance);
 
 #endif

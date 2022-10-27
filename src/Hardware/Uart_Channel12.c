@@ -11,7 +11,7 @@
 #include "uassert.h"
 #include "Event_SingleSubscriberSynchronous.h"
 #include "utils.h"
-#include "Uart_Channel0.h"
+#include "Uart_Channel12.h"
 
 #define U32_TARGET_BAUD_RATE ((uint32_t)19200)
 
@@ -28,14 +28,14 @@ typedef struct
 static UartData uartData;
 
 /*!
- * Transmit a single byte out the UART0 port
+ * Transmit a single byte out the UART12 port
  * @param instance
  * @param byte
  */
 static void Send(I_Uart_t *instance, const uint8_t byte)
 {
    IGNORE_ARG(instance);
-   SCI0.TDR = byte;
+   SCI12.TDR = byte;
 }
 
 static I_Event_t *GetOnReceiveEvent(I_Uart_t *instance)
@@ -61,14 +61,14 @@ static const I_Uart_Api_t Uart_Api = {
 };
 
 /*!
- * Interrupt service routine for UART0 rx data
+ * Interrupt service routine for UART12 rx data
  */
-void SCI0_RXI0(void) __attribute__((interrupt));
-void SCI0_RXI0(void)
+void SCI12_RXI12(void) __attribute__((interrupt));
+void SCI12_RXI12(void)
 {
    uint8_t receivedData;
 
-   receivedData = SCI0.RDR;
+   receivedData = SCI12.RDR;
 
    {
       UartOnReceiveArgs_t args = { receivedData };
@@ -79,24 +79,24 @@ void SCI0_RXI0(void)
 /*!
  * Interrupt service routine for GEA2_UART rx error
  */
-void SCI0_ERI0(void) __attribute__((interrupt));
-void SCI0_ERI0(void)
+void SCI12_ERI12(void) __attribute__((interrupt));
+void SCI12_ERI12(void)
 {
    uint8_t received_data;
 
-   received_data = SCI0.RDR;
+   received_data = SCI12.RDR;
    // Remove warning
    IGNORE_ARG(received_data);
 
-   while(SCI0.SSR.BIT.PER | SCI0.SSR.BIT.FER | SCI0.SSR.BIT.ORER)
+   while(SCI12.SSR.BIT.PER | SCI12.SSR.BIT.FER | SCI12.SSR.BIT.ORER)
    {
       // Clear errors
-      SCI0.SSR.BIT.PER = 0;
-      SCI0.SSR.BIT.FER = 0;
-      SCI0.SSR.BIT.ORER = 0;
+      SCI12.SSR.BIT.PER = 0;
+      SCI12.SSR.BIT.FER = 0;
+      SCI12.SSR.BIT.ORER = 0;
    }
-   MSTP_SCI0 = 1;
-   MSTP_SCI0 = 0;
+   MSTP_SCI12 = 1;
+   MSTP_SCI12 = 0;
 
    Event_SingleSubscriberSynchronous_Publish(&uartData.OnErrorEvent, NULL);
 }
@@ -104,24 +104,24 @@ void SCI0_ERI0(void)
 /*!
  * Interrupt service routine for GEA2_UART tx error
  */
-void SCI0_TEI0(void) __attribute__((interrupt));
-void SCI0_TEI0(void)
+void SCI12_TEI12(void) __attribute__((interrupt));
+void SCI12_TEI12(void)
 {
    uint8_t received_data;
 
-   received_data = SCI0.RDR;
+   received_data = SCI12.RDR;
    // Remove warning
    IGNORE_ARG(received_data);
 
-   while(SCI0.SSR.BIT.PER | SCI0.SSR.BIT.FER | SCI0.SSR.BIT.ORER)
+   while(SCI12.SSR.BIT.PER | SCI12.SSR.BIT.FER | SCI12.SSR.BIT.ORER)
    {
       // Clear errors
-      SCI0.SSR.BIT.PER = 0;
-      SCI0.SSR.BIT.FER = 0;
-      SCI0.SSR.BIT.ORER = 0;
+      SCI12.SSR.BIT.PER = 0;
+      SCI12.SSR.BIT.FER = 0;
+      SCI12.SSR.BIT.ORER = 0;
    }
-   MSTP_SCI0 = 1;
-   MSTP_SCI0 = 0;
+   MSTP_SCI12 = 1;
+   MSTP_SCI12 = 0;
 
    Event_SingleSubscriberSynchronous_Publish(&uartData.OnErrorEvent, NULL);
 }
@@ -130,7 +130,7 @@ void SCI0_TEI0(void)
  * Initialize GEA2_UART as GEA2 port - 19200, 8,n,1 with no Tx interrupts
  * @return
  */
-I_Uart_t *Uart_Channel0_GetInstance(uint32_t clockFrequency)
+I_Uart_t *Uart_Channel12_GetInstance(uint32_t clockFrequency)
 {
    if(!uartData.interface.api)
    {
@@ -140,20 +140,20 @@ I_Uart_t *Uart_Channel0_GetInstance(uint32_t clockFrequency)
       Event_SingleSubscriberSynchronous_Init(&uartData.OnTransmitEvent);
       Event_SingleSubscriberSynchronous_Init(&uartData.OnErrorEvent);
 
-      // Configure SCI0/UART0 on board
+      // Configure SCI12/UART12 on board
       // First, allow writes to Module-Stop-Control-Register
       SYSTEM.PRCR.WORD = 0xA502;
-      // Now turn on SCI0
-      MSTP_SCI0 = 0;
+      // Now turn on SCI12
+      MSTP_SCI12 = 0;
       SYSTEM.PRCR.WORD = 0xA500;
 
       // Disable UART in/out while we fiddle with it, set the clock to internal (CKE=0)
-      SCI0.SCR.BYTE = 0;
-      // Setup port P21 (rx) and P20 (tx) for use by UART
-      PORT2.PMR.BIT.B1 = 1;
-      PORT2.PMR.BIT.B0 = 1;
-      PORT2.PDR.BIT.B0 = 1;
-      PORT2.PODR.BIT.B0 = 1;
+      SCI12.SCR.BYTE = 0;
+      // Setup port PE2 (rx) and PE1 (tx) for use by UART
+      PORTE.PMR.BIT.B2 = 1;
+      PORTE.PMR.BIT.B1 = 1;
+      PORTE.PDR.BIT.B1 = 1;
+      PORTE.PODR.BIT.B1 = 1;
       // Setup the data format
       // Bit - Setting : Comment
       // 0:1 -     00  : Clock Select PCLK
@@ -163,7 +163,7 @@ I_Uart_t *Uart_Channel0_GetInstance(uint32_t clockFrequency)
       //   5 -      0  : No Parity
       //   6 -      0  : 8 Bytes
       //   7 -      0  : Async
-      SCI0.SMR.BYTE = 0x00;
+      SCI12.SMR.BYTE = 0x00;
       // Setup the smart card mode register data format
       // Bit - Setting : Comment
       //   0 -      0  : Non-smart card mode
@@ -175,18 +175,18 @@ I_Uart_t *Uart_Channel0_GetInstance(uint32_t clockFrequency)
       //   6 -      1  : Always 1
       //   7 -      0  : Base clock pulse
       // Set data transfer length to 8 bits, and the UART to non-smart card mode
-      SCI0.SCMR.BYTE = 0x72;
+      SCI12.SCMR.BYTE = 0x72;
       // Setup BRR and the clock multiplier
-      SCI0.SEMR.BIT.ABCS = 1; // 8 base clock cycles per 1 bit
-      SCI0.BRR = (uint8_t)((clockFrequency / (32L * U32_TARGET_BAUD_RATE / 2L)) - 1);
+      SCI12.SEMR.BIT.ABCS = 1; // 8 base clock cycles per 1 bit
+      SCI12.BRR = (uint8_t)((clockFrequency / (32L * U32_TARGET_BAUD_RATE / 2L)) - 1);
       // Set up interrupts in the Interrupt-Control-Unit
       // There is only one priority register per SCI port
-      ICU.IPR[IPR_SCI0_RXI0].BIT.IPR = 10;
+      ICU.IPR[IPR_SCI12_RXI12].BIT.IPR = 13;
       // But there are 4 separate interrupt enable bits
-      ICU.IER[IER_SCI0_RXI0].BIT.IEN_SCI0_RXI0 = 1;
-      ICU.IER[IER_SCI0_TXI0].BIT.IEN_SCI0_TXI0 = 0;
-      ICU.IER[IER_SCI0_ERI0].BIT.IEN_SCI0_ERI0 = 1;
-      ICU.IER[IER_SCI0_TEI0].BIT.IEN_SCI0_TEI0 = 1;
+      ICU.IER[IER_SCI12_RXI12].BIT.IEN_SCI12_RXI12 = 1;
+      ICU.IER[IER_SCI12_TXI12].BIT.IEN_SCI12_TXI12 = 0;
+      ICU.IER[IER_SCI12_ERI12].BIT.IEN_SCI12_ERI12 = 1;
+      ICU.IER[IER_SCI12_TEI12].BIT.IEN_SCI12_TEI12 = 1;
       // Enable the Interrupt should be deferred until the structure is enabled
 
       // Enable writing to the PFSWE bit
@@ -194,22 +194,22 @@ I_Uart_t *Uart_Channel0_GetInstance(uint32_t clockFrequency)
       // Enable writing to the PFS register
       MPC.PWPR.BIT.PFSWE = 1;
 
-      // Assign P21 and P20 to function as RXD0 and TXD0...
-      MPC.P21PFS.BYTE = 0x0A;
-      MPC.P20PFS.BYTE = 0x0A;
+      // Assign PE2 and PE1 to function as RXD12 and TXD12...
+      MPC.PE2PFS.BYTE = 0x0C;
+      MPC.PE1PFS.BYTE = 0x0C;
 
       // Disable writing to the PFS register
       MPC.PWPR.BIT.PFSWE = 0;
       // Disable writing to the PFSWE bit
       MPC.PWPR.BIT.B0WI = 1;
 
-      ICU.IR[IR_SCI0_TXI0].BIT.IR = 0;
+      ICU.IR[IR_SCI12_TXI12].BIT.IR = 0;
 
       // Finally, enable UART rx and interrupts
-      SCI0.SCR.BIT.TIE = 0; // Transmit Interrupt Disabled
-      SCI0.SCR.BIT.RIE = 1; // Receive Interrupt Enabled
-      SCI0.SCR.BIT.TE = 1; // Transmit Enabled
-      SCI0.SCR.BIT.RE = 1; // Receive Enabled
+      SCI12.SCR.BIT.TIE = 0; // Transmit Interrupt Disabled
+      SCI12.SCR.BIT.RIE = 1; // Receive Interrupt Enabled
+      SCI12.SCR.BIT.TE = 1; // Transmit Enabled
+      SCI12.SCR.BIT.RE = 1; // Receive Enabled
    }
 
    return &uartData.interface;

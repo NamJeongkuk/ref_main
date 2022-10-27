@@ -19,7 +19,6 @@
 #include "DataModelErdPointerAccess.h"
 #include "DataSource_ApplianceApiRevision1.h"
 #include "FlashBlockGroup_Rx130.h"
-#include "GeaStack.h"
 #include "Hardware.h"
 #include "Header.h"
 #include "I_Gea2PacketEndpoint.h"
@@ -51,6 +50,11 @@
 #include "RelayWatchdog.h"
 #include "ParametricDataVersionCheck.h"
 
+#ifdef OLD_HW
+#include "OldGeaStack.h"
+#else
+#include "GeaStack.h"
+#endif
 enum
 {
    UlTestsRunPeriodInMSec = 500,
@@ -68,9 +72,14 @@ static SystemData_t systemData;
 static Application_t application;
 static TimerModuleStack_t timerModuleStack;
 static InvokeActionOnTimerPeriodic_t watchdogPetter;
-static GeaStack_t geaStack;
 static UlTestsPlugin_t ulTestsPlugin;
 static NonVolatileAsyncDataSource_t nvAsyncDataSource;
+
+#ifdef OLD_HW
+static OldGeaStack_t oldGeaStack;
+#else
+static GeaStack_t geaStack;
+#endif
 
 static const uint8_t staticRoutingTable[] = {
    Gea2Address_DoorBoard
@@ -189,13 +198,22 @@ int main(void)
 
    RelayWatchdogPlugin_Init(dataModel);
 
-   GeaStack_Init(
-      &geaStack,
+#ifdef OLD_HW
+   OldGeaStack_Init(
+      &oldGeaStack,
       dataModel,
       SystemData_ExternalDataSource(&systemData),
       Gea2Address_ReferMainBoard,
       staticRoutingTable,
       ELEMENT_COUNT(staticRoutingTable));
+#else
+   IGNORE(staticRoutingTable);
+   GeaStack_Init(
+      &geaStack,
+      dataModel,
+      SystemData_ExternalDataSource(&systemData),
+      Gea2Address_ReferMainBoard);
+#endif
 
    Application_Init(
       &application,
@@ -209,8 +227,11 @@ int main(void)
       timerModule,
       1);
 
+#ifdef OLD_HW
+   SendStartupMessage(OldGeaStack_GetGea2PacketEndpoint(&oldGeaStack));
+#else
    SendStartupMessage(GeaStack_GetGea2PacketEndpoint(&geaStack));
-
+#endif
    UpdateBuildInfo(
       dataModel,
       Header_GetImageHeader(ImageType_Application));
@@ -231,7 +252,11 @@ int main(void)
 
    while(1)
    {
+#ifdef OLD_HW
+      OldGeaStack_Run(&oldGeaStack);
+#else
       GeaStack_Run(&geaStack);
+#endif
 
       if(!TimerModule_Run(timerModule))
       {
