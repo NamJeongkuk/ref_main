@@ -1,7 +1,7 @@
 "use strict";
 
 const delay = require("javascript-common").util.delay;
-const { msPerSec, msPerMin } = require("../support/constants");
+const { msPerSec, msPerMin, secondsPerMin } = require("../support/constants");
 const constants = require("../support/constants");
 
 describe("Defrost", () => {
@@ -72,7 +72,10 @@ describe("Defrost", () => {
   const somePrechillConditionTimeInMinutes = 3;
   const someTemperatureThatLiesInTheMiddleOfTheBounds = 4000;
   const someLowerTemperatureBound = 0;
+  const someEepromDefrostHeaterOnTime = 1;
   const defrostHeaterOnDelayAfterCompressorOffInSeconds = 2;
+  const freezerDefrostTerminationTemperatureInDegfx100 = 5900;
+  const freezerDefrostHeaterMaxOnTimeInMinutes = 60;
   const dwellFreshFoodDamperPosition = damperPosition.damperPositionClosed;
   const dwellTimeInMinutes = 7;
   const dwellTimeInSeconds = dwellTimeInMinutes * constants.secondsPerMin + 1;
@@ -110,6 +113,20 @@ describe("Defrost", () => {
 
     await providedTheEepromDefrostStateAtStartUpIs(defrostState.defrostStateIdle);
     await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateIdle);
+  };
+
+  const providedDefrostIsEnabledAndInHeaterOnEntryState = async () => {
+    await providedTheEepromDefrostStateAtStartUpIs(defrostState.defrostStateHeaterOn);
+    await providedTheFilteredResolvedTemperatureFor().TheFreezerEvapThermistorIs(freezerDefrostTerminationTemperatureInDegfx100 - 1);
+
+    await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateHeaterOnEntry);
+  };
+
+  const providedDefrostIsEnabledAndInHeaterOnState = async () => {
+    await providedDefrostIsEnabledAndInHeaterOnEntryState();
+
+    await after(defrostHeaterOnDelayAfterCompressorOffInSeconds).inSec();
+    await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateHeaterOn);
   };
 
   const providedDefrostIsEnabledAndInDwellState = async () => {
@@ -252,6 +269,19 @@ describe("Defrost", () => {
     TheFreezerEvapThermistorIs: async (temperature) => {
       await rockhopper.write("Erd_FreezerEvap_FilteredTemperatureResolved", temperature);
     }
+  });
+
+  const providedTheEepromDefrostHeaterOnTimeForThe = () => ({
+    FreezerDefrostHeaterIs: async (timeInMinutes) => {
+      await rx130.write("Erd_Eeprom_FreezerDefrostHeaterOnTimeInMinutes", timeInMinutes);
+    }
+  });
+
+  const theHeaterOnTimeForThe = () => ({
+    FreezerDefrostHeaterShouldBe: async (expected) => {
+      const actual = await rx130.read("Erd_FreezerDefrostHeaterOnTimeInMinutes");
+      expect(actual).toEqual(expected);
+    },
   });
 
   const theVoteFor = () => ({
@@ -402,6 +432,35 @@ describe("Defrost", () => {
     await after(defrostHeaterOnDelayAfterCompressorOffInSeconds).inSec();
 
     await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateHeaterOn);
+  });
+
+  it("should not count heater on time when heater is off", async () => {
+    await providedDefrostIsEnabledAndInIdleState();
+
+    await after(1).inMinutes();
+    await theHeaterOnTimeForThe().FreezerDefrostHeaterShouldBe(0);
+
+    await after(1).inMinutes();
+    await theHeaterOnTimeForThe().FreezerDefrostHeaterShouldBe(0);
+  });
+
+  it("should transition from heater on to dwell and reset heater on timer when freezer evaporator thermistor is valid and freezer heater max on time reached", async () => {
+    await providedTheEepromDefrostHeaterOnTimeForThe().FreezerDefrostHeaterIs(0);
+    await providedDefrostIsEnabledAndInHeaterOnState();
+    await providedFreezerEvaporatorThermistorIs().valid();
+
+    await after(freezerDefrostHeaterMaxOnTimeInMinutes).inMinutes();
+    await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateDwell);
+    await theHeaterOnTimeForThe().FreezerDefrostHeaterShouldBe(0);
+  });
+
+  it("should continue counting heater on time from eeprom stored time after resetting in heater on state", async () => {
+    await providedTheEepromDefrostHeaterOnTimeForThe().FreezerDefrostHeaterIs(someEepromDefrostHeaterOnTime);
+    await providedDefrostIsEnabledAndInHeaterOnEntryState();
+    await providedFreezerEvaporatorThermistorIs().valid();
+
+    await after((freezerDefrostHeaterMaxOnTimeInMinutes - someEepromDefrostHeaterOnTime) * secondsPerMin + defrostHeaterOnDelayAfterCompressorOffInSeconds).inSec();
+    await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateDwell);
   });
 
   it("should vote to turn off freezer defrost heater, compressor, and all fans and vote for parametric position for fresh food damper when entering dwell", async () => {

@@ -73,6 +73,12 @@ static const DefrostCompressorOnTimeCounterConfiguration_t defrostCompressorOnTi
    .timerModuleErd = Erd_TimerModule
 };
 
+static const DefrostHeaterOnTimeCounterConfig_t defrostHeaterOnTimeCounterConfig = {
+   .defrostHeaterOnTimeErd = Erd_FreezerDefrostHeaterOnTimeInMinutes,
+   .defrostHeaterStateErd = Erd_FreezerDefrostHeater_ResolvedVote,
+   .defrostStateErd = Erd_DefrostState
+};
+
 static const DoorAccelerationCounterConfiguration_t doorAccelerationCounterConfig = {
    .activelyWaitingForNextDefrostErd = Erd_ActivelyWaitingForNextDefrost,
    .doorAccelerationCounterFsmStateErd = Erd_DoorAccelerationCounterFsmState,
@@ -182,6 +188,8 @@ void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
       dataModel,
       &freshFoodOnlyDefrostArbitratorConfig);
 
+   FreezerDefrostHeaterVotingFrameworkPlugin_Init(&instance->_private.freezerDefrostHeaterVotingFramework, dataModel);
+
    DefrostStateOnCompareMatch(&instance->_private.defrostStateOnCompareMatch, dataModel);
 
    Defrost_Init(&instance->_private.defrost, dataModel, &defrostConfig);
@@ -192,6 +200,11 @@ void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
       &instance->_private.defrostCompressorOnTimeCounter,
       dataModel,
       &defrostCompressorOnTimeCounterConfig);
+
+   DefrostHeaterOnTimeCounter_Init(
+      &instance->_private.defrostHeaterOnTimeCounter,
+      dataModel,
+      &defrostHeaterOnTimeCounterConfig);
 
    DoorAccelerationCounter_Init(
       &instance->_private.doorAccelerationCounter,

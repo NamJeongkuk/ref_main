@@ -20,6 +20,8 @@
 #include "DefrostParameterSelector.h"
 #include "DefrostStateOnCompareMatch.h"
 #include "ActivelyWaitingForDefrostOnCompareMatch.h"
+#include "DefrostHeaterOnTimeCounter.h"
+#include "FreezerDefrostHeaterVotingFrameworkPlugin.h"
 
 typedef struct
 {
@@ -35,6 +37,8 @@ typedef struct
       DefrostParameterSelector_t defrostParameterSelector;
       DefrostStateOnCompareMatch_t defrostStateOnCompareMatch;
       ActivelyWaitingForDefrostOnCompareMatch_t activelyWaitingForDefrostOnCompareMatch;
+      DefrostHeaterOnTimeCounter_t defrostHeaterOnTimeCounter;
+      FreezerDefrostHeaterVotingFrameworkPlugin_t freezerDefrostHeaterVotingFramework;
    } _private;
 } DefrostPlugin_t;
 
