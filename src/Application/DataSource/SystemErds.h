@@ -34,7 +34,6 @@
 #include "FaultSnapshot.h"
 #include "CycleHistoryRecord.h"
 #include "I_Adc.h"
-#include "KeyStreamPlugin.h"
 #include "ResetCount.h"
 #include "ResetReason.h"
 #include "SecondsSinceLastReset.h"
@@ -370,13 +369,7 @@ enum
    ENTRY(Erd_SomeData,                                      0xF004, uint32_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Code,    NotFault) \
    ENTRY(Erd_ApplianceRunTimeInMinutesUpdatedHourly,        0xF005, ApplianceRunTimeMinutes_t,                          Swap_Y, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_StackPercentFree,                              0xF006, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_KeyErdStream,                                  0xF007, KeyErdStream_t,                                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_KeyStreamSequenceNumber,                       0xF008, ErdStreamSequenceNumber_t,                          Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_KeyStreamMissedEventSignal,                    0xF009, Signal_t,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_KeyStreamSenderResetSignal,                    0xF00A, Signal_t,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_KeyStreamSenderStateRequest,                   0xF00B, ErdStreamStateRequest_t,                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_HeartbeatTick,                                 0xF00C, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_RemoteKeyState,                                0xF00D, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_PersonalityParametricData,                     0xF00E, PersonalityParametricData_t *,                      Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_NonVolatileDataSourceCacheSyncState,           0xF012, bool,                                               Swap_N, Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorIsSingleSpeed,                       0xF013, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -483,13 +476,13 @@ enum
    ENTRY(Erd_DefrostIsFreshFoodOnly,                        0xF136, bool,                                               Swap_N, Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_AllFreshFoodDoorsAreClosed,                    0xF138, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FreshFoodThermistor_AdcCount,                  0xF13A, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerThermistor_AdcCount,                    0xF13B, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodEvapThermistor_AdcCount,              0xF13C, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerEvapThermistor_AdcCount,                0xF13D, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentCabinetThermistor_AdcCount, 0xF13E, AdcCounts_t,                                     Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AmbientThermistor_AdcCount,                    0xF13F, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentEvapThermistor_AdcCount, 0xF140, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodThermistor_AdcCount,                  0xF13A, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerThermistor_AdcCount,                    0xF13B, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvapThermistor_AdcCount,              0xF13C, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapThermistor_AdcCount,                0xF13D, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentCabinetThermistor_AdcCount, 0xF13E, AdcCounts_t,                                     Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_AmbientThermistor_AdcCount,                    0xF13F, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentEvapThermistor_AdcCount, 0xF140, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFood_UnfilteredTemperature,               0xF141, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Freezer_UnfilteredTemperature,                 0xF142, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -578,10 +571,6 @@ enum
    \
    ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RelayWatchdog,                                 0xF201, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_OtherLed,                                      0xF202, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_PushButtonSwitch,                              0xF203, bool,                                               Swap_N, Io_All,  Sub_Y, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_SomeAnalogInput,                               0xF204, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AnotherAnalogInput,                            0xF205, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorInverterDriver,                      0xF206, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorRelay,                               0xF207, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FillTubeHeater,                                0xF208, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -791,8 +780,21 @@ enum
    ENTRY(Erd_ApplicationToBspInputCapture_CAPT_4,           0xF413, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ApplicationToBspInputCapture_CAPT_5,           0xF414, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_ApplicationToBspAdc_ADC_0,                     0xF420, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ApplicationToBspAdc_ADC_1,                     0xF421, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Adc_ADC_0,                                     0xF420, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Adc_ADC_1,                                     0xF421, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Adc_ANALOG_475K_TH_00,                         0xF422, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Adc_ANALOG_TH_LOW_00,                          0xF423, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Adc_ANALOG_TH_LOW_01,                          0xF424, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Adc_ANALOG_TH_LOW_02,                          0xF425, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Adc_ANALOG_TH_LOW_03,                          0xF426, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Adc_ANALOG_TH_LOW_04,                          0xF427, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Adc_ANALOG_TH_LOW_05,                          0xF428, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Adc_ANALOG_TH_LOW_06,                          0xF429, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Adc_ANALOG_TH_LOW_07,                          0xF42A, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Adc_ANALOG_TH_LOW_08,                          0xF42B, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Adc_LOAD_CURRENT,                              0xF42C, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Adc_HW_PERSONALITY_00,                         0xF42D, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Adc_HW_PERSONALITY_01,                         0xF42E, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData0,     0xF500, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData1,     0xF501, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \

@@ -11,11 +11,14 @@ extern "C"
 #include "SensorData.h"
 #include "DataModelErdPointerAccess.h"
 #include "PersonalityParametricData.h"
+#include "TddPersonality.h"
 }
 
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
-#include "ReferDataModel_TestDouble.h"
+#include "DataModel_TestDouble.h"
+#include "TimerModule_TestDouble.h"
+#include "PersonalityParametricDataTestDouble.h"
 #include "uassert_test.h"
 
 enum
@@ -32,6 +35,28 @@ enum
    MappedValidTemperature4 = 2145,
    ValidAdcCount5 = 30336,
    MappedValidTemperature5 = 2977,
+
+   Erd_AmbientThermistor_AdcCount = 0xF000,
+   Erd_Ambient_UnfilteredTemperature,
+   Erd_Ambient_FilteredTemperature,
+   Erd_Ambient_ThermistorIsValid,
+   Erd_TimerModule,
+   Erd_FreezerEvapThermistor_AdcCount,
+   Erd_FreezerEvap_UnfilteredTemperature,
+   Erd_FreezerEvap_FilteredTemperature,
+   Erd_FreezerEvaporatorThermistorIsValid,
+};
+
+static const DataModel_TestDoubleConfigurationEntry_t erdsEntries[] = {
+   { Erd_AmbientThermistor_AdcCount, sizeof(AdcCounts_t) },
+   { Erd_Ambient_UnfilteredTemperature, sizeof(TemperatureDegFx100_t) },
+   { Erd_Ambient_FilteredTemperature, sizeof(TemperatureDegFx100_t) },
+   { Erd_Ambient_ThermistorIsValid, sizeof(bool) },
+   { Erd_TimerModule, sizeof(TimerModule_t *) },
+   { Erd_FreezerEvapThermistor_AdcCount, sizeof(AdcCounts_t) },
+   { Erd_FreezerEvap_UnfilteredTemperature, sizeof(TemperatureDegFx100_t) },
+   { Erd_FreezerEvap_FilteredTemperature, sizeof(TemperatureDegFx100_t) },
+   { Erd_FreezerEvaporatorThermistorIsValid, sizeof(bool) },
 };
 
 static const SensorFilteringConfig_t sensorConfigWithSlewRateFilterEnabled = {
@@ -52,24 +77,25 @@ static const SensorFilteringConfig_t sensorConfigWithSlewRateDisabled = {
 
 TEST_GROUP(SensorFiltering_SlewEnabled)
 {
-   ReferDataModel_TestDouble_t dataModelDouble;
+   DataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
-   TimerModule_TestDouble_t *timerModuleTestDouble;
+   TimerModule_TestDouble_t timerModuleTestDouble;
    SensorFiltering_t instance;
    const SensorData_t *sensorData;
 
    void setup()
    {
-      ReferDataModel_TestDouble_Init(&dataModelDouble);
+      DataModel_TestDouble_Init(&dataModelDouble, erdsEntries, NUM_ELEMENTS(erdsEntries));
       dataModel = dataModelDouble.dataModel;
-      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+      TimerModule_TestDouble_Init(&timerModuleTestDouble);
+      DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble.timerModule);
 
-      sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
+      sensorData = ((PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(TddPersonality_DevelopmentSingleEvaporator))->sensorData;
    }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
    {
-      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
+      TimerModule_TestDouble_ElapseTime(&timerModuleTestDouble, ticks, ticksToElapseAtATime);
    }
 
    void GivenSensorWithSlewRateFilterEnabledIsInitialized()
@@ -402,25 +428,26 @@ TEST(SensorFiltering_SlewEnabled, ShouldDoOnlyExponentialWeightedMovingAverageAf
 
 TEST_GROUP(SensorFiltering_SlewDisabled)
 {
-   ReferDataModel_TestDouble_t dataModelDouble;
+   DataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
-   TimerModule_TestDouble_t *timerModuleTestDouble;
+   TimerModule_TestDouble_t timerModuleTestDouble;
    SensorFiltering_t instance;
 
    const SensorData_t *sensorData;
 
    void setup()
    {
-      ReferDataModel_TestDouble_Init(&dataModelDouble);
+      DataModel_TestDouble_Init(&dataModelDouble, erdsEntries, NUM_ELEMENTS(erdsEntries));
       dataModel = dataModelDouble.dataModel;
-      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+      TimerModule_TestDouble_Init(&timerModuleTestDouble);
+      DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble.timerModule);
 
-      sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
+      sensorData = ((PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(TddPersonality_DevelopmentSingleEvaporator))->sensorData;
    }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
    {
-      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
+      TimerModule_TestDouble_ElapseTime(&timerModuleTestDouble, ticks, ticksToElapseAtATime);
    }
 
    void GivenSensorWithSlewRateDisabledIsInitializedWithSlewRateOf(int16_t slewRatePerSecondx100)

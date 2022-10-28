@@ -20,38 +20,6 @@ extern "C"
 
 TEST_GROUP(ParametricDataBspErds_Input){};
 
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForHeartbeatLed)
-{
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_HeartbeatLed)");
-
-   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_HeartbeatLed);
-}
-
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForRelayWatchdog)
-{
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_RelayWatchdog)");
-
-   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_RelayWatchdog);
-}
-
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForOtherLed)
-{
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_OtherLed)");
-
-   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_OtherLed);
-}
-
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForPushButtonSwitch)
-{
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_PushButtonSwitch)");
-
-   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_PushButtonSwitch);
-}
-
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForFreezerEvapFanPwm)
 {
    GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_FreezerEvapFan_Pwm)");
@@ -106,6 +74,54 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
    CHECK_EQUAL(*erd, Erd_IceCabinetFan_InputCaptureTime);
+}
+
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForFreshFoodThermistorAdcCount)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_FreshFoodThermistor_AdcCount)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_FreshFoodThermistor_AdcCount);
+}
+
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForFreezerThermistorAdcCount)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_FreezerThermistor_AdcCount)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_FreezerThermistor_AdcCount);
+}
+
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForFreshFoodEvapThermistorAdcCount)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_FreshFoodEvapThermistor_AdcCount)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_FreshFoodEvapThermistor_AdcCount);
+}
+
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForFreezerEvapThermistorAdcCount)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_FreezerEvapThermistor_AdcCount)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_FreezerEvapThermistor_AdcCount);
+}
+
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForConvertibleCompartmentCabinetThermistorAdcCount)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_ConvertibleCompartmentCabinetThermistor_AdcCount)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_ConvertibleCompartmentCabinetThermistor_AdcCount);
+}
+
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForConvertibleCompartmentEvapThermistorAdcCount)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_ConvertibleCompartmentEvapThermistor_AdcCount)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_ConvertibleCompartmentEvapThermistor_AdcCount);
 }
 
 TEST_GROUP(ParametricDataBspErds_Output){};
@@ -188,4 +204,92 @@ TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableF
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
    CHECK_EQUAL(*erd, Erd_ApplicationToBspInputCapture_CAPT_5);
+}
+
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForAdcAnalog475kTh00)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Adc_ANALOG_475K_TH_00)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_Adc_ANALOG_475K_TH_00);
+}
+
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForAdcAnalogThLow01)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Adc_ANALOG_TH_LOW_01)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_Adc_ANALOG_TH_LOW_01);
+}
+
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForAdcAnalogThLow02)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Adc_ANALOG_TH_LOW_02)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_Adc_ANALOG_TH_LOW_02);
+}
+
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForAdcAnalogThLow03)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Adc_ANALOG_TH_LOW_03)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_Adc_ANALOG_TH_LOW_03);
+}
+
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForAdcAnalogThLow04)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Adc_ANALOG_TH_LOW_04)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_Adc_ANALOG_TH_LOW_04);
+}
+
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForAdcAnalogThLow05)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Adc_ANALOG_TH_LOW_05)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_Adc_ANALOG_TH_LOW_05);
+}
+
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForAdcAnalogThLow06)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Adc_ANALOG_TH_LOW_06)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_Adc_ANALOG_TH_LOW_06);
+}
+
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForAdcAnalogThLow07)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Adc_ANALOG_TH_LOW_07)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_Adc_ANALOG_TH_LOW_07);
+}
+
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForAdcAnalogThLow08)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Adc_ANALOG_TH_LOW_08)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_Adc_ANALOG_TH_LOW_08);
+}
+
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForAdcHwPersonality00)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Adc_HW_PERSONALITY_00)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_Adc_HW_PERSONALITY_00);
+}
+
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForAdcHwPersonality01)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Adc_HW_PERSONALITY_01)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_Adc_HW_PERSONALITY_01);
 }

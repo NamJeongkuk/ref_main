@@ -21,8 +21,8 @@ static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_GpioGroupInterface, Erd_GpioGroupInterface },
    { Erd_HeartbeatLed, Erd_BspGpio_HeartbeatLed },
    { Erd_RelayWatchdog, Erd_BspGpio_RelayWatchdog },
-   { Erd_ApplicationToBspAdc_ADC_0, Erd_BspAdc_SomeAnalogInput },
-   { Erd_ApplicationToBspAdc_ADC_1, Erd_BspAdc_AnotherAnalogInput },
+   { Erd_Adc_ADC_0, Erd_BspAdc_SomeAnalogInput },
+   { Erd_Adc_ADC_1, Erd_BspAdc_AnotherAnalogInput },
    { Erd_ApplicationToBspPwm_PWM_0, Erd_BspPwm_PWM_0 },
    { Erd_ApplicationToBspPwm_PWM_1, Erd_BspPwm_PWM_1 },
    { Erd_ApplicationToBspPwm_PWM_2, Erd_BspPwm_PWM_2 },
@@ -38,6 +38,19 @@ static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
 static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_GpioGroupInterface, Erd_GpioGroupInterface },
    { Erd_HeartbeatLed, Erd_BspGpio_HeartbeatLed },
+   { Erd_Adc_ANALOG_475K_TH_00, Erd_BspAdc_ANALOG_475K_TH_00 },
+   { Erd_Adc_ANALOG_TH_LOW_00, Erd_BspAdc_ANALOG_TH_LOW_00 },
+   { Erd_Adc_ANALOG_TH_LOW_01, Erd_BspAdc_ANALOG_TH_LOW_01 },
+   { Erd_Adc_ANALOG_TH_LOW_02, Erd_BspAdc_ANALOG_TH_LOW_02 },
+   { Erd_Adc_ANALOG_TH_LOW_03, Erd_BspAdc_ANALOG_TH_LOW_03 },
+   { Erd_Adc_ANALOG_TH_LOW_04, Erd_BspAdc_ANALOG_TH_LOW_04 },
+   { Erd_Adc_ANALOG_TH_LOW_05, Erd_BspAdc_ANALOG_TH_LOW_05 },
+   { Erd_Adc_ANALOG_TH_LOW_06, Erd_BspAdc_ANALOG_TH_LOW_06 },
+   { Erd_Adc_ANALOG_TH_LOW_07, Erd_BspAdc_ANALOG_TH_LOW_07 },
+   { Erd_Adc_ANALOG_TH_LOW_08, Erd_BspAdc_ANALOG_TH_LOW_08 },
+   { Erd_Adc_LOAD_CURRENT, Erd_BspAdc_LOAD_CURRENT },
+   { Erd_Adc_HW_PERSONALITY_00, Erd_BspAdc_HW_PERSONALITY_00 },
+   { Erd_Adc_HW_PERSONALITY_01, Erd_BspAdc_HW_PERSONALITY_01 },
 };
 #endif
 

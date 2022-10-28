@@ -377,22 +377,22 @@ TEST(SystemData, ShouldSupportSubscribeUnsubscribeForSpecifiedErds)
 
 TEST(SystemData, ShouldSupportReadAndWriteToBspErdsViaExternalDataSource)
 {
-   AdcCounts_t expected = 0x1234;
+   TemperatureDegFx100_t expected = 0x1234;
    GivenThatSystemDataIsInitialized();
 
-   WhenDataIsWrittenViaExternalDataSource(Erd_SomeAnalogInput, &expected);
+   WhenDataIsWrittenViaExternalDataSource(Erd_Freezer_FilteredTemperature, &expected);
 
-   ExternalDataModelShouldReturnDataEqualTo(Erd_SomeAnalogInput, &expected);
+   ExternalDataModelShouldReturnDataEqualTo(Erd_Freezer_FilteredTemperature, &expected);
 }
 
 TEST(SystemData, ShouldSupportReadAndWriteToBspErdsViaInternalDataSource)
 {
-   AdcCounts_t expected = 0x4321;
+   TemperatureDegFx100_t expected = 0x4321;
    GivenThatSystemDataIsInitialized();
 
-   WhenDataIsWrittenViaInternalDataModel(Erd_SomeAnalogInput, &expected);
+   WhenDataIsWrittenViaInternalDataModel(Erd_Freezer_FilteredTemperature, &expected);
 
-   InternalDataModelShouldReturnDataEqualTo(Erd_SomeAnalogInput, &expected);
+   InternalDataModelShouldReturnDataEqualTo(Erd_Freezer_FilteredTemperature, &expected);
 }
 
 TEST(SystemData, ShouldSetNvErdDataToDefaultValues)

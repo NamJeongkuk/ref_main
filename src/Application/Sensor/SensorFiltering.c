@@ -9,7 +9,6 @@
 #include "PersonalityParametricData.h"
 #include "Mapper_LookupTable.h"
 #include "DataModelErdPointerAccess.h"
-#include "DataModelErdPointerAccess.h"
 #include <stdint.h>
 
 static int16_t UnfilteredTemperature(SensorFiltering_t *instance)
