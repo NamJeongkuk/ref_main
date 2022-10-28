@@ -44,7 +44,7 @@ enum
    TemperatureLessThanPrechillFreezerSetpoint = -700,
    TemperatureGreaterThanPrechillFreezerSetpoint = -500,
    SomeMaxPrechillTimeInMinutes = 5,
-   SomeAdjustedFreezerSetpointDegFx100 = 100
+   SomeAdjustedFreezerSetpointDegFx100 = 100,
 };
 
 static CalculatedAxisGridLines_t freshFoodCalcAxis = {
@@ -70,6 +70,7 @@ TEST_GROUP(DefrostTimerIntegration)
    PersonalityParametricData_t personalityParametricData;
 
    PeriodicNvUpdaterPlugin_t periodicNvUpdaterPlugin;
+   const SystemMonitorData_t *systemMonitorData;
 
    void setup()
    {
@@ -78,6 +79,7 @@ TEST_GROUP(DefrostTimerIntegration)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
+      systemMonitorData = PersonalityParametricData_Get(dataModel)->systemMonitorData;
    }
 
    void CalculatedGridLinesAre(CalculatedGridLines_t gridLines)
@@ -217,11 +219,11 @@ TEST_GROUP(DefrostTimerIntegration)
       DefrostStateShouldBe(DefrostState_Idle);
       DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Run);
 
-      After(60 * MSEC_PER_MIN - 1);
-      CompressorOnTimeInSecondsShouldBe(3599);
+      After(systemMonitorData->periodicNvUpdateInMinutes * MSEC_PER_MIN - 1);
+      CompressorOnTimeInSecondsShouldBe(1799);
 
       After(1);
-      CompressorOnTimeInSecondsShouldBe(3600);
+      CompressorOnTimeInSecondsShouldBe(1800);
    }
 
    void BoardResetsAndFreezerIsTooWarm()
@@ -236,26 +238,26 @@ TEST_GROUP(DefrostTimerIntegration)
       PluginsAreInitializedAndDefrostHsmStateIsIdle();
    }
 
-   void CompressorIsOnForOneHour()
+   void CompressorIsOnForThirtyMinutes()
    {
-      After(60 * MSEC_PER_MIN - 1);
-      CompressorOnTimeInSecondsShouldBe(3599);
+      After(systemMonitorData->periodicNvUpdateInMinutes * MSEC_PER_MIN - 1);
+      CompressorOnTimeInSecondsShouldBe(1799);
       EepromCompressorOnTimeInSecondsShouldBe(0);
 
       After(1);
-      CompressorOnTimeInSecondsShouldBe(3600);
-      EepromCompressorOnTimeInSecondsShouldBe(3599);
+      CompressorOnTimeInSecondsShouldBe(1800);
+      EepromCompressorOnTimeInSecondsShouldBe(1799);
    }
 
-   void CompressorIsOnForLessThanOneHour()
+   void CompressorIsOnForLessThanThirtyMinutes()
    {
-      // Before the 60 minute copy of RAM to NV
-      After(50 * MSEC_PER_MIN - 1);
-      CompressorOnTimeInSecondsShouldBe(2999);
+      // Before the 30 minute copy of RAM to NV
+      After((systemMonitorData->periodicNvUpdateInMinutes - 10) * MSEC_PER_MIN - 1);
+      CompressorOnTimeInSecondsShouldBe(1199);
       EepromCompressorOnTimeInSecondsShouldBe(0);
 
       After(1);
-      CompressorOnTimeInSecondsShouldBe(3000);
+      CompressorOnTimeInSecondsShouldBe(1200);
       EepromCompressorOnTimeInSecondsShouldBe(0);
    }
 };
@@ -276,13 +278,13 @@ TEST(DefrostTimerIntegration, ShouldCountWhenDefrostStateIsIdleOnStartUp)
    DefrostStateShouldBe(DefrostState_Idle);
    DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Run);
 
-   After(60 * MSEC_PER_MIN - 1);
-   CompressorOnTimeInSecondsShouldBe(3599);
+   After(systemMonitorData->periodicNvUpdateInMinutes * MSEC_PER_MIN - 1);
+   CompressorOnTimeInSecondsShouldBe(1799);
    EepromCompressorOnTimeInSecondsShouldBe(0);
 
    After(1);
-   CompressorOnTimeInSecondsShouldBe(3600);
-   EepromCompressorOnTimeInSecondsShouldBe(3599);
+   CompressorOnTimeInSecondsShouldBe(1800);
+   EepromCompressorOnTimeInSecondsShouldBe(1799);
 }
 
 TEST(DefrostTimerIntegration, ShouldResetCountWhenBoardResetsIntoDefrostStateIdleAndFreezerTemperatureIsTooWarm)
@@ -302,10 +304,10 @@ TEST(DefrostTimerIntegration, ShouldResetEepromErdToZeroWhenRamErdIsResetToZeroT
    CompressorOnTimeInSecondsShouldBe(0);
    EepromCompressorOnTimeInSecondsShouldBe(0);
 
-   CompressorIsOnForLessThanOneHour();
+   CompressorIsOnForLessThanThirtyMinutes();
 
    BoardResetsAndFreezerIsNormalTemperature();
-   // If it hadn't reset the EEPROM ERD to 0 it'd be 3599 for both RAM and EEPROM ERDs, then RAM would have been reset to 0 b/c FZ is too warm
+   // If it hadn't reset the EEPROM ERD to 0 it'd be 1799 for both RAM and EEPROM ERDs, then RAM would have been reset to 0 b/c FZ is too warm
    CompressorOnTimeInSecondsShouldBe(0);
    EepromCompressorOnTimeInSecondsShouldBe(0); // when RAM ERD is set to 0, it'll update EEPROM ERD to 0 immediately
 }
