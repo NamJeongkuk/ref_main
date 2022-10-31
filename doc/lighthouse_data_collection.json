@@ -118,12 +118,12 @@
       },
       {
          "namespace": "rockhopper",
-         "name": "Erd_FreshFood_Shift",
+         "name": "Erd_FreshFood_ThermalShiftInDegFx100",
          "interval": 60000
       },
       {
          "namespace": "rockhopper",
-         "name": "Erd_FreshFood_Offset",
+         "name": "Erd_FreshFood_CabinetOffsetInDegFx100",
          "interval": 60000
       },
       {
@@ -138,12 +138,12 @@
       },
       {
          "namespace": "rockhopper",
-         "name": "Erd_Freezer_Shift",
+         "name": "Erd_Freezer_ThermalShiftInDegFx100",
          "interval": 60000
       },
       {
          "namespace": "rockhopper",
-         "name": "Erd_Freezer_Offset",
+         "name": "Erd_Freezer_CabinetOffsetInDegFx100",
          "interval": 60000
       },
       {

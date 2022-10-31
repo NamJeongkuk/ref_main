@@ -46,16 +46,16 @@ static const GridConfiguration_t gridConfig = {
 
 static const GridLineAdjustmentErds_t freshFoodGridLineAdjustmentErds = {
    .rawSetpointErd = Erd_FreshFoodSetpoint_ResolvedVote,
-   .offsetErd = Erd_FreshFood_Offset,
-   .shiftErd = Erd_FreshFood_Shift,
-   .adjustedSetpointErd = Erd_FreshFood_AdjustedSetpointInDegFx100
+   .cabinetOffsetInDegFx100Erd = Erd_FreshFood_CabinetOffsetInDegFx100,
+   .thermalShiftInDegFx100Erd = Erd_FreshFood_ThermalShiftInDegFx100,
+   .adjustedSetpointInDegFx100Erd = Erd_FreshFood_AdjustedSetpointInDegFx100
 };
 
 static const GridLineAdjustmentErds_t freezerGridLineAdjustmentErds = {
    .rawSetpointErd = Erd_FreezerSetpoint_ResolvedVote,
-   .offsetErd = Erd_Freezer_Offset,
-   .shiftErd = Erd_Freezer_Shift,
-   .adjustedSetpointErd = Erd_Freezer_AdjustedSetpointInDegFx100,
+   .cabinetOffsetInDegFx100Erd = Erd_Freezer_CabinetOffsetInDegFx100,
+   .thermalShiftInDegFx100Erd = Erd_Freezer_ThermalShiftInDegFx100,
+   .adjustedSetpointInDegFx100Erd = Erd_Freezer_AdjustedSetpointInDegFx100,
 };
 
 static const GridLineCalculatorConfiguration_t gridLineCalculatorConfig = {

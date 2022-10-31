@@ -13,6 +13,7 @@
 #include "Constants_Binary.h"
 #include "SystemErds.h"
 #include "Setpoint.h"
+#include "uassert.h"
 
 #define GRID_LINE_TEMP(_dimension, _line) \
    instance->_private.gridData->deltaGridLines->gridLines[_dimension].gridLineData[_line].gridLinesDegFx100
@@ -22,6 +23,14 @@
 
 #define GRID_LINE_ADJUSTMENTS(_dimension) \
    instance->_private.config->gridLineAdjustmentErds[_dimension]
+
+static bool AdjustedSetpointPluginIsReady(GridLineCalculator_t *instance)
+{
+   bool adjustedSetpointPluginIsReady;
+   DataModel_Read(instance->_private.dataModel, Erd_AdjustedSetpointPluginReady, &adjustedSetpointPluginIsReady);
+
+   return adjustedSetpointPluginIsReady;
+}
 
 static void CalculateAxisGridLines(
    GridLineCalculator_t *instance,
@@ -42,19 +51,19 @@ static void CalculateAxisGridLines(
       if(PARAMETRIC_GRID_LINE_BIT_MASK(axisDimension, line) & DeltaGridLines_BitMapping_OffsetBitMask)
       {
          TemperatureDegFx100_t offset;
-         DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).offsetErd, &offset);
+         DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).cabinetOffsetInDegFx100Erd, &offset);
          axisToCalculate->gridLinesDegFx100[line] += offset;
       }
       if(PARAMETRIC_GRID_LINE_BIT_MASK(axisDimension, line) & DeltaGridLines_BitMapping_ShiftBitMask)
       {
          TemperatureDegFx100_t shift;
-         DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).shiftErd, &shift);
+         DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).thermalShiftInDegFx100Erd, &shift);
          axisToCalculate->gridLinesDegFx100[line] += shift;
       }
       if(PARAMETRIC_GRID_LINE_BIT_MASK(axisDimension, line) & DeltaGridLines_BitMapping_AdjSetpointBitMask)
       {
          SetpointVotedTemperature_t adjustedSetPoint;
-         DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).adjustedSetpointErd, &adjustedSetPoint);
+         DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).adjustedSetpointInDegFx100Erd, &adjustedSetPoint);
          axisToCalculate->gridLinesDegFx100[line] += adjustedSetPoint.temperature;
       }
    }
@@ -75,13 +84,13 @@ static void OnDataModelChanged(void *context, const void *args)
    const Erd_t erd = onChangeData->erd;
 
    if((erd == instance->_private.config->gridLineAdjustmentErds[FreshFoodGridLineDimension].rawSetpointErd) ||
-      (erd == instance->_private.config->gridLineAdjustmentErds[FreshFoodGridLineDimension].offsetErd) ||
-      (erd == instance->_private.config->gridLineAdjustmentErds[FreshFoodGridLineDimension].adjustedSetpointErd) ||
-      (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].shiftErd) ||
+      (erd == instance->_private.config->gridLineAdjustmentErds[FreshFoodGridLineDimension].cabinetOffsetInDegFx100Erd) ||
+      (erd == instance->_private.config->gridLineAdjustmentErds[FreshFoodGridLineDimension].adjustedSetpointInDegFx100Erd) ||
+      (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].thermalShiftInDegFx100Erd) ||
       (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].rawSetpointErd) ||
-      (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].offsetErd) ||
-      (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].adjustedSetpointErd) ||
-      (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].shiftErd))
+      (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].cabinetOffsetInDegFx100Erd) ||
+      (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].adjustedSetpointInDegFx100Erd) ||
+      (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].thermalShiftInDegFx100Erd))
    {
       ConfigureGridLines(instance);
    }
@@ -95,6 +104,8 @@ void GridLineCalculator_Init(GridLineCalculator_t *instance,
    instance->_private.dataModel = dataModel;
    instance->_private.gridData = PersonalityParametricData_Get(dataModel)->gridData;
    memset(&instance->_private.calculatedGridLineOutput, 0, sizeof(CalculatedGridLines_t));
+
+   uassert(AdjustedSetpointPluginIsReady(instance));
 
    ConfigureGridLines(instance);
 

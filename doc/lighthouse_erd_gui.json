@@ -278,14 +278,14 @@
             },
             {
                "namespace": "rockhopper",
-               "displayName": "Fresh Food Setpoint Shift",
-               "name": "Erd_FreshFood_Shift",
+               "displayName": "Fresh Food Thermal Setpoint Shift",
+               "name": "Erd_FreshFood_ThermalShiftInDegFx100",
                "read": true
             },
             {
                "namespace": "rockhopper",
-               "displayName": "Fresh Food Setpoint Offset",
-               "name": "Erd_FreshFood_Offset",
+               "displayName": "Fresh Food Cabinet Setpoint Offset",
+               "name": "Erd_FreshFood_CabinetOffsetInDegFx100",
                "read": true
             }
          ]
@@ -314,14 +314,14 @@
             },
             {
                "namespace": "rockhopper",
-               "displayName": "Freezer Setpoint Shift",
-               "name": "Erd_Freezer_Shift",
+               "displayName": "Freezer Thermal Setpoint Shift",
+               "name": "Erd_Freezer_ThermalShiftInDegFx100",
                "read": true
             },
             {
                "namespace": "rockhopper",
-               "displayName": "Freezer Setpoint Offset",
-               "name": "Erd_Freezer_Offset",
+               "displayName": "Freezer Cabinet Setpoint Offset",
+               "name": "Erd_Freezer_CabinetOffsetInDegFx100",
                "read": true
             }
          ]

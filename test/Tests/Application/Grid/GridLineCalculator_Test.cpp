@@ -56,16 +56,16 @@ enum
 
 static const GridLineAdjustmentErds_t freshFoodGridLineAdjustmentErds{
    .rawSetpointErd = Erd_FreshFoodSetpoint_ResolvedVote,
-   .offsetErd = Erd_FreshFood_Offset,
-   .shiftErd = Erd_FreshFood_Shift,
-   .adjustedSetpointErd = Erd_FreshFood_AdjustedSetpointInDegFx100
+   .cabinetOffsetInDegFx100Erd = Erd_FreshFood_CabinetOffsetInDegFx100,
+   .thermalShiftInDegFx100Erd = Erd_FreshFood_ThermalShiftInDegFx100,
+   .adjustedSetpointInDegFx100Erd = Erd_FreshFood_AdjustedSetpointInDegFx100
 };
 
 static const GridLineAdjustmentErds_t freezerGridLineAdjustmentErds{
    .rawSetpointErd = Erd_FreezerSetpoint_ResolvedVote,
-   .offsetErd = Erd_Freezer_Offset,
-   .shiftErd = Erd_Freezer_Shift,
-   .adjustedSetpointErd = Erd_Freezer_AdjustedSetpointInDegFx100,
+   .cabinetOffsetInDegFx100Erd = Erd_Freezer_CabinetOffsetInDegFx100,
+   .thermalShiftInDegFx100Erd = Erd_Freezer_ThermalShiftInDegFx100,
+   .adjustedSetpointInDegFx100Erd = Erd_Freezer_AdjustedSetpointInDegFx100,
 };
 
 static const GridLineCalculatorConfiguration_t config{
@@ -91,6 +91,8 @@ TEST_GROUP(GridLineCalculator)
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
+
+      AdjustedSetpointPluginReadyIs(true);
    }
 
    void ModuleIsInitialized()
@@ -123,17 +125,17 @@ TEST_GROUP(GridLineCalculator)
       FreezerAdjustedSetpointIs(freezerAdjustedSetpoint);
    }
 
-   void FreshFoodOffsetIs(TemperatureDegFx100_t offset)
+   void FreshFoodCabinetOffsetIs(TemperatureDegFx100_t offset)
    {
       DataModel_Write(dataModel,
-         Erd_FreshFood_Offset,
+         Erd_FreshFood_CabinetOffsetInDegFx100,
          &offset);
    }
 
-   void FreezerOffsetIs(TemperatureDegFx100_t offset)
+   void FreezerCabinetOffsetIs(TemperatureDegFx100_t offset)
    {
       DataModel_Write(dataModel,
-         Erd_Freezer_Offset,
+         Erd_Freezer_CabinetOffsetInDegFx100,
          &offset);
    }
 
@@ -141,21 +143,21 @@ TEST_GROUP(GridLineCalculator)
       TemperatureDegFx100_t freshFoodOffset,
       TemperatureDegFx100_t freezerOffset)
    {
-      FreshFoodOffsetIs(freshFoodOffset);
-      FreezerOffsetIs(freezerOffset);
+      FreshFoodCabinetOffsetIs(freshFoodOffset);
+      FreezerCabinetOffsetIs(freezerOffset);
    }
 
-   void FreezerShiftIs(TemperatureDegFx100_t shift)
+   void FreezerThermalShiftIs(TemperatureDegFx100_t shift)
    {
       DataModel_Write(dataModel,
-         Erd_Freezer_Shift,
+         Erd_Freezer_ThermalShiftInDegFx100,
          &shift);
    }
 
-   void FreshFoodShiftIs(TemperatureDegFx100_t shift)
+   void FreshFoodThermalShiftIs(TemperatureDegFx100_t shift)
    {
       DataModel_Write(dataModel,
-         Erd_FreshFood_Shift,
+         Erd_FreshFood_ThermalShiftInDegFx100,
          &shift);
    }
 
@@ -163,8 +165,8 @@ TEST_GROUP(GridLineCalculator)
       TemperatureDegFx100_t freshFoodShift,
       TemperatureDegFx100_t freezerShift)
    {
-      FreshFoodShiftIs(freshFoodShift);
-      FreezerShiftIs(freezerShift);
+      FreshFoodThermalShiftIs(freshFoodShift);
+      FreezerThermalShiftIs(freezerShift);
    }
 
    void FreshFoodRawSetpointIs(TemperatureDegFx100_t rawSetpoint)
@@ -212,6 +214,11 @@ TEST_GROUP(GridLineCalculator)
 
       ShiftsAre(AFreshFoodShiftTemperature,
          AFreezerShiftTemperature);
+   }
+
+   void AdjustedSetpointPluginReadyIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_AdjustedSetpointPluginReady, &state);
    }
 
    void CalculatedGridLineTempShouldBe(
@@ -305,6 +312,12 @@ TEST(GridLineCalculator, ShouldInitialize)
    Given The ModuleIsInitialized();
 }
 
+TEST(GridLineCalculator, ShouldAssertWhenAdjustedSetpointPluginIsNotReadyOnInit)
+{
+   Given AdjustedSetpointPluginReadyIs(false);
+   ShouldFailAssertion(ModuleIsInitialized());
+}
+
 TEST(GridLineCalculator, ShouldCalculateGridLinesOnInitIncludingAdjustmentErds)
 {
    Given The GridLineCalculationErdsAreInitialized();
@@ -317,8 +330,8 @@ TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenOffsetChanges)
    Given The GridLineCalculationErdsAreInitialized();
    And The ModuleIsInitialized();
 
-   When FreshFoodOffsetIs(AnotherFreshFoodOffsetTemperature);
-   And FreezerOffsetIs(AnotherFreezerOffsetTemperature);
+   When FreshFoodCabinetOffsetIs(AnotherFreshFoodOffsetTemperature);
+   And FreezerCabinetOffsetIs(AnotherFreezerOffsetTemperature);
 
    CalculatedGridLineTempShouldBe(
       (0 + AnotherFreshFoodOffsetTemperature),
@@ -345,8 +358,8 @@ TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenShiftChanges)
    Given The GridLineCalculationErdsAreInitialized();
    And The ModuleIsInitialized();
 
-   When FreshFoodShiftIs(AnotherFreshFoodShiftTemperature);
-   And FreezerShiftIs(AnotherFreezerShiftTemperature);
+   When FreshFoodThermalShiftIs(AnotherFreshFoodShiftTemperature);
+   And FreezerThermalShiftIs(AnotherFreezerShiftTemperature);
 
    CalculatedGridLineTempShouldBe(
       (150 + AnotherFreshFoodShiftTemperature),

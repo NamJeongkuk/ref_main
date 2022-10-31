@@ -13,13 +13,14 @@
 #include "TemperatureDegFx100.h"
 #include "GridData.h"
 #include "CalculatedGridLines.h"
+#include "AdjustedSetpointData.h"
 
 typedef struct
 {
-   Erd_t rawSetpointErd; // TemperatureDegFx100_t
-   Erd_t offsetErd; // TemperatureDegFx100_t
-   Erd_t shiftErd; // TemperatureDegFx100_t
-   Erd_t adjustedSetpointErd; // TemperatureDegFx100_t
+   Erd_t rawSetpointErd; // SetpointVotedTemperature_t
+   Erd_t cabinetOffsetInDegFx100Erd; // TemperatureDegFx100_t
+   Erd_t thermalShiftInDegFx100Erd; // TemperatureDegFx100_t
+   Erd_t adjustedSetpointInDegFx100Erd; // TemperatureDegFx100_t
 } GridLineAdjustmentErds_t;
 
 typedef struct
