@@ -16,6 +16,7 @@ enum
    DefrostState_Prechill,
    DefrostState_HeaterOn,
    DefrostState_Dwell,
+   DefrostState_PostDwell,
    DefrostState_Disabled
 };
 typedef uint8_t DefrostState_t;

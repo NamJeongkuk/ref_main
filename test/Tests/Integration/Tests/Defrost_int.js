@@ -22,6 +22,7 @@ describe("Defrost", () => {
     defrostStatePrechill: "DefrostState_Prechill",
     defrostStateHeaterOn: "DefrostState_HeaterOn",
     defrostStateDwell: "DefrostState_Dwell",
+    defrostStatePostDwell: "DefrostState_PostDwell",
     defrostStateDisabled: "DefrostState_Disabled"
   };
 

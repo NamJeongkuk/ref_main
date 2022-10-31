@@ -562,6 +562,15 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoDwellHsmStateWhenFreezerFilteredTem
    DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
 }
 
+TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasPostDwell)
+{
+   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(false);
+   And DefrostStateIs(DefrostState_PostDwell);
+   And DefrostIsInitialized();
+
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+}
+
 TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasIdle)
 {
    Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(false);
