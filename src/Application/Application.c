@@ -59,7 +59,6 @@ void Application_Init(
 
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
    EepromAppPlugin_Init(dataModel);
-   FanPlugin_Init(&instance->_private.fanPlugin, dataModel);
    SabbathPlugin_Init(dataModel);
    SetpointResolverPlugin_Init(dataModel);
    SetpointZonePlugin_Init(&instance->_private.setpointZonePlugin, dataModel);

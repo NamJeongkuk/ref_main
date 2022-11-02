@@ -17,7 +17,6 @@
 #include "GridPlugin.h"
 #include "PeriodicNvUpdaterPlugin.h"
 #include "ConvertibleCompartmentStatePlugin.h"
-#include "FanPlugin.h"
 #include "SetpointZonePlugin.h"
 #include "UserSetpointPlugin.h"
 #include "SideBySideConfigurationPlugin.h"
@@ -40,7 +39,6 @@ typedef struct
       ApplianceApiResetDiagnostics_t applianceApiResetDiagnostics;
       PeriodicNvUpdaterPlugin_t periodicNvUpdaterPlugin;
       ConvertibleCompartmentStatePlugin_t convertibleCompartmentStatePlugin;
-      FanPlugin_t fanPlugin;
       SetpointZonePlugin_t setpointZonePlugin;
       UserSetpointPlugin_t userSetpointPlugin;
       ShiftOffsetCalculatorCommonPlugin_t shiftOffsetCalculatorCommonPlugin;

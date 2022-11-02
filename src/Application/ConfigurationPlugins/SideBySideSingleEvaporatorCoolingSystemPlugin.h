@@ -16,6 +16,7 @@
 #include "FreshFoodDamperPlugin.h"
 #include "FreshFoodShiftOffsetCalculatorPlugin.h"
 #include "FreezerShiftOffsetCalculatorPlugin.h"
+#include "SideBySideFanPlugin.h"
 
 typedef struct
 {
@@ -28,6 +29,7 @@ typedef struct
       FreshFoodDamperPlugin_t freshFoodDamperPlugin;
       FreshFoodShiftOffsetCalculatorPlugin_t freshFoodShiftOffsetCalculatorPlugin;
       FreezerShiftOffsetCalculatorPlugin_t freezerShiftOffsetCalculatorPlugin;
+      SideBySideFanPlugin_t sideBySideFanPlugin;
    } _private;
 } SideBySideSingleEvaporatorCoolingSystemPlugin_t;
 
