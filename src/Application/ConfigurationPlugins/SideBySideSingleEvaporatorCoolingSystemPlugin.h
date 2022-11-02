@@ -16,12 +16,14 @@
 #include "FreshFoodDamperPlugin.h"
 #include "FreshFoodShiftOffsetCalculatorPlugin.h"
 #include "FreezerShiftOffsetCalculatorPlugin.h"
+#include "SideBySideSingleEvaporatorCoolingSystemSensorFilteringPlugin.h"
 #include "SideBySideFanPlugin.h"
 
 typedef struct
 {
    struct
    {
+      SideBySideSingleEvaporatorCoolingSystemSensorFilteringPlugin_t sensorFilteringPlugin;
       GridPlugin_t gridPlugin;
       ConstArrayMap_SideBySideSingleEvap_t coolingStateBasedGridVotesTable;
       CompressorPlugin_t compressorPlugin;

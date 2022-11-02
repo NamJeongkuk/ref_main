@@ -15,7 +15,6 @@
 #include "FaultWrapperPlugin.h"
 #include "OverrideArbiterPlugin.h"
 #include "SetpointResolverPlugin.h"
-#include "SensorFilterPlugin.h"
 
 enum
 {
@@ -54,7 +53,6 @@ void Application_Init(
 
    AdjustedSetpointPlugin_Init(&instance->_private.adjustedSetpointPlugin, dataModel);
    ShiftOffsetCalculatorCommonPlugin_Init(&instance->_private.shiftOffsetCalculatorCommonPlugin, dataModel);
-   SensorFilterPlugin(dataModel);
    OverrideArbiterPlugin_Init(dataModel);
 
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);

@@ -242,14 +242,6 @@ static void InitializeThermistorIsValidArbiters(I_DataModel_t *dataModel)
 
 void OverrideArbiterPlugin_Init(I_DataModel_t *dataModel)
 {
-   bool sensorsReadyToBeRead;
-   DataModel_Read(
-      dataModel,
-      Erd_SensorsReadyToBeRead,
-      &sensorsReadyToBeRead);
-
-   uassert(sensorsReadyToBeRead);
-
    InitializeFilteredTemperatureArbiters(dataModel);
    InitializeThermistorIsValidArbiters(dataModel);
 
