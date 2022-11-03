@@ -39,7 +39,7 @@ void RelayWatchdogPlugin_Init(I_DataModel_t *dataModel)
    DigitalOutput_GpioGroupAdapter_Init(
       &instance.digitalOutputAdapter,
       DataModelErdPointerAccess_GetGpioGroup(dataModel, Erd_GpioGroupInterface),
-      Erd_BspGpio_RelayWatchdog);
+      Erd_BspGpio_RLY_09);
 
    RelayWatchdogKicker_Init(
       &instance.relayWatchdogKicker,
