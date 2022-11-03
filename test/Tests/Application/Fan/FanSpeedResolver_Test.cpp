@@ -13,12 +13,15 @@ extern "C"
 #include "Setpoint.h"
 #include "SetpointZone.h"
 #include "CoolingMode.h"
+#include "PersonalityParametricData.h"
 }
 
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
 #include "DataModel_TestDouble.h"
 #include "uassert_test.h"
+#include "PersonalityParametricDataTestDouble.h"
+#include "TddPersonality.h"
 
 enum
 {
@@ -27,31 +30,6 @@ enum
    Erd_FreezerSetpointZone,
    Erd_CalculatedRequestFanControlSpeed,
    Erd_AmbientTemperature,
-
-   SuperLowSpeed = 0,
-   LowSpeed = 10,
-   MediumSpeed = 1000,
-   HighSpeed = 2000,
-   MaxSpeed = 2500,
-
-   SuperLowSpeedHighAmbientTemp = SuperLowSpeed + 1,
-   LowSpeedFreshFood = LowSpeed + 10,
-   LowSpeedFreezer = LowSpeed + 20,
-   LowSpeedConvertibleCompartment = LowSpeed + 30,
-   MediumSpeedFreshFood = MediumSpeed + 10,
-   MediumSpeedFreezer = MediumSpeed + 20,
-   MediumSpeedConvertibleCompartment = MediumSpeed + 30,
-   HighSpeedFreshFood = HighSpeed + 10,
-   HighSpeedFreezer = HighSpeed + 20,
-   HighSpeedConvertibleCompartment = HighSpeed + 30,
-
-   LowColdTempSpeedFreshFood = LowSpeedFreshFood + 10,
-   LowColdTempSpeedFreezer = LowSpeedFreezer + 20,
-   LowColdTempSpeedConvertibleCompartment = LowSpeedConvertibleCompartment + 30,
-   LowMediumTempSpeedFreezer = LowColdTempSpeedFreezer + 20,
-   LowMediumTempSpeedConvertibleCompartment = LowColdTempSpeedConvertibleCompartment + 30,
-   LowWarmTempSpeedFreezer = LowMediumTempSpeedFreezer + 20,
-   LowWarmTempSpeedConvertibleCompartment = LowMediumTempSpeedConvertibleCompartment + 30,
 
    HighAmbientTempDegFx100 = 4500
 };
@@ -62,199 +40,6 @@ static const DataModel_TestDoubleConfigurationEntry_t erds[] = {
    { Erd_FreezerSetpointZone, sizeof(SetpointZone_t) },
    { Erd_CalculatedRequestFanControlSpeed, sizeof(FanControl_t) },
    { Erd_AmbientTemperature, sizeof(TemperatureDegFx100_t) },
-};
-
-static const PidControllerGains_t gains = {
-   .kpValue = {
-      .value = 4,
-      .qBits = 0,
-   },
-   .kiValue = {
-      .value = 4,
-      .qBits = 0,
-   },
-   .kdValue = {
-      .value = 4,
-      .qBits = 0,
-   }
-};
-
-static const FanSpeedData_t speedData = {
-   .careAboutHighAmbientTemperature = true,
-   .superLowSpeed = {
-      .type = FanControlType_Rpm,
-      .rpm = SuperLowSpeed,
-   },
-   .lowSpeed = {
-      .type = FanControlType_Rpm,
-      .rpm = LowSpeed,
-   },
-   .mediumSpeed = {
-      .type = FanControlType_Rpm,
-      .rpm = MediumSpeed,
-   },
-   .highSpeed = {
-      .type = FanControlType_Rpm,
-      .rpm = HighSpeed,
-   },
-   .superHighSpeed = {
-      .type = FanControlType_Rpm,
-      .rpm = MaxSpeed,
-   },
-   .superLowSpeedHighAmbientTemperature = {
-      .type = FanControlType_Rpm,
-      .rpm = SuperLowSpeedHighAmbientTemp,
-   }
-};
-
-static const FanCareAboutCoolingModeSpeedData_t speedDataNoCareAboutSetpoint = {
-   .careAboutSetpoint = false,
-   .careAboutSetpointData = {
-      .nonSetpointSpeeds = {
-         .superLowSpeed = {
-            .type = FanControlType_Rpm,
-            .rpm = SuperLowSpeed,
-         },
-         .lowSpeedFreshFood = {
-            .type = FanControlType_Rpm,
-            .rpm = LowSpeedFreshFood,
-         },
-         .lowSpeedFreezer = {
-            .type = FanControlType_Rpm,
-            .rpm = LowSpeedFreezer,
-         },
-         .mediumSpeedFreshFood = {
-            .type = FanControlType_Rpm,
-            .rpm = MediumSpeedFreshFood,
-         },
-         .mediumSpeedFreezer = {
-            .type = FanControlType_Rpm,
-            .rpm = MediumSpeedFreezer,
-         },
-         .highSpeedSpeedFreshFood = {
-            .type = FanControlType_Rpm,
-            .rpm = HighSpeedFreshFood,
-         },
-         .highSpeedSpeedFreezer = {
-            .type = FanControlType_Rpm,
-            .rpm = HighSpeedFreezer,
-         },
-         .superHighSpeed = {
-            .type = FanControlType_Rpm,
-            .rpm = MaxSpeed,
-         },
-      },
-   },
-};
-
-static const FanCareAboutCoolingModeSpeedData_t speedDataCareAboutSetpoint = {
-   .careAboutSetpoint = true,
-   .careAboutSetpointData = {
-      .setpointSpeeds = {
-         .superLowSpeed = {
-            .type = FanControlType_Rpm,
-            .rpm = SuperLowSpeed,
-         },
-         .lowSpeedFreshFood = {
-            .type = FanControlType_Rpm,
-            .rpm = LowColdTempSpeedFreshFood,
-         },
-         .lowSpeedFreezerWithColdSetpoint = {
-            .type = FanControlType_Rpm,
-            .rpm = LowColdTempSpeedFreezer,
-         },
-         .lowSpeedFreezerWithMediumSetpoint = {
-            .type = FanControlType_Rpm,
-            .rpm = LowMediumTempSpeedFreezer,
-         },
-         .lowSpeedFreezerWithWarmSetpoint = {
-            .type = FanControlType_Rpm,
-            .rpm = LowWarmTempSpeedFreezer,
-         },
-         .lowSpeedConvertibleCompartmentWithColdSetpoint = {
-            .type = FanControlType_Rpm,
-            .rpm = LowColdTempSpeedConvertibleCompartment,
-         },
-         .lowSpeedConvertibleCompartmentWithMediumSetpoint = {
-            .type = FanControlType_Rpm,
-            .rpm = LowMediumTempSpeedConvertibleCompartment,
-         },
-         .lowSpeedConvertibleCompartmentWithWarmSetpoint = {
-            .type = FanControlType_Rpm,
-            .rpm = LowWarmTempSpeedConvertibleCompartment,
-         },
-         .mediumSpeedFreshFood = {
-            .type = FanControlType_Rpm,
-            .rpm = MediumSpeedFreshFood,
-         },
-         .mediumSpeedFreezer = {
-            .type = FanControlType_Rpm,
-            .rpm = MediumSpeedFreezer,
-         },
-         .mediumSpeedConvertibleCompartment = {
-            .type = FanControlType_Rpm,
-            .rpm = MediumSpeedConvertibleCompartment,
-         },
-         .highSpeedSpeedFreshFood = {
-            .type = FanControlType_Rpm,
-            .rpm = HighSpeedFreshFood,
-         },
-         .highSpeedSpeedFreezer = {
-            .type = FanControlType_Rpm,
-            .rpm = HighSpeedFreezer,
-         },
-         .highSpeedSpeedConvertibleCompartment = {
-            .type = FanControlType_Rpm,
-            .rpm = HighSpeedConvertibleCompartment,
-         },
-         .superHighSpeed = {
-            .type = FanControlType_Rpm,
-            .rpm = MaxSpeed,
-         },
-      },
-   },
-};
-
-static const FanData_t speedDataWithoutCoolingMode = {
-   .fanId = 2,
-   .pulsesPerRevolution = 2,
-   .careAboutCoolingMode = false,
-   .powerUsageInWatts = 8,
-   .gains = gains,
-   .lowerLimit = 0,
-   .upperLimit = 0xFFFF,
-   .fanMissedTargetFaultTimeoutInSeconds = 60,
-   .missingFanFeedbackFaultTimeoutInSeconds = 60,
-   .feedbackPresentWhenFanIsOffTimeoutInSeconds = 60,
-   .speedData = speedData
-};
-
-static const FanData_t coolingModeSpeedDataNoCareAboutSetpoint = {
-   .fanId = 2,
-   .pulsesPerRevolution = 2,
-   .careAboutCoolingMode = true,
-   .powerUsageInWatts = 8,
-   .gains = gains,
-   .lowerLimit = 0xFFFF,
-   .upperLimit = 0,
-   .fanMissedTargetFaultTimeoutInSeconds = 60,
-   .missingFanFeedbackFaultTimeoutInSeconds = 60,
-   .feedbackPresentWhenFanIsOffTimeoutInSeconds = 60,
-   .careAboutCoolingModeSpeedData = speedDataNoCareAboutSetpoint
-};
-
-static const FanData_t coolingModeSpeedDataCareAboutSetpoint = {
-   .fanId = 2,
-   .pulsesPerRevolution = 2,
-   .careAboutCoolingMode = true,
-   .powerUsageInWatts = 8,
-   .gains = gains,
-   .lowerLimit = 0,
-   .upperLimit = 0xFFFF,
-   .fanMissedTargetFaultTimeoutInSeconds = 60,
-   .missingFanFeedbackFaultTimeoutInSeconds = 60,
-   .feedbackPresentWhenFanIsOffTimeoutInSeconds = 60,
-   .careAboutCoolingModeSpeedData = speedDataCareAboutSetpoint
 };
 
 static const FanSpeedResolverConfig_t nonCoolingModeConfig = {
@@ -279,10 +64,18 @@ TEST_GROUP(FanSpeedResolver_NoCoolingMode)
    I_DataModel_t *dataModel;
    FanSpeedResolver_t instance;
 
+   PersonalityParametricData_t *parametricData;
+   const CombinedFanData_t *combinedFanData;
+   const FanData_t *nonCoolingModeFanData;
+
    void setup()
    {
       DataModel_TestDouble_Init(&dataModelTestDouble, erds, NUM_ELEMENTS(erds));
       dataModel = dataModelTestDouble.dataModel;
+
+      parametricData = (PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(TddPersonality_DevelopmentSingleEvaporator);
+      combinedFanData = parametricData->fanData;
+      nonCoolingModeFanData = &combinedFanData->convertibleCompartmentFan;
    }
 
    void GivenInitialization()
@@ -290,7 +83,7 @@ TEST_GROUP(FanSpeedResolver_NoCoolingMode)
       FanSpeedResolver_Init(
          &instance,
          dataModel,
-         &speedDataWithoutCoolingMode,
+         nonCoolingModeFanData,
          &nonCoolingModeConfig);
    }
 
@@ -323,7 +116,7 @@ TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeLowWhenRequestedLow)
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(LowSpeed);
+   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData.lowSpeed.rpm);
 }
 
 TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeMediumWhenRequestedMedium)
@@ -331,7 +124,7 @@ TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeMediumWhenRequestedM
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
-   CalculatedFanControlSpeedShouldBe(MediumSpeed);
+   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData.mediumSpeed.rpm);
 }
 
 TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeHighWhenRequestedHigh)
@@ -339,7 +132,7 @@ TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeHighWhenRequestedHig
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_High);
-   CalculatedFanControlSpeedShouldBe(HighSpeed);
+   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData.highSpeed.rpm);
 }
 
 TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeMaxWhenRequestedSuperHigh)
@@ -347,7 +140,7 @@ TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeMaxWhenRequestedSupe
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_SuperHigh);
-   CalculatedFanControlSpeedShouldBe(MaxSpeed);
+   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData.superHighSpeed.rpm);
 }
 
 TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeSuperLowWhenRequestedSuperLow)
@@ -355,7 +148,7 @@ TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeSuperLowWhenRequeste
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
-   CalculatedFanControlSpeedShouldBe(SuperLowSpeed);
+   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData.superLowSpeed.rpm);
 }
 
 TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeSuperLowWithHighAmbientTemperatureWhenRequestedSuperLowAndAmbientTemperatureIsHigh)
@@ -364,7 +157,7 @@ TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeSuperLowWithHighAmbi
    GivenAmbientTemperatureIsSetTo(HighAmbientTempDegFx100);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
-   CalculatedFanControlSpeedShouldBe(SuperLowSpeedHighAmbientTemp);
+   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData.superLowSpeedHighAmbientTemperature.rpm);
 }
 
 TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeSuperLowWhenRequestedIsSuperLowAndAmbientTemperatureIsBelowThreshold)
@@ -373,7 +166,7 @@ TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeSuperLowWhenRequeste
    GivenAmbientTemperatureIsSetTo(HighAmbientTempDegFx100 - 1);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
-   CalculatedFanControlSpeedShouldBe(SuperLowSpeed);
+   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData.superLowSpeed.rpm);
 }
 
 TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeZeroOnInitialization)
@@ -388,10 +181,20 @@ TEST_GROUP(FanSpeedResolver_CoolingMode)
    I_DataModel_t *dataModel;
    FanSpeedResolver_t instance;
 
+   PersonalityParametricData_t *parametricData;
+   const CombinedFanData_t *combinedFanData;
+   const FanCareAboutCoolingModeSpeedData_t *coolingModeFanData;
+   const FanCareAboutCoolingModeSpeedData_t *coolingModeCareSetpointData;
+
    void setup()
    {
       DataModel_TestDouble_Init(&dataModelTestDouble, erds, NUM_ELEMENTS(erds));
       dataModel = dataModelTestDouble.dataModel;
+
+      parametricData = (PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(TddPersonality_DevelopmentSingleEvaporator);
+      combinedFanData = parametricData->fanData;
+      coolingModeFanData = &combinedFanData->freshFoodEvapFan.careAboutCoolingModeSpeedData;
+      coolingModeCareSetpointData = &combinedFanData->freezerEvapFan.careAboutCoolingModeSpeedData;
    }
 
    void WhenResolvedFanSpeedVoteIs(FanSpeed_t speed)
@@ -427,7 +230,7 @@ TEST_GROUP(FanSpeedResolver_CoolingMode)
       FanSpeedResolver_Init(
          &instance,
          dataModel,
-         &coolingModeSpeedDataNoCareAboutSetpoint,
+         &combinedFanData->freshFoodEvapFan,
          &coolingModeConfig);
    }
 
@@ -436,7 +239,7 @@ TEST_GROUP(FanSpeedResolver_CoolingMode)
       FanSpeedResolver_Init(
          &instance,
          dataModel,
-         &coolingModeSpeedDataCareAboutSetpoint,
+         &combinedFanData->freezerEvapFan,
          &coolingModeConfig);
    }
 };
@@ -447,7 +250,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowFreshFoodWhenReques
    GivenCoolingModeIs(CoolingMode_FreshFood);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(LowSpeedFreshFood);
+   CalculatedFanControlSpeedShouldBe(coolingModeFanData->careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreshFood.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowFreezerWhenRequestedLowWithCoolingModeSetToFreezer)
@@ -456,7 +259,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowFreezerWhenRequeste
    GivenCoolingModeIs(CoolingMode_Freezer);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(LowSpeedFreezer);
+   CalculatedFanControlSpeedShouldBe(coolingModeFanData->careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreezer.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeMediumFreezerWhenRequestedMediumWithCoolingModeSetToFreezer)
@@ -465,7 +268,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeMediumFreezerWhenReque
    GivenCoolingModeIs(CoolingMode_Freezer);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
-   CalculatedFanControlSpeedShouldBe(MediumSpeedFreezer);
+   CalculatedFanControlSpeedShouldBe(coolingModeFanData->careAboutSetpointData.nonSetpointSpeeds.mediumSpeedFreezer.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeHighFreshFoodWhenRequestedHighWithCoolingModeSetToFreshFood)
@@ -474,7 +277,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeHighFreshFoodWhenReque
    GivenCoolingModeIs(CoolingMode_FreshFood);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_High);
-   CalculatedFanControlSpeedShouldBe(HighSpeedFreshFood);
+   CalculatedFanControlSpeedShouldBe(coolingModeFanData->careAboutSetpointData.nonSetpointSpeeds.highSpeedSpeedFreshFood.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeHighFreezerWhenRequestedHighWithCoolingModeSetToFreezer)
@@ -483,7 +286,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeHighFreezerWhenRequest
    GivenCoolingModeIs(CoolingMode_Freezer);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_High);
-   CalculatedFanControlSpeedShouldBe(HighSpeedFreezer);
+   CalculatedFanControlSpeedShouldBe(coolingModeFanData->careAboutSetpointData.nonSetpointSpeeds.highSpeedSpeedFreezer.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeMaxWhenRequestedIsSuperHigh)
@@ -491,7 +294,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeMaxWhenRequestedIsSupe
    GivenInitializationWithoutCaringAboutSetpoint();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_SuperHigh);
-   CalculatedFanControlSpeedShouldBe(MaxSpeed);
+   CalculatedFanControlSpeedShouldBe(coolingModeFanData->careAboutSetpointData.nonSetpointSpeeds.superHighSpeed.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreshFoodWhenRequestedLowWithCoolingModeSetToFreshFoodAndSetPointIsCold)
@@ -501,7 +304,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreshFoodWhenRe
    GivenCoolingModeIs(CoolingMode_FreshFood);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(LowColdTempSpeedFreshFood);
+   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreezerWhenRequestedLowWithCoolingModeSetToFreezerAndSetPointIsCold)
@@ -511,7 +314,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreezerWhenRequ
    GivenCoolingModeIs(CoolingMode_Freezer);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(LowColdTempSpeedFreezer);
+   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdConvertibleCompartmentWhenRequestedLowWithCoolingModeSetToConvertibleCompartmentAndSetPointIsCold)
@@ -521,7 +324,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdConvertibleComp
    GivenCoolingModeIs(CoolingMode_ConvertibleCompartment);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(LowColdTempSpeedConvertibleCompartment);
+   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithColdSetpoint.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumFreezerWhenRequestedLowWithCoolingModeSetToFreezerAndSetPointIsMedium)
@@ -531,7 +334,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumFreezerWhenRe
    GivenCoolingModeIs(CoolingMode_Freezer);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(LowMediumTempSpeedFreezer);
+   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithMediumSetpoint.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumConvertibleCompartmentWhenRequestedLowWithCoolingModeSetToConvertibleCompartmentAndSetPointIsMedium)
@@ -541,7 +344,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumConvertibleCo
    GivenCoolingModeIs(CoolingMode_ConvertibleCompartment);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(LowMediumTempSpeedConvertibleCompartment);
+   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithMediumSetpoint.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmFreezerWhenRequestedLowWithCoolingModeSetToFreezerAndSetPointIsWarm)
@@ -551,7 +354,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmFreezerWhenRequ
    GivenCoolingModeIs(CoolingMode_Freezer);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(LowWarmTempSpeedFreezer);
+   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithWarmSetpoint.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmConvertibleCompartmentWhenRequestedLowWithCoolingModeSetToConvertibleCompartmentAndSetPointIsWarm)
@@ -561,7 +364,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmConvertibleComp
    GivenCoolingModeIs(CoolingMode_ConvertibleCompartment);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(LowWarmTempSpeedConvertibleCompartment);
+   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithWarmSetpoint.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreezerWhenRequestedLowWithDefaultCaseCoolingModeAndSetPointIsCold)
@@ -571,7 +374,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreezerWhenRequ
    GivenCoolingModeIs(CoolingMode_Unknown);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(LowColdTempSpeedFreezer);
+   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumFreezerWhenRequestedLowWithDefaultCaseCoolingModeAndSetPointIsMedium)
@@ -581,7 +384,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumFreezerWhenRe
    GivenCoolingModeIs(CoolingMode_Unknown);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(LowMediumTempSpeedFreezer);
+   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithMediumSetpoint.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmFreezerWhenRequestedLowWithDefaultCaseCoolingModeAndSetPointIsWarm)
@@ -591,7 +394,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmFreezerWhenRequ
    GivenCoolingModeIs(CoolingMode_Unknown);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(LowWarmTempSpeedFreezer);
+   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithWarmSetpoint.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowFreezerWhenRequestedLowWithDefaultCaseCoolingMode)
@@ -600,7 +403,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowFreezerWhenRequeste
    GivenCoolingModeIs(CoolingMode_Unknown);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(LowSpeedFreezer);
+   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeMediumFreezerWhenRequestedLowWithDefaultCaseCoolingMode)
@@ -609,7 +412,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeMediumFreezerWhenReque
    GivenCoolingModeIs(CoolingMode_Unknown);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
-   CalculatedFanControlSpeedShouldBe(MediumSpeedFreezer);
+   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.mediumSpeedFreezer.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeHighFreezerWhenRequestedLowWithDefaultCaseCoolingMode)
@@ -618,5 +421,5 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeHighFreezerWhenRequest
    GivenCoolingModeIs(CoolingMode_Unknown);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_High);
-   CalculatedFanControlSpeedShouldBe(HighSpeedFreezer);
+   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.highSpeedSpeedFreezer.rpm);
 }
