@@ -37,8 +37,6 @@ static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
 #else
 static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_GpioGroupInterface, Erd_GpioGroupInterface },
-   { Erd_RelayWatchdog, Erd_BspGpio_RLY_09 },
-   { Erd_HeartbeatLed, Erd_BspGpio_HEARTBEAT },
    { Erd_Gpio_PWM_VAR_01, Erd_BspGpio_PWM_VAR_01 },
    { Erd_Gpio_GPIO_OUT_00, Erd_BspGpio_GPIO_OUT_00 },
    { Erd_Gpio_GPIO_OUT_01, Erd_BspGpio_GPIO_OUT_01 },
@@ -67,8 +65,10 @@ static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_Gpio_RLY_06, Erd_BspGpio_RLY_06 },
    { Erd_Gpio_RLY_07, Erd_BspGpio_RLY_07 },
    { Erd_Gpio_RLY_08, Erd_BspGpio_RLY_08 },
+   { Erd_RelayWatchdog, Erd_BspGpio_RLY_09 },
    { Erd_Gpio_AUGER_PWR, Erd_BspGpio_AUGER_PWR },
    { Erd_Gpio_AUGER_DIRECTION, Erd_BspGpio_AUGER_DIRECTION },
+   { Erd_HeartbeatLed, Erd_BspGpio_HEARTBEAT },
    { Erd_Gpio_SBC_RESET, Erd_BspGpio_SBC_RESET },
    { Erd_Gpio_PERSONALITY, Erd_BspGpio_PERSONALITY },
    { Erd_Gpio_DOOR_INT, Erd_BspGpio_DOOR_INT },
