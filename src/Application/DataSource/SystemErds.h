@@ -525,7 +525,7 @@ enum
    ENTRY(Erd_FreshFoodSetpointZone,                         0xF16C, SetpointZone_t,                                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentSetpointZone,            0xF16D, SetpointZone_t,                                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_IceRateTriggerSignal,                          0xF170, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerIceRateTriggerSignal,                   0xF170, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_CalculatedCondenserFanControl,                 0xF171, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CalculatedIceCabinetFanControl,                0xF173, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
@@ -620,7 +620,7 @@ enum
    ENTRY(Erd_FreezerEvapFanSpeed_FactoryVote,               0xF272, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerEvapFanSpeed_DefrostVote,               0xF273, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerEvapFanSpeed_CompressorStartUpVote,     0xF274, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerEvapFanSpeed_IceRateVote,               0xF275, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapFanSpeed_FreezerIceRateVote,        0xF275, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerEvapFanSpeed_GridVote,                  0xF276, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Grid_BlockNumber,                              0xF2A0, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
@@ -646,7 +646,7 @@ enum
    ENTRY(Erd_FreezerSetpoint_TurboFreezeVote,               0xF2C4, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerSetpoint_IceInDoorVote,                 0xF2C5, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerSetpoint_FreezerIceMakerVote,           0xF2C6, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerSetpoint_IceRateVote,                   0xF2C7, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerSetpoint_FreezerIceRateVote,            0xF2C7, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerSetpoint_UserVote,                      0xF2C8, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodSetpoint_ResolvedVote,                0xF2D0, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \

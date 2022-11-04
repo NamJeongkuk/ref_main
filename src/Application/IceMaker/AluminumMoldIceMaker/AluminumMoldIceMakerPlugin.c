@@ -7,12 +7,13 @@
 
 #include "SystemErds.h"
 #include "AluminumMoldIceMakerPlugin.h"
+#include "PersonalityParametricData.h"
 
-static const IceRateHandlerConfig_t iceRateHandlerConfig = {
-   .iceRateTriggerSignal = Erd_IceRateTriggerSignal,
+FreezerIceRateHandlerConfig_t iceRateHandlerConfig = {
+   .freezerIceRateTriggerSignal = Erd_FreezerIceRateTriggerSignal,
    .freezerSetpointUserVote = Erd_FreezerSetpoint_UserVote,
-   .freezerSetpointIceRateVote = Erd_FreezerSetpoint_IceRateVote,
-   .freezerEvapFanSpeedIceRateVote = Erd_FreezerEvapFanSpeed_IceRateVote,
+   .freezerSetpointFreezerIceRateVote = Erd_FreezerSetpoint_FreezerIceRateVote,
+   .freezerEvapFanSpeedFreezerIceRateVote = Erd_FreezerEvapFanSpeed_FreezerIceRateVote,
    .freezerEvapFanSpeedResolvedVote = Erd_FreezerEvapFanSpeed_ResolvedVote,
 };
 
@@ -29,9 +30,20 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
 
 void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
 {
-   FillTubeHeaterVotingFrameworkPlugin_Init(&instance->_private.fillTubeHeaterVotingFrameworkPlugin, dataModel);
-   IceRateHandler_Init(&instance->_private.iceRatehandler, dataModel, &iceRateHandlerConfig);
-   SoftPwm_Init(&instance->_private.fillTubeHeaterSoftPwm, dataModel, &softPwmConfig);
+   FillTubeHeaterVotingFrameworkPlugin_Init(
+      &instance->_private.fillTubeHeaterVotingFrameworkPlugin,
+      dataModel);
+
+   FreezerIceRateHandler_Init(
+      &instance->_private.iceRatehandler,
+      dataModel,
+      &iceRateHandlerConfig,
+      PersonalityParametricData_Get(dataModel)->freezerIceRateData);
+
+   SoftPwm_Init(
+      &instance->_private.fillTubeHeaterSoftPwm,
+      dataModel,
+      &softPwmConfig);
 
    AluminumMoldIceMaker_Init(
       &instance->_private.aluminumMoldIceMaker,

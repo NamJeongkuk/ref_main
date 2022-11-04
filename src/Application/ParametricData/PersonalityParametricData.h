@@ -24,6 +24,8 @@
 #include "SingleDamperData.h"
 #include "DamperHeaterData.h"
 #include "PulldownData.h"
+#include "AluminumMoldIceMakerData.h"
+#include "FreezerIceRateData.h"
 
 typedef struct
 {
@@ -42,6 +44,8 @@ typedef struct
    const SingleDamperData_t *freshFoodDamperData;
    const DamperHeaterData_t *damperHeaterData;
    const PulldownData_t *pulldownData;
+   const AluminumMoldIceMakerData_t *aluminumMoldIceMakerData;
+   const FreezerIceRateData_t *freezerIceRateData;
 } PersonalityParametricData_t;
 
 const PersonalityParametricData_t *PersonalityParametricData_Get(I_DataModel_t *dataModel);

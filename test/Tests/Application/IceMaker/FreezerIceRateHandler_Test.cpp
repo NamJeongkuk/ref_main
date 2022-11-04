@@ -7,10 +7,11 @@
 
 extern "C"
 {
-#include "IceRateHandler.h"
+#include "FreezerIceRateHandler.h"
 #include "SystemErds.h"
 #include "Constants_Time.h"
 #include "Vote.h"
+#include "PersonalityParametricData.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -23,34 +24,38 @@ enum
 
 };
 
-static const IceRateHandlerConfig_t iceRateHandlerConfig = {
-   .iceRateTriggerSignal = Erd_IceRateTriggerSignal,
+static const FreezerIceRateHandlerConfig_t iceRateHandlerConfig = {
+   .freezerIceRateTriggerSignal = Erd_FreezerIceRateTriggerSignal,
    .freezerSetpointUserVote = Erd_FreezerSetpoint_UserVote,
-   .freezerSetpointIceRateVote = Erd_FreezerSetpoint_IceRateVote,
-   .freezerEvapFanSpeedIceRateVote = Erd_FreezerEvapFanSpeed_IceRateVote,
+   .freezerSetpointFreezerIceRateVote = Erd_FreezerSetpoint_FreezerIceRateVote,
+   .freezerEvapFanSpeedFreezerIceRateVote = Erd_FreezerEvapFanSpeed_FreezerIceRateVote,
    .freezerEvapFanSpeedResolvedVote = Erd_FreezerEvapFanSpeed_ResolvedVote,
 };
 
-TEST_GROUP(IceRateHandler)
+TEST_GROUP(FreezerIceRateHandler)
 {
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
-   IceRateHandler_t instance;
+   FreezerIceRateHandler_t instance;
+   const FreezerIceRateData_t *freezerIceRateData;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+
+      freezerIceRateData = PersonalityParametricData_Get(dataModel)->freezerIceRateData;
    }
 
    void GivenTheModuleIsInitialized()
    {
-      IceRateHandler_Init(
+      FreezerIceRateHandler_Init(
          &instance,
          dataModel,
-         &iceRateHandlerConfig);
+         &iceRateHandlerConfig,
+         freezerIceRateData);
    }
 
    void GivenTheFreezerSetpointUserVoteIs(TemperatureDegFx100_t temperature, bool care)
@@ -66,9 +71,9 @@ TEST_GROUP(IceRateHandler)
    void GivenTheIceRateTriggerSignalIsActivated()
    {
       uint8_t signal;
-      DataModel_Read(dataModel, Erd_IceRateTriggerSignal, &signal);
+      DataModel_Read(dataModel, Erd_FreezerIceRateTriggerSignal, &signal);
       signal++;
-      DataModel_Write(dataModel, Erd_IceRateTriggerSignal, &signal);
+      DataModel_Write(dataModel, Erd_FreezerIceRateTriggerSignal, &signal);
    }
 
    void GivenTheFreezerEvapFanSpeedResolvedVoteIs(FanSpeed_t speed, bool care)
@@ -84,7 +89,7 @@ TEST_GROUP(IceRateHandler)
    void ThenTheFreezerSetpointIceMakerVoteShouldBe(TemperatureDegFx100_t temperature, bool care)
    {
       SetpointVotedTemperature_t actual;
-      DataModel_Read(dataModel, Erd_FreezerSetpoint_IceRateVote, &actual);
+      DataModel_Read(dataModel, Erd_FreezerSetpoint_FreezerIceRateVote, &actual);
 
       CHECK_EQUAL(temperature, actual.temperature);
       CHECK_EQUAL(care, actual.care);
@@ -93,7 +98,7 @@ TEST_GROUP(IceRateHandler)
    void ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(FanSpeed_t speed, bool care)
    {
       FanVotedSpeed_t actual;
-      DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_IceRateVote, &actual);
+      DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_FreezerIceRateVote, &actual);
 
       CHECK_EQUAL(speed, actual.speed);
       CHECK_EQUAL(care, actual.care);
@@ -105,7 +110,7 @@ TEST_GROUP(IceRateHandler)
    }
 };
 
-TEST(IceRateHandler, FreezerSetpointIceMakerVoteShouldBeSetToUserVoteIfUserVoteIsLessThanParametricSetpoint)
+TEST(FreezerIceRateHandler, FreezerSetpointIceMakerVoteShouldBeSetToUserVoteIfUserVoteIsLessThanParametricSetpoint)
 {
    GivenTheModuleIsInitialized();
    GivenTheIceRateTriggerSignalIsActivated();
@@ -115,7 +120,7 @@ TEST(IceRateHandler, FreezerSetpointIceMakerVoteShouldBeSetToUserVoteIfUserVoteI
    ThenTheFreezerSetpointIceMakerVoteShouldBe(200, Vote_Care);
 }
 
-TEST(IceRateHandler, FreezerSetpointIceMakerVoteShouldBeSetToParametricSetpointIfUserVoteIsGreaterThanParametricSetpoint)
+TEST(FreezerIceRateHandler, FreezerSetpointIceMakerVoteShouldBeSetToParametricSetpointIfUserVoteIsGreaterThanParametricSetpoint)
 {
    GivenTheModuleIsInitialized();
    GivenTheIceRateTriggerSignalIsActivated();
@@ -125,7 +130,7 @@ TEST(IceRateHandler, FreezerSetpointIceMakerVoteShouldBeSetToParametricSetpointI
    ThenTheFreezerSetpointIceMakerVoteShouldBe(250, Vote_Care);
 }
 
-TEST(IceRateHandler, FreezerEvapFanSpeedIceMakerVoteShouldBeFanSpeedMediumIfResolvedVoteIsLessThanFanSpeedMedium)
+TEST(FreezerIceRateHandler, FreezerEvapFanSpeedIceMakerVoteShouldBeFanSpeedMediumIfResolvedVoteIsLessThanFanSpeedMedium)
 {
    GivenTheModuleIsInitialized();
    GivenTheIceRateTriggerSignalIsActivated();
@@ -135,7 +140,7 @@ TEST(IceRateHandler, FreezerEvapFanSpeedIceMakerVoteShouldBeFanSpeedMediumIfReso
    ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(FanSpeed_Medium, Vote_Care);
 }
 
-TEST(IceRateHandler, ShouldUnsubscribeToErdsAfterTimerExpired)
+TEST(FreezerIceRateHandler, ShouldUnsubscribeToErdsAfterTimerExpired)
 {
    GivenTheModuleIsInitialized();
    GivenTheIceRateTriggerSignalIsActivated();
