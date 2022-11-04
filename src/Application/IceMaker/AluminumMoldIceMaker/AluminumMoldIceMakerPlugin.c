@@ -8,7 +8,7 @@
 #include "SystemErds.h"
 #include "AluminumMoldIceMakerPlugin.h"
 
-IceRateHandlerConfig_t iceRateHandlerConfig = {
+static const IceRateHandlerConfig_t iceRateHandlerConfig = {
    .iceRateTriggerSignal = Erd_IceRateTriggerSignal,
    .freezerSetpointUserVote = Erd_FreezerSetpoint_UserVote,
    .freezerSetpointIceRateVote = Erd_FreezerSetpoint_IceRateVote,
@@ -23,9 +23,18 @@ static const SoftPwmConfiguration_t softPwmConfig = {
    .frequencyX100 = 10
 };
 
+static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
+   .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState
+};
+
 void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
 {
    FillTubeHeaterVotingFrameworkPlugin_Init(&instance->_private.fillTubeHeaterVotingFrameworkPlugin, dataModel);
    IceRateHandler_Init(&instance->_private.iceRatehandler, dataModel, &iceRateHandlerConfig);
    SoftPwm_Init(&instance->_private.fillTubeHeaterSoftPwm, dataModel, &softPwmConfig);
+
+   AluminumMoldIceMaker_Init(
+      &instance->_private.aluminumMoldIceMaker,
+      dataModel,
+      &aluminumMoldIceMakerConfig);
 }

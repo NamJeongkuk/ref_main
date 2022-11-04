@@ -12,6 +12,7 @@
 #include "FillTubeHeaterVotingFrameworkPlugin.h"
 #include "IceRateHandler.h"
 #include "SoftPwm.h"
+#include "AluminumMoldIceMaker.h"
 
 typedef struct
 {
@@ -20,6 +21,7 @@ typedef struct
       FillTubeHeaterVotingFrameworkPlugin_t fillTubeHeaterVotingFrameworkPlugin;
       IceRateHandler_t iceRatehandler;
       SoftPwm_t fillTubeHeaterSoftPwm;
+      AluminumMoldIceMaker_t aluminumMoldIceMaker;
    } _private;
 } AluminumMoldIceMakerPlugin_t;
 

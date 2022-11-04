@@ -1118,81 +1118,93 @@
       "title": "Shift offset",
       "erds": [
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Post Dwell Completion Signal",
           "name": "Erd_PostDwellCompletionSignal",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Long Term Average",
           "name": "Erd_FreshFood_LongTermAverageInDegFx100",
           "read": true,
           "write": false
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Long Term Average",
           "name": "Erd_Freezer_LongTermAverageInDegFx100",
           "read": true,
           "write": false
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Convertible Compartment Long Term Average",
           "name": "Erd_ConvertibleCompartment_LongTermAverageInDegFx100",
           "read": true,
           "write": false
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Ice Box Long Term Average",
           "name": "Erd_IceBox_LongTermAverageInDegFx100",
           "read": true,
           "write": false
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Deli Pan Long Term Average",
           "name": "Erd_DeliPan_LongTermAverageInDegFx100",
           "read": true,
           "write": false
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Reset Thermal Shift Offset Signal",
           "name": "Erd_FreshFood_ResetThermalShiftOffsetSignal",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Freezer Reset Thermal Shift Offset Signal",
           "name": "Erd_Freezer_ResetThermalShiftOffsetSignal",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Convertible Compartment Reset Thermal Shift Offset Signal",
           "name": "Erd_ConvertibleCompartment_ResetThermalShiftOffsetSignal",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Ice Box Reset Thermal Shift Offset Signal",
           "name": "Erd_IceBox_ResetThermalShiftOffsetSignal",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rx130",
+          "namespace": "rockhopper",
           "displayName": "Deli Pan Reset Thermal Shift Offset Signal",
           "name": "Erd_DeliPan_ResetThermalShiftOffsetSignal",
           "read": true,
           "write": true
+        }
+      ]
+    },
+    {
+      "title": "Aluminum mold ice maker",
+      "erds": [
+        {
+          "namespace": "rockhopper",
+          "displayName": "Aluminum mold ice maker hsm state",
+          "name": "Erd_AluminumMoldIceMakerHsmState",
+          "read": true,
+          "write": false
         }
       ]
     }

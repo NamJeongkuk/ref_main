@@ -62,6 +62,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/Fan \
    $(TESTS_DIR)/Application/Grid \
    $(TESTS_DIR)/Application/IceMaker \
+   $(TESTS_DIR)/Application/IceMaker/AluminumMoldIceMaker \
    $(TESTS_DIR)/Application/Sabbath \
    $(TESTS_DIR)/Application/ParametricData \
    $(TESTS_DIR)/Application/Sensor \
