@@ -8,16 +8,19 @@
 #ifndef DEFROSTREQUEST_H
 #define DEFROSTREQUEST_H
 
+#include "Signal.h"
+
 enum
 {
-   DefrostRequest_Idle,
-   DefrostRequest_Disable,
-   DefrostRequest_Enable,
-   DefrostRequest_ForceFreshFoodPrechill,
-   DefrostRequest_ForceFreshFoodAndFreezerPrechill,
-   DefrostRequest_AhamSetUpForFreshFoodPrechill,
-   DefrostRequest_AhamSetUpForFreshFoodAndFreezerPrechill
+   DefrostEnableRequest_Disable,
+   DefrostEnableRequest_Enable,
 };
-typedef uint8_t DefrostRequest_t;
+typedef uint8_t DefrostEnableRequest_t;
+
+typedef struct
+{
+   DefrostEnableRequest_t request;
+   Signal_t requestId;
+} DefrostRequest_t;
 
 #endif

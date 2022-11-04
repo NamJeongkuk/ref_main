@@ -15,6 +15,9 @@
 static const DefrostConfiguration_t defrostConfig = {
    .defrostHsmStateErd = Erd_DefrostHsmState,
    .defrostStateErd = Erd_DefrostState,
+   .waitingForDefrostErd = Erd_WaitingToDefrost,
+   .defrostingErd = Erd_Defrosting,
+   .defrostRequestErd = Erd_DefrostRequest,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,

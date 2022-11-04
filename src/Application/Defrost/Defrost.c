@@ -22,6 +22,7 @@
 #include "Signal.h"
 #include "uassert.h"
 #include "Vote.h"
+#include "DefrostRequest.h"
 
 enum
 {
@@ -35,6 +36,7 @@ enum
    Signal_FreezerEvaporatorTemperatureReachedHeaterOnTerminationTemperature,
    Signal_FreezerHeaterMaxOnTimeReached,
    Signal_FreezerAbnormalHeaterOnTimeReached,
+   Signal_DisableDefrost
 };
 
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -45,16 +47,22 @@ static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data
 static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_PostDwell(Hsm_t *hsm, HsmSignal_t signal, const void *data);
+static bool State_WaitingToDefrost(Hsm_t *hsm, HsmSignal_t signal, const void *data);
+static bool State_Defrosting(Hsm_t *hsm, HsmSignal_t signal, const void *data);
+static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 
 static const HsmStateHierarchyDescriptor_t stateList[] = {
-   { State_Idle, HSM_NO_PARENT },
-   { State_PrechillParent, HSM_NO_PARENT },
+   { State_WaitingToDefrost, HSM_NO_PARENT },
+   { State_Defrosting, HSM_NO_PARENT },
+   { State_Idle, State_WaitingToDefrost },
+   { State_PrechillParent, State_Defrosting },
    { State_PrechillPrep, State_PrechillParent },
    { State_Prechill, State_PrechillParent },
-   { State_HeaterOnEntry, HSM_NO_PARENT },
-   { State_HeaterOn, HSM_NO_PARENT },
-   { State_Dwell, HSM_NO_PARENT },
-   { State_PostDwell, HSM_NO_PARENT }
+   { State_HeaterOnEntry, State_Defrosting },
+   { State_HeaterOn, State_Defrosting },
+   { State_Dwell, State_Defrosting },
+   { State_PostDwell, State_WaitingToDefrost },
+   { State_Disabled, HSM_NO_PARENT }
 };
 
 static const HsmConfiguration_t hsmConfiguration = {
@@ -175,6 +183,15 @@ static void DataModelChanged(void *context, const void *args)
          instance->_private.defrostParametricData->freezerHeaterOnTimeToSetAbnormalDefrostInMinutes)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerAbnormalHeaterOnTimeReached, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->defrostRequestErd)
+   {
+      const DefrostRequest_t *request = onChangeData->data;
+
+      if(request->request == DefrostEnableRequest_Disable)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_DisableDefrost, NULL);
       }
    }
 }
@@ -678,6 +695,22 @@ static HsmState_t InitialState(Defrost_t *instance)
    return initialState;
 }
 
+static void SetWaitingToDefrostTo(Defrost_t *instance, bool state)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->waitingForDefrostErd,
+      &state);
+}
+
+static void SetDefrostingTo(Defrost_t *instance, bool state)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->defrostingErd,
+      &state);
+}
+
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
@@ -704,6 +737,33 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          {
             Hsm_Transition(hsm, State_PrechillPrep);
          }
+         break;
+
+      case Hsm_Exit:
+         break;
+
+      default:
+         return HsmSignalDeferred;
+   }
+
+   return HsmSignalConsumed;
+}
+
+static bool State_Defrosting(Hsm_t *hsm, HsmSignal_t signal, const void *data)
+{
+   Defrost_t *instance = InstanceFromHsm(hsm);
+   IGNORE(data);
+   IGNORE(instance);
+
+   switch(signal)
+   {
+      case Hsm_Entry:
+         SetWaitingToDefrostTo(instance, false);
+         SetDefrostingTo(instance, true);
+         break;
+
+      case Signal_DisableDefrost:
+         Hsm_Transition(hsm, State_Disabled);
          break;
 
       case Hsm_Exit:
@@ -927,6 +987,32 @@ static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    return HsmSignalConsumed;
 }
 
+static bool State_WaitingToDefrost(Hsm_t *hsm, HsmSignal_t signal, const void *data)
+{
+   Defrost_t *instance = InstanceFromHsm(hsm);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Hsm_Entry:
+         SetWaitingToDefrostTo(instance, true);
+         SetDefrostingTo(instance, false);
+         break;
+
+      case Signal_DisableDefrost:
+         Hsm_Transition(hsm, State_Disabled);
+         break;
+
+      case Hsm_Exit:
+         break;
+
+      default:
+         return HsmSignalDeferred;
+   }
+
+   return HsmSignalConsumed;
+}
+
 static bool State_PostDwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
@@ -950,6 +1036,30 @@ static bool State_PostDwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Hsm_Exit:
          VoteDontCareForPostDwellLoads(instance);
          StopTimer(instance, &instance->_private.defrostTimer);
+         break;
+
+      default:
+         return HsmSignalDeferred;
+   }
+
+   return HsmSignalConsumed;
+}
+
+static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
+{
+   Defrost_t *instance = InstanceFromHsm(hsm);
+   IGNORE(data);
+   IGNORE(instance);
+
+   switch(signal)
+   {
+      case Hsm_Entry:
+         SetHsmStateTo(instance, DefrostHsmState_Disabled);
+         SetWaitingToDefrostTo(instance, false);
+         SetDefrostingTo(instance, false);
+         break;
+
+      case Hsm_Exit:
          break;
 
       default:

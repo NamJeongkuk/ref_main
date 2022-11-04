@@ -249,7 +249,21 @@
           "displayName": "Defrost HSM State",
           "name": "Erd_DefrostHsmState",
           "read": true,
-          "write": true
+          "write": false
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Waiting To Defrost",
+          "name": "Erd_WaitingToDefrost",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Defrosting",
+          "name": "Erd_Defrosting",
+          "read": true,
+          "write": false
         },
         {
           "namespace": "rockhopper",

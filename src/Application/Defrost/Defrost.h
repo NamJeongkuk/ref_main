@@ -20,6 +20,9 @@ typedef struct
 {
    Erd_t defrostHsmStateErd; // DefrostHsmState_t
    Erd_t defrostStateErd; // DefrostState_t
+   Erd_t waitingForDefrostErd; // bool
+   Erd_t defrostingErd; // bool
+   Erd_t defrostRequestErd; // DefrostRequest_t
    Erd_t freezerDefrostWasAbnormalErd; // bool
    Erd_t freshFoodDefrostWasAbnormalErd; // bool
    Erd_t convertibleCompartmentDefrostWasAbnormalErd; // bool

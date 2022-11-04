@@ -49,6 +49,9 @@ enum
 static const DefrostConfiguration_t defrostConfig = {
    .defrostHsmStateErd = Erd_DefrostHsmState,
    .defrostStateErd = Erd_DefrostState,
+   .waitingForDefrostErd = Erd_WaitingToDefrost,
+   .defrostingErd = Erd_Defrosting,
+   .defrostRequestErd = Erd_DefrostRequest,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
@@ -496,6 +499,52 @@ TEST_GROUP(Defrost_SingleEvap)
       DataModel_Read(dataModel, Erd_FreezerDefrostWasAbnormal, &actual);
 
       CHECK_EQUAL(expected, actual);
+   }
+
+   void WaitingToDefrostIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_WaitingToDefrost, &state);
+   }
+
+   void WaitingToDefrostShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_WaitingToDefrost, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void DefrostingIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_Defrosting, &state);
+   }
+
+   void DefrostingShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_Defrosting, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void DefrostRequestIsEnable()
+   {
+      DefrostRequest_t request;
+      DataModel_Read(dataModel, Erd_DefrostRequest, &request);
+      request.request = DefrostEnableRequest_Enable;
+      request.requestId++;
+
+      DataModel_Write(dataModel, Erd_DefrostRequest, &request);
+   }
+
+   void DefrostRequestIsDisable()
+   {
+      DefrostRequest_t request;
+      DataModel_Read(dataModel, Erd_DefrostRequest, &request);
+      request.request = DefrostEnableRequest_Disable;
+      request.requestId++;
+
+      DataModel_Write(dataModel, Erd_DefrostRequest, &request);
    }
 };
 
@@ -1102,6 +1151,130 @@ TEST(Defrost_SingleEvap, ShouldNotCareAboutFreezerDefrostHeaterCompressorAndDamp
    DamperVoteShouldBeDontCare();
    FanSpeedVotesShouldBeDontCare();
    DisableMinimumCompressorTimesShouldBe(false);
+}
+
+TEST(Defrost_SingleEvap, ShouldWriteTrueToWaitingToDefrostErdWhenEnteringIdleOnInit)
+{
+   Given WaitingToDefrostIs(false);
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   WaitingToDefrostShouldBe(true);
+}
+
+TEST(Defrost_SingleEvap, ShouldWriteTrueToWaitingToDefrostErdWhenEnteringPostDwellOnInit)
+{
+   Given WaitingToDefrostIs(false);
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
+
+   WaitingToDefrostShouldBe(true);
+}
+
+TEST(Defrost_SingleEvap, ShouldWriteTrueToWaitingToDefrostErdWhenEnteringPostDwellFromDwell)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
+   WaitingToDefrostShouldBe(false);
+
+   After(defrostData->dwellTimeInMinutes * MSEC_PER_MIN - 1);
+   DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
+
+   After(1);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
+   WaitingToDefrostIs(true);
+}
+
+TEST(Defrost_SingleEvap, ShouldWriteFalseToDefrostingErdWhenEnteringIdleOnInit)
+{
+   Given DefrostingIs(true);
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   DefrostingShouldBe(false);
+}
+
+TEST(Defrost_SingleEvap, ShouldWriteFalseToDefrostingErdWhenEnteringPostDwellOnInit)
+{
+   Given DefrostingIs(true);
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
+
+   DefrostingShouldBe(false);
+}
+
+TEST(Defrost_SingleEvap, ShouldWriteTrueToDefrostingErdWhenEnteringDwellOnInit)
+{
+   Given DefrostingIs(false);
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
+
+   DefrostingShouldBe(true);
+}
+
+TEST(Defrost_SingleEvap, ShouldWriteTrueToDefrostingErdWhenEnteringHeaterOnEntryOnInit)
+{
+   Given DefrostingIs(false);
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
+
+   DefrostingShouldBe(true);
+}
+
+TEST(Defrost_SingleEvap, ShouldWriteFalseToDefrostingErdWhenEnteringPostDwellFromDwell)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
+   DefrostingShouldBe(true);
+
+   After(defrostData->dwellTimeInMinutes * MSEC_PER_MIN - 1);
+   DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
+
+   After(1);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
+   DefrostingShouldBe(false);
+}
+
+TEST(Defrost_SingleEvap, ShouldWriteFalseToWaitingToDefrostErdWhenEnteringPrechillPrepFromIdle)
+{
+   Given LastFreshFoodDefrostWasNormal();
+   And LastFreezerDefrostWasNormal();
+   And LastConvertibleCompartmentDefrostWasNormal();
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   And FreezerEvaporatorThermistorValidityIs(Valid);
+   And FreshFoodThermistorValidityIs(Valid);
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   WaitingToDefrostShouldBe(true);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+   WaitingToDefrostShouldBe(false);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionFromWaitingToDefrostStateToDisabledWhenDisableIsRequested)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   When DefrostRequestIsDisable();
+   DefrostHsmStateShouldBe(DefrostHsmState_Disabled);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionFromDefrostingStateToDisabledWhenDisableIsRequested)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
+
+   When DefrostRequestIsDisable();
+   DefrostHsmStateShouldBe(DefrostHsmState_Disabled);
+}
+
+TEST(Defrost_SingleEvap, ShouldWriteFalseToWaitingToDefrostErdWhenEnteringDisabled)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   WaitingToDefrostShouldBe(true);
+
+   When DefrostRequestIsDisable();
+   WaitingToDefrostShouldBe(false);
+}
+
+TEST(Defrost_SingleEvap, ShouldWriteFalseToDefrostingErdWhenEnteringDisabled)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
+   DefrostingShouldBe(true);
+
+   When DefrostRequestIsDisable();
+   DefrostingShouldBe(false);
 }
 
 TEST_GROUP(Defrost_DualEvap)
