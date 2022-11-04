@@ -156,11 +156,11 @@ I_BufferedUart_t *BufferedUart_Channel9_Init(void)
    SYSTEM.PRCR.WORD = 0xA500;
    // Disable UART in/out while we fiddle with it, set the clock to internal (CKE=0)
    SCI9.SCR.BYTE = 0;
-   // Setup port PA3 (rx) and PA4 (tx) for use by UART
-   PORTA.PMR.BIT.B3 = 1;
-   PORTA.PMR.BIT.B4 = 1;
-   PORTA.PDR.BIT.B4 = 1;
-   PORTA.PODR.BIT.B4 = 1;
+   // Setup port PB6 (rx) and PB7 (tx) for use by UART
+   PORTB.PMR.BIT.B6 = 1;
+   PORTB.PMR.BIT.B7 = 1;
+   PORTB.PDR.BIT.B7 = 1;
+   PORTB.PODR.BIT.B7 = 1;
    // Setup the mode register data format
    // Bit - Setting : Comment
    // 0:1 -     00  : Clock Select PCLK (n=0)
@@ -218,9 +218,9 @@ I_BufferedUart_t *BufferedUart_Channel9_Init(void)
    MPC.PWPR.BIT.B0WI = 0;
    MPC.PWPR.BIT.PFSWE = 1;
 
-   // Assign PA3 and PA4 to function as RXD5 and TXD5...
-   MPC.PA3PFS.BYTE = 0x0A;
-   MPC.PA4PFS.BYTE = 0x0A;
+   // Assign PB6 and PB7 to function as RXD9 and TXD9...
+   MPC.PB6PFS.BYTE = 0x0A;
+   MPC.PB7PFS.BYTE = 0x0A;
 
    // Disable writing to the Multi-Function-Pin-Controller
    MPC.PWPR.BIT.PFSWE = 0;

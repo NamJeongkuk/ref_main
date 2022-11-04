@@ -23,6 +23,7 @@
 #include "BufferedUart_Channel6.h"
 #include "BufferedUart_Channel9.h"
 #include "SystemClock.h"
+#include "Dtc.h"
 
 void Hardware_InitializeStage1(void)
 {
@@ -39,6 +40,8 @@ void Hardware_InitializeStage2(I_DataModel_t *dataModel)
    I_Uart_t *externalUart = Uart_Channel0_GetInstance(U32_PCLKB);
    DataModelErdPointerAccess_Write(dataModel, Erd_ExternalUart, externalUart);
 #else
+   Dtc_Init();
+
    I_BufferedUart_t *wifiBufferedUart = BufferedUart_Channel1_Init();
    DataModelErdPointerAccess_Write(dataModel, Erd_WifiBufferedUart, wifiBufferedUart);
 

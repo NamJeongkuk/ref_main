@@ -9,8 +9,10 @@
 #define DTC_H
 
 #include <stdint.h>
+#include "BufferedUart_Channel1.h"
 #include "BufferedUart_Channel5.h"
 #include "BufferedUart_Channel6.h"
+#include "BufferedUart_Channel9.h"
 #include "Event_Synchronous.h"
 
 // This is valid for little endian only.

@@ -14,8 +14,6 @@
 #include "Dtc.h"
 #include "InterruptPriorityLevel.h"
 
-#ifndef OLD_HW
-
 // Set the DTC Receive Buffer Size: (230400 bits/sec) / 10 bits / 1000 msec = 23.04 bytes/msec ~= 25 bytes/msec
 // The buffer is serviced every msec, so double this number for safety: 25 * 2 = 50 bytes
 #define DTC_RECEIVE_BUFFER_SIZE_BYTES (50)
@@ -24,6 +22,8 @@
 
 volatile struct st_dtc_full uart6Receive __attribute__((section(".dtcTransferInformation")));
 volatile struct st_dtc_full uart6Transmit __attribute__((section(".dtcTransferInformation")));
+
+#ifndef OLD_HW
 
 typedef struct
 {
@@ -161,11 +161,11 @@ I_BufferedUart_t *BufferedUart_Channel6_Init(void)
    SYSTEM.PRCR.WORD = 0xA500;
    // Disable UART in/out while we fiddle with it, set the clock to internal (CKE=0)
    SCI6.SCR.BYTE = 0;
-   // Setup port PB0 (rx) and PB1 (tx) for use by UART
-   PORTB.PMR.BIT.B0 = 1;
-   PORTB.PMR.BIT.B1 = 1;
-   PORTB.PDR.BIT.B1 = 1;
-   PORTB.PODR.BIT.B1 = 1;
+   // Setup port PD1 (rx) and PD0 (tx) for use by UART
+   PORTD.PMR.BIT.B1 = 1;
+   PORTD.PMR.BIT.B0 = 1;
+   PORTD.PDR.BIT.B0 = 1;
+   PORTD.PODR.BIT.B0 = 1;
    // Setup the mode register data format
    // Bit - Setting : Comment
    // 0:1 -     00  : Clock Select PCLK (n=0)
@@ -212,7 +212,7 @@ I_BufferedUart_t *BufferedUart_Channel6_Init(void)
 
    // Set up interrupts in the Interrupt-Control-Unit
    // There is only one priority register per SCI port
-   ICU.IPR[IPR_SCI6_RXI6].BIT.IPR = E_IRQ_PRIORITY_13;
+   ICU.IPR[IPR_SCI6_RXI6].BIT.IPR = E_IRQ_PRIORITY_14;
    // But there are 4 separate interrupt enable bits
    ICU.IER[IER_SCI6_RXI6].BIT.IEN_SCI6_RXI6 = 1;
    ICU.IER[IER_SCI6_TXI6].BIT.IEN_SCI6_TXI6 = 1;
@@ -223,9 +223,9 @@ I_BufferedUart_t *BufferedUart_Channel6_Init(void)
    MPC.PWPR.BIT.B0WI = 0;
    MPC.PWPR.BIT.PFSWE = 1;
 
-   // Assign PB0 and PB1 to function as RXD6 and TXD6...
-   MPC.PB0PFS.BYTE = 0x0B;
-   MPC.PB1PFS.BYTE = 0x0B;
+   // Assign PD0 and PD1 to function as RXD6 and TXD6...
+   MPC.PD0PFS.BYTE = 0x0B;
+   MPC.PD1PFS.BYTE = 0x0B;
 
    // Disable writing to the Multi-Function-Pin-Controller
    MPC.PWPR.BIT.PFSWE = 0;
