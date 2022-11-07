@@ -63,7 +63,7 @@ describe("SetpointZone", () => {
       await theSetpointZoneFor().FreshFoodCompartmentShouldBe("SetpointZone_Cold");
    });
 
-   it("should set setpoint zone for convertible compartment", async () => {
+   xit("should set setpoint zone for convertible compartment", async () => {
       await providedTheVotedTemperatureOfThe().ConvertibleCompartmentCompartmentIs(500, true);
       await theSetpointZoneFor().ConvertibleCompartmentCompartmentShouldBe("SetpointZone_Warm");
 

@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "UserSetpointPlugin.h"
+#include "SideBySideUserSetpointPlugin.h"
 #include "PersonalityParametricData.h"
 #include "SystemErds.h"
 
@@ -37,8 +37,8 @@ static void WriteSetpointRangeDataToErds(I_DataModel_t *dataModel)
       personalityData->setpointData->userSetpointData->freezerUserSetpoint);
 }
 
-void UserSetpointPlugin_Init(
-   UserSetpointPlugin_t *instance,
+void SideBySideUserSetpointPlugin_Init(
+   SideBySideUserSetpointPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
    WriteSetpointRangeDataToErds(dataModel);

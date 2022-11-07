@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef USERSETPOINTPLUGIN_H
-#define USERSETPOINTPLUGIN_H
+#ifndef SIDEBYSIDEUSERSETPOINTPLUGIN_H
+#define SIDEBYSIDEUSERSETPOINTPLUGIN_H
 
 #include "I_DataModel.h"
 #include "UserSetpointRequestHandler.h"
@@ -18,14 +18,14 @@ typedef struct
       UserSetpointRequestHandler_t freshFoodHandler;
       UserSetpointRequestHandler_t freezerHandler;
    } _private;
-} UserSetpointPlugin_t;
+} SideBySideUserSetpointPlugin_t;
 
 /*!
  * @param instance
  * @param dataModel
  */
-void UserSetpointPlugin_Init(
-   UserSetpointPlugin_t *instance,
+void SideBySideUserSetpointPlugin_Init(
+   SideBySideUserSetpointPlugin_t *instance,
    I_DataModel_t *dataModel);
 
 #endif

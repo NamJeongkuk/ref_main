@@ -14,7 +14,6 @@
 #include "EepromAppPlugin.h"
 #include "FaultWrapperPlugin.h"
 #include "OverrideArbiterPlugin.h"
-#include "SetpointResolverPlugin.h"
 
 enum
 {
@@ -51,22 +50,17 @@ void Application_Init(
       Erd_PersonalityParametricData,
       Erd_PersonalityIdOutOfRangeFlag);
 
-   AdjustedSetpointPlugin_Init(&instance->_private.adjustedSetpointPlugin, dataModel);
    ShiftOffsetCalculatorCommonPlugin_Init(&instance->_private.shiftOffsetCalculatorCommonPlugin, dataModel);
    OverrideArbiterPlugin_Init(dataModel);
 
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
    EepromAppPlugin_Init(dataModel);
    SabbathPlugin_Init(dataModel);
-   SetpointResolverPlugin_Init(dataModel);
-   SetpointZonePlugin_Init(&instance->_private.setpointZonePlugin, dataModel);
-   ConvertibleCompartmentStatePlugin_Init(&instance->_private.convertibleCompartmentStatePlugin, dataModel);
-   DoorPlugin_Init(dataModel);
    PeriodicNvUpdaterPlugin_Init(&instance->_private.periodicNvUpdaterPlugin, dataModel);
-   FaultWrapperPlugin_Init(dataModel);
 
    SideBySideConfigurationPlugin_Init(&instance->_private.platformConfigurations.sideBySidePlugin, dataModel);
-   UserSetpointPlugin_Init(&instance->_private.userSetpointPlugin, dataModel);
+   DoorPlugin_Init(dataModel);
+   FaultWrapperPlugin_Init(dataModel);
 
    TimerModule_t *timerModule = DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule);
    TimerModuleDiagnostics_Init(

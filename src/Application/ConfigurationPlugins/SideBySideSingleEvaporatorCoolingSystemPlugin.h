@@ -14,8 +14,8 @@
 #include "CompressorPlugin.h"
 #include "DefrostPlugin.h"
 #include "FreshFoodDamperPlugin.h"
-#include "FreshFoodShiftOffsetCalculatorPlugin.h"
-#include "FreezerShiftOffsetCalculatorPlugin.h"
+#include "SideBySideSetpointPlugin.h"
+#include "ConvertibleCompartmentStatePlugin.h"
 #include "SideBySideSingleEvaporatorCoolingSystemSensorFilteringPlugin.h"
 #include "SideBySideFanPlugin.h"
 
@@ -29,8 +29,8 @@ typedef struct
       CompressorPlugin_t compressorPlugin;
       DefrostPlugin_t defrostPlugin;
       FreshFoodDamperPlugin_t freshFoodDamperPlugin;
-      FreshFoodShiftOffsetCalculatorPlugin_t freshFoodShiftOffsetCalculatorPlugin;
-      FreezerShiftOffsetCalculatorPlugin_t freezerShiftOffsetCalculatorPlugin;
+      SideBySideSetpointPlugin_t sideBySideSetpointPlugin;
+      ConvertibleCompartmentStatePlugin_t convertibleCompartmentStatePlugin; // remove me asap please
       SideBySideFanPlugin_t sideBySideFanPlugin;
    } _private;
 } SideBySideSingleEvaporatorCoolingSystemPlugin_t;

@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef SETPOINTZONEPLUGIN_H
-#define SETPOINTZONEPLUGIN_H
+#ifndef SIDEBYSIDESETPOINTZONEPLUGIN_H
+#define SIDEBYSIDESETPOINTZONEPLUGIN_H
 
 #include "I_DataModel.h"
 #include "SetpointZoneResolver.h"
@@ -17,15 +17,14 @@ typedef struct
    {
       SetpointZoneResolver_t freezerSetpointZoneResolver;
       SetpointZoneResolver_t freshFoodSetpointZoneResolver;
-      SetpointZoneResolver_t convertibleCompartmentSetpointZoneResolver;
    } _private;
-} SetpointZonePlugin_t;
+} SideBySideSetpointZonePlugin_t;
 
 /*!
  * @param instance
  * @param dataModel
  */
-void SetpointZonePlugin_Init(
-   SetpointZonePlugin_t *instance,
+void SideBySideSetpointZonePlugin_Init(
+   SideBySideSetpointZonePlugin_t *instance,
    I_DataModel_t *dataModel);
 #endif
