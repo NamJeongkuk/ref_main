@@ -15,6 +15,8 @@
 
 #define U32_TARGET_BAUD_RATE ((uint32_t)19200)
 
+#ifdef OLD_HW
+
 static void Send(I_Uart_t *instance, const uint8_t byte);
 
 typedef struct
@@ -126,12 +128,15 @@ void SCI0_TEI0(void)
    Event_SingleSubscriberSynchronous_Publish(&uartData.OnErrorEvent, NULL);
 }
 
+#endif
+
 /*!
  * Initialize GEA2_UART as GEA2 port - 19200, 8,n,1 with no Tx interrupts
  * @return
  */
 I_Uart_t *Uart_Channel0_GetInstance(uint32_t clockFrequency)
 {
+#ifdef OLD_HW
    if(!uartData.interface.api)
    {
       uartData.interface.api = &Uart_Api;
@@ -213,4 +218,8 @@ I_Uart_t *Uart_Channel0_GetInstance(uint32_t clockFrequency)
    }
 
    return &uartData.interface;
+#else
+   IGNORE(clockFrequency);
+   return NULL;
+#endif
 }

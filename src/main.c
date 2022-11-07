@@ -214,7 +214,6 @@ int main(void)
       SystemData_ExternalDataSource(&systemData),
       Gea2Address_ReferMainBoard);
 #endif
-
    Application_Init(
       &application,
       dataModel,
