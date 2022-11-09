@@ -57,7 +57,7 @@ TEST_GROUP(SetpointZoneResolver)
    void TheSetpointTemperatureIs(TemperatureDegFx100_t setpointTemperature)
    {
       SetpointVotedTemperature_t votedSetpointTemperature = {
-         .temperature = setpointTemperature,
+         .temperatureInDegFx100 = setpointTemperature,
          .care = true
       };
 

@@ -70,7 +70,7 @@ static TemperatureDegFx100_t FilteredTemperature(ShiftOffsetCalculator_t *instan
    TemperatureDegFx100_t filteredTemperature;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->filteredTemperatureErd,
+      instance->_private.config->filteredTemperatureInDegFx100Erd,
       &filteredTemperature);
 
    return filteredTemperature;

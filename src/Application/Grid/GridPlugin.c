@@ -60,8 +60,8 @@ static const GridLineAdjustmentErds_t freezerGridLineAdjustmentErds = {
 
 static const GridLineCalculatorConfiguration_t gridLineCalculatorConfig = {
    .calculatedGridLineErd = Erd_Grid_CalculatedGridLines,
-   .freshFoodFilteredTempErd = Erd_FreshFood_FilteredTemperatureResolved,
-   .freezerFilteredTemperatureErd = Erd_Freezer_FilteredTemperatureResolved,
+   .freshFoodFilteredTemperatureInDegFx100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
+   .freezerFilteredTemperatureInDegFx100Erd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
    .gridLineAdjustmentErds = {
       freshFoodGridLineAdjustmentErds,
       freezerGridLineAdjustmentErds,
@@ -69,8 +69,8 @@ static const GridLineCalculatorConfiguration_t gridLineCalculatorConfig = {
 };
 
 static const GridBlockCalculatorConfiguration_t gridBlockCalculatorConfig = {
-   .freshFoodFilteredResolvedTemperature = Erd_FreshFood_FilteredTemperatureResolved,
-   .freezerFilteredResolvedTemperature = Erd_Freezer_FilteredTemperatureResolved,
+   .freshFoodFilteredResolvedTemperatureInDegFx100 = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
+   .freezerFilteredResolvedTemperatureInDegFx100 = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
    .currentGridBlockNumberErd = Erd_Grid_BlockNumber,
    .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
    .previousGridBlockNumbersErd = Erd_Grid_PreviousBlocks

@@ -69,10 +69,10 @@ static void FreezerSetpointUserVoteChange(FreezerIceRateHandler_t *instance)
       instance->_private.config->freezerSetpointUserVote,
       &freezerSetpointVote);
 
-   if(freezerSetpointVote.temperature > instance->_private.freezerIceRateData->freezerSetpointInDegFx100)
+   if(freezerSetpointVote.temperatureInDegFx100 > instance->_private.freezerIceRateData->freezerSetpointInDegFx100)
    {
       SetpointVotedTemperature_t adjustedFreezerSetpointVote = {
-         .temperature = instance->_private.freezerIceRateData->freezerSetpointInDegFx100,
+         .temperatureInDegFx100 = instance->_private.freezerIceRateData->freezerSetpointInDegFx100,
          .care = true
       };
 

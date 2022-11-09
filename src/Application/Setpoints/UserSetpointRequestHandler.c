@@ -28,7 +28,7 @@ static void ResetUserSetpointRequest(UserSetpointRequestHandler_t *instance)
 static void VoteUserSetpoint(UserSetpointRequestHandler_t *instance, const Setpoint_t *setpointStatus)
 {
    SetpointVotedTemperature_t votedSetpoint = {
-      .temperature = (TemperatureDegFx100_t)*setpointStatus * ScalingFactorDegFx100,
+      .temperatureInDegFx100 = (TemperatureDegFx100_t)*setpointStatus * ScalingFactorDegFx100,
       .care = true
    };
 

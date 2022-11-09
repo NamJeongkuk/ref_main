@@ -9,7 +9,7 @@
 #include "SystemErds.h"
 
 static const ShiftOffsetCalculatorConfig_t freezerShiftOffsetCalculatorConfig = {
-   .filteredTemperatureErd = Erd_Freezer_FilteredTemperatureResolved,
+   .filteredTemperatureInDegFx100Erd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
    .adjustedSetpointErd = Erd_Freezer_AdjustedSetpointInDegFx100,
    .shiftOffsetErd = Erd_Freezer_ThermalShiftInDegFx100,
    .timerModuleErd = Erd_TimerModule,

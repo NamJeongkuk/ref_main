@@ -69,7 +69,7 @@ TEST_GROUP(ConvertibleCompartmentState)
    {
       SetpointVotedTemperature_t convertibleCompartmentVotedTemp;
       convertibleCompartmentVotedTemp.care = true;
-      convertibleCompartmentVotedTemp.temperature = temperature;
+      convertibleCompartmentVotedTemp.temperatureInDegFx100 = temperature;
       DataModel_Write(dataModel, Erd_ConvertibleCompartmentSetpoint_ResolvedVote, &convertibleCompartmentVotedTemp);
    }
 };

@@ -69,7 +69,7 @@ TEST_GROUP(FreezerFilteredTemperatureTooWarmOnPowerUp)
 
    void FilteredFreezerCabinetTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolved, &temperature);
+      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolvedInDegFx100, &temperature);
    }
 
    void FreezerFilteredTemperatureTooWarmOnPowerUpIs(bool state)

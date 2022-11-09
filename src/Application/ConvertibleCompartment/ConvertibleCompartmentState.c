@@ -30,14 +30,14 @@ static void ConvertibleCompartmentSetpointChangedCallback(void *context, const v
    REINTERPRET(instance, context, ConvertibleCompartmentState_t *);
    REINTERPRET(convertibleCompartmentSetpoint, args, const SetpointVotedTemperature_t *);
 
-   ChangeConvertibleCompartmentStateUsingSetpoint(instance, convertibleCompartmentSetpoint->temperature);
+   ChangeConvertibleCompartmentStateUsingSetpoint(instance, convertibleCompartmentSetpoint->temperatureInDegFx100);
 }
 
 static void InitConvertibleCompartmentState(ConvertibleCompartmentState_t *instance)
 {
    SetpointVotedTemperature_t convertibleCompartmentSetpoint;
    DataModel_Read(instance->_private.dataModel, instance->_private.config->convertibleCompartmentResolvedSetpointErd, &convertibleCompartmentSetpoint);
-   ChangeConvertibleCompartmentStateUsingSetpoint(instance, convertibleCompartmentSetpoint.temperature);
+   ChangeConvertibleCompartmentStateUsingSetpoint(instance, convertibleCompartmentSetpoint.temperatureInDegFx100);
 }
 
 void ConvertibleCompartmentState_Init(

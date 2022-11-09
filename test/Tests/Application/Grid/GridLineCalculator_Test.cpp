@@ -54,24 +54,24 @@ enum
    AnotherFreezerAdjustedSetpointTemperature = 18 * 2,
 };
 
-static const GridLineAdjustmentErds_t freshFoodGridLineAdjustmentErds{
+static const GridLineAdjustmentErds_t freshFoodGridLineAdjustmentErds = {
    .rawSetpointErd = Erd_FreshFoodSetpoint_ResolvedVote,
    .cabinetOffsetInDegFx100Erd = Erd_FreshFood_CabinetOffsetInDegFx100,
    .thermalShiftInDegFx100Erd = Erd_FreshFood_ThermalShiftInDegFx100,
    .adjustedSetpointInDegFx100Erd = Erd_FreshFood_AdjustedSetpointInDegFx100
 };
 
-static const GridLineAdjustmentErds_t freezerGridLineAdjustmentErds{
+static const GridLineAdjustmentErds_t freezerGridLineAdjustmentErds = {
    .rawSetpointErd = Erd_FreezerSetpoint_ResolvedVote,
    .cabinetOffsetInDegFx100Erd = Erd_Freezer_CabinetOffsetInDegFx100,
    .thermalShiftInDegFx100Erd = Erd_Freezer_ThermalShiftInDegFx100,
    .adjustedSetpointInDegFx100Erd = Erd_Freezer_AdjustedSetpointInDegFx100,
 };
 
-static const GridLineCalculatorConfiguration_t config{
+static const GridLineCalculatorConfiguration_t config = {
    .calculatedGridLineErd = Erd_Grid_CalculatedGridLines,
-   .freshFoodFilteredTempErd = Erd_FreshFood_FilteredTemperatureResolved,
-   .freezerFilteredTemperatureErd = Erd_Freezer_FilteredTemperatureResolved,
+   .freshFoodFilteredTemperatureInDegFx100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
+   .freezerFilteredTemperatureInDegFx100Erd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
    .gridLineAdjustmentErds = {
       freshFoodGridLineAdjustmentErds,
       freezerGridLineAdjustmentErds,
@@ -172,7 +172,7 @@ TEST_GROUP(GridLineCalculator)
    void FreshFoodRawSetpointIs(TemperatureDegFx100_t rawSetpoint)
    {
       SetpointVotedTemperature_t temp = {
-         .temperature = rawSetpoint,
+         .temperatureInDegFx100 = rawSetpoint,
          .care = true
       };
 
@@ -184,7 +184,7 @@ TEST_GROUP(GridLineCalculator)
    void FreezerRawSetpointIs(TemperatureDegFx100_t rawSetpoint)
    {
       SetpointVotedTemperature_t temp = {
-         .temperature = rawSetpoint,
+         .temperatureInDegFx100 = rawSetpoint,
          .care = true
       };
 

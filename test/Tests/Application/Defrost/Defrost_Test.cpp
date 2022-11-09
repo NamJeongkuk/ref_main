@@ -69,9 +69,9 @@ static const DefrostConfiguration_t defrostConfig = {
    .freezerEvapFanSpeedVoteErd = Erd_FreezerEvapFanSpeed_DefrostVote,
    .iceCabinetFanSpeedVoteErd = Erd_IceCabinetFanSpeed_DefrostVote,
    .freshFoodDamperPositionVoteErd = Erd_FreshFoodDamperPosition_DefrostVote,
-   .freezerEvaporatorFilteredTemperatureResolvedErd = Erd_FreezerEvap_FilteredTemperatureResolved,
-   .freezerFilteredTemperatureResolvedErd = Erd_Freezer_FilteredTemperatureResolved,
-   .freshFoodFilteredTemperatureResolvedErd = Erd_FreshFood_FilteredTemperatureResolved,
+   .freezerEvaporatorFilteredTemperatureResolvedInDegFx100Erd = Erd_FreezerEvap_FilteredTemperatureResolvedInDegFx100,
+   .freezerFilteredTemperatureResolvedInDegFx100Erd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
+   .freshFoodFilteredTemperatureResolvedInDegFx100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    .freezerDefrostHeaterVoteErd = Erd_FreezerDefrostHeater_DefrostVote,
    .freezerDefrostCycleCountErd = Erd_FreezerDefrostCycleCount,
    .freezerAbnormalDefrostCycleCountErd = Erd_FreezerAbnormalDefrostCycleCount,
@@ -151,17 +151,17 @@ TEST_GROUP(Defrost_SingleEvap)
 
    void FilteredFreezerCabinetTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolved, &temperature);
+      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolvedInDegFx100, &temperature);
    }
 
    void FilteredFreshFoodCabinetTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperatureResolved, &temperature);
+      DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperatureResolvedInDegFx100, &temperature);
    }
 
    void FilteredFreezerEvapTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_FreezerEvap_FilteredTemperatureResolved, &temperature);
+      DataModel_Write(dataModel, Erd_FreezerEvap_FilteredTemperatureResolvedInDegFx100, &temperature);
    }
 
    void DefrostStateIs(DefrostState_t state)

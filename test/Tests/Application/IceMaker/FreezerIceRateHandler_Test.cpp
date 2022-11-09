@@ -61,7 +61,7 @@ TEST_GROUP(FreezerIceRateHandler)
    void GivenTheFreezerSetpointUserVoteIs(TemperatureDegFx100_t temperature, bool care)
    {
       SetpointVotedTemperature_t setpointVotedTemperature = {
-         .temperature = temperature,
+         .temperatureInDegFx100 = temperature,
          .care = care,
       };
 
@@ -91,7 +91,7 @@ TEST_GROUP(FreezerIceRateHandler)
       SetpointVotedTemperature_t actual;
       DataModel_Read(dataModel, Erd_FreezerSetpoint_FreezerIceRateVote, &actual);
 
-      CHECK_EQUAL(temperature, actual.temperature);
+      CHECK_EQUAL(temperature, actual.temperatureInDegFx100);
       CHECK_EQUAL(care, actual.care);
    }
 

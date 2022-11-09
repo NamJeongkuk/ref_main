@@ -9,7 +9,7 @@
 #include "SystemErds.h"
 
 static const ShiftOffsetCalculatorConfig_t freshFoodShiftOffsetCalculatorConfig = {
-   .filteredTemperatureErd = Erd_FreshFood_FilteredTemperatureResolved,
+   .filteredTemperatureInDegFx100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    .adjustedSetpointErd = Erd_FreshFood_AdjustedSetpointInDegFx100,
    .shiftOffsetErd = Erd_FreshFood_ThermalShiftInDegFx100,
    .timerModuleErd = Erd_TimerModule,

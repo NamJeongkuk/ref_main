@@ -15,7 +15,7 @@ typedef int8_t Setpoint_t;
 
 typedef struct
 {
-   TemperatureDegFx100_t temperature;
+   TemperatureDegFx100_t temperatureInDegFx100;
    bool care;
 } SetpointVotedTemperature_t;
 

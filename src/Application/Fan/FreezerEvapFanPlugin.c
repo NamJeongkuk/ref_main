@@ -37,7 +37,7 @@ static const FanSpeedResolverConfig_t freezerEvapConfig = {
    .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedFreezerEvapFanControl,
-   .ambientTempErd = Erd_Ambient_FilteredTemperature,
+   .ambientTempErd = Erd_Ambient_FilteredTemperatureInDegFx100,
 };
 
 static const FanControllerConfig_t freezerEvapFanControllerConfig = {

@@ -46,7 +46,7 @@ static void CalculateAxisGridLines(
       {
          SetpointVotedTemperature_t rawSetpoint;
          DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).rawSetpointErd, &rawSetpoint);
-         axisToCalculate->gridLinesDegFx100[line] += rawSetpoint.temperature;
+         axisToCalculate->gridLinesDegFx100[line] += rawSetpoint.temperatureInDegFx100;
       }
       if(PARAMETRIC_GRID_LINE_BIT_MASK(axisDimension, line) & DeltaGridLines_BitMapping_OffsetBitMask)
       {
@@ -64,7 +64,7 @@ static void CalculateAxisGridLines(
       {
          SetpointVotedTemperature_t adjustedSetPoint;
          DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).adjustedSetpointInDegFx100Erd, &adjustedSetPoint);
-         axisToCalculate->gridLinesDegFx100[line] += adjustedSetPoint.temperature;
+         axisToCalculate->gridLinesDegFx100[line] += adjustedSetPoint.temperatureInDegFx100;
       }
    }
 }

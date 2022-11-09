@@ -17,7 +17,7 @@ static void SetErdIfFreezerFilteredTemperatureIsTooWarm(I_DataModel_t *dataModel
    TemperatureDegFx100_t freezerFilteredResolvedTemperatureInDegFx100;
    DataModel_Read(
       dataModel,
-      Erd_Freezer_FilteredTemperatureResolved,
+      Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
       &freezerFilteredResolvedTemperatureInDegFx100);
 
    CalculatedGridLines_t calcGridLines;

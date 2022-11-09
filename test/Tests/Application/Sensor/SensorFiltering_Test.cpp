@@ -61,16 +61,16 @@ static const DataModel_TestDoubleConfigurationEntry_t erdsEntries[] = {
 
 static const SensorFilteringConfig_t sensorConfigWithSlewRateFilterEnabled = {
    .sensorAdcCountErd = Erd_AmbientThermistor_AdcCount,
-   .sensorUnfilteredTemperatureErd = Erd_Ambient_UnfilteredTemperature,
-   .sensorFilteredTemperatureErd = Erd_Ambient_FilteredTemperature,
+   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_Ambient_UnfilteredTemperature,
+   .sensorFilteredTemperatureInDegFx100Erd = Erd_Ambient_FilteredTemperature,
    .sensorIsValidErd = Erd_Ambient_ThermistorIsValid,
    .timerModuleErd = Erd_TimerModule
 };
 
 static const SensorFilteringConfig_t sensorConfigWithSlewRateDisabled = {
    .sensorAdcCountErd = Erd_FreezerEvapThermistor_AdcCount,
-   .sensorUnfilteredTemperatureErd = Erd_FreezerEvap_UnfilteredTemperature,
-   .sensorFilteredTemperatureErd = Erd_FreezerEvap_FilteredTemperature,
+   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_FreezerEvap_UnfilteredTemperature,
+   .sensorFilteredTemperatureInDegFx100Erd = Erd_FreezerEvap_FilteredTemperature,
    .sensorIsValidErd = Erd_FreezerEvaporatorThermistorIsValid,
    .timerModuleErd = Erd_TimerModule
 };

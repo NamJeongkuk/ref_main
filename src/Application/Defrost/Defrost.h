@@ -40,9 +40,9 @@ typedef struct
    Erd_t freezerEvapFanSpeedVoteErd; // FanVotedSpeed_t
    Erd_t iceCabinetFanSpeedVoteErd; // FanVotedSpeed_t
    Erd_t freshFoodDamperPositionVoteErd; // DamperVotedPosition_t
-   Erd_t freezerEvaporatorFilteredTemperatureResolvedErd; // TemperatureDegFx100_t
-   Erd_t freezerFilteredTemperatureResolvedErd; // TemperatureDegFx100_t
-   Erd_t freshFoodFilteredTemperatureResolvedErd; // TemperatureDegFx100_t
+   Erd_t freezerEvaporatorFilteredTemperatureResolvedInDegFx100Erd; // TemperatureDegFx100_t
+   Erd_t freezerFilteredTemperatureResolvedInDegFx100Erd; // TemperatureDegFx100_t
+   Erd_t freshFoodFilteredTemperatureResolvedInDegFx100Erd; // TemperatureDegFx100_t
    Erd_t freezerDefrostHeaterVoteErd; // HeaterVotedState_t
    Erd_t freezerDefrostCycleCountErd; // uint16_t
    Erd_t freezerAbnormalDefrostCycleCountErd; // uint16_t

@@ -15,14 +15,14 @@ static const Erd_t freezerEvaporatorFilteredTemperatureOverrideRequestErdList[] 
 };
 
 static const Erd_t freezerEvaporatorFilteredTemperatureValueErdList[] = {
-   Erd_FreezerEvap_FilteredTemperature,
-   Erd_FreezerEvap_FilteredTemperatureOverrideValue
+   Erd_FreezerEvap_FilteredTemperatureInDegFx100,
+   Erd_FreezerEvap_FilteredTemperatureOverrideValueInDegFx100
 };
 
 static const OverrideArbiterConfiguration_t freezerEvaporatorFilteredTemperatureArbiterConfiguration = {
    freezerEvaporatorFilteredTemperatureOverrideRequestErdList,
    freezerEvaporatorFilteredTemperatureValueErdList,
-   Erd_FreezerEvap_FilteredTemperatureResolved,
+   Erd_FreezerEvap_FilteredTemperatureResolvedInDegFx100,
    NUM_ELEMENTS(freezerEvaporatorFilteredTemperatureOverrideRequestErdList)
 };
 
@@ -31,14 +31,14 @@ static const Erd_t freezerCabinetFilteredTemperatureOverrideRequestErdList[] = {
 };
 
 static const Erd_t freezerCabinetFilteredTemperatureValueErdList[] = {
-   Erd_Freezer_FilteredTemperature,
-   Erd_Freezer_FilteredTemperatureOverrideValue
+   Erd_Freezer_FilteredTemperatureInDegFx100,
+   Erd_Freezer_FilteredTemperatureOverrideValueInDegFx100
 };
 
 static const OverrideArbiterConfiguration_t freezerCabinetFilteredTemperatureArbiterConfiguration = {
    freezerCabinetFilteredTemperatureOverrideRequestErdList,
    freezerCabinetFilteredTemperatureValueErdList,
-   Erd_Freezer_FilteredTemperatureResolved,
+   Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
    NUM_ELEMENTS(freezerCabinetFilteredTemperatureOverrideRequestErdList)
 };
 
@@ -47,14 +47,14 @@ static const Erd_t freshFoodCabinetFilteredTemperatureOverrideRequestErdList[] =
 };
 
 static const Erd_t freshFoodCabinetFilteredTemperatureValueErdList[] = {
-   Erd_FreshFood_FilteredTemperature,
-   Erd_FreshFood_FilteredTemperatureOverrideValue
+   Erd_FreshFood_FilteredTemperatureInDegFx100,
+   Erd_FreshFood_FilteredTemperatureOverrideValueInDegFx100
 };
 
 static const OverrideArbiterConfiguration_t freshFoodCabinetFilteredTemperatureArbiterConfiguration = {
    freshFoodCabinetFilteredTemperatureOverrideRequestErdList,
    freshFoodCabinetFilteredTemperatureValueErdList,
-   Erd_FreshFood_FilteredTemperatureResolved,
+   Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    NUM_ELEMENTS(freshFoodCabinetFilteredTemperatureOverrideRequestErdList)
 };
 

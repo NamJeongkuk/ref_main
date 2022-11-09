@@ -148,8 +148,8 @@ static CalculatedGridLines_t differentCalculatedGridLines = {
 };
 
 static const GridBlockCalculatorConfiguration_t config = {
-   .freshFoodFilteredResolvedTemperature = Erd_FreshFood_FilteredTemperatureResolved,
-   .freezerFilteredResolvedTemperature = Erd_Freezer_FilteredTemperatureResolved,
+   .freshFoodFilteredResolvedTemperatureInDegFx100 = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
+   .freezerFilteredResolvedTemperatureInDegFx100 = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
    .currentGridBlockNumberErd = Erd_Grid_BlockNumber,
    .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
    .previousGridBlockNumbersErd = Erd_Grid_PreviousBlocks
@@ -194,12 +194,12 @@ TEST_GROUP(GridBlockCalculator)
 
    void FreshFoodFilteredTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperatureResolved, &temperature);
+      DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperatureResolvedInDegFx100, &temperature);
    }
 
    void FreezerFilteredTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolved, &temperature);
+      DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureResolvedInDegFx100, &temperature);
    }
 
    void CalculatedGridBlockIs(GridBlockNumber_t gridBlockNumber)

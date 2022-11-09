@@ -26,11 +26,11 @@ static void SetSetpointZone(SetpointZoneResolver_t *instance)
       instance->_private.config->setpointZoneTemperatureBoundsErd,
       &setpointBounds);
 
-   if(setpointVotedTemperature.temperature <= setpointBounds.coldSetpointBoundInDegFx100)
+   if(setpointVotedTemperature.temperatureInDegFx100 <= setpointBounds.coldSetpointBoundInDegFx100)
    {
       setpointZone = SetpointZone_Cold;
    }
-   else if(setpointVotedTemperature.temperature >= setpointBounds.warmSetpointBoundInDegFx100)
+   else if(setpointVotedTemperature.temperatureInDegFx100 >= setpointBounds.warmSetpointBoundInDegFx100)
    {
       setpointZone = SetpointZone_Warm;
    }

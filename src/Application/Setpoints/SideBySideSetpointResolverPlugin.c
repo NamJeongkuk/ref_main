@@ -11,7 +11,7 @@
 #include "Constants_Binary.h"
 
 static const SetpointVotedTemperature_t defaultData = {
-   .temperature = INT16_MAX,
+   .temperatureInDegFx100 = INT16_MAX,
    .care = false
 };
 

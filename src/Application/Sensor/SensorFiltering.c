@@ -51,7 +51,7 @@ static void UpdateSensorValues(void *context)
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->sensorUnfilteredTemperatureErd,
+      instance->_private.config->sensorUnfilteredTemperatureInDegFx100Erd,
       &unfilteredTemperature);
 
    if(!FallbackFilterHasBeenSeeded(instance))
@@ -67,7 +67,7 @@ static void UpdateSensorValues(void *context)
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->sensorFilteredTemperatureErd,
+      instance->_private.config->sensorFilteredTemperatureInDegFx100Erd,
       &fallbackFilterValue);
 }
 
@@ -133,7 +133,7 @@ void SensorFiltering_Init(
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->sensorUnfilteredTemperatureErd,
+      instance->_private.config->sensorUnfilteredTemperatureInDegFx100Erd,
       &unfilteredTemperature);
 
    Filter_Seed(&instance->_private.fallbackFilter.interface, &unfilteredTemperature);
@@ -142,7 +142,7 @@ void SensorFiltering_Init(
 
    DataModel_Write(
       dataModel,
-      instance->_private.config->sensorFilteredTemperatureErd,
+      instance->_private.config->sensorFilteredTemperatureInDegFx100Erd,
       &fallbackFilterValue);
 
    TimerModule_StartPeriodic(

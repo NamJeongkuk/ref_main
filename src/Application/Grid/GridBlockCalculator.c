@@ -103,12 +103,12 @@ static void UpdateGridBlock(GridBlockCalculator_t *instance)
 
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freshFoodFilteredResolvedTemperature,
+      instance->_private.config->freshFoodFilteredResolvedTemperatureInDegFx100,
       &freshFoodTemp);
 
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerFilteredResolvedTemperature,
+      instance->_private.config->freezerFilteredResolvedTemperatureInDegFx100,
       &freezerTemp);
 
    uint8_t freshFoodGridLineIndex = GridLineIndex(
@@ -185,8 +185,8 @@ static void OnDataModelChanged(void *context, const void *args)
    GridBlockCalculator_t *instance = context;
    Erd_t erd = arguments->erd;
 
-   if((erd == instance->_private.config->freshFoodFilteredResolvedTemperature) ||
-      (erd == instance->_private.config->freezerFilteredResolvedTemperature) ||
+   if((erd == instance->_private.config->freshFoodFilteredResolvedTemperatureInDegFx100) ||
+      (erd == instance->_private.config->freezerFilteredResolvedTemperatureInDegFx100) ||
       (erd == instance->_private.config->calculatedGridLinesErd))
    {
       UpdatePreviousGridBlocks(instance);

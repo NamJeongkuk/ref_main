@@ -32,7 +32,7 @@ enum
 };
 
 static const ShiftOffsetCalculatorConfig_t config = {
-   .filteredTemperatureErd = Erd_FreshFood_FilteredTemperatureResolved,
+   .filteredTemperatureInDegFx100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    .adjustedSetpointErd = Erd_FreshFood_AdjustedSetpointInDegFx100,
    .shiftOffsetErd = Erd_FreshFood_ThermalShiftInDegFx100,
    .timerModuleErd = Erd_TimerModule,
@@ -121,7 +121,7 @@ TEST_GROUP(ShiftOffsetCalculator)
 
    void FilteredTemperatureIs(TemperatureDegFx100_t filteredTemperature)
    {
-      DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperatureResolved, &filteredTemperature);
+      DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperatureResolvedInDegFx100, &filteredTemperature);
    }
 
    void ResetThermalShiftOffsetRequested()

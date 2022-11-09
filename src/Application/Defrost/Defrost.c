@@ -133,7 +133,7 @@ static void DataModelChanged(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerEvaporatorThermistorIsInvalid, NULL);
       }
    }
-   else if(erd == instance->_private.config->freezerEvaporatorFilteredTemperatureResolvedErd)
+   else if(erd == instance->_private.config->freezerEvaporatorFilteredTemperatureResolvedInDegFx100Erd)
    {
       const TemperatureDegFx100_t *freezerEvaporatorTemperature = onChangeData->data;
 
@@ -152,7 +152,7 @@ static void DataModelChanged(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_PostDwellTemperatureExitConditionMet, NULL);
       }
    }
-   else if(erd == instance->_private.config->freezerFilteredTemperatureResolvedErd)
+   else if(erd == instance->_private.config->freezerFilteredTemperatureResolvedInDegFx100Erd)
    {
       const TemperatureDegFx100_t *freezerTemperature = onChangeData->data;
 
@@ -161,7 +161,7 @@ static void DataModelChanged(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_PrechillTemperatureExitConditionMet, NULL);
       }
    }
-   else if(erd == instance->_private.config->freshFoodFilteredTemperatureResolvedErd)
+   else if(erd == instance->_private.config->freshFoodFilteredTemperatureResolvedInDegFx100Erd)
    {
       const TemperatureDegFx100_t *freshFoodTemperature = onChangeData->data;
 
@@ -561,19 +561,19 @@ static void CheckIfPrechillTemperatureExitConditionMet(Defrost_t *instance)
    TemperatureDegFx100_t freezerEvaporatorTemperature;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerEvaporatorFilteredTemperatureResolvedErd,
+      instance->_private.config->freezerEvaporatorFilteredTemperatureResolvedInDegFx100Erd,
       &freezerEvaporatorTemperature);
 
    TemperatureDegFx100_t freezerTemperature;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerFilteredTemperatureResolvedErd,
+      instance->_private.config->freezerFilteredTemperatureResolvedInDegFx100Erd,
       &freezerTemperature);
 
    TemperatureDegFx100_t freshFoodTemperature;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freshFoodFilteredTemperatureResolvedErd,
+      instance->_private.config->freshFoodFilteredTemperatureResolvedInDegFx100Erd,
       &freshFoodTemperature);
 
    if(freezerEvaporatorTemperature <= instance->_private.defrostParametricData->prechillFreezerEvapExitTemperatureInDegFx100 ||

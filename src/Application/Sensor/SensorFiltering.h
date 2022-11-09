@@ -21,8 +21,8 @@
 typedef struct
 {
    Erd_t sensorAdcCountErd;
-   Erd_t sensorUnfilteredTemperatureErd;
-   Erd_t sensorFilteredTemperatureErd;
+   Erd_t sensorUnfilteredTemperatureInDegFx100Erd;
+   Erd_t sensorFilteredTemperatureInDegFx100Erd;
    Erd_t sensorIsValidErd;
    Erd_t timerModuleErd;
 } SensorFilteringConfig_t;

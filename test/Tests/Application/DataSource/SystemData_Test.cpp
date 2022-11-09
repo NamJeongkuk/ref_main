@@ -380,9 +380,9 @@ TEST(SystemData, ShouldSupportReadAndWriteToBspErdsViaExternalDataSource)
    TemperatureDegFx100_t expected = 0x1234;
    GivenThatSystemDataIsInitialized();
 
-   WhenDataIsWrittenViaExternalDataSource(Erd_Freezer_FilteredTemperature, &expected);
+   WhenDataIsWrittenViaExternalDataSource(Erd_Freezer_FilteredTemperatureInDegFx100, &expected);
 
-   ExternalDataModelShouldReturnDataEqualTo(Erd_Freezer_FilteredTemperature, &expected);
+   ExternalDataModelShouldReturnDataEqualTo(Erd_Freezer_FilteredTemperatureInDegFx100, &expected);
 }
 
 TEST(SystemData, ShouldSupportReadAndWriteToBspErdsViaInternalDataSource)
@@ -390,9 +390,9 @@ TEST(SystemData, ShouldSupportReadAndWriteToBspErdsViaInternalDataSource)
    TemperatureDegFx100_t expected = 0x4321;
    GivenThatSystemDataIsInitialized();
 
-   WhenDataIsWrittenViaInternalDataModel(Erd_Freezer_FilteredTemperature, &expected);
+   WhenDataIsWrittenViaInternalDataModel(Erd_Freezer_FilteredTemperatureInDegFx100, &expected);
 
-   InternalDataModelShouldReturnDataEqualTo(Erd_Freezer_FilteredTemperature, &expected);
+   InternalDataModelShouldReturnDataEqualTo(Erd_Freezer_FilteredTemperatureInDegFx100, &expected);
 }
 
 TEST(SystemData, ShouldSetNvErdDataToDefaultValues)

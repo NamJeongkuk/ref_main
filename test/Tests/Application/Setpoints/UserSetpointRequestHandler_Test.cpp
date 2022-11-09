@@ -109,7 +109,7 @@ TEST_GROUP(UserSetpointRequestHandler)
       SetpointVotedTemperature_t actual;
       DataModel_Read(dataModel, Erd_UserSetpointVote, &actual);
 
-      CHECK_EQUAL(expected, actual.temperature);
+      CHECK_EQUAL(expected, actual.temperatureInDegFx100);
       CHECK_EQUAL(expectedCare, actual.care);
    }
 };
