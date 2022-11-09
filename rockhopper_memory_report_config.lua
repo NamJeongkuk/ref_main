@@ -28,5 +28,12 @@ return {
       apl = 'build/rockhopper/rockhopper.apl',
       endianness = 'little'
     }
+  },
+  Parametric = {
+    rom = {
+      srec = 'build/rockhopper/Parametric/data/Production/rockhopper.parametric.pnapl',
+      apl = 'build/rockhopper/Parametric/data/Production/rockhopper.parametric.apl',
+      endianness = 'little'
+    }
   }
 }
