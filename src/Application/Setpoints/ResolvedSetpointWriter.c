@@ -12,7 +12,7 @@ static void WriteResolvedSetpoint(void *context, const void *args)
 {
    ResolvedSetpointWriter_t *instance = context;
    const SetpointVotedTemperature_t *setpointVotedTemperature = args;
-   TemperatureDegFx100_t temperature = setpointVotedTemperature->temperature;
+   TemperatureDegFx100_t temperature = setpointVotedTemperature->temperatureInDegFx100;
 
    DataModel_Write(
       instance->_private.dataModel,

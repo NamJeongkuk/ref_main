@@ -54,7 +54,7 @@ TEST_GROUP(ResolvedSetpointWriter)
    void GivenResolvedVoteIs(int16_t value)
    {
       SetpointVotedTemperature_t vote = {
-         .temperature = value,
+         .temperatureInDegFx100 = value,
          .care = true
       };
       DataModel_Write(dataModel, Erd_SetpointResolvedVote, &vote);
@@ -63,7 +63,7 @@ TEST_GROUP(ResolvedSetpointWriter)
    void WhenAnotherErdIs(int16_t value)
    {
       SetpointVotedTemperature_t vote = {
-         .temperature = value,
+         .temperatureInDegFx100 = value,
          .care = true
       };
       DataModel_Write(dataModel, Erd_NotInConfig, &vote);
