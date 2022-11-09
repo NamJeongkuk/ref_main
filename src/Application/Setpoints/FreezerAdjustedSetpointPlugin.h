@@ -12,6 +12,7 @@
 #include "ErdWriterOnCompareMatch.h"
 #include "FreezerShiftOffsetCalculatorPlugin.h"
 #include "I16ErdAdder.h"
+#include "ResolvedSetpointWriter.h"
 #include "I_DataModel.h"
 
 typedef struct
@@ -21,6 +22,7 @@ typedef struct
       FreezerShiftOffsetCalculatorPlugin_t freezerShiftOffsetCalculatorPlugin;
       ErdWriterOnCompareMatch_t erdWriterOnCompareMatchForAdjustedSetpoint;
       I16ErdAdder_t freezerErdAdder;
+      ResolvedSetpointWriter_t resolvedSetpointWriter;
    } _private;
 } FreezerAdjustedSetpointPlugin_t;
 

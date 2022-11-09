@@ -12,6 +12,7 @@
 #include "ErdWriterOnCompareMatch.h"
 #include "FreshFoodShiftOffsetCalculatorPlugin.h"
 #include "I16ErdAdder.h"
+#include "ResolvedSetpointWriter.h"
 #include "I_DataModel.h"
 
 typedef struct
@@ -21,6 +22,7 @@ typedef struct
       FreshFoodShiftOffsetCalculatorPlugin_t freshFoodShiftOffsetCalculatorPlugin;
       ErdWriterOnCompareMatch_t erdWriterOnCompareMatchForAdjustedSetpoint;
       I16ErdAdder_t freshFoodErdAdder;
+      ResolvedSetpointWriter_t resolvedSetpointWriter;
    } _private;
 } FreshFoodAdjustedSetpointPlugin_t;
 

@@ -60,6 +60,11 @@ static const ErdWriterOnCompareMatchConfiguration_t erdWriteOnCompareMatchConfig
    NUM_ELEMENTS(erdWriteOnCompareMatchEntries)
 };
 
+static const ResolvedSetpointWriterConfiguration_t resolvedSetpointWriterConfiguration = {
+   .resolvedSetpointVoteErd = Erd_FreshFoodSetpoint_ResolvedVote,
+   .resolvedSetpointErd = Erd_FreshFood_ResolvedSetpointInDegFx100
+};
+
 static void InitializeSetpointOffsetErd(FreshFoodAdjustedSetpointPlugin_t *instance, I_DataModel_t *dataModel)
 {
    coldSetpointOffsetInDegFx100 = PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData->setpointOffsetData->coldOffsetInDegFx100;
@@ -84,6 +89,7 @@ void FreshFoodAdjustedSetpointPlugin_Init(
 {
    InitializeSetpointOffsetErd(instance, dataModel);
    InitializeCabinetOffsetErd(dataModel);
+   ResolvedSetpointWriter_Init(&instance->_private.resolvedSetpointWriter, dataModel, &resolvedSetpointWriterConfiguration);
    I16ErdAdder_Init(&instance->_private.freshFoodErdAdder, dataModel, &freshFoodErdAdderConfig);
    FreshFoodShiftOffsetCalculatorPlugin_Init(&instance->_private.freshFoodShiftOffsetCalculatorPlugin, dataModel);
 }
