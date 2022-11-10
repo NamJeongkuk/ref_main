@@ -22,7 +22,7 @@
 #include "Signal.h"
 #include "uassert.h"
 #include "Vote.h"
-#include "DefrostRequest.h"
+#include "DefrostTestRequestMessage.h"
 
 enum
 {
@@ -185,11 +185,11 @@ static void DataModelChanged(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerAbnormalHeaterOnTimeReached, NULL);
       }
    }
-   else if(erd == instance->_private.config->defrostRequestErd)
+   else if(erd == instance->_private.config->defrostTestRequestErd)
    {
-      const DefrostRequest_t *request = onChangeData->data;
+      const DefrostTestRequestMessage_t *request = onChangeData->data;
 
-      if(request->request == DefrostEnableRequest_Disable)
+      if(request->request == DefrostTestRequest_Disable)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_DisableDefrost, NULL);
       }

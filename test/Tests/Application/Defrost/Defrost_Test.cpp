@@ -51,7 +51,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .defrostStateErd = Erd_DefrostState,
    .waitingForDefrostErd = Erd_WaitingToDefrost,
    .defrostingErd = Erd_Defrosting,
-   .defrostRequestErd = Erd_DefrostRequest,
+   .defrostTestRequestErd = Erd_DefrostTestRequest,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
@@ -527,24 +527,24 @@ TEST_GROUP(Defrost_SingleEvap)
       CHECK_EQUAL(expected, actual);
    }
 
-   void DefrostRequestIsEnable()
+   void DefrostTestRequestIsEnable()
    {
-      DefrostRequest_t request;
-      DataModel_Read(dataModel, Erd_DefrostRequest, &request);
-      request.request = DefrostEnableRequest_Enable;
+      DefrostTestRequestMessage_t request;
+      DataModel_Read(dataModel, Erd_DefrostTestRequest, &request);
+      request.request = DefrostTestRequest_Enable;
       request.requestId++;
 
-      DataModel_Write(dataModel, Erd_DefrostRequest, &request);
+      DataModel_Write(dataModel, Erd_DefrostTestRequest, &request);
    }
 
-   void DefrostRequestIsDisable()
+   void DefrostTestRequestIsDisable()
    {
-      DefrostRequest_t request;
-      DataModel_Read(dataModel, Erd_DefrostRequest, &request);
-      request.request = DefrostEnableRequest_Disable;
+      DefrostTestRequestMessage_t request;
+      DataModel_Read(dataModel, Erd_DefrostTestRequest, &request);
+      request.request = DefrostTestRequest_Disable;
       request.requestId++;
 
-      DataModel_Write(dataModel, Erd_DefrostRequest, &request);
+      DataModel_Write(dataModel, Erd_DefrostTestRequest, &request);
    }
 };
 
@@ -1247,7 +1247,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionFromWaitingToDefrostStateToDisabledWhen
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
-   When DefrostRequestIsDisable();
+   When DefrostTestRequestIsDisable();
    DefrostHsmStateShouldBe(DefrostHsmState_Disabled);
 }
 
@@ -1255,7 +1255,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionFromDefrostingStateToDisabledWhenDisabl
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
 
-   When DefrostRequestIsDisable();
+   When DefrostTestRequestIsDisable();
    DefrostHsmStateShouldBe(DefrostHsmState_Disabled);
 }
 
@@ -1264,7 +1264,7 @@ TEST(Defrost_SingleEvap, ShouldWriteFalseToWaitingToDefrostErdWhenEnteringDisabl
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
    WaitingToDefrostShouldBe(true);
 
-   When DefrostRequestIsDisable();
+   When DefrostTestRequestIsDisable();
    WaitingToDefrostShouldBe(false);
 }
 
@@ -1273,7 +1273,7 @@ TEST(Defrost_SingleEvap, ShouldWriteFalseToDefrostingErdWhenEnteringDisabled)
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    DefrostingShouldBe(true);
 
-   When DefrostRequestIsDisable();
+   When DefrostTestRequestIsDisable();
    DefrostingShouldBe(false);
 }
 
