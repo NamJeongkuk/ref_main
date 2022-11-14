@@ -267,13 +267,6 @@
         },
         {
           "namespace": "rockhopper",
-          "displayName": "Actively Waiting For Next Defrost",
-          "name": "Erd_ActivelyWaitingForNextDefrost",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rockhopper",
           "displayName": "Freezer Defrost Was Abnormal (EEPROM)",
           "name": "Erd_FreezerDefrostWasAbnormal",
           "read": true,

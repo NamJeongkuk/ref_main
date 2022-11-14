@@ -19,11 +19,10 @@
 typedef struct
 {
    Erd_t compressorIsOnErd; // bool
-   Erd_t activelyWaitingForNextDefrostErd; // bool
+   Erd_t waitingToDefrostErd; // bool
    Erd_t defrostCompressorOnTimeInSecondsErd; // uint32_t
    Erd_t defrostCompressorOnTimeCounterFsmStateErd; // DefrostCompressorOnTimeCounterFsmState_t
    Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
-   Erd_t activelyWaitingForDefrostOnCompareMatchReadyErd; // bool
    Erd_t freezerFilteredTemperatureTooWarmOnPowerUpReadyErd; // bool
    Erd_t defrostCompressorOnTimeCounterReadyErd; // bool
    Erd_t timerModuleErd; // TimerModule_t *

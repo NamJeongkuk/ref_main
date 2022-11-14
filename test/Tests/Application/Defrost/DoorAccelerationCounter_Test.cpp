@@ -43,7 +43,7 @@ enum
 };
 
 static const DoorAccelerationCounterConfiguration_t config = {
-   .activelyWaitingForNextDefrostErd = Erd_ActivelyWaitingForNextDefrost,
+   .waitingToDefrostErd = Erd_WaitingToDefrost,
    .doorAccelerationCounterFsmStateErd = Erd_DoorAccelerationCounterFsmState,
    .freshFoodScaledDoorAccelerationInSecondsErd = Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds,
    .freezerScaledDoorAccelerationInSecondsErd = Erd_DefrostFreezerScaledDoorAccelerationInSeconds,
@@ -55,7 +55,6 @@ static const DoorAccelerationCounterConfiguration_t config = {
    .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorIsOpen,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
-   .activelyWaitingForDefrostOnCompareMatchReadyErd = Erd_ActivelyWaitingForDefrostOnCompareMatchReady,
    .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
    .doorAccelerationCounterReadyErd = Erd_DoorAccelerationCounterReady,
    .timerModuleErd = Erd_TimerModule
@@ -88,7 +87,6 @@ TEST_GROUP(DoorAccelerationCounter)
 
    void DoorAccelerationCounterIsInitialized()
    {
-      DataModel_Write(dataModel, Erd_ActivelyWaitingForDefrostOnCompareMatchReady, set);
       DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
 
       DoorAccelerationCounter_Init(&instance, dataModel, &config);
@@ -143,13 +141,13 @@ TEST_GROUP(DoorAccelerationCounter)
 
    void DoorAccelerationCounterIsInStopState()
    {
-      Given ActivelyWaitingForNextDefrostIs(true);
+      Given WaitingToDefrostIs(true);
       And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
       And DoorAccelerationCounterIsInitialized();
 
       DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Run);
 
-      When ActivelyWaitingForNextDefrostIs(false);
+      When WaitingToDefrostIs(false);
       DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Stop);
    }
 
@@ -161,16 +159,16 @@ TEST_GROUP(DoorAccelerationCounter)
       DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Pause);
    }
 
-   void ActivelyWaitingForNextDefrostIs(bool state)
+   void WaitingToDefrostIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_ActivelyWaitingForNextDefrost, &state);
+      DataModel_Write(dataModel, Erd_WaitingToDefrost, &state);
    }
 
    void DoorAccelerationCounterIsInRunState()
    {
       Given DoorAccelerationCounterIsInPauseState();
 
-      When ActivelyWaitingForNextDefrostIs(true);
+      When WaitingToDefrostIs(true);
       DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Run);
    }
 
@@ -246,15 +244,15 @@ TEST_GROUP(DoorAccelerationCounter)
    }
 };
 
-TEST(DoorAccelerationCounter, ShouldTransitionToStopStateFromRunStateWhenActivelyWaitingForNextDefrostBecomesFalse)
+TEST(DoorAccelerationCounter, ShouldTransitionFromRunStateToStopStateWhenNoLongerWaitingToDefrost)
 {
-   Given ActivelyWaitingForNextDefrostIs(true);
+   Given WaitingToDefrostIs(true);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DoorAccelerationCounterIsInitialized();
 
    DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Run);
 
-   When ActivelyWaitingForNextDefrostIs(false);
+   When WaitingToDefrostIs(false);
    DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Stop);
 }
 
@@ -290,9 +288,9 @@ TEST(DoorAccelerationCounter, ShouldNotResetDoorAccelerationsToZeroWhenEnteringP
    And ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration);
 }
 
-TEST(DoorAccelerationCounter, ShouldResetDoorAccelerationsToZeroWhenFreezerFilteredTemperatureTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsTrue)
+TEST(DoorAccelerationCounter, ShouldResetDoorAccelerationsToZeroWhenFreezerFilteredTemperatureTooWarmOnPowerUpAndWhenWaitingToDefrostIsTrue)
 {
-   Given ActivelyWaitingForNextDefrostIs(true);
+   Given WaitingToDefrostIs(true);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
    And FreezerDoorAccelerationIs(SomeFreezerDoorAcceleration);
@@ -304,9 +302,9 @@ TEST(DoorAccelerationCounter, ShouldResetDoorAccelerationsToZeroWhenFreezerFilte
    And ConvertibleCompartmentDoorAccelerationShouldBe(0);
 }
 
-TEST(DoorAccelerationCounter, ShouldThenStartCountingDoorAccelerationWhenFreezerFilteredTemperatureTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsTrue)
+TEST(DoorAccelerationCounter, ShouldThenStartCountingDoorAccelerationWhenFreezerFilteredTemperatureTooWarmOnPowerUpAndWhenWaitingToDefrostIsTrue)
 {
-   Given ActivelyWaitingForNextDefrostIs(true);
+   Given WaitingToDefrostIs(true);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
    And FreezerDoorAccelerationIs(SomeFreezerDoorAcceleration);
@@ -333,9 +331,9 @@ TEST(DoorAccelerationCounter, ShouldThenStartCountingDoorAccelerationWhenFreezer
    }
 }
 
-TEST(DoorAccelerationCounter, ShouldNotResetDoorAccelerationsToZeroWhenFreezerFilteredTemperatureIsNotTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsTrue)
+TEST(DoorAccelerationCounter, ShouldNotResetDoorAccelerationsToZeroWhenFreezerFilteredTemperatureIsNotTooWarmOnPowerUpAndWhenWaitingToDefrostIsTrue)
 {
-   Given ActivelyWaitingForNextDefrostIs(true);
+   Given WaitingToDefrostIs(true);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
    And FreezerDoorAccelerationIs(SomeFreezerDoorAcceleration);
@@ -347,9 +345,9 @@ TEST(DoorAccelerationCounter, ShouldNotResetDoorAccelerationsToZeroWhenFreezerFi
    And ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration);
 }
 
-TEST(DoorAccelerationCounter, ShouldThenStartCountingDoorAccelerationWhenFreezerFilteredTemperatureIsNotTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsTrue)
+TEST(DoorAccelerationCounter, ShouldThenStartCountingDoorAccelerationWhenFreezerFilteredTemperatureIsNotTooWarmOnPowerUpAndWhenWaitingToDefrostIsTrue)
 {
-   Given ActivelyWaitingForNextDefrostIs(true);
+   Given WaitingToDefrostIs(true);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
    And FreezerDoorAccelerationIs(SomeFreezerDoorAcceleration);
@@ -376,27 +374,27 @@ TEST(DoorAccelerationCounter, ShouldThenStartCountingDoorAccelerationWhenFreezer
    }
 }
 
-TEST(DoorAccelerationCounter, ShouldTransitionToRunFromStopWhenActivelyWaitingForNextDefrostBecomesTrue)
+TEST(DoorAccelerationCounter, ShouldTransitionFromStopToRunWhenWaitingToDefrost)
 {
    Given DoorAccelerationCounterIsInStopState();
 
-   When ActivelyWaitingForNextDefrostIs(true);
+   When WaitingToDefrostIs(true);
    DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Run);
 }
 
-TEST(DoorAccelerationCounter, ShouldTransitionToRunFromPauseWhenActivelyWaitingForNextDefrostBecomesTrue)
+TEST(DoorAccelerationCounter, ShouldTransitionFromPauseToRunWhenWaitingToDefrost)
 {
    Given DoorAccelerationCounterIsInPauseState();
 
-   When ActivelyWaitingForNextDefrostIs(true);
+   When WaitingToDefrostIs(true);
    DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Run);
 }
 
-TEST(DoorAccelerationCounter, ShouldTransitionToStopFromRunWhenActivelyWaitingForNextDefrostBecomesFalse)
+TEST(DoorAccelerationCounter, ShouldTransitionFromRunToStopWhenNoLongerWaitingToDefrost)
 {
    Given DoorAccelerationCounterIsInRunState();
 
-   When ActivelyWaitingForNextDefrostIs(false);
+   When WaitingToDefrostIs(false);
    DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Stop);
 }
 

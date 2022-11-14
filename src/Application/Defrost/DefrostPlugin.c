@@ -7,7 +7,6 @@
 
 #include "DefrostPlugin.h"
 #include "DefrostParameterSelector.h"
-#include "ActivelyWaitingForDefrostOnCompareMatch.h"
 #include "FreezerFilteredTemperatureTooWarmOnPowerUp.h"
 #include "SystemErds.h"
 #include "uassert.h"
@@ -66,11 +65,10 @@ static const FreshFoodOnlyDefrostArbitratorConfiguration_t freshFoodOnlyDefrostA
 
 static const DefrostCompressorOnTimeCounterConfiguration_t defrostCompressorOnTimeCounterConfig = {
    .compressorIsOnErd = Erd_CompressorIsOn,
-   .activelyWaitingForNextDefrostErd = Erd_ActivelyWaitingForNextDefrost,
+   .waitingToDefrostErd = Erd_WaitingToDefrost,
    .defrostCompressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
    .defrostCompressorOnTimeCounterFsmStateErd = Erd_DefrostCompressorOnTimeCounterFsmState,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
-   .activelyWaitingForDefrostOnCompareMatchReadyErd = Erd_ActivelyWaitingForDefrostOnCompareMatchReady,
    .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
    .defrostCompressorOnTimeCounterReadyErd = Erd_DefrostCompressorOnTimeCounterReady,
    .timerModuleErd = Erd_TimerModule
@@ -83,7 +81,7 @@ static const DefrostHeaterOnTimeCounterConfig_t defrostHeaterOnTimeCounterConfig
 };
 
 static const DoorAccelerationCounterConfiguration_t doorAccelerationCounterConfig = {
-   .activelyWaitingForNextDefrostErd = Erd_ActivelyWaitingForNextDefrost,
+   .waitingToDefrostErd = Erd_WaitingToDefrost,
    .doorAccelerationCounterFsmStateErd = Erd_DoorAccelerationCounterFsmState,
    .freshFoodScaledDoorAccelerationInSecondsErd = Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds,
    .freezerScaledDoorAccelerationInSecondsErd = Erd_DefrostFreezerScaledDoorAccelerationInSeconds,
@@ -95,7 +93,6 @@ static const DoorAccelerationCounterConfiguration_t doorAccelerationCounterConfi
    .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorIsOpen,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
-   .activelyWaitingForDefrostOnCompareMatchReadyErd = Erd_ActivelyWaitingForDefrostOnCompareMatchReady,
    .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
    .doorAccelerationCounterReadyErd = Erd_DoorAccelerationCounterReady,
    .timerModuleErd = Erd_TimerModule
@@ -196,8 +193,6 @@ void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
    DefrostStateOnCompareMatch(&instance->_private.defrostStateOnCompareMatch, dataModel);
 
    Defrost_Init(&instance->_private.defrost, dataModel, &defrostConfig);
-
-   ActivelyWaitingForDefrostOnCompareMatch_Init(&instance->_private.activelyWaitingForDefrostOnCompareMatch, dataModel);
 
    DefrostCompressorOnTimeCounter_Init(
       &instance->_private.defrostCompressorOnTimeCounter,

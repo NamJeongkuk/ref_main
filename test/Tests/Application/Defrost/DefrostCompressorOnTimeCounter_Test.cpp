@@ -36,11 +36,10 @@ enum
 
 static const DefrostCompressorOnTimeCounterConfiguration_t config = {
    .compressorIsOnErd = Erd_CompressorIsOn,
-   .activelyWaitingForNextDefrostErd = Erd_ActivelyWaitingForNextDefrost,
+   .waitingToDefrostErd = Erd_WaitingToDefrost,
    .defrostCompressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
    .defrostCompressorOnTimeCounterFsmStateErd = Erd_DefrostCompressorOnTimeCounterFsmState,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
-   .activelyWaitingForDefrostOnCompareMatchReadyErd = Erd_ActivelyWaitingForDefrostOnCompareMatchReady,
    .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
    .defrostCompressorOnTimeCounterReadyErd = Erd_DefrostCompressorOnTimeCounterReady,
    .timerModuleErd = Erd_TimerModule
@@ -69,7 +68,6 @@ TEST_GROUP(DefrostCompressorOnTimeCounter)
 
    void DefrostCompressorOnTimeCounterIsInitialized()
    {
-      DataModel_Write(dataModel, Erd_ActivelyWaitingForDefrostOnCompareMatchReady, set);
       DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
 
       DefrostCompressorOnTimeCounter_Init(&instance, dataModel, &config);
@@ -106,26 +104,26 @@ TEST_GROUP(DefrostCompressorOnTimeCounter)
 
    void DefrostCompressorOnTimeCounterIsInStopState()
    {
-      Given ActivelyWaitingForNextDefrostIs(true);
+      Given WaitingToDefrostIs(true);
       And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
       And DefrostCompressorOnTimeCounterIsInitialized();
 
       DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Run);
 
-      When ActivelyWaitingForNextDefrostIs(false);
+      When WaitingToDefrostIs(false);
       DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Stop);
    }
 
-   void ActivelyWaitingForNextDefrostIs(bool state)
+   void WaitingToDefrostIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_ActivelyWaitingForNextDefrost, &state);
+      DataModel_Write(dataModel, Erd_WaitingToDefrost, &state);
    }
 
    void DefrostCompressorOnTimeCounterIsInRunState()
    {
       Given DefrostCompressorOnTimeCounterIsInPauseState();
 
-      When ActivelyWaitingForNextDefrostIs(true);
+      When WaitingToDefrostIs(true);
       DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Run);
    }
 
@@ -165,15 +163,15 @@ TEST(DefrostCompressorOnTimeCounter, ShouldInitializeIntoPauseStateWhenFreezerFi
    DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Pause);
 }
 
-TEST(DefrostCompressorOnTimeCounter, ShouldTransitionToStopStateFromRunStateWhenActivelyWaitingForNextDefrostBecomesFalse)
+TEST(DefrostCompressorOnTimeCounter, ShouldTransitionFromRunStateToStopStateWhenNoLongerWaitingToDefrost)
 {
-   Given ActivelyWaitingForNextDefrostIs(true);
+   Given WaitingToDefrostIs(true);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostCompressorOnTimeCounterIsInitialized();
 
    DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Run);
 
-   When ActivelyWaitingForNextDefrostIs(false);
+   When WaitingToDefrostIs(false);
    DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Stop);
 }
 
@@ -193,9 +191,9 @@ TEST(DefrostCompressorOnTimeCounter, ShouldNotResetCompressorOnTimeInSecondsToZe
    CompressorOnTimeInSecondsShouldBe(SomeCompressorOnTimeInSeconds);
 }
 
-TEST(DefrostCompressorOnTimeCounter, ShouldResetCompressorOnTimeInSecondsWhenFreezerFilteredTemperatureTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsTrue)
+TEST(DefrostCompressorOnTimeCounter, ShouldResetCompressorOnTimeInSecondsWhenFreezerFilteredTemperatureTooWarmOnPowerUpAndWhenWaitingToDefrostIsTrue)
 {
-   Given ActivelyWaitingForNextDefrostIs(true);
+   Given WaitingToDefrostIs(true);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And CompressorOnTimeInSecondsIs(SomeCompressorOnTimeInSeconds);
    And DefrostCompressorOnTimeCounterIsInitialized();
@@ -203,9 +201,9 @@ TEST(DefrostCompressorOnTimeCounter, ShouldResetCompressorOnTimeInSecondsWhenFre
    CompressorOnTimeInSecondsShouldBe(0);
 }
 
-TEST(DefrostCompressorOnTimeCounter, ShouldThenStartCountingCompressorOnTimeWhenFreezerFilteredTemperatureTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsTrue)
+TEST(DefrostCompressorOnTimeCounter, ShouldThenStartCountingCompressorOnTimeWhenFreezerFilteredTemperatureTooWarmOnPowerUpAndWhenWaitingToDefrostIsTrue)
 {
-   Given ActivelyWaitingForNextDefrostIs(true);
+   Given WaitingToDefrostIs(true);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And CompressorOnTimeInSecondsIs(SomeCompressorOnTimeInSeconds);
    And CompressorIsOn();
@@ -221,9 +219,9 @@ TEST(DefrostCompressorOnTimeCounter, ShouldThenStartCountingCompressorOnTimeWhen
    }
 }
 
-TEST(DefrostCompressorOnTimeCounter, ShouldNotResetCompressorOnTimeInSecondsWhenFreezerFilteredTemperatureIsNotTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsTrue)
+TEST(DefrostCompressorOnTimeCounter, ShouldNotResetCompressorOnTimeInSecondsWhenFreezerFilteredTemperatureIsNotTooWarmOnPowerUpAndWhenWaitingToDefrostIsTrue)
 {
-   Given ActivelyWaitingForNextDefrostIs(true);
+   Given WaitingToDefrostIs(true);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And CompressorOnTimeInSecondsIs(SomeCompressorOnTimeInSeconds);
    And DefrostCompressorOnTimeCounterIsInitialized();
@@ -231,9 +229,9 @@ TEST(DefrostCompressorOnTimeCounter, ShouldNotResetCompressorOnTimeInSecondsWhen
    CompressorOnTimeInSecondsShouldBe(SomeCompressorOnTimeInSeconds);
 }
 
-TEST(DefrostCompressorOnTimeCounter, ShouldThenStartCountingCompressorOnTimeWhenFreezerFilteredTemperatureIsNotTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsTrue)
+TEST(DefrostCompressorOnTimeCounter, ShouldThenStartCountingCompressorOnTimeWhenFreezerFilteredTemperatureIsNotTooWarmOnPowerUpAndWhenWaitingToDefrostIsTrue)
 {
-   Given ActivelyWaitingForNextDefrostIs(true);
+   Given WaitingToDefrostIs(true);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And CompressorOnTimeInSecondsIs(SomeCompressorOnTimeInSeconds);
    And CompressorIsOn();
@@ -249,9 +247,9 @@ TEST(DefrostCompressorOnTimeCounter, ShouldThenStartCountingCompressorOnTimeWhen
    }
 }
 
-TEST(DefrostCompressorOnTimeCounter, ShouldNotStartCountingCompressorOnTimeWhenFreezerFilteredTemperatureTooWarmOnPowerUpAndWhenActivelyWaitingForNextDefrostIsFalse)
+TEST(DefrostCompressorOnTimeCounter, ShouldNotStartCountingCompressorOnTimeWhenFreezerFilteredTemperatureTooWarmOnPowerUpAndWhenWaitingToDefrostIsFalse)
 {
-   Given ActivelyWaitingForNextDefrostIs(false);
+   Given WaitingToDefrostIs(false);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And CompressorOnTimeInSecondsIs(SomeCompressorOnTimeInSeconds);
    And CompressorIsOn();
@@ -267,27 +265,27 @@ TEST(DefrostCompressorOnTimeCounter, ShouldNotStartCountingCompressorOnTimeWhenF
    }
 }
 
-TEST(DefrostCompressorOnTimeCounter, ShouldTransitionToRunFromStopWhenActivelyWaitingForNextDefrostBecomesTrue)
+TEST(DefrostCompressorOnTimeCounter, ShouldTransitionFromStopToRunWhenWaitingToDefrost)
 {
    Given DefrostCompressorOnTimeCounterIsInStopState();
 
-   When ActivelyWaitingForNextDefrostIs(true);
+   When WaitingToDefrostIs(true);
    DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Run);
 }
 
-TEST(DefrostCompressorOnTimeCounter, ShouldTransitionToRunFromPauseWhenActivelyWaitingForNextDefrostBecomesTrue)
+TEST(DefrostCompressorOnTimeCounter, ShouldTransitionFromPauseToRunWhenWaitingToDefrost)
 {
    Given DefrostCompressorOnTimeCounterIsInPauseState();
 
-   When ActivelyWaitingForNextDefrostIs(true);
+   When WaitingToDefrostIs(true);
    DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Run);
 }
 
-TEST(DefrostCompressorOnTimeCounter, ShouldTransitionToStopFromRunWhenActivelyWaitingForNextDefrostBecomesFalse)
+TEST(DefrostCompressorOnTimeCounter, ShouldTransitionFromRunToStopWhenNoLongerWaitingToDefrost)
 {
    Given DefrostCompressorOnTimeCounterIsInRunState();
 
-   When ActivelyWaitingForNextDefrostIs(false);
+   When WaitingToDefrostIs(false);
    DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Stop);
 }
 

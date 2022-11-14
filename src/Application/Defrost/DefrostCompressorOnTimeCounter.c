@@ -22,8 +22,8 @@ enum
 
 enum
 {
-   Signal_ActivelyWaitingForNextDefrost = Fsm_UserSignalStart,
-   Signal_NotActivelyWaitingForNextDefrost,
+   Signal_WaitingToDefrost = Fsm_UserSignalStart,
+   Signal_NotWaitingToDefrost,
    Signal_PeriodicTimeout
 };
 
@@ -44,18 +44,18 @@ static void SetFsmStateTo(DefrostCompressorOnTimeCounter_t *instance, DefrostCom
       &state);
 }
 
-static void ActivelyWaitingForNextDefrostChanged(void *context, const void *args)
+static void WaitingToDefrostChanged(void *context, const void *args)
 {
    DefrostCompressorOnTimeCounter_t *instance = context;
    const bool *state = args;
 
    if(*state)
    {
-      Fsm_SendSignal(&instance->_private.fsm, Signal_ActivelyWaitingForNextDefrost, NULL);
+      Fsm_SendSignal(&instance->_private.fsm, Signal_WaitingToDefrost, NULL);
    }
    else
    {
-      Fsm_SendSignal(&instance->_private.fsm, Signal_NotActivelyWaitingForNextDefrost, NULL);
+      Fsm_SendSignal(&instance->_private.fsm, Signal_NotWaitingToDefrost, NULL);
    }
 }
 
@@ -125,7 +125,7 @@ static void State_Run(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          StartPeriodicTimer(instance);
          break;
 
-      case Signal_NotActivelyWaitingForNextDefrost:
+      case Signal_NotWaitingToDefrost:
          Fsm_Transition(&instance->_private.fsm, State_Stop);
          break;
 
@@ -152,7 +152,7 @@ static void State_Pause(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          SetFsmStateTo(instance, DefrostCompressorOnTimeCounterFsmState_Pause);
          break;
 
-      case Signal_ActivelyWaitingForNextDefrost:
+      case Signal_WaitingToDefrost:
          Fsm_Transition(&instance->_private.fsm, State_Run);
          break;
 
@@ -173,7 +173,7 @@ static void State_Stop(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          ResetCompressorOnTimeInSecondsToZero(instance);
          break;
 
-      case Signal_ActivelyWaitingForNextDefrost:
+      case Signal_WaitingToDefrost:
          Fsm_Transition(&instance->_private.fsm, State_Run);
          break;
 
@@ -190,18 +190,18 @@ static FsmState_t InitStateBasedOnFreezerFilteredTemperature(DefrostCompressorOn
       instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
       &freezerWasTooWarmOnPowerUp);
 
-   bool activelyWaitingForNextDefrost;
+   bool waitingToDefrost;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->activelyWaitingForNextDefrostErd,
-      &activelyWaitingForNextDefrost);
+      instance->_private.config->waitingToDefrostErd,
+      &waitingToDefrost);
 
    if(freezerWasTooWarmOnPowerUp)
    {
       ResetCompressorOnTimeInSecondsToZero(instance);
    }
 
-   if(activelyWaitingForNextDefrost)
+   if(waitingToDefrost)
    {
       return State_Run;
    }
@@ -214,20 +214,13 @@ void DefrostCompressorOnTimeCounter_Init(
    I_DataModel_t *dataModel,
    const DefrostCompressorOnTimeCounterConfiguration_t *config)
 {
-   bool activelyWaitingForDefrostOnCompareMatchReady;
-   DataModel_Read(
-      dataModel,
-      config->activelyWaitingForDefrostOnCompareMatchReadyErd,
-      &activelyWaitingForDefrostOnCompareMatchReady);
-
    bool freezerFilteredTemperatureTooWarmOnPowerUpReady;
    DataModel_Read(
       dataModel,
       config->freezerFilteredTemperatureTooWarmOnPowerUpReadyErd,
       &freezerFilteredTemperatureTooWarmOnPowerUpReady);
 
-   uassert(activelyWaitingForDefrostOnCompareMatchReady &&
-      freezerFilteredTemperatureTooWarmOnPowerUpReady);
+   uassert(freezerFilteredTemperatureTooWarmOnPowerUpReady);
 
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
@@ -238,10 +231,10 @@ void DefrostCompressorOnTimeCounter_Init(
    EventSubscription_Init(
       &instance->_private.subscription,
       instance,
-      ActivelyWaitingForNextDefrostChanged);
+      WaitingToDefrostChanged);
    DataModel_Subscribe(
       instance->_private.dataModel,
-      instance->_private.config->activelyWaitingForNextDefrostErd,
+      instance->_private.config->waitingToDefrostErd,
       &instance->_private.subscription);
 
    DataModel_Write(
