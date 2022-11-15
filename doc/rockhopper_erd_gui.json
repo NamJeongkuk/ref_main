@@ -956,61 +956,6 @@
       ]
     },
     {
-      "title": "Ice Maker",
-      "erds": [
-        {
-          "namespace": "rockhopper",
-          "displayName": "Fill Tube Heater Resolved Vote",
-          "name": "Erd_FillTubeHeater_ResolvedVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rockhopper",
-          "displayName": "Fill Tube Heater Winning Vote ERD",
-          "name": "Erd_FillTubeHeater_WinningVoteErd",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rockhopper",
-          "displayName": "Fill Tube Heater Factory Vote",
-          "name": "Erd_FillTubeHeater_FactoryVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rockhopper",
-          "displayName": "Fill Tube Heater Ice Maker Harvest Vote",
-          "name": "Erd_FillTubeHeater_IceMakerHarvestVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rockhopper",
-          "displayName": "Fill Tube Heater Continuous Vote",
-          "name": "Erd_FillTubeHeater_ContinuousVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rockhopper",
-          "displayName": "Fill Tube Heater (Load)",
-          "name": "Erd_FillTubeHeater",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rockhopper",
-          "displayName": "Fill Tube Heater Pwm Duty Cycle (Out of 65535)",
-          "description": "Out of 65535",
-          "name": "Erd_FillTubeHeaterPwmDutyCycle",
-          "read": true,
-          "write": true
-        }
-      ]
-    },
-    {
       "title": "FaultWrapper",
       "erds": [
         {
@@ -1212,6 +1157,77 @@
           "name": "Erd_AluminumMoldIceMakerHsmState",
           "read": true,
           "write": false
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Feeler Arm Position",
+          "name": "Erd_FeelerArmPosition",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Feeler Arm Is Ready To Enter Harvest",
+          "name": "Erd_FeelerArmIsReadyToEnterHarvest",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Feeler Arm Monitoring Request",
+          "name": "Erd_FeelerArmMonitoringRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fill Tube Heater Resolved Vote",
+          "name": "Erd_FillTubeHeater_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fill Tube Heater Winning Vote ERD",
+          "name": "Erd_FillTubeHeater_WinningVoteErd",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fill Tube Heater Factory Vote",
+          "name": "Erd_FillTubeHeater_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fill Tube Heater Ice Maker Harvest Vote",
+          "name": "Erd_FillTubeHeater_IceMakerHarvestVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fill Tube Heater Continuous Vote",
+          "name": "Erd_FillTubeHeater_ContinuousVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fill Tube Heater (Load)",
+          "name": "Erd_FillTubeHeater",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fill Tube Heater Pwm Duty Cycle (Out of 65535)",
+          "description": "Out of 65535",
+          "name": "Erd_FillTubeHeaterPwmDutyCycle",
+          "read": true,
+          "write": true
         }
       ]
     }

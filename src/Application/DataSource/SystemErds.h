@@ -70,6 +70,7 @@
 #include "SetpointZoneTemperatureBounds.h"
 #include "HeaterVotedDutyCycle.h"
 #include "AluminumMoldIceMakerHsmState.h"
+#include "FeelerArmPosition.h"
 
 // clang-format off
 
@@ -572,6 +573,9 @@ enum
    ENTRY(Erd_ConvertibleCompartmentEvapThermistor_IsValidOverrideRequest,    0xF1A4, bool,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_AluminumMoldIceMakerHsmState,                  0xF1C0, AluminumMoldIceMakerHsmState_t,                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FeelerArmPosition,                             0xF1C1, FeelerArmPosition_t,                                Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FeelerArmIsReadyToEnterHarvest,                0xF1C2, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FeelerArmMonitoringRequest,                    0xF1C3, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RelayWatchdog,                                 0xF201, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,                    NotNv,                                    NotFault) \

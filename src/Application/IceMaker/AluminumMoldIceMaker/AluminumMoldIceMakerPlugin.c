@@ -28,6 +28,13 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState
 };
 
+static const FeelerArmMonitorConfig_t feelerArmMonitorConfig = {
+   .feelerArmMonitoringRequestErd = Erd_FeelerArmMonitoringRequest,
+   .timerModuleErd = Erd_TimerModule,
+   .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
+   .feelerArmPositionErd = Erd_FeelerArmPosition
+};
+
 void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
 {
    FillTubeHeaterVotingFrameworkPlugin_Init(
@@ -44,6 +51,11 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
       &instance->_private.fillTubeHeaterSoftPwm,
       dataModel,
       &softPwmConfig);
+
+   FeelerArmMonitor_Init(
+      &instance->_private.feelerArmMonitor,
+      dataModel,
+      &feelerArmMonitorConfig);
 
    AluminumMoldIceMaker_Init(
       &instance->_private.aluminumMoldIceMaker,
