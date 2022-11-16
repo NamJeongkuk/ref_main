@@ -16,7 +16,11 @@ typedef struct
    uint16_t stepsToClose;
    uint16_t stepsToHome;
    uint8_t delayBetweenStepEventsInMs;
-   uint16_t maxTimeForDamperToBeOpenInMinutes;
+   uint8_t maxTimeForDamperToBeOpenInMinutes;
+   uint8_t targetCompartmentMinimumTemperatureChangeTimeInMinutes;
+   uint8_t targetCompartmentDamperHeaterOnTimeInMinutes;
+   int16_t sourceCompartmentMaximumTemperatureToRunCheckInDegfx100;
+   int16_t targetCompartmentMinimumTemperatureChangeInDegfx100;
 } SingleDamperData_t;
 
 #endif

@@ -13,28 +13,6 @@
 #include "EnhancedSabbathData.h"
 #include "Constants_Binary.h"
 
-static void SetNumberOfFreshFoodDefrostsBeforeAFreezerDefrostWhenEnhancedSabbathModeIs(DefrostParameterSelector_t *instance, bool enhancedSabbathMode)
-{
-   uint8_t numberOfFreshFoodDefrostsBeforeAFreezerDefrost;
-
-   const DefrostData_t *defrostData = PersonalityParametricData_Get(instance->_private.dataModel)->defrostData;
-   const EnhancedSabbathData_t *enhancedSabbathData = PersonalityParametricData_Get(instance->_private.dataModel)->enhancedSabbathData;
-
-   if(enhancedSabbathMode)
-   {
-      numberOfFreshFoodDefrostsBeforeAFreezerDefrost = enhancedSabbathData->numberOfFreshFoodDefrostsBeforeFreezerDefrost;
-   }
-   else
-   {
-      numberOfFreshFoodDefrostsBeforeAFreezerDefrost = defrostData->numberOfFreshFoodDefrostsBeforeFreezerDefrost;
-   }
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost,
-      &numberOfFreshFoodDefrostsBeforeAFreezerDefrost);
-}
-
 static void SetMaxPrechillTimeInMinutes(DefrostParameterSelector_t *instance, bool defrostIsFreshFoodOnly)
 {
    uint8_t maxPrechillTimeInMinutes;
@@ -145,16 +123,12 @@ static void DataModelChanged(void *context, const void *args)
    const DataModelOnDataChangeArgs_t *onChangeData = args;
    Erd_t erd = onChangeData->erd;
 
-   if(erd == Erd_DefrostIsFreshFoodOnly)
+   if(erd == Erd_CurrentDefrostType)
    {
-      const bool *defrostIsFreshFoodOnly = onChangeData->data;
-      SetMaxPrechillTimeInMinutes(instance, *defrostIsFreshFoodOnly);
-      SetPostDwellExitTimeInMinutes(instance, *defrostIsFreshFoodOnly);
-   }
-   else if(erd == Erd_EnhancedSabbathMode)
-   {
-      const bool *enhancedSabbathMode = onChangeData->data;
-      SetNumberOfFreshFoodDefrostsBeforeAFreezerDefrostWhenEnhancedSabbathModeIs(instance, *enhancedSabbathMode);
+      const DefrostType_t *currentDefrostType = onChangeData->data;
+      bool defrostIsFreshFoodOnly = (*currentDefrostType == DefrostType_FreshFood);
+      SetMaxPrechillTimeInMinutes(instance, defrostIsFreshFoodOnly);
+      SetPostDwellExitTimeInMinutes(instance, defrostIsFreshFoodOnly);
    }
    else if(erd == Erd_FreshFoodDefrostWasAbnormal ||
       erd == Erd_FreezerDefrostWasAbnormal ||
@@ -170,19 +144,13 @@ void DefrostParameterSelector_Init(DefrostParameterSelector_t *instance, I_DataM
 {
    instance->_private.dataModel = dataModel;
 
-   bool defrostIsFreshFoodOnly;
+   DefrostType_t currentDefrostType;
    DataModel_Read(
       instance->_private.dataModel,
-      Erd_DefrostIsFreshFoodOnly,
-      &defrostIsFreshFoodOnly);
+      Erd_CurrentDefrostType,
+      &currentDefrostType);
 
-   bool enhancedSabbathMode;
-   DataModel_Read(
-      instance->_private.dataModel,
-      Erd_EnhancedSabbathMode,
-      &enhancedSabbathMode);
-
-   SetNumberOfFreshFoodDefrostsBeforeAFreezerDefrostWhenEnhancedSabbathModeIs(instance, enhancedSabbathMode);
+   bool defrostIsFreshFoodOnly = (currentDefrostType == DefrostType_FreshFood);
    SetMaxPrechillTimeInMinutes(instance, defrostIsFreshFoodOnly);
    SetPostDwellExitTimeInMinutes(instance, defrostIsFreshFoodOnly);
    SetTimeWhenDefrostReadyTimerIsSatisfiedInMinutes(instance);

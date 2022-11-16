@@ -82,7 +82,7 @@ static const ErdWriterOnCompareMatchConfiguration_t config = {
    NUM_ELEMENTS(configurationEntries)
 };
 
-void DefrostStateOnCompareMatch(DefrostStateOnCompareMatch_t *instance, I_DataModel_t *dataModel)
+void DefrostStateOnCompareMatch_Init(DefrostStateOnCompareMatch_t *instance, I_DataModel_t *dataModel)
 {
    ErdWriterOnCompareMatch_Init(
       &instance->_private.erdWriterOnCompareMatch,

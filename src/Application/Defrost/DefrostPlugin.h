@@ -11,7 +11,6 @@
 #include "I_DataModel.h"
 #include "Defrost.h"
 #include "DefrostHeaterMaxOnTime.h"
-#include "FreshFoodOnlyDefrostArbitrator.h"
 #include "DefrostCompressorOnTimeCounter.h"
 #include "DefrostStateOnCompareMatch.h"
 #include "DoorAccelerationCounter.h"
@@ -21,6 +20,7 @@
 #include "DefrostStateOnCompareMatch.h"
 #include "DefrostHeaterOnTimeCounter.h"
 #include "FreezerDefrostHeaterVotingFrameworkPlugin.h"
+#include "NextDefrostTypeArbiter.h"
 
 typedef struct
 {
@@ -28,7 +28,6 @@ typedef struct
    {
       Defrost_t defrost;
       DefrostHeaterMaxOnTime_t defrostHeaterMaxOnTime;
-      FreshFoodOnlyDefrostArbitrator_t freshFoodOnlyDefrostArbitrator;
       DefrostCompressorOnTimeCounter_t defrostCompressorOnTimeCounter;
       DoorAccelerationCounter_t doorAccelerationCounter;
       ReadyToDefrost_t readyToDefrost;
@@ -37,9 +36,15 @@ typedef struct
       DefrostStateOnCompareMatch_t defrostStateOnCompareMatch;
       DefrostHeaterOnTimeCounter_t defrostHeaterOnTimeCounter;
       FreezerDefrostHeaterVotingFrameworkPlugin_t freezerDefrostHeaterVotingFramework;
+      NextDefrostTypeArbiter_t nextDefrostTypeArbiter;
    } _private;
 } DefrostPlugin_t;
 
+/*!
+ *
+ * @param instance
+ * @param dataModel
+ */
 void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel);
 
 #endif

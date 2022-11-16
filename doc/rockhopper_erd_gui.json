@@ -428,13 +428,6 @@
         },
         {
           "namespace": "rockhopper",
-          "displayName": "Defrost Is Fresh Food Only",
-          "name": "Erd_DefrostIsFreshFoodOnly",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "rockhopper",
           "displayName": "Max Prechill Time In Minutes",
           "name": "Erd_MaxPrechillTimeInMinutes",
           "read": true,
@@ -472,6 +465,27 @@
           "namespace": "rockhopper",
           "displayName": "Freezer Filtered Temperature Too Warm At Power Up",
           "name": "Erd_FreezerFilteredTemperatureTooWarmAtPowerUp",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Next Defrost Type",
+          "name": "Erd_NextDefrostType",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fresh Food Defrost Count",
+          "name": "Erd_FreshFoodDefrostCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Current Defrost Type",
+          "name": "Erd_CurrentDefrostType",
           "read": true,
           "write": true
         }

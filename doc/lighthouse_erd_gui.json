@@ -477,8 +477,8 @@
             },
             {
                "namespace": "rockhopper",
-               "displayName": "Defrost Is Fresh Food Only",
-               "name": "Erd_DefrostIsFreshFoodOnly",
+               "displayName": "Current Defrost Type",
+               "name": "Erd_CurrentDefrostType",
                "read": true
             },
             {

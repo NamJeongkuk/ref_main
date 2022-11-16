@@ -56,13 +56,6 @@ static const DefrostHeaterMaxOnTimeConfiguration_t defrostHeaterMaxOnTimeConfig 
    .convertibleCompartmentDefrostHeaterMaxOnTimeInMinutesErd = Erd_ConvertibleCompartmentDefrostHeaterMaxOnTimeInMinutes
 };
 
-static const FreshFoodOnlyDefrostArbitratorConfiguration_t freshFoodOnlyDefrostArbitratorConfig = {
-   .numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd = Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost,
-   .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
-   .defrostIsFreshFoodOnlyErd = Erd_DefrostIsFreshFoodOnly,
-   .defrostParameterSelectorReadyErd = Erd_DefrostParameterSelectorReady
-};
-
 static const DefrostCompressorOnTimeCounterConfiguration_t defrostCompressorOnTimeCounterConfig = {
    .compressorIsOnErd = Erd_CompressorIsOn,
    .waitingToDefrostErd = Erd_WaitingToDefrost,
@@ -115,6 +108,16 @@ static const TimeThatPrechillConditionsAreMetConfiguration_t timeThatPrechillCon
    .timeThatPrechillConditionsAreMetInMinutesErd = Erd_TimeThatPrechillConditionsAreMetInMinutes,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .timerModuleErd = Erd_TimerModule
+};
+
+static const NextDefrostTypeArbiterConfig_t nextDefrostTypeArbiterConfig = {
+   .nextDefrostTypeErd = Erd_NextDefrostType,
+   .defrostingErd = Erd_Defrosting,
+   .freshFoodDefrostCountErd = Erd_FreshFoodDefrostCount,
+   .numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd = Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost,
+   .enhancedSabbathModeErd = Erd_EnhancedSabbathMode,
+   .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
+   .currentDefrostTypeErd = Erd_CurrentDefrostType
 };
 
 void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
@@ -183,14 +186,9 @@ void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
 
    DefrostParameterSelector_Init(&instance->_private.defrostParameterSelector, dataModel);
 
-   FreshFoodOnlyDefrostArbitrator_Init(
-      &instance->_private.freshFoodOnlyDefrostArbitrator,
-      dataModel,
-      &freshFoodOnlyDefrostArbitratorConfig);
-
    FreezerDefrostHeaterVotingFrameworkPlugin_Init(&instance->_private.freezerDefrostHeaterVotingFramework, dataModel);
 
-   DefrostStateOnCompareMatch(&instance->_private.defrostStateOnCompareMatch, dataModel);
+   DefrostStateOnCompareMatch_Init(&instance->_private.defrostStateOnCompareMatch, dataModel);
 
    Defrost_Init(&instance->_private.defrost, dataModel, &defrostConfig);
 
@@ -213,4 +211,9 @@ void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
       &instance->_private.readyToDefrost,
       dataModel,
       &readyToDefrostConfig);
+
+   NextDefrostTypeArbiter_Init(
+      &instance->_private.nextDefrostTypeArbiter,
+      dataModel,
+      &nextDefrostTypeArbiterConfig);
 }

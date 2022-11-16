@@ -19,6 +19,11 @@ typedef struct
    } _private;
 } DefrostStateOnCompareMatch_t;
 
-void DefrostStateOnCompareMatch(DefrostStateOnCompareMatch_t *instance, I_DataModel_t *dataModel);
+/*!
+ *
+ * @param instance
+ * @param dataModel
+ */
+void DefrostStateOnCompareMatch_Init(DefrostStateOnCompareMatch_t *instance, I_DataModel_t *dataModel);
 
 #endif
