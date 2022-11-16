@@ -13,6 +13,7 @@
 #include "DataSource_Gpio.h"
 #include "DataSource_Adc.h"
 #include "DataSource_OldHw_Pwm.h"
+#include "DataSource_Pwm.h"
 #include "DataSource_OldHw_InputCapture.h"
 #include "DataSource_OldHw_Personality.h"
 
@@ -89,7 +90,7 @@ I_DataSource_t *DataSource_Bsp_Init(TimerModule_t *timerModule)
    instance.dataSources[index++] = DataSource_OldHw_InputCapture_Init(timerModule, &instance.OnDataChange);
 #else
    // instance.dataSources[index++] = DataSource_Personality_Init();
-   // instance.dataSources[index++] = DataSource_Pwm_Init();
+   instance.dataSources[index++] = DataSource_Pwm_Init();
    // instance.dataSources[index++] = DataSource_InputCapture_Init(timerModule, &instance.OnDataChange);
 #endif
    // These inits need to be placed after the Personality_Init. As of now, there is some overlap of pins.

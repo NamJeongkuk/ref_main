@@ -12,6 +12,7 @@
 #include "ParametricData.h"
 #include "DataSource_Gpio.h"
 #include "DataSource_Adc.h"
+#include "DataSource_Pwm.h"
 #include "DataSource_OldHw_Pwm.h"
 #include "DataSource_OldHw_InputCapture.h"
 #include "DataSource_OldHw_Personality.h"
@@ -94,6 +95,17 @@ static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_Adc_LOAD_CURRENT, Erd_BspAdc_LOAD_CURRENT },
    { Erd_Adc_HW_PERSONALITY_00, Erd_BspAdc_HW_PERSONALITY_00 },
    { Erd_Adc_HW_PERSONALITY_01, Erd_BspAdc_HW_PERSONALITY_01 },
+   { Erd_Pwm_PWM_25K_00, Erd_BspPwm_PWM_25K_00 },
+   { Erd_Pwm_PWM_25K_01, Erd_BspPwm_PWM_25K_01 },
+   { Erd_Pwm_PWM_25K_02, Erd_BspPwm_PWM_25K_02 },
+   { Erd_Pwm_PWM_25K_03, Erd_BspPwm_PWM_25K_03 },
+   { Erd_Pwm_PWM_25K_04, Erd_BspPwm_PWM_25K_04 },
+   { Erd_Pwm_PWM_200_00, Erd_BspPwm_PWM_200_00 },
+   { Erd_Pwm_PWM_200_01, Erd_BspPwm_PWM_200_01 },
+   { Erd_Pwm_PWM_200_02, Erd_BspPwm_PWM_200_02 },
+   { Erd_Pwm_PWM_200_03, Erd_BspPwm_PWM_200_03 },
+   { Erd_Pwm_PWM_VAR_00, Erd_BspPwm_PWM_VAR_00 },
+   { Erd_Pwm_PWM_VAR_01, Erd_BspPwm_PWM_VAR_01 }
 };
 #endif
 

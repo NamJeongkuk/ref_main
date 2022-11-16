@@ -1,12 +1,12 @@
 /*!
  * @file
- * @brief
+ * @brief Pwm driver implementation for rockhopper rx130 mainboard.
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef DATASOURCE_OLDHW_PWM_H
-#define DATASOURCE_OLDHW_PWM_H
+#ifndef DATASOURCE_PWM_H
+#define DATASOURCE_PWM_H
 
 #include "I_DataSource.h"
 #include "BspErdRanges.h"
@@ -20,7 +20,7 @@
 #define EXPAND_AS_ENUM(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
    OutputChannel_Pwm_##pwm,
 
-#ifdef OLD_HW
+#ifndef OLD_HW
 enum
 {
    Erd_BspPwm_Start = (BspErdPwmStart - 1),
@@ -36,9 +36,8 @@ enum
 #endif
 
 /*!
- * @param timerModule
  * @return
  */
-I_DataSource_t *DataSource_OldHw_Pwm_Init(void);
+I_DataSource_t *DataSource_Pwm_Init(void);
 
 #endif

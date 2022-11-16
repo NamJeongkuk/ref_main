@@ -780,6 +780,17 @@ enum
    ENTRY(Erd_ApplicationToBspPwm_PWM_2,                     0xF402, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
    ENTRY(Erd_ApplicationToBspPwm_PWM_4,                     0xF403, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
    ENTRY(Erd_ApplicationToBspPwm_PWM_5,                     0xF404, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_25K_00,                                0xF405, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_25K_01,                                0xF406, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_25K_02,                                0xF407, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_25K_03,                                0xF408, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_25K_04,                                0xF409, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_200_00,                                0xF40A, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_200_01,                                0xF40B, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_200_02,                                0xF40C, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_200_03,                                0xF40D, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_VAR_00,                                0xF40E, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_VAR_01,                                0xF40F, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ApplicationToBspInputCapture_CAPT_0,           0xF410, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ApplicationToBspInputCapture_CAPT_1,           0xF411, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
