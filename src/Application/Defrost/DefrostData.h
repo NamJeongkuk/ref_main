@@ -16,7 +16,6 @@
 
 typedef struct
 {
-   uint8_t defrostPeriodicTimeoutInSeconds;
    uint16_t freezerDoorIncrementFactorInSecondsPerSecond;
    uint16_t freshFoodDoorIncrementFactorInSecondsPerSecond;
    uint16_t minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes;
