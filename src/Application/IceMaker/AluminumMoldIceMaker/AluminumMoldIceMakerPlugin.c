@@ -8,6 +8,7 @@
 #include "SystemErds.h"
 #include "AluminumMoldIceMakerPlugin.h"
 #include "PersonalityParametricData.h"
+#include "IceMakerEnableResolver.h"
 
 FreezerIceRateHandlerConfig_t iceRateHandlerConfig = {
    .freezerIceRateTriggerSignal = Erd_FreezerIceRateTriggerSignal,
@@ -35,6 +36,19 @@ static const FeelerArmMonitorConfig_t feelerArmMonitorConfig = {
    .feelerArmPositionErd = Erd_FeelerArmPosition
 };
 
+static const Erd_t enableErdsList[] = {
+   Erd_IceMakerEnabledByUser, Erd_IceMakerEnabledByGrid, Erd_IceMakerEnabledByDemandResponse
+};
+
+static const ErdLogicServiceConfigurationEntry_t configurationEntries[] = {
+   { ErdLogicServiceOperator_Or, { enableErdsList, NUM_ELEMENTS(enableErdsList) }, Erd_IceMakerEnabledResolved },
+};
+
+static const ErdLogicServiceConfiguration_t iceMakerEnableResolverConfiguration = {
+   configurationEntries,
+   NUM_ELEMENTS(configurationEntries)
+};
+
 void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
 {
    FillTubeHeaterVotingFrameworkPlugin_Init(
@@ -56,6 +70,11 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
       &instance->_private.feelerArmMonitor,
       dataModel,
       &feelerArmMonitorConfig);
+
+   IceMakerEnableResolver_Init(
+      &instance->_private.iceMakerEnableResolver,
+      dataModel,
+      &iceMakerEnableResolverConfiguration);
 
    AluminumMoldIceMaker_Init(
       &instance->_private.aluminumMoldIceMaker,

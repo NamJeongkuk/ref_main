@@ -14,6 +14,7 @@
 #include "SoftPwm.h"
 #include "AluminumMoldIceMaker.h"
 #include "FeelerArmMonitor.h"
+#include "IceMakerEnableResolver.h"
 
 typedef struct
 {
@@ -24,6 +25,7 @@ typedef struct
       SoftPwm_t fillTubeHeaterSoftPwm;
       FeelerArmMonitor_t feelerArmMonitor;
       AluminumMoldIceMaker_t aluminumMoldIceMaker;
+      IceMakerEnableResolver_t iceMakerEnableResolver;
    } _private;
 } AluminumMoldIceMakerPlugin_t;
 

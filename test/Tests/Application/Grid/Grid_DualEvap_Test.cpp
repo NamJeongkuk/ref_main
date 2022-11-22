@@ -86,10 +86,10 @@ TEST_GROUP(Grid_DualEvap_Test)
       CHECK_TRUE(actual.care);
    }
 
-   void IceMakersEnabledShouldBe(bool expected)
+   void IceMakerEnabledShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_IceMakersEnabled, &actual);
+      DataModel_Read(dataModel, Erd_IceMakerEnabledByGrid, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -218,7 +218,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks0And1And2)
       And FreezerEvapFanSpeedVoteShouldBe(FanSpeed_Low);
       And CondenserFanSpeedVoteShouldBe(FanSpeed_SuperHigh);
       And ValvePositionVoteShouldBe(ValvePosition_B);
-      And IceMakersEnabledShouldBe(DISABLED);
+      And IceMakerEnabledShouldBe(DISABLED);
       And DelayConvertibleCompartmentCoolingShouldBe(DISABLED);
       And CoolConvertibleCompartmentBeforeOffShouldBe(DISABLED);
       And UseDelayedConvertibleCompartmentCoolingLowSpeedShouldBe(DISABLED);
@@ -237,7 +237,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks3And4And5And6)
 
       The CondenserFanSpeedVoteShouldBe(FanSpeed_SuperHigh);
       And ValvePositionVoteShouldBe(ValvePosition_A);
-      And IceMakersEnabledShouldBe(DISABLED);
+      And IceMakerEnabledShouldBe(DISABLED);
       And DelayConvertibleCompartmentCoolingShouldBe(DISABLED);
       And CoolConvertibleCompartmentBeforeOffShouldBe(DISABLED);
       And UseDelayedConvertibleCompartmentCoolingLowSpeedShouldBe(DISABLED);
@@ -258,7 +258,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks7And8And9)
       And FreezerEvapFanSpeedVoteShouldBe(FanSpeed_High);
       And CondenserFanSpeedVoteShouldBe(FanSpeed_High);
       And ValvePositionVoteShouldBe(ValvePosition_B);
-      And IceMakersEnabledShouldBe(ENABLED);
+      And IceMakerEnabledShouldBe(ENABLED);
       And DelayConvertibleCompartmentCoolingShouldBe(DISABLED);
       And CoolConvertibleCompartmentBeforeOffShouldBe(DISABLED);
       And UseDelayedConvertibleCompartmentCoolingLowSpeedShouldBe(DISABLED);
@@ -346,7 +346,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks14And15And16)
       The FreshFoodEvapFanSpeedVoteShouldBe(FanSpeed_Off);
       The ValvePositionVoteShouldBe(ValvePosition_B);
       And FreshFoodPulldownOffsetENABLEDShouldBe(DISABLED);
-      The IceMakersEnabledShouldBe(ENABLED);
+      The IceMakerEnabledShouldBe(ENABLED);
       And The DelayConvertibleCompartmentCoolingShouldBe(ENABLED);
       And The CoolConvertibleCompartmentBeforeOffShouldBe(DISABLED);
       And UseDelayedConvertibleCompartmentCoolingLowSpeedShouldBe(DISABLED);
@@ -433,7 +433,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks21And22And23)
       And GridIsRun();
 
       FreshFoodPulldownOffsetENABLEDShouldBe(DISABLED);
-      And IceMakersEnabledShouldBe(ENABLED);
+      And IceMakerEnabledShouldBe(ENABLED);
       And MaxTimeInValvePositionAShouldBe(DISABLED);
       And DelayConvertibleCompartmentCoolingShouldBe(ENABLED);
       And CoolConvertibleCompartmentBeforeOffShouldBe(DISABLED);
@@ -574,7 +574,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks28And29And30)
       FreshFoodEvapFanSpeedVoteShouldBe(FanSpeed_Off);
 
       FreshFoodPulldownOffsetENABLEDShouldBe(DISABLED);
-      And IceMakersEnabledShouldBe(ENABLED);
+      And IceMakerEnabledShouldBe(ENABLED);
       And MaxTimeInValvePositionAShouldBe(DISABLED);
       And DelayConvertibleCompartmentCoolingShouldBe(ENABLED);
       And CoolConvertibleCompartmentBeforeOffShouldBe(DISABLED);
@@ -702,7 +702,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesFor35And36And37)
       FreshFoodEvapFanSpeedVoteShouldBe(FanSpeed_Off);
 
       FreshFoodPulldownOffsetENABLEDShouldBe(DISABLED);
-      IceMakersEnabledShouldBe(ENABLED);
+      IceMakerEnabledShouldBe(ENABLED);
       MaxTimeInValvePositionAShouldBe(DISABLED);
       DelayConvertibleCompartmentCoolingShouldBe(DISABLED);
       CoolConvertibleCompartmentBeforeOffShouldBe(DISABLED);
@@ -794,7 +794,7 @@ TEST(Grid_DualEvap_Test, ShouldOutputCorrectValuesForBlocks42And43And44)
       And GridIsRun();
 
       FreshFoodEvapFanSpeedVoteShouldBe(FanSpeed_Off);
-      IceMakersEnabledShouldBe(ENABLED);
+      IceMakerEnabledShouldBe(ENABLED);
       MaxTimeInValvePositionAShouldBe(DISABLED);
       DelayConvertibleCompartmentCoolingShouldBe(DISABLED);
 
