@@ -2,7 +2,7 @@
  * @file
  * @brief Controls Compressor Speed Frequency
  *
- * This module controls and manages the requests to the lower level compressor. It enforces minimum off, on, and run times
+ * This module controls and manages the requests to the lower level compressor. It enforces minimum times
  * as well as startup conditions.
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
@@ -22,6 +22,9 @@ typedef struct
    Erd_t compressorStateErd; // CompressorState_t
    Erd_t compressorSpeedRequestErd; // CompressorSpeed_t
    Erd_t compressorSpeedResolvedVoteErd; // CompressorVotedSpeed_t
+   Erd_t valvePositionResolvedVoteErd; // VotedValvePosition_t
+   Erd_t filteredAmbientTemperatureInDegFx100Erd; // TemperatureDegFx100_t
+   Erd_t disableMinimumCompressorTimeErd; // bool
    uint8_t sabbathDelayTimeInSeconds; // uint8_t
 } CompressorSpeedControllerConfiguration_t;
 
@@ -33,6 +36,10 @@ typedef struct
       const CompressorData_t *compressorData;
       const CompressorSpeedControllerConfiguration_t *config;
       Timer_t compressorTimer;
+      Timer_t sabbathDelayTimer;
+      Timer_t startupTimer;
+      Timer_t minimumRunTimer;
+      Timer_t remainOffAfterValveMoveTimer;
       TimerModule_t *timerModule;
       Hsm_t hsm;
       CompressorSpeed_t cacheSpeedFromResolvedVote;

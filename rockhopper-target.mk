@@ -80,6 +80,7 @@ SRC_DIRS:=\
   src/Application/Sensor \
   src/Application/SystemMonitor \
   src/Application/TimerModule \
+  src/Application/Valve \
   Parametric/data/Production/ \
 
 INC_DIRS:=\

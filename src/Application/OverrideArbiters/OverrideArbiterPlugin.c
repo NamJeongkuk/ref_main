@@ -58,7 +58,23 @@ static const OverrideArbiterConfiguration_t freshFoodCabinetFilteredTemperatureA
    NUM_ELEMENTS(freshFoodCabinetFilteredTemperatureOverrideRequestErdList)
 };
 
-static const Erd_t freshFoodThermistorValidOverrideArbiterRequestErdLis[] = {
+static const Erd_t ambientFilteredTemperatureOverrideRequestErdList[] = {
+   Erd_Ambient_FilteredTemperatureOverrideRequest
+};
+
+static const Erd_t ambientFilteredTemperatureValueErdList[] = {
+   Erd_Ambient_FilteredTemperatureInDegFx100,
+   Erd_Ambient_FilteredTemperatureOverrideValueInDegFx100
+};
+
+static const OverrideArbiterConfiguration_t ambientFilteredTemperatureArbiterConfiguration = {
+   ambientFilteredTemperatureOverrideRequestErdList,
+   ambientFilteredTemperatureValueErdList,
+   Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
+   NUM_ELEMENTS(ambientFilteredTemperatureValueErdList)
+};
+
+static const Erd_t freshFoodThermistorValidOverrideArbiterRequestErdList[] = {
    Erd_FreshFoodThermistor_IsValidOverrideRequest
 };
 
@@ -68,13 +84,13 @@ static const Erd_t freshFoodThermistorValidValueErdList[] = {
 };
 
 static const OverrideArbiterConfiguration_t freshFoodThermistorValidArbiterConfiguration = {
-   freshFoodThermistorValidOverrideArbiterRequestErdLis,
+   freshFoodThermistorValidOverrideArbiterRequestErdList,
    freshFoodThermistorValidValueErdList,
    Erd_FreshFoodThermistor_IsValidResolved,
-   NUM_ELEMENTS(freshFoodThermistorValidOverrideArbiterRequestErdLis)
+   NUM_ELEMENTS(freshFoodThermistorValidOverrideArbiterRequestErdList)
 };
 
-static const Erd_t freezerThermistorValidOverrideArbiterRequestErdLis[] = {
+static const Erd_t freezerThermistorValidOverrideArbiterRequestErdList[] = {
    Erd_FreezerThermistor_IsValidOverrideRequest
 };
 
@@ -84,13 +100,13 @@ static const Erd_t freezerThermistorValidValueErdList[] = {
 };
 
 static const OverrideArbiterConfiguration_t freezerThermistorValidArbiterConfiguration = {
-   freezerThermistorValidOverrideArbiterRequestErdLis,
+   freezerThermistorValidOverrideArbiterRequestErdList,
    freezerThermistorValidValueErdList,
    Erd_FreezerThermistor_IsValidResolved,
-   NUM_ELEMENTS(freezerThermistorValidOverrideArbiterRequestErdLis)
+   NUM_ELEMENTS(freezerThermistorValidOverrideArbiterRequestErdList)
 };
 
-static const Erd_t freshFoodEvapThermistorValidOverrideArbiterRequestErdLis[] = {
+static const Erd_t freshFoodEvapThermistorValidOverrideArbiterRequestErdList[] = {
    Erd_FreshFoodEvapThermistor_IsValidOverrideRequest
 };
 
@@ -100,13 +116,13 @@ static const Erd_t freshFoodEvapThermistorValidValueErdList[] = {
 };
 
 static const OverrideArbiterConfiguration_t freshFoodEvapThermistorValidArbiterConfiguration = {
-   freshFoodEvapThermistorValidOverrideArbiterRequestErdLis,
+   freshFoodEvapThermistorValidOverrideArbiterRequestErdList,
    freshFoodEvapThermistorValidValueErdList,
    Erd_FreshFoodEvapThermistor_IsValidResolved,
-   NUM_ELEMENTS(freshFoodEvapThermistorValidOverrideArbiterRequestErdLis)
+   NUM_ELEMENTS(freshFoodEvapThermistorValidOverrideArbiterRequestErdList)
 };
 
-static const Erd_t freezerEvapThermistorValidOverrideArbiterRequestErdLis[] = {
+static const Erd_t freezerEvapThermistorValidOverrideArbiterRequestErdList[] = {
    Erd_FreezerEvapThermistor_IsValidOverrideRequest
 };
 
@@ -116,13 +132,13 @@ static const Erd_t freezerEvapThermistorValidValueErdList[] = {
 };
 
 static const OverrideArbiterConfiguration_t freezerEvapThermistorValidArbiterConfiguration = {
-   freezerEvapThermistorValidOverrideArbiterRequestErdLis,
+   freezerEvapThermistorValidOverrideArbiterRequestErdList,
    freezerEvapThermistorValidValueErdList,
    Erd_FreezerEvapThermistor_IsValidResolved,
-   NUM_ELEMENTS(freezerEvapThermistorValidOverrideArbiterRequestErdLis)
+   NUM_ELEMENTS(freezerEvapThermistorValidOverrideArbiterRequestErdList)
 };
 
-static const Erd_t convertibleCompartmentCabinetThermistorValidOverrideArbiterRequestErdLis[] = {
+static const Erd_t convertibleCompartmentCabinetThermistorValidOverrideArbiterRequestErdList[] = {
    Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideRequest
 };
 
@@ -132,13 +148,13 @@ static const Erd_t convertibleCompartmentCabinetThermistorValidValueErdList[] = 
 };
 
 static const OverrideArbiterConfiguration_t convertibleCompartmentCabinetThermistorValidArbiterConfiguration = {
-   convertibleCompartmentCabinetThermistorValidOverrideArbiterRequestErdLis,
+   convertibleCompartmentCabinetThermistorValidOverrideArbiterRequestErdList,
    convertibleCompartmentCabinetThermistorValidValueErdList,
    Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved,
-   NUM_ELEMENTS(convertibleCompartmentCabinetThermistorValidOverrideArbiterRequestErdLis)
+   NUM_ELEMENTS(convertibleCompartmentCabinetThermistorValidOverrideArbiterRequestErdList)
 };
 
-static const Erd_t ambientThermistorValidOverrideArbiterRequestErdLis[] = {
+static const Erd_t ambientThermistorValidOverrideArbiterRequestErdList[] = {
    Erd_AmbientThermistor_IsValidOverrideRequest
 };
 
@@ -148,13 +164,13 @@ static const Erd_t ambientThermistorValidValueErdList[] = {
 };
 
 static const OverrideArbiterConfiguration_t ambientThermistorValidArbiterConfiguration = {
-   ambientThermistorValidOverrideArbiterRequestErdLis,
+   ambientThermistorValidOverrideArbiterRequestErdList,
    ambientThermistorValidValueErdList,
    Erd_AmbientThermistor_IsValidResolved,
-   NUM_ELEMENTS(ambientThermistorValidOverrideArbiterRequestErdLis)
+   NUM_ELEMENTS(ambientThermistorValidOverrideArbiterRequestErdList)
 };
 
-static const Erd_t convertibleCompartmentEvapThermistorValidOverrideArbiterRequestErdLis[] = {
+static const Erd_t convertibleCompartmentEvapThermistorValidOverrideArbiterRequestErdList[] = {
    Erd_ConvertibleCompartmentEvapThermistor_IsValidOverrideRequest
 };
 
@@ -164,10 +180,10 @@ static const Erd_t convertibleCompartmentEvapThermistorValidValueErdList[] = {
 };
 
 static const OverrideArbiterConfiguration_t convertibleCompartmentEvapThermistorValidArbiterConfiguration = {
-   convertibleCompartmentEvapThermistorValidOverrideArbiterRequestErdLis,
+   convertibleCompartmentEvapThermistorValidOverrideArbiterRequestErdList,
    convertibleCompartmentEvapThermistorValidValueErdList,
    Erd_ConvertibleCompartmentEvapThermistor_IsValidResolved,
-   NUM_ELEMENTS(convertibleCompartmentEvapThermistorValidOverrideArbiterRequestErdLis)
+   NUM_ELEMENTS(convertibleCompartmentEvapThermistorValidOverrideArbiterRequestErdList)
 };
 
 static struct
@@ -175,6 +191,7 @@ static struct
    OverrideArbiter_t freezerEvaporatorFilteredTemperatureArbiter;
    OverrideArbiter_t freezerCabinetFilteredTemperatureArbiter;
    OverrideArbiter_t freshFoodCabinetFilteredTemperatureArbiter;
+   OverrideArbiter_t ambientFilteredTemperatureArbiter;
    OverrideArbiter_t freshFoodThermistorValidArbiter;
    OverrideArbiter_t freezerThermistorValidArbiter;
    OverrideArbiter_t freshFoodEvapThermistorValidArbiter;
@@ -200,6 +217,11 @@ static void InitializeFilteredTemperatureArbiters(I_DataModel_t *dataModel)
       &instance.freshFoodCabinetFilteredTemperatureArbiter,
       DataModel_AsDataSource(dataModel),
       &freshFoodCabinetFilteredTemperatureArbiterConfiguration);
+
+   OverrideArbiter_Init(
+      &instance.ambientFilteredTemperatureArbiter,
+      DataModel_AsDataSource(dataModel),
+      &ambientFilteredTemperatureArbiterConfiguration);
 }
 
 static void InitializeThermistorIsValidArbiters(I_DataModel_t *dataModel)

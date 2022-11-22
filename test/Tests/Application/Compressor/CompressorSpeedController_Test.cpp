@@ -28,18 +28,24 @@ extern "C"
 #define Given
 #define When
 #define And
-#define The
+#define Active true
+#define Inactive false
 
 enum
 {
-   SomeSabbathTimeInSeconds = 20
+   SomeSabbathTimeInSeconds = 20,
+   SomeAmbientTemperatureAboveTheThreshold = 301,
+   SomeAmbientTemperatureBelowTheThreshold = 299,
 };
 
 static const CompressorSpeedControllerConfiguration_t config = {
    .compressorStateErd = Erd_CompressorState,
    .compressorSpeedRequestErd = Erd_CompressorControllerSpeedRequest,
    .compressorSpeedResolvedVoteErd = Erd_CompressorSpeed_ResolvedVote,
-   .sabbathDelayTimeInSeconds = SomeSabbathTimeInSeconds
+   .valvePositionResolvedVoteErd = Erd_ValvePosition_ResolvedVote,
+   .filteredAmbientTemperatureInDegFx100Erd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
+   .disableMinimumCompressorTimeErd = Erd_DisableMinimumCompressorTimes,
+   .sabbathDelayTimeInSeconds = SomeSabbathTimeInSeconds,
 };
 
 TEST_GROUP(VariableSpeedCompressorSpeedController)
@@ -65,7 +71,7 @@ TEST_GROUP(VariableSpeedCompressorSpeedController)
       compressorData = personalityParametricData->compressorData;
    }
 
-   void CompressorSpeedControllerIsInitialized()
+   void TheCompressorSpeedControllerIsInitialized()
    {
       CompressorSpeedController_Init(
          &instance,
@@ -73,7 +79,7 @@ TEST_GROUP(VariableSpeedCompressorSpeedController)
          &config);
    }
 
-   void CompressorHsmStateShouldBe(CompressorState_t expected)
+   void TheCompressorHsmStateShouldBe(CompressorState_t expected)
    {
       CompressorState_t actual;
       DataModel_Read(
@@ -83,7 +89,15 @@ TEST_GROUP(VariableSpeedCompressorSpeedController)
       CHECK_EQUAL(expected, actual);
    }
 
-   void ValvePositionIs(ValvePosition_t position)
+   void TheFilteredAmbientTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
+         &temperature);
+   }
+
+   void TheValvePositionIs(ValvePosition_t position)
    {
       ValveVotedPosition_t votedPosition;
       votedPosition.care = true;
@@ -94,54 +108,101 @@ TEST_GROUP(VariableSpeedCompressorSpeedController)
          &votedPosition);
    }
 
-   void CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_t requestedState)
+   ValvePosition_t GetValvePosition()
+   {
+      ValveVotedPosition_t actualValvePosition;
+      DataModel_Read(
+         dataModel,
+         Erd_ValvePosition_ResolvedVote,
+         &actualValvePosition);
+
+      return actualValvePosition.position;
+   }
+
+   void TheValvePositionChanges()
+   {
+      if(GetValvePosition() == ValvePosition_B)
+      {
+         TheValvePositionIs(ValvePosition_C);
+      }
+      else
+      {
+         TheValvePositionIs(ValvePosition_B);
+      }
+   }
+
+   void MinimumTimesAreDisabled()
+   {
+      bool active = true;
+      DataModel_Write(
+         dataModel,
+         Erd_DisableMinimumCompressorTimes,
+         &active);
+   }
+
+   void MinimumTimesAreEnabled()
+   {
+      bool inactive = false;
+      DataModel_Write(
+         dataModel,
+         Erd_DisableMinimumCompressorTimes,
+         &inactive);
+   }
+
+   void TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_t requestedState)
    {
       if(requestedState == CompressorState_OffAndReadyToChange)
       {
-         Given ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
-         And The CompressorSpeedControllerIsInitialized();
+         Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+         And TheCompressorSpeedControllerIsInitialized();
       }
 
       else if(requestedState == CompressorState_SabbathDelay)
       {
-         Given The CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OffAndReadyToChange);
-         When The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+         Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OffAndReadyToChange);
+         When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
       }
 
       else if(requestedState == CompressorState_Startup)
       {
-         Given The CompressorSpeedControllerIsInitialized();
+         Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_SabbathDelay);
          After(SomeSabbathTimeInSeconds * MSEC_PER_SEC);
       }
 
       else if(requestedState == CompressorState_MinimumOnTime)
       {
-         Given The CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_Startup);
+         Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_Startup);
          After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC);
       }
 
       else if(requestedState == CompressorState_OnAndReadyToChange)
       {
-         Given The CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOnTime);
+         Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOnTime);
          After(compressorData->compressorTimes.minimumOnTimeInMinutes * MSEC_PER_MIN);
       }
 
       else if(requestedState == CompressorState_VariableSpeedMinimumRunTime)
       {
-         Given The CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
-         When The ResolvedVoteChangesToAnotherNonzeroSpeed();
+         Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
+         When TheResolvedVoteChangesToAnotherNonzeroSpeed();
       }
 
       else if(requestedState == CompressorState_MinimumOffTime)
       {
-         Given The CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
-         When The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+         Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
+         When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
       }
 
-      CompressorHsmStateShouldBe(requestedState);
+      else if(requestedState == CompressorState_RemainOffAfterValveMove)
+      {
+         Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOffTime);
+         When TheValvePositionChanges();
+      }
+
+      TheCompressorHsmStateShouldBe(requestedState);
    }
 
-   void ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_t speed, bool care)
+   void TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_t speed, bool care)
    {
       CompressorVotedSpeed_t vote;
       vote.speed = speed;
@@ -158,7 +219,7 @@ TEST_GROUP(VariableSpeedCompressorSpeedController)
       TimerModule_TestDouble_ElapseTime(timerModuleDouble, ticks, 1000);
    }
 
-   void CompressorControllerSpeedRequestShouldBe(CompressorSpeed_t expected)
+   void TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_t expected)
    {
       CompressorSpeed_t actual;
       DataModel_Read(
@@ -178,167 +239,603 @@ TEST_GROUP(VariableSpeedCompressorSpeedController)
       return currentVotedSpeed.speed;
    }
 
-   void ResolvedVoteChangesToAnotherNonzeroSpeed()
+   void TheResolvedVoteChangesToAnotherNonzeroSpeed()
    {
       if(GetCompressorResolvedVotedSpeed() == CompressorSpeed_Low)
       {
-         ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Medium, Vote_Care);
+         TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Medium, Vote_Care);
       }
       else
       {
-         ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+         TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
       }
    }
 };
 
-TEST(VariableSpeedCompressorSpeedController, ShouldInitialize)
+TEST(VariableSpeedCompressorSpeedController, ShouldInitializeIntoOffAndReadyToChangeIfVotedSpeedIsZero)
 {
-   Given CompressorSpeedControllerIsInitialized();
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+   And TheCompressorSpeedControllerIsInitialized();
+   TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldInitializeIntoOnAndReadyToChangeIfVotedSpeedIsNonZeroAndMinimumTimesAreDisabled)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitialized();
+   And MinimumTimesAreDisabled();
+
+   TheCompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldInitializeIntoSabbathDelayIfVotedSpeedIsNonZeroAndMinimumTimesAreEnabled)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   Given TheCompressorSpeedControllerIsInitialized();
+   TheCompressorHsmStateShouldBe(CompressorState_SabbathDelay);
 }
 
 TEST(VariableSpeedCompressorSpeedController, ShouldTransitionToOffStateOnInitWhenVotedCompressorSpeedIsOff)
 {
-   Given ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
-   And The CompressorSpeedControllerIsInitialized();
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+   And TheCompressorSpeedControllerIsInitialized();
 
-   The CompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
-   And The CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
+   TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+   And TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
 }
 
-TEST(VariableSpeedCompressorSpeedController, CompressorControllerSpeedRequestShouldBeOffWhenResolvedRequestBecomesNonZero)
+TEST(VariableSpeedCompressorSpeedController, TheCompressorControllerSpeedRequestShouldBeOffWhenResolvedRequestBecomesNonZeroOnInit)
 {
-   Given The CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OffAndReadyToChange);
+   Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OffAndReadyToChange);
 
-   The CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
 
-   When ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_High, Vote_Care);
-   The CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_High, Vote_Care);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
 }
 
-TEST(VariableSpeedCompressorSpeedController, ShouldInitializeIntoSabbathDelayWithNonZeroResolvedSpeedVote)
+TEST(VariableSpeedCompressorSpeedController, ShouldHaveCompressorSpeedRequestOffWhenInSabbathDelayWithNonZeroResolvedSpeedVoteEvenIfSpeedChanges)
 {
-   Given ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
-   And The CompressorSpeedControllerIsInitialized();
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_SabbathDelay);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
 
-   The CompressorHsmStateShouldBe(CompressorState_SabbathDelay);
-   And The CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
-}
-
-TEST(VariableSpeedCompressorSpeedController, ShouldHaveCompressorSpeedRequestOffWhenInSabbathDelayWithNonZeroResolvedSpeedVote)
-{
-   Given ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
-   And The CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_SabbathDelay);
-
-   When The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_High, Vote_Care);
-   The CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_High, Vote_Care);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
 }
 
 TEST(VariableSpeedCompressorSpeedController, ShouldNotRequestACompressorSpeedForSabbathTimeWhileInSabbathStateThenShouldTransitionToStartupStateAfterStartupTime)
 {
-   Given The CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_SabbathDelay);
-   The CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
+   Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_SabbathDelay);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
 
    After(SomeSabbathTimeInSeconds * MSEC_PER_SEC - 1);
-   The CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
 
    After(1);
-   The CompressorHsmStateShouldBe(CompressorState_Startup);
+   TheCompressorHsmStateShouldBe(CompressorState_Startup);
 }
 
 TEST(VariableSpeedCompressorSpeedController, ShouldRequestStartupSpeedUponEntryToStartupState)
 {
-   Given The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
-   And The CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_Startup);
-   The CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Startup);
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_Startup);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Startup);
 }
 
 TEST(VariableSpeedCompressorSpeedController, ShouldRequestCompressorStartupSpeedForStartupTimerWhileInStartupState)
 {
-   Given The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
-   And The CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_Startup);
-   CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Startup);
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_Startup);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Startup);
 
-   When ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
-   CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Startup);
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Startup);
 }
 
 TEST(VariableSpeedCompressorSpeedController, ShouldTransitionToMinimumOnTimeFromStartupStateAfterStartupTime)
 {
-   Given The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
-   And The CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_Startup);
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_Startup);
 
    After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
-   The CompressorHsmStateShouldBe(CompressorState_Startup);
+   TheCompressorHsmStateShouldBe(CompressorState_Startup);
 
    After(1);
-   The CompressorHsmStateShouldBe(CompressorState_MinimumOnTime);
+   TheCompressorHsmStateShouldBe(CompressorState_MinimumOnTime);
 }
 
 TEST(VariableSpeedCompressorSpeedController, ShouldRequestCachedSpeedFromSabbathStateOnceInMinimumOnTimeEvenIfResolvedSpeedChanges)
 {
-   Given The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
-   And CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_Startup);
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_Startup);
 
    After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
-   The CompressorHsmStateShouldBe(CompressorState_Startup);
+   TheCompressorHsmStateShouldBe(CompressorState_Startup);
 
-   When The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Medium, Vote_Care);
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Medium, Vote_Care);
 
    After(1);
-   CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Low);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Low);
 }
 
 TEST(VariableSpeedCompressorSpeedController, ShouldNotTransitionFromOffAndReadyToChangeIfVoteChangesFromOffAndDontCareToOffAndCare)
 {
-   Given The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_DontCare);
-   And CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OffAndReadyToChange);
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_DontCare);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OffAndReadyToChange);
 
-   When The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
-   The CompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+   TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
 }
 
 TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromMinimumOnTimeToOnAndReadyToChangeAfterMinimumOnTimerExpires)
 {
-   Given The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
-   And CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOnTime);
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOnTime);
 
    After(compressorData->compressorTimes.minimumOnTimeInMinutes * MSEC_PER_MIN - 1);
-   The CompressorHsmStateShouldBe(CompressorState_MinimumOnTime);
+   TheCompressorHsmStateShouldBe(CompressorState_MinimumOnTime);
 
    After(1);
-   The CompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
+   TheCompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
 }
 
 TEST(VariableSpeedCompressorSpeedController, ShouldNotRequestCompressorSpeedInTransitionFromMinimumOnTimeToOnAndReadyToChange)
 {
-   Given The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
-   And CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOnTime);
-   CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Low);
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOnTime);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Low);
 
    After(compressorData->compressorTimes.minimumOnTimeInMinutes * MSEC_PER_MIN);
-   CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Low);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Low);
 }
 
 TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromOnAndReadyToChangeToMinimumOffTimeWhenResolvedSpeedVoteBecomesOff)
 {
-   Given The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
-   And CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
-   CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Low);
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Low);
 
-   When The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
-   The CompressorHsmStateShouldBe(CompressorState_MinimumOffTime);
-   And CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+   TheCompressorHsmStateShouldBe(CompressorState_MinimumOffTime);
+   And TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
 }
 
 TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromOnAndReadyToChangeToVariableSpeedMinimumRunTimeWhenResolvedSpeedVoteChangesToNonzeroSpeed)
 {
-   Given The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
-   And CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
-   CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Low);
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Low);
 
-   When The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Medium, Vote_Care);
-   The CompressorHsmStateShouldBe(CompressorState_VariableSpeedMinimumRunTime);
-   CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Medium);
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Medium, Vote_Care);
+   TheCompressorHsmStateShouldBe(CompressorState_VariableSpeedMinimumRunTime);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Medium);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromVariableSpeedMinimumRunTimeToOnAndReadyToChangeWhenTheMinimumRunTimerCompletes)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
+   And TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Medium, Vote_Care);
+
+   After(compressorData->compressorTimes.variableSpeedMinimumRunTimeInMinutes * MSEC_PER_MIN - 1);
+   TheCompressorHsmStateShouldBe(CompressorState_VariableSpeedMinimumRunTime);
+
+   After(1);
+   TheCompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldNotChangeRequestedSpeedWhileInMinimumRunTimeEvenIfResolvedCompressorSpeedVoteChangesToNonzeroSpeed)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
+   And TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Medium, Vote_Care);
+
+   After(compressorData->compressorTimes.variableSpeedMinimumRunTimeInMinutes * MSEC_PER_MIN - 1);
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Medium);
+
+   After(1);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Medium);
+   TheCompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromMinimumOffTimeToOffAndReadyToChangeAfterMinimumOffTimeInMinutes)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOffTime);
+
+   After(compressorData->compressorTimes.minimumOffTimeInMinutes * MSEC_PER_MIN - 1);
+   TheCompressorHsmStateShouldBe(CompressorState_MinimumOffTime);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
+
+   After(1);
+   TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromMinimumOffTimeToRemainOffAfterValveMoveWhenValvePositionChanges)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOffTime);
+
+   When TheValvePositionChanges();
+   TheCompressorHsmStateShouldBe(CompressorState_RemainOffAfterValveMove);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromRemainOffAfterValveMoveToMinimumOffTimeAfterRemainOffAfterValveMoveTimerElapses)
+{
+   Given TheFilteredAmbientTemperatureIs(SomeAmbientTemperatureAboveTheThreshold);
+   And TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOffTime);
+
+   When TheValvePositionChanges();
+   TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_RemainOffAfterValveMove);
+
+   After(compressorData->compressorTimes.remainOffAfterValveMoveTimeInMinutes * MSEC_PER_MIN - 1);
+   TheCompressorHsmStateShouldBe(CompressorState_RemainOffAfterValveMove);
+
+   After(1);
+   TheCompressorHsmStateShouldBe(CompressorState_MinimumOffTime);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromRemainOffAfterValveMoveToOffAndReadyAfterRemainOffAfterValveMoveTimerElapsesWithLowAmbientTemperature)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheFilteredAmbientTemperatureIs(SomeAmbientTemperatureBelowTheThreshold);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OffAndReadyToChange);
+
+   When TheValvePositionChanges();
+   After(compressorData->compressorTimes.remainOffAfterValveMoveLowAmbientTimeInMinutes * MSEC_PER_MIN - 1);
+   TheCompressorHsmStateShouldBe(CompressorState_RemainOffAfterValveMove);
+
+   After(1);
+   TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromRemainOffAfterValveMoveToMinimumOffTimeAfterRemainOffAfterValveMoveTimerElapsesWithLowAmbientTemperature)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheFilteredAmbientTemperatureIs(SomeAmbientTemperatureBelowTheThreshold);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOffTime);
+
+   When TheValvePositionChanges();
+   After(compressorData->compressorTimes.remainOffAfterValveMoveLowAmbientTimeInMinutes * MSEC_PER_MIN - 1);
+   TheCompressorHsmStateShouldBe(CompressorState_RemainOffAfterValveMove);
+
+   After(1);
+   TheCompressorHsmStateShouldBe(CompressorState_MinimumOffTime);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionToRemainOffAfterValveMoveThenToOffAndReadyToChangeWhenValveMovesLateInMinimumOffTime)
+{
+   Given TheFilteredAmbientTemperatureIs(SomeAmbientTemperatureAboveTheThreshold);
+   And TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOffTime);
+
+   After(compressorData->compressorTimes.minimumOffTimeInMinutes * MSEC_PER_MIN - 1);
+   TheValvePositionChanges();
+   TheCompressorHsmStateShouldBe(CompressorState_RemainOffAfterValveMove);
+
+   After(compressorData->compressorTimes.remainOffAfterValveMoveTimeInMinutes * MSEC_PER_MIN - 1);
+   TheCompressorHsmStateShouldBe(CompressorState_RemainOffAfterValveMove);
+
+   After(1);
+   TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionToRemainOffAfterValveMoveThenToOffAndReadyToChangeWhenValveMovesLateInMinimumOffTimeWithLowAmbientTemperature)
+{
+   Given TheFilteredAmbientTemperatureIs(SomeAmbientTemperatureBelowTheThreshold);
+   And TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOffTime);
+
+   After(compressorData->compressorTimes.minimumOffTimeInMinutes * MSEC_PER_MIN - 1);
+   TheValvePositionChanges();
+   TheCompressorHsmStateShouldBe(CompressorState_RemainOffAfterValveMove);
+
+   After(compressorData->compressorTimes.remainOffAfterValveMoveLowAmbientTimeInMinutes * MSEC_PER_MIN - 1);
+   TheCompressorHsmStateShouldBe(CompressorState_RemainOffAfterValveMove);
+
+   After(1);
+   TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldNotRequestACompressorSpeedInTransitionFromOffAndReadyToChangeToRemainOffAfterValveMove)
+{
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OffAndReadyToChange);
+
+   TheValvePositionChanges();
+   And TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+
+   TheCompressorHsmStateShouldBe(CompressorState_RemainOffAfterValveMove);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionToRemainOffAfterValveMoveFromOffAndReadyToChangeWhenValveMoves)
+{
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OffAndReadyToChange);
+
+   When TheValvePositionChanges();
+   TheCompressorHsmStateShouldBe(CompressorState_RemainOffAfterValveMove);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromMinimumOnTimeToMinimumOffTimeAfterMinimumOnTimeIfCompressorVoteBecomesOff)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOnTime);
+
+   After(compressorData->compressorTimes.minimumOnTimeInMinutes * MSEC_PER_MIN - 1);
+   TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+
+   After(1);
+   TheCompressorHsmStateShouldBe(CompressorState_MinimumOffTime);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromSabbathDelayToOnAndReadyWhenDisableRequestIsSetAndResolvedVoteIsNonzero)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_SabbathDelay);
+
+   And MinimumTimesAreDisabled();
+
+   TheCompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Low);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromSabbathDelayToOffAndReadyWhenDisableRequestIsSetAndResolvedVoteIsZero)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_SabbathDelay);
+
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+   And MinimumTimesAreDisabled();
+
+   TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldRequestResolvedCompressorSpeedIfMinimumTimesAreDisabledDuringSabbathDelay)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_SabbathDelay);
+
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_High, Vote_Care);
+   And MinimumTimesAreDisabled();
+
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_High);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromMinimumOnTimeToOnAndReadyWhenDisableRequestIsSetAndResolvedVoteIsNonZero)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOnTime);
+
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_High, Vote_Care);
+   And MinimumTimesAreDisabled();
+
+   TheCompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_High);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromSabbathDelayTimeToOffAndReadyWhenDisableRequestIsSetAndResolvedVoteIsZero)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_SabbathDelay);
+
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+   And MinimumTimesAreDisabled();
+
+   TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromMinimumOffTimeToOnAndReadyWhenDisableRequestIsSetAndResolvedVoteIsNonZero)
+{
+   Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOffTime);
+
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And MinimumTimesAreDisabled();
+
+   TheCompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Low);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromMinimumOffTimeToOffAndReadyWhenDisableRequestIsSetAndResolvedVoteIsZero)
+{
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOffTime);
+
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+   And MinimumTimesAreDisabled();
+
+   TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromVariableSpeedMinimumRunTimeToOffAndReadyWhenDisableRequestIsSetAndResolvedVoteIsZero)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
+   And TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Medium, Vote_Care);
+
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+   And MinimumTimesAreDisabled();
+
+   TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromVariableSpeedMinimumRunTimeToOnAndReadyWhenDisableRequestIsSetAndResolvedVoteIsNonZero)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
+   And TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Medium, Vote_Care);
+
+   And MinimumTimesAreDisabled();
+
+   TheCompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Medium);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromRemainOffAfterValveMoveToOffAndReadyWhenDisableRequestIsSetAndResolvedVoteIsZero)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_RemainOffAfterValveMove);
+
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+   And MinimumTimesAreDisabled();
+
+   TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromVariableSpeedToOnAndReadyWhenDisableRequestIsSetAndResolvedVoteIsNonZero)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
+   And TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Medium, Vote_Care);
+
+   And MinimumTimesAreDisabled();
+
+   TheCompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
+   And TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Medium);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromOffAndReadyToChangeToOnAndReadyToChangeWhenMinimumTimeDisabledIsSet)
+{
+   Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OffAndReadyToChange);
+   And MinimumTimesAreDisabled();
+
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_High, Vote_Care);
+   TheCompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
+   And TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_High);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromOnAndReadyToChangeToOffAndReadyToChangeWhenMinimumTimeDisabledIsSet)
+{
+   Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
+   And MinimumTimesAreDisabled();
+
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+   TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+   And TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldNotTransitionFromOffAndReadyToChangeWhenValveMovesWhenDisableMinimumTimeIsSet)
+{
+   Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OffAndReadyToChange);
+   And MinimumTimesAreDisabled();
+
+   When TheValvePositionChanges();
+   TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldNotLeaveOnAndReadyToChangeWhenResolvedSpeedVoteChangesWhenDisableMinimumTimeIsSet)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   When TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
+   And MinimumTimesAreDisabled();
+
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_High, Vote_Care);
+   TheCompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
+   And TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_High);
+
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_SuperLow, Vote_Care);
+   TheCompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
+   And TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_SuperLow);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromOnAndReadyToMinimumOffTimeTimeWhenSpeedVoteBecomesNonZeroAfterReEnablingMinimumOnTime)
+{
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
+   And MinimumTimesAreDisabled();
+
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_High, Vote_Care);
+   TheCompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
+
+   When MinimumTimesAreEnabled();
+
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+   TheCompressorHsmStateShouldBe(CompressorState_MinimumOffTime);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromOffAndReadyToSabbathDelayTimeWhenSpeedVoteBecomesNonZeroAfterReEnablingMinimumOnTime)
+{
+   Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OffAndReadyToChange);
+   And MinimumTimesAreDisabled();
+
+   TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+
+   When MinimumTimesAreEnabled();
+   And TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_High, Vote_Care);
+   And TheCompressorHsmStateShouldBe(CompressorState_SabbathDelay);
+   And TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldNotRestartMinimumOffTimeIfComingFromRemainOnAfterValveMoveState)
+{
+   Given TheFilteredAmbientTemperatureIs(SomeAmbientTemperatureAboveTheThreshold);
+   And TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOffTime);
+
+   When TheValvePositionChanges();
+   TheCompressorHsmStateShouldBe(CompressorState_RemainOffAfterValveMove);
+
+   After(compressorData->compressorTimes.remainOffAfterValveMoveTimeInMinutes * MSEC_PER_MIN);
+   TheCompressorHsmStateShouldBe(CompressorState_MinimumOffTime);
+
+   After((compressorData->compressorTimes.minimumOffTimeInMinutes * MSEC_PER_MIN) - (compressorData->compressorTimes.remainOffAfterValveMoveTimeInMinutes * MSEC_PER_MIN) - 1);
+   TheCompressorHsmStateShouldBe(CompressorState_MinimumOffTime);
+
+   After(1);
+   TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldTransitionFromMinimumOffTimeToSabbathDelayIfResolvedVoteBecomesNonZeroDuringMinimumOffTime)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOffTime);
+
+   After(compressorData->compressorTimes.minimumOffTimeInMinutes * MSEC_PER_MIN - 1);
+   TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_High, Vote_Care);
+   TheCompressorHsmStateShouldBe(CompressorState_MinimumOffTime);
+
+   After(1);
+   TheCompressorHsmStateShouldBe(CompressorState_SabbathDelay);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldInitializeIntoSabbathDelayStateIfResolvedVoteIsNonZeroOnInit)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+
+   When TheCompressorSpeedControllerIsInitialized();
+   TheCompressorHsmStateShouldBe(CompressorState_SabbathDelay);
+}
+
+TEST(VariableSpeedCompressorSpeedController, ShouldDisableCompressorTimesWhenMinimumTimesAreDisabled)
+{
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOnTime);
+
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+
+   When MinimumTimesAreDisabled();
+   And TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   TheCompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
+
+   When MinimumTimesAreEnabled();
+   And TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+   TheCompressorHsmStateShouldBe(CompressorState_MinimumOffTime);
+
+   After(compressorData->compressorTimes.minimumOffTimeInMinutes * MSEC_PER_MIN - 1);
+   TheCompressorHsmStateShouldBe(CompressorState_MinimumOffTime);
+
+   After(1);
+   TheCompressorHsmStateShouldBe(CompressorState_OffAndReadyToChange);
 }
 
 TEST_GROUP(SingleSpeedCompressorSpeedController)
@@ -364,7 +861,7 @@ TEST_GROUP(SingleSpeedCompressorSpeedController)
       compressorData = personalityParametricData->compressorData;
    }
 
-   void CompressorSpeedControllerIsInitialized()
+   void TheCompressorSpeedControllerIsInitialized()
    {
       CompressorSpeedController_Init(
          &instance,
@@ -372,7 +869,7 @@ TEST_GROUP(SingleSpeedCompressorSpeedController)
          &config);
    }
 
-   void CompressorHsmStateShouldBe(CompressorState_t expected)
+   void TheCompressorHsmStateShouldBe(CompressorState_t expected)
    {
       CompressorState_t actual;
       DataModel_Read(
@@ -382,54 +879,54 @@ TEST_GROUP(SingleSpeedCompressorSpeedController)
       CHECK_EQUAL(expected, actual);
    }
 
-   void CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_t requestedState)
+   void TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_t requestedState)
    {
       if(requestedState == CompressorState_OffAndReadyToChange)
       {
-         Given ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
-         And The CompressorSpeedControllerIsInitialized();
+         Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+         And TheCompressorSpeedControllerIsInitialized();
       }
 
       else if(requestedState == CompressorState_SabbathDelay)
       {
-         Given The CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OffAndReadyToChange);
-         When The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+         Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OffAndReadyToChange);
+         When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
       }
 
       else if(requestedState == CompressorState_Startup)
       {
-         Given The CompressorSpeedControllerIsInitialized();
+         Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_SabbathDelay);
          After(SomeSabbathTimeInSeconds * MSEC_PER_SEC);
       }
 
       else if(requestedState == CompressorState_MinimumOnTime)
       {
-         Given The CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_Startup);
+         Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_Startup);
          After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC);
       }
 
       else if(requestedState == CompressorState_OnAndReadyToChange)
       {
-         Given The CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOnTime);
+         Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_MinimumOnTime);
          After(compressorData->compressorTimes.minimumOnTimeInMinutes * MSEC_PER_MIN);
       }
 
       else if(requestedState == CompressorState_VariableSpeedMinimumRunTime)
       {
-         Given The CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
-         When The ResolvedVoteChangesToAnotherNonzeroSpeed();
+         Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
+         When TheResolvedVoteChangesToAnotherNonzeroSpeed();
       }
 
       else if(requestedState == CompressorState_MinimumOffTime)
       {
-         Given The CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
-         When The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
+         Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
+         When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Off, Vote_Care);
       }
 
-      CompressorHsmStateShouldBe(requestedState);
+      TheCompressorHsmStateShouldBe(requestedState);
    }
 
-   void ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_t speed, bool care)
+   void TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_t speed, bool care)
    {
       CompressorVotedSpeed_t vote;
       vote.speed = speed;
@@ -446,7 +943,7 @@ TEST_GROUP(SingleSpeedCompressorSpeedController)
       TimerModule_TestDouble_ElapseTime(timerModuleDouble, ticks, 1000);
    }
 
-   void CompressorControllerSpeedRequestShouldBe(CompressorSpeed_t expected)
+   void TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_t expected)
    {
       CompressorSpeed_t actual;
       DataModel_Read(
@@ -466,25 +963,25 @@ TEST_GROUP(SingleSpeedCompressorSpeedController)
       return currentVotedSpeed.speed;
    }
 
-   void ResolvedVoteChangesToAnotherNonzeroSpeed()
+   void TheResolvedVoteChangesToAnotherNonzeroSpeed()
    {
       if(GetCompressorResolvedVotedSpeed() == CompressorSpeed_Low)
       {
-         ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Medium, Vote_Care);
+         TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Medium, Vote_Care);
       }
       else
       {
-         ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+         TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
       }
    }
 };
 
 TEST(SingleSpeedCompressorSpeedController, ShouldNotTransitionFromOnAndReadyToChangeToMinimumVariableSpeedRunTimeWhenResolvedSpeedVoteChangesToNonzeroSpeed)
 {
-   Given The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
-   And CompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
-   CompressorControllerSpeedRequestShouldBe(CompressorSpeed_Low);
+   Given TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Low, Vote_Care);
+   And TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_OnAndReadyToChange);
+   TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Low);
 
-   When The ResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Medium, Vote_Care);
-   The CompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
+   When TheResolvedCompressorSpeedVoteAndCareIs(CompressorSpeed_Medium, Vote_Care);
+   TheCompressorHsmStateShouldBe(CompressorState_OnAndReadyToChange);
 }

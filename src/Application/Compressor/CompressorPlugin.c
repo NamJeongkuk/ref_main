@@ -26,6 +26,9 @@ static const CompressorSpeedControllerConfiguration_t compressorSpeedControllerC
    .compressorStateErd = Erd_CompressorState,
    .compressorSpeedRequestErd = Erd_CompressorControllerSpeedRequest,
    .compressorSpeedResolvedVoteErd = Erd_CompressorSpeed_ResolvedVote,
+   .valvePositionResolvedVoteErd = Erd_ValvePosition_ResolvedVote,
+   .filteredAmbientTemperatureInDegFx100Erd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
+   .disableMinimumCompressorTimeErd = Erd_DisableMinimumCompressorTimes,
    .sabbathDelayTimeInSeconds = CompressorSabbathDelayTimeInSeconds,
 };
 

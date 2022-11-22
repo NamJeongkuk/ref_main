@@ -114,6 +114,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_FIELD(PublicErd_CalculatedFreshFoodEvapFanControl, FanControl_t, rpm),
    SWAPPED_FIELD(PublicErd_FreezerSetpoint_TemperatureBounds, SetpointZoneTemperatureBounds_t, coldSetpointBoundInDegFx100),
    SWAPPED_FIELD(PublicErd_FreezerSetpoint_TemperatureBounds, SetpointZoneTemperatureBounds_t, warmSetpointBoundInDegFx100),
+   SWAPPED_ERD(PublicErd_Ambient_FilteredTemperatureOverrideValueInDegFx100, sizeof(TemperatureDegFx100_t)),
 
    // 0xF200 range
    SWAPPED_ERD(PublicErd_CompressorSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
@@ -195,6 +196,7 @@ static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
    SWAPPED_FIELD_RANGE(PublicErd_Freezer_FilteredTemperatureOverrideValueInDegFx100, PublicErd_Freezer_FilteredTemperatureResolvedInDegFx100),
    SWAPPED_FIELD_RANGE(PublicErd_FreshFood_FilteredTemperatureOverrideValueInDegFx100, PublicErd_FreshFood_FilteredTemperatureResolvedInDegFx100),
    SWAPPED_FIELD_RANGE(PublicErd_FreezerSetpoint_TemperatureBounds, PublicErd_ConvertibleCompartmentSetpoint_TemperatureBounds),
+   SWAPPED_FIELD_RANGE(PublicErd_Ambient_FilteredTemperatureOverrideValueInDegFx100, PublicErd_Ambient_FilteredTemperatureResolvedInDegFx100),
    SWAPPED_FIELD_RANGE(PublicErd_FreezerSetpoint_FactoryVote, PublicErd_FreezerSetpoint_UserVote),
    SWAPPED_FIELD_RANGE(PublicErd_FreshFoodSetpoint_FactoryVote, PublicErd_FreshFoodSetpoint_UserVote),
    SWAPPED_FIELD_RANGE(PublicErd_ApplicationToBspPwm_PWM_0, PublicErd_Pwm_PWM_VAR_01),
