@@ -31,8 +31,8 @@ typedef struct
 } EepromStack_t;
 
 static const HardwareEeprom_I2cMt24xxmmmConfiguration_t eepromConfig = {
-   .peripheralAddress_Write = 0x50,
-   .peripheralAddress_Read = 0x51,
+   .peripheralAddress_Write = 0xA2,
+   .peripheralAddress_Read = 0xA3,
    .numberOfStorageBytes = (32 * 1024),
    .bytesPerPage = 64,
    .byteAlignment = 1,
@@ -62,17 +62,13 @@ void EepromStack_Init(
 #else
    IGNORE(watchdogKickAction);
    IGNORE(timeSourceInterrupt);
+   IGNORE(timerModule);
    HardwareEeprom_I2cMt24xxmmm_Init(
       &instance.eepromI2cMt24,
       I2c_Rx130SerialChannel0_Init(ContextProtector_Rx2xx_GetInstance()),
       &eepromConfig,
       timerModule,
       ContextProtector_Rx2xx_GetInstance());
-
-   HardwareEeprom_DelayedPageOperationWrapper_Init(
-      &instance.eepromDelayedPageOperationWrapper,
-      &instance.eepromI2cMt24.interface,
-      timerModule);
 #endif
 
    InputOutput_Simple_Init(&instance.readFaultIo, &instance.readFaultData, sizeof(instance.readFaultData));
@@ -81,7 +77,7 @@ void EepromStack_Init(
 
    Eeprom_HardwareEeprom_Init(
       &instance.eepromHardwareEepromAdapter,
-      &instance.eepromDelayedPageOperationWrapper.interface,
+      &instance.eepromI2cMt24.interface,
       InputOutput_AsOutput(&instance.readFaultIo.interface),
       InputOutput_AsOutput(&instance.writeFaultIo.interface),
       InputOutput_AsOutput(&instance.eraseFaultIo.interface));
