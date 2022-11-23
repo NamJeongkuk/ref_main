@@ -36,7 +36,8 @@
 
 enum
 {
-   HardwareChannelCount = 32
+   HardwareChannelCount = 32,
+   AdcStateSamplingStates = 130
 };
 
 typedef struct
@@ -104,6 +105,19 @@ static void ConfigureAdcGroupA(void)
 
    // A/D data alignment right
    S12AD.ADCER.BIT.ADRFMT = 0x0;
+
+   // Adjust Sampling Times for Channels 0-7
+   S12AD.ADSSTR0 = AdcStateSamplingStates;
+   S12AD.ADSSTR1 = AdcStateSamplingStates;
+   S12AD.ADSSTR2 = AdcStateSamplingStates;
+   S12AD.ADSSTR3 = AdcStateSamplingStates;
+   S12AD.ADSSTR4 = AdcStateSamplingStates;
+   S12AD.ADSSTR5 = AdcStateSamplingStates;
+   S12AD.ADSSTR6 = AdcStateSamplingStates;
+   S12AD.ADSSTR7 = AdcStateSamplingStates;
+
+   // Adjust Sampling Times for Channels above 8
+   S12AD.ADSSTRL = AdcStateSamplingStates;
 
    // Scan Mode Select - Continuous Scan
    S12AD.ADCSR.BIT.ADCS = 0x2;
