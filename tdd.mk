@@ -22,6 +22,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Defrost \
    $(PROJECT_DIR)/Application/Door \
    $(PROJECT_DIR)/Application/EnhancedSabbath \
+   $(PROJECT_DIR)/Application/Factory \
    $(PROJECT_DIR)/Application/IceMaker \
    $(PROJECT_DIR)/Application/IceMaker/AluminumMoldIceMaker \
    $(PROJECT_DIR)/Application/Setpoints \
@@ -56,6 +57,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/Door \
    $(TESTS_DIR)/Application/ConvertibleCompartment \
    $(TESTS_DIR)/Application/EnhancedSabbath \
+   $(TESTS_DIR)/Application/Factory \
    $(TESTS_DIR)/Application/Setpoints \
    $(TESTS_DIR)/Application/StepperMotor \
    $(TESTS_DIR)/Application/Evaporator \

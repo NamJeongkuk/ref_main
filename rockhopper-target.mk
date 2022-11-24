@@ -60,6 +60,7 @@ SRC_DIRS:=\
   src/Application/Defrost \
   src/Application/Door \
   src/Application/EnhancedSabbath \
+  src/Application/Factory \
   src/Application/Fan \
   src/Application/IceMaker \
   src/Application/IceMaker/AluminumMoldIceMaker \
