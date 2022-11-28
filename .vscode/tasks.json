@@ -1,13 +1,11 @@
 {
    "tasks": [
       {
+         "command": "make -j16 -f rockhopper-target.mk RELEASE=N DEBUG=Y OLD_HW=Y vscode_debug",
+         "label": "rockhopper_vscode_debug",
          "osx": {
             "command": "dmake -j16 -f rockhopper-target.mk RELEASE=N DEBUG=Y OLD_HW=Y vscode_debug"
          },
-         "linux": {
-            "command": "make -j16 -f rockhopper-target.mk RELEASE=N DEBUG=Y OLD_HW=Y vscode_debug"
-         },
-         "label": "rockhopper_vscode_debug",
          "presentation": {
             "clear": false,
             "echo": false,
@@ -26,6 +24,11 @@
       {
          "command": "make -j8 RELEASE=Y -f tdd.mk test/Build/multi-target-starter-kit_tests",
          "label": "tdd_vscode_debug",
+         "options": {
+            "env": {
+               "PATH": "${env:PATH}"
+            }
+         },
          "presentation": {
             "clear": false,
             "echo": false,
@@ -34,12 +37,7 @@
             "reveal": "silent",
             "showReuseMessage": false
          },
-         "type": "shell",
-         "options": {
-            "env": {
-               "PATH": "${env:PATH}"
-            }
-         }
+         "type": "shell"
       }
    ],
    "version": "2.0.0"

@@ -26,7 +26,17 @@ static const SoftPwmConfiguration_t softPwmConfig = {
 };
 
 static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
-   .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState
+   .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState,
+   .waterValveVoteErd = Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
+   .iceMakerHeaterVoteErd = Erd_AluminumMoldIceMakerHeater_IceMakerVote,
+   .iceMakerMotorVoteErd = Erd_AluminumMoldIceMakerMotor_IceMakerVote,
+   .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
+   .feelerArmMonitoringRequestErd = Erd_FeelerArmMonitoringRequest,
+   .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
+   .iceMakerFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureInDegFx100,
+   .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
+   .iceMakerEnabledErd = Erd_IceMakerEnabledResolved,
+   .sabbathModeErd = Erd_SabbathMode
 };
 
 static const FeelerArmMonitorConfig_t feelerArmMonitorConfig = {

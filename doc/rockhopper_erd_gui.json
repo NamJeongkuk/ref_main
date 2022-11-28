@@ -1242,6 +1242,76 @@
           "name": "Erd_FillTubeHeaterPwmDutyCycle",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Aluminum Mold ice maker filtered temperature in degFx100",
+          "name": "Erd_AluminumMoldIceMaker_FilteredTemperatureInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Harvest count calculation request",
+          "name": "Erd_HarvestCountCalculationRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Harvest count is ready to harvest",
+          "name": "Erd_HarvestCountIsReadyToHarvest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Ice maker enabled by user",
+          "name": "Erd_IceMakerEnabledByUser",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Ice maker enabled by grid",
+          "name": "Erd_IceMakerEnabledByGrid",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Ice maker enabled by demand response",
+          "name": "Erd_IceMakerEnabledByDemandResponse",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Ice maker enabled resolved",
+          "name": "Erd_IceMakerEnabledResolved",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Aluminum mold ice maker heater - ice maker vote",
+          "name": "Erd_AluminumMoldIceMakerHeater_IceMakerVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Aluminum mold ice maker motor - ice maker vote",
+          "name": "Erd_AluminumMoldIceMakerMotor_IceMakerVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Aluminum mold ice maker water valve - ice maker vote",
+          "name": "Erd_AluminumMoldIceMakerWaterValve_IceMakerVote",
+          "read": true,
+          "write": false
         }
       ]
     }

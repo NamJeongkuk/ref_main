@@ -51,14 +51,25 @@
          "name": "rockhopper",
          "preLaunchTask": "rockhopper_vscode_debug",
          "request": "launch",
-         "runToEntryPoint": "main",
+         "rttConfig": {
+            "address": "auto",
+            "decoders": [
+               {
+                  "label": "",
+                  "port": 0,
+                  "type": "console"
+               }
+            ],
+            "enabled": true
+         },
          "serverArgs": [
             "-speed",
             "1000"
          ],
-         "serverpath": "${workspaceFolder}/build/rockhopper/JLinkGDBServer",
+         "serverpath": "${workspaceFolder}/build/rockhopper/jlink/JLinkGDBServer",
          "servertype": "jlink",
-         "svdFile": "tools/kpit-rx/svd/rockhopper.svd",
+         "svdFile": "${workspaceFolder}/build/rockhopper/rockhopper.svd",
+         "toolchainPrefix": "rx-elf",
          "type": "cortex-debug"
       }
    ],
