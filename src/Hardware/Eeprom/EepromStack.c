@@ -75,12 +75,21 @@ void EepromStack_Init(
    InputOutput_Simple_Init(&instance.writeFaultIo, &instance.writeFaultData, sizeof(instance.writeFaultData));
    InputOutput_Simple_Init(&instance.eraseFaultIo, &instance.eraseFaultData, sizeof(instance.eraseFaultData));
 
+#ifdef OLD_HW
+   Eeprom_HardwareEeprom_Init(
+      &instance.eepromHardwareEepromAdapter,
+      &instance.eepromDelayedPageOperationWrapper.interface,
+      InputOutput_AsOutput(&instance.readFaultIo.interface),
+      InputOutput_AsOutput(&instance.writeFaultIo.interface),
+      InputOutput_AsOutput(&instance.eraseFaultIo.interface));
+#else
    Eeprom_HardwareEeprom_Init(
       &instance.eepromHardwareEepromAdapter,
       &instance.eepromI2cMt24.interface,
       InputOutput_AsOutput(&instance.readFaultIo.interface),
       InputOutput_AsOutput(&instance.writeFaultIo.interface),
       InputOutput_AsOutput(&instance.eraseFaultIo.interface));
+#endif
 }
 
 I_Eeprom_t *EepromStack_GetEeprom(void)
