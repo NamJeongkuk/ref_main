@@ -105,22 +105,6 @@ static const DeltaAxisGridLines_t freezerAxis = {
    .gridLineData = freezerGridLineData
 };
 
-static DeltaAxisGridLines_t parametricGrid[] = {
-   freshFoodAxis,
-   freezerAxis
-};
-
-static DeltaGridLines_t deltaGrid = {
-   .dimensions = NumberGridDimensions,
-   .gridLines = parametricGrid
-};
-
-static const GridData_t gridData = {
-   .gridId = 0,
-   .deltaGridLines = &deltaGrid,
-   .gridPeriodicRunRateInMSec = MSEC_PER_SEC
-};
-
 static CalculatedAxisGridLines_t freshFoodCalculatedAxis = {
    .gridLinesDegFx100 = { 0, 150, 250, 350, 450, 5500 }
 };

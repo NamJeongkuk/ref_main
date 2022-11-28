@@ -9,10 +9,11 @@
 #define GRIDDATA_H
 
 #include "DeltaGridLines.h"
+#include "GridId.h"
 
 typedef struct
 {
-   uint8_t gridId;
+   GridId_t gridId;
    uint16_t gridConfigWord;
    DeltaGridLines_t *deltaGridLines;
    uint16_t gridPeriodicRunRateInMSec;
