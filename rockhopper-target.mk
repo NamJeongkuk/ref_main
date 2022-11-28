@@ -59,6 +59,7 @@ SRC_DIRS:=\
   src/Application/DataSource \
   src/Application/Defrost \
   src/Application/Door \
+  src/Application/DutyCycle \
   src/Application/EnhancedSabbath \
   src/Application/Factory \
   src/Application/Fan \
