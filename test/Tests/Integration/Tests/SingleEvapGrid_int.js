@@ -85,10 +85,10 @@ describe("SingleEvapGrid", () => {
 
    const providedTheResolvedFilteredTemperatureForThe = () => ({
       FreezerCompartmentIs: async (temperatureDegFx100) => {
-         await rockhopper.write("Erd_Freezer_FilteredTemperatureOverrideValue", temperatureDegFx100);
+         await rockhopper.write("Erd_Freezer_FilteredTemperatureOverrideValueInDegFx100", temperatureDegFx100);
       },
       FreshFoodCompartmentIs: async (temperatureDegFx100) => {
-         await rockhopper.write("Erd_FreshFood_FilteredTemperatureOverrideValue", temperatureDegFx100);
+         await rockhopper.write("Erd_FreshFood_FilteredTemperatureOverrideValueInDegFx100", temperatureDegFx100);
       }
    });
 
@@ -240,7 +240,7 @@ describe("SingleEvapGrid", () => {
    it("should publish the correct grid votes for blocks 9,10", async () => {
       for (let i = 9; i <= 10; i++) {
          await providedTheGridLinesAreAdjustedTo(block[i]);
-         await providedTheCoolingModeIs("CoolingMode_Freezer");
+         await providedTheCoolingModeIs("CoolingMode_FreshFood");
          await providedTheCoolingSpeedIs("CoolingSpeed_Off");
          await providedTheSingleEvapPulldownAndTripMitigationIs(active);
          await afterTheGridRuns();
@@ -250,7 +250,7 @@ describe("SingleEvapGrid", () => {
          await theCoolingSpeedShouldBe("CoolingSpeed_High");
          await theGridVotesShouldBe("CompressorSpeed_High", "FanSpeed_High", "FanSpeed_High", "DamperPosition_Closed");
 
-         await providedTheCoolingModeIs("CoolingMode_Freezer");
+         await providedTheCoolingModeIs("CoolingMode_FreshFood");
          await providedTheCoolingSpeedIs("CoolingSpeed_Off");
          await providedTheSingleEvapPulldownAndTripMitigationIs(inActive);
          await afterTheGridRuns();
@@ -417,19 +417,19 @@ describe("SingleEvapGrid", () => {
          await afterTheGridRuns();
 
          await theGridBlockShouldBe(i);
-         await theCoolingModeShouldBe("CoolingMode_FreshFood");
+         await theCoolingModeShouldBe("CoolingMode_Freezer");
          await theCoolingSpeedShouldBe("CoolingSpeed_Low");
          await thePulldownStateShouldBe(false);
-         await theGridVotesShouldBe("CompressorSpeed_Low", "FanSpeed_Low", "FanSpeed_Low", "DamperPosition_Open");
+         await theGridVotesShouldBe("CompressorSpeed_Low", "FanSpeed_Low", "FanSpeed_Low", "DamperPosition_Closed");
 
-         await providedTheCoolingModeIs("CoolingMode_Freezer");
+         await providedTheCoolingModeIs("CoolingMode_FreshFood");
          await providedTheCoolingSpeedIs("CoolingSpeed_High");
          await afterTheGridRuns();
 
          await theCoolingSpeedShouldBe("CoolingSpeed_High");
-         await theCoolingModeShouldBe("CoolingMode_Freezer");
+         await theCoolingModeShouldBe("CoolingMode_FreshFood");
          await thePulldownStateShouldBe(false);
-         await theGridVotesShouldBe("CompressorSpeed_High", "FanSpeed_High", "FanSpeed_High", "DamperPosition_Closed");
+         await theGridVotesShouldBe("CompressorSpeed_High", "FanSpeed_High", "FanSpeed_High", "DamperPosition_Open");
       }
    });
 

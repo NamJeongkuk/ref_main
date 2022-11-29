@@ -187,6 +187,7 @@ void Grid_SingleEvap(void *context)
 
       case 9:
       case 10:
+         SetCoolingMode(dataModel, (currentCoolingSpeed == CoolingSpeed_Off) ? CoolingMode_Freezer : currentCoolingMode);
          SetCoolingSpeed(dataModel,
             (pullDownActive && compressorTripMitigationActive) ? CoolingSpeed_High
                : (currentCoolingSpeed != CoolingSpeed_High)    ? CoolingSpeed_Mid
@@ -209,6 +210,7 @@ void Grid_SingleEvap(void *context)
 
       case 16:
       case 17:
+         SetCoolingMode(dataModel, (currentCoolingSpeed == CoolingSpeed_Off) ? CoolingMode_Freezer : currentCoolingMode);
          SetCoolingSpeed(dataModel, (currentCoolingSpeed != CoolingSpeed_High) ? CoolingSpeed_Mid : currentCoolingSpeed);
          SetPulldownActive(dataModel, CLEAR);
          break;
@@ -248,7 +250,7 @@ void Grid_SingleEvap(void *context)
 
       case 23:
       case 24:
-         SetCoolingMode(dataModel, (currentCoolingSpeed == CoolingSpeed_Off) ? CoolingMode_FreshFood : currentCoolingMode);
+         SetCoolingMode(dataModel, (currentCoolingSpeed == CoolingSpeed_Off) ? CoolingMode_Freezer : currentCoolingMode);
          SetCoolingSpeed(dataModel, (currentCoolingSpeed == CoolingSpeed_Off) ? CoolingSpeed_Low : currentCoolingSpeed);
          SetPulldownActive(dataModel, CLEAR);
          break;
