@@ -651,7 +651,11 @@ enum
    ENTRY(Erd_WaterValve_ResolvedVote,                       0xF280, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_WaterValve_WinningVoteErd,                     0xF281, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_WaterValve_FactoryVote,                        0xF282, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,   0xF283, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_AluminumMoldIceMakerWaterValve_ResolvedVote,   0xF290, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerWaterValve_WinningVoteErd, 0xF291, WinningVoteErd_t,                                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerWaterValve_FactoryVote,    0xF292, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,   0xF293, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Grid_BlockNumber,                              0xF2A0, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Grid_PreviousBlocks,                           0xF2A1, PreviousGridBlockNumbers_t,                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

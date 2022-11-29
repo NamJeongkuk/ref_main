@@ -15,6 +15,7 @@
 #include "AluminumMoldIceMaker.h"
 #include "FeelerArmMonitor.h"
 #include "IceMakerEnableResolver.h"
+#include "ErdResolver.h"
 
 typedef struct
 {
@@ -26,6 +27,9 @@ typedef struct
       FeelerArmMonitor_t feelerArmMonitor;
       AluminumMoldIceMaker_t aluminumMoldIceMaker;
       IceMakerEnableResolver_t iceMakerEnableResolver;
+      ErdResolver_t iceMakerWaterValveVoteResolver;
+      ErdResolver_t iceMakerHeaterVoteResolver;
+      ErdResolver_t iceMakerMotorVoteResolver;
    } _private;
 } AluminumMoldIceMakerPlugin_t;
 
