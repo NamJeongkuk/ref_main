@@ -17,7 +17,10 @@ InputCaptureCounts_t CalculateFeedbackCounts(uint16_t previousCounts, uint16_t c
 {
    if(currentCounts < previousCounts)
    {
-      overflows--;
+      if(overflows > 0)
+      {
+         overflows--;
+      }
    }
 
    return (InputCaptureCounts_t)OverflowCounts * overflows + (uint16_t)(currentCounts - previousCounts);

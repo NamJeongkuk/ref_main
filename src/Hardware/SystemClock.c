@@ -29,14 +29,14 @@ enum
 
 #define B_POWER_CONTROL_MODE_HIGH         ((uint8_t)0)
 
-#define U32_SCKCR_REGISTER_MASK_HIGHSPEED ((uint32_t)0x00000001)
-// 00000000000000000000000000000001b
+#define U32_SCKCR_REGISTER_MASK_HIGHSPEED ((uint32_t)0x00000101)
+// 00000000000000000000000100000001b
 // ||||||||XXXXXXXXXXXX||||XXXX||||
 // ||||||||            ||||    |||#---> PCKD: x1/2
 // ||||||||            ||||    ||#----> PCKD
 // ||||||||            ||||    |#-----> PCKD
 // ||||||||            ||||    #------> PCKD
-// ||||||||            |||#-----------> PCKB: x1
+// ||||||||            |||#-----------> PCKB: x2
 // ||||||||            ||#------------> PCKB
 // ||||||||            |#-------------> PCKB
 // ||||||||            #--------------> PCKB

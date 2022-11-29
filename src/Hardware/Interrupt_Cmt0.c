@@ -70,7 +70,7 @@ I_Interrupt_t *Interrupt_Cmt0_Init(void)
    //Set interrupt priority
    IPR(CMT0, CMI0) = U8_INTERRUPT_PRIORITY_6;
    // Set Compare Match Constant Register - this is the number of cycles between interrupts
-   // PCLK is 32MHz, divided by 8 it is 4MHz so dividing by 4000 gives an accurate 1mS tick
+   // PCLK is 16MHz, divided by 8 it is 2MHz so dividing by 2000 gives an accurate 1mS tick
    CMT0.CMCOR = U32_CMT_0_TIMER_PERIOD;
    // Reset Counter - it counts up until it hits the match constant register.
    CMT0.CMCNT = U16_RESET_CMCNT;

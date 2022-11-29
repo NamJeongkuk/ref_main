@@ -17,6 +17,7 @@
 #include "InterruptPriorityLevel.h"
 #include "utils.h"
 #include "PwmDutyCycle.h"
+#include "SystemClock.h"
 
 #ifndef OLD_HW
 
@@ -58,7 +59,7 @@
 #define CHANNEL_FROM_ERD(erd) (erd - Erd_BspPwm_Start - 1)
 #define ERD_IS_IN_RANGE(erd) (BETWEEN(Erd_BspPwm_Start, erd, Erd_BspPwm_End))
 
-#define PCLOCK_FREQUENCY (32000000)
+#define PCLOCK_FREQUENCY (U32_PCLKB)
 
 enum
 {
@@ -70,9 +71,12 @@ enum
    Mtu3FrequencyCount = PCLOCK_FREQUENCY / Mtu3FrequencyInHz,
    Mtu3RaceConditionLeftGap = 2, /* Heuristics value for detect race-condition that only for Mtu3FrequencyCount */
    Mtu3RaceConditionRightGap = 35, /* Heuristics value for detect race-condition that only for Mtu3FrequencyCount */
-   PwmTmoFrequencyInHz = 200,
-   PwmTmoFrequencyCount = (PCLOCK_FREQUENCY / 1024) / PwmTmoFrequencyInHz,
+   PwmTmoClockSourceFrequency = PCLOCK_FREQUENCY / 64,
+   PwmTmoFrequencyInHz = PwmTmoClockSourceFrequency / (UINT8_MAX - 1), // UINT8_MAX - 1 is the highest compare match value available
+   PwmTmoFrequencyCount = PwmTmoClockSourceFrequency / PwmTmoFrequencyInHz, // Must be lower than UINT8_MAX
 };
+
+STATIC_ASSERT(PwmTmoFrequencyCount < UINT8_MAX);
 
 #define IN_RANGE_GAP(left_gap, middle, right_gap, value) (IN_RANGE(middle - left_gap, value, middle + right_gap))
 
@@ -132,7 +136,7 @@ enum
    CONCAT(IncludeTmo_, mode)                                                                                                                      \
    (CONCAT(IncludeTimerConfig_, timerConfig)(                                                                                                     \
       TMR##timerNumber.TCCR.BIT.CSS = 0x01;                                                                                                       \
-      TMR##timerNumber.TCCR.BIT.CKS = 0x05;))
+      TMR##timerNumber.TCCR.BIT.CKS = 0x04;))
 
 #define EXPAND_AS_SET_COMPARE_MATCH(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
    CONCAT(IncludeTmo_, mode)                                                                                                                 \

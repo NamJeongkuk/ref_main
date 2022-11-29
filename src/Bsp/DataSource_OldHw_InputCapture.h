@@ -16,6 +16,8 @@
 #include "XMacroUtils.h"
 #include "utils.h"
 
+#ifdef OLD_HW
+
 #define IncludeTypeMotor_0(_x) _x
 #define IncludeTypeMotor_1(_x)
 
@@ -60,6 +62,8 @@ enum
    Erd_BspInputCapture_End = Erd_BspInputCapture_OutputErd_End
 };
 // clang-format on
+
+#endif
 
 I_DataSource_t *DataSource_OldHw_InputCapture_Init(
    TimerModule_t *timerModule,

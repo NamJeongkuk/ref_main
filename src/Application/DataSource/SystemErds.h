@@ -824,6 +824,12 @@ enum
    ENTRY(Erd_ApplicationToBspInputCapture_CAPT_2,           0xF412, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ApplicationToBspInputCapture_CAPT_4,           0xF413, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ApplicationToBspInputCapture_CAPT_5,           0xF414, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_InputCapture_CAPTURE_00,                       0xF415, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_InputCapture_CAPTURE_01,                       0xF416, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_InputCapture_CAPTURE_02,                       0xF417, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_InputCapture_CAPTURE_03,                       0xF418, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_InputCapture_CAPTURE_04,                       0xF419, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_InputCapture_CAPTURE_05,                       0xF41A, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Adc_ADC_0,                                     0xF420, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Adc_ADC_1,                                     0xF421, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \

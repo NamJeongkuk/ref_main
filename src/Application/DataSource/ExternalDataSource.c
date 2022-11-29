@@ -203,7 +203,7 @@ static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
    SWAPPED_FIELD_RANGE(PublicErd_FreezerSetpoint_FactoryVote, PublicErd_FreezerSetpoint_UserVote),
    SWAPPED_FIELD_RANGE(PublicErd_FreshFoodSetpoint_FactoryVote, PublicErd_FreshFoodSetpoint_UserVote),
    SWAPPED_FIELD_RANGE(PublicErd_ApplicationToBspPwm_PWM_0, PublicErd_Pwm_PWM_VAR_01),
-   SWAPPED_FIELD_RANGE(PublicErd_ApplicationToBspInputCapture_CAPT_0, PublicErd_ApplicationToBspInputCapture_CAPT_5),
+   SWAPPED_FIELD_RANGE(PublicErd_ApplicationToBspInputCapture_CAPT_0, PublicErd_InputCapture_CAPTURE_05),
    SWAPPED_FIELD_RANGE(PublicErd_Adc_ADC_0, PublicErd_Adc_HW_PERSONALITY_01),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableSnapshotData0, PublicErd_ServiceDiagnosticsFaultTableSnapshotData9),
    SWAPPED_FIELD_RANGE(PublicErd_Eeprom_DefrostCompressorOnTimeInSeconds, PublicErd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds),

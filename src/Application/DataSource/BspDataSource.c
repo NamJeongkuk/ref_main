@@ -13,6 +13,7 @@
 #include "DataSource_Gpio.h"
 #include "DataSource_Adc.h"
 #include "DataSource_Pwm.h"
+#include "DataSource_InputCapture.h"
 #include "DataSource_OldHw_Pwm.h"
 #include "DataSource_OldHw_InputCapture.h"
 #include "DataSource_OldHw_Personality.h"
@@ -105,7 +106,13 @@ static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_Pwm_PWM_200_02, Erd_BspPwm_PWM_200_02 },
    { Erd_Pwm_PWM_200_03, Erd_BspPwm_PWM_200_03 },
    { Erd_Pwm_PWM_VAR_00, Erd_BspPwm_PWM_VAR_00 },
-   { Erd_Pwm_PWM_VAR_01, Erd_BspPwm_PWM_VAR_01 }
+   { Erd_Pwm_PWM_VAR_01, Erd_BspPwm_PWM_VAR_01 },
+   { Erd_InputCapture_CAPTURE_00, Erd_BspInputCapture_CAPTURE_00 },
+   { Erd_InputCapture_CAPTURE_01, Erd_BspInputCapture_CAPTURE_01 },
+   { Erd_InputCapture_CAPTURE_02, Erd_BspInputCapture_CAPTURE_02 },
+   { Erd_InputCapture_CAPTURE_03, Erd_BspInputCapture_CAPTURE_03 },
+   { Erd_InputCapture_CAPTURE_04, Erd_BspInputCapture_CAPTURE_04 },
+   { Erd_InputCapture_CAPTURE_05, Erd_BspInputCapture_CAPTURE_05 }
 };
 #endif
 

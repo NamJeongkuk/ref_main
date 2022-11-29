@@ -324,7 +324,7 @@ static void InitializeI2C(void)
    SCI0.SMR.BYTE = 0x00; // Serial mode is simple I2C: use PCLK, 8-bits of data, 1 stop bit, async mode, parity is disabled
    SCI0.SCMR.BIT.SDIR = 0x01; // Serial mode is simple I2C: Transfer MSB first, SMIF bit = 0, will enable use of simple I2C
    SCI0.SCR.BYTE = 0x00; // Disable all interrupts
-   SCI0.BRR = 0x14; // Setting bit rate to ~46kHz
+   SCI0.BRR = 0x14; // Setting bit rate to ~40kHz
    SCI0.SEMR.BIT.NFEN = 0x01; // Enable noise cancellation for input signals
    SCI0.SNFR.BIT.NFCS = 0x01; // Clock divide by 1 for noise filter
    SCI0.SIMR1.BIT.IICM = 0x00; // Resets I2C mode

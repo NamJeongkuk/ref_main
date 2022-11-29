@@ -202,8 +202,8 @@ I_BufferedUart_t *BufferedUart_Channel9_Init(void)
    SCI9.SEMR.BIT.RXDESEL = 0;
    // Baud rate configured for 230400 with 0.03% error.
    // Set using Python tool in repo tools folder "CalculateBaudUsingMDDR.py"
-   SCI9.BRR = 5;
-   SCI9.MDDR = 177;
+   SCI9.BRR = 3;
+   SCI9.MDDR = 236;
 
    // Set up interrupts in the Interrupt-Control-Unit
    // There is only one priority register per SCI port
