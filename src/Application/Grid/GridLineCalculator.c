@@ -51,7 +51,7 @@ static void CalculateAxisGridLines(
       if(PARAMETRIC_GRID_LINE_BIT_MASK(axisDimension, line) & DeltaGridLines_BitMapping_OffsetBitMask)
       {
          TemperatureDegFx100_t offset;
-         DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).cabinetOffsetInDegFx100Erd, &offset);
+         DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).offsetInDegFx100Erd, &offset);
          axisToCalculate->gridLinesDegFx100[line] += offset;
       }
       if(PARAMETRIC_GRID_LINE_BIT_MASK(axisDimension, line) & DeltaGridLines_BitMapping_ShiftBitMask)
@@ -84,11 +84,11 @@ static void OnDataModelChanged(void *context, const void *args)
    const Erd_t erd = onChangeData->erd;
 
    if((erd == instance->_private.config->gridLineAdjustmentErds[FreshFoodGridLineDimension].rawSetpointErd) ||
-      (erd == instance->_private.config->gridLineAdjustmentErds[FreshFoodGridLineDimension].cabinetOffsetInDegFx100Erd) ||
+      (erd == instance->_private.config->gridLineAdjustmentErds[FreshFoodGridLineDimension].offsetInDegFx100Erd) ||
       (erd == instance->_private.config->gridLineAdjustmentErds[FreshFoodGridLineDimension].adjustedSetpointInDegFx100Erd) ||
       (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].thermalShiftInDegFx100Erd) ||
       (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].rawSetpointErd) ||
-      (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].cabinetOffsetInDegFx100Erd) ||
+      (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].offsetInDegFx100Erd) ||
       (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].adjustedSetpointInDegFx100Erd) ||
       (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].thermalShiftInDegFx100Erd))
    {

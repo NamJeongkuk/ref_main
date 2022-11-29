@@ -13,12 +13,15 @@
 #include "RingBuffer.h"
 #include "GridLineCalculator.h"
 #include "GridBlockCalculator.h"
+#include "GridOffsetAdder.h"
 
 typedef struct
 {
    Grid_t gridInstance;
    GridLineCalculator_t gridLineCalculator;
    GridBlockCalculator_t gridBlockCalculator;
+   GridOffsetAdder_t freshFoodGridOffsetAdder;
+   GridOffsetAdder_t freezerGridOffsetAdder;
 } GridPlugin_t;
 
 void GridPlugin_Init(

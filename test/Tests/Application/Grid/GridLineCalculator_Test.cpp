@@ -56,14 +56,14 @@ enum
 
 static const GridLineAdjustmentErds_t freshFoodGridLineAdjustmentErds = {
    .rawSetpointErd = Erd_FreshFoodSetpoint_ResolvedVote,
-   .cabinetOffsetInDegFx100Erd = Erd_FreshFood_CabinetOffsetInDegFx100,
+   .offsetInDegFx100Erd = Erd_FreshFood_CabinetPlusCrossAmbientOffsetInDegFx100,
    .thermalShiftInDegFx100Erd = Erd_FreshFood_ThermalShiftInDegFx100,
    .adjustedSetpointInDegFx100Erd = Erd_FreshFood_AdjustedSetpointInDegFx100
 };
 
 static const GridLineAdjustmentErds_t freezerGridLineAdjustmentErds = {
    .rawSetpointErd = Erd_FreezerSetpoint_ResolvedVote,
-   .cabinetOffsetInDegFx100Erd = Erd_Freezer_CabinetOffsetInDegFx100,
+   .offsetInDegFx100Erd = Erd_Freezer_CabinetPlusCrossAmbientOffsetInDegFx100,
    .thermalShiftInDegFx100Erd = Erd_Freezer_ThermalShiftInDegFx100,
    .adjustedSetpointInDegFx100Erd = Erd_Freezer_AdjustedSetpointInDegFx100,
 };
@@ -125,17 +125,17 @@ TEST_GROUP(GridLineCalculator)
       FreezerAdjustedSetpointIs(freezerAdjustedSetpoint);
    }
 
-   void FreshFoodCabinetOffsetIs(TemperatureDegFx100_t offset)
+   void FreshFoodSumOffsetIs(TemperatureDegFx100_t offset)
    {
       DataModel_Write(dataModel,
-         Erd_FreshFood_CabinetOffsetInDegFx100,
+         Erd_FreshFood_CabinetPlusCrossAmbientOffsetInDegFx100,
          &offset);
    }
 
-   void FreezerCabinetOffsetIs(TemperatureDegFx100_t offset)
+   void FreezerSumOffsetIs(TemperatureDegFx100_t offset)
    {
       DataModel_Write(dataModel,
-         Erd_Freezer_CabinetOffsetInDegFx100,
+         Erd_Freezer_CabinetPlusCrossAmbientOffsetInDegFx100,
          &offset);
    }
 
@@ -143,8 +143,8 @@ TEST_GROUP(GridLineCalculator)
       TemperatureDegFx100_t freshFoodOffset,
       TemperatureDegFx100_t freezerOffset)
    {
-      FreshFoodCabinetOffsetIs(freshFoodOffset);
-      FreezerCabinetOffsetIs(freezerOffset);
+      FreshFoodSumOffsetIs(freshFoodOffset);
+      FreezerSumOffsetIs(freezerOffset);
    }
 
    void FreezerThermalShiftIs(TemperatureDegFx100_t shift)
@@ -330,8 +330,8 @@ TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenOffsetChanges)
    Given The GridLineCalculationErdsAreInitialized();
    And The ModuleIsInitialized();
 
-   When FreshFoodCabinetOffsetIs(AnotherFreshFoodOffsetTemperature);
-   And FreezerCabinetOffsetIs(AnotherFreezerOffsetTemperature);
+   When FreshFoodSumOffsetIs(AnotherFreshFoodOffsetTemperature);
+   And FreezerSumOffsetIs(AnotherFreezerOffsetTemperature);
 
    CalculatedGridLineTempShouldBe(
       (0 + AnotherFreshFoodOffsetTemperature),

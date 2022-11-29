@@ -44,16 +44,44 @@ static const GridConfiguration_t gridConfig = {
    .gridFunctions = &gridFunctionArray,
 };
 
+static const Erd_t freshFoodErdAdderList[] = {
+   Erd_FreshFood_CabinetOffsetInDegFx100,
+   Erd_FreshFood_CrossAmbientOffsetInDegFx100
+};
+
+static const Erd_t freezerErdAdderList[] = {
+   Erd_Freezer_CabinetOffsetInDegFx100,
+   Erd_Freezer_CrossAmbientOffsetInDegFx100
+};
+
+static const I16ErdAdderConfiguration_t freshFoodErdAdderI16Config = {
+   .resultErd = Erd_FreshFood_CabinetPlusCrossAmbientOffsetInDegFx100,
+   .i16ErdsToBeAdded = { freshFoodErdAdderList, NUM_ELEMENTS(freshFoodErdAdderList) }
+};
+
+static const I16ErdAdderConfiguration_t freezerErdAdderI16Config = {
+   .resultErd = Erd_Freezer_CabinetPlusCrossAmbientOffsetInDegFx100,
+   .i16ErdsToBeAdded = { freezerErdAdderList, NUM_ELEMENTS(freezerErdAdderList) }
+};
+
+static const GridOffsetAdderErdConfiguration_t freshFoodGridOffsetAdderConfig = {
+   .I16ErdAdderConfig = &freshFoodErdAdderI16Config
+};
+
+static const GridOffsetAdderErdConfiguration_t freezerGridOffsetAdderConfig = {
+   .I16ErdAdderConfig = &freezerErdAdderI16Config
+};
+
 static const GridLineAdjustmentErds_t freshFoodGridLineAdjustmentErds = {
    .rawSetpointErd = Erd_FreshFoodSetpoint_ResolvedVote,
-   .cabinetOffsetInDegFx100Erd = Erd_FreshFood_CabinetOffsetInDegFx100,
+   .offsetInDegFx100Erd = Erd_FreshFood_CabinetPlusCrossAmbientOffsetInDegFx100,
    .thermalShiftInDegFx100Erd = Erd_FreshFood_ThermalShiftInDegFx100,
    .adjustedSetpointInDegFx100Erd = Erd_FreshFood_AdjustedSetpointInDegFx100
 };
 
 static const GridLineAdjustmentErds_t freezerGridLineAdjustmentErds = {
    .rawSetpointErd = Erd_FreezerSetpoint_ResolvedVote,
-   .cabinetOffsetInDegFx100Erd = Erd_Freezer_CabinetOffsetInDegFx100,
+   .offsetInDegFx100Erd = Erd_Freezer_CabinetPlusCrossAmbientOffsetInDegFx100,
    .thermalShiftInDegFx100Erd = Erd_Freezer_ThermalShiftInDegFx100,
    .adjustedSetpointInDegFx100Erd = Erd_Freezer_AdjustedSetpointInDegFx100,
 };
@@ -109,6 +137,16 @@ void GridPlugin_Init(
       dataModel,
       Erd_PulldownInMediumCompressorSpeedEnabled,
       &PersonalityParametricData_Get(dataModel)->pulldownData->pulldownInMediumCompressorSpeed);
+
+   GridOffsetAdder_Init(
+      &instance->freshFoodGridOffsetAdder,
+      dataModel,
+      &freshFoodGridOffsetAdderConfig);
+
+   GridOffsetAdder_Init(
+      &instance->freezerGridOffsetAdder,
+      dataModel,
+      &freezerGridOffsetAdderConfig);
 
    GridLineCalculator_Init(
       &instance->gridLineCalculator,

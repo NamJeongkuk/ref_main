@@ -1314,6 +1314,53 @@
           "write": false
         }
       ]
+    },
+    {
+      "title": "Offset Adder Erds",
+      "erds": [
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fresh Food Cabinet Offset and Cross Ambient Offset Sum",
+          "name": "Erd_FreshFood_CabinetPlusCrossAmbientOffsetInDegFx100",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Freezer Cabinet Offset and Cross Ambient Offset Sum",
+          "name": "Erd_Freezer_CabinetPlusCrossAmbientOffsetInDegFx100",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fresh Food Cabinet Offset",
+          "name": "Erd_FreshFood_CabinetOffsetInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fresh Food Cross Ambient Offset",
+          "name": "Erd_FreshFood_CrossAmbientOffsetInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Freezer Cabinet Offset",
+          "name": "Erd_Freezer_CabinetOffsetInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Freezer Cross Ambient Offset",
+          "name": "Erd_Freezer_CrossAmbientOffsetInDegFx100",
+          "read": true,
+          "write": true
+        }
+      ]
     }
   ]
 }

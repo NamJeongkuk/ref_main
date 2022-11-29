@@ -74,6 +74,7 @@
 #include "MotorVotedState.h"
 #include "WaterValveVotedState.h"
 #include "FeelerArmPosition.h"
+#include "GridOffsetAdder.h"
 
 // clang-format off
 
@@ -774,25 +775,27 @@ enum
    ENTRY(Erd_FreshFood_CrossAmbientOffsetInDegFx100,        0xF3A3, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFood_PulldownOffsetInDegFx100,            0xF3A4, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFood_ThermalShiftInDegFx100,              0xF3A5, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFood_CabinetPlusCrossAmbientOffsetInDegFx100,     0xF3A6, TemperatureDegFx100_t,                      Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_Freezer_ResolvedSetpointInDegFx100,            0xF3A6, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Freezer_CabinetOffsetInDegFx100,               0xF3A7, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Freezer_CrossAmbientOffsetInDegFx100,          0xF3A8, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Freezer_ThermalShiftInDegFx100,                0xF3A9, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_ResolvedSetpointInDegFx100,            0xF3A7, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_CabinetOffsetInDegFx100,               0xF3A8, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_CrossAmbientOffsetInDegFx100,          0xF3A9, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_ThermalShiftInDegFx100,                0xF3AA, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_CabinetPlusCrossAmbientOffsetInDegFx100,       0xF3AB, TemperatureDegFx100_t,                      Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_ConvertibleCompartment_ResolvedSetpointInDegFx100,     0xF3AA, TemperatureDegFx100_t,                      Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartment_SetpointOffsetInDegFx100,       0xF3AB, TemperatureDegFx100_t,                      Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100,   0xF3AC, TemperatureDegFx100_t,                      Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartment_ThermalShiftInDegFx100, 0xF3AD, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartment_ResolvedSetpointInDegFx100,     0xF3AC, TemperatureDegFx100_t,                      Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartment_SetpointOffsetInDegFx100,       0xF3AD, TemperatureDegFx100_t,                      Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartment_CrossAmbientOffsetInDegFx100,   0xF3AE, TemperatureDegFx100_t,                      Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartment_ThermalShiftInDegFx100, 0xF3AF, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_IceBox_ResolvedSetpointInDegFx100,             0xF3AE, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_IceBox_CabinetOffsetInDegFx100,                0xF3AF, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_IceBox_IceFormationOffsetInDegFx100,           0xF3B0, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_IceBox_ThermalShiftInDegFx100,                 0xF3B1, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_IceBox_ResolvedSetpointInDegFx100,             0xF3B0, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_IceBox_CabinetOffsetInDegFx100,                0xF3B1, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_IceBox_IceFormationOffsetInDegFx100,           0xF3B2, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_IceBox_ThermalShiftInDegFx100,                 0xF3B3, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_DeliPan_ResolvedSetpointInDegFx100,            0xF3B2, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DeliPan_SetpointOffsetInDegFx100,              0xF3B3, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DeliPan_ThermalShiftInDegFx100,                0xF3B4, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DeliPan_ResolvedSetpointInDegFx100,            0xF3B4, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DeliPan_SetpointOffsetInDegFx100,              0xF3B5, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DeliPan_ThermalShiftInDegFx100,                0xF3B6, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodDamperStepperMotorPositionRequest,    0xF3C0, StepperPositionRequest_t,                           Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperHomingRequest,                  0xF3C1, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

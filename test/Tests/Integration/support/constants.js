@@ -14,6 +14,8 @@ const set = true;
 const clear = false;
 const open = true;
 const closed = false;
+const INT16_MAX = 32767;
+const INT16_MIN = -32768;
 
 module.exports =
    Object.freeze({
@@ -36,5 +38,7 @@ module.exports =
       set: set,
       clear: clear,
       open: open,
-      closed: closed
+      closed: closed,
+      INT16_MAX: INT16_MAX,
+      INT16_MIN: INT16_MIN,
    });
