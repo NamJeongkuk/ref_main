@@ -50,7 +50,7 @@ enum
    CountCutoffCloseToOverflow = 0xD999,
    Mtu5_RisingEdgeCapture = 0x11,
 
-   InputCaptureOffMicroseconds = (0xFFFFFFFF / 2),
+   InputCaptureOffMicroseconds = UINT32_MAX,
    InputCapturePollPeriodInMsec = 10,
    InputCapturePollCountToSetToOff = 10, // Maximum pulse length we can measure without overflow is 65ms, set this to 100ms second for margin.
    FilterWindowSize = 5
