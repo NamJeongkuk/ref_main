@@ -90,7 +90,7 @@ TEST(FeelerArmMonitor, ShouldSetFeelerArmIsReadyToEnterHarvestAfterFeelerArmDela
    When FeelerArmMonitoringRequestIs(SET);
    And FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
 
-   After(aluminumMoldIceMakerData->minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN - 1);
+   After(aluminumMoldIceMakerData->freezeData.minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN - 1);
    FeelerArmIsReadyToEnterHarvestShouldBe(CLEAR);
 
    After(1);
@@ -105,7 +105,7 @@ TEST(FeelerArmMonitor, ShouldNotSetFeelerArmIsReadyToEnterHarvestAfterFeelerArmD
    And FeelerArmPositionIs(FeelerArmPosition_BucketFull);
    FeelerArmIsReadyToEnterHarvestShouldBe(CLEAR);
 
-   After(aluminumMoldIceMakerData->minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN);
+   After(aluminumMoldIceMakerData->freezeData.minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN);
    FeelerArmIsReadyToEnterHarvestShouldBe(CLEAR);
 }
 
@@ -117,7 +117,7 @@ TEST(FeelerArmMonitor, ShouldSetFeelerArmIsReadyToEnterHarvestAfterFeelerArmDela
    FeelerArmIsReadyToEnterHarvestShouldBe(CLEAR);
 
    When FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
-   After(aluminumMoldIceMakerData->minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN - 1);
+   After(aluminumMoldIceMakerData->freezeData.minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN - 1);
    FeelerArmIsReadyToEnterHarvestShouldBe(CLEAR);
 
    After(1);
@@ -132,7 +132,7 @@ TEST(FeelerArmMonitor, ShouldNotSetFeelerArmIsReadyToEnterHarvestAfterFeelerArmD
    FeelerArmIsReadyToEnterHarvestShouldBe(CLEAR);
 
    When FeelerArmMonitoringRequestIs(CLEAR);
-   After(aluminumMoldIceMakerData->minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN);
+   After(aluminumMoldIceMakerData->freezeData.minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN);
    FeelerArmIsReadyToEnterHarvestShouldBe(CLEAR);
 }
 
@@ -144,7 +144,7 @@ TEST(FeelerArmMonitor, ShouldNotSetFeelerArmIsReadyToEnterHarvestAfterFeelerArmD
    FeelerArmIsReadyToEnterHarvestShouldBe(CLEAR);
 
    When FeelerArmMonitoringRequestIs(SET);
-   After(aluminumMoldIceMakerData->minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN);
+   After(aluminumMoldIceMakerData->freezeData.minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN);
    FeelerArmIsReadyToEnterHarvestShouldBe(CLEAR);
 }
 
@@ -155,7 +155,7 @@ TEST(FeelerArmMonitor, ShouldNotSetFeelerArmIsReadyToEnterHarvestAfterFeelerArmD
    Given FeelerArmPositionIs(FeelerArmPosition_BucketFull);
 
    When FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
-   After(aluminumMoldIceMakerData->minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN);
+   After(aluminumMoldIceMakerData->freezeData.minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN);
    FeelerArmIsReadyToEnterHarvestShouldBe(CLEAR);
 }
 

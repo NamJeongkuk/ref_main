@@ -55,7 +55,7 @@ static void FeelerArmMonitoringRequestOrFeelerArmPositionUpdated(void *context, 
             instance->_private.dataModel,
             instance->_private.config->timerModuleErd),
          &instance->_private.feelerArmDelayTimer,
-         instance->_private.aluminumMoldIceMakerData->minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN,
+         instance->_private.aluminumMoldIceMakerData->freezeData.minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN,
          FeelerArmDelayTimerExpired,
          instance);
    }

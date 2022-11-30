@@ -141,7 +141,7 @@ static bool IceMakerTemperatureIsReadyToHarvest(AluminumMoldIceMaker_t *instance
       instance->_private.config->iceMakerFilteredTemperatureInDegFx100Erd,
       &temperature);
 
-   return (temperature < instance->_private.iceMakerParametricData->maximumHarvestTemperatureInDegFx100);
+   return (temperature < instance->_private.iceMakerParametricData->freezeData.maximumHarvestTemperatureInDegFx100);
 }
 
 static bool FeelerArmIsReadyToEnterHarvest(AluminumMoldIceMaker_t *instance)
@@ -376,7 +376,7 @@ static void DataModelChanged(void *context, const void *args)
    else if(erd == instance->_private.config->iceMakerFilteredTemperatureInDegFx100Erd)
    {
       const TemperatureDegFx100_t *temperature = onChangeData->data;
-      if(*temperature < instance->_private.iceMakerParametricData->maximumHarvestTemperatureInDegFx100)
+      if(*temperature < instance->_private.iceMakerParametricData->freezeData.maximumHarvestTemperatureInDegFx100)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_IceMakerTemperatureIsReadyToHarvest, NULL);
       }

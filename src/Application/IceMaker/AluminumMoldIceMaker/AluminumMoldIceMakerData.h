@@ -17,8 +17,12 @@ typedef struct
    uint32_t freezeIntegrationLimitInDegFx100TimesSeconds;
    uint8_t minimumFreezeTimeInMinutes;
    uint8_t minimumFeelerArmExtensionTimeInMinutes;
-   uint8_t freezeThawHarvestFillTubeHeaterDutyCycle;
-   uint16_t freezeThawHarvestFillTubeHeaterOnTimeInSeconds;
+} AluminumMoldIceMakerFreezeData_t;
+
+typedef struct
+{
+   uint8_t freezeThawFillTubeHeaterDutyCyclePercentage;
+   uint16_t freezeThawFillTubeHeaterOnTimeInSeconds;
    uint8_t maximumHarvestTimeInMinutes;
    TemperatureDegFx100_t initialMotorOnTemperatureInDegFx100;
    uint8_t initialMinimumHeaterOnTimeInSeconds;
@@ -26,6 +30,12 @@ typedef struct
    TemperatureDegFx100_t heaterOnTemperatureInDegFx100;
    uint8_t rakeNotHomeTestTimeInSeconds;
    uint8_t feelerArmTestTimeInSeconds;
+} AluminumMoldIceMakerHarvestData_t;
+
+typedef struct
+{
+   AluminumMoldIceMakerFreezeData_t freezeData;
+   AluminumMoldIceMakerHarvestData_t harvestData;
 } AluminumMoldIceMakerData_t;
 
 #endif
