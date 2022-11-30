@@ -142,7 +142,7 @@ TEST_GROUP(AluminumMoldIceMaker)
 
    void IceMakerTemperatureIsNotReadyToHarvest()
    {
-      TemperatureDegFx100_t temperature = iceMakerData->maxHarvestTemperatureInDegFx100;
+      TemperatureDegFx100_t temperature = iceMakerData->maximumHarvestTemperatureInDegFx100;
       DataModel_Write(
          dataModel,
          Erd_AluminumMoldIceMaker_FilteredTemperatureInDegFx100,
@@ -151,7 +151,7 @@ TEST_GROUP(AluminumMoldIceMaker)
 
    void IceMakerTemperatureIsReadyToHarvest()
    {
-      TemperatureDegFx100_t temperature = iceMakerData->maxHarvestTemperatureInDegFx100 - 1;
+      TemperatureDegFx100_t temperature = iceMakerData->maximumHarvestTemperatureInDegFx100 - 1;
       DataModel_Write(
          dataModel,
          Erd_AluminumMoldIceMaker_FilteredTemperatureInDegFx100,
