@@ -186,6 +186,22 @@ static const OverrideArbiterConfiguration_t convertibleCompartmentEvapThermistor
    NUM_ELEMENTS(convertibleCompartmentEvapThermistorValidOverrideArbiterRequestErdList)
 };
 
+static const Erd_t iceMakerFilteredTemperatureOverrideRequestErdList[] = {
+   Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideRequest
+};
+
+static const Erd_t iceMakerFilteredTemperatureValueErdList[] = {
+   Erd_AluminumMoldIceMaker_FilteredTemperatureInDegFx100,
+   Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100
+};
+
+static const OverrideArbiterConfiguration_t iceMakerFilteredTemperatureArbiterConfiguration = {
+   iceMakerFilteredTemperatureOverrideRequestErdList,
+   iceMakerFilteredTemperatureValueErdList,
+   Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+   NUM_ELEMENTS(iceMakerFilteredTemperatureOverrideRequestErdList)
+};
+
 static struct
 {
    OverrideArbiter_t freezerEvaporatorFilteredTemperatureArbiter;
@@ -199,6 +215,7 @@ static struct
    OverrideArbiter_t convertibleCompartmentCabinetThermistorValidArbiter;
    OverrideArbiter_t ambientThermistorValidArbiter;
    OverrideArbiter_t convertibleCompartmentEvapThermistorValidArbiter;
+   OverrideArbiter_t iceMakerFilteredTemperatureArbiter;
 } instance;
 
 static void InitializeFilteredTemperatureArbiters(I_DataModel_t *dataModel)
@@ -222,6 +239,11 @@ static void InitializeFilteredTemperatureArbiters(I_DataModel_t *dataModel)
       &instance.ambientFilteredTemperatureArbiter,
       DataModel_AsDataSource(dataModel),
       &ambientFilteredTemperatureArbiterConfiguration);
+
+   OverrideArbiter_Init(
+      &instance.iceMakerFilteredTemperatureArbiter,
+      DataModel_AsDataSource(dataModel),
+      &iceMakerFilteredTemperatureArbiterConfiguration);
 }
 
 static void InitializeThermistorIsValidArbiters(I_DataModel_t *dataModel)

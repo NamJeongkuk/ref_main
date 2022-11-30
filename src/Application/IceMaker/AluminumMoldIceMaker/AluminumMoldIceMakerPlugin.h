@@ -14,6 +14,7 @@
 #include "SoftPwm.h"
 #include "AluminumMoldIceMaker.h"
 #include "FeelerArmMonitor.h"
+#include "HarvestCountCalculator.h"
 #include "IceMakerEnableResolver.h"
 #include "ErdResolver.h"
 
@@ -22,9 +23,10 @@ typedef struct
    struct
    {
       FillTubeHeaterVotingFrameworkPlugin_t fillTubeHeaterVotingFrameworkPlugin;
-      FreezerIceRateHandler_t iceRatehandler;
+      FreezerIceRateHandler_t iceRateHandler;
       SoftPwm_t fillTubeHeaterSoftPwm;
       FeelerArmMonitor_t feelerArmMonitor;
+      HarvestCountCalculator_t harvestCountCalculator;
       AluminumMoldIceMaker_t aluminumMoldIceMaker;
       IceMakerEnableResolver_t iceMakerEnableResolver;
       ErdResolver_t iceMakerWaterValveVoteResolver;

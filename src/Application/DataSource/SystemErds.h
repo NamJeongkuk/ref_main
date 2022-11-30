@@ -582,8 +582,12 @@ enum
    ENTRY(Erd_Ambient_FilteredTemperatureOverrideValueInDegFx100,             0xF1A6, TemperatureDegFx100_t,             Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Ambient_FilteredTemperatureResolvedInDegFx100,                  0xF1A7, TemperatureDegFx100_t,             Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideRequest,        0xF1A8, bool,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100,0xF1A9, TemperatureDegFx100_t,             Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,     0xF1AA, TemperatureDegFx100_t,             Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_AluminumMoldIceMakerHsmState,                  0xF1C0, AluminumMoldIceMakerHsmState_t,                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_HarvestCountCalculationRequest,                0xF1C1, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_HarvestCountCalculationRequest,                0xF1C1, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FeelerArmMonitoringRequest,                    0xF1C2, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_HarvestCountIsReadyToHarvest,                  0xF1C3, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FeelerArmIsReadyToEnterHarvest,                0xF1C4, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

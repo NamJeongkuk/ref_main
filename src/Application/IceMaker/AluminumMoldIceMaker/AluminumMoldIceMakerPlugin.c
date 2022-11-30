@@ -47,6 +47,12 @@ static const FeelerArmMonitorConfig_t feelerArmMonitorConfig = {
    .feelerArmPositionErd = Erd_FeelerArmPosition
 };
 
+static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
+   .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
+   .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
+   .iceMakerFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100
+};
+
 static const Erd_t enableErdsList[] = {
    Erd_IceMakerEnabledByUser, Erd_IceMakerEnabledByGrid, Erd_IceMakerEnabledByDemandResponse
 };
@@ -146,7 +152,7 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
       dataModel);
 
    FreezerIceRateHandler_Init(
-      &instance->_private.iceRatehandler,
+      &instance->_private.iceRateHandler,
       dataModel,
       &iceRateHandlerConfig,
       PersonalityParametricData_Get(dataModel)->freezerIceRateData);
@@ -160,6 +166,12 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
       &instance->_private.feelerArmMonitor,
       dataModel,
       &feelerArmMonitorConfig);
+
+   HarvestCountCalculator_Init(
+      &instance->_private.harvestCountCalculator,
+      dataModel,
+      &harvestCountCalculatorConfig,
+      PersonalityParametricData_Get(dataModel)->aluminumMoldIceMakerData);
 
    IceMakerEnableResolver_Init(
       &instance->_private.iceMakerEnableResolver,
