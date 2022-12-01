@@ -13,6 +13,7 @@
 #include "FreshFoodDamperRequestManager.h"
 #include "DamperHeaterDefrostControl.h"
 #include "DamperMaxOpenTimeMonitor.h"
+#include "DamperFreezePrevention.h"
 #include "SingleDamperData.h"
 #include "Timer.h"
 #include "ErdResolver.h"
@@ -24,11 +25,13 @@ typedef struct
    {
       StepperMotorDriver_t stepperMotorDriver;
       FreshFoodDamperRequestManager_t damperRequestManager;
+      DamperFreezePrevention_t damperFreezePrevention;
       DamperHeaterDefrostControl_t freshFoodDamperHeaterDefrostControl;
       DamperMaxOpenTime_t damperMaxOpenTime;
       Event_Synchronous_t damperStepEvent;
       Timer_t stepEventTimer;
-      ErdResolver_t damperErdResolver;
+      ErdResolver_t damperPositionErdResolver;
+      ErdResolver_t damperHeaterErdResolver;
    } _private;
 } FreshFoodDamperMotorPlugin_t;
 

@@ -3,7 +3,7 @@
 const delay = require("javascript-common").util.delay;
 const constants = require("../support/constants");
 
-fdescribe("AluminumMoldIceMaker,", () => {
+describe("AluminumMoldIceMaker,", () => {
    const hsmState = {
       global: "AluminumMoldIceMakerHsmState_Global",
       freeze: "AluminumMoldIceMakerHsmState_Freeze",

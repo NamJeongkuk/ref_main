@@ -79,11 +79,11 @@ static const HeaterVotedState_t defaultHeaterData = {
 
 static bool MotorVotingErdCareDelegate(const void *votingErdData)
 {
-   const AluminumMoldIceMakerMotorState_t *data = votingErdData;
+   const AluminumMoldIceMakerMotorVotedState_t *data = votingErdData;
    return (data->care);
 }
 
-static const AluminumMoldIceMakerMotorState_t defaultMotorData = {
+static const AluminumMoldIceMakerMotorVotedState_t defaultMotorData = {
    .state = MotorState_Off,
    .care = Vote_DontCare
 };

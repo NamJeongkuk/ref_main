@@ -40,6 +40,18 @@ static const DamperMaxOpenTimeConfiguration_t maxOpenDamperConfig = {
    .damperCurrentPositionErd = Erd_FreshFoodDamperCurrentPosition
 };
 
+static const DamperFreezePreventionConfiguration_t damperFreezePreventionConfig = {
+   .damperHeaterVoteErd = Erd_FreshFoodDamperHeater_DamperFreezePreventionVote,
+   .damperPositionVoteErd = Erd_FreshFoodDamperPosition_DamperFreezePreventionVote,
+   .sourceThermistorIsValidResolvedErd = Erd_FreezerThermistor_IsValidResolved,
+   .targetThermistorIsValidResolvedErd = Erd_FreshFoodThermistor_IsValidResolved,
+   .sourceFilteredTemperatureErd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
+   .targetFilteredTemperatureErd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
+   .damperCurrentPositionErd = Erd_FreshFoodDamperCurrentPosition,
+   .timerModuleErd = Erd_TimerModule,
+   .damperFreezePreventionFsmStateErd = Erd_DamperFreezePreventionFsmState
+};
+
 static const DamperHeaterDefrostControlConfig_t freshFoodDamperHeaterDefrostControlConfig = {
    .defrostHeaterStateErd = Erd_FreezerDefrostHeaterRelay,
    .damperHeaterDefrostHeaterSyncVoteErd = Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote,
@@ -57,12 +69,26 @@ static bool VotingErdCareDelegate(const void *votingErdData)
    return (data->care);
 }
 
-static const ErdResolverConfiguration_t damperErdResolverConfiguration = {
+static const ErdResolverConfiguration_t damperPositionErdResolverConfiguration = {
    .votingErdCare = VotingErdCareDelegate,
    .defaultData = &defaultData,
    .winningVoterErd = Erd_FreshFoodDamperPosition_WinningVoteErd,
    .resolvedStateErd = Erd_FreshFoodDamperPosition_ResolvedVote,
    .numberOfVotingErds = (Erd_FreshFoodDamperPosition_GridVote - Erd_FreshFoodDamperPosition_WinningVoteErd)
+};
+
+static bool VotingDamperHeaterErdCareDelegate(const void *votingErdData)
+{
+   const HeaterVotedState_t *data = votingErdData;
+   return (data->care);
+}
+
+static const ErdResolverConfiguration_t damperHeaterErdResolverConfiguration = {
+   .votingErdCare = VotingDamperHeaterErdCareDelegate,
+   .defaultData = &defaultData,
+   .winningVoterErd = Erd_FreshFoodDamperHeater_WinningVoteErd,
+   .resolvedStateErd = Erd_FreshFoodDamperHeater_ResolvedVote,
+   .numberOfVotingErds = (Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote - Erd_FreshFoodDamperHeater_WinningVoteErd)
 };
 
 static void TriggerStepEvent(void *context)
@@ -76,9 +102,14 @@ void FreshFoodDamperMotorPlugin_Init(FreshFoodDamperMotorPlugin_t *instance, I_D
    Event_Synchronous_Init(&instance->_private.damperStepEvent);
 
    ErdResolver_Init(
-      &instance->_private.damperErdResolver,
+      &instance->_private.damperPositionErdResolver,
       DataModel_AsDataSource(dataModel),
-      &damperErdResolverConfiguration);
+      &damperPositionErdResolverConfiguration);
+
+   ErdResolver_Init(
+      &instance->_private.damperHeaterErdResolver,
+      DataModel_AsDataSource(dataModel),
+      &damperHeaterErdResolverConfiguration);
 
    StepperMotorDriver_Init(
       &instance->_private.stepperMotorDriver,
@@ -91,6 +122,12 @@ void FreshFoodDamperMotorPlugin_Init(FreshFoodDamperMotorPlugin_t *instance, I_D
       &instance->_private.damperRequestManager,
       dataModel,
       &requestManagerConfig);
+
+   DamperFreezePrevention_Init(
+      &instance->_private.damperFreezePrevention,
+      dataModel,
+      &damperFreezePreventionConfig,
+      PersonalityParametricData_Get(dataModel)->freshFoodDamperData);
 
    DamperMaxOpenTimeMonitor_Init(
       &instance->_private.damperMaxOpenTime,

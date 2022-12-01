@@ -32,7 +32,7 @@ static void StartMinimumFreezeTimer(HarvestCountCalculator_t *instance)
    TimerModule_StartOneShot(
       DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, Erd_TimerModule),
       &instance->_private.minimumFreezeTimer,
-      instance->_private.aluminumMoldIceMakerData->minimumFreezeTimeInMinutes * MSEC_PER_MIN,
+      instance->_private.aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes * MSEC_PER_MIN,
       MinimumFreezeTimerExpired,
       instance);
 }
@@ -56,7 +56,7 @@ static void CalculateHarvestCount(void *context)
    HarvestCountCalculator_t *instance = context;
 
    TemperatureDegFx100_t iceMakerTemperature = IceMakerTemperature(instance);
-   if(iceMakerTemperature <= instance->_private.aluminumMoldIceMakerData->startIntegrationTemperatureInDegFx100)
+   if(iceMakerTemperature <= instance->_private.aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100)
    {
       if(!TimerModule_IsRunning(DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, Erd_TimerModule), &instance->_private.minimumFreezeTimer) &&
          !instance->_private.minimumFreezeTimerIsExpired)
@@ -65,10 +65,10 @@ static void CalculateHarvestCount(void *context)
       }
 
       instance->_private.integrationTemperatureCount +=
-         (instance->_private.aluminumMoldIceMakerData->startIntegrationTemperatureInDegFx100 - iceMakerTemperature);
+         (instance->_private.aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100 - iceMakerTemperature);
 
       if(instance->_private.minimumFreezeTimerIsExpired &&
-         (instance->_private.integrationTemperatureCount >= instance->_private.aluminumMoldIceMakerData->freezeIntegrationLimitInDegFx100TimesSeconds))
+         (instance->_private.integrationTemperatureCount >= instance->_private.aluminumMoldIceMakerData->freezeData.freezeIntegrationLimitInDegFx100TimesSeconds))
       {
          DataModel_Write(
             instance->_private.dataModel,

@@ -590,6 +590,27 @@
       "erds": [
         {
           "namespace": "rockhopper",
+          "displayName": "Fresh Food Thermistor Is Valid Override Value",
+          "name": "Erd_FreshFoodThermistor_IsValidOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fresh Food Thermistor Is Valid Override Request",
+          "name": "Erd_FreshFoodThermistor_IsValidOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fresh Food Thermistor Is Valid Resolved",
+          "name": "Erd_FreshFoodThermistor_IsValidResolved",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
           "displayName": "Fresh Food Thermistor AdcCount",
           "name": "Erd_FreshFoodThermistor_AdcCount",
           "read": true,
@@ -598,14 +619,14 @@
         {
           "namespace": "rockhopper",
           "displayName": "Fresh Food Unfiltered Temperature",
-          "name": "Erd_FreshFood_UnfilteredTemperature",
+          "name": "Erd_FreshFood_UnfilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "rockhopper",
           "displayName": "Fresh Food Filtered Temperature",
-          "name": "Erd_FreshFood_FilteredTemperature",
+          "name": "Erd_FreshFood_FilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
@@ -619,14 +640,35 @@
         {
           "namespace": "rockhopper",
           "displayName": "FreshFood FilteredTemp Override Value",
-          "name": "Erd_FreshFood_FilteredTemperatureOverrideValue",
+          "name": "Erd_FreshFood_FilteredTemperatureOverrideValueInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "rockhopper",
           "displayName": "FreshFood FilteredTemp Resolved",
-          "name": "Erd_FreshFood_FilteredTemperatureResolved",
+          "name": "Erd_FreshFood_FilteredTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Freezer Thermistor Is Valid Override Value",
+          "name": "Erd_FreezerThermistor_IsValidOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Freezer Thermistor Is Valid Override Request",
+          "name": "Erd_FreezerThermistor_IsValidOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Freezer Thermistor Is Valid Resolved",
+          "name": "Erd_FreezerThermistor_IsValidResolved",
           "read": true,
           "write": true
         },
@@ -640,14 +682,14 @@
         {
           "namespace": "rockhopper",
           "displayName": "Freezer Unfiltered Temperature",
-          "name": "Erd_Freezer_UnfilteredTemperature",
+          "name": "Erd_Freezer_UnfilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "rockhopper",
           "displayName": "Freezer Filtered Temperature",
-          "name": "Erd_Freezer_FilteredTemperature",
+          "name": "Erd_Freezer_FilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
@@ -661,14 +703,14 @@
         {
           "namespace": "rockhopper",
           "displayName": "Freezer FilteredTemp Override Value",
-          "name": "Erd_Freezer_FilteredTemperatureOverrideValue",
+          "name": "Erd_Freezer_FilteredTemperatureOverrideValueInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "rockhopper",
           "displayName": "Freezer FilteredTemp Resolved",
-          "name": "Erd_Freezer_FilteredTemperatureResolved",
+          "name": "Erd_Freezer_FilteredTemperatureResolvedInDegFx100",
           "read": true,
           "write": true
         },
@@ -682,14 +724,14 @@
         {
           "namespace": "rockhopper",
           "displayName": "Fresh Food Evap Unfiltered Temperature",
-          "name": "Erd_FreshFoodEvap_UnfilteredTemperature",
+          "name": "Erd_FreshFoodEvap_UnfilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "rockhopper",
           "displayName": "Fresh Food Evap Filtered Temperature",
-          "name": "Erd_FreshFoodEvap_FilteredTemperature",
+          "name": "Erd_FreshFoodEvap_FilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
@@ -703,14 +745,14 @@
         {
           "namespace": "rockhopper",
           "displayName": "Freezer Evap Unfiltered Temperature",
-          "name": "Erd_FreezerEvap_UnfilteredTemperature",
+          "name": "Erd_FreezerEvap_UnfilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "rockhopper",
           "displayName": "FreezerEvap FilteredTemperature",
-          "name": "Erd_FreezerEvap_FilteredTemperature",
+          "name": "Erd_FreezerEvap_FilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
@@ -724,14 +766,14 @@
         {
           "namespace": "rockhopper",
           "displayName": "FreezerEvap FilteredTemp Override Value",
-          "name": "Erd_FreezerEvap_FilteredTemperatureOverrideValue",
+          "name": "Erd_FreezerEvap_FilteredTemperatureOverrideValueInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "rockhopper",
           "displayName": "FreezerEvap FilteredTemp Resolved",
-          "name": "Erd_FreezerEvap_FilteredTemperatureResolved",
+          "name": "Erd_FreezerEvap_FilteredTemperatureResolvedInDegFx100",
           "read": true,
           "write": true
         },
@@ -745,14 +787,14 @@
         {
           "namespace": "rockhopper",
           "displayName": "Convertible Compartment Unfiltered Temperature",
-          "name": "Erd_ConvertibleCompartment_UnfilteredTemperature",
+          "name": "Erd_ConvertibleCompartment_UnfilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "rockhopper",
           "displayName": "Convertible Compartment Filtered Temperature",
-          "name": "Erd_ConvertibleCompartment_FilteredTemperature",
+          "name": "Erd_ConvertibleCompartment_FilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
@@ -766,14 +808,14 @@
         {
           "namespace": "rockhopper",
           "displayName": "Ambient Unfiltered Temperature",
-          "name": "Erd_Ambient_UnfilteredTemperature",
+          "name": "Erd_Ambient_UnfilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "rockhopper",
           "displayName": "Ambient Filtered Temperature",
-          "name": "Erd_Ambient_FilteredTemperature",
+          "name": "Erd_Ambient_FilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
@@ -787,14 +829,14 @@
         {
           "namespace": "rockhopper",
           "displayName": "Convertible Compartment Evap Unfiltered Temperature",
-          "name": "Erd_ConvertibleCompartmentEvap_UnfilteredTemperature",
+          "name": "Erd_ConvertibleCompartmentEvap_UnfilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "rockhopper",
           "displayName": "Convertible Compartment Evap Filtered Temperature",
-          "name": "Erd_ConvertibleCompartmentEvap_FilteredTemperature",
+          "name": "Erd_ConvertibleCompartmentEvap_FilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         }
@@ -1075,6 +1117,69 @@
           "namespace": "rockhopper",
           "displayName": "Fresh Food Damper Heater Defrost Heater Sync Vote",
           "name": "Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fresh Food Damper Current Position",
+          "name": "Erd_FreshFoodDamperCurrentPosition",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fresh Food Damper Position Resolved Vote",
+          "name": "Erd_FreshFoodDamperPosition_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fresh Food Damper Position Winning Vote ERD",
+          "name": "Erd_FreshFoodDamperPosition_WinningVoteErd",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fresh Food Damper Position Factory Vote",
+          "name": "Erd_FreshFoodDamperPosition_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fresh Food Damper Position Damper Freeze Prevention Vote",
+          "name": "Erd_FreshFoodDamperPosition_DamperFreezePreventionVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fresh Food Damper Position Max Open Time Vote",
+          "name": "Erd_FreshFoodDamperPosition_MaxOpenTimeVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fresh Food Damper Position Defrost Vote",
+          "name": "Erd_FreshFoodDamperPosition_DefrostVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Fresh Food Damper Position Grid Vote",
+          "name": "Erd_FreshFoodDamperPosition_GridVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Damper Freeze Prevention Fsm State",
+          "name": "Erd_DamperFreezePreventionFsmState",
           "read": true,
           "write": true
         }

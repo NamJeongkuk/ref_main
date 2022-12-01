@@ -20,8 +20,8 @@ extern "C"
 #include "TimerModule_TestDouble.h"
 
 #define TemperatureThatCausesFreezeIntegrationLimitToBeReachedInMinimumFreezeTimeInMinutes \
-   (aluminumMoldIceMakerData->startIntegrationTemperatureInDegFx100 -                      \
-      aluminumMoldIceMakerData->freezeIntegrationLimitInDegFx100TimesSeconds / (aluminumMoldIceMakerData->minimumFreezeTimeInMinutes * SECONDS_PER_MINUTE))
+   (aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100 -           \
+      aluminumMoldIceMakerData->freezeData.freezeIntegrationLimitInDegFx100TimesSeconds / (aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes * SECONDS_PER_MINUTE))
 
 static const HarvestCountCalculatorConfiguration_t config = {
    .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
@@ -96,7 +96,7 @@ TEST(HarvestCountCalculator, ShouldSetHarvestCountIsReadyToHarvestWhenCalculatio
    GivenTheModuleIsInitialized();
    GivenTheHarvestCountCalculationRequestIs(SET);
 
-   After(aluminumMoldIceMakerData->minimumFreezeTimeInMinutes * MSEC_PER_MIN - MSEC_PER_SEC);
+   After(aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes * MSEC_PER_MIN - MSEC_PER_SEC);
    HarvestCountIsReadyToHarvestShouldBe(CLEAR);
 
    After(MSEC_PER_SEC);
@@ -109,7 +109,7 @@ TEST(HarvestCountCalculator, ShouldSetHarvestCountIsReadyToHarvestWhenCalculatio
    GivenTheModuleIsInitialized();
    GivenTheHarvestCountCalculationRequestIs(SET);
 
-   After(aluminumMoldIceMakerData->minimumFreezeTimeInMinutes * MSEC_PER_MIN - MSEC_PER_SEC);
+   After(aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes * MSEC_PER_MIN - MSEC_PER_SEC);
    HarvestCountIsReadyToHarvestShouldBe(CLEAR);
 
    After(MSEC_PER_SEC);
@@ -122,7 +122,7 @@ TEST(HarvestCountCalculator, ShouldSetHarvestCountIsReadyToHarvestWhenCalculatio
    GivenTheHarvestCountCalculationRequestIs(SET);
    GivenTheModuleIsInitialized();
 
-   After(aluminumMoldIceMakerData->minimumFreezeTimeInMinutes * MSEC_PER_MIN - MSEC_PER_SEC);
+   After(aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes * MSEC_PER_MIN - MSEC_PER_SEC);
    HarvestCountIsReadyToHarvestShouldBe(CLEAR);
 
    After(MSEC_PER_SEC);
@@ -143,7 +143,7 @@ TEST(HarvestCountCalculator, ShouldNotSetHarvestCountIsReadyToHarvestWhenCalcula
    GivenTheModuleIsInitialized();
    GivenTheHarvestCountCalculationRequestIs(CLEAR);
 
-   After(aluminumMoldIceMakerData->minimumFreezeTimeInMinutes * MSEC_PER_MIN);
+   After(aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes * MSEC_PER_MIN);
    HarvestCountIsReadyToHarvestShouldBe(CLEAR);
 }
 
@@ -153,15 +153,15 @@ TEST(HarvestCountCalculator, ShouldRestartHarvestCountWhenTemperatureGoesAboveSt
    GivenTheModuleIsInitialized();
    GivenTheHarvestCountCalculationRequestIs(SET);
 
-   After(aluminumMoldIceMakerData->minimumFreezeTimeInMinutes * MSEC_PER_MIN - MSEC_PER_SEC);
+   After(aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes * MSEC_PER_MIN - MSEC_PER_SEC);
    HarvestCountIsReadyToHarvestShouldBe(CLEAR);
 
-   WhenTheIceMakerTemperatureIs(aluminumMoldIceMakerData->startIntegrationTemperatureInDegFx100 + 1);
+   WhenTheIceMakerTemperatureIs(aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100 + 1);
    After(MSEC_PER_SEC);
    HarvestCountIsReadyToHarvestShouldBe(CLEAR);
 
    WhenTheIceMakerTemperatureIs(TemperatureThatCausesFreezeIntegrationLimitToBeReachedInMinimumFreezeTimeInMinutes);
-   After(aluminumMoldIceMakerData->minimumFreezeTimeInMinutes * MSEC_PER_MIN);
+   After(aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes * MSEC_PER_MIN);
    HarvestCountIsReadyToHarvestShouldBe(CLEAR);
 
    After(MSEC_PER_SEC);
@@ -170,14 +170,14 @@ TEST(HarvestCountCalculator, ShouldRestartHarvestCountWhenTemperatureGoesAboveSt
 
 TEST(HarvestCountCalculator, ShouldSetHarvestCountIsReadyToHarvestWhenCalculationIsRequestedAndThenTemperatureGoesBelowStartIntegrationTemperature)
 {
-   GivenTheIceMakerTemperatureIs(aluminumMoldIceMakerData->startIntegrationTemperatureInDegFx100 + 1);
+   GivenTheIceMakerTemperatureIs(aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100 + 1);
    GivenTheModuleIsInitialized();
    GivenTheHarvestCountCalculationRequestIs(SET);
 
    WhenTheIceMakerTemperatureIs(TemperatureThatCausesFreezeIntegrationLimitToBeReachedInMinimumFreezeTimeInMinutes);
    After(MSEC_PER_SEC);
 
-   After(aluminumMoldIceMakerData->minimumFreezeTimeInMinutes * MSEC_PER_MIN - MSEC_PER_SEC);
+   After(aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes * MSEC_PER_MIN - MSEC_PER_SEC);
    HarvestCountIsReadyToHarvestShouldBe(CLEAR);
 
    After(MSEC_PER_SEC);

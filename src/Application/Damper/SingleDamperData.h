@@ -19,8 +19,8 @@ typedef struct
    uint8_t maxTimeForDamperToBeOpenInMinutes;
    uint8_t targetCompartmentMinimumTemperatureChangeTimeInMinutes;
    uint8_t targetCompartmentDamperHeaterOnTimeInMinutes;
-   int16_t sourceCompartmentMaximumTemperatureToRunCheckInDegfx100;
-   int16_t targetCompartmentMinimumTemperatureChangeInDegfx100;
+   int16_t sourceCompartmentMaximumTemperatureToRunCheckInDegFx100;
+   int16_t targetCompartmentMinimumTemperatureChangeInDegFx100;
 } SingleDamperData_t;
 
 #endif

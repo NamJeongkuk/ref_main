@@ -69,9 +69,10 @@
 #include "SetpointZone.h"
 #include "SetpointZoneTemperatureBounds.h"
 #include "HeaterVotedDutyCycle.h"
+#include "DamperFreezePreventionFsmState.h"
 #include "DefrostType.h"
 #include "AluminumMoldIceMakerHsmState.h"
-#include "MotorVotedState.h"
+#include "AluminumMoldIceMakerMotorVotedState.h"
 #include "WaterValveVotedState.h"
 #include "FeelerArmPosition.h"
 #include "GridOffsetAdder.h"
@@ -727,10 +728,10 @@ enum
    ENTRY(Erd_ConvertibleCompartmentFanSpeed_DefrostVote,    0xF323, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentFanSpeed_GridVote,       0xF324, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_AluminumMoldIceMakerMotor_ResolvedVote,        0xF330, AluminumMoldIceMakerMotorState_t,                   Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerMotor_ResolvedVote,        0xF330, AluminumMoldIceMakerMotorVotedState_t,              Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerMotor_WinningVoteErd,      0xF331, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerMotor_FactoryVote,         0xF332, AluminumMoldIceMakerMotorState_t,                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerMotor_IceMakerVote,        0xF333, AluminumMoldIceMakerMotorState_t,                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerMotor_FactoryVote,         0xF332, AluminumMoldIceMakerMotorVotedState_t,              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerMotor_IceMakerVote,        0xF333, AluminumMoldIceMakerMotorVotedState_t,              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_DeliFanSpeed_ResolvedVote,                     0xF350, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DeliFanSpeed_WinningVoteErd,                   0xF351, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -762,10 +763,11 @@ enum
    ENTRY(Erd_FreshFoodDamperPosition_ResolvedVote,               0xF380, DamperVotedPosition_t,                         Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperPosition_WinningVoteErd,             0xF381, WinningVoteErd_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperPosition_FactoryVote,                0xF382, DamperVotedPosition_t,                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodDamperPosition_DefrostVote,                0xF383, DamperVotedPosition_t,                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodDamperPosition_DamperFreezePreventionVote, 0xF384, DamperVotedPosition_t,                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodDamperPosition_MaxOpenTimeVote,            0xF385, DamperVotedPosition_t,                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperPosition_DamperFreezePreventionVote, 0xF383, DamperVotedPosition_t,                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperPosition_MaxOpenTimeVote,            0xF384, DamperVotedPosition_t,                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperPosition_DefrostVote,                0xF385, DamperVotedPosition_t,                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperPosition_GridVote,                   0xF386, DamperVotedPosition_t,                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DamperFreezePreventionFsmState,                     0xF387, DamperFreezePreventionFsmState_t,              Swap_N, Io_None, Sub_N, Ram ,                   NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FillTubeHeater_ResolvedVote,                   0xF390, HeaterVotedDutyCycle_t,                             Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FillTubeHeater_WinningVoteErd,                 0xF391, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

@@ -92,7 +92,7 @@ TEST_GROUP(AluminumMoldIceMaker)
 
    void IceMakerMotorVoteShouldBe(bool expected)
    {
-      AluminumMoldIceMakerMotorState_t vote;
+      AluminumMoldIceMakerMotorVotedState_t vote;
       DataModel_Read(
          dataModel,
          Erd_AluminumMoldIceMakerMotor_IceMakerVote,

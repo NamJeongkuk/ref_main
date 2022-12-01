@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef MOTORVOTEDSTATE_H
-#define MOTORVOTEDSTATE_H
+#ifndef ALUMINUMMOLDICEMAKERMOTORVOTEDSTATE_H
+#define ALUMINUMMOLDICEMAKERMOTORVOTEDSTATE_H
 
 #include <stdint.h>
 
@@ -21,6 +21,6 @@ typedef struct
 {
    MotorState_t state;
    bool care;
-} AluminumMoldIceMakerMotorState_t;
+} AluminumMoldIceMakerMotorVotedState_t;
 
 #endif
