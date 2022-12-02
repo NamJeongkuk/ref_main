@@ -38,7 +38,8 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Sabbath \
    $(PROJECT_DIR)/Application/Sensor \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \
-   $(PROJECT_DIR)/Application/SystemMonitor \
+   $(PROJECT_DIR)/Application/SystemMonitor\
+   $(PROJECT_DIR)/Application/TimerModule \
    $(PROJECT_DIR)/Hardware/SoftPwm \
 
 # List of directories that contain your tests and test helpers (mocks, fakes, etc.)
@@ -73,6 +74,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/ServiceDiagnostics \
    $(TESTS_DIR)/Application/SystemMonitor \
    $(TESTS_DIR)/Application/ \
+   $(TESTS_DIR)/Application/TimerModule \
    $(TESTS_DIR)/Hardware/SoftPwm \
 
 # List of include directories

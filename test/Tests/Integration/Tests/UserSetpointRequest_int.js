@@ -1,6 +1,7 @@
 "use strict";
 
 const delay = require("javascript-common").util.delay;
+const After = require('../support/After.js');
 const { msPerSec, msPerMin } = require("../support/constants");
 const constants = require("../support/constants");
 
@@ -85,7 +86,7 @@ describe("UserSetpointRequest", () => {
       await theSetpointStatusForThe().FreezerCompartmentShouldBe(someSetpointWithinTheFreezerBoundsInDegF);
 
       await rockhopper.write("Erd_Reset", 1);
-      await delay(constants.oneSecondInMsec * 5);
+      await After(constants.oneSecondInMsec * 5);
 
       await theUserVotedSetpointForThe().FreezerCompartmentShouldBe(someSetpointWithinTheFreezerBoundsInDegFx100);
       await theSetpointStatusForThe().FreezerCompartmentShouldBe(someSetpointWithinTheFreezerBoundsInDegF);
@@ -93,10 +94,10 @@ describe("UserSetpointRequest", () => {
 
    it("it should vote for default freezer setpoint if there is no stored setpoint status", async () => {
       await providedTheSetpointStatusForThe().FreezerCompartmentIs(defaultStatusValue);
-      await delay(constants.oneSecondInMsec);
+      await After(constants.oneSecondInMsec);
 
       await rockhopper.write("Erd_Reset", 1);
-      await delay(constants.oneSecondInMsec * 5);
+      await After(constants.oneSecondInMsec * 5);
 
       await theUserVotedSetpointForThe().FreezerCompartmentShouldBe(freezerDefaultTemperatureInDegFx100);
       await theSetpointStatusForThe().FreezerCompartmentShouldBe(freezerDefaultTemperatureInDegF);
@@ -145,7 +146,7 @@ describe("UserSetpointRequest", () => {
       await theSetpointStatusForThe().FreshFoodCompartmentShouldBe(someSetpointWithinTheFreshFoodBoundsInDegF);
 
       await rockhopper.write("Erd_Reset", 1);
-      await delay(constants.oneSecondInMsec * 5);
+      await After(constants.oneSecondInMsec * 5);
 
       await theUserVotedSetpointForThe().FreshFoodCompartmentShouldBe(someSetpointWithinTheFreshFoodBoundsInDegFx100);
       await theSetpointStatusForThe().FreshFoodCompartmentShouldBe(someSetpointWithinTheFreshFoodBoundsInDegF);
@@ -153,10 +154,10 @@ describe("UserSetpointRequest", () => {
 
    it("it should vote for default fresh food setpoint if there is no stored setpoint status", async () => {
       await providedTheSetpointStatusForThe().FreshFoodCompartmentIs(defaultStatusValue);
-      await delay(constants.oneSecondInMsec);
+      await After(constants.oneSecondInMsec);
 
       await rockhopper.write("Erd_Reset", 1);
-      await delay(constants.oneSecondInMsec * 5);
+      await After(constants.oneSecondInMsec * 5);
 
       await theUserVotedSetpointForThe().FreshFoodCompartmentShouldBe(freshFoodDefaultTemperatureInDegFx100);
       await theSetpointStatusForThe().FreshFoodCompartmentShouldBe(freshFoodDefaultTemperatureInDegF);

@@ -13,13 +13,23 @@
 #include "I_Interrupt.h"
 #include "I_DataModel.h"
 
+#if defined(DEBUG)
+#include "TimeSource_SysTickWithAcceleration.h"
+#endif
+
 typedef struct
 {
    struct
    {
       TimerModule_t timerModule_1ms;
       TimeSource_Interrupt_t systemTickTimeSource;
+      I_TimeSource_t *timeSource;
       I_Interrupt_t *systemTickInterrupt;
+
+#if defined(DEBUG)
+      TimeSource_SysTickWithAcceleration_t acceleratedTimeSource;
+      Timer_t runTimer;
+#endif
    } _private;
 } TimerModuleStack_t;
 

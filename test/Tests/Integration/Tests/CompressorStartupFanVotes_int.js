@@ -1,6 +1,7 @@
 "use strict";
 
 const delay = require("javascript-common").util.delay;
+const After = require('../support/After.js');
 const { msPerSec } = require("../support/constants");
 const constants = require("../support/constants");
 
@@ -30,10 +31,10 @@ describe("CompressorStartupFanVotes,", () => {
 
    const after = (time) => ({
       inMsec: async () => {
-         await delay(time);
+         await After(time);
       },
       inSec: async () => {
-         await delay(time * msPerSec);
+         await After(time * msPerSec);
       }
    });
 

@@ -1,19 +1,19 @@
 "use strict";
 
 const delay = require("javascript-common").util.delay;
-const After = require("javascript-common").util.After;
+const After = require('../support/After.js');
 const { msPerSec, msPerMin } = require("../support/constants");
 const constants = require("../support/constants");
 
 const after = (time) => ({
    inMsec: async () => {
-      await delay(time);
+      await After(time);
    },
    inSec: async () => {
-      await delay(time * msPerSec);
+      await After(time * msPerSec);
    },
    inMin: async () => {
-      await delay(time * msPerMin);
+      await After(time * msPerMin);
    }
 });
 
@@ -88,6 +88,7 @@ describe("CompressorSpeedController,", () => {
       else if (requestedCompressorState === compressorState.minimumOnTime) {
          await providedTheCompressorSpeedControllerIsInitializedAndGetsIntoState(compressorState.startup, requestedSpeed);
          await after(startupTimeInSeconds).inSec();
+         await delay(500);
       }
 
       else if (requestedCompressorState === compressorState.onAndReadyToChange) {
@@ -187,6 +188,7 @@ describe("CompressorSpeedController,", () => {
       await providedTheCompressorSpeedControllerIsInitializedAndGetsIntoState(compressorState.startup, compressorSpeed.low);
 
       await after(startupTimeInSeconds).inSec();
+      await delay(500);
       await theCompressorSpeedRequestShouldBe(compressorSpeed.low);
    });
 
@@ -194,6 +196,7 @@ describe("CompressorSpeedController,", () => {
       await providedTheCompressorSpeedControllerIsInitializedAndGetsIntoState(compressorState.startup, compressorSpeed.low);
 
       await after(startupTimeInSeconds).inSec();
+      await delay(1000);
       await theCompressorStateShouldBe(compressorState.minimumOnTime);
    });
 
@@ -203,7 +206,8 @@ describe("CompressorSpeedController,", () => {
       await after(sabbathTimeInSeconds - 1).inSec();
       await providedTheFactorySpeedCompressorVoteSpeedIs(compressorSpeed.medium);
 
-      await after(startupTimeInSeconds + 1).inSec();
+      await after(startupTimeInSeconds).inSec();
+      await delay(500);
       await theCompressorSpeedRequestShouldBe(compressorSpeed.low);
    });
 
@@ -215,6 +219,7 @@ describe("CompressorSpeedController,", () => {
       await providedTheFactorySpeedCompressorVoteSpeedIs(compressorSpeed.medium);
 
       await after(1).inSec();
+      delay(500);
       await theCompressorSpeedRequestShouldBe(compressorSpeed.low);
    });
 
@@ -232,9 +237,11 @@ describe("CompressorSpeedController,", () => {
       await providedTheCompressorSpeedControllerIsInitializedAndGetsIntoState(compressorState.minimumOnTime, compressorSpeed.low);
 
       await after(minimumOnTimeInMinutes - 1).inMin();
+      await delay(500);
       await theCompressorSpeedRequestShouldBe(compressorSpeed.low);
 
       await after(1).inMin();
+      await delay(500);
       await theCompressorSpeedRequestShouldBe(compressorSpeed.low);
    });
 
@@ -258,6 +265,7 @@ describe("CompressorSpeedController,", () => {
       await providedTheCompressorSpeedControllerIsInitializedAndGetsIntoState(compressorState.onAndReadyToChange, compressorSpeed.low);
       await theValvePositionFactoryVoteIs(compressorSpeed.medium);
       await after(variableSpeedMinimumRunTimeInMinutes - 1).inMin();
+      await delay(500);
       await theCompressorStateShouldBe(compressorState.variableSpeedMinimumRunTime);
 
       await after(1).inMin();
@@ -280,9 +288,11 @@ describe("CompressorSpeedController,", () => {
       await providedTheCompressorSpeedControllerIsInitializedAndGetsIntoState(compressorState.minimumOffTime, compressorSpeed.low);
 
       await after(minimumOffTimeInMinutes - 1).inMin();
+      await delay(500);
       await theCompressorStateShouldBe(compressorState.minimumOffTime);
 
       await after(1).inMin();
+      await delay(5000);
       await theCompressorStateShouldBe(compressorState.offAndReadyToChange);
    });
 
@@ -302,9 +312,11 @@ describe("CompressorSpeedController,", () => {
       await theCompressorStateShouldBe(compressorState.remainOffAfterValveMove);
 
       await after(remainOffAfterValveMoveTimeInMinutes - 1).inMin();
+      await delay(500);
       await theCompressorStateShouldBe(compressorState.remainOffAfterValveMove);
 
       await after(1).inMin();
+      await delay(500);
       await theCompressorStateShouldBe(compressorState.minimumOffTime);
    });
 
@@ -316,9 +328,11 @@ describe("CompressorSpeedController,", () => {
       await theCompressorStateShouldBe(compressorState.remainOffAfterValveMove);
 
       await after(remainOffAfterValveMoveTimeInMinutesLowAmbient - 1).inMin();
+      await delay(1000);
       await theCompressorStateShouldBe(compressorState.remainOffAfterValveMove);
 
       await after(1).inMin();
+      await delay(1000);
       await theCompressorStateShouldBe(compressorState.minimumOffTime);
    });
 
@@ -327,13 +341,16 @@ describe("CompressorSpeedController,", () => {
       await providedTheCompressorSpeedControllerIsInitializedAndGetsIntoState(compressorState.minimumOffTime, compressorSpeed.low);
 
       await after(minimumOffTimeInMinutes - 1).inMin();
+      await delay(1000);
       await theValvePositionFactoryVoteIs(valvePosition.b);
       await theCompressorStateShouldBe(compressorState.remainOffAfterValveMove);
 
       await after(remainOffAfterValveMoveTimeInMinutes - 1).inMin();
+      await delay(1000);
       await theCompressorStateShouldBe(compressorState.remainOffAfterValveMove);
 
       await after(1).inMin();
+      await delay(1000);
       await theCompressorStateShouldBe(compressorState.offAndReadyToChange);
    });
 
@@ -342,14 +359,17 @@ describe("CompressorSpeedController,", () => {
       await providedTheCompressorSpeedControllerIsInitializedAndGetsIntoState(compressorState.minimumOffTime, compressorSpeed.low);
 
       await after(minimumOffTimeInMinutes - 1).inMin();
+      await delay(1000);
       await theValvePositionFactoryVoteIs(valvePosition.b);
       await theCompressorStateShouldBe(compressorState.remainOffAfterValveMove);
 
 
       await after(remainOffAfterValveMoveTimeInMinutesLowAmbient - 1).inMin();
+      await delay(1000);
       await theCompressorStateShouldBe(compressorState.remainOffAfterValveMove);
 
       await after(1).inMin();
+      await delay(1000);
       await theCompressorStateShouldBe(compressorState.offAndReadyToChange);
    });
 });
