@@ -671,6 +671,8 @@ I_DataSource_t *DataSource_Pwm_Init(void)
 {
 #ifndef OLD_HW
    instance.interface.api = &api;
+   
+   memset(dutyCycles, 0, sizeof(dutyCycles));
 
    ConfigurePins();
    ConfigurePwmMode2();
