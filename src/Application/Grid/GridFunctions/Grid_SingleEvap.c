@@ -72,19 +72,19 @@ static void ExecuteGridVote(I_DataModel_t *dataModel, SideBySideSingleEvaporator
 {
    CompressorVotedSpeed_t compressorVotedSpeed = {
       .speed = votes.compressorSpeed,
-      .care = true
+      .care = Vote_Care
    };
    FanVotedSpeed_t condenserFanVotedSpeed = {
       .speed = votes.condenserFanSpeed,
-      .care = true
+      .care = Vote_Care
    };
    FanVotedSpeed_t freezerEvapFanVotedSpeed = {
       .speed = votes.freezerEvapFanSpeed,
-      .care = true
+      .care = Vote_Care
    };
    DamperVotedPosition_t freshFoodDamperPositionVotedSpeed = {
       .position = votes.freshFoodDamperPosition,
-      .care = true
+      .care = Vote_Care
    };
 
    DataModel_Write(dataModel, Erd_CompressorSpeed_GridVote, &compressorVotedSpeed);

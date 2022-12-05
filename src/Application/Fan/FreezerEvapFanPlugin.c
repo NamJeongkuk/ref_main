@@ -21,7 +21,7 @@ static bool VotingErdCareDelegate(const void *votingErdData)
 
 static const FanVotedSpeed_t defaultData = {
    .speed = FanSpeed_Off,
-   .care = false
+   .care = Vote_DontCare
 };
 
 static const ErdResolverConfiguration_t freezerEvapFanSpeedResolverConfiguration = {

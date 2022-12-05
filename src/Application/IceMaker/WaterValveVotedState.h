@@ -9,6 +9,7 @@
 #define WATERVALVEVOTEDSTATE_H
 
 #include <stdint.h>
+#include "Vote.h"
 
 enum
 {
@@ -20,7 +21,7 @@ typedef uint8_t WaterValveState_t;
 typedef struct
 {
    WaterValveState_t state;
-   bool care;
+   Vote_t care;
 } WaterValveVotedState_t;
 
 #endif

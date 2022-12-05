@@ -9,6 +9,7 @@
 #define ALUMINUMMOLDICEMAKERMOTORVOTEDSTATE_H
 
 #include <stdint.h>
+#include "Vote.h"
 
 enum
 {
@@ -20,7 +21,7 @@ typedef uint8_t MotorState_t;
 typedef struct
 {
    MotorState_t state;
-   bool care;
+   Vote_t care;
 } AluminumMoldIceMakerMotorVotedState_t;
 
 #endif

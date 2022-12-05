@@ -9,6 +9,7 @@
 #define VOTECARE_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 enum
 {

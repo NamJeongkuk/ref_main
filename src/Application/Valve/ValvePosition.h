@@ -9,6 +9,7 @@
 #define VALVEPOSITION_H
 
 #include <stdint.h>
+#include "Vote.h"
 
 enum
 {
@@ -24,7 +25,7 @@ typedef uint8_t ValvePosition_t;
 typedef struct
 {
    ValvePosition_t position;
-   bool care;
+   Vote_t care;
 } ValveVotedPosition_t;
 
 #endif

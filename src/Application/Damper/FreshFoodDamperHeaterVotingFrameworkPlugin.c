@@ -10,7 +10,7 @@
 
 static const HeaterVotedState_t defaultData = {
    .state = HeaterState_Off,
-   .care = false
+   .care = Vote_DontCare
 };
 
 static bool VotingErdCareDelegate(const void *votingErdData)

@@ -29,7 +29,7 @@ static void VoteUserSetpoint(UserSetpointRequestHandler_t *instance, const Setpo
 {
    SetpointVotedTemperature_t votedSetpoint = {
       .temperatureInDegFx100 = (TemperatureDegFx100_t)*setpointStatus * ScalingFactorDegFx100,
-      .care = true
+      .care = Vote_Care
    };
 
    DataModel_Write(

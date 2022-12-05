@@ -9,6 +9,7 @@
 #define HEATERVOTEDSTATE_H
 
 #include <stdint.h>
+#include "Vote.h"
 
 enum
 {
@@ -20,7 +21,7 @@ typedef uint8_t HeaterState_t;
 typedef struct
 {
    HeaterState_t state;
-   bool care;
+   Vote_t care;
 } HeaterVotedState_t;
 
 #endif

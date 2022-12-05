@@ -40,7 +40,7 @@ static bool VotingErdCareDelegate(const void *votingErdData)
 
 static const CompressorVotedSpeed_t defaultCompressorSpeedData = {
    .speed = CompressorSpeed_Off,
-   .care = false
+   .care = Vote_DontCare
 };
 
 static const ErdResolverConfiguration_t compressorSpeedVoteResolverConfig = {

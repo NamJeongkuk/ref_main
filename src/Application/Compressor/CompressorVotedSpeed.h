@@ -9,6 +9,7 @@
 #define COMPRESSORVOTEDSPEED_H
 
 #include <stdint.h>
+#include "Vote.h"
 
 enum
 {
@@ -26,7 +27,7 @@ typedef uint8_t CompressorSpeed_t;
 typedef struct
 {
    CompressorSpeed_t speed;
-   bool care;
+   Vote_t care;
 } CompressorVotedSpeed_t;
 
 #endif

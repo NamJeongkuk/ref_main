@@ -9,7 +9,7 @@
 #define FANSPEED_H
 
 #include <stdint.h>
-#include <stdbool.h>
+#include "Vote.h"
 
 enum
 {
@@ -27,7 +27,7 @@ typedef uint8_t FanSpeed_t;
 typedef struct
 {
    FanSpeed_t speed;
-   bool care;
+   Vote_t care;
 } FanVotedSpeed_t;
 
 #endif
