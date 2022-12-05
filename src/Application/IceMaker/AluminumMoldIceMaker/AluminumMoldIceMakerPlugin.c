@@ -58,7 +58,7 @@ static const Erd_t enableErdsList[] = {
 };
 
 static const ErdLogicServiceConfigurationEntry_t configurationEntries[] = {
-   { ErdLogicServiceOperator_Or, { enableErdsList, NUM_ELEMENTS(enableErdsList) }, Erd_IceMakerEnabledResolved },
+   { ErdLogicServiceOperator_And, { enableErdsList, NUM_ELEMENTS(enableErdsList) }, Erd_IceMakerEnabledResolved },
 };
 
 static const ErdLogicServiceConfiguration_t iceMakerEnableResolverConfiguration = {
