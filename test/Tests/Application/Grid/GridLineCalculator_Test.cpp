@@ -23,7 +23,6 @@ extern "C"
 
 #define And
 #define Then
-#define The
 #define When
 #define Given
 
@@ -95,7 +94,7 @@ TEST_GROUP(GridLineCalculator)
       AdjustedSetpointPluginReadyIs(true);
    }
 
-   void ModuleIsInitialized()
+   void TheModuleIsInitialized()
    {
       GridLineCalculator_Init(
          &instance,
@@ -201,7 +200,7 @@ TEST_GROUP(GridLineCalculator)
       FreezerRawSetpointIs(freezerRawSetpoint);
    }
 
-   void GridLineCalculationErdsAreInitialized()
+   void TheGridLineCalculationErdsAreInitialized()
    {
       AdjustedSetpointsAre(AFreshFoodAdjustedSetpointTemperature,
          AFreezerAdjustedSetpointTemperature);
@@ -309,26 +308,26 @@ TEST_GROUP(GridLineCalculator)
 
 TEST(GridLineCalculator, ShouldInitialize)
 {
-   Given The ModuleIsInitialized();
+   Given TheModuleIsInitialized();
 }
 
 TEST(GridLineCalculator, ShouldAssertWhenAdjustedSetpointPluginIsNotReadyOnInit)
 {
    Given AdjustedSetpointPluginReadyIs(false);
-   ShouldFailAssertion(ModuleIsInitialized());
+   ShouldFailAssertion(TheModuleIsInitialized());
 }
 
 TEST(GridLineCalculator, ShouldCalculateGridLinesOnInitIncludingAdjustmentErds)
 {
-   Given The GridLineCalculationErdsAreInitialized();
-   And The ModuleIsInitialized();
+   Given TheGridLineCalculationErdsAreInitialized();
+   And TheModuleIsInitialized();
    GridLineTemperaturesShouldBeInitializedValues();
 }
 
 TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenOffsetChanges)
 {
-   Given The GridLineCalculationErdsAreInitialized();
-   And The ModuleIsInitialized();
+   Given TheGridLineCalculationErdsAreInitialized();
+   And TheModuleIsInitialized();
 
    When FreshFoodSumOffsetIs(AnotherFreshFoodOffsetTemperature);
    And FreezerSumOffsetIs(AnotherFreezerOffsetTemperature);
@@ -353,29 +352,10 @@ TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenOffsetChanges)
       GridLine_FreezerExtremeHigh);
 }
 
-TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenShiftChanges)
-{
-   Given The GridLineCalculationErdsAreInitialized();
-   And The ModuleIsInitialized();
-
-   When FreshFoodThermalShiftIs(AnotherFreshFoodShiftTemperature);
-   And FreezerThermalShiftIs(AnotherFreezerShiftTemperature);
-
-   CalculatedGridLineTempShouldBe(
-      (150 + AnotherFreshFoodShiftTemperature),
-      FreshFoodGridLineDimension,
-      GridLine_FreshFoodLowHystDelta);
-
-   And CalculatedGridLineTempShouldBe(
-      (600 + AnotherFreezerShiftTemperature),
-      GridDelta_Freezer,
-      GridLine_FreezerExtraHigh);
-}
-
 TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenSetpointChanges)
 {
-   Given The GridLineCalculationErdsAreInitialized();
-   And The ModuleIsInitialized();
+   Given TheGridLineCalculationErdsAreInitialized();
+   And TheModuleIsInitialized();
 
    GridLineTemperaturesShouldBeInitializedValues();
 
@@ -395,8 +375,8 @@ TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenSetpointChanges)
 
 TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenAdjustedSetpointChanges)
 {
-   Given The GridLineCalculationErdsAreInitialized();
-   And The ModuleIsInitialized();
+   Given TheGridLineCalculationErdsAreInitialized();
+   And TheModuleIsInitialized();
 
    When FreshFoodAdjustedSetpointIs(AnotherFreshFoodAdjustedSetpointTemperature);
    And FreezerAdjustedSetpointIs(AnotherFreezerAdjustedSetpointTemperature);
@@ -425,4 +405,30 @@ TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenAdjustedSetpointChanges)
       (750 + AnotherFreezerAdjustedSetpointTemperature + AFreezerOffsetTemperature),
       FreezerGridLineDimension,
       GridLine_FreezerSuperHigh);
+}
+
+TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenFreshFoodShiftChanges)
+{
+   Given TheGridLineCalculationErdsAreInitialized();
+   And TheModuleIsInitialized();
+
+   When FreshFoodThermalShiftIs(AnotherFreshFoodShiftTemperature);
+
+   CalculatedGridLineTempShouldBe(
+      (150 + AnotherFreshFoodShiftTemperature),
+      FreshFoodGridLineDimension,
+      GridLine_FreshFoodLowHystDelta);
+}
+
+TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenFreezerShiftChanges)
+{
+   Given TheGridLineCalculationErdsAreInitialized();
+   And TheModuleIsInitialized();
+
+   And FreezerThermalShiftIs(AnotherFreezerShiftTemperature);
+
+   And CalculatedGridLineTempShouldBe(
+      (600 + AnotherFreezerShiftTemperature),
+      GridDelta_Freezer,
+      GridLine_FreezerExtraHigh);
 }

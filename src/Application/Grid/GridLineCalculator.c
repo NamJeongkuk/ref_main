@@ -86,7 +86,7 @@ static void OnDataModelChanged(void *context, const void *args)
    if((erd == instance->_private.config->gridLineAdjustmentErds[FreshFoodGridLineDimension].rawSetpointErd) ||
       (erd == instance->_private.config->gridLineAdjustmentErds[FreshFoodGridLineDimension].offsetInDegFx100Erd) ||
       (erd == instance->_private.config->gridLineAdjustmentErds[FreshFoodGridLineDimension].adjustedSetpointInDegFx100Erd) ||
-      (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].thermalShiftInDegFx100Erd) ||
+      (erd == instance->_private.config->gridLineAdjustmentErds[FreshFoodGridLineDimension].thermalShiftInDegFx100Erd) ||
       (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].rawSetpointErd) ||
       (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].offsetInDegFx100Erd) ||
       (erd == instance->_private.config->gridLineAdjustmentErds[FreezerGridLineDimension].adjustedSetpointInDegFx100Erd) ||
