@@ -23,6 +23,7 @@
 #include "uassert.h"
 #include "Vote.h"
 #include "DefrostTestRequestMessage.h"
+#include "DefrostType.h"
 
 enum
 {
@@ -663,6 +664,19 @@ static bool FreezerDefrostHeaterOnTimeLessThanAbnormalDefrostTime(Defrost_t *ins
       instance->_private.defrostParametricData->freezerHeaterOnTimeToSetAbnormalDefrostInMinutes;
 }
 
+static void SetCurrentDefrostTypeToNextDefrostType(Defrost_t *instance)
+{
+   DefrostType_t nextDefrostType;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->nextDefrostTypeErd,
+      &nextDefrostType);
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->currentDefrostTypeErd,
+      &nextDefrostType);
+}
+
 static HsmState_t InitialState(Defrost_t *instance)
 {
    bool freezerFilteredTemperatureTooWarmAtPowerUp;
@@ -1010,6 +1024,7 @@ static bool State_WaitingToDefrost(Hsm_t *hsm, HsmSignal_t signal, const void *d
          break;
 
       case Hsm_Exit:
+         SetCurrentDefrostTypeToNextDefrostType(instance);
          break;
 
       default:

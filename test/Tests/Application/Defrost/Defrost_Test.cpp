@@ -79,6 +79,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .numberOfFreezerAbnormalDefrostCycleCountErd = Erd_NumberOfFreezerAbnormalDefrostCycles,
    .freezerDefrostHeaterOnTimeInMinutesErd = Erd_FreezerDefrostHeaterOnTimeInMinutes,
    .freezerDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,
+   .nextDefrostTypeErd = Erd_NextDefrostType,
+   .currentDefrostTypeErd = Erd_CurrentDefrostType,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -546,6 +548,24 @@ TEST_GROUP(Defrost_SingleEvap)
       request.requestId++;
 
       DataModel_Write(dataModel, Erd_DefrostTestRequest, &request);
+   }
+
+   void NextDefrostTypeIs(DefrostType_t defrostType)
+   {
+      DataModel_Write(dataModel, Erd_NextDefrostType, &defrostType);
+   }
+
+   void CurrentDefrostTypeIs(DefrostType_t defrostType)
+   {
+      DataModel_Write(dataModel, Erd_CurrentDefrostType, &defrostType);
+   }
+
+   void CurrentDefrostTypeShouldBe(DefrostType_t expected)
+   {
+      DefrostType_t actual;
+      DataModel_Read(dataModel, Erd_CurrentDefrostType, &actual);
+
+      CHECK_EQUAL(expected, actual);
    }
 };
 
@@ -1276,6 +1296,22 @@ TEST(Defrost_SingleEvap, ShouldWriteFalseToDefrostingErdWhenEnteringDisabled)
 
    When DefrostTestRequestIsDisable();
    DefrostingShouldBe(false);
+}
+
+TEST(Defrost_SingleEvap, ShouldWriteToCurrentDefrostTypeWhenExitingWaitingToDefrost)
+{
+   Given NextDefrostTypeIs(DefrostType_Full);
+   And CurrentDefrostTypeIs(DefrostType_FreshFood);
+   And LastFreshFoodDefrostWasNormal();
+   And LastFreezerDefrostWasNormal();
+   And LastConvertibleCompartmentDefrostWasNormal();
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   And FreezerEvaporatorThermistorValidityIs(Valid);
+   And FreshFoodThermistorValidityIs(Valid);
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   When ReadyToDefrost();
+   CurrentDefrostTypeShouldBe(DefrostType_Full);
 }
 
 TEST_GROUP(Defrost_DualEvap)
