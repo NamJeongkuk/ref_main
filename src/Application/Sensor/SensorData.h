@@ -52,6 +52,7 @@ typedef struct
    SensorDataConvertibleCompartmentSensorType_t *convertibleCompartmentCabinetThermistor;
    SensorDataSensorType_t *ambientThermistor;
    SensorDataSensorType_t *convertibleCompartmentEvapThermistor;
+   SensorDataSensorType_t *aluminumIceMakerMoldThermistor;
    uint16_t periodicUpdateRateInMs;
 } SensorData_t;
 
