@@ -5,7 +5,7 @@ const After = require('../support/After.js');
 const { msPerSec, msPerMin, secondsPerMin } = require("../support/constants");
 const constants = require("../support/constants");
 
-describe("Defrost", () => {
+xdescribe("Defrost", () => {
   const defrostHsmState = {
     defrostHsmStatePowerUp: "DefrostHsmState_PowerUp",
     defrostHsmStateIdle: "DefrostHsmState_Idle",
@@ -94,12 +94,12 @@ describe("Defrost", () => {
 
   const providedTheFilteredFreezerCabinetTemperatureIs = async (tempDegFx100) => {
     await rockhopper.write("Erd_Freezer_FilteredTemperatureOverrideRequest", true);
-    await rockhopper.write("Erd_Freezer_FilteredTemperatureOverrideValue", tempDegFx100);
+    await rockhopper.write("Erd_Freezer_FilteredTemperatureOverrideValueInDegFx100", tempDegFx100);
   };
 
   const providedTheFilteredFreezerEvaporatorTemperatureIs = async (tempDegFx100) => {
     await rockhopper.write("Erd_FreezerEvap_FilteredTemperatureOverrideRequest", true);
-    await rockhopper.write("Erd_FreezerEvap_FilteredTemperatureOverrideValue", tempDegFx100);
+    await rockhopper.write("Erd_FreezerEvap_FilteredTemperatureOverrideValueInDegFx100", tempDegFx100);
   }
 
   const providedTheEepromDefrostStateAtStartUpIs = async (state) => {
@@ -166,13 +166,13 @@ describe("Defrost", () => {
 
   const after = (time) => ({
     inMsec: async () => {
-      await delay(time);
+      await After(time);
     },
     inSec: async () => {
-      await delay(time * msPerSec);
+      await After(time * msPerSec);
     },
     inMinutes: async () => {
-      await delay(time * msPerMin);
+      await After(time * msPerMin);
     },
   });
 
@@ -275,13 +275,13 @@ describe("Defrost", () => {
 
   const providedTheEepromDefrostHeaterOnTimeForThe = () => ({
     FreezerDefrostHeaterIs: async (timeInMinutes) => {
-      await rx130.write("Erd_Eeprom_FreezerDefrostHeaterOnTimeInMinutes", timeInMinutes);
+      await rockhopper.write("Erd_Eeprom_FreezerDefrostHeaterOnTimeInMinutes", timeInMinutes);
     }
   });
 
   const theHeaterOnTimeForThe = () => ({
     FreezerDefrostHeaterShouldBe: async (expected) => {
-      const actual = await rx130.read("Erd_FreezerDefrostHeaterOnTimeInMinutes");
+      const actual = await rockhopper.read("Erd_FreezerDefrostHeaterOnTimeInMinutes");
       expect(actual).toEqual(expected);
     },
   });

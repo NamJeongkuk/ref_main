@@ -120,6 +120,11 @@ TEST_GROUP(DefrostParameterSelector_SingleEvap)
       DataModel_Write(dataModel, Erd_MaxTimeBetweenDefrostsInMinutes, &timeInMinutes);
    }
 
+   void ThereIsAConvertibleCompartment()
+   {
+      DataModel_Write(dataModel, Erd_HasConvertibleCompartment, set);
+   }
+
    void PreviousDefrostsAreNormalAndTimeWhenReadyToDefrostIsMaximumTimeBetweenDefrostsInMinutes()
    {
       Given PreviousDefrostsAreNormal();
@@ -231,9 +236,18 @@ TEST(DefrostParameterSelector_SingleEvap, TimeWhenReadyToDefrostShouldUpdateToMi
 TEST(DefrostParameterSelector_SingleEvap, TimeWhenReadyToDefrostShouldUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousConvertibleCompartmentDefrostIsAbnormal)
 {
    Given PreviousDefrostsAreNormalAndTimeWhenReadyToDefrostIsMaximumTimeBetweenDefrostsInMinutes();
+   Given ThereIsAConvertibleCompartment();
 
    When PreviousConvertibleCompartmentDefrostIsAbnormal();
    TimeWhenReadyToDefrostInMinutesShouldBe(defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+}
+
+TEST(DefrostParameterSelector_SingleEvap, TimeWhenReadyToDefrostShouldNotUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenPreviousConvertibleCompartmentDefrostIsAbnormalButThereIsNoConvertibleCompartment)
+{
+   Given PreviousDefrostsAreNormalAndTimeWhenReadyToDefrostIsMaximumTimeBetweenDefrostsInMinutes();
+
+   When PreviousConvertibleCompartmentDefrostIsAbnormal();
+   TimeWhenReadyToDefrostInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, TimeWhenReadyToDefrostShouldUpdateToMinimumTimeBetweenDefrostsAbnormalRunTimeWhenFreezerEvaporatorThermistorBecomesInvalid)

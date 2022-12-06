@@ -13,6 +13,23 @@
 #include "EnhancedSabbathData.h"
 #include "Constants_Binary.h"
 
+static bool ConvertibleCompartmentDefrostIsAbnormal(DefrostParameterSelector_t *instance)
+{
+   bool convertibleCompartmentDefrostWasAbnormal;
+   bool hasConvertibleCompartment;
+
+   DataModel_Read(
+      instance->_private.dataModel,
+      Erd_ConvertibleCompartmentDefrostWasAbnormal,
+      &convertibleCompartmentDefrostWasAbnormal);
+   DataModel_Read(
+      instance->_private.dataModel,
+      Erd_HasConvertibleCompartment,
+      &hasConvertibleCompartment);
+
+   return hasConvertibleCompartment && convertibleCompartmentDefrostWasAbnormal;
+}
+
 static void SetMaxPrechillTimeInMinutes(DefrostParameterSelector_t *instance, bool defrostIsFreshFoodOnly)
 {
    uint8_t maxPrechillTimeInMinutes;
@@ -77,12 +94,6 @@ static void SetTimeWhenDefrostReadyTimerIsSatisfiedInMinutes(DefrostParameterSel
       Erd_FreezerDefrostWasAbnormal,
       &freezerDefrostWasAbnormal);
 
-   bool convertibleCompartmentDefrostWasAbnormal;
-   DataModel_Read(
-      instance->_private.dataModel,
-      Erd_ConvertibleCompartmentDefrostWasAbnormal,
-      &convertibleCompartmentDefrostWasAbnormal);
-
    bool freezerEvaporatorThermistorIsValid;
    DataModel_Read(
       instance->_private.dataModel,
@@ -91,7 +102,7 @@ static void SetTimeWhenDefrostReadyTimerIsSatisfiedInMinutes(DefrostParameterSel
 
    if(freshFoodDefrostWasAbnormal ||
       freezerDefrostWasAbnormal ||
-      convertibleCompartmentDefrostWasAbnormal ||
+      ConvertibleCompartmentDefrostIsAbnormal(instance) ||
       !freezerEvaporatorThermistorIsValid)
    {
       const DefrostData_t *defrostData = PersonalityParametricData_Get(instance->_private.dataModel)->defrostData;

@@ -241,13 +241,19 @@ static bool FreezerDefrostWasAbnormal(Defrost_t *instance)
 
 static bool ConvertibleCompartmentDefrostWasAbnormal(Defrost_t *instance)
 {
+   bool hasConvertibleCompartment;
    bool defrostWasAbnormal;
+
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->hasConvertibleCompartment,
+      &hasConvertibleCompartment);
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->convertibleCompartmentDefrostWasAbnormalErd,
       &defrostWasAbnormal);
 
-   return defrostWasAbnormal;
+   return hasConvertibleCompartment && defrostWasAbnormal;
 }
 
 static bool AnyPreviousDefrostWasAbnormal(Defrost_t *instance)

@@ -54,6 +54,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .defrostTestRequestErd = Erd_DefrostTestRequest,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
+   .hasConvertibleCompartment = Erd_HasConvertibleCompartment,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
    .readyToDefrost = Erd_ReadyToDefrost,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,

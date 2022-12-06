@@ -35,6 +35,13 @@ static void UpdateStackUsage(void *context)
    DataModel_Write(instance->_private.dataModel, Erd_StackPercentFree, &stackUsage);
 }
 
+static void InitializePlatformParametricErds(I_DataModel_t *dataModel)
+{
+   const PersonalityParametricData_t *parametricData = PersonalityParametricData_Get(dataModel);
+
+   DataModel_Write(dataModel, Erd_HasConvertibleCompartment, &parametricData->convertibleCompartmentData->hasConvertibleCompartment);
+}
+
 void Application_Init(
    Application_t *instance,
    I_DataModel_t *dataModel,
@@ -49,6 +56,8 @@ void Application_Init(
       Erd_AppliancePersonality,
       Erd_PersonalityParametricData,
       Erd_PersonalityIdOutOfRangeFlag);
+
+   InitializePlatformParametricErds(dataModel);
 
    ShiftOffsetCalculatorCommonPlugin_Init(&instance->_private.shiftOffsetCalculatorCommonPlugin, dataModel);
    OverrideArbiterPlugin_Init(dataModel);

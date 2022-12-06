@@ -25,6 +25,7 @@ typedef struct
    Erd_t defrostTestRequestErd; // DefrostTestRequestMessage_t
    Erd_t freezerDefrostWasAbnormalErd; // bool
    Erd_t freshFoodDefrostWasAbnormalErd; // bool
+   Erd_t hasConvertibleCompartment; // bool
    Erd_t convertibleCompartmentDefrostWasAbnormalErd; // bool
    Erd_t readyToDefrost; // bool
    Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool

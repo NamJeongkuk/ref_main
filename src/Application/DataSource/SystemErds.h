@@ -527,6 +527,7 @@ enum
    ENTRY(Erd_FreezerSetpointZone,                                     0xF16B, SetpointZone_t,                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodSetpointZone,                                   0xF16C, SetpointZone_t,                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentSetpointZone,                      0xF16D, SetpointZone_t,                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_HasConvertibleCompartment,                               0xF16E, bool,                                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreezerIceRateTriggerSignal,                   0xF170, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \

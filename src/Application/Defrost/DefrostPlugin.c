@@ -19,6 +19,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .defrostTestRequestErd = Erd_DefrostTestRequest,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
+   .hasConvertibleCompartment = Erd_HasConvertibleCompartment,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
    .readyToDefrost = Erd_ReadyToDefrost,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
@@ -49,6 +50,7 @@ static const DefrostConfiguration_t defrostConfig = {
 static const DefrostHeaterMaxOnTimeConfiguration_t defrostHeaterMaxOnTimeConfig = {
    .freezerEvaporatorThermistorIsValidErd = Erd_FreezerEvapThermistor_IsValidResolved,
    .freshFoodEvaporatorThermistorIsValidErd = Erd_FreshFoodEvapThermistor_IsValidResolved,
+   .hasConvertibleCompartment = Erd_HasConvertibleCompartment,
    .convertibleCompartmentEvaporatorThermistorIsValidErd = Erd_ConvertibleCompartmentEvapThermistor_IsValidResolved,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .freshFoodDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreshFoodDefrostHeaterMaxOnTimeInMinutes,
@@ -120,6 +122,17 @@ static const NextDefrostTypeArbiterConfig_t nextDefrostTypeArbiterConfig = {
    .currentDefrostTypeErd = Erd_CurrentDefrostType
 };
 
+static bool ThereIsAConvertibleCompartment(I_DataModel_t *dataModel)
+{
+   bool hasConvertibleCompartment;
+   DataModel_Read(
+      dataModel,
+      Erd_HasConvertibleCompartment,
+      &hasConvertibleCompartment);
+
+   return hasConvertibleCompartment;
+}
+
 void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
 {
    bool sensorsReadyToBeRead;
@@ -135,10 +148,17 @@ void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
       &setpointResolverReady);
 
    bool convertibleCompartmentStateResolverReady;
-   DataModel_Read(
-      dataModel,
-      Erd_ConvertibleCompartmentStateResolverReady,
-      &convertibleCompartmentStateResolverReady);
+   if(ThereIsAConvertibleCompartment(dataModel))
+   {
+      DataModel_Read(
+         dataModel,
+         Erd_ConvertibleCompartmentStateResolverReady,
+         &convertibleCompartmentStateResolverReady);
+   }
+   else
+   {
+      convertibleCompartmentStateResolverReady = true;
+   }
 
    bool overrideArbiterReady;
    DataModel_Read(
