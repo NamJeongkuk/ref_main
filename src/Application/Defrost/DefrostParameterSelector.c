@@ -13,23 +13,6 @@
 #include "EnhancedSabbathData.h"
 #include "Constants_Binary.h"
 
-static bool ConvertibleCompartmentDefrostIsAbnormal(DefrostParameterSelector_t *instance)
-{
-   bool convertibleCompartmentDefrostWasAbnormal;
-   bool hasConvertibleCompartment;
-
-   DataModel_Read(
-      instance->_private.dataModel,
-      Erd_ConvertibleCompartmentDefrostWasAbnormal,
-      &convertibleCompartmentDefrostWasAbnormal);
-   DataModel_Read(
-      instance->_private.dataModel,
-      Erd_HasConvertibleCompartment,
-      &hasConvertibleCompartment);
-
-   return hasConvertibleCompartment && convertibleCompartmentDefrostWasAbnormal;
-}
-
 static void SetMaxPrechillTimeInMinutes(DefrostParameterSelector_t *instance, bool defrostIsFreshFoodOnly)
 {
    uint8_t maxPrechillTimeInMinutes;
@@ -80,53 +63,6 @@ static void SetPostDwellExitTimeInMinutes(DefrostParameterSelector_t *instance, 
       &postDwellExitTimeInMinutes);
 }
 
-static void SetTimeWhenDefrostReadyTimerIsSatisfiedInMinutes(DefrostParameterSelector_t *instance)
-{
-   bool freshFoodDefrostWasAbnormal;
-   DataModel_Read(
-      instance->_private.dataModel,
-      Erd_FreshFoodDefrostWasAbnormal,
-      &freshFoodDefrostWasAbnormal);
-
-   bool freezerDefrostWasAbnormal;
-   DataModel_Read(
-      instance->_private.dataModel,
-      Erd_FreezerDefrostWasAbnormal,
-      &freezerDefrostWasAbnormal);
-
-   bool freezerEvaporatorThermistorIsValid;
-   DataModel_Read(
-      instance->_private.dataModel,
-      Erd_FreezerEvaporatorThermistorIsValid,
-      &freezerEvaporatorThermistorIsValid);
-
-   if(freshFoodDefrostWasAbnormal ||
-      freezerDefrostWasAbnormal ||
-      ConvertibleCompartmentDefrostIsAbnormal(instance) ||
-      !freezerEvaporatorThermistorIsValid)
-   {
-      const DefrostData_t *defrostData = PersonalityParametricData_Get(instance->_private.dataModel)->defrostData;
-
-      DataModel_Write(
-         instance->_private.dataModel,
-         Erd_TimeInMinutesUntilReadyToDefrost,
-         &defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
-   }
-   else
-   {
-      uint16_t maxTimeBetweenDefrostsInMinutes;
-      DataModel_Read(
-         instance->_private.dataModel,
-         Erd_MaxTimeBetweenDefrostsInMinutes,
-         &maxTimeBetweenDefrostsInMinutes);
-
-      DataModel_Write(
-         instance->_private.dataModel,
-         Erd_TimeInMinutesUntilReadyToDefrost,
-         &maxTimeBetweenDefrostsInMinutes);
-   }
-}
-
 static void DataModelChanged(void *context, const void *args)
 {
    DefrostParameterSelector_t *instance = context;
@@ -140,14 +76,6 @@ static void DataModelChanged(void *context, const void *args)
       bool defrostIsFreshFoodOnly = (*currentDefrostType == DefrostType_FreshFood);
       SetMaxPrechillTimeInMinutes(instance, defrostIsFreshFoodOnly);
       SetPostDwellExitTimeInMinutes(instance, defrostIsFreshFoodOnly);
-   }
-   else if(erd == Erd_FreshFoodDefrostWasAbnormal ||
-      erd == Erd_FreezerDefrostWasAbnormal ||
-      erd == Erd_ConvertibleCompartmentDefrostWasAbnormal ||
-      erd == Erd_MaxTimeBetweenDefrostsInMinutes ||
-      erd == Erd_FreezerEvaporatorThermistorIsValid)
-   {
-      SetTimeWhenDefrostReadyTimerIsSatisfiedInMinutes(instance);
    }
 }
 
@@ -164,7 +92,6 @@ void DefrostParameterSelector_Init(DefrostParameterSelector_t *instance, I_DataM
    bool defrostIsFreshFoodOnly = (currentDefrostType == DefrostType_FreshFood);
    SetMaxPrechillTimeInMinutes(instance, defrostIsFreshFoodOnly);
    SetPostDwellExitTimeInMinutes(instance, defrostIsFreshFoodOnly);
-   SetTimeWhenDefrostReadyTimerIsSatisfiedInMinutes(instance);
 
    EventSubscription_Init(
       &instance->_private.dataModelSubscription,

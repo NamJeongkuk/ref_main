@@ -23,6 +23,13 @@ typedef struct
    Erd_t timeInMinutesUntilReadyToDefrostErd; // uint16_t
    Erd_t defrostCompressorOnTimeCounterReadyErd; // bool
    Erd_t doorAccelerationCounterReadyErd; // bool
+   Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
+   Erd_t freezerDefrostUseMinimumTimeErd; // bool
+   Erd_t freezerEvapThermistorIsValidErd; // bool
+   Erd_t freshFoodDefrostWasAbnormalErd; // bool
+   Erd_t freezerDefrostWasAbnormalErd; // bool
+   Erd_t convertibleCompartmentDefrostWasAbnormalErd; // bool
+   Erd_t hasConvertibleCompartment; // bool
 } ReadyToDefrostConfiguration_t;
 
 typedef struct
@@ -32,6 +39,7 @@ typedef struct
       I_DataModel_t *dataModel;
       EventSubscription_t dataModelSubscription;
       const ReadyToDefrostConfiguration_t *config;
+      uint32_t timeBetweenDefrostsInMinutes;
    } _private;
 } ReadyToDefrost_t;
 

@@ -103,7 +103,14 @@ static ReadyToDefrostConfiguration_t readyToDefrostConfig = {
    .readyToDefrostErd = Erd_ReadyToDefrost,
    .timeInMinutesUntilReadyToDefrostErd = Erd_TimeInMinutesUntilReadyToDefrost,
    .defrostCompressorOnTimeCounterReadyErd = Erd_DefrostCompressorOnTimeCounterReady,
-   .doorAccelerationCounterReadyErd = Erd_DoorAccelerationCounterReady
+   .doorAccelerationCounterReadyErd = Erd_DoorAccelerationCounterReady,
+   .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
+   .freezerDefrostUseMinimumTimeErd = Erd_UseMinimumReadyToDefrostTime,
+   .freezerEvapThermistorIsValidErd = Erd_FreezerEvapThermistor_IsValidResolved,
+   .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
+   .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
+   .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
+   .hasConvertibleCompartment = Erd_HasConvertibleCompartment
 };
 
 static const TimeThatPrechillConditionsAreMetConfiguration_t timeThatPrechillConditionsAreMetConfig = {

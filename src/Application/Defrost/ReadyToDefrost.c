@@ -35,15 +35,26 @@ static uint32_t DoorAccelerations(ReadyToDefrost_t *instance)
       convertibleCompartmentScaledDoorAccelerationInSeconds;
 }
 
-static uint32_t TimeInSecondsWhenReadyToDefrost(ReadyToDefrost_t *instance)
+static bool ConvertibleCompartmentIsAbnormal(ReadyToDefrost_t *instance)
 {
-   uint16_t timeInMinutesUntilReadyToDefrost;
+   bool hasConvertibleCompartment;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->timeInMinutesUntilReadyToDefrostErd,
-      &timeInMinutesUntilReadyToDefrost);
+      instance->_private.config->hasConvertibleCompartment,
+      &hasConvertibleCompartment);
 
-   return (uint32_t)timeInMinutesUntilReadyToDefrost * SECONDS_PER_MINUTE;
+   bool convertibleCompartmentDefrostWasAbnormal;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->convertibleCompartmentDefrostWasAbnormalErd,
+      &convertibleCompartmentDefrostWasAbnormal);
+
+   return hasConvertibleCompartment && convertibleCompartmentDefrostWasAbnormal;
+}
+
+static uint32_t TimeInSecondsWhenReadyToDefrost(ReadyToDefrost_t *instance)
+{
+   return instance->_private.timeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE;
 }
 
 static uint32_t CompressorOnTimeInSeconds(ReadyToDefrost_t *instance)
@@ -75,6 +86,66 @@ static void UpdateReadyToDefrostErd(ReadyToDefrost_t *instance)
       &readyToDefrost);
 }
 
+static void UpdateUseMinimumTimeErd(ReadyToDefrost_t *instance)
+{
+   if(ReadyToDefrost(instance))
+   {
+      DataModel_Write(
+         instance->_private.dataModel,
+         instance->_private.config->freezerDefrostUseMinimumTimeErd,
+         clear);
+   }
+}
+
+static void DetermineTimeWhenReadyToDefrost(ReadyToDefrost_t *instance)
+{
+   const DefrostData_t *defrostData = PersonalityParametricData_Get(instance->_private.dataModel)->defrostData;
+
+   bool freshFoodDefrostWasAbnormal;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freshFoodDefrostWasAbnormalErd,
+      &freshFoodDefrostWasAbnormal);
+
+   bool freezerDefrostWasAbnormal;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerDefrostWasAbnormalErd,
+      &freezerDefrostWasAbnormal);
+
+   bool freezerEvapIsValid;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerEvapThermistorIsValidErd,
+      &freezerEvapIsValid);
+
+   bool filteredTempTooWarmOnPowerUp;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
+      &filteredTempTooWarmOnPowerUp);
+
+   bool minimumTimeIsSet;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerDefrostUseMinimumTimeErd,
+      &minimumTimeIsSet);
+
+   if(freshFoodDefrostWasAbnormal ||
+      freezerDefrostWasAbnormal ||
+      ConvertibleCompartmentIsAbnormal(instance) ||
+      !freezerEvapIsValid ||
+      filteredTempTooWarmOnPowerUp ||
+      minimumTimeIsSet)
+   {
+      instance->_private.timeBetweenDefrostsInMinutes = defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes;
+   }
+   else
+   {
+      instance->_private.timeBetweenDefrostsInMinutes = defrostData->maxTimeBetweenDefrostsInMinutes;
+   }
+}
+
 static void DataModelChanged(void *context, const void *args)
 {
    ReadyToDefrost_t *instance = context;
@@ -86,8 +157,16 @@ static void DataModelChanged(void *context, const void *args)
       erd == instance->_private.config->freshFoodScaledDoorAccelerationInSecondsErd ||
       erd == instance->_private.config->freezerScaledDoorAccelerationInSecondsErd ||
       erd == instance->_private.config->convertibleCompartmentScaledDoorAccelerationInSecondsErd ||
-      erd == instance->_private.config->timeInMinutesUntilReadyToDefrostErd)
+      erd == instance->_private.config->timeInMinutesUntilReadyToDefrostErd ||
+      erd == instance->_private.config->freezerDefrostWasAbnormalErd ||
+      erd == instance->_private.config->freshFoodDefrostWasAbnormalErd ||
+      erd == instance->_private.config->convertibleCompartmentDefrostWasAbnormalErd ||
+      erd == instance->_private.config->freezerEvapThermistorIsValidErd ||
+      erd == instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd ||
+      erd == instance->_private.config->freezerDefrostUseMinimumTimeErd)
    {
+      UpdateUseMinimumTimeErd(instance);
+      DetermineTimeWhenReadyToDefrost(instance);
       UpdateReadyToDefrostErd(instance);
    }
 }
@@ -115,6 +194,8 @@ void ReadyToDefrost_Init(
    instance->_private.config = config;
    instance->_private.dataModel = dataModel;
 
+   UpdateUseMinimumTimeErd(instance);
+   DetermineTimeWhenReadyToDefrost(instance);
    UpdateReadyToDefrostErd(instance);
 
    EventSubscription_Init(
