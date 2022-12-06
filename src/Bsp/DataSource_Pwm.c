@@ -275,16 +275,13 @@ void TMR3_CMIB3(void)
       {                                                                                                                                            \
          dutyCycle = ConvertDutyCycleToCounts(PwmTmoFrequencyCount, dutyCycle);                                                                    \
                                                                                                                                                    \
-         if(PORT##port.PMR.BIT.B##bit == 1)                                                                                                       \
-         {                                                                                                                                         \
-            tmoPwmDutyCycleValue##timerNumber = (uint8_t)dutyCycle;                                                                                \
-         }                                                                                                                                         \
-         else                                                                                                                                      \
+         if(PORT##port.PMR.BIT.B##bit == 0)                                                                                                        \
          {                                                                                                                                         \
             TMR##timerNumber.TCNT = 0;                                                                                                             \
-            TMR##timerNumber.TCORB= (uint8_t)dutyCycle;                                                                                                 \
+            TMR##timerNumber.TCORB = (uint8_t)dutyCycle;                                                                                           \
             PORT##port.PMR.BIT.B##bit = 1;                                                                                                         \
          }                                                                                                                                         \
+         tmoPwmDutyCycleValue##timerNumber = (uint8_t)dutyCycle;                                                                                   \
       }                                                                                                                                            \
    })
 
@@ -544,10 +541,6 @@ static void StopTimersWhenPwmUnused(void)
       TimerNeedsToBeOnForChannel(OutputChannel_Pwm_25K_02) ||
       TimerNeedsToBeOnForChannel(OutputChannel_Pwm_25K_03) ||
       TimerNeedsToBeOnForChannel(OutputChannel_Pwm_25K_04) ||
-      TimerNeedsToBeOnForChannel(OutputChannel_Pwm_200_00) ||
-      TimerNeedsToBeOnForChannel(OutputChannel_Pwm_200_01) ||
-      TimerNeedsToBeOnForChannel(OutputChannel_Pwm_200_02) ||
-      TimerNeedsToBeOnForChannel(OutputChannel_Pwm_200_03) ||
       TimerNeedsToBeOnForChannel(OutputChannel_Pwm_VAR_00) ||
       TimerNeedsToBeOnForChannel(OutputChannel_Pwm_VAR_01))
    {
@@ -671,7 +664,7 @@ I_DataSource_t *DataSource_Pwm_Init(void)
 {
 #ifndef OLD_HW
    instance.interface.api = &api;
-   
+
    memset(dutyCycles, 0, sizeof(dutyCycles));
 
    ConfigurePins();
