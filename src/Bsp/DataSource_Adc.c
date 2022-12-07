@@ -103,8 +103,8 @@ static void ConfigureAdcGroupA(void)
    // Scan End Interrupt Enable bit. Set to 1 to enable interrupt.
    S12AD.ADCSR.BIT.ADIE = 0x1;
 
-   // A/D data alignment right
-   S12AD.ADCER.BIT.ADRFMT = 0x0;
+   // A/D data alignment left
+   S12AD.ADCER.BIT.ADRFMT = 0x01;
 
    // Adjust Sampling Times for Channels 0-7
    S12AD.ADSSTR0 = AdcStateSamplingStates;
