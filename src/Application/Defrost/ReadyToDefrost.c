@@ -131,12 +131,19 @@ static void DetermineTimeWhenReadyToDefrost(ReadyToDefrost_t *instance)
       instance->_private.config->freezerDefrostUseMinimumTimeErd,
       &minimumTimeIsSet);
 
+   bool eepromIsCleared;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->eepromClearedErd,
+      &eepromIsCleared);
+
    if(freshFoodDefrostWasAbnormal ||
       freezerDefrostWasAbnormal ||
       ConvertibleCompartmentIsAbnormal(instance) ||
       !freezerEvapIsValid ||
       filteredTempTooWarmOnPowerUp ||
-      minimumTimeIsSet)
+      minimumTimeIsSet ||
+      eepromIsCleared)
    {
       instance->_private.timeBetweenDefrostsInMinutes = defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes;
    }
@@ -163,7 +170,8 @@ static void DataModelChanged(void *context, const void *args)
       erd == instance->_private.config->convertibleCompartmentDefrostWasAbnormalErd ||
       erd == instance->_private.config->freezerEvapThermistorIsValidErd ||
       erd == instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd ||
-      erd == instance->_private.config->freezerDefrostUseMinimumTimeErd)
+      erd == instance->_private.config->freezerDefrostUseMinimumTimeErd ||
+      erd == instance->_private.config->eepromClearedErd)
    {
       UpdateUseMinimumTimeErd(instance);
       DetermineTimeWhenReadyToDefrost(instance);

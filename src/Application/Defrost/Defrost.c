@@ -264,6 +264,25 @@ static bool AnyPreviousDefrostWasAbnormal(Defrost_t *instance)
       ConvertibleCompartmentDefrostWasAbnormal(instance));
 }
 
+static bool ClearedEepromStartup(Defrost_t *instance)
+{
+   bool eepromClearedStartup;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->clearedEepromStartup,
+      &eepromClearedStartup);
+
+   return eepromClearedStartup;
+}
+
+static void SetClearedEepromStartupTo(Defrost_t *instance, bool state)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->clearedEepromStartup,
+      &state);
+}
+
 static bool CompressorIsOn(Defrost_t *instance)
 {
    bool compressorIsOn;
@@ -271,6 +290,7 @@ static bool CompressorIsOn(Defrost_t *instance)
       instance->_private.dataModel,
       instance->_private.config->compressorIsOnErd,
       &compressorIsOn);
+
    return compressorIsOn;
 }
 
@@ -745,7 +765,8 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Signal_ReadyToDefrost:
          if(AnyPreviousDefrostWasAbnormal(instance) ||
             FreezerCompartmentWasTooWarmOnPowerUp(instance) ||
-            !FreezerEvaporatorThermistorIsValid(instance))
+            !FreezerEvaporatorThermistorIsValid(instance) ||
+            ClearedEepromStartup(instance))
          {
             if(FreezerCompartmentWasTooWarmOnPowerUp(instance))
             {
@@ -760,6 +781,7 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Hsm_Exit:
+         SetClearedEepromStartupTo(instance, false);
          break;
 
       default:

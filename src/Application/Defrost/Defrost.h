@@ -53,6 +53,7 @@ typedef struct
    Erd_t nextDefrostTypeErd; // DefrostType_t
    Erd_t currentDefrostTypeErd; // DefrostType_t
    Erd_t timerModuleErd; // TimerModule_t *
+   Erd_t clearedEepromStartup; // bool
 } DefrostConfiguration_t;
 
 typedef struct

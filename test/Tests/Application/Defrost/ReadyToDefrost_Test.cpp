@@ -43,7 +43,8 @@ static ReadyToDefrostConfiguration_t config = {
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
-   .hasConvertibleCompartment = Erd_HasConvertibleCompartment
+   .hasConvertibleCompartment = Erd_HasConvertibleCompartment,
+   .eepromClearedErd = Erd_Eeprom_ClearedDefrostEepromStartup,
 };
 
 TEST_GROUP(ReadyToDefrost)
@@ -70,6 +71,7 @@ TEST_GROUP(ReadyToDefrost)
    {
       DataModel_Write(dataModel, Erd_DefrostCompressorOnTimeCounterReady, set);
       DataModel_Write(dataModel, Erd_DoorAccelerationCounterReady, set);
+      DataModel_Write(dataModel, Erd_Eeprom_ClearedDefrostEepromStartup, clear);
 
       ReadyToDefrost_Init(&instance, dataModel, &config);
    }
@@ -151,6 +153,11 @@ TEST_GROUP(ReadyToDefrost)
    void ConvertibleCompartmentDefrostWasAbnormalIs(bool state)
    {
       DataModel_Write(dataModel, Erd_ConvertibleCompartmentDefrostWasAbnormal, &state);
+   }
+
+   void EepromClearedFlagIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_Eeprom_ClearedDefrostEepromStartup, &state);
    }
 
    void HasConvertibleCompartmentIs(bool state)
@@ -607,6 +614,17 @@ TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdWhenConvertibleCompartmentDefrost
    ReadyToDefrostShouldBe(SET);
 
    And ConvertibleCompartmentDefrostWasAbnormalIs(CLEAR);
+   ReadyToDefrostShouldBe(CLEAR);
+}
+
+TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdWhenEepromClearedFlagIsSetThenClearReadyToDefrostErdWhenEepromClearedFlagIsCleared)
+{
+   Given TheTimeBetweenDefrostsIsNormalTimeAndReadyToDefrostIsClearAndTheReadyToDefrostModuleIsInitialized();
+   And EepromClearedFlagIs(SET);
+
+   ReadyToDefrostShouldBe(SET);
+
+   And EepromClearedFlagIs(CLEAR);
    ReadyToDefrostShouldBe(CLEAR);
 }
 

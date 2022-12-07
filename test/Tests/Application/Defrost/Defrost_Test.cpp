@@ -81,7 +81,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .freezerDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,
    .nextDefrostTypeErd = Erd_NextDefrostType,
    .currentDefrostTypeErd = Erd_CurrentDefrostType,
-   .timerModuleErd = Erd_TimerModule
+   .timerModuleErd = Erd_TimerModule,
+   .clearedEepromStartup = Erd_Eeprom_ClearedDefrostEepromStartup,
 };
 
 static const SabbathData_t sabbathData = {
@@ -136,6 +137,8 @@ TEST_GROUP(Defrost_SingleEvap)
    void DefrostIsInitialized()
    {
       DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+      DataModel_Write(dataModel, Erd_Eeprom_ClearedDefrostEepromStartup, clear);
+
       Defrost_Init(&instance, dataModel, &defrostConfig);
    }
 
@@ -569,6 +572,19 @@ TEST_GROUP(Defrost_SingleEvap)
    {
       DefrostType_t actual;
       DataModel_Read(dataModel, Erd_CurrentDefrostType, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void ClearedEepromOnStartupIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_Eeprom_ClearedDefrostEepromStartup, &state);
+   }
+
+   void ClearedEepromOnStartupShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_Eeprom_ClearedDefrostEepromStartup, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -1345,6 +1361,16 @@ TEST(Defrost_SingleEvap, ShouldWriteToCurrentDefrostTypeWhenExitingWaitingToDefr
 
    When ReadyToDefrost();
    CurrentDefrostTypeShouldBe(DefrostType_Full);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryFromIdleWhenReadyToDefrostAndEepromIsClearedOnStartup)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   Given ClearedEepromOnStartupIs(true);
+
+   When ReadyToDefrost();
+   ClearedEepromOnStartupShouldBe(false);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
 TEST_GROUP(Defrost_DualEvap)

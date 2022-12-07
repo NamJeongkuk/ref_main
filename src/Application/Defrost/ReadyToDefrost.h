@@ -30,6 +30,7 @@ typedef struct
    Erd_t freezerDefrostWasAbnormalErd; // bool
    Erd_t convertibleCompartmentDefrostWasAbnormalErd; // bool
    Erd_t hasConvertibleCompartment; // bool
+   Erd_t eepromClearedErd; // bool
 } ReadyToDefrostConfiguration_t;
 
 typedef struct

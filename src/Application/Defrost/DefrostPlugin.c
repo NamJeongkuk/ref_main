@@ -46,7 +46,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .freezerDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,
    .nextDefrostTypeErd = Erd_NextDefrostType,
    .currentDefrostTypeErd = Erd_CurrentDefrostType,
-   .timerModuleErd = Erd_TimerModule
+   .timerModuleErd = Erd_TimerModule,
+   .clearedEepromStartup = Erd_Eeprom_ClearedDefrostEepromStartup,
 };
 
 static const DefrostHeaterMaxOnTimeConfiguration_t defrostHeaterMaxOnTimeConfig = {
@@ -110,7 +111,8 @@ static ReadyToDefrostConfiguration_t readyToDefrostConfig = {
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
-   .hasConvertibleCompartment = Erd_HasConvertibleCompartment
+   .hasConvertibleCompartment = Erd_HasConvertibleCompartment,
+   .eepromClearedErd = Erd_Eeprom_ClearedDefrostEepromStartup
 };
 
 static const TimeThatPrechillConditionsAreMetConfiguration_t timeThatPrechillConditionsAreMetConfig = {

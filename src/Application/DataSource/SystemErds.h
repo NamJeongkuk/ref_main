@@ -943,6 +943,7 @@ enum
    ENTRY(Erd_Eeprom_DefrostFreshFoodScaledDoorAccelerationInSeconds, 0xFB08, uint32_t,                                  Swap_Y, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds, 0xFB09, uint32_t,                     Swap_Y, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_FreezerDefrostHeaterOnTimeInMinutes,    0xFB0A, uint8_t,                                            Swap_N, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_ClearedDefrostEepromStartup,            0xFB0B, bool,                                               Swap_N, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanTrue, NotFault) \
    \
    ENTRY(Erd_NvReservedProtected,                           0xFCFA, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvProtected,           NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NvReservedUnitSetting,                         0xFCFB, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
