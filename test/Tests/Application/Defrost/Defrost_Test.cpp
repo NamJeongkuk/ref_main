@@ -308,6 +308,11 @@ TEST_GROUP(Defrost_SingleEvap)
       DataModel_Write(dataModel, Erd_ReadyToDefrost, set);
    }
 
+   void ClearReadyToDefrost()
+   {
+      DataModel_Write(dataModel, Erd_ReadyToDefrost, clear);
+   }
+
    void FreezerFilteredTemperatureTooWarmOnPowerUpIs(bool state)
    {
       DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmAtPowerUp, &state);
@@ -768,6 +773,34 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillWhenPrechillPrepTimerExpiresWhileInPr
 
    After(1);
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+}
+
+TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepTheNextTimeThroughIdleAfterItWasTooWarmOnPowerUp)
+{
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+   And FreezerDefrostHeaterMaxOnTimeInMinutesIs(FreezerDefrostHeaterMaxOnTimeInMinutes);
+   And FreezerEvaporatorThermistorValidityIs(Valid);
+   And FreshFoodThermistorValidityIs(Valid);
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   ClearReadyToDefrost();
+
+   After(defrostData->defrostHeaterOnDelayAfterCompressorOffInSeconds * MSEC_PER_SEC);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOn);
+
+   When FreezerDefrostHeaterOnTimeInMinutesIs(FreezerDefrostHeaterMaxOnTimeInMinutes);
+   DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
+
+   After(defrostData->dwellTimeInMinutes * MSEC_PER_MIN);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
+
+   After(defrostData->postDwellExitTimeInMinutes * MSEC_PER_MIN);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
 }
 
 TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillPrepAndFreshFoodThermistorIsAlreadyInvalid)
