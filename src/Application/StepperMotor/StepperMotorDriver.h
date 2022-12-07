@@ -15,14 +15,17 @@
 
 typedef struct
 {
-   const Erd_t *pins;
-   uint8_t numOfPins;
-} StepperMotorPinArray_t;
+   Erd_t motorDriveA;
+   Erd_t motorDriveB;
+   Erd_t motorDriveABar;
+   Erd_t motorDriveBBar;
+   Erd_t motorDriveEnable;
+} StepperMotorPins_t;
 
 typedef struct
 {
    Erd_t stepperMotorPositionRequestErd;
-   const StepperMotorPinArray_t *pinArray;
+   const StepperMotorPins_t *pins;
 } StepperMotorDriverConfiguration_t;
 
 typedef struct

@@ -34,10 +34,10 @@ enum
    Position3,
    Position4,
 
-   Pin1 = 0,
-   Pin2,
-   Pin3,
-   Pin4,
+   A = 0,
+   B,
+   Abar,
+   Bbar,
    EnablePin,
    NumberOfPins,
 
@@ -53,22 +53,17 @@ static const bool pinState[5][5] = {
    { ON, OFF, OFF, ON, ON },
 };
 
-static const Erd_t pins[] = {
-   Pin1,
-   Pin2,
-   Pin3,
-   Pin4,
-   EnablePin
+static const StepperMotorPins_t damperPins = {
+   .motorDriveA = A,
+   .motorDriveB = B,
+   .motorDriveABar = Abar,
+   .motorDriveBBar = Bbar,
+   .motorDriveEnable = EnablePin
 };
 
-static const StepperMotorPinArray_t pinArray = {
-   pins,
-   NUM_ELEMENTS(pins)
-};
-
-static StepperMotorDriverConfiguration_t config = {
+static const StepperMotorDriverConfiguration_t config = {
    .stepperMotorPositionRequestErd = Erd_FreshFoodDamperStepperMotorPositionRequest,
-   .pinArray = &pinArray
+   .pins = &damperPins
 };
 
 static bool inputStates[NumberOfPins];
@@ -111,16 +106,16 @@ TEST_GROUP(StepperMotorDriver)
    {
       for(uint8_t i = 0; i < NumberOfPins; i++)
       {
-         PinShouldBe(Pin1 + i, pinState[i]);
+         PinShouldBe(A + i, pinState[i]);
       }
    }
 
    void ThePinsAre(const bool pinState[])
    {
-      GpioGroup_Write(&gpioGroupDouble.gpioGroup, Pin1, &pinState[0]);
-      GpioGroup_Write(&gpioGroupDouble.gpioGroup, Pin2, &pinState[1]);
-      GpioGroup_Write(&gpioGroupDouble.gpioGroup, Pin3, &pinState[2]);
-      GpioGroup_Write(&gpioGroupDouble.gpioGroup, Pin4, &pinState[3]);
+      GpioGroup_Write(&gpioGroupDouble.gpioGroup, A, &pinState[0]);
+      GpioGroup_Write(&gpioGroupDouble.gpioGroup, B, &pinState[1]);
+      GpioGroup_Write(&gpioGroupDouble.gpioGroup, Abar, &pinState[2]);
+      GpioGroup_Write(&gpioGroupDouble.gpioGroup, Bbar, &pinState[3]);
       GpioGroup_Write(&gpioGroupDouble.gpioGroup, EnablePin, &pinState[4]);
    }
 

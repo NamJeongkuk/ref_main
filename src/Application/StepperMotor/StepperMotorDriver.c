@@ -20,13 +20,13 @@ enum
    Position4
 };
 
-static void SetPinsToStates(StepperMotorDriver_t *instance, bool pin1, bool pin2, bool pin3, bool pin4, bool pin5)
+static void SetPinsToStates(StepperMotorDriver_t *instance, bool a, bool b, bool aBar, bool bBar, bool enable)
 {
-   GpioGroup_Write(instance->_private.gpioGroup, instance->_private.config->pinArray->pins[0], pin1);
-   GpioGroup_Write(instance->_private.gpioGroup, instance->_private.config->pinArray->pins[1], pin2);
-   GpioGroup_Write(instance->_private.gpioGroup, instance->_private.config->pinArray->pins[2], pin3);
-   GpioGroup_Write(instance->_private.gpioGroup, instance->_private.config->pinArray->pins[3], pin4);
-   GpioGroup_Write(instance->_private.gpioGroup, instance->_private.config->pinArray->pins[4], pin5);
+   GpioGroup_Write(instance->_private.gpioGroup, instance->_private.config->pins->motorDriveA, a);
+   GpioGroup_Write(instance->_private.gpioGroup, instance->_private.config->pins->motorDriveB, b);
+   GpioGroup_Write(instance->_private.gpioGroup, instance->_private.config->pins->motorDriveABar, aBar);
+   GpioGroup_Write(instance->_private.gpioGroup, instance->_private.config->pins->motorDriveBBar, bBar);
+   GpioGroup_Write(instance->_private.gpioGroup, instance->_private.config->pins->motorDriveEnable, enable);
 }
 
 static void SetPinsToPosition(StepperMotorDriver_t *instance, uint8_t position)
