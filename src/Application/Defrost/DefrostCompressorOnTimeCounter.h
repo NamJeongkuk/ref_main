@@ -24,6 +24,7 @@ typedef struct
    Erd_t defrostCompressorOnTimeCounterFsmStateErd; // DefrostCompressorOnTimeCounterFsmState_t
    Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
    Erd_t freezerFilteredTemperatureTooWarmOnPowerUpReadyErd; // bool
+   Erd_t resetAndCountSignalErd; // Signal_t
    Erd_t defrostCompressorOnTimeCounterReadyErd; // bool
    Erd_t timerModuleErd; // TimerModule_t *
 } DefrostCompressorOnTimeCounterConfiguration_t;
@@ -35,7 +36,9 @@ typedef struct
       I_DataModel_t *dataModel;
       Fsm_t fsm;
       Timer_t periodicTimer;
-      EventSubscription_t subscription;
+      EventSubscription_t waitingToDefrostSubscription;
+      EventSubscription_t resetAndCountSignalSubscription;
+      bool resetAndCountRequested;
       const DefrostCompressorOnTimeCounterConfiguration_t *config;
    } _private;
 } DefrostCompressorOnTimeCounter_t;

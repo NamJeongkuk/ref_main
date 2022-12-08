@@ -68,6 +68,7 @@ static const DefrostCompressorOnTimeCounterConfiguration_t defrostCompressorOnTi
    .defrostCompressorOnTimeCounterFsmStateErd = Erd_DefrostCompressorOnTimeCounterFsmState,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
+   .resetAndCountSignalErd = Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
    .defrostCompressorOnTimeCounterReadyErd = Erd_DefrostCompressorOnTimeCounterReady,
    .timerModuleErd = Erd_TimerModule
 };
@@ -92,6 +93,7 @@ static const DoorAccelerationCounterConfiguration_t doorAccelerationCounterConfi
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
+   .resetAndCountSignalErd = Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
    .doorAccelerationCounterReadyErd = Erd_DoorAccelerationCounterReady,
    .timerModuleErd = Erd_TimerModule
 };

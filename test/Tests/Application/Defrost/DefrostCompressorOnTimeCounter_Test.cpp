@@ -41,6 +41,7 @@ static const DefrostCompressorOnTimeCounterConfiguration_t config = {
    .defrostCompressorOnTimeCounterFsmStateErd = Erd_DefrostCompressorOnTimeCounterFsmState,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
+   .resetAndCountSignalErd = Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
    .defrostCompressorOnTimeCounterReadyErd = Erd_DefrostCompressorOnTimeCounterReady,
    .timerModuleErd = Erd_TimerModule
 };
@@ -152,6 +153,13 @@ TEST_GROUP(DefrostCompressorOnTimeCounter)
    void FreezerFilteredTemperatureTooWarmOnPowerUpIs(bool state)
    {
       DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmAtPowerUp, &state);
+   }
+
+   void ResetAndCountRequestReceived()
+   {
+      Signal_SendViaErd(
+         DataModel_AsDataSource(dataModel),
+         Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal);
    }
 };
 
@@ -323,4 +331,34 @@ TEST(DefrostCompressorOnTimeCounter, ShouldStopIncrementingCompressorOnTimeInSec
       After(1);
       CompressorOnTimeInSecondsShouldBe(SomeCompressorOnTimeInSeconds + 10);
    }
+}
+
+TEST(DefrostCompressorOnTimeCounter, ShouldTransitionFromPauseToRunAndClearCountsOnResetAndCountRequest)
+{
+   Given CompressorOnTimeInSecondsIs(SomeCompressorOnTimeInSeconds);
+   And DefrostCompressorOnTimeCounterIsInPauseState();
+
+   When ResetAndCountRequestReceived();
+   CompressorOnTimeInSecondsShouldBe(0);
+   DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Run);
+}
+
+TEST(DefrostCompressorOnTimeCounter, ShouldTransitionFromStopToRunAndClearCountsOnResetAndCountRequest)
+{
+   Given CompressorOnTimeInSecondsIs(SomeCompressorOnTimeInSeconds);
+   And DefrostCompressorOnTimeCounterIsInStopState();
+
+   When ResetAndCountRequestReceived();
+   CompressorOnTimeInSecondsShouldBe(0);
+   DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Run);
+}
+
+TEST(DefrostCompressorOnTimeCounter, ShouldClearCountsInRunStateOnResetAndCountRequest)
+{
+   Given CompressorOnTimeInSecondsIs(SomeCompressorOnTimeInSeconds);
+   And DefrostCompressorOnTimeCounterIsInRunState();
+
+   When ResetAndCountRequestReceived();
+   CompressorOnTimeInSecondsShouldBe(0);
+   DefrostCompressorOnTimeCounterFsmStateShouldBe(DefrostCompressorOnTimeCounterFsmState_Run);
 }
