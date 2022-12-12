@@ -112,7 +112,7 @@ describe("AluminumMoldIceMaker,", () => {
    };
 
    const theIceMakerHeaterShouldBeVoted = async(state) => {
-      const vote = await rockhopper.read("Erd_AluminumMoldIceMakerHeater_IceMakerVote");
+      const vote = await rockhopper.read("Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote");
       expect(vote.state).toEqual(state);
       expect(vote.care).toEqual(true);
    };

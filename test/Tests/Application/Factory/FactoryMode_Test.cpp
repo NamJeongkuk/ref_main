@@ -34,7 +34,7 @@ enum
 
 enum
 {
-   Erd_FactoryModeActive,
+   Erd_FactoryModeEnableRequest,
    Erd_Reset,
    Erd_U8_FactoryVoteStruct,
    Erd_U16_FactoryVoteStruct,
@@ -65,7 +65,7 @@ typedef struct
 } U64Vote_t;
 
 static const DataModel_TestDoubleConfigurationEntry_t erdTable[] = {
-   { Erd_FactoryModeActive, sizeof(bool) },
+   { Erd_FactoryModeEnableRequest, sizeof(bool) },
    { Erd_Reset, sizeof(uint8_t) },
    { Erd_U8_FactoryVoteStruct, sizeof(U8Vote_t) },
    { Erd_U16_FactoryVoteStruct, sizeof(U16Vote_t) },
@@ -102,13 +102,13 @@ static const FactoryVoteList_t factoryVoteListWithU64Vote = {
 };
 
 static const FactoryModeConfiguration_t config = {
-   .factoryModeActiveErd = Erd_FactoryModeActive,
+   .factoryModeActiveErd = Erd_FactoryModeEnableRequest,
    .resetErd = Erd_Reset,
    .factoryVoteList = factoryVoteList
 };
 
 static const FactoryModeConfiguration_t configU64Vote = {
-   .factoryModeActiveErd = Erd_FactoryModeActive,
+   .factoryModeActiveErd = Erd_FactoryModeEnableRequest,
    .resetErd = Erd_Reset,
    .factoryVoteList = factoryVoteListWithU64Vote
 };
@@ -137,7 +137,7 @@ TEST_GROUP(FactoryMode)
 
    void FactoryModeIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_FactoryModeActive, &state);
+      DataModel_Write(dataModel, Erd_FactoryModeEnableRequest, &state);
    }
 
    void U8VoteStructErdHasValue(Erd_t erd, uint8_t value, Vote_t vote)

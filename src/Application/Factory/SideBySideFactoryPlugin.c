@@ -17,7 +17,8 @@ static const FactoryVotePair_t factoryVotePairs[] = {
    { Erd_FreshFoodDefrostHeater_FactoryVote, HeaterState_Off },
    { Erd_FreshFoodDamperPosition_FactoryVote, DamperPosition_Closed },
    { Erd_FreshFoodDamperHeater_FactoryVote, PercentageDutyCycle_Min },
-   { Erd_FillTubeHeater_FactoryVote, PercentageDutyCycle_Min }
+   { Erd_FillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
+   { Erd_FreezerDefrostHeater_FactoryVote, HeaterState_Off },
 };
 
 static const FactoryVoteList_t factoryVoteList = {
@@ -26,7 +27,7 @@ static const FactoryVoteList_t factoryVoteList = {
 };
 
 static const FactoryModeConfiguration_t factoryModeConfig = {
-   .factoryModeActiveErd = Erd_FactoryModeActive,
+   .factoryModeActiveErd = Erd_FactoryModeEnableRequest,
    .resetErd = Erd_Reset,
    .factoryVoteList = factoryVoteList
 };

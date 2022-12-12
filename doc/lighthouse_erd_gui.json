@@ -260,7 +260,7 @@
             {
                "namespace": "rockhopper",
                "displayName": "Fresh Food Adjusted Setpoint",
-               "name": "Erd_FreshFood_AdjustedSetpoint",
+               "name": "Erd_FreshFood_AdjustedSetpointInDegFx100",
                "read": true
             },
             {
@@ -296,7 +296,7 @@
             {
                "namespace": "rockhopper",
                "displayName": "Freezer Adjusted Setpoint",
-               "name": "Erd_Freezer_AdjustedSetpoint",
+               "name": "Erd_Freezer_AdjustedSetpointInDegFx100",
                "read": true
             },
             {
@@ -542,61 +542,61 @@
             {
                "namespace": "rockhopper",
                "displayName": "Fresh Food Unfiltered Temperature",
-               "name": "Erd_FreshFood_UnfilteredTemperature",
+               "name": "Erd_FreshFood_UnfilteredTemperatureInDegFx100",
                "read": true
             },
             {
                "namespace": "rockhopper",
                "displayName": "Fresh Food Filtered Temperature",
-               "name": "Erd_FreshFood_FilteredTemperature",
+               "name": "Erd_FreshFood_FilteredTemperatureInDegFx100",
                "read": true
             },
             {
                "namespace": "rockhopper",
                "displayName": "Freezer Unfiltered Temperature",
-               "name": "Erd_Freezer_UnfilteredTemperature",
+               "name": "Erd_Freezer_UnfilteredTemperatureInDegFx100",
                "read": true
             },
             {
                "namespace": "rockhopper",
                "displayName": "Freezer Filtered Temperature",
-               "name": "Erd_Freezer_FilteredTemperature",
+               "name": "Erd_Freezer_FilteredTemperatureInDegFx100",
                "read": true
             },
             {
                "namespace": "rockhopper",
                "displayName": "Fresh Food Evap Unfiltered Temperature",
-               "name": "Erd_FreshFoodEvap_UnfilteredTemperature",
+               "name": "Erd_FreshFoodEvap_UnfilteredTemperatureInDegFx100",
                "read": true
             },
             {
                "namespace": "rockhopper",
                "displayName": "Fresh Food Evap Filtered Temperature",
-               "name": "Erd_FreshFoodEvap_FilteredTemperature",
+               "name": "Erd_FreshFoodEvap_FilteredTemperatureInDegFx100",
                "read": true
             },
             {
                "namespace": "rockhopper",
                "displayName": "Freezer Evap Unfiltered Temperature",
-               "name": "Erd_FreezerEvap_UnfilteredTemperature",
+               "name": "Erd_FreezerEvap_UnfilteredTemperatureInDegFx100",
                "read": true
             },
             {
                "namespace": "rockhopper",
                "displayName": "FreezerEvap FilteredTemperature",
-               "name": "Erd_FreezerEvap_FilteredTemperature",
+               "name": "Erd_FreezerEvap_FilteredTemperatureInDegFx100",
                "read": true
             },
             {
                "namespace": "rockhopper",
                "displayName": "Ambient Unfiltered Temperature",
-               "name": "Erd_Ambient_UnfilteredTemperature",
+               "name": "Erd_Ambient_UnfilteredTemperatureInDegFx100",
                "read": true
             },
             {
                "namespace": "rockhopper",
                "displayName": "Ambient Filtered Temperature",
-               "name": "Erd_Ambient_FilteredTemperature",
+               "name": "Erd_Ambient_FilteredTemperatureInDegFx100",
                "read": true
             }
          ]
@@ -606,6 +606,13 @@
          "erds": [
             {
                "namespace": "rockhopper",
+               "displayName": "Factory Mode Enable",
+               "name": "Erd_FactoryModeEnableRequest",
+               "read": true,
+               "write": true
+            },
+            {
+               "namespace": "rockhopper",
                "displayName": "Compressor Speed Factory Vote",
                "name": "Erd_CompressorSpeed_FactoryVote",
                "read": true,
@@ -613,8 +620,22 @@
             },
             {
                "namespace": "rockhopper",
-               "displayName": "Fresh Food Damper Factory Vote",
+               "displayName": "Freezer Defrost Heater Factory Vote",
+               "name": "Erd_FreezerDefrostHeater_FactoryVote",
+               "read": true,
+               "write": true
+            },
+            {
+               "namespace": "rockhopper",
+               "displayName": "Fresh Food Damper Position Factory Vote",
                "name": "Erd_FreshFoodDamperPosition_FactoryVote",
+               "read": true,
+               "write": true
+            },
+            {
+               "namespace": "rockhopper",
+               "displayName": "Fresh Food Damper Heater Factory Vote",
+               "name": "Erd_FreshFoodDamperHeater_FactoryVote",
                "read": true,
                "write": true
             },

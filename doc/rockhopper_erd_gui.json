@@ -1280,7 +1280,7 @@
         {
           "namespace": "rockhopper",
           "displayName": "Feeler Arm Position",
-          "name": "Erd_FeelerArmPosition",
+          "name": "Erd_AluminumMoldIceMakerFeelerArmPosition",
           "read": true,
           "write": true
         },
@@ -1344,7 +1344,7 @@
           "namespace": "rockhopper",
           "displayName": "Fill Tube Heater Pwm Duty Cycle (Out of 65535)",
           "description": "Out of 65535",
-          "name": "Erd_FillTubeHeaterPwmDutyCycle",
+          "name": "Erd_FillTubeHeater_Pwm",
           "read": true,
           "write": true
         },
@@ -1400,7 +1400,7 @@
         {
           "namespace": "rockhopper",
           "displayName": "Aluminum mold ice maker heater - ice maker vote",
-          "name": "Erd_AluminumMoldIceMakerHeater_IceMakerVote",
+          "name": "Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote",
           "read": true,
           "write": false
         },

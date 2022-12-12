@@ -24,7 +24,7 @@ extern "C"
 static const AluminumMoldIceMakerConfig_t config = {
    .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState,
    .waterValveVoteErd = Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
-   .iceMakerHeaterVoteErd = Erd_AluminumMoldIceMakerHeater_IceMakerVote,
+   .iceMakerHeaterVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
    .iceMakerMotorVoteErd = Erd_AluminumMoldIceMakerMotor_IceMakerVote,
    .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
    .feelerArmMonitoringRequestErd = Erd_FeelerArmMonitoringRequest,
@@ -83,7 +83,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       HeaterVotedState_t vote;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerHeater_IceMakerVote,
+         Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
          &vote);
 
       CHECK_EQUAL(expected, vote.state);

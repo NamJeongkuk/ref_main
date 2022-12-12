@@ -48,21 +48,6 @@
       },
       {
          "namespace": "rockhopper",
-         "name": "Erd_FreshFoodEvapFanSpeed_ResolvedVote",
-         "interval": 60000
-      },
-      {
-         "namespace": "rockhopper",
-         "name": "Erd_FreshFoodEvapFan_ActualRpm",
-         "interval": 60000
-      },
-      {
-         "namespace": "rockhopper",
-         "name": "Erd_CalculatedFreshFoodEvapFanControl",
-         "interval": 60000
-      },
-      {
-         "namespace": "rockhopper",
          "name": "Erd_CompressorSpeed_ResolvedVote",
          "interval": 60000
       },
@@ -88,27 +73,22 @@
       },
       {
          "namespace": "rockhopper",
-         "name": "Erd_FreshFood_FilteredTemperature",
+         "name": "Erd_FreshFood_FilteredTemperatureInDegFx100",
          "interval": 60000
       },
       {
          "namespace": "rockhopper",
-         "name": "Erd_FreshFoodEvap_FilteredTemperature",
+         "name": "Erd_Freezer_FilteredTemperatureInDegFx100",
          "interval": 60000
       },
       {
          "namespace": "rockhopper",
-         "name": "Erd_Freezer_FilteredTemperature",
+         "name": "Erd_FreezerEvap_FilteredTemperatureInDegFx100",
          "interval": 60000
       },
       {
          "namespace": "rockhopper",
-         "name": "Erd_FreezerEvap_FilteredTemperature",
-         "interval": 60000
-      },
-      {
-         "namespace": "rockhopper",
-         "name": "Erd_FreshFood_AdjustedSetpoint",
+         "name": "Erd_FreshFood_AdjustedSetpointInDegFx100",
          "interval": 60000
       },
       {
@@ -128,7 +108,7 @@
       },
       {
          "namespace": "rockhopper",
-         "name": "Erd_Freezer_AdjustedSetpoint",
+         "name": "Erd_Freezer_AdjustedSetpointInDegFx100",
          "interval": 60000
       },
       {
@@ -209,6 +189,11 @@
       {
          "namespace": "rockhopper",
          "name": "Erd_ParametricVersion",
+         "interval": 60000
+      },
+      {
+         "namespace": "rockhopper",
+         "name": "Erd_ParametricDataImageCrc",
          "interval": 60000
       },
       {

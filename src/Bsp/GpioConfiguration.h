@@ -34,7 +34,6 @@
 #else
 // Name, Direction, PullUp, DriveCapacity, Port, Bit, Inverted
 #define GPIO_TABLE(ENTRY) \
-   ENTRY(Erd_BspGpio_PWM_VAR_01,          GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortC, 6,  NonInverted) \
    ENTRY(Erd_BspGpio_GPIO_OUT_00,         GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortA, 2,  NonInverted) \
    ENTRY(Erd_BspGpio_GPIO_OUT_01,         GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortA, 0,  NonInverted) \
    ENTRY(Erd_BspGpio_GPIO_OUT_02,         GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortE, 7,  NonInverted) \
@@ -78,6 +77,7 @@
    ENTRY(Erd_BspGpio_GPIO_IN_02,          GpioDirection_Input,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortA, 5,  NonInverted) \
    ENTRY(Erd_BspGpio_GPIO_IN_03,          GpioDirection_Input,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortB, 4,  NonInverted) \
    ENTRY(Erd_BspGpio_SABBATH,             GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortA, 3,  NonInverted) \
+   ENTRY(Erd_BspGpio_PWM_VAR_01,          GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortC, 6,  NonInverted) \
 
 #endif
 

@@ -540,9 +540,7 @@ static void StopTimersWhenPwmUnused(void)
       TimerNeedsToBeOnForChannel(OutputChannel_Pwm_25K_01) ||
       TimerNeedsToBeOnForChannel(OutputChannel_Pwm_25K_02) ||
       TimerNeedsToBeOnForChannel(OutputChannel_Pwm_25K_03) ||
-      TimerNeedsToBeOnForChannel(OutputChannel_Pwm_25K_04) ||
-      TimerNeedsToBeOnForChannel(OutputChannel_Pwm_VAR_00) ||
-      TimerNeedsToBeOnForChannel(OutputChannel_Pwm_VAR_01))
+      TimerNeedsToBeOnForChannel(OutputChannel_Pwm_25K_04))
    {
       MTU.TSTR.BIT.CST0 = 1;
       MTU.TSTR.BIT.CST1 = 1;
@@ -613,13 +611,6 @@ static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
          case Erd_BspPwm_PWM_200_03:
             UpdateTmoOutputPin200_03(*dutyCycle);
             break;
-
-         case Erd_BspPwm_PWM_VAR_00:
-            UpdatePwmVAR_00(invertedDutyCycle);
-            break;
-
-         case Erd_BspPwm_PWM_VAR_01:
-            UpdatePwmVAR_01(invertedDutyCycle);
             break;
       }
       StopTimersWhenPwmUnused();

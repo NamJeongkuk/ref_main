@@ -20,7 +20,7 @@ FreezerIceRateHandlerConfig_t iceRateHandlerConfig = {
 };
 
 static const SoftPwmConfiguration_t softPwmConfig = {
-   .pwmDutyCycleErd = Erd_FillTubeHeaterPwmDutyCycle,
+   .pwmDutyCycleErd = Erd_FillTubeHeater_Pwm,
    .gpioErd = Erd_FillTubeHeater,
    .timerModuleErd = Erd_TimerModule,
    .frequencyX100 = 10
@@ -29,7 +29,7 @@ static const SoftPwmConfiguration_t softPwmConfig = {
 static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState,
    .waterValveVoteErd = Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
-   .iceMakerHeaterVoteErd = Erd_AluminumMoldIceMakerHeater_IceMakerVote,
+   .iceMakerHeaterVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
    .iceMakerMotorVoteErd = Erd_AluminumMoldIceMakerMotor_IceMakerVote,
    .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
    .feelerArmMonitoringRequestErd = Erd_FeelerArmMonitoringRequest,
@@ -44,7 +44,7 @@ static const FeelerArmMonitorConfig_t feelerArmMonitorConfig = {
    .feelerArmMonitoringRequestErd = Erd_FeelerArmMonitoringRequest,
    .timerModuleErd = Erd_TimerModule,
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
-   .feelerArmPositionErd = Erd_FeelerArmPosition
+   .feelerArmPositionErd = Erd_AluminumMoldIceMakerFeelerArmPosition
 };
 
 static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
@@ -102,9 +102,9 @@ static const WaterValveVotedState_t defaultWaterValveData = {
 static const ErdResolverConfiguration_t iceMakerHeaterResolverConfiguration = {
    .votingErdCare = HeaterVotingErdCareDelegate,
    .defaultData = &defaultHeaterData,
-   .winningVoterErd = Erd_AluminumMoldIceMakerHeater_WinningVoteErd,
-   .resolvedStateErd = Erd_AluminumMoldIceMakerHeater_ResolvedVote,
-   .numberOfVotingErds = (Erd_AluminumMoldIceMakerHeater_IceMakerVote - Erd_AluminumMoldIceMakerHeater_WinningVoteErd)
+   .winningVoterErd = Erd_AluminumMoldIceMakerHeaterRelay_WinningVoteErd,
+   .resolvedStateErd = Erd_AluminumMoldIceMakerHeaterRelay_ResolvedVote,
+   .numberOfVotingErds = (Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote - Erd_AluminumMoldIceMakerHeaterRelay_WinningVoteErd)
 };
 
 static const ErdResolverConfiguration_t iceMakerMotorResolverConfiguration = {

@@ -268,6 +268,19 @@
 #define INCLUDE_MAPPED_BSP_Bsp(_x)
 #define INCLUDE_MAPPED_BSP_MappedBsp(_x) _x
 
+#define INCLUDE_BSP_ALL_Ram(_x)
+#define INCLUDE_BSP_ALL_Virtual(_x)
+#define INCLUDE_BSP_ALL_Nv(_x)
+#define INCLUDE_BSP_ALL_NvProtected(_x)
+#define INCLUDE_BSP_ALL_NvUnitSetting(_x)
+#define INCLUDE_BSP_ALL_NvUserSetting(_x)
+#define INCLUDE_BSP_ALL_NvRfid(_x)
+#define INCLUDE_BSP_ALL_NvFaultSnapshot(_x)
+#define INCLUDE_BSP_ALL_NvCycleHistory(_x)
+#define INCLUDE_BSP_ALL_Fault(_x)
+#define INCLUDE_BSP_ALL_Bsp(_x) _x
+#define INCLUDE_BSP_ALL_MappedBsp(_x) _x
+
 #define INCLUDE_INPUT_OUTPUT_Io_None(_x)
 #define INCLUDE_INPUT_OUTPUT_Io_O(_x)
 #define INCLUDE_INPUT_OUTPUT_Io_All(_x) _x
@@ -473,12 +486,14 @@ enum
    ENTRY(Erd_PulldownInMediumCompressorSpeedEnabled,        0xF12F, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_LeftHandFreshFoodDoorIsOpen,                   0xF130, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_RightHandFreshFoodDoorIsOpen,                  0xF131, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_RightHandFreshFoodDoorIsOpen,                  0xF131, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_DoorInDoorIsOpen,                              0xF132, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerDoorIsOpen,                             0xF133, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerDoorIsOpen,                             0xF133, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentDoorIsOpen,              0xF134, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AllFreshFoodDoorsAreClosed,                    0xF138, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AllFreshFoodDoorsAreClosed,                    0xF135, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_IceMakerMoldThermistor_AdcCount,               0xF138, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_IceMakerBoxThermistor_AdcCount,                0xF139, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodThermistor_AdcCount,                  0xF13A, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerThermistor_AdcCount,                    0xF13B, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodEvapThermistor_AdcCount,              0xF13C, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
@@ -603,19 +618,22 @@ enum
    ENTRY(Erd_IceMakerEnabledByGrid,                         0xF1C6, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMakerEnabledByDemandResponse,               0xF1C7, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMakerEnabledResolved,                       0xF1C8, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FeelerArmPosition,                             0xF1C9, FeelerArmPosition_t,                                Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerFeelerArmPosition,         0xF1C9, FeelerArmPosition_t,                                Swap_N, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
    \
    ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RelayWatchdog,                                 0xF201, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CompressorInverterDriver,                      0xF206, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CompressorRelay,                               0xF207, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FillTubeHeater,                                0xF208, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerDefrostHeaterRelay,                     0xF209, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   \
-   ENTRY(Erd_UseMinimumReadyToDefrostTime,                  0xF20D, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DisableMinimumCompressorTimes,                 0xF20E, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   \
-   ENTRY(Erd_CompressorState,                               0xF20F, CompressorState_t,                                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorInverterDriver,                      0xF202, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorRelay,                               0xF203, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_FillTubeHeater,                                0xF204, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerDefrostHeaterRelay,                     0xF205, bool,                                               Swap_N, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperHeater,                         0xF206, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_IceMakerWaterValveRelay,                       0xF207, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerHeaterRelay,               0xF208, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_IceMakerMotorRelay,                            0xF209, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_AugerMotorDirection,                           0xF20A, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_AugerMotorPower,                               0xF20B, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_DispenserValveRelay,                           0xF20C, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_IsolationValveRelay,                           0xF20D, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    \
    ENTRY(Erd_CompressorControllerSpeedRequest,              0xF211, CompressorSpeed_t,                                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorSpeed_ResolvedVote,                  0xF212, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
@@ -624,10 +642,15 @@ enum
    ENTRY(Erd_CompressorSpeed_DefrostVote,                   0xF215, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorSpeed_GridVote,                      0xF216, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_AluminumMoldIceMakerHeater_ResolvedVote,       0xF220, HeaterVotedState_t,                                 Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerHeater_WinningVoteErd,     0xF221, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerHeater_FactoryVote,        0xF222, HeaterVotedState_t,                                 Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerHeater_IceMakerVote,       0xF223, HeaterVotedState_t,                                 Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_UseMinimumReadyToDefrostTime,                  0xF21D, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DisableMinimumCompressorTimes,                 0xF21E, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_CompressorState,                               0xF21F, CompressorState_t,                                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_AluminumMoldIceMakerHeaterRelay_ResolvedVote,       0xF220, HeaterVotedState_t,                            Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerHeaterRelay_WinningVoteErd,     0xF221, WinningVoteErd_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerHeaterRelay_FactoryVote,        0xF222, HeaterVotedState_t,                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,       0xF223, HeaterVotedState_t,                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_CondenserFanSpeed_ResolvedVote,                0xF230, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CondenserFanSpeed_WinningVoteErd,              0xF231, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -767,6 +790,7 @@ enum
    ENTRY(Erd_DeliFan_InputCaptureTime,                      0xF375, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerEvapFan_InputCaptureTime,               0xF376, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodEvapFan_InputCaptureTime,             0xF377, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumIceMakerRake_InputCaptureTime,         0xF378, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodDamperPosition_ResolvedVote,               0xF380, DamperVotedPosition_t,                         Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperPosition_WinningVoteErd,             0xF381, WinningVoteErd_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -821,24 +845,25 @@ enum
    ENTRY(Erd_FreshFoodDamperHeater_DamperFreezePreventionVote, 0xF3D3, HeaterVotedDutyCycle_t,                          Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote,      0xF3D4, HeaterVotedDutyCycle_t,                          Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FillTubeHeaterPwmDutyCycle,                    0xF3E0, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FillTubeHeater_Pwm,                            0xF3E0, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodBackWallLight_Pwm,                    0xF3E1, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodTopLight_Pwm,                         0xF3E2, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerTopLight_Pwm,                           0xF3E3, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_ApplicationToBspPwm_PWM_0,                     0xF400, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_ApplicationToBspPwm_PWM_1,                     0xF401, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_ApplicationToBspPwm_PWM_2,                     0xF402, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_ApplicationToBspPwm_PWM_4,                     0xF403, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_ApplicationToBspPwm_PWM_5,                     0xF404, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_Pwm_PWM_25K_00,                                0xF405, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_Pwm_PWM_25K_01,                                0xF406, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_Pwm_PWM_25K_02,                                0xF407, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_Pwm_PWM_25K_03,                                0xF408, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_Pwm_PWM_25K_04,                                0xF409, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_Pwm_PWM_200_00,                                0xF40A, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_Pwm_PWM_200_01,                                0xF40B, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_Pwm_PWM_200_02,                                0xF40C, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_Pwm_PWM_200_03,                                0xF40D, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_Pwm_PWM_VAR_00,                                0xF40E, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_Pwm_PWM_VAR_01,                                0xF40F, PwmDutyCycle_t,                                     Swap_Y, Io_O, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplicationToBspPwm_PWM_0,                     0xF400, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplicationToBspPwm_PWM_1,                     0xF401, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplicationToBspPwm_PWM_2,                     0xF402, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplicationToBspPwm_PWM_4,                     0xF403, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplicationToBspPwm_PWM_5,                     0xF404, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_25K_00,                                0xF405, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_25K_01,                                0xF406, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_25K_02,                                0xF407, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_25K_03,                                0xF408, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_25K_04,                                0xF409, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_200_00,                                0xF40A, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_200_01,                                0xF40B, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_200_02,                                0xF40C, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Pwm_PWM_200_03,                                0xF40D, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ApplicationToBspInputCapture_CAPT_0,           0xF410, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ApplicationToBspInputCapture_CAPT_1,           0xF411, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
@@ -868,7 +893,6 @@ enum
    ENTRY(Erd_Adc_HW_PERSONALITY_00,                         0xF42D, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Adc_HW_PERSONALITY_01,                         0xF42E, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_Gpio_PWM_VAR_01,                               0xF440, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gpio_GPIO_OUT_00,                              0xF441, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gpio_GPIO_OUT_01,                              0xF442, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gpio_GPIO_OUT_02,                              0xF443, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
@@ -912,6 +936,7 @@ enum
    ENTRY(Erd_Gpio_GPIO_IN_02,                               0xF470, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gpio_GPIO_IN_03,                               0xF471, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gpio_SABBATH,                                  0xF472, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Gpio_PWM_VAR_01,                               0xF473, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData0,     0xF500, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, NvFaultSnapshot,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData1,     0xF501, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, NvFaultSnapshot,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
@@ -930,7 +955,7 @@ enum
    ENTRY(Erd_CacheSyncState,                                0xF7FF, bool,                                               Swap_N, Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
    \
    ENTRY(Erd_EnhancedSabbathMode,                           0xF800, bool,                                               Swap_N, Io_None, Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
-   ENTRY(Erd_FactoryModeActive,                             0xF801, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FactoryModeEnableRequest,                      0xF801, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_EepromEraseRequestSignal,                      0xFAFF, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \

@@ -155,7 +155,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks0And1)
       CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_PullDown);
       GridAreaShouldBe(GridArea_1);
-      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Closed);
+      GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Closed);
 
       When PullDownInMediumCompressorSpeedIs(ENABLED);
       When The GridIsRun();
@@ -174,7 +174,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks2And3)
 
       CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_PullDown);
-      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Closed);
+      GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Closed);
 
       When PullDownInMediumCompressorSpeedIs(ENABLED);
       When The GridIsRun();
@@ -196,7 +196,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks4And5And6)
       CoolingSpeedShouldBe(CoolingSpeed_PullDown);
       GridAreaShouldBe(GridArea_2);
 
-      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Open);
+      GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Open);
 
       When PullDownInMediumCompressorSpeedIs(ENABLED);
       When The GridIsRun();

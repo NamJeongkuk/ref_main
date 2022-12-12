@@ -10,7 +10,6 @@ extern "C"
 #include "ConvertibleCompartmentState.h"
 #include "SystemErds.h"
 #include "Setpoint.h"
-#include "ConvertibleCompartmentData.h"
 #include "DataModelErdPointerAccess.h"
 }
 
@@ -35,10 +34,6 @@ enum
 static const ConvertibleCompartmentStateConfig_t config = {
    .convertibleCompartmentResolvedSetpointErd = Erd_ConvertibleCompartmentSetpoint_ResolvedVote,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState
-};
-
-static const ConvertibleCompartmentData_t convertibleCompartmentData = {
-   .convertibleCompartmentThresholdDegFx100 = CabinetThresholdDegFx100
 };
 
 TEST_GROUP(ConvertibleCompartmentState)

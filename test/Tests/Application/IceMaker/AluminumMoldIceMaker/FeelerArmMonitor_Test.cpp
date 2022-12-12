@@ -25,7 +25,7 @@ static const FeelerArmMonitorConfig_t config = {
    .feelerArmMonitoringRequestErd = Erd_FeelerArmMonitoringRequest,
    .timerModuleErd = Erd_TimerModule,
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
-   .feelerArmPositionErd = Erd_FeelerArmPosition
+   .feelerArmPositionErd = Erd_AluminumMoldIceMakerFeelerArmPosition
 };
 
 TEST_GROUP(FeelerArmMonitor)
@@ -57,7 +57,7 @@ TEST_GROUP(FeelerArmMonitor)
 
    void FeelerArmPositionIs(FeelerArmPosition_t position)
    {
-      DataModel_Write(dataModel, Erd_FeelerArmPosition, &position);
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerFeelerArmPosition, &position);
    }
 
    void FeelerArmIsReadyToEnterHarvestShouldBe(bool expected)

@@ -107,7 +107,7 @@ static void ApplyGridBlockOverrides(I_DataModel_t *dataModel, GridBlockNumber_t 
       case 4:
       case 5:
       case 6:
-         votes->compressorSpeed = pulldownInMediumCompressorSpeedEnabled ? CompressorSpeed_Medium : CompressorSpeed_High;
+         votes->compressorSpeed = pulldownInMediumCompressorSpeedEnabled ? CompressorSpeed_Medium : CompressorSpeed_Low;
          break;
 
       case 11:
