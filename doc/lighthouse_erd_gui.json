@@ -390,37 +390,6 @@
                "name": "Erd_CondenserFanSpeed_FactoryVote",
                "read": true,
                "write": true
-            },
-            {
-               "namespace": "rockhopper",
-               "displayName": "Fresh Food Evap Fan Resolved Speed",
-               "name": "Erd_FreshFoodEvapFanSpeed_ResolvedVote",
-               "read": true
-            },
-            {
-               "namespace": "rockhopper",
-               "displayName": "Fresh Food Evap Fan Actual RPM",
-               "name": "Erd_FreshFoodEvapFan_ActualRpm",
-               "read": true
-            },
-            {
-               "namespace": "rockhopper",
-               "displayName": "Fresh Food Evap Fan Target RPM/PWM",
-               "name": "Erd_CalculatedFreshFoodEvapFanControl",
-               "read": true
-            },
-            {
-               "namespace": "rockhopper",
-               "displayName": "Fresh Food Evap Fan Winning Vote Erd",
-               "name": "Erd_FreshFoodEvapFanSpeed_WinningVoteErd",
-               "read": true
-            },
-            {
-               "namespace": "rockhopper",
-               "displayName": "Fresh Food Evap Fan Factory Vote",
-               "name": "Erd_FreshFoodEvapFanSpeed_FactoryVote",
-               "read": true,
-               "write": true
             }
          ]
       },
