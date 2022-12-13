@@ -26,6 +26,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .freezerEvaporatorThermistorIsValidErd = Erd_FreezerEvapThermistor_IsValidResolved,
    .freshFoodThermistorIsValidErd = Erd_FreshFoodThermistor_IsValidResolved,
    .compressorIsOnErd = Erd_CompressorIsOn,
+   .coolingModeErd = Erd_CoolingMode,
    .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
    .disableMinimumTimeRequestErd = Erd_DisableMinimumCompressorTimes,
    .maxPrechillTimeInMinutesErd = Erd_MaxPrechillTimeInMinutes,
@@ -119,7 +120,7 @@ static ReadyToDefrostConfiguration_t readyToDefrostConfig = {
 
 static const TimeThatPrechillConditionsAreMetConfiguration_t timeThatPrechillConditionsAreMetConfig = {
    .compressorIsOnErd = Erd_CompressorIsOn,
-   .sealedSystemValvePositionResolvedVoteErd = Erd_ValvePosition_ResolvedVote,
+   .coolingModeErd = Erd_CoolingMode,
    .timeThatPrechillConditionsAreMetInMinutesErd = Erd_TimeThatPrechillConditionsAreMetInMinutes,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .timerModuleErd = Erd_TimerModule

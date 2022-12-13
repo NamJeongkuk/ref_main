@@ -44,6 +44,13 @@ xdescribe("Defrost", () => {
     compressorSpeedSuperHigh: "CompressorSpeed_SuperHigh"
   };
 
+  const coolingMode = {
+    coolingModeFreshFood: "CoolingMode_FreshFood",
+    coolingModeFreezer: "CoolingMode_Freezer",
+    coolingModeConvertibleCompartment: "CoolingMode_ConvertibleCompartment",
+    coolingModeUnknown: "CoolingMode_Unknown"
+  };
+
   const fanSpeed = {
     fanSpeedOff: "FanSpeed_Off",
     fanSpeedSuperLow: "FanSpeed_SuperLow",
@@ -63,6 +70,11 @@ xdescribe("Defrost", () => {
     heaterStateOn: "HeaterState_On"
   };
 
+  const voteState = {
+    voteCare: "Vote_Care",
+    voteDontCare: "Vote_DontCare"
+  };
+
   const powerUpDelayInMsec = 5 * constants.msPerSec;
 
   //minimum_time_between_defrosts_abnormal_run_time_in_minutes * seconds_per_minute
@@ -70,6 +82,7 @@ xdescribe("Defrost", () => {
   const minimumDefrostReadySatisfactionTimeInMinutes = 6 * 60;
   const minimumDefrostReadyOnTimeInSec =
     minimumDefrostReadySatisfactionTimeInMinutes * 60;
+  const maxTimeBetweenDefrostsInMinutes = 32 * 60;
 
   const somePrechillConditionTimeInMinutes = 3;
   const someTemperatureThatLiesInTheMiddleOfTheBounds = 4000;
@@ -235,8 +248,12 @@ xdescribe("Defrost", () => {
     }
   });
 
+  const providedTheCoolingModeIs = async (coolingMode) => {
+    await rockhopper.write("Erd_CoolingMode", coolingMode);
+  };
+
   const providedCompartmentWasNotTooWarmOnPowerUp = async () => {
-    await rockhopper.write("Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady", false);
+    await rockhopper.write("Erd_FreezerFilteredTemperatureTooWarmAtPowerUp", false);
   };
 
   const providedTimeThatPrechillConditionsAreMetIs = async (timeInMinutes) => {
@@ -263,13 +280,13 @@ xdescribe("Defrost", () => {
 
   const providedTheFilteredResolvedTemperatureFor = () => ({
     TheFreshFoodThermistorIs: async (temperature) => {
-      await rockhopper.write("Erd_FreshFood_FilteredTemperatureResolved", temperature);
+      await rockhopper.write("Erd_FreshFood_FilteredTemperatureResolvedInDegFx100", temperature);
     },
     TheFreezerThermistorIs: async (temperature) => {
-      await rockhopper.write("Erd_Freezer_FilteredTemperatureResolved", temperature);
+      await rockhopper.write("Erd_Freezer_FilteredTemperatureResolvedInDegFx100", temperature);
     },
     TheFreezerEvapThermistorIs: async (temperature) => {
-      await rockhopper.write("Erd_FreezerEvap_FilteredTemperatureResolved", temperature);
+      await rockhopper.write("Erd_FreezerEvap_FilteredTemperatureResolvedInDegFx100", temperature);
     }
   });
 
@@ -396,24 +413,21 @@ xdescribe("Defrost", () => {
     await providedThereWasNoPreviousAbnormalDefrost();
     await providedCompartmentWasNotTooWarmOnPowerUp();
     await providedFreshFoodThermistorIs().valid();
-    await providedTheCompressor().isOn();
-    await providedFreshFoodEvaporatorThermistorIs().valid();
     await providedFreezerEvaporatorThermistorIs().valid();
-
-    await providedTimeThatPrechillConditionsAreMetIs(somePrechillConditionTimeInMinutes);
 
     await providedTheFilteredResolvedTemperatureFor().TheFreshFoodThermistorIs(someTemperatureThatLiesInTheMiddleOfTheBounds);
     await providedTheFilteredResolvedTemperatureFor().TheFreezerThermistorIs(someLowerTemperatureBound);
     await providedTheFilteredResolvedTemperatureFor().TheFreezerEvapThermistorIs(someLowerTemperatureBound);
 
-    await providedTheDefrostReadySatisfactionTimeIs(minimumDefrostReadySatisfactionTimeInMinutes);
-    await whenTheCompressorHasBeenOnFor(minimumDefrostReadyOnTimeInSec).seconds();
+    await providedTheCompressor().isOn();
+    await whenTheCompressorHasBeenOnFor(maxTimeBetweenDefrostsInMinutes * secondsPerMin).seconds();
+    await providedTheCoolingModeIs(coolingMode.coolingModeFreezer);
 
     await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechill);
 
-    await theVoteFor().CompressorSpeedShouldBe(true, compressorSpeed.compressorSpeedLow);
-    await theVoteFor().FreezerEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedSuperLow);
-    await theVoteFor().DamperPositionShouldBe(true, damperPosition.damperPositionClosed);
+    await theVoteFor().CompressorSpeedShouldBe(voteState.voteCare, compressorSpeed.compressorSpeedLow);
+    await theVoteFor().FreezerEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedSuperLow);
+    await theVoteFor().DamperPositionShouldBe(voteState.voteCare, damperPosition.damperPositionClosed);
   });
 
   it("should transition from heater on entry to heater on after defrost heater on delay after compressor is off", async () => {

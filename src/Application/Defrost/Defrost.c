@@ -24,11 +24,12 @@
 #include "Vote.h"
 #include "DefrostTestRequestMessage.h"
 #include "DefrostType.h"
+#include "CoolingMode.h"
 
 enum
 {
    Signal_ReadyToDefrost = Hsm_UserSignalStart,
-   Signal_CompressorIsOn,
+   Signal_PrechillConditionsAreMet,
    Signal_DefrostTimerExpired,
    Signal_PrechillTemperatureExitConditionMet,
    Signal_PostDwellTemperatureExitConditionMet,
@@ -92,6 +93,23 @@ static uint8_t FreezerDefrostHeaterMaxOnTimeInMinutes(Defrost_t *instance)
    return maxOnTimeInMinutes;
 }
 
+static bool PrechillConditionsAreMet(Defrost_t *instance)
+{
+   bool compressorIsOn;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->compressorIsOnErd,
+      &compressorIsOn);
+
+   CoolingMode_t coolingMode;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->coolingModeErd,
+      &coolingMode);
+
+   return compressorIsOn && (coolingMode == CoolingMode_Freezer);
+}
+
 static void DataModelChanged(void *context, const void *args)
 {
    Defrost_t *instance = context;
@@ -107,13 +125,12 @@ static void DataModelChanged(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_ReadyToDefrost, NULL);
       }
    }
-   else if(erd == instance->_private.config->compressorIsOnErd)
+   else if(erd == instance->_private.config->compressorIsOnErd ||
+      erd == instance->_private.config->coolingModeErd)
    {
-      const bool *state = onChangeData->data;
-
-      if(*state)
+      if(PrechillConditionsAreMet(instance))
       {
-         Hsm_SendSignal(&instance->_private.hsm, Signal_CompressorIsOn, NULL);
+         Hsm_SendSignal(&instance->_private.hsm, Signal_PrechillConditionsAreMet, NULL);
       }
    }
    else if(erd == instance->_private.config->freshFoodThermistorIsValidErd)
@@ -281,17 +298,6 @@ static void SetClearedEepromStartupTo(Defrost_t *instance, bool state)
       instance->_private.dataModel,
       instance->_private.config->clearedEepromStartup,
       &state);
-}
-
-static bool CompressorIsOn(Defrost_t *instance)
-{
-   bool compressorIsOn;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->compressorIsOnErd,
-      &compressorIsOn);
-
-   return compressorIsOn;
 }
 
 static bool FreezerCompartmentWasTooWarmOnPowerUp(Defrost_t *instance)
@@ -856,7 +862,7 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          {
             Hsm_Transition(hsm, State_HeaterOnEntry);
          }
-         else if(CompressorIsOn(instance))
+         else if(PrechillConditionsAreMet(instance))
          {
             Hsm_Transition(hsm, State_Prechill);
          }
@@ -866,7 +872,7 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          }
          break;
 
-      case Signal_CompressorIsOn:
+      case Signal_PrechillConditionsAreMet:
       case Signal_DefrostTimerExpired:
          Hsm_Transition(hsm, State_Prechill);
          break;

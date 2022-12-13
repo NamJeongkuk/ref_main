@@ -28,7 +28,7 @@ extern "C"
 
 static const TimeThatPrechillConditionsAreMetConfiguration_t config = {
    .compressorIsOnErd = Erd_CompressorIsOn,
-   .sealedSystemValvePositionResolvedVoteErd = Erd_ValvePosition_ResolvedVote,
+   .coolingModeErd = Erd_CoolingMode,
    .timeThatPrechillConditionsAreMetInMinutesErd = Erd_TimeThatPrechillConditionsAreMetInMinutes,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .timerModuleErd = Erd_TimerModule
@@ -78,14 +78,9 @@ TEST_GROUP(TimeThatPrechillConditionsAreMet_SingleEvap)
       DataModel_Write(dataModel, Erd_CompressorIsOn, &state);
    }
 
-   void SealedSystemValveIsInPosition(ValvePosition_t position)
+   void CoolingModeIs(CoolingMode_t mode)
    {
-      ValveVotedPosition_t vote;
-
-      vote.care = true;
-      vote.position = position;
-
-      DataModel_Write(dataModel, Erd_ValvePosition_ResolvedVote, &vote);
+      DataModel_Write(dataModel, Erd_CoolingMode, &mode);
    }
 
    void AfterOneMinuteTimeThatPrechillConditionsAreMetShouldBeOne()
@@ -111,9 +106,10 @@ TEST(TimeThatPrechillConditionsAreMet_SingleEvap, ShouldResetTimeThatPrechillCon
    TimeThatPrechillConditionsAreMetInMinutesShouldBe(0);
 }
 
-TEST(TimeThatPrechillConditionsAreMet_SingleEvap, ShouldCountUpEachMinuteThatTheCompressorIsOnIfItIsOnOnInit)
+TEST(TimeThatPrechillConditionsAreMet_SingleEvap, ShouldCountUpEachMinuteThatCompressorIsOnAndCoolingModeIsFreezerOnInit)
 {
    Given CompressorIs(ON);
+   And CoolingModeIs(CoolingMode_Freezer);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
    for(uint8_t i = 0; i < 10; i++)
@@ -129,6 +125,7 @@ TEST(TimeThatPrechillConditionsAreMet_SingleEvap, ShouldCountUpEachMinuteThatThe
 TEST(TimeThatPrechillConditionsAreMet_SingleEvap, ShouldStopCountingUpAndResetTimeToZeroWhenTheCompressorTurnsOff)
 {
    Given CompressorIs(ON);
+   And CoolingModeIs(CoolingMode_Freezer);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
    AfterOneMinuteTimeThatPrechillConditionsAreMetShouldBeOne();
@@ -145,9 +142,30 @@ TEST(TimeThatPrechillConditionsAreMet_SingleEvap, ShouldStopCountingUpAndResetTi
    }
 }
 
+TEST(TimeThatPrechillConditionsAreMet_SingleEvap, ShouldStopCountingUpAndResetTimeToZeroWhenTheCoolingModeIsNotFreezer)
+{
+   Given CompressorIs(ON);
+   And CoolingModeIs(CoolingMode_Freezer);
+   And TimeThatPrechillConditionsAreMetIsInitialized();
+
+   AfterOneMinuteTimeThatPrechillConditionsAreMetShouldBeOne();
+
+   When CoolingModeIs(CoolingMode_FreshFood);
+
+   for(uint8_t i = 0; i < 10; i++)
+   {
+      After(MSEC_PER_MIN - 1);
+      TimeThatPrechillConditionsAreMetInMinutesShouldBe(0);
+
+      After(1);
+      TimeThatPrechillConditionsAreMetInMinutesShouldBe(0);
+   }
+}
+
 TEST(TimeThatPrechillConditionsAreMet_SingleEvap, ShouldRestartCountingUpWhenTheCompressorTurnsOnAgain)
 {
    Given CompressorIs(ON);
+   And CoolingModeIs(CoolingMode_Freezer);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
    AfterOneMinuteTimeThatPrechillConditionsAreMetShouldBeOne();
@@ -156,6 +174,29 @@ TEST(TimeThatPrechillConditionsAreMet_SingleEvap, ShouldRestartCountingUpWhenThe
    TimeThatPrechillConditionsAreMetInMinutesShouldBe(0);
 
    When CompressorIs(ON);
+
+   for(uint8_t i = 0; i < 10; i++)
+   {
+      After(MSEC_PER_MIN - 1);
+      TimeThatPrechillConditionsAreMetInMinutesShouldBe(i);
+
+      After(1);
+      TimeThatPrechillConditionsAreMetInMinutesShouldBe(i + 1);
+   }
+}
+
+TEST(TimeThatPrechillConditionsAreMet_SingleEvap, ShouldRestartCountingUpWhenTheCoolingModeBecomesFreezerAgain)
+{
+   Given CompressorIs(ON);
+   And CoolingModeIs(CoolingMode_Freezer);
+   And TimeThatPrechillConditionsAreMetIsInitialized();
+
+   AfterOneMinuteTimeThatPrechillConditionsAreMetShouldBeOne();
+
+   When CoolingModeIs(CoolingMode_FreshFood);
+   TimeThatPrechillConditionsAreMetInMinutesShouldBe(0);
+
+   When CoolingModeIs(CoolingMode_Freezer);
 
    for(uint8_t i = 0; i < 10; i++)
    {
@@ -211,14 +252,9 @@ TEST_GROUP(TimeThatPrechillConditionsAreMet_DualEvap)
       DataModel_Write(dataModel, Erd_CompressorIsOn, &state);
    }
 
-   void SealedSystemValveIsInPosition(ValvePosition_t position)
+   void CoolingModeIs(CoolingMode_t mode)
    {
-      ValveVotedPosition_t vote;
-
-      vote.care = true;
-      vote.position = position;
-
-      DataModel_Write(dataModel, Erd_ValvePosition_ResolvedVote, &vote);
+      DataModel_Write(dataModel, Erd_CoolingMode, &mode);
    }
 
    void AfterOneMinuteTimeThatPrechillConditionsAreMetShouldBeOne()
@@ -231,10 +267,10 @@ TEST_GROUP(TimeThatPrechillConditionsAreMet_DualEvap)
    }
 };
 
-TEST(TimeThatPrechillConditionsAreMet_DualEvap, ShouldCountUpEachMinuteThatTheCompressorIsOnAndValveIsInPositionBIfItIsOnOnInit)
+TEST(TimeThatPrechillConditionsAreMet_DualEvap, ShouldCountUpEachMinuteThatCompressorIsOnAndCoolingModeIsFreezerOnInit)
 {
    Given CompressorIs(ON);
-   And SealedSystemValveIsInPosition(ValvePosition_B);
+   And CoolingModeIs(CoolingMode_Freezer);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
    for(uint8_t i = 0; i < 10; i++)
@@ -247,10 +283,10 @@ TEST(TimeThatPrechillConditionsAreMet_DualEvap, ShouldCountUpEachMinuteThatTheCo
    }
 }
 
-TEST(TimeThatPrechillConditionsAreMet_DualEvap, ShouldStopCountingUpAndResetToZeroWhenTheCompressorTurnsOffAndValveStaysInPositionB)
+TEST(TimeThatPrechillConditionsAreMet_DualEvap, ShouldStopCountingUpAndResetTimeToZeroWhenTheCompressorTurnsOff)
 {
    Given CompressorIs(ON);
-   And SealedSystemValveIsInPosition(ValvePosition_B);
+   And CoolingModeIs(CoolingMode_Freezer);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
    AfterOneMinuteTimeThatPrechillConditionsAreMetShouldBeOne();
@@ -267,15 +303,15 @@ TEST(TimeThatPrechillConditionsAreMet_DualEvap, ShouldStopCountingUpAndResetToZe
    }
 }
 
-TEST(TimeThatPrechillConditionsAreMet_DualEvap, ShouldStopCountingUpAndResetToZeroWhenTheValveMovesToAPositionOtherThanAndCompressorStaysOn)
+TEST(TimeThatPrechillConditionsAreMet_DualEvap, ShouldStopCountingUpAndResetToZeroWhenCoolingModeChangesToNotFreezerAndCompressorStaysOn)
 {
    Given CompressorIs(ON);
-   And SealedSystemValveIsInPosition(ValvePosition_B);
+   And CoolingModeIs(CoolingMode_Freezer);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
    AfterOneMinuteTimeThatPrechillConditionsAreMetShouldBeOne();
 
-   When SealedSystemValveIsInPosition(ValvePosition_A);
+   When CoolingModeIs(CoolingMode_FreshFood);
 
    for(uint8_t i = 0; i < 10; i++)
    {
@@ -287,15 +323,15 @@ TEST(TimeThatPrechillConditionsAreMet_DualEvap, ShouldStopCountingUpAndResetToZe
    }
 }
 
-TEST(TimeThatPrechillConditionsAreMet_DualEvap, ShouldRestartCountingUpWhenValveMovesBackToPositionB)
+TEST(TimeThatPrechillConditionsAreMet_DualEvap, ShouldRestartCountingUpWhenCoolingModeIsFreezerAgain)
 {
    Given CompressorIs(ON);
-   And SealedSystemValveIsInPosition(ValvePosition_B);
+   And CoolingModeIs(CoolingMode_Freezer);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
    AfterOneMinuteTimeThatPrechillConditionsAreMetShouldBeOne();
 
-   When SealedSystemValveIsInPosition(ValvePosition_A);
+   When CoolingModeIs(CoolingMode_FreshFood);
 
    for(uint8_t i = 0; i < 10; i++)
    {
@@ -306,7 +342,7 @@ TEST(TimeThatPrechillConditionsAreMet_DualEvap, ShouldRestartCountingUpWhenValve
       TimeThatPrechillConditionsAreMetInMinutesShouldBe(0);
    }
 
-   When SealedSystemValveIsInPosition(ValvePosition_B);
+   When CoolingModeIs(CoolingMode_Freezer);
 
    for(uint8_t i = 0; i < 10; i++)
    {
@@ -362,14 +398,9 @@ TEST_GROUP(TimeThatPrechillConditionsAreMet_TripleEvap)
       DataModel_Write(dataModel, Erd_CompressorIsOn, &state);
    }
 
-   void SealedSystemValveIsInPosition(ValvePosition_t position)
+   void CoolingModeIs(CoolingMode_t mode)
    {
-      ValveVotedPosition_t vote;
-
-      vote.care = true;
-      vote.position = position;
-
-      DataModel_Write(dataModel, Erd_ValvePosition_ResolvedVote, &vote);
+      DataModel_Write(dataModel, Erd_CoolingMode, &mode);
    }
 
    void ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_t type)
@@ -387,10 +418,10 @@ TEST_GROUP(TimeThatPrechillConditionsAreMet_TripleEvap)
    }
 };
 
-TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldCountUpEachMinuteThatTheCompressorIsOnAndValveIsInPositionBAndConvertibleCompartmentIsActingAsAFreshFoodOnInit)
+TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldCountUpEachMinuteThatTheCompressorIsOnAndCoolingModeIsFreezerAndConvertibleCompartmentIsActingAsAFreshFoodOnInit)
 {
    Given CompressorIs(ON);
-   And SealedSystemValveIsInPosition(ValvePosition_B);
+   And CoolingModeIs(CoolingMode_Freezer);
    And ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_FreshFood);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
@@ -404,10 +435,10 @@ TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldCountUpEachMinuteThatThe
    }
 }
 
-TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldCountUpEachMinuteThatTheCompressorIsOnAndValveIsInPositionCAndConvertibleCompartmentIsActingAsAFreezerOnInit)
+TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldCountUpEachMinuteThatTheCompressorIsOnAndCoolingModeIsConvertibleCompartmentAndConvertibleCompartmentIsActingAsAFreezerOnInit)
 {
    Given CompressorIs(ON);
-   And SealedSystemValveIsInPosition(ValvePosition_C);
+   And CoolingModeIs(CoolingMode_ConvertibleCompartment);
    And ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
@@ -421,10 +452,10 @@ TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldCountUpEachMinuteThatThe
    }
 }
 
-TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldStopCountingUpAndResetToZeroWhenTheCompressorTurnsOffAndValveStaysInPositionBAndConvertibleCompartmentIsActingAsAFreshFood)
+TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldStopCountingUpAndResetToZeroWhenTheCompressorTurnsOffAndCoolingModeIsFreezerAndConvertibleCompartmentIsActingAsAFreshFood)
 {
    Given CompressorIs(ON);
-   And SealedSystemValveIsInPosition(ValvePosition_B);
+   And CoolingModeIs(CoolingMode_Freezer);
    And ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_FreshFood);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
@@ -442,10 +473,10 @@ TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldStopCountingUpAndResetTo
    }
 }
 
-TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldStopCountingUpAndResetToZeroWhenTheCompressorTurnsOffAndValveStaysInPositionCAndConvertibleCompartmentIsActingAsAFreezer)
+TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldStopCountingUpAndResetToZeroWhenTheCompressorTurnsOffAndCoolingModeIsConvertibleCompartmentAndConvertibleCompartmentIsActingAsAFreezer)
 {
    Given CompressorIs(ON);
-   And SealedSystemValveIsInPosition(ValvePosition_C);
+   And CoolingModeIs(CoolingMode_ConvertibleCompartment);
    And ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
@@ -463,16 +494,16 @@ TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldStopCountingUpAndResetTo
    }
 }
 
-TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldStopCountingUpAndResetToZeroWhenTheValveMovesToAPositionOtherThanBAndCompressorStaysOnAndConvertibleCompartmentIsActingAsAFreshFood)
+TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldStopCountingUpAndResetToZeroWhenTheCoolingModeChangesToNotFreezerAndCompressorStaysOnAndConvertibleCompartmentIsActingAsAFreshFood)
 {
    Given CompressorIs(ON);
-   And SealedSystemValveIsInPosition(ValvePosition_B);
+   And CoolingModeIs(CoolingMode_Freezer);
    And ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_FreshFood);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
    AfterOneMinuteTimeThatPrechillConditionsAreMetShouldBeOne();
 
-   When SealedSystemValveIsInPosition(ValvePosition_A);
+   When CoolingModeIs(CoolingMode_ConvertibleCompartment);
 
    for(uint8_t i = 0; i < 10; i++)
    {
@@ -484,16 +515,16 @@ TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldStopCountingUpAndResetTo
    }
 }
 
-TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldRestartCountingWhenValveMovesBackIntoPositionBAndConvertibleCompartmentIsActingAsAFreshFood)
+TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldRestartCountingWhenCoolingModeChangesBackToFreezerAndConvertibleCompartmentIsActingAsAFreshFood)
 {
    Given CompressorIs(ON);
-   And SealedSystemValveIsInPosition(ValvePosition_B);
+   And CoolingModeIs(CoolingMode_Freezer);
    And ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_FreshFood);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
    AfterOneMinuteTimeThatPrechillConditionsAreMetShouldBeOne();
 
-   When SealedSystemValveIsInPosition(ValvePosition_A);
+   When CoolingModeIs(CoolingMode_ConvertibleCompartment);
 
    for(uint8_t i = 0; i < 10; i++)
    {
@@ -504,7 +535,7 @@ TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldRestartCountingWhenValve
       TimeThatPrechillConditionsAreMetInMinutesShouldBe(0);
    }
 
-   When SealedSystemValveIsInPosition(ValvePosition_B);
+   When CoolingModeIs(CoolingMode_Freezer);
 
    for(uint8_t i = 0; i < 10; i++)
    {
@@ -516,16 +547,16 @@ TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldRestartCountingWhenValve
    }
 }
 
-TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldStopCountingUpAndResetToZeroWhenTheValveMovesToAPositionOtherThanCAndCompressorStaysOnAndConvertibleCompartmentIsActingAsAFreezer)
+TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldStopCountingUpAndResetToZeroWhenTheCoolingModeChangesToNotConvertibleCompartmentAndCompressorStaysOnAndConvertibleCompartmentIsActingAsAFreezer)
 {
    Given CompressorIs(ON);
-   And SealedSystemValveIsInPosition(ValvePosition_C);
+   And CoolingModeIs(CoolingMode_ConvertibleCompartment);
    And ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
    AfterOneMinuteTimeThatPrechillConditionsAreMetShouldBeOne();
 
-   When SealedSystemValveIsInPosition(ValvePosition_A);
+   When CoolingModeIs(CoolingMode_Freezer);
 
    for(uint8_t i = 0; i < 10; i++)
    {
@@ -537,16 +568,16 @@ TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldStopCountingUpAndResetTo
    }
 }
 
-TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldRestartCountingWhenValveMovesBackIntoPositionBAndConvertibleCompartmentIsActingAsAFreezer)
+TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldRestartCountingWhenCoolingModeChangesBackToConvertibleCompartmentAndConvertibleCompartmentIsActingAsAFreezer)
 {
    Given CompressorIs(ON);
-   And SealedSystemValveIsInPosition(ValvePosition_C);
+   And CoolingModeIs(CoolingMode_ConvertibleCompartment);
    And ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
    AfterOneMinuteTimeThatPrechillConditionsAreMetShouldBeOne();
 
-   When SealedSystemValveIsInPosition(ValvePosition_A);
+   When CoolingModeIs(CoolingMode_Freezer);
 
    for(uint8_t i = 0; i < 10; i++)
    {
@@ -557,7 +588,7 @@ TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldRestartCountingWhenValve
       TimeThatPrechillConditionsAreMetInMinutesShouldBe(0);
    }
 
-   When SealedSystemValveIsInPosition(ValvePosition_C);
+   When CoolingModeIs(CoolingMode_ConvertibleCompartment);
 
    for(uint8_t i = 0; i < 10; i++)
    {
@@ -572,7 +603,7 @@ TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldRestartCountingWhenValve
 TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldStopCountingUpAndResetTimeToZeroWhenTheConvertibleCompartmentChangesFromActingLikeAFreshFoodToAFreezerIfPrechillConditionsWereOtherwiseMet)
 {
    Given CompressorIs(ON);
-   And SealedSystemValveIsInPosition(ValvePosition_B);
+   And CoolingModeIs(CoolingMode_Freezer);
    And ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_FreshFood);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
@@ -593,7 +624,7 @@ TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldStopCountingUpAndResetTi
 TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldStopCountingUpAndResetTimeToZeroWhenTheConvertibleCompartmentChangesFromActingLikeAFreezerToAFreshFoodIfPrechillConditionsWereOtherwiseMet)
 {
    Given CompressorIs(ON);
-   And SealedSystemValveIsInPosition(ValvePosition_C);
+   And CoolingModeIs(CoolingMode_ConvertibleCompartment);
    And ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
@@ -614,7 +645,7 @@ TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldStopCountingUpAndResetTi
 TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldRestartCountingWhenConvertibleCompartmentActsAsAFreshFoodAgainAndPrechillConditionsAreMet)
 {
    Given CompressorIs(ON);
-   And SealedSystemValveIsInPosition(ValvePosition_B);
+   And CoolingModeIs(CoolingMode_Freezer);
    And ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_FreshFood);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 
@@ -638,7 +669,7 @@ TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldRestartCountingWhenConve
 TEST(TimeThatPrechillConditionsAreMet_TripleEvap, ShouldRestartCountingWhenConvertibleCompartmentActsAsAFreezerAgainAndPrechillConditionsAreMet)
 {
    Given CompressorIs(ON);
-   And SealedSystemValveIsInPosition(ValvePosition_C);
+   And CoolingModeIs(CoolingMode_ConvertibleCompartment);
    And ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
    And TimeThatPrechillConditionsAreMetIsInitialized();
 

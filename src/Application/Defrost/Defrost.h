@@ -32,6 +32,7 @@ typedef struct
    Erd_t freezerEvaporatorThermistorIsValidErd; // bool
    Erd_t freshFoodThermistorIsValidErd; // bool
    Erd_t compressorIsOnErd; // bool
+   Erd_t coolingModeErd; // CoolingMode_t
    Erd_t freezerFilteredTemperatureTooWarmOnPowerUpReadyErd; // bool
    Erd_t disableMinimumTimeRequestErd; // bool
    Erd_t maxPrechillTimeInMinutesErd; // uint8_t

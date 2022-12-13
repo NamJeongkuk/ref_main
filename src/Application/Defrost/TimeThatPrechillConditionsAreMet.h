@@ -2,9 +2,9 @@
  * @file
  * @brief Count how long the system has met (stayed in) the prechill condition, defined as:
  * - Compressor is on
- * - Dual evap: valve is in position B
- * - Triple evap: valve is in position B (convertible compartment is acting as a fresh food) or
- * valve is in position C (convertible compartment is acting as a freezer)
+ * - Single/Dual evap: cooling mode is freezer
+ * - Triple evap: cooling mode is freezer (convertible compartment is acting as a fresh food) or
+ * cooling mode is convertible compartment (convertible compartment is acting as a freezer)
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
@@ -20,7 +20,7 @@
 typedef struct
 {
    Erd_t compressorIsOnErd; // bool
-   Erd_t sealedSystemValvePositionResolvedVoteErd; // ValveVotedPosition_t
+   Erd_t coolingModeErd; // CoolingMode_t
    Erd_t timeThatPrechillConditionsAreMetInMinutesErd; // uint32_t
    Erd_t convertibleCompartmentStateErd; // ConvertibleCompartmentStateType_t
    Erd_t timerModuleErd; // TimerModule_t *

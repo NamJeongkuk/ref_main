@@ -11,14 +11,14 @@
 #include "PersonalityParametricData.h"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
-#include "ValvePosition.h"
+#include "CoolingMode.h"
 #include "utils.h"
 
 enum
 {
    Signal_CompressorIsOff = Fsm_UserSignalStart,
    Signal_CompressorIsOn,
-   Signal_ValvePositionChanged,
+   Signal_CoolingModeChanged,
    Signal_OneMinutePassed,
    Signal_ConvertibleCompartmentStateChanged
 };
@@ -50,9 +50,9 @@ static void DataModelChanged(void *context, const void *args)
          Fsm_SendSignal(&instance->_private.fsm, Signal_CompressorIsOff, NULL);
       }
    }
-   else if(erd == instance->_private.config->sealedSystemValvePositionResolvedVoteErd)
+   else if(erd == instance->_private.config->coolingModeErd)
    {
-      Fsm_SendSignal(&instance->_private.fsm, Signal_ValvePositionChanged, NULL);
+      Fsm_SendSignal(&instance->_private.fsm, Signal_CoolingModeChanged, NULL);
    }
    else if(erd == instance->_private.config->convertibleCompartmentStateErd)
    {
@@ -81,15 +81,15 @@ static bool CompressorIsOn(TimeThatPrechillConditionsAreMet_t *instance)
    return state;
 }
 
-static ValvePosition_t SealedSystemValvePosition(TimeThatPrechillConditionsAreMet_t *instance)
+static CoolingMode_t CoolingMode(TimeThatPrechillConditionsAreMet_t *instance)
 {
-   ValveVotedPosition_t vote;
+   CoolingMode_t coolingMode;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->sealedSystemValvePositionResolvedVoteErd,
-      &vote);
+      instance->_private.config->coolingModeErd,
+      &coolingMode);
 
-   return vote.position;
+   return coolingMode;
 }
 
 static uint8_t NumberOfEvaporators(TimeThatPrechillConditionsAreMet_t *instance)
@@ -141,11 +141,8 @@ static bool PrechillConditionsAreMet(TimeThatPrechillConditionsAreMet_t *instanc
       switch(numberOfEvaporators)
       {
          case 1:
-            state = true;
-            break;
-
          case 2:
-            if(SealedSystemValvePosition(instance) == ValvePosition_B)
+            if(CoolingMode(instance) == CoolingMode_Freezer)
             {
                state = true;
             }
@@ -153,13 +150,13 @@ static bool PrechillConditionsAreMet(TimeThatPrechillConditionsAreMet_t *instanc
 
          case 3:
             if(ConvertibleCompartment(instance) == ConvertibleCompartmentStateType_FreshFood &&
-               SealedSystemValvePosition(instance) == ValvePosition_B)
+               CoolingMode(instance) == CoolingMode_Freezer)
             {
                state = true;
             }
 
             else if(ConvertibleCompartment(instance) == ConvertibleCompartmentStateType_Freezer &&
-               SealedSystemValvePosition(instance) == ValvePosition_C)
+               CoolingMode(instance) == CoolingMode_ConvertibleCompartment)
             {
                state = true;
             }
@@ -210,7 +207,7 @@ static void State_Count(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          Fsm_Transition(&instance->_private.fsm, State_Stop);
          break;
 
-      case Signal_ValvePositionChanged:
+      case Signal_CoolingModeChanged:
       case Signal_ConvertibleCompartmentStateChanged:
          if(!PrechillConditionsAreMet(instance))
          {
@@ -236,7 +233,7 @@ static void State_Stop(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          break;
 
       case Signal_CompressorIsOn:
-      case Signal_ValvePositionChanged:
+      case Signal_CoolingModeChanged:
       case Signal_ConvertibleCompartmentStateChanged:
          if(PrechillConditionsAreMet(instance))
          {
