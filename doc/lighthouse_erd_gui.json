@@ -422,20 +422,8 @@
             },
             {
                "namespace": "rockhopper",
-               "displayName": "Fresh Food Scaled Door Acceleration In Seconds",
-               "name": "Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds",
-               "read": true
-            },
-            {
-               "namespace": "rockhopper",
                "displayName": "Time In Minutes Until Ready To Defrost",
                "name": "Erd_TimeInMinutesUntilReadyToDefrost",
-               "read": true
-            },
-            {
-               "namespace": "rockhopper",
-               "displayName": "Number of Fresh Food Defrosts Before A Freezer Defrost",
-               "name": "Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost",
                "read": true
             },
             {
@@ -487,13 +475,7 @@
          "erds": [
             {
                "namespace": "rockhopper",
-               "displayName": "Left Fresh Food Door Is Open",
-               "name": "Erd_LeftHandFreshFoodDoorIsOpen",
-               "read": true
-            },
-            {
-               "namespace": "rockhopper",
-               "displayName": "Right Fresh Food Door Is Open",
+               "displayName": "Fresh Food Door Is Open",
                "name": "Erd_RightHandFreshFoodDoorIsOpen",
                "read": true
             },
@@ -566,6 +548,12 @@
                "namespace": "rockhopper",
                "displayName": "Ambient Filtered Temperature",
                "name": "Erd_Ambient_FilteredTemperatureInDegFx100",
+               "read": true
+            },
+            {
+               "namespace": "rockhopper",
+               "displayName": "Aluminum Mold Ice Maker Temperature",
+               "name": "Erd_AluminumMoldIceMaker_FilteredTemperatureInDegFx100",
                "read": true
             }
          ]
