@@ -9,6 +9,7 @@
 #define FREEZERDEFROSTHEATERVOTINGFRAMEWORKPLUGIN_H
 
 #include "ErdResolver.h"
+#include "ResolvedVoteRelayConnector.h"
 #include "I_DataModel.h"
 
 typedef struct
@@ -16,6 +17,7 @@ typedef struct
    struct
    {
       ErdResolver_t freezerDefrostHeaterErdResolver;
+      ResolvedVoteRelayConnector_t freezerDefrostHeaterRelayConnector;
    } _private;
 } FreezerDefrostHeaterVotingFrameworkPlugin_t;
 

@@ -27,12 +27,20 @@ static const ErdResolverConfiguration_t freezerDefrostHeaterErdResolverConfigura
    .numberOfVotingErds = (Erd_FreezerDefrostHeater_DefrostVote - Erd_FreezerDefrostHeater_WinningVoteErd)
 };
 
-void FreezerDefrostHeaterVotingFrameworkPlugin_Init(
-   FreezerDefrostHeaterVotingFrameworkPlugin_t *instance,
-   I_DataModel_t *dataModel)
+static const ResolvedVoteRelayConnectorConfiguration_t freezerDefrostHeaterRelayConnectorConfiguration = {
+   .resolvedRelayVoteErd = Erd_FreezerDefrostHeater_ResolvedVote,
+   .relayOutputErd = Erd_FreezerDefrostHeaterRelay
+};
+
+void FreezerDefrostHeaterVotingFrameworkPlugin_Init(FreezerDefrostHeaterVotingFrameworkPlugin_t *instance, I_DataModel_t *dataModel)
 {
    ErdResolver_Init(
       &instance->_private.freezerDefrostHeaterErdResolver,
       DataModel_AsDataSource(dataModel),
       &freezerDefrostHeaterErdResolverConfiguration);
+
+   ResolvedVoteRelayConnector_Init(
+      &instance->_private.freezerDefrostHeaterRelayConnector,
+      dataModel,
+      &freezerDefrostHeaterRelayConnectorConfiguration);
 }

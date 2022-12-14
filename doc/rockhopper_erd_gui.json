@@ -488,6 +488,20 @@
           "name": "Erd_CurrentDefrostType",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Freezer Defrost Heater Resolved Vote",
+          "name": "Erd_FreezerDefrostHeater_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Freezer Defrost Heater Relay",
+          "name": "Erd_FreezerDefrostHeaterRelay",
+          "read": true,
+          "write": false
         }
       ]
     },

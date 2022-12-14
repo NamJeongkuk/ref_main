@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 #include "Vote.h"
+#include "RelayVotedState.h"
 
 enum
 {
@@ -18,10 +19,6 @@ enum
 };
 typedef uint8_t HeaterState_t;
 
-typedef struct
-{
-   HeaterState_t state;
-   Vote_t care;
-} HeaterVotedState_t;
+typedef RelayVotedState_t HeaterVotedState_t;
 
 #endif

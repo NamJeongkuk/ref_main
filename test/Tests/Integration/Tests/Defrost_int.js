@@ -2,10 +2,10 @@
 
 const delay = require("javascript-common").util.delay;
 const After = require('../support/After.js');
-const { msPerSec, msPerMin, secondsPerMin } = require("../support/constants");
+const { msPerSec, msPerMin, secondsPerMin, on, off } = require("../support/constants");
 const constants = require("../support/constants");
 
-xdescribe("Defrost", () => {
+describe("Defrost", () => {
   const defrostHsmState = {
     defrostHsmStatePowerUp: "DefrostHsmState_PowerUp",
     defrostHsmStateIdle: "DefrostHsmState_Idle",
@@ -170,6 +170,11 @@ xdescribe("Defrost", () => {
 
   const theDefrostHsmStateShouldBe = async (state) => {
     const actual = await rockhopper.read("Erd_DefrostHsmState");
+    expect(actual).toEqual(state);
+  };
+
+  const theFreezerDefrostHeaterRelayShouldBe = async (state) => {
+    const actual = await rockhopper.read("Erd_FreezerDefrostHeaterRelay");
     expect(actual).toEqual(state);
   };
 
@@ -345,6 +350,35 @@ xdescribe("Defrost", () => {
         expect(actual.speed).toEqual(expectedSpeed);
       }
       expect(actual.care).toEqual(expectedCare);
+    }
+  });
+
+  const theFreezerDefrostHeaterResolvedVoteShouldBe = () => ({
+    OnAndCare: async () => {
+      const expected = { state: heaterState.heaterStateOn, care: voteState.voteCare };
+      const actual = await rockhopper.read("Erd_FreezerDefrostHeater_ResolvedVote");
+      expect(actual).toEqual(expected);
+    },
+    OffAndCare: async () => {
+      const expected = { state: heaterState.heaterStateOff, care: voteState.voteCare };
+      const actual = await rockhopper.read("Erd_FreezerDefrostHeater_ResolvedVote");
+      expect(actual).toEqual(expected);
+    },
+    DontCare: async () => {
+      const expected = voteState.voteDontCare;
+      const actual = await rockhopper.read("Erd_FreezerDefrostHeater_ResolvedVote");
+      expect(actual.care).toEqual(expected);
+    }
+  });
+
+  const providedTheFreezerDefrostHeaterResolvedVoteIs = () => ({
+    OnAndDontCare: async (temperature) => {
+      const requestedVote = { state: heaterState.heaterStateOn, care: voteState.voteDontCare };
+      await rockhopper.write("Erd_FreezerDefrostHeater_ResolvedVote", requestedVote);
+    },
+    OffAndDontCare: async (temperature) => {
+      const requestedVote = { state: heaterState.heaterStateOff, care: voteState.voteDontCare };
+      await rockhopper.write("Erd_FreezerDefrostHeater_ResolvedVote", requestedVote);
     }
   });
 
@@ -535,5 +569,42 @@ xdescribe("Defrost", () => {
     await theVoteFor().IceCabinetFanSpeedShouldBe(false);
 
     await disableMinimumCompressorTimesShouldBe(false);
+  });
+
+  it("should update freezer defrost heater relay erd when freezer defrost heater resolved vote erd changes", async () => {
+    await providedTheEepromDefrostHeaterOnTimeForThe().FreezerDefrostHeaterIs(0);
+    await providedDefrostIsEnabledAndInHeaterOnState();
+    await providedFreezerEvaporatorThermistorIs().valid();
+
+    await theFreezerDefrostHeaterResolvedVoteShouldBe().OnAndCare();
+    await theFreezerDefrostHeaterRelayShouldBe(on);
+
+    await providedTheFilteredFreezerEvaporatorTemperatureIs(freezerDefrostTerminationTemperatureInDegfx100);
+
+    await theFreezerDefrostHeaterResolvedVoteShouldBe().OffAndCare();
+    await theFreezerDefrostHeaterRelayShouldBe(off);
+  });
+
+  it("should not update freezer defrost heater relay erd when freezer defrost heater resolved vote erd is dont care", async () => {
+    await providedTheEepromDefrostHeaterOnTimeForThe().FreezerDefrostHeaterIs(0);
+    await providedDefrostIsEnabledAndInHeaterOnState();
+    await providedFreezerEvaporatorThermistorIs().valid();
+
+    await theFreezerDefrostHeaterResolvedVoteShouldBe().OnAndCare();
+    await theFreezerDefrostHeaterRelayShouldBe(on);
+
+    await providedTheFilteredFreezerEvaporatorTemperatureIs(freezerDefrostTerminationTemperatureInDegfx100);
+
+    await theFreezerDefrostHeaterResolvedVoteShouldBe().OffAndCare();
+    await theFreezerDefrostHeaterRelayShouldBe(off);
+
+    await after(dwellTimeInSeconds).inSec();
+    await providedTheFreezerDefrostHeaterResolvedVoteIs().OnAndDontCare();
+    await theFreezerDefrostHeaterResolvedVoteShouldBe().DontCare();
+    await theFreezerDefrostHeaterRelayShouldBe(off);
+
+    await providedTheFreezerDefrostHeaterResolvedVoteIs().OffAndDontCare();
+    await theFreezerDefrostHeaterResolvedVoteShouldBe().DontCare();
+    await theFreezerDefrostHeaterRelayShouldBe(off);
   });
 });
