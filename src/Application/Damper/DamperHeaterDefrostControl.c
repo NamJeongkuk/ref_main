@@ -6,22 +6,22 @@
  */
 
 #include "DamperHeaterDefrostControl.h"
-#include "HeaterVotedDutyCycle.h"
 #include "HeaterVotedState.h"
+#include "PercentageDutyCycleVote.h"
 #include "Constants_Time.h"
 #include "Vote.h"
 #include "utils.h"
 
 static void SetDefrostSyncVoteTo(DamperHeaterDefrostControl_t *instance, PercentageDutyCycle_t dutyCycle, Vote_t care)
 {
-   HeaterVotedDutyCycle_t votedState;
+   PercentageDutyCycleVote_t vote;
 
-   votedState.dutyCycle = dutyCycle;
-   votedState.care = care;
+   vote.percentageDutyCycle = dutyCycle;
+   vote.care = care;
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->damperHeaterDefrostHeaterSyncVoteErd,
-      &votedState);
+      &vote);
 }
 
 static void SetDamperHeaterVoteToDontCare(void *context)

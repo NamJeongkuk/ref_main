@@ -15,7 +15,7 @@
 typedef struct
 {
    Erd_t defrostHeaterVoteErd; // HeaterVotedState_t
-   Erd_t damperHeaterDefrostHeaterSyncVoteErd; // HeaterVotedDutyCycle_t
+   Erd_t damperHeaterDefrostHeaterSyncVoteErd; // PercentageDutyCycleVote_t
    Erd_t defrostHeaterStateErd; // bool
 } DamperHeaterDefrostControlConfig_t;
 

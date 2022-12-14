@@ -10,7 +10,6 @@
 #include "DataModelErdPointerAccess.h"
 #include "SystemErds.h"
 #include "Constants_Time.h"
-#include "HeaterVotedDutyCycle.h"
 
 enum
 {
@@ -130,8 +129,8 @@ static DamperPosition_t CurrentDamperPosition(DamperFreezePrevention_t *instance
 
 static void VoteDamperHeaterOn(DamperFreezePrevention_t *instance)
 {
-   HeaterVotedDutyCycle_t vote;
-   vote.dutyCycle = PercentageDutyCycle_Max;
+   PercentageDutyCycleVote_t vote;
+   vote.percentageDutyCycle = PercentageDutyCycle_Max;
    vote.care = Vote_Care;
 
    DataModel_Write(
@@ -142,8 +141,8 @@ static void VoteDamperHeaterOn(DamperFreezePrevention_t *instance)
 
 static void VoteDamperHeaterOff(DamperFreezePrevention_t *instance)
 {
-   HeaterVotedDutyCycle_t vote;
-   vote.dutyCycle = PercentageDutyCycle_Min;
+   PercentageDutyCycleVote_t vote;
+   vote.percentageDutyCycle = PercentageDutyCycle_Min;
    vote.care = Vote_Care;
 
    DataModel_Write(

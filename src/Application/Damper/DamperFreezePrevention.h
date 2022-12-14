@@ -19,7 +19,7 @@
 
 typedef struct
 {
-   Erd_t damperHeaterVoteErd; // HeaterVotedDutyCycle_t
+   Erd_t damperHeaterVoteErd; // PercentageDutyCycleVote_t
    Erd_t damperPositionVoteErd; // DamperVotedPosition_t
    Erd_t sourceThermistorIsValidResolvedErd; // bool
    Erd_t targetThermistorIsValidResolvedErd; // bool

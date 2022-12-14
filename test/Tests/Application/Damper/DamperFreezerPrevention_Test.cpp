@@ -112,7 +112,7 @@ TEST_GROUP(DamperFreezePrevention)
 
    void DamperHeaterShouldNotBeVotedFor()
    {
-      HeaterVotedDutyCycle_t vote;
+      PercentageDutyCycleVote_t vote;
       DataModel_Read(dataModel, Erd_FreshFoodDamperHeater_DamperFreezePreventionVote, &vote);
 
       CHECK_FALSE(vote.care);
@@ -120,19 +120,19 @@ TEST_GROUP(DamperFreezePrevention)
 
    void DamperHeaterShouldBeVotedOn()
    {
-      HeaterVotedDutyCycle_t vote;
+      PercentageDutyCycleVote_t vote;
       DataModel_Read(dataModel, Erd_FreshFoodDamperHeater_DamperFreezePreventionVote, &vote);
 
-      CHECK_EQUAL(PercentageDutyCycle_Max, vote.dutyCycle);
+      CHECK_EQUAL(PercentageDutyCycle_Max, vote.percentageDutyCycle);
       CHECK_TRUE(vote.care);
    }
 
    void DamperHeaterShouldBeVotedOff()
    {
-      HeaterVotedDutyCycle_t vote;
+      PercentageDutyCycleVote_t vote;
       DataModel_Read(dataModel, Erd_FreshFoodDamperHeater_DamperFreezePreventionVote, &vote);
 
-      CHECK_EQUAL(PercentageDutyCycle_Min, vote.dutyCycle);
+      CHECK_EQUAL(PercentageDutyCycle_Min, vote.percentageDutyCycle);
       CHECK_TRUE(vote.care);
    }
 
