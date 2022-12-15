@@ -10,12 +10,16 @@
 
 #include "ErdResolver.h"
 #include "I_DataModel.h"
+#include "SoftPwm.h"
+#include "PercentageDutyCycleVoteToPwmDutyCycleConverter.h"
 
 typedef struct
 {
    struct
    {
       ErdResolver_t fillTubeHeaterErdResolver;
+      PercentageDutyCycleVoteToPwmDutyCycleConverter_t dutyCycleToPercentageCalculator;
+      SoftPwm_t fillTubeHeaterSoftPwm;
    } _private;
 } FillTubeHeaterVotingFrameworkPlugin_t;
 

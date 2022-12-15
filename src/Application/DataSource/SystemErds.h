@@ -68,7 +68,6 @@
 #include "StepperPositionRequest.h"
 #include "SetpointZone.h"
 #include "SetpointZoneTemperatureBounds.h"
-#include "PercentageDutyCycleVote.h"
 #include "DamperFreezePreventionFsmState.h"
 #include "DefrostType.h"
 #include "AluminumMoldIceMakerHsmState.h"
@@ -76,6 +75,7 @@
 #include "WaterValveVotedState.h"
 #include "FeelerArmPosition.h"
 #include "GridOffsetAdder.h"
+#include "PercentageDutyCycleVote.h"
 
 // clang-format off
 
@@ -801,7 +801,7 @@ enum
    ENTRY(Erd_FreshFoodDamperPosition_GridVote,                   0xF386, DamperVotedPosition_t,                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DamperFreezePreventionFsmState,                     0xF387, DamperFreezePreventionFsmState_t,              Swap_N, Io_None, Sub_N, Ram ,                   NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FillTubeHeater_ResolvedVote,                   0xF390, PercentageDutyCycle_t,                              Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FillTubeHeater_ResolvedVote,                   0xF390, PercentageDutyCycleVote_t,                          Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FillTubeHeater_WinningVoteErd,                 0xF391, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FillTubeHeater_FactoryVote,                    0xF392, PercentageDutyCycleVote_t,                          Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FillTubeHeater_IceMakerHarvestVote,            0xF393, PercentageDutyCycleVote_t,                          Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -839,7 +839,7 @@ enum
    ENTRY(Erd_FreshFoodDamperHomingRequest,                  0xF3C1, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperCurrentPosition,                0xF3C2, DamperPosition_t,                                   Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FreshFoodDamperHeater_ResolvedVote,               0xF3D0, PercentageDutyCycleVote_t,                       Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperHeater_ResolvedVote,               0xF3D0, PercentageDutyCycleVote_t,                       Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperHeater_WinningVoteErd,             0xF3D1, WinningVoteErd_t,                                Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperHeater_FactoryVote,                0xF3D2, PercentageDutyCycleVote_t,                       Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperHeater_DamperFreezePreventionVote, 0xF3D3, PercentageDutyCycleVote_t,                       Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -849,6 +849,7 @@ enum
    ENTRY(Erd_FreshFoodBackWallLight_Pwm,                    0xF3E1, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodTopLight_Pwm,                         0xF3E2, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerTopLight_Pwm,                           0xF3E3, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperHeaterPwmDutyCycle,             0xF3E4, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ApplicationToBspPwm_PWM_0,                     0xF400, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
    ENTRY(Erd_ApplicationToBspPwm_PWM_1,                     0xF401, PwmDutyCycle_t,                                     Swap_Y, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \

@@ -38,6 +38,7 @@ void PercentageDutyCycleVoteToPwmDutyCycleConverter_Init(
       &instance->_private.percentageDutyCycleOnChangeSubscription,
       instance,
       OnPercentageDutyCycleVoteChange);
+
    DataModel_Subscribe(
       instance->_private.dataModel,
       instance->_private.config->inputPercentageDutyCycleVoteErd,

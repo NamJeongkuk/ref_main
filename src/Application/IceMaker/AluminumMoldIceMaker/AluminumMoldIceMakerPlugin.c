@@ -19,13 +19,6 @@ FreezerIceRateHandlerConfig_t iceRateHandlerConfig = {
    .freezerEvapFanSpeedResolvedVote = Erd_FreezerEvapFanSpeed_ResolvedVote,
 };
 
-static const SoftPwmConfiguration_t softPwmConfig = {
-   .pwmDutyCycleErd = Erd_FillTubeHeater_Pwm,
-   .gpioErd = Erd_FillTubeHeater,
-   .timerModuleErd = Erd_TimerModule,
-   .frequencyX100 = 10
-};
-
 static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState,
    .waterValveVoteErd = Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
@@ -156,11 +149,6 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
       dataModel,
       &iceRateHandlerConfig,
       PersonalityParametricData_Get(dataModel)->freezerIceRateData);
-
-   SoftPwm_Init(
-      &instance->_private.fillTubeHeaterSoftPwm,
-      dataModel,
-      &softPwmConfig);
 
    FeelerArmMonitor_Init(
       &instance->_private.feelerArmMonitor,

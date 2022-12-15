@@ -10,6 +10,7 @@
 #include "DataModelErdPointerAccess.h"
 #include "SystemErds.h"
 #include "Constants_Time.h"
+#include "PercentageDutyCycleVote.h"
 
 enum
 {

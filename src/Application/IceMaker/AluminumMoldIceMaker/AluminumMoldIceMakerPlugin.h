@@ -24,7 +24,6 @@ typedef struct
    {
       FillTubeHeaterVotingFrameworkPlugin_t fillTubeHeaterVotingFrameworkPlugin;
       FreezerIceRateHandler_t iceRateHandler;
-      SoftPwm_t fillTubeHeaterSoftPwm;
       FeelerArmMonitor_t feelerArmMonitor;
       HarvestCountCalculator_t harvestCountCalculator;
       AluminumMoldIceMaker_t aluminumMoldIceMaker;

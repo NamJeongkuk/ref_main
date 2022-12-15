@@ -170,7 +170,6 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_FIELD(PublicErd_FreshFoodDamperStepperMotorPositionRequest, StepperPositionRequest_t, stepsToMove),
    SWAPPED_ERD(PublicErd_FreshFoodDamperHeater_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_FillTubeHeater_Pwm, sizeof(PwmDutyCycle_t)),
-
    // 0xF400 range
    SWAPPED_ERD(PublicErd_ApplicationToBspPwm_PWM_0, sizeof(PwmDutyCycle_t)),
    SWAPPED_ERD(PublicErd_ApplicationToBspInputCapture_CAPT_0, sizeof(InputCaptureMicroSeconds_t)),
@@ -211,6 +210,7 @@ static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
    SWAPPED_FIELD_RANGE(PublicErd_Adc_ADC_0, PublicErd_Adc_HW_PERSONALITY_01),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableSnapshotData0, PublicErd_ServiceDiagnosticsFaultTableSnapshotData9),
    SWAPPED_FIELD_RANGE(PublicErd_Eeprom_DefrostCompressorOnTimeInSeconds, PublicErd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds),
+   SWAPPED_FIELD_RANGE(PublicErd_FillTubeHeater_Pwm, PublicErd_FreshFoodDamperHeaterPwmDutyCycle),
 };
 
 static const DataSource_EndiannessSwappedSwappedRangesConfiguration_t endianessSwappedSwappedRangesConfiguration = {

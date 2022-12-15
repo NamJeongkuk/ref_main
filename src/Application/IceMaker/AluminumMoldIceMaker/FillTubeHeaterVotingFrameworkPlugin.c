@@ -14,6 +14,18 @@ static const PercentageDutyCycleVote_t defaultData = {
    .care = false
 };
 
+static const PercentageDutyCycleVoteToPwmDutyCycleConverterConfig_t dutyCycleToPercentageCalculatorConfig = {
+   .inputPercentageDutyCycleVoteErd = Erd_FillTubeHeater_ResolvedVote,
+   .outputPwmDutyCycleErd = Erd_FillTubeHeater_Pwm
+};
+
+static const SoftPwmConfiguration_t fillTubeHeaterSoftPwmConfig = {
+   .pwmDutyCycleErd = Erd_FillTubeHeater_Pwm,
+   .gpioErd = Erd_FillTubeHeater,
+   .timerModuleErd = Erd_TimerModule,
+   .frequencyX100 = 10
+};
+
 static bool VotingErdCareDelegate(const void *votingErdData)
 {
    const PercentageDutyCycleVote_t *data = votingErdData;
@@ -34,4 +46,14 @@ void FillTubeHeaterVotingFrameworkPlugin_Init(FillTubeHeaterVotingFrameworkPlugi
       &instance->_private.fillTubeHeaterErdResolver,
       DataModel_AsDataSource(dataModel),
       &fillTubeHeaterErdResolverConfiguration);
+
+   PercentageDutyCycleVoteToPwmDutyCycleConverter_Init(
+      &instance->_private.dutyCycleToPercentageCalculator,
+      dataModel,
+      &dutyCycleToPercentageCalculatorConfig);
+
+   SoftPwm_Init(
+      &instance->_private.fillTubeHeaterSoftPwm,
+      dataModel,
+      &fillTubeHeaterSoftPwmConfig);
 }
