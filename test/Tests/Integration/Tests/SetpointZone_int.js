@@ -42,35 +42,35 @@ describe("SetpointZone", () => {
    });
 
    it("should set setpoint zone for freezer compartment", async () => {
-      await providedTheVotedTemperatureOfThe().FreezerCompartmentIs(500, true);
+      await providedTheVotedTemperatureOfThe().FreezerCompartmentIs(500, "Vote_Care");
       await theSetpointZoneFor().FreezerCompartmentShouldBe("SetpointZone_Warm");
 
-      await providedTheVotedTemperatureOfThe().FreezerCompartmentIs(250, true);
+      await providedTheVotedTemperatureOfThe().FreezerCompartmentIs(250, "Vote_Care");
       await theSetpointZoneFor().FreezerCompartmentShouldBe("SetpointZone_Middle");
 
-      await providedTheVotedTemperatureOfThe().FreezerCompartmentIs(0, true);
+      await providedTheVotedTemperatureOfThe().FreezerCompartmentIs(0, "Vote_Care");
       await theSetpointZoneFor().FreezerCompartmentShouldBe("SetpointZone_Cold");
    });
 
    it("should set setpoint zone for fresh food compartment", async () => {
-      await providedTheVotedTemperatureOfThe().FreshFoodCompartmentIs(500, true);
+      await providedTheVotedTemperatureOfThe().FreshFoodCompartmentIs(500, "Vote_Care");
       await theSetpointZoneFor().FreshFoodCompartmentShouldBe("SetpointZone_Warm");
 
-      await providedTheVotedTemperatureOfThe().FreshFoodCompartmentIs(250, true);
+      await providedTheVotedTemperatureOfThe().FreshFoodCompartmentIs(250, "Vote_Care");
       await theSetpointZoneFor().FreshFoodCompartmentShouldBe("SetpointZone_Middle");
 
-      await providedTheVotedTemperatureOfThe().FreshFoodCompartmentIs(0, true);
+      await providedTheVotedTemperatureOfThe().FreshFoodCompartmentIs(0, "Vote_Care");
       await theSetpointZoneFor().FreshFoodCompartmentShouldBe("SetpointZone_Cold");
    });
 
    xit("should set setpoint zone for convertible compartment", async () => {
-      await providedTheVotedTemperatureOfThe().ConvertibleCompartmentCompartmentIs(500, true);
+      await providedTheVotedTemperatureOfThe().ConvertibleCompartmentCompartmentIs(500, "Vote_Care");
       await theSetpointZoneFor().ConvertibleCompartmentCompartmentShouldBe("SetpointZone_Warm");
 
-      await providedTheVotedTemperatureOfThe().ConvertibleCompartmentCompartmentIs(400, true);
+      await providedTheVotedTemperatureOfThe().ConvertibleCompartmentCompartmentIs(400, "Vote_Care");
       await theSetpointZoneFor().ConvertibleCompartmentCompartmentShouldBe("SetpointZone_Cold");
 
-      await providedTheVotedTemperatureOfThe().ConvertibleCompartmentCompartmentIs(0, true);
+      await providedTheVotedTemperatureOfThe().ConvertibleCompartmentCompartmentIs(0, "Vote_Care");
       await theSetpointZoneFor().ConvertibleCompartmentCompartmentShouldBe("SetpointZone_Cold");
    });
 

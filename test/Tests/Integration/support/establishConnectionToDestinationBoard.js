@@ -55,7 +55,7 @@ module.exports = async (geaNode) => {
    };
 
    const hostList = [
-      { host: 'rockhopper', address: 0xC0, type: 'primary' },
+      { host: 'mb', address: 0xC0, type: 'primary' },
    ];
 
    await ConnectionTools.resetBootloader(geaNode);

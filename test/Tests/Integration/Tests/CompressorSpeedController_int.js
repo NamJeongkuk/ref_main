@@ -64,7 +64,7 @@ describe("CompressorSpeedController,", () => {
    const someTemperatureAboveTriggerAmbientTemperature = 301;
 
    const providedTheFactorySpeedCompressorVoteSpeedIs = async (requestedSpeed) => {
-      let requestedVote = { speed: requestedSpeed, care: true };
+      let requestedVote = { speed: requestedSpeed, care: "Vote_Care" };
       await rockhopper.write("Erd_CompressorSpeed_FactoryVote", requestedVote);
    };
 
@@ -116,7 +116,7 @@ describe("CompressorSpeedController,", () => {
    };
 
    const theValvePositionFactoryVoteIs = async (requestedPosition) => {
-      let requested = { position: requestedPosition, care: true };
+      let requested = { position: requestedPosition, care: "Vote_Care" };
       await rockhopper.write("Erd_ValvePosition_FactoryVote", requested);
    };
 

@@ -2,7 +2,7 @@ local tools = require 'tools.lua-erd-documentation-tools.lua-erd-documentation-t
 local Types = require 'build.rockhopper.GeneratedTypes'
 
 tools.build_json({
-  namespace = 'rockhopper',
+  namespace = 'mb',
   address = 0xC0,
   parsers = {
     tools.parser.standard

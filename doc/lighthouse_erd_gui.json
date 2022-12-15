@@ -5,31 +5,31 @@
          "title": "Versions",
          "erds": [
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "MB Boot",
                "name": "Erd_BootLoaderVersion",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "MB Application",
                "name": "Erd_ApplicationVersion",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "MB Parametric",
                "name": "Erd_ParametricVersion",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "MB Parametric Image CRC",
                "name": "Erd_ParametricDataImageCrc",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "MB Personality",
                "name": "Erd_AppliancePersonality",
                "read": true
@@ -40,14 +40,14 @@
          "title": "Sabbath",
          "erds": [
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Sabbath Mode",
                "name": "Erd_SabbathMode",
                "read": true,
                "write": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Enhanced Sabbath Mode",
                "name": "Erd_EnhancedSabbathMode",
                "read": true,
@@ -181,25 +181,25 @@
          "title": "Compressor",
          "erds": [
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Compressor State",
                "name": "Erd_CompressorState",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Compressor Speed Resolved Vote",
                "name": "Erd_CompressorSpeed_ResolvedVote",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Compressor Winning Vote Erd",
                "name": "Erd_CompressorSpeed_WinningVoteErd",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Compressor Speed Factory Vote",
                "name": "Erd_CompressorSpeed_FactoryVote",
                "read": true,
@@ -211,19 +211,19 @@
          "title": "Damper",
          "erds": [
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Fresh Food Damper Resolved State",
                "name": "Erd_FreshFoodDamperPosition_ResolvedVote",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Fresh Food Damper Winning Vote Erd",
                "name": "Erd_FreshFoodDamperPosition_WinningVoteErd",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Fresh Food Damper Factory Vote",
                "name": "Erd_FreshFoodDamperPosition_FactoryVote",
                "read": true,
@@ -235,19 +235,19 @@
          "title": "Grid",
          "erds": [
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Current Grid Block",
                "name": "Erd_Grid_BlockNumber",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Previous Grid Blocks",
                "name": "Erd_Grid_PreviousBlocks",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Calculated Grid Lines",
                "name": "Erd_Grid_CalculatedGridLines",
                "read": true
@@ -258,32 +258,32 @@
          "title": "Fresh Food Settings",
          "erds": [
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Fresh Food Adjusted Setpoint",
                "name": "Erd_FreshFood_AdjustedSetpointInDegFx100",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Fresh Food User Setpoint Vote",
                "name": "Erd_FreshFoodSetpoint_UserVote",
                "read": true,
                "write": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Fresh Food Resolved Setpoint Vote",
                "name": "Erd_FreshFoodSetpoint_ResolvedVote",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Fresh Food Thermal Setpoint Shift",
                "name": "Erd_FreshFood_ThermalShiftInDegFx100",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Fresh Food Cabinet Setpoint Offset",
                "name": "Erd_FreshFood_CabinetOffsetInDegFx100",
                "read": true
@@ -294,32 +294,32 @@
          "title": "Freezer Settings",
          "erds": [
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Adjusted Setpoint",
                "name": "Erd_Freezer_AdjustedSetpointInDegFx100",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer User Setpoint Vote",
                "name": "Erd_FreezerSetpoint_UserVote",
                "read": true,
                "write": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Resolved Setpoint Vote",
                "name": "Erd_FreezerSetpoint_ResolvedVote",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Thermal Setpoint Shift",
                "name": "Erd_Freezer_ThermalShiftInDegFx100",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Cabinet Setpoint Offset",
                "name": "Erd_Freezer_CabinetOffsetInDegFx100",
                "read": true
@@ -330,62 +330,62 @@
          "title": "Fans",
          "erds": [
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Evap Fan Resolved Speed",
                "name": "Erd_FreezerEvapFanSpeed_ResolvedVote",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Evap Fan Actual RPM",
                "name": "Erd_FreezerEvapFan_ActualRpm",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Evap Fan Target RPM/PWM",
                "name": "Erd_CalculatedFreezerEvapFanControl",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Evap Fan Winning Vote Erd",
                "name": "Erd_FreezerEvapFanSpeed_WinningVoteErd",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Evap Fan Factory Vote",
                "name": "Erd_FreezerEvapFanSpeed_FactoryVote",
                "read": true,
                "write": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Condenser Fan Resolved Speed",
                "name": "Erd_CondenserFanSpeed_ResolvedVote",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Condenser Fan Actual RPM",
                "name": "Erd_CondenserFan_ActualRpm",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Condenser Fan Target RPM/PWM",
                "name": "Erd_CalculatedCondenserFanControl",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Condenser Fan Winning Vote Erd",
                "name": "Erd_CondenserFanSpeed_WinningVoteErd",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Condenser Fan Factory Vote",
                "name": "Erd_CondenserFanSpeed_FactoryVote",
                "read": true,
@@ -397,73 +397,73 @@
          "title": "Defrost",
          "erds": [
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Defrost State (EEPROM)",
                "name": "Erd_DefrostState",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Defrost Was Abnormal (EEPROM)",
                "name": "Erd_FreezerDefrostWasAbnormal",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Defrost Compressor On Time In Seconds",
                "name": "Erd_DefrostCompressorOnTimeInSeconds",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Scaled Door Acceleration In Seconds",
                "name": "Erd_DefrostFreezerScaledDoorAccelerationInSeconds",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Time In Minutes Until Ready To Defrost",
                "name": "Erd_TimeInMinutesUntilReadyToDefrost",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Defrost Heater Defrost Vote",
                "name": "Erd_FreezerDefrostHeater_DefrostVote",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Current Defrost Type",
                "name": "Erd_CurrentDefrostType",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Max Prechill Time In Minutes",
                "name": "Erd_MaxPrechillTimeInMinutes",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Post Dwell Exit Time In Minutes",
                "name": "Erd_PostDwellExitTimeInMinutes",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Time That Prechill Conditions Are Met In Minutes",
                "name": "Erd_TimeThatPrechillConditionsAreMetInMinutes",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Number of Freezer Abnormal Defrost Cycles (EEPROM)",
                "name": "Erd_NumberOfFreezerAbnormalDefrostCycles",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Defrost Cycle Count (EEPROM)",
                "name": "Erd_FreezerDefrostCycleCount",
                "read": true
@@ -474,13 +474,13 @@
          "title": "Doors",
          "erds": [
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Fresh Food Door Is Open",
                "name": "Erd_RightHandFreshFoodDoorIsOpen",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Door Is Open",
                "name": "Erd_FreezerDoorIsOpen",
                "read": true
@@ -491,67 +491,67 @@
          "title": "Thermistors",
          "erds": [
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Fresh Food Unfiltered Temperature",
                "name": "Erd_FreshFood_UnfilteredTemperatureInDegFx100",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Fresh Food Filtered Temperature",
                "name": "Erd_FreshFood_FilteredTemperatureInDegFx100",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Unfiltered Temperature",
                "name": "Erd_Freezer_UnfilteredTemperatureInDegFx100",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Filtered Temperature",
                "name": "Erd_Freezer_FilteredTemperatureInDegFx100",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Fresh Food Evap Unfiltered Temperature",
                "name": "Erd_FreshFoodEvap_UnfilteredTemperatureInDegFx100",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Fresh Food Evap Filtered Temperature",
                "name": "Erd_FreshFoodEvap_FilteredTemperatureInDegFx100",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Evap Unfiltered Temperature",
                "name": "Erd_FreezerEvap_UnfilteredTemperatureInDegFx100",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "FreezerEvap FilteredTemperature",
                "name": "Erd_FreezerEvap_FilteredTemperatureInDegFx100",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Ambient Unfiltered Temperature",
                "name": "Erd_Ambient_UnfilteredTemperatureInDegFx100",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Ambient Filtered Temperature",
                "name": "Erd_Ambient_FilteredTemperatureInDegFx100",
                "read": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Aluminum Mold Ice Maker Temperature",
                "name": "Erd_AluminumMoldIceMaker_FilteredTemperatureInDegFx100",
                "read": true
@@ -562,49 +562,49 @@
          "title": "Factory",
          "erds": [
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Factory Mode Enable",
                "name": "Erd_FactoryModeEnableRequest",
                "read": true,
                "write": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Compressor Speed Factory Vote",
                "name": "Erd_CompressorSpeed_FactoryVote",
                "read": true,
                "write": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Defrost Heater Factory Vote",
                "name": "Erd_FreezerDefrostHeater_FactoryVote",
                "read": true,
                "write": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Fresh Food Damper Position Factory Vote",
                "name": "Erd_FreshFoodDamperPosition_FactoryVote",
                "read": true,
                "write": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Fresh Food Damper Heater Factory Vote",
                "name": "Erd_FreshFoodDamperHeater_FactoryVote",
                "read": true,
                "write": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Freezer Evap Fan Factory Vote",
                "name": "Erd_FreezerEvapFanSpeed_FactoryVote",
                "read": true,
                "write": true
             },
             {
-               "namespace": "rockhopper",
+               "namespace": "mb",
                "displayName": "Condenser Fan Factory Vote",
                "name": "Erd_CondenserFanSpeed_FactoryVote",
                "read": true,
