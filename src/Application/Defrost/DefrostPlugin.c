@@ -133,7 +133,9 @@ static const NextDefrostTypeArbiterConfig_t nextDefrostTypeArbiterConfig = {
    .numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd = Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost,
    .enhancedSabbathModeErd = Erd_EnhancedSabbathMode,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
-   .currentDefrostTypeErd = Erd_CurrentDefrostType
+   .currentDefrostTypeErd = Erd_CurrentDefrostType,
+   .clearedDefrostEepromStartupErd = Erd_Eeprom_ClearedDefrostEepromStartup,
+   .freezerFilteredTemperatureTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp
 };
 
 static bool ThereIsAConvertibleCompartment(I_DataModel_t *dataModel)

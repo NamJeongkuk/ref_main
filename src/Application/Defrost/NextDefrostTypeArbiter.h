@@ -22,6 +22,8 @@ typedef struct
    Erd_t enhancedSabbathModeErd; // bool
    Erd_t freezerDefrostWasAbnormalErd; // bool
    Erd_t currentDefrostTypeErd; // DefrostType_t
+   Erd_t clearedDefrostEepromStartupErd; // bool
+   Erd_t freezerFilteredTemperatureTooWarmAtPowerUpErd; // bool
 } NextDefrostTypeArbiterConfig_t;
 
 typedef struct

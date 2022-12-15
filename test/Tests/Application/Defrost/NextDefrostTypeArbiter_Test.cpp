@@ -29,7 +29,9 @@ static const NextDefrostTypeArbiterConfig_t config = {
    .numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd = Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost,
    .enhancedSabbathModeErd = Erd_EnhancedSabbathMode,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
-   .currentDefrostTypeErd = Erd_CurrentDefrostType
+   .currentDefrostTypeErd = Erd_CurrentDefrostType,
+   .clearedDefrostEepromStartupErd = Erd_Eeprom_ClearedDefrostEepromStartup,
+   .freezerFilteredTemperatureTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp
 };
 
 TEST_GROUP(NextDefrostTypeArbiter)
@@ -47,6 +49,7 @@ TEST_GROUP(NextDefrostTypeArbiter)
 
       defrostData = PersonalityParametricData_Get(dataModel)->defrostData;
       enhancedSabbathData = PersonalityParametricData_Get(dataModel)->enhancedSabbathData;
+      ClearedDefrostEepromStartupIs(CLEAR);
    }
 
    void TheModuleIsInitialized()
@@ -117,6 +120,16 @@ TEST_GROUP(NextDefrostTypeArbiter)
       DataModel_Read(dataModel, Erd_FreshFoodDefrostCount, &actual);
 
       CHECK_EQUAL(expected, actual);
+   }
+
+   void ClearedDefrostEepromStartupIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_Eeprom_ClearedDefrostEepromStartup, &state);
+   }
+
+   void FreezerFilteredTemperatureTooWarmAtPowerUpFlagIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmAtPowerUp, &state);
    }
 };
 
@@ -283,6 +296,48 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToNormalWhenFr
 
    When FreezerDefrostWasAbnormalIs(false);
    NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+}
+
+TEST(NextDefrostTypeArbiter, ShouldUpdateNextDefrostTypeToFullWhenDefrostEepromClearedFlagIsSetOnInit)
+{
+   Given NextDefrostTypeIs(DefrostType_FreshFood);
+   Given ClearedDefrostEepromStartupIs(SET);
+   Given TheModuleIsInitialized();
+   NextDefrostTypeShouldBe(DefrostType_Full);
+}
+
+TEST(NextDefrostTypeArbiter, ShouldUpdateNextDefrostTypeToFullWhenFreezerFilteredTemperatureTooWarmAtPowerUpFlagIsSetOnInit)
+{
+   Given NextDefrostTypeIs(DefrostType_FreshFood);
+   Given ClearedDefrostEepromStartupIs(CLEAR);
+   Given FreezerFilteredTemperatureTooWarmAtPowerUpFlagIs(SET);
+   Given TheModuleIsInitialized();
+   NextDefrostTypeShouldBe(DefrostType_Full);
+}
+
+TEST(NextDefrostTypeArbiter, ShouldSetNextDefrostTypeToFreshFoodAfterTheTypeIsFullWithDefrostEepromClearedOnInit)
+{
+   Given NextDefrostTypeIs(DefrostType_FreshFood);
+   Given ClearedDefrostEepromStartupIs(SET);
+   Given TheModuleIsInitialized();
+   Given CurrentDefrostTypeIs(DefrostType_Full);
+   NextDefrostTypeShouldBe(DefrostType_Full);
+
+   After DefrostingStateIsChangedFromFalseToTrueNTimes(1);
+   NextDefrostTypeShouldBe(DefrostType_FreshFood);
+}
+
+TEST(NextDefrostTypeArbiter, ShouldSetNextDefrostTypeToFreshFoodAfterTheTypeIsFullWithTooWarmAtPowerUpOnInit)
+{
+   Given NextDefrostTypeIs(DefrostType_FreshFood);
+   Given ClearedDefrostEepromStartupIs(CLEAR);
+   Given FreezerFilteredTemperatureTooWarmAtPowerUpFlagIs(SET);
+   Given TheModuleIsInitialized();
+   Given CurrentDefrostTypeIs(DefrostType_Full);
+   NextDefrostTypeShouldBe(DefrostType_Full);
+
+   After DefrostingStateIsChangedFromFalseToTrueNTimes(1);
+   NextDefrostTypeShouldBe(DefrostType_FreshFood);
 }
 
 TEST_GROUP(NextDefrostTypeArbiterWithNumberOfFreshFoodDefrostCountIsZero)
