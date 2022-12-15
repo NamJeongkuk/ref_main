@@ -267,6 +267,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Disable Defrost",
+          "name": "Erd_DisableDefrost",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Freezer Defrost Was Abnormal (EEPROM)",
           "name": "Erd_FreezerDefrostWasAbnormal",
           "read": true,

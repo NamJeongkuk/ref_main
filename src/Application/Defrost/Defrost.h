@@ -22,7 +22,7 @@ typedef struct
    Erd_t defrostStateErd; // DefrostState_t
    Erd_t waitingForDefrostErd; // bool
    Erd_t defrostingErd; // bool
-   Erd_t defrostTestRequestErd; // DefrostTestRequestMessage_t
+   Erd_t disableDefrostErd; // bool
    Erd_t freezerDefrostWasAbnormalErd; // bool
    Erd_t freshFoodDefrostWasAbnormalErd; // bool
    Erd_t hasConvertibleCompartment; // bool

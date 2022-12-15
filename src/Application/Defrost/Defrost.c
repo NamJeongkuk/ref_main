@@ -22,7 +22,6 @@
 #include "Signal.h"
 #include "uassert.h"
 #include "Vote.h"
-#include "DefrostTestRequestMessage.h"
 #include "DefrostType.h"
 #include "CoolingMode.h"
 
@@ -38,7 +37,8 @@ enum
    Signal_FreezerEvaporatorTemperatureReachedHeaterOnTerminationTemperature,
    Signal_FreezerHeaterMaxOnTimeReached,
    Signal_FreezerAbnormalHeaterOnTimeReached,
-   Signal_DisableDefrost
+   Signal_DisableDefrost,
+   Signal_EnableDefrost
 };
 
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -203,13 +203,17 @@ static void DataModelChanged(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerAbnormalHeaterOnTimeReached, NULL);
       }
    }
-   else if(erd == instance->_private.config->defrostTestRequestErd)
+   else if(erd == instance->_private.config->disableDefrostErd)
    {
-      const DefrostTestRequestMessage_t *request = onChangeData->data;
+      const bool *disableDefrost = onChangeData->data;
 
-      if(request->request == DefrostTestRequest_Disable)
+      if(*disableDefrost)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_DisableDefrost, NULL);
+      }
+      else
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_EnableDefrost, NULL);
       }
    }
 }
@@ -1098,14 +1102,18 @@ static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
    IGNORE(data);
-   IGNORE(instance);
 
    switch(signal)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Disabled);
+         VoteForFreezerDefrostHeater(instance, HeaterState_Off, Vote_Care);
          SetWaitingToDefrostTo(instance, false);
          SetDefrostingTo(instance, false);
+         break;
+
+      case Signal_EnableDefrost:
+         Hsm_Transition(hsm, State_Idle);
          break;
 
       case Hsm_Exit:
