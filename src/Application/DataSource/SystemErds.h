@@ -52,7 +52,8 @@
 #include "Setpoint.h"
 #include "DefrostState.h"
 #include "DefrostHsmState.h"
-#include "DefrostTestRequestMessage.h"
+#include "DefrostTestRequest.h"
+#include "DefrostTestStateRequestMessage.h"
 #include "HeaterVotedState.h"
 #include "EnergyDemandLevel.h"
 #include "I_FaultWrapper.h"
@@ -453,7 +454,7 @@ enum
    \
    ENTRY(Erd_DefrostState,                                  0xF10D, DefrostState_t,                                     Swap_N, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_DefrostHsmState,                               0xF10E, DefrostHsmState_t,                                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DefrostTestRequest,                            0xF10F, DefrostTestRequestMessage_t,                        Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostTestRequest,                            0xF10F, DefrostTestRequest_t,                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerDefrostHeaterOnTimeInMinutes,           0xF110, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerDefrostWasAbnormal,                     0xF112, bool,                                               Swap_N, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_FreezerAbnormalDefrostCycleCount,              0xF113, uint16_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
@@ -571,12 +572,13 @@ enum
    ENTRY(Erd_FreshFoodDefrostCount,                         0xF185, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CurrentDefrostType,                            0xF186, DefrostType_t,                                      Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DisableDefrost,                                0xF187, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal, 0xF188, Signal_t,             Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostTestStateRequest,                       0xF189, DefrostTestStateRequestMessage_t,                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DefrostTestRequestStatus,                      0xF18A, DefrostTestRequest_t,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_TimeAcceleration_Enable,                       0xF188, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_TimeAcceleration_Ticks,                        0xF189, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_TimeAcceleration_CompleteSignal,               0xF18A, Signal_t,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   \
-   ENTRY(Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal, 0xF18B, Signal_t,             Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TimeAcceleration_Enable,                       0xF18B, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TimeAcceleration_Ticks,                        0xF18C, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TimeAcceleration_CompleteSignal,               0xF18D, Signal_t,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodThermistor_IsValidOverrideValue,                      0xF190, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerThermistor_IsValidOverrideValue,                        0xF191, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

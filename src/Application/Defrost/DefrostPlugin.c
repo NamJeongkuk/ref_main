@@ -138,6 +138,17 @@ static const NextDefrostTypeArbiterConfig_t nextDefrostTypeArbiterConfig = {
    .freezerFilteredTemperatureTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp
 };
 
+static const DefrostTestRequestHandlerConfiguration_t defrostTestRequestHandlerConfig = {
+   .defrostStateErd = Erd_DefrostState,
+   .defrostTestRequestErd = Erd_DefrostTestRequest,
+   .disableDefrostErd = Erd_DisableDefrost,
+   .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
+   .nextDefrostTypeErd = Erd_NextDefrostType,
+   .useMinimumReadyToDefrostTimeErd = Erd_UseMinimumReadyToDefrostTime,
+   .resetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestErd = Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
+   .defrostTestRequestStatusErd = Erd_DefrostTestRequestStatus
+};
+
 static bool ThereIsAConvertibleCompartment(I_DataModel_t *dataModel)
 {
    bool hasConvertibleCompartment;
@@ -252,4 +263,9 @@ void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
       &instance->_private.nextDefrostTypeArbiter,
       dataModel,
       &nextDefrostTypeArbiterConfig);
+
+   DefrostTestRequestHandler_Init(
+      &instance->_private.defrostTestRequestHandler,
+      dataModel,
+      &defrostTestRequestHandlerConfig);
 }

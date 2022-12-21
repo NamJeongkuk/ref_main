@@ -5,13 +5,14 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef DEFROSTTESTREQUESTMESSAGE_H
-#define DEFROSTTESTREQUESTMESSAGE_H
+#ifndef DEFROSTTESTREQUEST_H
+#define DEFROSTTESTREQUEST_H
 
 #include "Signal.h"
 
 enum
 {
+   DefrostTestRequest_None,
    DefrostTestRequest_Idle,
    DefrostTestRequest_FreshFoodOnlyDefrost,
    DefrostTestRequest_Defrost,
@@ -23,11 +24,5 @@ enum
    DefrostTestRequest_Disable
 };
 typedef uint8_t DefrostTestRequest_t;
-
-typedef struct
-{
-   DefrostTestRequest_t request;
-   Signal_t requestId;
-} DefrostTestRequestMessage_t;
 
 #endif

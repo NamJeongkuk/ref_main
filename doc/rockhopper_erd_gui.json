@@ -498,6 +498,41 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Defrost Test Request",
+          "name": "Erd_DefrostTestRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Defrost Test State Request",
+          "name": "Erd_DefrostTestStateRequest",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Defrost Test Request Status",
+          "name": "Erd_DefrostTestRequestStatus",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Use Minimum Ready To Defrost Time",
+          "name": "Erd_UseMinimumReadyToDefrostTime",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Reset And Count Defrost Compressor On Time Counts And Door Accelerations Request Signal",
+          "name": "Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Freezer Defrost Heater Resolved Vote",
           "name": "Erd_FreezerDefrostHeater_ResolvedVote",
           "read": true,

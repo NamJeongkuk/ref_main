@@ -21,6 +21,7 @@
 #include "DefrostHeaterOnTimeCounter.h"
 #include "FreezerDefrostHeaterVotingFrameworkPlugin.h"
 #include "NextDefrostTypeArbiter.h"
+#include "DefrostTestRequestHandler.h"
 
 typedef struct
 {
@@ -37,6 +38,7 @@ typedef struct
       DefrostHeaterOnTimeCounter_t defrostHeaterOnTimeCounter;
       FreezerDefrostHeaterVotingFrameworkPlugin_t freezerDefrostHeaterVotingFramework;
       NextDefrostTypeArbiter_t nextDefrostTypeArbiter;
+      DefrostTestRequestHandler_t defrostTestRequestHandler;
    } _private;
 } DefrostPlugin_t;
 
