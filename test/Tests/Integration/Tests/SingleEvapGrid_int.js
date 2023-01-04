@@ -161,10 +161,10 @@ describe("SingleEvapGrid", () => {
       expect(actualFreezerEvapFanVotedSpeed.speed).toEqual(expectedFreezerEvapFanSpeed);
       expect(actualFreshFoodDamperVotedPosition.position).toEqual(expectedFreshFoodDamperPosition);
 
-      expect(actualCompressorVotedSpeed.care).toEqual(true);
-      expect(actualCondenserFanVotedSpeed.care).toEqual(true);
-      expect(actualFreezerEvapFanVotedSpeed.care).toEqual(true);
-      expect(actualFreshFoodDamperVotedPosition.care).toEqual(true);
+      expect(actualCompressorVotedSpeed.care).toEqual('Vote_Care');
+      expect(actualCondenserFanVotedSpeed.care).toEqual('Vote_Care');
+      expect(actualFreezerEvapFanVotedSpeed.care).toEqual('Vote_Care');
+      expect(actualFreshFoodDamperVotedPosition.care).toEqual('Vote_Care');
    }
 
    it("should scroll through each block", async () => {
@@ -495,9 +495,17 @@ describe("SingleEvapGrid", () => {
 
          await theGridBlockShouldBe(gridBlockNumbers[i]);
          await theCoolingModeShouldBe("CoolingMode_Freezer");
-         await theCoolingSpeedShouldBe("CoolingSpeed_High");
+         await theCoolingSpeedShouldBe("CoolingSpeed_Off");
          await theGridAreaShouldBe("GridArea_1");
          await thePulldownStateShouldBe(false);
+         await theGridVotesShouldBe("CompressorSpeed_Off", "FanSpeed_Off", "FanSpeed_Off", "DamperPosition_Closed");
+
+         await providedTheCoolingSpeedIs("CoolingSpeed_Low");
+         await afterTheGridRuns();
+         await theGridVotesShouldBe("CompressorSpeed_Low", "FanSpeed_Low", "FanSpeed_Low", "DamperPosition_Closed");
+
+         await providedTheCoolingSpeedIs("CoolingSpeed_High");
+         await afterTheGridRuns();
          await theGridVotesShouldBe("CompressorSpeed_High", "FanSpeed_High", "FanSpeed_High", "DamperPosition_Closed");
       }
    });

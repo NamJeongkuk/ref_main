@@ -588,16 +588,27 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks28And29And35WhenCoo
    GridBlockNumber_t gridBlockNumbers[] = { 28, 29, 35 };
    for(uint8_t i = 0; i < 3; i++)
    {
-      Given GridBlockIs(gridBlockNumbers[i]);
+      Given CoolingSpeedIs(CoolingSpeed_Off);
+      And GridBlockIs(gridBlockNumbers[i]);
       And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
-      CoolingSpeedShouldBe(CoolingSpeed_High);
+      CoolingSpeedShouldBe(CoolingSpeed_Off);
       GridAreaShouldBe(GridArea_1);
 
-      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Closed);
+      When CoolingSpeedIs(CoolingSpeed_Off);
+      And The GridIsRun();
+      The GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Off, DamperPosition_Closed);
+
+      When CoolingSpeedIs(CoolingSpeed_Low);
+      And The GridIsRun();
+      The GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, DamperPosition_Closed);
+
+      When CoolingSpeedIs(CoolingSpeed_High);
+      And The GridIsRun();
+      The GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Closed);
    }
 }
 

@@ -277,7 +277,6 @@ void Grid_SingleEvap(void *context)
       case 29:
       case 35:
          SetCoolingMode(dataModel, CoolingMode_Freezer);
-         SetCoolingSpeed(dataModel, CoolingSpeed_High);
          SetPulldownActive(dataModel, CLEAR);
          SetGridArea(dataModel, GridArea_1);
          break;
