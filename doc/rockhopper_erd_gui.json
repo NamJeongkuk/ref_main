@@ -63,6 +63,34 @@
           "displayName": "Compressor Speed Resolved Vote",
           "name": "Erd_CompressorSpeed_ResolvedVote",
           "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Compressor Speed Winning Vote ERD",
+          "name": "Erd_CompressorSpeed_WinningVoteErd",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Compressor Speed Factory Vote",
+          "name": "Erd_CompressorSpeed_FactoryVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Compressor Speed Defrost Vote",
+          "name": "Erd_CompressorSpeed_DefrostVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "rockhopper",
+          "displayName": "Compressor Speed Grid Vote ERD",
+          "name": "Erd_CompressorSpeed_GridVote",
+          "read": true,
           "write": true
         },
         {
@@ -185,8 +213,36 @@
       "erds": [
         {
           "namespace": "mb",
+          "displayName": "Condenser Fan Resolved Vote",
+          "name": "Erd_CondenserFanSpeed_ResolvedVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Condenser Fan Winning Vote ERD",
+          "name": "Erd_CondenserFanSpeed_WinningVoteErd",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Condenser Fan Defrost Vote",
+          "name": "Erd_CondenserFanSpeed_DefrostVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Condenser Fan Startup Vote",
           "name": "Erd_CondenserFanSpeed_CompressorStartUpVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Condenser Fan Grid Vote",
+          "name": "Erd_CondenserFanSpeed_GridVote",
           "read": true,
           "write": true
         },
@@ -203,6 +259,20 @@
           "name": "Erd_FreshFoodEvapFanSpeed_CompressorStartUpVote",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Fan Speed Resolved Vote",
+          "name": "Erd_FreezerEvapFanSpeed_ResolvedVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Fan Speed Winning Vote ERD",
+          "name": "Erd_FreezerEvapFanSpeed_WinningVoteErd",
+          "read": true,
+          "write": false
         },
         {
           "namespace": "mb",
