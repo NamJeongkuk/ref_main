@@ -116,6 +116,13 @@ static const ErdResolverConfiguration_t iceMakerWaterValveResolverConfiguration 
    .numberOfVotingErds = (Erd_AluminumMoldIceMakerWaterValve_IceMakerVote - Erd_AluminumMoldIceMakerWaterValve_WinningVoteErd)
 };
 
+static const IceMakerMoldHeaterControllerConfig_t iceMakerMoldHeaterControllerConfig = {
+   .iceMakerMoldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
+   .iceMakerMoldHeaterHarvestVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
+   .iceMakerMoldFilteredTemperatureErd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .timerModuleErd = Erd_TimerModule,
+};
+
 static void InitializeErdResolvers(AluminumMoldIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
 {
    ErdResolver_Init(
@@ -165,6 +172,12 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
       &instance->_private.iceMakerEnableResolver,
       dataModel,
       &iceMakerEnableResolverConfiguration);
+
+   IceMakerMoldHeaterController_Init(
+      &instance->_private.iceMakerMoldHeaterController,
+      dataModel,
+      &iceMakerMoldHeaterControllerConfig,
+      &PersonalityParametricData_Get(dataModel)->aluminumMoldIceMakerData->harvestData);
 
    AluminumMoldIceMaker_Init(
       &instance->_private.aluminumMoldIceMaker,

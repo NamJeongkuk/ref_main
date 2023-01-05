@@ -17,6 +17,7 @@
 #include "HarvestCountCalculator.h"
 #include "IceMakerEnableResolver.h"
 #include "ErdResolver.h"
+#include "IceMakerMoldHeaterController.h"
 
 typedef struct
 {
@@ -31,6 +32,7 @@ typedef struct
       ErdResolver_t iceMakerWaterValveVoteResolver;
       ErdResolver_t iceMakerHeaterVoteResolver;
       ErdResolver_t iceMakerMotorVoteResolver;
+      IceMakerMoldHeaterController_t iceMakerMoldHeaterController;
    } _private;
 } AluminumMoldIceMakerPlugin_t;
 

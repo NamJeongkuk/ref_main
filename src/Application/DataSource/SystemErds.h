@@ -76,6 +76,7 @@
 #include "WaterValveVotedState.h"
 #include "FeelerArmPosition.h"
 #include "GridOffsetAdder.h"
+#include "IceMakerMoldHeaterControlRequest.h"
 #include "PercentageDutyCycleVote.h"
 
 // clang-format off
@@ -622,6 +623,7 @@ enum
    ENTRY(Erd_IceMakerEnabledByDemandResponse,               0xF1C7, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMakerEnabledResolved,                       0xF1C8, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerFeelerArmPosition,         0xF1C9, FeelerArmPosition_t,                                Swap_N, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerMoldHeaterControlRequest,  0xF1CA, IceMakerMoldHeaterControlRequest_t,                 Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RelayWatchdog,                                 0xF201, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,                    NotNv,                                    NotFault) \
