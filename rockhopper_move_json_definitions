@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+echo
+echo -e "\033[1m> Moving ERD definitions...\033[0m"
+cp ./build/rockhopper/doc/*.json ~/ApplCore/erd-jsons
+cp ./doc/*.json ~/ApplCore/erd-jsons
+echo -e "\033[1m> Move Completed Successfully\033[0m"
