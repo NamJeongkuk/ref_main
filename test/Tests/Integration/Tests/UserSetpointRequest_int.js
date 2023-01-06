@@ -54,11 +54,11 @@ describe("UserSetpointRequest", () => {
    const theUserVotedSetpointForThe = () => ({
       FreezerCompartmentShouldBe: async (setpointInDegFx100) => {
          const actual = await rockhopper.read("Erd_FreezerSetpoint_UserVote");
-         expect(actual.temperature).toEqual(setpointInDegFx100);
+         expect(actual.temperatureInDegFx100).toEqual(setpointInDegFx100);
       },
       FreshFoodCompartmentShouldBe: async (setpointInDegFx100) => {
          const actual = await rockhopper.read("Erd_FreshFoodSetpoint_UserVote");
-         expect(actual.temperature).toEqual(setpointInDegFx100);
+         expect(actual.temperatureInDegFx100).toEqual(setpointInDegFx100);
       }
    });
 

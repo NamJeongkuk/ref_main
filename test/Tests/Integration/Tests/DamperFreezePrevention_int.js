@@ -1,22 +1,35 @@
 "use strict";
 
 const delay = require("javascript-common").util.delay;
+const After = require('../support/After.js');
 const { msPerSec, msPerMin, secondsPerMin } = require("../support/constants");
 const constants = require("../support/constants");
 
+// For these tests to pass, the following ERDs must be temporarily changed to NV:
+// Erd_Freezer_FilteredTemperatureOverrideRequest
+// Erd_Freezer_FilteredTemperatureOverrideValueInDegFx100
+// Erd_FreshFood_FilteredTemperatureOverrideRequest
+// Erd_FreshFood_FilteredTemperatureOverrideValueInDegFx100
+// Erd_FreshFoodThermistor_IsValidOverrideValue
+// Erd_FreezerThermistor_IsValidOverrideValue
+// Erd_FreshFoodThermistor_IsValidOverrideRequest
+// Erd_FreezerThermistor_IsValidOverrideRequest
+
 const after = (time) => ({
    inMsec: async () => {
-      await delay(time);
+      await After(time);
    },
    inSec: async () => {
-      await delay(time * msPerSec);
+      await After(time * msPerSec);
    },
    inMinutes: async () => {
-      await delay(time * msPerMin);
+      await After(time * msPerMin);
    },
 });
 
 describe("DamperFreezePrevention", () => {
+   const integrationTestDelayInMsec = 1000;
+
    const damperFreezePreventionFsmState = {
       idle: "DamperFreezePreventionFsmState_Idle",
       monitoringTemperatureChange: "DamperFreezePreventionFsmState_MonitoringTemperatureChange",
@@ -38,9 +51,9 @@ describe("DamperFreezePrevention", () => {
 
    // Parametric values
    const damperHeaterOnTimeInMinutes = 2;
-   const minimumTemperatureChangeTimeInMinutes = 3;
-   const sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 = 500;
-   const targetCompartmentMinimumTemperatureChangeInDegFx100 = 10;
+   const minimumTemperatureChangeTimeInMinutes = 10;
+   const sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 = 5000;
+   const targetCompartmentMinimumTemperatureChangeInDegFx100 = 0;
 
    beforeEach(async () => {
       await rockhopper.write("Erd_Reset", 1);
@@ -117,19 +130,19 @@ describe("DamperFreezePrevention", () => {
       await providedTheSourceThermistorIsInvalid();
    };
 
-   const providedTheSourceTemperatureIs = async(temperature) => {
+   const providedTheSourceTemperatureIs = async (temperature) => {
       await rockhopper.write("Erd_Freezer_FilteredTemperatureOverrideRequest", true);
       await rockhopper.write("Erd_Freezer_FilteredTemperatureOverrideValueInDegFx100", temperature);
    };
 
-   const whenTheSourceTemperatureIs = async(temperature) => {
+   const whenTheSourceTemperatureIs = async (temperature) => {
       await providedTheSourceTemperatureIs(temperature);
    };
 
    const providedTheDamperFreezePreventionIsInMonitoringTemperatureChange = async () => {
       await providedTheTargetThermistorIsValid();
       await providedTheSourceThermistorIsValid();
-      await providedTheSourceTemperatureIs(sourceCompartmentMaximumTemperatureToRunCheckInDegFx100  - 1);
+      await providedTheSourceTemperatureIs(sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 - 1);
       await providedTheBoardHasBeenReset();
 
       await theDamperFreezePreventionFsmStateShouldBe(damperFreezePreventionFsmState.monitoringTemperatureChange);
@@ -151,7 +164,7 @@ describe("DamperFreezePrevention", () => {
 
    const damperHeaterPercentageDutyCycleVoteShouldBe = async (state) => {
       const vote = await rockhopper.read("Erd_FreshFoodDamperHeater_DamperFreezePreventionVote");
-      expect(vote.dutyCycle).toEqual(state);
+      expect(vote.percentageDutyCycle).toEqual(state);
       expect(vote.care).toEqual(voteCare.care);
    };
 
@@ -168,7 +181,7 @@ describe("DamperFreezePrevention", () => {
       await providedTheTargetTemperatureIs(someTargetTemperatureInDegFx100 - (targetCompartmentMinimumTemperatureChangeInDegFx100 - 1));
 
       await after(minimumTemperatureChangeTimeInMinutes).inMinutes();
-      await after(10).inSec();
+      await delay(10 * msPerSec);
       await damperHeaterPercentageDutyCycleVoteShouldBe(100);
    };
 
@@ -181,7 +194,7 @@ describe("DamperFreezePrevention", () => {
       await providedTheTargetTemperatureIs(someTargetTemperatureInDegFx100 + (targetCompartmentMinimumTemperatureChangeInDegFx100 - 1));
 
       await after(minimumTemperatureChangeTimeInMinutes).inMinutes();
-      await after(10).inSec();
+      await delay(10 * msPerSec);
       await damperHeaterPercentageDutyCycleVoteShouldBe(100);
    };
 
@@ -189,7 +202,7 @@ describe("DamperFreezePrevention", () => {
       await providedTheDamperHeaterIsOnAndDamperIsClosed();
 
       await after(damperHeaterOnTimeInMinutes).inMinutes();
-      await after(1).inSec();
+      await delay(integrationTestDelayInMsec);
       await damperHeaterPercentageDutyCycleVoteShouldBe(0);
       await damperPositionShouldBeVoted(damperPosition.open);
    };
@@ -198,7 +211,7 @@ describe("DamperFreezePrevention", () => {
       await providedTheDamperHeaterIsOnAndDamperIsOpen();
 
       await after(damperHeaterOnTimeInMinutes).inMinutes();
-      await after(1).inSec();
+      await delay(integrationTestDelayInMsec);
       await damperHeaterPercentageDutyCycleVoteShouldBe(0);
       await damperPositionShouldBeVoted(damperPosition.closed);
    };
@@ -211,7 +224,7 @@ describe("DamperFreezePrevention", () => {
       await damperPositionVoteShouldBeDontCare();
    };
 
-   it("should initialize into Idle when target thermistor is invalid and source thermistor is valid and source temperature is less than max source temperature for freeze prevention", async ()=> {
+   it("should initialize into Idle when target thermistor is invalid and source thermistor is valid and source temperature is less than max source temperature for freeze prevention", async () => {
       await providedTheTargetThermistorIsInvalid();
       await providedTheSourceThermistorIsValid();
       await providedTheSourceTemperatureIs(sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 - 1);
@@ -219,7 +232,7 @@ describe("DamperFreezePrevention", () => {
       await theDamperFreezePreventionFsmStateShouldBe(damperFreezePreventionFsmState.idle);
    });
 
-   it("should initialize into Idle when target thermistor is valid and source thermistor is valid and source temperature is equal to max source temperature for freeze prevention", async ()=> {
+   it("should initialize into Idle when target thermistor is valid and source thermistor is valid and source temperature is equal to max source temperature for freeze prevention", async () => {
       await providedTheTargetThermistorIsValid();
       await providedTheSourceThermistorIsValid();
       await providedTheSourceTemperatureIs(sourceCompartmentMaximumTemperatureToRunCheckInDegFx100);
@@ -227,7 +240,7 @@ describe("DamperFreezePrevention", () => {
       await theDamperFreezePreventionFsmStateShouldBe(damperFreezePreventionFsmState.idle);
    });
 
-   it("should initialize into Idle when target thermistor is valid and source thermistor is valid and source temperature is greater than max source temperature for freeze prevention", async ()=> {
+   it("should initialize into Idle when target thermistor is valid and source thermistor is valid and source temperature is greater than max source temperature for freeze prevention", async () => {
       await providedTheTargetThermistorIsValid();
       await providedTheSourceThermistorIsValid();
       await providedTheSourceTemperatureIs(sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 + 1);
@@ -235,7 +248,7 @@ describe("DamperFreezePrevention", () => {
       await theDamperFreezePreventionFsmStateShouldBe(damperFreezePreventionFsmState.idle);
    });
 
-   it("should initialize into Idle when target thermistor is valid and source thermistor is invalid and source temperature is less than max source temperature for freeze prevention", async ()=> {
+   it("should initialize into Idle when target thermistor is valid and source thermistor is invalid and source temperature is less than max source temperature for freeze prevention", async () => {
       await providedTheTargetThermistorIsValid();
       await providedTheSourceThermistorIsInvalid();
       await providedTheSourceTemperatureIs(sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 - 1);
@@ -243,7 +256,7 @@ describe("DamperFreezePrevention", () => {
       await theDamperFreezePreventionFsmStateShouldBe(damperFreezePreventionFsmState.idle);
    });
 
-   it("should initialize into Monitoring Temperature Change when target thermistor is valid and source thermistor is valid and source temperature is less than max source temperature for freeze prevention", async ()=> {
+   it("should initialize into Monitoring Temperature Change when target thermistor is valid and source thermistor is valid and source temperature is less than max source temperature for freeze prevention", async () => {
       await providedTheTargetThermistorIsValid();
       await providedTheSourceThermistorIsValid();
       await providedTheSourceTemperatureIs(sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 - 1);
@@ -251,7 +264,7 @@ describe("DamperFreezePrevention", () => {
       await theDamperFreezePreventionFsmStateShouldBe(damperFreezePreventionFsmState.monitoringTemperatureChange);
    });
 
-   it("should transition from Idle to Monitoring Temperature Change when target thermistor is valid and source temperature is less than max source temperature for freeze prevention and source thermistor is valid", async() => {
+   it("should transition from Idle to Monitoring Temperature Change when target thermistor is valid and source temperature is less than max source temperature for freeze prevention and source thermistor is valid", async () => {
       await providedTheTargetThermistorIsInvalid();
       await providedTheSourceThermistorIsValid();
       await providedTheSourceTemperatureIs(sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 - 1);
@@ -262,7 +275,7 @@ describe("DamperFreezePrevention", () => {
       await theDamperFreezePreventionFsmStateShouldBe(damperFreezePreventionFsmState.monitoringTemperatureChange);
    });
 
-   it("should transition from Idle to Monitoring Temperature Change when source temperature is less than max source temperature for freeze prevention and target thermistor is valid and source thermistor is valid", async ()=> {
+   it("should transition from Idle to Monitoring Temperature Change when source temperature is less than max source temperature for freeze prevention and target thermistor is valid and source thermistor is valid", async () => {
       await providedTheTargetThermistorIsValid();
       await providedTheSourceThermistorIsValid();
       await providedTheSourceTemperatureIs(sourceCompartmentMaximumTemperatureToRunCheckInDegFx100);
@@ -273,7 +286,7 @@ describe("DamperFreezePrevention", () => {
       await theDamperFreezePreventionFsmStateShouldBe(damperFreezePreventionFsmState.monitoringTemperatureChange);
    });
 
-   it("should transition from Idle to Monitoring Temperature Change when source thermistor is valid and temperature is less than max source temperature for freeze prevention and target thermistor is valid", async ()=> {
+   it("should transition from Idle to Monitoring Temperature Change when source thermistor is valid and temperature is less than max source temperature for freeze prevention and target thermistor is valid", async () => {
       await providedTheTargetThermistorIsValid();
       await providedTheSourceThermistorIsInvalid();
       await providedTheSourceTemperatureIs(sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 - 1);
@@ -350,35 +363,35 @@ describe("DamperFreezePrevention", () => {
       await theDamperFreezePreventionFsmStateShouldBe(damperFreezePreventionFsmState.idle);
    });
 
-   it("should transition from Monitoring Temperature Change to Idle when target thermistor is invalid", async() => {
+   it("should transition from Monitoring Temperature Change to Idle when target thermistor is invalid", async () => {
       await providedTheDamperFreezePreventionIsInMonitoringTemperatureChange();
 
       await whenTheTargetThermistorIsInvalid();
       await theDamperFreezePreventionFsmStateShouldBe(damperFreezePreventionFsmState.idle);
    });
 
-   it("should transition from Monitoring Temperature Change to Idle when target thermistor is invalid", async() => {
+   it("should transition from Monitoring Temperature Change to Idle when target thermistor is invalid", async () => {
       await providedTheDamperFreezePreventionIsInMonitoringTemperatureChange();
 
       await whenTheSourceThermistorIsInvalid();
       await theDamperFreezePreventionFsmStateShouldBe(damperFreezePreventionFsmState.idle);
    });
 
-   it("should transition from Monitoring Temperature Change to Idle when source temperature is equal to max source temperature for freeze prevention", async() => {
+   it("should transition from Monitoring Temperature Change to Idle when source temperature is equal to max source temperature for freeze prevention", async () => {
       await providedTheDamperFreezePreventionIsInMonitoringTemperatureChange();
 
       await whenTheSourceTemperatureIs(sourceCompartmentMaximumTemperatureToRunCheckInDegFx100);
       await theDamperFreezePreventionFsmStateShouldBe(damperFreezePreventionFsmState.idle);
    });
 
-   it("should transition from Monitoring Temperature Change to Idle when source temperature is greater than max source temperature for freeze prevention", async() => {
+   it("should transition from Monitoring Temperature Change to Idle when source temperature is greater than max source temperature for freeze prevention", async () => {
       await providedTheDamperFreezePreventionIsInMonitoringTemperatureChange();
 
       await whenTheSourceTemperatureIs(sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 + 1);
       await theDamperFreezePreventionFsmStateShouldBe(damperFreezePreventionFsmState.idle);
    });
 
-   it("should turn on damper heater when temperature does not decrease by minimum temperature change after damper opens", async() => {
+   it("should turn on damper heater when temperature does not decrease by minimum temperature change after damper opens", async () => {
       await providedTheTargetTemperatureIs(someTargetTemperatureInDegFx100);
       await providedTheDamperFreezePreventionIsInMonitoringTemperatureChange();
 
@@ -386,11 +399,11 @@ describe("DamperFreezePrevention", () => {
       await whenTheTargetTemperatureIs(someTargetTemperatureInDegFx100 - (targetCompartmentMinimumTemperatureChangeInDegFx100 - 1));
 
       await after(minimumTemperatureChangeTimeInMinutes).inMinutes();
-      await after(10).inSec();
+      await delay(10 * msPerSec);
       await damperHeaterPercentageDutyCycleVoteShouldBe(100);
    });
 
-   it("should turn on damper heater when temperature does not increase by minimum temperature change after damper closes", async() => {
+   it("should turn on damper heater when temperature does not increase by minimum temperature change after damper closes", async () => {
       await providedTheTargetTemperatureIs(someTargetTemperatureInDegFx100);
       await providedTheDamperFreezePreventionIsInMonitoringTemperatureChange();
       await whenTheDamperOpens();
@@ -399,37 +412,37 @@ describe("DamperFreezePrevention", () => {
       await whenTheTargetTemperatureIs(someTargetTemperatureInDegFx100 + (targetCompartmentMinimumTemperatureChangeInDegFx100 - 1));
 
       await after(minimumTemperatureChangeTimeInMinutes).inMinutes();
-      await after(10).inSec();
+      await delay(10 * msPerSec);
       await damperHeaterPercentageDutyCycleVoteShouldBe(100);
    });
 
-   it("should turn off damper heater after damper heater on time", async() => {
+   it("should turn off damper heater after damper heater on time", async () => {
       await providedTheDamperHeaterIsOnAndDamperIsOpen();
 
       await after(damperHeaterOnTimeInMinutes).inMinutes();
-      await after(1).inSec();
+      await delay(integrationTestDelayInMsec);
       await damperHeaterPercentageDutyCycleVoteShouldBe(0);
    });
 
-   it("should vote to open damper if damper is closed when damper heater is turned off", async() => {
+   it("should vote to open damper if damper is closed when damper heater is turned off", async () => {
       await providedTheDamperHeaterIsOnAndDamperIsClosed();
 
       await after(damperHeaterOnTimeInMinutes).inMinutes();
-      await after(1).inSec();
+      await delay(integrationTestDelayInMsec);
       await damperHeaterPercentageDutyCycleVoteShouldBe(0);
       await damperPositionShouldBeVoted(damperPosition.open);
    });
 
-   it("should vote to close damper if damper is open when damper heater is turned off", async() => {
+   it("should vote to close damper if damper is open when damper heater is turned off", async () => {
       await providedTheDamperHeaterIsOnAndDamperIsOpen();
 
       await after(damperHeaterOnTimeInMinutes).inMinutes();
-      await after(1).inSec();
+      await delay(integrationTestDelayInMsec);
       await damperHeaterPercentageDutyCycleVoteShouldBe(0);
       await damperPositionShouldBeVoted(damperPosition.closed);
    });
 
-   it("should vote don't care for damper position when current damper position changes to open after voting for open position then transition to Monitoring Temperature Change", async() => {
+   it("should vote don't care for damper position when current damper position changes to open after voting for open position then transition to Monitoring Temperature Change", async () => {
       await providedTheDamperHeaterHasBeenTurnedOffAndDamperVotedOpen();
 
       await whenTheDamperOpens();
@@ -437,7 +450,7 @@ describe("DamperFreezePrevention", () => {
       await damperPositionVoteShouldBeDontCare();
    });
 
-   it("should vote don't care for damper position when current damper position changes to open after voting for closed position then transition to Monitoring Temperature Change", async() => {
+   it("should vote don't care for damper position when current damper position changes to open after voting for closed position then transition to Monitoring Temperature Change", async () => {
       await providedTheDamperHeaterHasBeenTurnedOffAndDamperVotedClosed();
 
       await whenTheDamperCloses();
@@ -445,28 +458,28 @@ describe("DamperFreezePrevention", () => {
       await damperPositionVoteShouldBeDontCare();
    });
 
-   it("should transition to Idle after voting don't care for damper position if target thermistor is invalid", async() => {
+   it("should transition to Idle after voting don't care for damper position if target thermistor is invalid", async () => {
       await providedTheDamperPositionHasBeenVotedDontCareAndInMonitoringTemperatureChangeState();
 
       await whenTheTargetThermistorIsInvalid();
       await theDamperFreezePreventionFsmStateShouldBe(damperFreezePreventionFsmState.idle);
    });
 
-   it("should transition to Idle after voting don't care for damper position if source thermistor is invalid", async() => {
+   it("should transition to Idle after voting don't care for damper position if source thermistor is invalid", async () => {
       await providedTheDamperPositionHasBeenVotedDontCareAndInMonitoringTemperatureChangeState();
 
       await whenTheSourceThermistorIsInvalid();
       await theDamperFreezePreventionFsmStateShouldBe(damperFreezePreventionFsmState.idle);
    });
 
-   it("should transition to Idle after voting don't care for damper position if source temperature is equal to max source temperature for freeze prevention", async() => {
+   it("should transition to Idle after voting don't care for damper position if source temperature is equal to max source temperature for freeze prevention", async () => {
       await providedTheDamperPositionHasBeenVotedDontCareAndInMonitoringTemperatureChangeState();
 
       await whenTheSourceTemperatureIs(sourceCompartmentMaximumTemperatureToRunCheckInDegFx100);
       await theDamperFreezePreventionFsmStateShouldBe(damperFreezePreventionFsmState.idle);
    });
 
-   it("should transition to Idle after voting don't care for damper position if source temperature is greater than max source temperature for freeze prevention", async() => {
+   it("should transition to Idle after voting don't care for damper position if source temperature is greater than max source temperature for freeze prevention", async () => {
       await providedTheDamperPositionHasBeenVotedDontCareAndInMonitoringTemperatureChangeState();
 
       await whenTheSourceTemperatureIs(sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 + 1);

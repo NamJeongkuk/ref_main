@@ -186,7 +186,7 @@ describe("SingleEvapGrid", () => {
          await theCoolingSpeedShouldBe("CoolingSpeed_PullDown");
          await theGridAreaShouldBe("GridArea_1");
          await thePulldownStateShouldBe(true);
-         await theGridVotesShouldBe("CompressorSpeed_High", "FanSpeed_SuperHigh", "FanSpeed_Low", "DamperPosition_Closed");
+         await theGridVotesShouldBe("CompressorSpeed_Low", "FanSpeed_SuperHigh", "FanSpeed_Low", "DamperPosition_Closed");
       }
    });
 
@@ -201,7 +201,7 @@ describe("SingleEvapGrid", () => {
          await theCoolingModeShouldBe("CoolingMode_Freezer");
          await theCoolingSpeedShouldBe("CoolingSpeed_PullDown");
          await thePulldownStateShouldBe(true);
-         await theGridVotesShouldBe("CompressorSpeed_High", "FanSpeed_SuperHigh", "FanSpeed_Low", "DamperPosition_Closed");
+         await theGridVotesShouldBe("CompressorSpeed_Low", "FanSpeed_SuperHigh", "FanSpeed_Low", "DamperPosition_Closed");
       }
    });
 
@@ -217,7 +217,7 @@ describe("SingleEvapGrid", () => {
          await theCoolingSpeedShouldBe("CoolingSpeed_PullDown");
          await theGridAreaShouldBe("GridArea_2");
          await thePulldownStateShouldBe(true);
-         await theGridVotesShouldBe("CompressorSpeed_High", "FanSpeed_SuperHigh", "FanSpeed_Low", "DamperPosition_Open");
+         await theGridVotesShouldBe("CompressorSpeed_Low", "FanSpeed_SuperHigh", "FanSpeed_Low", "DamperPosition_Open");
       }
    });
 

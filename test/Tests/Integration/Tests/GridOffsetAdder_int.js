@@ -58,20 +58,20 @@ describe("OffsetAdder", () => {
    it("should limit to add the erds when result erd overflows", async () => {
       await providedTheModuleIsInitializedWithAllConfigurationErdsSetToZero();
 
-      await providedTheFreshFoodCabinetOffsetInDegFx100Is(INT16_MAX);
-      await theFreshFoodCabinetCrossAmbientOffsetsSumInDegFx100ShouldBe(INT16_MAX);
+      await providedTheFreshFoodCabinetOffsetInDegFx100Is(constants.INT16_MAX);
+      await theFreshFoodCabinetCrossAmbientOffsetsSumInDegFx100ShouldBe(constants.INT16_MAX);
 
       await providedTheFreshFoodCrossAmbientOffsetInDegFx100Is(1);
-      await theFreshFoodCabinetCrossAmbientOffsetsSumInDegFx100ShouldBe(INT16_MAX);
+      await theFreshFoodCabinetCrossAmbientOffsetsSumInDegFx100ShouldBe(constants.INT16_MAX);
    });
 
    it("should limit to add the erds when result erd underflows", async () => {
       await providedTheModuleIsInitializedWithAllConfigurationErdsSetToZero();
 
-      await providedTheFreshFoodCabinetOffsetInDegFx100Is(INT16_MIN);
-      await theFreshFoodCabinetCrossAmbientOffsetsSumInDegFx100ShouldBe(INT16_MIN);
+      await providedTheFreshFoodCabinetOffsetInDegFx100Is(constants.INT16_MIN);
+      await theFreshFoodCabinetCrossAmbientOffsetsSumInDegFx100ShouldBe(constants.INT16_MIN);
 
       await providedTheFreshFoodCrossAmbientOffsetInDegFx100Is(-1);
-      await theFreshFoodCabinetCrossAmbientOffsetsSumInDegFx100ShouldBe(INT16_MIN);
+      await theFreshFoodCabinetCrossAmbientOffsetsSumInDegFx100ShouldBe(constants.INT16_MIN);
    });
 })

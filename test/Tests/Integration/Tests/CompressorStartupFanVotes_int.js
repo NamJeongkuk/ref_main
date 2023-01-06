@@ -29,6 +29,11 @@ describe("CompressorStartupFanVotes,", () => {
       fanSpeedSuperHigh: "FanSpeed_SuperHigh"
    };
 
+   const voteState = {
+      voteCare: "Vote_Care",
+      voteDontCare: "Vote_DontCare"
+   };
+
    const after = (time) => ({
       inMsec: async () => {
          await After(time);
@@ -78,149 +83,152 @@ describe("CompressorStartupFanVotes,", () => {
    // Single evaporator number_evaporators = 1
    it("should vote for condenser fan speed low when compressor state changes to startup", async () => {
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().CondenserFanSpeedShouldBe(true, fanSpeed.fanSpeedLow);
+      await theVoteFor().CondenserFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedLow);
    });
 
    it("should vote don't care for condenser fan speed after start up time expires", async () => {
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().CondenserFanSpeedShouldBe(true, fanSpeed.fanSpeedLow);
+      await theVoteFor().CondenserFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedLow);
 
       await after(startUpTimeInSeconds).inSec();
-      await theVoteFor().CondenserFanSpeedShouldBe(false, fanSpeed.fanSpeedOff);
+      await delay(500);
+      await theVoteFor().CondenserFanSpeedShouldBe(voteState.voteDontCare, fanSpeed.fanSpeedOff);
    });
 
    it("should not vote for fresh food fan speed when compressor state changes to startup", async () => {
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(false, fanSpeed.fanSpeedOff);
+      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(voteState.voteDontCare, fanSpeed.fanSpeedOff);
    });
 
    it("should vote for freezer fan speed low when compressor state changes to startup", async () => {
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreezerEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedLow);
+      await theVoteFor().FreezerEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedLow);
    });
 
    it("should vote don't care for freezer fan speed after start up time expires", async () => {
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreezerEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedLow);
+      await theVoteFor().FreezerEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedLow);
 
       await after(startUpTimeInSeconds).inSec();
-      await theVoteFor().FreezerEvapFanSpeedShouldBe(false, fanSpeed.fanSpeedOff);
+      await delay(500);
+      await theVoteFor().FreezerEvapFanSpeedShouldBe(voteState.voteDontCare, fanSpeed.fanSpeedOff);
    });
 
    // Dual evaporator number_evaporators = 2
    xit("should vote for condenser fan speed low when compressor state changes to startup", async () => {
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().CondenserFanSpeedShouldBe(true, fanSpeed.fanSpeedLow);
+      await theVoteFor().CondenserFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedLow);
    });
 
    xit("should vote for fresh food fan speed low when compressor state changes to startup and cooling mode is fresh food", async () => {
       await theCoolingModeIs(coolingMode.coolingModeFreshFood);
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedLow);
+      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedLow);
    });
 
    xit("should vote for freezer fan speed off when compressor state changes to startup and cooling mode is fresh food", async () => {
       await theCoolingModeIs(coolingMode.coolingModeFreshFood);
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreezerEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
+      await theVoteFor().FreezerEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedOff);
    });
 
    xit("should vote for fresh food fan speed off when compressor state changes to startup and cooling mode is freezer", async () => {
       await theCoolingModeIs(coolingMode.coolingModeFreezer);
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
+      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedOff);
    });
 
    xit("should vote for freezer fan speed low when compressor state changes to startup and cooling mode is freezer", async () => {
       await theCoolingModeIs(coolingMode.coolingModeFreezer);
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreezerEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedLow);
+      await theVoteFor().FreezerEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedLow);
    });
 
    xit("should vote for fresh food fan speed off when compressor state changes to startup and cooling mode is convertible compartment", async () => {
       await theCoolingModeIs(coolingMode.coolingModeConvertibleCompartment);
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
+      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedOff);
    });
 
    xit("should vote for freezer fan speed low when compressor state changes to startup and cooling mode is convertible compartment", async () => {
       await theCoolingModeIs(coolingMode.coolingModeConvertibleCompartment);
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreezerEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedLow);
+      await theVoteFor().FreezerEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedLow);
    });
 
    xit("should vote for fresh food fan speed off when compressor state changes to startup and cooling mode is unknown", async () => {
       await theCoolingModeIs(coolingMode.coolingModeUnknown);
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
+      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedOff);
    });
 
    xit("should vote for freezer fan speed low when compressor state changes to startup and cooling mode is unknown", async () => {
       await theCoolingModeIs(coolingMode.coolingModeUnknown);
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreezerEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedLow);
+      await theVoteFor().FreezerEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedLow);
    });
 
    xit("should vote don't care for fresh food fan speed after start up time expires", async () => {
       await theCoolingModeIs(coolingMode.coolingModeFreshFood);
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedLow);
+      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedLow);
 
       await after(startUpTimeInSeconds).inSec();
-      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(false, fanSpeed.fanSpeedOff);
+      await delay(500);
+      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(voteState.voteDontCare, fanSpeed.fanSpeedOff);
    });
 
    // Triple evaporator number_evaporators = 3
    xit("should vote for condenser fan speed low when compressor state changes to startup", async () => {
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().CondenserFanSpeedShouldBe(true, fanSpeed.fanSpeedLow);
+      await theVoteFor().CondenserFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedLow);
    });
 
    xit("should vote for fresh food fan speed low when compressor state changes to startup and cooling mode is fresh food", async () => {
       await theCoolingModeIs(coolingMode.coolingModeFreshFood);
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedLow);
+      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedLow);
    });
 
    xit("should vote for freezer fan speed off when compressor state changes to startup and cooling mode is fresh food", async () => {
       await theCoolingModeIs(coolingMode.coolingModeFreshFood);
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreezerEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
+      await theVoteFor().FreezerEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedOff);
    });
 
    xit("should vote for fresh food fan speed off when compressor state changes to startup and cooling mode is freezer", async () => {
       await theCoolingModeIs(coolingMode.coolingModeFreezer);
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
+      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedOff);
    });
 
    xit("should vote for freezer fan speed low when compressor state changes to startup and cooling mode is freezer", async () => {
       await theCoolingModeIs(coolingMode.coolingModeFreezer);
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreezerEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedLow);
+      await theVoteFor().FreezerEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedLow);
    });
 
    xit("should vote for fresh food fan speed off when compressor state changes to startup and cooling mode is convertible compartment", async () => {
       await theCoolingModeIs(coolingMode.coolingModeConvertibleCompartment);
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
+      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedOff);
    });
 
    xit("should vote for freezer fan speed low when compressor state changes to startup and cooling mode is convertible compartment", async () => {
       await theCoolingModeIs(coolingMode.coolingModeConvertibleCompartment);
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreezerEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedLow);
+      await theVoteFor().FreezerEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedLow);
    });
 
    xit("should vote for fresh food fan speed off when compressor state changes to startup and cooling mode is unknown", async () => {
       await theCoolingModeIs(coolingMode.coolingModeUnknown);
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
+      await theVoteFor().FreshFoodEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedOff);
    });
 
    xit("should vote for freezer fan speed low when compressor state changes to startup and cooling mode is unknown", async () => {
       await theCoolingModeIs(coolingMode.coolingModeUnknown);
       await theCompressorStateIs(compressorState.compressorStateStartup);
-      await theVoteFor().FreezerEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedLow);
+      await theVoteFor().FreezerEvapFanSpeedShouldBe(voteState.voteCare, fanSpeed.fanSpeedLow);
    });
 })

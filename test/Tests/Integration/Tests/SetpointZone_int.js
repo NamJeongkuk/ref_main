@@ -13,15 +13,15 @@ describe("SetpointZone", () => {
 
    const providedTheVotedTemperatureOfThe = () => ({
       FreezerCompartmentIs: async (temperature, care) => {
-         let votedTemperature = { temperature: temperature, care: care };
+         let votedTemperature = { temperatureInDegFx100: temperature, care: care };
          await rockhopper.write("Erd_FreezerSetpoint_FactoryVote", votedTemperature)
       },
       FreshFoodCompartmentIs: async (temperature, care) => {
-         let votedTemperature = { temperature: temperature, care: care };
+         let votedTemperature = { temperatureInDegFx100: temperature, care: care };
          await rockhopper.write("Erd_FreshFoodSetpoint_FactoryVote", votedTemperature)
       },
       ConvertibleCompartmentCompartmentIs: async (temperature, care) => {
-         let votedTemperature = { temperature: temperature, care: care };
+         let votedTemperature = { temperatureInDegFx100: temperature, care: care };
          await rockhopper.write("Erd_ConvertibleCompartmentSetpoint_FactoryVote", votedTemperature)
       }
    });
