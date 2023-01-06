@@ -15,7 +15,7 @@ static const PercentageDutyCycleVote_t defaultData = {
 };
 
 static const PercentageDutyCycleVoteToPwmDutyCycleConverterConfig_t dutyCycleToPercentageCalculatorConfig = {
-   .inputPercentageDutyCycleVoteErd = Erd_FillTubeHeater_ResolvedVote,
+   .inputPercentageDutyCycleVoteErd = Erd_AluminumMoldIceMakerFillTubeHeater_ResolvedVote,
    .outputPwmDutyCycleErd = Erd_FillTubeHeater_Pwm
 };
 
@@ -35,9 +35,9 @@ static bool VotingErdCareDelegate(const void *votingErdData)
 static const ErdResolverConfiguration_t fillTubeHeaterErdResolverConfiguration = {
    .votingErdCare = VotingErdCareDelegate,
    .defaultData = &defaultData,
-   .winningVoterErd = Erd_FillTubeHeater_WinningVoteErd,
-   .resolvedStateErd = Erd_FillTubeHeater_ResolvedVote,
-   .numberOfVotingErds = (Erd_FillTubeHeater_ContinuousVote - Erd_FillTubeHeater_WinningVoteErd)
+   .winningVoterErd = Erd_AluminumMoldIceMakerFillTubeHeater_WinningVoteErd,
+   .resolvedStateErd = Erd_AluminumMoldIceMakerFillTubeHeater_ResolvedVote,
+   .numberOfVotingErds = (Erd_AluminumMoldIceMakerFillTubeHeater_ContinuousVote - Erd_AluminumMoldIceMakerFillTubeHeater_WinningVoteErd)
 };
 
 void FillTubeHeaterVotingFrameworkPlugin_Init(FillTubeHeaterVotingFrameworkPlugin_t *instance, I_DataModel_t *dataModel)

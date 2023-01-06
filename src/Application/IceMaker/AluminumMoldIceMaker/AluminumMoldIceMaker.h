@@ -11,6 +11,7 @@
 #include "I_DataModel.h"
 #include "AluminumMoldIceMakerData.h"
 #include "Hsm.h"
+#include "Timer.h"
 
 typedef struct
 {
@@ -25,6 +26,12 @@ typedef struct
    Erd_t feelerArmIsReadyToEnterHarvestErd; // bool
    Erd_t iceMakerEnabledErd; // bool
    Erd_t sabbathModeErd; // bool
+   Erd_t fillTubeHeaterVoteErd; // PercentageDutyCycleVote_t
+   Erd_t moldHeaterControlRequestErd; // IceMakerMoldHeaterControlRequest_t
+   Erd_t rakeCompletedRevolutionErd; // bool
+   Erd_t moldThermistorIsValidErd; // bool
+   Erd_t skipFillRequestErd; // bool
+   Erd_t rakeControlRequestErd; // bool
 } AluminumMoldIceMakerConfig_t;
 
 typedef struct
@@ -34,6 +41,9 @@ typedef struct
       Hsm_t hsm;
       I_DataModel_t *dataModel;
       EventSubscription_t dataModelSubscription;
+      Timer_t fillTubeHeaterTimer;
+      Timer_t maxHarvestTimer;
+      Timer_t minimumHeaterOnTimer;
       const AluminumMoldIceMakerConfig_t *config;
       const AluminumMoldIceMakerData_t *iceMakerParametricData;
    } _private;

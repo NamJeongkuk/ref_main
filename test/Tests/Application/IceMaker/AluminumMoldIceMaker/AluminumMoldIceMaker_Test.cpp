@@ -11,6 +11,8 @@ extern "C"
 #include "AluminumMoldIceMakerHsmState.h"
 #include "PersonalityParametricData.h"
 #include "Constants_Binary.h"
+#include "Constants_Time.h"
+#include "TddPersonality.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -29,16 +31,24 @@ static const AluminumMoldIceMakerConfig_t config = {
    .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
    .feelerArmMonitoringRequestErd = Erd_FeelerArmMonitoringRequest,
    .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
-   .iceMakerFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureInDegFx100,
+   .iceMakerFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
-   .iceMakerEnabledErd = Erd_IceMakerEnabledResolved,
-   .sabbathModeErd = Erd_SabbathMode
+   .iceMakerEnabledErd = Erd_IceMakerEnabledOverrideResolved,
+   .sabbathModeErd = Erd_SabbathMode,
+   .fillTubeHeaterVoteErd = Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote,
+   .moldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
+   .rakeCompletedRevolutionErd = Erd_AluminumMoldIceMakerRakeCompletedRevolution,
+   .moldThermistorIsValidErd = Erd_AluminumMoldIceMakerThermistorIsValidResolved,
+   .skipFillRequestErd = Erd_AluminumMoldIceMakerSkipFillRequest,
+   .rakeControlRequestErd = Erd_AluminumMoldIceMakerRakeControlRequest
 };
 
 TEST_GROUP(AluminumMoldIceMaker)
 {
    AluminumMoldIceMaker_t instance;
    ReferDataModel_TestDouble_t referDataModelTestDouble;
+   TimerModule_TestDouble_t *timerModuleTestDouble;
+
    I_DataModel_t *dataModel;
    const AluminumMoldIceMakerData_t *iceMakerData;
 
@@ -46,8 +56,14 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       ReferDataModel_TestDouble_Init(&referDataModelTestDouble);
       dataModel = referDataModelTestDouble.dataModel;
+      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&referDataModelTestDouble);
 
       iceMakerData = PersonalityParametricData_Get(dataModel)->aluminumMoldIceMakerData;
+   }
+
+   void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
+   {
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
    }
 
    void TheModuleIsInitialized()
@@ -145,7 +161,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       TemperatureDegFx100_t temperature = iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100;
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMaker_FilteredTemperatureInDegFx100,
+         Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
          &temperature);
    }
 
@@ -154,7 +170,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       TemperatureDegFx100_t temperature = iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1;
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMaker_FilteredTemperatureInDegFx100,
+         Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
          &temperature);
    }
 
@@ -204,7 +220,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMakerEnabledResolved,
+         Erd_IceMakerEnabledOverrideResolved,
          &state);
    }
 
@@ -237,7 +253,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
    }
 
-   void SabbathModeIsDisabledAndAluminumMoldIceMakerIsHarvest()
+   void SabbathModeIsDisabledAndAluminumMoldIceMakerIsInHarvest()
    {
       Given IceMakerIs(ENABLED);
       Given SabbathModeIs(DISABLED);
@@ -251,7 +267,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
    }
 
-   void IceMakerIsEnabledAndAluminumMoldIceMakerIsHarvest()
+   void IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest()
    {
       Given IceMakerIs(ENABLED);
       Given HarvestCountIsReadyToHarvest();
@@ -262,6 +278,100 @@ TEST_GROUP(AluminumMoldIceMaker)
 
       When IceMakerTemperatureIsReadyToHarvest();
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+   }
+
+   void IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvestFix()
+   {
+      Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+      After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN - 1);
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+      After(1);
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+   }
+
+   void FillTubeHeaterVoteShouldBe(PercentageDutyCycle_t expectedDutyCycle)
+   {
+      PercentageDutyCycleVote_t vote;
+      DataModel_Read(
+         dataModel,
+         Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote,
+         &vote);
+
+      CHECK_EQUAL(expectedDutyCycle, vote.percentageDutyCycle);
+      CHECK_TRUE(vote.care);
+   }
+
+   void MoldHeaterControlRequestForHarvestShouldBe(IceMakerMoldHeaterControlRequest_t expectedRequest)
+   {
+      IceMakerMoldHeaterControlRequest_t actualRequest;
+      DataModel_Read(
+         dataModel,
+         Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
+         &actualRequest);
+
+      CHECK_EQUAL(expectedRequest.enable, actualRequest.enable);
+      CHECK_EQUAL(expectedRequest.skipInitialOnTime, actualRequest.skipInitialOnTime);
+      CHECK_EQUAL(expectedRequest.onTemperatureInDegFx100, actualRequest.onTemperatureInDegFx100);
+      CHECK_EQUAL(expectedRequest.offTemperatureInDegFx100, actualRequest.offTemperatureInDegFx100);
+   }
+
+   void MoldHeaterControlRequestForHarvestShouldBeCleared()
+   {
+      IceMakerMoldHeaterControlRequest_t actual;
+      DataModel_Read(
+         dataModel,
+         Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
+         &actual);
+
+      CHECK_EQUAL(false, actual.enable);
+   }
+
+   void MoldThermistorIsValid()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerThermistorIsValidResolved, set);
+   }
+
+   void MoldThermistorIsInvalid()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerThermistorIsValidResolved, clear);
+   }
+
+   void SkipFillRequestIsSet()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerSkipFillRequest, set);
+   }
+
+   void SkipFillRequestIsClear()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerSkipFillRequest, clear);
+   }
+
+   void RakeCompletesFullRevolution()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeCompletedRevolution, set);
+   }
+
+   void RakeDidNotCompleteFullRevolution()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeCompletedRevolution, clear);
+   }
+
+   void SkipFillRequestShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_AluminumMoldIceMakerSkipFillRequest, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void RakeControllerRequestShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_AluminumMoldIceMakerRakeControlRequest, &actual);
+
+      CHECK_EQUAL(expected, actual);
    }
 };
 
@@ -426,7 +536,7 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromFreezeToIdleFreezeWhenSabbathIsEn
 
 TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToIdleFreezeWhenSabbathIsEnabled)
 {
-   Given SabbathModeIsDisabledAndAluminumMoldIceMakerIsHarvest();
+   Given SabbathModeIsDisabledAndAluminumMoldIceMakerIsInHarvest();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    When SabbathModeIs(ENABLED);
@@ -451,7 +561,7 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromFreezeToIdleFreezeWhenIceMakerIsD
 
 TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToIdleFreezeWhenIceMakerIsDisabled)
 {
-   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsHarvest();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    When IceMakerIs(DISABLED);
@@ -464,4 +574,831 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromIdleFreezeToFreezeWhenIceMakerIsE
 
    When IceMakerIs(ENABLED);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldVoteToTurnOnFillTubeHeaterWithFreezeThawFillTubeHeaterDutyCycleOnEntryToHarvest)
+{
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+   FillTubeHeaterVoteShouldBe(iceMakerData->harvestData.freezeThawFillTubeHeaterDutyCyclePercentage);
+}
+
+TEST(AluminumMoldIceMaker, ShouldVoteToTurnOffFillTubeHeaterAfterFillTubeHeaterOnTime)
+{
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   FillTubeHeaterVoteShouldBe(iceMakerData->harvestData.freezeThawFillTubeHeaterDutyCyclePercentage);
+
+   After(1);
+   FillTubeHeaterVoteShouldBe(PercentageDutyCycle_Min);
+}
+
+TEST(AluminumMoldIceMaker, ShouldRequestRakeControllerAfterInitialMinimumHeaterOnTimeOnEntryToHarvest)
+{
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   RakeControllerRequestShouldBe(CLEAR);
+
+   After(1);
+   RakeControllerRequestShouldBe(SET);
+}
+
+TEST(AluminumMoldIceMaker, ShouldSetMoldHeaterControlRequestOnEntryToHarvest)
+{
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   IceMakerMoldHeaterControlRequest_t expectedRequest;
+   expectedRequest.enable = true;
+   expectedRequest.skipInitialOnTime = false;
+   expectedRequest.onTemperatureInDegFx100 = iceMakerData->harvestData.heaterOnTemperatureInDegFx100;
+   expectedRequest.offTemperatureInDegFx100 = iceMakerData->harvestData.heaterOffTemperatureInDegFx100;
+   MoldHeaterControlRequestForHarvestShouldBe(expectedRequest);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToHarvestFixWhenMaxHarvestTimeReached)
+{
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN - 1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+}
+
+TEST(AluminumMoldIceMaker, ShouldVoteFillTubeHeaterOffWhenTransitioningFromHarvestToHarvestFix)
+{
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN - 1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+   FillTubeHeaterVoteShouldBe(iceMakerData->harvestData.freezeThawFillTubeHeaterDutyCyclePercentage);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+   FillTubeHeaterVoteShouldBe(PercentageDutyCycle_Min);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToThermistorFaultWhenMoldThermistorIsInvalid)
+{
+   Given MoldThermistorIsValid();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   When MoldThermistorIsInvalid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestFixToThermistorFaultWhenMoldThermistorIsInvalid)
+{
+   Given MoldThermistorIsValid();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvestFix();
+
+   When MoldThermistorIsInvalid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToFreezeStateWhenFillTubeHeaterTimerExpiredAndRakeHasCompletedFullRevolutionAndSkipFillRequestIsSetAndFillTubeHeaterOnTimeIsEqualToMaxHarvestTime)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsSet();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToFillStateWhenFillTubeHeaterTimerExpiredAndRakeHasCompletedFullRevolutionAndSkipFillRequestIsClearAndFillTubeHeaterOnTimeIsEqualToMaxHarvestTime)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsClear();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldClearRakeControllerRequestWhenRakeCompletesFullRevolutionDuringHarvest)
+{
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds * MSEC_PER_SEC);
+   RakeControllerRequestShouldBe(SET);
+
+   When RakeCompletesFullRevolution();
+   RakeControllerRequestShouldBe(CLEAR);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToHarvestFixStateWhenRakeHasNotCompletedFullRevolutionBeforeFillTubeHeaterTimerHasExpiredAndSkipFillRequestIsSetAndFillTubeHeaterOnTimeIsEqualToMaxHarvestTime)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsSet();
+   Given RakeDidNotCompleteFullRevolution();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+}
+
+TEST(AluminumMoldIceMaker, ShouldClearRakeControllerRequestWhenTransitioningFromHarvestToHarvestFixStateWhenRakeHasNotCompletedFullRevolutionBeforeFillTubeHeaterTimerHasExpiredAndSkipFillRequestIsSetAndFillTubeHeaterOnTimeIsEqualToMaxHarvestTime)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsSet();
+   Given RakeDidNotCompleteFullRevolution();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+   RakeControllerRequestShouldBe(SET);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+   RakeControllerRequestShouldBe(CLEAR);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToHarvestFixStateWhenRakeHasNotCompletedFullRevolutionBeforeFillTubeHeaterTimerHasExpiredAndSkipFillRequestIsClearAndFillTubeHeaterOnTimeIsEqualToMaxHarvestTime)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsClear();
+   Given RakeDidNotCompleteFullRevolution();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToHarvestFixStateWhenRakeHasNotCompletedFullRevolutionBeforeMaxHarvestTimeHasExpiredAndSkipFillRequestIsSet)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsSet();
+   Given RakeDidNotCompleteFullRevolution();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN - 1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToHarvestFixStateWhenRakeHasNotCompletedFullRevolutionBeforeMaxHarvestTimeHasExpiredAndSkipFillRequestIsClear)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsClear();
+   Given RakeDidNotCompleteFullRevolution();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN - 1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+}
+
+TEST(AluminumMoldIceMaker, ShouldDisableMoldHeaterControlRequestWhenTransitioningFromHarvestToHarvestFix)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsSet();
+   Given RakeDidNotCompleteFullRevolution();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN - 1);
+
+   IceMakerMoldHeaterControlRequest_t harvestRequestOnEntry;
+   harvestRequestOnEntry.enable = true;
+   harvestRequestOnEntry.skipInitialOnTime = false;
+   harvestRequestOnEntry.onTemperatureInDegFx100 = iceMakerData->harvestData.heaterOnTemperatureInDegFx100;
+   harvestRequestOnEntry.offTemperatureInDegFx100 = iceMakerData->harvestData.heaterOffTemperatureInDegFx100;
+   MoldHeaterControlRequestForHarvestShouldBe(harvestRequestOnEntry);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+   MoldHeaterControlRequestForHarvestShouldBeCleared();
+}
+
+TEST(AluminumMoldIceMaker, ShouldClearSkipFillFlagWhenTransitioningFromHarvestToHarvestFix)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsSet();
+   Given RakeDidNotCompleteFullRevolution();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN - 1);
+   SkipFillRequestShouldBe(SET);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+   SkipFillRequestShouldBe(CLEAR);
+}
+
+TEST(AluminumMoldIceMaker, ShouldNotTransitionAfterMaxHarvestTimerExpiresIfAlreadyExitedHarvest)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsSet();
+   Given RakeDidNotCompleteFullRevolution();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   When MoldThermistorIsInvalid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+
+   After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+}
+
+TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime)
+{
+   AluminumMoldIceMaker_t instance;
+   ReferDataModel_TestDouble_t referDataModelTestDouble;
+   TimerModule_TestDouble_t *timerModuleTestDouble;
+
+   I_DataModel_t *dataModel;
+   const AluminumMoldIceMakerData_t *iceMakerData;
+
+   void setup()
+   {
+      ReferDataModel_TestDouble_Init(&referDataModelTestDouble, TddPersonality_DevelopmentSingleEvapFillTubeHeaterOnTimeLessThanMaxHarvestTime);
+      dataModel = referDataModelTestDouble.dataModel;
+      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&referDataModelTestDouble);
+
+      iceMakerData = PersonalityParametricData_Get(dataModel)->aluminumMoldIceMakerData;
+   }
+
+   void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
+   {
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
+   }
+
+   void TheModuleIsInitialized()
+   {
+      AluminumMoldIceMaker_Init(&instance, dataModel, &config);
+   }
+
+   void AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_t expected)
+   {
+      AluminumMoldIceMakerHsmState_t actual;
+      DataModel_Read(
+         dataModel,
+         Erd_AluminumMoldIceMakerHsmState,
+         &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void HarvestCountIsReadyToHarvest()
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_HarvestCountIsReadyToHarvest,
+         set);
+   }
+
+   void HarvestCountIsNotReadyToHarvest()
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_HarvestCountIsReadyToHarvest,
+         clear);
+   }
+
+   void IceMakerTemperatureIsNotReadyToHarvest()
+   {
+      TemperatureDegFx100_t temperature = iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100;
+      DataModel_Write(
+         dataModel,
+         Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+         &temperature);
+   }
+
+   void IceMakerTemperatureIsReadyToHarvest()
+   {
+      TemperatureDegFx100_t temperature = iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1;
+      DataModel_Write(
+         dataModel,
+         Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+         &temperature);
+   }
+
+   void FeelerArmIsReadyToEnterHarvest()
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_FeelerArmIsReadyToEnterHarvest,
+         set);
+   }
+
+   void FeelerArmIsNotReadyToEnterHarvest()
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_FeelerArmIsReadyToEnterHarvest,
+         clear);
+   }
+
+   void IceMakerIs(bool state)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_IceMakerEnabledOverrideResolved,
+         &state);
+   }
+
+   void IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest()
+   {
+      Given IceMakerIs(ENABLED);
+      Given HarvestCountIsReadyToHarvest();
+      Given IceMakerTemperatureIsNotReadyToHarvest();
+      Given FeelerArmIsReadyToEnterHarvest();
+      Given TheModuleIsInitialized();
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+
+      When IceMakerTemperatureIsReadyToHarvest();
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+   }
+
+   void FillTubeHeaterVoteShouldBe(PercentageDutyCycle_t dutyCycle)
+   {
+      PercentageDutyCycleVote_t vote;
+      DataModel_Read(
+         dataModel,
+         Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote,
+         &vote);
+
+      CHECK_EQUAL(dutyCycle, vote.percentageDutyCycle);
+      CHECK_TRUE(vote.care);
+   }
+
+   void MoldHeaterControlRequestForHarvestShouldBe(IceMakerMoldHeaterControlRequest_t request)
+   {
+      IceMakerMoldHeaterControlRequest_t actual;
+      DataModel_Read(
+         dataModel,
+         Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
+         &actual);
+
+      CHECK_EQUAL(request.enable, actual.enable);
+      CHECK_EQUAL(request.skipInitialOnTime, actual.skipInitialOnTime);
+      CHECK_EQUAL(request.onTemperatureInDegFx100, actual.onTemperatureInDegFx100);
+      CHECK_EQUAL(request.offTemperatureInDegFx100, actual.offTemperatureInDegFx100);
+   }
+
+   void MoldThermistorIsValid()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerThermistorIsValidResolved, set);
+   }
+
+   void MoldThermistorIsInvalid()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerThermistorIsValidResolved, clear);
+   }
+
+   void SkipFillRequestIsSet()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerSkipFillRequest, set);
+   }
+
+   void SkipFillRequestIsClear()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerSkipFillRequest, clear);
+   }
+
+   void RakeCompletesFullRevolution()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeCompletedRevolution, set);
+   }
+
+   void RakeDidNotCompleteFullRevolution()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeCompletedRevolution, clear);
+   }
+
+   void RakeControllerRequestShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_AluminumMoldIceMakerRakeControlRequest, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+};
+
+TEST(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime, ShouldVoteToTurnOffFillTubeHeaterAfterFillTubeHeaterOnTime)
+{
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   FillTubeHeaterVoteShouldBe(iceMakerData->harvestData.freezeThawFillTubeHeaterDutyCyclePercentage);
+
+   After(1);
+   FillTubeHeaterVoteShouldBe(PercentageDutyCycle_Min);
+}
+
+TEST(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime, ShouldTransitionFromHarvestToFreezeStateWhenFillTubeHeaterTimerExpiredAndRakeHasCompletedFullRevolutionAndSkipFillRequestIsSet)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsSet();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime, ShouldTransitionFromHarvestToFillStateWhenFillTubeHeaterTimerExpiredAndRakeHasCompletedFullRevolutionAndSkipFillRequestIsClear)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsClear();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime, ShouldTransitionFromHarvestToFreezeStateWhenRakeCompletesFullRevolutionAndFillTubeHeaterTimerHasExpiredAndSkipFillRequestIsSet)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsSet();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime, ShouldTransitionFromHarvestToFillStateWhenRakeCompletesFullRevolutionAndFillTubeHeaterTimerHasExpiredAndSkipFillRequestIsClear)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsClear();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime, ShouldTransitionFromHarvestToHarvestFixStateWhenRakeHasNotCompletedFullRevolutionBeforeMaxHarvestTimeHasExpiredAndSkipFillRequestIsSet)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsSet();
+   Given RakeDidNotCompleteFullRevolution();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN - 1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+}
+
+TEST(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime, ShouldTransitionFromHarvestToHarvestFixStateWhenRakeHasNotCompletedFullRevolutionBeforeMaxHarvestTimeHasExpiredAndSkipFillRequestIsClear)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsClear();
+   Given RakeDidNotCompleteFullRevolution();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN - 1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+}
+
+TEST(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime, ShouldClearRakeControllerRequestWhenTransitioningFromHarvestToHarvestFixStateWhenRakeHasNotCompletedFullRevolutionBeforeFillTubeHeaterTimerHasExpiredAndSkipFillRequestIsSetAndFillTubeHeaterOnTimeIsEqualToMaxHarvestTime)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsSet();
+   Given RakeDidNotCompleteFullRevolution();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN - 1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+   RakeControllerRequestShouldBe(SET);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+   RakeControllerRequestShouldBe(CLEAR);
+}
+
+TEST(AluminumMoldIceMaker, ShouldNotTransitionAfterFillTubeHeaterTimerExpiresWhenExitConditionsToGoToFillAreMetIfAlreadyExitedHarvest)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsClear();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   When MoldThermistorIsInvalid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+}
+
+TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterZeroDutyCycle)
+{
+   AluminumMoldIceMaker_t instance;
+   ReferDataModel_TestDouble_t referDataModelTestDouble;
+   TimerModule_TestDouble_t *timerModuleTestDouble;
+
+   I_DataModel_t *dataModel;
+   const AluminumMoldIceMakerData_t *iceMakerData;
+
+   void setup()
+   {
+      ReferDataModel_TestDouble_Init(&referDataModelTestDouble, TddPersonality_DevelopmentSingleEvapFillTubeHeaterZeroDutyCycle);
+      dataModel = referDataModelTestDouble.dataModel;
+      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&referDataModelTestDouble);
+
+      iceMakerData = PersonalityParametricData_Get(dataModel)->aluminumMoldIceMakerData;
+   }
+
+   void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
+   {
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
+   }
+
+   void TheModuleIsInitialized()
+   {
+      AluminumMoldIceMaker_Init(&instance, dataModel, &config);
+   }
+
+   void AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_t expected)
+   {
+      AluminumMoldIceMakerHsmState_t actual;
+      DataModel_Read(
+         dataModel,
+         Erd_AluminumMoldIceMakerHsmState,
+         &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void HarvestCountIsReadyToHarvest()
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_HarvestCountIsReadyToHarvest,
+         set);
+   }
+
+   void IceMakerTemperatureIsNotReadyToHarvest()
+   {
+      TemperatureDegFx100_t temperature = iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100;
+      DataModel_Write(
+         dataModel,
+         Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+         &temperature);
+   }
+
+   void IceMakerTemperatureIsReadyToHarvest()
+   {
+      TemperatureDegFx100_t temperature = iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1;
+      DataModel_Write(
+         dataModel,
+         Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+         &temperature);
+   }
+
+   void FeelerArmIsReadyToEnterHarvest()
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_FeelerArmIsReadyToEnterHarvest,
+         set);
+   }
+
+   void IceMakerIs(bool state)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_IceMakerEnabledOverrideResolved,
+         &state);
+   }
+
+   void IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest()
+   {
+      Given IceMakerIs(ENABLED);
+      Given HarvestCountIsReadyToHarvest();
+      Given IceMakerTemperatureIsNotReadyToHarvest();
+      Given FeelerArmIsReadyToEnterHarvest();
+      Given TheModuleIsInitialized();
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+
+      When IceMakerTemperatureIsReadyToHarvest();
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+   }
+
+   void MoldThermistorIsValid()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerThermistorIsValidResolved, set);
+   }
+
+   void SkipFillRequestIsSet()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerSkipFillRequest, set);
+   }
+
+   void SkipFillRequestIsClear()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerSkipFillRequest, clear);
+   }
+
+   void RakeCompletesFullRevolution()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeCompletedRevolution, set);
+   }
+};
+
+TEST(AluminumMoldIceMaker_FillTubeHeaterZeroDutyCycle, ShouldTransitionFromHarvestToFreezeStateWhenRakeCompletesFullRevolutionAndFillTubeHeaterDutyCycleIsZeroAndSkipFillRequestIsSet)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsSet();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMaker_FillTubeHeaterZeroDutyCycle, ShouldTransitionFromHarvestToFillStateWhenRakeCompletesFullRevolutionAndFillTubeHeaterDutyCycleIsZeroAndSkipFillRequestIsClear)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsClear();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterZeroOnTime)
+{
+   AluminumMoldIceMaker_t instance;
+   ReferDataModel_TestDouble_t referDataModelTestDouble;
+   TimerModule_TestDouble_t *timerModuleTestDouble;
+
+   I_DataModel_t *dataModel;
+   const AluminumMoldIceMakerData_t *iceMakerData;
+
+   void setup()
+   {
+      ReferDataModel_TestDouble_Init(&referDataModelTestDouble, TddPersonality_DevelopmentSingleEvapFillTubeHeaterZeroOnTime);
+      dataModel = referDataModelTestDouble.dataModel;
+      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&referDataModelTestDouble);
+
+      iceMakerData = PersonalityParametricData_Get(dataModel)->aluminumMoldIceMakerData;
+   }
+
+   void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
+   {
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
+   }
+
+   void TheModuleIsInitialized()
+   {
+      AluminumMoldIceMaker_Init(&instance, dataModel, &config);
+   }
+
+   void AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_t expected)
+   {
+      AluminumMoldIceMakerHsmState_t actual;
+      DataModel_Read(
+         dataModel,
+         Erd_AluminumMoldIceMakerHsmState,
+         &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void HarvestCountIsReadyToHarvest()
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_HarvestCountIsReadyToHarvest,
+         set);
+   }
+
+   void IceMakerTemperatureIsNotReadyToHarvest()
+   {
+      TemperatureDegFx100_t temperature = iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100;
+      DataModel_Write(
+         dataModel,
+         Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+         &temperature);
+   }
+
+   void IceMakerTemperatureIsReadyToHarvest()
+   {
+      TemperatureDegFx100_t temperature = iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1;
+      DataModel_Write(
+         dataModel,
+         Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+         &temperature);
+   }
+
+   void FeelerArmIsReadyToEnterHarvest()
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_FeelerArmIsReadyToEnterHarvest,
+         set);
+   }
+
+   void IceMakerIs(bool state)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_IceMakerEnabledOverrideResolved,
+         &state);
+   }
+
+   void IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest()
+   {
+      Given IceMakerIs(ENABLED);
+      Given HarvestCountIsReadyToHarvest();
+      Given IceMakerTemperatureIsNotReadyToHarvest();
+      Given FeelerArmIsReadyToEnterHarvest();
+      Given TheModuleIsInitialized();
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+
+      When IceMakerTemperatureIsReadyToHarvest();
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+   }
+
+   void MoldThermistorIsValid()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerThermistorIsValidResolved, set);
+   }
+
+   void SkipFillRequestIsSet()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerSkipFillRequest, set);
+   }
+
+   void SkipFillRequestIsClear()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerSkipFillRequest, clear);
+   }
+
+   void RakeCompletesFullRevolution()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeCompletedRevolution, set);
+   }
+};
+
+TEST(AluminumMoldIceMaker_FillTubeHeaterZeroOnTime, ShouldTransitionFromHarvestToFreezeStateWhenRakeCompletesFullRevolutionAndFillTubeHeaterHeaterTimeIsZeroAndSkipFillRequestIsSet)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsSet();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMaker_FillTubeHeaterZeroOnTime, ShouldTransitionFromHarvestToFillStateWhenRakeCompletesFullRevolutionAndFillTubeHeaterHeaterTimeIsZeroAndSkipFillRequestIsClear)
+{
+   Given MoldThermistorIsValid();
+   Given SkipFillRequestIsClear();
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
 }

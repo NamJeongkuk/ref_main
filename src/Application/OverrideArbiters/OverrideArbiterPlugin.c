@@ -186,20 +186,52 @@ static const OverrideArbiterConfiguration_t convertibleCompartmentEvapThermistor
    NUM_ELEMENTS(convertibleCompartmentEvapThermistorValidOverrideArbiterRequestErdList)
 };
 
-static const Erd_t iceMakerFilteredTemperatureOverrideRequestErdList[] = {
+static const Erd_t aluminumMoldIceMakerFilteredTemperatureOverrideRequestErdList[] = {
    Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideRequest
 };
 
-static const Erd_t iceMakerFilteredTemperatureValueErdList[] = {
+static const Erd_t aluminumMoldIceMakerFilteredTemperatureValueErdList[] = {
    Erd_AluminumMoldIceMaker_FilteredTemperatureInDegFx100,
    Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100
 };
 
-static const OverrideArbiterConfiguration_t iceMakerFilteredTemperatureArbiterConfiguration = {
-   iceMakerFilteredTemperatureOverrideRequestErdList,
-   iceMakerFilteredTemperatureValueErdList,
+static const OverrideArbiterConfiguration_t aluminumMoldIceMakerFilteredTemperatureArbiterConfiguration = {
+   aluminumMoldIceMakerFilteredTemperatureOverrideRequestErdList,
+   aluminumMoldIceMakerFilteredTemperatureValueErdList,
    Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
-   NUM_ELEMENTS(iceMakerFilteredTemperatureOverrideRequestErdList)
+   NUM_ELEMENTS(aluminumMoldIceMakerFilteredTemperatureOverrideRequestErdList)
+};
+
+static const Erd_t aluminumMoldIceMakerThermistorValidOverrideArbiterRequestErdList[] = {
+   Erd_AluminumMoldIceMakerThermistorIsValidOverrideRequest
+};
+
+static const Erd_t aluminumMoldIceMakerThermistorValidValueErdList[] = {
+   Erd_AluminumMoldIceMakerThermistorIsValid,
+   Erd_AluminumMoldIceMakerThermistorIsValidOverrideValue
+};
+
+static const OverrideArbiterConfiguration_t aluminumMoldIceMakerThermistorValidArbiterConfiguration = {
+   aluminumMoldIceMakerThermistorValidOverrideArbiterRequestErdList,
+   aluminumMoldIceMakerThermistorValidValueErdList,
+   Erd_AluminumMoldIceMakerThermistorIsValidResolved,
+   NUM_ELEMENTS(aluminumMoldIceMakerThermistorValidOverrideArbiterRequestErdList)
+};
+
+static const Erd_t iceMakerEnabledOverrideRequestErdList[] = {
+   Erd_IceMakerEnabledOverrideRequest
+};
+
+static const Erd_t iceMakerEnabledOverrideValueErdList[] = {
+   Erd_IceMakerEnabledResolved,
+   Erd_IceMakerEnabledOverrideValue
+};
+
+static const OverrideArbiterConfiguration_t iceMakerEnabledOverrideConfiguration = {
+   iceMakerEnabledOverrideRequestErdList,
+   iceMakerEnabledOverrideValueErdList,
+   Erd_IceMakerEnabledOverrideResolved,
+   NUM_ELEMENTS(iceMakerEnabledOverrideRequestErdList)
 };
 
 static struct
@@ -215,7 +247,9 @@ static struct
    OverrideArbiter_t convertibleCompartmentCabinetThermistorValidArbiter;
    OverrideArbiter_t ambientThermistorValidArbiter;
    OverrideArbiter_t convertibleCompartmentEvapThermistorValidArbiter;
-   OverrideArbiter_t iceMakerFilteredTemperatureArbiter;
+   OverrideArbiter_t aluminumMoldIceMakerFilteredTemperatureArbiter;
+   OverrideArbiter_t aluminumMoldIceMakerThermistorValidArbiter;
+   OverrideArbiter_t iceMakerEnabledArbiter;
 } instance;
 
 static void InitializeFilteredTemperatureArbiters(I_DataModel_t *dataModel)
@@ -241,9 +275,9 @@ static void InitializeFilteredTemperatureArbiters(I_DataModel_t *dataModel)
       &ambientFilteredTemperatureArbiterConfiguration);
 
    OverrideArbiter_Init(
-      &instance.iceMakerFilteredTemperatureArbiter,
+      &instance.aluminumMoldIceMakerFilteredTemperatureArbiter,
       DataModel_AsDataSource(dataModel),
-      &iceMakerFilteredTemperatureArbiterConfiguration);
+      &aluminumMoldIceMakerFilteredTemperatureArbiterConfiguration);
 }
 
 static void InitializeThermistorIsValidArbiters(I_DataModel_t *dataModel)
@@ -282,12 +316,22 @@ static void InitializeThermistorIsValidArbiters(I_DataModel_t *dataModel)
       &instance.convertibleCompartmentEvapThermistorValidArbiter,
       DataModel_AsDataSource(dataModel),
       &convertibleCompartmentEvapThermistorValidArbiterConfiguration);
+
+   OverrideArbiter_Init(
+      &instance.aluminumMoldIceMakerThermistorValidArbiter,
+      DataModel_AsDataSource(dataModel),
+      &aluminumMoldIceMakerThermistorValidArbiterConfiguration);
 }
 
 void OverrideArbiterPlugin_Init(I_DataModel_t *dataModel)
 {
    InitializeFilteredTemperatureArbiters(dataModel);
    InitializeThermistorIsValidArbiters(dataModel);
+
+   OverrideArbiter_Init(
+      &instance.iceMakerEnabledArbiter,
+      DataModel_AsDataSource(dataModel),
+      &iceMakerEnabledOverrideConfiguration);
 
    DataModel_Write(
       dataModel,

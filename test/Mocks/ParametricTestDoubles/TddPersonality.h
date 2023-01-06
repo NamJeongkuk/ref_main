@@ -19,6 +19,9 @@ enum
    TddPersonality_DevelopmentMaxOpenDamperTimerZero,
    TddPersonality_DevelopmentDamperHeaterIsOnWhenDefrostHeaterIsOnIsFalse,
    TddPersonality_DevelopmentDamperHeaterZeroOnTimeMinutes,
+   TddPersonality_DevelopmentSingleEvapFillTubeHeaterZeroOnTime,
+   TddPersonality_DevelopmentSingleEvapFillTubeHeaterZeroDutyCycle,
+   TddPersonality_DevelopmentSingleEvapFillTubeHeaterOnTimeLessThanMaxHarvestTime,
    TddPersonality_MaxDevelopment
 };
 

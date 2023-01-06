@@ -27,10 +27,16 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
    .feelerArmMonitoringRequestErd = Erd_FeelerArmMonitoringRequest,
    .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
-   .iceMakerFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureInDegFx100,
+   .iceMakerFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
-   .iceMakerEnabledErd = Erd_IceMakerEnabledResolved,
-   .sabbathModeErd = Erd_SabbathMode
+   .iceMakerEnabledErd = Erd_IceMakerEnabledOverrideResolved,
+   .sabbathModeErd = Erd_SabbathMode,
+   .fillTubeHeaterVoteErd = Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote,
+   .moldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
+   .rakeCompletedRevolutionErd = Erd_AluminumMoldIceMakerRakeCompletedRevolution,
+   .moldThermistorIsValidErd = Erd_AluminumMoldIceMakerThermistorIsValidResolved,
+   .skipFillRequestErd = Erd_AluminumMoldIceMakerSkipFillRequest,
+   .rakeControlRequestErd = Erd_AluminumMoldIceMakerRakeControlRequest
 };
 
 static const FeelerArmMonitorConfig_t feelerArmMonitorConfig = {

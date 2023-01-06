@@ -33,7 +33,10 @@ static const string filePathByPersonality[NumberOfPersonalities][DirectoryAndScr
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentVariableSpeedCoolingModeDependentCompressor.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentMaxOpenDamperTimerZero.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentDamperHeaterOnWhenDefrostHeaterIsOnIsFalse.lua" },
-   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentDamperHeaterZeroOnTimeMinutes.lua" }
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentDamperHeaterZeroOnTimeMinutes.lua" },
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapFillTubeHeaterZeroOnTime.lua" },
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapFillTubeHeaterZeroDutyCycle.lua" },
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapFillTubeHeaterOnTimeLessThanMaxHarvestTime.lua" },
 };
 
 static bool loaded[NumberOfPersonalities];
