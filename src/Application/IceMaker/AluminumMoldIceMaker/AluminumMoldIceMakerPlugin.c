@@ -98,6 +98,17 @@ static const WaterValveVotedState_t defaultWaterValveData = {
    .care = Vote_DontCare
 };
 
+static bool RakeMotorVotingErdCareDelegate(const void *votingErdData)
+{
+   const AluminumMoldIceMakerMotorVotedState_t *data = votingErdData;
+   return (data->care);
+}
+
+static const AluminumMoldIceMakerMotorVotedState_t defaultRakeMotorData = {
+   .state = MotorState_Off,
+   .care = Vote_DontCare
+};
+
 static const ErdResolverConfiguration_t iceMakerHeaterResolverConfiguration = {
    .votingErdCare = HeaterVotingErdCareDelegate,
    .defaultData = &defaultHeaterData,
@@ -120,6 +131,25 @@ static const ErdResolverConfiguration_t iceMakerWaterValveResolverConfiguration 
    .winningVoterErd = Erd_AluminumMoldIceMakerWaterValve_WinningVoteErd,
    .resolvedStateErd = Erd_AluminumMoldIceMakerWaterValve_ResolvedVote,
    .numberOfVotingErds = (Erd_AluminumMoldIceMakerWaterValve_IceMakerVote - Erd_AluminumMoldIceMakerWaterValve_WinningVoteErd)
+};
+
+static const ErdResolverConfiguration_t iceMakerRakeMotorResolverConfiguration = {
+   .votingErdCare = RakeMotorVotingErdCareDelegate,
+   .defaultData = &defaultRakeMotorData,
+   .winningVoterErd = Erd_AluminumMoldIceMakerRakeMotor_WinningVoteErd,
+   .resolvedStateErd = Erd_AluminumMoldIceMakerRakeMotor_ResolvedVote,
+   .numberOfVotingErds = (Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote - Erd_AluminumMoldIceMakerRakeMotor_WinningVoteErd)
+};
+
+static const RakeControllerConfig_t rakeControllerConfig = {
+   .rakeControlRequestErd = Erd_AluminumMoldIceMakerRakeControlRequest,
+   .rakeMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
+   .rakeCompletedRevolutionErd = Erd_AluminumMoldIceMakerRakeCompletedRevolution,
+   .timerModuleErd = Erd_TimerModule,
+   .rakePositionErd = Erd_AluminumMoldIceMakerRakePosition,
+   .feelerArmPositionErd = Erd_AluminumMoldIceMakerFeelerArmPosition,
+   .rakePositionHasNotBeenHomeErd = Erd_AluminumMoldIceMakerRakeHasNotBeenHome,
+   .feelerArmPositionHasBeenBucketFullErd = Erd_AluminumMoldIceMakerFeelerArmHasBeenBucketFull
 };
 
 static const IceMakerMoldHeaterControllerConfig_t iceMakerMoldHeaterControllerConfig = {
@@ -145,6 +175,11 @@ static void InitializeErdResolvers(AluminumMoldIceMakerPlugin_t *instance, I_Dat
       &instance->_private.iceMakerWaterValveVoteResolver,
       DataModel_AsDataSource(dataModel),
       &iceMakerWaterValveResolverConfiguration);
+
+   ErdResolver_Init(
+      &instance->_private.iceMakerRakeMotorVoteResolver,
+      DataModel_AsDataSource(dataModel),
+      &iceMakerRakeMotorResolverConfiguration);
 }
 
 void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
@@ -167,6 +202,12 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
       &instance->_private.feelerArmMonitor,
       dataModel,
       &feelerArmMonitorConfig);
+
+   RakeController_Init(
+      &instance->_private.rakeController,
+      dataModel,
+      &rakeControllerConfig,
+      &PersonalityParametricData_Get(dataModel)->aluminumMoldIceMakerData->harvestData);
 
    HarvestCountCalculator_Init(
       &instance->_private.harvestCountCalculator,

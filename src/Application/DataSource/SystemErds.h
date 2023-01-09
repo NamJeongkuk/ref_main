@@ -76,6 +76,7 @@
 #include "WaterValveVotedState.h"
 #include "FeelerArmPosition.h"
 #include "GridOffsetAdder.h"
+#include "RakePosition.h"
 #include "IceMakerMoldHeaterControlRequest.h"
 #include "PercentageDutyCycleVote.h"
 
@@ -630,11 +631,14 @@ enum
    ENTRY(Erd_AluminumMoldIceMakerMoldHeaterControlRequest,  0xF1CA, IceMakerMoldHeaterControlRequest_t,                 Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerRakeCompletedRevolution,   0xF1CB, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerSkipFillRequest,           0xF1CC, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerRakeControlRequest,        0xF1CD, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerRakeControlRequest,        0xF1CD, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerRakePosition,              0xF1CE, RakePosition_t,                                     Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerRakeHasNotBeenHome,        0xF1CF, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerFeelerArmHasBeenBucketFull,0xF1D0, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_IceMakerEnabledOverrideRequest,                0xF1CE, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_IceMakerEnabledOverrideValue,                  0xF1CF, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_IceMakerEnabledOverrideResolved,               0xF1D0, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_IceMakerEnabledOverrideRequest,                0xF1E0, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_IceMakerEnabledOverrideValue,                  0xF1E1, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_IceMakerEnabledOverrideResolved,               0xF1E2, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RelayWatchdog,                                 0xF201, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,                    NotNv,                                    NotFault) \
@@ -667,6 +671,11 @@ enum
    ENTRY(Erd_AluminumMoldIceMakerHeaterRelay_WinningVoteErd,0xF221, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerHeaterRelay_FactoryVote,   0xF222, HeaterVotedState_t,                                 Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,  0xF223, HeaterVotedState_t,                                 Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_AluminumMoldIceMakerRakeMotor_ResolvedVote,    0xF22A, AluminumMoldIceMakerMotorVotedState_t,              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerRakeMotor_WinningVoteErd,  0xF22B, WinningVoteErd_t,                                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerRakeMotor_FactoryVote,     0xF22C, AluminumMoldIceMakerMotorVotedState_t,              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,    0xF22D, AluminumMoldIceMakerMotorVotedState_t,              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_CondenserFanSpeed_ResolvedVote,                0xF230, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CondenserFanSpeed_WinningVoteErd,              0xF231, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

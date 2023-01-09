@@ -17,6 +17,7 @@
 #include "HarvestCountCalculator.h"
 #include "IceMakerEnableResolver.h"
 #include "ErdResolver.h"
+#include "RakeController.h"
 #include "IceMakerMoldHeaterController.h"
 
 typedef struct
@@ -26,13 +27,16 @@ typedef struct
       FillTubeHeaterVotingFrameworkPlugin_t fillTubeHeaterVotingFrameworkPlugin;
       FreezerIceRateHandler_t iceRateHandler;
       FeelerArmMonitor_t feelerArmMonitor;
+      RakeController_t rakeController;
       HarvestCountCalculator_t harvestCountCalculator;
       AluminumMoldIceMaker_t aluminumMoldIceMaker;
       IceMakerEnableResolver_t iceMakerEnableResolver;
+      IceMakerMoldHeaterController_t iceMakerMoldHeaterController;
+
       ErdResolver_t iceMakerWaterValveVoteResolver;
       ErdResolver_t iceMakerHeaterVoteResolver;
       ErdResolver_t iceMakerMotorVoteResolver;
-      IceMakerMoldHeaterController_t iceMakerMoldHeaterController;
+      ErdResolver_t iceMakerRakeMotorVoteResolver;
    } _private;
 } AluminumMoldIceMakerPlugin_t;
 

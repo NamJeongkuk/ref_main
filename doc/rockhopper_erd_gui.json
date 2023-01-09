@@ -66,28 +66,28 @@
           "write": false
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
           "displayName": "Compressor Speed Winning Vote ERD",
           "name": "Erd_CompressorSpeed_WinningVoteErd",
           "read": true,
           "write": false
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
           "displayName": "Compressor Speed Factory Vote",
           "name": "Erd_CompressorSpeed_FactoryVote",
           "read": true,
           "write": false
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
           "displayName": "Compressor Speed Defrost Vote",
           "name": "Erd_CompressorSpeed_DefrostVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
           "displayName": "Compressor Speed Grid Vote ERD",
           "name": "Erd_CompressorSpeed_GridVote",
           "read": true,
@@ -967,42 +967,42 @@
           "write": true
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
           "displayName": "Aluminum Mold Ice Maker Thermistor Is Valid Override Value",
           "name": "Erd_AluminumMoldIceMakerThermistorIsValidOverrideValue",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
           "displayName": "Aluminum Mold Ice Maker Thermistor Is Valid Override Request",
           "name": "Erd_AluminumMoldIceMakerThermistorIsValidOverrideRequest",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
           "displayName": "Aluminum Mold Ice Maker Thermistor Is Valid Resolved",
           "name": "Erd_AluminumMoldIceMakerThermistorIsValidResolved",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
           "displayName": "Aluminum Mold IceMaker Filtered Temperature Override Request",
           "name": "Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideRequest",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
           "displayName": "Aluminum Mold IceMaker Filtered Temperature Override Value",
           "name": "Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
           "displayName": "Aluminum Mold IceMaker Filtered Temperature Resolved",
           "name": "Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100",
           "read": true,
@@ -1468,41 +1468,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Fill Tube Heater Resolved Vote",
-          "name": "Erd_FillTubeHeater_ResolvedVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Fill Tube Heater Winning Vote ERD",
-          "name": "Erd_FillTubeHeater_WinningVoteErd",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Fill Tube Heater Factory Vote",
-          "name": "Erd_FillTubeHeater_FactoryVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Fill Tube Heater Ice Maker Harvest Vote",
-          "name": "Erd_FillTubeHeater_IceMakerHarvestVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Fill Tube Heater Continuous Vote",
-          "name": "Erd_FillTubeHeater_ContinuousVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Fill Tube Heater (Load)",
           "name": "Erd_FillTubeHeater",
           "read": true,
@@ -1587,63 +1552,112 @@
           "write": false
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
           "displayName": "Aluminum Mold IceMaker Mold Heater Control Request",
           "name": "Erd_AluminumMoldIceMakerMoldHeaterControlRequest",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
           "displayName": "Aluminum Mold IceMaker Rake Completed Revolution",
           "name": "Erd_AluminumMoldIceMakerRakeCompletedRevolution",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
           "displayName": "Aluminum Mold IceMaker Rake Control Request",
           "name": "Erd_AluminumMoldIceMakerRakeControlRequest",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
+          "displayName": "Aluminum Mold IceMaker Rake Position",
+          "name": "Erd_AluminumMoldIceMakerRakePosition",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Aluminum Mold IceMaker Skip Fill Request",
           "name": "Erd_AluminumMoldIceMakerSkipFillRequest",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
+          "displayName": "Aluminum Mold IceMaker Rake Has Not Been home",
+          "name": "Erd_AluminumMoldIceMakerRakeHasNotBeenHome",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Aluminum Mold IceMaker Feeler Arm Has Been Bucket Full",
+          "name": "Erd_AluminumMoldIceMakerFeelerArmHasBeenBucketFull",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Aluminum Mold IceMaker Rake Motor Resolved Vote",
+          "name": "Erd_AluminumMoldIceMakerRakeMotor_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Aluminum Mold IceMaker Rake Motor Winning Vote ERD",
+          "name": "Erd_AluminumMoldIceMakerRakeMotor_WinningVoteErd",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Aluminum Mold IceMaker Rake Motor Factory Vote",
+          "name": "Erd_AluminumMoldIceMakerRakeMotor_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Aluminum Mold IceMaker Rake Motor IceMaker Vote",
+          "name": "Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Aluminum Mold IceMaker Fill Tube Heater Resolved Vote",
           "name": "Erd_AluminumMoldIceMakerFillTubeHeater_ResolvedVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
           "displayName": "Aluminum Mold IceMaker Fill Tube Heater Winning Vote ERD",
           "name": "Erd_AluminumMoldIceMakerFillTubeHeater_WinningVoteErd",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
           "displayName": "Aluminum Mold IceMaker Fill Tube Heater Factory Vote",
           "name": "Erd_AluminumMoldIceMakerFillTubeHeater_FactoryVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
           "displayName": "Aluminum Mold IceMaker Fill Tube Heater IceMaker Vote",
           "name": "Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote",
           "read": true,
           "write": true
         },
         {
-          "namespace": "rockhopper",
+          "namespace": "mb",
           "displayName": "Aluminum Mold IceMaker Fill Tube Heater Continuous Vote",
           "name": "Erd_AluminumMoldIceMakerFillTubeHeater_ContinuousVote",
           "read": true,
