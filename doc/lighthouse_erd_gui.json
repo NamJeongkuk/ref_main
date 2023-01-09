@@ -553,7 +553,7 @@
             {
                "namespace": "mb",
                "displayName": "Aluminum Mold Ice Maker Temperature",
-               "name": "Erd_AluminumMoldIceMaker_FilteredTemperatureInDegFx100",
+               "name": "Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100",
                "read": true
             }
          ]

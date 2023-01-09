@@ -86,10 +86,10 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMakerMoldThermistorAdcCount)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMakerMoldThermistor_AdcCount)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_AluminumMoldIceMakerMoldThermistor_AdcCount)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_IceMakerMoldThermistor_AdcCount);
+   CHECK_EQUAL(*erd, Erd_AluminumMoldIceMakerMoldThermistor_AdcCount);
 }
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceBoxThermistorAdcCount)

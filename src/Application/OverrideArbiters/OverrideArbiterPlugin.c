@@ -191,7 +191,7 @@ static const Erd_t aluminumMoldIceMakerFilteredTemperatureOverrideRequestErdList
 };
 
 static const Erd_t aluminumMoldIceMakerFilteredTemperatureValueErdList[] = {
-   Erd_AluminumMoldIceMaker_FilteredTemperatureInDegFx100,
+   Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100,
    Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100
 };
 
@@ -203,18 +203,18 @@ static const OverrideArbiterConfiguration_t aluminumMoldIceMakerFilteredTemperat
 };
 
 static const Erd_t aluminumMoldIceMakerThermistorValidOverrideArbiterRequestErdList[] = {
-   Erd_AluminumMoldIceMakerThermistorIsValidOverrideRequest
+   Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideRequest
 };
 
 static const Erd_t aluminumMoldIceMakerThermistorValidValueErdList[] = {
-   Erd_AluminumMoldIceMakerThermistorIsValid,
-   Erd_AluminumMoldIceMakerThermistorIsValidOverrideValue
+   Erd_AluminumMoldIceMakerMoldThermistorIsValid,
+   Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideValue
 };
 
 static const OverrideArbiterConfiguration_t aluminumMoldIceMakerThermistorValidArbiterConfiguration = {
    aluminumMoldIceMakerThermistorValidOverrideArbiterRequestErdList,
    aluminumMoldIceMakerThermistorValidValueErdList,
-   Erd_AluminumMoldIceMakerThermistorIsValidResolved,
+   Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved,
    NUM_ELEMENTS(aluminumMoldIceMakerThermistorValidOverrideArbiterRequestErdList)
 };
 

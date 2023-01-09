@@ -38,7 +38,7 @@ static const AluminumMoldIceMakerConfig_t config = {
    .fillTubeHeaterVoteErd = Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote,
    .moldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
    .rakeCompletedRevolutionErd = Erd_AluminumMoldIceMakerRakeCompletedRevolution,
-   .moldThermistorIsValidErd = Erd_AluminumMoldIceMakerThermistorIsValidResolved,
+   .moldThermistorIsValidErd = Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved,
    .skipFillRequestErd = Erd_AluminumMoldIceMakerSkipFillRequest,
    .rakeControlRequestErd = Erd_AluminumMoldIceMakerRakeControlRequest
 };
@@ -330,12 +330,12 @@ TEST_GROUP(AluminumMoldIceMaker)
 
    void MoldThermistorIsValid()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerThermistorIsValidResolved, set);
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved, set);
    }
 
    void MoldThermistorIsInvalid()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerThermistorIsValidResolved, clear);
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved, clear);
    }
 
    void SkipFillRequestIsSet()
@@ -964,12 +964,12 @@ TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime)
 
    void MoldThermistorIsValid()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerThermistorIsValidResolved, set);
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved, set);
    }
 
    void MoldThermistorIsInvalid()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerThermistorIsValidResolved, clear);
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved, clear);
    }
 
    void SkipFillRequestIsSet()
@@ -1229,7 +1229,7 @@ TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterZeroDutyCycle)
 
    void MoldThermistorIsValid()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerThermistorIsValidResolved, set);
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved, set);
    }
 
    void SkipFillRequestIsSet()
@@ -1364,7 +1364,7 @@ TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterZeroOnTime)
 
    void MoldThermistorIsValid()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerThermistorIsValidResolved, set);
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved, set);
    }
 
    void SkipFillRequestIsSet()

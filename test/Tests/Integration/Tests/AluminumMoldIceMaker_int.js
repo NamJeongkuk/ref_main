@@ -225,13 +225,13 @@ describe("AluminumMoldIceMaker,", () => {
    };
 
    const theMoldThermistorIsValid = async () => {
-      await rockhopper.write("Erd_AluminumMoldIceMakerThermistorIsValidOverrideRequest", true);
-      await rockhopper.write("Erd_AluminumMoldIceMakerThermistorIsValidOverrideValue", true);
+      await rockhopper.write("Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideRequest", true);
+      await rockhopper.write("Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideValue", true);
    };
 
    const theMoldThermistorIsInvalid = async () => {
-      await rockhopper.write("Erd_AluminumMoldIceMakerThermistorIsValidOverrideRequest", true);
-      await rockhopper.write("Erd_AluminumMoldIceMakerThermistorIsValidOverrideValue", false);
+      await rockhopper.write("Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideRequest", true);
+      await rockhopper.write("Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideValue", false);
    };
 
    const skipFillRequestIsSet = async () => {

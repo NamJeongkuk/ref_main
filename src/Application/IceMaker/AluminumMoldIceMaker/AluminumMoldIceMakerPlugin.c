@@ -34,7 +34,7 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .fillTubeHeaterVoteErd = Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote,
    .moldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
    .rakeCompletedRevolutionErd = Erd_AluminumMoldIceMakerRakeCompletedRevolution,
-   .moldThermistorIsValidErd = Erd_AluminumMoldIceMakerThermistorIsValidResolved,
+   .moldThermistorIsValidErd = Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved,
    .skipFillRequestErd = Erd_AluminumMoldIceMakerSkipFillRequest,
    .rakeControlRequestErd = Erd_AluminumMoldIceMakerRakeControlRequest
 };
@@ -159,6 +159,14 @@ static const IceMakerMoldHeaterControllerConfig_t iceMakerMoldHeaterControllerCo
    .timerModuleErd = Erd_TimerModule,
 };
 
+static const SensorFilteringConfig_t moldThermistorConfig = {
+   .sensorAdcCountErd = Erd_AluminumMoldIceMakerMoldThermistor_AdcCount,
+   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMakerMold_UnfilteredTemperatureInDegFx100,
+   .sensorFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100,
+   .sensorIsValidErd = Erd_AluminumMoldIceMakerMoldThermistorIsValid,
+   .timerModuleErd = Erd_TimerModule
+};
+
 static void InitializeErdResolvers(AluminumMoldIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
 {
    ErdResolver_Init(
@@ -184,6 +192,15 @@ static void InitializeErdResolvers(AluminumMoldIceMakerPlugin_t *instance, I_Dat
 
 void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
 {
+   const SensorData_t *sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
+
+   SensorFiltering_Init(
+      &instance->_private.moldThermistor,
+      dataModel,
+      &moldThermistorConfig,
+      sensorData->aluminumIceMakerMoldThermistor,
+      sensorData->periodicUpdateRateInMs);
+
    InitializeErdResolvers(
       instance,
       dataModel);

@@ -962,21 +962,21 @@
         {
           "namespace": "mb",
           "displayName": "Aluminum Mold Ice Maker Thermistor Is Valid Override Value",
-          "name": "Erd_AluminumMoldIceMakerThermistorIsValidOverrideValue",
+          "name": "Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideValue",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "Aluminum Mold Ice Maker Thermistor Is Valid Override Request",
-          "name": "Erd_AluminumMoldIceMakerThermistorIsValidOverrideRequest",
+          "name": "Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "Aluminum Mold Ice Maker Thermistor Is Valid Resolved",
-          "name": "Erd_AluminumMoldIceMakerThermistorIsValidResolved",
+          "name": "Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved",
           "read": true,
           "write": true
         },
@@ -1477,7 +1477,7 @@
         {
           "namespace": "mb",
           "displayName": "Aluminum Mold ice maker filtered temperature in degFx100",
-          "name": "Erd_AluminumMoldIceMaker_FilteredTemperatureInDegFx100",
+          "name": "Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
