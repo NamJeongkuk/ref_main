@@ -14,7 +14,8 @@ enum
 {
    DefrostTestStateRequest_Idle,
    DefrostTestStateRequest_Defrost,
-   DefrostTestStateRequest_Prechill
+   DefrostTestStateRequest_Prechill,
+   DefrostTestStateRequest_None
 };
 typedef uint8_t DefrostTestStateRequest_t;
 

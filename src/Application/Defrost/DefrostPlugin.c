@@ -49,6 +49,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .currentDefrostTypeErd = Erd_CurrentDefrostType,
    .timerModuleErd = Erd_TimerModule,
    .clearedEepromStartup = Erd_Eeprom_ClearedDefrostEepromStartup,
+   .defrostTestStateRequestErd = Erd_DefrostTestStateRequest
 };
 
 static const DefrostHeaterMaxOnTimeConfiguration_t defrostHeaterMaxOnTimeConfig = {
