@@ -36,7 +36,8 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .rakeCompletedRevolutionErd = Erd_AluminumMoldIceMakerRakeCompletedRevolution,
    .moldThermistorIsValidErd = Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved,
    .skipFillRequestErd = Erd_AluminumMoldIceMakerSkipFillRequest,
-   .rakeControlRequestErd = Erd_AluminumMoldIceMakerRakeControlRequest
+   .rakeControlRequestErd = Erd_AluminumMoldIceMakerRakeControlRequest,
+   .rakePosition = Erd_AluminumMoldIceMakerRakePosition
 };
 
 static const FeelerArmMonitorConfig_t feelerArmMonitorConfig = {

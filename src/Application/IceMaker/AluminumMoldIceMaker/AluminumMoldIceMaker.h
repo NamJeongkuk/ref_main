@@ -32,6 +32,7 @@ typedef struct
    Erd_t moldThermistorIsValidErd; // bool
    Erd_t skipFillRequestErd; // bool
    Erd_t rakeControlRequestErd; // bool
+   Erd_t rakePosition; // RakePosition_t
 } AluminumMoldIceMakerConfig_t;
 
 typedef struct

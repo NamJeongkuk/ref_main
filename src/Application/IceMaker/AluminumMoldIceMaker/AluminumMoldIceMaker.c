@@ -197,6 +197,28 @@ static bool IceMakerIsDisabled(AluminumMoldIceMaker_t *instance)
    return !state;
 }
 
+static bool MoldThermistorIsNotValid(AluminumMoldIceMaker_t *instance)
+{
+   bool valid;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->moldThermistorIsValidErd,
+      &valid);
+
+   return !valid;
+}
+
+static bool RakeIsHome(AluminumMoldIceMaker_t *instance)
+{
+   RakePosition_t position;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->rakePosition,
+      &position);
+
+   return position == RakePosition_Home;
+}
+
 static void VoteForFillTubeHeater(AluminumMoldIceMaker_t *instance, PercentageDutyCycle_t dutyCycle)
 {
    PercentageDutyCycleVote_t vote;
@@ -706,7 +728,18 @@ static HsmState_t InitialState(AluminumMoldIceMaker_t *instance)
    {
       return State_IdleFreeze;
    }
-   return State_Freeze;
+   else if(MoldThermistorIsNotValid(instance))
+   {
+      return State_ThermistorFault;
+   }
+   else if(RakeIsHome(instance))
+   {
+      return State_Freeze;
+   }
+   else
+   {
+      return State_Harvest;
+   }
 }
 
 void AluminumMoldIceMaker_Init(
