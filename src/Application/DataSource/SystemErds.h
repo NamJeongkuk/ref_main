@@ -459,7 +459,6 @@ enum
    ENTRY(Erd_DefrostTestRequest,                            0xF10F, DefrostTestRequest_t,                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerDefrostHeaterOnTimeInMinutes,           0xF110, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerDefrostWasAbnormal,                     0xF112, bool,                                               Swap_N, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_FreezerAbnormalDefrostCycleCount,              0xF113, uint16_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_FreezerDefrostCycleCount,                      0xF114, uint16_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NumberOfFreezerAbnormalDefrostCycles,          0xF115, uint16_t,                                           Swap_Y, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_DefrostFreezerScaledDoorAccelerationInSeconds, 0xF116, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

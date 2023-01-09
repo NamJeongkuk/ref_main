@@ -47,7 +47,6 @@ typedef struct
    Erd_t freshFoodFilteredTemperatureResolvedInDegFx100Erd; // TemperatureDegFx100_t
    Erd_t freezerDefrostHeaterVoteErd; // HeaterVotedState_t
    Erd_t freezerDefrostCycleCountErd; // uint16_t
-   Erd_t freezerAbnormalDefrostCycleCountErd; // uint16_t
    Erd_t numberOfFreezerAbnormalDefrostCycleCountErd; // uint16_t
    Erd_t freezerDefrostHeaterOnTimeInMinutesErd; // uint8_t
    Erd_t freezerDefrostHeaterMaxOnTimeInMinutesErd; // uint8_t

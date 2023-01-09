@@ -85,7 +85,6 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_FreshFood_LongTermAverageInDegFx100, sizeof(TemperatureDegFx100_t)),
 
    // 0xF100 range
-   SWAPPED_ERD(PublicErd_FreezerAbnormalDefrostCycleCount, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_FreezerDefrostCycleCount, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_NumberOfFreezerAbnormalDefrostCycles, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_DefrostFreezerScaledDoorAccelerationInSeconds, sizeof(uint32_t)),

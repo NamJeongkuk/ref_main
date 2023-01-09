@@ -41,7 +41,6 @@ static const DefrostConfiguration_t defrostConfig = {
    .freshFoodFilteredTemperatureResolvedInDegFx100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    .freezerDefrostHeaterVoteErd = Erd_FreezerDefrostHeater_DefrostVote,
    .freezerDefrostCycleCountErd = Erd_FreezerDefrostCycleCount,
-   .freezerAbnormalDefrostCycleCountErd = Erd_FreezerAbnormalDefrostCycleCount,
    .numberOfFreezerAbnormalDefrostCycleCountErd = Erd_NumberOfFreezerAbnormalDefrostCycles,
    .freezerDefrostHeaterOnTimeInMinutesErd = Erd_FreezerDefrostHeaterOnTimeInMinutes,
    .freezerDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,

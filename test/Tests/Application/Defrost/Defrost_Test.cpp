@@ -76,7 +76,6 @@ static const DefrostConfiguration_t defrostConfig = {
    .freshFoodFilteredTemperatureResolvedInDegFx100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    .freezerDefrostHeaterVoteErd = Erd_FreezerDefrostHeater_DefrostVote,
    .freezerDefrostCycleCountErd = Erd_FreezerDefrostCycleCount,
-   .freezerAbnormalDefrostCycleCountErd = Erd_FreezerAbnormalDefrostCycleCount,
    .numberOfFreezerAbnormalDefrostCycleCountErd = Erd_NumberOfFreezerAbnormalDefrostCycles,
    .freezerDefrostHeaterOnTimeInMinutesErd = Erd_FreezerDefrostHeaterOnTimeInMinutes,
    .freezerDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,
@@ -500,14 +499,6 @@ TEST_GROUP(Defrost_SingleEvap)
    {
       uint16_t actual;
       DataModel_Read(dataModel, Erd_NumberOfFreezerAbnormalDefrostCycles, &actual);
-
-      CHECK_EQUAL(expected, actual);
-   }
-
-   void FreezerAbnormalDefrostCycleCountShouldBe(uint16_t expected)
-   {
-      uint16_t actual;
-      DataModel_Read(dataModel, Erd_FreezerAbnormalDefrostCycleCount, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -1185,7 +1176,6 @@ TEST(Defrost_SingleEvap, ShouldIncrementNumberOfFreezerAbnormalDefrostCycleCount
    When FreezerDefrostHeaterOnTimeInMinutesIs(defrostData->freezerHeaterOnTimeToSetAbnormalDefrostInMinutes);
    NumberOfFreezerAbnormalDefrostCycleCountShouldBe(2);
    And FreezerDefrostWasAbnormalFlagShouldBe(SET);
-   And FreezerAbnormalDefrostCycleCountShouldBe(3);
 }
 
 TEST(Defrost_SingleEvap, ShouldIncrementNumberOfFreezerAbnormalDefrostCycleCountJustOnce)

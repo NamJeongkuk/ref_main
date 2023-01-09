@@ -358,13 +358,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Freezer Abnormal Defrost Cycle Count (EEPROM)",
-          "name": "Erd_FreezerAbnormalDefrostCycleCount",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Freezer Defrost Cycle Count (EEPROM)",
           "name": "Erd_FreezerDefrostCycleCount",
           "read": true,
