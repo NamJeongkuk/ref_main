@@ -49,7 +49,7 @@ TEST_GROUP(HarvestCountCalculator)
          dataModel,
          Erd_PersonalityParametricData,
          &personalityParametricData);
-      aluminumMoldIceMakerData = personalityParametricData->aluminumMoldIceMakerData;
+      aluminumMoldIceMakerData = personalityParametricData->iceMakerData->aluminumMoldIceMakerData;
    }
 
    void GivenTheModuleIsInitialized()

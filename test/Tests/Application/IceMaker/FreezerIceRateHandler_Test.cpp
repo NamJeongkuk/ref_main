@@ -46,7 +46,7 @@ TEST_GROUP(FreezerIceRateHandler)
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
-      freezerIceRateData = PersonalityParametricData_Get(dataModel)->freezerIceRateData;
+      freezerIceRateData = PersonalityParametricData_Get(dataModel)->iceMakerData->freezerIceRateData;
    }
 
    void GivenTheModuleIsInitialized()

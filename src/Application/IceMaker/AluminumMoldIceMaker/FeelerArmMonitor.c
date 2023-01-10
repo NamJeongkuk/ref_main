@@ -81,7 +81,7 @@ void FeelerArmMonitor_Init(
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
-   instance->_private.aluminumMoldIceMakerData = PersonalityParametricData_Get(dataModel)->aluminumMoldIceMakerData;
+   instance->_private.aluminumMoldIceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData;
 
    EventSubscription_Init(
       &instance->_private.feelerArmMonitoringRequestSubscription,

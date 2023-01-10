@@ -53,7 +53,7 @@ TEST_GROUP(IceMakerMoldHeaterController)
       ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
       timerModuleDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
-      harvestData = &PersonalityParametricData_Get(dataModel)->aluminumMoldIceMakerData->harvestData;
+      harvestData = &PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData->harvestData;
    }
 
    void WhenIceMakerMoldHeaterControlRequestIs(

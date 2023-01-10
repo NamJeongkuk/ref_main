@@ -214,7 +214,7 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
       &instance->_private.iceRateHandler,
       dataModel,
       &iceRateHandlerConfig,
-      PersonalityParametricData_Get(dataModel)->freezerIceRateData);
+      PersonalityParametricData_Get(dataModel)->iceMakerData->freezerIceRateData);
 
    FeelerArmMonitor_Init(
       &instance->_private.feelerArmMonitor,
@@ -225,13 +225,13 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
       &instance->_private.rakeController,
       dataModel,
       &rakeControllerConfig,
-      &PersonalityParametricData_Get(dataModel)->aluminumMoldIceMakerData->harvestData);
+      &PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData->harvestData);
 
    HarvestCountCalculator_Init(
       &instance->_private.harvestCountCalculator,
       dataModel,
       &harvestCountCalculatorConfig,
-      PersonalityParametricData_Get(dataModel)->aluminumMoldIceMakerData);
+      PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData);
 
    IceMakerEnableResolver_Init(
       &instance->_private.iceMakerEnableResolver,
@@ -242,7 +242,7 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
       &instance->_private.iceMakerMoldHeaterController,
       dataModel,
       &iceMakerMoldHeaterControllerConfig,
-      &PersonalityParametricData_Get(dataModel)->aluminumMoldIceMakerData->harvestData);
+      &PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData->harvestData);
 
    AluminumMoldIceMaker_Init(
       &instance->_private.aluminumMoldIceMaker,

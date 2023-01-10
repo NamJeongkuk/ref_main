@@ -42,7 +42,7 @@ TEST_GROUP(FeelerArmMonitor)
       dataModel = referDataModelTestDouble.dataModel;
 
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&referDataModelTestDouble);
-      aluminumMoldIceMakerData = PersonalityParametricData_Get(dataModel)->aluminumMoldIceMakerData;
+      aluminumMoldIceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData;
    }
 
    void TheModuleIsInitialized()

@@ -749,7 +749,7 @@ void AluminumMoldIceMaker_Init(
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
-   instance->_private.iceMakerParametricData = PersonalityParametricData_Get(dataModel)->aluminumMoldIceMakerData;
+   instance->_private.iceMakerParametricData = PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData;
 
    Hsm_Init(&instance->_private.hsm, &hsmConfiguration, InitialState(instance));
 
