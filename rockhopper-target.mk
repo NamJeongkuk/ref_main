@@ -52,8 +52,8 @@ SRC_DIRS:=\
   src/Hardware/SoftPwm \
   src/Application \
   src/Application/Compressor \
-  src/Application/Configurations \
   src/Application/ConfigurationPlugins \
+  src/Application/Configurations \
   src/Application/ConvertibleCompartment \
   src/Application/Damper \
   src/Application/DataSource \
@@ -61,25 +61,26 @@ SRC_DIRS:=\
   src/Application/Door \
   src/Application/DutyCycle \
   src/Application/EnhancedSabbath \
+  src/Application/Evaporator \
   src/Application/Factory \
   src/Application/Fan \
-  src/Application/IceMaker \
-  src/Application/IceMaker/AluminumMoldIceMaker \
-  src/Application/Setpoints \
-  src/Application/StepperMotor \
-  src/Application/Evaporator \
+  src/Application/Gea \
   src/Application/Grid \
   src/Application/Grid/GridFunctions \
   src/Application/Grid/GridStateTables \
-  src/Application/Gea \
+  src/Application/Heater \
+  src/Application/IceMaker \
+  src/Application/IceMaker/AluminumMoldIceMaker \
   src/Application/OverrideArbiters \
   src/Application/ParametricData \
   src/Application/Plugins \
   src/Application/Pulldown \
-  src/Application/Sensor \
   src/Application/Sabbath \
-  src/Application/ServiceDiagnostics \
   src/Application/Sensor \
+  src/Application/Sensor \
+  src/Application/ServiceDiagnostics \
+  src/Application/Setpoints \
+  src/Application/StepperMotor \
   src/Application/SystemMonitor \
   src/Application/TimerModule \
   src/Application/Valve \

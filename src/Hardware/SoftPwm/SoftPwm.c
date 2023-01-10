@@ -51,50 +51,80 @@ static void StartOnTimer(SoftPwm_t *instance, const PwmDutyCycle_t *pwmDutyCycle
       instance);
 }
 
-static void PeriodComplete(void *context)
+static void PeriodTimerExpired(void *context)
+{
+   SoftPwm_t *instance = context;
+   PwmDutyCycle_t pwmDutyCycle = PwmDutyCycle(instance);
+
+   if(pwmDutyCycle > 0)
+   {
+      SetGpioTo(instance, ON);
+      StartOnTimer(instance, &pwmDutyCycle);
+   }
+}
+
+static void StartPeriodicTimer(void *context)
 {
    SoftPwm_t *instance = context;
 
-   PwmDutyCycle_t pwmDutyCycle = PwmDutyCycle(instance);
-   DutyCycleChanged(instance, &pwmDutyCycle);
-}
-
-static void StartPeriodTimer(SoftPwm_t *instance)
-{
    TimerTicks_t periodTicks = instance->_private.config->frequencyX100 * MSEC_PER_SEC;
-   TimerModule_StartOneShot(
+   TimerModule_StartPeriodic(
       DataModelErdPointerAccess_GetTimerModule(
          instance->_private.dataModel,
          instance->_private.config->timerModuleErd),
       &instance->_private.periodTimer,
       periodTicks,
-      PeriodComplete,
+      PeriodTimerExpired,
       instance);
+}
+
+static void InitialPwmCheck(SoftPwm_t *instance)
+{
+   PeriodTimerExpired(instance);
+}
+
+static void DelayTimerExpired(void *context)
+{
+   SoftPwm_t *instance = context;
+
+   InitialPwmCheck(instance);
+   StartPeriodicTimer(instance);
 }
 
 static void DutyCycleChanged(void *context, const void *args)
 {
    SoftPwm_t *instance = context;
    const PwmDutyCycle_t *pwmDutyCycle = args;
-   if(*pwmDutyCycle > 0)
-   {
-      SetGpioTo(instance, ON);
-      StartOnTimer(instance, pwmDutyCycle);
-      StartPeriodTimer(instance);
-   }
-   else
+
+   if(*pwmDutyCycle == 0)
    {
       SetGpioTo(instance, OFF);
+      TimerModule_Stop(
+         DataModelErdPointerAccess_GetTimerModule(
+            instance->_private.dataModel,
+            instance->_private.config->timerModuleErd),
+         &instance->_private.dutyCycleOnTimer);
    }
-};
+}
 
 void SoftPwm_Init(
    SoftPwm_t *instance,
    I_DataModel_t *dataModel,
+   TimerTicks_t initialDelay,
    const SoftPwmConfiguration_t *config)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
+   SetGpioTo(instance, OFF);
+
+   TimerModule_StartOneShot(
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         instance->_private.config->timerModuleErd),
+      &instance->_private.periodTimer,
+      initialDelay,
+      DelayTimerExpired,
+      instance);
 
    EventSubscription_Init(
       &instance->_private.pwmDutyCycleSubscription,

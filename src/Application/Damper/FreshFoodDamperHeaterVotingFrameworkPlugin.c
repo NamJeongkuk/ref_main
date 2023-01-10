@@ -13,13 +13,6 @@ static const HeaterVotedState_t defaultData = {
    .care = Vote_DontCare
 };
 
-static const SoftPwmConfiguration_t damperHeaterSoftPwmConfig = {
-   .pwmDutyCycleErd = Erd_FreshFoodDamperHeaterPwmDutyCycle,
-   .gpioErd = Erd_FreshFoodDamperHeater,
-   .timerModuleErd = Erd_TimerModule,
-   .frequencyX100 = 10
-};
-
 static const PercentageDutyCycleVoteToPwmDutyCycleConverterConfig_t dutyCycleToPercentageCalculatorConfig = {
    .inputPercentageDutyCycleVoteErd = Erd_FreshFoodDamperHeater_ResolvedVote,
    .outputPwmDutyCycleErd = Erd_FreshFoodDamperHeaterPwmDutyCycle
@@ -50,9 +43,4 @@ void FreshFoodDamperHeaterVotingFrameworkPlugin_Init(FreshFoodDamperHeaterVoting
       &instance->_private.dutyCycleToPercentageCalculator,
       dataModel,
       &dutyCycleToPercentageCalculatorConfig);
-
-   SoftPwm_Init(
-      &instance->_private.damperHeaterSoftPwm,
-      dataModel,
-      &damperHeaterSoftPwmConfig);
 }

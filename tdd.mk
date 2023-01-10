@@ -23,21 +23,22 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Door \
    $(PROJECT_DIR)/Application/DutyCycle \
    $(PROJECT_DIR)/Application/EnhancedSabbath \
-   $(PROJECT_DIR)/Application/Factory \
-   $(PROJECT_DIR)/Application/IceMaker \
-   $(PROJECT_DIR)/Application/IceMaker/AluminumMoldIceMaker \
-   $(PROJECT_DIR)/Application/Setpoints \
-   $(PROJECT_DIR)/Application/StepperMotor \
    $(PROJECT_DIR)/Application/Evaporator \
+   $(PROJECT_DIR)/Application/Factory \
    $(PROJECT_DIR)/Application/Fan \
    $(PROJECT_DIR)/Application/Grid \
    $(PROJECT_DIR)/Application/Grid/GridFunctions \
    $(PROJECT_DIR)/Application/Grid/GridStateTables \
+   $(PROJECT_DIR)/Application/Heater \
+   $(PROJECT_DIR)/Application/IceMaker \
+   $(PROJECT_DIR)/Application/IceMaker/AluminumMoldIceMaker \
    $(PROJECT_DIR)/Application/ParametricData \
    $(PROJECT_DIR)/Application/Pulldown \
    $(PROJECT_DIR)/Application/Sabbath \
    $(PROJECT_DIR)/Application/Sensor \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \
+   $(PROJECT_DIR)/Application/Setpoints \
+   $(PROJECT_DIR)/Application/StepperMotor \
    $(PROJECT_DIR)/Application/SystemMonitor\
    $(PROJECT_DIR)/Application/TimerModule \
    $(PROJECT_DIR)/Hardware/SoftPwm \
@@ -52,28 +53,29 @@ TEST_SRC_DIRS := \
    $(TESTING_DIR)/Mocks/DataSource \
    $(TESTING_DIR)/Mocks/ParametricTestDoubles \
    $(TESTS_DIR) \
+   $(TESTS_DIR)/Application/ \
    $(TESTS_DIR)/Application/Compressor \
+   $(TESTS_DIR)/Application/ConvertibleCompartment \
    $(TESTS_DIR)/Application/Damper \
    $(TESTS_DIR)/Application/DataSource \
    $(TESTS_DIR)/Application/Defrost \
    $(TESTS_DIR)/Application/Door \
    $(TESTS_DIR)/Application/DutyCycle \
-   $(TESTS_DIR)/Application/ConvertibleCompartment \
    $(TESTS_DIR)/Application/EnhancedSabbath \
-   $(TESTS_DIR)/Application/Factory \
-   $(TESTS_DIR)/Application/Setpoints \
-   $(TESTS_DIR)/Application/StepperMotor \
    $(TESTS_DIR)/Application/Evaporator \
+   $(TESTS_DIR)/Application/Factory \
    $(TESTS_DIR)/Application/Fan \
    $(TESTS_DIR)/Application/Grid \
+   $(TESTS_DIR)/Application/Heater \
    $(TESTS_DIR)/Application/IceMaker \
    $(TESTS_DIR)/Application/IceMaker/AluminumMoldIceMaker \
-   $(TESTS_DIR)/Application/Sabbath \
    $(TESTS_DIR)/Application/ParametricData \
+   $(TESTS_DIR)/Application/Sabbath \
    $(TESTS_DIR)/Application/Sensor \
    $(TESTS_DIR)/Application/ServiceDiagnostics \
+   $(TESTS_DIR)/Application/Setpoints \
+   $(TESTS_DIR)/Application/StepperMotor \
    $(TESTS_DIR)/Application/SystemMonitor \
-   $(TESTS_DIR)/Application/ \
    $(TESTS_DIR)/Application/TimerModule \
    $(TESTS_DIR)/Hardware/SoftPwm \
 

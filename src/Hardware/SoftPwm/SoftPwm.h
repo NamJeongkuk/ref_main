@@ -36,6 +36,7 @@ typedef struct
 void SoftPwm_Init(
    SoftPwm_t *instance,
    I_DataModel_t *dataModel,
+   TimerTicks_t initialDelay,
    const SoftPwmConfiguration_t *config);
 
 #endif

@@ -11,6 +11,7 @@
 #include "SideBySideSingleEvaporatorCoolingSystemPlugin.h"
 #include "I_DataModel.h"
 #include "AluminumMoldIceMakerPlugin.h"
+#include "SideBySideStaggeredHeater.h"
 #include "SideBySideFactoryPlugin.h"
 
 typedef struct
@@ -19,6 +20,7 @@ typedef struct
    {
       SideBySideSingleEvaporatorCoolingSystemPlugin_t coolingSystemPlugin;
       AluminumMoldIceMakerPlugin_t aluminumMoldIceMakerPlugin;
+      SideBySideStaggeredHeater_t staggeredHeaterPlugin;
       SideBySideFactoryPlugin_t factoryPlugin;
    } _private;
 } SideBySideConfigurationPlugin_t;
