@@ -43,6 +43,7 @@ static const AluminumMoldIceMakerConfig_t config = {
    .skipFillRequestErd = Erd_AluminumMoldIceMakerSkipFillRequest,
    .rakeControlRequestErd = Erd_AluminumMoldIceMakerRakeControlRequest,
    .rakePosition = Erd_AluminumMoldIceMakerRakePosition,
+   .freezerIceRateTriggerSignal = Erd_FreezerIceRateTriggerSignal,
 };
 
 TEST_GROUP(AluminumMoldIceMaker)
@@ -387,6 +388,14 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       bool actual;
       DataModel_Read(dataModel, Erd_AluminumMoldIceMakerRakeControlRequest, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void FreezerTriggerIceRateSignalShouldBe(Signal_t expected)
+   {
+      Signal_t actual;
+      DataModel_Read(dataModel, Erd_FreezerIceRateTriggerSignal, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -909,6 +918,48 @@ TEST(AluminumMoldIceMaker, ShouldNotTransitionAfterMaxHarvestTimerExpiresIfAlrea
 
    After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+}
+
+TEST(AluminumMoldIceMaker, ShouldIncrementFreezerTriggerIceRateSignalWhenTransitioningToTheFreezeState)
+{
+   Given IceMakerIs(DISABLED);
+   Given SabbathModeIs(ENABLED);
+   Given MoldThermistorIsValid();
+   Given TheRakePositionIs(RakePosition_NotHome);
+   Given TheModuleIsInitialized();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+   FreezerTriggerIceRateSignalShouldBe(0);
+
+   When SabbathModeIs(DISABLED);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+   FreezerTriggerIceRateSignalShouldBe(1);
+
+   When SabbathModeIs(ENABLED);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+   FreezerTriggerIceRateSignalShouldBe(1);
+
+   When SabbathModeIs(DISABLED);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+   FreezerTriggerIceRateSignalShouldBe(2);
+}
+
+TEST(AluminumMoldIceMaker, ShouldNotIncrementFreezerTriggerIceRateSignalWhenTransitioningToTheFreezeStateOnInitialization)
+{
+   Given IceMakerIs(ENABLED);
+   Given SabbathModeIs(DISABLED);
+   Given MoldThermistorIsValid();
+   Given TheRakePositionIs(RakePosition_Home);
+   Given TheModuleIsInitialized();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+   FreezerTriggerIceRateSignalShouldBe(0);
+
+   When SabbathModeIs(ENABLED);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+   FreezerTriggerIceRateSignalShouldBe(0);
+
+   When SabbathModeIs(DISABLED);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+   FreezerTriggerIceRateSignalShouldBe(1);
 }
 
 TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime)

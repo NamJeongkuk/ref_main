@@ -33,6 +33,7 @@ typedef struct
    Erd_t skipFillRequestErd; // bool
    Erd_t rakeControlRequestErd; // bool
    Erd_t rakePosition; // RakePosition_t
+   Erd_t freezerIceRateTriggerSignal; // Signal_t
 } AluminumMoldIceMakerConfig_t;
 
 typedef struct
@@ -47,6 +48,7 @@ typedef struct
       Timer_t minimumHeaterOnTimer;
       const AluminumMoldIceMakerConfig_t *config;
       const AluminumMoldIceMakerData_t *iceMakerParametricData;
+      bool initalFreezerStateTransition;
    } _private;
 } AluminumMoldIceMaker_t;
 
