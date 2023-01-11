@@ -34,8 +34,15 @@ typedef struct
 
 typedef struct
 {
+   uint8_t rakeMotorControlTimeInSeconds;
+   uint16_t harvestFaultMaxTimeInMinutes;
+} AluminumMoldIceMakerHarvestFaultData_t;
+
+typedef struct
+{
    AluminumMoldIceMakerFreezeData_t freezeData;
    AluminumMoldIceMakerHarvestData_t harvestData;
+   AluminumMoldIceMakerHarvestFaultData_t harvestFaultData;
 } AluminumMoldIceMakerData_t;
 
 #endif
