@@ -95,13 +95,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Compressor Is Single Speed",
-          "name": "Erd_CompressorIsSingleSpeed",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Compressor State",
           "name": "Erd_CompressorState",
           "read": true,

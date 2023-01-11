@@ -395,7 +395,6 @@ enum
    ENTRY(Erd_HeartbeatTick,                                 0xF00C, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_PersonalityParametricData,                     0xF00E, PersonalityParametricData_t *,                      Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_NonVolatileDataSourceCacheSyncState,           0xF012, bool,                                               Swap_N, Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
-   ENTRY(Erd_CompressorIsSingleSpeed,                       0xF013, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_DelayConvertibleCompartmentCooling,            0xF014, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CoolConvertibleCompartmentBeforeOff,           0xF015, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
