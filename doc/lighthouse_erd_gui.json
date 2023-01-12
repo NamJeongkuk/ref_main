@@ -33,6 +33,13 @@
                "displayName": "MB Personality",
                "name": "Erd_AppliancePersonality",
                "read": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "MB Reset",
+               "name": "Erd_Reset",
+               "read": false,
+               "write": true
             }
          ]
       },
