@@ -762,6 +762,12 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenReadyToDefrostAndFreezerEvap
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
+TEST(Defrost_SingleEvap, ShouldSetDisableMinimumCompressorOnTimesWhenEnteringHeaterOnEntry)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
+   DisableMinimumCompressorTimesShouldBe(SET);
+}
+
 TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenReadyToDefrostAndLastDefrostsWereNormalAndThermistorsAreValid)
 {
    Given LastFreshFoodDefrostWasNormal();
@@ -1220,7 +1226,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToPostDwellAfterDwellTimeHasPassed)
    DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
 }
 
-TEST(Defrost_SingleEvap, ShouldVoteForCompressorAndCondenserFanAndDamperAndDisableMinimumCompressorTimesWhenEnteringPostDwell)
+TEST(Defrost_SingleEvap, ShouldVoteForCompressorAndCondenserFanAndDamperWhenEnteringPostDwell)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
 

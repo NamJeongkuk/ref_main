@@ -616,7 +616,6 @@ static void VoteDontCareForPostDwellLoads(Defrost_t *instance)
    VoteForCondenserFanSpeed(instance, FanSpeed_Off, Vote_DontCare);
    VoteForFreezerEvapFanSpeed(instance, FanSpeed_Off, Vote_DontCare);
    VoteForDamperPosition(instance, DamperPosition_Closed, Vote_DontCare);
-   SetDisableMinimumCompressorTimes(instance, false);
 }
 
 static void CheckIfPrechillTemperatureExitConditionMet(Defrost_t *instance)
@@ -1010,6 +1009,7 @@ static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_HeaterOnEntry);
          ClearDefrostTestStateRequest(instance);
+         SetDisableMinimumCompressorTimes(instance, true);
          VoteForHeaterOnEntryLoads(instance, Vote_Care);
          StartDefrostTimer(
             instance,
@@ -1157,6 +1157,7 @@ static bool State_PostDwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Hsm_Exit:
+         SetDisableMinimumCompressorTimes(instance, false);
          VoteDontCareForPostDwellLoads(instance);
          StopTimer(instance, &instance->_private.defrostTimer);
          break;

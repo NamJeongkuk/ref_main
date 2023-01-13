@@ -513,6 +513,11 @@ describe("Defrost", () => {
     await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateDwell);
   });
 
+  it("should set disable minimum compressor on times when entering heater on entry state", async () => {
+    await providedDefrostIsEnabledAndInHeaterOnEntryState();
+    await disableMinimumCompressorTimesShouldBe(true);
+  });
+
   it("should vote to turn off freezer defrost heater, compressor, and all fans and vote for parametric position for fresh food damper when entering dwell", async () => {
     await providedDefrostIsEnabledAndInDwellState();
 
@@ -538,7 +543,6 @@ describe("Defrost", () => {
     await theVoteFor().CompressorSpeedShouldBe(true, postDwellCompressorSpeed);
     await theVoteFor().CondenserFanSpeedShouldBe(true, fanSpeed.fanSpeedLow);
     await theVoteFor().DamperPositionShouldBe(true, postDwellDamperPosition);
-    await disableMinimumCompressorTimesShouldBe(true);
   });
 
   it("should transition to idle when freezer evaporator temperature is less than or equal to the exit temperature", async () => {
