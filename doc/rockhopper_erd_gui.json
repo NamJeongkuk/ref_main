@@ -1648,6 +1648,34 @@
           "name": "Erd_AluminumMoldIceMakerFillTubeHeater_ContinuousVote",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Stop Aluminum Mold IceMaker Fill Signal",
+          "name": "Erd_StopAluminumMoldIceMakerFillSignal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Aluminum Mold IceMaker Flow Meter Water Dispensed Ounces x100",
+          "name": "Erd_AluminumMoldFlowMeterWaterDispensedOzX100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Aluminum Mold IceMaker Water Fill Monitoring Request",
+          "name": "Erd_AluminumMoldIceMakerWaterFillMonitoringRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Aluminum Mold IceMaker Flow Meter Monitoring Request",
+          "name": "Erd_AluminumMoldFlowMeterMonitoringRequest",
+          "read": true,
+          "write": true
         }
       ]
     },

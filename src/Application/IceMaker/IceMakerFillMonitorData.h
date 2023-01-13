@@ -14,7 +14,7 @@ typedef struct
 {
    uint16_t timedIceMakerFillInSecondsx10;
    uint16_t preciseIceMakerFillMaxTimeInSecondsx10;
-   uint16_t timedIceMakerFillOuncesInOzx100;
+   uint16_t preciseIceMakerFillOuncesInOzx100;
 } IceMakerFillMonitorData_t;
 
 #endif

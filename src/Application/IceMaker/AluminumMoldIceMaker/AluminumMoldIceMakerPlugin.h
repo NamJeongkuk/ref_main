@@ -19,6 +19,7 @@
 #include "ErdResolver.h"
 #include "RakeController.h"
 #include "IceMakerMoldHeaterController.h"
+#include "IceMakerWaterFillMonitor.h"
 #include "SensorFiltering.h"
 
 typedef struct
@@ -33,6 +34,7 @@ typedef struct
       AluminumMoldIceMaker_t aluminumMoldIceMaker;
       IceMakerEnableResolver_t iceMakerEnableResolver;
       IceMakerMoldHeaterController_t iceMakerMoldHeaterController;
+      IceMakerWaterFillMonitor_t iceMakerFillMonitor;
 
       ErdResolver_t iceMakerWaterValveVoteResolver;
       ErdResolver_t iceMakerHeaterVoteResolver;
