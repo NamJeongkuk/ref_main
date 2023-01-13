@@ -29,7 +29,7 @@ static void SetErdIfFreezerFilteredTemperatureIsTooWarm(I_DataModel_t *dataModel
    TemperatureDegFx100_t gridFreezerExtremeHystTemperature = calcGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtremeHigh];
 
    bool state = ((freezerFilteredResolvedTemperatureInDegFx100 > gridFreezerExtremeHystTemperature) ||
-      (freezerFilteredResolvedTemperatureInDegFx100 >= defrostData->freezerDefrostTerminationTemperatureInDegFx100));
+      (freezerFilteredResolvedTemperatureInDegFx100 >= defrostData->heaterOnData.freezerDefrostTerminationTemperatureInDegFx100));
 
    DataModel_Write(
       dataModel,

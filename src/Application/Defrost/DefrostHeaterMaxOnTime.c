@@ -28,14 +28,14 @@ static void ResolveFreezerDefrostHeaterMaxOnTime(DefrostHeaterMaxOnTime_t *insta
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->freezerDefrostHeaterMaxOnTimeInMinutesErd,
-         &instance->_private.defrostParametricData->freezerDefrostHeaterMaxOnTimeInMinutes);
+         &instance->_private.defrostParametricData->heaterOnData.freezerDefrostHeaterMaxOnTimeInMinutes);
    }
    else
    {
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->freezerDefrostHeaterMaxOnTimeInMinutesErd,
-         &instance->_private.defrostParametricData->freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes);
+         &instance->_private.defrostParametricData->heaterOnData.freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes);
    }
 }
 
@@ -46,14 +46,14 @@ static void ResolveFreshFoodDefrostHeaterMaxOnTime(DefrostHeaterMaxOnTime_t *ins
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->freshFoodDefrostHeaterMaxOnTimeInMinutesErd,
-         &instance->_private.defrostParametricData->freshFoodDefrostHeaterMaxOnTimeInMinutes);
+         &instance->_private.defrostParametricData->heaterOnData.freshFoodDefrostHeaterMaxOnTimeInMinutes);
    }
    else
    {
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->freshFoodDefrostHeaterMaxOnTimeInMinutesErd,
-         &instance->_private.defrostParametricData->freshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes);
+         &instance->_private.defrostParametricData->heaterOnData.freshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes);
    }
 }
 
@@ -67,7 +67,7 @@ static void ResolveConvertibleCompartmentDefrostHeaterMaxOnTime(
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->convertibleCompartmentDefrostHeaterMaxOnTimeInMinutesErd,
-         &instance->_private.defrostParametricData->convertibleCompartmentDefrostHeaterMaxOnTimeInMinutes);
+         &instance->_private.defrostParametricData->heaterOnData.convertibleCompartmentDefrostHeaterMaxOnTimeInMinutes);
    }
    else
    {
@@ -76,14 +76,14 @@ static void ResolveConvertibleCompartmentDefrostHeaterMaxOnTime(
          DataModel_Write(
             instance->_private.dataModel,
             instance->_private.config->convertibleCompartmentDefrostHeaterMaxOnTimeInMinutesErd,
-            &instance->_private.defrostParametricData->freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes);
+            &instance->_private.defrostParametricData->heaterOnData.freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes);
       }
       else
       {
          DataModel_Write(
             instance->_private.dataModel,
             instance->_private.config->convertibleCompartmentDefrostHeaterMaxOnTimeInMinutesErd,
-            &instance->_private.defrostParametricData->freshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes);
+            &instance->_private.defrostParametricData->heaterOnData.freshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes);
       }
    }
 }

@@ -23,7 +23,7 @@ static void UpdateMaxTimeBetweenDefrosts(SabbathParameters_t *instance, bool sab
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->maxTimeBetweenDefrostsInMinutesErd,
-         &instance->_private.defrostParametricData->maxTimeBetweenDefrostsInMinutes);
+         &instance->_private.defrostParametricData->idleData.maxTimeBetweenDefrostsInMinutes);
    }
 }
 

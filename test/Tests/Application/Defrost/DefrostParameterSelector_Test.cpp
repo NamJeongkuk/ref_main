@@ -128,11 +128,11 @@ TEST_GROUP(DefrostParameterSelector_SingleEvap)
    void PreviousDefrostsAreNormalAndTimeWhenReadyToDefrostIsMaximumTimeBetweenDefrostsInMinutes()
    {
       Given PreviousDefrostsAreNormal();
-      And MaxTimeBetweenDefrostsInMinutesIs(defrostData->maxTimeBetweenDefrostsInMinutes);
+      And MaxTimeBetweenDefrostsInMinutesIs(defrostData->idleData.maxTimeBetweenDefrostsInMinutes);
       And FreezerEvaporatorThermistorValidityIs(Valid);
       And DefrostParameterSelectorIsInitialized();
 
-      TimeWhenReadyToDefrostInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes);
+      TimeWhenReadyToDefrostInMinutesShouldBe(defrostData->idleData.maxTimeBetweenDefrostsInMinutes);
    }
 };
 
@@ -141,7 +141,7 @@ TEST(DefrostParameterSelector_SingleEvap, ShouldSetMaxPrechillTimeToMaxPrechillT
    Given CurrentDefrostTypeIs(DefrostType_FreshFood);
    And DefrostParameterSelectorIsInitialized();
 
-   MaxPrechillTimeInMinutesShouldBe(defrostData->maxPrechillTimeForFreshFoodOnlyDefrostInMinutes);
+   MaxPrechillTimeInMinutesShouldBe(defrostData->prechillData.maxPrechillTimeForFreshFoodOnlyDefrostInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, ShouldSetMaxPrechillTimeToMaxPrechillTimeIfCurrentDefrostIsNotFreshFoodOnlyOnInit)
@@ -149,7 +149,7 @@ TEST(DefrostParameterSelector_SingleEvap, ShouldSetMaxPrechillTimeToMaxPrechillT
    Given CurrentDefrostTypeIs(DefrostType_Full);
    And DefrostParameterSelectorIsInitialized();
 
-   MaxPrechillTimeInMinutesShouldBe(defrostData->maxPrechillTimeInMinutes);
+   MaxPrechillTimeInMinutesShouldBe(defrostData->prechillData.maxPrechillTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, ShouldSetMaxPrechillTimeToMaxPrechillTimeForFreshFoodOnlyIfCurrentDefrostIsFreshFoodOnlyChangesFromFalseToTrue)
@@ -157,11 +157,11 @@ TEST(DefrostParameterSelector_SingleEvap, ShouldSetMaxPrechillTimeToMaxPrechillT
    Given CurrentDefrostTypeIs(DefrostType_Full);
    And DefrostParameterSelectorIsInitialized();
 
-   MaxPrechillTimeInMinutesShouldBe(defrostData->maxPrechillTimeInMinutes);
+   MaxPrechillTimeInMinutesShouldBe(defrostData->prechillData.maxPrechillTimeInMinutes);
 
    When CurrentDefrostTypeIs(DefrostType_FreshFood);
 
-   MaxPrechillTimeInMinutesShouldBe(defrostData->maxPrechillTimeForFreshFoodOnlyDefrostInMinutes);
+   MaxPrechillTimeInMinutesShouldBe(defrostData->prechillData.maxPrechillTimeForFreshFoodOnlyDefrostInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, ShouldSetMaxPrechillTimeToMaxPrechillTimeIfCurrentDefrostIsFreshFoodOnlyChangesFromTrueToFalse)
@@ -169,18 +169,18 @@ TEST(DefrostParameterSelector_SingleEvap, ShouldSetMaxPrechillTimeToMaxPrechillT
    Given CurrentDefrostTypeIs(DefrostType_FreshFood);
    And DefrostParameterSelectorIsInitialized();
 
-   MaxPrechillTimeInMinutesShouldBe(defrostData->maxPrechillTimeForFreshFoodOnlyDefrostInMinutes);
+   MaxPrechillTimeInMinutesShouldBe(defrostData->prechillData.maxPrechillTimeForFreshFoodOnlyDefrostInMinutes);
 
    When CurrentDefrostTypeIs(DefrostType_Full);
 
-   MaxPrechillTimeInMinutesShouldBe(defrostData->maxPrechillTimeInMinutes);
+   MaxPrechillTimeInMinutesShouldBe(defrostData->prechillData.maxPrechillTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_SingleEvap, ShouldSetPostDwellExitTimeToPostDwellExitTimeWhenUnitIsSingleEvap)
 {
    Given DefrostParameterSelectorIsInitialized();
 
-   PostDwellExitTimeInMinutesShouldBe(defrostData->postDwellExitTimeInMinutes);
+   PostDwellExitTimeInMinutesShouldBe(defrostData->postDwellData.postDwellExitTimeInMinutes);
 }
 
 TEST_GROUP(DefrostParameterSelector_DualEvap)
@@ -226,7 +226,7 @@ TEST(DefrostParameterSelector_DualEvap, ShouldSetPostDwellExitTimeToPostDwellExi
    Given CurrentDefrostTypeIs(DefrostType_Full);
    And DefrostParameterSelectorIsInitialized();
 
-   PostDwellExitTimeInMinutesShouldBe(defrostData->postDwellExitTimeInMinutes);
+   PostDwellExitTimeInMinutesShouldBe(defrostData->postDwellData.postDwellExitTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_DualEvap, ShouldSetPostDwellExitTimeToFreshFoodOnlyPostDwellExitTimeWhenUnitIsDualEvapAndCurrentDefrostIsFreshFoodOnlyOnInit)
@@ -234,7 +234,7 @@ TEST(DefrostParameterSelector_DualEvap, ShouldSetPostDwellExitTimeToFreshFoodOnl
    Given CurrentDefrostTypeIs(DefrostType_FreshFood);
    And DefrostParameterSelectorIsInitialized();
 
-   PostDwellExitTimeInMinutesShouldBe(defrostData->freshFoodOnlyPostDwellExitTimeInMinutes);
+   PostDwellExitTimeInMinutesShouldBe(defrostData->postDwellData.freshFoodOnlyPostDwellExitTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_DualEvap, ShouldSetPostDwellExitTimeToPostDwellExitTimeWhenUnitIsDualEvapAndCurrentDefrostIsFreshFoodOnlyChangesFromTrueToFalse)
@@ -242,11 +242,11 @@ TEST(DefrostParameterSelector_DualEvap, ShouldSetPostDwellExitTimeToPostDwellExi
    Given CurrentDefrostTypeIs(DefrostType_FreshFood);
    And DefrostParameterSelectorIsInitialized();
 
-   PostDwellExitTimeInMinutesShouldBe(defrostData->freshFoodOnlyPostDwellExitTimeInMinutes);
+   PostDwellExitTimeInMinutesShouldBe(defrostData->postDwellData.freshFoodOnlyPostDwellExitTimeInMinutes);
 
    When CurrentDefrostTypeIs(DefrostType_Full);
 
-   PostDwellExitTimeInMinutesShouldBe(defrostData->postDwellExitTimeInMinutes);
+   PostDwellExitTimeInMinutesShouldBe(defrostData->postDwellData.postDwellExitTimeInMinutes);
 }
 
 TEST(DefrostParameterSelector_DualEvap, ShouldSetPostDwellExitTimeToFreshFoodOnlyPostDwellExitTimeWhenUnitIsDualEvapAndCurrentDefrostIsFreshFoodOnlyChangesFromFalseToTrue)
@@ -254,9 +254,9 @@ TEST(DefrostParameterSelector_DualEvap, ShouldSetPostDwellExitTimeToFreshFoodOnl
    Given CurrentDefrostTypeIs(DefrostType_Full);
    And DefrostParameterSelectorIsInitialized();
 
-   PostDwellExitTimeInMinutesShouldBe(defrostData->postDwellExitTimeInMinutes);
+   PostDwellExitTimeInMinutesShouldBe(defrostData->postDwellData.postDwellExitTimeInMinutes);
 
    When CurrentDefrostTypeIs(DefrostType_FreshFood);
 
-   PostDwellExitTimeInMinutesShouldBe(defrostData->freshFoodOnlyPostDwellExitTimeInMinutes);
+   PostDwellExitTimeInMinutesShouldBe(defrostData->postDwellData.freshFoodOnlyPostDwellExitTimeInMinutes);
 }

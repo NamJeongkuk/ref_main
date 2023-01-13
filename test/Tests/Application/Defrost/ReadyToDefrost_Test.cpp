@@ -24,9 +24,9 @@ extern "C"
 #define Then
 #define And
 
-#define MinTimeBetweenDefrostsInMinutes (defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes)
-#define MinTimeBetweenDefrostsInSeconds (defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
-#define MaxTimeBetweenDefrostInSeconds (defrostData->maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE)
+#define MinTimeBetweenDefrostsInMinutes (defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes)
+#define MinTimeBetweenDefrostsInSeconds (defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
+#define MaxTimeBetweenDefrostInSeconds (defrostData->idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE)
 
 static ReadyToDefrostConfiguration_t config = {
    .compressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,

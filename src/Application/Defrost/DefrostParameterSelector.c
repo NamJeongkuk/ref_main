@@ -21,11 +21,11 @@ static void SetMaxPrechillTimeInMinutes(DefrostParameterSelector_t *instance, bo
 
    if(defrostIsFreshFoodOnly)
    {
-      maxPrechillTimeInMinutes = defrostData->maxPrechillTimeForFreshFoodOnlyDefrostInMinutes;
+      maxPrechillTimeInMinutes = defrostData->prechillData.maxPrechillTimeForFreshFoodOnlyDefrostInMinutes;
    }
    else
    {
-      maxPrechillTimeInMinutes = defrostData->maxPrechillTimeInMinutes;
+      maxPrechillTimeInMinutes = defrostData->prechillData.maxPrechillTimeInMinutes;
    }
 
    DataModel_Write(
@@ -43,17 +43,17 @@ static void SetPostDwellExitTimeInMinutes(DefrostParameterSelector_t *instance, 
 
    if(evaporatorData->numberOfEvaporators == 1)
    {
-      postDwellExitTimeInMinutes = defrostData->postDwellExitTimeInMinutes;
+      postDwellExitTimeInMinutes = defrostData->postDwellData.postDwellExitTimeInMinutes;
    }
    else
    {
       if(defrostIsFreshFoodOnly)
       {
-         postDwellExitTimeInMinutes = defrostData->freshFoodOnlyPostDwellExitTimeInMinutes;
+         postDwellExitTimeInMinutes = defrostData->postDwellData.freshFoodOnlyPostDwellExitTimeInMinutes;
       }
       else
       {
-         postDwellExitTimeInMinutes = defrostData->postDwellExitTimeInMinutes;
+         postDwellExitTimeInMinutes = defrostData->postDwellData.postDwellExitTimeInMinutes;
       }
    }
 

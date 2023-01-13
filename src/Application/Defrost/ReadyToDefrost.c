@@ -73,7 +73,7 @@ static bool ReadyToDefrost(ReadyToDefrost_t *instance)
    const DefrostData_t *defrostData = PersonalityParametricData_Get(instance->_private.dataModel)->defrostData;
    uint32_t compressorOnTimeInSeconds = CompressorOnTimeInSeconds(instance);
 
-   return (compressorOnTimeInSeconds >= ((uint32_t)defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)) &&
+   return (compressorOnTimeInSeconds >= ((uint32_t)defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)) &&
       ((compressorOnTimeInSeconds + DoorAccelerations(instance)) >= TimeInSecondsWhenReadyToDefrost(instance));
 }
 
@@ -145,11 +145,11 @@ static void DetermineTimeWhenReadyToDefrost(ReadyToDefrost_t *instance)
       minimumTimeIsSet ||
       eepromIsCleared)
    {
-      instance->_private.timeBetweenDefrostsInMinutes = defrostData->minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes;
+      instance->_private.timeBetweenDefrostsInMinutes = defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes;
    }
    else
    {
-      instance->_private.timeBetweenDefrostsInMinutes = defrostData->maxTimeBetweenDefrostsInMinutes;
+      instance->_private.timeBetweenDefrostsInMinutes = defrostData->idleData.maxTimeBetweenDefrostsInMinutes;
    }
 }
 

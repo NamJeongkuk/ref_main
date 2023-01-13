@@ -170,7 +170,7 @@ static void IncrementFreshFoodScaledDoorAccelerationInSeconds(DoorAccelerationCo
 
    count = TRUNCATE_UNSIGNED_ADDITION(
       count,
-      instance->_private.defrostParametricData->freshFoodDoorIncrementFactorInSecondsPerSecond,
+      instance->_private.defrostParametricData->idleData.freshFoodDoorIncrementFactorInSecondsPerSecond,
       UINT32_MAX);
 
    DataModel_Write(
@@ -189,7 +189,7 @@ static void IncrementFreezerScaledDoorAccelerationInSeconds(DoorAccelerationCoun
 
    count = TRUNCATE_UNSIGNED_ADDITION(
       count,
-      instance->_private.defrostParametricData->freezerDoorIncrementFactorInSecondsPerSecond,
+      instance->_private.defrostParametricData->idleData.freezerDoorIncrementFactorInSecondsPerSecond,
       UINT32_MAX);
 
    DataModel_Write(
@@ -216,14 +216,14 @@ static void IncrementConvertibleCompartmentScaledDoorAccelerationInSeconds(DoorA
    {
       count = TRUNCATE_UNSIGNED_ADDITION(
          count,
-         instance->_private.defrostParametricData->freshFoodDoorIncrementFactorInSecondsPerSecond,
+         instance->_private.defrostParametricData->idleData.freshFoodDoorIncrementFactorInSecondsPerSecond,
          UINT32_MAX);
    }
    else if(state == ConvertibleCompartmentStateType_Freezer)
    {
       count = TRUNCATE_UNSIGNED_ADDITION(
          count,
-         instance->_private.defrostParametricData->freezerDoorIncrementFactorInSecondsPerSecond,
+         instance->_private.defrostParametricData->idleData.freezerDoorIncrementFactorInSecondsPerSecond,
          UINT32_MAX);
    }
 

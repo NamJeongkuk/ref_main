@@ -86,7 +86,7 @@ TEST_GROUP(SabbathParameters)
       And SabbathModeIs(DISABLED);
 
       When SabbathParametersAreInitialized();
-      MaxTimeBetweenDefrostsInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes);
+      MaxTimeBetweenDefrostsInMinutesShouldBe(defrostData->idleData.maxTimeBetweenDefrostsInMinutes);
    }
 };
 
@@ -101,7 +101,7 @@ TEST(SabbathParameters, ShouldSetMaxTimeBetweenDefrostsToNormalTimeWhenSabbathIs
    And SabbathModeIs(DISABLED);
 
    When SabbathParametersAreInitialized();
-   MaxTimeBetweenDefrostsInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes);
+   MaxTimeBetweenDefrostsInMinutesShouldBe(defrostData->idleData.maxTimeBetweenDefrostsInMinutes);
 }
 
 TEST(SabbathParameters, ShouldSetMaxTimeBetweenDefrostsToSabbathTimeWhenSabbathIsEnabledOnInit)
@@ -118,7 +118,7 @@ TEST(SabbathParameters, ShouldUpdateMaxTimeBetweenDefrostsToNormalTimeWhenSabbat
    Given SabbathAndSabbathParametersAreEnabled();
 
    When SabbathModeIs(DISABLED);
-   MaxTimeBetweenDefrostsInMinutesShouldBe(defrostData->maxTimeBetweenDefrostsInMinutes);
+   MaxTimeBetweenDefrostsInMinutesShouldBe(defrostData->idleData.maxTimeBetweenDefrostsInMinutes);
 }
 
 TEST(SabbathParameters, ShouldSetMaxTimeBetweenDefrostsToSabbathTimeWhenSabbathIsEnabled)

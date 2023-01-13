@@ -81,12 +81,12 @@ static void DetermineNumberOfFreshFoodDefrostsBeforeAFreezerDefrost(NextDefrostT
    else if(FreezerDefrostWasAbnormal(instance))
    {
       numberOfFreshFoodDefrostsBeforeAFreezerDefrost =
-         instance->_private.defrostData->numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost;
+         instance->_private.defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost;
    }
    else
    {
       numberOfFreshFoodDefrostsBeforeAFreezerDefrost =
-         instance->_private.defrostData->numberOfFreshFoodDefrostsBeforeFreezerDefrost;
+         instance->_private.defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeFreezerDefrost;
    }
 
    DataModel_Write(

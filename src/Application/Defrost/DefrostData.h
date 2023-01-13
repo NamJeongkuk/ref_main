@@ -20,9 +20,17 @@ typedef struct
    uint16_t freshFoodDoorIncrementFactorInSecondsPerSecond;
    uint16_t minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes;
    uint16_t maxTimeBetweenDefrostsInMinutes;
+} DefrostIdleData_t;
+
+typedef struct
+{
    uint8_t numberOfFreshFoodDefrostsBeforeFreezerDefrost;
    uint8_t numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost;
    uint8_t maxPrechillPrepTimeInMinutes;
+} DefrostPrechillPrepData_t;
+
+typedef struct
+{
    uint8_t maxPrechillTimeInMinutes;
    uint8_t maxPrechillTimeForFreshFoodOnlyDefrostInMinutes;
    ValvePosition_t prechillRefrigerantValvePosition;
@@ -42,7 +50,15 @@ typedef struct
    TemperatureDegFx100_t prechillConvertibleCompartmentAsFreshFoodMaxTempInDegFx100;
    TemperatureDegFx100_t prechillFreezerEvapExitTemperatureInDegFx100;
    TemperatureDegFx100_t prechillConvertibleCompartmentEvapExitTemperatureInDegFx100;
+} DefrostPrechillData_t;
+
+typedef struct
+{
    uint8_t defrostHeaterOnDelayAfterCompressorOffInSeconds;
+} DefrostHeaterOnEntryData_t;
+
+typedef struct
+{
    ValvePosition_t defrostHeaterOnRefrigerantValvePosition;
    uint8_t freezerDefrostHeaterMaxOnTimeInMinutes;
    uint8_t freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes;
@@ -58,9 +74,17 @@ typedef struct
    uint8_t convertibleCompartmentAsFreezerHeaterOnTimeToSetAbnormalDefrostInMinutes;
    uint8_t convertibleCompartmentAsFreshFoodInvalidThermistorDefrostHeaterMaxOnTimeInMinutes;
    uint8_t convertibleCompartmentAsFreezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes;
+} DefrostHeaterOnData_t;
+
+typedef struct
+{
    uint8_t dwellTimeInMinutes;
    DamperPosition_t dwellFreshFoodDamperPosition;
    ValvePosition_t dwellRefrigerantValvePosition;
+} DefrostDwellData_t;
+
+typedef struct
+{
    uint8_t postDwellExitTimeInMinutes;
    uint8_t freshFoodOnlyPostDwellExitTimeInMinutes;
    TemperatureDegFx100_t postDwellFreezerEvapExitTemperatureInDegFx100;
@@ -69,6 +93,17 @@ typedef struct
    CompressorSpeed_t postDwellCompressorSpeed;
    FanSpeed_t postDwellCondenserFanSpeed;
    DamperPosition_t postDwellFreshFoodDamperPosition;
+} DefrostPostDwellData_t;
+
+typedef struct
+{
+   DefrostIdleData_t idleData;
+   DefrostPrechillPrepData_t prechillPrepData;
+   DefrostPrechillData_t prechillData;
+   DefrostHeaterOnEntryData_t heaterOnEntryData;
+   DefrostHeaterOnData_t heaterOnData;
+   DefrostDwellData_t dwellData;
+   DefrostPostDwellData_t postDwellData;
 } DefrostData_t;
 
 #endif

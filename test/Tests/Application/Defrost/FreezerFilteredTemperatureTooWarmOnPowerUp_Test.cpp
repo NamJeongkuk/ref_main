@@ -113,7 +113,7 @@ TEST(FreezerFilteredTemperatureTooWarmOnPowerUp, ShouldSetErdToFalseWhenFreezerF
 
 TEST(FreezerFilteredTemperatureTooWarmOnPowerUp, ShouldSetErdToTrueWhenFreezerFilteredTemperatureIsAboveFreezerDefrostTerminationTemperature)
 {
-   Given FilteredFreezerCabinetTemperatureIs(defrostData->freezerDefrostTerminationTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->heaterOnData.freezerDefrostTerminationTemperatureInDegFx100 + 1);
    And CalculatedGridLinesAre(calcGridLines);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIsInitialized();
@@ -123,7 +123,7 @@ TEST(FreezerFilteredTemperatureTooWarmOnPowerUp, ShouldSetErdToTrueWhenFreezerFi
 
 TEST(FreezerFilteredTemperatureTooWarmOnPowerUp, ShouldSetErdToTrueWhenFreezerFilteredTemperatureIsEqualToFreezerDefrostTerminationTemperature)
 {
-   Given FilteredFreezerCabinetTemperatureIs(defrostData->freezerDefrostTerminationTemperatureInDegFx100);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->heaterOnData.freezerDefrostTerminationTemperatureInDegFx100);
    And CalculatedGridLinesAre(calcGridLines);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIsInitialized();
