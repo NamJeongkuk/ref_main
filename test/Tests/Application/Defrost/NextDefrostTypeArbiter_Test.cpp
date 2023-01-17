@@ -177,7 +177,7 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToAbnormalCoun
    Given FreezerDefrostWasAbnormalIs(true);
    Given ConvertibleCompartmentDefrostWasAbnormalIs(false);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost);
+   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost);
 }
 
 TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToAbnormalCountWhenItHasAConvertibleCompartmentAndConvertibleCompartmentDefrostIsAbnormalAndConvertibleCompartmentIsActingAsFreezerOnInit)
@@ -216,7 +216,7 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToNormalCountW
    Given ConvertibleCompartmentDefrostWasAbnormalIs(false);
    Given ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
 }
 
 TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToNormalCountWhenEnhancedSabbathIsNotEnabledAndFreezerDefrostIsNotAbnormalAndDoesNotHaveConvertibleCompartmentOnInit)
@@ -227,7 +227,7 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToNormalCountW
    Given ConvertibleCompartmentDefrostWasAbnormalIs(true);
    Given ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
 }
 
 TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToNormalCountWhenEnhancedSabbathIsNotEnabledAndFreezerDefrostIsNotAbnormalAndConvertibleCompartmentTypeIsFreshFoodOnInit)
@@ -347,10 +347,10 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToAbnormalFree
    Given ConvertibleCompartmentDefrostWasAbnormalIs(true);
    Given ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_FreshFood);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
 
    When ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
-   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost);
+   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost);
 }
 
 TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToAbnormalFreezeDefrostCountWhenHasConvertibleCompartmentAndConvertibleCompartmentStateIsFreezerAndConvertibleCompartmentDefrostWasAbnormalChangesToTrue)
@@ -361,10 +361,10 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToAbnormalFree
    Given ConvertibleCompartmentDefrostWasAbnormalIs(false);
    Given ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
 
    When ConvertibleCompartmentDefrostWasAbnormalIs(true);
-   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost);
+   NumberOfFreshFoodDefrostsBeforeAFreezerDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost);
 }
 
 TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToNormalWhenEnhancedSabbathModeIsDisabledWhileFreezerDefrostWasAbnormalIsFalse)
