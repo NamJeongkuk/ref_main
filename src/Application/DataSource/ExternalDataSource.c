@@ -101,7 +101,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_ConvertibleCompartmentSetpoint_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_FIELD(PublicErd_ConvertibleCompartmentSetpoint_FactoryVote, SetpointVotedTemperature_t, temperatureInDegFx100),
    SWAPPED_FIELD(PublicErd_ConvertibleCompartmentSetpoint_UserVote, SetpointVotedTemperature_t, temperatureInDegFx100),
-   SWAPPED_ERD(PublicErd_TimeInMinutesInValvePositionB, sizeof(uint32_t)),
+   SWAPPED_ERD(PublicErd_TimeInMinutesInValvePositionB, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_FreezerEvap_FilteredTemperatureOverrideValueInDegFx100, sizeof(TemperatureDegFx100_t)),
    SWAPPED_ERD(PublicErd_Freezer_FilteredTemperatureOverrideValueInDegFx100, sizeof(TemperatureDegFx100_t)),
    SWAPPED_ERD(PublicErd_FreshFood_FilteredTemperatureOverrideValueInDegFx100, sizeof(TemperatureDegFx100_t)),
