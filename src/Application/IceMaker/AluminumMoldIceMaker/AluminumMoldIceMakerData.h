@@ -40,9 +40,19 @@ typedef struct
 
 typedef struct
 {
+   TemperatureDegFx100_t heaterOffTemperatureInDegFx100;
+   TemperatureDegFx100_t heaterOnTemperatureInDegFx100;
+   uint8_t motorOffTimeInSeconds;
+   uint8_t motorOnTimeInSeconds;
+   uint8_t maximumHarvestFixTimeInMinutes;
+} AluminumMoldIceMakerHarvestFixData_t;
+
+typedef struct
+{
    AluminumMoldIceMakerFreezeData_t freezeData;
    AluminumMoldIceMakerHarvestData_t harvestData;
    AluminumMoldIceMakerHarvestFaultData_t harvestFaultData;
+   AluminumMoldIceMakerHarvestFixData_t harvestFixData;
 } AluminumMoldIceMakerData_t;
 
 #endif
