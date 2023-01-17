@@ -9,6 +9,7 @@
 #define ALUMINUMMOLDICEMAKERDATA_H
 
 #include "TemperatureDegFx100.h"
+#include "FillTubeHeaterData.h"
 
 typedef struct
 {
@@ -21,8 +22,6 @@ typedef struct
 
 typedef struct
 {
-   uint8_t freezeThawFillTubeHeaterDutyCyclePercentage;
-   uint16_t freezeThawFillTubeHeaterOnTimeInSeconds;
    uint8_t maximumHarvestTimeInMinutes;
    TemperatureDegFx100_t initialMotorOnTemperatureInDegFx100;
    uint8_t initialMinimumHeaterOnTimeInSeconds;
@@ -53,6 +52,7 @@ typedef struct
    AluminumMoldIceMakerHarvestData_t harvestData;
    AluminumMoldIceMakerHarvestFaultData_t harvestFaultData;
    AluminumMoldIceMakerHarvestFixData_t harvestFixData;
+   FillTubeHeaterData_t fillTubeHeaterData;
 } AluminumMoldIceMakerData_t;
 
 #endif

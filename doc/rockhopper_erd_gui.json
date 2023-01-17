@@ -1725,6 +1725,53 @@
           "write": true
         }
       ]
+    },
+    {
+      "title": "Fill Tube Heater",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Ice Rate Is Active",
+          "name": "Erd_Freezer_IceRateIsActive",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Ice Formation Is Active",
+          "name": "Erd_Freezer_IceFormationIsActive",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fill Tube Heater Winning Vote",
+          "name": "Erd_AluminumMoldIceMakerFillTubeHeater_WinningVoteErd",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fill Tube Heater Factory Vote",
+          "name": "Erd_AluminumMoldIceMakerFillTubeHeater_FactoryVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fill Tube Heater Ice Maker Vote",
+          "name": "Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fill Tube Heater Non Harvest Vote",
+          "name": "Erd_AluminumMoldIceMakerFillTubeHeater_NonHarvestVote",
+          "read": true,
+          "write": true
+        }
+      ]
     }
   ]
 }

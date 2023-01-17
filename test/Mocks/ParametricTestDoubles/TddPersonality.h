@@ -22,6 +22,7 @@ enum
    TddPersonality_DevelopmentSingleEvapFillTubeHeaterZeroOnTime,
    TddPersonality_DevelopmentSingleEvapFillTubeHeaterZeroDutyCycle,
    TddPersonality_DevelopmentSingleEvapFillTubeHeaterOnTimeLessThanMaxHarvestTime,
+   TddPersonality_DevelopmentSingleEvapFillTubeHeaterNonHarvestControlZeroPercentDutyCycle,
    TddPersonality_MaxDevelopment
 };
 

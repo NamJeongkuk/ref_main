@@ -673,15 +673,15 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromIdleFreezeToFreezeWhenIceMakerIsE
 TEST(AluminumMoldIceMaker, ShouldVoteToTurnOnFillTubeHeaterWithFreezeThawFillTubeHeaterDutyCycleOnEntryToHarvest)
 {
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
-   FillTubeHeaterVoteShouldBe(iceMakerData->harvestData.freezeThawFillTubeHeaterDutyCyclePercentage);
+   FillTubeHeaterVoteShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
 }
 
 TEST(AluminumMoldIceMaker, ShouldVoteToTurnOffFillTubeHeaterAfterFillTubeHeaterOnTime)
 {
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
 
-   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
-   FillTubeHeaterVoteShouldBe(iceMakerData->harvestData.freezeThawFillTubeHeaterDutyCyclePercentage);
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   FillTubeHeaterVoteShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
 
    After(1);
    FillTubeHeaterVoteShouldBe(PercentageDutyCycle_Min);
@@ -727,7 +727,7 @@ TEST(AluminumMoldIceMaker, ShouldVoteFillTubeHeaterOffWhenTransitioningFromHarve
 
    After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN - 1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
-   FillTubeHeaterVoteShouldBe(iceMakerData->harvestData.freezeThawFillTubeHeaterDutyCyclePercentage);
+   FillTubeHeaterVoteShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
 
    After(1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
@@ -758,7 +758,7 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToFreezeStateWhenFillTubeH
    Given SkipFillRequestIsSet();
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
 
-   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    When RakeCompletesFullRevolution();
@@ -774,7 +774,7 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToFillStateWhenFillTubeHea
    Given SkipFillRequestIsClear();
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
 
-   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    When RakeCompletesFullRevolution();
@@ -802,7 +802,7 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToHarvestFixStateWhenRakeH
    Given RakeDidNotCompleteFullRevolution();
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
 
-   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    After(1);
@@ -816,7 +816,7 @@ TEST(AluminumMoldIceMaker, ShouldClearRakeControllerRequestWhenTransitioningFrom
    Given RakeDidNotCompleteFullRevolution();
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
 
-   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
    RakeControllerRequestShouldBe(SET);
 
@@ -832,7 +832,7 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToHarvestFixStateWhenRakeH
    Given RakeDidNotCompleteFullRevolution();
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
 
-   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    After(1);
@@ -1148,8 +1148,8 @@ TEST(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime, ShouldVote
 {
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
 
-   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
-   FillTubeHeaterVoteShouldBe(iceMakerData->harvestData.freezeThawFillTubeHeaterDutyCyclePercentage);
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   FillTubeHeaterVoteShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
 
    After(1);
    FillTubeHeaterVoteShouldBe(PercentageDutyCycle_Min);
@@ -1161,7 +1161,7 @@ TEST(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime, ShouldTran
    Given SkipFillRequestIsSet();
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
 
-   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    When RakeCompletesFullRevolution();
@@ -1177,7 +1177,7 @@ TEST(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime, ShouldTran
    Given SkipFillRequestIsClear();
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
 
-   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    When RakeCompletesFullRevolution();
@@ -1193,7 +1193,7 @@ TEST(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime, ShouldTran
    Given SkipFillRequestIsSet();
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
 
-   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    When RakeCompletesFullRevolution();
@@ -1206,7 +1206,7 @@ TEST(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime, ShouldTran
    Given SkipFillRequestIsClear();
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
 
-   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    When RakeCompletesFullRevolution();
@@ -1263,7 +1263,7 @@ TEST(AluminumMoldIceMaker, ShouldNotTransitionAfterFillTubeHeaterTimerExpiresWhe
    Given SkipFillRequestIsClear();
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
 
-   After(iceMakerData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    When RakeCompletesFullRevolution();

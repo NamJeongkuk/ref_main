@@ -617,6 +617,7 @@ enum
    ENTRY(Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100,0xF1AC, TemperatureDegFx100_t,             Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,     0xF1AD, TemperatureDegFx100_t,             Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_Freezer_IceRateIsActive,                                        0xF1AE, bool,                              Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerHsmState,                  0xF1C0, AluminumMoldIceMakerHsmState_t,                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_HarvestCountCalculationRequest,                0xF1C1, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FeelerArmMonitoringRequest,                    0xF1C2, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
@@ -829,7 +830,7 @@ enum
    ENTRY(Erd_AluminumMoldIceMakerFillTubeHeater_WinningVoteErd,  0xF391, WinningVoteErd_t,                             Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerFillTubeHeater_FactoryVote,     0xF392, PercentageDutyCycleVote_t,                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote,    0xF393, PercentageDutyCycleVote_t,                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerFillTubeHeater_ContinuousVote,  0xF394, PercentageDutyCycleVote_t,                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerFillTubeHeater_NonHarvestVote,  0xF394, PercentageDutyCycleVote_t,                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFood_ResolvedSetpointInDegFx100,          0xF3A0, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFood_CabinetOffsetInDegFx100,             0xF3A1, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

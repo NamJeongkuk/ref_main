@@ -256,7 +256,7 @@ static void StartFillTubeHeaterTimer(AluminumMoldIceMaker_t *instance)
          instance->_private.dataModel,
          Erd_TimerModule),
       &instance->_private.fillTubeHeaterTimer,
-      instance->_private.iceMakerParametricData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC,
+      instance->_private.iceMakerParametricData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC,
       FillTubeHeaterTimerExpired,
       instance);
 }
@@ -367,12 +367,12 @@ static void ClearSkipFillFlag(AluminumMoldIceMaker_t *instance)
 
 static bool FillTubeHeaterDutyCycleIsZero(AluminumMoldIceMaker_t *instance)
 {
-   return (instance->_private.iceMakerParametricData->harvestData.freezeThawFillTubeHeaterDutyCyclePercentage == 0);
+   return (instance->_private.iceMakerParametricData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage == 0);
 }
 
 static bool FillTubeHeaterOnTimeIsZero(AluminumMoldIceMaker_t *instance)
 {
-   return (instance->_private.iceMakerParametricData->harvestData.freezeThawFillTubeHeaterOnTimeInSeconds == 0);
+   return (instance->_private.iceMakerParametricData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds == 0);
 }
 
 static void MinimumHeaterOnTimeReached(void *context)
@@ -543,7 +543,7 @@ static bool State_Harvest(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_Harvest);
-         VoteForFillTubeHeater(instance, instance->_private.iceMakerParametricData->harvestData.freezeThawFillTubeHeaterDutyCyclePercentage);
+         VoteForFillTubeHeater(instance, instance->_private.iceMakerParametricData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
          StartMaxHarvestTimer(instance);
          StartFillTubeHeaterTimer(instance);
          StartMinimumHeaterOnTimer(instance);

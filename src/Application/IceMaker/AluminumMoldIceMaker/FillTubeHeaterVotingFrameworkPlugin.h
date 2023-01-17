@@ -12,6 +12,7 @@
 #include "I_DataModel.h"
 #include "SoftPwm.h"
 #include "PercentageDutyCycleVoteToPwmDutyCycleConverter.h"
+#include "NonHarvestFillTubeHeaterControl.h"
 
 typedef struct
 {
@@ -19,6 +20,7 @@ typedef struct
    {
       ErdResolver_t fillTubeHeaterErdResolver;
       PercentageDutyCycleVoteToPwmDutyCycleConverter_t dutyCycleToPercentageCalculator;
+      NonHarvestFillTubeHeaterControl_t nonHarvestFillTubeHeaterControl;
       SoftPwm_t fillTubeHeaterSoftPwm;
    } _private;
 } FillTubeHeaterVotingFrameworkPlugin_t;
