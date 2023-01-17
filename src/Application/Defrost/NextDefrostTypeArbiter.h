@@ -21,6 +21,9 @@ typedef struct
    Erd_t numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd; // uint8_t
    Erd_t enhancedSabbathModeErd; // bool
    Erd_t freezerDefrostWasAbnormalErd; // bool
+   Erd_t convertibleCompartmentDefrostWasAbnormalErd; // bool
+   Erd_t hasConvertibleCompartmentErd; // bool
+   Erd_t convertibleCompartmentStateErd; // ConvertibleCompartmentStateType_t
    Erd_t currentDefrostTypeErd; // DefrostType_t
    Erd_t clearedDefrostEepromStartupErd; // bool
    Erd_t freezerFilteredTemperatureTooWarmAtPowerUpErd; // bool

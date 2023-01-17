@@ -8,6 +8,7 @@
 #include "NextDefrostTypeArbiter.h"
 #include "Constants_Binary.h"
 #include "DefrostType.h"
+#include "ConvertibleCompartmentStateType.h"
 #include "PersonalityParametricData.h"
 #include "utils.h"
 
@@ -69,6 +70,30 @@ static bool FreezerDefrostWasAbnormal(NextDefrostTypeArbiter_t *instance)
    return freezerDefrostWasAbnormal;
 }
 
+static bool ConvertibleCompartmentIsActingAsFreezerAndDefrostWasAbnormal(NextDefrostTypeArbiter_t *instance)
+{
+   bool hasConvertibleCompartment;
+   bool convertibleCompartmentDefrostWasAbnormal;
+   ConvertibleCompartmentStateType_t convertibleCompartmentStateType;
+
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->hasConvertibleCompartmentErd,
+      &hasConvertibleCompartment);
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->convertibleCompartmentDefrostWasAbnormalErd,
+      &convertibleCompartmentDefrostWasAbnormal);
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->convertibleCompartmentStateErd,
+      &convertibleCompartmentStateType);
+
+   return (hasConvertibleCompartment &&
+      convertibleCompartmentDefrostWasAbnormal &&
+      (convertibleCompartmentStateType == ConvertibleCompartmentStateType_Freezer));
+}
+
 static void DetermineNumberOfFreshFoodDefrostsBeforeAFreezerDefrost(NextDefrostTypeArbiter_t *instance)
 {
    uint8_t numberOfFreshFoodDefrostsBeforeAFreezerDefrost;
@@ -78,7 +103,7 @@ static void DetermineNumberOfFreshFoodDefrostsBeforeAFreezerDefrost(NextDefrostT
       numberOfFreshFoodDefrostsBeforeAFreezerDefrost =
          instance->_private.enhancedSabbathData->numberOfFreshFoodDefrostsBeforeFreezerDefrost;
    }
-   else if(FreezerDefrostWasAbnormal(instance))
+   else if(FreezerDefrostWasAbnormal(instance) || (ConvertibleCompartmentIsActingAsFreezerAndDefrostWasAbnormal(instance)))
    {
       numberOfFreshFoodDefrostsBeforeAFreezerDefrost =
          instance->_private.defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost;
@@ -175,7 +200,9 @@ static void DataModelUpdated(void *context, const void *_args)
       }
    }
    else if((args->erd == instance->_private.config->enhancedSabbathModeErd) ||
-      (args->erd == instance->_private.config->freezerDefrostWasAbnormalErd))
+      (args->erd == instance->_private.config->freezerDefrostWasAbnormalErd) ||
+      (args->erd == instance->_private.config->convertibleCompartmentDefrostWasAbnormalErd) ||
+      (args->erd == instance->_private.config->convertibleCompartmentStateErd))
    {
       DetermineNumberOfFreshFoodDefrostsBeforeAFreezerDefrost(instance);
    }
