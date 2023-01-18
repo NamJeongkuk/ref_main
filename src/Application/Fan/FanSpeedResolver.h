@@ -28,7 +28,7 @@ typedef struct
       I_DataModel_t *dataModel;
       const FanSpeedResolverConfig_t *config;
       const FanData_t *fanData;
-      EventSubscription_t resolvedVoteOnChangeSubscription;
+      EventSubscription_t dataModelSubscription;
    } _private;
 } FanSpeedResolver_t;
 

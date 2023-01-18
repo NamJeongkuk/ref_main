@@ -212,6 +212,11 @@ TEST_GROUP(FanSpeedResolver_CoolingMode)
       DataModel_Write(dataModel, Erd_CoolingMode, &coolingMode);
    }
 
+   void WhenCoolingModeBecomes(CoolingMode_t coolingMode)
+   {
+      GivenCoolingModeIs(coolingMode);
+   }
+
    void GivenFreezerSetpointIsSetTo(SetpointZone_t setpoint)
    {
       DataModel_Write(dataModel, Erd_FreezerSetpointZone, &setpoint);
@@ -422,4 +427,16 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeHighFreezerWhenRequest
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_High);
    CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.highSpeedSpeedFreezer.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingMode, ShouldChangeFanSpeedWhenCoolingModeChanges)
+{
+   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenCoolingModeIs(CoolingMode_FreshFood);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(coolingModeFanData->careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreshFood.rpm);
+
+   WhenCoolingModeBecomes(CoolingMode_Freezer);
+   CalculatedFanControlSpeedShouldBe(coolingModeFanData->careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreezer.rpm);
 }

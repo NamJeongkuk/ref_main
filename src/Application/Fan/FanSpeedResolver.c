@@ -325,12 +325,16 @@ static void CalculateResolvedFanSpeedBasedOnDependence(FanSpeedResolver_t *insta
    }
 }
 
-static void ResolvedFanSpeedVoteChanged(void *context, const void *args)
+static void DataModelChanged(void *context, const void *_args)
 {
    FanSpeedResolver_t *instance = context;
-   IGNORE(args);
+   const DataModelOnDataChangeArgs_t *args = _args;
 
-   CalculateResolvedFanSpeedBasedOnDependence(instance);
+   if((args->erd == instance->_private.config->resolvedFanSpeedVoteErd) ||
+      args->erd == instance->_private.config->coolingModeErd)
+   {
+      CalculateResolvedFanSpeedBasedOnDependence(instance);
+   }
 }
 
 void FanSpeedResolver_Init(
@@ -346,11 +350,10 @@ void FanSpeedResolver_Init(
    CalculateResolvedFanSpeedBasedOnDependence(instance);
 
    EventSubscription_Init(
-      &instance->_private.resolvedVoteOnChangeSubscription,
+      &instance->_private.dataModelSubscription,
       instance,
-      ResolvedFanSpeedVoteChanged);
-   DataModel_Subscribe(
-      instance->_private.dataModel,
-      instance->_private.config->resolvedFanSpeedVoteErd,
-      &instance->_private.resolvedVoteOnChangeSubscription);
+      DataModelChanged);
+   Event_Subscribe(
+      dataModel->OnDataChange,
+      &instance->_private.dataModelSubscription);
 }
