@@ -15,7 +15,7 @@
 
 typedef struct
 {
-   Erd_t compressorOnTimeInSecondsErd; // uint32_t
+   Erd_t defrostCompressorOnTimeInSecondsErd; // uint32_t
    Erd_t freshFoodScaledDoorAccelerationInSecondsErd; // uint32_t
    Erd_t freezerScaledDoorAccelerationInSecondsErd; // uint32_t
    Erd_t convertibleCompartmentScaledDoorAccelerationInSecondsErd; // uint32_t
@@ -31,6 +31,7 @@ typedef struct
    Erd_t convertibleCompartmentDefrostWasAbnormalErd; // bool
    Erd_t hasConvertibleCompartment; // bool
    Erd_t eepromClearedErd; // bool
+   Erd_t waitingForDefrostTimeInSecondsErd; // uint32_t
 } ReadyToDefrostConfiguration_t;
 
 typedef struct

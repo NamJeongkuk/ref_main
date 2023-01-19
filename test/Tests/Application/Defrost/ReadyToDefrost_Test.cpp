@@ -29,7 +29,7 @@ extern "C"
 #define MaxTimeBetweenDefrostInSeconds (defrostData->idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE)
 
 static ReadyToDefrostConfiguration_t config = {
-   .compressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
+   .defrostCompressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
    .freshFoodScaledDoorAccelerationInSecondsErd = Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds,
    .freezerScaledDoorAccelerationInSecondsErd = Erd_DefrostFreezerScaledDoorAccelerationInSeconds,
    .convertibleCompartmentScaledDoorAccelerationInSecondsErd = Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds,
@@ -45,6 +45,7 @@ static ReadyToDefrostConfiguration_t config = {
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
    .hasConvertibleCompartment = Erd_HasConvertibleCompartment,
    .eepromClearedErd = Erd_Eeprom_ClearedDefrostEepromStartup,
+   .waitingForDefrostTimeInSecondsErd = Erd_WaitingForDefrostTimeInSeconds
 };
 
 TEST_GROUP(ReadyToDefrost)
@@ -123,6 +124,14 @@ TEST_GROUP(ReadyToDefrost)
       DataModel_Read(dataModel, Erd_UseMinimumReadyToDefrostTime, &actualState);
 
       CHECK_EQUAL(expectedState, actualState);
+   }
+
+   void WaitingForDefrostTimeInSecondsShouldBe(uint32_t expectedValue)
+   {
+      uint32_t actualValue;
+      DataModel_Read(dataModel, Erd_WaitingForDefrostTimeInSeconds, &actualValue);
+
+      CHECK_EQUAL(expectedValue, actualValue);
    }
 
    void FreezerFilteredTemperatureTooWarmAtPowerUpIs(bool state)
@@ -645,4 +654,23 @@ TEST(ReadyToDefrost, ShouldClearUseMinimumReadyToDefrostTimeErdWhenReadyToDefros
 
    ReadyToDefrostShouldBe(SET);
    UseMinimumReadyToDefrostTimeIs(CLEAR);
+}
+
+TEST(ReadyToDefrost, ShouldSetWaitingForDefrostTimeInSecondsToDefrostCompressorOnTimeInSecondsIfDefrostCompressorOnTimeInSecondsIsLessThanMinimumTimeBetweenDefrostsAbnormalRunTimeInMinutes)
+{
+   Given TheTimeBetweenDefrostsIsNormalTimeAndReadyToDefrostIsClearAndTheReadyToDefrostModuleIsInitialized();
+   And CompressorOnTimeInSecondsIs(MinTimeBetweenDefrostsInSeconds - 1);
+
+   WaitingForDefrostTimeInSecondsShouldBe(MinTimeBetweenDefrostsInSeconds - 1);
+}
+
+TEST(ReadyToDefrost, ShouldSetWaitingForDefrostTimeInSecondsToSumOfDefrostCompressorOnTimeInSecondsAndDoorAccelerationsForFreshFoodAndFreezerAndConvertibleCompartmentIfDefrostCompressorOnTimeInSecondsIsGreaterThanOrEqualsToMinimumTimeBetweenDefrostsAbnormalRunTimeInMinutes)
+{
+   Given TheTimeBetweenDefrostsIsNormalTimeAndReadyToDefrostIsClearAndTheReadyToDefrostModuleIsInitialized();
+   And CompressorOnTimeInSecondsIs(MinTimeBetweenDefrostsInSeconds);
+   And FreshFoodDoorAccelerationIs(1000);
+   And FreezerDoorAccelerationIs(200);
+   And ConvertibleCompartmentDoorAccelerationIs(245);
+
+   WaitingForDefrostTimeInSecondsShouldBe(MinTimeBetweenDefrostsInSeconds + 1000 + 200 + 245);
 }

@@ -100,7 +100,7 @@ static const DoorAccelerationCounterConfiguration_t doorAccelerationCounterConfi
 };
 
 static ReadyToDefrostConfiguration_t readyToDefrostConfig = {
-   .compressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
+   .defrostCompressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
    .freshFoodScaledDoorAccelerationInSecondsErd = Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds,
    .freezerScaledDoorAccelerationInSecondsErd = Erd_DefrostFreezerScaledDoorAccelerationInSeconds,
    .convertibleCompartmentScaledDoorAccelerationInSecondsErd = Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds,
@@ -115,7 +115,8 @@ static ReadyToDefrostConfiguration_t readyToDefrostConfig = {
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
    .hasConvertibleCompartment = Erd_HasConvertibleCompartment,
-   .eepromClearedErd = Erd_Eeprom_ClearedDefrostEepromStartup
+   .eepromClearedErd = Erd_Eeprom_ClearedDefrostEepromStartup,
+   .waitingForDefrostTimeInSecondsErd = Erd_WaitingForDefrostTimeInSeconds
 };
 
 static const TimeThatPrechillConditionsAreMetConfiguration_t timeThatPrechillConditionsAreMetConfig = {

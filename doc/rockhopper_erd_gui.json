@@ -344,6 +344,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Waiting For Defrost Time In Seconds",
+          "name": "Erd_WaitingForDefrostTimeInSeconds",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
           "displayName": "Number of Freezer Abnormal Defrost Cycles (EEPROM)",
           "name": "Erd_NumberOfFreezerAbnormalDefrostCycles",
           "read": true,
