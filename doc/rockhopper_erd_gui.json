@@ -1546,6 +1546,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Isolation water valve aluminum mold ice maker vote",
+          "name": "Erd_IsolationWaterValve_AluminumMoldIceMakerVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
           "displayName": "Aluminum Mold IceMaker Mold Heater Control Request",
           "name": "Erd_AluminumMoldIceMakerMoldHeaterControlRequest",
           "read": true,
@@ -1658,8 +1665,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Stop Aluminum Mold IceMaker Fill Signal",
-          "name": "Erd_StopAluminumMoldIceMakerFillSignal",
+          "displayName": "Aluminum Mold IceMaker Stop Fill Signal",
+          "name": "Erd_AluminumMoldIceMakerStopFillSignal",
           "read": true,
           "write": true
         },

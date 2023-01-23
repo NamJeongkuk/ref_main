@@ -21,7 +21,7 @@ FreezerIceRateHandlerConfig_t iceRateHandlerConfig = {
 
 static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState,
-   .waterValveVoteErd = Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
+   .iceMakerWaterValveVoteErd = Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
    .iceMakerHeaterVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
    .iceMakerMotorVoteErd = Erd_AluminumMoldIceMakerMotor_IceMakerVote,
    .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
@@ -37,6 +37,9 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .moldThermistorIsValidErd = Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved,
    .skipFillRequestErd = Erd_AluminumMoldIceMakerSkipFillRequest,
    .rakeControlRequestErd = Erd_AluminumMoldIceMakerRakeControlRequest,
+   .isolationWaterValveVoteErd = Erd_IsolationWaterValve_AluminumMoldIceMakerVote,
+   .waterFillMonitoringRequest = Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,
+   .stopFillSignalErd = Erd_AluminumMoldIceMakerStopFillSignal,
    .rakePosition = Erd_AluminumMoldIceMakerRakePosition,
    .freezerIceRateTriggerSignal = Erd_FreezerIceRateTriggerSignal
 };
@@ -170,7 +173,7 @@ static const SensorFilteringConfig_t moldThermistorConfig = {
 };
 
 static const IceMakerWaterFillMonitorConfig_t iceMakerFillMonitorConfig = {
-   .stopIceMakerFillSignalErd = Erd_StopAluminumMoldIceMakerFillSignal,
+   .stopIceMakerFillSignalErd = Erd_AluminumMoldIceMakerStopFillSignal,
    .flowMeterWaterDispensedOzx100Erd = Erd_AluminumMoldFlowMeterWaterDispensedOzX100,
    .iceMakerWaterFillMonitoringRequestErd = Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,
    .flowMeterMonitoringRequestErd = Erd_AluminumMoldFlowMeterMonitoringRequest,

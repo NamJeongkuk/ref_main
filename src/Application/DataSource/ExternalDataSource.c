@@ -128,7 +128,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_ValvePosition_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_FreshFoodEvapFanSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_FreezerEvapFanSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
-   SWAPPED_ERD(PublicErd_WaterValve_WinningVoteErd, sizeof(WinningVoteErd_t)),
+   SWAPPED_ERD(PublicErd_IsolationWaterValve_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freshFoodGridLine.gridLinesDegFx100[GridLine_Nfl]),
    SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHyst]),
    SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHystDelta]),

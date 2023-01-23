@@ -93,10 +93,6 @@ static void OnFillMonitorRequestChange(void *context, const void *_args)
    {
       StartMonitoring(instance);
    }
-   else
-   {
-      StopMonitoring(instance);
-   }
 }
 
 static void OnFlowMeterWaterDispensedChange(void *context, const void *_args)

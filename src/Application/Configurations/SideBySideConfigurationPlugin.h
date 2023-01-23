@@ -13,12 +13,14 @@
 #include "AluminumMoldIceMakerPlugin.h"
 #include "SideBySideStaggeredHeater.h"
 #include "SideBySideFactoryPlugin.h"
+#include "IsolationWaterValvePlugin.h"
 
 typedef struct
 {
    struct
    {
       SideBySideSingleEvaporatorCoolingSystemPlugin_t coolingSystemPlugin;
+      IsolationWaterValvePlugin_t isolationWaterValvePlugin;
       AluminumMoldIceMakerPlugin_t aluminumMoldIceMakerPlugin;
       SideBySideStaggeredHeater_t staggeredHeaterPlugin;
       SideBySideFactoryPlugin_t factoryPlugin;

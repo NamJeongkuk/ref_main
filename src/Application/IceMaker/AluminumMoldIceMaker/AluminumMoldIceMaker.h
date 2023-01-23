@@ -16,7 +16,7 @@
 typedef struct
 {
    Erd_t aluminumMoldIceMakerHsmStateErd; // AluminumMoldIceMakerHsmState_t
-   Erd_t waterValveVoteErd; // WaterValveVotedState_t
+   Erd_t iceMakerWaterValveVoteErd; // WaterValveVotedState_t
    Erd_t iceMakerHeaterVoteErd; // HeaterVotedState_t
    Erd_t iceMakerMotorVoteErd; // AluminumMoldIceMakerMotorVotedState_t
    Erd_t harvestCountCalculationRequestErd; // bool
@@ -32,6 +32,9 @@ typedef struct
    Erd_t moldThermistorIsValidErd; // bool
    Erd_t skipFillRequestErd; // bool
    Erd_t rakeControlRequestErd; // bool
+   Erd_t isolationWaterValveVoteErd; // WaterValveVotedState_t
+   Erd_t waterFillMonitoringRequest; // bool
+   Erd_t stopFillSignalErd; // Signal_t
    Erd_t rakePosition; // RakePosition_t
    Erd_t freezerIceRateTriggerSignal; // Signal_t
 } AluminumMoldIceMakerConfig_t;

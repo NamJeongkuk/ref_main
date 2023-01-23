@@ -33,7 +33,8 @@ enum
    Signal_MaxHarvestTimeReached,
    Signal_MoldThermistorIsInvalid,
    Signal_RakeCompletedRevolution,
-   Signal_MinimumHeaterOnTimeReached
+   Signal_MinimumHeaterOnTimeReached,
+   Signal_StopFill
 };
 
 static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -74,23 +75,38 @@ static void UpdateHsmStateTo(AluminumMoldIceMaker_t *instance, AluminumMoldIceMa
       &state);
 }
 
-static void VoteForWaterValve(AluminumMoldIceMaker_t *instance, WaterValveState_t state, bool care)
+static void VoteForIceMakerWaterValve(AluminumMoldIceMaker_t *instance, WaterValveState_t state, bool care)
 {
-   WaterValveVotedState_t vote;
-   vote.state = state;
-   vote.care = care;
+   WaterValveVotedState_t vote = {
+      .state = state,
+      .care = care
+   };
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->waterValveVoteErd,
+      instance->_private.config->iceMakerWaterValveVoteErd,
+      &vote);
+}
+
+static void VoteForIsolationWaterValve(AluminumMoldIceMaker_t *instance, WaterValveState_t state, bool care)
+{
+   WaterValveVotedState_t vote = {
+      .state = state,
+      .care = care
+   };
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->isolationWaterValveVoteErd,
       &vote);
 }
 
 static void VoteForIceMakerHeater(AluminumMoldIceMaker_t *instance, HeaterState_t state, bool care)
 {
-   HeaterVotedState_t vote;
-   vote.state = state;
-   vote.care = care;
+   HeaterVotedState_t vote = {
+      .state = state,
+      .care = care
+   };
 
    DataModel_Write(
       instance->_private.dataModel,
@@ -100,9 +116,10 @@ static void VoteForIceMakerHeater(AluminumMoldIceMaker_t *instance, HeaterState_
 
 static void VoteForIceMakerMotor(AluminumMoldIceMaker_t *instance, MotorState_t state, bool care)
 {
-   AluminumMoldIceMakerMotorVotedState_t vote;
-   vote.state = state;
-   vote.care = care;
+   AluminumMoldIceMakerMotorVotedState_t vote = {
+      .state = state,
+      .care = care
+   };
 
    DataModel_Write(
       instance->_private.dataModel,
@@ -221,9 +238,10 @@ static bool RakeIsHome(AluminumMoldIceMaker_t *instance)
 
 static void VoteForFillTubeHeater(AluminumMoldIceMaker_t *instance, PercentageDutyCycle_t dutyCycle)
 {
-   PercentageDutyCycleVote_t vote;
-   vote.percentageDutyCycle = dutyCycle;
-   vote.care = Vote_Care;
+   PercentageDutyCycleVote_t vote = {
+      .percentageDutyCycle = dutyCycle,
+      .care = Vote_Care
+   };
 
    DataModel_Write(
       instance->_private.dataModel,
@@ -240,7 +258,6 @@ static void VoteFillTubeHeaterDontCare(AluminumMoldIceMaker_t *instance)
       &vote);
 
    vote.care = Vote_DontCare;
-
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->fillTubeHeaterVoteErd,
@@ -413,6 +430,22 @@ static void ClearRakeControllerRequest(AluminumMoldIceMaker_t *instance)
       clear);
 }
 
+static void RequestWaterFillMonitoring(AluminumMoldIceMaker_t *instance)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->waterFillMonitoringRequest,
+      set);
+}
+
+static void ClearWaterFillMonitoringRequest(AluminumMoldIceMaker_t *instance)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->waterFillMonitoringRequest,
+      clear);
+}
+
 static void SendFreezerIceRateSignal(AluminumMoldIceMaker_t *instance)
 {
    Signal_SendViaErd(
@@ -455,7 +488,7 @@ static bool State_Freeze(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_Freeze);
-         VoteForWaterValve(instance, OFF, Vote_Care);
+         VoteForIceMakerWaterValve(instance, OFF, Vote_Care);
          VoteForIceMakerHeater(instance, OFF, Vote_Care);
          VoteForIceMakerMotor(instance, OFF, Vote_Care);
          RequestHarvestCountCalculation(instance);
@@ -505,27 +538,6 @@ static bool State_IdleFreeze(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Signal_SabbathModeDisabled:
       case Signal_IceMakerIsEnabled:
          Hsm_Transition(hsm, State_Freeze);
-         break;
-
-      case Hsm_Exit:
-         break;
-
-      default:
-         return HsmSignalDeferred;
-   }
-
-   return HsmSignalConsumed;
-}
-
-static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
-{
-   IGNORE(data);
-   AluminumMoldIceMaker_t *instance = InstanceFromHsm(hsm);
-
-   switch(signal)
-   {
-      case Hsm_Entry:
-         UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_Fill);
          break;
 
       case Hsm_Exit:
@@ -654,6 +666,37 @@ static bool State_HarvestFault(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    return HsmSignalConsumed;
 }
 
+static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
+{
+   IGNORE(data);
+   AluminumMoldIceMaker_t *instance = InstanceFromHsm(hsm);
+
+   switch(signal)
+   {
+      case Hsm_Entry:
+         UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_Fill);
+         VoteForIceMakerWaterValve(instance, ON, Vote_Care);
+         VoteForIsolationWaterValve(instance, ON, Vote_Care);
+         RequestWaterFillMonitoring(instance);
+         break;
+
+      case Signal_StopFill:
+         Hsm_Transition(hsm, State_Freeze);
+         break;
+
+      case Hsm_Exit:
+         ClearWaterFillMonitoringRequest(instance);
+         VoteForIceMakerWaterValve(instance, OFF, Vote_Care);
+         VoteForIsolationWaterValve(instance, OFF, Vote_Care);
+         break;
+
+      default:
+         return HsmSignalDeferred;
+   }
+
+   return HsmSignalConsumed;
+}
+
 static bool State_ThermistorFault(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    IGNORE(data);
@@ -736,6 +779,10 @@ static void DataModelChanged(void *context, const void *args)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_RakeCompletedRevolution, NULL);
       }
+   }
+   else if(erd == instance->_private.config->stopFillSignalErd)
+   {
+      Hsm_SendSignal(&instance->_private.hsm, Signal_StopFill, NULL);
    }
 }
 
