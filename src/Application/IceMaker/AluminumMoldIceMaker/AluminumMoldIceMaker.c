@@ -231,11 +231,15 @@ static void VoteForFillTubeHeater(AluminumMoldIceMaker_t *instance, PercentageDu
       &vote);
 }
 
-static void VoteFillTubeHeaterOff(AluminumMoldIceMaker_t *instance)
+static void VoteFillTubeHeaterDontCare(AluminumMoldIceMaker_t *instance)
 {
    PercentageDutyCycleVote_t vote;
-   vote.percentageDutyCycle = PercentageDutyCycle_Min;
-   vote.care = Vote_Care;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->fillTubeHeaterVoteErd,
+      &vote);
+
+   vote.care = Vote_DontCare;
 
    DataModel_Write(
       instance->_private.dataModel,
@@ -566,7 +570,7 @@ static bool State_Harvest(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_FillTubeHeaterTimerExpired:
-         VoteFillTubeHeaterOff(instance);
+         VoteFillTubeHeaterDontCare(instance);
          if(RakeCompletedRevolution(instance))
          {
             SkipFillFlagIsSet(instance) ? Hsm_Transition(hsm, State_Freeze) : Hsm_Transition(hsm, State_Fill);
@@ -589,7 +593,7 @@ static bool State_Harvest(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Hsm_Exit:
-         VoteFillTubeHeaterOff(instance);
+         VoteFillTubeHeaterDontCare(instance);
          StopFillTubeHeaterTimer(instance);
          StopMaxHarvestTimer(instance);
          ClearMoldHeaterControlRequest(instance);

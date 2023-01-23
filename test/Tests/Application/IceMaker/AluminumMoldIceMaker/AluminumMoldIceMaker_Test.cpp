@@ -304,7 +304,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
    }
 
-   void FillTubeHeaterVoteShouldBe(PercentageDutyCycle_t expectedDutyCycle)
+   void FillTubeHeaterVoteAndCareShouldBe(PercentageDutyCycle_t expectedDutyCycle, Vote_t expectedCare)
    {
       PercentageDutyCycleVote_t vote;
       DataModel_Read(
@@ -313,7 +313,7 @@ TEST_GROUP(AluminumMoldIceMaker)
          &vote);
 
       CHECK_EQUAL(expectedDutyCycle, vote.percentageDutyCycle);
-      CHECK_TRUE(vote.care);
+      CHECK_EQUAL(expectedCare, vote.care);
    }
 
    void MoldHeaterControlRequestForHarvestShouldBe(IceMakerMoldHeaterControlRequest_t expectedRequest)
@@ -673,7 +673,7 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromIdleFreezeToFreezeWhenIceMakerIsE
 TEST(AluminumMoldIceMaker, ShouldVoteToTurnOnFillTubeHeaterWithFreezeThawFillTubeHeaterDutyCycleOnEntryToHarvest)
 {
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
-   FillTubeHeaterVoteShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
+   FillTubeHeaterVoteAndCareShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage, Vote_Care);
 }
 
 TEST(AluminumMoldIceMaker, ShouldVoteToTurnOffFillTubeHeaterAfterFillTubeHeaterOnTime)
@@ -681,10 +681,10 @@ TEST(AluminumMoldIceMaker, ShouldVoteToTurnOffFillTubeHeaterAfterFillTubeHeaterO
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
 
    After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
-   FillTubeHeaterVoteShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
+   FillTubeHeaterVoteAndCareShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage, Vote_Care);
 
    After(1);
-   FillTubeHeaterVoteShouldBe(PercentageDutyCycle_Min);
+   FillTubeHeaterVoteAndCareShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage, Vote_DontCare);
 }
 
 TEST(AluminumMoldIceMaker, ShouldRequestRakeControllerAfterInitialMinimumHeaterOnTimeOnEntryToHarvest)
@@ -721,17 +721,17 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToHarvestFixWhenMaxHarvest
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
 }
 
-TEST(AluminumMoldIceMaker, ShouldVoteFillTubeHeaterOffWhenTransitioningFromHarvestToHarvestFix)
+TEST(AluminumMoldIceMaker, ShouldVoteFillTubeHeaterDontCareWhenTransitioningFromHarvestToHarvestFix)
 {
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
 
    After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN - 1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
-   FillTubeHeaterVoteShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
+   FillTubeHeaterVoteAndCareShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage, Vote_Care);
 
    After(1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
-   FillTubeHeaterVoteShouldBe(PercentageDutyCycle_Min);
+   FillTubeHeaterVoteAndCareShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage, Vote_DontCare);
 }
 
 TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToThermistorFaultWhenMoldThermistorIsInvalid)
@@ -1079,7 +1079,7 @@ TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
    }
 
-   void FillTubeHeaterVoteShouldBe(PercentageDutyCycle_t dutyCycle)
+   void FillTubeHeaterVoteAndCareShouldBe(PercentageDutyCycle_t dutyCycle, Vote_t expectedCare)
    {
       PercentageDutyCycleVote_t vote;
       DataModel_Read(
@@ -1088,7 +1088,7 @@ TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime)
          &vote);
 
       CHECK_EQUAL(dutyCycle, vote.percentageDutyCycle);
-      CHECK_TRUE(vote.care);
+      CHECK_EQUAL(expectedCare, vote.care);
    }
 
    void MoldHeaterControlRequestForHarvestShouldBe(IceMakerMoldHeaterControlRequest_t request)
@@ -1144,15 +1144,15 @@ TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime)
    }
 };
 
-TEST(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime, ShouldVoteToTurnOffFillTubeHeaterAfterFillTubeHeaterOnTime)
+TEST(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime, ShouldVoteDontCareForFillTubeHeaterAfterFillTubeHeaterOnTime)
 {
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
 
    After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
-   FillTubeHeaterVoteShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
+   FillTubeHeaterVoteAndCareShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage, Vote_Care);
 
    After(1);
-   FillTubeHeaterVoteShouldBe(PercentageDutyCycle_Min);
+   FillTubeHeaterVoteAndCareShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage, Vote_DontCare);
 }
 
 TEST(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime, ShouldTransitionFromHarvestToFreezeStateWhenFillTubeHeaterTimerExpiredAndRakeHasCompletedFullRevolutionAndSkipFillRequestIsSet)

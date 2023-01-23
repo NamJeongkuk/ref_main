@@ -56,6 +56,11 @@ describe("AluminumMoldIceMaker,", () => {
       care: "Vote_Care"
    };
 
+   const rakePosition = {
+      notHome: "RakePosition_NotHome",
+      home: "RakePosition_Home"
+   };
+
    // Parametric values
    const freezeThawFillTubeHeaterOnTimeInSeconds = 420;
    const freezeThawFillTubeHeaterDutyCyclePercentage = 100;
@@ -92,8 +97,13 @@ describe("AluminumMoldIceMaker,", () => {
       await delay(constants.oneSecondInMsec * 5);
    };
 
-   const providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState = async(state) => {
+   const theRakePositionIsHome = async() => {
+      await rockhopper.write("Erd_AluminumMoldIceMakerRakePosition", rakePosition.home);
+   };
+
+   const providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState = async (state) => {
       await theMoldThermistorIsValid();
+      await theRakePositionIsHome();
 
       if(state == hsmState.freeze) {
          await sabbathModeIsDisabled();
@@ -205,10 +215,10 @@ describe("AluminumMoldIceMaker,", () => {
       await rockhopper.write("Erd_FeelerArmIsReadyToEnterHarvest", false);
    };
 
-   const theFillTubeHeaterVoteShouldBe = async(percentageDutyCycle) => {
+   const theFillTubeHeaterVoteAndCareShouldBe = async (percentageDutyCycle, care) => {
       const vote = await rockhopper.read("Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote");
       expect(vote.percentageDutyCycle).toEqual(percentageDutyCycle);
-      expect(vote.care).toEqual(voteCare.care);
+      expect(vote.care).toEqual(care);
    };
 
    const theMoldHeaterControlRequestShouldBeForHarvest = async() => {
@@ -440,17 +450,17 @@ describe("AluminumMoldIceMaker,", () => {
    // fill tube heater on time = max harvest time
    it("should vote for fill tube heater on entry to Harvest", async() => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
-      await theFillTubeHeaterVoteShouldBe(freezeThawFillTubeHeaterDutyCyclePercentage);
+      await theFillTubeHeaterVoteAndCareShouldBe(freezeThawFillTubeHeaterDutyCyclePercentage, voteCare.care);
    });
 
-   it("should vote to turn off fill tube heater after fill tube heater on time", async() => {
+   it("should vote to dont care for fill tube heater after fill tube heater on time", async() => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
-      await theFillTubeHeaterVoteShouldBe(freezeThawFillTubeHeaterDutyCyclePercentage);
+      await theFillTubeHeaterVoteAndCareShouldBe(freezeThawFillTubeHeaterDutyCyclePercentage, voteCare.care);
 
       await after(freezeThawFillTubeHeaterOnTimeInSeconds - aLittleBitAccelerationDelayInSeconds).inSec();
       await delay(aLittleBitAccelerationDelayInSeconds * constants.msPerSec);
 
-      await theFillTubeHeaterVoteShouldBe(0);
+      await theFillTubeHeaterVoteAndCareShouldBe(freezeThawFillTubeHeaterDutyCyclePercentage, voteCare.dontCare);
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.harvestFix);
    });
 
@@ -468,12 +478,12 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.harvestFix);
    });
 
-   it("should vote to turn off fill tube heater after max harvest time", async() => {
+   it("should vote to dont care for fill tube heater after max harvest time", async() => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
 
       await after(maximumHarvestTimeInMinutes - 1).inMin();
       await delay(aLittleBitMoreThanAMinuteAccelerationDelayInSeconds * constants.msPerSec);
-      await theFillTubeHeaterVoteShouldBe(0);
+      await theFillTubeHeaterVoteAndCareShouldBe(freezeThawFillTubeHeaterDutyCyclePercentage, voteCare.dontCare);
    });
 
    it("should transition from Harvest to Thermistor Fault when mold thermistor is invalid", async() => {
@@ -587,14 +597,14 @@ describe("AluminumMoldIceMaker,", () => {
    // Parametric
    // fill tube heater on time < max harvest time
    // freezeThawFillTubeHeaterOnTimeInSeconds < maximumHarvestTimeInMinutes * 60
-   xit("should vote to turn off fill tube heater after fill tube heater on time", async() => {
+   xit("should vote dont care for fill tube heater after fill tube heater on time", async() => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
-      await theFillTubeHeaterVoteShouldBe(freezeThawFillTubeHeaterDutyCyclePercentage);
+      await theFillTubeHeaterVoteAndCareShouldBe(freezeThawFillTubeHeaterDutyCyclePercentage, voteCare.care);
 
       await after(freezeThawFillTubeHeaterOnTimeInSeconds - aLittleBitAccelerationDelayInSeconds).inSec();
 
       await delay(aLittleBitAccelerationDelayInSeconds * constants.msPerSec);
-      await theFillTubeHeaterVoteShouldBe(0);
+      await theFillTubeHeaterVoteAndCareShouldBe(freezeThawFillTubeHeaterDutyCyclePercentage, voteCare.dontCare);
    });
 
    xit("should transition from Harvest to Freeze state when fill tube heater timer expired and rake has completed full revolution and skip fill request is set", async() => {
