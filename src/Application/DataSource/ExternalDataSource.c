@@ -189,7 +189,7 @@ static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
    SWAPPED_FIELD_RANGE(PublicErd_FreshFood_LongTermAverageInDegFx100, PublicErd_DeliPan_LongTermAverageInDegFx100),
    SWAPPED_FIELD_RANGE(PublicErd_CondenserFan_Pwm, PublicErd_FreshFoodEvapFan_Pwm),
    SWAPPED_FIELD_RANGE(PublicErd_CondenserFan_ActualRpm, PublicErd_FreshFoodEvapFan_ActualRpm),
-   SWAPPED_FIELD_RANGE(PublicErd_CondenserFan_InputCaptureTime, PublicErd_AluminumIceMakerRake_InputCaptureTime),
+   SWAPPED_FIELD_RANGE(PublicErd_CondenserFan_InputCaptureTime, PublicErd_FlowMeter_InputCaptureCount),
    SWAPPED_FIELD_RANGE(PublicErd_FreshFood_ResolvedSetpointInDegFx100, PublicErd_DeliPan_ThermalShiftInDegFx100),
    SWAPPED_FIELD_RANGE(PublicErd_FillTubeHeater_Pwm, PublicErd_FreezerTopLight_Pwm),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableEntry0, PublicErd_ServiceDiagnosticsFaultTableEntry9),

@@ -24,19 +24,25 @@
 
 #define ERD_IS_IN_RANGE(erd) (BETWEEN(Erd_BspInputCapture_Start, erd, Erd_BspInputCapture_End))
 
+#define ERD_IS_IN_PULSE_WIDTH_ERD_RANGE(erd) \
+   (BETWEEN(Erd_BspInputCapture_Start, erd, Erd_BspInputCapture_End) && !(erd == Erd_BspInputCapture_CAPTURE_03))
+
+#define ERD_IS_IN_PULSE_COUNT_ERD_RANGE(erd) \
+   (erd == Erd_BspInputCapture_CAPTURE_03)
+
 #define CHANNEL_FROM_INPUT_ERD(erd) (erd - Erd_BspInputCapture_InputErd_Start - 1)
 
 #define CHANNEL_FROM_OUTPUT_ERD(erd) (erd - Erd_BspInputCapture_OutputErd_Start - 1)
 #define ERD_IS_IN_OUTPUT_ERD_RANGE(erd) \
    (BETWEEN(Erd_BspInputCapture_OutputErd_Start, erd, Erd_BspInputCapture_OutputErd_End))
 
-#define EXPAND_AS_CHANNEL_ENUM(inputName, port, bit, timer, channel) \
+#define EXPAND_AS_CHANNEL_ENUM(inputName, port, bit, timer, channel, peripheralFunction) \
    Channel_##inputName,
 
-#define EXPAND_AS_INTERRUPT_PENDING_REGISTER(inputName, port, bit, timer, channel) \
+#define EXPAND_AS_INTERRUPT_PENDING_REGISTER(inputName, port, bit, timer, channel, peripheralFunction) \
    &ICU.IR[IR_MTU##timer##_TGI##channel##timer].BYTE,
 
-#define EXPAND_AS_INPUT_CAPTURE_COUNTS_REGISTER(inputName, port, bit, timer, channel) \
+#define EXPAND_AS_INPUT_CAPTURE_COUNTS_REGISTER(inputName, port, bit, timer, channel, peripheralFunction) \
    &MTU##timer.TGR##channel,
 
 enum
@@ -93,7 +99,7 @@ typedef struct
 static struct
 {
    I_DataSource_t interface;
-   volatile uint16_t motorFeedbackCounts;
+   volatile uint16_t flowMeterFeedbackCounts;
    FeedbackData_t feedbackData[Channel_InputCapture_Max];
    Timer_t timer;
    Event_Synchronous_t *onChangeEvent;
@@ -167,7 +173,7 @@ void MTU4_TGIC4(void)
 void MTU4_TGIA4(void) __attribute__((interrupt));
 void MTU4_TGIA4(void)
 {
-   InputCaptureCompareMatch(Channel_Erd_BspInputCapture_CAPTURE_03, MTU4.TGRA);
+   instance.flowMeterFeedbackCounts += 1;
 }
 
 void MTU5_TGIU5(void) __attribute__((interrupt));
@@ -188,14 +194,14 @@ void MTU5_TGIW5(void)
    InputCaptureCompareMatch(Channel_Erd_BspInputCapture_CAPTURE_02, MTU5.TGRW);
 }
 
-#define EXPAND_AS_GENERAL_INPUT_PIN(inputname, port, bit, timer, channel) \
-   PORT##port.PDR.BIT.B##bit = 0;                                         \
+#define EXPAND_AS_GENERAL_INPUT_PIN(inputname, port, bit, timer, channel, peripheralFunction) \
+   PORT##port.PDR.BIT.B##bit = 0;                                                             \
    PORT##port.PMR.BIT.B##bit = 0;
 
-#define EXPAND_AS_FUNCTION_SELECTION(inputname, port, bit, timer, channel) \
-   MPC.P##port##bit##PFS.BIT.PSEL = 0x01;
+#define EXPAND_AS_FUNCTION_SELECTION(inputname, port, bit, timer, channel, peripheralFunction) \
+   MPC.P##port##bit##PFS.BIT.PSEL = peripheralFunction;
 
-#define EXPAND_AS_PERIPHERAL_PIN(inputname, port, bit, timer, channel) \
+#define EXPAND_AS_PERIPHERAL_PIN(inputname, port, bit, timer, channel, peripheralFunction) \
    PORT##port.PMR.BIT.B##bit = 1;
 
 static void ConfigureInputCapture(void)
@@ -325,7 +331,7 @@ static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
 {
    IGNORE(_instance);
 
-   if(ERD_IS_IN_RANGE(erd))
+   if(ERD_IS_IN_PULSE_WIDTH_ERD_RANGE(erd))
    {
       InputCaptureMicroSeconds_t *totalTimeUs = data;
       FanInputCaptureChannel_t channel = CHANNEL_FROM_INPUT_ERD(erd);
@@ -342,6 +348,22 @@ static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
          // 1 micro second = 1 count
          *totalTimeUs = (InputCaptureMicroSeconds_t)(filteredCounts);
       }
+   }
+   else if(ERD_IS_IN_PULSE_COUNT_ERD_RANGE(erd))
+   {
+      uint32_t *counts = data;
+      uint16_t current;
+      uint16_t last;
+
+      current = instance.flowMeterFeedbackCounts;
+
+      do
+      {
+         last = current;
+         current = instance.flowMeterFeedbackCounts;
+      } while(last != current);
+
+      *counts = ((uint32_t)current);
    }
 }
 
@@ -362,9 +384,13 @@ static uint8_t SizeOf(I_DataSource_t *_instance, const Erd_t erd)
 {
    IGNORE(_instance);
 
-   if(ERD_IS_IN_RANGE(erd))
+   if(ERD_IS_IN_PULSE_WIDTH_ERD_RANGE(erd))
    {
       return sizeof(InputCaptureMicroSeconds_t);
+   }
+   else if(ERD_IS_IN_PULSE_COUNT_ERD_RANGE(erd))
+   {
+      return sizeof(InputCaptureCounts_t);
    }
 
    return sizeof(InputCaptureMode_t);

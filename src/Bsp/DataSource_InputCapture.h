@@ -18,10 +18,10 @@
 
 #ifndef OLD_HW
 
-#define INPUTCAPTURE_TABLE_EXPAND_AS_ERD_NAMES(name, port, bit, timer, channel) \
+#define INPUTCAPTURE_TABLE_EXPAND_AS_ERD_NAMES(name, port, bit, timer, channel, peripheralFunction) \
    name,
 
-#define INPUTCAPTURE_TABLE_EXPAND_AS_ERD_MODE(name, port, bit, timer, channel) \
+#define INPUTCAPTURE_TABLE_EXPAND_AS_ERD_MODE(name, port, bit, timer, channel, peripheralFunction) \
    name##_Mode,
 
 // clang-format off

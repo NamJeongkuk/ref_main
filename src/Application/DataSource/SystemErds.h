@@ -817,6 +817,7 @@ enum
    ENTRY(Erd_FreezerEvapFan_InputCaptureTime,               0xF376, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodEvapFan_InputCaptureTime,             0xF377, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumIceMakerRake_InputCaptureTime,         0xF378, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_FlowMeter_InputCaptureCount,                   0xF379, InputCaptureCounts_t,                               Swap_Y, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodDamperPosition_ResolvedVote,               0xF380, DamperVotedPosition_t,                         Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperPosition_WinningVoteErd,             0xF381, WinningVoteErd_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -907,7 +908,7 @@ enum
    ENTRY(Erd_InputCapture_CAPTURE_00,                       0xF415, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_InputCapture_CAPTURE_01,                       0xF416, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_InputCapture_CAPTURE_02,                       0xF417, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_InputCapture_CAPTURE_03,                       0xF418, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_InputCapture_CAPTURE_03,                       0xF418, InputCaptureCounts_t,                               Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_InputCapture_CAPTURE_04,                       0xF419, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_InputCapture_CAPTURE_05,                       0xF41A, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    \
