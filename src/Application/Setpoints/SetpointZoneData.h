@@ -12,11 +12,11 @@
 
 typedef struct
 {
-   TemperatureDegFx100_t freezerColdSetpointZoneLimitInDegFx100;
-   TemperatureDegFx100_t freezerWarmSetpointZoneLimitInDegFx100;
-   TemperatureDegFx100_t freshFoodColdSetpointZoneLimitInDegFx100;
-   TemperatureDegFx100_t freshFoodWarmSetpointZoneLimitInDegFx100;
-   TemperatureDegFx100_t convertibleCompartmentSetpointZoneLimitInDegFx100;
+   TemperatureDegFx100_t freezerTriggerColdSetpointZoneInDegFx100;
+   TemperatureDegFx100_t freezerTriggerWarmSetpointZoneInDegFx100;
+   TemperatureDegFx100_t freshFoodTriggerColdSetpointZoneInDegFx100;
+   TemperatureDegFx100_t freshFoodTriggerWarmSetpointZoneInDegFx100;
+   TemperatureDegFx100_t convertibleCompartmentTriggerSetpointZoneLimitInDegFx100;
 } SetpointZoneData_t;
 
 #endif

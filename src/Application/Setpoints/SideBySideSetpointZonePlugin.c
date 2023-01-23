@@ -24,12 +24,12 @@ void SideBySideSetpointZonePlugin_Init(SideBySideSetpointZonePlugin_t *instance,
 {
    const SetpointData_t *setpointParametricData = PersonalityParametricData_Get(dataModel)->setpointData;
    SetpointZoneTemperatureBounds_t freezerTemperatureBounds = {
-      .coldSetpointBoundInDegFx100 = setpointParametricData->setpointZoneData->freezerColdSetpointZoneLimitInDegFx100,
-      .warmSetpointBoundInDegFx100 = setpointParametricData->setpointZoneData->freezerWarmSetpointZoneLimitInDegFx100
+      .coldSetpointBoundInDegFx100 = setpointParametricData->setpointZoneData->freezerTriggerColdSetpointZoneInDegFx100,
+      .warmSetpointBoundInDegFx100 = setpointParametricData->setpointZoneData->freezerTriggerWarmSetpointZoneInDegFx100
    };
    SetpointZoneTemperatureBounds_t freshFoodTemperatureBounds = {
-      .coldSetpointBoundInDegFx100 = setpointParametricData->setpointZoneData->freshFoodColdSetpointZoneLimitInDegFx100,
-      .warmSetpointBoundInDegFx100 = setpointParametricData->setpointZoneData->freshFoodWarmSetpointZoneLimitInDegFx100
+      .coldSetpointBoundInDegFx100 = setpointParametricData->setpointZoneData->freshFoodTriggerColdSetpointZoneInDegFx100,
+      .warmSetpointBoundInDegFx100 = setpointParametricData->setpointZoneData->freshFoodTriggerWarmSetpointZoneInDegFx100
    };
 
    DataModel_Write(dataModel, Erd_FreezerSetpoint_TemperatureBounds, &freezerTemperatureBounds);
