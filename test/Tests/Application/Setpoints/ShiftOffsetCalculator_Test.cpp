@@ -292,15 +292,15 @@ TEST(ShiftOffsetCalculator, ShouldUpdateShiftOffsetToShiftOffsetMinusTwoWhenLong
    ShiftOffsetShouldBe(SomeShiftOffset - 2);
 }
 
-TEST(ShiftOffsetCalculator, ShouldUpdateShiftOffsetToShiftOffsetPlusTenWhenLongTermAverageMinusAdjustedSetpointIsLessThanMinusHundred)
+TEST(ShiftOffsetCalculator, ShouldUpdateShiftOffsetToShiftOffsetPlusTenWhenLongTermAverageMinusAdjustedSetpointWithoutShiftOffsetIsLessThanMinusHundred)
 {
-   Given AdjustedSetpointIs(SomeAdjustedSetpointInDegFx100 - 101);
-   Given FilteredTemperatureIs(SomeAdjustedSetpointInDegFx100 - 101);
+   Given AdjustedSetpointIs(SomeAdjustedSetpointInDegFx100 - 110);
+   Given FilteredTemperatureIs(SomeAdjustedSetpointInDegFx100 - 110);
    Given TheModuleIsInitialized();
    Given ShiftOffsetIs(SomeShiftOffset);
 
    After(shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN - 1);
-   LongTermAverageShouldBe(SomeAdjustedSetpointInDegFx100 - 101);
+   LongTermAverageShouldBe(SomeAdjustedSetpointInDegFx100 - 110);
    And ShiftOffsetShouldBe(SomeShiftOffset);
 
    When AdjustedSetpointIs(SomeAdjustedSetpointInDegFx100);
@@ -308,15 +308,15 @@ TEST(ShiftOffsetCalculator, ShouldUpdateShiftOffsetToShiftOffsetPlusTenWhenLongT
    ShiftOffsetShouldBe(SomeShiftOffset + 10);
 }
 
-TEST(ShiftOffsetCalculator, ShouldUpdateShiftOffsetToShiftOffsetPlusTwoWhenLongTermAverageMinusAdjustedSetpointIsBetweenMinusTwentyAndMinusHundred)
+TEST(ShiftOffsetCalculator, ShouldUpdateShiftOffsetToShiftOffsetPlusTwoWhenLongTermAverageMinusAdjustedSetpointWithoutShiftOffsetIsBetweenMinusTwentyAndMinusHundred)
 {
-   Given AdjustedSetpointIs(SomeAdjustedSetpointInDegFx100 - 21);
-   Given FilteredTemperatureIs(SomeAdjustedSetpointInDegFx100 - 21);
+   Given AdjustedSetpointIs(SomeAdjustedSetpointInDegFx100 - 26);
+   Given FilteredTemperatureIs(SomeAdjustedSetpointInDegFx100 - 26);
    Given TheModuleIsInitialized();
    Given ShiftOffsetIs(SomeShiftOffset);
 
    After(shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN - 1);
-   LongTermAverageShouldBe(SomeAdjustedSetpointInDegFx100 - 21);
+   LongTermAverageShouldBe(SomeAdjustedSetpointInDegFx100 - 26);
    And ShiftOffsetShouldBe(SomeShiftOffset);
 
    When AdjustedSetpointIs(SomeAdjustedSetpointInDegFx100);
@@ -324,13 +324,14 @@ TEST(ShiftOffsetCalculator, ShouldUpdateShiftOffsetToShiftOffsetPlusTwoWhenLongT
    ShiftOffsetShouldBe(SomeShiftOffset + 2);
 }
 
-TEST(ShiftOffsetCalculator, ShouldUpdateShiftOffsetToMaxShiftOffsetWhenShiftOffsetIsGreaterThanMax)
+TEST(ShiftOffsetCalculator, ShouldUpdateShiftOffsetToMaxShiftOffsetWhenShiftOffsetIsGreaterThanMaxShift)
 {
    Given TheModuleIsInitialized();
-   Given ShiftOffsetIs(shiftOffsetData->maxShiftInDegFx100 + 1);
+   Given AdjustedSetpointIs(0);
+   Given ShiftOffsetIs(shiftOffsetData->maxShiftInDegFx100 + 11);
 
    After(shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN - 1);
-   And ShiftOffsetShouldBe(shiftOffsetData->maxShiftInDegFx100 + 1);
+   And ShiftOffsetShouldBe(shiftOffsetData->maxShiftInDegFx100 + 11);
 
    After(1);
    ShiftOffsetShouldBe(shiftOffsetData->maxShiftInDegFx100);
@@ -339,10 +340,10 @@ TEST(ShiftOffsetCalculator, ShouldUpdateShiftOffsetToMaxShiftOffsetWhenShiftOffs
 TEST(ShiftOffsetCalculator, ShouldUpdateShiftOffsetToMinShiftOffsetWhenShiftOffsetIsLessThanMin)
 {
    Given TheModuleIsInitialized();
-   Given ShiftOffsetIs(shiftOffsetData->minShiftInDegFx100 - 1);
+   Given ShiftOffsetIs(shiftOffsetData->minShiftInDegFx100 - 11);
 
    After(shiftOffsetCalculatorData->updateTimeInMinutes * MSEC_PER_MIN - 1);
-   And ShiftOffsetShouldBe(shiftOffsetData->minShiftInDegFx100 - 1);
+   And ShiftOffsetShouldBe(shiftOffsetData->minShiftInDegFx100 - 11);
 
    After(1);
    ShiftOffsetShouldBe(shiftOffsetData->minShiftInDegFx100);

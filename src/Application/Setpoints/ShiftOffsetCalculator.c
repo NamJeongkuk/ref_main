@@ -95,10 +95,12 @@ static void ShiftOffsetCalculateTimeExpired(void *context)
    shiftOffset = ShiftOffset(instance);
    Filter_Read(instance->_private.longTermAverageFilter, &average1);
 
-   if(average1 > (adjustedSetpoint - instance->_private.shiftOffsetData->lowerAdjustmentLimitInDegFx100) &&
-      average1 < (adjustedSetpoint + instance->_private.shiftOffsetData->upperAdjustmentLimitInDegFx100))
+   TemperatureDegFx100_t adjustedSetpointWithoutShift = adjustedSetpoint - shiftOffset;
+
+   if(average1 > (adjustedSetpointWithoutShift - instance->_private.shiftOffsetData->lowerAdjustmentLimitInDegFx100) &&
+      average1 < (adjustedSetpointWithoutShift + instance->_private.shiftOffsetData->upperAdjustmentLimitInDegFx100))
    {
-      difference = average1 - adjustedSetpoint;
+      difference = average1 - adjustedSetpointWithoutShift;
       if(difference > 100)
       {
          shiftOffset -= 10;

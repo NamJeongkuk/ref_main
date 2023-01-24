@@ -1786,6 +1786,63 @@
           "write": true
         }
       ]
+    },
+    {
+      "title": "Shift Offset Calculator",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Thermal Shift",
+          "name": "Erd_Freezer_ThermalShiftInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Long Term Average",
+          "name": "Erd_Freezer_LongTermAverageInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "displayName": "Freezer Adjusted Setpoint",
+          "name": "Erd_Freezer_AdjustedSetpointInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "displayName": "Freezer Filtered Temperature",
+          "name": "Erd_Freezer_FilteredTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Thermal Shift",
+          "name": "Erd_FreshFood_ThermalShiftInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Long Term Average",
+          "name": "Erd_FreshFood_LongTermAverageInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "displayName": "Fresh Food Adjusted Setpoint",
+          "name": "Erd_FreshFood_AdjustedSetpointInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "displayName": "Fresh Food Filterd Temperature",
+          "name": "Erd_FreshFood_FilteredTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": true
+        }
+      ]
     }
   ]
 }
