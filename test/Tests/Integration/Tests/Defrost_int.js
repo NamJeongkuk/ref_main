@@ -159,10 +159,6 @@ describe("Defrost", () => {
     await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePostDwell);
   };
 
-  const providedTheDefrostReadySatisfactionTimeIs = async (timeInMinutes) => {
-    await rockhopper.write("Erd_TimeInMinutesUntilReadyToDefrost", timeInMinutes);
-  };
-
   const disableMinimumCompressorTimesShouldBe = async (state) => {
     const actual = await rockhopper.read("Erd_DisableMinimumCompressorTimes");
     expect(actual).toEqual(state);
@@ -396,7 +392,6 @@ describe("Defrost", () => {
     await providedCompartmentWasNotTooWarmOnPowerUp();
     await providedTheCompressor().isOff();
 
-    await providedTheDefrostReadySatisfactionTimeIs(minimumDefrostReadySatisfactionTimeInMinutes);
     await whenTheCompressorHasBeenOnFor(minimumDefrostReadyOnTimeInSec).seconds();
 
     await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStatePrechillPrep);
@@ -412,7 +407,6 @@ describe("Defrost", () => {
     await providedFreshFoodEvaporatorThermistorIs().valid();
     await providedFreezerEvaporatorThermistorIs().valid();
 
-    await providedTheDefrostReadySatisfactionTimeIs(minimumDefrostReadySatisfactionTimeInMinutes * 3);
     await whenTheCompressorHasBeenOnFor(minimumDefrostReadyOnTimeInSec).seconds();
     await whenTheDoorAccelerationTimeForThe().FreshFoodCompartmentIs(minimumDefrostReadyOnTimeInSec);
     await whenTheDoorAccelerationTimeForThe().FreezerCompartmentIs(minimumDefrostReadyOnTimeInSec);
@@ -431,7 +425,6 @@ describe("Defrost", () => {
     await providedFreshFoodEvaporatorThermistorIs().valid();
     await providedFreezerEvaporatorThermistorIs().invalid();
 
-    await providedTheDefrostReadySatisfactionTimeIs(minimumDefrostReadySatisfactionTimeInMinutes);
     await whenTheCompressorHasBeenOnFor(minimumDefrostReadyOnTimeInSec).seconds();
 
     await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateHeaterOnEntry);
@@ -474,7 +467,6 @@ describe("Defrost", () => {
     await providedFreshFoodEvaporatorThermistorIs().valid();
     await providedFreezerEvaporatorThermistorIs().invalid();
 
-    await providedTheDefrostReadySatisfactionTimeIs(minimumDefrostReadySatisfactionTimeInMinutes);
     await whenTheCompressorHasBeenOnFor(minimumDefrostReadyOnTimeInSec).seconds();
 
     await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateHeaterOnEntry);

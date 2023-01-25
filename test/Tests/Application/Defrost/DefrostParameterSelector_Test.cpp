@@ -87,14 +87,6 @@ TEST_GROUP(DefrostParameterSelector_SingleEvap)
       DataModel_Write(dataModel, Erd_ConvertibleCompartmentDefrostWasAbnormal, clear);
    }
 
-   void TimeWhenReadyToDefrostInMinutesShouldBe(uint16_t expectedTimeInMinutes)
-   {
-      uint16_t actualTimeInMinutes;
-      DataModel_Read(dataModel, Erd_TimeInMinutesUntilReadyToDefrost, &actualTimeInMinutes);
-
-      CHECK_EQUAL(expectedTimeInMinutes, actualTimeInMinutes);
-   }
-
    void PreviousFreshFoodDefrostIsAbnormal()
    {
       DataModel_Write(dataModel, Erd_FreshFoodDefrostWasAbnormal, set);
@@ -123,16 +115,6 @@ TEST_GROUP(DefrostParameterSelector_SingleEvap)
    void ThereIsAConvertibleCompartment()
    {
       DataModel_Write(dataModel, Erd_HasConvertibleCompartment, set);
-   }
-
-   void PreviousDefrostsAreNormalAndTimeWhenReadyToDefrostIsMaximumTimeBetweenDefrostsInMinutes()
-   {
-      Given PreviousDefrostsAreNormal();
-      And MaxTimeBetweenDefrostsInMinutesIs(defrostData->idleData.maxTimeBetweenDefrostsInMinutes);
-      And FreezerEvaporatorThermistorValidityIs(Valid);
-      And DefrostParameterSelectorIsInitialized();
-
-      TimeWhenReadyToDefrostInMinutesShouldBe(defrostData->idleData.maxTimeBetweenDefrostsInMinutes);
    }
 };
 

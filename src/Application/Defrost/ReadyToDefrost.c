@@ -179,7 +179,6 @@ static void DataModelChanged(void *context, const void *args)
       erd == instance->_private.config->freshFoodScaledDoorAccelerationInSecondsErd ||
       erd == instance->_private.config->freezerScaledDoorAccelerationInSecondsErd ||
       erd == instance->_private.config->convertibleCompartmentScaledDoorAccelerationInSecondsErd ||
-      erd == instance->_private.config->timeInMinutesUntilReadyToDefrostErd ||
       erd == instance->_private.config->freezerDefrostWasAbnormalErd ||
       erd == instance->_private.config->freshFoodDefrostWasAbnormalErd ||
       erd == instance->_private.config->convertibleCompartmentDefrostWasAbnormalErd ||

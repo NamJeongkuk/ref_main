@@ -34,7 +34,6 @@ static ReadyToDefrostConfiguration_t config = {
    .freezerScaledDoorAccelerationInSecondsErd = Erd_DefrostFreezerScaledDoorAccelerationInSeconds,
    .convertibleCompartmentScaledDoorAccelerationInSecondsErd = Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds,
    .readyToDefrostErd = Erd_ReadyToDefrost,
-   .timeInMinutesUntilReadyToDefrostErd = Erd_TimeInMinutesUntilReadyToDefrost,
    .defrostCompressorOnTimeCounterReadyErd = Erd_DefrostCompressorOnTimeCounterReady,
    .doorAccelerationCounterReadyErd = Erd_DoorAccelerationCounterReady,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,

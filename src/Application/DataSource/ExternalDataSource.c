@@ -94,7 +94,6 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_MaxTimeBetweenDefrostsInMinutes, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_DefrostPrechillRunCounterInMinutes, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_DefrostCompressorOnTimeInSeconds, sizeof(uint32_t)),
-   SWAPPED_ERD(PublicErd_TimeInMinutesUntilReadyToDefrost, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_TimeThatPrechillConditionsAreMetInMinutes, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_AluminumMoldIceMakerMoldThermistor_AdcCount, sizeof(AdcCounts_t)),
    SWAPPED_ERD(PublicErd_FreshFood_UnfilteredTemperatureInDegFx100, sizeof(TemperatureDegFx100_t)),

@@ -20,7 +20,6 @@ typedef struct
    Erd_t freezerScaledDoorAccelerationInSecondsErd; // uint32_t
    Erd_t convertibleCompartmentScaledDoorAccelerationInSecondsErd; // uint32_t
    Erd_t readyToDefrostErd; // bool
-   Erd_t timeInMinutesUntilReadyToDefrostErd; // uint16_t
    Erd_t defrostCompressorOnTimeCounterReadyErd; // bool
    Erd_t doorAccelerationCounterReadyErd; // bool
    Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool

@@ -429,12 +429,6 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Time In Minutes Until Ready To Defrost",
-               "name": "Erd_TimeInMinutesUntilReadyToDefrost",
-               "read": true
-            },
-            {
-               "namespace": "mb",
                "displayName": "Freezer Defrost Heater Defrost Vote",
                "name": "Erd_FreezerDefrostHeater_DefrostVote",
                "read": true

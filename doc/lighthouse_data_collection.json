@@ -138,11 +138,6 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_TimeInMinutesUntilReadyToDefrost",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
          "name": "Erd_DefrostCompressorOnTimeInSeconds",
          "interval": 60000
       },

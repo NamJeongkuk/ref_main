@@ -449,13 +449,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Time In Minutes Until Ready To Defrost",
-          "name": "Erd_TimeInMinutesUntilReadyToDefrost",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Ready To Defrost",
           "name": "Erd_ReadyToDefrost",
           "read": true,
