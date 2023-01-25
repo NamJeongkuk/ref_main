@@ -128,11 +128,11 @@ static void DetermineTimeWhenReadyToDefrost(ReadyToDefrost_t *instance)
       instance->_private.config->freezerDefrostWasAbnormalErd,
       &freezerDefrostWasAbnormal);
 
-   bool freezerEvapIsValid;
+   bool invalidFreezerEvaporatorThermistorDuringDefrost;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerEvapThermistorIsValidErd,
-      &freezerEvapIsValid);
+      instance->_private.config->invalidFreezerEvaporatorThermistorDuringDefrostErd,
+      &invalidFreezerEvaporatorThermistorDuringDefrost);
 
    bool filteredTempTooWarmOnPowerUp;
    DataModel_Read(
@@ -155,7 +155,7 @@ static void DetermineTimeWhenReadyToDefrost(ReadyToDefrost_t *instance)
    if(freshFoodDefrostWasAbnormal ||
       freezerDefrostWasAbnormal ||
       ConvertibleCompartmentIsAbnormal(instance) ||
-      !freezerEvapIsValid ||
+      invalidFreezerEvaporatorThermistorDuringDefrost ||
       filteredTempTooWarmOnPowerUp ||
       minimumTimeIsSet ||
       eepromIsCleared)
@@ -183,7 +183,7 @@ static void DataModelChanged(void *context, const void *args)
       erd == instance->_private.config->freezerDefrostWasAbnormalErd ||
       erd == instance->_private.config->freshFoodDefrostWasAbnormalErd ||
       erd == instance->_private.config->convertibleCompartmentDefrostWasAbnormalErd ||
-      erd == instance->_private.config->freezerEvapThermistorIsValidErd ||
+      erd == instance->_private.config->invalidFreezerEvaporatorThermistorDuringDefrostErd ||
       erd == instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd ||
       erd == instance->_private.config->freezerDefrostUseMinimumTimeErd ||
       erd == instance->_private.config->eepromClearedErd)

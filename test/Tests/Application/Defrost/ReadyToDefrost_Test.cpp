@@ -39,7 +39,7 @@ static ReadyToDefrostConfiguration_t config = {
    .doorAccelerationCounterReadyErd = Erd_DoorAccelerationCounterReady,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .freezerDefrostUseMinimumTimeErd = Erd_UseMinimumReadyToDefrostTime,
-   .freezerEvapThermistorIsValidErd = Erd_FreezerEvapThermistor_IsValidResolved,
+   .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
@@ -171,15 +171,19 @@ TEST_GROUP(ReadyToDefrost)
 
    void HasConvertibleCompartmentIs(bool state)
    {
-      DataModel_Write(
-         dataModel, Erd_HasConvertibleCompartment, &state);
+      DataModel_Write(dataModel, Erd_HasConvertibleCompartment, &state);
+   }
+
+   void InvalidFreezerEvaporatorThermistorDuringDefrostIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_InvalidFreezerEvaporatorThermistorDuringDefrost, &state);
    }
 
    void TimeBetweenDefrostsIsMinimumTime()
    {
       And FreezerFilteredTemperatureTooWarmAtPowerUpIs(SET);
       And UseMinimumReadyToDefrostTimeIs(SET);
-      And FreezerEvapThermistorIs(CLEAR);
+      And InvalidFreezerEvaporatorThermistorDuringDefrostIs(SET);
       And FreezerDefrostWasAbnormalIs(SET);
    }
 
@@ -187,7 +191,7 @@ TEST_GROUP(ReadyToDefrost)
    {
       And FreezerFilteredTemperatureTooWarmAtPowerUpIs(CLEAR);
       And UseMinimumReadyToDefrostTimeIs(CLEAR);
-      And FreezerEvapThermistorIs(SET);
+      And InvalidFreezerEvaporatorThermistorDuringDefrostIs(CLEAR);
       And FreezerDefrostWasAbnormalIs(CLEAR);
    }
 
@@ -581,14 +585,14 @@ TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdWhenDefrostUseMinimumTimeErdIsSet
    ReadyToDefrostShouldBe(CLEAR);
 }
 
-TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdWhenFreezerEvapThermistorIsInvalidThenClearReadyToDefrostErdWhenFreezerEvapThermistorIsValid)
+TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdWhenInvalidFreezerEvaporatorThermistorDuringDefrostIsSetThenClearReadyToDefrostErdWhenInvalidFreezerEvaporatorThermistorDuringDefrostIsClear)
 {
    Given TheTimeBetweenDefrostsIsNormalTimeAndReadyToDefrostIsClearAndTheReadyToDefrostModuleIsInitialized();
-   And FreezerEvapThermistorIs(CLEAR);
+   And InvalidFreezerEvaporatorThermistorDuringDefrostIs(SET);
 
    ReadyToDefrostShouldBe(SET);
 
-   And FreezerEvapThermistorIs(SET);
+   When InvalidFreezerEvaporatorThermistorDuringDefrostIs(CLEAR);
    ReadyToDefrostShouldBe(CLEAR);
 }
 
@@ -646,14 +650,16 @@ TEST(ReadyToDefrost, ShouldClearReadyToDefrostErdWhenThereIsNoConvertibleCompart
    ReadyToDefrostShouldBe(CLEAR);
 }
 
-TEST(ReadyToDefrost, ShouldClearUseMinimumReadyToDefrostTimeErdWhenReadyToDefrostIsSet)
+TEST(ReadyToDefrost, ShouldClearUseMinimumReadyToDefrostTimeWhenReadyToDefrostChangesToBeSet)
 {
-   Given TheTimeBetweenDefrostsIsNormalTimeAndReadyToDefrostIsClearAndTheReadyToDefrostModuleIsInitialized();
-   And FreezerEvapThermistorIs(CLEAR);
-   UseMinimumReadyToDefrostTimeIs(SET);
+   Given TimeBetweenDefrostsIsMinimumTime();
+   And ReadyToDefrostModuleIsInitialized();
+   And UseMinimumReadyToDefrostTimeIs(SET);
+   ReadyToDefrostShouldBe(CLEAR);
 
+   When CompressorOnTimeInSecondsIs(MinTimeBetweenDefrostsInSeconds);
    ReadyToDefrostShouldBe(SET);
-   UseMinimumReadyToDefrostTimeIs(CLEAR);
+   UseMinimumReadyToDefrostTimeShouldBe(CLEAR);
 }
 
 TEST(ReadyToDefrost, ShouldSetWaitingForDefrostTimeInSecondsToDefrostCompressorOnTimeInSecondsIfDefrostCompressorOnTimeInSecondsIsLessThanMinimumTimeBetweenDefrostsAbnormalRunTimeInMinutes)

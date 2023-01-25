@@ -607,6 +607,13 @@
           "name": "Erd_FreezerDefrostHeaterRelay",
           "read": true,
           "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Invalid Freezer Evaporator Thermistor During Defrost",
+          "name": "Erd_InvalidFreezerEvaporatorThermistorDuringDefrost",
+          "read": true,
+          "write": true
         }
       ]
     },
@@ -851,6 +858,27 @@
           "namespace": "mb",
           "displayName": "Fresh Food Evap Filtered Temperature",
           "name": "Erd_FreshFoodEvap_FilteredTemperatureInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Thermistor Is Valid Override Value",
+          "name": "Erd_FreezerEvapThermistor_IsValidOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Thermistor Is Valid Override Request",
+          "name": "Erd_FreezerEvapThermistor_IsValidOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Thermistor Is Valid Resolved",
+          "name": "Erd_FreezerEvapThermistor_IsValidResolved",
           "read": true,
           "write": true
         },

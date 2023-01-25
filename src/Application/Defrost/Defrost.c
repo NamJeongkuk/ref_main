@@ -772,6 +772,25 @@ static void SetDefrostingTo(Defrost_t *instance, bool state)
       &state);
 }
 
+static void SetInvalidFreezerEvaporatorThermistorDuringDefrostTo(Defrost_t *instance, bool state)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->invalidFreezerEvaporatorThermistorDuringDefrostErd,
+      &state);
+}
+
+static bool InvalidFreezerEvaporatorThermistorDuringDefrostIsSet(Defrost_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->invalidFreezerEvaporatorThermistorDuringDefrostErd,
+      &state);
+
+   return state;
+}
+
 static void ClearDefrostTestStateRequest(Defrost_t *instance)
 {
    DefrostTestStateRequestMessage_t requestMessage;
@@ -831,7 +850,7 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Signal_ReadyToDefrost:
          if(AnyPreviousDefrostWasAbnormal(instance) ||
             FreezerCompartmentWasTooWarmOnPowerUp(instance) ||
-            !FreezerEvaporatorThermistorIsValid(instance) ||
+            InvalidFreezerEvaporatorThermistorDuringDefrostIsSet(instance) ||
             ClearedEepromStartup(instance))
          {
             if(FreezerCompartmentWasTooWarmOnPowerUp(instance))
@@ -1044,6 +1063,10 @@ static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_FreezerHeaterMaxOnTimeReached:
+         if(!FreezerEvaporatorThermistorIsValid(instance))
+         {
+            SetInvalidFreezerEvaporatorThermistorDuringDefrostTo(instance, true);
+         }
          Hsm_Transition(hsm, State_Dwell);
          break;
 
@@ -1057,11 +1080,14 @@ static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          {
             ClearFreezerDefrostWasAbnormal(instance);
          }
-
          Hsm_Transition(hsm, State_Dwell);
          break;
 
       case Hsm_Exit:
+         if(FreezerEvaporatorThermistorIsValid(instance))
+         {
+            SetInvalidFreezerEvaporatorThermistorDuringDefrostTo(instance, false);
+         }
          VoteForFreezerDefrostHeater(instance, HeaterState_Off, Vote_Care);
          IncrementFreezerDefrostCycleCount(instance);
          break;
