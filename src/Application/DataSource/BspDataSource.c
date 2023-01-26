@@ -82,6 +82,7 @@ static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_Gpio_GPIO_IN_02, Erd_BspGpio_GPIO_IN_02 },
    { Erd_Gpio_GPIO_IN_03, Erd_BspGpio_GPIO_IN_03 },
    { Erd_Gpio_SABBATH, Erd_BspGpio_SABBATH },
+   { Erd_Gpio_PWM_VAR_00, Erd_BspGpio_PWM_VAR_00 },
    { Erd_Gpio_PWM_VAR_01, Erd_BspGpio_PWM_VAR_01 },
    { Erd_Adc_ANALOG_475K_TH_00, Erd_BspAdc_ANALOG_475K_TH_00 },
    { Erd_Adc_ANALOG_TH_LOW_00, Erd_BspAdc_ANALOG_TH_LOW_00 },

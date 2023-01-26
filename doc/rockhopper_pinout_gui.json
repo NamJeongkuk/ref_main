@@ -1,5 +1,5 @@
 {
-  "name": "Rockhopper GPIO Hardware Pinout GUI",
+  "name": "Rockhopper Hardware Pinout GUI",
   "tabs": [
     {
       "title": "GPIO OUT",
@@ -368,6 +368,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Gpio_PWM_VAR_01",
+          "name": "Erd_Gpio_PWM_VAR_01",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "PWM_200_03",
           "name": "Erd_Pwm_PWM_200_03",
           "read": true,
@@ -376,22 +383,151 @@
       ]
     },
     {
-      "title": "MISC",
+      "title": "ADC",
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Gpio_SABBATH",
-          "name": "Erd_Gpio_SABBATH",
+          "displayName": "Adc_ANALOG_475K_TH_00",
+          "name": "Erd_Adc_ANALOG_475K_TH_00",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Gpio_PWM_VAR_01",
-          "name": "Erd_Gpio_PWM_VAR_01",
+          "displayName": "Adc_ANALOG_TH_LOW_00",
+          "name": "Erd_Adc_ANALOG_TH_LOW_00",
           "read": true,
-          "write": true
+          "write": false
         },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_TH_LOW_01",
+          "name": "Erd_Adc_ANALOG_TH_LOW_01",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_TH_LOW_02",
+          "name": "Erd_Adc_ANALOG_TH_LOW_02",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_TH_LOW_03",
+          "name": "Erd_Adc_ANALOG_TH_LOW_03",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_TH_LOW_04",
+          "name": "Erd_Adc_ANALOG_TH_LOW_04",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_TH_LOW_05",
+          "name": "Erd_Adc_ANALOG_TH_LOW_05",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_TH_LOW_06",
+          "name": "Erd_Adc_ANALOG_TH_LOW_06",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_TH_LOW_07",
+          "name": "Erd_Adc_ANALOG_TH_LOW_07",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_TH_LOW_08",
+          "name": "Erd_Adc_ANALOG_TH_LOW_08",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_LOAD_CURRENT",
+          "name": "Erd_Adc_LOAD_CURRENT",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_HW_PERSONALITY_00",
+          "name": "Erd_Adc_HW_PERSONALITY_00",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_HW_PERSONALITY_01",
+          "name": "Erd_Adc_HW_PERSONALITY_01",
+          "read": true,
+          "write": false
+        }
+      ]
+    },
+    {
+      "title": "INPUT CAPTURE",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "InputCapture_CAPTURE_00",
+          "name": "Erd_InputCapture_CAPTURE_00",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "InputCapture_CAPTURE_01",
+          "name": "Erd_InputCapture_CAPTURE_01",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "InputCapture_CAPTURE_02",
+          "name": "Erd_InputCapture_CAPTURE_02",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "InputCapture_CAPTURE_03",
+          "name": "Erd_InputCapture_CAPTURE_03",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "InputCapture_CAPTURE_04",
+          "name": "Erd_InputCapture_CAPTURE_04",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "InputCapture_CAPTURE_05",
+          "name": "Erd_InputCapture_CAPTURE_05",
+          "read": true,
+          "write": false
+        }
+      ]
+    },
+    {
+      "title": "MISC",
+      "erds": [
         {
           "namespace": "mb",
           "displayName": "Gpio_SABBATH",

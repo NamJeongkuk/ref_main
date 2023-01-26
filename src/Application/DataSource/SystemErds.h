@@ -909,7 +909,7 @@ enum
    ENTRY(Erd_InputCapture_CAPTURE_00,                       0xF415, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_InputCapture_CAPTURE_01,                       0xF416, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_InputCapture_CAPTURE_02,                       0xF417, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_InputCapture_CAPTURE_03,                       0xF418, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_InputCapture_CAPTURE_03,                       0xF418, InputCaptureCounts_t,                               Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_InputCapture_CAPTURE_04,                       0xF419, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_InputCapture_CAPTURE_05,                       0xF41A, InputCaptureMicroSeconds_t,                         Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    \
@@ -972,7 +972,8 @@ enum
    ENTRY(Erd_Gpio_GPIO_IN_02,                               0xF470, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gpio_GPIO_IN_03,                               0xF471, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gpio_SABBATH,                                  0xF472, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Gpio_PWM_VAR_01,                               0xF473, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Gpio_PWM_VAR_00,                               0xF473, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Gpio_PWM_VAR_01,                               0xF474, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData0,     0xF500, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, NvFaultSnapshot,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData1,     0xF501, FaultSnapshotData_t,                                Swap_Y, Io_None, Sub_N, NvFaultSnapshot,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
