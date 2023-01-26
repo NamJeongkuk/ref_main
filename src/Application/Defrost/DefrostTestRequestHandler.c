@@ -89,6 +89,14 @@ static void ResetDefrostTestRequest(DefrostTestRequestHandler_t *instance)
       &request);
 }
 
+static void SetDontSkipDefrostPrechillToTrue(DefrostTestRequestHandler_t *instance)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->dontSkipDefrostPrechillErd,
+      set);
+}
+
 static void HandleDefrostTestRequest(void *context, const void *args)
 {
    DefrostTestRequestHandler_t *instance = context;
@@ -133,6 +141,7 @@ static void HandleDefrostTestRequest(void *context, const void *args)
             break;
 
          case DefrostTestRequest_AhamFreshFoodOnlyPrechill:
+            SetDontSkipDefrostPrechillToTrue(instance);
             UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_AhamFreshFoodOnlyPrechill);
             SetNextDefrostType(instance, DefrostType_FreshFood);
             SetUseMinimumReadyToDefrostTime(instance, true);
@@ -140,6 +149,7 @@ static void HandleDefrostTestRequest(void *context, const void *args)
             break;
 
          case DefrostTestRequest_AhamPrechill:
+            SetDontSkipDefrostPrechillToTrue(instance);
             UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_AhamPrechill);
             SetNextDefrostType(instance, DefrostType_Full);
             SetUseMinimumReadyToDefrostTime(instance, true);

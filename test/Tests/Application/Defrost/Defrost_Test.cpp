@@ -84,6 +84,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .timerModuleErd = Erd_TimerModule,
    .clearedEepromStartup = Erd_Eeprom_ClearedDefrostEepromStartup,
    .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
+   .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill,
    .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost
 };
 
@@ -342,6 +343,12 @@ TEST_GROUP(Defrost_SingleEvap)
    {
       CompressorIs(ON);
       CoolingModeIs(CoolingMode_Freezer);
+   }
+
+   void PrechillConditionsAreNotMet()
+   {
+      CompressorIs(OFF);
+      CoolingModeIs(CoolingMode_FreshFood);
    }
 
    void MaxPrechillTimeInMinutesIs(uint8_t maxPrechillTime)
@@ -613,6 +620,47 @@ TEST_GROUP(Defrost_SingleEvap)
 
       CHECK_EQUAL(expectedRequest, actual.request);
    }
+
+   void DontSkipPrechillErdIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_DontSkipDefrostPrechill, &state);
+   }
+
+   void DefrostIsInPrechillPrepBecauseDontSkipPrechillErdWasSet()
+   {
+      Given LastFreshFoodDefrostWasNormal();
+      And LastFreezerDefrostWasNormal();
+      And LastConvertibleCompartmentDefrostWasNormal();
+      And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+      And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+      And InvalidFreezerEvaporatorThermistorDuringDefrostIs(true);
+      And FreshFoodThermistorValidityIs(Valid);
+      And DontSkipPrechillErdIs(SET);
+
+      When ReadyToDefrost();
+      DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+      And DontSkipPrechillErdIs(CLEAR);
+   }
+
+   void DefrostTransitionsFromPrechillPrepToHeaterOnEntryToHeaterOnToDwellToPostDwellThenToIdle()
+   {
+      PrechillConditionsAreMet();
+      DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+      ClearReadyToDefrost();
+      PrechillConditionsAreNotMet();
+
+      After(defrostData->heaterOnEntryData.defrostHeaterOnDelayAfterCompressorOffInSeconds * MSEC_PER_SEC);
+      DefrostHsmStateShouldBe(DefrostHsmState_HeaterOn);
+
+      When FreezerDefrostHeaterOnTimeInMinutesIs(FreezerDefrostHeaterMaxOnTimeInMinutes);
+      DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
+
+      After(defrostData->dwellData.dwellTimeInMinutes * MSEC_PER_MIN);
+      DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
+
+      After(defrostData->postDwellData.postDwellExitTimeInMinutes * MSEC_PER_MIN);
+      DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+   }
 };
 
 TEST(Defrost_SingleEvap, ShouldInitializeIntoDwellHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasHeaterOn)
@@ -840,6 +888,33 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenReadyToDefrostAndLastDefrosts
 
    When ReadyToDefrost();
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenReadyToDefrostAndFreezerEvapThermistorIsInvalidAndDontSkipPrechillIsSet)
+{
+   Given LastFreshFoodDefrostWasNormal();
+   And LastFreezerDefrostWasNormal();
+   And LastConvertibleCompartmentDefrostWasNormal();
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   And FreezerEvaporatorThermistorValidityIs(Valid);
+   And FreshFoodThermistorValidityIs(Valid);
+   And InvalidFreezerEvaporatorThermistorDuringDefrostIs(true);
+   And DontSkipPrechillErdIs(SET);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+   And DontSkipPrechillErdIs(CLEAR);
+}
+
+TEST(Defrost_SingleEvap, ShouldOnlyGoToPrechillPrepOnceWhenDontSkipPrechillIsSetIfConditionsAreNotPresentForItToGoToPrechillPrepNormallyAndInThisCaseItShouldGoToHeaterOnEntryInsteadOfPrechillPrepNextTime)
+{
+   Given DefrostIsInPrechillPrepBecauseDontSkipPrechillErdWasSet();
+
+   When DefrostTransitionsFromPrechillPrepToHeaterOnEntryToHeaterOnToDwellToPostDwellThenToIdle();
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
 TEST(Defrost_SingleEvap, ShouldGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAlreadyMetAndThermistorsAreValid)

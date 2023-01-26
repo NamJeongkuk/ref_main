@@ -26,7 +26,8 @@ static const DefrostTestRequestHandlerConfiguration_t config = {
    .nextDefrostTypeErd = Erd_NextDefrostType,
    .useMinimumReadyToDefrostTimeErd = Erd_UseMinimumReadyToDefrostTime,
    .resetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestErd = Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
-   .defrostTestRequestStatusErd = Erd_DefrostTestRequestStatus
+   .defrostTestRequestStatusErd = Erd_DefrostTestRequestStatus,
+   .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill
 };
 
 TEST_GROUP(DefrostTestRequestHandler)
@@ -140,6 +141,13 @@ TEST_GROUP(DefrostTestRequestHandler)
       DataModel_Read(dataModel, Erd_DefrostTestRequest, &actual);
 
       CHECK_EQUAL(DefrostTestRequest_None, actual);
+   }
+
+   void DontSkipPrechillShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_DontSkipDefrostPrechill, &actual);
+      CHECK_EQUAL(expected, actual);
    }
 };
 
@@ -323,6 +331,7 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndDoTheOther
    UseMinimumReadyToDefrostTimeShouldBe(true);
    ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestShouldBeIncremented();
    DefrostTestRequestShouldBeReset();
+   DontSkipPrechillShouldBe(SET);
 }
 
 TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFullAndDoTheOthersWhenDefrostTestRequestIsAhamPrechillWhileDefrostStateIsIdle)
@@ -336,6 +345,7 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFullAndDoTheOthersWhen
    UseMinimumReadyToDefrostTimeShouldBe(true);
    ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestShouldBeIncremented();
    DefrostTestRequestShouldBeReset();
+   DontSkipPrechillShouldBe(SET);
 }
 
 TEST(DefrostTestRequestHandler, ShouldIncrementResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestWheneverDefrostTestRequestIsAhamFreshFoodOnlyPrechillOrAhamPrechill)

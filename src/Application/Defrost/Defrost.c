@@ -369,7 +369,7 @@ static bool FreshFoodThermistorIsValid(Defrost_t *instance)
    return state;
 }
 
-static uint8_t GetMaxPrechillTime(Defrost_t *instance)
+static uint8_t MaxPrechillTime(Defrost_t *instance)
 {
    uint8_t maxPrechillTime;
    DataModel_Read(
@@ -380,7 +380,7 @@ static uint8_t GetMaxPrechillTime(Defrost_t *instance)
    return maxPrechillTime;
 }
 
-static uint16_t GetTimeThatPrechillConditionsAreMet(Defrost_t *instance)
+static uint16_t TimeThatPrechillConditionsAreMet(Defrost_t *instance)
 {
    uint16_t timeThatPrechillConditionsAreMet;
    DataModel_Read(
@@ -819,6 +819,25 @@ static DefrostTestStateRequest_t DefrostTestStateRequest(Defrost_t *instance)
    return requestMessage.request;
 }
 
+static bool DontSkipPrechill(Defrost_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->dontSkipDefrostPrechillErd,
+      &state);
+
+   return state;
+}
+
+static void ClearDontSkipPrechillFlag(Defrost_t *instance)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->dontSkipDefrostPrechillErd,
+      clear);
+}
+
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
@@ -848,20 +867,27 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_ReadyToDefrost:
-         if(AnyPreviousDefrostWasAbnormal(instance) ||
-            FreezerCompartmentWasTooWarmOnPowerUp(instance) ||
-            InvalidFreezerEvaporatorThermistorDuringDefrostIsSet(instance) ||
-            ClearedEepromStartup(instance))
+         if(DontSkipPrechill(instance))
          {
-            if(FreezerCompartmentWasTooWarmOnPowerUp(instance))
-            {
-               ResetFreezerCompartmentWasTooWarmOnPowerUp(instance);
-            }
-            Hsm_Transition(hsm, State_HeaterOnEntry);
+            Hsm_Transition(hsm, State_PrechillPrep);
          }
          else
          {
-            Hsm_Transition(hsm, State_PrechillPrep);
+            if(AnyPreviousDefrostWasAbnormal(instance) ||
+               FreezerCompartmentWasTooWarmOnPowerUp(instance) ||
+               InvalidFreezerEvaporatorThermistorDuringDefrostIsSet(instance) ||
+               ClearedEepromStartup(instance))
+            {
+               if(FreezerCompartmentWasTooWarmOnPowerUp(instance))
+               {
+                  ResetFreezerCompartmentWasTooWarmOnPowerUp(instance);
+               }
+               Hsm_Transition(hsm, State_HeaterOnEntry);
+            }
+            else
+            {
+               Hsm_Transition(hsm, State_PrechillPrep);
+            }
          }
          break;
 
@@ -942,6 +968,7 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_PrechillPrep);
+         ClearDontSkipPrechillFlag(instance);
          ClearDefrostTestStateRequest(instance);
 
          if(!FreshFoodThermistorIsValid(instance))
@@ -985,7 +1012,7 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          SetHsmStateTo(instance, DefrostHsmState_Prechill);
          VoteForPrechillLoads(instance, Vote_Care);
 
-         if(GetTimeThatPrechillConditionsAreMet(instance) >= GetMaxPrechillTime(instance))
+         if(TimeThatPrechillConditionsAreMet(instance) >= MaxPrechillTime(instance))
          {
             Hsm_Transition(hsm, State_HeaterOnEntry);
          }
@@ -993,8 +1020,8 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          {
             StartDefrostTimer(
                instance,
-               TRUNCATE_UNSIGNED_SUBTRACTION((uint16_t)GetMaxPrechillTime(instance),
-                  GetTimeThatPrechillConditionsAreMet(instance)) *
+               TRUNCATE_UNSIGNED_SUBTRACTION((uint16_t)MaxPrechillTime(instance),
+                  TimeThatPrechillConditionsAreMet(instance)) *
                   MSEC_PER_MIN);
          }
 

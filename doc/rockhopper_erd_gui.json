@@ -603,6 +603,12 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Don't skip defrost prechill",
+          "name": "Erd_DontSkipDefrostPrechill",
+          "read": true,
+          "write": false
+        },
+        {
           "displayName": "Invalid Freezer Evaporator Thermistor During Defrost",
           "name": "Erd_InvalidFreezerEvaporatorThermistorDuringDefrost",
           "read": true,
@@ -1803,6 +1809,158 @@
           "namespace": "mb",
           "displayName": "Fill Tube Heater Non Harvest Vote",
           "name": "Erd_AluminumMoldIceMakerFillTubeHeater_NonHarvestVote",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
+      "title": "Defrost External Test Request",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Compressor State",
+          "name": "Erd_CompressorState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer filtered temperature too warm at power up",
+          "name": "Erd_FreezerFilteredTemperatureTooWarmAtPowerUp",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "FreshFood Thermistor Is Valid Override Value",
+          "name": "Erd_FreshFoodThermistor_IsValidOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Thermistor Is Valid Override Request",
+          "name": "Erd_FreshFoodThermistor_IsValidOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Thermistor Is Valid Override Value",
+          "name": "Erd_FreezerEvapThermistor_IsValidOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Thermistor Is Valid Override Request",
+          "name": "Erd_FreezerEvapThermistor_IsValidOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Filtered Temperature Override Request",
+          "name": "Erd_Freezer_FilteredTemperatureOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Filtered Temperature Override Value InDegFx100",
+          "name": "Erd_Freezer_FilteredTemperatureOverrideValueInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Filtered Temperature Override Request",
+          "name": "Erd_FreezerEvap_FilteredTemperatureOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Filtered Temperature Override Value InDegFx100",
+          "name": "Erd_FreezerEvap_FilteredTemperatureOverrideValueInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer defrost was abnormal",
+          "name": "Erd_FreezerDefrostWasAbnormal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh food defrost was abnormal",
+          "name": "Erd_FreshFoodDefrostWasAbnormal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible compartment was abnormal",
+          "name": "Erd_ConvertibleCompartmentDefrostWasAbnormal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Defrost State",
+          "name": "Erd_DefrostState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Defrost Hsm State",
+          "name": "Erd_DefrostHsmState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Defrost test request",
+          "name": "Erd_DefrostTestRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Don't skip defrost prechill",
+          "name": "Erd_DontSkipDefrostPrechill",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Compressor speed factory vote",
+          "name": "Erd_CompressorSpeed_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Compressor Is On",
+          "name": "Erd_CompressorIsOn",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Defrost Compressor On Time In Seconds",
+          "name": "Erd_DefrostCompressorOnTimeInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Cooling Mode",
+          "name": "Erd_CoolingMode",
           "read": true,
           "write": true
         }

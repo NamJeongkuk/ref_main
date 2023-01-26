@@ -579,9 +579,11 @@ enum
    ENTRY(Erd_DefrostTestStateRequest,                       0xF18A, DefrostTestStateRequestMessage_t,                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DefrostTestRequestStatus,                      0xF18B, DefrostTestRequest_t,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_TimeAcceleration_Enable,                       0xF18C, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_TimeAcceleration_Ticks,                        0xF18D, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_TimeAcceleration_CompleteSignal,               0xF18E, Signal_t,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DontSkipDefrostPrechill,                       0xF18C, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_TimeAcceleration_Enable,                       0xF18D, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TimeAcceleration_Ticks,                        0xF18E, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TimeAcceleration_CompleteSignal,               0xF18F, Signal_t,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodThermistor_IsValidOverrideValue,                       0xF190, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerThermistor_IsValidOverrideValue,                         0xF191, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

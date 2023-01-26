@@ -49,6 +49,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .timerModuleErd = Erd_TimerModule,
    .clearedEepromStartup = Erd_Eeprom_ClearedDefrostEepromStartup,
    .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
+   .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill,
    .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost
 };
 
@@ -150,7 +151,8 @@ static const DefrostTestRequestHandlerConfiguration_t defrostTestRequestHandlerC
    .nextDefrostTypeErd = Erd_NextDefrostType,
    .useMinimumReadyToDefrostTimeErd = Erd_UseMinimumReadyToDefrostTime,
    .resetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestErd = Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
-   .defrostTestRequestStatusErd = Erd_DefrostTestRequestStatus
+   .defrostTestRequestStatusErd = Erd_DefrostTestRequestStatus,
+   .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill
 };
 
 static bool ThereIsAConvertibleCompartment(I_DataModel_t *dataModel)

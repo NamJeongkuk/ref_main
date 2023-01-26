@@ -55,6 +55,7 @@ typedef struct
    Erd_t timerModuleErd; // TimerModule_t *
    Erd_t clearedEepromStartup; // bool
    Erd_t defrostTestStateRequestErd; // DefrostTestStateRequestMessage_t
+   Erd_t dontSkipDefrostPrechillErd; // bool
    Erd_t invalidFreezerEvaporatorThermistorDuringDefrostErd; // bool
 } DefrostConfiguration_t;
 

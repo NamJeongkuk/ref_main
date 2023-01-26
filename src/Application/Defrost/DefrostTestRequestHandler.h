@@ -20,6 +20,7 @@ typedef struct
    Erd_t useMinimumReadyToDefrostTimeErd; // bool
    Erd_t resetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestErd; // Signal_t
    Erd_t defrostTestRequestStatusErd; // DefrostTestStateRequestMessage_t
+   Erd_t dontSkipDefrostPrechillErd; // bool
 } DefrostTestRequestHandlerConfiguration_t;
 
 typedef struct
