@@ -18,6 +18,7 @@
 #include "IceMakerEnableResolver.h"
 #include "ErdResolver.h"
 #include "RakeController.h"
+#include "ResolvedVoteRelayConnector.h"
 #include "IceMakerMoldHeaterController.h"
 #include "IceMakerWaterFillMonitor.h"
 #include "SensorFiltering.h"
@@ -30,6 +31,7 @@ typedef struct
       FreezerIceRateHandler_t iceRateHandler;
       FeelerArmMonitor_t feelerArmMonitor;
       RakeController_t rakeController;
+      ResolvedVoteRelayConnector_t rakeMotorRelayConnector;
       HarvestCountCalculator_t harvestCountCalculator;
       AluminumMoldIceMaker_t aluminumMoldIceMaker;
       IceMakerEnableResolver_t iceMakerEnableResolver;

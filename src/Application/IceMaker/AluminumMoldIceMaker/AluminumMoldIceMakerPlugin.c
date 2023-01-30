@@ -157,6 +157,11 @@ static const RakeControllerConfig_t rakeControllerConfig = {
    .feelerArmPositionHasBeenBucketFullErd = Erd_AluminumMoldIceMakerFeelerArmHasBeenBucketFull
 };
 
+static const ResolvedVoteRelayConnectorConfiguration_t rakeMotorDriverConfig = {
+   .resolvedRelayVoteErd = Erd_AluminumMoldIceMakerRakeMotor_ResolvedVote,
+   .relayOutputErd = Erd_IceMakerMotorRelay
+};
+
 static const IceMakerMoldHeaterControllerConfig_t iceMakerMoldHeaterControllerConfig = {
    .iceMakerMoldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
    .iceMakerMoldHeaterHarvestVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
@@ -238,6 +243,11 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
       dataModel,
       &rakeControllerConfig,
       &PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData->harvestData);
+
+   ResolvedVoteRelayConnector_Init(
+      &instance->_private.rakeMotorRelayConnector,
+      dataModel,
+      &rakeMotorDriverConfig);
 
    HarvestCountCalculator_Init(
       &instance->_private.harvestCountCalculator,

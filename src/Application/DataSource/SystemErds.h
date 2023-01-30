@@ -677,7 +677,7 @@ enum
    ENTRY(Erd_AluminumMoldIceMakerHeaterRelay_FactoryVote,   0xF222, HeaterVotedState_t,                                 Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,  0xF223, HeaterVotedState_t,                                 Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_AluminumMoldIceMakerRakeMotor_ResolvedVote,    0xF22A, AluminumMoldIceMakerMotorVotedState_t,              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerRakeMotor_ResolvedVote,    0xF22A, AluminumMoldIceMakerMotorVotedState_t,              Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerRakeMotor_WinningVoteErd,  0xF22B, WinningVoteErd_t,                                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerRakeMotor_FactoryVote,     0xF22C, AluminumMoldIceMakerMotorVotedState_t,              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,    0xF22D, AluminumMoldIceMakerMotorVotedState_t,              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
