@@ -26,6 +26,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Evaporator \
    $(PROJECT_DIR)/Application/Factory \
    $(PROJECT_DIR)/Application/Fan \
+   $(PROJECT_DIR)/Application/FlowMeter \
    $(PROJECT_DIR)/Application/Grid \
    $(PROJECT_DIR)/Application/Grid/GridFunctions \
    $(PROJECT_DIR)/Application/Grid/GridStateTables \
@@ -65,6 +66,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/Evaporator \
    $(TESTS_DIR)/Application/Factory \
    $(TESTS_DIR)/Application/Fan \
+   $(TESTS_DIR)/Application/FlowMeter \
    $(TESTS_DIR)/Application/Grid \
    $(TESTS_DIR)/Application/Heater \
    $(TESTS_DIR)/Application/IceMaker \

@@ -873,8 +873,8 @@ enum
    ENTRY(Erd_FreshFoodDamperStepperMotorDriveEnable,        0xF3C5, bool,                                               Swap_N, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_TwistIceMakerMotorDriveEnable,                 0xF3C6, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_AluminumMoldFlowMeterWaterDispensedOzX100,      0xF3C7, uint32_t,                                          Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldFlowMeterMonitoringRequest,         0xF3C8, bool,                                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldFlowMeterWaterDispensedOzX100,     0xF3C7, uint32_t,                                           Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldFlowMeterMonitoringRequest,        0xF3C8, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodDamperHeater_ResolvedVote,               0xF3D0, PercentageDutyCycleVote_t,                       Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperHeater_WinningVoteErd,             0xF3D1, WinningVoteErd_t,                                Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

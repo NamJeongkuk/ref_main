@@ -99,7 +99,7 @@ typedef struct
 static struct
 {
    I_DataSource_t interface;
-   volatile uint16_t flowMeterFeedbackCounts;
+   volatile uint32_t flowMeterFeedbackCounts;
    FeedbackData_t feedbackData[Channel_InputCapture_Max];
    Timer_t timer;
    Event_Synchronous_t *onChangeEvent;
@@ -352,8 +352,8 @@ static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
    else if(ERD_IS_IN_PULSE_COUNT_ERD_RANGE(erd))
    {
       uint32_t *counts = data;
-      uint16_t current;
-      uint16_t last;
+      uint32_t current;
+      uint32_t last;
 
       current = instance.flowMeterFeedbackCounts;
 
@@ -363,7 +363,7 @@ static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
          current = instance.flowMeterFeedbackCounts;
       } while(last != current);
 
-      *counts = ((uint32_t)current);
+      *counts = current;
    }
 }
 

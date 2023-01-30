@@ -64,6 +64,7 @@ SRC_DIRS:=\
   src/Application/Evaporator \
   src/Application/Factory \
   src/Application/Fan \
+  src/Application/FlowMeter \
   src/Application/Gea \
   src/Application/Grid \
   src/Application/Grid/GridFunctions \
