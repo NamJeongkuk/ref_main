@@ -368,6 +368,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Gpio_PWM_VAR_00",
+          "name": "Erd_Gpio_PWM_VAR_00",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Gpio_PWM_VAR_01",
           "name": "Erd_Gpio_PWM_VAR_01",
           "read": true,
