@@ -26,7 +26,8 @@ extern "C"
 static const HarvestCountCalculatorConfiguration_t config = {
    .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
-   .iceMakerFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100
+   .iceMakerFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .aluminumMoldFreezeIntegrationCountErd = Erd_AluminumMoldFreezeIntegrationCount
 };
 
 TEST_GROUP(HarvestCountCalculator)
@@ -87,6 +88,13 @@ TEST_GROUP(HarvestCountCalculator)
       bool actual;
       DataModel_Read(dataModel, Erd_HarvestCountIsReadyToHarvest, &actual);
       CHECK_EQUAL(expected, actual);
+   }
+
+   void FreezeIntegrationCountShouldBe(uint32_t expectedCount)
+   {
+      uint32_t actualCount;
+      DataModel_Read(dataModel, Erd_AluminumMoldFreezeIntegrationCount, &actualCount);
+      CHECK_EQUAL(expectedCount, actualCount);
    }
 };
 
@@ -182,4 +190,40 @@ TEST(HarvestCountCalculator, ShouldSetHarvestCountIsReadyToHarvestWhenCalculatio
 
    After(MSEC_PER_SEC);
    HarvestCountIsReadyToHarvestShouldBe(SET);
+}
+
+TEST(HarvestCountCalculator, ShouldSetFreezeIntegrationCountToZeroOnInit)
+{
+   GivenTheModuleIsInitialized();
+   FreezeIntegrationCountShouldBe(0);
+}
+
+TEST(HarvestCountCalculator, ShouldSetAluminumFreezeIntegrationCountToTheExpectedValueAfterAGivenAmountOfTime)
+{
+   GivenTheIceMakerTemperatureIs(TemperatureThatCausesFreezeIntegrationLimitToBeReachedInMinimumFreezeTimeInMinutes);
+   GivenTheModuleIsInitialized();
+   GivenTheHarvestCountCalculationRequestIs(SET);
+
+   After(aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes * MSEC_PER_MIN);
+   FreezeIntegrationCountShouldBe(3001000);
+   HarvestCountIsReadyToHarvestShouldBe(SET);
+}
+
+TEST(HarvestCountCalculator, ShouldUpdateAluminumFreezeIntegrationCountEverySecondWhileCalculatingHarvestCount)
+{
+   GivenTheIceMakerTemperatureIs(TemperatureThatCausesFreezeIntegrationLimitToBeReachedInMinimumFreezeTimeInMinutes);
+   GivenTheModuleIsInitialized();
+   GivenTheHarvestCountCalculationRequestIs(SET);
+
+   After(MSEC_PER_SEC - 1);
+   FreezeIntegrationCountShouldBe(1000);
+
+   After(1);
+   FreezeIntegrationCountShouldBe(2000);
+
+   After(MSEC_PER_SEC - 1);
+   FreezeIntegrationCountShouldBe(2000);
+
+   After(2);
+   FreezeIntegrationCountShouldBe(3000);
 }

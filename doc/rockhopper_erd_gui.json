@@ -1027,6 +1027,13 @@
           "name": "Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Aluminum Mold Freeze Integration Count",
+          "name": "Erd_AluminumMoldFreezeIntegrationCount",
+          "read": true,
+          "write": true
         }
       ]
     },

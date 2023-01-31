@@ -118,6 +118,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100, sizeof(TemperatureDegFx100_t)),
    SWAPPED_FIELD(PublicErd_AluminumMoldIceMakerMoldHeaterControlRequest, IceMakerMoldHeaterControlRequest_t, onTemperatureInDegFx100),
    SWAPPED_FIELD(PublicErd_AluminumMoldIceMakerMoldHeaterControlRequest, IceMakerMoldHeaterControlRequest_t, offTemperatureInDegFx100),
+   SWAPPED_ERD(PublicErd_AluminumMoldFreezeIntegrationCount, sizeof(uint32_t)),
 
    // 0xF200 range
    SWAPPED_ERD(PublicErd_CompressorSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),

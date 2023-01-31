@@ -556,6 +556,12 @@
                "displayName": "Aluminum Mold Ice Maker Temperature",
                "name": "Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100",
                "read": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Aluminum Mold Freeze Integration Count",
+               "name": "Erd_AluminumMoldFreezeIntegrationCount",
+               "read": true
             }
          ]
       },
