@@ -5,6 +5,18 @@ const constants = require("../support/constants");
 const After = require('../support/After.js');
 const { msPerSec } = require("../support/constants");
 
+/*
+Change the following ERDs to NvUnitSetting in SystemErds.h:
+
+Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideValue
+Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideRequest
+Erd_AluminumMoldIceMakerRakePosition
+Erd_IceMakerEnabledOverrideRequest
+Erd_IceMakerEnabledOverrideValue
+
+Flash board with DEBUG=Y for time acceleration to work
+*/
+
 describe("AluminumMoldIceMaker,", () => {
    const aLittleBitMoreThanAMinuteAccelerationDelayInSeconds = 65;
    const aLittleBitAccelerationDelayInSeconds = 10;
