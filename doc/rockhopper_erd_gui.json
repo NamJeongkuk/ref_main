@@ -194,6 +194,27 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Grid Block Number Override Resolved",
+          "name": "Erd_GridBlockNumberOverrideResolved",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Grid Block Override Request",
+          "name": "Erd_GridBlockNumberOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Grid Block Override Value",
+          "name": "Erd_GridBlockNumberOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Previous Grid Blocks",
           "name": "Erd_Grid_PreviousBlocks",
           "read": true,

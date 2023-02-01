@@ -118,7 +118,7 @@ void Grid_DualEvap(void *context)
 {
    REINTERPRET(dataModel, context, I_DataModel_t *);
    GridBlockNumber_t blockNumber;
-   DataModel_Read(dataModel, Erd_Grid_BlockNumber, &blockNumber);
+   DataModel_Read(dataModel, Erd_GridBlockNumberOverrideResolved, &blockNumber);
 
    VoteDontCareForAllVotes(dataModel);
 

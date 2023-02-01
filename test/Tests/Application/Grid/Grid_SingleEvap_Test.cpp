@@ -52,7 +52,7 @@ TEST_GROUP(Grid_SingleEvap_Test)
 
    void GridBlockIs(GridBlockNumber_t actual)
    {
-      DataModel_Write(dataModel, Erd_Grid_BlockNumber, &actual);
+      DataModel_Write(dataModel, Erd_GridBlockNumberOverrideResolved, &actual);
    }
 
    void GridIsRun()

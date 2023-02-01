@@ -143,7 +143,7 @@ void Grid_SingleEvap(void *context)
    I_DataModel_t *dataModel = context;
 
    GridBlockNumber_t blockNumber;
-   DataModel_Read(dataModel, Erd_Grid_BlockNumber, &blockNumber);
+   DataModel_Read(dataModel, Erd_GridBlockNumberOverrideResolved, &blockNumber);
 
    CoolingMode_t currentCoolingMode = GetCoolingMode(dataModel);
    CoolingSpeed_t currentCoolingSpeed = GetCoolingSpeed(dataModel);

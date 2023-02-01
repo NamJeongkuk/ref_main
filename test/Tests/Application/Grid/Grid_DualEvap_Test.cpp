@@ -42,7 +42,7 @@ TEST_GROUP(Grid_DualEvap_Test)
 
    void GridBlockBecomes(GridBlockNumber_t actual)
    {
-      DataModel_Write(dataModel, Erd_Grid_BlockNumber, &actual);
+      DataModel_Write(dataModel, Erd_GridBlockNumberOverrideResolved, &actual);
    }
 
    void GridIsRun()

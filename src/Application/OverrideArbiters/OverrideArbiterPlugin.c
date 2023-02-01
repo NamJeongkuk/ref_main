@@ -71,7 +71,7 @@ static const OverrideArbiterConfiguration_t ambientFilteredTemperatureArbiterCon
    ambientFilteredTemperatureOverrideRequestErdList,
    ambientFilteredTemperatureValueErdList,
    Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
-   NUM_ELEMENTS(ambientFilteredTemperatureValueErdList)
+   NUM_ELEMENTS(ambientFilteredTemperatureOverrideRequestErdList)
 };
 
 static const Erd_t freshFoodThermistorValidOverrideArbiterRequestErdList[] = {
@@ -234,6 +234,22 @@ static const OverrideArbiterConfiguration_t iceMakerEnabledOverrideConfiguration
    NUM_ELEMENTS(iceMakerEnabledOverrideRequestErdList)
 };
 
+static const Erd_t gridBlockNumberOverrideRequestErdList[] = {
+   Erd_GridBlockNumberOverrideRequest
+};
+
+static const Erd_t gridBlockNumberOverrideValueErdList[] = {
+   Erd_Grid_BlockNumber,
+   Erd_GridBlockNumberOverrideValue
+};
+
+static const OverrideArbiterConfiguration_t gridBlockNumberOverrideConfiguration = {
+   gridBlockNumberOverrideRequestErdList,
+   gridBlockNumberOverrideValueErdList,
+   Erd_GridBlockNumberOverrideResolved,
+   NUM_ELEMENTS(gridBlockNumberOverrideRequestErdList)
+};
+
 static struct
 {
    OverrideArbiter_t freezerEvaporatorFilteredTemperatureArbiter;
@@ -250,6 +266,7 @@ static struct
    OverrideArbiter_t aluminumMoldIceMakerFilteredTemperatureArbiter;
    OverrideArbiter_t aluminumMoldIceMakerThermistorValidArbiter;
    OverrideArbiter_t iceMakerEnabledArbiter;
+   OverrideArbiter_t gridBlockNumberArbiter;
 } instance;
 
 static void InitializeFilteredTemperatureArbiters(I_DataModel_t *dataModel)
@@ -332,6 +349,11 @@ void OverrideArbiterPlugin_Init(I_DataModel_t *dataModel)
       &instance.iceMakerEnabledArbiter,
       DataModel_AsDataSource(dataModel),
       &iceMakerEnabledOverrideConfiguration);
+
+   OverrideArbiter_Init(
+      &instance.gridBlockNumberArbiter,
+      DataModel_AsDataSource(dataModel),
+      &gridBlockNumberOverrideConfiguration);
 
    DataModel_Write(
       dataModel,
