@@ -14,12 +14,13 @@ static const StepperMotorPins_t damperPins = {
    .motorDriveA = Erd_BspGpio_MTR_DRV_00,
    .motorDriveB = Erd_BspGpio_MTR_DRV_02,
    .motorDriveABar = Erd_BspGpio_MTR_DRV_01,
-   .motorDriveBBar = Erd_BspGpio_MTR_DRV_03,
-   .motorDriveEnable = Erd_BspGpio_MTR_DRV_EN_00
+   .motorDriveBBar = Erd_BspGpio_MTR_DRV_03
 };
 
 static const StepperMotorDriverConfiguration_t driverConfig = {
    .stepperMotorPositionRequestErd = Erd_FreshFoodDamperStepperMotorPositionRequest,
+   .motorControlRequestErd = Erd_FreshFoodDamperStepperMotorControlRequest,
+   .motorEnableErd = Erd_FreshFoodDamperStepperMotorDriveEnable,
    .pins = &damperPins
 };
 

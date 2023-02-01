@@ -2028,6 +2028,39 @@
           "read": true,
           "write": true
         }
+      ]    
+    },  
+    {
+      "title": "Motor Arbitrator Erds",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Damper Stepper Motor Control Request",
+          "name": "Erd_FreshFoodDamperStepperMotorControlRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Ice Maker Motor Control Request",
+          "name": "Erd_TwistIceMakerMotorControlRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Damper Stepper Motor Drive Enable",
+          "name": "Erd_FreshFoodDamperStepperMotorDriveEnable",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Ice Maker Motor Drive Enable",
+          "name": "Erd_TwistIceMakerMotorDriveEnable",
+          "read": true,
+          "write": true
+        }
       ]
     }
   ]

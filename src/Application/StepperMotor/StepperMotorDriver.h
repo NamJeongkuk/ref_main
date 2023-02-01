@@ -19,12 +19,13 @@ typedef struct
    Erd_t motorDriveB;
    Erd_t motorDriveABar;
    Erd_t motorDriveBBar;
-   Erd_t motorDriveEnable;
 } StepperMotorPins_t;
 
 typedef struct
 {
-   Erd_t stepperMotorPositionRequestErd;
+   Erd_t stepperMotorPositionRequestErd; // StepperPositionRequest_t
+   Erd_t motorControlRequestErd; // bool
+   Erd_t motorEnableErd; // bool
    const StepperMotorPins_t *pins;
 } StepperMotorDriverConfiguration_t;
 
@@ -37,6 +38,7 @@ typedef struct
       I_GpioGroup_t *gpioGroup;
       EventSubscription_t erdChangeSubscription;
       EventSubscription_t stepEventSubscription;
+      EventSubscription_t motorEnableSubscription;
       I_Event_t *stepEvent;
       uint8_t currentStepPosition;
       uint16_t stepsToRun;

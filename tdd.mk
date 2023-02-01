@@ -33,6 +33,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Heater \
    $(PROJECT_DIR)/Application/IceMaker \
    $(PROJECT_DIR)/Application/IceMaker/AluminumMoldIceMaker \
+   $(PROJECT_DIR)/Application/Motor \
    $(PROJECT_DIR)/Application/ParametricData \
    $(PROJECT_DIR)/Application/Pulldown \
    $(PROJECT_DIR)/Application/Sabbath \
@@ -71,8 +72,9 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/Heater \
    $(TESTS_DIR)/Application/IceMaker \
    $(TESTS_DIR)/Application/IceMaker/AluminumMoldIceMaker \
-   $(TESTS_DIR)/Application/ParametricData \
+   $(TESTS_DIR)/Application/Motor \
    $(TESTS_DIR)/Application/Sabbath \
+   $(TESTS_DIR)/Application/ParametricData \
    $(TESTS_DIR)/Application/Sensor \
    $(TESTS_DIR)/Application/ServiceDiagnostics \
    $(TESTS_DIR)/Application/Setpoints \
