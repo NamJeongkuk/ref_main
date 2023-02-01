@@ -11,7 +11,7 @@
 #include "IceMakerEnableResolver.h"
 #include "Vote.h"
 
-FreezerIceRateHandlerConfig_t iceRateHandlerConfig = {
+static const FreezerIceRateHandlerConfig_t iceRateHandlerConfig = {
    .freezerIceRateTriggerSignal = Erd_FreezerIceRateTriggerSignal,
    .freezerSetpointUserVote = Erd_FreezerSetpoint_UserVote,
    .freezerSetpointFreezerIceRateVote = Erd_FreezerSetpoint_FreezerIceRateVote,
@@ -186,6 +186,11 @@ static const IceMakerWaterFillMonitorConfig_t iceMakerFillMonitorConfig = {
    .timerModuleErd = Erd_TimerModule
 };
 
+static const ResolvedVoteRelayConnectorConfiguration_t iceMakerWaterValveRelayConnectorConfiguration = {
+   .resolvedRelayVoteErd = Erd_AluminumMoldIceMakerWaterValve_ResolvedVote,
+   .relayOutputErd = Erd_IceMakerWaterValveRelay
+};
+
 static void InitializeErdResolvers(AluminumMoldIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
 {
    ErdResolver_Init(
@@ -223,6 +228,11 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
    InitializeErdResolvers(
       instance,
       dataModel);
+
+   ResolvedVoteRelayConnector_Init(
+      &instance->_private.iceMakerWaterValveRelayConnector,
+      dataModel,
+      &iceMakerWaterValveRelayConnectorConfiguration);
 
    FillTubeHeaterVotingFrameworkPlugin_Init(
       &instance->_private.fillTubeHeaterVotingFrameworkPlugin,

@@ -22,6 +22,7 @@
 #include "IceMakerMoldHeaterController.h"
 #include "IceMakerWaterFillMonitor.h"
 #include "SensorFiltering.h"
+#include "ResolvedVoteRelayConnector.h"
 
 typedef struct
 {
@@ -43,6 +44,7 @@ typedef struct
       ErdResolver_t iceMakerMotorVoteResolver;
       SensorFiltering_t moldThermistor;
       ErdResolver_t iceMakerRakeMotorVoteResolver;
+      ResolvedVoteRelayConnector_t iceMakerWaterValveRelayConnector;
    } _private;
 } AluminumMoldIceMakerPlugin_t;
 

@@ -613,6 +613,20 @@
           "name": "Erd_InvalidFreezerEvaporatorThermistorDuringDefrost",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Aluminum Mold Ice Maker Water Valve Resolved Vote",
+          "name": "Erd_AluminumMoldIceMakerWaterValve_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Maker Water Valve Relay",
+          "name": "Erd_IceMakerWaterValveRelay",
+          "read": true,
+          "write": false
         }
       ]
     },

@@ -27,6 +27,11 @@ static const ErdResolverConfiguration_t isolationWaterValveResolverConfiguration
    .numberOfVotingErds = (Erd_IsolationWaterValve_AluminumMoldIceMakerVote - Erd_IsolationWaterValve_WinningVoteErd)
 };
 
+static const ResolvedVoteRelayConnectorConfiguration_t isolationWaterValveRelayConnectorConfiguration = {
+   .resolvedRelayVoteErd = Erd_IsolationWaterValve_ResolvedVote,
+   .relayOutputErd = Erd_IsolationValveRelay
+};
+
 void IsolationWaterValvePlugin_Init(
    IsolationWaterValvePlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -35,4 +40,9 @@ void IsolationWaterValvePlugin_Init(
       &instance->_private.isolationWaterValveErdResolver,
       DataModel_AsDataSource(dataModel),
       &isolationWaterValveResolverConfiguration);
+
+   ResolvedVoteRelayConnector_Init(
+      &instance->_private.isolationWaterValveRelayConnector,
+      dataModel,
+      &isolationWaterValveRelayConnectorConfiguration);
 }

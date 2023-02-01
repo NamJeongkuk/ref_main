@@ -721,7 +721,7 @@ enum
    ENTRY(Erd_IsolationWaterValve_FactoryVote,               0xF28C, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IsolationWaterValve_AluminumMoldIceMakerVote,  0xF28D, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_AluminumMoldIceMakerWaterValve_ResolvedVote,   0xF290, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerWaterValve_ResolvedVote,   0xF290, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerWaterValve_WinningVoteErd, 0xF291, WinningVoteErd_t,                                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerWaterValve_FactoryVote,    0xF292, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,   0xF293, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

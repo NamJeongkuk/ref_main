@@ -10,12 +10,14 @@
 
 #include "I_DataModel.h"
 #include "ErdResolver.h"
+#include "ResolvedVoteRelayConnector.h"
 
 typedef struct
 {
    struct
    {
       ErdResolver_t isolationWaterValveErdResolver;
+      ResolvedVoteRelayConnector_t isolationWaterValveRelayConnector;
    } _private;
 } IsolationWaterValvePlugin_t;
 

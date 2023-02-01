@@ -19,11 +19,6 @@ extern "C"
 #include "ReferDataModel_TestDouble.h"
 #include "uassert_test.h"
 
-enum
-{
-
-};
-
 static const FreezerIceRateHandlerConfig_t iceRateHandlerConfig = {
    .freezerIceRateTriggerSignal = Erd_FreezerIceRateTriggerSignal,
    .freezerSetpointUserVote = Erd_FreezerSetpoint_UserVote,
