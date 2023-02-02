@@ -48,10 +48,13 @@ typedef struct
       EventSubscription_t dataModelSubscription;
       Timer_t fillTubeHeaterTimer;
       Timer_t maxHarvestTimer;
+      Timer_t maxHarvestFixTimer;
+      Timer_t motorOnAndOffTimer;
       Timer_t minimumHeaterOnTimer;
       const AluminumMoldIceMakerConfig_t *config;
       const AluminumMoldIceMakerData_t *iceMakerParametricData;
       bool initalFreezerStateTransition;
+      bool revolutionCompletedDuringHarvestFix;
    } _private;
 } AluminumMoldIceMaker_t;
 

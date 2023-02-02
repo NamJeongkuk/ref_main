@@ -31,6 +31,9 @@ enum
    Signal_IceMakerIsDisabled,
    Signal_FillTubeHeaterTimerExpired,
    Signal_MaxHarvestTimeReached,
+   Signal_MaxHarvestFixTimeReached,
+   Signal_RakeOnTimerExpired,
+   Signal_RakeOffTimerExpired,
    Signal_MoldThermistorIsInvalid,
    Signal_RakeCompletedRevolution,
    Signal_MinimumHeaterOnTimeReached,
@@ -320,11 +323,12 @@ static void StopMaxHarvestTimer(AluminumMoldIceMaker_t *instance)
 
 static void SetMoldHeaterControlRequestForHarvest(AluminumMoldIceMaker_t *instance)
 {
-   IceMakerMoldHeaterControlRequest_t request;
-   request.enable = true;
-   request.skipInitialOnTime = false;
-   request.onTemperatureInDegFx100 = instance->_private.iceMakerParametricData->harvestData.heaterOnTemperatureInDegFx100;
-   request.offTemperatureInDegFx100 = instance->_private.iceMakerParametricData->harvestData.heaterOffTemperatureInDegFx100;
+   IceMakerMoldHeaterControlRequest_t request = {
+      .enable = true,
+      .skipInitialOnTime = false,
+      .onTemperatureInDegFx100 = instance->_private.iceMakerParametricData->harvestData.heaterOnTemperatureInDegFx100,
+      .offTemperatureInDegFx100 = instance->_private.iceMakerParametricData->harvestData.heaterOffTemperatureInDegFx100
+   };
 
    DataModel_Write(
       instance->_private.dataModel,
@@ -376,6 +380,14 @@ static bool SkipFillFlagIsSet(AluminumMoldIceMaker_t *instance)
       &state);
 
    return state;
+}
+
+static void SetSkipFillFlag(AluminumMoldIceMaker_t *instance)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->skipFillRequestErd,
+      set);
 }
 
 static void ClearSkipFillFlag(AluminumMoldIceMaker_t *instance)
@@ -451,6 +463,93 @@ static void SendFreezerIceRateSignal(AluminumMoldIceMaker_t *instance)
    Signal_SendViaErd(
       DataModel_AsDataSource(instance->_private.dataModel),
       instance->_private.config->freezerIceRateTriggerSignal);
+}
+
+static void MaxHarvestFixTimeReached(void *context)
+{
+   AluminumMoldIceMaker_t *instance = context;
+   Hsm_SendSignal(&instance->_private.hsm, Signal_MaxHarvestFixTimeReached, NULL);
+}
+
+static void StartMaxHarvestFixTimer(AluminumMoldIceMaker_t *instance)
+{
+   TimerModule_StartOneShot(
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         Erd_TimerModule),
+      &instance->_private.maxHarvestFixTimer,
+      instance->_private.iceMakerParametricData->harvestFixData.maximumHarvestFixTimeInMinutes * MSEC_PER_MIN,
+      MaxHarvestFixTimeReached,
+      instance);
+}
+
+static void StopMaxHarvestFixTimer(AluminumMoldIceMaker_t *instance)
+{
+   TimerModule_Stop(
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         Erd_TimerModule),
+      &instance->_private.maxHarvestFixTimer);
+}
+
+static void SetMoldHeaterControlRequestForHarvestFix(AluminumMoldIceMaker_t *instance)
+{
+   IceMakerMoldHeaterControlRequest_t request = {
+      .enable = true,
+      .skipInitialOnTime = true,
+      .onTemperatureInDegFx100 = instance->_private.iceMakerParametricData->harvestFixData.heaterOnTemperatureInDegFx100,
+      .offTemperatureInDegFx100 = instance->_private.iceMakerParametricData->harvestFixData.heaterOffTemperatureInDegFx100
+   };
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->moldHeaterControlRequestErd,
+      &request);
+}
+
+static void RakeOnTimerExpired(void *context)
+{
+   AluminumMoldIceMaker_t *instance = context;
+   Hsm_SendSignal(&instance->_private.hsm, Signal_RakeOnTimerExpired, NULL);
+}
+
+static void StartRakeOnTimer(AluminumMoldIceMaker_t *instance)
+{
+   TimerModule_StartOneShot(
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         Erd_TimerModule),
+      &instance->_private.motorOnAndOffTimer,
+      instance->_private.iceMakerParametricData->harvestFixData.motorOnTimeInSeconds * MSEC_PER_SEC,
+      RakeOnTimerExpired,
+      instance);
+}
+
+static void StopRakeOnAndOffTimer(AluminumMoldIceMaker_t *instance)
+{
+   TimerModule_Stop(
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         Erd_TimerModule),
+      &instance->_private.motorOnAndOffTimer);
+}
+
+static void RakeOffTimerExpired(void *context)
+{
+   AluminumMoldIceMaker_t *instance = context;
+   Hsm_SendSignal(&instance->_private.hsm, Signal_RakeOffTimerExpired, NULL);
+}
+
+static void StartRakeOffTimer(AluminumMoldIceMaker_t *instance)
+{
+   TimerModule_StartOneShot(
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         Erd_TimerModule),
+      &instance->_private.motorOnAndOffTimer,
+      instance->_private.iceMakerParametricData->harvestFixData.motorOffTimeInSeconds * MSEC_PER_SEC,
+      RakeOffTimerExpired,
+      instance);
 }
 
 static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data)
@@ -629,6 +728,36 @@ static bool State_HarvestFix(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_HarvestFix);
+         SetSkipFillFlag(instance);
+         StartMaxHarvestFixTimer(instance);
+         SetMoldHeaterControlRequestForHarvestFix(instance);
+         SetRakeControllerRequest(instance);
+         StartRakeOnTimer(instance);
+         break;
+
+      case Signal_RakeOnTimerExpired:
+         ClearRakeControllerRequest(instance);
+         StartRakeOffTimer(instance);
+         break;
+
+      case Signal_RakeOffTimerExpired:
+         SetRakeControllerRequest(instance);
+         StartRakeOnTimer(instance);
+         break;
+
+      case Signal_MaxHarvestFixTimeReached:
+         Hsm_Transition(hsm, State_HarvestFault);
+         break;
+
+      case Signal_RakeCompletedRevolution:
+         if(!instance->_private.revolutionCompletedDuringHarvestFix)
+         {
+            instance->_private.revolutionCompletedDuringHarvestFix = true;
+         }
+         else
+         {
+            Hsm_Transition(hsm, State_Freeze);
+         }
          break;
 
       case Signal_MoldThermistorIsInvalid:
@@ -636,6 +765,11 @@ static bool State_HarvestFix(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Hsm_Exit:
+         instance->_private.revolutionCompletedDuringHarvestFix = false;
+         StopMaxHarvestFixTimer(instance);
+         StopRakeOnAndOffTimer(instance);
+         ClearMoldHeaterControlRequest(instance);
+         ClearRakeControllerRequest(instance);
          break;
 
       default:
@@ -816,6 +950,7 @@ void AluminumMoldIceMaker_Init(
    instance->_private.config = config;
    instance->_private.iceMakerParametricData = PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData;
    instance->_private.initalFreezerStateTransition = false;
+   instance->_private.revolutionCompletedDuringHarvestFix = false;
 
    Hsm_Init(&instance->_private.hsm, &hsmConfiguration, InitialState(instance));
 
