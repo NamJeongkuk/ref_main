@@ -1,0 +1,453 @@
+{
+  "name": "Hardware Pinout GUI for Lighthouse",
+  "tabs": [
+    {
+      "title": "12V Outputs",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "HTR 00 / Twist IM Fill Tube Htr",
+          "name": "Erd_Gpio_HTR_00",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "HTR 01 / FF Damper Htr",
+          "name": "Erd_Gpio_HTR_01",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "HTR 02 / Pangea Mullion Htr",
+          "name": "Erd_Gpio_HTR_02",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "HTR 03 / Spare Recess Htr",
+          "name": "Erd_Gpio_HTR_03",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "HTR 04 / Aluminum IM Fill Tube Htr",
+          "name": "Erd_Gpio_HTR_04",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        }
+      ]
+    },
+    {
+      "title": "Damper Drivers",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "MTR DRV EN 00 / FF Damper Enable",
+          "name": "Erd_Gpio_MTR_DRV_EN_00",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "MTR DRV EN 01 / Twist Motor Enable",
+          "name": "Erd_Gpio_MTR_DRV_EN_01",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "MTR DRV 00 / Damper or Twist Motor",
+          "name": "Erd_Gpio_MTR_DRV_00",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "MTR DRV 01 / Damper or Twist Motor",
+          "name": "Erd_Gpio_MTR_DRV_01",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "MTR DRV 02 / Damper",
+          "name": "Erd_Gpio_MTR_DRV_02",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "MTR DRV 03 / Damper",
+          "name": "Erd_Gpio_MTR_DRV_03",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        }
+      ]
+    },
+    {
+      "title": "Relays",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "PWM VAR 01 / Compressor Relay",
+          "name": "Erd_Gpio_PWM_VAR_01",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "RLY 00 / FZ Defrost Heater",
+          "name": "Erd_Gpio_RLY_00",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "RLY 01 / Isolation Valve",
+          "name": "Erd_Gpio_RLY_01",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "RLY 02 / Dispenser Valve",
+          "name": "Erd_Gpio_RLY_02",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "RLY 03 / Aluminum IM Valve",
+          "name": "Erd_Gpio_RLY_03",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "RLY 04 / Aluminum IM Heater",
+          "name": "Erd_Gpio_RLY_04",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "RLY 05 / Aluminum IM Motor",
+          "name": "Erd_Gpio_RLY_05",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "RLY 06 / Twist IM Valve",
+          "name": "Erd_Gpio_RLY_06",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "AUGER PWR",
+          "name": "Erd_Gpio_AUGER_PWR",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "AUGER DIRECTION",
+          "name": "Erd_Gpio_AUGER_DIRECTION",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        }
+      ]
+    },
+    {
+      "title": "DC Inputs",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "DOOR INT / FZ Door",
+          "name": "Erd_Gpio_DOOR_INT",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "DOOR 01 / FF Door",
+          "name": "Erd_Gpio_DOOR_01",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "DOOR 02 / Pangea FF Right",
+          "name": "Erd_Gpio_DOOR_02",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "GPIO IN 00 / Internal Dispense Switch",
+          "name": "Erd_Gpio_GPIO_IN_00",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "GPIO IN 02 / Twist IM Switch",
+          "name": "Erd_Gpio_GPIO_IN_02",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "GPIO IN 03 / Aluminum IM Arm",
+          "name": "Erd_Gpio_GPIO_IN_03",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        }		
+      ]
+    },
+    {
+      "title": "PWM Outputs",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "PWM 25K 00 / FZ Fan PWM",
+          "name": "Erd_Pwm_PWM_25K_00",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "PWM 25K 01 / Condenser Fan PWM",
+          "name": "Erd_Pwm_PWM_25K_01",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "PWM 25K 02 / Ice Fan PWM",
+          "name": "Erd_Pwm_PWM_25K_02",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "PWM 200 00 / FF Side/Top LEDs",
+          "name": "Erd_Pwm_PWM_200_00",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "PWM 200 01 / FF Backwall LEDs",
+          "name": "Erd_Pwm_PWM_200_01",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "PWM 200 02 / FZ Backwall LEDs",
+          "name": "Erd_Pwm_PWM_200_02",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "PWM 200 03 / FZ Side/Top LEDs",
+          "name": "Erd_Pwm_PWM_200_03",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "PWM VAR 00 / VS Compressor PWM",
+          "name": "Erd_Gpio_PWM_VAR_00",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        }
+      ]
+    },
+    {
+      "title": "Analog Inputs",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "ANALOG 4.75K 00 / FF Thermistor",
+          "name": "Erd_Adc_ANALOG_475K_TH_00",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "ANALOG LOW 00 / FZ Thermistor",
+          "name": "Erd_Adc_ANALOG_TH_LOW_00",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "ANALOG LOW 01 / FZ Evap Thermistor",
+          "name": "Erd_Adc_ANALOG_TH_LOW_01",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "ANALOG LOW 02 / Humidity",
+          "name": "Erd_Adc_ANALOG_TH_LOW_02",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "ANALOG LOW 03 / Pangea Icebox",
+          "name": "Erd_Adc_ANALOG_TH_LOW_03",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "ANALOG LOW 04 / Twist IM Thermistor",
+          "name": "Erd_Adc_ANALOG_TH_LOW_04",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "ANALOG LOW 05 / Ambient Temperature",
+          "name": "Erd_Adc_ANALOG_TH_LOW_05",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "DC Current Measurement",
+          "name": "Erd_Adc_LOAD_CURRENT",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "HW PERSONALITY 00",
+          "name": "Erd_Adc_HW_PERSONALITY_00",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "HW PERSONALITY 01",
+          "name": "Erd_Adc_HW_PERSONALITY_01",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        }
+      ]
+    },
+    {
+      "title": "Frequency Inputs",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "CAPTURE 00 / FZ Fan RPM",
+          "name": "Erd_InputCapture_CAPTURE_00",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "CAPTURE 01 / Cond Fan RPM",
+          "name": "Erd_InputCapture_CAPTURE_01",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "CAPTURE 02 / Pangea Ice Fan RPM",
+          "name": "Erd_InputCapture_CAPTURE_02",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "CAPTURE 03 / Aluminum IM Rake / Flowmeter",
+          "name": "Erd_InputCapture_CAPTURE_03",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        }
+      ]
+    },
+    {
+      "title": "Misc",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Enable Switch Grounds for Non-Sabbath Mode",
+          "name": "Erd_Gpio_SABBATH",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Heartbeat LED",
+          "name": "Erd_Gpio_HEARTBEAT",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        }
+      ]
+    }
+  ]
+}
