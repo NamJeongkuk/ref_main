@@ -12,8 +12,8 @@
 
 enum
 {
-   RakePosition_NotHome,
-   RakePosition_Home
+   RakePosition_Home,
+   RakePosition_NotHome
 };
 typedef uint8_t RakePosition_t;
 
