@@ -5,6 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+#include "OverrideArbiterPlugin.h"
 #include "OverrideArbiter.h"
 #include "SystemErds.h"
 #include "Constants_Binary.h"

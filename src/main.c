@@ -49,6 +49,8 @@
 #include "MemoryMap.h"
 #include "RelayWatchdog.h"
 #include "ParametricDataVersionCheck.h"
+#include "EepromMonitorPlugin.h"
+#include "ParametricDataErds.h"
 
 #ifdef OLD_HW
 #include "OldGeaStack.h"
@@ -74,12 +76,19 @@ static TimerModuleStack_t timerModuleStack;
 static InvokeActionOnTimerPeriodic_t watchdogPetter;
 static UlTestsPlugin_t ulTestsPlugin;
 static NonVolatileAsyncDataSource_t nvAsyncDataSource;
+static Input_StackUsageCalculator_t stackUsageCalculator;
+static Timer_t stackUsageUpdateTimer;
 
 #ifdef OLD_HW
 static OldGeaStack_t oldGeaStack;
 #else
 static GeaStack_t geaStack;
 #endif
+
+enum
+{
+   StackUsageUpdatePeriodInMsec = 1000
+};
 
 static const uint8_t staticRoutingTable[] = {
    Gea2Address_DoorBoard
@@ -134,6 +143,15 @@ static void SetReadyToEnterBootLoader(I_DataModel_t *dataModel)
 {
    ReadyToEnterBootLoaderState_t ready = ReadyToEnterBootLoaderState_Ready;
    DataModel_Write(dataModel, Erd_ReadyToEnterBootLoader, &ready);
+}
+
+static void UpdateStackUsage(void *context)
+{
+   REINTERPRET(instance, context, I_DataModel_t *);
+   uint8_t stackUsage;
+
+   Input_Read(&stackUsageCalculator.interface, &stackUsage);
+   DataModel_Write(instance, Erd_StackPercentFree, &stackUsage);
 }
 
 int main(void)
@@ -198,6 +216,15 @@ int main(void)
 
    RelayWatchdogPlugin_Init(dataModel);
 
+   EepromMonitorPlugin_Init(dataModel);
+
+   ParametricDataErds_Init(
+      dataModel,
+      Erd_ParametricDataImageCrc,
+      Erd_AppliancePersonality,
+      Erd_PersonalityParametricData,
+      Erd_PersonalityIdOutOfRangeFlag);
+
 #ifdef OLD_HW
    OldGeaStack_Init(
       &oldGeaStack,
@@ -217,8 +244,16 @@ int main(void)
    Application_Init(
       &application,
       dataModel,
-      StackConfigurator_GetConfiguration(),
       Rx2xxResetSource_GetResetReason());
+
+   Input_StackUsageCalculator_Init(&stackUsageCalculator, StackConfigurator_GetConfiguration());
+
+   TimerModule_StartPeriodic(
+      timerModule,
+      &stackUsageUpdateTimer,
+      StackUsageUpdatePeriodInMsec,
+      UpdateStackUsage,
+      dataModel);
 
    InvokeActionOnTimerPeriodic_Init(
       &watchdogPetter,

@@ -86,6 +86,7 @@ SRC_DIRS:=\
   src/Application/StepperMotor \
   src/Application/SystemMonitor \
   src/Application/TimerModule \
+  src/Application/Uassert \
   src/Application/Valve \
   Parametric/data/Production/ \
 
@@ -109,7 +110,7 @@ INC_DIRS:=\
   lib/Common/Source/Temperature/ \
 
 applcommon_EXTERNAL_INC_DIRS:=\
-  src/Application \
+  src/Application/Uassert \
   src/Hardware/Flash \
 
 include lib_applcommon_rx130.mk

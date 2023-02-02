@@ -5,13 +5,19 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
+extern "C"
+{
 #include <string.h>
 #include <stdint.h>
 #include "BspDataSource.h"
+#include "BspErdRanges.h"
 #include "DataSource_Ram.h"
 #include "ConstArrayMap_LinearSearch.h"
 #include "SystemErds.h"
 #include "uassert.h"
+}
+
+#include "GpioGroup_TestDouble.h"
 
 // clang-format off
 
@@ -43,6 +49,9 @@ static const ConstArrayMap_LinearSearchConfiguration_t constArrayMapConfig = {
 static DataSource_Ram_t dataSource;
 static DataSourceStorage_t storage;
 static ConstArrayMap_LinearSearch_t dataSourceConstArrayMap;
+static GpioGroup_TestDouble_t gpioGroup;
+static bool inputStates[UINT16_MAX];
+static bool outputStates[UINT16_MAX];
 
 static struct
 {
@@ -52,7 +61,15 @@ static struct
 static void Read(I_DataSource_t *instance, const Erd_t erd, void *data)
 {
    IGNORE(instance);
-   DataSource_Read(&dataSource.interface, erd, data);
+
+   if(erd == Erd_GpioGroupInterface)
+   {
+      *(I_GpioGroup_t **)data = &gpioGroup.interface;
+   }
+   else
+   {
+      DataSource_Read(&dataSource.interface, erd, data);
+   }
 }
 
 static void Write(I_DataSource_t *instance, const Erd_t erd, const void *data)
@@ -64,7 +81,7 @@ static void Write(I_DataSource_t *instance, const Erd_t erd, const void *data)
 static bool Has(I_DataSource_t *instance, const Erd_t erd)
 {
    IGNORE(instance);
-   return DataSource_Has(&dataSource.interface, erd);
+   return (erd == Erd_GpioGroupInterface) || DataSource_Has(&dataSource.interface, erd);
 }
 
 static uint8_t SizeOf(I_DataSource_t *instance, const Erd_t erd)
@@ -75,7 +92,7 @@ static uint8_t SizeOf(I_DataSource_t *instance, const Erd_t erd)
 
 static const I_DataSource_Api_t api = { Read, Write, Has, SizeOf };
 
-void BspDataSource_Init(
+extern "C" void BspDataSource_Init(
    BspDataSource_t *_instance,
    TimerModule_t *timerModule)
 {
@@ -87,9 +104,11 @@ void BspDataSource_Init(
 
    instance.interface.api = &api;
    instance.interface.OnDataChange = dataSource.interface.OnDataChange;
+
+   GpioGroup_TestDouble_Init(&gpioGroup, inputStates, outputStates);
 }
 
-I_DataSource_t *BspDataSource_DataSource(BspDataSource_t *_instance)
+extern "C" I_DataSource_t *BspDataSource_DataSource(BspDataSource_t *_instance)
 {
    IGNORE(_instance);
 

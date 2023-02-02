@@ -15,11 +15,16 @@ SRC_FILES := \
 
 # List of directories that contain your code under test
 SRC_DIRS := \
+   $(PROJECT_DIR)/Application \
    $(PROJECT_DIR)/Application/Compressor \
+   $(PROJECT_DIR)/Application/ConfigurationPlugins \
+   $(PROJECT_DIR)/Application/Configurations \
    $(PROJECT_DIR)/Application/ConvertibleCompartment \
+   $(PROJECT_DIR)/Application/Cooling \
    $(PROJECT_DIR)/Application/Damper \
    $(PROJECT_DIR)/Application/DataSource \
    $(PROJECT_DIR)/Application/Defrost \
+   $(PROJECT_DIR)/Application/DemandResponse \
    $(PROJECT_DIR)/Application/Door \
    $(PROJECT_DIR)/Application/DutyCycle \
    $(PROJECT_DIR)/Application/EnhancedSabbath \
@@ -33,16 +38,22 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Heater \
    $(PROJECT_DIR)/Application/IceMaker \
    $(PROJECT_DIR)/Application/IceMaker/AluminumMoldIceMaker \
+   $(PROJECT_DIR)/Application/IsolationWaterValve \
    $(PROJECT_DIR)/Application/Motor \
+   $(PROJECT_DIR)/Application/OverrideArbiters \
    $(PROJECT_DIR)/Application/ParametricData \
+   $(PROJECT_DIR)/Application/Plugins \
    $(PROJECT_DIR)/Application/Pulldown \
    $(PROJECT_DIR)/Application/Sabbath \
    $(PROJECT_DIR)/Application/Sensor \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \
    $(PROJECT_DIR)/Application/Setpoints \
    $(PROJECT_DIR)/Application/StepperMotor \
-   $(PROJECT_DIR)/Application/SystemMonitor\
+   $(PROJECT_DIR)/Application/SystemMonitor \
+   $(PROJECT_DIR)/Application/Temperature \
    $(PROJECT_DIR)/Application/TimerModule \
+   $(PROJECT_DIR)/Application/Valve \
+   $(PROJECT_DIR)/Application/Voting \
    $(PROJECT_DIR)/Hardware/SoftPwm \
 
 # List of directories that contain your tests and test helpers (mocks, fakes, etc.)
@@ -86,30 +97,9 @@ TEST_SRC_DIRS := \
 # List of include directories
 INCLUDE_DIRS := \
    $(APPLCOMMON_DIR)/Hardware/Rx130 \
+   $(APPLCOMMON_DIR)/Hardware/Rx2xx \
+   $(APPLCOMMON_DIR)/Hardware/Kpit/Rx130 \
    $(APPLCOMMON_DIR)/Image \
-   $(PROJECT_DIR)/Application/Compressor \
-   $(PROJECT_DIR)/Application/Cooling \
-   $(PROJECT_DIR)/Application/Damper \
-   $(PROJECT_DIR)/Application/Defrost \
-   $(PROJECT_DIR)/Application/Door \
-   $(PROJECT_DIR)/Application/EnhancedSabbath \
-   $(PROJECT_DIR)/Application/Setpoints \
-   $(PROJECT_DIR)/Application/Evaporator \
-   $(PROJECT_DIR)/Application/DemandResponse \
-   $(PROJECT_DIR)/Application/Fan \
-   $(PROJECT_DIR)/Application/Grid \
-   $(PROJECT_DIR)/Application/Grid/GridFunctions \
-   $(PROJECT_DIR)/Application/Grid/GridStateTables \
-   $(PROJECT_DIR)/Application/ParametricData \
-   $(PROJECT_DIR)/Application/Plugins \
-   $(PROJECT_DIR)/Application/Sabbath \
-   $(PROJECT_DIR)/Application/Sensor \
-   $(PROJECT_DIR)/Application/ServiceDiagnostics \
-   $(PROJECT_DIR)/Application/Setpoints \
-   $(PROJECT_DIR)/Application/SystemMonitor \
-   $(PROJECT_DIR)/Application/Temperature \
-   $(PROJECT_DIR)/Application/Valve \
-   $(PROJECT_DIR)/Application/Voting \
    $(PROJECT_DIR)/Bsp \
    $(PROJECT_DIR)/Hardware \
    $(PROJECT_DIR)/Hardware/Eeprom \
