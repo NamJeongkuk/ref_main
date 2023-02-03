@@ -558,8 +558,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "FF Evap Unfiltered Temperature (DegF x100)",
-               "name": "Erd_FreshFoodEvap_UnfilteredTemperatureInDegFx100",
+               "displayName": "Ambient Unfiltered Temperature (DegF x100)",
+               "name": "Erd_Ambient_UnfilteredTemperatureInDegFx100",
                "read": true,
                "interval": 1000000000
             },
@@ -567,13 +567,6 @@
                "namespace": "mb",
                "displayName": "FZ Evap FilteredTemperature (DegF x100)",
                "name": "Erd_FreezerEvap_FilteredTemperatureInDegFx100",
-               "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
-               "displayName": "FF Evap Filtered Temperature (DegF x100)",
-               "name": "Erd_FreshFoodEvap_FilteredTemperatureInDegFx100",
                "read": true,
                "interval": 1000000000
             },
@@ -588,13 +581,6 @@
                "namespace": "mb",
                "displayName": "Aluminum Mold Ice Maker Filtered Temperature (DegF x100)",
                "name": "Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100",
-               "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
-               "displayName": "Ambient Unfiltered Temperature (DegF x100)",
-               "name": "Erd_Ambient_UnfilteredTemperatureInDegFx100",
                "read": true,
                "interval": 1000000000
             }
