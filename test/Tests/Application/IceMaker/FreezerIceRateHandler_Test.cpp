@@ -20,11 +20,12 @@ extern "C"
 #include "uassert_test.h"
 
 static const FreezerIceRateHandlerConfig_t iceRateHandlerConfig = {
-   .freezerIceRateTriggerSignal = Erd_FreezerIceRateTriggerSignal,
-   .freezerSetpointUserVote = Erd_FreezerSetpoint_UserVote,
-   .freezerSetpointFreezerIceRateVote = Erd_FreezerSetpoint_FreezerIceRateVote,
-   .freezerEvapFanSpeedFreezerIceRateVote = Erd_FreezerEvapFanSpeed_FreezerIceRateVote,
-   .freezerEvapFanSpeedResolvedVote = Erd_FreezerEvapFanSpeed_ResolvedVote,
+   .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
+   .freezerSetpointUserVoteErd = Erd_FreezerSetpoint_UserVote,
+   .freezerSetpointFreezerIceRateVoteErd = Erd_FreezerSetpoint_FreezerIceRateVote,
+   .freezerEvapFanSpeedFreezerIceRateVoteErd = Erd_FreezerEvapFanSpeed_FreezerIceRateVote,
+   .freezerEvapFanSpeedResolvedVoteErd = Erd_FreezerEvapFanSpeed_ResolvedVote,
+   .iceRateIsActiveErd = Erd_Freezer_IceRateIsActive
 };
 
 TEST_GROUP(FreezerIceRateHandler)
@@ -71,6 +72,11 @@ TEST_GROUP(FreezerIceRateHandler)
       DataModel_Write(dataModel, Erd_FreezerIceRateTriggerSignal, &signal);
    }
 
+   void WhenTheIceRateTriggerSignalIsActivated()
+   {
+      GivenTheIceRateTriggerSignalIsActivated();
+   }
+
    void GivenTheFreezerEvapFanSpeedResolvedVoteIs(FanSpeed_t speed, bool care)
    {
       FanVotedSpeed_t votedFanSpeed = {
@@ -102,6 +108,23 @@ TEST_GROUP(FreezerIceRateHandler)
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
    {
       TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
+   }
+
+   void IceRateActiveErdShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_Freezer_IceRateIsActive, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void GivenIceRateHasAlreadyBeenActiveForIceRateTime()
+   {
+      WhenTheIceRateTriggerSignalIsActivated();
+      After((freezerIceRateData->timeInMinutes * MSEC_PER_MIN) - 1);
+      IceRateActiveErdShouldBe(true);
+
+      After(1);
+      IceRateActiveErdShouldBe(false);
    }
 };
 
@@ -153,4 +176,39 @@ TEST(FreezerIceRateHandler, ShouldUnsubscribeToErdsAfterTimerExpired)
 
    ThenTheFreezerSetpointIceMakerVoteShouldBe(250, Vote_DontCare);
    ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(FanSpeed_Medium, Vote_DontCare);
+}
+
+TEST(FreezerIceRateHandler, ShouldSetIceRateActiveToTrueWhenIceRateSignalTriggerActivated)
+{
+   GivenTheModuleIsInitialized();
+   IceRateActiveErdShouldBe(false);
+
+   WhenTheIceRateTriggerSignalIsActivated();
+   IceRateActiveErdShouldBe(true);
+}
+
+TEST(FreezerIceRateHandler, ShouldSetIceRateActiveToFalseAfterIceRateSignalTriggeredTimer)
+{
+   GivenTheModuleIsInitialized();
+   IceRateActiveErdShouldBe(false);
+
+   WhenTheIceRateTriggerSignalIsActivated();
+   After((freezerIceRateData->timeInMinutes * MSEC_PER_MIN) - 1);
+   IceRateActiveErdShouldBe(true);
+
+   After(1);
+   IceRateActiveErdShouldBe(false);
+}
+
+TEST(FreezerIceRateHandler, ShouldSetIceRateActiveToTrueAfterIceRateSignalTriggeredAgain)
+{
+   GivenTheModuleIsInitialized();
+   GivenIceRateHasAlreadyBeenActiveForIceRateTime();
+
+   WhenTheIceRateTriggerSignalIsActivated();
+   After((freezerIceRateData->timeInMinutes * MSEC_PER_MIN) - 1);
+   IceRateActiveErdShouldBe(true);
+
+   After(1);
+   IceRateActiveErdShouldBe(false);
 }

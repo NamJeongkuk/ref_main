@@ -12,11 +12,12 @@
 #include "Vote.h"
 
 static const FreezerIceRateHandlerConfig_t iceRateHandlerConfig = {
-   .freezerIceRateTriggerSignal = Erd_FreezerIceRateTriggerSignal,
-   .freezerSetpointUserVote = Erd_FreezerSetpoint_UserVote,
-   .freezerSetpointFreezerIceRateVote = Erd_FreezerSetpoint_FreezerIceRateVote,
-   .freezerEvapFanSpeedFreezerIceRateVote = Erd_FreezerEvapFanSpeed_FreezerIceRateVote,
-   .freezerEvapFanSpeedResolvedVote = Erd_FreezerEvapFanSpeed_ResolvedVote,
+   .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
+   .freezerSetpointUserVoteErd = Erd_FreezerSetpoint_UserVote,
+   .freezerSetpointFreezerIceRateVoteErd = Erd_FreezerSetpoint_FreezerIceRateVote,
+   .freezerEvapFanSpeedFreezerIceRateVoteErd = Erd_FreezerEvapFanSpeed_FreezerIceRateVote,
+   .freezerEvapFanSpeedResolvedVoteErd = Erd_FreezerEvapFanSpeed_ResolvedVote,
+   .iceRateIsActiveErd = Erd_Freezer_IceRateIsActive
 };
 
 static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {

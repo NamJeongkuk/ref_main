@@ -13,11 +13,12 @@
 
 typedef struct
 {
-   Erd_t freezerIceRateTriggerSignal; // Signal_t
-   Erd_t freezerSetpointUserVote; // SetpointVotedTemperature_t
-   Erd_t freezerSetpointFreezerIceRateVote; // SetpointVotedTemperature_t
-   Erd_t freezerEvapFanSpeedFreezerIceRateVote; // FanVotedSpeed_t
-   Erd_t freezerEvapFanSpeedResolvedVote; // FanVotedSpeed_t
+   Erd_t freezerIceRateTriggerSignalErd; // Signal_t
+   Erd_t freezerSetpointUserVoteErd; // SetpointVotedTemperature_t
+   Erd_t freezerSetpointFreezerIceRateVoteErd; // SetpointVotedTemperature_t
+   Erd_t freezerEvapFanSpeedFreezerIceRateVoteErd; // FanVotedSpeed_t
+   Erd_t freezerEvapFanSpeedResolvedVoteErd; // FanVotedSpeed_t
+   Erd_t iceRateIsActiveErd; // bool
 } FreezerIceRateHandlerConfig_t;
 
 typedef struct

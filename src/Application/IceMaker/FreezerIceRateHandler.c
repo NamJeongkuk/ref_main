@@ -10,6 +10,7 @@
 #include "Constants_Time.h"
 #include "Vote.h"
 #include "SystemErds.h"
+#include "Constants_Binary.h"
 
 static void TimerExpired(void *context)
 {
@@ -22,22 +23,38 @@ static void TimerExpired(void *context)
    SetpointVotedTemperature_t setpointVoteDontCare;
    FanVotedSpeed_t fanSpeedVoteDontCare;
 
-   DataModel_Read(instance->_private.dataModel, instance->_private.config->freezerSetpointFreezerIceRateVote, &setpointVoteDontCare);
-   DataModel_Read(instance->_private.dataModel, instance->_private.config->freezerEvapFanSpeedFreezerIceRateVote, &fanSpeedVoteDontCare);
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerSetpointFreezerIceRateVoteErd,
+      &setpointVoteDontCare);
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerEvapFanSpeedFreezerIceRateVoteErd,
+      &fanSpeedVoteDontCare);
 
    setpointVoteDontCare.care = Vote_DontCare;
    fanSpeedVoteDontCare.care = Vote_DontCare;
 
-   DataModel_Write(instance->_private.dataModel, instance->_private.config->freezerSetpointFreezerIceRateVote, &setpointVoteDontCare);
-   DataModel_Write(instance->_private.dataModel, instance->_private.config->freezerEvapFanSpeedFreezerIceRateVote, &fanSpeedVoteDontCare);
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freezerSetpointFreezerIceRateVoteErd,
+      &setpointVoteDontCare);
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freezerEvapFanSpeedFreezerIceRateVoteErd,
+      &fanSpeedVoteDontCare);
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->iceRateIsActiveErd,
+      clear);
 }
 
-static void FreezerEvapFanSpeedChange(FreezerIceRateHandler_t *instance)
+static void UpdateFreezerIceRateVoteBasedOnFreezerEvapFanSpeed(FreezerIceRateHandler_t *instance)
 {
    FanVotedSpeed_t freezerEvapFanVote;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerEvapFanSpeedResolvedVote,
+      instance->_private.config->freezerEvapFanSpeedResolvedVoteErd,
       &freezerEvapFanVote);
 
    if(freezerEvapFanVote.speed < FanSpeed_Medium)
@@ -49,24 +66,24 @@ static void FreezerEvapFanSpeedChange(FreezerIceRateHandler_t *instance)
 
       DataModel_Write(
          instance->_private.dataModel,
-         instance->_private.config->freezerEvapFanSpeedFreezerIceRateVote,
+         instance->_private.config->freezerEvapFanSpeedFreezerIceRateVoteErd,
          &adjustedFreezerEvapFanVote);
    }
    else
    {
       DataModel_Write(
          instance->_private.dataModel,
-         instance->_private.config->freezerEvapFanSpeedFreezerIceRateVote,
+         instance->_private.config->freezerEvapFanSpeedFreezerIceRateVoteErd,
          &freezerEvapFanVote);
    }
 }
 
-static void FreezerSetpointUserVoteChange(FreezerIceRateHandler_t *instance)
+static void UpdateFreezerIceRateVoteBasedOnFreezerSetpointUserVote(FreezerIceRateHandler_t *instance)
 {
    SetpointVotedTemperature_t freezerSetpointVote;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerSetpointUserVote,
+      instance->_private.config->freezerSetpointUserVoteErd,
       &freezerSetpointVote);
 
    if(freezerSetpointVote.temperatureInDegFx100 > instance->_private.freezerIceRateData->freezerSetpointInDegFx100)
@@ -78,16 +95,22 @@ static void FreezerSetpointUserVoteChange(FreezerIceRateHandler_t *instance)
 
       DataModel_Write(
          instance->_private.dataModel,
-         instance->_private.config->freezerSetpointFreezerIceRateVote,
+         instance->_private.config->freezerSetpointFreezerIceRateVoteErd,
          &adjustedFreezerSetpointVote);
    }
    else
    {
       DataModel_Write(
          instance->_private.dataModel,
-         instance->_private.config->freezerSetpointFreezerIceRateVote,
+         instance->_private.config->freezerSetpointFreezerIceRateVoteErd,
          &freezerSetpointVote);
    }
+}
+static void SubscribeToDataModel(FreezerIceRateHandler_t *instance)
+{
+   DataModel_SubscribeAll(
+      instance->_private.dataModel,
+      &instance->_private.dataModelOnChangeSubscription);
 }
 
 static void StartTimer(FreezerIceRateHandler_t *instance)
@@ -100,13 +123,6 @@ static void StartTimer(FreezerIceRateHandler_t *instance)
       instance->_private.freezerIceRateData->timeInMinutes * MSEC_PER_MIN,
       TimerExpired,
       instance);
-
-   DataModel_SubscribeAll(
-      instance->_private.dataModel,
-      &instance->_private.dataModelOnChangeSubscription);
-
-   FreezerEvapFanSpeedChange(instance);
-   FreezerSetpointUserVoteChange(instance);
 }
 
 static void OnDataModelChange(void *context, const void *_args)
@@ -114,13 +130,13 @@ static void OnDataModelChange(void *context, const void *_args)
    FreezerIceRateHandler_t *instance = context;
    const DataModelOnDataChangeArgs_t *args = _args;
 
-   if(args->erd == instance->_private.config->freezerEvapFanSpeedResolvedVote)
+   if(args->erd == instance->_private.config->freezerEvapFanSpeedResolvedVoteErd)
    {
-      FreezerEvapFanSpeedChange(instance);
+      UpdateFreezerIceRateVoteBasedOnFreezerEvapFanSpeed(instance);
    }
-   else if(args->erd == instance->_private.config->freezerSetpointUserVote)
+   else if(args->erd == instance->_private.config->freezerSetpointUserVoteErd)
    {
-      FreezerSetpointUserVoteChange(instance);
+      UpdateFreezerIceRateVoteBasedOnFreezerSetpointUserVote(instance);
    }
 }
 
@@ -130,6 +146,10 @@ static void IceRateSignalTriggered(void *context, const void *_args)
    IGNORE(_args);
 
    StartTimer(instance);
+   SubscribeToDataModel(instance);
+   UpdateFreezerIceRateVoteBasedOnFreezerEvapFanSpeed(instance);
+   UpdateFreezerIceRateVoteBasedOnFreezerSetpointUserVote(instance);
+   DataModel_Write(instance->_private.dataModel, instance->_private.config->iceRateIsActiveErd, set);
 }
 
 void FreezerIceRateHandler_Init(
@@ -156,7 +176,7 @@ void FreezerIceRateHandler_Init(
    {
       DataModel_Subscribe(
          dataModel,
-         instance->_private.config->freezerIceRateTriggerSignal,
+         instance->_private.config->freezerIceRateTriggerSignalErd,
          &instance->_private.freezerIceRateTriggerSignalSubscription);
    }
 }

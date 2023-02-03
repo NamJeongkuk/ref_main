@@ -621,6 +621,7 @@ enum
    ENTRY(Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,     0xF1AD, TemperatureDegFx100_t,             Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Freezer_IceRateIsActive,                                        0xF1AE, bool,                              Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_AluminumMoldIceMakerHsmState,                  0xF1C0, AluminumMoldIceMakerHsmState_t,                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_HarvestCountCalculationRequest,                0xF1C1, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FeelerArmMonitoringRequest,                    0xF1C2, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \

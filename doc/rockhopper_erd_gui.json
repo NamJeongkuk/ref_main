@@ -2097,6 +2097,46 @@
           "write": true
         }
       ]
+    },
+    {
+      "title": "Freezer Ice Rate Handler",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Ice Rate Trigger Signal",
+          "name": "Erd_FreezerIceRateTriggerSignal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Setpoint User Vote",
+          "name": "Erd_FreezerSetpoint_UserVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Fan Speed Freezer Ice Rate Vote",
+          "name": "Erd_FreezerEvapFanSpeed_FreezerIceRateVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Fan Speed Resolved Vote",
+          "name": "Erd_FreezerEvapFanSpeed_ResolvedVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Ice Rate Is Active",
+          "name": "Erd_Freezer_IceRateIsActive",
+          "read": true,
+          "write": true
+        }
+      ]
     }
   ]
 }
