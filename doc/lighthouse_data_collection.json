@@ -23,11 +23,6 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_FreezerEvapFanSpeed_WinningVoteErd",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
          "name": "Erd_CondenserFanSpeed_ResolvedVote",
          "interval": 60000
       },
@@ -43,11 +38,6 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_CondenserFanSpeed_WinningVoteErd",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
          "name": "Erd_CompressorSpeed_ResolvedVote",
          "interval": 60000
       },
@@ -58,17 +48,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_CompressorSpeed_WinningVoteErd",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
          "name": "Erd_FreshFoodDamperPosition_ResolvedVote",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
-         "name": "Erd_FreshFoodDamperPosition_WinningVoteErd",
          "interval": 60000
       },
       {
@@ -149,6 +129,16 @@
       {
          "namespace": "mb",
          "name": "Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_FreezerDoorIsOpen",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_RightHandFreshFoodDoorIsOpen",
          "interval": 60000
       },
       {
@@ -249,6 +239,36 @@
       {
          "namespace": "mb",
          "name": "Erd_ServiceDiagnosticsFaultTableEntry9",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_ResetCount",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_StackPercentFree",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_FreezerEvapFanSpeed_WinningVoteErd",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_CondenserFanSpeed_WinningVoteErd",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_CompressorSpeed_WinningVoteErd",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_FreshFoodDamperPosition_WinningVoteErd",
          "interval": 60000
       }
    ]
