@@ -119,6 +119,10 @@ describe("SingleEvapGrid", () => {
       await rockhopper.write("Erd_PulldownInMediumCompressorSpeedEnabled", state);
    }
 
+   const providedPulldownActiveIs = async (state) => {
+      await rockhopper.write("Erd_SingleEvaporatorPulldownActive", state);
+   }
+
    const theCoolingModeShouldBe = async (expected) => {
       const actual = await rockhopper.read("Erd_CoolingMode");
       expect(actual).toEqual(expected);
@@ -259,6 +263,14 @@ describe("SingleEvapGrid", () => {
          await theCoolingModeShouldBe("CoolingMode_Freezer");
          await theCoolingSpeedShouldBe("CoolingSpeed_Mid");
          await theGridVotesShouldBe("CompressorSpeed_Medium", "FanSpeed_Medium", "FanSpeed_Medium", "DamperPosition_Closed");
+
+         await providedPulldownActiveIs(false);
+         await afterTheGridRuns();
+         await thePulldownStateShouldBe(false);
+
+         await providedPulldownActiveIs(true);
+         await afterTheGridRuns();
+         await thePulldownStateShouldBe(true);
       }
    });
 
@@ -284,6 +296,14 @@ describe("SingleEvapGrid", () => {
          await theCoolingSpeedShouldBe("CoolingSpeed_High");
          await theGridAreaShouldBe("GridArea_2");
          await theGridVotesShouldBe("CompressorSpeed_High", "FanSpeed_High", "FanSpeed_High", "DamperPosition_Open");
+
+         await providedPulldownActiveIs(false);
+         await afterTheGridRuns();
+         await thePulldownStateShouldBe(false);
+
+         await providedPulldownActiveIs(true);
+         await afterTheGridRuns();
+         await thePulldownStateShouldBe(true);
       }
    });
 
@@ -298,6 +318,7 @@ describe("SingleEvapGrid", () => {
       await theCoolingSpeedShouldBe("CoolingSpeed_Mid");
       await theGridAreaShouldBe("GridArea_1");
       await theGridVotesShouldBe("CompressorSpeed_Medium", "FanSpeed_Medium", "FanSpeed_Medium", "DamperPosition_Closed");
+      await thePulldownStateShouldBe(false);
 
       await providedTheCoolingSpeedIs("CoolingSpeed_High");
       await afterTheGridRuns();
@@ -355,6 +376,14 @@ describe("SingleEvapGrid", () => {
       await theCoolingSpeedShouldBe("CoolingSpeed_Mid");
       await theGridAreaShouldBe("GridArea_2");
       await theGridVotesShouldBe("CompressorSpeed_Medium", "FanSpeed_Medium", "FanSpeed_Medium", "DamperPosition_Open");
+
+      await providedPulldownActiveIs(false);
+      await afterTheGridRuns();
+      await thePulldownStateShouldBe(false);
+
+      await providedPulldownActiveIs(true);
+      await afterTheGridRuns();
+      await thePulldownStateShouldBe(true);
    });
 
    it("should publish the correct grid votes for blocks 19,20,27,34,41", async () => {
@@ -370,6 +399,7 @@ describe("SingleEvapGrid", () => {
          await theCoolingSpeedShouldBe("CoolingSpeed_High");
          await theGridAreaShouldBe("GridArea_2");
          await theGridVotesShouldBe("CompressorSpeed_High", "FanSpeed_High", "FanSpeed_High", "DamperPosition_Open");
+         await thePulldownStateShouldBe(false);
       }
    });
 

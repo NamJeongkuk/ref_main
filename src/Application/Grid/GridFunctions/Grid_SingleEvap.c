@@ -159,6 +159,7 @@ void Grid_SingleEvap(void *context)
          SetCoolingSpeed(dataModel, CoolingSpeed_PullDown);
          SetPulldownActive(dataModel, SET);
          SetGridArea(dataModel, GridArea_1);
+         SetPulldownActive(dataModel, SET);
          break;
 
       case 2:
@@ -183,6 +184,7 @@ void Grid_SingleEvap(void *context)
          SetCoolingSpeed(dataModel, CoolingSpeed_High);
          SetPulldownActive(dataModel, CLEAR);
          SetGridArea(dataModel, GridArea_1);
+         SetPulldownActive(dataModel, CLEAR);
          break;
 
       case 9:
@@ -206,6 +208,7 @@ void Grid_SingleEvap(void *context)
          SetCoolingMode(dataModel, CoolingMode_Freezer);
          SetCoolingSpeed(dataModel, (currentCoolingSpeed != CoolingSpeed_High) ? CoolingSpeed_Mid : currentCoolingSpeed);
          SetGridArea(dataModel, GridArea_1);
+         SetPulldownActive(dataModel, CLEAR);
          break;
 
       case 16:
@@ -232,6 +235,7 @@ void Grid_SingleEvap(void *context)
          SetCoolingMode(dataModel, CoolingMode_FreshFood);
          SetCoolingSpeed(dataModel, CoolingSpeed_High);
          SetGridArea(dataModel, GridArea_2);
+         SetPulldownActive(dataModel, CLEAR);
          break;
 
       case 21:
@@ -239,6 +243,7 @@ void Grid_SingleEvap(void *context)
          SetCoolingSpeed(dataModel, CoolingSpeed_Low);
          SetPulldownActive(dataModel, CLEAR);
          SetGridArea(dataModel, GridArea_1);
+         SetPulldownActive(dataModel, CLEAR);
          break;
 
       case 22:
@@ -328,12 +333,14 @@ void Grid_SingleEvap(void *context)
          SetCoolingMode(dataModel, CoolingMode_FreshFood);
          SetCoolingSpeed(dataModel, CoolingSpeed_Low);
          SetGridArea(dataModel, GridArea_2);
+         SetPulldownActive(dataModel, CLEAR);
          break;
 
       case 48:
          SetCoolingMode(dataModel, CoolingMode_FreshFood);
          SetCoolingSpeed(dataModel, CoolingSpeed_Mid);
          SetGridArea(dataModel, GridArea_2);
+         SetPulldownActive(dataModel, CLEAR);
          break;
 
       default:
