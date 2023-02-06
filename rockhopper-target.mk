@@ -123,6 +123,7 @@ $(call add_to_package,$(OUTPUT_DIR)/doc,doc)
 $(call add_to_package,doc/lighthouse_data_collection.json,doc)
 $(call add_to_package,doc/lighthouse_erd_gui.json,doc)
 $(call add_to_package,doc/wifi-erd-definitions.json,doc)
+$(call add_to_package,doc/hardware_gui_for_lighthouse.json,doc)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
 $(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
 
