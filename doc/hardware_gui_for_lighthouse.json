@@ -1,5 +1,5 @@
 {
-  "name": "Hardware Pinout GUI for Lighthouse",
+  "name": "WARNING: MAY DAMAGE UNIT - Lighthouse Hardware Pinout GUI",
   "tabs": [
       {
          "title": "Versions",
@@ -203,7 +203,7 @@
         },
         {
           "namespace": "mb",
-          "displayName": "AUGER DIRECTION",
+          "displayName": "AUGER DIRECTION - Warning: do not change while Auger PWR is on!",
           "name": "Erd_Gpio_AUGER_DIRECTION",
           "read": true,
           "write": true,
