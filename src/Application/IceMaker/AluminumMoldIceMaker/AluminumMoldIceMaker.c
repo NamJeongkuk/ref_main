@@ -815,7 +815,18 @@ static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_StopFill:
-         Hsm_Transition(hsm, State_Freeze);
+         if(MoldThermistorIsNotValid(instance))
+         {
+            Hsm_Transition(hsm, State_ThermistorFault);
+         }
+         else if(!RakeIsHome(instance))
+         {
+            Hsm_Transition(hsm, State_Harvest);
+         }
+         else
+         {
+            Hsm_Transition(hsm, State_Freeze);
+         }
          break;
 
       case Hsm_Exit:

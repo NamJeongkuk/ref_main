@@ -1209,6 +1209,51 @@ TEST(AluminumMoldIceMaker, ShouldNotIncrementFreezerTriggerIceRateSignalWhenTran
    FreezerTriggerIceRateSignalShouldBe(1);
 }
 
+TEST(AluminumMoldIceMaker, ShouldCompleteFillEvenIfThermistorBecomesInvalid)
+{
+   Given TheModuleIsInitialized();
+   Given AluminumMoldIceMakerIsInFillState();
+
+   When MoldThermistorIsInvalid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromFillToThermistorFaultWhenThermistorIsInvalidAfterFillStops)
+{
+   Given TheModuleIsInitialized();
+   Given MoldThermistorIsValid();
+   Given AluminumMoldIceMakerIsInFillState();
+
+   When MoldThermistorIsInvalid();
+   When StopFillSignalChanges();
+
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromFillToHarvestWhenRakeIsNotHomeAfterFillStops)
+{
+   Given TheModuleIsInitialized();
+   Given MoldThermistorIsValid();
+   Given AluminumMoldIceMakerIsInFillState();
+
+   When TheRakePositionIs(RakePosition_NotHome);
+   When StopFillSignalChanges();
+
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromFillToFreezeWhenRakeIsHomeAfterFillStops)
+{
+   Given TheModuleIsInitialized();
+   Given MoldThermistorIsValid();
+   Given AluminumMoldIceMakerIsInFillState();
+
+   When TheRakePositionIs(RakePosition_Home);
+   When StopFillSignalChanges();
+
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
 TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime)
 {
    AluminumMoldIceMaker_t instance;

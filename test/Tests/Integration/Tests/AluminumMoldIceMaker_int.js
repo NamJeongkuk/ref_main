@@ -115,6 +115,10 @@ describe("AluminumMoldIceMaker,", () => {
       await rockhopper.write("Erd_AluminumMoldIceMakerRakePosition", rakePosition.home);
    };
 
+   const theRakePositionIsNotHome = async () => {
+      await rockhopper.write("Erd_AluminumMoldIceMakerRakePosition", rakePosition.notHome)
+   }
+
    const providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState = async(state) => {
       await theMoldThermistorIsValid();
       await theRakePositionIsHome();
@@ -724,6 +728,32 @@ describe("AluminumMoldIceMaker,", () => {
       await delay(aLittleBitAccelerationDelayInSeconds * constants.msPerSec);
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.harvestFix);
       await theRakeControllerRequestShouldBe(false);
+   });
+
+   it("should go to thermistor fault if thermistors become invalid during fill", async () => {
+      await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.fill);
+      await theMoldThermistorIsInvalid();
+      await delay(timedIceMakerFillInSecondsx10 * msPerSec / 10);
+
+      await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.thermistorFault);
+   });
+
+   it("should go to harvest if rake is not home and thermistor is valid", async () => {
+      await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.fill);
+      await theMoldThermistorIsValid();
+      await theRakePositionIsNotHome();
+      await delay(timedIceMakerFillInSecondsx10 * msPerSec / 10);
+
+      await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.harvest);
+   });
+
+   it("should go to freeze if rake is home and thermistor is valid", async () => {
+      await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.fill);
+      await theMoldThermistorIsValid();
+      await theRakePositionIsHome();
+      await delay(timedIceMakerFillInSecondsx10 * msPerSec / 10);
+
+      await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.freeze);
    });
 
    // Parametric
