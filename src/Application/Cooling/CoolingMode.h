@@ -12,10 +12,10 @@
 
 enum
 {
+   CoolingMode_Off,
    CoolingMode_FreshFood,
    CoolingMode_Freezer,
-   CoolingMode_ConvertibleCompartment,
-   CoolingMode_Unknown,
+   CoolingMode_ConvertibleCompartment
 };
 typedef uint8_t CoolingMode_t;
 

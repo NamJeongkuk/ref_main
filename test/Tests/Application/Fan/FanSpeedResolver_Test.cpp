@@ -376,7 +376,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreezerWhenRequ
 {
    GivenInitializationCaringAboutSetpoint();
    GivenFreezerSetpointIsSetTo(SetpointZone_Cold);
-   GivenCoolingModeIs(CoolingMode_Unknown);
+   GivenCoolingModeIs(CoolingMode_Off);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
    CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint.rpm);
@@ -386,7 +386,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumFreezerWhenRe
 {
    GivenInitializationCaringAboutSetpoint();
    GivenFreezerSetpointIsSetTo(SetpointZone_Middle);
-   GivenCoolingModeIs(CoolingMode_Unknown);
+   GivenCoolingModeIs(CoolingMode_Off);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
    CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithMediumSetpoint.rpm);
@@ -396,7 +396,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmFreezerWhenRequ
 {
    GivenInitializationCaringAboutSetpoint();
    GivenFreezerSetpointIsSetTo(SetpointZone_Warm);
-   GivenCoolingModeIs(CoolingMode_Unknown);
+   GivenCoolingModeIs(CoolingMode_Off);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
    CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithWarmSetpoint.rpm);
@@ -405,7 +405,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmFreezerWhenRequ
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowFreezerWhenRequestedLowWithDefaultCaseCoolingMode)
 {
    GivenInitializationWithoutCaringAboutSetpoint();
-   GivenCoolingModeIs(CoolingMode_Unknown);
+   GivenCoolingModeIs(CoolingMode_Off);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
    CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint.rpm);
@@ -414,7 +414,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowFreezerWhenRequeste
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeMediumFreezerWhenRequestedLowWithDefaultCaseCoolingMode)
 {
    GivenInitializationWithoutCaringAboutSetpoint();
-   GivenCoolingModeIs(CoolingMode_Unknown);
+   GivenCoolingModeIs(CoolingMode_Off);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
    CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.mediumSpeedFreezer.rpm);
@@ -423,7 +423,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeMediumFreezerWhenReque
 TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeHighFreezerWhenRequestedLowWithDefaultCaseCoolingMode)
 {
    GivenInitializationWithoutCaringAboutSetpoint();
-   GivenCoolingModeIs(CoolingMode_Unknown);
+   GivenCoolingModeIs(CoolingMode_Off);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_High);
    CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.highSpeedSpeedFreezer.rpm);

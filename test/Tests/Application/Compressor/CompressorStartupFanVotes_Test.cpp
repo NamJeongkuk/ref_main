@@ -329,7 +329,7 @@ TEST(CompressorStartupFanVotes_DualEvaporator, ShouldVoteForFreezerEvapFanLowWhe
 TEST(CompressorStartupFanVotes_DualEvaporator, ShouldVoteForFreshFoodEvapFanOffWhenCompressorStateChangesToStartupAndCoolingModeIsUnknown)
 {
    Given CompressorStateIs(CompressorState_Off);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Off);
    And CompressorStartupFanVotesIsInitialized();
 
    When CompressorStateIs(CompressorState_Startup);
@@ -339,7 +339,7 @@ TEST(CompressorStartupFanVotes_DualEvaporator, ShouldVoteForFreshFoodEvapFanOffW
 TEST(CompressorStartupFanVotes_DualEvaporator, ShouldVoteForFreezerEvapFanLowWhenCompressorStateChangesToStartupAndCoolingModeIsUnknown)
 {
    Given CompressorStateIs(CompressorState_Off);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Off);
    And CompressorStartupFanVotesIsInitialized();
 
    When CompressorStateIs(CompressorState_Startup);
@@ -522,7 +522,7 @@ TEST(CompressorStartupFanVotes_TripleEvaporator, ShouldVoteForFreezerEvapFanLowW
 TEST(CompressorStartupFanVotes_TripleEvaporator, ShouldVoteForFreshFoodEvapFanOffWhenCompressorStateChangesToStartupAndCoolingModeIsUnknown)
 {
    Given CompressorStateIs(CompressorState_Off);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Off);
    And CompressorStartupFanVotesIsInitialized();
 
    When CompressorStateIs(CompressorState_Startup);
@@ -532,7 +532,7 @@ TEST(CompressorStartupFanVotes_TripleEvaporator, ShouldVoteForFreshFoodEvapFanOf
 TEST(CompressorStartupFanVotes_TripleEvaporator, ShouldVoteForFreezerEvapFanLowWhenCompressorStateChangesToStartupAndCoolingModeIsUnknown)
 {
    Given CompressorStateIs(CompressorState_Off);
-   And CoolingModeIs(CoolingMode_Unknown);
+   And CoolingModeIs(CoolingMode_Off);
    And CompressorStartupFanVotesIsInitialized();
 
    When CompressorStateIs(CompressorState_Startup);
