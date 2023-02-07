@@ -17,7 +17,7 @@ Erd_IceMakerEnabledOverrideValue
 Flash board with DEBUG=Y for time acceleration to work
 */
 
-describe("AluminumMoldIceMaker,", () => {
+fdescribe("AluminumMoldIceMaker,", () => {
    const aLittleBitMoreThanAMinuteAccelerationDelayInSeconds = 65;
    const aLittleBitAccelerationDelayInSeconds = 10;
 
@@ -116,19 +116,22 @@ describe("AluminumMoldIceMaker,", () => {
    };
 
    const theRakePositionIsNotHome = async () => {
-      await rockhopper.write("Erd_AluminumMoldIceMakerRakePosition", rakePosition.notHome)
-   }
+      await rockhopper.write("Erd_AluminumMoldIceMakerRakePosition", rakePosition.notHome);
+   };
 
-   const providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState = async(state) => {
+   const providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState = async (state) => {
       await theMoldThermistorIsValid();
       await theRakePositionIsHome();
 
-      if(state == hsmState.freeze) {
+      if (state == hsmState.freeze) {
+         await sabbathModeIsEnabled();
+         await iceMakerIsDisabled();
+      }
+      else if (state == hsmState.IdleFreeze) {
          await sabbathModeIsDisabled();
          await iceMakerIsEnabled();
-         await resetBoard();
       }
-      else if(state == hsmState.harvest) {
+      else if (state == hsmState.harvest) {
          await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
          await harvestCountIsNotReadyToHarvest();
          await iceMakerTemperatureIsReadyToHarvest();
@@ -136,15 +139,15 @@ describe("AluminumMoldIceMaker,", () => {
 
          await harvestCountIsReadyToHarvest();
       }
-      else if(state == hsmState.fill) {
+      else if (state == hsmState.fill) {
          await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
+         await theRakeCompletesAFullRevolution();
          await skipFillRequestIsClear();
 
          await after(freezeThawFillTubeHeaterOnTimeInSeconds - aLittleBitAccelerationDelayInSeconds).inSec();
-         await theRakeCompletesAFullRevolution();
          await delay(aLittleBitAccelerationDelayInSeconds * constants.msPerSec);
       }
-      else if(state == hsmState.harvestFix) {
+      else if (state == hsmState.harvestFix) {
          await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
 
          await after(maximumHarvestTimeInMinutes - 1).inMin();
@@ -154,14 +157,14 @@ describe("AluminumMoldIceMaker,", () => {
    };
 
    const providedTheAluminumMoldIceMakerIsInFreezeState = () => ({
-      andWaitingForHarvestCountToBeReadyForHarvest: async() => {
+      andWaitingForHarvestCountToBeReadyForHarvest: async () => {
          await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
          await harvestCountIsNotReadyToHarvest();
          await iceMakerTemperatureIsReadyToHarvest();
          await feelerArmIsReadyToEnterHarvest();
          await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.freeze);
       },
-      andWaitingForFeelerArmToBeReadyToEnterHarvest: async() => {
+      andWaitingForFeelerArmToBeReadyToEnterHarvest: async () => {
          await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
          await harvestCountIsReadyToHarvest();
          await iceMakerTemperatureIsReadyToHarvest();
@@ -171,13 +174,13 @@ describe("AluminumMoldIceMaker,", () => {
    });
 
    const providedTheAluminumIceMakerIsInIdleFreeze = () => ({
-      andSabbathModeIsEnabled: async() => {
+      andSabbathModeIsEnabled: async () => {
          await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
 
          await sabbathModeIsEnabled();
          await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.idleFreeze);
       },
-      andIceMakerIsDisabled: async() => {
+      andIceMakerIsDisabled: async () => {
          await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
 
          await iceMakerIsDisabled();
@@ -185,70 +188,70 @@ describe("AluminumMoldIceMaker,", () => {
       }
    });
 
-   const theIceMakerWaterValveShouldBeVoted = async(state) => {
+   const theIceMakerWaterValveShouldBeVoted = async (state) => {
       const vote = await rockhopper.read("Erd_AluminumMoldIceMakerWaterValve_IceMakerVote");
       expect(vote.state).toEqual(state);
       expect(vote.care).toEqual(voteCare.care);
    };
 
-   const theIsolationWaterValveShouldBeVoted = async(state) => {
+   const theIsolationWaterValveShouldBeVoted = async (state) => {
       const vote = await rockhopper.read("Erd_IsolationWaterValve_AluminumMoldIceMakerVote");
       expect(vote.state).toEqual(state);
       expect(vote.care).toEqual(voteCare.care);
    };
 
-   const theIsolationWaterValveShouldBeVotedDontCare = async(state) => {
+   const theIsolationWaterValveShouldBeVotedDontCare = async (state) => {
       const vote = await rockhopper.read("Erd_IsolationWaterValve_AluminumMoldIceMakerVote");
       expect(vote.care).toEqual(voteCare.dontCare);
    };
 
-   const theIceMakerHeaterShouldBeVoted = async(state) => {
+   const theIceMakerHeaterShouldBeVoted = async (state) => {
       const vote = await rockhopper.read("Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote");
       expect(vote.state).toEqual(state);
       expect(vote.care).toEqual(voteCare.care);
    };
 
-   const theIceMakerMotorShouldBeVoted = async(state) => {
+   const theIceMakerMotorShouldBeVoted = async (state) => {
       const vote = await rockhopper.read("Erd_AluminumMoldIceMakerMotor_IceMakerVote");
       expect(vote.state).toEqual(state);
       expect(vote.care).toEqual(voteCare.care);
    };
 
-   const harvestCountCalculationRequestShouldBe = async(state) => {
+   const harvestCountCalculationRequestShouldBe = async (state) => {
       const actual = await rockhopper.read("Erd_HarvestCountCalculationRequest");
       expect(actual).toEqual(state);
    };
 
-   const feelerArmMonitoringRequestShouldBe = async(state) => {
+   const feelerArmMonitoringRequestShouldBe = async (state) => {
       const actual = await rockhopper.read("Erd_FeelerArmMonitoringRequest");
       expect(actual).toEqual(state);
    };
 
-   const harvestCountIsNotReadyToHarvest = async() => {
+   const harvestCountIsNotReadyToHarvest = async () => {
       await rockhopper.write("Erd_HarvestCountIsReadyToHarvest", false);
    };
 
-   const harvestCountIsReadyToHarvest = async() => {
+   const harvestCountIsReadyToHarvest = async () => {
       await rockhopper.write("Erd_HarvestCountIsReadyToHarvest", true);
    };
 
-   const iceMakerTemperatureIsReadyToHarvest = async() => {
+   const iceMakerTemperatureIsReadyToHarvest = async () => {
       let temperature = 1900 - 1; // max harvest temperature - 1
       await rockhopper.write("Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideRequest", true);
       await rockhopper.write("Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100", temperature);
    };
 
-   const iceMakerTemperatureIsNotReadyToHarvest = async() => {
+   const iceMakerTemperatureIsNotReadyToHarvest = async () => {
       let temperature = 1900; // max harvest temperature
       await rockhopper.write("Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideRequest", true);
       await rockhopper.write("Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100", temperature);
    };
 
-   const feelerArmIsReadyToEnterHarvest = async() => {
+   const feelerArmIsReadyToEnterHarvest = async () => {
       await rockhopper.write("Erd_FeelerArmIsReadyToEnterHarvest", true);
    };
 
-   const feelerArmIsNotReadyToEnterHarvest = async() => {
+   const feelerArmIsNotReadyToEnterHarvest = async () => {
       await rockhopper.write("Erd_FeelerArmIsReadyToEnterHarvest", false);
    };
 
@@ -258,7 +261,7 @@ describe("AluminumMoldIceMaker,", () => {
       expect(vote.care).toEqual(care);
    };
 
-   const theMoldHeaterControlRequestShouldBeForHarvest = async() => {
+   const theMoldHeaterControlRequestShouldBeForHarvest = async () => {
       const vote = await rockhopper.read("Erd_AluminumMoldIceMakerMoldHeaterControlRequest");
       expect(vote.enable).toEqual(true);
       expect(vote.skipInitialOnTime).toEqual(false);
@@ -266,19 +269,19 @@ describe("AluminumMoldIceMaker,", () => {
       expect(vote.offTemperatureInDegFx100, heaterOffTemperatureInDegFx100);
    };
 
-   const theMoldHeaterControlRequestShouldBeDisabled = async() => {
+   const theMoldHeaterControlRequestShouldBeDisabled = async () => {
       const vote = await rockhopper.read("Erd_AluminumMoldIceMakerMoldHeaterControlRequest");
       expect(vote.enable).toEqual(false);
    };
 
    const theMoldThermistorIsValid = async () => {
-      await rockhopper.write("Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideRequest", true);
-      await rockhopper.write("Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideValue", true);
+      await rockhopper.write("Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideRequest", true);
+      await rockhopper.write("Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideValue", true);
    };
 
    const theMoldThermistorIsInvalid = async () => {
-      await rockhopper.write("Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideRequest", true);
-      await rockhopper.write("Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideValue", false);
+      await rockhopper.write("Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideRequest", true);
+      await rockhopper.write("Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideValue", false);
    };
 
    const skipFillRequestIsSet = async () => {
@@ -311,6 +314,43 @@ describe("AluminumMoldIceMaker,", () => {
       const actual = await rockhopper.read("Erd_AluminumMoldIceMakerWaterFillMonitoringRequest");
       expect(actual).toEqual(expected);
    };
+
+   const stopFillSignalIsSent = async () => {
+      let signal = await rockhopper.read("Erd_AluminumMoldIceMakerStopFillSignal");
+      signal++;
+      await rockhopper.write("Erd_AluminumMoldIceMakerStopFillSignal", signal);
+   };
+
+   it("should be in thermistor fault state if thermistor is invalid after init", async () => {
+      await theMoldThermistorIsValid();
+      await sabbathModeIsDisabled();
+      await iceMakerIsEnabled();
+      await theMoldThermistorIsInvalid();
+
+      await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.thermistorFault);
+   });
+   it("should turn off all loads if thermistor is invalid", async () => {
+      await theMoldThermistorIsValid();
+      await theMoldThermistorIsInvalid();
+      await sabbathModeIsDisabled();
+      await iceMakerIsEnabled();
+
+      await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.thermistorFault);
+      await theIceMakerHeaterShouldBeVoted(relayState.off)
+      await theIceMakerMotorShouldBeVoted(motorState.off);
+      await theIceMakerWaterValveShouldBeVoted(waterValveState.off);
+      await theIsolationWaterValveShouldBeVoted(waterValveState.off);
+   });
+   it("should transition from fill state to thermistor fault if thermistor is invalid and stop fill signal is sent", async () => {
+      await theMoldThermistorIsValid();
+      await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.fill);
+
+      await theMoldThermistorIsInvalid();
+      await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.fill);
+
+      await stopFillSignalIsSent();
+      await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.thermistorFault);
+   });
 
    it("should enter freeze state after initialization when Sabbath is disabled and ice maker is enabled", async () => {
       await theMoldThermistorIsValid();
@@ -364,7 +404,7 @@ describe("AluminumMoldIceMaker,", () => {
       await feelerArmMonitoringRequestShouldBe(constants.set);
    });
 
-   it("should transition from freeze to harvest when harvest count is ready to harvest and harvest conditions are met", async() => {
+   it("should transition from freeze to harvest when harvest count is ready to harvest and harvest conditions are met", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
       await harvestCountIsNotReadyToHarvest();
       await iceMakerTemperatureIsReadyToHarvest();
@@ -375,7 +415,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.harvest);
    });
 
-   it("should not transition from freeze to harvest when feeler arm is ready to harvest and harvest count is not ready to harvest", async() => {
+   it("should not transition from freeze to harvest when feeler arm is ready to harvest and harvest count is not ready to harvest", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
       await harvestCountIsNotReadyToHarvest();
       await iceMakerTemperatureIsReadyToHarvest();
@@ -386,7 +426,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.freeze);
    });
 
-   it("should not transition from freeze to harvest when harvest count is ready to harvest and ice maker temperature is not ready to harvest", async() => {
+   it("should not transition from freeze to harvest when harvest count is ready to harvest and ice maker temperature is not ready to harvest", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
       await harvestCountIsNotReadyToHarvest();
       await iceMakerTemperatureIsNotReadyToHarvest();
@@ -397,7 +437,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.freeze);
    });
 
-   it("should not transition from freeze to harvest when harvest count is ready to harvest and feeler arm is not ready to harvest", async() => {
+   it("should not transition from freeze to harvest when harvest count is ready to harvest and feeler arm is not ready to harvest", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
       await harvestCountIsNotReadyToHarvest();
       await iceMakerTemperatureIsReadyToHarvest();
@@ -408,7 +448,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.freeze);
    });
 
-   it("should transition from freeze to harvest when ice maker temperature is ready to harvest and harvest conditions are met", async() => {
+   it("should transition from freeze to harvest when ice maker temperature is ready to harvest and harvest conditions are met", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
       await harvestCountIsReadyToHarvest();
       await iceMakerTemperatureIsNotReadyToHarvest();
@@ -419,7 +459,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.harvest);
    });
 
-   it("should transition from freeze to harvest when feeler arm is ready to enter harvest and harvest conditions are met", async() => {
+   it("should transition from freeze to harvest when feeler arm is ready to enter harvest and harvest conditions are met", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
       await harvestCountIsReadyToHarvest();
       await iceMakerTemperatureIsReadyToHarvest();
@@ -430,7 +470,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.harvest);
    });
 
-   it("should request to stop calculating harvest count when transitioning from freeze to harvest", async() => {
+   it("should request to stop calculating harvest count when transitioning from freeze to harvest", async () => {
       await providedTheAluminumMoldIceMakerIsInFreezeState().andWaitingForHarvestCountToBeReadyForHarvest();
       await harvestCountCalculationRequestShouldBe(constants.set);
 
@@ -438,7 +478,7 @@ describe("AluminumMoldIceMaker,", () => {
       await harvestCountCalculationRequestShouldBe(constants.clear);
    });
 
-   it("should request to stop monitoring feeler arm when transitioning from freeze to harvest", async() => {
+   it("should request to stop monitoring feeler arm when transitioning from freeze to harvest", async () => {
       await providedTheAluminumMoldIceMakerIsInFreezeState().andWaitingForFeelerArmToBeReadyToEnterHarvest();
       await feelerArmMonitoringRequestShouldBe(constants.set);
 
@@ -446,35 +486,35 @@ describe("AluminumMoldIceMaker,", () => {
       await feelerArmMonitoringRequestShouldBe(constants.clear);
    });
 
-   it("should transition from freeze to idle freeze when Sabbath is enabled", async() => {
+   it("should transition from freeze to idle freeze when Sabbath is enabled", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
 
       await sabbathModeIsEnabled();
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.idleFreeze);
    });
 
-   it("should transition from harvest to idle freeze when Sabbath is enabled", async() => {
+   it("should transition from harvest to idle freeze when Sabbath is enabled", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
 
       await sabbathModeIsEnabled();
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.idleFreeze);
    });
 
-   it("should transition from idle freeze to freeze when Sabbath is disabled", async() => {
+   it("should transition from idle freeze to freeze when Sabbath is disabled", async () => {
       await providedTheAluminumIceMakerIsInIdleFreeze().andSabbathModeIsEnabled();
 
       await sabbathModeIsDisabled();
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.freeze);
    });
 
-   it("should transition from freeze to idle freeze when ice maker is disabled", async() => {
+   it("should transition from freeze to idle freeze when ice maker is disabled", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
 
       await iceMakerIsDisabled();
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.idleFreeze);
    });
 
-   it("should transition from harvest to idle freeze when ice maker is disabled", async() => {
+   it("should transition from harvest to idle freeze when ice maker is disabled", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
 
       await iceMakerIsDisabled();
@@ -488,7 +528,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.freeze);
    });
 
-   it("should vote to turn on ice maker water valve when entering fill state", async() => {
+   it("should vote to turn on ice maker water valve when entering fill state", async () => {
       await theMoldThermistorIsValid();
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsClear();
@@ -502,7 +542,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theIceMakerWaterValveShouldBeVoted(waterValveState.on);
    });
 
-   it("should vote to turn on isolation water valve when entering fill state", async() => {
+   it("should vote to turn on isolation water valve when entering fill state", async () => {
       await theMoldThermistorIsValid();
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsClear();
@@ -516,7 +556,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theIsolationWaterValveShouldBeVoted(waterValveState.on);
    });
 
-   it("should request to start water fill monitoring when entering fill state", async() => {
+   it("should request to start water fill monitoring when entering fill state", async () => {
       await theMoldThermistorIsValid();
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsClear();
@@ -530,14 +570,14 @@ describe("AluminumMoldIceMaker,", () => {
       await theWaterFillMonitoringRequestShouldBe(constants.set);
    });
 
-   it("should transition from fill to freeze state after timed ice maker fill when no flow meter is present", async() => {
+   it("should transition from fill to freeze state after timed ice maker fill when no flow meter is present", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.fill);
 
       await delay(timedIceMakerFillInSecondsx10 * msPerSec / 10);
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.freeze);
    });
 
-   it("should vote to turn off ice maker valve when exiting fill state", async() => {
+   it("should vote to turn off ice maker valve when exiting fill state", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.fill);
 
       await delay(timedIceMakerFillInSecondsx10 * msPerSec / 10);
@@ -545,7 +585,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theIceMakerWaterValveShouldBeVoted(waterValveState.off);
    });
 
-   it("should vote to turn off isolation valve when exiting fill state", async() => {
+   it("should vote to turn off isolation valve when exiting fill state", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.fill);
 
       await delay(timedIceMakerFillInSecondsx10 * msPerSec / 10);
@@ -553,7 +593,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theIsolationWaterValveShouldBeVoted(waterValveState.off);
    });
 
-   it("should clear water fill monitoring request when exiting fill state", async() => {
+   it("should clear water fill monitoring request when exiting fill state", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.fill);
 
       await delay(timedIceMakerFillInSecondsx10 * msPerSec / 10);
@@ -561,7 +601,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theWaterFillMonitoringRequestShouldBe(constants.clear);
    });
 
-   it("should request water fill monitoring when entering fill state again", async() => {
+   it("should request water fill monitoring when entering fill state again", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.fill);
 
       await delay(timedIceMakerFillInSecondsx10 * msPerSec / 10);
@@ -584,12 +624,12 @@ describe("AluminumMoldIceMaker,", () => {
 
    // Parametric
    // fill tube heater on time = max harvest time
-   it("should vote for fill tube heater on entry to Harvest", async() => {
+   it("should vote for fill tube heater on entry to Harvest", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await theFillTubeHeaterVoteAndCareShouldBe(freezeThawFillTubeHeaterDutyCyclePercentage, voteCare.care);
    });
 
-   it("should vote to dont care for fill tube heater after fill tube heater on time", async() => {
+   it("should vote to dont care for fill tube heater after fill tube heater on time", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await theFillTubeHeaterVoteAndCareShouldBe(freezeThawFillTubeHeaterDutyCyclePercentage, voteCare.care);
 
@@ -600,12 +640,12 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.harvestFix);
    });
 
-   it("should set mold control request on entry to harvest", async() => {
+   it("should set mold control request on entry to harvest", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await theMoldHeaterControlRequestShouldBeForHarvest();
    });
 
-   it("should transition from Harvest to Harvest Fix when max harvest time reached", async() => {
+   it("should transition from Harvest to Harvest Fix when max harvest time reached", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await theRakeDidNotCompleteAFullRevolution();
 
@@ -614,7 +654,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.harvestFix);
    });
 
-   it("should vote to dont care for fill tube heater after max harvest time", async() => {
+   it("should vote to dont care for fill tube heater after max harvest time", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
 
       await after(maximumHarvestTimeInMinutes - 1).inMin();
@@ -622,21 +662,39 @@ describe("AluminumMoldIceMaker,", () => {
       await theFillTubeHeaterVoteAndCareShouldBe(freezeThawFillTubeHeaterDutyCyclePercentage, voteCare.dontCare);
    });
 
-   it("should transition from Harvest to Thermistor Fault when mold thermistor is invalid", async() => {
+   it("should transition from Freeze to Thermistor Fault State when mold thermistor is invalid", async () => {
+      await theMoldThermistorIsValid();
+      await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
+
+      await theMoldThermistorIsInvalid();
+      await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.thermistorFault);
+   });
+
+   it("should transition from Fill to Thermistor Fault State when mold thermistor is invalid and stop fill signal is sent", async () => {
+      await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.fill);
+
+      await theMoldThermistorIsInvalid();
+      await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.fill);
+
+      await stopFillSignalIsSent();
+      await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.thermistorFault);
+   });
+
+   it("should transition from Harvest to Thermistor Fault State when mold thermistor is invalid", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
 
       await theMoldThermistorIsInvalid();
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.thermistorFault);
    });
 
-   it("should transition from Harvest Fix to Thermistor Fault when mold thermistor is invalid", async() => {
+   it("should transition from Harvest Fix to Thermistor Fault State when mold thermistor is invalid", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvestFix);
 
       await theMoldThermistorIsInvalid();
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.thermistorFault);
    });
 
-   it("should transition from Harvest to Freeze state when fill tube heater timer expired and rake has completed full revolution and skip fill request is set", async() => {
+   it("should transition from Harvest to Freeze state when fill tube heater timer expired and rake has completed full revolution and skip fill request is set", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsSet();
 
@@ -647,7 +705,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.freeze);
    });
 
-   it("should transition from Harvest to Fill state when fill tube heater timer expired and rake has completed full revolution and skip fill request is clear", async() => {
+   it("should transition from Harvest to Fill state when fill tube heater timer expired and rake has completed full revolution and skip fill request is clear", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsClear();
 
@@ -658,7 +716,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.fill);
    });
 
-   it("should clear rake controller request when rake completes full revolution during harvest", async() => {
+   it("should clear rake controller request when rake completes full revolution during harvest", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
 
       await after(initialMinimumHeaterOnTimeInSeconds).inSec();
@@ -669,7 +727,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theRakeControllerRequestShouldBe(false);
    });
 
-   it("should transition from Harvest to Harvest Fix state when rake has not completed full revolution before fill tube heater timer has expired and skip fill request is set", async() => {
+   it("should transition from Harvest to Harvest Fix state when rake has not completed full revolution before fill tube heater timer has expired and skip fill request is set", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsSet();
 
@@ -680,7 +738,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.harvestFix);
    });
 
-   it("should transition from Harvest to Harvest Fix state when rake has not completed full revolution before fill tube heater timer has expired and skip fill request is clear", async() => {
+   it("should transition from Harvest to Harvest Fix state when rake has not completed full revolution before fill tube heater timer has expired and skip fill request is clear", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsClear();
 
@@ -691,7 +749,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.harvestFix);
    });
 
-   it("should disable mold heater control request when transitioning from Harvest to Harvest Fix", async() => {
+   it("should disable mold heater control request when transitioning from Harvest to Harvest Fix", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
 
       await after(freezeThawFillTubeHeaterOnTimeInSeconds - aLittleBitAccelerationDelayInSeconds).inSec();
@@ -703,7 +761,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theMoldHeaterControlRequestShouldBeDisabled();
    });
 
-   it("should clear skip fill flag when transitioning from Harvest to Harvest Fix", async() => {
+   it("should clear skip fill flag when transitioning from Harvest to Harvest Fix", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsSet();
 
@@ -715,7 +773,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theSkipFillRequestShouldBeClear();
    });
 
-   it("should clear rake controller request when transitioning from Harvest to Harvest Fix and the rake has not completed a full revolution", async() => {
+   it("should clear rake controller request when transitioning from Harvest to Harvest Fix and the rake has not completed a full revolution", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
 
       await after(initialMinimumHeaterOnTimeInSeconds).inSec();
@@ -759,7 +817,7 @@ describe("AluminumMoldIceMaker,", () => {
    // Parametric
    // fill tube heater on time < max harvest time
    // freezeThawFillTubeHeaterOnTimeInSeconds < maximumHarvestTimeInMinutes * 60
-   xit("should vote dont care for fill tube heater after fill tube heater on time", async() => {
+   xit("should vote dont care for fill tube heater after fill tube heater on time", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await theFillTubeHeaterVoteAndCareShouldBe(freezeThawFillTubeHeaterDutyCyclePercentage, voteCare.care);
 
@@ -769,7 +827,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theFillTubeHeaterVoteAndCareShouldBe(freezeThawFillTubeHeaterDutyCyclePercentage, voteCare.dontCare);
    });
 
-   xit("should transition from Harvest to Freeze state when fill tube heater timer expired and rake has completed full revolution and skip fill request is set", async() => {
+   xit("should transition from Harvest to Freeze state when fill tube heater timer expired and rake has completed full revolution and skip fill request is set", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsSet();
 
@@ -780,7 +838,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.freeze);
    });
 
-   xit("should transition from Harvest to Fill state when fill tube heater timer expired and rake has completed full revolution and skip fill request is clear", async() => {
+   xit("should transition from Harvest to Fill state when fill tube heater timer expired and rake has completed full revolution and skip fill request is clear", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsClear();
 
@@ -791,7 +849,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.fill);
    });
 
-   xit("should transition from Harvest to Freeze state when rake completes full revolution and fill tube heater timer has expired and skip fill request is set", async() => {
+   xit("should transition from Harvest to Freeze state when rake completes full revolution and fill tube heater timer has expired and skip fill request is set", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsSet();
 
@@ -803,7 +861,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.freeze);
    });
 
-   xit("should transition from Harvest to Fill state when rake completes full revolution and fill tube heater timer has expired and skip fill request is clear", async() => {
+   xit("should transition from Harvest to Fill state when rake completes full revolution and fill tube heater timer has expired and skip fill request is clear", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsClear();
 
@@ -815,7 +873,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.fill);
    });
 
-   xit("should transition from Harvest to Harvest Fix state when rake has not completed full revolution before max harvest time has expired and skip fill request is set", async() => {
+   xit("should transition from Harvest to Harvest Fix state when rake has not completed full revolution before max harvest time has expired and skip fill request is set", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsSet();
 
@@ -826,7 +884,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.harvestFix);
    });
 
-   xit("should transition from Harvest to Harvest Fix state when rake has not completed full revolution before max harvest time has expired and skip fill request is clear", async() => {
+   xit("should transition from Harvest to Harvest Fix state when rake has not completed full revolution before max harvest time has expired and skip fill request is clear", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsClear();
 
@@ -837,7 +895,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.harvestFix);
    });
 
-   xit("should clear rake controller request when transitioning from Harvest to Harvest Fix and the rake has not completed a full revolution", async() => {
+   xit("should clear rake controller request when transitioning from Harvest to Harvest Fix and the rake has not completed a full revolution", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
 
       await after(initialMinimumHeaterOnTimeInSeconds).inSec();
@@ -855,7 +913,7 @@ describe("AluminumMoldIceMaker,", () => {
    // Parametric
    // fill tube heater zero duty cycle
    // freezeThawFillTubeHeaterDutyCyclePercentage = 0
-   xit("should transition from Harvest to Freeze state when rake completes full revolution and fill tube heater timer has expired and skip fill request is set", async() => {
+   xit("should transition from Harvest to Freeze state when rake completes full revolution and fill tube heater timer has expired and skip fill request is set", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsSet();
 
@@ -867,7 +925,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.freeze);
    });
 
-   xit("should transition from Harvest to Fill state when rake completes full revolution and fill tube heater timer has expired and skip fill request is clear", async() => {
+   xit("should transition from Harvest to Fill state when rake completes full revolution and fill tube heater timer has expired and skip fill request is clear", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsClear();
 
@@ -882,7 +940,7 @@ describe("AluminumMoldIceMaker,", () => {
    // Parametric
    // fill tube heater on time zero
    // freezeThawFillTubeHeaterOnTimeInSeconds = 0
-   xit("should transition from Harvest to Freeze state when rake completes full revolution and fill tube heater timer has expired and skip fill request is set", async() => {
+   xit("should transition from Harvest to Freeze state when rake completes full revolution and fill tube heater timer has expired and skip fill request is set", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsSet();
 
@@ -893,7 +951,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.freeze);
    });
 
-   xit("should transition from Harvest to Fill state when rake completes full revolution and fill tube heater timer has expired and skip fill request is clear", async() => {
+   xit("should transition from Harvest to Fill state when rake completes full revolution and fill tube heater timer has expired and skip fill request is clear", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
       await skipFillRequestIsClear();
 

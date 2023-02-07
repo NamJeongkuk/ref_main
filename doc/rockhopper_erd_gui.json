@@ -1024,21 +1024,21 @@
         {
           "namespace": "mb",
           "displayName": "Aluminum Mold Ice Maker Thermistor Is Valid Override Value",
-          "name": "Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideValue",
+          "name": "Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideValue",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "Aluminum Mold Ice Maker Thermistor Is Valid Override Request",
-          "name": "Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideRequest",
+          "name": "Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "Aluminum Mold Ice Maker Thermistor Is Valid Resolved",
-          "name": "Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved",
+          "name": "Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved",
           "read": true,
           "write": true
         },
@@ -2063,8 +2063,8 @@
           "read": true,
           "write": true
         }
-      ]    
-    },  
+      ]
+    },
     {
       "title": "Motor Arbitrator Erds",
       "erds": [

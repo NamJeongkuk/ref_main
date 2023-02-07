@@ -592,7 +592,7 @@ enum
    ENTRY(Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideValue,   0xF194, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AmbientThermistor_IsValidOverrideValue,                         0xF195, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentEvapThermistor_IsValidOverrideValue,      0xF196, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideValue,         0xF197, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideValue,        0xF197, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodThermistor_IsValidResolved,                            0xF198, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerThermistor_IsValidResolved,                              0xF199, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -601,7 +601,7 @@ enum
    ENTRY(Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved,        0xF19C, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AmbientThermistor_IsValidResolved,                              0xF19D, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentEvapThermistor_IsValidResolved,           0xF19E, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved,              0xF19F, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved,             0xF19F, bool,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodThermistor_IsValidOverrideRequest,                     0xF1A0, bool,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerThermistor_IsValidOverrideRequest,                       0xF1A1, bool,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -610,7 +610,7 @@ enum
    ENTRY(Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideRequest, 0xF1A4, bool,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AmbientThermistor_IsValidOverrideRequest,                       0xF1A5, bool,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentEvapThermistor_IsValidOverrideRequest,    0xF1A6, bool,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideRequest,       0xF1A7, bool,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideRequest,      0xF1A7, bool,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Ambient_FilteredTemperatureOverrideRequest,                     0xF1A8, bool,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Ambient_FilteredTemperatureOverrideValueInDegFx100,             0xF1A9, TemperatureDegFx100_t,             Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

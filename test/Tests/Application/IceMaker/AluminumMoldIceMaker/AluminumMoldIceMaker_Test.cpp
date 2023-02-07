@@ -29,7 +29,7 @@ static const AluminumMoldIceMakerConfig_t config = {
    .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState,
    .iceMakerWaterValveVoteErd = Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
    .iceMakerHeaterVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
-   .iceMakerMotorVoteErd = Erd_AluminumMoldIceMakerMotor_IceMakerVote,
+   .iceMakerMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
    .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
    .feelerArmMonitoringRequestErd = Erd_FeelerArmMonitoringRequest,
    .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
@@ -40,7 +40,7 @@ static const AluminumMoldIceMakerConfig_t config = {
    .fillTubeHeaterVoteErd = Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote,
    .moldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
    .rakeCompletedRevolutionErd = Erd_AluminumMoldIceMakerRakeCompletedRevolution,
-   .moldThermistorIsValidErd = Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved,
+   .moldThermistorIsValidErd = Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved,
    .skipFillRequestErd = Erd_AluminumMoldIceMakerSkipFillRequest,
    .rakeControlRequestErd = Erd_AluminumMoldIceMakerRakeControlRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_AluminumMoldIceMakerVote,
@@ -118,7 +118,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       AluminumMoldIceMakerMotorVotedState_t vote;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerMotor_IceMakerVote,
+         Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
          &vote);
 
       CHECK_EQUAL(expected, vote.state);
@@ -231,6 +231,12 @@ TEST_GROUP(AluminumMoldIceMaker)
          &state);
    }
 
+   void IceMakerIsEnabledAndSabbathModeIsDisabled()
+   {
+      IceMakerIs(ENABLED);
+      SabbathModeIs(DISABLED);
+   }
+
    void AluminumMoldIceMakerIsInFreezeState()
    {
       Given IceMakerIs(ENABLED);
@@ -239,6 +245,13 @@ TEST_GROUP(AluminumMoldIceMaker)
       Given TheRakePositionIs(RakePosition_Home);
       Given TheModuleIsInitialized();
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+   }
+
+   void AluminumMoldIceMakerIsInHarvestFault()
+   {
+      Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvestFix();
+      After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN);
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFault);
    }
 
    void SabbathIsEnabledAndAluminumMoldIceMakerIsInIdleFreezeState()
@@ -353,14 +366,55 @@ TEST_GROUP(AluminumMoldIceMaker)
       CHECK_EQUAL(false, actual.enable);
    }
 
+   void StopFillSignalIs(bool signal)
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote, &signal);
+   }
+
+   void IceMakerMotorVoteIs(MotorState_t state)
+   {
+      AluminumMoldIceMakerMotorVotedState_t vote = {
+         .state = state,
+         .care = true
+      };
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote, &vote);
+   }
+
+   void IceMakerWaterValveVoteIs(WaterValveState_t state)
+   {
+      WaterValveVotedState_t vote = {
+         .state = state,
+         .care = true
+      };
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerWaterValve_IceMakerVote, &vote);
+   }
+
+   void IceMakerHeaterVoteIs(HeaterState_t state)
+   {
+      HeaterVotedState_t vote = {
+         .state = state,
+         .care = true
+      };
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote, &vote);
+   }
+
+   void IceMakerIsolationWaterValveVoteIs(WaterValveState_t state)
+   {
+      WaterValveVotedState_t vote = {
+         .state = state,
+         .care = true
+      };
+      DataModel_Write(dataModel, Erd_IsolationWaterValve_AluminumMoldIceMakerVote, &vote);
+   }
+
    void MoldThermistorIsValid()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved, set);
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved, set);
    }
 
    void MoldThermistorIsInvalid()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved, clear);
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved, clear);
    }
 
    void SkipFillRequestIsSet()
@@ -435,13 +489,9 @@ TEST_GROUP(AluminumMoldIceMaker)
       Given SkipFillRequestIsClear();
       Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
 
-      After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
-      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
-
       When RakeCompletesFullRevolution();
-      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+      After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
 
-      After(1);
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
    }
 
@@ -1169,7 +1219,7 @@ TEST(AluminumMoldIceMaker, ShouldVoteToTurnOffIsolationWaterValveWhenExitingFill
 
 TEST(AluminumMoldIceMaker, ShouldIncrementFreezerTriggerIceRateSignalWhenTransitioningToTheFreezeState)
 {
-   Given IceMakerIs(DISABLED);
+   Given IceMakerIs(ENABLED);
    Given SabbathModeIs(ENABLED);
    Given MoldThermistorIsValid();
    Given TheRakePositionIs(RakePosition_NotHome);
@@ -1207,6 +1257,140 @@ TEST(AluminumMoldIceMaker, ShouldNotIncrementFreezerTriggerIceRateSignalWhenTran
    When SabbathModeIs(DISABLED);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
    FreezerTriggerIceRateSignalShouldBe(1);
+}
+
+TEST(AluminumMoldIceMaker, ShouldVoteToTurnOffIceMakerWaterValveWhenMoldThermistorIsInvalid)
+{
+   Given IceMakerIsEnabledAndSabbathModeIsDisabled();
+   Given MoldThermistorIsValid();
+   Given TheModuleIsInitialized();
+   Given IceMakerWaterValveVoteIs(WaterValveState_On);
+
+   When MoldThermistorIsInvalid();
+   IceMakerWaterValveVoteShouldBe(WaterValveState_Off);
+}
+
+TEST(AluminumMoldIceMaker, ShouldVoteToTurnOffIsolationValveWhenMoldThermistorIsInvalid)
+{
+   Given IceMakerIsEnabledAndSabbathModeIsDisabled();
+   Given MoldThermistorIsValid();
+   Given TheModuleIsInitialized();
+   Given IceMakerIsolationWaterValveVoteIs(WaterValveState_On);
+
+   When MoldThermistorIsInvalid();
+   IsolationIceMakerWaterValveVoteShouldBe(WaterValveState_Off);
+}
+
+TEST(AluminumMoldIceMaker, ShouldVoteToTurnOffIceMakerHeaterWhenMoldThermistorIsInvalid)
+{
+   Given IceMakerIsEnabledAndSabbathModeIsDisabled();
+   Given MoldThermistorIsValid();
+   Given TheModuleIsInitialized();
+   Given IceMakerHeaterVoteIs(HeaterState_On);
+
+   When MoldThermistorIsInvalid();
+   IceMakerHeaterVoteShouldBe(HeaterState_Off);
+}
+
+TEST(AluminumMoldIceMaker, ShouldVoteToTurnOffIceMakerMotorWhenMoldThermistorIsInvalid)
+{
+   Given IceMakerIsEnabledAndSabbathModeIsDisabled();
+   Given MoldThermistorIsValid();
+   Given TheModuleIsInitialized();
+   Given IceMakerMotorVoteIs(MotorState_On);
+
+   When MoldThermistorIsInvalid();
+   IceMakerMotorVoteShouldBe(MotorState_Off);
+}
+
+TEST(AluminumMoldIceMaker, ShouldBeInThermistorFaultStateIfThermistorIsInvalidBeforeInitialization)
+{
+   Given IceMakerIsEnabledAndSabbathModeIsDisabled();
+   Given MoldThermistorIsInvalid();
+   Given TheModuleIsInitialized();
+
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionToThermistorFaultFromFreezeWhenThermistorIsInvalid)
+{
+   Given AluminumMoldIceMakerIsInFreezeState();
+
+   When MoldThermistorIsInvalid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionToThermistorFaultFromHarvestWhenThermistorIsInvalid)
+{
+   Given SabbathModeIsDisabledAndAluminumMoldIceMakerIsInHarvest();
+
+   When MoldThermistorIsInvalid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+}
+
+TEST(AluminumMoldIceMaker, ShouldNotTransitionOutOfFillStateWhenSignalStopFillNotReceivedAndThermistorIsInvalid)
+{
+   Given AluminumMoldIceMakerIsInFillState();
+
+   When MoldThermistorIsInvalid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionToFreezeAfterFillWhenReceivedSignalStopFillAndThermistorIsValid)
+{
+   Given AluminumMoldIceMakerIsInFillState();
+
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+
+   When StopFillSignalChanges();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionToThermistorFaultAfterFillWhenSignalStopFillReceivedAndThermistorIsInvalid)
+{
+   Given AluminumMoldIceMakerIsInFillState();
+
+   When MoldThermistorIsInvalid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+
+   When StopFillSignalChanges();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionToThermistorFaultAfterHarvestFixWhenThermistorIsInvalid)
+{
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvestFix();
+
+   When MoldThermistorIsInvalid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromThermistorFaultToFreezeWhenThermistorIsValidAndSabbathModeIsDisabledAndIceMakerIsEnabledAndRakeIsHome)
+{
+   Given IceMakerIsEnabledAndSabbathModeIsDisabled();
+   Given TheRakePositionIs(RakePosition_Home);
+   Given TheModuleIsInitialized();
+
+   When MoldThermistorIsInvalid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+
+   When MoldThermistorIsValid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldSetSkipFillRequestAndShouldTransitionFromThermistorFaultStateToHarvestWhenThermistorIsValidAndSabbathModeIsDisabledAndIceMakerIsEnabledAndRakeIsNotHome)
+{
+   Given IceMakerIsEnabledAndSabbathModeIsDisabled();
+   Given TheRakePositionIs(RakePosition_NotHome);
+   Given SkipFillRequestIsClear();
+   Given TheModuleIsInitialized();
+
+   When MoldThermistorIsInvalid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+
+   When MoldThermistorIsValid();
+   SkipFillRequestShouldBe(set);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 }
 
 TEST(AluminumMoldIceMaker, ShouldCompleteFillEvenIfThermistorBecomesInvalid)
@@ -1385,12 +1569,12 @@ TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime)
 
    void MoldThermistorIsValid()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved, set);
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved, set);
    }
 
    void MoldThermistorIsInvalid()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved, clear);
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved, clear);
    }
 
    void SkipFillRequestIsSet()
@@ -1657,7 +1841,7 @@ TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterZeroDutyCycle)
 
    void MoldThermistorIsValid()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved, set);
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved, set);
    }
 
    void SkipFillRequestIsSet()
@@ -1799,7 +1983,7 @@ TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterZeroOnTime)
 
    void MoldThermistorIsValid()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved, set);
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved, set);
    }
 
    void SkipFillRequestIsSet()

@@ -35,6 +35,7 @@ enum
    Signal_RakeOnTimerExpired,
    Signal_RakeOffTimerExpired,
    Signal_MoldThermistorIsInvalid,
+   Signal_MoldThermistorIsValid,
    Signal_RakeCompletedRevolution,
    Signal_MinimumHeaterOnTimeReached,
    Signal_StopFill
@@ -568,6 +569,10 @@ static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          Hsm_Transition(hsm, State_IdleFreeze);
          break;
 
+      case Signal_MoldThermistorIsInvalid:
+         Hsm_Transition(hsm, State_ThermistorFault);
+         break;
+
       case Hsm_Exit:
          break;
 
@@ -634,8 +639,8 @@ static bool State_IdleFreeze(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_IdleFreeze);
          break;
 
-      case Signal_SabbathModeDisabled:
       case Signal_IceMakerIsEnabled:
+      case Signal_SabbathModeDisabled:
          Hsm_Transition(hsm, State_Freeze);
          break;
 
@@ -699,10 +704,6 @@ static bool State_Harvest(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          }
          break;
 
-      case Signal_MoldThermistorIsInvalid:
-         Hsm_Transition(hsm, State_ThermistorFault);
-         break;
-
       case Hsm_Exit:
          VoteFillTubeHeaterDontCare(instance);
          StopFillTubeHeaterTimer(instance);
@@ -758,10 +759,6 @@ static bool State_HarvestFix(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          {
             Hsm_Transition(hsm, State_Freeze);
          }
-         break;
-
-      case Signal_MoldThermistorIsInvalid:
-         Hsm_Transition(hsm, State_ThermistorFault);
          break;
 
       case Hsm_Exit:
@@ -829,6 +826,10 @@ static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          }
          break;
 
+      case Signal_MoldThermistorIsInvalid:
+         // Consume signal so it doesn't get deferred to global - transition to thermistor fault state will occur when fill completes
+         break;
+
       case Hsm_Exit:
          ClearWaterFillMonitoringRequest(instance);
          VoteForIceMakerWaterValve(instance, OFF, Vote_Care);
@@ -851,6 +852,22 @@ static bool State_ThermistorFault(Hsm_t *hsm, HsmSignal_t signal, const void *da
    {
       case Hsm_Entry:
          UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_ThermistorFault);
+         VoteForIceMakerWaterValve(instance, OFF, Vote_Care);
+         VoteForIsolationWaterValve(instance, OFF, Vote_Care);
+         VoteForIceMakerHeater(instance, OFF, Vote_Care);
+         VoteForIceMakerMotor(instance, OFF, Vote_Care);
+         break;
+
+      case Signal_MoldThermistorIsValid:
+         if(RakeIsHome(instance))
+         {
+            Hsm_Transition(hsm, State_Freeze);
+         }
+         else
+         {
+            SetSkipFillFlag(instance);
+            Hsm_Transition(hsm, State_Harvest);
+         }
          break;
 
       case Hsm_Exit:
@@ -912,7 +929,11 @@ static void DataModelChanged(void *context, const void *args)
    else if(erd == instance->_private.config->moldThermistorIsValidErd)
    {
       const bool *state = onChangeData->data;
-      if(!*state)
+      if(*state)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_MoldThermistorIsValid, NULL);
+      }
+      else
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_MoldThermistorIsInvalid, NULL);
       }

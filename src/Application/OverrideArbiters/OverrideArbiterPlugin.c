@@ -204,18 +204,18 @@ static const OverrideArbiterConfiguration_t aluminumMoldIceMakerFilteredTemperat
 };
 
 static const Erd_t aluminumMoldIceMakerThermistorValidOverrideArbiterRequestErdList[] = {
-   Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideRequest
+   Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideRequest
 };
 
 static const Erd_t aluminumMoldIceMakerThermistorValidValueErdList[] = {
    Erd_AluminumMoldIceMakerMoldThermistorIsValid,
-   Erd_AluminumMoldIceMakerMoldThermistorIsValidOverrideValue
+   Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideValue
 };
 
 static const OverrideArbiterConfiguration_t aluminumMoldIceMakerThermistorValidArbiterConfiguration = {
    aluminumMoldIceMakerThermistorValidOverrideArbiterRequestErdList,
    aluminumMoldIceMakerThermistorValidValueErdList,
-   Erd_AluminumMoldIceMakerMoldThermistorIsValidResolved,
+   Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved,
    NUM_ELEMENTS(aluminumMoldIceMakerThermistorValidOverrideArbiterRequestErdList)
 };
 
