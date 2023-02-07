@@ -1,6 +1,6 @@
 /*!
  * @file
- * @brief
+ * @brief When requested this module takes care of calculating the temperature integration count and the minimum freeze time.
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
