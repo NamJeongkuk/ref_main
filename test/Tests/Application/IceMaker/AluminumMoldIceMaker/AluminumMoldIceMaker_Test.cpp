@@ -1438,6 +1438,61 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromFillToFreezeWhenRakeIsHomeAfterFi
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
 }
 
+TEST(AluminumMoldIceMaker, ShouldGoToFreezeAfterSecondRevolutionWhenReEnteringIntoHarvestFixState)
+{
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvestFix();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+
+   When RakeDidNotCompleteFullRevolution();
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+
+   When IceMakerTemperatureIsNotReadyToHarvest();
+   When IceMakerTemperatureIsReadyToHarvest();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   When RakeDidNotCompleteFullRevolution();
+   After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+
+   When RakeDidNotCompleteFullRevolution();
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldGoToFreezeAfterSecondRevolutionWhenReEnteringIntoHarvestFixAfterFirstRevolutionAndMoldThermistorIsInvalidInTheState)
+{
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvestFix();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+
+   When MoldThermistorIsInvalid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+
+   When TheRakePositionIs(RakePosition_NotHome);
+   When MoldThermistorIsValid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   When RakeDidNotCompleteFullRevolution();
+   After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+
+   When RakeDidNotCompleteFullRevolution();
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
 TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime)
 {
    AluminumMoldIceMaker_t instance;
