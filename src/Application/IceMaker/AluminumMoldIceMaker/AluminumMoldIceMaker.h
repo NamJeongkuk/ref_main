@@ -51,6 +51,8 @@ typedef struct
       Timer_t maxHarvestFixTimer;
       Timer_t motorOnAndOffTimer;
       Timer_t minimumHeaterOnTimer;
+      Timer_t harvestFaultMaxTimer;
+      Timer_t rakeMotorControlTimer;
       const AluminumMoldIceMakerConfig_t *config;
       const AluminumMoldIceMakerData_t *iceMakerParametricData;
       bool initalFreezerStateTransition;

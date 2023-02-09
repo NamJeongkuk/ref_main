@@ -247,13 +247,6 @@ TEST_GROUP(AluminumMoldIceMaker)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
    }
 
-   void AluminumMoldIceMakerIsInHarvestFault()
-   {
-      Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvestFix();
-      After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN);
-      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFault);
-   }
-
    void SabbathIsEnabledAndAluminumMoldIceMakerIsInIdleFreezeState()
    {
       Given IceMakerIs(ENABLED);
@@ -319,6 +312,14 @@ TEST_GROUP(AluminumMoldIceMaker)
 
       After(1);
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+   }
+
+   void AluminumMoldIceMakerIsInHarvestFault()
+   {
+      Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvestFix();
+
+      After(iceMakerData->harvestFixData.maximumHarvestFixTimeInMinutes * MSEC_PER_MIN);
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFault);
    }
 
    void FillTubeHeaterVoteAndCareShouldBe(PercentageDutyCycle_t expectedDutyCycle, Vote_t expectedCare)
@@ -860,6 +861,136 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToHarvestFixWhenMaxHarvest
 
    After(1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestFaultToThermistorFaultWhenMoldThermistorIsInvalid)
+{
+   Given AluminumMoldIceMakerIsInHarvestFault();
+
+   When MoldThermistorIsInvalid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestFaultToIdleFreezeWhenSabbathModeEnabled)
+{
+   Given AluminumMoldIceMakerIsInHarvestFault();
+
+   When SabbathModeIs(ENABLED);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestFaultToIdleFreezeWhenIceMakeIsDisbled)
+{
+   Given AluminumMoldIceMakerIsInHarvestFault();
+
+   When IceMakerIs(DISABLED);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldClearMoldHeaterControlRequestOnEntryToHarvestFault)
+{
+   Given AluminumMoldIceMakerIsInHarvestFault();
+   MoldHeaterControlRequestShouldBeCleared();
+}
+
+TEST(AluminumMoldIceMaker, ShouldSetRakeMotorControlRequestOnEntryToHarvestFault)
+{
+   Given AluminumMoldIceMakerIsInHarvestFault();
+   RakeControllerRequestShouldBe(SET);
+}
+
+TEST(AluminumMoldIceMaker, ShouldClearRakeMotorControlRequestAfterRakeMotorControlTimeWhileTheMotorHasBeenOn)
+{
+   Given AluminumMoldIceMakerIsInHarvestFault();
+   RakeControllerRequestShouldBe(SET);
+
+   After(iceMakerData->harvestFaultData.rakeMotorControlTimeInSeconds * MSEC_PER_SEC - 1);
+   RakeControllerRequestShouldBe(SET);
+
+   After(1);
+   RakeControllerRequestShouldBe(CLEAR);
+}
+
+TEST(AluminumMoldIceMaker, ShouldRepeatTurningOnAndOffRakeMotorAfterRakeMotorControlTime)
+{
+   Given AluminumMoldIceMakerIsInHarvestFault();
+
+   After(iceMakerData->harvestFaultData.rakeMotorControlTimeInSeconds * MSEC_PER_SEC - 1);
+   RakeControllerRequestShouldBe(SET);
+   After(1);
+   RakeControllerRequestShouldBe(CLEAR);
+
+   After(iceMakerData->harvestFaultData.rakeMotorControlTimeInSeconds * MSEC_PER_SEC - 1);
+   RakeControllerRequestShouldBe(CLEAR);
+   After(1);
+   RakeControllerRequestShouldBe(SET);
+
+   After(iceMakerData->harvestFaultData.rakeMotorControlTimeInSeconds * MSEC_PER_SEC - 1);
+   RakeControllerRequestShouldBe(SET);
+   After(1);
+   RakeControllerRequestShouldBe(CLEAR);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestFaultToHarvestWhenHarvestFaultMaxTimeExpired)
+{
+   Given AluminumMoldIceMakerIsInHarvestFault();
+
+   After(iceMakerData->harvestFaultData.harvestFaultMaxTimeInMinutes * MSEC_PER_MIN - 1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFault);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestFaultToHarvetWhenRakeCompletesFullRevolution)
+{
+   Given AluminumMoldIceMakerIsInHarvestFault();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFault);
+
+   When RakeCompletesFullRevolution();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+}
+
+TEST(AluminumMoldIceMaker, ShouldNotUpdateRakeControllerRequestAfterMotorControlTimeWhenMoldThermistorIsInvalidInHarvestFix)
+{
+   Given AluminumMoldIceMakerIsInHarvestFault();
+   When MoldThermistorIsInvalid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+   RakeControllerRequestShouldBe(CLEAR);
+
+   After(iceMakerData->harvestFaultData.rakeMotorControlTimeInSeconds * MSEC_PER_SEC);
+   RakeControllerRequestShouldBe(CLEAR);
+
+   After(iceMakerData->harvestFaultData.rakeMotorControlTimeInSeconds * MSEC_PER_SEC);
+   RakeControllerRequestShouldBe(CLEAR);
+}
+
+TEST(AluminumMoldIceMaker, ShouldNotUpdateRakeControllerRequestAfterMotorControlTimeWhenSabbathModeIsEnabledInHarvestFault)
+{
+   Given AluminumMoldIceMakerIsInHarvestFault();
+   When SabbathModeIs(ENABLED);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+   RakeControllerRequestShouldBe(CLEAR);
+
+   After(iceMakerData->harvestFaultData.rakeMotorControlTimeInSeconds * MSEC_PER_SEC);
+   RakeControllerRequestShouldBe(CLEAR);
+
+   After(iceMakerData->harvestFaultData.rakeMotorControlTimeInSeconds * MSEC_PER_SEC);
+   RakeControllerRequestShouldBe(CLEAR);
+}
+
+TEST(AluminumMoldIceMaker, ShouldNotUpdateRakeControllerRequestAfterMotorControlTimeWhenIceMakerIsDisabledInHarvestFault)
+{
+   Given AluminumMoldIceMakerIsInHarvestFault();
+   When IceMakerIs(DISABLED);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+   RakeControllerRequestShouldBe(CLEAR);
+
+   After(iceMakerData->harvestFaultData.rakeMotorControlTimeInSeconds * MSEC_PER_SEC);
+   RakeControllerRequestShouldBe(CLEAR);
+
+   After(iceMakerData->harvestFaultData.rakeMotorControlTimeInSeconds * MSEC_PER_SEC);
+   RakeControllerRequestShouldBe(CLEAR);
 }
 
 TEST(AluminumMoldIceMaker, ShouldVoteFillTubeHeaterDontCareWhenTransitioningFromHarvestToHarvestFix)
