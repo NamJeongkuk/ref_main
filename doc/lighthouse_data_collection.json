@@ -270,6 +270,76 @@
          "namespace": "mb",
          "name": "Erd_FreshFoodDamperPosition_WinningVoteErd",
          "interval": 60000
-      }
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_AluminumMoldIceMakerHsmState",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_AluminumMoldIceMakerFeelerArmPosition",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_AluminumMoldIceMakerRakePosition",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_AluminumMoldFreezeIntegrationCount",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_AluminumMoldIceMakerRakeMotor_ResolvedVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_AluminumMoldIceMakerHeaterRelay_ResolvedVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IsolationWaterValve_ResolvedVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_AluminumMoldIceMakerWaterValve_ResolvedVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_AluminumMoldIceMakerSkipFillRequest",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMakerEnabledByUser",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMakerEnabledByGrid",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMakerEnabledByDemandResponse",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_AluminumMoldIceMakerRakeCompletedRevolution",
+         "interval": 60000
+      }      
    ]
 }
