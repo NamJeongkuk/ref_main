@@ -74,7 +74,6 @@ SRC_DIRS:=\
   src/Application/IceMaker \
   src/Application/IceMaker/AluminumMoldIceMaker \
   src/Application/IsolationWaterValve \
-  src/Application/OverrideArbiters \
   src/Application/ParametricData \
   src/Application/Plugins \
   src/Application/Pulldown \

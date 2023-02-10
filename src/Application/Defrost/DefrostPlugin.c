@@ -193,11 +193,11 @@ void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
       convertibleCompartmentStateResolverReady = true;
    }
 
-   bool overrideArbiterReady;
+   bool ambientTemperaturePluginReady;
    DataModel_Read(
       dataModel,
-      Erd_OverrideArbiterReady,
-      &overrideArbiterReady);
+      Erd_AmbientTemperaturePluginReady,
+      &ambientTemperaturePluginReady);
 
    bool gridPluginReady;
    DataModel_Read(
@@ -220,7 +220,7 @@ void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
    uassert(sensorsReadyToBeRead &&
       setpointResolverReady &&
       convertibleCompartmentStateResolverReady &&
-      overrideArbiterReady &&
+      ambientTemperaturePluginReady &&
       gridPluginReady &&
       periodicNvUpdaterReady &&
       sabbathPluginReady);

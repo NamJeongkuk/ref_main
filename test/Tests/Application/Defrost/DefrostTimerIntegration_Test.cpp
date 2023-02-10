@@ -108,7 +108,7 @@ TEST_GROUP(DefrostTimerIntegration)
 
       DataModel_Write(
          dataModel,
-         Erd_OverrideArbiterReady,
+         Erd_AmbientTemperaturePluginReady,
          set);
 
       DataModel_Write(

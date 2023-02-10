@@ -23,6 +23,7 @@
 #include "IceMakerWaterFillMonitor.h"
 #include "SensorFiltering.h"
 #include "ResolvedVoteRelayConnector.h"
+#include "OverrideArbiter.h"
 
 typedef struct
 {
@@ -45,6 +46,10 @@ typedef struct
       SensorFiltering_t moldThermistor;
       ErdResolver_t iceMakerRakeMotorVoteResolver;
       ResolvedVoteRelayConnector_t iceMakerWaterValveRelayConnector;
+
+      OverrideArbiter_t aluminumMoldIceMakerFilteredTemperatureArbiter;
+      OverrideArbiter_t aluminumMoldIceMakerThermistorValidArbiter;
+      OverrideArbiter_t iceMakerEnabledArbiter;
    } _private;
 } AluminumMoldIceMakerPlugin_t;
 

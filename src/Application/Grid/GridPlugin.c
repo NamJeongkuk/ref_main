@@ -104,10 +104,31 @@ static const GridBlockCalculatorConfiguration_t gridBlockCalculatorConfig = {
    .previousGridBlockNumbersErd = Erd_Grid_PreviousBlocks
 };
 
+static const Erd_t gridBlockNumberOverrideRequestErdList[] = {
+   Erd_GridBlockNumberOverrideRequest
+};
+
+static const Erd_t gridBlockNumberOverrideValueErdList[] = {
+   Erd_Grid_BlockNumber,
+   Erd_GridBlockNumberOverrideValue
+};
+
+static const OverrideArbiterConfiguration_t gridBlockNumberOverrideConfiguration = {
+   gridBlockNumberOverrideRequestErdList,
+   gridBlockNumberOverrideValueErdList,
+   Erd_GridBlockNumberOverrideResolved,
+   NUM_ELEMENTS(gridBlockNumberOverrideRequestErdList)
+};
+
 void GridPlugin_Init(
    GridPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
+   OverrideArbiter_Init(
+      &instance->gridBlockNumberArbiter,
+      DataModel_AsDataSource(dataModel),
+      &gridBlockNumberOverrideConfiguration);
+
    bool sensorsReadyToBeRead;
    DataModel_Read(
       dataModel,
@@ -120,13 +141,13 @@ void GridPlugin_Init(
       Erd_SetpointResolverReady,
       &setpointResolverReady);
 
-   bool overrideArbiterReady;
+   bool ambientTemperaturePluginReady;
    DataModel_Read(
       dataModel,
-      Erd_OverrideArbiterReady,
-      &overrideArbiterReady);
+      Erd_AmbientTemperaturePluginReady,
+      &ambientTemperaturePluginReady);
 
-   uassert(sensorsReadyToBeRead && setpointResolverReady & overrideArbiterReady);
+   uassert(sensorsReadyToBeRead && setpointResolverReady && ambientTemperaturePluginReady);
 
    DataModel_Write(
       dataModel,

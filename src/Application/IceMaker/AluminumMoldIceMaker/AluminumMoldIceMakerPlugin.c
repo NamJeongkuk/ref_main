@@ -192,6 +192,72 @@ static const ResolvedVoteRelayConnectorConfiguration_t iceMakerWaterValveRelayCo
    .relayOutputErd = Erd_IceMakerWaterValveRelay
 };
 
+static const Erd_t aluminumMoldIceMakerFilteredTemperatureOverrideRequestErdList[] = {
+   Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideRequest
+};
+
+static const Erd_t aluminumMoldIceMakerFilteredTemperatureValueErdList[] = {
+   Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100,
+   Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100
+};
+
+static const OverrideArbiterConfiguration_t aluminumMoldIceMakerFilteredTemperatureArbiterConfiguration = {
+   aluminumMoldIceMakerFilteredTemperatureOverrideRequestErdList,
+   aluminumMoldIceMakerFilteredTemperatureValueErdList,
+   Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+   NUM_ELEMENTS(aluminumMoldIceMakerFilteredTemperatureOverrideRequestErdList)
+};
+
+static const Erd_t aluminumMoldIceMakerThermistorValidOverrideArbiterRequestErdList[] = {
+   Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideRequest
+};
+
+static const Erd_t aluminumMoldIceMakerThermistorValidValueErdList[] = {
+   Erd_AluminumMoldIceMakerMoldThermistorIsValid,
+   Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideValue
+};
+
+static const OverrideArbiterConfiguration_t aluminumMoldIceMakerThermistorValidArbiterConfiguration = {
+   aluminumMoldIceMakerThermistorValidOverrideArbiterRequestErdList,
+   aluminumMoldIceMakerThermistorValidValueErdList,
+   Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved,
+   NUM_ELEMENTS(aluminumMoldIceMakerThermistorValidOverrideArbiterRequestErdList)
+};
+
+static const Erd_t iceMakerEnabledOverrideRequestErdList[] = {
+   Erd_IceMakerEnabledOverrideRequest
+};
+
+static const Erd_t iceMakerEnabledOverrideValueErdList[] = {
+   Erd_IceMakerEnabledResolved,
+   Erd_IceMakerEnabledOverrideValue
+};
+
+static const OverrideArbiterConfiguration_t iceMakerEnabledOverrideConfiguration = {
+   iceMakerEnabledOverrideRequestErdList,
+   iceMakerEnabledOverrideValueErdList,
+   Erd_IceMakerEnabledOverrideResolved,
+   NUM_ELEMENTS(iceMakerEnabledOverrideRequestErdList)
+};
+
+static void InitializeIceMakerOverrideArbiters(AluminumMoldIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
+{
+   OverrideArbiter_Init(
+      &instance->_private.aluminumMoldIceMakerFilteredTemperatureArbiter,
+      DataModel_AsDataSource(dataModel),
+      &aluminumMoldIceMakerFilteredTemperatureArbiterConfiguration);
+
+   OverrideArbiter_Init(
+      &instance->_private.aluminumMoldIceMakerThermistorValidArbiter,
+      DataModel_AsDataSource(dataModel),
+      &aluminumMoldIceMakerThermistorValidArbiterConfiguration);
+
+   OverrideArbiter_Init(
+      &instance->_private.iceMakerEnabledArbiter,
+      DataModel_AsDataSource(dataModel),
+      &iceMakerEnabledOverrideConfiguration);
+}
+
 static void InitializeErdResolvers(AluminumMoldIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
 {
    ErdResolver_Init(
@@ -218,6 +284,8 @@ static void InitializeErdResolvers(AluminumMoldIceMakerPlugin_t *instance, I_Dat
 void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
 {
    const SensorData_t *sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
+
+   InitializeIceMakerOverrideArbiters(instance, dataModel);
 
    SensorFiltering_Init(
       &instance->_private.moldThermistor,

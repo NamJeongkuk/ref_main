@@ -11,7 +11,6 @@
 #include "SabbathPlugin.h"
 #include "DoorPlugin.h"
 #include "FaultWrapperPlugin.h"
-#include "OverrideArbiterPlugin.h"
 
 static const ApplianceApiResetDiagnosticsConfiguration_t applianceApiResetDiagnosticsConfiguration = {
    .resetReasonErd = Erd_ResetReason,
@@ -36,7 +35,6 @@ void Application_Init(
    InitializePlatformParametricErds(dataModel);
 
    ShiftOffsetCalculatorCommonPlugin_Init(&instance->_private.shiftOffsetCalculatorCommonPlugin, dataModel);
-   OverrideArbiterPlugin_Init(dataModel);
 
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
    SabbathPlugin_Init(dataModel);
