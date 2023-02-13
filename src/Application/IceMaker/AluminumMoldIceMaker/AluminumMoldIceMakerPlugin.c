@@ -24,7 +24,7 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState,
    .iceMakerWaterValveVoteErd = Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
    .iceMakerHeaterVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
-   .iceMakerMotorVoteErd = Erd_AluminumMoldIceMakerMotor_IceMakerVote,
+   .iceMakerMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
    .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
    .feelerArmMonitoringRequestErd = Erd_FeelerArmMonitoringRequest,
    .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
@@ -83,17 +83,6 @@ static const HeaterVotedState_t defaultHeaterData = {
    .care = Vote_DontCare
 };
 
-static bool MotorVotingErdCareDelegate(const void *votingErdData)
-{
-   const AluminumMoldIceMakerMotorVotedState_t *data = votingErdData;
-   return (data->care);
-}
-
-static const AluminumMoldIceMakerMotorVotedState_t defaultMotorData = {
-   .state = MotorState_Off,
-   .care = Vote_DontCare
-};
-
 static bool WaterValveVotingErdCareDelegate(const void *votingErdData)
 {
    const WaterValveVotedState_t *data = votingErdData;
@@ -122,14 +111,6 @@ static const ErdResolverConfiguration_t iceMakerHeaterResolverConfiguration = {
    .winningVoterErd = Erd_AluminumMoldIceMakerHeaterRelay_WinningVoteErd,
    .resolvedStateErd = Erd_AluminumMoldIceMakerHeaterRelay_ResolvedVote,
    .numberOfVotingErds = (Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote - Erd_AluminumMoldIceMakerHeaterRelay_WinningVoteErd)
-};
-
-static const ErdResolverConfiguration_t iceMakerMotorResolverConfiguration = {
-   .votingErdCare = MotorVotingErdCareDelegate,
-   .defaultData = &defaultMotorData,
-   .winningVoterErd = Erd_AluminumMoldIceMakerMotor_WinningVoteErd,
-   .resolvedStateErd = Erd_AluminumMoldIceMakerMotor_ResolvedVote,
-   .numberOfVotingErds = (Erd_AluminumMoldIceMakerMotor_IceMakerVote - Erd_AluminumMoldIceMakerMotor_WinningVoteErd)
 };
 
 static const ErdResolverConfiguration_t iceMakerWaterValveResolverConfiguration = {
@@ -264,11 +245,6 @@ static void InitializeErdResolvers(AluminumMoldIceMakerPlugin_t *instance, I_Dat
       &instance->_private.iceMakerHeaterVoteResolver,
       DataModel_AsDataSource(dataModel),
       &iceMakerHeaterResolverConfiguration);
-
-   ErdResolver_Init(
-      &instance->_private.iceMakerMotorVoteResolver,
-      DataModel_AsDataSource(dataModel),
-      &iceMakerMotorResolverConfiguration);
 
    ErdResolver_Init(
       &instance->_private.iceMakerWaterValveVoteResolver,

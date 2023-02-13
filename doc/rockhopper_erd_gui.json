@@ -1601,13 +1601,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum mold ice maker motor - ice maker vote",
-          "name": "Erd_AluminumMoldIceMakerMotor_IceMakerVote",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
           "displayName": "Aluminum mold ice maker water valve - ice maker vote",
           "name": "Erd_AluminumMoldIceMakerWaterValve_IceMakerVote",
           "read": true,

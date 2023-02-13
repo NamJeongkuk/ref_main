@@ -212,7 +212,7 @@ fdescribe("AluminumMoldIceMaker,", () => {
    };
 
    const theIceMakerMotorShouldBeVoted = async (state) => {
-      const vote = await rockhopper.read("Erd_AluminumMoldIceMakerMotor_IceMakerVote");
+      const vote = await rockhopper.read("Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote");
       expect(vote.state).toEqual(state);
       expect(vote.care).toEqual(voteCare.care);
    };
