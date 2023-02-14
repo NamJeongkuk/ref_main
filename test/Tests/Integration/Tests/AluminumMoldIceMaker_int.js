@@ -17,7 +17,7 @@ Erd_IceMakerEnabledOverrideValue
 Flash board with DEBUG=Y for time acceleration to work
 */
 
-fdescribe("AluminumMoldIceMaker,", () => {
+describe("AluminumMoldIceMaker,", () => {
    const aLittleBitMoreThanAMinuteAccelerationDelayInSeconds = 65;
    const aLittleBitAccelerationDelayInSeconds = 10;
 

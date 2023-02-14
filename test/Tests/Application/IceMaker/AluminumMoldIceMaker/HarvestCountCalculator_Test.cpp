@@ -23,11 +23,14 @@ extern "C"
    (aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100 -           \
       aluminumMoldIceMakerData->freezeData.freezeIntegrationLimitInDegFx100TimesSeconds / (aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes * SECONDS_PER_MINUTE))
 
+#define TemperatureBelowFreezeIntegrationTemperature 3000
+
 static const HarvestCountCalculatorConfiguration_t config = {
    .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
    .iceMakerFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
-   .aluminumMoldFreezeIntegrationCountErd = Erd_AluminumMoldFreezeIntegrationCount
+   .aluminumMoldFreezeIntegrationCountErd = Erd_AluminumMoldFreezeIntegrationCount,
+   .aluminumMoldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes
 };
 
 TEST_GROUP(HarvestCountCalculator)
@@ -95,6 +98,13 @@ TEST_GROUP(HarvestCountCalculator)
       uint32_t actualCount;
       DataModel_Read(dataModel, Erd_AluminumMoldFreezeIntegrationCount, &actualCount);
       CHECK_EQUAL(expectedCount, actualCount);
+   }
+
+   void MinimumFreezeTimeCounterInMinutesShouldBe(uint8_t expected)
+   {
+      uint8_t actual;
+      DataModel_Read(dataModel, Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes, &actual);
+      CHECK_EQUAL(expected, actual);
    }
 };
 
@@ -166,6 +176,7 @@ TEST(HarvestCountCalculator, ShouldRestartHarvestCountWhenTemperatureGoesAboveSt
 
    WhenTheIceMakerTemperatureIs(aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100 + 1);
    After(MSEC_PER_SEC);
+   FreezeIntegrationCountShouldBe(0);
    HarvestCountIsReadyToHarvestShouldBe(CLEAR);
 
    WhenTheIceMakerTemperatureIs(TemperatureThatCausesFreezeIntegrationLimitToBeReachedInMinimumFreezeTimeInMinutes);
@@ -226,4 +237,80 @@ TEST(HarvestCountCalculator, ShouldUpdateAluminumFreezeIntegrationCountEverySeco
 
    After(2);
    FreezeIntegrationCountShouldBe(3000);
+}
+
+TEST(HarvestCountCalculator, ShouldIncrementFreezeTimeCounterUntilMinimumFreezeTimeIsSatisfied)
+{
+   GivenTheIceMakerTemperatureIs(TemperatureThatCausesFreezeIntegrationLimitToBeReachedInMinimumFreezeTimeInMinutes);
+   GivenTheModuleIsInitialized();
+   GivenTheHarvestCountCalculationRequestIs(SET);
+
+   MinimumFreezeTimeCounterInMinutesShouldBe(0);
+
+   for(uint8_t i = 1; i <= aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes; i++)
+   {
+      After(MSEC_PER_MIN - 1);
+      MinimumFreezeTimeCounterInMinutesShouldBe(i - 1);
+      After(1);
+      MinimumFreezeTimeCounterInMinutesShouldBe(i);
+   }
+
+   HarvestCountIsReadyToHarvestShouldBe(SET);
+
+   After(MSEC_PER_MIN);
+   MinimumFreezeTimeCounterInMinutesShouldBe(aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes);
+}
+
+TEST(HarvestCountCalculator, ShouldIncrementFreezeTimeCounterIfFreezingAfterMinimumFreezeTimeIsSatisfied)
+{
+   GivenTheIceMakerTemperatureIs(TemperatureBelowFreezeIntegrationTemperature);
+   GivenTheModuleIsInitialized();
+   GivenTheHarvestCountCalculationRequestIs(SET);
+
+   After(aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes * MSEC_PER_MIN);
+   MinimumFreezeTimeCounterInMinutesShouldBe(aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes);
+
+   After(MSEC_PER_MIN * 3);
+   MinimumFreezeTimeCounterInMinutesShouldBe(aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes + 3);
+}
+
+TEST(HarvestCountCalculator, FreezeTimeCounterShouldNotExceedUINT8_MAX)
+{
+   GivenTheIceMakerTemperatureIs(aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100);
+   GivenTheModuleIsInitialized();
+   GivenTheHarvestCountCalculationRequestIs(SET);
+
+   After((UINT8_MAX + 1) * MSEC_PER_MIN);
+   MinimumFreezeTimeCounterInMinutesShouldBe(UINT8_MAX);
+}
+
+TEST(HarvestCountCalculator, ShouldClearFreezeTimeCounterIfIceMakerTemperatureExceedsStartIntegrationTemperature)
+{
+   GivenTheIceMakerTemperatureIs(aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100);
+   GivenTheModuleIsInitialized();
+   GivenTheHarvestCountCalculationRequestIs(SET);
+
+   After(MSEC_PER_MIN);
+   MinimumFreezeTimeCounterInMinutesShouldBe(1);
+
+   WhenTheIceMakerTemperatureIs(aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100 + 1);
+   After(MSEC_PER_SEC);
+   MinimumFreezeTimeCounterInMinutesShouldBe(0);
+}
+
+TEST(HarvestCountCalculator, ShouldMaintainFreezeTimeCounterIfHarvestCountCalculationRequestIsClearedAndResetFreezeTimeCounterWhenSet)
+{
+   GivenTheIceMakerTemperatureIs(aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100);
+   GivenTheModuleIsInitialized();
+   GivenTheHarvestCountCalculationRequestIs(SET);
+
+   After(MSEC_PER_MIN);
+   MinimumFreezeTimeCounterInMinutesShouldBe(1);
+
+   GivenTheHarvestCountCalculationRequestIs(CLEAR);
+   After(MSEC_PER_MIN);
+   MinimumFreezeTimeCounterInMinutesShouldBe(1);
+
+   GivenTheHarvestCountCalculationRequestIs(SET);
+   MinimumFreezeTimeCounterInMinutesShouldBe(0);
 }

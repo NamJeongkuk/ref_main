@@ -56,7 +56,8 @@ static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig 
    .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
    .iceMakerFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
-   .aluminumMoldFreezeIntegrationCountErd = Erd_AluminumMoldFreezeIntegrationCount
+   .aluminumMoldFreezeIntegrationCountErd = Erd_AluminumMoldFreezeIntegrationCount,
+   .aluminumMoldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes
 };
 
 static const Erd_t enableErdsList[] = {

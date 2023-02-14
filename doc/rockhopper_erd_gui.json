@@ -1580,6 +1580,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Freeze Time Counter In Minutes",
+          "name": "Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
           "displayName": "Ice maker enabled by user",
           "name": "Erd_IceMakerEnabledByUser",
           "read": true,

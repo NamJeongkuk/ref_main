@@ -642,6 +642,7 @@ enum
    ENTRY(Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,0xF1D1, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerStopFillSignal,            0xF1D2, Signal_t,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldFreezeIntegrationCount,            0xF1D3, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes,  0xF1D4, uint8_t,                                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_IceMakerEnabledOverrideRequest,                0xF1E0, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMakerEnabledOverrideValue,                  0xF1E1, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

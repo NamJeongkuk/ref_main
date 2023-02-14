@@ -21,27 +21,58 @@ static TemperatureDegFx100_t IceMakerTemperature(HarvestCountCalculator_t *insta
    return temperature;
 }
 
-static void MinimumFreezeTimerExpired(void *context)
-{
-   HarvestCountCalculator_t *instance = context;
-   instance->_private.minimumFreezeTimerIsExpired = true;
-}
-
-static void StartMinimumFreezeTimer(HarvestCountCalculator_t *instance)
-{
-   TimerModule_StartOneShot(
-      DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, Erd_TimerModule),
-      &instance->_private.minimumFreezeTimer,
-      instance->_private.aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes * MSEC_PER_MIN,
-      MinimumFreezeTimerExpired,
-      instance);
-}
-
 static void StopMinimumFreezeTimer(HarvestCountCalculator_t *instance)
 {
    TimerModule_Stop(
       DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, Erd_TimerModule),
       &instance->_private.minimumFreezeTimer);
+}
+
+static void IncrementMinimumFreezeTimerCounter(void *context)
+{
+   HarvestCountCalculator_t *instance = context;
+   uint8_t currentFreezeTime;
+
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->aluminumMoldIceMakerMinimumFreezeTimeCounterInMinutesErd,
+      &currentFreezeTime);
+
+   currentFreezeTime++;
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->aluminumMoldIceMakerMinimumFreezeTimeCounterInMinutesErd,
+      &currentFreezeTime);
+
+   if(currentFreezeTime >= instance->_private.aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes)
+   {
+      instance->_private.minimumFreezeTimeIsSatisfied = true;
+   }
+
+   if(currentFreezeTime == UINT8_MAX)
+   {
+      StopMinimumFreezeTimer(instance);
+   }
+}
+
+static void StartMinimumFreezeTimer(HarvestCountCalculator_t *instance)
+{
+   TimerModule_StartPeriodic(
+      DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, Erd_TimerModule),
+      &instance->_private.minimumFreezeTimer,
+      MSEC_PER_MIN,
+      IncrementMinimumFreezeTimerCounter,
+      instance);
+}
+
+static void ClearMinimumFreezeTimeCounter(HarvestCountCalculator_t *instance)
+{
+   uint8_t clearVal = 0;
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->aluminumMoldIceMakerMinimumFreezeTimeCounterInMinutesErd,
+      &clearVal);
 }
 
 static void StopHarvestCountTimer(HarvestCountCalculator_t *instance)
@@ -64,7 +95,7 @@ static void CalculateHarvestCount(void *context)
    if(iceMakerTemperature <= instance->_private.aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100)
    {
       if(!TimerModule_IsRunning(DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, Erd_TimerModule), &instance->_private.minimumFreezeTimer) &&
-         !instance->_private.minimumFreezeTimerIsExpired)
+         !instance->_private.minimumFreezeTimeIsSatisfied)
       {
          StartMinimumFreezeTimer(instance);
       }
@@ -72,7 +103,7 @@ static void CalculateHarvestCount(void *context)
       integrationCount +=
          (instance->_private.aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100 - iceMakerTemperature);
 
-      if(instance->_private.minimumFreezeTimerIsExpired &&
+      if(instance->_private.minimumFreezeTimeIsSatisfied &&
          (integrationCount >= instance->_private.aluminumMoldIceMakerData->freezeData.freezeIntegrationLimitInDegFx100TimesSeconds))
       {
          DataModel_Write(
@@ -80,13 +111,15 @@ static void CalculateHarvestCount(void *context)
             instance->_private.config->harvestCountIsReadyToHarvestErd,
             set);
          StopHarvestCountTimer(instance);
+         StopMinimumFreezeTimer(instance);
       }
    }
    else
    {
       StopMinimumFreezeTimer(instance);
+      ClearMinimumFreezeTimeCounter(instance);
       integrationCount = 0;
-      instance->_private.minimumFreezeTimerIsExpired = false;
+      instance->_private.minimumFreezeTimeIsSatisfied = false;
    }
 
    DataModel_Write(
@@ -115,12 +148,13 @@ static void HarvestCountCalculationRequestChanged(void *context, const void *arg
       uint32_t integrationCount = 0;
 
       DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->aluminumMoldFreezeIntegrationCountErd,
-      &integrationCount);
+         instance->_private.dataModel,
+         instance->_private.config->aluminumMoldFreezeIntegrationCountErd,
+         &integrationCount);
 
-      instance->_private.minimumFreezeTimerIsExpired = false;
+      instance->_private.minimumFreezeTimeIsSatisfied = false;
 
+      ClearMinimumFreezeTimeCounter(instance);
       CalculateHarvestCount(instance);
       StartPeriodicTimerForHarvestCount(instance);
    }
