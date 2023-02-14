@@ -151,6 +151,8 @@ void Grid_SingleEvap(void *context)
    bool pullDownActive = GetPulldownActive(dataModel);
    bool compressorTripMitigationActive = GetCompressorTripMitigationActive(dataModel);
 
+   DataModel_Write(dataModel, Erd_IceMakerEnabledByGrid, enabled);
+
    switch(blockNumber)
    {
       case 0:

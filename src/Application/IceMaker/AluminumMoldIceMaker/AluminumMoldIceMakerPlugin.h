@@ -46,7 +46,7 @@ typedef struct
       SensorFiltering_t moldThermistor;
       ErdResolver_t iceMakerRakeMotorVoteResolver;
       ResolvedVoteRelayConnector_t iceMakerWaterValveRelayConnector;
-
+      ResolvedVoteRelayConnector_t heaterRelayConnector;
       OverrideArbiter_t aluminumMoldIceMakerFilteredTemperatureArbiter;
       OverrideArbiter_t aluminumMoldIceMakerThermistorValidArbiter;
       OverrideArbiter_t iceMakerEnabledArbiter;

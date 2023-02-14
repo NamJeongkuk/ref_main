@@ -630,7 +630,6 @@ enum
    ENTRY(Erd_FeelerArmIsReadyToEnterHarvest,                0xF1C4, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMakerEnabledByUser,                         0xF1C5, bool,                                               Swap_N, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_IceMakerEnabledByGrid,                         0xF1C6, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_IceMakerEnabledByDemandResponse,               0xF1C7, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMakerEnabledResolved,                       0xF1C8, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerFeelerArmPosition,         0xF1C9, FeelerArmPosition_t,                                Swap_N, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerMoldHeaterControlRequest,  0xF1CA, IceMakerMoldHeaterControlRequest_t,                 Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \

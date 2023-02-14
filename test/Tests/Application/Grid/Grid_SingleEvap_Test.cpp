@@ -113,6 +113,13 @@ TEST_GROUP(Grid_SingleEvap_Test)
       DataModel_Write(dataModel, Erd_GridArea, &gridArea);
    }
 
+   void TheIceMakerEnableShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_IceMakerEnabledByGrid, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
    void GridVotesShouldBe(
       CompressorSpeed_t expectedCompressorSpeed,
       FanSpeed_t expectedCondenserFanSpeed,
@@ -937,4 +944,15 @@ TEST(Grid_SingleEvap_Test, ShouldVoteAllOffIfInvalidSearchWasPerformed)
    When The GridIsRun();
 
    GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Off, DamperPosition_Closed);
+}
+
+TEST(Grid_SingleEvap_Test, IceMakerShouldBeEnabledByGrid)
+{
+   for(GridBlockNumber_t gridBlockNumber = 0; gridBlockNumber <= 48; gridBlockNumber++)
+   {
+      Given GridBlockIs(gridBlockNumber);
+      When The GridIsRun();
+
+      TheIceMakerEnableShouldBe(ON);
+   }
 }

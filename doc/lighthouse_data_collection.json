@@ -333,13 +333,8 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_IceMakerEnabledByDemandResponse",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
          "name": "Erd_AluminumMoldIceMakerRakeCompletedRevolution",
          "interval": 60000
-      }      
+      }
    ]
 }

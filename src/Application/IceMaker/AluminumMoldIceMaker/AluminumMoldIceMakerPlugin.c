@@ -60,7 +60,7 @@ static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig 
 };
 
 static const Erd_t enableErdsList[] = {
-   Erd_IceMakerEnabledByUser, Erd_IceMakerEnabledByGrid, Erd_IceMakerEnabledByDemandResponse
+   Erd_IceMakerEnabledByUser, Erd_IceMakerEnabledByGrid
 };
 
 static const ErdLogicServiceConfigurationEntry_t configurationEntries[] = {
@@ -187,6 +187,11 @@ static const OverrideArbiterConfiguration_t aluminumMoldIceMakerFilteredTemperat
    aluminumMoldIceMakerFilteredTemperatureValueErdList,
    Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    NUM_ELEMENTS(aluminumMoldIceMakerFilteredTemperatureOverrideRequestErdList)
+};
+
+static const ResolvedVoteRelayConnectorConfiguration_t heaterRelayConnectorConfiguration = {
+   .resolvedRelayVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_ResolvedVote,
+   .relayOutputErd = Erd_AluminumMoldIceMakerHeaterRelay
 };
 
 static const Erd_t aluminumMoldIceMakerThermistorValidOverrideArbiterRequestErdList[] = {
@@ -321,6 +326,11 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
       dataModel,
       &iceMakerMoldHeaterControllerConfig,
       &PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData->harvestData);
+
+   ResolvedVoteRelayConnector_Init(
+      &instance->_private.heaterRelayConnector,
+      dataModel,
+      &heaterRelayConnectorConfiguration);
 
    IceMakerWaterFillMonitor_Init(
       &instance->_private.iceMakerFillMonitor,

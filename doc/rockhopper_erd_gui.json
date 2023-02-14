@@ -1594,13 +1594,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Ice maker enabled by demand response",
-          "name": "Erd_IceMakerEnabledByDemandResponse",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Ice maker enabled resolved",
           "name": "Erd_IceMakerEnabledResolved",
           "read": true,
