@@ -53,6 +53,12 @@ TEST_GROUP(FreshFoodDamperRequestManager)
       FreshFoodDamperRequestManager_Init(&instance, dataModelDouble.dataModel, &config);
    }
 
+   void GivenTheModuleIsInitializedAndHomingIsComplete()
+   {
+      TheModuleIsInitialized();
+      StepsAreSetToZero();
+   }
+
    void HomingErdIsSetTo(bool status)
    {
       DataModel_Write(
@@ -114,6 +120,11 @@ TEST_GROUP(FreshFoodDamperRequestManager)
          dataModelDouble.dataModel,
          Erd_FreshFoodDamperStepperMotorPositionRequest,
          &position);
+   }
+
+   void TheDamperCompletesPositionChange()
+   {
+      StepsAreSetToZero();
    }
 
    void TheRequestedPositionIs(DamperPosition_t position)
@@ -180,7 +191,7 @@ TEST(FreshFoodDamperRequestManager, ShouldSetMotorStepsToOpenAndDirectionToClock
 {
    Given TheRequestedPositionIs(DamperPosition_Closed);
    And TheModuleIsInitialized();
-   StepsAreSetToZero();
+   And TheDamperCompletesPositionChange();
    And TheRequestedPositionIs(DamperPosition_Open);
 
    DamperMotorRequestedStepsShouldBe(StepsToOpen);
@@ -189,8 +200,7 @@ TEST(FreshFoodDamperRequestManager, ShouldSetMotorStepsToOpenAndDirectionToClock
 
 TEST(FreshFoodDamperRequestManager, ShouldSetMotorStepsToCloseAndDirectionToCounterClockwiseWhenClosedPositionRequested)
 {
-   Given TheModuleIsInitialized();
-   StepsAreSetToZero();
+   GivenTheModuleIsInitializedAndHomingIsComplete();
    When TheRequestedPositionIs(DamperPosition_Closed);
 
    DamperMotorRequestedStepsShouldBe(StepsToClose);
@@ -199,11 +209,10 @@ TEST(FreshFoodDamperRequestManager, ShouldSetMotorStepsToCloseAndDirectionToCoun
 
 TEST(FreshFoodDamperRequestManager, ShouldHandleConsecutiveRequests)
 {
-   Given TheModuleIsInitialized();
-   StepsAreSetToZero();
+   GivenTheModuleIsInitializedAndHomingIsComplete();
    SetHomingFlagFalse();
    And TheRequestedPositionIs(DamperPosition_Open);
-   And StepsAreSetToZero();
+   And TheDamperCompletesPositionChange();
    And TheRequestedPositionIs(DamperPosition_Closed);
 
    DamperMotorRequestedStepsShouldBe(StepsToClose);
@@ -212,8 +221,7 @@ TEST(FreshFoodDamperRequestManager, ShouldHandleConsecutiveRequests)
 
 TEST(FreshFoodDamperRequestManager, ShouldHandleLatestRequestThatOccurredWhileMoving)
 {
-   Given TheModuleIsInitialized();
-   StepsAreSetToZero();
+   GivenTheModuleIsInitializedAndHomingIsComplete();
    SetHomingFlagFalse();
    And TheRequestedPositionIs(DamperPosition_Open);
    And TheRequestedPositionIs(DamperPosition_Closed);
@@ -228,39 +236,47 @@ TEST(FreshFoodDamperRequestManager, ShouldHandleLatestRequestThatOccurredWhileMo
 
 TEST(FreshFoodDamperRequestManager, ShouldSetMotorStepsToHomeAndDirectionToCounterClockwiseWhenHomingIsRequested)
 {
-   Given TheModuleIsInitialized();
-   StepsAreSetToZero();
+   GivenTheModuleIsInitializedAndHomingIsComplete();
    And HomingErdIsSetTo(true);
 
    DamperMotorRequestedStepsShouldBe(StepsToHome);
    DirectionShouldBe(TurningDirection_Clockwise);
 
-   When StepsAreSetToZero();
+   When TheDamperCompletesPositionChange();
    HomingErdShouldBe(false);
 }
 
 TEST(FreshFoodDamperRequestManager, ShouldSetPositionToClosedAfterHoming)
 {
-   Given TheModuleIsInitialized();
-   StepsAreSetToZero();
+   GivenTheModuleIsInitializedAndHomingIsComplete();
    And HomingErdIsSetTo(true);
 
    DamperMotorRequestedStepsShouldBe(StepsToHome);
    DirectionShouldBe(TurningDirection_Clockwise);
 
-   When StepsAreSetToZero();
+   When TheDamperCompletesPositionChange();
    TheCurrentPositionShouldBe(DamperPosition_Closed);
    HomingErdShouldBe(false);
 }
 
 TEST(FreshFoodDamperRequestManager, ShouldOpenCloseThenOpenAgain)
 {
-   Given TheModuleIsInitialized();
-   StepsAreSetToZero();
+   GivenTheModuleIsInitializedAndHomingIsComplete();
    And TheRequestedPositionIs(DamperPosition_Open);
    And TheRequestedPositionIs(DamperPosition_Closed);
    And TheRequestedPositionIs(DamperPosition_Open);
 
    DamperMotorRequestedStepsShouldBe(StepsToOpen);
    DirectionShouldBe(TurningDirection_CounterClockwise);
+}
+
+TEST(FreshFoodDamperRequestManager, ShouldChangeDamperStateAfterDamperCompletesMovement)
+{
+   GivenTheModuleIsInitializedAndHomingIsComplete();
+
+   When TheRequestedPositionIs(DamperPosition_Open);
+   TheCurrentPositionShouldBe(DamperPosition_Closed);
+
+   When TheDamperCompletesPositionChange();
+   TheCurrentPositionShouldBe(DamperPosition_Open);
 }

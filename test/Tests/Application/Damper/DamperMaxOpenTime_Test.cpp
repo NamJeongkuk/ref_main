@@ -15,6 +15,7 @@ extern "C"
 #include "SingleDamperData.h"
 #include "TddPersonality.h"
 #include "DamperVotedPosition.h"
+#include "Vote.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -77,7 +78,7 @@ TEST_GROUP(MaxOpenTime)
       DamperVotedPosition_t actualPosition;
 
       DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_MaxOpenTimeVote, &actualPosition);
-      CHECK_FALSE(actualPosition.care);
+      CHECK_EQUAL(actualPosition.care, Vote_DontCare);
    }
 
    void DamperCareStateShouldBeDamperClosedAndCareTrue()
@@ -85,7 +86,7 @@ TEST_GROUP(MaxOpenTime)
       DamperVotedPosition_t actualPosition;
 
       DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_MaxOpenTimeVote, &actualPosition);
-      CHECK_TRUE(actualPosition.care);
+      CHECK_EQUAL(actualPosition.care, Vote_Care);
       CHECK_EQUAL(actualPosition.position, DamperPosition_Closed);
    }
 };
@@ -187,7 +188,7 @@ TEST_GROUP(MaxOpenTime_Zero)
       DamperVotedPosition_t actualPosition;
 
       DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_MaxOpenTimeVote, &actualPosition);
-      CHECK_FALSE(actualPosition.care);
+      CHECK_EQUAL(actualPosition.care, Vote_DontCare);
    }
 };
 

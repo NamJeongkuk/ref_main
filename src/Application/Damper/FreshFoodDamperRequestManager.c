@@ -85,23 +85,19 @@ static void SetCurrentDamperPositionTo(FreshFoodDamperRequestManager_t *instance
 static void SetCurrentPositionRequestTo(FreshFoodDamperRequestManager_t *instance, DamperVotedPosition_t requestedPosition)
 {
    StepperPositionRequest_t stepRequest = { .direction = TurningDirection_Clockwise, .stepsToMove = 0 };
-   DamperPosition_t damperCurrentPosition = DamperPosition_Closed;
 
    if(requestedPosition.position == DamperPosition_Open)
    {
       stepRequest.direction = TurningDirection_CounterClockwise;
       stepRequest.stepsToMove = instance->_private.freshFoodDamperParametricData->stepsToOpen;
-      damperCurrentPosition = DamperPosition_Open;
    }
    else if(requestedPosition.position == DamperPosition_Closed)
    {
       stepRequest.direction = TurningDirection_Clockwise;
       stepRequest.stepsToMove = instance->_private.freshFoodDamperParametricData->stepsToClose;
-      damperCurrentPosition = DamperPosition_Closed;
    }
 
    SetDamperStepperMotorPositionRequest(instance, stepRequest);
-   SetCurrentDamperPositionTo(instance, damperCurrentPosition);
 }
 
 static void State_Idle(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
@@ -169,6 +165,8 @@ static void State_Moving(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          break;
 
       case Signal_StepRequestCompleted:
+         SetCurrentDamperPositionTo(instance, (CurrentDamperPosition(instance) == DamperPosition_Open) ? DamperPosition_Closed : DamperPosition_Open);
+
          if(instance->_private.homingRequired)
          {
             Fsm_Transition(fsm, State_Homing);

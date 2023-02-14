@@ -77,7 +77,7 @@ static void MaxOpenDamperTimeCheck(DamperMaxOpenTime_t *instance, DamperPosition
 
       StopMaxOpenDamperTimer(instance);
 
-      damperCurrentVotePosition.care = false;
+      damperCurrentVotePosition.care = Vote_DontCare;
       damperCurrentVotePosition.position = DamperPosition_Closed;
 
       SetMaxOpenDamperRequestPositionVote(instance, damperCurrentVotePosition);

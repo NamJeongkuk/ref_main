@@ -12,6 +12,7 @@ extern "C"
 #include "StepperPositionRequest.h"
 #include "utils.h"
 #include "PersonalityParametricData.h"
+#include "EventSubscription.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -70,6 +71,32 @@ static const StepperMotorDriverConfiguration_t config = {
 static bool inputStates[NumberOfPins];
 static bool outputStates[NumberOfPins];
 
+static void DataModelChanged(void *context, const void *_args)
+{
+   IGNORE(context);
+   REINTERPRET(args, _args, const DataModelOnDataChangeArgs_t *);
+
+   if(args->erd == config.stepperMotorPositionRequestErd)
+   {
+      REINTERPRET(positionRequest, args->data, const StepperPositionRequest_t *);
+
+      mock()
+         .actualCall("Stepper Motor Request")
+         .onObject(context)
+         .withParameter("Erd", args->erd)
+         .withParameter("Direction", positionRequest->direction)
+         .withParameter("Steps", positionRequest->stepsToMove);
+   }
+   else if(args->erd == config.motorControlRequestErd)
+   {
+      mock()
+         .actualCall("Motor Control Request")
+         .onObject(context)
+         .withParameter("Erd", args->erd)
+         .withParameter("Data", *(const bool *)args->data);
+   }
+}
+
 TEST_GROUP(StepperMotorDriver)
 {
    StepperMotorDriver_t instance;
@@ -77,6 +104,7 @@ TEST_GROUP(StepperMotorDriver)
    Event_Synchronous_t stepEvent;
    GpioGroup_TestDouble_t gpioGroupDouble;
    const SingleDamperData_t *damperData;
+   EventSubscription_t dataModelOnChangeSubscription;
 
    void setup()
    {
@@ -84,11 +112,16 @@ TEST_GROUP(StepperMotorDriver)
       Event_Synchronous_Init(&stepEvent);
       GpioGroup_TestDouble_Init(&gpioGroupDouble, inputStates, outputStates);
 
+      EventSubscription_Init(&dataModelOnChangeSubscription, NULL, DataModelChanged);
+      Event_Subscribe(dataModelDouble.dataModel->OnDataChange, &dataModelOnChangeSubscription);
+
       damperData = PersonalityParametricData_Get(dataModelDouble.dataModel)->freshFoodDamperData;
    }
 
    void TheModuleIsInitialized()
    {
+      mock().disable();
+
       StepperMotorDriver_Init(
          &instance,
          dataModelDouble.dataModel,
@@ -186,12 +219,40 @@ TEST_GROUP(StepperMotorDriver)
       CHECK_EQUAL(expected, actual);
    }
 
+   void StepperMotorStepRequestShouldBeCleared()
+   {
+      StepperPositionRequest_t actual;
+      DataModel_Read(
+         dataModelDouble.dataModel,
+         config.stepperMotorPositionRequestErd,
+         &actual);
+
+      CHECK_EQUAL(0, actual.stepsToMove);
+   }
+
    void StepperMotorDriveEnableIs(bool state)
    {
       DataModel_Write(
          dataModelDouble.dataModel,
          Erd_FreshFoodDamperStepperMotorDriveEnable,
          &state);
+   }
+
+   void TheMotorShouldBeRequestedTo(bool expectedRequest)
+   {
+      mock()
+         .expectOneCall("Motor Control Request")
+         .withParameter("Erd", config.motorControlRequestErd)
+         .withParameter("Data", expectedRequest);
+   }
+
+   void TheStepRequestShouldBeSetTo(uint16_t expectedSteps)
+   {
+      mock()
+         .expectOneCall("Stepper Motor Request")
+         .withParameter("Erd", config.stepperMotorPositionRequestErd)
+         .withParameter("Steps", expectedSteps)
+         .ignoreOtherParameters();
    }
 };
 
@@ -209,6 +270,7 @@ TEST(StepperMotorDriver, ShouldSetMotorControlRequestWhenStepperMotorDirectionRe
    Given TheModuleIsInitialized();
    WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
 
+   WhenTheRequestedStepsAreSetTo(1);
    WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
    StepperMotorControlRequestShouldBe(SET);
 }
@@ -446,4 +508,29 @@ TEST(StepperMotorDriver, ShouldNotListenToChangesInDirectionRequestWhileRunningG
    WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
    After RunForNSteps(1);
    ThePinsShouldBe(pinState[Position3]);
+}
+
+TEST(StepperMotorDriver, ShouldClearMotorControlRequestThenClearStepRequestWhenCompleted)
+{
+   Given TheModuleIsInitialized();
+   WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
+   WhenTheRequestedStepsAreSetTo(StepsToClose);
+   Given StepperMotorDriveEnableIs(enabled);
+
+   After RunForNSteps(StepsToClose);
+   mock().enable();
+   mock().strictOrder();
+
+   TheMotorShouldBeRequestedTo(0);
+   TheStepRequestShouldBeSetTo(0);
+   After RunForNSteps(1);
+}
+
+TEST(StepperMotorDriver, ShouldNotReactToRequestsForZeroSteps)
+{
+   Given TheModuleIsInitialized();
+   WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
+   WhenTheRequestedStepsAreSetTo(0);
+
+   StepperMotorStepRequestShouldBeCleared();
 }

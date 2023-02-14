@@ -75,12 +75,15 @@ static void ClearStepCountRequest(StepperMotorDriver_t *instance)
 static void OnDamperPositionRequestChange(void *context, const void *args)
 {
    StepperMotorDriver_t *instance = context;
-   IGNORE(args);
+   const StepperPositionRequest_t *positionRequest = args;
 
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->motorControlRequestErd,
-      set);
+   if(positionRequest->stepsToMove > 0)
+   {
+      DataModel_Write(
+         instance->_private.dataModel,
+         instance->_private.config->motorControlRequestErd,
+         set);
+   }
 }
 
 static void GetNextStep(StepperMotorDriver_t *instance)
@@ -130,12 +133,13 @@ static void StepTimeChange(void *context, const void *args)
          &instance->_private.erdChangeSubscription);
 
       SetPinsToPosition(instance, AllOff);
-      ClearStepCountRequest(instance);
 
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->motorControlRequestErd,
          clear);
+
+      ClearStepCountRequest(instance);
    }
    else if(instance->_private.countBetweenSteps < instance->_private.freshFoodDamperParametricData->delayBetweenStepEventsInMs)
    {
