@@ -135,7 +135,7 @@ TEST_GROUP(AluminumMoldIceMaker)
 
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMakerMotor_IceMakerVote,
+         Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
          &vote);
    }
 
