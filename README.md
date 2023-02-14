@@ -11,6 +11,3 @@
 [DG1](https://geappliances.atlassian.net/wiki/spaces/RDR/pages/3292856340/SxS)
 [Prototype wiring diagram](https://geappliances.atlassian.net/wiki/spaces/RDR/pages/3384147977/Prototype+Build)
 
-## Other Repos
-
-[Chinstrap Door Board](https://github.com/geappliances/refrigeration.chinstrap-doorboard)
