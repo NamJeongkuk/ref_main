@@ -101,6 +101,19 @@ TEST_GROUP(AluminumMoldIceMaker)
       CHECK_TRUE(vote.care);
    }
 
+   void IceMakerHeaterVoteIsSet()
+   {
+      HeaterVotedState_t vote = {
+         .state = HeaterState_On,
+         .care = Vote_Care
+      };
+
+      DataModel_Write(
+         dataModel,
+         Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
+         &vote);
+   }
+
    void IceMakerHeaterVoteShouldBe(bool expected)
    {
       HeaterVotedState_t vote;
@@ -111,6 +124,19 @@ TEST_GROUP(AluminumMoldIceMaker)
 
       CHECK_EQUAL(expected, vote.state);
       CHECK_TRUE(vote.care);
+   }
+
+   void IceMakerMotorVoteIsSet()
+   {
+      AluminumMoldIceMakerMotorVotedState_t vote = {
+         .state = MotorState_On,
+         .care = Vote_Care
+      };
+
+      DataModel_Write(
+         dataModel,
+         Erd_AluminumMoldIceMakerMotor_IceMakerVote,
+         &vote);
    }
 
    void IceMakerMotorVoteShouldBe(bool expected)
@@ -247,6 +273,15 @@ TEST_GROUP(AluminumMoldIceMaker)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
    }
 
+   void Given AluminumMoldIceMakerIsInIdleFreezeState()
+   {
+      Given IceMakerIs(DISABLED);
+      Given MoldThermistorIsValid();
+      Given TheRakePositionIs(RakePosition_Home);
+      Given TheModuleIsInitialized();
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+   }
+
    void SabbathIsEnabledAndAluminumMoldIceMakerIsInIdleFreezeState()
    {
       Given IceMakerIs(ENABLED);
@@ -376,7 +411,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       AluminumMoldIceMakerMotorVotedState_t vote = {
          .state = state,
-         .care = true
+         .care = Vote_Care
       };
       DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote, &vote);
    }
@@ -385,7 +420,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       WaterValveVotedState_t vote = {
          .state = state,
-         .care = true
+         .care = Vote_Care
       };
       DataModel_Write(dataModel, Erd_AluminumMoldIceMakerWaterValve_IceMakerVote, &vote);
    }
@@ -651,19 +686,19 @@ TEST(AluminumMoldIceMaker, ShouldGoToFreezeStateOnInitIfSabbathModeIsDisabledAnd
 TEST(AluminumMoldIceMaker, ShouldTurnOffWaterValveOnEntryToFreezeState)
 {
    Given AluminumMoldIceMakerIsInFreezeState();
-   IceMakerWaterValveVoteShouldBe(OFF);
+   IceMakerWaterValveVoteShouldBe(WaterValveState_Off);
 }
 
 TEST(AluminumMoldIceMaker, ShouldTurnOffIceMakerHeaterOnEntryToFreezeState)
 {
    Given AluminumMoldIceMakerIsInFreezeState();
-   IceMakerHeaterVoteShouldBe(OFF);
+   IceMakerHeaterVoteShouldBe(HeaterState_Off);
 }
 
 TEST(AluminumMoldIceMaker, ShouldTurnOffIceMakerMotorOnEntryToFreezeState)
 {
    Given AluminumMoldIceMakerIsInFreezeState();
-   IceMakerMotorVoteShouldBe(OFF);
+   IceMakerMotorVoteShouldBe(MotorState_Off);
 }
 
 TEST(AluminumMoldIceMaker, ShouldRequestToMonitorFeelerArmOnEntryToFreezeState)
@@ -787,6 +822,26 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromIdleFreezeToFreezeWhenSabbathIsDi
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
 }
 
+TEST(AluminumMoldIceMaker, ShouldTransitionFromIdleFreezeToHarvestWhenSabbathIsDisabledWhileRakePositionIsNotHome)
+{
+   Given IceMakerIsDisabledAndAluminumMoldIceMakerIsInIdleFreezeState();
+   Given AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+
+   When TheRakePositionIs(RakePosition_NotHome);
+   When IceMakerIs(ENABLED);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromIdleFreezeToHarvestWhenIceMakerIsEnabledWhileRakePositionIsNotHome)
+{
+   Given SabbathIsEnabledAndAluminumMoldIceMakerIsInIdleFreezeState();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+
+   When TheRakePositionIs(RakePosition_NotHome);
+   When SabbathModeIs(DISABLED);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+}
+
 TEST(AluminumMoldIceMaker, ShouldTransitionFromFreezeToIdleFreezeWhenIceMakerIsDisabled)
 {
    Given AluminumMoldIceMakerIsInFreezeState();
@@ -810,6 +865,27 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromIdleFreezeToFreezeWhenIceMakerIsE
 
    When IceMakerIs(ENABLED);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTurnOffWaterValveOnEntryToIdleFreezeState)
+{
+   Given IceMakerWaterValveVoteIs(WaterValveState_On);
+   Given AluminumMoldIceMakerIsInIdleFreezeState();
+   IceMakerWaterValveVoteShouldBe(WaterValveState_Off);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTurnOffIceMakerHeaterOnEntryToIdleFreezeState)
+{
+   Given IceMakerHeaterVoteIsSet();
+   Given AluminumMoldIceMakerIsInIdleFreezeState();
+   IceMakerHeaterVoteShouldBe(HeaterState_Off);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTurnOffIceMakerMotorOnEntryToIdleFreezeState)
+{
+   Given IceMakerMotorVoteIsSet();
+   Given AluminumMoldIceMakerIsInIdleFreezeState();
+   IceMakerMotorVoteShouldBe(MotorState_Off);
 }
 
 TEST(AluminumMoldIceMaker, ShouldVoteToTurnOnFillTubeHeaterWithFreezeThawFillTubeHeaterDutyCycleOnEntryToHarvest)
@@ -1261,11 +1337,11 @@ TEST(AluminumMoldIceMaker, ShouldVoteToTurnOnIceMakerWaterValveWhenEnteringFillS
 
    When RakeCompletesFullRevolution();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
-   IceMakerWaterValveVoteShouldBe(OFF); // it's voted off in freeze
+   IceMakerWaterValveVoteShouldBe(WaterValveState_Off); // it's voted off in freeze
 
    After(1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
-   IceMakerWaterValveVoteShouldBe(ON);
+   IceMakerWaterValveVoteShouldBe(WaterValveState_On);
 }
 
 TEST(AluminumMoldIceMaker, ShouldVoteToTurnOnIsolationWaterValveWhenEnteringFillState)
@@ -1283,7 +1359,7 @@ TEST(AluminumMoldIceMaker, ShouldVoteToTurnOnIsolationWaterValveWhenEnteringFill
 
    After(1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
-   IsolationIceMakerWaterValveVoteShouldBe(ON);
+   IsolationIceMakerWaterValveVoteShouldBe(WaterValveState_On);
 }
 
 TEST(AluminumMoldIceMaker, ShouldRequestWaterFillMonitoringWhenEnteringFillState)
@@ -1334,21 +1410,21 @@ TEST(AluminumMoldIceMaker, ShouldRequestWaterFillMonitoringWhenEnteringFillState
 TEST(AluminumMoldIceMaker, ShouldVoteToTurnOffIceMakerWaterValveWhenExitingFillState)
 {
    Given AluminumMoldIceMakerIsInFillState();
-   IceMakerWaterValveVoteShouldBe(ON);
+   IceMakerWaterValveVoteShouldBe(WaterValveState_On);
 
    When SabbathModeIs(ENABLED);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
-   IceMakerWaterValveVoteShouldBe(OFF);
+   IceMakerWaterValveVoteShouldBe(WaterValveState_Off);
 }
 
 TEST(AluminumMoldIceMaker, ShouldVoteToTurnOffIsolationWaterValveWhenExitingFillState)
 {
    Given AluminumMoldIceMakerIsInFillState();
-   IsolationIceMakerWaterValveVoteShouldBe(ON);
+   IsolationIceMakerWaterValveVoteShouldBe(WaterValveState_On);
 
    When StopFillSignalChanges();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
-   IsolationIceMakerWaterValveVoteShouldBe(OFF);
+   IsolationIceMakerWaterValveVoteShouldBe(WaterValveState_Off);
 }
 
 TEST(AluminumMoldIceMaker, ShouldIncrementFreezerTriggerIceRateSignalWhenTransitioningToTheFreezeState)
@@ -1356,7 +1432,7 @@ TEST(AluminumMoldIceMaker, ShouldIncrementFreezerTriggerIceRateSignalWhenTransit
    Given IceMakerIs(ENABLED);
    Given SabbathModeIs(ENABLED);
    Given MoldThermistorIsValid();
-   Given TheRakePositionIs(RakePosition_NotHome);
+   Given TheRakePositionIs(RakePosition_Home);
    Given TheModuleIsInitialized();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
    FreezerTriggerIceRateSignalShouldBe(0);
@@ -1365,11 +1441,11 @@ TEST(AluminumMoldIceMaker, ShouldIncrementFreezerTriggerIceRateSignalWhenTransit
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
    FreezerTriggerIceRateSignalShouldBe(1);
 
-   When SabbathModeIs(ENABLED);
+   When IceMakerIs(DISABLED);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
    FreezerTriggerIceRateSignalShouldBe(1);
 
-   When SabbathModeIs(DISABLED);
+   When IceMakerIs(ENABLED);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
    FreezerTriggerIceRateSignalShouldBe(2);
 }

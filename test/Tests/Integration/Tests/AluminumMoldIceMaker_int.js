@@ -131,7 +131,11 @@ fdescribe("AluminumMoldIceMaker,", () => {
          await sabbathModeIsDisabled();
          await iceMakerIsEnabled();
       }
-      else if (state == hsmState.harvest) {
+      else if(state == hsmState.idleFreeze) {
+         await sabbathModeIsEnabled();
+         await iceMakerIsEnabled();
+      }
+      else if(state == hsmState.harvest) {
          await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
          await harvestCountIsNotReadyToHarvest();
          await iceMakerTemperatureIsReadyToHarvest();
@@ -368,7 +372,7 @@ fdescribe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.idleFreeze);
    });
 
-   it("should enter idle freeze state after initialization when Sabbath is disabled and ice maker is disabled", async () => {
+   it("should enter idle freeze state after initialization when Sabbath is enabled and ice maker is disabled", async () => {
       await theMoldThermistorIsValid();
       await sabbathModeIsEnabled();
       await iceMakerIsDisabled();
@@ -382,6 +386,14 @@ fdescribe("AluminumMoldIceMaker,", () => {
       await iceMakerIsDisabled();
       await resetBoard();
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.idleFreeze);
+   });
+
+   it("should turn off loads on entry to idle freeze state", async () => {
+      await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.idleFreeze);
+
+      await theWaterValveShouldBeVoted(waterValveState.off);
+      await theIceMakerHeaterShouldBeVoted(heaterState.off);
+      await theIceMakerMotorShouldBeVoted(motorState.off);
    });
 
    it("should turn off loads on entry to freeze state", async () => {
@@ -662,6 +674,16 @@ fdescribe("AluminumMoldIceMaker,", () => {
       await theFillTubeHeaterVoteAndCareShouldBe(freezeThawFillTubeHeaterDutyCyclePercentage, voteCare.dontCare);
    });
 
+   it("should transition from Idle Freeze to Thermistor Fault when mold thermistor is invalid", async() => {
+      await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.idleFreeze);
+      await theMoldThermistorIsInvalid();
+      await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.idleFreeze);
+
+      await sabbathModeIsDisabled();
+      await iceMakerIsEnabled();
+      await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.thermistorFault);
+   });
+
    it("should transition from Freeze to Thermistor Fault State when mold thermistor is invalid", async () => {
       await theMoldThermistorIsValid();
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
@@ -680,7 +702,7 @@ fdescribe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.thermistorFault);
    });
 
-   it("should transition from Harvest to Thermistor Fault State when mold thermistor is invalid", async () => {
+   it("should transition from Harvest to Thermistor Fault State when mold thermistor is invalid", async() => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
 
       await theMoldThermistorIsInvalid();

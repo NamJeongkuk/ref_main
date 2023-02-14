@@ -210,6 +210,28 @@ static bool SabbathModeIsEnabled(AluminumMoldIceMaker_t *instance)
    return state;
 }
 
+static bool IceMakerIsEnabled(AluminumMoldIceMaker_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->iceMakerEnabledErd,
+      &state);
+
+   return state;
+}
+
+static bool SabbathModeIsDisabled(AluminumMoldIceMaker_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->sabbathModeErd,
+      &state);
+
+   return !state;
+}
+
 static bool IceMakerIsDisabled(AluminumMoldIceMaker_t *instance)
 {
    bool state;
@@ -712,11 +734,29 @@ static bool State_IdleFreeze(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_IdleFreeze);
+         VoteForIceMakerWaterValve(instance, OFF, Vote_Care);
+         VoteForIceMakerHeater(instance, OFF, Vote_Care);
+         VoteForIceMakerMotor(instance, OFF, Vote_Care);
          break;
 
+      case Signal_MoldThermistorIsInvalid:
       case Signal_IceMakerIsEnabled:
       case Signal_SabbathModeDisabled:
-         Hsm_Transition(hsm, State_Freeze);
+         if(SabbathModeIsDisabled(instance) && IceMakerIsEnabled(instance))
+         {
+            if(MoldThermistorIsNotValid(instance))
+            {
+               Hsm_Transition(hsm, State_ThermistorFault);
+            }
+            else if(!RakeIsHome(instance))
+            {
+               Hsm_Transition(hsm, State_Harvest);
+            }
+            else
+            {
+               Hsm_Transition(hsm, State_Freeze);
+            }
+         }
          break;
 
       case Hsm_Exit:
