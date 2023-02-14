@@ -14,7 +14,6 @@
 typedef struct
 {
    GridId_t gridId;
-   uint16_t gridConfigWord;
    DeltaGridLines_t *deltaGridLines;
    uint16_t gridPeriodicRunRateInMSec;
 } GridData_t;
