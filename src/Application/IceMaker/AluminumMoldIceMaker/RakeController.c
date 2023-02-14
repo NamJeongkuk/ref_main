@@ -59,63 +59,22 @@ static void FeelerArmPositionHasBeenBucketFullIsSetTo(
       &state);
 }
 
-static void RakeControlRequestUpdated(void *context, const void *args)
+static void RakeNotHomeTestTimerExpired(void *context)
 {
    RakeController_t *instance = context;
-   const bool *rakeControlRequestIsSet = args;
-
-   if(*rakeControlRequestIsSet)
-   {
-      VoteForRakeMotor(instance, MotorState_On, Vote_Care);
-
-      DataModel_Subscribe(
-         instance->_private.dataModel,
-         instance->_private.config->rakePositionErd,
-         &instance->_private.rakePositionSubscription);
-      DataModel_Subscribe(
-         instance->_private.dataModel,
-         instance->_private.config->feelerArmPositionErd,
-         &instance->_private.feelerArmPositionSubscription);
-   }
-   else
-   {
-      VoteForRakeMotor(instance, MotorState_Off, Vote_Care);
-
-      DataModel_Unsubscribe(
-         instance->_private.dataModel,
-         instance->_private.config->rakePositionErd,
-         &instance->_private.rakePositionSubscription);
-      DataModel_Unsubscribe(
-         instance->_private.dataModel,
-         instance->_private.config->feelerArmPositionErd,
-         &instance->_private.feelerArmPositionSubscription);
-
-      TimerModule_Stop(
-         DataModelErdPointerAccess_GetTimerModule(
-            instance->_private.dataModel,
-            instance->_private.config->timerModuleErd),
-         &instance->_private.rakeNotHomeTestTimer);
-      TimerModule_Stop(
-         DataModelErdPointerAccess_GetTimerModule(
-            instance->_private.dataModel,
-            instance->_private.config->timerModuleErd),
-         &instance->_private.feelerArmBucketFullTestTimer);
-
-      RakeCompletedRevolutionIsSetTo(instance, false);
-      RakePositionHasNotBeenHomeIsSetTo(instance, false);
-      FeelerArmPositionHasBeenBucketFullIsSetTo(instance, false);
-   }
+   RakePositionHasNotBeenHomeIsSetTo(instance, true);
 }
 
-static bool RakePositionIsHome(RakeController_t *instance)
+static void StartRakeIsNotHomeTimer(RakeController_t *instance)
 {
-   RakePosition_t rakePosition;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->rakePositionErd,
-      &rakePosition);
-
-   return (rakePosition == RakePosition_Home);
+   TimerModule_StartOneShot(
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         instance->_private.config->timerModuleErd),
+      &instance->_private.rakeNotHomeTestTimer,
+      instance->_private.harvestData->rakeNotHomeTestTimeInSeconds * MSEC_PER_SEC,
+      RakeNotHomeTestTimerExpired,
+      instance);
 }
 
 static bool RakePositionHasNotBeenHome(RakeController_t *instance)
@@ -140,10 +99,15 @@ static bool FeelerArmPositionHasBeenBucketFull(RakeController_t *instance)
    return state;
 }
 
-static void RakeNotHomeTestTimerExpired(void *context)
+static bool RakePositionIsHome(RakeController_t *instance)
 {
-   RakeController_t *instance = context;
-   RakePositionHasNotBeenHomeIsSetTo(instance, true);
+   RakePosition_t rakePosition;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->rakePositionErd,
+      &rakePosition);
+
+   return (rakePosition == RakePosition_Home);
 }
 
 static bool RakeRevolutionHasCompleted(RakeController_t *instance)
@@ -181,6 +145,87 @@ static void FeelerArmBucketFullTestTimerExpired(void *context)
    StopRakeControlWhenRakeRevolutionHasCompleted(instance);
 }
 
+static void StartBucketIsFullTestTimer(RakeController_t *instance)
+{
+   TimerModule_StartOneShot(
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         instance->_private.config->timerModuleErd),
+      &instance->_private.feelerArmBucketFullTestTimer,
+      instance->_private.harvestData->feelerArmTestTimeInSeconds * MSEC_PER_SEC,
+      FeelerArmBucketFullTestTimerExpired,
+      instance);
+}
+
+static bool BucketIsFull(RakeController_t *instance)
+{
+   FeelerArmPosition_t bucketState;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->feelerArmPositionErd,
+      &bucketState);
+
+   return (bucketState == FeelerArmPosition_BucketFull);
+}
+
+static void RakeControlRequestUpdated(void *context, const void *args)
+{
+   RakeController_t *instance = context;
+   const bool *rakeControlRequestIsSet = args;
+
+   if(*rakeControlRequestIsSet)
+   {
+      VoteForRakeMotor(instance, MotorState_On, Vote_Care);
+
+      DataModel_Subscribe(
+         instance->_private.dataModel,
+         instance->_private.config->rakePositionErd,
+         &instance->_private.rakePositionSubscription);
+      DataModel_Subscribe(
+         instance->_private.dataModel,
+         instance->_private.config->feelerArmPositionErd,
+         &instance->_private.feelerArmPositionSubscription);
+
+      if(!RakePositionIsHome(instance))
+      {
+         StartRakeIsNotHomeTimer(instance);
+      }
+
+      if(BucketIsFull(instance))
+      {
+         StartBucketIsFullTestTimer(instance);
+      }
+   }
+   else
+   {
+      VoteForRakeMotor(instance, MotorState_Off, Vote_Care);
+
+      DataModel_Unsubscribe(
+         instance->_private.dataModel,
+         instance->_private.config->rakePositionErd,
+         &instance->_private.rakePositionSubscription);
+      DataModel_Unsubscribe(
+         instance->_private.dataModel,
+         instance->_private.config->feelerArmPositionErd,
+         &instance->_private.feelerArmPositionSubscription);
+
+      TimerModule_Stop(
+         DataModelErdPointerAccess_GetTimerModule(
+            instance->_private.dataModel,
+            instance->_private.config->timerModuleErd),
+         &instance->_private.rakeNotHomeTestTimer);
+      TimerModule_Stop(
+         DataModelErdPointerAccess_GetTimerModule(
+            instance->_private.dataModel,
+            instance->_private.config->timerModuleErd),
+         &instance->_private.feelerArmBucketFullTestTimer);
+
+      RakeCompletedRevolutionIsSetTo(instance, false);
+      RakePositionHasNotBeenHomeIsSetTo(instance, false);
+      FeelerArmPositionHasBeenBucketFullIsSetTo(instance, false);
+   }
+}
+
 static void RakePositionUpdated(void *context, const void *args)
 {
    RakeController_t *instance = context;
@@ -188,14 +233,7 @@ static void RakePositionUpdated(void *context, const void *args)
 
    if(*rakePosition == RakePosition_NotHome)
    {
-      TimerModule_StartOneShot(
-         DataModelErdPointerAccess_GetTimerModule(
-            instance->_private.dataModel,
-            instance->_private.config->timerModuleErd),
-         &instance->_private.rakeNotHomeTestTimer,
-         instance->_private.harvestData->rakeNotHomeTestTimeInSeconds * MSEC_PER_SEC,
-         RakeNotHomeTestTimerExpired,
-         instance);
+      StartRakeIsNotHomeTimer(instance);
    }
    else
    {
@@ -216,14 +254,7 @@ static void FeelerArmPositionUpdated(void *context, const void *args)
 
    if(*feelerArmPosition == FeelerArmPosition_BucketFull)
    {
-      TimerModule_StartOneShot(
-         DataModelErdPointerAccess_GetTimerModule(
-            instance->_private.dataModel,
-            instance->_private.config->timerModuleErd),
-         &instance->_private.feelerArmBucketFullTestTimer,
-         instance->_private.harvestData->feelerArmTestTimeInSeconds * MSEC_PER_SEC,
-         FeelerArmBucketFullTestTimerExpired,
-         instance);
+      StartBucketIsFullTestTimer(instance);
    }
    else
    {

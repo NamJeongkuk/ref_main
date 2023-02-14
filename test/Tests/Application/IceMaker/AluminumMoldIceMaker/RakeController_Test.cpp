@@ -400,3 +400,21 @@ TEST(RakeController, ShouldNotSetRakePositionHasNotBeenHomeAfterRakeRevolutionCo
    After(harvestData.rakeNotHomeTestTimeInSeconds * MSEC_PER_SEC);
    RakePositionHasNotBeenHomeShouldBe(CLEAR);
 }
+
+TEST(RakeController, ShouldStartNotHomeTimerIfRequestComesInWhileNotHome)
+{
+   Given RakePositionIs(RakePosition_NotHome);
+   Given TheModuleIsInitializedAndRakeControlRequestIsSet();
+
+   After(harvestData.rakeNotHomeTestTimeInSeconds * MSEC_PER_SEC);
+   RakePositionHasNotBeenHomeShouldBe(SET);
+}
+
+TEST(RakeController, ShouldStartFeelerArmPositionHasBeenFullTimerIsRequestComesThroughWhileBucketIsReadingFull)
+{
+   Given FeelerArmPositionIs(FeelerArmPosition_BucketFull);
+   Given TheModuleIsInitializedAndRakeControlRequestIsSet();
+
+   After(harvestData.feelerArmTestTimeInSeconds * MSEC_PER_SEC);
+   FeelerArmPositionHasBeenBucketFullShouldBe(SET);
+}

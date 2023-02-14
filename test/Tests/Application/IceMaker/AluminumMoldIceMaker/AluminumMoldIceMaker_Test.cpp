@@ -1056,7 +1056,7 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToFillStateWhenFillTubeHea
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
 }
 
-TEST(AluminumMoldIceMaker, ShouldClearRakeControllerRequestWhenRakeCompletesFullRevolutionDuringHarvest)
+TEST(AluminumMoldIceMaker, ShouldNotClearRakeControllerRequestUntilAfterWeMoveOnFromHarvest)
 {
    Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
 
@@ -1064,6 +1064,9 @@ TEST(AluminumMoldIceMaker, ShouldClearRakeControllerRequestWhenRakeCompletesFull
    RakeControllerRequestShouldBe(SET);
 
    When RakeCompletesFullRevolution();
+   RakeControllerRequestShouldBe(SET);
+
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
    RakeControllerRequestShouldBe(CLEAR);
 }
 

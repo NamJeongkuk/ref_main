@@ -769,8 +769,6 @@ static bool State_Harvest(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_RakeCompletedRevolution:
-         ClearRakeControllerRequest(instance);
-
          if(FillTubeHeaterTimerHasExpired(instance) ||
             FillTubeHeaterDutyCycleIsZero(instance) ||
             FillTubeHeaterOnTimeIsZero(instance))
