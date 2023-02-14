@@ -53,6 +53,8 @@ void AmbientTemperaturePlugin_Init(AmbientTemperaturePlugin_t *instance, I_DataM
       DataModel_AsDataSource(dataModel),
       &ambientThermistorValidArbiterConfiguration);
 
+   AmbientTemperatureAverage_Init(&instance->ambientTemperatureAverage, dataModel);
+   
    DataModel_Write(
       dataModel,
       Erd_AmbientTemperaturePluginReady,

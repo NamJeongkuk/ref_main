@@ -24,4 +24,6 @@ void SideBySideSingleEvaporatorCoolingSystemPlugin_Init(SideBySideSingleEvaporat
    SideBySideParallelMotorControlPlugin_Init(&instance->_private.sideBySideParallelMotorControlPlugin, dataModel);
    FreshFoodDamperPlugin_Init(&instance->_private.freshFoodDamperPlugin, dataModel);
    SideBySideFanPlugin_Init(&instance->_private.sideBySideFanPlugin, dataModel);
+
+   AmbientTemperaturePlugin_Init(&instance->_private.ambientTemperaturePlugin, dataModel);
 }

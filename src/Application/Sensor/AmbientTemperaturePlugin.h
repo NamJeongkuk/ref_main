@@ -9,12 +9,14 @@
 #define AMBIENTTEMPERATUREPLUGIN_H
 
 #include "I_DataModel.h"
+#include "AmbientTemperatureAverage.h"
 #include "OverrideArbiter.h"
 
 typedef struct
 {
    OverrideArbiter_t ambientFilteredTemperatureArbiter;
    OverrideArbiter_t ambientThermistorValidArbiter;
+   AmbientTemperatureAverage_t ambientTemperatureAverage;
 } AmbientTemperaturePlugin_t;
 
 /*!

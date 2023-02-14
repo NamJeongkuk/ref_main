@@ -1002,6 +1002,20 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Cross Ambient Window Average Temperature",
+          "name": "Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient Filtered Temperature Resolved",
+          "name": "Erd_Ambient_FilteredTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Convertible Compartment Evap Thermistor AdcCount",
           "name": "Erd_ConvertibleCompartmentEvapThermistor_AdcCount",
           "read": true,
