@@ -511,6 +511,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Gpio_CAPTURE_03",
+          "name": "Erd_Gpio_CAPTURE_03",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
           "displayName": "InputCapture_CAPTURE_03",
           "name": "Erd_InputCapture_CAPTURE_03",
           "read": true,
