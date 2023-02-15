@@ -604,7 +604,7 @@
         {
           "namespace": "mb",
           "displayName": "Reset And Count Defrost Compressor On Time Counts And Door Accelerations Request Signal",
-          "name": "Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal",
+          "name": "Erd_ResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal",
           "read": true,
           "write": true
         },

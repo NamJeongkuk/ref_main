@@ -25,7 +25,7 @@ static const DefrostTestRequestHandlerConfiguration_t config = {
    .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
    .nextDefrostTypeErd = Erd_NextDefrostType,
    .useMinimumReadyToDefrostTimeErd = Erd_UseMinimumReadyToDefrostTime,
-   .resetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestErd = Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
+   .resetDefrostCountsErd = Erd_ResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
    .defrostTestRequestStatusErd = Erd_DefrostTestRequestStatus,
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill
 };
@@ -122,7 +122,7 @@ TEST_GROUP(DefrostTestRequestHandler)
    void ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestShouldBeIncremented()
    {
       Signal_t actual;
-      DataModel_Read(dataModel, Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal, &actual);
+      DataModel_Read(dataModel, Erd_ResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal, &actual);
 
       CHECK_EQUAL(1, actual);
    }
@@ -130,7 +130,7 @@ TEST_GROUP(DefrostTestRequestHandler)
    void ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestShouldBeIncrementedAgain()
    {
       Signal_t actual;
-      DataModel_Read(dataModel, Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal, &actual);
+      DataModel_Read(dataModel, Erd_ResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal, &actual);
 
       CHECK_EQUAL(2, actual);
    }

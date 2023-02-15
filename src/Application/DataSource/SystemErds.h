@@ -576,7 +576,7 @@ enum
    ENTRY(Erd_FreshFoodDefrostCount,                         0xF186, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CurrentDefrostType,                            0xF187, DefrostType_t,                                      Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DisableDefrost,                                0xF188, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal, 0xF189, Signal_t,             Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal, 0xF189, Signal_t,                     Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DefrostTestStateRequest,                       0xF18A, DefrostTestStateRequestMessage_t,                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DefrostTestRequestStatus,                      0xF18B, DefrostTestRequest_t,                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \

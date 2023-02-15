@@ -31,7 +31,7 @@ typedef struct
    Erd_t convertibleCompartmentStateErd; // ConvertibleCompartmentState_t
    Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
    Erd_t freezerFilteredTemperatureTooWarmOnPowerUpReadyErd; // bool
-   Erd_t resetAndCountSignalErd; // Signal_t
+   Erd_t resetDefrostCountsErd; // Signal_t
    Erd_t doorAccelerationCounterReadyErd; // bool
    Erd_t timerModuleErd; // TimerModule_t *
 } DoorAccelerationCounterConfiguration_t;
@@ -45,7 +45,6 @@ typedef struct
       Timer_t periodicTimer;
       EventSubscription_t waitingToDefrostSubscription;
       EventSubscription_t resetAndCountSignalSubscription;
-      bool resetAndCountRequested;
       const DoorAccelerationCounterConfiguration_t *config;
       const DefrostData_t *defrostParametricData;
    } _private;

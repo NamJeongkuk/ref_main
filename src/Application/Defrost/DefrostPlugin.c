@@ -71,7 +71,7 @@ static const DefrostCompressorOnTimeCounterConfiguration_t defrostCompressorOnTi
    .defrostCompressorOnTimeCounterFsmStateErd = Erd_DefrostCompressorOnTimeCounterFsmState,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
-   .resetAndCountSignalErd = Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
+   .resetDefrostCountsErd = Erd_ResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
    .defrostCompressorOnTimeCounterReadyErd = Erd_DefrostCompressorOnTimeCounterReady,
    .timerModuleErd = Erd_TimerModule
 };
@@ -96,7 +96,7 @@ static const DoorAccelerationCounterConfiguration_t doorAccelerationCounterConfi
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
-   .resetAndCountSignalErd = Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
+   .resetDefrostCountsErd = Erd_ResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
    .doorAccelerationCounterReadyErd = Erd_DoorAccelerationCounterReady,
    .timerModuleErd = Erd_TimerModule
 };
@@ -150,7 +150,7 @@ static const DefrostTestRequestHandlerConfiguration_t defrostTestRequestHandlerC
    .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
    .nextDefrostTypeErd = Erd_NextDefrostType,
    .useMinimumReadyToDefrostTimeErd = Erd_UseMinimumReadyToDefrostTime,
-   .resetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestErd = Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
+   .resetDefrostCountsErd = Erd_ResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
    .defrostTestRequestStatusErd = Erd_DefrostTestRequestStatus,
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill
 };

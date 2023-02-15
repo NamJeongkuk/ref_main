@@ -64,11 +64,11 @@ static void SetUseMinimumReadyToDefrostTime(DefrostTestRequestHandler_t *instanc
       &useMinimumReadyToDefrostTime);
 }
 
-static void IncrementResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequest(DefrostTestRequestHandler_t *instance)
+static void IncrementResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequest(DefrostTestRequestHandler_t *instance)
 {
    Signal_SendViaErd(
       DataModel_AsDataSource(instance->_private.dataModel),
-      instance->_private.config->resetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestErd);
+      instance->_private.config->resetDefrostCountsErd);
 }
 
 static void SetDisableDefrost(DefrostTestRequestHandler_t *instance, bool disableDefrost)
@@ -145,7 +145,7 @@ static void HandleDefrostTestRequest(void *context, const void *args)
             UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_AhamFreshFoodOnlyPrechill);
             SetNextDefrostType(instance, DefrostType_FreshFood);
             SetUseMinimumReadyToDefrostTime(instance, true);
-            IncrementResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequest(instance);
+            IncrementResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequest(instance);
             break;
 
          case DefrostTestRequest_AhamPrechill:
@@ -153,7 +153,7 @@ static void HandleDefrostTestRequest(void *context, const void *args)
             UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_AhamPrechill);
             SetNextDefrostType(instance, DefrostType_Full);
             SetUseMinimumReadyToDefrostTime(instance, true);
-            IncrementResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequest(instance);
+            IncrementResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequest(instance);
             break;
 
          default:

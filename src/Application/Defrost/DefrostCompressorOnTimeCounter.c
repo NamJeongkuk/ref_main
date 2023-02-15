@@ -25,7 +25,7 @@ enum
    Signal_WaitingToDefrost = Fsm_UserSignalStart,
    Signal_NotWaitingToDefrost,
    Signal_PeriodicTimeout,
-   Signal_ResetAndCount
+   Signal_ResetCompressorOnTimeCount
 };
 
 static void State_Stop(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
@@ -60,12 +60,12 @@ static void WaitingToDefrostChanged(void *context, const void *args)
    }
 }
 
-static void ResetAndCountSignalChanged(void *context, const void *args)
+static void ResetCountsSignalChanged(void *context, const void *args)
 {
    DefrostCompressorOnTimeCounter_t *instance = context;
    IGNORE(args);
 
-   Fsm_SendSignal(&instance->_private.fsm, Signal_ResetAndCount, NULL);
+   Fsm_SendSignal(&instance->_private.fsm, Signal_ResetCompressorOnTimeCount, NULL);
 }
 
 static void ResetCompressorOnTimeInSecondsToZero(DefrostCompressorOnTimeCounter_t *instance)
@@ -145,9 +145,8 @@ static void State_Run(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          }
          break;
 
-      case Signal_ResetAndCount:
-         instance->_private.resetAndCountRequested = true;
-         Fsm_Transition(&instance->_private.fsm, State_Stop);
+      case Signal_ResetCompressorOnTimeCount:
+         ResetCompressorOnTimeInSecondsToZero(instance);
          break;
 
       case Fsm_Exit:
@@ -170,9 +169,8 @@ static void State_Pause(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          Fsm_Transition(&instance->_private.fsm, State_Run);
          break;
 
-      case Signal_ResetAndCount:
-         instance->_private.resetAndCountRequested = true;
-         Fsm_Transition(&instance->_private.fsm, State_Stop);
+      case Signal_ResetCompressorOnTimeCount:
+         ResetCompressorOnTimeInSecondsToZero(instance);
          break;
 
       case Fsm_Exit:
@@ -190,22 +188,13 @@ static void State_Stop(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
       case Fsm_Entry:
          SetFsmStateTo(instance, DefrostCompressorOnTimeCounterFsmState_Stop);
          ResetCompressorOnTimeInSecondsToZero(instance);
-         if(instance->_private.resetAndCountRequested)
-         {
-            Fsm_Transition(&instance->_private.fsm, State_Run);
-         }
          break;
 
       case Signal_WaitingToDefrost:
          Fsm_Transition(&instance->_private.fsm, State_Run);
          break;
 
-      case Signal_ResetAndCount:
-         Fsm_Transition(&instance->_private.fsm, State_Run);
-         break;
-
       case Fsm_Exit:
-         instance->_private.resetAndCountRequested = false;
          break;
    }
 }
@@ -268,10 +257,10 @@ void DefrostCompressorOnTimeCounter_Init(
    EventSubscription_Init(
       &instance->_private.resetAndCountSignalSubscription,
       instance,
-      ResetAndCountSignalChanged);
+      ResetCountsSignalChanged);
    DataModel_Subscribe(
       instance->_private.dataModel,
-      instance->_private.config->resetAndCountSignalErd,
+      instance->_private.config->resetDefrostCountsErd,
       &instance->_private.resetAndCountSignalSubscription);
 
    DataModel_Write(

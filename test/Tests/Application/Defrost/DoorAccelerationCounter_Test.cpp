@@ -56,7 +56,7 @@ static const DoorAccelerationCounterConfiguration_t config = {
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
-   .resetAndCountSignalErd = Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
+   .resetDefrostCountsErd = Erd_ResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
    .doorAccelerationCounterReadyErd = Erd_DoorAccelerationCounterReady,
    .timerModuleErd = Erd_TimerModule
 };
@@ -244,11 +244,11 @@ TEST_GROUP(DoorAccelerationCounter)
       DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmAtPowerUp, &state);
    }
 
-   void ResetAndCountRequestReceived()
+   void ResetRequestReceived()
    {
       Signal_SendViaErd(
          DataModel_AsDataSource(dataModel),
-         Erd_ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal);
+         Erd_ResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal);
    }
 };
 
@@ -612,42 +612,42 @@ TEST(DoorAccelerationCounter, ShouldStopIncrementingWhenConvertibleCompartmentDo
    }
 }
 
-TEST(DoorAccelerationCounter, ShouldTransitionFromPauseToRunAndClearCountsOnResetAndCountRequest)
-{
-   Given FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
-   And FreezerDoorAccelerationIs(SomeFreezerDoorAcceleration);
-   And ConvertibleCompartmentDoorAccelerationIs(SomeConvertibleCompartmentDoorAcceleration);
-   And DoorAccelerationCounterIsInPauseState();
-
-   When ResetAndCountRequestReceived();
-   FreshFoodDoorAccelerationShouldBe(0);
-   FreezerDoorAccelerationShouldBe(0);
-   ConvertibleCompartmentDoorAccelerationShouldBe(0);
-   DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Run);
-}
-
-TEST(DoorAccelerationCounter, ShouldTransitionFromStopToRunAndClearCountsOnResetAndCountRequest)
-{
-   Given FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
-   And FreezerDoorAccelerationIs(SomeFreezerDoorAcceleration);
-   And ConvertibleCompartmentDoorAccelerationIs(SomeConvertibleCompartmentDoorAcceleration);
-   And DoorAccelerationCounterIsInStopState();
-
-   When ResetAndCountRequestReceived();
-   FreshFoodDoorAccelerationShouldBe(0);
-   FreezerDoorAccelerationShouldBe(0);
-   ConvertibleCompartmentDoorAccelerationShouldBe(0);
-   DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Run);
-}
-
-TEST(DoorAccelerationCounter, ShouldClearCountsInRunStateOnResetAndCountRequest)
+TEST(DoorAccelerationCounter, ShouldResetDoorAccelerationsWhenReceivingResetSignalDuringRun)
 {
    Given FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
    And FreezerDoorAccelerationIs(SomeFreezerDoorAcceleration);
    And ConvertibleCompartmentDoorAccelerationIs(SomeConvertibleCompartmentDoorAcceleration);
    And DoorAccelerationCounterIsInRunState();
 
-   When ResetAndCountRequestReceived();
+   When ResetRequestReceived();
+   FreshFoodDoorAccelerationShouldBe(0);
+   FreezerDoorAccelerationShouldBe(0);
+   ConvertibleCompartmentDoorAccelerationShouldBe(0);
+   DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Run);
+}
+
+TEST(DoorAccelerationCounter, ShouldResetDoorAccelerationsWhenReceivingResetSignalDuringPause)
+{
+   Given FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
+   And FreezerDoorAccelerationIs(SomeFreezerDoorAcceleration);
+   And ConvertibleCompartmentDoorAccelerationIs(SomeConvertibleCompartmentDoorAcceleration);
+   And DoorAccelerationCounterIsInPauseState();
+
+   When ResetRequestReceived();
+   FreshFoodDoorAccelerationShouldBe(0);
+   FreezerDoorAccelerationShouldBe(0);
+   ConvertibleCompartmentDoorAccelerationShouldBe(0);
+   DoorAccelerationCounterFsmStateShouldBe(DoorAccelerationCounterFsmState_Pause);
+}
+
+TEST(DoorAccelerationCounter, ShouldClearCountsInRunStateOnResetRequest)
+{
+   Given FreshFoodDoorAccelerationIs(SomeFreshFoodDoorAcceleration);
+   And FreezerDoorAccelerationIs(SomeFreezerDoorAcceleration);
+   And ConvertibleCompartmentDoorAccelerationIs(SomeConvertibleCompartmentDoorAcceleration);
+   And DoorAccelerationCounterIsInRunState();
+
+   When ResetRequestReceived();
    FreshFoodDoorAccelerationShouldBe(0);
    FreezerDoorAccelerationShouldBe(0);
    ConvertibleCompartmentDoorAccelerationShouldBe(0);
