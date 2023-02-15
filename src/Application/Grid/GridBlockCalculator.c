@@ -153,9 +153,10 @@ static void WriteDefaultValuesToPreviousGridBlockErd(GridBlockCalculator_t *inst
 
 static void CopyFifoOrder(GridBlockCalculator_t *instance, PreviousGridBlockNumbers_t *outputBlocks)
 {
-   for(uint8_t i = 0; i < RingBuffer_Count(&instance->_private.ringBuffer); i++)
+   uint8_t j = NumberOfPreviousGridBlocksStored - 1;
+   for(uint8_t i = 0; i < outputBlocks->count; i++)
    {
-      RingBuffer_At(&instance->_private.ringBuffer, &outputBlocks->blockNumbers[i], i);
+      RingBuffer_At(&instance->_private.ringBuffer, &outputBlocks->blockNumbers[j--], i);
    }
 }
 

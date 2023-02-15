@@ -207,7 +207,7 @@ TEST_GROUP(GridBlockCalculator)
          Erd_Grid_PreviousBlocks,
          &previousGridBlockNumbers);
 
-      CHECK_EQUAL(previousGridBlockNumbers.count, expected);
+      CHECK_EQUAL(expected, previousGridBlockNumbers.count);
    }
 
    void PreviousGridBlocksShouldBe(GridBlockNumber_t * expected)
@@ -219,23 +219,23 @@ TEST_GROUP(GridBlockCalculator)
          Erd_Grid_PreviousBlocks,
          &previousGridBlockNumbers);
 
-      MEMCMP_EQUAL(expected, previousGridBlockNumbers.blockNumbers, sizeof(*expected));
+      MEMCMP_EQUAL(expected, previousGridBlockNumbers.blockNumbers, PreviousGridBlockNumbers_MaxBlockNumbers);
    }
 
    void AddBlockToExpectedArray(GridBlockNumber_t * expected, GridBlockNumber_t currentBlockNumber, uint8_t currentBlockCount)
    {
-      if(currentBlockCount >= (NumberOfPreviousGridBlocksStored))
+      if(currentBlockCount >= NumberOfPreviousGridBlocksStored)
       {
          uint8_t i;
-         for(i = 0; i < (NumberOfPreviousGridBlocksStored - 1); i++)
+         for(i = NumberOfPreviousGridBlocksStored - 1; i > 0; i--)
          {
-            expected[i] = expected[i + 1];
+            expected[i] = expected[i - 1];
          }
          expected[i] = currentBlockNumber;
       }
       else
       {
-         expected[currentBlockCount] = currentBlockNumber;
+         expected[(NumberOfPreviousGridBlocksStored - 1) - currentBlockCount] = currentBlockNumber;
       }
    }
 };
@@ -368,9 +368,6 @@ TEST(GridBlockCalculator, ShouldRecalculateBlocksAndAddToPreviousBlocksWhenCalcu
 
    When CalculatedGridLinesAre(differentCalculatedGridLines);
    CurrentGridBlockShouldBe(44);
-
-   AddBlockToExpectedArray(expectedPreviousBlocks, 44, expectedBlockIndex++);
-
    The PreviousGridBlockCountShouldBe(1);
    And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
 }
@@ -397,8 +394,11 @@ TEST(GridBlockCalculator, ShouldNotUpdatePreviousGridBlocksIfGridBlockDoesntChan
    And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
 
    When The FreezerFilteredTemperatureIs(1);
+   CurrentGridBlockShouldBe(31);
    The PreviousGridBlockCountShouldBe(1);
    And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+
+   AddBlockToExpectedArray(expectedPreviousBlocks, 31, expectedBlockIndex++);
 
    When The FreezerFilteredTemperatureIs(5900);
    CurrentGridBlockShouldBe(3);
