@@ -651,6 +651,13 @@
                "name": "Erd_IceMakerEnabledByGrid",
                "read": true,
                "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Minimum Freeze Time Counter (mins)",
+               "name": "Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes",
+               "read": true,
+               "interval": 1000000000
             }
          ]
       },
