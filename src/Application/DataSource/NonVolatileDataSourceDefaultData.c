@@ -21,8 +21,18 @@ void NonVolatileDataSourceDefaultData_BooleanTrue(void *data, size_t dataSize)
    memcpy(data, &constTrue, dataSize);
 }
 
+void NonVolatileDataSourceDefaultData_BooleanFalse(void *data, size_t dataSize)
+{
+   memcpy(data, &constFalse, dataSize);
+}
+
 void NonVolatileDataSourceDefaultData_Code(void *data, size_t dataSize)
 {
    uint32_t code = 0xC0DECAFE;
    memcpy(data, &code, dataSize);
+}
+
+void NonVolatileDataSourceDefaultData_Int8Max(void *data, size_t dataSize)
+{
+   memset(data, INT8_MAX, dataSize);
 }

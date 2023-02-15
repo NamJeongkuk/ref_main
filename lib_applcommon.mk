@@ -20,6 +20,7 @@ applcommon_SRC_DIRS:=\
   $(applcommon_LIB_ROOT)/Allocator \
   $(applcommon_LIB_ROOT)/ApplianceApi \
   $(applcommon_LIB_ROOT)/Audio \
+  $(applcommon_LIB_ROOT)/BootLoopDefender \
   $(applcommon_LIB_ROOT)/Communications/Gea2 \
   $(applcommon_LIB_ROOT)/Communications/Gea2/Commands \
   $(applcommon_LIB_ROOT)/Communications/Gea2/MessageLayer \
@@ -48,12 +49,16 @@ applcommon_SRC_DIRS:=\
   $(applcommon_LIB_ROOT)/Git \
   $(applcommon_LIB_ROOT)/HardwareInterfaces \
   $(applcommon_LIB_ROOT)/HardwareInterfaces/Adapters \
+  $(applcommon_LIB_ROOT)/HardwareInterfaces/Relays \
   $(applcommon_LIB_ROOT)/Image \
   $(applcommon_LIB_ROOT)/KeyManager \
+  $(applcommon_LIB_ROOT)/Mapper \
   $(applcommon_LIB_ROOT)/NonVolatile \
+  $(applcommon_LIB_ROOT)/OverrideArbiter \
   $(applcommon_LIB_ROOT)/RecordStorage \
   $(applcommon_LIB_ROOT)/ResourceWatchdog \
   $(applcommon_LIB_ROOT)/Selector \
+  $(applcommon_LIB_ROOT)/Sha256/ \
   $(applcommon_LIB_ROOT)/Signal \
   $(applcommon_LIB_ROOT)/StateMachines \
   $(applcommon_LIB_ROOT)/Time \

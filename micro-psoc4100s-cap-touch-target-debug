@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-set -e
-
-make -f micro-psoc4100s-cap-touch-target.mk -j8 RELEASE=N DEBUG=Y package

@@ -9,14 +9,14 @@
 #define INPUTGROUP_NONVOLATILEDATASOURCEDEFAULTDATA_H
 
 #include "I_InputGroup.h"
-#include "AsyncDataSource_FlashBlockGroup.h"
+#include "AsyncDataSource_Eeprom.h"
 
 typedef struct
 {
    I_InputGroup_t interface;
    struct
    {
-      const AsyncDataSource_FlashBlockGroupErdInfo_t *erdInfoTable;
+      const AsyncDataSource_EepromErdInfo_t *erdInfoTable;
       uint16_t erdCount;
    } _private;
 } InputGroup_NonVolatileDataSourceDefaultData_t;
@@ -28,7 +28,7 @@ typedef struct
  */
 void InputGroup_NonVolatileDataSourceDefaultData_Init(
    InputGroup_NonVolatileDataSourceDefaultData_t *instance,
-   const AsyncDataSource_FlashBlockGroupErdInfo_t *erdInfoTable,
+   const AsyncDataSource_EepromErdInfo_t *erdInfoTable,
    const uint16_t erdCount);
 
 #endif

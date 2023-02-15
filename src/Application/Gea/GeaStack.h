@@ -61,6 +61,12 @@ typedef struct
       uint8_t subscriptionBuffers[ErdApiV2SubscriptionClients][sizeof(GeaStackPublicErdCount_t) / 4 + 1];
       ConstArrayMap_BinarySearch_t publicErdMap;
       ErdStreamReceiver_t erdStreamReceiver;
+      DataSourcePacketReadWriteManager_Simple_t dataSourceReadWriteManager;
+      DataSourcePacketGea2MessageEndpointConnector_t dataSourceEndpointConnector;
+      DataSourcePacketSubscriptionFrontEnd_Simple_t dataSourceSubscriptionFrontEnd;
+      DataSourcePacketSubscriptionManager_Simple_SubscriptionListItem_t subscriptionList[MaxNumberOfSubscriptions];
+      DataSourcePacketSubscriptionManager_Simple_t dataSourceSubscriptionManager;
+      ErdGea2ReadWriteApiRevision2_t erdApiRevision2;
 
       Gea2Configurator_t configurator;
       Gea2ConfiguratorNode_t applicationNode;
@@ -69,32 +75,10 @@ typedef struct
       struct
       {
          Gea2ConfiguratorNode_t node;
-         Gea2ConfiguratorCustomForegroundSingleWireUartInterfaceNodeResources_t nodeResources;
-         Gea2ConfiguratorStaticRoutingTableResources_t staticRoutingResources;
+         Gea2ConfiguratorDefaultBackgroundSingleWireUartInterfaceNodeResources_t nodeResources;
          Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
          uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
-         struct
-         {
-            uint8_t sendReceiveBuffer[SendReceiveBufferSize];
-            uint8_t sentPacketQueueStorage[PacketQueueStorageSize];
-            uint8_t receivedPacketQueueStorage[PacketQueueStorageSize];
-         } buffers;
-      } singleWire;
-
-      struct
-      {
-         Gea2ConfiguratorNode_t node;
-         Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t nodeResources;
-         Gea2ConfiguratorStaticRoutingTableResources_t staticRoutingResources;
-         Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
-         uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
-         struct
-         {
-            uint8_t sendBuffer[SendBufferSize];
-            uint8_t receiveBuffer[ReceiveBufferSize];
-            uint8_t packetQueueStorage[PacketQueueStorageSize];
-         } buffers;
-      } internal;
+      } gea2Bus;
 
       struct
       {
@@ -102,13 +86,59 @@ typedef struct
          Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t nodeResources;
          Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
          uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
+
          struct
          {
             uint8_t sendBuffer[SendBufferSize];
             uint8_t receiveBuffer[ReceiveBufferSize];
             uint8_t packetQueueStorage[PacketQueueStorageSize];
          } buffers;
-      } external;
+      } wifi;
+
+      struct
+      {
+         Gea2ConfiguratorNode_t node;
+         Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t nodeResources;
+         Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
+         uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
+
+         struct
+         {
+            uint8_t sendBuffer[SendBufferSize];
+            uint8_t receiveBuffer[ReceiveBufferSize];
+            uint8_t packetQueueStorage[PacketQueueStorageSize];
+         } buffers;
+      } factory;
+
+      struct
+      {
+         Gea2ConfiguratorNode_t node;
+         Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t nodeResources;
+         Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
+         uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
+
+         struct
+         {
+            uint8_t sendBuffer[SendBufferSize];
+            uint8_t receiveBuffer[ReceiveBufferSize];
+            uint8_t packetQueueStorage[PacketQueueStorageSize];
+         } buffers;
+      } door;
+
+      struct
+      {
+         Gea2ConfiguratorNode_t node;
+         Gea2ConfiguratorCustomBufferedFullDuplexUartInterfaceNodeResources_t nodeResources;
+         Gea2ConfiguratorDynamicRoutingTableWithReplacementResources_t dynamicRoutingResources;
+         uint8_t dynamicRoutingTable[DynamicRoutingTableBufferSize];
+
+         struct
+         {
+            uint8_t sendBuffer[SendBufferSize];
+            uint8_t receiveBuffer[ReceiveBufferSize];
+            uint8_t packetQueueStorage[PacketQueueStorageSize];
+         } buffers;
+      } caseBus;
 
       struct
       {
@@ -128,13 +158,11 @@ void GeaStack_Init(
    GeaStack_t *instance,
    I_DataModel_t *dataModel,
    I_DataSource_t *externalDataSource,
-   uint8_t geaAddress,
-   const uint8_t *staticRoutingTable,
-   uint8_t staticRoutingTableEntryCount);
+   uint8_t geaAddress);
 
 /*!
  * @param instance
- * @return Gea2 Packet Endpoint
+ * @return
  */
 I_Gea2PacketEndpoint_t *GeaStack_GetGea2PacketEndpoint(GeaStack_t *instance);
 

@@ -8,12 +8,13 @@
 #include "GeaStack.h"
 #include "DataModelErdPointerAccess.h"
 #include "Gea2Message.h"
-#include "Gea2Addresses.h"
+#include "Gea2RefAddresses.h"
 #include "Header.h"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
 #include "XMacroUtils.h"
 #include "uassert.h"
+#include "ContextProtector_Rx2xx.h"
 
 enum
 {
@@ -47,8 +48,8 @@ static const ConstArrayMap_BinarySearchConfiguration_t publicErdMapConfiguration
 };
 
 static const uint8_t rangeRestrictedValidatorRestrictedAddressTable[] = {
-   EmbeddedWiFiGeaAddress,
-   ConnectPlusWiFiGeaAddress
+   Gea2Address_EmbeddedWiFi,
+   Gea2Address_ConnectPlusWiFi
 };
 
 static const Validator_RestrictedRangeErdConfiguration_t restrictedRangeConfiguration = {
@@ -81,31 +82,39 @@ static void InitializeErdSecurityComponents(
 
 static void ConnectGea2MessageEndpointToDataSource(
    GeaStack_t *instance,
-   I_DataModel_t *dataModel,
    I_DataSource_t *externalDataSource)
 {
-   ErdGea2ReadWriteApiRevision2_Init(
-      &instance->_private.erdApiRevision2ReadWrite,
+   // Datasource/ERD handling system and GEA interface
+   DataSourcePacketReadWriteManager_Init(&instance->_private.dataSourceReadWriteManager, externalDataSource);
+   DataSourcePacketSubscriptionManager_Simple_Init(
+      &instance->_private.dataSourceSubscriptionManager,
       externalDataSource,
-      NULL,
-      NULL,
-      &instance->_private.erdSecurity.restrictedErdPacketRestrictor.interface);
+      instance->_private.subscriptionList,
+      MaxNumberOfSubscriptions,
+      MissedAckLimit);
+   DataSourcePacketSubscriptionFrontEnd_Simple_Init(
+      &instance->_private.dataSourceSubscriptionFrontEnd,
+      &instance->_private.dataSourceSubscriptionManager.interface);
 
    ConstArrayMap_BinarySearch_Init(
       &instance->_private.publicErdMap,
       &publicErdMapConfiguration);
 
-   ErdGea2SubscriptionApiRevision2_Init(
-      &instance->_private.erdApiRevision2Subscription,
+   ErdGea2ReadWriteApiRevision2_Init(
+      &instance->_private.erdApiRevision2,
       externalDataSource,
       NULL,
-      &instance->_private.erdSecurity.restrictedErdPacketRestrictor.interface,
-      DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
-      &instance->_private.publicErdMap.interface,
-      instance->_private.subscriptionResources,
-      ErdApiV2SubscriptionClients,
-      &instance->_private.subscriptionBuffers[0][0],
-      sizeof(instance->_private.subscriptionBuffers[0]));
+      NULL,
+      &instance->_private.erdSecurity.restrictedErdPacketRestrictor.interface);
+
+   DataSourcePacketGea2MessageEndpointConnector_Init(
+      &instance->_private.dataSourceEndpointConnector,
+      &instance->_private.messageEndpointAdapter.interface,
+      &instance->_private.dataSourceReadWriteManager.interface,
+      &instance->_private.dataSourceSubscriptionFrontEnd.interface,
+      GEA2MESSAGE_MAXPAYLOAD,
+      RetryCount,
+      RetryCount);
 }
 
 static void CreatePacketAndMessageEndpoints(
@@ -129,130 +138,171 @@ static void CreatePacketAndMessageEndpoints(
    DataModelErdPointerAccess_Write(dataModel, Erd_Gea2MessageEndpoint, &instance->_private.messageEndpointAdapter.interface);
 }
 
-static void CreateSingleWireNode(
+static void CreateGea2Node(
    GeaStack_t *instance,
    I_DataModel_t *dataModel,
    uint8_t geaAddress)
 {
-   I_Uart_t *uart = DataModelErdPointerAccess_GetUart(dataModel, Erd_SingleWireUart);
-   I_ContextProtector_t *contextProtector = DataModelErdPointerAccess_GetContextProtector(dataModel, Erd_ContextProtector);
-
-   if(uart && contextProtector)
-   {
-      Gea2Configurator_CreateCustomForegroundSingleWireUartInterfaceNode(
-         &instance->_private.configurator,
-         &instance->_private.singleWire.node,
-         &instance->_private.singleWire.nodeResources,
-         uart,
-         DataModelErdPointerAccess_GetTimeSource(dataModel, Erd_TimeSource),
-         DataModelErdPointerAccess_GetCrc16Calculator(dataModel, Erd_CrcCalcTable),
-         contextProtector,
-         DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_SystemTickInterrupt),
-         geaAddress,
-         RetryCount,
-         instance->_private.singleWire.buffers.sendReceiveBuffer,
-         sizeof(instance->_private.singleWire.buffers.sendReceiveBuffer),
-         instance->_private.singleWire.buffers.sentPacketQueueStorage,
-         sizeof(instance->_private.singleWire.buffers.sentPacketQueueStorage),
-         instance->_private.singleWire.buffers.receivedPacketQueueStorage,
-         sizeof(instance->_private.singleWire.buffers.receivedPacketQueueStorage));
-
-      Gea2Configurator_AddDynamicRoutingTableWithReplacementToNode(
-         &instance->_private.configurator,
-         &instance->_private.singleWire.node,
-         &instance->_private.singleWire.dynamicRoutingResources,
-         instance->_private.singleWire.dynamicRoutingTable,
-         ELEMENT_COUNT(instance->_private.singleWire.dynamicRoutingTable));
-   }
-}
-
-static void CreateInternalNode(
-   GeaStack_t *instance,
-   I_DataModel_t *dataModel,
-   uint8_t geaAddress,
-   const uint8_t *staticRoutingTable,
-   uint8_t staticRoutingTableEntryCount)
-{
-   I_BufferedUart_t *uart = DataModelErdPointerAccess_GetBufferedUart(dataModel, Erd_InternalBufferedUart);
+   I_Uart_t *uart = DataModelErdPointerAccess_GetUart(dataModel, Erd_Gea2Uart);
 
    if(uart)
    {
-      Gea2Configurator_CreateCustomBufferedFullDuplexUartInterfaceNode(
+      Gea2Configurator_CreateDefaultBackgroundSingleWireUartInterfaceNode(
          &instance->_private.configurator,
-         &instance->_private.internal.node,
-         &instance->_private.internal.nodeResources,
+         &instance->_private.gea2Bus.node,
+         &instance->_private.gea2Bus.nodeResources,
          uart,
+         DataModelErdPointerAccess_GetTimeSource(dataModel, Erd_TimeSource),
          DataModelErdPointerAccess_GetCrc16Calculator(dataModel, Erd_CrcCalcTable),
-         geaAddress,
-         RetryCount,
-         instance->_private.internal.buffers.sendBuffer,
-         sizeof(instance->_private.internal.buffers.sendBuffer),
-         instance->_private.internal.buffers.receiveBuffer,
-         sizeof(instance->_private.internal.buffers.receiveBuffer),
-         instance->_private.internal.buffers.packetQueueStorage,
-         sizeof(instance->_private.internal.buffers.packetQueueStorage));
+         geaAddress);
 
       Gea2Configurator_AddDynamicRoutingTableWithReplacementToNode(
          &instance->_private.configurator,
-         &instance->_private.internal.node,
-         &instance->_private.internal.dynamicRoutingResources,
-         instance->_private.internal.dynamicRoutingTable,
-         ELEMENT_COUNT(instance->_private.internal.dynamicRoutingTable));
-
-      Gea2Configurator_AddStaticRoutingTableToNode(
-         &instance->_private.configurator,
-         &instance->_private.internal.node,
-         &instance->_private.internal.staticRoutingResources,
-         staticRoutingTable,
-         staticRoutingTableEntryCount);
+         &instance->_private.gea2Bus.node,
+         &instance->_private.gea2Bus.dynamicRoutingResources,
+         instance->_private.gea2Bus.dynamicRoutingTable,
+         ELEMENT_COUNT(instance->_private.gea2Bus.dynamicRoutingTable));
    }
 }
 
-static void CreateExternalNode(
+static void CreateWifiNode(
    GeaStack_t *instance,
    I_DataModel_t *dataModel,
    uint8_t geaAddress)
 {
+   I_BufferedUart_t *bufferedUart = DataModelErdPointerAccess_GetBufferedUart(dataModel, Erd_WifiBufferedUart);
+
    Gea2Configurator_CreateCustomBufferedFullDuplexUartInterfaceNode(
       &instance->_private.configurator,
-      &instance->_private.external.node,
-      &instance->_private.external.nodeResources,
-      DataModelErdPointerAccess_GetBufferedUart(dataModel, Erd_ExternalBufferedUart),
+      &instance->_private.wifi.node,
+      &instance->_private.wifi.nodeResources,
+      bufferedUart,
       DataModelErdPointerAccess_GetCrc16Calculator(dataModel, Erd_CrcCalcTable),
       geaAddress,
       RetryCount,
-      instance->_private.external.buffers.sendBuffer,
-      sizeof(instance->_private.external.buffers.sendBuffer),
-      instance->_private.external.buffers.receiveBuffer,
-      sizeof(instance->_private.external.buffers.receiveBuffer),
-      instance->_private.external.buffers.packetQueueStorage,
-      sizeof(instance->_private.external.buffers.packetQueueStorage));
+      instance->_private.wifi.buffers.sendBuffer,
+      sizeof(instance->_private.wifi.buffers.sendBuffer),
+      instance->_private.wifi.buffers.receiveBuffer,
+      sizeof(instance->_private.wifi.buffers.receiveBuffer),
+      instance->_private.wifi.buffers.packetQueueStorage,
+      sizeof(instance->_private.wifi.buffers.packetQueueStorage));
 
    Gea2Configurator_AddDynamicRoutingTableWithReplacementToNode(
       &instance->_private.configurator,
-      &instance->_private.external.node,
-      &instance->_private.external.dynamicRoutingResources,
-      instance->_private.external.dynamicRoutingTable,
-      ELEMENT_COUNT(instance->_private.external.dynamicRoutingTable));
+      &instance->_private.wifi.node,
+      &instance->_private.wifi.dynamicRoutingResources,
+      instance->_private.wifi.dynamicRoutingTable,
+      ELEMENT_COUNT(instance->_private.wifi.dynamicRoutingTable));
+}
+
+static void CreateFactoryNode(
+   GeaStack_t *instance,
+   I_DataModel_t *dataModel,
+   uint8_t geaAddress)
+{
+   I_BufferedUart_t *bufferedUart = DataModelErdPointerAccess_GetBufferedUart(dataModel, Erd_FactoryBufferedUart);
+
+   Gea2Configurator_CreateCustomBufferedFullDuplexUartInterfaceNode(
+      &instance->_private.configurator,
+      &instance->_private.factory.node,
+      &instance->_private.factory.nodeResources,
+      bufferedUart,
+      DataModelErdPointerAccess_GetCrc16Calculator(dataModel, Erd_CrcCalcTable),
+      geaAddress,
+      RetryCount,
+      instance->_private.factory.buffers.sendBuffer,
+      sizeof(instance->_private.factory.buffers.sendBuffer),
+      instance->_private.factory.buffers.receiveBuffer,
+      sizeof(instance->_private.factory.buffers.receiveBuffer),
+      instance->_private.factory.buffers.packetQueueStorage,
+      sizeof(instance->_private.factory.buffers.packetQueueStorage));
+
+   Gea2Configurator_AddDynamicRoutingTableWithReplacementToNode(
+      &instance->_private.configurator,
+      &instance->_private.factory.node,
+      &instance->_private.factory.dynamicRoutingResources,
+      instance->_private.factory.dynamicRoutingTable,
+      ELEMENT_COUNT(instance->_private.factory.dynamicRoutingTable));
+}
+
+static void CreateDoorNode(
+   GeaStack_t *instance,
+   I_DataModel_t *dataModel,
+   uint8_t geaAddress)
+{
+   I_BufferedUart_t *bufferedUart = DataModelErdPointerAccess_GetBufferedUart(dataModel, Erd_DoorBufferedUart);
+
+   Gea2Configurator_CreateCustomBufferedFullDuplexUartInterfaceNode(
+      &instance->_private.configurator,
+      &instance->_private.door.node,
+      &instance->_private.door.nodeResources,
+      bufferedUart,
+      DataModelErdPointerAccess_GetCrc16Calculator(dataModel, Erd_CrcCalcTable),
+      geaAddress,
+      RetryCount,
+      instance->_private.door.buffers.sendBuffer,
+      sizeof(instance->_private.door.buffers.sendBuffer),
+      instance->_private.door.buffers.receiveBuffer,
+      sizeof(instance->_private.door.buffers.receiveBuffer),
+      instance->_private.door.buffers.packetQueueStorage,
+      sizeof(instance->_private.door.buffers.packetQueueStorage));
+
+   Gea2Configurator_AddDynamicRoutingTableWithReplacementToNode(
+      &instance->_private.configurator,
+      &instance->_private.door.node,
+      &instance->_private.door.dynamicRoutingResources,
+      instance->_private.door.dynamicRoutingTable,
+      ELEMENT_COUNT(instance->_private.door.dynamicRoutingTable));
+}
+
+static void CreateCaseNode(
+   GeaStack_t *instance,
+   I_DataModel_t *dataModel,
+   uint8_t geaAddress)
+{
+   I_BufferedUart_t *bufferedUart = DataModelErdPointerAccess_GetBufferedUart(dataModel, Erd_CaseBufferedUart);
+
+   Gea2Configurator_CreateCustomBufferedFullDuplexUartInterfaceNode(
+      &instance->_private.configurator,
+      &instance->_private.caseBus.node,
+      &instance->_private.caseBus.nodeResources,
+      bufferedUart,
+      DataModelErdPointerAccess_GetCrc16Calculator(dataModel, Erd_CrcCalcTable),
+      geaAddress,
+      RetryCount,
+      instance->_private.caseBus.buffers.sendBuffer,
+      sizeof(instance->_private.caseBus.buffers.sendBuffer),
+      instance->_private.caseBus.buffers.receiveBuffer,
+      sizeof(instance->_private.caseBus.buffers.receiveBuffer),
+      instance->_private.caseBus.buffers.packetQueueStorage,
+      sizeof(instance->_private.caseBus.buffers.packetQueueStorage));
+
+   Gea2Configurator_AddDynamicRoutingTableWithReplacementToNode(
+      &instance->_private.configurator,
+      &instance->_private.caseBus.node,
+      &instance->_private.caseBus.dynamicRoutingResources,
+      instance->_private.caseBus.dynamicRoutingTable,
+      ELEMENT_COUNT(instance->_private.caseBus.dynamicRoutingTable));
 }
 
 void GeaStack_Init(
    GeaStack_t *instance,
    I_DataModel_t *dataModel,
    I_DataSource_t *externalDataSource,
-   uint8_t geaAddress,
-   const uint8_t *staticRoutingTable,
-   uint8_t staticRoutingTableEntryCount)
+   uint8_t geaAddress)
 {
    Gea2Configurator_Init(&instance->_private.configurator);
+   Gea2Configurator_EnablePromiscuousRouting(&instance->_private.configurator);
 
-   CreateSingleWireNode(instance, dataModel, geaAddress);
-   CreateInternalNode(instance, dataModel, geaAddress, staticRoutingTable, staticRoutingTableEntryCount);
-   CreateExternalNode(instance, dataModel, geaAddress);
+   CreateGea2Node(instance, dataModel, geaAddress);
+   CreateWifiNode(instance, dataModel, geaAddress);
+   CreateFactoryNode(instance, dataModel, geaAddress);
+   CreateDoorNode(instance, dataModel, geaAddress);
+   CreateCaseNode(instance, dataModel, geaAddress);
 
    CreatePacketAndMessageEndpoints(instance, dataModel, geaAddress);
 
-   ConnectGea2MessageEndpointToDataSource(instance, dataModel, externalDataSource);
+   ConnectGea2MessageEndpointToDataSource(instance, externalDataSource);
 
    Gea2CommonCommands_Init(
       &instance->_private.commonCommands,

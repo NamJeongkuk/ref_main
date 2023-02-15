@@ -1,0 +1,569 @@
+{
+  "name": "Rockhopper Hardware Pinout GUI",
+  "tabs": [
+    {
+      "title": "GPIO OUT",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_GPIO_OUT_00",
+          "name": "Erd_Gpio_GPIO_OUT_00",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_GPIO_OUT_01",
+          "name": "Erd_Gpio_GPIO_OUT_01",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_GPIO_OUT_02",
+          "name": "Erd_Gpio_GPIO_OUT_02",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
+      "title": "HTR",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_HTR_00",
+          "name": "Erd_Gpio_HTR_00",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_HTR_01",
+          "name": "Erd_Gpio_HTR_01",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_HTR_02",
+          "name": "Erd_Gpio_HTR_02",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_HTR_03",
+          "name": "Erd_Gpio_HTR_03",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_HTR_04",
+          "name": "Erd_Gpio_HTR_04",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
+      "title": "MTR",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_MTR_DRV_EN_00",
+          "name": "Erd_Gpio_MTR_DRV_EN_00",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_MTR_DRV_EN_01",
+          "name": "Erd_Gpio_MTR_DRV_EN_01",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_MTR_DRV_00",
+          "name": "Erd_Gpio_MTR_DRV_00",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_MTR_DRV_01",
+          "name": "Erd_Gpio_MTR_DRV_01",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_MTR_DRV_02",
+          "name": "Erd_Gpio_MTR_DRV_02",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_MTR_DRV_03",
+          "name": "Erd_Gpio_MTR_DRV_03",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
+      "title": "REF VAL",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_REF_VAL_00",
+          "name": "Erd_Gpio_REF_VAL_00",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_REF_VAL_01",
+          "name": "Erd_Gpio_REF_VAL_01",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_REF_VAL_02",
+          "name": "Erd_Gpio_REF_VAL_02",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_REF_VAL_03",
+          "name": "Erd_Gpio_REF_VAL_03",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
+      "title": "RLY",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_RLY_00",
+          "name": "Erd_Gpio_RLY_00",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_RLY_01",
+          "name": "Erd_Gpio_RLY_01",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_RLY_02",
+          "name": "Erd_Gpio_RLY_02",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_RLY_03",
+          "name": "Erd_Gpio_RLY_03",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_RLY_04",
+          "name": "Erd_Gpio_RLY_04",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_RLY_05",
+          "name": "Erd_Gpio_RLY_05",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_RLY_06",
+          "name": "Erd_Gpio_RLY_06",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_RLY_07",
+          "name": "Erd_Gpio_RLY_07",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_RLY_08",
+          "name": "Erd_Gpio_RLY_08",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_RLY_09",
+          "name": "Erd_Gpio_RLY_09",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
+      "title": "DOOR",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_DOOR_INT",
+          "name": "Erd_Gpio_DOOR_INT",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_DOOR_01",
+          "name": "Erd_Gpio_DOOR_01",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_DOOR_02",
+          "name": "Erd_Gpio_DOOR_02",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_DOOR_03",
+          "name": "Erd_Gpio_DOOR_03",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_DOOR_04",
+          "name": "Erd_Gpio_DOOR_04",
+          "read": true,
+          "write": false
+        }
+      ]
+    },
+    {
+      "title": "AUGER",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_AUGER_PWR",
+          "name": "Erd_Gpio_AUGER_PWR",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_AUGER_DIRECTION",
+          "name": "Erd_Gpio_AUGER_DIRECTION",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
+      "title": "GPIO IN",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_GPIO_IN_00",
+          "name": "Erd_Gpio_GPIO_IN_00",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_GPIO_IN_01",
+          "name": "Erd_Gpio_GPIO_IN_01",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_GPIO_IN_02",
+          "name": "Erd_Gpio_GPIO_IN_02",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_GPIO_IN_03",
+          "name": "Erd_Gpio_GPIO_IN_03",
+          "read": true,
+          "write": false
+        }
+      ]
+    },
+    {
+      "title": "PWM",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "PWM_25K_00",
+          "name": "Erd_Pwm_PWM_25K_00",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "PWM_25K_02",
+          "name": "Erd_Pwm_PWM_25K_02",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "PWM_25K_03",
+          "name": "Erd_Pwm_PWM_25K_03",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "PWM_25K_04",
+          "name": "Erd_Pwm_PWM_25K_04",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "PWM_200_00",
+          "name": "Erd_Pwm_PWM_200_00",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "PWM_200_01",
+          "name": "Erd_Pwm_PWM_200_01",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Pwm_PWM_200_02",
+          "name": "Erd_Pwm_PWM_200_02",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_PWM_VAR_00",
+          "name": "Erd_Gpio_PWM_VAR_00",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_PWM_VAR_01",
+          "name": "Erd_Gpio_PWM_VAR_01",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "PWM_200_03",
+          "name": "Erd_Pwm_PWM_200_03",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
+      "title": "ADC",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_475K_TH_00",
+          "name": "Erd_Adc_ANALOG_475K_TH_00",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_TH_LOW_00",
+          "name": "Erd_Adc_ANALOG_TH_LOW_00",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_TH_LOW_01",
+          "name": "Erd_Adc_ANALOG_TH_LOW_01",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_TH_LOW_02",
+          "name": "Erd_Adc_ANALOG_TH_LOW_02",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_TH_LOW_03",
+          "name": "Erd_Adc_ANALOG_TH_LOW_03",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_TH_LOW_04",
+          "name": "Erd_Adc_ANALOG_TH_LOW_04",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_TH_LOW_05",
+          "name": "Erd_Adc_ANALOG_TH_LOW_05",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_TH_LOW_06",
+          "name": "Erd_Adc_ANALOG_TH_LOW_06",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_TH_LOW_07",
+          "name": "Erd_Adc_ANALOG_TH_LOW_07",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_ANALOG_TH_LOW_08",
+          "name": "Erd_Adc_ANALOG_TH_LOW_08",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_LOAD_CURRENT",
+          "name": "Erd_Adc_LOAD_CURRENT",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_HW_PERSONALITY_00",
+          "name": "Erd_Adc_HW_PERSONALITY_00",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Adc_HW_PERSONALITY_01",
+          "name": "Erd_Adc_HW_PERSONALITY_01",
+          "read": true,
+          "write": false
+        }
+      ]
+    },
+    {
+      "title": "INPUT CAPTURE",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "InputCapture_CAPTURE_00",
+          "name": "Erd_InputCapture_CAPTURE_00",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "InputCapture_CAPTURE_01",
+          "name": "Erd_InputCapture_CAPTURE_01",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "InputCapture_CAPTURE_02",
+          "name": "Erd_InputCapture_CAPTURE_02",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "InputCapture_CAPTURE_03",
+          "name": "Erd_InputCapture_CAPTURE_03",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "InputCapture_CAPTURE_04",
+          "name": "Erd_InputCapture_CAPTURE_04",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "InputCapture_CAPTURE_05",
+          "name": "Erd_InputCapture_CAPTURE_05",
+          "read": true,
+          "write": false
+        }
+      ]
+    },
+    {
+      "title": "MISC",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_SABBATH",
+          "name": "Erd_Gpio_SABBATH",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_HEARTBEAT",
+          "name": "Erd_Gpio_HEARTBEAT",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_SBC_RESET",
+          "name": "Erd_Gpio_SBC_RESET",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Gpio_PERSONALITY",
+          "name": "Erd_Gpio_PERSONALITY",
+          "read": true,
+          "write": true
+        }
+      ]
+    }
+  ]
+}

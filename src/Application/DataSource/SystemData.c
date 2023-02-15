@@ -22,7 +22,7 @@ static void AddDataSourceToComposite(
 static void InitializeInternalDataSource(
    Instance_t *instance,
    TimerModule_t *timerModule,
-   I_FlashBlockGroup_t *flashBlockGroup,
+   I_AsyncDataSource_t *async,
    I_Crc16Calculator_t *crcCalculator,
    I_Action_t *systemActionForStartup,
    I_Action_t *resetAction)
@@ -40,8 +40,8 @@ static void InitializeInternalDataSource(
       &instance->_private.dataSource.nv,
       timerModule,
       systemActionForStartup,
-      crcCalculator,
-      flashBlockGroup);
+      async);
+
    AddDataSourceToComposite(
       instance,
       NonVolatileDataSource_DataSource(&instance->_private.dataSource.nv),
@@ -54,6 +54,14 @@ static void InitializeInternalDataSource(
       instance,
       BspDataSource_DataSource(&instance->_private.dataSource.bsp),
       &instance->_private.dataSource.bspComponent);
+
+   // UnmappedBspDataSource Must be added to the DataSource Composite after BspDataSource
+   UnmappedBspDataSource_Init(
+      &instance->_private.dataSource.unmappedBsp);
+   AddDataSourceToComposite(
+      instance,
+      UnmappedBspDataSource_DataSource(&instance->_private.dataSource.unmappedBsp),
+      &instance->_private.dataSource.unmappedBspComponent);
 
    ApplianceApiDataSource_Init(
       &instance->_private.dataSource.applianceApi,
@@ -93,7 +101,7 @@ static void InitializeDataModel(Instance_t *instance)
 void SystemData_Init(
    SystemData_t *instance,
    TimerModule_t *timerModule,
-   I_FlashBlockGroup_t *flashBlockGroup,
+   I_AsyncDataSource_t *async,
    I_Crc16Calculator_t *crcCalculator,
    I_Action_t *systemActionForStartup,
    I_Action_t *resetAction)
@@ -101,7 +109,7 @@ void SystemData_Init(
    InitializeInternalDataSource(
       instance,
       timerModule,
-      flashBlockGroup,
+      async,
       crcCalculator,
       systemActionForStartup,
       resetAction);

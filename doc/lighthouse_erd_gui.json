@@ -1,0 +1,997 @@
+{
+   "name": "Lighthouse GUI",
+   "tabs": [
+      {
+         "title": "Versions",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Mainboard Application Version",
+               "name": "Erd_ApplicationVersion",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Mainboard Parametric Version",
+               "name": "Erd_ParametricVersion",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Mainboard Parametric CRC",
+               "name": "Erd_ParametricDataImageCrc",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Mainboard Personality",
+               "name": "Erd_AppliancePersonality",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Reset Mainboard in X Seconds",
+               "name": "Erd_Reset",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Mainboard Bootloader Version",
+               "name": "Erd_BootLoaderVersion",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Quick Status",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "FF Temperature (DegF x100)",
+               "name": "Erd_FreshFood_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Temperature (DegF x100)",
+               "name": "Erd_Freezer_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Evap Temperature (DegF x100)",
+               "name": "Erd_FreezerEvap_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Current Grid Block",
+               "name": "Erd_Grid_BlockNumber",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Compressor Speed",
+               "name": "Erd_CompressorSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },          
+            {
+               "namespace": "mb",
+               "displayName": "FF Damper",
+               "name": "Erd_FreshFoodDamperPosition_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Evap Fan Speed",
+               "name": "Erd_FreezerEvapFanSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan Speed",
+               "name": "Erd_CondenserFanSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Evap Fan Actual RPM",
+               "name": "Erd_FreezerEvapFan_ActualRpm",
+               "read": true,
+               "interval": 1000000000
+            },          
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan Actual RPM",
+               "name": "Erd_CondenserFan_ActualRpm",
+               "read": true,
+               "interval": 1000000000
+            },          
+            {
+               "namespace": "mb",
+               "displayName": "Defrost State",
+               "name": "Erd_DefrostState",
+               "read": true,
+               "interval": 1000000000
+            },          
+            {
+               "namespace": "mb",
+               "displayName": "FZ Defrost Heater",
+               "name": "Erd_FreezerDefrostHeater_DefrostVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF Door Open?",
+               "name": "Erd_RightHandFreshFoodDoorIsOpen",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Door Open?",
+               "name": "Erd_FreezerDoorIsOpen",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Grid Cooling Mode",
+               "name": "Erd_CoolingMode",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },      
+      {
+         "title": "Compressor",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Compressor State",
+               "name": "Erd_CompressorState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Compressor Speed Resolved Vote",
+               "name": "Erd_CompressorSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Damper",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "FF Damper Resolved State",
+               "name": "Erd_FreshFoodDamperPosition_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Grid",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Current Grid Block",
+               "name": "Erd_Grid_BlockNumber",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Grid Cooling Mode",
+               "name": "Erd_CoolingMode",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Previous Grid Blocks",
+               "name": "Erd_Grid_PreviousBlocks",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Calculated Grid Lines",
+               "name": "Erd_Grid_CalculatedGridLines",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Pulldown Flag",
+               "name": "Erd_SingleEvaporatorPulldownActive",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Grid Area",
+               "name": "Erd_GridArea",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Setpoints",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "FF Adjusted Setpoint (DegF x100)",
+               "name": "Erd_FreshFood_AdjustedSetpointInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Adjusted Setpoint (DegF x100)",
+               "name": "Erd_Freezer_AdjustedSetpointInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF User Setpoint Vote (DegF x100)",
+               "name": "Erd_FreshFoodSetpoint_UserVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ User Setpoint Vote (DegF x100)",
+               "name": "Erd_FreezerSetpoint_UserVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF Resolved Setpoint Vote (DegF x100)",
+               "name": "Erd_FreshFoodSetpoint_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Resolved Setpoint Vote (DegF x100)",
+               "name": "Erd_FreezerSetpoint_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF Cabinet Setpoint Offset (DegF x100)",
+               "name": "Erd_FreshFood_CabinetOffsetInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Cabinet Setpoint Offset (DegF x100)",
+               "name": "Erd_Freezer_CabinetOffsetInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF Thermal Setpoint Shift (DegF x100)",
+               "name": "Erd_FreshFood_ThermalShiftInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Thermal Setpoint Shift (DegF x100)",
+               "name": "Erd_Freezer_ThermalShiftInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF Cross Ambient Offset (DegF x100)",
+               "name": "Erd_FreshFood_CrossAmbientOffsetInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Cross Ambient Offset (DegF x100)",
+               "name": "Erd_Freezer_CrossAmbientOffsetInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Fans",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "FZ Evap Fan Resolved Speed",
+               "name": "Erd_FreezerEvapFanSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan Resolved Speed",
+               "name": "Erd_CondenserFanSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Evap Fan Actual RPM",
+               "name": "Erd_FreezerEvapFan_ActualRpm",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan Actual RPM",
+               "name": "Erd_CondenserFan_ActualRpm",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Evap Fan Target RPM/PWM",
+               "name": "Erd_CalculatedFreezerEvapFanControl",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan Target RPM/PWM",
+               "name": "Erd_CalculatedCondenserFanControl",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Defrost",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Defrost State (Simplified)",
+               "name": "Erd_DefrostState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Defrost HSM State",
+               "name": "Erd_DefrostHsmState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Last FZ Defrost Was Abnormal?",
+               "name": "Erd_FreezerDefrostWasAbnormal",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Defrost Timer - Compressor On Time in Seconds",
+               "name": "Erd_DefrostCompressorOnTimeInSeconds",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Defrost Timer - FZ Door Acceleration in Compressor-Seconds",
+               "name": "Erd_DefrostFreezerScaledDoorAccelerationInSeconds",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Defrost Timer - FF Door Acceleration in Compressor-Seconds",
+               "name": "Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Defrost Heater Defrost Vote",
+               "name": "Erd_FreezerDefrostHeater_DefrostVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Current Defrost Type",
+               "name": "Erd_CurrentDefrostType",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Max Prechill Time in Minutes",
+               "name": "Erd_MaxPrechillTimeInMinutes",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Current Prechill Run Time in Minutes (if Active)",
+               "name": "Erd_DefrostPrechillRunCounterInMinutes",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Post Dwell Exit Time in Minutes",
+               "name": "Erd_PostDwellExitTimeInMinutes",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Time That Prechill Conditions Are Met in Minutes",
+               "name": "Erd_TimeThatPrechillConditionsAreMetInMinutes",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Number of FZ Abnormal Defrost Cycles",
+               "name": "Erd_NumberOfFreezerAbnormalDefrostCycles",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Defrost Cycle Count",
+               "name": "Erd_FreezerDefrostCycleCount",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Force Special Defrost Mode",
+               "name": "Erd_DefrostTestRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Doors",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "FF Door Is Open",
+               "name": "Erd_RightHandFreshFoodDoorIsOpen",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Door Is Open",
+               "name": "Erd_FreezerDoorIsOpen",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Thermistors",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "FF Filtered Temperature (DegF x100)",
+               "name": "Erd_FreshFood_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Filtered Temperature (DegF x100)",
+               "name": "Erd_Freezer_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF Unfiltered Temperature (DegF x100)",
+               "name": "Erd_FreshFood_UnfilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Unfiltered Temperature (DegF x100)",
+               "name": "Erd_Freezer_UnfilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF Long Term Avg Temperature (DegF x100)",
+               "name": "Erd_FreshFood_LongTermAverageInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Long Term Avg Temperature (DegF x100)",
+               "name": "Erd_Freezer_LongTermAverageInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Evap Unfiltered Temperature (DegF x100)",
+               "name": "Erd_FreezerEvap_UnfilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ambient Unfiltered Temperature (DegF x100)",
+               "name": "Erd_Ambient_UnfilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Evap FilteredTemperature (DegF x100)",
+               "name": "Erd_FreezerEvap_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ambient Filtered Temperature (DegF x100)",
+               "name": "Erd_Ambient_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Aluminum Mold Ice Maker Filtered Temperature (DegF x100)",
+               "name": "Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Aluminum IM",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "IM HSM State",
+               "name": "Erd_AluminumMoldIceMakerHsmState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Filtered Temperature (DegF x100)",
+               "name": "Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Feeler Arm Postion",
+               "name": "Erd_AluminumMoldIceMakerFeelerArmPosition",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Rake Position",
+               "name": "Erd_AluminumMoldIceMakerRakePosition",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Freeze Integration Count",
+               "name": "Erd_AluminumMoldFreezeIntegrationCount",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Freeze Integration Count Reached?",
+               "name": "Erd_HarvestCountIsReadyToHarvest",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Arm is OK to Harvest?",
+               "name": "Erd_FeelerArmIsReadyToEnterHarvest",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Enabled by User?",
+               "name": "Erd_IceMakerEnabledByUser",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Enabled by Grid?",
+               "name": "Erd_IceMakerEnabledByGrid",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Factory",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Factory Mode Enable",
+               "name": "Erd_FactoryModeEnableRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF Damper Heater Factory Vote",
+               "name": "Erd_FreshFoodDamperHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Compressor Speed Factory Vote",
+               "name": "Erd_CompressorSpeed_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Evap Unfiltered Temperature",
+               "name": "Erd_FreezerEvap_UnfilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },          
+            {
+               "namespace": "mb",
+               "displayName": "FZ Defrost Heater Factory Vote",
+               "name": "Erd_FreezerDefrostHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Evap Unfiltered Temperature",
+               "name": "Erd_FreezerEvap_UnfilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },          
+            {
+               "namespace": "mb",
+               "displayName": "FF Damper Position Factory Vote",
+               "name": "Erd_FreshFoodDamperPosition_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF Unfiltered Temperature",
+               "name": "Erd_FreshFood_UnfilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Evap Fan Factory Vote",
+               "name": "Erd_FreezerEvapFanSpeed_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Evap Fan Actual RPM",
+               "name": "Erd_FreezerEvapFan_ActualRpm",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan Factory Vote",
+               "name": "Erd_CondenserFanSpeed_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan Actual RPM",
+               "name": "Erd_CondenserFan_ActualRpm",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Sabbath",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Normal Sabbath Mode",
+               "name": "Erd_SabbathMode",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Enhanced Sabbath Mode",
+               "name": "Erd_EnhancedSabbathMode",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Rfid",
+         "erds": [
+            {
+               "namespace": "Rfid",
+               "displayName": "Read Request",
+               "name": "Erd_RfidReadSignal",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Result",
+               "name": "Erd_ReadWriteResult",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "UID",
+               "name": "Erd_TagUid",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Filter Identifier",
+               "name": "Erd_TagFilterIdentifier",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Ounces x100",
+               "name": "Erd_TagVolume",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Calendar Seconds",
+               "name": "Erd_TagCalendarUsage",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Leak Seconds",
+               "name": "Erd_TagLeakDetectedTime",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Number of writes",
+               "name": "Erd_TagWriteOperations",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Status Bits",
+               "name": "Erd_TagFilterStatusBitmap",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Init Error Bits",
+               "name": "Erd_InitializationErrorBitfield",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "WiFi",
+         "erds": [
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Version",
+               "name": "Erd_ApplicationVersion",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Mac Address",
+               "name": "Erd_MacAddress",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "SSID",
+               "name": "Erd_WiFiApSsid",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Password",
+               "name": "Erd_WiFiApPassword",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Network State",
+               "name": "Erd_NetworkState",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Server",
+               "name": "Erd_HeartbeatServerType",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "AP Service",
+               "name": "Erd_ApServiceModeRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "WiFi-Module",
+               "displayName": "Network SSID",
+               "name": "Erd_ConnectedNetworkSSID",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Debug",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Reset Count",
+               "name": "Erd_ResetCount",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb", 
+               "displayName": "Reset Reason",
+               "name": "Erd_ResetReason",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Seconds Since Last Reset",
+               "name": "Erd_SecondsSinceLastReset",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Free Stack %",
+               "name": "Erd_StackPercentFree",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Compressor Winning Vote Erd",
+               "name": "Erd_CompressorSpeed_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF Damper Winning Vote Erd",
+               "name": "Erd_FreshFoodDamperPosition_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Evap Fan Winning Vote Erd",
+               "name": "Erd_FreezerEvapFanSpeed_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan Winning Vote Erd",
+               "name": "Erd_CondenserFanSpeed_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF Setpoint Winning Vote Erd",
+               "name": "Erd_FreshFoodSetpoint_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Setpoint Winning Vote Erd",
+               "name": "Erd_FreezerSetpoint_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Defrost Heater Winning Vote Erd",
+               "name": "Erd_FreezerDefrostHeater_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      }
+   ]
+}

@@ -6,10 +6,42 @@ return {
     'max_align_t',
     'KeyErdStreamData_t',
     'StreamedErd_t',
-    '_mbstate_t'
+    '_mbstate_t',
+    'FanCareAboutCoolingModeSpeedData_t',
+    'FanData_t',
+    'CompressorSpeeds_t'
   },
 
   -- Types that can't be automatically generated but need to be defined
   type_overrides = {
+    GridBlockNumber_t = 'uint8_t',
+    FreshFoodCalculatedAxisGridLines_t = [[
+      struct {
+        TemperatureDegFx100_t 'nflGridLinesDegFx100',
+        TemperatureDegFx100_t 'lowHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'lowHystDeltaGridLinesDegFx100',
+        TemperatureDegFx100_t 'highHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'extraHighGridLinesDegFx100',
+        TemperatureDegFx100_t 'superHighGridLinesDegFx100',
+      }
+    ]],
+    FreezerCalculatedAxisGridLines_t = [[
+      struct {
+        TemperatureDegFx100_t 'lowHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'deltaGridLinesDegFx100',
+        TemperatureDegFx100_t 'highHystGridLinesDegFx100',
+        TemperatureDegFx100_t 'extraHighGridLinesDegFx100',
+        TemperatureDegFx100_t 'superHighGridLinesDegFx100',
+        TemperatureDegFx100_t 'extremeHighGridLinesDegFx100',
+      }
+    ]],
+    FanControl_t = [[
+      struct {
+        FanControlType_t 'type',
+        FanRpm_t 'rpmOrDutyCycle',
+      }
+    ]],
+    PwmDutyCycle_t = 'uint16_t',
+    PercentageDutyCycle_t = 'uint8_t'
   }
 }

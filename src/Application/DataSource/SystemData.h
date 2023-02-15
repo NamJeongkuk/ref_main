@@ -11,6 +11,7 @@
 #include "RamDataSource.h"
 #include "NonVolatileDataSource.h"
 #include "BspDataSource.h"
+#include "UnmappedBspDataSource.h"
 #include "ApplianceApiDataSource.h"
 #include "DataSource_Composite.h"
 #include "DataModel_DataSource.h"
@@ -47,6 +48,9 @@ typedef struct
          BspDataSource_t bsp;
          DataSource_CompositeComponent_t bspComponent;
 
+         UnmappedBspDataSource_t unmappedBsp;
+         DataSource_CompositeComponent_t unmappedBspComponent;
+
          ApplianceApiDataSource_t applianceApi;
          DataSource_CompositeComponent_t applianceApiComponent;
 
@@ -61,7 +65,7 @@ typedef struct
 /*!
  * @param instance
  * @param timerModule
- * @param flashBlockGroup
+ * @param async
  * @param crcCalculator
  * @param systemActionForStartup
  * @param resetAction
@@ -69,7 +73,7 @@ typedef struct
 void SystemData_Init(
    SystemData_t *instance,
    TimerModule_t *timerModule,
-   I_FlashBlockGroup_t *flashBlockGroup,
+   I_AsyncDataSource_t *async,
    I_Crc16Calculator_t *crcCalculator,
    I_Action_t *systemActionForStartup,
    I_Action_t *resetAction);
@@ -78,21 +82,21 @@ void SystemData_Init(
  * @param instance
  * @return
  */
-I_DataSource_t * SystemData_InternalDataSource(
+I_DataSource_t *SystemData_InternalDataSource(
    SystemData_t *instance);
 
 /*!
  * @param instance
  * @return
  */
-I_DataSource_t * SystemData_ExternalDataSource(
+I_DataSource_t *SystemData_ExternalDataSource(
    SystemData_t *instance);
 
 /*!
  * @param instance
  * @return
  */
-I_DataModel_t * SystemData_DataModel(
+I_DataModel_t *SystemData_DataModel(
    SystemData_t *instance);
 
 #endif
