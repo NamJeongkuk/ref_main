@@ -22,7 +22,7 @@ typedef struct
       FreshFoodShiftOffsetCalculatorPlugin_t freshFoodShiftOffsetCalculatorPlugin;
       ErdWriterOnCompareMatch_t erdWriterOnCompareMatchForAdjustedSetpoint;
       I16ErdAdder_t freshFoodErdAdder;
-      ResolvedSetpointWriter_t resolvedSetpointWriter;
+      ResolvedSetpointWriter_t freshFoodResolvedSetpointWriter;
    } _private;
 } FreshFoodAdjustedSetpointPlugin_t;
 

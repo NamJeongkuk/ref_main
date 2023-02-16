@@ -15,6 +15,7 @@ typedef struct
 {
    Erd_t resolvedSetpointVoteErd; // SetpointVotedTemperature_t
    Erd_t resolvedSetpointErd; // TemperatureDegFx100_t
+   Erd_t userSetpointPluginReadyErd; // bool
 } ResolvedSetpointWriterConfiguration_t;
 
 typedef struct

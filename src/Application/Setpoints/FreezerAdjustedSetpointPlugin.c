@@ -25,9 +25,10 @@ static const I16ErdAdderConfiguration_t freezerErdAdderConfig = {
    },
 };
 
-static const ResolvedSetpointWriterConfiguration_t resolvedSetpointWriterConfiguration = {
+static const ResolvedSetpointWriterConfiguration_t freezerResolvedSetpointWriterConfiguration = {
    .resolvedSetpointVoteErd = Erd_FreezerSetpoint_ResolvedVote,
-   .resolvedSetpointErd = Erd_Freezer_ResolvedSetpointInDegFx100
+   .resolvedSetpointErd = Erd_Freezer_ResolvedSetpointInDegFx100,
+   .userSetpointPluginReadyErd = Erd_UserSetpointPluginReady
 };
 
 static void InitializeFreezerCabinetOffsetErd(I_DataModel_t *dataModel)
@@ -44,6 +45,9 @@ void FreezerAdjustedSetpointPlugin_Init(
 {
    InitializeFreezerCabinetOffsetErd(dataModel);
    I16ErdAdder_Init(&instance->_private.freezerErdAdder, dataModel, &freezerErdAdderConfig);
-   ResolvedSetpointWriter_Init(&instance->_private.resolvedSetpointWriter, dataModel, &resolvedSetpointWriterConfiguration);
+   ResolvedSetpointWriter_Init(
+      &instance->_private.freezerResolvedSetpointWriter,
+      dataModel,
+      &freezerResolvedSetpointWriterConfiguration);
    FreezerShiftOffsetCalculatorPlugin_Init(&instance->_private.freezerShiftOffsetCalculatorPlugin, dataModel);
 }

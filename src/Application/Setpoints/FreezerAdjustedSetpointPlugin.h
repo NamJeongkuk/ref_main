@@ -22,7 +22,7 @@ typedef struct
       FreezerShiftOffsetCalculatorPlugin_t freezerShiftOffsetCalculatorPlugin;
       ErdWriterOnCompareMatch_t erdWriterOnCompareMatchForAdjustedSetpoint;
       I16ErdAdder_t freezerErdAdder;
-      ResolvedSetpointWriter_t resolvedSetpointWriter;
+      ResolvedSetpointWriter_t freezerResolvedSetpointWriter;
    } _private;
 } FreezerAdjustedSetpointPlugin_t;
 

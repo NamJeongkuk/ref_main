@@ -9,6 +9,7 @@
 #include "PersonalityParametricData.h"
 #include "SetpointZone.h"
 #include "SystemErds.h"
+#include "uassert.h"
 
 static const SetpointZone_t coldZone = SetpointZone_Cold;
 static const SetpointZone_t middleZone = SetpointZone_Middle;
@@ -60,15 +61,46 @@ static const ErdWriterOnCompareMatchConfiguration_t erdWriteOnCompareMatchConfig
    NUM_ELEMENTS(erdWriteOnCompareMatchEntries)
 };
 
-static const ResolvedSetpointWriterConfiguration_t resolvedSetpointWriterConfiguration = {
+static const ResolvedSetpointWriterConfiguration_t freshFoodResolvedSetpointWriterConfiguration = {
    .resolvedSetpointVoteErd = Erd_FreshFoodSetpoint_ResolvedVote,
-   .resolvedSetpointErd = Erd_FreshFood_ResolvedSetpointInDegFx100
+   .resolvedSetpointErd = Erd_FreshFood_ResolvedSetpointInDegFx100,
+   .userSetpointPluginReadyErd = Erd_UserSetpointPluginReady
 };
+
+static bool SetpointZonePluginIsReady(I_DataModel_t *dataModel)
+{
+   bool state;
+   DataModel_Read(dataModel, Erd_SetpointZonePluginReady, &state);
+   return state;
+}
 
 static void InitializeSetpointOffsetErd(FreshFoodAdjustedSetpointPlugin_t *instance, I_DataModel_t *dataModel)
 {
+   uassert(SetpointZonePluginIsReady(dataModel));
+
    coldSetpointOffsetInDegFx100 = PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData->setpointOffsetData->coldOffsetInDegFx100;
    warmSetpointOffsetInDegFx100 = PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData->setpointOffsetData->warmOffsetInDegFx100;
+
+   SetpointZone_t freshFoodSetpointZone;
+   DataModel_Read(dataModel, Erd_FreshFoodSetpointZone, &freshFoodSetpointZone);
+   switch(freshFoodSetpointZone)
+   {
+      case SetpointZone_Cold:
+         DataModel_Write(dataModel, Erd_FreshFood_SetpointOffsetInDegFx100, &coldSetpointOffsetInDegFx100);
+         break;
+
+      case SetpointZone_Middle:
+         DataModel_Write(dataModel, Erd_FreshFood_SetpointOffsetInDegFx100, &middleSetpointOffsetInDegFx100);
+         break;
+
+      case SetpointZone_Warm:
+         DataModel_Write(dataModel, Erd_FreshFood_SetpointOffsetInDegFx100, &warmSetpointOffsetInDegFx100);
+         break;
+
+      default:
+         break;
+   }
+
    ErdWriterOnCompareMatch_Init(
       &instance->_private.erdWriterOnCompareMatchForAdjustedSetpoint,
       DataModel_AsDataSource(dataModel),
@@ -89,7 +121,10 @@ void FreshFoodAdjustedSetpointPlugin_Init(
 {
    InitializeSetpointOffsetErd(instance, dataModel);
    InitializeCabinetOffsetErd(dataModel);
-   ResolvedSetpointWriter_Init(&instance->_private.resolvedSetpointWriter, dataModel, &resolvedSetpointWriterConfiguration);
+   ResolvedSetpointWriter_Init(
+      &instance->_private.freshFoodResolvedSetpointWriter,
+      dataModel,
+      &freshFoodResolvedSetpointWriterConfiguration);
    I16ErdAdder_Init(&instance->_private.freshFoodErdAdder, dataModel, &freshFoodErdAdderConfig);
    FreshFoodShiftOffsetCalculatorPlugin_Init(&instance->_private.freshFoodShiftOffsetCalculatorPlugin, dataModel);
 }

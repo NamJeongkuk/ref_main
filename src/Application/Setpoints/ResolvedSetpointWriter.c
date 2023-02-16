@@ -7,6 +7,7 @@
 
 #include "ResolvedSetpointWriter.h"
 #include "Setpoint.h"
+#include "uassert.h"
 
 static void WriteResolvedSetpoint(void *context, const void *args)
 {
@@ -20,11 +21,22 @@ static void WriteResolvedSetpoint(void *context, const void *args)
       &temperature);
 }
 
+static bool UserSetpointPluginIsReady(
+   I_DataModel_t *dataModel,
+   Erd_t userSetpointPluginReadyErd)
+{
+   bool state;
+   DataModel_Read(dataModel, userSetpointPluginReadyErd, &state);
+   return state;
+}
+
 void ResolvedSetpointWriter_Init(
    ResolvedSetpointWriter_t *instance,
    I_DataModel_t *dataModel,
    const ResolvedSetpointWriterConfiguration_t *config)
 {
+   uassert(UserSetpointPluginIsReady(dataModel, config->userSetpointPluginReadyErd));
+
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
 

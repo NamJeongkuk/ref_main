@@ -6,6 +6,7 @@
  */
 
 #include "SideBySideUserSetpointPlugin.h"
+#include "Constants_Binary.h"
 #include "PersonalityParametricData.h"
 #include "SystemErds.h"
 
@@ -52,4 +53,6 @@ void SideBySideUserSetpointPlugin_Init(
       &instance->_private.freezerHandler,
       &freezerConfig,
       dataModel);
+
+   DataModel_Write(dataModel, Erd_UserSetpointPluginReady, set);
 }

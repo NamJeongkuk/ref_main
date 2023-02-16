@@ -6,6 +6,7 @@
  */
 
 #include "SideBySideSetpointZonePlugin.h"
+#include "Constants_Binary.h"
 #include "SystemErds.h"
 
 static const SetpointZoneResolverConfig_t freezerSetpointZoneResolverConfig = {
@@ -44,4 +45,6 @@ void SideBySideSetpointZonePlugin_Init(SideBySideSetpointZonePlugin_t *instance,
       &instance->_private.freshFoodSetpointZoneResolver,
       &freshFoodSetpointZoneResolverConfig,
       dataModel);
+
+   DataModel_Write(dataModel, Erd_SetpointZonePluginReady, set);
 }

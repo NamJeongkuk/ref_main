@@ -8,30 +8,39 @@
 extern "C"
 {
 #include "ResolvedSetpointWriter.h"
+#include "Constants_Binary.h"
 #include "Setpoint.h"
 #include "utils.h"
 }
 #include "DataModel_TestDouble.h"
 #include "CppUTest/TestHarness.h"
+#include "uassert_test.h"
+
+enum
+{
+   SomeValue = 10,
+   SomeOtherValue = 20
+};
 
 enum
 {
    Erd_SetpointResolvedVote,
    Erd_ResolvedSetpoint,
    Erd_NotInConfig,
-   SomeValue = 10,
-   SomeOtherValue = 20
+   Erd_UserSetpointPluginReady
 };
 
 static const DataModel_TestDoubleConfigurationEntry_t dataModelTestDoubleConfig[] = {
    { Erd_SetpointResolvedVote, sizeof(SetpointVotedTemperature_t) },
    { Erd_ResolvedSetpoint, sizeof(int16_t) },
-   { Erd_NotInConfig, sizeof(SetpointVotedTemperature_t) }
+   { Erd_NotInConfig, sizeof(SetpointVotedTemperature_t) },
+   { Erd_UserSetpointPluginReady, sizeof(bool) }
 };
 
 static const ResolvedSetpointWriterConfiguration_t resolvedSetpointWriterConfiguration = {
    .resolvedSetpointVoteErd = Erd_SetpointResolvedVote,
-   .resolvedSetpointErd = Erd_ResolvedSetpoint
+   .resolvedSetpointErd = Erd_ResolvedSetpoint,
+   .userSetpointPluginReadyErd = Erd_UserSetpointPluginReady
 };
 
 TEST_GROUP(ResolvedSetpointWriter)
@@ -44,6 +53,8 @@ TEST_GROUP(ResolvedSetpointWriter)
    {
       DataModel_TestDouble_Init(&dataModelTestDouble, dataModelTestDoubleConfig, NUM_ELEMENTS(dataModelTestDoubleConfig));
       dataModel = dataModelTestDouble.dataModel;
+
+      DataModel_Write(dataModel, Erd_UserSetpointPluginReady, set);
    }
 
    void GivenModuleIsInitialized()
@@ -76,7 +87,18 @@ TEST_GROUP(ResolvedSetpointWriter)
 
       CHECK_EQUAL(expected, actual);
    }
+
+   void GivenUserSetpointPluginReadyIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_UserSetpointPluginReady, &state);
+   }
 };
+
+TEST(ResolvedSetpointWriter, ShouldAssertWhenUserSetpointPluginReadyIsClearOnInit)
+{
+   GivenUserSetpointPluginReadyIs(CLEAR);
+   ShouldFailAssertion(GivenModuleIsInitialized());
+}
 
 TEST(ResolvedSetpointWriter, ShouldWriteToResolvedSetpointOnInit)
 {
