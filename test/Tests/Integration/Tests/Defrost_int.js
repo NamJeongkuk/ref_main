@@ -434,6 +434,25 @@ describe("Defrost", () => {
     await theVoteFor().CondenserFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
   });
 
+  it("should transition to heater on entry state when fresh food thermistor is invalid upon entry to Prechill Prep", async () => {
+    await providedDefrostIsEnabledAndInIdleState();
+
+    await providedThereWasNoPreviousAbnormalDefrost();
+    await providedCompartmentWasNotTooWarmOnPowerUp();
+    await providedFreshFoodThermistorIs().invalid();
+    await providedTheCompressor().isOff();
+    await providedFreshFoodEvaporatorThermistorIs().valid();
+    await providedFreezerEvaporatorThermistorIs().valid();
+
+    await whenTheCompressorHasBeenOnFor(minimumDefrostReadyOnTimeInSec).seconds();
+
+    await theDefrostHsmStateShouldBe(defrostHsmState.defrostHsmStateHeaterOnEntry);
+
+    await theVoteFor().CompressorSpeedShouldBe(true, compressorSpeed.compressorSpeedOff);
+    await theVoteFor().FreezerEvapFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
+    await theVoteFor().CondenserFanSpeedShouldBe(true, fanSpeed.fanSpeedOff);
+  });
+
   it("should transition from prechill prep to prechill and vote loads", async () => {
     await providedDefrostIsEnabledAndInIdleState();
 

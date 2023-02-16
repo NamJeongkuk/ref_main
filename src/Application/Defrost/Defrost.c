@@ -967,15 +967,17 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Hsm_Entry:
+         if(!FreshFoodThermistorIsValid(instance) || !FreezerEvaporatorThermistorIsValid(instance))
+         {
+            Hsm_Transition(hsm, State_HeaterOnEntry);
+            break;
+         }
+
          SetHsmStateTo(instance, DefrostHsmState_PrechillPrep);
          ClearDontSkipPrechillFlag(instance);
          ClearDefrostTestStateRequest(instance);
 
-         if(!FreshFoodThermistorIsValid(instance))
-         {
-            Hsm_Transition(hsm, State_HeaterOnEntry);
-         }
-         else if(PrechillConditionsAreMet(instance))
+         if(PrechillConditionsAreMet(instance))
          {
             Hsm_Transition(hsm, State_Prechill);
          }
