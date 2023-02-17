@@ -15,6 +15,7 @@ extern "C"
 #include "TddPersonality.h"
 #include "Signal.h"
 #include "RakePosition.h"
+#include "AluminumMoldIceMakerTestRequest.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -24,6 +25,7 @@ extern "C"
 
 #define Given
 #define When
+#define Then
 
 static const AluminumMoldIceMakerConfig_t config = {
    .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState,
@@ -48,6 +50,7 @@ static const AluminumMoldIceMakerConfig_t config = {
    .stopFillSignalErd = Erd_AluminumMoldIceMakerStopFillSignal,
    .rakePosition = Erd_AluminumMoldIceMakerRakePosition,
    .freezerIceRateTriggerSignal = Erd_FreezerIceRateTriggerSignal,
+   .aluminumMoldIceMakerTestRequestErd = Erd_AluminumMoldIceMakerTestRequest,
 };
 
 TEST_GROUP(AluminumMoldIceMaker)
@@ -58,6 +61,14 @@ TEST_GROUP(AluminumMoldIceMaker)
 
    I_DataModel_t *dataModel;
    const AluminumMoldIceMakerData_t *iceMakerData;
+   EventSubscription_t iceWaterValveOnChangeSubscription;
+
+   static void IceMakerWaterValveVoteChanged(void * context, const void * args)
+   {
+      IGNORE(context);
+      IGNORE(args);
+      mock().actualCall("Ice Maker Water Valve Vote Changed");
+   }
 
    void setup()
    {
@@ -66,6 +77,8 @@ TEST_GROUP(AluminumMoldIceMaker)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&referDataModelTestDouble);
 
       iceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData;
+
+      EventSubscription_Init(&iceWaterValveOnChangeSubscription, &instance, IceMakerWaterValveVoteChanged);
    }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
@@ -263,6 +276,12 @@ TEST_GROUP(AluminumMoldIceMaker)
       SabbathModeIs(DISABLED);
    }
 
+   void IceMakerIsDisabledAndSabbathModeIsEnabled()
+   {
+      IceMakerIs(DISABLED);
+      SabbathModeIs(ENABLED);
+   }
+
    void AluminumMoldIceMakerIsInFreezeState()
    {
       Given IceMakerIs(ENABLED);
@@ -357,6 +376,15 @@ TEST_GROUP(AluminumMoldIceMaker)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFault);
    }
 
+   void IceMakerIsEnabledAndAluminumMoldIceMakerIsInThermistorFault()
+   {
+      Given IceMakerIs(ENABLED);
+      Given SabbathModeIs(DISABLED);
+      Given MoldThermistorIsInvalid();
+      Given TheRakePositionIs(RakePosition_NotHome);
+      Given TheModuleIsInitialized();
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+   }
    void FillTubeHeaterVoteAndCareShouldBe(PercentageDutyCycle_t expectedDutyCycle, Vote_t expectedCare)
    {
       PercentageDutyCycleVote_t vote;
@@ -575,6 +603,32 @@ TEST_GROUP(AluminumMoldIceMaker)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
       After(1);
+   }
+
+   void ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_t request)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_AluminumMoldIceMakerTestRequest,
+         &request);
+   }
+
+   void ExternalTestRequestShouldBe(AluminumMoldIceMakerTestRequest_t expected)
+   {
+      AluminumMoldIceMakerTestRequest_t actual;
+      DataModel_Read(dataModel, Erd_AluminumMoldIceMakerTestRequest, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void ExpectNoChangeInIceMakerWaterValveVote()
+   {
+      DataModel_Subscribe(dataModel, Erd_AluminumMoldIceMakerWaterValve_IceMakerVote, &iceWaterValveOnChangeSubscription);
+      mock().expectNoCall("No Call");
+   }
+
+   void UnsubscribeFromIceWaterValveOnChangeSubscription()
+   {
+      DataModel_Unsubscribe(dataModel, Erd_AluminumMoldIceMakerWaterValve_IceMakerVote, &iceWaterValveOnChangeSubscription);
    }
 };
 
@@ -1467,6 +1521,90 @@ TEST(AluminumMoldIceMaker, ShouldNotIncrementFreezerTriggerIceRateSignalWhenTran
    When SabbathModeIs(DISABLED);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
    FreezerTriggerIceRateSignalShouldBe(1);
+}
+
+TEST(AluminumMoldIceMaker, ShouldClearExternalTestRequestWhenFillTestIsRequested)
+{
+   Given TheModuleIsInitialized();
+   When ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Fill);
+   ExternalTestRequestShouldBe(AluminumMoldIceMakerTestRequest_None);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromFreezeToFillStateWhenFillTestIsRequested)
+{
+   Given AluminumMoldIceMakerIsInFreezeState();
+   When ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Fill);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromIdleFreezeToFillStateWhenFillTestIsRequested)
+{
+   Given SabbathIsEnabledAndAluminumMoldIceMakerIsInIdleFreezeState();
+   When ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Fill);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToFillStateWhenFillTestIsRequested)
+{
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+   When ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Fill);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestFixToFillStateWhenFillTestIsRequested)
+{
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvestFix();
+   When ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Fill);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestFaultToFillStateWhenFillTestIsRequested)
+{
+   Given AluminumMoldIceMakerIsInHarvestFault();
+   When ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Fill);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionFromThermistorFaultToFillStateWhenFillTestIsRequested)
+{
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInThermistorFault();
+   When ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Fill);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldNotLeaveIdleFreezeStateWhenIceMakerIsInDisabledState)
+{
+   Given AluminumMoldIceMakerIsInIdleFreezeState();
+   Given IceMakerIs(DISABLED);
+   
+   When ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Fill);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+
+   When StopFillSignalChanges();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldGoFromFillToIdleStateIfSabbathModeIsEnabledAndIceMakerIsDisabled)
+{
+   Given AluminumMoldIceMakerIsInIdleFreezeState();
+   Given SabbathModeIs(ENABLED);
+   
+   When ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Fill);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+
+   When StopFillSignalChanges();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldNotTransitionOutOfFillStateWhenFillTestIsRequestedWhileFillIsAlreadyTakingPlace)
+{
+   Given AluminumMoldIceMakerIsInFillState();
+   ExpectNoChangeInIceMakerWaterValveVote();
+   
+   When ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Fill);
+   Then UnsubscribeFromIceWaterValveOnChangeSubscription();
+
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
 }
 
 TEST(AluminumMoldIceMaker, ShouldVoteToTurnOffIceMakerWaterValveWhenMoldThermistorIsInvalid)

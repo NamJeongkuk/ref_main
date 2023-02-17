@@ -37,6 +37,7 @@ typedef struct
    Erd_t stopFillSignalErd; // Signal_t
    Erd_t rakePosition; // RakePosition_t
    Erd_t freezerIceRateTriggerSignal; // Signal_t
+   Erd_t aluminumMoldIceMakerTestRequestErd; // AluminumMoldIceMakerTestRequest_t
 } AluminumMoldIceMakerConfig_t;
 
 typedef struct

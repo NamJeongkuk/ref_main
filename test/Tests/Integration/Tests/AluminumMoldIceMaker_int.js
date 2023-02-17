@@ -74,6 +74,12 @@ describe("AluminumMoldIceMaker,", () => {
       home: "RakePosition_Home"
    };
 
+   const iceMakerTestRequest = {
+      none: "AluminumMoldIceMakerTestRequest_None",
+      fill: "AluminumMoldIceMakerTestRequest_Fill",
+      harvest: "AluminumMoldIceMakerTestRequest_Harvest"
+   }
+
    // Parametric values
    const freezeThawFillTubeHeaterOnTimeInSeconds = 420;
    const freezeThawFillTubeHeaterDutyCyclePercentage = 100;
@@ -316,6 +322,15 @@ describe("AluminumMoldIceMaker,", () => {
 
    const theWaterFillMonitoringRequestShouldBe = async (expected) => {
       const actual = await rockhopper.read("Erd_AluminumMoldIceMakerWaterFillMonitoringRequest");
+      expect(actual).toEqual(expected);
+   };
+
+   const providedTheAluminumMoldIceMakerTestRequestIsSetTo = async (request) => {
+      await rockhopper.write("Erd_AluminumMoldIceMakerTestRequest", request);
+   };
+
+   const theAluminumMoldIceMakerTestRequestShouldBe = async (expected) => {
+      const actual = await rockhopper.read("Erd_AluminumMoldIceMakerTestRequest");
       expect(actual).toEqual(expected);
    };
 
@@ -834,6 +849,27 @@ describe("AluminumMoldIceMaker,", () => {
       await delay(timedIceMakerFillInSecondsx10 * msPerSec / 10);
 
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.freeze);
+   });
+
+   it("should reset ice maker test request when fill is requested", async () => {
+      await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
+      await providedTheAluminumMoldIceMakerTestRequestIsSetTo(iceMakerTestRequest.fill);
+
+      await theAluminumMoldIceMakerTestRequestShouldBe(iceMakerTestRequest.none);
+   });
+
+   it("should transition from harvest to fill state when external fill request is sent", async () => {
+      await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
+      await providedTheAluminumMoldIceMakerTestRequestIsSetTo(iceMakerTestRequest.fill);
+
+      await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.fill);
+   });
+
+   it("should transition from freeze to fill state when external fill request is sent", async () => {
+      await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
+      await providedTheAluminumMoldIceMakerTestRequestIsSetTo(iceMakerTestRequest.fill);
+
+      await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.fill);
    });
 
    // Parametric

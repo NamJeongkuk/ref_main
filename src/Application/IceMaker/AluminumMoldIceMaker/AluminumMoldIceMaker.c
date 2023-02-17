@@ -39,6 +39,7 @@ enum
    Signal_RakeCompletedRevolution,
    Signal_MinimumHeaterOnTimeReached,
    Signal_StopFill,
+   Signal_TestRequest_Fill,
    Signal_TurnOnRakeMotor,
    Signal_TurnOffRakeMotor,
    Signal_HarvestFaultMaxTimerExpired
@@ -566,6 +567,15 @@ static void RakeOffTimerExpired(void *context)
    Hsm_SendSignal(&instance->_private.hsm, Signal_RakeOffTimerExpired, NULL);
 }
 
+static void ClearIceMakerTestRequest(AluminumMoldIceMaker_t *instance)
+{
+   AluminumMoldIceMakerTestRequest_t clearRequest = AluminumMoldIceMakerTestRequest_None;
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->aluminumMoldIceMakerTestRequestErd,
+      &clearRequest);
+}
+
 static void StartRakeOffTimer(AluminumMoldIceMaker_t *instance)
 {
    TimerModule_StartOneShot(
@@ -668,6 +678,10 @@ static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 
       case Signal_MoldThermistorIsInvalid:
          Hsm_Transition(hsm, State_ThermistorFault);
+         break;
+
+      case Signal_TestRequest_Fill:
+         Hsm_Transition(hsm, State_Fill);
          break;
 
       case Hsm_Exit:
@@ -945,8 +959,15 @@ static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          RequestWaterFillMonitoring(instance);
          break;
 
+      case Signal_TestRequest_Fill:
+         break;
+
       case Signal_StopFill:
-         if(MoldThermistorIsNotValid(instance))
+         if(SabbathModeIsEnabled(instance) || IceMakerIsDisabled(instance))
+         {
+            Hsm_Transition(hsm, State_IdleFreeze);
+         }
+         else if(MoldThermistorIsNotValid(instance))
          {
             Hsm_Transition(hsm, State_ThermistorFault);
          }
@@ -1083,6 +1104,20 @@ static void DataModelChanged(void *context, const void *args)
    else if(erd == instance->_private.config->stopFillSignalErd)
    {
       Hsm_SendSignal(&instance->_private.hsm, Signal_StopFill, NULL);
+   }
+   else if(erd == instance->_private.config->aluminumMoldIceMakerTestRequestErd)
+   {
+      const AluminumMoldIceMakerTestRequest_t *request = onChangeData->data;
+
+      if(*request != AluminumMoldIceMakerTestRequest_None)
+      {
+         if(*request == AluminumMoldIceMakerTestRequest_Fill)
+         {
+            Hsm_SendSignal(&instance->_private.hsm, Signal_TestRequest_Fill, NULL);
+         }
+
+         ClearIceMakerTestRequest(instance);
+      }
    }
 }
 

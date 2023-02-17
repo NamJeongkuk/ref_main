@@ -1083,6 +1083,13 @@
           "name": "Erd_AluminumMoldFreezeIntegrationCount",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Aluminum Mold Ice Maker Test Request",
+          "name": "Erd_AluminumMoldIceMakerTestRequest",
+          "read": true,
+          "write": true
         }
       ]
     },
