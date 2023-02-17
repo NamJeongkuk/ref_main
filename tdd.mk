@@ -5,7 +5,7 @@ REFERCOMMON_DIR = lib/Common
 PROJECT_DIR := src
 TESTING_DIR := test
 TESTS_DIR := test/Tests
-OUTPUT_DIR := test
+OUTPUT_DIR := test/Build
 
 RUN_APPLCOMMON_TESTS := N
 DISPLAY_ASCII_ART_RESULTS?=Y
@@ -40,7 +40,6 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/IceMaker/AluminumMoldIceMaker \
    $(PROJECT_DIR)/Application/IsolationWaterValve \
    $(PROJECT_DIR)/Application/Motor \
-   $(PROJECT_DIR)/Application/OverrideArbiters \
    $(PROJECT_DIR)/Application/ParametricData \
    $(PROJECT_DIR)/Application/Plugins \
    $(PROJECT_DIR)/Application/Pulldown \
@@ -60,7 +59,6 @@ SRC_DIRS := \
 TEST_SRC_DIRS := \
    $(TESTING_DIR) \
    $(TESTING_DIR)/Utils \
-   $(TESTING_DIR)/Doubles \
    $(TESTING_DIR)/Mocks \
    $(TESTING_DIR)/Mocks/Bsp \
    $(TESTING_DIR)/Mocks/DataSource \
@@ -74,13 +72,10 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/Defrost \
    $(TESTS_DIR)/Application/Door \
    $(TESTS_DIR)/Application/DutyCycle \
-   $(TESTS_DIR)/Application/EnhancedSabbath \
-   $(TESTS_DIR)/Application/Evaporator \
    $(TESTS_DIR)/Application/Factory \
    $(TESTS_DIR)/Application/Fan \
    $(TESTS_DIR)/Application/FlowMeter \
    $(TESTS_DIR)/Application/Grid \
-   $(TESTS_DIR)/Application/Heater \
    $(TESTS_DIR)/Application/IceMaker \
    $(TESTS_DIR)/Application/IceMaker/AluminumMoldIceMaker \
    $(TESTS_DIR)/Application/Motor \
@@ -96,11 +91,12 @@ TEST_SRC_DIRS := \
 
 # List of include directories
 INCLUDE_DIRS := \
-   $(APPLCOMMON_DIR)/Hardware/Rx130 \
-   $(APPLCOMMON_DIR)/Hardware/Rx2xx \
-   $(APPLCOMMON_DIR)/Hardware/Kpit/Rx130 \
-   $(APPLCOMMON_DIR)/Image \
+   $(APPLCOMMON_DIR)/src/Hardware/Rx130 \
+   $(APPLCOMMON_DIR)/src/Hardware/Rx2xx \
+   $(APPLCOMMON_DIR)/src/Hardware/Kpit/Rx130 \
+   $(APPLCOMMON_DIR)/src/Image \
    $(PROJECT_DIR)/Bsp \
+   $(PROJECT_DIR)/Application/DataSource/BspDataSource \
    $(PROJECT_DIR)/Hardware \
    $(PROJECT_DIR)/Hardware/Eeprom \
    $(REFERCOMMON_DIR)/Source/Temperature \

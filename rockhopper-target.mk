@@ -57,6 +57,7 @@ SRC_DIRS:=\
   src/Application/ConvertibleCompartment \
   src/Application/Damper \
   src/Application/DataSource \
+  src/Application/DataSource/BspDataSource \
   src/Application/Defrost \
   src/Application/Door \
   src/Application/DutyCycle \

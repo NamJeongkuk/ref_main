@@ -101,16 +101,12 @@ TEST_GROUP(DamperHeaterDefrostControl)
          &votedState);
    }
 
-   void TheDefrostHeaterStateIs(HeaterState_t state, bool care)
+   void TheDefrostHeaterStateIs(HeaterState_t state)
    {
-      HeaterVotedState_t votedState = {
-         .state = state,
-         .care = care
-      };
       DataModel_Write(
          dataModelDouble.dataModel,
          Erd_FreezerDefrostHeaterRelay,
-         &votedState);
+         &state);
    }
 
    void After(TimerTicks_t ticks)
@@ -127,7 +123,7 @@ TEST(DamperHeaterDefrostControl, ShouldInitializeTheModule)
 TEST(DamperHeaterDefrostControl, ShouldVoteCareWhenFollowingDefrostHeaterAndDefrostVoteCaresAndCurrentDefrostStateIsOn)
 {
    Given TheDamperHeaterDefrostHeaterSyncVoteIs(PercentageDutyCycle_Min, Vote_DontCare);
-   And TheDefrostHeaterStateIs(PercentageDutyCycle_Max, Vote_DontCare);
+   And TheDefrostHeaterStateIs(HeaterState_On);
    And TheModuleIsInitialized();
 
    When DefrostHeaterDefrostVoteIsSetTo(PercentageDutyCycle_Max, Vote_Care);
@@ -138,7 +134,7 @@ TEST(DamperHeaterDefrostControl, ShouldVoteCareWhenFollowingDefrostHeaterAndDefr
 TEST(DamperHeaterDefrostControl, ShouldVoteDontCareWhenFollowingDefrostHeaterAndDefrostVoteCaresAndCurrentDefrostStateIsOff)
 {
    Given TheDamperHeaterDefrostHeaterSyncVoteIs(PercentageDutyCycle_Min, Vote_Care);
-   And TheDefrostHeaterStateIs(PercentageDutyCycle_Min, Vote_DontCare);
+   And TheDefrostHeaterStateIs(HeaterState_Off);
    And TheModuleIsInitialized();
 
    When DefrostHeaterDefrostVoteIsSetTo(PercentageDutyCycle_Max, Vote_Care);
@@ -148,14 +144,14 @@ TEST(DamperHeaterDefrostControl, ShouldVoteDontCareWhenFollowingDefrostHeaterAnd
 TEST(DamperHeaterDefrostControl, ShouldMatchDefrostHeaterStateChangesWhenFollowingDefrostHeaterIsTrue)
 {
    Given TheDamperHeaterDefrostHeaterSyncVoteIs(PercentageDutyCycle_Min, Vote_Care);
-   And TheDefrostHeaterStateIs(PercentageDutyCycle_Max, Vote_DontCare);
+   And TheDefrostHeaterStateIs(HeaterState_On);
    And TheModuleIsInitialized();
 
    When DefrostHeaterDefrostVoteIsSetTo(PercentageDutyCycle_Max, Vote_Care);
    TheDamperHeaterDefrostHeaterSyncVoteStateShouldBe(PercentageDutyCycle_Max);
    TheDamperHeaterDefrostHeaterSyncVoteCareShouldBe(Vote_Care);
 
-   When TheDefrostHeaterStateIs(PercentageDutyCycle_Min, Vote_Care);
+   When TheDefrostHeaterStateIs(HeaterState_Off);
    TheDamperHeaterDefrostHeaterSyncVoteCareShouldBe(Vote_DontCare);
    TheDamperHeaterDefrostHeaterSyncVoteStateShouldBe(PercentageDutyCycle_Min);
 }
@@ -174,7 +170,7 @@ TEST(DamperHeaterDefrostControl, ShouldVoteDontCareWhenFollowingDefrostHeaterBut
 TEST(DamperHeaterDefrostControl, ShouldStopMatchingDefrostHeaterStateChangesWhenDefrostHeaterVoteIsDontCare)
 {
    Given TheDamperHeaterDefrostHeaterSyncVoteIs(PercentageDutyCycle_Min, Vote_DontCare);
-   And TheDefrostHeaterStateIs(PercentageDutyCycle_Max, Vote_DontCare);
+   And TheDefrostHeaterStateIs(HeaterState_On);
    And TheModuleIsInitialized();
 
    When DefrostHeaterDefrostVoteIsSetTo(PercentageDutyCycle_Max, Vote_Care);
@@ -185,7 +181,7 @@ TEST(DamperHeaterDefrostControl, ShouldStopMatchingDefrostHeaterStateChangesWhen
    TheDamperHeaterDefrostHeaterSyncVoteCareShouldBe(Vote_DontCare);
    TheDamperHeaterDefrostHeaterSyncVoteStateShouldBe(PercentageDutyCycle_Min);
 
-   When TheDefrostHeaterStateIs(PercentageDutyCycle_Max, Vote_Care);
+   When TheDefrostHeaterStateIs(HeaterState_On);
    TheDamperHeaterDefrostHeaterSyncVoteCareShouldBe(Vote_DontCare);
    TheDamperHeaterDefrostHeaterSyncVoteStateShouldBe(PercentageDutyCycle_Min);
 }

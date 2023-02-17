@@ -32,6 +32,7 @@ TEST_GROUP(Filter_LongTermAverage)
 
    static void InputChangeCallback(void *context, const void *_args)
    {
+      IGNORE(context);
       REINTERPRET(result, _args, const bool *);
       mock()
          .actualCall("ReadyChanged")

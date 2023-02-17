@@ -1,4 +1,4 @@
-$(call create_library_with_defaults,applcommon,lib/applcommon)
+$(call create_library_with_defaults,applcommon,lib/applcommon/src)
 
 applcommon_INC_DIRS:=\
   $(applcommon_EXTERNAL_INC_DIRS) \

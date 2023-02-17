@@ -48,6 +48,8 @@ enum
    Pid_KiQBits = 0,
    Pid_KdValue = 0,
    Pid_KdQBits = 0,
+
+   UnusedButInclude = 0
 };
 
 const DataModel_TestDoubleConfigurationEntry_t erds[] = {
@@ -82,7 +84,16 @@ const FanData_t fanData = {
    .upperLimit = Pid_UpperLimit,
    .fanMissedTargetFaultTimeoutInSeconds = 60,
    .missingFanFeedbackFaultTimeoutInSeconds = 60,
-   .feedbackPresentWhenFanIsOffTimeoutInSeconds = 60
+   .feedbackPresentWhenFanIsOffTimeoutInSeconds = 60,
+   .speedData = {
+      .careAboutHighAmbientTemperature = false,
+      .superLowSpeed = { UnusedButInclude, { UnusedButInclude } },
+      .lowSpeed = { UnusedButInclude, { UnusedButInclude } },
+      .mediumSpeed = { UnusedButInclude, { UnusedButInclude } },
+      .highSpeed = { UnusedButInclude, { UnusedButInclude } },
+      .superHighSpeed = { UnusedButInclude, { UnusedButInclude } },
+      .superLowSpeedHighAmbientTemperature = { UnusedButInclude, { UnusedButInclude } },
+   }
 };
 
 const FanControllerConfig_t fanConfig = {

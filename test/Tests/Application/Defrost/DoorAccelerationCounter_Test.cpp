@@ -205,7 +205,7 @@ TEST_GROUP(DoorAccelerationCounter)
 
    void FreshFoodDoorAccelerationShouldBeIncrementedForThisManySeconds(uint8_t seconds)
    {
-      for(uint8_t i = 0; i < 10; i++)
+      for(uint8_t i = 0; i < seconds; i++)
       {
          After(PeriodicTimerTicksInMs - 1);
          FreshFoodDoorAccelerationShouldBe(SomeFreshFoodDoorAcceleration + defrostData->idleData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
@@ -217,7 +217,7 @@ TEST_GROUP(DoorAccelerationCounter)
 
    void FreezerDoorAccelerationShouldBeIncrementedForThisManySeconds(uint8_t seconds)
    {
-      for(uint8_t i = 0; i < 10; i++)
+      for(uint8_t i = 0; i < seconds; i++)
       {
          After(PeriodicTimerTicksInMs - 1);
          FreezerDoorAccelerationShouldBe(SomeFreezerDoorAcceleration + defrostData->idleData.freezerDoorIncrementFactorInSecondsPerSecond * i);
@@ -229,7 +229,7 @@ TEST_GROUP(DoorAccelerationCounter)
 
    void ConvertibleCompartmentDoorAccelerationShouldBeIncrementedForThisManySeconds(uint8_t seconds)
    {
-      for(uint8_t i = 0; i < 10; i++)
+      for(uint8_t i = 0; i < seconds; i++)
       {
          After(PeriodicTimerTicksInMs - 1);
          ConvertibleCompartmentDoorAccelerationShouldBe(SomeConvertibleCompartmentDoorAcceleration + defrostData->idleData.freshFoodDoorIncrementFactorInSecondsPerSecond * i);
