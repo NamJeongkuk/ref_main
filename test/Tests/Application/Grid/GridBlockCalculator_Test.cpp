@@ -386,14 +386,29 @@ TEST(GridBlockCalculator, ShouldNotUpdatePreviousGridBlocksIfGridBlockDoesntChan
    The PreviousGridBlockCountShouldBe(0);
    And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
 
-   AddBlockToExpectedArray(expectedPreviousBlocks, 38, expectedBlockIndex++);
-
    When FreshFoodFilteredTemperatureIs(276);
    CurrentGridBlockShouldBe(38);
+   The PreviousGridBlockCountShouldBe(0);
+   And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+
+   When FreshFoodFilteredTemperatureIs(277);
+   CurrentGridBlockShouldBe(38);
+   The PreviousGridBlockCountShouldBe(0);
+   And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+
+   AddBlockToExpectedArray(expectedPreviousBlocks, 38, expectedBlockIndex++);
+
+   When The FreezerFilteredTemperatureIs(1);
+   CurrentGridBlockShouldBe(31);
    The PreviousGridBlockCountShouldBe(1);
    And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
 
-   When The FreezerFilteredTemperatureIs(1);
+   When The FreezerFilteredTemperatureIs(2);
+   CurrentGridBlockShouldBe(31);
+   The PreviousGridBlockCountShouldBe(1);
+   And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+
+   When The FreezerFilteredTemperatureIs(3);
    CurrentGridBlockShouldBe(31);
    The PreviousGridBlockCountShouldBe(1);
    And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
@@ -401,6 +416,16 @@ TEST(GridBlockCalculator, ShouldNotUpdatePreviousGridBlocksIfGridBlockDoesntChan
    AddBlockToExpectedArray(expectedPreviousBlocks, 31, expectedBlockIndex++);
 
    When The FreezerFilteredTemperatureIs(5900);
+   CurrentGridBlockShouldBe(3);
+   The PreviousGridBlockCountShouldBe(2);
+   And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+
+   When The FreezerFilteredTemperatureIs(5901);
+   CurrentGridBlockShouldBe(3);
+   The PreviousGridBlockCountShouldBe(2);
+   And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+
+   When The FreezerFilteredTemperatureIs(5902);
    CurrentGridBlockShouldBe(3);
    The PreviousGridBlockCountShouldBe(2);
    And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);

@@ -18,6 +18,8 @@ enum
    InvertedGridLine = 1,
 };
 
+static void UpdatePreviousGridBlocks(GridBlockCalculator_t *instance);
+
 static CalculatedAxisGridLines_t CalculatedGridLine(
    GridBlockCalculator_t *instance,
    uint8_t gridLineDimension)
@@ -96,7 +98,7 @@ static void AddGridBlockToRingBufferIfDifferent(
    RingBuffer_Add(&instance->_private.ringBuffer, &currentGridBlock);
 }
 
-static void UpdateGridBlock(GridBlockCalculator_t *instance)
+static GridBlockNumber_t GetCalculatedGridBlockNumber(GridBlockCalculator_t *instance)
 {
    TemperatureDegFx100_t freshFoodTemp;
    TemperatureDegFx100_t freezerTemp;
@@ -129,12 +131,39 @@ static void UpdateGridBlock(GridBlockCalculator_t *instance)
          freezerGridLineIndex,
          (NumberOfGridLinesPerAxis + 1));
 
-   AddGridBlockToRingBufferIfDifferent(instance, calculatedBlockNumber);
+   return calculatedBlockNumber;
+}
+
+static void UpdateGridBlock(GridBlockCalculator_t *instance)
+{
+   GridBlockNumber_t calculatedBlockNumber = GetCalculatedGridBlockNumber(instance);
 
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->currentGridBlockNumberErd,
       &calculatedBlockNumber);
+}
+
+static void UpdateGridBlockIfDifferent(GridBlockCalculator_t *instance)
+{
+   GridBlockNumber_t calculatedBlockNumber = GetCalculatedGridBlockNumber(instance);
+
+   GridBlockNumber_t savedBlockNumber;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->currentGridBlockNumberErd,
+      &savedBlockNumber);
+
+   if(calculatedBlockNumber != savedBlockNumber)
+   {
+      AddGridBlockToRingBufferIfDifferent(instance, savedBlockNumber);
+      UpdatePreviousGridBlocks(instance);
+
+      DataModel_Write(
+         instance->_private.dataModel,
+         instance->_private.config->currentGridBlockNumberErd,
+         &calculatedBlockNumber);
+   }
 }
 
 static void WriteDefaultValuesToPreviousGridBlockErd(GridBlockCalculator_t *instance)
@@ -190,8 +219,7 @@ static void OnDataModelChanged(void *context, const void *args)
       (erd == instance->_private.config->freezerFilteredResolvedTemperatureInDegFx100) ||
       (erd == instance->_private.config->calculatedGridLinesErd))
    {
-      UpdatePreviousGridBlocks(instance);
-      UpdateGridBlock(instance);
+      UpdateGridBlockIfDifferent(instance);
    }
 }
 
