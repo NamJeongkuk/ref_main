@@ -492,6 +492,15 @@ static void SendFreezerIceRateSignal(AluminumMoldIceMaker_t *instance)
       instance->_private.config->freezerIceRateTriggerSignal);
 }
 
+static void ClearIceMakerTestRequest(AluminumMoldIceMaker_t *instance)
+{
+   AluminumMoldIceMakerTestRequest_t clearRequest = AluminumMoldIceMakerTestRequest_None;
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->aluminumMoldIceMakerTestRequestErd,
+      &clearRequest);
+}
+
 static void MaxHarvestFixTimeReached(void *context)
 {
    AluminumMoldIceMaker_t *instance = context;
@@ -534,57 +543,48 @@ static void SetMoldHeaterControlRequestForHarvestFix(AluminumMoldIceMaker_t *ins
       &request);
 }
 
-static void RakeOnTimerExpired(void *context)
+static void HarvestFixRakeOnTimerExpired(void *context)
 {
    AluminumMoldIceMaker_t *instance = context;
    Hsm_SendSignal(&instance->_private.hsm, Signal_RakeOnTimerExpired, NULL);
 }
 
-static void StartRakeOnTimer(AluminumMoldIceMaker_t *instance)
+static void StartHarvestFixRakeOnTimer(AluminumMoldIceMaker_t *instance)
 {
    TimerModule_StartOneShot(
       DataModelErdPointerAccess_GetTimerModule(
          instance->_private.dataModel,
          Erd_TimerModule),
-      &instance->_private.motorOnAndOffTimer,
+      &instance->_private.rakeMotorControlTimer,
       instance->_private.iceMakerParametricData->harvestFixData.motorOnTimeInSeconds * MSEC_PER_SEC,
-      RakeOnTimerExpired,
+      HarvestFixRakeOnTimerExpired,
       instance);
 }
 
-static void StopRakeOnAndOffTimer(AluminumMoldIceMaker_t *instance)
+static void StopHarvestFixRakeOnAndOffTimer(AluminumMoldIceMaker_t *instance)
 {
    TimerModule_Stop(
       DataModelErdPointerAccess_GetTimerModule(
          instance->_private.dataModel,
          Erd_TimerModule),
-      &instance->_private.motorOnAndOffTimer);
+      &instance->_private.rakeMotorControlTimer);
 }
 
-static void RakeOffTimerExpired(void *context)
+static void HarvestFixRakeOffTimerExpired(void *context)
 {
    AluminumMoldIceMaker_t *instance = context;
    Hsm_SendSignal(&instance->_private.hsm, Signal_RakeOffTimerExpired, NULL);
 }
 
-static void ClearIceMakerTestRequest(AluminumMoldIceMaker_t *instance)
-{
-   AluminumMoldIceMakerTestRequest_t clearRequest = AluminumMoldIceMakerTestRequest_None;
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->aluminumMoldIceMakerTestRequestErd,
-      &clearRequest);
-}
-
-static void StartRakeOffTimer(AluminumMoldIceMaker_t *instance)
+static void StartHarvestFixRakeOffTimer(AluminumMoldIceMaker_t *instance)
 {
    TimerModule_StartOneShot(
       DataModelErdPointerAccess_GetTimerModule(
          instance->_private.dataModel,
          Erd_TimerModule),
-      &instance->_private.motorOnAndOffTimer,
+      &instance->_private.rakeMotorControlTimer,
       instance->_private.iceMakerParametricData->harvestFixData.motorOffTimeInSeconds * MSEC_PER_SEC,
-      RakeOffTimerExpired,
+      HarvestFixRakeOffTimerExpired,
       instance);
 }
 
@@ -615,13 +615,13 @@ static void StopHarvestFaultMaxTimer(AluminumMoldIceMaker_t *instance)
       &instance->_private.harvestFaultMaxTimer);
 }
 
-static void RakeMotorControlOnTimeExpired(void *context)
+static void HarvestFaultRakeOnTimerExpired(void *context)
 {
    AluminumMoldIceMaker_t *instance = context;
    Hsm_SendSignal(&instance->_private.hsm, Signal_TurnOffRakeMotor, NULL);
 }
 
-static void StartRakeMotorControlOnTimer(AluminumMoldIceMaker_t *instance)
+static void StartHarvestFaultRakeOnTimer(AluminumMoldIceMaker_t *instance)
 {
    TimerModule_StartOneShot(
       DataModelErdPointerAccess_GetTimerModule(
@@ -629,17 +629,17 @@ static void StartRakeMotorControlOnTimer(AluminumMoldIceMaker_t *instance)
          Erd_TimerModule),
       &instance->_private.rakeMotorControlTimer,
       instance->_private.iceMakerParametricData->harvestFaultData.rakeMotorControlTimeInSeconds * MSEC_PER_SEC,
-      RakeMotorControlOnTimeExpired,
+      HarvestFaultRakeOnTimerExpired,
       instance);
 }
 
-static void RakeMotorControlOffTimeExpired(void *context)
+static void HarvestFaultRakeOffTimerExpired(void *context)
 {
    AluminumMoldIceMaker_t *instance = context;
    Hsm_SendSignal(&instance->_private.hsm, Signal_TurnOnRakeMotor, NULL);
 }
 
-static void StartRakeMotorControlOffTimer(AluminumMoldIceMaker_t *instance)
+static void StartHarvestFaultRakeOffTimer(AluminumMoldIceMaker_t *instance)
 {
    TimerModule_StartOneShot(
       DataModelErdPointerAccess_GetTimerModule(
@@ -647,11 +647,11 @@ static void StartRakeMotorControlOffTimer(AluminumMoldIceMaker_t *instance)
          Erd_TimerModule),
       &instance->_private.rakeMotorControlTimer,
       instance->_private.iceMakerParametricData->harvestFaultData.rakeMotorControlTimeInSeconds * MSEC_PER_SEC,
-      RakeMotorControlOffTimeExpired,
+      HarvestFaultRakeOffTimerExpired,
       instance);
 }
 
-static void StopRakeMotorControlTimer(AluminumMoldIceMaker_t *instance)
+static void StopHarvestFaultRakeOnAndOffTimer(AluminumMoldIceMaker_t *instance)
 {
    TimerModule_Stop(
       DataModelErdPointerAccess_GetTimerModule(
@@ -860,17 +860,17 @@ static bool State_HarvestFix(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          StartMaxHarvestFixTimer(instance);
          SetMoldHeaterControlRequestForHarvestFix(instance);
          SetRakeControllerRequest(instance);
-         StartRakeOnTimer(instance);
+         StartHarvestFixRakeOnTimer(instance);
          break;
 
       case Signal_RakeOnTimerExpired:
          ClearRakeControllerRequest(instance);
-         StartRakeOffTimer(instance);
+         StartHarvestFixRakeOffTimer(instance);
          break;
 
       case Signal_RakeOffTimerExpired:
          SetRakeControllerRequest(instance);
-         StartRakeOnTimer(instance);
+         StartHarvestFixRakeOnTimer(instance);
          break;
 
       case Signal_MaxHarvestFixTimeReached:
@@ -891,7 +891,7 @@ static bool State_HarvestFix(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Hsm_Exit:
          instance->_private.revolutionCompletedDuringHarvestFix = false;
          StopMaxHarvestFixTimer(instance);
-         StopRakeOnAndOffTimer(instance);
+         StopHarvestFixRakeOnAndOffTimer(instance);
          ClearMoldHeaterControlRequest(instance);
          ClearRakeControllerRequest(instance);
          break;
@@ -919,12 +919,12 @@ static bool State_HarvestFault(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 
       case Signal_TurnOnRakeMotor:
          SetRakeControllerRequest(instance);
-         StartRakeMotorControlOnTimer(instance);
+         StartHarvestFaultRakeOnTimer(instance);
          break;
 
       case Signal_TurnOffRakeMotor:
          ClearRakeControllerRequest(instance);
-         StartRakeMotorControlOffTimer(instance);
+         StartHarvestFaultRakeOffTimer(instance);
          break;
 
       case Signal_HarvestFaultMaxTimerExpired:
@@ -934,7 +934,7 @@ static bool State_HarvestFault(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 
       case Hsm_Exit:
          StopHarvestFaultMaxTimer(instance);
-         StopRakeMotorControlTimer(instance);
+         StopHarvestFaultRakeOnAndOffTimer(instance);
          ClearRakeControllerRequest(instance);
          break;
 

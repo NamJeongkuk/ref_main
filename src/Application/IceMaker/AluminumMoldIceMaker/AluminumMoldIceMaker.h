@@ -50,7 +50,6 @@ typedef struct
       Timer_t fillTubeHeaterTimer;
       Timer_t maxHarvestTimer;
       Timer_t maxHarvestFixTimer;
-      Timer_t motorOnAndOffTimer;
       Timer_t minimumHeaterOnTimer;
       Timer_t harvestFaultMaxTimer;
       Timer_t rakeMotorControlTimer;
