@@ -57,6 +57,7 @@ typedef struct
    Erd_t defrostTestStateRequestErd; // DefrostTestStateRequestMessage_t
    Erd_t dontSkipDefrostPrechillErd; // bool
    Erd_t invalidFreezerEvaporatorThermistorDuringDefrostErd; // bool
+   Erd_t useMinimumReadyToDefrostTimeErd; // bool
 } DefrostConfiguration_t;
 
 typedef struct

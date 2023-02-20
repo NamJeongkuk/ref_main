@@ -838,6 +838,14 @@ static void ClearDontSkipPrechillFlag(Defrost_t *instance)
       clear);
 }
 
+static void ClearUseMinimumReadyToDefrostTimeFlag(Defrost_t *instance)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->useMinimumReadyToDefrostTimeErd,
+      clear);
+}
+
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
@@ -976,6 +984,7 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          SetHsmStateTo(instance, DefrostHsmState_PrechillPrep);
          ClearDontSkipPrechillFlag(instance);
          ClearDefrostTestStateRequest(instance);
+         ClearUseMinimumReadyToDefrostTimeFlag(instance);
 
          if(PrechillConditionsAreMet(instance))
          {

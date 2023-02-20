@@ -2151,6 +2151,151 @@
           "write": true
         }
       ]
+    },
+    {
+      "title": "Ready to defrost",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Filtered Temperature Too Warm At Power Up",
+          "name": "Erd_FreezerFilteredTemperatureTooWarmAtPowerUp",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "EEPROM Cleared At Startup",
+          "name": "Erd_Eeprom_ClearedDefrostEepromStartup",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Use Minimum Ready To Defrost Time",
+          "name": "Erd_UseMinimumReadyToDefrostTime",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Invalid Freezer Evaporator Thermistor During Defrost",
+          "name": "Erd_InvalidFreezerEvaporatorThermistorDuringDefrost",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh food defrost was abnormal",
+          "name": "Erd_FreshFoodDefrostWasAbnormal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer defrost was abnormal",
+          "name": "Erd_FreezerDefrostWasAbnormal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible compartment was abnormal",
+          "name": "Erd_ConvertibleCompartmentDefrostWasAbnormal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Has Convertible Compartment",
+          "name": "Erd_HasConvertibleCompartment",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Defrost Compressor On Time In Seconds",
+          "name": "Erd_DefrostCompressorOnTimeInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "EEPROM Defrost Compressor On Time In Seconds",
+          "name": "Erd_Eeprom_DefrostCompressorOnTimeInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Scaled Door Acceleration In Seconds",
+          "name": "Erd_DefrostFreezerScaledDoorAccelerationInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "EEPROM Freezer Scaled Door Acceleration In Seconds",
+          "name": "Erd_Eeprom_DefrostFreezerScaledDoorAccelerationInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "EEPROM Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_Eeprom_DefrostFreshFoodScaledDoorAccelerationInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Scaled Door Acceleration In Seconds",
+          "name": "Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "EEPROM Convertible Compartment Scaled Door Acceleration In Seconds",
+          "name": "Erd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Defrost State",
+          "name": "Erd_DefrostState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Defrost Hsm State",
+          "name": "Erd_DefrostHsmState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ready To Defrost",
+          "name": "Erd_ReadyToDefrost",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Waiting for defrost time in seconds",
+          "name": "Erd_WaitingForDefrostTimeInSeconds",
+          "read": true,
+          "write": true
+        }
+      ]
     }
   ]
 }

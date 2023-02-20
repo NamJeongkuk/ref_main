@@ -11,28 +11,29 @@
 #include "Constants_Time.h"
 #include "uassert.h"
 
-static uint32_t DoorAccelerations(ReadyToDefrost_t *instance)
+enum
 {
-   uint32_t freshFoodScaledDoorAccelerationInSeconds;
-   uint32_t freezerScaledDoorAccelerationInSeconds;
-   uint32_t convertibleCompartmentScaledDoorAccelerationInSeconds;
+   Signal_WaitingToDefrost = Fsm_UserSignalStart,
+   Signal_NotWaitingToDefrost,
+   Signal_ConditionChangedAffectingTimeBetweenDefrost,
+   Signal_CompressorOnTimeChanged,
+   Signal_DoorAccelerationsChanged
+};
 
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->freshFoodScaledDoorAccelerationInSecondsErd,
-      &freshFoodScaledDoorAccelerationInSeconds);
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->freezerScaledDoorAccelerationInSecondsErd,
-      &freezerScaledDoorAccelerationInSeconds);
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->convertibleCompartmentScaledDoorAccelerationInSecondsErd,
-      &convertibleCompartmentScaledDoorAccelerationInSeconds);
+static void State_WaitingToGetReadyToDefrost(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
+static void State_ReadyAndDefrosting(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
 
-   return freshFoodScaledDoorAccelerationInSeconds +
-      freezerScaledDoorAccelerationInSeconds +
-      convertibleCompartmentScaledDoorAccelerationInSeconds;
+static ReadyToDefrost_t *InstanceFromFsm(Fsm_t *fsm)
+{
+   return CONTAINER_OF(ReadyToDefrost_t, _private.fsm, fsm);
+}
+
+static void UpdateWaitingDefrostTimeInSecondsTo(ReadyToDefrost_t *instance, uint32_t timeInSeconds)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->waitingForDefrostTimeInSecondsErd,
+      &timeInSeconds);
 }
 
 static bool ConvertibleCompartmentIsAbnormal(ReadyToDefrost_t *instance)
@@ -52,70 +53,8 @@ static bool ConvertibleCompartmentIsAbnormal(ReadyToDefrost_t *instance)
    return hasConvertibleCompartment && convertibleCompartmentDefrostWasAbnormal;
 }
 
-static uint32_t TimeInSecondsWhenReadyToDefrost(ReadyToDefrost_t *instance)
+static bool ShouldUseMinimumTimeBetweenDefrosts(ReadyToDefrost_t *instance)
 {
-   return instance->_private.timeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE;
-}
-
-static uint32_t CompressorOnTimeInSeconds(ReadyToDefrost_t *instance)
-{
-   uint32_t compressorOnTimeInSeconds;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->defrostCompressorOnTimeInSecondsErd,
-      &compressorOnTimeInSeconds);
-
-   return compressorOnTimeInSeconds;
-}
-
-static bool ReadyToDefrost(ReadyToDefrost_t *instance)
-{
-   const DefrostData_t *defrostData = PersonalityParametricData_Get(instance->_private.dataModel)->defrostData;
-   uint32_t defrostCompressorOnTimeInSeconds = CompressorOnTimeInSeconds(instance);
-   uint32_t waitingForDefrostTimeInSeconds = defrostCompressorOnTimeInSeconds;
-   bool readyToDefrost = false;
-
-   if(defrostCompressorOnTimeInSeconds >= (uint32_t)defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)
-   {
-      waitingForDefrostTimeInSeconds += DoorAccelerations(instance);
-      if(waitingForDefrostTimeInSeconds >= TimeInSecondsWhenReadyToDefrost(instance))
-      {
-         readyToDefrost = true;
-      }
-   }
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->waitingForDefrostTimeInSecondsErd,
-      &waitingForDefrostTimeInSeconds);
-
-   return readyToDefrost;
-}
-
-static void UpdateReadyToDefrostErd(ReadyToDefrost_t *instance)
-{
-   bool readyToDefrost = ReadyToDefrost(instance);
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->readyToDefrostErd,
-      &readyToDefrost);
-}
-
-static void UpdateUseMinimumTimeErd(ReadyToDefrost_t *instance)
-{
-   if(ReadyToDefrost(instance))
-   {
-      DataModel_Write(
-         instance->_private.dataModel,
-         instance->_private.config->freezerDefrostUseMinimumTimeErd,
-         clear);
-   }
-}
-
-static void DetermineTimeWhenReadyToDefrost(ReadyToDefrost_t *instance)
-{
-   const DefrostData_t *defrostData = PersonalityParametricData_Get(instance->_private.dataModel)->defrostData;
-
    bool freshFoodDefrostWasAbnormal;
    DataModel_Read(
       instance->_private.dataModel,
@@ -140,63 +79,222 @@ static void DetermineTimeWhenReadyToDefrost(ReadyToDefrost_t *instance)
       instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
       &filteredTempTooWarmOnPowerUp);
 
-   bool minimumTimeIsSet;
+   bool useMinimumReadyToDefrostTime;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerDefrostUseMinimumTimeErd,
-      &minimumTimeIsSet);
+      instance->_private.config->useMinimumReadyToDefrostTimeErd,
+      &useMinimumReadyToDefrostTime);
 
-   bool eepromIsCleared;
+   bool eepromWasCleared;
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->eepromClearedErd,
-      &eepromIsCleared);
+      &eepromWasCleared);
 
-   if(freshFoodDefrostWasAbnormal ||
+   return (freshFoodDefrostWasAbnormal ||
       freezerDefrostWasAbnormal ||
       ConvertibleCompartmentIsAbnormal(instance) ||
       invalidFreezerEvaporatorThermistorDuringDefrost ||
       filteredTempTooWarmOnPowerUp ||
-      minimumTimeIsSet ||
-      eepromIsCleared)
+      useMinimumReadyToDefrostTime ||
+      eepromWasCleared);
+}
+
+static void CalculateTimeBetweenDefrosts(ReadyToDefrost_t *instance)
+{
+   instance->_private.timeBetweenDefrostsInMinutes = instance->_private.defrostData->idleData.maxTimeBetweenDefrostsInMinutes;
+
+   if(ShouldUseMinimumTimeBetweenDefrosts(instance))
    {
-      instance->_private.timeBetweenDefrostsInMinutes = defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes;
+      instance->_private.timeBetweenDefrostsInMinutes = instance->_private.defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes;
    }
-   else
+}
+
+static uint32_t CompressorOnTimeInSeconds(ReadyToDefrost_t *instance)
+{
+   uint32_t compressorOnTimeInSeconds;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->defrostCompressorOnTimeInSecondsErd,
+      &compressorOnTimeInSeconds);
+
+   return compressorOnTimeInSeconds;
+}
+
+static uint32_t DoorAccelerationsInSeconds(ReadyToDefrost_t *instance)
+{
+   uint32_t freshFoodScaledDoorAccelerationInSeconds;
+   uint32_t freezerScaledDoorAccelerationInSeconds;
+   uint32_t convertibleCompartmentScaledDoorAccelerationInSeconds;
+
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freshFoodScaledDoorAccelerationInSecondsErd,
+      &freshFoodScaledDoorAccelerationInSeconds);
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerScaledDoorAccelerationInSecondsErd,
+      &freezerScaledDoorAccelerationInSeconds);
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->convertibleCompartmentScaledDoorAccelerationInSecondsErd,
+      &convertibleCompartmentScaledDoorAccelerationInSeconds);
+
+   return (freshFoodScaledDoorAccelerationInSeconds +
+      freezerScaledDoorAccelerationInSeconds +
+      convertibleCompartmentScaledDoorAccelerationInSeconds);
+}
+
+static void SetReadyToDefrost(ReadyToDefrost_t *instance)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->readyToDefrostErd,
+      set);
+}
+
+static void ClearReadyToDefrost(ReadyToDefrost_t *instance)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->readyToDefrostErd,
+      clear);
+}
+
+static bool ReadyToDefrost(ReadyToDefrost_t *instance)
+{
+   return ((CompressorOnTimeInSeconds(instance) >= instance->_private.defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE) &&
+      ((CompressorOnTimeInSeconds(instance) + DoorAccelerationsInSeconds(instance)) >= instance->_private.timeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE));
+}
+
+static uint32_t CurrentWaitingTime(ReadyToDefrost_t *instance)
+{
+   if(CompressorOnTimeInSeconds(instance) >= (instance->_private.defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE))
    {
-      instance->_private.timeBetweenDefrostsInMinutes = defrostData->idleData.maxTimeBetweenDefrostsInMinutes;
+      return CompressorOnTimeInSeconds(instance) + DoorAccelerationsInSeconds(instance);
+   }
+
+   return CompressorOnTimeInSeconds(instance);
+}
+
+static void SetReadyToDefrostIfReadyToDefrost(ReadyToDefrost_t *instance)
+{
+   if(ReadyToDefrost(instance))
+   {
+      SetReadyToDefrost(instance);
+   }
+}
+
+static void State_WaitingToGetReadyToDefrost(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
+{
+   ReadyToDefrost_t *instance = InstanceFromFsm(fsm);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Fsm_Entry:
+         ClearReadyToDefrost(instance);
+         CalculateTimeBetweenDefrosts(instance);
+         UpdateWaitingDefrostTimeInSecondsTo(instance, CurrentWaitingTime(instance));
+         SetReadyToDefrostIfReadyToDefrost(instance);
+         break;
+
+      case Signal_NotWaitingToDefrost:
+         Fsm_Transition(&instance->_private.fsm, State_ReadyAndDefrosting);
+         break;
+
+      case Signal_ConditionChangedAffectingTimeBetweenDefrost:
+         CalculateTimeBetweenDefrosts(instance);
+         SetReadyToDefrostIfReadyToDefrost(instance);
+         break;
+
+      case Signal_CompressorOnTimeChanged:
+      case Signal_DoorAccelerationsChanged:
+         UpdateWaitingDefrostTimeInSecondsTo(instance, CurrentWaitingTime(instance));
+         SetReadyToDefrostIfReadyToDefrost(instance);
+         break;
+
+      case Fsm_Exit:
+         break;
+   }
+}
+
+static void State_ReadyAndDefrosting(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
+{
+   ReadyToDefrost_t *instance = InstanceFromFsm(fsm);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Fsm_Entry:
+         break;
+
+      case Signal_WaitingToDefrost:
+         Fsm_Transition(&instance->_private.fsm, State_WaitingToGetReadyToDefrost);
+         break;
+
+      case Fsm_Exit:
+         break;
    }
 }
 
 static void DataModelChanged(void *context, const void *args)
 {
    ReadyToDefrost_t *instance = context;
-
    const DataModelOnDataChangeArgs_t *onChangeData = args;
    Erd_t erd = onChangeData->erd;
 
-   if(erd == instance->_private.config->defrostCompressorOnTimeInSecondsErd ||
-      erd == instance->_private.config->freshFoodScaledDoorAccelerationInSecondsErd ||
-      erd == instance->_private.config->freezerScaledDoorAccelerationInSecondsErd ||
-      erd == instance->_private.config->convertibleCompartmentScaledDoorAccelerationInSecondsErd ||
-      erd == instance->_private.config->freezerDefrostWasAbnormalErd ||
+   if(erd == instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd ||
       erd == instance->_private.config->freshFoodDefrostWasAbnormalErd ||
+      erd == instance->_private.config->freezerDefrostWasAbnormalErd ||
       erd == instance->_private.config->convertibleCompartmentDefrostWasAbnormalErd ||
       erd == instance->_private.config->invalidFreezerEvaporatorThermistorDuringDefrostErd ||
-      erd == instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd ||
-      erd == instance->_private.config->freezerDefrostUseMinimumTimeErd ||
-      erd == instance->_private.config->eepromClearedErd)
+      erd == instance->_private.config->useMinimumReadyToDefrostTimeErd ||
+      erd == instance->_private.config->eepromClearedErd ||
+      erd == instance->_private.config->hasConvertibleCompartment)
    {
-      UpdateUseMinimumTimeErd(instance);
-      DetermineTimeWhenReadyToDefrost(instance);
-      UpdateReadyToDefrostErd(instance);
+      Fsm_SendSignal(&instance->_private.fsm, Signal_ConditionChangedAffectingTimeBetweenDefrost, NULL);
    }
+   else if(erd == instance->_private.config->defrostCompressorOnTimeInSecondsErd)
+   {
+      Fsm_SendSignal(&instance->_private.fsm, Signal_CompressorOnTimeChanged, NULL);
+   }
+   else if(erd == instance->_private.config->freshFoodScaledDoorAccelerationInSecondsErd ||
+      erd == instance->_private.config->freezerScaledDoorAccelerationInSecondsErd ||
+      erd == instance->_private.config->convertibleCompartmentScaledDoorAccelerationInSecondsErd)
+   {
+      Fsm_SendSignal(&instance->_private.fsm, Signal_DoorAccelerationsChanged, NULL);
+   }
+   else if(erd == instance->_private.config->waitingToDefrostErd)
+   {
+      const bool *state = onChangeData->data;
+      if(*state)
+      {
+         Fsm_SendSignal(&instance->_private.fsm, Signal_WaitingToDefrost, NULL);
+      }
+      else
+      {
+         Fsm_SendSignal(&instance->_private.fsm, Signal_NotWaitingToDefrost, NULL);
+      }
+   }
+}
+
+static FsmState_t InitialState(ReadyToDefrost_t *instance)
+{
+   bool waitingToDefrost;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->waitingToDefrostErd,
+      &waitingToDefrost);
+
+   return waitingToDefrost ? State_WaitingToGetReadyToDefrost : State_ReadyAndDefrosting;
 }
 
 void ReadyToDefrost_Init(
    ReadyToDefrost_t *instance,
    I_DataModel_t *dataModel,
-   const ReadyToDefrostConfiguration_t *config)
+   const ReadyToDefrostConfiguration_t *config,
+   const DefrostData_t *defrostData)
 {
    bool defrostCompressorOnTimeCounterReady;
    DataModel_Read(
@@ -215,10 +313,9 @@ void ReadyToDefrost_Init(
 
    instance->_private.config = config;
    instance->_private.dataModel = dataModel;
+   instance->_private.defrostData = defrostData;
 
-   UpdateUseMinimumTimeErd(instance);
-   DetermineTimeWhenReadyToDefrost(instance);
-   UpdateReadyToDefrostErd(instance);
+   Fsm_Init(&instance->_private.fsm, InitialState(instance));
 
    EventSubscription_Init(
       &instance->_private.dataModelSubscription,

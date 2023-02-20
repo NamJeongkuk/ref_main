@@ -50,7 +50,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .clearedEepromStartup = Erd_Eeprom_ClearedDefrostEepromStartup,
    .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill,
-   .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost
+   .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
+   .useMinimumReadyToDefrostTimeErd = Erd_UseMinimumReadyToDefrostTime
 };
 
 static const DefrostHeaterMaxOnTimeConfiguration_t defrostHeaterMaxOnTimeConfig = {
@@ -110,14 +111,15 @@ static ReadyToDefrostConfiguration_t readyToDefrostConfig = {
    .defrostCompressorOnTimeCounterReadyErd = Erd_DefrostCompressorOnTimeCounterReady,
    .doorAccelerationCounterReadyErd = Erd_DoorAccelerationCounterReady,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
-   .freezerDefrostUseMinimumTimeErd = Erd_UseMinimumReadyToDefrostTime,
+   .useMinimumReadyToDefrostTimeErd = Erd_UseMinimumReadyToDefrostTime,
    .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
    .hasConvertibleCompartment = Erd_HasConvertibleCompartment,
    .eepromClearedErd = Erd_Eeprom_ClearedDefrostEepromStartup,
-   .waitingForDefrostTimeInSecondsErd = Erd_WaitingForDefrostTimeInSeconds
+   .waitingForDefrostTimeInSecondsErd = Erd_WaitingForDefrostTimeInSeconds,
+   .waitingToDefrostErd = Erd_WaitingToDefrost
 };
 
 static const TimeThatPrechillConditionsAreMetConfiguration_t timeThatPrechillConditionsAreMetConfig = {
@@ -225,6 +227,8 @@ void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
       periodicNvUpdaterReady &&
       sabbathPluginReady);
 
+   const DefrostData_t *defrostData = PersonalityParametricData_Get(dataModel)->defrostData;
+
    DefrostHeaterMaxOnTime_Init(
       &instance->_private.defrostHeaterMaxOnTime,
       dataModel,
@@ -263,7 +267,8 @@ void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
    ReadyToDefrost_Init(
       &instance->_private.readyToDefrost,
       dataModel,
-      &readyToDefrostConfig);
+      &readyToDefrostConfig,
+      defrostData);
 
    NextDefrostTypeArbiter_Init(
       &instance->_private.nextDefrostTypeArbiter,
