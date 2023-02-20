@@ -159,19 +159,19 @@ TEST_GROUP(DefrostIntegration)
    void GivenFreezerEvaporatorThermistorIsValid(bool state)
    {
       DataModel_Write(dataModel, Erd_FreezerEvapThermistor_IsValidOverrideRequest, set);
-      DataModel_Write(dataModel, Erd_FreezerEvapThermistor_IsValidOverrideValue, set);
+      DataModel_Write(dataModel, Erd_FreezerEvapThermistor_IsValidOverrideValue, &state);
    }
 
    void GivenFreshFoodThermistorIsValid(bool state)
    {
       DataModel_Write(dataModel, Erd_FreshFoodThermistor_IsValidOverrideRequest, set);
-      DataModel_Write(dataModel, Erd_FreshFoodThermistor_IsValidOverrideValue, set);
+      DataModel_Write(dataModel, Erd_FreshFoodThermistor_IsValidOverrideValue, &state);
    }
 
    void GivenFreezerThermistorIsValid(bool state)
    {
       DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidOverrideRequest, set);
-      DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidOverrideValue, set);
+      DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidOverrideValue, &state);
    }
 
    void CompressorOnTimeInSecondsShouldBe(uint32_t expectedSeconds)
@@ -202,6 +202,8 @@ TEST_GROUP(DefrostIntegration)
    {
       bool actual;
       DataModel_Read(dataModel, Erd_ReadyToDefrost, &actual);
+
+      CHECK_EQUAL(expected, actual);
    }
 
    void CoolingModeShouldBe(CoolingMode_t expected)
