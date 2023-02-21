@@ -68,7 +68,7 @@ TEST_GROUP(RakeController)
    {
       Given TheModuleIsInitializedAndRakeControlRequestIsSet();
       Given RakePositionIs(RakePosition_Home);
-      Given FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+      Given FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
 
       When RakePositionIs(RakePosition_NotHome);
       After(harvestData.rakeNotHomeTestTimeInSeconds * MSEC_PER_SEC);
@@ -85,7 +85,7 @@ TEST_GROUP(RakeController)
    {
       Given TheModuleIsInitializedAndRakeControlRequestIsSet();
       Given RakePositionIs(RakePosition_Home);
-      Given FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+      Given FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
 
       When RakePositionIs(RakePosition_NotHome);
       After(harvestData.rakeNotHomeTestTimeInSeconds * MSEC_PER_SEC);
@@ -269,7 +269,7 @@ TEST(RakeController, ShouldNotSetRakePositionHasNotBeenHomeAfterRakeNotHomeTimeW
 TEST(RakeController, ShouldSetFeelerArmPositionHasBeenBucketFullWhenFeelerArmPositionHasBeenBucketFullForFeelerArmTestTimeWhileRakeControlRequestIsSet)
 {
    Given TheModuleIsInitializedAndRakeControlRequestIsSet();
-   Given FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+   Given FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
 
    When FeelerArmPositionIs(FeelerArmPosition_BucketFull);
    After(harvestData.feelerArmTestTimeInSeconds * MSEC_PER_SEC - 1);
@@ -279,16 +279,16 @@ TEST(RakeController, ShouldSetFeelerArmPositionHasBeenBucketFullWhenFeelerArmPos
    FeelerArmPositionHasBeenBucketFullShouldBe(SET);
 }
 
-TEST(RakeController, ShouldNotSetFeelerArmPositionHasBeenBucketFullAfterFeelerArmTestTimeWhenFeelerArmPositionChangedToBucketEmptyBeforeTheTimeout)
+TEST(RakeController, ShouldNotSetFeelerArmPositionHasBeenBucketFullAfterFeelerArmTestTimeWhenFeelerArmPositionChangedToBucketNotFullBeforeTheTimeout)
 {
    Given TheModuleIsInitializedAndRakeControlRequestIsSet();
-   Given FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+   Given FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
 
    When FeelerArmPositionIs(FeelerArmPosition_BucketFull);
    After(harvestData.feelerArmTestTimeInSeconds * MSEC_PER_SEC - 1);
    FeelerArmPositionHasBeenBucketFullShouldBe(CLEAR);
 
-   When FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+   When FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
    After(1);
    FeelerArmPositionHasBeenBucketFullShouldBe(CLEAR);
 }
@@ -296,7 +296,7 @@ TEST(RakeController, ShouldNotSetFeelerArmPositionHasBeenBucketFullAfterFeelerAr
 TEST(RakeController, ShouldNotSetFeelerArmPositionHasBeenBucketFullAfterFeelerArmTestTimeWhileRakeControlRequestIsClear)
 {
    Given TheModuleIsInitializedAndRakeControlRequestIsSet();
-   Given FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+   Given FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
 
    When FeelerArmPositionIs(FeelerArmPosition_BucketFull);
    After(harvestData.feelerArmTestTimeInSeconds * MSEC_PER_SEC - 1);
@@ -310,14 +310,14 @@ TEST(RakeController, ShouldNotSetFeelerArmPositionHasBeenBucketFullAfterFeelerAr
 TEST(RakeController, ShouldNotSetFeelerArmHasBeenFullAfterItWasSet)
 {
    Given TheModuleIsInitializedAndRakeControlRequestIsSet();
-   Given FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+   Given FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
 
    When FeelerArmPositionIs(FeelerArmPosition_BucketFull);
    After(harvestData.feelerArmTestTimeInSeconds * MSEC_PER_SEC);
    FeelerArmPositionHasBeenBucketFullShouldBe(SET);
 
    When FeelerArmPositionHasBeenBucketFullIs(CLEAR);
-   And FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+   And FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
    And FeelerArmPositionIs(FeelerArmPosition_BucketFull);
 
    After(harvestData.feelerArmTestTimeInSeconds * MSEC_PER_SEC);
@@ -328,7 +328,7 @@ TEST(RakeController, ShouldVoteToTurnOffRakeMotorAndSetRakeCompletedRevolutionWh
 {
    Given TheModuleIsInitializedAndRakeControlRequestIsSet();
    Given RakePositionIs(RakePosition_Home);
-   Given FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+   Given FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
 
    When RakePositionIs(RakePosition_NotHome);
    After(harvestData.rakeNotHomeTestTimeInSeconds * MSEC_PER_SEC);
@@ -347,7 +347,7 @@ TEST(RakeController, ShouldNotSetRakeCompletedRevolutionWhenRakePositionIsNotHom
 {
    Given TheModuleIsInitializedAndRakeControlRequestIsSet();
    Given RakePositionIs(RakePosition_Home);
-   Given FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+   Given FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
 
    When RakePositionIs(RakePosition_NotHome);
    After(harvestData.rakeNotHomeTestTimeInSeconds * MSEC_PER_SEC);
@@ -364,7 +364,7 @@ TEST(RakeController, ShouldVoteToTurnOffRakeMotorAndSetRakeCompletedRevolutionWh
 {
    Given TheModuleIsInitializedAndRakeControlRequestIsSet();
    Given RakePositionIs(RakePosition_Home);
-   Given FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+   Given FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
 
    When RakePositionIs(RakePosition_NotHome);
    After(harvestData.rakeNotHomeTestTimeInSeconds * MSEC_PER_SEC);

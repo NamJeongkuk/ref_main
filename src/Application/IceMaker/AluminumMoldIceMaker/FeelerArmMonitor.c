@@ -21,7 +21,7 @@ static void FeelerArmDelayTimerExpired(void *context)
       set);
 }
 
-static bool FeelerArmPositionIsBucketEmpty(FeelerArmMonitor_t *instance)
+static bool FeelerArmPositionIsBucketNotFull(FeelerArmMonitor_t *instance)
 {
    FeelerArmPosition_t position;
    DataModel_Read(
@@ -29,7 +29,7 @@ static bool FeelerArmPositionIsBucketEmpty(FeelerArmMonitor_t *instance)
       instance->_private.config->feelerArmPositionErd,
       &position);
 
-   return position == FeelerArmPosition_BucketEmpty;
+   return position == FeelerArmPosition_BucketNotFull;
 }
 
 static bool FeelerArmMonitoringIsRequested(FeelerArmMonitor_t *instance)
@@ -48,7 +48,7 @@ static void FeelerArmMonitoringRequestOrFeelerArmPositionUpdated(void *context, 
    FeelerArmMonitor_t *instance = context;
    IGNORE(args);
 
-   if(FeelerArmMonitoringIsRequested(instance) && FeelerArmPositionIsBucketEmpty(instance))
+   if(FeelerArmMonitoringIsRequested(instance) && FeelerArmPositionIsBucketNotFull(instance))
    {
       TimerModule_StartOneShot(
          DataModelErdPointerAccess_GetTimerModule(

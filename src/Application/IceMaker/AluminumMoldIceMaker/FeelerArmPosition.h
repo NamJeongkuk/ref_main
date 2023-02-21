@@ -12,7 +12,7 @@
 
 enum
 {
-   FeelerArmPosition_BucketEmpty,
+   FeelerArmPosition_BucketNotFull,
    FeelerArmPosition_BucketFull
 };
 typedef uint8_t FeelerArmPosition_t;

@@ -83,12 +83,12 @@ TEST(FeelerArmMonitor, ShouldInitialize)
    TheModuleIsInitialized();
 }
 
-TEST(FeelerArmMonitor, ShouldSetFeelerArmIsReadyToEnterHarvestAfterFeelerArmDelayWhileFeelerArmMonitoringRequestedAndFeelerArmPositionIsBucketEmpty)
+TEST(FeelerArmMonitor, ShouldSetFeelerArmIsReadyToEnterHarvestAfterFeelerArmDelayWhileFeelerArmMonitoringRequestedAndFeelerArmPositionIsBucketNotFull)
 {
    Given TheModuleIsInitialized();
 
    When FeelerArmMonitoringRequestIs(SET);
-   And FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+   And FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
 
    After(aluminumMoldIceMakerData->freezeData.minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN - 1);
    FeelerArmIsReadyToEnterHarvestShouldBe(CLEAR);
@@ -116,7 +116,7 @@ TEST(FeelerArmMonitor, ShouldSetFeelerArmIsReadyToEnterHarvestAfterFeelerArmDela
    Given FeelerArmPositionIs(FeelerArmPosition_BucketFull);
    FeelerArmIsReadyToEnterHarvestShouldBe(CLEAR);
 
-   When FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+   When FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
    After(aluminumMoldIceMakerData->freezeData.minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN - 1);
    FeelerArmIsReadyToEnterHarvestShouldBe(CLEAR);
 
@@ -124,11 +124,11 @@ TEST(FeelerArmMonitor, ShouldSetFeelerArmIsReadyToEnterHarvestAfterFeelerArmDela
    FeelerArmIsReadyToEnterHarvestShouldBe(SET);
 }
 
-TEST(FeelerArmMonitor, ShouldNotSetFeelerArmIsReadyToEnterHarvestAfterFeelerArmDelayWhenFeelerArmMonitoringRequestIsClearWhileFeelerArmPositionIsBucketEmpty)
+TEST(FeelerArmMonitor, ShouldNotSetFeelerArmIsReadyToEnterHarvestAfterFeelerArmDelayWhenFeelerArmMonitoringRequestIsClearWhileFeelerArmPositionIsBucketNotFull)
 {
    Given TheModuleIsInitialized();
    Given FeelerArmMonitoringRequestIs(SET);
-   Given FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+   Given FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
    FeelerArmIsReadyToEnterHarvestShouldBe(CLEAR);
 
    When FeelerArmMonitoringRequestIs(CLEAR);
@@ -148,22 +148,22 @@ TEST(FeelerArmMonitor, ShouldNotSetFeelerArmIsReadyToEnterHarvestAfterFeelerArmD
    FeelerArmIsReadyToEnterHarvestShouldBe(CLEAR);
 }
 
-TEST(FeelerArmMonitor, ShouldNotSetFeelerArmIsReadyToEnterHarvestAfterFeelerArmDelayWhenFeelerArmPositionIsBucketEmptyWhileFeelerArmMonitoringIsNotRequested)
+TEST(FeelerArmMonitor, ShouldNotSetFeelerArmIsReadyToEnterHarvestAfterFeelerArmDelayWhenFeelerArmPositionIsBucketNotFullWhileFeelerArmMonitoringIsNotRequested)
 {
    Given TheModuleIsInitialized();
    Given FeelerArmMonitoringRequestIs(CLEAR);
    Given FeelerArmPositionIs(FeelerArmPosition_BucketFull);
 
-   When FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+   When FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
    After(aluminumMoldIceMakerData->freezeData.minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN);
    FeelerArmIsReadyToEnterHarvestShouldBe(CLEAR);
 }
 
-TEST(FeelerArmMonitor, ShouldClearFeelerArmIsReadyToEnterHarvestWhenFeelerArmMonitoringRequestChangesToFalseWhileIceBucketIsEmpty)
+TEST(FeelerArmMonitor, ShouldClearFeelerArmIsReadyToEnterHarvestWhenFeelerArmMonitoringRequestChangesToFalseWhileIceBucketIsNotFull)
 {
    Given TheModuleIsInitialized();
    Given FeelerArmMonitoringRequestIs(SET);
-   Given FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+   Given FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
    Given FeelerArmIsReadyToEnterHarvestIs(SET);
 
    When FeelerArmMonitoringRequestIs(CLEAR);
@@ -185,7 +185,7 @@ TEST(FeelerArmMonitor, ShouldClearFeelerArmIsReadyToEnterHarvestWhenIceBucketCha
 {
    Given TheModuleIsInitialized();
    Given FeelerArmMonitoringRequestIs(CLEAR);
-   Given FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+   Given FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
    Given FeelerArmIsReadyToEnterHarvestIs(SET);
 
    When FeelerArmPositionIs(FeelerArmPosition_BucketFull);
@@ -196,7 +196,7 @@ TEST(FeelerArmMonitor, ShouldClearFeelerArmIsReadyToEnterHarvestWhenIceBucketCha
 {
    Given TheModuleIsInitialized();
    Given FeelerArmMonitoringRequestIs(SET);
-   Given FeelerArmPositionIs(FeelerArmPosition_BucketEmpty);
+   Given FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
    Given FeelerArmIsReadyToEnterHarvestIs(SET);
 
    When FeelerArmPositionIs(FeelerArmPosition_BucketFull);
