@@ -126,6 +126,11 @@ TEST_GROUP(DefrostTimerIntegration)
          Erd_SabbathPluginReady,
          set);
 
+      DataModel_Write(
+         dataModel,
+         Erd_FreezerThermistor_IsValidResolved,
+         set);
+
       PeriodicNvUpdaterPlugin_Init(&periodicNvUpdaterPlugin, dataModel);
       DefrostPlugin_Init(&instance, dataModel);
    }

@@ -28,6 +28,12 @@ enum
    TwoDimensional = 2,
 };
 
+enum
+{
+   Invalid = false,
+   Valid = true
+};
+
 static CalculatedAxisGridLines_t freshFoodCalcAxis = {
    .gridLinesDegFx100 = { 0, -450, 150, 450, 950, 1150 }
 };
@@ -89,6 +95,11 @@ TEST_GROUP(FreezerFilteredTemperatureTooWarmOnPowerUp)
    {
       FreezerFilteredTemperatureTooWarmOnPowerUp_Init(dataModel);
    }
+
+   void FreezerThermistorIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidResolved, &state);
+   }
 };
 
 TEST(FreezerFilteredTemperatureTooWarmOnPowerUp, ShouldSetErdToTrueWhenFreezerFilteredTemperatureIsAboveGridFreezerExtremeHysteresis)
@@ -96,6 +107,7 @@ TEST(FreezerFilteredTemperatureTooWarmOnPowerUp, ShouldSetErdToTrueWhenFreezerFi
    Given FilteredFreezerCabinetTemperatureIs(freezerCalcAxis.gridLinesDegFx100[GridLine_FreezerExtremeHigh] + 1);
    And CalculatedGridLinesAre(calcGridLines);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   And FreezerThermistorIs(Valid);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIsInitialized();
 
    FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(true);
@@ -106,6 +118,7 @@ TEST(FreezerFilteredTemperatureTooWarmOnPowerUp, ShouldSetErdToFalseWhenFreezerF
    Given FilteredFreezerCabinetTemperatureIs(freezerCalcAxis.gridLinesDegFx100[GridLine_FreezerExtremeHigh]);
    And CalculatedGridLinesAre(calcGridLines);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+   And FreezerThermistorIs(Valid);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIsInitialized();
 
    FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
@@ -116,6 +129,7 @@ TEST(FreezerFilteredTemperatureTooWarmOnPowerUp, ShouldSetErdToTrueWhenFreezerFi
    Given FilteredFreezerCabinetTemperatureIs(defrostData->heaterOnData.freezerDefrostTerminationTemperatureInDegFx100 + 1);
    And CalculatedGridLinesAre(calcGridLines);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   And FreezerThermistorIs(Valid);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIsInitialized();
 
    FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(true);
@@ -126,7 +140,41 @@ TEST(FreezerFilteredTemperatureTooWarmOnPowerUp, ShouldSetErdToTrueWhenFreezerFi
    Given FilteredFreezerCabinetTemperatureIs(defrostData->heaterOnData.freezerDefrostTerminationTemperatureInDegFx100);
    And CalculatedGridLinesAre(calcGridLines);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   And FreezerThermistorIs(Valid);
    And FreezerFilteredTemperatureTooWarmOnPowerUpIsInitialized();
 
    FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(true);
+}
+
+TEST(FreezerFilteredTemperatureTooWarmOnPowerUp, ShouldSetErdToFalseWhenFreezerThermistorIsInvalidAndFreezerFilteredTemperatureIsAboveGridFreezerExtremeHysteresis)
+{
+   Given FilteredFreezerCabinetTemperatureIs(freezerCalcAxis.gridLinesDegFx100[GridLine_FreezerExtremeHigh] + 1);
+   And CalculatedGridLinesAre(calcGridLines);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+   And FreezerThermistorIs(Invalid);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIsInitialized();
+
+   FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
+}
+
+TEST(FreezerFilteredTemperatureTooWarmOnPowerUp, ShouldSetErdToFalseWhenFreezerThermistorIsInvalidAndFreezerFilteredTemperatureIsAboveFreezerDefrostTerminationTemperature)
+{
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->heaterOnData.freezerDefrostTerminationTemperatureInDegFx100 + 1);
+   And CalculatedGridLinesAre(calcGridLines);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+   And FreezerThermistorIs(Invalid);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIsInitialized();
+
+   FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
+}
+
+TEST(FreezerFilteredTemperatureTooWarmOnPowerUp, ShouldSetErdToFalseWhenFreezerThermistorIsInvalidAndFreezerFilteredTemperatureIsEqualToFreezerDefrostTerminationTemperature)
+{
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->heaterOnData.freezerDefrostTerminationTemperatureInDegFx100);
+   And CalculatedGridLinesAre(calcGridLines);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+   And FreezerThermistorIs(Invalid);
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIsInitialized();
+
+   FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
 }
