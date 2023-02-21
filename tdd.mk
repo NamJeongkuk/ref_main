@@ -78,7 +78,6 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/Grid \
    $(TESTS_DIR)/Application/IceMaker \
    $(TESTS_DIR)/Application/IceMaker/AluminumMoldIceMaker \
-   $(TESTS_DIR)/Application/Integration \
    $(TESTS_DIR)/Application/Motor \
    $(TESTS_DIR)/Application/Sabbath \
    $(TESTS_DIR)/Application/ParametricData \
@@ -89,6 +88,11 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/SystemMonitor \
    $(TESTS_DIR)/Application/TimerModule \
    $(TESTS_DIR)/Hardware/SoftPwm \
+
+ifeq ($(INTEGRATION),Y)
+TEST_SRC_DIRS += \
+   $(TESTS_DIR)/Application/Integration
+endif
 
 # List of include directories
 INCLUDE_DIRS := \
