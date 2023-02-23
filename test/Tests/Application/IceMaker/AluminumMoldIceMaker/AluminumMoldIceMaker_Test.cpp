@@ -62,12 +62,35 @@ TEST_GROUP(AluminumMoldIceMaker)
    I_DataModel_t *dataModel;
    const AluminumMoldIceMakerData_t *iceMakerData;
    EventSubscription_t iceWaterValveOnChangeSubscription;
+   EventSubscription_t dataModelOnChangeSubscription;
+   EventSubscription_t rakeControllerRequestOnChangeSubscription;
 
-   static void IceMakerWaterValveVoteChanged(void * context, const void * args)
+   static void IceMakerWaterValveVoteChanged(void *context, const void *args)
    {
       IGNORE(context);
       IGNORE(args);
-      mock().actualCall("Ice Maker Water Valve Vote Changed");
+   }
+
+   static void DataModelChanged(void *context, const void *args)
+   {
+      IGNORE(context);
+      const DataModelOnDataChangeArgs_t *onChangeData = (const DataModelOnDataChangeArgs_t *)args;
+
+      if(onChangeData->erd == Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote)
+      {
+         mock().actualCall("Ice Maker Fill Tube Heater Vote Changed");
+      }
+      else if(onChangeData->erd == Erd_AluminumMoldIceMakerWaterValve_IceMakerVote)
+      {
+         mock().actualCall("Ice Maker Water Valve Vote Changed");
+      }
+   }
+
+   static void RakeControllerRequestChanged(void *context, const void *args)
+   {
+      IGNORE(context);
+      IGNORE(args);
+      mock().actualCall("Ice Maker Rake Controller Request Changed");
    }
 
    void setup()
@@ -78,7 +101,8 @@ TEST_GROUP(AluminumMoldIceMaker)
 
       iceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData;
 
-      EventSubscription_Init(&iceWaterValveOnChangeSubscription, &instance, IceMakerWaterValveVoteChanged);
+      EventSubscription_Init(&dataModelOnChangeSubscription, &instance, DataModelChanged);
+      EventSubscription_Init(&rakeControllerRequestOnChangeSubscription, &instance, RakeControllerRequestChanged);
    }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
@@ -622,13 +646,35 @@ TEST_GROUP(AluminumMoldIceMaker)
 
    void ExpectNoChangeInIceMakerWaterValveVote()
    {
-      DataModel_Subscribe(dataModel, Erd_AluminumMoldIceMakerWaterValve_IceMakerVote, &iceWaterValveOnChangeSubscription);
+      DataModel_SubscribeAll(dataModel, &dataModelOnChangeSubscription);
       mock().expectNoCall("No Call");
    }
 
    void UnsubscribeFromIceWaterValveOnChangeSubscription()
    {
-      DataModel_Unsubscribe(dataModel, Erd_AluminumMoldIceMakerWaterValve_IceMakerVote, &iceWaterValveOnChangeSubscription);
+      DataModel_UnsubscribeAll(dataModel, &dataModelOnChangeSubscription);
+   }
+
+   void ExpectNoChangeInIceMakerFillTubeHeaterVote()
+   {
+      DataModel_SubscribeAll(dataModel, &dataModelOnChangeSubscription);
+      mock().expectNoCall("No Call");
+   }
+
+   void UnsubscribeFromFillTubeHeaterOnChangeSubscription()
+   {
+      DataModel_UnsubscribeAll(dataModel, &dataModelOnChangeSubscription);
+   }
+
+   void ExpectNoChangeInRakeControllerRequest()
+   {
+      DataModel_Subscribe(dataModel, Erd_AluminumMoldIceMakerRakeControlRequest, &rakeControllerRequestOnChangeSubscription);
+      mock().expectNoCall("No Call");
+   }
+
+   void UnsubscribeFromRakeControllerRequestOnChangeSubscription()
+   {
+      DataModel_Unsubscribe(dataModel, Erd_AluminumMoldIceMakerRakeControlRequest, &rakeControllerRequestOnChangeSubscription);
    }
 };
 
@@ -1576,7 +1622,7 @@ TEST(AluminumMoldIceMaker, ShouldNotLeaveIdleFreezeStateWhenIceMakerIsInDisabled
 {
    Given AluminumMoldIceMakerIsInIdleFreezeState();
    Given IceMakerIs(DISABLED);
-   
+
    When ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Fill);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
 
@@ -1588,7 +1634,7 @@ TEST(AluminumMoldIceMaker, ShouldGoFromFillToIdleStateIfSabbathModeIsEnabledAndI
 {
    Given AluminumMoldIceMakerIsInIdleFreezeState();
    Given SabbathModeIs(ENABLED);
-   
+
    When ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Fill);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
 
@@ -1600,7 +1646,7 @@ TEST(AluminumMoldIceMaker, ShouldNotTransitionOutOfFillStateWhenFillTestIsReques
 {
    Given AluminumMoldIceMakerIsInFillState();
    ExpectNoChangeInIceMakerWaterValveVote();
-   
+
    When ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Fill);
    Then UnsubscribeFromIceWaterValveOnChangeSubscription();
 
@@ -1839,6 +1885,114 @@ TEST(AluminumMoldIceMaker, ShouldGoToFreezeAfterSecondRevolutionWhenReEnteringIn
    When RakeDidNotCompleteFullRevolution();
    When RakeCompletesFullRevolution();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldSetTestRequestToNoneAfterTestRequestIsSetToHarvest)
+{
+   Given TheModuleIsInitialized();
+
+   When ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Harvest);
+   ExternalTestRequestShouldBe(AluminumMoldIceMakerTestRequest_None);
+}
+
+TEST(AluminumMoldIceMaker, ShouldRemainInHarvestWhenTestRequestBecomesHarvest)
+{
+   Given IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvest();
+
+   ExpectNoChangeInIceMakerFillTubeHeaterVote();
+   When ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Harvest);
+
+   UnsubscribeFromFillTubeHeaterOnChangeSubscription();
+}
+
+TEST(AluminumMoldIceMaker, ShouldRemainInThermistorFaultWhenExternalTestRequestBecomesHarvest)
+{
+   IceMakerIsEnabledAndAluminumMoldIceMakerIsInThermistorFault();
+   ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Harvest);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+}
+
+TEST(AluminumMoldIceMaker, ShouldRemainInHarvestFixWhenTestRequestBecomesHarvest)
+{
+   IceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvestFix();
+   ExpectNoChangeInRakeControllerRequest();
+   When ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Harvest);
+
+   UnsubscribeFromRakeControllerRequestOnChangeSubscription();
+}
+
+TEST(AluminumMoldIceMaker, ShouldEnterHarvestFromIdleFreezeWhenExternalTestRequestBecomesHarvest)
+{
+   SabbathIsEnabledAndAluminumMoldIceMakerIsInIdleFreezeState();
+   ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Harvest);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+}
+
+TEST(AluminumMoldIceMaker, ShouldEnterHarvestFromFreezeWhenExternalTestRequestBecomesHarvest)
+{
+   AluminumMoldIceMakerIsInFreezeState();
+   ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Harvest);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+}
+
+TEST(AluminumMoldIceMaker, ShouldEnterHarvestFromFillWhenExternalTestRequestBecomesHarvest)
+{
+   AluminumMoldIceMakerIsInFillState();
+   ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Harvest);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+}
+
+TEST(AluminumMoldIceMaker, ShouldEnterHarvestFromHarvestFaultWhenExternalTestRequestBecomesHarvest)
+{
+   AluminumMoldIceMakerIsInHarvestFault();
+   ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Harvest);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+}
+
+TEST(AluminumMoldIceMaker, ShouldReturnToIdleFreezeStateAfterMaxHarvestTimeIfSabbathModeisEnabledAndHarvestIsEnteredViaTestRequest)
+{
+   SabbathIsEnabledAndAluminumMoldIceMakerIsInIdleFreezeState();
+   ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Harvest);
+
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   MaxHarvestTimeExpires();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldReturnToIdleFreezeStateAfterMaxHarvestTimeIfIceMakerDisabledAndHarvestIsEnteredViaTestRequest)
+{
+   IceMakerIsDisabledAndAluminumMoldIceMakerIsInIdleFreezeState();
+   ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Harvest);
+
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   MaxHarvestTimeExpires();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldReturnToIdleFreezeStateAfterFillTuberOnTimeExpiredIfSabbathModeisEnabledAndHarvestIsEnteredViaTestRequest)
+{
+   SabbathIsEnabledAndAluminumMoldIceMakerIsInIdleFreezeState();
+   ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Harvest);
+
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   RakeCompletesFullRevolution();
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldReturnToIdleFreezeStateAfterFillTubeHeaterOnTimeIfIceMakerDisabledAndHarvestIsEnteredViaTestRequest)
+{
+   IceMakerIsDisabledAndAluminumMoldIceMakerIsInIdleFreezeState();
+   ExternalTestRequestIs(AluminumMoldIceMakerTestRequest_Harvest);
+
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   RakeCompletesFullRevolution();
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
 }
 
 TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime)

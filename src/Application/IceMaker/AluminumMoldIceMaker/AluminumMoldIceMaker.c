@@ -42,7 +42,8 @@ enum
    Signal_TestRequest_Fill,
    Signal_TurnOnRakeMotor,
    Signal_TurnOffRakeMotor,
-   Signal_HarvestFaultMaxTimerExpired
+   Signal_HarvestFaultMaxTimerExpired,
+   Signal_TestRequest_Harvest
 };
 
 static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -684,6 +685,10 @@ static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          Hsm_Transition(hsm, State_Fill);
          break;
 
+      case Signal_TestRequest_Harvest:
+         Hsm_Transition(hsm, State_Harvest);
+         break;
+
       case Hsm_Exit:
          break;
 
@@ -806,7 +811,14 @@ static bool State_Harvest(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Signal_MaxHarvestTimeReached:
          if(RakeCompletedRevolution(instance))
          {
-            SkipFillFlagIsSet(instance) ? Hsm_Transition(hsm, State_Freeze) : Hsm_Transition(hsm, State_Fill);
+            if(SabbathModeIsDisabled(instance) && IceMakerIsEnabled(instance))
+            {
+               SkipFillFlagIsSet(instance) ? Hsm_Transition(hsm, State_Freeze) : Hsm_Transition(hsm, State_Fill);
+            }
+            else
+            {
+               Hsm_Transition(hsm, State_IdleFreeze);
+            }
          }
          else
          {
@@ -818,7 +830,14 @@ static bool State_Harvest(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          VoteFillTubeHeaterDontCare(instance);
          if(RakeCompletedRevolution(instance))
          {
-            SkipFillFlagIsSet(instance) ? Hsm_Transition(hsm, State_Freeze) : Hsm_Transition(hsm, State_Fill);
+            if(SabbathModeIsDisabled(instance) && IceMakerIsEnabled(instance))
+            {
+               SkipFillFlagIsSet(instance) ? Hsm_Transition(hsm, State_Freeze) : Hsm_Transition(hsm, State_Fill);
+            }
+            else
+            {
+               Hsm_Transition(hsm, State_IdleFreeze);
+            }
          }
          break;
 
@@ -827,8 +846,18 @@ static bool State_Harvest(Hsm_t *hsm, HsmSignal_t signal, const void *data)
             FillTubeHeaterDutyCycleIsZero(instance) ||
             FillTubeHeaterOnTimeIsZero(instance))
          {
-            SkipFillFlagIsSet(instance) ? Hsm_Transition(hsm, State_Freeze) : Hsm_Transition(hsm, State_Fill);
+            if(SabbathModeIsDisabled(instance) && IceMakerIsEnabled(instance))
+            {
+               SkipFillFlagIsSet(instance) ? Hsm_Transition(hsm, State_Freeze) : Hsm_Transition(hsm, State_Fill);
+            }
+            else
+            {
+               Hsm_Transition(hsm, State_IdleFreeze);
+            }
          }
+         break;
+
+      case Signal_TestRequest_Harvest:
          break;
 
       case Hsm_Exit:
@@ -894,6 +923,9 @@ static bool State_HarvestFix(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          StopHarvestFixRakeOnAndOffTimer(instance);
          ClearMoldHeaterControlRequest(instance);
          ClearRakeControllerRequest(instance);
+         break;
+
+      case Signal_TestRequest_Harvest:
          break;
 
       default:
@@ -1025,6 +1057,9 @@ static bool State_ThermistorFault(Hsm_t *hsm, HsmSignal_t signal, const void *da
          }
          break;
 
+      case Signal_TestRequest_Harvest:
+         break;
+
       case Hsm_Exit:
          break;
 
@@ -1115,7 +1150,10 @@ static void DataModelChanged(void *context, const void *args)
          {
             Hsm_SendSignal(&instance->_private.hsm, Signal_TestRequest_Fill, NULL);
          }
-
+         else if(*request == AluminumMoldIceMakerTestRequest_Harvest)
+         {
+            Hsm_SendSignal(&instance->_private.hsm, Signal_TestRequest_Harvest, NULL);
+         }
          ClearIceMakerTestRequest(instance);
       }
    }
