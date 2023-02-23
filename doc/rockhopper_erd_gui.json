@@ -2185,21 +2185,21 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh food defrost was abnormal",
+          "displayName": "Fresh Food Defrost Was Abnormal",
           "name": "Erd_FreshFoodDefrostWasAbnormal",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Freezer defrost was abnormal",
+          "displayName": "Freezer Defrost Was Abnormal",
           "name": "Erd_FreezerDefrostWasAbnormal",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible compartment was abnormal",
+          "displayName": "Convertible Compartment Was Abnormal",
           "name": "Erd_ConvertibleCompartmentDefrostWasAbnormal",
           "read": true,
           "write": true

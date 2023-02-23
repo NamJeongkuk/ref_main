@@ -709,11 +709,11 @@ static bool State_Freeze(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          RequestHarvestCountCalculation(instance);
          RequestFeelerArmMonitoring(instance);
 
-         if(!instance->_private.initalFreezerStateTransition)
+         if(!instance->_private.initialFreezeStateTransition)
          {
             SendFreezerIceRateSignal(instance);
          }
-         instance->_private.initalFreezerStateTransition = false;
+         instance->_private.initialFreezeStateTransition = false;
          break;
 
       case Signal_HarvestCountIsReadyToHarvest:
@@ -1133,7 +1133,7 @@ static HsmState_t InitialState(AluminumMoldIceMaker_t *instance)
    }
    else if(RakeIsHome(instance))
    {
-      instance->_private.initalFreezerStateTransition = true;
+      instance->_private.initialFreezeStateTransition = true;
       return State_Freeze;
    }
    else
@@ -1150,7 +1150,7 @@ void AluminumMoldIceMaker_Init(
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
    instance->_private.iceMakerParametricData = PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData;
-   instance->_private.initalFreezerStateTransition = false;
+   instance->_private.initialFreezeStateTransition = false;
    instance->_private.revolutionCompletedDuringHarvestFix = false;
 
    Hsm_Init(&instance->_private.hsm, &hsmConfiguration, InitialState(instance));

@@ -55,7 +55,7 @@ typedef struct
       Timer_t rakeMotorControlTimer;
       const AluminumMoldIceMakerConfig_t *config;
       const AluminumMoldIceMakerData_t *iceMakerParametricData;
-      bool initalFreezerStateTransition;
+      bool initialFreezeStateTransition;
       bool revolutionCompletedDuringHarvestFix;
    } _private;
 } AluminumMoldIceMaker_t;
