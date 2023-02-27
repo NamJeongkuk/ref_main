@@ -9,8 +9,6 @@ assignees: ''
 
 **Issue Description:**
 
-**Binary**
-
 **Definition of Done:**
 - [ ] Update Confluence design page with any changes from implementation
 - [ ] Add integration tests
@@ -20,6 +18,9 @@ assignees: ''
 
 **Link to requirement(s):**
 Link to requirements in Confluence <add link here>
+  
+**Link to design(s):**
+Link to designs in Confluence <add link here>
 
 **Logic Replaced**
 If applicable, describe which logic this implementation would replace. Please include any relevant information about the old logic including names, ticket numbers, and parametric information.
