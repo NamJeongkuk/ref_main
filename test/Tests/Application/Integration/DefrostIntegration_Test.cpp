@@ -940,11 +940,11 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToPrechillPrepWhenPrechillTe
    NextDefrostTypeShouldBe(DefrostType_Full);
 }
 
-TEST(DefrostIntegration_SingleEvap, ShouldNotTransitionToPrechillPrepButToHeaterOnEntryWhenPrechillTestRequestedAndFreshFoodThermistorIsInvalidDuringWaitingToDefrostState)
+TEST(DefrostIntegration_SingleEvap, ShouldNotTransitionToPrechillPrepButToHeaterOnEntryWhenPrechillTestRequestedAndFreezerThermistorIsInvalidDuringWaitingToDefrostState)
 {
    GivenThatTheApplicationHasStartedAndDefrostIsInIdle();
    GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
-   GivenFreshFoodThermistorIsValidIs(Invalid);
+   GivenFreezerThermistorIsValidIs(Invalid);
 
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry);
    WhenDefrostTestIsRequested(DefrostTestRequest_Prechill);
@@ -972,11 +972,11 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToPrechillPrepWhenPrechillTe
    NextDefrostTypeShouldBe(DefrostType_Full);
 }
 
-TEST(DefrostIntegration_SingleEvap, ShouldNotTransitionToPrechillPrepButToHeaterOnEntryWhenPrechillTestRequestedAndFreshFoodThermistorIsInvalidDuringDefrostingState)
+TEST(DefrostIntegration_SingleEvap, ShouldNotTransitionToPrechillPrepButToHeaterOnEntryWhenPrechillTestRequestedAndFreezerThermistorIsInvalidDuringDefrostingState)
 {
    GivenThatTheApplicationHasStartedAndDefrostIsInHeaterOnEntry();
    GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
-   GivenFreshFoodThermistorIsValidIs(Invalid);
+   GivenFreezerThermistorIsValidIs(Invalid);
 
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Idle);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry);
