@@ -316,8 +316,8 @@
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Freezer Evaporator Thermistor Is Valid",
-          "name": "Erd_FreezerEvaporatorThermistorIsValid",
+          "displayName": "Freezer Evaporator Thermistor Is Valid Resolved",
+          "name": "Erd_FreezerEvapThermistor_IsValidResolved",
           "read": true,
           "write": true
         },

@@ -25,6 +25,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
    .freezerEvaporatorThermistorIsValidErd = Erd_FreezerEvapThermistor_IsValidResolved,
    .freshFoodThermistorIsValidErd = Erd_FreshFoodThermistor_IsValidResolved,
+   .freezerThermistorIsValidErd = Erd_FreezerThermistor_IsValidResolved,
    .compressorIsOnErd = Erd_CompressorIsOn,
    .coolingModeErd = Erd_CoolingMode,
    .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
