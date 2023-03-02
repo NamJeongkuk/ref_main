@@ -295,10 +295,6 @@ TEST_GROUP(Defrost_SingleEvap)
       }
    }
 
-   void NothingShouldHappen()
-   {
-   }
-
    void FreezerEvaporatorThermistorValidityIs(bool state)
    {
       DataModel_Write(dataModel, Erd_FreezerEvapThermistor_IsValidResolved, &state);
@@ -914,6 +910,28 @@ TEST(Defrost_SingleEvap, ShouldSetDisableMinimumCompressorOnTimesWhenEnteringHea
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
    DisableMinimumCompressorTimesShouldBe(SET);
 }
+TEST(Defrost_SingleEvap, ShouldNotSetDisableMinimumCompressorOnTimesWhenEnteringIdle)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   DisableMinimumCompressorTimesShouldBe(CLEAR);
+}
+
+TEST(Defrost_SingleEvap, ShouldNotSetDisableMinimumCompressorOnTimesWhenEnteringPrechillPrep)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+   DisableMinimumCompressorTimesShouldBe(CLEAR);
+}
+
+TEST(Defrost_SingleEvap, ShouldNotSetDisableMinimumCompressorOnTimesWhenEnteringPrechill)
+{
+   Given MaxPrechillTimeInMinutesIs(TenMinutes);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(NineMinutes);
+   Given FilteredFreezerEvapTemperatureIs(defrostData->prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
+   Given FilteredFreezerCabinetTemperatureIs(defrostData->prechillData.prechillFreezerMinTempInDegFx100 + 1);
+   Given FilteredFreshFoodCabinetTemperatureIs(defrostData->prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+   DisableMinimumCompressorTimesShouldBe(CLEAR);
+}
 
 TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenReadyToDefrostAndLastDefrostsWereNormalAndThermistorsAreValidAndDontSkipPrechillPrepIsNotSet)
 {
@@ -1504,6 +1522,7 @@ TEST(Defrost_SingleEvap, ShouldTurnOffFreezerDefrostHeaterCompressorAndAllFansWh
    FreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off);
    CondenserFanSpeedVoteShouldBe(FanSpeed_Off);
    IceCabinetFanSpeedVoteShouldBe(FanSpeed_Off);
+   DisableMinimumCompressorTimesShouldBe(SET);
 }
 
 TEST(Defrost_SingleEvap, ShouldVoteForFreshFoodDamperWhenEnteringDwell)

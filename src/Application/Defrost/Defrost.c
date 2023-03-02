@@ -424,55 +424,6 @@ static void VoteForFreezerDefrostHeater(
       &heaterVote);
 }
 
-static void VoteForDwellLoads(Defrost_t *instance, bool care)
-{
-   HeaterVotedState_t heaterVote = {
-      .state = HeaterState_Off,
-      .care = care
-   };
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->freezerDefrostHeaterVoteErd,
-      &heaterVote);
-
-   CompressorVotedSpeed_t compressorVote = {
-      .speed = CompressorSpeed_Off,
-      .care = care,
-   };
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->compressorSpeedVoteErd,
-      &compressorVote);
-
-   FanVotedSpeed_t fanVote = {
-      .speed = FanSpeed_Off,
-      .care = care,
-   };
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->condenserFanSpeedVoteErd,
-      &fanVote);
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->freezerEvapFanSpeedVoteErd,
-      &fanVote);
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->iceCabinetFanSpeedVoteErd,
-      &fanVote);
-
-   DamperVotedPosition_t damperVote = {
-      .position = instance->_private.defrostParametricData->dwellData.dwellFreshFoodDamperPosition,
-      .care = care
-   };
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->freshFoodDamperPositionVoteErd,
-      &damperVote);
-}
-
 static void EnableMinimumCompressorTimes(Defrost_t *instance)
 {
    DataModel_Write(
@@ -487,6 +438,16 @@ static void DisableMinimumCompressorTimes(Defrost_t *instance)
       instance->_private.dataModel,
       instance->_private.config->disableMinimumTimeRequestErd,
       set);
+}
+
+static void VoteForDwellLoads(Defrost_t *instance, bool care)
+{
+   VoteForFreezerDefrostHeater(instance, HeaterState_Off, care);
+   VoteForCompressorSpeed(instance, CompressorSpeed_Off, care);
+   VoteForCondenserFanSpeed(instance, FanSpeed_Off, care);
+   VoteForFreezerEvapFanSpeed(instance, FanSpeed_Off, care);
+   VoteForIceCabinetFanSpeed(instance, FanSpeed_Off, care);
+   VoteForDamperPosition(instance, instance->_private.defrostParametricData->dwellData.dwellFreshFoodDamperPosition, care);
 }
 
 static void VoteForPostDwellLoads(Defrost_t *instance, bool care)
@@ -1041,6 +1002,7 @@ static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Dwell);
+         DisableMinimumCompressorTimes(instance);
          VoteForDwellLoads(instance, Vote_Care);
          StartDefrostTimer(
             instance,
