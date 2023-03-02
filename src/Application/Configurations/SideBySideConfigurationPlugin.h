@@ -15,6 +15,7 @@
 #include "SideBySideFactoryPlugin.h"
 #include "IsolationWaterValvePlugin.h"
 #include "FlowMeterPlugin.h"
+#include "SideBySideDispensePlugin.h"
 
 typedef struct
 {
@@ -26,6 +27,7 @@ typedef struct
       FlowMeterPlugin_t flowMeterPlugin;
       SideBySideStaggeredHeater_t staggeredHeaterPlugin;
       SideBySideFactoryPlugin_t factoryPlugin;
+      SideBySideDispensePlugin_t dispensePlugin;
    } _private;
 } SideBySideConfigurationPlugin_t;
 

@@ -80,6 +80,7 @@
 #include "IceMakerMoldHeaterControlRequest.h"
 #include "PercentageDutyCycleVote.h"
 #include "AluminumMoldIceMakerTestRequest.h"
+#include "DispenseSelection.h"
 
 // clang-format off
 
@@ -329,6 +330,8 @@ enum
    ENTRY(Erd_FreshFoodSetpointRequest,                      0x1200, Setpoint_t,                                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodSetpointRangeData,                    0x1201, UserSetpointRangeData_t,                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodSetpointStatus,                       0x1202, Setpoint_t,                                         Swap_N, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Int8Max, NotFault) \
+   ENTRY(Erd_DispenseSelectionRequest,                      0x1206, DispenseSelection_t,                                Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DispenseSelectionStatus,                       0x1207, DispenseSelection_t,                                Swap_N, Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_DispenseSelection, NotFault) \
    ENTRY(Erd_FreezerSetpointRequest,                        0x1210, Setpoint_t,                                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerSetpointRangeData,                      0x1211, UserSetpointRangeData_t,                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerSetpointStatus,                         0x1212, Setpoint_t,                                         Swap_N, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Int8Max, NotFault) \

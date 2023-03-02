@@ -25,6 +25,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/DataSource \
    $(PROJECT_DIR)/Application/Defrost \
    $(PROJECT_DIR)/Application/DemandResponse \
+   $(PROJECT_DIR)/Application/Dispenser \
    $(PROJECT_DIR)/Application/Door \
    $(PROJECT_DIR)/Application/DutyCycle \
    $(PROJECT_DIR)/Application/EnhancedSabbath \
@@ -70,6 +71,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/Damper \
    $(TESTS_DIR)/Application/DataSource \
    $(TESTS_DIR)/Application/Defrost \
+   $(TESTS_DIR)/Application/Dispenser \
    $(TESTS_DIR)/Application/Door \
    $(TESTS_DIR)/Application/DutyCycle \
    $(TESTS_DIR)/Application/Factory \

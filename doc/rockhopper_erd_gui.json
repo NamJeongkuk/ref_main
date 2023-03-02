@@ -1223,6 +1223,25 @@
       ]
     },
     {
+      "title": "Dispenser Compartment",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Dispense Selection Request",
+          "name": "Erd_DispenseSelectionRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dispense Selection Status",
+          "name": "Erd_DispenseSelectionStatus",
+          "read": true,
+          "write": false
+        }
+      ]
+    },
+    {
       "title": "Convertible Compartment",
       "erds": [
         {

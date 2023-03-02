@@ -36,3 +36,8 @@ void NonVolatileDataSourceDefaultData_Int8Max(void *data, size_t dataSize)
 {
    memset(data, INT8_MAX, dataSize);
 }
+void NonVolatileDataSourceDefaultData_DispenseSelection(void *data, size_t dataSize)
+{
+   DispenseSelection_t defaultDispenseSelection = DispenseSelection_ColdWater;
+   memcpy(data, &defaultDispenseSelection, dataSize);
+}
