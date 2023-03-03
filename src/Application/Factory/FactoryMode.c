@@ -71,6 +71,11 @@ static void FactoryModeActiveChanged(void *context, const void *args)
 
    if(*factoryModeIsActive)
    {
+      DataModel_Write(
+         instance->_private.dataModel,
+         instance->_private.config->disableMinimumCompressorTimesErd,
+         set);
+
       for(uint8_t erdIndex = 0; erdIndex < instance->_private.config->factoryVoteList.numberOfPairs; erdIndex++)
       {
          uint8_t erdSize = DataModel_SizeOf(

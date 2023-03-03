@@ -35,6 +35,7 @@ enum
 enum
 {
    Erd_FactoryModeEnableRequest,
+   Erd_DisableMinimumCompressorTimes,
    Erd_Reset,
    Erd_U8_FactoryVoteStruct,
    Erd_U16_FactoryVoteStruct,
@@ -66,6 +67,7 @@ typedef struct
 
 static const DataModel_TestDoubleConfigurationEntry_t erdTable[] = {
    { Erd_FactoryModeEnableRequest, sizeof(bool) },
+   { Erd_DisableMinimumCompressorTimes, sizeof(bool) },
    { Erd_Reset, sizeof(uint8_t) },
    { Erd_U8_FactoryVoteStruct, sizeof(U8Vote_t) },
    { Erd_U16_FactoryVoteStruct, sizeof(U16Vote_t) },
@@ -103,12 +105,14 @@ static const FactoryVoteList_t factoryVoteListWithU64Vote = {
 
 static const FactoryModeConfiguration_t config = {
    .factoryModeActiveErd = Erd_FactoryModeEnableRequest,
+   .disableMinimumCompressorTimesErd = Erd_DisableMinimumCompressorTimes,
    .resetErd = Erd_Reset,
    .factoryVoteList = factoryVoteList
 };
 
 static const FactoryModeConfiguration_t configU64Vote = {
    .factoryModeActiveErd = Erd_FactoryModeEnableRequest,
+   .disableMinimumCompressorTimesErd = Erd_DisableMinimumCompressorTimes,
    .resetErd = Erd_Reset,
    .factoryVoteList = factoryVoteListWithU64Vote
 };
@@ -226,6 +230,20 @@ TEST_GROUP(FactoryMode)
       DataModel_Read(dataModel, Erd_Reset, &actual);
       CHECK_EQUAL(expected, actual);
    }
+
+   void MinimumCompressorTimesShouldBeDisabled()
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_DisableMinimumCompressorTimes, &actual);
+      CHECK_EQUAL(true, actual);
+   }
+
+   void MinimumCompressorTimesShouldBeEnabled()
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_DisableMinimumCompressorTimes, &actual);
+      CHECK_EQUAL(false, actual);
+   }
 };
 
 TEST(FactoryMode, ShouldInitialize)
@@ -258,4 +276,13 @@ TEST(FactoryMode, ShouldRequestResetWhenFactoryModeIsInactive)
 
    When FactoryModeIs(Inactive);
    ResetRequestShouldBe(ResetDelayTimeInSeconds);
+}
+
+TEST(FactoryMode, ShouldDisableMinimumCompressorTimesWhenFactoryModeIsActive)
+{
+   Given ModuleIsInitialized();
+   MinimumCompressorTimesShouldBeEnabled();
+
+   When FactoryModeIs(Active);
+   MinimumCompressorTimesShouldBeDisabled();
 }

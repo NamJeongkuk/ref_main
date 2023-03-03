@@ -77,7 +77,7 @@
           "displayName": "Compressor Speed Factory Vote",
           "name": "Erd_CompressorSpeed_FactoryVote",
           "read": true,
-          "write": false
+          "write": true
         },
         {
           "namespace": "mb",

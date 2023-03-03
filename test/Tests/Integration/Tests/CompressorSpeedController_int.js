@@ -134,6 +134,11 @@ describe("CompressorSpeedController,", () => {
       expect(actual.position).toEqual(expected);
    };
 
+   const theCompressorSpeedResolvedVoteShouldBe = async (expected) => {
+      let actual = await rockhopper.read("Erd_CompressorSpeed_ResolvedVote");
+      expect(actual.speed).toEqual(expected);
+   };
+
    const theCompressorStateShouldBe = async (expected) => {
       const actual = await rockhopper.read("Erd_CompressorState");
       expect(actual).toEqual(expected);
@@ -371,5 +376,19 @@ describe("CompressorSpeedController,", () => {
       await after(1).inMin();
       await delay(1000);
       await theCompressorStateShouldBe(compressorState.offAndReadyToChange);
+   });
+
+   it("should disable compressor minimum off times in factory mode", async () => {
+      await providedTheFactorySpeedCompressorVoteSpeedIs(compressorSpeed.off);
+      await after(minimumOffTimeInMinutes - 1).inMin();
+      await providedTheFactorySpeedCompressorVoteSpeedIs(compressorSpeed.medium);
+      await theCompressorSpeedResolvedVoteShouldBe(compressorSpeed.medium);
+   });
+
+   it("should disable compressor minimum on times in factory mode", async () => {
+      await providedTheFactorySpeedCompressorVoteSpeedIs(compressorSpeed.medium);
+      await after(minimumOnTimeInMinutes - 1).inMin();
+      await providedTheFactorySpeedCompressorVoteSpeedIs(compressorSpeed.off);
+      await theCompressorSpeedResolvedVoteShouldBe(compressorSpeed.off);
    });
 });

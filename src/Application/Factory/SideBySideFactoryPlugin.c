@@ -28,6 +28,7 @@ static const FactoryVoteList_t factoryVoteList = {
 
 static const FactoryModeConfiguration_t factoryModeConfig = {
    .factoryModeActiveErd = Erd_FactoryModeEnableRequest,
+   .disableMinimumCompressorTimesErd = Erd_DisableMinimumCompressorTimes,
    .resetErd = Erd_Reset,
    .factoryVoteList = factoryVoteList
 };
