@@ -350,63 +350,17 @@ static void VoteForDamperPosition(Defrost_t *instance, DamperPosition_t position
 
 static void VoteForPrechillLoads(Defrost_t *instance, bool care)
 {
-   CompressorVotedSpeed_t compressorVote = {
-      .speed = instance->_private.defrostParametricData->prechillData.prechillCompressorSpeed,
-      .care = care
-   };
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->compressorSpeedVoteErd,
-      &compressorVote);
-
-   FanVotedSpeed_t freezerEvapFanVote = {
-      .speed = instance->_private.defrostParametricData->prechillData.prechillFreezerEvapFanSpeed,
-      .care = care
-   };
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->freezerEvapFanSpeedVoteErd,
-      &freezerEvapFanVote);
-
-   DamperVotedPosition_t damperVote = {
-      .position = instance->_private.defrostParametricData->prechillData.prechillFreshFoodDamperPosition,
-      .care = care
-   };
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->freshFoodDamperPositionVoteErd,
-      &damperVote);
+   VoteForCompressorSpeed(instance, instance->_private.defrostParametricData->prechillData.prechillCompressorSpeed, care);
+   VoteForFreezerEvapFanSpeed(instance, instance->_private.defrostParametricData->prechillData.prechillFreezerEvapFanSpeed, care);
+   VoteForDamperPosition(instance, instance->_private.defrostParametricData->prechillData.prechillFreshFoodDamperPosition, care);
 }
 
 static void VoteForHeaterOnEntryLoads(Defrost_t *instance, bool care)
 {
-   CompressorVotedSpeed_t compressorVote = {
-      .speed = CompressorSpeed_Off,
-      .care = care,
-   };
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->compressorSpeedVoteErd,
-      &compressorVote);
-
-   FanVotedSpeed_t fanVote = {
-      .speed = FanSpeed_Off,
-      .care = care,
-   };
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->condenserFanSpeedVoteErd,
-      &fanVote);
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->freezerEvapFanSpeedVoteErd,
-      &fanVote);
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->iceCabinetFanSpeedVoteErd,
-      &fanVote);
+   VoteForCompressorSpeed(instance, CompressorSpeed_Off, care);
+   VoteForCondenserFanSpeed(instance, FanSpeed_Off, care);
+   VoteForFreezerEvapFanSpeed(instance, FanSpeed_Off, care);
+   VoteForIceCabinetFanSpeed(instance, FanSpeed_Off, care);
 }
 
 static void VoteForFreezerDefrostHeater(
