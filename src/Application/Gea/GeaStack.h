@@ -18,12 +18,14 @@
 #include "Gea2PacketEndpoint_PacketRestrictor.h"
 #include "Input_ErdGea2UnlockState.h"
 #include "Validator_RestrictedRangeErd.h"
+#include "ErdClient_ApiRevision2.h"
 #include "ErdGea2ReadWriteApiRevision2.h"
 #include "ErdGea2SubscriptionApiRevision2.h"
 #include "ConstArrayMap_BinarySearch.h"
 #include "ErdStreamReceiver.h"
 #include "GeaStackXmacroUtils.h"
 #include "SystemErds.h"
+#include "PeriodicSignalUpdater.h"
 
 enum
 {
@@ -33,7 +35,8 @@ enum
    SendReceiveBufferSize = Gea2Interface_SingleWireMaxSendReceiveBufferSize,
    PacketQueueStorageSize = 300,
    DynamicRoutingTableBufferSize = 8,
-   ErdApiV2SubscriptionClients = 1
+   ErdApiV2SubscriptionClients = 1,
+   QueueBufferElements = 1024
 };
 
 // clang-format off
@@ -71,6 +74,11 @@ typedef struct
       Gea2Configurator_t configurator;
       Gea2ConfiguratorNode_t applicationNode;
       Gea2ConfiguratorPacketEndpointNodeResources_t applicationPacketEndpointResources;
+
+      ErdClient_ApiRevision2_t erdClient;
+      uint8_t queueBuffer[QueueBufferElements];
+
+      PeriodicSignalUpdater_t mainboardToUiHeartbeatPeriodicSignalUpdater;
 
       struct
       {
