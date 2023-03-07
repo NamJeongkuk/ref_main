@@ -14,7 +14,7 @@ SVD:=tools/kpit-rx/svd/rx130.svd
 ID_CODE:=45C0C0AC1C1AC2C2AC3C3AC4C4AC5C5A
 
 PATH_TO_BUILD_PARAMETRIC:=./Parametric
-PARAMETRIC_DIRS:=Parametric/data/Production/
+PARAMETRIC_DIRS:=Parametric/data/Production
 
 BUILD_DEPS+=$(BOOT_LOADER_DIR)/$(BOOT_LOADER_TARGET)-boot-loader-memory.ld
 
@@ -118,15 +118,21 @@ include lib_applcommon_rx130.mk
 
 include lib_refercommon.mk
 
+PARAMETRIC_HASH:=$(shell cd Parametric && git rev-parse --short HEAD)
+
 PACKAGE_CONTENTS:=
-$(call add_to_package,$(OUTPUT_DIR)/binaries,binaries)
-$(call add_to_package,$(OUTPUT_DIR)/doc,doc)
-$(call add_to_package,doc/lighthouse_data_collection.json,doc)
-$(call add_to_package,doc/lighthouse_erd_gui.json,doc)
-$(call add_to_package,doc/wifi-erd-definitions.json,doc)
-$(call add_to_package,doc/hardware_gui_for_lighthouse.json,doc)
-$(call add_to_package,$(OUTPUT_DIR)/$(TARGET).map,)
-$(call add_to_package,$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md,)
+$(call add_to_package,{ from = '$(OUTPUT_DIR)/doc', to = 'doc' })
+$(call add_to_package,{ from = 'doc/lighthouse_data_collection.json', to = 'doc' })
+$(call add_to_package,{ from = 'doc/lighthouse_erd_gui.json', to = 'doc' })
+$(call add_to_package,{ from = 'doc/wifi-erd-definitions.json', to = 'doc' })
+$(call add_to_package,{ from = 'doc/hardware_gui_for_lighthouse.json', to = 'doc' })
+$(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET).map', to = '' })
+$(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md', to = '' })
+$(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET).apl', to = 'binaries/$(TARGET).apl', version = true })
+$(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET)_bootloader_app_parametric.mot', to = 'binaries/$(TARGET).mot', version = true })
+$(call add_to_package,{ from = '$(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot', to = 'binaries/$(TARGET).mot', version = true })
+$(call add_to_package,{ from = '$(BOOT_LOADER_UPDATER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader-updater/$(BOOT_LOADER_TARGET)-boot-loader-updater.apl', to = 'binaries/', version = true })
+$(call add_to_package,{ from = '$(OUTPUT_DIR)/$(PARAMETRIC_DIRS)/rockhopper.parametric.apl', to = 'binaries/$(TARGET)_%v_$(PARAMETRIC_HASH).apl', version = true })
 
 .PHONY: all
 all: info
@@ -138,20 +144,14 @@ info: build
 .PHONY: build
 build: target $(OUTPUT_DIR)/$(TARGET)_bootloader_app_parametric.mot
 	$(call copy_file,$(OUTPUT_DIR)/$(TARGET).apl,$(OUTPUT_DIR)/$(TARGET).mot)
-	$(call make_directory,$(OUTPUT_DIR)/binaries)
 	@$(LUA53) $(LUA_MEMORY_USAGE_REPORT) --configuration $(TARGET)_memory_report_config.lua --output $(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md
 
 target: erd_definitions
 
 .PHONY: package
 package: build artifacts erd_lock
-	@echo Creating artifacts/$(TARGET)_$(GIT_SHORT_HASH).zip...
-	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET).apl --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
-	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(TARGET)_bootloader_app_parametric.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
-	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(OUTPUT_DIR)/$(PARAMETRIC_DIRS)rockhopper.parametric.apl --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).apl
-	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries --base_name $(TARGET).mot
-	@$(LUA53) $(LUA_VERSION_RENAMER) --input $(BOOT_LOADER_UPDATER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader-updater/$(BOOT_LOADER_TARGET)-boot-loader-updater.apl --endianness $(ENDIANNESS) --output_directory $(OUTPUT_DIR)/binaries
-	@$(call create_artifacts,$(TARGET)_$(HW_VERSION)_$(GIT_SHORT_HASH).zip)
+	@echo Creating artifacts/$(TARGET)_$(HW_VERSION)_v$(CRIT_VERSION_MAJOR).$(CRIT_VERSION_MINOR).$(NONCRIT_VERSION_MAJOR).$(NONCRIT_VERSION_MINOR)_$(GIT_SHORT_HASH).zip...
+	@$(call create_artifacts,$(TARGET)_$(HW_VERSION)_v$(CRIT_VERSION_MAJOR).$(CRIT_VERSION_MINOR).$(NONCRIT_VERSION_MAJOR).$(NONCRIT_VERSION_MINOR)_$(GIT_SHORT_HASH).zip)
 
 $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot:
 	@OUTPUT_PREFIX="\<BootLoader\>" $(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N build
