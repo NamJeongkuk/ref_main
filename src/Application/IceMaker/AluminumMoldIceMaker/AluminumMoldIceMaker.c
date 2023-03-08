@@ -809,20 +809,20 @@ static bool State_Harvest(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_MaxHarvestTimeReached:
-         if(RakeCompletedRevolution(instance))
+         if(SabbathModeIsDisabled(instance) && IceMakerIsEnabled(instance))
          {
-            if(SabbathModeIsDisabled(instance) && IceMakerIsEnabled(instance))
+            if(RakeCompletedRevolution(instance))
             {
                SkipFillFlagIsSet(instance) ? Hsm_Transition(hsm, State_Freeze) : Hsm_Transition(hsm, State_Fill);
             }
             else
             {
-               Hsm_Transition(hsm, State_IdleFreeze);
+               Hsm_Transition(hsm, State_HarvestFix);
             }
          }
          else
          {
-            Hsm_Transition(hsm, State_HarvestFix);
+            Hsm_Transition(hsm, State_IdleFreeze);
          }
          break;
 
