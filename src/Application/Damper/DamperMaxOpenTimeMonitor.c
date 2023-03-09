@@ -31,7 +31,7 @@ static void MaxOpenDamperTimerExpired(void *context)
    DamperMaxOpenTime_t *instance = context;
    DamperVotedPosition_t damperMaxOpenVoteCareAndPosition;
 
-   damperMaxOpenVoteCareAndPosition.care = true;
+   damperMaxOpenVoteCareAndPosition.care = Vote_Care;
    damperMaxOpenVoteCareAndPosition.position = DamperPosition_Closed;
 
    SetMaxOpenDamperRequestPositionVote(instance, damperMaxOpenVoteCareAndPosition);

@@ -144,7 +144,7 @@ static void VoteDamperHeaterOff(DamperFreezePrevention_t *instance)
 {
    PercentageDutyCycleVote_t vote;
    vote.percentageDutyCycle = PercentageDutyCycle_Min;
-   vote.care = Vote_Care;
+   vote.care = Vote_DontCare;
 
    DataModel_Write(
       instance->_private.dataModel,

@@ -133,7 +133,7 @@ TEST_GROUP(DamperFreezePrevention)
       DataModel_Read(dataModel, Erd_FreshFoodDamperHeater_DamperFreezePreventionVote, &vote);
 
       CHECK_EQUAL(PercentageDutyCycle_Min, vote.percentageDutyCycle);
-      CHECK_TRUE(vote.care);
+      CHECK_FALSE(vote.care);
    }
 
    void TargetThermistorIsValid()
