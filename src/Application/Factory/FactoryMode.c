@@ -11,10 +11,12 @@
 #include "StackAllocator.h"
 #include "uassert.h"
 #include <stdlib.h>
+#include "Constants_Time.h"
 
 enum
 {
-   ResetDelayTimeInSeconds = 1
+   ResetDelayTimeInSeconds = 1,
+   OneMinuteInMsec = 1 * MSEC_PER_MIN
 };
 
 typedef struct
@@ -63,33 +65,68 @@ static void FillOffValueInFactoryVote(void *context, void *factoryVoteData)
       factoryVoteData);
 }
 
-static void FactoryModeActiveChanged(void *context, const void *args)
+static void FactoryModeOneMinuteTimerExpired(void *context)
 {
    FactoryMode_t *instance = context;
-   const bool *factoryModeIsActive = args;
+   uint8_t factoryModeTime;
+
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->factoryModeTimeErd,
+      &factoryModeTime);
+
+   factoryModeTime--;
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->factoryModeTimeErd,
+      &factoryModeTime);
+}
+
+static void VoteOffForAllTheLoads(void *context)
+{
+   FactoryMode_t *instance = context;
+
+   for(uint8_t erdIndex = 0; erdIndex < instance->_private.config->factoryVoteList.numberOfPairs; erdIndex++)
+   {
+      uint8_t erdSize = DataModel_SizeOf(
+         instance->_private.dataModel,
+         instance->_private.config->factoryVoteList.pairs[erdIndex].factoryVoteErd);
+
+      FactoryVoteErdCallbackContext_t factoryVoteErdCallbackContext = {
+         instance,
+         erdIndex,
+         erdSize
+      };
+
+      StackAllocator_Allocate(erdSize, FillOffValueInFactoryVote, &factoryVoteErdCallbackContext);
+   }
+}
+
+static void FactoryModeTimeChanged(void *context, const void *args)
+{
+   FactoryMode_t *instance = context;
+   const uint8_t *factoryModeEnableTimeInMinutes = args;
    uint8_t delay = ResetDelayTimeInSeconds;
 
-   if(*factoryModeIsActive)
+   if(*factoryModeEnableTimeInMinutes > 0)
    {
-      DataModel_Write(
-         instance->_private.dataModel,
-         instance->_private.config->disableMinimumCompressorTimesErd,
-         set);
-
-      for(uint8_t erdIndex = 0; erdIndex < instance->_private.config->factoryVoteList.numberOfPairs; erdIndex++)
+      if(instance->_private.factoryModeEntered == false)
       {
-         uint8_t erdSize = DataModel_SizeOf(
+         DataModel_Write(
             instance->_private.dataModel,
-            instance->_private.config->factoryVoteList.pairs[erdIndex].factoryVoteErd);
+            instance->_private.config->disableMinimumCompressorTimesErd,
+            set);
 
-         FactoryVoteErdCallbackContext_t factoryVoteErdCallbackContext = {
-            instance,
-            erdIndex,
-            erdSize
-         };
-
-         StackAllocator_Allocate(erdSize, FillOffValueInFactoryVote, &factoryVoteErdCallbackContext);
+         VoteOffForAllTheLoads(instance);
+         instance->_private.factoryModeEntered = true;
       }
+
+      TimerModule_StartOneShot(
+         instance->_private.timerModule,
+         &instance->_private.factoryModeOneMinuteTimer,
+         OneMinuteInMsec,
+         FactoryModeOneMinuteTimerExpired,
+         instance);
    }
    else
    {
@@ -103,17 +140,19 @@ static void FactoryModeActiveChanged(void *context, const void *args)
 void FactoryMode_Init(
    FactoryMode_t *instance,
    I_DataModel_t *dataModel,
-   const FactoryModeConfiguration_t *factoryModeConfig)
+   const FactoryModeConfiguration_t *factoryModeConfig,
+   TimerModule_t *timerModule)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = factoryModeConfig;
+   instance->_private.timerModule = timerModule;
 
    EventSubscription_Init(
       &instance->_private.factoryModeSubscription,
       instance,
-      FactoryModeActiveChanged);
+      FactoryModeTimeChanged);
    DataModel_Subscribe(
       instance->_private.dataModel,
-      instance->_private.config->factoryModeActiveErd,
+      instance->_private.config->factoryModeTimeErd,
       &instance->_private.factoryModeSubscription);
 }

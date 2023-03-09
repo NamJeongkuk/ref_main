@@ -8,6 +8,7 @@
 #include "SideBySideFactoryPlugin.h"
 #include "FactoryMode.h"
 #include "SystemErds.h"
+#include "DataModelErdPointerAccess.h"
 #include "Constants_Binary.h"
 
 static const FactoryVotePair_t factoryVotePairs[] = {
@@ -27,7 +28,7 @@ static const FactoryVoteList_t factoryVoteList = {
 };
 
 static const FactoryModeConfiguration_t factoryModeConfig = {
-   .factoryModeActiveErd = Erd_FactoryModeEnableRequest,
+   .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
    .disableMinimumCompressorTimesErd = Erd_DisableMinimumCompressorTimes,
    .resetErd = Erd_Reset,
    .factoryVoteList = factoryVoteList
@@ -35,5 +36,8 @@ static const FactoryModeConfiguration_t factoryModeConfig = {
 
 void SideBySideFactoryPlugin_Init(SideBySideFactoryPlugin_t *instance, I_DataModel_t *dataModel)
 {
-   FactoryMode_Init(&instance->_private.factoryMode, dataModel, &factoryModeConfig);
+   FactoryMode_Init(&instance->_private.factoryMode,
+      dataModel,
+      &factoryModeConfig,
+      DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule));
 }

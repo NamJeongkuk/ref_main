@@ -1,34 +1,34 @@
 {
   "name": "WARNING: MAY DAMAGE UNIT - Lighthouse Hardware Pinout GUI",
   "tabs": [
-      {
-         "title": "Versions",
-         "erds": [
-            {
-               "namespace": "mb",
-               "displayName": "Mainboard Application Version",
-               "name": "Erd_ApplicationVersion",
-               "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
-               "displayName": "Mainboard Parametric Version",
-               "name": "Erd_ParametricVersion",
-               "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
-               "displayName": "Factory Mode Enable",
-               "name": "Erd_FactoryModeEnableRequest",
-               "read": true,
-               "write": true,
-               "interval": 1000000000
-            }
-         ]
-      },
-      {
+    {
+      "title": "Versions",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Mainboard Application Version",
+          "name": "Erd_ApplicationVersion",
+          "read": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Mainboard Parametric Version",
+          "name": "Erd_ParametricVersion",
+          "read": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Factory Mode Enable Request in Minutes",
+          "name": "Erd_FactoryModeEnableRequestInMinutes",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        }
+      ]
+    },
+    {
       "title": "12V Outputs",
       "erds": [
         {
@@ -261,7 +261,7 @@
           "read": true,
           "write": false,
           "interval": 1000000000
-        }		
+        }
       ]
     },
     {

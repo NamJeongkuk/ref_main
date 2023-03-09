@@ -14,6 +14,8 @@ extern "C"
 
 #include "CppUTest/TestHarness.h"
 #include "DataModel_TestDouble.h"
+#include "TimerModule_TestDouble.h"
+#include "Constants_Time.h"
 #include "uassert_test.h"
 
 #define Given
@@ -23,8 +25,9 @@ extern "C"
 
 enum
 {
-   Inactive = false,
-   Active = true
+   TwoMinutes = 2,
+   OneMinute = 1,
+   ZeroMinutes = 0,
 };
 
 enum
@@ -34,7 +37,7 @@ enum
 
 enum
 {
-   Erd_FactoryModeEnableRequest,
+   Erd_FactoryModeEnableRequestInMinutes,
    Erd_DisableMinimumCompressorTimes,
    Erd_Reset,
    Erd_U8_FactoryVoteStruct,
@@ -59,6 +62,10 @@ static uint8_t U8AnotherOffValue = 1;
 static uint16_t U16AnotherOffValue = UINT8_MAX + 1;
 static uint32_t U32AnotherOffValue = UINT16_MAX + 1;
 
+static uint8_t U8ChangeValue = 127;
+static uint16_t U16ChangeValue = UINT8_MAX + 10;
+static uint32_t U32ChangeValue = UINT16_MAX + 10;
+
 typedef struct
 {
    uint64_t value;
@@ -66,7 +73,7 @@ typedef struct
 } U64Vote_t;
 
 static const DataModel_TestDoubleConfigurationEntry_t erdTable[] = {
-   { Erd_FactoryModeEnableRequest, sizeof(bool) },
+   { Erd_FactoryModeEnableRequestInMinutes, sizeof(uint8_t) },
    { Erd_DisableMinimumCompressorTimes, sizeof(bool) },
    { Erd_Reset, sizeof(uint8_t) },
    { Erd_U8_FactoryVoteStruct, sizeof(U8Vote_t) },
@@ -104,14 +111,14 @@ static const FactoryVoteList_t factoryVoteListWithU64Vote = {
 };
 
 static const FactoryModeConfiguration_t config = {
-   .factoryModeActiveErd = Erd_FactoryModeEnableRequest,
+   .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
    .disableMinimumCompressorTimesErd = Erd_DisableMinimumCompressorTimes,
    .resetErd = Erd_Reset,
    .factoryVoteList = factoryVoteList
 };
 
 static const FactoryModeConfiguration_t configU64Vote = {
-   .factoryModeActiveErd = Erd_FactoryModeEnableRequest,
+   .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
    .disableMinimumCompressorTimesErd = Erd_DisableMinimumCompressorTimes,
    .resetErd = Erd_Reset,
    .factoryVoteList = factoryVoteListWithU64Vote
@@ -122,26 +129,40 @@ TEST_GROUP(FactoryMode)
    DataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    FactoryMode_t instance;
+   TimerModule_TestDouble_t timerModuleDouble;
 
    void setup()
    {
       DataModel_TestDouble_Init(&dataModelDouble, erdTable, NUM_ELEMENTS(erdTable));
       dataModel = dataModelDouble.dataModel;
+      TimerModule_TestDouble_Init(&timerModuleDouble);
    }
 
    void ModuleIsInitialized()
    {
-      FactoryMode_Init(&instance, dataModel, &config);
+      FactoryMode_Init(&instance, dataModel, &config, &timerModuleDouble.timerModule);
    }
 
    void ModuleIsInitializedWithU64Vote()
    {
-      FactoryMode_Init(&instance, dataModel, &configU64Vote);
+      FactoryMode_Init(&instance, dataModel, &configU64Vote, &timerModuleDouble.timerModule);
    }
 
-   void FactoryModeIs(bool state)
+   void FactoryModeEnableRequestInMinutesIs(uint8_t value)
    {
-      DataModel_Write(dataModel, Erd_FactoryModeEnableRequest, &state);
+      DataModel_Write(dataModel, Erd_FactoryModeEnableRequestInMinutes, &value);
+   }
+
+   void FactoryModeEnableRequestInMinutesShouldBe(uint8_t expected)
+   {
+      uint8_t actual;
+      DataModel_Read(dataModel, Erd_FactoryModeEnableRequestInMinutes, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void After(TimerTicks_t ticks)
+   {
+      TimerModule_TestDouble_ElapseTime(&timerModuleDouble, ticks, 1000);
    }
 
    void U8VoteStructErdHasValue(Erd_t erd, uint8_t value, Vote_t vote)
@@ -251,38 +272,115 @@ TEST(FactoryMode, ShouldInitialize)
    ModuleIsInitialized();
 }
 
-TEST(FactoryMode, ShouldVoteOffForAllTheLoadsWhenFactoryModeIsChangedFromInactiveToActive)
+TEST(FactoryMode, ShouldVoteOffForAllTheLoadsWhenFactoryModeEnableRequestInMinutesIsChangedFromZeroToNotZero)
 {
    Given AllFactoryVoteErdsAreUninitialized();
-   Given FactoryModeIs(Inactive);
+   Given FactoryModeEnableRequestInMinutesIs(ZeroMinutes);
    Given ModuleIsInitialized();
 
-   When FactoryModeIs(Active);
+   When FactoryModeEnableRequestInMinutesIs(OneMinute);
    AllFactoryVotesShouldBeOff();
+}
+
+TEST(FactoryMode, ShouldNotVoteToOffForAllTheLoadsWhenFactoryModeEnableRequestInMinutesDecreasese)
+{
+   Given ModuleIsInitialized();
+   Given FactoryModeEnableRequestInMinutesIs(TwoMinutes);
+   Given U8VoteStructErdHasValue(Erd_U8_FactoryVoteStruct, U8ChangeValue, Vote_Care);
+   Given U16VoteStructErdHasValue(Erd_U16_FactoryVoteStruct, U16ChangeValue, Vote_Care);
+   Given U32VoteStructErdHasValue(Erd_U32_FactoryVoteStruct, U32ChangeValue, Vote_Care);
+   Given U8VoteStructErdHasValue(Erd_U8_AnotherFactoryVoteStruct, U8ChangeValue, Vote_Care);
+   Given U16VoteStructErdHasValue(Erd_U16_AnotherFactoryVoteStruct, U16ChangeValue, Vote_Care);
+   Given U32VoteStructErdHasValue(Erd_U32_AnotherFactoryVoteStruct, U32ChangeValue, Vote_Care);
+
+   After(OneMinute * MSEC_PER_MIN);
+   TheU8VoteStructErdShouldBe(Erd_U8_FactoryVoteStruct, U8ChangeValue, Vote_Care);
+   TheU16VoteStructErdShouldBe(Erd_U16_FactoryVoteStruct, U16ChangeValue, Vote_Care);
+   TheU32VoteStructErdShouldBe(Erd_U32_FactoryVoteStruct, U32ChangeValue, Vote_Care);
+   TheU8VoteStructErdShouldBe(Erd_U8_AnotherFactoryVoteStruct, U8ChangeValue, Vote_Care);
+   TheU16VoteStructErdShouldBe(Erd_U16_AnotherFactoryVoteStruct, U16ChangeValue, Vote_Care);
+   TheU32VoteStructErdShouldBe(Erd_U32_AnotherFactoryVoteStruct, U32ChangeValue, Vote_Care);
 }
 
 TEST(FactoryMode, ShouldAssertWhenOverSizeVoteErdIsIncludedInConfig)
 {
-   Given FactoryModeIs(Inactive);
+   Given FactoryModeEnableRequestInMinutesIs(ZeroMinutes);
    Given ModuleIsInitializedWithU64Vote();
 
-   ShouldFailAssertionWhen(FactoryModeIs(Active));
+   ShouldFailAssertionWhen(FactoryModeEnableRequestInMinutesIs(OneMinute));
 }
 
-TEST(FactoryMode, ShouldRequestResetWhenFactoryModeIsInactive)
+TEST(FactoryMode, ShouldRequestResetWhenFactoryModeEnableRequestInMinutesIsSetToZero)
 {
    Given ModuleIsInitialized();
-   Given FactoryModeIs(Active);
+   Given FactoryModeEnableRequestInMinutesIs(TwoMinutes);
+   ResetRequestShouldBe(0);
 
-   When FactoryModeIs(Inactive);
+   When FactoryModeEnableRequestInMinutesIs(ZeroMinutes);
    ResetRequestShouldBe(ResetDelayTimeInSeconds);
 }
 
-TEST(FactoryMode, ShouldDisableMinimumCompressorTimesWhenFactoryModeIsActive)
+TEST(FactoryMode, ShouldResetWhenFactoryModeEnableRequestInMinutesReachesZero)
+{
+   Given ModuleIsInitialized();
+   Given FactoryModeEnableRequestInMinutesIs(TwoMinutes);
+
+   After(OneMinute * MSEC_PER_MIN);
+   ResetRequestShouldBe(0);
+
+   After(OneMinute * MSEC_PER_MIN - 1);
+   ResetRequestShouldBe(0);
+
+   After(1);
+   ResetRequestShouldBe(ResetDelayTimeInSeconds);
+}
+
+TEST(FactoryMode, ShouldDisableMinimumCompressorTimesWhenEnteringFactoryModeByFactoryModeEnableRequestInMinutes)
 {
    Given ModuleIsInitialized();
    MinimumCompressorTimesShouldBeEnabled();
 
-   When FactoryModeIs(Active);
+   When FactoryModeEnableRequestInMinutesIs(TwoMinutes);
    MinimumCompressorTimesShouldBeDisabled();
+}
+
+TEST(FactoryMode, ShouldDecreaseFactoryModeEnableRequestInMinutesByOneEveryMinute)
+{
+   Given ModuleIsInitialized();
+   Given FactoryModeEnableRequestInMinutesIs(TwoMinutes);
+
+   After(OneMinute * MSEC_PER_MIN - 1);
+   FactoryModeEnableRequestInMinutesShouldBe(TwoMinutes);
+
+   After(1);
+   FactoryModeEnableRequestInMinutesShouldBe(OneMinute);
+
+   After(OneMinute * MSEC_PER_MIN - 1);
+   FactoryModeEnableRequestInMinutesShouldBe(OneMinute);
+
+   After(1);
+   FactoryModeEnableRequestInMinutesShouldBe(ZeroMinutes);
+}
+
+TEST(FactoryMode, ShouldDecreaseFactoryModeEnableRequestInMinutesByOneEveryMinuteAfterHavingNewValue)
+{
+   Given ModuleIsInitialized();
+   Given FactoryModeEnableRequestInMinutesIs(TwoMinutes);
+
+   After(OneMinute * MSEC_PER_MIN);
+   FactoryModeEnableRequestInMinutesShouldBe(OneMinute);
+
+   When FactoryModeEnableRequestInMinutesIs(TwoMinutes);
+
+   After(OneMinute * MSEC_PER_MIN - 1);
+   FactoryModeEnableRequestInMinutesShouldBe(TwoMinutes);
+
+   After(1);
+   FactoryModeEnableRequestInMinutesShouldBe(OneMinute);
+
+   After(OneMinute * MSEC_PER_MIN - 1);
+   FactoryModeEnableRequestInMinutesShouldBe(OneMinute);
+
+   After(1);
+   FactoryModeEnableRequestInMinutesShouldBe(ZeroMinutes);
 }

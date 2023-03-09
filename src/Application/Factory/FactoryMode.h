@@ -10,6 +10,7 @@
 
 #include "I_DataModel.h"
 #include "ErdList.h"
+#include "Timer.h"
 
 typedef struct
 {
@@ -25,7 +26,7 @@ typedef struct
 
 typedef struct
 {
-   Erd_t factoryModeActiveErd; // bool
+   Erd_t factoryModeTimeErd; // uint8_t
    Erd_t disableMinimumCompressorTimesErd; // bool
    Erd_t resetErd; // uint8_t
    const FactoryVoteList_t factoryVoteList;
@@ -38,6 +39,9 @@ typedef struct
       I_DataModel_t *dataModel;
       EventSubscription_t factoryModeSubscription;
       const FactoryModeConfiguration_t *config;
+      Timer_t factoryModeOneMinuteTimer;
+      TimerModule_t *timerModule;
+      bool factoryModeEntered;
    } _private;
 } FactoryMode_t;
 
@@ -46,10 +50,11 @@ typedef struct
  * @param instance
  * @param dataModel
  * @param factoryModeConfiguration
+ * @param timerModule
  */
 void FactoryMode_Init(
    FactoryMode_t *instance,
    I_DataModel_t *dataModel,
-   const FactoryModeConfiguration_t *factoryModeConfiguration);
-
+   const FactoryModeConfiguration_t *factoryModeConfiguration,
+   TimerModule_t *timerModule);
 #endif

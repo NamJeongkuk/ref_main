@@ -85,7 +85,7 @@
                "name": "Erd_CompressorSpeed_ResolvedVote",
                "read": true,
                "interval": 1000000000
-            },          
+            },
             {
                "namespace": "mb",
                "displayName": "FF Damper",
@@ -113,21 +113,21 @@
                "name": "Erd_FreezerEvapFan_ActualRpm",
                "read": true,
                "interval": 1000000000
-            },          
+            },
             {
                "namespace": "mb",
                "displayName": "Condenser Fan Actual RPM",
                "name": "Erd_CondenserFan_ActualRpm",
                "read": true,
                "interval": 1000000000
-            },          
+            },
             {
                "namespace": "mb",
                "displayName": "Defrost State",
                "name": "Erd_DefrostState",
                "read": true,
                "interval": 1000000000
-            },          
+            },
             {
                "namespace": "mb",
                "displayName": "FZ Defrost Heater",
@@ -157,7 +157,7 @@
                "interval": 1000000000
             }
          ]
-      },      
+      },
       {
          "title": "Compressor",
          "erds": [
@@ -666,8 +666,8 @@
          "erds": [
             {
                "namespace": "mb",
-               "displayName": "Factory Mode Enable",
-               "name": "Erd_FactoryModeEnableRequest",
+               "displayName": "Factory Mode Enable Request in Minutes",
+               "name": "Erd_FactoryModeEnableRequestInMinutes",
                "read": true,
                "write": true,
                "interval": 1000000000
@@ -694,7 +694,7 @@
                "name": "Erd_FreezerEvap_UnfilteredTemperatureInDegFx100",
                "read": true,
                "interval": 1000000000
-            },          
+            },
             {
                "namespace": "mb",
                "displayName": "FZ Defrost Heater Factory Vote",
@@ -709,7 +709,7 @@
                "name": "Erd_FreezerEvap_UnfilteredTemperatureInDegFx100",
                "read": true,
                "interval": 1000000000
-            },          
+            },
             {
                "namespace": "mb",
                "displayName": "FF Damper Position Factory Vote",
@@ -929,7 +929,7 @@
                "interval": 1000000000
             },
             {
-               "namespace": "mb", 
+               "namespace": "mb",
                "displayName": "Reset Reason",
                "name": "Erd_ResetReason",
                "read": true,
