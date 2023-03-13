@@ -121,6 +121,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_AluminumMoldFreezeIntegrationCount, sizeof(uint32_t)),
 
    // 0xF200 range
+   SWAPPED_ERD(PublicErd_CompressorInverterDriver, sizeof(PwmFrequency_t)),
    SWAPPED_ERD(PublicErd_CompressorSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_AluminumMoldIceMakerHeaterRelay_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_CondenserFanSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),

@@ -42,6 +42,7 @@ return {
       }
     ]],
     PwmDutyCycle_t = 'uint16_t',
-    PercentageDutyCycle_t = 'uint8_t'
+    PercentageDutyCycle_t = 'uint8_t',
+    PwmFrequency_t = 'uint16_t'
   }
 }

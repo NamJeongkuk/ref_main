@@ -368,13 +368,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Gpio_PWM_VAR_00",
-          "name": "Erd_Gpio_PWM_VAR_00",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Gpio_PWM_VAR_01",
           "name": "Erd_Gpio_PWM_VAR_01",
           "read": true,
@@ -384,6 +377,13 @@
           "namespace": "mb",
           "displayName": "PWM_200_03",
           "name": "Erd_Pwm_PWM_200_03",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "PWM_VAR_00 Compressor Inverter Driver",
+          "name": "Erd_CompressorInverterDriver",
           "read": true,
           "write": true
         }

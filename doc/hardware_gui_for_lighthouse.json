@@ -326,7 +326,7 @@
         {
           "namespace": "mb",
           "displayName": "PWM VAR 00 / VS Compressor PWM",
-          "name": "Erd_Gpio_PWM_VAR_00",
+          "name": "Erd_CompressorInverterDriver",
           "read": true,
           "write": true,
           "interval": 1000000000

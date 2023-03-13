@@ -1,10 +1,10 @@
 {
    "tasks": [
       {
-         "command": "make -j16 -f rockhopper-target.mk RELEASE=N DEBUG=Y OLD_HW=Y vscode_debug",
+         "command": "make -j16 -f rockhopper-target.mk RELEASE=N DEBUG=Y OLD_HW=N vscode_debug",
          "label": "rockhopper_vscode_debug",
          "osx": {
-            "command": "dmake -j16 -f rockhopper-target.mk RELEASE=N DEBUG=Y OLD_HW=Y vscode_debug"
+            "command": "dmake -j16 -f rockhopper-target.mk RELEASE=N DEBUG=Y OLD_HW=N vscode_debug"
          },
          "presentation": {
             "clear": false,

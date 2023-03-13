@@ -11,6 +11,15 @@
 #include "CoolingMode.h"
 #include "SetpointZone.h"
 #include "PersonalityParametricData.h"
+#include "PwmFrequency.h"
+
+static void SetCompressorFrequency(CompressorSpeedDriver_t *instance, PwmFrequency_t frequency)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->compressorFrequencyErd,
+      &frequency);
+}
 
 static void ControlCompressorRelay(
    CompressorSpeedDriver_t *instance,
@@ -37,72 +46,63 @@ static void UpdateCompressorFrequencyWhenCompressorSpeedIsLow(
       case CoolingMode_FreshFood:
          if(freezerSetpointZone == SetpointZone_Warm)
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedFreshFoodWarmFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedFreshFoodWarmFrequencyInHz);
          }
          else if(freezerSetpointZone == SetpointZone_Middle)
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedFreshFoodMidFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedFreshFoodMidFrequencyInHz);
          }
          else
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedFreshFoodColdFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedFreshFoodColdFrequencyInHz);
          }
          break;
 
       case CoolingMode_Freezer:
          if(freezerSetpointZone == SetpointZone_Warm)
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedFreezerWarmFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedFreezerWarmFrequencyInHz);
          }
          else if(freezerSetpointZone == SetpointZone_Middle)
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedFreezerMidFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedFreezerMidFrequencyInHz);
          }
          else
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedFreezerColdFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedFreezerColdFrequencyInHz);
          }
          break;
 
       case CoolingMode_ConvertibleCompartment:
          if(freezerSetpointZone == SetpointZone_Warm)
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedConvertibleCompartmentWarmFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedConvertibleCompartmentWarmFrequencyInHz);
          }
          else if(freezerSetpointZone == SetpointZone_Middle)
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedConvertibleCompartmentMidFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedConvertibleCompartmentMidFrequencyInHz);
          }
          else
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedConvertibleCompartmentColdFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.lowSpeedConvertibleCompartmentColdFrequencyInHz);
          }
          break;
    }
@@ -119,72 +119,63 @@ static void UpdateCompressorFrequencyWhenCompressorSpeedIsMedium(
       case CoolingMode_FreshFood:
          if(freezerSetpointZone == SetpointZone_Warm)
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedFreshFoodWarmFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedFreshFoodWarmFrequencyInHz);
          }
          else if(freezerSetpointZone == SetpointZone_Middle)
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedFreshFoodMidFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedFreshFoodMidFrequencyInHz);
          }
          else
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedFreshFoodColdFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedFreshFoodColdFrequencyInHz);
          }
          break;
 
       case CoolingMode_Freezer:
          if(freezerSetpointZone == SetpointZone_Warm)
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedFreezerWarmFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedFreezerWarmFrequencyInHz);
          }
          else if(freezerSetpointZone == SetpointZone_Middle)
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedFreezerMidFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedFreezerMidFrequencyInHz);
          }
          else
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedFreezerColdFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedFreezerColdFrequencyInHz);
          }
          break;
 
       case CoolingMode_ConvertibleCompartment:
          if(freezerSetpointZone == SetpointZone_Warm)
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedConvertibleCompartmentWarmFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedConvertibleCompartmentWarmFrequencyInHz);
          }
          else if(freezerSetpointZone == SetpointZone_Middle)
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedConvertibleCompartmentMidFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedConvertibleCompartmentMidFrequencyInHz);
          }
          else
          {
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedConvertibleCompartmentColdFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeDependentCompressorSpeeds.mediumSpeedConvertibleCompartmentColdFrequencyInHz);
          }
          break;
    }
@@ -198,24 +189,21 @@ static void UpdateCompressorFrequencyWhenCompressorSpeedIsHigh(
    switch(coolingMode)
    {
       case CoolingMode_FreshFood:
-         DataModel_Write(
-            instance->_private.dataModel,
-            instance->_private.config->compressorFrequencyErd,
-            &compressorSpeeds->coolingModeDependentCompressorSpeeds.highSpeedFreshFoodFrequencyInHz);
+         SetCompressorFrequency(
+            instance,
+            compressorSpeeds->coolingModeDependentCompressorSpeeds.highSpeedFreshFoodFrequencyInHz);
          break;
 
       case CoolingMode_Freezer:
-         DataModel_Write(
-            instance->_private.dataModel,
-            instance->_private.config->compressorFrequencyErd,
-            &compressorSpeeds->coolingModeDependentCompressorSpeeds.highSpeedFreezerFrequencyInHz);
+         SetCompressorFrequency(
+            instance,
+            compressorSpeeds->coolingModeDependentCompressorSpeeds.highSpeedFreezerFrequencyInHz);
          break;
 
       case CoolingMode_ConvertibleCompartment:
-         DataModel_Write(
-            instance->_private.dataModel,
-            instance->_private.config->compressorFrequencyErd,
-            &compressorSpeeds->coolingModeDependentCompressorSpeeds.highSpeedConvertibleCompartmentFrequencyInHz);
+         SetCompressorFrequency(
+            instance,
+            compressorSpeeds->coolingModeDependentCompressorSpeeds.highSpeedConvertibleCompartmentFrequencyInHz);
          break;
    }
 }
@@ -234,31 +222,27 @@ static void UpdateCompressorFrequency(
       switch(compressorSpeed)
       {
          case CompressorSpeed_Startup:
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->startupSpeedFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->startupSpeedFrequencyInHz);
             break;
 
          case CompressorSpeed_SuperLow:
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->superLowSpeedFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->superLowSpeedFrequencyInHz);
             break;
 
          case CompressorSpeed_SuperHigh:
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->superHighSpeedFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->superHighSpeedFrequencyInHz);
             break;
 
          case CompressorSpeed_Off:
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               off);
+            SetCompressorFrequency(
+               instance,
+               PwmFrequency_Min);
             break;
       }
    }
@@ -267,24 +251,21 @@ static void UpdateCompressorFrequency(
       switch(compressorSpeed)
       {
          case CompressorSpeed_Low:
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeIndependentCompressorSpeeds.lowSpeedFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeIndependentCompressorSpeeds.lowSpeedFrequencyInHz);
             break;
 
          case CompressorSpeed_Medium:
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeIndependentCompressorSpeeds.mediumSpeedFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeIndependentCompressorSpeeds.mediumSpeedFrequencyInHz);
             break;
 
          case CompressorSpeed_High:
-            DataModel_Write(
-               instance->_private.dataModel,
-               instance->_private.config->compressorFrequencyErd,
-               &compressorSpeeds->coolingModeIndependentCompressorSpeeds.highSpeedFrequencyInHz);
+            SetCompressorFrequency(
+               instance,
+               compressorSpeeds->coolingModeIndependentCompressorSpeeds.highSpeedFrequencyInHz);
             break;
       }
    }

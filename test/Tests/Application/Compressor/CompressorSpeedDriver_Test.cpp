@@ -168,9 +168,9 @@ TEST_GROUP(CompressorSpeedDriver_VariableSpeedCoolingModeIndependentAndRelayEnab
       DataModel_Write(dataModel, Erd_CompressorControllerSpeedRequest, &speed);
    }
 
-   void CompressorFrequencyShouldBe(uint8_t expected)
+   void CompressorFrequencyShouldBe(uint16_t expected)
    {
-      uint8_t actual;
+      uint16_t actual;
       DataModel_Read(dataModel, Erd_CompressorInverterDriver, &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -364,9 +364,9 @@ TEST_GROUP(CompressorSpeedDriver_VariableSpeedCoolingModeDependentAndRelayDisabl
       DataModel_Write(dataModel, Erd_FreezerSetpointZone, &setpointZone);
    }
 
-   void CompressorFrequencyShouldBe(uint8_t expected)
+   void CompressorFrequencyShouldBe(uint16_t expected)
    {
-      uint8_t actual;
+      uint16_t actual;
       DataModel_Read(dataModel, Erd_CompressorInverterDriver, &actual);
 
       CHECK_EQUAL(expected, actual);

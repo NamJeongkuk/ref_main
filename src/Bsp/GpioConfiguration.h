@@ -77,7 +77,6 @@
    ENTRY(Erd_BspGpio_GPIO_IN_02,          GpioDirection_Input,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortA, 5,  NonInverted) \
    ENTRY(Erd_BspGpio_GPIO_IN_03,          GpioDirection_Input,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortB, 4,  NonInverted) \
    ENTRY(Erd_BspGpio_SABBATH,             GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortA, 3,  Inverted) \
-   ENTRY(Erd_BspGpio_PWM_VAR_00,          GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortC, 1,  NonInverted) \
    ENTRY(Erd_BspGpio_PWM_VAR_01,          GpioDirection_Output, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortC, 6,  NonInverted) \
    ENTRY(Erd_BspGpio_CAPTURE_03,          GpioDirection_Input,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortB, 3,  NonInverted) \
 

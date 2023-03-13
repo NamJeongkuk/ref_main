@@ -81,6 +81,7 @@
 #include "PercentageDutyCycleVote.h"
 #include "AluminumMoldIceMakerTestRequest.h"
 #include "DispenseSelection.h"
+#include "PwmFrequency.h"
 
 // clang-format off
 
@@ -663,7 +664,7 @@ enum
    \
    ENTRY(Erd_HeartbeatLed,                                  0xF200, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RelayWatchdog,                                 0xF201, bool,                                               Swap_N, Io_O,    Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CompressorInverterDriver,                      0xF202, uint8_t,                                            Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorInverterDriver,                      0xF202, PwmFrequency_t,                                     Swap_Y, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorRelay,                               0xF203, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_FillTubeHeater,                                0xF204, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerDefrostHeaterRelay,                     0xF205, bool,                                               Swap_N, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
@@ -990,7 +991,6 @@ enum
    ENTRY(Erd_Gpio_GPIO_IN_02,                               0xF470, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gpio_GPIO_IN_03,                               0xF471, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gpio_SABBATH,                                  0xF472, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Gpio_PWM_VAR_00,                               0xF473, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gpio_PWM_VAR_01,                               0xF474, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gpio_CAPTURE_03,                               0xF475, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    \
