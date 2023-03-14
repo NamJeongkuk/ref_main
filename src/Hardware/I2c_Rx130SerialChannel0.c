@@ -58,8 +58,6 @@ typedef struct
    } _private;
 } I2c_Rx130SerialChannel0_t;
 
-#ifndef OLD_HW
-
 static I2c_Rx130SerialChannel0_t instance;
 
 static inline void WriteByteToTransmitRegister(uint8_t byte)
@@ -546,11 +544,8 @@ static const I_I2c_Api_t api = {
    .Busy = Busy
 };
 
-#endif
-
 I_I2c_t *I2c_Rx130SerialChannel0_Init(I_ContextProtector_t *contextProtector)
 {
-#ifndef OLD_HW
    ContextProtector_Protect(contextProtector);
    InitializePorts();
    InitializeI2C();
@@ -562,8 +557,4 @@ I_I2c_t *I2c_Rx130SerialChannel0_Init(I_ContextProtector_t *contextProtector)
    SetCurrentOperation(CurrentOperation_Idle);
    instance.interface.api = &api;
    return &instance.interface;
-#else
-   IGNORE(contextProtector);
-   return NULL;
-#endif
 }

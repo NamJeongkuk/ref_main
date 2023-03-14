@@ -20,8 +20,6 @@
 #include "SystemClock.h"
 #include "PwmFrequency.h"
 
-#ifndef OLD_HW
-
 #define IncludeTimerConfig_SetTimerConfig(_x) _x
 #define IncludeTimerConfig_DontSetTimeConfig(_x)
 
@@ -242,7 +240,6 @@ void TMR3_CMIB3(void)
 {
    PWM_TABLE(EXPAND_AS_TRM3_CMIB3)
 }
-
 
 #define EXPAND_AS_UPDATE_TMO_PWM_FUNCTION(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
     CONCAT(IncludeTmo_, mode)                                                                                                               \
@@ -625,11 +622,8 @@ static struct
 
 static const I_DataSource_Api_t api = { Read, Write, Has, SizeOf };
 
-#endif
-
 I_DataSource_t *DataSource_Pwm_Init(void)
 {
-#ifndef OLD_HW
    instance.interface.api = &api;
 
    memset(dutyCycles, 0, sizeof(dutyCycles));
@@ -640,7 +634,4 @@ I_DataSource_t *DataSource_Pwm_Init(void)
    ConfigurePwmMode1ForMtu3();
 
    return &instance.interface;
-#else
-   return NULL;
-#endif
 }

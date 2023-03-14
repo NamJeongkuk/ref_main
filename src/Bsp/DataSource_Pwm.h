@@ -20,7 +20,6 @@
 #define EXPAND_AS_ENUM(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
    OutputChannel_Pwm_##pwm,
 
-#ifndef OLD_HW
 enum
 {
    Erd_BspPwm_Start = (BspErdPwmStart - 1),
@@ -33,7 +32,6 @@ enum
    PWM_TABLE(EXPAND_AS_ENUM)
       OutputChannel_Pwm_Max
 };
-#endif
 
 /*!
  * @return

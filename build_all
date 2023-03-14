@@ -14,8 +14,7 @@ fi
 
 echo
 echo -e "\033[1m> Building rockhopper-target...\033[0m"
-$RX_MAKE -f rockhopper-target.mk -j16 RELEASE=Y DEBUG=N OLD_HW=N package
-$RX_MAKE -f rockhopper-target.mk -j16 RELEASE=Y DEBUG=N OLD_HW=Y package
+$RX_MAKE -f rockhopper-target.mk -j16 RELEASE=Y DEBUG=N package
 
 echo
 echo -e "\033[1m> All builds completed successfully\033[0m"

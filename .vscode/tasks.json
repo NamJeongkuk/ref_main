@@ -1,10 +1,10 @@
 {
    "tasks": [
       {
-         "command": "make -j16 -f rockhopper-target.mk RELEASE=N DEBUG=Y OLD_HW=N vscode_debug",
+         "command": "make -j16 -f rockhopper-target.mk RELEASE=N DEBUG=Y vscode_debug",
          "label": "rockhopper_vscode_debug",
          "osx": {
-            "command": "dmake -j16 -f rockhopper-target.mk RELEASE=N DEBUG=Y OLD_HW=N vscode_debug"
+            "command": "dmake -j16 -f rockhopper-target.mk RELEASE=N DEBUG=Y vscode_debug"
          },
          "presentation": {
             "clear": false,
@@ -21,24 +21,37 @@
             }
          }
       },
-      {
-         "command": "make -j8 RELEASE=Y -f tdd.mk test/Build/multi-target-starter-kit_tests",
-         "label": "tdd_vscode_debug",
-         "options": {
-            "env": {
-               "PATH": "${env:PATH}"
-            }
-         },
-         "presentation": {
-            "clear": false,
-            "echo": false,
-            "focus": false,
-            "panel": "shared",
-            "reveal": "silent",
-            "showReuseMessage": false
-         },
-         "type": "shell"
-      }
-   ],
-   "version": "2.0.0"
+      "osx": {
+        "command": "dmake -j16 -f rockhopper-target.mk RELEASE=N DEBUG=Y vscode_debug"
+      },
+      "presentation": {
+        "clear": false,
+        "echo": false,
+        "focus": false,
+        "panel": "shared",
+        "reveal": "silent",
+        "showReuseMessage": false
+      },
+      "type": "shell"
+    },
+    {
+      "command": "make -j8 RELEASE=Y -f tdd.mk test/Build/multi-target-starter-kit_tests",
+      "label": "tdd_vscode_debug",
+      "options": {
+        "env": {
+          "PATH": "${env:PATH}"
+        }
+      },
+      "presentation": {
+        "clear": false,
+        "echo": false,
+        "focus": false,
+        "panel": "shared",
+        "reveal": "silent",
+        "showReuseMessage": false
+      },
+      "type": "shell"
+    }
+  ],
+  "version": "2.0.0"
 }

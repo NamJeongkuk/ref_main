@@ -12,10 +12,8 @@
 #include "Event_Synchronous.h"
 #include "DataSource_Gpio.h"
 #include "DataSource_Adc.h"
-#include "DataSource_OldHw_Pwm.h"
 #include "DataSource_Pwm.h"
 #include "DataSource_InputCapture.h"
-#include "DataSource_OldHw_InputCapture.h"
 
 enum
 {
@@ -86,13 +84,8 @@ I_DataSource_t *DataSource_Bsp_Init(TimerModule_t *timerModule)
    uint8_t index = 0;
    // This needs to be initialized first for the scenario of dual purposing a pin to function as GPIO Input and Input Capture
    instance.dataSources[index++] = DataSource_Gpio_Init(timerModule, &instance.OnDataChange);
-#ifdef OLD_HW
-   instance.dataSources[index++] = DataSource_OldHw_Pwm_Init();
-   instance.dataSources[index++] = DataSource_OldHw_InputCapture_Init(timerModule, &instance.OnDataChange);
-#else
    instance.dataSources[index++] = DataSource_Pwm_Init();
    instance.dataSources[index++] = DataSource_InputCapture_Init(timerModule, &instance.OnDataChange);
-#endif
    instance.dataSources[index++] = DataSource_Adc_Init();
 
    uassert(index <= NUM_ELEMENTS(instance.dataSources));

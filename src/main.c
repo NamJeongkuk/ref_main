@@ -51,12 +51,8 @@
 #include "ParametricDataVersionCheck.h"
 #include "EepromMonitorPlugin.h"
 #include "ParametricDataErds.h"
-
-#ifdef OLD_HW
-#include "OldGeaStack.h"
-#else
 #include "GeaStack.h"
-#endif
+
 enum
 {
    UlTestsRunPeriodInMSec = 500,
@@ -78,20 +74,11 @@ static UlTestsPlugin_t ulTestsPlugin;
 static NonVolatileAsyncDataSource_t nvAsyncDataSource;
 static Input_StackUsageCalculator_t stackUsageCalculator;
 static Timer_t stackUsageUpdateTimer;
-
-#ifdef OLD_HW
-static OldGeaStack_t oldGeaStack;
-#else
 static GeaStack_t geaStack;
-#endif
 
 enum
 {
    StackUsageUpdatePeriodInMsec = 1000
-};
-
-static const uint8_t staticRoutingTable[] = {
-   Gea2Address_DoorBoard
 };
 
 static BootLoopDefender_t bootLoopDefender;
@@ -225,22 +212,12 @@ int main(void)
       Erd_PersonalityParametricData,
       Erd_PersonalityIdOutOfRangeFlag);
 
-#ifdef OLD_HW
-   OldGeaStack_Init(
-      &oldGeaStack,
-      dataModel,
-      SystemData_ExternalDataSource(&systemData),
-      Gea2Address_ReferMainBoard,
-      staticRoutingTable,
-      ELEMENT_COUNT(staticRoutingTable));
-#else
-   IGNORE(staticRoutingTable);
    GeaStack_Init(
       &geaStack,
       dataModel,
       SystemData_ExternalDataSource(&systemData),
       Gea2Address_ReferMainBoard);
-#endif
+
    Application_Init(
       &application,
       dataModel,
@@ -261,11 +238,8 @@ int main(void)
       timerModule,
       1);
 
-#ifdef OLD_HW
-   SendStartupMessage(OldGeaStack_GetGea2PacketEndpoint(&oldGeaStack));
-#else
    SendStartupMessage(GeaStack_GetGea2PacketEndpoint(&geaStack));
-#endif
+
    UpdateBuildInfo(
       dataModel,
       Header_GetImageHeader(ImageType_Application));
@@ -286,11 +260,7 @@ int main(void)
 
    while(1)
    {
-#ifdef OLD_HW
-      OldGeaStack_Run(&oldGeaStack);
-#else
       GeaStack_Run(&geaStack);
-#endif
 
       if(!TimerModule_Run(timerModule))
       {

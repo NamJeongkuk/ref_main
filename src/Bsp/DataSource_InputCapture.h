@@ -16,8 +16,6 @@
 #include "XMacroUtils.h"
 #include "utils.h"
 
-#ifndef OLD_HW
-
 #define INPUTCAPTURE_TABLE_EXPAND_AS_ERD_NAMES(name, port, bit, timer, channel, peripheralFunction) \
    name,
 
@@ -43,8 +41,6 @@ enum
    Erd_BspInputCapture_End = Erd_BspInputCapture_OutputErd_End
 };
 // clang-format on
-
-#endif
 
 I_DataSource_t *DataSource_InputCapture_Init(
    TimerModule_t *timerModule,

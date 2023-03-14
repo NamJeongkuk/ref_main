@@ -51,15 +51,6 @@ void EepromStack_Init(
    TimerModule_t *timerModule,
    TimeSource_Interrupt_t *timeSourceInterrupt)
 {
-#ifdef OLD_HW
-   IGNORE(eepromConfig);
-   instance.hardwareEepromI2c = HardwareEeprom_I2c_Init(watchdogKickAction, timeSourceInterrupt);
-
-   HardwareEeprom_DelayedPageOperationWrapper_Init(
-      &instance.eepromDelayedPageOperationWrapper,
-      &instance.hardwareEepromI2c->interface,
-      timerModule);
-#else
    IGNORE(watchdogKickAction);
    IGNORE(timeSourceInterrupt);
    IGNORE(timerModule);
@@ -69,27 +60,17 @@ void EepromStack_Init(
       &eepromConfig,
       timerModule,
       ContextProtector_Rx2xx_GetInstance());
-#endif
 
    InputOutput_Simple_Init(&instance.readFaultIo, &instance.readFaultData, sizeof(instance.readFaultData));
    InputOutput_Simple_Init(&instance.writeFaultIo, &instance.writeFaultData, sizeof(instance.writeFaultData));
    InputOutput_Simple_Init(&instance.eraseFaultIo, &instance.eraseFaultData, sizeof(instance.eraseFaultData));
 
-#ifdef OLD_HW
-   Eeprom_HardwareEeprom_Init(
-      &instance.eepromHardwareEepromAdapter,
-      &instance.eepromDelayedPageOperationWrapper.interface,
-      InputOutput_AsOutput(&instance.readFaultIo.interface),
-      InputOutput_AsOutput(&instance.writeFaultIo.interface),
-      InputOutput_AsOutput(&instance.eraseFaultIo.interface));
-#else
    Eeprom_HardwareEeprom_Init(
       &instance.eepromHardwareEepromAdapter,
       &instance.eepromI2cMt24.interface,
       InputOutput_AsOutput(&instance.readFaultIo.interface),
       InputOutput_AsOutput(&instance.writeFaultIo.interface),
       InputOutput_AsOutput(&instance.eraseFaultIo.interface));
-#endif
 }
 
 I_Eeprom_t *EepromStack_GetEeprom(void)

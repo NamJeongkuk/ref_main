@@ -28,17 +28,6 @@ $(error Please define DEBUG with Y or N.)
 endif
 endif
 
-ifeq ($(OLD_HW), N)
-HW_VERSION:=new-hw
-else
-ifeq ($(OLD_HW), Y)
-DEFINES+=OLD_HW
-HW_VERSION:=old-hw
-else
-$(error Please define OLD_HW with Y or N.)
-endif
-endif
-
 include tools/kpit-rx/defaults.mk
 
 SRC_FILES:=\
@@ -150,8 +139,8 @@ target: erd_definitions
 
 .PHONY: package
 package: build artifacts erd_lock
-	@echo Creating artifacts/$(TARGET)_$(HW_VERSION)_v$(CRIT_VERSION_MAJOR).$(CRIT_VERSION_MINOR).$(NONCRIT_VERSION_MAJOR).$(NONCRIT_VERSION_MINOR)_$(GIT_SHORT_HASH).zip...
-	@$(call create_artifacts,$(TARGET)_$(HW_VERSION)_v$(CRIT_VERSION_MAJOR).$(CRIT_VERSION_MINOR).$(NONCRIT_VERSION_MAJOR).$(NONCRIT_VERSION_MINOR)_$(GIT_SHORT_HASH).zip)
+	@echo Creating artifacts/$(TARGET)_v$(CRIT_VERSION_MAJOR).$(CRIT_VERSION_MINOR).$(NONCRIT_VERSION_MAJOR).$(NONCRIT_VERSION_MINOR)_$(GIT_SHORT_HASH).zip...
+	@$(call create_artifacts,$(TARGET)_v$(CRIT_VERSION_MAJOR).$(CRIT_VERSION_MINOR).$(NONCRIT_VERSION_MAJOR).$(NONCRIT_VERSION_MINOR)_$(GIT_SHORT_HASH).zip)
 
 $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot:
 	@OUTPUT_PREFIX="\<BootLoader\>" $(MAKE) -C $(BOOT_LOADER_DIR) -f $(BOOT_LOADER_TARGET)-boot-loader.mk RELEASE=Y DEBUG=N build

@@ -5,12 +5,12 @@ MAKE=make -f rockhopper-target.mk
 else
 MAKE=dmake -f rockhopper-target.mk
 endif
-MAKE_RELEASE=$(MAKE) RELEASE=Y DEBUG=N OLD_HW=Y package
+MAKE_RELEASE=$(MAKE) RELEASE=Y DEBUG=N package
 MAKE_NO_RELEASE=$(MAKE) RELEASE=N
 
 .PHONY: target
 target:
-	$(MAKE_NO_RELEASE) DEBUG=N OLD_HW=Y
+	$(MAKE_NO_RELEASE) DEBUG=N
 
 .PHONY: release
 release:
@@ -18,15 +18,15 @@ release:
 
 .PHONY: upload
 upload:
-	 $(MAKE_NO_RELEASE) DEBUG=N OLD_HW=Y upload
+	 $(MAKE_NO_RELEASE) DEBUG=N upload
 
 .PHONY: upload_release
 upload_release:
-	 $(MAKE) RELEASE=Y DEBUG=N OLD_HW=Y upload
+	 $(MAKE) RELEASE=Y DEBUG=N upload
 
 .PHONY: json
 json:
-	$(MAKE_NO_RELEASE) DEBUG=N OLD_HW=Y erd_definitions
+	$(MAKE_NO_RELEASE) DEBUG=N erd_definitions
 
 .PHONY: tdd
 tdd:
@@ -38,21 +38,21 @@ verbose:
 
 .PHONY: debug
 debug:
-	$(MAKE_NO_RELEASE) DEBUG=Y OLD_HW=Y
+	$(MAKE_NO_RELEASE) DEBUG=Y
 
 .PHONY: gdb_server
 gdb_server:
-	$(MAKE_NO_RELEASE) DEBUG=Y OLD_HW=Y gdb_server
+	$(MAKE_NO_RELEASE) DEBUG=Y gdb_server
 
 .PHONY: clean
 clean:
-	$(MAKE_NO_RELEASE) DEBUG=N OLD_HW=Y clean
+	$(MAKE_NO_RELEASE) DEBUG=N clean
 	make -f tdd.mk RELEASE=N DEBUG=N clean
 
 .PHONY: erase
 erase:
-	$(MAKE_NO_RELEASE) DEBUG=N OLD_HW=Y erase
+	$(MAKE_NO_RELEASE) DEBUG=N erase
 
 .PHONY: parametric
 parametric:
-	$(MAKE_NO_RELEASE) DEBUG=Y OLD_HW=Y build_parametric
+	$(MAKE_NO_RELEASE) DEBUG=Y build_parametric

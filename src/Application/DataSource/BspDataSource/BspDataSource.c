@@ -14,28 +14,7 @@
 #include "DataSource_Adc.h"
 #include "DataSource_Pwm.h"
 #include "DataSource_InputCapture.h"
-#include "DataSource_OldHw_Pwm.h"
-#include "DataSource_OldHw_InputCapture.h"
 
-#ifdef OLD_HW
-static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
-   { Erd_GpioGroupInterface, Erd_GpioGroupInterface },
-   { Erd_HeartbeatLed, Erd_BspGpio_HeartbeatLed },
-   { Erd_RelayWatchdog, Erd_BspGpio_RLY_09 },
-   { Erd_Adc_ADC_0, Erd_BspAdc_SomeAnalogInput },
-   { Erd_Adc_ADC_1, Erd_BspAdc_AnotherAnalogInput },
-   { Erd_ApplicationToBspPwm_PWM_0, Erd_BspPwm_PWM_0 },
-   { Erd_ApplicationToBspPwm_PWM_1, Erd_BspPwm_PWM_1 },
-   { Erd_ApplicationToBspPwm_PWM_2, Erd_BspPwm_PWM_2 },
-   { Erd_ApplicationToBspPwm_PWM_4, Erd_BspPwm_PWM_4 },
-   { Erd_ApplicationToBspPwm_PWM_5, Erd_BspPwm_PWM_5 },
-   { Erd_ApplicationToBspInputCapture_CAPT_0, Erd_BspFanInputCapture_CAPT_0 },
-   { Erd_ApplicationToBspInputCapture_CAPT_1, Erd_BspFanInputCapture_CAPT_1 },
-   { Erd_ApplicationToBspInputCapture_CAPT_2, Erd_BspFanInputCapture_CAPT_2 },
-   { Erd_ApplicationToBspInputCapture_CAPT_4, Erd_BspFanInputCapture_CAPT_4 },
-   { Erd_ApplicationToBspInputCapture_CAPT_5, Erd_BspFanInputCapture_CAPT_5 },
-};
-#else
 static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_GpioGroupInterface, Erd_GpioGroupInterface },
    { Erd_Gpio_GPIO_OUT_00, Erd_BspGpio_GPIO_OUT_00 },
@@ -113,7 +92,6 @@ static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_InputCapture_CAPTURE_04, Erd_BspInputCapture_CAPTURE_04 },
    { Erd_InputCapture_CAPTURE_05, Erd_BspInputCapture_CAPTURE_05 }
 };
-#endif
 
 static const ConstArrayMap_BinarySearchConfiguration_t bspToApplicationMapConfiguration = {
    applicationBspToBspMappedPairs,

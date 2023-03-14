@@ -23,8 +23,6 @@
 volatile struct st_dtc_full uart6Receive __attribute__((section(".dtcTransferInformation")));
 volatile struct st_dtc_full uart6Transmit __attribute__((section(".dtcTransferInformation")));
 
-#ifndef OLD_HW
-
 typedef struct
 {
    I_BufferedUart_t interface;
@@ -140,11 +138,8 @@ static const I_BufferedUart_Api_t bufferedUartApi = {
    Run
 };
 
-#endif
-
 I_BufferedUart_t *BufferedUart_Channel6_Init(void)
 {
-#ifndef OLD_HW
    uassert(sizeof(instance.dtcReceiveBuffer) >= ((RECEIVE_REPEAT_COUNT & 0xFF00) >> 8) && (sizeof(instance.dtcReceiveBuffer) >= (RECEIVE_REPEAT_COUNT & 0xFF)));
 
    Event_SingleSubscriberSynchronous_Init(&instance.OnReceive);
@@ -288,7 +283,4 @@ I_BufferedUart_t *BufferedUart_Channel6_Init(void)
    SCI6.SCR.BIT.TIE = 1; // Transmit Interrupt Enabled
 
    return &instance.interface;
-#else
-   return NULL;
-#endif
 }

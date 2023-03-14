@@ -15,8 +15,6 @@
 #include "I_Interrupt.h"
 #include "SystemClock.h"
 #include "SystemErds.h"
-#include "Uart_Channel0.h"
-#include "Uart_Channel6.h"
 #include "Uart_Channel12.h"
 #include "BufferedUart_Channel1.h"
 #include "BufferedUart_Channel5.h"
@@ -33,13 +31,6 @@ void Hardware_InitializeStage1(void)
 
 void Hardware_InitializeStage2(I_DataModel_t *dataModel)
 {
-#ifdef OLD_HW
-   I_Uart_t *internalUart = Uart_Channel6_GetInstance(U32_PCLKB);
-   DataModelErdPointerAccess_Write(dataModel, Erd_InternalUart, internalUart);
-
-   I_Uart_t *externalUart = Uart_Channel0_GetInstance(U32_PCLKB);
-   DataModelErdPointerAccess_Write(dataModel, Erd_ExternalUart, externalUart);
-#else
    Dtc_Init();
 
    I_BufferedUart_t *wifiBufferedUart = BufferedUart_Channel1_Init();
@@ -56,7 +47,6 @@ void Hardware_InitializeStage2(I_DataModel_t *dataModel)
 
    I_Uart_t *gea2Uart = Uart_Channel12_GetInstance(U32_PCLKB);
    DataModelErdPointerAccess_Write(dataModel, Erd_Gea2Uart, gea2Uart);
-#endif
 
    I_Crc16Calculator_t *crcCalcTable = Crc16Calculator_Table;
    DataModelErdPointerAccess_Write(dataModel, Erd_CrcCalcTable, crcCalcTable);

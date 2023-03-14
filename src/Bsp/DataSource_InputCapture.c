@@ -20,8 +20,6 @@
 #include "InputCapture_FeedbackCountCalculation.h"
 #include "Filter_SimpleMovingAverage.h"
 
-#ifndef OLD_HW
-
 #define ERD_IS_IN_RANGE(erd) (BETWEEN(Erd_BspInputCapture_Start, erd, Erd_BspInputCapture_End))
 
 #define ERD_IS_IN_PULSE_WIDTH_ERD_RANGE(erd) \
@@ -398,13 +396,10 @@ static uint8_t SizeOf(I_DataSource_t *_instance, const Erd_t erd)
 
 static const I_DataSource_Api_t api = { Read, Write, Has, SizeOf };
 
-#endif
-
 I_DataSource_t *DataSource_InputCapture_Init(
    TimerModule_t *timerModule,
    Event_Synchronous_t *onChangeEvent)
 {
-#ifndef OLD_HW
    instance.interface.api = &api;
    instance.interface.OnDataChange = &onChangeEvent->interface;
    instance.onChangeEvent = onChangeEvent;
@@ -438,9 +433,4 @@ I_DataSource_t *DataSource_InputCapture_Init(
       NULL);
 
    return &instance.interface;
-#else
-   IGNORE(timerModule);
-   IGNORE(onChangeEvent);
-   return NULL;
-#endif
 }
