@@ -101,7 +101,9 @@ static const GridBlockCalculatorConfiguration_t gridBlockCalculatorConfig = {
    .freezerFilteredResolvedTemperatureInDegFx100 = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
    .currentGridBlockNumberErd = Erd_Grid_BlockNumber,
    .calculatedGridLinesErd = Erd_Grid_CalculatedGridLines,
-   .previousGridBlockNumbersErd = Erd_Grid_PreviousBlocks
+   .previousGridBlockNumbersErd = Erd_Grid_PreviousBlocks,
+   .freezerThermistorIsValidErd = Erd_FreezerThermistor_IsValidResolved,
+   .freshFoodThermistorIsValidErd = Erd_FreshFoodThermistor_IsValidResolved
 };
 
 static const Erd_t gridBlockNumberOverrideRequestErdList[] = {

@@ -26,6 +26,8 @@ typedef struct
    Erd_t currentGridBlockNumberErd; // GridBlockNumber_t
    Erd_t calculatedGridLinesErd; // CalculatedGridLines_t
    Erd_t previousGridBlockNumbersErd; // PreviousGridBlockNumbers_t
+   Erd_t freezerThermistorIsValidErd; // bool
+   Erd_t freshFoodThermistorIsValidErd; // bool
 } GridBlockCalculatorConfiguration_t;
 
 typedef struct
