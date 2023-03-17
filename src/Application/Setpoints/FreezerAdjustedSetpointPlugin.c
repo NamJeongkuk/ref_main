@@ -31,6 +31,11 @@ static const ResolvedSetpointWriterConfiguration_t freezerResolvedSetpointWriter
    .userSetpointPluginReadyErd = Erd_UserSetpointPluginReady
 };
 
+static const CrossAmbientCalculatorConfig_t freezerCrossAmbientOffsetCalculatorConfig = {
+   .crossAmbientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100,
+   .crossAmbientOffsetErd = Erd_Freezer_CrossAmbientOffsetInDegFx100,
+};
+
 static void InitializeFreezerCabinetOffsetErd(I_DataModel_t *dataModel)
 {
    DataModel_Write(
@@ -49,5 +54,10 @@ void FreezerAdjustedSetpointPlugin_Init(
       &instance->_private.freezerResolvedSetpointWriter,
       dataModel,
       &freezerResolvedSetpointWriterConfiguration);
+   CrossAmbientOffsetCalculator_Init(
+      &instance->_private.freezerCrossAmbientOffsetCalculator,
+      dataModel,
+      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freezerAdjustedSetpointData->crossAmbientOffsetData,
+      &freezerCrossAmbientOffsetCalculatorConfig);
    FreezerShiftOffsetCalculatorPlugin_Init(&instance->_private.freezerShiftOffsetCalculatorPlugin, dataModel);
 }

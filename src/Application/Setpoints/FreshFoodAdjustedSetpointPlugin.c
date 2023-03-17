@@ -67,6 +67,11 @@ static const ResolvedSetpointWriterConfiguration_t freshFoodResolvedSetpointWrit
    .userSetpointPluginReadyErd = Erd_UserSetpointPluginReady
 };
 
+static const CrossAmbientCalculatorConfig_t freshFoodCrossAmbientOffsetCalculatorConfig = {
+   .crossAmbientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100,
+   .crossAmbientOffsetErd = Erd_FreshFood_CrossAmbientOffsetInDegFx100,
+};
+
 static bool SetpointZonePluginIsReady(I_DataModel_t *dataModel)
 {
    bool state;
@@ -126,5 +131,10 @@ void FreshFoodAdjustedSetpointPlugin_Init(
       dataModel,
       &freshFoodResolvedSetpointWriterConfiguration);
    I16ErdAdder_Init(&instance->_private.freshFoodErdAdder, dataModel, &freshFoodErdAdderConfig);
+   CrossAmbientOffsetCalculator_Init(
+      &instance->_private.freshFoodCrossAmbientOffsetCalculator,
+      dataModel,
+      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData->crossAmbientOffsetData,
+      &freshFoodCrossAmbientOffsetCalculatorConfig);
    FreshFoodShiftOffsetCalculatorPlugin_Init(&instance->_private.freshFoodShiftOffsetCalculatorPlugin, dataModel);
 }

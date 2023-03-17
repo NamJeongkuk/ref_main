@@ -536,7 +536,7 @@ enum
    ENTRY(Erd_IceBox_FilteredTemperatureInDegFx100,                       0xF150, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DeliPan_FilteredTemperatureInDegFx100,                      0xF151, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100,     0xF152, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100,    0xF153, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100,    0xF153, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ConvertibleCompartmentState,                   0xF155, ConvertibleCompartmentStateType_t,                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentSetpoint_ResolvedVote,   0xF156, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
