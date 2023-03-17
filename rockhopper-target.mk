@@ -47,6 +47,7 @@ SRC_DIRS:=\
   src/Application/Damper \
   src/Application/DataSource \
   src/Application/DataSource/BspDataSource \
+  src/Application/Debounce \
   src/Application/Defrost \
   src/Application/Dispenser \
   src/Application/Door \

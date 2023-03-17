@@ -20,6 +20,7 @@
 #include "DataModel.h"
 #include "ServiceDiagnosticsDataSource.h"
 #include "SystemErds.h"
+#include "I_Interrupt.h"
 
 typedef struct
 {
@@ -76,7 +77,8 @@ void SystemData_Init(
    I_AsyncDataSource_t *async,
    I_Crc16Calculator_t *crcCalculator,
    I_Action_t *systemActionForStartup,
-   I_Action_t *resetAction);
+   I_Action_t *resetAction,
+   I_Interrupt_t *debounceInterrupt);
 
 /*!
  * @param instance

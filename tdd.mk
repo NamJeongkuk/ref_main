@@ -23,6 +23,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Cooling \
    $(PROJECT_DIR)/Application/Damper \
    $(PROJECT_DIR)/Application/DataSource \
+   $(PROJECT_DIR)/Application/Debounce \
    $(PROJECT_DIR)/Application/Defrost \
    $(PROJECT_DIR)/Application/DemandResponse \
    $(PROJECT_DIR)/Application/Dispenser \
@@ -70,6 +71,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/ConvertibleCompartment \
    $(TESTS_DIR)/Application/Damper \
    $(TESTS_DIR)/Application/DataSource \
+   $(TESTS_DIR)/Application/Debounce \
    $(TESTS_DIR)/Application/Defrost \
    $(TESTS_DIR)/Application/Dispenser \
    $(TESTS_DIR)/Application/Door \

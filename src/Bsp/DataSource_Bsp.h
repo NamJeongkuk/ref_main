@@ -9,12 +9,14 @@
 #define DATASOURCE_BSP_H
 
 #include "I_DataSource.h"
+#include "I_Interrupt.h"
 #include "Timer.h"
 
 /*!
  * @param timerModule
+ * @param debounceInterrupt
  * @return
  */
-I_DataSource_t *DataSource_Bsp_Init(TimerModule_t *timerModule);
+I_DataSource_t *DataSource_Bsp_Init(TimerModule_t *timerModule, I_Interrupt_t *debounceInterrupt);
 
 #endif

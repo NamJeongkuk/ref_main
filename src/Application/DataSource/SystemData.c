@@ -25,7 +25,8 @@ static void InitializeInternalDataSource(
    I_AsyncDataSource_t *async,
    I_Crc16Calculator_t *crcCalculator,
    I_Action_t *systemActionForStartup,
-   I_Action_t *resetAction)
+   I_Action_t *resetAction,
+   I_Interrupt_t *debounceInterrupt)
 {
    DataSource_Composite_Init(&instance->_private.dataSource.composite);
 
@@ -49,7 +50,9 @@ static void InitializeInternalDataSource(
 
    BspDataSource_Init(
       &instance->_private.dataSource.bsp,
-      timerModule);
+      timerModule,
+      debounceInterrupt);
+
    AddDataSourceToComposite(
       instance,
       BspDataSource_DataSource(&instance->_private.dataSource.bsp),
@@ -104,7 +107,8 @@ void SystemData_Init(
    I_AsyncDataSource_t *async,
    I_Crc16Calculator_t *crcCalculator,
    I_Action_t *systemActionForStartup,
-   I_Action_t *resetAction)
+   I_Action_t *resetAction,
+   I_Interrupt_t *debounceInterrupt)
 {
    InitializeInternalDataSource(
       instance,
@@ -112,7 +116,8 @@ void SystemData_Init(
       async,
       crcCalculator,
       systemActionForStartup,
-      resetAction);
+      resetAction,
+      debounceInterrupt);
 
    InitializeExternalDataSource(instance);
    InitializeDataModel(instance);

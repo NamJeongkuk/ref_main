@@ -17,6 +17,16 @@
 
 static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_GpioGroupInterface, Erd_GpioGroupInterface },
+   { Erd_Gpio_GPIO_IN_00, Erd_BspGpio_GPIO_IN_00 },
+   { Erd_Gpio_GPIO_IN_01, Erd_BspGpio_GPIO_IN_01 },
+   { Erd_Gpio_GPIO_IN_02, Erd_BspGpio_GPIO_IN_02 },
+   { Erd_Gpio_GPIO_IN_03, Erd_BspGpio_GPIO_IN_03 },
+   { Erd_Gpio_DOOR_INT, Erd_BspGpio_DOOR_INT },
+   { Erd_Gpio_DOOR_01, Erd_BspGpio_DOOR_01 },
+   { Erd_Gpio_DOOR_02, Erd_BspGpio_DOOR_02 },
+   { Erd_Gpio_DOOR_03, Erd_BspGpio_DOOR_03 },
+   { Erd_Gpio_DOOR_04, Erd_BspGpio_DOOR_04 },
+   { Erd_Gpio_CAPTURE_03, Erd_BspGpio_CAPTURE_03 },
    { Erd_Gpio_GPIO_OUT_00, Erd_BspGpio_GPIO_OUT_00 },
    { Erd_Gpio_GPIO_OUT_01, Erd_BspGpio_GPIO_OUT_01 },
    { Erd_Gpio_GPIO_OUT_02, Erd_BspGpio_GPIO_OUT_02 },
@@ -50,18 +60,8 @@ static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_HeartbeatLed, Erd_BspGpio_HEARTBEAT },
    { Erd_Gpio_SBC_RESET, Erd_BspGpio_SBC_RESET },
    { Erd_Gpio_PERSONALITY, Erd_BspGpio_PERSONALITY },
-   { Erd_Gpio_DOOR_INT, Erd_BspGpio_DOOR_INT },
-   { Erd_Gpio_DOOR_01, Erd_BspGpio_DOOR_01 },
-   { Erd_Gpio_DOOR_02, Erd_BspGpio_DOOR_02 },
-   { Erd_Gpio_DOOR_03, Erd_BspGpio_DOOR_03 },
-   { Erd_Gpio_DOOR_04, Erd_BspGpio_DOOR_04 },
-   { Erd_Gpio_GPIO_IN_00, Erd_BspGpio_GPIO_IN_00 },
-   { Erd_Gpio_GPIO_IN_01, Erd_BspGpio_GPIO_IN_01 },
-   { Erd_Gpio_GPIO_IN_02, Erd_BspGpio_GPIO_IN_02 },
-   { Erd_Gpio_GPIO_IN_03, Erd_BspGpio_GPIO_IN_03 },
    { Erd_Gpio_SABBATH, Erd_BspGpio_SABBATH },
    { Erd_Gpio_PWM_VAR_01, Erd_BspGpio_PWM_VAR_01 },
-   { Erd_Gpio_CAPTURE_03, Erd_BspGpio_CAPTURE_03 },
    { Erd_Adc_ANALOG_475K_TH_00, Erd_BspAdc_ANALOG_475K_TH_00 },
    { Erd_Adc_ANALOG_TH_LOW_00, Erd_BspAdc_ANALOG_TH_LOW_00 },
    { Erd_Adc_ANALOG_TH_LOW_01, Erd_BspAdc_ANALOG_TH_LOW_01 },
@@ -157,9 +157,10 @@ static void InitializeParametricToApplicationBspMappedDataSource(BspDataSource_t
 
 void BspDataSource_Init(
    BspDataSource_t *instance,
-   TimerModule_t *timerModule)
+   TimerModule_t *timerModule,
+   I_Interrupt_t *debounceInterrupt)
 {
-   instance->_private.dataSource = DataSource_Bsp_Init(timerModule);
+   instance->_private.dataSource = DataSource_Bsp_Init(timerModule, debounceInterrupt);
 
    InitializeApplicationToBspMappedDataSource(instance);
    InitializeParametricToApplicationBspMappedDataSource(instance);

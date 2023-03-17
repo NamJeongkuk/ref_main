@@ -15,6 +15,7 @@
 #include "ConstBidirectionalMap_ConstArrayMap.h"
 #include "BspParametricConfiguration.h"
 #include "Timer.h"
+#include "I_Interrupt.h"
 
 typedef struct
 {
@@ -39,10 +40,12 @@ typedef struct
  * Initialize BSP data source components
  * @param instance
  * @param timerModule
+ * @param debounceInterrupt
  */
 void BspDataSource_Init(
    BspDataSource_t *instance,
-   TimerModule_t *timerModule);
+   TimerModule_t *timerModule,
+   I_Interrupt_t *debounceInterrupt);
 
 /*!
  * Get the interface to the BSP data source

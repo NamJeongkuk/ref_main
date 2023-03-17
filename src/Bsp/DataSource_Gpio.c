@@ -12,18 +12,28 @@
 #include "iodefine.h"
 #include "ContextProtector_Rx2xx.h"
 #include <string.h>
+#include "Asymmetrical_Debouncer_bool.h"
+#include "Constants_Binary.h"
 
 #define CHANNEL_FROM_ERD(erd) (erd - Erd_BspGpio_Start - 1)
 #define ERD_FROM_CHANNEL(channel) (Erd_BspGpio_Start + 1 + channel)
 #define ERD_IS_IN_RANGE(erd) (IN_RANGE(Erd_BspGpio_Start + 1, erd, Erd_BspGpio_End - 1))
 
-#define GPIO_TABLE_EXPAND_AS_GPIO_COUNT(name, direction, pullUp, driveCapacity, port, pin, inverted) +1
+#define GPIO_TABLE_EXPAND_AS_GPIO_COUNT(name, direction, offToOnDebounceCount, onToOffDebounceCount, pullUp, driveCapacity, port, pin, inverted) +1
+
+#define GPIO_TABLE_EXPAND_AS_GPIO_INPUT_COUNT(name, direction, offToOnDebounceCount, onToOffDebounceCount, pullUp, driveCapacity, port, pin, inverted) \
+   +((direction) == GpioDirection_Input)
 
 enum
 {
    InputPollPeriodInMsec = 10,
    BitsPerByte = 8,
    GpioCount = 0 GPIO_TABLE(GPIO_TABLE_EXPAND_AS_GPIO_COUNT)
+};
+
+enum
+{
+   GpioInputCount = 0 GPIO_TABLE(GPIO_TABLE_EXPAND_AS_GPIO_INPUT_COUNT)
 };
 
 enum
@@ -99,7 +109,7 @@ typedef struct
    bool inverted;
 } GpioDirectionPortsAndPins_t;
 
-#define EXPAND_PORTS_AND_PINS(channel, direction, pullUp, driveCapacity, port, pin, inverted) { direction, pullUp, driveCapacity, port, pin, inverted },
+#define EXPAND_PORTS_AND_PINS(channel, direction, offToOnDebounceCount, onToOffDebounceCount, pullUp, driveCapacity, port, pin, inverted) { direction, pullUp, driveCapacity, port, pin, inverted },
 
 static const GpioDirectionPortsAndPins_t gpioPortsAndPins[] = {
    GPIO_TABLE(EXPAND_PORTS_AND_PINS)
@@ -110,9 +120,20 @@ static struct
    I_DataSource_t interface;
    I_GpioGroup_t gpioGroupInterface;
    Event_Synchronous_t *onChangeEvent;
+   EventSubscription_t debouncePollSubscription;
+   Asymmetrical_Debouncer_bool_t asymmetricalDebouncers[GpioInputCount];
    Timer_t timer;
    uint8_t inputCache[((GpioCount - 1) / BitsPerByte) + 1];
+   uint32_t debounceCallbackCount;
 } instance;
+
+#define EXPAND_AS_ASYMMETRICAL_DOUBOUNCE_BOOL_CONFIGS(channel, direction, offToOnDebounceCount, onToOffDebounceCount, pullUp, driveCapacity, port, pin, inverted) \
+   CONCAT(INCLUDE_, direction)                                                                                                                                    \
+   ({ .debounceCountOffToOn = offToOnDebounceCount COMMA.debounceCountOnToOff = onToOffDebounceCount COMMA.initialValue = false } COMMA)
+
+static const Asymmetrical_Debouncer_bool_Config_t asymmetricalDebouncerConfigs[] = {
+   GPIO_TABLE(EXPAND_AS_ASYMMETRICAL_DOUBOUNCE_BOOL_CONFIGS)
+};
 
 static void SetPullUp(const GpioChannel_t channel, const GpioPullUp_t pullUp)
 {
@@ -194,7 +215,16 @@ static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
    }
    else
    {
-      bool value = ReadGpio(CHANNEL_FROM_ERD(erd));
+      bool value;
+      uint16_t channel = CHANNEL_FROM_ERD(erd);
+      if(channel < GpioInputCount)
+      {
+         value = Asymmetrical_Debouncer_bool_GetDebounced(&instance.asymmetricalDebouncers[channel]);
+      }
+      else
+      {
+         value = ReadGpio(channel);
+      }
       memcpy(data, &value, sizeof(bool));
    }
 }
@@ -242,12 +272,12 @@ static uint8_t SizeOf(I_DataSource_t *_instance, const Erd_t erd)
 
 static const I_DataSource_Api_t api = { Read, Write, Has, SizeOf };
 
-bool ReadGpioGroup(I_GpioGroup_t *instance, const GpioChannel_t channel)
+bool ReadGpioGroup(I_GpioGroup_t *_instance, const GpioChannel_t channel)
 {
-   IGNORE(instance);
+   IGNORE(_instance);
    uassert(ERD_IS_IN_RANGE(channel));
 
-   return ReadGpio(CHANNEL_FROM_ERD(channel));
+   return Asymmetrical_Debouncer_bool_GetDebounced(&instance.asymmetricalDebouncers[channel]);
 }
 
 void WriteGpioGroup(I_GpioGroup_t *instance, const GpioChannel_t channel, const bool state)
@@ -268,23 +298,13 @@ void SetDirectionGpioGroup(I_GpioGroup_t *instance, const GpioChannel_t channel,
 
 static const I_GpioGroup_Api_t apiGpioGroup = { ReadGpioGroup, WriteGpioGroup, SetDirectionGpioGroup };
 
-static void PollInputs(void *context)
+static void InitializeBoolDebouncer(uint8_t channel)
 {
-   IGNORE(context);
+   instance.debounceCallbackCount = 0;
 
-   for(GpioChannel_t channel = 0; channel < NUM_ELEMENTS(gpioPortsAndPins); channel++)
+   if(gpioPortsAndPins[channel].direction == GpioDirection_Input)
    {
-      if(gpioPortsAndPins[channel].direction == GpioDirection_Input)
-      {
-         bool state = ReadGpio(channel);
-         if(BIT_STATE(instance.inputCache[channel / BitsPerByte], channel % BitsPerByte) != state)
-         {
-            BIT_WRITE(instance.inputCache[channel / BitsPerByte], channel % BitsPerByte, state);
-
-            DataSourceOnDataChangeArgs_t args = { ERD_FROM_CHANNEL(channel), &state };
-            Event_Synchronous_Publish(instance.onChangeEvent, &args);
-         }
-      }
+      Asymmetrical_Debouncer_bool_Init(&instance.asymmetricalDebouncers[channel], &asymmetricalDebouncerConfigs[channel]);
    }
 }
 
@@ -296,6 +316,7 @@ static void InitializeGpio(void)
       SetDirection(channel, gpioPortsAndPins[channel].direction);
       SetGpioMode(channel);
       SetDriveCapacity(channel, gpioPortsAndPins[channel].driveCapacity);
+      InitializeBoolDebouncer(channel);
    }
 }
 
@@ -311,9 +332,43 @@ static bool AtLeastOneInputExists(void)
    return false;
 }
 
+void DataSource_Gpio_Run(void)
+{
+   for(GpioChannel_t channel = 0; channel < GpioInputCount; channel++)
+   {
+      bool debouncedInput = Asymmetrical_Debouncer_bool_GetDebounced(&instance.asymmetricalDebouncers[channel]);
+
+      DataSourceOnDataChangeArgs_t arguments = { ERD_FROM_CHANNEL(channel), &debouncedInput };
+      Event_Synchronous_Publish(instance.onChangeEvent, &arguments);
+   }
+}
+
+static void DebounceCallback(void *context, const void *args)
+{
+   IGNORE(context);
+   IGNORE(args);
+
+   instance.debounceCallbackCount++;
+
+   if(instance.debounceCallbackCount == InputPollPeriodInMsec)
+   {
+      instance.debounceCallbackCount = 0;
+      for(GpioChannel_t channel = 0; channel < GpioInputCount; channel++)
+      {
+         bool rawInputValue = ReadGpio(channel);
+
+         if(gpioPortsAndPins[channel].inverted)
+         {
+            rawInputValue = !rawInputValue;
+         }
+         Asymmetrical_Debouncer_bool_Process(&instance.asymmetricalDebouncers[channel], rawInputValue);
+      }
+   }
+}
+
 I_DataSource_t *DataSource_Gpio_Init(
-   TimerModule_t *timerModule,
-   Event_Synchronous_t *onChangeEvent)
+   Event_Synchronous_t *onChangeEvent,
+   I_Interrupt_t *debounceInterrupt)
 {
    instance.interface.api = &api;
    instance.gpioGroupInterface.api = &apiGpioGroup;
@@ -321,15 +376,11 @@ I_DataSource_t *DataSource_Gpio_Init(
    instance.onChangeEvent = onChangeEvent;
 
    InitializeGpio();
+   EventSubscription_Init(&instance.debouncePollSubscription, NULL, DebounceCallback);
 
    if(AtLeastOneInputExists())
    {
-      TimerModule_StartPeriodic(
-         timerModule,
-         &instance.timer,
-         InputPollPeriodInMsec,
-         PollInputs,
-         &instance);
+      Event_Subscribe(debounceInterrupt->OnInterrupt, &instance.debouncePollSubscription);
    }
 
    return &instance.interface;

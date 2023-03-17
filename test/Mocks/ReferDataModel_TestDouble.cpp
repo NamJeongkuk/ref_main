@@ -49,7 +49,8 @@ void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance, Perso
       AsyncDataSource_Eeprom_TestDouble_GetAsyncDataSource(&instance->_private.asyncEepromTestDouble),
       Crc16Calculator_Table,
       &instance->_private.runTimerModuleAction.interface,
-      Action_Null_GetInstance());
+      Action_Null_GetInstance(),
+      NULL);
 
    instance->dataModel = SystemData_DataModel(&instance->_private.systemData);
    instance->externalDataSource = SystemData_ExternalDataSource(&instance->_private.systemData);

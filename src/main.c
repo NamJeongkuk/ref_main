@@ -51,6 +51,7 @@
 #include "ParametricDataVersionCheck.h"
 #include "EepromMonitorPlugin.h"
 #include "ParametricDataErds.h"
+#include "DataSource_Gpio.h"
 #include "GeaStack.h"
 
 enum
@@ -188,7 +189,8 @@ int main(void)
       NonVolatileAsyncDataSource_GetAsyncDataSource(&nvAsyncDataSource),
       Crc16Calculator_Table,
       watchdogKickAction,
-      resetAction);
+      resetAction,
+      interrupt);
 
    I_DataModel_t *dataModel = SystemData_DataModel(&systemData);
 
@@ -261,6 +263,8 @@ int main(void)
    while(1)
    {
       GeaStack_Run(&geaStack);
+
+      DataSource_Gpio_Run();
 
       if(!TimerModule_Run(timerModule))
       {

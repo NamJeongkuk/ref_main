@@ -159,7 +159,8 @@ TEST_GROUP(SystemData)
          AsyncDataSource_Eeprom_TestDouble_GetAsyncDataSource(&nvAsyncDataSource),
          Crc16Calculator_Table,
          &runTimerModuleAction.interface,
-         Action_Null_GetInstance());
+         Action_Null_GetInstance(),
+         NULL);
 
       dataModel = SystemData_DataModel(&instance);
       externalDataSource = SystemData_ExternalDataSource(&instance);
