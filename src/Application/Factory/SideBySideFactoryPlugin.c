@@ -10,6 +10,8 @@
 #include "SystemErds.h"
 #include "DataModelErdPointerAccess.h"
 #include "Constants_Binary.h"
+#include "WaterValveVotedState.h"
+#include "TwistTrayIceMakerMotorAction.h"
 
 static const FactoryVotePair_t factoryVotePairs[] = {
    { Erd_CompressorSpeed_FactoryVote, CompressorSpeed_Off },
@@ -19,7 +21,10 @@ static const FactoryVotePair_t factoryVotePairs[] = {
    { Erd_FreshFoodDamperPosition_FactoryVote, DamperPosition_Closed },
    { Erd_FreshFoodDamperHeater_FactoryVote, PercentageDutyCycle_Min },
    { Erd_AluminumMoldIceMakerFillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
-   { Erd_FreezerDefrostHeater_FactoryVote, HeaterState_Off }
+   { Erd_FreezerDefrostHeater_FactoryVote, HeaterState_Off },
+   { Erd_AluminumMoldIceMakerWaterValve_FactoryVote, WaterValveState_Off },
+   { Erd_TwistTrayIceMakerWaterValve_FactoryVote, WaterValveState_Off },
+   { Erd_TwistTrayIceMakerMotor_FactoryVote, TwistTrayIceMakerMotorAction_RunHomingRoutine }
 };
 
 static const FactoryVoteList_t factoryVoteList = {

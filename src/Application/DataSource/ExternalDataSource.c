@@ -95,7 +95,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_DefrostPrechillRunCounterInMinutes, sizeof(uint16_t)),
    SWAPPED_ERD(PublicErd_DefrostCompressorOnTimeInSeconds, sizeof(uint32_t)),
    SWAPPED_ERD(PublicErd_TimeThatPrechillConditionsAreMetInMinutes, sizeof(uint16_t)),
-   SWAPPED_ERD(PublicErd_AluminumMoldIceMakerMoldThermistor_AdcCount, sizeof(AdcCounts_t)),
+   SWAPPED_ERD(PublicErd_TwistTrayIceMakerThermistor_AdcCount, sizeof(AdcCounts_t)),
    SWAPPED_ERD(PublicErd_FreshFood_UnfilteredTemperatureInDegFx100, sizeof(TemperatureDegFx100_t)),
    SWAPPED_FIELD(PublicErd_ConvertibleCompartmentSetpoint_ResolvedVote, SetpointVotedTemperature_t, temperatureInDegFx100),
    SWAPPED_ERD(PublicErd_ConvertibleCompartmentSetpoint_WinningVoteErd, sizeof(WinningVoteErd_t)),
@@ -116,6 +116,8 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_TimeAcceleration_Ticks, sizeof(uint32_t)),
    SWAPPED_ERD(PublicErd_Ambient_FilteredTemperatureOverrideValueInDegFx100, sizeof(TemperatureDegFx100_t)),
    SWAPPED_ERD(PublicErd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100, sizeof(TemperatureDegFx100_t)),
+   SWAPPED_ERD(PublicErd_TwistTrayIceMaker_FreezeIntegrationCount, sizeof(uint32_t)),
+   SWAPPED_ERD(PublicErd_TwistTrayIceMaker_MinimumFreezeTimerRemainingTimeInMsec, sizeof(TimerTicks_t)),
    SWAPPED_FIELD(PublicErd_AluminumMoldIceMakerMoldHeaterControlRequest, IceMakerMoldHeaterControlRequest_t, onTemperatureInDegFx100),
    SWAPPED_FIELD(PublicErd_AluminumMoldIceMakerMoldHeaterControlRequest, IceMakerMoldHeaterControlRequest_t, offTemperatureInDegFx100),
    SWAPPED_ERD(PublicErd_AluminumMoldFreezeIntegrationCount, sizeof(uint32_t)),
@@ -129,7 +131,10 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_ValvePosition_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_FreshFoodEvapFanSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_FreezerEvapFanSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
+   SWAPPED_ERD(PublicErd_TwistTrayIceMakerWaterValve_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_IsolationWaterValve_WinningVoteErd, sizeof(WinningVoteErd_t)),
+   SWAPPED_ERD(PublicErd_AluminumMoldIceMakerWaterValve_WinningVoteErd, sizeof(WinningVoteErd_t)),
+   SWAPPED_ERD(PublicErd_TwistTrayIceMakerMotor_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freshFoodGridLine.gridLinesDegFx100[GridLine_Nfl]),
    SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHyst]),
    SWAPPED_FIELD(PublicErd_Grid_CalculatedGridLines, CalculatedGridLines_t, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHystDelta]),
@@ -182,7 +187,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_FIELD(PublicErd_ServiceDiagnosticsFaultTableSnapshotData0, FaultSnapshotData_t, someData),
 
    // 0xFB00 range
-   SWAPPED_ERD(PublicErd_Eeprom_DefrostCompressorOnTimeInSeconds, sizeof(uint32_t))
+   SWAPPED_ERD(PublicErd_Eeprom_DefrostCompressorOnTimeInSeconds, sizeof(uint32_t)),
 };
 
 static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
@@ -196,7 +201,7 @@ static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableSnapshot0, PublicErd_ServiceDiagnosticsFaultTableSnapshot9),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultSequenceEntry0, PublicErd_ServiceDiagnosticsFaultSequenceEntry7),
    SWAPPED_FIELD_RANGE(PublicErd_DiagnosticsCycleHistoryRecord0, PublicErd_DiagnosticsCycleHistoryRecord9),
-   SWAPPED_FIELD_RANGE(PublicErd_AluminumMoldIceMakerMoldThermistor_AdcCount, PublicErd_ConvertibleCompartmentEvapThermistor_AdcCount),
+   SWAPPED_FIELD_RANGE(PublicErd_TwistTrayIceMakerThermistor_AdcCount, PublicErd_ConvertibleCompartmentEvapThermistor_AdcCount),
    SWAPPED_FIELD_RANGE(PublicErd_FreshFood_UnfilteredTemperatureInDegFx100, PublicErd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100),
    SWAPPED_FIELD_RANGE(PublicErd_FreshFood_AdjustedSetpointInDegFx100, PublicErd_DeliPan_AdjustedSetpointInDegFx100),
    SWAPPED_FIELD_RANGE(PublicErd_ConvertibleCompartmentSetpoint_FactoryVote, PublicErd_ConvertibleCompartmentSetpoint_UserVote),

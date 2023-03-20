@@ -11,12 +11,14 @@
 #include "AluminumMoldIceMakerData.h"
 #include "FreezerIceRateData.h"
 #include "IceMakerFillMonitorData.h"
+#include "TwistTrayIceMakerData.h"
 
 typedef struct
 {
    FreezerIceRateData_t *freezerIceRateData;
    AluminumMoldIceMakerData_t *aluminumMoldIceMakerData;
    IceMakerFillMonitorData_t *iceMakerFillMonitorData;
+   TwistTrayIceMakerData_t *twistTrayIceMakerData;
 } IceMakerData_t;
 
 #endif

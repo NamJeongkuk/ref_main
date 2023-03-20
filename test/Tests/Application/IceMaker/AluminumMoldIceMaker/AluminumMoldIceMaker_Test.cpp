@@ -135,7 +135,15 @@ TEST_GROUP(AluminumMoldIceMaker)
          &vote);
 
       CHECK_EQUAL(expected, vote.state);
-      CHECK_TRUE(vote.care);
+
+      if(expected)
+      {
+         CHECK_TRUE(vote.care);
+      }
+      else
+      {
+         CHECK_FALSE(vote.care);
+      }
    }
 
    void IceMakerHeaterVoteIsSet()
@@ -160,7 +168,7 @@ TEST_GROUP(AluminumMoldIceMaker)
          &vote);
 
       CHECK_EQUAL(expected, vote.state);
-      CHECK_TRUE(vote.care);
+      CHECK_FALSE(vote.care);
    }
 
    void IceMakerMotorVoteIsSet()
@@ -185,7 +193,7 @@ TEST_GROUP(AluminumMoldIceMaker)
          &vote);
 
       CHECK_EQUAL(expected, vote.state);
-      CHECK_TRUE(vote.care);
+      CHECK_FALSE(vote.care);
    }
 
    void HarvestCountCalculationRequestShouldBe(bool expected)
@@ -560,7 +568,15 @@ TEST_GROUP(AluminumMoldIceMaker)
       DataModel_Read(dataModel, Erd_IsolationWaterValve_AluminumMoldIceMakerVote, &vote);
 
       CHECK_EQUAL(expected, vote.state);
-      CHECK_EQUAL(Vote_Care, vote.care);
+
+      if(expected)
+      {
+         CHECK_EQUAL(Vote_Care, vote.care);
+      }
+      else
+      {
+         CHECK_EQUAL(Vote_DontCare, vote.care);
+      }
    }
 
    void WaterFillMonitoringRequestShouldBe(bool expected)

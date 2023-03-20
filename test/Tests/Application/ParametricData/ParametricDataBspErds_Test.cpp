@@ -132,12 +132,20 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
    CHECK_EQUAL(*erd, Erd_FreshFoodDamperHeater);
 }
 
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMakerWaterValveRelay)
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForAluminumMoldIceMakerWaterValveRelay)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMakerWaterValveRelay)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_AluminumMoldIceMakerWaterValveRelay)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_IceMakerWaterValveRelay);
+   CHECK_EQUAL(*erd, Erd_AluminumMoldIceMakerWaterValveRelay);
+}
+
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForTwistTrayIceMakerWaterValveRelay)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_TwistTrayIceMakerWaterValveRelay)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_TwistTrayIceMakerWaterValveRelay);
 }
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForAluminumMoldIceMakerRelay)
@@ -154,22 +162,6 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
    CHECK_EQUAL(*erd, Erd_IceMakerMotorRelay);
-}
-
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForAugerMotorDirection)
-{
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_AugerMotorDirection)");
-
-   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_AugerMotorDirection);
-}
-
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForAugerMotorPower)
-{
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_AugerMotorPower)");
-
-   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_AugerMotorPower);
 }
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForDispenserValveRelay)
@@ -678,30 +670,6 @@ TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableR
    CHECK_EQUAL(*erd, Erd_Gpio_RLY_08);
 }
 
-TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableRelay_09)
-{
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Gpio_RLY_09)");
-
-   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_Gpio_RLY_09);
-}
-
-TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableAugerPower)
-{
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Gpio_AUGER_PWR)");
-
-   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_Gpio_AUGER_PWR);
-}
-
-TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableAugerDirection)
-{
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Gpio_AUGER_DIRECTION)");
-
-   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_Gpio_AUGER_DIRECTION);
-}
-
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableDoorInt)
 {
    GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Gpio_DOOR_INT)");
@@ -780,14 +748,6 @@ TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableG
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
    CHECK_EQUAL(*erd, Erd_Gpio_CAPTURE_03);
-}
-
-TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableSabbath)
-{
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Gpio_SABBATH)");
-
-   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_Gpio_SABBATH);
 }
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTablePwVar_00)

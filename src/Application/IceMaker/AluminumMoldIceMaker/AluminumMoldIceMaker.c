@@ -708,9 +708,9 @@ static bool State_Freeze(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_Freeze);
-         VoteForIceMakerWaterValve(instance, OFF, Vote_Care);
-         VoteForIceMakerHeater(instance, OFF, Vote_Care);
-         VoteForIceMakerMotor(instance, OFF, Vote_Care);
+         VoteForIceMakerWaterValve(instance, OFF, Vote_DontCare);
+         VoteForIceMakerHeater(instance, OFF, Vote_DontCare);
+         VoteForIceMakerMotor(instance, OFF, Vote_DontCare);
          RequestHarvestCountCalculation(instance);
          RequestFeelerArmMonitoring(instance);
 
@@ -753,9 +753,9 @@ static bool State_IdleFreeze(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_IdleFreeze);
-         VoteForIceMakerWaterValve(instance, OFF, Vote_Care);
-         VoteForIceMakerHeater(instance, OFF, Vote_Care);
-         VoteForIceMakerMotor(instance, OFF, Vote_Care);
+         VoteForIceMakerWaterValve(instance, OFF, Vote_DontCare);
+         VoteForIceMakerHeater(instance, OFF, Vote_DontCare);
+         VoteForIceMakerMotor(instance, OFF, Vote_DontCare);
          break;
 
       case Signal_MoldThermistorIsInvalid:
@@ -1019,8 +1019,8 @@ static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 
       case Hsm_Exit:
          ClearWaterFillMonitoringRequest(instance);
-         VoteForIceMakerWaterValve(instance, OFF, Vote_Care);
-         VoteForIsolationWaterValve(instance, OFF, Vote_Care);
+         VoteForIceMakerWaterValve(instance, OFF, Vote_DontCare);
+         VoteForIsolationWaterValve(instance, OFF, Vote_DontCare);
          break;
 
       default:
@@ -1039,10 +1039,10 @@ static bool State_ThermistorFault(Hsm_t *hsm, HsmSignal_t signal, const void *da
    {
       case Hsm_Entry:
          UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_ThermistorFault);
-         VoteForIceMakerWaterValve(instance, OFF, Vote_Care);
-         VoteForIsolationWaterValve(instance, OFF, Vote_Care);
-         VoteForIceMakerHeater(instance, OFF, Vote_Care);
-         VoteForIceMakerMotor(instance, OFF, Vote_Care);
+         VoteForIceMakerWaterValve(instance, OFF, Vote_DontCare);
+         VoteForIsolationWaterValve(instance, OFF, Vote_DontCare);
+         VoteForIceMakerHeater(instance, OFF, Vote_DontCare);
+         VoteForIceMakerMotor(instance, OFF, Vote_DontCare);
          break;
 
       case Signal_MoldThermistorIsValid:

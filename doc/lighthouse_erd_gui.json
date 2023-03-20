@@ -662,6 +662,95 @@
          ]
       },
       {
+         "title": "Twist IM",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Twist IM High Level State",
+               "name": "Erd_TwistTrayIceMaker_HighLevelState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist IM Operation State",
+               "name": "Erd_TwistTrayIceMaker_OperationState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist IM Motor Operation State",
+               "name": "Erd_TwistTrayIceMaker_MotorOperationState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist IM Motor Action Result",
+               "name": "Erd_TwistTrayIceMaker_MotorActionResult",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist IM Motor Fault Active Flag",
+               "name": "Erd_TwistTrayIceMaker_MotorFaultActive",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist IM Motor State",
+               "name": "Erd_TwistTrayIceMakerMotor_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist IM Valve State",
+               "name": "Erd_TwistTrayIceMakerWaterValve_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist IM Filtered Temperature (DegF x100)",
+               "name": "Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist IM Freeze Integration Count",
+               "name": "Erd_TwistTrayIceMaker_FreezeIntegrationCount",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist IM Minimum Freeze Time Counter Msec",
+               "name": "Erd_TwistTrayIceMaker_MinimumFreezeTimerRemainingTimeInMsec",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist IM Dispenser State",
+               "name": "Erd_TwistTrayIceMaker_IceDispenserState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Ice Rate Active?",
+               "name": "Erd_Freezer_IceRateIsActive",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
          "title": "Factory",
          "erds": [
             {

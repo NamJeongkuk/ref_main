@@ -16,6 +16,7 @@
 #include "IsolationWaterValvePlugin.h"
 #include "FlowMeterPlugin.h"
 #include "SideBySideDispensePlugin.h"
+#include "TwistTrayIceMakerPlugin.h"
 
 typedef struct
 {
@@ -24,6 +25,7 @@ typedef struct
       SideBySideSingleEvaporatorCoolingSystemPlugin_t coolingSystemPlugin;
       IsolationWaterValvePlugin_t isolationWaterValvePlugin;
       AluminumMoldIceMakerPlugin_t aluminumMoldIceMakerPlugin;
+      TwistTrayIceMakerPlugin_t twistTrayIceMakerPlugin;
       FlowMeterPlugin_t flowMeterPlugin;
       SideBySideStaggeredHeater_t staggeredHeaterPlugin;
       SideBySideFactoryPlugin_t factoryPlugin;

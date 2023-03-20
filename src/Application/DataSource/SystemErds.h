@@ -82,6 +82,11 @@
 #include "AluminumMoldIceMakerTestRequest.h"
 #include "DispenseSelection.h"
 #include "PwmFrequency.h"
+#include "TwistTrayIceMakerMotorActionResult.h"
+#include "TwistTrayIceMakerMotorAction.h"
+#include "TwistTrayIceMakerMotorOperationState.h"
+#include "TwistTrayIceMakerOperationState.h"
+#include "TwistTrayIceMakerHighLevelState.h"
 
 // clang-format off
 
@@ -507,6 +512,7 @@ enum
    ENTRY(Erd_ConvertibleCompartmentDoorIsOpen,              0xF134, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AllFreshFoodDoorsAreClosed,                    0xF135, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_TwistTrayIceMakerThermistor_AdcCount,          0xF137, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerMoldThermistor_AdcCount,   0xF138, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_IceMakerBoxThermistor_AdcCount,                0xF139, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodThermistor_AdcCount,                  0xF13A, AdcCounts_t,                                        Swap_Y, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
@@ -525,24 +531,26 @@ enum
    ENTRY(Erd_Ambient_UnfilteredTemperatureInDegFx100,                    0xF146, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentEvap_UnfilteredTemperatureInDegFx100, 0xF147, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerMold_UnfilteredTemperatureInDegFx100,   0xF148, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_UnfilteredTemperatureInDegFx100,          0xF149, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FreshFood_FilteredTemperatureInDegFx100,                    0xF149, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Freezer_FilteredTemperatureInDegFx100,                      0xF14A, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodEvap_FilteredTemperatureInDegFx100,                0xF14B, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerEvap_FilteredTemperatureInDegFx100,                  0xF14C, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartment_FilteredTemperatureInDegFx100,       0xF14D, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Ambient_FilteredTemperatureInDegFx100,                      0xF14E, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentEvap_FilteredTemperatureInDegFx100,   0xF14F, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_IceBox_FilteredTemperatureInDegFx100,                       0xF150, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DeliPan_FilteredTemperatureInDegFx100,                      0xF151, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100,     0xF152, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100,    0xF153, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFood_FilteredTemperatureInDegFx100,                    0xF14A, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_FilteredTemperatureInDegFx100,                      0xF14B, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvap_FilteredTemperatureInDegFx100,                0xF14C, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvap_FilteredTemperatureInDegFx100,                  0xF14D, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartment_FilteredTemperatureInDegFx100,       0xF14E, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Ambient_FilteredTemperatureInDegFx100,                      0xF14F, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentEvap_FilteredTemperatureInDegFx100,   0xF150, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_IceBox_FilteredTemperatureInDegFx100,                       0xF151, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DeliPan_FilteredTemperatureInDegFx100,                      0xF152, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100,     0xF153, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100,            0xF154, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100,    0xF155, TemperatureDegFx100_t,                 Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_ConvertibleCompartmentState,                   0xF155, ConvertibleCompartmentStateType_t,                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentSetpoint_ResolvedVote,   0xF156, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentSetpoint_WinningVoteErd, 0xF157, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentSetpoint_FactoryVote,    0xF158, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentSetpoint_UserVote,       0xF159, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentState,                   0xF156, ConvertibleCompartmentStateType_t,                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentSetpoint_ResolvedVote,   0xF157, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentSetpoint_WinningVoteErd, 0xF158, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentSetpoint_FactoryVote,    0xF159, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentSetpoint_UserVote,       0xF15A, SetpointVotedTemperature_t,                         Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_TimeInMinutesInValvePositionB,                 0xF160, uint16_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
@@ -561,27 +569,28 @@ enum
    ENTRY(Erd_ConvertibleCompartmentSetpointZone,                      0xF16D, SetpointZone_t,                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_HasConvertibleCompartment,                               0xF16E, bool,                                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FreezerIceRateTriggerSignal,                   0xF170, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerIceRateTriggerSignal,                   0xF16F, Signal_t,                                           Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_CalculatedCondenserFanControl,                 0xF171, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CalculatedIceCabinetFanControl,                0xF173, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CalculatedConvertibleCompartmentFanControl,    0xF174, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CalculatedDeliFanControl,                      0xF175, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CalculatedFreezerEvapFanControl,               0xF176, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CalculatedFreshFoodEvapFanControl,             0xF177, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CalculatedCondenserFanControl,                 0xF170, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CalculatedIceCabinetFanControl,                0xF171, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CalculatedConvertibleCompartmentFanControl,    0xF172, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CalculatedDeliFanControl,                      0xF173, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CalculatedFreezerEvapFanControl,               0xF174, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CalculatedFreshFoodEvapFanControl,             0xF175, FanControl_t,                                       Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FreezerSetpoint_TemperatureBounds,             0xF178, SetpointZoneTemperatureBounds_t,                    Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodSetpoint_TemperatureBounds,           0xF179, SetpointZoneTemperatureBounds_t,                    Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentSetpoint_TemperatureBounds, 0xF17A, SetpointZoneTemperatureBounds_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerSetpoint_TemperatureBounds,             0xF176, SetpointZoneTemperatureBounds_t,                    Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodSetpoint_TemperatureBounds,           0xF177, SetpointZoneTemperatureBounds_t,                    Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentSetpoint_TemperatureBounds, 0xF178, SetpointZoneTemperatureBounds_t,                 Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FreezerEvaporatorThermistorIsValid,            0xF17B, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodEvaporatorThermistorIsValid,          0xF17C, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentEvaporatorThermistorIsValid, 0xF17D, bool,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Freezer_ThermistorIsValid,                     0xF17E, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFood_ThermistorIsValid,                   0xF17F, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Ambient_ThermistorIsValid,                     0xF180, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartment_ThermistorIsValid,      0xF181, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerMoldThermistorIsValid,     0xF182, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvaporatorThermistorIsValid,            0xF179, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvaporatorThermistorIsValid,          0xF17A, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentEvaporatorThermistorIsValid, 0xF17B, bool,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_ThermistorIsValid,                     0xF17C, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFood_ThermistorIsValid,                   0xF17D, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Ambient_ThermistorIsValid,                     0xF17E, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartment_ThermistorIsValid,      0xF17F, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerMoldThermistorIsValid,     0xF180, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_ThermistorIsValid,           0xF181, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_WaitingToDefrost,                              0xF183, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Defrosting,                                    0xF184, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -636,6 +645,17 @@ enum
    \
    ENTRY(Erd_Freezer_IceRateIsActive,                                        0xF1AE, bool,                              Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_TwistTrayIceMaker_MotorActionResult,                            0xF1B1, TwistTrayIceMakerMotorActionResult_t, Swap_N, Io_None, Sub_N, Ram,                 NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_IceDispenserState,                            0xF1B2, bool,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_OperationState,                               0xF1B3, TwistTrayIceMakerOperationState_t, Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_HighLevelState,                               0xF1B4, TwistTrayIceMakerHighLevelState_t, Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_FreezeIntegrationCount,                       0xF1B5, uint32_t,                          Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_MinimumFreezeTimerRemainingTimeInMsec,        0xF1B6, TimerTicks_t,                      Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_MinimumFreezeTimerRemainingTimeRequest,       0xF1B7, Signal_t,                          Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_MotorFaultActive,                             0xF1B8, bool,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_ForceHarvest,                                 0xF1B9, bool,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_MotorOperationState,                          0xF1BA, TwistTrayIceMakerMotorOperationState_t, Swap_N, Io_None, Sub_N, Ram,               NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_AluminumMoldIceMakerHsmState,                  0xF1C0, AluminumMoldIceMakerHsmState_t,                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_HarvestCountCalculationRequest,                0xF1C1, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FeelerArmMonitoringRequest,                    0xF1C2, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
@@ -669,13 +689,14 @@ enum
    ENTRY(Erd_FillTubeHeater,                                0xF204, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerDefrostHeaterRelay,                     0xF205, bool,                                               Swap_N, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperHeater,                         0xF206, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
-   ENTRY(Erd_IceMakerWaterValveRelay,                       0xF207, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerWaterValveRelay,           0xF207, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerHeaterRelay,               0xF208, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_IceMakerMotorRelay,                            0xF209, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_AugerMotorDirection,                           0xF20A, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_AugerMotorPower,                               0xF20B, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_DispenserValveRelay,                           0xF20C, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_IsolationValveRelay,                           0xF20D, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMakerWaterValveRelay,              0xF20E, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    \
    ENTRY(Erd_CompressorControllerSpeedRequest,              0xF211, CompressorSpeed_t,                                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorSpeed_ResolvedVote,                  0xF212, CompressorVotedSpeed_t,                             Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
@@ -732,15 +753,26 @@ enum
    ENTRY(Erd_FreezerEvapFanSpeed_FreezerIceRateVote,        0xF275, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerEvapFanSpeed_GridVote,                  0xF276, FanVotedSpeed_t,                                    Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_TwistTrayIceMakerWaterValve_ResolvedVote,      0xF280, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMakerWaterValve_WinningVoteErd,    0xF281, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMakerWaterValve_FactoryVote,       0xF282, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMakerWaterValve_IceMakerVote,      0xF283, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_IsolationWaterValve_ResolvedVote,              0xF28A, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IsolationWaterValve_WinningVoteErd,            0xF28B, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IsolationWaterValve_FactoryVote,               0xF28C, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IsolationWaterValve_AluminumMoldIceMakerVote,  0xF28D, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_IsolationWaterValve_TwistTrayIceMakerVote,     0xF28E, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_AluminumMoldIceMakerWaterValve_ResolvedVote,   0xF290, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerWaterValve_WinningVoteErd, 0xF291, WinningVoteErd_t,                                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerWaterValve_WinningVoteErd, 0xF291, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerWaterValve_FactoryVote,    0xF292, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,   0xF293, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,   0xF293, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_TwistTrayIceMakerMotor_ResolvedVote,           0xF294, TwistTrayIceMakerMotorVotedAction_t,                Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMakerMotor_WinningVoteErd,         0xF295, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMakerMotor_FactoryVote,            0xF296, TwistTrayIceMakerMotorVotedAction_t,                Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMakerMotor_IceMakerVote,           0xF297, TwistTrayIceMakerMotorVotedAction_t,                Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Grid_BlockNumber,                              0xF2A0, GridBlockNumber_t,                                  Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Grid_PreviousBlocks,                           0xF2A1, PreviousGridBlockNumbers_t,                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

@@ -172,7 +172,7 @@ static const IceMakerWaterFillMonitorConfig_t iceMakerFillMonitorConfig = {
 
 static const ResolvedVoteRelayConnectorConfiguration_t iceMakerWaterValveRelayConnectorConfiguration = {
    .resolvedRelayVoteErd = Erd_AluminumMoldIceMakerWaterValve_ResolvedVote,
-   .relayOutputErd = Erd_IceMakerWaterValveRelay
+   .relayOutputErd = Erd_AluminumMoldIceMakerWaterValveRelay
 };
 
 static const Erd_t aluminumMoldIceMakerFilteredTemperatureOverrideRequestErdList[] = {

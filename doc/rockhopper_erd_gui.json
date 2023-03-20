@@ -645,7 +645,7 @@
         {
           "namespace": "mb",
           "displayName": "Ice Maker Water Valve Relay",
-          "name": "Erd_IceMakerWaterValveRelay",
+          "name": "Erd_AluminumMoldIceMakerWaterValveRelay",
           "read": true,
           "write": false
         }
@@ -1641,7 +1641,7 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum mold ice maker water valve - ice maker vote",
+          "displayName": "Aluminum Mold Ice maker water valve - ice maker vote",
           "name": "Erd_AluminumMoldIceMakerWaterValve_IceMakerVote",
           "read": true,
           "write": false

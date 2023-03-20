@@ -349,8 +349,15 @@ TEST_GROUP(DamperIntegration)
       CHECK_EQUAL(freshFoodDamperData->stepsToHome, stepRequest.stepsToMove);
    }
 
+   void EnsureTwistIceMakerIsNotRequestingControl(void)
+   {
+      DataModel_Write(dataModel, Erd_TwistIceMakerMotorControlRequest, clear);
+   }
+
    void StepperMotorControlRequestShouldBe(bool expectedRequest)
    {
+      EnsureTwistIceMakerIsNotRequestingControl();
+
       bool actualRequest;
       DataModel_Read(dataModel, Erd_FreshFoodDamperStepperMotorControlRequest, &actualRequest);
 

@@ -328,6 +328,11 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_AluminumMoldIceMakerRakeCompletedRevolution",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_IceMakerEnabledByUser",
          "interval": 60000
       },
@@ -338,7 +343,67 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_AluminumMoldIceMakerRakeCompletedRevolution",
+         "name": "Erd_TwistTrayIceMaker_HighLevelState",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_TwistTrayIceMaker_OperationState",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_TwistTrayIceMaker_MotorOperationState",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_TwistTrayIceMaker_MotorActionResult",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_TwistTrayIceMaker_MotorFaultActive",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_TwistTrayIceMakerMotor_ResolvedVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_TwistTrayIceMakerWaterValve_ResolvedVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_TwistTrayIceMaker_FreezeIntegrationCount",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_TwistTrayIceMaker_MinimumFreezeTimerRemainingTimeInMsec",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_TwistTrayIceMaker_IceDispenserState",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_TwistTrayIceMakerWaterValve_ResolvedVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_Freezer_IceRateIsActive",
          "interval": 60000
       }
    ]

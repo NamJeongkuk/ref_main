@@ -24,7 +24,7 @@ static const ErdResolverConfiguration_t isolationWaterValveResolverConfiguration
    .defaultData = &defaultIsolationWaterValveData,
    .winningVoterErd = Erd_IsolationWaterValve_WinningVoteErd,
    .resolvedStateErd = Erd_IsolationWaterValve_ResolvedVote,
-   .numberOfVotingErds = (Erd_IsolationWaterValve_AluminumMoldIceMakerVote - Erd_IsolationWaterValve_WinningVoteErd)
+   .numberOfVotingErds = (Erd_IsolationWaterValve_TwistTrayIceMakerVote - Erd_IsolationWaterValve_WinningVoteErd)
 };
 
 static const ResolvedVoteRelayConnectorConfiguration_t isolationWaterValveRelayConnectorConfiguration = {

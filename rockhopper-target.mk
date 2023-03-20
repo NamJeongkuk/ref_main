@@ -65,6 +65,7 @@ SRC_DIRS:=\
   src/Application/Heater \
   src/Application/IceMaker \
   src/Application/IceMaker/AluminumMoldIceMaker \
+  src/Application/IceMaker/TwistTrayIceMaker \
   src/Application/IsolationWaterValve \
   src/Application/ParametricData \
   src/Application/Plugins \

@@ -40,6 +40,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Heater \
    $(PROJECT_DIR)/Application/IceMaker \
    $(PROJECT_DIR)/Application/IceMaker/AluminumMoldIceMaker \
+   $(PROJECT_DIR)/Application/IceMaker/TwistTrayIceMaker \
    $(PROJECT_DIR)/Application/IsolationWaterValve \
    $(PROJECT_DIR)/Application/Motor \
    $(PROJECT_DIR)/Application/ParametricData \
@@ -91,6 +92,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/StepperMotor \
    $(TESTS_DIR)/Application/SystemMonitor \
    $(TESTS_DIR)/Application/TimerModule \
+   $(TESTS_DIR)/Application/TwistTrayIceMaker \
    $(TESTS_DIR)/Hardware/SoftPwm \
 
 ifeq ($(INTEGRATION),Y)

@@ -55,6 +55,9 @@ void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance, Perso
    instance->dataModel = SystemData_DataModel(&instance->_private.systemData);
    instance->externalDataSource = SystemData_ExternalDataSource(&instance->_private.systemData);
 
+   Interrupt_TestDouble_Init(&instance->_private.systemTickInterruptTestDouble);
+   DataModelErdPointerAccess_Write(instance->dataModel, Erd_SystemTickInterrupt, &instance->_private.systemTickInterruptTestDouble.interface);
+
    DataModelErdPointerAccess_Write(instance->dataModel, Erd_TimerModule, &instance->_private.timerModuleTestDouble.timerModule);
 
    instance->_private.personalityParametricData = (PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(personalityIdForTest);

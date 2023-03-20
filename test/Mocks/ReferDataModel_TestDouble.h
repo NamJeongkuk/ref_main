@@ -17,6 +17,8 @@
 #include "Eeprom_Model.h"
 #include "AsyncDataSource_Eeprom_TestDouble.h"
 #include "PersonalityId.h"
+#include "Interrupt_TestDouble.h"
+#include "GpioGroup_TestDouble.h"
 
 typedef struct
 {
@@ -31,6 +33,7 @@ typedef struct
       Action_Context_t runTimerModuleAction;
       Action_Context_t resetAction;
       AsyncDataSource_Eeprom_TestDouble_t asyncEepromTestDouble;
+      Interrupt_TestDouble_t systemTickInterruptTestDouble;
    } _private;
 } ReferDataModel_TestDouble_t;
 
