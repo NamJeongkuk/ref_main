@@ -204,7 +204,7 @@ static FsmState_t InitStateBasedOnFreezerFilteredTemperature(DefrostCompressorOn
    bool freezerWasTooWarmOnPowerUp;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
+      instance->_private.config->freezerFilteredTemperatureWasTooWarmAtPowerUpErd,
       &freezerWasTooWarmOnPowerUp);
 
    bool waitingToDefrost;

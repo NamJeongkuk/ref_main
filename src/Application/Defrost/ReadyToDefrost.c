@@ -76,7 +76,7 @@ static bool ShouldUseMinimumTimeBetweenDefrosts(ReadyToDefrost_t *instance)
    bool filteredTempTooWarmOnPowerUp;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
+      instance->_private.config->freezerFilteredTemperatureWasTooWarmAtPowerUpErd,
       &filteredTempTooWarmOnPowerUp);
 
    bool useMinimumReadyToDefrostTime;
@@ -244,7 +244,7 @@ static void DataModelChanged(void *context, const void *args)
    const DataModelOnDataChangeArgs_t *onChangeData = args;
    Erd_t erd = onChangeData->erd;
 
-   if(erd == instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd ||
+   if(erd == instance->_private.config->freezerFilteredTemperatureWasTooWarmAtPowerUpErd ||
       erd == instance->_private.config->freshFoodDefrostWasAbnormalErd ||
       erd == instance->_private.config->freezerDefrostWasAbnormalErd ||
       erd == instance->_private.config->convertibleCompartmentDefrostWasAbnormalErd ||

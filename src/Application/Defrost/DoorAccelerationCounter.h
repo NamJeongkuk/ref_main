@@ -29,7 +29,7 @@ typedef struct
    Erd_t freezerDoorIsOpenErd; // bool
    Erd_t convertibleCompartmentDoorIsOpenErd; // bool
    Erd_t convertibleCompartmentStateErd; // ConvertibleCompartmentState_t
-   Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
+   Erd_t freezerFilteredTemperatureWasTooWarmAtPowerUpErd; // bool
    Erd_t freezerFilteredTemperatureTooWarmOnPowerUpReadyErd; // bool
    Erd_t resetDefrostCountsErd; // Signal_t
    Erd_t doorAccelerationCounterReadyErd; // bool

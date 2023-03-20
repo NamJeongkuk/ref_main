@@ -187,7 +187,7 @@ static bool ClearedEepromStartup(Defrost_t *instance)
    bool eepromClearedStartup;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->clearedEepromStartup,
+      instance->_private.config->eepromClearedErd,
       &eepromClearedStartup);
 
    return eepromClearedStartup;
@@ -197,7 +197,7 @@ static void SetClearedEepromStartupTo(Defrost_t *instance, bool state)
 {
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->clearedEepromStartup,
+      instance->_private.config->eepromClearedErd,
       &state);
 }
 
@@ -206,7 +206,7 @@ static bool FreezerCompartmentWasTooWarmOnPowerUp(Defrost_t *instance)
    bool state;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
+      instance->_private.config->freezerFilteredTemperatureWasTooWarmAtPowerUpErd,
       &state);
 
    return state;
@@ -216,7 +216,7 @@ static void ResetFreezerCompartmentWasTooWarmOnPowerUp(Defrost_t *instance)
 {
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
+      instance->_private.config->freezerFilteredTemperatureWasTooWarmAtPowerUpErd,
       clear);
 }
 
@@ -533,7 +533,7 @@ static HsmState_t InitialState(Defrost_t *instance)
    bool freezerFilteredTemperatureTooWarmAtPowerUp;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
+      instance->_private.config->freezerFilteredTemperatureWasTooWarmAtPowerUpErd,
       &freezerFilteredTemperatureTooWarmAtPowerUp);
 
    DefrostState_t defrostState;
@@ -1079,7 +1079,7 @@ static void DataModelChanged(void *context, const void *args)
    const DataModelOnDataChangeArgs_t *onChangeData = args;
    Erd_t erd = onChangeData->erd;
 
-   if(erd == instance->_private.config->readyToDefrost)
+   if(erd == instance->_private.config->readyToDefrostErd)
    {
       const bool *state = onChangeData->data;
 

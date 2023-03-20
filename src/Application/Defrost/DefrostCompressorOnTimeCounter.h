@@ -22,7 +22,7 @@ typedef struct
    Erd_t waitingToDefrostErd; // bool
    Erd_t defrostCompressorOnTimeInSecondsErd; // uint32_t
    Erd_t defrostCompressorOnTimeCounterFsmStateErd; // DefrostCompressorOnTimeCounterFsmState_t
-   Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
+   Erd_t freezerFilteredTemperatureWasTooWarmAtPowerUpErd; // bool
    Erd_t freezerFilteredTemperatureTooWarmOnPowerUpReadyErd; // bool
    Erd_t resetDefrostCountsErd; // Signal_t
    Erd_t defrostCompressorOnTimeCounterReadyErd; // bool
