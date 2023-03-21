@@ -8,6 +8,7 @@ BOOT_LOADER_UPDATER_DIR:=$(BOOT_LOADER_DIR)/lib/boot-loader-updater
 CPU:=rx100
 TOOLCHAIN_VERSION:=8.3.0.202102-gdb-12.1
 LINKER_SCRIPT:=$(TARGET).ld
+export IMAGE_CRC
 
 DEVICE:=R5F51308
 SVD:=tools/kpit-rx/svd/rx130.svd
@@ -123,7 +124,6 @@ $(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET).apl', to = 'binaries/$(T
 $(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET)_bootloader_app_parametric.mot', to = 'binaries/$(TARGET).mot', version = true })
 $(call add_to_package,{ from = '$(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot', to = 'binaries/$(TARGET).mot', version = true })
 $(call add_to_package,{ from = '$(BOOT_LOADER_UPDATER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader-updater/$(BOOT_LOADER_TARGET)-boot-loader-updater.apl', to = 'binaries/', version = true })
-$(call add_to_package,{ from = '$(OUTPUT_DIR)/$(PARAMETRIC_DIRS)/rockhopper.parametric.apl', to = 'binaries/$(TARGET)_%v_$(PARAMETRIC_HASH).apl', version = true })
 
 .PHONY: all
 all: info
@@ -141,6 +141,8 @@ target: erd_definitions
 
 .PHONY: package
 package: build artifacts erd_lock
+	$(eval IMAGE_CRC:=$(shell $(LUA53) $(PATH_TO_BUILD_PARAMETRIC)/lib/lua-image-header-dump/lua-image-header-dump.lua --srec $(OUTPUT_DIR)/$(PARAMETRIC_DIRS)/rockhopper.parametric.apl | grep -m1 -oE 'Calculated Image CRC: 0x([0-9A-Fa-f]+)' | cut -d' ' -f4))
+	$(call add_to_package,{ from = '$(OUTPUT_DIR)/$(PARAMETRIC_DIRS)/rockhopper.parametric.apl', to = 'binaries/$(TARGET)_%v_$(PARAMETRIC_HASH)_$(IMAGE_CRC).apl', version = true })
 	@echo Creating artifacts/$(TARGET)_v$(CRIT_VERSION_MAJOR).$(CRIT_VERSION_MINOR).$(NONCRIT_VERSION_MAJOR).$(NONCRIT_VERSION_MINOR)_$(GIT_SHORT_HASH).zip...
 	@$(call create_artifacts,$(TARGET)_v$(CRIT_VERSION_MAJOR).$(CRIT_VERSION_MINOR).$(NONCRIT_VERSION_MAJOR).$(NONCRIT_VERSION_MINOR)_$(GIT_SHORT_HASH).zip)
 
