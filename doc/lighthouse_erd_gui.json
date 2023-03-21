@@ -474,14 +474,6 @@
                "name": "Erd_FreezerDefrostCycleCount",
                "read": true,
                "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
-               "displayName": "Force Special Defrost Mode",
-               "name": "Erd_DefrostTestRequest",
-               "read": true,
-               "write": true,
-               "interval": 1000000000
             }
          ]
       },
