@@ -847,6 +847,56 @@
          ]
       },
       {
+         "title": "Lab",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Defrost Test Request",
+               "name": "Erd_DefrostTestRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Defrost Test Request Status",
+               "name": "Erd_DefrostTestRequestStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Aluminum Mold IM Test Request",
+               "name": "Erd_AluminumMoldIceMakerTestRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Aluminum Mold IM State",
+               "name": "Erd_AluminumMoldIceMakerHsmState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Tray IM Force Harvest",
+               "name": "Erd_TwistTrayIceMaker_ForceHarvest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Tray IM State",
+               "name": "Erd_TwistTrayIceMaker_HighLevelState",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
          "title": "Sabbath",
          "erds": [
             {
