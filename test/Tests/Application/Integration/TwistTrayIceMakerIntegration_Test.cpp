@@ -30,9 +30,6 @@ extern "C"
 enum
 {
    MotorControllerPollingTimeInMsec = 150,
-   DebouncePollTimeInMsec = 4,
-   DebounceCounts = 5,
-   TotalDebounceTimeInMsec = DebouncePollTimeInMsec * DebounceCounts,
    MotorBrakingDurationInMsec = 1 * MSEC_PER_SEC,
    IntegrationPeriod = 1 * MSEC_PER_SEC,
    BelowFreezingAdcCounts = 44800
@@ -68,16 +65,6 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
          dataModel,
          resetReason);
    };
-
-   void GivenTheMotorSwitchIsLow(void)
-   {
-      GpioGroup_TestDouble_SetInputState(gpioGroupTestDouble, Erd_BspGpio_GPIO_IN_02, HIGH);
-   }
-
-   void GivenTheMotorSwitchIsHigh(void)
-   {
-      GpioGroup_TestDouble_SetInputState(gpioGroupTestDouble, Erd_BspGpio_GPIO_IN_02, LOW);
-   }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
    {
@@ -134,8 +121,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
 
    void GivenTheMotorSwitchIsDebouncedHigh(void)
    {
-      GivenTheMotorSwitchIsHigh();
-      AfterNInterrupts(TotalDebounceTimeInMsec);
+      DataModel_Write(dataModel, Erd_Gpio_GPIO_IN_02, clear);
    }
 
    void WhenTheMotorSwitchIsDebouncedHigh(void)
@@ -145,8 +131,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
 
    void GivenTheMotorSwitchIsDebouncedLow(void)
    {
-      GivenTheMotorSwitchIsLow();
-      AfterNInterrupts(TotalDebounceTimeInMsec);
+      DataModel_Write(dataModel, Erd_Gpio_GPIO_IN_02, set);
    }
 
    void TheIceMakerWaterValveShouldBe(bool expected)

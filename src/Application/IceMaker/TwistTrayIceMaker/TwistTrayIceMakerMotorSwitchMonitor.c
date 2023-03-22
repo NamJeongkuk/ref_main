@@ -7,51 +7,39 @@
 
 #include "TwistTrayIceMakerMotorSwitchMonitor.h"
 #include "utils.h"
+#include "SystemErds.h"
 
-enum
+static void OnInputChange(void *context, const void *args)
 {
-   DebounceCounts = 5,
-   PollFrequencyInMsec = 4
-};
-
-static void OnInterrupt(void *context, const void *args)
-{
-   IGNORE(args);
    TwistTrayIceMakerMotorSwitchMonitor_t *instance = context;
+   const bool *newState = args;
 
-   if(++instance->_private.ticks >= PollFrequencyInMsec)
-   {
-      Debouncer_bool_Process(
-         &instance->_private.debouncer,
-         GpioGroup_Read(
-            instance->_private.gpioGroup,
-            instance->_private.config->switchInputChannel));
-
-      TwistTrayIceMakerMotorController_UpdateSwitchState(
-         instance->_private.motorController,
-         !Debouncer_bool_GetDebounced(&instance->_private.debouncer));
-
-      instance->_private.ticks = 0;
-   }
+   TwistTrayIceMakerMotorController_UpdateSwitchState(
+      instance->_private.motorController,
+      !(*newState));
 }
 
 void TwistTrayIceMakerMotorSwitchMonitor_Init(
    TwistTrayIceMakerMotorSwitchMonitor_t *instance,
+   I_DataModel_t *dataModel,
    TwistTrayIceMakerMotorController_t *motorController,
-   I_GpioGroup_t *gpioGroup,
-   I_Interrupt_t *interrupt,
    const TwistTrayIceMakerMotorSwitchMonitorConfig_t *config)
 {
-   instance->_private.gpioGroup = gpioGroup;
    instance->_private.motorController = motorController;
-   instance->_private.ticks = 0;
    instance->_private.config = config;
 
-   Debouncer_bool_Init(
-      &instance->_private.debouncer,
-      0,
-      DebounceCounts);
+   bool initialState;
+   DataModel_Read(dataModel, instance->_private.config->switchInputErd, &initialState);
+   TwistTrayIceMakerMotorController_UpdateSwitchState(
+      instance->_private.motorController,
+      !(initialState));
 
-   EventSubscription_Init(&instance->_private.on1MsInterruptSubscription, instance, OnInterrupt);
-   Event_Subscribe(interrupt->OnInterrupt, &instance->_private.on1MsInterruptSubscription);
+   EventSubscription_Init(
+      &instance->_private.switchInputSubscription,
+      instance,
+      OnInputChange);
+   DataModel_Subscribe(
+      dataModel,
+      instance->_private.config->switchInputErd,
+      &instance->_private.switchInputSubscription);
 }

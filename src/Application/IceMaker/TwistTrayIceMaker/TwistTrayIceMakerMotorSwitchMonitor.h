@@ -9,25 +9,20 @@
 #define TWISTTRAYICEMAKERMOTORSWITCHMONITOR_H
 
 #include "EventSubscription.h"
-#include "I_Interrupt.h"
-#include "I_GpioGroup.h"
 #include "Erd.h"
-#include "Debouncer_bool.h"
 #include "TwistTrayIceMakerMotorController.h"
+#include "I_DataModel.h"
 
 typedef struct
 {
-   Erd_t switchInputChannel;
+   Erd_t switchInputErd; // bool
 } TwistTrayIceMakerMotorSwitchMonitorConfig_t;
 
 typedef struct
 {
    struct
    {
-      EventSubscription_t on1MsInterruptSubscription;
-      I_GpioGroup_t *gpioGroup;
-      Debouncer_bool_t debouncer;
-      uint8_t ticks;
+      EventSubscription_t switchInputSubscription;
       const TwistTrayIceMakerMotorSwitchMonitorConfig_t *config;
       TwistTrayIceMakerMotorController_t *motorController;
    } _private;
@@ -35,9 +30,8 @@ typedef struct
 
 void TwistTrayIceMakerMotorSwitchMonitor_Init(
    TwistTrayIceMakerMotorSwitchMonitor_t *instance,
+   I_DataModel_t *dataModel,
    TwistTrayIceMakerMotorController_t *motorController,
-   I_GpioGroup_t *gpioGroup,
-   I_Interrupt_t *interrupt,
    const TwistTrayIceMakerMotorSwitchMonitorConfig_t *config);
 
 #endif
