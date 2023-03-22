@@ -27,6 +27,7 @@ typedef struct
       Timer_t waitingTimer;
       Timer_t doorClosedTimer;
 
+      bool firstFreezeTransition;
       bool minimumFreezeTimeReached : 1;
       bool freezeIntegrationSumReached : 1;
       bool doorHasBeenClosedForLongEnough : 1;

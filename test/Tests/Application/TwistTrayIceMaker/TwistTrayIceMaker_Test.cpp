@@ -108,7 +108,8 @@ static const DataModel_TestDoubleConfigurationEntry_t erdDefinitions[] = {
    { Erd_SabbathMode, sizeof(bool) },
    { Erd_EnhancedSabbathMode, sizeof(bool) },
    { Erd_FreezerDoorIsOpen, sizeof(bool) },
-   { Erd_TwistTrayIceMaker_ForceHarvest, sizeof(bool) }
+   { Erd_TwistTrayIceMaker_ForceHarvest, sizeof(bool) },
+   { Erd_FreezerIceRateTriggerSignal, sizeof(Signal_t) }
 };
 
 static void OnDataModelChange(void *context, const void *_args)
@@ -164,6 +165,13 @@ static void OnDataModelChange(void *context, const void *_args)
          .onObject(context)
          .withParameter("Erd", args->erd)
          .withParameter("Data", *data);
+   }
+   else if(args->erd == Erd_FreezerIceRateTriggerSignal)
+   {
+      mock()
+         .actualCall("Freezer Ice Rate Signal Has Been Triggered")
+         .onObject(context)
+         .withParameter("Erd", args->erd);
    }
 }
 
@@ -240,7 +248,7 @@ TEST_GROUP(TwistTrayIceMaker)
          .withParameter("Data", state);
    }
 
-   void TheIceDispensorBecomes(bool state)
+   void TheIceDispenserBecomes(bool state)
    {
       DataModel_Write(dataModel, Erd_TwistTrayIceMaker_IceDispenserState, &state);
    }
@@ -312,6 +320,21 @@ TEST_GROUP(TwistTrayIceMaker)
       TheMotorShouldBeRequestedTo(Home);
    }
 
+   void FreezerTriggerIceRateSignalShouldIncrement()
+   {
+      mock()
+         .expectOneCall("Freezer Ice Rate Signal Has Been Triggered")
+         .onObject(dataModel)
+         .withParameter("Erd", Erd_FreezerIceRateTriggerSignal)
+         .ignoreOtherParameters();
+   }
+
+   void FreezerTriggerIceRateSignalShouldNotIncrement()
+   {
+      mock()
+         .expectNoCall("Freezer Ice Rate Signal Has Been Triggered");
+   }
+
    TimerTicks_t TheTimeToReachIntegrationSumGiven(TemperatureDegFx100_t actualTempx100)
    {
       return (MSEC_PER_SEC * TargetFreezeIntegrationSum) / (FreezingPointx100 - actualTempx100);
@@ -325,6 +348,7 @@ TEST_GROUP(TwistTrayIceMaker)
       TheMotorActionResultIs(Homed);
 
       TheMotorShouldBeRequestedTo(Idle);
+
       After(MotorPollTime);
    }
 
@@ -364,7 +388,7 @@ TEST_GROUP(TwistTrayIceMaker)
    }
 };
 
-TEST(TwistTrayIceMaker, ShouldHomeAtBegining)
+TEST(TwistTrayIceMaker, ShouldHomeOnInitializationAndNotIncrementFreezerIceRateSignal)
 {
    TheMotorShouldBeRequestedTo(Home);
    When TheModuleIsInitialized();
@@ -375,6 +399,7 @@ TEST(TwistTrayIceMaker, ShouldHomeAtBegining)
    After(MotorPollTime - 1);
 
    TheMotorShouldBeRequestedTo(Idle);
+   FreezerTriggerIceRateSignalShouldNotIncrement();
    After(1);
 }
 
@@ -571,13 +596,13 @@ TEST(TwistTrayIceMaker, ShouldTryToHarvestIceAgainAfterIceDispenserKicksOff)
    NothingShouldHappen();
    After(FullIceBucketWaitTime - 10);
 
-   TheIceDispensorBecomes(ON);
+   TheIceDispenserBecomes(ON);
 
    HarvestingShouldStart();
-   TheIceDispensorBecomes(OFF);
+   TheIceDispenserBecomes(OFF);
 }
 
-TEST(TwistTrayIceMaker, ShouldFillTheTrayWithWaterAfterHarvesting)
+TEST(TwistTrayIceMaker, ShouldFillTheTrayWithWaterAfterHarvestingAndIncrementFreezerIceRateSignal)
 {
    Given FreezingIsCompletedAndHarvestingIsStarted();
    HarvestingIsCompletedAndFillingIsStarted();
@@ -586,15 +611,17 @@ TEST(TwistTrayIceMaker, ShouldFillTheTrayWithWaterAfterHarvesting)
    After(WaterFillTime - 1);
 
    TheWaterValveShouldBecome(CLOSED);
+   FreezerTriggerIceRateSignalShouldIncrement();
    After(1);
 }
 
-TEST(TwistTrayIceMaker, ShouldFreezeAfterFilling)
+TEST(TwistTrayIceMaker, ShouldFreezeAfterFillingAndIncrementFreezerIceRateSignal)
 {
    Given FreezingIsCompletedAndHarvestingIsStarted();
    HarvestingIsCompletedAndFillingIsStarted();
 
    TheWaterValveShouldBecome(CLOSED);
+   FreezerTriggerIceRateSignalShouldIncrement();
    After(WaterFillTime);
 
    FreezingIsCompletedAndHarvestingIsStarted();
@@ -606,6 +633,7 @@ TEST(TwistTrayIceMaker, ShouldBeAbleToHarvestTwice)
    HarvestingIsCompletedAndFillingIsStarted();
 
    TheWaterValveShouldBecome(CLOSED);
+   FreezerTriggerIceRateSignalShouldIncrement();
    After(WaterFillTime);
 
    FreezingIsCompletedAndHarvestingIsStarted();
@@ -644,7 +672,7 @@ TEST(TwistTrayIceMaker, ShouldNotHarvestIceIfSabbathModeComesOnWhileFreezing)
    When SabbathModeIs(OFF);
 }
 
-TEST(TwistTrayIceMaker, SabbathModeShouldAlsoWorkIfTheEnancedSabbathModeErdComesOn)
+TEST(TwistTrayIceMaker, SabbathModeShouldAlsoWorkIfTheEnhancedSabbathModeErdComesOn)
 {
    HomingIsCompleted();
    And TheTemperatureIs(200);

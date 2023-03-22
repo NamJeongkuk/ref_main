@@ -135,6 +135,13 @@ static void UpdateWaterValve(TwistTrayIceMaker_t *instance, bool newState)
    DataSource_Write(instance->_private.dataSource, Erd_IsolationWaterValve_TwistTrayIceMakerVote, &vote);
 }
 
+static void SendFreezerIceRateSignal(TwistTrayIceMaker_t *instance)
+{
+   Signal_SendViaErd(
+      instance->_private.dataSource,
+      Erd_FreezerIceRateTriggerSignal);
+}
+
 static void ClearFreezeIntegrationSum(TwistTrayIceMaker_t *instance)
 {
    uint32_t freezeIntegrationSum = 0;
@@ -286,6 +293,14 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 
          StartFreezingTimers(instance);
          StartTemperaturePollingTimer(instance);
+         if(!instance->_private.firstFreezeTransition)
+         {
+            SendFreezerIceRateSignal(instance);
+         }
+         else
+         {
+            instance->_private.firstFreezeTransition = false;
+         }
          break;
 
       case Signal_IceTemperaturePollingIntervalElapsed:
@@ -586,6 +601,7 @@ void TwistTrayIceMaker_Init(
    instance->_private.dataSource = dataSource;
    instance->_private.parametric = parametric;
    instance->_private.doorHasBeenClosedForLongEnough = true;
+   instance->_private.firstFreezeTransition = true;
 
    EventSubscription_Init(&instance->_private.dataSourceChangeEventSubcription, instance, DataSourceChanged);
    Event_Subscribe(dataSource->OnDataChange, &instance->_private.dataSourceChangeEventSubcription);
