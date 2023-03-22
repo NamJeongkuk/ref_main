@@ -26,7 +26,7 @@ static const TwistTrayIceMakerMotorRequestManagerConfig_t requestManagerConfig =
 };
 
 static const TwistTrayIceMakerMotorSwitchMonitorConfig_t switchMonitorConfig = {
-   .switchInputChannel = Erd_BspGpio_GPIO_IN_02
+   .switchInputErd = Erd_Gpio_GPIO_IN_02
 };
 
 static const SensorFilteringConfig_t sensorFilterConfig = {
@@ -110,13 +110,6 @@ void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataMod
       &instance->_private.twistTrayMotorController,
       DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_SystemTickInterrupt));
 
-   TwistTrayIceMakerMotorSwitchMonitor_Init(
-      &instance->_private.twistTrayIceMakerSwitchMonitor,
-      &instance->_private.twistTrayMotorController,
-      DataModelErdPointerAccess_GetGpioGroup(dataModel, Erd_GpioGroupInterface),
-      DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_SystemTickInterrupt),
-      &switchMonitorConfig);
-
    TwistTrayIceMakerMotorRequestManager_Init(
       &instance->_private.twistTrayMotorRequestManager,
       dataModel,
@@ -130,6 +123,12 @@ void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataMod
          &instance->_private.motorStateOutput,
          DataModelErdPointerAccess_GetGpioGroup(dataModel, Erd_GpioGroupInterface),
          &outputTwistIceMakerMotorStateConfig));
+
+   TwistTrayIceMakerMotorSwitchMonitor_Init(
+      &instance->_private.twistTrayIceMakerSwitchMonitor,
+      dataModel,
+      &instance->_private.twistTrayMotorController,
+      &switchMonitorConfig);
 
    TwistTrayIceMaker_Init(
       &instance->_private.twistTrayIceMaker,
