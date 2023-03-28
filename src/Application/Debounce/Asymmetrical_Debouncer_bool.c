@@ -52,10 +52,11 @@ bool Asymmetrical_Debouncer_bool_Process(
 
 void Asymmetrical_Debouncer_bool_Init(
    Asymmetrical_Debouncer_bool_t *instance,
-   const Asymmetrical_Debouncer_bool_Config_t *config)
+   const Asymmetrical_Debouncer_bool_Config_t *config,
+   bool initialSeedValue)
 {
    instance->_private.config = config;
-   instance->_private.filteredOutputValue = config->initialValue;
+   instance->_private.filteredOutputValue = initialSeedValue;
 
    Debouncer_bool_Init(
       &instance->_private.onToOffDebouncer,

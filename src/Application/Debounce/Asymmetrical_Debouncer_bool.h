@@ -14,7 +14,6 @@ typedef struct
 {
    uint8_t debounceCountOffToOn;
    uint8_t debounceCountOnToOff;
-   bool initialValue;
 } Asymmetrical_Debouncer_bool_Config_t;
 
 typedef struct
@@ -37,6 +36,7 @@ bool Asymmetrical_Debouncer_bool_Process(
 
 void Asymmetrical_Debouncer_bool_Init(
    Asymmetrical_Debouncer_bool_t *instance,
-   const Asymmetrical_Debouncer_bool_Config_t *config);
+   const Asymmetrical_Debouncer_bool_Config_t *config,
+   bool initialSeedValue);
 
 #endif

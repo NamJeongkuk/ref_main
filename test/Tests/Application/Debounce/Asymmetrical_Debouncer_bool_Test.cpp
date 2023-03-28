@@ -19,32 +19,26 @@ enum
 {
    SomeOffToOnValue = 4,
    SomeOnToOffValue = 5,
-   LowInitialValue = 0,
-   HighInitialValue = 1,
 };
 
 static const Asymmetrical_Debouncer_bool_Config_t lowInitialValueConfig = {
    .debounceCountOffToOn = SomeOffToOnValue,
    .debounceCountOnToOff = SomeOnToOffValue,
-   .initialValue = LowInitialValue
 };
 
 static const Asymmetrical_Debouncer_bool_Config_t highInitialValueConfig = {
    .debounceCountOffToOn = SomeOffToOnValue,
    .debounceCountOnToOff = SomeOnToOffValue,
-   .initialValue = HighInitialValue
 };
 
 static const Asymmetrical_Debouncer_bool_Config_t configWithDebounceCountOffToOnOfOneAndLowInitialValue = {
    .debounceCountOffToOn = 1,
    .debounceCountOnToOff = SomeOnToOffValue,
-   .initialValue = LowInitialValue
 };
 
 static const Asymmetrical_Debouncer_bool_Config_t configWithDebounceCountOnToOffOfOneAndHighInitialValue = {
    .debounceCountOffToOn = SomeOffToOnValue,
    .debounceCountOnToOff = 1,
-   .initialValue = HighInitialValue
 };
 
 TEST_GROUP(Asymmetrical_Debouncer_bool)
@@ -53,22 +47,22 @@ TEST_GROUP(Asymmetrical_Debouncer_bool)
 
    void GivenModuleIsInitializedWithLowInitialValue()
    {
-      Asymmetrical_Debouncer_bool_Init(&instance, &lowInitialValueConfig);
+      Asymmetrical_Debouncer_bool_Init(&instance, &lowInitialValueConfig, LOW);
    }
 
    void GivenModuleIsInitializedWithHighInitialValue()
    {
-      Asymmetrical_Debouncer_bool_Init(&instance, &highInitialValueConfig);
+      Asymmetrical_Debouncer_bool_Init(&instance, &highInitialValueConfig, HIGH);
    }
 
    void GivenModuleIsInitializedWithDebounceCountOffToOnOfOneAndLowInitialValue()
    {
-      Asymmetrical_Debouncer_bool_Init(&instance, &configWithDebounceCountOffToOnOfOneAndLowInitialValue);
+      Asymmetrical_Debouncer_bool_Init(&instance, &configWithDebounceCountOffToOnOfOneAndLowInitialValue, LOW);
    }
 
    void GivenModuleIsInitializedWithDebounceCountOnToOffOfOneAndHighInitialValue()
    {
-      Asymmetrical_Debouncer_bool_Init(&instance, &configWithDebounceCountOnToOffOfOneAndHighInitialValue);
+      Asymmetrical_Debouncer_bool_Init(&instance, &configWithDebounceCountOnToOffOfOneAndHighInitialValue, HIGH);
    }
 
    void DebouncedValueShouldNotChangeWhenProcessingConsecutiveValues(uint8_t numberOfCalls, bool valueToProcess, bool expectedDebouncedValue)

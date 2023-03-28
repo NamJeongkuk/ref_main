@@ -122,17 +122,18 @@ static struct
    Event_Synchronous_t *onChangeEvent;
    EventSubscription_t debouncePollSubscription;
    Asymmetrical_Debouncer_bool_t asymmetricalDebouncers[GpioInputCount];
+   bool debounceInputDataDirtyFlags[GpioInputCount];
    Timer_t timer;
    uint8_t inputCache[((GpioCount - 1) / BitsPerByte) + 1];
    uint32_t debounceCallbackCount;
 } instance;
 
-#define EXPAND_AS_ASYMMETRICAL_DOUBOUNCE_BOOL_CONFIGS(channel, direction, offToOnDebounceCount, onToOffDebounceCount, pullUp, driveCapacity, port, pin, inverted) \
-   CONCAT(INCLUDE_, direction)                                                                                                                                    \
-   ({ .debounceCountOffToOn = offToOnDebounceCount COMMA.debounceCountOnToOff = onToOffDebounceCount COMMA.initialValue = false } COMMA)
+#define EXPAND_AS_ASYMMETRICAL_DEBOUNCE_BOOL_CONFIGS(channel, direction, offToOnDebounceCount, onToOffDebounceCount, pullUp, driveCapacity, port, pin, inverted) \
+   CONCAT(INCLUDE_, direction)                                                                                                                                   \
+   ({ .debounceCountOffToOn = offToOnDebounceCount COMMA.debounceCountOnToOff = onToOffDebounceCount } COMMA)
 
 static const Asymmetrical_Debouncer_bool_Config_t asymmetricalDebouncerConfigs[] = {
-   GPIO_TABLE(EXPAND_AS_ASYMMETRICAL_DOUBOUNCE_BOOL_CONFIGS)
+   GPIO_TABLE(EXPAND_AS_ASYMMETRICAL_DEBOUNCE_BOOL_CONFIGS)
 };
 
 static void SetPullUp(const GpioChannel_t channel, const GpioPullUp_t pullUp)
@@ -304,7 +305,13 @@ static void InitializeBoolDebouncer(uint8_t channel)
 
    if(gpioPortsAndPins[channel].direction == GpioDirection_Input)
    {
-      Asymmetrical_Debouncer_bool_Init(&instance.asymmetricalDebouncers[channel], &asymmetricalDebouncerConfigs[channel]);
+      instance.debounceInputDataDirtyFlags[channel] = 0;
+
+      bool currentValue = ReadGpio(channel);
+      Asymmetrical_Debouncer_bool_Init(
+         &instance.asymmetricalDebouncers[channel],
+         &asymmetricalDebouncerConfigs[channel],
+         currentValue);
    }
 }
 
@@ -336,10 +343,13 @@ void DataSource_Gpio_Run(void)
 {
    for(GpioChannel_t channel = 0; channel < GpioInputCount; channel++)
    {
-      bool debouncedInput = Asymmetrical_Debouncer_bool_GetDebounced(&instance.asymmetricalDebouncers[channel]);
-
-      DataSourceOnDataChangeArgs_t arguments = { ERD_FROM_CHANNEL(channel), &debouncedInput };
-      Event_Synchronous_Publish(instance.onChangeEvent, &arguments);
+      if(instance.debounceInputDataDirtyFlags[channel])
+      {
+         bool debouncedInput = Asymmetrical_Debouncer_bool_GetDebounced(&instance.asymmetricalDebouncers[channel]);
+         DataSourceOnDataChangeArgs_t arguments = { ERD_FROM_CHANNEL(channel), &debouncedInput };
+         Event_Synchronous_Publish(instance.onChangeEvent, &arguments);
+         instance.debounceInputDataDirtyFlags[channel] = false;
+      }
    }
 }
 
@@ -361,7 +371,10 @@ static void DebounceCallback(void *context, const void *args)
          {
             rawInputValue = !rawInputValue;
          }
-         Asymmetrical_Debouncer_bool_Process(&instance.asymmetricalDebouncers[channel], rawInputValue);
+         if(Asymmetrical_Debouncer_bool_Process(&instance.asymmetricalDebouncers[channel], rawInputValue))
+         {
+            instance.debounceInputDataDirtyFlags[channel] = true;
+         }
       }
    }
 }
