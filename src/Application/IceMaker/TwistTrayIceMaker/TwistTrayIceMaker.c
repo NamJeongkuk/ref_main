@@ -30,7 +30,7 @@ enum
    Signal_DispenserOff,
    Signal_MinimumFreezeTimeReached,
    Signal_IceTemperatureIntegrationIntervalElapsed,
-   Signal_MotorPollIntervalElapsed,
+   Signal_MotorActionResultChanged,
    Signal_TrayFilled,
    Signal_FullIceBucketWaitTimeElapsed,
    Signal_IceTemperaturePollingIntervalElapsed,
@@ -53,7 +53,6 @@ enum
    DOOR_OPEN = true,
    DOOR_CLOSED = false,
 
-   MotorPollPeriodInMsec = 150,
    IceTemperaturePollPeriodInMsec = 3 * MSEC_PER_SEC,
    IntegrationIntervalPeriodInMsec = 1 * MSEC_PER_SEC,
 };
@@ -76,7 +75,6 @@ FSM_STATE_TABLE(FSM_STATE_EXPAND_AS_FUNCTION_DEFINITION)
 
 static void MinimumFreezeTimeReached(void *context);
 static void IceTemperatureIntegrationIntervalElapsed(void *context);
-static void MotorPollIntervalElapsed(void *context);
 static void FillingTrayPeriodElapsed(void *context);
 static void FullIceBucketWaitTimeElapsed(void *context);
 static void IceTemperaturePollingIntervalElapsed(void *context);
@@ -204,16 +202,6 @@ static void StopFreezeTimers(TwistTrayIceMaker_t *instance)
    TimerModule_Stop(instance->_private.timerModule, &instance->_private.integrationTimer);
 }
 
-static void StartMotorPolling(TwistTrayIceMaker_t *instance)
-{
-   TimerModule_StartPeriodic(
-      instance->_private.timerModule,
-      &instance->_private.pollingTimer,
-      MotorPollPeriodInMsec,
-      MotorPollIntervalElapsed,
-      instance);
-}
-
 static void StartFillTrayTimer(TwistTrayIceMaker_t *instance)
 {
    TimerModule_StartOneShot(
@@ -229,15 +217,13 @@ static void StartHarvestingIfConditionsAreMet(TwistTrayIceMaker_t *instance)
    if(!ItIsSabbathMode(instance) && instance->_private.doorHasBeenClosedForLongEnough)
    {
       RequestMotorAction(instance, TwistTrayIceMakerMotorAction_RunCycle);
-      StartMotorPolling(instance);
    }
 }
 
 static void State_Homing(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
    TwistTrayIceMaker_t *instance = InterfaceFrom(fsm);
-   IGNORE(data);
-   uint8_t motorActionResult;
+   const TwistTrayIceMakerMotorActionResult_t *motorActionResult = data;
 
    switch(signal)
    {
@@ -245,29 +231,20 @@ static void State_Homing(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          UpdateOperationState(instance, TwistTrayIceMakerOperationState_Homing);
 
          RequestMotorAction(instance, Home);
-
-         TimerModule_StartPeriodic(
-            instance->_private.timerModule,
-            &instance->_private.pollingTimer,
-            MotorPollPeriodInMsec,
-            MotorPollIntervalElapsed,
-            instance);
          break;
 
-      case Signal_MotorPollIntervalElapsed:
-         DataSource_Read(instance->_private.dataSource, Erd_TwistTrayIceMaker_MotorActionResult, &motorActionResult);
-         if(Homed == motorActionResult)
+      case Signal_MotorActionResultChanged:
+         if(Homed == *motorActionResult)
          {
             Fsm_Transition(fsm, State_Freeze);
          }
-         else if(MotorError == motorActionResult)
+         else if(MotorError == *motorActionResult)
          {
             Fsm_Transition(fsm, State_MotorError);
          }
          break;
 
       case Fsm_Exit:
-         TimerModule_Stop(instance->_private.timerModule, &instance->_private.pollingTimer);
          RequestMotorAction(instance, Idle);
          break;
    }
@@ -366,8 +343,7 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
    TwistTrayIceMaker_t *instance = InterfaceFrom(fsm);
-   uint8_t motorActionResult;
-   IGNORE(data);
+   const TwistTrayIceMakerMotorActionResult_t *motorActionResult = data;
 
    switch(signal)
    {
@@ -381,25 +357,22 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          StartHarvestingIfConditionsAreMet(instance);
          break;
 
-      case Signal_MotorPollIntervalElapsed:
-         DataSource_Read(instance->_private.dataSource, Erd_TwistTrayIceMaker_MotorActionResult, &motorActionResult);
-
-         if(Harvested == motorActionResult)
+      case Signal_MotorActionResultChanged:
+         if(Harvested == *motorActionResult)
          {
             Fsm_Transition(fsm, State_FillingTrayWithWater);
          }
-         else if(BucketWasFull == motorActionResult)
+         else if(BucketWasFull == *motorActionResult)
          {
             Fsm_Transition(fsm, State_BucketIsFull);
          }
-         else if(MotorError == motorActionResult)
+         else if(MotorError == *motorActionResult)
          {
             Fsm_Transition(fsm, State_MotorError);
          }
          break;
 
       case Fsm_Exit:
-         TimerModule_Stop(instance->_private.timerModule, &instance->_private.pollingTimer);
          RequestMotorAction(instance, Idle);
          break;
    }
@@ -497,12 +470,6 @@ static void IceTemperatureIntegrationIntervalElapsed(void *context)
    Fsm_SendSignal(&instance->_private.fsm, Signal_IceTemperatureIntegrationIntervalElapsed, NULL);
 }
 
-static void MotorPollIntervalElapsed(void *context)
-{
-   REINTERPRET(instance, context, TwistTrayIceMaker_t *);
-   Fsm_SendSignal(&instance->_private.fsm, Signal_MotorPollIntervalElapsed, NULL);
-}
-
 static void FillingTrayPeriodElapsed(void *context)
 {
    REINTERPRET(instance, context, TwistTrayIceMaker_t *);
@@ -588,6 +555,10 @@ static void DataSourceChanged(void *context, const void *data)
    {
       Fsm_SendSignal(&instance->_private.fsm, Signal_ForcedHarvest, NULL);
       DataSource_Write(instance->_private.dataSource, Erd_TwistTrayIceMaker_ForceHarvest, clear);
+   }
+   else if(onChangeArgs->erd == Erd_TwistTrayIceMaker_MotorActionResult)
+   {
+      Fsm_SendSignal(&instance->_private.fsm, Signal_MotorActionResultChanged, onChangeArgs->data);
    }
 }
 
