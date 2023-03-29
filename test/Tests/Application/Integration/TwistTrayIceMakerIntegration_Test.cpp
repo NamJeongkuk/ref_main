@@ -188,7 +188,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       GivenTheApplicationIsInitializedAndIceMakerIsInFreeze();
 
       WhenTheThermistorAdcCountsAre(BelowFreezingAdcCounts);
-      After(twistTrayIceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN - 1);
+      After(twistTrayIceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN - 1 - MotorControllerPollingTimeInMsec);
       OperationStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
 
       After(1);

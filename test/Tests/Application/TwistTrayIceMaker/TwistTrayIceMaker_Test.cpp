@@ -60,7 +60,6 @@ enum
    IntegrationInterval = 1 * MSEC_PER_SEC,
    FullIceBucketWaitTime = 3 * SECONDS_PER_HOUR * MSEC_PER_SEC,
    DelayToHarvestAfterDoorCloses = 3 * MSEC_PER_MIN,
-   MotorPollTime = 150,
    IceTemperaturePollingTime = 3 * MSEC_PER_SEC,
 
    TargetFreezeIntegrationSum = 16200,
@@ -322,10 +321,8 @@ TEST_GROUP(TwistTrayIceMaker)
       TheMotorShouldBeRequestedTo(Home);
       When TheModuleIsInitialized();
 
-      TheMotorActionResultIs(Homed);
-
       TheMotorShouldBeRequestedTo(Idle);
-      After(MotorPollTime);
+      When TheMotorActionResultIs(Homed);
    }
 
    void FreezingIsCompletedAndHarvestingIsStarted()
@@ -352,11 +349,9 @@ TEST_GROUP(TwistTrayIceMaker)
 
    void HarvestingIsCompletedAndFillingIsStarted()
    {
-      TheMotorActionResultIs(Harvested);
-
-      TheMotorShouldBeRequestedTo(Idle);
       FillingShouldStart();
-      After(MotorPollTime);
+      TheMotorShouldBeRequestedTo(Idle);
+      When TheMotorActionResultIs(Harvested);
    }
 
    void NothingShouldHappen()
@@ -369,13 +364,8 @@ TEST(TwistTrayIceMaker, ShouldHomeAtBegining)
    TheMotorShouldBeRequestedTo(Home);
    When TheModuleIsInitialized();
 
-   TheMotorActionResultIs(Homed);
-
-   NothingShouldHappen();
-   After(MotorPollTime - 1);
-
    TheMotorShouldBeRequestedTo(Idle);
-   After(1);
+   When TheMotorActionResultIs(Homed);
 }
 
 // Freezing
@@ -533,24 +523,17 @@ TEST(TwistTrayIceMaker, ShouldTryToHarvestWhateverIsInTheTrayOnInitAfterTryingTo
 {
    Given FreezingIsCompletedAndHarvestingIsStarted();
 
-   Then TheMotorActionResultIs(Harvested);
-
-   NothingShouldHappen();
-   After(MotorPollTime - 1);
-
    TheMotorShouldBeRequestedTo(Idle);
    FillingShouldStart();
-   After(1);
+   When TheMotorActionResultIs(Harvested);
 }
 
 TEST(TwistTrayIceMaker, ShouldTryToHarvestIceAgainAfterEnoughTimeHasPassedSinceTheBucketWasFull)
 {
    Given FreezingIsCompletedAndHarvestingIsStarted();
 
-   Then TheMotorActionResultIs(BucketWasFull);
-
    TheMotorShouldBeRequestedTo(Idle);
-   After(MotorPollTime);
+   When TheMotorActionResultIs(BucketWasFull);
 
    NothingShouldHappen();
    After(FullIceBucketWaitTime - 1);
@@ -563,10 +546,8 @@ TEST(TwistTrayIceMaker, ShouldTryToHarvestIceAgainAfterIceDispenserKicksOff)
 {
    Given FreezingIsCompletedAndHarvestingIsStarted();
 
-   Then TheMotorActionResultIs(BucketWasFull);
-
    TheMotorShouldBeRequestedTo(Idle);
-   After(MotorPollTime);
+   When TheMotorActionResultIs(BucketWasFull);
 
    NothingShouldHappen();
    After(FullIceBucketWaitTime - 10);
@@ -681,10 +662,9 @@ TEST(TwistTrayIceMaker, ShouldNotStartFillingTheTrayWithWaterWhileInSabbathMode)
    Given FreezingIsCompletedAndHarvestingIsStarted();
 
    SabbathModeIs(ON);
-   TheMotorActionResultIs(Harvested);
 
    TheMotorShouldBeRequestedTo(Idle);
-   After(MotorPollTime);
+   When TheMotorActionResultIs(Harvested);
 
    NothingShouldHappen();
    After(ALongTime);
@@ -700,28 +680,18 @@ TEST(TwistTrayIceMaker, ShouldGoToErrorStateIfAHomingMovementResultsInError)
    TheMotorShouldBeRequestedTo(Home);
    When TheModuleIsInitialized();
 
-   TheMotorActionResultIs(MotorError);
-
-   NothingShouldHappen();
-   After(MotorPollTime - 1);
-
    TheMotorShouldBeRequestedTo(Idle);
    TheHighLevelStateShouldBecome(FaultState);
    TheMotorFaultShouldBecome(ACTIVE);
-   After(1);
+   When TheMotorActionResultIs(MotorError);
 }
 
 TEST(TwistTrayIceMaker, ShouldGoToErrorStateIfAHarvestMovementResultsInError)
 {
    Given FreezingIsCompletedAndHarvestingIsStarted();
 
-   Then TheMotorActionResultIs(MotorError);
-
-   NothingShouldHappen();
-   After(MotorPollTime - 1);
-
    TheMotorShouldBeRequestedTo(Idle);
    TheHighLevelStateShouldBecome(FaultState);
    TheMotorFaultShouldBecome(ACTIVE);
-   After(1);
+   When TheMotorActionResultIs(MotorError);
 }
