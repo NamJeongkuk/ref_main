@@ -32,18 +32,17 @@ enum
    Signal_PrechillConditionsAreMet,
    Signal_DefrostTimerExpired,
    Signal_PrechillTemperatureExitConditionMet,
-   Signal_PostDwellTemperatureExitConditionMet,
    Signal_FreshFoodThermistorIsInvalid,
    Signal_FreezerThermistorIsInvalid,
    Signal_FreezerEvaporatorThermistorIsInvalid,
-   Signal_FreezerEvaporatorTemperatureReachedHeaterOnTerminationTemperature,
    Signal_FreezerHeaterMaxOnTimeReached,
    Signal_FreezerAbnormalHeaterOnTimeReached,
    Signal_DisableDefrost,
    Signal_EnableDefrost,
    Signal_IdleTestRequest,
    Signal_PrechillTestRequest,
-   Signal_DefrostTestRequest
+   Signal_DefrostTestRequest,
+   Signal_FreezerEvaporatorTemperatureChanged
 };
 
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -825,7 +824,6 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
-   IGNORE(data);
 
    switch(signal)
    {
@@ -848,6 +846,16 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 
          CheckIfPrechillTemperatureExitConditionMet(instance);
          break;
+
+      case Signal_FreezerEvaporatorTemperatureChanged: {
+         const TemperatureDegFx100_t *freezerEvaporatorTemperature = data;
+
+         if(*freezerEvaporatorTemperature <= instance->_private.defrostParametricData->prechillData.prechillFreezerEvapExitTemperatureInDegFx100)
+         {
+            Hsm_Transition(hsm, State_HeaterOnEntry);
+         }
+      }
+      break;
 
       case Signal_PrechillTemperatureExitConditionMet:
       case Signal_DefrostTimerExpired:
@@ -901,7 +909,6 @@ static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data
 static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
-   IGNORE(data);
 
    switch(signal)
    {
@@ -923,13 +930,19 @@ static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          SetFreezerDefrostWasAbnormal(instance);
          break;
 
-      case Signal_FreezerEvaporatorTemperatureReachedHeaterOnTerminationTemperature:
-         if(FreezerDefrostHeaterOnTimeLessThanAbnormalDefrostTime(instance))
+      case Signal_FreezerEvaporatorTemperatureChanged: {
+         const TemperatureDegFx100_t *freezerEvaporatorTemperature = data;
+         if((*freezerEvaporatorTemperature >= instance->_private.defrostParametricData->heaterOnData.freezerDefrostTerminationTemperatureInDegFx100) &&
+            FreezerEvaporatorThermistorIsValid(instance))
          {
-            ClearFreezerDefrostWasAbnormal(instance);
+            if(FreezerDefrostHeaterOnTimeLessThanAbnormalDefrostTime(instance))
+            {
+               ClearFreezerDefrostWasAbnormal(instance);
+            }
+            Hsm_Transition(hsm, State_Dwell);
          }
-         Hsm_Transition(hsm, State_Dwell);
-         break;
+      }
+      break;
 
       case Hsm_Exit:
          if(FreezerEvaporatorThermistorIsValid(instance))
@@ -1014,7 +1027,6 @@ static bool State_WaitingToDefrost(Hsm_t *hsm, HsmSignal_t signal, const void *d
 static bool State_PostDwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
-   IGNORE(data);
 
    switch(signal)
    {
@@ -1028,9 +1040,19 @@ static bool State_PostDwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_DefrostTimerExpired:
-      case Signal_PostDwellTemperatureExitConditionMet:
          Hsm_Transition(hsm, State_Idle);
          break;
+
+      case Signal_FreezerEvaporatorTemperatureChanged: {
+         const TemperatureDegFx100_t *freezerEvaporatorTemperature = data;
+
+         if(*freezerEvaporatorTemperature <= instance->_private.defrostParametricData->postDwellData.postDwellFreezerEvapExitTemperatureInDegFx100 &&
+            FreezerEvaporatorThermistorIsValid(instance))
+         {
+            Hsm_Transition(hsm, State_Idle);
+         }
+         break;
+      }
 
       case Hsm_Exit:
          EnableMinimumCompressorTimes(instance);
@@ -1126,23 +1148,7 @@ static void DataModelChanged(void *context, const void *args)
    else if(erd == instance->_private.config->freezerEvaporatorFilteredTemperatureResolvedInDegFx100Erd)
    {
       const TemperatureDegFx100_t *freezerEvaporatorTemperature = onChangeData->data;
-
-      if(*freezerEvaporatorTemperature <= instance->_private.defrostParametricData->prechillData.prechillFreezerEvapExitTemperatureInDegFx100)
-      {
-         Hsm_SendSignal(&instance->_private.hsm, Signal_PrechillTemperatureExitConditionMet, NULL);
-      }
-
-      if(*freezerEvaporatorTemperature >= instance->_private.defrostParametricData->heaterOnData.freezerDefrostTerminationTemperatureInDegFx100 &&
-         FreezerEvaporatorThermistorIsValid(instance))
-      {
-         Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerEvaporatorTemperatureReachedHeaterOnTerminationTemperature, NULL);
-      }
-
-      if(*freezerEvaporatorTemperature <= instance->_private.defrostParametricData->postDwellData.postDwellFreezerEvapExitTemperatureInDegFx100 &&
-         FreezerEvaporatorThermistorIsValid(instance))
-      {
-         Hsm_SendSignal(&instance->_private.hsm, Signal_PostDwellTemperatureExitConditionMet, NULL);
-      }
+      Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerEvaporatorTemperatureChanged, freezerEvaporatorTemperature);
    }
    else if(erd == instance->_private.config->freezerFilteredTemperatureResolvedInDegFx100Erd)
    {
@@ -1242,7 +1248,7 @@ void Defrost_Init(
       instance,
       DataModelChanged);
 
-   Event_Subscribe(
-      dataModel->OnDataChange,
+   DataModel_SubscribeAll(
+      dataModel,
       &instance->_private.dataModelSubscription);
 }
