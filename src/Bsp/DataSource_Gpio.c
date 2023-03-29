@@ -305,7 +305,7 @@ static void InitializeBoolDebouncer(uint8_t channel)
 
    if(gpioPortsAndPins[channel].direction == GpioDirection_Input)
    {
-      instance.debounceInputDataDirtyFlags[channel] = 0;
+      instance.debounceInputDataDirtyFlags[channel] = false;
 
       bool currentValue = ReadGpio(channel);
       Asymmetrical_Debouncer_bool_Init(
