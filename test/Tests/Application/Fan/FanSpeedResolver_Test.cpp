@@ -426,7 +426,7 @@ TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeHighFreezerWhenRequest
    GivenCoolingModeIs(CoolingMode_Off);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_High);
-   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.highSpeedSpeedFreezer.rpm);
+   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.highSpeedFreezer.rpm);
 }
 
 TEST(FanSpeedResolver_CoolingMode, ShouldChangeFanSpeedWhenCoolingModeChanges)

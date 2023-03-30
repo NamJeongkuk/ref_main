@@ -159,7 +159,6 @@ void Grid_SingleEvap(void *context)
       case 1:
          SetCoolingMode(dataModel, CoolingMode_Freezer);
          SetCoolingSpeed(dataModel, CoolingSpeed_PullDown);
-         SetPulldownActive(dataModel, SET);
          SetGridArea(dataModel, GridArea_1);
          SetPulldownActive(dataModel, SET);
          break;
@@ -184,7 +183,6 @@ void Grid_SingleEvap(void *context)
       case 14:
          SetCoolingMode(dataModel, CoolingMode_Freezer);
          SetCoolingSpeed(dataModel, CoolingSpeed_High);
-         SetPulldownActive(dataModel, CLEAR);
          SetGridArea(dataModel, GridArea_1);
          SetPulldownActive(dataModel, CLEAR);
          break;
@@ -243,7 +241,6 @@ void Grid_SingleEvap(void *context)
       case 21:
          SetCoolingMode(dataModel, CoolingMode_Freezer);
          SetCoolingSpeed(dataModel, CoolingSpeed_Low);
-         SetPulldownActive(dataModel, CLEAR);
          SetGridArea(dataModel, GridArea_1);
          SetPulldownActive(dataModel, CLEAR);
          break;
@@ -251,8 +248,8 @@ void Grid_SingleEvap(void *context)
       case 22:
          SetCoolingMode(dataModel, CoolingMode_Freezer);
          SetCoolingSpeed(dataModel, (currentCoolingSpeed != CoolingSpeed_Low) ? CoolingSpeed_Low : currentCoolingSpeed);
-         SetPulldownActive(dataModel, CLEAR);
          SetGridArea(dataModel, GridArea_1);
+         SetPulldownActive(dataModel, CLEAR);
          break;
 
       case 23:

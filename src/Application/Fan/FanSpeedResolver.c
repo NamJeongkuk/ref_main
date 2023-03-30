@@ -184,7 +184,7 @@ static FanControl_t CoolingModeFanSpeedWithSetpoint(FanSpeedResolver_t *instance
       case FanSpeed_Medium:
          if(coolingMode == CoolingMode_FreshFood)
          {
-            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.mediumSpeedFreezer;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.mediumSpeedFreshFood;
          }
          else if(coolingMode == CoolingMode_ConvertibleCompartment)
          {
@@ -199,15 +199,15 @@ static FanControl_t CoolingModeFanSpeedWithSetpoint(FanSpeedResolver_t *instance
       case FanSpeed_High:
          if(coolingMode == CoolingMode_FreshFood)
          {
-            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.highSpeedSpeedFreshFood;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.highSpeedFreshFood;
          }
          else if(coolingMode == CoolingMode_ConvertibleCompartment)
          {
-            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.highSpeedSpeedConvertibleCompartment;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.highSpeedConvertibleCompartment;
          }
          else
          {
-            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.highSpeedSpeedFreezer;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.highSpeedFreezer;
          }
          break;
 

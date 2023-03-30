@@ -40,9 +40,9 @@ typedef struct
          FanControl_t mediumSpeedFreshFood;
          FanControl_t mediumSpeedFreezer;
          FanControl_t mediumSpeedConvertibleCompartment;
-         FanControl_t highSpeedSpeedFreshFood;
-         FanControl_t highSpeedSpeedFreezer;
-         FanControl_t highSpeedSpeedConvertibleCompartment;
+         FanControl_t highSpeedFreshFood;
+         FanControl_t highSpeedFreezer;
+         FanControl_t highSpeedConvertibleCompartment;
          FanControl_t superHighSpeed;
       } setpointSpeeds;
 
