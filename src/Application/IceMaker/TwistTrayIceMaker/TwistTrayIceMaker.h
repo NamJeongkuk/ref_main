@@ -23,7 +23,6 @@ typedef struct
 
       Timer_t minimumFreezeTimer;
       Timer_t integrationTimer;
-      Timer_t pollingTimer;
       Timer_t waitingTimer;
       Timer_t doorClosedTimer;
 

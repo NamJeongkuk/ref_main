@@ -179,7 +179,6 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
    {
       GivenTheApplicationIsInitializedAndTheMotorIsHomed();
 
-      After(MotorControllerPollingTimeInMsec);
       OperationStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
    }
 
@@ -188,7 +187,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       GivenTheApplicationIsInitializedAndIceMakerIsInFreeze();
 
       WhenTheThermistorAdcCountsAre(BelowFreezingAdcCounts);
-      After(twistTrayIceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN - 1 - MotorControllerPollingTimeInMsec);
+      After(twistTrayIceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN - 1);
       OperationStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
 
       After(1);
@@ -366,7 +365,6 @@ TEST(TwistTrayIceMakerIntegration, ShouldGoToFreezeAfterHoming)
 {
    GivenTheApplicationIsInitializedAndTheMotorIsHomed();
 
-   After(MotorControllerPollingTimeInMsec);
    OperationStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
 }
 

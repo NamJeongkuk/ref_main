@@ -204,8 +204,8 @@ TEST_GROUP(TwistTrayIceMaker)
 
    void TheTemperatureIs(TemperatureDegFx100_t temp)
    {
-      DataModel_Write(dataModel, Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100, &temp);
       DataModel_Write(dataModel, Erd_TwistTrayIceMaker_ThermistorIsValid, set);
+      DataModel_Write(dataModel, Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100, &temp);
    }
 
    void TheTemperatureIsInvalid()
@@ -434,9 +434,8 @@ TEST(TwistTrayIceMaker, ShouldResetFreezeIntegrationSumIfTempGoesAboveFreezing)
 
    // make sure that the timers are actually going off at the very last tick of these After's
    TheTemperatureIs(FreezingPointx100 + 3000);
-   After(IceTemperaturePollingTime - OneSecond);
+
    TheTemperatureIs(belowFreezing);
-   After(IceTemperaturePollingTime);
 
    NothingShouldHappen();
    When SomeTimePasses(TheTimeToReachIntegrationSumGiven(belowFreezing) - 1);
@@ -455,9 +454,8 @@ TEST(TwistTrayIceMaker, ShouldResetMinimumFreezeTimeIfTempGoesAboveFreezing)
    When SomeTimePasses(MinimumFreezeTime / 5);
 
    TheTemperatureIs(FreezingPointx100 + 3000);
-   After(IceTemperaturePollingTime);
+
    TheTemperatureIs(actualTempx100);
-   After(IceTemperaturePollingTime);
 
    NothingShouldHappen();
    When SomeTimePasses(MinimumFreezeTime - 1);
@@ -525,7 +523,7 @@ TEST(TwistTrayIceMaker, ShouldReturnTheCorrectTimeForTheMinimumFreezeTimerRemain
    When TheMinimumFreezeTimerRemainingTimeIsRequested();
 }
 
-TEST(TwistTrayIceMaker, ShouldStopIfThereIsAThermistorFaultAndBeginPollingThermistorIndefinately)
+TEST(TwistTrayIceMaker, ShouldStopIfThereIsAThermistorFaultAndBeginPollingThermistorIndefinitely)
 {
    Given TheTemperatureIs(200);
    And HomingIsCompleted();

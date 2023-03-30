@@ -77,7 +77,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       bool actualState;
       DataModel_Read(dataModel, Erd_AluminumMoldIceMakerMoldThermistorIsValid, &actualState);
 
-      CHECK_EQUAL(expectedState, actualState);;
+      CHECK_EQUAL(expectedState, actualState);
    }
 
    void TheRakePositionIs(RakePosition_t position)
