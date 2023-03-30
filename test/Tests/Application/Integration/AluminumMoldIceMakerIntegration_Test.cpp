@@ -129,7 +129,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       bool actualState;
       DataModel_Read(
          dataModel,
-         Erd_IceMakerWaterValveRelay,
+         Erd_AluminumMoldIceMakerWaterValveRelay,
          &actualState);
 
       CHECK_EQUAL(expectedState, actualState);
@@ -391,8 +391,8 @@ TEST(AluminumMoldIceMakerIntegration, ShouldTurnOffIceMakerWaterValveAndHeaterWh
    When SabbathModeIs(ENABLED);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
 
-   IceMakerWaterValveShouldVote(WaterValveState_Off, Vote_Care);
-   IceMakerHeaterShouldVote(HeaterState_Off, Vote_Care);
+   IceMakerWaterValveShouldVote(WaterValveState_Off, Vote_DontCare);
+   IceMakerHeaterShouldVote(HeaterState_Off, Vote_DontCare);
 
    IceMakerWaterValveRelayShouldBe(OFF);
    IceMakerHeaterRelayShouldBe(OFF);
@@ -419,6 +419,6 @@ TEST(AluminumMoldIceMakerIntegration, ShouldTurnOffIceMakerMotorWhenEnteringStat
    When SabbathModeIs(ENABLED);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
 
-   IceMakerMotorShouldVote(MotorState_Off, Vote_Care);
+   IceMakerMotorShouldVote(MotorState_Off, Vote_DontCare);
    IceMakerMotorRelayShouldVote(OFF);
 }
