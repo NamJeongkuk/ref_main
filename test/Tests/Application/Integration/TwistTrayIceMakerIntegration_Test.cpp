@@ -32,7 +32,11 @@ enum
    MotorControllerPollingTimeInMsec = 150,
    MotorBrakingDurationInMsec = 1 * MSEC_PER_SEC,
    IntegrationPeriod = 1 * MSEC_PER_SEC,
-   BelowFreezingAdcCounts = 44800
+   BelowFreezingAdcCounts = 44800,
+   InvalidAdcCount = 5375,
+   ValidAdcCount = 30336,
+   Invalid = false,
+   Valid = true
 };
 
 TEST_GROUP(TwistTrayIceMakerIntegration)
@@ -42,6 +46,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
    I_DataModel_t *dataModel;
    ResetReason_t resetReason;
    const TwistTrayIceMakerData_t *twistTrayIceMakerData;
+   const SensorData_t *sensorData;
    GpioGroup_TestDouble_t *gpioGroupTestDouble;
    Interrupt_TestDouble_t *interruptTestDouble;
    TimerModule_TestDouble_t *timerModuleTestDouble;
@@ -56,6 +61,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       interruptTestDouble = (Interrupt_TestDouble_t *)DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_SystemTickInterrupt);
 
       twistTrayIceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->twistTrayIceMakerData;
+      sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
    }
 
    void GivenApplicationHasBeenInitialized(void)
@@ -65,6 +71,16 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
          dataModel,
          resetReason);
    };
+
+   void GivenTheIceMakerThermistorAdcCountIs(AdcCounts_t count)
+   {
+      DataModel_Write(dataModel, Erd_TwistTrayIceMakerThermistor_AdcCount, &count);
+   }
+
+   void WhenTheIceMakerThermistorAdcCountIs(AdcCounts_t count)
+   {
+      GivenTheIceMakerThermistorAdcCountIs(count);
+   }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
    {
@@ -155,6 +171,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
 
    void GivenTheApplicationIsInitializedAndTheMotorIsHomed(void)
    {
+      GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
       GivenApplicationHasBeenInitialized();
       GivenTheMotorSwitchIsDebouncedHigh();
       WhenMotorDriveIs(ENABLED);
@@ -173,6 +190,13 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
    void WhenTheThermistorAdcCountsAre(AdcCounts_t adcCount)
    {
       DataModel_Write(dataModel, Erd_TwistTrayIceMakerThermistor_AdcCount, &adcCount);
+   }
+
+   void TwistTrayIceMakerThermistorShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_ThermistorIsValid, &actual);
+      CHECK_EQUAL(expected, actual);
    }
 
    void GivenTheApplicationIsInitializedAndIceMakerIsInFreeze(void)
@@ -279,8 +303,24 @@ TEST(TwistTrayIceMakerIntegration, ShouldInitialize)
    GivenApplicationHasBeenInitialized();
 }
 
+TEST(TwistTrayIceMakerIntegration, ShouldInitializeInThermistorFaultStateIfThermistorIsInvalidThenHomeWhenTheThermistorBecomesValid)
+{
+   GivenTheIceMakerThermistorAdcCountIs(InvalidAdcCount);
+   GivenApplicationHasBeenInitialized();
+   OperationStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
+   TwistTrayIceMakerThermistorShouldBe(Invalid);
+
+   WhenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
+   After(sensorData->twistTrayIceMakerMoldThermistor->goodReadingCounterMax * sensorData->periodicUpdateRateInMs);
+
+   TwistTrayIceMakerThermistorShouldBe(Valid);
+   HighLevelStateShouldBe(TwistTrayIceMakerHighLevelState_NormalRun);
+   OperationStateShouldBe(TwistTrayIceMakerOperationState_Homing);
+}
+
 TEST(TwistTrayIceMakerIntegration, ShouldInitializeInHighLevelStateNormalRunAndOperationStateHoming)
 {
+   GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenApplicationHasBeenInitialized();
    HighLevelStateShouldBe(TwistTrayIceMakerHighLevelState_NormalRun);
    OperationStateShouldBe(TwistTrayIceMakerOperationState_Homing);
@@ -288,6 +328,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldInitializeInHighLevelStateNormalRunAndO
 
 TEST(TwistTrayIceMakerIntegration, ShouldRequestMotorControlRequest)
 {
+   GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenApplicationHasBeenInitialized();
 
    IceMakerMotorControlRequestShouldBe(true);
@@ -295,6 +336,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldRequestMotorControlRequest)
 
 TEST(TwistTrayIceMakerIntegration, ShouldBeginHomingMotorOnInitializationIfControlIsGranted)
 {
+   GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenApplicationHasBeenInitialized();
    TheMotorControlRequestShouldBe(SET);
 
@@ -308,6 +350,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldBeginHomingMotorOnInitializationIfContr
 
 TEST(TwistTrayIceMakerIntegration, ShouldMakeSureTrayIsHome)
 {
+   GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenApplicationHasBeenInitialized();
    GivenTheMotorSwitchIsDebouncedHigh();
 
@@ -325,6 +368,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldMakeSureTrayIsHome)
 
 TEST(TwistTrayIceMakerIntegration, ShouldJumpOutOfHomeAfterBeingHome)
 {
+   GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenApplicationHasBeenInitialized();
    GivenTheMotorSwitchIsDebouncedHigh();
    WhenMotorDriveIs(ENABLED);
@@ -340,6 +384,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldJumpOutOfHomeAfterBeingHome)
 
 TEST(TwistTrayIceMakerIntegration, ShouldLandBackInHomePositionAfterJumpingOutOfHome)
 {
+   GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenApplicationHasBeenInitialized();
    GivenTheMotorSwitchIsDebouncedHigh();
    WhenMotorDriveIs(ENABLED);
@@ -363,6 +408,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldLandBackInHomePositionAfterJumpingOutOf
 
 TEST(TwistTrayIceMakerIntegration, ShouldGoToFreezeAfterHoming)
 {
+   GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenTheApplicationIsInitializedAndTheMotorIsHomed();
 
    OperationStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
@@ -370,6 +416,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldGoToFreezeAfterHoming)
 
 TEST(TwistTrayIceMakerIntegration, ShouldCompleteFreezeAndEnterHarvest)
 {
+   GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenTheApplicationIsInitializedAndIceMakerIsInFreeze();
 
    WhenTheThermistorAdcCountsAre(BelowFreezingAdcCounts);
@@ -380,6 +427,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldCompleteFreezeAndEnterHarvest)
 
 TEST(TwistTrayIceMakerIntegration, ShouldRunMotorHarvestCycle)
 {
+   GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenTheApplicationIsInitializedAndIceMakerIsInHarvest();
 
    WhenMotorDriveIs(ENABLED);
@@ -423,6 +471,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldRunMotorHarvestCycle)
 
 TEST(TwistTrayIceMakerIntegration, ShouldFillAfterHarvest)
 {
+   GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenTheApplicationIsInitializedAndIceMakerHasJustHarvested();
 
    After(MotorControllerPollingTimeInMsec);

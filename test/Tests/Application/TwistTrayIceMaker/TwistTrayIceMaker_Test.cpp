@@ -208,9 +208,24 @@ TEST_GROUP(TwistTrayIceMaker)
       DataModel_Write(dataModel, Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100, &temp);
    }
 
-   void TheTemperatureIsInvalid()
+   void GivenTheIceMakerThermistorIsValid()
+   {
+      DataModel_Write(dataModel, Erd_TwistTrayIceMaker_ThermistorIsValid, set);
+   }
+
+   void WhenTheIceMakerThermistorIsValid()
+   {
+      GivenTheIceMakerThermistorIsValid();
+   }
+
+   void GivenTheIceMakerThermistorIsInvalid()
    {
       DataModel_Write(dataModel, Erd_TwistTrayIceMaker_ThermistorIsValid, clear);
+   }
+
+   void WhenTheIceMakerThermistorIsInvalid()
+   {
+      GivenTheIceMakerThermistorIsInvalid();
    }
 
    void TheMotorShouldBeRequestedTo(TwistTrayIceMakerMotorAction_t expectedMotorState)
@@ -377,19 +392,54 @@ TEST_GROUP(TwistTrayIceMaker)
       When TheMotorActionResultIs(Harvested);
    }
 
+   void TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_t expectedState)
+   {
+      TwistTrayIceMakerOperationState_t actualState;
+      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_OperationState, &actualState);
+
+      CHECK_EQUAL(expectedState, actualState);
+   }
+
    void NothingShouldHappen()
    {
    }
 };
 
-TEST(TwistTrayIceMaker, ShouldHomeOnInitializationAndNotIncrementFreezerIceRateSignal)
+TEST(TwistTrayIceMaker, ShouldHomeOnInitializationAndNotIncrementFreezerIceRateSignalIfIceMakerThermistorIsValid)
 {
+   GivenTheIceMakerThermistorIsValid();
+
    TheMotorShouldBeRequestedTo(Home);
    When TheModuleIsInitialized();
 
    TheMotorShouldBeRequestedTo(Idle);
    FreezerTriggerIceRateSignalShouldNotIncrement();
    When TheMotorActionResultIs(Homed);
+}
+
+TEST(TwistTrayIceMaker, ShouldHomeWhenIceMakerThermistorIsInvalidAndBecomesValid)
+{
+   GivenTheIceMakerThermistorIsInvalid();
+   And TheModuleIsInitialized();
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
+   TheMotorShouldBeRequestedTo(Home);
+
+   TheMotorShouldBeRequestedTo(Idle);
+   WhenTheIceMakerThermistorIsValid();
+   TheMotorActionResultIs(Homed);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotTransitionToThermistorFaultStateWhenHomingAndThermistorBecomesInvalid)
+{
+   GivenTheIceMakerThermistorIsValid();
+
+   TheMotorShouldBeRequestedTo(Home);
+   When TheModuleIsInitialized();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Homing);
+
+   WhenTheIceMakerThermistorIsInvalid();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Homing);
 }
 
 // Freezing
@@ -531,12 +581,15 @@ TEST(TwistTrayIceMaker, ShouldStopIfThereIsAThermistorFaultAndBeginPollingThermi
    NothingShouldHappen();
    When SomeTimePasses(MinimumFreezeTime / 5);
 
-   TheTemperatureIsInvalid();
+   WhenTheIceMakerThermistorIsInvalid();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
 
    After(IceTemperaturePollingTime);
 
    NothingShouldHappen();
    After(ALongTime);
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
 }
 
 // Harvesting
@@ -605,6 +658,20 @@ TEST(TwistTrayIceMaker, ShouldFreezeAfterFillingAndIncrementFreezerIceRateSignal
    FreezingIsCompletedAndHarvestingIsStarted();
 }
 
+TEST(TwistTrayIceMaker, ShouldGoToThermistorFaultStateWhenEnteringFreezeStateIfThermistorIsInvalid)
+{
+   Given FreezingIsCompletedAndHarvestingIsStarted();
+   HarvestingIsCompletedAndFillingIsStarted();
+
+   WhenTheIceMakerThermistorIsInvalid();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+
+   TheWaterValveShouldBecome(CLOSED);
+   After(WaterFillTime);
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
+}
+
 TEST(TwistTrayIceMaker, ShouldBeAbleToHarvestTwice)
 {
    Given FreezingIsCompletedAndHarvestingIsStarted();
@@ -635,10 +702,42 @@ TEST(TwistTrayIceMaker, ShouldWaitToHarvestUntilDoorIsClosed)
    After(1);
 }
 
+TEST(TwistTrayIceMaker, ShouldNotTransitionToThermistorFaultStateWhenThermistorBecomesInvalidDuringTheHarvestState)
+{
+   Given FreezingIsCompletedAndHarvestingIsStarted();
+
+   WhenTheIceMakerThermistorIsInvalid();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+}
+
+TEST(TwistTrayIceMaker, ShouldTransitionToThermistorFaultStateWhenInBucketIsFullStateAndThermistorBecomesInvalid)
+{
+   Given FreezingIsCompletedAndHarvestingIsStarted();
+   TheMotorShouldBeRequestedTo(Idle);
+   Then TheMotorActionResultIs(BucketWasFull);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_BucketIsFull);
+
+   WhenTheIceMakerThermistorIsInvalid();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotTransitionToThermistorFaultStateWhenFillingAndThermistorBecomesInvalid)
+{
+   GivenTheIceMakerThermistorIsValid();
+   And FreezingIsCompletedAndHarvestingIsStarted();
+   And HarvestingIsCompletedAndFillingIsStarted();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+
+   WhenTheIceMakerThermistorIsInvalid();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+}
+
 // SABBATH MODE
 
 TEST(TwistTrayIceMaker, ShouldNotHarvestIceIfSabbathModeComesOnWhileFreezing)
 {
+   TemperatureDegFx100_t actualTempx100 = 200;
+   Given TheTemperatureIs(actualTempx100);
    HomingIsCompleted();
    And TheTemperatureIs(200);
    Then SabbathModeIs(ON);
@@ -652,6 +751,8 @@ TEST(TwistTrayIceMaker, ShouldNotHarvestIceIfSabbathModeComesOnWhileFreezing)
 
 TEST(TwistTrayIceMaker, SabbathModeShouldAlsoWorkIfTheEnhancedSabbathModeErdComesOn)
 {
+   TemperatureDegFx100_t actualTempx100 = 200;
+   Given TheTemperatureIs(actualTempx100);
    HomingIsCompleted();
    And TheTemperatureIs(200);
    Then EnhancedSabbathModeIs(ON);
@@ -665,6 +766,8 @@ TEST(TwistTrayIceMaker, SabbathModeShouldAlsoWorkIfTheEnhancedSabbathModeErdCome
 
 TEST(TwistTrayIceMaker, SabbathModeShouldAlsoWorkIfBothSabbathErdsComeOn)
 {
+   TemperatureDegFx100_t actualTempx100 = 200;
+   Given TheTemperatureIs(actualTempx100);
    HomingIsCompleted();
    Given TheTemperatureIs(200);
    Then EnhancedSabbathModeIs(ON);
@@ -702,6 +805,8 @@ TEST(TwistTrayIceMaker, ShouldNotStartFillingTheTrayWithWaterWhileInSabbathMode)
 
 TEST(TwistTrayIceMaker, ShouldGoToErrorStateIfAHomingMovementResultsInError)
 {
+   GivenTheIceMakerThermistorIsValid();
+
    TheMotorShouldBeRequestedTo(Home);
    When TheModuleIsInitialized();
 
@@ -719,4 +824,18 @@ TEST(TwistTrayIceMaker, ShouldGoToErrorStateIfAHarvestMovementResultsInError)
    TheHighLevelStateShouldBecome(FaultState);
    TheMotorFaultShouldBecome(ACTIVE);
    When TheMotorActionResultIs(MotorError);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotTransitionToThermistorFaultStateWhenThermistorBecomesInvalidFromTheMotorErrorState)
+{
+   Given FreezingIsCompletedAndHarvestingIsStarted();
+
+   TheMotorShouldBeRequestedTo(Idle);
+   TheHighLevelStateShouldBecome(FaultState);
+   TheMotorFaultShouldBecome(ACTIVE);
+   Then TheMotorActionResultIs(MotorError);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_MotorError);
+
+   WhenTheIceMakerThermistorIsInvalid();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_MotorError);
 }
