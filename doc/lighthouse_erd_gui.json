@@ -565,7 +565,7 @@
             {
                "namespace": "mb",
                "displayName": "Ambient Filtered Temperature (DegF x100)",
-               "name": "Erd_Ambient_FilteredTemperatureInDegFx100",
+               "name": "Erd_Ambient_FilteredInternalTemperatureInDegFx100",
                "read": true,
                "interval": 1000000000
             },

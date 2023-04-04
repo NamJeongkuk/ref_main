@@ -144,7 +144,7 @@ static const RakeControllerConfig_t rakeControllerConfig = {
 
 static const ResolvedVoteRelayConnectorConfiguration_t rakeMotorDriverConfig = {
    .resolvedRelayVoteErd = Erd_AluminumMoldIceMakerRakeMotor_ResolvedVote,
-   .relayOutputErd = Erd_IceMakerMotorRelay
+   .relayOutputErd = Erd_IceMakerRakeMotorRelay
 };
 
 static const IceMakerMoldHeaterControllerConfig_t iceMakerMoldHeaterControllerConfig = {

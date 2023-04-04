@@ -175,7 +175,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       bool actualState;
       DataModel_Read(
          dataModel,
-         Erd_IceMakerMotorRelay,
+         Erd_IceMakerRakeMotorRelay,
          &actualState);
 
       CHECK_EQUAL(expectedState, actualState);

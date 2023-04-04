@@ -14,14 +14,14 @@ static const Erd_t ambientFilteredTemperatureOverrideRequestErdList[] = {
 };
 
 static const Erd_t ambientFilteredTemperatureValueErdList[] = {
-   Erd_Ambient_FilteredTemperatureInDegFx100,
-   Erd_Ambient_FilteredTemperatureOverrideValueInDegFx100
+   Erd_Ambient_FilteredInternalTemperatureInDegFx100,
+   Erd_Ambient_FilteredInternalTemperatureOverrideValueInDegFx100
 };
 
 static const OverrideArbiterConfiguration_t ambientFilteredTemperatureArbiterConfiguration = {
    ambientFilteredTemperatureOverrideRequestErdList,
    ambientFilteredTemperatureValueErdList,
-   Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
+   Erd_Ambient_FilteredInternalTemperatureResolvedInDegFx100,
    NUM_ELEMENTS(ambientFilteredTemperatureOverrideRequestErdList)
 };
 
@@ -54,7 +54,7 @@ void AmbientTemperaturePlugin_Init(AmbientTemperaturePlugin_t *instance, I_DataM
       &ambientThermistorValidArbiterConfiguration);
 
    AmbientTemperatureAverage_Init(&instance->ambientTemperatureAverage, dataModel);
-   
+
    DataModel_Write(
       dataModel,
       Erd_AmbientTemperaturePluginReady,

@@ -43,7 +43,7 @@ static const CompressorSpeedControllerConfiguration_t config = {
    .compressorSpeedRequestErd = Erd_CompressorControllerSpeedRequest,
    .compressorSpeedResolvedVoteErd = Erd_CompressorSpeed_ResolvedVote,
    .valvePositionResolvedVoteErd = Erd_ValvePosition_ResolvedVote,
-   .filteredAmbientTemperatureInDegFx100Erd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
+   .filteredAmbientTemperatureInDegFx100Erd = Erd_Ambient_FilteredInternalTemperatureResolvedInDegFx100,
    .disableMinimumCompressorTimeErd = Erd_DisableMinimumCompressorTimes,
    .sabbathDelayTimeInSeconds = SomeSabbathTimeInSeconds,
 };
@@ -93,7 +93,7 @@ TEST_GROUP(VariableSpeedCompressorSpeedController)
    {
       DataModel_Write(
          dataModel,
-         Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
+         Erd_Ambient_FilteredInternalTemperatureResolvedInDegFx100,
          &temperature);
    }
 

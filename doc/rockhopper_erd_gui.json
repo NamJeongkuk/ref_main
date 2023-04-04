@@ -996,7 +996,7 @@
         {
           "namespace": "mb",
           "displayName": "Ambient Filtered Temperature",
-          "name": "Erd_Ambient_FilteredTemperatureInDegFx100",
+          "name": "Erd_Ambient_FilteredInternalTemperatureInDegFx100",
           "read": true,
           "write": true
         },
@@ -1010,7 +1010,84 @@
         {
           "namespace": "mb",
           "displayName": "Ambient Filtered Temperature Resolved",
+          "name": "Erd_Ambient_FilteredInternalTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient Thermistor Is Valid Resolved",
+          "name": "Erd_AmbientThermistor_IsValidResolved",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient External Temperature (DegF x100)",
+          "name": "Erd_Ambient_ExternalTemperatureInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient External Thermistor Is Valid",
+          "name": "Erd_Ambient_ExternalThermistorIsValid",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient Temperature Resolved",
           "name": "Erd_Ambient_FilteredTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient Resolved Thermistor Is Valid",
+          "name": "Erd_Ambient_ResolvedThermistorIsValid",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient Humidity in Relative Humidity",
+          "name": "Erd_AmbientHumidity_RelativeHumidityPercentx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient Humidity Sensors Is Valid",
+          "name": "Erd_AmbientHumidity_SensorIsValid",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient External Humidity",
+          "name": "Erd_Ambient_ExternalHumidityPercentx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient External Humidity Sensor Is Valid",
+          "name": "Erd_Ambient_ExternalHumidityPercentx100SensorIsValid",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient Resolved Humidity",
+          "name": "Erd_Ambient_ResolvedHumidityPercentx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient Resolved Humidity Sensor Is Valid",
+          "name": "Erd_Ambient_ResolvedHumidityPercentx100SensorIsValid",
           "read": true,
           "write": true
         },

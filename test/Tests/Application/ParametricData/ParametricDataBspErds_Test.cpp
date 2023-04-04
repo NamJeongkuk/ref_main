@@ -158,10 +158,10 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMakerMotorRelay)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMakerMotorRelay)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMakerRakeMotorRelay)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_IceMakerMotorRelay);
+   CHECK_EQUAL(*erd, Erd_IceMakerRakeMotorRelay);
 }
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForDispenserValveRelay)

@@ -28,6 +28,7 @@ typedef struct
    SensorDataSlewRateData_t clampData;
    uint16_t goodReadingCounterMax;
    uint16_t badReadingCounterMax;
+   bool enableExternalSensorCheck;
 } SensorDataSensorType_t;
 
 typedef struct
@@ -51,6 +52,7 @@ typedef struct
    SensorDataSensorType_t *freshFoodEvapThermistor;
    SensorDataConvertibleCompartmentSensorType_t *convertibleCompartmentCabinetThermistor;
    SensorDataSensorType_t *ambientThermistor;
+   SensorDataSensorType_t *ambientHumidityThermistor;
    SensorDataSensorType_t *convertibleCompartmentEvapThermistor;
    SensorDataSensorType_t *aluminumIceMakerMoldThermistor;
    SensorDataSensorType_t *twistTrayIceMakerMoldThermistor;

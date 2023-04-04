@@ -20,6 +20,7 @@
 #include "SideBySideParallelMotorControlPlugin.h"
 #include "SideBySideFanPlugin.h"
 #include "AmbientTemperaturePlugin.h"
+#include "ExternalFilteredSensorResolverPlugin.h"
 
 typedef struct
 {
@@ -36,6 +37,7 @@ typedef struct
       SideBySideFanPlugin_t sideBySideFanPlugin;
       AmbientTemperaturePlugin_t ambientTemperaturePlugin;
       SideBySideParallelMotorControlPlugin_t sideBySideParallelMotorControlPlugin;
+      ExternalFilteredSensorResolverPlugin_t externalFilteredSensorResolverPlugin;
    } _private;
 } SideBySideSingleEvaporatorCoolingSystemPlugin_t;
 

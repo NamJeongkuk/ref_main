@@ -16,7 +16,10 @@ void SideBySideSingleEvaporatorCoolingSystemPlugin_Init(SideBySideSingleEvaporat
 
    SideBySideSetpointPlugin_Init(&instance->_private.sideBySideSetpointPlugin, dataModel);
    SideBySideSingleEvaporatorCoolingSystemSensorFilteringPlugin_Init(&instance->_private.sensorFilteringPlugin, dataModel);
+
    AmbientTemperaturePlugin_Init(&instance->_private.ambientTemperaturePlugin, dataModel);
+   ExternalFilteredSensorResolverPlugin_Init(&instance->_private.externalFilteredSensorResolverPlugin, dataModel);
+
    GridPlugin_Init(&instance->_private.gridPlugin, dataModel);
    CompressorPlugin_Init(&instance->_private.compressorPlugin, dataModel);
 
@@ -24,6 +27,4 @@ void SideBySideSingleEvaporatorCoolingSystemPlugin_Init(SideBySideSingleEvaporat
    SideBySideParallelMotorControlPlugin_Init(&instance->_private.sideBySideParallelMotorControlPlugin, dataModel);
    FreshFoodDamperPlugin_Init(&instance->_private.freshFoodDamperPlugin, dataModel);
    SideBySideFanPlugin_Init(&instance->_private.sideBySideFanPlugin, dataModel);
-
-   AmbientTemperaturePlugin_Init(&instance->_private.ambientTemperaturePlugin, dataModel);
 }

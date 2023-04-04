@@ -8,7 +8,7 @@ const constants = require("../support/constants");
 /*
 Change the following ERDs to NvUnitSetting in SystemErds.h:
 Erd_Ambient_FilteredTemperatureOverrideRequest
-Erd_Ambient_FilteredTemperatureOverrideValueInDegFx100
+Erd_Ambient_FilteredInternalTemperatureOverrideValueInDegFx100
 Flash board with DEBUG=Y for time acceleration to work
 */
 
@@ -33,7 +33,7 @@ const value = {
 describe("AmbientTemperatureAverage", () => {
    const providedTheAmbientFilteredTemperatureIs = async (temp) => {
       await rockhopper.write("Erd_Ambient_FilteredTemperatureOverrideRequest", true);
-      await rockhopper.write("Erd_Ambient_FilteredTemperatureOverrideValueInDegFx100", temp);
+      await rockhopper.write("Erd_Ambient_FilteredInternalTemperatureOverrideValueInDegFx100", temp);
    };
 
    const providedTheBoardHasResetAndFiveSecondsHavePassed = async () => {
