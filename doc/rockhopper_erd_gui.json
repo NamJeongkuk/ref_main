@@ -1315,6 +1315,104 @@
           "name": "Erd_DispenseSelectionStatus",
           "read": true,
           "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Private Dispense Selection Request",
+          "name": "Erd_PrivateDispensingRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Private Dispense Selection Status",
+          "name": "Erd_PrivateDispensingResultStatus",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dispense Disabled",
+          "name": "Erd_DispensingDisabled",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dispense Inhibited By Rfid",
+          "name": "Erd_DispensingInhibitedByRfid",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Water Dispensing Inhibited By Door",
+          "name": "Erd_WaterDispensingInhibitedByDoor",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Dispensing Inhibited By Door",
+          "name": "Erd_IceDispensingInhibitedByDoor",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "AutofillSensorError",
+          "name": "Erd_AutofillSensorError",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Isolation Valve Dispensing Vote",
+          "name": "Erd_IsolationWaterValve_DispensingVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dispenser Water Valve Resolved Vote",
+          "name": "Erd_DispenserWaterValve_ResolvedVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dispenser Water Valve Factory Vote",
+          "name": "Erd_DispenserWaterValve_FactoryVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dispenser Water Valve Dispensing Vote",
+          "name": "Erd_DispenserWaterValve_DispensingVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Auger Motor Resolved Vote",
+          "name": "Erd_AugerMotor_ResolvedVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Auger Motor Factory Vote",
+          "name": "Erd_AugerMotor_FactoryVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Auger Motor Dispensing Vote",
+          "name": "Erd_AugerMotor_DispensingVote",
+          "read": true,
+          "write": false
         }
       ]
     },
@@ -1851,8 +1949,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Flow Meter Water Dispensed Ounces x100",
-          "name": "Erd_AluminumMoldFlowMeterWaterDispensedOzX100",
+          "displayName": "Flow Meter Water Dispensed Ounces x100",
+          "name": "Erd_FlowMeterWaterDispensedOzX100",
           "read": true,
           "write": true
         },
@@ -1865,8 +1963,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Flow Meter Monitoring Request",
-          "name": "Erd_AluminumMoldFlowMeterMonitoringRequest",
+          "displayName": "Flow Meter Monitoring Request",
+          "name": "Erd_FlowMeterMonitoringRequest",
           "read": true,
           "write": true
         }

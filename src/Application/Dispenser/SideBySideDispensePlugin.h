@@ -10,12 +10,14 @@
 
 #include "I_DataModel.h"
 #include "DispenseSelectionRequestHandler.h"
+#include "DispenseController.h"
 
 typedef struct
 {
    struct
    {
-      DispenseSelectionRequestHandler_t dispenseSelection;
+      DispenseSelectionRequestHandler_t dispenseSelectionRequestHandler;
+      DispenseController_t dispenseController;
    } _private;
 } SideBySideDispensePlugin_t;
 

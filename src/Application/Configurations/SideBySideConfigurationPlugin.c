@@ -14,6 +14,8 @@ void SideBySideConfigurationPlugin_Init(SideBySideConfigurationPlugin_t *instanc
    AluminumMoldIceMakerPlugin_Init(&instance->_private.aluminumMoldIceMakerPlugin, dataModel);
    TwistTrayIceMakerPlugin_Init(&instance->_private.twistTrayIceMakerPlugin, dataModel);
    FlowMeterPlugin_Init(&instance->_private.flowMeterPlugin, dataModel);
+   DispenserWaterValvePlugin_Init(&instance->_private.dispenserWaterValvePlugin, dataModel);
+   AugerMotorPlugin_Init(&instance->_private.augerMotorPlugin, dataModel);
    SideBySideStaggeredHeater_Init(&instance->_private.staggeredHeaterPlugin, dataModel);
    SideBySideFactoryPlugin_Init(&instance->_private.factoryPlugin, dataModel);
    SideBySideDispensePlugin_Init(&instance->_private.dispensePlugin, dataModel);

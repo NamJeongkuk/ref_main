@@ -81,6 +81,7 @@ SRC_DIRS:=\
   src/Application/TimerModule \
   src/Application/Uassert \
   src/Application/Valve \
+    src/Application/WaterValve \
   Parametric/data/Production/ \
 
 INC_DIRS:=\

@@ -164,9 +164,9 @@ static const SensorFilteringConfig_t moldThermistorConfig = {
 
 static const IceMakerWaterFillMonitorConfig_t iceMakerFillMonitorConfig = {
    .stopIceMakerFillSignalErd = Erd_AluminumMoldIceMakerStopFillSignal,
-   .flowMeterWaterDispensedOzx100Erd = Erd_AluminumMoldFlowMeterWaterDispensedOzX100,
+   .flowMeterWaterDispensedOzx100Erd = Erd_FlowMeterWaterDispensedOzX100,
    .iceMakerWaterFillMonitoringRequestErd = Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,
-   .flowMeterMonitoringRequestErd = Erd_AluminumMoldFlowMeterMonitoringRequest,
+   .flowMeterMonitoringRequestErd = Erd_FlowMeterMonitoringRequest,
    .timerModuleErd = Erd_TimerModule
 };
 

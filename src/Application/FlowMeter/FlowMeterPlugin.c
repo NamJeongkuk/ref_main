@@ -9,9 +9,9 @@
 #include "FlowMeterPlugin.h"
 
 static const FlowMeterMonitorConfig_t flowMeterMonitorConfig = {
-   .flowMeterMonitoringRequest = Erd_AluminumMoldFlowMeterMonitoringRequest,
+   .flowMeterMonitoringRequest = Erd_FlowMeterMonitoringRequest,
    .flowMeterCountsErd = Erd_FlowMeter_InputCaptureCount,
-   .flowMeterWaterDispensedOzX100Erd = Erd_AluminumMoldFlowMeterWaterDispensedOzX100
+   .flowMeterWaterDispensedOzX100Erd = Erd_FlowMeterWaterDispensedOzX100
 };
 
 void FlowMeterPlugin_Init(

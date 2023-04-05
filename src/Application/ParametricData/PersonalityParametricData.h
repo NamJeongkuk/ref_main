@@ -26,6 +26,7 @@
 #include "PulldownData.h"
 #include "IceMakerData.h"
 #include "FlowMeterData.h"
+#include "DispenserData.h"
 
 typedef struct
 {
@@ -46,6 +47,7 @@ typedef struct
    const PulldownData_t *pulldownData;
    const IceMakerData_t *iceMakerData;
    const FlowMeterData_t *flowMeterData;
+   const DispenserData_t *dispenserData;
 } PersonalityParametricData_t;
 
 const PersonalityParametricData_t *PersonalityParametricData_Get(I_DataModel_t *dataModel);
