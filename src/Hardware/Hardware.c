@@ -22,6 +22,7 @@
 #include "BufferedUart_Channel9.h"
 #include "SystemClock.h"
 #include "Dtc.h"
+#include "r_dataflash.h"
 
 void Hardware_InitializeStage1(void)
 {
@@ -31,6 +32,8 @@ void Hardware_InitializeStage1(void)
 
 void Hardware_InitializeStage2(I_DataModel_t *dataModel)
 {
+   R_DF_Enable_DataFlashAccess(); // This is here for the boot-loader parametric items stored in data flash to be able to be read.
+
    Dtc_Init();
 
    I_BufferedUart_t *wifiBufferedUart = BufferedUart_Channel1_Init();
