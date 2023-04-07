@@ -44,6 +44,8 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_ResetCount, sizeof(ResetCount_t)),
    SWAPPED_ERD(PublicErd_SecondsSinceLastReset, sizeof(SecondsSinceLastReset_t)),
    SWAPPED_ERD(PublicErd_ProgramCounterAddressAtLastUassert, sizeof(ProgramCounterAddress_t)),
+   SWAPPED_FIELD(PublicErd_DispensingRequest, DispensingRequest_t, preciseFillOuncesx100),
+   SWAPPED_FIELD(PublicErd_DispensingRequestStatus, DispensingRequestStatus_t, preciseFillOuncesx100),
 
    // 0xE000 range
    SWAPPED_ERD(PublicErd_ServiceDiagnosticsEntityLocation, sizeof(Erd_t)),
@@ -182,7 +184,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_Ambient_ResolvedHumidityPercentx100, sizeof(RelativeHumidityPercentx100_t)),
    SWAPPED_ERD(PublicErd_AmbientHumidity_RelativeHumidityPercentx100, sizeof(RelativeHumidityPercentx100_t)),
    SWAPPED_ERD(PublicErd_FreshFoodDamperHeater_WinningVoteErd, sizeof(WinningVoteErd_t)),
-   SWAPPED_FIELD(PublicErd_PrivateDispensingRequest, DispensingRequest_t, preciseFillOuncesX100),
+   SWAPPED_FIELD(PublicErd_PrivateDispensingRequest, DispensingRequest_t, preciseFillOuncesx100),
    SWAPPED_ERD(PublicErd_Ambient_ExternalTemperatureInDegFx100, sizeof(TemperatureDegFx100_t)),
    SWAPPED_ERD(PublicErd_Ambient_ExternalHumidityPercentx100, sizeof(RelativeHumidityPercentx100_t)),
    SWAPPED_ERD(PublicErd_FillTubeHeater_Pwm, sizeof(PwmDutyCycle_t)),
@@ -196,6 +198,9 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
 
    // 0xFB00 range
    SWAPPED_ERD(PublicErd_Eeprom_DefrostCompressorOnTimeInSeconds, sizeof(uint32_t)),
+
+   // 0xFD00 range
+   SWAPPED_FIELD(PublicErd_PrivateDispensingRequestStatus, DispensingRequestStatus_t, preciseFillOuncesx100)
 };
 
 static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {

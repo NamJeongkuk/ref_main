@@ -13,7 +13,9 @@
 enum
 {
    DispensingAction_Stop,
-   DispensingAction_Start
+   DispensingAction_Start,
+   DispensingAction_Continue,
+   DispensingAction_None = UINT8_MAX
 };
 typedef uint8_t DispensingAction_t;
 

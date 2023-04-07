@@ -15,7 +15,8 @@ enum
    DispensingRequestSelection_Water,
    DispensingRequestSelection_CrushedIce,
    DispensingRequestSelection_CubedIce,
-   DispensingRequestSelection_Autofill
+   DispensingRequestSelection_Autofill,
+   DispensingRequestSelection_None = UINT8_MAX
 };
 typedef uint8_t DispensingRequestSelection_t;
 

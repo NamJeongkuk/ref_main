@@ -1413,6 +1413,27 @@
           "name": "Erd_AugerMotor_DispensingVote",
           "read": true,
           "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dispensing Request",
+          "name": "Erd_DispensingRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dispensing Request Status",
+          "name": "Erd_DispensingRequestStatus",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Private Dispensing Request Status",
+          "name": "Erd_PrivateDispensingRequestStatus",
+          "read": true,
+          "write": true
         }
       ]
     },

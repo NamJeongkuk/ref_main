@@ -14,6 +14,13 @@ static const DispenseSelectionRequestHandlerConfig_t dispenseSelectionRequestHan
    .dispenseSelectionStatusErd = Erd_DispenseSelectionStatus
 };
 
+static const DispensingRequestHandlerConfig_t dispensingRequestHandlerConfig = {
+   .dispensingRequestErd = Erd_DispensingRequest,
+   .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
+   .privateDispensingRequestErd = Erd_PrivateDispensingRequest,
+   .privateDispensingRequestStatusErd = Erd_PrivateDispensingRequestStatus
+};
+
 static const DispenseControllerConfig_t dispenseControllerConfig = {
    .privateDispensingRequestErd = Erd_PrivateDispensingRequest,
    .privateDispensingResultStatusErd = Erd_PrivateDispensingResultStatus,
@@ -36,6 +43,11 @@ void SideBySideDispensePlugin_Init(SideBySideDispensePlugin_t *instance, I_DataM
       &instance->_private.dispenseSelectionRequestHandler,
       &dispenseSelectionRequestHandlerConfig,
       dataModel);
+
+   DispensingRequestHandler_Init(
+      &instance->_private.dispensingRequestHandler,
+      dataModel,
+      &dispensingRequestHandlerConfig);
 
    DispenseController_Init(
       &instance->_private.dispenseController,

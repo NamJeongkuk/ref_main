@@ -14,7 +14,7 @@ enum
 {
    DispensingSpecialOptions_None,
    DispensingSpecialOptions_SwitchPressedOnSecondaryBoardRequired,
-   DispensingSpecialOptions_EmptyRequest = 0xFF,
+   DispensingSpecialOptions_EmptyRequest = UINT8_MAX
 };
 typedef uint8_t DispensingSpecialOptions_t;
 

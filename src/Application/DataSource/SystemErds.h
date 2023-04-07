@@ -88,6 +88,7 @@
 #include "TwistTrayIceMakerOperationState.h"
 #include "TwistTrayIceMakerHighLevelState.h"
 #include "DispensingRequest.h"
+#include "DispensingRequestHandler.h"
 #include "DispenseStatus.h"
 #include "AugerMotorVotedIceType.h"
 #include "RelativeHumidityPercentx100.h"
@@ -345,6 +346,8 @@ enum
    ENTRY(Erd_FreezerSetpointStatus,                         0x1205, Setpoint_t,                                         Swap_N, Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_Int8Max, NotFault) \
    ENTRY(Erd_DispenseSelectionRequest,                      0x1206, DispenseSelection_t,                                Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispenseSelectionStatus,                       0x1207, DispenseSelection_t,                                Swap_N, Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_DispenseSelection, NotFault) \
+   ENTRY(Erd_DispensingRequest,                             0x1208, DispensingRequest_t,                                Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DispensingRequestStatus,                       0x1209, DispensingRequestStatus_t,                          Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_SignOfLifeFromMainboardToUi,                   0x120C, Signal_t,                                           Swap_N, Io_All,  Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_SignOfLifeFromUiToMainboard,                   0x120D, Signal_t,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -1100,6 +1103,8 @@ enum
    ENTRY(Erd_NvReservedRfid,                                0xFCFD, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvRfid,                NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NvReservedFaultSnapshot,                       0xFCFE, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NvReservedCycleHistory,                        0xFCFF, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvCycleHistory,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   \
+   ENTRY(Erd_PrivateDispensingRequestStatus,                0xFD01, DispensingRequestStatus_t,                          Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
 
 #define EXPAND_AS_INTERNAL_RAM_ERD_ENUM(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)(Name COMMA)
