@@ -43,6 +43,8 @@ enum
    Signal_IceMakerThermistorIsInvalid,
    Signal_IceMakerThermistorIsValid,
    Signal_IceMakerFilteredTemperatureChanged,
+   Signal_IceMakerIsEnabled,
+   Signal_IceMakerIsDisabled,
 
    Idle = TwistTrayIceMakerMotorAction_Idle,
    Home = TwistTrayIceMakerMotorAction_RunHomingRoutine,
@@ -71,7 +73,8 @@ enum
    ENTRY(State_FillingTrayWithWater) \
    ENTRY(State_BucketIsFull)         \
    ENTRY(State_MotorError)           \
-   ENTRY(State_ThermistorFault)
+   ENTRY(State_ThermistorFault)      \
+   ENTRY(State_IdleFreeze)
 
 FSM_STATE_TABLE(FSM_STATE_EXPAND_AS_FUNCTION_DEFINITION)
 
@@ -83,7 +86,7 @@ static void IceTemperatureIntegrationIntervalElapsed(void *context);
 static void FillingTrayPeriodElapsed(void *context);
 static void FullIceBucketWaitTimeElapsed(void *context);
 
-static TwistTrayIceMaker_t *InterfaceFrom(Fsm_t *fsm)
+static TwistTrayIceMaker_t *InstanceFrom(Fsm_t *fsm)
 {
    return CONTAINER_OF(TwistTrayIceMaker_t, _private.fsm, fsm);
 }
@@ -116,6 +119,14 @@ static bool ItIsSabbathMode(TwistTrayIceMaker_t *instance)
    DataSource_Read(instance->_private.dataSource, Erd_EnhancedSabbathMode, &enhancedSabbathMode);
 
    return sabbathMode || enhancedSabbathMode;
+}
+
+static bool IceMakerIsEnabled(TwistTrayIceMaker_t *instance)
+{
+   bool iceMakerIsEnabled;
+   DataSource_Read(instance->_private.dataSource, Erd_IceMakerEnabledOverrideResolved, &iceMakerIsEnabled);
+
+   return iceMakerIsEnabled;
 }
 
 static void UpdateWaterValve(TwistTrayIceMaker_t *instance, bool newState)
@@ -217,7 +228,7 @@ static bool IceMakerThermistorIsValid(TwistTrayIceMaker_t *instance)
 
 static void State_Homing(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
-   TwistTrayIceMaker_t *instance = InterfaceFrom(fsm);
+   TwistTrayIceMaker_t *instance = InstanceFrom(fsm);
    IGNORE(data);
 
    switch(signal)
@@ -232,9 +243,13 @@ static void State_Homing(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          {
             Fsm_Transition(fsm, State_ThermistorFault);
          }
-         else
+         else if(IceMakerIsEnabled(instance))
          {
             Fsm_Transition(fsm, State_Freeze);
+         }
+         else
+         {
+            Fsm_Transition(fsm, State_IdleFreeze);
          }
          break;
 
@@ -250,7 +265,7 @@ static void State_Homing(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 
 static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
-   TwistTrayIceMaker_t *instance = InterfaceFrom(fsm);
+   TwistTrayIceMaker_t *instance = InstanceFrom(fsm);
    TemperatureDegFx100_t iceTrayTempx100;
    uint32_t freezeIntegrationSum;
    IGNORE(data);
@@ -331,6 +346,10 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          Fsm_Transition(fsm, State_Harvesting);
          break;
 
+      case Signal_IceMakerIsDisabled:
+         Fsm_Transition(fsm, State_IdleFreeze);
+         break;
+
       case Fsm_Exit:
          StopFreezeTimers(instance);
 
@@ -342,7 +361,7 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 
 static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
-   TwistTrayIceMaker_t *instance = InterfaceFrom(fsm);
+   TwistTrayIceMaker_t *instance = InstanceFrom(fsm);
    IGNORE(data);
 
    switch(signal)
@@ -358,11 +377,25 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          break;
 
       case Signal_MotorActionResultHarvested:
-         Fsm_Transition(fsm, State_FillingTrayWithWater);
+         if(IceMakerIsEnabled(instance))
+         {
+            Fsm_Transition(fsm, State_FillingTrayWithWater);
+         }
+         else
+         {
+            Fsm_Transition(fsm, State_IdleFreeze);
+         }
          break;
 
       case Signal_MotorActionResultBucketWasFull:
-         Fsm_Transition(fsm, State_BucketIsFull);
+         if(IceMakerIsEnabled(instance))
+         {
+            Fsm_Transition(fsm, State_BucketIsFull);
+         }
+         else
+         {
+            Fsm_Transition(fsm, State_IdleFreeze);
+         }
          break;
 
       case Signal_MotorActionResultMotorError:
@@ -377,7 +410,7 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 
 static void State_FillingTrayWithWater(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
-   TwistTrayIceMaker_t *instance = InterfaceFrom(fsm);
+   TwistTrayIceMaker_t *instance = InstanceFrom(fsm);
    IGNORE(data);
 
    switch(signal)
@@ -402,9 +435,13 @@ static void State_FillingTrayWithWater(Fsm_t *fsm, FsmSignal_t signal, const voi
          {
             Fsm_Transition(fsm, State_ThermistorFault);
          }
-         else
+         else if(IceMakerIsEnabled(instance))
          {
             Fsm_Transition(fsm, State_Freeze);
+         }
+         else
+         {
+            Fsm_Transition(fsm, State_IdleFreeze);
          }
          break;
 
@@ -417,7 +454,7 @@ static void State_FillingTrayWithWater(Fsm_t *fsm, FsmSignal_t signal, const voi
 
 static void State_BucketIsFull(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
-   TwistTrayIceMaker_t *instance = InterfaceFrom(fsm);
+   TwistTrayIceMaker_t *instance = InstanceFrom(fsm);
    IGNORE(data);
 
    switch(signal)
@@ -443,6 +480,10 @@ static void State_BucketIsFull(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          Fsm_Transition(fsm, State_ThermistorFault);
          break;
 
+      case Signal_IceMakerIsDisabled:
+         Fsm_Transition(fsm, State_IdleFreeze);
+         break;
+
       case Fsm_Exit:
          TimerModule_Stop(instance->_private.timerModule, &instance->_private.waitingTimer);
          break;
@@ -451,7 +492,7 @@ static void State_BucketIsFull(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 
 static void State_MotorError(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
-   TwistTrayIceMaker_t *instance = InterfaceFrom(fsm);
+   TwistTrayIceMaker_t *instance = InstanceFrom(fsm);
    IGNORE(data);
 
    switch(signal)
@@ -468,7 +509,7 @@ static void State_MotorError(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 
 static void State_ThermistorFault(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
-   TwistTrayIceMaker_t *instance = InterfaceFrom(fsm);
+   TwistTrayIceMaker_t *instance = InstanceFrom(fsm);
    IGNORE(data);
 
    switch(signal)
@@ -479,6 +520,23 @@ static void State_ThermistorFault(Fsm_t *fsm, FsmSignal_t signal, const void *da
 
       case Signal_IceMakerThermistorIsValid:
          Fsm_Transition(fsm, State_Homing);
+         break;
+   }
+}
+
+static void State_IdleFreeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
+{
+   TwistTrayIceMaker_t *instance = InstanceFrom(fsm);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Fsm_Entry:
+         UpdateOperationState(instance, TwistTrayIceMakerOperationState_IdleFreeze);
+         break;
+
+      case Signal_IceMakerIsEnabled:
+         Fsm_Transition(fsm, State_Freeze);
          break;
    }
 }
@@ -613,6 +671,18 @@ static void DataSourceChanged(void *context, const void *data)
    else if(onChangeArgs->erd == Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100)
    {
       Fsm_SendSignal(&instance->_private.fsm, Signal_IceMakerFilteredTemperatureChanged, NULL);
+   }
+   else if(onChangeArgs->erd == Erd_IceMakerEnabledOverrideResolved)
+   {
+      const bool *state = onChangeArgs->data;
+      if(*state)
+      {
+         Fsm_SendSignal(&instance->_private.fsm, Signal_IceMakerIsEnabled, NULL);
+      }
+      else
+      {
+         Fsm_SendSignal(&instance->_private.fsm, Signal_IceMakerIsDisabled, NULL);
+      }
    }
 }
 
