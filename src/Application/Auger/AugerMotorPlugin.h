@@ -10,12 +10,14 @@
 
 #include "I_DataModel.h"
 #include "ErdResolver.h"
+#include "AugerMotorController.h"
 
 typedef struct
 {
    struct
    {
       ErdResolver_t augerMotorErdResolver;
+      AugerMotorController_t augerMotorController;
    } _private;
 } AugerMotorPlugin_t;
 

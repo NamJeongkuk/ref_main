@@ -92,6 +92,8 @@
 #include "DispenseStatus.h"
 #include "AugerMotorVotedIceType.h"
 #include "RelativeHumidityPercentx100.h"
+#include "AugerMotorVotedIceType.h"
+#include "AugerMotorControllerFsmState.h"
 
 // clang-format off
 
@@ -698,8 +700,8 @@ enum
    ENTRY(Erd_AluminumMoldIceMakerWaterValveRelay,           0xF207, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerHeaterRelay,               0xF208, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_IceMakerRakeMotorRelay,                        0xF209, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
-   ENTRY(Erd_AugerMotorDirection,                           0xF20A, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
-   ENTRY(Erd_AugerMotorPower,                               0xF20B, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_AugerMotorDirection,                           0xF20A, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AugerMotorPower,                               0xF20B, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispenserValveRelay,                           0xF20C, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_IsolationValveRelay,                           0xF20D, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMakerWaterValveRelay,              0xF20E, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
@@ -903,6 +905,8 @@ enum
    ENTRY(Erd_AugerMotor_FactoryVote,                        0xF39B, AugerMotorVotedIceType_t,                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AugerMotor_DispensingVote,                     0xF39C, AugerMotorVotedIceType_t,                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_AugerMotorControllerFsmState,                  0xF39D, AugerMotorControllerFsmState_t,                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_FreshFood_ResolvedSetpointInDegFx100,          0xF3A0, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFood_CabinetOffsetInDegFx100,             0xF3A1, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFood_SetpointOffsetInDegFx100,            0xF3A2, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -1045,8 +1049,6 @@ enum
    ENTRY(Erd_Gpio_RLY_07,                                   0xF45B, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gpio_RLY_08,                                   0xF45C, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gpio_RLY_09,                                   0xF45D, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Gpio_AUGER_PWR,                                0xF45E, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Gpio_AUGER_DIRECTION,                          0xF45F, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gpio_HEARTBEAT,                                0xF460, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gpio_SBC_RESET,                                0xF461, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gpio_PERSONALITY,                              0xF462, bool,                                               Swap_N, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \

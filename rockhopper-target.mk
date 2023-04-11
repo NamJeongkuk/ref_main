@@ -40,6 +40,7 @@ SRC_DIRS:=\
   src/Hardware/Flash \
   src/Hardware/SoftPwm \
   src/Application \
+  src/Application/Auger \
   src/Application/Compressor \
   src/Application/ConfigurationPlugins \
   src/Application/Configurations \

@@ -12,6 +12,7 @@
 #include "FreezerIceRateData.h"
 #include "IceMakerFillMonitorData.h"
 #include "TwistTrayIceMakerData.h"
+#include "AugerMotorData.h"
 
 typedef struct
 {
@@ -19,6 +20,7 @@ typedef struct
    AluminumMoldIceMakerData_t *aluminumMoldIceMakerData;
    IceMakerFillMonitorData_t *iceMakerFillMonitorData;
    TwistTrayIceMakerData_t *twistTrayIceMakerData;
+   AugerMotorData_t *augerMotorData;
 } IceMakerData_t;
 
 #endif
