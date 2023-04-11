@@ -70,6 +70,12 @@ static bool GetPulldownActive(I_DataModel_t *dataModel)
 
 static void ExecuteGridVote(I_DataModel_t *dataModel, SideBySideSingleEvaporatorVotes_t votes)
 {
+   bool freezerThermistorIsValid;
+   bool freshFoodThermistorIsValid;
+
+   DataModel_Read(dataModel, Erd_FreezerThermistor_IsValidResolved, &freezerThermistorIsValid);
+   DataModel_Read(dataModel, Erd_FreshFoodThermistor_IsValidResolved, &freshFoodThermistorIsValid);
+
    CompressorVotedSpeed_t compressorVotedSpeed = {
       .speed = votes.compressorSpeed,
       .care = Vote_Care
@@ -82,15 +88,23 @@ static void ExecuteGridVote(I_DataModel_t *dataModel, SideBySideSingleEvaporator
       .speed = votes.freezerEvapFanSpeed,
       .care = Vote_Care
    };
-   DamperVotedPosition_t freshFoodDamperPositionVotedSpeed = {
+   DamperVotedPosition_t freshFoodDamperPositionVotedPosition = {
       .position = votes.freshFoodDamperPosition,
       .care = Vote_Care
    };
 
+   if(!freezerThermistorIsValid && !freshFoodThermistorIsValid)
+   {
+      compressorVotedSpeed.care = Vote_DontCare;
+      condenserFanVotedSpeed.care = Vote_DontCare;
+      freezerEvapFanVotedSpeed.care = Vote_DontCare;
+      freshFoodDamperPositionVotedPosition.care = Vote_DontCare;
+   }
+
    DataModel_Write(dataModel, Erd_CompressorSpeed_GridVote, &compressorVotedSpeed);
    DataModel_Write(dataModel, Erd_CondenserFanSpeed_GridVote, &condenserFanVotedSpeed);
    DataModel_Write(dataModel, Erd_FreezerEvapFanSpeed_GridVote, &freezerEvapFanVotedSpeed);
-   DataModel_Write(dataModel, Erd_FreshFoodDamperPosition_GridVote, &freshFoodDamperPositionVotedSpeed);
+   DataModel_Write(dataModel, Erd_FreshFoodDamperPosition_GridVote, &freshFoodDamperPositionVotedPosition);
 }
 
 static void ApplyGridBlockOverrides(I_DataModel_t *dataModel, GridBlockNumber_t blockNumber, SideBySideSingleEvaporatorVotes_t *votes)

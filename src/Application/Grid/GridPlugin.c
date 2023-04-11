@@ -179,7 +179,8 @@ void GridPlugin_Init(
    GridBlockCalculator_Init(
       &instance->gridBlockCalculator,
       &gridBlockCalculatorConfig,
-      dataModel);
+      dataModel,
+      PersonalityParametricData_Get(dataModel)->gridData);
 
    Grid_Init(
       &instance->gridInstance,

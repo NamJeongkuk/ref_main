@@ -24,6 +24,12 @@ extern "C"
 
 enum
 {
+   Valid = true,
+   Invalid = false
+};
+
+enum
+{
    NumberOfGridBlocksPerAxis = NumberOfGridLinesPerAxis + 1,
    NumberOfGridBlocks = NumberOfGridBlocksPerAxis * NumberOfGridBlocksPerAxis
 };
@@ -299,6 +305,22 @@ TEST_GROUP(GridIntegration)
       DataModel_Write(dataModel, Erd_SingleEvaporatorPulldownActive, &state);
       DataModel_Write(dataModel, Erd_CompressorTripMitigationActive, &state);
    }
+
+   void FreshFoodThermistorValidIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreshFoodThermistor_IsValidResolved, &state);
+   }
+
+   void FreezerThermistorValidIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidResolved, &state);
+   }
+
+   void BothThermistorsAreValid(void)
+   {
+      FreshFoodThermistorValidIs(Valid);
+      FreezerThermistorValidIs(Valid);
+   }
 };
 
 TEST(GridIntegration, ShouldInitialize)
@@ -309,6 +331,7 @@ TEST(GridIntegration, ShouldInitialize)
 TEST(GridIntegration, ShouldScrollThroughEachGridBlock)
 {
    Given ApplicationHasBeenInitialized();
+   Given BothThermistorsAreValid();
 
    for(uint8_t gridBlockIndex = 0; gridBlockIndex < NumberOfGridBlocks; gridBlockIndex++)
    {
@@ -322,6 +345,7 @@ TEST(GridIntegration, ShouldScrollThroughEachGridBlock)
 TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks0and1)
 {
    Given ApplicationHasBeenInitialized();
+   Given BothThermistorsAreValid();
 
    for(uint8_t gridBlockIndex = 0; gridBlockIndex <= 1; gridBlockIndex++)
    {
@@ -349,6 +373,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks0and1)
 TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks2and3)
 {
    Given ApplicationHasBeenInitialized();
+   Given BothThermistorsAreValid();
 
    for(uint8_t gridBlockIndex = 2; gridBlockIndex <= 3; gridBlockIndex++)
    {
@@ -374,6 +399,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks2and3)
 TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks4and5and6)
 {
    Given ApplicationHasBeenInitialized();
+   Given BothThermistorsAreValid();
 
    for(uint8_t gridBlockIndex = 4; gridBlockIndex <= 6; gridBlockIndex++)
    {
@@ -401,6 +427,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks4and5and6)
 TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks7and8and14)
 {
    Given ApplicationHasBeenInitialized();
+   Given BothThermistorsAreValid();
 
    uint8_t gridBlockNumbers[] = { 7, 8, 14 };
    for(uint8_t index = 0; index < NUM_ELEMENTS(gridBlockNumbers); index++)
@@ -429,6 +456,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks7and8and14)
 TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks9And10)
 {
    Given ApplicationHasBeenInitialized();
+   Given BothThermistorsAreValid();
 
    for(uint8_t gridBlockIndex = 9; gridBlockIndex <= 10; gridBlockIndex++)
    {
@@ -468,6 +496,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks9And10)
 TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks11And12And13)
 {
    Given ApplicationHasBeenInitialized();
+   Given BothThermistorsAreValid();
 
    for(uint8_t gridBlockIndex = 11; gridBlockIndex <= 13; gridBlockIndex++)
    {
@@ -523,6 +552,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks15)
    Given TheCoolingSpeedIs(CoolingSpeed_Off);
    Given TheGridAreaIs(GridArea_2);
    Given TheSingleEvaporatorPulldownActiveIs(SET);
+   Given BothThermistorsAreValid();
 
    When FreezerAndFreshFoodTemperaturesAreSetForBlock(15);
 
@@ -561,6 +591,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks15)
 TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks16And17)
 {
    Given ApplicationHasBeenInitialized();
+   Given BothThermistorsAreValid();
 
    for(uint8_t gridBlockIndex = 16; gridBlockIndex <= 17; gridBlockIndex++)
    {
@@ -607,6 +638,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks18)
    When TheCoolingModeIs(CoolingMode_Off);
    When TheCoolingSpeedIs(CoolingSpeed_Off);
    When TheSingleEvapPulldownAndTripMitigationIs(SET);
+   When BothThermistorsAreValid();
 
    After GridRuns();
    TheGridBlockNumberShouldBe(18);
@@ -640,6 +672,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks18)
 TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks19And20And27And34And41)
 {
    Given ApplicationHasBeenInitialized();
+   Given BothThermistorsAreValid();
 
    uint8_t gridBlockNumbers[] = { 19, 20, 27, 34, 41 };
    for(uint8_t index = 0; index < NUM_ELEMENTS(gridBlockNumbers); index++)
@@ -672,6 +705,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks21)
    Given TheCoolingSpeedIs(CoolingSpeed_Off);
    Given TheGridAreaIs(GridArea_2);
    Given TheSingleEvaporatorPulldownActiveIs(SET);
+   Given BothThermistorsAreValid();
 
    When FreezerAndFreshFoodTemperaturesAreSetForBlock(21);
 
@@ -696,6 +730,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks22)
    Given TheCoolingSpeedIs(CoolingSpeed_Off);
    Given TheGridAreaIs(GridArea_2);
    Given TheSingleEvaporatorPulldownActiveIs(SET);
+   Given BothThermistorsAreValid();
 
    When FreezerAndFreshFoodTemperaturesAreSetForBlock(22);
 
@@ -734,6 +769,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks22)
 TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks23And24)
 {
    Given ApplicationHasBeenInitialized();
+   Given BothThermistorsAreValid();
 
    for(uint8_t gridBlockIndex = 23; gridBlockIndex <= 24; gridBlockIndex++)
    {
@@ -775,6 +811,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks23And24)
 TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks25And32And39)
 {
    Given ApplicationHasBeenInitialized();
+   Given BothThermistorsAreValid();
 
    uint8_t gridBlockNumbers[] = { 25, 32, 39 };
    for(uint8_t index = 0; index < NUM_ELEMENTS(gridBlockNumbers); index++)
@@ -829,6 +866,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks26And33And40)
       When TheCoolingSpeedIs(CoolingSpeed_Off);
       When TheGridAreaIs(GridArea_1);
       When TheSingleEvaporatorPulldownActiveIs(SET);
+      When BothThermistorsAreValid();
 
       After GridRuns();
       TheGridBlockNumberShouldBe(gridBlockNumbers[index]);
@@ -874,6 +912,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks28And29And35)
       When TheCoolingSpeedIs(CoolingSpeed_Off);
       When TheGridAreaIs(GridArea_2);
       When TheSingleEvaporatorPulldownActiveIs(SET);
+      When BothThermistorsAreValid();
 
       After GridRuns();
       TheGridBlockNumberShouldBe(gridBlockNumbers[index]);
@@ -894,6 +933,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks30)
    Given TheCoolingModeIs(CoolingMode_Off);
    Given TheCoolingSpeedIs(CoolingSpeed_Off);
    Given TheSingleEvaporatorPulldownActiveIs(SET);
+   Given BothThermistorsAreValid();
 
    When FreezerAndFreshFoodTemperaturesAreSetForBlock(30);
 
@@ -914,6 +954,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks31)
    Given TheCoolingModeIs(CoolingMode_Off);
    Given TheCoolingSpeedIs(CoolingSpeed_Off);
    Given TheSingleEvaporatorPulldownActiveIs(SET);
+   Given BothThermistorsAreValid();
 
    When FreezerAndFreshFoodTemperaturesAreSetForBlock(31);
 
@@ -950,6 +991,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks36)
    Given TheCoolingSpeedIs(CoolingSpeed_High);
    Given TheGridAreaIs(GridArea_2);
    Given TheSingleEvaporatorPulldownActiveIs(SET);
+   Given BothThermistorsAreValid();
 
    When FreezerAndFreshFoodTemperaturesAreSetForBlock(36);
 
@@ -988,6 +1030,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks37)
    Given TheCoolingModeIs(CoolingMode_Off);
    Given TheCoolingSpeedIs(CoolingSpeed_High);
    Given TheSingleEvaporatorPulldownActiveIs(SET);
+   Given BothThermistorsAreValid();
 
    When FreezerAndFreshFoodTemperaturesAreSetForBlock(37);
 
@@ -1022,6 +1065,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks38)
    Given TheCoolingModeIs(CoolingMode_Freezer);
    Given TheCoolingSpeedIs(CoolingSpeed_High);
    Given TheSingleEvaporatorPulldownActiveIs(SET);
+   Given BothThermistorsAreValid();
 
    When FreezerAndFreshFoodTemperaturesAreSetForBlock(38);
 
@@ -1064,6 +1108,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks42And43)
       When TheCoolingSpeedIs(CoolingSpeed_High);
       When TheGridAreaIs(GridArea_2);
       When TheSingleEvaporatorPulldownActiveIs(SET);
+      When BothThermistorsAreValid();
 
       After GridRuns();
       TheGridBlockNumberShouldBe(gridBlockIndex);
@@ -1089,6 +1134,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks44And45)
       When TheCoolingSpeedIs(CoolingSpeed_High);
       When TheGridAreaIs(GridArea_1);
       When TheSingleEvaporatorPulldownActiveIs(SET);
+      When BothThermistorsAreValid();
 
       After GridRuns();
       TheGridBlockNumberShouldBe(gridBlockIndex);
@@ -1130,6 +1176,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks46And47)
       When TheCoolingSpeedIs(CoolingSpeed_High);
       When TheGridAreaIs(GridArea_1);
       When TheSingleEvaporatorPulldownActiveIs(SET);
+      When BothThermistorsAreValid();
 
       After GridRuns();
       TheGridBlockNumberShouldBe(gridBlockIndex);
@@ -1153,6 +1200,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks48)
    Given TheCoolingSpeedIs(CoolingSpeed_Off);
    Given TheGridAreaIs(GridArea_1);
    Given TheSingleEvaporatorPulldownActiveIs(SET);
+   Given BothThermistorsAreValid();
 
    When FreezerAndFreshFoodTemperaturesAreSetForBlock(48);
 
@@ -1167,5 +1215,122 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks48)
       condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.mediumSpeedFreshFood);
    TheCalculatedFreezerEvapFanControlShouldBe(
       freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.mediumSpeedFreshFood);
+   TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+}
+
+TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks48ThenChangeToBlock27LoadsWhenFreezerSensorBecomesInvalid)
+{
+   Given ApplicationHasBeenInitialized();
+   Given TheCoolingModeIs(CoolingMode_Off);
+   Given TheCoolingSpeedIs(CoolingSpeed_Off);
+   Given TheGridAreaIs(GridArea_1);
+   Given TheSingleEvaporatorPulldownActiveIs(SET);
+   Given BothThermistorsAreValid();
+
+   When FreezerAndFreshFoodTemperaturesAreSetForBlock(48);
+
+   After GridRuns();
+   TheGridBlockNumberShouldBe(48);
+   TheCoolingModeShouldBe(CoolingMode_FreshFood);
+   TheCoolingSpeedShouldBe(CoolingSpeed_Mid);
+   TheGridAreaShouldBe(GridArea_2);
+   TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
+   TheCompressorRelayShouldBe(ON);
+   TheCalculatedCondenserFanControlShouldBe(
+      condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.mediumSpeedFreshFood);
+   TheCalculatedFreezerEvapFanControlShouldBe(
+      freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.mediumSpeedFreshFood);
+   TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+
+   When FreezerThermistorValidIs(Invalid);
+
+   After GridRuns();
+   TheGridBlockNumberShouldBe(27);
+   TheCoolingModeShouldBe(CoolingMode_FreshFood);
+   TheCoolingSpeedShouldBe(CoolingSpeed_High);
+   TheGridAreaShouldBe(GridArea_2);
+   TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
+   TheCompressorRelayShouldBe(ON);
+   TheCalculatedCondenserFanControlShouldBe(
+      condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.highSpeedFreshFood);
+   TheCalculatedFreezerEvapFanControlShouldBe(
+      freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.highSpeedFreshFood);
+   TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+}
+
+TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks38ThenChangeToBlock36LoadsWhenFreshFoodSensorBecomesInvalid)
+{
+   Given ApplicationHasBeenInitialized();
+   Given TheCoolingModeIs(CoolingMode_Freezer);
+   Given TheCoolingSpeedIs(CoolingSpeed_High);
+   Given TheSingleEvaporatorPulldownActiveIs(SET);
+   Given BothThermistorsAreValid();
+
+   When FreezerAndFreshFoodTemperaturesAreSetForBlock(38);
+
+   After GridRuns();
+   TheGridBlockNumberShouldBe(38);
+   TheCoolingModeShouldBe(CoolingMode_FreshFood);
+   TheCoolingSpeedShouldBe(CoolingSpeed_Low);
+   TheGridAreaShouldBe(GridArea_1);
+   TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
+   TheCompressorRelayShouldBe(ON);
+   TheCalculatedCondenserFanControlShouldBe(
+      condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
+   TheCalculatedFreezerEvapFanControlShouldBe(
+      freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
+   TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+
+   When FreshFoodThermistorValidIs(Invalid);
+
+   After GridRuns();
+   TheGridBlockNumberShouldBe(36);
+   TheCoolingModeShouldBe(CoolingMode_Freezer);
+   TheCoolingSpeedShouldBe(CoolingSpeed_Low);
+   TheGridAreaShouldBe(GridArea_1);
+   TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
+   TheCompressorRelayShouldBe(ON);
+   TheCalculatedCondenserFanControlShouldBe(
+      condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
+   TheCalculatedFreezerEvapFanControlShouldBe(
+      freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
+   TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+}
+
+TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks38ThenTurnAllLoadsOffWhenBothSensorsBecomeInvalid)
+{
+   Given ApplicationHasBeenInitialized();
+   Given TheCoolingModeIs(CoolingMode_Freezer);
+   Given TheCoolingSpeedIs(CoolingSpeed_High);
+   Given TheSingleEvaporatorPulldownActiveIs(SET);
+   Given BothThermistorsAreValid();
+
+   When FreezerAndFreshFoodTemperaturesAreSetForBlock(38);
+
+   After GridRuns();
+   TheGridBlockNumberShouldBe(38);
+   TheCoolingModeShouldBe(CoolingMode_FreshFood);
+   TheCoolingSpeedShouldBe(CoolingSpeed_Low);
+   TheGridAreaShouldBe(GridArea_1);
+   TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
+   TheCompressorRelayShouldBe(ON);
+   TheCalculatedCondenserFanControlShouldBe(
+      condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
+   TheCalculatedFreezerEvapFanControlShouldBe(
+      freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
+   TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+
+   When FreshFoodThermistorValidIs(Invalid);
+   When FreezerThermistorValidIs(Invalid);
+
+   After GridRuns();
+   TheGridBlockNumberShouldBe(36);
+   TheCoolingModeShouldBe(CoolingMode_Freezer);
+   TheCoolingSpeedShouldBe(CoolingSpeed_Low);
+   TheGridAreaShouldBe(GridArea_1);
+   TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
+   TheCompressorRelayShouldBe(OFF);
+   TheCalculatedCondenserFanControlShouldBe(fanSpeedOff);
+   TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedOff);
    TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 }

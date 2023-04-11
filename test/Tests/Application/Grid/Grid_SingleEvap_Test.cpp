@@ -31,6 +31,8 @@ enum
 {
    Active = true,
    Inactive = false,
+   Valid = true,
+   Invalid = false
 };
 
 TEST_GROUP(Grid_SingleEvap_Test)
@@ -154,6 +156,40 @@ TEST_GROUP(Grid_SingleEvap_Test)
 
       CHECK_EQUAL(expected, actual);
    }
+
+   void FreshFoodThermistorValidResolvedIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreshFoodThermistor_IsValidResolved, &state);
+   }
+
+   void FreezerThermistorValidResolvedIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidResolved, &state);
+   }
+
+   void BothThermistorsAreValid(void)
+   {
+      FreshFoodThermistorValidResolvedIs(Valid);
+      FreezerThermistorValidResolvedIs(Valid);
+   }
+
+   void GridCareVotesShouldBeDontCare(void)
+   {
+      CompressorVotedSpeed_t actualCompressorVotedSpeed;
+      FanVotedSpeed_t actualCondenserFanVotedSpeed;
+      FanVotedSpeed_t actualFreezerEvapFanVotedSpeed;
+      DamperVotedPosition_t actualFreshFoodDamperPositionVotedSpeed;
+
+      DataModel_Read(dataModel, Erd_CompressorSpeed_GridVote, &actualCompressorVotedSpeed);
+      DataModel_Read(dataModel, Erd_CondenserFanSpeed_GridVote, &actualCondenserFanVotedSpeed);
+      DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_GridVote, &actualFreezerEvapFanVotedSpeed);
+      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_GridVote, &actualFreshFoodDamperPositionVotedSpeed);
+
+      CHECK_FALSE(actualCompressorVotedSpeed.care);
+      CHECK_FALSE(actualCondenserFanVotedSpeed.care);
+      CHECK_FALSE(actualFreezerEvapFanVotedSpeed.care);
+      CHECK_FALSE(actualFreshFoodDamperPositionVotedSpeed.care);
+   }
 };
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks0And1)
@@ -164,6 +200,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks0And1)
       And PullDownInMediumCompressorSpeedIs(DISABLED);
       And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
@@ -185,6 +222,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks2And3)
       Given GridBlockIs(gridBlockNumber);
       And PullDownInMediumCompressorSpeedIs(DISABLED);
       And CoolingModeIs(CoolingMode_Freezer);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
@@ -206,6 +244,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks4And5And6)
       And PullDownInMediumCompressorSpeedIs(DISABLED);
       And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
@@ -230,6 +269,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks7And8And14)
       Given GridBlockIs(gridBlockNumbers[i]);
       And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
@@ -250,6 +290,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10IfPulldownAnd
       And CoolingSpeedIs(CoolingSpeed_Off);
       And PulldownActiveIs(Active);
       And CompressorTripMitigationIs(Active);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
@@ -274,6 +315,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10IfPulldownAnd
       And CoolingSpeedIs(CoolingSpeed_High);
       And PulldownActiveIs(Active);
       And CompressorTripMitigationIs(Active);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
@@ -293,6 +335,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10IfPulldownAnd
       And CoolingSpeedIs(CoolingSpeed_Off);
       And PulldownActiveIs(Inactive);
       And CompressorTripMitigationIs(Inactive);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
@@ -313,6 +356,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10IfPulldownAnd
       And CoolingSpeedIs(CoolingSpeed_High);
       And PulldownActiveIs(Inactive);
       And CompressorTripMitigationIs(Inactive);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
@@ -333,6 +377,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks11And12And13IfPullD
       And GridAreaIs(GridArea_Unknown);
       And PulldownActiveIs(Inactive);
       And CompressorTripMitigationIs(Inactive);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
@@ -353,6 +398,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks11And12And13IfPullD
       And GridAreaIs(GridArea_Unknown);
       And PulldownActiveIs(Active);
       And CompressorTripMitigationIs(Active);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
@@ -370,6 +416,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock15IfCoolingSpeedIsHi
    And CoolingModeIs(CoolingMode_Freezer);
    And GridAreaIs(GridArea_Unknown);
    And CoolingSpeedIs(CoolingSpeed_High);
+   And BothThermistorsAreValid();
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
@@ -386,6 +433,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock15IfCoolingSpeedIsNo
    And CoolingModeIs(CoolingMode_Freezer);
    And GridAreaIs(GridArea_Unknown);
    And CoolingSpeedIs(CoolingSpeed_Low);
+   And BothThermistorsAreValid();
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
@@ -403,6 +451,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks16And17IfCoolingSpe
       Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Freezer);
       And CoolingSpeedIs(CoolingSpeed_High);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
@@ -420,6 +469,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks16And17IfCoolingSpe
       Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Freezer);
       And CoolingSpeedIs(CoolingSpeed_Low);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
@@ -437,6 +487,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock18)
    And CoolingSpeedIs(CoolingSpeed_High);
    And GridAreaIs(GridArea_Unknown);
    And PulldownActiveIs(Active);
+   And BothThermistorsAreValid();
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
@@ -458,6 +509,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks19And20And27And34An
       Given GridBlockIs(gridBlockNumbers[i]);
       And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
@@ -474,6 +526,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock21)
    Given GridBlockIs(21);
    And CoolingModeIs(CoolingMode_Freezer);
    And GridAreaIs(GridArea_Unknown);
+   And BothThermistorsAreValid();
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
@@ -490,6 +543,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock22IfCoolingSpeedIsNo
    And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_High);
    And GridAreaIs(GridArea_Unknown);
+   And BothThermistorsAreValid();
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
@@ -506,6 +560,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock22IfCoolingSpeedIsLo
    And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_Low);
    And GridAreaIs(GridArea_Unknown);
+   And BothThermistorsAreValid();
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
@@ -523,6 +578,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks23And24WhenCoolingS
       Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Freezer);
       And CoolingSpeedIs(CoolingSpeed_Off);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
@@ -540,6 +596,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks23And24WhenCoolingS
       Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Freezer);
       And CoolingSpeedIs(CoolingSpeed_Low);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
@@ -585,6 +642,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks25And32And39WhenCoo
       And CoolingModeIs(CoolingMode_Freezer);
       And CoolingSpeedIs(CoolingSpeed_Off);
       And GridAreaIs(GridArea_Unknown);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
@@ -604,6 +662,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks25And32And39WhenCoo
       And CoolingModeIs(CoolingMode_Freezer);
       And CoolingSpeedIs(CoolingSpeed_High);
       And GridAreaIs(GridArea_Unknown);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
@@ -623,6 +682,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks26And33And40WhenCoo
       And CoolingModeIs(CoolingMode_Freezer);
       And CoolingSpeedIs(CoolingSpeed_High);
       And GridAreaIs(GridArea_Unknown);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
@@ -643,6 +703,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks28And29And35WhenCoo
       And GridBlockIs(gridBlockNumbers[i]);
       And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
@@ -669,6 +730,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock30)
    Given GridBlockIs(30);
    And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_Off);
+   And BothThermistorsAreValid();
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
@@ -682,6 +744,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock31WhenCoolingModeIsO
    Given GridBlockIs(31);
    And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_Off);
+   And BothThermistorsAreValid();
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
@@ -695,6 +758,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock31WhenCoolingModeIsN
    Given GridBlockIs(31);
    And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_Low);
+   And BothThermistorsAreValid();
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
@@ -733,6 +797,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock36WhenCoolingSpeedIs
    And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_Off);
    And GridAreaIs(GridArea_Unknown);
+   And BothThermistorsAreValid();
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
@@ -749,6 +814,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock36WhenCoolingSpeedIs
    And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_High);
    And GridAreaIs(GridArea_Unknown);
+   And BothThermistorsAreValid();
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
@@ -764,6 +830,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock37WhenCoolingSpeedIs
    Given GridBlockIs(37);
    And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_High);
+   And BothThermistorsAreValid();
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
@@ -778,6 +845,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock37WhenCoolingSpeedIs
    Given GridBlockIs(37);
    And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_Off);
+   And BothThermistorsAreValid();
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
@@ -792,6 +860,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock38WhenCoolingSpeedIs
    Given GridBlockIs(38);
    And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_Off);
+   And BothThermistorsAreValid();
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_Freezer);
@@ -806,6 +875,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock38WhenCoolingSpeedIs
    Given GridBlockIs(38);
    And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_Low);
+   And BothThermistorsAreValid();
    When The GridIsRun();
 
    CoolingModeShouldBe(CoolingMode_FreshFood);
@@ -849,6 +919,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock42And43)
       Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
@@ -867,6 +938,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock44And45WhenAreaIsOne
       Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_1);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_Freezer);
@@ -884,6 +956,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock44And45WhenAreaIsNot
       Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_2);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
@@ -907,6 +980,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock46And47)
       Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
+      And BothThermistorsAreValid();
       When The GridIsRun();
 
       CoolingModeShouldBe(CoolingMode_FreshFood);
@@ -923,6 +997,7 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock48)
    Given GridBlockIs(48);
    And CoolingModeIs(CoolingMode_Freezer);
    And GridAreaIs(GridArea_Unknown);
+   And BothThermistorsAreValid();
 
    When The GridIsRun();
 
@@ -940,6 +1015,7 @@ TEST(Grid_SingleEvap_Test, ShouldVoteAllOffIfInvalidSearchWasPerformed)
    And CoolingModeIs(0xFF);
    And CoolingSpeedIs(0xFF);
    And GridAreaIs(GridArea_Unknown);
+   And BothThermistorsAreValid();
 
    When The GridIsRun();
 
@@ -952,7 +1028,92 @@ TEST(Grid_SingleEvap_Test, IceMakerShouldBeEnabledByGrid)
    {
       Given GridBlockIs(gridBlockNumber);
       When The GridIsRun();
+      And BothThermistorsAreValid();
 
       TheIceMakerEnableShouldBe(ON);
    }
+}
+
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock2WhenTheFreezerThermistorIsInvalid)
+{
+   Given GridBlockIs(2);
+   And PullDownInMediumCompressorSpeedIs(DISABLED);
+   And CoolingModeIs(CoolingMode_Freezer);
+   And FreshFoodThermistorValidResolvedIs(Valid);
+   And FreezerThermistorValidResolvedIs(Invalid);
+   When The GridIsRun();
+
+   CoolingModeShouldBe(CoolingMode_Freezer);
+   CoolingSpeedShouldBe(CoolingSpeed_PullDown);
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Closed);
+
+   When PullDownInMediumCompressorSpeedIs(ENABLED);
+   When The GridIsRun();
+   GridVotesShouldBe(CompressorSpeed_Medium, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Closed);
+   PulldownActiveShouldBe(Active);
+}
+
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock2WhenTheFreshFoodThermistorIsInvalid)
+{
+   Given GridBlockIs(2);
+   And PullDownInMediumCompressorSpeedIs(DISABLED);
+   And CoolingModeIs(CoolingMode_Freezer);
+   And FreezerThermistorValidResolvedIs(Valid);
+   And FreshFoodThermistorValidResolvedIs(Invalid);
+   When The GridIsRun();
+
+   CoolingModeShouldBe(CoolingMode_Freezer);
+   CoolingSpeedShouldBe(CoolingSpeed_PullDown);
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Closed);
+
+   When PullDownInMediumCompressorSpeedIs(ENABLED);
+   When The GridIsRun();
+   GridVotesShouldBe(CompressorSpeed_Medium, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Closed);
+   PulldownActiveShouldBe(Active);
+}
+
+TEST(Grid_SingleEvap_Test, ShouldSetCareVoteToDontCareWhenBothThermistorsAreInvalid)
+{
+   Given GridBlockIs(2);
+   And PullDownInMediumCompressorSpeedIs(DISABLED);
+   And CoolingModeIs(CoolingMode_Freezer);
+   And FreezerThermistorValidResolvedIs(Valid);
+   And FreshFoodThermistorValidResolvedIs(Invalid);
+   When The GridIsRun();
+
+   CoolingModeShouldBe(CoolingMode_Freezer);
+   CoolingSpeedShouldBe(CoolingSpeed_PullDown);
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Closed);
+
+   When PullDownInMediumCompressorSpeedIs(ENABLED);
+   And FreezerThermistorValidResolvedIs(Invalid);
+   When The GridIsRun();
+   GridCareVotesShouldBeDontCare();
+   PulldownActiveShouldBe(Active);
+}
+
+TEST(Grid_SingleEvap_Test, ShouldSetCareVoteToCareWhenOneThermistorReturnsToValid)
+{
+   Given GridBlockIs(2);
+   And PullDownInMediumCompressorSpeedIs(DISABLED);
+   And CoolingModeIs(CoolingMode_Freezer);
+   And FreezerThermistorValidResolvedIs(Valid);
+   And FreshFoodThermistorValidResolvedIs(Invalid);
+   When The GridIsRun();
+
+   CoolingModeShouldBe(CoolingMode_Freezer);
+   CoolingSpeedShouldBe(CoolingSpeed_PullDown);
+   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Closed);
+
+   When PullDownInMediumCompressorSpeedIs(ENABLED);
+   And FreezerThermistorValidResolvedIs(Invalid);
+   When The GridIsRun();
+   GridCareVotesShouldBeDontCare();
+   PulldownActiveShouldBe(Active);
+
+   When PullDownInMediumCompressorSpeedIs(ENABLED);
+   And FreshFoodThermistorValidResolvedIs(Valid);
+   When The GridIsRun();
+   GridVotesShouldBe(CompressorSpeed_Medium, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Closed);
+   PulldownActiveShouldBe(Active);
 }

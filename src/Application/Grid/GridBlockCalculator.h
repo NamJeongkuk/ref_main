@@ -39,12 +39,14 @@ typedef struct
       I_DataModel_t *dataModel;
       RingBuffer_t ringBuffer;
       uint8_t ringBufferArray[NumberOfPreviousGridBlocksStored];
+      const GridData_t *gridData;
    } _private;
 } GridBlockCalculator_t;
 
 void GridBlockCalculator_Init(
    GridBlockCalculator_t *instance,
    const GridBlockCalculatorConfiguration_t *config,
-   I_DataModel_t *dataModel);
+   I_DataModel_t *dataModel,
+   const GridData_t *gridData);
 
 #endif

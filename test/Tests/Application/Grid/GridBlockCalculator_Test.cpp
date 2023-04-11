@@ -37,7 +37,15 @@ extern "C"
 enum
 {
    AVeryHighTemp = 5600,
-   AVeryLowTemp = -750
+   AVeryLowTemp = -750,
+   FreshFoodFallbackTemp = -500,
+   FreezerFallbackTemp = 2500
+};
+
+enum
+{
+   Invalid = false,
+   Valid = true
 };
 
 static const DeltaGridLineData_t freshFoodGridLineData[] = {
@@ -164,7 +172,8 @@ TEST_GROUP(GridBlockCalculator)
       GridBlockCalculator_Init(
          &instance,
          &config,
-         dataModel);
+         dataModel,
+         PersonalityParametricData_Get(dataModel)->gridData);
    }
 
    void GridLinesAreReady()
@@ -240,6 +249,22 @@ TEST_GROUP(GridBlockCalculator)
          expected[(NumberOfPreviousGridBlocksStored - 1) - currentBlockCount] = currentBlockNumber;
       }
    }
+
+   void FreezerThermistorValidityIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerThermistor_IsValidResolved, &state);
+   }
+
+   void FreshFoodThermistorValidityIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreshFoodThermistor_IsValidResolved, &state);
+   }
+
+   void BothThermistorsAreValid(void)
+   {
+      FreezerThermistorValidityIs(Valid);
+      FreshFoodThermistorValidityIs(Valid);
+   }
 };
 
 TEST(GridBlockCalculator, ShouldInitialize)
@@ -255,6 +280,7 @@ TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockAtVariousTemperatures)
    Given CalculatedGridLinesAre(calculatedGridLines);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(AVeryLowTemp);
+   And BothThermistorsAreValid();
    And The ModuleIsInitialized();
 
    CurrentGridBlockShouldBe(48);
@@ -293,6 +319,7 @@ TEST(GridBlockCalculator, ShouldCalculatePreviousGridBlocks)
    Given CalculatedGridLinesAre(calculatedGridLines);
    And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
    And FreezerFilteredTemperatureIs(AVeryLowTemp);
+   And BothThermistorsAreValid();
    And The ModuleIsInitialized();
 
    The CurrentGridBlockShouldBe(48);
@@ -360,6 +387,7 @@ TEST(GridBlockCalculator, ShouldRecalculateBlocksAndAddToPreviousBlocksWhenCalcu
    Given CalculatedGridLinesAre(calculatedGridLines);
    And FreshFoodFilteredTemperatureIs(275);
    And FreezerFilteredTemperatureIs(0);
+   And BothThermistorsAreValid();
    And The ModuleIsInitialized();
 
    CurrentGridBlockShouldBe(38);
@@ -382,6 +410,7 @@ TEST(GridBlockCalculator, ShouldNotUpdatePreviousGridBlocksIfGridBlockDoesntChan
    Given CalculatedGridLinesAre(calculatedGridLines);
    And FreshFoodFilteredTemperatureIs(275);
    And FreezerFilteredTemperatureIs(0);
+   And BothThermistorsAreValid();
    And The ModuleIsInitialized();
 
    CurrentGridBlockShouldBe(38);
@@ -431,4 +460,204 @@ TEST(GridBlockCalculator, ShouldNotUpdatePreviousGridBlocksIfGridBlockDoesntChan
    CurrentGridBlockShouldBe(3);
    The PreviousGridBlockCountShouldBe(2);
    And The PreviousGridBlocksShouldBe(expectedPreviousBlocks);
+}
+
+TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockAtVariousTemperaturesWithAnInvalidFreshFoodThermistor)
+{
+   Given CalculatedGridLinesAre(calculatedGridLines);
+   And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And FreezerFilteredTemperatureIs(AVeryLowTemp);
+   And FreezerThermistorValidityIs(Valid);
+   And FreshFoodThermistorValidityIs(Invalid);
+   And The ModuleIsInitialized();
+
+   CurrentGridBlockShouldBe(43);
+
+   When FreshFoodFilteredTemperatureIs(349);
+   And FreezerFilteredTemperatureIs(149);
+   The CurrentGridBlockShouldBe(29);
+
+   When FreshFoodFilteredTemperatureIs(149);
+   And FreezerFilteredTemperatureIs(349);
+   The CurrentGridBlockShouldBe(15);
+
+   When FreshFoodFilteredTemperatureIs(-100);
+   And FreezerFilteredTemperatureIs(2500);
+   The CurrentGridBlockShouldBe(1);
+}
+
+TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockAtVariousTemperaturesWithAnInvalidFreezerThermistor)
+{
+   Given CalculatedGridLinesAre(calculatedGridLines);
+   And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And FreezerFilteredTemperatureIs(AVeryLowTemp);
+   And FreezerThermistorValidityIs(Invalid);
+   And FreshFoodThermistorValidityIs(Valid);
+   And The ModuleIsInitialized();
+
+   CurrentGridBlockShouldBe(27);
+
+   When FreshFoodFilteredTemperatureIs(349);
+   And FreezerFilteredTemperatureIs(149);
+   The CurrentGridBlockShouldBe(24);
+
+   When FreshFoodFilteredTemperatureIs(149);
+   And FreezerFilteredTemperatureIs(349);
+   The CurrentGridBlockShouldBe(22);
+
+   When FreshFoodFilteredTemperatureIs(-100);
+   And FreezerFilteredTemperatureIs(2500);
+   The CurrentGridBlockShouldBe(21);
+}
+
+TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockWhenFreezerThermistorChangesFromValidToInvalidAndBackOnTemperatureChange)
+{
+   Given CalculatedGridLinesAre(calculatedGridLines);
+   And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And FreezerFilteredTemperatureIs(AVeryLowTemp);
+   And BothThermistorsAreValid();
+   And The ModuleIsInitialized();
+
+   CurrentGridBlockShouldBe(48);
+
+   When FreezerThermistorValidityIs(Invalid);
+   And FreshFoodFilteredTemperatureIs(149);
+   And FreezerFilteredTemperatureIs(FreezerFallbackTemp);
+   The CurrentGridBlockShouldBe(22);
+
+   When FreezerThermistorValidityIs(Valid);
+   And FreshFoodFilteredTemperatureIs(149);
+   And FreezerFilteredTemperatureIs(349);
+   The CurrentGridBlockShouldBe(15);
+
+   When FreshFoodFilteredTemperatureIs(-100);
+   And FreezerFilteredTemperatureIs(2500);
+   The CurrentGridBlockShouldBe(0);
+}
+
+TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockWhenFreezerThermistorChangesFromValidToInvalidAndBackWithoutTemperatureChange)
+{
+   Given CalculatedGridLinesAre(calculatedGridLines);
+   And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And FreezerFilteredTemperatureIs(AVeryLowTemp);
+   And BothThermistorsAreValid();
+   And The ModuleIsInitialized();
+
+   CurrentGridBlockShouldBe(48);
+
+   When FreezerThermistorValidityIs(Invalid);
+   And FreshFoodFilteredTemperatureIs(149);
+   And FreezerFilteredTemperatureIs(FreezerFallbackTemp);
+   The CurrentGridBlockShouldBe(22);
+
+   When FreezerThermistorValidityIs(Valid);
+   And FreshFoodFilteredTemperatureIs(149);
+   And FreezerFilteredTemperatureIs(FreezerFallbackTemp);
+   The CurrentGridBlockShouldBe(1);
+
+   When FreshFoodFilteredTemperatureIs(-100);
+   And FreezerFilteredTemperatureIs(2500);
+   The CurrentGridBlockShouldBe(0);
+}
+
+TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockWhenFreshFoodThermistorChangesFromValidToInvalidAndBackOnTemperatureChange)
+{
+   Given CalculatedGridLinesAre(calculatedGridLines);
+   And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And FreezerFilteredTemperatureIs(AVeryLowTemp);
+   And BothThermistorsAreValid();
+   And The ModuleIsInitialized();
+
+   CurrentGridBlockShouldBe(48);
+
+   When FreshFoodThermistorValidityIs(Invalid);
+   And FreshFoodFilteredTemperatureIs(149);
+   And FreezerFilteredTemperatureIs(FreezerFallbackTemp);
+   The CurrentGridBlockShouldBe(1);
+
+   When FreshFoodThermistorValidityIs(Valid);
+   And FreshFoodFilteredTemperatureIs(149);
+   And FreezerFilteredTemperatureIs(349);
+   The CurrentGridBlockShouldBe(15);
+
+   When FreshFoodFilteredTemperatureIs(-100);
+   And FreezerFilteredTemperatureIs(2500);
+   The CurrentGridBlockShouldBe(0);
+}
+
+TEST(GridBlockCalculator, ShouldCalculateCorrectGridBlockWhenFreshFoodThermistorChangesFromValidToInvalidAndBackWithoutTemperatureChange)
+{
+   Given CalculatedGridLinesAre(calculatedGridLines);
+   And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And FreezerFilteredTemperatureIs(AVeryLowTemp);
+   And BothThermistorsAreValid();
+   And The ModuleIsInitialized();
+
+   CurrentGridBlockShouldBe(48);
+
+   When FreshFoodThermistorValidityIs(Invalid);
+   And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And FreezerFilteredTemperatureIs(149);
+   The CurrentGridBlockShouldBe(29);
+
+   When FreshFoodThermistorValidityIs(Valid);
+   And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And FreezerFilteredTemperatureIs(149);
+   The CurrentGridBlockShouldBe(34);
+
+   When FreshFoodFilteredTemperatureIs(-100);
+   And FreezerFilteredTemperatureIs(2500);
+   The CurrentGridBlockShouldBe(0);
+}
+
+TEST(GridBlockCalculator, ShouldNotCalculateNewGridBlockWhenBothThermistorsChangesFromValidToInvalid)
+{
+   Given CalculatedGridLinesAre(calculatedGridLines);
+   And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And FreezerFilteredTemperatureIs(AVeryLowTemp);
+   And BothThermistorsAreValid();
+   And The ModuleIsInitialized();
+
+   CurrentGridBlockShouldBe(48);
+
+   When FreshFoodThermistorValidityIs(Invalid);
+   And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And FreezerFilteredTemperatureIs(149);
+   The CurrentGridBlockShouldBe(29);
+
+   When FreezerThermistorValidityIs(Invalid);
+   And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And FreezerFilteredTemperatureIs(149);
+   The CurrentGridBlockShouldBe(29);
+}
+
+TEST(GridBlockCalculator, ShouldRecalculateNewGridBlockWhenOneThermistorChangesBackToValidFromInvalid)
+{
+   Given CalculatedGridLinesAre(calculatedGridLines);
+   And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And FreezerFilteredTemperatureIs(AVeryLowTemp);
+   And BothThermistorsAreValid();
+   And The ModuleIsInitialized();
+
+   CurrentGridBlockShouldBe(48);
+
+   When FreshFoodThermistorValidityIs(Invalid);
+   And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And FreezerFilteredTemperatureIs(149);
+   The CurrentGridBlockShouldBe(29);
+
+   When FreezerThermistorValidityIs(Invalid);
+   And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And FreezerFilteredTemperatureIs(149);
+   The CurrentGridBlockShouldBe(29);
+
+   When FreshFoodThermistorValidityIs(Valid);
+   And FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And FreezerFilteredTemperatureIs(AVeryLowTemp);
+   The CurrentGridBlockShouldBe(27);
+
+   When FreshFoodFilteredTemperatureIs(AVeryHighTemp);
+   And FreezerFilteredTemperatureIs(AVeryLowTemp);
+   And BothThermistorsAreValid();
+   The CurrentGridBlockShouldBe(48);
 }

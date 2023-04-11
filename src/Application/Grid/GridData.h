@@ -15,8 +15,8 @@ typedef struct
 {
    GridId_t gridId;
    DeltaGridLines_t *deltaGridLines;
-   uint8_t grid_invalid_freezer_thermistor_row;
-   uint8_t grid_invalid_fresh_food_thermistor_column;
+   uint8_t gridInvalidFreezerThermistorRow;
+   uint8_t gridInvalidFreshFoodThermistorColumn;
    uint16_t gridPeriodicRunRateInMSec;
 } GridData_t;
 

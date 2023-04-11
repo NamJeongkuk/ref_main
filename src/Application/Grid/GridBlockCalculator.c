@@ -41,12 +41,48 @@ static CalculatedAxisGridLines_t CalculatedGridLine(
    }
 }
 
+static bool FreezerThermistorIsValid(GridBlockCalculator_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerThermistorIsValidErd,
+      &state);
+   return state;
+}
+
+static bool FreshFoodThermistorIsValid(GridBlockCalculator_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freshFoodThermistorIsValidErd,
+      &state);
+   return state;
+}
+
 static uint8_t GridLineIndex(
    GridBlockCalculator_t *instance,
-   TemperatureDegFx100_t temperature,
    bool gridLineIsInverted,
    uint8_t gridLineDimension)
 {
+   TemperatureDegFx100_t temperature;
+
+   if(FreshFoodGridLineDimension == gridLineDimension)
+   {
+      DataModel_Read(
+         instance->_private.dataModel,
+         instance->_private.config->freshFoodFilteredResolvedTemperatureInDegFx100,
+         &temperature);
+   }
+   else
+   {
+      DataModel_Read(
+         instance->_private.dataModel,
+         instance->_private.config->freezerFilteredResolvedTemperatureInDegFx100,
+         &temperature);
+   }
+
    CalculatedAxisGridLines_t calculatedGridLine = CalculatedGridLine(instance, gridLineDimension);
    uint8_t index;
 
@@ -100,30 +136,32 @@ static void AddGridBlockToRingBufferIfDifferent(
 
 static GridBlockNumber_t GetCalculatedGridBlockNumber(GridBlockCalculator_t *instance)
 {
-   TemperatureDegFx100_t freshFoodTemp;
-   TemperatureDegFx100_t freezerTemp;
+   uint8_t freshFoodGridLineIndex;
+   uint8_t freezerGridLineIndex;
 
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->freshFoodFilteredResolvedTemperatureInDegFx100,
-      &freshFoodTemp);
+   if(FreshFoodThermistorIsValid(instance))
+   {
+      freshFoodGridLineIndex = GridLineIndex(
+         instance,
+         NonInvertedGridLine,
+         FreshFoodGridLineDimension);
+   }
+   else
+   {
+      freshFoodGridLineIndex = instance->_private.gridData->gridInvalidFreshFoodThermistorColumn;
+   }
 
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->freezerFilteredResolvedTemperatureInDegFx100,
-      &freezerTemp);
-
-   uint8_t freshFoodGridLineIndex = GridLineIndex(
-      instance,
-      freshFoodTemp,
-      NonInvertedGridLine,
-      FreshFoodGridLineDimension);
-
-   uint8_t freezerGridLineIndex = GridLineIndex(
-      instance,
-      freezerTemp,
-      InvertedGridLine,
-      FreezerGridLineDimension);
+   if(FreezerThermistorIsValid(instance))
+   {
+      freezerGridLineIndex = GridLineIndex(
+         instance,
+         InvertedGridLine,
+         FreezerGridLineDimension);
+   }
+   else
+   {
+      freezerGridLineIndex = instance->_private.gridData->gridInvalidFreezerThermistorRow;
+   }
 
    GridBlockNumber_t calculatedBlockNumber =
       GridBlock(
@@ -217,16 +255,22 @@ static void OnDataModelChanged(void *context, const void *args)
 
    if((erd == instance->_private.config->freshFoodFilteredResolvedTemperatureInDegFx100) ||
       (erd == instance->_private.config->freezerFilteredResolvedTemperatureInDegFx100) ||
-      (erd == instance->_private.config->calculatedGridLinesErd))
+      (erd == instance->_private.config->calculatedGridLinesErd) ||
+      (erd == instance->_private.config->freezerThermistorIsValidErd) ||
+      (erd == instance->_private.config->freshFoodThermistorIsValidErd))
    {
-      UpdateGridBlockIfDifferent(instance);
+      if(FreshFoodThermistorIsValid(instance) || FreezerThermistorIsValid(instance))
+      {
+         UpdateGridBlockIfDifferent(instance);
+      }
    }
 }
 
 void GridBlockCalculator_Init(
    GridBlockCalculator_t *instance,
    const GridBlockCalculatorConfiguration_t *config,
-   I_DataModel_t *dataModel)
+   I_DataModel_t *dataModel,
+   const GridData_t *gridData)
 {
    bool gridLineCalculatorReady;
    DataModel_Read(
@@ -237,6 +281,7 @@ void GridBlockCalculator_Init(
 
    instance->_private.config = config;
    instance->_private.dataModel = dataModel;
+   instance->_private.gridData = gridData;
 
    RingBuffer_Init(
       &instance->_private.ringBuffer,
