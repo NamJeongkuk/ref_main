@@ -635,6 +635,7 @@
                "displayName": "IM Enabled by User?",
                "name": "Erd_IceMakerEnabledByUser",
                "read": true,
+               "write": true,
                "interval": 1000000000
             },
             {
@@ -739,7 +740,22 @@
                "name": "Erd_Freezer_IceRateIsActive",
                "read": true,
                "interval": 1000000000
-            }
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Enabled by User?",
+               "name": "Erd_IceMakerEnabledByUser",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Enabled by Grid?",
+               "name": "Erd_IceMakerEnabledByGrid",
+               "read": true,
+               "interval": 1000000000
+            }            
          ]
       },
       {
@@ -884,6 +900,14 @@
                "displayName": "Twist Tray IM State",
                "name": "Erd_TwistTrayIceMaker_HighLevelState",
                "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "IM Enabled by User?",
+               "name": "Erd_IceMakerEnabledByUser",
+               "read": true,
+               "write": true,
                "interval": 1000000000
             }
          ]
