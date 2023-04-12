@@ -9,10 +9,12 @@
 #define TWISTTRAYICEMAKERDATA_H
 
 #include <stdint.h>
+#include "TemperatureDegFx100.h"
 
 typedef struct
 {
-   int16_t freezingTemperatureDegreesFx100;
+   TemperatureDegFx100_t maximumHarvestTemperatureInDegFx100;
+   TemperatureDegFx100_t startIntegrationTemperatureInDegFx100;
    uint32_t targetFreezeIntegrationSum;
    uint8_t minimumFreezeTimeMinutes;
 } TwistTrayIceMakerFreezeData_t;

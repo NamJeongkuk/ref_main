@@ -68,7 +68,8 @@ static const I_Output_Api_t motorStateMockOutputApi = { WriteMotorState };
 
 static const TwistTrayIceMakerData_t config = {
    .freezeData{
-      .freezingTemperatureDegreesFx100 = 0,
+      .maximumHarvestTemperatureInDegFx100 = 0,
+      .startIntegrationTemperatureInDegFx100 = 0,
       .targetFreezeIntegrationSum = 0,
       .minimumFreezeTimeMinutes = 0 },
 

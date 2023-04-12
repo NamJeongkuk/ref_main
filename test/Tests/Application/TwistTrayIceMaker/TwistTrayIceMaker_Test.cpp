@@ -53,7 +53,9 @@ enum
    FaultState = TwistTrayIceMakerHighLevelState_Fault,
    FactoryDiagsState = TwistTrayIceMakerHighLevelState_FactoryDiags,
 
+   MaximumHarvestTemperaturex100 = 1900,
    FreezingPointx100 = 3200,
+   VeryCold = 200,
 
    WaterFillTime = ((51 * MSEC_PER_SEC) / 10),
    MinimumFreezeTime = 1 * MSEC_PER_MIN,
@@ -66,14 +68,12 @@ enum
 
    ALongTime = FullIceBucketWaitTime + 1,
    OneSecond = 1 * MSEC_PER_SEC,
-
-   OutOfRangeHigh = 20000,
-   OutOfRangeLow = -4100 - 1,
 };
 
 static const TwistTrayIceMakerData_t parametric = {
    .freezeData{
-      .freezingTemperatureDegreesFx100 = FreezingPointx100,
+      .maximumHarvestTemperatureInDegFx100 = MaximumHarvestTemperaturex100,
+      .startIntegrationTemperatureInDegFx100 = FreezingPointx100,
       .targetFreezeIntegrationSum = TargetFreezeIntegrationSum,
       .minimumFreezeTimeMinutes = MinimumFreezeTime / MSEC_PER_MIN },
 
@@ -332,7 +332,7 @@ TEST_GROUP(TwistTrayIceMaker)
 
    void After(TimerTicks_t time)
    {
-      TimerModule_TestDouble_ElapseTime(&timerModuleTestDouble, time, 1);
+      TimerModule_TestDouble_ElapseTime(&timerModuleTestDouble, time, 1000);
    }
 
    void SomeTimePasses(TimerTicks_t time)
@@ -377,6 +377,8 @@ TEST_GROUP(TwistTrayIceMaker)
 
    void HomingIsCompleted()
    {
+      GivenTheIceMakerThermistorIsValid();
+
       TheMotorShouldBeRequestedTo(Home);
       When TheModuleIsInitialized();
 
@@ -386,24 +388,25 @@ TEST_GROUP(TwistTrayIceMaker)
 
    void FreezingIsCompletedAndHarvestingIsStarted()
    {
-      TemperatureDegFx100_t actualTempx100 = 3100;
-      Given TheTemperatureIs(actualTempx100);
+      GivenTheIceMakerThermistorIsValid();
       And HomingIsCompleted();
 
+      When TheTemperatureIs(MaximumHarvestTemperaturex100 - 1);
       HarvestingShouldStart();
-      After(TheTimeToReachIntegrationSumGiven(actualTempx100));
+      After(TheTimeToReachIntegrationSumGiven(FreezingPointx100 - 1));
    }
 
    void FreezingIsCompletedAndHarvestingDoesNotStartBecauseFreezerDoorOpens()
    {
-      TemperatureDegFx100_t actualTempx100 = 3100;
+      TemperatureDegFx100_t actualTempx100 = MaximumHarvestTemperaturex100;
       Given TheTemperatureIs(actualTempx100);
       And HomingIsCompleted();
 
       TheFreezerDoorIs(OPEN);
 
       NothingShouldHappen();
-      After(TheTimeToReachIntegrationSumGiven(actualTempx100));
+      When TheTemperatureIs(actualTempx100 - 1);
+      And After(TheTimeToReachIntegrationSumGiven(FreezingPointx100 - 1));
    }
 
    void HarvestingIsCompletedAndFillingIsStarted()
@@ -470,7 +473,7 @@ TEST(TwistTrayIceMaker, ShouldNotTransitionToThermistorFaultStateWhenHomingAndTh
 TEST(TwistTrayIceMaker, ShouldHomeOnInitializationThenGoToIdleFreezeWhenIceMakerIsDisabled)
 {
    GivenTheIceMakerIsDisabled();
-   Given TheTemperatureIs(200);
+   Given TheTemperatureIs(VeryCold);
    And HomingIsCompleted();
 
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_IdleFreeze);
@@ -479,7 +482,7 @@ TEST(TwistTrayIceMaker, ShouldHomeOnInitializationThenGoToIdleFreezeWhenIceMaker
 TEST(TwistTrayIceMaker, ShouldTransitionFromIdleFreezeStateToFreezeStateWhenIceMakerIsEnabled)
 {
    GivenTheIceMakerIsDisabled();
-   Given TheTemperatureIs(200);
+   Given TheTemperatureIs(VeryCold);
    And HomingIsCompleted();
 
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_IdleFreeze);
@@ -493,8 +496,8 @@ TEST(TwistTrayIceMaker, ShouldTransitionFromIdleFreezeStateToFreezeStateWhenIceM
 TEST(TwistTrayIceMaker, ShouldInitiallyTryToFreezeWhateverIsInTheTray)
 {
    GivenTheIceMakerIsEnabled();
-   Given TheTemperatureIs(200);
    And HomingIsCompleted();
+   And TheTemperatureIs(VeryCold);
 
    SomeTimePasses(MinimumFreezeTime - 1);
 
@@ -504,10 +507,12 @@ TEST(TwistTrayIceMaker, ShouldInitiallyTryToFreezeWhateverIsInTheTray)
 
 TEST(TwistTrayIceMaker, ShouldFreezeForMinimumFreezeTimeIfIntegrationSumIsCompletedFirst)
 {
-   TemperatureDegFx100_t actualTempx100 = 200;
-   Given TheTemperatureIs(actualTempx100);
+   TemperatureDegFx100_t actualTempx100 = VeryCold;
+
    GivenTheIceMakerIsEnabled();
    And HomingIsCompleted();
+   And TheTemperatureIs(actualTempx100);
+
 
    TimerTicks_t timeToReachIntegrationSum = TheTimeToReachIntegrationSumGiven(actualTempx100);
    NothingShouldHappen();
@@ -539,13 +544,15 @@ TEST(TwistTrayIceMaker, ShouldResetFreezeIntegrationSumIfTempGoesAboveFreezing)
    NothingShouldHappen();
    When SomeTimePasses(TheTimeToReachIntegrationSumGiven(belowFreezing) - 1);
 
+   When TheTemperatureIs(MaximumHarvestTemperaturex100 - 1);
+
    HarvestingShouldStart();
    After(1);
 }
 
 TEST(TwistTrayIceMaker, ShouldResetMinimumFreezeTimeIfTempGoesAboveFreezing)
 {
-   TemperatureDegFx100_t actualTempx100 = 200;
+   TemperatureDegFx100_t actualTempx100 = VeryCold;
    Given TheTemperatureIs(actualTempx100);
    GivenTheIceMakerIsEnabled();
    And HomingIsCompleted();
@@ -566,14 +573,14 @@ TEST(TwistTrayIceMaker, ShouldResetMinimumFreezeTimeIfTempGoesAboveFreezing)
 
 TEST(TwistTrayIceMaker, ShouldNotResetFreezeIntegrationSumIfTempChangesButDoesNotGoAboveFreezing)
 {
-   TemperatureDegFx100_t actualTempx100 = 3100;
-   Given TheTemperatureIs(actualTempx100);
+   TemperatureDegFx100_t actualTempx100 = FreezingPointx100 - 1;
    GivenTheIceMakerIsEnabled();
+   And TheTemperatureIs(actualTempx100);
    And HomingIsCompleted();
 
    SomeTimePasses(TheTimeToReachIntegrationSumGiven(actualTempx100) - 1);
 
-   TheTemperatureIs(actualTempx100 - 1);
+   TheTemperatureIs(MaximumHarvestTemperaturex100 - 1);
 
    HarvestingShouldStart();
    After(1);
@@ -581,7 +588,7 @@ TEST(TwistTrayIceMaker, ShouldNotResetFreezeIntegrationSumIfTempChangesButDoesNo
 
 TEST(TwistTrayIceMaker, ShouldNotResetMinimumFreezeTimeIfTempChangesButDoesNotGoAboveFreezing)
 {
-   TemperatureDegFx100_t actualTempx100 = 200;
+   TemperatureDegFx100_t actualTempx100 = VeryCold;
    Given TheTemperatureIs(actualTempx100);
    GivenTheIceMakerIsEnabled();
    And HomingIsCompleted();
@@ -611,6 +618,21 @@ TEST(TwistTrayIceMaker, ShouldNotStartIntegrationSumOrMinimumFreezeTimerIfTempIs
    SomeTimePasses(MinimumFreezeTime);
 }
 
+TEST(TwistTrayIceMaker, ShouldNotTransitionToHarvestIfThermistorTemperatureIsNotBelowMaximumHarvestTemperature)
+{
+   GivenTheIceMakerIsEnabled();
+   And HomingIsCompleted();
+
+   NothingShouldHappen();
+   When TheTemperatureIs(FreezingPointx100 - 1);
+   After(TheTimeToReachIntegrationSumGiven(FreezingPointx100 - 1));
+   After(MinimumFreezeTime);
+   And TheTemperatureIs(MaximumHarvestTemperaturex100);
+
+   HarvestingShouldStart();
+   When TheTemperatureIs(MaximumHarvestTemperaturex100 - 1);
+}
+
 TEST(TwistTrayIceMaker, ShouldReturnTheCorrectTimeForTheMinimumFreezeTimerRemainingTime)
 {
    TemperatureDegFx100_t actualTempx100 = 3100;
@@ -630,7 +652,7 @@ TEST(TwistTrayIceMaker, ShouldReturnTheCorrectTimeForTheMinimumFreezeTimerRemain
 TEST(TwistTrayIceMaker, ShouldStopIfThereIsAThermistorFaultAndBeginPollingThermistorIndefinitely)
 {
    GivenTheIceMakerIsEnabled();
-   Given TheTemperatureIs(200);
+   Given TheTemperatureIs(VeryCold);
    And HomingIsCompleted();
 
    NothingShouldHappen();
@@ -650,7 +672,7 @@ TEST(TwistTrayIceMaker, ShouldStopIfThereIsAThermistorFaultAndBeginPollingThermi
 TEST(TwistTrayIceMaker, ShouldTransitionFromFreezeToIdleFreezeWhenIceMakerBecomesDisabled)
 {
    GivenTheIceMakerIsEnabled();
-   Given TheTemperatureIs(200);
+   Given TheTemperatureIs(VeryCold);
    And HomingIsCompleted();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
 
@@ -753,8 +775,6 @@ TEST(TwistTrayIceMaker, ShouldFreezeAfterFillingAndIncrementFreezerIceRateSignal
    TheWaterValveShouldBecome(CLOSED);
    FreezerTriggerIceRateSignalShouldIncrement();
    After(WaterFillTime);
-
-   FreezingIsCompletedAndHarvestingIsStarted();
 }
 
 TEST(TwistTrayIceMaker, ShouldGoToThermistorFaultStateWhenEnteringFreezeStateIfThermistorIsInvalid)
@@ -796,9 +816,9 @@ TEST(TwistTrayIceMaker, ShouldBeAbleToHarvestTwice)
    FreezerTriggerIceRateSignalShouldIncrement();
    After(WaterFillTime);
 
-   FreezingIsCompletedAndHarvestingIsStarted();
-
-   HarvestingIsCompletedAndFillingIsStarted();
+   HarvestingShouldStart();
+   When TheTemperatureIs(VeryCold);
+   And After(MinimumFreezeTime);
 }
 
 TEST(TwistTrayIceMaker, ShouldWaitToHarvestUntilDoorIsClosed)
@@ -879,11 +899,9 @@ TEST(TwistTrayIceMaker, ShouldNotTransitionToIdleFreezeStateWhenIceMakerBecomesD
 
 TEST(TwistTrayIceMaker, ShouldNotHarvestIceIfSabbathModeComesOnWhileFreezing)
 {
-   TemperatureDegFx100_t actualTempx100 = 200;
-   Given TheTemperatureIs(actualTempx100);
    GivenTheIceMakerIsEnabled();
-   HomingIsCompleted();
-   And TheTemperatureIs(200);
+   And HomingIsCompleted();
+   And TheTemperatureIs(VeryCold);
    Then SabbathModeIs(ON);
 
    NothingShouldHappen();
@@ -895,11 +913,9 @@ TEST(TwistTrayIceMaker, ShouldNotHarvestIceIfSabbathModeComesOnWhileFreezing)
 
 TEST(TwistTrayIceMaker, SabbathModeShouldAlsoWorkIfTheEnhancedSabbathModeErdComesOn)
 {
-   TemperatureDegFx100_t actualTempx100 = 200;
-   Given TheTemperatureIs(actualTempx100);
    GivenTheIceMakerIsEnabled();
-   HomingIsCompleted();
-   And TheTemperatureIs(200);
+   And HomingIsCompleted();
+   And TheTemperatureIs(VeryCold);
    Then EnhancedSabbathModeIs(ON);
 
    NothingShouldHappen();
@@ -911,12 +927,10 @@ TEST(TwistTrayIceMaker, SabbathModeShouldAlsoWorkIfTheEnhancedSabbathModeErdCome
 
 TEST(TwistTrayIceMaker, SabbathModeShouldAlsoWorkIfBothSabbathErdsComeOn)
 {
-   TemperatureDegFx100_t actualTempx100 = 200;
-   Given TheTemperatureIs(actualTempx100);
    GivenTheIceMakerIsEnabled();
-   HomingIsCompleted();
-   Given TheTemperatureIs(200);
-   Then EnhancedSabbathModeIs(ON);
+   And HomingIsCompleted();
+   And TheTemperatureIs(VeryCold);
+   And EnhancedSabbathModeIs(ON);
    And SabbathModeIs(ON);
 
    NothingShouldHappen();

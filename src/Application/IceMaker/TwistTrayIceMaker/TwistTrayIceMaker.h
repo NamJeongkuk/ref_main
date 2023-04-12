@@ -30,7 +30,8 @@ typedef struct
       bool minimumFreezeTimeReached : 1;
       bool freezeIntegrationSumReached : 1;
       bool doorHasBeenClosedForLongEnough : 1;
-      uint8_t unused : 5;
+      bool maximumHarvestTemperatureReached : 1;
+      uint8_t unused : 4;
 
       const TwistTrayIceMakerData_t *parametric;
 

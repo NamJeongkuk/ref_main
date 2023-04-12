@@ -575,6 +575,13 @@
                "name": "Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100",
                "read": true,
                "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Tray Ice Maker Filtered Temperature (DegF x100)",
+               "name": "Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
             }
          ]
       },

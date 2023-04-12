@@ -19,8 +19,9 @@
 #define MinimumFreezePeriodMinutes (instance->_private.parametric->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN)
 #define FullIceBucketWaitPeriodMinutes (instance->_private.parametric->harvestData.fullBucketWaitPeriodMinutes * MSEC_PER_MIN)
 #define DelayToHarvestAfterDoorCloses (instance->_private.parametric->harvestData.delayToHarvestAfterDoorClosesSeconds * MSEC_PER_SEC)
-#define FreezingPointDegFx100 (instance->_private.parametric->freezeData.freezingTemperatureDegreesFx100)
+#define FreezingPointDegFx100 (instance->_private.parametric->freezeData.startIntegrationTemperatureInDegFx100)
 #define TargetFreezeIntegrationSum (instance->_private.parametric->freezeData.targetFreezeIntegrationSum)
+#define MaxHarvestTemperature (instance->_private.parametric->freezeData.maximumHarvestTemperatureInDegFx100)
 
 enum
 {
@@ -226,6 +227,14 @@ static bool IceMakerThermistorIsValid(TwistTrayIceMaker_t *instance)
    return thermistorIsValid;
 }
 
+static bool HarvestConditionsHaveBeenMet(TwistTrayIceMaker_t *instance)
+{
+   return (
+      instance->_private.minimumFreezeTimeReached &&
+      instance->_private.freezeIntegrationSumReached &&
+      instance->_private.maximumHarvestTemperatureReached);
+}
+
 static void State_Homing(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
    TwistTrayIceMaker_t *instance = InstanceFrom(fsm);
@@ -277,6 +286,7 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 
          instance->_private.minimumFreezeTimeReached = false;
          instance->_private.freezeIntegrationSumReached = false;
+         instance->_private.maximumHarvestTemperatureReached = false;
 
          ClearFreezeIntegrationSum(instance);
          StartFreezingTimers(instance);
@@ -299,6 +309,7 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          {
             instance->_private.minimumFreezeTimeReached = false;
             instance->_private.freezeIntegrationSumReached = false;
+            instance->_private.maximumHarvestTemperatureReached = false;
 
             ClearFreezeIntegrationSum(instance);
             StopFreezeTimers(instance);
@@ -315,13 +326,20 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
             {
                StartFreezingTimers(instance);
             }
+
+            instance->_private.maximumHarvestTemperatureReached = (iceTrayTempx100 < MaxHarvestTemperature);
+
+            if(HarvestConditionsHaveBeenMet(instance))
+            {
+               Fsm_Transition(fsm, State_Harvesting);
+            }
          }
          break;
 
       case Signal_MinimumFreezeTimeReached:
          instance->_private.minimumFreezeTimeReached = true;
 
-         if(instance->_private.minimumFreezeTimeReached && instance->_private.freezeIntegrationSumReached)
+         if(HarvestConditionsHaveBeenMet(instance))
          {
             Fsm_Transition(fsm, State_Harvesting);
          }
@@ -335,7 +353,7 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
             instance->_private.freezeIntegrationSumReached = true;
             TimerModule_Stop(instance->_private.timerModule, &instance->_private.integrationTimer);
 
-            if(instance->_private.minimumFreezeTimeReached && instance->_private.freezeIntegrationSumReached)
+            if(HarvestConditionsHaveBeenMet(instance))
             {
                Fsm_Transition(fsm, State_Harvesting);
             }
@@ -355,6 +373,7 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 
          instance->_private.minimumFreezeTimeReached = false;
          instance->_private.freezeIntegrationSumReached = false;
+         instance->_private.maximumHarvestTemperatureReached = false;
          break;
    }
 }
