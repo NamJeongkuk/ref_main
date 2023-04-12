@@ -85,6 +85,11 @@ TEST_GROUP(DispenseController)
       DataModel_Write(dataModel, Erd_DispensingDisabled, set);
    }
 
+   void WhenDispensingIsDisabled()
+   {
+      GivenDispensingIsDisabled();
+   }
+
    void GivenDispensingInhibitedByRfid()
    {
       DataModel_Write(dataModel, Erd_DispensingInhibitedByRfid, set);
@@ -93,6 +98,11 @@ TEST_GROUP(DispenseController)
    void WhenDispensingNotInhibitedByRfid()
    {
       DataModel_Write(dataModel, Erd_DispensingInhibitedByRfid, clear);
+   }
+
+   void WhenDispensingIsInhibitedByRfid()
+   {
+      GivenDispensingInhibitedByRfid();
    }
 
    void GivenIceDispensingInhibitedByDoor()
@@ -110,9 +120,19 @@ TEST_GROUP(DispenseController)
       DataModel_Write(dataModel, Erd_IceDispensingInhibitedByDoor, clear);
    }
 
+   void WhenIceDispensingIsInhibitedByDoor()
+   {
+      GivenIceDispensingInhibitedByDoor();
+   }
+
    void WhenWaterDispensingNotInhibitedByDoor()
    {
       DataModel_Write(dataModel, Erd_WaterDispensingInhibitedByDoor, clear);
+   }
+
+   void WhenWaterDispensingIsInhibitedByDoor()
+   {
+      GivenWaterDispensingInhibitedByDoor();
    }
 
    void GivenDispensingInhibitedByAutofillSensorError()
@@ -123,6 +143,11 @@ TEST_GROUP(DispenseController)
    void WhenDispensingNotInhibitedByAutofillSensorError()
    {
       DataModel_Write(dataModel, Erd_AutofillSensorError, clear);
+   }
+
+   void WhenDispensingIsInhibitedByAutofillSensorError()
+   {
+      GivenDispensingInhibitedByAutofillSensorError();
    }
 
    void TheAugerMotorDispensingVoteShouldBe(AugerMotorIceType_t iceType, Vote_t vote)
@@ -187,7 +212,6 @@ TEST_GROUP(DispenseController)
 
    void ShouldBeDispensing()
    {
-      TheDispenseStatusShouldBe(DispenseStatus_Dispensing);
       bool aLoadIsOn;
 
       WaterValveVotedState_t dispensingValve;
@@ -268,7 +292,7 @@ TEST(DispenseController, ShouldStopMaxTimerWhenDispensingRequestActionIsStop)
    GivenTheFsmIsInitializedAndInDispensingStateWithSelection(DispensingRequestSelection_Water);
 
    After(dispenserData->maximumDispenseTimeInSeconds * MSEC_PER_SEC - 10);
-   TheDispenseStatusShouldBe(DispenseStatus_Dispensing);
+   ShouldBeDispensing();
 
    WhenTheDispensingRequestActionIs(DispensingAction_Stop);
    TheMaxDispenseTimerShouldNotRun();
@@ -279,7 +303,7 @@ TEST(DispenseController, ShouldSetStatusToHitMaxTimeWhenTimerExpires)
    GivenTheFsmIsInitializedAndInDispensingStateWithSelection(DispensingRequestSelection_Water);
 
    After(dispenserData->maximumDispenseTimeInSeconds * MSEC_PER_SEC - 1);
-   TheDispenseStatusShouldBe(DispenseStatus_Dispensing);
+   ShouldBeDispensing();
 
    After(1);
    TheDispenseStatusShouldBe(DispenseStatus_HitMaxTime);
@@ -500,5 +524,13 @@ TEST(DispenseController, ShouldTransitionToDispensingStateIfSelectionIsCrushedIc
 
    WhenIceDispensingNotInhibitedByDoor();
    WhenDispensingRequestActionIsStopThenStart();
+   ShouldBeDispensing();
+}
+
+TEST(DispenseController, ShouldNotStopDispensingIfANonStopActionIsRequested)
+{
+   GivenTheFsmIsInitializedAndInDispensingStateWithSelection(DispensingRequestSelection_CrushedIce);
+
+   WhenTheDispensingRequestActionIs(DispensingAction_Continue);
    ShouldBeDispensing();
 }

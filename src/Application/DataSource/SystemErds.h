@@ -1105,8 +1105,6 @@ enum
    ENTRY(Erd_NvReservedRfid,                                0xFCFD, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvRfid,                NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NvReservedFaultSnapshot,                       0xFCFE, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NvReservedCycleHistory,                        0xFCFF, uint8_t,                                            Swap_N, Io_None, Sub_N,  NvCycleHistory,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   \
-   ENTRY(Erd_PrivateDispensingRequestStatus,                0xFD01, DispensingRequestStatus_t,                          Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
 
 #define EXPAND_AS_INTERNAL_RAM_ERD_ENUM(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)(Name COMMA)

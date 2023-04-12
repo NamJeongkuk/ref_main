@@ -198,9 +198,6 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
 
    // 0xFB00 range
    SWAPPED_ERD(PublicErd_Eeprom_DefrostCompressorOnTimeInSeconds, sizeof(uint32_t)),
-
-   // 0xFD00 range
-   SWAPPED_FIELD(PublicErd_PrivateDispensingRequestStatus, DispensingRequestStatus_t, preciseFillOuncesx100)
 };
 
 static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {

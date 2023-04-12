@@ -19,7 +19,7 @@ static const DispensingRequestHandlerConfig_t config = {
    .dispensingRequestErd = Erd_DispensingRequest,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
    .privateDispensingRequestErd = Erd_PrivateDispensingRequest,
-   .privateDispensingRequestStatusErd = Erd_PrivateDispensingRequestStatus
+   .privateDispensingResultStatusErd = Erd_PrivateDispensingResultStatus
 };
 
 TEST_GROUP(DispensingRequestHandler)
@@ -48,7 +48,7 @@ TEST_GROUP(DispensingRequestHandler)
       TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
    }
 
-   void WhenTheDispensingRequestActionIs(uint8_t action)
+   void WhenTheDispensingRequestActionIs(DispensingAction_t action)
    {
       DispensingRequest_t dispensingRequest;
       DataModel_Read(
@@ -63,13 +63,41 @@ TEST_GROUP(DispensingRequestHandler)
          &dispensingRequest);
    }
 
+   void WhenTheDispensingRequestIs(DispensingAction_t action, DispensingRequestSelection_t selection)
+   {
+      DispensingRequest_t dispensingRequest;
+      DataModel_Read(
+         dataModel,
+         Erd_DispensingRequest,
+         &dispensingRequest);
+
+      dispensingRequest.action = action;
+      dispensingRequest.selection = selection;
+      DataModel_Write(
+         dataModel,
+         Erd_DispensingRequest,
+         &dispensingRequest);
+   }
+
+   void ThePrivateDispensingRequestShouldBe(DispensingAction_t expectedAction, DispensingRequestSelection_t expectedSelection)
+   {
+      DispensingRequest_t actual;
+      DataModel_Read(
+         dataModel,
+         Erd_PrivateDispensingRequest,
+         &actual);
+
+      CHECK_EQUAL(expectedAction, actual.action);
+      CHECK_EQUAL(expectedSelection, actual.selection);
+   }
+
    void GivenTheDispensingRequestIsInRequestingDispense(void)
    {
       GivenTheModuleIsInitialized();
       WhenTheDispensingRequestActionIs(DispensingAction_Start);
    }
 
-   void WhenTheDispensingRequestSelectionIs(uint8_t selection)
+   void WhenTheDispensingRequestSelectionIs(DispensingRequestSelection_t selection)
    {
       DispensingRequest_t dispensingRequest;
       DataModel_Read(
@@ -84,82 +112,15 @@ TEST_GROUP(DispensingRequestHandler)
          &dispensingRequest);
    }
 
-   void WhenThePrivateDispensingRequestStatusActionIs(uint8_t action)
+   void WhenThePrivateDispensingResultStatusIs(DispenseStatus_t status)
    {
-      DispensingRequestStatus_t privateDispensingRequestStatus;
-      DataModel_Read(
-         dataModel,
-         Erd_PrivateDispensingRequestStatus,
-         &privateDispensingRequestStatus);
-
-      privateDispensingRequestStatus.action = action;
       DataModel_Write(
          dataModel,
-         Erd_PrivateDispensingRequestStatus,
-         &privateDispensingRequestStatus);
+         Erd_PrivateDispensingResultStatus,
+         &status);
    }
 
-   void WhenThePrivateDispensingRequestStatusSelectionIs(uint8_t selection)
-   {
-      DispensingRequestStatus_t privateDispensingRequestStatus;
-      DataModel_Read(
-         dataModel,
-         Erd_PrivateDispensingRequestStatus,
-         &privateDispensingRequestStatus);
-
-      privateDispensingRequestStatus.selection = selection;
-      DataModel_Write(
-         dataModel,
-         Erd_PrivateDispensingRequestStatus,
-         &privateDispensingRequestStatus);
-   }
-
-   void WhenThePrivateDispensingRequestStatusSpecialOptionsIs(uint8_t option)
-   {
-      DispensingRequestStatus_t privateDispensingRequestStatus;
-      DataModel_Read(
-         dataModel,
-         Erd_PrivateDispensingRequestStatus,
-         &privateDispensingRequestStatus);
-
-      privateDispensingRequestStatus.specialOptions = option;
-      DataModel_Write(
-         dataModel,
-         Erd_PrivateDispensingRequestStatus,
-         &privateDispensingRequestStatus);
-   }
-
-   void WhenThePrivateDispensingRequestStatusIs(uint8_t status)
-   {
-      DispensingRequestStatus_t dispensingRequestStatus;
-      DataModel_Read(
-         dataModel,
-         Erd_PrivateDispensingRequestStatus,
-         &dispensingRequestStatus);
-
-      dispensingRequestStatus.status = status;
-      DataModel_Write(
-         dataModel,
-         Erd_PrivateDispensingRequestStatus,
-         &dispensingRequestStatus);
-   }
-
-   void WhenThePrivateDispensingRequestStatusPreciseFillOuncesx100Is(uint16_t ouncesx100)
-   {
-      DispensingRequestStatus_t priVateDispensingRequestStatus;
-      DataModel_Read(
-         dataModel,
-         Erd_PrivateDispensingRequestStatus,
-         &priVateDispensingRequestStatus);
-
-      priVateDispensingRequestStatus.preciseFillOuncesx100 = ouncesx100;
-      DataModel_Write(
-         dataModel,
-         Erd_PrivateDispensingRequestStatus,
-         &priVateDispensingRequestStatus);
-   }
-
-   void GivenThePrivateDispensingRequestActionIs(uint8_t action)
+   void GivenThePrivateDispensingRequestActionIs(DispensingAction_t action)
    {
       DispensingRequest_t privateDispensingRequest;
       DataModel_Read(
@@ -174,7 +135,7 @@ TEST_GROUP(DispensingRequestHandler)
          &privateDispensingRequest);
    }
 
-   void GivenTheDispensingRequestStatusIs(uint8_t status)
+   void GivenTheDispensingRequestStatusIs(DispenseStatus_t status)
    {
       DispensingRequestStatus_t dispensingRequestStatus;
       DataModel_Read(
@@ -189,37 +150,37 @@ TEST_GROUP(DispensingRequestHandler)
          &dispensingRequestStatus);
    }
 
-   void ThePrivateDispensingRequestActionShouldBe(uint8_t action)
+   void ThePrivateDispensingRequestActionShouldBe(DispensingAction_t expectedAction)
    {
-      DispensingRequest_t privateDispensingRequest;
+      DispensingRequest_t actual;
       DataModel_Read(
          dataModel,
          Erd_PrivateDispensingRequest,
-         &privateDispensingRequest);
+         &actual);
 
-      CHECK_EQUAL(privateDispensingRequest.action, action);
+      CHECK_EQUAL(expectedAction, actual.action);
    }
 
-   void TheDispensingRequestActionShouldBe(uint8_t action)
+   void TheDispensingRequestActionShouldBe(DispensingAction_t expectedAction)
    {
-      DispensingRequest_t dispensingRequest;
+      DispensingRequest_t actual;
       DataModel_Read(
          dataModel,
          Erd_DispensingRequest,
-         &dispensingRequest);
+         &actual);
 
-      CHECK_EQUAL(dispensingRequest.action, action);
+      CHECK_EQUAL(expectedAction, actual.action);
    }
 
-   void TheDispensingRequestStatusShouldBe(uint8_t status)
+   void TheDispensingRequestStatusShouldBe(DispenseStatus_t expectedStatus)
    {
-      DispensingRequestStatus_t dispensingRequestStatus;
+      DispensingRequestStatus_t actual;
       DataModel_Read(
          dataModel,
          Erd_DispensingRequestStatus,
-         &dispensingRequestStatus);
+         &actual);
 
-      CHECK_EQUAL(dispensingRequestStatus.status, status);
+      CHECK_EQUAL(expectedStatus, actual.status);
    }
 
    void TheDispensingRequestShouldBeClear(void)
@@ -243,12 +204,12 @@ TEST_GROUP(DispensingRequestHandler)
 
    void ThePrivateAndPublicDispensingRequestStatusShouldBeTheSameValue(void)
    {
-      DispensingRequestStatus_t privateDispensingRequestStatus;
+      DispenseStatus_t privateDispensingRequestStatus;
       DispensingRequestStatus_t publicDispensingRequestStatus;
 
       DataModel_Read(
          dataModel,
-         Erd_PrivateDispensingRequestStatus,
+         Erd_PrivateDispensingResultStatus,
          &privateDispensingRequestStatus);
 
       DataModel_Read(
@@ -256,7 +217,7 @@ TEST_GROUP(DispensingRequestHandler)
          Erd_DispensingRequestStatus,
          &publicDispensingRequestStatus);
 
-      CHECK_EQUAL(0, memcmp(&privateDispensingRequestStatus, &publicDispensingRequestStatus, sizeof(DispensingRequestStatus_t)));
+      CHECK_EQUAL(privateDispensingRequestStatus, publicDispensingRequestStatus.status);
    }
 };
 
@@ -288,6 +249,7 @@ TEST(DispensingRequestHandler, ShouldUpdateDispensingRequestStatusActionToStartW
 
    WhenTheDispensingRequestActionIs(DispensingAction_Start);
    ThePrivateDispensingRequestActionShouldBe(DispensingAction_Start);
+   TheDispensingRequestStatusShouldBe(DispenseStatus_Dispensing);
 }
 
 TEST(DispensingRequestHandler, ShouldUpdateDispensingRequestStatusToBadCommandWhenTheDispensingRequestActionIsInvalidInIdle)
@@ -391,53 +353,12 @@ TEST(DispensingRequestHandler, ShouldUpdatePrivateDispensingRequestActionToStopW
    ThePrivateDispensingRequestActionShouldBe(DispensingAction_Stop);
 }
 
-TEST(DispensingRequestHandler, ShouldUpdateThePublicDispensingRequestStatustToThePriviteStatusWhenThePrivateStatusActionChangesToStartInRequestingDispense)
+TEST(DispensingRequestHandler, ShouldUpdateThePublicDispensingRequestStatusToThePrivateStatusWhenThePrivateStatusActionChangesToStartInRequestingDispense)
 {
    GivenTheDispensingRequestIsInRequestingDispense();
 
-   WhenThePrivateDispensingRequestStatusActionIs(DispensingAction_Start);
+   WhenThePrivateDispensingResultStatusIs(DispenseStatus_DispenseInhibitedDueToDoorOpen);
    ThePrivateAndPublicDispensingRequestStatusShouldBeTheSameValue();
-}
-
-TEST(DispensingRequestHandler, ShouldUpdateThePublicDispensingRequestStatusToThePrivateStatusWhenThePrivateDispensingRequestStatusSelectionIsChangesToCrushedIceInRequestingDispense)
-{
-   GivenTheDispensingRequestIsInRequestingDispense();
-
-   WhenThePrivateDispensingRequestStatusSpecialOptionsIs(DispensingSpecialOptions_SwitchPressedOnSecondaryBoardRequired);
-   ThePrivateAndPublicDispensingRequestStatusShouldBeTheSameValue();
-}
-
-TEST(DispensingRequestHandler, ShouldUpdateThePublicDispensingRequestStatusToThePrivateStatusWhenThePrivateDispensingRequestStatusOptionsChangesToSwitchPressedOnSecondaryBoardRequiredInRequestingDispense)
-{
-   GivenTheDispensingRequestIsInRequestingDispense();
-
-   WhenThePrivateDispensingRequestStatusIs(DispenseStatus_HitMaxVolume);
-   ThePrivateAndPublicDispensingRequestStatusShouldBeTheSameValue();
-}
-
-TEST(DispensingRequestHandler, ShouldUpdateThePublicDispensingRequestStatusToThePrivateStatusWhenThePrivateDispensingRequestStatusChangesToHitMaxVolumeInRequestingDispense)
-{
-   GivenTheDispensingRequestIsInRequestingDispense();
-
-   WhenThePrivateDispensingRequestStatusIs(DispenseStatus_HitMaxVolume);
-   ThePrivateAndPublicDispensingRequestStatusShouldBeTheSameValue();
-}
-
-TEST(DispensingRequestHandler, ShouldUpdateThePublicDispensingStatusToThePrivateStatusWhenThePrivateDispensingRequestStatusPreciseFillIsChangeInRequestingDispense)
-{
-   GivenTheDispensingRequestIsInRequestingDispense();
-
-   WhenThePrivateDispensingRequestStatusPreciseFillOuncesx100Is(100);
-   ThePrivateAndPublicDispensingRequestStatusShouldBeTheSameValue();
-}
-
-TEST(DispensingRequestHandler, ShouldUpdateThePrivateDispensingRequestActionToStopWhenThePrivateDispensingRequestStatusActionIChangesToStartInRequestingDispense)
-{
-   GivenTheDispensingRequestIsInRequestingDispense();
-   GivenThePrivateDispensingRequestActionIs(DispensingAction_Start);
-
-   WhenThePrivateDispensingRequestStatusActionIs(DispensingAction_Start);
-   ThePrivateDispensingRequestActionShouldBe(DispensingAction_Stop);
 }
 
 TEST(DispensingRequestHandler, ShouldUpdateThePublicDispensingRequestStatusToBadCommandWhenTheDispensingRequestActionIsInvalidInRequestingDispense)
@@ -470,4 +391,29 @@ TEST(DispensingRequestHandler, ShouldClearDispensingRequestWhenTheDispensingRequ
 
    WhenTheDispensingRequestSelectionIs(DispensingRequestSelection_Autofill + 1);
    TheDispensingRequestShouldBeClear();
+}
+
+TEST(DispensingRequestHandler, ShouldSetPrivateDispenseRequestToIceThenWaterWhenTheCorrectActionsAreRequested)
+{
+   GivenTheModuleIsInitialized();
+
+   WhenTheDispensingRequestIs(DispensingAction_Start, DispensingRequestSelection_Water);
+   ThePrivateDispensingRequestShouldBe(DispensingAction_Start, DispensingRequestSelection_Water);
+   TheDispensingRequestStatusShouldBe(DispenseStatus_Dispensing);
+
+   WhenTheDispensingRequestIs(DispensingAction_Continue, DispensingRequestSelection_Water);
+   ThePrivateDispensingRequestShouldBe(DispensingAction_Start, DispensingRequestSelection_Water);
+   TheDispensingRequestStatusShouldBe(DispenseStatus_Dispensing);
+
+   WhenTheDispensingRequestIs(DispensingAction_Stop, DispensingRequestSelection_Water);
+   ThePrivateDispensingRequestShouldBe(DispensingAction_Stop, DispensingRequestSelection_Water);
+   TheDispensingRequestStatusShouldBe(DispenseStatus_CompletedSuccessfully);
+
+   WhenTheDispensingRequestIs(DispensingAction_Start, DispensingRequestSelection_CrushedIce);
+   ThePrivateDispensingRequestShouldBe(DispensingAction_Start, DispensingRequestSelection_CrushedIce);
+   TheDispensingRequestStatusShouldBe(DispenseStatus_Dispensing);
+
+   WhenTheDispensingRequestIs(DispensingAction_Continue, DispensingRequestSelection_CrushedIce);
+   ThePrivateDispensingRequestShouldBe(DispensingAction_Start, DispensingRequestSelection_CrushedIce);
+   TheDispensingRequestStatusShouldBe(DispenseStatus_Dispensing);
 }

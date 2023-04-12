@@ -18,7 +18,7 @@ static const DispensingRequestHandlerConfig_t dispensingRequestHandlerConfig = {
    .dispensingRequestErd = Erd_DispensingRequest,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
    .privateDispensingRequestErd = Erd_PrivateDispensingRequest,
-   .privateDispensingRequestStatusErd = Erd_PrivateDispensingRequestStatus
+   .privateDispensingResultStatusErd = Erd_PrivateDispensingResultStatus
 };
 
 static const DispenseControllerConfig_t dispenseControllerConfig = {

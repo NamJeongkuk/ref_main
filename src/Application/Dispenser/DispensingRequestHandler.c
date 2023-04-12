@@ -18,7 +18,7 @@ enum
    Signal_InvalidRequest,
    Signal_ContinueRequest,
    Signal_DispensingContinueRequestWaitTimeExpired,
-   Signal_PrivateDispensingRequestStatusChanged
+   Signal_PrivateDispensingResultStatusChanged
 };
 
 static void State_Idle(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
@@ -27,6 +27,21 @@ static void State_RequestingDispense(Fsm_t *fsm, const FsmSignal_t signal, const
 static DispensingRequestHandler_t *InstanceFromFsm(Fsm_t *fsm)
 {
    return CONTAINER_OF(DispensingRequestHandler_t, _private.fsm, fsm);
+}
+
+static void ClearDispensingRequest(DispensingRequestHandler_t *instance)
+{
+   DispensingRequest_t dispensingRequest = {
+      .action = DispensingAction_None,
+      .selection = DispensingRequestSelection_None,
+      .specialOptions = DispensingSpecialOptions_EmptyRequest,
+      .padding = UINT8_MAX,
+      .preciseFillOuncesx100 = UINT16_MAX
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->dispensingRequestErd,
+      &dispensingRequest);
 }
 
 static void OnDataModelChange(void *context, const void *args)
@@ -41,6 +56,8 @@ static void OnDataModelChange(void *context, const void *args)
 
       if(dispensingRequest->action != DispensingAction_None)
       {
+         instance->_private.currentPrivateDispensingRequest = *dispensingRequest;
+
          switch(dispensingRequest->action)
          {
             case DispensingAction_Continue:
@@ -65,22 +82,25 @@ static void OnDataModelChange(void *context, const void *args)
       {
          Fsm_SendSignal(&instance->_private.fsm, Signal_InvalidRequest, NULL);
       }
+
+      ClearDispensingRequest(instance);
    }
-   else if(erd == instance->_private.config->privateDispensingRequestStatusErd)
+   else if(erd == instance->_private.config->privateDispensingResultStatusErd)
    {
-      Fsm_SendSignal(&instance->_private.fsm, Signal_PrivateDispensingRequestStatusChanged, NULL);
+      Fsm_SendSignal(&instance->_private.fsm, Signal_PrivateDispensingResultStatusChanged, NULL);
    }
 }
 
 static void UpdateDispensingRequestStatus(DispensingRequestHandler_t *instance, uint8_t status)
 {
-   DispensingRequestStatus_t dispensingRequestStatus;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->dispensingRequestStatusErd,
-      &dispensingRequestStatus);
+   DispensingRequestStatus_t dispensingRequestStatus = {
+      .action = instance->_private.currentPrivateDispensingRequest.action,
+      .selection = instance->_private.currentPrivateDispensingRequest.selection,
+      .specialOptions = instance->_private.currentPrivateDispensingRequest.specialOptions,
+      .status = status,
+      .preciseFillOuncesx100 = instance->_private.currentPrivateDispensingRequest.preciseFillOuncesx100
+   };
 
-   dispensingRequestStatus.status = status;
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->dispensingRequestStatusErd,
@@ -89,41 +109,35 @@ static void UpdateDispensingRequestStatus(DispensingRequestHandler_t *instance, 
 
 static void UpdatePrivateDispensingRequestAction(DispensingRequestHandler_t *instance, uint8_t action)
 {
+   instance->_private.currentPrivateDispensingRequest.action = action;
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->privateDispensingRequestErd,
+      &instance->_private.currentPrivateDispensingRequest);
+}
+
+static void CopyPrivateDispensingRequestStatusToThePublicStatus(DispensingRequestHandler_t *instance)
+{
+   DispenseStatus_t dispensingResultStatus;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->privateDispensingResultStatusErd,
+      &dispensingResultStatus);
+
    DispensingRequest_t dispensingRequest;
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->privateDispensingRequestErd,
       &dispensingRequest);
 
-   dispensingRequest.action = action;
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->privateDispensingRequestErd,
-      &dispensingRequest);
-}
-
-static void ClearDispensingRequest(DispensingRequestHandler_t *instance)
-{
-   DispensingRequest_t dispensingRequest = {
-      .action = DispensingAction_None,
-      .selection = DispensingRequestSelection_None,
-      .specialOptions = DispensingSpecialOptions_EmptyRequest,
-      .padding = UINT8_MAX,
-      .preciseFillOuncesx100 = UINT16_MAX
+   DispensingRequestStatus_t dispensingRequestStatus = {
+      .action = dispensingRequest.action,
+      .selection = dispensingRequest.selection,
+      .specialOptions = dispensingRequest.specialOptions,
+      .status = dispensingResultStatus,
+      .preciseFillOuncesx100 = dispensingRequest.preciseFillOuncesx100
    };
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->dispensingRequestErd,
-      &dispensingRequest);
-}
-
-static void CopyPrivateDispensingRequestStatusToThePublicStatus(DispensingRequestHandler_t *instance)
-{
-   DispensingRequestStatus_t dispensingRequestStatus;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->privateDispensingRequestStatusErd,
-      &dispensingRequestStatus);
 
    DataModel_Write(
       instance->_private.dataModel,
@@ -168,16 +182,15 @@ static void State_RequestingDispense(Fsm_t *fsm, const FsmSignal_t signal, const
       case Fsm_Entry:
          StartDispensingContinueRequestWaitTimer(instance);
          UpdatePrivateDispensingRequestAction(instance, DispensingAction_Start);
+         UpdateDispensingRequestStatus(instance, DispenseStatus_Dispensing);
          break;
 
       case Signal_ContinueRequest:
          StartDispensingContinueRequestWaitTimer(instance);
-         ClearDispensingRequest(instance);
          break;
 
       case Signal_StopRequest:
          UpdateDispensingRequestStatus(instance, DispenseStatus_CompletedSuccessfully);
-         ClearDispensingRequest(instance);
          Fsm_Transition(fsm, State_Idle);
          break;
 
@@ -186,14 +199,13 @@ static void State_RequestingDispense(Fsm_t *fsm, const FsmSignal_t signal, const
          Fsm_Transition(fsm, State_Idle);
          break;
 
-      case Signal_PrivateDispensingRequestStatusChanged:
+      case Signal_PrivateDispensingResultStatusChanged:
          CopyPrivateDispensingRequestStatusToThePublicStatus(instance);
          Fsm_Transition(fsm, State_Idle);
          break;
 
       case Signal_InvalidRequest:
          UpdateDispensingRequestStatus(instance, DispenseStatus_BadCommand);
-         ClearDispensingRequest(instance);
          break;
 
       case Fsm_Exit:
@@ -212,7 +224,6 @@ static void State_Idle(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
    {
       case Signal_StopRequest:
          UpdateDispensingRequestStatus(instance, DispenseStatus_CompletedSuccessfully);
-         ClearDispensingRequest(instance);
          break;
 
       case Signal_StartRequest:
@@ -221,7 +232,6 @@ static void State_Idle(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
 
       case Signal_InvalidRequest:
          UpdateDispensingRequestStatus(instance, DispenseStatus_BadCommand);
-         ClearDispensingRequest(instance);
          break;
    }
 }

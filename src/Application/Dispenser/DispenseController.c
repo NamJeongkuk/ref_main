@@ -226,7 +226,6 @@ static bool State_Dispensing(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Hsm_Entry:
-         SetDispensingResultStatusTo(instance, DispenseStatus_Dispensing);
          StartMaxDispenseTimer(instance);
          DispensingRequestSelection_t requestSelection = GetRequestSelection(instance);
 
@@ -312,7 +311,7 @@ static void OnDataModelChange(void *context, const void *args)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_StartDispensingRequested, NULL);
       }
-      else
+      else if(request->action == DispensingAction_Stop)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_StopDispensingRequested, NULL);
       }

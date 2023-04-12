@@ -16,7 +16,7 @@
 
 enum
 {
-   DispensingRequestContinueWaitMaxTimeInMsec = 1500
+   DispensingRequestContinueWaitMaxTimeInMsec = 3000
 };
 
 typedef struct
@@ -24,7 +24,7 @@ typedef struct
    Erd_t dispensingRequestErd; // DispensingRequest_t
    Erd_t dispensingRequestStatusErd; // DispensingRequestStatus_t
    Erd_t privateDispensingRequestErd; // DispensingRequest_t
-   Erd_t privateDispensingRequestStatusErd; // DispensingRequestStatus_t
+   Erd_t privateDispensingResultStatusErd; // DispenseStatus_t
 } DispensingRequestHandlerConfig_t;
 
 typedef struct
@@ -36,6 +36,7 @@ typedef struct
       Timer_t dispensingRequestContinueWaitTimer;
       const DispensingRequestHandlerConfig_t *config;
       EventSubscription_t dataModelSubscription;
+      DispensingRequest_t currentPrivateDispensingRequest;
    } _private;
 } DispensingRequestHandler_t;
 
