@@ -17,7 +17,7 @@
 #include "SingleDamperData.h"
 #include "Timer.h"
 #include "ErdResolver.h"
-#include "Event_Synchronous.h"
+#include "Event_OneMillisecondTimer.h"
 
 typedef struct
 {
@@ -28,10 +28,9 @@ typedef struct
       DamperFreezePrevention_t damperFreezePrevention;
       DamperHeaterDefrostControl_t freshFoodDamperHeaterDefrostControl;
       DamperMaxOpenTime_t damperMaxOpenTime;
-      Event_Synchronous_t damperStepEvent;
-      Timer_t stepEventTimer;
       ErdResolver_t damperPositionErdResolver;
       ErdResolver_t damperHeaterErdResolver;
+      Event_OneMillisecondTimer_t oneMillisecondTimerEvent;
    } _private;
 } FreshFoodDamperMotorPlugin_t;
 

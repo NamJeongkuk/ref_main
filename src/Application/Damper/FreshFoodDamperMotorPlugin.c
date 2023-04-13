@@ -87,16 +87,8 @@ static const ErdResolverConfiguration_t damperHeaterErdResolverConfiguration = {
    .numberOfVotingErds = (Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote - Erd_FreshFoodDamperHeater_WinningVoteErd)
 };
 
-static void TriggerStepEvent(void *context)
-{
-   FreshFoodDamperMotorPlugin_t *instance = context;
-   Event_Synchronous_Publish(&instance->_private.damperStepEvent, NULL);
-}
-
 void FreshFoodDamperMotorPlugin_Init(FreshFoodDamperMotorPlugin_t *instance, I_DataModel_t *dataModel)
 {
-   Event_Synchronous_Init(&instance->_private.damperStepEvent);
-
    ErdResolver_Init(
       &instance->_private.damperPositionErdResolver,
       DataModel_AsDataSource(dataModel),
@@ -107,12 +99,16 @@ void FreshFoodDamperMotorPlugin_Init(FreshFoodDamperMotorPlugin_t *instance, I_D
       DataModel_AsDataSource(dataModel),
       &damperHeaterErdResolverConfiguration);
 
+   Event_OneMillisecondTimer_Init(
+      &instance->_private.oneMillisecondTimerEvent,
+      DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule));
+
    StepperMotorDriver_Init(
       &instance->_private.stepperMotorDriver,
       dataModel,
       &driverConfig,
       DataModelErdPointerAccess_GetGpioGroup(dataModel, Erd_GpioGroupInterface),
-      &instance->_private.damperStepEvent.interface);
+      &instance->_private.oneMillisecondTimerEvent.interface);
 
    FreshFoodDamperRequestManager_Init(
       &instance->_private.damperRequestManager,
@@ -137,11 +133,4 @@ void FreshFoodDamperMotorPlugin_Init(FreshFoodDamperMotorPlugin_t *instance, I_D
       &freshFoodDamperHeaterDefrostControlConfig,
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
       PersonalityParametricData_Get(dataModel)->damperHeaterData);
-
-   TimerModule_StartPeriodic(
-      DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
-      &instance->_private.stepEventTimer,
-      1,
-      TriggerStepEvent,
-      instance);
 }
