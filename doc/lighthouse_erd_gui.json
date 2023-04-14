@@ -788,7 +788,6 @@
                "displayName": "Dispensing Status",
                "name": "Erd_DispensingRequestStatus",
                "read": true,
-               "write": true,
                "interval": 1000000000
             },
             {
@@ -796,7 +795,6 @@
                "displayName": "User Dispense Water Valve Resolved Vote",
                "name": "Erd_DispenserWaterValve_ResolvedVote",
                "read": true,
-               "write": true,
                "interval": 1000000000
             },
             {
@@ -804,7 +802,6 @@
                "displayName": "Auger Motor Resolved vote",
                "name": "Erd_AugerMotor_ResolvedVote",
                "read": true,
-               "write": true,
                "interval": 1000000000
             }
          ]
