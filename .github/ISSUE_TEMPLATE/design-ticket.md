@@ -19,3 +19,6 @@ If applicable, describe which logic this design would replace. Please include an
 
 **Link to requirement(s):**
 Link to requirements in Confluence <add link here>
+  
+**Link to implementation ticket(s):**
+Implementation ticket(s) go here
