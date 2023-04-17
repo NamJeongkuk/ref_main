@@ -23,8 +23,13 @@ static const FactoryVotePair_t factoryVotePairs[] = {
    { Erd_AluminumMoldIceMakerFillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
    { Erd_FreezerDefrostHeater_FactoryVote, HeaterState_Off },
    { Erd_AluminumMoldIceMakerWaterValve_FactoryVote, WaterValveState_Off },
+   { Erd_AluminumMoldIceMakerHeaterRelay_FactoryVote, HeaterState_Off },
+   { Erd_AluminumMoldIceMakerRakeMotor_FactoryVote, MotorState_Off },
    { Erd_TwistTrayIceMakerWaterValve_FactoryVote, WaterValveState_Off },
-   { Erd_TwistTrayIceMakerMotor_FactoryVote, TwistTrayIceMakerMotorAction_RunHomingRoutine }
+   { Erd_TwistTrayIceMakerMotor_FactoryVote, TwistTrayIceMakerMotorAction_RunHomingRoutine },
+   { Erd_IsolationWaterValve_FactoryVote, WaterValveState_Off },
+   { Erd_AugerMotor_FactoryVote, AugerMotorIceType_Off },
+   { Erd_DispenserWaterValve_FactoryVote, WaterValveState_Off }
 };
 
 static const FactoryVoteList_t factoryVoteList = {

@@ -565,7 +565,14 @@
             {
                "namespace": "mb",
                "displayName": "Ambient Filtered Temperature (DegF x100)",
-               "name": "Erd_Ambient_FilteredInternalTemperatureInDegFx100",
+               "name": "Erd_Ambient_FilteredTemperatureResolvedInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ambient Filtered Humidity (Percent x100)",
+               "name": "Erd_Ambient_ResolvedHumidityPercentx100",
                "read": true,
                "interval": 1000000000
             },
@@ -762,7 +769,41 @@
                "name": "Erd_IceMakerEnabledByGrid",
                "read": true,
                "interval": 1000000000
-            }            
+            }
+         ]
+      },
+      {
+         "title": "Dispensing",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Dispensing Request",
+               "name": "Erd_DispensingRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Dispensing Status",
+               "name": "Erd_DispensingRequestStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "User Dispense Water Valve Resolved Vote",
+               "name": "Erd_DispenserWaterValve_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Auger Motor Resolved vote",
+               "name": "Erd_AugerMotor_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            }
          ]
       },
       {
@@ -856,6 +897,13 @@
                "namespace": "mb",
                "displayName": "Condenser Fan Actual RPM",
                "name": "Erd_CondenserFan_ActualRpm",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Auger Motor Factory Vote",
+               "name": "Erd_AugerMotor_FactoryVote",
                "read": true,
                "interval": 1000000000
             }
