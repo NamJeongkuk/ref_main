@@ -63,6 +63,8 @@ enum
    FullIceBucketWaitTime = 3 * SECONDS_PER_HOUR * MSEC_PER_SEC,
    DelayToHarvestAfterDoorCloses = 3 * MSEC_PER_MIN,
    IceTemperaturePollingTime = 3 * MSEC_PER_SEC,
+   FullBucketDispenseCheckTimeInSec = 12,
+   FullBucketDispenseCheckTimeInMsec = FullBucketDispenseCheckTimeInSec * MSEC_PER_SEC,
 
    TargetFreezeIntegrationSum = 16200,
 
@@ -84,7 +86,9 @@ static const TwistTrayIceMakerData_t parametric = {
       .homeLandingDelayPeriodSecX10 = 0,
       .longMotorErrorTimeoutPeriodSec = 0,
       .shortMotorErrorTimeoutPeriodSec = 0,
-      .delayToHarvestAfterDoorClosesSeconds = DelayToHarvestAfterDoorCloses / MSEC_PER_SEC },
+      .delayToHarvestAfterDoorClosesSeconds = DelayToHarvestAfterDoorCloses / MSEC_PER_SEC,
+      .fullBucketDispenseCheckTimeInSeconds = FullBucketDispenseCheckTimeInSec,
+   },
 
    .fillData{
       .waterFillTimeSecX10 = WaterFillTime / 100 }
@@ -97,7 +101,7 @@ static const DataModel_TestDoubleConfigurationEntry_t erdDefinitions[] = {
    { Erd_TwistTrayIceMaker_ThermistorIsValid, sizeof(bool) },
    { Erd_TwistTrayIceMakerWaterValve_IceMakerVote, sizeof(WaterValveVotedState_t) },
    { Erd_IsolationWaterValve_TwistTrayIceMakerVote, sizeof(WaterValveVotedState_t) },
-   { Erd_TwistTrayIceMaker_IceDispenserState, sizeof(bool) },
+   { Erd_DispensingRequestStatus, sizeof(DispensingRequestStatus_t) },
    { Erd_TwistTrayIceMaker_FreezeIntegrationCount, sizeof(uint32_t) },
    { Erd_TwistTrayIceMaker_MinimumFreezeTimerRemainingTimeInMsec, sizeof(TimerTicks_t) },
    { Erd_TwistTrayIceMaker_MinimumFreezeTimerRemainingTimeRequest, sizeof(uint8_t) },
@@ -283,9 +287,56 @@ TEST_GROUP(TwistTrayIceMaker)
          .withParameter("Data", state);
    }
 
-   void TheIceDispenserBecomes(bool state)
+   void WhenIceStartsDispensing(void)
    {
-      DataModel_Write(dataModel, Erd_TwistTrayIceMaker_IceDispenserState, &state);
+      DispensingRequestStatus_t status = {
+         .action = DispensingAction_Start,
+         .selection = DispenseSelection_CubedIce,
+         .specialOptions = DispensingSpecialOptions_None,
+         .status = DispenseStatus_Dispensing,
+         .preciseFillOuncesx100 = 0
+      };
+
+      DataModel_Write(dataModel, Erd_DispensingRequestStatus, &status);
+   }
+
+   void WhenIceStopsDispensing(void)
+   {
+      DispensingRequestStatus_t status = {
+         .action = DispensingAction_Stop,
+         .selection = DispenseSelection_CubedIce,
+         .specialOptions = DispensingSpecialOptions_None,
+         .status = DispenseStatus_CompletedSuccessfully,
+         .preciseFillOuncesx100 = 0
+      };
+
+      DataModel_Write(dataModel, Erd_DispensingRequestStatus, &status);
+   }
+
+   void WhenWaterStartsDispensing(void)
+   {
+      DispensingRequestStatus_t status = {
+         .action = DispensingAction_Start,
+         .selection = DispenseSelection_ColdWater,
+         .specialOptions = DispensingSpecialOptions_None,
+         .status = DispenseStatus_Dispensing,
+         .preciseFillOuncesx100 = 0
+      };
+
+      DataModel_Write(dataModel, Erd_DispensingRequestStatus, &status);
+   }
+
+   void WhenWaterStopsDispensing(void)
+   {
+      DispensingRequestStatus_t status = {
+         .action = DispensingAction_Stop,
+         .selection = DispenseSelection_ColdWater,
+         .specialOptions = DispensingSpecialOptions_None,
+         .status = DispenseStatus_CompletedSuccessfully,
+         .preciseFillOuncesx100 = 0
+      };
+
+      DataModel_Write(dataModel, Erd_DispensingRequestStatus, &status);
    }
 
    void SabbathModeIs(bool state)
@@ -513,7 +564,6 @@ TEST(TwistTrayIceMaker, ShouldFreezeForMinimumFreezeTimeIfIntegrationSumIsComple
    And HomingIsCompleted();
    And TheTemperatureIs(actualTempx100);
 
-
    TimerTicks_t timeToReachIntegrationSum = TheTimeToReachIntegrationSumGiven(actualTempx100);
    NothingShouldHappen();
    After(timeToReachIntegrationSum);
@@ -735,21 +785,56 @@ TEST(TwistTrayIceMaker, ShouldTransitionFromHarvestToIdleFreezeWhenBucketIsFullA
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_IdleFreeze);
 }
 
-TEST(TwistTrayIceMaker, ShouldTryToHarvestIceAgainAfterIceDispenserKicksOff)
+TEST(TwistTrayIceMaker, ShouldTryToHarvestIceAfterIceHasBeenDispensedLongEnough)
 {
    GivenTheIceMakerIsEnabled();
    Given FreezingIsCompletedAndHarvestingIsStarted();
-
    TheMotorShouldBeRequestedTo(Idle);
-   When TheMotorActionResultIs(BucketWasFull);
+   Then TheMotorActionResultIs(BucketWasFull);
 
+   WhenIceStartsDispensing();
+
+   After(FullBucketDispenseCheckTimeInMsec - 1);
    NothingShouldHappen();
-   After(FullIceBucketWaitTime - 10);
 
-   TheIceDispenserBecomes(ON);
+   After(1);
 
    HarvestingShouldStart();
-   TheIceDispenserBecomes(OFF);
+   WhenIceStopsDispensing();
+}
+
+TEST(TwistTrayIceMaker, ShouldNotTryToHarvestIceAfterIceHasNotBeenDispensedForLongEnough)
+{
+   GivenTheIceMakerIsEnabled();
+   Given FreezingIsCompletedAndHarvestingIsStarted();
+   TheMotorShouldBeRequestedTo(Idle);
+   Then TheMotorActionResultIs(BucketWasFull);
+
+   WhenIceStartsDispensing();
+
+   After(FullBucketDispenseCheckTimeInMsec - 1);
+   NothingShouldHappen();
+
+   NothingShouldHappen();
+   WhenIceStopsDispensing();
+}
+
+TEST(TwistTrayIceMaker, ShouldNotTryToHarvestIceAfterWaterHasBeenDispensedInsteadOfIce)
+{
+   GivenTheIceMakerIsEnabled();
+   Given FreezingIsCompletedAndHarvestingIsStarted();
+   TheMotorShouldBeRequestedTo(Idle);
+   Then TheMotorActionResultIs(BucketWasFull);
+
+   WhenWaterStartsDispensing();
+
+   After(FullBucketDispenseCheckTimeInMsec - 1);
+   NothingShouldHappen();
+
+   After(1);
+
+   NothingShouldHappen();
+   WhenWaterStopsDispensing();
 }
 
 TEST(TwistTrayIceMaker, ShouldFillTheTrayWithWaterAfterHarvestingAndIncrementFreezerIceRateSignal)

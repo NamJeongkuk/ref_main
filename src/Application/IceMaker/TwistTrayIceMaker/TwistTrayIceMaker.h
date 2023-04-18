@@ -25,12 +25,14 @@ typedef struct
       Timer_t integrationTimer;
       Timer_t waitingTimer;
       Timer_t doorClosedTimer;
+      Timer_t dispensingIceTimer;
 
       bool firstFreezeTransition;
       bool minimumFreezeTimeReached : 1;
       bool freezeIntegrationSumReached : 1;
       bool doorHasBeenClosedForLongEnough : 1;
       bool maximumHarvestTemperatureReached : 1;
+      bool iceDispensedLongEnoughToCheckHarvest;
       uint8_t unused : 4;
 
       const TwistTrayIceMakerData_t *parametric;

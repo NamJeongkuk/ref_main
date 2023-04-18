@@ -654,7 +654,6 @@ enum
    ENTRY(Erd_Freezer_IceRateIsActive,                                        0xF1AE, bool,                              Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_TwistTrayIceMaker_MotorActionResult,                            0xF1B1, TwistTrayIceMakerMotorActionResult_t, Swap_N, Io_None, Sub_N, Ram,                 NotNv,                                    NotFault) \
-   ENTRY(Erd_TwistTrayIceMaker_IceDispenserState,                            0xF1B2, bool,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_OperationState,                               0xF1B3, TwistTrayIceMakerOperationState_t, Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_HighLevelState,                               0xF1B4, TwistTrayIceMakerHighLevelState_t, Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_FreezeIntegrationCount,                       0xF1B5, uint32_t,                          Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

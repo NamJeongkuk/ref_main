@@ -743,13 +743,6 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Twist IM Dispenser State",
-               "name": "Erd_TwistTrayIceMaker_IceDispenserState",
-               "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
                "displayName": "FZ Ice Rate Active?",
                "name": "Erd_Freezer_IceRateIsActive",
                "read": true,

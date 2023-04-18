@@ -28,6 +28,7 @@ typedef struct
    uint8_t longMotorErrorTimeoutPeriodSec;
    uint8_t shortMotorErrorTimeoutPeriodSec;
    uint8_t delayToHarvestAfterDoorClosesSeconds;
+   uint8_t fullBucketDispenseCheckTimeInSeconds;
 } TwistTrayIceMakerHarvestData_t;
 
 typedef struct

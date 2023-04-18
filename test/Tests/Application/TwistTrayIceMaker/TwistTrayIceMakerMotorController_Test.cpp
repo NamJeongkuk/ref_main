@@ -38,6 +38,7 @@ enum
    LongMotorErrorTimeout = 25 * MSEC_PER_SEC,
    ShortMotorErrorTimeout = 3 * MSEC_PER_SEC,
    FullBucketDetectionTime = 7 * MSEC_PER_SEC,
+   FullBucketDispenseCheckTimeInSec = 12,
 
    ALongTime = 450000,
    OneSecond = MSEC_PER_SEC,
@@ -80,7 +81,9 @@ static const TwistTrayIceMakerData_t config = {
       .homeLandingDelayPeriodSecX10 = HomePositionLandingDelay / 100,
       .longMotorErrorTimeoutPeriodSec = LongMotorErrorTimeout / MSEC_PER_SEC,
       .shortMotorErrorTimeoutPeriodSec = ShortMotorErrorTimeout / MSEC_PER_SEC,
-      .delayToHarvestAfterDoorClosesSeconds = 0 },
+      .delayToHarvestAfterDoorClosesSeconds = 0,
+      .fullBucketDispenseCheckTimeInSeconds = FullBucketDispenseCheckTimeInSec,
+   },
 
    .fillData{
       .waterFillTimeSecX10 = 0,

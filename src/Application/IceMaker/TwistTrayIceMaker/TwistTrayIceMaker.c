@@ -14,6 +14,7 @@
 #include "TwistTrayIceMakerHighLevelState.h"
 #include "TwistTrayIceMakerOperationState.h"
 #include "WaterValveVotedState.h"
+#include "DispensingRequest.h"
 
 #define WaterFillPeriod (instance->_private.parametric->fillData.waterFillTimeSecX10 * 100)
 #define MinimumFreezePeriodMinutes (instance->_private.parametric->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN)
@@ -28,7 +29,7 @@ enum
    Signal_Entry = Fsm_Entry,
    Signal_Exit = Fsm_Exit,
    Signal_DispenserOn = FSM_USER_SIGNAL_START,
-   Signal_DispenserOff,
+   Signal_IceHasStoppedDispensing,
    Signal_MinimumFreezeTimeReached,
    Signal_IceTemperatureIntegrationIntervalElapsed,
    Signal_MotorActionResultHarvested,
@@ -489,7 +490,14 @@ static void State_BucketIsFull(Fsm_t *fsm, FsmSignal_t signal, const void *data)
             instance);
          break;
 
-      case Signal_DispenserOff:
+      case Signal_IceHasStoppedDispensing:
+         if(instance->_private.iceDispensedLongEnoughToCheckHarvest)
+         {
+            instance->_private.iceDispensedLongEnoughToCheckHarvest = false;
+            Fsm_Transition(fsm, State_Harvesting);
+         }
+         break;
+
       case Signal_FullIceBucketWaitTimeElapsed:
       case Signal_ForcedHarvest:
          Fsm_Transition(fsm, State_Harvesting);
@@ -591,21 +599,42 @@ static void DoorClosedForLongEnough(void *context)
    Fsm_SendSignal(&instance->_private.fsm, Signal_DoorClosedForLongEnough, NULL);
 }
 
+static bool IceIsDispensing(DispensingRequestStatus_t dispensingRequestStatus)
+{
+   return (dispensingRequestStatus.status == DispenseStatus_Dispensing &&
+      (dispensingRequestStatus.selection == DispensingRequestSelection_CrushedIce ||
+         dispensingRequestStatus.selection == DispensingRequestSelection_CubedIce));
+}
+
+static void IceDispensedLongEnoughToCheckForHarvestAfterDispensingHasEnded(void *context)
+{
+   TwistTrayIceMaker_t *instance = context;
+   instance->_private.iceDispensedLongEnoughToCheckHarvest = true;
+}
+
 static void DataSourceChanged(void *context, const void *data)
 {
-   REINTERPRET(instance, context, TwistTrayIceMaker_t *);
-   REINTERPRET(onChangeArgs, data, const DataSourceOnDataChangeArgs_t *);
+   TwistTrayIceMaker_t *instance = context;
+   const DataSourceOnDataChangeArgs_t *onChangeArgs = data;
 
-   if(onChangeArgs->erd == Erd_TwistTrayIceMaker_IceDispenserState)
+   if(onChangeArgs->erd == Erd_DispensingRequestStatus)
    {
-      REINTERPRET(dispenserStatus, onChangeArgs->data, const bool *);
-      if(*dispenserStatus)
+      const DispensingRequestStatus_t *dispensingRequestStatus = onChangeArgs->data;
+      if(IceIsDispensing(*dispensingRequestStatus))
       {
-         Fsm_SendSignal(&instance->_private.fsm, Signal_DispenserOn, NULL);
+         TimerModule_StartOneShot(
+            instance->_private.timerModule,
+            &instance->_private.dispensingIceTimer,
+            instance->_private.parametric->harvestData.fullBucketDispenseCheckTimeInSeconds * MSEC_PER_SEC,
+            IceDispensedLongEnoughToCheckForHarvestAfterDispensingHasEnded,
+            instance);
       }
       else
       {
-         Fsm_SendSignal(&instance->_private.fsm, Signal_DispenserOff, NULL);
+         TimerModule_Stop(
+            instance->_private.timerModule,
+            &instance->_private.dispensingIceTimer);
+         Fsm_SendSignal(&instance->_private.fsm, Signal_IceHasStoppedDispensing, NULL);
       }
    }
    else if(onChangeArgs->erd == Erd_TwistTrayIceMaker_MinimumFreezeTimerRemainingTimeRequest)
@@ -716,6 +745,7 @@ void TwistTrayIceMaker_Init(
    instance->_private.parametric = parametric;
    instance->_private.doorHasBeenClosedForLongEnough = true;
    instance->_private.firstFreezeTransition = true;
+   instance->_private.iceDispensedLongEnoughToCheckHarvest = false;
 
    EventSubscription_Init(&instance->_private.dataSourceChangeEventSubscription, instance, DataSourceChanged);
    Event_Subscribe(dataSource->OnDataChange, &instance->_private.dataSourceChangeEventSubscription);
