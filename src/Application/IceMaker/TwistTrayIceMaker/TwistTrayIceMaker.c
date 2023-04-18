@@ -717,8 +717,8 @@ void TwistTrayIceMaker_Init(
    instance->_private.doorHasBeenClosedForLongEnough = true;
    instance->_private.firstFreezeTransition = true;
 
-   EventSubscription_Init(&instance->_private.dataSourceChangeEventSubcription, instance, DataSourceChanged);
-   Event_Subscribe(dataSource->OnDataChange, &instance->_private.dataSourceChangeEventSubcription);
+   EventSubscription_Init(&instance->_private.dataSourceChangeEventSubscription, instance, DataSourceChanged);
+   Event_Subscribe(dataSource->OnDataChange, &instance->_private.dataSourceChangeEventSubscription);
 
    UpdateHighLevelState(instance, TwistTrayIceMakerHighLevelState_NormalRun);
 

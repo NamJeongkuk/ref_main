@@ -19,7 +19,7 @@ typedef struct
       TimerModule_t *timerModule;
       I_DataSource_t *dataSource;
 
-      EventSubscription_t dataSourceChangeEventSubcription;
+      EventSubscription_t dataSourceChangeEventSubscription;
 
       Timer_t minimumFreezeTimer;
       Timer_t integrationTimer;
