@@ -1167,6 +1167,27 @@
           "name": "Erd_AluminumMoldIceMakerTestRequest",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Thermistor Is Valid Override Value",
+          "name": "Erd_TwistTrayIceMakerThermistor_IsValidOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Thermistor Is Valid Override Request",
+          "name": "Erd_TwistTrayIceMakerThermistor_IsValidOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Thermistor Is Valid Resolved",
+          "name": "Erd_TwistTrayIceMakerThermistor_IsValidResolved",
+          "read": true,
+          "write": true
         }
       ]
     },

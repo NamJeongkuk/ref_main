@@ -98,7 +98,7 @@ static const DataModel_TestDoubleConfigurationEntry_t erdDefinitions[] = {
    { Erd_TwistTrayIceMakerMotor_IceMakerVote, sizeof(TwistTrayIceMakerMotorVotedAction_t) },
    { Erd_TwistTrayIceMaker_MotorActionResult, sizeof(uint8_t) },
    { Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100, sizeof(TemperatureDegFx100_t) },
-   { Erd_TwistTrayIceMaker_ThermistorIsValid, sizeof(bool) },
+   { Erd_TwistTrayIceMakerThermistor_IsValidResolved, sizeof(bool) },
    { Erd_TwistTrayIceMakerWaterValve_IceMakerVote, sizeof(WaterValveVotedState_t) },
    { Erd_IsolationWaterValve_TwistTrayIceMakerVote, sizeof(WaterValveVotedState_t) },
    { Erd_DispensingRequestStatus, sizeof(DispensingRequestStatus_t) },
@@ -209,13 +209,13 @@ TEST_GROUP(TwistTrayIceMaker)
 
    void TheTemperatureIs(TemperatureDegFx100_t temp)
    {
-      DataModel_Write(dataModel, Erd_TwistTrayIceMaker_ThermistorIsValid, set);
+      DataModel_Write(dataModel, Erd_TwistTrayIceMakerThermistor_IsValidResolved, set);
       DataModel_Write(dataModel, Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100, &temp);
    }
 
    void GivenTheIceMakerThermistorIsValid()
    {
-      DataModel_Write(dataModel, Erd_TwistTrayIceMaker_ThermistorIsValid, set);
+      DataModel_Write(dataModel, Erd_TwistTrayIceMakerThermistor_IsValidResolved, set);
    }
 
    void WhenTheIceMakerThermistorIsValid()
@@ -225,7 +225,7 @@ TEST_GROUP(TwistTrayIceMaker)
 
    void GivenTheIceMakerThermistorIsInvalid()
    {
-      DataModel_Write(dataModel, Erd_TwistTrayIceMaker_ThermistorIsValid, clear);
+      DataModel_Write(dataModel, Erd_TwistTrayIceMakerThermistor_IsValidResolved, clear);
    }
 
    void WhenTheIceMakerThermistorIsInvalid()

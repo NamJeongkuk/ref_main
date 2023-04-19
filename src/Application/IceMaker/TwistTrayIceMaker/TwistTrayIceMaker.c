@@ -223,7 +223,7 @@ static void StartHarvestingIfConditionsAreMet(TwistTrayIceMaker_t *instance)
 static bool IceMakerThermistorIsValid(TwistTrayIceMaker_t *instance)
 {
    bool thermistorIsValid;
-   DataSource_Read(instance->_private.dataSource, Erd_TwistTrayIceMaker_ThermistorIsValid, &thermistorIsValid);
+   DataSource_Read(instance->_private.dataSource, Erd_TwistTrayIceMakerThermistor_IsValidResolved, &thermistorIsValid);
 
    return thermistorIsValid;
 }
@@ -681,7 +681,7 @@ static void DataSourceChanged(void *context, const void *data)
       Fsm_SendSignal(&instance->_private.fsm, Signal_ForcedHarvest, NULL);
       DataSource_Write(instance->_private.dataSource, Erd_TwistTrayIceMaker_ForceHarvest, clear);
    }
-   else if(onChangeArgs->erd == Erd_TwistTrayIceMaker_ThermistorIsValid)
+   else if(onChangeArgs->erd == Erd_TwistTrayIceMakerThermistor_IsValidResolved)
    {
       const bool *state = onChangeArgs->data;
       if(*state)

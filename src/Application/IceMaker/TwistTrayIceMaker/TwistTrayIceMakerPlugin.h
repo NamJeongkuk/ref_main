@@ -19,6 +19,7 @@
 #include "TwistTrayIceMakerMotorSwitchMonitor.h"
 #include "SensorFiltering.h"
 #include "ResolvedVoteRelayConnector.h"
+#include "OverrideArbiter.h"
 
 typedef struct
 {
@@ -34,6 +35,7 @@ typedef struct
       ErdResolver_t twistTrayMotorVoteResolver;
       ErdResolver_t iceMakerWaterValveVoteResolver;
       ResolvedVoteRelayConnector_t iceMakerWaterValveRelayConnector;
+      OverrideArbiter_t twistTrayIceMakerThermistorIsValidOverrideArbiter;
    } _private;
 } TwistTrayIceMakerPlugin_t;
 

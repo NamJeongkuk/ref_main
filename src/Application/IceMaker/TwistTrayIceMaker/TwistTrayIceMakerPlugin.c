@@ -37,6 +37,22 @@ static const SensorFilteringConfig_t sensorFilterConfig = {
    .timerModuleErd = Erd_TimerModule
 };
 
+static const Erd_t twistTrayIceMakerThermistorValidOverrideArbiterRequestErdList[] = {
+   Erd_TwistTrayIceMakerThermistor_IsValidOverrideRequest
+};
+
+static const Erd_t twistTrayIceMakerThermistorValidValueErdList[] = {
+   Erd_TwistTrayIceMaker_ThermistorIsValid,
+   Erd_TwistTrayIceMakerThermistor_IsValidOverrideValue
+};
+
+static const OverrideArbiterConfiguration_t twistTrayIceMakerThermistorValidArbiterConfiguration = {
+   twistTrayIceMakerThermistorValidOverrideArbiterRequestErdList,
+   twistTrayIceMakerThermistorValidValueErdList,
+   Erd_TwistTrayIceMakerThermistor_IsValidResolved,
+   NUM_ELEMENTS(twistTrayIceMakerThermistorValidOverrideArbiterRequestErdList)
+};
+
 static bool TwistMotorVotingErdCareDelegate(const void *votingErdData)
 {
    const TwistTrayIceMakerMotorVotedAction_t *data = votingErdData;
@@ -89,6 +105,11 @@ void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataMod
       &sensorFilterConfig,
       sensorData->twistTrayIceMakerMoldThermistor,
       sensorData->periodicUpdateRateInMs);
+
+   OverrideArbiter_Init(
+      &instance->_private.twistTrayIceMakerThermistorIsValidOverrideArbiter,
+      DataModel_AsDataSource(dataModel),
+      &twistTrayIceMakerThermistorValidArbiterConfiguration);
 
    ErdResolver_Init(
       &instance->_private.twistTrayMotorVoteResolver,

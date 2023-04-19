@@ -217,7 +217,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
    void TwistTrayIceMakerThermistorShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_ThermistorIsValid, &actual);
+      DataModel_Read(dataModel, Erd_TwistTrayIceMakerThermistor_IsValidResolved, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
