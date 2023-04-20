@@ -71,31 +71,54 @@ static void StopPollTimer(FlowMeterMonitor_t *instance)
       &instance->_private.pollTimer);
 }
 
+static void PausePollTimer(FlowMeterMonitor_t *instance)
+{
+   TimerModule_Pause(
+      DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, Erd_TimerModule),
+      &instance->_private.pollTimer);
+}
+
+static void ResumePollTimer(FlowMeterMonitor_t *instance)
+{
+   TimerModule_Resume(
+      DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, Erd_TimerModule),
+      &instance->_private.pollTimer);
+}
+
 static void MonitoringRequestChanged(void *context, const void *args)
 {
    FlowMeterMonitor_t *instance = context;
-   const bool *monitoringRequested = args;
+   const FlowMeterMonitoringRequest_t *request = args;
 
-   if(*monitoringRequested)
+   switch(*request)
    {
-      DataModel_Read(
-         instance->_private.dataModel,
-         instance->_private.config->flowMeterCountsErd,
-         &instance->_private.previousFlowMeterCounts);
+      case FlowMeterMonitoringRequest_Start:
+         DataModel_Read(
+            instance->_private.dataModel,
+            instance->_private.config->flowMeterCountsErd,
+            &instance->_private.previousFlowMeterCounts);
 
-      instance->_private.flowMeterCountsSinceBeginningMonitoring = 0;
+         instance->_private.flowMeterCountsSinceBeginningMonitoring = 0;
+         StartPollTimer(instance);
+         break;
 
-      StartPollTimer(instance);
-   }
-   else
-   {
-      StopPollTimer(instance);
+      case FlowMeterMonitoringRequest_Stop:
+         StopPollTimer(instance);
 
-      uint32_t zeroOunces = 0;
-      DataModel_Write(
-         instance->_private.dataModel,
-         instance->_private.config->flowMeterWaterDispensedOzX100Erd,
-         &zeroOunces);
+         uint32_t zeroOunces = 0;
+         DataModel_Write(
+            instance->_private.dataModel,
+            instance->_private.config->flowMeterWaterDispensedOzX100Erd,
+            &zeroOunces);
+         break;
+
+      case FlowMeterMonitoringRequest_Pause:
+         PausePollTimer(instance);
+         break;
+
+      case FlowMeterMonitoringRequest_Resume:
+         ResumePollTimer(instance);
+         break;
    }
 }
 
@@ -109,12 +132,12 @@ void FlowMeterMonitor_Init(
    instance->_private.config = config;
    instance->_private.flowMeterData = flowMeterData;
 
-   bool monitoringRequested;
+   FlowMeterMonitoringRequest_t monitoringRequest;
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->flowMeterMonitoringRequest,
-      &monitoringRequested);
-   MonitoringRequestChanged(instance, &monitoringRequested);
+      &monitoringRequest);
+   MonitoringRequestChanged(instance, &monitoringRequest);
 
    EventSubscription_Init(
       &instance->_private.flowMeterMonitoringRequestSubscription,

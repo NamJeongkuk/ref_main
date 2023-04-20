@@ -11,6 +11,7 @@
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
 #include "Signal.h"
+#include "FlowMeterMonitoringRequest.h"
 
 static void StopAllActiveTimers(IceMakerWaterFillMonitor_t *instance)
 {
@@ -24,6 +25,16 @@ static void StopAllActiveTimers(IceMakerWaterFillMonitor_t *instance)
          instance->_private.dataModel,
          instance->_private.config->timerModuleErd),
       &instance->_private.timedFillTimer);
+}
+
+static void FlowMeterMonitoringRequestIsSetTo(
+   IceMakerWaterFillMonitor_t *instance,
+   FlowMeterMonitoringRequest_t request)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->flowMeterMonitoringRequestErd,
+      &request);
 }
 
 static void SendStopIceMakerFillSignal(IceMakerWaterFillMonitor_t *instance)
@@ -44,10 +55,7 @@ static void StopMonitoring(void *context)
    StopAllActiveTimers(instance);
    SendStopIceMakerFillSignal(instance);
 
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->flowMeterMonitoringRequestErd,
-      clear);
+   FlowMeterMonitoringRequestIsSetTo(instance, FlowMeterMonitoringRequest_Stop);
 }
 
 static void StartTimers(IceMakerWaterFillMonitor_t *instance)
@@ -75,10 +83,7 @@ static void StartMonitoring(void *context)
    IceMakerWaterFillMonitor_t *instance = context;
 
    StartTimers(instance);
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->flowMeterMonitoringRequestErd,
-      set);
+   FlowMeterMonitoringRequestIsSetTo(instance, FlowMeterMonitoringRequest_Start);
    DataModel_Subscribe(
       instance->_private.dataModel,
       instance->_private.config->flowMeterWaterDispensedOzx100Erd,

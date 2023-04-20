@@ -17,7 +17,7 @@ typedef struct
    Erd_t stopIceMakerFillSignalErd; // Signal_t
    Erd_t flowMeterWaterDispensedOzx100Erd; // uint32_t
    Erd_t iceMakerWaterFillMonitoringRequestErd; // bool
-   Erd_t flowMeterMonitoringRequestErd; // bool
+   Erd_t flowMeterMonitoringRequestErd; // FlowMeterMonitoringRequest_t
    Erd_t timerModuleErd; // TimerModule *
 } IceMakerWaterFillMonitorConfig_t;
 

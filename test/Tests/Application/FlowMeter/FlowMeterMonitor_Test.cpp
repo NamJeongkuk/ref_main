@@ -84,14 +84,14 @@ TEST_GROUP(FlowMeterMonitor)
       GivenTheFlowMeterCountsAre(counts);
    }
 
-   void GivenTheMonitoringRequestIs(bool state)
+   void GivenTheMonitoringRequestIs(FlowMeterMonitoringRequest_t request)
    {
-      DataModel_Write(dataModel, Erd_FlowMeterMonitoringRequest, &state);
+      DataModel_Write(dataModel, Erd_FlowMeterMonitoringRequest, &request);
    }
 
-   void WhenTheMonitoringRequestIs(bool state)
+   void WhenTheMonitoringRequestIs(FlowMeterMonitoringRequest_t request)
    {
-      GivenTheMonitoringRequestIs(state);
+      GivenTheMonitoringRequestIs(request);
    }
 
    void TheOuncesDispensedShouldBe(uint32_t expected)
@@ -105,7 +105,7 @@ TEST_GROUP(FlowMeterMonitor)
 
 TEST(FlowMeterMonitor, ShouldClearOuncesDispensedOnInitWhenMonitoringNotRequested)
 {
-   GivenTheMonitoringRequestIs(CLEAR);
+   GivenTheMonitoringRequestIs(FlowMeterMonitoringRequest_Stop);
    GivenTheOuncesDispensedAre(SomeOunces);
    GivenTheModuleIsInitialized();
    TheOuncesDispensedShouldBe(0);
@@ -116,7 +116,7 @@ TEST(FlowMeterMonitor, ShouldNotUpdateOuncesDispensedWhenMonitoringNotRequested)
    GivenTheModuleIsInitialized();
 
    WhenTheFlowMeterCountsAre(SomeCounts);
-   WhenTheMonitoringRequestIs(CLEAR);
+   WhenTheMonitoringRequestIs(FlowMeterMonitoringRequest_Stop);
 
    After(PollingPeriodInMsec);
    TheOuncesDispensedShouldBe(0);
@@ -130,12 +130,12 @@ TEST(FlowMeterMonitor, ShouldNotUpdateOuncesDispensedWhenMonitoringNotRequested)
    TheOuncesDispensedShouldBe(0);
 }
 
-TEST(FlowMeterMonitor, ShouldNotUpdateOuncesDispensedWhenMonitoringRequestIsSetButNotEnoughPulsesHaveBeenObserved)
+TEST(FlowMeterMonitor, ShouldNotUpdateOuncesDispensedWhenMonitoringIsStartedButNotEnoughPulsesHaveBeenObserved)
 {
    GivenTheModuleIsInitialized();
 
    WhenTheFlowMeterCountsAre(SomeCounts);
-   WhenTheMonitoringRequestIs(SET);
+   WhenTheMonitoringRequestIs(FlowMeterMonitoringRequest_Start);
    After(PollingPeriodInMsec);
    TheOuncesDispensedShouldBe(0);
 
@@ -144,12 +144,12 @@ TEST(FlowMeterMonitor, ShouldNotUpdateOuncesDispensedWhenMonitoringRequestIsSetB
    TheOuncesDispensedShouldBe(0);
 }
 
-TEST(FlowMeterMonitor, ShouldUpdateOuncesDispensedWhenMonitoringRequestIsSetAndEnoughPulsesHaveBeenObserved)
+TEST(FlowMeterMonitor, ShouldUpdateOuncesDispensedWhenMonitoringIsStartedAndEnoughPulsesHaveBeenObserved)
 {
    GivenTheModuleIsInitialized();
 
    WhenTheFlowMeterCountsAre(SomeCounts);
-   WhenTheMonitoringRequestIs(SET);
+   WhenTheMonitoringRequestIs(FlowMeterMonitoringRequest_Start);
    After(PollingPeriodInMsec);
    TheOuncesDispensedShouldBe(0);
 
@@ -168,12 +168,12 @@ TEST(FlowMeterMonitor, ShouldUpdateOuncesDispensedWhenMonitoringRequestIsSetAndE
       flowMeterData->flowMeterOffsetOzX100);
 }
 
-TEST(FlowMeterMonitor, ShouldUpdateOuncesDispensedWithEnoughPrecisionWhenMonitoringRequestIsSetAndManyPulsesHaveBeenObservedOverSomeTime)
+TEST(FlowMeterMonitor, ShouldUpdateOuncesDispensedWithEnoughPrecisionWhenMonitoringIsStartedAndManyPulsesHaveBeenObservedOverSomeTime)
 {
    GivenTheModuleIsInitialized();
 
    WhenTheFlowMeterCountsAre(SomeCounts);
-   WhenTheMonitoringRequestIs(SET);
+   WhenTheMonitoringRequestIs(FlowMeterMonitoringRequest_Start);
    After(PollingPeriodInMsec);
    TheOuncesDispensedShouldBe(0);
 
@@ -186,9 +186,9 @@ TEST(FlowMeterMonitor, ShouldUpdateOuncesDispensedWithEnoughPrecisionWhenMonitor
    }
 }
 
-TEST(FlowMeterMonitor, ShouldUpdateOuncesDispensedWhenMonitoringRequestIsSetOnInit)
+TEST(FlowMeterMonitor, ShouldUpdateOuncesDispensedWhenMonitoringIsStartedOnInit)
 {
-   GivenTheMonitoringRequestIs(SET);
+   GivenTheMonitoringRequestIs(FlowMeterMonitoringRequest_Start);
    GivenTheFlowMeterCountsAre(SomeCounts);
    GivenTheModuleIsInitialized();
 
@@ -206,7 +206,7 @@ TEST(FlowMeterMonitor, ShouldUpdateOuncesDispensedCorrectlyWhenPulsesOverflows)
    GivenTheModuleIsInitialized();
 
    WhenTheFlowMeterCountsAre(UINT32_MAX - 1);
-   WhenTheMonitoringRequestIs(SET);
+   WhenTheMonitoringRequestIs(FlowMeterMonitoringRequest_Start);
    After(PollingPeriodInMsec);
    TheOuncesDispensedShouldBe(0);
 
@@ -220,12 +220,12 @@ TEST(FlowMeterMonitor, ShouldUpdateOuncesDispensedCorrectlyWhenPulsesOverflows)
       flowMeterData->flowMeterOffsetOzX100);
 }
 
-TEST(FlowMeterMonitor, ShouldClearAndStopUpdatingOuncesDispensedWhenMonitoringRequestIsCleared)
+TEST(FlowMeterMonitor, ShouldClearAndStopUpdatingOuncesDispensedWhenMonitoringIsStopped)
 {
    GivenTheModuleIsInitialized();
 
    WhenTheFlowMeterCountsAre(SomeCounts);
-   WhenTheMonitoringRequestIs(SET);
+   WhenTheMonitoringRequestIs(FlowMeterMonitoringRequest_Start);
    After(PollingPeriodInMsec);
    TheOuncesDispensedShouldBe(0);
 
@@ -234,10 +234,55 @@ TEST(FlowMeterMonitor, ShouldClearAndStopUpdatingOuncesDispensedWhenMonitoringRe
    TheOuncesDispensedShouldBe(MinimumNumberOfPulsesBeforePublishingOuncesDispensed * flowMeterData->flowMeterOzPerPulseX100000 / 1000 +
       flowMeterData->flowMeterOffsetOzX100);
 
-   WhenTheMonitoringRequestIs(CLEAR);
+   WhenTheMonitoringRequestIs(FlowMeterMonitoringRequest_Stop);
    TheOuncesDispensedShouldBe(0);
 
    WhenTheFlowMeterCountsAre(SomeCounts + 2 * MinimumNumberOfPulsesBeforePublishingOuncesDispensed);
    After(PollingPeriodInMsec);
    TheOuncesDispensedShouldBe(0);
+}
+
+TEST(FlowMeterMonitor, ShouldNotClearAndPauseUpdatingOuncesDispensedWhenMonitoringRequestIsPaused)
+{
+   GivenTheModuleIsInitialized();
+
+   WhenTheFlowMeterCountsAre(SomeCounts);
+   WhenTheMonitoringRequestIs(FlowMeterMonitoringRequest_Start);
+   After(PollingPeriodInMsec);
+   TheOuncesDispensedShouldBe(0);
+
+   WhenTheFlowMeterCountsAre(SomeCounts + MinimumNumberOfPulsesBeforePublishingOuncesDispensed);
+   After(PollingPeriodInMsec);
+   TheOuncesDispensedShouldBe(MinimumNumberOfPulsesBeforePublishingOuncesDispensed * flowMeterData->flowMeterOzPerPulseX100000 / 1000 +
+      flowMeterData->flowMeterOffsetOzX100);
+
+   WhenTheMonitoringRequestIs(FlowMeterMonitoringRequest_Pause);
+   TheOuncesDispensedShouldBe(MinimumNumberOfPulsesBeforePublishingOuncesDispensed * flowMeterData->flowMeterOzPerPulseX100000 / 1000 +
+      flowMeterData->flowMeterOffsetOzX100);
+
+   WhenTheFlowMeterCountsAre(SomeCounts + 2 * MinimumNumberOfPulsesBeforePublishingOuncesDispensed);
+   After(PollingPeriodInMsec);
+   TheOuncesDispensedShouldBe(MinimumNumberOfPulsesBeforePublishingOuncesDispensed * flowMeterData->flowMeterOzPerPulseX100000 / 1000 +
+      flowMeterData->flowMeterOffsetOzX100);
+}
+
+TEST(FlowMeterMonitor, ShouldResumeUpdatingOuncesDispenseWhenMonitoringRequestChangesToResumeWhilePaused)
+{
+   GivenTheModuleIsInitialized();
+
+   WhenTheFlowMeterCountsAre(SomeCounts);
+   WhenTheMonitoringRequestIs(FlowMeterMonitoringRequest_Start);
+
+   WhenTheFlowMeterCountsAre(SomeCounts + MinimumNumberOfPulsesBeforePublishingOuncesDispensed);
+   After(PollingPeriodInMsec - 1);
+   TheOuncesDispensedShouldBe(0);
+
+   WhenTheMonitoringRequestIs(FlowMeterMonitoringRequest_Pause);
+   After(1);
+   TheOuncesDispensedShouldBe(0);
+
+   WhenTheMonitoringRequestIs(FlowMeterMonitoringRequest_Resume);
+   After(1);
+   TheOuncesDispensedShouldBe(MinimumNumberOfPulsesBeforePublishingOuncesDispensed * flowMeterData->flowMeterOzPerPulseX100000 / 1000 +
+      flowMeterData->flowMeterOffsetOzX100);
 }

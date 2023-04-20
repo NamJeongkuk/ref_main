@@ -11,6 +11,7 @@ extern "C"
 #include "Constants_Time.h"
 #include "Constants_Binary.h"
 #include "Signal.h"
+#include "FlowMeterMonitoringRequest.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -40,7 +41,7 @@ static const DataModel_TestDoubleConfigurationEntry_t erds[] = {
    { Erd_StopIceMakerFillSignal, sizeof(Signal_t) },
    { Erd_FlowMeterWaterDispensedOzX100, sizeof(uint32_t) },
    { Erd_IceMakerWaterFillMonitoringRequest, sizeof(bool) },
-   { Erd_FlowMeterMonitoringRequest, sizeof(bool) },
+   { Erd_FlowMeterMonitoringRequest, sizeof(FlowMeterMonitoringRequest_t) },
    { Erd_TimerModule, sizeof(TimerModule_t *) },
 };
 
@@ -98,9 +99,9 @@ TEST_GROUP(IceMakerWaterFillMonitor)
       DataModel_Write(dataModel, Erd_IceMakerWaterFillMonitoringRequest, &state);
    }
 
-   void TheFlowMeterMonitoringRequestShouldBe(bool expected)
+   void TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_t expected)
    {
-      bool actual;
+      FlowMeterMonitoringRequest_t actual;
       DataModel_Read(dataModel, Erd_FlowMeterMonitoringRequest, &actual);
       CHECK_EQUAL(expected, actual);
    }
@@ -126,7 +127,7 @@ TEST_GROUP(IceMakerWaterFillMonitor)
    }
 };
 
-TEST(IceMakerWaterFillMonitor, ShouldClearFlowMeterMonitoringRequestAndSendStopSignalOncePreciseMaxFillTimeHasBeenElapsedWhenNotEnoughOuncesDispensed)
+TEST(IceMakerWaterFillMonitor, ShouldStopFlowMeterMonitoringAndSendStopSignalOncePreciseMaxFillTimeHasBeenElapsedWhenNotEnoughOuncesDispensed)
 {
    GivenInitialization();
    GivenTheIceMakerFillMonitoringRequestIs(ENABLED);
@@ -134,118 +135,118 @@ TEST(IceMakerWaterFillMonitor, ShouldClearFlowMeterMonitoringRequestAndSendStopS
    WhenTheFlowMeterWaterDispensedIncrements();
 
    After(SomePreciseIceMakerFillMaxTimeInMsec - 1);
-   TheFlowMeterMonitoringRequestShouldBe(ENABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Start);
    TheStopIceMakerFillSignalShouldBe(0);
 
    After(1);
-   TheFlowMeterMonitoringRequestShouldBe(DISABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Stop);
    TheStopIceMakerFillSignalShouldBe(1);
 }
 
-TEST(IceMakerWaterFillMonitor, ShouldClearFlowMeterMonitoringRequestAndSendStopSignalOnceNonFlowMeterTimeHasBeenElapsedWhenNoOuncesAreDispensed)
+TEST(IceMakerWaterFillMonitor, ShouldStopFlowMeterMonitoringAndSendStopSignalOnceNonFlowMeterTimeHasBeenElapsedWhenNoOuncesAreDispensed)
 {
    GivenInitialization();
    GivenTheIceMakerFillMonitoringRequestIs(ENABLED);
 
    After(SomeTimedIceMakerFillInMsec - 1);
-   TheFlowMeterMonitoringRequestShouldBe(ENABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Start);
    TheStopIceMakerFillSignalShouldBe(0);
 
    After(1);
-   TheFlowMeterMonitoringRequestShouldBe(DISABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Stop);
    TheStopIceMakerFillSignalShouldBe(1);
 }
 
-TEST(IceMakerWaterFillMonitor, ShouldClearFlowMeterMonitoringRequestAndSendStopSignalOncePreciseFillFlowMeterWaterHasBeenDispensed)
+TEST(IceMakerWaterFillMonitor, ShouldStopFlowMeterMonitoringAndSendStopSignalOncePreciseFillFlowMeterWaterHasBeenDispensed)
 {
    GivenInitialization();
    GivenTheIceMakerFillMonitoringRequestIs(ENABLED);
 
    WhenTheFlowMeterWaterDispensedIsSetTo(MaxAmountOfWaterDispensedInOzx100 - 1);
-   TheFlowMeterMonitoringRequestShouldBe(ENABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Start);
    TheStopIceMakerFillSignalShouldBe(0);
 
    WhenTheFlowMeterWaterDispensedIncrements();
-   TheFlowMeterMonitoringRequestShouldBe(DISABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Stop);
    TheStopIceMakerFillSignalShouldBe(1);
 }
 
-TEST(IceMakerWaterFillMonitor, ShouldNotClearFlowMeterMonitoringRequestAndNotSendStopRequestUntilAfterTimedIceMakerFillIfIceMakerFillMonitoringRequestIsClearedAfterItWasSet)
+TEST(IceMakerWaterFillMonitor, ShouldNotStopFlowMeterMonitoringAndNotSendStopRequestUntilAfterTimedIceMakerFillIfIceMakerFillMonitoringRequestIsClearedAfterItWasSet)
 {
    GivenInitialization();
    GivenTheIceMakerFillMonitoringRequestIs(ENABLED);
 
    WhenTheIceMakerFillMonitoringRequestChangesTo(DISABLED);
-   TheFlowMeterMonitoringRequestShouldBe(ENABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Start);
    TheStopIceMakerFillSignalShouldBe(0);
 
    After(SomeTimedIceMakerFillInMsec - 1);
-   TheFlowMeterMonitoringRequestShouldBe(ENABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Start);
    TheStopIceMakerFillSignalShouldBe(0);
 
    After(1);
-   TheFlowMeterMonitoringRequestShouldBe(DISABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Stop);
    TheStopIceMakerFillSignalShouldBe(1);
 }
 
-TEST(IceMakerWaterFillMonitor, ShouldNotClearFlowMeterMonitoringRequestAndNotSendStopRequestUntilAfterMaxTimedIceMakerFillIfIceMakerFillMonitoringRequestIsClearedAfterItWasSet)
+TEST(IceMakerWaterFillMonitor, ShoulNotStopFlowMeterMonitoringAndNotSendStopRequestUntilAfterMaxTimedIceMakerFillIfIceMakerFillMonitoringRequestIsClearedAfterItWasSet)
 {
    GivenInitialization();
    GivenTheIceMakerFillMonitoringRequestIs(ENABLED);
 
    WhenTheIceMakerFillMonitoringRequestChangesTo(DISABLED);
-   TheFlowMeterMonitoringRequestShouldBe(ENABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Start);
    TheStopIceMakerFillSignalShouldBe(0);
 
    WhenTheFlowMeterWaterDispensedIncrements();
 
    After(SomePreciseIceMakerFillMaxTimeInMsec - 1);
-   TheFlowMeterMonitoringRequestShouldBe(ENABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Start);
    TheStopIceMakerFillSignalShouldBe(0);
 
    After(1);
-   TheFlowMeterMonitoringRequestShouldBe(DISABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Stop);
    TheStopIceMakerFillSignalShouldBe(1);
 }
 
-TEST(IceMakerWaterFillMonitor, ShouldNotClearFlowMeterMonitoringRequestAndNotSendStopRequestUntilAfterPreciseFillFlowMeterWaterHasBeenDispensedIfIceMakerFillMonitoringRequestIsClearedAfterItWasSet)
+TEST(IceMakerWaterFillMonitor, ShouldNotStopFlowMeterMonitoringAndNotSendStopRequestUntilAfterPreciseFillFlowMeterWaterHasBeenDispensedIfIceMakerFillMonitoringRequestIsClearedAfterItWasSet)
 {
    GivenInitialization();
    GivenTheIceMakerFillMonitoringRequestIs(ENABLED);
 
    WhenTheIceMakerFillMonitoringRequestChangesTo(DISABLED);
-   TheFlowMeterMonitoringRequestShouldBe(ENABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Start);
    TheStopIceMakerFillSignalShouldBe(0);
 
    WhenTheFlowMeterWaterDispensedIsSetTo(MaxAmountOfWaterDispensedInOzx100 - 1);
-   TheFlowMeterMonitoringRequestShouldBe(ENABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Start);
    TheStopIceMakerFillSignalShouldBe(0);
 
    WhenTheFlowMeterWaterDispensedIncrements();
-   TheFlowMeterMonitoringRequestShouldBe(DISABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Stop);
    TheStopIceMakerFillSignalShouldBe(1);
 }
 
-TEST(IceMakerWaterFillMonitor, ShouldClearFlowMeterMonitoringRequestAndSendStopSignalOncePreciseMaxFillTimeHasBeenElapsedWhenNotEnoughOuncesDispensedAndNotNonFlowMeterTimeIfDispensedWaterIsDetected)
+TEST(IceMakerWaterFillMonitor, ShouldStopFlowMeterMonitoringAndSendStopSignalOncePreciseMaxFillTimeHasBeenElapsedWhenNotEnoughOuncesDispensedAndNotNonFlowMeterTimeIfDispensedWaterIsDetected)
 {
    GivenInitialization();
    GivenTheIceMakerFillMonitoringRequestIs(ENABLED);
 
    After(SomeTimedIceMakerFillInMsec - 1);
-   TheFlowMeterMonitoringRequestShouldBe(ENABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Start);
    TheStopIceMakerFillSignalShouldBe(0);
 
    WhenTheFlowMeterWaterDispensedIncrements();
    After(1);
-   TheFlowMeterMonitoringRequestShouldBe(ENABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Start);
    TheStopIceMakerFillSignalShouldBe(0);
 
    After(SomePreciseIceMakerFillMaxTimeInMsec - SomeTimedIceMakerFillInMsec - 1);
-   TheFlowMeterMonitoringRequestShouldBe(ENABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Start);
    TheStopIceMakerFillSignalShouldBe(0);
 
    After(1);
-   TheFlowMeterMonitoringRequestShouldBe(DISABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Stop);
    TheStopIceMakerFillSignalShouldBe(1);
 }
 
@@ -255,23 +256,23 @@ TEST(IceMakerWaterFillMonitor, ShouldNotSendMultipleStopMonitoringRequestsInFlow
    GivenTheIceMakerFillMonitoringRequestIs(ENABLED);
 
    After(SomeTimedIceMakerFillInMsec - 1);
-   TheFlowMeterMonitoringRequestShouldBe(ENABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Start);
    TheStopIceMakerFillSignalShouldBe(0);
 
    WhenTheFlowMeterWaterDispensedIncrements();
    After(1);
-   TheFlowMeterMonitoringRequestShouldBe(ENABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Start);
    TheStopIceMakerFillSignalShouldBe(0);
 
    After(SomePreciseIceMakerFillMaxTimeInMsec - SomeTimedIceMakerFillInMsec - 1);
-   TheFlowMeterMonitoringRequestShouldBe(ENABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Start);
    TheStopIceMakerFillSignalShouldBe(0);
 
    After(1);
-   TheFlowMeterMonitoringRequestShouldBe(DISABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Stop);
    TheStopIceMakerFillSignalShouldBe(1);
 
    WhenTheFlowMeterWaterDispensedIsSetTo(MaxAmountOfWaterDispensedInOzx100 - 1);
-   TheFlowMeterMonitoringRequestShouldBe(DISABLED);
+   TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_Stop);
    TheStopIceMakerFillSignalShouldBe(1);
 }

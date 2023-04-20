@@ -94,6 +94,7 @@
 #include "RelativeHumidityPercentx100.h"
 #include "AugerMotorVotedIceType.h"
 #include "AugerMotorControllerFsmState.h"
+#include "FlowMeterMonitoringRequest.h"
 
 // clang-format off
 
@@ -946,7 +947,7 @@ enum
    ENTRY(Erd_TwistIceMakerMotorDriveEnable,                 0xF3C6, bool,                                               Swap_N, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FlowMeterWaterDispensedOzX100,                 0xF3C7, uint32_t,                                           Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FlowMeterMonitoringRequest,                    0xF3C8, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FlowMeterMonitoringRequest,                    0xF3C8, FlowMeterMonitoringRequest_t,                       Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Ambient_FilteredTemperatureResolvedInDegFx100,    0xF3C9, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Ambient_ResolvedThermistorIsValid,                0xF3CA, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
