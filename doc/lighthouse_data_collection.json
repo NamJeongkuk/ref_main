@@ -118,6 +118,16 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_CoolingMode",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_CoolingSpeed",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_DefrostCompressorOnTimeInSeconds",
          "interval": 60000
       },
