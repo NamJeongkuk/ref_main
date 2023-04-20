@@ -1,8 +1,8 @@
 ---
-name: Bug report
+name: Lighthouse Bug report
 about: Create a report to help us improve
 title: ''
-labels: ''
+labels: 'Lighthouse'
 assignees: ''
 
 ---
