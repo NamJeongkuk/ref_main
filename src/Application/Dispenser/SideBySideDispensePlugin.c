@@ -37,6 +37,26 @@ static const DispenseControllerConfig_t dispenseControllerConfig = {
    .timerModuleErd = Erd_TimerModule
 };
 
+static const DoorInhibitDispensingResolverConfig_t doorInhibitWaterDispensingResolverConfig = {
+   .leftHandFreshFoodDoorIsOpenErd = Erd_LeftHandFreshFoodDoorIsOpen,
+   .rightHandFreshFoodDoorIsOpenErd = Erd_RightHandFreshFoodDoorIsOpen,
+   .leftHandFreezerDoorIsOpenErd = Erd_FreezerDoorIsOpen,
+   .rightHandFreezerDoorIsOpenErd = Erd_Invalid,
+   .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorIsOpen,
+   .doorInDoorIsOpenErd = Erd_DoorInDoorIsOpen,
+   .dispensingInhibitedByDoorErd = Erd_WaterDispensingInhibitedByDoor
+};
+
+static const DoorInhibitDispensingResolverConfig_t doorInhibitIceDispensingResolverConfig = {
+   .leftHandFreshFoodDoorIsOpenErd = Erd_LeftHandFreshFoodDoorIsOpen,
+   .rightHandFreshFoodDoorIsOpenErd = Erd_RightHandFreshFoodDoorIsOpen,
+   .leftHandFreezerDoorIsOpenErd = Erd_FreezerDoorIsOpen,
+   .rightHandFreezerDoorIsOpenErd = Erd_Invalid,
+   .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorIsOpen,
+   .doorInDoorIsOpenErd = Erd_DoorInDoorIsOpen,
+   .dispensingInhibitedByDoorErd = Erd_IceDispensingInhibitedByDoor
+};
+
 void SideBySideDispensePlugin_Init(SideBySideDispensePlugin_t *instance, I_DataModel_t *dataModel)
 {
    DispenseSelectionRequestHandler_Init(
@@ -54,4 +74,16 @@ void SideBySideDispensePlugin_Init(SideBySideDispensePlugin_t *instance, I_DataM
       dataModel,
       PersonalityParametricData_Get(dataModel)->dispenserData,
       &dispenseControllerConfig);
+
+   DoorInhibitDispensingResolver_Init(
+      &instance->_private.doorInhibitWaterDispensingResolver,
+      dataModel,
+      &doorInhibitWaterDispensingResolverConfig,
+      PersonalityParametricData_Get(dataModel)->dispenserData->doorInhibitWaterDispenseTable);
+
+   DoorInhibitDispensingResolver_Init(
+      &instance->_private.doorInhibitIceDispensingResolver,
+      dataModel,
+      &doorInhibitIceDispensingResolverConfig,
+      PersonalityParametricData_Get(dataModel)->dispenserData->doorInhibitIceDispenseTable);
 }

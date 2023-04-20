@@ -1448,13 +1448,6 @@
           "name": "Erd_DispensingRequestStatus",
           "read": true,
           "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Private Dispensing Request Status",
-          "name": "Erd_PrivateDispensingRequestStatus",
-          "read": true,
-          "write": true
         }
       ]
     },

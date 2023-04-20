@@ -12,6 +12,7 @@
 #include "DispenseSelectionRequestHandler.h"
 #include "DispensingRequestHandler.h"
 #include "DispenseController.h"
+#include "DoorInhibitDispensingResolver.h"
 
 typedef struct
 {
@@ -20,6 +21,8 @@ typedef struct
       DispenseSelectionRequestHandler_t dispenseSelectionRequestHandler;
       DispensingRequestHandler_t dispensingRequestHandler;
       DispenseController_t dispenseController;
+      DoorInhibitDispensingResolver_t doorInhibitWaterDispensingResolver;
+      DoorInhibitDispensingResolver_t doorInhibitIceDispensingResolver;
    } _private;
 } SideBySideDispensePlugin_t;
 
