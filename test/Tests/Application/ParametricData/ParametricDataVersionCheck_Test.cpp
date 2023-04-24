@@ -21,7 +21,7 @@ extern "C"
 enum
 {
    Critical_ValidMajorVersion = 0,
-   Critical_ValidMinorVersion = 6,
+   Critical_ValidMinorVersion = 7,
    Critical_InvalidMajorVersion = Critical_ValidMajorVersion + 1,
    Critical_InvalidMinorVersion = Critical_ValidMinorVersion + 1,
 };

@@ -19,6 +19,7 @@ enum
 
 static PersonalityParametricData_t *personalities[PersonalityId_Max];
 static ParametricDataTableOfContents_t parametricData = {
+   .shortGitHash = { { 0x12, 0x34, 0x56, 0x78 } },
    .numberOfPersonalities = PersonalityId_Max,
    .personalities = personalities
 };

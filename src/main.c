@@ -53,6 +53,7 @@
 #include "ParametricDataErds.h"
 #include "DataSource_Gpio.h"
 #include "GeaStack.h"
+#include "ShortGitHash.h"
 
 enum
 {
@@ -99,6 +100,8 @@ static void UpdateBuildInfo(
 {
    static const GitHash_t gitHash = { GIT_HASH_U8_ARRAY_RX };
    DataModel_Write(dataModel, Erd_GitHash, &gitHash);
+
+   DataModel_Write(dataModel, Erd_ParametricShortGitHash, &ParametricData_GetParametricTableOfContents()->shortGitHash);
 
    uint32_t buildNumber = BUILD_NUMBER;
    DataModel_Write(dataModel, Erd_BuildNumber, &buildNumber);

@@ -27,6 +27,20 @@
             },
             {
                "namespace": "mb",
+               "displayName": "Mainboard Git Hash",
+               "name": "Erd_GitHash",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "MB Parametric Short Git Hash",
+               "name": "Erd_ParametricShortGitHash",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
                "displayName": "Mainboard Personality",
                "name": "Erd_AppliancePersonality",
                "read": true,
