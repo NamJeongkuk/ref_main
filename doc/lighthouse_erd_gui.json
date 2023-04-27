@@ -913,6 +913,34 @@
                "name": "Erd_AugerMotor_FactoryVote",
                "read": true,
                "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Back Wall Light Factory Vote",
+               "name": "Erd_FreshFoodBackWallLight_FactoryVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Top Light Factory Vote",
+               "name": "Erd_FreshFoodTopLight_FactoryVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Back Wall Light Factory Vote",
+               "name": "Erd_FreezerBackWallLight_FactoryVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Top Light Factory Vote",
+               "name": "Erd_FreezerTopLight_FactoryVote",
+               "read": true,
+               "interval": 1000000000
             }
          ]
       },

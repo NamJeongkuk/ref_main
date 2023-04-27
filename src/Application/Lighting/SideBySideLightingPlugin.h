@@ -12,6 +12,7 @@
 #include "LightingController.h"
 #include "ErdResolver.h"
 #include "ConstArrayMap_LinearSearch.h"
+#include "LightingDoorVoteResolver.h"
 
 typedef struct
 {
@@ -23,6 +24,8 @@ typedef struct
       ErdResolver_t freezerBackWallLightErdResolver;
       ErdResolver_t freezerTopLightErdResolver;
       ConstArrayMap_LinearSearch_t linearMap;
+      LightingDoorVoteResolver_t freshFoodLightingDoorVoteResolver;
+      LightingDoorVoteResolver_t freezerLightingDoorVoteResolver;
    } _private;
 } SideBySideLightingPlugin_t;
 

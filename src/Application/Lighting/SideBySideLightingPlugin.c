@@ -68,6 +68,40 @@ static const ConstArrayMap_LinearSearchConfiguration_t linearMapConfiguration = 
    OFFSET_OF(VotedPwmDutyCyclePair_t, pwmDutyCycleResolvedVoteErd)
 };
 
+static const Erd_t freshFoodDoorErds[] = {
+   Erd_RightHandFreshFoodDoorIsOpen
+};
+
+static const Erd_t freshFoodPwmVotedDutyCycleErds[] = {
+   Erd_FreshFoodBackWallLight_DoorVote,
+   Erd_FreshFoodTopLight_DoorVote
+};
+
+static const LightingDoorVoteResolverConfig_t freshFoodLightingDoorVoteResolverConfig = {
+   .timerModuleErd = Erd_TimerModule,
+   .doorIsOpenErds = freshFoodDoorErds,
+   .pwmVotedDutyCycleErds = freshFoodPwmVotedDutyCycleErds,
+   .numberOfDoorErds = NUM_ELEMENTS(freshFoodDoorErds),
+   .numberOfPwmVotedDutyCycleErds = NUM_ELEMENTS(freshFoodPwmVotedDutyCycleErds),
+};
+
+static const Erd_t freezerDoorErds[] = {
+   Erd_FreezerDoorIsOpen,
+};
+
+static const Erd_t freezerPwmVotedDutyCycleErds[] = {
+   Erd_FreezerBackWallLight_DoorVote,
+   Erd_FreezerTopLight_DoorVote
+};
+
+static const LightingDoorVoteResolverConfig_t freezerLightingDoorVoteResolverConfig = {
+   .timerModuleErd = Erd_TimerModule,
+   .doorIsOpenErds = freezerDoorErds,
+   .pwmVotedDutyCycleErds = freezerPwmVotedDutyCycleErds,
+   .numberOfDoorErds = NUM_ELEMENTS(freezerDoorErds),
+   .numberOfPwmVotedDutyCycleErds = NUM_ELEMENTS(freezerPwmVotedDutyCycleErds),
+};
+
 static void InitializeErdResolvers(
    SideBySideLightingPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -101,8 +135,6 @@ void SideBySideLightingPlugin_Init(
       instance,
       dataModel);
 
-   // next pr will have the door stuff. it will go here ignore this it wont actually be merged in lol
-
    ConstArrayMap_LinearSearch_Init(
       &instance->_private.linearMap,
       &linearMapConfiguration);
@@ -111,4 +143,14 @@ void SideBySideLightingPlugin_Init(
       &instance->_private.lightingController,
       dataModel,
       &instance->_private.linearMap.interface);
+
+   LightingDoorVoteResolver_Init(
+      &instance->_private.freshFoodLightingDoorVoteResolver,
+      dataModel,
+      &freshFoodLightingDoorVoteResolverConfig);
+
+   LightingDoorVoteResolver_Init(
+      &instance->_private.freezerLightingDoorVoteResolver,
+      dataModel,
+      &freezerLightingDoorVoteResolverConfig);
 }
