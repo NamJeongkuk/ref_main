@@ -129,7 +129,11 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_CompressorSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_AluminumMoldIceMakerHeaterRelay_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_CondenserFanSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
+   SWAPPED_ERD(PublicErd_FreshFoodBackWallLight_WinningVoteErd, sizeof(WinningVoteErd_t)),
+   SWAPPED_ERD(PublicErd_FreshFoodTopLight_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_IceCabinetFanSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
+   SWAPPED_ERD(PublicErd_FreezerBackWallLight_WinningVoteErd, sizeof(WinningVoteErd_t)),
+   SWAPPED_ERD(PublicErd_FreezerTopLight_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_ValvePosition_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_FreshFoodEvapFanSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_FreezerEvapFanSpeed_WinningVoteErd, sizeof(WinningVoteErd_t)),
@@ -228,7 +232,7 @@ static const DataSource_EndiannessSwappedSwappedFieldRange_t swappedRanges[] = {
    SWAPPED_FIELD_RANGE(PublicErd_Adc_ADC_0, PublicErd_Adc_HW_PERSONALITY_01),
    SWAPPED_FIELD_RANGE(PublicErd_ServiceDiagnosticsFaultTableSnapshotData0, PublicErd_ServiceDiagnosticsFaultTableSnapshotData9),
    SWAPPED_FIELD_RANGE(PublicErd_Eeprom_DefrostCompressorOnTimeInSeconds, PublicErd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds),
-   SWAPPED_FIELD_RANGE(PublicErd_FillTubeHeater_Pwm, PublicErd_FreshFoodDamperHeaterPwmDutyCycle),
+   SWAPPED_FIELD_RANGE(PublicErd_FillTubeHeater_Pwm, PublicErd_FreezerBackWallLight_Pwm),
 };
 
 static const DataSource_EndiannessSwappedSwappedRangesConfiguration_t endianessSwappedSwappedRangesConfiguration = {

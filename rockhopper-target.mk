@@ -68,6 +68,7 @@ SRC_DIRS:=\
   src/Application/IceMaker/AluminumMoldIceMaker \
   src/Application/IceMaker/TwistTrayIceMaker \
   src/Application/IsolationWaterValve \
+  src/Application/Lighting \
   src/Application/ParametricData \
   src/Application/Plugins \
   src/Application/Pulldown \
@@ -81,7 +82,7 @@ SRC_DIRS:=\
   src/Application/TimerModule \
   src/Application/Uassert \
   src/Application/Valve \
-    src/Application/WaterValve \
+  src/Application/WaterValve \
   Parametric/data/Production/ \
 
 INC_DIRS:=\

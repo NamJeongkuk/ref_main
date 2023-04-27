@@ -19,4 +19,5 @@ void SideBySideConfigurationPlugin_Init(SideBySideConfigurationPlugin_t *instanc
    SideBySideStaggeredHeater_Init(&instance->_private.staggeredHeaterPlugin, dataModel);
    SideBySideFactoryPlugin_Init(&instance->_private.factoryPlugin, dataModel);
    SideBySideDispensePlugin_Init(&instance->_private.dispensePlugin, dataModel);
+   SideBySideLightingPlugin_Init(&instance->_private.lightingPlugin, dataModel);
 }

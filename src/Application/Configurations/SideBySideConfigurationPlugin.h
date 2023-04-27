@@ -19,6 +19,7 @@
 #include "TwistTrayIceMakerPlugin.h"
 #include "DispenserWaterValvePlugin.h"
 #include "AugerMotorPlugin.h"
+#include "SideBySideLightingPlugin.h"
 
 typedef struct
 {
@@ -34,6 +35,7 @@ typedef struct
       SideBySideStaggeredHeater_t staggeredHeaterPlugin;
       SideBySideFactoryPlugin_t factoryPlugin;
       SideBySideDispensePlugin_t dispensePlugin;
+      SideBySideLightingPlugin_t lightingPlugin;
    } _private;
 } SideBySideConfigurationPlugin_t;
 
