@@ -10,6 +10,8 @@
 
 #include "I_PidController.h"
 #include "FanControl.h"
+#include "RelativeHumidityPercentx100.h"
+#include "TemperatureDegFx100.h"
 
 typedef struct
 {
@@ -20,6 +22,8 @@ typedef struct
    FanControl_t highSpeed;
    FanControl_t superHighSpeed;
    FanControl_t superLowSpeedHighAmbientTemperature;
+   TemperatureDegFx100_t highAmbientTriggerTemperatureInDegFx100;
+   RelativeHumidityPercentx100_t highAmbientTriggerHumidityInPercentx100;
 } FanSpeedData_t;
 
 typedef struct
@@ -75,8 +79,8 @@ typedef struct
 
    union
    {
-      FanSpeedData_t speedData;
-      FanCareAboutCoolingModeSpeedData_t careAboutCoolingModeSpeedData;
+      const FanSpeedData_t *speedData;
+      const FanCareAboutCoolingModeSpeedData_t *careAboutCoolingModeSpeedData;
    };
 } FanData_t;
 

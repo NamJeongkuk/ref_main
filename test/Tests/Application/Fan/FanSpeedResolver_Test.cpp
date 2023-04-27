@@ -30,8 +30,6 @@ enum
    Erd_FreezerSetpointZone,
    Erd_CalculatedRequestFanControlSpeed,
    Erd_AmbientTemperature,
-
-   HighAmbientTempDegFx100 = 4500
 };
 
 static const DataModel_TestDoubleConfigurationEntry_t erds[] = {
@@ -73,9 +71,9 @@ TEST_GROUP(FanSpeedResolver_NoCoolingMode)
       DataModel_TestDouble_Init(&dataModelTestDouble, erds, NUM_ELEMENTS(erds));
       dataModel = dataModelTestDouble.dataModel;
 
-      parametricData = (PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(TddPersonality_DevelopmentSingleEvaporator);
+      parametricData = (PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(TddPersonality_DevelopmentCondenserFanCareAboutHighAmbient);
       combinedFanData = parametricData->fanData;
-      nonCoolingModeFanData = &combinedFanData->convertibleCompartmentFan;
+      nonCoolingModeFanData = &combinedFanData->condenserFan;
    }
 
    void GivenInitialization()
@@ -116,7 +114,7 @@ TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeLowWhenRequestedLow)
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData.lowSpeed.rpm);
+   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData->lowSpeed.rpm);
 }
 
 TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeMediumWhenRequestedMedium)
@@ -124,7 +122,7 @@ TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeMediumWhenRequestedM
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
-   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData.mediumSpeed.rpm);
+   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData->mediumSpeed.rpm);
 }
 
 TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeHighWhenRequestedHigh)
@@ -132,7 +130,7 @@ TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeHighWhenRequestedHig
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_High);
-   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData.highSpeed.rpm);
+   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData->highSpeed.rpm);
 }
 
 TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeMaxWhenRequestedSuperHigh)
@@ -140,7 +138,7 @@ TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeMaxWhenRequestedSupe
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_SuperHigh);
-   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData.superHighSpeed.rpm);
+   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData->superHighSpeed.rpm);
 }
 
 TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeSuperLowWhenRequestedSuperLow)
@@ -148,25 +146,25 @@ TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeSuperLowWhenRequeste
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
-   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData.superLowSpeed.rpm);
+   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData->superLowSpeed.rpm);
 }
 
 TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeSuperLowWithHighAmbientTemperatureWhenRequestedSuperLowAndAmbientTemperatureIsHigh)
 {
    GivenInitialization();
-   GivenAmbientTemperatureIsSetTo(HighAmbientTempDegFx100);
+   GivenAmbientTemperatureIsSetTo(nonCoolingModeFanData->speedData->highAmbientTriggerTemperatureInDegFx100);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
-   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData.superLowSpeedHighAmbientTemperature.rpm);
+   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData->superLowSpeedHighAmbientTemperature.rpm);
 }
 
 TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeSuperLowWhenRequestedIsSuperLowAndAmbientTemperatureIsBelowThreshold)
 {
    GivenInitialization();
-   GivenAmbientTemperatureIsSetTo(HighAmbientTempDegFx100 - 1);
+   GivenAmbientTemperatureIsSetTo(nonCoolingModeFanData->speedData->highAmbientTriggerTemperatureInDegFx100 - 1);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
-   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData.superLowSpeed.rpm);
+   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData->superLowSpeed.rpm);
 }
 
 TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeZeroOnInitialization)
@@ -193,8 +191,8 @@ TEST_GROUP(FanSpeedResolver_CoolingMode)
 
       parametricData = (PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(TddPersonality_DevelopmentSingleEvaporator);
       combinedFanData = parametricData->fanData;
-      coolingModeFanData = &combinedFanData->freshFoodEvapFan.careAboutCoolingModeSpeedData;
-      coolingModeCareSetpointData = &combinedFanData->freezerEvapFan.careAboutCoolingModeSpeedData;
+      coolingModeFanData = combinedFanData->freshFoodEvapFan.careAboutCoolingModeSpeedData;
+      coolingModeCareSetpointData = combinedFanData->freezerEvapFan.careAboutCoolingModeSpeedData;
    }
 
    void WhenResolvedFanSpeedVoteIs(FanSpeed_t speed)

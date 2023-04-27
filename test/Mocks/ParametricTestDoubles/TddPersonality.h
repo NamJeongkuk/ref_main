@@ -25,6 +25,7 @@ enum
    TddPersonality_DevelopmentSingleEvapFillTubeHeaterNonHarvestControlZeroPercentDutyCycle,
    TddPersonality_DevelopmentSingleSpeedCompressorGridIntegration,
    TddPersonality_DevelopmentExternalAmbientSensorIsDisabled,
+   TddPersonality_DevelopmentCondenserFanCareAboutHighAmbient,
    TddPersonality_MaxDevelopment
 };
 

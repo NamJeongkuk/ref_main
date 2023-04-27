@@ -12,14 +12,9 @@
 #include "TemperatureDegFx100.h"
 #include "utils.h"
 
-enum
-{
-   HighAmbientTempDegFx100 = 4500,
-};
-
 static bool CareAboutHighAmbientTemperature(FanSpeedResolver_t *instance)
 {
-   return instance->_private.fanData->speedData.careAboutHighAmbientTemperature;
+   return instance->_private.fanData->speedData->careAboutHighAmbientTemperature;
 }
 
 static bool FanDataCaresAboutCoolingMode(FanSpeedResolver_t *instance)
@@ -29,7 +24,7 @@ static bool FanDataCaresAboutCoolingMode(FanSpeedResolver_t *instance)
 
 static bool CareAboutSetpoint(FanSpeedResolver_t *instance)
 {
-   return instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpoint;
+   return instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpoint;
 }
 
 static FanControl_t FanControlFromAmbientTemperature(FanSpeedResolver_t *instance)
@@ -40,13 +35,13 @@ static FanControl_t FanControlFromAmbientTemperature(FanSpeedResolver_t *instanc
       instance->_private.config->ambientTempErd,
       &ambientTemp);
 
-   if(CareAboutHighAmbientTemperature(instance) && ambientTemp >= HighAmbientTempDegFx100)
+   if(CareAboutHighAmbientTemperature(instance) && ambientTemp >= instance->_private.fanData->speedData->highAmbientTriggerTemperatureInDegFx100)
    {
-      return instance->_private.fanData->speedData.superLowSpeedHighAmbientTemperature;
+      return instance->_private.fanData->speedData->superLowSpeedHighAmbientTemperature;
    }
    else
    {
-      return instance->_private.fanData->speedData.superLowSpeed;
+      return instance->_private.fanData->speedData->superLowSpeed;
    }
 }
 
@@ -70,19 +65,19 @@ static void CalculateFanSpeed(FanSpeedResolver_t *instance)
          break;
 
       case FanSpeed_Low:
-         control = instance->_private.fanData->speedData.lowSpeed;
+         control = instance->_private.fanData->speedData->lowSpeed;
          break;
 
       case FanSpeed_Medium:
-         control = instance->_private.fanData->speedData.mediumSpeed;
+         control = instance->_private.fanData->speedData->mediumSpeed;
          break;
 
       case FanSpeed_High:
-         control = instance->_private.fanData->speedData.highSpeed;
+         control = instance->_private.fanData->speedData->highSpeed;
          break;
 
       case FanSpeed_SuperHigh:
-         control = instance->_private.fanData->speedData.superHighSpeed;
+         control = instance->_private.fanData->speedData->superHighSpeed;
          break;
 
       default:
@@ -116,36 +111,36 @@ static FanControl_t FanControlFromCoolingModeAndFreezerSetpoint(FanSpeedResolver
 
    if(coolingMode == CoolingMode_FreshFood)
    {
-      control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood;
+      control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood;
    }
    else if(coolingMode == CoolingMode_ConvertibleCompartment)
    {
       if(freezerSetpointZone == SetpointZone_Cold)
       {
-         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithColdSetpoint;
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithColdSetpoint;
       }
       else if(freezerSetpointZone == SetpointZone_Middle)
       {
-         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithMediumSetpoint;
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithMediumSetpoint;
       }
       else if(freezerSetpointZone == SetpointZone_Warm)
       {
-         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithWarmSetpoint;
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithWarmSetpoint;
       }
    }
    else
    {
       if(freezerSetpointZone == SetpointZone_Cold)
       {
-         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint;
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint;
       }
       else if(freezerSetpointZone == SetpointZone_Middle)
       {
-         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithMediumSetpoint;
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithMediumSetpoint;
       }
       else if(freezerSetpointZone == SetpointZone_Warm)
       {
-         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithWarmSetpoint;
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithWarmSetpoint;
       }
    }
 
@@ -174,7 +169,7 @@ static FanControl_t CoolingModeFanSpeedWithSetpoint(FanSpeedResolver_t *instance
    switch(votedSpeed.speed)
    {
       case FanSpeed_SuperLow:
-         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.superLowSpeed;
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.setpointSpeeds.superLowSpeed;
          break;
 
       case FanSpeed_Low:
@@ -184,35 +179,35 @@ static FanControl_t CoolingModeFanSpeedWithSetpoint(FanSpeedResolver_t *instance
       case FanSpeed_Medium:
          if(coolingMode == CoolingMode_FreshFood)
          {
-            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.mediumSpeedFreshFood;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.setpointSpeeds.mediumSpeedFreshFood;
          }
          else if(coolingMode == CoolingMode_ConvertibleCompartment)
          {
-            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.mediumSpeedConvertibleCompartment;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.setpointSpeeds.mediumSpeedConvertibleCompartment;
          }
          else
          {
-            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.mediumSpeedFreezer;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.setpointSpeeds.mediumSpeedFreezer;
          }
          break;
 
       case FanSpeed_High:
          if(coolingMode == CoolingMode_FreshFood)
          {
-            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.highSpeedFreshFood;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.setpointSpeeds.highSpeedFreshFood;
          }
          else if(coolingMode == CoolingMode_ConvertibleCompartment)
          {
-            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.highSpeedConvertibleCompartment;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.setpointSpeeds.highSpeedConvertibleCompartment;
          }
          else
          {
-            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.highSpeedFreezer;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.setpointSpeeds.highSpeedFreezer;
          }
          break;
 
       case FanSpeed_SuperHigh:
-         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.setpointSpeeds.superHighSpeed;
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.setpointSpeeds.superHighSpeed;
          break;
 
       default:
@@ -244,44 +239,44 @@ static FanControl_t CoolingModeFanSpeedWithoutSetpoint(FanSpeedResolver_t *insta
    switch(votedSpeed.speed)
    {
       case FanSpeed_SuperLow:
-         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.nonSetpointSpeeds.superLowSpeed;
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed;
          break;
 
       case FanSpeed_Low:
          if(coolingMode == CoolingMode_FreshFood)
          {
-            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreshFood;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreshFood;
          }
          else
          {
-            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreezer;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreezer;
          }
          break;
 
       case FanSpeed_Medium:
          if(coolingMode == CoolingMode_FreshFood)
          {
-            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.nonSetpointSpeeds.mediumSpeedFreezer;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.nonSetpointSpeeds.mediumSpeedFreezer;
          }
          else
          {
-            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.nonSetpointSpeeds.mediumSpeedFreezer;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.nonSetpointSpeeds.mediumSpeedFreezer;
          }
          break;
 
       case FanSpeed_High:
          if(coolingMode == CoolingMode_FreshFood)
          {
-            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.nonSetpointSpeeds.highSpeedSpeedFreshFood;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.nonSetpointSpeeds.highSpeedSpeedFreshFood;
          }
          else
          {
-            control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.nonSetpointSpeeds.highSpeedSpeedFreezer;
+            control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.nonSetpointSpeeds.highSpeedSpeedFreezer;
          }
          break;
 
       case FanSpeed_SuperHigh:
-         control = instance->_private.fanData->careAboutCoolingModeSpeedData.careAboutSetpointData.nonSetpointSpeeds.superHighSpeed;
+         control = instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpointData.nonSetpointSpeeds.superHighSpeed;
          break;
 
       default:

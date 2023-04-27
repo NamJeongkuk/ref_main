@@ -39,7 +39,8 @@ static const string filePathByPersonality[NumberOfPersonalities][DirectoryAndScr
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapFillTubeHeaterOnTimeLessThanMaxHarvestTime.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapFillTubeHeaterNonHarvestControlZeroPercentDutyCycle.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleSpeedCompressorGridIntegration.lua" },
-   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentExternalAmbientSensorIsDisabled.lua" }
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentExternalAmbientSensorIsDisabled.lua" },
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentCondenserFanCareAboutHighAmbient.lua" }
 };
 
 static bool loaded[NumberOfPersonalities];
@@ -55,6 +56,7 @@ void *GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(Personality
       script << "local env = (require 'Environment')('" << filePathByPersonality[personalityForTest][DirectoryOfPersonality].c_str() << "');";
       script << "local loaded_file, err = loadfile('" << filePathByPersonality[personalityForTest][DirectoryOfPersonality].c_str() << filePathByPersonality[personalityForTest][ScriptNameOfPersonality].c_str() << "', 't', env);";
       script << "return '<data>' .. tostring(loaded_file()) .. env.core.attic() .. '</data>'";
+
       uassert(LuaObj_Generate(script.str().c_str(), applicationParametricData[personalityForTest], sizeof(applicationParametricData[personalityForTest]), true));
       loaded[personalityForTest] = true;
    }

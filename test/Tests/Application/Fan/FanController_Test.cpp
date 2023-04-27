@@ -74,6 +74,18 @@ const PidControllerGains_t gains = {
    }
 };
 
+const FanSpeedData_t fanSpeedData = {
+   .careAboutHighAmbientTemperature = false,
+   .superLowSpeed = { UnusedButInclude, { UnusedButInclude } },
+   .lowSpeed = { UnusedButInclude, { UnusedButInclude } },
+   .mediumSpeed = { UnusedButInclude, { UnusedButInclude } },
+   .highSpeed = { UnusedButInclude, { UnusedButInclude } },
+   .superHighSpeed = { UnusedButInclude, { UnusedButInclude } },
+   .superLowSpeedHighAmbientTemperature = { UnusedButInclude, { UnusedButInclude } },
+   .highAmbientTriggerTemperatureInDegFx100 = UnusedButInclude,
+   .highAmbientTriggerHumidityInPercentx100 = UnusedButInclude
+};
+
 const FanData_t fanData = {
    .fanId = 2,
    .pulsesPerRevolution = NumberOfPulsesPerRevolution,
@@ -85,15 +97,7 @@ const FanData_t fanData = {
    .fanMissedTargetFaultTimeoutInSeconds = 60,
    .missingFanFeedbackFaultTimeoutInSeconds = 60,
    .feedbackPresentWhenFanIsOffTimeoutInSeconds = 60,
-   .speedData = {
-      .careAboutHighAmbientTemperature = false,
-      .superLowSpeed = { UnusedButInclude, { UnusedButInclude } },
-      .lowSpeed = { UnusedButInclude, { UnusedButInclude } },
-      .mediumSpeed = { UnusedButInclude, { UnusedButInclude } },
-      .highSpeed = { UnusedButInclude, { UnusedButInclude } },
-      .superHighSpeed = { UnusedButInclude, { UnusedButInclude } },
-      .superLowSpeedHighAmbientTemperature = { UnusedButInclude, { UnusedButInclude } },
-   }
+   .speedData = &fanSpeedData
 };
 
 const FanControllerConfig_t fanConfig = {

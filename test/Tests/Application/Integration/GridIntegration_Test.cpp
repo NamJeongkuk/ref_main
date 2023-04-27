@@ -61,8 +61,8 @@ TEST_GROUP(GridIntegration)
       ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentSingleSpeedCompressorGridIntegration);
       dataModel = dataModelDouble.dataModel;
 
-      condenserFanSpeedData = &PersonalityParametricData_Get(dataModel)->fanData->condenserFan.careAboutCoolingModeSpeedData;
-      freezerEvapFanSpeedData = &PersonalityParametricData_Get(dataModel)->fanData->freezerEvapFan.careAboutCoolingModeSpeedData;
+      condenserFanSpeedData = PersonalityParametricData_Get(dataModel)->fanData->condenserFan.careAboutCoolingModeSpeedData;
+      freezerEvapFanSpeedData = PersonalityParametricData_Get(dataModel)->fanData->freezerEvapFan.careAboutCoolingModeSpeedData;
    }
 
    void ApplicationHasBeenInitialized()
