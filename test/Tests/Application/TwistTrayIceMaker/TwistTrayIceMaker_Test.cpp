@@ -383,7 +383,7 @@ TEST_GROUP(TwistTrayIceMaker)
 
    void After(TimerTicks_t time)
    {
-      TimerModule_TestDouble_ElapseTime(&timerModuleTestDouble, time, 1000);
+      TimerModule_TestDouble_ElapseTime(&timerModuleTestDouble, time);
    }
 
    void SomeTimePasses(TimerTicks_t time)

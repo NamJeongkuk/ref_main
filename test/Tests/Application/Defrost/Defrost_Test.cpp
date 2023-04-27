@@ -54,7 +54,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .disableDefrostErd = Erd_DisableDefrost,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
-   .hasConvertibleCompartment = Erd_HasConvertibleCompartment,
+   .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
    .readyToDefrostErd = Erd_ReadyToDefrost,
    .freezerFilteredTemperatureWasTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
@@ -87,7 +87,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill,
    .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
-   .useMinimumReadyToDefrostTimeErd = Erd_UseMinimumReadyToDefrostTime
+   .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts
 };
 
 static const SabbathData_t sabbathData = {
@@ -643,15 +643,15 @@ TEST_GROUP(Defrost_SingleEvap)
       CHECK_EQUAL(expected, actual);
    }
 
-   void UseMinimumReadyToDefrostTimeFlagIs(bool state)
+   void UseMinimumReadyToDefrostTimeAndResetDefrostCountsFlagIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_UseMinimumReadyToDefrostTime, &state);
+      DataModel_Write(dataModel, Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts, &state);
    }
 
-   void UseMinimumReadyToDefrostTimeFlagShouldBe(bool expected)
+   void UseMinimumReadyToDefrostTimeAndResetDefrostCountsFlagShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_UseMinimumReadyToDefrostTime, &actual);
+      DataModel_Read(dataModel, Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -1009,7 +1009,7 @@ TEST(Defrost_SingleEvap, ShouldDisobeyTheDontSkipPrechillErdWhenFreezerEvaporato
 
 TEST(Defrost_SingleEvap, ShouldClearUseMinimumTimeErdOnEntryToPrechillPrep)
 {
-   Given UseMinimumReadyToDefrostTimeFlagIs(SET);
+   Given UseMinimumReadyToDefrostTimeAndResetDefrostCountsFlagIs(SET);
    And LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
    And LastConvertibleCompartmentDefrostWasNormal();
@@ -1022,7 +1022,7 @@ TEST(Defrost_SingleEvap, ShouldClearUseMinimumTimeErdOnEntryToPrechillPrep)
 
    When ReadyToDefrost();
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
-   UseMinimumReadyToDefrostTimeFlagShouldBe(CLEAR);
+   UseMinimumReadyToDefrostTimeAndResetDefrostCountsFlagShouldBe(CLEAR);
 }
 
 TEST(Defrost_SingleEvap, ShouldGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAlreadyMetAndThermistorsAreValid)

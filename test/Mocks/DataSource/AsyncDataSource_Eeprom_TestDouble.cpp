@@ -54,7 +54,8 @@ static void ClearEeprom(Instance_t *instance)
 void AsyncDataSource_Eeprom_TestDouble_Init(
    Instance_t *instance,
    TimerModule_t *timerModule,
-   I_Crc16Calculator_t *crc16Calculator)
+   I_Crc16Calculator_t *crc16Calculator,
+   bool clearEeprom)
 {
    ConstArrayMap_BinarySearch_Init(&instance->_private.asyncMap, &asyncMapConfiguration);
 
@@ -63,7 +64,10 @@ void AsyncDataSource_Eeprom_TestDouble_Init(
       asyncMapElements,
       NUM_ELEMENTS(asyncMapElements));
 
-   ClearEeprom(instance);
+   if(clearEeprom)
+   {
+      ClearEeprom(instance);
+   }
 
    Eeprom_Model_Init(
       &instance->_private.eepromModel,

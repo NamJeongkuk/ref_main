@@ -58,4 +58,18 @@ void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance, Perso
  */
 TimerModule_TestDouble_t *ReferDataModel_TestDouble_GetTimerModuleTestDouble(ReferDataModel_TestDouble_t *instance);
 
+/*!
+ * @brief Simulate a reset - resets everything except for NV ERDs
+ * @param instance of refer datamodel testdouble
+ * @param instance of personality id for test. Matching Lua file will be loaded into personality parametric ERD
+ */
+void ReferDataModel_TestDouble_Reset(ReferDataModel_TestDouble_t *instance);
+
+/*!
+ * @brief Simulate a reset - resets everything except for NV ERDs
+ * @param instance of refer datamodel testdouble
+ * @param instance of personality id for test. Matching Lua file will be loaded into personality parametric ERD
+ */
+void ReferDataModel_TestDouble_Reset(ReferDataModel_TestDouble_t *instance, PersonalityId_t personalityIdForTest);
+
 #endif

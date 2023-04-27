@@ -422,14 +422,14 @@
             {
                "namespace": "mb",
                "displayName": "Defrost Timer - FZ Door Acceleration in Compressor-Seconds",
-               "name": "Erd_DefrostFreezerScaledDoorAccelerationInSeconds",
+               "name": "Erd_FreezerScaledDoorAccelerationInSeconds",
                "read": true,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
                "displayName": "Defrost Timer - FF Door Acceleration in Compressor-Seconds",
-               "name": "Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds",
+               "name": "Erd_RightHandFreshFoodScaledDoorAccelerationInSeconds",
                "read": true,
                "interval": 1000000000
             },

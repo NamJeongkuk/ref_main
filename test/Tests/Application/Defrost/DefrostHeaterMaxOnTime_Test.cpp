@@ -32,7 +32,7 @@ enum
 static const DefrostHeaterMaxOnTimeConfiguration_t config = {
    .freezerEvaporatorThermistorIsValidErd = Erd_FreezerEvaporatorThermistorIsValid,
    .freshFoodEvaporatorThermistorIsValidErd = Erd_FreshFoodEvaporatorThermistorIsValid,
-   .hasConvertibleCompartment = Erd_HasConvertibleCompartment,
+   .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,
    .convertibleCompartmentEvaporatorThermistorIsValidErd = Erd_ConvertibleCompartmentEvaporatorThermistorIsValid,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .freshFoodDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreshFoodDefrostHeaterMaxOnTimeInMinutes,

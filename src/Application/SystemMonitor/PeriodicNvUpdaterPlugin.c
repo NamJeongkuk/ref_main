@@ -15,9 +15,12 @@
 
 static const PeriodicNvUpdateServiceConfigurationEntry_t periodicNvUpdateTableEntries[] = {
    { Erd_DefrostCompressorOnTimeInSeconds, Erd_Eeprom_DefrostCompressorOnTimeInSeconds },
-   { Erd_DefrostFreezerScaledDoorAccelerationInSeconds, Erd_Eeprom_DefrostFreezerScaledDoorAccelerationInSeconds },
-   { Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_DefrostFreshFoodScaledDoorAccelerationInSeconds },
-   { Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds, Erd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds }
+   { Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_LeftHandFreshFoodScaledDoorAccelerationInSeconds },
+   { Erd_RightHandFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_RightHandFreshFoodScaledDoorAccelerationInSeconds },
+   { Erd_DoorInDoorScaledDoorAccelerationInSeconds, Erd_Eeprom_DoorInDoorScaledDoorAccelerationInSeconds },
+   { Erd_FreezerScaledDoorAccelerationInSeconds, Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds },
+   { Erd_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds },
+   { Erd_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds, Erd_Eeprom_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds }
 };
 
 static const PeriodicNvUpdateServiceConfigurationEntry_t periodicNvUpdateDefrostHeaterOnTimeTableEntries[] = {
@@ -36,9 +39,12 @@ static const PeriodicNvUpdateServiceConfiguration_t periodicNvUpdateDefrostHeate
 
 static const ResetNvErdImmediatelyWhenRamErdChangesToZeroEntry_t resetNvErdImmediatelyWhenRamErdChangesToZeroEntries[] = {
    { Erd_DefrostCompressorOnTimeInSeconds, Erd_Eeprom_DefrostCompressorOnTimeInSeconds },
-   { Erd_DefrostFreezerScaledDoorAccelerationInSeconds, Erd_Eeprom_DefrostFreezerScaledDoorAccelerationInSeconds },
-   { Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_DefrostFreshFoodScaledDoorAccelerationInSeconds },
-   { Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds, Erd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds },
+   { Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_LeftHandFreshFoodScaledDoorAccelerationInSeconds },
+   { Erd_RightHandFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_RightHandFreshFoodScaledDoorAccelerationInSeconds },
+   { Erd_DoorInDoorScaledDoorAccelerationInSeconds, Erd_Eeprom_DoorInDoorScaledDoorAccelerationInSeconds },
+   { Erd_FreezerScaledDoorAccelerationInSeconds, Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds },
+   { Erd_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds },
+   { Erd_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds, Erd_Eeprom_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds },
    { Erd_FreezerDefrostHeaterOnTimeInMinutes, Erd_Eeprom_FreezerDefrostHeaterOnTimeInMinutes }
 };
 

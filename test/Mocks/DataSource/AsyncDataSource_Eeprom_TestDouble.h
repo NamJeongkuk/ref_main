@@ -52,7 +52,8 @@ typedef AsyncDataSource_Eeprom_TestDouble_t Instance_t;
 void AsyncDataSource_Eeprom_TestDouble_Init(
    Instance_t *instance,
    TimerModule_t *timerModule,
-   I_Crc16Calculator_t *crc16Calculator);
+   I_Crc16Calculator_t *crc16Calculator,
+   bool clearEeprom);
 
 /*!
  * @param instance

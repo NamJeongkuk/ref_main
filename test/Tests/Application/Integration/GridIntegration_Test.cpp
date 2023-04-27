@@ -12,6 +12,7 @@ extern "C"
 #include "DeltaGridLines.h"
 #include "SystemErds.h"
 #include "Rx2xxResetSource.h"
+#include "Constants_Binary.h"
 }
 
 #include "CppUTest/TestHarness.h"

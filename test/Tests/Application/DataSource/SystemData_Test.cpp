@@ -132,7 +132,8 @@ TEST_GROUP(SystemData)
       AsyncDataSource_Eeprom_TestDouble_Init(
          &nvAsyncDataSource,
          &timerModuleDouble.timerModule,
-         Crc16Calculator_Table);
+         Crc16Calculator_Table,
+         true);
 
       memset(dataFromExternalDataSource, 0, sizeof(dataFromExternalDataSource));
       FillBlockOfRandomData();

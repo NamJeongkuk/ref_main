@@ -11,10 +11,7 @@
 #include "I_DataModel.h"
 #include "Defrost.h"
 #include "DefrostHeaterMaxOnTime.h"
-#include "DefrostCompressorOnTimeCounter.h"
 #include "DefrostStateOnCompareMatch.h"
-#include "DoorAccelerationCounter.h"
-#include "ReadyToDefrost.h"
 #include "TimeThatPrechillConditionsAreMet.h"
 #include "DefrostParameterSelector.h"
 #include "DefrostStateOnCompareMatch.h"
@@ -22,6 +19,7 @@
 #include "FreezerDefrostHeaterVotingFrameworkPlugin.h"
 #include "NextDefrostTypeArbiter.h"
 #include "DefrostTestRequestHandler.h"
+#include "ReadyToDefrostImproved.h"
 
 typedef struct
 {
@@ -29,9 +27,7 @@ typedef struct
    {
       Defrost_t defrost;
       DefrostHeaterMaxOnTime_t defrostHeaterMaxOnTime;
-      DefrostCompressorOnTimeCounter_t defrostCompressorOnTimeCounter;
-      DoorAccelerationCounter_t doorAccelerationCounter;
-      ReadyToDefrost_t readyToDefrost;
+      ReadyToDefrostImproved_t readyToDefrostImproved;
       TimeThatPrechillConditionsAreMet_t timeThatPrechillConditionsAreMet;
       DefrostParameterSelector_t defrostParameterSelector;
       DefrostStateOnCompareMatch_t defrostStateOnCompareMatch;

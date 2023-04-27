@@ -56,19 +56,12 @@ static void SetNextDefrostType(DefrostTestRequestHandler_t *instance, DefrostTyp
       &defrostType);
 }
 
-static void SetUseMinimumReadyToDefrostTime(DefrostTestRequestHandler_t *instance, bool useMinimumReadyToDefrostTime)
+static void SetUseMinimumReadyToDefrostTimeAndResetDefrostCountsTo(DefrostTestRequestHandler_t *instance, bool useMinimumReadyToDefrostTimeAndResetDefrostCounts)
 {
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->useMinimumReadyToDefrostTimeErd,
-      &useMinimumReadyToDefrostTime);
-}
-
-static void IncrementResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequest(DefrostTestRequestHandler_t *instance)
-{
-   Signal_SendViaErd(
-      DataModel_AsDataSource(instance->_private.dataModel),
-      instance->_private.config->resetDefrostCountsErd);
+      instance->_private.config->useMinimumReadyToDefrostTimeAndResetDefrostCountsErd,
+      &useMinimumReadyToDefrostTimeAndResetDefrostCounts);
 }
 
 static void SetDisableDefrost(DefrostTestRequestHandler_t *instance, bool disableDefrost)
@@ -144,16 +137,14 @@ static void HandleDefrostTestRequest(void *context, const void *args)
             SetDontSkipDefrostPrechillToTrue(instance);
             UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_AhamFreshFoodOnlyPrechill);
             SetNextDefrostType(instance, DefrostType_FreshFood);
-            SetUseMinimumReadyToDefrostTime(instance, true);
-            IncrementResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequest(instance);
+            SetUseMinimumReadyToDefrostTimeAndResetDefrostCountsTo(instance, true);
             break;
 
          case DefrostTestRequest_AhamPrechill:
             SetDontSkipDefrostPrechillToTrue(instance);
             UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_AhamPrechill);
             SetNextDefrostType(instance, DefrostType_Full);
-            SetUseMinimumReadyToDefrostTime(instance, true);
-            IncrementResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequest(instance);
+            SetUseMinimumReadyToDefrostTimeAndResetDefrostCountsTo(instance, true);
             break;
 
          default:

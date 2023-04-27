@@ -19,7 +19,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .disableDefrostErd = Erd_DisableDefrost,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
-   .hasConvertibleCompartment = Erd_HasConvertibleCompartment,
+   .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
    .readyToDefrostErd = Erd_ReadyToDefrost,
    .freezerFilteredTemperatureWasTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
@@ -52,30 +52,18 @@ static const DefrostConfiguration_t defrostConfig = {
    .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill,
    .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
-   .useMinimumReadyToDefrostTimeErd = Erd_UseMinimumReadyToDefrostTime
+   .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts
 };
 
 static const DefrostHeaterMaxOnTimeConfiguration_t defrostHeaterMaxOnTimeConfig = {
    .freezerEvaporatorThermistorIsValidErd = Erd_FreezerEvapThermistor_IsValidResolved,
    .freshFoodEvaporatorThermistorIsValidErd = Erd_FreshFoodEvapThermistor_IsValidResolved,
-   .hasConvertibleCompartment = Erd_HasConvertibleCompartment,
+   .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,
    .convertibleCompartmentEvaporatorThermistorIsValidErd = Erd_ConvertibleCompartmentEvapThermistor_IsValidResolved,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .freshFoodDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreshFoodDefrostHeaterMaxOnTimeInMinutes,
    .freezerDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,
    .convertibleCompartmentDefrostHeaterMaxOnTimeInMinutesErd = Erd_ConvertibleCompartmentDefrostHeaterMaxOnTimeInMinutes
-};
-
-static const DefrostCompressorOnTimeCounterConfiguration_t defrostCompressorOnTimeCounterConfig = {
-   .compressorIsOnErd = Erd_CompressorIsOn,
-   .waitingToDefrostErd = Erd_WaitingToDefrost,
-   .defrostCompressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
-   .defrostCompressorOnTimeCounterFsmStateErd = Erd_DefrostCompressorOnTimeCounterFsmState,
-   .freezerFilteredTemperatureWasTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
-   .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
-   .resetDefrostCountsErd = Erd_ResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
-   .defrostCompressorOnTimeCounterReadyErd = Erd_DefrostCompressorOnTimeCounterReady,
-   .timerModuleErd = Erd_TimerModule
 };
 
 static const DefrostHeaterOnTimeCounterConfig_t defrostHeaterOnTimeCounterConfig = {
@@ -84,43 +72,58 @@ static const DefrostHeaterOnTimeCounterConfig_t defrostHeaterOnTimeCounterConfig
    .defrostStateErd = Erd_DefrostState
 };
 
-static const DoorAccelerationCounterConfiguration_t doorAccelerationCounterConfig = {
-   .waitingToDefrostErd = Erd_WaitingToDefrost,
-   .doorAccelerationCounterFsmStateErd = Erd_DoorAccelerationCounterFsmState,
-   .freshFoodScaledDoorAccelerationInSecondsErd = Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds,
-   .freezerScaledDoorAccelerationInSecondsErd = Erd_DefrostFreezerScaledDoorAccelerationInSeconds,
-   .convertibleCompartmentScaledDoorAccelerationInSecondsErd = Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds,
-   .leftHandFreshFoodDoorIsOpenErd = Erd_LeftHandFreshFoodDoorIsOpen,
-   .rightHandFreshFoodDoorIsOpenErd = Erd_RightHandFreshFoodDoorIsOpen,
-   .doorInDoorIsOpenErd = Erd_DoorInDoorIsOpen,
-   .freezerDoorIsOpenErd = Erd_FreezerDoorIsOpen,
-   .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorIsOpen,
-   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
-   .freezerFilteredTemperatureWasTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
-   .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
-   .resetDefrostCountsErd = Erd_ResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
-   .doorAccelerationCounterReadyErd = Erd_DoorAccelerationCounterReady,
-   .timerModuleErd = Erd_TimerModule
+static ReadyToDefrostDoorConfiguration_t doorsConfiguration[] = {
+   {
+      .doorIsOpenErd = Erd_LeftHandFreshFoodDoorIsOpen,
+      .doorAccelerationErd = Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds,
+      .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
+   },
+   {
+      .doorIsOpenErd = Erd_RightHandFreshFoodDoorIsOpen,
+      .doorAccelerationErd = Erd_RightHandFreshFoodScaledDoorAccelerationInSeconds,
+      .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
+   },
+   {
+      .doorIsOpenErd = Erd_DoorInDoorIsOpen,
+      .doorAccelerationErd = Erd_DoorInDoorScaledDoorAccelerationInSeconds,
+      .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
+   },
+   {
+      .doorIsOpenErd = Erd_FreezerDoorIsOpen,
+      .doorAccelerationErd = Erd_FreezerScaledDoorAccelerationInSeconds,
+      .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freezerDoorIncrementFactorInSecondsPerSecond),
+   },
+   {
+      .doorIsOpenErd = Erd_ConvertibleCompartmentAsFreshFoodDoorIsOpen,
+      .doorAccelerationErd = Erd_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds,
+      .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
+   },
+   {
+      .doorIsOpenErd = Erd_ConvertibleCompartmentAsFreezerDoorIsOpen,
+      .doorAccelerationErd = Erd_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds,
+      .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freezerDoorIncrementFactorInSecondsPerSecond),
+   },
 };
 
-static ReadyToDefrostConfiguration_t readyToDefrostConfig = {
+static ReadyToDefrostImprovedConfiguration_t readyToDefrostConfig = {
+   .compressorIsOnErd = Erd_CompressorIsOn,
    .defrostCompressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
-   .freshFoodScaledDoorAccelerationInSecondsErd = Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds,
-   .freezerScaledDoorAccelerationInSecondsErd = Erd_DefrostFreezerScaledDoorAccelerationInSeconds,
-   .convertibleCompartmentScaledDoorAccelerationInSecondsErd = Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds,
-   .readyToDefrostErd = Erd_ReadyToDefrost,
-   .defrostCompressorOnTimeCounterReadyErd = Erd_DefrostCompressorOnTimeCounterReady,
-   .doorAccelerationCounterReadyErd = Erd_DoorAccelerationCounterReady,
+   .freezerFilteredTemperatureWasTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
    .freezerFilteredTemperatureWasTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
-   .useMinimumReadyToDefrostTimeErd = Erd_UseMinimumReadyToDefrostTime,
+   .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts,
    .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
-   .hasConvertibleCompartment = Erd_HasConvertibleCompartment,
+   .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,
    .eepromClearedErd = Erd_Eeprom_ClearedDefrostEepromStartup,
    .waitingForDefrostTimeInSecondsErd = Erd_WaitingForDefrostTimeInSeconds,
-   .waitingToDefrostErd = Erd_WaitingToDefrost
+   .waitingToDefrostErd = Erd_WaitingToDefrost,
+   .readyToDefrostErd = Erd_ReadyToDefrost,
+   .timeBetweenDefrostsInMinutesErd = Erd_TimeBetweenDefrostsInMinutes,
+   .readyToDefrostHsmStateErd = Erd_ReadyToDefrostHsmState,
+   .doorsConfiguration = doorsConfiguration,
+   .numberOfDoors = NUM_ELEMENTS(doorsConfiguration)
 };
 
 static const TimeThatPrechillConditionsAreMetConfiguration_t timeThatPrechillConditionsAreMetConfig = {
@@ -152,8 +155,7 @@ static const DefrostTestRequestHandlerConfiguration_t defrostTestRequestHandlerC
    .disableDefrostErd = Erd_DisableDefrost,
    .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
    .nextDefrostTypeErd = Erd_NextDefrostType,
-   .useMinimumReadyToDefrostTimeErd = Erd_UseMinimumReadyToDefrostTime,
-   .resetDefrostCountsErd = Erd_ResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
+   .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts,
    .defrostTestRequestStatusErd = Erd_DefrostTestRequestStatus,
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill
 };
@@ -250,23 +252,13 @@ void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
 
    Defrost_Init(&instance->_private.defrost, dataModel, &defrostConfig);
 
-   DefrostCompressorOnTimeCounter_Init(
-      &instance->_private.defrostCompressorOnTimeCounter,
-      dataModel,
-      &defrostCompressorOnTimeCounterConfig);
-
    DefrostHeaterOnTimeCounter_Init(
       &instance->_private.defrostHeaterOnTimeCounter,
       dataModel,
       &defrostHeaterOnTimeCounterConfig);
 
-   DoorAccelerationCounter_Init(
-      &instance->_private.doorAccelerationCounter,
-      dataModel,
-      &doorAccelerationCounterConfig);
-
-   ReadyToDefrost_Init(
-      &instance->_private.readyToDefrost,
+   ReadyToDefrostImproved_Init(
+      &instance->_private.readyToDefrostImproved,
       dataModel,
       &readyToDefrostConfig,
       defrostData);

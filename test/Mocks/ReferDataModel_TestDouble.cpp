@@ -28,12 +28,7 @@ static void RunTimerModule(void *context)
    TimerModule_TestDouble_ElapseTime(timerModule, 1);
 }
 
-void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance)
-{
-   ReferDataModel_TestDouble_Init(instance, DefaultPersonalityForTest);
-}
-
-void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance, PersonalityId_t personalityIdForTest)
+static void Init(ReferDataModel_TestDouble_t *instance, PersonalityId_t personalityIdForTest, bool clearEeprom)
 {
    TimerModule_TestDouble_Init(&instance->_private.timerModuleTestDouble);
    Action_Context_Init(&instance->_private.runTimerModuleAction, &instance->_private.timerModuleTestDouble.timerModule, RunTimerModule);
@@ -41,7 +36,8 @@ void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance, Perso
    AsyncDataSource_Eeprom_TestDouble_Init(
       &instance->_private.asyncEepromTestDouble,
       &instance->_private.timerModuleTestDouble.timerModule,
-      Crc16Calculator_Table);
+      Crc16Calculator_Table,
+      clearEeprom);
 
    SystemData_Init(
       &instance->_private.systemData,
@@ -62,6 +58,26 @@ void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance, Perso
 
    instance->_private.personalityParametricData = (PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(personalityIdForTest);
    DataModelErdPointerAccess_Write(instance->dataModel, Erd_PersonalityParametricData, instance->_private.personalityParametricData);
+}
+
+void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance)
+{
+   ReferDataModel_TestDouble_Init(instance, DefaultPersonalityForTest);
+}
+
+void ReferDataModel_TestDouble_Reset(ReferDataModel_TestDouble_t *instance)
+{
+   ReferDataModel_TestDouble_Reset(instance, DefaultPersonalityForTest);
+}
+
+void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance, PersonalityId_t personalityIdForTest)
+{
+   Init(instance, personalityIdForTest, true);
+}
+
+void ReferDataModel_TestDouble_Reset(ReferDataModel_TestDouble_t *instance, PersonalityId_t personalityIdForTest)
+{
+   Init(instance, personalityIdForTest, false);
 }
 
 TimerModule_TestDouble_t *ReferDataModel_TestDouble_GetTimerModuleTestDouble(ReferDataModel_TestDouble_t *instance)

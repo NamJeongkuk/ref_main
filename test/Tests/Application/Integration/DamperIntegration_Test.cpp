@@ -12,6 +12,7 @@ extern "C"
 #include "SystemErds.h"
 #include "StackConfigurator.h"
 #include "Constants_Time.h"
+#include "Constants_Binary.h"
 #include "Vote.h"
 #include "Rx2xxResetSource.h"
 #include "PersonalityParametricData.h"
@@ -466,9 +467,9 @@ TEST(DamperIntegration, ShouldTurnOnDamperHeaterWhenTemperatureDoesNotDecreaseBy
 
    After(
       (freshFoodDamperData->maxTimeForDamperToBeOpenInMinutes * MSEC_PER_MIN) -
-      1 -
-      (freshFoodDamperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN) -
-      (freshFoodDamperData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN),
+         1 -
+         (freshFoodDamperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN) -
+         (freshFoodDamperData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN),
       1000);
    DamperPositionShouldBeDontCareForMaxOpenTimeVote();
    DamperPositionWinningVoteErdShouldBe(Erd_FreshFoodDamperPosition_DamperFreezePreventionVote);

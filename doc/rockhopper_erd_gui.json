@@ -400,20 +400,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Defrost Compressor On Time Counter Fsm State",
-          "name": "Erd_DefrostCompressorOnTimeCounterFsmState",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Door Acceleration Counter Fsm State",
-          "name": "Erd_DoorAccelerationCounterFsmState",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Defrost Compressor On Time In Seconds",
           "name": "Erd_DefrostCompressorOnTimeInSeconds",
           "read": true,
@@ -429,42 +415,28 @@
         {
           "namespace": "mb",
           "displayName": "Freezer Scaled Door Acceleration In Seconds",
-          "name": "Erd_DefrostFreezerScaledDoorAccelerationInSeconds",
+          "name": "Erd_FreezerScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "EEPROM Freezer Scaled Door Acceleration In Seconds",
-          "name": "Erd_Eeprom_DefrostFreezerScaledDoorAccelerationInSeconds",
+          "name": "Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "Fresh Food Scaled Door Acceleration In Seconds",
-          "name": "Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds",
+          "name": "Erd_RightHandFreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "EEPROM Fresh Food Scaled Door Acceleration In Seconds",
-          "name": "Erd_Eeprom_DefrostFreshFoodScaledDoorAccelerationInSeconds",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Convertible Compartment Scaled Door Acceleration In Seconds",
-          "name": "Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "EEPROM Convertible Compartment Scaled Door Acceleration In Seconds",
-          "name": "Erd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds",
+          "name": "Erd_Eeprom_RightHandFreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
@@ -597,14 +569,7 @@
         {
           "namespace": "mb",
           "displayName": "Use Minimum Ready To Defrost Time",
-          "name": "Erd_UseMinimumReadyToDefrostTime",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Reset And Count Defrost Compressor On Time Counts And Door Accelerations Request Signal",
-          "name": "Erd_ResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal",
+          "name": "Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts",
           "read": true,
           "write": true
         },
@@ -2394,7 +2359,7 @@
         {
           "namespace": "mb",
           "displayName": "Use Minimum Ready To Defrost Time",
-          "name": "Erd_UseMinimumReadyToDefrostTime",
+          "name": "Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts",
           "read": true,
           "write": true
         },
@@ -2449,43 +2414,148 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Freezer Scaled Door Acceleration In Seconds",
-          "name": "Erd_DefrostFreezerScaledDoorAccelerationInSeconds",
+          "displayName": "Left Hand Fresh Food Door Is Open",
+          "name": "Erd_LeftHandFreshFoodDoorIsOpen",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "EEPROM Freezer Scaled Door Acceleration In Seconds",
-          "name": "Erd_Eeprom_DefrostFreezerScaledDoorAccelerationInSeconds",
+          "displayName": "Left Hand Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Scaled Door Acceleration In Seconds",
-          "name": "Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds",
+          "displayName": "EEPROM Left Hand Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_Eeprom_LeftHandFreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "EEPROM Fresh Food Scaled Door Acceleration In Seconds",
-          "name": "Erd_Eeprom_DefrostFreshFoodScaledDoorAccelerationInSeconds",
+          "displayName": "Right Hand Fresh Food Door Is Open",
+          "name": "Erd_RightHandFreshFoodDoorIsOpen",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Scaled Door Acceleration In Seconds",
-          "name": "Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds",
+          "displayName": "Right Hand Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_RightHandFreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "EEPROM Convertible Compartment Scaled Door Acceleration In Seconds",
-          "name": "Erd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds",
+          "displayName": "EEPROM Right Hand Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_Eeprom_RightHandFreshFoodScaledDoorAccelerationInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Door in Door Is Open",
+          "name": "Erd_DoorInDoorIsOpen",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Door in Door Scaled Door Acceleration In Seconds",
+          "name": "Erd_DoorInDoorScaledDoorAccelerationInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "EEPROM Door in Door Scaled Door Acceleration In Seconds",
+          "name": "Erd_Eeprom_DoorInDoorScaledDoorAccelerationInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Door Is Open",
+          "name": "Erd_FreezerDoorIsOpen",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Door Scaled Door Acceleration In Seconds",
+          "name": "Erd_FreezerScaledDoorAccelerationInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "EEPROM Freezer Door Scaled Door Acceleration In Seconds",
+          "name": "Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Has Convertible Compartment",
+          "name": "Erd_HasConvertibleCompartment",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment State",
+          "name": "Erd_ConvertibleCompartmentState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Door Is Open",
+          "name": "Erd_ConvertibleCompartmentDoorIsOpen",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment As Fresh Food Door Is Open",
+          "name": "Erd_ConvertibleCompartmentAsFreshFoodDoorIsOpen",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment As Fresh Food Door Scaled Door Acceleration In Seconds",
+          "name": "Erd_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "EEPROM Convertible Compartment As Fresh Food Door Scaled Door Acceleration In Seconds",
+          "name": "Erd_Eeprom_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment As Freezer Door Is Open",
+          "name": "Erd_ConvertibleCompartmentAsFreezerDoorIsOpen",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment As Freezer Door Scaled Door Acceleration In Seconds",
+          "name": "Erd_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "EEPROM Convertible Compartment As Freezer Door Scaled Door Acceleration In Seconds",
+          "name": "Erd_Eeprom_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
@@ -2514,6 +2584,41 @@
           "namespace": "mb",
           "displayName": "Waiting for defrost time in seconds",
           "name": "Erd_WaitingForDefrostTimeInSeconds",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Compressor Is On",
+          "name": "Erd_CompressorIsOn",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Waiting To Defrost",
+          "name": "Erd_WaitingToDefrost",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Use Minimum Ready To Defrost Time",
+          "name": "Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Time between defrosts in minutes",
+          "name": "Erd_TimeBetweenDefrostsInMinutes",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ready to defrost HSM state",
+          "name": "Erd_ReadyToDefrostHsmState",
           "read": true,
           "write": true
         }

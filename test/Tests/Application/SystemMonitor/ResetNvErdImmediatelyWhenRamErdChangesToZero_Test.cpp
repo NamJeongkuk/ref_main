@@ -36,9 +36,9 @@ static const SystemMonitorData_t systemMonitorData = {
 
 static const ResetNvErdImmediatelyWhenRamErdChangesToZeroEntry_t ResetNvErdImmediatelyWhenRamErdChangesToZeroEntries[] = {
    { Erd_DefrostCompressorOnTimeInSeconds, Erd_Eeprom_DefrostCompressorOnTimeInSeconds },
-   { Erd_DefrostFreezerScaledDoorAccelerationInSeconds, Erd_Eeprom_DefrostFreezerScaledDoorAccelerationInSeconds },
-   { Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_DefrostFreshFoodScaledDoorAccelerationInSeconds },
-   { Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds, Erd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds }
+   { Erd_FreezerScaledDoorAccelerationInSeconds, Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds },
+   { Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_LeftHandFreshFoodScaledDoorAccelerationInSeconds },
+   { Erd_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds }
 };
 
 static const ResetNvErdImmediatelyWhenRamErdChangesToZeroConfiguration_t ResetNvErdImmediatelyWhenRamErdChangesToZeroConfiguration = {
@@ -100,32 +100,32 @@ TEST(ResetNvErdImmediatelyWhenRamErdChangesToZero, ShouldResetEepromErdToZeroImm
 
 TEST(ResetNvErdImmediatelyWhenRamErdChangesToZero, ShouldResetEepromErdToZeroImmediatelyWhenRamErdIsSetToZeroForFreezerScaledDoorAccelerationInSeconds)
 {
-   Given RamErd(Erd_DefrostFreezerScaledDoorAccelerationInSeconds Is SomeValue);
-   And EepromErd(Erd_Eeprom_DefrostFreezerScaledDoorAccelerationInSeconds Is SomeOtherValue);
+   Given RamErd(Erd_FreezerScaledDoorAccelerationInSeconds Is SomeValue);
+   And EepromErd(Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds Is SomeOtherValue);
    And Initialize();
 
-   When RamErd(Erd_DefrostFreezerScaledDoorAccelerationInSeconds Is 0);
-   EepromErdShouldBe(Erd_Eeprom_DefrostFreezerScaledDoorAccelerationInSeconds ShouldBe 0);
+   When RamErd(Erd_FreezerScaledDoorAccelerationInSeconds Is 0);
+   EepromErdShouldBe(Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds ShouldBe 0);
 }
 
-TEST(ResetNvErdImmediatelyWhenRamErdChangesToZero, ShouldResetEepromErdToZeroImmediatelyWhenRamErdIsSetToZeroForFreshFoodScaledDoorAccelerationInSeconds)
+TEST(ResetNvErdImmediatelyWhenRamErdChangesToZero, ShouldResetEepromErdToZeroImmediatelyWhenRamErdIsSetToZeroForLeftHandFreshFoodScaledDoorAccelerationInSeconds)
 {
-   Given RamErd(Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds Is SomeValue);
-   And EepromErd(Erd_Eeprom_DefrostFreshFoodScaledDoorAccelerationInSeconds Is SomeOtherValue);
+   Given RamErd(Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds Is SomeValue);
+   And EepromErd(Erd_Eeprom_LeftHandFreshFoodScaledDoorAccelerationInSeconds Is SomeOtherValue);
    And Initialize();
 
-   When RamErd(Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds Is 0);
-   EepromErdShouldBe(Erd_Eeprom_DefrostFreshFoodScaledDoorAccelerationInSeconds ShouldBe 0);
+   When RamErd(Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds Is 0);
+   EepromErdShouldBe(Erd_Eeprom_LeftHandFreshFoodScaledDoorAccelerationInSeconds ShouldBe 0);
 }
 
-TEST(ResetNvErdImmediatelyWhenRamErdChangesToZero, ShouldResetEepromErdToZeroImmediatelyWhenRamErdIsSetToZeroForConvertibleCompartmentScaledDoorAccelerationInSeconds)
+TEST(ResetNvErdImmediatelyWhenRamErdChangesToZero, ShouldResetEepromErdToZeroImmediatelyWhenRamErdIsSetToZeroForConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds)
 {
-   Given RamErd(Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds Is SomeValue);
-   And EepromErd(Erd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds Is SomeOtherValue);
+   Given RamErd(Erd_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds Is SomeValue);
+   And EepromErd(Erd_Eeprom_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds Is SomeOtherValue);
    And Initialize();
 
-   When RamErd(Erd_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds Is 0);
-   EepromErdShouldBe(Erd_Eeprom_DefrostConvertibleCompartmentScaledDoorAccelerationInSeconds ShouldBe 0);
+   When RamErd(Erd_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds Is 0);
+   EepromErdShouldBe(Erd_Eeprom_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds ShouldBe 0);
 }
 
 TEST(ResetNvErdImmediatelyWhenRamErdChangesToZero, ShouldNotResetEepromErdToZeroImmediatelyWhenRamErdIsSetToANonZeroValueForCompressorOnTimeInSeconds)

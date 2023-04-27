@@ -25,7 +25,7 @@ typedef struct
    Erd_t disableDefrostErd; // bool
    Erd_t freezerDefrostWasAbnormalErd; // bool
    Erd_t freshFoodDefrostWasAbnormalErd; // bool
-   Erd_t hasConvertibleCompartment; // bool
+   Erd_t hasConvertibleCompartmentErd; // bool
    Erd_t convertibleCompartmentDefrostWasAbnormalErd; // bool
    Erd_t readyToDefrostErd; // bool
    Erd_t freezerFilteredTemperatureWasTooWarmAtPowerUpErd; // bool
@@ -58,7 +58,7 @@ typedef struct
    Erd_t defrostTestStateRequestErd; // DefrostTestStateRequestMessage_t
    Erd_t dontSkipDefrostPrechillErd; // bool
    Erd_t invalidFreezerEvaporatorThermistorDuringDefrostErd; // bool
-   Erd_t useMinimumReadyToDefrostTimeErd; // bool
+   Erd_t useMinimumReadyToDefrostTimeAndResetDefrostCountsErd; // bool
 } DefrostConfiguration_t;
 
 typedef struct

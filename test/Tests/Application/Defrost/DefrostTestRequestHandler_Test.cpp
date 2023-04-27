@@ -24,8 +24,7 @@ static const DefrostTestRequestHandlerConfiguration_t config = {
    .disableDefrostErd = Erd_DisableDefrost,
    .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
    .nextDefrostTypeErd = Erd_NextDefrostType,
-   .useMinimumReadyToDefrostTimeErd = Erd_UseMinimumReadyToDefrostTime,
-   .resetDefrostCountsErd = Erd_ResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal,
+   .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts,
    .defrostTestRequestStatusErd = Erd_DefrostTestRequestStatus,
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill
 };
@@ -111,28 +110,12 @@ TEST_GROUP(DefrostTestRequestHandler)
       CHECK_EQUAL(expected, actual);
    }
 
-   void UseMinimumReadyToDefrostTimeShouldBe(bool expected)
+   void UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_UseMinimumReadyToDefrostTime, &actual);
+      DataModel_Read(dataModel, Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts, &actual);
 
       CHECK_EQUAL(expected, actual);
-   }
-
-   void ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestShouldBeIncremented()
-   {
-      Signal_t actual;
-      DataModel_Read(dataModel, Erd_ResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal, &actual);
-
-      CHECK_EQUAL(1, actual);
-   }
-
-   void ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestShouldBeIncrementedAgain()
-   {
-      Signal_t actual;
-      DataModel_Read(dataModel, Erd_ResetDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestSignal, &actual);
-
-      CHECK_EQUAL(2, actual);
    }
 
    void DefrostTestRequestShouldBeReset()
@@ -328,8 +311,7 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndDoTheOther
    When DefrostTestRequestIs(DefrostTestRequest_AhamFreshFoodOnlyPrechill);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_AhamFreshFoodOnlyPrechill);
    NextDefrostTypeShouldBe(DefrostType_FreshFood);
-   UseMinimumReadyToDefrostTimeShouldBe(true);
-   ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestShouldBeIncremented();
+   UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
    DefrostTestRequestShouldBeReset();
    DontSkipPrechillShouldBe(SET);
 }
@@ -342,30 +324,9 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFullAndDoTheOthersWhen
    When DefrostTestRequestIs(DefrostTestRequest_AhamPrechill);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_AhamPrechill);
    NextDefrostTypeShouldBe(DefrostType_Full);
-   UseMinimumReadyToDefrostTimeShouldBe(true);
-   ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestShouldBeIncremented();
+   UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
    DefrostTestRequestShouldBeReset();
    DontSkipPrechillShouldBe(SET);
-}
-
-TEST(DefrostTestRequestHandler, ShouldIncrementResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestWheneverDefrostTestRequestIsAhamFreshFoodOnlyPrechillOrAhamPrechill)
-{
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_Idle);
-
-   When DefrostTestRequestIs(DefrostTestRequest_AhamFreshFoodOnlyPrechill);
-   DefrostTestRequestStatusShouldBe(DefrostTestRequest_AhamFreshFoodOnlyPrechill);
-   NextDefrostTypeShouldBe(DefrostType_FreshFood);
-   UseMinimumReadyToDefrostTimeShouldBe(true);
-   ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestShouldBeIncremented();
-   DefrostTestRequestShouldBeReset();
-
-   When DefrostTestRequestIs(DefrostTestRequest_AhamPrechill);
-   DefrostTestRequestStatusShouldBe(DefrostTestRequest_AhamPrechill);
-   NextDefrostTypeShouldBe(DefrostType_Full);
-   UseMinimumReadyToDefrostTimeShouldBe(true);
-   ResetAndCountDefrostCompressorOnTimeCountsAndDoorAccelerationsRequestShouldBeIncrementedAgain();
-   DefrostTestRequestShouldBeReset();
 }
 
 TEST(DefrostTestRequestHandler, ShouldSetDisableDefrostToTrueWhenDefrostTestRequestIsDisableWhileDefrostStateIsIdle)

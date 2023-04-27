@@ -164,7 +164,7 @@ static bool ConvertibleCompartmentDefrostWasAbnormal(Defrost_t *instance)
 
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->hasConvertibleCompartment,
+      instance->_private.config->hasConvertibleCompartmentErd,
       &hasConvertibleCompartment);
    DataModel_Read(
       instance->_private.dataModel,
@@ -651,7 +651,7 @@ static void ClearUseMinimumReadyToDefrostTimeFlag(Defrost_t *instance)
 {
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->useMinimumReadyToDefrostTimeErd,
+      instance->_private.config->useMinimumReadyToDefrostTimeAndResetDefrostCountsErd,
       clear);
 }
 

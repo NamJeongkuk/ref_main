@@ -133,12 +133,32 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_DefrostFreezerScaledDoorAccelerationInSeconds",
+         "name": "Erd_FreezerScaledDoorAccelerationInSeconds",
          "interval": 60000
       },
       {
          "namespace": "mb",
-         "name": "Erd_DefrostFreshFoodScaledDoorAccelerationInSeconds",
+         "name": "Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_RightHandFreshFoodScaledDoorAccelerationInSeconds",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_Eeprom_RightHandFreshFoodScaledDoorAccelerationInSeconds",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_WaitingForDefrostTimeInSeconds",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_TimeBetweenDefrostsInMinutes",
          "interval": 60000
       },
       {

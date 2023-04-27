@@ -17,8 +17,7 @@ typedef struct
    Erd_t disableDefrostErd; // bool
    Erd_t defrostTestStateRequestErd; // DefrostTestStateRequestMessage_t
    Erd_t nextDefrostTypeErd; // DefrostType_t
-   Erd_t useMinimumReadyToDefrostTimeErd; // bool
-   Erd_t resetDefrostCountsErd; // Signal_t
+   Erd_t useMinimumReadyToDefrostTimeAndResetDefrostCountsErd; // bool
    Erd_t defrostTestRequestStatusErd; // DefrostTestStateRequestMessage_t
    Erd_t dontSkipDefrostPrechillErd; // bool
 } DefrostTestRequestHandlerConfiguration_t;

@@ -15,7 +15,7 @@ static bool ThereIsAConvertibleCompartment(DefrostHeaterMaxOnTime_t *instance)
    bool hasConvertibleCompartment;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->hasConvertibleCompartment,
+      instance->_private.config->hasConvertibleCompartmentErd,
       &hasConvertibleCompartment);
 
    return hasConvertibleCompartment;
