@@ -95,6 +95,7 @@
 #include "AugerMotorVotedIceType.h"
 #include "AugerMotorControllerFsmState.h"
 #include "FlowMeterMonitoringRequest.h"
+#include "IceMakerWaterFillMonitoringRequest.h"
 #include "ShortGitHash.h"
 
 // clang-format off
@@ -685,7 +686,7 @@ enum
    ENTRY(Erd_AluminumMoldIceMakerRakePosition,              0xF1CE, RakePosition_t,                                     Swap_N, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerRakeHasNotBeenHome,        0xF1CF, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerFeelerArmHasBeenBucketFull,0xF1D0, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,0xF1D1, bool,                                               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,0xF1D1, IceMakerWaterFillMonitoringRequest_t,               Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerStopFillSignal,            0xF1D2, Signal_t,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldFreezeIntegrationCount,            0xF1D3, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes,  0xF1D4, uint8_t,                                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

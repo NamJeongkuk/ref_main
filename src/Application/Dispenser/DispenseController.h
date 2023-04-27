@@ -26,8 +26,6 @@ typedef struct
    Erd_t augerMotorDispensingVoteErd; // AugerMotorVotedIceType_t
    Erd_t isolationValveDispensingVoteErd; // WaterValveVotedState_t
    Erd_t dispensingValveDispensingVoteErd; // WaterValveVotedState_t
-   Erd_t flowMeterWaterDispensedOzX100Erd; // uint32_t
-   Erd_t flowMeterMonitoringRequestErd; // bool
    Erd_t timerModuleErd; // TimerModule_t *
 } DispenseControllerConfig_t;
 

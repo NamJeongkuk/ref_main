@@ -33,10 +33,10 @@ typedef struct
    Erd_t skipFillRequestErd; // bool
    Erd_t rakeControlRequestErd; // bool
    Erd_t isolationWaterValveVoteErd; // WaterValveVotedState_t
-   Erd_t waterFillMonitoringRequest; // bool
+   Erd_t waterFillMonitoringRequestErd; // IceMakerWaterFillMonitoringRequest_t
    Erd_t stopFillSignalErd; // Signal_t
-   Erd_t rakePosition; // RakePosition_t
-   Erd_t freezerIceRateTriggerSignal; // Signal_t
+   Erd_t rakePositionErd; // RakePosition_t
+   Erd_t freezerIceRateTriggerSignalErd; // Signal_t
    Erd_t aluminumMoldIceMakerTestRequestErd; // AluminumMoldIceMakerTestRequest_t
 } AluminumMoldIceMakerConfig_t;
 

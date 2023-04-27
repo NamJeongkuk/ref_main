@@ -6,12 +6,12 @@
  */
 
 #include "IceMakerWaterFillMonitor.h"
-#include "utils.h"
-#include "DataModelErdPointerAccess.h"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
-#include "Signal.h"
+#include "DataModelErdPointerAccess.h"
 #include "FlowMeterMonitoringRequest.h"
+#include "IceMakerWaterFillMonitoringRequest.h"
+#include "Signal.h"
 
 static void StopAllActiveTimers(IceMakerWaterFillMonitor_t *instance)
 {
@@ -78,10 +78,8 @@ static void StartTimers(IceMakerWaterFillMonitor_t *instance)
       instance);
 }
 
-static void StartMonitoring(void *context)
+static void StartMonitoring(IceMakerWaterFillMonitor_t *instance)
 {
-   IceMakerWaterFillMonitor_t *instance = context;
-
    StartTimers(instance);
    FlowMeterMonitoringRequestIsSetTo(instance, FlowMeterMonitoringRequest_Start);
    DataModel_Subscribe(
@@ -90,13 +88,68 @@ static void StartMonitoring(void *context)
       &instance->_private.flowMeterWaterDispensedSubscription);
 }
 
+static void PauseMonitoring(IceMakerWaterFillMonitor_t *instance)
+{
+   TimerModule_Pause(
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         instance->_private.config->timerModuleErd),
+      &instance->_private.timedFillTimer);
+   TimerModule_Pause(
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         instance->_private.config->timerModuleErd),
+      &instance->_private.maxFillTimer);
+   DataModel_Unsubscribe(
+      instance->_private.dataModel,
+      instance->_private.config->flowMeterWaterDispensedOzx100Erd,
+      &instance->_private.flowMeterWaterDispensedSubscription);
+
+   FlowMeterMonitoringRequestIsSetTo(instance, FlowMeterMonitoringRequest_Pause);
+}
+
+static void ResumeMonitoring(IceMakerWaterFillMonitor_t *instance)
+{
+   TimerModule_Resume(
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         instance->_private.config->timerModuleErd),
+      &instance->_private.timedFillTimer);
+   TimerModule_Resume(
+      DataModelErdPointerAccess_GetTimerModule(
+         instance->_private.dataModel,
+         instance->_private.config->timerModuleErd),
+      &instance->_private.maxFillTimer);
+   DataModel_Subscribe(
+      instance->_private.dataModel,
+      instance->_private.config->flowMeterWaterDispensedOzx100Erd,
+      &instance->_private.flowMeterWaterDispensedSubscription);
+
+   FlowMeterMonitoringRequestIsSetTo(instance, FlowMeterMonitoringRequest_Resume);
+}
+
 static void OnFillMonitorRequestChange(void *context, const void *_args)
 {
    IceMakerWaterFillMonitor_t *instance = context;
-   const bool *state = _args;
-   if(*state)
+   const IceMakerWaterFillMonitoringRequest_t *request = _args;
+
+   switch(*request)
    {
-      StartMonitoring(instance);
+      case IceMakerWaterFillMonitoringRequest_Start:
+         StartMonitoring(instance);
+         break;
+
+      case IceMakerWaterFillMonitoringRequest_Stop:
+         // Do nothing
+         break;
+
+      case IceMakerWaterFillMonitoringRequest_Pause:
+         PauseMonitoring(instance);
+         break;
+
+      case IceMakerWaterFillMonitoringRequest_Resume:
+         ResumeMonitoring(instance);
+         break;
    }
 }
 

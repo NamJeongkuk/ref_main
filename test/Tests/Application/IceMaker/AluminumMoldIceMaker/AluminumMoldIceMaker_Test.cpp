@@ -46,10 +46,10 @@ static const AluminumMoldIceMakerConfig_t config = {
    .skipFillRequestErd = Erd_AluminumMoldIceMakerSkipFillRequest,
    .rakeControlRequestErd = Erd_AluminumMoldIceMakerRakeControlRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_AluminumMoldIceMakerVote,
-   .waterFillMonitoringRequest = Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,
+   .waterFillMonitoringRequestErd = Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,
    .stopFillSignalErd = Erd_AluminumMoldIceMakerStopFillSignal,
-   .rakePosition = Erd_AluminumMoldIceMakerRakePosition,
-   .freezerIceRateTriggerSignal = Erd_FreezerIceRateTriggerSignal,
+   .rakePositionErd = Erd_AluminumMoldIceMakerRakePosition,
+   .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
    .aluminumMoldIceMakerTestRequestErd = Erd_AluminumMoldIceMakerTestRequest,
 };
 
@@ -579,9 +579,9 @@ TEST_GROUP(AluminumMoldIceMaker)
       }
    }
 
-   void WaterFillMonitoringRequestShouldBe(bool expected)
+   void WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_t expected)
    {
-      bool actual;
+      IceMakerWaterFillMonitoringRequest_t actual;
       DataModel_Read(dataModel, Erd_AluminumMoldIceMakerWaterFillMonitoringRequest, &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -1434,7 +1434,7 @@ TEST(AluminumMoldIceMaker, ShouldVoteToTurnOnIsolationWaterValveWhenEnteringFill
    IsolationIceMakerWaterValveVoteShouldBe(WaterValveState_On);
 }
 
-TEST(AluminumMoldIceMaker, ShouldRequestWaterFillMonitoringWhenEnteringFillState)
+TEST(AluminumMoldIceMaker, ShouldStartWaterFillMonitoringWhenEnteringFillState)
 {
    Given MoldThermistorIsValid();
    Given SkipFillRequestIsClear();
@@ -1445,38 +1445,38 @@ TEST(AluminumMoldIceMaker, ShouldRequestWaterFillMonitoringWhenEnteringFillState
 
    When RakeCompletesFullRevolution();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
-   WaterFillMonitoringRequestShouldBe(CLEAR);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Stop);
 
    After(1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
-   WaterFillMonitoringRequestShouldBe(SET);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
 }
 
-TEST(AluminumMoldIceMaker, ShouldClearWaterFillMonitoringRequestWhenExitingFillState)
+TEST(AluminumMoldIceMaker, ShouldStopWaterFillMonitoringWhenExitingFillState)
 {
    Given AluminumMoldIceMakerIsInFillState();
-   WaterFillMonitoringRequestShouldBe(SET);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
 
    When StopFillSignalChanges();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
-   WaterFillMonitoringRequestShouldBe(CLEAR);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Stop);
 }
 
-TEST(AluminumMoldIceMaker, ShouldRequestWaterFillMonitoringWhenEnteringFillStateAgain)
+TEST(AluminumMoldIceMaker, ShouldStartWaterFillMonitoringWhenEnteringFillStateAgain)
 {
    Given AluminumMoldIceMakerIsInFillState();
-   WaterFillMonitoringRequestShouldBe(SET);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
 
    When StopFillSignalChanges();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
-   WaterFillMonitoringRequestShouldBe(CLEAR);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Stop);
 
    When ReadyToEnterHarvest();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    When RakeCompletesRevolutionAndFillTubeHeaterTimerExpires();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
-   WaterFillMonitoringRequestShouldBe(SET);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
 }
 
 TEST(AluminumMoldIceMaker, ShouldVoteToTurnOffIceMakerWaterValveWhenExitingFillState)

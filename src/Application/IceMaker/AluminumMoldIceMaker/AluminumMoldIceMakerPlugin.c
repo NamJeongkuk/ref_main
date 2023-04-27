@@ -39,10 +39,10 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .skipFillRequestErd = Erd_AluminumMoldIceMakerSkipFillRequest,
    .rakeControlRequestErd = Erd_AluminumMoldIceMakerRakeControlRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_AluminumMoldIceMakerVote,
-   .waterFillMonitoringRequest = Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,
+   .waterFillMonitoringRequestErd = Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,
    .stopFillSignalErd = Erd_AluminumMoldIceMakerStopFillSignal,
-   .rakePosition = Erd_AluminumMoldIceMakerRakePosition,
-   .freezerIceRateTriggerSignal = Erd_FreezerIceRateTriggerSignal,
+   .rakePositionErd = Erd_AluminumMoldIceMakerRakePosition,
+   .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
    .aluminumMoldIceMakerTestRequestErd = Erd_AluminumMoldIceMakerTestRequest
 };
 

@@ -261,7 +261,7 @@ static bool RakeIsHome(AluminumMoldIceMaker_t *instance)
    RakePosition_t position;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->rakePosition,
+      instance->_private.config->rakePositionErd,
       &position);
 
    return position == RakePosition_Home;
@@ -470,27 +470,29 @@ static void ClearRakeControllerRequest(AluminumMoldIceMaker_t *instance)
       clear);
 }
 
-static void RequestWaterFillMonitoring(AluminumMoldIceMaker_t *instance)
+static void StartWaterFillMonitoring(AluminumMoldIceMaker_t *instance)
 {
+   IceMakerWaterFillMonitoringRequest_t request = IceMakerWaterFillMonitoringRequest_Start;
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->waterFillMonitoringRequest,
-      set);
+      instance->_private.config->waterFillMonitoringRequestErd,
+      &request);
 }
 
-static void ClearWaterFillMonitoringRequest(AluminumMoldIceMaker_t *instance)
+static void StopWaterFillMonitoring(AluminumMoldIceMaker_t *instance)
 {
+   IceMakerWaterFillMonitoringRequest_t request = IceMakerWaterFillMonitoringRequest_Stop;
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->waterFillMonitoringRequest,
-      clear);
+      instance->_private.config->waterFillMonitoringRequestErd,
+      &request);
 }
 
 static void SendFreezerIceRateSignal(AluminumMoldIceMaker_t *instance)
 {
    Signal_SendViaErd(
       DataModel_AsDataSource(instance->_private.dataModel),
-      instance->_private.config->freezerIceRateTriggerSignal);
+      instance->_private.config->freezerIceRateTriggerSignalErd);
 }
 
 static void ClearIceMakerTestRequest(AluminumMoldIceMaker_t *instance)
@@ -988,7 +990,7 @@ static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_Fill);
          VoteForIceMakerWaterValve(instance, ON, Vote_Care);
          VoteForIsolationWaterValve(instance, ON, Vote_Care);
-         RequestWaterFillMonitoring(instance);
+         StartWaterFillMonitoring(instance);
          break;
 
       case Signal_TestRequest_Fill:
@@ -1018,7 +1020,7 @@ static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Hsm_Exit:
-         ClearWaterFillMonitoringRequest(instance);
+         StopWaterFillMonitoring(instance);
          VoteForIceMakerWaterValve(instance, OFF, Vote_DontCare);
          VoteForIsolationWaterValve(instance, OFF, Vote_DontCare);
          break;

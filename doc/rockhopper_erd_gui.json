@@ -1970,13 +1970,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Fill Tube Heater Continuous Vote",
-          "name": "Erd_AluminumMoldIceMakerFillTubeHeater_ContinuousVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Aluminum Mold IceMaker Stop Fill Signal",
           "name": "Erd_AluminumMoldIceMakerStopFillSignal",
           "read": true,

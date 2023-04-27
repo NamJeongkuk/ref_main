@@ -32,8 +32,6 @@ static const DispenseControllerConfig_t config = {
    .augerMotorDispensingVoteErd = Erd_AugerMotor_DispensingVote,
    .isolationValveDispensingVoteErd = Erd_IsolationWaterValve_DispensingVote,
    .dispensingValveDispensingVoteErd = Erd_DispenserWaterValve_DispensingVote,
-   .flowMeterWaterDispensedOzX100Erd = Erd_FlowMeterWaterDispensedOzX100,
-   .flowMeterMonitoringRequestErd = Erd_FlowMeterMonitoringRequest,
    .timerModuleErd = Erd_TimerModule
 };
 
