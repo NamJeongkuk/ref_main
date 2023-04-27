@@ -1,0 +1,17 @@
+{
+  "configurations": [
+    {
+      "name": "Target",
+      "makefile": "rockhopper-target.mk",
+      "defines": {
+        "RELEASE": "N",
+        "DEBUG": "Y"
+      }
+    },
+    {
+      "name": "Test",
+      "makefile": "tdd.mk"
+    }
+  ],
+  "version": 2
+}

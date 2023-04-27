@@ -1,0 +1,28 @@
+{
+  "configurations": [
+    {
+      "args": [
+        "--config=${workspaceFolder}/test/Tests/Integration/support/jasmine.json"
+      ],
+      "cwd": "${workspaceRoot}",
+      "name": "Integration Test",
+      "program": "${workspaceFolder}/node_modules/.bin/jasmine",
+      "request": "launch",
+      "runtimeVersion": "18.3.0",
+      "type": "node"
+    },
+    {
+      "args": [
+        "--config=${workspaceFolder}/test/Tests/Integration/support/jasmine.json",
+        "${file}"
+      ],
+      "cwd": "${workspaceRoot}",
+      "name": "Integration Test Current File",
+      "program": "${workspaceFolder}/node_modules/.bin/jasmine",
+      "request": "launch",
+      "runtimeVersion": "18.3.0",
+      "type": "node"
+    }
+  ],
+  "version": "0.2.0"
+}
