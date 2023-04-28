@@ -979,8 +979,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Twist Tray IM Force Harvest",
-               "name": "Erd_TwistTrayIceMaker_ForceHarvest",
+               "displayName": "Twist Tray IM Test Request",
+               "name": "Erd_TwistTrayIceMakerTestRequest",
                "read": true,
                "write": true,
                "interval": 1000000000

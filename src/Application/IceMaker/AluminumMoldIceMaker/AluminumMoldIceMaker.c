@@ -497,7 +497,7 @@ static void SendFreezerIceRateSignal(AluminumMoldIceMaker_t *instance)
 
 static void ClearIceMakerTestRequest(AluminumMoldIceMaker_t *instance)
 {
-   AluminumMoldIceMakerTestRequest_t clearRequest = AluminumMoldIceMakerTestRequest_None;
+   IceMakerTestRequest_t clearRequest = IceMakerTestRequest_None;
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->aluminumMoldIceMakerTestRequestErd,
@@ -1144,15 +1144,15 @@ static void DataModelChanged(void *context, const void *args)
    }
    else if(erd == instance->_private.config->aluminumMoldIceMakerTestRequestErd)
    {
-      const AluminumMoldIceMakerTestRequest_t *request = onChangeData->data;
+      const IceMakerTestRequest_t *request = onChangeData->data;
 
-      if(*request != AluminumMoldIceMakerTestRequest_None)
+      if(*request != IceMakerTestRequest_None)
       {
-         if(*request == AluminumMoldIceMakerTestRequest_Fill)
+         if(*request == IceMakerTestRequest_Fill)
          {
             Hsm_SendSignal(&instance->_private.hsm, Signal_TestRequest_Fill, NULL);
          }
-         else if(*request == AluminumMoldIceMakerTestRequest_Harvest)
+         else if(*request == IceMakerTestRequest_Harvest)
          {
             Hsm_SendSignal(&instance->_private.hsm, Signal_TestRequest_Harvest, NULL);
          }

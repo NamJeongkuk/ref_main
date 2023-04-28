@@ -75,9 +75,9 @@ describe("AluminumMoldIceMaker,", () => {
    };
 
    const iceMakerTestRequest = {
-      none: "AluminumMoldIceMakerTestRequest_None",
-      fill: "AluminumMoldIceMakerTestRequest_Fill",
-      harvest: "AluminumMoldIceMakerTestRequest_Harvest"
+      none: "IceMakerTestRequest_None",
+      fill: "IceMakerTestRequest_Fill",
+      harvest: "IceMakerTestRequest_Harvest"
    }
 
    // Parametric values
@@ -137,11 +137,11 @@ describe("AluminumMoldIceMaker,", () => {
          await sabbathModeIsDisabled();
          await iceMakerIsEnabled();
       }
-      else if(state == hsmState.idleFreeze) {
+      else if (state == hsmState.idleFreeze) {
          await sabbathModeIsEnabled();
          await iceMakerIsEnabled();
       }
-      else if(state == hsmState.harvest) {
+      else if (state == hsmState.harvest) {
          await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.freeze);
          await harvestCountIsNotReadyToHarvest();
          await iceMakerTemperatureIsReadyToHarvest();
@@ -689,7 +689,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theFillTubeHeaterVoteAndCareShouldBe(freezeThawFillTubeHeaterDutyCyclePercentage, voteCare.dontCare);
    });
 
-   it("should transition from Idle Freeze to Thermistor Fault when mold thermistor is invalid", async() => {
+   it("should transition from Idle Freeze to Thermistor Fault when mold thermistor is invalid", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.idleFreeze);
       await theMoldThermistorIsInvalid();
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.idleFreeze);
@@ -717,7 +717,7 @@ describe("AluminumMoldIceMaker,", () => {
       await theAluminumMoldIceMakerHsmStateShouldBe(hsmState.thermistorFault);
    });
 
-   it("should transition from Harvest to Thermistor Fault State when mold thermistor is invalid", async() => {
+   it("should transition from Harvest to Thermistor Fault State when mold thermistor is invalid", async () => {
       await providedTheAluminumMoldIceMakerIsInitializedAndGetsIntoState(hsmState.harvest);
 
       await theMoldThermistorIsInvalid();

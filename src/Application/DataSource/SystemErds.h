@@ -77,7 +77,6 @@
 #include "RakePosition.h"
 #include "IceMakerMoldHeaterControlRequest.h"
 #include "PercentageDutyCycleVote.h"
-#include "AluminumMoldIceMakerTestRequest.h"
 #include "DispenseSelection.h"
 #include "ReadyToDefrostHsmState.h"
 #include "PwmFrequency.h"
@@ -91,6 +90,7 @@
 #include "DispenseStatus.h"
 #include "AugerMotorVotedIceType.h"
 #include "RelativeHumidityPercentx100.h"
+#include "IceMakerTestRequest.h"
 #include "AugerMotorVotedIceType.h"
 #include "AugerMotorControllerFsmState.h"
 #include "PwmVotedDutyCycle.h"
@@ -660,7 +660,7 @@ enum
    ENTRY(Erd_TwistTrayIceMaker_MinimumFreezeTimerRemainingTimeInMsec,        0xF1B6, TimerTicks_t,                      Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_MinimumFreezeTimerRemainingTimeRequest,       0xF1B7, Signal_t,                          Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_MotorFaultActive,                             0xF1B8, bool,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_TwistTrayIceMaker_ForceHarvest,                                 0xF1B9, bool,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMakerTestRequest,                                   0xF1B9, IceMakerTestRequest_t,             Swap_N, Io_None, Sub_Y, Ram,               NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_MotorOperationState,                          0xF1BA, TwistTrayIceMakerMotorOperationState_t, Swap_N, Io_None, Sub_N, Ram,               NotNv,                                    NotFault) \
    \
    ENTRY(Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds,  0xF1BB, uint32_t,                                        Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -690,7 +690,7 @@ enum
    ENTRY(Erd_AluminumMoldIceMakerStopFillSignal,            0xF1D2, Signal_t,                                           Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldFreezeIntegrationCount,            0xF1D3, uint32_t,                                           Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes,  0xF1D4, uint8_t,                                   Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerTestRequest,               0xF1D5, AluminumMoldIceMakerTestRequest_t,                  Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerTestRequest,               0xF1D5, IceMakerTestRequest_t,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ConvertibleCompartmentAsFreshFoodDoorIsOpen,   0xF1D6, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentAsFreezerDoorIsOpen,     0xF1D7, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

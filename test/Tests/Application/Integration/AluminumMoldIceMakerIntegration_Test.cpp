@@ -184,7 +184,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       CHECK_EQUAL(expectedState, actualState);
    }
 
-   void AluminumMoldIceMakerTestRequestIs(AluminumMoldIceMakerTestRequest_t request)
+   void AluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_t request)
    {
       DataModel_Write(
          dataModel,
@@ -493,7 +493,7 @@ TEST(AluminumMoldIceMakerIntegration, ShouldTurnOffIceMakerWaterValveAndHeaterWh
    MoldThermistorShouldBe(Valid);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
 
-   AluminumMoldIceMakerTestRequestIs(AluminumMoldIceMakerTestRequest_Fill);
+   When AluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_Fill);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
    IceMakerWaterValveShouldVote(WaterValveState_On, Vote_Care);
 

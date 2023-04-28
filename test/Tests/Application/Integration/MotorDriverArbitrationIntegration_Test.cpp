@@ -161,7 +161,8 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
 
    void WhenTwistTrayMotorIsRequestedToHarvest()
    {
-      DataModel_Write(dataModel, Erd_TwistTrayIceMaker_ForceHarvest, set);
+      IceMakerTestRequest_t testRequestValue = IceMakerTestRequest_Harvest;
+      DataModel_Write(dataModel, Erd_TwistTrayIceMakerTestRequest, &testRequestValue);
    }
 
    void GivenTheDamperHasHomed()

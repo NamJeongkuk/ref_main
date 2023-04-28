@@ -41,7 +41,8 @@ enum
    Signal_SabbathModeEnabled,
    Signal_SabbathModeDisabled,
    Signal_DoorClosedForLongEnough,
-   Signal_ForcedHarvest,
+   Signal_TestRequest_Fill,
+   Signal_TestRequest_Harvest,
    Signal_IceMakerThermistorIsInvalid,
    Signal_IceMakerThermistorIsValid,
    Signal_IceMakerFilteredTemperatureChanged,
@@ -361,7 +362,11 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          }
          break;
 
-      case Signal_ForcedHarvest:
+      case Signal_TestRequest_Fill:
+         Fsm_Transition(fsm, State_FillingTrayWithWater);
+         break;
+
+      case Signal_TestRequest_Harvest:
          Fsm_Transition(fsm, State_Harvesting);
          break;
 
@@ -397,13 +402,13 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          break;
 
       case Signal_MotorActionResultHarvested:
-         if(IceMakerIsEnabled(instance))
+         if(ItIsSabbathMode(instance) || !IceMakerIsEnabled(instance))
          {
-            Fsm_Transition(fsm, State_FillingTrayWithWater);
+            Fsm_Transition(fsm, State_IdleFreeze);
          }
          else
          {
-            Fsm_Transition(fsm, State_IdleFreeze);
+            Fsm_Transition(fsm, State_FillingTrayWithWater);
          }
          break;
 
@@ -451,18 +456,22 @@ static void State_FillingTrayWithWater(Fsm_t *fsm, FsmSignal_t signal, const voi
          break;
 
       case Signal_TrayFilled:
-         if(!IceMakerThermistorIsValid(instance))
-         {
-            Fsm_Transition(fsm, State_ThermistorFault);
-         }
-         else if(IceMakerIsEnabled(instance))
-         {
-            Fsm_Transition(fsm, State_Freeze);
-         }
-         else
+         if(ItIsSabbathMode(instance) || !IceMakerIsEnabled(instance))
          {
             Fsm_Transition(fsm, State_IdleFreeze);
          }
+         else if(!IceMakerThermistorIsValid(instance))
+         {
+            Fsm_Transition(fsm, State_ThermistorFault);
+         }
+         else
+         {
+            Fsm_Transition(fsm, State_Freeze);
+         }
+         break;
+
+      case Signal_TestRequest_Harvest:
+         Fsm_Transition(fsm, State_Harvesting);
          break;
 
       case Fsm_Exit:
@@ -499,12 +508,16 @@ static void State_BucketIsFull(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          break;
 
       case Signal_FullIceBucketWaitTimeElapsed:
-      case Signal_ForcedHarvest:
+      case Signal_TestRequest_Harvest:
          Fsm_Transition(fsm, State_Harvesting);
          break;
 
       case Signal_IceMakerThermistorIsInvalid:
          Fsm_Transition(fsm, State_ThermistorFault);
+         break;
+
+      case Signal_TestRequest_Fill:
+         Fsm_Transition(fsm, State_FillingTrayWithWater);
          break;
 
       case Signal_IceMakerIsDisabled:
@@ -564,6 +577,14 @@ static void State_IdleFreeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 
       case Signal_IceMakerIsEnabled:
          Fsm_Transition(fsm, State_Freeze);
+         break;
+
+      case Signal_TestRequest_Fill:
+         Fsm_Transition(fsm, State_FillingTrayWithWater);
+         break;
+
+      case Signal_TestRequest_Harvest:
+         Fsm_Transition(fsm, State_Harvesting);
          break;
    }
 }
@@ -676,10 +697,29 @@ static void DataSourceChanged(void *context, const void *data)
             instance);
       }
    }
-   else if(onChangeArgs->erd == Erd_TwistTrayIceMaker_ForceHarvest)
+   else if(onChangeArgs->erd == Erd_TwistTrayIceMakerTestRequest)
    {
-      Fsm_SendSignal(&instance->_private.fsm, Signal_ForcedHarvest, NULL);
-      DataSource_Write(instance->_private.dataSource, Erd_TwistTrayIceMaker_ForceHarvest, clear);
+      const IceMakerTestRequest_t *testRequest = onChangeArgs->data;
+
+      if(*testRequest != IceMakerTestRequest_None)
+      {
+         switch(*testRequest)
+         {
+            case IceMakerTestRequest_Fill:
+               Fsm_SendSignal(&instance->_private.fsm, Signal_TestRequest_Fill, NULL);
+               break;
+
+            case IceMakerTestRequest_Harvest:
+               Fsm_SendSignal(&instance->_private.fsm, Signal_TestRequest_Harvest, NULL);
+               break;
+         }
+
+         IceMakerTestRequest_t testRequestValue = IceMakerTestRequest_None;
+         DataSource_Write(
+            instance->_private.dataSource,
+            Erd_TwistTrayIceMakerTestRequest,
+            &testRequestValue);
+      }
    }
    else if(onChangeArgs->erd == Erd_TwistTrayIceMakerThermistor_IsValidResolved)
    {
