@@ -11,8 +11,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef READYTODEFROSTIMPROVED_H
-#define READYTODEFROSTIMPROVED_H
+#ifndef READYTODEFROST_H
+#define READYTODEFROST_H
 
 #include "I_DataModel.h"
 #include "DefrostData.h"
@@ -46,7 +46,7 @@ typedef struct
    Erd_t readyToDefrostHsmStateErd; // ReadyToDefrostHsmState_t
    const ReadyToDefrostDoorConfiguration_t *doorsConfiguration;
    uint8_t numberOfDoors;
-} ReadyToDefrostImprovedConfiguration_t;
+} ReadyToDefrostConfiguration_t;
 
 typedef struct
 {
@@ -57,15 +57,15 @@ typedef struct
       Hsm_t hsm;
       Timer_t timer;
       EventSubscription_t dataModelSubscription;
-      const ReadyToDefrostImprovedConfiguration_t *config;
+      const ReadyToDefrostConfiguration_t *config;
       const DefrostData_t *defrostData;
    } _private;
-} ReadyToDefrostImproved_t;
+} ReadyToDefrost_t;
 
-void ReadyToDefrostImproved_Init(
-   ReadyToDefrostImproved_t *instance,
+void ReadyToDefrost_Init(
+   ReadyToDefrost_t *instance,
    I_DataModel_t *dataModel,
-   const ReadyToDefrostImprovedConfiguration_t *config,
+   const ReadyToDefrostConfiguration_t *config,
    const DefrostData_t *defrostData);
 
 #endif

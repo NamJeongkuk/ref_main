@@ -105,7 +105,7 @@ static ReadyToDefrostDoorConfiguration_t doorsConfiguration[] = {
    },
 };
 
-static ReadyToDefrostImprovedConfiguration_t readyToDefrostConfig = {
+static ReadyToDefrostConfiguration_t readyToDefrostConfig = {
    .compressorIsOnErd = Erd_CompressorIsOn,
    .defrostCompressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
@@ -257,8 +257,8 @@ void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
       dataModel,
       &defrostHeaterOnTimeCounterConfig);
 
-   ReadyToDefrostImproved_Init(
-      &instance->_private.readyToDefrostImproved,
+   ReadyToDefrost_Init(
+      &instance->_private.readyToDefrost,
       dataModel,
       &readyToDefrostConfig,
       defrostData);

@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "ReadyToDefrostImproved.h"
+#include "ReadyToDefrost.h"
 #include "ReadyToDefrostHsmState.h"
 #include "uassert.h"
 #include "SystemErds.h"
@@ -49,12 +49,12 @@ static const HsmConfiguration_t hsmConfiguration = {
    NUM_ELEMENTS(stateList)
 };
 
-static ReadyToDefrostImproved_t *InstanceFromHsm(Hsm_t *hsm)
+static ReadyToDefrost_t *InstanceFromHsm(Hsm_t *hsm)
 {
-   return CONTAINER_OF(ReadyToDefrostImproved_t, _private.hsm, hsm);
+   return CONTAINER_OF(ReadyToDefrost_t, _private.hsm, hsm);
 }
 
-static void SetHsmStateTo(ReadyToDefrostImproved_t *instance, ReadyToDefrostHsmState_t state)
+static void SetHsmStateTo(ReadyToDefrost_t *instance, ReadyToDefrostHsmState_t state)
 {
    DataModel_Write(
       instance->_private.dataModel,
@@ -62,7 +62,7 @@ static void SetHsmStateTo(ReadyToDefrostImproved_t *instance, ReadyToDefrostHsmS
       &state);
 }
 
-static bool WaitingToDefrost(ReadyToDefrostImproved_t *instance)
+static bool WaitingToDefrost(ReadyToDefrost_t *instance)
 {
    bool waitingToDefrost;
    DataModel_Read(
@@ -73,7 +73,7 @@ static bool WaitingToDefrost(ReadyToDefrostImproved_t *instance)
    return waitingToDefrost;
 }
 
-static bool FreezerTooWarmAtPowerUp(ReadyToDefrostImproved_t *instance)
+static bool FreezerTooWarmAtPowerUp(ReadyToDefrost_t *instance)
 {
    bool freezerTooWarmAtPowerUp;
    DataModel_Read(
@@ -84,7 +84,7 @@ static bool FreezerTooWarmAtPowerUp(ReadyToDefrostImproved_t *instance)
    return freezerTooWarmAtPowerUp;
 }
 
-static void ResetCompressorOnTimeInSecondsToZero(ReadyToDefrostImproved_t *instance)
+static void ResetCompressorOnTimeInSecondsToZero(ReadyToDefrost_t *instance)
 {
    uint32_t seconds = 0;
    DataModel_Write(
@@ -93,7 +93,7 @@ static void ResetCompressorOnTimeInSecondsToZero(ReadyToDefrostImproved_t *insta
       &seconds);
 }
 
-static void ResetWaitingForDefrostTimeInSecondsToZero(ReadyToDefrostImproved_t *instance)
+static void ResetWaitingForDefrostTimeInSecondsToZero(ReadyToDefrost_t *instance)
 {
    uint32_t seconds = 0;
    DataModel_Write(
@@ -102,7 +102,7 @@ static void ResetWaitingForDefrostTimeInSecondsToZero(ReadyToDefrostImproved_t *
       &seconds);
 }
 
-static void ResetDoorAccelerationsInSecondsToZero(ReadyToDefrostImproved_t *instance)
+static void ResetDoorAccelerationsInSecondsToZero(ReadyToDefrost_t *instance)
 {
    uint32_t seconds = 0;
    for(uint8_t i = 0; i < instance->_private.config->numberOfDoors; i++)
@@ -114,7 +114,7 @@ static void ResetDoorAccelerationsInSecondsToZero(ReadyToDefrostImproved_t *inst
    }
 }
 
-static bool ConvertibleCompartmentIsAbnormal(ReadyToDefrostImproved_t *instance)
+static bool ConvertibleCompartmentIsAbnormal(ReadyToDefrost_t *instance)
 {
    bool hasConvertibleCompartment;
    DataModel_Read(
@@ -131,7 +131,7 @@ static bool ConvertibleCompartmentIsAbnormal(ReadyToDefrostImproved_t *instance)
    return hasConvertibleCompartment && convertibleCompartmentDefrostWasAbnormal;
 }
 
-static bool TimeBetweenDefrostsShouldBeMinimum(ReadyToDefrostImproved_t *instance)
+static bool TimeBetweenDefrostsShouldBeMinimum(ReadyToDefrost_t *instance)
 {
    bool freshFoodDefrostWasAbnormal;
    DataModel_Read(
@@ -171,7 +171,7 @@ static bool TimeBetweenDefrostsShouldBeMinimum(ReadyToDefrostImproved_t *instanc
       eepromWasCleared);
 }
 
-static uint16_t TimeBetweenDefrostsInMinutesDependingOnCurrentSystemConditions(ReadyToDefrostImproved_t *instance)
+static uint16_t TimeBetweenDefrostsInMinutesDependingOnCurrentSystemConditions(ReadyToDefrost_t *instance)
 {
    uint16_t timeBetweenDefrostsInMinutes =
       instance->_private.defrostData->idleData.maxTimeBetweenDefrostsInMinutes;
@@ -185,7 +185,7 @@ static uint16_t TimeBetweenDefrostsInMinutesDependingOnCurrentSystemConditions(R
    return timeBetweenDefrostsInMinutes;
 }
 
-static uint16_t TimeBetweenDefrostsInMinutes(ReadyToDefrostImproved_t *instance)
+static uint16_t TimeBetweenDefrostsInMinutes(ReadyToDefrost_t *instance)
 {
    uint16_t timeBetweenDefrostsInMinutes;
    DataModel_Read(
@@ -196,7 +196,7 @@ static uint16_t TimeBetweenDefrostsInMinutes(ReadyToDefrostImproved_t *instance)
    return timeBetweenDefrostsInMinutes;
 }
 
-static void SetTimeBetweenDefrostsInMinutesTo(ReadyToDefrostImproved_t *instance, uint16_t minutes)
+static void SetTimeBetweenDefrostsInMinutesTo(ReadyToDefrost_t *instance, uint16_t minutes)
 {
    DataModel_Write(
       instance->_private.dataModel,
@@ -204,7 +204,7 @@ static void SetTimeBetweenDefrostsInMinutesTo(ReadyToDefrostImproved_t *instance
       &minutes);
 }
 
-static uint32_t DefrostCompressorOnTimeInSeconds(ReadyToDefrostImproved_t *instance)
+static uint32_t DefrostCompressorOnTimeInSeconds(ReadyToDefrost_t *instance)
 {
    uint32_t seconds;
    DataModel_Read(
@@ -215,7 +215,7 @@ static uint32_t DefrostCompressorOnTimeInSeconds(ReadyToDefrostImproved_t *insta
    return seconds;
 }
 
-static uint32_t DoorAccelerationsInSeconds(ReadyToDefrostImproved_t *instance)
+static uint32_t DoorAccelerationsInSeconds(ReadyToDefrost_t *instance)
 {
    uint32_t totalAccelerations = 0;
    for(uint8_t i = 0; i < instance->_private.config->numberOfDoors; i++)
@@ -232,7 +232,7 @@ static uint32_t DoorAccelerationsInSeconds(ReadyToDefrostImproved_t *instance)
    return totalAccelerations;
 }
 
-static bool CompressorIsOn(ReadyToDefrostImproved_t *instance)
+static bool CompressorIsOn(ReadyToDefrost_t *instance)
 {
    bool compressorIsOn;
    DataModel_Read(
@@ -243,7 +243,7 @@ static bool CompressorIsOn(ReadyToDefrostImproved_t *instance)
    return compressorIsOn;
 }
 
-static void SetWaitingDefrostTimeInSecondsTo(ReadyToDefrostImproved_t *instance, uint32_t seconds)
+static void SetWaitingDefrostTimeInSecondsTo(ReadyToDefrost_t *instance, uint32_t seconds)
 {
    DataModel_Write(
       instance->_private.dataModel,
@@ -251,17 +251,17 @@ static void SetWaitingDefrostTimeInSecondsTo(ReadyToDefrostImproved_t *instance,
       &seconds);
 }
 
-static void SetWaitingForDefrostTimeInSecondsToDefrostCompressorOnTimeInSeconds(ReadyToDefrostImproved_t *instance)
+static void SetWaitingForDefrostTimeInSecondsToDefrostCompressorOnTimeInSeconds(ReadyToDefrost_t *instance)
 {
    SetWaitingDefrostTimeInSecondsTo(instance, DefrostCompressorOnTimeInSeconds(instance));
 }
 
-static void SetWaitingForDefrostTimeInSecondsToDefrostCompressorOnTimeInSecondsPlusDoorAccelerationsInSeconds(ReadyToDefrostImproved_t *instance)
+static void SetWaitingForDefrostTimeInSecondsToDefrostCompressorOnTimeInSecondsPlusDoorAccelerationsInSeconds(ReadyToDefrost_t *instance)
 {
    SetWaitingDefrostTimeInSecondsTo(instance, DefrostCompressorOnTimeInSeconds(instance) + DoorAccelerationsInSeconds(instance));
 }
 
-static bool ReadyToDefrost(ReadyToDefrostImproved_t *instance)
+static bool ReadyToDefrost(ReadyToDefrost_t *instance)
 {
    uint16_t timeBetweenDefrostsInMinutes;
    DataModel_Read(
@@ -273,7 +273,7 @@ static bool ReadyToDefrost(ReadyToDefrostImproved_t *instance)
       ((DefrostCompressorOnTimeInSeconds(instance) + DoorAccelerationsInSeconds(instance)) >= timeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE));
 }
 
-static void SetReadyToDefrostTo(ReadyToDefrostImproved_t *instance, bool state)
+static void SetReadyToDefrostTo(ReadyToDefrost_t *instance, bool state)
 {
    DataModel_Write(
       instance->_private.dataModel,
@@ -281,7 +281,7 @@ static void SetReadyToDefrostTo(ReadyToDefrostImproved_t *instance, bool state)
       &state);
 }
 
-static bool DoorIsOpen(ReadyToDefrostImproved_t *instance, uint8_t doorIndex)
+static bool DoorIsOpen(ReadyToDefrost_t *instance, uint8_t doorIndex)
 {
    bool doorIsOpen;
    DataModel_Read(
@@ -292,7 +292,7 @@ static bool DoorIsOpen(ReadyToDefrostImproved_t *instance, uint8_t doorIndex)
    return doorIsOpen;
 }
 
-static bool AtLeastOneDoorIsOpen(ReadyToDefrostImproved_t *instance)
+static bool AtLeastOneDoorIsOpen(ReadyToDefrost_t *instance)
 {
    for(uint8_t i = 0; i < instance->_private.config->numberOfDoors; i++)
    {
@@ -304,7 +304,7 @@ static bool AtLeastOneDoorIsOpen(ReadyToDefrostImproved_t *instance)
    return false;
 }
 
-static uint16_t DoorAccelerationFactor(ReadyToDefrostImproved_t *instance, uint8_t doorIndex)
+static uint16_t DoorAccelerationFactor(ReadyToDefrost_t *instance, uint8_t doorIndex)
 {
    uint16_t factor;
    memcpy(
@@ -315,7 +315,7 @@ static uint16_t DoorAccelerationFactor(ReadyToDefrostImproved_t *instance, uint8
    return factor;
 }
 
-static uint32_t SumOfOpenDoorFactors(ReadyToDefrostImproved_t *instance)
+static uint32_t SumOfOpenDoorFactors(ReadyToDefrost_t *instance)
 {
    uint32_t sumOfOpenDoorFactorsInSecondsPerSecond = 0;
 
@@ -332,17 +332,17 @@ static uint32_t SumOfOpenDoorFactors(ReadyToDefrostImproved_t *instance)
 
 static void MinimumTimeBetweenDefrostsTimeExpired(void *context)
 {
-   ReadyToDefrostImproved_t *instance = context;
+   ReadyToDefrost_t *instance = context;
    Hsm_SendSignal(&instance->_private.hsm, Signal_MinimumTimeBetweenDefrostsTimeExpired, NULL);
 }
 
-static TimerTicks_t RemainingTimeUntilMinimumTimeBetweenDefrostsIsReachedInMilliseconds(ReadyToDefrostImproved_t *instance)
+static TimerTicks_t RemainingTimeUntilMinimumTimeBetweenDefrostsIsReachedInMilliseconds(ReadyToDefrost_t *instance)
 {
    return (instance->_private.defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN) -
       (DefrostCompressorOnTimeInSeconds(instance) * MSEC_PER_SEC);
 }
 
-static void StartMinimumTimeBetweenDefrostsTimer(ReadyToDefrostImproved_t *instance)
+static void StartMinimumTimeBetweenDefrostsTimer(ReadyToDefrost_t *instance)
 {
    TimerModule_StartOneShot(
       DataModelErdPointerAccess_GetTimerModule(
@@ -356,11 +356,11 @@ static void StartMinimumTimeBetweenDefrostsTimer(ReadyToDefrostImproved_t *insta
 
 static void UpdatePeriodExpired(void *context)
 {
-   ReadyToDefrostImproved_t *instance = context;
+   ReadyToDefrost_t *instance = context;
    Hsm_SendSignal(&instance->_private.hsm, Signal_UpdatePeriodExpired, NULL);
 }
 
-static void StartPeriodicUpdateTimer(ReadyToDefrostImproved_t *instance)
+static void StartPeriodicUpdateTimer(ReadyToDefrost_t *instance)
 {
    TimerModule_StartOneShot(
       DataModelErdPointerAccess_GetTimerModule(
@@ -374,11 +374,11 @@ static void StartPeriodicUpdateTimer(ReadyToDefrostImproved_t *instance)
 
 static void RemainingTimeBetweenDefrostsTimeExpired(void *context)
 {
-   ReadyToDefrostImproved_t *instance = context;
+   ReadyToDefrost_t *instance = context;
    Hsm_SendSignal(&instance->_private.hsm, Signal_RemainingTimeBetweenDefrostsTimeExpired, NULL);
 }
 
-static void StartRemainingTimeBetweenDefrostsTimerFor(ReadyToDefrostImproved_t *instance, TimerTicks_t ticks)
+static void StartRemainingTimeBetweenDefrostsTimerFor(ReadyToDefrost_t *instance, TimerTicks_t ticks)
 {
    TimerModule_StartOneShot(
       DataModelErdPointerAccess_GetTimerModule(
@@ -390,7 +390,7 @@ static void StartRemainingTimeBetweenDefrostsTimerFor(ReadyToDefrostImproved_t *
       instance);
 }
 
-static uint32_t RemainingTimeBetweenDefrostsInMilliseconds(ReadyToDefrostImproved_t *instance)
+static uint32_t RemainingTimeBetweenDefrostsInMilliseconds(ReadyToDefrost_t *instance)
 {
    return ((TimeBetweenDefrostsInMinutes(instance) * SECONDS_PER_MINUTE) -
              DefrostCompressorOnTimeInSeconds(instance) -
@@ -398,7 +398,7 @@ static uint32_t RemainingTimeBetweenDefrostsInMilliseconds(ReadyToDefrostImprove
       MSEC_PER_SEC;
 }
 
-static TimerTicks_t RemainingTimeUntilReadyToDefrostInMilliseconds(ReadyToDefrostImproved_t *instance)
+static TimerTicks_t RemainingTimeUntilReadyToDefrostInMilliseconds(ReadyToDefrost_t *instance)
 {
    if(CompressorIsOn(instance))
    {
@@ -420,7 +420,7 @@ static TimerTicks_t RemainingTimeUntilReadyToDefrostInMilliseconds(ReadyToDefros
    return 0;
 }
 
-static TimerTicks_t ElapsedTicks(ReadyToDefrostImproved_t *instance)
+static TimerTicks_t ElapsedTicks(ReadyToDefrost_t *instance)
 {
    return TimerModule_TicksSinceLastStarted(
       DataModelErdPointerAccess_GetTimerModule(
@@ -429,7 +429,7 @@ static TimerTicks_t ElapsedTicks(ReadyToDefrostImproved_t *instance)
       &instance->_private.timer);
 }
 
-static void AddElapsedTicksToCompressorOnTime(ReadyToDefrostImproved_t *instance)
+static void AddElapsedTicksToCompressorOnTime(ReadyToDefrost_t *instance)
 {
    uint32_t updatedTimeInSeconds = DefrostCompressorOnTimeInSeconds(instance) + (ElapsedTicks(instance) / MSEC_PER_SEC);
 
@@ -439,7 +439,7 @@ static void AddElapsedTicksToCompressorOnTime(ReadyToDefrostImproved_t *instance
       &updatedTimeInSeconds);
 }
 
-static void StopTimer(ReadyToDefrostImproved_t *instance)
+static void StopTimer(ReadyToDefrost_t *instance)
 {
    TimerModule_Stop(
       DataModelErdPointerAccess_GetTimerModule(
@@ -448,7 +448,7 @@ static void StopTimer(ReadyToDefrostImproved_t *instance)
       &instance->_private.timer);
 }
 
-static void StartTimerForRemainingTimeBetweenDefrostsIfRemainingTimeIsLessThanPeriodicUpdateTimeOtherwiseStartTimerForPeriodicUpdateTime(ReadyToDefrostImproved_t *instance)
+static void StartTimerForRemainingTimeBetweenDefrostsIfRemainingTimeIsLessThanPeriodicUpdateTimeOtherwiseStartTimerForPeriodicUpdateTime(ReadyToDefrost_t *instance)
 {
    if((CompressorIsOn(instance) || AtLeastOneDoorIsOpen(instance)) && (RemainingTimeUntilReadyToDefrostInMilliseconds(instance) < (UpdatePeriodInSeconds * MSEC_PER_SEC)))
    {
@@ -464,7 +464,7 @@ static void StartTimerForRemainingTimeBetweenDefrostsIfRemainingTimeIsLessThanPe
    }
 }
 
-static void IncrementDoorAccelerationByElapsedTicks(ReadyToDefrostImproved_t *instance, TimerTicks_t elapsedTicks, uint8_t doorIndex)
+static void IncrementDoorAccelerationByElapsedTicks(ReadyToDefrost_t *instance, TimerTicks_t elapsedTicks, uint8_t doorIndex)
 {
    uint32_t accelerations;
    DataModel_Read(
@@ -479,12 +479,12 @@ static void IncrementDoorAccelerationByElapsedTicks(ReadyToDefrostImproved_t *in
       &accelerations);
 }
 
-static void AddElapsedTicksToDoorAccelerationForDoorThatClosed(ReadyToDefrostImproved_t *instance, uint8_t doorIndex)
+static void AddElapsedTicksToDoorAccelerationForDoorThatClosed(ReadyToDefrost_t *instance, uint8_t doorIndex)
 {
    IncrementDoorAccelerationByElapsedTicks(instance, ElapsedTicks(instance), doorIndex);
 }
 
-static void AddElapsedTicksToDoorAccelerationForOpenDoors(ReadyToDefrostImproved_t *instance)
+static void AddElapsedTicksToDoorAccelerationForOpenDoors(ReadyToDefrost_t *instance)
 {
    uint32_t elapsedTicks = ElapsedTicks(instance);
 
@@ -497,7 +497,7 @@ static void AddElapsedTicksToDoorAccelerationForOpenDoors(ReadyToDefrostImproved
    }
 }
 
-static void AddElapsedTicksToDoorAccelerationForOpenDoorsExceptForDoorThatJustOpened(ReadyToDefrostImproved_t *instance, uint8_t doorIndex)
+static void AddElapsedTicksToDoorAccelerationForOpenDoorsExceptForDoorThatJustOpened(ReadyToDefrost_t *instance, uint8_t doorIndex)
 {
    uint32_t elapsedTicks = ElapsedTicks(instance);
 
@@ -510,7 +510,7 @@ static void AddElapsedTicksToDoorAccelerationForOpenDoorsExceptForDoorThatJustOp
    }
 }
 
-static void StartMinimumTimeBetweenDefrostsTimerIfCompressorIsOnAndMinimumTimeBetweenDefrostsIsLessThanPeriodicUpdateOtherwiseStartTimerForPeriodicUpdateTimeIfCompressorIsOnOrADoorIsOpen(ReadyToDefrostImproved_t *instance)
+static void StartMinimumTimeBetweenDefrostsTimerIfCompressorIsOnAndMinimumTimeBetweenDefrostsIsLessThanPeriodicUpdateOtherwiseStartTimerForPeriodicUpdateTimeIfCompressorIsOnOrADoorIsOpen(ReadyToDefrost_t *instance)
 {
    if(CompressorIsOn(instance) && (RemainingTimeUntilMinimumTimeBetweenDefrostsIsReachedInMilliseconds(instance) < (UpdatePeriodInSeconds * MSEC_PER_SEC)))
    {
@@ -522,7 +522,7 @@ static void StartMinimumTimeBetweenDefrostsTimerIfCompressorIsOnAndMinimumTimeBe
    }
 }
 
-static void AddElapsedTicksToCompressorOnTimeIfCompressorIsOn(ReadyToDefrostImproved_t *instance)
+static void AddElapsedTicksToCompressorOnTimeIfCompressorIsOn(ReadyToDefrost_t *instance)
 {
    if(CompressorIsOn(instance))
    {
@@ -530,7 +530,7 @@ static void AddElapsedTicksToCompressorOnTimeIfCompressorIsOn(ReadyToDefrostImpr
    }
 }
 
-static void SetWaitingForDefrostTimeInSecondsToDefrostCompressorOnTimeInSecondsIfCompressorIsOn(ReadyToDefrostImproved_t *instance)
+static void SetWaitingForDefrostTimeInSecondsToDefrostCompressorOnTimeInSecondsIfCompressorIsOn(ReadyToDefrost_t *instance)
 {
    if(CompressorIsOn(instance))
    {
@@ -540,7 +540,7 @@ static void SetWaitingForDefrostTimeInSecondsToDefrostCompressorOnTimeInSecondsI
 
 static bool State_WaitingToGetReadyToDefrost(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
-   ReadyToDefrostImproved_t *instance = InstanceFromHsm(hsm);
+   ReadyToDefrost_t *instance = InstanceFromHsm(hsm);
    IGNORE(data);
 
    switch(signal)
@@ -567,7 +567,7 @@ static bool State_WaitingToGetReadyToDefrost(Hsm_t *hsm, HsmSignal_t signal, con
 
 static bool State_WaitingForMinimumTimeBetweenDefrosts(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
-   ReadyToDefrostImproved_t *instance = InstanceFromHsm(hsm);
+   ReadyToDefrost_t *instance = InstanceFromHsm(hsm);
    const uint8_t *doorIndex = data;
 
    switch(signal)
@@ -670,7 +670,7 @@ static bool State_WaitingForMinimumTimeBetweenDefrosts(Hsm_t *hsm, HsmSignal_t s
 
 static bool State_WaitingForRemainingTimeBetweenDefrosts(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
-   ReadyToDefrostImproved_t *instance = InstanceFromHsm(hsm);
+   ReadyToDefrost_t *instance = InstanceFromHsm(hsm);
    const uint8_t *doorIndex = data;
 
    switch(signal)
@@ -753,7 +753,7 @@ static bool State_WaitingForRemainingTimeBetweenDefrosts(Hsm_t *hsm, HsmSignal_t
 
 static bool State_ReadyAndDefrosting(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
-   ReadyToDefrostImproved_t *instance = InstanceFromHsm(hsm);
+   ReadyToDefrost_t *instance = InstanceFromHsm(hsm);
    IGNORE(data);
 
    switch(signal)
@@ -784,7 +784,7 @@ static bool State_ReadyAndDefrosting(Hsm_t *hsm, HsmSignal_t signal, const void 
 
 static void DataModelChanged(void *context, const void *args)
 {
-   ReadyToDefrostImproved_t *instance = context;
+   ReadyToDefrost_t *instance = context;
    const DataModelOnDataChangeArgs_t *onChangeData = args;
    Erd_t erd = onChangeData->erd;
 
@@ -845,7 +845,7 @@ static void DataModelChanged(void *context, const void *args)
    }
 }
 
-static HsmState_t InitialState(ReadyToDefrostImproved_t *instance)
+static HsmState_t InitialState(ReadyToDefrost_t *instance)
 {
    if(WaitingToDefrost(instance))
    {
@@ -862,10 +862,10 @@ static HsmState_t InitialState(ReadyToDefrostImproved_t *instance)
    return State_ReadyAndDefrosting;
 }
 
-void ReadyToDefrostImproved_Init(
-   ReadyToDefrostImproved_t *instance,
+void ReadyToDefrost_Init(
+   ReadyToDefrost_t *instance,
    I_DataModel_t *dataModel,
-   const ReadyToDefrostImprovedConfiguration_t *config,
+   const ReadyToDefrostConfiguration_t *config,
    const DefrostData_t *defrostData)
 {
    bool freezerTooWarmOnPowerUpReady;

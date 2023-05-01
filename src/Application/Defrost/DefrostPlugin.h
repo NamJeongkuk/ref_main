@@ -19,7 +19,7 @@
 #include "FreezerDefrostHeaterVotingFrameworkPlugin.h"
 #include "NextDefrostTypeArbiter.h"
 #include "DefrostTestRequestHandler.h"
-#include "ReadyToDefrostImproved.h"
+#include "ReadyToDefrost.h"
 
 typedef struct
 {
@@ -27,7 +27,7 @@ typedef struct
    {
       Defrost_t defrost;
       DefrostHeaterMaxOnTime_t defrostHeaterMaxOnTime;
-      ReadyToDefrostImproved_t readyToDefrostImproved;
+      ReadyToDefrost_t readyToDefrost;
       TimeThatPrechillConditionsAreMet_t timeThatPrechillConditionsAreMet;
       DefrostParameterSelector_t defrostParameterSelector;
       DefrostStateOnCompareMatch_t defrostStateOnCompareMatch;
