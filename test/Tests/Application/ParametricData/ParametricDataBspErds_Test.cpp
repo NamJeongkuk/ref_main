@@ -182,18 +182,18 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForRightHandFreshFoodDoorIsOpen)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_RightHandFreshFoodDoorIsOpen)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_RightSideFreshFoodDoorStatus)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_RightHandFreshFoodDoorIsOpen);
+   CHECK_EQUAL(*erd, Erd_RightSideFreshFoodDoorStatus);
 }
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForFreezerDoorIsOpen)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_FreezerDoorIsOpen)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_LeftSideFreezerDoorStatus)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_FreezerDoorIsOpen);
+   CHECK_EQUAL(*erd, Erd_LeftSideFreezerDoorStatus);
 }
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMakerFeelerArmPosition)

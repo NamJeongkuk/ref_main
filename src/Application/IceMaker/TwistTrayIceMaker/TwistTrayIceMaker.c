@@ -676,7 +676,7 @@ static void DataSourceChanged(void *context, const void *data)
          Fsm_SendSignal(&instance->_private.fsm, Signal_SabbathModeDisabled, NULL);
       }
    }
-   else if(onChangeArgs->erd == Erd_FreezerDoorIsOpen)
+   else if(onChangeArgs->erd == Erd_LeftSideFreezerDoorStatus)
    {
       REINTERPRET(doorIsOpen, onChangeArgs->data, const bool *);
 

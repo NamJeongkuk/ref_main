@@ -36,9 +36,9 @@ static const DispenseControllerConfig_t dispenseControllerConfig = {
 };
 
 static const DoorInhibitDispensingResolverConfig_t doorInhibitWaterDispensingResolverConfig = {
-   .leftHandFreshFoodDoorIsOpenErd = Erd_LeftHandFreshFoodDoorIsOpen,
-   .rightHandFreshFoodDoorIsOpenErd = Erd_RightHandFreshFoodDoorIsOpen,
-   .leftHandFreezerDoorIsOpenErd = Erd_FreezerDoorIsOpen,
+   .leftHandFreshFoodDoorIsOpenErd = Erd_LeftSideFreshFoodDoorIsOpen,
+   .rightHandFreshFoodDoorIsOpenErd = Erd_RightSideFreshFoodDoorStatus,
+   .leftHandFreezerDoorIsOpenErd = Erd_LeftSideFreezerDoorStatus,
    .rightHandFreezerDoorIsOpenErd = Erd_Invalid,
    .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorIsOpen,
    .doorInDoorIsOpenErd = Erd_DoorInDoorIsOpen,
@@ -46,9 +46,9 @@ static const DoorInhibitDispensingResolverConfig_t doorInhibitWaterDispensingRes
 };
 
 static const DoorInhibitDispensingResolverConfig_t doorInhibitIceDispensingResolverConfig = {
-   .leftHandFreshFoodDoorIsOpenErd = Erd_LeftHandFreshFoodDoorIsOpen,
-   .rightHandFreshFoodDoorIsOpenErd = Erd_RightHandFreshFoodDoorIsOpen,
-   .leftHandFreezerDoorIsOpenErd = Erd_FreezerDoorIsOpen,
+   .leftHandFreshFoodDoorIsOpenErd = Erd_LeftSideFreshFoodDoorIsOpen,
+   .rightHandFreshFoodDoorIsOpenErd = Erd_RightSideFreshFoodDoorStatus,
+   .leftHandFreezerDoorIsOpenErd = Erd_LeftSideFreezerDoorStatus,
    .rightHandFreezerDoorIsOpenErd = Erd_Invalid,
    .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorIsOpen,
    .doorInDoorIsOpenErd = Erd_DoorInDoorIsOpen,

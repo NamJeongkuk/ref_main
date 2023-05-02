@@ -621,15 +621,15 @@
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Left Fresh Food Door Is Open",
-          "name": "Erd_LeftHandFreshFoodDoorIsOpen",
+          "displayName": "Left Side Fresh Food Door Is Open",
+          "name": "Erd_LeftSideFreshFoodDoorIsOpen",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Right Fresh Food Door Is Open",
-          "name": "Erd_RightHandFreshFoodDoorIsOpen",
+          "displayName": "Right Side Fresh Food Door Status",
+          "name": "Erd_RightSideFreshFoodDoorStatus",
           "read": true,
           "write": true
         },
@@ -642,8 +642,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Freezer Door Is Open",
-          "name": "Erd_FreezerDoorIsOpen",
+          "displayName": "Left Side Freezer Door Status",
+          "name": "Erd_LeftSideFreezerDoorStatus",
           "read": true,
           "write": true
         },
@@ -2414,8 +2414,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Left Hand Fresh Food Door Is Open",
-          "name": "Erd_LeftHandFreshFoodDoorIsOpen",
+          "displayName": "Left Side Fresh Food Door Is Open",
+          "name": "Erd_LeftSideFreshFoodDoorIsOpen",
           "read": true,
           "write": true
         },
@@ -2435,8 +2435,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Right Hand Fresh Food Door Is Open",
-          "name": "Erd_RightHandFreshFoodDoorIsOpen",
+          "displayName": "Right Side Fresh Food Door Is Open",
+          "name": "Erd_RightSideFreshFoodDoorStatus",
           "read": true,
           "write": true
         },
@@ -2477,8 +2477,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Freezer Door Is Open",
-          "name": "Erd_FreezerDoorIsOpen",
+          "displayName": "Left Side Freezer Door Is Open",
+          "name": "Erd_LeftSideFreezerDoorStatus",
           "read": true,
           "write": true
         },

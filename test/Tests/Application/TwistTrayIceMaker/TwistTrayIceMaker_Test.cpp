@@ -110,7 +110,7 @@ static const DataModel_TestDoubleConfigurationEntry_t erdDefinitions[] = {
    { Erd_TwistTrayIceMaker_MotorFaultActive, sizeof(bool) },
    { Erd_SabbathMode, sizeof(bool) },
    { Erd_EnhancedSabbathMode, sizeof(bool) },
-   { Erd_FreezerDoorIsOpen, sizeof(bool) },
+   { Erd_LeftSideFreezerDoorStatus, sizeof(bool) },
    { Erd_TwistTrayIceMakerTestRequest, sizeof(IceMakerTestRequest_t) },
    { Erd_FreezerIceRateTriggerSignal, sizeof(Signal_t) },
    { Erd_IceMakerEnabledOverrideResolved, sizeof(bool) }
@@ -292,7 +292,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_FreezerDoorIsOpen,
+         Erd_LeftSideFreezerDoorStatus,
          &freezerDoorState);
    }
 

@@ -22,8 +22,8 @@ enum
 };
 
 static const Erd_t doorIsOpenErds[] = {
-   Erd_LeftHandFreshFoodDoorIsOpen,
-   Erd_RightHandFreshFoodDoorIsOpen
+   Erd_LeftSideFreshFoodDoorIsOpen,
+   Erd_RightSideFreshFoodDoorStatus
 };
 
 static const Erd_t pwmVotedDutyCycleErds[] = {
@@ -92,21 +92,21 @@ TEST_GROUP(LightingDoorVoteResolver)
 
    void GivenOneDoorIsOpenAndPwmVotedDutyCycleIsMax()
    {
-      GivenTheDoorIs(Erd_LeftHandFreshFoodDoorIsOpen, false);
-      GivenTheDoorIs(Erd_RightHandFreshFoodDoorIsOpen, false);
+      GivenTheDoorIs(Erd_LeftSideFreshFoodDoorIsOpen, false);
+      GivenTheDoorIs(Erd_RightSideFreshFoodDoorStatus, false);
       GivenInitialization();
 
       ThePwmVotedDutyCycleErdsShouldBe(PwmDutyCycle_Min);
 
-      WhenTheDoorStateChangesTo(Erd_LeftHandFreshFoodDoorIsOpen, true);
+      WhenTheDoorStateChangesTo(Erd_LeftSideFreshFoodDoorIsOpen, true);
       ThePwmVotedDutyCycleErdsShouldBe(PwmDutyCycle_Max);
    }
 };
 
 TEST(LightingDoorVoteResolver, ShouldSetPwmVotedDutyCycleErdsToMinIfAllDoorsAreClosedOnInitialization)
 {
-   GivenTheDoorIs(Erd_LeftHandFreshFoodDoorIsOpen, false);
-   GivenTheDoorIs(Erd_RightHandFreshFoodDoorIsOpen, false);
+   GivenTheDoorIs(Erd_LeftSideFreshFoodDoorIsOpen, false);
+   GivenTheDoorIs(Erd_RightSideFreshFoodDoorStatus, false);
    GivenInitialization();
 
    ThePwmVotedDutyCycleErdsShouldBe(PwmDutyCycle_Min);
@@ -114,8 +114,8 @@ TEST(LightingDoorVoteResolver, ShouldSetPwmVotedDutyCycleErdsToMinIfAllDoorsAreC
 
 TEST(LightingDoorVoteResolver, ShouldSetPwmVotedDutyCycleErdsToMaxIfOneDoorIsOpenOnInitialization)
 {
-   GivenTheDoorIs(Erd_LeftHandFreshFoodDoorIsOpen, false);
-   GivenTheDoorIs(Erd_RightHandFreshFoodDoorIsOpen, true);
+   GivenTheDoorIs(Erd_LeftSideFreshFoodDoorIsOpen, false);
+   GivenTheDoorIs(Erd_RightSideFreshFoodDoorStatus, true);
    GivenInitialization();
 
    ThePwmVotedDutyCycleErdsShouldBe(PwmDutyCycle_Max);
@@ -130,25 +130,25 @@ TEST(LightingDoorVoteResolver, ShouldSetPwmVotedDutyCycleErdsToMaxWhenOneDoorOpe
 {
    GivenOneDoorIsOpenAndPwmVotedDutyCycleIsMax();
 
-   WhenTheDoorStateChangesTo(Erd_RightHandFreshFoodDoorIsOpen, true);
+   WhenTheDoorStateChangesTo(Erd_RightSideFreshFoodDoorStatus, true);
    ThePwmVotedDutyCycleErdsShouldBe(PwmDutyCycle_Max);
 
-   WhenTheDoorStateChangesTo(Erd_RightHandFreshFoodDoorIsOpen, false);
+   WhenTheDoorStateChangesTo(Erd_RightSideFreshFoodDoorStatus, false);
    ThePwmVotedDutyCycleErdsShouldBe(PwmDutyCycle_Max);
 
-   WhenTheDoorStateChangesTo(Erd_LeftHandFreshFoodDoorIsOpen, false);
+   WhenTheDoorStateChangesTo(Erd_LeftSideFreshFoodDoorIsOpen, false);
    ThePwmVotedDutyCycleErdsShouldBe(PwmDutyCycle_Min);
 }
 
 TEST(LightingDoorVoteResolver, ShouldSetPwmVotedDutyCycleErdsToMinWhenAnyDoorIsOpenForTheMaxDoorOpenTime)
 {
-   GivenTheDoorIs(Erd_LeftHandFreshFoodDoorIsOpen, false);
-   GivenTheDoorIs(Erd_RightHandFreshFoodDoorIsOpen, false);
+   GivenTheDoorIs(Erd_LeftSideFreshFoodDoorIsOpen, false);
+   GivenTheDoorIs(Erd_RightSideFreshFoodDoorStatus, false);
    GivenInitialization();
 
    ThePwmVotedDutyCycleErdsShouldBe(PwmDutyCycle_Min);
 
-   WhenTheDoorStateChangesTo(Erd_LeftHandFreshFoodDoorIsOpen, true);
+   WhenTheDoorStateChangesTo(Erd_LeftSideFreshFoodDoorIsOpen, true);
    ThePwmVotedDutyCycleErdsShouldBe(PwmDutyCycle_Max);
 
    After(MaxDoorOpenTimeInMsec - 1);
@@ -160,19 +160,19 @@ TEST(LightingDoorVoteResolver, ShouldSetPwmVotedDutyCycleErdsToMinWhenAnyDoorIsO
 
 TEST(LightingDoorVoteResolver, ShouldResetMaxDoorOpenTimeWhenAnotherDoorOpensWhileADifferentDoorIsOpen)
 {
-   GivenTheDoorIs(Erd_LeftHandFreshFoodDoorIsOpen, false);
-   GivenTheDoorIs(Erd_RightHandFreshFoodDoorIsOpen, false);
+   GivenTheDoorIs(Erd_LeftSideFreshFoodDoorIsOpen, false);
+   GivenTheDoorIs(Erd_RightSideFreshFoodDoorStatus, false);
    GivenInitialization();
 
    ThePwmVotedDutyCycleErdsShouldBe(PwmDutyCycle_Min);
 
-   WhenTheDoorStateChangesTo(Erd_LeftHandFreshFoodDoorIsOpen, true);
+   WhenTheDoorStateChangesTo(Erd_LeftSideFreshFoodDoorIsOpen, true);
    ThePwmVotedDutyCycleErdsShouldBe(PwmDutyCycle_Max);
 
    After(MaxDoorOpenTimeInMsec - 1);
    ThePwmVotedDutyCycleErdsShouldBe(PwmDutyCycle_Max);
 
-   WhenTheDoorStateChangesTo(Erd_RightHandFreshFoodDoorIsOpen, true);
+   WhenTheDoorStateChangesTo(Erd_RightSideFreshFoodDoorStatus, true);
    After(1);
    ThePwmVotedDutyCycleErdsShouldBe(PwmDutyCycle_Max);
 

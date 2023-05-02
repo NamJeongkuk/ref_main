@@ -41,12 +41,12 @@ enum
 
 static ReadyToDefrostDoorConfiguration_t doorsConfiguration[] = {
    {
-      .doorIsOpenErd = Erd_LeftHandFreshFoodDoorIsOpen,
+      .doorIsOpenErd = Erd_LeftSideFreshFoodDoorIsOpen,
       .doorAccelerationErd = Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds,
       .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
    },
    {
-      .doorIsOpenErd = Erd_FreezerDoorIsOpen,
+      .doorIsOpenErd = Erd_LeftSideFreezerDoorStatus,
       .doorAccelerationErd = Erd_FreezerScaledDoorAccelerationInSeconds,
       .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freezerDoorIncrementFactorInSecondsPerSecond),
    },
@@ -284,12 +284,12 @@ TEST_GROUP(ReadyToDefrost)
 
    void GivenLeftHandFreshFoodDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_LeftHandFreshFoodDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpen, &state);
    }
 
    void GivenRightHandFreshFoodDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_RightHandFreshFoodDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_RightSideFreshFoodDoorStatus, &state);
    }
 
    void GivenDoorInDoorIs(bool state)
@@ -299,7 +299,7 @@ TEST_GROUP(ReadyToDefrost)
 
    void GivenFreezerDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_FreezerDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_LeftSideFreezerDoorStatus, &state);
    }
 
    void GivenConvertibleCompartmentDoorAsFreshFoodDoorIs(bool state)
@@ -380,12 +380,12 @@ TEST_GROUP(ReadyToDefrost)
 
    void WhenLeftHandFreshFoodDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_LeftHandFreshFoodDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpen, &state);
    }
 
    void WhenFreezerDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_FreezerDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_LeftSideFreezerDoorStatus, &state);
    }
 
    void GivenLeftHandFreshFoodDoorAccelerationInSecondsIs(uint32_t seconds)

@@ -69,7 +69,7 @@ static const ConstArrayMap_LinearSearchConfiguration_t linearMapConfiguration = 
 };
 
 static const Erd_t freshFoodDoorErds[] = {
-   Erd_RightHandFreshFoodDoorIsOpen
+   Erd_RightSideFreshFoodDoorStatus
 };
 
 static const Erd_t freshFoodPwmVotedDutyCycleErds[] = {
@@ -86,7 +86,7 @@ static const LightingDoorVoteResolverConfig_t freshFoodLightingDoorVoteResolverC
 };
 
 static const Erd_t freezerDoorErds[] = {
-   Erd_FreezerDoorIsOpen,
+   Erd_LeftSideFreezerDoorStatus,
 };
 
 static const Erd_t freezerPwmVotedDutyCycleErds[] = {

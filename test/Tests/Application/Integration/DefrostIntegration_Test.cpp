@@ -631,12 +631,12 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
 
    void WhenFreezerDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_FreezerDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_LeftSideFreezerDoorStatus, &state);
    }
 
    void WhenLeftHandFreshFoodDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_LeftHandFreshFoodDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpen, &state);
    }
 
    void WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled()

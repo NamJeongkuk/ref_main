@@ -74,12 +74,12 @@ static const DefrostHeaterOnTimeCounterConfig_t defrostHeaterOnTimeCounterConfig
 
 static ReadyToDefrostDoorConfiguration_t doorsConfiguration[] = {
    {
-      .doorIsOpenErd = Erd_LeftHandFreshFoodDoorIsOpen,
+      .doorIsOpenErd = Erd_LeftSideFreshFoodDoorIsOpen,
       .doorAccelerationErd = Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds,
       .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
    },
    {
-      .doorIsOpenErd = Erd_RightHandFreshFoodDoorIsOpen,
+      .doorIsOpenErd = Erd_RightSideFreshFoodDoorStatus,
       .doorAccelerationErd = Erd_RightHandFreshFoodScaledDoorAccelerationInSeconds,
       .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
    },
@@ -89,7 +89,7 @@ static ReadyToDefrostDoorConfiguration_t doorsConfiguration[] = {
       .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
    },
    {
-      .doorIsOpenErd = Erd_FreezerDoorIsOpen,
+      .doorIsOpenErd = Erd_LeftSideFreezerDoorStatus,
       .doorAccelerationErd = Erd_FreezerScaledDoorAccelerationInSeconds,
       .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freezerDoorIncrementFactorInSecondsPerSecond),
    },

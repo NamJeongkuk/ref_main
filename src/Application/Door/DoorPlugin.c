@@ -17,8 +17,8 @@ static struct
 } instance;
 
 static const AllFreshFoodDoorStatusConfiguration_t allFreshFoodDoorStatusConfiguration = {
-   .rightFreshDoorIsOpenErd = Erd_RightHandFreshFoodDoorIsOpen,
-   .leftFreshDoorIsOpenErd = Erd_LeftHandFreshFoodDoorIsOpen,
+   .rightFreshDoorIsOpenErd = Erd_RightSideFreshFoodDoorStatus,
+   .leftFreshDoorIsOpenErd = Erd_LeftSideFreshFoodDoorIsOpen,
    .allFreshFoodDoorsAreClosedErd = Erd_AllFreshFoodDoorsAreClosed
 };
 
