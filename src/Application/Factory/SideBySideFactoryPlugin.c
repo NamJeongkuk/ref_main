@@ -20,7 +20,7 @@ static const FactoryVotePair_t factoryVotePairs[] = {
    { Erd_FreshFoodDefrostHeater_FactoryVote, HeaterState_Off },
    { Erd_FreshFoodDamperPosition_FactoryVote, DamperPosition_Closed },
    { Erd_FreshFoodDamperHeater_FactoryVote, PercentageDutyCycle_Min },
-   { Erd_AluminumMoldIceMakerFillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
+   { Erd_FillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
    { Erd_FreezerDefrostHeater_FactoryVote, HeaterState_Off },
    { Erd_AluminumMoldIceMakerWaterValve_FactoryVote, WaterValveState_Off },
    { Erd_AluminumMoldIceMakerHeaterRelay_FactoryVote, HeaterState_Off },

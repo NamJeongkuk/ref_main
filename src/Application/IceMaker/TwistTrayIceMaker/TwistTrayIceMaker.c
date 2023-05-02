@@ -15,6 +15,7 @@
 #include "TwistTrayIceMakerOperationState.h"
 #include "WaterValveVotedState.h"
 #include "DispensingRequest.h"
+#include "PercentageDutyCycleVote.h"
 
 #define WaterFillPeriod (instance->_private.parametric->fillData.waterFillTimeSecX10 * 100)
 #define MinimumFreezePeriodMinutes (instance->_private.parametric->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN)
@@ -46,6 +47,7 @@ enum
    Signal_IceMakerThermistorIsInvalid,
    Signal_IceMakerThermistorIsValid,
    Signal_IceMakerFilteredTemperatureChanged,
+   Signal_FillTubeHeaterTimerExpired,
    Signal_IceMakerIsEnabled,
    Signal_IceMakerIsDisabled,
 
@@ -213,11 +215,76 @@ static void StartFillTrayTimer(TwistTrayIceMaker_t *instance)
       instance);
 }
 
+static void VoteForFillTubeHeater(TwistTrayIceMaker_t *instance, PercentageDutyCycle_t dutyCycle)
+{
+   PercentageDutyCycleVote_t vote = {
+      .percentageDutyCycle = dutyCycle,
+      .care = Vote_Care
+   };
+
+   DataSource_Write(instance->_private.dataSource, Erd_FillTubeHeater_TwistTrayIceMakerVote, &vote);
+}
+
+static void VoteForFillTubeHeaterOffAndDontCare(TwistTrayIceMaker_t *instance)
+{
+   PercentageDutyCycleVote_t vote = {
+      .percentageDutyCycle = OFF,
+      .care = Vote_DontCare
+   };
+
+   DataSource_Write(instance->_private.dataSource, Erd_FillTubeHeater_TwistTrayIceMakerVote, &vote);
+}
+
+static void FillTubeHeaterTimerExpired(void *context)
+{
+   REINTERPRET(instance, context, TwistTrayIceMaker_t *);
+   Fsm_SendSignal(&instance->_private.fsm, Signal_FillTubeHeaterTimerExpired, NULL);
+}
+
+static void StartFillTubeHeaterTimer(TwistTrayIceMaker_t *instance)
+{
+   TimerModule_StartOneShot(
+      instance->_private.timerModule,
+      &instance->_private.fillTubeHeaterTimer,
+      instance->_private.parametric->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC,
+      FillTubeHeaterTimerExpired,
+      instance);
+}
+
+static bool FillTubeHeaterTimerHasExpired(TwistTrayIceMaker_t *instance)
+{
+   return !TimerModule_IsRunning(instance->_private.timerModule, &instance->_private.fillTubeHeaterTimer);
+}
+
+static void StopFillTubeHeaterTimer(TwistTrayIceMaker_t *instance)
+{
+   TimerModule_Stop(instance->_private.timerModule, &instance->_private.fillTubeHeaterTimer);
+}
+
+static bool MotorActionResultIs(TwistTrayIceMaker_t *instance, TwistTrayIceMakerMotorActionResult_t expected)
+{
+   TwistTrayIceMakerMotorActionResult_t actual;
+   DataSource_Read(instance->_private.dataSource, Erd_TwistTrayIceMaker_MotorActionResult, &actual);
+   return actual == expected;
+}
+
+static bool FillTubeHeaterDutyCycleIsZero(TwistTrayIceMaker_t *instance)
+{
+   return (instance->_private.parametric->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage == 0);
+}
+
+static bool FillTubeHeaterOnTimeIsZero(TwistTrayIceMaker_t *instance)
+{
+   return (instance->_private.parametric->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds == 0);
+}
+
 static void StartHarvestingIfConditionsAreMet(TwistTrayIceMaker_t *instance)
 {
    if(!ItIsSabbathMode(instance) && instance->_private.doorHasBeenClosedForLongEnough)
    {
       RequestMotorAction(instance, TwistTrayIceMakerMotorAction_RunCycle);
+      VoteForFillTubeHeater(instance, instance->_private.parametric->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
+      StartFillTubeHeaterTimer(instance);
    }
 }
 
@@ -401,12 +468,30 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          StartHarvestingIfConditionsAreMet(instance);
          break;
 
+      case Signal_FillTubeHeaterTimerExpired:
+         VoteForFillTubeHeaterOffAndDontCare(instance);
+
+         if(MotorActionResultIs(instance, Harvested))
+         {
+            if(ItIsSabbathMode(instance) || !IceMakerIsEnabled(instance))
+            {
+               Fsm_Transition(fsm, State_IdleFreeze);
+            }
+            else
+            {
+               Fsm_Transition(fsm, State_FillingTrayWithWater);
+            }
+         }
+         break;
+
       case Signal_MotorActionResultHarvested:
          if(ItIsSabbathMode(instance) || !IceMakerIsEnabled(instance))
          {
             Fsm_Transition(fsm, State_IdleFreeze);
          }
-         else
+         else if((FillTubeHeaterTimerHasExpired(instance) ||
+                    FillTubeHeaterDutyCycleIsZero(instance) ||
+                    FillTubeHeaterOnTimeIsZero(instance)))
          {
             Fsm_Transition(fsm, State_FillingTrayWithWater);
          }
@@ -428,6 +513,8 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          break;
 
       case Fsm_Exit:
+         VoteForFillTubeHeaterOffAndDontCare(instance);
+         StopFillTubeHeaterTimer(instance);
          RequestMotorAction(instance, Idle);
          break;
    }

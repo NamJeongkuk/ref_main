@@ -25,6 +25,7 @@ typedef struct
       Timer_t integrationTimer;
       Timer_t waitingTimer;
       Timer_t doorClosedTimer;
+      Timer_t fillTubeHeaterTimer;
       Timer_t dispensingIceTimer;
 
       bool firstFreezeTransition;

@@ -151,6 +151,10 @@ void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataMod
       &instance->_private.twistTrayMotorController,
       &switchMonitorConfig);
 
+   FillTubeHeaterVotingFrameworkPlugin_Init(
+      &instance->_private.fillTubeHeaterVotingFrameworkPlugin,
+      dataModel);
+
    TwistTrayIceMaker_Init(
       &instance->_private.twistTrayIceMaker,
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),

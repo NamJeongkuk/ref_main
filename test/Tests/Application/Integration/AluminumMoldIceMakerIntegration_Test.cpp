@@ -368,7 +368,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       PercentageDutyCycleVote_t actual;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote,
+         Erd_FillTubeHeater_AluminumMoldIceMakerVote,
          &actual);
 
       CHECK_EQUAL(expectedDutyCycle, actual.percentageDutyCycle);

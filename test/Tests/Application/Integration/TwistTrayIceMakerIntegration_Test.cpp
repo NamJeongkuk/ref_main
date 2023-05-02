@@ -35,6 +35,7 @@ enum
    BelowFreezingAdcCounts = 44800,
    InvalidAdcCount = 5375,
    ValidAdcCount = 30336,
+   RelayDelay = 2 * MSEC_PER_SEC,
    Invalid = false,
    Valid = true
 };
@@ -186,6 +187,31 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       CHECK_EQUAL(expected, actual);
    }
 
+   void TheFillTubeHeaterRelayShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_FillTubeHeater, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void TheFillTubeHeaterResolvedVoteShouldBe(PercentageDutyCycle_t expectedDutyCycle, Vote_t expectedCare)
+   {
+      PercentageDutyCycleVote_t vote;
+      DataModel_Read(dataModel, Erd_FillTubeHeater_ResolvedVote, &vote);
+      CHECK_EQUAL(expectedDutyCycle, vote.percentageDutyCycle);
+      CHECK_EQUAL(expectedCare, vote.care);
+   }
+
+   void TheFillTubeHeaterWinningErdShouldBe(WinningVoteErd_t expected)
+   {
+      WinningVoteErd_t actual;
+      DataModel_Read(
+         dataModel,
+         Erd_FillTubeHeater_WinningVoteErd,
+         &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
    void WhenTheMotorSwitchIsDebouncedLow(void)
    {
       GivenTheMotorSwitchIsDebouncedLow();
@@ -281,6 +307,9 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       After(MotorControllerPollingTimeInMsec);
       TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
       TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvested);
+
+      After(twistTrayIceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+      TheFillTubeHeaterWinningErdShouldBe(Erd_FillTubeHeater_NonHarvestVote);
    }
 
    void TheMotorControlRequestShouldBe(bool expected)
@@ -648,4 +677,25 @@ TEST(TwistTrayIceMakerIntegration, ShouldTransitionToHomingThenIdleFreezeWhenIce
    TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Homed);
    TheMotorControlRequestShouldBe(CLEAR);
    OperationStateShouldBe(TwistTrayIceMakerOperationState_IdleFreeze);
+}
+
+TEST(TwistTrayIceMakerIntegration, ShouldTurnOnFillTubeHeaterWhenEnteringHarvest)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
+   GivenTheApplicationIsInitializedAndIceMakerIsInHarvest();
+
+   TheFillTubeHeaterResolvedVoteShouldBe(twistTrayIceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage, Vote_Care);
+   TheFillTubeHeaterWinningErdShouldBe(Erd_FillTubeHeater_TwistTrayIceMakerVote);
+   After(RelayDelay);
+   TheFillTubeHeaterRelayShouldBe(ON);
+
+   After((twistTrayIceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC) - RelayDelay - 1);
+   TheFillTubeHeaterResolvedVoteShouldBe(twistTrayIceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage, Vote_Care);
+   TheFillTubeHeaterWinningErdShouldBe(Erd_FillTubeHeater_TwistTrayIceMakerVote);
+
+   After(1);
+   TheFillTubeHeaterResolvedVoteShouldBe(twistTrayIceMakerData->fillTubeHeaterData.nonHarvestFillTubeHeaterDutyCyclePercentage, Vote_Care);
+   TheFillTubeHeaterWinningErdShouldBe(Erd_FillTubeHeater_NonHarvestVote);
+   TheFillTubeHeaterRelayShouldBe(ON);
 }

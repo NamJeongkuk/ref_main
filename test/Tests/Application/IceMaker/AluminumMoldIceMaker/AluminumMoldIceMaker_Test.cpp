@@ -39,7 +39,7 @@ static const AluminumMoldIceMakerConfig_t config = {
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
    .iceMakerEnabledErd = Erd_IceMakerEnabledOverrideResolved,
    .sabbathModeErd = Erd_SabbathMode,
-   .fillTubeHeaterVoteErd = Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote,
+   .fillTubeHeaterVoteErd = Erd_FillTubeHeater_AluminumMoldIceMakerVote,
    .moldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
    .rakeCompletedRevolutionErd = Erd_AluminumMoldIceMakerRakeCompletedRevolution,
    .moldThermistorIsValidErd = Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved,
@@ -76,7 +76,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       IGNORE(context);
       const DataModelOnDataChangeArgs_t *onChangeData = (const DataModelOnDataChangeArgs_t *)args;
 
-      if(onChangeData->erd == Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote)
+      if(onChangeData->erd == Erd_FillTubeHeater_AluminumMoldIceMakerVote)
       {
          mock().actualCall("Ice Maker Fill Tube Heater Vote Changed");
       }
@@ -422,7 +422,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       PercentageDutyCycleVote_t vote;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote,
+         Erd_FillTubeHeater_AluminumMoldIceMakerVote,
          &vote);
 
       CHECK_EQUAL(expectedDutyCycle, vote.percentageDutyCycle);
@@ -2089,7 +2089,7 @@ TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime)
       PercentageDutyCycleVote_t vote;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote,
+         Erd_FillTubeHeater_AluminumMoldIceMakerVote,
          &vote);
 
       CHECK_EQUAL(dutyCycle, vote.percentageDutyCycle);

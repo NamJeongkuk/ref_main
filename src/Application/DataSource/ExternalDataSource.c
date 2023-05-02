@@ -177,10 +177,10 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_CondenserFan_ActualRpm, sizeof(FanRpm_t)),
    SWAPPED_ERD(PublicErd_CondenserFan_InputCaptureTime, sizeof(InputCaptureMicroSeconds_t)),
    SWAPPED_ERD(PublicErd_FreshFoodDamperPosition_WinningVoteErd, sizeof(WinningVoteErd_t)),
-   SWAPPED_ERD(PublicErd_AluminumMoldIceMakerFillTubeHeater_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_DispenserWaterValve_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_AugerMotor_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_ERD(PublicErd_FreshFood_ResolvedSetpointInDegFx100, sizeof(TemperatureDegFx100_t)),
+   SWAPPED_ERD(PublicErd_FillTubeHeater_WinningVoteErd, sizeof(WinningVoteErd_t)),
    SWAPPED_FIELD(PublicErd_FreshFoodDamperStepperMotorPositionRequest, StepperPositionRequest_t, stepsToMove),
    SWAPPED_ERD(PublicErd_FlowMeterWaterDispensedOzX100, sizeof(uint32_t)),
    SWAPPED_ERD(PublicErd_Ambient_FilteredTemperatureResolvedInDegFx100, sizeof(TemperatureDegFx100_t)),
@@ -191,6 +191,7 @@ static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    SWAPPED_ERD(PublicErd_Ambient_ExternalTemperatureInDegFx100, sizeof(TemperatureDegFx100_t)),
    SWAPPED_ERD(PublicErd_Ambient_ExternalHumidityPercentx100, sizeof(RelativeHumidityPercentx100_t)),
    SWAPPED_ERD(PublicErd_FillTubeHeater_Pwm, sizeof(PwmDutyCycle_t)),
+
    // 0xF400 range
    SWAPPED_ERD(PublicErd_ApplicationToBspPwm_PWM_0, sizeof(PwmDutyCycle_t)),
    SWAPPED_ERD(PublicErd_ApplicationToBspInputCapture_CAPT_0, sizeof(InputCaptureMicroSeconds_t)),

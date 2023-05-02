@@ -9,6 +9,7 @@
 #define TWISTTRAYICEMAKERDATA_H
 
 #include <stdint.h>
+#include "FillTubeHeaterData.h"
 #include "TemperatureDegFx100.h"
 #include "FillTubeHeaterData.h"
 

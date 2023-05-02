@@ -17,6 +17,7 @@
 #include "Output_TwistTrayIceMakerMotorState.h"
 #include "TwistTrayIceMakerRunner.h"
 #include "TwistTrayIceMakerMotorSwitchMonitor.h"
+#include "FillTubeHeaterVotingFrameworkPlugin.h"
 #include "SensorFiltering.h"
 #include "ResolvedVoteRelayConnector.h"
 #include "OverrideArbiter.h"
@@ -32,6 +33,7 @@ typedef struct
       TwistTrayIceMakerRunner_t twistTrayIceMakerMotorControllerRunner;
       TwistTrayIceMakerMotorSwitchMonitor_t twistTrayIceMakerSwitchMonitor;
       TwistTrayIceMakerMotorRequestManager_t twistTrayMotorRequestManager;
+      FillTubeHeaterVotingFrameworkPlugin_t fillTubeHeaterVotingFrameworkPlugin;
       ErdResolver_t twistTrayMotorVoteResolver;
       ErdResolver_t iceMakerWaterValveVoteResolver;
       ResolvedVoteRelayConnector_t iceMakerWaterValveRelayConnector;

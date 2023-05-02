@@ -32,7 +32,7 @@ enum
 
 const NonHarvestFillTubeHeaterControlConfig_t config = {
    .iceAlgorithmIsActiveErd = Erd_Freezer_IceRateIsActive,
-   .nonHarvestFillTubeHeaterVoteErd = Erd_AluminumMoldIceMakerFillTubeHeater_NonHarvestVote,
+   .nonHarvestFillTubeHeaterVoteErd = Erd_FillTubeHeater_NonHarvestVote,
 };
 
 TEST_GROUP(NonZeroNonHarvestFillTubeHeaterControl)
@@ -66,7 +66,7 @@ TEST_GROUP(NonZeroNonHarvestFillTubeHeaterControl)
    void NonHarvestPercentageVoteShouldBe(PercentageDutyCycle_t percentage, Vote_t care)
    {
       PercentageDutyCycleVote_t actual;
-      DataModel_Read(dataModel, Erd_AluminumMoldIceMakerFillTubeHeater_NonHarvestVote, &actual);
+      DataModel_Read(dataModel, Erd_FillTubeHeater_NonHarvestVote, &actual);
       CHECK_EQUAL(percentage, actual.percentageDutyCycle);
       CHECK_EQUAL(care, actual.care);
    }
@@ -139,7 +139,7 @@ TEST_GROUP(ZeroNonHarvestFillTubeHeaterControl)
    void NonHarvestPercentageVoteShouldBe(PercentageDutyCycle_t percentage, Vote_t care)
    {
       PercentageDutyCycleVote_t actual;
-      DataModel_Read(dataModel, Erd_AluminumMoldIceMakerFillTubeHeater_NonHarvestVote, &actual);
+      DataModel_Read(dataModel, Erd_FillTubeHeater_NonHarvestVote, &actual);
       CHECK_EQUAL(percentage, actual.percentageDutyCycle);
       CHECK_EQUAL(care, actual.care);
    }

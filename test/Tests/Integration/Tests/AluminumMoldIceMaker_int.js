@@ -266,7 +266,7 @@ describe("AluminumMoldIceMaker,", () => {
    };
 
    const theFillTubeHeaterVoteAndCareShouldBe = async (percentageDutyCycle, care) => {
-      const vote = await rockhopper.read("Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote");
+      const vote = await rockhopper.read("Erd_FillTubeHeater_AluminumMoldIceMakerVote");
       expect(vote.percentageDutyCycle).toEqual(percentageDutyCycle);
       expect(vote.care).toEqual(care);
    };

@@ -919,12 +919,6 @@ enum
    ENTRY(Erd_FreshFoodDamperPosition_GridVote,                   0xF386, DamperVotedPosition_t,                         Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DamperFreezePreventionFsmState,                     0xF387, DamperFreezePreventionFsmState_t,              Swap_N, Io_None, Sub_N, Ram ,                   NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_AluminumMoldIceMakerFillTubeHeater_ResolvedVote,    0xF390, PercentageDutyCycleVote_t,                     Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerFillTubeHeater_WinningVoteErd,  0xF391, WinningVoteErd_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerFillTubeHeater_FactoryVote,     0xF392, PercentageDutyCycleVote_t,                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerFillTubeHeater_IceMakerVote,    0xF393, PercentageDutyCycleVote_t,                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerFillTubeHeater_NonHarvestVote,  0xF394, PercentageDutyCycleVote_t,                     Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   \
    ENTRY(Erd_DispenserWaterValve_ResolvedVote,              0xF395, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispenserWaterValve_WinningVoteErd,            0xF396, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispenserWaterValve_FactoryVote,               0xF397, WaterValveVotedState_t,                             Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -964,6 +958,13 @@ enum
    ENTRY(Erd_DeliPan_ResolvedSetpointInDegFx100,            0xF3B4, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DeliPan_SetpointOffsetInDegFx100,              0xF3B5, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DeliPan_ThermalShiftInDegFx100,                0xF3B6, TemperatureDegFx100_t,                              Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FillTubeHeater_ResolvedVote,                   0xF3B7, PercentageDutyCycleVote_t,                          Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FillTubeHeater_WinningVoteErd,                 0xF3B8, WinningVoteErd_t,                                   Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FillTubeHeater_FactoryVote,                    0xF3B9, PercentageDutyCycleVote_t,                          Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FillTubeHeater_AluminumMoldIceMakerVote,       0xF3BA, PercentageDutyCycleVote_t,                          Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FillTubeHeater_TwistTrayIceMakerVote,          0xF3BB, PercentageDutyCycleVote_t,                          Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FillTubeHeater_NonHarvestVote,                 0xF3BC, PercentageDutyCycleVote_t,                          Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodDamperStepperMotorPositionRequest,    0xF3C0, StepperPositionRequest_t,                           Swap_Y, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperHomingRequest,                  0xF3C1, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
