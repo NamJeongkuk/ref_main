@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 #include "TemperatureDegFx100.h"
+#include "FillTubeHeaterData.h"
 
 typedef struct
 {
@@ -41,6 +42,7 @@ typedef struct
    TwistTrayIceMakerFreezeData_t freezeData;
    TwistTrayIceMakerHarvestData_t harvestData;
    TwistTrayIceMakerFillData_t fillData;
+   FillTubeHeaterData_t fillTubeHeaterData;
 } TwistTrayIceMakerData_t;
 
 #endif

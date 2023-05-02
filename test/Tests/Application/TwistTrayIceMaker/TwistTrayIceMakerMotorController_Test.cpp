@@ -72,8 +72,8 @@ static const TwistTrayIceMakerData_t config = {
       .maximumHarvestTemperatureInDegFx100 = 0,
       .startIntegrationTemperatureInDegFx100 = 0,
       .targetFreezeIntegrationSum = 0,
-      .minimumFreezeTimeMinutes = 0 },
-
+      .minimumFreezeTimeMinutes = 0,
+   },
    .harvestData{
       .fullBucketWaitPeriodMinutes = 0,
       .fullBucketDetectionPeriodSecX10 = FullBucketDetectionTime / 100,
@@ -84,9 +84,13 @@ static const TwistTrayIceMakerData_t config = {
       .delayToHarvestAfterDoorClosesSeconds = 0,
       .fullBucketDispenseCheckTimeInSeconds = FullBucketDispenseCheckTimeInSec,
    },
-
    .fillData{
       .waterFillTimeSecX10 = 0,
+   },
+   .fillTubeHeaterData = {
+      .freezeThawFillTubeHeaterDutyCyclePercentage = 0,
+      .freezeThawFillTubeHeaterOnTimeInSeconds = 400,
+      .nonHarvestFillTubeHeaterDutyCyclePercentage = 10,
    }
 };
 

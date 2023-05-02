@@ -77,8 +77,8 @@ static const TwistTrayIceMakerData_t parametric = {
       .maximumHarvestTemperatureInDegFx100 = MaximumHarvestTemperaturex100,
       .startIntegrationTemperatureInDegFx100 = FreezingPointx100,
       .targetFreezeIntegrationSum = TargetFreezeIntegrationSum,
-      .minimumFreezeTimeMinutes = MinimumFreezeTime / MSEC_PER_MIN },
-
+      .minimumFreezeTimeMinutes = MinimumFreezeTime / MSEC_PER_MIN,
+   },
    .harvestData{
       .fullBucketWaitPeriodMinutes = FullIceBucketWaitTime / MSEC_PER_MIN,
       .fullBucketDetectionPeriodSecX10 = 0,
@@ -89,9 +89,14 @@ static const TwistTrayIceMakerData_t parametric = {
       .delayToHarvestAfterDoorClosesSeconds = DelayToHarvestAfterDoorCloses / MSEC_PER_SEC,
       .fullBucketDispenseCheckTimeInSeconds = FullBucketDispenseCheckTimeInSec,
    },
-
    .fillData{
-      .waterFillTimeSecX10 = WaterFillTime / 100 }
+      .waterFillTimeSecX10 = WaterFillTime / 100,
+   },
+   .fillTubeHeaterData = {
+      .freezeThawFillTubeHeaterDutyCyclePercentage = 0,
+      .freezeThawFillTubeHeaterOnTimeInSeconds = 400,
+      .nonHarvestFillTubeHeaterDutyCyclePercentage = 10,
+   }
 };
 
 static const DataModel_TestDoubleConfigurationEntry_t erdDefinitions[] = {

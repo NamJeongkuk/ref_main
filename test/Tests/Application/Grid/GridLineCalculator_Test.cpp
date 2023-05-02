@@ -295,7 +295,7 @@ TEST_GROUP(GridLineCalculator)
          GridLine_FreezerExtraHigh);
 
       And CalculatedGridLineTempShouldBe(
-         (750 + AFreezerAdjustedSetpointTemperature + AFreezerOffsetTemperature),
+         (750 + AFreezerAdjustedSetpointTemperature),
          GridDelta_Freezer,
          GridLine_FreezerSuperHigh);
 
@@ -342,7 +342,7 @@ TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenOffsetChanges)
       GridLine_FreezerDelta);
 
    And CalculatedGridLineTempShouldBe(
-      (750 + AFreezerAdjustedSetpointTemperature + AnotherFreezerOffsetTemperature),
+      (750 + AFreezerAdjustedSetpointTemperature),
       GridDelta_Freezer,
       GridLine_FreezerSuperHigh);
 
@@ -402,7 +402,7 @@ TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenAdjustedSetpointChanges)
       GridLine_FreezerLowHyst);
 
    CalculatedGridLineTempShouldBe(
-      (750 + AnotherFreezerAdjustedSetpointTemperature + AFreezerOffsetTemperature),
+      (750 + AnotherFreezerAdjustedSetpointTemperature),
       FreezerGridLineDimension,
       GridLine_FreezerSuperHigh);
 }
