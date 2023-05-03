@@ -53,6 +53,11 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_FreshFoodDamperHeater_ResolvedVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_FreshFood_FilteredTemperatureInDegFx100",
          "interval": 60000
       },
@@ -64,6 +69,21 @@
       {
          "namespace": "mb",
          "name": "Erd_FreezerEvap_FilteredTemperatureInDegFx100",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_Ambient_FilteredTemperatureResolvedInDegFx100",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_Ambient_ResolvedHumidityPercentx100",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100",
          "interval": 60000
       },
       {
@@ -308,6 +328,16 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_FillTubeHeater_WinningVoteErd",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_FreshFoodDamperHeater_WinningVoteErd",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes",
          "interval": 60000
       },
@@ -364,6 +394,11 @@
       {
          "namespace": "mb",
          "name": "Erd_AluminumMoldIceMakerRakeCompletedRevolution",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_FillTubeHeater_ResolvedVote",
          "interval": 60000
       },
       {

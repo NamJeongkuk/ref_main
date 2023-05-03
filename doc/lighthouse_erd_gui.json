@@ -857,6 +857,14 @@
             },
             {
                "namespace": "mb",
+               "displayName": "Fill Tube Heater",
+               "name": "Erd_FillTubeHeater_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
                "displayName": "FZ Evap Unfiltered Temperature",
                "name": "Erd_FreezerEvap_UnfilteredTemperatureInDegFx100",
                "read": true,
@@ -905,6 +913,7 @@
                "displayName": "Condenser Fan Actual RPM",
                "name": "Erd_CondenserFan_ActualRpm",
                "read": true,
+               "write": true,
                "interval": 1000000000
             },
             {
@@ -912,6 +921,7 @@
                "displayName": "Auger Motor Factory Vote",
                "name": "Erd_AugerMotor_FactoryVote",
                "read": true,
+               "write": true,
                "interval": 1000000000
             },
             {
@@ -919,6 +929,7 @@
                "displayName": "Fresh Food Back Wall Light Factory Vote",
                "name": "Erd_FreshFoodBackWallLight_FactoryVote",
                "read": true,
+               "write": true,
                "interval": 1000000000
             },
             {
@@ -926,6 +937,7 @@
                "displayName": "Fresh Food Top Light Factory Vote",
                "name": "Erd_FreshFoodTopLight_FactoryVote",
                "read": true,
+               "write": true,
                "interval": 1000000000
             },
             {
@@ -933,6 +945,7 @@
                "displayName": "Freezer Back Wall Light Factory Vote",
                "name": "Erd_FreezerBackWallLight_FactoryVote",
                "read": true,
+               "write": true,
                "interval": 1000000000
             },
             {
@@ -940,6 +953,7 @@
                "displayName": "Freezer Top Light Factory Vote",
                "name": "Erd_FreezerTopLight_FactoryVote",
                "read": true,
+               "write": true,
                "interval": 1000000000
             }
          ]
@@ -1240,6 +1254,20 @@
                "namespace": "mb",
                "displayName": "FZ Defrost Heater Winning Vote Erd",
                "name": "Erd_FreezerDefrostHeater_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF Damper Heater Winning Vote Erd",
+               "name": "Erd_FreshFoodDamperHeater_WinningVoteErd",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fill Tube Heater Winning Vote Erd",
+               "name": "Erd_FillTubeHeater_WinningVoteErd",
                "read": true,
                "interval": 1000000000
             }
