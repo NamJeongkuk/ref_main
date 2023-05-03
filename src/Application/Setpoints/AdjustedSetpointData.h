@@ -83,12 +83,6 @@ typedef struct
 
 typedef struct
 {
-   uint8_t ambientTemperatureAverageWindowSize;
-   uint8_t ambientTemperatureAverageUpdateIntervalInMinutes;
-} CrossAmbientOffsetCalculatorData_t;
-
-typedef struct
-{
    uint8_t longTermBeta;
    uint8_t longTermAverageUpdateTimeInMinutes;
    uint8_t updateTimeInMinutes;
@@ -101,7 +95,6 @@ typedef struct
    const ConvertibleCompartmentAdjustedSetpointData_t *convertibleCompartmentAdjustedSetpointData;
    const DeliPanAdjustedSetpointData_t *deliPanAdjustedSetpointData;
    const IceBoxAdjustedSetpointData_t *iceBoxAdjustedSetpointData;
-   const CrossAmbientOffsetCalculatorData_t *crossAmbientOffsetCalculatorData;
    const ShiftOffsetCalculatorData_t *shiftOffsetCalculatorData;
 } AdjustedSetpointData_t;
 
