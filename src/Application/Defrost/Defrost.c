@@ -1226,6 +1226,14 @@ void Defrost_Init(
    I_DataModel_t *dataModel,
    const DefrostConfiguration_t *defrostConfig)
 {
+   bool defrostParameterSelectorReady;
+   DataModel_Read(
+      dataModel,
+      defrostConfig->defrostParameterSelectorReadyErd,
+      &defrostParameterSelectorReady);
+
+   uassert(defrostParameterSelectorReady);
+
    bool freezerFilteredTemperatureTooWarmOnPowerUpReady;
    DataModel_Read(
       dataModel,

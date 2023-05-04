@@ -87,7 +87,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill,
    .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
-   .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts
+   .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts,
+   .defrostParameterSelectorReadyErd = Erd_DefrostParameterSelectorReady
 };
 
 static const SabbathData_t sabbathData = {
@@ -139,12 +140,23 @@ TEST_GROUP(Defrost_SingleEvap)
       TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
    }
 
+   void DefrostIsInitializedWithoutAssertErdsSet()
+   {
+      Defrost_Init(&instance, dataModel, &defrostConfig);
+   }
+
    void DefrostIsInitialized()
    {
       DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+      DataModel_Write(dataModel, Erd_DefrostParameterSelectorReady, set);
       DataModel_Write(dataModel, Erd_Eeprom_ClearedDefrostEepromStartup, clear);
 
       Defrost_Init(&instance, dataModel, &defrostConfig);
+   }
+
+   void ShouldAssertOnInitialization()
+   {
+      CHECK_ASSERTION_FAILED(DefrostIsInitializedWithoutAssertErdsSet());
    }
 
    void DefrostHsmStateShouldBe(DefrostHsmState_t expectedState)
@@ -153,6 +165,11 @@ TEST_GROUP(Defrost_SingleEvap)
       DataModel_Read(dataModel, Erd_DefrostHsmState, &actualState);
 
       CHECK_EQUAL(expectedState, actualState);
+   }
+
+   void DefrostParameterSelectorReadyIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_DefrostParameterSelectorReady, &state);
    }
 
    void FreezerFilteredTemperatureTooWarmAtPowerUpIs(bool state)
@@ -2090,6 +2107,22 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestSt
    DefrostTestStateRequestShouldBeNone();
 }
 
+TEST(Defrost_SingleEvap, ShouldThrowAssertionWhenParameterSelectorIsNotSetAndFreezerFilteredTemperatureTooWarmOnPowerUpReadyIsSet)
+{
+   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(true);
+   Given DefrostParameterSelectorReadyIs(false);
+
+   ShouldAssertOnInitialization();
+}
+
+TEST(Defrost_SingleEvap, ShouldThrowAssertionWhenFreezerFilteredTemperatureTooWarmOnPowerUpReadyIsNotSetAndParameterSelectorIsSet)
+{
+   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(false);
+   Given DefrostParameterSelectorReadyIs(true);
+
+   ShouldAssertOnInitialization();
+}
+
 TEST_GROUP(Defrost_DualEvap)
 {
    ReferDataModel_TestDouble_t dataModelDouble;
@@ -2114,6 +2147,7 @@ TEST_GROUP(Defrost_DualEvap)
    void DefrostIsInitialized()
    {
       DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+      DataModel_Write(dataModel, Erd_DefrostParameterSelectorReady, set);
       Defrost_Init(&instance, dataModel, &defrostConfig);
    }
 };
