@@ -162,6 +162,11 @@ TEST_GROUP(TwistTrayIceMakerMotorController)
       CHECK_EQUAL(expectedResult, TwistTrayIceMakerMotorController_ActionResult(&instance));
    }
 
+   void TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_t expected)
+   {
+      CHECK_EQUAL(expected, TwistTrayIceMakerMotorController_MotorErrorReason(&instance));
+   }
+
    void TheSwitchBlipsQuicklyForRoutineHomewardMotionSwitchCheck()
    {
       // see the motor spec for a definition
@@ -413,6 +418,7 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringFi
    TheMotorShouldBecome(Coasting);
    After(1);
    TheActionResultShouldBe(TwistTrayIceMakerMotorActionResult_MotorError);
+   TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHomingCheckingTrayIsHome);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringSecondHomingMovement)
@@ -432,6 +438,7 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringSe
    TheMotorShouldBecome(Coasting);
    After(1);
    TheActionResultShouldBe(TwistTrayIceMakerMotorActionResult_MotorError);
+   TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHomingJumpingOutOfHome);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringThirdHomingMovement)
@@ -456,6 +463,7 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringTh
    TheMotorShouldBecome(Coasting);
    After(1);
    TheActionResultShouldBe(TwistTrayIceMakerMotorActionResult_MotorError);
+   TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHomingReadyToLandInHomePosition);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringThirdHomingMovementEvenIfSwitchCheckOccurs)
@@ -482,6 +490,7 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringTh
    TheMotorShouldBecome(Coasting);
    After(1);
    TheActionResultShouldBe(TwistTrayIceMakerMotorActionResult_MotorError);
+   TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHomingReadyToLandInHomePosition);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringFirstHarvestingMovement)
@@ -497,6 +506,7 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringFi
    TheMotorShouldBecome(Coasting);
    After(1);
    TheActionResultShouldBe(TwistTrayIceMakerMotorActionResult_MotorError);
+   TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHarvestStoppingAtFullTwistPosition);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringHarvestingAfterBucketWasFoundToBeFull)
@@ -521,6 +531,7 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringHa
    TheMotorShouldBecome(Coasting);
    After(1);
    TheActionResultShouldBe(TwistTrayIceMakerMotorActionResult_MotorError);
+   TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHarvestReadyToLandInHomePosition);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringHarvestingAfterActuallyHarvesting)
@@ -545,6 +556,7 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringHa
    TheMotorShouldBecome(Coasting);
    After(1);
    TheActionResultShouldBe(TwistTrayIceMakerMotorActionResult_MotorError);
+   TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHarvestUntwisting);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringHarvestingAfterActuallyHarvestingEvenIfTheSwitchCheckOccurs)
@@ -571,4 +583,5 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringHa
    TheMotorShouldBecome(Coasting);
    After(1);
    TheActionResultShouldBe(TwistTrayIceMakerMotorActionResult_MotorError);
+   TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHarvestReadyToLandInHomePosition);
 }

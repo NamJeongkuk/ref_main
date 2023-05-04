@@ -20,6 +20,15 @@ enum
    PollingFrequencyInMsec = 150
 };
 
+static void ClearMotorRequestAndStopTimer(TwistTrayIceMakerMotorRequestManager_t *instance)
+{
+   DataModel_Write(instance->_private.dataModel, instance->_private.config->motorRequestErd, clear);
+
+   TimerModule_Stop(
+      DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, Erd_TimerModule),
+      &instance->_private.motorPollingTimer);
+}
+
 static void PollMotorActionResult(void *context)
 {
    TwistTrayIceMakerMotorRequestManager_t *instance = context;
@@ -31,16 +40,22 @@ static void PollMotorActionResult(void *context)
    DataModel_Write(instance->_private.dataModel, instance->_private.config->motorActionResultErd, &result);
    DataModel_Write(instance->_private.dataModel, instance->_private.config->motorOperationStateErd, &state);
 
-   if(result == TwistTrayIceMakerMotorActionResult_Harvested ||
-      result == TwistTrayIceMakerMotorActionResult_BucketWasFull ||
-      result == TwistTrayIceMakerMotorActionResult_Homed ||
-      result == TwistTrayIceMakerMotorActionResult_MotorError)
+   if(result == TwistTrayIceMakerMotorActionResult_MotorError)
    {
-      DataModel_Write(instance->_private.dataModel, instance->_private.config->motorRequestErd, clear);
+      TwistTrayIceMakerMotorOperationState_t reason =
+         TwistTrayIceMakerMotorController_MotorErrorReason(instance->_private.motorController);
+      DataSource_Write(
+         instance->_private.dataModel,
+         Erd_TwistTrayIceMaker_MotorErrorReason,
+         &reason);
 
-      TimerModule_Stop(
-         DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, Erd_TimerModule),
-         &instance->_private.motorPollingTimer);
+      ClearMotorRequestAndStopTimer(instance);
+   }
+   else if(result == TwistTrayIceMakerMotorActionResult_Harvested ||
+      result == TwistTrayIceMakerMotorActionResult_BucketWasFull ||
+      result == TwistTrayIceMakerMotorActionResult_Homed)
+   {
+      ClearMotorRequestAndStopTimer(instance);
    }
 }
 

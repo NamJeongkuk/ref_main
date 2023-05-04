@@ -82,6 +82,7 @@
 #include "PwmFrequency.h"
 #include "TwistTrayIceMakerMotorActionResult.h"
 #include "TwistTrayIceMakerMotorAction.h"
+#include "TwistTrayIceMakerMotorErrorReason.h"
 #include "TwistTrayIceMakerMotorOperationState.h"
 #include "TwistTrayIceMakerOperationState.h"
 #include "TwistTrayIceMakerHighLevelState.h"
@@ -660,7 +661,7 @@ enum
    ENTRY(Erd_TwistTrayIceMaker_MinimumFreezeTimerRemainingTimeInMsec,        0xF1B6, TimerTicks_t,                      Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_MinimumFreezeTimerRemainingTimeRequest,       0xF1B7, Signal_t,                          Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_MotorFaultActive,                             0xF1B8, bool,                              Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_TwistTrayIceMakerTestRequest,                                   0xF1B9, IceMakerTestRequest_t,             Swap_N, Io_None, Sub_Y, Ram,               NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMakerTestRequest,                                   0xF1B9, IceMakerTestRequest_t,             Swap_N, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_MotorOperationState,                          0xF1BA, TwistTrayIceMakerMotorOperationState_t, Swap_N, Io_None, Sub_N, Ram,               NotNv,                                    NotFault) \
    \
    ENTRY(Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds,  0xF1BB, uint32_t,                                        Swap_Y, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -694,6 +695,8 @@ enum
    \
    ENTRY(Erd_ConvertibleCompartmentAsFreshFoodDoorIsOpen,   0xF1D6, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentAsFreezerDoorIsOpen,     0xF1D7, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_TwistTrayIceMaker_MotorErrorReason,            0xF1D8, TwistTrayIceMakerMotorErrorReason_t,                Swap_N, Io_None, Sub_N, Ram,                  NotNv,                                    NotFault) \
    \
    ENTRY(Erd_IceMakerEnabledOverrideRequest,                0xF1E0, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMakerEnabledOverrideValue,                  0xF1E1, bool,                                               Swap_N, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

@@ -16,6 +16,7 @@
 #include "TwistTrayIceMakerData.h"
 #include "TwistTrayIceMakerMotorActionResult.h"
 #include "TwistTrayIceMakerMotorAction.h"
+#include "TwistTrayIceMakerMotorErrorReason.h"
 
 enum
 {
@@ -43,6 +44,7 @@ typedef struct
       uint8_t harvestActionResult : 4;
 
       uint8_t operationState;
+      TwistTrayIceMakerMotorErrorReason_t motorErrorReason;
 
       Fsm_t fsm;
    } _private;
@@ -102,6 +104,14 @@ TwistTrayIceMakerMotorActionResult_t TwistTrayIceMakerMotorController_ActionResu
  * @return the operation state of the motor
  */
 uint8_t TwistTrayIceMakerMotorController_OperationState(
+   TwistTrayIceMakerMotorController_t *instance);
+
+/*!
+ * Returns the motor error reason, containing the state in which the error occurred
+ * @param instance
+ * @return the error reason of the motor
+ */
+TwistTrayIceMakerMotorErrorReason_t TwistTrayIceMakerMotorController_MotorErrorReason(
    TwistTrayIceMakerMotorController_t *instance);
 
 #endif
