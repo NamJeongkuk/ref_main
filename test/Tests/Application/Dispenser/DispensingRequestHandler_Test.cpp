@@ -249,7 +249,6 @@ TEST(DispensingRequestHandler, ShouldUpdateDispensingRequestStatusActionToStartW
 
    WhenTheDispensingRequestActionIs(DispensingAction_Start);
    ThePrivateDispensingRequestActionShouldBe(DispensingAction_Start);
-   TheDispensingRequestStatusShouldBe(DispenseStatus_Dispensing);
 }
 
 TEST(DispensingRequestHandler, ShouldUpdateDispensingRequestStatusToBadCommandWhenTheDispensingRequestActionIsInvalidInIdle)
@@ -399,21 +398,16 @@ TEST(DispensingRequestHandler, ShouldSetPrivateDispenseRequestToIceThenWaterWhen
 
    WhenTheDispensingRequestIs(DispensingAction_Start, DispensingRequestSelection_Water);
    ThePrivateDispensingRequestShouldBe(DispensingAction_Start, DispensingRequestSelection_Water);
-   TheDispensingRequestStatusShouldBe(DispenseStatus_Dispensing);
 
    WhenTheDispensingRequestIs(DispensingAction_Continue, DispensingRequestSelection_Water);
    ThePrivateDispensingRequestShouldBe(DispensingAction_Start, DispensingRequestSelection_Water);
-   TheDispensingRequestStatusShouldBe(DispenseStatus_Dispensing);
 
    WhenTheDispensingRequestIs(DispensingAction_Stop, DispensingRequestSelection_Water);
    ThePrivateDispensingRequestShouldBe(DispensingAction_Stop, DispensingRequestSelection_Water);
-   TheDispensingRequestStatusShouldBe(DispenseStatus_CompletedSuccessfully);
 
    WhenTheDispensingRequestIs(DispensingAction_Start, DispensingRequestSelection_CrushedIce);
    ThePrivateDispensingRequestShouldBe(DispensingAction_Start, DispensingRequestSelection_CrushedIce);
-   TheDispensingRequestStatusShouldBe(DispenseStatus_Dispensing);
 
    WhenTheDispensingRequestIs(DispensingAction_Continue, DispensingRequestSelection_CrushedIce);
    ThePrivateDispensingRequestShouldBe(DispensingAction_Start, DispensingRequestSelection_CrushedIce);
-   TheDispensingRequestStatusShouldBe(DispenseStatus_Dispensing);
 }

@@ -32,7 +32,8 @@ static const DispenseControllerConfig_t config = {
    .augerMotorDispensingVoteErd = Erd_AugerMotor_DispensingVote,
    .isolationValveDispensingVoteErd = Erd_IsolationWaterValve_DispensingVote,
    .dispensingValveDispensingVoteErd = Erd_DispenserWaterValve_DispensingVote,
-   .timerModuleErd = Erd_TimerModule
+   .timerModuleErd = Erd_TimerModule,
+   .dispensingRequestStatusErd = Erd_DispensingRequestStatus
 };
 
 TEST_GROUP(DispenseController)
@@ -108,19 +109,29 @@ TEST_GROUP(DispenseController)
       DataModel_Write(dataModel, Erd_IceDispensingInhibitedByDoor, set);
    }
 
+   void WhenIceDispensingInhibitedByDoor()
+   {
+      GivenIceDispensingInhibitedByDoor();
+   }
+
    void GivenWaterDispensingInhibitedByDoor()
    {
       DataModel_Write(dataModel, Erd_WaterDispensingInhibitedByDoor, set);
    }
 
-   void WhenIceDispensingNotInhibitedByDoor()
+   void WhenWaterDispensingInhibitedByDoor()
+   {
+      GivenWaterDispensingInhibitedByDoor();
+   }
+
+   void GivenIceDispensingNotInhibitedByDoor()
    {
       DataModel_Write(dataModel, Erd_IceDispensingInhibitedByDoor, clear);
    }
 
-   void WhenIceDispensingIsInhibitedByDoor()
+   void WhenIceDispensingNotInhibitedByDoor()
    {
-      GivenIceDispensingInhibitedByDoor();
+      GivenIceDispensingNotInhibitedByDoor();
    }
 
    void WhenWaterDispensingNotInhibitedByDoor()
@@ -128,9 +139,9 @@ TEST_GROUP(DispenseController)
       DataModel_Write(dataModel, Erd_WaterDispensingInhibitedByDoor, clear);
    }
 
-   void WhenWaterDispensingIsInhibitedByDoor()
+   void GivenWaterDispensingNotInhibitedByDoor()
    {
-      GivenWaterDispensingInhibitedByDoor();
+      WhenWaterDispensingNotInhibitedByDoor();
    }
 
    void GivenDispensingInhibitedByAutofillSensorError()
@@ -183,6 +194,14 @@ TEST_GROUP(DispenseController)
       CHECK_EQUAL(expected, actual);
    }
 
+   void TheDispensingRequestStatusShouldBe(DispenseStatus_t expected)
+   {
+      DispensingRequestStatus_t actual;
+      DataModel_Read(dataModel, Erd_DispensingRequestStatus, &actual);
+
+      CHECK_EQUAL(expected, actual.status);
+   }
+
    void WhenTheDispensingRequestActionIs(DispensingAction_t action)
    {
       DispensingRequest_t request;
@@ -192,13 +211,19 @@ TEST_GROUP(DispenseController)
       DataModel_Write(dataModel, Erd_PrivateDispensingRequest, &request);
    }
 
-   void GivenTheDispensingRequestSelectionIs(DispensingRequestSelection_t selection)
+   void GivenTheDispensingRequestIs(DispensingRequestSelection_t selection, DispensingAction_t action)
    {
       DispensingRequest_t request;
       DataModel_Read(dataModel, Erd_PrivateDispensingRequest, &request);
 
       request.selection = selection;
+      request.action = action;
       DataModel_Write(dataModel, Erd_PrivateDispensingRequest, &request);
+   }
+
+   void WhenTheDispensingRequestIs(DispensingRequestSelection_t selection, DispensingAction_t action)
+   {
+      GivenTheDispensingRequestIs(selection, action);
    }
 
    void ShouldNotBeDispensing()
@@ -234,28 +259,29 @@ TEST_GROUP(DispenseController)
    void GivenTheFsmIsInitializedAndInDispensingStateWithSelection(DispensingRequestSelection_t selection)
    {
       GivenTheModuleIsInitialized();
-      GivenTheDispensingRequestSelectionIs(selection);
       WhenDispensingIsEnabled();
       WhenWaterDispensingNotInhibitedByDoor();
       WhenIceDispensingNotInhibitedByDoor();
       WhenDispensingNotInhibitedByRfid();
-      WhenTheDispensingRequestActionIs(DispensingAction_Start);
+      GivenTheDispensingRequestIs(selection, DispensingAction_Start);
    }
 
    void GivenTheFsmIsInitializedIntoNotDispensingState()
    {
       WhenTheDispensingRequestActionIs(DispensingAction_Stop);
       GivenTheModuleIsInitialized();
+      TheDispenseStatusShouldBe(DispenseStatus_CompletedSuccessfully);
    }
 };
 
-TEST(DispenseController, ShouldVoteIsolationValveOnAndDispensingValveOnUponEnteringDispensingStateIfRequestIsWater)
+TEST(DispenseController, ShouldSetDispensingStatusToDispensingAndVoteIsolationValveOnAndDispensingValveOnUponEnteringDispensingStateIfRequestIsWater)
 {
    GivenTheFsmIsInitializedAndInDispensingStateWithSelection(DispensingRequestSelection_Water);
 
    TheDispensingValveDispensingVoteShouldBe(WaterValveState_On, Vote_Care);
    TheIsolationValveDispensingVoteShouldBe(WaterValveState_On, Vote_Care);
    TheAugerMotorDispensingVoteShouldBe(AugerMotorIceType_Off, Vote_DontCare);
+   TheDispensingRequestStatusShouldBe(DispenseStatus_Dispensing);
 }
 
 TEST(DispenseController, ShouldVoteIsolationValveOnAndDispensingValveOnUponEnteringDispensingStateIfRequestIsAutofill)
@@ -334,7 +360,7 @@ TEST(DispenseController, ShouldSetStatusToInhibitedDueToDoorOpenWhenInDispensing
 
 TEST(DispenseController, ShouldSetStatusToInhibitedDueToDoorOpenWhenInDispensingStateAndIceDispensingIsInhibited)
 {
-   GivenTheFsmIsInitializedAndInDispensingStateWithSelection(DispensingRequestSelection_Water);
+   GivenTheFsmIsInitializedAndInDispensingStateWithSelection(DispensingRequestSelection_CubedIce);
    GivenIceDispensingInhibitedByDoor();
 
    TheDispenseStatusShouldBe(DispenseStatus_DispenseInhibitedDueToDoorOpen);
@@ -416,6 +442,7 @@ TEST(DispenseController, ShouldSetStatusToInhibitedDueToDoorOpenWhenInNotDispens
 TEST(DispenseController, ShouldSetStatusToInhibitedDueToDoorOpenWhenInNotDispensingStateAndIceDispensingIsInhibited)
 {
    GivenTheFsmIsInitializedIntoNotDispensingState();
+   GivenTheDispensingRequestIs(DispensingRequestSelection_CrushedIce, DispensingAction_Stop);
    GivenIceDispensingInhibitedByDoor();
 
    TheDispenseStatusShouldBe(DispenseStatus_DispenseInhibitedDueToDoorOpen);
@@ -429,6 +456,174 @@ TEST(DispenseController, ShouldSetStatusToInhibitedDueToRFIDWhenInNotDispensingS
    TheDispenseStatusShouldBe(DispenseStatus_DispenseInhibitedDueToRfidErrorOrLeak);
 }
 
+TEST(DispenseController, ShouldNotSetStatusToInhibitedDueToDoorOpenWhenInNotDispensingStateAndIceDispensingIsInhibitedButSelectionIsWater)
+{
+   GivenIceDispensingInhibitedByDoor();
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_Water, DispensingAction_Start);
+   TheDispenseStatusShouldBe(DispenseStatus_CompletedSuccessfully);
+}
+
+TEST(DispenseController, ShouldSetStatusToInhibitedDueToDoorOpenWhenInNotDispensingStateAndWaterDispensingIsInhibitedAndSelectionIsWater)
+{
+   GivenWaterDispensingInhibitedByDoor();
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_Water, DispensingAction_Start);
+   TheDispenseStatusShouldBe(DispenseStatus_DispenseInhibitedDueToDoorOpen);
+}
+
+TEST(DispenseController, ShouldNotSetStatusToInhibitedDueToDoorOpenWhenInNotDispensingStateAndIceDispensingIsInhibitedButSelectionIsAutofill)
+{
+   GivenIceDispensingInhibitedByDoor();
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_Autofill, DispensingAction_Start);
+   TheDispenseStatusShouldBe(DispenseStatus_CompletedSuccessfully);
+}
+
+TEST(DispenseController, ShouldSetStatusToInhibitedDueToDoorOpenWhenInNotDispensingStateAndWaterDispensingIsInhibitedAndSelectionIsAutofill)
+{
+   GivenWaterDispensingInhibitedByDoor();
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_Autofill, DispensingAction_Start);
+   TheDispenseStatusShouldBe(DispenseStatus_DispenseInhibitedDueToDoorOpen);
+}
+
+TEST(DispenseController, ShouldNotSetStatusToInhibitedDueToDoorOpenWhenInNotDispensingStateAndWaterDispensingIsInhibitedButSelectionIsCubedIce)
+{
+   GivenWaterDispensingInhibitedByDoor();
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_CubedIce, DispensingAction_Start);
+   TheDispenseStatusShouldBe(DispenseStatus_CompletedSuccessfully);
+}
+
+TEST(DispenseController, ShouldSetStatusToInhibitedDueToDoorOpenWhenInNotDispensingStateAndWaterDispensingIsInhibitedAndSelectionIsCubedIce)
+{
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+   GivenIceDispensingInhibitedByDoor();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_CubedIce, DispensingAction_Start);
+   TheDispenseStatusShouldBe(DispenseStatus_DispenseInhibitedDueToDoorOpen);
+}
+
+TEST(DispenseController, ShouldNotSetStatusToInhibitedDueToDoorOpenWhenInNotDispensingStateAndWaterDispensingIsInhibitedButSelectionIsCrushedIce)
+{
+   GivenWaterDispensingInhibitedByDoor();
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_CrushedIce, DispensingAction_Start);
+   TheDispenseStatusShouldBe(DispenseStatus_CompletedSuccessfully);
+}
+
+TEST(DispenseController, ShouldSetStatusToInhibitedDueToDoorOpenWhenInNotDispensingStateAndWaterDispensingIsInhibitedAndSelectionIsCrushedIce)
+{
+   GivenIceDispensingInhibitedByDoor();
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_CrushedIce, DispensingAction_Start);
+   TheDispenseStatusShouldBe(DispenseStatus_DispenseInhibitedDueToDoorOpen);
+}
+
+TEST(DispenseController, ShouldSetStatusToInhibitedDueToRfidWhenInNotDispensingStateAndDispensingIsInhibitedByRfidAndSelectionIsAutofill)
+{
+   GivenDispensingInhibitedByRfid();
+   GivenWaterDispensingNotInhibitedByDoor();
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_Autofill, DispensingAction_Start);
+   TheDispenseStatusShouldBe(DispenseStatus_DispenseInhibitedDueToRfidErrorOrLeak);
+}
+
+TEST(DispenseController, ShouldSetStatusToSensorErrorWhenInNotDispensingStateAndAutofillSensorErrorIsSetAndSelectionIsAutofill)
+{
+   GivenDispensingInhibitedByAutofillSensorError();
+   GivenWaterDispensingNotInhibitedByDoor();
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_Autofill, DispensingAction_Start);
+   TheDispenseStatusShouldBe(DispenseStatus_SensorError);
+}
+
+TEST(DispenseController, ShouldSetStatusToDisabledOrBlockedWhenInNotDispensingStateAndDispenseIsDisabledAndSelectionIsAutofill)
+{
+   GivenDispensingIsDisabled();
+   GivenWaterDispensingNotInhibitedByDoor();
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_Autofill, DispensingAction_Start);
+   TheDispenseStatusShouldBe(DispenseStatus_DisabledOrBlocked);
+}
+
+TEST(DispenseController, ShouldSetStatusToInhibitedDueToDoorOpenWhenInNotDispensingStateAndSelectionIsWaterAndWaterDispensingBecomesInhibited)
+{
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_Water, DispensingAction_Start);
+   WhenWaterDispensingInhibitedByDoor();
+   TheDispenseStatusShouldBe(DispenseStatus_DispenseInhibitedDueToDoorOpen);
+}
+
+TEST(DispenseController, ShouldSetStatusToInhibitedDueToDoorOpenWhenInNotDispensingStateAndSelectionIsAutofillAndWaterDispensingBecomesInhibited)
+{
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_Autofill, DispensingAction_Start);
+   WhenWaterDispensingInhibitedByDoor();
+   TheDispenseStatusShouldBe(DispenseStatus_DispenseInhibitedDueToDoorOpen);
+}
+
+TEST(DispenseController, ShouldSetStatusToInhibitedDueToDoorOpenWhenInNotDispensingStateAndSelectionIsCubedIceAndIceDispensingBecomesInhibited)
+{
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_CubedIce, DispensingAction_Start);
+   WhenIceDispensingInhibitedByDoor();
+   TheDispenseStatusShouldBe(DispenseStatus_DispenseInhibitedDueToDoorOpen);
+}
+
+TEST(DispenseController, ShouldSetStatusToInhibitedDueToDoorOpenWhenInNotDispensingStateAndSelectionIsCrushedIceAndIceDispensingBecomesInhibited)
+{
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_CrushedIce, DispensingAction_Start);
+   WhenIceDispensingInhibitedByDoor();
+   TheDispenseStatusShouldBe(DispenseStatus_DispenseInhibitedDueToDoorOpen);
+}
+
+TEST(DispenseController, ShouldSetStatusToDisabledOrBlockedWhenInNotDispensingStateAndDispenseIsDisabledAndSelectionIsCubedIce)
+{
+   GivenDispensingIsDisabled();
+   GivenIceDispensingNotInhibitedByDoor();
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_CubedIce, DispensingAction_Start);
+   TheDispenseStatusShouldBe(DispenseStatus_DisabledOrBlocked);
+}
+
+TEST(DispenseController, ShouldDispenseWhenWaterDispensingIsInhibitedByDoorDuringACrushedIceDispense)
+{
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_CrushedIce, DispensingAction_Start);
+   WhenWaterDispensingInhibitedByDoor();
+
+   TheDispensingRequestStatusShouldBe(DispenseStatus_Dispensing);
+}
+
+TEST(DispenseController, ShouldDispenseWhenIceDispensingIsInhibitedByDoorDuringAWaterDispense)
+{
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_Water, DispensingAction_Start);
+   WhenIceDispensingInhibitedByDoor();
+
+   TheDispensingRequestStatusShouldBe(DispenseStatus_Dispensing);
+}
+
 TEST(DispenseController, ShouldTransitionToDispensingStateIfSelectionIsAutofillAndNothingInhibitsDispense)
 {
    GivenTheFsmIsInitializedIntoNotDispensingState();
@@ -436,7 +631,7 @@ TEST(DispenseController, ShouldTransitionToDispensingStateIfSelectionIsAutofillA
    GivenWaterDispensingInhibitedByDoor();
    GivenDispensingInhibitedByRfid();
    GivenDispensingInhibitedByAutofillSensorError();
-   GivenTheDispensingRequestSelectionIs(DispensingRequestSelection_Autofill);
+   GivenTheDispensingRequestIs(DispensingRequestSelection_Autofill, DispensingAction_Start);
 
    WhenDispensingRequestActionIsStopThenStart();
    ShouldNotBeDispensing();
@@ -465,7 +660,7 @@ TEST(DispenseController, ShouldTransitionToDispensingStateIfSelectionIsWaterAndN
    GivenWaterDispensingInhibitedByDoor();
    GivenDispensingInhibitedByRfid();
    GivenDispensingInhibitedByAutofillSensorError();
-   GivenTheDispensingRequestSelectionIs(DispensingRequestSelection_Water);
+   GivenTheDispensingRequestIs(DispensingRequestSelection_Water, DispensingAction_Start);
 
    WhenDispensingRequestActionIsStopThenStart();
    ShouldNotBeDispensing();
@@ -490,7 +685,7 @@ TEST(DispenseController, ShouldTransitionToDispensingStateIfSelectionIsCubedIceA
    GivenIceDispensingInhibitedByDoor();
    GivenDispensingInhibitedByRfid();
    GivenDispensingInhibitedByAutofillSensorError();
-   GivenTheDispensingRequestSelectionIs(DispensingRequestSelection_CubedIce);
+   GivenTheDispensingRequestIs(DispensingRequestSelection_CubedIce, DispensingAction_Start);
 
    WhenDispensingRequestActionIsStopThenStart();
    ShouldNotBeDispensing();
@@ -511,7 +706,7 @@ TEST(DispenseController, ShouldTransitionToDispensingStateIfSelectionIsCrushedIc
    GivenIceDispensingInhibitedByDoor();
    GivenDispensingInhibitedByRfid();
    GivenDispensingInhibitedByAutofillSensorError();
-   GivenTheDispensingRequestSelectionIs(DispensingRequestSelection_CrushedIce);
+   GivenTheDispensingRequestIs(DispensingRequestSelection_CrushedIce, DispensingAction_Start);
 
    WhenDispensingRequestActionIsStopThenStart();
    ShouldNotBeDispensing();

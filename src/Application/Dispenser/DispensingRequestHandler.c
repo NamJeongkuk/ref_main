@@ -182,7 +182,6 @@ static void State_RequestingDispense(Fsm_t *fsm, const FsmSignal_t signal, const
       case Fsm_Entry:
          StartDispensingContinueRequestWaitTimer(instance);
          UpdatePrivateDispensingRequestAction(instance, DispensingAction_Start);
-         UpdateDispensingRequestStatus(instance, DispenseStatus_Dispensing);
          break;
 
       case Signal_ContinueRequest:

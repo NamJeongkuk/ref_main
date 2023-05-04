@@ -172,7 +172,7 @@ static bool AutoFillSensorError(DispenseController_t *instance)
    return state;
 }
 
-static DispensingRequestSelection_t GetRequestSelection(DispenseController_t *instance)
+static DispensingRequestSelection_t RequestSelection(DispenseController_t *instance)
 {
    DispensingRequest_t request;
    DataModel_Read(
@@ -183,10 +183,26 @@ static DispensingRequestSelection_t GetRequestSelection(DispenseController_t *in
    return request.selection;
 }
 
+static void UpdateDispensingRequestStatus(DispenseController_t *instance, DispenseStatus_t status)
+{
+   DispensingRequestStatus_t dispensingRequestStatus;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->dispensingRequestStatusErd,
+      &dispensingRequestStatus);
+
+   dispensingRequestStatus.status = status;
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->dispensingRequestStatusErd,
+      &dispensingRequestStatus);
+}
+
 static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    DispenseController_t *instance = InstanceFromHsm(hsm);
    IGNORE(data);
+   DispensingRequestSelection_t requestSelection;
 
    switch(signal)
    {
@@ -202,7 +218,12 @@ static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_DispensingInhibitedByDoor:
-         SetDispensingResultStatusTo(instance, DispenseStatus_DispenseInhibitedDueToDoorOpen);
+         requestSelection = RequestSelection(instance);
+         if(((requestSelection == DispensingRequestSelection_Autofill || requestSelection == DispensingRequestSelection_Water) && WaterDispensingInhibitedByDoor(instance)) ||
+            ((requestSelection == DispensingRequestSelection_CubedIce || requestSelection == DispensingRequestSelection_CrushedIce) && IceDispensingInhibitedByDoor(instance)))
+         {
+            SetDispensingResultStatusTo(instance, DispenseStatus_DispenseInhibitedDueToDoorOpen);
+         }
          break;
 
       case Signal_AutoFillSensorError:
@@ -226,8 +247,9 @@ static bool State_Dispensing(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Hsm_Entry:
+         UpdateDispensingRequestStatus(instance, DispenseStatus_Dispensing);
          StartMaxDispenseTimer(instance);
-         DispensingRequestSelection_t requestSelection = GetRequestSelection(instance);
+         DispensingRequestSelection_t requestSelection = RequestSelection(instance);
 
          if(requestSelection == DispensingRequestSelection_Water || requestSelection == DispensingRequestSelection_Autofill)
          {
@@ -277,7 +299,7 @@ static bool State_NotDispensing(Hsm_t *hsm, HsmSignal_t signal, const void *data
          break;
 
       case Signal_StartDispensingRequested: {
-         DispensingRequestSelection_t requestSelection = GetRequestSelection(instance);
+         DispensingRequestSelection_t requestSelection = RequestSelection(instance);
 
          if((requestSelection == DispensingRequestSelection_Autofill && DispenseEnabled(instance) && !WaterDispensingInhibitedByDoor(instance) && !DispenseInhibitedByRfid(instance) && !AutoFillSensorError(instance)) ||
             (requestSelection == DispensingRequestSelection_Water && DispenseEnabled(instance) && !WaterDispensingInhibitedByDoor(instance) && !DispenseInhibitedByRfid(instance)) ||
@@ -285,8 +307,23 @@ static bool State_NotDispensing(Hsm_t *hsm, HsmSignal_t signal, const void *data
          {
             Hsm_Transition(hsm, State_Dispensing);
          }
-
-         break;
+         else if(((requestSelection == DispensingRequestSelection_Autofill || requestSelection == DispensingRequestSelection_Water) && WaterDispensingInhibitedByDoor(instance)) ||
+            ((requestSelection == DispensingRequestSelection_CubedIce || requestSelection == DispensingRequestSelection_CrushedIce) && IceDispensingInhibitedByDoor(instance)))
+         {
+            SetDispensingResultStatusTo(instance, DispenseStatus_DispenseInhibitedDueToDoorOpen);
+         }
+         else if(DispenseInhibitedByRfid(instance))
+         {
+            SetDispensingResultStatusTo(instance, DispenseStatus_DispenseInhibitedDueToRfidErrorOrLeak);
+         }
+         else if(AutoFillSensorError(instance))
+         {
+            SetDispensingResultStatusTo(instance, DispenseStatus_SensorError);
+         }
+         else if(!DispenseEnabled(instance))
+         {
+            SetDispensingResultStatusTo(instance, DispenseStatus_DisabledOrBlocked);
+         }
       }
       case Hsm_Exit:
          break;

@@ -27,6 +27,7 @@ typedef struct
    Erd_t isolationValveDispensingVoteErd; // WaterValveVotedState_t
    Erd_t dispensingValveDispensingVoteErd; // WaterValveVotedState_t
    Erd_t timerModuleErd; // TimerModule_t *
+   Erd_t dispensingRequestStatusErd; // DispensingRequestStatus_t
 } DispenseControllerConfig_t;
 
 typedef struct
