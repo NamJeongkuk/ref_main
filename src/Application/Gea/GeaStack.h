@@ -35,7 +35,7 @@ enum
    SendReceiveBufferSize = Gea2Interface_SingleWireMaxSendReceiveBufferSize,
    PacketQueueStorageSize = 300,
    DynamicRoutingTableBufferSize = 8,
-   ErdApiV2SubscriptionClients = 1,
+   ErdApiV2SubscriptionClients = 2,
    QueueBufferElements = 1024
 };
 
