@@ -38,6 +38,7 @@ typedef struct
    Erd_t rakePositionErd; // RakePosition_t
    Erd_t freezerIceRateTriggerSignalErd; // Signal_t
    Erd_t aluminumMoldIceMakerTestRequestErd; // AluminumMoldIceMakerTestRequest_t
+   Erd_t dispensingRequestStatusErd; // DispensingRequestStatus_t
 } AluminumMoldIceMakerConfig_t;
 
 typedef struct
@@ -57,6 +58,7 @@ typedef struct
       const AluminumMoldIceMakerData_t *iceMakerParametricData;
       bool initialFreezeStateTransition;
       bool revolutionCompletedDuringHarvestFix;
+      bool pauseFillMonitoring;
    } _private;
 } AluminumMoldIceMaker_t;
 

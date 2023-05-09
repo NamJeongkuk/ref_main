@@ -43,7 +43,8 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .stopFillSignalErd = Erd_AluminumMoldIceMakerStopFillSignal,
    .rakePositionErd = Erd_AluminumMoldIceMakerRakePosition,
    .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
-   .aluminumMoldIceMakerTestRequestErd = Erd_AluminumMoldIceMakerTestRequest
+   .aluminumMoldIceMakerTestRequestErd = Erd_AluminumMoldIceMakerTestRequest,
+   .dispensingRequestStatusErd = Erd_DispensingRequestStatus
 };
 
 static const FeelerArmMonitorConfig_t feelerArmMonitorConfig = {

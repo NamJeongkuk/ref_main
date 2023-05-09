@@ -51,6 +51,7 @@ static const AluminumMoldIceMakerConfig_t config = {
    .rakePositionErd = Erd_AluminumMoldIceMakerRakePosition,
    .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
    .aluminumMoldIceMakerTestRequestErd = Erd_AluminumMoldIceMakerTestRequest,
+   .dispensingRequestStatusErd = Erd_DispensingRequestStatus
 };
 
 TEST_GROUP(AluminumMoldIceMaker)
@@ -513,6 +514,11 @@ TEST_GROUP(AluminumMoldIceMaker)
       DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved, clear);
    }
 
+   void WhenMoldThermistorIsInvalid()
+   {
+      MoldThermistorIsInvalid();
+   }
+
    void SkipFillRequestIsSet()
    {
       DataModel_Write(dataModel, Erd_AluminumMoldIceMakerSkipFillRequest, set);
@@ -599,6 +605,28 @@ TEST_GROUP(AluminumMoldIceMaker)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
    }
 
+   void GivenAluminumMoldIceMakerIsInFillState()
+   {
+      AluminumMoldIceMakerIsInFillState();
+   }
+
+   void GivenAluminumMoldIceMakerIsInIdleFillState()
+   {
+      GivenAluminumMoldIceMakerIsInFillState();
+
+      WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_Dispensing);
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFill);
+   }
+
+   void GivenAluminumMoldIceMakerIsInFillStateAfterIdleFillState()
+   {
+      GivenAluminumMoldIceMakerIsInIdleFillState();
+
+      WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_CompletedSuccessfully);
+      WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Resume);
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+   }
+
    void StopFillSignalChanges()
    {
       Signal_SendViaErd(DataModel_AsDataSource(dataModel), Erd_AluminumMoldIceMakerStopFillSignal);
@@ -653,6 +681,11 @@ TEST_GROUP(AluminumMoldIceMaker)
          &request);
    }
 
+   void WhenExternalTestRequestIs(IceMakerTestRequest_t request)
+   {
+      ExternalTestRequestIs(request);
+   }
+
    void ExternalTestRequestShouldBe(IceMakerTestRequest_t expected)
    {
       IceMakerTestRequest_t actual;
@@ -691,6 +724,16 @@ TEST_GROUP(AluminumMoldIceMaker)
    void UnsubscribeFromRakeControllerRequestOnChangeSubscription()
    {
       DataModel_Unsubscribe(dataModel, Erd_AluminumMoldIceMakerRakeControlRequest, &rakeControllerRequestOnChangeSubscription);
+   }
+
+   void WhenDispensingRequestStatusIs(DispensingRequestSelection_t selection, DispenseStatus_t status)
+   {
+      DispensingRequestStatus_t dispensingRequestStatus;
+      DataModel_Read(dataModel, Erd_DispensingRequestStatus, &dispensingRequestStatus);
+
+      dispensingRequestStatus.selection = selection;
+      dispensingRequestStatus.status = status;
+      DataModel_Write(dataModel, Erd_DispensingRequestStatus, &dispensingRequestStatus);
    }
 };
 
@@ -1965,6 +2008,165 @@ TEST(AluminumMoldIceMaker, ShouldReturnToIdleFreezeStateAfterFillTubeHeaterOnTim
    RakeCompletesFullRevolution();
    After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldPauseFillMonitoringAndTransitionToIdleFillStateWhenWaterDispensingIsStartedWhileInFillState)
+{
+   GivenAluminumMoldIceMakerIsInFillState();
+
+   WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_Dispensing);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Pause);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldPauseFillMonitoringAndTransitionToIdleFillStateWhenAutofillDispensingIsStartedWhileInFillState)
+{
+   GivenAluminumMoldIceMakerIsInFillState();
+
+   WhenDispensingRequestStatusIs(DispensingRequestSelection_Autofill, DispenseStatus_Dispensing);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Pause);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldResumeFillMonitoringAndTransitionToFillStateWhenDispensingStatusChangesToCompletedSuccessfullyWhileInIdleFillState)
+{
+   GivenAluminumMoldIceMakerIsInIdleFillState();
+
+   WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_CompletedSuccessfully);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Resume);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldResumeFillMonitoringAndTransitionToFillStateWhenDispensingStatusChangesToSensorErrorWhileInIdleFillState)
+{
+   GivenAluminumMoldIceMakerIsInIdleFillState();
+
+   WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_SensorError);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Resume);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldResumeFillMonitoringAndTransitionToFillStateWhenDispensingStatusChangesToDisabledOrBlockedWhileInIdleFillState)
+{
+   GivenAluminumMoldIceMakerIsInIdleFillState();
+
+   WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_DisabledOrBlocked);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Resume);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldResumeFillMonitoringAndTransitionToFillStateWhenDispensingStatusChangesToHitMaxVolumeWhileInIdleFillState)
+{
+   GivenAluminumMoldIceMakerIsInIdleFillState();
+
+   WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_HitMaxVolume);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Resume);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldResumeFillMonitoringAndTransitionToFillStateWhenDispensingStatusChangesToHitMaxTimeWhileInIdleFillState)
+{
+   GivenAluminumMoldIceMakerIsInIdleFillState();
+
+   WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_HitMaxTime);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Resume);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldResumeFillMonitoringAndTransitionToFillStateWhenDispensingStatusChangesToDidNotReceiveDispenseRequestAfterHeartbeatWhileInIdleFillState)
+{
+   GivenAluminumMoldIceMakerIsInIdleFillState();
+
+   WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_DidNotReceiveDispenseRequestAfterHeartbeat);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Resume);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldResumeFillMonitoringAndTransitionToFillStateWhenDispensingStatusChangesToPreciseFillAmountReachedWhileInIdleFillState)
+{
+   GivenAluminumMoldIceMakerIsInIdleFillState();
+
+   WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_PreciseFillAmountReached);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Resume);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldResumeFillMonitoringAndTransitionToFillStateWhenDispensingStatusChangesToBadCommandWhileInIdleFillState)
+{
+   GivenAluminumMoldIceMakerIsInIdleFillState();
+
+   WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_BadCommand);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Resume);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldResumeFillMonitoringAndTransitionToFillStateWhenDispensingStatusChangesToDispenseInhibitedDueToDoorOpenWhileInIdleFillState)
+{
+   GivenAluminumMoldIceMakerIsInIdleFillState();
+
+   WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_DispenseInhibitedDueToDoorOpen);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Resume);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldResumeFillMonitoringAndTransitionToFillStateWhenDispensingStatusChangesToDispenseInhibitedBecauseRedundantCupSwitchPressIsRequiredWhileInIdleFillState)
+{
+   GivenAluminumMoldIceMakerIsInIdleFillState();
+
+   WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_DispenseInhibitedBecauseRedundantCupSwitchPressIsRequired);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Resume);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldResumeFillMonitoringAndTransitionToFillStateWhenDispensingStatusChangesToDispenseInhibitedDueToRfidErrorOrLeakWhileInIdleFillState)
+{
+   GivenAluminumMoldIceMakerIsInIdleFillState();
+
+   WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_DispenseInhibitedDueToRfidErrorOrLeak);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Resume);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldNotPauseFillMonitoringWhenCrushedIceDispensingIsStartedWhileInFillState)
+{
+   GivenAluminumMoldIceMakerIsInFillState();
+
+   WhenDispensingRequestStatusIs(DispensingRequestSelection_CrushedIce, DispenseStatus_Dispensing);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldNotPauseFillMonitoringWhenCubedIceDispensingIsStartedWhileInFillState)
+{
+   GivenAluminumMoldIceMakerIsInFillState();
+
+   WhenDispensingRequestStatusIs(DispensingRequestSelection_CubedIce, DispenseStatus_Dispensing);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldNotTransitionToFillStateWhenFillTestIsRequestedWhileInIdleFillState)
+{
+   GivenAluminumMoldIceMakerIsInIdleFillState();
+
+   WhenExternalTestRequestIs(IceMakerTestRequest_Fill);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldNotTransitionToThermistorFaultStateWhenMoldThermistorIsInvalidWhileInIdleFillState)
+{
+   GivenAluminumMoldIceMakerIsInIdleFillState();
+
+   WhenMoldThermistorIsInvalid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldStopFillMonitoringWhenReceivingStopFillSignalAfterFillMonitoringIsResumed)
+{
+   GivenAluminumMoldIceMakerIsInFillStateAfterIdleFillState();
+
+   When StopFillSignalChanges();
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Stop);
 }
 
 TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime)

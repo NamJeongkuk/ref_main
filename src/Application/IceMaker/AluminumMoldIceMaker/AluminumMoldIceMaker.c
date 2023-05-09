@@ -43,13 +43,17 @@ enum
    Signal_TurnOnRakeMotor,
    Signal_TurnOffRakeMotor,
    Signal_HarvestFaultMaxTimerExpired,
-   Signal_TestRequest_Harvest
+   Signal_TestRequest_Harvest,
+   Signal_PauseFill,
+   Signal_ResumeFill,
 };
 
 static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Freeze(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_IdleFreeze(Hsm_t *hsm, HsmSignal_t signal, const void *data);
+static bool State_FillParent(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data);
+static bool State_IdleFill(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Harvest(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_HarvestFix(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_HarvestFault(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -59,7 +63,9 @@ static const HsmStateHierarchyDescriptor_t stateList[] = {
    { State_Global, HSM_NO_PARENT },
    { State_Freeze, State_Global },
    { State_IdleFreeze, State_Global },
-   { State_Fill, State_Global },
+   { State_FillParent, State_Global },
+   { State_Fill, State_FillParent },
+   { State_IdleFill, State_FillParent },
    { State_Harvest, State_Global },
    { State_HarvestFix, State_Global },
    { State_HarvestFault, State_Global },
@@ -482,6 +488,24 @@ static void StartWaterFillMonitoring(AluminumMoldIceMaker_t *instance)
 static void StopWaterFillMonitoring(AluminumMoldIceMaker_t *instance)
 {
    IceMakerWaterFillMonitoringRequest_t request = IceMakerWaterFillMonitoringRequest_Stop;
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->waterFillMonitoringRequestErd,
+      &request);
+}
+
+static void PauseWaterFillMonitoring(AluminumMoldIceMaker_t *instance)
+{
+   IceMakerWaterFillMonitoringRequest_t request = IceMakerWaterFillMonitoringRequest_Pause;
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->waterFillMonitoringRequestErd,
+      &request);
+}
+
+static void ResumeWaterFillMonitoring(AluminumMoldIceMaker_t *instance)
+{
+   IceMakerWaterFillMonitoringRequest_t request = IceMakerWaterFillMonitoringRequest_Resume;
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->waterFillMonitoringRequestErd,
@@ -979,6 +1003,27 @@ static bool State_HarvestFault(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    return HsmSignalConsumed;
 }
 
+static bool State_FillParent(Hsm_t *hsm, HsmSignal_t signal, const void *data)
+{
+   IGNORE(hsm);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Signal_TestRequest_Fill:
+         break;
+
+      case Signal_MoldThermistorIsInvalid:
+         // Consume signal so it doesn't get deferred to global - transition to thermistor fault state will occur when fill completes
+         break;
+
+      default:
+         return HsmSignalDeferred;
+   }
+
+   return HsmSignalConsumed;
+}
+
 static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    IGNORE(data);
@@ -990,7 +1035,15 @@ static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_Fill);
          VoteForIceMakerWaterValve(instance, ON, Vote_Care);
          VoteForIsolationWaterValve(instance, ON, Vote_Care);
-         StartWaterFillMonitoring(instance);
+         if(instance->_private.pauseFillMonitoring)
+         {
+            ResumeWaterFillMonitoring(instance);
+            instance->_private.pauseFillMonitoring = false;
+         }
+         else
+         {
+            StartWaterFillMonitoring(instance);
+         }
          break;
 
       case Signal_TestRequest_Fill:
@@ -1015,14 +1068,44 @@ static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          }
          break;
 
-      case Signal_MoldThermistorIsInvalid:
-         // Consume signal so it doesn't get deferred to global - transition to thermistor fault state will occur when fill completes
+      case Signal_PauseFill:
+         instance->_private.pauseFillMonitoring = true;
+         Hsm_Transition(hsm, State_IdleFill);
          break;
 
       case Hsm_Exit:
-         StopWaterFillMonitoring(instance);
+         if(instance->_private.pauseFillMonitoring)
+         {
+            PauseWaterFillMonitoring(instance);
+         }
+         else
+         {
+            StopWaterFillMonitoring(instance);
+         }
          VoteForIceMakerWaterValve(instance, OFF, Vote_DontCare);
          VoteForIsolationWaterValve(instance, OFF, Vote_DontCare);
+         break;
+
+      default:
+         return HsmSignalDeferred;
+   }
+
+   return HsmSignalConsumed;
+}
+
+static bool State_IdleFill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
+{
+   IGNORE(data);
+   AluminumMoldIceMaker_t *instance = InstanceFromHsm(hsm);
+
+   switch(signal)
+   {
+      case Hsm_Entry:
+         UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_IdleFill);
+         break;
+
+      case Signal_ResumeFill:
+         Hsm_Transition(hsm, State_Fill);
          break;
 
       default:
@@ -1157,6 +1240,24 @@ static void DataModelChanged(void *context, const void *args)
             Hsm_SendSignal(&instance->_private.hsm, Signal_TestRequest_Harvest, NULL);
          }
          ClearIceMakerTestRequest(instance);
+      }
+   }
+   else if(erd == instance->_private.config->dispensingRequestStatusErd)
+   {
+      const DispensingRequestStatus_t *dispensingRequestStatus = onChangeData->data;
+      switch(dispensingRequestStatus->status)
+      {
+         case DispenseStatus_Dispensing:
+            if((dispensingRequestStatus->selection == DispensingRequestSelection_Water) ||
+               (dispensingRequestStatus->selection == DispensingRequestSelection_Autofill))
+            {
+               Hsm_SendSignal(&instance->_private.hsm, Signal_PauseFill, NULL);
+            }
+            break;
+
+         default:
+            Hsm_SendSignal(&instance->_private.hsm, Signal_ResumeFill, NULL);
+            break;
       }
    }
 }

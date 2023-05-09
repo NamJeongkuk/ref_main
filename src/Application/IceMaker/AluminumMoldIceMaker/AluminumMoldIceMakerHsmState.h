@@ -17,6 +17,7 @@ enum
    AluminumMoldIceMakerHsmState_IdleFreeze,
    AluminumMoldIceMakerHsmState_Harvest,
    AluminumMoldIceMakerHsmState_Fill,
+   AluminumMoldIceMakerHsmState_IdleFill,
    AluminumMoldIceMakerHsmState_HarvestFix,
    AluminumMoldIceMakerHsmState_HarvestFault,
    AluminumMoldIceMakerHsmState_ThermistorFault

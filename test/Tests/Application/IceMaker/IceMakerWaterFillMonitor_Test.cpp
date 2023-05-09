@@ -10,9 +10,9 @@ extern "C"
 #include "IceMakerWaterFillMonitor.h"
 #include "Constants_Time.h"
 #include "Constants_Binary.h"
-#include "Signal.h"
 #include "FlowMeterMonitoringRequest.h"
 #include "IceMakerWaterFillMonitoringRequest.h"
+#include "Signal.h"
 }
 
 #include "CppUTest/TestHarness.h"
