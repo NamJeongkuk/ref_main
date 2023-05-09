@@ -25,6 +25,7 @@ enum
    Invalid = false,
    SkipInitialOnTimeDisabled = false,
    Inactive = false,
+   SkipInitialOnTimeEnabled = true,
    Active = true,
    Valid = true,
    InvalidAdcCount = 5375,
@@ -42,6 +43,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    TimerModule_TestDouble_t *timerModuleTestDouble;
    EventSubscription_t harvestCountIsReadyToHarvestSubscription;
    EventSubscription_t feelerArmIsReadyToHarvestSubscription;
+   EventSubscription_t rakeCompletedRevolutionSubscription;
 
    void setup()
    {
@@ -450,6 +452,25 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
    }
 
+   void GivenIceMakerIsInHarvestFixState()
+   {
+      GivenIceMakerIsInHarvestStateAndRakeIsNotHome();
+
+      After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN);
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+   }
+
+   void SkipFillRequestShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(
+         dataModel,
+         Erd_AluminumMoldIceMakerSkipFillRequest,
+         &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
    void WhenTheFeelerArmReadyToEnterHarvestIs(bool state)
    {
       DataModel_Write(
@@ -516,6 +537,19 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       }
    }
 
+   static void RakeCompletedRevolutionHasChangedStates(void *context, const void *_args)
+   {
+      IGNORE(context);
+      const DataModelOnDataChangeArgs_t *args = (const DataModelOnDataChangeArgs_t *)_args;
+
+      if(args->erd == Erd_AluminumMoldIceMakerRakeCompletedRevolution)
+      {
+         const bool *state = (const bool *)args->data;
+
+         mock().actualCall("RakeCompletedRevolutionHasChanged").withParameter("state", *state);
+      }
+   }
+
    void GivenHarvestCountReadySubscriptionIsInitializedAndSubscribedTo()
    {
       EventSubscription_Init(
@@ -528,9 +562,26 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
          &harvestCountIsReadyToHarvestSubscription);
    }
 
+   void GivenRakeCompletedRevolutionSubscriptionIsInitializedAndSubscribedTo()
+   {
+      EventSubscription_Init(
+         &rakeCompletedRevolutionSubscription,
+         NULL,
+         RakeCompletedRevolutionHasChangedStates);
+
+      DataModel_SubscribeAll(
+         dataModel,
+         &rakeCompletedRevolutionSubscription);
+   }
+
    void HarvestCountIsReadyToHarvestShouldChangeTo(bool state)
    {
       mock().expectOneCall("HarvestCountReadyHasChanged").withParameter("state", state);
+   }
+
+   void RakeCompletedRevolutionShouldChangeTo(bool state)
+   {
+      mock().expectOneCall("RakeCompletedRevolutionHasChanged").withParameter("state", state);
    }
 
    void TheFeelerArmIsReadyToHarvestShouldNotChange()
@@ -635,6 +686,113 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
          dataModel,
          Erd_AluminumMoldIceMakerTestRequest,
          &request);
+   }
+
+   void FeelerArmMonitoringShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(
+         dataModel,
+         Erd_FeelerArmMonitoringRequest,
+         &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void WhenTheFeelerArmMovesFromBucketNotFullToFullForFeelerArmTestTime()
+   {
+      WhenFeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
+      WhenFeelerArmPositionIs(FeelerArmPosition_BucketFull);
+      After(iceMakerData->harvestData.feelerArmTestTimeInSeconds * MSEC_PER_SEC);
+   }
+
+   void AfterWaitingForMotorOnAndOffTimeToSetRakeControllerRequestAgainDuringHarvestFix()
+   {
+      RakeCompletedRevolutionShouldChangeTo(false);
+      After(iceMakerData->harvestFixData.motorOnTimeInSeconds * MSEC_PER_SEC);
+      RakeControllerRequestShouldBe(CLEAR);
+
+      After(iceMakerData->harvestFixData.motorOffTimeInSeconds * MSEC_PER_SEC);
+      RakeControllerRequestShouldBe(SET);
+   }
+
+   void WhenTheRakeRotatesFirstTimeDuringHarvestFix()
+   {
+      RakeControllerRequestShouldBe(SET);
+      WhenTheRakePositionIs(RakePosition_NotHome);
+
+      WhenTheFeelerArmMovesFromBucketNotFullToFullForFeelerArmTestTime();
+
+      RakeCompletedRevolutionShouldChangeTo(true);
+      WhenTheRakePositionIs(RakePosition_Home);
+      RakeCompletedRevolutionShouldBe(SET);
+   }
+
+   void WhenTheRakeRotatesTheSecondTimeDuringHarvestFix()
+   {
+      RakeControllerRequestShouldBe(SET);
+      WhenTheRakePositionIs(RakePosition_NotHome);
+
+      WhenTheFeelerArmMovesFromBucketNotFullToFullForFeelerArmTestTime();
+
+      RakeCompletedRevolutionShouldChangeTo(true);
+      RakeCompletedRevolutionShouldChangeTo(false);
+      WhenTheRakePositionIs(RakePosition_Home);
+   }
+
+   void WhenTheRakeRotatesTwoTimesWhileInHarvestFix()
+   {
+      WhenTheRakeRotatesFirstTimeDuringHarvestFix();
+
+      AfterWaitingForMotorOnAndOffTimeToSetRakeControllerRequestAgainDuringHarvestFix();
+
+      WhenTheRakeRotatesTheSecondTimeDuringHarvestFix();
+   }
+
+   void WhenTheRakeRotatesOneTimeDuringHarvest()
+   {
+      WhenTheRakePositionIs(RakePosition_NotHome);
+
+      WhenFeelerArmPositionIs(FeelerArmPosition_BucketFull);
+      After(iceMakerData->harvestData.feelerArmTestTimeInSeconds * MSEC_PER_SEC);
+
+      RakeCompletedRevolutionShouldChangeTo(true);
+      RakeCompletedRevolutionShouldChangeTo(false);
+      WhenTheRakePositionIs(RakePosition_Home);
+      RakeCompletedRevolutionShouldBe(SET);
+   }
+
+   void WhenFeelerArmMovesToBucketNotFullForMinimumFeelerArmExtensionTime()
+   {
+      WhenFeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
+      After(iceMakerData->freezeData.minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN);
+      TheFeelerArmReadyToEnterHarvestShouldBe(true);
+   }
+
+   void WhenRakeRotatesOneTimeAfterInitialMinimumHeaterOnTimeDuringHarvest()
+   {
+      After(iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds * MSEC_PER_SEC);
+      RakeControllerRequestShouldBe(SET);
+
+      WhenTheRakeRotatesOneTimeDuringHarvest();
+   }
+
+   void AfterEnoughTimeHasPassedToReachHarvestCount()
+   {
+      After((iceMakerData->freezeData.minimumFreezeTimeInMinutes) * MSEC_PER_MIN);
+      After(MSEC_PER_SEC);
+   }
+
+   void GivenIceMakerIsInFreezeStateAfterHavingBeenInHarvestFix()
+   {
+      GivenRakeCompletedRevolutionSubscriptionIsInitializedAndSubscribedTo();
+      GivenIceMakerIsInHarvestFixState();
+
+      SkipFillRequestShouldBe(SET);
+      RakeControllerRequestShouldBe(SET);
+
+      WhenTheRakeRotatesTwoTimesWhileInHarvestFix();
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
    }
 };
 
@@ -1020,5 +1178,134 @@ TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToFreezeStateWhenFillTubeT
    After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
 
    FillTubeHeaterVoteAndCareShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage, Vote_DontCare);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTurnRakeMotorOnAndOffAccordingToParametricallyDefinedTime)
+{
+   GivenIceMakerIsInHarvestFixState();
+   IceMakerMotorShouldVote(MotorState_On, Vote_Care);
+
+   After(iceMakerData->harvestFixData.motorOffTimeInSeconds * MSEC_PER_SEC - 1);
+   IceMakerMotorShouldVote(MotorState_On, Vote_Care);
+
+   After(1);
+   IceMakerMotorShouldVote(MotorState_Off, Vote_Care);
+
+   After(iceMakerData->harvestFixData.motorOnTimeInSeconds * MSEC_PER_SEC - 1);
+   IceMakerMotorShouldVote(MotorState_Off, Vote_Care);
+
+   After(1);
+   IceMakerMotorShouldVote(MotorState_On, Vote_Care);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTurnMoldHeaterOnUponEnteringHarvestFixState)
+{
+   GivenIceMakerIsInHarvestFixState();
+
+   IceMakerMoldHeaterControlRequestShouldBe(
+      ENABLED,
+      SkipInitialOnTimeEnabled,
+      iceMakerData->harvestFixData.heaterOnTemperatureInDegFx100,
+      iceMakerData->harvestFixData.heaterOffTemperatureInDegFx100);
+
+   IceMakerHeaterRelayShouldBe(ON);
+   TheMoldHeaterVoteShouldBeCareAnd(ENABLED);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTransitionFromHarvestFixToFreezeStateWhenRakeMotorCompletesTwoRevolutions)
+{
+   GivenRakeCompletedRevolutionSubscriptionIsInitializedAndSubscribedTo();
+   GivenIceMakerIsInHarvestFixState();
+
+   SkipFillRequestShouldBe(SET);
+   RakeControllerRequestShouldBe(SET);
+
+   WhenTheRakeRotatesTwoTimesWhileInHarvestFix();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldSetSkipFillAfterTheNextNormalHarvestAfterHavingBeenInHarvestFix)
+{
+   GivenIceMakerIsInFreezeStateAfterHavingBeenInHarvestFix();
+
+   WhenTheIceMakerMoldTemperatureIsBelowMaximumHarvestTemperature();
+   WhenFeelerArmMovesToBucketNotFullForMinimumFeelerArmExtensionTime();
+
+   AfterEnoughTimeHasPassedToReachHarvestCount();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   WhenRakeRotatesOneTimeAfterInitialMinimumHeaterOnTimeDuringHarvest();
+
+   After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+   IceMakerWaterValveRelayShouldBe(WaterValveState_Off);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTurnOnAndOffMoldHeaterAtParametricallyDefinedTemperaturesInHarvestFixState)
+{
+   GivenIceMakerIsInHarvestFixState();
+
+   IceMakerMoldHeaterControlRequestShouldBe(
+      ENABLED,
+      SkipInitialOnTimeEnabled,
+      iceMakerData->harvestFixData.heaterOnTemperatureInDegFx100,
+      iceMakerData->harvestFixData.heaterOffTemperatureInDegFx100);
+
+   IceMakerHeaterRelayShouldBe(ON);
+   TheMoldHeaterVoteShouldBeCareAnd(ENABLED);
+
+   WhenAluminumMoldIceMakerTemperatureIs(iceMakerData->harvestFixData.heaterOffTemperatureInDegFx100);
+   IceMakerHeaterRelayShouldBe(OFF);
+
+   WhenAluminumMoldIceMakerTemperatureIs(iceMakerData->harvestFixData.heaterOnTemperatureInDegFx100);
+   IceMakerHeaterRelayShouldBe(ON);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToHarvestFaultStateWhenRakeMotorDoesNotCompleteTheSecondRevolutionWithinMaxHarvestFixTime)
+{
+   GivenIceMakerIsInHarvestFixState();
+
+   WhenTheRakePositionIs(RakePosition_NotHome);
+   WhenTheFeelerArmMovesFromBucketNotFullToFullForFeelerArmTestTime();
+
+   WhenTheRakePositionIs(RakePosition_Home);
+   RakeCompletedRevolutionShouldBe(SET);
+
+   After(iceMakerData->harvestFixData.maximumHarvestFixTimeInMinutes * MSEC_PER_MIN);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFault);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldDoTwoNewRevolutionsToExitHarvestFixTheSecondTimeItIsInHarvestFix)
+{
+   GivenIceMakerIsInHarvestFixState();
+
+   WhenTheRakePositionIs(RakePosition_NotHome);
+   WhenTheFeelerArmMovesFromBucketNotFullToFullForFeelerArmTestTime();
+
+   WhenTheRakePositionIs(RakePosition_Home);
+   RakeCompletedRevolutionShouldBe(SET);
+
+   After(iceMakerData->harvestFixData.maximumHarvestFixTimeInMinutes * MSEC_PER_MIN);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFault);
+
+   After(iceMakerData->harvestFaultData.harvestFaultMaxTimeInMinutes * MSEC_PER_MIN);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+
+   GivenRakeCompletedRevolutionSubscriptionIsInitializedAndSubscribedTo();
+
+   WhenTheRakeRotatesFirstTimeDuringHarvestFix();
+
+   RakeCompletedRevolutionShouldChangeTo(false);
+   After(iceMakerData->harvestFixData.motorOnTimeInSeconds * MSEC_PER_SEC - iceMakerData->harvestData.feelerArmTestTimeInSeconds * MSEC_PER_SEC);
+   RakeControllerRequestShouldBe(CLEAR);
+
+   After(iceMakerData->harvestFixData.motorOffTimeInSeconds * MSEC_PER_SEC);
+   RakeControllerRequestShouldBe(SET);
+
+   WhenTheRakeRotatesTheSecondTimeDuringHarvestFix();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
 }

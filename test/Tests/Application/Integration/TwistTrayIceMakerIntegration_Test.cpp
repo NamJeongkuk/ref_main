@@ -105,9 +105,9 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       GivenTheIceMakerIsEnabled();
    }
 
-   void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
+   void After(TimerTicks_t ticks)
    {
-      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
    }
 
    void AfterNInterrupts(int numberOfInterrupts)

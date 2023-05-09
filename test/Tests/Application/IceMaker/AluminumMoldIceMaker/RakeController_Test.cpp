@@ -157,6 +157,20 @@ TEST_GROUP(RakeController)
    {
       DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeHasNotBeenHome, &state);
    }
+
+   void GivenRakeHasCompletedARevolutionAndBucketIsFullAndRakeIsHome()
+   {
+      Given RakePositionIs(RakePosition_NotHome);
+      Given FeelerArmPositionIs(FeelerArmPosition_BucketFull);
+      Given TheModuleIsInitializedAndRakeControlRequestIsSet();
+
+      After(harvestData.rakeNotHomeTestTimeInSeconds * MSEC_PER_SEC);
+      RakePositionHasNotBeenHomeShouldBe(SET);
+      FeelerArmPositionHasBeenBucketFullShouldBe(SET);
+
+      When RakePositionIs(RakePosition_Home);
+      RakeCompletedRevolutionShouldBe(SET);
+   }
 };
 
 TEST(RakeController, ShouldInitialize)
@@ -417,4 +431,41 @@ TEST(RakeController, ShouldStartFeelerArmPositionHasBeenFullTimerIsRequestComesT
 
    After(harvestData.feelerArmTestTimeInSeconds * MSEC_PER_SEC);
    FeelerArmPositionHasBeenBucketFullShouldBe(SET);
+}
+
+TEST(RakeController, ShouldSetAnotherCompletedRevolutionWhenANewRequestIsReceivedAndRakeMovesOutOfHomeForNotHomeTestTime)
+{
+   GivenRakeHasCompletedARevolutionAndBucketIsFullAndRakeIsHome();
+
+   When RakeControlRequestIs(CLEAR);
+   When RakeControlRequestIs(SET);
+   When RakePositionIs(RakePosition_NotHome);
+
+   // parametric happens to have rake not home test time equal to feeler arm test time
+   After(harvestData.rakeNotHomeTestTimeInSeconds * MSEC_PER_SEC);
+   RakePositionHasNotBeenHomeShouldBe(SET);
+   FeelerArmPositionHasBeenBucketFullShouldBe(SET);
+
+   When RakePositionIs(RakePosition_Home);
+   RakeCompletedRevolutionShouldBe(SET);
+}
+
+TEST(RakeController, ShouldSetAnotherCompletedRevolutionWhenANewRequestIsReceivedAndRakeMovesOutOfHomeAndThenBucketBecomesFull)
+{
+   GivenRakeHasCompletedARevolutionAndBucketIsFullAndRakeIsHome();
+
+   When RakeControlRequestIs(CLEAR);
+   When FeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
+   When RakeControlRequestIs(SET);
+
+   When RakePositionIs(RakePosition_NotHome);
+   After(harvestData.rakeNotHomeTestTimeInSeconds * MSEC_PER_SEC);
+   RakePositionHasNotBeenHomeShouldBe(SET);
+
+   When FeelerArmPositionIs(FeelerArmPosition_BucketFull);
+   After(harvestData.feelerArmTestTimeInSeconds * MSEC_PER_SEC);
+   FeelerArmPositionHasBeenBucketFullShouldBe(SET);
+
+   When RakePositionIs(RakePosition_Home);
+   RakeCompletedRevolutionShouldBe(SET);
 }
