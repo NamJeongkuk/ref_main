@@ -18,4 +18,8 @@ typedef struct
    TemperatureDegFx100_t offTemperatureInDegFx100;
 } IceMakerMoldHeaterControlRequest_t;
 
+#define SWAP_DEFINITION_IceMakerMoldHeaterControlRequest_t(_name, _type) \
+   SWAPPED_FIELD(_name, _type, onTemperatureInDegFx100),                 \
+      SWAPPED_FIELD(_name, _type, offTemperatureInDegFx100),
+
 #endif

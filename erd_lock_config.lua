@@ -28,5 +28,14 @@ return {
       '0x0702',
       '0x0703'
     }
+  },
+  titanic_ui = {
+    error_message = 'Do not change these ERDs. If they change, Titanic UI\'s Common ERDs need updated.',
+    erds = {
+      '0xFAFB',
+      '0xFAFC',
+      '0xFAFD',
+      '0xFAFE'
+    }
   }
 }

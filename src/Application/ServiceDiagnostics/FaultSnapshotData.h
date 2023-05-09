@@ -17,4 +17,7 @@ typedef struct
    uint8_t someData[sizeof(uint32_t)];
 } FaultSnapshotData_t;
 
+#define SWAP_DEFINITION_FaultSnapshotData_t(_name, _type) \
+   SWAPPED_FIELD(_name, _type, someData),
+
 #endif

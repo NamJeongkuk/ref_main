@@ -30,10 +30,10 @@ enum
 static const ExternalFilteredSensorResolverConfig_t config = {
    .internalFilteredSensorErd = Erd_Ambient_FilteredInternalTemperatureResolvedInDegFx100,
    .internalFilteredSensorIsValidErd = Erd_AmbientThermistor_IsValidResolved,
-   .externalFilteredSensorErd = Erd_Ambient_ExternalTemperatureInDegFx100,
-   .externalFilteredSensorIsValidErd = Erd_Ambient_ExternalThermistorIsValid,
+   .externalFilteredSensorErd = Erd_ExternalAmbientFilteredTemperatureInDegFx100,
+   .externalFilteredSensorIsValidErd = Erd_ExternalAmbientThermistor_IsValid,
    .resolvedFilteredSensorErd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
-   .resolvedFilteredSensorIsValidErd = Erd_Ambient_ResolvedThermistorIsValid,
+   .resolvedFilteredSensorIsValidErd = Erd_AmbientTemperature_IsValidResolved,
    .sensorType = ExternalFilteredSensorResolver_SensorType_Temperature,
 };
 
@@ -123,7 +123,7 @@ TEST_GROUP(ExternalFilteredSensorResolver)
    {
       DataModel_Write(
          dataModel,
-         Erd_Ambient_ExternalTemperatureInDegFx100,
+         Erd_ExternalAmbientFilteredTemperatureInDegFx100,
          &externalFilteredTemperature);
    }
 
@@ -136,7 +136,7 @@ TEST_GROUP(ExternalFilteredSensorResolver)
    {
       DataModel_Write(
          dataModel,
-         Erd_Ambient_ExternalThermistorIsValid,
+         Erd_ExternalAmbientThermistor_IsValid,
          &status);
    }
 
@@ -156,7 +156,7 @@ TEST_GROUP(ExternalFilteredSensorResolver)
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_Ambient_ResolvedThermistorIsValid,
+         Erd_AmbientTemperature_IsValidResolved,
          &actual);
 
       CHECK_EQUAL(expected, actual);

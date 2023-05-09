@@ -17,4 +17,7 @@ enum
 };
 typedef uint16_t PwmDutyCycle_t;
 
+#define SWAP_DEFINITION_PwmDutyCycle_t(_name, _type) \
+   SWAPPED_ERD(_name, sizeof(_type)),
+
 #endif

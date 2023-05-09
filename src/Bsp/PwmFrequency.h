@@ -17,4 +17,7 @@ enum
 };
 typedef uint16_t PwmFrequency_t;
 
+#define SWAP_DEFINITION_PwmFrequency_t(_name, _type) \
+   SWAPPED_ERD(_name, sizeof(_type)),
+
 #endif

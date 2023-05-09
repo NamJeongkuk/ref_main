@@ -121,7 +121,7 @@ describe("CompressorSpeedController,", () => {
    };
 
    const providedThatTheAmbientTemperatureOverrideIsActive = async () => {
-      await rockhopper.write("Erd_Ambient_FilteredTemperatureOverrideRequest", true);
+      await rockhopper.write("Erd_Ambient_FilteredInternalTemperatureOverrideRequest", true);
    };
 
    const theFilteredAmbientTemperatureOverrideIs = async (requestedTemperature) => {

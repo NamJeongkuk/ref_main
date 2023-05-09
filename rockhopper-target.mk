@@ -169,6 +169,10 @@ clean: target_clean
 erd_lock: erd_definitions
 	@$(LUA53) $(LUA_ERD_LOCK_REPORT) --configuration erd_lock_config.lua --locked_definitions erd-lock.json --definitions $(OUTPUT_DIR)/doc/erd-definitions.json
 
+.PHONY: erd_lock_update
+erd_lock_update: erd_definitions
+	@$(LUA53) $(LUA_ERD_LOCK_REPORT) --configuration erd_lock_config.lua --locked_definitions erd-lock.json --definitions $(OUTPUT_DIR)/doc/erd-definitions.json --generate_locked_definitions
+
 .PHONY: erd_definitions
 erd_definitions: $(OUTPUT_DIR)/doc toolchain
 	@echo Generating ERD definitions...

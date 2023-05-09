@@ -9,7 +9,14 @@
 #define FANCONTROL_H
 
 typedef uint16_t FanRpm_t;
-typedef uint8_t FanDutyCycle_t;
+
+#define SWAP_DEFINITION_FanRpm_t(_name, _type) \
+   SWAPPED_ERD(_name, sizeof(_type)),
+
+typedef uint16_t FanDutyCycle_t;
+
+#define SWAP_DEFINITION_FanDutyCycle_t(_name, _type) \
+   SWAPPED_ERD(_name, sizeof(_type)),
 
 enum
 {
@@ -28,5 +35,8 @@ typedef struct
       FanRpm_t rpm;
    };
 } FanControl_t;
+
+#define SWAP_DEFINITION_FanControl_t(_name, _type) \
+   SWAPPED_FIELD(_name, _type, dutyCycle),
 
 #endif

@@ -23,6 +23,9 @@ typedef struct
    uint16_t preciseFillOuncesx100;
 } DispensingRequest_t;
 
+#define SWAP_DEFINITION_DispensingRequest_t(_name, _type) \
+   SWAPPED_FIELD(_name, _type, preciseFillOuncesx100),
+
 typedef struct
 {
    DispensingAction_t action;
@@ -31,5 +34,8 @@ typedef struct
    DispenseStatus_t status;
    uint16_t preciseFillOuncesx100;
 } DispensingRequestStatus_t;
+
+#define SWAP_DEFINITION_DispensingRequestStatus_t(_name, _type) \
+   SWAPPED_FIELD(_name, _type, preciseFillOuncesx100),
 
 #endif

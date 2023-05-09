@@ -12,10 +12,5 @@
 
 void Grid_TripleEvap(void *context)
 {
-   REINTERPRET(dataModel, context, I_DataModel_t *);
-   uint8_t someData;
-
-   DataModel_Read(dataModel, Erd_GridLoopTripleEvapRun_Test, &someData);
-   someData += 1;
-   DataModel_Write(dataModel, Erd_GridLoopTripleEvapRun_Test, &someData);
+   IGNORE(context);
 }

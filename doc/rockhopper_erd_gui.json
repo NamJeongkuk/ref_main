@@ -45,13 +45,6 @@
           "name": "Erd_SabbathMode",
           "read": true,
           "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Demand Response Level",
-          "name": "Erd_DemandResponseLevel",
-          "read": true,
-          "write": true
         }
       ]
     },
@@ -158,18 +151,6 @@
           "namespace": "mb",
           "displayName": "Time In Minutes In Position B",
           "name": "Erd_TimeInMinutesInValvePositionB",
-          "read": true,
-          "write": true
-        }
-      ]
-    },
-    {
-      "title": "Cooling",
-      "erds": [
-        {
-          "namespace": "mb",
-          "displayName": "No Freeze Limit Is Active",
-          "name": "Erd_NoFreezeLimitIsActive",
           "read": true,
           "write": true
         }
@@ -477,13 +458,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Defrost Max Holdoff Met",
-          "name": "Erd_DefrostMaxHoldoffMet",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Max Prechill Time In Minutes",
           "name": "Erd_MaxPrechillTimeInMinutes",
           "read": true,
@@ -493,20 +467,6 @@
           "namespace": "mb",
           "displayName": "Post Dwell Exit Time In Minutes",
           "name": "Erd_PostDwellExitTimeInMinutes",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Defrost Prechill Run Counter In Minutes",
-          "name": "Erd_DefrostPrechillRunCounterInMinutes",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Prechill Time Met",
-          "name": "Erd_PrechillTimeMet",
           "read": true,
           "write": true
         },
@@ -595,6 +555,7 @@
           "write": false
         },
         {
+          "namespace": "mb",
           "displayName": "Invalid Freezer Evaporator Thermistor During Defrost",
           "name": "Erd_InvalidFreezerEvaporatorThermistorDuringDefrost",
           "read": true,
@@ -848,20 +809,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Evap Unfiltered Temperature",
-          "name": "Erd_FreshFoodEvap_UnfilteredTemperatureInDegFx100",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Fresh Food Evap Filtered Temperature",
-          "name": "Erd_FreshFoodEvap_FilteredTemperatureInDegFx100",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Freezer Evap Thermistor Is Valid Override Value",
           "name": "Erd_FreezerEvapThermistor_IsValidOverrideValue",
           "read": true,
@@ -932,20 +879,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Unfiltered Temperature",
-          "name": "Erd_ConvertibleCompartment_UnfilteredTemperatureInDegFx100",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Convertible Compartment Filtered Temperature",
-          "name": "Erd_ConvertibleCompartment_FilteredTemperatureInDegFx100",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Ambient Thermistor AdcCount",
           "name": "Erd_AmbientThermistor_AdcCount",
           "read": true,
@@ -989,14 +922,14 @@
         {
           "namespace": "mb",
           "displayName": "Ambient External Temperature (DegF x100)",
-          "name": "Erd_Ambient_ExternalTemperatureInDegFx100",
+          "name": "Erd_ExternalAmbientFilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "Ambient External Thermistor Is Valid",
-          "name": "Erd_Ambient_ExternalThermistorIsValid",
+          "name": "Erd_ExternalAmbientThermistor_IsValid",
           "read": true,
           "write": true
         },
@@ -1010,14 +943,14 @@
         {
           "namespace": "mb",
           "displayName": "Ambient Resolved Thermistor Is Valid",
-          "name": "Erd_Ambient_ResolvedThermistorIsValid",
+          "name": "Erd_AmbientTemperature_IsValidResolved",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "Ambient Humidity in Relative Humidity",
-          "name": "Erd_AmbientHumidity_RelativeHumidityPercentx100",
+          "name": "Erd_AmbientHumidity_FilteredRelativeHumidityPercentx100",
           "read": true,
           "write": true
         },
@@ -1031,28 +964,28 @@
         {
           "namespace": "mb",
           "displayName": "Ambient External Humidity",
-          "name": "Erd_Ambient_ExternalHumidityPercentx100",
+          "name": "Erd_ExternalAmbientFilteredRelativeHumidityPercentx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "Ambient External Humidity Sensor Is Valid",
-          "name": "Erd_Ambient_ExternalHumidityPercentx100SensorIsValid",
+          "name": "Erd_ExternalAmbientHumidity_IsValid",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "Ambient Resolved Humidity",
-          "name": "Erd_Ambient_ResolvedHumidityPercentx100",
+          "name": "Erd_Ambient_FilteredHumidityResolvedPercentx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "Ambient Resolved Humidity Sensor Is Valid",
-          "name": "Erd_Ambient_ResolvedHumidityPercentx100SensorIsValid",
+          "name": "Erd_AmbientHumidity_SensorIsValid",
           "read": true,
           "write": true
         },
@@ -1060,20 +993,6 @@
           "namespace": "mb",
           "displayName": "Convertible Compartment Evap Thermistor AdcCount",
           "name": "Erd_ConvertibleCompartmentEvapThermistor_AdcCount",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Convertible Compartment Evap Unfiltered Temperature",
-          "name": "Erd_ConvertibleCompartmentEvap_UnfilteredTemperatureInDegFx100",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Convertible Compartment Evap Filtered Temperature",
-          "name": "Erd_ConvertibleCompartmentEvap_FilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
@@ -1656,27 +1575,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Long Term Average",
-          "name": "Erd_ConvertibleCompartment_LongTermAverageInDegFx100",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Ice Box Long Term Average",
-          "name": "Erd_IceBox_LongTermAverageInDegFx100",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Deli Pan Long Term Average",
-          "name": "Erd_DeliPan_LongTermAverageInDegFx100",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
           "displayName": "Fresh Food Reset Thermal Shift Offset Signal",
           "name": "Erd_FreshFood_ResetThermalShiftOffsetSignal",
           "read": true,
@@ -1686,27 +1584,6 @@
           "namespace": "mb",
           "displayName": "Freezer Reset Thermal Shift Offset Signal",
           "name": "Erd_Freezer_ResetThermalShiftOffsetSignal",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Convertible Compartment Reset Thermal Shift Offset Signal",
-          "name": "Erd_ConvertibleCompartment_ResetThermalShiftOffsetSignal",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Ice Box Reset Thermal Shift Offset Signal",
-          "name": "Erd_IceBox_ResetThermalShiftOffsetSignal",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Deli Pan Reset Thermal Shift Offset Signal",
-          "name": "Erd_DeliPan_ResetThermalShiftOffsetSignal",
           "read": true,
           "write": true
         }
@@ -2227,12 +2104,14 @@
           "write": true
         },
         {
+          "namespace": "mb",
           "displayName": "Freezer Adjusted Setpoint",
           "name": "Erd_Freezer_AdjustedSetpointInDegFx100",
           "read": true,
           "write": true
         },
         {
+          "namespace": "mb",
           "displayName": "Freezer Filtered Temperature",
           "name": "Erd_Freezer_FilteredTemperatureResolvedInDegFx100",
           "read": true,
@@ -2253,12 +2132,14 @@
           "write": true
         },
         {
+          "namespace": "mb",
           "displayName": "Fresh Food Adjusted Setpoint",
           "name": "Erd_FreshFood_AdjustedSetpointInDegFx100",
           "read": true,
           "write": true
         },
         {
+          "namespace": "mb",
           "displayName": "Fresh Food Filterd Temperature",
           "name": "Erd_FreshFood_FilteredTemperatureResolvedInDegFx100",
           "read": true,

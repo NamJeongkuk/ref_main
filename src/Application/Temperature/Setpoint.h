@@ -20,4 +20,7 @@ typedef struct
    Vote_t care;
 } SetpointVotedTemperature_t;
 
+#define SWAP_DEFINITION_SetpointVotedTemperature_t(_name, _type) \
+   SWAPPED_FIELD(_name, _type, temperatureInDegFx100),
+
 #endif

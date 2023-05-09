@@ -212,13 +212,6 @@
           "name": "Erd_Gpio_RLY_08",
           "read": true,
           "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Gpio_RLY_09",
-          "name": "Erd_Gpio_RLY_09",
-          "read": true,
-          "write": true
         }
       ]
     },

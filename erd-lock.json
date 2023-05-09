@@ -1,483 +1,531 @@
 {
-   "erds": [
-      {
-         "name": "Erd_ModelNumber",
-         "id": "0x0001",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_ModelNumber.data",
-               "type": "string",
-               "offset": 0,
-               "size": 32
-            }
-         ]
-      },
-      {
-         "name": "Erd_SerialNumber",
-         "id": "0x0002",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_SerialNumber.data",
-               "type": "string",
-               "offset": 0,
-               "size": 32
-            }
-         ]
-      },
-      {
-         "name": "Erd_ApplianceType",
-         "id": "0x0008",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_ApplianceType",
-               "type": "enum",
-               "values": {
-                  "0": "WaterHeater",
-                  "1": "ClothesDryer",
-                  "2": "ClothesWasher",
-                  "3": "Refrigerator",
-                  "4": "Microwave",
-                  "5": "Advantium",
-                  "6": "Dishwasher",
-                  "7": "Oven",
-                  "8": "ElectricRange",
-                  "9": "GasRange",
-                  "10": "ThermostatRac",
-                  "11": "ElectricCooktop",
-                  "12": "PizzaOven",
-                  "13": "GasCooktop",
-                  "14": "SplitDfsAc",
-                  "15": "Hood",
-                  "16": "PointOfEntryWaterFilter",
-                  "17": "InductionCooktop",
-                  "18": "DeliveryBox",
-                  "19": "KitchenHubVentHood",
-                  "20": "ZonelinePtac",
-                  "21": "WaterSoftener",
-                  "22": "PortableAc",
-                  "255": "Unknown"
-               },
-               "offset": 0,
-               "size": 1
-            }
-         ]
-      },
-      {
-         "name": "Erd_ReadyToEnterBootLoader",
-         "id": "0x0030",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_ReadyToEnterBootLoader",
-               "type": "enum",
-               "values": {
-                  "0": "ReadyToEnterBootLoaderState_Unknown1",
-                  "1": "ReadyToEnterBootLoaderState_Unknown2",
-                  "2": "ReadyToEnterBootLoaderState_NotReady",
-                  "3": "ReadyToEnterBootLoaderState_Ready"
-               },
-               "offset": 0,
-               "size": 1
-            }
-         ]
-      },
-      {
-         "name": "Erd_BuildNumber",
-         "id": "0x0031",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_BuildNumber",
-               "type": "u32",
-               "offset": 0,
-               "size": 4
-            }
-         ]
-      },
-      {
-         "name": "Erd_Reset",
-         "id": "0x0032",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_Reset",
-               "type": "u8",
-               "offset": 0,
-               "size": 1
-            }
-         ]
-      },
-      {
-         "name": "Erd_AppliancePersonality",
-         "id": "0x0035",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_AppliancePersonality",
-               "type": "u32",
-               "offset": 0,
-               "size": 4
-            }
-         ]
-      },
-      {
-         "name": "Erd_SupportedImageTypes",
-         "id": "0x0038",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_SupportedImageTypes",
-               "type": "u8",
-               "offset": 0,
-               "size": 1
-            }
-         ]
-      },
-      {
-         "name": "Erd_BootLoaderVersion",
-         "id": "0x0039",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_BootLoaderVersion.criticalMajor",
-               "type": "u8",
-               "offset": 0,
-               "size": 1
-            },
-            {
-               "name": "Erd_BootLoaderVersion.criticalMinor",
-               "type": "u8",
-               "offset": 1,
-               "size": 1
-            },
-            {
-               "name": "Erd_BootLoaderVersion.major",
-               "type": "u8",
-               "offset": 2,
-               "size": 1
-            },
-            {
-               "name": "Erd_BootLoaderVersion.minor",
-               "type": "u8",
-               "offset": 3,
-               "size": 1
-            }
-         ]
-      },
-      {
-         "name": "Erd_ApplicationVersion",
-         "id": "0x003A",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_ApplicationVersion.criticalMajor",
-               "type": "u8",
-               "offset": 0,
-               "size": 1
-            },
-            {
-               "name": "Erd_ApplicationVersion.criticalMinor",
-               "type": "u8",
-               "offset": 1,
-               "size": 1
-            },
-            {
-               "name": "Erd_ApplicationVersion.major",
-               "type": "u8",
-               "offset": 2,
-               "size": 1
-            },
-            {
-               "name": "Erd_ApplicationVersion.minor",
-               "type": "u8",
-               "offset": 3,
-               "size": 1
-            }
-         ]
-      },
-      {
-         "name": "Erd_ParametricVersion",
-         "id": "0x003B",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_ParametricVersion.criticalMajor",
-               "type": "u8",
-               "offset": 0,
-               "size": 1
-            },
-            {
-               "name": "Erd_ParametricVersion.criticalMinor",
-               "type": "u8",
-               "offset": 1,
-               "size": 1
-            },
-            {
-               "name": "Erd_ParametricVersion.major",
-               "type": "u8",
-               "offset": 2,
-               "size": 1
-            },
-            {
-               "name": "Erd_ParametricVersion.minor",
-               "type": "u8",
-               "offset": 3,
-               "size": 1
-            }
-         ]
-      },
-      {
-         "name": "Erd_AuxiliaryVersion",
-         "id": "0x003C",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_AuxiliaryVersion.criticalMajor",
-               "type": "u8",
-               "offset": 0,
-               "size": 1
-            },
-            {
-               "name": "Erd_AuxiliaryVersion.criticalMinor",
-               "type": "u8",
-               "offset": 1,
-               "size": 1
-            },
-            {
-               "name": "Erd_AuxiliaryVersion.major",
-               "type": "u8",
-               "offset": 2,
-               "size": 1
-            },
-            {
-               "name": "Erd_AuxiliaryVersion.minor",
-               "type": "u8",
-               "offset": 3,
-               "size": 1
-            }
-         ]
-      },
-      {
-         "name": "Erd_GitHash",
-         "id": "0x007F",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_GitHash",
-               "type": "raw",
-               "offset": 0,
-               "size": 20
-            }
-         ]
-      },
-      {
-         "name": "Erd_ServiceDiagnosticsApiVersion",
-         "id": "0x008F",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_ServiceDiagnosticsApiVersion.apiVersion",
-               "type": "u8",
-               "offset": 0,
-               "size": 1
-            },
-            {
-               "name": "Erd_ServiceDiagnosticsApiVersion.profile",
-               "type": "u8",
-               "offset": 1,
-               "size": 1
-            }
-         ]
-      },
-      {
-         "name": "Erd_ServiceDiagnosticsRevision3Manifest",
-         "id": "0x0090",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_ServiceDiagnosticsRevision3Manifest.entityMapStart",
-               "type": "enum",
-               "values": {
-                  "65535": "Erd_Invalid"
-               },
-               "offset": 0,
-               "size": 2
-            },
-            {
-               "name": "Erd_ServiceDiagnosticsRevision3Manifest.entityCount",
-               "type": "u8",
-               "offset": 2,
-               "size": 1
-            },
-            {
-               "name": "Erd_ServiceDiagnosticsRevision3Manifest.reserved",
-               "type": "u8",
-               "offset": 3,
-               "size": 1
-            }
-         ]
-      },
-      {
-         "name": "Erd_ApplianceApiManifest",
-         "id": "0x0092",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_ApplianceApiManifest.revision",
-               "type": "u32",
-               "offset": 0,
-               "size": 4
-            },
-            {
-               "name": "Erd_ApplianceApiManifest.features",
-               "type": "u32",
-               "offset": 4,
-               "size": 4
-            }
-         ]
-      },
-      {
-         "name": "Erd_ResetCount",
-         "id": "0x0700",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_ResetCount",
-               "type": "u32",
-               "offset": 0,
-               "size": 4
-            }
-         ]
-      },
-      {
-         "name": "Erd_ResetCount",
-         "id": "0x0700",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_ResetCount",
-               "type": "u32",
-               "offset": 0,
-               "size": 4
-            }
-         ]
-      },
-      {
-         "name": "Erd_ResetReason",
-         "id": "0x0701",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_ResetReason.source",
-               "type": "enum",
-               "values": {
-                  "0": "ResetSource_Software",
-                  "1": "ResetSource_Watchdog",
-                  "2": "ResetSource_PowerOn",
-                  "3": "ResetSource_Unknown"
-               },
-               "offset": 0,
-               "size": 1
-            },
-            {
-               "name": "Erd_ResetReason.metadata",
-               "type": "u8",
-               "offset": 1,
-               "size": 1
-            }
-         ]
-      },
-      {
-         "name": "Erd_SecondsSinceLastReset",
-         "id": "0x0702",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_SecondsSinceLastReset",
-               "type": "u32",
-               "offset": 0,
-               "size": 4
-            }
-         ]
-      },
-      {
-         "name": "Erd_ProgramCounterAddressAtLastUassert",
-         "id": "0x0703",
-         "operations": [
-            "read",
-            "write"
-         ],
-         "data": [
-            {
-               "name": "Erd_ProgramCounterAddressAtLastUassert",
-               "type": "u32",
-               "offset": 0,
-               "size": 4
-            }
-         ]
-      }
-   ]
+  "erds": [
+    {
+      "data": [
+        {
+          "name": "Erd_ModelNumber.data",
+          "offset": 0,
+          "size": 32,
+          "type": "string"
+        }
+      ],
+      "id": "0x0001",
+      "name": "Erd_ModelNumber",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_SerialNumber.data",
+          "offset": 0,
+          "size": 32,
+          "type": "string"
+        }
+      ],
+      "id": "0x0002",
+      "name": "Erd_SerialNumber",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_ApplianceType",
+          "offset": 0,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "WaterHeater",
+            "1": "ClothesDryer",
+            "10": "ThermostatRac",
+            "11": "ElectricCooktop",
+            "12": "PizzaOven",
+            "13": "GasCooktop",
+            "14": "SplitDfsAc",
+            "15": "Hood",
+            "16": "PointOfEntryWaterFilter",
+            "17": "InductionCooktop",
+            "18": "DeliveryBox",
+            "19": "KitchenHubVentHood",
+            "2": "ClothesWasher",
+            "20": "ZonelinePtac",
+            "21": "WaterSoftener",
+            "22": "PortableAc",
+            "255": "Unknown",
+            "3": "Refrigerator",
+            "4": "Microwave",
+            "5": "Advantium",
+            "6": "Dishwasher",
+            "7": "Oven",
+            "8": "ElectricRange",
+            "9": "GasRange"
+          }
+        }
+      ],
+      "id": "0x0008",
+      "name": "Erd_ApplianceType",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_ReadyToEnterBootLoader",
+          "offset": 0,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "ReadyToEnterBootLoaderState_Unknown1",
+            "1": "ReadyToEnterBootLoaderState_Unknown2",
+            "2": "ReadyToEnterBootLoaderState_NotReady",
+            "3": "ReadyToEnterBootLoaderState_Ready"
+          }
+        }
+      ],
+      "id": "0x0030",
+      "name": "Erd_ReadyToEnterBootLoader",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_BuildNumber",
+          "offset": 0,
+          "size": 4,
+          "type": "u32"
+        }
+      ],
+      "id": "0x0031",
+      "name": "Erd_BuildNumber",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_Reset",
+          "offset": 0,
+          "size": 1,
+          "type": "u8"
+        }
+      ],
+      "id": "0x0032",
+      "name": "Erd_Reset",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_AppliancePersonality",
+          "offset": 0,
+          "size": 4,
+          "type": "u32"
+        }
+      ],
+      "id": "0x0035",
+      "name": "Erd_AppliancePersonality",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_SupportedImageTypes",
+          "offset": 0,
+          "size": 1,
+          "type": "u8"
+        }
+      ],
+      "id": "0x0038",
+      "name": "Erd_SupportedImageTypes",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_BootLoaderVersion.criticalMajor",
+          "offset": 0,
+          "size": 1,
+          "type": "u8"
+        },
+        {
+          "name": "Erd_BootLoaderVersion.criticalMinor",
+          "offset": 1,
+          "size": 1,
+          "type": "u8"
+        },
+        {
+          "name": "Erd_BootLoaderVersion.major",
+          "offset": 2,
+          "size": 1,
+          "type": "u8"
+        },
+        {
+          "name": "Erd_BootLoaderVersion.minor",
+          "offset": 3,
+          "size": 1,
+          "type": "u8"
+        }
+      ],
+      "id": "0x0039",
+      "name": "Erd_BootLoaderVersion",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_ApplicationVersion.criticalMajor",
+          "offset": 0,
+          "size": 1,
+          "type": "u8"
+        },
+        {
+          "name": "Erd_ApplicationVersion.criticalMinor",
+          "offset": 1,
+          "size": 1,
+          "type": "u8"
+        },
+        {
+          "name": "Erd_ApplicationVersion.major",
+          "offset": 2,
+          "size": 1,
+          "type": "u8"
+        },
+        {
+          "name": "Erd_ApplicationVersion.minor",
+          "offset": 3,
+          "size": 1,
+          "type": "u8"
+        }
+      ],
+      "id": "0x003A",
+      "name": "Erd_ApplicationVersion",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_ParametricVersion.criticalMajor",
+          "offset": 0,
+          "size": 1,
+          "type": "u8"
+        },
+        {
+          "name": "Erd_ParametricVersion.criticalMinor",
+          "offset": 1,
+          "size": 1,
+          "type": "u8"
+        },
+        {
+          "name": "Erd_ParametricVersion.major",
+          "offset": 2,
+          "size": 1,
+          "type": "u8"
+        },
+        {
+          "name": "Erd_ParametricVersion.minor",
+          "offset": 3,
+          "size": 1,
+          "type": "u8"
+        }
+      ],
+      "id": "0x003B",
+      "name": "Erd_ParametricVersion",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_AuxiliaryVersion.criticalMajor",
+          "offset": 0,
+          "size": 1,
+          "type": "u8"
+        },
+        {
+          "name": "Erd_AuxiliaryVersion.criticalMinor",
+          "offset": 1,
+          "size": 1,
+          "type": "u8"
+        },
+        {
+          "name": "Erd_AuxiliaryVersion.major",
+          "offset": 2,
+          "size": 1,
+          "type": "u8"
+        },
+        {
+          "name": "Erd_AuxiliaryVersion.minor",
+          "offset": 3,
+          "size": 1,
+          "type": "u8"
+        }
+      ],
+      "id": "0x003C",
+      "name": "Erd_AuxiliaryVersion",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_GitHash",
+          "offset": 0,
+          "size": 20,
+          "type": "raw"
+        }
+      ],
+      "id": "0x007F",
+      "name": "Erd_GitHash",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_ServiceDiagnosticsApiVersion.apiVersion",
+          "offset": 0,
+          "size": 1,
+          "type": "u8"
+        },
+        {
+          "name": "Erd_ServiceDiagnosticsApiVersion.profile",
+          "offset": 1,
+          "size": 1,
+          "type": "u8"
+        }
+      ],
+      "id": "0x008F",
+      "name": "Erd_ServiceDiagnosticsApiVersion",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_ServiceDiagnosticsRevision3Manifest.entityMapStart",
+          "offset": 0,
+          "size": 2,
+          "type": "enum",
+          "values": {
+            "65535": "Erd_Invalid"
+          }
+        },
+        {
+          "name": "Erd_ServiceDiagnosticsRevision3Manifest.entityCount",
+          "offset": 2,
+          "size": 1,
+          "type": "u8"
+        },
+        {
+          "name": "Erd_ServiceDiagnosticsRevision3Manifest.reserved",
+          "offset": 3,
+          "size": 1,
+          "type": "u8"
+        }
+      ],
+      "id": "0x0090",
+      "name": "Erd_ServiceDiagnosticsRevision3Manifest",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_ApplianceApiManifest.revision",
+          "offset": 0,
+          "size": 4,
+          "type": "u32"
+        },
+        {
+          "name": "Erd_ApplianceApiManifest.features",
+          "offset": 4,
+          "size": 4,
+          "type": "u32"
+        }
+      ],
+      "id": "0x0092",
+      "name": "Erd_ApplianceApiManifest",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_ResetCount",
+          "offset": 0,
+          "size": 4,
+          "type": "u32"
+        }
+      ],
+      "id": "0x0700",
+      "name": "Erd_ResetCount",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_ResetReason.source",
+          "offset": 0,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "ResetSource_Software",
+            "1": "ResetSource_Watchdog",
+            "2": "ResetSource_PowerOn",
+            "3": "ResetSource_Unknown"
+          }
+        },
+        {
+          "name": "Erd_ResetReason.metadata",
+          "offset": 1,
+          "size": 1,
+          "type": "u8"
+        }
+      ],
+      "id": "0x0701",
+      "name": "Erd_ResetReason",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_SecondsSinceLastReset",
+          "offset": 0,
+          "size": 4,
+          "type": "u32"
+        }
+      ],
+      "id": "0x0702",
+      "name": "Erd_SecondsSinceLastReset",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_ProgramCounterAddressAtLastUassert",
+          "offset": 0,
+          "size": 4,
+          "type": "u32"
+        }
+      ],
+      "id": "0x0703",
+      "name": "Erd_ProgramCounterAddressAtLastUassert",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_ExternalAmbientFilteredTemperatureInDegFx100",
+          "offset": 0,
+          "size": 2,
+          "type": "i16"
+        }
+      ],
+      "id": "0xFAFB",
+      "name": "Erd_ExternalAmbientFilteredTemperatureInDegFx100",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_ExternalAmbientThermistor_IsValid",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0xFAFC",
+      "name": "Erd_ExternalAmbientThermistor_IsValid",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_ExternalAmbientFilteredRelativeHumidityPercentx100",
+          "offset": 0,
+          "size": 2,
+          "type": "u16"
+        }
+      ],
+      "id": "0xFAFD",
+      "name": "Erd_ExternalAmbientFilteredRelativeHumidityPercentx100",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_ExternalAmbientHumidity_IsValid",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0xFAFE",
+      "name": "Erd_ExternalAmbientHumidity_IsValid",
+      "operations": [
+        "read",
+        "write"
+      ]
+    }
+  ]
 }

@@ -17,4 +17,9 @@ typedef struct
    FaultSnapshotData_t data;
 } FaultSnapshot_t;
 
+#define SWAP_DEFINITION_FaultSnapshot_t(_name, _type) \
+   SWAPPED_FIELD(_name, _type, header.cycleNumber),   \
+      SWAPPED_FIELD(_name, _type, header.timeStamp),  \
+      SWAPPED_FIELD(_name, _type, header.faultCode),
+
 #endif

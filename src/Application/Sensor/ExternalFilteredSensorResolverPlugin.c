@@ -12,20 +12,20 @@
 static const ExternalFilteredSensorResolverConfig_t externalFilteredAmbientTemperatureResolver = {
    .internalFilteredSensorErd = Erd_Ambient_FilteredInternalTemperatureResolvedInDegFx100,
    .internalFilteredSensorIsValidErd = Erd_AmbientThermistor_IsValidResolved,
-   .externalFilteredSensorErd = Erd_Ambient_ExternalTemperatureInDegFx100,
-   .externalFilteredSensorIsValidErd = Erd_Ambient_ExternalThermistorIsValid,
+   .externalFilteredSensorErd = Erd_ExternalAmbientFilteredTemperatureInDegFx100,
+   .externalFilteredSensorIsValidErd = Erd_ExternalAmbientThermistor_IsValid,
    .resolvedFilteredSensorErd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
-   .resolvedFilteredSensorIsValidErd = Erd_Ambient_ResolvedThermistorIsValid,
+   .resolvedFilteredSensorIsValidErd = Erd_AmbientTemperature_IsValidResolved,
    .sensorType = ExternalFilteredSensorResolver_SensorType_Temperature
 };
 
 static const ExternalFilteredSensorResolverConfig_t externalFilteredAmbientHumiditySensorResolver = {
-   .internalFilteredSensorErd = Erd_AmbientHumidity_RelativeHumidityPercentx100,
+   .internalFilteredSensorErd = Erd_AmbientHumidity_FilteredRelativeHumidityPercentx100,
    .internalFilteredSensorIsValidErd = Erd_AmbientHumidity_SensorIsValid,
-   .externalFilteredSensorErd = Erd_Ambient_ExternalHumidityPercentx100,
-   .externalFilteredSensorIsValidErd = Erd_Ambient_ExternalHumidityPercentx100SensorIsValid,
-   .resolvedFilteredSensorErd = Erd_Ambient_ResolvedHumidityPercentx100,
-   .resolvedFilteredSensorIsValidErd = Erd_Ambient_ResolvedHumidityPercentx100SensorIsValid,
+   .externalFilteredSensorErd = Erd_ExternalAmbientFilteredRelativeHumidityPercentx100,
+   .externalFilteredSensorIsValidErd = Erd_ExternalAmbientHumidity_IsValid,
+   .resolvedFilteredSensorErd = Erd_Ambient_FilteredHumidityResolvedPercentx100,
+   .resolvedFilteredSensorIsValidErd = Erd_AmbientHumidity_IsValidResolved,
    .sensorType = ExternalFilteredSensorResolver_SensorType_Humidity
 };
 

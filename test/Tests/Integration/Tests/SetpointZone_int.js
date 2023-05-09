@@ -34,10 +34,6 @@ describe("SetpointZone", () => {
       FreshFoodCompartmentShouldBe: async (setpointZone) => {
          const actual = await rockhopper.read("Erd_FreshFoodSetpointZone");
          expect(actual).toEqual(setpointZone);
-      },
-      ConvertibleCompartmentCompartmentShouldBe: async (setpointZone) => {
-         const actual = await rockhopper.read("Erd_ConvertibleCompartmentSetpointZone");
-         expect(actual).toEqual(setpointZone);
       }
    });
 
@@ -62,16 +58,4 @@ describe("SetpointZone", () => {
       await providedTheVotedTemperatureOfThe().FreshFoodCompartmentIs(0, "Vote_Care");
       await theSetpointZoneFor().FreshFoodCompartmentShouldBe("SetpointZone_Cold");
    });
-
-   xit("should set setpoint zone for convertible compartment", async () => {
-      await providedTheVotedTemperatureOfThe().ConvertibleCompartmentCompartmentIs(500, "Vote_Care");
-      await theSetpointZoneFor().ConvertibleCompartmentCompartmentShouldBe("SetpointZone_Warm");
-
-      await providedTheVotedTemperatureOfThe().ConvertibleCompartmentCompartmentIs(400, "Vote_Care");
-      await theSetpointZoneFor().ConvertibleCompartmentCompartmentShouldBe("SetpointZone_Cold");
-
-      await providedTheVotedTemperatureOfThe().ConvertibleCompartmentCompartmentIs(0, "Vote_Care");
-      await theSetpointZoneFor().ConvertibleCompartmentCompartmentShouldBe("SetpointZone_Cold");
-   });
-
 })

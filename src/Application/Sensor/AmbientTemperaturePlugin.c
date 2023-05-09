@@ -10,7 +10,7 @@
 #include "SystemErds.h"
 
 static const Erd_t ambientFilteredTemperatureOverrideRequestErdList[] = {
-   Erd_Ambient_FilteredTemperatureOverrideRequest
+   Erd_Ambient_FilteredInternalTemperatureOverrideRequest
 };
 
 static const Erd_t ambientFilteredTemperatureValueErdList[] = {

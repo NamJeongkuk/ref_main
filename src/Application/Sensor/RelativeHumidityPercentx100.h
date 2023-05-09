@@ -12,4 +12,7 @@
 
 typedef uint16_t RelativeHumidityPercentx100_t;
 
+#define SWAP_DEFINITION_RelativeHumidityPercentx100_t(_name, _type) \
+   SWAPPED_ERD(_name, sizeof(_type)),
+
 #endif

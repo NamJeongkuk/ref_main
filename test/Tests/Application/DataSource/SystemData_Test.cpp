@@ -49,8 +49,9 @@ enum
    BlockSize = 1024
 };
 
-#define Swap_N 0
-#define Swap_Y 1
+#define Swap_No 0
+#define Swap_Yes 1
+#define Swap_Range 1
 
 #define Io_None 0
 #define Io_O 1

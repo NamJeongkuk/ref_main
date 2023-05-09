@@ -20,4 +20,7 @@ enum
 
 typedef uint16_t WinningVoteErd_t;
 
+#define SWAP_DEFINITION_WinningVoteErd_t(_name, _type) \
+   SWAPPED_ERD(_name, sizeof(_type)),
+
 #endif

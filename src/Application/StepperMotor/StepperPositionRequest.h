@@ -23,4 +23,7 @@ typedef struct
    uint16_t stepsToMove;
 } StepperPositionRequest_t;
 
+#define SWAP_DEFINITION_StepperPositionRequest_t(_name, _type) \
+   SWAPPED_FIELD(_name, _type, stepsToMove),
+
 #endif

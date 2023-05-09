@@ -15,4 +15,7 @@ typedef struct
    uint8_t someData[sizeof(uint32_t)];
 } CycleHistoryRecord_t;
 
+#define SWAP_DEFINITION_CycleHistoryRecord_t(_name, _type) \
+   SWAPPED_FIELD(_name, _type, someData),
+
 #endif

@@ -456,13 +456,6 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Current Prechill Run Time in Minutes (if Active)",
-               "name": "Erd_DefrostPrechillRunCounterInMinutes",
-               "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
                "displayName": "Post Dwell Exit Time in Minutes",
                "name": "Erd_PostDwellExitTimeInMinutes",
                "read": true,
@@ -586,7 +579,7 @@
             {
                "namespace": "mb",
                "displayName": "Ambient Filtered Humidity (Percent x100)",
-               "name": "Erd_Ambient_ResolvedHumidityPercentx100",
+               "name": "Erd_Ambient_FilteredHumidityResolvedPercentx100",
                "read": true,
                "interval": 1000000000
             },
