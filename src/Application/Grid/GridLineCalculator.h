@@ -28,6 +28,7 @@ typedef struct
    Erd_t calculatedGridLineErd; // CalculatedGridLines_t
    Erd_t freshFoodFilteredTemperatureInDegFx100Erd; // TemperatureDegFx100_t
    Erd_t freezerFilteredTemperatureInDegFx100Erd; // TemperatureDegFx100_t
+   Erd_t crossAmbientHysteresisAdjustmentErd; // TemperatureDegFx100_t
    GridLineAdjustmentErds_t gridLineAdjustmentErds[NumberGridDimensions];
 } GridLineCalculatorConfiguration_t;
 

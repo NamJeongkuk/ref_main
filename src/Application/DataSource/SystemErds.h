@@ -471,6 +471,7 @@ enum
    ENTRY(Erd_CoolingMode,                                   0xF043, CoolingMode_t,                                      Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_PulldownInMediumCompressorSpeedEnabled,        0xF044, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TimeInMinutesInValvePositionB,                 0xF046, uint16_t,                                           Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CrossAmbientHysteresisAdjustmentInDegFx100,    0xF047, TemperatureDegFx100_t,                              Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_DamperFreezePreventionFsmState,                0xF04A, DamperFreezePreventionFsmState_t,                   Swap_No,  Io_None, Sub_N, Ram,                   NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentState,                   0xF04B, ConvertibleCompartmentStateType_t,                  Swap_No,  Io_None, Sub_Y, Ram,                   NotNv,                                    NotFault) \

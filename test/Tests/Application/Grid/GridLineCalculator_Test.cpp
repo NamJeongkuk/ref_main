@@ -22,9 +22,6 @@ extern "C"
 #include "uassert_test.h"
 
 #define And
-#define Then
-#define When
-#define Given
 
 enum
 {
@@ -51,6 +48,8 @@ enum
 
    AFreezerAdjustedSetpointTemperature = 18,
    AnotherFreezerAdjustedSetpointTemperature = 18 * 2,
+
+   ACrossAmbientHysteresisAdjustmentInDegFx100 = 23,
 };
 
 static const GridLineAdjustmentErds_t freshFoodGridLineAdjustmentErds = {
@@ -71,6 +70,7 @@ static const GridLineCalculatorConfiguration_t config = {
    .calculatedGridLineErd = Erd_Grid_CalculatedGridLines,
    .freshFoodFilteredTemperatureInDegFx100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    .freezerFilteredTemperatureInDegFx100Erd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
+   .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
    .gridLineAdjustmentErds = {
       freshFoodGridLineAdjustmentErds,
       freezerGridLineAdjustmentErds,
@@ -91,10 +91,10 @@ TEST_GROUP(GridLineCalculator)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
 
-      AdjustedSetpointPluginReadyIs(true);
+      GivenTheAdjustedSetpointPluginReadyIs(true);
    }
 
-   void TheModuleIsInitialized()
+   void GivenTheModuleIsInitialized()
    {
       GridLineCalculator_Init(
          &instance,
@@ -102,73 +102,91 @@ TEST_GROUP(GridLineCalculator)
          dataModel);
    }
 
-   void FreshFoodAdjustedSetpointIs(TemperatureDegFx100_t setpoint)
+   void WhenTheFreshFoodAdjustedSetpointIs(TemperatureDegFx100_t setpoint)
    {
       DataModel_Write(dataModel,
          Erd_FreshFood_AdjustedSetpointInDegFx100,
          &setpoint);
    }
 
-   void FreezerAdjustedSetpointIs(TemperatureDegFx100_t setpoint)
+   void WhenTheFreezerAdjustedSetpointIs(TemperatureDegFx100_t setpoint)
    {
       DataModel_Write(dataModel,
          Erd_Freezer_AdjustedSetpointInDegFx100,
          &setpoint);
    }
 
-   void AdjustedSetpointsAre(
+   void GivenTheAdjustedSetpointsAre(
       TemperatureDegFx100_t freshFoodAdjustedSetpoint,
       TemperatureDegFx100_t freezerAdjustedSetpoint)
    {
-      FreshFoodAdjustedSetpointIs(freshFoodAdjustedSetpoint);
-      FreezerAdjustedSetpointIs(freezerAdjustedSetpoint);
+      WhenTheFreshFoodAdjustedSetpointIs(freshFoodAdjustedSetpoint);
+      WhenTheFreezerAdjustedSetpointIs(freezerAdjustedSetpoint);
    }
 
-   void FreshFoodSumOffsetIs(TemperatureDegFx100_t offset)
+   void WhenTheFreshFoodSumOffsetIs(TemperatureDegFx100_t offset)
    {
       DataModel_Write(dataModel,
          Erd_FreshFood_CabinetPlusCrossAmbientOffsetInDegFx100,
          &offset);
    }
 
-   void FreezerSumOffsetIs(TemperatureDegFx100_t offset)
+   void WhenTheFreezerSumOffsetIs(TemperatureDegFx100_t offset)
    {
       DataModel_Write(dataModel,
          Erd_Freezer_CabinetPlusCrossAmbientOffsetInDegFx100,
          &offset);
    }
 
-   void OffsetsAre(
+   void GivenTheOffsetsAre(
       TemperatureDegFx100_t freshFoodOffset,
       TemperatureDegFx100_t freezerOffset)
    {
-      FreshFoodSumOffsetIs(freshFoodOffset);
-      FreezerSumOffsetIs(freezerOffset);
+      WhenTheFreshFoodSumOffsetIs(freshFoodOffset);
+      WhenTheFreezerSumOffsetIs(freezerOffset);
    }
 
-   void FreezerThermalShiftIs(TemperatureDegFx100_t shift)
+   void GivenTheFreezerThermalShiftIs(TemperatureDegFx100_t shift)
    {
       DataModel_Write(dataModel,
          Erd_Freezer_ThermalShiftInDegFx100,
          &shift);
    }
 
-   void FreshFoodThermalShiftIs(TemperatureDegFx100_t shift)
+   void WhenTheFreezerThermalShiftIs(TemperatureDegFx100_t shift)
+   {
+      GivenTheFreezerThermalShiftIs(shift);
+   }
+
+   void WhenTheCrossAmbientHysteresisAdjustmentChangesTo(TemperatureDegFx100_t adjustment)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
+         &adjustment);
+   }
+
+   void GivenTheFreshFoodThermalShiftIs(TemperatureDegFx100_t shift)
    {
       DataModel_Write(dataModel,
          Erd_FreshFood_ThermalShiftInDegFx100,
          &shift);
    }
 
-   void ShiftsAre(
+   void WhenTheFreshFoodThermalShiftIs(TemperatureDegFx100_t shift)
+   {
+      GivenTheFreshFoodThermalShiftIs(shift);
+   }
+
+   void GivenTheShiftsAre(
       TemperatureDegFx100_t freshFoodShift,
       TemperatureDegFx100_t freezerShift)
    {
-      FreshFoodThermalShiftIs(freshFoodShift);
-      FreezerThermalShiftIs(freezerShift);
+      GivenTheFreshFoodThermalShiftIs(freshFoodShift);
+      GivenTheFreezerThermalShiftIs(freezerShift);
    }
 
-   void FreshFoodRawSetpointIs(TemperatureDegFx100_t rawSetpoint)
+   void WhenTheFreshFoodRawSetpointIs(TemperatureDegFx100_t rawSetpoint)
    {
       SetpointVotedTemperature_t temp = {
          .temperatureInDegFx100 = rawSetpoint,
@@ -180,7 +198,7 @@ TEST_GROUP(GridLineCalculator)
          &temp);
    }
 
-   void FreezerRawSetpointIs(TemperatureDegFx100_t rawSetpoint)
+   void WhenTheFreezerRawSetpointIs(TemperatureDegFx100_t rawSetpoint)
    {
       SetpointVotedTemperature_t temp = {
          .temperatureInDegFx100 = rawSetpoint,
@@ -192,35 +210,35 @@ TEST_GROUP(GridLineCalculator)
          &temp);
    }
 
-   void RawSetpointsAre(
+   void GivenTheRawSetpointsAre(
       TemperatureDegFx100_t freshFoodRawSetpoint,
       TemperatureDegFx100_t freezerRawSetpoint)
    {
-      FreshFoodRawSetpointIs(freshFoodRawSetpoint);
-      FreezerRawSetpointIs(freezerRawSetpoint);
+      WhenTheFreshFoodRawSetpointIs(freshFoodRawSetpoint);
+      WhenTheFreezerRawSetpointIs(freezerRawSetpoint);
    }
 
-   void TheGridLineCalculationErdsAreInitialized()
+   void GivenTheGridLineCalculationErdsAreInitialized()
    {
-      AdjustedSetpointsAre(AFreshFoodAdjustedSetpointTemperature,
+      GivenTheAdjustedSetpointsAre(AFreshFoodAdjustedSetpointTemperature,
          AFreezerAdjustedSetpointTemperature);
 
-      OffsetsAre(AFreshFoodOffsetTemperature,
+      GivenTheOffsetsAre(AFreshFoodOffsetTemperature,
          AFreezerOffsetTemperature);
 
-      RawSetpointsAre(AFreshFoodSetpointTemperature,
+      GivenTheRawSetpointsAre(AFreshFoodSetpointTemperature,
          AFreezerSetpointTemperature);
 
-      ShiftsAre(AFreshFoodShiftTemperature,
+      GivenTheShiftsAre(AFreshFoodShiftTemperature,
          AFreezerShiftTemperature);
    }
 
-   void AdjustedSetpointPluginReadyIs(bool state)
+   void GivenTheAdjustedSetpointPluginReadyIs(bool state)
    {
       DataModel_Write(dataModel, Erd_AdjustedSetpointPluginReady, &state);
    }
 
-   void CalculatedGridLineTempShouldBe(
+   void TheCalculatedGridLineTempShouldBe(
       TemperatureDegFx100_t temperature,
       uint8_t dimension,
       uint8_t gridLineIndex)
@@ -230,7 +248,7 @@ TEST_GROUP(GridLineCalculator)
          Erd_Grid_CalculatedGridLines,
          &calcLines);
 
-      if(dimension == FreshFoodGridLineDimension)
+      if(dimension == GridDelta_FreshFood)
       {
          CHECK_EQUAL(temperature,
             calcLines.freshFoodGridLine.gridLinesDegFx100[gridLineIndex]);
@@ -242,111 +260,176 @@ TEST_GROUP(GridLineCalculator)
       }
    }
 
-   void GridLineTemperaturesShouldBeInitializedValues()
+   void TheGridLineTemperaturesShouldBeInitializedValues()
    {
-      CalculatedGridLineTempShouldBe(
+      TheCalculatedGridLineTempShouldBe(
          (0 + AFreshFoodOffsetTemperature),
-         FreshFoodGridLineDimension,
+         GridDelta_FreshFood,
          GridLine_Nfl);
 
-      And CalculatedGridLineTempShouldBe(
+      And TheCalculatedGridLineTempShouldBe(
          (-450 + AFreshFoodAdjustedSetpointTemperature),
-         FreshFoodGridLineDimension,
+         GridDelta_FreshFood,
          GridLine_FreshFoodLowHyst);
 
-      And CalculatedGridLineTempShouldBe(
+      And TheCalculatedGridLineTempShouldBe(
          (150 + AFreshFoodShiftTemperature),
-         FreshFoodGridLineDimension,
+         GridDelta_FreshFood,
          GridLine_FreshFoodLowHystDelta);
 
-      And CalculatedGridLineTempShouldBe(
+      And TheCalculatedGridLineTempShouldBe(
          (450 + AFreshFoodSetpointTemperature),
-         FreshFoodGridLineDimension,
+         GridDelta_FreshFood,
          GridLine_FreshFoodHighHyst);
 
-      And CalculatedGridLineTempShouldBe(
+      And TheCalculatedGridLineTempShouldBe(
          (950 + AFreshFoodAdjustedSetpointTemperature),
-         FreshFoodGridLineDimension,
+         GridDelta_FreshFood,
          GridLine_FreshFoodExtraHigh);
 
-      And CalculatedGridLineTempShouldBe(
+      And TheCalculatedGridLineTempShouldBe(
          (1150 + AFreshFoodAdjustedSetpointTemperature),
-         FreshFoodGridLineDimension,
+         GridDelta_FreshFood,
          GridLine_FreshFoodSuperHigh);
 
-      And CalculatedGridLineTempShouldBe(
+      And TheCalculatedGridLineTempShouldBe(
          (-250 + AFreezerAdjustedSetpointTemperature),
          GridDelta_Freezer,
          GridLine_FreezerLowHyst);
 
-      And CalculatedGridLineTempShouldBe(
+      And TheCalculatedGridLineTempShouldBe(
          (0 + AFreezerOffsetTemperature),
          GridDelta_Freezer,
          GridLine_FreezerDelta);
 
-      And CalculatedGridLineTempShouldBe(
+      And TheCalculatedGridLineTempShouldBe(
          (250 + AFreezerSetpointTemperature),
          GridDelta_Freezer,
          GridLine_FreezerHighHyst);
 
-      And CalculatedGridLineTempShouldBe(
+      And TheCalculatedGridLineTempShouldBe(
          (600 + AFreezerShiftTemperature),
          GridDelta_Freezer,
          GridLine_FreezerExtraHigh);
 
-      And CalculatedGridLineTempShouldBe(
+      And TheCalculatedGridLineTempShouldBe(
          (750 + AFreezerAdjustedSetpointTemperature),
          GridDelta_Freezer,
          GridLine_FreezerSuperHigh);
 
-      And CalculatedGridLineTempShouldBe(
+      And TheCalculatedGridLineTempShouldBe(
          (5500 + AFreezerOffsetTemperature),
          GridDelta_Freezer,
          GridLine_FreezerExtremeHigh);
    }
+   void TheFreezerGridLineTemperaturesShouldBeInitializedValues()
+   {
+      TheCalculatedGridLineTempShouldBe(
+         (-250 + AFreezerAdjustedSetpointTemperature),
+         GridDelta_Freezer,
+         GridLine_FreezerLowHyst);
+
+      And TheCalculatedGridLineTempShouldBe(
+         (0 + AFreezerOffsetTemperature),
+         GridDelta_Freezer,
+         GridLine_FreezerDelta);
+
+      And TheCalculatedGridLineTempShouldBe(
+         (250 + AFreezerSetpointTemperature),
+         GridDelta_Freezer,
+         GridLine_FreezerHighHyst);
+
+      And TheCalculatedGridLineTempShouldBe(
+         (600 + AFreezerShiftTemperature),
+         GridDelta_Freezer,
+         GridLine_FreezerExtraHigh);
+
+      And TheCalculatedGridLineTempShouldBe(
+         (750 + AFreezerAdjustedSetpointTemperature),
+         GridDelta_Freezer,
+         GridLine_FreezerSuperHigh);
+
+      And TheCalculatedGridLineTempShouldBe(
+         (5500 + AFreezerOffsetTemperature),
+         GridDelta_Freezer,
+         GridLine_FreezerExtremeHigh);
+   }
+
+   void TheFreshFoodGridLineTemperaturesShouldBeAdjustedWithCrossAmbientHysteresis()
+   {
+      TheCalculatedGridLineTempShouldBe(
+         (0 + AFreshFoodOffsetTemperature + ACrossAmbientHysteresisAdjustmentInDegFx100),
+         GridDelta_FreshFood,
+         GridLine_Nfl);
+
+      And TheCalculatedGridLineTempShouldBe(
+         (-450 + AFreshFoodAdjustedSetpointTemperature + ACrossAmbientHysteresisAdjustmentInDegFx100),
+         GridDelta_FreshFood,
+         GridLine_FreshFoodLowHyst);
+
+      And TheCalculatedGridLineTempShouldBe(
+         (150 + AFreshFoodShiftTemperature + ACrossAmbientHysteresisAdjustmentInDegFx100),
+         GridDelta_FreshFood,
+         GridLine_FreshFoodLowHystDelta);
+
+      And TheCalculatedGridLineTempShouldBe(
+         (450 + AFreshFoodSetpointTemperature + ACrossAmbientHysteresisAdjustmentInDegFx100),
+         GridDelta_FreshFood,
+         GridLine_FreshFoodHighHyst);
+
+      And TheCalculatedGridLineTempShouldBe(
+         (950 + AFreshFoodAdjustedSetpointTemperature + ACrossAmbientHysteresisAdjustmentInDegFx100),
+         GridDelta_FreshFood,
+         GridLine_FreshFoodExtraHigh);
+
+      And TheCalculatedGridLineTempShouldBe(
+         (1150 + AFreshFoodAdjustedSetpointTemperature + ACrossAmbientHysteresisAdjustmentInDegFx100),
+         GridDelta_FreshFood,
+         GridLine_FreshFoodSuperHigh);
+   };
 };
 
 TEST(GridLineCalculator, ShouldInitialize)
 {
-   Given TheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 }
 
 TEST(GridLineCalculator, ShouldAssertWhenAdjustedSetpointPluginIsNotReadyOnInit)
 {
-   Given AdjustedSetpointPluginReadyIs(false);
-   ShouldFailAssertion(TheModuleIsInitialized());
+   GivenTheAdjustedSetpointPluginReadyIs(false);
+   ShouldFailAssertion(GivenTheModuleIsInitialized());
 }
 
 TEST(GridLineCalculator, ShouldCalculateGridLinesOnInitIncludingAdjustmentErds)
 {
-   Given TheGridLineCalculationErdsAreInitialized();
-   And TheModuleIsInitialized();
-   GridLineTemperaturesShouldBeInitializedValues();
+   GivenTheGridLineCalculationErdsAreInitialized();
+   GivenTheModuleIsInitialized();
+   TheGridLineTemperaturesShouldBeInitializedValues();
 }
 
 TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenOffsetChanges)
 {
-   Given TheGridLineCalculationErdsAreInitialized();
-   And TheModuleIsInitialized();
+   GivenTheGridLineCalculationErdsAreInitialized();
+   GivenTheModuleIsInitialized();
 
-   When FreshFoodSumOffsetIs(AnotherFreshFoodOffsetTemperature);
-   And FreezerSumOffsetIs(AnotherFreezerOffsetTemperature);
+   WhenTheFreshFoodSumOffsetIs(AnotherFreshFoodOffsetTemperature);
+   WhenTheFreezerSumOffsetIs(AnotherFreezerOffsetTemperature);
 
-   CalculatedGridLineTempShouldBe(
+   TheCalculatedGridLineTempShouldBe(
       (0 + AnotherFreshFoodOffsetTemperature),
-      FreshFoodGridLineDimension,
+      GridDelta_FreshFood,
       GridLine_Nfl);
 
-   And CalculatedGridLineTempShouldBe((0 + AnotherFreezerOffsetTemperature),
+   And TheCalculatedGridLineTempShouldBe((0 + AnotherFreezerOffsetTemperature),
       GridDelta_Freezer,
       GridLine_FreezerDelta);
 
-   And CalculatedGridLineTempShouldBe(
+   And TheCalculatedGridLineTempShouldBe(
       (750 + AFreezerAdjustedSetpointTemperature),
       GridDelta_Freezer,
       GridLine_FreezerSuperHigh);
 
-   And CalculatedGridLineTempShouldBe(
+   And TheCalculatedGridLineTempShouldBe(
       (5500 + AnotherFreezerOffsetTemperature),
       GridDelta_Freezer,
       GridLine_FreezerExtremeHigh);
@@ -354,20 +437,20 @@ TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenOffsetChanges)
 
 TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenSetpointChanges)
 {
-   Given TheGridLineCalculationErdsAreInitialized();
-   And TheModuleIsInitialized();
+   GivenTheGridLineCalculationErdsAreInitialized();
+   GivenTheModuleIsInitialized();
 
-   GridLineTemperaturesShouldBeInitializedValues();
+   TheGridLineTemperaturesShouldBeInitializedValues();
 
-   When FreshFoodRawSetpointIs(AnotherFreshFoodSetpointTemperature);
-   And FreezerRawSetpointIs(AnotherFreezerSetpointTemperature);
+   WhenTheFreshFoodRawSetpointIs(AnotherFreshFoodSetpointTemperature);
+   WhenTheFreezerRawSetpointIs(AnotherFreezerSetpointTemperature);
 
-   CalculatedGridLineTempShouldBe(
+   TheCalculatedGridLineTempShouldBe(
       (450 + AnotherFreshFoodSetpointTemperature),
-      FreshFoodGridLineDimension,
+      GridDelta_FreshFood,
       GridLine_FreshFoodHighHyst);
 
-   CalculatedGridLineTempShouldBe(
+   TheCalculatedGridLineTempShouldBe(
       (250 + AnotherFreezerSetpointTemperature),
       FreezerGridLineDimension,
       GridLine_FreezerHighHyst);
@@ -375,33 +458,33 @@ TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenSetpointChanges)
 
 TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenAdjustedSetpointChanges)
 {
-   Given TheGridLineCalculationErdsAreInitialized();
-   And TheModuleIsInitialized();
+   GivenTheGridLineCalculationErdsAreInitialized();
+   GivenTheModuleIsInitialized();
 
-   When FreshFoodAdjustedSetpointIs(AnotherFreshFoodAdjustedSetpointTemperature);
-   And FreezerAdjustedSetpointIs(AnotherFreezerAdjustedSetpointTemperature);
+   WhenTheFreshFoodAdjustedSetpointIs(AnotherFreshFoodAdjustedSetpointTemperature);
+   WhenTheFreezerAdjustedSetpointIs(AnotherFreezerAdjustedSetpointTemperature);
 
-   CalculatedGridLineTempShouldBe(
+   TheCalculatedGridLineTempShouldBe(
       (-450 + AnotherFreshFoodAdjustedSetpointTemperature),
-      FreshFoodGridLineDimension,
+      GridDelta_FreshFood,
       GridLine_FreshFoodLowHyst);
 
-   CalculatedGridLineTempShouldBe(
+   TheCalculatedGridLineTempShouldBe(
       (950 + AnotherFreshFoodAdjustedSetpointTemperature),
-      FreshFoodGridLineDimension,
+      GridDelta_FreshFood,
       GridLine_FreshFoodExtraHigh);
 
-   CalculatedGridLineTempShouldBe(
+   TheCalculatedGridLineTempShouldBe(
       (1150 + AnotherFreshFoodAdjustedSetpointTemperature),
-      FreshFoodGridLineDimension,
+      GridDelta_FreshFood,
       GridLine_FreshFoodSuperHigh);
 
-   CalculatedGridLineTempShouldBe(
+   TheCalculatedGridLineTempShouldBe(
       (-250 + AnotherFreezerAdjustedSetpointTemperature),
       FreezerGridLineDimension,
       GridLine_FreezerLowHyst);
 
-   CalculatedGridLineTempShouldBe(
+   TheCalculatedGridLineTempShouldBe(
       (750 + AnotherFreezerAdjustedSetpointTemperature),
       FreezerGridLineDimension,
       GridLine_FreezerSuperHigh);
@@ -409,26 +492,37 @@ TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenAdjustedSetpointChanges)
 
 TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenFreshFoodShiftChanges)
 {
-   Given TheGridLineCalculationErdsAreInitialized();
-   And TheModuleIsInitialized();
+   GivenTheGridLineCalculationErdsAreInitialized();
+   GivenTheModuleIsInitialized();
 
-   When FreshFoodThermalShiftIs(AnotherFreshFoodShiftTemperature);
+   WhenTheFreshFoodThermalShiftIs(AnotherFreshFoodShiftTemperature);
 
-   CalculatedGridLineTempShouldBe(
+   TheCalculatedGridLineTempShouldBe(
       (150 + AnotherFreshFoodShiftTemperature),
-      FreshFoodGridLineDimension,
+      GridDelta_FreshFood,
       GridLine_FreshFoodLowHystDelta);
 }
 
 TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenFreezerShiftChanges)
 {
-   Given TheGridLineCalculationErdsAreInitialized();
-   And TheModuleIsInitialized();
+   GivenTheGridLineCalculationErdsAreInitialized();
+   GivenTheModuleIsInitialized();
 
-   And FreezerThermalShiftIs(AnotherFreezerShiftTemperature);
+   WhenTheFreezerThermalShiftIs(AnotherFreezerShiftTemperature);
 
-   And CalculatedGridLineTempShouldBe(
+   And TheCalculatedGridLineTempShouldBe(
       (600 + AnotherFreezerShiftTemperature),
       GridDelta_Freezer,
       GridLine_FreezerExtraHigh);
+}
+
+TEST(GridLineCalculator, ShouldRecalculateFreshFoodGridLinesWhenCrossAmbientHysteresisAdjustmentChanges)
+{
+   GivenTheGridLineCalculationErdsAreInitialized();
+   GivenTheModuleIsInitialized();
+
+   WhenTheCrossAmbientHysteresisAdjustmentChangesTo(ACrossAmbientHysteresisAdjustmentInDegFx100);
+
+   TheFreshFoodGridLineTemperaturesShouldBeAdjustedWithCrossAmbientHysteresis();
+   TheFreezerGridLineTemperaturesShouldBeInitializedValues();
 }

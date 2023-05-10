@@ -122,6 +122,11 @@ static const OverrideArbiterConfiguration_t gridBlockNumberOverrideConfiguration
    NUM_ELEMENTS(gridBlockNumberOverrideRequestErdList)
 };
 
+static const CrossAmbientHysteresisAdjustmentCalculatorConfig_t crossAmbientHysteresisAdjustmentCalculatorConfig = {
+   .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
+   .crossAmbientWindowAveragedTemperatureErd = Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100,
+};
+
 void GridPlugin_Init(
    GridPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -170,6 +175,12 @@ void GridPlugin_Init(
       &instance->freezerGridOffsetAdder,
       dataModel,
       &freezerGridOffsetAdderConfig);
+
+   CrossAmbientHysteresisAdjustmentCalculator_Init(
+      &instance->crossAmbientHysteresisAdjustmentCalculator,
+      dataModel,
+      PersonalityParametricData_Get(dataModel)->gridData,
+      &crossAmbientHysteresisAdjustmentCalculatorConfig);
 
    GridLineCalculator_Init(
       &instance->gridLineCalculator,

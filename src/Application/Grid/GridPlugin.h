@@ -15,6 +15,7 @@
 #include "GridBlockCalculator.h"
 #include "GridOffsetAdder.h"
 #include "OverrideArbiter.h"
+#include "CrossAmbientHysteresisAdjustmentCalculator.h"
 
 typedef struct
 {
@@ -24,6 +25,7 @@ typedef struct
    GridOffsetAdder_t freshFoodGridOffsetAdder;
    GridOffsetAdder_t freezerGridOffsetAdder;
    OverrideArbiter_t gridBlockNumberArbiter;
+   CrossAmbientHysteresisAdjustmentCalculator_t crossAmbientHysteresisAdjustmentCalculator;
 } GridPlugin_t;
 
 void GridPlugin_Init(
