@@ -51,55 +51,54 @@ enum
 static const DeltaGridLineData_t freshFoodGridLineData[] = {
    {
       .gridLinesDegFx100 = -450,
-      .bitMapping = DeltaGridLines_BitMapping_OffsetBitMask,
+      .correction = DeltaGridLinesCorrection_Offset,
    },
    {
       .gridLinesDegFx100 = 0,
-      .bitMapping = DeltaGridLines_BitMapping_AdjSetpointBitMask,
+      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
    },
    {
       .gridLinesDegFx100 = 150,
-      .bitMapping = DeltaGridLines_BitMapping_ShiftBitMask,
+      .correction = DeltaGridLinesCorrection_Shift,
    },
    {
       .gridLinesDegFx100 = 450,
-      .bitMapping = DeltaGridLines_BitMapping_SetpointBitMask,
+      .correction = DeltaGridLinesCorrection_RawSetpoint,
    },
    {
       .gridLinesDegFx100 = 950,
-      .bitMapping = DeltaGridLines_BitMapping_AdjSetpointBitMask,
+      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
    },
    {
       .gridLinesDegFx100 = 1150,
-      .bitMapping = DeltaGridLines_BitMapping_AdjSetpointBitMask,
+      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
    },
 };
 
 static const DeltaGridLineData_t freezerGridLineData[] = {
    {
       .gridLinesDegFx100 = -250,
-      .bitMapping = DeltaGridLines_BitMapping_AdjSetpointBitMask,
+      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
    },
    {
       .gridLinesDegFx100 = 0,
-      .bitMapping = DeltaGridLines_BitMapping_OffsetBitMask,
+      .correction = DeltaGridLinesCorrection_Offset,
    },
    {
       .gridLinesDegFx100 = 250,
-      .bitMapping = DeltaGridLines_BitMapping_SetpointBitMask,
+      .correction = DeltaGridLinesCorrection_RawSetpoint,
    },
    {
       .gridLinesDegFx100 = 600,
-      .bitMapping = DeltaGridLines_BitMapping_ShiftBitMask,
+      .correction = DeltaGridLinesCorrection_Shift,
    },
    {
       .gridLinesDegFx100 = 750,
-      .bitMapping = DeltaGridLines_BitMapping_AdjSetpointBitMask |
-         DeltaGridLines_BitMapping_OffsetBitMask,
+      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
    },
    {
       .gridLinesDegFx100 = 5500,
-      .bitMapping = DeltaGridLines_BitMapping_OffsetBitMask,
+      .correction = DeltaGridLinesCorrection_Offset,
    },
 };
 

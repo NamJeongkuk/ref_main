@@ -18,8 +18,8 @@
 #define GRID_LINE_TEMP(_dimension, _line) \
    instance->_private.gridData->deltaGridLines->gridLines[_dimension].gridLineData[_line].gridLinesDegFx100
 
-#define PARAMETRIC_GRID_LINE_BIT_MASK(_dimension, _line) \
-   instance->_private.gridData->deltaGridLines->gridLines[_dimension].gridLineData[_line].bitMapping
+#define PARAMETRIC_GRID_LINE_CORRECTION(_dimension, _line) \
+   instance->_private.gridData->deltaGridLines->gridLines[_dimension].gridLineData[_line].correction
 
 #define GRID_LINE_ADJUSTMENTS(_dimension) \
    instance->_private.config->gridLineAdjustmentErds[_dimension]
@@ -42,25 +42,25 @@ static void CalculateAxisGridLines(
       axisToCalculate->gridLinesDegFx100[line] =
          GRID_LINE_TEMP(axisDimension, line);
 
-      if(PARAMETRIC_GRID_LINE_BIT_MASK(axisDimension, line) & DeltaGridLines_BitMapping_SetpointBitMask)
+      if(PARAMETRIC_GRID_LINE_CORRECTION(axisDimension, line) == DeltaGridLinesCorrection_RawSetpoint)
       {
          SetpointVotedTemperature_t rawSetpoint;
          DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).rawSetpointErd, &rawSetpoint);
          axisToCalculate->gridLinesDegFx100[line] += rawSetpoint.temperatureInDegFx100;
       }
-      if(PARAMETRIC_GRID_LINE_BIT_MASK(axisDimension, line) & DeltaGridLines_BitMapping_OffsetBitMask)
+      if(PARAMETRIC_GRID_LINE_CORRECTION(axisDimension, line) == DeltaGridLinesCorrection_Offset)
       {
          TemperatureDegFx100_t offset;
          DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).offsetInDegFx100Erd, &offset);
          axisToCalculate->gridLinesDegFx100[line] += offset;
       }
-      if(PARAMETRIC_GRID_LINE_BIT_MASK(axisDimension, line) & DeltaGridLines_BitMapping_ShiftBitMask)
+      if(PARAMETRIC_GRID_LINE_CORRECTION(axisDimension, line) == DeltaGridLinesCorrection_Shift)
       {
          TemperatureDegFx100_t shift;
          DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).thermalShiftInDegFx100Erd, &shift);
          axisToCalculate->gridLinesDegFx100[line] += shift;
       }
-      if(PARAMETRIC_GRID_LINE_BIT_MASK(axisDimension, line) & DeltaGridLines_BitMapping_AdjSetpointBitMask)
+      if(PARAMETRIC_GRID_LINE_CORRECTION(axisDimension, line) == DeltaGridLinesCorrection_AdjustedSetpoint)
       {
          SetpointVotedTemperature_t adjustedSetPoint;
          DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).adjustedSetpointInDegFx100Erd, &adjustedSetPoint);

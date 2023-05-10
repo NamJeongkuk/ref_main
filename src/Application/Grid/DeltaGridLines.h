@@ -39,17 +39,17 @@ enum
 
 enum
 {
-   DeltaGridLines_BitMapping_SetpointBitMask = 0x01,
-   DeltaGridLines_BitMapping_OffsetBitMask = 0x02,
-   DeltaGridLines_BitMapping_ShiftBitMask = 0x04,
-   DeltaGridLines_BitMapping_AdjSetpointBitMask = 0x08
+   DeltaGridLinesCorrection_RawSetpoint,
+   DeltaGridLinesCorrection_Offset,
+   DeltaGridLinesCorrection_Shift,
+   DeltaGridLinesCorrection_AdjustedSetpoint
 };
-typedef uint8_t DeltaGridLines_BitMapping_t;
+typedef uint8_t DeltaGridLinesCorrection_t;
 
 typedef struct
 {
    const TemperatureDegFx100_t gridLinesDegFx100;
-   const DeltaGridLines_BitMapping_t bitMapping;
+   const DeltaGridLinesCorrection_t correction;
 } DeltaGridLineData_t;
 
 typedef struct
