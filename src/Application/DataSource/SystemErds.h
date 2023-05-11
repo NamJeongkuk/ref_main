@@ -98,7 +98,7 @@
 #include "FlowMeterMonitoringRequest.h"
 #include "IceMakerWaterFillMonitoringRequest.h"
 #include "ShortGitHash.h"
-#include "TwistTrayIceMakerMotorErrorReason.h"
+#include "ApplianceFeatureApi.h"
 
 // clang-format off
 
@@ -348,6 +348,7 @@ enum
    ENTRY(Erd_ServiceDiagnosticsApiVersion,                  0x008F, ServiceDiagnosticsApiVersion_t,                     Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ServiceDiagnosticsRevision3Manifest,           0x0090, ServiceDiagnosticsRevision3Manifest_t,              Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ApplianceApiManifest,                          0x0092, ApplianceApiManifest_t,                             Swap_Yes, Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
+   ENTRY(Erd_ApplianceApiApplianceTypeManifest1,            0x0093, ApplianceFeatureApiManifest_t,                      Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ResetCount,                                    0x0700, ResetCount_t,                                       Swap_Yes, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ResetReason,                                   0x0701, ResetReason_t,                                      Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_SecondsSinceLastReset,                         0x0702, SecondsSinceLastReset_t,                            Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

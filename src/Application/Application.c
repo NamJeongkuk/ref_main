@@ -11,6 +11,7 @@
 #include "SabbathPlugin.h"
 #include "DoorPlugin.h"
 #include "FaultWrapperPlugin.h"
+#include "ApplianceFeatureApiUpdater.h"
 
 static const ApplianceApiResetDiagnosticsConfiguration_t applianceApiResetDiagnosticsConfiguration = {
    .resetReasonErd = Erd_ResetReason,
@@ -33,6 +34,7 @@ void Application_Init(
    instance->_private.dataModel = dataModel;
 
    InitializePlatformParametricErds(dataModel);
+   ApplianceFeatureApiUpdater_Init(dataModel);
 
    ShiftOffsetCalculatorCommonPlugin_Init(&instance->_private.shiftOffsetCalculatorCommonPlugin, dataModel);
 

@@ -41,6 +41,7 @@ SRC_DIRS:=\
   src/Hardware/SoftPwm \
   src/Application \
   src/Application/Auger \
+  src/Application/ApplianceFeatureApiUpdater \
   src/Application/Compressor \
   src/Application/ConfigurationPlugins \
   src/Application/Configurations \

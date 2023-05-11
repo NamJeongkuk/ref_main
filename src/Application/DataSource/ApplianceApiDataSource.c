@@ -34,6 +34,7 @@ static const DataSource_ApplianceApiRevision1Configuration_t applianceApiConfigu
 
    .primary = {
       .supported = true,
+      .applianceType = ApplianceFeatureApiType_Refrigerator,
       .erd = {
          .modelNumber = Erd_ModelNumber,
          .serialNumber = Erd_SerialNumber,

@@ -1265,6 +1265,55 @@
                "interval": 1000000000
             }
          ]
+      },
+      {
+         "title": "Mobile App",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Setpoint Request",
+               "name": "Erd_FreshFoodSetpointRequest",
+               "read": false,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Setpoint Status",
+               "name": "Erd_FreshFoodSetpointStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fresh Food Setpoint Range",
+               "name": "Erd_FreshFoodSetpointRangeData",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Setpoint Request",
+               "name": "Erd_FreezerSetpointRequest",
+               "read": false,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Setpoint Status",
+               "name": "Erd_FreezerSetpointStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Freezer Setpoint Range",
+               "name": "Erd_FreezerSetpointRangeData",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
       }
    ]
 }

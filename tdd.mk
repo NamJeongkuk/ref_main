@@ -17,6 +17,7 @@ SRC_FILES := \
 SRC_DIRS := \
    $(PROJECT_DIR)/Application \
    $(PROJECT_DIR)/Application/Auger \
+   $(PROJECT_DIR)/Application/ApplianceFeatureApiUpdater \
    $(PROJECT_DIR)/Application/Compressor \
    $(PROJECT_DIR)/Application/ConfigurationPlugins \
    $(PROJECT_DIR)/Application/Configurations \
@@ -72,6 +73,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR) \
    $(TESTS_DIR)/Application/ \
    $(TESTS_DIR)/Application/Auger \
+   $(TESTS_DIR)/Application/ApplianceFeatureApiUpdater \
    $(TESTS_DIR)/Application/Compressor \
    $(TESTS_DIR)/Application/ConvertibleCompartment \
    $(TESTS_DIR)/Application/Damper \
