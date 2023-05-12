@@ -14,6 +14,7 @@ typedef struct
 {
    uint8_t timeInMinutes;
    TemperatureDegFx100_t freezerSetpointInDegFx100;
+   FanSpeed_t freezerEvaporatorFanSpeed;
 } FreezerIceRateData_t;
 
 #endif
