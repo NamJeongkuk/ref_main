@@ -653,8 +653,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "IM Enabled by User?",
-               "name": "Erd_IceMakerEnabledByUser",
+               "displayName": "Ice Maker0 Enable Request",
+               "name": "Erd_IceMaker0EnableRequest",
                "read": true,
                "write": true,
                "interval": 1000000000
@@ -757,8 +757,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "IM Enabled by User?",
-               "name": "Erd_IceMakerEnabledByUser",
+               "displayName": "Ice Maker0 Enable Request",
+               "name": "Erd_IceMaker0EnableRequest",
                "read": true,
                "write": true,
                "interval": 1000000000
@@ -1001,8 +1001,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "IM Enabled by User?",
-               "name": "Erd_IceMakerEnabledByUser",
+               "displayName": "Ice Maker0 Enable Request",
+               "name": "Erd_IceMaker0EnableRequest",
                "read": true,
                "write": true,
                "interval": 1000000000

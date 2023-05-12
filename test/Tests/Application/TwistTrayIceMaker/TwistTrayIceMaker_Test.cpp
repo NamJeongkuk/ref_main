@@ -182,7 +182,7 @@ static const DataModel_TestDoubleConfigurationEntry_t erdDefinitions[] = {
    { Erd_TwistTrayIceMakerTestRequest, sizeof(IceMakerTestRequest_t) },
    { Erd_FreezerIceRateTriggerSignal, sizeof(Signal_t) },
    { Erd_FillTubeHeater_TwistTrayIceMakerVote, sizeof(PercentageDutyCycleVote_t) },
-   { Erd_IceMakerEnabledOverrideResolved, sizeof(bool) }
+   { Erd_IceMaker0EnableStatus, sizeof(bool) }
 };
 
 static void OnDataModelChange(void *context, const void *_args)
@@ -341,7 +341,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMakerEnabledOverrideResolved,
+         Erd_IceMaker0EnableStatus,
          set);
    }
 
@@ -354,7 +354,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMakerEnabledOverrideResolved,
+         Erd_IceMaker0EnableStatus,
          clear);
    }
 

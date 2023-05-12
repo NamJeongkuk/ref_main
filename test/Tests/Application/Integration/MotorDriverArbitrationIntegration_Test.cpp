@@ -104,7 +104,7 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
 
    void GivenTheIceMakerIsEnabled()
    {
-      DataModel_Write(dataModel, Erd_IceMakerEnabledByUser, set);
+      DataModel_Write(dataModel, Erd_IceMaker0EnableRequest, set);
       DataModel_Write(dataModel, Erd_IceMakerEnabledByGrid, set);
    }
 

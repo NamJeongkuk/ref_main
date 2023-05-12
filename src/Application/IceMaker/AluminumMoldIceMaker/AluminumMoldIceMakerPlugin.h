@@ -18,7 +18,6 @@
 #include "IceMakerEnableResolver.h"
 #include "ErdResolver.h"
 #include "RakeController.h"
-#include "ResolvedVoteRelayConnector.h"
 #include "IceMakerMoldHeaterController.h"
 #include "IceMakerWaterFillMonitor.h"
 #include "SensorFiltering.h"

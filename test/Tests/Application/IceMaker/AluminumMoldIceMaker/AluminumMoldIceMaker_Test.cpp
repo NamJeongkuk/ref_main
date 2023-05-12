@@ -37,7 +37,7 @@ static const AluminumMoldIceMakerConfig_t config = {
    .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
    .iceMakerFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
-   .iceMakerEnabledErd = Erd_IceMakerEnabledOverrideResolved,
+   .iceMakerEnabledErd = Erd_IceMaker0EnableStatus,
    .sabbathModeErd = Erd_SabbathMode,
    .fillTubeHeaterVoteErd = Erd_FillTubeHeater_AluminumMoldIceMakerVote,
    .moldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
@@ -299,7 +299,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMakerEnabledOverrideResolved,
+         Erd_IceMaker0EnableStatus,
          &state);
    }
 
@@ -2262,7 +2262,7 @@ TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMakerEnabledOverrideResolved,
+         Erd_IceMaker0EnableStatus,
          &state);
    }
 
@@ -2546,7 +2546,7 @@ TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterZeroDutyCycle)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMakerEnabledOverrideResolved,
+         Erd_IceMaker0EnableStatus,
          &state);
    }
 
@@ -2688,7 +2688,7 @@ TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterZeroOnTime)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMakerEnabledOverrideResolved,
+         Erd_IceMaker0EnableStatus,
          &state);
    }
 

@@ -85,13 +85,13 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
 
    void GivenTheIceMakerIsEnabled()
    {
-      DataModel_Write(dataModel, Erd_IceMakerEnabledByUser, set);
+      DataModel_Write(dataModel, Erd_IceMaker0EnableRequest, set);
       DataModel_Write(dataModel, Erd_IceMakerEnabledByGrid, set);
    }
 
    void GivenTheIceMakerIsDisabled()
    {
-      DataModel_Write(dataModel, Erd_IceMakerEnabledByUser, clear);
+      DataModel_Write(dataModel, Erd_IceMaker0EnableRequest, clear);
       DataModel_Write(dataModel, Erd_IceMakerEnabledByGrid, clear);
    }
 

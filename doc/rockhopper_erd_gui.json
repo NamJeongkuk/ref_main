@@ -1665,8 +1665,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Ice maker enabled by user",
-          "name": "Erd_IceMakerEnabledByUser",
+          "displayName": "Ice maker0 enable request",
+          "name": "Erd_IceMaker0EnableRequest",
           "read": true,
           "write": true
         },
@@ -1681,6 +1681,13 @@
           "namespace": "mb",
           "displayName": "Ice maker enabled resolved",
           "name": "Erd_IceMakerEnabledResolved",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice maker0 enable status",
+          "name": "Erd_IceMaker0EnableStatus",
           "read": true,
           "write": false
         },

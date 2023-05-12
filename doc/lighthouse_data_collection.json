@@ -403,7 +403,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_IceMakerEnabledByUser",
+         "name": "Erd_IceMaker0EnableRequest",
          "interval": 60000
       },
       {
