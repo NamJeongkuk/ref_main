@@ -18,7 +18,6 @@
 #include "PercentageDutyCycleVote.h"
 
 #define WaterFillPeriod (instance->_private.parametric->fillData.waterFillTimeSecX10 * 100)
-#define MinimumFreezePeriodMinutes (instance->_private.parametric->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN)
 #define FullIceBucketWaitPeriodMinutes (instance->_private.parametric->harvestData.fullBucketWaitPeriodMinutes * MSEC_PER_MIN)
 #define DelayToHarvestAfterDoorCloses (instance->_private.parametric->harvestData.delayToHarvestAfterDoorClosesSeconds * MSEC_PER_SEC)
 #define FreezingPointDegFx100 (instance->_private.parametric->freezeData.startIntegrationTemperatureInDegFx100)
@@ -86,10 +85,10 @@ FSM_STATE_TABLE(FSM_STATE_EXPAND_AS_FUNCTION_DEFINITION)
 #define open enabled
 #define closed disabled
 
-static void MinimumFreezeTimeReached(void *context);
 static void IceTemperatureIntegrationIntervalElapsed(void *context);
 static void FillingTrayPeriodElapsed(void *context);
 static void FullIceBucketWaitTimeElapsed(void *context);
+static void StartMinimumFreezeTimer(TwistTrayIceMaker_t *instance);
 
 static TwistTrayIceMaker_t *InstanceFrom(Fsm_t *fsm)
 {
@@ -182,15 +181,8 @@ static uint32_t IncreasedFreezeIntegrationSum(TwistTrayIceMaker_t *instance)
    return freezeIntegrationSum;
 }
 
-static void StartFreezingTimers(TwistTrayIceMaker_t *instance)
+static void StartIntegrationTimer(TwistTrayIceMaker_t *instance)
 {
-   TimerModule_StartOneShot(
-      instance->_private.timerModule,
-      &instance->_private.minimumFreezeTimer,
-      MinimumFreezePeriodMinutes,
-      MinimumFreezeTimeReached,
-      instance);
-
    TimerModule_StartPeriodic(
       instance->_private.timerModule,
       &instance->_private.integrationTimer,
@@ -199,10 +191,64 @@ static void StartFreezingTimers(TwistTrayIceMaker_t *instance)
       instance);
 }
 
-static void StopFreezeTimers(TwistTrayIceMaker_t *instance)
+static void StopIntegrationTimer(TwistTrayIceMaker_t *instance)
 {
-   TimerModule_Stop(instance->_private.timerModule, &instance->_private.minimumFreezeTimer);
-   TimerModule_Stop(instance->_private.timerModule, &instance->_private.integrationTimer);
+   TimerModule_Stop(
+      instance->_private.timerModule,
+      &instance->_private.integrationTimer);
+}
+
+static void ClearMinimumFreezeTimeCounter(TwistTrayIceMaker_t *instance)
+{
+   uint8_t zeroFreezeTime = 0;
+   DataSource_Write(
+      instance->_private.dataSource,
+      Erd_TwistTrayIceMaker_MinimumFreezeTimeCounterInMinutes,
+      &zeroFreezeTime);
+}
+
+static void StopMinimumFreezeTimer(TwistTrayIceMaker_t *instance)
+{
+   TimerModule_Stop(
+      instance->_private.timerModule,
+      &instance->_private.minimumFreezeTimer);
+}
+
+static void IncrementMinimumFreezeTimerCounter(void *context)
+{
+   TwistTrayIceMaker_t *instance = context;
+
+   uint8_t currentFreezeTime;
+   DataSource_Read(
+      instance->_private.dataSource,
+      Erd_TwistTrayIceMaker_MinimumFreezeTimeCounterInMinutes,
+      &currentFreezeTime);
+
+   currentFreezeTime++;
+   DataSource_Write(
+      instance->_private.dataSource,
+      Erd_TwistTrayIceMaker_MinimumFreezeTimeCounterInMinutes,
+      &currentFreezeTime);
+
+   if(currentFreezeTime >= instance->_private.parametric->freezeData.minimumFreezeTimeMinutes)
+   {
+      Fsm_SendSignal(&instance->_private.fsm, Signal_MinimumFreezeTimeReached, NULL);
+   }
+
+   if(currentFreezeTime == UINT8_MAX)
+   {
+      StopMinimumFreezeTimer(instance);
+   }
+}
+
+static void StartMinimumFreezeTimer(TwistTrayIceMaker_t *instance)
+{
+   TimerModule_StartPeriodic(
+      instance->_private.timerModule,
+      &instance->_private.minimumFreezeTimer,
+      MSEC_PER_MIN,
+      IncrementMinimumFreezeTimerCounter,
+      instance);
 }
 
 static void StartFillTrayTimer(TwistTrayIceMaker_t *instance)
@@ -358,7 +404,9 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          instance->_private.maximumHarvestTemperatureReached = false;
 
          ClearFreezeIntegrationSum(instance);
-         StartFreezingTimers(instance);
+         ClearMinimumFreezeTimeCounter(instance);
+         StartMinimumFreezeTimer(instance);
+         StartIntegrationTimer(instance);
 
          if(!instance->_private.firstFreezeTransition)
          {
@@ -381,7 +429,9 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
             instance->_private.maximumHarvestTemperatureReached = false;
 
             ClearFreezeIntegrationSum(instance);
-            StopFreezeTimers(instance);
+            ClearMinimumFreezeTimeCounter(instance);
+            StopMinimumFreezeTimer(instance);
+            StopIntegrationTimer(instance);
 
             if(!IceMakerThermistorIsValid(instance))
             {
@@ -393,7 +443,8 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
             if(!TimerModule_IsRunning(instance->_private.timerModule, &instance->_private.minimumFreezeTimer) &&
                !TimerModule_IsRunning(instance->_private.timerModule, &instance->_private.integrationTimer))
             {
-               StartFreezingTimers(instance);
+               StartMinimumFreezeTimer(instance);
+               StartIntegrationTimer(instance);
             }
 
             instance->_private.maximumHarvestTemperatureReached = (iceTrayTempx100 < MaxHarvestTemperature);
@@ -420,11 +471,11 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          if(freezeIntegrationSum >= TargetFreezeIntegrationSum)
          {
             instance->_private.freezeIntegrationSumReached = true;
-            TimerModule_Stop(instance->_private.timerModule, &instance->_private.integrationTimer);
+            StopIntegrationTimer(instance);
 
             if(HarvestConditionsHaveBeenMet(instance))
             {
-               Fsm_Transition(fsm, State_Harvesting);
+               Fsm_Transition(&instance->_private.fsm, State_Harvesting);
             }
          }
          break;
@@ -442,7 +493,9 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          break;
 
       case Fsm_Exit:
-         StopFreezeTimers(instance);
+         ClearMinimumFreezeTimeCounter(instance);
+         StopMinimumFreezeTimer(instance);
+         StopIntegrationTimer(instance);
 
          instance->_private.minimumFreezeTimeReached = false;
          instance->_private.freezeIntegrationSumReached = false;
@@ -676,12 +729,6 @@ static void State_IdleFreeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
    }
 }
 
-static void MinimumFreezeTimeReached(void *context)
-{
-   REINTERPRET(instance, context, TwistTrayIceMaker_t *);
-   Fsm_SendSignal(&instance->_private.fsm, Signal_MinimumFreezeTimeReached, NULL);
-}
-
 static void IceTemperatureIntegrationIntervalElapsed(void *context)
 {
    REINTERPRET(instance, context, TwistTrayIceMaker_t *);
@@ -744,12 +791,6 @@ static void DataSourceChanged(void *context, const void *data)
             &instance->_private.dispensingIceTimer);
          Fsm_SendSignal(&instance->_private.fsm, Signal_IceHasStoppedDispensing, NULL);
       }
-   }
-   else if(onChangeArgs->erd == Erd_TwistTrayIceMaker_MinimumFreezeTimerRemainingTimeRequest)
-   {
-      TimerTicks_t remainingTime =
-         TimerModule_RemainingTicks(instance->_private.timerModule, &instance->_private.minimumFreezeTimer);
-      DataSource_Write(instance->_private.dataSource, Erd_TwistTrayIceMaker_MinimumFreezeTimerRemainingTimeInMsec, &remainingTime);
    }
    else if((onChangeArgs->erd == Erd_SabbathMode) ||
       (onChangeArgs->erd == Erd_EnhancedSabbathMode))

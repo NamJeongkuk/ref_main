@@ -458,7 +458,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_TwistTrayIceMaker_MinimumFreezeTimerRemainingTimeInMsec",
+         "name": "Erd_TwistTrayIceMaker_MinimumFreezeTimeCounterInMinutes",
          "interval": 60000
       },
       {

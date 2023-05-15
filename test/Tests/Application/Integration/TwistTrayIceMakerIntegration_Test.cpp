@@ -31,7 +31,6 @@ enum
 {
    MotorControllerPollingTimeInMsec = 150,
    MotorBrakingDurationInMsec = 1 * MSEC_PER_SEC,
-   IntegrationPeriod = 1 * MSEC_PER_SEC,
    BelowFreezingAdcCounts = 44800,
    InvalidAdcCount = 5375,
    ValidAdcCount = 30336,

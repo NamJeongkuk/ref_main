@@ -743,8 +743,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Twist IM Minimum Freeze Time Counter Msec",
-               "name": "Erd_TwistTrayIceMaker_MinimumFreezeTimerRemainingTimeInMsec",
+               "displayName": "Twist IM Minimum Freeze Time Counter In Minutes",
+               "name": "Erd_TwistTrayIceMaker_MinimumFreezeTimeCounterInMinutes",
                "read": true,
                "interval": 1000000000
             },

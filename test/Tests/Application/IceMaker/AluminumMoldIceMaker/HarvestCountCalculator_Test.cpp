@@ -298,6 +298,16 @@ TEST(HarvestCountCalculator, ShouldClearFreezeTimeCounterIfIceMakerTemperatureEx
    MinimumFreezeTimeCounterInMinutesShouldBe(0);
 }
 
+TEST(HarvestCountCalculator, ShouldNotIncrementFreezeTimeCounterWhileIceMakerTemperatureExceedsStartIntegrationTemperature)
+{
+   GivenTheIceMakerTemperatureIs(aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100 + 1);
+   GivenTheModuleIsInitialized();
+   GivenTheHarvestCountCalculationRequestIs(SET);
+
+   After(MSEC_PER_MIN);
+   MinimumFreezeTimeCounterInMinutesShouldBe(0);
+}
+
 TEST(HarvestCountCalculator, ShouldMaintainFreezeTimeCounterIfHarvestCountCalculationRequestIsClearedAndResetFreezeTimeCounterWhenSet)
 {
    GivenTheIceMakerTemperatureIs(aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100);
