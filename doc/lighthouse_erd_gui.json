@@ -1311,6 +1311,143 @@
                "displayName": "Freezer Setpoint Range",
                "name": "Erd_FreezerSetpointRangeData",
                "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Left Side Freezer Door Status",
+               "name": "Erd_LeftSideFreezerDoorStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Right Side Fresh Food Door Status",
+               "name": "Erd_RightSideFreshFoodDoorStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Water Filter State",
+               "name": "Erd_WaterFilterState",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Water Filter Type",
+               "name": "Erd_WaterFilterType",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 0 Enable Request",
+               "name": "Erd_IceMaker0EnableRequest",
+               "read": false,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 0 Enable Status",
+               "name": "Erd_IceMaker0EnableStatus",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 0 Full Status",
+               "name": "Erd_IceMaker0FullStatus",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 0 Type Info",
+               "name": "Erd_IceMaker0TypeInformation",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 1 Enable Request",
+               "name": "Erd_IceMaker1EnableRequest",
+               "read": false,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 1 Enable Status",
+               "name": "Erd_IceMaker1EnableStatus",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 1 Full Status",
+               "name": "Erd_IceMaker1FullStatus",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 1 Type Info",
+               "name": "Erd_IceMaker1TypeInformation",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Turbo Cool Request",
+               "name": "Erd_TurboCoolRequest",
+               "read": false,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Turbo Cool Status",
+               "name": "Erd_TurboCoolStatus",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Turbo Freeze Request",
+               "name": "Erd_TurboFreezeRequest",
+               "read": false,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Turbo Freeze Status",
+               "name": "Erd_TurboFreezeStatus",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Hydration - Total Dispensed Ounces",
+               "name": "Erd_CumulativeWaterDispensedOunces",
+               "read": true,
+               "write": true,
                "interval": 1000000000
             }
          ]

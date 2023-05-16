@@ -106,7 +106,8 @@ INC_DIRS:=\
   src/Application/Temperature \
   src/Application/Valve \
   src/Application/Voting \
-  lib/Common/Source/Temperature \
+  src/Application/WaterFilter \
+  lib/Common/Source/Temperature/ \
 
 applcommon_EXTERNAL_INC_DIRS:=\
   src/Application/Uassert \

@@ -15,8 +15,24 @@ void ApplianceFeatureApiUpdater_Init(I_DataModel_t *dataModel)
    applianceFeatureApiManifest.version = 2;
    applianceFeatureApiManifest.features =
       ApplianceFeatureApi_Refrigerator_Version2_Foundation |
+      ApplianceFeatureApi_Refrigerator_Version2_HydrationStation |
       ApplianceFeatureApi_Refrigerator_Version2_FreshFoodCabinetSetpoint |
-      ApplianceFeatureApi_Refrigerator_Version2_FreezerCabinetSetpoint;
+      ApplianceFeatureApi_Refrigerator_Version2_FreezerCabinetSetpoint |
+      ApplianceFeatureApi_Refrigerator_Version2_DispenserSelection |
+      ApplianceFeatureApi_Refrigerator_Version2_ColdWaterDispensable |
+      ApplianceFeatureApi_Refrigerator_Version2_CrushedIceDispensable |
+      ApplianceFeatureApi_Refrigerator_Version2_CubedIceDispensable |
+      ApplianceFeatureApi_Refrigerator_Version2_ColdWaterDispenseRequest |
+      ApplianceFeatureApi_Refrigerator_Version2_CrushedIceDispenseRequest |
+      ApplianceFeatureApi_Refrigerator_Version2_CubedIceDispenseRequest |
+      ApplianceFeatureApi_Refrigerator_Version2_CoolingOnOffRequest |
+      ApplianceFeatureApi_Refrigerator_Version2_LeftSideFreezerDoorStatus |
+      ApplianceFeatureApi_Refrigerator_Version2_RightSideFreshFoodDoorStatus |
+      ApplianceFeatureApi_Refrigerator_Version2_WaterFilterStatus |
+      ApplianceFeatureApi_Refrigerator_Version2_IceMaker0 |
+      ApplianceFeatureApi_Refrigerator_Version2_IceMaker1 |
+      ApplianceFeatureApi_Refrigerator_Version2_TurboCool |
+      ApplianceFeatureApi_Refrigerator_Version2_TurboFreeze;
 
    DataModel_Write(dataModel, Erd_ApplianceApiApplianceTypeManifest1, &applianceFeatureApiManifest);
 }

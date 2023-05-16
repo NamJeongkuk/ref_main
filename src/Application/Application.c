@@ -34,6 +34,14 @@ void Application_Init(
    instance->_private.dataModel = dataModel;
 
    InitializePlatformParametricErds(dataModel);
+
+   // TODO Remove after updating icemaker
+   {
+      IceMakerTypeInformation_t iceMakerInfo;
+      iceMakerInfo.type = IceMakerType_Twist;
+      iceMakerInfo.location = IceMakerLocation_Fridge;
+      DataModel_Write(dataModel, WinningVoteErd_Erd_IceMaker1TypeInformation, &iceMakerInfo);
+   }
    ApplianceFeatureApiUpdater_Init(dataModel);
 
    ShiftOffsetCalculatorCommonPlugin_Init(&instance->_private.shiftOffsetCalculatorCommonPlugin, dataModel);

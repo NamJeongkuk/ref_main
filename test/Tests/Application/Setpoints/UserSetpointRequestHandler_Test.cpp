@@ -50,8 +50,8 @@ static const UserSetpointRequestHandlerConfig_t config = {
 };
 
 static const UserSetpointRangeData_t rangeData = {
-   .highTemperatureSetpoint = SomeHighTemperatureBound,
    .lowTemperatureSetpoint = SomeLowTemperatureBound,
+   .highTemperatureSetpoint = SomeHighTemperatureBound,
    .defaultTemperatureSetpoint = SomeDefaultTemperature
 };
 

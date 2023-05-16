@@ -12,8 +12,8 @@
 
 typedef struct
 {
-   Setpoint_t highTemperatureSetpoint;
    Setpoint_t lowTemperatureSetpoint;
+   Setpoint_t highTemperatureSetpoint;
    Setpoint_t defaultTemperatureSetpoint;
 } UserSetpointRangeData_t;
 

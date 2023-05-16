@@ -60,6 +60,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/TimerModule \
    $(PROJECT_DIR)/Application/Valve \
    $(PROJECT_DIR)/Application/Voting \
+   $(PROJECT_DIR)/Application/WaterFilter \
    $(PROJECT_DIR)/Application/WaterValve \
    $(PROJECT_DIR)/Hardware/SoftPwm \
 
