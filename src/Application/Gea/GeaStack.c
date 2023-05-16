@@ -89,9 +89,16 @@ static void InitializeErdSecurityComponents(
 
 static void ConnectGea2MessageEndpointToDataSource(
    GeaStack_t *instance,
+   I_DataModel_t *dataModel,
    I_DataSource_t *externalDataSource,
    TimerModule_t *timerModule)
 {
+   PeriodicSignalUpdater_Init(
+      &instance->_private.mainboardToUiHeartbeatPeriodicSignalUpdater,
+      DataModel_GetInputOutput(dataModel, Erd_SignOfLifeFromMainboardToUi),
+      timerModule,
+      SubscriptionUpdatePeriodInTicks);
+
    ErdGea2ReadWriteApiRevision2_Init(
       &instance->_private.erdApiRevision2ReadWrite,
       externalDataSource,
@@ -313,6 +320,7 @@ void GeaStack_Init(
 
    ConnectGea2MessageEndpointToDataSource(
       instance,
+      dataModel,
       externalDataSource,
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule));
 
