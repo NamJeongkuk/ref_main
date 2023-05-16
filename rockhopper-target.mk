@@ -78,13 +78,15 @@ SRC_DIRS:=\
   src/Application/Sensor \
   src/Application/ServiceDiagnostics \
   src/Application/Setpoints \
+  src/Application/SignOfLife \
   src/Application/StepperMotor \
   src/Application/SystemMonitor \
   src/Application/TimerModule \
   src/Application/Uassert \
   src/Application/Valve \
   src/Application/WaterValve \
-  Parametric/data/Production/ \
+  Parametric/data/Production \
+  lib/Common/Source/Gea \
 
 INC_DIRS:=\
   src/Application/Compressor \
@@ -99,11 +101,12 @@ INC_DIRS:=\
   src/Application/Grid \
   src/Application/Grid/GridFunctions \
   src/Application/Sabbath \
+  src/Application/SignOfLife \
   src/Application/SystemMonitor \
   src/Application/Temperature \
   src/Application/Valve \
   src/Application/Voting \
-  lib/Common/Source/Temperature/ \
+  lib/Common/Source/Temperature \
 
 applcommon_EXTERNAL_INC_DIRS:=\
   src/Application/Uassert \

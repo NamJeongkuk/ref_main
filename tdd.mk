@@ -16,6 +16,7 @@ SRC_FILES := \
 # List of directories that contain your code under test
 SRC_DIRS := \
    $(PROJECT_DIR)/Application \
+   $(PROJECT_DIR)/Application/SignOfLife \
    $(PROJECT_DIR)/Application/Auger \
    $(PROJECT_DIR)/Application/ApplianceFeatureApiUpdater \
    $(PROJECT_DIR)/Application/Compressor \
@@ -96,6 +97,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/Sensor \
    $(TESTS_DIR)/Application/ServiceDiagnostics \
    $(TESTS_DIR)/Application/Setpoints \
+   $(TESTS_DIR)/Application/SignOfLife \
    $(TESTS_DIR)/Application/StepperMotor \
    $(TESTS_DIR)/Application/SystemMonitor \
    $(TESTS_DIR)/Application/TimerModule \
@@ -117,6 +119,7 @@ INCLUDE_DIRS := \
    $(PROJECT_DIR)/Application/DataSource/BspDataSource \
    $(PROJECT_DIR)/Hardware \
    $(PROJECT_DIR)/Hardware/Eeprom \
+   $(REFERCOMMON_DIR)/Source/Gea \
    $(REFERCOMMON_DIR)/Source/Temperature \
 
 include $(APPLCOMMON_DIR)/Makefile

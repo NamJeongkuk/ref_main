@@ -354,6 +354,8 @@ enum
    ENTRY(Erd_SecondsSinceLastReset,                         0x0702, SecondsSinceLastReset_t,                            Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ProgramCounterAddressAtLastUassert,            0x0703, ProgramCounterAddress_t,                            Swap_Yes, Io_O,    Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
+   ENTRY(Erd_AndroidUiSignOfLife,                           0x0900, Signal_t,                                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_FreshFoodSetpointRequest,                      0x1200, Setpoint_t,                                         Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodSetpointRangeData,                    0x1201, UserSetpointRangeData_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodSetpointStatus,                       0x1202, Setpoint_t,                                         Swap_No,  Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_Int8Max, NotFault) \
@@ -365,8 +367,6 @@ enum
    ENTRY(Erd_DispensingRequest,                             0x1208, DispensingRequest_t,                                Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispensingRequestStatus,                       0x1209, DispensingRequestStatus_t,                          Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_SignOfLifeFromMainboardToUi,                   0x120C, Signal_t,                                           Swap_No,  Io_All,  Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_SignOfLifeFromUiToMainboard,                   0x120D, Signal_t,                                           Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RightSideFreshFoodDoorStatus,                  0x120E, bool,                                               Swap_No,  Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_LeftSideFreezerDoorStatus,                     0x120F, bool,                                               Swap_No,  Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker0EnableRequest,                        0x1210, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
@@ -452,6 +452,10 @@ enum
    ENTRY(Erd_DoorBufferedUart,                              0xF01B, I_BufferedUart_t *,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CaseBufferedUart,                              0xF01C, I_BufferedUart_t *,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gea2Uart,                                      0xF01D, I_Uart_t *,                                         Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_MainboardIsCommunicatingToAndroidUi,           0xF01E, bool,                                               Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_SignOfLifeFromMainboardToUi,                   0xF01F, Signal_t,                                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_SignOfLifeFromUiToMainboard,                   0xF020, Signal_t,                                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Grid_BlockNumber,                              0xF030, GridBlockNumber_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Grid_PreviousBlocks,                           0xF031, PreviousGridBlockNumbers_t,                         Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

@@ -20,6 +20,7 @@
 #include "DispenserWaterValvePlugin.h"
 #include "AugerMotorPlugin.h"
 #include "SideBySideLightingPlugin.h"
+#include "SignOfLifePlugin.h"
 
 typedef struct
 {
@@ -36,6 +37,7 @@ typedef struct
       SideBySideFactoryPlugin_t factoryPlugin;
       SideBySideDispensePlugin_t dispensePlugin;
       SideBySideLightingPlugin_t lightingPlugin;
+      SignOfLifePlugin_t signOfLifePlugin;
    } _private;
 } SideBySideConfigurationPlugin_t;
 

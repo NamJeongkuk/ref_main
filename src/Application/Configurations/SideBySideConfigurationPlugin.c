@@ -20,4 +20,5 @@ void SideBySideConfigurationPlugin_Init(SideBySideConfigurationPlugin_t *instanc
    SideBySideFactoryPlugin_Init(&instance->_private.factoryPlugin, dataModel);
    SideBySideDispensePlugin_Init(&instance->_private.dispensePlugin, dataModel);
    SideBySideLightingPlugin_Init(&instance->_private.lightingPlugin, dataModel);
+   SignOfLifePlugin_Init(&instance->_private.signOfLifePlugin, dataModel);
 }
