@@ -24,6 +24,7 @@ enum
    DispenseStatus_DispenseInhibitedDueToDoorOpen,
    DispenseStatus_DispenseInhibitedBecauseRedundantCupSwitchPressIsRequired,
    DispenseStatus_DispenseInhibitedDueToRfidErrorOrLeak,
+   DispenseStatus_PrivateDispenseStatusResetValue = UINT8_MAX,
 };
 typedef uint8_t DispenseStatus_t;
 

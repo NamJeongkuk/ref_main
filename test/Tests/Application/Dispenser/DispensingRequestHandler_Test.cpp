@@ -38,6 +38,36 @@ TEST_GROUP(DispensingRequestHandler)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&referDataModelTestDouble);
    }
 
+   static void PrivateDispensingResultStatusChanged(void *context, const void *_args)
+   {
+      IGNORE(context);
+      const DataModelOnDataChangeArgs_t *args = (const DataModelOnDataChangeArgs_t *)_args;
+
+      if(args->erd == Erd_PrivateDispensingResultStatus)
+      {
+         const DispenseStatus_t *status = (const DispenseStatus_t *)args->data;
+
+         mock().actualCall("PrivateDispensingResultStatusHasChanged").withParameter("status", *status);
+      }
+   }
+
+   void GivenPrivateDispensingResultStatusSubscriptionIsInitialized()
+   {
+      EventSubscription_Init(
+         &dataModelOnChangeSubscription,
+         NULL,
+         PrivateDispensingResultStatusChanged);
+
+      DataModel_SubscribeAll(
+         dataModel,
+         &dataModelOnChangeSubscription);
+   }
+
+   void ThePrivateDispensingResultStatusShouldChangeTo(DispenseStatus_t status)
+   {
+      mock().expectOneCall("PrivateDispensingResultStatusHasChanged").withParameter("status", status);
+   }
+
    void GivenTheModuleIsInitialized(void)
    {
       DispensingRequestHandler_Init(&instance, dataModel, &config);
@@ -201,24 +231,6 @@ TEST_GROUP(DispensingRequestHandler)
 
       CHECK_EQUAL(0, memcmp(&expectedDispensingRequest, &dispensingRequest, sizeof(DispensingRequest_t)));
    }
-
-   void ThePrivateAndPublicDispensingRequestStatusShouldBeTheSameValue(void)
-   {
-      DispenseStatus_t privateDispensingRequestStatus;
-      DispensingRequestStatus_t publicDispensingRequestStatus;
-
-      DataModel_Read(
-         dataModel,
-         Erd_PrivateDispensingResultStatus,
-         &privateDispensingRequestStatus);
-
-      DataModel_Read(
-         dataModel,
-         Erd_DispensingRequestStatus,
-         &publicDispensingRequestStatus);
-
-      CHECK_EQUAL(privateDispensingRequestStatus, publicDispensingRequestStatus.status);
-   }
 };
 
 TEST(DispensingRequestHandler, ShouldClearDispensingRequestOnInit)
@@ -357,7 +369,7 @@ TEST(DispensingRequestHandler, ShouldUpdateThePublicDispensingRequestStatusToThe
    GivenTheDispensingRequestIsInRequestingDispense();
 
    WhenThePrivateDispensingResultStatusIs(DispenseStatus_DispenseInhibitedDueToDoorOpen);
-   ThePrivateAndPublicDispensingRequestStatusShouldBeTheSameValue();
+   TheDispensingRequestStatusShouldBe(DispenseStatus_DispenseInhibitedDueToDoorOpen);
 }
 
 TEST(DispensingRequestHandler, ShouldUpdateThePublicDispensingRequestStatusToBadCommandWhenTheDispensingRequestActionIsInvalidInRequestingDispense)
@@ -410,4 +422,27 @@ TEST(DispensingRequestHandler, ShouldSetPrivateDispenseRequestToIceThenWaterWhen
 
    WhenTheDispensingRequestIs(DispensingAction_Continue, DispensingRequestSelection_CrushedIce);
    ThePrivateDispensingRequestShouldBe(DispensingAction_Start, DispensingRequestSelection_CrushedIce);
+}
+
+TEST(DispensingRequestHandler, ShouldNotUpdateTheDispenseStatusWhenThePrivateDispensingResultStatusChangesAndThenAStopRequestIsMade)
+{
+   GivenTheDispensingRequestIsInRequestingDispense();
+
+   WhenThePrivateDispensingResultStatusIs(DispenseStatus_DispenseInhibitedDueToDoorOpen);
+   TheDispensingRequestStatusShouldBe(DispenseStatus_DispenseInhibitedDueToDoorOpen);
+
+   WhenTheDispensingRequestIs(DispensingAction_Stop, DispensingRequestSelection_Water);
+   TheDispensingRequestStatusShouldBe(DispenseStatus_DispenseInhibitedDueToDoorOpen);
+}
+
+TEST(DispensingRequestHandler, ShouldClearPrivateDispensingStatusResultWhenItChanges)
+{
+   GivenPrivateDispensingResultStatusSubscriptionIsInitialized();
+   GivenTheDispensingRequestIsInRequestingDispense();
+
+   ThePrivateDispensingResultStatusShouldChangeTo(DispenseStatus_DispenseInhibitedDueToDoorOpen);
+   ThePrivateDispensingResultStatusShouldChangeTo(DispenseStatus_PrivateDispenseStatusResetValue);
+   WhenThePrivateDispensingResultStatusIs(DispenseStatus_DispenseInhibitedDueToDoorOpen);
+
+   TheDispensingRequestStatusShouldBe(DispenseStatus_DispenseInhibitedDueToDoorOpen);
 }

@@ -174,10 +174,10 @@ TEST_GROUP(DispensingIntegration)
 
    void TheDispenseStatusShouldBe(DispenseStatus_t expected)
    {
-      DispenseStatus_t actual;
-      DataModel_Read(dataModel, Erd_PrivateDispensingResultStatus, &actual);
+      DispensingRequestStatus_t actual;
+      DataModel_Read(dataModel, Erd_DispensingRequestStatus, &actual);
 
-      CHECK_EQUAL(expected, actual);
+      CHECK_EQUAL(expected, actual.status);
    }
 
    void AfterFirstDispenseIsCompletedSuccessfully()

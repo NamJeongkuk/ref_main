@@ -44,6 +44,15 @@ static void ClearDispensingRequest(DispensingRequestHandler_t *instance)
       &dispensingRequest);
 }
 
+static void ClearPrivateDispenseStatus(DispensingRequestHandler_t *instance)
+{
+   DispenseStatus_t resetValue = DispenseStatus_PrivateDispenseStatusResetValue;
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->privateDispensingResultStatusErd,
+      &resetValue);
+}
+
 static void OnDataModelChange(void *context, const void *args)
 {
    DispensingRequestHandler_t *instance = context;
@@ -87,7 +96,12 @@ static void OnDataModelChange(void *context, const void *args)
    }
    else if(erd == instance->_private.config->privateDispensingResultStatusErd)
    {
-      Fsm_SendSignal(&instance->_private.fsm, Signal_PrivateDispensingResultStatusChanged, NULL);
+      const DispenseStatus_t *status = onChangeData->data;
+      if(*status != DispenseStatus_PrivateDispenseStatusResetValue)
+      {
+         Fsm_SendSignal(&instance->_private.fsm, Signal_PrivateDispensingResultStatusChanged, NULL);
+         ClearPrivateDispenseStatus(instance);
+      }
    }
 }
 
@@ -221,10 +235,6 @@ static void State_Idle(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
 
    switch(signal)
    {
-      case Signal_StopRequest:
-         UpdateDispensingRequestStatus(instance, DispenseStatus_CompletedSuccessfully);
-         break;
-
       case Signal_StartRequest:
          Fsm_Transition(fsm, State_RequestingDispense);
          break;
