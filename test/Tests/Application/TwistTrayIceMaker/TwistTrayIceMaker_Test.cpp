@@ -75,6 +75,11 @@ enum
 };
 
 static const TwistTrayIceMakerData_t parametric = {
+   .typeInformation{
+      .type = IceMakerType_Twist,
+      .location = IceMakerLocation_Freezer,
+       },
+
    .freezeData{
       .maximumHarvestTemperatureInDegFx100 = MaximumHarvestTemperaturex100,
       .startIntegrationTemperatureInDegFx100 = FreezingPointx100,
@@ -105,6 +110,10 @@ static const TwistTrayIceMakerData_t parametric = {
 };
 
 static const TwistTrayIceMakerData_t fillTubeHeaterDutyCycleIsZeroParametric = {
+   .typeInformation{
+      .type = IceMakerType_Twist,
+      .location = IceMakerLocation_Freezer,
+      },
    .freezeData{
       .maximumHarvestTemperatureInDegFx100 = MaximumHarvestTemperaturex100,
       .startIntegrationTemperatureInDegFx100 = FreezingPointx100,
@@ -135,6 +144,10 @@ static const TwistTrayIceMakerData_t fillTubeHeaterDutyCycleIsZeroParametric = {
 };
 
 static const TwistTrayIceMakerData_t fillTubeHeaterOnTimeIsZeroParametric = {
+   .typeInformation{
+      .type = IceMakerType_Twist,
+      .location = IceMakerLocation_Freezer,
+      },
    .freezeData{
       .maximumHarvestTemperatureInDegFx100 = MaximumHarvestTemperaturex100,
       .startIntegrationTemperatureInDegFx100 = FreezingPointx100,

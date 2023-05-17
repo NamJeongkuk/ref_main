@@ -99,6 +99,12 @@ static const ResolvedVoteRelayConnectorConfiguration_t iceMakerWaterValveRelayCo
 void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
 {
    const SensorData_t *sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
+
+   DataModel_Write(
+      dataModel,
+      Erd_IceMaker0TypeInformation,
+      &PersonalityParametricData_Get(dataModel)->iceMakerData->twistTrayIceMakerData->typeInformation);
+
    SensorFiltering_Init(
       &instance->_private.sensorFilter,
       dataModel,

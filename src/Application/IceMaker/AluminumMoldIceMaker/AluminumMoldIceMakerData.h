@@ -10,6 +10,7 @@
 
 #include "TemperatureDegFx100.h"
 #include "FillTubeHeaterData.h"
+#include "IceMakerTypeInformation.h"
 
 typedef struct
 {
@@ -48,6 +49,7 @@ typedef struct
 
 typedef struct
 {
+   IceMakerTypeInformation_t typeInformation;
    AluminumMoldIceMakerFreezeData_t freezeData;
    AluminumMoldIceMakerHarvestData_t harvestData;
    AluminumMoldIceMakerHarvestFaultData_t harvestFaultData;

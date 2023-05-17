@@ -269,6 +269,11 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
 {
    const SensorData_t *sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
 
+   DataModel_Write(
+      dataModel,
+      Erd_IceMaker0TypeInformation,
+      &PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData->typeInformation);
+
    InitializeIceMakerOverrideArbiters(instance, dataModel);
 
    SensorFiltering_Init(
