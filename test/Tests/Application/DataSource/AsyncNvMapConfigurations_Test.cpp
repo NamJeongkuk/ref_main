@@ -114,8 +114,9 @@ TEST_GROUP(AsyncNvMapConfigurations)
 
       if(NvErdCount != 1)
       {
-         sprintf(
+         snprintf(
             string,
+            sizeof(string),
             "An ERD of type Nv has been added, types can only be NvProtected, NvUserSetting, NvUnitSetting, NvRfid, NvFaultSnapshot, or NvCycleHistory");
          FAIL(string);
       }
@@ -129,8 +130,9 @@ TEST_GROUP(AsyncNvMapConfigurations)
       {
          if(resources[i].readWriteBufferSize != 24)
          {
-            sprintf(
+            snprintf(
                string,
+               sizeof(string),
                "Need to update NonVolatileDataSourceReadWriteBuffer; the max ERD size has changed from 24 to %d",
                resources[i].readWriteBufferSize);
             FAIL(string);

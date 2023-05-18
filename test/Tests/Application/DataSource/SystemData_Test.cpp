@@ -217,7 +217,10 @@ TEST_GROUP(SystemData)
       if(DataMatched == memcmp(dataFromInternalDataSource, dataFromExternalDataSource, DataSource_SizeOf(externalDataSource, externalErd)))
       {
          char error[50];
-         sprintf(error, "ERD 0x%04X was not swapped but should be", externalErd);
+         snprintf(error,
+            sizeof(error),
+            "ERD 0x%04X was not swapped but should be",
+            externalErd);
          FAIL(error);
       }
    }
@@ -230,7 +233,10 @@ TEST_GROUP(SystemData)
       if(DataMatched != memcmp(dataFromInternalDataSource, dataFromExternalDataSource, DataSource_SizeOf(externalDataSource, externalErd)))
       {
          char error[50];
-         sprintf(error, "ERD 0x%04X was swapped but shouldn't be", externalErd);
+         snprintf(error,
+            sizeof(error),
+            "ERD 0x%04X was swapped but shouldn't be",
+            externalErd);
          FAIL(error);
       }
    }
