@@ -1,15 +1,29 @@
 {
   "configurations": [
     {
-      "args": [
-        "--config=${workspaceFolder}/test/Tests/Integration/support/jasmine.json"
-      ],
-      "cwd": "${workspaceRoot}",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "linux": {
+        "MIMode": "gdb"
+      },
       "name": "Integration Test",
-      "program": "${workspaceFolder}/node_modules/.bin/jasmine",
+      "osx": {
+        "MIMode": "lldb"
+      },
+      "preLaunchTask": "Integration Test_vscode_debug",
+      "program": "${workspaceFolder}/test/Build/multi-target-starter-kit_tests",
       "request": "launch",
-      "runtimeVersion": "18.3.0",
-      "type": "node"
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "ignoreFailures": true,
+          "text": "-enable-pretty-printing"
+        }
+      ],
+      "stopAtEntry": false,
+      "type": "cppdbg"
     },
     {
       "args": [

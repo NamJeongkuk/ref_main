@@ -44,8 +44,8 @@ enum
    Signal_TurnOffRakeMotor,
    Signal_HarvestFaultMaxTimerExpired,
    Signal_TestRequest_Harvest,
-   Signal_PauseFill,
-   Signal_ResumeFill,
+   Signal_DispensingActive,
+   Signal_DispensingInactive,
 };
 
 static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -715,6 +715,14 @@ static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          Hsm_Transition(hsm, State_Harvest);
          break;
 
+      case Signal_DispensingActive:
+         instance->_private.delayFillMonitoring = true;
+         break;
+
+      case Signal_DispensingInactive:
+         instance->_private.delayFillMonitoring = false;
+         break;
+
       case Hsm_Exit:
          break;
 
@@ -1040,6 +1048,11 @@ static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
             ResumeWaterFillMonitoring(instance);
             instance->_private.pauseFillMonitoring = false;
          }
+         else if(instance->_private.delayFillMonitoring)
+         {
+            instance->_private.delayFillMonitoring = false;
+            Hsm_Transition(hsm, State_IdleFill);
+         }
          else
          {
             StartWaterFillMonitoring(instance);
@@ -1069,7 +1082,7 @@ static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          }
          break;
 
-      case Signal_PauseFill:
+      case Signal_DispensingActive:
          instance->_private.pauseFillMonitoring = true;
          Hsm_Transition(hsm, State_IdleFill);
          break;
@@ -1105,7 +1118,7 @@ static bool State_IdleFill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_IdleFill);
          break;
 
-      case Signal_ResumeFill:
+      case Signal_DispensingInactive:
          Hsm_Transition(hsm, State_Fill);
          break;
 
@@ -1252,12 +1265,12 @@ static void DataModelChanged(void *context, const void *args)
             if((dispensingRequestStatus->selection == DispensingRequestSelection_Water) ||
                (dispensingRequestStatus->selection == DispensingRequestSelection_Autofill))
             {
-               Hsm_SendSignal(&instance->_private.hsm, Signal_PauseFill, NULL);
+               Hsm_SendSignal(&instance->_private.hsm, Signal_DispensingActive, NULL);
             }
             break;
 
          default:
-            Hsm_SendSignal(&instance->_private.hsm, Signal_ResumeFill, NULL);
+            Hsm_SendSignal(&instance->_private.hsm, Signal_DispensingInactive, NULL);
             break;
       }
    }
@@ -1294,6 +1307,7 @@ void AluminumMoldIceMaker_Init(
    instance->_private.iceMakerParametricData = PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData;
    instance->_private.initialFreezeStateTransition = false;
    instance->_private.revolutionCompletedDuringHarvestFix = false;
+   instance->_private.delayFillMonitoring = false;
 
    Hsm_Init(&instance->_private.hsm, &hsmConfiguration, InitialState(instance));
 

@@ -59,6 +59,7 @@ typedef struct
       bool initialFreezeStateTransition;
       bool revolutionCompletedDuringHarvestFix;
       bool pauseFillMonitoring;
+      bool delayFillMonitoring;
    } _private;
 } AluminumMoldIceMaker_t;
 

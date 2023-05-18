@@ -11,6 +11,13 @@
     {
       "name": "Test",
       "makefile": "tdd.mk"
+    },
+    {
+      "name": "Integration Test",
+      "makefile": "tdd.mk",
+      "defines": {
+        "INTEGRATION": "Y"
+      }
     }
   ],
   "version": 2
