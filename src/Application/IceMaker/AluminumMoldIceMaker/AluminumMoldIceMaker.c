@@ -1060,6 +1060,7 @@ static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          }
          else if(!RakeIsHome(instance))
          {
+            SetSkipFillFlag(instance);
             Hsm_Transition(hsm, State_Harvest);
          }
          else

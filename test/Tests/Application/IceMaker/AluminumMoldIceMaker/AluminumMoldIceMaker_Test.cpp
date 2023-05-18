@@ -1835,6 +1835,19 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromFillToHarvestWhenRakeIsNotHomeAft
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 }
 
+TEST(AluminumMoldIceMaker, ShouldSetSkipFillFlagWhenTransitioningFromFillToHarvestWhenRakeIsNotHomeAfterFillStops)
+{
+   Given TheModuleIsInitialized();
+   Given MoldThermistorIsValid();
+   Given AluminumMoldIceMakerIsInFillState();
+
+   When TheRakePositionIs(RakePosition_NotHome);
+   When StopFillSignalChanges();
+
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+   SkipFillRequestShouldBe(SET);
+}
+
 TEST(AluminumMoldIceMaker, ShouldTransitionFromFillToFreezeWhenRakeIsHomeAfterFillStops)
 {
    Given TheModuleIsInitialized();
