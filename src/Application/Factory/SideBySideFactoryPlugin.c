@@ -29,7 +29,12 @@ static const FactoryVotePair_t factoryVotePairs[] = {
    { Erd_TwistTrayIceMakerMotor_FactoryVote, TwistTrayIceMakerMotorAction_RunHomingRoutine },
    { Erd_IsolationWaterValve_FactoryVote, WaterValveState_Off },
    { Erd_AugerMotor_FactoryVote, AugerMotorIceType_Off },
-   { Erd_DispenserWaterValve_FactoryVote, WaterValveState_Off }
+   { Erd_DispenserWaterValve_FactoryVote, WaterValveState_Off },
+   { Erd_DispenserWaterValve_FactoryVote, WaterValveState_Off },
+   { Erd_FreshFoodBackWallLight_FactoryVote, PwmDutyCycle_Min },
+   { Erd_FreshFoodTopLight_FactoryVote, PwmDutyCycle_Min },
+   { Erd_FreezerBackWallLight_FactoryVote, PwmDutyCycle_Min },
+   { Erd_FreezerTopLight_FactoryVote, PwmDutyCycle_Min }
 };
 
 static const FactoryVoteList_t factoryVoteList = {
