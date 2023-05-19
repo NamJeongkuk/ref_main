@@ -55,7 +55,7 @@ static const IceMakerFillMonitorData_t iceMakerFillMonitorData = {
 static const IceMakerWaterFillMonitorConfig_t config = {
    .stopIceMakerFillSignalErd = Erd_StopIceMakerFillSignal,
    .flowMeterWaterDispensedOzx100Erd = Erd_FlowMeterWaterDispensedOzX100,
-   .iceMakerWaterFillMonitoringRequestErd = Erd_IceMakerWaterFillMonitoringRequest,
+   .waterFillMonitoringRequestErd = Erd_IceMakerWaterFillMonitoringRequest,
    .flowMeterMonitoringRequestErd = Erd_FlowMeterMonitoringRequest,
    .timerModuleErd = Erd_TimerModule
 };

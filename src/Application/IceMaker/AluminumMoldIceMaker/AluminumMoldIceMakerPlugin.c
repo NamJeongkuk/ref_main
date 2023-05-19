@@ -23,12 +23,12 @@ static const FreezerIceRateHandlerConfig_t iceRateHandlerConfig = {
 static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState,
    .iceMakerWaterValveVoteErd = Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
-   .iceMakerHeaterVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
-   .iceMakerMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
+   .moldHeaterVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
+   .rakeMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
    .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
    .feelerArmMonitoringRequestErd = Erd_FeelerArmMonitoringRequest,
    .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
-   .iceMakerFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
    .iceMakerEnabledErd = Erd_IceMaker0EnableStatus,
    .sabbathModeErd = Erd_SabbathMode,
@@ -40,7 +40,7 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .rakeControlRequestErd = Erd_AluminumMoldIceMakerRakeControlRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_AluminumMoldIceMakerVote,
    .waterFillMonitoringRequestErd = Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,
-   .stopFillSignalErd = Erd_AluminumMoldIceMakerStopFillSignal,
+   .stopIceMakerFillSignalErd = Erd_AluminumMoldIceMakerStopFillSignal,
    .rakePositionErd = Erd_AluminumMoldIceMakerRakePosition,
    .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
    .aluminumMoldIceMakerTestRequestErd = Erd_AluminumMoldIceMakerTestRequest,
@@ -57,9 +57,9 @@ static const FeelerArmMonitorConfig_t feelerArmMonitorConfig = {
 static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
    .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
-   .iceMakerFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
-   .aluminumMoldFreezeIntegrationCountErd = Erd_AluminumMoldFreezeIntegrationCount,
-   .aluminumMoldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes
+   .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .moldFreezeIntegrationCountErd = Erd_AluminumMoldFreezeIntegrationCount,
+   .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes
 };
 
 static const Erd_t enableErdsList[] = {
@@ -149,9 +149,9 @@ static const ResolvedVoteRelayConnectorConfiguration_t rakeMotorDriverConfig = {
 };
 
 static const IceMakerMoldHeaterControllerConfig_t iceMakerMoldHeaterControllerConfig = {
-   .iceMakerMoldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
-   .iceMakerMoldHeaterHarvestVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
-   .iceMakerMoldFilteredTemperatureErd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .moldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
+   .moldHeaterVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
+   .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .timerModuleErd = Erd_TimerModule,
 };
 
@@ -166,7 +166,7 @@ static const SensorFilteringConfig_t moldThermistorConfig = {
 static const IceMakerWaterFillMonitorConfig_t iceMakerFillMonitorConfig = {
    .stopIceMakerFillSignalErd = Erd_AluminumMoldIceMakerStopFillSignal,
    .flowMeterWaterDispensedOzx100Erd = Erd_FlowMeterWaterDispensedOzX100,
-   .iceMakerWaterFillMonitoringRequestErd = Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,
+   .waterFillMonitoringRequestErd = Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,
    .flowMeterMonitoringRequestErd = Erd_FlowMeterMonitoringRequest,
    .timerModuleErd = Erd_TimerModule
 };

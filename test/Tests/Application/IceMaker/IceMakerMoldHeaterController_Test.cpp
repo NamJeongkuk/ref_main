@@ -34,9 +34,9 @@ enum
 };
 
 static const IceMakerMoldHeaterControllerConfig_t config = {
-   .iceMakerMoldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
-   .iceMakerMoldHeaterHarvestVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
-   .iceMakerMoldFilteredTemperatureErd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .moldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
+   .moldHeaterVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
+   .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .timerModuleErd = Erd_TimerModule,
 };
 

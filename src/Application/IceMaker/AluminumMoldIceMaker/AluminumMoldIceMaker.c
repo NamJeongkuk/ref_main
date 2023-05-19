@@ -125,7 +125,7 @@ static void VoteForIceMakerHeater(AluminumMoldIceMaker_t *instance, HeaterState_
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->iceMakerHeaterVoteErd,
+      instance->_private.config->moldHeaterVoteErd,
       &vote);
 }
 
@@ -138,7 +138,7 @@ static void VoteForIceMakerMotor(AluminumMoldIceMaker_t *instance, MotorState_t 
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->iceMakerMotorVoteErd,
+      instance->_private.config->rakeMotorVoteErd,
       &vote);
 }
 
@@ -179,7 +179,7 @@ static bool IceMakerTemperatureIsReadyToHarvest(AluminumMoldIceMaker_t *instance
    TemperatureDegFx100_t temperature;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->iceMakerFilteredTemperatureInDegFx100Erd,
+      instance->_private.config->moldFilteredTemperatureInDegFx100Erd,
       &temperature);
 
    return (temperature < instance->_private.iceMakerParametricData->freezeData.maximumHarvestTemperatureInDegFx100);
@@ -1179,7 +1179,7 @@ static void DataModelChanged(void *context, const void *args)
    {
       Hsm_SendSignal(&instance->_private.hsm, Signal_HarvestCountIsReadyToHarvest, NULL);
    }
-   else if(erd == instance->_private.config->iceMakerFilteredTemperatureInDegFx100Erd)
+   else if(erd == instance->_private.config->moldFilteredTemperatureInDegFx100Erd)
    {
       const TemperatureDegFx100_t *temperature = onChangeData->data;
       if(*temperature < instance->_private.iceMakerParametricData->freezeData.maximumHarvestTemperatureInDegFx100)
@@ -1235,7 +1235,7 @@ static void DataModelChanged(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_RakeCompletedRevolution, NULL);
       }
    }
-   else if(erd == instance->_private.config->stopFillSignalErd)
+   else if(erd == instance->_private.config->stopIceMakerFillSignalErd)
    {
       Hsm_SendSignal(&instance->_private.hsm, Signal_StopFill, NULL);
    }

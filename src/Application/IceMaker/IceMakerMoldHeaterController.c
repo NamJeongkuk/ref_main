@@ -38,7 +38,7 @@ static void SetMoldHeaterVoteTo(IceMakerMoldHeaterController_t *instance, bool s
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->iceMakerMoldHeaterHarvestVoteErd,
+      instance->_private.config->moldHeaterVoteErd,
       &votedState);
 }
 
@@ -47,7 +47,7 @@ static TemperatureDegFx100_t IceMakerMoldTemperature(IceMakerMoldHeaterControlle
    TemperatureDegFx100_t currentTemperature;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->iceMakerMoldFilteredTemperatureErd,
+      instance->_private.config->moldFilteredTemperatureInDegFx100Erd,
       &currentTemperature);
 
    return currentTemperature;
@@ -58,7 +58,7 @@ static IceMakerMoldHeaterControlRequest_t IceMakerHeaterRequest(IceMakerMoldHeat
    IceMakerMoldHeaterControlRequest_t request;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->iceMakerMoldHeaterControlRequestErd,
+      instance->_private.config->moldHeaterControlRequestErd,
       &request);
 
    return request;
@@ -228,7 +228,7 @@ static void OnDataModelChange(void *context, const void *_args)
    IceMakerMoldHeaterController_t *instance = context;
    const DataModelOnDataChangeArgs_t *args = _args;
 
-   if(args->erd == instance->_private.config->iceMakerMoldHeaterControlRequestErd)
+   if(args->erd == instance->_private.config->moldHeaterControlRequestErd)
    {
       const IceMakerMoldHeaterControlRequest_t *request = args->data;
       if(request->enable)
@@ -240,7 +240,7 @@ static void OnDataModelChange(void *context, const void *_args)
          Fsm_SendSignal(&instance->_private.fsm, Signal_Disable, NULL);
       }
    }
-   else if(args->erd == instance->_private.config->iceMakerMoldFilteredTemperatureErd)
+   else if(args->erd == instance->_private.config->moldFilteredTemperatureInDegFx100Erd)
    {
       Fsm_SendSignal(&instance->_private.fsm, Signal_IceMakerTemperatureChanged, NULL);
    }

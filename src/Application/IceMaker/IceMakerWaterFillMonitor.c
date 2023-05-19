@@ -186,7 +186,7 @@ void IceMakerWaterFillMonitor_Init(
       OnFillMonitorRequestChange);
    DataModel_Subscribe(
       dataModel,
-      instance->_private.config->iceMakerWaterFillMonitoringRequestErd,
+      instance->_private.config->waterFillMonitoringRequestErd,
       &instance->_private.fillMonitoringRequestSubscription);
 
    EventSubscription_Init(

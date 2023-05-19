@@ -17,9 +17,9 @@
 
 typedef struct
 {
-   Erd_t iceMakerMoldHeaterControlRequestErd; // IceMakerMoldHeaterControlRequest_t
-   Erd_t iceMakerMoldHeaterHarvestVoteErd; // HeaterVotedState_t
-   Erd_t iceMakerMoldFilteredTemperatureErd; // TemperatureDegFx100_t
+   Erd_t moldHeaterControlRequestErd; // IceMakerMoldHeaterControlRequest_t
+   Erd_t moldHeaterVoteErd; // HeaterVotedState_t
+   Erd_t moldFilteredTemperatureInDegFx100Erd; // TemperatureDegFx100_t
    Erd_t timerModuleErd; // TimerModule_t *
 } IceMakerMoldHeaterControllerConfig_t;
 

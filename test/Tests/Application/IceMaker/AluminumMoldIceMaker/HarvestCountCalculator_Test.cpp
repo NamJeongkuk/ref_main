@@ -28,9 +28,9 @@ extern "C"
 static const HarvestCountCalculatorConfiguration_t config = {
    .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
-   .iceMakerFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
-   .aluminumMoldFreezeIntegrationCountErd = Erd_AluminumMoldFreezeIntegrationCount,
-   .aluminumMoldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes
+   .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .moldFreezeIntegrationCountErd = Erd_AluminumMoldFreezeIntegrationCount,
+   .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes
 };
 
 TEST_GROUP(HarvestCountCalculator)

@@ -16,9 +16,9 @@ typedef struct
 {
    Erd_t harvestCountIsReadyToHarvestErd; // bool
    Erd_t harvestCountCalculationRequestErd; // bool
-   Erd_t iceMakerFilteredTemperatureInDegFx100Erd; // TemperatureDegFx100_t
-   Erd_t aluminumMoldFreezeIntegrationCountErd; // uint32_t
-   Erd_t aluminumMoldIceMakerMinimumFreezeTimeCounterInMinutesErd; // uint8_t
+   Erd_t moldFilteredTemperatureInDegFx100Erd; // TemperatureDegFx100_t
+   Erd_t moldFreezeIntegrationCountErd; // uint32_t
+   Erd_t moldIceMakerMinimumFreezeTimeCounterInMinutesErd; // uint8_t
 } HarvestCountCalculatorConfiguration_t;
 
 typedef struct
