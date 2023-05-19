@@ -37,7 +37,11 @@ static const FanSpeedResolverConfig_t condenserConfig = {
    .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedCondenserFanControl,
-   .ambientTempErd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
+   .ambientFilteredTemperatureResolvedInDegFx100Erd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
+   .ambientFilteredHumidityPercentx100ResolvedErd = Erd_Ambient_FilteredHumidityResolvedPercentx100,
+   .ambientThermistorIsValidErd = Erd_AmbientTemperature_IsValidResolved,
+   .ambientHumiditySensorIsValidErd = Erd_AmbientHumidity_IsValidResolved,
+   .pullDownIsActiveErd = Erd_SingleEvaporatorPulldownActive
 };
 
 static const FanControllerConfig_t condenserFanControllerConfig = {

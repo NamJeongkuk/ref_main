@@ -15,15 +15,11 @@
 
 typedef struct
 {
-   bool careAboutHighAmbientTemperature;
    FanControl_t superLowSpeed;
    FanControl_t lowSpeed;
    FanControl_t mediumSpeed;
    FanControl_t highSpeed;
    FanControl_t superHighSpeed;
-   FanControl_t superLowSpeedHighAmbientTemperature;
-   TemperatureDegFx100_t highAmbientTriggerTemperatureInDegFx100;
-   RelativeHumidityPercentx100_t highAmbientTriggerHumidityInPercentx100;
 } FanSpeedData_t;
 
 typedef struct
@@ -57,8 +53,8 @@ typedef struct
          FanControl_t lowSpeedFreezer;
          FanControl_t mediumSpeedFreshFood;
          FanControl_t mediumSpeedFreezer;
-         FanControl_t highSpeedSpeedFreshFood;
-         FanControl_t highSpeedSpeedFreezer;
+         FanControl_t highSpeedFreshFood;
+         FanControl_t highSpeedFreezer;
          FanControl_t superHighSpeed;
       } nonSetpointSpeeds;
    } careAboutSetpointData;
@@ -66,6 +62,7 @@ typedef struct
 
 typedef struct
 {
+   bool careAboutHighAmbientTemperature;
    uint8_t fanId;
    uint8_t pulsesPerRevolution;
    bool careAboutCoolingMode;
@@ -82,6 +79,11 @@ typedef struct
       const FanSpeedData_t *speedData;
       const FanCareAboutCoolingModeSpeedData_t *careAboutCoolingModeSpeedData;
    };
+
+   FanControl_t superLowAtHighAmbientHumidityAndHighTemperature;
+   FanControl_t superLowAtHighAmbientHumidityAndLowTemperature;
+   TemperatureDegFx100_t highAmbientTriggerTemperatureInDegFx100;
+   RelativeHumidityPercentx100_t highAmbientTriggerHumidityInPercentx100;
 } FanData_t;
 
 typedef struct

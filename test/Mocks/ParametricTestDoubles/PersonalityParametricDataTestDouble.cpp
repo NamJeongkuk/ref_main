@@ -39,8 +39,9 @@ static const string filePathByPersonality[NumberOfPersonalities][DirectoryAndScr
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapFillTubeHeaterOnTimeLessThanMaxHarvestTime.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapFillTubeHeaterNonHarvestControlZeroPercentDutyCycle.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleSpeedCompressorGridIntegration.lua" },
-   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentExternalAmbientSensorIsDisabled.lua" },
-   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentCondenserFanCareAboutHighAmbient.lua" }
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapEnableExternalSensorIsFalse.lua" },
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapCondenserFanCoolingModeWithoutSetpoint.lua" },
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapCondenserFanNoCoolingMode.lua" }
 };
 
 static bool loaded[NumberOfPersonalities];

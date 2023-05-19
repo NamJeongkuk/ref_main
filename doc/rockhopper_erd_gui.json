@@ -208,35 +208,42 @@
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Condenser Fan Resolved Vote",
+          "displayName": "Condenser Fan Speed Resolved Vote",
           "name": "Erd_CondenserFanSpeed_ResolvedVote",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Condenser Fan Winning Vote ERD",
+          "displayName": "Condenser Fan Speed Winning Vote ERD",
           "name": "Erd_CondenserFanSpeed_WinningVoteErd",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Condenser Fan Defrost Vote",
+          "displayName": "Condenser Fan Speed Factory Vote",
+          "name": "Erd_CondenserFanSpeed_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Condenser Fan Speed Defrost Vote",
           "name": "Erd_CondenserFanSpeed_DefrostVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Condenser Fan Startup Vote",
+          "displayName": "Condenser Fan Speed Compressor Startup Vote",
           "name": "Erd_CondenserFanSpeed_CompressorStartUpVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Condenser Fan Grid Vote",
+          "displayName": "Condenser Fan Speed Grid Vote",
           "name": "Erd_CondenserFanSpeed_GridVote",
           "read": true,
           "write": true
@@ -2526,6 +2533,53 @@
           "namespace": "mb",
           "displayName": "Ready to defrost HSM state",
           "name": "Erd_ReadyToDefrostHsmState",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
+      "title": "Condenser Fan High Ambient Control",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Ambient filtered temperature resolved in degFx100",
+          "name": "Erd_Ambient_FilteredTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient filtered humidity resolved percentx100",
+          "name": "Erd_Ambient_FilteredHumidityResolvedPercentx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient temperature is valid resolved",
+          "name": "Erd_AmbientTemperature_IsValidResolved",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient humidity is valid resolved",
+          "name": "Erd_AmbientHumidity_IsValidResolved",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Single evaporator pull down active",
+          "name": "Erd_SingleEvaporatorPulldownActive",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Calculated condenser fan control",
+          "name": "Erd_CalculatedCondenserFanControl",
           "read": true,
           "write": true
         }

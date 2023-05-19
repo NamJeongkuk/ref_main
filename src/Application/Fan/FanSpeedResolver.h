@@ -18,7 +18,11 @@ typedef struct
    Erd_t coolingModeErd; // CoolingMode_t
    Erd_t freezerSetpointErd; // FreezerSetpoint_t
    Erd_t calculatedRequestFanControlErd; // FanControl_t
-   Erd_t ambientTempErd; // TemperatureDegFx100_t
+   Erd_t ambientFilteredTemperatureResolvedInDegFx100Erd; // TemperatureDegFx100_t
+   Erd_t ambientFilteredHumidityPercentx100ResolvedErd; // RelativeHumidityPercentx100_t
+   Erd_t ambientThermistorIsValidErd; // bool
+   Erd_t ambientHumiditySensorIsValidErd; // bool
+   Erd_t pullDownIsActiveErd; // bool
 } FanSpeedResolverConfig_t;
 
 typedef struct

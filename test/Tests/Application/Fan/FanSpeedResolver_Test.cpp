@@ -25,11 +25,23 @@ extern "C"
 
 enum
 {
+   Invalid = 0,
+   Valid,
+   Inactive = 0,
+   Active
+};
+
+enum
+{
    Erd_ResolvedSpeedVote,
    Erd_CoolingMode,
    Erd_FreezerSetpointZone,
    Erd_CalculatedRequestFanControlSpeed,
    Erd_AmbientTemperature,
+   Erd_AmbientHumidity,
+   Erd_AmbientThermistorIsValid,
+   Erd_AmbientHumidityIsValid,
+   Erd_PullDownIsActive
 };
 
 static const DataModel_TestDoubleConfigurationEntry_t erds[] = {
@@ -38,6 +50,10 @@ static const DataModel_TestDoubleConfigurationEntry_t erds[] = {
    { Erd_FreezerSetpointZone, sizeof(SetpointZone_t) },
    { Erd_CalculatedRequestFanControlSpeed, sizeof(FanControl_t) },
    { Erd_AmbientTemperature, sizeof(TemperatureDegFx100_t) },
+   { Erd_AmbientHumidity, sizeof(RelativeHumidityPercentx100_t) },
+   { Erd_AmbientThermistorIsValid, sizeof(bool) },
+   { Erd_AmbientHumidityIsValid, sizeof(bool) },
+   { Erd_PullDownIsActive, sizeof(bool) }
 };
 
 static const FanSpeedResolverConfig_t nonCoolingModeConfig = {
@@ -45,7 +61,11 @@ static const FanSpeedResolverConfig_t nonCoolingModeConfig = {
    .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedRequestFanControlSpeed,
-   .ambientTempErd = Erd_AmbientTemperature,
+   .ambientFilteredTemperatureResolvedInDegFx100Erd = Erd_AmbientTemperature,
+   .ambientFilteredHumidityPercentx100ResolvedErd = Erd_AmbientHumidity,
+   .ambientThermistorIsValidErd = Erd_AmbientThermistorIsValid,
+   .ambientHumiditySensorIsValidErd = Erd_AmbientHumidityIsValid,
+   .pullDownIsActiveErd = Erd_PullDownIsActive
 };
 
 static const FanSpeedResolverConfig_t coolingModeConfig = {
@@ -53,7 +73,11 @@ static const FanSpeedResolverConfig_t coolingModeConfig = {
    .coolingModeErd = Erd_CoolingMode,
    .freezerSetpointErd = Erd_FreezerSetpointZone,
    .calculatedRequestFanControlErd = Erd_CalculatedRequestFanControlSpeed,
-   .ambientTempErd = Erd_AmbientTemperature,
+   .ambientFilteredTemperatureResolvedInDegFx100Erd = Erd_AmbientTemperature,
+   .ambientFilteredHumidityPercentx100ResolvedErd = Erd_AmbientHumidity,
+   .ambientThermistorIsValidErd = Erd_AmbientThermistorIsValid,
+   .ambientHumiditySensorIsValidErd = Erd_AmbientHumidityIsValid,
+   .pullDownIsActiveErd = Erd_PullDownIsActive
 };
 
 TEST_GROUP(FanSpeedResolver_NoCoolingMode)
@@ -64,16 +88,16 @@ TEST_GROUP(FanSpeedResolver_NoCoolingMode)
 
    PersonalityParametricData_t *parametricData;
    const CombinedFanData_t *combinedFanData;
-   const FanData_t *nonCoolingModeFanData;
+   const FanData_t *convertibleCompartmentFanData;
 
    void setup()
    {
       DataModel_TestDouble_Init(&dataModelTestDouble, erds, NUM_ELEMENTS(erds));
       dataModel = dataModelTestDouble.dataModel;
 
-      parametricData = (PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(TddPersonality_DevelopmentCondenserFanCareAboutHighAmbient);
+      parametricData = (PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(TddPersonality_DevelopmentSingleEvaporator);
       combinedFanData = parametricData->fanData;
-      nonCoolingModeFanData = &combinedFanData->condenserFan;
+      convertibleCompartmentFanData = &combinedFanData->convertibleCompartmentFan;
    }
 
    void GivenInitialization()
@@ -81,7 +105,7 @@ TEST_GROUP(FanSpeedResolver_NoCoolingMode)
       FanSpeedResolver_Init(
          &instance,
          dataModel,
-         nonCoolingModeFanData,
+         convertibleCompartmentFanData,
          &nonCoolingModeConfig);
    }
 
@@ -109,71 +133,53 @@ TEST_GROUP(FanSpeedResolver_NoCoolingMode)
    }
 };
 
-TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeLowWhenRequestedLow)
+TEST(FanSpeedResolver_NoCoolingMode, ShouldSetCalculatedSpeedToLowWhenRequestedLow)
 {
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData->lowSpeed.rpm);
+   CalculatedFanControlSpeedShouldBe(convertibleCompartmentFanData->speedData->lowSpeed.rpm);
 }
 
-TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeMediumWhenRequestedMedium)
+TEST(FanSpeedResolver_NoCoolingMode, ShouldSetCalculatedSpeedToMediumWhenRequestedMedium)
 {
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
-   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData->mediumSpeed.rpm);
+   CalculatedFanControlSpeedShouldBe(convertibleCompartmentFanData->speedData->mediumSpeed.rpm);
 }
 
-TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeHighWhenRequestedHigh)
+TEST(FanSpeedResolver_NoCoolingMode, ShouldSetCalculatedSpeedToHighWhenRequestedHigh)
 {
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_High);
-   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData->highSpeed.rpm);
+   CalculatedFanControlSpeedShouldBe(convertibleCompartmentFanData->speedData->highSpeed.rpm);
 }
 
-TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeMaxWhenRequestedSuperHigh)
+TEST(FanSpeedResolver_NoCoolingMode, ShouldSetCalculatedSpeedToMaxWhenRequestedSuperHigh)
 {
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_SuperHigh);
-   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData->superHighSpeed.rpm);
+   CalculatedFanControlSpeedShouldBe(convertibleCompartmentFanData->speedData->superHighSpeed.rpm);
 }
 
-TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeSuperLowWhenRequestedSuperLow)
+TEST(FanSpeedResolver_NoCoolingMode, ShouldSetCalculatedSpeedToSuperLowWhenRequestedSuperLow)
 {
    GivenInitialization();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
-   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData->superLowSpeed.rpm);
+   CalculatedFanControlSpeedShouldBe(convertibleCompartmentFanData->speedData->superLowSpeed.rpm);
 }
 
-TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeSuperLowWithHighAmbientTemperatureWhenRequestedSuperLowAndAmbientTemperatureIsHigh)
-{
-   GivenInitialization();
-   GivenAmbientTemperatureIsSetTo(nonCoolingModeFanData->speedData->highAmbientTriggerTemperatureInDegFx100);
-
-   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
-   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData->superLowSpeedHighAmbientTemperature.rpm);
-}
-
-TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeSuperLowWhenRequestedIsSuperLowAndAmbientTemperatureIsBelowThreshold)
-{
-   GivenInitialization();
-   GivenAmbientTemperatureIsSetTo(nonCoolingModeFanData->speedData->highAmbientTriggerTemperatureInDegFx100 - 1);
-
-   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
-   CalculatedFanControlSpeedShouldBe(nonCoolingModeFanData->speedData->superLowSpeed.rpm);
-}
-
-TEST(FanSpeedResolver_NoCoolingMode, CalculatedSpeedShouldBeZeroOnInitialization)
+TEST(FanSpeedResolver_NoCoolingMode, ShouldSetCalculatedSpeedToZeroOnInitialization)
 {
    GivenInitialization();
    CalculatedFanControlSpeedShouldBe(0);
 }
 
-TEST_GROUP(FanSpeedResolver_CoolingMode)
+TEST_GROUP(FanSpeedResolver_CoolingModeWithoutSetpoint)
 {
    DataModel_TestDouble_t dataModelTestDouble;
    I_DataModel_t *dataModel;
@@ -181,8 +187,7 @@ TEST_GROUP(FanSpeedResolver_CoolingMode)
 
    PersonalityParametricData_t *parametricData;
    const CombinedFanData_t *combinedFanData;
-   const FanCareAboutCoolingModeSpeedData_t *coolingModeFanData;
-   const FanCareAboutCoolingModeSpeedData_t *coolingModeCareSetpointData;
+   const FanCareAboutCoolingModeSpeedData_t *coolingModeWithoutSetpointFanData;
 
    void setup()
    {
@@ -191,8 +196,7 @@ TEST_GROUP(FanSpeedResolver_CoolingMode)
 
       parametricData = (PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(TddPersonality_DevelopmentSingleEvaporator);
       combinedFanData = parametricData->fanData;
-      coolingModeFanData = combinedFanData->freshFoodEvapFan.careAboutCoolingModeSpeedData;
-      coolingModeCareSetpointData = combinedFanData->freezerEvapFan.careAboutCoolingModeSpeedData;
+      coolingModeWithoutSetpointFanData = combinedFanData->freshFoodEvapFan.careAboutCoolingModeSpeedData;
    }
 
    void WhenResolvedFanSpeedVoteIs(FanSpeed_t speed)
@@ -236,205 +240,1417 @@ TEST_GROUP(FanSpeedResolver_CoolingMode)
          &combinedFanData->freshFoodEvapFan,
          &coolingModeConfig);
    }
+};
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpoint, ShouldSetCalculatedSpeedToLowFreshFoodWhenRequestedLowWithCoolingModeSetToFreshFood)
+{
+   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenCoolingModeIs(CoolingMode_FreshFood);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointFanData->careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreshFood.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpoint, ShouldSetCalculatedSpeedToLowFreezerWhenRequestedLowWithCoolingModeSetToFreezer)
+{
+   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenCoolingModeIs(CoolingMode_Freezer);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointFanData->careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreezer.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpoint, ShouldSetCalculatedSpeedToMediumFreshFoodWhenRequestedMediumWithCoolingModeSetToFreshFood)
+{
+   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenCoolingModeIs(CoolingMode_FreshFood);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointFanData->careAboutSetpointData.nonSetpointSpeeds.mediumSpeedFreshFood.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpoint, ShouldSetCalculatedSpeedToMediumFreezerWhenRequestedMediumWithCoolingModeSetToFreezer)
+{
+   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenCoolingModeIs(CoolingMode_Freezer);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointFanData->careAboutSetpointData.nonSetpointSpeeds.mediumSpeedFreezer.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpoint, ShouldSetCalculatedSpeedToHighFreshFoodWhenRequestedHighWithCoolingModeSetToFreshFood)
+{
+   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenCoolingModeIs(CoolingMode_FreshFood);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_High);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointFanData->careAboutSetpointData.nonSetpointSpeeds.highSpeedFreshFood.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpoint, ShouldSetCalculatedSpeedToHighFreezerWhenRequestedHighWithCoolingModeSetToFreezer)
+{
+   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenCoolingModeIs(CoolingMode_Freezer);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_High);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointFanData->careAboutSetpointData.nonSetpointSpeeds.highSpeedFreezer.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpoint, ShouldSetCalculatedSpeedToMaxWhenRequestedIsSuperHigh)
+{
+   GivenInitializationWithoutCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperHigh);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointFanData->careAboutSetpointData.nonSetpointSpeeds.superHighSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpoint, ShouldSetCalculatedSpeedToLowFreezerWhenRequestedLowWithDefaultCaseCoolingMode)
+{
+   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenCoolingModeIs(CoolingMode_Off);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointFanData->careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreezer.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpoint, ShouldSetCalculatedSpeedToMediumFreezerWhenRequestedLowWithDefaultCaseCoolingMode)
+{
+   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenCoolingModeIs(CoolingMode_Off);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointFanData->careAboutSetpointData.nonSetpointSpeeds.mediumSpeedFreezer.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpoint, ShouldSetCalculatedSpeedToHighFreezerWhenRequestedLowWithDefaultCaseCoolingMode)
+{
+   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenCoolingModeIs(CoolingMode_Off);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_High);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointFanData->careAboutSetpointData.nonSetpointSpeeds.highSpeedFreezer.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpoint, ShouldChangeFanSpeedWhenCoolingModeChanges)
+{
+   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenCoolingModeIs(CoolingMode_FreshFood);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointFanData->careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreshFood.rpm);
+
+   WhenCoolingModeBecomes(CoolingMode_Freezer);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointFanData->careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreezer.rpm);
+}
+
+TEST_GROUP(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient)
+{
+   DataModel_TestDouble_t dataModelTestDouble;
+   I_DataModel_t *dataModel;
+   FanSpeedResolver_t instance;
+
+   PersonalityParametricData_t *parametricData;
+   const CombinedFanData_t *combinedFanData;
+   const FanData_t *condenserFanData;
+   const FanCareAboutCoolingModeSpeedData_t *coolingModeWithSetpointAndHighAmbientFanData;
+
+   void setup()
+   {
+      DataModel_TestDouble_Init(&dataModelTestDouble, erds, NUM_ELEMENTS(erds));
+      dataModel = dataModelTestDouble.dataModel;
+
+      parametricData = (PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(TddPersonality_DevelopmentSingleEvaporator);
+      combinedFanData = parametricData->fanData;
+      condenserFanData = &combinedFanData->condenserFan;
+      coolingModeWithSetpointAndHighAmbientFanData = combinedFanData->condenserFan.careAboutCoolingModeSpeedData;
+   }
+
+   void WhenResolvedFanSpeedVoteIs(FanSpeed_t speed)
+   {
+      FanVotedSpeed_t votedSpeed = {
+         .speed = speed,
+         .care = true,
+      };
+
+      DataModel_Write(dataModel, Erd_ResolvedSpeedVote, &votedSpeed);
+   }
+
+   void GivenCoolingModeIs(CoolingMode_t coolingMode)
+   {
+      DataModel_Write(dataModel, Erd_CoolingMode, &coolingMode);
+   }
+
+   void WhenCoolingModeBecomes(CoolingMode_t coolingMode)
+   {
+      GivenCoolingModeIs(coolingMode);
+   }
+
+   void GivenFreezerSetpointIsSetTo(SetpointZone_t setpoint)
+   {
+      DataModel_Write(dataModel, Erd_FreezerSetpointZone, &setpoint);
+   }
+
+   void CalculatedFanControlSpeedShouldBe(uint16_t expectedSpeed)
+   {
+      FanControl_t actual;
+      DataModel_Read(dataModel, Erd_CalculatedRequestFanControlSpeed, &actual);
+
+      CHECK_EQUAL(expectedSpeed, actual.rpm);
+   }
 
    void GivenInitializationCaringAboutSetpoint()
    {
       FanSpeedResolver_Init(
          &instance,
          dataModel,
-         &combinedFanData->freezerEvapFan,
+         &combinedFanData->condenserFan,
          &coolingModeConfig);
+   }
+
+   void GivenPullDownIs(bool state)
+   {
+      DataModel_Write(dataModel, coolingModeConfig.pullDownIsActiveErd, &state);
+   }
+
+   void WhenPullDownIs(bool state)
+   {
+      GivenPullDownIs(state);
+   }
+
+   void GivenAmbientHumiditySensorIs(bool state)
+   {
+      DataModel_Write(dataModel, coolingModeConfig.ambientHumiditySensorIsValidErd, &state);
+   }
+
+   void WhenAmbientHumiditySensorIs(bool state)
+   {
+      GivenAmbientHumiditySensorIs(state);
+   }
+
+   void GivenAmbientThermistorIs(bool state)
+   {
+      DataModel_Write(dataModel, coolingModeConfig.ambientThermistorIsValidErd, &state);
+   }
+
+   void WhenAmbientThermistorSensorIs(bool state)
+   {
+      GivenAmbientThermistorIs(state);
+   }
+
+   void GivenAmbientTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, coolingModeConfig.ambientFilteredTemperatureResolvedInDegFx100Erd, &temperature);
+   }
+
+   void WhenAmbientTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      GivenAmbientTemperatureIs(temperature);
+   }
+
+   void GivenAmbientHumidityIs(RelativeHumidityPercentx100_t humidity)
+   {
+      DataModel_Write(dataModel, coolingModeConfig.ambientFilteredHumidityPercentx100ResolvedErd, &humidity);
+   }
+
+   void WhenAmbientHumidityIs(RelativeHumidityPercentx100_t humidity)
+   {
+      GivenAmbientHumidityIs(humidity);
+   }
+
+   void GivenAmbientSensorsAreValidAndPullDownIsActive()
+   {
+      GivenAmbientHumiditySensorIs(Valid);
+      GivenAmbientThermistorIs(Valid);
+      GivenPullDownIs(Active);
+   }
+
+   void GivenAmbientSensorsAreValidAndPullDownIsInactive()
+   {
+      GivenAmbientHumiditySensorIs(Valid);
+      GivenAmbientThermistorIs(Valid);
+      GivenPullDownIs(Inactive);
+   }
+
+   void GivenAmbientHumiditySensorIsInvalidAndAmbientThermistorIsValidAndPullDownIsInactive()
+   {
+      GivenAmbientHumiditySensorIs(Invalid);
+      GivenAmbientThermistorIs(Valid);
+      GivenPullDownIs(Inactive);
+   }
+
+   void GivenAmbientHumiditySensorIsValidAndAmbientThermistorIsInvalidAndPullDownIsInactive()
+   {
+      GivenAmbientHumiditySensorIs(Valid);
+      GivenAmbientThermistorIs(Invalid);
+      GivenPullDownIs(Inactive);
    }
 };
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowFreshFoodWhenRequestedLowWithCoolingModeSetToFreshFood)
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowWhenRequestedSuperLowWithCoolingModeSetToFreshFoodAndSetPointIsCold)
 {
-   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(SetpointZone_Cold);
+   GivenCoolingModeIs(CoolingMode_FreshFood);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowWhenRequestedSuperLowWithAmbientSensorsValidAndPullDownIsActive)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Active);
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowWhenRequestedSuperLowWithAmbientHumiditySensorIsInvalidAndAmbientThermistorIsValidAndPullDownIsInactive)
+{
+   GivenAmbientHumiditySensorIs(Invalid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowWhenRequestedSuperLowWithAmbientHumiditySensorIsValidAndAmbientThermistorIsInvalidAndPullDownIsInactive)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Invalid);
+   GivenPullDownIs(Inactive);
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowWhenRequestedSuperLowWithAmbientSensorsValidAndPullDownIsInactiveAndAmbientHumidityIsGreaterThanHighTriggerHumidityAndAmbientTemperatureIsGreaterThanHighTriggerTemp)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndHighAmbientTemperatureIfAmbientSensorsAreValidAndPullDownIsInactiveAndAmbientHumidityIsEqualToHighTriggerHumidityAndAmbientTemperatureIsEqualToHighTriggerTemp)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100);
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndLowAmbientTemperatureIfAmbientSensorsAreValidAndPullDownIsInactiveAndAmbientHumidityIsEqualToHighTriggerHumidityAndAmbientTemperatureIsLessThanTriggerTemp)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 - 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100);
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndLowTemperature.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedIfAmbientSensorsAreValidAndPullDownIsInactiveAndAmbientHumidityIsLessThanHighTriggerHumidityAndAmbientTemperatureIsEqualToTriggerTemp)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 - 1);
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedIfAmbientHumiditySensorIsInvalidAndAmbientThermistorIsValidAndPullDownIsInactiveAndAmbientHumidityIsGreaterThanHighTriggerHumidityAndAmbientTemperatureIsGreaterThanHighTriggerTemp)
+{
+   GivenAmbientHumiditySensorIs(Invalid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedIfAmbientHumiditySensorIsValidAndAmbientThermistorIsInvalidAndPullDownIsInactiveAndAmbientHumidityIsGreaterThanHighTriggerHumidityAndAmbientTemperatureIsGreaterThanHighTriggerTemp)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Invalid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedIfAmbientHumiditySensorsAreValidAndPullDownIsActiveAndAmbientHumidityIsGreaterThanHighTriggerHumidityAndAmbientTemperatureIsGreaterThanHighTriggerTemp)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Active);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndHighAmbientTemperatureWhenPullDownBecomesInactiveAndAmbientSensorsAreGreaterThanTriggerPoints)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientSensorsAreValidAndPullDownIsActive();
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.superLowSpeed.rpm);
+
+   WhenPullDownIs(Inactive);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedWhenPullDownBecomesActiveAndAmbientSensorsAreGreaterThanTriggerPoints)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientSensorsAreValidAndPullDownIsInactive();
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+
+   WhenPullDownIs(Active);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndHighAmbientTemperatureWhenAmbientHumiditySensorBecomesInvalidAndAmbientSensorsAreGreaterThanTriggerPoints)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientHumiditySensorIsInvalidAndAmbientThermistorIsValidAndPullDownIsInactive();
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.superLowSpeed.rpm);
+
+   WhenAmbientHumiditySensorIs(Valid);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedWhenAmbientHumiditySensorBecomesValidAndAmbientSensorsAreGreaterThanTriggerPoints)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientSensorsAreValidAndPullDownIsInactive();
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+
+   WhenAmbientHumiditySensorIs(Invalid);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndHighAmbientTemperatureWhenAmbientThermistorBecomesInvalidAndAmbientSensorsAreGreaterThanTriggerPoints)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientHumiditySensorIsValidAndAmbientThermistorIsInvalidAndPullDownIsInactive();
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.superLowSpeed.rpm);
+
+   WhenAmbientThermistorSensorIs(Valid);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedWhenAmbientThermistorBecomesValidAndAmbientSensorsAreGreaterThanTriggerPoints)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientSensorsAreValidAndPullDownIsInactive();
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+
+   WhenAmbientThermistorSensorIs(Invalid);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndLowAmbientTemperatureWhenAmbientTemperatureDropsBelowTriggerTempWhileAmbientHumidityIsEqualToTriggerHumidityAndAmbientSensorsAreValidAndPullDownIsInactive)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100);
+   GivenAmbientSensorsAreValidAndPullDownIsInactive();
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+
+   WhenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 - 1);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndLowTemperature.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedWhenAmbientHumidityDropsBelowTriggerTempWhileAmbientTemperatureIsEqualToTriggerTempAndAmbientSensorsAreValidAndPullDownIsInactive)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100);
+   GivenAmbientSensorsAreValidAndPullDownIsInactive();
+   GivenInitializationCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+
+   WhenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 - 1);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToLowColdFreshFoodWhenRequestedLowWithCoolingModeSetToFreshFoodAndSetPointIsCold)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(SetpointZone_Cold);
    GivenCoolingModeIs(CoolingMode_FreshFood);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(coolingModeFanData->careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreshFood.rpm);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowFreezerWhenRequestedLowWithCoolingModeSetToFreezer)
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToLowColdFreezerWhenRequestedLowWithCoolingModeSetToFreezerAndSetPointIsCold)
 {
-   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(SetpointZone_Cold);
    GivenCoolingModeIs(CoolingMode_Freezer);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(coolingModeFanData->careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreezer.rpm);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeMediumFreezerWhenRequestedMediumWithCoolingModeSetToFreezer)
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToLowColdConvertibleCompartmentWhenRequestedLowWithCoolingModeSetToConvertibleCompartmentAndSetPointIsCold)
 {
-   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(SetpointZone_Cold);
+   GivenCoolingModeIs(CoolingMode_ConvertibleCompartment);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithColdSetpoint.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToLowMediumFreezerWhenRequestedLowWithCoolingModeSetToFreezerAndSetPointIsMedium)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(SetpointZone_Middle);
+   GivenCoolingModeIs(CoolingMode_Freezer);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithMediumSetpoint.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToLowMediumConvertibleCompartmentWhenRequestedLowWithCoolingModeSetToConvertibleCompartmentAndSetPointIsMedium)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(SetpointZone_Middle);
+   GivenCoolingModeIs(CoolingMode_ConvertibleCompartment);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithMediumSetpoint.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToLowWarmFreezerWhenRequestedLowWithCoolingModeSetToFreezerAndSetPointIsWarm)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(SetpointZone_Warm);
+   GivenCoolingModeIs(CoolingMode_Freezer);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithWarmSetpoint.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToLowWarmConvertibleCompartmentWhenRequestedLowWithCoolingModeSetToConvertibleCompartmentAndSetPointIsWarm)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(SetpointZone_Warm);
+   GivenCoolingModeIs(CoolingMode_ConvertibleCompartment);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithWarmSetpoint.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToLowColdFreezerWhenRequestedLowWithDefaultCaseCoolingModeAndSetPointIsCold)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(SetpointZone_Cold);
+   GivenCoolingModeIs(CoolingMode_Off);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToLowMediumFreezerWhenRequestedLowWithDefaultCaseCoolingModeAndSetPointIsMedium)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(SetpointZone_Middle);
+   GivenCoolingModeIs(CoolingMode_Off);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithMediumSetpoint.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToLowWarmFreezerWhenRequestedLowWithDefaultCaseCoolingModeAndSetPointIsWarm)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenFreezerSetpointIsSetTo(SetpointZone_Warm);
+   GivenCoolingModeIs(CoolingMode_Off);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithWarmSetpoint.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToMediumFreshFoodWhenRequestedMediumWithCoolingModeSetToFreshFood)
+{
+   GivenInitializationCaringAboutSetpoint();
+   GivenCoolingModeIs(CoolingMode_FreshFood);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.mediumSpeedFreshFood.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToMediumFreezerWhenRequestedMediumWithCoolingModeSetToFreezer)
+{
+   GivenInitializationCaringAboutSetpoint();
    GivenCoolingModeIs(CoolingMode_Freezer);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
-   CalculatedFanControlSpeedShouldBe(coolingModeFanData->careAboutSetpointData.nonSetpointSpeeds.mediumSpeedFreezer.rpm);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.mediumSpeedFreezer.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeHighFreshFoodWhenRequestedHighWithCoolingModeSetToFreshFood)
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToMediumConvertibleCompartmentWhenRequestedMediumWithCoolingModeSetToConvertibleCompartment)
 {
-   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenInitializationCaringAboutSetpoint();
+   GivenCoolingModeIs(CoolingMode_ConvertibleCompartment);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.mediumSpeedConvertibleCompartment.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToHighFreshFoodWhenRequestedHighWithCoolingModeSetToFreshFood)
+{
+   GivenInitializationCaringAboutSetpoint();
    GivenCoolingModeIs(CoolingMode_FreshFood);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_High);
-   CalculatedFanControlSpeedShouldBe(coolingModeFanData->careAboutSetpointData.nonSetpointSpeeds.highSpeedSpeedFreshFood.rpm);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.highSpeedFreshFood.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeHighFreezerWhenRequestedHighWithCoolingModeSetToFreezer)
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToHighFreezerWhenRequestedHighWithCoolingModeSetToFreezer)
 {
-   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenInitializationCaringAboutSetpoint();
    GivenCoolingModeIs(CoolingMode_Freezer);
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_High);
-   CalculatedFanControlSpeedShouldBe(coolingModeFanData->careAboutSetpointData.nonSetpointSpeeds.highSpeedSpeedFreezer.rpm);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.highSpeedFreezer.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeMaxWhenRequestedIsSuperHigh)
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToHighConvertibleCompartmentWhenRequestedHighWithCoolingModeSetToConvertibleCompartment)
 {
-   GivenInitializationWithoutCaringAboutSetpoint();
+   GivenInitializationCaringAboutSetpoint();
+   GivenCoolingModeIs(CoolingMode_ConvertibleCompartment);
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_High);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.highSpeedConvertibleCompartment.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperHighWhenRequestedSuperHigh)
+{
+   GivenInitializationCaringAboutSetpoint();
 
    WhenResolvedFanSpeedVoteIs(FanSpeed_SuperHigh);
-   CalculatedFanControlSpeedShouldBe(coolingModeFanData->careAboutSetpointData.nonSetpointSpeeds.superHighSpeed.rpm);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithSetpointAndHighAmbientFanData->careAboutSetpointData.setpointSpeeds.superHighSpeed.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreshFoodWhenRequestedLowWithCoolingModeSetToFreshFoodAndSetPointIsCold)
+TEST_GROUP(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient)
 {
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(SetpointZone_Cold);
-   GivenCoolingModeIs(CoolingMode_FreshFood);
+   DataModel_TestDouble_t dataModelTestDouble;
+   I_DataModel_t *dataModel;
+   FanSpeedResolver_t instance;
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood.rpm);
+   PersonalityParametricData_t *parametricData;
+   const CombinedFanData_t *combinedFanData;
+   const FanData_t *condenserFanData;
+   const FanCareAboutCoolingModeSpeedData_t *coolingModeWithoutSetpointAndHighAmbientFanData;
+
+   void setup()
+   {
+      DataModel_TestDouble_Init(&dataModelTestDouble, erds, NUM_ELEMENTS(erds));
+      dataModel = dataModelTestDouble.dataModel;
+
+      parametricData = (PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(TddPersonality_DevelopmentCondenserFanCoolingModeWithoutSetpoint);
+      combinedFanData = parametricData->fanData;
+      condenserFanData = &combinedFanData->condenserFan;
+      coolingModeWithoutSetpointAndHighAmbientFanData = combinedFanData->condenserFan.careAboutCoolingModeSpeedData;
+   }
+
+   void WhenResolvedFanSpeedVoteIs(FanSpeed_t speed)
+   {
+      FanVotedSpeed_t votedSpeed = {
+         .speed = speed,
+         .care = true,
+      };
+
+      DataModel_Write(dataModel, Erd_ResolvedSpeedVote, &votedSpeed);
+   }
+
+   void GivenCoolingModeIs(CoolingMode_t coolingMode)
+   {
+      DataModel_Write(dataModel, Erd_CoolingMode, &coolingMode);
+   }
+
+   void WhenCoolingModeBecomes(CoolingMode_t coolingMode)
+   {
+      GivenCoolingModeIs(coolingMode);
+   }
+
+   void GivenFreezerSetpointIsSetTo(SetpointZone_t setpoint)
+   {
+      DataModel_Write(dataModel, Erd_FreezerSetpointZone, &setpoint);
+   }
+
+   void CalculatedFanControlSpeedShouldBe(uint16_t expectedSpeed)
+   {
+      FanControl_t actual;
+      DataModel_Read(dataModel, Erd_CalculatedRequestFanControlSpeed, &actual);
+
+      CHECK_EQUAL(expectedSpeed, actual.rpm);
+   }
+
+   void GivenInitializationNotCaringAboutSetpoint()
+   {
+      FanSpeedResolver_Init(
+         &instance,
+         dataModel,
+         &combinedFanData->condenserFan,
+         &coolingModeConfig);
+   }
+
+   void GivenPullDownIs(bool state)
+   {
+      DataModel_Write(dataModel, coolingModeConfig.pullDownIsActiveErd, &state);
+   }
+
+   void WhenPullDownIs(bool state)
+   {
+      GivenPullDownIs(state);
+   }
+
+   void GivenAmbientHumiditySensorIs(bool state)
+   {
+      DataModel_Write(dataModel, coolingModeConfig.ambientHumiditySensorIsValidErd, &state);
+   }
+
+   void WhenAmbientHumiditySensorIs(bool state)
+   {
+      GivenAmbientHumiditySensorIs(state);
+   }
+
+   void GivenAmbientThermistorIs(bool state)
+   {
+      DataModel_Write(dataModel, coolingModeConfig.ambientThermistorIsValidErd, &state);
+   }
+
+   void WhenAmbientThermistorSensorIs(bool state)
+   {
+      GivenAmbientThermistorIs(state);
+   }
+
+   void GivenAmbientTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, coolingModeConfig.ambientFilteredTemperatureResolvedInDegFx100Erd, &temperature);
+   }
+
+   void WhenAmbientTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      GivenAmbientTemperatureIs(temperature);
+   }
+
+   void GivenAmbientHumidityIs(RelativeHumidityPercentx100_t humidity)
+   {
+      DataModel_Write(dataModel, coolingModeConfig.ambientFilteredHumidityPercentx100ResolvedErd, &humidity);
+   }
+
+   void WhenAmbientHumidityIs(RelativeHumidityPercentx100_t humidity)
+   {
+      GivenAmbientHumidityIs(humidity);
+   }
+
+   void GivenAmbientSensorsAreValidAndPullDownIsActive()
+   {
+      GivenAmbientHumiditySensorIs(Valid);
+      GivenAmbientThermistorIs(Valid);
+      GivenPullDownIs(Active);
+   }
+
+   void GivenAmbientSensorsAreValidAndPullDownIsInactive()
+   {
+      GivenAmbientHumiditySensorIs(Valid);
+      GivenAmbientThermistorIs(Valid);
+      GivenPullDownIs(Inactive);
+   }
+
+   void GivenAmbientHumiditySensorIsInvalidAndAmbientThermistorIsValidAndPullDownIsInactive()
+   {
+      GivenAmbientHumiditySensorIs(Invalid);
+      GivenAmbientThermistorIs(Valid);
+      GivenPullDownIs(Inactive);
+   }
+
+   void GivenAmbientHumiditySensorIsValidAndAmbientThermistorIsInvalidAndPullDownIsInactive()
+   {
+      GivenAmbientHumiditySensorIs(Valid);
+      GivenAmbientThermistorIs(Invalid);
+      GivenPullDownIs(Inactive);
+   }
+};
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowWhenRequestedSuperLowWithAmbientSensorsValidAndPullDownIsActive)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Active);
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointAndHighAmbientFanData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreezerWhenRequestedLowWithCoolingModeSetToFreezerAndSetPointIsCold)
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowWhenRequestedSuperLowWithAmbientHumiditySensorIsInvalidAndAmbientThermistorIsValidAndPullDownIsInactive)
 {
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(SetpointZone_Cold);
-   GivenCoolingModeIs(CoolingMode_Freezer);
+   GivenAmbientHumiditySensorIs(Invalid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenInitializationNotCaringAboutSetpoint();
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint.rpm);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointAndHighAmbientFanData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdConvertibleCompartmentWhenRequestedLowWithCoolingModeSetToConvertibleCompartmentAndSetPointIsCold)
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowWhenRequestedSuperLowWithAmbientHumiditySensorIsValidAndAmbientThermistorIsInvalidAndPullDownIsInactive)
 {
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(SetpointZone_Cold);
-   GivenCoolingModeIs(CoolingMode_ConvertibleCompartment);
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Invalid);
+   GivenPullDownIs(Inactive);
+   GivenInitializationNotCaringAboutSetpoint();
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithColdSetpoint.rpm);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointAndHighAmbientFanData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumFreezerWhenRequestedLowWithCoolingModeSetToFreezerAndSetPointIsMedium)
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowWhenRequestedSuperLowWithAmbientSensorsValidAndPullDownIsInactiveAndAmbientHumidityIsGreaterThanHighTriggerHumidityAndAmbientTemperatureIsGreaterThanHighTriggerTemp)
 {
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(SetpointZone_Middle);
-   GivenCoolingModeIs(CoolingMode_Freezer);
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenInitializationNotCaringAboutSetpoint();
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithMediumSetpoint.rpm);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumConvertibleCompartmentWhenRequestedLowWithCoolingModeSetToConvertibleCompartmentAndSetPointIsMedium)
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndHighAmbientTemperatureIfAmbientSensorsAreValidAndPullDownIsInactiveAndAmbientHumidityIsEqualToHighTriggerHumidityAndAmbientTemperatureIsEqualToHighTriggerTemp)
 {
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(SetpointZone_Middle);
-   GivenCoolingModeIs(CoolingMode_ConvertibleCompartment);
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100);
+   GivenInitializationNotCaringAboutSetpoint();
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithMediumSetpoint.rpm);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmFreezerWhenRequestedLowWithCoolingModeSetToFreezerAndSetPointIsWarm)
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndLowAmbientTemperatureIfAmbientSensorsAreValidAndPullDownIsInactiveAndAmbientHumidityIsEqualToHighTriggerHumidityAndAmbientTemperatureIsLessThanTriggerTemp)
 {
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(SetpointZone_Warm);
-   GivenCoolingModeIs(CoolingMode_Freezer);
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 - 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100);
+   GivenInitializationNotCaringAboutSetpoint();
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithWarmSetpoint.rpm);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndLowTemperature.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmConvertibleCompartmentWhenRequestedLowWithCoolingModeSetToConvertibleCompartmentAndSetPointIsWarm)
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedIfAmbientSensorsAreValidAndPullDownIsInactiveAndAmbientHumidityIsLessThanHighTriggerHumidityAndAmbientTemperatureIsEqualToTriggerTemp)
 {
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(SetpointZone_Warm);
-   GivenCoolingModeIs(CoolingMode_ConvertibleCompartment);
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 - 1);
+   GivenInitializationNotCaringAboutSetpoint();
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedConvertibleCompartmentWithWarmSetpoint.rpm);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointAndHighAmbientFanData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowColdFreezerWhenRequestedLowWithDefaultCaseCoolingModeAndSetPointIsCold)
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedIfAmbientHumiditySensorIsInvalidAndAmbientThermistorIsValidAndPullDownIsInactiveAndAmbientHumidityIsGreaterThanHighTriggerHumidityAndAmbientTemperatureIsGreaterThanHighTriggerTemp)
 {
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(SetpointZone_Cold);
-   GivenCoolingModeIs(CoolingMode_Off);
+   GivenAmbientHumiditySensorIs(Invalid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenInitializationNotCaringAboutSetpoint();
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint.rpm);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointAndHighAmbientFanData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowMediumFreezerWhenRequestedLowWithDefaultCaseCoolingModeAndSetPointIsMedium)
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedIfAmbientHumiditySensorIsValidAndAmbientThermistorIsInvalidAndPullDownIsInactiveAndAmbientHumidityIsGreaterThanHighTriggerHumidityAndAmbientTemperatureIsGreaterThanHighTriggerTemp)
 {
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(SetpointZone_Middle);
-   GivenCoolingModeIs(CoolingMode_Off);
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Invalid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenInitializationNotCaringAboutSetpoint();
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithMediumSetpoint.rpm);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointAndHighAmbientFanData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowWarmFreezerWhenRequestedLowWithDefaultCaseCoolingModeAndSetPointIsWarm)
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedIfAmbientHumiditySensorsAreValidAndPullDownIsActiveAndAmbientHumidityIsGreaterThanHighTriggerHumidityAndAmbientTemperatureIsGreaterThanHighTriggerTemp)
 {
-   GivenInitializationCaringAboutSetpoint();
-   GivenFreezerSetpointIsSetTo(SetpointZone_Warm);
-   GivenCoolingModeIs(CoolingMode_Off);
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Active);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenInitializationNotCaringAboutSetpoint();
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithWarmSetpoint.rpm);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointAndHighAmbientFanData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeLowFreezerWhenRequestedLowWithDefaultCaseCoolingMode)
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndHighAmbientTemperatureWhenPullDownBecomesInactiveAndAmbientSensorsAreGreaterThanTriggerPoints)
 {
-   GivenInitializationWithoutCaringAboutSetpoint();
-   GivenCoolingModeIs(CoolingMode_Off);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientSensorsAreValidAndPullDownIsActive();
+   GivenInitializationNotCaringAboutSetpoint();
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint.rpm);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointAndHighAmbientFanData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed.rpm);
+
+   WhenPullDownIs(Inactive);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeMediumFreezerWhenRequestedLowWithDefaultCaseCoolingMode)
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedWhenPullDownBecomesActiveAndAmbientSensorsAreGreaterThanTriggerPoints)
 {
-   GivenInitializationWithoutCaringAboutSetpoint();
-   GivenCoolingModeIs(CoolingMode_Off);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientSensorsAreValidAndPullDownIsInactive();
+   GivenInitializationNotCaringAboutSetpoint();
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Medium);
-   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.mediumSpeedFreezer.rpm);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+
+   WhenPullDownIs(Active);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointAndHighAmbientFanData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, CalculatedSpeedShouldBeHighFreezerWhenRequestedLowWithDefaultCaseCoolingMode)
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndHighAmbientTemperatureWhenAmbientHumiditySensorBecomesInvalidAndAmbientSensorsAreGreaterThanTriggerPoints)
 {
-   GivenInitializationWithoutCaringAboutSetpoint();
-   GivenCoolingModeIs(CoolingMode_Off);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientHumiditySensorIsInvalidAndAmbientThermistorIsValidAndPullDownIsInactive();
+   GivenInitializationNotCaringAboutSetpoint();
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_High);
-   CalculatedFanControlSpeedShouldBe(coolingModeCareSetpointData->careAboutSetpointData.setpointSpeeds.highSpeedFreezer.rpm);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointAndHighAmbientFanData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed.rpm);
+
+   WhenAmbientHumiditySensorIs(Valid);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
 }
 
-TEST(FanSpeedResolver_CoolingMode, ShouldChangeFanSpeedWhenCoolingModeChanges)
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedWhenAmbientHumiditySensorBecomesValidAndAmbientSensorsAreGreaterThanTriggerPoints)
 {
-   GivenInitializationWithoutCaringAboutSetpoint();
-   GivenCoolingModeIs(CoolingMode_FreshFood);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientSensorsAreValidAndPullDownIsInactive();
+   GivenInitializationNotCaringAboutSetpoint();
 
-   WhenResolvedFanSpeedVoteIs(FanSpeed_Low);
-   CalculatedFanControlSpeedShouldBe(coolingModeFanData->careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreshFood.rpm);
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
 
-   WhenCoolingModeBecomes(CoolingMode_Freezer);
-   CalculatedFanControlSpeedShouldBe(coolingModeFanData->careAboutSetpointData.nonSetpointSpeeds.lowSpeedFreezer.rpm);
+   WhenAmbientHumiditySensorIs(Invalid);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointAndHighAmbientFanData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndHighAmbientTemperatureWhenAmbientThermistorBecomesInvalidAndAmbientSensorsAreGreaterThanTriggerPoints)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientHumiditySensorIsValidAndAmbientThermistorIsInvalidAndPullDownIsInactive();
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointAndHighAmbientFanData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed.rpm);
+
+   WhenAmbientThermistorSensorIs(Valid);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedWhenAmbientThermistorBecomesValidAndAmbientSensorsAreGreaterThanTriggerPoints)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientSensorsAreValidAndPullDownIsInactive();
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+
+   WhenAmbientThermistorSensorIs(Invalid);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointAndHighAmbientFanData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndLowAmbientTemperatureWhenAmbientTemperatureDropsBelowTriggerTempWhileAmbientHumidityIsEqualToTriggerHumidityAndAmbientSensorsAreValidAndPullDownIsInactive)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100);
+   GivenAmbientSensorsAreValidAndPullDownIsInactive();
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+
+   WhenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 - 1);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndLowTemperature.rpm);
+}
+
+TEST(FanSpeedResolver_CoolingModeWithoutSetpointAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedWhenAmbientHumidityDropsBelowTriggerTempWhileAmbientTemperatureIsEqualToTriggerTempAndAmbientSensorsAreValidAndPullDownIsInactive)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100);
+   GivenAmbientSensorsAreValidAndPullDownIsInactive();
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+
+   WhenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 - 1);
+   CalculatedFanControlSpeedShouldBe(coolingModeWithoutSetpointAndHighAmbientFanData->careAboutSetpointData.nonSetpointSpeeds.superLowSpeed.rpm);
+}
+
+TEST_GROUP(FanSpeedResolver_NoCoolingModeAndHighAmbient)
+{
+   DataModel_TestDouble_t dataModelTestDouble;
+   I_DataModel_t *dataModel;
+   FanSpeedResolver_t instance;
+
+   PersonalityParametricData_t *parametricData;
+   const CombinedFanData_t *combinedFanData;
+   const FanData_t *condenserFanData;
+   const FanSpeedData_t *noCoolingModeAndHighAmbientFanData;
+
+   void setup()
+   {
+      DataModel_TestDouble_Init(&dataModelTestDouble, erds, NUM_ELEMENTS(erds));
+      dataModel = dataModelTestDouble.dataModel;
+
+      parametricData = (PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(TddPersonality_DevelopmentCondenserFanNoCoolingMode);
+      combinedFanData = parametricData->fanData;
+      condenserFanData = &combinedFanData->condenserFan;
+      noCoolingModeAndHighAmbientFanData = combinedFanData->condenserFan.speedData;
+   }
+
+   void WhenResolvedFanSpeedVoteIs(FanSpeed_t speed)
+   {
+      FanVotedSpeed_t votedSpeed = {
+         .speed = speed,
+         .care = true,
+      };
+
+      DataModel_Write(dataModel, Erd_ResolvedSpeedVote, &votedSpeed);
+   }
+
+   void GivenCoolingModeIs(CoolingMode_t coolingMode)
+   {
+      DataModel_Write(dataModel, Erd_CoolingMode, &coolingMode);
+   }
+
+   void WhenCoolingModeBecomes(CoolingMode_t coolingMode)
+   {
+      GivenCoolingModeIs(coolingMode);
+   }
+
+   void GivenFreezerSetpointIsSetTo(SetpointZone_t setpoint)
+   {
+      DataModel_Write(dataModel, Erd_FreezerSetpointZone, &setpoint);
+   }
+
+   void CalculatedFanControlSpeedShouldBe(uint16_t expectedSpeed)
+   {
+      FanControl_t actual;
+      DataModel_Read(dataModel, Erd_CalculatedRequestFanControlSpeed, &actual);
+
+      CHECK_EQUAL(expectedSpeed, actual.rpm);
+   }
+
+   void GivenInitializationNotCaringAboutSetpoint()
+   {
+      FanSpeedResolver_Init(
+         &instance,
+         dataModel,
+         &combinedFanData->condenserFan,
+         &coolingModeConfig);
+   }
+
+   void GivenPullDownIs(bool state)
+   {
+      DataModel_Write(dataModel, coolingModeConfig.pullDownIsActiveErd, &state);
+   }
+
+   void WhenPullDownIs(bool state)
+   {
+      GivenPullDownIs(state);
+   }
+
+   void GivenAmbientHumiditySensorIs(bool state)
+   {
+      DataModel_Write(dataModel, coolingModeConfig.ambientHumiditySensorIsValidErd, &state);
+   }
+
+   void WhenAmbientHumiditySensorIs(bool state)
+   {
+      GivenAmbientHumiditySensorIs(state);
+   }
+
+   void GivenAmbientThermistorIs(bool state)
+   {
+      DataModel_Write(dataModel, coolingModeConfig.ambientThermistorIsValidErd, &state);
+   }
+
+   void WhenAmbientThermistorSensorIs(bool state)
+   {
+      GivenAmbientThermistorIs(state);
+   }
+
+   void GivenAmbientTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      DataModel_Write(dataModel, coolingModeConfig.ambientFilteredTemperatureResolvedInDegFx100Erd, &temperature);
+   }
+
+   void WhenAmbientTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      GivenAmbientTemperatureIs(temperature);
+   }
+
+   void GivenAmbientHumidityIs(RelativeHumidityPercentx100_t humidity)
+   {
+      DataModel_Write(dataModel, coolingModeConfig.ambientFilteredHumidityPercentx100ResolvedErd, &humidity);
+   }
+
+   void WhenAmbientHumidityIs(RelativeHumidityPercentx100_t humidity)
+   {
+      GivenAmbientHumidityIs(humidity);
+   }
+
+   void GivenAmbientSensorsAreValidAndPullDownIsActive()
+   {
+      GivenAmbientHumiditySensorIs(Valid);
+      GivenAmbientThermistorIs(Valid);
+      GivenPullDownIs(Active);
+   }
+
+   void GivenAmbientSensorsAreValidAndPullDownIsInactive()
+   {
+      GivenAmbientHumiditySensorIs(Valid);
+      GivenAmbientThermistorIs(Valid);
+      GivenPullDownIs(Inactive);
+   }
+
+   void GivenAmbientHumiditySensorIsInvalidAndAmbientThermistorIsValidAndPullDownIsInactive()
+   {
+      GivenAmbientHumiditySensorIs(Invalid);
+      GivenAmbientThermistorIs(Valid);
+      GivenPullDownIs(Inactive);
+   }
+
+   void GivenAmbientHumiditySensorIsValidAndAmbientThermistorIsInvalidAndPullDownIsInactive()
+   {
+      GivenAmbientHumiditySensorIs(Valid);
+      GivenAmbientThermistorIs(Invalid);
+      GivenPullDownIs(Inactive);
+   }
+};
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowWhenRequestedSuperLowWithAmbientSensorsValidAndPullDownIsActive)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Active);
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(noCoolingModeAndHighAmbientFanData->superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowWhenRequestedSuperLowWithAmbientHumiditySensorIsInvalidAndAmbientThermistorIsValidAndPullDownIsInactive)
+{
+   GivenAmbientHumiditySensorIs(Invalid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(noCoolingModeAndHighAmbientFanData->superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowWhenRequestedSuperLowWithAmbientHumiditySensorIsValidAndAmbientThermistorIsInvalidAndPullDownIsInactive)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Invalid);
+   GivenPullDownIs(Inactive);
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(noCoolingModeAndHighAmbientFanData->superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowWhenRequestedSuperLowWithAmbientSensorsValidAndPullDownIsInactiveAndAmbientHumidityIsGreaterThanHighTriggerHumidityAndAmbientTemperatureIsGreaterThanHighTriggerTemp)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndHighAmbientTemperatureIfAmbientSensorsAreValidAndPullDownIsInactiveAndAmbientHumidityIsEqualToHighTriggerHumidityAndAmbientTemperatureIsEqualToHighTriggerTemp)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100);
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndLowAmbientTemperatureIfAmbientSensorsAreValidAndPullDownIsInactiveAndAmbientHumidityIsEqualToHighTriggerHumidityAndAmbientTemperatureIsLessThanTriggerTemp)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 - 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100);
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndLowTemperature.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedIfAmbientSensorsAreValidAndPullDownIsInactiveAndAmbientHumidityIsLessThanHighTriggerHumidityAndAmbientTemperatureIsEqualToTriggerTemp)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 - 1);
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(noCoolingModeAndHighAmbientFanData->superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedIfAmbientHumiditySensorIsInvalidAndAmbientThermistorIsValidAndPullDownIsInactiveAndAmbientHumidityIsGreaterThanHighTriggerHumidityAndAmbientTemperatureIsGreaterThanHighTriggerTemp)
+{
+   GivenAmbientHumiditySensorIs(Invalid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(noCoolingModeAndHighAmbientFanData->superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedIfAmbientHumiditySensorIsValidAndAmbientThermistorIsInvalidAndPullDownIsInactiveAndAmbientHumidityIsGreaterThanHighTriggerHumidityAndAmbientTemperatureIsGreaterThanHighTriggerTemp)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Invalid);
+   GivenPullDownIs(Inactive);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(noCoolingModeAndHighAmbientFanData->superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedIfAmbientHumiditySensorsAreValidAndPullDownIsActiveAndAmbientHumidityIsGreaterThanHighTriggerHumidityAndAmbientTemperatureIsGreaterThanHighTriggerTemp)
+{
+   GivenAmbientHumiditySensorIs(Valid);
+   GivenAmbientThermistorIs(Valid);
+   GivenPullDownIs(Active);
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(noCoolingModeAndHighAmbientFanData->superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndHighAmbientTemperatureWhenPullDownBecomesInactiveAndAmbientSensorsAreGreaterThanTriggerPoints)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientSensorsAreValidAndPullDownIsActive();
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(noCoolingModeAndHighAmbientFanData->superLowSpeed.rpm);
+
+   WhenPullDownIs(Inactive);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedWhenPullDownBecomesActiveAndAmbientSensorsAreGreaterThanTriggerPoints)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientSensorsAreValidAndPullDownIsInactive();
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+
+   WhenPullDownIs(Active);
+   CalculatedFanControlSpeedShouldBe(noCoolingModeAndHighAmbientFanData->superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndHighAmbientTemperatureWhenAmbientHumiditySensorBecomesInvalidAndAmbientSensorsAreGreaterThanTriggerPoints)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientHumiditySensorIsInvalidAndAmbientThermistorIsValidAndPullDownIsInactive();
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(noCoolingModeAndHighAmbientFanData->superLowSpeed.rpm);
+
+   WhenAmbientHumiditySensorIs(Valid);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedWhenAmbientHumiditySensorBecomesValidAndAmbientSensorsAreGreaterThanTriggerPoints)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientSensorsAreValidAndPullDownIsInactive();
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+
+   WhenAmbientHumiditySensorIs(Invalid);
+   CalculatedFanControlSpeedShouldBe(noCoolingModeAndHighAmbientFanData->superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndHighAmbientTemperatureWhenAmbientThermistorBecomesInvalidAndAmbientSensorsAreGreaterThanTriggerPoints)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientHumiditySensorIsValidAndAmbientThermistorIsInvalidAndPullDownIsInactive();
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(noCoolingModeAndHighAmbientFanData->superLowSpeed.rpm);
+
+   WhenAmbientThermistorSensorIs(Valid);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedWhenAmbientThermistorBecomesValidAndAmbientSensorsAreGreaterThanTriggerPoints)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 + 1);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 + 1);
+   GivenAmbientSensorsAreValidAndPullDownIsInactive();
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+
+   WhenAmbientThermistorSensorIs(Invalid);
+   CalculatedFanControlSpeedShouldBe(noCoolingModeAndHighAmbientFanData->superLowSpeed.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedAtHighAmbientHumidityAndLowAmbientTemperatureWhenAmbientTemperatureDropsBelowTriggerTempWhileAmbientHumidityIsEqualToTriggerHumidityAndAmbientSensorsAreValidAndPullDownIsInactive)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100);
+   GivenAmbientSensorsAreValidAndPullDownIsInactive();
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+
+   WhenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100 - 1);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndLowTemperature.rpm);
+}
+
+TEST(FanSpeedResolver_NoCoolingModeAndHighAmbient, ShouldSetCalculatedSpeedToSuperLowSpeedWhenAmbientHumidityDropsBelowTriggerTempWhileAmbientTemperatureIsEqualToTriggerTempAndAmbientSensorsAreValidAndPullDownIsInactive)
+{
+   GivenAmbientTemperatureIs(condenserFanData->highAmbientTriggerTemperatureInDegFx100);
+   GivenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100);
+   GivenAmbientSensorsAreValidAndPullDownIsInactive();
+   GivenInitializationNotCaringAboutSetpoint();
+
+   WhenResolvedFanSpeedVoteIs(FanSpeed_SuperLow);
+   CalculatedFanControlSpeedShouldBe(condenserFanData->superLowAtHighAmbientHumidityAndHighTemperature.rpm);
+
+   WhenAmbientHumidityIs(condenserFanData->highAmbientTriggerHumidityInPercentx100 - 1);
+   CalculatedFanControlSpeedShouldBe(noCoolingModeAndHighAmbientFanData->superLowSpeed.rpm);
 }
