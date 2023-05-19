@@ -1644,15 +1644,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Harvest count calculation request",
-          "name": "Erd_HarvestCountCalculationRequest",
+          "displayName": "Aluminum mold ice maker harvest count calculation request",
+          "name": "Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Harvest count is ready to harvest",
-          "name": "Erd_HarvestCountIsReadyToHarvest",
+          "displayName": "Aluminum mold ice maker harvest count is ready to harvest",
+          "name": "Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest",
           "read": true,
           "write": true
         },
@@ -1844,6 +1844,25 @@
           "name": "Erd_FlowMeterMonitoringRequest",
           "read": true,
           "write": true
+        }
+      ]
+    },
+    {
+      "title": "Twist tray ice maker",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Harvest Count Calculation Request",
+          "name": "Erd_TwistTrayIceMaker_HarvestCountCalculationRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Harvest Count Is Ready To Harvest",
+          "name": "Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest",
+          "read": true,
+          "write": false
         }
       ]
     },

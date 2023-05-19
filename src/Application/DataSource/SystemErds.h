@@ -631,10 +631,8 @@ enum
    ENTRY(Erd_IceMakerEnabledOverrideRequest,                0xF12F, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMakerEnabledOverrideValue,                  0xF130, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_HarvestCountCalculationRequest,                0xF132, bool,                                               Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FeelerArmMonitoringRequest,                    0xF133, bool,                                               Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_HarvestCountIsReadyToHarvest,                  0xF134, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FeelerArmIsReadyToEnterHarvest,                0xF135, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FeelerArmIsReadyToEnterHarvest,                0xF134, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_TwistTrayIceMaker_MotorActionResult,                      0xF140, TwistTrayIceMakerMotorActionResult_t,    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_OperationState,                         0xF141, TwistTrayIceMakerOperationState_t,       Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -645,6 +643,8 @@ enum
    ENTRY(Erd_TwistTrayIceMakerTestRequest,                             0xF146, IceMakerTestRequest_t,                   Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_MotorOperationState,                    0xF147, TwistTrayIceMakerMotorOperationState_t,  Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_MotorErrorReason,                       0xF148, TwistTrayIceMakerMotorErrorReason_t,     Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,         0xF149, bool,                                    Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest,           0xF14A, bool,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_AluminumMoldIceMakerHsmState,                  0xF150, AluminumMoldIceMakerHsmState_t,                     Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerFeelerArmPosition,         0xF151, FeelerArmPosition_t,                                Swap_No,    Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
@@ -660,6 +660,8 @@ enum
    ENTRY(Erd_AluminumMoldFreezeIntegrationCount,            0xF15B, uint32_t,                                           Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes,  0xF15C, uint8_t,                                   Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerTestRequest,               0xF15D, IceMakerTestRequest_t,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest, 0xF15E, bool,                                          Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,   0xF15F, bool,                                          Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FlowMeterWaterDispensedOzX100,                 0xF160, uint32_t,                                           Swap_Yes,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FlowMeterMonitoringRequest,                    0xF161, FlowMeterMonitoringRequest_t,                       Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \

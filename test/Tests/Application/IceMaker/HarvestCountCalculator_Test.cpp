@@ -25,12 +25,15 @@ extern "C"
 
 #define TemperatureBelowFreezeIntegrationTemperature 3000
 
-static const HarvestCountCalculatorConfiguration_t config = {
-   .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
-   .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
+static HarvestCountCalculatorConfiguration_t config = {
+   .harvestCountIsReadyToHarvestErd = Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
+   .harvestCountCalculationRequestErd = Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest,
    .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .moldFreezeIntegrationCountErd = Erd_AluminumMoldFreezeIntegrationCount,
-   .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes
+   .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes,
+   .startIntegrationTemperatureInDegFx100 = PersonalityParametricData_UseParametricValue,
+   .targetFreezeIntegrationSum = PersonalityParametricData_UseParametricValue,
+   .minimumFreezeTimeMinutes = PersonalityParametricData_UseParametricValue
 };
 
 TEST_GROUP(HarvestCountCalculator)
@@ -54,11 +57,18 @@ TEST_GROUP(HarvestCountCalculator)
          Erd_PersonalityParametricData,
          &personalityParametricData);
       aluminumMoldIceMakerData = personalityParametricData->iceMakerData->aluminumMoldIceMakerData;
+
+      config.startIntegrationTemperatureInDegFx100 =
+         aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100;
+      config.targetFreezeIntegrationSum =
+         aluminumMoldIceMakerData->freezeData.freezeIntegrationLimitInDegFx100TimesSeconds;
+      config.minimumFreezeTimeMinutes =
+         aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes;
    }
 
    void GivenTheModuleIsInitialized()
    {
-      HarvestCountCalculator_Init(&instance, dataModel, &config, aluminumMoldIceMakerData);
+      HarvestCountCalculator_Init(&instance, dataModel, &config);
    }
 
    void After(TimerTicks_t ticks)
@@ -68,7 +78,7 @@ TEST_GROUP(HarvestCountCalculator)
 
    void GivenTheHarvestCountCalculationRequestIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_HarvestCountCalculationRequest, &state);
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest, &state);
    }
 
    void GivenTheIceMakerTemperatureIs(TemperatureDegFx100_t temperature)
@@ -83,13 +93,13 @@ TEST_GROUP(HarvestCountCalculator)
 
    void GivenHarvestCountIsReadyToHarvestIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_HarvestCountIsReadyToHarvest, &state);
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest, &state);
    }
 
    void HarvestCountIsReadyToHarvestShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_HarvestCountIsReadyToHarvest, &actual);
+      DataModel_Read(dataModel, Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -323,4 +333,22 @@ TEST(HarvestCountCalculator, ShouldMaintainFreezeTimeCounterIfHarvestCountCalcul
 
    GivenTheHarvestCountCalculationRequestIs(SET);
    MinimumFreezeTimeCounterInMinutesShouldBe(0);
+}
+
+TEST(HarvestCountCalculator, ShouldAssertWhenStartIntegrationTemperatureInDegFx100Is0OnInit)
+{
+   config.startIntegrationTemperatureInDegFx100 = 0;
+   ShouldFailAssertion(GivenTheModuleIsInitialized());
+}
+
+TEST(HarvestCountCalculator, ShouldAssertWhenTargetFreezeIntegrationSumIs0OnInit)
+{
+   config.targetFreezeIntegrationSum = 0;
+   ShouldFailAssertion(GivenTheModuleIsInitialized());
+}
+
+TEST(HarvestCountCalculator, ShouldAssertWhenMinimumFreezeTimeMinutesIs0OnInit)
+{
+   config.minimumFreezeTimeMinutes = 0;
+   ShouldFailAssertion(GivenTheModuleIsInitialized());
 }

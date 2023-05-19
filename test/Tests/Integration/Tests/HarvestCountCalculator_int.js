@@ -37,7 +37,7 @@ describe("HarvestCountCalculator", () => {
    };
 
    const providedThatTheCountCalculationRequestIs = async (request) => {
-      await rockhopper.write("Erd_HarvestCountCalculationRequest", request);
+      await rockhopper.write("Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest", request);
    };
 
    const providedTheFreezeIntegrationCountShouldBeGreaterThan = async (expected) => {

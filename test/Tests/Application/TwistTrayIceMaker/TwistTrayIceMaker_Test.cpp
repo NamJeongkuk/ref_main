@@ -154,6 +154,16 @@ TEST_GROUP(TwistTrayIceMaker)
       DataModel_Write(dataModel, Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100, &temp);
    }
 
+   void WhenTheTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      TheTemperatureIs(temperature);
+   }
+
+   void GivenTheTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      WhenTheTemperatureIs(temperature);
+   }
+
    void GivenTheIceMakerThermistorIsValid()
    {
       DataModel_Write(
@@ -385,11 +395,6 @@ TEST_GROUP(TwistTrayIceMaker)
          .expectNoCall("Freezer Ice Rate Signal Has Been Triggered");
    }
 
-   TimerTicks_t TheTimeToReachIntegrationSumGiven(TemperatureDegFx100_t actualTempx100)
-   {
-      return (MSEC_PER_SEC * iceMakerData->freezeData.targetFreezeIntegrationSum) / (iceMakerData->freezeData.startIntegrationTemperatureInDegFx100 - actualTempx100);
-   }
-
    void GivenHomingIsCompleted()
    {
       GivenTheIceMakerThermistorIsValid();
@@ -408,7 +413,7 @@ TEST_GROUP(TwistTrayIceMaker)
       When TheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
 
       HarvestingShouldStart();
-      After(iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN);
+      WhenHarvestCountIsReadyToHarvestIs(SET);
       TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
    }
 
@@ -422,7 +427,7 @@ TEST_GROUP(TwistTrayIceMaker)
 
       NothingShouldHappen();
       When TheTemperatureIs(actualTempx100 - 1);
-      And After(TheTimeToReachIntegrationSumGiven(iceMakerData->freezeData.startIntegrationTemperatureInDegFx100 - 1));
+      And WhenHarvestCountIsReadyToHarvestIs(SET);
    }
 
    void HarvestingIsCompletedAndFillingIsStarted()
@@ -564,11 +569,16 @@ TEST_GROUP(TwistTrayIceMaker)
       HarvestingIsCompletedAndFillingIsStarted();
    }
 
-   void MinimumFreezeTimeCounterInMinutesShouldBe(uint8_t expected)
+   void HarvestCountCalculationRequestShouldBe(bool expected)
    {
-      uint8_t actual;
-      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_MinimumFreezeTimeCounterInMinutes, &actual);
+      bool actual;
+      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_HarvestCountCalculationRequest, &actual);
       CHECK_EQUAL(expected, actual);
+   }
+
+   void WhenHarvestCountIsReadyToHarvestIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest, &state);
    }
 };
 
@@ -613,6 +623,7 @@ TEST(TwistTrayIceMaker, ShouldNotTransitionToThermistorFaultStateWhenHomingAndTh
 }
 
 // Idle Freeze
+
 TEST(TwistTrayIceMaker, ShouldHomeOnInitializationThenGoToIdleFreezeWhenIceMakerIsDisabled)
 {
    GivenTheIceMakerIsDisabled();
@@ -636,234 +647,58 @@ TEST(TwistTrayIceMaker, ShouldTransitionFromIdleFreezeStateToFreezeStateWhenIceM
 
 // Freezing
 
-TEST(TwistTrayIceMaker, ShouldInitiallyTryToFreezeWhateverIsInTheTray)
+TEST(TwistTrayIceMaker, ShouldSetHarvestCountCalculationRequestWhenEnteringIntoFreezeState)
 {
-   GivenTheIceMakerIsEnabled();
-   GivenHomingIsCompleted();
-   And TheTemperatureIs(VeryCold);
-
-   SomeTimePasses(iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN - 1);
-
-   HarvestingShouldStart();
-   After(1);
+   GivenTheOperationStateIsInFreeze();
+   HarvestCountCalculationRequestShouldBe(SET);
 }
 
-TEST(TwistTrayIceMaker, ShouldFreezeForMinimumFreezeTimeIfIntegrationSumIsCompletedFirst)
+TEST(TwistTrayIceMaker, ShouldClearHarvestCountCalculationRequestAndStartHarvestingIfThermistorTemperatureChangesToBelowMaximumHarvestTemperatureWhileHarvestCountIsReadyToHarvest)
 {
-   TemperatureDegFx100_t actualTempx100 = VeryCold;
+   GivenTheOperationStateIsInFreeze();
+   GivenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100);
+   HarvestCountCalculationRequestShouldBe(SET);
 
-   GivenTheIceMakerIsEnabled();
-   GivenHomingIsCompleted();
-   And TheTemperatureIs(actualTempx100);
-
-   TimerTicks_t timeToReachIntegrationSum = TheTimeToReachIntegrationSumGiven(actualTempx100);
-   NothingShouldHappen();
-   After(timeToReachIntegrationSum);
-
-   SomeTimePasses(iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN - timeToReachIntegrationSum - 1);
+   WhenHarvestCountIsReadyToHarvestIs(SET);
 
    HarvestingShouldStart();
-   After(1);
+   When TheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
+   HarvestCountCalculationRequestShouldBe(CLEAR);
 }
 
-TEST(TwistTrayIceMaker, ShouldResetFreezeIntegrationSumIfTempGoesAboveFreezing)
+TEST(TwistTrayIceMaker, ShouldClearHarvestCountCalculationRequestAndStartHarvestingIfHarvestCountIsReadyToHarvestWhileThermistorTemperatureIsBelowMaximumHarvestTemperature)
 {
-   // this test is based on two simultaneous periodic timers
-   // so it is very touchy
-   // if it is failing, you probably changed the intervals around
-   TemperatureDegFx100_t belowFreezing = 3100;
-   Given TheTemperatureIs(belowFreezing);
-   GivenTheIceMakerIsEnabled();
-   GivenHomingIsCompleted();
-
-   SomeTimePasses(OneSecond);
-
-   // make sure that the timers are actually going off at the very last tick of these After's
-   TheTemperatureIs(iceMakerData->freezeData.startIntegrationTemperatureInDegFx100 + 3000);
-
-   TheTemperatureIs(belowFreezing);
-
-   NothingShouldHappen();
-   When SomeTimePasses(TheTimeToReachIntegrationSumGiven(belowFreezing) - 1);
+   GivenTheOperationStateIsInFreeze();
+   HarvestCountCalculationRequestShouldBe(SET);
 
    When TheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
 
    HarvestingShouldStart();
-   After(1);
+   WhenHarvestCountIsReadyToHarvestIs(SET);
+   HarvestCountCalculationRequestShouldBe(CLEAR);
 }
 
-TEST(TwistTrayIceMaker, ShouldResetMinimumFreezeTimeIfTempGoesAboveFreezing)
+TEST(TwistTrayIceMaker, ShouldClearHarvestCountCalculationRequestAndTransitionToThermistorFaultWhenThermistorIsInvalidWhileFreezing)
 {
-   TemperatureDegFx100_t actualTempx100 = VeryCold;
-   Given TheTemperatureIs(actualTempx100);
-   GivenTheIceMakerIsEnabled();
-   GivenHomingIsCompleted();
-
-   NothingShouldHappen();
-   When SomeTimePasses(iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN / 5);
-
-   TheTemperatureIs(iceMakerData->freezeData.startIntegrationTemperatureInDegFx100 + 3000);
-
-   TheTemperatureIs(actualTempx100);
-
-   NothingShouldHappen();
-   When SomeTimePasses(iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN - 1);
-
-   HarvestingShouldStart();
-   After(1);
-}
-
-TEST(TwistTrayIceMaker, ShouldNotResetFreezeIntegrationSumIfTempChangesButDoesNotGoAboveFreezing)
-{
-   TemperatureDegFx100_t actualTempx100 = iceMakerData->freezeData.startIntegrationTemperatureInDegFx100 - 1;
-   GivenTheIceMakerIsEnabled();
-   And TheTemperatureIs(actualTempx100);
-   GivenHomingIsCompleted();
-
-   SomeTimePasses(TheTimeToReachIntegrationSumGiven(actualTempx100) - 1);
-
-   TheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
-
-   HarvestingShouldStart();
-   After(1);
-}
-
-TEST(TwistTrayIceMaker, ShouldNotResetMinimumFreezeTimeIfTempChangesButDoesNotGoAboveFreezing)
-{
-   TemperatureDegFx100_t actualTempx100 = VeryCold;
-   Given TheTemperatureIs(actualTempx100);
-   GivenTheIceMakerIsEnabled();
-   GivenHomingIsCompleted();
-
-   SomeTimePasses(iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN - 1);
-
-   TheTemperatureIs(actualTempx100 - 1);
-
-   HarvestingShouldStart();
-   After(1);
-}
-
-TEST(TwistTrayIceMaker, ShouldNotStartIntegrationSumOrMinimumFreezeTimerIfTempIsAboveFreezingToBeginWith)
-{
-   GivenTheIceMakerIsEnabled();
-   Given TheTemperatureIs(iceMakerData->freezeData.startIntegrationTemperatureInDegFx100 + 1000);
-   GivenHomingIsCompleted();
-
-   NothingShouldHappen();
-   After(ALongTime);
-
-   TheTemperatureIs(iceMakerData->freezeData.startIntegrationTemperatureInDegFx100 / 3);
-
-   SomeTimePasses(IceTemperaturePollingTime);
-   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
-
-   HarvestingShouldStart();
-   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
-   When SomeTimePasses(iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN);
-}
-
-TEST(TwistTrayIceMaker, ShouldNotTransitionToHarvestIfThermistorTemperatureIsNotBelowMaximumHarvestTemperature)
-{
-   GivenTheIceMakerIsEnabled();
-   GivenHomingIsCompleted();
-
-   NothingShouldHappen();
-   When TheTemperatureIs(iceMakerData->freezeData.startIntegrationTemperatureInDegFx100 - 1);
-   After(TheTimeToReachIntegrationSumGiven(iceMakerData->freezeData.startIntegrationTemperatureInDegFx100 - 1));
-   After(iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN);
-   And TheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100);
-
-   HarvestingShouldStart();
-   When TheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
-}
-
-TEST(TwistTrayIceMaker, ShouldIncrementFreezeTimeCounterUntilMinimumFreezeTimeIsSatisfied)
-{
-   TemperatureDegFx100_t temperatureThatCausesFreezeIntegrationLimitToBeReachedInMinimumFreezeTimeInMinutes =
-      iceMakerData->freezeData.startIntegrationTemperatureInDegFx100 -
-      iceMakerData->freezeData.targetFreezeIntegrationSum /
-         (iceMakerData->freezeData.minimumFreezeTimeMinutes * SECONDS_PER_MINUTE);
-   Given TheTemperatureIs(temperatureThatCausesFreezeIntegrationLimitToBeReachedInMinimumFreezeTimeInMinutes);
-   GivenTheIceMakerIsEnabled();
-   GivenHomingIsCompleted();
-
-   for(uint8_t i = 1; i <= iceMakerData->freezeData.minimumFreezeTimeMinutes; i++)
-   {
-      After(MSEC_PER_MIN - 1);
-      MinimumFreezeTimeCounterInMinutesShouldBe(i - 1);
-      After(1);
-      MinimumFreezeTimeCounterInMinutesShouldBe(i);
-   }
-}
-
-TEST(TwistTrayIceMaker, ShouldIncrementFreezeTimeCounterIfFreezingAfterMinimumFreezeTimeIsSatisfied)
-{
-   Given TheTemperatureIs(iceMakerData->freezeData.startIntegrationTemperatureInDegFx100 - 200);
-   GivenTheIceMakerIsEnabled();
-   GivenHomingIsCompleted();
-
-   After(iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN);
-   MinimumFreezeTimeCounterInMinutesShouldBe(iceMakerData->freezeData.minimumFreezeTimeMinutes);
-
-   After(3 * MSEC_PER_MIN);
-   MinimumFreezeTimeCounterInMinutesShouldBe(iceMakerData->freezeData.minimumFreezeTimeMinutes + 3);
-}
-
-TEST(TwistTrayIceMaker, ShouldNotExceedUINT8_MAXForFreezeTimeCounter)
-{
-   Given TheTemperatureIs(iceMakerData->freezeData.startIntegrationTemperatureInDegFx100);
-   GivenTheIceMakerIsEnabled();
-   GivenHomingIsCompleted();
-
-   After(UINT8_MAX * MSEC_PER_MIN);
-   MinimumFreezeTimeCounterInMinutesShouldBe(UINT8_MAX);
-
-   After(1 * MSEC_PER_MIN);
-   MinimumFreezeTimeCounterInMinutesShouldBe(UINT8_MAX);
-}
-
-TEST(TwistTrayIceMaker, ShouldClearFreezeTimeCounterIfIceMakerTemperatureExceedsStartIntegrationTemperature)
-{
-   Given TheTemperatureIs(iceMakerData->freezeData.startIntegrationTemperatureInDegFx100);
-   GivenTheIceMakerIsEnabled();
-   GivenHomingIsCompleted();
-
-   After(1 * MSEC_PER_MIN);
-   MinimumFreezeTimeCounterInMinutesShouldBe(1);
-
-   When TheTemperatureIs(iceMakerData->freezeData.startIntegrationTemperatureInDegFx100 + 1);
-   MinimumFreezeTimeCounterInMinutesShouldBe(0);
-}
-
-TEST(TwistTrayIceMaker, ShouldStopIfThereIsAThermistorFaultAndBeginPollingThermistorIndefinitely)
-{
-   GivenTheIceMakerIsEnabled();
-   Given TheTemperatureIs(VeryCold);
-   GivenHomingIsCompleted();
-
-   NothingShouldHappen();
-   When SomeTimePasses(iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN / 5);
+   GivenTheOperationStateIsInFreeze();
+   HarvestCountCalculationRequestShouldBe(SET);
 
    WhenTheIceMakerThermistorIsInvalid();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
-
-   After(IceTemperaturePollingTime);
-
-   NothingShouldHappen();
-   After((iceMakerData->harvestData.fullBucketWaitPeriodMinutes * MSEC_PER_MIN) + 1);
-
-   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
+   HarvestCountCalculationRequestShouldBe(CLEAR);
 }
 
-TEST(TwistTrayIceMaker, ShouldTransitionFromFreezeToIdleFreezeWhenIceMakerBecomesDisabled)
+TEST(TwistTrayIceMaker, ShouldClearHarvestCountCalculationRequestAndTransitionFromFreezeToIdleFreezeWhenIceMakerBecomesDisabled)
 {
    GivenTheIceMakerIsEnabled();
    Given TheTemperatureIs(VeryCold);
    GivenHomingIsCompleted();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+   HarvestCountCalculationRequestShouldBe(SET);
 
    WhenTheIceMakerBecomesDisabled();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_IdleFreeze);
+   HarvestCountCalculationRequestShouldBe(CLEAR);
 }
 
 // Harvesting
@@ -1055,7 +890,7 @@ TEST(TwistTrayIceMaker, ShouldBeAbleToHarvestTwice)
 
    HarvestingShouldStart();
    When TheTemperatureIs(VeryCold);
-   And After(iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN);
+   WhenHarvestCountIsReadyToHarvestIs(SET);
 }
 
 TEST(TwistTrayIceMaker, ShouldWaitToHarvestUntilDoorIsClosed)
@@ -1143,6 +978,7 @@ TEST(TwistTrayIceMaker, ShouldNotHarvestIceIfSabbathModeComesOnWhileFreezing)
    Then SabbathModeIs(ON);
 
    NothingShouldHappen();
+   WhenHarvestCountIsReadyToHarvestIs(SET);
    After((iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN) + 1);
 
    HarvestingShouldStart();
@@ -1157,6 +993,7 @@ TEST(TwistTrayIceMaker, SabbathModeShouldAlsoWorkIfTheEnhancedSabbathModeErdCome
    Then EnhancedSabbathModeIs(ON);
 
    NothingShouldHappen();
+   WhenHarvestCountIsReadyToHarvestIs(SET);
    After((iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN) + 1);
 
    HarvestingShouldStart();
@@ -1172,6 +1009,7 @@ TEST(TwistTrayIceMaker, SabbathModeShouldAlsoWorkIfBothSabbathErdsComeOn)
    And SabbathModeIs(ON);
 
    NothingShouldHappen();
+   WhenHarvestCountIsReadyToHarvestIs(SET);
    After((iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN) + 1);
 
    Then SabbathModeIs(OFF);
@@ -1322,20 +1160,24 @@ TEST(TwistTrayIceMaker, ShouldTransitionToHarvestingAndClearTestRequestWhenTestR
 TEST(TwistTrayIceMaker, ShouldTransitionToFillingTrayWithWaterAndClearTestRequestWhenTestRequestIsFillWhileIceMakerStateIsInFreeze)
 {
    GivenTheOperationStateIsInFreeze();
+   HarvestCountCalculationRequestShouldBe(SET);
 
    FillingShouldStart();
    WhenTheTestRequestIs(IceMakerTestRequest_Fill);
-   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+   HarvestCountCalculationRequestShouldBe(CLEAR);
+   And TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
    And TheTestRequestShouldBe(IceMakerTestRequest_None);
 }
 
 TEST(TwistTrayIceMaker, ShouldTransitionToHarvestingAndClearTestRequestWhenTestRequestIsHarvestWhileIceMakerStateIsInFreeze)
 {
    GivenTheOperationStateIsInFreeze();
+   HarvestCountCalculationRequestShouldBe(SET);
 
    HarvestingShouldStart();
    WhenTheTestRequestIs(IceMakerTestRequest_Harvest);
-   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+   HarvestCountCalculationRequestShouldBe(CLEAR);
+   And TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
    And TheTestRequestShouldBe(IceMakerTestRequest_None);
 }
 
@@ -1604,9 +1446,9 @@ TEST_GROUP(TwistTrayIceMaker_FillTubeHeaterDutyCycleZero)
       TheWaterValveShouldBecome(OPEN);
    }
 
-   TimerTicks_t TheTimeToReachIntegrationSumGiven(TemperatureDegFx100_t actualTempx100)
+   void WhenHarvestCountIsReadyToHarvestIs(bool state)
    {
-      return (MSEC_PER_SEC * iceMakerData->freezeData.targetFreezeIntegrationSum) / (iceMakerData->freezeData.startIntegrationTemperatureInDegFx100 - actualTempx100);
+      DataModel_Write(dataModel, Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest, &state);
    }
 
    void WhenFreezingIsCompletedAndHarvestingIsStartedWithFillTubeHeaterDutyCycleZeroParametric()
@@ -1625,7 +1467,7 @@ TEST_GROUP(TwistTrayIceMaker_FillTubeHeaterDutyCycleZero)
       When TheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
       TheMotorShouldBeRequestedTo(Harvest);
 
-      After(iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN);
+      WhenHarvestCountIsReadyToHarvestIs(SET);
       TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
    }
 };
@@ -1752,6 +1594,11 @@ TEST_GROUP(TwistTrayIceMaker_FillTubeHeaterOnTimeZero)
       TheWaterValveShouldBecome(OPEN);
    }
 
+   void WhenHarvestCountIsReadyToHarvestIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest, &state);
+   }
+
    void WhenFreezingIsCompletedAndHarvestingIsStartedWithFillTubeHeaterOnTimeZeroParametric()
    {
       GivenTheIceMakerThermistorIsValid();
@@ -1767,7 +1614,7 @@ TEST_GROUP(TwistTrayIceMaker_FillTubeHeaterOnTimeZero)
       When TheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
       TheMotorShouldBeRequestedTo(Harvest);
 
-      After(iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN);
+      WhenHarvestCountIsReadyToHarvestIs(SET);
       TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
    }
 };

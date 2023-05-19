@@ -28,9 +28,9 @@ static const AluminumMoldIceMakerConfig_t config = {
    .iceMakerWaterValveVoteErd = Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
    .moldHeaterVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
    .rakeMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
-   .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
+   .harvestCountCalculationRequestErd = Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest,
    .feelerArmMonitoringRequestErd = Erd_FeelerArmMonitoringRequest,
-   .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
+   .harvestCountIsReadyToHarvestErd = Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
    .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
    .iceMakerEnabledErd = Erd_IceMaker0EnableStatus,
@@ -192,7 +192,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_HarvestCountCalculationRequest,
+         Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -213,7 +213,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_HarvestCountIsReadyToHarvest,
+         Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
          set);
    }
 
@@ -226,7 +226,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_HarvestCountIsReadyToHarvest,
+         Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
          clear);
    }
 
@@ -2314,7 +2314,7 @@ TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime)
    {
       DataModel_Write(
          dataModel,
-         Erd_HarvestCountIsReadyToHarvest,
+         Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
          set);
    }
 
@@ -2322,7 +2322,7 @@ TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterOnTimeLessThanMaxHarvestTime)
    {
       DataModel_Write(
          dataModel,
-         Erd_HarvestCountIsReadyToHarvest,
+         Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
          clear);
    }
 
@@ -2620,7 +2620,7 @@ TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterZeroDutyCycle)
    {
       DataModel_Write(
          dataModel,
-         Erd_HarvestCountIsReadyToHarvest,
+         Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
          set);
    }
 
@@ -2767,7 +2767,7 @@ TEST_GROUP(AluminumMoldIceMaker_FillTubeHeaterZeroOnTime)
    {
       DataModel_Write(
          dataModel,
-         Erd_HarvestCountIsReadyToHarvest,
+         Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
          set);
    }
 

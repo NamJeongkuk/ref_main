@@ -228,7 +228,7 @@ describe("AluminumMoldIceMaker,", () => {
    };
 
    const harvestCountCalculationRequestShouldBe = async (state) => {
-      const actual = await rockhopper.read("Erd_HarvestCountCalculationRequest");
+      const actual = await rockhopper.read("Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest");
       expect(actual).toEqual(state);
    };
 
@@ -238,11 +238,11 @@ describe("AluminumMoldIceMaker,", () => {
    };
 
    const harvestCountIsNotReadyToHarvest = async () => {
-      await rockhopper.write("Erd_HarvestCountIsReadyToHarvest", false);
+      await rockhopper.write("Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest", false);
    };
 
    const harvestCountIsReadyToHarvest = async () => {
-      await rockhopper.write("Erd_HarvestCountIsReadyToHarvest", true);
+      await rockhopper.write("Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest", true);
    };
 
    const iceMakerTemperatureIsReadyToHarvest = async () => {

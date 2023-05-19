@@ -258,6 +258,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       GivenTheApplicationIsInitializedAndIceMakerIsInFreeze();
 
       WhenTheThermistorAdcCountsAre(BelowFreezingAdcCounts);
+      After(MSEC_PER_SEC);
       After(twistTrayIceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN - 1);
       OperationStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
 
@@ -482,8 +483,11 @@ TEST(TwistTrayIceMakerIntegration, ShouldCompleteFreezeAndEnterHarvest)
    GivenTheApplicationIsInitializedAndIceMakerIsInFreeze();
 
    WhenTheThermistorAdcCountsAre(BelowFreezingAdcCounts);
-   After(twistTrayIceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN);
+   After(MSEC_PER_SEC);
+   After(twistTrayIceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN - 1);
+   OperationStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
 
+   After(1);
    OperationStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
 }
 

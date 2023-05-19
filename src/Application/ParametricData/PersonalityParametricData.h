@@ -28,6 +28,11 @@
 #include "FlowMeterData.h"
 #include "DispenserData.h"
 
+enum
+{
+   PersonalityParametricData_UseParametricValue = 0
+};
+
 typedef struct
 {
    const DefrostData_t *defrostData;

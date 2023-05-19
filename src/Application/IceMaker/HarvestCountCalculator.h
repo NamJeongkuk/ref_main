@@ -19,6 +19,9 @@ typedef struct
    Erd_t moldFilteredTemperatureInDegFx100Erd; // TemperatureDegFx100_t
    Erd_t moldFreezeIntegrationCountErd; // uint32_t
    Erd_t moldIceMakerMinimumFreezeTimeCounterInMinutesErd; // uint8_t
+   TemperatureDegFx100_t startIntegrationTemperatureInDegFx100;
+   uint32_t targetFreezeIntegrationSum;
+   uint8_t minimumFreezeTimeMinutes;
 } HarvestCountCalculatorConfiguration_t;
 
 typedef struct
@@ -26,7 +29,6 @@ typedef struct
    struct
    {
       I_DataModel_t *dataModel;
-      const AluminumMoldIceMakerData_t *aluminumMoldIceMakerData;
       const HarvestCountCalculatorConfiguration_t *config;
       Timer_t minimumFreezeTimer;
       Timer_t harvestCountTimer;
@@ -38,7 +40,6 @@ typedef struct
 void HarvestCountCalculator_Init(
    HarvestCountCalculator_t *instance,
    I_DataModel_t *dataModel,
-   const HarvestCountCalculatorConfiguration_t *config,
-   const AluminumMoldIceMakerData_t *aluminumMoldIceMakerData);
+   const HarvestCountCalculatorConfiguration_t *config);
 
 #endif

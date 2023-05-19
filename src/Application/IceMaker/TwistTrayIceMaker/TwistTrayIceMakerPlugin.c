@@ -96,14 +96,27 @@ static const ResolvedVoteRelayConnectorConfiguration_t iceMakerWaterValveRelayCo
    .relayOutputErd = Erd_TwistTrayIceMakerWaterValveRelay
 };
 
+static HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
+   .harvestCountIsReadyToHarvestErd = Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest,
+   .harvestCountCalculationRequestErd = Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,
+   .moldFilteredTemperatureInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100,
+   .moldFreezeIntegrationCountErd = Erd_TwistTrayIceMaker_FreezeIntegrationCount,
+   .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_TwistTrayIceMaker_MinimumFreezeTimeCounterInMinutes,
+   .startIntegrationTemperatureInDegFx100 = PersonalityParametricData_UseParametricValue,
+   .targetFreezeIntegrationSum = PersonalityParametricData_UseParametricValue,
+   .minimumFreezeTimeMinutes = PersonalityParametricData_UseParametricValue
+};
+
 void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
 {
    const SensorData_t *sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
+   const TwistTrayIceMakerData_t *twistTrayIceMakerData =
+      PersonalityParametricData_Get(dataModel)->iceMakerData->twistTrayIceMakerData;
 
    DataModel_Write(
       dataModel,
       Erd_IceMaker0TypeInformation,
-      &PersonalityParametricData_Get(dataModel)->iceMakerData->twistTrayIceMakerData->typeInformation);
+      &twistTrayIceMakerData->typeInformation);
 
    SensorFiltering_Init(
       &instance->_private.sensorFilter,
@@ -132,6 +145,17 @@ void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataMod
       dataModel,
       &iceMakerWaterValveRelayConnectorConfiguration);
 
+   harvestCountCalculatorConfig.startIntegrationTemperatureInDegFx100 =
+      twistTrayIceMakerData->freezeData.startIntegrationTemperatureInDegFx100;
+   harvestCountCalculatorConfig.targetFreezeIntegrationSum =
+      twistTrayIceMakerData->freezeData.targetFreezeIntegrationSum;
+   harvestCountCalculatorConfig.minimumFreezeTimeMinutes =
+      twistTrayIceMakerData->freezeData.minimumFreezeTimeMinutes;
+   HarvestCountCalculator_Init(
+      &instance->_private.harvestCountCalculator,
+      dataModel,
+      &harvestCountCalculatorConfig);
+
    TwistTrayIceMakerRunner_Init(
       &instance->_private.twistTrayIceMakerMotorControllerRunner,
       &instance->_private.twistTrayMotorController,
@@ -145,7 +169,7 @@ void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataMod
 
    TwistTrayIceMakerMotorController_Init(
       &instance->_private.twistTrayMotorController,
-      PersonalityParametricData_Get(dataModel)->iceMakerData->twistTrayIceMakerData,
+      twistTrayIceMakerData,
       Output_TwistTrayIceMakerMotorState_Init(
          &instance->_private.motorStateOutput,
          DataModelErdPointerAccess_GetGpioGroup(dataModel, Erd_GpioGroupInterface),
@@ -165,5 +189,5 @@ void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataMod
       &instance->_private.twistTrayIceMaker,
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
       DataModel_AsDataSource(dataModel),
-      PersonalityParametricData_Get(dataModel)->iceMakerData->twistTrayIceMakerData);
+      twistTrayIceMakerData);
 }

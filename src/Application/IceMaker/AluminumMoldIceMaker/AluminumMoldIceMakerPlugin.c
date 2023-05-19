@@ -25,9 +25,9 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .iceMakerWaterValveVoteErd = Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
    .moldHeaterVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
    .rakeMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
-   .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
+   .harvestCountCalculationRequestErd = Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest,
    .feelerArmMonitoringRequestErd = Erd_FeelerArmMonitoringRequest,
-   .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
+   .harvestCountIsReadyToHarvestErd = Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
    .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
    .iceMakerEnabledErd = Erd_IceMaker0EnableStatus,
@@ -54,12 +54,15 @@ static const FeelerArmMonitorConfig_t feelerArmMonitorConfig = {
    .feelerArmPositionErd = Erd_AluminumMoldIceMakerFeelerArmPosition
 };
 
-static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
-   .harvestCountIsReadyToHarvestErd = Erd_HarvestCountIsReadyToHarvest,
-   .harvestCountCalculationRequestErd = Erd_HarvestCountCalculationRequest,
+static HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
+   .harvestCountIsReadyToHarvestErd = Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
+   .harvestCountCalculationRequestErd = Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest,
    .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .moldFreezeIntegrationCountErd = Erd_AluminumMoldFreezeIntegrationCount,
-   .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes
+   .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes,
+   .startIntegrationTemperatureInDegFx100 = PersonalityParametricData_UseParametricValue,
+   .targetFreezeIntegrationSum = PersonalityParametricData_UseParametricValue,
+   .minimumFreezeTimeMinutes = PersonalityParametricData_UseParametricValue
 };
 
 static const Erd_t enableErdsList[] = {
@@ -268,6 +271,8 @@ static void InitializeErdResolvers(AluminumMoldIceMakerPlugin_t *instance, I_Dat
 void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
 {
    const SensorData_t *sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
+   const AluminumMoldIceMakerData_t *aluminumMoldIceMakerData =
+      PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData;
 
    DataModel_Write(
       dataModel,
@@ -318,11 +323,16 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
       dataModel,
       &rakeMotorDriverConfig);
 
+   harvestCountCalculatorConfig.startIntegrationTemperatureInDegFx100 =
+      aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100;
+   harvestCountCalculatorConfig.targetFreezeIntegrationSum =
+      aluminumMoldIceMakerData->freezeData.freezeIntegrationLimitInDegFx100TimesSeconds;
+   harvestCountCalculatorConfig.minimumFreezeTimeMinutes =
+      aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes;
    HarvestCountCalculator_Init(
       &instance->_private.harvestCountCalculator,
       dataModel,
-      &harvestCountCalculatorConfig,
-      PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData);
+      &harvestCountCalculatorConfig);
 
    IceMakerEnableResolver_Init(
       &instance->_private.iceMakerEnableResolver,

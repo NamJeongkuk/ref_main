@@ -21,6 +21,7 @@
 #include "SensorFiltering.h"
 #include "ResolvedVoteRelayConnector.h"
 #include "OverrideArbiter.h"
+#include "HarvestCountCalculator.h"
 
 typedef struct
 {
@@ -38,6 +39,7 @@ typedef struct
       ErdResolver_t iceMakerWaterValveVoteResolver;
       ResolvedVoteRelayConnector_t iceMakerWaterValveRelayConnector;
       OverrideArbiter_t twistTrayIceMakerThermistorIsValidOverrideArbiter;
+      HarvestCountCalculator_t harvestCountCalculator;
    } _private;
 } TwistTrayIceMakerPlugin_t;
 
