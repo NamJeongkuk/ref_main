@@ -27,6 +27,7 @@
 #include "IceMakerData.h"
 #include "FlowMeterData.h"
 #include "DispenserData.h"
+#include "RecessHeaterData.h"
 
 enum
 {
@@ -53,6 +54,7 @@ typedef struct
    const IceMakerData_t *iceMakerData;
    const FlowMeterData_t *flowMeterData;
    const DispenserData_t *dispenserData;
+   const RecessHeaterData_t *recessHeaterData;
 } PersonalityParametricData_t;
 
 const PersonalityParametricData_t *PersonalityParametricData_Get(I_DataModel_t *dataModel);

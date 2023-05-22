@@ -17,6 +17,7 @@ void SideBySideConfigurationPlugin_Init(SideBySideConfigurationPlugin_t *instanc
    DispenserWaterValvePlugin_Init(&instance->_private.dispenserWaterValvePlugin, dataModel);
    AugerMotorPlugin_Init(&instance->_private.augerMotorPlugin, dataModel);
    SideBySideStaggeredHeater_Init(&instance->_private.staggeredHeaterPlugin, dataModel);
+   RecessHeaterPlugin_Init(&instance->_private.recessHeaterPlugin, dataModel);
    SideBySideFactoryPlugin_Init(&instance->_private.factoryPlugin, dataModel);
    SideBySideDispensePlugin_Init(&instance->_private.dispensePlugin, dataModel);
    SideBySideLightingPlugin_Init(&instance->_private.lightingPlugin, dataModel);

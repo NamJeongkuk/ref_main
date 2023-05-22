@@ -50,6 +50,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/ParametricData \
    $(PROJECT_DIR)/Application/Plugins \
    $(PROJECT_DIR)/Application/Pulldown \
+   $(PROJECT_DIR)/Application/RecessHeater \
    $(PROJECT_DIR)/Application/Sabbath \
    $(PROJECT_DIR)/Application/Sensor \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \
@@ -59,6 +60,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Temperature \
    $(PROJECT_DIR)/Application/TimerModule \
    $(PROJECT_DIR)/Application/Valve \
+   $(PROJECT_DIR)/Application/VariableSweatHeater \
    $(PROJECT_DIR)/Application/Voting \
    $(PROJECT_DIR)/Application/WaterFilter \
    $(PROJECT_DIR)/Application/WaterValve \
@@ -103,6 +105,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/SystemMonitor \
    $(TESTS_DIR)/Application/TimerModule \
    $(TESTS_DIR)/Application/TwistTrayIceMaker \
+   $(TESTS_DIR)/Application/VariableSweatHeater \
    $(TESTS_DIR)/Hardware/SoftPwm \
 
 ifeq ($(INTEGRATION),Y)

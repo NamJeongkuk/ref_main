@@ -73,8 +73,8 @@ SRC_DIRS:=\
   src/Application/ParametricData \
   src/Application/Plugins \
   src/Application/Pulldown \
+  src/Application/RecessHeater \
   src/Application/Sabbath \
-  src/Application/Sensor \
   src/Application/Sensor \
   src/Application/ServiceDiagnostics \
   src/Application/Setpoints \
@@ -84,6 +84,7 @@ SRC_DIRS:=\
   src/Application/TimerModule \
   src/Application/Uassert \
   src/Application/Valve \
+  src/Application/VariableSweatHeater \
   src/Application/WaterValve \
   Parametric/data/Production \
   lib/Common/Source/Gea \

@@ -12,6 +12,7 @@
 #include "I_DataModel.h"
 #include "AluminumMoldIceMakerPlugin.h"
 #include "SideBySideStaggeredHeater.h"
+#include "RecessHeaterPlugin.h"
 #include "SideBySideFactoryPlugin.h"
 #include "IsolationWaterValvePlugin.h"
 #include "FlowMeterPlugin.h"
@@ -34,6 +35,7 @@ typedef struct
       DispenserWaterValvePlugin_t dispenserWaterValvePlugin;
       AugerMotorPlugin_t augerMotorPlugin;
       SideBySideStaggeredHeater_t staggeredHeaterPlugin;
+      RecessHeaterPlugin_t recessHeaterPlugin;
       SideBySideFactoryPlugin_t factoryPlugin;
       SideBySideDispensePlugin_t dispensePlugin;
       SideBySideLightingPlugin_t lightingPlugin;

@@ -841,6 +841,11 @@ enum
    ENTRY(Erd_CompressorSpeed_DefrostVote,                   0xF33D, CompressorVotedSpeed_t,                             Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorSpeed_GridVote,                      0xF33E, CompressorVotedSpeed_t,                             Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_RecessHeater_ResolvedVote,                     0xF340, PercentageDutyCycleVote_t,                          Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_RecessHeater_WinningVoteErd,                   0xF341, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_RecessHeater_FactoryVote,                      0xF342, PercentageDutyCycleVote_t,                          Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_RecessHeater_VariableAntiSweatVote,            0xF343, PercentageDutyCycleVote_t,                          Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_SensorsReadyToBeRead,                          0xF400, bool,                                               Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_SetpointResolverReady,                         0xF401, bool,                                               Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentStateResolverReady,      0xF402, bool,                                               Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
@@ -907,8 +912,8 @@ enum
    ENTRY(Erd_Ambient_FilteredInternalTemperatureOverrideValueInDegFx100,     0xF44B, TemperatureDegFx100_t,             Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Ambient_FilteredInternalTemperatureResolvedInDegFx100,          0xF44C, TemperatureDegFx100_t,             Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_Ambient_FilteredTemperatureResolvedInDegFx100,                  0xF44D, TemperatureDegFx100_t,             Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Ambient_FilteredHumidityResolvedPercentx100,                    0xF44E, RelativeHumidityPercentx100_t,     Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Ambient_FilteredTemperatureResolvedInDegFx100,                  0xF44D, TemperatureDegFx100_t,             Swap_Yes,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Ambient_FilteredHumidityResolvedPercentx100,                    0xF44E, RelativeHumidityPercentx100_t,     Swap_Yes,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AmbientTemperature_IsValidResolved,                             0xF44F, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AmbientHumidity_IsValidResolved,                                0xF450, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
