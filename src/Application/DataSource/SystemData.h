@@ -21,6 +21,7 @@
 #include "ServiceDiagnosticsDataSource.h"
 #include "SystemErds.h"
 #include "I_Interrupt.h"
+#include "Timer.h"
 
 typedef struct
 {
@@ -77,8 +78,7 @@ void SystemData_Init(
    I_AsyncDataSource_t *async,
    I_Crc16Calculator_t *crcCalculator,
    I_Action_t *systemActionForStartup,
-   I_Action_t *resetAction,
-   I_Interrupt_t *debounceInterrupt);
+   I_Action_t *resetAction);
 
 /*!
  * @param instance
@@ -100,5 +100,17 @@ I_DataSource_t *SystemData_ExternalDataSource(
  */
 I_DataModel_t *SystemData_DataModel(
    SystemData_t *instance);
+
+/*!
+ * @param instance
+ * @param dataModel 
+ * @param timerModule
+ * @param debounceInterrupt
+ */
+void SystemData_AddBspDataSource(
+   SystemData_t *instance,
+   I_DataModel_t *dataModel,
+   TimerModule_t *timerModule,
+   I_Interrupt_t *debounceInterrupt);
 
 #endif

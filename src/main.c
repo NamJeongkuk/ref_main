@@ -192,8 +192,7 @@ int main(void)
       NonVolatileAsyncDataSource_GetAsyncDataSource(&nvAsyncDataSource),
       Crc16Calculator_Table,
       watchdogKickAction,
-      resetAction,
-      interrupt);
+      resetAction);
 
    I_DataModel_t *dataModel = SystemData_DataModel(&systemData);
 
@@ -206,8 +205,6 @@ int main(void)
 
    Hardware_InitializeStage2(dataModel);
 
-   RelayWatchdogPlugin_Init(dataModel);
-
    EepromMonitorPlugin_Init(dataModel);
 
    ParametricDataErds_Init(
@@ -216,6 +213,15 @@ int main(void)
       Erd_AppliancePersonality,
       Erd_PersonalityParametricData,
       Erd_PersonalityIdOutOfRangeFlag);
+
+   // The BSP ERDs are parametrically mapped, so they need to be initialized after Parametric ERDs are established.
+   SystemData_AddBspDataSource(
+      &systemData,
+      dataModel,
+      timerModule,
+      interrupt);
+
+   RelayWatchdogPlugin_Init(dataModel);
 
    GeaStack_Init(
       &geaStack,

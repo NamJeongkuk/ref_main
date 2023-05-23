@@ -45,8 +45,7 @@ static void Init(ReferDataModel_TestDouble_t *instance, PersonalityId_t personal
       AsyncDataSource_Eeprom_TestDouble_GetAsyncDataSource(&instance->_private.asyncEepromTestDouble),
       Crc16Calculator_Table,
       &instance->_private.runTimerModuleAction.interface,
-      Action_Null_GetInstance(),
-      NULL);
+      Action_Null_GetInstance());
 
    instance->dataModel = SystemData_DataModel(&instance->_private.systemData);
    instance->externalDataSource = SystemData_ExternalDataSource(&instance->_private.systemData);
@@ -58,6 +57,12 @@ static void Init(ReferDataModel_TestDouble_t *instance, PersonalityId_t personal
 
    instance->_private.personalityParametricData = (PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(personalityIdForTest);
    DataModelErdPointerAccess_Write(instance->dataModel, Erd_PersonalityParametricData, instance->_private.personalityParametricData);
+
+   SystemData_AddBspDataSource(
+      &instance->_private.systemData,
+      instance->dataModel,
+      NULL,
+      NULL);
 }
 
 void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance)

@@ -95,11 +95,13 @@ static const I_DataSource_Api_t api = { Read, Write, Has, SizeOf };
 extern "C" void BspDataSource_Init(
    BspDataSource_t *_instance,
    TimerModule_t *timerModule,
-   I_Interrupt_t *debounceInterrupt)
+   I_Interrupt_t *debounceInterrupt,
+   I_DataModel_t *dataModel)
 {
    IGNORE(_instance);
    IGNORE(timerModule);
    IGNORE(debounceInterrupt);
+   IGNORE(dataModel);
 
    ConstArrayMap_LinearSearch_Init(&dataSourceConstArrayMap, &constArrayMapConfig);
    DataSource_Ram_Init(&dataSource, &storage, sizeof(storage), &dataSourceConstArrayMap.interface);

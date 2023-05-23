@@ -14,6 +14,7 @@
 #include "DataSource_Adc.h"
 #include "DataSource_Pwm.h"
 #include "DataSource_InputCapture.h"
+#include "PersonalityParametricData.h"
 
 static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_GpioGroupInterface, Erd_GpioGroupInterface },
@@ -131,18 +132,17 @@ static void InitializeApplicationToBspMappedDataSource(BspDataSource_t *instance
       &instance->_private.applicationToBspBidirectionalMap.interface);
 }
 
-static void InitializeParametricToApplicationBspMappedDataSource(BspDataSource_t *instance)
+static void InitializeParametricToApplicationBspMappedDataSource(
+   BspDataSource_t *instance, 
+   const BspParametricConfiguration_t *configuration)
 {
-   const ParametricDataTableOfContents_t *parametricData = ParametricData_GetParametricTableOfContents();
-   instance->_private.bspParametricConfiguration = parametricData->personalities[PersonalityId_Default]->bspConfigurationData;
-
    ConstArrayMap_LinearSearch_Init(
       &instance->_private.parametricToApplicationBspMap,
-      instance->_private.bspParametricConfiguration->parametricToBspMapConfiguration);
+      configuration->parametricToBspMapConfiguration);
 
    ConstArrayMap_BinarySearch_Init(
       &instance->_private.applicationBspToParametricMap,
-      instance->_private.bspParametricConfiguration->bspToParametricMapConfiguration);
+      configuration->bspToParametricMapConfiguration);
 
    ConstBidirectionalMap_ConstArrayMap_Init(
       &instance->_private.parametricToApplicationBspBidirectionalMap,
@@ -158,12 +158,15 @@ static void InitializeParametricToApplicationBspMappedDataSource(BspDataSource_t
 void BspDataSource_Init(
    BspDataSource_t *instance,
    TimerModule_t *timerModule,
-   I_Interrupt_t *debounceInterrupt)
+   I_Interrupt_t *debounceInterrupt,
+   I_DataModel_t *dataModel)
 {
    instance->_private.dataSource = DataSource_Bsp_Init(timerModule, debounceInterrupt);
 
    InitializeApplicationToBspMappedDataSource(instance);
-   InitializeParametricToApplicationBspMappedDataSource(instance);
+   InitializeParametricToApplicationBspMappedDataSource(
+      instance,
+      PersonalityParametricData_Get(dataModel)->bspConfigurationData);
 }
 
 I_DataSource_t *BspDataSource_DataSource(BspDataSource_t *instance)

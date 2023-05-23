@@ -16,6 +16,7 @@
 #include "BspParametricConfiguration.h"
 #include "Timer.h"
 #include "I_Interrupt.h"
+#include "I_DataModel.h"
 
 typedef struct
 {
@@ -25,7 +26,6 @@ typedef struct
       DataSource_Mapped_t applicationToBspMappedDataSource;
       DataSource_Mapped_t parametricToApplicationBspMappedDataSource;
 
-      const BspParametricConfiguration_t *bspParametricConfiguration;
       ConstArrayMap_LinearSearch_t applicationToBspMap;
       ConstArrayMap_BinarySearch_t bspToApplicationMap;
       ConstBidirectionalMap_ConstArrayMap_t applicationToBspBidirectionalMap;
@@ -41,11 +41,13 @@ typedef struct
  * @param instance
  * @param timerModule
  * @param debounceInterrupt
+ * @param dataModel
  */
 void BspDataSource_Init(
    BspDataSource_t *instance,
    TimerModule_t *timerModule,
-   I_Interrupt_t *debounceInterrupt);
+   I_Interrupt_t *debounceInterrupt,
+   I_DataModel_t *dataModel);
 
 /*!
  * Get the interface to the BSP data source

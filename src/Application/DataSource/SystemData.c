@@ -25,8 +25,7 @@ static void InitializeInternalDataSource(
    I_AsyncDataSource_t *async,
    I_Crc16Calculator_t *crcCalculator,
    I_Action_t *systemActionForStartup,
-   I_Action_t *resetAction,
-   I_Interrupt_t *debounceInterrupt)
+   I_Action_t *resetAction)
 {
    DataSource_Composite_Init(&instance->_private.dataSource.composite);
 
@@ -47,24 +46,6 @@ static void InitializeInternalDataSource(
       instance,
       NonVolatileDataSource_DataSource(&instance->_private.dataSource.nv),
       &instance->_private.dataSource.nvComponent);
-
-   BspDataSource_Init(
-      &instance->_private.dataSource.bsp,
-      timerModule,
-      debounceInterrupt);
-
-   AddDataSourceToComposite(
-      instance,
-      BspDataSource_DataSource(&instance->_private.dataSource.bsp),
-      &instance->_private.dataSource.bspComponent);
-
-   // UnmappedBspDataSource Must be added to the DataSource Composite after BspDataSource
-   UnmappedBspDataSource_Init(
-      &instance->_private.dataSource.unmappedBsp);
-   AddDataSourceToComposite(
-      instance,
-      UnmappedBspDataSource_DataSource(&instance->_private.dataSource.unmappedBsp),
-      &instance->_private.dataSource.unmappedBspComponent);
 
    ApplianceApiDataSource_Init(
       &instance->_private.dataSource.applianceApi,
@@ -107,8 +88,7 @@ void SystemData_Init(
    I_AsyncDataSource_t *async,
    I_Crc16Calculator_t *crcCalculator,
    I_Action_t *systemActionForStartup,
-   I_Action_t *resetAction,
-   I_Interrupt_t *debounceInterrupt)
+   I_Action_t *resetAction)
 {
    InitializeInternalDataSource(
       instance,
@@ -116,8 +96,7 @@ void SystemData_Init(
       async,
       crcCalculator,
       systemActionForStartup,
-      resetAction,
-      debounceInterrupt);
+      resetAction);
 
    InitializeExternalDataSource(instance);
    InitializeDataModel(instance);
@@ -141,4 +120,25 @@ I_DataSource_t *SystemData_ExternalDataSource(SystemData_t *instance)
 I_DataModel_t *SystemData_DataModel(SystemData_t *instance)
 {
    return DataModel_DataModel(&instance->_private.dataModel);
+}
+
+void SystemData_AddBspDataSource(SystemData_t *instance, I_DataModel_t *dataModel, TimerModule_t *timerModule, I_Interrupt_t *debounceInterrupt)
+{
+   BspDataSource_Init(
+      &instance->_private.dataSource.bsp,
+      timerModule,
+      debounceInterrupt,
+      dataModel);
+   AddDataSourceToComposite(
+      instance,
+      BspDataSource_DataSource(&instance->_private.dataSource.bsp),
+      &instance->_private.dataSource.bspComponent);
+
+   // UnmappedBspDataSource Must be added to the DataSource Composite after BspDataSource
+   UnmappedBspDataSource_Init(
+      &instance->_private.dataSource.unmappedBsp);
+   AddDataSourceToComposite(
+      instance,
+      UnmappedBspDataSource_DataSource(&instance->_private.dataSource.unmappedBsp),
+      &instance->_private.dataSource.unmappedBspComponent);
 }
