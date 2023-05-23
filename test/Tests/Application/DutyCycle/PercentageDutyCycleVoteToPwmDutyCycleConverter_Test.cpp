@@ -24,6 +24,7 @@ enum
 
    SomeDutyCycle = 25,
    SomeOtherDutyCycle = 60,
+   SomePercentage = 75
 };
 
 static const DataModel_TestDoubleConfigurationEntry_t erds[] = {
@@ -66,6 +67,11 @@ TEST_GROUP(PercentageDutyCycleVoteToPwmDutyCycleConverter)
       DataModel_Write(dataModel, Erd_PercentageDutyCycleVote, &votedPercentageDutyCycle);
    }
 
+   void GivenThePercentageDutyCycleIs(PercentageDutyCycle_t percentage)
+   {
+      WhenThePercentageDutyCycleIs(percentage);
+   }
+
    void WhenTheDontCarePercentageDutyCycleIs(PercentageDutyCycle_t percentage)
    {
       PercentageDutyCycleVote_t votedPercentageDutyCycle = {
@@ -74,6 +80,11 @@ TEST_GROUP(PercentageDutyCycleVoteToPwmDutyCycleConverter)
       };
 
       DataModel_Write(dataModel, Erd_PercentageDutyCycleVote, &votedPercentageDutyCycle);
+   }
+
+   void GivenTheDontCarePercentageDutyCycleIs(PercentageDutyCycle_t percentage)
+   {
+      WhenTheDontCarePercentageDutyCycleIs(percentage);
    }
 
    void TheConvertedPwmDutyCycleShouldBe(PwmDutyCycle_t expected)
@@ -89,6 +100,22 @@ TEST_GROUP(PercentageDutyCycleVoteToPwmDutyCycleConverter)
    }
 };
 
+TEST(PercentageDutyCycleVoteToPwmDutyCycleConverter, ShouldConvertPercentageDutyCycleToPwmDutyCycleWhenDutyCycleVoteIsCareOnInitialization)
+{
+   GivenThePercentageDutyCycleIs(SomePercentage);
+   GivenInitialization();
+
+   TheConvertedPwmDutyCycleShouldBe(PercentageDutyCycleAsPwmDutyCycle(SomePercentage));
+}
+
+TEST(PercentageDutyCycleVoteToPwmDutyCycleConverter, ShouldConvertPercentageDutyCycleToPwmDutyCycleWhenDutyCycleVoteIsDontCareOnInitialization)
+{
+   GivenTheDontCarePercentageDutyCycleIs(SomePercentage);
+   GivenInitialization();
+
+   TheConvertedPwmDutyCycleShouldBe(PercentageDutyCycleAsPwmDutyCycle(SomePercentage));
+}
+
 TEST(PercentageDutyCycleVoteToPwmDutyCycleConverter, ShouldConvertPercentageDutyCycleToPwmDutyCycleWhenPercentageChanges)
 {
    GivenInitialization();
@@ -100,7 +127,7 @@ TEST(PercentageDutyCycleVoteToPwmDutyCycleConverter, ShouldConvertPercentageDuty
    }
 }
 
-TEST(PercentageDutyCycleVoteToPwmDutyCycleConverter, ShouldNotConvertPercentageDutyCycleToPwmDutyCycleWhenDutyCycleVoteDoesNotCare)
+TEST(PercentageDutyCycleVoteToPwmDutyCycleConverter, ShouldConvertPercentageDutyCycleToPwmDutyCycleWhenDutyCycleVoteDoesNotCare)
 {
    GivenInitialization();
 
@@ -108,8 +135,8 @@ TEST(PercentageDutyCycleVoteToPwmDutyCycleConverter, ShouldNotConvertPercentageD
    TheConvertedPwmDutyCycleShouldBe(PercentageDutyCycleAsPwmDutyCycle(SomeDutyCycle));
 
    WhenTheDontCarePercentageDutyCycleIs(SomeOtherDutyCycle);
-   TheConvertedPwmDutyCycleShouldBe(PercentageDutyCycleAsPwmDutyCycle(SomeDutyCycle));
-
-   WhenThePercentageDutyCycleIs(SomeOtherDutyCycle);
    TheConvertedPwmDutyCycleShouldBe(PercentageDutyCycleAsPwmDutyCycle(SomeOtherDutyCycle));
+
+   WhenThePercentageDutyCycleIs(SomeDutyCycle);
+   TheConvertedPwmDutyCycleShouldBe(PercentageDutyCycleAsPwmDutyCycle(SomeDutyCycle));
 }

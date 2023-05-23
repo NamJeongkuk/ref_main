@@ -10,20 +10,15 @@
 #include "PwmDutyCycle.h"
 
 static void OnPercentageDutyCycleVoteChange(void *context, const void *args)
-
 {
    PercentageDutyCycleVoteToPwmDutyCycleConverter_t *instance = context;
    const PercentageDutyCycleVote_t *percentageDutyCycleVote = args;
 
-   if(percentageDutyCycleVote->care)
-   {
-      PwmDutyCycle_t convertedPwmDutyCycle = (PwmDutyCycle_Max * percentageDutyCycleVote->percentageDutyCycle) / 100;
-
-      DataModel_Write(
-         instance->_private.dataModel,
-         instance->_private.config->outputPwmDutyCycleErd,
-         &convertedPwmDutyCycle);
-   }
+   PwmDutyCycle_t convertedPwmDutyCycle = (PwmDutyCycle_Max * percentageDutyCycleVote->percentageDutyCycle) / 100;
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->outputPwmDutyCycleErd,
+      &convertedPwmDutyCycle);
 }
 
 void PercentageDutyCycleVoteToPwmDutyCycleConverter_Init(
@@ -34,11 +29,17 @@ void PercentageDutyCycleVoteToPwmDutyCycleConverter_Init(
    instance->_private.config = config;
    instance->_private.dataModel = dataModel;
 
+   PercentageDutyCycleVote_t inputPercentageDutyCycleVote;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->inputPercentageDutyCycleVoteErd,
+      &inputPercentageDutyCycleVote);
+   OnPercentageDutyCycleVoteChange(instance, &inputPercentageDutyCycleVote);
+
    EventSubscription_Init(
       &instance->_private.percentageDutyCycleOnChangeSubscription,
       instance,
       OnPercentageDutyCycleVoteChange);
-
    DataModel_Subscribe(
       instance->_private.dataModel,
       instance->_private.config->inputPercentageDutyCycleVoteErd,
