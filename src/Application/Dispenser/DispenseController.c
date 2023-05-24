@@ -185,13 +185,19 @@ static DispensingRequestSelection_t RequestSelection(DispenseController_t *insta
 
 static void UpdateDispensingRequestStatus(DispenseController_t *instance, DispenseStatus_t status)
 {
-   DispensingRequestStatus_t dispensingRequestStatus;
+   DispensingRequest_t privateDispensingRequest;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->dispensingRequestStatusErd,
-      &dispensingRequestStatus);
+      instance->_private.config->privateDispensingRequestErd,
+      &privateDispensingRequest);
 
-   dispensingRequestStatus.status = status;
+   DispensingRequestStatus_t dispensingRequestStatus = {
+      .action = privateDispensingRequest.action,
+      .selection = privateDispensingRequest.selection,
+      .specialOptions = privateDispensingRequest.specialOptions,
+      .status = status,
+      .preciseFillOuncesx100 = privateDispensingRequest.preciseFillOuncesx100
+   };
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->dispensingRequestStatusErd,

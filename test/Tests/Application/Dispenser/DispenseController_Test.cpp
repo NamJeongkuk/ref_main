@@ -194,6 +194,16 @@ TEST_GROUP(DispenseController)
       CHECK_EQUAL(expected, actual);
    }
 
+   void TheDispensingRequestStatusAndSelectionAndActionShouldBe(DispenseStatus_t expectedStatus, DispenseStatus_t expectedSelection, DispensingAction_t expectedAction)
+   {
+      DispensingRequestStatus_t actual;
+      DataModel_Read(dataModel, Erd_DispensingRequestStatus, &actual);
+
+      CHECK_EQUAL(expectedStatus, actual.status);
+      CHECK_EQUAL(expectedSelection, actual.selection);
+      CHECK_EQUAL(expectedAction, actual.action);
+   }
+
    void TheDispensingRequestStatusShouldBe(DispenseStatus_t expected)
    {
       DispensingRequestStatus_t actual;
@@ -726,4 +736,39 @@ TEST(DispenseController, ShouldNotStopDispensingIfANonStopActionIsRequested)
 
    WhenTheDispensingRequestActionIs(DispensingAction_Continue);
    ShouldBeDispensing();
+}
+
+TEST(DispenseController, ShouldUpdateDispensingRequestStatusBasedOnPrivateDispensingRequest)
+{
+   GivenTheFsmIsInitializedIntoNotDispensingState();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_CrushedIce, DispensingAction_Start);
+   TheDispensingRequestStatusAndSelectionAndActionShouldBe(
+      DispenseStatus_Dispensing,
+      DispensingRequestSelection_CrushedIce,
+      DispensingAction_Start);
+   ShouldBeDispensing();
+
+   WhenTheDispensingRequestActionIs(DispensingAction_Stop);
+   ShouldNotBeDispensing();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_CubedIce, DispensingAction_Start);
+   TheDispensingRequestStatusAndSelectionAndActionShouldBe(
+      DispenseStatus_Dispensing,
+      DispensingRequestSelection_CubedIce,
+      DispensingAction_Start);
+   ShouldBeDispensing();
+
+   WhenTheDispensingRequestActionIs(DispensingAction_Stop);
+   ShouldNotBeDispensing();
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_Water, DispensingAction_Start);
+   TheDispensingRequestStatusAndSelectionAndActionShouldBe(
+      DispenseStatus_Dispensing,
+      DispensingRequestSelection_Water,
+      DispensingAction_Start);
+   ShouldBeDispensing();
+
+   WhenTheDispensingRequestActionIs(DispensingAction_Stop);
+   ShouldNotBeDispensing();
 }
