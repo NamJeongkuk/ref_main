@@ -359,5 +359,6 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
    AluminumMoldIceMaker_Init(
       &instance->_private.aluminumMoldIceMaker,
       dataModel,
-      &aluminumMoldIceMakerConfig);
+      &aluminumMoldIceMakerConfig,
+      aluminumMoldIceMakerData);
 }

@@ -215,24 +215,9 @@ static bool MotorActionResultIs(TwistTrayIceMaker_t *instance, TwistTrayIceMaker
    return actual == expected;
 }
 
-static bool FillTubeHeaterDutyCycleIsZero(TwistTrayIceMaker_t *instance)
+static bool DoorHasBeenClosedForLongEnough(TwistTrayIceMaker_t *instance)
 {
-   return (instance->_private.parametric->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage == 0);
-}
-
-static bool FillTubeHeaterOnTimeIsZero(TwistTrayIceMaker_t *instance)
-{
-   return (instance->_private.parametric->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds == 0);
-}
-
-static void StartHarvestingIfConditionsAreMet(TwistTrayIceMaker_t *instance)
-{
-   if(!ItIsSabbathMode(instance) && instance->_private.doorHasBeenClosedForLongEnough)
-   {
-      RequestMotorAction(instance, TwistTrayIceMakerMotorAction_RunCycle);
-      VoteForFillTubeHeater(instance, instance->_private.parametric->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
-      StartFillTubeHeaterTimer(instance);
-   }
+   return instance->_private.doorHasBeenClosedForLongEnough;
 }
 
 static bool IceMakerThermistorIsValid(TwistTrayIceMaker_t *instance)
@@ -373,12 +358,15 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
    {
       case Fsm_Entry:
          UpdateOperationState(instance, TwistTrayIceMakerOperationState_Harvesting);
-         StartHarvestingIfConditionsAreMet(instance);
-         break;
-
+         // Fallthrough
       case Signal_DoorClosedForLongEnough:
       case Signal_SabbathModeDisabled:
-         StartHarvestingIfConditionsAreMet(instance);
+         if(!ItIsSabbathMode(instance) && DoorHasBeenClosedForLongEnough(instance))
+         {
+            RequestMotorAction(instance, TwistTrayIceMakerMotorAction_RunCycle);
+            VoteForFillTubeHeater(instance, instance->_private.parametric->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
+            StartFillTubeHeaterTimer(instance);
+         }
          break;
 
       case Signal_FillTubeHeaterTimerExpired:
@@ -402,9 +390,7 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          {
             Fsm_Transition(fsm, State_IdleFreeze);
          }
-         else if((FillTubeHeaterTimerHasExpired(instance) ||
-                    FillTubeHeaterDutyCycleIsZero(instance) ||
-                    FillTubeHeaterOnTimeIsZero(instance)))
+         else if(FillTubeHeaterTimerHasExpired(instance))
          {
             Fsm_Transition(fsm, State_FillingTrayWithWater);
          }

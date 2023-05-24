@@ -1866,8 +1866,71 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Freeze Integration Count",
+          "name": "Erd_TwistTrayIceMaker_FreezeIntegrationCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Twist Tray Ice Maker Harvest Count Is Ready To Harvest",
           "name": "Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Operation State",
+          "name": "Erd_TwistTrayIceMaker_OperationState",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Motor Action Result",
+          "name": "Erd_TwistTrayIceMaker_MotorActionResult",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Motor Operation State",
+          "name": "Erd_TwistTrayIceMaker_MotorOperationState",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Motor Ice Maker Vote",
+          "name": "Erd_TwistTrayIceMakerMotor_IceMakerVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Water Valve Ice Maker Vote",
+          "name": "Erd_TwistTrayIceMakerWaterValve_IceMakerVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Switch Input",
+          "name": "Erd_Gpio_GPIO_IN_02",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Thermistor Is Valid",
+          "name": "Erd_TwistTrayIceMaker_ThermistorIsValid",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Thermistor Filtered Temperature In DegFx100",
+          "name": "Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100",
           "read": true,
           "write": false
         }

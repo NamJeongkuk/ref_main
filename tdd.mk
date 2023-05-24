@@ -10,6 +10,9 @@ OUTPUT_DIR := test/Build
 RUN_APPLCOMMON_TESTS := N
 DISPLAY_ASCII_ART_RESULTS?=Y
 
+CPPUTEST_CFLAGS += -DTDD_BUILD
+CPPUTEST_CPPFLAGS += -DTDD_BUILD
+
 # Specific files to include if you don't want the entire directory included
 SRC_FILES := \
 

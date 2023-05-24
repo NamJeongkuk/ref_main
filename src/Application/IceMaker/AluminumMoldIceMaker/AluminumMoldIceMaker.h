@@ -66,6 +66,7 @@ typedef struct
 void AluminumMoldIceMaker_Init(
    AluminumMoldIceMaker_t *instance,
    I_DataModel_t *dataModel,
-   const AluminumMoldIceMakerConfig_t *config);
+   const AluminumMoldIceMakerConfig_t *config,
+   const AluminumMoldIceMakerData_t *iceMakerData);
 
 #endif

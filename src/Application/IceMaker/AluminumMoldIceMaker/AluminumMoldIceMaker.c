@@ -19,6 +19,7 @@
 #include "Constants_Time.h"
 #include "DataModelErdPointerAccess.h"
 #include "utils.h"
+#include "uassert.h"
 
 enum
 {
@@ -432,16 +433,6 @@ static void ClearSkipFillFlag(AluminumMoldIceMaker_t *instance)
       clear);
 }
 
-static bool FillTubeHeaterDutyCycleIsZero(AluminumMoldIceMaker_t *instance)
-{
-   return (instance->_private.iceMakerParametricData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage == 0);
-}
-
-static bool FillTubeHeaterOnTimeIsZero(AluminumMoldIceMaker_t *instance)
-{
-   return (instance->_private.iceMakerParametricData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds == 0);
-}
-
 static void MinimumHeaterOnTimeReached(void *context)
 {
    AluminumMoldIceMaker_t *instance = context;
@@ -831,9 +822,11 @@ static bool State_Harvest(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_Harvest);
-         VoteForFillTubeHeater(instance, instance->_private.iceMakerParametricData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
-         StartMaxHarvestTimer(instance);
+         VoteForFillTubeHeater(
+            instance,
+            instance->_private.iceMakerParametricData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
          StartFillTubeHeaterTimer(instance);
+         StartMaxHarvestTimer(instance);
          StartMinimumHeaterOnTimer(instance);
          SetMoldHeaterControlRequestForHarvest(instance);
          break;
@@ -862,23 +855,9 @@ static bool State_Harvest(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 
       case Signal_FillTubeHeaterTimerExpired:
          VoteFillTubeHeaterDontCare(instance);
-         if(RakeCompletedRevolution(instance))
-         {
-            if(SabbathModeIsDisabled(instance) && IceMakerIsEnabled(instance))
-            {
-               SkipFillFlagIsSet(instance) ? Hsm_Transition(hsm, State_Freeze) : Hsm_Transition(hsm, State_Fill);
-            }
-            else
-            {
-               Hsm_Transition(hsm, State_IdleFreeze);
-            }
-         }
-         break;
-
+         // Fallthrough
       case Signal_RakeCompletedRevolution:
-         if(FillTubeHeaterTimerHasExpired(instance) ||
-            FillTubeHeaterDutyCycleIsZero(instance) ||
-            FillTubeHeaterOnTimeIsZero(instance))
+         if(RakeCompletedRevolution(instance) && FillTubeHeaterTimerHasExpired(instance))
          {
             if(SabbathModeIsDisabled(instance) && IceMakerIsEnabled(instance))
             {
@@ -980,9 +959,7 @@ static bool State_HarvestFault(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_HarvestFault);
          ClearMoldHeaterControlRequest(instance);
          StartHarvestFaultMaxTimer(instance);
-         Hsm_SendSignal(&instance->_private.hsm, Signal_TurnOnRakeMotor, NULL);
-         break;
-
+         // Fallthrough
       case Signal_TurnOnRakeMotor:
          SetRakeControllerRequest(instance);
          StartHarvestFaultRakeOnTimer(instance);
@@ -1300,14 +1277,22 @@ static HsmState_t InitialState(AluminumMoldIceMaker_t *instance)
 void AluminumMoldIceMaker_Init(
    AluminumMoldIceMaker_t *instance,
    I_DataModel_t *dataModel,
-   const AluminumMoldIceMakerConfig_t *config)
+   const AluminumMoldIceMakerConfig_t *config,
+   const AluminumMoldIceMakerData_t *iceMakerData)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
-   instance->_private.iceMakerParametricData = PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData;
+   instance->_private.iceMakerParametricData = iceMakerData;
    instance->_private.initialFreezeStateTransition = false;
    instance->_private.revolutionCompletedDuringHarvestFix = false;
    instance->_private.delayFillMonitoring = false;
+
+#ifdef TDD_BUILD
+   uassert(instance->_private.iceMakerParametricData->harvestData.maximumHarvestTimeInMinutes * SECONDS_PER_MINUTE >=
+      instance->_private.iceMakerParametricData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds);
+   uassert(instance->_private.iceMakerParametricData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds >=
+      instance->_private.iceMakerParametricData->harvestData.initialMinimumHeaterOnTimeInSeconds);
+#endif
 
    Hsm_Init(&instance->_private.hsm, &hsmConfiguration, InitialState(instance));
 
