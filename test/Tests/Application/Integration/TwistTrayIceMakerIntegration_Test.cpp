@@ -218,7 +218,6 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
 
    void GivenTheApplicationIsInitializedAndTheMotorIsHomed(void)
    {
-      GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
       GivenApplicationHasBeenInitialized();
       GivenTheMotorSwitchIsDebouncedHigh();
       WhenMotorDriveIs(ENABLED);
@@ -701,4 +700,33 @@ TEST(TwistTrayIceMakerIntegration, ShouldTurnOnFillTubeHeaterWhenEnteringHarvest
    TheFillTubeHeaterResolvedVoteShouldBe(twistTrayIceMakerData->fillTubeHeaterData.nonHarvestFillTubeHeaterDutyCyclePercentage, Vote_Care);
    TheFillTubeHeaterWinningErdShouldBe(Erd_FillTubeHeater_NonHarvestVote);
    TheFillTubeHeaterRelayShouldBe(ON);
+}
+
+TEST(TwistTrayIceMakerIntegration, ShouldTransitionFromFreezeToHarvestingOnceHarvestCountIsReachedWhenStartingCountingWithABelowStartIntegrationTemperature)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerThermistorAdcCountIs(BelowFreezingAdcCounts);
+   GivenTheApplicationIsInitializedAndIceMakerIsInFreeze();
+
+   After(twistTrayIceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN - 1);
+   OperationStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+
+   After(1);
+   OperationStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+}
+
+TEST(TwistTrayIceMakerIntegration, ShouldTransitionFromFreezeToHarvestingOnceHarvestCountIsReachedWhenStartingCountingAfterTemperatureDecreasesBelowStartIntegrationTemperature)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
+   GivenTheApplicationIsInitializedAndIceMakerIsInFreeze();
+
+   WhenTheIceMakerThermistorAdcCountIs(BelowFreezingAdcCounts);
+
+   After(MSEC_PER_SEC);
+   After(twistTrayIceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN - 1);
+   OperationStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+
+   After(1);
+   OperationStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
 }
