@@ -576,6 +576,20 @@ TEST_GROUP(TwistTrayIceMaker)
       CHECK_EQUAL(expected, actual);
    }
 
+   void GivenTheIceMakerIsInStateMotorError()
+   {
+      GivenTheIceMakerIsEnabled();
+      GivenTheIceMakerThermistorIsValid();
+
+      TheMotorShouldBeRequestedTo(Home);
+      When TheModuleIsInitialized();
+
+      TheMotorShouldBeRequestedTo(Idle);
+      TheHighLevelStateShouldBecome(FaultState);
+      TheMotorFaultShouldBecome(ACTIVE);
+      WhenTheMotorActionResultIs(MotorError);
+   }
+
    void WhenHarvestCountIsReadyToHarvestIs(bool state)
    {
       DataModel_Write(dataModel, Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest, &state);
@@ -1248,6 +1262,20 @@ TEST(TwistTrayIceMaker, ShouldNotTransitionToHarvestingAndClearTestRequestWhenTe
    WhenTheTestRequestIs(IceMakerTestRequest_Harvest);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_MotorError);
    And TheTestRequestShouldBe(IceMakerTestRequest_None);
+}
+
+TEST(TwistTrayIceMaker, ShouldRetryInitalizingMotor)
+{
+   GivenTheIceMakerIsInStateMotorError();
+
+   TheMotorShouldBeRequestedTo(Home);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_MotorError);
+
+   After(((instance._private.parametric->harvestData.motorErrorRetryInitializeMinutes) * MSEC_PER_MIN) - 1);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_MotorError);
+
+   After(1);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Homing);
 }
 
 // FILL TUBE HEATER

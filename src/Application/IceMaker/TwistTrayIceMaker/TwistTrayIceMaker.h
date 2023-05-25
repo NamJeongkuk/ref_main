@@ -25,6 +25,7 @@ typedef struct
       Timer_t doorClosedTimer;
       Timer_t fillTubeHeaterTimer;
       Timer_t dispensingIceTimer;
+      Timer_t retryMotorInitTimer;
 
       bool firstFreezeTransition : 1;
       bool doorHasBeenClosedForLongEnough : 1;

@@ -21,6 +21,7 @@
 #define FullIceBucketWaitPeriodMinutes (instance->_private.parametric->harvestData.fullBucketWaitPeriodMinutes * MSEC_PER_MIN)
 #define DelayToHarvestAfterDoorCloses (instance->_private.parametric->harvestData.delayToHarvestAfterDoorClosesSeconds * MSEC_PER_SEC)
 #define MaxHarvestTemperatureInDegFx100 (instance->_private.parametric->freezeData.maximumHarvestTemperatureInDegFx100)
+#define RetryMotorInitializeMinutes ((instance->_private.parametric->harvestData.motorErrorRetryInitializeMinutes) * MSEC_PER_MIN)
 
 enum
 {
@@ -45,6 +46,7 @@ enum
    Signal_FillTubeHeaterTimerExpired,
    Signal_IceMakerIsEnabled,
    Signal_IceMakerIsDisabled,
+   Signal_MotorErrorRetryTimerExpired,
    Signal_HarvestCountIsReadyToHarvest,
 
    Idle = TwistTrayIceMakerMotorAction_Idle,
@@ -516,6 +518,12 @@ static void State_BucketIsFull(Fsm_t *fsm, FsmSignal_t signal, const void *data)
    }
 }
 
+static void MotorErrorRetryTimerExpired(void *context)
+{
+   REINTERPRET(instance, context, TwistTrayIceMaker_t *);
+   Fsm_SendSignal(&instance->_private.fsm, Signal_MotorErrorRetryTimerExpired, NULL);
+}
+
 static void State_MotorError(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
    TwistTrayIceMaker_t *instance = InstanceFrom(fsm);
@@ -524,11 +532,26 @@ static void State_MotorError(Fsm_t *fsm, FsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Fsm_Entry:
+         TimerModule_StartOneShot(
+            instance->_private.timerModule,
+            &instance->_private.retryMotorInitTimer,
+            RetryMotorInitializeMinutes,
+            MotorErrorRetryTimerExpired,
+            instance);
+
          UpdateOperationState(instance, TwistTrayIceMakerOperationState_MotorError);
          UpdateHighLevelState(instance, TwistTrayIceMakerHighLevelState_Fault);
 
          RequestMotorAction(instance, Idle);
          DataSource_Write(instance->_private.dataSource, Erd_TwistTrayIceMaker_MotorFaultActive, set);
+         break;
+
+      case Signal_MotorErrorRetryTimerExpired:
+         Fsm_Transition(&instance->_private.fsm, State_Homing);
+         break;
+
+      case Fsm_Exit:
+         TimerModule_Stop(instance->_private.timerModule, &instance->_private.retryMotorInitTimer);
          break;
    }
 }

@@ -28,6 +28,7 @@ typedef struct
    uint8_t fullBucketDetectionPeriodSecX10;
    uint8_t initialHomingTwistPeriodSecX10;
    uint8_t homeLandingDelayPeriodSecX10;
+   uint8_t motorErrorRetryInitializeMinutes;
    uint8_t longMotorErrorTimeoutPeriodSec;
    uint8_t shortMotorErrorTimeoutPeriodSec;
    uint8_t delayToHarvestAfterDoorClosesSeconds;

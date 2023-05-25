@@ -71,7 +71,7 @@ static const TwistTrayIceMakerData_t config = {
    .typeInformation{
       .type = IceMakerType_Twist,
       .location = IceMakerLocation_Freezer,
-      },
+   },
    .freezeData{
       .maximumHarvestTemperatureInDegFx100 = 0,
       .startIntegrationTemperatureInDegFx100 = 0,
@@ -83,6 +83,7 @@ static const TwistTrayIceMakerData_t config = {
       .fullBucketDetectionPeriodSecX10 = FullBucketDetectionTime / 100,
       .initialHomingTwistPeriodSecX10 = InitialHomingTwistTime / 100,
       .homeLandingDelayPeriodSecX10 = HomePositionLandingDelay / 100,
+      .motorErrorRetryInitializeMinutes = 180,
       .longMotorErrorTimeoutPeriodSec = LongMotorErrorTimeout / MSEC_PER_SEC,
       .shortMotorErrorTimeoutPeriodSec = ShortMotorErrorTimeout / MSEC_PER_SEC,
       .delayToHarvestAfterDoorClosesSeconds = 0,
