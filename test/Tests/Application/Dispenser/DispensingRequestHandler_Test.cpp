@@ -424,7 +424,7 @@ TEST(DispensingRequestHandler, ShouldSetPrivateDispenseRequestToIceThenWaterWhen
    ThePrivateDispensingRequestShouldBe(DispensingAction_Start, DispensingRequestSelection_CrushedIce);
 }
 
-TEST(DispensingRequestHandler, ShouldNotUpdateTheDispenseStatusWhenThePrivateDispensingResultStatusChangesAndThenAStopRequestIsMade)
+TEST(DispensingRequestHandler, ShouldUpdateTheDispenseStatusToSuccessfulWhenThePrivateDispensingResultStatusChangesAndThenAStopRequestIsMade)
 {
    GivenTheDispensingRequestIsInRequestingDispense();
 
@@ -432,7 +432,7 @@ TEST(DispensingRequestHandler, ShouldNotUpdateTheDispenseStatusWhenThePrivateDis
    TheDispensingRequestStatusShouldBe(DispenseStatus_DispenseInhibitedDueToDoorOpen);
 
    WhenTheDispensingRequestIs(DispensingAction_Stop, DispensingRequestSelection_Water);
-   TheDispensingRequestStatusShouldBe(DispenseStatus_DispenseInhibitedDueToDoorOpen);
+   TheDispensingRequestStatusShouldBe(DispenseStatus_CompletedSuccessfully);
 }
 
 TEST(DispensingRequestHandler, ShouldClearPrivateDispensingStatusResultWhenItChanges)

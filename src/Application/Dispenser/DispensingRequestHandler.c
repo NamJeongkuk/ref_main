@@ -239,6 +239,10 @@ static void State_Idle(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          Fsm_Transition(fsm, State_RequestingDispense);
          break;
 
+      case Signal_StopRequest:
+         UpdateDispensingRequestStatus(instance, DispenseStatus_CompletedSuccessfully);
+         break;
+
       case Signal_InvalidRequest:
          UpdateDispensingRequestStatus(instance, DispenseStatus_BadCommand);
          break;
