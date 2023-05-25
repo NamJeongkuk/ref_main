@@ -233,7 +233,7 @@ static bool HarvestConditionsHaveBeenMet(TwistTrayIceMaker_t *instance)
    TemperatureDegFx100_t iceTrayTempx100;
    DataSource_Read(
       instance->_private.dataSource,
-      Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100,
+      Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
       &iceTrayTempx100);
 
    bool harvestCountIsReadyToHarvest;
@@ -724,7 +724,7 @@ static void DataSourceChanged(void *context, const void *data)
             break;
       }
    }
-   else if(onChangeArgs->erd == Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100)
+   else if(onChangeArgs->erd == Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100)
    {
       Fsm_SendSignal(&instance->_private.fsm, Signal_IceMakerFilteredTemperatureChanged, NULL);
    }

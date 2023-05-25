@@ -99,12 +99,28 @@ static const ResolvedVoteRelayConnectorConfiguration_t iceMakerWaterValveRelayCo
 static HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
    .harvestCountIsReadyToHarvestErd = Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,
-   .moldFilteredTemperatureInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100,
+   .moldFilteredTemperatureInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
    .moldFreezeIntegrationCountErd = Erd_TwistTrayIceMaker_FreezeIntegrationCount,
    .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_TwistTrayIceMaker_MinimumFreezeTimeCounterInMinutes,
    .startIntegrationTemperatureInDegFx100 = PersonalityParametricData_UseParametricValue,
    .targetFreezeIntegrationSum = PersonalityParametricData_UseParametricValue,
    .minimumFreezeTimeMinutes = PersonalityParametricData_UseParametricValue
+};
+
+static const Erd_t twistTrayIceMakerFilteredTemperatureOverrideRequestErdList[] = {
+   Erd_TwistTrayIceMaker_FilteredTemperatureOverrideRequest
+};
+
+static const Erd_t twistTrayIceMakerFilteredTemperatureValueErdList[] = {
+   Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100,
+   Erd_TwistTrayIceMaker_FilteredTemperatureOverrideValueInDegFx100
+};
+
+static const OverrideArbiterConfiguration_t twistTrayIceMakerFilteredTemperatureArbiterConfiguration = {
+   twistTrayIceMakerFilteredTemperatureOverrideRequestErdList,
+   twistTrayIceMakerFilteredTemperatureValueErdList,
+   Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
+   NUM_ELEMENTS(twistTrayIceMakerFilteredTemperatureOverrideRequestErdList)
 };
 
 void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
@@ -129,6 +145,11 @@ void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataMod
       &instance->_private.twistTrayIceMakerThermistorIsValidOverrideArbiter,
       DataModel_AsDataSource(dataModel),
       &twistTrayIceMakerThermistorValidArbiterConfiguration);
+
+   OverrideArbiter_Init(
+      &instance->_private.twistTrayIceMakerFilteredTemperatureOverrideArbiter,
+      DataModel_AsDataSource(dataModel),
+      &twistTrayIceMakerFilteredTemperatureArbiterConfiguration);
 
    ErdResolver_Init(
       &instance->_private.twistTrayMotorVoteResolver,

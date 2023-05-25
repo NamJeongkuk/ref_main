@@ -921,6 +921,10 @@ enum
    ENTRY(Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100,0xF452, TemperatureDegFx100_t,             Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,     0xF453, TemperatureDegFx100_t,             Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_TwistTrayIceMaker_FilteredTemperatureOverrideRequest,           0xF454, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_FilteredTemperatureOverrideValueInDegFx100,   0xF455, TemperatureDegFx100_t,             Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,        0xF456, TemperatureDegFx100_t,             Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_CalculatedCondenserFanControl,                 0xF480, FanControl_t,                                       Swap_Yes,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CalculatedIceCabinetFanControl,                0xF481, FanControl_t,                                       Swap_Range, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CalculatedConvertibleCompartmentFanControl,    0xF482, FanControl_t,                                       Swap_Range, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \

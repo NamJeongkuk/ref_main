@@ -39,6 +39,7 @@ typedef struct
       ErdResolver_t iceMakerWaterValveVoteResolver;
       ResolvedVoteRelayConnector_t iceMakerWaterValveRelayConnector;
       OverrideArbiter_t twistTrayIceMakerThermistorIsValidOverrideArbiter;
+      OverrideArbiter_t twistTrayIceMakerFilteredTemperatureOverrideArbiter;
       HarvestCountCalculator_t harvestCountCalculator;
    } _private;
 } TwistTrayIceMakerPlugin_t;

@@ -151,7 +151,7 @@ TEST_GROUP(TwistTrayIceMaker)
    void TheTemperatureIs(TemperatureDegFx100_t temp)
    {
       DataModel_Write(dataModel, Erd_TwistTrayIceMakerThermistor_IsValidResolved, set);
-      DataModel_Write(dataModel, Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100, &temp);
+      DataModel_Write(dataModel, Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100, &temp);
    }
 
    void WhenTheTemperatureIs(TemperatureDegFx100_t temperature)

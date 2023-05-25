@@ -1079,6 +1079,27 @@
           "name": "Erd_TwistTrayIceMakerThermistor_IsValidResolved",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Filtered Temperature Override Request",
+          "name": "Erd_TwistTrayIceMaker_FilteredTemperatureOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Filtered Temperature Override Value",
+          "name": "Erd_TwistTrayIceMaker_FilteredTemperatureOverrideValueInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Filtered Temperature Resolved",
+          "name": "Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": false
         }
       ]
     },
