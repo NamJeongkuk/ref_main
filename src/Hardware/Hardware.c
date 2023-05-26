@@ -23,6 +23,7 @@
 #include "SystemClock.h"
 #include "Dtc.h"
 #include "r_dataflash.h"
+#include "Constants_Binary.h"
 
 void Hardware_InitializeStage1(void)
 {
@@ -56,4 +57,6 @@ void Hardware_InitializeStage2(I_DataModel_t *dataModel)
 
    DataModelErdPointerAccess_Write(dataModel, Erd_JumpToBootLoaderAction, Header_GetEnterBootLoaderAction());
    DataModelErdPointerAccess_Write(dataModel, Erd_SystemResetAction, Action_Rx2xxSystemReset_Init());
+
+   DataModel_Write(dataModel, Erd_Gpio_SABBATH, set); // TODO: Remove this when Sabbath Mode is implemented.
 }

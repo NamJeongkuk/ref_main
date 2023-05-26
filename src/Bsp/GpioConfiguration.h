@@ -58,7 +58,7 @@
    ENTRY(Erd_BspGpio_HEARTBEAT,           GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, Port5, 0,  NonInverted) \
    ENTRY(Erd_BspGpio_SBC_RESET,           GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortC, 5,  NonInverted) \
    ENTRY(Erd_BspGpio_PERSONALITY,         GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortA, 4,  NonInverted) \
-   ENTRY(Erd_BspGpio_SABBATH,             GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortA, 3,  Inverted) \
+   ENTRY(Erd_BspGpio_SABBATH,             GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortA, 3,  NonInverted) \
    ENTRY(Erd_BspGpio_PWM_VAR_00,          GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortC, 1,  NonInverted) \
    ENTRY(Erd_BspGpio_PWM_VAR_01,          GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortC, 6,  NonInverted)
 // clang-format on
