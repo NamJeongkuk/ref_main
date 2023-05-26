@@ -103,6 +103,7 @@
 #include "WaterFilterState.h"
 #include "WaterFilterType.h"
 #include "IceMakerTypeInformation.h"
+#include "AndroidUiSignOfLifeFsmState.h"
 
 // clang-format off
 
@@ -474,8 +475,6 @@ enum
    ENTRY(Erd_DoorBufferedUart,                              0xF01B, I_BufferedUart_t *,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CaseBufferedUart,                              0xF01C, I_BufferedUart_t *,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gea2Uart,                                      0xF01D, I_Uart_t *,                                         Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   \
-   ENTRY(Erd_MainboardIsCommunicatingToAndroidUi,           0xF01E, bool,                                               Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Grid_BlockNumber,                              0xF030, GridBlockNumber_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Grid_PreviousBlocks,                           0xF031, PreviousGridBlockNumbers_t,                         Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -1116,12 +1115,19 @@ enum
    ENTRY(Erd_Eeprom_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds, 0xFB10, uint32_t,                 Swap_Range, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds,   0xFB11, uint32_t,                 Swap_Range, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
+   ENTRY(Erd_AndroidUiSignOfLifeFsmState,                   0xFB80, AndroidUiSignOfLifeFsmState_t,                      Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_MainboardIsConnectedToTheAndroidUi,            0xFB81, bool,                                               Swap_No,  Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
+   ENTRY(Erd_NumberOfTimesMainboardHasLostCommunicationWithAndroidUi, 0xFB82, uint8_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_NumberOfTimesMainboardHasAttemptedToResetAndroidUi,      0xFB83, uint8_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AndroidUiResetSignal,                                    0xFB84, Signal_t,                                 Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_NvReservedProtected,                           0xFCFA, uint8_t,                                            Swap_No,    Io_None, Sub_N,  NvProtected,           NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NvReservedUnitSetting,                         0xFCFB, uint8_t,                                            Swap_No,    Io_None, Sub_N,  NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NvReservedUserSetting,                         0xFCFC, uint8_t,                                            Swap_No,    Io_None, Sub_N,  NvUserSetting,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NvReservedRfid,                                0xFCFD, uint8_t,                                            Swap_No,    Io_None, Sub_N,  NvRfid,                NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NvReservedFaultSnapshot,                       0xFCFE, uint8_t,                                            Swap_No,    Io_None, Sub_N,  NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NvReservedCycleHistory,                        0xFCFF, uint8_t,                                            Swap_No,    Io_None, Sub_N,  NvCycleHistory,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   \
 
 #define EXPAND_AS_INTERNAL_RAM_ERD_ENUM(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)(Name COMMA)

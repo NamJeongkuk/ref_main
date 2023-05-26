@@ -8,18 +8,18 @@
 #ifndef SIGNOFLIFEPLUGIN_H
 #define SIGNOFLIFEPLUGIN_H
 
-#include "UiHeartbeatTickMonitor.h"
+#include "AndroidUiSignOfLifeMonitor.h"
 
 typedef struct
 {
    struct
    {
-      UiHeartbeatTickMonitor_t uiHeartbeatTickMonitor;
+      AndroidUiSignOfLifeMonitor_t androidUiSignOfLifeMonitor;
    } _private;
 } SignOfLifePlugin_t;
 
 /*!
- * Plugin for Heartbeat tick and sign of life
+ * Plugin for Sign of Life
  * @param instance
  * @param dataModel
  * @return

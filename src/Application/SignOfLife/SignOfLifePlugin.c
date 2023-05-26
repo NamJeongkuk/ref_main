@@ -10,20 +10,27 @@
 
 enum
 {
-   HeartbeatTickPeriodInMsec = 1500,
-   MaxUpdateIntervalInMsec = 1500
+   MaxUiUpdateIntervalInMinutes = 2,
+   MaxTimeBeforeUiResetAttemptInMinutes = 10,
+   AndroidUiCommunicationFaultTimeInMinutes = 15
 };
 
-static const UiHeartbeatTickMonitorConfiguration_t uiHeartbeatTickMonitorConfiguration = {
+static const AndroidUiSignOfLifeMonitorConfiguration_t androidUiSignOfLifeMonitorConfiguration = {
    .heartbeatTickFromUiErd = Erd_AndroidUiSignOfLife,
-   .activeCommunicationWithUiErd = Erd_MainboardIsCommunicatingToAndroidUi,
-   .maxUiUpdateIntervalInMsec = MaxUpdateIntervalInMsec
+   .uiSignOfLifeFsmStateErd = Erd_AndroidUiSignOfLifeFsmState,
+   .mainboardIsConnectedToUiNvErd = Erd_MainboardIsConnectedToTheAndroidUi,
+   .numberOfTimesMainboardHasLostCommunicationWithUi = Erd_NumberOfTimesMainboardHasLostCommunicationWithAndroidUi,
+   .numberOfTimesMainboardHasAttemptedToResetUi = Erd_NumberOfTimesMainboardHasAttemptedToResetAndroidUi,
+   .uiResetSignalErd = Erd_AndroidUiResetSignal,
+   .maxUiUpdateIntervalInMinutes = MaxUiUpdateIntervalInMinutes,
+   .resetTimeInMinutes = MaxTimeBeforeUiResetAttemptInMinutes,
+   .faultTimeInMinutes = AndroidUiCommunicationFaultTimeInMinutes
 };
 
 void SignOfLifePlugin_Init(SignOfLifePlugin_t *instance, I_DataModel_t *dataModel)
 {
-   UiHeartbeatTickMonitor_Init(
-      &instance->_private.uiHeartbeatTickMonitor,
-      &uiHeartbeatTickMonitorConfiguration,
+   AndroidUiSignOfLifeMonitor_Init(
+      &instance->_private.androidUiSignOfLifeMonitor,
+      &androidUiSignOfLifeMonitorConfiguration,
       dataModel);
 }
