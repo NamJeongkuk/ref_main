@@ -8,6 +8,7 @@
 #include "TwistTrayIceMakerMotorRequestManager.h"
 #include "TwistTrayIceMakerMotorController.h"
 #include "TwistTrayIceMakerMotorAction.h"
+#include "TwistTrayIceMakerMotorDoAction.h"
 #include "TwistTrayIceMakerMotorActionResult.h"
 #include "TwistTrayIceMakerMotorOperationState.h"
 #include "Constants_Binary.h"
@@ -15,58 +16,42 @@
 #include "DataModelErdPointerAccess.h"
 #include "SystemErds.h"
 
-enum
-{
-   PollingFrequencyInMsec = 150
-};
-
-static void ClearMotorRequestAndStopTimer(TwistTrayIceMakerMotorRequestManager_t *instance)
+static void ClearMotorRequest(TwistTrayIceMakerMotorRequestManager_t *instance)
 {
    DataModel_Write(instance->_private.dataModel, instance->_private.config->motorRequestErd, clear);
-
-   TimerModule_Stop(
-      DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, Erd_TimerModule),
-      &instance->_private.motorPollingTimer);
 }
 
-static void PollMotorActionResult(void *context)
+static void UpdateMotorDoActionToResolvedVoteMotorAction(TwistTrayIceMakerMotorRequestManager_t *instance)
 {
-   TwistTrayIceMakerMotorRequestManager_t *instance = context;
-   TwistTrayIceMakerMotorActionResult_t result =
-      TwistTrayIceMakerMotorController_ActionResult(instance->_private.motorController);
-   TwistTrayIceMakerMotorOperationState_t state =
-      TwistTrayIceMakerMotorController_OperationState(instance->_private.motorController);
+   TwistTrayIceMakerMotorVotedAction_t motorVote;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->resolvedVoteErd,
+      &motorVote);
 
-   DataModel_Write(instance->_private.dataModel, instance->_private.config->motorActionResultErd, &result);
-   DataModel_Write(instance->_private.dataModel, instance->_private.config->motorOperationStateErd, &state);
+   TwistTrayIceMakerMotorDoAction_t doAction;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->motorDoActionErd,
+      &doAction);
 
-   if(result == TwistTrayIceMakerMotorActionResult_MotorError)
-   {
-      TwistTrayIceMakerMotorOperationState_t reason =
-         TwistTrayIceMakerMotorController_MotorErrorReason(instance->_private.motorController);
-      DataSource_Write(
-         instance->_private.dataModel,
-         Erd_TwistTrayIceMaker_MotorErrorReason,
-         &reason);
-
-      ClearMotorRequestAndStopTimer(instance);
-   }
-   else if(result == TwistTrayIceMakerMotorActionResult_Harvested ||
-      result == TwistTrayIceMakerMotorActionResult_BucketWasFull ||
-      result == TwistTrayIceMakerMotorActionResult_Homed)
-   {
-      ClearMotorRequestAndStopTimer(instance);
-   }
+   doAction.action = motorVote.action;
+   doAction.signal++;
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->motorDoActionErd,
+      &doAction);
 }
 
-static void StartMotorActionResultPolling(TwistTrayIceMakerMotorRequestManager_t *instance)
+static bool MotorIsEnabled(TwistTrayIceMakerMotorRequestManager_t *instance)
 {
-   TimerModule_StartPeriodic(
-      DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, Erd_TimerModule),
-      &instance->_private.motorPollingTimer,
-      PollingFrequencyInMsec,
-      PollMotorActionResult,
-      instance);
+   bool motorIsEnabled;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->motorEnableErd,
+      &motorIsEnabled);
+
+   return motorIsEnabled;
 }
 
 static void DataModelChanged(void *context, const void *_args)
@@ -86,11 +71,18 @@ static void DataModelChanged(void *context, const void *_args)
       const bool *enabled = args->data;
       if(*enabled)
       {
-         TwistTrayIceMakerMotorVotedAction_t motorVote;
-         DataModel_Read(instance->_private.dataModel, instance->_private.config->resolvedVoteErd, &motorVote);
-         TwistTrayIceMakerMotorController_DoAction(instance->_private.motorController, motorVote.action);
-
-         StartMotorActionResultPolling(instance);
+         UpdateMotorDoActionToResolvedVoteMotorAction(instance);
+      }
+   }
+   else if(args->erd == instance->_private.config->motorActionResultErd && MotorIsEnabled(instance))
+   {
+      const TwistTrayIceMakerMotorActionResult_t *result = args->data;
+      if((*result == TwistTrayIceMakerMotorActionResult_MotorError) ||
+         (*result == TwistTrayIceMakerMotorActionResult_Harvested) ||
+         (*result == TwistTrayIceMakerMotorActionResult_BucketWasFull) ||
+         (*result == TwistTrayIceMakerMotorActionResult_Homed))
+      {
+         ClearMotorRequest(instance);
       }
    }
 }
@@ -98,13 +90,16 @@ static void DataModelChanged(void *context, const void *_args)
 void TwistTrayIceMakerMotorRequestManager_Init(
    TwistTrayIceMakerMotorRequestManager_t *instance,
    I_DataModel_t *dataModel,
-   TwistTrayIceMakerMotorController_t *motorController,
    const TwistTrayIceMakerMotorRequestManagerConfig_t *config)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
-   instance->_private.motorController = motorController;
 
-   EventSubscription_Init(&instance->_private.dataModelEventSubscription, instance, DataModelChanged);
-   Event_Subscribe(dataModel->OnDataChange, &instance->_private.dataModelEventSubscription);
+   EventSubscription_Init(
+      &instance->_private.dataModelEventSubscription,
+      instance,
+      DataModelChanged);
+   Event_Subscribe(
+      dataModel->OnDataChange,
+      &instance->_private.dataModelEventSubscription);
 }

@@ -82,6 +82,7 @@
 #include "PwmFrequency.h"
 #include "TwistTrayIceMakerMotorActionResult.h"
 #include "TwistTrayIceMakerMotorAction.h"
+#include "TwistTrayIceMakerMotorDoAction.h"
 #include "TwistTrayIceMakerMotorErrorReason.h"
 #include "TwistTrayIceMakerMotorOperationState.h"
 #include "TwistTrayIceMakerOperationState.h"
@@ -645,6 +646,7 @@ enum
    ENTRY(Erd_TwistTrayIceMaker_MotorErrorReason,                       0xF148, TwistTrayIceMakerMotorErrorReason_t,     Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,         0xF149, bool,                                    Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest,           0xF14A, bool,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_MotorDoAction,                          0xF14B, TwistTrayIceMakerMotorDoAction_t,        Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_AluminumMoldIceMakerHsmState,                  0xF150, AluminumMoldIceMakerHsmState_t,                     Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerFeelerArmPosition,         0xF151, FeelerArmPosition_t,                                Swap_No,    Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \

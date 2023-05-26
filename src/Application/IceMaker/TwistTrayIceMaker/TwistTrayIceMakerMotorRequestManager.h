@@ -13,7 +13,6 @@
 #include "Erd.h"
 #include "I_DataModel.h"
 #include "EventSubscription.h"
-#include "TwistTrayIceMakerMotorController.h"
 #include "Timer.h"
 
 typedef struct
@@ -22,7 +21,7 @@ typedef struct
    Erd_t motorRequestErd; // bool
    Erd_t motorEnableErd; // bool
    Erd_t motorActionResultErd; // TwistTrayIceMakerMotorActionResult_t
-   Erd_t motorOperationStateErd;
+   Erd_t motorDoActionErd; // TwistTrayIceMakerMotorDoAction_t
 } TwistTrayIceMakerMotorRequestManagerConfig_t;
 
 typedef struct
@@ -32,15 +31,12 @@ typedef struct
       EventSubscription_t dataModelEventSubscription;
       I_DataModel_t *dataModel;
       const TwistTrayIceMakerMotorRequestManagerConfig_t *config;
-      TwistTrayIceMakerMotorController_t *motorController;
-      Timer_t motorPollingTimer;
    } _private;
 } TwistTrayIceMakerMotorRequestManager_t;
 
 void TwistTrayIceMakerMotorRequestManager_Init(
    TwistTrayIceMakerMotorRequestManager_t *instance,
    I_DataModel_t *dataModel,
-   TwistTrayIceMakerMotorController_t *motorController,
    const TwistTrayIceMakerMotorRequestManagerConfig_t *config);
 
 #endif

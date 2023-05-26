@@ -10,6 +10,7 @@
 
 #include "TwistTrayIceMaker.h"
 #include "TwistTrayIceMakerMotorController.h"
+#include "TwistTrayIceMakerMotorControllerValueUpdater.h"
 #include "TwistTrayIceMakerPlugin.h"
 #include "I_DataModel.h"
 #include "ErdResolver.h"
@@ -31,6 +32,7 @@ typedef struct
       TwistTrayIceMaker_t twistTrayIceMaker;
       Output_TwistTrayIceMakerMotorState_t motorStateOutput;
       TwistTrayIceMakerMotorController_t twistTrayMotorController;
+      TwistTrayIceMakerMotorControllerValueUpdater_t twistTrayMotorControllerValueUpdater;
       TwistTrayIceMakerRunner_t twistTrayIceMakerMotorControllerRunner;
       TwistTrayIceMakerMotorSwitchMonitor_t twistTrayIceMakerSwitchMonitor;
       TwistTrayIceMakerMotorRequestManager_t twistTrayMotorRequestManager;

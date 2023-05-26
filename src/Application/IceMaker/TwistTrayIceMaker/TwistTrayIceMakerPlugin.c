@@ -22,7 +22,7 @@ static const TwistTrayIceMakerMotorRequestManagerConfig_t requestManagerConfig =
    .motorRequestErd = Erd_TwistIceMakerMotorControlRequest,
    .motorEnableErd = Erd_TwistIceMakerMotorDriveEnable,
    .motorActionResultErd = Erd_TwistTrayIceMaker_MotorActionResult,
-   .motorOperationStateErd = Erd_TwistTrayIceMaker_MotorOperationState
+   .motorDoActionErd = Erd_TwistTrayIceMaker_MotorDoAction
 };
 
 static const TwistTrayIceMakerMotorSwitchMonitorConfig_t switchMonitorConfig = {
@@ -96,6 +96,10 @@ static const ResolvedVoteRelayConnectorConfiguration_t iceMakerWaterValveRelayCo
    .relayOutputErd = Erd_TwistTrayIceMakerWaterValveRelay
 };
 
+static const TwistTrayIceMakerMotorControllerConfig_t twistTrayMotorControllerConfig = {
+   .motorDoActionErd = Erd_TwistTrayIceMaker_MotorDoAction
+};
+
 static HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
    .harvestCountIsReadyToHarvestErd = Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,
@@ -105,6 +109,12 @@ static HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
    .startIntegrationTemperatureInDegFx100 = PersonalityParametricData_UseParametricValue,
    .targetFreezeIntegrationSum = PersonalityParametricData_UseParametricValue,
    .minimumFreezeTimeMinutes = PersonalityParametricData_UseParametricValue
+};
+
+static const TwistTrayIceMakerMotorControllerValueUpdaterConfig_t motorControllerValueUpdaterConfig = {
+   .motorActionResultErd = Erd_TwistTrayIceMaker_MotorActionResult,
+   .motorOperationStateErd = Erd_TwistTrayIceMaker_MotorOperationState,
+   .motorErrorReasonErd = Erd_TwistTrayIceMaker_MotorErrorReason
 };
 
 static const Erd_t twistTrayIceMakerFilteredTemperatureOverrideRequestErdList[] = {
@@ -185,7 +195,6 @@ void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataMod
    TwistTrayIceMakerMotorRequestManager_Init(
       &instance->_private.twistTrayMotorRequestManager,
       dataModel,
-      &instance->_private.twistTrayMotorController,
       &requestManagerConfig);
 
    TwistTrayIceMakerMotorController_Init(
@@ -194,7 +203,15 @@ void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataMod
       Output_TwistTrayIceMakerMotorState_Init(
          &instance->_private.motorStateOutput,
          DataModelErdPointerAccess_GetGpioGroup(dataModel, Erd_GpioGroupInterface),
-         &outputTwistIceMakerMotorStateConfig));
+         &outputTwistIceMakerMotorStateConfig),
+      dataModel,
+      &twistTrayMotorControllerConfig);
+
+   TwistTrayIceMakerMotorControllerValueUpdater_Init(
+      &instance->_private.twistTrayMotorControllerValueUpdater,
+      dataModel,
+      &instance->_private.twistTrayMotorController,
+      &motorControllerValueUpdaterConfig);
 
    TwistTrayIceMakerMotorSwitchMonitor_Init(
       &instance->_private.twistTrayIceMakerSwitchMonitor,

@@ -11,12 +11,14 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "I_DataModel.h"
 #include "I_Output.h"
 #include "Fsm.h"
 #include "TwistTrayIceMakerData.h"
 #include "TwistTrayIceMakerMotorActionResult.h"
 #include "TwistTrayIceMakerMotorAction.h"
 #include "TwistTrayIceMakerMotorErrorReason.h"
+#include "TwistTrayIceMakerMotorOperationState.h"
 
 enum
 {
@@ -24,6 +26,11 @@ enum
    Timer_GeneralPurpose,
    Timer_Max
 };
+
+typedef struct
+{
+   Erd_t motorDoActionErd; // TwistTrayIceMakerMotorAction_t
+} TwistTrayIceMakerMotorControllerConfig_t;
 
 typedef struct
 {
@@ -40,13 +47,15 @@ typedef struct
       bool initialized : 1;
       uint8_t lastMotorState : 6;
 
-      uint8_t actionResult : 4;
-      uint8_t harvestActionResult : 4;
-
-      uint8_t operationState;
+      TwistTrayIceMakerMotorActionResult_t motorActionResult;
+      TwistTrayIceMakerMotorActionResult_t harvestActionResult;
+      TwistTrayIceMakerMotorOperationState_t motorOperationState;
       TwistTrayIceMakerMotorErrorReason_t motorErrorReason;
 
       Fsm_t fsm;
+      I_DataModel_t *dataModel;
+      EventSubscription_t doActionSubscription;
+      const TwistTrayIceMakerMotorControllerConfig_t *config;
    } _private;
 } TwistTrayIceMakerMotorController_t;
 
@@ -55,11 +64,15 @@ typedef struct
  * @param instance
  * @param data
  * @param motorStateOutput to drive the motor
+ * @param dataModel
+ * @param config
  */
 void TwistTrayIceMakerMotorController_Init(
    TwistTrayIceMakerMotorController_t *instance,
    const TwistTrayIceMakerData_t *data,
-   I_Output_t *motorStateOutput);
+   I_Output_t *motorStateOutput,
+   I_DataModel_t *dataModel,
+   const TwistTrayIceMakerMotorControllerConfig_t *config);
 
 /*!
  * Runs the twist tray ice maker motor
@@ -81,21 +94,12 @@ void TwistTrayIceMakerMotorController_UpdateSwitchState(
    bool newSwitchState);
 
 /*!
- * Tells the motor to do an action
- * @param instance
- * @param action the action that will be taken (either Home or Run Cycle)
- */
-void TwistTrayIceMakerMotorController_DoAction(
-   TwistTrayIceMakerMotorController_t *instance,
-   TwistTrayIceMakerMotorAction_t action);
-
-/*!
  * A client can call this function if they want the result of the latest action
  * it will give you `no result` if no action has been started
  * @param instance
- * @return the result of the action
+ * @return the result of the motor action
  */
-TwistTrayIceMakerMotorActionResult_t TwistTrayIceMakerMotorController_ActionResult(
+TwistTrayIceMakerMotorActionResult_t TwistTrayIceMakerMotorController_MotorActionResult(
    TwistTrayIceMakerMotorController_t *instance);
 
 /*!
@@ -103,7 +107,7 @@ TwistTrayIceMakerMotorActionResult_t TwistTrayIceMakerMotorController_ActionResu
  * @param instance
  * @return the operation state of the motor
  */
-uint8_t TwistTrayIceMakerMotorController_OperationState(
+TwistTrayIceMakerMotorOperationState_t TwistTrayIceMakerMotorController_MotorOperationState(
    TwistTrayIceMakerMotorController_t *instance);
 
 /*!
@@ -113,5 +117,34 @@ uint8_t TwistTrayIceMakerMotorController_OperationState(
  */
 TwistTrayIceMakerMotorErrorReason_t TwistTrayIceMakerMotorController_MotorErrorReason(
    TwistTrayIceMakerMotorController_t *instance);
+
+#ifdef TDD_BUILD
+/*!
+ * Update the motor action result for TDD testing
+ * @param instance
+ * @param actionResult
+ */
+void TwistTrayIceMakerMotorController_UpdateMotorActionResult(
+   TwistTrayIceMakerMotorController_t *instance,
+   TwistTrayIceMakerMotorActionResult_t actionResult);
+
+/*!
+ * Update the motor operation state for TDD testing
+ * @param instance
+ * @param motorOperationState
+ */
+void TwistTrayIceMakerMotorController_UpdateMotorOperationState(
+   TwistTrayIceMakerMotorController_t *instance,
+   TwistTrayIceMakerMotorOperationState_t motorOperationState);
+
+/*!
+ * Update the motor error reason for TDD testing
+ * @param instance
+ * @param motorErrorReason
+ */
+void TwistTrayIceMakerMotorController_UpdateMotorErrorReason(
+   TwistTrayIceMakerMotorController_t *instance,
+   TwistTrayIceMakerMotorErrorReason_t motorErrorReason);
+#endif
 
 #endif
