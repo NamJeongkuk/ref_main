@@ -37,5 +37,37 @@ return {
       '0xFAFD',
       '0xFAFE'
     }
+  },
+  refrigeration_public_erds = {
+    error_message = 'Do not change these ERDs. If they change, please check with the public ERD spec page and create tickets to make the changes on other boards that use these ERDs',
+    erds = {
+      '0x1200',
+      '0x1201',
+      '0x1202',
+      '0x1203',
+      '0x1204',
+      '0x1205',
+      '0x1206',
+      '0x1207',
+      '0x1208',
+      '0x1209',
+      '0x120A',
+      '0x120B',
+      '0x120C',
+      '0x120D',
+      '0x120E',
+      '0x120F',
+      '0x1210',
+      '0x1211',
+      '0x1212',
+      '0x1213',
+      '0x1215',
+      '0x1216',
+      '0x1217',
+      '0x1218',
+      '0x1219',
+      '0x121A',
+      '0x121B'
+    }
   }
 }

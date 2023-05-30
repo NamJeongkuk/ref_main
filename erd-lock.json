@@ -466,6 +466,613 @@
     {
       "data": [
         {
+          "name": "Erd_FreshFoodSetpointRequest",
+          "offset": 0,
+          "size": 1,
+          "type": "i8"
+        }
+      ],
+      "id": "0x1200",
+      "name": "Erd_FreshFoodSetpointRequest",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_FreshFoodSetpointRangeData.lowTemperatureSetpoint",
+          "offset": 0,
+          "size": 1,
+          "type": "i8"
+        },
+        {
+          "name": "Erd_FreshFoodSetpointRangeData.highTemperatureSetpoint",
+          "offset": 1,
+          "size": 1,
+          "type": "i8"
+        },
+        {
+          "name": "Erd_FreshFoodSetpointRangeData.defaultTemperatureSetpoint",
+          "offset": 2,
+          "size": 1,
+          "type": "i8"
+        }
+      ],
+      "id": "0x1201",
+      "name": "Erd_FreshFoodSetpointRangeData",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_FreshFoodSetpointStatus",
+          "offset": 0,
+          "size": 1,
+          "type": "i8"
+        }
+      ],
+      "id": "0x1202",
+      "name": "Erd_FreshFoodSetpointStatus",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_FreezerSetpointRequest",
+          "offset": 0,
+          "size": 1,
+          "type": "i8"
+        }
+      ],
+      "id": "0x1203",
+      "name": "Erd_FreezerSetpointRequest",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_FreezerSetpointRangeData.lowTemperatureSetpoint",
+          "offset": 0,
+          "size": 1,
+          "type": "i8"
+        },
+        {
+          "name": "Erd_FreezerSetpointRangeData.highTemperatureSetpoint",
+          "offset": 1,
+          "size": 1,
+          "type": "i8"
+        },
+        {
+          "name": "Erd_FreezerSetpointRangeData.defaultTemperatureSetpoint",
+          "offset": 2,
+          "size": 1,
+          "type": "i8"
+        }
+      ],
+      "id": "0x1204",
+      "name": "Erd_FreezerSetpointRangeData",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_FreezerSetpointStatus",
+          "offset": 0,
+          "size": 1,
+          "type": "i8"
+        }
+      ],
+      "id": "0x1205",
+      "name": "Erd_FreezerSetpointStatus",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_DispenseSelectionRequest",
+          "offset": 0,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "DispenseSelection_ColdWater",
+            "1": "DispenseSelection_CrushedIce",
+            "2": "DispenseSelection_CubedIce",
+            "255": "DispenseSelection_Reset"
+          }
+        }
+      ],
+      "id": "0x1206",
+      "name": "Erd_DispenseSelectionRequest",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_DispenseSelectionStatus",
+          "offset": 0,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "DispenseSelection_ColdWater",
+            "1": "DispenseSelection_CrushedIce",
+            "2": "DispenseSelection_CubedIce",
+            "255": "DispenseSelection_Reset"
+          }
+        }
+      ],
+      "id": "0x1207",
+      "name": "Erd_DispenseSelectionStatus",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_DispensingRequest.action",
+          "offset": 0,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "DispensingAction_Stop",
+            "1": "DispensingAction_Start",
+            "2": "DispensingAction_Continue",
+            "255": "DispensingAction_None"
+          }
+        },
+        {
+          "name": "Erd_DispensingRequest.selection",
+          "offset": 1,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "DispensingRequestSelection_Water",
+            "1": "DispensingRequestSelection_CrushedIce",
+            "2": "DispensingRequestSelection_CubedIce",
+            "255": "DispensingRequestSelection_None",
+            "3": "DispensingRequestSelection_Autofill"
+          }
+        },
+        {
+          "name": "Erd_DispensingRequest.specialOptions",
+          "offset": 2,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "DispensingSpecialOptions_None",
+            "1": "DispensingSpecialOptions_SwitchPressedOnSecondaryBoardRequired",
+            "255": "DispensingSpecialOptions_EmptyRequest"
+          }
+        },
+        {
+          "name": "Erd_DispensingRequest.padding",
+          "offset": 3,
+          "size": 1,
+          "type": "u8"
+        },
+        {
+          "name": "Erd_DispensingRequest.preciseFillOuncesx100",
+          "offset": 4,
+          "size": 2,
+          "type": "u16"
+        }
+      ],
+      "id": "0x1208",
+      "name": "Erd_DispensingRequest",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_DispensingRequestStatus.action",
+          "offset": 0,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "DispensingAction_Stop",
+            "1": "DispensingAction_Start",
+            "2": "DispensingAction_Continue",
+            "255": "DispensingAction_None"
+          }
+        },
+        {
+          "name": "Erd_DispensingRequestStatus.selection",
+          "offset": 1,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "DispensingRequestSelection_Water",
+            "1": "DispensingRequestSelection_CrushedIce",
+            "2": "DispensingRequestSelection_CubedIce",
+            "255": "DispensingRequestSelection_None",
+            "3": "DispensingRequestSelection_Autofill"
+          }
+        },
+        {
+          "name": "Erd_DispensingRequestStatus.specialOptions",
+          "offset": 2,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "DispensingSpecialOptions_None",
+            "1": "DispensingSpecialOptions_SwitchPressedOnSecondaryBoardRequired",
+            "255": "DispensingSpecialOptions_EmptyRequest"
+          }
+        },
+        {
+          "name": "Erd_DispensingRequestStatus.status",
+          "offset": 3,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "DispenseStatus_CompletedSuccessfully",
+            "1": "DispenseStatus_Dispensing",
+            "10": "DispenseStatus_DispenseInhibitedBecauseRedundantCupSwitchPressIsRequired",
+            "11": "DispenseStatus_DispenseInhibitedDueToRfidErrorOrLeak",
+            "2": "DispenseStatus_SensorError",
+            "255": "DispenseStatus_PrivateDispenseStatusResetValue",
+            "3": "DispenseStatus_DisabledOrBlocked",
+            "4": "DispenseStatus_HitMaxVolume",
+            "5": "DispenseStatus_HitMaxTime",
+            "6": "DispenseStatus_DidNotReceiveDispenseRequestAfterHeartbeat",
+            "7": "DispenseStatus_PreciseFillAmountReached",
+            "8": "DispenseStatus_BadCommand",
+            "9": "DispenseStatus_DispenseInhibitedDueToDoorOpen"
+          }
+        },
+        {
+          "name": "Erd_DispensingRequestStatus.preciseFillOuncesx100",
+          "offset": 4,
+          "size": 2,
+          "type": "u16"
+        }
+      ],
+      "id": "0x1209",
+      "name": "Erd_DispensingRequestStatus",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_CoolingOffRequest",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0x120A",
+      "name": "Erd_CoolingOffRequest",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_CoolingOffStatus",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0x120B",
+      "name": "Erd_CoolingOffStatus",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_SignOfLifeFromMainboardToUi",
+          "offset": 0,
+          "size": 1,
+          "type": "u8"
+        }
+      ],
+      "id": "0x120C",
+      "name": "Erd_SignOfLifeFromMainboardToUi",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_SignOfLifeFromUiToMainboard",
+          "offset": 0,
+          "size": 1,
+          "type": "u8"
+        }
+      ],
+      "id": "0x120D",
+      "name": "Erd_SignOfLifeFromUiToMainboard",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_RightSideFreshFoodDoorStatus",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0x120E",
+      "name": "Erd_RightSideFreshFoodDoorStatus",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_LeftSideFreezerDoorStatus",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0x120F",
+      "name": "Erd_LeftSideFreezerDoorStatus",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_IceMaker0EnableRequest",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0x1210",
+      "name": "Erd_IceMaker0EnableRequest",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_IceMaker0EnableStatus",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0x1211",
+      "name": "Erd_IceMaker0EnableStatus",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_IceMaker0FullStatus",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0x1212",
+      "name": "Erd_IceMaker0FullStatus",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_IceMaker0TypeInformation.type",
+          "offset": 0,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "IceMakerType_AluminumMold",
+            "1": "IceMakerType_Twist",
+            "2": "IceMakerType_Cartridge",
+            "3": "IceMakerType_Nugget"
+          }
+        },
+        {
+          "name": "Erd_IceMaker0TypeInformation.location",
+          "offset": 1,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "IceMakerLocation_Freezer",
+            "1": "IceMakerLocation_Fridge"
+          }
+        }
+      ],
+      "id": "0x1213",
+      "name": "Erd_IceMaker0TypeInformation",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_WaterFilterState",
+          "offset": 0,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "WaterFilterState_Good",
+            "1": "WaterFilterState_Replace",
+            "2": "WaterFilterState_Expired",
+            "3": "WaterFilterState_Bypass",
+            "4": "WaterFilterState_Leak",
+            "5": "WaterFilterState_Error"
+          }
+        }
+      ],
+      "id": "0x1215",
+      "name": "Erd_WaterFilterState",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_IceMaker1EnableRequest",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0x1216",
+      "name": "Erd_IceMaker1EnableRequest",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_IceMaker1EnableStatus",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0x1217",
+      "name": "Erd_IceMaker1EnableStatus",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_IceMaker1FullStatus",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0x1218",
+      "name": "Erd_IceMaker1FullStatus",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_IceMaker1TypeInformation.type",
+          "offset": 0,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "IceMakerType_AluminumMold",
+            "1": "IceMakerType_Twist",
+            "2": "IceMakerType_Cartridge",
+            "3": "IceMakerType_Nugget"
+          }
+        },
+        {
+          "name": "Erd_IceMaker1TypeInformation.location",
+          "offset": 1,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "IceMakerLocation_Freezer",
+            "1": "IceMakerLocation_Fridge"
+          }
+        }
+      ],
+      "id": "0x1219",
+      "name": "Erd_IceMaker1TypeInformation",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_TurboFreezeRequest",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0x121A",
+      "name": "Erd_TurboFreezeRequest",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_TurboFreezeStatus",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0x121B",
+      "name": "Erd_TurboFreezeStatus",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
           "name": "Erd_ExternalAmbientFilteredTemperatureInDegFx100",
           "offset": 0,
           "size": 2,
