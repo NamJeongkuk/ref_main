@@ -74,8 +74,7 @@ enum
    ENTRY(State_FillingTrayWithWater) \
    ENTRY(State_BucketIsFull)         \
    ENTRY(State_MotorError)           \
-   ENTRY(State_ThermistorFault)      \
-   ENTRY(State_IdleFreeze)
+   ENTRY(State_ThermistorFault)
 
 FSM_STATE_TABLE(FSM_STATE_EXPAND_AS_FUNCTION_DEFINITION)
 
@@ -263,6 +262,11 @@ static void StopHarvestCountCalculation(TwistTrayIceMaker_t *instance)
       clear);
 }
 
+static bool SabbathModeIsDisabledAndIceMakerIsEnabled(TwistTrayIceMaker_t *instance)
+{
+   return (!ItIsSabbathMode(instance) && IceMakerIsEnabled(instance));
+}
+
 static void State_Homing(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
    TwistTrayIceMaker_t *instance = InstanceFrom(fsm);
@@ -280,13 +284,9 @@ static void State_Homing(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          {
             Fsm_Transition(fsm, State_ThermistorFault);
          }
-         else if(IceMakerIsEnabled(instance))
-         {
-            Fsm_Transition(fsm, State_Freeze);
-         }
          else
          {
-            Fsm_Transition(fsm, State_IdleFreeze);
+            Fsm_Transition(fsm, State_Freeze);
          }
          break;
 
@@ -311,19 +311,24 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          UpdateOperationState(instance, TwistTrayIceMakerOperationState_Freeze);
          RequestHarvestCountCalculation(instance);
 
-         if(!instance->_private.firstFreezeTransition)
-         {
-            SendFreezerIceRateSignal(instance);
-         }
-         else
+         if(instance->_private.firstFreezeTransition)
          {
             instance->_private.firstFreezeTransition = false;
          }
+         else
+         {
+            if(SabbathModeIsDisabledAndIceMakerIsEnabled(instance))
+            {
+               SendFreezerIceRateSignal(instance);
+            }
+         }
          break;
 
+      case Signal_SabbathModeDisabled:
+      case Signal_IceMakerIsEnabled:
       case Signal_IceMakerFilteredTemperatureChanged:
       case Signal_HarvestCountIsReadyToHarvest:
-         if(HarvestConditionsHaveBeenMet(instance))
+         if(SabbathModeIsDisabledAndIceMakerIsEnabled(instance) && HarvestConditionsHaveBeenMet(instance))
          {
             Fsm_Transition(fsm, State_Harvesting);
          }
@@ -339,10 +344,6 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 
       case Signal_TestRequest_Harvest:
          Fsm_Transition(fsm, State_Harvesting);
-         break;
-
-      case Signal_IceMakerIsDisabled:
-         Fsm_Transition(fsm, State_IdleFreeze);
          break;
 
       case Fsm_Exit:
@@ -376,23 +377,12 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 
          if(MotorActionResultIs(instance, Harvested))
          {
-            if(ItIsSabbathMode(instance) || !IceMakerIsEnabled(instance))
-            {
-               Fsm_Transition(fsm, State_IdleFreeze);
-            }
-            else
-            {
-               Fsm_Transition(fsm, State_FillingTrayWithWater);
-            }
+            Fsm_Transition(fsm, State_FillingTrayWithWater);
          }
          break;
 
       case Signal_MotorActionResultHarvested:
-         if(ItIsSabbathMode(instance) || !IceMakerIsEnabled(instance))
-         {
-            Fsm_Transition(fsm, State_IdleFreeze);
-         }
-         else if(FillTubeHeaterTimerHasExpired(instance))
+         if(FillTubeHeaterTimerHasExpired(instance))
          {
             Fsm_Transition(fsm, State_FillingTrayWithWater);
          }
@@ -405,7 +395,7 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          }
          else
          {
-            Fsm_Transition(fsm, State_IdleFreeze);
+            Fsm_Transition(fsm, State_Freeze);
          }
          break;
 
@@ -444,11 +434,7 @@ static void State_FillingTrayWithWater(Fsm_t *fsm, FsmSignal_t signal, const voi
          break;
 
       case Signal_TrayFilled:
-         if(ItIsSabbathMode(instance) || !IceMakerIsEnabled(instance))
-         {
-            Fsm_Transition(fsm, State_IdleFreeze);
-         }
-         else if(!IceMakerThermistorIsValid(instance))
+         if(!IceMakerThermistorIsValid(instance))
          {
             Fsm_Transition(fsm, State_ThermistorFault);
          }
@@ -509,7 +495,7 @@ static void State_BucketIsFull(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          break;
 
       case Signal_IceMakerIsDisabled:
-         Fsm_Transition(fsm, State_IdleFreeze);
+         Fsm_Transition(fsm, State_Freeze);
          break;
 
       case Fsm_Exit:
@@ -569,31 +555,6 @@ static void State_ThermistorFault(Fsm_t *fsm, FsmSignal_t signal, const void *da
 
       case Signal_IceMakerThermistorIsValid:
          Fsm_Transition(fsm, State_Homing);
-         break;
-   }
-}
-
-static void State_IdleFreeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
-{
-   TwistTrayIceMaker_t *instance = InstanceFrom(fsm);
-   IGNORE(data);
-
-   switch(signal)
-   {
-      case Fsm_Entry:
-         UpdateOperationState(instance, TwistTrayIceMakerOperationState_IdleFreeze);
-         break;
-
-      case Signal_IceMakerIsEnabled:
-         Fsm_Transition(fsm, State_Freeze);
-         break;
-
-      case Signal_TestRequest_Fill:
-         Fsm_Transition(fsm, State_FillingTrayWithWater);
-         break;
-
-      case Signal_TestRequest_Harvest:
-         Fsm_Transition(fsm, State_Harvesting);
          break;
    }
 }
