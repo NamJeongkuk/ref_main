@@ -836,21 +836,7 @@ static bool State_Harvest(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_MaxHarvestTimeReached:
-         if(SabbathModeIsDisabled(instance) && IceMakerIsEnabled(instance))
-         {
-            if(RakeCompletedRevolution(instance))
-            {
-               SkipFillFlagIsSet(instance) ? Hsm_Transition(hsm, State_Freeze) : Hsm_Transition(hsm, State_Fill);
-            }
-            else
-            {
-               Hsm_Transition(hsm, State_HarvestFix);
-            }
-         }
-         else
-         {
-            Hsm_Transition(hsm, State_IdleFreeze);
-         }
+         Hsm_Transition(hsm, State_HarvestFix);
          break;
 
       case Signal_FillTubeHeaterTimerExpired:
@@ -859,18 +845,13 @@ static bool State_Harvest(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Signal_RakeCompletedRevolution:
          if(RakeCompletedRevolution(instance) && FillTubeHeaterTimerHasExpired(instance))
          {
-            if(SabbathModeIsDisabled(instance) && IceMakerIsEnabled(instance))
-            {
-               SkipFillFlagIsSet(instance) ? Hsm_Transition(hsm, State_Freeze) : Hsm_Transition(hsm, State_Fill);
-            }
-            else
-            {
-               Hsm_Transition(hsm, State_IdleFreeze);
-            }
+            SkipFillFlagIsSet(instance) ? Hsm_Transition(hsm, State_Freeze) : Hsm_Transition(hsm, State_Fill);
          }
          break;
 
       case Signal_TestRequest_Harvest:
+      case Signal_SabbathModeEnabled:
+      case Signal_IceMakerIsDisabled:
          break;
 
       case Hsm_Exit:
@@ -995,10 +976,10 @@ static bool State_FillParent(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 
    switch(signal)
    {
-      case Signal_TestRequest_Fill:
-         break;
-
       case Signal_MoldThermistorIsInvalid:
+      case Signal_TestRequest_Fill:
+      case Signal_SabbathModeEnabled:
+      case Signal_IceMakerIsDisabled:
          // Consume signal so it doesn't get deferred to global - transition to thermistor fault state will occur when fill completes
          break;
 

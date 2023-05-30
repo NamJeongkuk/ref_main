@@ -40,6 +40,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    I_DataModel_t *dataModel;
    ResetReason_t resetReason;
    const AluminumMoldIceMakerData_t *iceMakerData;
+   const IceMakerFillMonitorData_t *iceMakerFillMonitorData;
    TimerModule_TestDouble_t *timerModuleTestDouble;
    EventSubscription_t harvestCountIsReadyToHarvestSubscription;
    EventSubscription_t feelerArmIsReadyToHarvestSubscription;
@@ -52,6 +53,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       iceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData;
+      iceMakerFillMonitorData = PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerFillMonitorData;
    }
 
    void WhenApplicationHasBeenInitialized()
@@ -699,6 +701,17 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       CHECK_EQUAL(expected, actual);
    }
 
+   void WhenStopFillSignalChanges()
+   {
+      After(iceMakerFillMonitorData->timedIceMakerFillInSecondsx10 * 100);
+   }
+
+   void WhenFillTubeHeaterTimeReachedAfterRakeCompletedFullRevolution()
+   {
+      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeCompletedRevolution, set);
+      After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+   }
+
    void WhenTheFeelerArmMovesFromBucketNotFullToFullForFeelerArmTestTime()
    {
       WhenFeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
@@ -1061,6 +1074,9 @@ TEST(AluminumMoldIceMakerIntegration, ShouldTurnOffIceMakerWaterValveAndHeaterWh
    IceMakerWaterValveRelayShouldBe(WaterValveState_On);
 
    WhenSabbathModeIs(ENABLED);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+
+   WhenStopFillSignalChanges();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
 
    IceMakerWaterValveShouldVote(WaterValveState_Off, Vote_DontCare);
@@ -1087,6 +1103,9 @@ TEST(AluminumMoldIceMakerIntegration, ShouldTurnOffIceMakerRakeMotorWhenEntering
    IceMakerMotorShouldVote(MotorState_On, Vote_Care);
 
    WhenSabbathModeIs(ENABLED);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   WhenFillTubeHeaterTimeReachedAfterRakeCompletedFullRevolution();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
 
    IceMakerMotorShouldVote(MotorState_Off, Vote_DontCare);
