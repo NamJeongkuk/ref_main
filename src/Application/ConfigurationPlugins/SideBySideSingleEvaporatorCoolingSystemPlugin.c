@@ -18,6 +18,7 @@ void SideBySideSingleEvaporatorCoolingSystemPlugin_Init(SideBySideSingleEvaporat
    SideBySideSingleEvaporatorCoolingSystemSensorFilteringPlugin_Init(&instance->_private.sensorFilteringPlugin, dataModel);
 
    AmbientTemperaturePlugin_Init(&instance->_private.ambientTemperaturePlugin, dataModel);
+   AmbientHumidityPlugin_Init(&instance->_private.ambientHumidityPlugin, dataModel);
    ExternalFilteredSensorResolverPlugin_Init(&instance->_private.externalFilteredSensorResolverPlugin, dataModel);
 
    GridPlugin_Init(&instance->_private.gridPlugin, dataModel);

@@ -921,8 +921,29 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Ambient Thermistor Is Valid Override Request",
+          "name": "Erd_AmbientThermistor_IsValidOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient Thermistor Is Valid Override Value",
+          "name": "Erd_AmbientThermistor_IsValidOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Ambient Thermistor Is Valid Resolved",
           "name": "Erd_AmbientThermistor_IsValidResolved",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient Thermistor Is Valid",
+          "name": "Erd_Ambient_ThermistorIsValid",
           "read": true,
           "write": true
         },
@@ -963,8 +984,29 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Ambient Humidity Sensors Is Valid",
-          "name": "Erd_AmbientHumidity_SensorIsValid",
+          "displayName": "Ambient Humidity Sensor Is Valid Override Request",
+          "name": "Erd_AmbientHumiditySensor_IsValidOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient Humidity Sensor Is Valid Override Value",
+          "name": "Erd_AmbientHumiditySensor_IsValidOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient Humidity Sensor Is Valid Resolved",
+          "name": "Erd_AmbientHumiditySensor_IsValidResolved",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient Humidity Sensor Is Valid",
+          "name": "Erd_Ambient_HumiditySensorIsValid",
           "read": true,
           "write": true
         },
@@ -986,13 +1028,6 @@
           "namespace": "mb",
           "displayName": "Ambient Resolved Humidity",
           "name": "Erd_Ambient_FilteredHumidityResolvedPercentx100",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Ambient Resolved Humidity Sensor Is Valid",
-          "name": "Erd_AmbientHumidity_SensorIsValid",
           "read": true,
           "write": true
         },

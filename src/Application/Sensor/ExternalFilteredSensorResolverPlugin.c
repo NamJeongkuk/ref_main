@@ -21,7 +21,7 @@ static const ExternalFilteredSensorResolverConfig_t externalFilteredAmbientTempe
 
 static const ExternalFilteredSensorResolverConfig_t externalFilteredAmbientHumiditySensorResolver = {
    .internalFilteredSensorErd = Erd_AmbientHumidity_FilteredRelativeHumidityPercentx100,
-   .internalFilteredSensorIsValidErd = Erd_AmbientHumidity_SensorIsValid,
+   .internalFilteredSensorIsValidErd = Erd_AmbientHumiditySensor_IsValidResolved,
    .externalFilteredSensorErd = Erd_ExternalAmbientFilteredRelativeHumidityPercentx100,
    .externalFilteredSensorIsValidErd = Erd_ExternalAmbientHumidity_IsValid,
    .resolvedFilteredSensorErd = Erd_Ambient_FilteredHumidityResolvedPercentx100,

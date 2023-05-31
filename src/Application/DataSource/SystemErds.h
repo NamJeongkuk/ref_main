@@ -601,7 +601,7 @@ enum
    ENTRY(Erd_Ambient_ThermistorIsValid,                     0xF0F5, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerMoldThermistorIsValid,     0xF0F6, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_ThermistorIsValid,           0xF0F7, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AmbientHumidity_SensorIsValid,                 0xF0F8, bool,                                               Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Ambient_HumiditySensorIsValid,                 0xF0F8, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFood_AdjustedSetpointInDegFx100,          0xF0FF, TemperatureDegFx100_t,                              Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Freezer_AdjustedSetpointInDegFx100,            0xF100, TemperatureDegFx100_t,                              Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -925,6 +925,10 @@ enum
    ENTRY(Erd_TwistTrayIceMaker_FilteredTemperatureOverrideRequest,           0xF454, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_FilteredTemperatureOverrideValueInDegFx100,   0xF455, TemperatureDegFx100_t,             Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,        0xF456, TemperatureDegFx100_t,             Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_AmbientHumiditySensor_IsValidOverrideRequest,                   0xF457, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AmbientHumiditySensor_IsValidOverrideValue,                     0xF458, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AmbientHumiditySensor_IsValidResolved,                          0xF459, bool,                              Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_CalculatedCondenserFanControl,                 0xF480, FanControl_t,                                       Swap_Yes,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CalculatedIceCabinetFanControl,                0xF481, FanControl_t,                                       Swap_Range, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
