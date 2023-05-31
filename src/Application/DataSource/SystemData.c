@@ -7,6 +7,7 @@
 
 #include "SystemData.h"
 #include "DataModelErdPointerAccess.h"
+#include "Constants_Binary.h"
 
 typedef SystemData_t Instance_t;
 
@@ -141,4 +142,6 @@ void SystemData_AddBspDataSource(SystemData_t *instance, I_DataModel_t *dataMode
       instance,
       UnmappedBspDataSource_DataSource(&instance->_private.dataSource.unmappedBsp),
       &instance->_private.dataSource.unmappedBspComponent);
+
+   DataModel_Write(dataModel, Erd_Gpio_SABBATH, set); // TODO: Remove this when Sabbath Mode is implemented.
 }
