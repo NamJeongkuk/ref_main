@@ -10,6 +10,8 @@
 
 #include <stdint.h>
 
+// PSA: This enum impacts the factory test sequence. Add to the end only.
+
 enum
 {
    TwistTrayIceMakerMotorActionResult_NoAction = 0,
