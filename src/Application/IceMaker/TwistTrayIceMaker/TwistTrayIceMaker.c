@@ -17,7 +17,6 @@
 #include "DispensingRequest.h"
 #include "PercentageDutyCycleVote.h"
 
-#define WaterFillPeriod (instance->_private.parametric->fillData.waterFillTimeSecX10 * 100)
 #define FullIceBucketWaitPeriodMinutes (instance->_private.parametric->harvestData.fullBucketWaitPeriodMinutes * MSEC_PER_MIN)
 #define DelayToHarvestAfterDoorCloses (instance->_private.parametric->harvestData.delayToHarvestAfterDoorClosesSeconds * MSEC_PER_SEC)
 #define MaxHarvestTemperatureInDegFx100 (instance->_private.parametric->freezeData.maximumHarvestTemperatureInDegFx100)
@@ -46,6 +45,8 @@ enum
    Signal_FillTubeHeaterTimerExpired,
    Signal_IceMakerIsEnabled,
    Signal_IceMakerIsDisabled,
+   Signal_PauseFill,
+   Signal_ResumeFill,
    Signal_MotorErrorRetryTimerExpired,
    Signal_HarvestCountIsReadyToHarvest,
 
@@ -74,14 +75,14 @@ enum
    ENTRY(State_FillingTrayWithWater) \
    ENTRY(State_BucketIsFull)         \
    ENTRY(State_MotorError)           \
-   ENTRY(State_ThermistorFault)
+   ENTRY(State_ThermistorFault)      \
+   ENTRY(State_IdleFill)
 
 FSM_STATE_TABLE(FSM_STATE_EXPAND_AS_FUNCTION_DEFINITION)
 
 #define open enabled
 #define closed disabled
 
-static void FillingTrayPeriodElapsed(void *context);
 static void FullIceBucketWaitTimeElapsed(void *context);
 
 static TwistTrayIceMaker_t *InstanceFrom(Fsm_t *fsm)
@@ -153,14 +154,12 @@ static void SendFreezerIceRateSignal(TwistTrayIceMaker_t *instance)
       Erd_FreezerIceRateTriggerSignal);
 }
 
-static void StartFillTrayTimer(TwistTrayIceMaker_t *instance)
+static void SetWaterFillMonitoringRequestTo(TwistTrayIceMaker_t *instance, IceMakerWaterFillMonitoringRequest_t request)
 {
-   TimerModule_StartOneShot(
-      instance->_private.timerModule,
-      &instance->_private.waitingTimer,
-      WaterFillPeriod,
-      FillingTrayPeriodElapsed,
-      instance);
+   DataSource_Write(
+      instance->_private.dataSource,
+      Erd_TwistTrayIceMakerWaterFillMonitoringRequest,
+      &request);
 }
 
 static void VoteForFillTubeHeater(TwistTrayIceMaker_t *instance, PercentageDutyCycle_t dutyCycle)
@@ -260,6 +259,19 @@ static void StopHarvestCountCalculation(TwistTrayIceMaker_t *instance)
       instance->_private.dataSource,
       Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,
       clear);
+}
+
+static void ResumeFillMonitoringIfPausedOrStartIfStopped(TwistTrayIceMaker_t *instance)
+{
+   if(instance->_private.pauseFillMonitoring)
+   {
+      SetWaterFillMonitoringRequestTo(instance, IceMakerWaterFillMonitoringRequest_Resume);
+      instance->_private.pauseFillMonitoring = false;
+   }
+   else
+   {
+      SetWaterFillMonitoringRequestTo(instance, IceMakerWaterFillMonitoringRequest_Start);
+   }
 }
 
 static bool SabbathModeIsDisabledAndIceMakerIsEnabled(TwistTrayIceMaker_t *instance)
@@ -424,13 +436,13 @@ static void State_FillingTrayWithWater(Fsm_t *fsm, FsmSignal_t signal, const voi
          if(!ItIsSabbathMode(instance))
          {
             UpdateWaterValve(instance, OPEN);
-            StartFillTrayTimer(instance);
+            ResumeFillMonitoringIfPausedOrStartIfStopped(instance);
          }
          break;
 
       case Signal_SabbathModeDisabled:
          UpdateWaterValve(instance, OPEN);
-         StartFillTrayTimer(instance);
+         ResumeFillMonitoringIfPausedOrStartIfStopped(instance);
          break;
 
       case Signal_TrayFilled:
@@ -444,11 +456,24 @@ static void State_FillingTrayWithWater(Fsm_t *fsm, FsmSignal_t signal, const voi
          }
          break;
 
+      case Signal_PauseFill:
+         instance->_private.pauseFillMonitoring = true;
+         Fsm_Transition(fsm, State_IdleFill);
+         break;
+
       case Signal_TestRequest_Harvest:
          Fsm_Transition(fsm, State_Harvesting);
          break;
 
       case Fsm_Exit:
+         if(instance->_private.pauseFillMonitoring)
+         {
+            SetWaterFillMonitoringRequestTo(instance, IceMakerWaterFillMonitoringRequest_Pause);
+         }
+         else
+         {
+            SetWaterFillMonitoringRequestTo(instance, IceMakerWaterFillMonitoringRequest_Stop);
+         }
          TimerModule_Stop(instance->_private.timerModule, &instance->_private.waitingTimer);
          UpdateWaterValve(instance, CLOSED);
          break;
@@ -559,10 +584,21 @@ static void State_ThermistorFault(Fsm_t *fsm, FsmSignal_t signal, const void *da
    }
 }
 
-static void FillingTrayPeriodElapsed(void *context)
+static void State_IdleFill(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
-   REINTERPRET(instance, context, TwistTrayIceMaker_t *);
-   Fsm_SendSignal(&instance->_private.fsm, Signal_TrayFilled, NULL);
+   TwistTrayIceMaker_t *instance = InstanceFrom(fsm);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Fsm_Entry:
+         UpdateOperationState(instance, TwistTrayIceMakerOperationState_IdleFill);
+         break;
+
+      case Signal_ResumeFill:
+         Fsm_Transition(fsm, State_FillingTrayWithWater);
+         break;
+   }
 }
 
 static void FullIceBucketWaitTimeElapsed(void *context)
@@ -599,6 +635,22 @@ static void DataSourceChanged(void *context, const void *data)
    if(onChangeArgs->erd == Erd_DispensingRequestStatus)
    {
       const DispensingRequestStatus_t *dispensingRequestStatus = onChangeArgs->data;
+
+      switch(dispensingRequestStatus->status)
+      {
+         case DispenseStatus_Dispensing:
+            if((dispensingRequestStatus->selection == DispensingRequestSelection_Water) ||
+               (dispensingRequestStatus->selection == DispensingRequestSelection_Autofill))
+            {
+               Fsm_SendSignal(&instance->_private.fsm, Signal_PauseFill, NULL);
+            }
+            break;
+
+         default:
+            Fsm_SendSignal(&instance->_private.fsm, Signal_ResumeFill, NULL);
+            break;
+      }
+
       if(IceIsDispensing(*dispensingRequestStatus))
       {
          TimerModule_StartOneShot(
@@ -724,6 +776,10 @@ static void DataSourceChanged(void *context, const void *data)
          Fsm_SendSignal(&instance->_private.fsm, Signal_IceMakerIsDisabled, NULL);
       }
    }
+   else if(onChangeArgs->erd == Erd_TwistTrayIceMakerStopFillSignal)
+   {
+      Fsm_SendSignal(&instance->_private.fsm, Signal_TrayFilled, NULL);
+   }
    else if(onChangeArgs->erd == Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest)
    {
       const bool *state = onChangeArgs->data;
@@ -746,6 +802,7 @@ void TwistTrayIceMaker_Init(
    instance->_private.doorHasBeenClosedForLongEnough = true;
    instance->_private.firstFreezeTransition = true;
    instance->_private.iceDispensedLongEnoughToCheckHarvest = false;
+   instance->_private.pauseFillMonitoring = false;
 
    EventSubscription_Init(&instance->_private.dataSourceChangeEventSubscription, instance, DataSourceChanged);
    Event_Subscribe(dataSource->OnDataChange, &instance->_private.dataSourceChangeEventSubscription);

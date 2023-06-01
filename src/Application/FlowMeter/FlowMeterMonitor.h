@@ -15,7 +15,7 @@
 typedef struct
 {
    Erd_t flowMeterMonitoringRequest; // FlowMeterMonitoringRequest_t
-   Erd_t flowMeterCountsErd; // InputCaptureCounts_t
+   Erd_t flowMeterInputCaptureCountsErd; // InputCaptureCounts_t
    Erd_t flowMeterWaterDispensedOzX100Erd; // uint32_t
 } FlowMeterMonitorConfig_t;
 

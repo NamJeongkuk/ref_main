@@ -11,7 +11,6 @@
 #include <stdint.h>
 #include "FillTubeHeaterData.h"
 #include "TemperatureDegFx100.h"
-#include "FillTubeHeaterData.h"
 #include "IceMakerTypeInformation.h"
 
 typedef struct
@@ -37,15 +36,9 @@ typedef struct
 
 typedef struct
 {
-   uint8_t waterFillTimeSecX10;
-} TwistTrayIceMakerFillData_t;
-
-typedef struct
-{
    IceMakerTypeInformation_t typeInformation;
    TwistTrayIceMakerFreezeData_t freezeData;
    TwistTrayIceMakerHarvestData_t harvestData;
-   TwistTrayIceMakerFillData_t fillData;
    FillTubeHeaterData_t fillTubeHeaterData;
 } TwistTrayIceMakerData_t;
 

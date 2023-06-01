@@ -28,7 +28,7 @@ enum
 
 static const FlowMeterMonitorConfig_t config = {
    .flowMeterMonitoringRequest = Erd_FlowMeterMonitoringRequest,
-   .flowMeterCountsErd = Erd_FlowMeter_InputCaptureCount,
+   .flowMeterInputCaptureCountsErd = Erd_FlowMeter_InputCaptureCount,
    .flowMeterWaterDispensedOzX100Erd = Erd_FlowMeterWaterDispensedOzX100
 };
 

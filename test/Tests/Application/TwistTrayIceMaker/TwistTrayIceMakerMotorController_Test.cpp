@@ -97,9 +97,6 @@ static const TwistTrayIceMakerData_t iceMakerData = {
       .delayToHarvestAfterDoorClosesSeconds = 0,
       .fullBucketDispenseCheckTimeInSeconds = FullBucketDispenseCheckTimeInSec,
    },
-   .fillData{
-      .waterFillTimeSecX10 = 0,
-   },
    .fillTubeHeaterData = {
       .freezeThawFillTubeHeaterDutyCyclePercentage = 0,
       .freezeThawFillTubeHeaterOnTimeInSeconds = 400,

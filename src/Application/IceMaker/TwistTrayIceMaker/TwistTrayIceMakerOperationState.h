@@ -18,7 +18,8 @@ enum
    TwistTrayIceMakerOperationState_FillingTrayWithWater,
    TwistTrayIceMakerOperationState_BucketIsFull,
    TwistTrayIceMakerOperationState_MotorError,
-   TwistTrayIceMakerOperationState_ThermistorFault
+   TwistTrayIceMakerOperationState_ThermistorFault,
+   TwistTrayIceMakerOperationState_IdleFill
 };
 typedef uint8_t TwistTrayIceMakerOperationState_t;
 

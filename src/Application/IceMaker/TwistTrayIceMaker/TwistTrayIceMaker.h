@@ -27,10 +27,10 @@ typedef struct
       Timer_t dispensingIceTimer;
       Timer_t retryMotorInitTimer;
 
-      bool firstFreezeTransition : 1;
-      bool doorHasBeenClosedForLongEnough : 1;
-      bool iceDispensedLongEnoughToCheckHarvest : 1;
-      uint8_t unused : 5;
+      bool firstFreezeTransition;
+      bool doorHasBeenClosedForLongEnough;
+      bool iceDispensedLongEnoughToCheckHarvest;
+      bool pauseFillMonitoring;
 
       const TwistTrayIceMakerData_t *parametric;
 

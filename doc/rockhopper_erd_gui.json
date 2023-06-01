@@ -1989,6 +1989,34 @@
           "name": "Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100",
           "read": true,
           "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Water Fill Monitoring Request",
+          "name": "Erd_TwistTrayIceMakerWaterFillMonitoringRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Stop Fill Signal",
+          "name": "Erd_TwistTrayIceMakerStopFillSignal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Ice Maker Flow Meter Water Dispensed OzX100",
+          "name": "Erd_TwistTrayIceMakerFlowMeterWaterDispensedOzX100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Ice Maker Flow Meter Monitoring Request",
+          "name": "Erd_TwistTrayIceMakerFlowMeterMonitoringRequest",
+          "read": true,
+          "write": true
         }
       ]
     },

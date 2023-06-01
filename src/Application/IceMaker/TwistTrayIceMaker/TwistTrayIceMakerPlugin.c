@@ -72,6 +72,20 @@ static const ErdResolverConfiguration_t twistTrayMotorResolverConfiguration = {
    .numberOfVotingErds = (Erd_TwistTrayIceMakerMotor_IceMakerVote - Erd_TwistTrayIceMakerMotor_WinningVoteErd)
 };
 
+static const FlowMeterMonitorConfig_t twistTrayIceMakerFlowMeterMonitorConfig = {
+   .flowMeterMonitoringRequest = Erd_TwistTrayIceMakerFlowMeterMonitoringRequest,
+   .flowMeterInputCaptureCountsErd = Erd_FlowMeter_InputCaptureCount,
+   .flowMeterWaterDispensedOzX100Erd = Erd_TwistTrayIceMakerFlowMeterWaterDispensedOzX100
+};
+
+static const IceMakerWaterFillMonitorConfig_t twistTrayIceMakerFillMonitorConfig = {
+   .stopIceMakerFillSignalErd = Erd_TwistTrayIceMakerStopFillSignal,
+   .flowMeterWaterDispensedOzx100Erd = Erd_TwistTrayIceMakerFlowMeterWaterDispensedOzX100,
+   .waterFillMonitoringRequestErd = Erd_TwistTrayIceMakerWaterFillMonitoringRequest,
+   .flowMeterMonitoringRequestErd = Erd_TwistTrayIceMakerFlowMeterMonitoringRequest,
+   .timerModuleErd = Erd_TimerModule
+};
+
 static bool WaterValveVotingErdCareDelegate(const void *votingErdData)
 {
    const WaterValveVotedState_t *data = votingErdData;
@@ -222,6 +236,18 @@ void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataMod
    FillTubeHeaterVotingFrameworkPlugin_Init(
       &instance->_private.fillTubeHeaterVotingFrameworkPlugin,
       dataModel);
+
+   FlowMeterMonitor_Init(
+      &instance->_private.twistTrayIceMakerFlowMeterMonitor,
+      dataModel,
+      &twistTrayIceMakerFlowMeterMonitorConfig,
+      PersonalityParametricData_Get(dataModel)->flowMeterData);
+
+   IceMakerWaterFillMonitor_Init(
+      &instance->_private.twistTrayIceMakerFillMonitor,
+      dataModel,
+      &twistTrayIceMakerFillMonitorConfig,
+      PersonalityParametricData_Get(dataModel)->iceMakerData->twistIceMakerFillMonitorData);
 
    TwistTrayIceMaker_Init(
       &instance->_private.twistTrayIceMaker,

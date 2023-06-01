@@ -18,7 +18,11 @@ enum
 static uint32_t FlowMeterCounts(FlowMeterMonitor_t *instance)
 {
    uint32_t flowMeterCounts;
-   DataModel_Read(instance->_private.dataModel, instance->_private.config->flowMeterCountsErd, &flowMeterCounts);
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->flowMeterInputCaptureCountsErd,
+      &flowMeterCounts);
+
    return flowMeterCounts;
 }
 
@@ -95,7 +99,7 @@ static void MonitoringRequestChanged(void *context, const void *args)
       case FlowMeterMonitoringRequest_Start:
          DataModel_Read(
             instance->_private.dataModel,
-            instance->_private.config->flowMeterCountsErd,
+            instance->_private.config->flowMeterInputCaptureCountsErd,
             &instance->_private.previousFlowMeterCounts);
 
          instance->_private.flowMeterCountsSinceBeginningMonitoring = 0;

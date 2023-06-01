@@ -166,6 +166,12 @@ static const SensorFilteringConfig_t moldThermistorConfig = {
    .timerModuleErd = Erd_TimerModule
 };
 
+static const FlowMeterMonitorConfig_t flowMeterMonitorConfig = {
+   .flowMeterMonitoringRequest = Erd_FlowMeterMonitoringRequest,
+   .flowMeterInputCaptureCountsErd = Erd_FlowMeter_InputCaptureCount,
+   .flowMeterWaterDispensedOzX100Erd = Erd_FlowMeterWaterDispensedOzX100
+};
+
 static const IceMakerWaterFillMonitorConfig_t iceMakerFillMonitorConfig = {
    .stopIceMakerFillSignalErd = Erd_AluminumMoldIceMakerStopFillSignal,
    .flowMeterWaterDispensedOzx100Erd = Erd_FlowMeterWaterDispensedOzX100,
@@ -349,6 +355,12 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
       &instance->_private.heaterRelayConnector,
       dataModel,
       &heaterRelayConnectorConfiguration);
+
+   FlowMeterMonitor_Init(
+      &instance->_private.flowMeterMonitor,
+      dataModel,
+      &flowMeterMonitorConfig,
+      PersonalityParametricData_Get(dataModel)->flowMeterData);
 
    IceMakerWaterFillMonitor_Init(
       &instance->_private.iceMakerFillMonitor,

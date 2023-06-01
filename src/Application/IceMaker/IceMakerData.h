@@ -20,6 +20,7 @@ typedef struct
    AluminumMoldIceMakerData_t *aluminumMoldIceMakerData;
    IceMakerFillMonitorData_t *iceMakerFillMonitorData;
    TwistTrayIceMakerData_t *twistTrayIceMakerData;
+   IceMakerFillMonitorData_t *twistIceMakerFillMonitorData;
    AugerMotorData_t *augerMotorData;
 } IceMakerData_t;
 
