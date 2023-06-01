@@ -1426,7 +1426,17 @@ TEST(Defrost_SingleEvap, ShouldTurnOffCompressorAndFansAndNotCareAboutDamperVote
    IceCabinetFanSpeedVoteShouldBe(FanSpeed_Off);
 }
 
-TEST(Defrost_SingleEvap, ShouldExitOnHeaterEntryStateAndTurnOnTheDefrostHeaterAfterDefrostHeaterOnDelayTimerExpired)
+TEST(Defrost_SingleEvap, ShouldReleaseControlOfHeaterOnEntryLoadsWhenDefrostIsDisabled)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
+
+   When DisableDefrostIs(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_Disabled);
+   CompressorSpeedVoteShouldBeDontCare();
+   FanSpeedVotesShouldBeDontCare();
+}
+
+TEST(Defrost_SingleEvap, ShouldExitOnHeaterEntryStateAndTurnOnTheDefrostHeaterAndEnableMinimumCompressorTimesAfterDefrostHeaterOnDelayTimerExpired)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
 
@@ -1436,7 +1446,27 @@ TEST(Defrost_SingleEvap, ShouldExitOnHeaterEntryStateAndTurnOnTheDefrostHeaterAf
 
    After(1);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOn);
+   DisableMinimumCompressorTimesShouldBe(true);
    And FreezerDefrostHeaterVoteShouldBe(HeaterState_On);
+   And CompressorSpeedVoteShouldBe(CompressorSpeed_Off);
+   And CondenserFanSpeedVoteShouldBe(FanSpeed_Off);
+   And FreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off);
+   And IceCabinetFanSpeedVoteShouldBe(FanSpeed_Off);
+}
+
+TEST(Defrost_SingleEvap, ShouldReleaseControlOfHeaterOnLoadsWhenDefrostIsDisabled)
+{
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
+
+   When DisableDefrostIs(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_Disabled);
+   CompressorSpeedVoteShouldBeDontCare();
+   FanSpeedVotesShouldBeDontCare();
+   FreezerDefrostHeaterVoteShouldBe(HeaterState_Off);
+   DisableMinimumCompressorTimesShouldBe(false);
+
+   When DisableDefrostIs(false);
+   FreezerDefrostHeaterVoteShouldBeDontCare();
 }
 
 TEST(Defrost_SingleEvap, ShouldTurnOffDefrostHeaterAndIncrementFreezerDefrostCountAndTransitToDwellStateWhenFreezerEvaporatorTemperatureReachesFreezerDefrostTerminationTemperatureAndFreezerEvaporatorThermistorIsValid)
@@ -1559,7 +1589,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToPostDwellAfterDwellTimeHasPassed)
    DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
 }
 
-TEST(Defrost_SingleEvap, ShouldVoteForCompressorAndCondenserFanAndDamperWhenEnteringPostDwell)
+TEST(Defrost_SingleEvap, ShouldVoteForCompressorAndCondenserFanAndDamperWhenEnteringPostDwellAndOffForFreezerDefrostHeaterAndFreezerEvapFanSpeedAndIceCabinetFanSpeed)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
 
@@ -1567,6 +1597,9 @@ TEST(Defrost_SingleEvap, ShouldVoteForCompressorAndCondenserFanAndDamperWhenEnte
    CondenserFanSpeedVoteShouldBe(defrostData->postDwellData.postDwellCondenserFanSpeed);
    FreshFoodDamperPositionVoteShouldBe(defrostData->postDwellData.postDwellFreshFoodDamperPosition);
    DisableMinimumCompressorTimesShouldBe(true);
+   FreezerDefrostHeaterVoteShouldBe(HeaterState_Off);
+   FreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off);
+   IceCabinetFanSpeedVoteShouldBe(FanSpeed_Off);
 }
 
 TEST(Defrost_SingleEvap, ShouldTransitionToIdleAfterPostDwellTimeHasPassed)
@@ -1772,12 +1805,14 @@ TEST(Defrost_SingleEvap, ShouldVoteFreezerDefrostHeaterOffWhenTransitioningFromI
    FreezerDefrostHeaterVoteShouldBe(HeaterState_Off);
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionFromDisabledToIdleWhenEnabled)
+TEST(Defrost_SingleEvap, ShouldReleaseControlOfFreezerDefrostHeaterWhenDefrostBecomesEnabledAndTransitionsFromDisabledToIdle)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Disabled);
+   FreezerDefrostHeaterVoteShouldBe(HeaterState_Off);
 
    When DisableDefrostIs(false);
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+   FreezerDefrostHeaterVoteShouldBeDontCare();
 }
 
 TEST(Defrost_SingleEvap, ShouldWriteToCurrentDefrostTypeWhenExitingWaitingToDefrost)
@@ -2056,16 +2091,17 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestSt
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestWhenIdleTestIsRequestedInDwellState)
+TEST(Defrost_SingleEvap, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestAndEnableMinimumCompressorTimesWhenIdleTestIsRequestedInDwellState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
 
    When DefrostTestIsRequested(DefrostTestStateRequest_Idle);
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+   DisableMinimumCompressorTimesShouldBe(false);
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToPrechillPrepAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInDwellState)
+TEST(Defrost_SingleEvap, ShouldTransitionToPrechillPrepAndClearTheDefrostTestStateRequestAndEnableMinimumCompressorTimesWhenPrechillTestIsRequestedInDwellState)
 {
    Given FreezerThermistorValidityIs(Valid);
    Given FreezerEvaporatorThermistorValidityIs(Valid);
@@ -2073,10 +2109,11 @@ TEST(Defrost_SingleEvap, ShouldTransitionToPrechillPrepAndClearTheDefrostTestSta
 
    When DefrostTestIsRequested(DefrostTestStateRequest_Prechill);
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+   DisableMinimumCompressorTimesShouldBe(false);
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldSkipPrechillPrepAndTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestWhenPrechillTestIsRequestedInDwellStateBecauseFreezerEvaporatorThermistorIsInvalid)
+TEST(Defrost_SingleEvap, ShouldSkipPrechillPrepAndTransitionToHeaterOnEntryAndClearTheDefrostTestStateRequestAndNotEnableMinimumCompressorTimesWhenPrechillTestIsRequestedInDwellStateBecauseFreezerEvaporatorThermistorIsInvalid)
 {
    Given FreezerThermistorValidityIs(Valid);
    Given FreezerEvaporatorThermistorValidityIs(Invalid);
@@ -2084,6 +2121,7 @@ TEST(Defrost_SingleEvap, ShouldSkipPrechillPrepAndTransitionToHeaterOnEntryAndCl
 
    When DefrostTestIsRequested(DefrostTestStateRequest_Prechill);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   DisableMinimumCompressorTimesShouldBe(true);
    DefrostTestStateRequestShouldBeNone();
 }
 

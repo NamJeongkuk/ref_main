@@ -308,6 +308,12 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       CHECK_EQUAL(expected.care, actual.care);
    }
 
+   void CompressorSpeedDefrostVoteShouldBeOffAndDontCare()
+   {
+      CompressorVotedSpeed_t compressorDefrostVote = { .speed = CompressorSpeed_Off, .care = Vote_DontCare };
+      CompressorSpeedDefrostVoteShouldBe(compressorDefrostVote);
+   }
+
    void WhenItBecomesReadyToDefrostAfterMaxTimeBetweenDefrostsWithCompressorOn()
    {
       // I want to replace this by having the compressor on because of the grid and same with cooling mode
@@ -1087,8 +1093,11 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToIdleAndStartCountingCompre
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Idle);
    WhenDefrostTestIsRequested(DefrostTestRequest_Idle);
 
+   CompressorSpeedDefrostVoteShouldBeOffAndDontCare();
+   CompressorSpeedWinningVoteShouldBe(Erd_CompressorSpeed_GridVote);
+
+   WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
    WhenFreezerDoorIs(Open);
-   WhenCompressorIsTurnedOnWhileCompressorMinimumTimesHaveBeenDisabled();
 
    CompressorOnTimeInSecondsShouldBe(0);
    FreezerScaledDoorAccelerationsInSecondsShouldBe(0);
@@ -1181,6 +1190,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToPrechillPrepWhenPrechillTe
    GivenThatTheApplicationHasStartedAndDefrostIsInHeaterOnEntry();
    GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
 
+   WhenCompressorIsTurnedOff();
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Idle);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
    WhenDefrostTestIsRequested(DefrostTestRequest_Prechill);
