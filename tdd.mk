@@ -109,6 +109,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/TimerModule \
    $(TESTS_DIR)/Application/TwistTrayIceMaker \
    $(TESTS_DIR)/Application/VariableSweatHeater \
+   $(TESTS_DIR)/Bsp \
    $(TESTS_DIR)/Hardware/SoftPwm \
 
 ifeq ($(INTEGRATION),Y)
