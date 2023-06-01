@@ -633,48 +633,6 @@
           "name": "Erd_EepromEraseRequestSignal",
           "read": true,
           "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Some Protected Data",
-          "name": "Erd_ProtectedSomeData",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Some Unit Setting Data",
-          "name": "Erd_UnitSettingSomeData",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Some User Setting Data",
-          "name": "Erd_UserSettingSomeData",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Some Rfid Data",
-          "name": "Erd_RfidSomeData",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Some Fault Snapshot Data",
-          "name": "Erd_FaultSnapshotSomeData",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Some Cycle History Data",
-          "name": "Erd_CycleHistorySomeData",
-          "read": true,
-          "write": true
         }
       ]
     },

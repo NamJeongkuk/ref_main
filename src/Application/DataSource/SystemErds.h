@@ -1107,12 +1107,6 @@ enum
    \
    ENTRY(Erd_EepromEraseRequestSignal,                      0xFAFF, Signal_t,                                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_ProtectedSomeData,                             0xFB00, uint32_t,                                           Swap_No,    Io_None, Sub_Y, NvProtected,            NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_UnitSettingSomeData,                           0xFB01, uint32_t,                                           Swap_No,    Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_UserSettingSomeData,                           0xFB02, uint32_t,                                           Swap_No,    Io_None, Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_RfidSomeData,                                  0xFB03, uint32_t,                                           Swap_No,    Io_None, Sub_Y, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_FaultSnapshotSomeData,                         0xFB04, uint32_t,                                           Swap_No,    Io_None, Sub_Y, NvFaultSnapshot,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_CycleHistorySomeData,                          0xFB05, uint32_t,                                           Swap_No,    Io_None, Sub_Y, NvCycleHistory,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_DefrostCompressorOnTimeInSeconds,       0xFB06, uint32_t,                                           Swap_Yes,   Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_FreezerDefrostHeaterOnTimeInMinutes,    0xFB07, uint8_t,                                            Swap_No,    Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_ClearedDefrostEepromStartup,            0xFB08, bool,                                               Swap_No,    Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanTrue, NotFault) \
