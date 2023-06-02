@@ -1440,12 +1440,13 @@ TEST(TwistTrayIceMaker, ShouldTransitionToHarvestingAndClearTestRequestWhenTestR
    And TheTestRequestShouldBe(IceMakerTestRequest_None);
 }
 
-TEST(TwistTrayIceMaker, ShouldNotTransitionToFillingTrayWithWaterAndClearTestRequestWhenTestRequestIsFillWhileIceMakerStateIsInMotorError)
+TEST(TwistTrayIceMaker, ShouldTransitionToFillingTrayWithWaterAndClearTestRequestWhenTestRequestIsFillWhileIceMakerStateIsInMotorError)
 {
    GivenTheOperationStateIsInMotorError();
 
+   TheWaterValveShouldBecome(OPEN);
    WhenTheTestRequestIs(IceMakerTestRequest_Fill);
-   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_MotorError);
+   And TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
    And TheTestRequestShouldBe(IceMakerTestRequest_None);
 }
 

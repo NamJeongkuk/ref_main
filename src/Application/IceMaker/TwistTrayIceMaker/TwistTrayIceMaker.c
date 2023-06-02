@@ -3,7 +3,6 @@
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
-
 #include "TwistTrayIceMaker.h"
 #include "utils.h"
 #include "Constants_Time.h"
@@ -555,6 +554,10 @@ static void State_MotorError(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 
          RequestMotorAction(instance, Idle);
          DataSource_Write(instance->_private.dataSource, Erd_TwistTrayIceMaker_MotorFaultActive, set);
+         break;
+
+      case Signal_TestRequest_Fill:
+         Fsm_Transition(fsm, State_FillingTrayWithWater);
          break;
 
       case Signal_MotorErrorRetryTimerExpired:
