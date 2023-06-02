@@ -26,10 +26,8 @@ enum
    Signal_HarvestCountIsReadyToHarvest = Hsm_UserSignalStart,
    Signal_FeelerArmIsReadyToEnterHarvest,
    Signal_IceMakerTemperatureIsReadyToHarvest,
-   Signal_SabbathModeEnabled,
    Signal_SabbathModeDisabled,
    Signal_IceMakerIsEnabled,
-   Signal_IceMakerIsDisabled,
    Signal_FillTubeHeaterTimerExpired,
    Signal_MaxHarvestTimeReached,
    Signal_MaxHarvestFixTimeReached,
@@ -51,7 +49,6 @@ enum
 
 static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Freeze(Hsm_t *hsm, HsmSignal_t signal, const void *data);
-static bool State_IdleFreeze(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_FillParent(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_IdleFill(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -63,7 +60,6 @@ static bool State_ThermistorFault(Hsm_t *hsm, HsmSignal_t signal, const void *da
 static const HsmStateHierarchyDescriptor_t stateList[] = {
    { State_Global, HSM_NO_PARENT },
    { State_Freeze, State_Global },
-   { State_IdleFreeze, State_Global },
    { State_FillParent, State_Global },
    { State_Fill, State_FillParent },
    { State_IdleFill, State_FillParent },
@@ -208,28 +204,6 @@ static bool HarvestCountIsReadyToHarvest(AluminumMoldIceMaker_t *instance)
    return ready;
 }
 
-static bool SabbathModeIsEnabled(AluminumMoldIceMaker_t *instance)
-{
-   bool state;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->sabbathModeErd,
-      &state);
-
-   return state;
-}
-
-static bool IceMakerIsEnabled(AluminumMoldIceMaker_t *instance)
-{
-   bool state;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->iceMakerEnabledErd,
-      &state);
-
-   return state;
-}
-
 static bool SabbathModeIsDisabled(AluminumMoldIceMaker_t *instance)
 {
    bool state;
@@ -241,7 +215,7 @@ static bool SabbathModeIsDisabled(AluminumMoldIceMaker_t *instance)
    return !state;
 }
 
-static bool IceMakerIsDisabled(AluminumMoldIceMaker_t *instance)
+static bool IceMakerIsEnabled(AluminumMoldIceMaker_t *instance)
 {
    bool state;
    DataModel_Read(
@@ -249,7 +223,7 @@ static bool IceMakerIsDisabled(AluminumMoldIceMaker_t *instance)
       instance->_private.config->iceMakerEnabledErd,
       &state);
 
-   return !state;
+   return state;
 }
 
 static bool MoldThermistorIsNotValid(AluminumMoldIceMaker_t *instance)
@@ -689,11 +663,6 @@ static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_Global);
          break;
 
-      case Signal_SabbathModeEnabled:
-      case Signal_IceMakerIsDisabled:
-         Hsm_Transition(hsm, State_IdleFreeze);
-         break;
-
       case Signal_MoldThermistorIsInvalid:
          Hsm_Transition(hsm, State_ThermistorFault);
          break;
@@ -746,12 +715,16 @@ static bool State_Freeze(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          instance->_private.initialFreezeStateTransition = false;
          break;
 
+      case Signal_IceMakerIsEnabled:
+      case Signal_SabbathModeDisabled:
       case Signal_HarvestCountIsReadyToHarvest:
       case Signal_IceMakerTemperatureIsReadyToHarvest:
       case Signal_FeelerArmIsReadyToEnterHarvest:
          if(IceMakerTemperatureIsReadyToHarvest(instance) &&
             FeelerArmIsReadyToEnterHarvest(instance) &&
-            HarvestCountIsReadyToHarvest(instance))
+            HarvestCountIsReadyToHarvest(instance) &&
+            SabbathModeIsDisabled(instance) &&
+            IceMakerIsEnabled(instance))
          {
             Hsm_Transition(hsm, State_Harvest);
          }
@@ -760,50 +733,6 @@ static bool State_Freeze(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Hsm_Exit:
          StopHarvestCountCalculation(instance);
          StopFeelerArmMonitoring(instance);
-         break;
-
-      default:
-         return HsmSignalDeferred;
-   }
-
-   return HsmSignalConsumed;
-}
-
-static bool State_IdleFreeze(Hsm_t *hsm, HsmSignal_t signal, const void *data)
-{
-   IGNORE(data);
-   AluminumMoldIceMaker_t *instance = InstanceFromHsm(hsm);
-
-   switch(signal)
-   {
-      case Hsm_Entry:
-         UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_IdleFreeze);
-         VoteForIceMakerWaterValve(instance, OFF, Vote_DontCare);
-         VoteForIceMakerHeater(instance, OFF, Vote_DontCare);
-         VoteForIceMakerMotor(instance, OFF, Vote_DontCare);
-         break;
-
-      case Signal_MoldThermistorIsInvalid:
-      case Signal_IceMakerIsEnabled:
-      case Signal_SabbathModeDisabled:
-         if(SabbathModeIsDisabled(instance) && IceMakerIsEnabled(instance))
-         {
-            if(MoldThermistorIsNotValid(instance))
-            {
-               Hsm_Transition(hsm, State_ThermistorFault);
-            }
-            else if(!RakeIsHome(instance))
-            {
-               Hsm_Transition(hsm, State_Harvest);
-            }
-            else
-            {
-               Hsm_Transition(hsm, State_Freeze);
-            }
-         }
-         break;
-
-      case Hsm_Exit:
          break;
 
       default:
@@ -850,8 +779,6 @@ static bool State_Harvest(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_TestRequest_Harvest:
-      case Signal_SabbathModeEnabled:
-      case Signal_IceMakerIsDisabled:
          break;
 
       case Hsm_Exit:
@@ -977,10 +904,8 @@ static bool State_FillParent(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Signal_MoldThermistorIsInvalid:
-      case Signal_TestRequest_Fill:
-      case Signal_SabbathModeEnabled:
-      case Signal_IceMakerIsDisabled:
          // Consume signal so it doesn't get deferred to global - transition to thermistor fault state will occur when fill completes
+      case Signal_TestRequest_Fill:
          break;
 
       default:
@@ -1021,11 +946,7 @@ static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_StopFill:
-         if(SabbathModeIsEnabled(instance) || IceMakerIsDisabled(instance))
-         {
-            Hsm_Transition(hsm, State_IdleFreeze);
-         }
-         else if(MoldThermistorIsNotValid(instance))
+         if(MoldThermistorIsNotValid(instance))
          {
             Hsm_Transition(hsm, State_ThermistorFault);
          }
@@ -1152,11 +1073,7 @@ static void DataModelChanged(void *context, const void *args)
    else if(erd == instance->_private.config->sabbathModeErd)
    {
       const bool *state = onChangeData->data;
-      if(*state)
-      {
-         Hsm_SendSignal(&instance->_private.hsm, Signal_SabbathModeEnabled, NULL);
-      }
-      else
+      if(!*state)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_SabbathModeDisabled, NULL);
       }
@@ -1167,10 +1084,6 @@ static void DataModelChanged(void *context, const void *args)
       if(*state)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_IceMakerIsEnabled, NULL);
-      }
-      else
-      {
-         Hsm_SendSignal(&instance->_private.hsm, Signal_IceMakerIsDisabled, NULL);
       }
    }
    else if(erd == instance->_private.config->moldThermistorIsValidErd)
@@ -1236,11 +1149,7 @@ static void DataModelChanged(void *context, const void *args)
 
 static HsmState_t InitialState(AluminumMoldIceMaker_t *instance)
 {
-   if(SabbathModeIsEnabled(instance) || IceMakerIsDisabled(instance))
-   {
-      return State_IdleFreeze;
-   }
-   else if(MoldThermistorIsNotValid(instance))
+   if(MoldThermistorIsNotValid(instance))
    {
       return State_ThermistorFault;
    }

@@ -14,7 +14,6 @@ enum
 {
    AluminumMoldIceMakerHsmState_Global,
    AluminumMoldIceMakerHsmState_Freeze,
-   AluminumMoldIceMakerHsmState_IdleFreeze,
    AluminumMoldIceMakerHsmState_Harvest,
    AluminumMoldIceMakerHsmState_Fill,
    AluminumMoldIceMakerHsmState_IdleFill,

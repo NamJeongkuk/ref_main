@@ -370,29 +370,17 @@ TEST_GROUP(AluminumMoldIceMaker)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
    }
 
-   void GivenAluminumMoldIceMakerIsInIdleFreezeState()
-   {
-      GivenTheIceMakerIs(DISABLED);
-      GivenTheMoldThermistorIsValid();
-      GivenTheRakePositionIs(RakePosition_Home);
-      GivenTheModuleIsInitialized();
-      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
-   }
-
-   void GivenSabbathIsEnabledAndAluminumMoldIceMakerIsInIdleFreezeState()
+   void GivenSabbathIsEnabledAndAluminumMoldIceMakerIsInFreezeState()
    {
       GivenTheIceMakerIs(ENABLED);
-      GivenSabbathModeIs(DISABLED);
+      GivenSabbathModeIs(ENABLED);
       GivenTheMoldThermistorIsValid();
       GivenTheRakePositionIs(RakePosition_Home);
       GivenTheModuleIsInitialized();
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
-
-      WhenSabbathModeIs(ENABLED);
-      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
    }
 
-   void GivenTheIceMakerIsDisabledAndAluminumMoldIceMakerIsInIdleFreezeState()
+   void GivenTheIceMakerIsDisabledAndAluminumMoldIceMakerIsInFreezeState()
    {
       GivenTheIceMakerIs(ENABLED);
       GivenTheMoldThermistorIsValid();
@@ -401,7 +389,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
 
       WhenTheIceMakerIs(DISABLED);
-      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
    }
 
    void GivenSabbathModeIsDisabledAndAluminumMoldIceMakerIsInHarvest()
@@ -802,6 +790,11 @@ TEST_GROUP(AluminumMoldIceMaker)
       WhenFeelerArmIsReadyToEnterHarvest();
    }
 
+   void GivenReadyToEnterHarvest()
+   {
+      WhenReadyToEnterHarvest();
+   }
+
    void GivenTheExternalTestRequestIs(IceMakerTestRequest_t request)
    {
       DataModel_Write(
@@ -839,20 +832,10 @@ TEST_GROUP(AluminumMoldIceMaker)
       mock().expectNoCall("No Call");
    }
 
-   void UnsubscribeFromFillTubeHeaterOnChangeSubscription()
-   {
-      DataModel_UnsubscribeAll(dataModel, &dataModelOnChangeSubscription);
-   }
-
    void ExpectNoChangeInRakeControllerRequest()
    {
       DataModel_Subscribe(dataModel, Erd_AluminumMoldIceMakerRakeControlRequest, &rakeControllerRequestOnChangeSubscription);
       mock().expectNoCall("No Call");
-   }
-
-   void UnsubscribeFromRakeControllerRequestOnChangeSubscription()
-   {
-      DataModel_Unsubscribe(dataModel, Erd_AluminumMoldIceMakerRakeControlRequest, &rakeControllerRequestOnChangeSubscription);
    }
 
    void WhenDispensingRequestStatusIs(DispensingRequestSelection_t selection, DispenseStatus_t status)
@@ -899,54 +882,54 @@ TEST(AluminumMoldIceMaker, ShouldGoToFreezeStateOnInitIfSabbathModeIsDisabledAnd
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
 }
 
-TEST(AluminumMoldIceMaker, ShouldGoToIdleFreezeStateOnInitIfSabbathModeIsEnabledAndIceMakerIsEnabled)
+TEST(AluminumMoldIceMaker, ShouldGoToHarvestStateOnInitIfSabbathModeIsEnabledAndIceMakerIsEnabledAndRakePositionIsNotHome)
 {
    GivenTheIceMakerIs(ENABLED);
    GivenSabbathModeIs(ENABLED);
    GivenTheMoldThermistorIsValid();
    GivenTheRakePositionIs(RakePosition_NotHome);
    GivenTheModuleIsInitialized();
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 }
 
-TEST(AluminumMoldIceMaker, ShouldGoToIdleFreezeStateOnInitIfSabbathModeIsEnabledAndIceMakerIsDisabled)
+TEST(AluminumMoldIceMaker, ShouldGoToHarvestStateOnInitIfSabbathModeIsEnabledAndIceMakerIsDisabledAndRakePositionIsNotHome)
 {
    GivenTheIceMakerIs(DISABLED);
    GivenSabbathModeIs(ENABLED);
    GivenTheMoldThermistorIsValid();
    GivenTheRakePositionIs(RakePosition_NotHome);
    GivenTheModuleIsInitialized();
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 }
 
-TEST(AluminumMoldIceMaker, ShouldGoIdleToFreezeStateOnInitIfSabbathModeIsDisabledAndIceMakerIsDisabled)
+TEST(AluminumMoldIceMaker, ShouldGoToHarvestStateOnInitIfSabbathModeIsDisabledAndIceMakerIsDisabledAndRakePositionIsNotHome)
 {
    GivenTheIceMakerIs(DISABLED);
    GivenSabbathModeIs(DISABLED);
    GivenTheMoldThermistorIsValid();
    GivenTheRakePositionIs(RakePosition_NotHome);
    GivenTheModuleIsInitialized();
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 }
 
-TEST(AluminumMoldIceMaker, ShouldGoIdleToFreezeStateOnInitIfSabbathModeIsDisabledAndIceMakerIsDisabledAndRakeIsHome)
+TEST(AluminumMoldIceMaker, ShouldGoToFreezeStateOnInitIfSabbathModeIsDisabledAndIceMakerIsDisabledAndRakeIsHome)
 {
    GivenTheIceMakerIs(DISABLED);
    GivenSabbathModeIs(DISABLED);
    GivenTheMoldThermistorIsValid();
    GivenTheRakePositionIs(RakePosition_Home);
    GivenTheModuleIsInitialized();
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
 }
 
-TEST(AluminumMoldIceMaker, ShouldGoIdleToFreezeStateOnInitIfSabbathModeIsDisabledAndIceMakerIsDisabledAndMoldThermistorIsInvalid)
+TEST(AluminumMoldIceMaker, ShouldGoToThermistorFaultStateOnInitIfSabbathModeIsDisabledAndIceMakerIsDisabledAndMoldThermistorIsInvalid)
 {
    GivenTheIceMakerIs(DISABLED);
    GivenSabbathModeIs(DISABLED);
    GivenMoldThermistorIsInvalid();
    GivenTheRakePositionIs(RakePosition_NotHome);
    GivenTheModuleIsInitialized();
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
 }
 
 TEST(AluminumMoldIceMaker, ShouldGoToThermistorFaultStateOnInitIfSabbathModeIsDisabledAndIceMakerIsEnabledAndAluminumMoldThermistorIsInvalid)
@@ -1093,12 +1076,12 @@ TEST(AluminumMoldIceMaker, ShouldRequestToStopMonitoringFeelerArmWhenTransitioni
    HarvestCountCalculationRequestShouldBe(CLEAR);
 }
 
-TEST(AluminumMoldIceMaker, ShouldTransitionFromFreezeToIdleFreezeWhenSabbathIsEnabled)
+TEST(AluminumMoldIceMaker, ShouldStayInFreezeWhenSabbathIsEnabled)
 {
    GivenTheAluminumMoldIceMakerIsInFreezeState();
 
    WhenSabbathModeIs(ENABLED);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
 }
 
 TEST(AluminumMoldIceMaker, ShouldNotInterruptHarvestWhenSabbathIsEnabled)
@@ -1107,34 +1090,6 @@ TEST(AluminumMoldIceMaker, ShouldNotInterruptHarvestWhenSabbathIsEnabled)
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    WhenSabbathModeIs(ENABLED);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
-}
-
-TEST(AluminumMoldIceMaker, ShouldTransitionFromIdleFreezeToFreezeWhenSabbathIsDisabled)
-{
-   GivenSabbathIsEnabledAndAluminumMoldIceMakerIsInIdleFreezeState();
-
-   WhenSabbathModeIs(DISABLED);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
-}
-
-TEST(AluminumMoldIceMaker, ShouldTransitionFromIdleFreezeToHarvestWhenSabbathIsDisabledWhileRakePositionIsNotHome)
-{
-   GivenTheIceMakerIsDisabledAndAluminumMoldIceMakerIsInIdleFreezeState();
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
-
-   WhenTheRakePositionIs(RakePosition_NotHome);
-   WhenTheIceMakerIs(ENABLED);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
-}
-
-TEST(AluminumMoldIceMaker, ShouldTransitionFromIdleFreezeToHarvestWhenIceMakerIsEnabledWhileRakePositionIsNotHome)
-{
-   GivenSabbathIsEnabledAndAluminumMoldIceMakerIsInIdleFreezeState();
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
-
-   WhenTheRakePositionIs(RakePosition_NotHome);
-   WhenSabbathModeIs(DISABLED);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 }
 
@@ -1155,35 +1110,6 @@ TEST(AluminumMoldIceMaker, ShouldNotInterruptHarvestAndStillTransitionToFillWhen
    WhenTheIceMakerIs(DISABLED);
    WhenRakeCompletesRevolutionAfterRequestSentAfterInitialMinimumHeaterOnTimeDuringFillTubeHeaterOnTimeAndFillTubeHeaterTimeExpires();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
-}
-
-TEST(AluminumMoldIceMaker, ShouldTransitionFromIdleFreezeToFreezeWhenIceMakerIsEnabled)
-{
-   GivenTheIceMakerIsDisabledAndAluminumMoldIceMakerIsInIdleFreezeState();
-
-   WhenTheIceMakerIs(ENABLED);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
-}
-
-TEST(AluminumMoldIceMaker, ShouldTurnOffWaterValveOnEntryToIdleFreezeState)
-{
-   GivenIceMakerWaterValveVoteIs(WaterValveState_On);
-   GivenAluminumMoldIceMakerIsInIdleFreezeState();
-   IceMakerWaterValveVoteShouldBe(WaterValveState_Off);
-}
-
-TEST(AluminumMoldIceMaker, ShouldTurnOffIceMakerHeaterOnEntryToIdleFreezeState)
-{
-   GivenIceMakerHeaterVoteIsSet();
-   GivenAluminumMoldIceMakerIsInIdleFreezeState();
-   IceMakerHeaterVoteShouldBe(HeaterState_Off);
-}
-
-TEST(AluminumMoldIceMaker, ShouldTurnOffIceMakerMotorOnEntryToIdleFreezeState)
-{
-   GivenIceMakerMotorVoteIsSet();
-   GivenAluminumMoldIceMakerIsInIdleFreezeState();
-   IceMakerMotorVoteShouldBe(MotorState_Off);
 }
 
 TEST(AluminumMoldIceMaker, ShouldVoteToTurnOnFillTubeHeaterWithFreezeThawFillTubeHeaterDutyCycleOnEntryToHarvest)
@@ -1245,20 +1171,20 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestFaultToThermistorFaultWhen
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
 }
 
-TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestFaultToIdleFreezeWhenSabbathModeEnabled)
+TEST(AluminumMoldIceMaker, ShouldNotInterruptHarvestFaultWhenSabbathModeEnabled)
 {
    GivenTheAluminumMoldIceMakerIsInHarvestFault();
 
    WhenSabbathModeIs(ENABLED);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFault);
 }
 
-TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestFaultToIdleFreezeWhenIceMakeIsDisbled)
+TEST(AluminumMoldIceMaker, ShouldNotInterruptHarvestFaultWhenIceMakeIsDisabled)
 {
    GivenTheAluminumMoldIceMakerIsInHarvestFault();
 
    WhenTheIceMakerIs(DISABLED);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFault);
 }
 
 TEST(AluminumMoldIceMaker, ShouldClearMoldHeaterControlRequestOnEntryToHarvestFault)
@@ -1339,32 +1265,34 @@ TEST(AluminumMoldIceMaker, ShouldNotUpdateRakeControllerRequestAfterMotorControl
    RakeControllerRequestShouldBe(CLEAR);
 }
 
-TEST(AluminumMoldIceMaker, ShouldNotUpdateRakeControllerRequestAfterMotorControlTimeWhenSabbathModeIsEnabledInHarvestFault)
+TEST(AluminumMoldIceMaker, ShouldUpdateRakeControllerRequestAfterMotorControlTimeWhenSabbathModeIsEnabledInHarvestFault)
 {
    GivenTheAluminumMoldIceMakerIsInHarvestFault();
+   RakeControllerRequestShouldBe(SET);
+
    WhenSabbathModeIs(ENABLED);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
-   RakeControllerRequestShouldBe(CLEAR);
+   RakeControllerRequestShouldBe(SET);
 
    After(iceMakerData->harvestFaultData.rakeMotorControlTimeInSeconds * MSEC_PER_SEC);
    RakeControllerRequestShouldBe(CLEAR);
 
    After(iceMakerData->harvestFaultData.rakeMotorControlTimeInSeconds * MSEC_PER_SEC);
-   RakeControllerRequestShouldBe(CLEAR);
+   RakeControllerRequestShouldBe(SET);
 }
 
-TEST(AluminumMoldIceMaker, ShouldNotUpdateRakeControllerRequestAfterMotorControlTimeWhenIceMakerIsDisabledInHarvestFault)
+TEST(AluminumMoldIceMaker, ShouldUpdateRakeControllerRequestAfterMotorControlTimeWhenIceMakerIsDisabledInHarvestFault)
 {
    GivenTheAluminumMoldIceMakerIsInHarvestFault();
+   RakeControllerRequestShouldBe(SET);
+
    WhenTheIceMakerIs(DISABLED);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
-   RakeControllerRequestShouldBe(CLEAR);
+   RakeControllerRequestShouldBe(SET);
 
    After(iceMakerData->harvestFaultData.rakeMotorControlTimeInSeconds * MSEC_PER_SEC);
    RakeControllerRequestShouldBe(CLEAR);
 
    After(iceMakerData->harvestFaultData.rakeMotorControlTimeInSeconds * MSEC_PER_SEC);
-   RakeControllerRequestShouldBe(CLEAR);
+   RakeControllerRequestShouldBe(SET);
 }
 
 TEST(AluminumMoldIceMaker, ShouldVoteFillTubeHeaterDontCareWhenTransitioningFromHarvestToHarvestFix)
@@ -1630,7 +1558,43 @@ TEST(AluminumMoldIceMaker, ShouldStartWaterFillMonitoringWhenEnteringFillStateAg
    WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
 }
 
-TEST(AluminumMoldIceMaker, ShouldNotTransitionToIdleFreezeWhenSabbathModeBecomesEnabledInFillStateUntilTheFillIsComplete)
+TEST(AluminumMoldIceMaker, ShouldStayInFreezeWhenReadyToEnterHarvestConditionsAreMetWhileSabbathModeIsEnabled)
+{
+   GivenSabbathIsEnabledAndAluminumMoldIceMakerIsInFreezeState();
+
+   WhenReadyToEnterHarvest();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionToHarvestWhenSabbathModeIsDisabledWhileTheOtherConditionsAreMet)
+{
+   GivenSabbathIsEnabledAndAluminumMoldIceMakerIsInFreezeState();
+   GivenReadyToEnterHarvest();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+
+   WhenSabbathModeIs(DISABLED);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+}
+
+TEST(AluminumMoldIceMaker, ShouldStayInFreezeWhenReadyToEnterHarvestConditionsAreMetWhileIceMakerIsDisabled)
+{
+   GivenTheIceMakerIsDisabledAndAluminumMoldIceMakerIsInFreezeState();
+
+   WhenReadyToEnterHarvest();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionToHarvestWhenIceMakerIsEnabledWhileTheOtherConditionsAreMet)
+{
+   GivenTheIceMakerIsDisabledAndAluminumMoldIceMakerIsInFreezeState();
+   GivenReadyToEnterHarvest();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+
+   WhenTheIceMakerIs(ENABLED);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+}
+
+TEST(AluminumMoldIceMaker, ShouldNotTransitionToFreezeWhenSabbathModeBecomesEnabledInFillStateUntilTheFillIsComplete)
 {
    GivenAluminumMoldIceMakerIsInFillState();
    IceMakerWaterValveVoteShouldBe(WaterValveState_On);
@@ -1639,10 +1603,10 @@ TEST(AluminumMoldIceMaker, ShouldNotTransitionToIdleFreezeWhenSabbathModeBecomes
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
 
    WhenStopFillSignalChanges();
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
 }
 
-TEST(AluminumMoldIceMaker, ShouldNotTransitionToIdleFreezeWhenIceMakerBecomesDisabledInFillStateUntilTheFillIsComplete)
+TEST(AluminumMoldIceMaker, ShouldNotTransitionToFreezeWhenIceMakerBecomesDisabledInFillStateUntilTheFillIsComplete)
 {
    GivenAluminumMoldIceMakerIsInFillState();
    IceMakerWaterValveVoteShouldBe(WaterValveState_On);
@@ -1651,7 +1615,7 @@ TEST(AluminumMoldIceMaker, ShouldNotTransitionToIdleFreezeWhenIceMakerBecomesDis
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
 
    WhenStopFillSignalChanges();
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
 }
 
 TEST(AluminumMoldIceMaker, ShouldVoteToTurnOffIceMakerWaterValveAndIsolationWaterValveWhenExitingFillState)
@@ -1666,30 +1630,7 @@ TEST(AluminumMoldIceMaker, ShouldVoteToTurnOffIceMakerWaterValveAndIsolationWate
    IceMakerWaterValveVoteShouldBe(WaterValveState_Off);
 }
 
-TEST(AluminumMoldIceMaker, ShouldIncrementFreezerTriggerIceRateSignalWhenTransitioningToTheFreezeState)
-{
-   GivenTheIceMakerIs(ENABLED);
-   GivenSabbathModeIs(ENABLED);
-   GivenTheMoldThermistorIsValid();
-   GivenTheRakePositionIs(RakePosition_Home);
-   GivenTheModuleIsInitialized();
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
-   FreezerTriggerIceRateSignalShouldBe(0);
-
-   WhenSabbathModeIs(DISABLED);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
-   FreezerTriggerIceRateSignalShouldBe(1);
-
-   WhenTheIceMakerIs(DISABLED);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
-   FreezerTriggerIceRateSignalShouldBe(1);
-
-   WhenTheIceMakerIs(ENABLED);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
-   FreezerTriggerIceRateSignalShouldBe(2);
-}
-
-TEST(AluminumMoldIceMaker, ShouldNotIncrementFreezerTriggerIceRateSignalWhenTransitioningToTheFreezeStateOnInitialization)
+TEST(AluminumMoldIceMaker, ShouldIncrementFreezerTriggerIceRateSignalWhenTransitioningToTheFreezeStateExceptForInitialTransition)
 {
    GivenTheIceMakerIs(ENABLED);
    GivenSabbathModeIs(DISABLED);
@@ -1699,13 +1640,30 @@ TEST(AluminumMoldIceMaker, ShouldNotIncrementFreezerTriggerIceRateSignalWhenTran
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
    FreezerTriggerIceRateSignalShouldBe(0);
 
-   WhenSabbathModeIs(ENABLED);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
-   FreezerTriggerIceRateSignalShouldBe(0);
+   WhenReadyToEnterHarvest();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
-   WhenSabbathModeIs(DISABLED);
+   After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+
+   WhenTheRakeCompletesFullRevolutionAfterRequestSentDuringHarvestFix();
+   WhenMotorOnTimeExpiresAndRakeRequestIsClearedThenMotorOffTimeExpiresAndRakeRequestIsSet();
+   WhenTheRakeCompletesFullRevolutionAfterRequestSentDuringHarvestFix();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
    FreezerTriggerIceRateSignalShouldBe(1);
+
+   WhenReadyToEnterHarvest();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   WhenRakeCompletedRevolutionIsCleared();
+   After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+
+   WhenTheRakeCompletesFullRevolutionAfterRequestSentDuringHarvestFix();
+   WhenMotorOnTimeExpiresAndRakeRequestIsClearedThenMotorOffTimeExpiresAndRakeRequestIsSet();
+   WhenTheRakeCompletesFullRevolutionAfterRequestSentDuringHarvestFix();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+   FreezerTriggerIceRateSignalShouldBe(2);
 }
 
 TEST(AluminumMoldIceMaker, ShouldClearExternalTestRequestWhenFillTestIsRequested)
@@ -1718,13 +1676,6 @@ TEST(AluminumMoldIceMaker, ShouldClearExternalTestRequestWhenFillTestIsRequested
 TEST(AluminumMoldIceMaker, ShouldTransitionFromFreezeToFillStateWhenFillTestIsRequested)
 {
    GivenTheAluminumMoldIceMakerIsInFreezeState();
-   WhenExternalTestRequestIs(IceMakerTestRequest_Fill);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
-}
-
-TEST(AluminumMoldIceMaker, ShouldTransitionFromIdleFreezeToFillStateWhenFillTestIsRequested)
-{
-   GivenSabbathIsEnabledAndAluminumMoldIceMakerIsInIdleFreezeState();
    WhenExternalTestRequestIs(IceMakerTestRequest_Fill);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
 }
@@ -1755,30 +1706,6 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromThermistorFaultToFillStateWhenFil
    GivenTheIceMakerIsEnabledAndAluminumMoldIceMakerIsInThermistorFault();
    WhenExternalTestRequestIs(IceMakerTestRequest_Fill);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
-}
-
-TEST(AluminumMoldIceMaker, ShouldNotLeaveIdleFreezeStateWhenIceMakerIsInDisabledState)
-{
-   GivenAluminumMoldIceMakerIsInIdleFreezeState();
-   GivenTheIceMakerIs(DISABLED);
-
-   WhenExternalTestRequestIs(IceMakerTestRequest_Fill);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
-
-   WhenStopFillSignalChanges();
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
-}
-
-TEST(AluminumMoldIceMaker, ShouldGoFromFillToIdleStateIfSabbathModeIsEnabledAndIceMakerIsDisabled)
-{
-   GivenAluminumMoldIceMakerIsInIdleFreezeState();
-   GivenSabbathModeIs(ENABLED);
-
-   WhenExternalTestRequestIs(IceMakerTestRequest_Fill);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
-
-   WhenStopFillSignalChanges();
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFreeze);
 }
 
 TEST(AluminumMoldIceMaker, ShouldNotTransitionOutOfFillStateWhenFillTestIsRequestedWhileFillIsAlreadyTakingPlace)
@@ -2056,13 +1983,12 @@ TEST(AluminumMoldIceMaker, ShouldRemainInHarvestWhenTestRequestBecomesHarvest)
 
    ExpectNoChangeInIceMakerFillTubeHeaterVote();
    WhenExternalTestRequestIs(IceMakerTestRequest_Harvest);
-
-   UnsubscribeFromFillTubeHeaterOnChangeSubscription();
 }
 
 TEST(AluminumMoldIceMaker, ShouldRemainInThermistorFaultWhenExternalTestRequestBecomesHarvest)
 {
    GivenTheIceMakerIsEnabledAndAluminumMoldIceMakerIsInThermistorFault();
+
    WhenExternalTestRequestIs(IceMakerTestRequest_Harvest);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
 }
@@ -2070,22 +1996,16 @@ TEST(AluminumMoldIceMaker, ShouldRemainInThermistorFaultWhenExternalTestRequestB
 TEST(AluminumMoldIceMaker, ShouldRemainInHarvestFixWhenTestRequestBecomesHarvest)
 {
    GivenTheIceMakerIsEnabledAndAluminumMoldIceMakerIsInHarvestFix();
+
    ExpectNoChangeInRakeControllerRequest();
    WhenExternalTestRequestIs(IceMakerTestRequest_Harvest);
-
-   UnsubscribeFromRakeControllerRequestOnChangeSubscription();
-}
-
-TEST(AluminumMoldIceMaker, ShouldEnterHarvestFromIdleFreezeWhenExternalTestRequestBecomesHarvest)
-{
-   GivenSabbathIsEnabledAndAluminumMoldIceMakerIsInIdleFreezeState();
-   WhenExternalTestRequestIs(IceMakerTestRequest_Harvest);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
 }
 
 TEST(AluminumMoldIceMaker, ShouldEnterHarvestFromFreezeWhenExternalTestRequestBecomesHarvest)
 {
    GivenTheAluminumMoldIceMakerIsInFreezeState();
+
    WhenExternalTestRequestIs(IceMakerTestRequest_Harvest);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 }
@@ -2093,6 +2013,7 @@ TEST(AluminumMoldIceMaker, ShouldEnterHarvestFromFreezeWhenExternalTestRequestBe
 TEST(AluminumMoldIceMaker, ShouldEnterHarvestFromFillWhenExternalTestRequestBecomesHarvest)
 {
    GivenAluminumMoldIceMakerIsInFillState();
+
    WhenExternalTestRequestIs(IceMakerTestRequest_Harvest);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 }
@@ -2100,15 +2021,16 @@ TEST(AluminumMoldIceMaker, ShouldEnterHarvestFromFillWhenExternalTestRequestBeco
 TEST(AluminumMoldIceMaker, ShouldEnterHarvestFromHarvestFaultWhenExternalTestRequestBecomesHarvest)
 {
    GivenTheAluminumMoldIceMakerIsInHarvestFault();
+
    WhenExternalTestRequestIs(IceMakerTestRequest_Harvest);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 }
 
-TEST(AluminumMoldIceMaker, ShouldProceedToFillStateAfterMaxHarvestTimeWhenSabbathModeisEnabledAndHarvestIsEnteredViaTestRequest)
+TEST(AluminumMoldIceMaker, ShouldProceedToFillStateAfterMaxHarvestTimeWhenSabbathModeIsEnabledAndHarvestIsEnteredViaTestRequest)
 {
-   GivenSabbathIsEnabledAndAluminumMoldIceMakerIsInIdleFreezeState();
-   WhenExternalTestRequestIs(IceMakerTestRequest_Harvest);
+   GivenSabbathIsEnabledAndAluminumMoldIceMakerIsInFreezeState();
 
+   WhenExternalTestRequestIs(IceMakerTestRequest_Harvest);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    WhenTheRakeCompletesFullRevolutionAfterRequestSentAfterInitialMinimumHeaterOnTime();
@@ -2118,9 +2040,9 @@ TEST(AluminumMoldIceMaker, ShouldProceedToFillStateAfterMaxHarvestTimeWhenSabbat
 
 TEST(AluminumMoldIceMaker, ShouldProceedToFillStateAfterMaxHarvestTimeWhenIceMakerDisabledAndHarvestIsEnteredViaTestRequest)
 {
-   GivenTheIceMakerIsDisabledAndAluminumMoldIceMakerIsInIdleFreezeState();
-   WhenExternalTestRequestIs(IceMakerTestRequest_Harvest);
+   GivenTheIceMakerIsDisabledAndAluminumMoldIceMakerIsInFreezeState();
 
+   WhenExternalTestRequestIs(IceMakerTestRequest_Harvest);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    WhenTheRakeCompletesFullRevolutionAfterRequestSentAfterInitialMinimumHeaterOnTime();
@@ -2128,11 +2050,11 @@ TEST(AluminumMoldIceMaker, ShouldProceedToFillStateAfterMaxHarvestTimeWhenIceMak
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
 }
 
-TEST(AluminumMoldIceMaker, ShouldProceedToFillStateAfterFillTuberOnTimeExpiredWhenSabbathModeisEnabledAndHarvestIsEnteredViaTestRequest)
+TEST(AluminumMoldIceMaker, ShouldProceedToFillStateAfterFillTuberOnTimeExpiredWhenSabbathModeIsEnabledAndHarvestIsEnteredViaTestRequest)
 {
-   GivenSabbathIsEnabledAndAluminumMoldIceMakerIsInIdleFreezeState();
-   WhenExternalTestRequestIs(IceMakerTestRequest_Harvest);
+   GivenSabbathIsEnabledAndAluminumMoldIceMakerIsInFreezeState();
 
+   WhenExternalTestRequestIs(IceMakerTestRequest_Harvest);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    WhenTheRakeCompletesFullRevolutionAfterRequestSentAfterInitialMinimumHeaterOnTime();
@@ -2142,9 +2064,9 @@ TEST(AluminumMoldIceMaker, ShouldProceedToFillStateAfterFillTuberOnTimeExpiredWh
 
 TEST(AluminumMoldIceMaker, ShouldProceedToFillStateAfterFillTubeHeaterOnTimeWhenIceMakerDisabledAndHarvestIsEnteredViaTestRequest)
 {
-   GivenTheIceMakerIsDisabledAndAluminumMoldIceMakerIsInIdleFreezeState();
-   WhenExternalTestRequestIs(IceMakerTestRequest_Harvest);
+   GivenTheIceMakerIsDisabledAndAluminumMoldIceMakerIsInFreezeState();
 
+   WhenExternalTestRequestIs(IceMakerTestRequest_Harvest);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    WhenTheRakeCompletesFullRevolutionAfterRequestSentAfterInitialMinimumHeaterOnTime();
