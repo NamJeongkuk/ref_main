@@ -455,6 +455,7 @@ TEST_GROUP(TwistTrayIceMaker)
       TemperatureDegFx100_t actualTempx100 = iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100;
       GivenTheTemperatureIs(actualTempx100);
       GivenHomingIsCompleted();
+      GivenFreezerIceRateActiveBecomes(SET);
 
       TheFreezerDoorIs(OPEN);
 
@@ -629,11 +630,29 @@ TEST_GROUP(TwistTrayIceMaker)
          Erd_TwistTrayIceMakerStopFillSignal,
          set);
    }
+
    void HarvestCountCalculationRequestShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_HarvestCountCalculationRequest, &actual);
+      DataModel_Read(
+         dataModel,
+         Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,
+         &actual);
+
       CHECK_EQUAL(expected, actual);
+   }
+
+   void GivenFreezerIceRateActiveBecomes(bool state)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_Freezer_IceRateIsActive,
+         &state);
+   }
+
+   void WhenFreezerIceRateActiveBecomes(bool state)
+   {
+      GivenFreezerIceRateActiveBecomes(state);
    }
 
    void GivenTheIceMakerIsInStateMotorError()
@@ -689,6 +708,7 @@ TEST_GROUP(TwistTrayIceMaker)
       TheWaterValveShouldBecome(CLOSED);
       FreezerTriggerIceRateSignalShouldIncrement();
       WhenTwistTrayIceMakerTrayIsFilled();
+      GivenFreezerIceRateActiveBecomes(SET);
       TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
       WhenHarvestCountIsReadyToHarvestIs(CLEAR);
    }
@@ -761,6 +781,7 @@ TEST(TwistTrayIceMaker, ShouldSetHarvestCountCalculationRequestWhenEnteringIntoF
 TEST(TwistTrayIceMaker, ShouldClearHarvestCountCalculationRequestAndStartHarvestingIfThermistorTemperatureChangesToBelowMaximumHarvestTemperatureWhileHarvestCountIsReadyToHarvest)
 {
    GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
    GivenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100);
    HarvestCountCalculationRequestShouldBe(SET);
 
@@ -774,6 +795,7 @@ TEST(TwistTrayIceMaker, ShouldClearHarvestCountCalculationRequestAndStartHarvest
 TEST(TwistTrayIceMaker, ShouldClearHarvestCountCalculationRequestAndStartHarvestingIfHarvestCountIsReadyToHarvestWhileThermistorTemperatureIsBelowMaximumHarvestTemperature)
 {
    GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
    HarvestCountCalculationRequestShouldBe(SET);
 
    WhenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
@@ -786,6 +808,7 @@ TEST(TwistTrayIceMaker, ShouldClearHarvestCountCalculationRequestAndStartHarvest
 TEST(TwistTrayIceMaker, ShouldWaitUntilSabbathModeChangesFromEnabledToDisabledInFreezeStateBeforeClearingHarvestCountCalculationRequestAndStartingHarvestIfHarvestCountIsReadyToHarvestWhileThermistorTemperatureIsBelowMaximumHarvestTemperature)
 {
    GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
    HarvestCountCalculationRequestShouldBe(SET);
 
    WhenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
@@ -803,6 +826,7 @@ TEST(TwistTrayIceMaker, ShouldWaitUntilSabbathModeChangesFromEnabledToDisabledIn
 TEST(TwistTrayIceMaker, ShouldWaitUntilIceMakerChangesFromDisabledToEnabledInFreezeStateBeforeClearingHarvestCountCalculationRequestAndStartingHarvestIfHarvestCountIsReadyToHarvestWhileThermistorTemperatureIsBelowMaximumHarvestTemperature)
 {
    GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
    HarvestCountCalculationRequestShouldBe(SET);
 
    WhenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
@@ -820,6 +844,7 @@ TEST(TwistTrayIceMaker, ShouldWaitUntilIceMakerChangesFromDisabledToEnabledInFre
 TEST(TwistTrayIceMaker, ShouldWaitUntilBothIceMakerIsEnabledAndSabbathModeIsDisabledWhileInFreezeStateBeforeClearingHarvestCountCalculationRequestAndStartingHarvestIfHarvestCountIsReadyToHarvestWhileThermistorTemperatureIsBelowMaximumHarvestTemperature)
 {
    GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
    HarvestCountCalculationRequestShouldBe(SET);
 
    WhenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
@@ -843,6 +868,7 @@ TEST(TwistTrayIceMaker, ShouldWaitUntilBothIceMakerIsEnabledAndSabbathModeIsDisa
 TEST(TwistTrayIceMaker, ShouldWaitUntilIceMakerIsEnabledThenSabbathModeIsDisabledWhileInFreezeStateBeforeClearingHarvestCountCalculationRequestAndStartingHarvestIfHarvestCountIsReadyToHarvestWhileThermistorTemperatureIsBelowMaximumHarvestTemperature)
 {
    GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
    GivenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100);
    HarvestCountCalculationRequestShouldBe(SET);
 
@@ -867,6 +893,7 @@ TEST(TwistTrayIceMaker, ShouldWaitUntilIceMakerIsEnabledThenSabbathModeIsDisable
 TEST(TwistTrayIceMaker, ShouldWaitUntilHarvestCountIsReadyToHarvestBeforeTransitioningToStateHarvestWhenInStateFreezeAndSabbathModeChangesFromEnabledToDisabled)
 {
    GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
    HarvestCountCalculationRequestShouldBe(SET);
 
    WhenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
@@ -885,6 +912,7 @@ TEST(TwistTrayIceMaker, ShouldWaitUntilHarvestCountIsReadyToHarvestBeforeTransit
 TEST(TwistTrayIceMaker, ShouldWaitUntilHarvestCountIsReadyToHarvestBeforeTransitioningToStateHarvestWhenInStateFreezeAndIceMakerChangesFromDisabledToEnabled)
 {
    GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
    HarvestCountCalculationRequestShouldBe(SET);
 
    WhenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
@@ -922,9 +950,71 @@ TEST(TwistTrayIceMaker, ShouldNotClearHarvestCountCalculationRequestWhenIceMaker
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
    HarvestCountCalculationRequestShouldBe(SET);
 
+   FreezerTriggerIceRateSignalShouldIncrement();
    WhenTheIceMakerBecomesEnabled();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
    HarvestCountCalculationRequestShouldBe(SET);
+}
+
+TEST(TwistTrayIceMaker, ShouldTriggerFreezerIceRateAgainIfItCompletesWhileInStateFreeze)
+{
+   GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
+
+   FreezerTriggerIceRateSignalShouldIncrement();
+   WhenFreezerIceRateActiveBecomes(CLEAR);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotTriggerFreezerIceRateAgainIfItCompletesWhileInStateFreezeButSabbathModeIsActive)
+{
+   GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
+   GivenSabbathModeIs(ON);
+
+   FreezerTriggerIceRateSignalShouldNotIncrement();
+   WhenFreezerIceRateActiveBecomes(CLEAR);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotTriggerFreezerIceRateAgainIfItCompletesWhileInStateFreezeButIceMakerIsDisabled)
+{
+   GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
+   GivenTheIceMakerIsDisabled();
+
+   FreezerTriggerIceRateSignalShouldNotIncrement();
+   WhenFreezerIceRateActiveBecomes(CLEAR);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotTriggerFreezerIceRateAgainWhenSabbathModeBecomesDisabledButIceRateIsAlreadyActive)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenTheTemperatureIs(VeryCold);
+   GivenHomingIsCompleted();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+
+   WhenFreezerIceRateActiveBecomes(SET);
+   WhenSabbathModeIs(ENABLED);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+
+   FreezerTriggerIceRateSignalShouldNotIncrement();
+   WhenSabbathModeIs(DISABLED);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotTriggerFreezerIceRateAgainWhenIceMakerBecomesEnabledButIceRateIsAlreadyActive)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenTheTemperatureIs(VeryCold);
+   GivenHomingIsCompleted();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+
+   WhenFreezerIceRateActiveBecomes(SET);
+   WhenTheIceMakerBecomesDisabled();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+
+   FreezerTriggerIceRateSignalShouldNotIncrement();
+   WhenTheIceMakerBecomesEnabled();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
 }
 
 // Harvesting
@@ -1060,7 +1150,7 @@ TEST(TwistTrayIceMaker, ShouldGoToThermistorFaultStateWhenEnteringFreezeStateIfT
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
 }
 
-TEST(TwistTrayIceMaker, ShouldStartHarvestCountCalculationRequestButNotTriggerFreezerIceRateWhenEnteringFreezeStateIfIceMakerIsDisabled)
+TEST(TwistTrayIceMaker, ShouldStartHarvestCountCalculationRequestButNotTriggerFreezerIceRateWhenEnteringFreezeStateIfIceMakerIsDisabledAndThenTriggerFreezerIceRateWhenIceMakerIsEnabled)
 {
    GivenTheIceMakerIsEnabled();
    GivenFillingHasStartedAfterCompletingFreezingAndHarvesting();
@@ -1073,9 +1163,33 @@ TEST(TwistTrayIceMaker, ShouldStartHarvestCountCalculationRequestButNotTriggerFr
    WhenTwistTrayIceMakerTrayIsFilled();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
    HarvestCountCalculationRequestShouldBe(SET);
+
+   WhenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100);
+
+   FreezerTriggerIceRateSignalShouldIncrement();
+   WhenTheIceMakerBecomesEnabled();
 }
 
-TEST(TwistTrayIceMaker, ShouldTransitionToFreezeStateAndStartHarvestCountCalculationRequestButNotTriggerFreezerIceRateAfterFillingIsFinishedWhileSabbathIsEnabled)
+TEST(TwistTrayIceMaker, ShouldNotTriggerFreezerIceRateWhenInFreezeStateAndIceMakerBecomesEnabledButHarvestConditionsAreAlreadyMet)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenFillingHasStartedAfterCompletingFreezingAndHarvesting();
+
+   WhenTheIceMakerBecomesDisabled();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+
+   TheWaterValveShouldBecome(CLOSED);
+   FreezerTriggerIceRateSignalShouldNotIncrement();
+   WhenTwistTrayIceMakerTrayIsFilled();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+   HarvestCountCalculationRequestShouldBe(SET);
+
+   HarvestingShouldStart();
+   FreezerTriggerIceRateSignalShouldNotIncrement();
+   WhenTheIceMakerBecomesEnabled();
+}
+
+TEST(TwistTrayIceMaker, ShouldTransitionToFreezeStateAndStartHarvestCountCalculationRequestButNotTriggerFreezerIceRateAfterFillingIsFinishedWhileSabbathIsEnabledAndThenTriggerFreezerIceRateWhenSabbathIsDisabled)
 {
    GivenTheIceMakerIsEnabled();
    GivenFillingHasStartedAfterCompletingFreezingAndHarvesting();
@@ -1088,6 +1202,30 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFreezeStateAndStartHarvestCountCalcula
    WhenTwistTrayIceMakerTrayIsFilled();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
    HarvestCountCalculationRequestShouldBe(SET);
+
+   WhenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100);
+
+   FreezerTriggerIceRateSignalShouldIncrement();
+   WhenSabbathModeIs(OFF);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotTriggerFreezerIceRateWhenInFreezeStateAndSabbathBecomesDisabledButHarvestConditionsAreAlreadyMet)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenFillingHasStartedAfterCompletingFreezingAndHarvesting();
+
+   WhenSabbathModeIs(ON);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+
+   TheWaterValveShouldBecome(CLOSED);
+   FreezerTriggerIceRateSignalShouldNotIncrement();
+   WhenTwistTrayIceMakerTrayIsFilled();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+   HarvestCountCalculationRequestShouldBe(SET);
+
+   HarvestingShouldStart();
+   FreezerTriggerIceRateSignalShouldNotIncrement();
+   WhenSabbathModeIs(OFF);
 }
 
 TEST(TwistTrayIceMaker, ShouldBeAbleToHarvestTwice)
@@ -1185,6 +1323,7 @@ TEST(TwistTrayIceMaker, ShouldNotHarvestIceIfSabbathModeComesOnWhileFreezing)
 {
    GivenTheIceMakerIsEnabled();
    GivenHomingIsCompleted();
+   GivenFreezerIceRateActiveBecomes(SET);
    GivenTheTemperatureIs(VeryCold);
    GivenSabbathModeIs(ON);
 
@@ -1200,6 +1339,7 @@ TEST(TwistTrayIceMaker, SabbathModeShouldAlsoWorkIfTheEnhancedSabbathModeErdCome
 {
    GivenTheIceMakerIsEnabled();
    GivenHomingIsCompleted();
+   GivenFreezerIceRateActiveBecomes(SET);
    GivenTheTemperatureIs(VeryCold);
    GivenEnhancedSabbathModeIs(ON);
 
@@ -1215,6 +1355,7 @@ TEST(TwistTrayIceMaker, SabbathModeShouldAlsoWorkIfBothSabbathErdsComeOn)
 {
    GivenTheIceMakerIsEnabled();
    GivenHomingIsCompleted();
+   GivenFreezerIceRateActiveBecomes(SET);
    GivenTheTemperatureIs(VeryCold);
    GivenEnhancedSabbathModeIs(ON);
    GivenSabbathModeIs(ON);
@@ -1259,6 +1400,7 @@ TEST(TwistTrayIceMaker, ShouldNotClearHarvestCountCalculationRequestWhenSabbathM
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
    HarvestCountCalculationRequestShouldBe(SET);
 
+   FreezerTriggerIceRateSignalShouldIncrement();
    WhenSabbathModeIs(DISABLED);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
    HarvestCountCalculationRequestShouldBe(SET);

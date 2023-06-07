@@ -33,7 +33,6 @@ enum
    Signal_MotorActionResultHomed,
    Signal_TrayFilled,
    Signal_FullIceBucketWaitTimeElapsed,
-   Signal_SabbathModeEnabled,
    Signal_SabbathModeDisabled,
    Signal_DoorClosedForLongEnough,
    Signal_TestRequest_Fill,
@@ -48,6 +47,7 @@ enum
    Signal_ResumeFill,
    Signal_MotorErrorRetryTimerExpired,
    Signal_HarvestCountIsReadyToHarvest,
+   Signal_IceRateNoLongerActive,
 
    Idle = TwistTrayIceMakerMotorAction_Idle,
    Home = TwistTrayIceMakerMotorAction_RunHomingRoutine,
@@ -278,6 +278,17 @@ static bool SabbathModeIsDisabledAndIceMakerIsEnabled(TwistTrayIceMaker_t *insta
    return (!ItIsSabbathMode(instance) && IceMakerIsEnabled(instance));
 }
 
+static bool FreezerIceRateIsActive(TwistTrayIceMaker_t *instance)
+{
+   bool iceRateIsActive;
+   DataSource_Read(
+      instance->_private.dataSource,
+      Erd_Freezer_IceRateIsActive,
+      &iceRateIsActive);
+
+   return iceRateIsActive;
+}
+
 static void State_Homing(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
    TwistTrayIceMaker_t *instance = InstanceFrom(fsm);
@@ -335,13 +346,21 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          }
          break;
 
+      case Signal_IceRateNoLongerActive:
       case Signal_SabbathModeDisabled:
       case Signal_IceMakerIsEnabled:
       case Signal_IceMakerFilteredTemperatureChanged:
       case Signal_HarvestCountIsReadyToHarvest:
-         if(SabbathModeIsDisabledAndIceMakerIsEnabled(instance) && HarvestConditionsHaveBeenMet(instance))
+         if(SabbathModeIsDisabledAndIceMakerIsEnabled(instance))
          {
-            Fsm_Transition(fsm, State_Harvesting);
+            if(HarvestConditionsHaveBeenMet(instance))
+            {
+               Fsm_Transition(fsm, State_Harvesting);
+            }
+            else if(!FreezerIceRateIsActive(instance))
+            {
+               SendFreezerIceRateSignal(instance);
+            }
          }
          break;
 
@@ -372,7 +391,7 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
    {
       case Fsm_Entry:
          UpdateOperationState(instance, TwistTrayIceMakerOperationState_Harvesting);
-         // Fallthrough
+      // Fallthrough
       case Signal_DoorClosedForLongEnough:
       case Signal_SabbathModeDisabled:
          if(!ItIsSabbathMode(instance) && DoorHasBeenClosedForLongEnough(instance))
@@ -674,11 +693,7 @@ static void DataSourceChanged(void *context, const void *data)
    else if((onChangeArgs->erd == Erd_SabbathMode) ||
       (onChangeArgs->erd == Erd_EnhancedSabbathMode))
    {
-      if(ItIsSabbathMode(instance))
-      {
-         Fsm_SendSignal(&instance->_private.fsm, Signal_SabbathModeEnabled, NULL);
-      }
-      else
+      if(!ItIsSabbathMode(instance))
       {
          Fsm_SendSignal(&instance->_private.fsm, Signal_SabbathModeDisabled, NULL);
       }
@@ -789,6 +804,14 @@ static void DataSourceChanged(void *context, const void *data)
       if(*state)
       {
          Fsm_SendSignal(&instance->_private.fsm, Signal_HarvestCountIsReadyToHarvest, NULL);
+      }
+   }
+   else if(onChangeArgs->erd == Erd_Freezer_IceRateIsActive)
+   {
+      const bool *state = onChangeArgs->data;
+      if(!*state)
+      {
+         Fsm_SendSignal(&instance->_private.fsm, Signal_IceRateNoLongerActive, NULL);
       }
    }
 }
