@@ -42,7 +42,6 @@ static void InitializeInternalDataSource(
       timerModule,
       systemActionForStartup,
       async);
-
    AddDataSourceToComposite(
       instance,
       NonVolatileDataSource_DataSource(&instance->_private.dataSource.nv),

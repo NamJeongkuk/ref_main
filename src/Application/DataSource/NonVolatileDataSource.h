@@ -43,6 +43,7 @@ typedef struct
       NonVolatileDataSourceSyncCache_t syncCache;
       NonVolatileDataSourceSyncWriteCache_t syncWriteCache;
       uint8_t syncMetadataCache[sizeof(NonVolatileDataSourceErdCount_t) / 8 + 1];
+      Timer_t timeout;
    } _private;
 } NonVolatileDataSource_t;
 

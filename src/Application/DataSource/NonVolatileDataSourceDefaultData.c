@@ -26,6 +26,12 @@ void NonVolatileDataSourceDefaultData_BooleanFalse(void *data, size_t dataSize)
    memcpy(data, &constFalse, dataSize);
 }
 
+void NonVolatileDataSourceDefaultData_DefaultPersonality(void *data, size_t dataSize)
+{
+   AppliancePersonality_t defaultPersonality = 1;
+   memcpy(data, &defaultPersonality, dataSize);
+}
+
 void NonVolatileDataSourceDefaultData_Code(void *data, size_t dataSize)
 {
    uint32_t code = 0xC0DECAFE;

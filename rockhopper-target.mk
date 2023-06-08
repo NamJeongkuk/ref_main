@@ -38,6 +38,7 @@ SRC_DIRS:=\
   src/Hardware \
   src/Hardware/Eeprom \
   src/Hardware/Flash \
+  src/Hardware/PersonalityEeprom \
   src/Hardware/SoftPwm \
   src/Application \
   src/Application/Auger \

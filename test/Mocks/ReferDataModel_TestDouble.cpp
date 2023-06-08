@@ -11,6 +11,7 @@ extern "C"
 #include "Action_Null.h"
 #include "Action_Context.h"
 #include "SystemData.h"
+#include "Eeprom_AT21CS11.h"
 }
 
 #include "ReferDataModel_TestDouble.h"

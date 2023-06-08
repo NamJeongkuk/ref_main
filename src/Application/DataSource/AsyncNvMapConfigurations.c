@@ -12,7 +12,8 @@
 
 enum
 {
-   NumberOfAsyncDataSources = EepromPartitionIndex_PartitionCount
+   HarnessEepromIndex = EepromPartitionIndex_PartitionCount,
+   NumberOfAsyncDataSources
 };
 
 typedef struct
@@ -36,8 +37,20 @@ static const ConstArrayMap_BinarySearchConfiguration_t asyncNvMapConfigurations[
    EEPROM_PARTITIONS(EXPAND_AS_PARTITION_ASYNC_MAP_CONFIG)
 };
 
+static const AsyncDataSource_EepromErdInfo_t eepromAsyncMapElements[] = { ERD_TABLE(EXPAND_AS_PERSONALITYEEPROM_ASYNC_MAP_ELEMENTS) };
+
+static const ConstArrayMap_BinarySearchConfiguration_t eepromAsyncMapConfiguration = {
+   eepromAsyncMapElements,
+   NUM_ELEMENTS(eepromAsyncMapElements),
+   ELEMENT_SIZE(eepromAsyncMapElements),
+   sizeof(eepromAsyncMapElements[0].erd),
+   OFFSET_OF(AsyncDataSource_EepromErdInfo_t, erd),
+   IS_SIGNED(Erd_t)
+};
+
 static const NonVolatileAsyncDataSourceConfiguration_t configuration = {
    .metadataErd = Erd_NvMetadata,
+   .harnessEepromMetadataErd = Erd_PersonalityEepromMetadata,
    .mapCount = NUM_ELEMENTS(asyncNvMapConfigurations)
 };
 
@@ -50,6 +63,11 @@ void AsyncNvMapConfigurations_Init(void)
       instance._private.resources[i].readWriteBuffer = &buffers[i];
       instance._private.resources[i].readWriteBufferSize = sizeof(buffers[i]);
    }
+
+   ConstArrayMap_BinarySearch_Init(&instance._private.binarySearchMaps[HarnessEepromIndex], &eepromAsyncMapConfiguration);
+   instance._private.resources[HarnessEepromIndex].map = &instance._private.binarySearchMaps[HarnessEepromIndex].interface;
+   instance._private.resources[HarnessEepromIndex].readWriteBuffer = &buffers[HarnessEepromIndex];
+   instance._private.resources[HarnessEepromIndex].readWriteBufferSize = sizeof(buffers[EepromPartitionIndex_PartitionCount]);
 
    InputGroup_NonVolatileDataSourceDefaultData_Init(
       &instance._private.inputGroup,

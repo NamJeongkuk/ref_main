@@ -68,6 +68,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/WaterFilter \
    $(PROJECT_DIR)/Application/WaterValve \
    $(PROJECT_DIR)/Hardware/SoftPwm \
+   $(PROJECT_DIR)/Hardware/PersonalityEeprom \
 
 # List of directories that contain your tests and test helpers (mocks, fakes, etc.)
 TEST_SRC_DIRS := \
@@ -98,8 +99,9 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/IceMaker/AluminumMoldIceMaker \
    $(TESTS_DIR)/Application/Lighting \
    $(TESTS_DIR)/Application/Motor \
-   $(TESTS_DIR)/Application/Sabbath \
    $(TESTS_DIR)/Application/ParametricData \
+   $(TESTS_DIR)/Application/PersonalityEeprom \
+   $(TESTS_DIR)/Application/Sabbath \
    $(TESTS_DIR)/Application/Sensor \
    $(TESTS_DIR)/Application/ServiceDiagnostics \
    $(TESTS_DIR)/Application/Setpoints \

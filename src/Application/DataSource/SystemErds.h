@@ -104,6 +104,7 @@
 #include "WaterFilterType.h"
 #include "IceMakerTypeInformation.h"
 #include "AndroidUiSignOfLifeFsmState.h"
+#include "I_OneWire.h"
 
 // clang-format off
 
@@ -119,6 +120,7 @@
 #define INCLUDE_RAM_Fault(_x)
 #define INCLUDE_RAM_Bsp(_x)
 #define INCLUDE_RAM_MappedBsp(_x)
+#define INCLUDE_RAM_PersonalityEeprom(_x)
 
 #define INCLUDE_VIRTUAL_Ram(_x)
 #define INCLUDE_VIRTUAL_Virtual(_x) _x
@@ -132,6 +134,7 @@
 #define INCLUDE_VIRTUAL_Fault(_x)
 #define INCLUDE_VIRTUAL_Bsp(_x)
 #define INCLUDE_VIRTUAL_MappedBsp(_x)
+#define INCLUDE_VIRTUAL_PersonalityEeprom(_x)
 
 #define INCLUDE_NV_Ram(_x)
 #define INCLUDE_NV_Virtual(_x)
@@ -139,6 +142,7 @@
 #define INCLUDE_NV_Fault(_x)
 #define INCLUDE_NV_Bsp(_x)
 #define INCLUDE_NV_MappedBsp(_x)
+#define INCLUDE_NV_PersonalityEeprom(_x)
 
 #define INCLUDE_FAULT_Ram(_x)
 #define INCLUDE_FAULT_Virtual(_x)
@@ -152,6 +156,7 @@
 #define INCLUDE_FAULT_Fault(_x) _x
 #define INCLUDE_FAULT_Bsp(_x)
 #define INCLUDE_FAULT_MappedBsp(_x)
+#define INCLUDE_FAULT_PersonalityEeprom(_x)
 
 #define INCLUDE_BSP_Ram(_x)
 #define INCLUDE_BSP_Virtual(_x)
@@ -165,6 +170,7 @@
 #define INCLUDE_BSP_Fault(_x)
 #define INCLUDE_BSP_Bsp(_x) _x
 #define INCLUDE_BSP_MappedBsp(_x)
+#define INCLUDE_BSP_PersonalityEeprom(_x)
 
 #define INCLUDE_NVONLY_Ram(_x)
 #define INCLUDE_NVONLY_Virtual(_x)
@@ -178,6 +184,7 @@
 #define INCLUDE_NVONLY_Fault(_x)
 #define INCLUDE_NVONLY_Bsp(_x)
 #define INCLUDE_NVONLY_MappedBsp(_x)
+#define INCLUDE_NVONLY_PersonalityEeprom(_x)
 
 #define INCLUDE_NVALL_Ram(_x)
 #define INCLUDE_NVALL_Virtual(_x)
@@ -191,6 +198,7 @@
 #define INCLUDE_NVALL_Fault(_x)
 #define INCLUDE_NVALL_Bsp(_x)
 #define INCLUDE_NVALL_MappedBsp(_x)
+#define INCLUDE_NVALL_PersonalityEeprom(_x) _x
 
 #define INCLUDE_NVPROTECTED_Ram(_x)
 #define INCLUDE_NVPROTECTED_Virtual(_x)
@@ -204,6 +212,7 @@
 #define INCLUDE_NVPROTECTED_Fault(_x)
 #define INCLUDE_NVPROTECTED_Bsp(_x)
 #define INCLUDE_NVPROTECTED_MappedBsp(_x)
+#define INCLUDE_NVPROTECTED_PersonalityEeprom(_x)
 
 #define INCLUDE_NVUNITSETTING_Ram(_x)
 #define INCLUDE_NVUNITSETTING_Virtual(_x)
@@ -217,6 +226,7 @@
 #define INCLUDE_NVUNITSETTING_Fault(_x)
 #define INCLUDE_NVUNITSETTING_Bsp(_x)
 #define INCLUDE_NVUNITSETTING_MappedBsp(_x)
+#define INCLUDE_NVUNITSETTING_PersonalityEeprom(_x)
 
 #define INCLUDE_NVUSERSETTING_Ram(_x)
 #define INCLUDE_NVUSERSETTING_Virtual(_x)
@@ -230,6 +240,7 @@
 #define INCLUDE_NVUSERSETTING_Fault(_x)
 #define INCLUDE_NVUSERSETTING_Bsp(_x)
 #define INCLUDE_NVUSERSETTING_MappedBsp(_x)
+#define INCLUDE_NVUSERSETTING_PersonalityEeprom(_x)
 
 #define INCLUDE_NVRFID_Ram(_x)
 #define INCLUDE_NVRFID_Virtual(_x)
@@ -243,6 +254,7 @@
 #define INCLUDE_NVRFID_Fault(_x)
 #define INCLUDE_NVRFID_Bsp(_x)
 #define INCLUDE_NVRFID_MappedBsp(_x)
+#define INCLUDE_NVRFID_PersonalityEeprom(_x)
 
 #define INCLUDE_NVFAULTSNAPSHOT_Ram(_x)
 #define INCLUDE_NVFAULTSNAPSHOT_Virtual(_x)
@@ -256,6 +268,21 @@
 #define INCLUDE_NVFAULTSNAPSHOT_Fault(_x)
 #define INCLUDE_NVFAULTSNAPSHOT_Bsp(_x)
 #define INCLUDE_NVFAULTSNAPSHOT_MappedBsp(_x)
+#define INCLUDE_NVFAULTSNAPSHOT_PersonalityEeprom(_x)
+
+#define INCLUDE_PERSONALITYEEPROM_Ram(_x)
+#define INCLUDE_PERSONALITYEEPROM_Virtual(_x)
+#define INCLUDE_PERSONALITYEEPROM_Nv(_x) _x
+#define INCLUDE_PERSONALITYEEPROM_NvProtected(_x)
+#define INCLUDE_PERSONALITYEEPROM_NvUnitSetting(_x)
+#define INCLUDE_PERSONALITYEEPROM_NvUserSetting(_x)
+#define INCLUDE_PERSONALITYEEPROM_NvRfid(_x)
+#define INCLUDE_PERSONALITYEEPROM_NvFaultSnapshot(_x)
+#define INCLUDE_PERSONALITYEEPROM_NvCycleHistory(_x)
+#define INCLUDE_PERSONALITYEEPROM_Fault(_x)
+#define INCLUDE_PERSONALITYEEPROM_Bsp(_x)
+#define INCLUDE_PERSONALITYEEPROM_MappedBsp(_x)
+#define INCLUDE_PERSONALITYEEPROM_PersonalityEeprom(_x) _x
 
 #define INCLUDE_NVCYCLEHISTORY_Ram(_x)
 #define INCLUDE_NVCYCLEHISTORY_Virtual(_x)
@@ -269,6 +296,7 @@
 #define INCLUDE_NVCYCLEHISTORY_Fault(_x)
 #define INCLUDE_NVCYCLEHISTORY_Bsp(_x)
 #define INCLUDE_NVCYCLEHISTORY_MappedBsp(_x)
+#define INCLUDE_NVCYCLEHISTORY_PersonalityEeprom(_x)
 
 #define INCLUDE_NON_RAM_Ram(_x)
 #define INCLUDE_NON_RAM_Virtual(_x) _x
@@ -282,6 +310,7 @@
 #define INCLUDE_NON_RAM_Fault(_x) _x
 #define INCLUDE_NON_RAM_Bsp(_x) _x
 #define INCLUDE_NON_RAM_MappedBsp(_x) _x
+#define INCLUDE_NON_RAM_PersonalityEeprom(_x) _x
 
 #define INCLUDE_MAPPED_BSP_Ram(_x)
 #define INCLUDE_MAPPED_BSP_Virtual(_x)
@@ -295,6 +324,7 @@
 #define INCLUDE_MAPPED_BSP_Fault(_x)
 #define INCLUDE_MAPPED_BSP_Bsp(_x)
 #define INCLUDE_MAPPED_BSP_MappedBsp(_x) _x
+#define INCLUDE_MAPPED_BSP_PersonalityEeprom(_x)
 
 #define INCLUDE_BSP_ALL_Ram(_x)
 #define INCLUDE_BSP_ALL_Virtual(_x)
@@ -308,6 +338,7 @@
 #define INCLUDE_BSP_ALL_Fault(_x)
 #define INCLUDE_BSP_ALL_Bsp(_x) _x
 #define INCLUDE_BSP_ALL_MappedBsp(_x) _x
+#define INCLUDE_BSP_ALL_PersonalityEeprom(_x)
 
 #define INCLUDE_INPUT_OUTPUT_Io_None(_x)
 #define INCLUDE_INPUT_OUTPUT_Io_O(_x)
@@ -343,7 +374,7 @@ enum
    ENTRY(Erd_ReadyToEnterBootLoader,                        0x0030, ReadyToEnterBootLoaderState_t,                      Swap_No,  Io_All,  Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_BuildNumber,                                   0x0031, uint32_t,                                           Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Reset,                                         0x0032, uint8_t,                                            Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
-   ENTRY(Erd_AppliancePersonality,                          0x0035, AppliancePersonality_t,                             Swap_Yes, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_AppliancePersonality,                          0x0035, AppliancePersonality_t,                             Swap_Yes, Io_None, Sub_N, PersonalityEeprom,      NonVolatileDataSourceDefaultData_DefaultPersonality, NotFault) \
    ENTRY(Erd_SupportedImageTypes,                           0x0038, uint8_t,                                            Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
    ENTRY(Erd_BootLoaderVersion,                             0x0039, Version_t,                                          Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
    ENTRY(Erd_ApplicationVersion,                            0x003A, Version_t,                                          Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
@@ -681,6 +712,8 @@ enum
    ENTRY(Erd_IceDispensingInhibitedByDoor,                  0xF167, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AutofillSensorError,                           0xF168, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispensingDisabled,                            0xF169, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_MainboardIsCommunicatingToAndroidUi,           0xF180, bool,                                               Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_CondenserFanSpeed_ResolvedVote,                0xF200, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CondenserFanSpeed_WinningVoteErd,              0xF201, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -1132,6 +1165,7 @@ enum
    ENTRY(Erd_NvReservedFaultSnapshot,                       0xFCFE, uint8_t,                                            Swap_No,    Io_None, Sub_N,  NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NvReservedCycleHistory,                        0xFCFF, uint8_t,                                            Swap_No,    Io_None, Sub_N,  NvCycleHistory,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
+   ENTRY(Erd_PersonalityEepromMetadata,                     0xFFFE, AsyncDataSource_EepromMetadata_t,                   Swap_No,    Io_None, Sub_N,  PersonalityEeprom,     NonVolatileDataSourceDefaultData_Zeros,   NotFault)
 
 #define EXPAND_AS_INTERNAL_RAM_ERD_ENUM(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)(Name COMMA)

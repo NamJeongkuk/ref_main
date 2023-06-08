@@ -133,7 +133,7 @@ static void InitializeApplicationToBspMappedDataSource(BspDataSource_t *instance
 }
 
 static void InitializeParametricToApplicationBspMappedDataSource(
-   BspDataSource_t *instance, 
+   BspDataSource_t *instance,
    const BspParametricConfiguration_t *configuration)
 {
    ConstArrayMap_LinearSearch_Init(

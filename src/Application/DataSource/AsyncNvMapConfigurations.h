@@ -48,6 +48,10 @@ enum
    CONCAT(INCLUDE_NVCYCLEHISTORY_, StorageType)                                                                             \
    ({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
 
+#define EXPAND_AS_PERSONALITYEEPROM_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_PERSONALITYEEPROM_, StorageType)                                                                                 \
+   ({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
+
 #define EXPAND_AS_BINARY_SEARCH_CONFIGURATION(Elements)                                \
    Elements COMMA NUM_ELEMENTS(Elements)                                               \
    COMMA ELEMENT_SIZE(Elements)                                                        \

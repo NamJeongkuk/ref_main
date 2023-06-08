@@ -22,9 +22,11 @@
 
 enum
 {
-   ClientVersion = 1,
+   ClientVersion = 1, // This needs to be reved whenever NV ERDs change to force erase/default
+   HarnessEepromClientVersion = 1,
    EraseBufferSize = 248, // this is also the size of NonVolatileAsyncDataSourceReadWriteBuffer_t
-   AsyncDataSourceCount = EepromPartitionIndex_PartitionCount
+   HarnessEepromCount = 1,
+   AsyncDataSourceCount = EepromPartitionIndex_PartitionCount + HarnessEepromCount
 };
 
 typedef struct
@@ -37,6 +39,7 @@ typedef struct
 typedef struct
 {
    Erd_t metadataErd;
+   Erd_t harnessEepromMetadataErd;
    uint16_t mapCount;
 } NonVolatileAsyncDataSourceConfiguration_t;
 
@@ -59,6 +62,7 @@ typedef struct
  * @param crc16Calculator
  * @param timerModule
  * @param eeprom
+ * @param personalityEeprom
  * @param partitionedEepromConfiguration
  * @param nvDefaultDataInput
  * @param resources
@@ -69,6 +73,7 @@ void NonVolatileAsyncDataSource_Init(
    I_Crc16Calculator_t *crc16Calculator,
    TimerModule_t *timerModule,
    I_Eeprom_t *eeprom,
+   I_Eeprom_t *personalityEeprom,
    const PartitionedEepromPartitionConfiguration_t *partitionedEepromConfiguration,
    I_InputGroup_t *nvDefaultDataInput,
    NonVolatileAsyncDataSourceResources_t *resources,

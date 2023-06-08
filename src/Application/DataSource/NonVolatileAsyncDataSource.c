@@ -12,7 +12,9 @@
 enum
 {
    TimerTicksBetweenRetriesInMsec = 100,
-   NumberOfRetriesBeforeErase = 10
+   NumberOfRetriesBeforeErase = 10,
+   HarnessEepromRetriesBeforeErase = 0,
+   HarnessEepromIndex = EepromPartitionIndex_PartitionCount
 };
 
 static void VerifyAllCountsMatch(uint16_t partitionCount, uint16_t mapCount)
@@ -25,6 +27,7 @@ void NonVolatileAsyncDataSource_Init(
    I_Crc16Calculator_t *crc16Calculator,
    TimerModule_t *timerModule,
    I_Eeprom_t *eeprom,
+   I_Eeprom_t *personalityEeprom,
    const PartitionedEepromPartitionConfiguration_t *partitionedEepromConfiguration,
    I_InputGroup_t *nvDefaultDataInput,
    NonVolatileAsyncDataSourceResources_t *resources,
@@ -56,6 +59,20 @@ void NonVolatileAsyncDataSource_Init(
          TimerTicksBetweenRetriesInMsec,
          NumberOfRetriesBeforeErase);
    }
+
+   AsyncDataSource_Eeprom_Init(
+      &instance->_private.asyncDataSourceEeprom[HarnessEepromIndex],
+      resources[HarnessEepromIndex].map,
+      personalityEeprom,
+      crc16Calculator,
+      nvDefaultDataInput,
+      resources[HarnessEepromIndex].readWriteBuffer,
+      resources[HarnessEepromIndex].readWriteBufferSize,
+      configuration->harnessEepromMetadataErd,
+      HarnessEepromClientVersion,
+      timerModule,
+      TimerTicksBetweenRetriesInMsec,
+      HarnessEepromRetriesBeforeErase);
 
    for(uint8_t i = 0; i < AsyncDataSourceCount; i++)
    {

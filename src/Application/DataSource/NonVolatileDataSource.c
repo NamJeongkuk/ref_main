@@ -14,9 +14,7 @@
 enum
 {
    BitsPerByte = 8,
-   TimerTicksBetweenRetriesInMsec = 100,
-   NumberOfRetriesBeforeErase = 10,
-   NumberOfRecordBackups = 1
+   EepromMissingTimeoutTicks = 5000
 };
 
 #define EXPAND_AS_SYNC_CONFIGURATION(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
@@ -54,6 +52,8 @@ void NonVolatileDataSource_Init(
 
    ConstArrayMap_BinarySearch_Init(&instance->_private.syncMap, &syncMapConfiguration);
 
+   TimerModule_StartOneShot(timerModule, &instance->_private.timeout, EepromMissingTimeoutTicks, MarkReady, &ready);
+
    DataSource_CachedAsyncDataSource_Init(
       &instance->_private.sync,
       async,
@@ -70,6 +70,8 @@ void NonVolatileDataSource_Init(
       Action_Invoke(watchdog);
       TimerModule_Run(timerModule);
    }
+
+   TimerModule_Stop(timerModule, &instance->_private.timeout);
 }
 
 I_DataSource_t *NonVolatileDataSource_DataSource(

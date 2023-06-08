@@ -103,7 +103,7 @@ I_DataModel_t *SystemData_DataModel(
 
 /*!
  * @param instance
- * @param dataModel 
+ * @param dataModel
  * @param timerModule
  * @param debounceInterrupt
  */

@@ -54,6 +54,7 @@
 #include "DataSource_Gpio.h"
 #include "GeaStack.h"
 #include "ShortGitHash.h"
+#include "PersonalityEepromStack.h"
 
 enum
 {
@@ -171,6 +172,7 @@ int main(void)
    TimeSource_Interrupt_t *timeSourceInterrupt = TimeSource_Rockhopper_Init(interrupt);
 
    EepromStack_Init(watchdogKickAction, timerModule, timeSourceInterrupt);
+   PersonalityEepromStack_Init(timerModule);
 
    AsyncNvMapConfigurations_Init();
 
@@ -179,6 +181,7 @@ int main(void)
       Crc16Calculator_Table,
       timerModule,
       EepromStack_GetEeprom(),
+      PersonalityEepromStack_GetEeprom(),
       EepromPartitionConfiguration_Init(),
       AsyncNvMapConfigurations_GetInputGroup(),
       AsyncNvMapConfigurations_GetAsyncDataSourceResources(),

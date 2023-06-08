@@ -23,6 +23,7 @@
 #include "SystemClock.h"
 #include "Dtc.h"
 #include "r_dataflash.h"
+#include "HardwareTimer.h"
 
 void Hardware_InitializeStage1(void)
 {
