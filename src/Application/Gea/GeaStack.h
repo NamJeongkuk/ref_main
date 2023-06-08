@@ -25,7 +25,6 @@
 #include "ErdStreamReceiver.h"
 #include "GeaStackXmacroUtils.h"
 #include "SystemErds.h"
-#include "PeriodicSignalUpdater.h"
 
 enum
 {
@@ -77,8 +76,6 @@ typedef struct
 
       ErdClient_ApiRevision2_t erdClient;
       uint8_t queueBuffer[QueueBufferElements];
-
-      PeriodicSignalUpdater_t mainboardToUiHeartbeatPeriodicSignalUpdater;
 
       struct
       {

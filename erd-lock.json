@@ -793,14 +793,14 @@
     {
       "data": [
         {
-          "name": "Erd_SignOfLifeFromMainboardToUi",
+          "name": "Erd_TurboCoolOnOffRequest",
           "offset": 0,
           "size": 1,
-          "type": "u8"
+          "type": "bool"
         }
       ],
       "id": "0x120C",
-      "name": "Erd_SignOfLifeFromMainboardToUi",
+      "name": "Erd_TurboCoolOnOffRequest",
       "operations": [
         "read",
         "write"
@@ -809,14 +809,14 @@
     {
       "data": [
         {
-          "name": "Erd_SignOfLifeFromUiToMainboard",
+          "name": "Erd_TurboCoolOnOffStatus",
           "offset": 0,
           "size": 1,
-          "type": "u8"
+          "type": "bool"
         }
       ],
       "id": "0x120D",
-      "name": "Erd_SignOfLifeFromUiToMainboard",
+      "name": "Erd_TurboCoolOnOffStatus",
       "operations": [
         "read",
         "write"
