@@ -28,6 +28,9 @@ enum
    Signal_IceMakerTemperatureIsReadyToHarvest,
    Signal_SabbathModeDisabled,
    Signal_IceMakerIsEnabled,
+   Signal_IceMakerIsDisabled,
+   Signal_CoolingSystemTurnedOn,
+   Signal_CoolingSystemTurnedOff,
    Signal_FillTubeHeaterTimerExpired,
    Signal_MaxHarvestTimeReached,
    Signal_MaxHarvestFixTimeReached,
@@ -202,6 +205,17 @@ static bool HarvestCountIsReadyToHarvest(AluminumMoldIceMaker_t *instance)
       &ready);
 
    return ready;
+}
+
+static bool CoolingSystemIsOn(AluminumMoldIceMaker_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->coolingSystemOffStatus,
+      &state);
+
+   return !state;
 }
 
 static bool SabbathModeIsDisabled(AluminumMoldIceMaker_t *instance)
@@ -720,11 +734,13 @@ static bool State_Freeze(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Signal_HarvestCountIsReadyToHarvest:
       case Signal_IceMakerTemperatureIsReadyToHarvest:
       case Signal_FeelerArmIsReadyToEnterHarvest:
+      case Signal_CoolingSystemTurnedOn:
          if(IceMakerTemperatureIsReadyToHarvest(instance) &&
             FeelerArmIsReadyToEnterHarvest(instance) &&
             HarvestCountIsReadyToHarvest(instance) &&
             SabbathModeIsDisabled(instance) &&
-            IceMakerIsEnabled(instance))
+            IceMakerIsEnabled(instance) &&
+            CoolingSystemIsOn(instance))
          {
             Hsm_Transition(hsm, State_Harvest);
          }
@@ -1084,6 +1100,18 @@ static void DataModelChanged(void *context, const void *args)
       if(*state)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_IceMakerIsEnabled, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->coolingSystemOffStatus)
+   {
+      const bool *state = onChangeData->data;
+      if(*state)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_CoolingSystemTurnedOff, NULL);
+      }
+      else
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_CoolingSystemTurnedOn, NULL);
       }
    }
    else if(erd == instance->_private.config->moldThermistorIsValidErd)

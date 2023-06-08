@@ -194,6 +194,19 @@ TEST_GROUP(TwistTrayIceMaker)
          set);
    }
 
+   void GivenTheCoolingSystemOffIs(bool state)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_CoolingOffStatus,
+         &state);
+   }
+
+   void WhenTheCoolingSystemOffChangesTo(bool state)
+   {
+      GivenTheCoolingSystemOffIs(state);
+   }
+
    void WhenTheIceMakerBecomesEnabled()
    {
       GivenTheIceMakerIsEnabled();
@@ -841,7 +854,25 @@ TEST(TwistTrayIceMaker, ShouldWaitUntilIceMakerChangesFromDisabledToEnabledInFre
    HarvestCountCalculationRequestShouldBe(CLEAR);
 }
 
-TEST(TwistTrayIceMaker, ShouldWaitUntilBothIceMakerIsEnabledAndSabbathModeIsDisabledWhileInFreezeStateBeforeClearingHarvestCountCalculationRequestAndStartingHarvestIfHarvestCountIsReadyToHarvestWhileThermistorTemperatureIsBelowMaximumHarvestTemperature)
+TEST(TwistTrayIceMaker, ShouldWaitUntilCoolingSystemTurnsOnInFreezeStateBeforeClearingHarvestCountCalculationRequestAndStartingHarvestIfHarvestCountIsReadyToHarvestWhileThermistorTemperatureIsBelowMaximumHarvestTemperature)
+{
+   GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
+   HarvestCountCalculationRequestShouldBe(SET);
+
+   WhenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
+   WhenTheCoolingSystemOffChangesTo(true);
+
+   MotorRequestShouldNotBeCalled();
+   WhenHarvestCountIsReadyToHarvestIs(SET);
+   HarvestCountCalculationRequestShouldBe(SET);
+
+   HarvestingShouldStart();
+   WhenTheCoolingSystemOffChangesTo(false);
+   HarvestCountCalculationRequestShouldBe(CLEAR);
+}
+
+TEST(TwistTrayIceMaker, ShouldWaitUntilIceMakerIsEnabledAndSabbathModeIsDisabledAndCoolingSystemIsOnWhileInFreezeStateBeforeClearingHarvestCountCalculationRequestAndStartingHarvestIfHarvestCountIsReadyToHarvestWhileThermistorTemperatureIsBelowMaximumHarvestTemperature)
 {
    GivenTheOperationStateIsInFreeze();
    GivenFreezerIceRateActiveBecomes(SET);
@@ -849,6 +880,7 @@ TEST(TwistTrayIceMaker, ShouldWaitUntilBothIceMakerIsEnabledAndSabbathModeIsDisa
 
    WhenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
    WhenTheIceMakerBecomesDisabled();
+   WhenTheCoolingSystemOffChangesTo(true);
 
    MotorRequestShouldNotBeCalled();
    WhenHarvestCountIsReadyToHarvestIs(SET);
@@ -860,12 +892,15 @@ TEST(TwistTrayIceMaker, ShouldWaitUntilBothIceMakerIsEnabledAndSabbathModeIsDisa
    WhenTheIceMakerBecomesEnabled();
    HarvestCountCalculationRequestShouldBe(SET);
 
+   WhenTheCoolingSystemOffChangesTo(false);
+   HarvestCountCalculationRequestShouldBe(SET);
+
    HarvestingShouldStart();
    WhenSabbathModeIs(DISABLED);
    HarvestCountCalculationRequestShouldBe(CLEAR);
 }
 
-TEST(TwistTrayIceMaker, ShouldWaitUntilIceMakerIsEnabledThenSabbathModeIsDisabledWhileInFreezeStateBeforeClearingHarvestCountCalculationRequestAndStartingHarvestIfHarvestCountIsReadyToHarvestWhileThermistorTemperatureIsBelowMaximumHarvestTemperature)
+TEST(TwistTrayIceMaker, ShouldWaitUntilIceMakerIsEnabledThenSabbathModeIsDisabledAndCoolingSystemIsOnWhileInFreezeStateBeforeClearingHarvestCountCalculationRequestAndStartingHarvestIfHarvestCountIsReadyToHarvestWhileThermistorTemperatureIsBelowMaximumHarvestTemperature)
 {
    GivenTheOperationStateIsInFreeze();
    GivenFreezerIceRateActiveBecomes(SET);
@@ -882,11 +917,15 @@ TEST(TwistTrayIceMaker, ShouldWaitUntilIceMakerIsEnabledThenSabbathModeIsDisable
    WhenTheIceMakerBecomesDisabled();
    HarvestCountCalculationRequestShouldBe(SET);
 
+   WhenTheCoolingSystemOffChangesTo(true);
+   HarvestCountCalculationRequestShouldBe(SET);
+
    WhenSabbathModeIs(DISABLED);
    HarvestCountCalculationRequestShouldBe(SET);
 
    HarvestingShouldStart();
    WhenTheIceMakerBecomesEnabled();
+   WhenTheCoolingSystemOffChangesTo(false);
    HarvestCountCalculationRequestShouldBe(CLEAR);
 }
 

@@ -47,6 +47,8 @@ enum
    Signal_ResumeFill,
    Signal_MotorErrorRetryTimerExpired,
    Signal_HarvestCountIsReadyToHarvest,
+   Signal_CoolingSystemIsTurnedOff,
+   Signal_CoolingSystemIsTurnedOn,
    Signal_IceRateNoLongerActive,
 
    Idle = TwistTrayIceMakerMotorAction_Idle,
@@ -273,9 +275,20 @@ static void ResumeFillMonitoringIfPausedOrStartIfStopped(TwistTrayIceMaker_t *in
    }
 }
 
-static bool SabbathModeIsDisabledAndIceMakerIsEnabled(TwistTrayIceMaker_t *instance)
+static bool CoolingSystemIsOff(TwistTrayIceMaker_t *instance)
 {
-   return (!ItIsSabbathMode(instance) && IceMakerIsEnabled(instance));
+   bool coolingSystemIsOff;
+   DataSource_Read(
+      instance->_private.dataSource,
+      Erd_CoolingOffStatus,
+      &coolingSystemIsOff);
+
+   return coolingSystemIsOff;
+}
+
+static bool SabbathModeIsDisabledAndIceMakerIsEnabledAndCoolingSystemIsOn(TwistTrayIceMaker_t *instance)
+{
+   return (!ItIsSabbathMode(instance) && IceMakerIsEnabled(instance) && !CoolingSystemIsOff(instance));
 }
 
 static bool FreezerIceRateIsActive(TwistTrayIceMaker_t *instance)
@@ -339,7 +352,7 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          }
          else
          {
-            if(SabbathModeIsDisabledAndIceMakerIsEnabled(instance))
+            if(SabbathModeIsDisabledAndIceMakerIsEnabledAndCoolingSystemIsOn(instance))
             {
                SendFreezerIceRateSignal(instance);
             }
@@ -349,9 +362,10 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
       case Signal_IceRateNoLongerActive:
       case Signal_SabbathModeDisabled:
       case Signal_IceMakerIsEnabled:
+      case Signal_CoolingSystemIsTurnedOn:
       case Signal_IceMakerFilteredTemperatureChanged:
       case Signal_HarvestCountIsReadyToHarvest:
-         if(SabbathModeIsDisabledAndIceMakerIsEnabled(instance))
+         if(SabbathModeIsDisabledAndIceMakerIsEnabledAndCoolingSystemIsOn(instance))
          {
             if(HarvestConditionsHaveBeenMet(instance))
             {
@@ -419,7 +433,7 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          break;
 
       case Signal_MotorActionResultBucketWasFull:
-         if(IceMakerIsEnabled(instance))
+         if(IceMakerIsEnabled(instance) && !CoolingSystemIsOff(instance))
          {
             Fsm_Transition(fsm, State_BucketIsFull);
          }
@@ -537,6 +551,7 @@ static void State_BucketIsFull(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          Fsm_Transition(fsm, State_FillingTrayWithWater);
          break;
 
+      case Signal_CoolingSystemIsTurnedOff:
       case Signal_IceMakerIsDisabled:
          Fsm_Transition(fsm, State_Freeze);
          break;
@@ -804,6 +819,18 @@ static void DataSourceChanged(void *context, const void *data)
       if(*state)
       {
          Fsm_SendSignal(&instance->_private.fsm, Signal_HarvestCountIsReadyToHarvest, NULL);
+      }
+   }
+   else if(onChangeArgs->erd == Erd_CoolingOffStatus)
+   {
+      const bool *state = onChangeArgs->data;
+      if(*state)
+      {
+         Fsm_SendSignal(&instance->_private.fsm, Signal_CoolingSystemIsTurnedOff, NULL);
+      }
+      else
+      {
+         Fsm_SendSignal(&instance->_private.fsm, Signal_CoolingSystemIsTurnedOn, NULL);
       }
    }
    else if(onChangeArgs->erd == Erd_Freezer_IceRateIsActive)

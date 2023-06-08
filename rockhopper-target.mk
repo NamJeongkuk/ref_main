@@ -47,6 +47,7 @@ SRC_DIRS:=\
   src/Application/ConfigurationPlugins \
   src/Application/Configurations \
   src/Application/ConvertibleCompartment \
+  src/Application/Cooling \
   src/Application/Damper \
   src/Application/DataSource \
   src/Application/DataSource/BspDataSource \

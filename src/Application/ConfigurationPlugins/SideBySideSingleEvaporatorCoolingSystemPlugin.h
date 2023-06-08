@@ -22,6 +22,7 @@
 #include "AmbientTemperaturePlugin.h"
 #include "AmbientHumidityPlugin.h"
 #include "ExternalFilteredSensorResolverPlugin.h"
+#include "CoolingSystemRequestHandler.h"
 
 typedef struct
 {
@@ -40,6 +41,7 @@ typedef struct
       AmbientHumidityPlugin_t ambientHumidityPlugin;
       SideBySideParallelMotorControlPlugin_t sideBySideParallelMotorControlPlugin;
       ExternalFilteredSensorResolverPlugin_t externalFilteredSensorResolverPlugin;
+      CoolingSystemRequestHandler_t coolingSystemRequestHandler;
    } _private;
 } SideBySideSingleEvaporatorCoolingSystemPlugin_t;
 

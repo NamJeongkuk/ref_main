@@ -84,6 +84,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/ApplianceFeatureApiUpdater \
    $(TESTS_DIR)/Application/Compressor \
    $(TESTS_DIR)/Application/ConvertibleCompartment \
+   $(TESTS_DIR)/Application/Cooling \
    $(TESTS_DIR)/Application/Damper \
    $(TESTS_DIR)/Application/DataSource \
    $(TESTS_DIR)/Application/Debounce \

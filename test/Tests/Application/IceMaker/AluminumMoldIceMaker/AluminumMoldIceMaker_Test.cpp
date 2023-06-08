@@ -47,7 +47,8 @@ static const AluminumMoldIceMakerConfig_t config = {
    .rakePositionErd = Erd_AluminumMoldIceMakerRakePosition,
    .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
    .aluminumMoldIceMakerTestRequestErd = Erd_AluminumMoldIceMakerTestRequest,
-   .dispensingRequestStatusErd = Erd_DispensingRequestStatus
+   .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
+   .coolingSystemOffStatus = Erd_CoolingOffStatus
 };
 
 TEST_GROUP(AluminumMoldIceMaker)
@@ -354,6 +355,19 @@ TEST_GROUP(AluminumMoldIceMaker)
       GivenTheIceMakerIs(state);
    }
 
+   void GivenTheCoolingSystemOffIs(bool state)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_CoolingOffStatus,
+         &state);
+   }
+
+   void WhenTheCoolingSystemOffChangesTo(bool state)
+   {
+      GivenTheCoolingSystemOffIs(state);
+   }
+
    void GivenTheIceMakerIsEnabledAndSabbathModeIsDisabled()
    {
       GivenTheIceMakerIs(ENABLED);
@@ -389,6 +403,18 @@ TEST_GROUP(AluminumMoldIceMaker)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
 
       WhenTheIceMakerIs(DISABLED);
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+   }
+
+   void GivenTheCoolingSystemIsOffAndAluminumMoldIceMakerIsInFreezeState()
+   {
+      GivenTheIceMakerIs(ENABLED);
+      GivenTheMoldThermistorIsValid();
+      GivenTheRakePositionIs(RakePosition_Home);
+      GivenTheModuleIsInitialized();
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+
+      WhenTheCoolingSystemOffChangesTo(true);
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
    }
 
@@ -1594,6 +1620,16 @@ TEST(AluminumMoldIceMaker, ShouldTransitionToHarvestWhenIceMakerIsEnabledWhileTh
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 }
 
+TEST(AluminumMoldIceMaker, ShouldTransitionToHarvestWhenCoolingSystemIsTurnedOnWhileTheOtherConditionsAreMet)
+{
+   GivenTheCoolingSystemIsOffAndAluminumMoldIceMakerIsInFreezeState();
+   GivenReadyToEnterHarvest();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+
+   WhenTheCoolingSystemOffChangesTo(false);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+}
+
 TEST(AluminumMoldIceMaker, ShouldNotTransitionToFreezeWhenSabbathModeBecomesEnabledInFillStateUntilTheFillIsComplete)
 {
    GivenAluminumMoldIceMakerIsInFillState();
@@ -1612,6 +1648,18 @@ TEST(AluminumMoldIceMaker, ShouldNotTransitionToFreezeWhenIceMakerBecomesDisable
    IceMakerWaterValveVoteShouldBe(WaterValveState_On);
 
    WhenTheIceMakerIs(DISABLED);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+
+   WhenStopFillSignalChanges();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldNotTransitionToIdleFreezeWhenTheCoolingSystemIsOffInFillStateUntilTheFillIsComplete)
+{
+   GivenAluminumMoldIceMakerIsInFillState();
+   IceMakerWaterValveVoteShouldBe(WaterValveState_On);
+
+   WhenTheCoolingSystemOffChangesTo(true);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
 
    WhenStopFillSignalChanges();

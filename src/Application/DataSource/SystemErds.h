@@ -407,8 +407,8 @@ enum
    ENTRY(Erd_DispensingRequest,                             0x1208, DispensingRequest_t,                                Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispensingRequestStatus,                       0x1209, DispensingRequestStatus_t,                          Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_CoolingOffRequest,                             0x120A, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CoolingOffStatus,                              0x120B, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CoolingOffRequest,                             0x120A, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CoolingOffStatus,                              0x120B, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_TurboCoolOnOffRequest,                         0x120C, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TurboCoolOnOffStatus,                          0x120D, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RightSideFreshFoodDoorStatus,                  0x120E, bool,                                               Swap_No,  Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
@@ -718,9 +718,10 @@ enum
    ENTRY(Erd_CondenserFanSpeed_ResolvedVote,                0xF200, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CondenserFanSpeed_WinningVoteErd,              0xF201, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CondenserFanSpeed_FactoryVote,                 0xF202, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CondenserFanSpeed_DefrostVote,                 0xF203, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CondenserFanSpeed_CompressorStartUpVote,       0xF204, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CondenserFanSpeed_GridVote,                    0xF205, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CondenserFanSpeed_CoolingSystemOffVote,        0xF203, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CondenserFanSpeed_DefrostVote,                 0xF204, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CondenserFanSpeed_CompressorStartUpVote,       0xF205, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CondenserFanSpeed_GridVote,                    0xF206, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_IceCabinetFanSpeed_ResolvedVote,               0xF210, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceCabinetFanSpeed_WinningVoteErd,             0xF211, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -730,17 +731,19 @@ enum
    ENTRY(Erd_FreshFoodEvapFanSpeed_ResolvedVote,            0xF21A, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodEvapFanSpeed_WinningVoteErd,          0xF21B, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodEvapFanSpeed_FactoryVote,             0xF21C, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodEvapFanSpeed_DefrostVote,             0xF21D, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodEvapFanSpeed_CompressorStartUpVote,   0xF21E, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodEvapFanSpeed_GridVote,                0xF21F, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvapFanSpeed_CoolingSystemOffVote,    0xF21D, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvapFanSpeed_DefrostVote,             0xF21E, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvapFanSpeed_CompressorStartUpVote,   0xF21F, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvapFanSpeed_GridVote,                0xF220, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreezerEvapFanSpeed_ResolvedVote,              0xF22A, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerEvapFanSpeed_WinningVoteErd,            0xF22B, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerEvapFanSpeed_FactoryVote,               0xF22C, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerEvapFanSpeed_DefrostVote,               0xF22D, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerEvapFanSpeed_CompressorStartUpVote,     0xF22E, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerEvapFanSpeed_FreezerIceRateVote,        0xF22F, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerEvapFanSpeed_GridVote,                  0xF230, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapFanSpeed_CoolingSystemOffVote,      0xF22D, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapFanSpeed_DefrostVote,               0xF22E, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapFanSpeed_CompressorStartUpVote,     0xF22F, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapFanSpeed_FreezerIceRateVote,        0xF230, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapFanSpeed_GridVote,                  0xF231, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ConvertibleCompartmentFanSpeed_ResolvedVote,   0xF23A, FanVotedSpeed_t,                                    Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentFanSpeed_WinningVoteErd, 0xF23B, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -848,26 +851,30 @@ enum
    ENTRY(Erd_FreshFoodDefrostHeater_ResolvedVote,           0xF2FA, HeaterVotedState_t,                                 Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDefrostHeater_WinningVoteErd,         0xF2FB, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDefrostHeater_FactoryVote,            0xF2FC, HeaterVotedState_t,                                 Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodDefrostHeater_DefrostVote,            0xF2FD, HeaterVotedState_t,                                 Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDefrostHeater_CoolingSystemOffVote,   0xF2FD, HeaterVotedState_t,                                 Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDefrostHeater_DefrostVote,            0xF2FE, HeaterVotedState_t,                                 Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreezerDefrostHeater_ResolvedVote,             0xF300, HeaterVotedState_t,                                 Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerDefrostHeater_WinningVoteErd,           0xF301, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerDefrostHeater_FactoryVote,              0xF302, HeaterVotedState_t,                                 Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerDefrostHeater_DefrostVote,              0xF303, HeaterVotedState_t,                                 Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerDefrostHeater_CoolingSystemOffVote,     0xF303, HeaterVotedState_t,                                 Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerDefrostHeater_DefrostVote,              0xF304, HeaterVotedState_t,                                 Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodDamperHeater_ResolvedVote,               0xF30A, PercentageDutyCycleVote_t,                       Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperHeater_WinningVoteErd,             0xF30B, WinningVoteErd_t,                                Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperHeater_FactoryVote,                0xF30C, PercentageDutyCycleVote_t,                       Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodDamperHeater_DamperFreezePreventionVote, 0xF30D, PercentageDutyCycleVote_t,                       Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote,      0xF30E, PercentageDutyCycleVote_t,                       Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperHeater_CoolingSystemOffVote,       0xF30D, PercentageDutyCycleVote_t,                       Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperHeater_DamperFreezePreventionVote, 0xF30E, PercentageDutyCycleVote_t,                       Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote,      0xF30F, PercentageDutyCycleVote_t,                       Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodDamperPosition_ResolvedVote,               0xF31A, DamperVotedPosition_t,                         Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperPosition_WinningVoteErd,             0xF31B, WinningVoteErd_t,                              Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodDamperPosition_FactoryVote,                0xF31C, DamperVotedPosition_t,                         Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodDamperPosition_DamperFreezePreventionVote, 0xF31D, DamperVotedPosition_t,                         Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodDamperPosition_MaxOpenTimeVote,            0xF31E, DamperVotedPosition_t,                         Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodDamperPosition_DefrostVote,                0xF31F, DamperVotedPosition_t,                         Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodDamperPosition_GridVote,                   0xF320, DamperVotedPosition_t,                         Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperPosition_CoolingSystemOffVote,       0xF31D, DamperVotedPosition_t,                         Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperPosition_DamperFreezePreventionVote, 0xF31E, DamperVotedPosition_t,                         Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperPosition_MaxOpenTimeVote,            0xF31F, DamperVotedPosition_t,                         Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperPosition_DefrostVote,                0xF320, DamperVotedPosition_t,                         Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperPosition_GridVote,                   0xF321, DamperVotedPosition_t,                         Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ValvePosition_ResolvedVote,                    0xF32A, ValveVotedPosition_t,                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ValvePosition_WinningVoteErd,                  0xF32B, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -878,13 +885,15 @@ enum
    ENTRY(Erd_CompressorSpeed_ResolvedVote,                  0xF33A, CompressorVotedSpeed_t,                             Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorSpeed_WinningVoteErd,                0xF33B, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorSpeed_FactoryVote,                   0xF33C, CompressorVotedSpeed_t,                             Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CompressorSpeed_DefrostVote,                   0xF33D, CompressorVotedSpeed_t,                             Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CompressorSpeed_GridVote,                      0xF33E, CompressorVotedSpeed_t,                             Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorSpeed_CoolingSystemOffVote,          0xF33D, CompressorVotedSpeed_t,                             Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorSpeed_DefrostVote,                   0xF33E, CompressorVotedSpeed_t,                             Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CompressorSpeed_GridVote,                      0xF33F, CompressorVotedSpeed_t,                             Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_RecessHeater_ResolvedVote,                     0xF340, PercentageDutyCycleVote_t,                          Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RecessHeater_WinningVoteErd,                   0xF341, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RecessHeater_FactoryVote,                      0xF342, PercentageDutyCycleVote_t,                          Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_RecessHeater_VariableAntiSweatVote,            0xF343, PercentageDutyCycleVote_t,                          Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_RecessHeater_CoolingSystemOffVote,             0xF343, PercentageDutyCycleVote_t,                          Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_RecessHeater_VariableAntiSweatVote,            0xF344, PercentageDutyCycleVote_t,                          Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_SensorsReadyToBeRead,                          0xF400, bool,                                               Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_SetpointResolverReady,                         0xF401, bool,                                               Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
