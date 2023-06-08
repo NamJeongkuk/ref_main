@@ -316,19 +316,10 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
 
    void WhenItBecomesReadyToDefrostAfterMaxTimeBetweenDefrostsWithCompressorOn()
    {
-      // I want to replace this by having the compressor on because of the grid and same with cooling mode
-      // CompressorSpeedWinningVoteShouldBe(Erd_CompressorSpeed_DefrostVote);
-
-      WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
+      WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
       CoolingModeShouldBe(CoolingMode_Freezer);
 
       After(defrostData->idleData.maxTimeBetweenDefrostsInMinutes * MSEC_PER_MIN);
-   }
-
-   void WhenFactoryHasVotedForCompressor(CompressorSpeed_t speed, Vote_t care)
-   {
-      CompressorVotedSpeed_t vote = { .speed = speed, .care = care };
-      DataModel_Write(dataModel, Erd_CompressorSpeed_FactoryVote, &vote);
    }
 
    void WhenFilteredFreezerEvapTemperatureChangesTo(TemperatureDegFx100_t temperature)
@@ -443,12 +434,13 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
    {
       GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
 
-      WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
+      WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
 
       After(defrostData->idleData.maxTimeBetweenDefrostsInMinutes * MSEC_PER_MIN -
          defrostData->idleData.freezerDoorIncrementFactorInSecondsPerSecond * MSEC_PER_SEC);
 
-      WhenFactoryHasVotedForCompressor(CompressorSpeed_Off, Vote_Care);
+      WhenGridVotesToTurnOffCompressorAndWinsAndDoesNotHaveToWaitMinimumOffTimeBecauseItAlreadyPassed();
+
       WhenFreezerDoorIs(Open);
       DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 
@@ -464,7 +456,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
       CompressorOnTimeInSecondsShouldBe(0);
 
-      WhenFactoryHasVotedForCompressor(CompressorSpeed_Off, Vote_DontCare);
+      WhenGridVotesToTurnOffCompressorWhileMinimumTimesAreDisabledAndGridWins();
    }
 
    void GivenThatTheApplicationHasStartedWithInvalidFreezerThermistorAndDefrostIsInHeaterOnEntry()
@@ -475,7 +467,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
       CompressorOnTimeInSecondsShouldBe(0);
 
-      WhenFactoryHasVotedForCompressor(CompressorSpeed_Off, Vote_DontCare);
+      WhenGridVotesToTurnOffCompressorWhileMinimumTimesAreDisabledAndGridWins();
    }
 
    void GivenThatTheApplicationHasStartedWithInvalidFreezerEvaporatorThermistorAndDefrostIsInHeaterOnEntry()
@@ -486,7 +478,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
       CompressorOnTimeInSecondsShouldBe(0);
 
-      WhenFactoryHasVotedForCompressor(CompressorSpeed_Off, Vote_DontCare);
+      WhenGridVotesToTurnOffCompressorWhileMinimumTimesAreDisabledAndGridWins();
    }
 
    void WhenDefrostTestIsRequested(DefrostTestRequest_t request)
@@ -582,7 +574,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
 
       DefrostTransitedFromHeaterOnEntryToHeaterOnToDwellToPostDwellToIdleAndWasAbnormal();
 
-      WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
+      WhenGridVotesToTurnOnCompressorWhileCompressorMinimumTimesAreEnabledAfterBeingOffAndGridWinsAndGridRanThisManyTimes(2);
 
       ReadyToDefrostShouldBe(false);
       UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
@@ -645,9 +637,41 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpen, &state);
    }
 
-   void WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled()
+   void WhenGridRunsByWaitingOneSecond()
    {
-      WhenFactoryHasVotedForCompressor(CompressorSpeed_Low, Vote_Care);
+      After(MSEC_PER_SEC);
+   }
+
+   void WhenFactoryVotesForSetpointsToCauseCompressorToTurnOn()
+   {
+      SetpointVotedTemperature_t freezerSetpointVote;
+      freezerSetpointVote.temperatureInDegFx100 = -3000;
+      freezerSetpointVote.care = Vote_Care;
+      DataModel_Write(dataModel, Erd_FreezerSetpoint_FactoryVote, &freezerSetpointVote);
+
+      SetpointVotedTemperature_t freshFoodSetpointVote;
+      freshFoodSetpointVote.temperatureInDegFx100 = 2000;
+      freshFoodSetpointVote.care = Vote_Care;
+      DataModel_Write(dataModel, Erd_FreshFoodSetpoint_FactoryVote, &freshFoodSetpointVote);
+   }
+
+   void WhenFactoryVotesForSetpointsToCauseCompressorToTurnOff()
+   {
+      SetpointVotedTemperature_t freezerSetpointVote;
+      freezerSetpointVote.temperatureInDegFx100 = 1000;
+      freezerSetpointVote.care = Vote_Care;
+      DataModel_Write(dataModel, Erd_FreezerSetpoint_FactoryVote, &freezerSetpointVote);
+
+      SetpointVotedTemperature_t freshFoodSetpointVote;
+      freshFoodSetpointVote.temperatureInDegFx100 = 5000;
+      freshFoodSetpointVote.care = Vote_Care;
+      DataModel_Write(dataModel, Erd_FreshFoodSetpoint_FactoryVote, &freshFoodSetpointVote);
+   }
+
+   void WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins()
+   {
+      WhenFactoryVotesForSetpointsToCauseCompressorToTurnOn();
+      WhenGridRunsByWaitingOneSecond();
 
       After(CompressorSabbathDelayTimeInSeconds * MSEC_PER_SEC);
       After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
@@ -657,11 +681,12 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       CompressorShouldBe(ON);
    }
 
-   void WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabledAndHasToWaitTheMinimumOffTime()
+   void WhenGridVotesToTurnOnCompressorWhileCompressorMinimumTimesAreEnabledAfterBeingOffAndGridWinsAndGridRanThisManyTimes(uint8_t numberOfGridRuns)
    {
-      WhenFactoryHasVotedForCompressor(CompressorSpeed_Low, Vote_Care);
+      WhenFactoryVotesForSetpointsToCauseCompressorToTurnOn();
+      WhenGridRunsByWaitingOneSecond();
 
-      After(compressorData->compressorTimes.minimumOffTimeInMinutes * MSEC_PER_MIN);
+      After(compressorData->compressorTimes.minimumOffTimeInMinutes * MSEC_PER_MIN - numberOfGridRuns * MSEC_PER_SEC);
       After(CompressorSabbathDelayTimeInSeconds * MSEC_PER_SEC);
       After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       CompressorShouldBe(OFF);
@@ -670,16 +695,25 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       CompressorShouldBe(ON);
    }
 
-   void WhenCompressorIsTurnedOff()
+   void WhenGridVotesToTurnOnCompressorWhileMinimumTimesAreDisabledAndGridWins()
    {
-      WhenFactoryHasVotedForCompressor(CompressorSpeed_Off, Vote_Care);
+      WhenFactoryVotesForSetpointsToCauseCompressorToTurnOn();
+      WhenGridRunsByWaitingOneSecond();
+      CompressorShouldBe(ON);
+   }
+
+   void WhenGridVotesToTurnOffCompressorAndWinsAndDoesNotHaveToWaitMinimumOffTimeBecauseItAlreadyPassed()
+   {
+      WhenFactoryVotesForSetpointsToCauseCompressorToTurnOff();
+      WhenGridRunsByWaitingOneSecond();
       CompressorShouldBe(OFF);
    }
 
-   void WhenCompressorIsTurnedOnWhileCompressorMinimumTimesHaveBeenDisabled()
+   void WhenGridVotesToTurnOffCompressorWhileMinimumTimesAreDisabledAndGridWins()
    {
-      WhenFactoryHasVotedForCompressor(CompressorSpeed_Low, Vote_Care);
-      CompressorShouldBe(ON);
+      WhenFactoryVotesForSetpointsToCauseCompressorToTurnOff();
+      WhenGridRunsByWaitingOneSecond();
+      CompressorShouldBe(OFF);
    }
 
    void NextDefrostTypeShouldBe(DefrostType_t expected)
@@ -703,7 +737,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
       GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
 
-      WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
+      WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
       CoolingModeShouldBe(CoolingMode_Freezer);
 
       After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN);
@@ -732,16 +766,14 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
 
    void WhenCompressorIsOnForMinimumTimeBetweenDefrosts()
    {
-      WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
+      WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
       After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN);
-      WhenCompressorIsTurnedOff();
    }
 
    void WhenCompressorIsOnForMinimumTimePlusSomeTime()
    {
-      WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
+      WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
       After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN + SomeTimeInMsec);
-      WhenCompressorIsTurnedOff();
    }
 
    void WhenLeftHandFreshFoodDoorIsOpenForSomeSmallTime()
@@ -753,15 +785,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
 
    void WhenCompressorTurnsOnAfterSomeSmallTimeOfBeingOff()
    {
-      WhenFactoryHasVotedForCompressor(CompressorSpeed_Low, Vote_Care);
-
-      After(compressorData->compressorTimes.minimumOffTimeInMinutes * MSEC_PER_MIN - SomeSmallTimeInMsec);
-      After(CompressorSabbathDelayTimeInSeconds * MSEC_PER_SEC);
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
-      CompressorShouldBe(OFF);
-
-      After(1);
-      CompressorShouldBe(ON);
+      WhenGridVotesToTurnOnCompressorWhileCompressorMinimumTimesAreEnabledAfterBeingOffAndGridWinsAndGridRanThisManyTimes(SomeSmallTimeInMsec / MSEC_PER_SEC + 1);
    }
 
    void WhenFreezerDoorIsOpenForSomeSmallTime()
@@ -808,7 +832,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnterin
 
    DefrostTransitedFromHeaterOnEntryToHeaterOnToDwellToPostDwellToIdleAndWasAbnormal();
 
-   WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
+   WhenGridVotesToTurnOnCompressorWhileCompressorMinimumTimesAreEnabledAfterBeingOffAndGridWinsAndGridRanThisManyTimes(2);
 
    ReadyToDefrostShouldBe(false);
    UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
@@ -832,6 +856,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldResumeNormalDefrostAfterAhamPrechillTe
    UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
 
    DefrostTransitedFromHeaterOnEntryToHeaterOnToDwellToPostDwellToIdleAndWasNormal();
+   CompressorShouldBe(ON); // grid voted for compressor on earlier, and once defrost released control, it's still on
 
    DontSkipPrechillShouldBe(false);
    UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
@@ -853,6 +878,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldResumeAbnormalDefrostAfterAhamPrechill
    UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
 
    DefrostTransitedFromHeaterOnEntryToHeaterOnToDwellToPostDwellToIdleAndWasAbnormal();
+   CompressorShouldBe(ON);
 
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry);
    After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN - defrostData->postDwellData.postDwellExitTimeInMinutes * MSEC_PER_MIN);
@@ -869,7 +895,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnterin
    UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
    DontSkipPrechillShouldBe(true);
 
-   WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
+   WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
    CoolingModeShouldBe(CoolingMode_Freezer);
 
    // Should use minimum time to exit Idle
@@ -887,7 +913,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnterin
    GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
    GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
 
-   WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
+   WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
    CoolingModeShouldBe(CoolingMode_Freezer);
 
    After(SomeTimeInMinutes * MSEC_PER_MIN);
@@ -914,7 +940,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnterin
    GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
    GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
 
-   WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
+   WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
    CoolingModeShouldBe(CoolingMode_Freezer);
 
    After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN);
@@ -957,6 +983,8 @@ TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnterin
    After(defrostData->postDwellData.postDwellExitTimeInMinutes * MSEC_PER_MIN / 2);
    DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
 
+   WhenGridVotesToTurnOnCompressorWhileMinimumTimesAreDisabledAndGridWins();
+
    UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
    DontSkipPrechillShouldBe(false);
 
@@ -983,8 +1011,6 @@ TEST(DefrostIntegration_SingleEvap, ShouldSetReadyToDefrostErdWhenItBecomesReady
    GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
    GivenReadyToDefrostSubscriptionHasBeenInitializedAndSubscribedTo();
 
-   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
-
    DefrostExitsHeaterOnEntryAndIsInHeaterAfterHeaterOnDelayAfterCompressorOffTime();
    DefrostExitsHeaterOnAndIsInDwellBecauseFreezerEvaporatorReachesTerminationTemperature();
 
@@ -992,7 +1018,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldSetReadyToDefrostErdWhenItBecomesReady
    DefrostExitsDwellAndIsInPostDwellAfterDwellTime();
    DefrostExitsPostDwellAndIsInIdleAfterPostDwellTime();
 
-   WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
+   WhenGridVotesToTurnOnCompressorWhileCompressorMinimumTimesAreEnabledAfterBeingOffAndGridWinsAndGridRanThisManyTimes(1);
 
    ReadyToDefrostShouldChangeTo(true);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
@@ -1068,7 +1094,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldNotReenterIdleAndShouldNotRestartCompr
    CompressorOnTimeInSecondsShouldBe(SomeCompressorOnTimeInMinutes);
    FreezerScaledDoorAccelerationsInSecondsShouldBe(SomeDoorAccelerationsInSecondsPerSecond);
 
-   WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
+   WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
    CompressorOnTimeInSecondsShouldBe(SomeCompressorOnTimeInMinutes);
    FreezerScaledDoorAccelerationsInSecondsShouldBe(SomeDoorAccelerationsInSecondsPerSecond);
 
@@ -1093,10 +1119,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToIdleAndStartCountingCompre
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Idle);
    WhenDefrostTestIsRequested(DefrostTestRequest_Idle);
 
-   CompressorSpeedDefrostVoteShouldBeOffAndDontCare();
-   CompressorSpeedWinningVoteShouldBe(Erd_CompressorSpeed_GridVote);
-
-   WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
+   WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
    WhenFreezerDoorIs(Open);
 
    CompressorOnTimeInSecondsShouldBe(0);
@@ -1190,7 +1213,6 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToPrechillPrepWhenPrechillTe
    GivenThatTheApplicationHasStartedAndDefrostIsInHeaterOnEntry();
    GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
 
-   WhenCompressorIsTurnedOff();
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Idle);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
    WhenDefrostTestIsRequested(DefrostTestRequest_Prechill);
@@ -1228,11 +1250,11 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToIdleWhenExitingDisabledSta
    FreezerScaledDoorAccelerationsInSecondsShouldBe(0);
 
    WhenFreezerDoorIs(Open);
-   WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
+   WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
 
    WhenFreezerDoorIs(Closed);
    CompressorOnTimeInSecondsShouldBe(0);
-   FreezerScaledDoorAccelerationsInSecondsShouldBe((CompressorSabbathDelayTimeInSeconds +
+   FreezerScaledDoorAccelerationsInSecondsShouldBe((1 + CompressorSabbathDelayTimeInSeconds +
                                                       compressorData->compressorTimes.startupOnTimeInSeconds) *
       defrostData->idleData.freezerDoorIncrementFactorInSecondsPerSecond);
 
@@ -1263,13 +1285,14 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToIdleWhenExitingDisabledSta
    FreezerScaledDoorAccelerationsInSecondsShouldBe(0);
 
    WhenFreezerDoorIs(Open);
-   WhenCompressorIsTurnedOnWhileCompressorMinimumTimesHaveBeenDisabled();
 
    After(1 * MSEC_PER_SEC);
 
    WhenFreezerDoorIs(Closed);
    CompressorOnTimeInSecondsShouldBe(1);
    FreezerScaledDoorAccelerationsInSecondsShouldBe(1 * defrostData->idleData.freezerDoorIncrementFactorInSecondsPerSecond);
+
+   WhenGridVotesToTurnOnCompressorWhileMinimumTimesAreDisabledAndGridWins();
 
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Disabled);
    WhenDefrostTestIsRequested(DefrostTestRequest_Disable);
@@ -1321,10 +1344,11 @@ TEST(DefrostIntegration_SingleEvap, ShouldStartDefrostingFromZeroWhenResettingWi
    GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
 
    WhenCompressorIsOnForMinimumTimeBetweenDefrosts();
+   WhenGridVotesToTurnOffCompressorAndWinsAndDoesNotHaveToWaitMinimumOffTimeBecauseItAlreadyPassed();
 
-   CompressorOnTimeInSecondsShouldBe(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
+   CompressorOnTimeInSecondsShouldBe(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1);
    After(systemMonitorData->periodicNvUpdateInMinutes * MSEC_PER_MIN);
-   EepromCompressorOnTimeInSecondsShouldBe(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
+   EepromCompressorOnTimeInSecondsShouldBe(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1);
 
    WhenRefrigeratorResetsWithFreezerTooWarm();
    GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
@@ -1335,7 +1359,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldStartDefrostingFromZeroWhenResettingWi
    FreezerCompartmentTemperatureShouldBeTooWarmOnPowerUp();
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 
-   WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
+   WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
 
    ReadyToDefrostShouldChangeTo(true);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry);
@@ -1356,7 +1380,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldContinueWaitingToDefrostWhereItLeftOff
    EepromCompressorOnTimeInSecondsShouldBe(defrostData->idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - SomeTimeInSeconds);
    CompressorOnTimeInSecondsShouldBe(defrostData->idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - SomeTimeInSeconds);
 
-   WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
+   WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
 
    ReadyToDefrostShouldChangeTo(true);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
@@ -1371,16 +1395,16 @@ TEST(DefrostIntegration_SingleEvap, ShouldSetReadyToDefrostAfterMaximumTimeReach
    GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
    GivenReadyToDefrostSubscriptionHasBeenInitializedAndSubscribedTo();
 
-   WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabled();
+   WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
 
    After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN - SomeTimeInMsec);
-   WhenCompressorIsTurnedOff();
+   WhenGridVotesToTurnOffCompressorAndWinsAndDoesNotHaveToWaitMinimumOffTimeBecauseItAlreadyPassed();
 
    WhenLeftHandFreshFoodDoorIs(Open);
 
-   WhenCompressorIsTurnedOnWhileCompressorMinimumTimesAreEnabledAndHasToWaitTheMinimumOffTime();
+   WhenGridVotesToTurnOnCompressorWhileCompressorMinimumTimesAreEnabledAfterBeingOffAndGridWinsAndGridRanThisManyTimes(1);
 
-   CompressorOnTimeInSecondsShouldBe(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - SomeTimeInSeconds);
+   CompressorOnTimeInSecondsShouldBe(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - SomeTimeInSeconds + 1);
    LeftHandFreshFoodScaledDoorAccelerationsInSecondsShouldBe((compressorData->compressorTimes.minimumOffTimeInMinutes * SECONDS_PER_MINUTE +
                                                                 CompressorSabbathDelayTimeInSeconds +
                                                                 compressorData->compressorTimes.startupOnTimeInSeconds) *
@@ -1400,6 +1424,8 @@ TEST(DefrostIntegration_SingleEvap, ShouldSetReadyToDefrostAfterMaximumTimeReach
    GivenReadyToDefrostSubscriptionHasBeenInitializedAndSubscribedTo();
 
    WhenCompressorIsOnForMinimumTimePlusSomeTime();
+   WhenGridVotesToTurnOffCompressorAndWinsAndDoesNotHaveToWaitMinimumOffTimeBecauseItAlreadyPassed();
+
    WhenLeftHandFreshFoodDoorIsOpenForSomeSmallTime();
    WhenCompressorTurnsOnAfterSomeSmallTimeOfBeingOff();
    WhenFreezerDoorIsOpenForSomeSmallTime();
