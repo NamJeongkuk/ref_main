@@ -67,7 +67,7 @@ TEST_GROUP(Asymmetrical_Debouncer_bool)
 
    void DebouncedValueShouldNotChangeWhenProcessingConsecutiveValues(uint8_t numberOfCalls, bool valueToProcess, bool expectedDebouncedValue)
    {
-      bool signalChanged;
+      bool signalChanged = false;
       for(uint8_t i = 0; i < numberOfCalls; i++)
       {
          signalChanged |= Asymmetrical_Debouncer_bool_Process(&instance, valueToProcess);

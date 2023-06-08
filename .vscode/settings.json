@@ -1,5 +1,9 @@
 {
   "editor.tabSize": 3,
   "editor.insertSpaces": true,
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "C_Cpp.exclusionPolicy": "checkFilesAndFolders",
+  "C_Cpp.files.exclude": {
+    "**/ErdXMacroUtils*.h": true,
+  }
 }
