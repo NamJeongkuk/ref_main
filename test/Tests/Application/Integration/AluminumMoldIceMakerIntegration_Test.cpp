@@ -225,18 +225,6 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
          &position);
    }
 
-   void IceMakerWaterValveShouldVote(WaterValveState_t expectedState, Vote_t expectedVoteCare)
-   {
-      WaterValveVotedState_t actualVote;
-      DataModel_Read(
-         dataModel,
-         Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
-         &actualVote);
-
-      CHECK_EQUAL(expectedState, actualVote.state);
-      CHECK_EQUAL(expectedVoteCare, actualVote.care);
-   }
-
    void IceMakerWaterValveRelayShouldBe(bool expectedState)
    {
       bool actualState;
@@ -460,6 +448,37 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
 
       After(iceMakerData->harvestData.maximumHarvestTimeInMinutes * MSEC_PER_MIN);
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+   }
+
+   void GivenIceMakerIsInFillState()
+   {
+      GivenIceMakerIsInHarvestStateAndRakeIsNotHome();
+
+      After(iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds * MSEC_PER_SEC);
+
+      RakeControllerRequestShouldBe(SET);
+
+      WhenFeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
+      WhenTheRakePositionIs(RakePosition_NotHome);
+
+      After(iceMakerData->harvestData.rakeNotHomeTestTimeInSeconds * MSEC_PER_SEC);
+
+      WhenFeelerArmPositionIs(FeelerArmPosition_BucketFull);
+
+      After(iceMakerData->harvestData.feelerArmTestTimeInSeconds * MSEC_PER_SEC);
+
+      WhenTheRakePositionIs(RakePosition_Home);
+      RakeCompletedRevolutionShouldBe(SET);
+
+      After((iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds - iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds - iceMakerData->harvestData.feelerArmTestTimeInSeconds - iceMakerData->harvestData.rakeNotHomeTestTimeInSeconds) * MSEC_PER_SEC - 1);
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+      IceMakerWaterValveRelayShouldBe(WaterValveState_Off);
+      TheIsolationWaterValveRelayShouldBe(WaterValveState_Off);
+
+      After(1);
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+      IceMakerWaterValveRelayShouldBe(WaterValveState_On);
+      TheIsolationWaterValveRelayShouldBe(WaterValveState_On);
    }
 
    void GivenIceMakerIsInHarvestFaultState()
@@ -709,7 +728,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       CHECK_EQUAL(expected, actual);
    }
 
-   void WhenStopFillSignalChanges()
+   void WhenFillStops()
    {
       After(iceMakerFillMonitorData->timedIceMakerFillInSecondsx10 * 100);
    }
@@ -1202,6 +1221,78 @@ TEST(AluminumMoldIceMakerIntegration, ShouldDoTwoNewRevolutionsToExitHarvestFixT
 
    WhenTheRakeRotatesTheSecondTimeDuringHarvestFix();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTurnOnIceMakerWaterValveAndIsolationWaterValveWhenStartingIceMakerFill)
+{
+   GivenIceMakerIsInHarvestStateAndRakeIsNotHome();
+
+   After(iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds * MSEC_PER_SEC);
+
+   RakeControllerRequestShouldBe(SET);
+
+   WhenFeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
+   WhenTheRakePositionIs(RakePosition_NotHome);
+
+   After(iceMakerData->harvestData.rakeNotHomeTestTimeInSeconds * MSEC_PER_SEC);
+
+   WhenFeelerArmPositionIs(FeelerArmPosition_BucketFull);
+
+   After(iceMakerData->harvestData.feelerArmTestTimeInSeconds * MSEC_PER_SEC);
+
+   WhenTheRakePositionIs(RakePosition_Home);
+   RakeCompletedRevolutionShouldBe(SET);
+
+   After((iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds - iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds - iceMakerData->harvestData.feelerArmTestTimeInSeconds - iceMakerData->harvestData.rakeNotHomeTestTimeInSeconds) * MSEC_PER_SEC - 1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+   IceMakerWaterValveRelayShouldBe(WaterValveState_Off);
+   TheIsolationWaterValveRelayShouldBe(WaterValveState_Off);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+   IceMakerWaterValveRelayShouldBe(WaterValveState_On);
+   TheIsolationWaterValveRelayShouldBe(WaterValveState_On);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTurnOffWaterValveAfterFillFinishes)
+{
+   GivenIceMakerIsInFillState();
+   IceMakerWaterValveRelayShouldBe(WaterValveState_On);
+   TheIsolationWaterValveRelayShouldBe(WaterValveState_On);
+
+   WhenFillStops();
+   IceMakerWaterValveRelayShouldBe(WaterValveState_Off);
+   TheIsolationWaterValveRelayShouldBe(WaterValveState_Off);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToThermistorFaultWhenFillFinishesWhileMoldThermistorIsInvalid)
+{
+   GivenIceMakerIsInFillState();
+   GivenTheMoldThermistorIsInvalid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+
+   WhenFillStops();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToFreezeWhenFillFinishesWhileRakePositionIsHome)
+{
+   GivenIceMakerIsInFillState();
+   GivenTheRakePositionIs(RakePosition_Home);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+
+   WhenFillStops();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToHarvestWhenFillFinishesWhileRakePositionIsNotHome)
+{
+   GivenIceMakerIsInFillState();
+   GivenTheRakePositionIs(RakePosition_NotHome);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+
+   WhenFillStops();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 }
 
 TEST(AluminumMoldIceMakerIntegration, ShouldTurnRakeMotorOnAndOffAccordingToParametricDefinedTimeInHarvestFaultState)
