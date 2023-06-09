@@ -47,6 +47,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
    I_DataModel_t *dataModel;
    ResetReason_t resetReason;
    const TwistTrayIceMakerData_t *twistTrayIceMakerData;
+   const IceMakerFillMonitorData_t *twistTrayIceMakerFillMonitorData;
    const SensorData_t *sensorData;
    const IceMakerData_t *iceMakerData;
    GpioGroup_TestDouble_t *gpioGroupTestDouble;
@@ -63,6 +64,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       interruptTestDouble = (Interrupt_TestDouble_t *)DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_SystemTickInterrupt);
 
       twistTrayIceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->twistTrayIceMakerData;
+      twistTrayIceMakerFillMonitorData = twistTrayIceMakerData->fillData.iceMakerFillMonitorData;
       sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
       iceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData;
    }
@@ -604,7 +606,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptHarvestAndShouldGoToFillAft
    TheIceMakerWaterValveShouldBe(ON);
    TheIsolationValveShouldBe(ON);
 
-   After(iceMakerData->twistIceMakerFillMonitorData->timedIceMakerFillInSecondsx10 * 100);
+   After(twistTrayIceMakerFillMonitorData->timedIceMakerFillInSecondsx10 * 100);
    TheIceMakerWaterValveShouldBe(OFF);
    TheIsolationValveShouldBe(OFF);
    OperationStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
@@ -666,7 +668,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptHarvestAndShouldGoToFillAft
    TheIceMakerWaterValveShouldBe(ON);
    TheIsolationValveShouldBe(ON);
 
-   After(iceMakerData->twistIceMakerFillMonitorData->timedIceMakerFillInSecondsx10 * 100);
+   After(twistTrayIceMakerFillMonitorData->timedIceMakerFillInSecondsx10 * 100);
    TheIceMakerWaterValveShouldBe(OFF);
    TheIsolationValveShouldBe(OFF);
    OperationStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
@@ -683,7 +685,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldFillAfterHarvest)
    TheIceMakerWaterValveShouldBe(ON);
    TheIsolationValveShouldBe(ON);
 
-   After(iceMakerData->twistIceMakerFillMonitorData->timedIceMakerFillInSecondsx10 * 100);
+   After(twistTrayIceMakerFillMonitorData->timedIceMakerFillInSecondsx10 * 100);
    TheIceMakerWaterValveShouldBe(OFF);
    TheIsolationValveShouldBe(OFF);
    OperationStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
@@ -700,7 +702,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldRemainInStateFreezeWhenIceMakerEnabledS
    TheIceMakerWaterValveShouldBe(ON);
    TheIsolationValveShouldBe(ON);
 
-   After(iceMakerData->twistIceMakerFillMonitorData->timedIceMakerFillInSecondsx10 * 100);
+   After(twistTrayIceMakerFillMonitorData->timedIceMakerFillInSecondsx10 * 100);
    TheIceMakerWaterValveShouldBe(OFF);
    TheIsolationValveShouldBe(OFF);
    OperationStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
@@ -726,7 +728,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptFillWhenIceMakerBecomesDisa
    WhenTheIceMakerBecomesDisabled();
    OperationStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 
-   After(iceMakerData->twistIceMakerFillMonitorData->timedIceMakerFillInSecondsx10 * 100);
+   After(twistTrayIceMakerFillMonitorData->timedIceMakerFillInSecondsx10 * 100);
    TheIceMakerWaterValveShouldBe(OFF);
    TheIsolationValveShouldBe(OFF);
    OperationStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
@@ -747,7 +749,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptFillWhenSabbathModeBecomesE
    WhenSabbathModeBecomes(ENABLED);
    OperationStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 
-   After(iceMakerData->twistIceMakerFillMonitorData->timedIceMakerFillInSecondsx10 * 100);
+   After(twistTrayIceMakerFillMonitorData->timedIceMakerFillInSecondsx10 * 100);
    TheIceMakerWaterValveShouldBe(OFF);
    TheIsolationValveShouldBe(OFF);
    OperationStateShouldBe(TwistTrayIceMakerOperationState_Freeze);

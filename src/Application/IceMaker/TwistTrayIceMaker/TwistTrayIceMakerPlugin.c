@@ -247,7 +247,7 @@ void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataMod
       &instance->_private.twistTrayIceMakerFillMonitor,
       dataModel,
       &twistTrayIceMakerFillMonitorConfig,
-      PersonalityParametricData_Get(dataModel)->iceMakerData->twistIceMakerFillMonitorData);
+      PersonalityParametricData_Get(dataModel)->iceMakerData->twistTrayIceMakerData->fillData.iceMakerFillMonitorData);
 
    TwistTrayIceMaker_Init(
       &instance->_private.twistTrayIceMaker,

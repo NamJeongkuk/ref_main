@@ -53,7 +53,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       iceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData;
-      iceMakerFillMonitorData = PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerFillMonitorData;
+      iceMakerFillMonitorData = iceMakerData->fillData.iceMakerFillMonitorData;
    }
 
    void WhenApplicationHasBeenInitialized()

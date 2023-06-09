@@ -367,7 +367,7 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
       &instance->_private.iceMakerFillMonitor,
       dataModel,
       &iceMakerFillMonitorConfig,
-      PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerFillMonitorData);
+      PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData->fillData.iceMakerFillMonitorData);
 
    AluminumMoldIceMaker_Init(
       &instance->_private.aluminumMoldIceMaker,

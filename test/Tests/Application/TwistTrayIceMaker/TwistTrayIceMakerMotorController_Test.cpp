@@ -75,10 +75,19 @@ static const TwistTrayIceMakerMotorControllerConfig_t config = {
 
 static const I_Output_Api_t motorStateMockOutputApi = { WriteMotorState };
 
+static const IceMakerFillMonitorData_t iceMakerFillMonitorData = {
+   .timedIceMakerFillInSecondsx10 = 0,
+   .preciseIceMakerFillMaxTimeInSecondsx10 = 0,
+   .preciseIceMakerFillOuncesInOzx100 = 0
+};
+
 static const TwistTrayIceMakerData_t iceMakerData = {
    .typeInformation{
       .type = IceMakerType_Twist,
       .location = IceMakerLocation_Freezer,
+   },
+   .fillData{
+      .iceMakerFillMonitorData = &iceMakerFillMonitorData,
    },
    .freezeData{
       .maximumHarvestTemperatureInDegFx100 = 0,

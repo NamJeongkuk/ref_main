@@ -12,6 +12,12 @@
 #include "FillTubeHeaterData.h"
 #include "TemperatureDegFx100.h"
 #include "IceMakerTypeInformation.h"
+#include "IceMakerFillMonitorData.h"
+
+typedef struct
+{
+   const IceMakerFillMonitorData_t *iceMakerFillMonitorData;
+} TwistTrayIceMakerFillData_t;
 
 typedef struct
 {
@@ -37,6 +43,7 @@ typedef struct
 typedef struct
 {
    IceMakerTypeInformation_t typeInformation;
+   TwistTrayIceMakerFillData_t fillData;
    TwistTrayIceMakerFreezeData_t freezeData;
    TwistTrayIceMakerHarvestData_t harvestData;
    FillTubeHeaterData_t fillTubeHeaterData;
