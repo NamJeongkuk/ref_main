@@ -31,6 +31,7 @@ typedef struct
       bool doorHasBeenClosedForLongEnough;
       bool iceDispensedLongEnoughToCheckHarvest;
       bool pauseFillMonitoring;
+      bool delayFillMonitoring;
 
       const TwistTrayIceMakerData_t *parametric;
 

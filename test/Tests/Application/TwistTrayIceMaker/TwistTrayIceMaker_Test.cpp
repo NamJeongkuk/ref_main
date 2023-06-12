@@ -140,7 +140,7 @@ TEST_GROUP(TwistTrayIceMaker)
       Event_Subscribe(dataModel->OnDataChange, &dataModelTestDoubleOnChangeEventSubscription);
    }
 
-   void TheModuleIsInitialized()
+   void GivenTheModuleIsInitialized()
    {
       TwistTrayIceMaker_Init(
          &instance,
@@ -269,7 +269,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DispensingRequestStatus_t status = {
          .action = DispensingAction_Start,
-         .selection = DispenseSelection_CubedIce,
+         .selection = DispensingRequestSelection_CubedIce,
          .specialOptions = DispensingSpecialOptions_None,
          .status = DispenseStatus_Dispensing,
          .preciseFillOuncesx100 = 0
@@ -285,7 +285,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DispensingRequestStatus_t status = {
          .action = DispensingAction_Stop,
-         .selection = DispenseSelection_CubedIce,
+         .selection = DispensingRequestSelection_CubedIce,
          .specialOptions = DispensingSpecialOptions_None,
          .status = DispenseStatus_CompletedSuccessfully,
          .preciseFillOuncesx100 = 0
@@ -323,7 +323,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DispensingRequestStatus_t status = {
          .action = DispensingAction_Start,
-         .selection = DispenseSelection_ColdWater,
+         .selection = DispensingRequestSelection_Water,
          .specialOptions = DispensingSpecialOptions_None,
          .status = DispenseStatus_Dispensing,
          .preciseFillOuncesx100 = 0
@@ -339,7 +339,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DispensingRequestStatus_t status = {
          .action = DispensingAction_Stop,
-         .selection = DispenseSelection_ColdWater,
+         .selection = DispensingRequestSelection_Water,
          .specialOptions = DispensingSpecialOptions_None,
          .status = DispenseStatus_CompletedSuccessfully,
          .preciseFillOuncesx100 = 0
@@ -447,7 +447,7 @@ TEST_GROUP(TwistTrayIceMaker)
       GivenTheIceMakerThermistorIsValid();
 
       TheMotorShouldBeRequestedTo(Home);
-      When TheModuleIsInitialized();
+      GivenTheModuleIsInitialized();
 
       TheMotorShouldBeRequestedTo(Idle);
       WhenTheMotorActionResultIs(Homed);
@@ -552,7 +552,7 @@ TEST_GROUP(TwistTrayIceMaker)
       GivenTheIceMakerThermistorIsValid();
 
       TheMotorShouldBeRequestedTo(Home);
-      When TheModuleIsInitialized();
+      GivenTheModuleIsInitialized();
       TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Homing);
    }
 
@@ -674,7 +674,7 @@ TEST_GROUP(TwistTrayIceMaker)
       GivenTheIceMakerThermistorIsValid();
 
       TheMotorShouldBeRequestedTo(Home);
-      When TheModuleIsInitialized();
+      GivenTheModuleIsInitialized();
 
       TheMotorShouldBeRequestedTo(Idle);
       TheHighLevelStateShouldBecome(FaultState);
@@ -694,7 +694,7 @@ TEST_GROUP(TwistTrayIceMaker)
       WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
 
       TheWaterValveShouldBecome(CLOSED);
-      WhenDispensingRequestStatusIs(DispenseStatus_Dispensing, DispensingRequestSelection_Water);
+      WhenWaterStartsDispensing();
       TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_IdleFill);
       And WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Pause);
    }
@@ -710,15 +710,13 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       GivenFillPausedDuringFillingTrayWithWaterStateAndNowInIdleFillState();
 
-      TheWaterValveShouldBecome(OPEN);
-      WhenDispensingRequestStatusIs(DispenseStatus_CompletedSuccessfully, DispensingRequestSelection_Water);
+      WhenWaterStopsDispensing();
       TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
       And WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Resume);
    }
 
    void ShouldTransitionFromFillingTrayWithWaterToFreezeWhenTrayIsFull()
    {
-      TheWaterValveShouldBecome(CLOSED);
       FreezerTriggerIceRateSignalShouldIncrement();
       WhenTwistTrayIceMakerTrayIsFilled();
       GivenFreezerIceRateActiveBecomes(SET);
@@ -749,7 +747,7 @@ TEST(TwistTrayIceMaker, ShouldHomeOnInitializationAndNotIncrementFreezerIceRateS
    GivenTheIceMakerIsEnabled();
 
    TheMotorShouldBeRequestedTo(Home);
-   When TheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    TheMotorShouldBeRequestedTo(Idle);
    FreezerTriggerIceRateSignalShouldNotIncrement();
@@ -760,7 +758,7 @@ TEST(TwistTrayIceMaker, ShouldHomeWhenIceMakerThermistorIsInvalidAndBecomesValid
 {
    GivenTheIceMakerThermistorIsInvalid();
    GivenTheIceMakerIsEnabled();
-   And TheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
    TheMotorShouldBeRequestedTo(Home);
@@ -776,7 +774,7 @@ TEST(TwistTrayIceMaker, ShouldNotTransitionToThermistorFaultStateWhenHomingAndTh
    GivenTheIceMakerIsEnabled();
 
    TheMotorShouldBeRequestedTo(Home);
-   When TheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Homing);
 
    WhenTheIceMakerThermistorIsInvalid();
@@ -1453,7 +1451,7 @@ TEST(TwistTrayIceMaker, ShouldGoToErrorStateIfAHomingMovementResultsInError)
    GivenTheIceMakerThermistorIsValid();
 
    TheMotorShouldBeRequestedTo(Home);
-   When TheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
 
    TheMotorShouldBeRequestedTo(Idle);
    TheHighLevelStateShouldBecome(FaultState);
@@ -1467,7 +1465,7 @@ TEST(TwistTrayIceMaker, ShouldGoToErrorStateIfAHomingMovementResultsInErrorAndIc
    GivenTheIceMakerThermistorIsValid();
 
    TheMotorShouldBeRequestedTo(Home);
-   When TheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Homing);
 
    WhenTheIceMakerBecomesDisabled();
@@ -1527,7 +1525,7 @@ TEST(TwistTrayIceMaker, ShouldNotTransitionToThermistorFaultStateWhenThermistorB
 TEST(TwistTrayIceMaker, ShouldNotTransitionToFillingTrayWithWaterAndClearTestRequestWhenTestRequestIsFillWhileIceMakerThermistorIsInvalid)
 {
    GivenTheIceMakerThermistorIsInvalid();
-   When TheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
 
    WhenTheTestRequestIs(IceMakerTestRequest_Fill);
@@ -1538,7 +1536,7 @@ TEST(TwistTrayIceMaker, ShouldNotTransitionToFillingTrayWithWaterAndClearTestReq
 TEST(TwistTrayIceMaker, ShouldNotTransitionToHarvestingAndClearTestRequestWhenTestRequestIsHarvestWhileIceMakerThermistorIsInvalid)
 {
    GivenTheIceMakerThermistorIsInvalid();
-   When TheModuleIsInitialized();
+   GivenTheModuleIsInitialized();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
 
    WhenTheTestRequestIs(IceMakerTestRequest_Harvest);
@@ -1728,7 +1726,7 @@ TEST(TwistTrayIceMaker, ShouldTransitionToIdleFillWhenDispenseStatusIsDispensing
    GivenTheOperationStateIsInFillingTrayWithWater();
 
    TheWaterValveShouldBecome(CLOSED);
-   WhenDispensingRequestStatusIs(DispenseStatus_Dispensing, DispensingRequestSelection_Water);
+   WhenWaterStartsDispensing();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_IdleFill);
    And WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Pause);
 }
@@ -1763,16 +1761,22 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFillingTrayWithWaterWhenDispenseStatus
 {
    GivenTheOperationStateIsInIdleFill();
 
-   TheWaterValveShouldBecome(OPEN);
-   WhenDispensingRequestStatusIs(DispenseStatus_CompletedSuccessfully, DispensingRequestSelection_Water);
+   WhenWaterStopsDispensing();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotTransitionToFillingTrayWithWaterWhenDispensingIsActiveWhileIceMakerStateIsInIdleFill)
+{
+   GivenTheOperationStateIsInIdleFill();
+
+   WhenDispensingRequestStatusIs(DispenseStatus_Dispensing, DispensingRequestSelection_Autofill);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_IdleFill);
 }
 
 TEST(TwistTrayIceMaker, ShouldTransitionToFillingTrayWithWaterWhenDispenseStatusIsSensorErrorWhileIceMakerStateIsInIdleFill)
 {
    GivenTheOperationStateIsInIdleFill();
 
-   TheWaterValveShouldBecome(OPEN);
    WhenDispensingRequestStatusIs(DispenseStatus_SensorError, DispensingRequestSelection_Water);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 }
@@ -1781,7 +1785,6 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFillingTrayWithWaterWhenDispenseStatus
 {
    GivenTheOperationStateIsInIdleFill();
 
-   TheWaterValveShouldBecome(OPEN);
    WhenDispensingRequestStatusIs(DispenseStatus_DisabledOrBlocked, DispensingRequestSelection_Water);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 }
@@ -1790,7 +1793,6 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFillingTrayWithWaterWhenDispenseStatus
 {
    GivenTheOperationStateIsInIdleFill();
 
-   TheWaterValveShouldBecome(OPEN);
    WhenDispensingRequestStatusIs(DispenseStatus_HitMaxVolume, DispensingRequestSelection_Water);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 }
@@ -1799,7 +1801,6 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFillingTrayWithWaterWhenDispenseStatus
 {
    GivenTheOperationStateIsInIdleFill();
 
-   TheWaterValveShouldBecome(OPEN);
    WhenDispensingRequestStatusIs(DispenseStatus_HitMaxTime, DispensingRequestSelection_Water);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 }
@@ -1808,7 +1809,6 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFillingTrayWithWaterWhenDispenseStatus
 {
    GivenTheOperationStateIsInIdleFill();
 
-   TheWaterValveShouldBecome(OPEN);
    WhenDispensingRequestStatusIs(DispenseStatus_DidNotReceiveDispenseRequestAfterHeartbeat, DispensingRequestSelection_Water);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 }
@@ -1817,7 +1817,6 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFillingTrayWithWaterWhenDispenseStatus
 {
    GivenTheOperationStateIsInIdleFill();
 
-   TheWaterValveShouldBecome(OPEN);
    WhenDispensingRequestStatusIs(DispenseStatus_PreciseFillAmountReached, DispensingRequestSelection_Water);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 }
@@ -1826,7 +1825,6 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFillingTrayWithWaterWhenDispenseStatus
 {
    GivenTheOperationStateIsInIdleFill();
 
-   TheWaterValveShouldBecome(OPEN);
    WhenDispensingRequestStatusIs(DispenseStatus_BadCommand, DispensingRequestSelection_Water);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 }
@@ -1835,7 +1833,6 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFillingTrayWithWaterWhenDispenseStatus
 {
    GivenTheOperationStateIsInIdleFill();
 
-   TheWaterValveShouldBecome(OPEN);
    WhenDispensingRequestStatusIs(DispenseStatus_DispenseInhibitedDueToDoorOpen, DispensingRequestSelection_Water);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 }
@@ -1844,7 +1841,6 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFillingTrayWithWaterWhenDispenseStatus
 {
    GivenTheOperationStateIsInIdleFill();
 
-   TheWaterValveShouldBecome(OPEN);
    WhenDispensingRequestStatusIs(DispenseStatus_DispenseInhibitedBecauseRedundantCupSwitchPressIsRequired, DispensingRequestSelection_Water);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 }
@@ -1853,7 +1849,6 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFillingTrayWithWaterWhenDispenseStatus
 {
    GivenTheOperationStateIsInIdleFill();
 
-   TheWaterValveShouldBecome(OPEN);
    WhenDispensingRequestStatusIs(DispenseStatus_DispenseInhibitedDueToRfidErrorOrLeak, DispensingRequestSelection_Water);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 }
@@ -1869,8 +1864,7 @@ TEST(TwistTrayIceMaker, ShouldResumeWaterFillMonitoringWhenUserDispensingIsFinis
 {
    GivenFillPausedDuringFillingTrayWithWaterStateAndNowInIdleFillState();
 
-   TheWaterValveShouldBecome(OPEN);
-   WhenDispensingRequestStatusIs(DispenseStatus_CompletedSuccessfully, DispensingRequestSelection_Water);
+   WhenWaterStopsDispensing();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
    And WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Resume);
 }
@@ -1908,7 +1902,6 @@ TEST(TwistTrayIceMaker, ShouldResumeWaterFillMonitoringWhenSabbathIsDisabledWhil
    GivenDispensingRequestStatusIs(DispenseStatus_CompletedSuccessfully, DispensingRequestSelection_Water);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 
-   TheWaterValveShouldBecome(OPEN);
    WhenSabbathModeIs(OFF);
    WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Resume);
 }
@@ -1933,4 +1926,326 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFreezeStateAndStopWaterFillMonitoringW
    WhenTwistTrayIceMakerTrayIsFilled();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
    And WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Stop);
+}
+
+TEST(TwistTrayIceMaker, ShouldDelayFillMonitoringWhenEnteringFillStateDuringWaterDispensingUntilDispensingIsCompleted)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenFreezingIsCompletedAndHarvestingIsStarted();
+
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   WhenWaterStartsDispensing();
+
+   TheMotorShouldBeRequestedTo(Idle);
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   After(1);
+   WhenTheMotorActionResultIs(Harvested);
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_IdleFill);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Stop);
+
+   FillingShouldStart();
+   WhenWaterStopsDispensing();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotDelayFillMonitoringIfWaterDispensingFinishesBeforeFillStateIsEntered)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenFreezingIsCompletedAndHarvestingIsStarted();
+
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 2);
+   WhenWaterStartsDispensing();
+
+   After(1);
+   WhenWaterStopsDispensing();
+
+   TheMotorShouldBeRequestedTo(Idle);
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   FillingShouldStart();
+   After(1);
+   WhenTheMotorActionResultIs(Harvested);
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotDelayFillMonitoringWhenEnteringFillStateDuringCubedIceDispensing)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenFreezingIsCompletedAndHarvestingIsStarted();
+
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   WhenDispensingRequestStatusIs(DispenseStatus_Dispensing, DispensingRequestSelection_CubedIce);
+
+   TheMotorShouldBeRequestedTo(Idle);
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   FillingShouldStart();
+   After(1);
+   WhenTheMotorActionResultIs(Harvested);
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotDelayFillMonitoringWhenEnteringFillStateDuringCrushedIceDispensing)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenFreezingIsCompletedAndHarvestingIsStarted();
+
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   WhenDispensingRequestStatusIs(DispenseStatus_Dispensing, DispensingRequestSelection_CrushedIce);
+
+   TheMotorShouldBeRequestedTo(Idle);
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   FillingShouldStart();
+   After(1);
+   WhenTheMotorActionResultIs(Harvested);
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
+}
+
+TEST(TwistTrayIceMaker, ShouldDelayFillMonitoringWhenEnteringFillStateIfDispensingIsNotCompletedInHomingOperation)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
+   GivenTheIceMakerThermistorIsValid();
+
+   TheMotorShouldBeRequestedTo(Home);
+   GivenTheModuleIsInitialized();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Homing);
+
+   WhenWaterStartsDispensing();
+
+   TheMotorShouldBeRequestedTo(Idle);
+   WhenTheMotorActionResultIs(Homed);
+
+   HarvestingShouldStart();
+   WhenHarvestCountIsReadyToHarvestIs(SET);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+
+   TheMotorShouldBeRequestedTo(Idle);
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+   WhenTheMotorActionResultIs(Harvested);
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_IdleFill);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Stop);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotDelayFillMonitoringWhenEnteringFillStateIfDispensingIsCompletedInHomingOperation)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
+   GivenTheIceMakerThermistorIsValid();
+
+   TheMotorShouldBeRequestedTo(Home);
+   GivenTheModuleIsInitialized();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Homing);
+
+   WhenWaterStartsDispensing();
+   WhenWaterStopsDispensing();
+
+   TheMotorShouldBeRequestedTo(Idle);
+   WhenTheMotorActionResultIs(Homed);
+
+   HarvestingShouldStart();
+   WhenHarvestCountIsReadyToHarvestIs(SET);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+
+   TheMotorShouldBeRequestedTo(Idle);
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   FillingShouldStart();
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+   WhenTheMotorActionResultIs(Harvested);
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
+}
+
+TEST(TwistTrayIceMaker, ShouldDelayFillMonitoringWhenFillingIsStartedWhileWaterIsDispensingFromFreezeOperation)
+{
+   GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
+   GivenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
+
+   WhenWaterStartsDispensing();
+
+   HarvestingShouldStart();
+   WhenHarvestCountIsReadyToHarvestIs(SET);
+
+   TheMotorShouldBeRequestedTo(Idle);
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   AfterTheFillTubeHeaterTimerHasExpired();
+   WhenTheMotorActionResultIs(Harvested);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_IdleFill);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Stop);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotDelayFillMonitoringWhenFillingIsStartedIfDispensingIsCompletedSuccessfullyInFreezeOperation)
+{
+   GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
+   GivenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
+
+   WhenWaterStartsDispensing();
+   WhenWaterStopsDispensing();
+
+   HarvestingShouldStart();
+   WhenHarvestCountIsReadyToHarvestIs(SET);
+
+   HarvestingIsCompletedAndFillingIsStarted();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotDelayFillMonitoringAndClearTestRequestWhenWaterDispensingIsCompletedAndTestRequestIsFillWhileIceMakerStateIsInBucketIsFull)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenFreezingIsCompletedAndHarvestingIsStarted();
+
+   WhenWaterStartsDispensing();
+
+   TheMotorShouldBeRequestedTo(Idle);
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   WhenTheMotorActionResultIs(BucketWasFull);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_BucketIsFull);
+
+   WhenWaterStopsDispensing();
+
+   FillingShouldStart();
+   WhenTheTestRequestIs(IceMakerTestRequest_Fill);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
+   And TheTestRequestShouldBe(IceMakerTestRequest_None);
+}
+
+TEST(TwistTrayIceMaker, ShouldDelayFillMonitoringAndClearTestRequestWhenWaterDispensingIsStartedAndTestRequestIsFillWhileIceMakerStateIsInBucketIsFull)
+{
+   GivenTheOperationStateIsInBucketIsFull();
+
+   WhenWaterStartsDispensing();
+
+   WhenTheTestRequestIs(IceMakerTestRequest_Fill);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_IdleFill);
+   And WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Stop);
+   And TheTestRequestShouldBe(IceMakerTestRequest_None);
+}
+
+TEST(TwistTrayIceMaker, ShouldDelayFillMonitoringWhenEnteringFillStateIfWaterIsDispensingInMotorErrorOperation)
+{
+   GivenTheIceMakerIsInStateMotorError();
+   TheMotorShouldBeRequestedTo(Home);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_MotorError);
+
+   WhenWaterStartsDispensing();
+
+   After(instance._private.parametric->harvestData.motorErrorRetryInitializeMinutes * MSEC_PER_MIN);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Homing);
+
+   TheMotorShouldBeRequestedTo(Idle);
+   WhenTheMotorActionResultIs(Homed);
+
+   HarvestingShouldStart();
+   WhenHarvestCountIsReadyToHarvestIs(SET);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+
+   TheMotorShouldBeRequestedTo(Idle);
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+   WhenTheMotorActionResultIs(Harvested);
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_IdleFill);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Stop);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotDelayFillMonitoringWhenEnteringFillStateIfWaterDispensingIsCompletedInMotorErrorOperation)
+{
+   GivenTheIceMakerIsInStateMotorError();
+   TheMotorShouldBeRequestedTo(Home);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_MotorError);
+
+   WhenWaterStartsDispensing();
+
+   After(instance._private.parametric->harvestData.motorErrorRetryInitializeMinutes * MSEC_PER_MIN - 1);
+   WhenWaterStopsDispensing();
+
+   After(1);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Homing);
+
+   TheMotorShouldBeRequestedTo(Idle);
+   WhenTheMotorActionResultIs(Homed);
+
+   HarvestingShouldStart();
+   WhenHarvestCountIsReadyToHarvestIs(SET);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+
+   TheMotorShouldBeRequestedTo(Idle);
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   FillingShouldStart();
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+   WhenTheMotorActionResultIs(Harvested);
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
+}
+
+TEST(TwistTrayIceMaker, ShouldDelayFillMonitoringWhenIceMakerThermistorBecomesValidAndEnteringFillStateIfWaterIsDispensingInThermistorFaultOperation)
+{
+   GivenTheIceMakerThermistorIsInvalid();
+   GivenTheIceMakerIsEnabled();
+   GivenTheModuleIsInitialized();
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
+   TheMotorShouldBeRequestedTo(Home);
+
+   WhenWaterStartsDispensing();
+
+   TheMotorShouldBeRequestedTo(Idle);
+   WhenTheIceMakerThermistorIsValid();
+   WhenTheMotorActionResultIs(Homed);
+
+   HarvestingShouldStart();
+   WhenHarvestCountIsReadyToHarvestIs(SET);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+
+   TheMotorShouldBeRequestedTo(Idle);
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+   WhenTheMotorActionResultIs(Harvested);
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_IdleFill);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Stop);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotDelayFillMonitoringWhenIceMakerThermistorBecomesValidAndEnteringFillStateIfWaterDispensingIsCompletedInThermistorFaultOperation)
+{
+   GivenTheIceMakerThermistorIsInvalid();
+   GivenTheIceMakerIsEnabled();
+   GivenTheModuleIsInitialized();
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
+   TheMotorShouldBeRequestedTo(Home);
+
+   WhenWaterStartsDispensing();
+   WhenWaterStopsDispensing();
+
+   TheMotorShouldBeRequestedTo(Idle);
+   WhenTheIceMakerThermistorIsValid();
+   WhenTheMotorActionResultIs(Homed);
+
+   HarvestingShouldStart();
+   WhenHarvestCountIsReadyToHarvestIs(SET);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+
+   TheMotorShouldBeRequestedTo(Idle);
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   FillingShouldStart();
+   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+   WhenTheMotorActionResultIs(Harvested);
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
 }

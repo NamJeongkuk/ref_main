@@ -43,8 +43,8 @@ enum
    Signal_FillTubeHeaterTimerExpired,
    Signal_IceMakerIsEnabled,
    Signal_IceMakerIsDisabled,
-   Signal_PauseFill,
-   Signal_ResumeFill,
+   Signal_DispensingActive,
+   Signal_DispensingInactive,
    Signal_MotorErrorRetryTimerExpired,
    Signal_HarvestCountIsReadyToHarvest,
    Signal_CoolingSystemIsTurnedOff,
@@ -262,15 +262,21 @@ static void StopHarvestCountCalculation(TwistTrayIceMaker_t *instance)
       clear);
 }
 
-static void ResumeFillMonitoringIfPausedOrStartIfStopped(TwistTrayIceMaker_t *instance)
+static void ResumeFillMonitoringIfPausedOrStartIfStoppedOrTransitionToIdleFillIfDelayed(TwistTrayIceMaker_t *instance)
 {
    if(instance->_private.pauseFillMonitoring)
    {
       SetWaterFillMonitoringRequestTo(instance, IceMakerWaterFillMonitoringRequest_Resume);
       instance->_private.pauseFillMonitoring = false;
    }
+   else if(instance->_private.delayFillMonitoring)
+   {
+      instance->_private.delayFillMonitoring = false;
+      Fsm_Transition(&instance->_private.fsm, State_IdleFill);
+   }
    else
    {
+      UpdateWaterValve(instance, OPEN);
       SetWaterFillMonitoringRequestTo(instance, IceMakerWaterFillMonitoringRequest_Start);
    }
 }
@@ -327,6 +333,14 @@ static void State_Homing(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 
       case Signal_MotorActionResultMotorError:
          Fsm_Transition(fsm, State_MotorError);
+         break;
+
+      case Signal_DispensingActive:
+         instance->_private.delayFillMonitoring = true;
+         break;
+
+      case Signal_DispensingInactive:
+         instance->_private.delayFillMonitoring = false;
          break;
 
       case Fsm_Exit:
@@ -390,6 +404,14 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          Fsm_Transition(fsm, State_Harvesting);
          break;
 
+      case Signal_DispensingActive:
+         instance->_private.delayFillMonitoring = true;
+         break;
+
+      case Signal_DispensingInactive:
+         instance->_private.delayFillMonitoring = false;
+         break;
+
       case Fsm_Exit:
          StopHarvestCountCalculation(instance);
          break;
@@ -447,6 +469,14 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          Fsm_Transition(fsm, State_MotorError);
          break;
 
+      case Signal_DispensingActive:
+         instance->_private.delayFillMonitoring = true;
+         break;
+
+      case Signal_DispensingInactive:
+         instance->_private.delayFillMonitoring = false;
+         break;
+
       case Fsm_Exit:
          VoteForFillTubeHeaterOffAndDontCare(instance);
          StopFillTubeHeaterTimer(instance);
@@ -467,14 +497,12 @@ static void State_FillingTrayWithWater(Fsm_t *fsm, FsmSignal_t signal, const voi
 
          if(!ItIsSabbathMode(instance))
          {
-            UpdateWaterValve(instance, OPEN);
-            ResumeFillMonitoringIfPausedOrStartIfStopped(instance);
+            ResumeFillMonitoringIfPausedOrStartIfStoppedOrTransitionToIdleFillIfDelayed(instance);
          }
          break;
 
       case Signal_SabbathModeDisabled:
-         UpdateWaterValve(instance, OPEN);
-         ResumeFillMonitoringIfPausedOrStartIfStopped(instance);
+         ResumeFillMonitoringIfPausedOrStartIfStoppedOrTransitionToIdleFillIfDelayed(instance);
          break;
 
       case Signal_TrayFilled:
@@ -488,7 +516,7 @@ static void State_FillingTrayWithWater(Fsm_t *fsm, FsmSignal_t signal, const voi
          }
          break;
 
-      case Signal_PauseFill:
+      case Signal_DispensingActive:
          instance->_private.pauseFillMonitoring = true;
          Fsm_Transition(fsm, State_IdleFill);
          break;
@@ -556,6 +584,14 @@ static void State_BucketIsFull(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          Fsm_Transition(fsm, State_Freeze);
          break;
 
+      case Signal_DispensingActive:
+         instance->_private.delayFillMonitoring = true;
+         break;
+
+      case Signal_DispensingInactive:
+         instance->_private.delayFillMonitoring = false;
+         break;
+
       case Fsm_Exit:
          TimerModule_Stop(instance->_private.timerModule, &instance->_private.waitingTimer);
          break;
@@ -598,6 +634,14 @@ static void State_MotorError(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          Fsm_Transition(&instance->_private.fsm, State_Homing);
          break;
 
+      case Signal_DispensingActive:
+         instance->_private.delayFillMonitoring = true;
+         break;
+
+      case Signal_DispensingInactive:
+         instance->_private.delayFillMonitoring = false;
+         break;
+
       case Fsm_Exit:
          TimerModule_Stop(instance->_private.timerModule, &instance->_private.retryMotorInitTimer);
          break;
@@ -618,6 +662,14 @@ static void State_ThermistorFault(Fsm_t *fsm, FsmSignal_t signal, const void *da
       case Signal_IceMakerThermistorIsValid:
          Fsm_Transition(fsm, State_Homing);
          break;
+
+      case Signal_DispensingActive:
+         instance->_private.delayFillMonitoring = true;
+         break;
+
+      case Signal_DispensingInactive:
+         instance->_private.delayFillMonitoring = false;
+         break;
    }
 }
 
@@ -632,7 +684,7 @@ static void State_IdleFill(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          UpdateOperationState(instance, TwistTrayIceMakerOperationState_IdleFill);
          break;
 
-      case Signal_ResumeFill:
+      case Signal_DispensingInactive:
          Fsm_Transition(fsm, State_FillingTrayWithWater);
          break;
    }
@@ -651,11 +703,16 @@ static void DoorClosedForLongEnough(void *context)
    Fsm_SendSignal(&instance->_private.fsm, Signal_DoorClosedForLongEnough, NULL);
 }
 
-static bool IceIsDispensing(DispensingRequestStatus_t dispensingRequestStatus)
+static bool IceIsSelected(DispensingRequestStatus_t dispensingRequestStatus)
 {
-   return (dispensingRequestStatus.status == DispenseStatus_Dispensing &&
-      (dispensingRequestStatus.selection == DispensingRequestSelection_CrushedIce ||
-         dispensingRequestStatus.selection == DispensingRequestSelection_CubedIce));
+   return (dispensingRequestStatus.selection == DispensingRequestSelection_CrushedIce ||
+      dispensingRequestStatus.selection == DispensingRequestSelection_CubedIce);
+}
+
+static bool WaterOrAutofillIsSelected(DispensingRequestStatus_t dispensingRequestStatus)
+{
+   return (dispensingRequestStatus.selection == DispensingRequestSelection_Water ||
+      dispensingRequestStatus.selection == DispensingRequestSelection_Autofill);
 }
 
 static void IceDispensedLongEnoughToCheckForHarvestAfterDispensingHasEnded(void *context)
@@ -673,36 +730,36 @@ static void DataSourceChanged(void *context, const void *data)
    {
       const DispensingRequestStatus_t *dispensingRequestStatus = onChangeArgs->data;
 
-      switch(dispensingRequestStatus->status)
+      if(WaterOrAutofillIsSelected(*dispensingRequestStatus))
       {
-         case DispenseStatus_Dispensing:
-            if((dispensingRequestStatus->selection == DispensingRequestSelection_Water) ||
-               (dispensingRequestStatus->selection == DispensingRequestSelection_Autofill))
-            {
-               Fsm_SendSignal(&instance->_private.fsm, Signal_PauseFill, NULL);
-            }
-            break;
-
-         default:
-            Fsm_SendSignal(&instance->_private.fsm, Signal_ResumeFill, NULL);
-            break;
+         if(dispensingRequestStatus->status == DispenseStatus_Dispensing)
+         {
+            Fsm_SendSignal(&instance->_private.fsm, Signal_DispensingActive, NULL);
+         }
+         else
+         {
+            Fsm_SendSignal(&instance->_private.fsm, Signal_DispensingInactive, NULL);
+         }
       }
 
-      if(IceIsDispensing(*dispensingRequestStatus))
+      if(IceIsSelected(*dispensingRequestStatus))
       {
-         TimerModule_StartOneShot(
-            instance->_private.timerModule,
-            &instance->_private.dispensingIceTimer,
-            instance->_private.parametric->harvestData.fullBucketDispenseCheckTimeInSeconds * MSEC_PER_SEC,
-            IceDispensedLongEnoughToCheckForHarvestAfterDispensingHasEnded,
-            instance);
-      }
-      else
-      {
-         TimerModule_Stop(
-            instance->_private.timerModule,
-            &instance->_private.dispensingIceTimer);
-         Fsm_SendSignal(&instance->_private.fsm, Signal_IceHasStoppedDispensing, NULL);
+         if(dispensingRequestStatus->status == DispenseStatus_Dispensing)
+         {
+            TimerModule_StartOneShot(
+               instance->_private.timerModule,
+               &instance->_private.dispensingIceTimer,
+               instance->_private.parametric->harvestData.fullBucketDispenseCheckTimeInSeconds * MSEC_PER_SEC,
+               IceDispensedLongEnoughToCheckForHarvestAfterDispensingHasEnded,
+               instance);
+         }
+         else
+         {
+            TimerModule_Stop(
+               instance->_private.timerModule,
+               &instance->_private.dispensingIceTimer);
+            Fsm_SendSignal(&instance->_private.fsm, Signal_IceHasStoppedDispensing, NULL);
+         }
       }
    }
    else if((onChangeArgs->erd == Erd_SabbathMode) ||
@@ -856,6 +913,7 @@ void TwistTrayIceMaker_Init(
    instance->_private.firstFreezeTransition = true;
    instance->_private.iceDispensedLongEnoughToCheckHarvest = false;
    instance->_private.pauseFillMonitoring = false;
+   instance->_private.delayFillMonitoring = false;
 
    EventSubscription_Init(&instance->_private.dataSourceChangeEventSubscription, instance, DataSourceChanged);
    Event_Subscribe(dataSource->OnDataChange, &instance->_private.dataSourceChangeEventSubscription);
