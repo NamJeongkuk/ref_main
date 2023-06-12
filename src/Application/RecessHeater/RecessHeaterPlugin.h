@@ -11,6 +11,7 @@
 #include "I_DataModel.h"
 #include "ErdResolver.h"
 #include "VariableSweatHeaterDutyCycleCalculator.h"
+#include "ResolvedVotePercentageDutyCycleConnector.h"
 
 typedef struct
 {
@@ -18,6 +19,7 @@ typedef struct
    {
       ErdResolver_t recessHeaterErdResolver;
       VariableSweatHeaterDutyCycleCalculator_t variableSweatHeaterDutyCycleCalculator;
+      ResolvedVotePercentageDutyCycleConnector_t resolvedVotePercentageDutyCycleConnector;
    } _private;
 } RecessHeaterPlugin_t;
 

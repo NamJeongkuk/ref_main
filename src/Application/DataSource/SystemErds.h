@@ -426,6 +426,7 @@ enum
    ENTRY(Erd_TurboFreezeRequest,                            0x121A, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TurboFreezeStatus,                             0x121B, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_DispenserRecessHeaterDutyCyclePercent,         0x122C, PercentageDutyCycle_t,                              Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_SecondarySignOfLife,                           0x122D, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ServiceDiagnosticsEntityLocation,              0xE000, Erd_t,                                              Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

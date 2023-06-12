@@ -35,6 +35,11 @@ static const VariableSweatHeaterDutyCycleCalculatorConfig_t variableSweatHeaterD
    .recessHeaterVariableAntiSweatVoteErd = Erd_RecessHeater_VariableAntiSweatVote
 };
 
+static const ResolvedVotePercentageDutyCycleConnectorConfiguration_t connectorConfiguration = {
+   .percentageDutyCycleOutputErd = Erd_DispenserRecessHeaterDutyCyclePercent,
+   .resolvedPercentageDutyCycleVoteErd = Erd_RecessHeater_ResolvedVote
+};
+
 void RecessHeaterPlugin_Init(
    RecessHeaterPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -49,4 +54,9 @@ void RecessHeaterPlugin_Init(
       dataModel,
       &PersonalityParametricData_Get(dataModel)->recessHeaterData->variableSweatHeaterData,
       &variableSweatHeaterDutyCycleCalculatorConfiguration);
+
+   ResolvedVotePercentageDutyCycleConnector_Init(
+      &instance->_private.resolvedVotePercentageDutyCycleConnector,
+      dataModel,
+      &connectorConfiguration);
 }

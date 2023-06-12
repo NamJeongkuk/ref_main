@@ -38,7 +38,7 @@ static const ResolvedVoteRelayConnectorConfiguration_t config = {
 
 static const DataModel_TestDoubleConfigurationEntry_t dataModelTestDoubleConfigurationTable[] = {
    { Erd_SomeRelay_ResolvedVote, sizeof(RelayVotedState_t) },
-   { Erd_SomeRelay_MappedErd, sizeof(bool) }
+   { Erd_SomeRelay_MappedErd, sizeof(RelayState_t) }
 };
 
 TEST_GROUP(ResolvedVoteRelayConnector)
@@ -74,9 +74,9 @@ TEST_GROUP(ResolvedVoteRelayConnector)
          &relayVote);
    }
 
-   void MappedRelayShouldBe(bool expectedState)
+   void MappedRelayShouldBe(RelayState_t expectedState)
    {
-      bool actualState;
+      RelayState_t actualState;
       DataModel_Read(dataModel, Erd_SomeRelay_MappedErd, &actualState);
 
       CHECK_EQUAL(expectedState, actualState);

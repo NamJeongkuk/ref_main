@@ -38,11 +38,7 @@ void ResolvedVoteRelayConnector_Init(
       instance->_private.dataModel,
       instance->_private.config->resolvedRelayVoteErd,
       &relayVote);
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->relayOutputErd,
-      &relayVote.state);
+   VoteForRelay(instance, relayVote.state);
 
    EventSubscription_Init(
       &instance->_private.dataModelSubscription,
