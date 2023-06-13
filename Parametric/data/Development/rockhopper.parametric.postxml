@@ -1,0 +1,16 @@
+;
+
+#include "utils.h"
+
+const ImageHeader_t *ParametricData_GetParametricHeader(void)
+{
+   return (const ImageHeader_t *)data;
+}
+
+const ParametricDataTableOfContents_t *ParametricData_GetParametricTableOfContents(void)
+{
+   REINTERPRET(header, data, const ImageHeader_t *);
+   REINTERPRET(raw, data, const uint8_t *);
+
+   return (const void *)(raw + OFFSET_OF(ImageHeader_t, flashPages) + sizeof(FlashPageRecord_t) * header->flashPageCount);
+}

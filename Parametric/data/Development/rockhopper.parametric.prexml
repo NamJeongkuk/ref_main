@@ -1,0 +1,3 @@
+#include "ParametricData.h"
+
+static const unsigned char data[] __attribute__ ((section (".parametricData"))) =

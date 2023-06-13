@@ -14,7 +14,7 @@ SVD:=tools/kpit-rx/svd/rx130.svd
 ID_CODE:=45C0C0AC1C1AC2C2AC3C3AC4C4AC5C5A
 
 PATH_TO_BUILD_PARAMETRIC:=./Parametric
-PARAMETRIC_DIRS:=Parametric/data/Production
+PARAMETRIC_DIRS:=Parametric/data/Development
 
 BUILD_DEPS+=$(BOOT_LOADER_DIR)/$(BOOT_LOADER_TARGET)-boot-loader-memory.ld
 
@@ -88,7 +88,7 @@ SRC_DIRS:=\
   src/Application/Valve \
   src/Application/VariableSweatHeater \
   src/Application/WaterValve \
-  Parametric/data/Production \
+  Parametric/data/Development \
   lib/Common/Source/Gea \
 
 INC_DIRS:=\
@@ -131,9 +131,7 @@ $(call add_to_package,{ from = 'doc/hardware_gui_for_lighthouse.json', to = 'doc
 $(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET).map', to = '' })
 $(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md', to = '' })
 $(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET).apl', to = 'binaries/$(TARGET).apl', version = true })
-$(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET)_bootloader_app_parametric.mot', to = 'binaries/$(TARGET).mot', version = true })
 $(call add_to_package,{ from = '$(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot', to = 'binaries/$(TARGET).mot', version = true })
-$(call add_to_package,{ from = '$(OUTPUT_DIR)/$(PARAMETRIC_DIRS)/rockhopper.parametric.apl', to = 'binaries/$(TARGET)_%v_$(PARAMETRIC_HASH)_$(IMAGE_CRC).apl', version = true })
 
 .PHONY: all
 all: info
@@ -160,7 +158,7 @@ $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)
 
 $(OUTPUT_DIR)/$(TARGET)_bootloader_app_parametric.mot: target $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot build_parametric
 	@echo Creating $@...
-	@$(LUA53) $(SREC_CONCATENATE) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot $(OUTPUT_DIR)/$(TARGET).apl $(OUTPUT_DIR)/Parametric/data/Production/rockhopper.parametric.apl --output $@
+	@$(LUA53) $(SREC_CONCATENATE) --input $(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot $(OUTPUT_DIR)/$(TARGET).apl $(OUTPUT_DIR)/Parametric/data/Development/rockhopper.parametric.apl --output $@
 
 $(OUTPUT_DIR)/doc:
 	@mkdir -p $(OUTPUT_DIR)/doc

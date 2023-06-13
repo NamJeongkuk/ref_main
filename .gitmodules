@@ -7,12 +7,24 @@
 [submodule "Tools/lua-erd-documentation-tools"]
 	path = tools/lua-erd-documentation-tools
 	url = https://github.com/geappliances/applcommon.lua-erd-documentation-tools
-[submodule "Parametric"]
-	path = Parametric
-	url = https://github.com/geappliances/refrigeration.rockhopper-parametric
 [submodule "lib/rockhopper-boot-loader"]
 	path = lib/rockhopper-boot-loader
 	url = https://github.com/geappliances/refrigeration.rockhopper-boot-loader.git
 [submodule "lib/Common"]
 	path = lib/Common
 	url = https://github.com/geappliances/refrigeration.Common
+[submodule "Parametric/lib/lua-common"]
+	path = Parametric/lib/lua-common
+	url = https://github.com/geappliances/applcommon.lua-common.git
+[submodule "Parametric/lib/lua-parametric-tools"]
+	path = Parametric/lib/lua-parametric-tools
+	url = https://github.com/geappliances/applcommon.lua-parametric-tools.git
+[submodule "Parametric/tools/make"]
+	path = Parametric/tools/make
+	url = https://github.com/geappliances/build-tools.gnu-make-4-2
+[submodule "Parametric/tools/makecommon"]
+	path = Parametric/tools/makecommon
+	url = https://github.com/geappliances/applcommon.makecommon-flat
+[submodule "Parametric/lib/lua-image-header-dump"]
+	path = Parametric/lib/lua-image-header-dump
+	url = https://github.com/geappliances/applcommon.lua-image-header-dump.git

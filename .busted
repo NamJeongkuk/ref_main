@@ -1,0 +1,7 @@
+return {
+  default = {
+    lpath = "./Parametric/spec/?.lua;./Parametric/src/?.lua;./Parametric/lib/lua-parametric-tools/?.lua;./Parametric/lib/?/?.lua",
+    ROOT = { './Parametric/spec' },
+    coverage = true
+  }
+}

@@ -54,10 +54,34 @@ jobs:
       script: tdd
       runs-on: skynet-macos-x64
 
+  parametric-linux-tdd:
+    uses: geappliances/skynet.workflow/.github/workflows/build-workflow.yml@v1
+    needs: setup
+    secrets: inherit
+    permissions:
+      id-token: write
+      contents: read
+    with:
+      job-name: parametric-linux-tdd
+      script: parametric_tdd
+      runs-on: skynet-linux-x64
+
+  parametric-macos-tdd:
+    uses: geappliances/skynet.workflow/.github/workflows/build-workflow.yml@v1
+    needs: setup
+    secrets: inherit
+    permissions:
+      id-token: write
+      contents: read
+    with:
+      job-name: parametric-macos-tdd
+      script: parametric_tdd
+      runs-on: skynet-macos-x64
+
   email:
     if: ${{ (cancelled() || failure()) && github.event_name != 'pull_request' }}
     uses: geappliances/skynet.workflow/.github/workflows/email-workflow.yml@v1
-    needs: [macos-tdd, linux-build, linux-tdd]
+    needs: [macos-tdd, linux-build, linux-tdd, parametric-linux-tdd, parametric-macos-tdd]
     secrets: inherit
     permissions:
       id-token: write
