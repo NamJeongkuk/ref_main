@@ -48,6 +48,7 @@ enum
    Signal_TestRequest_Harvest,
    Signal_DispensingActive,
    Signal_DispensingInactive,
+   Signal_FreezerIceRateIsInactive
 };
 
 static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -249,6 +250,28 @@ static bool MoldThermistorIsNotValid(AluminumMoldIceMaker_t *instance)
       &valid);
 
    return !valid;
+}
+
+static bool FreezerIceRateIsActive(AluminumMoldIceMaker_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerIceRateIsActiveErd,
+      &state);
+
+   return state;
+}
+
+static bool FeelerArmPositionIsBucketNotFull(AluminumMoldIceMaker_t *instance)
+{
+   FeelerArmPosition_t position;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->feelerArmPositionErd,
+      &position);
+
+   return (position == FeelerArmPosition_BucketNotFull);
 }
 
 static bool RakeIsHome(AluminumMoldIceMaker_t *instance)
@@ -666,6 +689,28 @@ static void StopHarvestFaultRakeOnAndOffTimer(AluminumMoldIceMaker_t *instance)
       &instance->_private.rakeMotorControlTimer);
 }
 
+static void TriggerFreezerIceRateIfNecessary(AluminumMoldIceMaker_t *instance)
+{
+   if(!instance->_private.initialFreezeStateTransition &&
+      IceMakerIsEnabled(instance) &&
+      SabbathModeIsDisabled(instance) &&
+      FeelerArmPositionIsBucketNotFull(instance) &&
+      !FreezerIceRateIsActive(instance))
+   {
+      SendFreezerIceRateSignal(instance);
+   }
+}
+
+static bool HarvestConditionsAreMet(AluminumMoldIceMaker_t *instance)
+{
+   return (IceMakerTemperatureIsReadyToHarvest(instance) &&
+      FeelerArmIsReadyToEnterHarvest(instance) &&
+      HarvestCountIsReadyToHarvest(instance) &&
+      SabbathModeIsDisabled(instance) &&
+      IceMakerIsEnabled(instance) &&
+      CoolingSystemIsOn(instance));
+}
+
 static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    IGNORE(data);
@@ -722,27 +767,28 @@ static bool State_Freeze(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          RequestHarvestCountCalculation(instance);
          RequestFeelerArmMonitoring(instance);
 
-         if(!instance->_private.initialFreezeStateTransition)
-         {
-            SendFreezerIceRateSignal(instance);
-         }
+         TriggerFreezerIceRateIfNecessary(instance);
+
          instance->_private.initialFreezeStateTransition = false;
          break;
 
-      case Signal_IceMakerIsEnabled:
-      case Signal_SabbathModeDisabled:
+      case Signal_FreezerIceRateIsInactive:
+         TriggerFreezerIceRateIfNecessary(instance);
+         break;
+
       case Signal_HarvestCountIsReadyToHarvest:
       case Signal_IceMakerTemperatureIsReadyToHarvest:
       case Signal_FeelerArmIsReadyToEnterHarvest:
       case Signal_CoolingSystemTurnedOn:
-         if(IceMakerTemperatureIsReadyToHarvest(instance) &&
-            FeelerArmIsReadyToEnterHarvest(instance) &&
-            HarvestCountIsReadyToHarvest(instance) &&
-            SabbathModeIsDisabled(instance) &&
-            IceMakerIsEnabled(instance) &&
-            CoolingSystemIsOn(instance))
+      case Signal_IceMakerIsEnabled:
+      case Signal_SabbathModeDisabled:
+         if(HarvestConditionsAreMet(instance))
          {
             Hsm_Transition(hsm, State_Harvest);
+         }
+         else
+         {
+            TriggerFreezerIceRateIfNecessary(instance);
          }
          break;
 
@@ -1171,6 +1217,14 @@ static void DataModelChanged(void *context, const void *args)
          default:
             Hsm_SendSignal(&instance->_private.hsm, Signal_DispensingInactive, NULL);
             break;
+      }
+   }
+   else if(erd == instance->_private.config->freezerIceRateIsActiveErd)
+   {
+      const bool *freezerIceRateIsActiveStatus = onChangeData->data;
+      if(!*freezerIceRateIsActiveStatus)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerIceRateIsInactive, NULL);
       }
    }
 }

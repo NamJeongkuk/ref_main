@@ -21,6 +21,7 @@ typedef struct
    Erd_t rakeMotorVoteErd; // AluminumMoldIceMakerMotorVotedState_t
    Erd_t harvestCountCalculationRequestErd; // bool
    Erd_t feelerArmMonitoringRequestErd; // bool
+   Erd_t feelerArmPositionErd; // FeelerArmPosition_t
    Erd_t harvestCountIsReadyToHarvestErd; // bool
    Erd_t moldFilteredTemperatureInDegFx100Erd; // TemperatureDegFx100_t
    Erd_t feelerArmIsReadyToEnterHarvestErd; // bool
@@ -37,6 +38,7 @@ typedef struct
    Erd_t stopIceMakerFillSignalErd; // Signal_t
    Erd_t rakePositionErd; // RakePosition_t
    Erd_t freezerIceRateTriggerSignalErd; // Signal_t
+   Erd_t freezerIceRateIsActiveErd; // bool
    Erd_t aluminumMoldIceMakerTestRequestErd; // AluminumMoldIceMakerTestRequest_t
    Erd_t dispensingRequestStatusErd; // DispensingRequestStatus_t
    Erd_t coolingSystemOffStatus; // bool

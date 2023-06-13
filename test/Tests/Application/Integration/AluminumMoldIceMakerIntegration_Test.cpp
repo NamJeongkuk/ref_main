@@ -835,6 +835,31 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
    }
 
+   void GivenTheAluminumMoldIceMakerIsInFreezeState()
+   {
+      GivenIceMakerIs(ENABLED);
+      GivenSabbathModeIs(DISABLED);
+      GivenTheMoldThermistorIsValid();
+      GivenTheRakePositionIs(RakePosition_Home);
+
+      WhenApplicationHasBeenInitialized();
+      AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+   }
+
+   void FreezerTriggerIceRateSignalShouldBe(Signal_t expected)
+   {
+      Signal_t actual;
+      DataModel_Read(dataModel, Erd_FreezerIceRateTriggerSignal, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void IceRateActiveErdStateShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_Freezer_IceRateIsActive, &actual);
+      CHECK_EQUAL(actual, expected);
+   }
+
    void WhenRakeCompletedRevolution()
    {
       WhenTheRakePositionIs(RakePosition_NotHome);
@@ -981,6 +1006,7 @@ TEST(AluminumMoldIceMakerIntegration, ShouldActivateFreezerIceRateWhenTheMoldThe
    GivenTheApplicationHasBeenInitializedAndEntersState(AluminumMoldIceMakerHsmState_ThermistorFault);
 
    WhenTheMoldThermistorIsValid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
    TheFreezerIceRateShouldBe(Active);
 }
 
@@ -1358,4 +1384,20 @@ TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToHarvestFaultIfHarvestFix
 
    After(iceMakerData->harvestFixData.maximumHarvestFixTimeInMinutes * MSEC_PER_MIN);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFault);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldActivateIceRateWhenIceRateSignalIsSent)
+{
+   GivenTheAluminumMoldIceMakerIsInFreezeState();
+   GivenSabbathModeIs(ENABLED);
+   GivenSabbathModeIs(DISABLED);
+   FreezerTriggerIceRateSignalShouldBe(1);
+   IceRateActiveErdStateShouldBe(ON);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldNotActivateIceRateWhenIceRateSignalNotSent)
+{
+   GivenTheAluminumMoldIceMakerIsInFreezeState();
+   FreezerTriggerIceRateSignalShouldBe(0);
+   IceRateActiveErdStateShouldBe(OFF);
 }
