@@ -16,7 +16,7 @@ enum
 };
 
 static const AndroidUiSignOfLifeMonitorConfiguration_t androidUiSignOfLifeMonitorConfiguration = {
-   .heartbeatTickFromUiErd = Erd_AndroidUiSignOfLife,
+   .heartbeatTickFromUiErd = Erd_PrimaryUiSignOfLife,
    .uiSignOfLifeFsmStateErd = Erd_AndroidUiSignOfLifeFsmState,
    .mainboardIsConnectedToUiNvErd = Erd_MainboardIsConnectedToTheAndroidUi,
    .numberOfTimesMainboardHasLostCommunicationWithUi = Erd_NumberOfTimesMainboardHasLostCommunicationWithAndroidUi,

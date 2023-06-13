@@ -27,7 +27,7 @@ enum
 };
 
 static const AndroidUiSignOfLifeMonitorConfiguration_t config = {
-   .heartbeatTickFromUiErd = Erd_AndroidUiSignOfLife,
+   .heartbeatTickFromUiErd = Erd_PrimaryUiSignOfLife,
    .uiSignOfLifeFsmStateErd = Erd_AndroidUiSignOfLifeFsmState,
    .mainboardIsConnectedToUiNvErd = Erd_MainboardIsConnectedToTheAndroidUi,
    .numberOfTimesMainboardHasLostCommunicationWithUi = Erd_NumberOfTimesMainboardHasLostCommunicationWithAndroidUi,
@@ -72,7 +72,7 @@ TEST_GROUP(AndroidUiSignOfLifeMonitor)
    {
       Signal_SendViaErd(
          DataModel_AsDataSource(dataModel),
-         Erd_AndroidUiSignOfLife);
+         Erd_PrimaryUiSignOfLife);
    }
 
    void GivenTheMainboardConnectedErdIs(bool state)

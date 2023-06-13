@@ -390,7 +390,7 @@ enum
    ENTRY(Erd_SecondsSinceLastReset,                         0x0702, SecondsSinceLastReset_t,                            Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ProgramCounterAddressAtLastUassert,            0x0703, ProgramCounterAddress_t,                            Swap_Yes, Io_O,    Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
-   ENTRY(Erd_AndroidUiSignOfLife,                           0x0900, Signal_t,                                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_PrimaryUiSignOfLife,                           0x0900, Signal_t,                                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_WaterFilterType,                               0x1019, WaterFilterType_t,                                  Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
