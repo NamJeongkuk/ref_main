@@ -68,7 +68,7 @@ static const ResolvedSetpointWriterConfiguration_t freshFoodResolvedSetpointWrit
 };
 
 static const CrossAmbientCalculatorConfig_t freshFoodCrossAmbientOffsetCalculatorConfig = {
-   .crossAmbientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100,
+   .crossAmbientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
    .crossAmbientOffsetErd = Erd_FreshFood_CrossAmbientOffsetInDegFx100,
 };
 

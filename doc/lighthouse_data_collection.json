@@ -83,7 +83,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100",
+         "name": "Erd_Ambient_WindowAveragedTemperatureInDegFx100",
          "interval": 60000
       },
       {

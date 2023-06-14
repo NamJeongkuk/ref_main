@@ -21,7 +21,7 @@ static void AmbientWindowAverageTemperatureFilterReadAndWriteToErd(void *context
 
    DataModel_Write(
       instance->dataModel,
-      Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100,
+      Erd_Ambient_WindowAveragedTemperatureInDegFx100,
       &crossAmbientWindowAverageTemperature);
 }
 

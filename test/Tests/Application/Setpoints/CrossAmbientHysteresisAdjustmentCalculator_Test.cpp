@@ -29,7 +29,7 @@ enum
 
 static const CrossAmbientHysteresisAdjustmentCalculatorConfig_t config = {
    .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
-   .crossAmbientWindowAveragedTemperatureErd = Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100,
+   .crossAmbientWindowAveragedTemperatureErd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
 };
 
 TEST_GROUP(CrossAmbientHysteresisAdjustmentCalculator)
@@ -87,7 +87,7 @@ TEST_GROUP(CrossAmbientHysteresisAdjustmentCalculator)
 
    void GivenCrossAmbientWindowAveragedTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100, &temperature);
+      DataModel_Write(dataModel, Erd_Ambient_WindowAveragedTemperatureInDegFx100, &temperature);
    }
 
    void GivenCrossAmbientHysteresisAdjustmentIs(TemperatureDegFx100_t adjustment)

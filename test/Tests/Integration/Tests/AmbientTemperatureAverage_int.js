@@ -46,12 +46,12 @@ describe("AmbientTemperatureAverage", () => {
    });
 
    const theAmbientFilteredTemperatureShouldBe = async (expected) => {
-      const actual = await rockhopper.read("Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100");
+      const actual = await rockhopper.read("Erd_Ambient_WindowAveragedTemperatureInDegFx100");
       expect(actual).toEqual(expected);
    };
 
    const crossWindowAverageShouldBe = async (actual) => {
-      await rockhopper.read("Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100", actual);
+      await rockhopper.read("Erd_Ambient_WindowAveragedTemperatureInDegFx100", actual);
    };
 
    it("should set cross window average on init", async () => {

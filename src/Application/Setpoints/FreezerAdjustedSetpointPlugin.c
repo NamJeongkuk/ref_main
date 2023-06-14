@@ -32,7 +32,7 @@ static const ResolvedSetpointWriterConfiguration_t freezerResolvedSetpointWriter
 };
 
 static const CrossAmbientCalculatorConfig_t freezerCrossAmbientOffsetCalculatorConfig = {
-   .crossAmbientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100,
+   .crossAmbientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
    .crossAmbientOffsetErd = Erd_Freezer_CrossAmbientOffsetInDegFx100,
 };
 

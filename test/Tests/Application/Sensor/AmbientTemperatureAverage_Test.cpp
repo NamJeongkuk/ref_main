@@ -68,7 +68,7 @@ TEST_GROUP(AmbientTemperatureAverage)
       TemperatureDegFx100_t actual;
       DataModel_Read(
          dataModel,
-         Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100,
+         Erd_Ambient_WindowAveragedTemperatureInDegFx100,
          &actual);
       CHECK_EQUAL(expected, actual);
    }

@@ -32,7 +32,7 @@ enum
 };
 
 static const CrossAmbientCalculatorConfig_t config = {
-   .crossAmbientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100,
+   .crossAmbientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
    .crossAmbientOffsetErd = Erd_FreshFood_CrossAmbientOffsetInDegFx100,
 };
 
@@ -77,7 +77,7 @@ TEST_GROUP(CrossAmbientOffsetCalculator)
    {
       DataModel_Write(
          dataModel,
-         Erd_Ambient_CrossAmbientWindowAveragedTemperatureInDegFx100,
+         Erd_Ambient_WindowAveragedTemperatureInDegFx100,
          &temperature);
    }
 };
