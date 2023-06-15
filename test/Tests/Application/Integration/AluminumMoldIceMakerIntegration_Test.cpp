@@ -282,14 +282,6 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       CHECK_EQUAL(expectedState, actualState);
    }
 
-   void AluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_t request)
-   {
-      DataModel_Write(
-         dataModel,
-         Erd_AluminumMoldIceMakerTestRequest,
-         &request);
-   }
-
    void RakeControllerRequestShouldBe(bool expected)
    {
       bool actual;
@@ -715,6 +707,17 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
          dataModel,
          Erd_AluminumMoldIceMakerTestRequest,
          &request);
+   }
+
+   void TheAluminumMoldIceMakerTestRequestShouldBe(IceMakerTestRequest_t expected)
+   {
+      IceMakerTestRequest_t actual;
+      DataModel_Read(
+         dataModel,
+         Erd_AluminumMoldIceMakerTestRequest,
+         &actual);
+
+      CHECK_EQUAL(expected, actual);
    }
 
    void FeelerArmMonitoringShouldBe(bool expected)
@@ -1384,6 +1387,126 @@ TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToHarvestFaultIfHarvestFix
 
    After(iceMakerData->harvestFixData.maximumHarvestFixTimeInMinutes * MSEC_PER_MIN);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFault);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldResetTestRequestWhenFillTestIsRequested)
+{
+   GivenIceMakerIsInFreezeStateAfterHavingBeenInHarvestFix();
+
+   WhenTheAluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_Fill);
+   TheAluminumMoldIceMakerTestRequestShouldBe(IceMakerTestRequest_None);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldStayInFillStateIfFillTestIsRequestedWhileInFillState)
+{
+   GivenIceMakerIsInFillState();
+
+   WhenTheAluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_Fill);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToFillStateIfFillTestIsRequestedWhileInFreezeState)
+{
+   GivenTheApplicationHasBeenInitializedAndEntersState(AluminumMoldIceMakerHsmState_Freeze);
+
+   WhenTheAluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_Fill);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToFillStateIfFillTestIsRequestedWhileInHarvestState)
+{
+   GivenIceMakerIsInHarvestStateAndRakeIsNotHome();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   WhenTheAluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_Fill);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToFillStateIfFillTestIsRequestedWhileInHarvestFixState)
+{
+   GivenIceMakerIsInHarvestFixState();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+
+   WhenTheAluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_Fill);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToFillStateIfFillTestIsRequestedWhileInHarvestFaultState)
+{
+   GivenIceMakerIsInHarvestFaultState();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFault);
+
+   WhenTheAluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_Fill);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToFillStateIfFillTestIsRequestedWhileInThermistorFaultState)
+{
+   GivenTheApplicationHasBeenInitializedAndEntersState(AluminumMoldIceMakerHsmState_ThermistorFault);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+
+   WhenTheAluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_Fill);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldResetTestRequestWhenHarvestTestIsRequested)
+{
+   GivenIceMakerIsInFillState();
+
+   WhenTheAluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_Harvest);
+   TheAluminumMoldIceMakerTestRequestShouldBe(IceMakerTestRequest_None);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToHarvestStateIfHarvestTestIsRequestedWhileInFillState)
+{
+   GivenIceMakerIsInFillState();
+
+   WhenTheAluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_Harvest);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToHarvestStateIfHarvestTestIsRequestedWhileInFreezeState)
+{
+   GivenTheApplicationHasBeenInitializedAndEntersState(AluminumMoldIceMakerHsmState_Freeze);
+
+   WhenTheAluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_Harvest);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldStayInHarvestStateIfHarvestTestIsRequestedWhileInHarvestState)
+{
+   GivenIceMakerIsInHarvestStateAndRakeIsNotHome();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+
+   WhenTheAluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_Harvest);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldStayInHarvestFixStateIfHarvestTestIsRequestedWhileInHarvestFixState)
+{
+   GivenIceMakerIsInHarvestFixState();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+
+   WhenTheAluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_Harvest);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToHarvestIfHarvestTestIsRequestedWhileInHarvestFaultState)
+{
+   GivenIceMakerIsInHarvestFaultState();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFault);
+
+   WhenTheAluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_Harvest);
+   AluminumMoldIceMakerHsmStateShouldBe(IceMakerTestRequest_Harvest);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldStayInThermistorFaultStateIfHarvestTestIsRequestedWhileInThermistorFaultState)
+{
+   GivenTheApplicationHasBeenInitializedAndEntersState(AluminumMoldIceMakerHsmState_ThermistorFault);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+
+   WhenTheAluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_Harvest);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
 }
 
 TEST(AluminumMoldIceMakerIntegration, ShouldActivateIceRateWhenIceRateSignalIsSent)
