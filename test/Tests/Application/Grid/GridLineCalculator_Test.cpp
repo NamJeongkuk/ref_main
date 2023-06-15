@@ -275,7 +275,7 @@ TEST_GROUP(GridLineCalculator)
       And TheCalculatedGridLineTempShouldBe(
          (150 + AFreshFoodShiftTemperature),
          GridDelta_FreshFood,
-         GridLine_FreshFoodLowHystDelta);
+         GridLine_FreshFoodSetpointDelta);
 
       And TheCalculatedGridLineTempShouldBe(
          (450 + AFreshFoodSetpointTemperature),
@@ -300,7 +300,7 @@ TEST_GROUP(GridLineCalculator)
       And TheCalculatedGridLineTempShouldBe(
          (0 + AFreezerOffsetTemperature),
          GridDelta_Freezer,
-         GridLine_FreezerDelta);
+         GridLine_FreezerSetpointDelta);
 
       And TheCalculatedGridLineTempShouldBe(
          (250 + AFreezerSetpointTemperature),
@@ -332,7 +332,7 @@ TEST_GROUP(GridLineCalculator)
       And TheCalculatedGridLineTempShouldBe(
          (0 + AFreezerOffsetTemperature),
          GridDelta_Freezer,
-         GridLine_FreezerDelta);
+         GridLine_FreezerSetpointDelta);
 
       And TheCalculatedGridLineTempShouldBe(
          (250 + AFreezerSetpointTemperature),
@@ -370,7 +370,7 @@ TEST_GROUP(GridLineCalculator)
       And TheCalculatedGridLineTempShouldBe(
          (150 + AFreshFoodShiftTemperature + ACrossAmbientHysteresisAdjustmentInDegFx100),
          GridDelta_FreshFood,
-         GridLine_FreshFoodLowHystDelta);
+         GridLine_FreshFoodSetpointDelta);
 
       And TheCalculatedGridLineTempShouldBe(
          (450 + AFreshFoodSetpointTemperature + ACrossAmbientHysteresisAdjustmentInDegFx100),
@@ -422,7 +422,7 @@ TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenOffsetChanges)
 
    And TheCalculatedGridLineTempShouldBe((0 + AnotherFreezerOffsetTemperature),
       GridDelta_Freezer,
-      GridLine_FreezerDelta);
+      GridLine_FreezerSetpointDelta);
 
    And TheCalculatedGridLineTempShouldBe(
       (750 + AFreezerAdjustedSetpointTemperature),
@@ -500,7 +500,7 @@ TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenFreshFoodShiftChanges)
    TheCalculatedGridLineTempShouldBe(
       (150 + AnotherFreshFoodShiftTemperature),
       GridDelta_FreshFood,
-      GridLine_FreshFoodLowHystDelta);
+      GridLine_FreshFoodSetpointDelta);
 }
 
 TEST(GridLineCalculator, ShouldRecalculateGridLinesWhenFreezerShiftChanges)

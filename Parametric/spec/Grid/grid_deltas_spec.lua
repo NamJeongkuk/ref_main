@@ -13,20 +13,20 @@ describe('grid_deltas', function()
     return require 'lua-common'.table.merge({
       deltas = {
         fresh_food_grid_deltas = {
-          fresh_food_no_freeze_limit = TypedString('gridline', 'fresh_food_no_freeze_limit'),
-          fresh_food_low_hyst = TypedString('gridline', 'fresh_food_low_hyst'),
-          fresh_food_low_hyst_plus_delta = TypedString('gridline', 'fresh_food_low_hyst_plus_delta'),
-          fresh_food_high_hyst = TypedString('gridline', 'fresh_food_high_hyst'),
-          fresh_food_extra_high_hyst = TypedString('gridline', 'fresh_food_extra_high_hyst'),
-          fresh_food_super_high_hyst = TypedString('gridline', 'fresh_food_super_high_hyst')
+          fresh_food_no_freeze_limit_in_degfx100 = TypedString('gridline', 'fresh_food_no_freeze_limit_in_degfx100'),
+          fresh_food_low_hyst_in_degfx100 = TypedString('gridline', 'fresh_food_low_hyst_in_degfx100'),
+          fresh_food_set_point_delta_in_degfx100 = TypedString('gridline', 'fresh_food_set_point_delta_in_degfx100'),
+          fresh_food_high_hyst_in_degfx100 = TypedString('gridline', 'fresh_food_high_hyst_in_degfx100'),
+          fresh_food_extra_high_hyst_in_degfx100 = TypedString('gridline', 'fresh_food_extra_high_hyst_in_degfx100'),
+          fresh_food_super_high_hyst_in_degfx100 = TypedString('gridline', 'fresh_food_super_high_hyst_in_degfx100')
         },
         freezer_grid_deltas = {
-          freezer_low_hyst = TypedString('gridline', 'freezer_low_hyst'),
-          freezer_delta = TypedString('gridline', 'freezer_delta'),
-          freezer_high_hyst = TypedString('gridline', 'freezer_high_hyst'),
-          freezer_extra_high_hyst = TypedString('gridline', 'freezer_extra_high_hyst'),
-          freezer_super_high_hyst = TypedString('gridline', 'freezer_super_high_hyst'),
-          freezer_extreme_high_hyst = TypedString('gridline', 'freezer_extreme_high_hyst')
+          freezer_low_hyst_in_degfx100 = TypedString('gridline', 'freezer_low_hyst_in_degfx100'),
+          freezer_setpoint_delta_in_degfx100 = TypedString('gridline', 'freezer_setpoint_delta_in_degfx100'),
+          freezer_high_hyst_in_degfx100 = TypedString('gridline', 'freezer_high_hyst_in_degfx100'),
+          freezer_extra_high_hyst_in_degfx100 = TypedString('gridline', 'freezer_extra_high_hyst_in_degfx100'),
+          freezer_super_high_hyst_in_degfx100 = TypedString('gridline', 'freezer_super_high_hyst_in_degfx100'),
+          freezer_extreme_high_hyst_in_degfx100 = TypedString('gridline', 'freezer_extreme_high_hyst_in_degfx100')
         }
       }
     }, overrides or {})
@@ -60,12 +60,12 @@ describe('grid_deltas', function()
                 u8(6),
                 pointer(
                   structure(
-                    fresh_food_no_freeze_limit,
-                    fresh_food_low_hyst,
-                    fresh_food_low_hyst_plus_delta,
-                    fresh_food_high_hyst,
-                    fresh_food_extra_high_hyst,
-                    fresh_food_super_high_hyst
+                    fresh_food_no_freeze_limit_in_degfx100,
+                    fresh_food_low_hyst_in_degfx100,
+                    fresh_food_set_point_delta_in_degfx100,
+                    fresh_food_high_hyst_in_degfx100,
+                    fresh_food_extra_high_hyst_in_degfx100,
+                    fresh_food_super_high_hyst_in_degfx100
                   )
                 )
               ),
@@ -73,12 +73,12 @@ describe('grid_deltas', function()
                 u8(6),
                 pointer(
                   structure(
-                    freezer_low_hyst,
-                    freezer_delta,
-                    freezer_high_hyst,
-                    freezer_extra_high_hyst,
-                    freezer_super_high_hyst,
-                    freezer_extreme_high_hyst
+                    freezer_low_hyst_in_degfx100,
+                    freezer_setpoint_delta_in_degfx100,
+                    freezer_high_hyst_in_degfx100,
+                    freezer_extra_high_hyst_in_degfx100,
+                    freezer_super_high_hyst_in_degfx100,
+                    freezer_extreme_high_hyst_in_degfx100
                   )
                 )
               )

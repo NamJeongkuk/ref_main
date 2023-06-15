@@ -41,18 +41,18 @@ typedef struct
    FreezerCalculatedAxisGridLines_t freezerGridLine;
 } CalculatedGridLines_t;
 
-#define SWAP_DEFINITION_CalculatedGridLines_t(_name, _type)                                             \
-   SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_Nfl]),                      \
-      SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHyst]),      \
-      SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHystDelta]), \
-      SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodHighHyst]),     \
-      SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodExtraHigh]),    \
-      SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodSuperHigh]),    \
-      SWAPPED_FIELD(_name, _type, freezerGridLine.gridLinesDegFx100[GridLine_FreezerLowHyst]),          \
-      SWAPPED_FIELD(_name, _type, freezerGridLine.gridLinesDegFx100[GridLine_FreezerDelta]),            \
-      SWAPPED_FIELD(_name, _type, freezerGridLine.gridLinesDegFx100[GridLine_FreezerHighHyst]),         \
-      SWAPPED_FIELD(_name, _type, freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtraHigh]),        \
-      SWAPPED_FIELD(_name, _type, freezerGridLine.gridLinesDegFx100[GridLine_FreezerSuperHigh]),        \
+#define SWAP_DEFINITION_CalculatedGridLines_t(_name, _type)                                              \
+   SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_Nfl]),                       \
+      SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHyst]),       \
+      SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodSetpointDelta]), \
+      SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodHighHyst]),      \
+      SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodExtraHigh]),     \
+      SWAPPED_FIELD(_name, _type, freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodSuperHigh]),     \
+      SWAPPED_FIELD(_name, _type, freezerGridLine.gridLinesDegFx100[GridLine_FreezerLowHyst]),           \
+      SWAPPED_FIELD(_name, _type, freezerGridLine.gridLinesDegFx100[GridLine_FreezerSetpointDelta]),     \
+      SWAPPED_FIELD(_name, _type, freezerGridLine.gridLinesDegFx100[GridLine_FreezerHighHyst]),          \
+      SWAPPED_FIELD(_name, _type, freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtraHigh]),         \
+      SWAPPED_FIELD(_name, _type, freezerGridLine.gridLinesDegFx100[GridLine_FreezerSuperHigh]),         \
       SWAPPED_FIELD(_name, _type, freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtremeHigh]),
 
 #endif

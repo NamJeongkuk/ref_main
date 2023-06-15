@@ -21,7 +21,7 @@ enum
 {
    GridLine_Nfl,
    GridLine_FreshFoodLowHyst,
-   GridLine_FreshFoodLowHystDelta,
+   GridLine_FreshFoodSetpointDelta,
    GridLine_FreshFoodHighHyst,
    GridLine_FreshFoodExtraHigh,
    GridLine_FreshFoodSuperHigh
@@ -30,7 +30,7 @@ enum
 enum
 {
    GridLine_FreezerLowHyst,
-   GridLine_FreezerDelta,
+   GridLine_FreezerSetpointDelta,
    GridLine_FreezerHighHyst,
    GridLine_FreezerExtraHigh,
    GridLine_FreezerSuperHigh,

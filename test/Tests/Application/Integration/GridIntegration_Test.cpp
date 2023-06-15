@@ -87,7 +87,7 @@ TEST_GROUP(GridIntegration)
       gridBlockTemperatures[1].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtremeHigh] + 1;
       gridBlockTemperatures[1].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHyst] - 1;
       gridBlockTemperatures[2].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtremeHigh] + 1;
-      gridBlockTemperatures[2].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHystDelta] - 1;
+      gridBlockTemperatures[2].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodSetpointDelta] - 1;
       gridBlockTemperatures[3].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtremeHigh] + 1;
       gridBlockTemperatures[3].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodHighHyst] - 1;
       gridBlockTemperatures[4].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtremeHigh] + 1;
@@ -102,7 +102,7 @@ TEST_GROUP(GridIntegration)
       gridBlockTemperatures[8].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerSuperHigh] + 1;
       gridBlockTemperatures[8].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHyst] - 1;
       gridBlockTemperatures[9].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerSuperHigh] + 1;
-      gridBlockTemperatures[9].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHystDelta] - 1;
+      gridBlockTemperatures[9].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodSetpointDelta] - 1;
       gridBlockTemperatures[10].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerSuperHigh] + 1;
       gridBlockTemperatures[10].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodHighHyst] - 1;
       gridBlockTemperatures[11].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerSuperHigh] + 1;
@@ -117,7 +117,7 @@ TEST_GROUP(GridIntegration)
       gridBlockTemperatures[15].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtraHigh] + 1;
       gridBlockTemperatures[15].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHyst] - 1;
       gridBlockTemperatures[16].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtraHigh] + 1;
-      gridBlockTemperatures[16].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHystDelta] - 1;
+      gridBlockTemperatures[16].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodSetpointDelta] - 1;
       gridBlockTemperatures[17].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtraHigh] + 1;
       gridBlockTemperatures[17].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodHighHyst] - 1;
       gridBlockTemperatures[18].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerExtraHigh] + 1;
@@ -132,7 +132,7 @@ TEST_GROUP(GridIntegration)
       gridBlockTemperatures[22].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerHighHyst] + 1;
       gridBlockTemperatures[22].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHyst] - 1;
       gridBlockTemperatures[23].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerHighHyst] + 1;
-      gridBlockTemperatures[23].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHystDelta] - 1;
+      gridBlockTemperatures[23].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodSetpointDelta] - 1;
       gridBlockTemperatures[24].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerHighHyst] + 1;
       gridBlockTemperatures[24].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodHighHyst] - 1;
       gridBlockTemperatures[25].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerHighHyst] + 1;
@@ -142,19 +142,19 @@ TEST_GROUP(GridIntegration)
       gridBlockTemperatures[27].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerHighHyst] + 1;
       gridBlockTemperatures[27].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodSuperHigh] + 1;
 
-      gridBlockTemperatures[28].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerDelta] + 1;
+      gridBlockTemperatures[28].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerSetpointDelta] + 1;
       gridBlockTemperatures[28].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_Nfl] - 1;
-      gridBlockTemperatures[29].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerDelta] + 1;
+      gridBlockTemperatures[29].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerSetpointDelta] + 1;
       gridBlockTemperatures[29].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHyst] - 1;
-      gridBlockTemperatures[30].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerDelta] + 1;
-      gridBlockTemperatures[30].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHystDelta] - 1;
-      gridBlockTemperatures[31].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerDelta] + 1;
+      gridBlockTemperatures[30].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerSetpointDelta] + 1;
+      gridBlockTemperatures[30].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodSetpointDelta] - 1;
+      gridBlockTemperatures[31].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerSetpointDelta] + 1;
       gridBlockTemperatures[31].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodHighHyst] - 1;
-      gridBlockTemperatures[32].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerDelta] + 1;
+      gridBlockTemperatures[32].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerSetpointDelta] + 1;
       gridBlockTemperatures[32].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodExtraHigh] - 1;
-      gridBlockTemperatures[33].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerDelta] + 1;
+      gridBlockTemperatures[33].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerSetpointDelta] + 1;
       gridBlockTemperatures[33].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodSuperHigh] - 1;
-      gridBlockTemperatures[34].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerDelta] + 1;
+      gridBlockTemperatures[34].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerSetpointDelta] + 1;
       gridBlockTemperatures[34].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodSuperHigh] + 1;
 
       gridBlockTemperatures[35].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerLowHyst] + 1;
@@ -162,7 +162,7 @@ TEST_GROUP(GridIntegration)
       gridBlockTemperatures[36].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerLowHyst] + 1;
       gridBlockTemperatures[36].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHyst] - 1;
       gridBlockTemperatures[37].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerLowHyst] + 1;
-      gridBlockTemperatures[37].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHystDelta] - 1;
+      gridBlockTemperatures[37].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodSetpointDelta] - 1;
       gridBlockTemperatures[38].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerLowHyst] + 1;
       gridBlockTemperatures[38].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodHighHyst] - 1;
       gridBlockTemperatures[39].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerLowHyst] + 1;
@@ -177,7 +177,7 @@ TEST_GROUP(GridIntegration)
       gridBlockTemperatures[43].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerLowHyst] - 1;
       gridBlockTemperatures[43].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHyst] - 1;
       gridBlockTemperatures[44].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerLowHyst] - 1;
-      gridBlockTemperatures[44].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHystDelta] - 1;
+      gridBlockTemperatures[44].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodSetpointDelta] - 1;
       gridBlockTemperatures[45].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerLowHyst] - 1;
       gridBlockTemperatures[45].freshFoodTemperature = calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodHighHyst] - 1;
       gridBlockTemperatures[46].freezerTemperature = calculatedGridLines.freezerGridLine.gridLinesDegFx100[GridLine_FreezerLowHyst] - 1;
