@@ -1044,7 +1044,7 @@
           "name": "Erd_TurboFreezeRequest",
           "offset": 0,
           "size": 1,
-          "type": "bool"
+          "type": "u8"
         }
       ],
       "id": "0x121A",

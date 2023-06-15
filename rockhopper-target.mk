@@ -76,6 +76,7 @@ SRC_DIRS:=\
   src/Application/Plugins \
   src/Application/Pulldown \
   src/Application/RecessHeater \
+  src/Application/RequestStatusUpdater \
   src/Application/Sabbath \
   src/Application/Sensor \
   src/Application/ServiceDiagnostics \
@@ -103,6 +104,7 @@ INC_DIRS:=\
   src/Application/StepperMotor \
   src/Application/Grid \
   src/Application/Grid/GridFunctions \
+  src/Application/RequestStatusUpdater\
   src/Application/Sabbath \
   src/Application/SignOfLife \
   src/Application/SystemMonitor \

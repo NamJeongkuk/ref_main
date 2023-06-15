@@ -426,8 +426,13 @@ enum
    ENTRY(Erd_IceMaker1EnableStatus,                         0x1217, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker1FullStatus,                           0x1218, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker1TypeInformation,                      0x1219, IceMakerTypeInformation_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_TurboFreezeRequest,                            0x121A, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TurboFreezeRequest,                            0x121A, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TurboFreezeStatus,                             0x121B, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_PresenceSensingEnableRequest,                  0x1222, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_PresenceSensingEnableStatus,                   0x1223, bool,                                               Swap_No,  Io_None, Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
+   \
+   ENTRY(Erd_PresenceDetected,                              0x1226, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_DispenserRecessHeaterDutyCyclePercent,         0x122C, PercentageDutyCycle_t,                              Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_SecondarySignOfLife,                           0x122D, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \

@@ -21,4 +21,5 @@ void SideBySideConfigurationPlugin_Init(SideBySideConfigurationPlugin_t *instanc
    SideBySideDispensePlugin_Init(&instance->_private.dispensePlugin, dataModel);
    SideBySideLightingPlugin_Init(&instance->_private.lightingPlugin, dataModel);
    SignOfLifePlugin_Init(&instance->_private.signOfLifePlugin, dataModel);
+   SideBySideBooleanRequestStatusUpdaterPlugin_Init(&instance->_private.requestStatusUpdaterPlugin, dataModel);
 }

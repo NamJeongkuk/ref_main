@@ -21,6 +21,7 @@
 #include "AugerMotorPlugin.h"
 #include "SideBySideLightingPlugin.h"
 #include "SignOfLifePlugin.h"
+#include "SideBySideBooleanRequestStatusUpdaterPlugin.h"
 
 typedef struct
 {
@@ -38,6 +39,7 @@ typedef struct
       SideBySideDispensePlugin_t dispensePlugin;
       SideBySideLightingPlugin_t lightingPlugin;
       SignOfLifePlugin_t signOfLifePlugin;
+      SideBySideBooleanRequestStatusUpdaterPlugin_t requestStatusUpdaterPlugin;
    } _private;
 } SideBySideConfigurationPlugin_t;
 
