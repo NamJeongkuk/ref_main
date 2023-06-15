@@ -16,13 +16,16 @@ extern "C"
 #include "CppUTestExt/MockSupport.h"
 #include "ReferDataModel_TestDouble.h"
 #include "uassert_test.h"
+#include "HeaterControlType.h"
 
 enum
 {
    NewTemperatureInDegFx100 = 7200,
    NewHumidityPercentx100 = 5000,
    NewFreshFoodSetpointTemperatureInDegFx100 = 3900,
-   NewFreezerSetpointTemperatureInDegFx100 = 0
+   NewFreezerSetpointTemperatureInDegFx100 = 0,
+   Invalid = false,
+   Valid = true,
 };
 
 static const VariableSweatHeaterDutyCycleCalculatorConfig_t variableSweatHeaterDutyCycleCalculatorConfiguration = {
@@ -30,7 +33,9 @@ static const VariableSweatHeaterDutyCycleCalculatorConfig_t variableSweatHeaterD
    .ambientFilteredHumidityResolvedPercentx100Erd = Erd_Ambient_FilteredHumidityResolvedPercentx100,
    .freshFoodSetpointResolvedVoteErd = Erd_FreshFoodSetpoint_ResolvedVote,
    .freezerSetpointResolvedVoteErd = Erd_FreezerSetpoint_ResolvedVote,
-   .recessHeaterVariableAntiSweatVoteErd = Erd_RecessHeater_VariableAntiSweatVote
+   .recessHeaterVariableAntiSweatVoteErd = Erd_RecessHeater_VariableAntiSweatVote,
+   .ambientTemperatureIsValidResolvedErd = Erd_AmbientTemperature_IsValidResolved,
+   .ambientHumidityIsValidResolvedErd = Erd_AmbientHumidity_IsValidResolved
 };
 
 TEST_GROUP(VariableSweatHeaterDutyCycleCalculator)
@@ -118,6 +123,21 @@ TEST_GROUP(VariableSweatHeaterDutyCycleCalculator)
       WhenFreezerSetpointTemperatureIs(temperature);
    }
 
+   void WhenHeaterControlTypeIs(uint8_t heaterControlType)
+   {
+      variableSweatHeaterData.heaterControlType = heaterControlType;
+      VariableSweatHeaterDutyCycleCalculator_Init(
+         &instance,
+         dataModel,
+         &variableSweatHeaterData,
+         &variableSweatHeaterDutyCycleCalculatorConfiguration);
+   }
+
+   void GivenHeaterControlTypeIs(HeaterControlType_t heaterControlType)
+   {
+      WhenHeaterControlTypeIs(heaterControlType);
+   }
+
    void TheDutyCycleInPercentShouldBe(PercentageDutyCycle_t expectedPercentageDutyCycle)
    {
       PercentageDutyCycleVote_t actual;
@@ -128,6 +148,38 @@ TEST_GROUP(VariableSweatHeaterDutyCycleCalculator)
 
       CHECK_EQUAL(expectedPercentageDutyCycle, actual.percentageDutyCycle);
    }
+
+   void WhenAmbientTemperatureSensorIsValidChangesTo(bool state)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_AmbientTemperature_IsValidResolved,
+         &state);
+   }
+
+   void WhenAmbientHumiditySensorIsValidChangesTo(bool state)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_AmbientHumidity_IsValidResolved,
+         &state);
+   }
+
+   void GivenTheAmbientTemperatureSensorIsValidIs(bool state)
+   {
+      WhenAmbientTemperatureSensorIsValidChangesTo(state);
+   }
+
+   void GivenTheAmbientHumiditySensorIsValidIs(bool state)
+   {
+      WhenAmbientHumiditySensorIsValidChangesTo(state);
+   }
+
+   void GivenBothAmbientTemperatureAndAmbientHumidityAreValid()
+   {
+      GivenTheAmbientTemperatureSensorIsValidIs(Valid);
+      GivenTheAmbientHumiditySensorIsValidIs(Valid);
+   }
 };
 
 TEST(VariableSweatHeaterDutyCycleCalculator, ShouldCalculateTheDutyCycleAndCorrectTheValueWithClampOnInitialization)
@@ -136,6 +188,7 @@ TEST(VariableSweatHeaterDutyCycleCalculator, ShouldCalculateTheDutyCycleAndCorre
    GivenAmbientHumidityIs(0);
    GivenFreshFoodSetpointTemperatureIs(0);
    GivenFreezerSetpointTemperatureIs(0);
+   GivenBothAmbientTemperatureAndAmbientHumidityAreValid();
    GivenTheModuleIsInitialized();
 
    TheDutyCycleInPercentShouldBe(0);
@@ -143,6 +196,7 @@ TEST(VariableSweatHeaterDutyCycleCalculator, ShouldCalculateTheDutyCycleAndCorre
 
 TEST(VariableSweatHeaterDutyCycleCalculator, ShouldCalculateTheDutyCycleWhenAmbientTemperatureChanges)
 {
+   GivenBothAmbientTemperatureAndAmbientHumidityAreValid();
    GivenTheModuleIsInitialized();
 
    WhenAmbientTemperatureIs(NewTemperatureInDegFx100);
@@ -151,6 +205,7 @@ TEST(VariableSweatHeaterDutyCycleCalculator, ShouldCalculateTheDutyCycleWhenAmbi
 
 TEST(VariableSweatHeaterDutyCycleCalculator, ShouldCalculateTheDutyCycleAndCorrectTheValueWithClampWhenAmbientHumidityChanges)
 {
+   GivenBothAmbientTemperatureAndAmbientHumidityAreValid();
    GivenTheModuleIsInitialized();
 
    WhenAmbientHumidityIs(NewHumidityPercentx100);
@@ -159,6 +214,7 @@ TEST(VariableSweatHeaterDutyCycleCalculator, ShouldCalculateTheDutyCycleAndCorre
 
 TEST(VariableSweatHeaterDutyCycleCalculator, ShouldCalculateTheDutyCycleAndCorrectTheValueWithClampWhenFreshFoodSetpointTemperatureChanges)
 {
+   GivenBothAmbientTemperatureAndAmbientHumidityAreValid();
    GivenTheModuleIsInitialized();
 
    WhenFreshFoodSetpointTemperatureIs(NewFreshFoodSetpointTemperatureInDegFx100);
@@ -167,6 +223,7 @@ TEST(VariableSweatHeaterDutyCycleCalculator, ShouldCalculateTheDutyCycleAndCorre
 
 TEST(VariableSweatHeaterDutyCycleCalculator, ShouldCalculateTheDutyCycleAndCorrectTheValueWithClampWhenFreezerSetpointTemperatureChanges)
 {
+   GivenBothAmbientTemperatureAndAmbientHumidityAreValid();
    GivenTheModuleIsInitialized();
    GivenAmbientTemperatureIs(NewTemperatureInDegFx100);
    GivenAmbientHumidityIs(NewHumidityPercentx100);
@@ -177,6 +234,7 @@ TEST(VariableSweatHeaterDutyCycleCalculator, ShouldCalculateTheDutyCycleAndCorre
 
 TEST(VariableSweatHeaterDutyCycleCalculator, ShouldRecalculateTheDutyCycleAndCorrectTheValueWithClampWheneverTemperatureOrHumidityChanges)
 {
+   GivenBothAmbientTemperatureAndAmbientHumidityAreValid();
    GivenTheModuleIsInitialized();
    GivenAmbientTemperatureIs(NewTemperatureInDegFx100);
    TheDutyCycleInPercentShouldBe(8);
@@ -189,4 +247,84 @@ TEST(VariableSweatHeaterDutyCycleCalculator, ShouldRecalculateTheDutyCycleAndCor
 
    WhenFreezerSetpointTemperatureIs(NewFreezerSetpointTemperatureInDegFx100);
    TheDutyCycleInPercentShouldBe(30);
+}
+
+TEST(VariableSweatHeaterDutyCycleCalculator, ShouldUseVariableAntiSweatHeaterDutyCycleInPercentWhenAmbientTemperatureBecomesNotValid)
+{
+   GivenBothAmbientTemperatureAndAmbientHumidityAreValid();
+   GivenTheModuleIsInitialized();
+
+   WhenAmbientTemperatureSensorIsValidChangesTo(Invalid);
+   TheDutyCycleInPercentShouldBe(variableSweatHeaterData.variableHeaterFallbackDutyCycleInPercent);
+}
+
+TEST(VariableSweatHeaterDutyCycleCalculator, ShouldUseVariableAntiSweatHeaterDutyCycleInPercentWhenAmbientHumidityBecomesNotValid)
+{
+   GivenBothAmbientTemperatureAndAmbientHumidityAreValid();
+   GivenTheModuleIsInitialized();
+
+   WhenAmbientHumiditySensorIsValidChangesTo(Invalid);
+   TheDutyCycleInPercentShouldBe(variableSweatHeaterData.variableHeaterFallbackDutyCycleInPercent);
+}
+
+TEST(VariableSweatHeaterDutyCycleCalculator, ShouldUseVariableAntiSweatHeaterDutyCycleInPercentWhenBothAmbientTemperatureAndAmbientHumidityBecomeNotValid)
+{
+   GivenBothAmbientTemperatureAndAmbientHumidityAreValid();
+   GivenTheModuleIsInitialized();
+
+   WhenAmbientTemperatureSensorIsValidChangesTo(Invalid);
+   TheDutyCycleInPercentShouldBe(variableSweatHeaterData.variableHeaterFallbackDutyCycleInPercent);
+
+   WhenAmbientHumiditySensorIsValidChangesTo(Invalid);
+   TheDutyCycleInPercentShouldBe(variableSweatHeaterData.variableHeaterFallbackDutyCycleInPercent);
+}
+
+TEST(VariableSweatHeaterDutyCycleCalculator, ShouldSwitchFromVariableAntiSweatHeaterDutyCycleInPercentToCalculatedDutyCycleOnceBothSensorsBecomeValid)
+{
+   GivenBothAmbientTemperatureAndAmbientHumidityAreValid();
+   GivenTheModuleIsInitialized();
+   GivenAmbientTemperatureIs(NewTemperatureInDegFx100);
+   TheDutyCycleInPercentShouldBe(8);
+
+   WhenAmbientTemperatureSensorIsValidChangesTo(Invalid);
+   TheDutyCycleInPercentShouldBe(variableSweatHeaterData.variableHeaterFallbackDutyCycleInPercent);
+
+   WhenAmbientHumiditySensorIsValidChangesTo(Invalid);
+   TheDutyCycleInPercentShouldBe(variableSweatHeaterData.variableHeaterFallbackDutyCycleInPercent);
+
+   WhenAmbientTemperatureSensorIsValidChangesTo(Valid);
+   TheDutyCycleInPercentShouldBe(variableSweatHeaterData.variableHeaterFallbackDutyCycleInPercent);
+
+   WhenAmbientHumiditySensorIsValidChangesTo(Valid);
+   TheDutyCycleInPercentShouldBe(8);
+}
+
+TEST(VariableSweatHeaterDutyCycleCalculator, ShouldCalculateDutyCycleWhenHeaterControlTypeDoesNotDependOnAmbientHumidityAndAmbientTemperatureIsValid)
+{
+   GivenBothAmbientTemperatureAndAmbientHumidityAreValid();
+   GivenTheModuleIsInitialized();
+   GivenHeaterControlTypeIs(HeaterControlType_1);
+   GivenAmbientTemperatureIs(NewTemperatureInDegFx100);
+   TheDutyCycleInPercentShouldBe(8);
+
+   WhenAmbientHumiditySensorIsValidChangesTo(Invalid);
+   TheDutyCycleInPercentShouldBe(8);
+
+   WhenAmbientTemperatureSensorIsValidChangesTo(Invalid);
+   TheDutyCycleInPercentShouldBe(variableSweatHeaterData.variableHeaterFallbackDutyCycleInPercent);
+}
+
+TEST(VariableSweatHeaterDutyCycleCalculator, ShouldCalculateDutyCycleWhenHeaterControlTypeSwitchesBetweenTypeDependentOnAmbientHumidityAndTypeNot)
+{
+   GivenBothAmbientTemperatureAndAmbientHumidityAreValid();
+   GivenTheModuleIsInitialized();
+   GivenHeaterControlTypeIs(HeaterControlType_7);
+   GivenAmbientTemperatureIs(NewTemperatureInDegFx100);
+   TheDutyCycleInPercentShouldBe(8);
+
+   WhenAmbientHumiditySensorIsValidChangesTo(Invalid);
+   TheDutyCycleInPercentShouldBe(variableSweatHeaterData.variableHeaterFallbackDutyCycleInPercent);
+
+   WhenHeaterControlTypeIs(HeaterControlType_1);
+   TheDutyCycleInPercentShouldBe(8);
 }

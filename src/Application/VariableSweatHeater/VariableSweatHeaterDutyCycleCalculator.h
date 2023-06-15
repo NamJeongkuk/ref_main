@@ -19,6 +19,8 @@ typedef struct
    Erd_t freshFoodSetpointResolvedVoteErd; // SetpointVotedTemperature_t
    Erd_t freezerSetpointResolvedVoteErd; // SetpointVotedTemperature_t
    Erd_t recessHeaterVariableAntiSweatVoteErd; // PercentageDutyCycleVote_t
+   Erd_t ambientTemperatureIsValidResolvedErd; // bool
+   Erd_t ambientHumidityIsValidResolvedErd; // bool
 } VariableSweatHeaterDutyCycleCalculatorConfig_t;
 
 typedef struct

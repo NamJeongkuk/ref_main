@@ -12,6 +12,8 @@ describe('RecessHeater', function()
   local variable_sweat_heater = VariableSweatHeater(core_mock)
 
   local some_variable_sweat_heater = variable_sweat_heater({
+    fallback_duty_cycle_in_percent = 100,
+    heater_control_type = 7,
     temperature_coefficient = 2100,
     humidity_coefficient = 0,
     fresh_food_coefficient = 0,
@@ -51,6 +53,8 @@ describe('RecessHeater', function()
     local expected = remove_whitespace([[
       structure(
         structure(
+          u8(100),
+          u8(7),
           i32(2100),
           i32(0),
           i32(0),

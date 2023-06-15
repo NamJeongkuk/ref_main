@@ -9,9 +9,13 @@
 #define VARIABLESWEATHEATERDATA_H
 
 #include <stdint.h>
+#include "PercentageDutyCycle.h"
+#include "HeaterControlType.h"
 
 typedef struct
 {
+   PercentageDutyCycle_t variableHeaterFallbackDutyCycleInPercent;
+   HeaterControlType_t heaterControlType;
    int32_t temperatureCoefficient;
    int32_t humidityCoefficient;
    int32_t freshFoodCoefficient;

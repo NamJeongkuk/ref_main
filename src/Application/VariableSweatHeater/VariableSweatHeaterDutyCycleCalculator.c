@@ -9,7 +9,15 @@
 #include "PersonalityParametricData.h"
 #include "TemperatureDegFx100.h"
 #include "PercentageDutyCycleVote.h"
+#include "HeaterControlType.h"
 #include "utils.h"
+
+static bool HeaterControlTypeCaresAboutAmbientHumidity(HeaterControlType_t heaterControlType)
+{
+   return !((heaterControlType == HeaterControlType_1) ||
+      (heaterControlType == HeaterControlType_3) ||
+      (heaterControlType == HeaterControlType_4));
+}
 
 static void CalculateDutyCycle(VariableSweatHeaterDutyCycleCalculator_t *instance)
 {
@@ -17,6 +25,8 @@ static void CalculateDutyCycle(VariableSweatHeaterDutyCycleCalculator_t *instanc
    RelativeHumidityPercentx100_t ambientFilteredHumidity;
    SetpointVotedTemperature_t freshFoodSetpoint;
    SetpointVotedTemperature_t freezerSetpoint;
+   bool ambientTemperatureIsValid;
+   bool ambientHumidityIsValid;
 
    DataModel_Read(
       instance->_private.dataModel,
@@ -38,23 +48,40 @@ static void CalculateDutyCycle(VariableSweatHeaterDutyCycleCalculator_t *instanc
       instance->_private.config->freezerSetpointResolvedVoteErd,
       &freezerSetpoint);
 
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->ambientTemperatureIsValidResolvedErd,
+      &ambientTemperatureIsValid);
+
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->ambientHumidityIsValidResolvedErd,
+      &ambientHumidityIsValid);
+
    int32_t dutyCycle = 0;
-   dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->temperatureCoefficient * ambientFilteredTemperature) / 100);
-   dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->humidityCoefficient * ambientFilteredHumidity) / 100);
-   dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->freshFoodCoefficient * freshFoodSetpoint.temperatureInDegFx100) / 100);
-   dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->freezerCoefficient * freezerSetpoint.temperatureInDegFx100) / 100);
-   dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->temperatureSquaredCoefficient * ambientFilteredTemperature * ambientFilteredTemperature) / 10000);
-   dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->humiditySquaredCoefficient * ambientFilteredHumidity * ambientFilteredHumidity) / 10000);
-   dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->freshFoodSquaredCoefficient * freshFoodSetpoint.temperatureInDegFx100 * freshFoodSetpoint.temperatureInDegFx100) / 10000);
-   dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->freezerSquaredCoefficient * freezerSetpoint.temperatureInDegFx100 * freezerSetpoint.temperatureInDegFx100) / 10000);
-   dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->temperatureHumidityCoefficient * ambientFilteredTemperature * ambientFilteredHumidity) / 10000);
-   dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->temperatureFreshFoodCoefficient * ambientFilteredTemperature * freshFoodSetpoint.temperatureInDegFx100) / 10000);
-   dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->temperatureFreezerCoefficient * ambientFilteredTemperature * freezerSetpoint.temperatureInDegFx100) / 10000);
-   dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->humidityFreshFoodCoefficient * ambientFilteredHumidity * freshFoodSetpoint.temperatureInDegFx100) / 10000);
-   dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->humidityFreezerCoefficient * ambientFilteredHumidity * freezerSetpoint.temperatureInDegFx100) / 10000);
-   dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->freshFoodFreezerCoefficient * freshFoodSetpoint.temperatureInDegFx100 * freezerSetpoint.temperatureInDegFx100) / 10000);
-   dutyCycle += (int32_t)instance->_private.variableSweatHeaterData->interceptCoefficient;
-   dutyCycle /= 1000;
+   if(!ambientTemperatureIsValid || (!ambientHumidityIsValid && HeaterControlTypeCaresAboutAmbientHumidity(instance->_private.variableSweatHeaterData->heaterControlType)))
+   {
+      dutyCycle = instance->_private.variableSweatHeaterData->variableHeaterFallbackDutyCycleInPercent;
+   }
+   else
+   {
+      dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->temperatureCoefficient * ambientFilteredTemperature) / 100);
+      dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->humidityCoefficient * ambientFilteredHumidity) / 100);
+      dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->freshFoodCoefficient * freshFoodSetpoint.temperatureInDegFx100) / 100);
+      dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->freezerCoefficient * freezerSetpoint.temperatureInDegFx100) / 100);
+      dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->temperatureSquaredCoefficient * ambientFilteredTemperature * ambientFilteredTemperature) / 10000);
+      dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->humiditySquaredCoefficient * ambientFilteredHumidity * ambientFilteredHumidity) / 10000);
+      dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->freshFoodSquaredCoefficient * freshFoodSetpoint.temperatureInDegFx100 * freshFoodSetpoint.temperatureInDegFx100) / 10000);
+      dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->freezerSquaredCoefficient * freezerSetpoint.temperatureInDegFx100 * freezerSetpoint.temperatureInDegFx100) / 10000);
+      dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->temperatureHumidityCoefficient * ambientFilteredTemperature * ambientFilteredHumidity) / 10000);
+      dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->temperatureFreshFoodCoefficient * ambientFilteredTemperature * freshFoodSetpoint.temperatureInDegFx100) / 10000);
+      dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->temperatureFreezerCoefficient * ambientFilteredTemperature * freezerSetpoint.temperatureInDegFx100) / 10000);
+      dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->humidityFreshFoodCoefficient * ambientFilteredHumidity * freshFoodSetpoint.temperatureInDegFx100) / 10000);
+      dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->humidityFreezerCoefficient * ambientFilteredHumidity * freezerSetpoint.temperatureInDegFx100) / 10000);
+      dutyCycle += (int32_t)(((int64_t)instance->_private.variableSweatHeaterData->freshFoodFreezerCoefficient * freshFoodSetpoint.temperatureInDegFx100 * freezerSetpoint.temperatureInDegFx100) / 10000);
+      dutyCycle += (int32_t)instance->_private.variableSweatHeaterData->interceptCoefficient;
+      dutyCycle /= 1000;
+   }
 
    PercentageDutyCycle_t correctedDutyCyle = CLAMP(dutyCycle, PercentageDutyCycle_Min, PercentageDutyCycle_Max);
    PercentageDutyCycleVote_t dutyCycleVote = {
@@ -76,7 +103,9 @@ static void DataModelChanged(void *context, const void *args)
    if((erd == instance->_private.config->ambientFilteredTemperatureResolvedInDegFx100Erd) ||
       (erd == instance->_private.config->ambientFilteredHumidityResolvedPercentx100Erd) ||
       (erd == instance->_private.config->freshFoodSetpointResolvedVoteErd) ||
-      (erd == instance->_private.config->freezerSetpointResolvedVoteErd))
+      (erd == instance->_private.config->freezerSetpointResolvedVoteErd) ||
+      (erd == instance->_private.config->ambientTemperatureIsValidResolvedErd) ||
+      (erd == instance->_private.config->ambientHumidityIsValidResolvedErd))
    {
       CalculateDutyCycle(instance);
    }

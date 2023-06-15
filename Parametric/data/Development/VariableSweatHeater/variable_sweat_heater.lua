@@ -1,4 +1,6 @@
 return variable_sweat_heater({
+  fallback_duty_cycle_in_percent = 100,
+  heater_control_type = 7,
   temperature_coefficient = 2100,
   humidity_coefficient = 7100,
   fresh_food_coefficient = -6900,

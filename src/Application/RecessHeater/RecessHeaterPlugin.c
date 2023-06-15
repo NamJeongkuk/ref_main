@@ -32,7 +32,9 @@ static const VariableSweatHeaterDutyCycleCalculatorConfig_t variableSweatHeaterD
    .ambientFilteredHumidityResolvedPercentx100Erd = Erd_Ambient_FilteredHumidityResolvedPercentx100,
    .freshFoodSetpointResolvedVoteErd = Erd_FreshFoodSetpoint_ResolvedVote,
    .freezerSetpointResolvedVoteErd = Erd_FreezerSetpoint_ResolvedVote,
-   .recessHeaterVariableAntiSweatVoteErd = Erd_RecessHeater_VariableAntiSweatVote
+   .recessHeaterVariableAntiSweatVoteErd = Erd_RecessHeater_VariableAntiSweatVote,
+   .ambientTemperatureIsValidResolvedErd = Erd_AmbientTemperature_IsValidResolved,
+   .ambientHumidityIsValidResolvedErd = Erd_AmbientHumidity_IsValidResolved,
 };
 
 static const ResolvedVotePercentageDutyCycleConnectorConfiguration_t connectorConfiguration = {

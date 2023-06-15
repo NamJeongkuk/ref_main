@@ -10,6 +10,8 @@ describe('VariableSweatHeater', function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
+      fallback_duty_cycle_in_percent = 100,
+      heater_control_type = 7,
       temperature_coefficient = 2100,
       humidity_coefficient = 0,
       fresh_food_coefficient = 0,
@@ -30,6 +32,22 @@ describe('VariableSweatHeater', function()
 
   it('should require all arguments', function()
     should_require_args(variable_sweat_heater, generate_config())
+  end)
+
+  it('should assert if fallback_duty_cycle_in_percent is not in range', function()
+    should_fail_with('fallback_duty_cycle_in_percent=101 must be in [0, 100]', function()
+      variable_sweat_heater(generate_config({
+        fallback_duty_cycle_in_percent = 101
+      }))
+    end)
+  end)
+
+  it('should assert if heater_control_type is not in range', function()
+    should_fail_with('heater_control_type=8 must be in [1, 7]', function()
+      variable_sweat_heater(generate_config({
+        heater_control_type = 8
+      }))
+    end)
   end)
 
   it('should assert if temperature_coefficient is not in range', function()
@@ -155,6 +173,8 @@ describe('VariableSweatHeater', function()
   it('should generate a typed string with the correct data and type for variable_sweat_heater', function()
     local expected = remove_whitespace([[
       structure(
+        u8(100),
+        u8(7),
         i32(2100),
         i32(0),
         i32(0),
@@ -174,6 +194,8 @@ describe('VariableSweatHeater', function()
     ]])
 
     local actual = variable_sweat_heater({
+      fallback_duty_cycle_in_percent = 100,
+      heater_control_type = 7,
       temperature_coefficient = 2100,
       humidity_coefficient = 0,
       fresh_food_coefficient = 0,

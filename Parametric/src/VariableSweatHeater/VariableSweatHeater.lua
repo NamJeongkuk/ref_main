@@ -10,6 +10,8 @@ return function(core)
     return TypedString(
       { 'variable_sweat_heater' },
       structure(
+        u8(config.fallback_duty_cycle_in_percent),
+        u8(config.heater_control_type),
         i32(config.temperature_coefficient),
         i32(config.humidity_coefficient),
         i32(config.fresh_food_coefficient),
@@ -33,6 +35,8 @@ return function(core)
     validate_arguments(
       config,
       {
+        fallback_duty_cycle_in_percent = { constraint.in_range(0,100) },
+        heater_control_type = { constraint.in_range(1,7) },
         temperature_coefficient = { constraint.i32 },
         humidity_coefficient = { constraint.i32 },
         fresh_food_coefficient = { constraint.i32 },
