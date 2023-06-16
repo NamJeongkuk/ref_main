@@ -248,7 +248,7 @@ TEST_GROUP(TwistTrayIceMaker)
          &motorActionResult);
    }
 
-   void TheFreezerDoorIs(bool freezerDoorState)
+   void WhenTheFreezerDoorIs(bool freezerDoorState)
    {
       DataModel_Write(
          dataModel,
@@ -470,7 +470,7 @@ TEST_GROUP(TwistTrayIceMaker)
       GivenHomingIsCompleted();
       GivenFreezerIceRateActiveBecomes(SET);
 
-      TheFreezerDoorIs(OPEN);
+      WhenTheFreezerDoorIs(OPEN);
 
       NothingShouldHappen();
       WhenTheTemperatureIs(actualTempx100 - 1);
@@ -1287,13 +1287,25 @@ TEST(TwistTrayIceMaker, ShouldWaitToHarvestUntilDoorIsClosed)
    NothingShouldHappen();
    After((iceMakerData->harvestData.fullBucketWaitPeriodMinutes * MSEC_PER_MIN) + 1);
 
-   TheFreezerDoorIs(CLOSED);
+   WhenTheFreezerDoorIs(CLOSED);
 
    NothingShouldHappen();
    After((iceMakerData->harvestData.delayToHarvestAfterDoorClosesSeconds * MSEC_PER_SEC) - 1);
 
    HarvestingShouldStart();
    After(1);
+}
+
+TEST(TwistTrayIceMaker, ShouldStartHarvestingAfterFreezerDoorIsClosedForEnoughTimeWhileSabbathIsEnabled)
+{
+   GivenTheIceMakerIsEnabled();
+   FreezingIsCompletedAndHarvestingDoesNotStartBecauseFreezerDoorOpens();
+   GivenSabbathModeIs(ON);
+
+   WhenTheFreezerDoorIs(CLOSED);
+
+   HarvestingShouldStart();
+   After(iceMakerData->harvestData.delayToHarvestAfterDoorClosesSeconds * MSEC_PER_SEC);
 }
 
 TEST(TwistTrayIceMaker, ShouldNotTransitionToThermistorFaultStateWhenThermistorBecomesInvalidDuringTheHarvestState)
@@ -1410,7 +1422,7 @@ TEST(TwistTrayIceMaker, SabbathModeShouldAlsoWorkIfBothSabbathErdsComeOn)
    WhenEnhancedSabbathModeIs(OFF);
 }
 
-TEST(TwistTrayIceMaker, ShouldTransitionToFreezeWhenMotorActionResultIsHarvestedWhileIceMakerStateIsInHarvestingAndSabbathIsEnabled)
+TEST(TwistTrayIceMaker, ShouldTransitionToFillAndStartFillingWhenMotorActionResultIsHarvestedWhileIceMakerStateIsInHarvestingAndSabbathIsEnabled)
 {
    GivenTheIceMakerIsEnabled();
    GivenFreezingIsCompletedAndHarvestingIsStarted();
@@ -1421,6 +1433,7 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFreezeWhenMotorActionResultIsHarvested
    AfterTheFillTubeHeaterTimerHasExpired();
 
    TheMotorShouldBeRequestedTo(Idle);
+   FillingShouldStart();
    WhenTheMotorActionResultIs(Harvested);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 }
@@ -1705,7 +1718,7 @@ TEST(TwistTrayIceMaker, ShouldNotBeginFillingTrayUntilMotorActionResultIsHarvest
    AfterTheFillTubeHeaterTimerHasExpired();
 }
 
-TEST(TwistTrayIceMaker, ShouldTransitionFromHarvestToFillWhenFillTubeTimerCompletesAndSabbathModeBecomesEnabled)
+TEST(TwistTrayIceMaker, ShouldTransitionFromHarvestToFillAndStartFillingWhenFillTubeTimerCompletesAndSabbathModeBecomesEnabled)
 {
    GivenTheIceMakerIsEnabled();
    GivenFreezingIsCompletedAndHarvestingIsStarted();
@@ -1717,6 +1730,7 @@ TEST(TwistTrayIceMaker, ShouldTransitionFromHarvestToFillWhenFillTubeTimerComple
 
    FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
    TheMotorShouldBeRequestedTo(Idle);
+   FillingShouldStart();
    AfterTheFillTubeHeaterTimerHasExpired();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 }

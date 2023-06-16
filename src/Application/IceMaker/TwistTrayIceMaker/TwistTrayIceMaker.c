@@ -262,25 +262,6 @@ static void StopHarvestCountCalculation(TwistTrayIceMaker_t *instance)
       clear);
 }
 
-static void ResumeFillMonitoringIfPausedOrStartIfStoppedOrTransitionToIdleFillIfDelayed(TwistTrayIceMaker_t *instance)
-{
-   if(instance->_private.pauseFillMonitoring)
-   {
-      SetWaterFillMonitoringRequestTo(instance, IceMakerWaterFillMonitoringRequest_Resume);
-      instance->_private.pauseFillMonitoring = false;
-   }
-   else if(instance->_private.delayFillMonitoring)
-   {
-      instance->_private.delayFillMonitoring = false;
-      Fsm_Transition(&instance->_private.fsm, State_IdleFill);
-   }
-   else
-   {
-      UpdateWaterValve(instance, OPEN);
-      SetWaterFillMonitoringRequestTo(instance, IceMakerWaterFillMonitoringRequest_Start);
-   }
-}
-
 static bool CoolingSystemIsOff(TwistTrayIceMaker_t *instance)
 {
    bool coolingSystemIsOff;
@@ -429,8 +410,7 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          UpdateOperationState(instance, TwistTrayIceMakerOperationState_Harvesting);
       // Fallthrough
       case Signal_DoorClosedForLongEnough:
-      case Signal_SabbathModeDisabled:
-         if(!ItIsSabbathMode(instance) && DoorHasBeenClosedForLongEnough(instance))
+         if(DoorHasBeenClosedForLongEnough(instance))
          {
             RequestMotorAction(instance, TwistTrayIceMakerMotorAction_RunCycle);
             VoteForFillTubeHeater(instance, instance->_private.parametric->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
@@ -495,14 +475,21 @@ static void State_FillingTrayWithWater(Fsm_t *fsm, FsmSignal_t signal, const voi
       case Fsm_Entry:
          UpdateOperationState(instance, TwistTrayIceMakerOperationState_FillingTrayWithWater);
 
-         if(!ItIsSabbathMode(instance))
+         if(instance->_private.pauseFillMonitoring)
          {
-            ResumeFillMonitoringIfPausedOrStartIfStoppedOrTransitionToIdleFillIfDelayed(instance);
+            SetWaterFillMonitoringRequestTo(instance, IceMakerWaterFillMonitoringRequest_Resume);
+            instance->_private.pauseFillMonitoring = false;
          }
-         break;
-
-      case Signal_SabbathModeDisabled:
-         ResumeFillMonitoringIfPausedOrStartIfStoppedOrTransitionToIdleFillIfDelayed(instance);
+         else if(instance->_private.delayFillMonitoring)
+         {
+            instance->_private.delayFillMonitoring = false;
+            Fsm_Transition(&instance->_private.fsm, State_IdleFill);
+         }
+         else
+         {
+            UpdateWaterValve(instance, OPEN);
+            SetWaterFillMonitoringRequestTo(instance, IceMakerWaterFillMonitoringRequest_Start);
+         }
          break;
 
       case Signal_TrayFilled:

@@ -624,7 +624,7 @@ enum
    ENTRY(Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100,            0xF0D5, TemperatureDegFx100_t,                 Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AmbientHumidity_FilteredRelativeHumidityPercentx100,        0xF0D6, RelativeHumidityPercentx100_t,         Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_Ambient_WindowAveragedTemperatureInDegFx100,   0xF0E0, TemperatureDegFx100_t,                 Swap_Yes,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Ambient_WindowAveragedTemperatureInDegFx100,   0xF0E0, TemperatureDegFx100_t,                              Swap_Yes,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFood_LongTermAverageInDegFx100,           0xF0E1, TemperatureDegFx100_t,                              Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Freezer_LongTermAverageInDegFx100,             0xF0E2, TemperatureDegFx100_t,                              Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \

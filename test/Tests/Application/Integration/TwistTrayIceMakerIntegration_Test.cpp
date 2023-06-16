@@ -661,10 +661,6 @@ TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptHarvestAndShouldGoToFillAft
    After((twistTrayIceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC) - (5 * MotorControllerPollingTimeInMsec));
    OperationStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 
-   TheIceMakerWaterValveShouldBe(OFF);
-   TheIsolationValveShouldBe(OFF);
-
-   WhenSabbathModeBecomes(DISABLED);
    TheIceMakerWaterValveShouldBe(ON);
    TheIsolationValveShouldBe(ON);
 
