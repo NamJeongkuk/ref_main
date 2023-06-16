@@ -1073,6 +1073,38 @@
     {
       "data": [
         {
+          "name": "Erd_DoorAlarmEnableRequest",
+          "offset": 0,
+          "size": 1,
+          "type": "u8"
+        }
+      ],
+      "id": "0x1227",
+      "name": "Erd_DoorAlarmEnableRequest",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_DoorAlarmEnableStatus",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0x1228",
+      "name": "Erd_DoorAlarmEnableStatus",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
           "name": "Erd_ExternalAmbientFilteredTemperatureInDegFx100",
           "offset": 0,
           "size": 2,

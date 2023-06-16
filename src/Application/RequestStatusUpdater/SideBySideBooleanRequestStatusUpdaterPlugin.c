@@ -12,7 +12,8 @@
 // ENTRY(_requestErd, _statusErd)
 #define BOOLEAN_REQUEST_STATUS_ERD_PAIR_TABLE(ENTRY) \
    ENTRY(Erd_PresenceSensingEnableRequest, Erd_PresenceSensingEnableStatus)         \
-   ENTRY(Erd_TurboFreezeRequest, Erd_TurboFreezeStatus)
+   ENTRY(Erd_TurboFreezeRequest, Erd_TurboFreezeStatus)                             \
+   ENTRY(Erd_DoorAlarmEnableRequest, Erd_DoorAlarmEnableStatus)
 
 #define EXPAND_AS_REQUEST_STATUS_ERD_PAIRS( _requestErd, _statusErd) \
 { .requestErd = _requestErd, .statusErd = _statusErd },
