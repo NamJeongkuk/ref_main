@@ -243,7 +243,9 @@ static bool HarvestConditionsHaveBeenMet(TwistTrayIceMaker_t *instance)
       Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest,
       &harvestCountIsReadyToHarvest);
 
-   return (iceTrayTempx100 < MaxHarvestTemperatureInDegFx100) && harvestCountIsReadyToHarvest;
+   return (iceTrayTempx100 < MaxHarvestTemperatureInDegFx100) &&
+      harvestCountIsReadyToHarvest &&
+      DoorHasBeenClosedForLongEnough(instance);
 }
 
 static void RequestHarvestCountCalculation(TwistTrayIceMaker_t *instance)
@@ -360,6 +362,7 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
       case Signal_CoolingSystemIsTurnedOn:
       case Signal_IceMakerFilteredTemperatureChanged:
       case Signal_HarvestCountIsReadyToHarvest:
+      case Signal_DoorClosedForLongEnough:
          if(SabbathModeIsDisabledAndIceMakerIsEnabledAndCoolingSystemIsOn(instance))
          {
             if(HarvestConditionsHaveBeenMet(instance))
@@ -408,14 +411,9 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
    {
       case Fsm_Entry:
          UpdateOperationState(instance, TwistTrayIceMakerOperationState_Harvesting);
-      // Fallthrough
-      case Signal_DoorClosedForLongEnough:
-         if(DoorHasBeenClosedForLongEnough(instance))
-         {
-            RequestMotorAction(instance, TwistTrayIceMakerMotorAction_RunCycle);
-            VoteForFillTubeHeater(instance, instance->_private.parametric->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
-            StartFillTubeHeaterTimer(instance);
-         }
+         RequestMotorAction(instance, TwistTrayIceMakerMotorAction_RunCycle);
+         VoteForFillTubeHeater(instance, instance->_private.parametric->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
+         StartFillTubeHeaterTimer(instance);
          break;
 
       case Signal_FillTubeHeaterTimerExpired:

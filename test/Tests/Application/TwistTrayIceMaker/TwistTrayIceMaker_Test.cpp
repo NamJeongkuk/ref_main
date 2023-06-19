@@ -965,6 +965,23 @@ TEST(TwistTrayIceMaker, ShouldWaitUntilHarvestCountIsReadyToHarvestBeforeTransit
    HarvestCountCalculationRequestShouldBe(CLEAR);
 }
 
+TEST(TwistTrayIceMaker, ShouldWaitUntilFreezeDoorHasBeenClosedForLongEnoughBeforeTransitioningToHarvestStateWhileTheOtherConditionsAreMet)
+{
+   GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
+   WhenTheFreezerDoorIs(OPEN);
+
+   WhenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
+
+   NothingShouldHappen();
+   WhenHarvestCountIsReadyToHarvestIs(SET);
+
+   WhenTheFreezerDoorIs(CLOSED);
+
+   HarvestingShouldStart();
+   After(iceMakerData->harvestData.delayToHarvestAfterDoorClosesSeconds * MSEC_PER_SEC);
+}
+
 TEST(TwistTrayIceMaker, ShouldClearHarvestCountCalculationRequestAndTransitionToThermistorFaultWhenThermistorIsInvalidWhileFreezing)
 {
    GivenTheOperationStateIsInFreeze();
@@ -1277,35 +1294,6 @@ TEST(TwistTrayIceMaker, ShouldBeAbleToHarvestTwice)
    HarvestingShouldStart();
    WhenTheTemperatureIs(VeryCold);
    WhenHarvestCountIsReadyToHarvestIs(SET);
-}
-
-TEST(TwistTrayIceMaker, ShouldWaitToHarvestUntilDoorIsClosed)
-{
-   GivenTheIceMakerIsEnabled();
-   FreezingIsCompletedAndHarvestingDoesNotStartBecauseFreezerDoorOpens();
-
-   NothingShouldHappen();
-   After((iceMakerData->harvestData.fullBucketWaitPeriodMinutes * MSEC_PER_MIN) + 1);
-
-   WhenTheFreezerDoorIs(CLOSED);
-
-   NothingShouldHappen();
-   After((iceMakerData->harvestData.delayToHarvestAfterDoorClosesSeconds * MSEC_PER_SEC) - 1);
-
-   HarvestingShouldStart();
-   After(1);
-}
-
-TEST(TwistTrayIceMaker, ShouldStartHarvestingAfterFreezerDoorIsClosedForEnoughTimeWhileSabbathIsEnabled)
-{
-   GivenTheIceMakerIsEnabled();
-   FreezingIsCompletedAndHarvestingDoesNotStartBecauseFreezerDoorOpens();
-   GivenSabbathModeIs(ON);
-
-   WhenTheFreezerDoorIs(CLOSED);
-
-   HarvestingShouldStart();
-   After(iceMakerData->harvestData.delayToHarvestAfterDoorClosesSeconds * MSEC_PER_SEC);
 }
 
 TEST(TwistTrayIceMaker, ShouldNotTransitionToThermistorFaultStateWhenThermistorBecomesInvalidDuringTheHarvestState)
