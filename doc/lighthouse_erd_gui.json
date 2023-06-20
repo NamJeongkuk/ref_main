@@ -44,6 +44,7 @@
                "displayName": "Mainboard Personality",
                "name": "Erd_AppliancePersonality",
                "read": true,
+               "write": true,
                "interval": 1000000000
             },
             {
