@@ -28,7 +28,7 @@ void NonVolatileDataSourceDefaultData_BooleanFalse(void *data, size_t dataSize)
 
 void NonVolatileDataSourceDefaultData_DefaultPersonality(void *data, size_t dataSize)
 {
-   AppliancePersonality_t defaultPersonality = 1;
+   AppliancePersonality_t defaultPersonality = 0;
    memcpy(data, &defaultPersonality, dataSize);
 }
 
