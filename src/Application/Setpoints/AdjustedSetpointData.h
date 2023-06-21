@@ -12,6 +12,13 @@
 
 typedef struct
 {
+   uint8_t relativeHumidityTriggerForHighAmbientOffsetInPercent;
+   int8_t userSetpointTriggerForHighAmbientOffsetInDegF;
+   TemperatureDegFx100_t offsetForHighAmbientHumidityInDegFx100;
+} HighAmbientOffsetData_t;
+
+typedef struct
+{
    int16_t slopeCoefficient;
    TemperatureDegFx100_t minimumAmbientOffset;
    TemperatureDegFx100_t maximumAmbientOffset;
@@ -49,6 +56,7 @@ typedef struct
    TemperatureDegFx100_t cabinetOffsetInDegFx100;
    TemperatureDegFx100_t pulldownOffsetInDegFx100;
    const CrossAmbientOffsetData_t *crossAmbientOffsetData;
+   const HighAmbientOffsetData_t *highAmbientOffsetData;
    const SetpointOffsetData_t *setpointOffsetData;
    const ShiftOffsetData_t *shiftOffsetData;
 } FreshFoodAdjustedSetpointData_t;
@@ -57,6 +65,7 @@ typedef struct
 {
    TemperatureDegFx100_t cabinetOffsetInDegFx100;
    const CrossAmbientOffsetData_t *crossAmbientOffsetData;
+   const HighAmbientOffsetData_t *highAmbientOffsetData;
    const ShiftOffsetData_t *shiftOffsetData;
 } FreezerAdjustedSetpointData_t;
 

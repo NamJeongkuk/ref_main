@@ -657,12 +657,14 @@ enum
    ENTRY(Erd_FreshFood_PulldownOffsetInDegFx100,            0xF109, TemperatureDegFx100_t,                              Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFood_ThermalShiftInDegFx100,              0xF10A, TemperatureDegFx100_t,                              Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFood_CabinetPlusCrossAmbientOffsetInDegFx100, 0xF10B, TemperatureDegFx100_t,                          Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFood_HighAmbientOffsetInDegFx100,         0xF10C, TemperatureDegFx100_t,                              Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Freezer_ResolvedSetpointInDegFx100,            0xF110, TemperatureDegFx100_t,                              Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Freezer_CabinetOffsetInDegFx100,               0xF111, TemperatureDegFx100_t,                              Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Freezer_CrossAmbientOffsetInDegFx100,          0xF112, TemperatureDegFx100_t,                              Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Freezer_ThermalShiftInDegFx100,                0xF113, TemperatureDegFx100_t,                              Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Freezer_CabinetPlusCrossAmbientOffsetInDegFx100, 0xF114, TemperatureDegFx100_t,                            Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_HighAmbientOffsetInDegFx100,           0xF115, TemperatureDegFx100_t,                              Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreezerSetpointZone,                           0xF120, SetpointZone_t,                                     Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodSetpointZone,                         0xF121, SetpointZone_t,                                     Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

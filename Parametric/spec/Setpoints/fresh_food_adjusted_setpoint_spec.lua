@@ -14,6 +14,7 @@ describe('fresh_food_adjusted_setpoint', function()
       fresh_food_offset_in_degfx100 = 10,
       fresh_food_pulldown_offset_in_degfx100 = 30,
       cross_ambient_offset = TypedString('cross_ambient_offset', 'cross_ambient_offset'),
+      high_ambient_offset = TypedString('high_ambient_offset', 'high_ambient_offset'),
       setpoint_offset = TypedString('setpoint_offset', 'setpoint_offset'),
       shift_offset = TypedString('shift_offset', 'shift_offset')
     }, overrides or {})
@@ -28,6 +29,12 @@ describe('fresh_food_adjusted_setpoint', function()
       fresh_food_adjusted_setpoint(generate_config({
         cross_ambient_offset = -1
       }))
+    end)
+
+    should_fail_with('high_ambient_offset must be a typed string with type high_ambient_offset, but is a number', function()
+        fresh_food_adjusted_setpoint(generate_config({
+          high_ambient_offset = -1
+        }))
     end)
 
     should_fail_with('setpoint_offset must be a typed string with type setpoint_offset, but is a number', function()
@@ -65,6 +72,7 @@ describe('fresh_food_adjusted_setpoint', function()
         i16(10),
         i16(30),
         pointer(cross_ambient_offset),
+        pointer(high_ambient_offset),
         pointer(setpoint_offset),
         pointer(shift_offset)
     )

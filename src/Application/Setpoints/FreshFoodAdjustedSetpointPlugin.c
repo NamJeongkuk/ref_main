@@ -23,6 +23,7 @@ static const Erd_t freshFoodAdjustedSetpointErds[] = {
    Erd_FreshFood_CabinetOffsetInDegFx100,
    Erd_FreshFood_SetpointOffsetInDegFx100,
    Erd_FreshFood_CrossAmbientOffsetInDegFx100,
+   Erd_FreshFood_HighAmbientOffsetInDegFx100,
    Erd_FreshFood_PulldownOffsetInDegFx100,
    Erd_FreshFood_ThermalShiftInDegFx100
 };
@@ -70,6 +71,13 @@ static const ResolvedSetpointWriterConfiguration_t freshFoodResolvedSetpointWrit
 static const CrossAmbientCalculatorConfig_t freshFoodCrossAmbientOffsetCalculatorConfig = {
    .crossAmbientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
    .crossAmbientOffsetErd = Erd_FreshFood_CrossAmbientOffsetInDegFx100,
+};
+
+static const HighAmbientCalculatorConfig_t freshFoodHighAmbientOffsetCalculatorConfig = {
+   .ambientFilteredHumidityResolvedPercentx100Erd = Erd_Ambient_FilteredHumidityResolvedPercentx100,
+   .highAmbientOffsetErd = Erd_FreshFood_HighAmbientOffsetInDegFx100,
+   .setpointStatusErd = Erd_FreshFoodSetpointStatus,
+   .ambientHumiditySensorIsValidResolvedErd = Erd_AmbientHumidity_IsValidResolved
 };
 
 static bool SetpointZonePluginIsReady(I_DataModel_t *dataModel)
@@ -136,5 +144,10 @@ void FreshFoodAdjustedSetpointPlugin_Init(
       dataModel,
       PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData->crossAmbientOffsetData,
       &freshFoodCrossAmbientOffsetCalculatorConfig);
+   HighAmbientHumidityOffsetCalculator_Init(
+      &instance->_private.freshFoodHighAmbientOffsetCalculator,
+      dataModel,
+      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData->highAmbientOffsetData,
+      &freshFoodHighAmbientOffsetCalculatorConfig);
    FreshFoodShiftOffsetCalculatorPlugin_Init(&instance->_private.freshFoodShiftOffsetCalculatorPlugin, dataModel);
 }

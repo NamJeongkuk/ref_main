@@ -13,6 +13,7 @@ describe('freezer_adjusted_setpoint', function()
     return require 'lua-common'.table.merge({
       freezer_offset_in_degfx100 = -10,
       cross_ambient_offset = TypedString('cross_ambient_offset', 'cross_ambient_offset'),
+      high_ambient_offset = TypedString('high_ambient_offset', 'high_ambient_offset'),
       shift_offset = TypedString('shift_offset', 'shift_offset')
     }, overrides or {})
   end
@@ -25,6 +26,12 @@ describe('freezer_adjusted_setpoint', function()
     should_fail_with('cross_ambient_offset must be a typed string with type cross_ambient_offset, but is a number', function()
       freezer_adjusted_setpoint(generate_config({
         cross_ambient_offset = -1
+      }))
+    end)
+
+    should_fail_with('high_ambient_offset must be a typed string with type high_ambient_offset, but is a number', function()
+      freezer_adjusted_setpoint(generate_config({
+        high_ambient_offset = -1
       }))
     end)
 
@@ -48,6 +55,7 @@ describe('freezer_adjusted_setpoint', function()
       structure(
         i16(-10),
         pointer(cross_ambient_offset),
+        pointer(high_ambient_offset),
         pointer(shift_offset)
     )
     ]])

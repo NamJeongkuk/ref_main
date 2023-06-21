@@ -14,6 +14,7 @@ static const Erd_t freezerAdjustedSetpointErds[] = {
    Erd_Freezer_ResolvedSetpointInDegFx100,
    Erd_Freezer_CabinetOffsetInDegFx100,
    Erd_Freezer_CrossAmbientOffsetInDegFx100,
+   Erd_Freezer_HighAmbientOffsetInDegFx100,
    Erd_Freezer_ThermalShiftInDegFx100
 };
 
@@ -34,6 +35,13 @@ static const ResolvedSetpointWriterConfiguration_t freezerResolvedSetpointWriter
 static const CrossAmbientCalculatorConfig_t freezerCrossAmbientOffsetCalculatorConfig = {
    .crossAmbientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
    .crossAmbientOffsetErd = Erd_Freezer_CrossAmbientOffsetInDegFx100,
+};
+
+static const HighAmbientCalculatorConfig_t freezerHighAmbientOffsetCalculatorConfig = {
+   .ambientFilteredHumidityResolvedPercentx100Erd = Erd_Ambient_FilteredHumidityResolvedPercentx100,
+   .setpointStatusErd = Erd_FreezerSetpointStatus,
+   .highAmbientOffsetErd = Erd_Freezer_HighAmbientOffsetInDegFx100,
+   .ambientHumiditySensorIsValidResolvedErd = Erd_AmbientHumidity_IsValidResolved
 };
 
 static void InitializeFreezerCabinetOffsetErd(I_DataModel_t *dataModel)
@@ -59,5 +67,10 @@ void FreezerAdjustedSetpointPlugin_Init(
       dataModel,
       PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freezerAdjustedSetpointData->crossAmbientOffsetData,
       &freezerCrossAmbientOffsetCalculatorConfig);
+   HighAmbientHumidityOffsetCalculator_Init(
+      &instance->_private.freezerHighAmbientOffsetCalculator,
+      dataModel,
+      PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freezerAdjustedSetpointData->highAmbientOffsetData,
+      &freezerHighAmbientOffsetCalculatorConfig);
    FreezerShiftOffsetCalculatorPlugin_Init(&instance->_private.freezerShiftOffsetCalculatorPlugin, dataModel);
 }

@@ -2022,6 +2022,20 @@
           "name": "Erd_Freezer_CrossAmbientOffsetInDegFx100",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer High Ambient Offset",
+          "name": "Erd_Freezer_HighAmbientOffsetInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food High Ambient Offset",
+          "name": "Erd_FreshFood_HighAmbientOffsetInDegFx100",
+          "read": true,
+          "write": true
         }
       ]
     },

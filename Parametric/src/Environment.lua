@@ -57,6 +57,7 @@ return function(directory)
   import('Setpoints/SetpointOffset')
   import('Setpoints/ShiftOffset')
   import('Setpoints/CrossAmbientOffset')
+  import('Setpoints/HighAmbientOffset')
   import('Damper/SingleDamper')
   import('Setpoints/UserSetpoint')
   import('Setpoints/UserSetpointData')
@@ -124,6 +125,7 @@ return function(directory)
   setpoint_offset = SetpointOffset(core)
   shift_offset = ShiftOffset(core)
   cross_ambient_offset = CrossAmbientOffset(core)
+  high_ambient_offset = HighAmbientOffset(core)
   single_damper = SingleDamper(core)
   user_setpoint = UserSetpoint(core)
   user_setpoint_data = UserSetpointData(core)
@@ -199,6 +201,7 @@ return function(directory)
     setpoint_offset = setpoint_offset,
     shift_offset = shift_offset,
     cross_ambient_offset = cross_ambient_offset,
+    high_ambient_offset = high_ambient_offset,
     single_damper = single_damper,
     user_setpoint = user_setpoint,
     user_setpoint_data = user_setpoint_data,

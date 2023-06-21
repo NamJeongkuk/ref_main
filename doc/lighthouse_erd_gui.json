@@ -338,6 +338,20 @@
                "name": "Erd_Freezer_CrossAmbientOffsetInDegFx100",
                "read": true,
                "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF High Ambient Offset (DegF x100)",
+               "name": "Erd_FreshFood_HighAmbientOffsetInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ High Ambient Offset (DegF x100)",
+               "name": "Erd_Freezer_HighAmbientOffsetInDegFx100",
+               "read": true,
+               "interval": 1000000000
             }
          ]
       },
