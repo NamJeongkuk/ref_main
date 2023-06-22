@@ -24,9 +24,7 @@ extern "C"
 static const DispenseControllerConfig_t config = {
    .privateDispensingRequestErd = Erd_PrivateDispensingRequest,
    .privateDispensingResultStatusErd = Erd_PrivateDispensingResultStatus,
-   .dispensingInhibitedByRfidErd = Erd_DispensingInhibitedByRfid,
-   .waterDispensingInhibitedByDoorErd = Erd_WaterDispensingInhibitedByDoor,
-   .iceDispensingInhibitedByDoorErd = Erd_IceDispensingInhibitedByDoor,
+   .dispensingInhibitedErd = Erd_DispensingInhibited,
    .autofillSensorErrorErd = Erd_AutofillSensorError,
    .dispensingDisabledErd = Erd_DispensingDisabled,
    .augerMotorDispensingVoteErd = Erd_AugerMotor_DispensingVote,
@@ -91,12 +89,20 @@ TEST_GROUP(DispenseController)
 
    void GivenDispensingInhibitedByRfid()
    {
-      DataModel_Write(dataModel, Erd_DispensingInhibitedByRfid, set);
+      DispensingInhibitedBitmap_t bitmap;
+      DataModel_Read(dataModel, Erd_DispensingInhibited, &bitmap);
+
+      BIT_SET(bitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
+      DataModel_Write(dataModel, Erd_DispensingInhibited, &bitmap);
    }
 
    void WhenDispensingNotInhibitedByRfid()
    {
-      DataModel_Write(dataModel, Erd_DispensingInhibitedByRfid, clear);
+      DispensingInhibitedBitmap_t bitmap;
+      DataModel_Read(dataModel, Erd_DispensingInhibited, &bitmap);
+
+      BIT_CLEAR(bitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
+      DataModel_Write(dataModel, Erd_DispensingInhibited, &bitmap);
    }
 
    void WhenDispensingIsInhibitedByRfid()
@@ -106,7 +112,11 @@ TEST_GROUP(DispenseController)
 
    void GivenIceDispensingInhibitedByDoor()
    {
-      DataModel_Write(dataModel, Erd_IceDispensingInhibitedByDoor, set);
+      DispensingInhibitedBitmap_t bitmap;
+      DataModel_Read(dataModel, Erd_DispensingInhibited, &bitmap);
+
+      BIT_SET(bitmap, DispensingInhibitedBitmapIndex_IceDueToDoorOpen);
+      DataModel_Write(dataModel, Erd_DispensingInhibited, &bitmap);
    }
 
    void WhenIceDispensingInhibitedByDoor()
@@ -116,7 +126,11 @@ TEST_GROUP(DispenseController)
 
    void GivenWaterDispensingInhibitedByDoor()
    {
-      DataModel_Write(dataModel, Erd_WaterDispensingInhibitedByDoor, set);
+      DispensingInhibitedBitmap_t bitmap;
+      DataModel_Read(dataModel, Erd_DispensingInhibited, &bitmap);
+
+      BIT_SET(bitmap, DispensingInhibitedBitmapIndex_WaterDueToDoorOpen);
+      DataModel_Write(dataModel, Erd_DispensingInhibited, &bitmap);
    }
 
    void WhenWaterDispensingInhibitedByDoor()
@@ -126,7 +140,11 @@ TEST_GROUP(DispenseController)
 
    void GivenIceDispensingNotInhibitedByDoor()
    {
-      DataModel_Write(dataModel, Erd_IceDispensingInhibitedByDoor, clear);
+      DispensingInhibitedBitmap_t bitmap;
+      DataModel_Read(dataModel, Erd_DispensingInhibited, &bitmap);
+
+      BIT_CLEAR(bitmap, DispensingInhibitedBitmapIndex_IceDueToDoorOpen);
+      DataModel_Write(dataModel, Erd_DispensingInhibited, &bitmap);
    }
 
    void WhenIceDispensingNotInhibitedByDoor()
@@ -136,7 +154,11 @@ TEST_GROUP(DispenseController)
 
    void WhenWaterDispensingNotInhibitedByDoor()
    {
-      DataModel_Write(dataModel, Erd_WaterDispensingInhibitedByDoor, clear);
+      DispensingInhibitedBitmap_t bitmap;
+      DataModel_Read(dataModel, Erd_DispensingInhibited, &bitmap);
+
+      BIT_CLEAR(bitmap, DispensingInhibitedBitmapIndex_WaterDueToDoorOpen);
+      DataModel_Write(dataModel, Erd_DispensingInhibited, &bitmap);
    }
 
    void GivenWaterDispensingNotInhibitedByDoor()

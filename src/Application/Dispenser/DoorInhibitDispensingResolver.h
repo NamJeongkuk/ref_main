@@ -11,6 +11,7 @@
 #include "EventSubscription.h"
 #include "DispenserData.h"
 #include "I_DataModel.h"
+#include "DispensingInhibitedBitmap.h"
 
 typedef struct
 {
@@ -20,7 +21,8 @@ typedef struct
    Erd_t rightHandFreezerDoorIsOpenErd; // bool
    Erd_t convertibleCompartmentDoorIsOpenErd; // bool
    Erd_t doorInDoorIsOpenErd; // bool
-   Erd_t dispensingInhibitedByDoorErd; // bool
+   Erd_t dispensingInhibitedErd; // DispensingInhibitedBitmap_t
+   DispensingInhibitedBitmapIndex_t dispensingInhibitedBitmapIndex;
 } DoorInhibitDispensingResolverConfig_t;
 
 typedef struct

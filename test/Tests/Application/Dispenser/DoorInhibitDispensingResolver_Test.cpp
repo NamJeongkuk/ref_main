@@ -27,7 +27,9 @@ enum
    RightHandFreezerDoorIsOpenErd,
    ConvertibleCompartmentDoorIsOpenErd,
    DoorInDoorIsOpenErd,
-   DispensingInhibitedByDoorErd
+   DispensingInhibitedErd,
+
+   DispensingInhibitedBitmapIndex_SomeInhibitReason = 0
 };
 
 static const DataModel_TestDoubleConfigurationEntry_t erds[] = {
@@ -37,7 +39,7 @@ static const DataModel_TestDoubleConfigurationEntry_t erds[] = {
    { RightHandFreezerDoorIsOpenErd, sizeof(bool) },
    { ConvertibleCompartmentDoorIsOpenErd, sizeof(bool) },
    { DoorInDoorIsOpenErd, sizeof(bool) },
-   { DispensingInhibitedByDoorErd, sizeof(bool) }
+   { DispensingInhibitedErd, sizeof(DispensingInhibitedBitmap_t) }
 };
 
 static const DoorInhibitDispensingResolverConfig_t config = {
@@ -47,7 +49,8 @@ static const DoorInhibitDispensingResolverConfig_t config = {
    .rightHandFreezerDoorIsOpenErd = RightHandFreezerDoorIsOpenErd,
    .convertibleCompartmentDoorIsOpenErd = ConvertibleCompartmentDoorIsOpenErd,
    .doorInDoorIsOpenErd = DoorInDoorIsOpenErd,
-   .dispensingInhibitedByDoorErd = DispensingInhibitedByDoorErd
+   .dispensingInhibitedErd = DispensingInhibitedErd,
+   .dispensingInhibitedBitmapIndex = DispensingInhibitedBitmapIndex_SomeInhibitReason
 };
 
 TEST_GROUP(DoorInhibitDispensingResolverWithAllDoorsInhibited)
@@ -172,12 +175,12 @@ TEST_GROUP(DoorInhibitDispensingResolverWithAllDoorsInhibited)
       DataModel_Write(dataModel, DoorInDoorIsOpenErd, clear);
    }
 
-   void TheDispensingInhibitedByDoorShouldBe(bool expected)
+   void TheDispensingInhibitedByDoorBitmapIndexShouldBe(bool expected)
    {
-      bool actual;
-      DataModel_Read(dataModel, DispensingInhibitedByDoorErd, &actual);
+      DispensingInhibitedBitmap_t actual;
+      DataModel_Read(dataModel, DispensingInhibitedErd, &actual);
 
-      CHECK_EQUAL(expected, actual);
+      CHECK_EQUAL(expected, BIT_STATE(actual, DispensingInhibitedBitmapIndex_SomeInhibitReason));
    }
 };
 
@@ -189,169 +192,169 @@ TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldInitialize)
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldInhibitDispensingWhenLeftHandFreshFoodDoorOpensOnInit)
 {
    GivenTheLeftHandFreshFoodDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldInhibitDispensingWhenRightHandFreshFoodDoorOpensOnInit)
 {
    GivenTheRightHandFreshFoodDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldInhibitDispensingWhenLeftHandFreezerDoorOpensOnInit)
 {
    GivenTheLeftHandFreezerDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldInhibitDispensingWhenRightHandFreezerDoorOpensOnInit)
 {
    GivenTheRightHandFreezerDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldInhibitDispensingWhenConvertibleCompartmentDoorOpensOnInit)
 {
    GivenTheConvertibleCompartmentDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldInhibitDispensingWhenDoorInDoorOpensOnInit)
 {
    GivenTheDoorInDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldInhibitDispensingWhenLeftHandFreshFoodDoorOpens)
 {
    GivenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheLeftHandFreshFoodDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldAllowDispensingWhenLeftHandFreshFoodDoorCloses)
 {
    GivenTheModuleIsInitialized();
    GivenTheLeftHandFreshFoodDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 
    WhenTheLeftHandFreshFoodDoorCloses();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldInhibitDispensingWhenRightHandFreshFoodDoorOpens)
 {
    GivenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheRightHandFreshFoodDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldAllowDispensingWhenRightHandFreshFoodDoorCloses)
 {
    GivenTheModuleIsInitialized();
    GivenTheRightHandFreshFoodDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 
    WhenTheRightHandFreshFoodDoorCloses();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldInhibitDispensingWhenLeftHandFreezerDoorOpens)
 {
    GivenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheLeftHandFreezerDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldAllowDispensingWhenLeftHandFreezerDoorCloses)
 {
    GivenTheModuleIsInitialized();
    GivenTheLeftHandFreezerDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 
    WhenTheLeftHandFreezerDoorCloses();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldInhibitDispensingWhenRightHandFreezerDoorOpens)
 {
    GivenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheRightHandFreezerDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldAllowDispensingWhenRightHandFreezerDoorCloses)
 {
    GivenTheModuleIsInitialized();
    GivenTheRightHandFreezerDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 
    WhenTheRightHandFreezerDoorCloses();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldInhibitDispensingWhenConvertibleCompartmentDoorOpens)
 {
    GivenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheConvertibleCompartmentDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldInhibitDispensingWhenConvertibleCompartmentDoorCloses)
 {
    GivenTheModuleIsInitialized();
    GivenTheConvertibleCompartmentDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 
    WhenTheConvertibleCompartmentDoorCloses();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldInhibitDispensingWhenDoorInDoorOpens)
 {
    GivenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheDoorInDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldAllowDispensingWhenDoorInDoorCloses)
 {
    GivenTheModuleIsInitialized();
    GivenTheDoorInDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 
    WhenTheDoorInDoorCloses();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldInhibitDispensingUntilAllTheDoorsAreClosed)
@@ -363,25 +366,25 @@ TEST(DoorInhibitDispensingResolverWithAllDoorsInhibited, ShouldInhibitDispensing
    GivenTheRightHandFreezerDoorOpens();
    GivenTheConvertibleCompartmentDoorOpens();
    GivenTheDoorInDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 
    WhenTheLeftHandFreshFoodDoorCloses();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 
    WhenTheRightHandFreshFoodDoorCloses();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 
    WhenTheLeftHandFreezerDoorCloses();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 
    WhenTheRightHandFreezerDoorCloses();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 
    WhenTheConvertibleCompartmentDoorCloses();
-   TheDispensingInhibitedByDoorShouldBe(SET);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(SET);
 
    WhenTheDoorInDoorCloses();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 }
 
 TEST_GROUP(DoorInhibitDispensingResolverWithAllDoorsNotInhibited)
@@ -501,65 +504,65 @@ TEST_GROUP(DoorInhibitDispensingResolverWithAllDoorsNotInhibited)
       DataModel_Write(dataModel, DoorInDoorIsOpenErd, clear);
    }
 
-   void TheDispensingInhibitedByDoorShouldBe(bool expected)
+   void TheDispensingInhibitedByDoorBitmapIndexShouldBe(bool expected)
    {
-      bool actual;
-      DataModel_Read(dataModel, DispensingInhibitedByDoorErd, &actual);
+      DispensingInhibitedBitmap_t actual;
+      DataModel_Read(dataModel, DispensingInhibitedErd, &actual);
 
-      CHECK_EQUAL(expected, actual);
+      CHECK_EQUAL(expected, BIT_STATE(actual, DispensingInhibitedBitmapIndex_SomeInhibitReason));
    }
 };
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsNotInhibited, ShouldNotInhibitDispensingWhenLeftHandFreshFoodDoorOpens)
 {
    GivenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheLeftHandFreshFoodDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsNotInhibited, ShouldNotInhibitDispensingWhenRightHandFreshFoodDoorOpens)
 {
    GivenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheRightHandFreshFoodDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsNotInhibited, ShouldNotInhibitDispensingWhenLeftHandFreezerDoorOpens)
 {
    GivenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheLeftHandFreezerDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsNotInhibited, ShouldNotInhibitDispensingWhenRightHandFreezerDoorOpens)
 {
    GivenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheRightHandFreezerDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsNotInhibited, ShouldNotInhibitDispensingWhenConvertibleCompartmentDoorOpens)
 {
    GivenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheConvertibleCompartmentDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 }
 
 TEST(DoorInhibitDispensingResolverWithAllDoorsNotInhibited, ShouldNotInhibitDispensingWhenDoorInDoorOpens)
 {
    GivenTheModuleIsInitialized();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 
    WhenTheDoorInDoorOpens();
-   TheDispensingInhibitedByDoorShouldBe(CLEAR);
+   TheDispensingInhibitedByDoorBitmapIndexShouldBe(CLEAR);
 }

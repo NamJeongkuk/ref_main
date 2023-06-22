@@ -66,29 +66,39 @@ TEST_GROUP(DispensingIntegration)
 
    void GivenDispensingNotInhibitedByRfid()
    {
-      DataModel_Write(dataModel, Erd_DispensingInhibitedByRfid, clear);
+      DispensingInhibitedBitmap_t bitmap;
+      DataModel_Read(
+         dataModel,
+         Erd_DispensingInhibited,
+         &bitmap);
+
+      BIT_CLEAR(bitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
+      DataModel_Write(
+         dataModel,
+         Erd_DispensingInhibited,
+         &bitmap);
    }
 
    void WaterDispensingInhibitedByDoorShouldBe(bool expectedState)
    {
-      bool actualState;
+      DispensingInhibitedBitmap_t actualBitmap;
       DataModel_Read(
          dataModel,
-         Erd_WaterDispensingInhibitedByDoor,
-         &actualState);
+         Erd_DispensingInhibited,
+         &actualBitmap);
 
-      CHECK_EQUAL(expectedState, actualState);
+      CHECK_EQUAL(expectedState, BIT_STATE(actualBitmap, DispensingInhibitedBitmapIndex_WaterDueToDoorOpen));
    }
 
    void IceDispensingInhibitedByDoorShouldBe(bool expectedState)
    {
-      bool actualState;
+      DispensingInhibitedBitmap_t actualBitmap;
       DataModel_Read(
          dataModel,
-         Erd_IceDispensingInhibitedByDoor,
-         &actualState);
+         Erd_DispensingInhibited,
+         &actualBitmap);
 
-      CHECK_EQUAL(expectedState, actualState);
+      CHECK_EQUAL(expectedState, BIT_STATE(actualBitmap, DispensingInhibitedBitmapIndex_IceDueToDoorOpen));
    }
 
    void WhenTheDispensingRequestIs(DispensingAction_t action, DispensingRequestSelection_t selection)
@@ -159,7 +169,17 @@ TEST_GROUP(DispensingIntegration)
 
    void WhenDispensingIsInhibitedByRfid()
    {
-      DataModel_Write(dataModel, Erd_DispensingInhibitedByRfid, set);
+      DispensingInhibitedBitmap_t bitmap;
+      DataModel_Read(
+         dataModel,
+         Erd_DispensingInhibited,
+         &bitmap);
+
+      BIT_SET(bitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
+      DataModel_Write(
+         dataModel,
+         Erd_DispensingInhibited,
+         &bitmap);
    }
 
    void WhenWaterDispensingIsInhibitedByAnOpenDoor()
@@ -169,7 +189,17 @@ TEST_GROUP(DispensingIntegration)
 
    void WhenIceDispensingIsInhibitedByDoor()
    {
-      DataModel_Write(dataModel, Erd_IceDispensingInhibitedByDoor, set);
+      DispensingInhibitedBitmap_t bitmap;
+      DataModel_Read(
+         dataModel,
+         Erd_DispensingInhibited,
+         &bitmap);
+
+      BIT_SET(bitmap, DispensingInhibitedBitmapIndex_IceDueToDoorOpen);
+      DataModel_Write(
+         dataModel,
+         Erd_DispensingInhibited,
+         &bitmap);
    }
 
    void TheDispenseStatusShouldBe(DispenseStatus_t expected)

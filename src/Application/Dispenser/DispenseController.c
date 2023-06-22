@@ -14,6 +14,7 @@
 #include "AugerMotorVotedIceType.h"
 #include "Constants_Time.h"
 #include "utils.h"
+#include "DispensingInhibitedBitmap.h"
 
 #define InstanceFromHsm(hsm) CONTAINER_OF(DispenseController_t, _private.hsm, hsm)
 
@@ -130,35 +131,35 @@ static bool DispenseEnabled(DispenseController_t *instance)
 
 static bool DispenseInhibitedByRfid(DispenseController_t *instance)
 {
-   bool state;
+   DispensingInhibitedBitmap_t dispensingInhibitedBitmap;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->dispensingInhibitedByRfidErd,
-      &state);
+      instance->_private.config->dispensingInhibitedErd,
+      &dispensingInhibitedBitmap);
 
-   return state;
+   return BIT_STATE(dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
 }
 
 static bool WaterDispensingInhibitedByDoor(DispenseController_t *instance)
 {
-   bool state;
+   DispensingInhibitedBitmap_t dispensingInhibitedBitmap;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->waterDispensingInhibitedByDoorErd,
-      &state);
+      instance->_private.config->dispensingInhibitedErd,
+      &dispensingInhibitedBitmap);
 
-   return state;
+   return BIT_STATE(dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_WaterDueToDoorOpen);
 }
 
 static bool IceDispensingInhibitedByDoor(DispenseController_t *instance)
 {
-   bool state;
+   DispensingInhibitedBitmap_t dispensingInhibitedBitmap;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->iceDispensingInhibitedByDoorErd,
-      &state);
+      instance->_private.config->dispensingInhibitedErd,
+      &dispensingInhibitedBitmap);
 
-   return state;
+   return BIT_STATE(dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_IceDueToDoorOpen);
 }
 
 static bool AutoFillSensorError(DispenseController_t *instance)
@@ -367,18 +368,15 @@ static void OnDataModelChange(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_DispensingDisabled, NULL);
       }
    }
-   else if(erd == instance->_private.config->dispensingInhibitedByRfidErd)
+   else if(erd == instance->_private.config->dispensingInhibitedErd)
    {
-      const bool *state = onChangeData->data;
-      if(*state)
+      const DispensingInhibitedBitmap_t *dispensingInhibitedBitmap = onChangeData->data;
+      if(BIT_STATE(*dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter))
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_DispensingInhibitedByRfid, NULL);
       }
-   }
-   else if(erd == instance->_private.config->waterDispensingInhibitedByDoorErd || erd == instance->_private.config->iceDispensingInhibitedByDoorErd)
-   {
-      const bool *state = onChangeData->data;
-      if(*state)
+      else if(BIT_STATE(*dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_WaterDueToDoorOpen) ||
+         BIT_STATE(*dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_IceDueToDoorOpen))
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_DispensingInhibitedByDoor, NULL);
       }

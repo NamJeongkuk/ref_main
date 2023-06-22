@@ -105,6 +105,7 @@
 #include "IceMakerTypeInformation.h"
 #include "AndroidUiSignOfLifeFsmState.h"
 #include "I_OneWire.h"
+#include "DispensingInhibitedBitmap.h"
 
 // clang-format off
 
@@ -438,6 +439,7 @@ enum
    \
    ENTRY(Erd_DispenserRecessHeaterDutyCyclePercent,         0x122C, PercentageDutyCycle_t,                              Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_SecondarySignOfLife,                           0x122D, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DispensingInhibited,                           0x122F, DispensingInhibitedBitmap_t,                        Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ServiceDiagnosticsEntityLocation,              0xE000, Erd_t,                                              Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
@@ -720,9 +722,6 @@ enum
    ENTRY(Erd_AugerMotorControllerFsmState,                  0xF162, AugerMotorControllerFsmState_t,                     Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_PrivateDispensingRequest,                      0xF163, DispensingRequest_t,                                Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_PrivateDispensingResultStatus,                 0xF164, DispenseStatus_t,                                   Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DispensingInhibitedByRfid,                     0xF165, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_WaterDispensingInhibitedByDoor,                0xF166, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_IceDispensingInhibitedByDoor,                  0xF167, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AutofillSensorError,                           0xF168, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispensingDisabled,                            0xF169, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \

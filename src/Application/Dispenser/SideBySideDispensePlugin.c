@@ -24,9 +24,7 @@ static const DispensingRequestHandlerConfig_t dispensingRequestHandlerConfig = {
 static const DispenseControllerConfig_t dispenseControllerConfig = {
    .privateDispensingRequestErd = Erd_PrivateDispensingRequest,
    .privateDispensingResultStatusErd = Erd_PrivateDispensingResultStatus,
-   .dispensingInhibitedByRfidErd = Erd_DispensingInhibitedByRfid,
-   .waterDispensingInhibitedByDoorErd = Erd_WaterDispensingInhibitedByDoor,
-   .iceDispensingInhibitedByDoorErd = Erd_IceDispensingInhibitedByDoor,
+   .dispensingInhibitedErd = Erd_DispensingInhibited,
    .autofillSensorErrorErd = Erd_AutofillSensorError,
    .dispensingDisabledErd = Erd_DispensingDisabled,
    .augerMotorDispensingVoteErd = Erd_AugerMotor_DispensingVote,
@@ -43,7 +41,8 @@ static const DoorInhibitDispensingResolverConfig_t doorInhibitWaterDispensingRes
    .rightHandFreezerDoorIsOpenErd = Erd_Invalid,
    .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorIsOpen,
    .doorInDoorIsOpenErd = Erd_DoorInDoorIsOpen,
-   .dispensingInhibitedByDoorErd = Erd_WaterDispensingInhibitedByDoor
+   .dispensingInhibitedErd = Erd_DispensingInhibited,
+   .dispensingInhibitedBitmapIndex = DispensingInhibitedBitmapIndex_WaterDueToDoorOpen
 };
 
 static const DoorInhibitDispensingResolverConfig_t doorInhibitIceDispensingResolverConfig = {
@@ -53,7 +52,8 @@ static const DoorInhibitDispensingResolverConfig_t doorInhibitIceDispensingResol
    .rightHandFreezerDoorIsOpenErd = Erd_Invalid,
    .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorIsOpen,
    .doorInDoorIsOpenErd = Erd_DoorInDoorIsOpen,
-   .dispensingInhibitedByDoorErd = Erd_IceDispensingInhibitedByDoor
+   .dispensingInhibitedErd = Erd_DispensingInhibited,
+   .dispensingInhibitedBitmapIndex = DispensingInhibitedBitmapIndex_IceDueToDoorOpen
 };
 
 void SideBySideDispensePlugin_Init(SideBySideDispensePlugin_t *instance, I_DataModel_t *dataModel)
