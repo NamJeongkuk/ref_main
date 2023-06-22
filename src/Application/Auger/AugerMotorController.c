@@ -17,14 +17,17 @@ enum
    Signal_StopDispensing = Fsm_UserSignalStart,
    Signal_Crushed,
    Signal_Cubed,
-   Signal_DirectionChangeDelayTimerExpired,
+   Signal_RelayOperationDelayTimerExpired,
    Signal_PressureReliefTimerExpired,
 };
 
+static void State_PreIdleDelay(Fsm_t *, const FsmSignal_t, const void *);
 static void State_Idle(Fsm_t *, const FsmSignal_t, const void *);
 static void State_Cubed(Fsm_t *, const FsmSignal_t, const void *);
 static void State_Crushed(Fsm_t *, const FsmSignal_t, const void *);
 static void State_DispensingComplete(Fsm_t *, const FsmSignal_t, const void *);
+static void State_MoveInReverseDirection(Fsm_t *, const FsmSignal_t, const void *);
+static void State_EnsureRelaysAreOff(Fsm_t *, const FsmSignal_t, const void *);
 
 static AugerMotorController_t *InstanceFromFsm(Fsm_t *fsm)
 {
@@ -58,7 +61,7 @@ static void SetAugerMotorDirectionRelayTo(AugerMotorController_t *instance, bool
 static void ReverseDirectionDelayTimerExpired(void *context)
 {
    AugerMotorController_t *instance = context;
-   Fsm_SendSignal(&instance->_private.fsm, Signal_DirectionChangeDelayTimerExpired, NULL);
+   Fsm_SendSignal(&instance->_private.fsm, Signal_RelayOperationDelayTimerExpired, NULL);
 }
 
 static void PressureReliefTimerExpired(void *context)
@@ -67,7 +70,7 @@ static void PressureReliefTimerExpired(void *context)
    Fsm_SendSignal(&instance->_private.fsm, Signal_PressureReliefTimerExpired, NULL);
 }
 
-static void StartReverseDirectionDelayTimer(AugerMotorController_t *instance)
+static void StartDelayBetweenRelayOperations(AugerMotorController_t *instance)
 {
    TimerModule_StartOneShot(
       DataModelErdPointerAccess_GetTimerModule(
@@ -107,12 +110,40 @@ static void ReverseAugerDirectionRelay(AugerMotorController_t *instance)
    if(instance->_private.storedAugerMotorIceType == AugerMotorIceType_Cubed)
    {
       SetAugerMotorDirectionRelayTo(instance, ON);
-      SetAugerMotorPowerTo(instance, ON);
    }
    else if(instance->_private.storedAugerMotorIceType == AugerMotorIceType_Crushed)
    {
       SetAugerMotorDirectionRelayTo(instance, OFF);
-      SetAugerMotorPowerTo(instance, ON);
+   }
+}
+
+// This delay is here to ensure that the relay operation delay holds between dispense cycles.
+static void State_PreIdleDelay(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
+{
+   AugerMotorController_t *instance = InstanceFromFsm(fsm);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Fsm_Entry:
+         SetFsmStateTo(instance, AugerMotorControllerFsmState_PreIdleDelay);
+         StartDelayBetweenRelayOperations(instance);
+         break;
+
+      case Signal_RelayOperationDelayTimerExpired:
+         if(AugerMotorIceType(instance) == AugerMotorIceType_Off)
+         {
+            Fsm_Transition(&instance->_private.fsm, State_Idle);
+         }
+         else if(AugerMotorIceType(instance) == AugerMotorIceType_Crushed)
+         {
+            Fsm_Transition(&instance->_private.fsm, State_Crushed);
+         }
+         else if(AugerMotorIceType(instance) == AugerMotorIceType_Cubed)
+         {
+            Fsm_Transition(&instance->_private.fsm, State_Cubed);
+         }
+         break;
    }
 }
 
@@ -125,7 +156,6 @@ void State_Idle(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
    {
       case Fsm_Entry:
          SetFsmStateTo(instance, AugerMotorControllerFsmState_Idle);
-         SetAugerMotorPowerTo(instance, OFF);
          break;
 
       case Signal_Crushed:
@@ -134,9 +164,6 @@ void State_Idle(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
 
       case Signal_Cubed:
          Fsm_Transition(&instance->_private.fsm, State_Cubed);
-         break;
-
-      case Fsm_Exit:
          break;
    }
 }
@@ -152,24 +179,12 @@ void State_Cubed(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          SetFsmStateTo(instance, AugerMotorControllerFsmState_Cubed);
          instance->_private.storedAugerMotorIceType = AugerMotorIceType_Cubed;
 
-         StartReverseDirectionDelayTimer(instance);
-         SetAugerMotorPowerTo(instance, OFF);
-         break;
-
-      case Signal_StopDispensing:
-         Fsm_Transition(&instance->_private.fsm, State_DispensingComplete);
-         break;
-
-      case Signal_DirectionChangeDelayTimerExpired:
-         SetAugerMotorDirectionRelayTo(instance, OFF);
          SetAugerMotorPowerTo(instance, ON);
          break;
 
+      case Signal_StopDispensing:
       case Signal_Crushed:
-         Fsm_Transition(&instance->_private.fsm, State_Crushed);
-         break;
-
-      case Fsm_Exit:
+         Fsm_Transition(&instance->_private.fsm, State_DispensingComplete);
          break;
    }
 }
@@ -185,24 +200,17 @@ void State_Crushed(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          SetFsmStateTo(instance, AugerMotorControllerFsmState_Crushed);
          instance->_private.storedAugerMotorIceType = AugerMotorIceType_Crushed;
 
-         StartReverseDirectionDelayTimer(instance);
-         SetAugerMotorPowerTo(instance, OFF);
-         break;
-
-      case Signal_StopDispensing:
-         Fsm_Transition(&instance->_private.fsm, State_DispensingComplete);
-         break;
-
-      case Signal_DirectionChangeDelayTimerExpired:
          SetAugerMotorDirectionRelayTo(instance, ON);
+         StartDelayBetweenRelayOperations(instance);
+         break;
+
+      case Signal_RelayOperationDelayTimerExpired:
          SetAugerMotorPowerTo(instance, ON);
          break;
 
+      case Signal_StopDispensing:
       case Signal_Cubed:
-         Fsm_Transition(&instance->_private.fsm, State_Cubed);
-         break;
-
-      case Fsm_Exit:
+         Fsm_Transition(&instance->_private.fsm, State_DispensingComplete);
          break;
    }
 }
@@ -218,41 +226,55 @@ void State_DispensingComplete(Fsm_t *fsm, const FsmSignal_t signal, const void *
          SetFsmStateTo(instance, AugerMotorControllerFsmState_DispensingComplete);
          SetAugerMotorPowerTo(instance, OFF);
 
-         StartReverseDirectionDelayTimer(instance);
+         StartDelayBetweenRelayOperations(instance);
          break;
 
-      case Signal_DirectionChangeDelayTimerExpired:
-         if(AugerMotorIceType(instance) == AugerMotorIceType_Off)
-         {
-            ReverseAugerDirectionRelay(instance);
-            StartPressureReliefTimer(instance);
-         }
-         else if(AugerMotorIceType(instance) == AugerMotorIceType_Crushed)
-         {
-            Fsm_Transition(&instance->_private.fsm, State_Crushed);
-         }
-         else if(AugerMotorIceType(instance) == AugerMotorIceType_Cubed)
-         {
-            Fsm_Transition(&instance->_private.fsm, State_Cubed);
-         }
+      case Signal_RelayOperationDelayTimerExpired:
+         Fsm_Transition(&instance->_private.fsm, State_MoveInReverseDirection);
+         break;
+   }
+}
+
+static void State_MoveInReverseDirection(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
+{
+   AugerMotorController_t *instance = InstanceFromFsm(fsm);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Fsm_Entry:
+         SetFsmStateTo(instance, AugerMotorControllerFsmState_MoveInReverseDirection);
+         ReverseAugerDirectionRelay(instance);
+         StartDelayBetweenRelayOperations(instance);
+         break;
+
+      case Signal_RelayOperationDelayTimerExpired:
+         SetAugerMotorPowerTo(instance, ON);
+         StartPressureReliefTimer(instance);
          break;
 
       case Signal_PressureReliefTimerExpired:
-         if(AugerMotorIceType(instance) == AugerMotorIceType_Off)
-         {
-            Fsm_Transition(&instance->_private.fsm, State_Idle);
-         }
-         else if(AugerMotorIceType(instance) == AugerMotorIceType_Crushed)
-         {
-            Fsm_Transition(&instance->_private.fsm, State_Crushed);
-         }
-         else if(AugerMotorIceType(instance) == AugerMotorIceType_Cubed)
-         {
-            Fsm_Transition(&instance->_private.fsm, State_Cubed);
-         }
+         Fsm_Transition(&instance->_private.fsm, State_EnsureRelaysAreOff);
+         break;
+   }
+}
+
+static void State_EnsureRelaysAreOff(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
+{
+   AugerMotorController_t *instance = InstanceFromFsm(fsm);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Fsm_Entry:
+         SetFsmStateTo(instance, AugerMotorControllerFsmState_EnsureRelaysAreOff);
+         SetAugerMotorPowerTo(instance, OFF);
+         StartDelayBetweenRelayOperations(instance);
          break;
 
-      case Fsm_Exit:
+      case Signal_RelayOperationDelayTimerExpired:
+         SetAugerMotorDirectionRelayTo(instance, OFF);
+         Fsm_Transition(&instance->_private.fsm, State_PreIdleDelay);
          break;
    }
 }

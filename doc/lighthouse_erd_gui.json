@@ -44,6 +44,7 @@
                "displayName": "Mainboard Personality",
                "name": "Erd_AppliancePersonality",
                "read": true,
+               "write": true,
                "interval": 1000000000
             },
             {
@@ -269,18 +270,32 @@
             },
             {
                "namespace": "mb",
-               "displayName": "FF User Setpoint Vote (DegF x100)",
-               "name": "Erd_FreshFoodSetpoint_UserVote",
+               "displayName": "FF User Setpoint Request (DegF)",
+               "name": "Erd_FreshFoodSetpointRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ User Setpoint Request (DegF)",
+               "name": "Erd_FreezerSetpointRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF User Setpoint Status (DegF)",
+               "name": "Erd_FreshFoodSetpointStatus",
                "read": true,
-               "write": true,
+               "write": false,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "FZ User Setpoint Vote (DegF x100)",
-               "name": "Erd_FreezerSetpoint_UserVote",
+               "displayName": "FZ User Setpoint Status (DegF)",
+               "name": "Erd_FreezerSetpointStatus",
                "read": true,
-               "write": true,
+               "write": false,
                "interval": 1000000000
             },
             {

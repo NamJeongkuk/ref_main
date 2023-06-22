@@ -90,6 +90,7 @@ static const GridLineCalculatorConfiguration_t gridLineCalculatorConfig = {
    .calculatedGridLineErd = Erd_Grid_CalculatedGridLines,
    .freshFoodFilteredTemperatureInDegFx100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    .freezerFilteredTemperatureInDegFx100Erd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
+   .crossAmbientHysteresisAdjustmentErd = Erd_CrossAmbientHysteresisAdjustmentInDegFx100,
    .gridLineAdjustmentErds = {
       freshFoodGridLineAdjustmentErds,
       freezerGridLineAdjustmentErds,

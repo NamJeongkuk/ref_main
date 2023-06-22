@@ -1,6 +1,6 @@
 return parametric_data({
   major_data_structure_version = 0,
-  minor_data_structure_version = 10,
+  minor_data_structure_version = 11,
   major_version = 0,
   minor_version = 0,
   personalities = {
