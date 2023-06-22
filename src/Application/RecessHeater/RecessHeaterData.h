@@ -12,7 +12,7 @@
 
 typedef struct
 {
-   VariableSweatHeaterData_t variableSweatHeaterData;
+   const VariableSweatHeaterData_t *variableSweatHeaterData;
 } RecessHeaterData_t;
 
 #endif

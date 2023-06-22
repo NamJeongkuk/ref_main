@@ -54,7 +54,7 @@ void RecessHeaterPlugin_Init(
    VariableSweatHeaterDutyCycleCalculator_Init(
       &instance->_private.variableSweatHeaterDutyCycleCalculator,
       dataModel,
-      &PersonalityParametricData_Get(dataModel)->recessHeaterData->variableSweatHeaterData,
+      PersonalityParametricData_Get(dataModel)->recessHeaterData->variableSweatHeaterData,
       &variableSweatHeaterDutyCycleCalculatorConfiguration);
 
    ResolvedVotePercentageDutyCycleConnector_Init(

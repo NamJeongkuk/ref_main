@@ -9,7 +9,8 @@ return {
     '_mbstate_t',
     'FanCareAboutCoolingModeSpeedData_t',
     'FanData_t',
-    'CompressorSpeeds_t'
+    'CompressorSpeeds_t',
+    'VariableSweatHeaterData_t'
   },
 
   -- Types that can't be automatically generated but need to be defined

@@ -6,53 +6,42 @@ local memoize = require 'lua-common'.util.memoize
 
 return function(core)
   import(core)
+
   local generate = memoize(function(config)
+    local heater_control_type do
+      for i = 1, 7 do
+        if config.variable_sweat_heater.is_of_type('variable_sweat_heater_type_' .. i) then
+          heater_control_type = i
+          break
+        end
+      end
+    end
+
     return TypedString(
       { 'variable_sweat_heater' },
       structure(
+        u8(heater_control_type),
         u8(config.fallback_duty_cycle_in_percent),
-        u8(config.heater_control_type),
-        i32(config.temperature_coefficient),
-        i32(config.humidity_coefficient),
-        i32(config.fresh_food_coefficient),
-        i32(config.freezer_coefficient),
-        i16(config.temperature_squared_coefficient),
-        i16(config.humidity_squared_coefficient),
-        i16(config.fresh_food_squared_coefficient),
-        i16(config.freezer_squared_coefficient),
-        i16(config.temperature_humidity_coefficient),
-        i16(config.temperature_fresh_food_coefficient),
-        i16(config.temperature_freezer_coefficient),
-        i16(config.humidity_fresh_food_coefficient),
-        i16(config.humidity_freezer_coefficient),
-        i16(config.fresh_food_freezer_coefficient),
-        i32(config.intercept_coefficient)
+        pointer(config.variable_sweat_heater)
       )
     )
   end)
 
   return function(config)
-    validate_arguments(
-      config,
-      {
-        fallback_duty_cycle_in_percent = { constraint.in_range(0,100) },
-        heater_control_type = { constraint.in_range(1,7) },
-        temperature_coefficient = { constraint.i32 },
-        humidity_coefficient = { constraint.i32 },
-        fresh_food_coefficient = { constraint.i32 },
-        freezer_coefficient = { constraint.i32 },
-        temperature_squared_coefficient = { constraint.i16 },
-        humidity_squared_coefficient = { constraint.i16 },
-        fresh_food_squared_coefficient = { constraint.i16 },
-        freezer_squared_coefficient = { constraint.i16 },
-        temperature_humidity_coefficient = { constraint.i16 },
-        temperature_fresh_food_coefficient = { constraint.i16 },
-        temperature_freezer_coefficient = { constraint.i16 },
-        humidity_fresh_food_coefficient = { constraint.i16 },
-        humidity_freezer_coefficient = { constraint.i16 },
-        fresh_food_freezer_coefficient = { constraint.i16 },
-        intercept_coefficient = { constraint.i32 }
-      })
+    validate_arguments(config, {
+      fallback_duty_cycle_in_percent = { constraint.in_range(0, 100) },
+      variable_sweat_heater = {
+        constraint.ored({
+          constraint.typed_string('variable_sweat_heater_type_1'),
+          constraint.typed_string('variable_sweat_heater_type_2'),
+          constraint.typed_string('variable_sweat_heater_type_3'),
+          constraint.typed_string('variable_sweat_heater_type_4'),
+          constraint.typed_string('variable_sweat_heater_type_5'),
+          constraint.typed_string('variable_sweat_heater_type_6'),
+          constraint.typed_string('variable_sweat_heater_type_7')
+        })
+      }
+    })
 
     return generate(config)
   end

@@ -72,6 +72,13 @@ return function(directory)
   import('FlowMeter/FlowMeter')
   import('IceMaker/TwistTrayIceMaker')
   import('VariableSweatHeater/VariableSweatHeater')
+  import('VariableSweatHeater/VariableSweatHeaterType1')
+  import('VariableSweatHeater/VariableSweatHeaterType2')
+  import('VariableSweatHeater/VariableSweatHeaterType3')
+  import('VariableSweatHeater/VariableSweatHeaterType4')
+  import('VariableSweatHeater/VariableSweatHeaterType5')
+  import('VariableSweatHeater/VariableSweatHeaterType6')
+  import('VariableSweatHeater/VariableSweatHeaterType7')
   import('RecessHeater/RecessHeater')
 
   Core = require 'lua-parametric-tools'.common.Core
@@ -143,6 +150,13 @@ return function(directory)
   dispenser = Dispenser(core)
   auger_motor = AugerMotor(core)
   variable_sweat_heater = VariableSweatHeater(core)
+  variable_sweat_heater_type_1 = VariableSweatHeaterType1(core)
+  variable_sweat_heater_type_2 = VariableSweatHeaterType2(core)
+  variable_sweat_heater_type_3 = VariableSweatHeaterType3(core)
+  variable_sweat_heater_type_4 = VariableSweatHeaterType4(core)
+  variable_sweat_heater_type_5 = VariableSweatHeaterType5(core)
+  variable_sweat_heater_type_6 = VariableSweatHeaterType6(core)
+  variable_sweat_heater_type_7 = VariableSweatHeaterType7(core)
   recess_heater = RecessHeater(core)
   condenser_fan = CondenserFan(core)
 
@@ -218,6 +232,13 @@ return function(directory)
     dispenser = dispenser,
     auger_motor = auger_motor,
     variable_sweat_heater = variable_sweat_heater,
+    variable_sweat_heater_type_1 = variable_sweat_heater_type_1,
+    variable_sweat_heater_type_2 = variable_sweat_heater_type_2,
+    variable_sweat_heater_type_3 = variable_sweat_heater_type_3,
+    variable_sweat_heater_type_4 = variable_sweat_heater_type_4,
+    variable_sweat_heater_type_5 = variable_sweat_heater_type_5,
+    variable_sweat_heater_type_6 = variable_sweat_heater_type_6,
+    variable_sweat_heater_type_7 = variable_sweat_heater_type_7,
     recess_heater = recess_heater,
     condenser_fan = condenser_fan,
     enum = enum,

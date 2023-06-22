@@ -6,12 +6,13 @@ local memoize = require 'lua-common'.util.memoize
 
 return function(core)
   import(core)
-
   local generate = memoize(function(config)
     return TypedString(
-      { 'recess_heater' },
+      { 'variable_sweat_heater_type_1' },
       structure(
-        pointer(config.variable_sweat_heater)
+        i32(config.temperature_coefficient),
+        i16(config.temperature_squared_coefficient),
+        i32(config.intercept_coefficient)
       )
     )
   end)
@@ -20,9 +21,11 @@ return function(core)
     validate_arguments(
       config,
       {
-        variable_sweat_heater = { constraint.typed_string('variable_sweat_heater') }
-      }
-    )
+        temperature_coefficient = { constraint.i32 },
+        temperature_squared_coefficient = { constraint.i16 },
+        intercept_coefficient = { constraint.i32 }
+      })
+
     return generate(config)
   end
 end

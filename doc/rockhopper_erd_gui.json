@@ -2703,6 +2703,116 @@
           "write": true
         }
       ]
+    },
+    {
+      "title": "Variable Sweat Heater Control",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Ambient filtered temperature override request in degFx100",
+          "name": "Erd_Ambient_FilteredInternalTemperatureOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient filtered temperature override value in degFx100",
+          "name": "Erd_Ambient_FilteredInternalTemperatureOverrideValueInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient filtered temperature resolved in degFx100",
+          "name": "Erd_Ambient_FilteredTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient temperature is valid override request",
+          "name": "Erd_AmbientThermistor_IsValidOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient temperature is valid override value",
+          "name": "Erd_AmbientThermistor_IsValidOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient temperature is valid resolved",
+          "name": "Erd_AmbientTemperature_IsValidResolved",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient filtered humidity resolved percentx100",
+          "name": "Erd_Ambient_FilteredHumidityResolvedPercentx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient humidity is valid override request",
+          "name": "Erd_AmbientHumiditySensor_IsValidOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient humidity is valid override value",
+          "name": "Erd_AmbientHumiditySensor_IsValidOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient humidity is valid resolved",
+          "name": "Erd_AmbientHumidity_IsValidResolved",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh food setpoint factory vote",
+          "name": "Erd_FreshFoodSetpoint_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh food setpoint resolved vote",
+          "name": "Erd_FreshFoodSetpoint_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer setpoint factory vote",
+          "name": "Erd_FreezerSetpoint_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer setpoint resolved vote",
+          "name": "Erd_FreezerSetpoint_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Recess heater variable anti sweat vote",
+          "name": "Erd_RecessHeater_VariableAntiSweatVote",
+          "read": true,
+          "write": true
+        }
+      ]
     }
   ]
 }

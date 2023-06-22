@@ -9,31 +9,10 @@ local TypedString = require 'lua-common'.utilities.TypedString
 
 describe('RecessHeater', function()
   local recess_heater = RecessHeater(core_mock)
-  local variable_sweat_heater = VariableSweatHeater(core_mock)
-
-  local some_variable_sweat_heater = variable_sweat_heater({
-    fallback_duty_cycle_in_percent = 100,
-    heater_control_type = 7,
-    temperature_coefficient = 2100,
-    humidity_coefficient = 0,
-    fresh_food_coefficient = 0,
-    freezer_coefficient = 0,
-    temperature_squared_coefficient = 12,
-    humidity_squared_coefficient = 0,
-    fresh_food_squared_coefficient = 0,
-    freezer_squared_coefficient = 0,
-    temperature_humidity_coefficient = 0,
-    temperature_fresh_food_coefficient = 0,
-    temperature_freezer_coefficient = 0,
-    humidity_fresh_food_coefficient = 0,
-    humidity_freezer_coefficient = 0,
-    fresh_food_freezer_coefficient = 0,
-    intercept_coefficient = -205000
-  })
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-      variable_sweat_heater = some_variable_sweat_heater
+      variable_sweat_heater = TypedString('variable_sweat_heater', 'variable_sweat_heater')
     }, overrides or {})
   end
 
@@ -52,30 +31,12 @@ describe('RecessHeater', function()
   it('should generate a typed string with the correct data and type recess_heater', function()
     local expected = remove_whitespace([[
       structure(
-        structure(
-          u8(100),
-          u8(7),
-          i32(2100),
-          i32(0),
-          i32(0),
-          i32(0),
-          i16(12),
-          i16(0),
-          i16(0),
-          i16(0),
-          i16(0),
-          i16(0),
-          i16(0),
-          i16(0),
-          i16(0),
-          i16(0),
-          i32(-205000)
-        )
+        pointer(variable_sweat_heater)
       )
     ]])
 
     local actual = recess_heater({
-      variable_sweat_heater = some_variable_sweat_heater
+      variable_sweat_heater = TypedString('variable_sweat_heater', 'variable_sweat_heater')
     })
 
     assert.equals(expected, remove_whitespace(tostring(actual)))
