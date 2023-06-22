@@ -21,7 +21,7 @@ extern "C"
 enum
 {
    PressureReliefTimeInMsec = 10,
-   ReverseDirectionDelayTimeInMsec = 20,
+   DelayBetweenRelayOperationsInMsec = 20,
 };
 
 static const AugerMotorControllerConfig_t config = {
@@ -33,7 +33,7 @@ static const AugerMotorControllerConfig_t config = {
 };
 
 static const AugerMotorData_t motorData = {
-   .augerMotorReverseDirectionDelayInMsec = ReverseDirectionDelayTimeInMsec,
+   .augerMotorReverseDirectionDelayInMsec = DelayBetweenRelayOperationsInMsec,
    .augerMotorDispenseCompleteInMsec = PressureReliefTimeInMsec,
    .augerMotorControlledByMainboard = true
 };
@@ -118,84 +118,58 @@ TEST_GROUP(AugerMotorController)
    void GivenTheAugerMotorControllerIsInitalizedInTheCubedState()
    {
       GivenInitialization();
-      GivenTheAugerMotorPowerIs(ON);
       GivenTheAugerMotorIceTypeVoteIs(AugerMotorIceType_Cubed);
-
-      TheAugerMotorPowerShouldBe(OFF);
       TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_Cubed);
    }
 
    void GivenTheAugerMotorControllerIsInitalizedInTheCrushedState()
    {
       GivenInitialization();
-      GivenTheAugerMotorPowerIs(ON);
       GivenTheAugerMotorIceTypeVoteIs(AugerMotorIceType_Crushed);
-
-      TheAugerMotorPowerShouldBe(OFF);
       TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_Crushed);
    }
 };
 
-TEST(AugerMotorController, AugerMotorPowerShouldBeOffWhenEnteringTheCubedState)
+TEST(AugerMotorController, AugerMotorPowerShouldBeOnDirectionShouldBeOffWhenEnteringTheCubedState)
 {
-   GivenTheAugerMotorPowerIs(ON);
+   GivenTheAugerMotorPowerIs(OFF);
+   GivenTheAugerMotorDirectionRelayIs(OFF);
    GivenInitialization();
 
    WhenAugerMotorIceTypeVoteChangesTo(AugerMotorIceType_Cubed);
-   TheAugerMotorPowerShouldBe(OFF);
+   TheAugerMotorPowerShouldBe(ON);
+   TheAugerMotorDirectionRelayShouldBe(OFF);
    TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_Cubed);
 }
 
-TEST(AugerMotorController, AugerMotorPowerShouldBeOnAndDirectionShouldBeOffAfterReverseDirectionDelayInTheCubedState)
+TEST(AugerMotorController, AugerMotorPowerShouldBeOffDirectionShouldBeOnWhenEnteringTheCrushedState)
 {
-   GivenTheAugerMotorDirectionRelayIs(ON);
-   GivenTheAugerMotorControllerIsInitalizedInTheCubedState();
-
-   After(ReverseDirectionDelayTimeInMsec - 1);
-   TheAugerMotorPowerShouldBe(OFF);
-
-   After(1);
-   TheAugerMotorPowerShouldBe(ON);
-   TheAugerMotorDirectionRelayShouldBe(OFF);
-}
-
-TEST(AugerMotorController, ShouldSwitchFromCubedToCrushedStateWhenRequested)
-{
-   GivenTheAugerMotorControllerIsInitalizedInTheCubedState();
-
-   WhenAugerMotorIceTypeVoteChangesTo(AugerMotorIceType_Crushed);
-   TheAugerMotorPowerShouldBe(OFF);
-   TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_Crushed);
-}
-
-TEST(AugerMotorController, AugerMotorPowerShouldBeOffWhenEnteringTheCrushedState)
-{
-   GivenTheAugerMotorPowerIs(ON);
+   GivenTheAugerMotorPowerIs(OFF);
+   GivenTheAugerMotorDirectionRelayIs(OFF);
    GivenInitialization();
 
    WhenAugerMotorIceTypeVoteChangesTo(AugerMotorIceType_Crushed);
+   TheAugerMotorDirectionRelayShouldBe(ON);
    TheAugerMotorPowerShouldBe(OFF);
    TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_Crushed);
 }
 
-TEST(AugerMotorController, AugerMotorPowerShouldBeOnAndDirectionShouldBeOnAfterReverseDirectionDelayInTheCrushedState)
+TEST(AugerMotorController, AugerMotorPowerPowerShouldComeOnAfterDelayBetweenOperationsWhenInCrushed)
 {
+   GivenTheAugerMotorPowerIs(OFF);
    GivenTheAugerMotorDirectionRelayIs(OFF);
    GivenTheAugerMotorControllerIsInitalizedInTheCrushedState();
 
-   After(ReverseDirectionDelayTimeInMsec - 1);
+   After(DelayBetweenRelayOperationsInMsec - 1);
    TheAugerMotorPowerShouldBe(OFF);
 
    After(1);
    TheAugerMotorPowerShouldBe(ON);
-   TheAugerMotorDirectionRelayShouldBe(ON);
 }
 
 TEST(AugerMotorController, AugerMotorPowerShouldBeOffThenReverseDirectionWhenTransitioningFromCubedToComplete)
 {
    GivenTheAugerMotorControllerIsInitalizedInTheCubedState();
-
-   After(ReverseDirectionDelayTimeInMsec);
    TheAugerMotorPowerShouldBe(ON);
    TheAugerMotorDirectionRelayShouldBe(OFF);
 
@@ -204,9 +178,14 @@ TEST(AugerMotorController, AugerMotorPowerShouldBeOffThenReverseDirectionWhenTra
    TheAugerMotorDirectionRelayShouldBe(OFF);
    TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_DispensingComplete);
 
-   After(ReverseDirectionDelayTimeInMsec);
+   After(DelayBetweenRelayOperationsInMsec);
+   TheAugerMotorPowerShouldBe(OFF);
+   TheAugerMotorDirectionRelayShouldBe(ON);
+
+   After(DelayBetweenRelayOperationsInMsec);
    TheAugerMotorPowerShouldBe(ON);
    TheAugerMotorDirectionRelayShouldBe(ON);
+   TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_MoveInReverseDirection);
 
    After(PressureReliefTimeInMsec - 1);
    TheAugerMotorPowerShouldBe(ON);
@@ -215,14 +194,19 @@ TEST(AugerMotorController, AugerMotorPowerShouldBeOffThenReverseDirectionWhenTra
    After(1);
    TheAugerMotorPowerShouldBe(OFF);
    TheAugerMotorDirectionRelayShouldBe(ON);
-   TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_Idle);
+   TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_EnsureRelaysAreOff);
+
+   After(DelayBetweenRelayOperationsInMsec);
+   TheAugerMotorDirectionRelayShouldBe(OFF);
+   TheAugerMotorPowerShouldBe(OFF);
+   TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_PreIdleDelay);
 }
 
 TEST(AugerMotorController, AugerMotorPowerShouldBeOffThenReverseDirectionWhenTransitioningFromCrushedToComplete)
 {
    GivenTheAugerMotorControllerIsInitalizedInTheCrushedState();
 
-   After(ReverseDirectionDelayTimeInMsec);
+   After(DelayBetweenRelayOperationsInMsec);
    TheAugerMotorPowerShouldBe(ON);
    TheAugerMotorDirectionRelayShouldBe(ON);
 
@@ -231,9 +215,14 @@ TEST(AugerMotorController, AugerMotorPowerShouldBeOffThenReverseDirectionWhenTra
    TheAugerMotorDirectionRelayShouldBe(ON);
    TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_DispensingComplete);
 
-   After(ReverseDirectionDelayTimeInMsec);
+   After(DelayBetweenRelayOperationsInMsec);
+   TheAugerMotorPowerShouldBe(OFF);
+   TheAugerMotorDirectionRelayShouldBe(OFF);
+
+   After(DelayBetweenRelayOperationsInMsec);
    TheAugerMotorPowerShouldBe(ON);
    TheAugerMotorDirectionRelayShouldBe(OFF);
+   TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_MoveInReverseDirection);
 
    After(PressureReliefTimeInMsec - 1);
    TheAugerMotorPowerShouldBe(ON);
@@ -242,43 +231,14 @@ TEST(AugerMotorController, AugerMotorPowerShouldBeOffThenReverseDirectionWhenTra
    After(1);
    TheAugerMotorPowerShouldBe(OFF);
    TheAugerMotorDirectionRelayShouldBe(OFF);
-   TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_Idle);
-}
-
-TEST(AugerMotorController, AugerMotorPowerShouldBeOffWhenSwitchingBetweenCubedAndCrushedMultipleTimes)
-{
-   GivenTheAugerMotorControllerIsInitalizedInTheCubedState();
-
-   WhenAugerMotorIceTypeVoteChangesTo(AugerMotorIceType_Crushed);
-   TheAugerMotorPowerShouldBe(OFF);
-   TheAugerMotorDirectionRelayShouldBe(OFF);
-
-   After(ReverseDirectionDelayTimeInMsec - 1);
-   TheAugerMotorPowerShouldBe(OFF);
-   TheAugerMotorDirectionRelayShouldBe(OFF);
-
-   WhenAugerMotorIceTypeVoteChangesTo(AugerMotorIceType_Cubed);
-   TheAugerMotorPowerShouldBe(OFF);
-   TheAugerMotorDirectionRelayShouldBe(OFF);
-
-   After(1);
-   TheAugerMotorPowerShouldBe(OFF);
-   TheAugerMotorDirectionRelayShouldBe(OFF);
-
-   After(ReverseDirectionDelayTimeInMsec - 2);
-   TheAugerMotorPowerShouldBe(OFF);
-   TheAugerMotorDirectionRelayShouldBe(OFF);
-
-   WhenAugerMotorIceTypeVoteChangesTo(AugerMotorIceType_Crushed);
-   TheAugerMotorPowerShouldBe(OFF);
-   TheAugerMotorDirectionRelayShouldBe(OFF);
+   TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_EnsureRelaysAreOff);
 }
 
 TEST(AugerMotorController, AugerMotorShouldGoBackToCubedStateIfCubedIceIsRequestedDuringDispenseCompleteAfterTheDirectionChangeDelay)
 {
    GivenTheAugerMotorControllerIsInitalizedInTheCubedState();
 
-   After(ReverseDirectionDelayTimeInMsec);
+   After(DelayBetweenRelayOperationsInMsec);
    TheAugerMotorPowerShouldBe(ON);
    TheAugerMotorDirectionRelayShouldBe(OFF);
 
@@ -290,14 +250,24 @@ TEST(AugerMotorController, AugerMotorShouldGoBackToCubedStateIfCubedIceIsRequest
    WhenAugerMotorIceTypeVoteChangesTo(AugerMotorIceType_Cubed);
    TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_DispensingComplete);
 
-   After(ReverseDirectionDelayTimeInMsec - 1);
+   After(DelayBetweenRelayOperationsInMsec);
    TheAugerMotorPowerShouldBe(OFF);
-   TheAugerMotorDirectionRelayShouldBe(OFF);
-   TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_DispensingComplete);
+   TheAugerMotorDirectionRelayShouldBe(ON);
 
-   After(1);
+   After(DelayBetweenRelayOperationsInMsec);
+   TheAugerMotorPowerShouldBe(ON);
+   TheAugerMotorDirectionRelayShouldBe(ON);
+
+   After(PressureReliefTimeInMsec);
+   TheAugerMotorPowerShouldBe(OFF);
+   TheAugerMotorDirectionRelayShouldBe(ON);
+
+   After(DelayBetweenRelayOperationsInMsec);
    TheAugerMotorPowerShouldBe(OFF);
    TheAugerMotorDirectionRelayShouldBe(OFF);
+
+   After(DelayBetweenRelayOperationsInMsec);
+   TheAugerMotorPowerShouldBe(ON);
    TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_Cubed);
 }
 
@@ -305,7 +275,7 @@ TEST(AugerMotorController, AugerMotorShouldGoToCrushedStateIfCrushedIceIsRequest
 {
    GivenTheAugerMotorControllerIsInitalizedInTheCrushedState();
 
-   After(ReverseDirectionDelayTimeInMsec);
+   After(DelayBetweenRelayOperationsInMsec);
    TheAugerMotorPowerShouldBe(ON);
    TheAugerMotorDirectionRelayShouldBe(ON);
 
@@ -317,81 +287,62 @@ TEST(AugerMotorController, AugerMotorShouldGoToCrushedStateIfCrushedIceIsRequest
    WhenAugerMotorIceTypeVoteChangesTo(AugerMotorIceType_Crushed);
    TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_DispensingComplete);
 
-   After(ReverseDirectionDelayTimeInMsec - 1);
+   After(DelayBetweenRelayOperationsInMsec);
    TheAugerMotorPowerShouldBe(OFF);
-   TheAugerMotorDirectionRelayShouldBe(ON);
-   TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_DispensingComplete);
+   TheAugerMotorDirectionRelayShouldBe(OFF);
 
-   After(1);
+   After(DelayBetweenRelayOperationsInMsec);
+   TheAugerMotorPowerShouldBe(ON);
+   TheAugerMotorDirectionRelayShouldBe(OFF);
+
+   After(PressureReliefTimeInMsec);
+   TheAugerMotorPowerShouldBe(OFF);
+   TheAugerMotorDirectionRelayShouldBe(OFF);
+
+   After(DelayBetweenRelayOperationsInMsec);
+   TheAugerMotorPowerShouldBe(OFF);
+   TheAugerMotorDirectionRelayShouldBe(OFF);
+
+   After(DelayBetweenRelayOperationsInMsec);
    TheAugerMotorPowerShouldBe(OFF);
    TheAugerMotorDirectionRelayShouldBe(ON);
    TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_Crushed);
 }
 
-TEST(AugerMotorController, AugerMotorShouldGoToCrushedStateIfCrushedIceIsRequestedDuringDispenseCompleteAfterThePressureReliefTime)
+TEST(AugerMotorController, ShouldSwitchFromCubedToCrushedStateWhenRequested)
 {
    GivenTheAugerMotorControllerIsInitalizedInTheCrushedState();
 
-   After(ReverseDirectionDelayTimeInMsec);
+   After(DelayBetweenRelayOperationsInMsec);
    TheAugerMotorPowerShouldBe(ON);
    TheAugerMotorDirectionRelayShouldBe(ON);
 
    WhenAugerMotorIceTypeVoteChangesTo(AugerMotorIceType_Off);
    TheAugerMotorPowerShouldBe(OFF);
-   TheAugerMotorDirectionRelayShouldBe(ON);
-   TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_DispensingComplete);
-
-   After(ReverseDirectionDelayTimeInMsec);
-   TheAugerMotorPowerShouldBe(ON);
-   TheAugerMotorDirectionRelayShouldBe(OFF);
-   TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_DispensingComplete);
-
-   After(PressureReliefTimeInMsec - 1);
-   TheAugerMotorPowerShouldBe(ON);
-   TheAugerMotorDirectionRelayShouldBe(OFF);
-   TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_DispensingComplete);
-
-   WhenAugerMotorIceTypeVoteChangesTo(AugerMotorIceType_Crushed);
-   TheAugerMotorPowerShouldBe(ON);
-   TheAugerMotorDirectionRelayShouldBe(OFF);
-   TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_DispensingComplete);
-
-   After(1);
-   TheAugerMotorPowerShouldBe(OFF);
-   TheAugerMotorDirectionRelayShouldBe(OFF);
-   TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_Crushed);
-}
-
-TEST(AugerMotorController, AugerMotorShouldGoToCubedStateIfCubedIceIsRequestedDuringDispenseCompleteAfterThePressureReliefTime)
-{
-   GivenTheAugerMotorControllerIsInitalizedInTheCubedState();
-
-   After(ReverseDirectionDelayTimeInMsec);
-   TheAugerMotorPowerShouldBe(ON);
-   TheAugerMotorDirectionRelayShouldBe(OFF);
-
-   WhenAugerMotorIceTypeVoteChangesTo(AugerMotorIceType_Off);
-   TheAugerMotorPowerShouldBe(OFF);
-   TheAugerMotorDirectionRelayShouldBe(OFF);
-   TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_DispensingComplete);
-
-   After(ReverseDirectionDelayTimeInMsec);
-   TheAugerMotorPowerShouldBe(ON);
-   TheAugerMotorDirectionRelayShouldBe(ON);
-   TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_DispensingComplete);
-
-   After(PressureReliefTimeInMsec - 1);
-   TheAugerMotorPowerShouldBe(ON);
    TheAugerMotorDirectionRelayShouldBe(ON);
    TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_DispensingComplete);
 
    WhenAugerMotorIceTypeVoteChangesTo(AugerMotorIceType_Cubed);
-   TheAugerMotorPowerShouldBe(ON);
-   TheAugerMotorDirectionRelayShouldBe(ON);
    TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_DispensingComplete);
 
-   After(1);
+   After(DelayBetweenRelayOperationsInMsec);
    TheAugerMotorPowerShouldBe(OFF);
-   TheAugerMotorDirectionRelayShouldBe(ON);
+   TheAugerMotorDirectionRelayShouldBe(OFF);
+
+   After(DelayBetweenRelayOperationsInMsec);
+   TheAugerMotorPowerShouldBe(ON);
+   TheAugerMotorDirectionRelayShouldBe(OFF);
+
+   After(PressureReliefTimeInMsec);
+   TheAugerMotorPowerShouldBe(OFF);
+   TheAugerMotorDirectionRelayShouldBe(OFF);
+
+   After(DelayBetweenRelayOperationsInMsec);
+   TheAugerMotorPowerShouldBe(OFF);
+   TheAugerMotorDirectionRelayShouldBe(OFF);
+
+   After(DelayBetweenRelayOperationsInMsec);
+   TheAugerMotorPowerShouldBe(ON);
+   TheAugerMotorDirectionRelayShouldBe(OFF);
    TheAugerMotorFsmStateShouldBe(AugerMotorControllerFsmState_Cubed);
 }
