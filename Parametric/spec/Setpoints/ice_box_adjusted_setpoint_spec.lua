@@ -11,7 +11,6 @@ describe('ice_box_adjusted_setpoint', function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-      ice_box_offset_in_degfx100 = -100,
       ice_formation_offset_in_degfx100 = -200,
       shift_offset = TypedString('shift_offset', 'shift_offset')
     }, overrides or {})
@@ -29,14 +28,6 @@ describe('ice_box_adjusted_setpoint', function()
     end)
   end)
 
-  it('should assert if ice_box_offset_in_degfx100 is not in range', function()
-    should_fail_with('ice_box_offset_in_degfx100=32768 must be in [-32768, 32767]', function()
-      ice_box_adjusted_setpoint(generate_config({
-        ice_box_offset_in_degfx100 = 32768
-      }))
-    end)
-  end)
-
   it('should assert if ice_formation_offset_in_degfx100 is not in range', function()
     should_fail_with('ice_formation_offset_in_degfx100=32768 must be in [-32768, 32767]', function()
       ice_box_adjusted_setpoint(generate_config({
@@ -48,7 +39,6 @@ describe('ice_box_adjusted_setpoint', function()
   it('should generate a typed string with the correct data and type for ice box adjusted setpoint', function()
     local expected = remove_whitespace([[
       structure(
-        i16(-100),
         i16(-200),
         pointer(shift_offset)
     )

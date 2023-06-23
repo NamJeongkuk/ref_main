@@ -125,7 +125,7 @@ static void InitializeCabinetOffsetErd(I_DataModel_t *dataModel)
    DataModel_Write(
       dataModel,
       Erd_FreshFood_CabinetOffsetInDegFx100,
-      &PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freshFoodAdjustedSetpointData->cabinetOffsetInDegFx100);
+      &PersonalityParametricData_Get(dataModel)->cabinetOffsetData->freshFoodOffsetInDegFx100);
 }
 
 void FreshFoodAdjustedSetpointPlugin_Init(

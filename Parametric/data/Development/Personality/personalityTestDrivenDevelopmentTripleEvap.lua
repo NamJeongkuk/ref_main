@@ -10,6 +10,7 @@ return personality({
   systemMonitor = import("../SystemMonitor/system_monitor.lua"),
   compressor = import("../Compressor/variable_speed_cooling_mode_dependent_compressor.lua"),
   setpoint = import("../Setpoints/setpoint.lua"),
+  cabinet_offset = import("../Setpoints/AdjustedSetpoint/CabinetOffset/cabinet_offset.lua"),
   bsp_configuration = import("../Bsp/bsp_configuration.lua"),
   single_damper = import("../Damper/fresh_food_damper.lua"),
   damper_heater = import("../Damper/damper_heater.lua"),

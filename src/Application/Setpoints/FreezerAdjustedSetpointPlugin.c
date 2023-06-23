@@ -49,7 +49,7 @@ static void InitializeFreezerCabinetOffsetErd(I_DataModel_t *dataModel)
    DataModel_Write(
       dataModel,
       Erd_Freezer_CabinetOffsetInDegFx100,
-      &PersonalityParametricData_Get(dataModel)->setpointData->adjustedSetpointData->freezerAdjustedSetpointData->cabinetOffsetInDegFx100);
+      &PersonalityParametricData_Get(dataModel)->cabinetOffsetData->freezerOffsetInDegFx100);
 }
 
 void FreezerAdjustedSetpointPlugin_Init(

@@ -11,7 +11,6 @@ describe('freezer_adjusted_setpoint', function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-      freezer_offset_in_degfx100 = -10,
       cross_ambient_offset = TypedString('cross_ambient_offset', 'cross_ambient_offset'),
       high_ambient_offset = TypedString('high_ambient_offset', 'high_ambient_offset'),
       shift_offset = TypedString('shift_offset', 'shift_offset')
@@ -42,18 +41,9 @@ describe('freezer_adjusted_setpoint', function()
     end)
   end)
 
-  it('should assert if freezer_offset_in_degfx100 is not in range', function()
-    should_fail_with('freezer_offset_in_degfx100=32768 must be in [-32768, 32767]', function()
-      freezer_adjusted_setpoint(generate_config({
-        freezer_offset_in_degfx100 = 32768
-      }))
-    end)
-  end)
-
   it('should generate a typed string with the correct data and type for freezer adjusted setpoint', function()
     local expected = remove_whitespace([[
       structure(
-        i16(-10),
         pointer(cross_ambient_offset),
         pointer(high_ambient_offset),
         pointer(shift_offset)

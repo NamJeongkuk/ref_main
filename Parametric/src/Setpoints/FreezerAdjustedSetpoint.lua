@@ -11,7 +11,6 @@ return function(core)
     return TypedString(
       { 'freezer_adjusted_setpoint' },
       structure(
-        i16(config.freezer_offset_in_degfx100),
         pointer(config.cross_ambient_offset),
         pointer(config.high_ambient_offset),
         pointer(config.shift_offset)
@@ -23,7 +22,6 @@ return function(core)
     validate_arguments(
       config,
       {
-        freezer_offset_in_degfx100 = { constraint.i16 },
         cross_ambient_offset = { constraint.typed_string('cross_ambient_offset') },
         high_ambient_offset = { constraint.typed_string('high_ambient_offset') },
         shift_offset = { constraint.typed_string('shift_offset') }

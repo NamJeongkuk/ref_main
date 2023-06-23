@@ -11,7 +11,6 @@ return function(core)
     return TypedString(
       { 'fresh_food_adjusted_setpoint' },
       structure(
-        i16(config.fresh_food_offset_in_degfx100),
         i16(config.fresh_food_pulldown_offset_in_degfx100),
         pointer(config.cross_ambient_offset),
         pointer(config.high_ambient_offset),
@@ -25,7 +24,6 @@ return function(core)
     validate_arguments(
       config,
       {
-        fresh_food_offset_in_degfx100 = { constraint.i16 },
         fresh_food_pulldown_offset_in_degfx100 = { constraint.i16 },
         cross_ambient_offset = { constraint.typed_string('cross_ambient_offset') },
         high_ambient_offset = { constraint.typed_string('high_ambient_offset') },

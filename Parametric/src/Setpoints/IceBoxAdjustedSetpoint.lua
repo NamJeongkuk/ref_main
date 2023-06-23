@@ -11,7 +11,6 @@ return function(core)
     return TypedString(
       { 'ice_box_adjusted_setpoint' },
       structure(
-        i16(config.ice_box_offset_in_degfx100),
         i16(config.ice_formation_offset_in_degfx100),
         pointer(config.shift_offset)
       )
@@ -22,7 +21,6 @@ return function(core)
     validate_arguments(
       config,
       {
-        ice_box_offset_in_degfx100 = { constraint.i16 },
         ice_formation_offset_in_degfx100 = { constraint.i16 },
         shift_offset = { constraint.typed_string('shift_offset') }
       })

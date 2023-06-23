@@ -11,7 +11,6 @@ describe('fresh_food_adjusted_setpoint', function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-      fresh_food_offset_in_degfx100 = 10,
       fresh_food_pulldown_offset_in_degfx100 = 30,
       cross_ambient_offset = TypedString('cross_ambient_offset', 'cross_ambient_offset'),
       high_ambient_offset = TypedString('high_ambient_offset', 'high_ambient_offset'),
@@ -50,14 +49,6 @@ describe('fresh_food_adjusted_setpoint', function()
     end)
   end)
 
-  it('should assert if fresh_food_offset_in_degfx100 is not in range', function()
-    should_fail_with('fresh_food_offset_in_degfx100=32768 must be in [-32768, 32767]', function()
-      fresh_food_adjusted_setpoint(generate_config({
-        fresh_food_offset_in_degfx100 = 32768
-      }))
-    end)
-  end)
-
   it('should assert if fresh_food_pulldown_offset_in_degfx100 is not in range', function()
     should_fail_with('fresh_food_pulldown_offset_in_degfx100=32768 must be in [-32768, 32767]', function()
       fresh_food_adjusted_setpoint(generate_config({
@@ -69,7 +60,6 @@ describe('fresh_food_adjusted_setpoint', function()
   it('should generate a typed string with the correct data and type for fresh food adjusted setpoint', function()
     local expected = remove_whitespace([[
       structure(
-        i16(10),
         i16(30),
         pointer(cross_ambient_offset),
         pointer(high_ambient_offset),

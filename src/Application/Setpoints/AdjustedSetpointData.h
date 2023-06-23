@@ -53,7 +53,6 @@ typedef struct
 
 typedef struct
 {
-   TemperatureDegFx100_t cabinetOffsetInDegFx100;
    TemperatureDegFx100_t pulldownOffsetInDegFx100;
    const CrossAmbientOffsetData_t *crossAmbientOffsetData;
    const HighAmbientOffsetData_t *highAmbientOffsetData;
@@ -63,7 +62,6 @@ typedef struct
 
 typedef struct
 {
-   TemperatureDegFx100_t cabinetOffsetInDegFx100;
    const CrossAmbientOffsetData_t *crossAmbientOffsetData;
    const HighAmbientOffsetData_t *highAmbientOffsetData;
    const ShiftOffsetData_t *shiftOffsetData;
@@ -85,7 +83,6 @@ typedef struct
 
 typedef struct
 {
-   TemperatureDegFx100_t cabinetOffsetInDegFx100;
    TemperatureDegFx100_t iceFormationOffsetInDegFx100;
    const ShiftOffsetData_t *shiftOffsetData;
 } IceBoxAdjustedSetpointData_t;
