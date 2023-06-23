@@ -229,6 +229,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Condenser Fan Speed Sabbath Vote",
+          "name": "Erd_CondenserFanSpeed_SabbathVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Condenser Fan Speed Defrost Vote",
           "name": "Erd_CondenserFanSpeed_DefrostVote",
           "read": true,
@@ -264,6 +271,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Fresh Food Evap Fan Speed Sabbath Vote",
+          "name": "Erd_FreshFoodEvapFanSpeed_SabbathVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Freezer Evap Fan Speed Resolved Vote",
           "name": "Erd_FreezerEvapFanSpeed_ResolvedVote",
           "read": true,
@@ -275,6 +289,13 @@
           "name": "Erd_FreezerEvapFanSpeed_WinningVoteErd",
           "read": true,
           "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Fan Speed Sabbath Vote",
+          "name": "Erd_FreezerEvapFanSpeed_SabbathVote",
+          "read": true,
+          "write": true
         },
         {
           "namespace": "mb",

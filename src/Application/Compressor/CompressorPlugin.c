@@ -14,6 +14,19 @@ enum
    CompressorSabbathDelayTimeInSeconds = 20
 };
 
+static Erd_t sabbathFanVoteErdList[] = {
+   Erd_CondenserFanSpeed_SabbathVote,
+   Erd_FreezerEvapFanSpeed_SabbathVote,
+   Erd_FreshFoodEvapFanSpeed_SabbathVote
+};
+
+static const SabbathFanDelayHandlerConfiguration_t sabbathFanDelayHandlerConfig = {
+   .compressorStateErd = Erd_CompressorState,
+   .sabbathFanVoteErdList = {
+      .erds = sabbathFanVoteErdList,
+      .numberOfErds = NUM_ELEMENTS(sabbathFanVoteErdList) }
+};
+
 static const CompressorSpeedDriverConfig_t compressorSpeedDriverConfig = {
    .compressorRelayErd = Erd_CompressorRelay,
    .compressorFrequencyErd = Erd_CompressorInverterDriver,
@@ -82,4 +95,9 @@ void CompressorPlugin_Init(CompressorPlugin_t *instance, I_DataModel_t *dataMode
       &instance->_private.compressorSpeedController,
       dataModel,
       &compressorSpeedControllerConfig);
+
+   SabbathFanDelayHandler_Init(
+      &instance->_private.sabbathFanDelayHandler,
+      dataModel,
+      &sabbathFanDelayHandlerConfig);
 }

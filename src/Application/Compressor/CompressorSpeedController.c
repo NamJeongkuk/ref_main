@@ -627,6 +627,7 @@ static bool State_RemainOffAfterValveMove(Hsm_t *hsm, HsmSignal_t signal, const 
    return HsmSignalConsumed;
 }
 
+//The Sabbath delay is applied even when outside of Sabbath for simplicity.
 static bool State_SabbathDelay(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    CompressorSpeedController_t *instance = InstanceFromHsm(hsm);

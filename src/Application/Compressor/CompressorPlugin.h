@@ -13,6 +13,7 @@
 #include "CompressorSpeedDriver.h"
 #include "ErdResolver.h"
 #include "CompressorStartupFanVotes.h"
+#include "SabbathFanDelayHandler.h"
 
 typedef struct
 {
@@ -21,6 +22,7 @@ typedef struct
       CompressorSpeedDriver_t compressorSpeedDriver;
       CompressorSpeedController_t compressorSpeedController;
       CompressorStartupFanVotes_t compressorStartupFanVotes;
+      SabbathFanDelayHandler_t sabbathFanDelayHandler;
       ErdResolver_t compressorSpeedErdResolver;
    } _private;
 } CompressorPlugin_t;
