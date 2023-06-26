@@ -81,6 +81,9 @@ return function(directory)
   import('VariableSweatHeater/VariableSweatHeaterType6')
   import('VariableSweatHeater/VariableSweatHeaterType7')
   import('RecessHeater/RecessHeater')
+  import('TurboModes/FreshFoodTurboCoolSetpoint')
+  import('TurboModes/FreezerTurboFreezeSetpoint')
+  import('TurboModes/TurboModeSetpoint')
 
   Core = require 'lua-parametric-tools'.common.Core
   enum = require 'lua-common'.utilities.enum
@@ -161,6 +164,9 @@ return function(directory)
   variable_sweat_heater_type_7 = VariableSweatHeaterType7(core)
   recess_heater = RecessHeater(core)
   condenser_fan = CondenserFan(core)
+  turbo_mode_setpoint = TurboModeSetpoint(core)
+  fresh_food_turbo_cool_setpoint = FreshFoodTurboCoolSetpoint(core)
+  freezer_turbo_freeze_setpoint = FreezerTurboFreezeSetpoint(core)
 
   return {
     core = core,
@@ -244,6 +250,9 @@ return function(directory)
     variable_sweat_heater_type_7 = variable_sweat_heater_type_7,
     recess_heater = recess_heater,
     condenser_fan = condenser_fan,
+    turbo_mode_setpoint = turbo_mode_setpoint,
+    fresh_food_turbo_cool_setpoint = fresh_food_turbo_cool_setpoint,
+    freezer_turbo_freeze_setpoint = freezer_turbo_freeze_setpoint,
     enum = enum,
     erd_list_to_sorted_erd_mappings = erd_list_to_sorted_erd_mappings,
     import = require 'lua-parametric-tools'.util.EvalInCurrentEnvironment(directory, {

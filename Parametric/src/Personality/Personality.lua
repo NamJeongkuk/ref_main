@@ -29,7 +29,8 @@ return function(core)
         pointer(config.ice_maker),
         pointer(config.flow_meter),
         pointer(config.dispenser),
-        pointer(config.recess_heater)
+        pointer(config.recess_heater),
+        pointer(config.turbo_mode_setpoint)
       ))
   end)
 
@@ -54,7 +55,8 @@ return function(core)
       ice_maker = { constraint.typed_string('ice_maker') },
       flow_meter = { constraint.typed_string('flow_meter') },
       dispenser = { constraint.typed_string('dispenser') },
-      recess_heater = { constraint.typed_string('recess_heater') }
+      recess_heater = { constraint.typed_string('recess_heater') },
+      turbo_mode_setpoint = { constraint.typed_string('turbo_mode_setpoint') }
     })
     return generate(config)
   end

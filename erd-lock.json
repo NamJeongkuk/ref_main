@@ -796,7 +796,7 @@
           "name": "Erd_TurboCoolOnOffRequest",
           "offset": 0,
           "size": 1,
-          "type": "bool"
+          "type": "u8"
         }
       ],
       "id": "0x120C",

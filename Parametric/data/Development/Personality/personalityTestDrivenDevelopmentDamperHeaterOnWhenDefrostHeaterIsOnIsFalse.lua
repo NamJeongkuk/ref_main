@@ -18,5 +18,6 @@ return personality({
   ice_maker = import("../IceMaker/ice_maker.lua"),
   flow_meter = import("../FlowMeter/flow_meter.lua"),
   dispenser = import("../Dispenser/dispenser.lua"),
-  recess_heater = import("../RecessHeater/recess_heater.lua")
+  recess_heater = import("../RecessHeater/recess_heater.lua"),
+  turbo_mode_setpoint = import("../TurboModes/turbo_mode_setpoint.lua")
 })

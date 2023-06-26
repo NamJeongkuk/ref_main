@@ -15,4 +15,5 @@ void SideBySideSetpointPlugin_Init(
    SideBySideUserSetpointPlugin_Init(&instance->_private.userSetpointPlugin, dataModel);
    SideBySideSetpointZonePlugin_Init(&instance->_private.setpointZonePlugin, dataModel);
    SideBySideAdjustedSetpointPlugin_Init(&instance->_private.adjustedSetpointPlugin, dataModel);
+   SideBySideTurboModeSetpointPlugin_Init(&instance->_private.turboModeSetpointPlugin, dataModel);
 }

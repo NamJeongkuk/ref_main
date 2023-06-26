@@ -57,6 +57,7 @@ typedef struct
    const FlowMeterData_t *flowMeterData;
    const DispenserData_t *dispenserData;
    const RecessHeaterData_t *recessHeaterData;
+   const TurboModeSetpointData_t *turboModeSetpointData;
 } PersonalityParametricData_t;
 
 const PersonalityParametricData_t *PersonalityParametricData_Get(I_DataModel_t *dataModel);

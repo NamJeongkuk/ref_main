@@ -413,8 +413,8 @@ enum
    \
    ENTRY(Erd_CoolingOffRequest,                             0x120A, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CoolingOffStatus,                              0x120B, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_TurboCoolOnOffRequest,                         0x120C, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_TurboCoolOnOffStatus,                          0x120D, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TurboCoolOnOffRequest,                         0x120C, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TurboCoolOnOffStatus,                          0x120D, bool,                                               Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RightSideFreshFoodDoorStatus,                  0x120E, bool,                                               Swap_No,  Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_LeftSideFreezerDoorStatus,                     0x120F, bool,                                               Swap_No,  Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker0EnableRequest,                        0x1210, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
@@ -670,6 +670,7 @@ enum
    \
    ENTRY(Erd_FreezerSetpointZone,                           0xF120, SetpointZone_t,                                     Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodSetpointZone,                         0xF121, SetpointZone_t,                                     Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TurboCoolOnTimeInMinutes,                      0xF122, uint16_t,                                           Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Freezer_IceRateIsActive,                       0xF12A, bool,                                               Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerIceRateTriggerSignal,                   0xF12B, Signal_t,                                           Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
@@ -1175,6 +1176,7 @@ enum
    ENTRY(Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds,            0xFB0F, uint32_t,                                Swap_Range, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds, 0xFB10, uint32_t,                 Swap_Range, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds,   0xFB11, uint32_t,                 Swap_Range, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_TurboCoolOnTimeInMinutes,               0xFB12, uint16_t,                                           Swap_Yes,   Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
    ENTRY(Erd_AndroidUiSignOfLifeFsmState,                   0xFB80, AndroidUiSignOfLifeFsmState_t,                      Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_MainboardIsConnectedToTheAndroidUi,            0xFB81, bool,                                               Swap_No,  Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \

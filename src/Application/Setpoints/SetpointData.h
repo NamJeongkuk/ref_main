@@ -11,6 +11,7 @@
 #include "AdjustedSetpointData.h"
 #include "SetpointZoneData.h"
 #include "UserSetpointData.h"
+#include "TurboModeSetpointData.h"
 
 typedef struct
 {

@@ -1139,7 +1139,7 @@
           "displayName": "Freezer Cabinet Setpoint Winning Vote ERD",
           "name": "Erd_FreezerSetpoint_WinningVoteErd",
           "read": true,
-          "write": true
+          "write": false
         },
         {
           "namespace": "mb",
@@ -1207,7 +1207,7 @@
           "displayName": "Fresh Food Cabinet Setpoint Winning Vote ERD",
           "name": "Erd_FreshFoodSetpoint_WinningVoteErd",
           "read": true,
-          "write": true
+          "write": false
         },
         {
           "namespace": "mb",
@@ -1470,7 +1470,7 @@
           "displayName": "Erd_FreezerSetpoint_WinningVoteErd",
           "name": "Erd_FreezerSetpoint_WinningVoteErd",
           "read": true,
-          "write": true
+          "write": false
         },
         {
           "namespace": "mb",
@@ -1483,6 +1483,48 @@
           "namespace": "mb",
           "displayName": "Erd_FreezerSetpoint_TurboFreezeVote",
           "name": "Erd_FreezerSetpoint_TurboFreezeVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Erd_FreshFoodSetpoint_ResolvedVote",
+          "name": "Erd_FreezerSetpoint_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Erd_FreshFoodSetpoint_WinningVoteErd",
+          "name": "Erd_FreshFoodSetpoint_WinningVoteErd",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Erd_FreshFoodSetpoint_FactoryVote",
+          "name": "Erd_FreezerSetpoint_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Erd_FreshFoodSetpoint_EnhancedSabbathVote",
+          "name": "Erd_FreezerSetpoint_EnhancedSabbathVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Erd_FreshFoodSetpoint_TurboFreezeVote",
+          "name": "Erd_FreezerSetpoint_TurboFreezeVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Erd_FreshFoodSetpoint_UserVote",
+          "name": "Erd_FreezerSetpoint_UserVote",
           "read": true,
           "write": true
         }

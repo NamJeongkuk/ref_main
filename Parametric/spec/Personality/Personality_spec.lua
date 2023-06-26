@@ -29,7 +29,8 @@ describe("personality", function()
       ice_maker = TypedString('ice_maker', 'ice_maker'),
       flow_meter = TypedString('flow_meter', 'flow_meter'),
       dispenser = TypedString('dispenser', 'dispenser'),
-      recess_heater = TypedString('recess_heater', 'recess_heater')
+      recess_heater = TypedString('recess_heater', 'recess_heater'),
+      turbo_mode_setpoint = TypedString('turbo_mode_setpoint', 'turbo_mode_setpoint')
     }, overrides or {})
   end
 
@@ -197,6 +198,14 @@ describe("personality", function()
     end)
   end)
 
+  it('should constrain all arguments', function()
+    should_fail_with('turbo_mode_setpoint must be a typed string with type turbo_mode_setpoint, but is a number', function()
+      personality(generate_config({
+        turbo_mode_setpoint = -1
+      }))
+    end)
+  end)
+
   it('should generate a typed string with the correct data and type personality', function()
     local expected = remove_whitespace([[
       structure(
@@ -219,7 +228,8 @@ describe("personality", function()
         pointer(ice_maker),
         pointer(flow_meter),
         pointer(dispenser),
-        pointer(recess_heater)
+        pointer(recess_heater),
+        pointer(turbo_mode_setpoint)
       )
     ]])
 

@@ -13,6 +13,7 @@
 #include "SideBySideUserSetpointPlugin.h"
 #include "SideBySideSetpointZonePlugin.h"
 #include "SideBySideSetpointResolverPlugin.h"
+#include "SideBySideTurboModeSetpointPlugin.h"
 
 typedef struct
 {
@@ -22,6 +23,7 @@ typedef struct
       SideBySideUserSetpointPlugin_t userSetpointPlugin;
       SideBySideSetpointZonePlugin_t setpointZonePlugin;
       SideBySideSetpointResolverPlugin_t setpointResolverPlugin;
+      SideBySideTurboModeSetpointPlugin_t turboModeSetpointPlugin;
    } _private;
 } SideBySideSetpointPlugin_t;
 
