@@ -33,7 +33,6 @@ extern "C"
 
 enum
 {
-   SomeSabbathTimeInSeconds = 20,
    SomeAmbientTemperatureAboveTheThreshold = 301,
    SomeAmbientTemperatureBelowTheThreshold = 299,
 };
@@ -45,7 +44,6 @@ static const CompressorSpeedControllerConfiguration_t config = {
    .valvePositionResolvedVoteErd = Erd_ValvePosition_ResolvedVote,
    .filteredAmbientTemperatureInDegFx100Erd = Erd_Ambient_FilteredInternalTemperatureResolvedInDegFx100,
    .disableMinimumCompressorTimeErd = Erd_DisableMinimumCompressorTimes,
-   .sabbathDelayTimeInSeconds = SomeSabbathTimeInSeconds,
 };
 
 TEST_GROUP(VariableSpeedCompressorSpeedController)
@@ -166,7 +164,7 @@ TEST_GROUP(VariableSpeedCompressorSpeedController)
       else if(requestedState == CompressorState_Startup)
       {
          Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_SabbathDelay);
-         After(SomeSabbathTimeInSeconds * MSEC_PER_SEC);
+         After(compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC);
       }
 
       else if(requestedState == CompressorState_MinimumOnTime)
@@ -309,7 +307,7 @@ TEST(VariableSpeedCompressorSpeedController, ShouldNotRequestACompressorSpeedFor
    Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_SabbathDelay);
    TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
 
-   After(SomeSabbathTimeInSeconds * MSEC_PER_SEC - 1);
+   After(compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC - 1);
    TheCompressorControllerSpeedRequestShouldBe(CompressorSpeed_Off);
 
    After(1);
@@ -896,7 +894,7 @@ TEST_GROUP(SingleSpeedCompressorSpeedController)
       else if(requestedState == CompressorState_Startup)
       {
          Given TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_SabbathDelay);
-         After(SomeSabbathTimeInSeconds * MSEC_PER_SEC);
+         After(compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC);
       }
 
       else if(requestedState == CompressorState_MinimumOnTime)

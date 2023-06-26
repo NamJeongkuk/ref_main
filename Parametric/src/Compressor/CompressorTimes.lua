@@ -15,7 +15,8 @@ return function(core)
         u8(config.startup_on_time_in_seconds),
         u8(config.remain_off_after_valve_move_in_minutes),
         u8(config.remain_off_after_valve_move_low_ambient_in_minutes),
-        u8(config.variable_speed_minimum_run_time_in_minutes)
+        u8(config.variable_speed_minimum_run_time_in_minutes),
+        u8(config.sabbath_delay_time_in_seconds)
       )
     )
   end)
@@ -29,7 +30,8 @@ return function(core)
         startup_on_time_in_seconds = { constraint.u8 },
         remain_off_after_valve_move_in_minutes = { constraint.u8 },
         remain_off_after_valve_move_low_ambient_in_minutes = { constraint.u8 },
-        variable_speed_minimum_run_time_in_minutes = { constraint.u8 }
+        variable_speed_minimum_run_time_in_minutes = { constraint.u8 },
+        sabbath_delay_time_in_seconds = { constraint.in_range(15, 25) }
       }
     )
     return generate(config)

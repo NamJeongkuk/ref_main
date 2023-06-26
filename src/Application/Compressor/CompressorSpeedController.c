@@ -149,7 +149,7 @@ static void StartSabbathDelayTimer(CompressorSpeedController_t *instance)
    TimerModule_StartOneShot(
       instance->_private.timerModule,
       &instance->_private.sabbathDelayTimer,
-      instance->_private.config->sabbathDelayTimeInSeconds * MSEC_PER_SEC,
+      instance->_private.compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC,
       SabbathDelayTimerCompleted,
       instance);
 }
@@ -627,7 +627,7 @@ static bool State_RemainOffAfterValveMove(Hsm_t *hsm, HsmSignal_t signal, const 
    return HsmSignalConsumed;
 }
 
-//The Sabbath delay is applied even when outside of Sabbath for simplicity.
+// The Sabbath delay is applied even when outside of Sabbath for simplicity.
 static bool State_SabbathDelay(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    CompressorSpeedController_t *instance = InstanceFromHsm(hsm);

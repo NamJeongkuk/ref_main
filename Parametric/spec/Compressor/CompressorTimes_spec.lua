@@ -15,7 +15,8 @@ describe('compressor_times', function()
       startup_on_time_in_seconds = 45,
       remain_off_after_valve_move_in_minutes = 30,
       remain_off_after_valve_move_low_ambient_in_minutes = 29,
-      variable_speed_minimum_run_time_in_minutes = 3
+      variable_speed_minimum_run_time_in_minutes = 3,
+      sabbath_delay_time_in_seconds = 20
     }, overrides or {})
   end
 
@@ -71,6 +72,14 @@ describe('compressor_times', function()
     end)
   end)
 
+  it('should assert if sabbath_delay_time_in_seconds is not in range', function()
+    should_fail_with('sabbath_delay_time_in_seconds=-1 must be in [15, 25]', function()
+      compressorTimes(generate_config({
+        sabbath_delay_time_in_seconds = -1
+      }))
+    end)
+  end)
+
   it('should generate a typed string with the correct data and type compressor_times', function()
     local expected = remove_whitespace([[
       structure(
@@ -79,7 +88,8 @@ describe('compressor_times', function()
         u8(45),
         u8(30),
         u8(29),
-        u8(3))
+        u8(3),
+        u8(20))
     ]])
 
     local actual = compressorTimes({
@@ -88,7 +98,8 @@ describe('compressor_times', function()
       startup_on_time_in_seconds = 45,
       remain_off_after_valve_move_in_minutes = 30,
       remain_off_after_valve_move_low_ambient_in_minutes = 29,
-      variable_speed_minimum_run_time_in_minutes = 3
+      variable_speed_minimum_run_time_in_minutes = 3,
+      sabbath_delay_time_in_seconds = 20
     })
 
   end)

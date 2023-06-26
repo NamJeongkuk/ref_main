@@ -16,6 +16,7 @@ typedef struct
    uint8_t remainOffAfterValveMoveTimeInMinutes;
    uint8_t remainOffAfterValveMoveLowAmbientTimeInMinutes;
    uint8_t variableSpeedMinimumRunTimeInMinutes;
+   uint8_t sabbathDelayTimeInSeconds;
 } CompressorTimes_t;
 
 #endif

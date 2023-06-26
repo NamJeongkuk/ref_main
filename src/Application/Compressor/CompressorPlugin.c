@@ -9,11 +9,6 @@
 #include "CompressorIsOn.h"
 #include "SystemErds.h"
 
-enum
-{
-   CompressorSabbathDelayTimeInSeconds = 20
-};
-
 static Erd_t sabbathFanVoteErdList[] = {
    Erd_CondenserFanSpeed_SabbathVote,
    Erd_FreezerEvapFanSpeed_SabbathVote,
@@ -42,7 +37,6 @@ static const CompressorSpeedControllerConfiguration_t compressorSpeedControllerC
    .valvePositionResolvedVoteErd = Erd_ValvePosition_ResolvedVote,
    .filteredAmbientTemperatureInDegFx100Erd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
    .disableMinimumCompressorTimeErd = Erd_DisableMinimumCompressorTimes,
-   .sabbathDelayTimeInSeconds = CompressorSabbathDelayTimeInSeconds,
 };
 
 static bool VotingErdCareDelegate(const void *votingErdData)

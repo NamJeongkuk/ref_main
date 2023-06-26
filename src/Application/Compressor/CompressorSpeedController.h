@@ -25,7 +25,6 @@ typedef struct
    Erd_t valvePositionResolvedVoteErd; // VotedValvePosition_t
    Erd_t filteredAmbientTemperatureInDegFx100Erd; // TemperatureDegFx100_t
    Erd_t disableMinimumCompressorTimeErd; // bool
-   uint8_t sabbathDelayTimeInSeconds; // uint8_t
 } CompressorSpeedControllerConfiguration_t;
 
 typedef struct
