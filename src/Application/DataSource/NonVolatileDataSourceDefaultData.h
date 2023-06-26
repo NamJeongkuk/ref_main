@@ -38,6 +38,12 @@ void NonVolatileDataSourceDefaultData_DefaultPersonality(void *data, size_t data
  * @param data
  * @param dataSize
  */
+void NonVolatileDataSourceDefaultData_UnlockedControlLockStatus(void *data, size_t dataSize);
+
+/*!
+ * @param data
+ * @param dataSize
+ */
 void NonVolatileDataSourceDefaultData_Code(void *data, size_t dataSize);
 
 /*!

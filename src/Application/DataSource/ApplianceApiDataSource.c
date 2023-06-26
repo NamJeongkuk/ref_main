@@ -55,6 +55,13 @@ static const DataSource_ApplianceApiRevision1Configuration_t applianceApiConfigu
       },
    },
 
+   .controlLock = {
+      .supported = true,
+      .erd = {
+         .controlLockStatus = Erd_ControlLockStatus,
+      },
+   },
+
    .timeOfDay = {
       .supported = false,
    },

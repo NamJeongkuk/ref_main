@@ -32,6 +32,12 @@ void NonVolatileDataSourceDefaultData_DefaultPersonality(void *data, size_t data
    memcpy(data, &defaultPersonality, dataSize);
 }
 
+void NonVolatileDataSourceDefaultData_UnlockedControlLockStatus(void *data, size_t dataSize)
+{
+   ControlLockStatus_t defaultControlLockStatus = ControlLockStatus_Unlocked;
+   memcpy(data, &defaultControlLockStatus, dataSize);
+}
+
 void NonVolatileDataSourceDefaultData_Code(void *data, size_t dataSize)
 {
    uint32_t code = 0xC0DECAFE;

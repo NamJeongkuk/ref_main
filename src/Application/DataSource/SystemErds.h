@@ -106,6 +106,7 @@
 #include "AndroidUiSignOfLifeFsmState.h"
 #include "I_OneWire.h"
 #include "DispensingInhibitedBitmap.h"
+#include "ControlLockStatus.h"
 
 // clang-format off
 
@@ -370,6 +371,7 @@ enum
    ENTRY(Erd_NvMetadata,                                    0x0000, AsyncDataSource_EepromMetadata_t,                   Swap_No,  Io_None, Sub_N, Nv,                     NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ModelNumber,                                   0x0001, ModelNumber_t,                                      Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
    ENTRY(Erd_SerialNumber,                                  0x0002, SerialNumber_t,                                     Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
+   ENTRY(Erd_ControlLockStatus,                             0x0004, ControlLockStatus_t,                                Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_UnlockedControlLockStatus, NotFault) \
    ENTRY(Erd_ApplianceType,                                 0x0008, ApplianceType_t,                                    Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
    ENTRY(Erd_SabbathMode,                                   0x0009, bool,                                               Swap_No,  Io_All,  Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ReadyToEnterBootLoader,                        0x0030, ReadyToEnterBootLoaderState_t,                      Swap_No,  Io_All,  Sub_N, Ram,                    NotNv,                                    NotFault) \
