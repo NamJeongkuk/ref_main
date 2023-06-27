@@ -874,21 +874,23 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       WhenTheRakePositionIs(RakePosition_Home);
    }
 
-   void WhenDispensingRequestStatusIs(DispensingRequestSelection_t selection, DispenseStatus_t status)
+   void WhenDispensingRequestIs(DispensingAction_t action, DispensingRequestSelection_t selection)
    {
-      DispensingRequestStatus_t dispensingRequestStatus;
-      DataModel_Read(dataModel, Erd_DispensingRequestStatus, &dispensingRequestStatus);
-
-      dispensingRequestStatus.selection = selection;
-      dispensingRequestStatus.status = status;
-      DataModel_Write(dataModel, Erd_DispensingRequestStatus, &dispensingRequestStatus);
+      DispensingRequest_t request = {
+         .action = action,
+         .selection = selection,
+         .specialOptions = DispensingSpecialOptions_EmptyRequest,
+         .padding = UINT8_MAX,
+         .preciseFillOuncesx100 = UINT16_MAX
+      };
+      DataModel_Write(dataModel, Erd_DispensingRequest, &request);
    }
 
    void GivenIceMakerIsInIdleFillState()
    {
       GivenIceMakerIsInFillState();
 
-      WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_Dispensing);
+      WhenDispensingRequestIs(DispensingAction_Start, DispenseSelection_ColdWater);
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFill);
    }
 
@@ -1646,5 +1648,32 @@ TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToHarvestWhenTheThermistor
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
    WhenHarvestFinishes();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldPauseFillDuringDispensingAndResumeWhenDispensingStops)
+{
+   GivenIceMakerIsInFillState();
+
+   WhenDispensingRequestIs(DispensingAction_Start, DispenseSelection_ColdWater);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFill);
+
+   WhenDispensingRequestIs(DispensingAction_Stop, DispenseSelection_ColdWater);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldResumeFillForRemainderOfFillTimeAfterDispensingStops)
+{
+   GivenIceMakerIsInFillState();
+
+   After((iceMakerData->fillData.iceMakerFillMonitorData->timedIceMakerFillInSecondsx10 * MSEC_PER_SEC) / 10 - 1);
+
+   WhenDispensingRequestIs(DispensingAction_Start, DispenseSelection_ColdWater);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFill);
+
+   WhenDispensingRequestIs(DispensingAction_Stop, DispenseSelection_ColdWater);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+
+   After(1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
 }
