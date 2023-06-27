@@ -669,7 +669,7 @@
             {
                "namespace": "mb",
                "displayName": "IM Freeze Integration Count Reached?",
-               "name": "Erd_HarvestCountIsReadyToHarvest",
+               "name": "Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest",
                "read": true,
                "interval": 1000000000
             },
