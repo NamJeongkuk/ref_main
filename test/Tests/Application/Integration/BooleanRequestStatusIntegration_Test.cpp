@@ -99,7 +99,7 @@ TEST_GROUP(BooleanRequestStatusIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_TurboFreezeStatus,
+         Erd_TurboFreezeOnOffStatus,
          &state);
    }
 
@@ -107,7 +107,7 @@ TEST_GROUP(BooleanRequestStatusIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_TurboFreezeRequest,
+         Erd_TurboFreezeOnOffRequest,
          &state);
    }
 
@@ -126,7 +126,7 @@ TEST_GROUP(BooleanRequestStatusIntegration)
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_TurboFreezeStatus,
+         Erd_TurboFreezeOnOffStatus,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -137,7 +137,7 @@ TEST_GROUP(BooleanRequestStatusIntegration)
       uint8_t actual;
       DataModel_Read(
          dataModel,
-         Erd_TurboFreezeRequest,
+         Erd_TurboFreezeOnOffRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual);

@@ -15,7 +15,15 @@ static const SetpointTurboModeConfig_t freshFoodSetpointTurboCoolConfiguration =
    .turboModeSetpointVoteErd = Erd_FreshFoodSetpoint_TurboCoolVote,
    .turboModeOnOffStatusErd = Erd_TurboCoolOnOffStatus,
    .turboModeOnTimeInMinutesErd = Erd_TurboCoolOnTimeInMinutes,
-   .timerModuleErd = Erd_TimerModule
+   .timerModuleErd = Erd_TimerModule,
+};
+
+static const SetpointTurboModeConfig_t freezerSetpointTurboFreezeConfiguration = {
+   .currentSetpointResolvedVoteErd = Erd_FreezerSetpoint_ResolvedVote,
+   .turboModeSetpointVoteErd = Erd_FreezerSetpoint_TurboFreezeVote,
+   .turboModeOnOffStatusErd = Erd_TurboFreezeOnOffStatus,
+   .turboModeOnTimeInMinutesErd = Erd_TurboFreezeOnTimeInMinutes,
+   .timerModuleErd = Erd_TimerModule,
 };
 
 void SideBySideTurboModeSetpointPlugin_Init(
@@ -30,4 +38,10 @@ void SideBySideTurboModeSetpointPlugin_Init(
       dataModel,
       &freshFoodSetpointTurboCoolConfiguration,
       turboModeSetpointData->freshFoodTurboCoolSetpointData);
+
+   SetpointTurboMode_Init(
+      &instance->_private.freezerSetpointTurboFreeze,
+      dataModel,
+      &freezerSetpointTurboFreezeConfiguration,
+      turboModeSetpointData->freezerTurboFreezeSetpointData);
 }

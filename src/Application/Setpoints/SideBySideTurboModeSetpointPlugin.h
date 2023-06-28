@@ -16,6 +16,7 @@ typedef struct
    struct
    {
       SetpointTurboMode_t freshFoodSetpointTurboCool;
+      SetpointTurboMode_t freezerSetpointTurboFreeze;
    } _private;
 } SideBySideTurboModeSetpointPlugin_t;
 

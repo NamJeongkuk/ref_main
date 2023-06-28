@@ -18,7 +18,7 @@ extern "C"
 
 static const BooleanRequestStatusErdPair_t erdPairs[] = {
    { Erd_PresenceSensingEnableRequest, Erd_PresenceSensingEnableStatus },
-   { Erd_TurboFreezeRequest, Erd_TurboFreezeStatus }
+   { Erd_TurboFreezeOnOffRequest, Erd_TurboFreezeOnOffStatus }
 };
 
 static const BooleanRequestStatusUpdaterConfig_t config = {
@@ -103,7 +103,7 @@ TEST_GROUP(BooleanRequestStatusUpdater)
    {
       DataModel_Write(
          dataModel,
-         Erd_TurboFreezeStatus,
+         Erd_TurboFreezeOnOffStatus,
          &state);
    }
 
@@ -111,7 +111,7 @@ TEST_GROUP(BooleanRequestStatusUpdater)
    {
       DataModel_Write(
          dataModel,
-         Erd_TurboFreezeRequest,
+         Erd_TurboFreezeOnOffRequest,
          &state);
    }
 
@@ -130,7 +130,7 @@ TEST_GROUP(BooleanRequestStatusUpdater)
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_TurboFreezeStatus,
+         Erd_TurboFreezeOnOffStatus,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -141,7 +141,7 @@ TEST_GROUP(BooleanRequestStatusUpdater)
       uint8_t actual;
       DataModel_Read(
          dataModel,
-         Erd_TurboFreezeRequest,
+         Erd_TurboFreezeOnOffRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual);

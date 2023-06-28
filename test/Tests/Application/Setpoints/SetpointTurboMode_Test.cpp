@@ -18,16 +18,16 @@ extern "C"
 
 enum
 {
-   VeryCold = 100,
+   VeryCold = -700,
    Warm = 4000
 };
 
 static const SetpointTurboModeConfig_t setpointTurboModeConfig = {
-   .currentSetpointResolvedVoteErd = Erd_FreshFoodSetpoint_ResolvedVote,
-   .turboModeSetpointVoteErd = Erd_FreshFoodSetpoint_TurboCoolVote,
-   .turboModeOnOffStatusErd = Erd_TurboCoolOnOffStatus,
-   .turboModeOnTimeInMinutesErd = Erd_TurboCoolOnTimeInMinutes,
-   .timerModuleErd = Erd_TimerModule
+   .currentSetpointResolvedVoteErd = Erd_FreezerSetpoint_ResolvedVote,
+   .turboModeSetpointVoteErd = Erd_FreezerSetpoint_TurboFreezeVote,
+   .turboModeOnOffStatusErd = Erd_TurboFreezeOnOffStatus,
+   .turboModeOnTimeInMinutesErd = Erd_TurboFreezeOnTimeInMinutes,
+   .timerModuleErd = Erd_TimerModule,
 };
 
 TEST_GROUP(SetpointTurboMode)
@@ -44,7 +44,7 @@ TEST_GROUP(SetpointTurboMode)
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
-      turboModeSetpointData = PersonalityParametricData_Get(dataModel)->turboModeSetpointData->freshFoodTurboCoolSetpointData;
+      turboModeSetpointData = PersonalityParametricData_Get(dataModel)->turboModeSetpointData->freezerTurboFreezeSetpointData;
    }
 
    void After(TimerTicks_t ticks)
@@ -63,7 +63,7 @@ TEST_GROUP(SetpointTurboMode)
 
    void WhenTurboModeStatusIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_TurboCoolOnOffStatus, &state);
+      DataModel_Write(dataModel, Erd_TurboFreezeOnOffStatus, &state);
    }
 
    void GivenCurrentResolvedVoteIs(TemperatureDegFx100_t temperature, Vote_t vote)
@@ -72,13 +72,13 @@ TEST_GROUP(SetpointTurboMode)
       currentResolvedVote.temperatureInDegFx100 = temperature;
       currentResolvedVote.care = vote;
 
-      DataModel_Write(dataModel, Erd_FreshFoodSetpoint_ResolvedVote, &currentResolvedVote);
+      DataModel_Write(dataModel, Erd_FreezerSetpoint_ResolvedVote, &currentResolvedVote);
    }
 
    void TurboVoteShouldBe(TemperatureDegFx100_t expectedTemperature, Vote_t expectedVote)
    {
       SetpointVotedTemperature_t actual;
-      DataModel_Read(dataModel, Erd_FreshFoodSetpoint_TurboCoolVote, &actual);
+      DataModel_Read(dataModel, Erd_FreezerSetpoint_TurboFreezeVote, &actual);
 
       CHECK_EQUAL(expectedTemperature, actual.temperatureInDegFx100);
       CHECK_EQUAL(expectedVote, actual.care);
@@ -87,7 +87,7 @@ TEST_GROUP(SetpointTurboMode)
    void TurboModeOnTimeInMinutesShouldBe(uint16_t expected)
    {
       uint16_t actual;
-      DataModel_Read(dataModel, Erd_TurboCoolOnTimeInMinutes, &actual);
+      DataModel_Read(dataModel, Erd_TurboFreezeOnTimeInMinutes, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -95,14 +95,14 @@ TEST_GROUP(SetpointTurboMode)
    void TurboModeStatusShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_TurboCoolOnOffStatus, &actual);
+      DataModel_Read(dataModel, Erd_TurboFreezeOnOffStatus, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
 
    void GivenTurboModeOnTimeInMinutesIs(uint16_t minutes)
    {
-      DataModel_Write(dataModel, Erd_TurboCoolOnTimeInMinutes, &minutes);
+      DataModel_Write(dataModel, Erd_TurboFreezeOnTimeInMinutes, &minutes);
    }
 };
 

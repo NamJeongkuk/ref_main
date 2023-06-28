@@ -1481,8 +1481,43 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Erd_FreezerSetpoint_EnhancedSabbathVote",
+          "name": "Erd_FreezerSetpoint_EnhancedSabbathVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Erd_FreezerSetpoint_TurboFreezeVote",
           "name": "Erd_FreezerSetpoint_TurboFreezeVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Erd_FreezerSetpoint_IceInDoorVote",
+          "name": "Erd_FreezerSetpoint_IceInDoorVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Erd_FreezerSetpoint_FreezerIceMakerVote",
+          "name": "Erd_FreezerSetpoint_FreezerIceMakerVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Erd_FreezerSetpoint_FreezerIceRateVote",
+          "name": "Erd_FreezerSetpoint_FreezerIceRateVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Erd_FreezerSetpoint_UserVote",
+          "name": "Erd_FreezerSetpoint_UserVote",
           "read": true,
           "write": true
         },

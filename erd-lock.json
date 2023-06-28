@@ -1041,14 +1041,14 @@
     {
       "data": [
         {
-          "name": "Erd_TurboFreezeRequest",
+          "name": "Erd_TurboFreezeOnOffRequest",
           "offset": 0,
           "size": 1,
           "type": "u8"
         }
       ],
       "id": "0x121A",
-      "name": "Erd_TurboFreezeRequest",
+      "name": "Erd_TurboFreezeOnOffRequest",
       "operations": [
         "read",
         "write"
@@ -1057,14 +1057,14 @@
     {
       "data": [
         {
-          "name": "Erd_TurboFreezeStatus",
+          "name": "Erd_TurboFreezeOnOffStatus",
           "offset": 0,
           "size": 1,
           "type": "bool"
         }
       ],
       "id": "0x121B",
-      "name": "Erd_TurboFreezeStatus",
+      "name": "Erd_TurboFreezeOnOffStatus",
       "operations": [
         "read",
         "write"
