@@ -10,6 +10,7 @@ extern "C"
 #include "FactoryMode.h"
 #include "DataModelErdPointerAccess.h"
 #include "VoteType.h"
+#include "BooleanVotedState.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -38,8 +39,8 @@ enum
 enum
 {
    Erd_FactoryModeEnableRequestInMinutes,
-   Erd_DisableMinimumCompressorTimes,
    Erd_Reset,
+   Erd_Boolean_FactoryVoteStruct,
    Erd_U8_FactoryVoteStruct,
    Erd_U16_FactoryVoteStruct,
    Erd_U32_FactoryVoteStruct,
@@ -50,10 +51,12 @@ enum
    Erd_U64_AnotherFactoryVoteStruct
 };
 
+static bool booleanOnValue = true;
 static uint8_t U8Value = UINT8_MAX;
 static uint16_t U16Value = UINT16_MAX;
 static uint32_t U32Value = UINT32_MAX;
 
+static bool booleanOffValue = false;
 static uint8_t U8OffValue = 0;
 static uint16_t U16OffValue = 0;
 static uint32_t U32OffValue = 0;
@@ -74,8 +77,8 @@ typedef struct
 
 static const DataModel_TestDoubleConfigurationEntry_t erdTable[] = {
    { Erd_FactoryModeEnableRequestInMinutes, sizeof(uint8_t) },
-   { Erd_DisableMinimumCompressorTimes, sizeof(bool) },
    { Erd_Reset, sizeof(uint8_t) },
+   { Erd_Boolean_FactoryVoteStruct, sizeof(BooleanVotedState_t) },
    { Erd_U8_FactoryVoteStruct, sizeof(U8Vote_t) },
    { Erd_U16_FactoryVoteStruct, sizeof(U16Vote_t) },
    { Erd_U32_FactoryVoteStruct, sizeof(U32Vote_t) },
@@ -87,6 +90,7 @@ static const DataModel_TestDoubleConfigurationEntry_t erdTable[] = {
 };
 
 static const FactoryVotePair_t factoryVotePairs[] = {
+   { Erd_Boolean_FactoryVoteStruct, booleanOffValue },
    { Erd_U8_FactoryVoteStruct, U8OffValue },
    { Erd_U16_FactoryVoteStruct, U16OffValue },
    { Erd_U32_FactoryVoteStruct, U32OffValue },
@@ -112,14 +116,12 @@ static const FactoryVoteList_t factoryVoteListWithU64Vote = {
 
 static const FactoryModeConfiguration_t config = {
    .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
-   .disableMinimumCompressorTimesErd = Erd_DisableMinimumCompressorTimes,
    .resetErd = Erd_Reset,
    .factoryVoteList = factoryVoteList
 };
 
 static const FactoryModeConfiguration_t configU64Vote = {
    .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
-   .disableMinimumCompressorTimesErd = Erd_DisableMinimumCompressorTimes,
    .resetErd = Erd_Reset,
    .factoryVoteList = factoryVoteListWithU64Vote
 };
@@ -165,6 +167,12 @@ TEST_GROUP(FactoryMode)
       TimerModule_TestDouble_ElapseTime(&timerModuleDouble, ticks, 1000);
    }
 
+   void BooleanVoteStructErdHasValue(Erd_t erd, bool value, Vote_t vote)
+   {
+      BooleanVotedState_t offVote = { value, vote };
+      DataModel_Write(dataModel, erd, &offVote);
+   }
+
    void U8VoteStructErdHasValue(Erd_t erd, uint8_t value, Vote_t vote)
    {
       U8Vote_t offVote = { value, vote };
@@ -191,12 +199,22 @@ TEST_GROUP(FactoryMode)
 
    void AllFactoryVoteErdsAreUninitialized(void)
    {
+      Given BooleanVoteStructErdHasValue(Erd_Boolean_FactoryVoteStruct, booleanOnValue, Vote_DontCare);
       Given U8VoteStructErdHasValue(Erd_U8_FactoryVoteStruct, U8Value, Vote_DontCare);
       Given U16VoteStructErdHasValue(Erd_U16_FactoryVoteStruct, U16Value, Vote_DontCare);
       Given U32VoteStructErdHasValue(Erd_U32_FactoryVoteStruct, U32Value, Vote_DontCare);
       Given U8VoteStructErdHasValue(Erd_U8_AnotherFactoryVoteStruct, U8Value, Vote_DontCare);
       Given U16VoteStructErdHasValue(Erd_U16_AnotherFactoryVoteStruct, U16Value, Vote_DontCare);
       Given U32VoteStructErdHasValue(Erd_U32_AnotherFactoryVoteStruct, U32Value, Vote_DontCare);
+   }
+
+   void TheBooleanVoteStructErdShouldBe(Erd_t erd, bool expectedValue, Vote_t expectedVote)
+   {
+      BooleanVotedState_t actual;
+      DataModel_Read(dataModel, erd, &actual);
+
+      CHECK_EQUAL(expectedValue, actual.state);
+      CHECK_EQUAL(expectedVote, actual.care);
    }
 
    void TheU8VoteStructErdShouldBe(Erd_t erd, uint8_t expectedValue, Vote_t expectedVote)
@@ -237,6 +255,7 @@ TEST_GROUP(FactoryMode)
 
    void AllFactoryVotesShouldBeOff(void)
    {
+      TheBooleanVoteStructErdShouldBe(Erd_Boolean_FactoryVoteStruct, booleanOffValue, Vote_Care);
       TheU8VoteStructErdShouldBe(Erd_U8_FactoryVoteStruct, U8OffValue, Vote_Care);
       TheU16VoteStructErdShouldBe(Erd_U16_FactoryVoteStruct, U16OffValue, Vote_Care);
       TheU32VoteStructErdShouldBe(Erd_U32_FactoryVoteStruct, U32OffValue, Vote_Care);
@@ -250,20 +269,6 @@ TEST_GROUP(FactoryMode)
       uint8_t actual;
       DataModel_Read(dataModel, Erd_Reset, &actual);
       CHECK_EQUAL(expected, actual);
-   }
-
-   void MinimumCompressorTimesShouldBeDisabled()
-   {
-      bool actual;
-      DataModel_Read(dataModel, Erd_DisableMinimumCompressorTimes, &actual);
-      CHECK_EQUAL(true, actual);
-   }
-
-   void MinimumCompressorTimesShouldBeEnabled()
-   {
-      bool actual;
-      DataModel_Read(dataModel, Erd_DisableMinimumCompressorTimes, &actual);
-      CHECK_EQUAL(false, actual);
    }
 };
 
@@ -286,6 +291,7 @@ TEST(FactoryMode, ShouldNotVoteToOffForAllTheLoadsWhenFactoryModeEnableRequestIn
 {
    Given ModuleIsInitialized();
    Given FactoryModeEnableRequestInMinutesIs(TwoMinutes);
+   Given BooleanVoteStructErdHasValue(Erd_Boolean_FactoryVoteStruct, booleanOnValue, Vote_Care);
    Given U8VoteStructErdHasValue(Erd_U8_FactoryVoteStruct, U8ChangeValue, Vote_Care);
    Given U16VoteStructErdHasValue(Erd_U16_FactoryVoteStruct, U16ChangeValue, Vote_Care);
    Given U32VoteStructErdHasValue(Erd_U32_FactoryVoteStruct, U32ChangeValue, Vote_Care);
@@ -294,6 +300,7 @@ TEST(FactoryMode, ShouldNotVoteToOffForAllTheLoadsWhenFactoryModeEnableRequestIn
    Given U32VoteStructErdHasValue(Erd_U32_AnotherFactoryVoteStruct, U32ChangeValue, Vote_Care);
 
    After(OneMinute * MSEC_PER_MIN);
+   TheBooleanVoteStructErdShouldBe(Erd_Boolean_FactoryVoteStruct, booleanOnValue, Vote_Care);
    TheU8VoteStructErdShouldBe(Erd_U8_FactoryVoteStruct, U8ChangeValue, Vote_Care);
    TheU16VoteStructErdShouldBe(Erd_U16_FactoryVoteStruct, U16ChangeValue, Vote_Care);
    TheU32VoteStructErdShouldBe(Erd_U32_FactoryVoteStruct, U32ChangeValue, Vote_Care);
@@ -333,15 +340,6 @@ TEST(FactoryMode, ShouldResetWhenFactoryModeEnableRequestInMinutesReachesZero)
 
    After(1);
    ResetRequestShouldBe(ResetDelayTimeInSeconds);
-}
-
-TEST(FactoryMode, ShouldDisableMinimumCompressorTimesWhenEnteringFactoryModeByFactoryModeEnableRequestInMinutes)
-{
-   Given ModuleIsInitialized();
-   MinimumCompressorTimesShouldBeEnabled();
-
-   When FactoryModeEnableRequestInMinutesIs(TwoMinutes);
-   MinimumCompressorTimesShouldBeDisabled();
 }
 
 TEST(FactoryMode, ShouldDecreaseFactoryModeEnableRequestInMinutesByOneEveryMinute)

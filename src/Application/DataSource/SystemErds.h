@@ -107,6 +107,7 @@
 #include "I_OneWire.h"
 #include "DispensingInhibitedBitmap.h"
 #include "ControlLockStatus.h"
+#include "BooleanVotedState.h"
 
 // clang-format off
 
@@ -588,7 +589,6 @@ enum
    ENTRY(Erd_PostDwellCompletionSignal,                     0xF080, Signal_t,                                           Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,0xF081,bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,    0xF082, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DisableMinimumCompressorTimes,                 0xF083, bool,                                               Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CompressorIsOn,                                0xF084, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DisableDefrost,                                0xF085, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DefrostTestRequest,                            0xF086, DefrostTestRequest_t,                               Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
@@ -913,6 +913,12 @@ enum
    ENTRY(Erd_RecessHeater_FactoryVote,                      0xF342, PercentageDutyCycleVote_t,                          Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RecessHeater_CoolingSystemOffVote,             0xF343, PercentageDutyCycleVote_t,                          Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RecessHeater_VariableAntiSweatVote,            0xF344, PercentageDutyCycleVote_t,                          Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_DisableMinimumCompressorTimes_ResolvedVote,        0xF350, BooleanVotedState_t,                            Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DisableMinimumCompressorTimes_WinningVoteErd,      0xF351, WinningVoteErd_t,                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DisableMinimumCompressorTimes_FactoryVote,         0xF352, BooleanVotedState_t,                            Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DisableMinimumCompressorTimes_EnhancedSabbathVote, 0xF353, BooleanVotedState_t,                            Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DisableMinimumCompressorTimes_DefrostVote,         0xF354, BooleanVotedState_t,                            Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_SensorsReadyToBeRead,                          0xF400, bool,                                               Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_SetpointResolverReady,                         0xF401, bool,                                               Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \

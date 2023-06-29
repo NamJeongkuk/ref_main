@@ -36,7 +36,7 @@ static const CompressorSpeedControllerConfiguration_t compressorSpeedControllerC
    .compressorSpeedResolvedVoteErd = Erd_CompressorSpeed_ResolvedVote,
    .valvePositionResolvedVoteErd = Erd_ValvePosition_ResolvedVote,
    .filteredAmbientTemperatureInDegFx100Erd = Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
-   .disableMinimumCompressorTimeErd = Erd_DisableMinimumCompressorTimes,
+   .disableMinimumCompressorTimesVoteErd = Erd_DisableMinimumCompressorTimes_ResolvedVote,
 };
 
 static bool VotingErdCareDelegate(const void *votingErdData)
@@ -50,12 +50,31 @@ static const CompressorVotedSpeed_t defaultCompressorSpeedData = {
    .care = Vote_DontCare
 };
 
+static bool BooleanVotingErdCareDelegate(const void *votingErdData)
+{
+   const BooleanVotedState_t *data = votingErdData;
+   return (data->care);
+}
+
+static const BooleanVotedState_t defaultDisableMinimumCompressorTimeData = {
+   .state = false,
+   .care = Vote_DontCare
+};
+
 static const ErdResolverConfiguration_t compressorSpeedVoteResolverConfig = {
    .votingErdCare = VotingErdCareDelegate,
    .defaultData = &defaultCompressorSpeedData,
    .winningVoterErd = Erd_CompressorSpeed_WinningVoteErd,
    .resolvedStateErd = Erd_CompressorSpeed_ResolvedVote,
    .numberOfVotingErds = (Erd_CompressorSpeed_GridVote - Erd_CompressorSpeed_WinningVoteErd)
+};
+
+static const ErdResolverConfiguration_t disableMinimumCompressorTimesVoteResolverConfig = {
+   .votingErdCare = BooleanVotingErdCareDelegate,
+   .defaultData = &defaultDisableMinimumCompressorTimeData,
+   .winningVoterErd = Erd_DisableMinimumCompressorTimes_WinningVoteErd,
+   .resolvedStateErd = Erd_DisableMinimumCompressorTimes_ResolvedVote,
+   .numberOfVotingErds = (Erd_DisableMinimumCompressorTimes_DefrostVote - Erd_DisableMinimumCompressorTimes_WinningVoteErd)
 };
 
 static CompressorStartupFanVotesConfiguration_t compressorStartupFanVotesConfig = {
@@ -72,6 +91,11 @@ void CompressorPlugin_Init(CompressorPlugin_t *instance, I_DataModel_t *dataMode
       &instance->_private.compressorSpeedErdResolver,
       DataModel_AsDataSource(dataModel),
       &compressorSpeedVoteResolverConfig);
+
+   ErdResolver_Init(
+      &instance->_private.disableMinimumCompressorTimesErdResolver,
+      DataModel_AsDataSource(dataModel),
+      &disableMinimumCompressorTimesVoteResolverConfig);
 
    CompressorStartupFanVotes_Init(
       &instance->_private.compressorStartupFanVotes,

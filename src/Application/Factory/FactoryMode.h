@@ -27,7 +27,6 @@ typedef struct
 typedef struct
 {
    Erd_t factoryModeTimeErd; // uint8_t
-   Erd_t disableMinimumCompressorTimesErd; // bool
    Erd_t resetErd; // uint8_t
    const FactoryVoteList_t factoryVoteList;
 } FactoryModeConfiguration_t;

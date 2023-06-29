@@ -12,6 +12,7 @@
 #include "CompressorSpeedFrequencyInHz.h"
 #include "CompressorState.h"
 #include "Constants_Binary.h"
+#include "BooleanVotedState.h"
 
 enum
 {
@@ -269,13 +270,13 @@ static bool CompressorIsVariableSpeed(CompressorSpeedController_t *instance)
 
 static bool MinimumTimesAreEnabled(CompressorSpeedController_t *instance)
 {
-   bool minimumTimesDisabled;
+   BooleanVotedState_t minimumTimesDisabledVote;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->disableMinimumCompressorTimeErd,
-      &minimumTimesDisabled);
+      instance->_private.config->disableMinimumCompressorTimesVoteErd,
+      &minimumTimesDisabledVote);
 
-   return !minimumTimesDisabled;
+   return !minimumTimesDisabledVote.state;
 }
 
 static HsmState_t InitializationCompressorState(CompressorSpeedController_t *instance)
@@ -736,10 +737,10 @@ static void DataModelChanged(void *context, const void *args)
          Signal_ValvePositionChanged,
          &resolvedValvePosition->position);
    }
-   else if(onChangeArgs->erd == instance->_private.config->disableMinimumCompressorTimeErd)
+   else if(onChangeArgs->erd == instance->_private.config->disableMinimumCompressorTimesVoteErd)
    {
-      const bool *minimumTimeDisableRequest = onChangeArgs->data;
-      if(*minimumTimeDisableRequest)
+      const BooleanVotedState_t *minimumTimesDisableVote = onChangeArgs->data;
+      if(minimumTimesDisableVote->state)
       {
          MinimumTimesDisabled(instance);
       }

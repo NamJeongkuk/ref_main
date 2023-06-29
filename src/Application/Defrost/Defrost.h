@@ -35,7 +35,7 @@ typedef struct
    Erd_t compressorIsOnErd; // bool
    Erd_t coolingModeErd; // CoolingMode_t
    Erd_t freezerFilteredTemperatureTooWarmOnPowerUpReadyErd; // bool
-   Erd_t disableMinimumTimeRequestErd; // bool
+   Erd_t disableCompressorMinimumTimesVoteErd; // BooleanVotedState_t
    Erd_t maxPrechillTimeInMinutesErd; // uint8_t
    Erd_t timeThatPrechillConditionsAreMetInMinutesErd; // uint16_t
    Erd_t compressorSpeedVoteErd; // CompressorVotedSpeed_t

@@ -43,7 +43,7 @@ static const CompressorSpeedControllerConfiguration_t config = {
    .compressorSpeedResolvedVoteErd = Erd_CompressorSpeed_ResolvedVote,
    .valvePositionResolvedVoteErd = Erd_ValvePosition_ResolvedVote,
    .filteredAmbientTemperatureInDegFx100Erd = Erd_Ambient_FilteredInternalTemperatureResolvedInDegFx100,
-   .disableMinimumCompressorTimeErd = Erd_DisableMinimumCompressorTimes,
+   .disableMinimumCompressorTimesVoteErd = Erd_DisableMinimumCompressorTimes_ResolvedVote,
 };
 
 TEST_GROUP(VariableSpeedCompressorSpeedController)
@@ -131,20 +131,28 @@ TEST_GROUP(VariableSpeedCompressorSpeedController)
 
    void MinimumTimesAreDisabled()
    {
-      bool active = true;
+      BooleanVotedState_t activeVote = {
+         .state = true,
+         .care = Vote_Care
+      };
+
       DataModel_Write(
          dataModel,
-         Erd_DisableMinimumCompressorTimes,
-         &active);
+         Erd_DisableMinimumCompressorTimes_ResolvedVote,
+         &activeVote);
    }
 
    void MinimumTimesAreEnabled()
    {
-      bool inactive = false;
+      BooleanVotedState_t inactiveVote = {
+         .state = false,
+         .care = Vote_Care
+      };
+
       DataModel_Write(
          dataModel,
-         Erd_DisableMinimumCompressorTimes,
-         &inactive);
+         Erd_DisableMinimumCompressorTimes_ResolvedVote,
+         &inactiveVote);
    }
 
    void TheCompressorSpeedControllerIsInitializedAndGetsIntoState(CompressorState_t requestedState)

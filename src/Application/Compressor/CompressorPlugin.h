@@ -24,6 +24,7 @@ typedef struct
       CompressorStartupFanVotes_t compressorStartupFanVotes;
       SabbathFanDelayHandler_t sabbathFanDelayHandler;
       ErdResolver_t compressorSpeedErdResolver;
+      ErdResolver_t disableMinimumCompressorTimesErdResolver;
    } _private;
 } CompressorPlugin_t;
 

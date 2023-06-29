@@ -25,6 +25,7 @@
 #include "DefrostType.h"
 #include "CoolingMode.h"
 #include "DefrostTestStateRequestMessage.h"
+#include "BooleanVotedState.h"
 
 enum
 {
@@ -385,18 +386,28 @@ static void VoteForHeaterOnLoads(Defrost_t *instance, HeaterState_t state, bool 
 
 static void EnableMinimumCompressorTimes(Defrost_t *instance)
 {
+   BooleanVotedState_t booleanVote = {
+      .state = false,
+      .care = Vote_DontCare
+   };
+
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->disableMinimumTimeRequestErd,
-      clear);
+      instance->_private.config->disableCompressorMinimumTimesVoteErd,
+      &booleanVote);
 }
 
 static void DisableMinimumCompressorTimes(Defrost_t *instance)
 {
+   BooleanVotedState_t booleanVote = {
+      .state = true,
+      .care = Vote_Care
+   };
+
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->disableMinimumTimeRequestErd,
-      set);
+      instance->_private.config->disableCompressorMinimumTimesVoteErd,
+      &booleanVote);
 }
 
 static void VoteForDwellLoads(Defrost_t *instance, bool care)

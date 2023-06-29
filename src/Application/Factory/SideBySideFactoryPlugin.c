@@ -33,7 +33,8 @@ static const FactoryVotePair_t factoryVotePairs[] = {
    { Erd_FreshFoodBackWallLight_FactoryVote, PwmDutyCycle_Min },
    { Erd_FreshFoodTopLight_FactoryVote, PwmDutyCycle_Min },
    { Erd_FreezerBackWallLight_FactoryVote, PwmDutyCycle_Min },
-   { Erd_FreezerTopLight_FactoryVote, PwmDutyCycle_Min }
+   { Erd_FreezerTopLight_FactoryVote, PwmDutyCycle_Min },
+   { Erd_DisableMinimumCompressorTimes_FactoryVote, true },
 };
 
 static const FactoryVoteList_t factoryVoteList = {
@@ -43,7 +44,6 @@ static const FactoryVoteList_t factoryVoteList = {
 
 static const FactoryModeConfiguration_t factoryModeConfig = {
    .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
-   .disableMinimumCompressorTimesErd = Erd_DisableMinimumCompressorTimes,
    .resetErd = Erd_Reset,
    .factoryVoteList = factoryVoteList
 };

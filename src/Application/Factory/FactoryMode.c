@@ -112,11 +112,6 @@ static void FactoryModeTimeChanged(void *context, const void *args)
    {
       if(instance->_private.factoryModeEntered == false)
       {
-         DataModel_Write(
-            instance->_private.dataModel,
-            instance->_private.config->disableMinimumCompressorTimesErd,
-            set);
-
          VoteOffForAllTheLoads(instance);
          instance->_private.factoryModeEntered = true;
       }

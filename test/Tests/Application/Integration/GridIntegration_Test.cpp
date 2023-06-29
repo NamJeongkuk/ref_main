@@ -74,7 +74,12 @@ TEST_GROUP(GridIntegration)
       DataModel_Write(dataModel, Erd_GridOverrideEnable, set);
       DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureOverrideRequest, set);
       DataModel_Write(dataModel, Erd_FreshFood_FilteredTemperatureOverrideRequest, set);
-      DataModel_Write(dataModel, Erd_DisableMinimumCompressorTimes, set);
+
+      BooleanVotedState_t activeVote = {
+         .state = true,
+         .care = Vote_Care
+      };
+      DataModel_Write(dataModel, Erd_DisableMinimumCompressorTimes_FactoryVote, &activeVote);
    }
 
    void GridBlockTemperaturesHaveBeenGenerated()
