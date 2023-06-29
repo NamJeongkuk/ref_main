@@ -14,7 +14,10 @@
    ENTRY(Erd_PresenceSensingEnableRequest, Erd_PresenceSensingEnableStatus)         \
    ENTRY(Erd_TurboFreezeOnOffRequest, Erd_TurboFreezeOnOffStatus)                   \
    ENTRY(Erd_DoorAlarmEnableRequest, Erd_DoorAlarmEnableStatus)                     \
-   ENTRY(Erd_TurboCoolOnOffRequest, Erd_TurboCoolOnOffStatus)
+   ENTRY(Erd_TurboCoolOnOffRequest, Erd_TurboCoolOnOffStatus)                       \
+   ENTRY(Erd_IceMaker0EnableRequest, Erd_IceMaker0EnableStatus)                     \
+   ENTRY(Erd_IceMaker1EnableRequest, Erd_IceMaker1EnableStatus)                     \
+   ENTRY(Erd_CoolingOffRequest, Erd_CoolingOffStatus)
 
 #define EXPAND_AS_REQUEST_STATUS_ERD_PAIRS( _requestErd, _statusErd) \
 { .requestErd = _requestErd, .statusErd = _statusErd },

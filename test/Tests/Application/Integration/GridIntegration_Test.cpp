@@ -322,6 +322,26 @@ TEST_GROUP(GridIntegration)
       FreshFoodThermistorValidIs(Valid);
       FreezerThermistorValidIs(Valid);
    }
+
+   void GivenTheIceMakerIsEnabledAndTheApplicationIsInitialized()
+   {
+      DataModel_Write(dataModel, Erd_IceMaker0EnableRequest, set);
+      ApplicationHasBeenInitialized();
+      DataModel_Write(dataModel, Erd_IceMakerEnabledByGrid, set);
+   }
+
+   void WhenTheGridVotesToDisableTheIceMaker()
+   {
+      DataModel_Write(dataModel, Erd_IceMakerEnabledByGrid, clear);
+   }
+
+   void TheIceMakerShouldBe(bool expectedState)
+   {
+      bool actualState;
+      DataModel_Read(dataModel, Erd_IceMakerEnabledResolved, &actualState);
+
+      CHECK_EQUAL(expectedState, actualState);
+   }
 };
 
 TEST(GridIntegration, ShouldInitialize)
@@ -1334,4 +1354,13 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks38ThenTurnAllLoadsOff
    TheCalculatedCondenserFanControlShouldBe(fanSpeedOff);
    TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedOff);
    TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+}
+
+TEST(GridIntegration, ShouldDisableTheIceMakerWhenTheGridVotesDisabled)
+{
+   GivenTheIceMakerIsEnabledAndTheApplicationIsInitialized();
+   TheIceMakerShouldBe(ENABLED);
+
+   WhenTheGridVotesToDisableTheIceMaker();
+   TheIceMakerShouldBe(DISABLED);
 }

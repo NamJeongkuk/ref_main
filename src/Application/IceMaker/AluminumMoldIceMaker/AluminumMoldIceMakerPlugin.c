@@ -31,7 +31,7 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .harvestCountIsReadyToHarvestErd = Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
    .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
-   .iceMakerEnabledErd = Erd_IceMaker0EnableStatus,
+   .iceMakerEnabledErd = Erd_IceMakerEnabledResolved,
    .sabbathModeErd = Erd_SabbathMode,
    .fillTubeHeaterVoteErd = Erd_FillTubeHeater_AluminumMoldIceMakerVote,
    .moldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
@@ -69,7 +69,7 @@ static HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
 };
 
 static const Erd_t enableErdsList[] = {
-   Erd_IceMaker0EnableRequest, Erd_IceMakerEnabledByGrid
+   Erd_IceMaker0EnableStatus, Erd_IceMakerEnabledByGrid
 };
 
 static const ErdLogicServiceConfigurationEntry_t configurationEntries[] = {
@@ -230,14 +230,14 @@ static const Erd_t iceMakerEnabledOverrideRequestErdList[] = {
 };
 
 static const Erd_t iceMakerEnabledOverrideValueErdList[] = {
-   Erd_IceMakerEnabledResolved,
+   Erd_IceMaker0EnableStatus,
    Erd_IceMakerEnabledOverrideValue
 };
 
 static const OverrideArbiterConfiguration_t iceMakerEnabledOverrideConfiguration = {
    iceMakerEnabledOverrideRequestErdList,
    iceMakerEnabledOverrideValueErdList,
-   Erd_IceMaker0EnableStatus,
+   Erd_IceMakerEnabledResolved,
    NUM_ELEMENTS(iceMakerEnabledOverrideRequestErdList)
 };
 

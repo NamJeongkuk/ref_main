@@ -190,7 +190,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMaker0EnableStatus,
+         Erd_IceMakerEnabledResolved,
          set);
    }
 
@@ -216,7 +216,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMaker0EnableStatus,
+         Erd_IceMakerEnabledResolved,
          clear);
    }
 

@@ -684,14 +684,20 @@
                "namespace": "mb",
                "displayName": "Ice Maker0 Enable Request",
                "name": "Erd_IceMaker0EnableRequest",
-               "read": true,
-               "write": true,
-               "interval": 1000000000
+               "read": false,
+               "write": true
             },
             {
                "namespace": "mb",
                "displayName": "IM Enabled by Grid?",
                "name": "Erd_IceMakerEnabledByGrid",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker0 Enable Status",
+               "name": "Erd_IceMaker0EnableStatus",
                "read": true,
                "interval": 1000000000
             },
@@ -788,14 +794,20 @@
                "namespace": "mb",
                "displayName": "Ice Maker0 Enable Request",
                "name": "Erd_IceMaker0EnableRequest",
-               "read": true,
-               "write": true,
-               "interval": 1000000000
+               "read": false,
+               "write": true
             },
             {
                "namespace": "mb",
                "displayName": "IM Enabled by Grid?",
                "name": "Erd_IceMakerEnabledByGrid",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker0 Enable Status",
+               "name": "Erd_IceMaker0EnableStatus",
                "read": true,
                "interval": 1000000000
             }
@@ -1032,8 +1044,14 @@
                "namespace": "mb",
                "displayName": "Ice Maker0 Enable Request",
                "name": "Erd_IceMaker0EnableRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker0 Enable Status",
+               "name": "Erd_IceMaker0EnableStatus",
                "read": true,
-               "write": true,
                "interval": 1000000000
             }
          ]
@@ -1380,15 +1398,14 @@
                "displayName": "Ice Maker 0 Enable Request",
                "name": "Erd_IceMaker0EnableRequest",
                "read": false,
-               "write": true,
-               "interval": 1000000000
+               "write": true
             },
             {
                "namespace": "mb",
                "displayName": "Ice Maker 0 Enable Status",
                "name": "Erd_IceMaker0EnableStatus",
                "read": true,
-               "write": true,
+               "write": false,
                "interval": 1000000000
             },
             {
@@ -1412,15 +1429,14 @@
                "displayName": "Ice Maker 1 Enable Request",
                "name": "Erd_IceMaker1EnableRequest",
                "read": false,
-               "write": true,
-               "interval": 1000000000
+               "write": true
             },
             {
                "namespace": "mb",
                "displayName": "Ice Maker 1 Enable Status",
                "name": "Erd_IceMaker1EnableStatus",
                "read": true,
-               "write": true,
+               "write": false,
                "interval": 1000000000
             },
             {

@@ -97,11 +97,11 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMakerEnabledOverrideRequest,
-         set);
+         Erd_IceMakerEnabledByGrid,
+         &state);
       DataModel_Write(
          dataModel,
-         Erd_IceMakerEnabledOverrideValue,
+         Erd_IceMaker0EnableStatus,
          &state);
    }
 
@@ -1560,6 +1560,7 @@ TEST(AluminumMoldIceMakerIntegration, ShouldActivateIceRateWhenIceRateSignalIsSe
 {
    GivenTheAluminumMoldIceMakerIsInFreezeState();
    GivenSabbathModeIs(ENABLED);
+   GivenIceMakerIs(ENABLED);
    GivenSabbathModeIs(DISABLED);
    FreezerTriggerIceRateSignalShouldBe(1);
    IceRateActiveErdStateShouldBe(ON);

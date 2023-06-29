@@ -403,12 +403,17 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_IceMaker0EnableRequest",
+         "name": "Erd_IceMaker0EnableStatus",
          "interval": 60000
       },
       {
          "namespace": "mb",
          "name": "Erd_IceMakerEnabledByGrid",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_IceMakerEnabledResolved",
          "interval": 60000
       },
       {

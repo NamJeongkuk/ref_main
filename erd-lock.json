@@ -860,7 +860,7 @@
           "name": "Erd_IceMaker0EnableRequest",
           "offset": 0,
           "size": 1,
-          "type": "bool"
+          "type": "u8"
         }
       ],
       "id": "0x1210",
@@ -964,7 +964,7 @@
           "name": "Erd_IceMaker1EnableRequest",
           "offset": 0,
           "size": 1,
-          "type": "bool"
+          "type": "u8"
         }
       ],
       "id": "0x1216",

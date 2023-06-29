@@ -124,7 +124,7 @@ static bool ItIsSabbathMode(TwistTrayIceMaker_t *instance)
 static bool IceMakerIsEnabled(TwistTrayIceMaker_t *instance)
 {
    bool iceMakerIsEnabled;
-   DataSource_Read(instance->_private.dataSource, Erd_IceMaker0EnableStatus, &iceMakerIsEnabled);
+   DataSource_Read(instance->_private.dataSource, Erd_IceMakerEnabledResolved, &iceMakerIsEnabled);
 
    return iceMakerIsEnabled;
 }
@@ -839,7 +839,7 @@ static void DataSourceChanged(void *context, const void *data)
    {
       Fsm_SendSignal(&instance->_private.fsm, Signal_IceMakerFilteredTemperatureChanged, NULL);
    }
-   else if(onChangeArgs->erd == Erd_IceMaker0EnableStatus)
+   else if(onChangeArgs->erd == Erd_IceMakerEnabledResolved)
    {
       const bool *state = onChangeArgs->data;
       if(*state)

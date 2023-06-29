@@ -34,7 +34,7 @@ static const AluminumMoldIceMakerConfig_t config = {
    .harvestCountIsReadyToHarvestErd = Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
    .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
-   .iceMakerEnabledErd = Erd_IceMaker0EnableStatus,
+   .iceMakerEnabledErd = Erd_IceMakerEnabledResolved,
    .sabbathModeErd = Erd_SabbathMode,
    .fillTubeHeaterVoteErd = Erd_FillTubeHeater_AluminumMoldIceMakerVote,
    .moldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
@@ -355,7 +355,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMaker0EnableStatus,
+         Erd_IceMakerEnabledResolved,
          &state);
    }
 

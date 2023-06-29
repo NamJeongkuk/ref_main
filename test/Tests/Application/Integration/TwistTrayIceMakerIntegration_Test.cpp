@@ -75,6 +75,8 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
          &instance,
          dataModel,
          resetReason);
+
+      DataModel_Write(dataModel, Erd_IceMakerEnabledByGrid, set);
    };
 
    void GivenTheIceMakerThermistorAdcCountIs(AdcCounts_t count)
@@ -89,13 +91,12 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
 
    void GivenTheIceMakerIsEnabled()
    {
-      DataModel_Write(dataModel, Erd_IceMaker0EnableRequest, set);
-      DataModel_Write(dataModel, Erd_IceMakerEnabledByGrid, set);
+      DataModel_Write(dataModel, Erd_IceMaker0EnableStatus, set);
    }
 
    void GivenTheIceMakerIsDisabled()
    {
-      DataModel_Write(dataModel, Erd_IceMaker0EnableRequest, clear);
+      DataModel_Write(dataModel, Erd_IceMaker0EnableStatus, clear);
       DataModel_Write(dataModel, Erd_IceMakerEnabledByGrid, clear);
    }
 
