@@ -121,6 +121,7 @@ static HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
    .moldFreezeIntegrationCountErd = Erd_TwistTrayIceMaker_FreezeIntegrationCount,
    .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_TwistTrayIceMaker_MinimumFreezeTimeCounterInMinutes,
    .startIntegrationTemperatureInDegFx100 = PersonalityParametricData_UseParametricValue,
+   .minimumFreezeTimeInitiationTemperatureInDegFx100 = PersonalityParametricData_UseParametricValue,
    .targetFreezeIntegrationSum = PersonalityParametricData_UseParametricValue,
    .minimumFreezeTimeMinutes = PersonalityParametricData_UseParametricValue
 };
@@ -192,6 +193,8 @@ void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataMod
 
    harvestCountCalculatorConfig.startIntegrationTemperatureInDegFx100 =
       twistTrayIceMakerData->freezeData.startIntegrationTemperatureInDegFx100;
+   harvestCountCalculatorConfig.minimumFreezeTimeInitiationTemperatureInDegFx100 =
+      twistTrayIceMakerData->freezeData.minimumFreezeTimeInitiationTemperatureInDegFx100;
    harvestCountCalculatorConfig.targetFreezeIntegrationSum =
       twistTrayIceMakerData->freezeData.targetFreezeIntegrationSum;
    harvestCountCalculatorConfig.minimumFreezeTimeMinutes =

@@ -9,6 +9,7 @@ return aluminum_mold_ice_maker({
   freeze = {
     maximum_harvest_temperature_in_deg_fx100 = 1900,
     start_integration_temperature_in_deg_fx100 = 3200,
+    minimum_freeze_time_initiation_temperature_in_deg_fx100 = 3200,
     freeze_integration_limit_in_deg_fx100_times_seconds = 3000000,
     minimum_freeze_time_in_minutes = 50,
     minimum_feeler_arm_extension_time_in_minutes = 3,

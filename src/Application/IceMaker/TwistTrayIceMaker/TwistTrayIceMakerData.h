@@ -23,6 +23,7 @@ typedef struct
 {
    TemperatureDegFx100_t maximumHarvestTemperatureInDegFx100;
    TemperatureDegFx100_t startIntegrationTemperatureInDegFx100;
+   TemperatureDegFx100_t minimumFreezeTimeInitiationTemperatureInDegFx100;
    uint32_t targetFreezeIntegrationSum;
    uint8_t minimumFreezeTimeMinutes;
 } TwistTrayIceMakerFreezeData_t;

@@ -26,6 +26,7 @@ return function(core)
         structure(
           i16(config.freeze.maximum_harvest_temperature_in_deg_fx100),
           i16(config.freeze.start_integration_temperature_in_deg_fx100),
+          i16(config.freeze.minimum_freeze_time_initiation_temperature_in_deg_fx100),
           u32(config.freeze.target_integration_temperature_in_deg_fx100_times_seconds),
           u8(config.freeze.minimum_freeze_time_in_minutes)
         ),
@@ -68,6 +69,7 @@ return function(core)
           constraint.table_keys({
             maximum_harvest_temperature_in_deg_fx100 = { constraint.i16 },
             start_integration_temperature_in_deg_fx100 = { constraint.i16 },
+            minimum_freeze_time_initiation_temperature_in_deg_fx100 = { constraint.i16 },
             target_integration_temperature_in_deg_fx100_times_seconds = { constraint.u32 },
             minimum_freeze_time_in_minutes = { constraint.u8 }
           })

@@ -64,6 +64,7 @@ static HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
    .moldFreezeIntegrationCountErd = Erd_AluminumMoldFreezeIntegrationCount,
    .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes,
    .startIntegrationTemperatureInDegFx100 = PersonalityParametricData_UseParametricValue,
+   .minimumFreezeTimeInitiationTemperatureInDegFx100 = PersonalityParametricData_UseParametricValue,
    .targetFreezeIntegrationSum = PersonalityParametricData_UseParametricValue,
    .minimumFreezeTimeMinutes = PersonalityParametricData_UseParametricValue
 };
@@ -334,6 +335,8 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
 
    harvestCountCalculatorConfig.startIntegrationTemperatureInDegFx100 =
       aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100;
+   harvestCountCalculatorConfig.minimumFreezeTimeInitiationTemperatureInDegFx100 =
+      aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInitiationTemperatureInDegFx100;
    harvestCountCalculatorConfig.targetFreezeIntegrationSum =
       aluminumMoldIceMakerData->freezeData.freezeIntegrationLimitInDegFx100TimesSeconds;
    harvestCountCalculatorConfig.minimumFreezeTimeMinutes =

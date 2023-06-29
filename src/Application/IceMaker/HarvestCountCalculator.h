@@ -20,6 +20,7 @@ typedef struct
    Erd_t moldFreezeIntegrationCountErd; // uint32_t
    Erd_t moldIceMakerMinimumFreezeTimeCounterInMinutesErd; // uint8_t
    TemperatureDegFx100_t startIntegrationTemperatureInDegFx100;
+   TemperatureDegFx100_t minimumFreezeTimeInitiationTemperatureInDegFx100;
    uint32_t targetFreezeIntegrationSum;
    uint8_t minimumFreezeTimeMinutes;
 } HarvestCountCalculatorConfiguration_t;

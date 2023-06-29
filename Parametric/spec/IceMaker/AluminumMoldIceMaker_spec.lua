@@ -24,6 +24,7 @@ describe('AluminumMoldIceMaker', function()
       freeze = {
         maximum_harvest_temperature_in_deg_fx100 = 1900,
         start_integration_temperature_in_deg_fx100 = 3200,
+        minimum_freeze_time_initiation_temperature_in_deg_fx100 = 3200,
         freeze_integration_limit_in_deg_fx100_times_seconds = 2000000,
         minimum_freeze_time_in_minutes = 50,
         minimum_feeler_arm_extension_time_in_minutes = 3
@@ -105,6 +106,16 @@ describe('AluminumMoldIceMaker', function()
       aluminum_mold_ice_maker(generate_config({
         freeze = {
           start_integration_temperature_in_deg_fx100 = 32768
+        }
+      }))
+    end)
+  end)
+
+  it('should assert if minimum_freeze_time_initiation_temperature_in_deg_fx100 is not in range', function()
+    should_fail_with('minimum_freeze_time_initiation_temperature_in_deg_fx100=32768 must be in [-32768, 32767]', function()
+      aluminum_mold_ice_maker(generate_config({
+        freeze = {
+          minimum_freeze_time_initiation_temperature_in_deg_fx100 = 32768
         }
       }))
     end)
@@ -349,6 +360,7 @@ describe('AluminumMoldIceMaker', function()
           structure(
             i16(1900),
             i16(3200),
+            i16(3200),
             u32(2000000),
             u8(50),
             u8(3)
@@ -392,6 +404,7 @@ describe('AluminumMoldIceMaker', function()
       freeze = {
         maximum_harvest_temperature_in_deg_fx100 = 1900,
         start_integration_temperature_in_deg_fx100 = 3200,
+        minimum_freeze_time_initiation_temperature_in_deg_fx100 = 3200,
         freeze_integration_limit_in_deg_fx100_times_seconds = 2000000,
         minimum_freeze_time_in_minutes = 50,
         minimum_feeler_arm_extension_time_in_minutes = 3

@@ -96,15 +96,21 @@ static void CalculateHarvestCount(void *context)
    TemperatureDegFx100_t iceMakerTemperature = IceMakerTemperature(instance);
    if(iceMakerTemperature <= instance->_private.config->startIntegrationTemperatureInDegFx100)
    {
+      integrationCount +=
+         (instance->_private.config->startIntegrationTemperatureInDegFx100 - iceMakerTemperature);
+   }
+   else
+   {
+      integrationCount = 0;
+   }
+
+   if(iceMakerTemperature <= instance->_private.config->minimumFreezeTimeInitiationTemperatureInDegFx100)
+   {
       if(!TimerModule_IsRunning(DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, Erd_TimerModule), &instance->_private.minimumFreezeTimer) &&
          !instance->_private.minimumFreezeTimeIsSatisfied)
       {
          StartMinimumFreezeTimer(instance);
       }
-
-      integrationCount +=
-         (instance->_private.config->startIntegrationTemperatureInDegFx100 - iceMakerTemperature);
-
       if(instance->_private.minimumFreezeTimeIsSatisfied &&
          (integrationCount >= instance->_private.config->targetFreezeIntegrationSum))
       {
@@ -120,7 +126,6 @@ static void CalculateHarvestCount(void *context)
    {
       StopMinimumFreezeTimer(instance);
       ClearMinimumFreezeTimeCounter(instance);
-      integrationCount = 0;
       instance->_private.minimumFreezeTimeIsSatisfied = false;
    }
 
@@ -180,6 +185,7 @@ void HarvestCountCalculator_Init(
    instance->_private.config = config;
 
    uassert(config->startIntegrationTemperatureInDegFx100 > 0);
+   uassert(config->minimumFreezeTimeInitiationTemperatureInDegFx100 > 0);
    uassert(config->targetFreezeIntegrationSum > 0);
    uassert(config->minimumFreezeTimeMinutes > 0);
 

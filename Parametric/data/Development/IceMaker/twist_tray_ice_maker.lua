@@ -9,6 +9,7 @@ return twist_tray_ice_maker({
   freeze = {
     maximum_harvest_temperature_in_deg_fx100 = 1900,
     start_integration_temperature_in_deg_fx100 = 3200,
+    minimum_freeze_time_initiation_temperature_in_deg_fx100 = 3200,
     target_integration_temperature_in_deg_fx100_times_seconds = 2000000,
     minimum_freeze_time_in_minutes = 50
   },

@@ -92,6 +92,7 @@ static const TwistTrayIceMakerData_t iceMakerData = {
    .freezeData{
       .maximumHarvestTemperatureInDegFx100 = 0,
       .startIntegrationTemperatureInDegFx100 = 0,
+      .minimumFreezeTimeInitiationTemperatureInDegFx100 = 0,
       .targetFreezeIntegrationSum = 0,
       .minimumFreezeTimeMinutes = 0,
    },
