@@ -4,6 +4,7 @@ return parametric_data({
   major_version = 0,
   minor_version = 0,
   personalities = {
+    import('./Personality/personalitySwqa.lua'),
     import('./Personality/personalityTestDrivenDevelopmentSingleEvap.lua'),
     import('./Personality/personalityTestDrivenDevelopmentDualEvap.lua'),
     import('./Personality/personalityTestDrivenDevelopmentTripleEvap.lua'),

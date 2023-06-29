@@ -10,6 +10,7 @@
 
 enum
 {
+   TddPersonality_Swqa,
    TddPersonality_DevelopmentSingleEvaporator,
    TddPersonality_DevelopmentDualEvaporator,
    TddPersonality_DevelopmentTripleEvaporator,
