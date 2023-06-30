@@ -77,7 +77,11 @@ TEST_GROUP(SingleSpeedCompressorIntegration)
 
    void GivenDisableMinimumCompressorTimesIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_DisableMinimumCompressorTimes, &state);
+      BooleanVotedState_t votedState;
+      votedState.state = state;
+      votedState.care = Vote_Care;
+
+      DataModel_Write(dataModel, Erd_DisableMinimumCompressorTimes_ResolvedVote, &votedState);
    }
 
    void WhenDisableMinimumCompressorTimesIs(bool state)
@@ -201,7 +205,11 @@ TEST_GROUP(VariableSpeedCompressorIntegration)
 
    void GivenDisableMinimumCompressorTimesIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_DisableMinimumCompressorTimes, &state);
+      BooleanVotedState_t votedState;
+      votedState.state = state;
+      votedState.care = Vote_Care;
+
+      DataModel_Write(dataModel, Erd_DisableMinimumCompressorTimes_ResolvedVote, &votedState);
    }
 
    void WhenDisableMinimumCompressorTimesIs(bool state)
