@@ -27,6 +27,7 @@ enum
    Invalid = false,
    TwistTrayMotorControllerPollingTimeInMsec = 150,
    TwistTrayMotorBrakingDurationInMsec = 1 * MSEC_PER_SEC,
+   CoastingTimeInMs = 1000
 };
 
 TEST_GROUP(MotorDriverArbitrationIntegration)
@@ -159,6 +160,13 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
       CHECK_EQUAL(expected, actual);
    }
 
+   void TheTwistTrayOperationShouldBe(TwistTrayIceMakerOperationState_t expected)
+   {
+      TwistTrayIceMakerOperationState_t actual;
+      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_OperationState, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
    void WhenTwistTrayMotorIsRequestedToHarvest()
    {
       IceMakerTestRequest_t testRequestValue = IceMakerTestRequest_Harvest;
@@ -188,6 +196,25 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
 
       After(TwistTrayMotorControllerPollingTimeInMsec);
       TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Homed);
+   }
+
+   void WhenTheTwistTrayMotorIsDoneHarvesting()
+   {
+      AfterNInterrupts(twistTrayIceMakerData->harvestData.fullBucketDetectionPeriodSecX10 * 100);
+      WhenTheMotorSwitchIsDebouncedLow();
+      WhenTheMotorSwitchIsDebouncedHigh();
+      WhenTheMotorSwitchIsDebouncedLow();
+      AfterNInterrupts(CoastingTimeInMs);
+      WhenTheMotorSwitchIsDebouncedHigh();
+      WhenTheMotorSwitchIsDebouncedLow();
+
+      WhenTheMotorSwitchIsDebouncedHigh();
+      AfterNInterrupts(twistTrayIceMakerData->harvestData.homeLandingDelayPeriodSecX10 * 100);
+
+      AfterNInterrupts(CoastingTimeInMs);
+
+      After(TwistTrayMotorControllerPollingTimeInMsec);
+      TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvested);
    }
 };
 
@@ -271,4 +298,23 @@ TEST(MotorDriverArbitrationIntegration, TwistTrayMotorShouldHaveMotorAfterItHome
    TheTwistTrayMotorEnableShouldBe(ENABLED);
    TheDamperMotorDriveEnableShouldBe(DISABLED);
    TheDamperMotorDriveControlRequestShouldBe(ENABLED);
+}
+
+TEST(MotorDriverArbitrationIntegration, TwistTrayMotorShouldGiveUpControlAfterAHarvestCompletes)
+{
+   GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
+   GivenTheIceMakerIsEnabled();
+   GivenTheApplicationHasBeenInitialized();
+   GivenTheDamperHasHomed();
+
+   WhenTheTwistTrayMotorHomes();
+   WhenTwistTrayMotorIsRequestedToHarvest();
+   WhenTheTwistTrayMotorIsDoneHarvesting();
+
+   // This ensures we've exited the Twist Tray Ice Maker Harvest State
+   After(twistTrayIceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+   TheTwistTrayOperationShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+
+   TheTwistTrayMotorControlRequestShouldBe(DISABLED);
+   TheTwistTrayMotorEnableShouldBe(DISABLED);
 }

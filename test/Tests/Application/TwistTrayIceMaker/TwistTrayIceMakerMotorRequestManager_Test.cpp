@@ -162,14 +162,16 @@ TEST(TwistTrayIceMakerMotorRequestManager, ShouldSetMotorControlRequestWhenMotor
    TheMotorControlRequestShouldBe(SET);
 }
 
-TEST(TwistTrayIceMakerMotorRequestManager, ShouldSetMotorControlRequestWhenMotorActionChangesToIdle)
+TEST(TwistTrayIceMakerMotorRequestManager, ShouldNotRequestMotorControlIfVoteChangesToIdle)
 {
-   GivenTheMotorResolvedVoteIs(TwistTrayIceMakerMotorAction_RunCycle);
    GivenTheModuleIsInitialized();
-   TheMotorControlRequestShouldBe(CLEAR);
+
+   WhenTheMotorResolvedVoteIs(TwistTrayIceMakerMotorAction_RunCycle);
+   TheMotorControlRequestShouldBe(SET);
+   WhenTheMotorActionResultIs(TwistTrayIceMakerMotorActionResult_Harvested);
 
    WhenTheMotorResolvedVoteIs(TwistTrayIceMakerMotorAction_Idle);
-   TheMotorControlRequestShouldBe(SET);
+   TheMotorControlRequestShouldBe(CLEAR);
 }
 
 TEST(TwistTrayIceMakerMotorRequestManager, ShouldUpdateDoActionToTheMotorActionWhenMotorIsEnabled)
@@ -251,17 +253,5 @@ TEST(TwistTrayIceMakerMotorRequestManager, ShouldNotClearMotorRequestWhenMotorAc
    TheMotorControlRequestShouldBe(SET);
 
    WhenTheMotorActionResultIs(TwistTrayIceMakerMotorActionResult_Homing);
-   TheMotorControlRequestShouldBe(SET);
-}
-
-TEST(TwistTrayIceMakerMotorRequestManager, ShouldNotClearMotorControlRequestWhenMotorActionResultIsUpdatedWhileMotorDriveIsNotEnabled)
-{
-   GivenTheModuleIsInitialized();
-   GivenTheMotorDriveEnableIs(CLEAR);
-
-   WhenTheMotorResolvedVoteIs(TwistTrayIceMakerMotorAction_RunCycle);
-   TheMotorControlRequestShouldBe(SET);
-
-   WhenTheMotorActionResultIs(TwistTrayIceMakerMotorActionResult_Homed);
    TheMotorControlRequestShouldBe(SET);
 }
