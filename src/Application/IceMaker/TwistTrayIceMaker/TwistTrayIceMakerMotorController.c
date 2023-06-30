@@ -557,23 +557,3 @@ TwistTrayIceMakerMotorErrorReason_t TwistTrayIceMakerMotorController_MotorErrorR
 {
    return instance->_private.motorErrorReason;
 }
-
-#ifdef TDD_BUILD
-void TwistTrayIceMakerMotorController_UpdateMotorActionResult(
-   TwistTrayIceMakerMotorController_t *instance, TwistTrayIceMakerMotorActionResult_t actionResult)
-{
-   instance->_private.motorActionResult = actionResult;
-}
-
-void TwistTrayIceMakerMotorController_UpdateMotorOperationState(
-   TwistTrayIceMakerMotorController_t *instance, TwistTrayIceMakerMotorOperationState_t motorOperationState)
-{
-   instance->_private.motorOperationState = motorOperationState;
-}
-
-void TwistTrayIceMakerMotorController_UpdateMotorErrorReason(
-   TwistTrayIceMakerMotorController_t *instance, TwistTrayIceMakerMotorErrorReason_t motorErrorReason)
-{
-   instance->_private.motorErrorReason = motorErrorReason;
-}
-#endif

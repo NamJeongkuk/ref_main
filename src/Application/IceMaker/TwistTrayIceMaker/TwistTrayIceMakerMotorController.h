@@ -118,33 +118,4 @@ TwistTrayIceMakerMotorOperationState_t TwistTrayIceMakerMotorController_MotorOpe
 TwistTrayIceMakerMotorErrorReason_t TwistTrayIceMakerMotorController_MotorErrorReason(
    TwistTrayIceMakerMotorController_t *instance);
 
-#ifdef TDD_BUILD
-/*!
- * Update the motor action result for TDD testing
- * @param instance
- * @param actionResult
- */
-void TwistTrayIceMakerMotorController_UpdateMotorActionResult(
-   TwistTrayIceMakerMotorController_t *instance,
-   TwistTrayIceMakerMotorActionResult_t actionResult);
-
-/*!
- * Update the motor operation state for TDD testing
- * @param instance
- * @param motorOperationState
- */
-void TwistTrayIceMakerMotorController_UpdateMotorOperationState(
-   TwistTrayIceMakerMotorController_t *instance,
-   TwistTrayIceMakerMotorOperationState_t motorOperationState);
-
-/*!
- * Update the motor error reason for TDD testing
- * @param instance
- * @param motorErrorReason
- */
-void TwistTrayIceMakerMotorController_UpdateMotorErrorReason(
-   TwistTrayIceMakerMotorController_t *instance,
-   TwistTrayIceMakerMotorErrorReason_t motorErrorReason);
-#endif
-
 #endif

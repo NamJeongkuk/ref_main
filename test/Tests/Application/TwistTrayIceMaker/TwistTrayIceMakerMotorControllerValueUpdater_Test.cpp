@@ -13,6 +13,7 @@ extern "C"
 
 #include "CppUTest/TestHarness.h"
 #include "ReferDataModel_TestDouble.h"
+#include "TwistTrayIceMakerMotorController_TestDouble.h"
 
 enum
 {
@@ -28,7 +29,7 @@ static const TwistTrayIceMakerMotorControllerValueUpdaterConfig_t config = {
 TEST_GROUP(TwistTrayIceMakerMotorControllerValueUpdater)
 {
    TwistTrayIceMakerMotorControllerValueUpdater_t instance;
-   TwistTrayIceMakerMotorController_t motorController;
+   TwistTrayIceMakerMotorController_TestDouble_t motorControllerTestDouble;
 
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
@@ -40,16 +41,18 @@ TEST_GROUP(TwistTrayIceMakerMotorControllerValueUpdater)
       dataModel = dataModelDouble.dataModel;
 
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+
+      TwistTrayIceMakerMotorController_TestDouble_Init(&motorControllerTestDouble);
    }
 
    void GivenTheModuleIsInitialized()
    {
-      TwistTrayIceMakerMotorControllerValueUpdater_Init(&instance, dataModel, &motorController, &config);
+      TwistTrayIceMakerMotorControllerValueUpdater_Init(&instance, dataModel, (TwistTrayIceMakerMotorController_t *)&motorControllerTestDouble, &config);
    }
 
    void WhenTheMotorActionResultIs(TwistTrayIceMakerMotorActionResult_t actionResult)
    {
-      TwistTrayIceMakerMotorController_UpdateMotorActionResult(&motorController, actionResult);
+      TwistTrayIceMakerMotorController_TestDouble_UpdateMotorActionResult(&motorControllerTestDouble, actionResult);
    }
 
    void TheMotorActionResultErdShouldBe(TwistTrayIceMakerMotorActionResult_t expected)
@@ -62,7 +65,7 @@ TEST_GROUP(TwistTrayIceMakerMotorControllerValueUpdater)
 
    void WhenTheMotorOperationStateIs(TwistTrayIceMakerMotorOperationState_t motorOperationState)
    {
-      TwistTrayIceMakerMotorController_UpdateMotorOperationState(&motorController, motorOperationState);
+      TwistTrayIceMakerMotorController_TestDouble_UpdateMotorOperationState(&motorControllerTestDouble, motorOperationState);
    }
 
    void TheMotorOperationStateErdShouldBe(TwistTrayIceMakerMotorActionResult_t expected)
@@ -75,7 +78,7 @@ TEST_GROUP(TwistTrayIceMakerMotorControllerValueUpdater)
 
    void WhenTheMotorErrorIs(TwistTrayIceMakerMotorErrorReason_t motorErrorReason)
    {
-      TwistTrayIceMakerMotorController_UpdateMotorErrorReason(&motorController, motorErrorReason);
+      TwistTrayIceMakerMotorController_TestDouble_UpdateMotorErrorReason(&motorControllerTestDouble, motorErrorReason);
    }
 
    void TheMotorErrorErdShouldBe(TwistTrayIceMakerMotorErrorReason_t expected)
