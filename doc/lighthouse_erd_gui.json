@@ -1479,6 +1479,20 @@
             },
             {
                "namespace": "mb",
+               "displayName": "Turbo Cool Request",
+               "name": "Erd_TurboCoolOnOffRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Turbo Freeze Request",
+               "name": "Erd_TurboFreezeOnOffRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
                "displayName": "Turbo Cool Status",
                "name": "Erd_TurboCoolOnOffStatus",
                "read": true,
@@ -1492,20 +1506,6 @@
                "read": true,
                "write": false,
                "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
-               "displayName": "Turbo Cool Request",
-               "name": "Erd_TurboCoolOnOffRequest",
-               "read": false,
-               "write": true
-            },
-            {
-               "namespace": "mb",
-               "displayName": "Turbo Freeze Request",
-               "name": "Erd_TurboFreezeOnOffRequest",
-               "read": false,
-               "write": true
             }
          ]
       }

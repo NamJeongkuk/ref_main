@@ -1,0 +1,241 @@
+{
+   "name": "Lighthouse Laboratorio GUI",
+   "tabs": [
+      {
+         "title": "Versions",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Mainboard Application Version",
+               "name": "Erd_ApplicationVersion",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Mainboard Parametric Version",
+               "name": "Erd_ParametricVersion",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Mainboard Parametric CRC",
+               "name": "Erd_ParametricDataImageCrc",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Mainboard Git Hash",
+               "name": "Erd_GitHash",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "MB Parametric Short Git Hash",
+               "name": "Erd_ParametricShortGitHash",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Mainboard Personality",
+               "name": "Erd_AppliancePersonality",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Reset Mainboard in X Seconds",
+               "name": "Erd_Reset",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Mainboard Bootloader Version",
+               "name": "Erd_BootLoaderVersion",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Quick Status",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "FF Temperature (DegF x100)",
+               "name": "Erd_FreshFood_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Temperature (DegF x100)",
+               "name": "Erd_Freezer_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Evap Temperature (DegF x100)",
+               "name": "Erd_FreezerEvap_FilteredTemperatureInDegFx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Current Grid Block",
+               "name": "Erd_Grid_BlockNumber",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Compressor Speed",
+               "name": "Erd_CompressorSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF Damper",
+               "name": "Erd_FreshFoodDamperPosition_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Evap Fan Speed",
+               "name": "Erd_FreezerEvapFanSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan Speed",
+               "name": "Erd_CondenserFanSpeed_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Evap Fan Actual RPM",
+               "name": "Erd_FreezerEvapFan_ActualRpm",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Condenser Fan Actual RPM",
+               "name": "Erd_CondenserFan_ActualRpm",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Defrost State",
+               "name": "Erd_DefrostState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Defrost Heater",
+               "name": "Erd_FreezerDefrostHeater_DefrostVote",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FF Door Open?",
+               "name": "Erd_RightSideFreshFoodDoorStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "FZ Door Open?",
+               "name": "Erd_LeftSideFreezerDoorStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Grid Cooling Mode",
+               "name": "Erd_CoolingMode",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      },
+      {
+         "title": "Laboratorio",
+         "erds": [
+            {
+               "namespace": "mb",
+               "displayName": "Defrost Test Request",
+               "name": "Erd_DefrostTestRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Defrost Test Result",
+               "name": "Erd_DefrostTestRequestStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Aluminum Mold IM Test",
+               "name": "Erd_AluminumMoldIceMakerTestRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Aluminum Mold IM Status",
+               "name": "Erd_AluminumMoldIceMakerHsmState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Tray IM Test",
+               "name": "Erd_TwistTrayIceMakerTestRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Tray IM Status",
+               "name": "Erd_TwistTrayIceMaker_HighLevelState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker0 Enable Request",
+               "name": "Erd_IceMaker0EnableRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker0 Enable Status",
+               "name": "Erd_IceMaker0EnableStatus",
+               "read": true,
+               "interval": 1000000000
+            }
+         ]
+      }
+   ]
+}
