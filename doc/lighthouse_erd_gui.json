@@ -989,6 +989,22 @@
                "read": true,
                "write": true,
                "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Isolation Valve Factory Vote",
+               "name": "Erd_IsolationWaterValve_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Twist Tray IM Water Valve Factory Vote",
+               "name": "Erd_TwistTrayIceMakerWaterValve_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
             }
          ]
       },
@@ -1321,14 +1337,14 @@
                "displayName": "Fresh Food Setpoint Request",
                "name": "Erd_FreshFoodSetpointRequest",
                "read": false,
-               "write": true,
-               "interval": 1000000000
+               "write": true
             },
             {
                "namespace": "mb",
                "displayName": "Fresh Food Setpoint Status",
                "name": "Erd_FreshFoodSetpointStatus",
                "read": true,
+               "write": false,
                "interval": 1000000000
             },
             {
@@ -1343,8 +1359,7 @@
                "displayName": "Freezer Setpoint Request",
                "name": "Erd_FreezerSetpointRequest",
                "read": false,
-               "write": true,
-               "interval": 1000000000
+               "write": true
             },
             {
                "namespace": "mb",
@@ -1358,7 +1373,6 @@
                "displayName": "Freezer Setpoint Range",
                "name": "Erd_FreezerSetpointRangeData",
                "read": true,
-               "write": true,
                "interval": 1000000000
             },
             {
@@ -1413,7 +1427,7 @@
                "displayName": "Ice Maker 0 Full Status",
                "name": "Erd_IceMaker0FullStatus",
                "read": true,
-               "write": true,
+               "write": false,
                "interval": 1000000000
             },
             {
@@ -1421,7 +1435,7 @@
                "displayName": "Ice Maker 0 Type Info",
                "name": "Erd_IceMaker0TypeInformation",
                "read": true,
-               "write": true,
+               "write": false,
                "interval": 1000000000
             },
             {
@@ -1444,7 +1458,7 @@
                "displayName": "Ice Maker 1 Full Status",
                "name": "Erd_IceMaker1FullStatus",
                "read": true,
-               "write": true,
+               "write": false,
                "interval": 1000000000
             },
             {
@@ -1452,7 +1466,7 @@
                "displayName": "Ice Maker 1 Type Info",
                "name": "Erd_IceMaker1TypeInformation",
                "read": true,
-               "write": true,
+               "write": false,
                "interval": 1000000000
             },
             {
@@ -1462,6 +1476,36 @@
                "read": true,
                "write": true,
                "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Turbo Cool Status",
+               "name": "Erd_TurboCoolOnOffStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Turbo Freeze Status",
+               "name": "Erd_TurboFreezeOnOffStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Turbo Cool Request",
+               "name": "Erd_TurboCoolOnOffRequest",
+               "read": false,
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Turbo Freeze Request",
+               "name": "Erd_TurboFreezeOnOffRequest",
+               "read": false,
+               "write": true
             }
          ]
       }
