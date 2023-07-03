@@ -54,6 +54,16 @@ static void SetPulldownActive(I_DataModel_t *dataModel, bool pulldownActive)
    DataModel_Write(dataModel, Erd_SingleEvaporatorPulldownActive, &pulldownActive);
 }
 
+static void SetIceMakerEnable(I_DataModel_t *dataModel, bool state)
+{
+   DataModel_Write(dataModel, Erd_IceMakerEnabledByGrid, &state);
+}
+
+static void SetCondenserFanAntiSweatBehavior(I_DataModel_t *dataModel, bool state)
+{
+   DataModel_Write(dataModel, Erd_CondenserFanAntiSweatBehaviorEnabledByGrid, &state);
+}
+
 static GridArea_t GetGridArea(I_DataModel_t *dataModel)
 {
    GridArea_t currentGridArea;
@@ -165,8 +175,6 @@ void Grid_SingleEvap(void *context)
    bool pullDownActive = GetPulldownActive(dataModel);
    bool compressorTripMitigationActive = GetCompressorTripMitigationActive(dataModel);
 
-   DataModel_Write(dataModel, Erd_IceMakerEnabledByGrid, enabled);
-
    switch(blockNumber)
    {
       case 0:
@@ -175,12 +183,16 @@ void Grid_SingleEvap(void *context)
          SetCoolingSpeed(dataModel, CoolingSpeed_PullDown);
          SetGridArea(dataModel, GridArea_1);
          SetPulldownActive(dataModel, SET);
+         SetIceMakerEnable(dataModel, CLEAR);
+         SetCondenserFanAntiSweatBehavior(dataModel, DISABLED);
          break;
 
       case 2:
       case 3:
          SetCoolingSpeed(dataModel, CoolingSpeed_PullDown);
          SetPulldownActive(dataModel, SET);
+         SetIceMakerEnable(dataModel, CLEAR);
+         SetCondenserFanAntiSweatBehavior(dataModel, DISABLED);
          break;
 
       case 4:
@@ -190,6 +202,8 @@ void Grid_SingleEvap(void *context)
          SetCoolingSpeed(dataModel, CoolingSpeed_PullDown);
          SetGridArea(dataModel, GridArea_2);
          SetPulldownActive(dataModel, SET);
+         SetIceMakerEnable(dataModel, CLEAR);
+         SetCondenserFanAntiSweatBehavior(dataModel, DISABLED);
          break;
 
       case 7:
@@ -199,6 +213,7 @@ void Grid_SingleEvap(void *context)
          SetCoolingSpeed(dataModel, CoolingSpeed_High);
          SetGridArea(dataModel, GridArea_1);
          SetPulldownActive(dataModel, CLEAR);
+         SetIceMakerEnable(dataModel, SET);
          break;
 
       case 9:
@@ -223,6 +238,7 @@ void Grid_SingleEvap(void *context)
          SetCoolingSpeed(dataModel, (currentCoolingSpeed != CoolingSpeed_High) ? CoolingSpeed_Mid : currentCoolingSpeed);
          SetGridArea(dataModel, GridArea_1);
          SetPulldownActive(dataModel, CLEAR);
+         SetIceMakerEnable(dataModel, SET);
          break;
 
       case 16:
@@ -257,6 +273,7 @@ void Grid_SingleEvap(void *context)
          SetCoolingSpeed(dataModel, CoolingSpeed_Low);
          SetGridArea(dataModel, GridArea_1);
          SetPulldownActive(dataModel, CLEAR);
+         SetIceMakerEnable(dataModel, SET);
          break;
 
       case 22:
@@ -264,6 +281,7 @@ void Grid_SingleEvap(void *context)
          SetCoolingSpeed(dataModel, (currentCoolingSpeed != CoolingSpeed_Low) ? CoolingSpeed_Low : currentCoolingSpeed);
          SetGridArea(dataModel, GridArea_1);
          SetPulldownActive(dataModel, CLEAR);
+         SetIceMakerEnable(dataModel, SET);
          break;
 
       case 23:
@@ -297,6 +315,8 @@ void Grid_SingleEvap(void *context)
          SetCoolingMode(dataModel, CoolingMode_Freezer);
          SetPulldownActive(dataModel, CLEAR);
          SetGridArea(dataModel, GridArea_1);
+         SetIceMakerEnable(dataModel, SET);
+         SetCondenserFanAntiSweatBehavior(dataModel, ENABLED);
          break;
 
       case 30:
@@ -313,6 +333,8 @@ void Grid_SingleEvap(void *context)
          SetCoolingSpeed(dataModel, (currentCoolingSpeed != CoolingSpeed_Off) ? CoolingSpeed_Low : CoolingSpeed_Off);
          SetPulldownActive(dataModel, CLEAR);
          SetGridArea(dataModel, GridArea_1);
+         SetIceMakerEnable(dataModel, SET);
+         SetCondenserFanAntiSweatBehavior(dataModel, ENABLED);
          break;
 
       case 37:
@@ -332,6 +354,8 @@ void Grid_SingleEvap(void *context)
          SetCoolingSpeed(dataModel, CoolingSpeed_Off);
          SetPulldownActive(dataModel, CLEAR);
          SetGridArea(dataModel, GridArea_1);
+         SetIceMakerEnable(dataModel, SET);
+         SetCondenserFanAntiSweatBehavior(dataModel, ENABLED);
          break;
 
       case 44:
@@ -339,6 +363,7 @@ void Grid_SingleEvap(void *context)
          SetCoolingMode(dataModel, (currentGridArea == GridArea_1) ? CoolingMode_Freezer : CoolingMode_FreshFood);
          SetCoolingSpeed(dataModel, CoolingSpeed_Off);
          SetPulldownActive(dataModel, CLEAR);
+         SetCondenserFanAntiSweatBehavior(dataModel, ENABLED);
          break;
 
       case 46:

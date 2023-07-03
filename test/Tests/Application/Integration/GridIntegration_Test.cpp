@@ -328,6 +328,27 @@ TEST_GROUP(GridIntegration)
       FreezerThermistorValidIs(Valid);
    }
 
+   void WhenTheIceMakerIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_IceMakerEnabledByGrid, &state);
+   }
+
+   void WhenTheCondenserFanAntiSweatBehaviorIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_CondenserFanAntiSweatBehaviorEnabledByGrid, &state);
+   }
+
+   void TheCondenserFanAntiSweatBehaviorShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(
+         dataModel,
+         Erd_CondenserFanAntiSweatBehaviorEnabledByGrid,
+         &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
    void GivenTheIceMakerIsEnabledAndTheApplicationIsInitialized()
    {
       DataModel_Write(dataModel, Erd_IceMaker0EnableRequest, set);
@@ -380,6 +401,8 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks0and1)
       When TheCoolingSpeedIs(CoolingSpeed_Off);
       When TheGridAreaIs(GridArea_2);
       When TheSingleEvaporatorPulldownActiveIs(CLEAR);
+      WhenTheIceMakerIs(ENABLED);
+      WhenTheCondenserFanAntiSweatBehaviorIs(ENABLED);
 
       After GridRuns();
       TheGridBlockNumberShouldBe(gridBlockIndex);
@@ -388,6 +411,8 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks0and1)
       TheGridAreaShouldBe(GridArea_1);
       TheSingleEvaporatorPulldownActiveShouldBe(SET);
       TheCompressorRelayShouldBe(ON);
+      TheIceMakerShouldBe(DISABLED);
+      TheCondenserFanAntiSweatBehaviorShouldBe(DISABLED);
       TheCalculatedCondenserFanControlShouldBe(
          condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.superHighSpeed);
       TheCalculatedFreezerEvapFanControlShouldBe(
@@ -408,6 +433,8 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks2and3)
       When TheCoolingSpeedIs(CoolingSpeed_Off);
       When TheGridAreaIs(GridArea_2);
       When TheSingleEvaporatorPulldownActiveIs(CLEAR);
+      WhenTheIceMakerIs(ENABLED);
+      WhenTheCondenserFanAntiSweatBehaviorIs(ENABLED);
 
       After GridRuns();
       TheGridBlockNumberShouldBe(gridBlockIndex);
@@ -419,6 +446,8 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks2and3)
       TheCalculatedCondenserFanControlShouldBe(fanSpeedOff);
       TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedOff);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+      TheIceMakerShouldBe(DISABLED);
+      TheCondenserFanAntiSweatBehaviorShouldBe(DISABLED);
    }
 }
 
@@ -434,6 +463,8 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks4and5and6)
       When TheCoolingSpeedIs(CoolingSpeed_Off);
       When TheGridAreaIs(GridArea_1);
       When TheSingleEvaporatorPulldownActiveIs(CLEAR);
+      WhenTheIceMakerIs(ENABLED);
+      WhenTheCondenserFanAntiSweatBehaviorIs(ENABLED);
 
       After GridRuns();
       TheGridBlockNumberShouldBe(gridBlockIndex);
@@ -447,6 +478,8 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks4and5and6)
       TheCalculatedFreezerEvapFanControlShouldBe(
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+      TheIceMakerShouldBe(DISABLED);
+      TheCondenserFanAntiSweatBehaviorShouldBe(DISABLED);
    }
 }
 
@@ -463,8 +496,10 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks7and8and14)
       When TheCoolingSpeedIs(CoolingSpeed_Off);
       When TheGridAreaIs(GridArea_2);
       When TheSingleEvaporatorPulldownActiveIs(SET);
+      WhenTheIceMakerIs(DISABLED);
 
       After GridRuns();
+      TheIceMakerShouldBe(ENABLED);
       TheGridBlockNumberShouldBe(gridBlockNumbers[index]);
       TheCoolingModeShouldBe(CoolingMode_Freezer);
       TheCoolingSpeedShouldBe(CoolingSpeed_High);
@@ -581,6 +616,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks15)
    Given BothThermistorsAreValid();
 
    When FreezerAndFreshFoodTemperaturesAreSetForBlock(15);
+   WhenTheIceMakerIs(DISABLED);
 
    After GridRuns();
    TheGridBlockNumberShouldBe(15);
@@ -594,11 +630,13 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks15)
    TheCalculatedFreezerEvapFanControlShouldBe(
       freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.mediumSpeedFreezer);
    TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+   TheIceMakerShouldBe(ENABLED);
 
    When TheCoolingModeIs(CoolingMode_Off);
    When TheCoolingSpeedIs(CoolingSpeed_High);
    When TheGridAreaIs(GridArea_2);
    When TheSingleEvaporatorPulldownActiveIs(SET);
+   WhenTheIceMakerIs(DISABLED);
 
    After GridRuns();
    TheGridBlockNumberShouldBe(15);
@@ -612,6 +650,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks15)
    TheCalculatedFreezerEvapFanControlShouldBe(
       freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.highSpeedFreezer);
    TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+   TheIceMakerShouldBe(ENABLED);
 }
 
 TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks16And17)
@@ -733,6 +772,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks21)
    Given TheSingleEvaporatorPulldownActiveIs(SET);
    Given BothThermistorsAreValid();
 
+   WhenTheIceMakerIs(DISABLED);
    When FreezerAndFreshFoodTemperaturesAreSetForBlock(21);
 
    After GridRuns();
@@ -747,6 +787,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks21)
    TheCalculatedFreezerEvapFanControlShouldBe(
       freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
    TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+   TheIceMakerShouldBe(ENABLED);
 }
 
 TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks22)
@@ -758,6 +799,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks22)
    Given TheSingleEvaporatorPulldownActiveIs(SET);
    Given BothThermistorsAreValid();
 
+   WhenTheIceMakerIs(DISABLED);
    When FreezerAndFreshFoodTemperaturesAreSetForBlock(22);
 
    After GridRuns();
@@ -772,11 +814,13 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks22)
    TheCalculatedFreezerEvapFanControlShouldBe(
       freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
    TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+   TheIceMakerShouldBe(ENABLED);
 
    When TheCoolingModeIs(CoolingMode_Off);
    When TheCoolingSpeedIs(CoolingSpeed_Low);
    When TheGridAreaIs(GridArea_2);
    When TheSingleEvaporatorPulldownActiveIs(SET);
+   WhenTheIceMakerIs(DISABLED);
 
    After GridRuns();
    TheGridBlockNumberShouldBe(22);
@@ -790,6 +834,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks22)
    TheCalculatedFreezerEvapFanControlShouldBe(
       freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
    TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+   TheIceMakerShouldBe(ENABLED);
 }
 
 TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks23And24)
@@ -939,6 +984,8 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks28And29And35)
       When TheGridAreaIs(GridArea_2);
       When TheSingleEvaporatorPulldownActiveIs(SET);
       When BothThermistorsAreValid();
+      WhenTheIceMakerIs(DISABLED);
+      WhenTheCondenserFanAntiSweatBehaviorIs(DISABLED);
 
       After GridRuns();
       TheGridBlockNumberShouldBe(gridBlockNumbers[index]);
@@ -950,6 +997,8 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks28And29And35)
       TheCalculatedCondenserFanControlShouldBe(fanSpeedOff);
       TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedOff);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+      TheIceMakerShouldBe(ENABLED);
+      TheCondenserFanAntiSweatBehaviorShouldBe(ENABLED);
    }
 }
 
@@ -1019,6 +1068,8 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks36)
    Given TheSingleEvaporatorPulldownActiveIs(SET);
    Given BothThermistorsAreValid();
 
+   WhenTheCondenserFanAntiSweatBehaviorIs(DISABLED);
+   WhenTheIceMakerIs(DISABLED);
    When FreezerAndFreshFoodTemperaturesAreSetForBlock(36);
 
    After GridRuns();
@@ -1033,11 +1084,15 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks36)
    TheCalculatedFreezerEvapFanControlShouldBe(
       freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
    TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+   TheIceMakerShouldBe(ENABLED);
+   TheCondenserFanAntiSweatBehaviorShouldBe(ENABLED);
 
    When TheCoolingModeIs(CoolingMode_FreshFood);
    When TheCoolingSpeedIs(CoolingSpeed_Off);
    When TheGridAreaIs(GridArea_2);
    When TheSingleEvaporatorPulldownActiveIs(SET);
+   WhenTheIceMakerIs(DISABLED);
+   WhenTheCondenserFanAntiSweatBehaviorIs(DISABLED);
 
    After GridRuns();
    TheCoolingModeShouldBe(CoolingMode_Freezer);
@@ -1048,6 +1103,8 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks36)
    TheCalculatedCondenserFanControlShouldBe(fanSpeedOff);
    TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedOff);
    TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+   TheIceMakerShouldBe(ENABLED);
+   TheCondenserFanAntiSweatBehaviorShouldBe(ENABLED);
 }
 
 TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks37)
@@ -1135,6 +1192,8 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks42And43)
       When TheGridAreaIs(GridArea_2);
       When TheSingleEvaporatorPulldownActiveIs(SET);
       When BothThermistorsAreValid();
+      WhenTheCondenserFanAntiSweatBehaviorIs(DISABLED);
+      WhenTheIceMakerIs(DISABLED);
 
       After GridRuns();
       TheGridBlockNumberShouldBe(gridBlockIndex);
@@ -1146,6 +1205,8 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks42And43)
       TheCalculatedCondenserFanControlShouldBe(fanSpeedOff);
       TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedOff);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+      TheIceMakerShouldBe(ENABLED);
+      TheCondenserFanAntiSweatBehaviorShouldBe(ENABLED);
    }
 }
 
@@ -1161,6 +1222,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks44And45)
       When TheGridAreaIs(GridArea_1);
       When TheSingleEvaporatorPulldownActiveIs(SET);
       When BothThermistorsAreValid();
+      WhenTheCondenserFanAntiSweatBehaviorIs(DISABLED);
 
       After GridRuns();
       TheGridBlockNumberShouldBe(gridBlockIndex);
@@ -1172,11 +1234,13 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks44And45)
       TheCalculatedCondenserFanControlShouldBe(fanSpeedOff);
       TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedOff);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+      TheCondenserFanAntiSweatBehaviorShouldBe(ENABLED);
 
       When TheCoolingModeIs(CoolingMode_Freezer);
       When TheCoolingSpeedIs(CoolingSpeed_Mid);
       When TheGridAreaIs(GridArea_2);
       When TheSingleEvaporatorPulldownActiveIs(SET);
+      WhenTheCondenserFanAntiSweatBehaviorIs(DISABLED);
 
       After GridRuns();
       TheCoolingModeShouldBe(CoolingMode_FreshFood);
@@ -1188,6 +1252,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks44And45)
       TheCalculatedFreezerEvapFanControlShouldBe(
          freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+      TheCondenserFanAntiSweatBehaviorShouldBe(ENABLED);
    }
 }
 
@@ -1361,11 +1426,14 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks38ThenTurnAllLoadsOff
    TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
 }
 
-TEST(GridIntegration, ShouldDisableTheIceMakerWhenTheGridVotesDisabled)
+TEST(GridIntegration, ShouldDisableTheIceMakerWhenTheGridVotesDisabledInBlock0)
 {
-   GivenTheIceMakerIsEnabledAndTheApplicationIsInitialized();
-   TheIceMakerShouldBe(ENABLED);
+   Given ApplicationHasBeenInitialized();
+   Given BothThermistorsAreValid();
 
-   WhenTheGridVotesToDisableTheIceMaker();
+   When FreezerAndFreshFoodTemperaturesAreSetForBlock(0);
+   WhenTheIceMakerIs(ENABLED);
+
+   After GridRuns();
    TheIceMakerShouldBe(DISABLED);
 }

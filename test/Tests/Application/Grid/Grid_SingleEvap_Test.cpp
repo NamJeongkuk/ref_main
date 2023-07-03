@@ -119,6 +119,33 @@ TEST_GROUP(Grid_SingleEvap_Test)
    {
       bool actual;
       DataModel_Read(dataModel, Erd_IceMakerEnabledByGrid, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void TheCondenserFanAntiSweatBehaviorShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_CondenserFanAntiSweatBehaviorEnabledByGrid, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void GivenTheCondenserFanAntiSweatBehaviorIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_CondenserFanAntiSweatBehaviorEnabledByGrid, &state);
+   }
+
+   void GivenTheIceMakerEnableIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_IceMakerEnabledByGrid, &state);
+   }
+
+   void TheFreezerEvapFanAntiSweatBehaviorShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_FreezerEvapFanAntiSweatBehaviorEnabledByGrid, &actual);
+
       CHECK_EQUAL(expected, actual);
    }
 
@@ -192,17 +219,31 @@ TEST_GROUP(Grid_SingleEvap_Test)
    }
 };
 
+TEST(Grid_SingleEvap_Test, ShouldDisableFreezerEvapFanAntiSweatBehaviorInAllBlocks)
+{
+   for(GridBlockNumber_t gridBlockNumber = 0; gridBlockNumber <= 48; gridBlockNumber++)
+   {
+      Given GridBlockIs(gridBlockNumber);
+      When The GridIsRun();
+      TheFreezerEvapFanAntiSweatBehaviorShouldBe(DISABLED);
+   }
+}
+
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks0And1)
 {
    for(GridBlockNumber_t gridBlockNumber = 0; gridBlockNumber <= 1; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
+      GivenTheIceMakerEnableIs(ENABLED);
+      GivenTheCondenserFanAntiSweatBehaviorIs(ENABLED);
       And PullDownInMediumCompressorSpeedIs(DISABLED);
       And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
       And BothThermistorsAreValid();
       When The GridIsRun();
 
+      TheIceMakerEnableShouldBe(DISABLED);
+      TheCondenserFanAntiSweatBehaviorShouldBe(DISABLED);
       CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_PullDown);
       GridAreaShouldBe(GridArea_1);
@@ -220,11 +261,15 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks2And3)
    for(GridBlockNumber_t gridBlockNumber = 2; gridBlockNumber <= 3; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
+      GivenTheIceMakerEnableIs(ENABLED);
+      GivenTheCondenserFanAntiSweatBehaviorIs(ENABLED);
       And PullDownInMediumCompressorSpeedIs(DISABLED);
       And CoolingModeIs(CoolingMode_Freezer);
       And BothThermistorsAreValid();
       When The GridIsRun();
 
+      TheIceMakerEnableShouldBe(DISABLED);
+      TheCondenserFanAntiSweatBehaviorShouldBe(DISABLED);
       CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_PullDown);
       GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_SuperHigh, FanSpeed_Low, DamperPosition_Closed);
@@ -241,12 +286,16 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks4And5And6)
    for(GridBlockNumber_t gridBlockNumber = 4; gridBlockNumber <= 6; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
+      GivenTheIceMakerEnableIs(ENABLED);
+      GivenTheCondenserFanAntiSweatBehaviorIs(ENABLED);
       And PullDownInMediumCompressorSpeedIs(DISABLED);
       And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
       And BothThermistorsAreValid();
       When The GridIsRun();
 
+      TheIceMakerEnableShouldBe(DISABLED);
+      TheCondenserFanAntiSweatBehaviorShouldBe(DISABLED);
       CoolingModeShouldBe(CoolingMode_FreshFood);
       CoolingSpeedShouldBe(CoolingSpeed_PullDown);
       GridAreaShouldBe(GridArea_2);
@@ -267,11 +316,13 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks7And8And14)
    for(uint8_t i = 0; i < 3; i++)
    {
       Given GridBlockIs(gridBlockNumbers[i]);
+      GivenTheIceMakerEnableIs(DISABLED);
       And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
       And BothThermistorsAreValid();
       When The GridIsRun();
 
+      TheIceMakerEnableShouldBe(ENABLED);
       CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_High);
       GridAreaShouldBe(GridArea_1);
@@ -430,12 +481,14 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock15IfCoolingSpeedIsHi
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock15IfCoolingSpeedIsNotHigh)
 {
    Given GridBlockIs(15);
+   GivenTheIceMakerEnableIs(DISABLED);
    And CoolingModeIs(CoolingMode_Freezer);
    And GridAreaIs(GridArea_Unknown);
    And CoolingSpeedIs(CoolingSpeed_Low);
    And BothThermistorsAreValid();
    When The GridIsRun();
 
+   TheIceMakerEnableShouldBe(ENABLED);
    CoolingModeShouldBe(CoolingMode_Freezer);
    CoolingSpeedShouldBe(CoolingSpeed_Mid);
    GridAreaShouldBe(GridArea_1);
@@ -524,11 +577,13 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks19And20And27And34An
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock21)
 {
    Given GridBlockIs(21);
+   GivenTheIceMakerEnableIs(DISABLED);
    And CoolingModeIs(CoolingMode_Freezer);
    And GridAreaIs(GridArea_Unknown);
    And BothThermistorsAreValid();
    When The GridIsRun();
 
+   TheIceMakerEnableShouldBe(ENABLED);
    CoolingModeShouldBe(CoolingMode_Freezer);
    CoolingSpeedShouldBe(CoolingSpeed_Low);
    GridAreaShouldBe(GridArea_1);
@@ -540,12 +595,14 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock21)
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock22IfCoolingSpeedIsNotLow)
 {
    Given GridBlockIs(22);
+   GivenTheIceMakerEnableIs(DISABLED);
    And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_High);
    And GridAreaIs(GridArea_Unknown);
    And BothThermistorsAreValid();
    When The GridIsRun();
 
+   TheIceMakerEnableShouldBe(ENABLED);
    CoolingModeShouldBe(CoolingMode_Freezer);
    CoolingSpeedShouldBe(CoolingSpeed_Low);
    GridAreaShouldBe(GridArea_1);
@@ -557,12 +614,14 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock22IfCoolingSpeedIsNo
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock22IfCoolingSpeedIsLow)
 {
    Given GridBlockIs(22);
+   GivenTheIceMakerEnableIs(DISABLED);
    And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_Low);
    And GridAreaIs(GridArea_Unknown);
    And BothThermistorsAreValid();
    When The GridIsRun();
 
+   TheIceMakerEnableShouldBe(ENABLED);
    CoolingModeShouldBe(CoolingMode_Freezer);
    CoolingSpeedShouldBe(CoolingSpeed_Low);
    GridAreaShouldBe(GridArea_1);
@@ -700,12 +759,16 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks28And29And35WhenCoo
    for(uint8_t i = 0; i < 3; i++)
    {
       Given CoolingSpeedIs(CoolingSpeed_Off);
+      GivenTheIceMakerEnableIs(DISABLED);
+      GivenTheCondenserFanAntiSweatBehaviorIs(DISABLED);
       And GridBlockIs(gridBlockNumbers[i]);
       And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
       And BothThermistorsAreValid();
       When The GridIsRun();
 
+      TheIceMakerEnableShouldBe(ENABLED);
+      TheCondenserFanAntiSweatBehaviorShouldBe(ENABLED);
       CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_Off);
       GridAreaShouldBe(GridArea_1);
@@ -811,12 +874,16 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock36WhenCoolingSpeedIs
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock36WhenCoolingSpeedIsNotOff)
 {
    Given GridBlockIs(36);
+   GivenTheCondenserFanAntiSweatBehaviorIs(DISABLED);
+   GivenTheIceMakerEnableIs(DISABLED);
    And CoolingModeIs(CoolingMode_Freezer);
    And CoolingSpeedIs(CoolingSpeed_High);
    And GridAreaIs(GridArea_Unknown);
    And BothThermistorsAreValid();
    When The GridIsRun();
 
+   TheIceMakerEnableShouldBe(ENABLED);
+   TheCondenserFanAntiSweatBehaviorShouldBe(ENABLED);
    CoolingModeShouldBe(CoolingMode_Freezer);
    CoolingSpeedShouldBe(CoolingSpeed_Low);
    GridAreaShouldBe(GridArea_1);
@@ -917,11 +984,15 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock42And43)
    for(GridBlockNumber_t gridBlockNumber = 42; gridBlockNumber <= 43; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
+      GivenTheCondenserFanAntiSweatBehaviorIs(DISABLED);
+      GivenTheIceMakerEnableIs(DISABLED);
       And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_Unknown);
       And BothThermistorsAreValid();
       When The GridIsRun();
 
+      TheIceMakerEnableShouldBe(ENABLED);
+      TheCondenserFanAntiSweatBehaviorShouldBe(ENABLED);
       CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_Off);
       GridAreaShouldBe(GridArea_1);
@@ -936,11 +1007,13 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock44And45WhenAreaIsOne
    for(GridBlockNumber_t gridBlockNumber = 44; gridBlockNumber <= 45; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
+      GivenTheCondenserFanAntiSweatBehaviorIs(DISABLED);
       And CoolingModeIs(CoolingMode_Freezer);
       And GridAreaIs(GridArea_1);
       And BothThermistorsAreValid();
       When The GridIsRun();
 
+      TheCondenserFanAntiSweatBehaviorShouldBe(ENABLED);
       CoolingModeShouldBe(CoolingMode_Freezer);
       CoolingSpeedShouldBe(CoolingSpeed_Off);
 
@@ -1020,18 +1093,6 @@ TEST(Grid_SingleEvap_Test, ShouldVoteAllOffIfInvalidSearchWasPerformed)
    When The GridIsRun();
 
    GridVotesShouldBe(CompressorSpeed_Off, FanSpeed_Off, FanSpeed_Off, DamperPosition_Closed);
-}
-
-TEST(Grid_SingleEvap_Test, IceMakerShouldBeEnabledByGrid)
-{
-   for(GridBlockNumber_t gridBlockNumber = 0; gridBlockNumber <= 48; gridBlockNumber++)
-   {
-      Given GridBlockIs(gridBlockNumber);
-      When The GridIsRun();
-      And BothThermistorsAreValid();
-
-      TheIceMakerEnableShouldBe(ON);
-   }
 }
 
 TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock2WhenTheFreezerThermistorIsInvalid)

@@ -41,7 +41,8 @@ static const FanSpeedResolverConfig_t freezerEvapConfig = {
    .ambientFilteredHumidityPercentx100ResolvedErd = Erd_Ambient_FilteredHumidityResolvedPercentx100,
    .ambientThermistorIsValidErd = Erd_AmbientTemperature_IsValidResolved,
    .ambientHumiditySensorIsValidErd = Erd_AmbientHumidity_IsValidResolved,
-   .pullDownIsActiveErd = Erd_SingleEvaporatorPulldownActive
+   .pullDownIsActiveErd = Erd_SingleEvaporatorPulldownActive,
+   .fanAntiSweatBehaviorEnabledErd = Erd_FreezerEvapFanAntiSweatBehaviorEnabledByGrid
 };
 
 static const FanControllerConfig_t freezerEvapFanControllerConfig = {

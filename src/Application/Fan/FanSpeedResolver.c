@@ -82,11 +82,22 @@ static bool CareAboutSetpoint(FanSpeedResolver_t *instance)
    return instance->_private.fanData->careAboutCoolingModeSpeedData->careAboutSetpoint;
 }
 
+static bool FanAntiSweatBehaviorIsEnabled(FanSpeedResolver_t *instance)
+{
+   bool fanAntiSweatBehaviorIsEnabled;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->fanAntiSweatBehaviorEnabledErd,
+      &fanAntiSweatBehaviorIsEnabled);
+
+   return fanAntiSweatBehaviorIsEnabled;
+}
+
 static FanControl_t SuperLowFanControl(FanSpeedResolver_t *instance, FanControl_t defaultFanControl)
 {
    FanControl_t control = defaultFanControl;
 
-   if(CareAboutHighAmbientTemperature(instance))
+   if(CareAboutHighAmbientTemperature(instance) && FanAntiSweatBehaviorIsEnabled(instance))
    {
       if(AmbientHumiditySensorIsValid(instance) && AmbientThermistorIsValid(instance) && !PullDownIsActive(instance))
       {
