@@ -1069,8 +1069,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Enhanced Sabbath Mode",
-               "name": "Erd_EnhancedSabbathMode",
+               "displayName": "Enhanced Sabbath Mode Status",
+               "name": "Erd_EnhancedSabbathModeStatus",
                "read": true,
                "write": true,
                "interval": 1000000000

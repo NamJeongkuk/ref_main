@@ -243,7 +243,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_EnhancedSabbathMode",
+         "name": "Erd_EnhancedSabbathModeStatus",
          "interval": 60000
       },
       {

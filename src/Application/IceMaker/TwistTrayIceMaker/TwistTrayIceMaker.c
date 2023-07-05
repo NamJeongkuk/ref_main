@@ -116,7 +116,7 @@ static bool ItIsSabbathMode(TwistTrayIceMaker_t *instance)
    bool enhancedSabbathMode;
 
    DataSource_Read(instance->_private.dataSource, Erd_SabbathMode, &sabbathMode);
-   DataSource_Read(instance->_private.dataSource, Erd_EnhancedSabbathMode, &enhancedSabbathMode);
+   DataSource_Read(instance->_private.dataSource, Erd_EnhancedSabbathModeStatus, &enhancedSabbathMode);
 
    return sabbathMode || enhancedSabbathMode;
 }
@@ -748,7 +748,7 @@ static void DataSourceChanged(void *context, const void *data)
       }
    }
    else if((onChangeArgs->erd == Erd_SabbathMode) ||
-      (onChangeArgs->erd == Erd_EnhancedSabbathMode))
+      (onChangeArgs->erd == Erd_EnhancedSabbathModeStatus))
    {
       if(!ItIsSabbathMode(instance))
       {

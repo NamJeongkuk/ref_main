@@ -27,7 +27,7 @@ static const NextDefrostTypeArbiterConfig_t config = {
    .defrostingErd = Erd_Defrosting,
    .freshFoodDefrostCountErd = Erd_FreshFoodDefrostCount,
    .numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd = Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost,
-   .enhancedSabbathModeErd = Erd_EnhancedSabbathMode,
+   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeStatus,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
    .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,
@@ -119,7 +119,7 @@ TEST_GROUP(NextDefrostTypeArbiter)
 
    void EnhancedSabbathModeIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_EnhancedSabbathMode, &state);
+      DataModel_Write(dataModel, Erd_EnhancedSabbathModeStatus, &state);
    }
 
    void CurrentDefrostTypeIs(DefrostType_t defrostType)
@@ -483,7 +483,7 @@ TEST_GROUP(NextDefrostTypeArbiterWithNumberOfFreshFoodDefrostCountIsZero)
 
    void EnhancedSabbathModeIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_EnhancedSabbathMode, &state);
+      DataModel_Write(dataModel, Erd_EnhancedSabbathModeStatus, &state);
    }
 
    void FreezerDefrostWasAbnormalIs(bool state)

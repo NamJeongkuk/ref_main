@@ -384,6 +384,8 @@ enum
    ENTRY(Erd_ApplicationVersion,                            0x003A, Version_t,                                          Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
    ENTRY(Erd_ParametricVersion,                             0x003B, Version_t,                                          Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
    ENTRY(Erd_AuxiliaryVersion,                              0x003C, Version_t,                                          Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
+   ENTRY(Erd_EnhancedSabbathModeSupported,                  0x004E, bool,                                               Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
+   ENTRY(Erd_EnhancedSabbathModeStatus,                     0x004F, bool,                                               Swap_No,  Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_GitHash,                                       0x007F, GitHash_t,                                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ServiceDiagnosticsApiVersion,                  0x008F, ServiceDiagnosticsApiVersion_t,                     Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ServiceDiagnosticsRevision3Manifest,           0x0090, ServiceDiagnosticsRevision3Manifest_t,              Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -1168,7 +1170,6 @@ enum
    ENTRY(Erd_FaultWrapperInterfaceArray,                    0xF717, I_FaultWrapper_t *,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CoolingStatesGridVotesConstArrayMapInterface,  0xF719, I_ConstArrayMap_t *,                                Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_EnhancedSabbathMode,                           0xF800, bool,                                               Swap_No,  Io_None, Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_FactoryModeEnableRequestInMinutes,             0xF801, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ExternalAmbientFilteredTemperatureInDegFx100,  0xFAFB, TemperatureDegFx100_t,                              Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

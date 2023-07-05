@@ -75,6 +75,14 @@ static const DataSource_ApplianceApiRevision1Configuration_t applianceApiConfigu
          .programCounterAddressOfLastUassert = Erd_ProgramCounterAddressAtLastUassert,
       },
    },
+
+   .enhancedSabbath = {
+      .supported = true,
+      .erd = {
+         .enhancedSabbathModeSupported = Erd_EnhancedSabbathModeSupported,
+         .enhancedSabbathModeStatus = Erd_EnhancedSabbathModeStatus,
+      },
+   },
 };
 
 void ApplianceApiDataSource_Init(
