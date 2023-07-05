@@ -55,5 +55,9 @@ return {
         ['2'] = bool 'WaterDueToRfidFilter',
       }
     ]],
+    IceMakerEnableRequest_t = 'bool',
+    TurboModeRequest_t = 'bool',
+    CoolingSystemRequest_t = 'bool',
+    DoorAlarmEnableRequest_t = 'bool'
   }
 }

@@ -108,6 +108,10 @@
 #include "DispensingInhibitedBitmap.h"
 #include "ControlLockStatus.h"
 #include "BooleanVotedState.h"
+#include "IceMakerEnableRequest.h"
+#include "TurboModeRequest.h"
+#include "CoolingSystemRequest.h"
+#include "DoorAlarmEnableRequest.h"
 
 // clang-format off
 
@@ -416,30 +420,30 @@ enum
    ENTRY(Erd_DispensingRequest,                             0x1208, DispensingRequest_t,                                Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispensingRequestStatus,                       0x1209, DispensingRequestStatus_t,                          Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_CoolingOffRequest,                             0x120A, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CoolingOffRequest,                             0x120A, CoolingSystemRequest_t,                             Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CoolingOffStatus,                              0x120B, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_TurboCoolOnOffRequest,                         0x120C, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TurboCoolOnOffRequest,                         0x120C, TurboModeRequest_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TurboCoolOnOffStatus,                          0x120D, bool,                                               Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RightSideFreshFoodDoorStatus,                  0x120E, bool,                                               Swap_No,  Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_LeftSideFreezerDoorStatus,                     0x120F, bool,                                               Swap_No,  Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
-   ENTRY(Erd_IceMaker0EnableRequest,                        0x1210, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_IceMaker0EnableRequest,                        0x1210, IceMakerEnableRequest_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker0EnableStatus,                         0x1211, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
    ENTRY(Erd_IceMaker0FullStatus,                           0x1212, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker0TypeInformation,                      0x1213, IceMakerTypeInformation_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_WaterFilterState,                              0x1215, WaterFilterState_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_IceMaker1EnableRequest,                        0x1216, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_IceMaker1EnableRequest,                        0x1216, IceMakerEnableRequest_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker1EnableStatus,                         0x1217, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
    ENTRY(Erd_IceMaker1FullStatus,                           0x1218, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker1TypeInformation,                      0x1219, IceMakerTypeInformation_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_TurboFreezeOnOffRequest,                       0x121A, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TurboFreezeOnOffRequest,                       0x121A, TurboModeRequest_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TurboFreezeOnOffStatus,                        0x121B, bool,                                               Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_PresenceSensingEnableRequest,                  0x1222, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_PresenceSensingEnableStatus,                   0x1223, bool,                                               Swap_No,  Io_None, Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
    \
    ENTRY(Erd_PresenceDetected,                              0x1226, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                              NotFault) \
-   ENTRY(Erd_DoorAlarmEnableRequest,                        0x1227, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                              NotFault) \
+   ENTRY(Erd_DoorAlarmEnableRequest,                        0x1227, DoorAlarmEnableRequest_t,                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                              NotFault) \
    ENTRY(Erd_DoorAlarmEnableStatus,                         0x1228, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
    \
    ENTRY(Erd_DispenserRecessHeaterDutyCyclePercent,         0x122C, PercentageDutyCycle_t,                              Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

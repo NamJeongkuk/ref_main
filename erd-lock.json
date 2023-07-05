@@ -764,7 +764,7 @@
           "name": "Erd_CoolingOffRequest",
           "offset": 0,
           "size": 1,
-          "type": "u8"
+          "type": "bool"
         }
       ],
       "id": "0x120A",
@@ -796,7 +796,7 @@
           "name": "Erd_TurboCoolOnOffRequest",
           "offset": 0,
           "size": 1,
-          "type": "u8"
+          "type": "bool"
         }
       ],
       "id": "0x120C",
@@ -860,7 +860,7 @@
           "name": "Erd_IceMaker0EnableRequest",
           "offset": 0,
           "size": 1,
-          "type": "u8"
+          "type": "bool"
         }
       ],
       "id": "0x1210",
@@ -964,7 +964,7 @@
           "name": "Erd_IceMaker1EnableRequest",
           "offset": 0,
           "size": 1,
-          "type": "u8"
+          "type": "bool"
         }
       ],
       "id": "0x1216",
@@ -1044,7 +1044,7 @@
           "name": "Erd_TurboFreezeOnOffRequest",
           "offset": 0,
           "size": 1,
-          "type": "u8"
+          "type": "bool"
         }
       ],
       "id": "0x121A",
@@ -1076,7 +1076,7 @@
           "name": "Erd_DoorAlarmEnableRequest",
           "offset": 0,
           "size": 1,
-          "type": "u8"
+          "type": "bool"
         }
       ],
       "id": "0x1227",
