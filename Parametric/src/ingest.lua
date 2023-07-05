@@ -12,9 +12,12 @@ return function(path)
     end
 
     if type(t) == 'table' then
+      local newTable = {}
       for k, v in pairs(t) do
-      t[k] = tostringify(v)
+        local newIndex = type(k) == 'number' and k - 1 or k
+        newTable[newIndex] = tostringify(v)
       end
+      return newTable
     end
 
     return t
