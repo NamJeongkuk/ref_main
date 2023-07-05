@@ -128,6 +128,7 @@ PACKAGE_CONTENTS:=
 $(call add_to_package,{ from = '$(OUTPUT_DIR)/doc', to = 'doc' })
 $(call add_to_package,{ from = 'doc/lighthouse_data_collection.json', to = 'doc' })
 $(call add_to_package,{ from = 'doc/lighthouse_erd_gui.json', to = 'doc' })
+$(call add_to_package,{ from = 'doc/lighthouse_laboratorio_gui.json', to = 'doc' })
 $(call add_to_package,{ from = 'doc/wifi-erd-definitions.json', to = 'doc' })
 $(call add_to_package,{ from = 'doc/hardware_gui_for_lighthouse.json', to = 'doc' })
 $(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET).map', to = '' })
