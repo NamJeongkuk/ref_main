@@ -22,11 +22,8 @@ describe('TwistTrayIceMaker', function()
         ice_maker_fill_monitor = TypedString('ice_maker_fill_monitor', 'ice_maker_fill_monitor')
       },
       freeze = {
+        harvest_count_calculator = TypedString('harvest_count_calculator', 'harvest_count_calculator'),
         maximum_harvest_temperature_in_deg_fx100 = 1900,
-        start_integration_temperature_in_deg_fx100 = 3200,
-        minimum_freeze_time_initiation_temperature_in_deg_fx100 = 3200,
-        target_integration_temperature_in_deg_fx100_times_seconds = 2000000,
-        minimum_freeze_time_in_minutes = 50
       },
       harvest = {
         full_bucket_wait_period_in_minutes = 7,
@@ -81,51 +78,21 @@ describe('TwistTrayIceMaker', function()
     end)
   end)
 
+  it('should assert if freeze.harvest_count_calculator is not a string', function()
+    should_fail_with('freeze.harvest_count_calculator must be a typed string with type harvest_count_calculator, but is a number', function()
+      twist_tray_ice_maker(generate_config({
+        freeze = {
+          harvest_count_calculator = 1
+       }
+      }))
+    end)
+  end)
+
   it('should assert if maximum_harvest_temperature_in_deg_fx100 is not in range', function()
     should_fail_with('maximum_harvest_temperature_in_deg_fx100=32768 must be in [-32768, 32767]', function()
       twist_tray_ice_maker(generate_config({
         freeze = {
           maximum_harvest_temperature_in_deg_fx100 = 32768
-        }
-      }))
-    end)
-  end)
-
-  it('should assert if start_integration_temperature_in_deg_fx100 is not in range', function()
-    should_fail_with('start_integration_temperature_in_deg_fx100=32768 must be in [-32768, 32767]', function()
-      twist_tray_ice_maker(generate_config({
-        freeze = {
-          start_integration_temperature_in_deg_fx100 = 32768
-        }
-      }))
-    end)
-  end)
-
-  it('should assert if minimum_freeze_time_initiation_temperature_in_deg_fx100 is not in range', function()
-    should_fail_with('minimum_freeze_time_initiation_temperature_in_deg_fx100=32768 must be in [-32768, 32767]', function()
-      twist_tray_ice_maker(generate_config({
-        freeze = {
-          minimum_freeze_time_initiation_temperature_in_deg_fx100 = 32768
-        }
-      }))
-    end)
-  end)
-
-  it('should assert if target_integration_temperature_in_deg_fx100_times_seconds is not in range', function()
-    should_fail_with('target_integration_temperature_in_deg_fx100_times_seconds=-1 must be in [0, 4294967295]', function()
-      twist_tray_ice_maker(generate_config({
-        freeze = {
-          target_integration_temperature_in_deg_fx100_times_seconds = -1
-        }
-      }))
-    end)
-  end)
-
-  it('should assert if minimum_freeze_time_in_minutes is not in range', function()
-    should_fail_with('minimum_freeze_time_in_minutes=-1 must be in [0, 255]', function()
-      twist_tray_ice_maker(generate_config({
-        freeze = {
-          minimum_freeze_time_in_minutes = -1
         }
       }))
     end)
@@ -262,11 +229,8 @@ describe('TwistTrayIceMaker', function()
             pointer(ice_maker_fill_monitor)
           ),
           structure(
-            i16(1900),
-            i16(3200),
-            i16(3200),
-            u32(2000000),
-            u8(50)
+            pointer(harvest_count_calculator),
+            i16(1900)
           ),
           structure(
             u8(7),
@@ -296,11 +260,8 @@ describe('TwistTrayIceMaker', function()
         ice_maker_fill_monitor = TypedString('ice_maker_fill_monitor', 'ice_maker_fill_monitor')
       },
       freeze = {
+        harvest_count_calculator = TypedString('harvest_count_calculator', 'harvest_count_calculator'),
         maximum_harvest_temperature_in_deg_fx100 = 1900,
-        start_integration_temperature_in_deg_fx100 = 3200,
-        minimum_freeze_time_initiation_temperature_in_deg_fx100 = 3200,
-        target_integration_temperature_in_deg_fx100_times_seconds = 2000000,
-        minimum_freeze_time_in_minutes = 50
       },
       harvest = {
         full_bucket_wait_period_in_minutes = 7,

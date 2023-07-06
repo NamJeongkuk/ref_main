@@ -24,11 +24,8 @@ return function(core)
           pointer(config.fill.ice_maker_fill_monitor)
         ),
         structure(
-          i16(config.freeze.maximum_harvest_temperature_in_deg_fx100),
-          i16(config.freeze.start_integration_temperature_in_deg_fx100),
-          i16(config.freeze.minimum_freeze_time_initiation_temperature_in_deg_fx100),
-          u32(config.freeze.target_integration_temperature_in_deg_fx100_times_seconds),
-          u8(config.freeze.minimum_freeze_time_in_minutes)
+          pointer(config.freeze.harvest_count_calculator),
+          i16(config.freeze.maximum_harvest_temperature_in_deg_fx100)
         ),
         structure(
           u8(config.harvest.full_bucket_wait_period_in_minutes),
@@ -67,11 +64,8 @@ return function(core)
         },
         freeze = {
           constraint.table_keys({
-            maximum_harvest_temperature_in_deg_fx100 = { constraint.i16 },
-            start_integration_temperature_in_deg_fx100 = { constraint.i16 },
-            minimum_freeze_time_initiation_temperature_in_deg_fx100 = { constraint.i16 },
-            target_integration_temperature_in_deg_fx100_times_seconds = { constraint.u32 },
-            minimum_freeze_time_in_minutes = { constraint.u8 }
+            harvest_count_calculator = { constraint.typed_string('harvest_count_calculator') },
+            maximum_harvest_temperature_in_deg_fx100 = { constraint.i16 }
           })
         },
         harvest = {

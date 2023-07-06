@@ -12,6 +12,7 @@
 #include "FillTubeHeaterData.h"
 #include "IceMakerTypeInformation.h"
 #include "IceMakerFillMonitorData.h"
+#include "HarvestCountCalculatorData.h"
 
 typedef struct
 {
@@ -20,11 +21,8 @@ typedef struct
 
 typedef struct
 {
+   const HarvestCountCalculatorData_t *harvestCountCalculatorData;
    TemperatureDegFx100_t maximumHarvestTemperatureInDegFx100;
-   TemperatureDegFx100_t startIntegrationTemperatureInDegFx100;
-   TemperatureDegFx100_t minimumFreezeTimeInitiationTemperatureInDegFx100;
-   uint32_t freezeIntegrationLimitInDegFx100TimesSeconds;
-   uint8_t minimumFreezeTimeInMinutes;
    uint8_t minimumFeelerArmExtensionTimeInMinutes;
 } AluminumMoldIceMakerFreezeData_t;
 

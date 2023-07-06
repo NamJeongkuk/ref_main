@@ -1366,7 +1366,7 @@ TEST(TwistTrayIceMaker, ShouldNotHarvestIceIfSabbathModeComesOnWhileFreezing)
 
    NothingShouldHappen();
    WhenHarvestCountIsReadyToHarvestIs(SET);
-   After((iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN) + 1);
+   After((iceMakerData->freezeData.harvestCountCalculatorData->minimumFreezeTimeInMinutes * MSEC_PER_MIN) + 1);
 
    HarvestingShouldStart();
    WhenSabbathModeIs(OFF);
@@ -1382,7 +1382,7 @@ TEST(TwistTrayIceMaker, SabbathModeShouldAlsoWorkIfTheEnhancedSabbathModeErdCome
 
    NothingShouldHappen();
    WhenHarvestCountIsReadyToHarvestIs(SET);
-   After((iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN) + 1);
+   After((iceMakerData->freezeData.harvestCountCalculatorData->minimumFreezeTimeInMinutes * MSEC_PER_MIN) + 1);
 
    HarvestingShouldStart();
    WhenEnhancedSabbathModeIs(OFF);
@@ -1399,12 +1399,12 @@ TEST(TwistTrayIceMaker, SabbathModeShouldAlsoWorkIfBothSabbathErdsComeOn)
 
    NothingShouldHappen();
    WhenHarvestCountIsReadyToHarvestIs(SET);
-   After((iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN) + 1);
+   After((iceMakerData->freezeData.harvestCountCalculatorData->minimumFreezeTimeInMinutes * MSEC_PER_MIN) + 1);
 
    WhenSabbathModeIs(OFF);
 
    NothingShouldHappen();
-   After((iceMakerData->freezeData.minimumFreezeTimeMinutes * MSEC_PER_MIN) + 1);
+   After((iceMakerData->freezeData.harvestCountCalculatorData->minimumFreezeTimeInMinutes * MSEC_PER_MIN) + 1);
 
    HarvestingShouldStart();
    WhenEnhancedSabbathModeIs(OFF);

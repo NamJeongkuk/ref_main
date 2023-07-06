@@ -19,10 +19,6 @@ typedef struct
    Erd_t moldFilteredTemperatureInDegFx100Erd; // TemperatureDegFx100_t
    Erd_t moldFreezeIntegrationCountErd; // uint32_t
    Erd_t moldIceMakerMinimumFreezeTimeCounterInMinutesErd; // uint8_t
-   TemperatureDegFx100_t startIntegrationTemperatureInDegFx100;
-   TemperatureDegFx100_t minimumFreezeTimeInitiationTemperatureInDegFx100;
-   uint32_t targetFreezeIntegrationSum;
-   uint8_t minimumFreezeTimeMinutes;
 } HarvestCountCalculatorConfiguration_t;
 
 typedef struct
@@ -35,12 +31,14 @@ typedef struct
       Timer_t harvestCountTimer;
       EventSubscription_t harvestCountCalculationRequestSubscription;
       bool minimumFreezeTimeIsSatisfied;
+      const HarvestCountCalculatorData_t *harvestCountCalculatorData;
    } _private;
 } HarvestCountCalculator_t;
 
 void HarvestCountCalculator_Init(
    HarvestCountCalculator_t *instance,
    I_DataModel_t *dataModel,
-   const HarvestCountCalculatorConfiguration_t *config);
+   const HarvestCountCalculatorConfiguration_t *config,
+   const HarvestCountCalculatorData_t *harvestCountCalculatorData);
 
 #endif

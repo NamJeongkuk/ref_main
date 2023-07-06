@@ -22,11 +22,8 @@ describe('AluminumMoldIceMaker', function()
         ice_maker_fill_monitor = TypedString('ice_maker_fill_monitor', 'ice_maker_fill_monitor')
       },
       freeze = {
+        harvest_count_calculator = TypedString('harvest_count_calculator', 'harvest_count_calculator'),
         maximum_harvest_temperature_in_deg_fx100 = 1900,
-        start_integration_temperature_in_deg_fx100 = 3200,
-        minimum_freeze_time_initiation_temperature_in_deg_fx100 = 3200,
-        freeze_integration_limit_in_deg_fx100_times_seconds = 2000000,
-        minimum_freeze_time_in_minutes = 50,
         minimum_feeler_arm_extension_time_in_minutes = 3
       },
       harvest = {
@@ -91,51 +88,21 @@ describe('AluminumMoldIceMaker', function()
     end)
   end)
 
+  it('should assert if freeze.harvest_count_calculator is not a string', function()
+    should_fail_with('freeze.harvest_count_calculator must be a typed string with type harvest_count_calculator, but is a number', function()
+      aluminum_mold_ice_maker(generate_config({
+        freeze = {
+          harvest_count_calculator = 1
+        }
+      }))
+    end)
+  end)
+
   it('should assert if maximum_harvest_temperature_in_deg_fx100 is not in range', function()
     should_fail_with('maximum_harvest_temperature_in_deg_fx100=32768 must be in [-32768, 32767]', function()
       aluminum_mold_ice_maker(generate_config({
         freeze = {
           maximum_harvest_temperature_in_deg_fx100 = 32768
-        }
-      }))
-    end)
-  end)
-
-  it('should assert if start_integration_temperature_in_deg_fx100 is not in range', function()
-    should_fail_with('start_integration_temperature_in_deg_fx100=32768 must be in [-32768, 32767]', function()
-      aluminum_mold_ice_maker(generate_config({
-        freeze = {
-          start_integration_temperature_in_deg_fx100 = 32768
-        }
-      }))
-    end)
-  end)
-
-  it('should assert if minimum_freeze_time_initiation_temperature_in_deg_fx100 is not in range', function()
-    should_fail_with('minimum_freeze_time_initiation_temperature_in_deg_fx100=32768 must be in [-32768, 32767]', function()
-      aluminum_mold_ice_maker(generate_config({
-        freeze = {
-          minimum_freeze_time_initiation_temperature_in_deg_fx100 = 32768
-        }
-      }))
-    end)
-  end)
-
-  it('should assert if freeze_integration_limit_in_deg_fx100_times_seconds is not in range', function()
-    should_fail_with('freeze_integration_limit_in_deg_fx100_times_seconds=-1 must be in [0, 4294967295]', function()
-      aluminum_mold_ice_maker(generate_config({
-        freeze = {
-          freeze_integration_limit_in_deg_fx100_times_seconds = -1
-        }
-      }))
-    end)
-  end)
-
-  it('should assert if minimum_freeze_time_in_minutes is not in range', function()
-    should_fail_with('minimum_freeze_time_in_minutes=-1 must be in [0, 255]', function()
-      aluminum_mold_ice_maker(generate_config({
-        freeze = {
-          minimum_freeze_time_in_minutes = -1
         }
       }))
     end)
@@ -358,11 +325,8 @@ describe('AluminumMoldIceMaker', function()
             pointer(ice_maker_fill_monitor)
           ),
           structure(
+            pointer(harvest_count_calculator),
             i16(1900),
-            i16(3200),
-            i16(3200),
-            u32(2000000),
-            u8(50),
             u8(3)
           ),
           structure(
@@ -402,11 +366,8 @@ describe('AluminumMoldIceMaker', function()
         ice_maker_fill_monitor = TypedString('ice_maker_fill_monitor', 'ice_maker_fill_monitor')
       },
       freeze = {
+        harvest_count_calculator = TypedString('harvest_count_calculator', 'harvest_count_calculator'),
         maximum_harvest_temperature_in_deg_fx100 = 1900,
-        start_integration_temperature_in_deg_fx100 = 3200,
-        minimum_freeze_time_initiation_temperature_in_deg_fx100 = 3200,
-        freeze_integration_limit_in_deg_fx100_times_seconds = 2000000,
-        minimum_freeze_time_in_minutes = 50,
         minimum_feeler_arm_extension_time_in_minutes = 3
       },
       harvest = {

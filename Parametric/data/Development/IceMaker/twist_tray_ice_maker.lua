@@ -7,11 +7,8 @@ return twist_tray_ice_maker({
     ice_maker_fill_monitor = import("../IceMaker/twist_tray_ice_maker_fill_monitor.lua")
   },
   freeze = {
-    maximum_harvest_temperature_in_deg_fx100 = 1900,
-    start_integration_temperature_in_deg_fx100 = 3200,
-    minimum_freeze_time_initiation_temperature_in_deg_fx100 = 3200,
-    target_integration_temperature_in_deg_fx100_times_seconds = 2000000,
-    minimum_freeze_time_in_minutes = 50
+    harvest_count_calculator = import("../IceMaker/twist_tray_harvest_count_calculator.lua"),
+    maximum_harvest_temperature_in_deg_fx100 = 1900
   },
   harvest = {
     full_bucket_wait_period_in_minutes = 10,

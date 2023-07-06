@@ -57,16 +57,12 @@ static const FeelerArmMonitorConfig_t feelerArmMonitorConfig = {
    .feelerArmPositionErd = Erd_AluminumMoldIceMakerFeelerArmPosition
 };
 
-static HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
+static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
    .harvestCountIsReadyToHarvestErd = Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest,
    .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .moldFreezeIntegrationCountErd = Erd_AluminumMoldFreezeIntegrationCount,
-   .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes,
-   .startIntegrationTemperatureInDegFx100 = PersonalityParametricData_UseParametricValue,
-   .minimumFreezeTimeInitiationTemperatureInDegFx100 = PersonalityParametricData_UseParametricValue,
-   .targetFreezeIntegrationSum = PersonalityParametricData_UseParametricValue,
-   .minimumFreezeTimeMinutes = PersonalityParametricData_UseParametricValue
+   .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes
 };
 
 static const Erd_t enableErdsList[] = {
@@ -333,18 +329,11 @@ void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_D
       dataModel,
       &rakeMotorDriverConfig);
 
-   harvestCountCalculatorConfig.startIntegrationTemperatureInDegFx100 =
-      aluminumMoldIceMakerData->freezeData.startIntegrationTemperatureInDegFx100;
-   harvestCountCalculatorConfig.minimumFreezeTimeInitiationTemperatureInDegFx100 =
-      aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInitiationTemperatureInDegFx100;
-   harvestCountCalculatorConfig.targetFreezeIntegrationSum =
-      aluminumMoldIceMakerData->freezeData.freezeIntegrationLimitInDegFx100TimesSeconds;
-   harvestCountCalculatorConfig.minimumFreezeTimeMinutes =
-      aluminumMoldIceMakerData->freezeData.minimumFreezeTimeInMinutes;
    HarvestCountCalculator_Init(
       &instance->_private.harvestCountCalculator,
       dataModel,
-      &harvestCountCalculatorConfig);
+      &harvestCountCalculatorConfig,
+      aluminumMoldIceMakerData->freezeData.harvestCountCalculatorData);
 
    IceMakerEnableResolver_Init(
       &instance->_private.iceMakerEnableResolver,

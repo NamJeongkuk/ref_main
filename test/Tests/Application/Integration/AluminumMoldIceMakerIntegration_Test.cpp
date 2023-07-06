@@ -822,7 +822,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
 
    void AfterEnoughTimeHasPassedToReachHarvestCount()
    {
-      After((iceMakerData->freezeData.minimumFreezeTimeInMinutes) * MSEC_PER_MIN);
+      After((iceMakerData->freezeData.harvestCountCalculatorData->minimumFreezeTimeInMinutes) * MSEC_PER_MIN);
       After(MSEC_PER_SEC);
    }
 
@@ -1007,7 +1007,7 @@ TEST(AluminumMoldIceMakerIntegration, ShouldNotTransitionFromFreezeToHarvestUnti
    TheHarvestCountCalculationRequestShouldBe(Active);
 
    HarvestCountIsReadyToHarvestShouldChangeTo(Active);
-   After(10 * iceMakerData->freezeData.minimumFreezeTimeInMinutes * MSEC_PER_MIN);
+   After(10 * iceMakerData->freezeData.harvestCountCalculatorData->minimumFreezeTimeInMinutes * MSEC_PER_MIN);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
 
    HarvestCountIsReadyToHarvestShouldChangeTo(Inactive);
@@ -1044,7 +1044,7 @@ TEST(AluminumMoldIceMakerIntegration, ShouldTransitionFromFreezeToHarvestIfIceMa
    GivenFeelerArmIsReadyToEnterHarvest();
 
    WhenApplicationHasBeenInitializedAndEntersState(AluminumMoldIceMakerHsmState_Freeze);
-   After(iceMakerData->freezeData.minimumFreezeTimeInMinutes * MSEC_PER_MIN);
+   After(iceMakerData->freezeData.harvestCountCalculatorData->minimumFreezeTimeInMinutes * MSEC_PER_MIN);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 }
 

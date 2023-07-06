@@ -72,6 +72,7 @@ return function(directory)
   import('IceMaker/AugerMotor')
   import('FlowMeter/FlowMeter')
   import('IceMaker/TwistTrayIceMaker')
+  import('IceMaker/HarvestCountCalculator')
   import('VariableSweatHeater/VariableSweatHeater')
   import('VariableSweatHeater/VariableSweatHeaterType1')
   import('VariableSweatHeater/VariableSweatHeaterType2')
@@ -167,6 +168,7 @@ return function(directory)
   turbo_mode_setpoint = TurboModeSetpoint(core)
   fresh_food_turbo_cool_setpoint = FreshFoodTurboCoolSetpoint(core)
   freezer_turbo_freeze_setpoint = FreezerTurboFreezeSetpoint(core)
+  harvest_count_calculator = HarvestCountCalculator(core)
 
   return {
     core = core,
@@ -253,6 +255,7 @@ return function(directory)
     turbo_mode_setpoint = turbo_mode_setpoint,
     fresh_food_turbo_cool_setpoint = fresh_food_turbo_cool_setpoint,
     freezer_turbo_freeze_setpoint = freezer_turbo_freeze_setpoint,
+    harvest_count_calculator = harvest_count_calculator,
     enum = enum,
     erd_list_to_sorted_erd_mappings = erd_list_to_sorted_erd_mappings,
     import = require 'lua-parametric-tools'.util.EvalInCurrentEnvironment(directory, {

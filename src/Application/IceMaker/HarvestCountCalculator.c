@@ -47,7 +47,7 @@ static void IncrementMinimumFreezeTimerCounter(void *context)
       instance->_private.config->moldIceMakerMinimumFreezeTimeCounterInMinutesErd,
       &currentFreezeTime);
 
-   if(currentFreezeTime >= instance->_private.config->minimumFreezeTimeMinutes)
+   if(currentFreezeTime >= instance->_private.harvestCountCalculatorData->minimumFreezeTimeInMinutes)
    {
       instance->_private.minimumFreezeTimeIsSatisfied = true;
    }
@@ -94,17 +94,17 @@ static void CalculateHarvestCount(void *context)
       &integrationCount);
 
    TemperatureDegFx100_t iceMakerTemperature = IceMakerTemperature(instance);
-   if(iceMakerTemperature <= instance->_private.config->startIntegrationTemperatureInDegFx100)
+   if(iceMakerTemperature <= instance->_private.harvestCountCalculatorData->startIntegrationTemperatureInDegFx100)
    {
       integrationCount +=
-         (instance->_private.config->startIntegrationTemperatureInDegFx100 - iceMakerTemperature);
+         (instance->_private.harvestCountCalculatorData->startIntegrationTemperatureInDegFx100 - iceMakerTemperature);
    }
    else
    {
       integrationCount = 0;
    }
 
-   if(iceMakerTemperature <= instance->_private.config->minimumFreezeTimeInitiationTemperatureInDegFx100)
+   if(iceMakerTemperature <= instance->_private.harvestCountCalculatorData->minimumFreezeTimeInitiationTemperatureInDegFx100)
    {
       if(!TimerModule_IsRunning(DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, Erd_TimerModule), &instance->_private.minimumFreezeTimer) &&
          !instance->_private.minimumFreezeTimeIsSatisfied)
@@ -112,7 +112,7 @@ static void CalculateHarvestCount(void *context)
          StartMinimumFreezeTimer(instance);
       }
       if(instance->_private.minimumFreezeTimeIsSatisfied &&
-         (integrationCount >= instance->_private.config->targetFreezeIntegrationSum))
+         (integrationCount >= instance->_private.harvestCountCalculatorData->targetIntegrationLimitInDegFx100TimesSeconds))
       {
          DataModel_Write(
             instance->_private.dataModel,
@@ -179,15 +179,12 @@ static void HarvestCountCalculationRequestChanged(void *context, const void *arg
 void HarvestCountCalculator_Init(
    HarvestCountCalculator_t *instance,
    I_DataModel_t *dataModel,
-   const HarvestCountCalculatorConfiguration_t *config)
+   const HarvestCountCalculatorConfiguration_t *config,
+   const HarvestCountCalculatorData_t *harvestCountCalculatorData)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
-
-   uassert(config->startIntegrationTemperatureInDegFx100 > 0);
-   uassert(config->minimumFreezeTimeInitiationTemperatureInDegFx100 > 0);
-   uassert(config->targetFreezeIntegrationSum > 0);
-   uassert(config->minimumFreezeTimeMinutes > 0);
+   instance->_private.harvestCountCalculatorData = harvestCountCalculatorData;
 
    bool harvestCountCalculationRequested;
    DataModel_Read(

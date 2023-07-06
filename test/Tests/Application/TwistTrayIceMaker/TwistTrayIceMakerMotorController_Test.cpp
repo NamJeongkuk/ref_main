@@ -81,6 +81,13 @@ static const IceMakerFillMonitorData_t iceMakerFillMonitorData = {
    .preciseIceMakerFillOuncesInOzx100 = 0
 };
 
+static const HarvestCountCalculatorData_t harvestCountCalculatorData = {
+   .startIntegrationTemperatureInDegFx100 = 0,
+   .minimumFreezeTimeInitiationTemperatureInDegFx100 = 0,
+   .targetIntegrationLimitInDegFx100TimesSeconds = 0,
+   .minimumFreezeTimeInMinutes = 0
+};
+
 static const TwistTrayIceMakerData_t iceMakerData = {
    .typeInformation{
       .type = IceMakerType_Twist,
@@ -90,11 +97,8 @@ static const TwistTrayIceMakerData_t iceMakerData = {
       .iceMakerFillMonitorData = &iceMakerFillMonitorData,
    },
    .freezeData{
+      .harvestCountCalculatorData = &harvestCountCalculatorData,
       .maximumHarvestTemperatureInDegFx100 = 0,
-      .startIntegrationTemperatureInDegFx100 = 0,
-      .minimumFreezeTimeInitiationTemperatureInDegFx100 = 0,
-      .targetFreezeIntegrationSum = 0,
-      .minimumFreezeTimeMinutes = 0,
    },
    .harvestData{
       .fullBucketWaitPeriodMinutes = 0,

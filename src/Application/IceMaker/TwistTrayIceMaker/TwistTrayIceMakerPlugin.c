@@ -114,16 +114,12 @@ static const TwistTrayIceMakerMotorControllerConfig_t twistTrayMotorControllerCo
    .motorDoActionErd = Erd_TwistTrayIceMaker_MotorDoAction
 };
 
-static HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
+static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
    .harvestCountIsReadyToHarvestErd = Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,
    .moldFilteredTemperatureInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
    .moldFreezeIntegrationCountErd = Erd_TwistTrayIceMaker_FreezeIntegrationCount,
-   .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_TwistTrayIceMaker_MinimumFreezeTimeCounterInMinutes,
-   .startIntegrationTemperatureInDegFx100 = PersonalityParametricData_UseParametricValue,
-   .minimumFreezeTimeInitiationTemperatureInDegFx100 = PersonalityParametricData_UseParametricValue,
-   .targetFreezeIntegrationSum = PersonalityParametricData_UseParametricValue,
-   .minimumFreezeTimeMinutes = PersonalityParametricData_UseParametricValue
+   .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_TwistTrayIceMaker_MinimumFreezeTimeCounterInMinutes
 };
 
 static const TwistTrayIceMakerMotorControllerValueUpdaterConfig_t motorControllerValueUpdaterConfig = {
@@ -191,18 +187,11 @@ void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataMod
       dataModel,
       &iceMakerWaterValveRelayConnectorConfiguration);
 
-   harvestCountCalculatorConfig.startIntegrationTemperatureInDegFx100 =
-      twistTrayIceMakerData->freezeData.startIntegrationTemperatureInDegFx100;
-   harvestCountCalculatorConfig.minimumFreezeTimeInitiationTemperatureInDegFx100 =
-      twistTrayIceMakerData->freezeData.minimumFreezeTimeInitiationTemperatureInDegFx100;
-   harvestCountCalculatorConfig.targetFreezeIntegrationSum =
-      twistTrayIceMakerData->freezeData.targetFreezeIntegrationSum;
-   harvestCountCalculatorConfig.minimumFreezeTimeMinutes =
-      twistTrayIceMakerData->freezeData.minimumFreezeTimeMinutes;
    HarvestCountCalculator_Init(
       &instance->_private.harvestCountCalculator,
       dataModel,
-      &harvestCountCalculatorConfig);
+      &harvestCountCalculatorConfig,
+      twistTrayIceMakerData->freezeData.harvestCountCalculatorData);
 
    TwistTrayIceMakerRunner_Init(
       &instance->_private.twistTrayIceMakerMotorControllerRunner,

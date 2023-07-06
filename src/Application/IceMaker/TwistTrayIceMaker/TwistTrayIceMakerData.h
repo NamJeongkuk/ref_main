@@ -13,6 +13,7 @@
 #include "TemperatureDegFx100.h"
 #include "IceMakerTypeInformation.h"
 #include "IceMakerFillMonitorData.h"
+#include "HarvestCountCalculatorData.h"
 
 typedef struct
 {
@@ -21,11 +22,8 @@ typedef struct
 
 typedef struct
 {
+   const HarvestCountCalculatorData_t *harvestCountCalculatorData;
    TemperatureDegFx100_t maximumHarvestTemperatureInDegFx100;
-   TemperatureDegFx100_t startIntegrationTemperatureInDegFx100;
-   TemperatureDegFx100_t minimumFreezeTimeInitiationTemperatureInDegFx100;
-   uint32_t targetFreezeIntegrationSum;
-   uint8_t minimumFreezeTimeMinutes;
 } TwistTrayIceMakerFreezeData_t;
 
 typedef struct
