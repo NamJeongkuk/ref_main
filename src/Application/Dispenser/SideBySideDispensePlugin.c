@@ -8,6 +8,7 @@
 #include "SideBySideDispensePlugin.h"
 #include "Constants_Binary.h"
 #include "SystemErds.h"
+#include "DoorIndex.h"
 
 static const DispenseSelectionRequestHandlerConfig_t dispenseSelectionRequestHandlerConfig = {
    .dispenseSelectionRequestErd = Erd_DispenseSelectionRequest,
@@ -34,26 +35,31 @@ static const DispenseControllerConfig_t dispenseControllerConfig = {
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus
 };
 
+static const DoorInhibitDispensingResolverDoorConfig_t doorsThatInhibitDispense[] = {
+   {
+      .doorIsOpenErd = Erd_RightSideFreshFoodDoorStatus,
+      .doorIndex = DoorIndex_RightHandFreshFood,
+      .offsetInParametricForDoorInhibitsDispense = OFFSET_OF(DoorInhibitDispenseTable_t, rightHandFreshFood),
+   },
+   {
+      .doorIsOpenErd = Erd_LeftSideFreezerDoorStatus,
+      .doorIndex = DoorIndex_LeftHandFreezer,
+      .offsetInParametricForDoorInhibitsDispense = OFFSET_OF(DoorInhibitDispenseTable_t, leftHandFreezer),
+   },
+};
+
 static const DoorInhibitDispensingResolverConfig_t doorInhibitWaterDispensingResolverConfig = {
-   .leftHandFreshFoodDoorIsOpenErd = Erd_LeftSideFreshFoodDoorIsOpen,
-   .rightHandFreshFoodDoorIsOpenErd = Erd_RightSideFreshFoodDoorStatus,
-   .leftHandFreezerDoorIsOpenErd = Erd_LeftSideFreezerDoorStatus,
-   .rightHandFreezerDoorIsOpenErd = Erd_Invalid,
-   .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorIsOpen,
-   .doorInDoorIsOpenErd = Erd_DoorInDoorIsOpen,
    .dispensingInhibitedErd = Erd_DispensingInhibited,
-   .dispensingInhibitedBitmapIndex = DispensingInhibitedBitmapIndex_WaterDueToDoorOpen
+   .dispensingInhibitedBitmapIndex = DispensingInhibitedBitmapIndex_WaterDueToDoorOpen,
+   .doorsThatInhibitDispense = doorsThatInhibitDispense,
+   .numberOfDoors = NUM_ELEMENTS(doorsThatInhibitDispense)
 };
 
 static const DoorInhibitDispensingResolverConfig_t doorInhibitIceDispensingResolverConfig = {
-   .leftHandFreshFoodDoorIsOpenErd = Erd_LeftSideFreshFoodDoorIsOpen,
-   .rightHandFreshFoodDoorIsOpenErd = Erd_RightSideFreshFoodDoorStatus,
-   .leftHandFreezerDoorIsOpenErd = Erd_LeftSideFreezerDoorStatus,
-   .rightHandFreezerDoorIsOpenErd = Erd_Invalid,
-   .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorIsOpen,
-   .doorInDoorIsOpenErd = Erd_DoorInDoorIsOpen,
    .dispensingInhibitedErd = Erd_DispensingInhibited,
-   .dispensingInhibitedBitmapIndex = DispensingInhibitedBitmapIndex_IceDueToDoorOpen
+   .dispensingInhibitedBitmapIndex = DispensingInhibitedBitmapIndex_IceDueToDoorOpen,
+   .doorsThatInhibitDispense = doorsThatInhibitDispense,
+   .numberOfDoors = NUM_ELEMENTS(doorsThatInhibitDispense)
 };
 
 void SideBySideDispensePlugin_Init(SideBySideDispensePlugin_t *instance, I_DataModel_t *dataModel)

@@ -184,7 +184,7 @@ TEST_GROUP(DispensingIntegration)
 
    void WhenWaterDispensingIsInhibitedByAnOpenDoor()
    {
-      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpen, set);
+      DataModel_Write(dataModel, Erd_RightSideFreshFoodDoorStatus, set);
    }
 
    void WhenIceDispensingIsInhibitedByDoor()

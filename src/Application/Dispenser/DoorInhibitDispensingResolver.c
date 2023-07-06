@@ -58,98 +58,45 @@ static void UpdateDispensingInhibitedByDoor(
    }
 }
 
+static bool GetDoorInhibitingStatus(DoorInhibitDispensingResolver_t *instance, uint8_t doorIndex)
+{
+   bool doorInhibitingStatus;
+   memcpy(
+      &doorInhibitingStatus,
+      ((const uint8_t *)instance->_private.doorInhibitDispenseTable) + instance->_private.config->doorsThatInhibitDispense[doorIndex].offsetInParametricForDoorInhibitsDispense,
+      sizeof(doorInhibitingStatus));
+
+   return doorInhibitingStatus;
+}
+
 static void OnDataModelChange(void *context, const void *_args)
 {
    DoorInhibitDispensingResolver_t *instance = context;
    const DataModelOnDataChangeArgs_t *args = _args;
 
-   if(args->erd == instance->_private.config->leftHandFreshFoodDoorIsOpenErd)
+   for(uint8_t i = 0; i < instance->_private.config->numberOfDoors; i++)
    {
-      UpdateDispensingInhibitedByDoor(
-         instance,
-         instance->_private.doorInhibitDispenseTable->leftHandFreshFood,
-         DoorIndex_LeftHandFreshFood,
-         args->erd);
-   }
-   else if(args->erd == instance->_private.config->rightHandFreshFoodDoorIsOpenErd)
-   {
-      UpdateDispensingInhibitedByDoor(
-         instance,
-         instance->_private.doorInhibitDispenseTable->rightHandFreshFood,
-         DoorIndex_RightHandFreshFood,
-         args->erd);
-   }
-   else if(args->erd == instance->_private.config->leftHandFreezerDoorIsOpenErd)
-   {
-      UpdateDispensingInhibitedByDoor(
-         instance,
-         instance->_private.doorInhibitDispenseTable->leftHandFreezer,
-         DoorIndex_LeftHandFreezer,
-         args->erd);
-   }
-   else if(args->erd == instance->_private.config->rightHandFreezerDoorIsOpenErd)
-   {
-      UpdateDispensingInhibitedByDoor(
-         instance,
-         instance->_private.doorInhibitDispenseTable->rightHandFreezer,
-         DoorIndex_RightHandFreezer,
-         args->erd);
-   }
-   else if(args->erd == instance->_private.config->convertibleCompartmentDoorIsOpenErd)
-   {
-      UpdateDispensingInhibitedByDoor(
-         instance,
-         instance->_private.doorInhibitDispenseTable->convertibleCompartment,
-         DoorIndex_ConvertibleCompartment,
-         args->erd);
-   }
-   else if(args->erd == instance->_private.config->doorInDoorIsOpenErd)
-   {
-      UpdateDispensingInhibitedByDoor(
-         instance,
-         instance->_private.doorInhibitDispenseTable->doorInDoor,
-         DoorIndex_DoorInDoor,
-         args->erd);
+      if(args->erd == instance->_private.config->doorsThatInhibitDispense[i].doorIsOpenErd)
+      {
+         UpdateDispensingInhibitedByDoor(
+            instance,
+            GetDoorInhibitingStatus(instance, i),
+            instance->_private.config->doorsThatInhibitDispense[i].doorIndex,
+            instance->_private.config->doorsThatInhibitDispense[i].doorIsOpenErd);
+      }
    }
 }
 
 static void UpdateDispensingInhibitedByDoorOnInit(DoorInhibitDispensingResolver_t *instance)
 {
-   UpdateDispensingInhibitedByDoor(
-      instance,
-      instance->_private.doorInhibitDispenseTable->leftHandFreshFood,
-      DoorIndex_LeftHandFreshFood,
-      instance->_private.config->leftHandFreshFoodDoorIsOpenErd);
-
-   UpdateDispensingInhibitedByDoor(
-      instance,
-      instance->_private.doorInhibitDispenseTable->rightHandFreshFood,
-      DoorIndex_RightHandFreshFood,
-      instance->_private.config->rightHandFreshFoodDoorIsOpenErd);
-
-   UpdateDispensingInhibitedByDoor(
-      instance,
-      instance->_private.doorInhibitDispenseTable->leftHandFreezer,
-      DoorIndex_LeftHandFreezer,
-      instance->_private.config->leftHandFreezerDoorIsOpenErd);
-
-   UpdateDispensingInhibitedByDoor(
-      instance,
-      instance->_private.doorInhibitDispenseTable->rightHandFreezer,
-      DoorIndex_RightHandFreezer,
-      instance->_private.config->rightHandFreezerDoorIsOpenErd);
-
-   UpdateDispensingInhibitedByDoor(
-      instance,
-      instance->_private.doorInhibitDispenseTable->convertibleCompartment,
-      DoorIndex_ConvertibleCompartment,
-      instance->_private.config->convertibleCompartmentDoorIsOpenErd);
-
-   UpdateDispensingInhibitedByDoor(
-      instance,
-      instance->_private.doorInhibitDispenseTable->doorInDoor,
-      DoorIndex_DoorInDoor,
-      instance->_private.config->doorInDoorIsOpenErd);
+   for(uint8_t i = 0; i < instance->_private.config->numberOfDoors; i++)
+   {
+      UpdateDispensingInhibitedByDoor(
+         instance,
+         GetDoorInhibitingStatus(instance, i),
+         instance->_private.config->doorsThatInhibitDispense[i].doorIndex,
+         instance->_private.config->doorsThatInhibitDispense[i].doorIsOpenErd);
+   }
 }
 
 void DoorInhibitDispensingResolver_Init(

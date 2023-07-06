@@ -10,19 +10,23 @@
 
 #include "EventSubscription.h"
 #include "DispenserData.h"
+#include "DoorIndex.h"
 #include "I_DataModel.h"
 #include "DispensingInhibitedBitmap.h"
 
 typedef struct
 {
-   Erd_t leftHandFreshFoodDoorIsOpenErd; // bool
-   Erd_t rightHandFreshFoodDoorIsOpenErd; // bool
-   Erd_t leftHandFreezerDoorIsOpenErd; // bool
-   Erd_t rightHandFreezerDoorIsOpenErd; // bool
-   Erd_t convertibleCompartmentDoorIsOpenErd; // bool
-   Erd_t doorInDoorIsOpenErd; // bool
-   Erd_t dispensingInhibitedErd; // DispensingInhibitedBitmap_t
-   DispensingInhibitedBitmapIndex_t dispensingInhibitedBitmapIndex;
+   Erd_t doorIsOpenErd; // bool
+   DoorIndex_t doorIndex;
+   size_t offsetInParametricForDoorInhibitsDispense;
+} DoorInhibitDispensingResolverDoorConfig_t;
+
+typedef struct
+{
+   Erd_t dispensingInhibitedErd;
+   Erd_t dispensingInhibitedBitmapIndex;
+   const DoorInhibitDispensingResolverDoorConfig_t *doorsThatInhibitDispense;
+   uint8_t numberOfDoors;
 } DoorInhibitDispensingResolverConfig_t;
 
 typedef struct
