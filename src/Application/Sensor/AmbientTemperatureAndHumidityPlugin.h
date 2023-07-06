@@ -9,13 +9,17 @@
 #define AMBIENTTEMPERATUREPLUGIN_H
 
 #include "I_DataModel.h"
-#include "AmbientTemperatureAverage.h"
 #include "OverrideArbiter.h"
+#include "ExternalFilteredSensorResolver.h"
+#include "AmbientTemperatureAverage.h"
 
 typedef struct
 {
    OverrideArbiter_t ambientFilteredTemperatureArbiter;
    OverrideArbiter_t ambientThermistorValidArbiter;
+   OverrideArbiter_t ambientHumiditySensorValidArbiter;
+   ExternalFilteredSensorResolver_t externalFilteredAmbientTemperatureSensorResolver;
+   ExternalFilteredSensorResolver_t externalFilteredAmbientHumiditySensorResolver;
    AmbientTemperatureAverage_t ambientTemperatureAverage;
 } AmbientTemperaturePlugin_t;
 
@@ -24,6 +28,6 @@ typedef struct
  * @param instance
  * @param dataModel
  */
-void AmbientTemperaturePlugin_Init(AmbientTemperaturePlugin_t *instance, I_DataModel_t *dataModel);
+void AmbientTemperatureAndHumidityPlugin_Init(AmbientTemperaturePlugin_t *instance, I_DataModel_t *dataModel);
 
 #endif
