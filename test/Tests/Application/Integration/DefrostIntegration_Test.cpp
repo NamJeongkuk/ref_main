@@ -57,11 +57,6 @@ enum
    Open = 1
 };
 
-enum
-{
-   CompressorSabbathDelayTimeInSeconds = 20
-};
-
 TEST_GROUP(DefrostIntegration_SingleEvap)
 {
    Application_t instance;
@@ -673,7 +668,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       WhenFactoryVotesForSetpointsToCauseCompressorToTurnOn();
       WhenGridRunsByWaitingOneSecond();
 
-      After(CompressorSabbathDelayTimeInSeconds * MSEC_PER_SEC);
+      After(compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC);
       After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       CompressorShouldBe(OFF);
 
@@ -687,7 +682,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       WhenGridRunsByWaitingOneSecond();
 
       After(compressorData->compressorTimes.minimumOffTimeInMinutes * MSEC_PER_MIN - numberOfGridRuns * MSEC_PER_SEC);
-      After(CompressorSabbathDelayTimeInSeconds * MSEC_PER_SEC);
+      After(compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC);
       After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
       CompressorShouldBe(OFF);
 
@@ -1254,7 +1249,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToIdleWhenExitingDisabledSta
 
    WhenFreezerDoorIs(Closed);
    CompressorOnTimeInSecondsShouldBe(0);
-   FreezerScaledDoorAccelerationsInSecondsShouldBe((1 + CompressorSabbathDelayTimeInSeconds +
+   FreezerScaledDoorAccelerationsInSecondsShouldBe((1 + compressorData->compressorTimes.sabbathDelayTimeInSeconds +
                                                       compressorData->compressorTimes.startupOnTimeInSeconds) *
       defrostData->idleData.freezerDoorIncrementFactorInSecondsPerSecond);
 
@@ -1406,7 +1401,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldSetReadyToDefrostAfterMaximumTimeReach
 
    CompressorOnTimeInSecondsShouldBe(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - SomeTimeInSeconds + 1);
    LeftHandFreshFoodScaledDoorAccelerationsInSecondsShouldBe((compressorData->compressorTimes.minimumOffTimeInMinutes * SECONDS_PER_MINUTE +
-                                                                CompressorSabbathDelayTimeInSeconds +
+                                                                compressorData->compressorTimes.sabbathDelayTimeInSeconds +
                                                                 compressorData->compressorTimes.startupOnTimeInSeconds) *
       defrostData->idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 

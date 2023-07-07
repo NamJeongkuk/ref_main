@@ -19,7 +19,8 @@ static const SabbathFanDelayHandlerConfiguration_t sabbathFanDelayHandlerConfig 
    .compressorStateErd = Erd_CompressorState,
    .sabbathFanVoteErdList = {
       .erds = sabbathFanVoteErdList,
-      .numberOfErds = NUM_ELEMENTS(sabbathFanVoteErdList) }
+      .numberOfErds = NUM_ELEMENTS(sabbathFanVoteErdList),
+   }
 };
 
 static const CompressorSpeedDriverConfig_t compressorSpeedDriverConfig = {
