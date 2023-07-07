@@ -10,6 +10,6 @@
 
 #include "I_DataModel.h"
 
-void DoorPlugin_Init(I_DataModel_t *dataModel);
+void SideBySideDoorPlugin_Init(I_DataModel_t *dataModel);
 
 #endif

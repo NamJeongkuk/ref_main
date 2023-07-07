@@ -9,7 +9,6 @@
 #include "SystemErds.h"
 #include "DataModelErdPointerAccess.h"
 #include "SabbathPlugin.h"
-#include "DoorPlugin.h"
 #include "FaultWrapperPlugin.h"
 #include "ApplianceFeatureApiUpdater.h"
 
@@ -44,7 +43,6 @@ void Application_Init(
    PeriodicNvUpdaterPlugin_Init(&instance->_private.periodicNvUpdaterPlugin, dataModel);
 
    SideBySideConfigurationPlugin_Init(&instance->_private.platformConfigurations.sideBySidePlugin, dataModel);
-   DoorPlugin_Init(dataModel);
    FaultWrapperPlugin_Init(dataModel);
 
    TimerModule_t *timerModule = DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule);

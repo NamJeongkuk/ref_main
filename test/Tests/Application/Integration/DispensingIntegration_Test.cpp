@@ -52,10 +52,10 @@ TEST_GROUP(DispensingIntegration)
 
    void WhenAllDoorsAreClosed()
    {
-      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpen, clear);
-      DataModel_Write(dataModel, Erd_RightSideFreshFoodDoorStatus, clear);
-      DataModel_Write(dataModel, Erd_DoorInDoorIsOpen, clear);
-      DataModel_Write(dataModel, Erd_LeftSideFreezerDoorStatus, clear);
+      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpenResolved, clear);
+      DataModel_Write(dataModel, Erd_RightSideFreshFoodDoorStatusResolved, clear);
+      DataModel_Write(dataModel, Erd_DoorInDoorIsOpenResolved, clear);
+      DataModel_Write(dataModel, Erd_LeftSideFreezerDoorStatusResolved, clear);
       DataModel_Write(dataModel, Erd_ConvertibleCompartmentDoorIsOpen, clear);
    }
 
@@ -184,7 +184,7 @@ TEST_GROUP(DispensingIntegration)
 
    void WhenWaterDispensingIsInhibitedByAnOpenDoor()
    {
-      DataModel_Write(dataModel, Erd_RightSideFreshFoodDoorStatus, set);
+      DataModel_Write(dataModel, Erd_RightSideFreshFoodDoorStatusResolved, set);
    }
 
    void WhenIceDispensingIsInhibitedByDoor()

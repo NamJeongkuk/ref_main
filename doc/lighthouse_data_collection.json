@@ -198,12 +198,12 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_LeftSideFreezerDoorStatus",
+         "name": "Erd_LeftSideFreezerDoorStatusResolved",
          "interval": 60000
       },
       {
          "namespace": "mb",
-         "name": "Erd_RightSideFreshFoodDoorStatus",
+         "name": "Erd_RightSideFreshFoodDoorStatusResolved",
          "interval": 60000
       },
       {

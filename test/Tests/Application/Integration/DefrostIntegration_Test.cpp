@@ -624,12 +624,12 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
 
    void WhenFreezerDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_LeftSideFreezerDoorStatus, &state);
+      DataModel_Write(dataModel, Erd_LeftSideFreezerDoorStatusResolved, &state);
    }
 
    void WhenLeftHandFreshFoodDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpenResolved, &state);
    }
 
    void WhenGridRunsByWaitingOneSecond()

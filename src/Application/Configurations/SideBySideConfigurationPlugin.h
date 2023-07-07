@@ -22,6 +22,7 @@
 #include "SideBySideLightingPlugin.h"
 #include "SignOfLifePlugin.h"
 #include "SideBySideBooleanRequestStatusUpdaterPlugin.h"
+#include "SideBySideDoorPlugin.h"
 
 typedef struct
 {

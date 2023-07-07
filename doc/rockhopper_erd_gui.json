@@ -618,7 +618,7 @@
         {
           "namespace": "mb",
           "displayName": "Right Side Fresh Food Door Status",
-          "name": "Erd_RightSideFreshFoodDoorStatus",
+          "name": "Erd_RightSideFreshFoodDoorStatusResolved",
           "read": true,
           "write": true
         },
@@ -632,7 +632,7 @@
         {
           "namespace": "mb",
           "displayName": "Left Side Freezer Door Status",
-          "name": "Erd_LeftSideFreezerDoorStatus",
+          "name": "Erd_LeftSideFreezerDoorStatusResolved",
           "read": true,
           "write": true
         },

@@ -153,14 +153,14 @@
             {
                "namespace": "mb",
                "displayName": "FF Door Open?",
-               "name": "Erd_RightSideFreshFoodDoorStatus",
+               "name": "Erd_RightSideFreshFoodDoorStatusResolved",
                "read": true,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
                "displayName": "FZ Door Open?",
-               "name": "Erd_LeftSideFreezerDoorStatus",
+               "name": "Erd_LeftSideFreezerDoorStatusResolved",
                "read": true,
                "interval": 1000000000
             },

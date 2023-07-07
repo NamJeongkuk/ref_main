@@ -22,4 +22,5 @@ void SideBySideConfigurationPlugin_Init(SideBySideConfigurationPlugin_t *instanc
    SideBySideLightingPlugin_Init(&instance->_private.lightingPlugin, dataModel);
    SignOfLifePlugin_Init(&instance->_private.signOfLifePlugin, dataModel);
    SideBySideBooleanRequestStatusUpdaterPlugin_Init(&instance->_private.requestStatusUpdaterPlugin, dataModel);
+   SideBySideDoorPlugin_Init(dataModel);
 }

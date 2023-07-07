@@ -825,14 +825,14 @@
     {
       "data": [
         {
-          "name": "Erd_RightSideFreshFoodDoorStatus",
+          "name": "Erd_RightSideFreshFoodDoorStatusResolved",
           "offset": 0,
           "size": 1,
           "type": "bool"
         }
       ],
       "id": "0x120E",
-      "name": "Erd_RightSideFreshFoodDoorStatus",
+      "name": "Erd_RightSideFreshFoodDoorStatusResolved",
       "operations": [
         "read",
         "write"
@@ -841,14 +841,14 @@
     {
       "data": [
         {
-          "name": "Erd_LeftSideFreezerDoorStatus",
+          "name": "Erd_LeftSideFreezerDoorStatusResolved",
           "offset": 0,
           "size": 1,
           "type": "bool"
         }
       ],
       "id": "0x120F",
-      "name": "Erd_LeftSideFreezerDoorStatus",
+      "name": "Erd_LeftSideFreezerDoorStatusResolved",
       "operations": [
         "read",
         "write"

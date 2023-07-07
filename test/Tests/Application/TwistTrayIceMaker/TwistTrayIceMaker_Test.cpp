@@ -252,7 +252,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_LeftSideFreezerDoorStatus,
+         Erd_LeftSideFreezerDoorStatusResolved,
          &freezerDoorState);
    }
 

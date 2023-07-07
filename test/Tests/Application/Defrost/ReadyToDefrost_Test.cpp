@@ -41,12 +41,12 @@ enum
 
 static ReadyToDefrostDoorConfiguration_t doorsConfiguration[] = {
    {
-      .doorIsOpenErd = Erd_LeftSideFreshFoodDoorIsOpen,
+      .doorIsOpenErd = Erd_LeftSideFreshFoodDoorIsOpenResolved,
       .doorAccelerationErd = Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds,
       .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
    },
    {
-      .doorIsOpenErd = Erd_LeftSideFreezerDoorStatus,
+      .doorIsOpenErd = Erd_LeftSideFreezerDoorStatusResolved,
       .doorAccelerationErd = Erd_FreezerScaledDoorAccelerationInSeconds,
       .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freezerDoorIncrementFactorInSecondsPerSecond),
    },
@@ -284,22 +284,22 @@ TEST_GROUP(ReadyToDefrost)
 
    void GivenLeftHandFreshFoodDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpenResolved, &state);
    }
 
    void GivenRightHandFreshFoodDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_RightSideFreshFoodDoorStatus, &state);
+      DataModel_Write(dataModel, Erd_RightSideFreshFoodDoorStatusResolved, &state);
    }
 
    void GivenDoorInDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_DoorInDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_DoorInDoorIsOpenResolved, &state);
    }
 
    void GivenFreezerDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_LeftSideFreezerDoorStatus, &state);
+      DataModel_Write(dataModel, Erd_LeftSideFreezerDoorStatusResolved, &state);
    }
 
    void GivenConvertibleCompartmentDoorAsFreshFoodDoorIs(bool state)
@@ -380,12 +380,12 @@ TEST_GROUP(ReadyToDefrost)
 
    void WhenLeftHandFreshFoodDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpenResolved, &state);
    }
 
    void WhenFreezerDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_LeftSideFreezerDoorStatus, &state);
+      DataModel_Write(dataModel, Erd_LeftSideFreezerDoorStatusResolved, &state);
    }
 
    void GivenLeftHandFreshFoodDoorAccelerationInSecondsIs(uint32_t seconds)

@@ -424,8 +424,8 @@ enum
    ENTRY(Erd_CoolingOffStatus,                              0x120B, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_TurboCoolOnOffRequest,                         0x120C, TurboModeRequest_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TurboCoolOnOffStatus,                          0x120D, bool,                                               Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_RightSideFreshFoodDoorStatus,                  0x120E, bool,                                               Swap_No,  Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
-   ENTRY(Erd_LeftSideFreezerDoorStatus,                     0x120F, bool,                                               Swap_No,  Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_RightSideFreshFoodDoorStatusResolved,          0x120E, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_LeftSideFreezerDoorStatusResolved,             0x120F, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker0EnableRequest,                        0x1210, IceMakerEnableRequest_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker0EnableStatus,                         0x1211, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
    ENTRY(Erd_IceMaker0FullStatus,                           0x1212, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -611,6 +611,10 @@ enum
    ENTRY(Erd_ConvertibleCompartmentAsFreshFoodDoorIsOpen,   0xF0A3, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentAsFreezerDoorIsOpen,     0xF0A4, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AllFreshFoodDoorsAreClosed,                    0xF0A5, bool,                                               Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_LeftSideFreshFoodDoorIsOpenResolved,           0xF0A6, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DoorInDoorIsOpenResolved,                      0xF0A7, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_RightSideFreshFoodDoorStatus,                  0xF0A8, bool,                                               Swap_No,    Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_LeftSideFreezerDoorStatus,                     0xF0A9, bool,                                               Swap_No,    Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    \
    ENTRY(Erd_TwistTrayIceMakerThermistor_AdcCount,          0xF0B0, AdcCounts_t,                                        Swap_Yes,   Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_AluminumMoldIceMakerMoldThermistor_AdcCount,   0xF0B1, AdcCounts_t,                                        Swap_Range, Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
