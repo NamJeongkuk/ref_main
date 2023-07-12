@@ -7,7 +7,7 @@
 
 extern "C"
 {
-#include "DefrostPlugin.h"
+#include "SideBySideDefrostPlugin.h"
 #include "PeriodicNvUpdaterPlugin.h"
 #include "SystemErds.h"
 #include "Constants_Binary.h"

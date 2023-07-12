@@ -41,6 +41,7 @@ typedef struct
       SideBySideLightingPlugin_t lightingPlugin;
       SignOfLifePlugin_t signOfLifePlugin;
       SideBySideBooleanRequestStatusUpdaterPlugin_t requestStatusUpdaterPlugin;
+      SideBySideDoorPlugin_t doorPlugin;
    } _private;
 } SideBySideConfigurationPlugin_t;
 

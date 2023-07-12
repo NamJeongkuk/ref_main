@@ -7,7 +7,7 @@
 
 extern "C"
 {
-#include "DefrostPlugin.h"
+#include "SideBySideDefrostPlugin.h"
 #include "PeriodicNvUpdaterPlugin.h"
 #include "DataModelErdPointerAccess.h"
 #include "SystemErds.h"
@@ -67,7 +67,7 @@ static CalculatedGridLines_t calcGridLines = {
 
 TEST_GROUP(DefrostTimerIntegration)
 {
-   DefrostPlugin_t instance;
+   SideBySideDefrostPlugin_t instance;
 
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
@@ -137,7 +137,7 @@ TEST_GROUP(DefrostTimerIntegration)
          set);
 
       PeriodicNvUpdaterPlugin_Init(&periodicNvUpdaterPlugin, dataModel);
-      DefrostPlugin_Init(&instance, dataModel);
+      SideBySideDefrostPlugin_Init(&instance, dataModel);
    }
 
    void FilteredFreezerCabinetTemperatureIs(TemperatureDegFx100_t temperature)

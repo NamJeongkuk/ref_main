@@ -172,7 +172,7 @@ static bool ConvertibleCompartmentDefrostWasAbnormal(Defrost_t *instance)
       instance->_private.config->convertibleCompartmentDefrostWasAbnormalErd,
       &defrostWasAbnormal);
 
-   return hasConvertibleCompartment && defrostWasAbnormal;
+   return (hasConvertibleCompartment && defrostWasAbnormal);
 }
 
 static bool AnyPreviousDefrostWasAbnormal(Defrost_t *instance)

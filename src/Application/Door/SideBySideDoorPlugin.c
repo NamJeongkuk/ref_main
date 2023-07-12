@@ -7,28 +7,11 @@
 
 #include "SideBySideDoorPlugin.h"
 #include "SystemErds.h"
-#include "AllFreshFoodDoorStatus.h"
-#include "ConvertibleCompartmentDoorStateResolver.h"
-#include "SabbathInhibitDoors.h"
-
-static struct
-{
-   AllFreshFoodDoorStatus_t allFreshFoodDoorStatus;
-   ConvertibleCompartmentDoorStateResolver_t convertibleCompartmentDoorStateResolver;
-   SabbathInhibitDoors_t sabbathInhibitDoors;
-} instance;
 
 static const AllFreshFoodDoorStatusConfiguration_t allFreshFoodDoorStatusConfiguration = {
    .rightFreshDoorIsOpenErd = Erd_RightSideFreshFoodDoorStatusResolved,
    .leftFreshDoorIsOpenErd = Erd_LeftSideFreshFoodDoorIsOpenResolved,
    .allFreshFoodDoorsAreClosedErd = Erd_AllFreshFoodDoorsAreClosed
-};
-
-static const ConvertibleCompartmentDoorResolverConfiguration_t convertibleCompartmentDoorStateResolverConfig = {
-   .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorIsOpen,
-   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
-   .convertibleCompartmentAsFreshFoodDoorIsOpenErd = Erd_ConvertibleCompartmentAsFreshFoodDoorIsOpen,
-   .convertibleCompartmentAsFreezerDoorIsOpenErd = Erd_ConvertibleCompartmentAsFreezerDoorIsOpen
 };
 
 static const SabbathDoorResolvedPair_t doorResolvedPairs[] = {
@@ -43,31 +26,15 @@ static const SabbathInhibitDoorsConfiguration_t sabbathInhibitDoorsConfig = {
    .enhancedSabbathModeErd = Erd_EnhancedSabbathModeStatus
 };
 
-static bool HasAConvertibleCompartment(I_DataModel_t *dataModel)
-{
-   bool hasAConvertibleCompartment;
-   DataModel_Read(dataModel, Erd_HasConvertibleCompartment, &hasAConvertibleCompartment);
-
-   return hasAConvertibleCompartment;
-}
-
-void SideBySideDoorPlugin_Init(I_DataModel_t *dataModel)
+void SideBySideDoorPlugin_Init(SideBySideDoorPlugin_t *instance, I_DataModel_t *dataModel)
 {
    SabbathInhibitDoors_Init(
-      &instance.sabbathInhibitDoors,
+      &instance->_private.sabbathInhibitDoors,
       dataModel,
       &sabbathInhibitDoorsConfig);
 
    AllFreshFoodDoorStatus_Init(
-      &instance.allFreshFoodDoorStatus,
+      &instance->_private.allFreshFoodDoorStatus,
       dataModel,
       &allFreshFoodDoorStatusConfiguration);
-
-   if(HasAConvertibleCompartment(dataModel))
-   {
-      ConvertibleCompartmentDoorStateResolver_Init(
-         &instance.convertibleCompartmentDoorStateResolver,
-         dataModel,
-         &convertibleCompartmentDoorStateResolverConfig);
-   }
 }

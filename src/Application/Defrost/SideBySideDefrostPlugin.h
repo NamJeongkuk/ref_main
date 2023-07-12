@@ -36,13 +36,13 @@ typedef struct
       NextDefrostTypeArbiter_t nextDefrostTypeArbiter;
       DefrostTestRequestHandler_t defrostTestRequestHandler;
    } _private;
-} DefrostPlugin_t;
+} SideBySideDefrostPlugin_t;
 
 /*!
  *
  * @param instance
  * @param dataModel
  */
-void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel);
+void SideBySideDefrostPlugin_Init(SideBySideDefrostPlugin_t *instance, I_DataModel_t *dataModel);
 
 #endif
