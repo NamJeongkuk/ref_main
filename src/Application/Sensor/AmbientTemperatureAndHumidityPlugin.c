@@ -108,7 +108,7 @@ void AmbientTemperatureAndHumidityPlugin_Init(AmbientTemperaturePlugin_t *instan
       &instance->externalFilteredAmbientHumiditySensorResolver,
       dataModel,
       &externalFilteredAmbientHumiditySensorResolver,
-      PersonalityParametricData_Get(dataModel)->sensorData->ambientHumidityThermistor);
+      PersonalityParametricData_Get(dataModel)->sensorData->ambientHumiditySensor);
 
    DataModel_Write(
       dataModel,
