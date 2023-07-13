@@ -364,6 +364,7 @@ static void VoteForHeaterOnEntryLoads(Defrost_t *instance, bool care)
    VoteForCondenserFanSpeed(instance, FanSpeed_Off, care);
    VoteForFreezerEvapFanSpeed(instance, FanSpeed_Off, care);
    VoteForIceCabinetFanSpeed(instance, FanSpeed_Off, care);
+   VoteForDamperPosition(instance, instance->_private.defrostParametricData->heaterOnEntryData.heaterOnEntryFreshFoodDamperPosition, care);
 }
 
 static void VoteForFreezerDefrostHeater(

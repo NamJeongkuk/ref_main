@@ -33,6 +33,7 @@ return defrost({
   },
   heater_on_entry = {
     defrost_heater_on_delay_after_compressor_off_in_seconds = 2,
+    heater_on_entry_fresh_food_damper_position = 'closed'
   },
   heater_on = {
     defrost_heater_on_refrigerant_valve_position = 'position_A',
@@ -49,7 +50,7 @@ return defrost({
     convertible_compartment_as_fresh_food_heater_on_time_to_set_abnormal_defrost_in_minutes = 21,
     convertible_compartment_as_freezer_heater_on_time_to_set_abnormal_defrost_in_minutes = 35,
     convertible_compartment_as_fresh_food_invalid_thermistor_defrost_heater_max_on_time_in_minutes = 2,
-    convertible_compartment_as_freezer_invalid_thermistor_defrost_heater_max_on_time_in_minutes = 25,
+    convertible_compartment_as_freezer_invalid_thermistor_defrost_heater_max_on_time_in_minutes = 25
   },
   dwell = {
     dwell_time_in_minutes = 7,

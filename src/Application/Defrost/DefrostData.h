@@ -55,6 +55,7 @@ typedef struct
 typedef struct
 {
    uint8_t defrostHeaterOnDelayAfterCompressorOffInSeconds;
+   DamperPosition_t heaterOnEntryFreshFoodDamperPosition;
 } DefrostHeaterOnEntryData_t;
 
 typedef struct
