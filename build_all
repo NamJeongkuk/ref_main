@@ -6,7 +6,7 @@ OPERATING_SYSTEM=$(uname)
 if [[ $OPERATING_SYSTEM == 'Linux' ]]; then
    RX_MAKE=make
 elif [[ $OPERATING_SYSTEM == 'Darwin' ]]; then
-   RX_MAKE=dmake
+   RX_MAKE=make
 else
    echo 'Unsupported operating system!'
    exit 1

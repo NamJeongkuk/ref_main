@@ -1,10 +1,6 @@
 UNAME := $(shell uname)
 
-ifeq ($(UNAME), Linux)
 MAKE=make -f rockhopper-target.mk
-else
-MAKE=dmake -f rockhopper-target.mk
-endif
 MAKE_RELEASE=$(MAKE) RELEASE=Y DEBUG=N package
 MAKE_NO_RELEASE=$(MAKE) RELEASE=N
 
