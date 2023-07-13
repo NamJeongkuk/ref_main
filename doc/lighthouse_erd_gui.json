@@ -1015,9 +1015,7 @@
                "namespace": "mb",
                "displayName": "Defrost Test Request",
                "name": "Erd_DefrostTestRequest",
-               "read": true,
-               "write": true,
-               "interval": 1000000000
+               "write": true
             },
             {
                "namespace": "mb",
