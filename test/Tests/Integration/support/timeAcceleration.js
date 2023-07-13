@@ -8,7 +8,7 @@ module.exports = {
    advance: async (msec) => {
       await rockhopper.write('Erd_TimeAcceleration_Ticks', msec);
 
-      const signal = rockhopper.read(`Erd_TimeAcceleration_CompleteSignal`);
+      const signal = await rockhopper.read(`Erd_TimeAcceleration_CompleteSignal`);
       await rockhopper.write('Erd_TimeAcceleration_Enable', true);
       do {
          await delay(aFewMilliseconds);

@@ -52,7 +52,7 @@ typedef struct
    SensorDataSensorType_t *freshFoodEvapThermistor;
    SensorDataConvertibleCompartmentSensorType_t *convertibleCompartmentCabinetThermistor;
    SensorDataSensorType_t *ambientThermistor;
-   SensorDataSensorType_t *ambientHumidityThermistor;
+   SensorDataSensorType_t *ambientHumiditySensor;
    SensorDataSensorType_t *convertibleCompartmentEvapThermistor;
    SensorDataSensorType_t *aluminumIceMakerMoldThermistor;
    SensorDataSensorType_t *twistTrayIceMakerMoldThermistor;

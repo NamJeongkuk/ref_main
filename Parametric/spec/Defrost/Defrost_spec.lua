@@ -48,7 +48,8 @@ describe('defrost', function()
         prechill_convertible_compartment_evap_exit_temperature_in_degfx100 = -3000
       },
       heater_on_entry = {
-        defrost_heater_on_delay_after_compressor_off_in_seconds = 2
+        defrost_heater_on_delay_after_compressor_off_in_seconds = 2,
+        heater_on_entry_fresh_food_damper_position = 'closed'
       },
       heater_on = {
         defrost_heater_on_refrigerant_valve_position = 'position_A',
@@ -421,6 +422,14 @@ describe('defrost', function()
     end)
   end)
 
+  it('should require fresh food damper position argument of heater on entry to be valid damper position', function()
+    should_fail_with("heater_on_entry.heater_on_entry_fresh_food_damper_position='not a valid damper position' must be in the set { 'closed', 'open' }", function()
+      local config = generate_config()
+      config.heater_on_entry['heater_on_entry_fresh_food_damper_position'] = 'not a valid damper position'
+      defrost(config)
+    end)
+  end)
+
   it('should require fresh food damper position argument of dwell to be valid damper position', function()
     should_fail_with("dwell.dwell_fresh_food_damper_position='not a valid damper position' must be in the set { 'closed', 'open' }", function()
       local config = generate_config()
@@ -753,7 +762,8 @@ describe('defrost', function()
           i16(-3000)
         ),
         structure(
-          u8(2)
+          u8(2),
+          u8(]] .. damper_position_type.closed .. [[)
         ),
         structure(
           u8(]] .. sealed_system_valve_position_type.position_A .. [[),
@@ -824,7 +834,8 @@ describe('defrost', function()
         prechill_convertible_compartment_evap_exit_temperature_in_degfx100 = -3000
       },
       heater_on_entry = {
-        defrost_heater_on_delay_after_compressor_off_in_seconds = 2
+        defrost_heater_on_delay_after_compressor_off_in_seconds = 2,
+        heater_on_entry_fresh_food_damper_position = 'closed'
       },
       heater_on = {
         defrost_heater_on_refrigerant_valve_position = 'position_A',

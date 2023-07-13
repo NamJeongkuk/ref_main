@@ -69,6 +69,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
    EventSubscription_t defrostHsmStateSubscription;
    EventSubscription_t readyToDefrostSubscription;
    const SystemMonitorData_t *systemMonitorData;
+   const SabbathData_t *sabbathData;
 
    void setup()
    {
@@ -81,6 +82,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       defrostData = PersonalityParametricData_Get(dataModel)->defrostData;
       compressorData = PersonalityParametricData_Get(dataModel)->compressorData;
       systemMonitorData = PersonalityParametricData_Get(dataModel)->systemMonitorData;
+      sabbathData = PersonalityParametricData_Get(dataModel)->sabbathData;
 
       mock().strictOrder();
    }
@@ -119,6 +121,11 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       GivenThermistorsAreValidAndFreezerThermistorIsTooWarm();
 
       WhenApplicationIsInitialized();
+   }
+
+   void GivenRefrigeratorResetsWithFreezerTooWarm()
+   {
+      WhenRefrigeratorResetsWithFreezerTooWarm();
    }
 
    void WhenRefrigeratorResetsWithFreezerNotTooWarm()
@@ -255,10 +262,10 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       CHECK_EQUAL(expectedSeconds, actualSeconds);
    }
 
-   void LeftHandFreshFoodScaledDoorAccelerationsInSecondsShouldBe(uint32_t expectedSeconds)
+   void RightHandFreshFoodScaledDoorAccelerationsInSecondsShouldBe(uint32_t expectedSeconds)
    {
       uint32_t actualSeconds;
-      DataModel_Read(dataModel, Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds, &actualSeconds);
+      DataModel_Read(dataModel, Erd_RightHandFreshFoodScaledDoorAccelerationInSeconds, &actualSeconds);
 
       CHECK_EQUAL(expectedSeconds, actualSeconds);
    }
@@ -627,9 +634,9 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       DataModel_Write(dataModel, Erd_LeftSideFreezerDoorStatusResolved, &state);
    }
 
-   void WhenLeftHandFreshFoodDoorIs(bool state)
+   void WhenRightHandFreshFoodDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpenResolved, &state);
+      DataModel_Write(dataModel, Erd_RightSideFreshFoodDoorStatusResolved, &state);
    }
 
    void WhenGridRunsByWaitingOneSecond()
@@ -674,6 +681,11 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
 
       After(1);
       CompressorShouldBe(ON);
+   }
+
+   void GivenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins()
+   {
+      WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
    }
 
    void WhenGridVotesToTurnOnCompressorWhileCompressorMinimumTimesAreEnabledAfterBeingOffAndGridWinsAndGridRanThisManyTimes(uint8_t numberOfGridRuns)
@@ -771,11 +783,11 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN + SomeTimeInMsec);
    }
 
-   void WhenLeftHandFreshFoodDoorIsOpenForSomeSmallTime()
+   void WhenRightHandFreshFoodDoorIsOpenForSomeSmallTime()
    {
-      WhenLeftHandFreshFoodDoorIs(Open);
+      WhenRightHandFreshFoodDoorIs(Open);
       After(SomeSmallTimeInMsec);
-      WhenLeftHandFreshFoodDoorIs(Closed);
+      WhenRightHandFreshFoodDoorIs(Closed);
    }
 
    void WhenCompressorTurnsOnAfterSomeSmallTimeOfBeingOff()
@@ -788,6 +800,23 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       WhenFreezerDoorIs(Open);
       After(SomeSmallTimeInMsec);
       WhenFreezerDoorIs(Closed);
+   }
+
+   void SabbathIsReadyToDefrostShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_SabbathIsReadyToDefrost, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void GivenSabbathModeIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_SabbathMode, &state);
+   }
+
+   void WhenSabbathModeIs(bool state)
+   {
+      GivenSabbathModeIs(state);
    }
 };
 
@@ -1395,14 +1424,14 @@ TEST(DefrostIntegration_SingleEvap, ShouldSetReadyToDefrostAfterMaximumTimeReach
    After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN - SomeTimeInMsec);
    WhenGridVotesToTurnOffCompressorAndWinsAndDoesNotHaveToWaitMinimumOffTimeBecauseItAlreadyPassed();
 
-   WhenLeftHandFreshFoodDoorIs(Open);
+   WhenRightHandFreshFoodDoorIs(Open);
 
    WhenGridVotesToTurnOnCompressorWhileCompressorMinimumTimesAreEnabledAfterBeingOffAndGridWinsAndGridRanThisManyTimes(1);
 
    CompressorOnTimeInSecondsShouldBe(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - SomeTimeInSeconds + 1);
-   LeftHandFreshFoodScaledDoorAccelerationsInSecondsShouldBe((compressorData->compressorTimes.minimumOffTimeInMinutes * SECONDS_PER_MINUTE +
-                                                                compressorData->compressorTimes.sabbathDelayTimeInSeconds +
-                                                                compressorData->compressorTimes.startupOnTimeInSeconds) *
+   RightHandFreshFoodScaledDoorAccelerationsInSecondsShouldBe((compressorData->compressorTimes.minimumOffTimeInMinutes * SECONDS_PER_MINUTE +
+                                                                 compressorData->compressorTimes.sabbathDelayTimeInSeconds +
+                                                                 compressorData->compressorTimes.startupOnTimeInSeconds) *
       defrostData->idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
    ReadyToDefrostShouldChangeTo(true);
@@ -1421,10 +1450,10 @@ TEST(DefrostIntegration_SingleEvap, ShouldSetReadyToDefrostAfterMaximumTimeReach
    WhenCompressorIsOnForMinimumTimePlusSomeTime();
    WhenGridVotesToTurnOffCompressorAndWinsAndDoesNotHaveToWaitMinimumOffTimeBecauseItAlreadyPassed();
 
-   WhenLeftHandFreshFoodDoorIsOpenForSomeSmallTime();
+   WhenRightHandFreshFoodDoorIsOpenForSomeSmallTime();
    WhenCompressorTurnsOnAfterSomeSmallTimeOfBeingOff();
    WhenFreezerDoorIsOpenForSomeSmallTime();
-   WhenLeftHandFreshFoodDoorIs(Open);
+   WhenRightHandFreshFoodDoorIs(Open);
    WhenFreezerDoorIs(Open);
 
    ReadyToDefrostShouldChangeTo(true);
@@ -1438,4 +1467,79 @@ TEST(DefrostIntegration_SingleEvap, ShouldSetReadyToDefrostAfterMaximumTimeReach
                SomeSmallTimeInSeconds) *
                MSEC_PER_SEC) /
       (1 + (defrostData->idleData.freshFoodDoorIncrementFactorInSecondsPerSecond + defrostData->idleData.freezerDoorIncrementFactorInSecondsPerSecond)));
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostAfterSabbathTimeBetweenDefrostsInMinutesWhileSabbathIsEnabled)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
+   GivenSabbathModeIs(ENABLED);
+
+   After(sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN - 1);
+   SabbathIsReadyToDefrostShouldBe(false);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldNotStartDefrostingWhenSabbathIsReadyToDefrostIsSetAndStartDefrostingWhenReadyToDefrostIsSetWhileSabbathIsDisabled)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
+   GivenSabbathModeIs(ENABLED);
+
+   WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
+
+   After(sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN -
+      compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC -
+      compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC -
+      MSEC_PER_SEC - 1);
+   SabbathIsReadyToDefrostShouldBe(false);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+   WhenSabbathModeIs(DISABLED);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+   After(defrostData->idleData.maxTimeBetweenDefrostsInMinutes * MSEC_PER_MIN -
+      sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN +
+      compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC +
+      compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC +
+      MSEC_PER_SEC - 1);
+   ReadyToDefrostShouldBe(false);
+
+   After(1);
+   ReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostWhenSabbathIsDisabledWhileReadyToDefrostIsSet)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
+   GivenRefrigeratorResetsWithFreezerTooWarm();
+   GivenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
+   GivenSabbathModeIs(ENABLED);
+
+   After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN);
+   SabbathIsReadyToDefrostShouldBe(false);
+   ReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+   WhenSabbathModeIs(DISABLED);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostWhenSabbathIsEnabledWhileSabbathReadyToDefrostIsSet)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
+
+   After(sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN);
+   SabbathIsReadyToDefrostShouldBe(true);
+   ReadyToDefrostShouldBe(false);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+   WhenSabbathModeIs(ENABLED);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }

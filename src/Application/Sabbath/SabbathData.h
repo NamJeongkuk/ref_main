@@ -12,7 +12,7 @@
 
 typedef struct
 {
-   uint16_t maxTimeBetweenDefrostsInMinutes;
+   uint16_t timeBetweenDefrostsInMinutes;
 } SabbathData_t;
 
 #endif

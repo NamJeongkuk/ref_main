@@ -43,7 +43,10 @@ enum
    Signal_IdleTestRequest,
    Signal_PrechillTestRequest,
    Signal_DefrostTestRequest,
-   Signal_FreezerEvaporatorTemperatureChanged
+   Signal_FreezerEvaporatorTemperatureChanged,
+   Signal_SabbathIsReadyToDefrost,
+   Signal_SabbathIsActive,
+   Signal_SabbathIsInactive
 };
 
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -172,7 +175,7 @@ static bool ConvertibleCompartmentDefrostWasAbnormal(Defrost_t *instance)
       instance->_private.config->convertibleCompartmentDefrostWasAbnormalErd,
       &defrostWasAbnormal);
 
-   return hasConvertibleCompartment && defrostWasAbnormal;
+   return (hasConvertibleCompartment && defrostWasAbnormal);
 }
 
 static bool AnyPreviousDefrostWasAbnormal(Defrost_t *instance)
@@ -361,6 +364,7 @@ static void VoteForHeaterOnEntryLoads(Defrost_t *instance, bool care)
    VoteForCondenserFanSpeed(instance, FanSpeed_Off, care);
    VoteForFreezerEvapFanSpeed(instance, FanSpeed_Off, care);
    VoteForIceCabinetFanSpeed(instance, FanSpeed_Off, care);
+   VoteForDamperPosition(instance, instance->_private.defrostParametricData->heaterOnEntryData.heaterOnEntryFreshFoodDamperPosition, care);
 }
 
 static void VoteForFreezerDefrostHeater(
@@ -675,6 +679,45 @@ static void ClearUseMinimumReadyToDefrostTimeFlag(Defrost_t *instance)
       clear);
 }
 
+static bool SabbathModeIsEnabled(Defrost_t *instance)
+{
+   bool sabbathMode;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->sabbathModeErd,
+      &sabbathMode);
+
+   bool enhancedSabbathMode;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->enhancedSabbathModeErd,
+      &enhancedSabbathMode);
+
+   return (sabbathMode || enhancedSabbathMode);
+}
+
+static bool SabbathIsReadyToDefrost(Defrost_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->sabbathIsReadyToDefrostErd,
+      &state);
+
+   return state;
+}
+
+static bool ReadyToDefrost(Defrost_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->readyToDefrostErd,
+      &state);
+
+   return state;
+}
+
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
@@ -704,27 +747,39 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_ReadyToDefrost:
-         if(DontSkipPrechill(instance))
+      case Signal_SabbathIsInactive:
+         if(!SabbathModeIsEnabled(instance) && ReadyToDefrost(instance))
          {
-            Hsm_Transition(hsm, State_PrechillPrep);
-         }
-         else
-         {
-            if(AnyPreviousDefrostWasAbnormal(instance) ||
-               FreezerCompartmentWasTooWarmOnPowerUp(instance) ||
-               InvalidFreezerEvaporatorThermistorDuringDefrostIsSet(instance) ||
-               ClearedEepromStartup(instance))
-            {
-               if(FreezerCompartmentWasTooWarmOnPowerUp(instance))
-               {
-                  ResetFreezerCompartmentWasTooWarmOnPowerUp(instance);
-               }
-               Hsm_Transition(hsm, State_HeaterOnEntry);
-            }
-            else
+            if(DontSkipPrechill(instance))
             {
                Hsm_Transition(hsm, State_PrechillPrep);
             }
+            else
+            {
+               if(AnyPreviousDefrostWasAbnormal(instance) ||
+                  FreezerCompartmentWasTooWarmOnPowerUp(instance) ||
+                  InvalidFreezerEvaporatorThermistorDuringDefrostIsSet(instance) ||
+                  ClearedEepromStartup(instance))
+               {
+                  if(FreezerCompartmentWasTooWarmOnPowerUp(instance))
+                  {
+                     ResetFreezerCompartmentWasTooWarmOnPowerUp(instance);
+                  }
+                  Hsm_Transition(hsm, State_HeaterOnEntry);
+               }
+               else
+               {
+                  Hsm_Transition(hsm, State_PrechillPrep);
+               }
+            }
+         }
+         break;
+
+      case Signal_SabbathIsReadyToDefrost:
+      case Signal_SabbathIsActive:
+         if(SabbathModeIsEnabled(instance) && SabbathIsReadyToDefrost(instance))
+         {
+            Hsm_Transition(hsm, State_PrechillPrep);
          }
          break;
 
@@ -1244,6 +1299,27 @@ static void DataModelChanged(void *context, const void *args)
 
          default:
             break;
+      }
+   }
+   else if(erd == instance->_private.config->sabbathIsReadyToDefrostErd)
+   {
+      const bool *state = onChangeData->data;
+      if(*state)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_SabbathIsReadyToDefrost, NULL);
+      }
+   }
+   else if((erd == instance->_private.config->sabbathModeErd) ||
+      (erd == instance->_private.config->enhancedSabbathModeErd))
+   {
+      const bool *state = onChangeData->data;
+      if(*state)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_SabbathIsActive, NULL);
+      }
+      else
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_SabbathIsInactive, NULL);
       }
    }
 }

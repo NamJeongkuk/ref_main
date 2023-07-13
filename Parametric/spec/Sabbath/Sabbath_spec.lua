@@ -10,7 +10,7 @@ describe('sabbath', function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-      max_time_between_defrosts_in_minutes = 16 * 60
+      time_between_defrosts_in_minutes = 16 * 60
     }, overrides or {})
   end
 
@@ -18,10 +18,10 @@ describe('sabbath', function()
     should_require_args(sabbath, generate_config())
   end)
 
-  it('should assert if max_time_between_defrosts_in_minutes is not in range', function()
-    should_fail_with('max_time_between_defrosts_in_minutes=-1 must be in [0, 65535]', function()
+  it('should assert if time_between_defrosts_in_minutes is not in range', function()
+    should_fail_with('time_between_defrosts_in_minutes=-1 must be in [0, 65535]', function()
       sabbath(generate_config({
-        max_time_between_defrosts_in_minutes = -1
+        time_between_defrosts_in_minutes = -1
       }))
     end)
   end)
@@ -34,7 +34,7 @@ describe('sabbath', function()
       ]])
 
     local actual = sabbath({
-      max_time_between_defrosts_in_minutes = 1440
+      time_between_defrosts_in_minutes = 1440
     })
 
     assert.equals(expected, remove_whitespace(tostring(actual)))

@@ -10,7 +10,7 @@ return function(core)
     return TypedString(
       { 'sabbath' },
       structure(
-        u16(config.max_time_between_defrosts_in_minutes)
+        u16(config.time_between_defrosts_in_minutes)
       )
     )
   end)
@@ -19,7 +19,7 @@ return function(core)
     validate_arguments(
       config,
       {
-        max_time_between_defrosts_in_minutes = { constraint.u16 }
+        time_between_defrosts_in_minutes = { constraint.u16 }
       })
     return generate(config)
   end

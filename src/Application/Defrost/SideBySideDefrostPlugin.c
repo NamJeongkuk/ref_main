@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "DefrostPlugin.h"
+#include "SideBySideDefrostPlugin.h"
 #include "DefrostParameterSelector.h"
 #include "FreezerFilteredTemperatureTooWarmOnPowerUp.h"
 #include "SystemErds.h"
@@ -53,7 +53,10 @@ static const DefrostConfiguration_t defrostConfig = {
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill,
    .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
    .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts,
-   .defrostParameterSelectorReadyErd = Erd_DefrostParameterSelectorReady
+   .defrostParameterSelectorReadyErd = Erd_DefrostParameterSelectorReady,
+   .sabbathModeErd = Erd_SabbathMode,
+   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeStatus,
+   .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost
 };
 
 static const DefrostHeaterMaxOnTimeConfiguration_t defrostHeaterMaxOnTimeConfig = {
@@ -75,33 +78,13 @@ static const DefrostHeaterOnTimeCounterConfig_t defrostHeaterOnTimeCounterConfig
 
 static ReadyToDefrostDoorConfiguration_t doorsConfiguration[] = {
    {
-      .doorIsOpenErd = Erd_LeftSideFreshFoodDoorIsOpenResolved,
-      .doorAccelerationErd = Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds,
-      .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
-   },
-   {
       .doorIsOpenErd = Erd_RightSideFreshFoodDoorStatusResolved,
       .doorAccelerationErd = Erd_RightHandFreshFoodScaledDoorAccelerationInSeconds,
       .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
    },
    {
-      .doorIsOpenErd = Erd_DoorInDoorIsOpenResolved,
-      .doorAccelerationErd = Erd_DoorInDoorScaledDoorAccelerationInSeconds,
-      .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
-   },
-   {
       .doorIsOpenErd = Erd_LeftSideFreezerDoorStatusResolved,
       .doorAccelerationErd = Erd_FreezerScaledDoorAccelerationInSeconds,
-      .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freezerDoorIncrementFactorInSecondsPerSecond),
-   },
-   {
-      .doorIsOpenErd = Erd_ConvertibleCompartmentAsFreshFoodDoorIsOpen,
-      .doorAccelerationErd = Erd_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds,
-      .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
-   },
-   {
-      .doorIsOpenErd = Erd_ConvertibleCompartmentAsFreezerDoorIsOpen,
-      .doorAccelerationErd = Erd_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds,
       .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freezerDoorIncrementFactorInSecondsPerSecond),
    },
 };
@@ -161,18 +144,7 @@ static const DefrostTestRequestHandlerConfiguration_t defrostTestRequestHandlerC
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill
 };
 
-static bool ThereIsAConvertibleCompartment(I_DataModel_t *dataModel)
-{
-   bool hasConvertibleCompartment;
-   DataModel_Read(
-      dataModel,
-      Erd_HasConvertibleCompartment,
-      &hasConvertibleCompartment);
-
-   return hasConvertibleCompartment;
-}
-
-void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
+void SideBySideDefrostPlugin_Init(SideBySideDefrostPlugin_t *instance, I_DataModel_t *dataModel)
 {
    bool sensorsReadyToBeRead;
    DataModel_Read(
@@ -185,19 +157,6 @@ void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
       dataModel,
       Erd_SetpointResolverReady,
       &setpointResolverReady);
-
-   bool convertibleCompartmentStateResolverReady;
-   if(ThereIsAConvertibleCompartment(dataModel))
-   {
-      DataModel_Read(
-         dataModel,
-         Erd_ConvertibleCompartmentStateResolverReady,
-         &convertibleCompartmentStateResolverReady);
-   }
-   else
-   {
-      convertibleCompartmentStateResolverReady = true;
-   }
 
    bool ambientTemperaturePluginReady;
    DataModel_Read(
@@ -225,7 +184,6 @@ void DefrostPlugin_Init(DefrostPlugin_t *instance, I_DataModel_t *dataModel)
 
    uassert(sensorsReadyToBeRead &&
       setpointResolverReady &&
-      convertibleCompartmentStateResolverReady &&
       ambientTemperaturePluginReady &&
       gridPluginReady &&
       periodicNvUpdaterReady &&

@@ -48,7 +48,8 @@ return function(core)
           i16(config.prechill.prechill_convertible_compartment_evap_exit_temperature_in_degfx100)
         ),
         structure(
-          u8(config.heater_on_entry.defrost_heater_on_delay_after_compressor_off_in_seconds)
+          u8(config.heater_on_entry.defrost_heater_on_delay_after_compressor_off_in_seconds),
+          u8(damper_position_type[config.heater_on_entry.heater_on_entry_fresh_food_damper_position])
         ),
         structure(
           u8(sealed_system_valve_position_type[config.heater_on.defrost_heater_on_refrigerant_valve_position]),
@@ -130,7 +131,8 @@ return function(core)
         },
         heater_on_entry = {
           constraint.table_keys({
-            defrost_heater_on_delay_after_compressor_off_in_seconds = { constraint.u8 }
+            defrost_heater_on_delay_after_compressor_off_in_seconds = { constraint.u8 },
+            heater_on_entry_fresh_food_damper_position = { constraint.in_set(enum.keys(damper_position_type)) }
           })
         },
         heater_on = {

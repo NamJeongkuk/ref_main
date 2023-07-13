@@ -1,5 +1,6 @@
 /*!
- * @file - handles turning off Condenser and Evaporator fans when compressor is in sabbath delay state (delays all of them at same time).
+ * @file
+ * @brief handles turning off Condenser and Evaporator fans when compressor is in sabbath delay state (delays all of them at same time).
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */

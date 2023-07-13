@@ -8,8 +8,24 @@
 #ifndef DOORPLUGIN_H
 #define DOORPLUGIN_H
 
+#include "AllFreshFoodDoorStatus.h"
 #include "I_DataModel.h"
+#include "SabbathInhibitDoors.h"
 
-void SideBySideDoorPlugin_Init(I_DataModel_t *dataModel);
+typedef struct
+{
+   struct
+   {
+      AllFreshFoodDoorStatus_t allFreshFoodDoorStatus;
+      SabbathInhibitDoors_t sabbathInhibitDoors;
+   } _private;
+} SideBySideDoorPlugin_t;
+
+/*!
+ *
+ * @param instance
+ * @param dataModel
+ */
+void SideBySideDoorPlugin_Init(SideBySideDoorPlugin_t *instance, I_DataModel_t *dataModel);
 
 #endif

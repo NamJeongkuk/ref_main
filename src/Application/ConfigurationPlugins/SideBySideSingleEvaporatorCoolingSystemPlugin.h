@@ -12,7 +12,7 @@
 #include "GridPlugin.h"
 #include "ConstArrayMap_SideBySideSingleEvap.h"
 #include "CompressorPlugin.h"
-#include "DefrostPlugin.h"
+#include "SideBySideDefrostPlugin.h"
 #include "FreshFoodDamperPlugin.h"
 #include "SideBySideSetpointPlugin.h"
 #include "ValvePlugin.h"
@@ -30,7 +30,7 @@ typedef struct
       GridPlugin_t gridPlugin;
       ConstArrayMap_SideBySideSingleEvap_t coolingStateBasedGridVotesTable;
       CompressorPlugin_t compressorPlugin;
-      DefrostPlugin_t defrostPlugin;
+      SideBySideDefrostPlugin_t defrostPlugin;
       FreshFoodDamperPlugin_t freshFoodDamperPlugin;
       SideBySideSetpointPlugin_t sideBySideSetpointPlugin;
       ValvePlugin_t valvePlugin;

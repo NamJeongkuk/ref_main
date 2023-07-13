@@ -32,7 +32,8 @@ return defrost({
     prechill_convertible_compartment_evap_exit_temperature_in_degfx100 = -3000
   },
   heater_on_entry = {
-    defrost_heater_on_delay_after_compressor_off_in_seconds = 2
+    defrost_heater_on_delay_after_compressor_off_in_seconds = 2,
+    heater_on_entry_fresh_food_damper_position = 'closed'
   },
   heater_on = {
     defrost_heater_on_refrigerant_valve_position = 'position_A',

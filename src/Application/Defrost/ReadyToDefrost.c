@@ -128,7 +128,7 @@ static bool ConvertibleCompartmentIsAbnormal(ReadyToDefrost_t *instance)
       instance->_private.config->convertibleCompartmentDefrostWasAbnormalErd,
       &convertibleCompartmentDefrostWasAbnormal);
 
-   return hasConvertibleCompartment && convertibleCompartmentDefrostWasAbnormal;
+   return (hasConvertibleCompartment && convertibleCompartmentDefrostWasAbnormal);
 }
 
 static bool TimeBetweenDefrostsShouldBeMinimum(ReadyToDefrost_t *instance)
