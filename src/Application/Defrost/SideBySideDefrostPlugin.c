@@ -53,7 +53,10 @@ static const DefrostConfiguration_t defrostConfig = {
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill,
    .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
    .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts,
-   .defrostParameterSelectorReadyErd = Erd_DefrostParameterSelectorReady
+   .defrostParameterSelectorReadyErd = Erd_DefrostParameterSelectorReady,
+   .sabbathModeErd = Erd_SabbathMode,
+   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeStatus,
+   .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost
 };
 
 static const DefrostHeaterMaxOnTimeConfiguration_t defrostHeaterMaxOnTimeConfig = {

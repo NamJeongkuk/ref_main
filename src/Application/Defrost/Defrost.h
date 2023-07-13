@@ -60,6 +60,9 @@ typedef struct
    Erd_t invalidFreezerEvaporatorThermistorDuringDefrostErd; // bool
    Erd_t useMinimumReadyToDefrostTimeAndResetDefrostCountsErd; // bool
    Erd_t defrostParameterSelectorReadyErd; // bool
+   Erd_t sabbathModeErd; // bool
+   Erd_t enhancedSabbathModeErd; // bool
+   Erd_t sabbathIsReadyToDefrostErd; // bool
 } DefrostConfiguration_t;
 
 typedef struct

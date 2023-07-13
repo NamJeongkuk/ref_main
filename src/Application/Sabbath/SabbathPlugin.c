@@ -6,23 +6,30 @@
  */
 
 #include "SabbathPlugin.h"
-#include "SabbathParameters.h"
-#include "SystemErds.h"
 #include "Constants_Binary.h"
+#include "SabbathReadyToDefrost.h"
+#include "SystemErds.h"
 
 static struct
 {
-   SabbathParameters_t sabbathParameters;
+   SabbathReadyToDefrost_t sabbathReadyToDefrost;
 } instance;
 
-static const SabbathParametersConfig_t sabbathParametersConfig = {
-   .sabbathModeErd = Erd_SabbathMode,
-   .maxTimeBetweenDefrostsInMinutesErd = Erd_MaxTimeBetweenDefrostsInMinutes
+static const SabbathReadyToDefrostConfig_t sabbathReadyToDefrostConfig = {
+   .timerModuleErd = Erd_TimerModule,
+   .waitingToDefrostErd = Erd_WaitingToDefrost,
+   .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost,
+   .sabbathTimeBetweenDefrostsInMinutesErd = Erd_SabbathTimeBetweenDefrostsInMinutes,
+   .sabbathWaitingForDefrostTimeInMinutesErd = Erd_SabbathWaitingForDefrostTimeInMinutes
 };
 
 void SabbathPlugin_Init(I_DataModel_t *dataModel)
 {
-   SabbathParameters_Init(&instance.sabbathParameters, dataModel, &sabbathParametersConfig);
+   SabbathReadyToDefrost_Init(
+      &instance.sabbathReadyToDefrost,
+      dataModel,
+      &sabbathReadyToDefrostConfig,
+      PersonalityParametricData_Get(dataModel)->sabbathData);
 
    DataModel_Write(
       dataModel,

@@ -118,7 +118,7 @@ static bool ItIsSabbathMode(TwistTrayIceMaker_t *instance)
    DataSource_Read(instance->_private.dataSource, Erd_SabbathMode, &sabbathMode);
    DataSource_Read(instance->_private.dataSource, Erd_EnhancedSabbathModeStatus, &enhancedSabbathMode);
 
-   return sabbathMode || enhancedSabbathMode;
+   return (sabbathMode || enhancedSabbathMode);
 }
 
 static bool IceMakerIsEnabled(TwistTrayIceMaker_t *instance)

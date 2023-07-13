@@ -107,11 +107,6 @@ TEST_GROUP(DefrostParameterSelector_SingleEvap)
       DataModel_Write(dataModel, Erd_FreezerEvaporatorThermistorIsValid, &state);
    }
 
-   void MaxTimeBetweenDefrostsInMinutesIs(uint16_t timeInMinutes)
-   {
-      DataModel_Write(dataModel, Erd_MaxTimeBetweenDefrostsInMinutes, &timeInMinutes);
-   }
-
    void ThereIsAConvertibleCompartment()
    {
       DataModel_Write(dataModel, Erd_HasConvertibleCompartment, set);
