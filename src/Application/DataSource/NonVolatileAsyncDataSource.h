@@ -22,7 +22,7 @@
 
 enum
 {
-   ClientVersion = 3, // This needs to be reved whenever NV ERDs change to force erase/default
+   ClientVersion = 4, // This needs to be reved whenever NV ERDs change to force erase/default
    HarnessEepromClientVersion = 1,
    EraseBufferSize = 248, // this is also the size of NonVolatileAsyncDataSourceReadWriteBuffer_t
    HarnessEepromCount = 1,
