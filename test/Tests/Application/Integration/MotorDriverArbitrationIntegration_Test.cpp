@@ -312,7 +312,7 @@ TEST(MotorDriverArbitrationIntegration, TwistTrayMotorShouldGiveUpControlAfterAH
    WhenTheTwistTrayMotorIsDoneHarvesting();
 
    // This ensures we've exited the Twist Tray Ice Maker Harvest State
-   After(twistTrayIceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+   After(twistTrayIceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
    TheTwistTrayOperationShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 
    TheTwistTrayMotorControlRequestShouldBe(DISABLED);

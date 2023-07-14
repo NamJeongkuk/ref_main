@@ -9,7 +9,6 @@
 #define ALUMINUMMOLDICEMAKERDATA_H
 
 #include "TemperatureDegFx100.h"
-#include "FillTubeHeaterData.h"
 #include "IceMakerTypeInformation.h"
 #include "IceMakerFillMonitorData.h"
 #include "HarvestCountCalculatorData.h"
@@ -35,6 +34,8 @@ typedef struct
    TemperatureDegFx100_t heaterOnTemperatureInDegFx100;
    uint8_t rakeNotHomeTestTimeInSeconds;
    uint8_t feelerArmTestTimeInSeconds;
+   uint16_t fillTubeHeaterOnTimeInSeconds;
+   uint8_t fillTubeHeaterDutyCyclePercentage;
 } AluminumMoldIceMakerHarvestData_t;
 
 typedef struct
@@ -60,7 +61,6 @@ typedef struct
    AluminumMoldIceMakerHarvestData_t harvestData;
    AluminumMoldIceMakerHarvestFaultData_t harvestFaultData;
    AluminumMoldIceMakerHarvestFixData_t harvestFixData;
-   FillTubeHeaterData_t fillTubeHeaterData;
 } AluminumMoldIceMakerData_t;
 
 #endif

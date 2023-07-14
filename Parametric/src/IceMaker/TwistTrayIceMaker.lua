@@ -4,14 +4,12 @@ local validate_arguments = require 'lua-common'.utilities.validate_arguments
 local TypedString = require 'lua-common'.utilities.TypedString
 local memoize = require 'lua-common'.util.memoize
 local TypedString = require 'lua-common'.util.TypedString
-local FillTubeHeater = require '../IceMaker/FillTubeHeater'
 local ice_maker_type = require 'IceMaker/IceMakerType'
 local ice_maker_location= require 'IceMaker/IceMakerLocation'
 local enum = require 'lua-common'.utilities.enum
 
 return function(core)
   import(core)
-  local fill_tube_heater = FillTubeHeater(core)
   local generate = memoize(function(config)
     return TypedString(
       { 'twist_tray_ice_maker' },
@@ -36,13 +34,10 @@ return function(core)
           u8(config.harvest.long_motor_error_timeout_period_in_sec),
           u8(config.harvest.short_motor_error_timeout_period_in_sec),
           u8(config.harvest.delay_to_harvest_after_door_closes_in_sec),
-          u8(config.harvest.full_bucket_dispense_check_time_in_seconds)
-        ),
-        fill_tube_heater({
-          freeze_thaw_fill_tube_heater_duty_cycle_percentage = config.fill_tube_heater.freeze_thaw_fill_tube_heater_duty_cycle_percentage,
-          freeze_thaw_fill_tube_heater_on_time_in_seconds = config.fill_tube_heater.freeze_thaw_fill_tube_heater_on_time_in_seconds,
-          non_harvest_fill_tube_heater_duty_cycle_percentage = config.fill_tube_heater.non_harvest_fill_tube_heater_duty_cycle_percentage
-        })
+          u8(config.harvest.full_bucket_dispense_check_time_in_seconds),
+          u16(config.harvest.freeze_thaw_fill_tube_heater_on_time_in_seconds),
+          u8(config.harvest.freeze_thaw_fill_tube_heater_duty_cycle_percentage)
+        )
       )
     )
   end)
@@ -78,14 +73,9 @@ return function(core)
             long_motor_error_timeout_period_in_sec = { constraint.u8 },
             short_motor_error_timeout_period_in_sec = { constraint.u8 },
             delay_to_harvest_after_door_closes_in_sec = { constraint.u8 },
-            full_bucket_dispense_check_time_in_seconds = { constraint.u8 }
-          })
-        },
-        fill_tube_heater = {
-          constraint.table_keys({
-            freeze_thaw_fill_tube_heater_duty_cycle_percentage = { constraint.in_range(0,100) },
+            full_bucket_dispense_check_time_in_seconds = { constraint.u8 },
             freeze_thaw_fill_tube_heater_on_time_in_seconds = { constraint.u16 },
-            non_harvest_fill_tube_heater_duty_cycle_percentage = { constraint.in_range(0,100) }
+            freeze_thaw_fill_tube_heater_duty_cycle_percentage = { constraint.in_range(0,100) }
           })
         }
       }

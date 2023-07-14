@@ -810,6 +810,13 @@
                "name": "Erd_IceMaker0EnableStatus",
                "read": true,
                "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Fill Tube Heater State",
+               "name": "Erd_FillTubeHeater_ResolvedVote",
+               "read": true,
+               "interval": 1000000000
             }
          ]
       },

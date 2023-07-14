@@ -19,11 +19,8 @@ return twist_tray_ice_maker({
     long_motor_error_timeout_period_in_sec = 15,
     short_motor_error_timeout_period_in_sec = 16,
     delay_to_harvest_after_door_closes_in_sec = 17,
-    full_bucket_dispense_check_time_in_seconds = 18
-  },
-  fill_tube_heater = {
-    freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100,
+    full_bucket_dispense_check_time_in_seconds = 18,
     freeze_thaw_fill_tube_heater_on_time_in_seconds = 400,
-    non_harvest_fill_tube_heater_duty_cycle_percentage = 10
+    freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100
   }
 })

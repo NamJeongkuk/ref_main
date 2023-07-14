@@ -33,7 +33,9 @@ describe('AluminumMoldIceMaker', function()
         heater_off_temperature_in_deg_fx100 = 5000,
         heater_on_temperature_in_deg_fx100 = 3200,
         rake_not_home_test_time_in_seconds = 10,
-        feeler_arm_test_time_in_seconds = 10
+        feeler_arm_test_time_in_seconds = 10,
+        freeze_thaw_fill_tube_heater_on_time_in_seconds = 400,
+        freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100
       },
       harvest_fault = {
         rake_motor_control_time_in_seconds = 30,
@@ -45,11 +47,6 @@ describe('AluminumMoldIceMaker', function()
         motor_off_time_in_seconds = 30,
         motor_on_time_in_seconds = 30,
         maximum_harvest_fix_time_in_minutes = 60
-      },
-      fill_tube_heater = {
-        freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100,
-        freeze_thaw_fill_tube_heater_on_time_in_seconds = 400,
-        non_harvest_fill_tube_heater_duty_cycle_percentage = 10
       }
     }, overrides or {})
   end
@@ -211,7 +208,7 @@ describe('AluminumMoldIceMaker', function()
   it('should assert if freeze_thaw_fill_tube_heater_duty_cycle_percentage is not in range', function()
     should_fail_with('freeze_thaw_fill_tube_heater_duty_cycle_percentage=101 must be in [0, 100]', function()
       aluminum_mold_ice_maker(generate_config({
-        fill_tube_heater = {
+        harvest = {
           freeze_thaw_fill_tube_heater_duty_cycle_percentage = 101
         }
       }))
@@ -229,9 +226,9 @@ describe('AluminumMoldIceMaker', function()
   end)
 
   it('should assert if freeze_thaw_fill_tube_heater_on_time_in_seconds is not in range', function()
-    should_fail_with('fill_tube_heater.freeze_thaw_fill_tube_heater_on_time_in_seconds=-1 must be in [0, 65535]', function()
+    should_fail_with('harvest.freeze_thaw_fill_tube_heater_on_time_in_seconds=-1 must be in [0, 65535]', function()
       aluminum_mold_ice_maker(generate_config({
-        fill_tube_heater = {
+        harvest = {
           freeze_thaw_fill_tube_heater_on_time_in_seconds = -1
         }
       }))
@@ -243,16 +240,6 @@ describe('AluminumMoldIceMaker', function()
       aluminum_mold_ice_maker(generate_config({
         harvest_fix = {
           heater_on_temperature_in_deg_fx100 = 32768
-        }
-      }))
-    end)
-  end)
-
-  it('should assert if non_harvest_fill_tube_heater_duty_cycle_percentage is not in range', function()
-    should_fail_with('non_harvest_fill_tube_heater_duty_cycle_percentage=101 must be in [0, 100]', function()
-      aluminum_mold_ice_maker(generate_config({
-        fill_tube_heater = {
-          non_harvest_fill_tube_heater_duty_cycle_percentage = 101
         }
       }))
     end)
@@ -293,8 +280,6 @@ describe('AluminumMoldIceMaker', function()
       aluminum_mold_ice_maker(generate_config({
         harvest = {
           maximum_harvest_time_in_minutes = 4,
-        },
-        fill_tube_heater = {
           freeze_thaw_fill_tube_heater_on_time_in_seconds = 300
         }
       }))
@@ -305,9 +290,7 @@ describe('AluminumMoldIceMaker', function()
     should_fail_with('minimum heater on time must be less than or equal to freeze thaw fill tube heater on time', function()
       aluminum_mold_ice_maker(generate_config({
         harvest = {
-          initial_minimum_heater_on_time_in_seconds = 240
-        },
-        fill_tube_heater = {
+          initial_minimum_heater_on_time_in_seconds = 240,
           freeze_thaw_fill_tube_heater_on_time_in_seconds = 20
         }
       }))
@@ -336,7 +319,9 @@ describe('AluminumMoldIceMaker', function()
             i16(5000),
             i16(3200),
             u8(10),
-            u8(10)
+            u8(10),
+            u16(400),
+            u8(100)
           ),
           structure(
             u8(30),
@@ -348,11 +333,6 @@ describe('AluminumMoldIceMaker', function()
             u8(30),
             u8(30),
             u8(60)
-          ),
-          structure(
-            u8(100),
-            u16(400),
-            u8(10)
           )
         )
       ]])
@@ -377,7 +357,9 @@ describe('AluminumMoldIceMaker', function()
         heater_off_temperature_in_deg_fx100 = 5000,
         heater_on_temperature_in_deg_fx100 = 3200,
         rake_not_home_test_time_in_seconds = 10,
-        feeler_arm_test_time_in_seconds = 10
+        feeler_arm_test_time_in_seconds = 10,
+        freeze_thaw_fill_tube_heater_on_time_in_seconds = 400,
+        freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100
       },
       harvest_fault = {
         rake_motor_control_time_in_seconds = 30,
@@ -389,11 +371,6 @@ describe('AluminumMoldIceMaker', function()
         motor_off_time_in_seconds = 30,
         motor_on_time_in_seconds = 30,
         maximum_harvest_fix_time_in_minutes = 60
-      },
-      fill_tube_heater = {
-        freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100,
-        freeze_thaw_fill_tube_heater_on_time_in_seconds = 400,
-        non_harvest_fill_tube_heater_duty_cycle_percentage = 10
       }
     })
 

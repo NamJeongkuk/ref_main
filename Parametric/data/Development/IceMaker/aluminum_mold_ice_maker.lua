@@ -18,7 +18,9 @@ return aluminum_mold_ice_maker({
     heater_off_temperature_in_deg_fx100 = 5000,
     heater_on_temperature_in_deg_fx100 = 3200,
     rake_not_home_test_time_in_seconds = 10,
-    feeler_arm_test_time_in_seconds = 10
+    feeler_arm_test_time_in_seconds = 10,
+    freeze_thaw_fill_tube_heater_on_time_in_seconds = 400,
+    freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100
   },
   harvest_fault = {
     rake_motor_control_time_in_seconds = 30,
@@ -30,10 +32,5 @@ return aluminum_mold_ice_maker({
     motor_off_time_in_seconds = 30,
     motor_on_time_in_seconds = 30,
     maximum_harvest_fix_time_in_minutes = 60
-  },
-  fill_tube_heater = {
-    freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100,
-    freeze_thaw_fill_tube_heater_on_time_in_seconds = 400,
-    non_harvest_fill_tube_heater_duty_cycle_percentage = 10
   }
 })

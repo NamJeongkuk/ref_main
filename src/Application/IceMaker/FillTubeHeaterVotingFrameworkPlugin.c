@@ -20,7 +20,10 @@ static const PercentageDutyCycleVoteToPwmDutyCycleConverterConfig_t dutyCycleToP
 };
 
 static const NonHarvestFillTubeHeaterControlConfig_t nonHarvestFillTubeHeaterControlConfig = {
-   .iceAlgorithmIsActiveErd = Erd_Freezer_IceRateIsActive,
+   .iceMakingActiveErd = Erd_Freezer_IceRateIsActive,
+   .cabinetTemperatureErd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
+   .compressorIsOnErd = Erd_CompressorIsOn,
+   .fanResolvedVoteErd = Erd_FreezerEvapFanSpeed_ResolvedVote,
    .nonHarvestFillTubeHeaterVoteErd = Erd_FillTubeHeater_NonHarvestVote
 };
 
@@ -54,5 +57,5 @@ void FillTubeHeaterVotingFrameworkPlugin_Init(FillTubeHeaterVotingFrameworkPlugi
       &instance->_private.nonHarvestFillTubeHeaterControl,
       dataModel,
       &nonHarvestFillTubeHeaterControlConfig,
-      &PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData->fillTubeHeaterData);
+      PersonalityParametricData_Get(dataModel)->iceMakerData->nonHarvestFillTubeHeaterData);
 }

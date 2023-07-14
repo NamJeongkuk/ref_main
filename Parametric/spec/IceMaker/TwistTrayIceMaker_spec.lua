@@ -34,12 +34,9 @@ describe('TwistTrayIceMaker', function()
         long_motor_error_timeout_period_in_sec = 12,
         short_motor_error_timeout_period_in_sec = 13,
         delay_to_harvest_after_door_closes_in_sec = 14,
-        full_bucket_dispense_check_time_in_seconds = 15
-      },
-      fill_tube_heater = {
-        freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100,
+        full_bucket_dispense_check_time_in_seconds = 15,
         freeze_thaw_fill_tube_heater_on_time_in_seconds = 400,
-        non_harvest_fill_tube_heater_duty_cycle_percentage = 10
+        freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100
       }
     }, overrides or {})
   end
@@ -191,7 +188,7 @@ describe('TwistTrayIceMaker', function()
   it('should assert if freeze_thaw_fill_tube_heater_duty_cycle_percentage is not in range', function()
     should_fail_with('freeze_thaw_fill_tube_heater_duty_cycle_percentage=101 must be in [0, 100]', function()
       twist_tray_ice_maker(generate_config({
-        fill_tube_heater = {
+        harvest = {
           freeze_thaw_fill_tube_heater_duty_cycle_percentage = 101
         }
       }))
@@ -199,20 +196,10 @@ describe('TwistTrayIceMaker', function()
   end)
 
   it('should assert if freeze_thaw_fill_tube_heater_on_time_in_seconds is not in range', function()
-    should_fail_with('fill_tube_heater.freeze_thaw_fill_tube_heater_on_time_in_seconds=-1 must be in [0, 65535]', function()
+    should_fail_with('harvest.freeze_thaw_fill_tube_heater_on_time_in_seconds=-1 must be in [0, 65535]', function()
       twist_tray_ice_maker(generate_config({
-        fill_tube_heater = {
+        harvest = {
           freeze_thaw_fill_tube_heater_on_time_in_seconds = -1
-        }
-      }))
-    end)
-  end)
-
-  it('should assert if non_harvest_fill_tube_heater_duty_cycle_percentage is not in range', function()
-    should_fail_with('non_harvest_fill_tube_heater_duty_cycle_percentage=101 must be in [0, 100]', function()
-      twist_tray_ice_maker(generate_config({
-        fill_tube_heater = {
-          non_harvest_fill_tube_heater_duty_cycle_percentage = 101
         }
       }))
     end)
@@ -241,12 +228,9 @@ describe('TwistTrayIceMaker', function()
             u8(12),
             u8(13),
             u8(14),
-            u8(15)
-          ),
-          structure(
-            u8(100),
+            u8(15),
             u16(400),
-            u8(10)
+            u8(100)
           )
         )
       ]])
@@ -272,12 +256,9 @@ describe('TwistTrayIceMaker', function()
         long_motor_error_timeout_period_in_sec = 12,
         short_motor_error_timeout_period_in_sec = 13,
         delay_to_harvest_after_door_closes_in_sec = 14,
-        full_bucket_dispense_check_time_in_seconds = 15
-      },
-      fill_tube_heater = {
-        freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100,
+        full_bucket_dispense_check_time_in_seconds = 15,
         freeze_thaw_fill_tube_heater_on_time_in_seconds = 400,
-        non_harvest_fill_tube_heater_duty_cycle_percentage = 10
+        freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100
       }
     })
 

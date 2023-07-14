@@ -9,7 +9,6 @@
 #define TWISTTRAYICEMAKERDATA_H
 
 #include <stdint.h>
-#include "FillTubeHeaterData.h"
 #include "TemperatureDegFx100.h"
 #include "IceMakerTypeInformation.h"
 #include "IceMakerFillMonitorData.h"
@@ -37,6 +36,8 @@ typedef struct
    uint8_t shortMotorErrorTimeoutPeriodSec;
    uint8_t delayToHarvestAfterDoorClosesSeconds;
    uint8_t fullBucketDispenseCheckTimeInSeconds;
+   uint16_t fillTubeHeaterOnTimeInSeconds;
+   uint8_t fillTubeHeaterDutyCyclePercentage;
 } TwistTrayIceMakerHarvestData_t;
 
 typedef struct
@@ -45,7 +46,6 @@ typedef struct
    TwistTrayIceMakerFillData_t fillData;
    TwistTrayIceMakerFreezeData_t freezeData;
    TwistTrayIceMakerHarvestData_t harvestData;
-   FillTubeHeaterData_t fillTubeHeaterData;
 } TwistTrayIceMakerData_t;
 
 #endif

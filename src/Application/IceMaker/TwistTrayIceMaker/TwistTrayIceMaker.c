@@ -194,7 +194,7 @@ static void StartFillTubeHeaterTimer(TwistTrayIceMaker_t *instance)
    TimerModule_StartOneShot(
       instance->_private.timerModule,
       &instance->_private.fillTubeHeaterTimer,
-      instance->_private.parametric->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC,
+      instance->_private.parametric->harvestData.fillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC,
       FillTubeHeaterTimerExpired,
       instance);
 }
@@ -412,7 +412,7 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
       case Fsm_Entry:
          UpdateOperationState(instance, TwistTrayIceMakerOperationState_Harvesting);
          RequestMotorAction(instance, TwistTrayIceMakerMotorAction_RunCycle);
-         VoteForFillTubeHeater(instance, instance->_private.parametric->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
+         VoteForFillTubeHeater(instance, instance->_private.parametric->harvestData.fillTubeHeaterDutyCyclePercentage);
          StartFillTubeHeaterTimer(instance);
          break;
 

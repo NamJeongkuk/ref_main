@@ -14,7 +14,8 @@ describe('ice_maker', function()
       freezer_ice_rate = TypedString('freezer_ice_rate', 'freezer_ice_rate'),
       aluminum_mold_ice_maker = TypedString('aluminum_mold_ice_maker', 'aluminum_mold_ice_maker'),
       twist_tray_ice_maker = TypedString('twist_tray_ice_maker', 'twist_tray_ice_maker'),
-      auger_motor = TypedString('auger_motor', 'auger_motor')
+      auger_motor = TypedString('auger_motor', 'auger_motor'),
+      non_harvest_fill_tube_heater = TypedString('non_harvest_fill_tube_heater', 'non_harvest_fill_tube_heater')
     }, overrides or {})
   end
 
@@ -54,13 +55,22 @@ describe('ice_maker', function()
     end)
   end)
 
+  it('should assert if non_harvest_fill_tube_heater is not a string', function()
+    should_fail_with('non_harvest_fill_tube_heater must be a typed string with type non_harvest_fill_tube_heater, but is a number', function()
+      ice_maker(generate_config({
+        non_harvest_fill_tube_heater = 5
+      }))
+    end)
+  end)
+
   it('should generate a typed string with the correct data and type for freezer ice rate', function()
     local expected = remove_whitespace([[
         structure(
           pointer(freezer_ice_rate),
           pointer(aluminum_mold_ice_maker),
           pointer(twist_tray_ice_maker),
-          pointer(auger_motor)
+          pointer(auger_motor),
+          pointer(non_harvest_fill_tube_heater)
         )
       ]])
 
@@ -68,7 +78,8 @@ describe('ice_maker', function()
       freezer_ice_rate = TypedString('freezer_ice_rate', 'freezer_ice_rate'),
       aluminum_mold_ice_maker = TypedString('aluminum_mold_ice_maker', 'aluminum_mold_ice_maker'),
       twist_tray_ice_maker = TypedString('twist_tray_ice_maker', 'twist_tray_ice_maker'),
-      auger_motor = TypedString('auger_motor', 'auger_motor')
+      auger_motor = TypedString('auger_motor', 'auger_motor'),
+      non_harvest_fill_tube_heater = TypedString('non_harvest_fill_tube_heater', 'non_harvest_fill_tube_heater')
     })
 
     assert.equals(expected, remove_whitespace(tostring(actual)))

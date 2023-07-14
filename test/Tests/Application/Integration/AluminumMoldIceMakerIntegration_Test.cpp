@@ -417,7 +417,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
          iceMakerData->harvestData.heaterOnTemperatureInDegFx100,
          iceMakerData->harvestData.heaterOffTemperatureInDegFx100);
 
-      FillTubeHeaterVoteAndCareShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage, Vote_Care);
+      FillTubeHeaterVoteAndCareShouldBe(iceMakerData->harvestData.fillTubeHeaterDutyCyclePercentage, Vote_Care);
       IceMakerHeaterRelayShouldBe(ON);
       TheMoldHeaterVoteShouldBe(ON, Vote_Care);
    }
@@ -462,7 +462,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       WhenTheRakePositionIs(RakePosition_Home);
       RakeCompletedRevolutionShouldBe(SET);
 
-      After((iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds - iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds - iceMakerData->harvestData.feelerArmTestTimeInSeconds - iceMakerData->harvestData.rakeNotHomeTestTimeInSeconds) * MSEC_PER_SEC - 1);
+      After((iceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds - iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds - iceMakerData->harvestData.feelerArmTestTimeInSeconds - iceMakerData->harvestData.rakeNotHomeTestTimeInSeconds) * MSEC_PER_SEC - 1);
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
       IceMakerWaterValveRelayShouldBe(WaterValveState_Off);
       TheIsolationWaterValveRelayShouldBe(WaterValveState_Off);
@@ -739,7 +739,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    void WhenFillTubeHeaterTimeReachedAfterRakeCompletedFullRevolution()
    {
       DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeCompletedRevolution, set);
-      After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+      After(iceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
    }
 
    void WhenTheFeelerArmMovesFromBucketNotFullToFullForFeelerArmTestTime()
@@ -1162,11 +1162,11 @@ TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToFreezeStateWhenFillTubeT
    WhenTheRakePositionIs(RakePosition_Home);
    RakeCompletedRevolutionShouldBe(Active);
 
-   FillTubeHeaterVoteAndCareShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage, Vote_Care);
+   FillTubeHeaterVoteAndCareShouldBe(iceMakerData->harvestData.fillTubeHeaterDutyCyclePercentage, Vote_Care);
 
-   After(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
+   After(iceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
 
-   FillTubeHeaterVoteAndCareShouldBe(iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage, Vote_DontCare);
+   FillTubeHeaterVoteAndCareShouldBe(iceMakerData->harvestData.fillTubeHeaterDutyCyclePercentage, Vote_DontCare);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
 }
 
@@ -1319,7 +1319,7 @@ TEST(AluminumMoldIceMakerIntegration, ShouldTurnOnIceMakerWaterValveAndIsolation
    WhenTheRakePositionIs(RakePosition_Home);
    RakeCompletedRevolutionShouldBe(SET);
 
-   After((iceMakerData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds - iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds - iceMakerData->harvestData.feelerArmTestTimeInSeconds - iceMakerData->harvestData.rakeNotHomeTestTimeInSeconds) * MSEC_PER_SEC - 1);
+   After((iceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds - iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds - iceMakerData->harvestData.feelerArmTestTimeInSeconds - iceMakerData->harvestData.rakeNotHomeTestTimeInSeconds) * MSEC_PER_SEC - 1);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
    IceMakerWaterValveRelayShouldBe(WaterValveState_Off);
    TheIsolationWaterValveRelayShouldBe(WaterValveState_Off);

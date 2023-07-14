@@ -326,7 +326,7 @@ static void StartFillTubeHeaterTimer(AluminumMoldIceMaker_t *instance)
          instance->_private.dataModel,
          Erd_TimerModule),
       &instance->_private.fillTubeHeaterTimer,
-      instance->_private.iceMakerParametricData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC,
+      instance->_private.iceMakerParametricData->harvestData.fillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC,
       FillTubeHeaterTimerExpired,
       instance);
 }
@@ -815,7 +815,7 @@ static bool State_Harvest(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_Harvest);
          VoteForFillTubeHeater(
             instance,
-            instance->_private.iceMakerParametricData->fillTubeHeaterData.freezeThawFillTubeHeaterDutyCyclePercentage);
+            instance->_private.iceMakerParametricData->harvestData.fillTubeHeaterDutyCyclePercentage);
          StartFillTubeHeaterTimer(instance);
          StartMaxHarvestTimer(instance);
          StartMinimumHeaterOnTimer(instance);
@@ -1261,8 +1261,8 @@ void AluminumMoldIceMaker_Init(
 
 #ifdef TDD_BUILD
    uassert(instance->_private.iceMakerParametricData->harvestData.maximumHarvestTimeInMinutes * SECONDS_PER_MINUTE >=
-      instance->_private.iceMakerParametricData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds);
-   uassert(instance->_private.iceMakerParametricData->fillTubeHeaterData.freezeThawFillTubeHeaterOnTimeInSeconds >=
+      instance->_private.iceMakerParametricData->harvestData.fillTubeHeaterOnTimeInSeconds);
+   uassert(instance->_private.iceMakerParametricData->harvestData.fillTubeHeaterOnTimeInSeconds >=
       instance->_private.iceMakerParametricData->harvestData.initialMinimumHeaterOnTimeInSeconds);
 #endif
 

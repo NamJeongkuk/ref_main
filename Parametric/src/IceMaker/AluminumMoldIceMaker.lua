@@ -3,7 +3,6 @@ local constraint = require 'lua-common'.utilities.constraint
 local validate_arguments = require 'lua-common'.utilities.validate_arguments
 local TypedString = require 'lua-common'.utilities.TypedString
 local memoize = require 'lua-common'.util.memoize
-local FillTubeHeater = require '../IceMaker/FillTubeHeater'
 local ice_maker_type = require 'IceMaker/IceMakerType'
 local ice_maker_location= require 'IceMaker/IceMakerLocation'
 local enum = require 'lua-common'.utilities.enum
@@ -11,7 +10,6 @@ local seconds_per_minute = 60
 
 return function(core)
   import(core)
-  local fill_tube_heater = FillTubeHeater(core)
   local generate = memoize(function(config)
     return TypedString(
       { 'aluminum_mold_ice_maker' },
@@ -35,7 +33,9 @@ return function(core)
           i16(config.harvest.heater_off_temperature_in_deg_fx100),
           i16(config.harvest.heater_on_temperature_in_deg_fx100),
           u8(config.harvest.rake_not_home_test_time_in_seconds),
-          u8(config.harvest.feeler_arm_test_time_in_seconds)
+          u8(config.harvest.feeler_arm_test_time_in_seconds),
+          u16(config.harvest.freeze_thaw_fill_tube_heater_on_time_in_seconds),
+          u8(config.harvest.freeze_thaw_fill_tube_heater_duty_cycle_percentage)
         ),
         structure(
           u8(config.harvest_fault.rake_motor_control_time_in_seconds),
@@ -47,12 +47,7 @@ return function(core)
           u8(config.harvest_fix.motor_off_time_in_seconds),
           u8(config.harvest_fix.motor_on_time_in_seconds),
           u8(config.harvest_fix.maximum_harvest_fix_time_in_minutes)
-        ),
-        fill_tube_heater({
-          freeze_thaw_fill_tube_heater_duty_cycle_percentage = config.fill_tube_heater.freeze_thaw_fill_tube_heater_duty_cycle_percentage,
-          freeze_thaw_fill_tube_heater_on_time_in_seconds = config.fill_tube_heater.freeze_thaw_fill_tube_heater_on_time_in_seconds,
-          non_harvest_fill_tube_heater_duty_cycle_percentage = config.fill_tube_heater.non_harvest_fill_tube_heater_duty_cycle_percentage
-        })
+        )
       )
     )
   end)
@@ -87,7 +82,9 @@ return function(core)
             heater_off_temperature_in_deg_fx100 = { constraint.i16 },
             heater_on_temperature_in_deg_fx100 = { constraint.i16 },
             rake_not_home_test_time_in_seconds = { constraint.u8 },
-            feeler_arm_test_time_in_seconds = { constraint.u8 }
+            feeler_arm_test_time_in_seconds = { constraint.u8 },
+            freeze_thaw_fill_tube_heater_on_time_in_seconds = { constraint.u16 },
+            freeze_thaw_fill_tube_heater_duty_cycle_percentage = { constraint.in_range(0,100) }
           })
         },
         harvest_fault = {
@@ -104,22 +101,15 @@ return function(core)
             motor_on_time_in_seconds = { constraint.u8 },
             maximum_harvest_fix_time_in_minutes = { constraint.u8 }
           })
-        },
-        fill_tube_heater = {
-          constraint.table_keys({
-            freeze_thaw_fill_tube_heater_duty_cycle_percentage = { constraint.in_range(0,100) },
-            freeze_thaw_fill_tube_heater_on_time_in_seconds = { constraint.u16 },
-            non_harvest_fill_tube_heater_duty_cycle_percentage = { constraint.in_range(0,100) }
-          })
         }
       }
     )
 
-    if ((config.harvest.maximum_harvest_time_in_minutes * seconds_per_minute) < config.fill_tube_heater.freeze_thaw_fill_tube_heater_on_time_in_seconds) then
+    if ((config.harvest.maximum_harvest_time_in_minutes * seconds_per_minute) < config.harvest.freeze_thaw_fill_tube_heater_on_time_in_seconds) then
       error('freeze thaw fill tube heater on time must be less than or equal to maximum harvest time', 2)
     end
 
-    if (config.fill_tube_heater.freeze_thaw_fill_tube_heater_on_time_in_seconds < config.harvest.initial_minimum_heater_on_time_in_seconds) then
+    if (config.harvest.freeze_thaw_fill_tube_heater_on_time_in_seconds < config.harvest.initial_minimum_heater_on_time_in_seconds) then
       error('minimum heater on time must be less than or equal to freeze thaw fill tube heater on time', 2)
     end
 

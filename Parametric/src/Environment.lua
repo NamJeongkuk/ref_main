@@ -69,7 +69,7 @@ return function(directory)
   import('IceMaker/FreezerIceRate')
   import('IceMaker/IceMakerFillMonitor')
   import('IceMaker/IceMaker')
-  import('IceMaker/FillTubeHeater')
+  import('IceMaker/NonHarvestFillTubeHeater')
   import('IceMaker/AugerMotor')
   import('FlowMeter/FlowMeter')
   import('IceMaker/TwistTrayIceMaker')
@@ -150,7 +150,7 @@ return function(directory)
   freezer_ice_rate = FreezerIceRate(core)
   ice_maker_fill_monitor = IceMakerFillMonitor(core)
   ice_maker = IceMaker(core)
-  fill_tube_heater = FillTubeHeater(core)
+  non_harvest_fill_tube_heater = NonHarvestFillTubeHeater(core)
   flow_meter = FlowMeter(core)
   erd_list_to_sorted_erd_mappings = ErdListToSortedErdMappings(core)
   twist_tray_ice_maker = TwistTrayIceMaker(core)
@@ -239,7 +239,7 @@ return function(directory)
     freezer_ice_rate = freezer_ice_rate,
     ice_maker_fill_monitor = ice_maker_fill_monitor,
     ice_maker = ice_maker,
-    fill_tube_heater = fill_tube_heater,
+    non_harvest_fill_tube_heater = non_harvest_fill_tube_heater,
     flow_meter = flow_meter,
     twist_tray_ice_maker = twist_tray_ice_maker,
     twist_tray_ice_maker_fill_monitor = twist_tray_ice_maker_fill_monitor,
