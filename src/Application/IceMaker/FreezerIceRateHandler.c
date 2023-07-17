@@ -60,7 +60,7 @@ static void UpdateFreezerIceRateVoteBasedOnFreezerEvapFanSpeed(FreezerIceRateHan
    if(freezerEvapFanVote.speed < instance->_private.freezerIceRateData->freezerEvaporatorFanSpeed)
    {
       FanVotedSpeed_t adjustedFreezerEvapFanVote = {
-         .speed = FanSpeed_Medium,
+         .speed = instance->_private.freezerIceRateData->freezerEvaporatorFanSpeed,
          .care = true
       };
 

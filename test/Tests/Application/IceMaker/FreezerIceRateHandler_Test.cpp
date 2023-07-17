@@ -155,7 +155,7 @@ TEST(FreezerIceRateHandler, FreezerEvapFanSpeedIceMakerVoteShouldBeFanSpeedMediu
 
    GivenTheFreezerEvapFanSpeedResolvedVoteIs(FanSpeed_Low, Vote_Care);
 
-   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(FanSpeed_Medium, Vote_Care);
+   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(freezerIceRateData->freezerEvaporatorFanSpeed, Vote_Care);
 }
 
 TEST(FreezerIceRateHandler, ShouldUnsubscribeToErdsAfterTimerExpired)
@@ -167,15 +167,15 @@ TEST(FreezerIceRateHandler, ShouldUnsubscribeToErdsAfterTimerExpired)
    GivenTheFreezerEvapFanSpeedResolvedVoteIs(FanSpeed_Low, Vote_Care);
 
    ThenTheFreezerSetpointIceMakerVoteShouldBe(250, Vote_Care);
-   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(FanSpeed_Medium, Vote_Care);
+   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(freezerIceRateData->freezerEvaporatorFanSpeed, Vote_Care);
 
    After(2 * MSEC_PER_MIN);
 
    GivenTheFreezerSetpointUserVoteIs(999, Vote_Care);
-   GivenTheFreezerEvapFanSpeedResolvedVoteIs(FanSpeed_High, Vote_Care);
+   GivenTheFreezerEvapFanSpeedResolvedVoteIs(FanSpeed_SuperHigh, Vote_Care);
 
    ThenTheFreezerSetpointIceMakerVoteShouldBe(250, Vote_DontCare);
-   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(FanSpeed_Medium, Vote_DontCare);
+   ThenTheFreezerEvapFanSpeedIceMakerVoteShouldBe(freezerIceRateData->freezerEvaporatorFanSpeed, Vote_DontCare);
 }
 
 TEST(FreezerIceRateHandler, ShouldSetIceRateActiveToTrueWhenIceRateSignalTriggerActivated)
