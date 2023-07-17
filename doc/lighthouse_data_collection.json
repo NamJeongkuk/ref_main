@@ -328,6 +328,16 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_FreshFoodSetpoint_WinningVoteErd",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_FreezerSetpoint_WinningVoteErd",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_FreezerEvapFanSpeed_WinningVoteErd",
          "interval": 60000
       },
