@@ -1511,6 +1511,22 @@
                "read": true,
                "write": false,
                "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Recess Light On when presence is sensed Request",
+               "name": "Erd_PresenceSensingEnableRequest",
+               "read": false,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Recess Light On when presence is sensed Status",
+               "name": "Erd_PresenceSensingEnableStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
             }
          ]
       }
