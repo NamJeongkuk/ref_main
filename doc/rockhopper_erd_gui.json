@@ -2911,6 +2911,39 @@
           "write": true
         }
       ]
+    },
+    {
+      "title": "Lighting",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Ramping LED PWM 200_00 (Fresh Food Top Light)",
+          "name": "Erd_RampingLedPwm_PWM_200_00",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ramping LED PWM 200_01 (Fresh Food Back Wall Light)",
+          "name": "Erd_RampingLedPwm_PWM_200_01",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ramping LED PWM 200_02 (Freezer Back Wall Light)",
+          "name": "Erd_RampingLedPwm_PWM_200_02",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ramping LED PWM 200_03 (Freezer Top Light)",
+          "name": "Erd_RampingLedPwm_PWM_200_03",
+          "read": true,
+          "write": true
+        }
+      ]
     }
   ]
 }

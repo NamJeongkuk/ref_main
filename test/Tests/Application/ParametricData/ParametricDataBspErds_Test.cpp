@@ -326,36 +326,36 @@ TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableF
    CHECK_EQUAL(*erd, Erd_Pwm_PWM_25K_04);
 }
 
-TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspPwm200_00)
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspRampingLedPwm200_00)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Pwm_PWM_200_00)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_RampingLedPwm_PWM_200_00)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_Pwm_PWM_200_00);
+   CHECK_EQUAL(*erd, Erd_RampingLedPwm_PWM_200_00);
 }
 
-TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspPwm200_01)
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspRampingLedPwm200_01)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Pwm_PWM_200_01)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_RampingLedPwm_PWM_200_01)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_Pwm_PWM_200_01);
+   CHECK_EQUAL(*erd, Erd_RampingLedPwm_PWM_200_01);
 }
 
-TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspPwm200_02)
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspRampingLedPwm200_02)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Pwm_PWM_200_02)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_RampingLedPwm_PWM_200_02)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_Pwm_PWM_200_02);
+   CHECK_EQUAL(*erd, Erd_RampingLedPwm_PWM_200_02);
 }
 
-TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspPwm200_03)
+TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspRampingLedPwm200_03)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Pwm_PWM_200_03)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_RampingLedPwm_PWM_200_03)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_Pwm_PWM_200_03);
+   CHECK_EQUAL(*erd, Erd_RampingLedPwm_PWM_200_03);
 }
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForBspInputCapture_00)

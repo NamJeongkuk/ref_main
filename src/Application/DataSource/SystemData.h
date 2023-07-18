@@ -105,12 +105,12 @@ I_DataModel_t *SystemData_DataModel(
  * @param instance
  * @param dataModel
  * @param timerModule
- * @param debounceInterrupt
+ * @param interrupt
  */
 void SystemData_AddBspDataSource(
    SystemData_t *instance,
    I_DataModel_t *dataModel,
    TimerModule_t *timerModule,
-   I_Interrupt_t *debounceInterrupt);
+   I_Interrupt_t *interrupt);
 
 #endif

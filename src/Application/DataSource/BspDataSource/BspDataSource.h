@@ -40,13 +40,13 @@ typedef struct
  * Initialize BSP data source components
  * @param instance
  * @param timerModule
- * @param debounceInterrupt
+ * @param interrupt
  * @param dataModel
  */
 void BspDataSource_Init(
    BspDataSource_t *instance,
    TimerModule_t *timerModule,
-   I_Interrupt_t *debounceInterrupt,
+   I_Interrupt_t *interrupt,
    I_DataModel_t *dataModel);
 
 /*!

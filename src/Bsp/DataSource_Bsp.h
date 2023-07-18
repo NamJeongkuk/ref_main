@@ -14,9 +14,9 @@
 
 /*!
  * @param timerModule
- * @param debounceInterrupt
+ * @param interrupt
  * @return
  */
-I_DataSource_t *DataSource_Bsp_Init(TimerModule_t *timerModule, I_Interrupt_t *debounceInterrupt);
+I_DataSource_t *DataSource_Bsp_Init(TimerModule_t *timerModule, I_Interrupt_t *interrupt);
 
 #endif

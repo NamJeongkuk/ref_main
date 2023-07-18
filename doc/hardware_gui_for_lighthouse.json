@@ -293,16 +293,16 @@
         },
         {
           "namespace": "mb",
-          "displayName": "PWM 200 00 / FF Side/Top LEDs",
-          "name": "Erd_Pwm_PWM_200_00",
+          "displayName": "PWM 200 00 / FF Backwall LEDs",
+          "name": "Erd_RampingLedPwm_PWM_200_00",
           "read": true,
           "write": true,
           "interval": 1000000000
         },
         {
           "namespace": "mb",
-          "displayName": "PWM 200 01 / FF Backwall LEDs",
-          "name": "Erd_Pwm_PWM_200_01",
+          "displayName": "PWM 200 01 / FF Side/Top LEDs",
+          "name": "Erd_RampingLedPwm_PWM_200_01",
           "read": true,
           "write": true,
           "interval": 1000000000
@@ -310,7 +310,7 @@
         {
           "namespace": "mb",
           "displayName": "PWM 200 02 / FZ Backwall LEDs",
-          "name": "Erd_Pwm_PWM_200_02",
+          "name": "Erd_RampingLedPwm_PWM_200_02",
           "read": true,
           "write": true,
           "interval": 1000000000
@@ -318,7 +318,7 @@
         {
           "namespace": "mb",
           "displayName": "PWM 200 03 / FZ Side/Top LEDs",
-          "name": "Erd_Pwm_PWM_200_03",
+          "name": "Erd_RampingLedPwm_PWM_200_03",
           "read": true,
           "write": true,
           "interval": 1000000000

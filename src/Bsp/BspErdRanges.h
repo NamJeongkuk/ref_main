@@ -22,7 +22,9 @@ enum
    BspErdAdcEnd = BspErdAdcStart + BspErdRangeSize,
    BspErdPwmStart = BspErdAdcEnd + 1,
    BspErdPwmEnd = BspErdPwmStart + BspErdRangeSize,
-   BspErdInputCaptureStart = BspErdPwmEnd + 1,
+   BspErdRampingLedPwmStart = BspErdPwmEnd + 1,
+   BspErdRampingLedPwmEnd = BspErdRampingLedPwmStart + BspErdRangeSize,
+   BspErdInputCaptureStart = BspErdRampingLedPwmEnd + 1,
    BspErdInputCaptureEnd = BspErdInputCaptureStart + BspErdRangeSize,
    BspErdPersonalityStart = BspErdInputCaptureEnd + 1,
    BspErdPersonalityEnd = BspErdPersonalityStart + BspErdRangeSize

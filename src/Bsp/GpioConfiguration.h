@@ -12,7 +12,6 @@
 #define Inverted 1
 #define NonInverted 0
 
-
 // Name, Direction, offToOnDebounceCount, onToOffDebounceCount, PullUp, DriveCapacity, Port, Bit, Inverted
 #define GPIO_TABLE(ENTRY) \
    ENTRY(Erd_BspGpio_GPIO_IN_00,          GpioDirection_Input,  4,  20, GpioPullUp_Disable, GpioDriveCapacity_Normal, PortA, 6,  NonInverted) \

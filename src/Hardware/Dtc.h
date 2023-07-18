@@ -13,6 +13,7 @@
 #include "BufferedUart_Channel5.h"
 #include "BufferedUart_Channel6.h"
 #include "BufferedUart_Channel9.h"
+#include "DataSource_RampingLedPwm.h"
 #include "Event_Synchronous.h"
 
 // This is valid for little endian only.

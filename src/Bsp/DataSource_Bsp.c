@@ -13,11 +13,12 @@
 #include "DataSource_Gpio.h"
 #include "DataSource_Adc.h"
 #include "DataSource_Pwm.h"
+#include "DataSource_RampingLedPwm.h"
 #include "DataSource_InputCapture.h"
 
 enum
 {
-   BspDataSourceCount = 5
+   BspDataSourceCount = 6
 };
 
 static struct
@@ -75,7 +76,7 @@ static uint8_t SizeOf(I_DataSource_t *_instance, const Erd_t erd)
 
 static const I_DataSource_Api_t api = { Read, Write, Has, SizeOf };
 
-I_DataSource_t *DataSource_Bsp_Init(TimerModule_t *timerModule, I_Interrupt_t *debounceInterrupt)
+I_DataSource_t *DataSource_Bsp_Init(TimerModule_t *timerModule, I_Interrupt_t *interrupt)
 {
    instance.interface.api = &api;
    instance.interface.OnDataChange = &instance.OnDataChange.interface;
@@ -83,8 +84,9 @@ I_DataSource_t *DataSource_Bsp_Init(TimerModule_t *timerModule, I_Interrupt_t *d
 
    uint8_t index = 0;
    // This needs to be initialized first for the scenario of dual purposing a pin to function as GPIO Input and Input Capture
-   instance.dataSources[index++] = DataSource_Gpio_Init(&instance.OnDataChange, debounceInterrupt);
+   instance.dataSources[index++] = DataSource_Gpio_Init(&instance.OnDataChange, interrupt);
    instance.dataSources[index++] = DataSource_Pwm_Init();
+   instance.dataSources[index++] = DataSource_RampingLedPwm_Init(interrupt);
    instance.dataSources[index++] = DataSource_InputCapture_Init(timerModule, &instance.OnDataChange);
    instance.dataSources[index++] = DataSource_Adc_Init();
 

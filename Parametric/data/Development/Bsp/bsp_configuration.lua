@@ -1,10 +1,10 @@
 local erd_list = {
   { input = bsp_mapped_erd.Erd_FreezerEvapFan_Pwm,                        output = bsp_erd.Erd_Pwm_PWM_25K_00 },
   { input = bsp_mapped_erd.Erd_CondenserFan_Pwm,                          output = bsp_erd.Erd_Pwm_PWM_25K_01 },
-  { input = bsp_mapped_erd.Erd_FreshFoodBackWallLight_Pwm,                output = bsp_erd.Erd_Pwm_PWM_200_00 },
-  { input = bsp_mapped_erd.Erd_FreshFoodTopLight_Pwm,                     output = bsp_erd.Erd_Pwm_PWM_200_01 },
-  { input = bsp_mapped_erd.Erd_FreezerBackWallLight_Pwm,                  output = bsp_erd.Erd_Pwm_PWM_200_02 },
-  { input = bsp_mapped_erd.Erd_FreezerTopLight_Pwm,                       output = bsp_erd.Erd_Pwm_PWM_200_03 },
+  { input = bsp_mapped_erd.Erd_FreshFoodTopLight_Pwm,                     output = bsp_erd.Erd_RampingLedPwm_PWM_200_00 },
+  { input = bsp_mapped_erd.Erd_FreshFoodBackWallLight_Pwm,                output = bsp_erd.Erd_RampingLedPwm_PWM_200_01 },
+  { input = bsp_mapped_erd.Erd_FreezerBackWallLight_Pwm,                  output = bsp_erd.Erd_RampingLedPwm_PWM_200_02 },
+  { input = bsp_mapped_erd.Erd_FreezerTopLight_Pwm,                       output = bsp_erd.Erd_RampingLedPwm_PWM_200_03 },
 
   { input = bsp_mapped_erd.Erd_FreezerEvapFan_InputCaptureTime,           output = bsp_erd.Erd_InputCapture_CAPTURE_00 },
   { input = bsp_mapped_erd.Erd_CondenserFan_InputCaptureTime,             output = bsp_erd.Erd_InputCapture_CAPTURE_01 },

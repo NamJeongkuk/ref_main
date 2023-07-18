@@ -341,21 +341,21 @@
         {
           "namespace": "mb",
           "displayName": "PWM_200_00",
-          "name": "Erd_Pwm_PWM_200_00",
+          "name": "Erd_RampingLedPwm_PWM_200_00",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "PWM_200_01",
-          "name": "Erd_Pwm_PWM_200_01",
+          "name": "Erd_RampingLedPwm_PWM_200_01",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "Pwm_PWM_200_02",
-          "name": "Erd_Pwm_PWM_200_02",
+          "name": "Erd_RampingLedPwm_PWM_200_02",
           "read": true,
           "write": true
         },
@@ -369,7 +369,7 @@
         {
           "namespace": "mb",
           "displayName": "PWM_200_03",
-          "name": "Erd_Pwm_PWM_200_03",
+          "name": "Erd_RampingLedPwm_PWM_200_03",
           "read": true,
           "write": true
         },

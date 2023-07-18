@@ -3,7 +3,6 @@
  * @brief MTU0 and MTU1 are synchronous to allow for MTU1.TGRA to be used as the cycle (frequency) register
  *        and allow all 3 of MTIOC0A, MTIOC0B, MTIOC0C on MTU0 and MTIOC1A, MTIOC1B on MTU1
  *        to be used on PWM Mode 2. MTIOC3A and MTIOC3C are configured on PWM Mode 1.
- *        TMO0, TMO1, TMO1, and TMO3 are all configured to run as interrupt driven.
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
@@ -25,15 +24,9 @@
 
 #define IncludeMode1_1(_x) _x
 #define IncludeMode1_2(_x)
-#define IncludeMode1_tmo(_x)
 
 #define IncludeMode2_1(_x)
 #define IncludeMode2_2(_x) _x
-#define IncludeMode2_tmo(_x)
-
-#define IncludeTmo_1(_x)
-#define IncludeTmo_2(_x)
-#define IncludeTmo_tmo(_x) _x
 
 #define IncludeTimer0_0(_x) _x
 #define IncludeTimer0_1(_x)
@@ -66,12 +59,7 @@ enum
    Mtu0Mtu1SynchronousFrequencyCount = PCLOCK_FREQUENCY / Mtu0Mtu1SynchronousFrequencyInHz,
    Mtu2FrequencyInHz = 25000,
    Mtu2FrequencyCount = PCLOCK_FREQUENCY / Mtu2FrequencyInHz,
-   PwmTmoClockSourceFrequency = PCLOCK_FREQUENCY / 64,
-   PwmTmoFrequencyInHz = PwmTmoClockSourceFrequency / (UINT8_MAX - 1), // UINT8_MAX - 1 is the highest compare match value available
-   PwmTmoFrequencyCount = PwmTmoClockSourceFrequency / PwmTmoFrequencyInHz, // Must be lower than UINT8_MAX
 };
-
-STATIC_ASSERT(PwmTmoFrequencyCount < UINT8_MAX);
 
 #define IN_RANGE_GAP(left_gap, middle, right_gap, value) (IN_RANGE(middle - left_gap, value, middle + right_gap))
 
@@ -111,47 +99,6 @@ STATIC_ASSERT(PwmTmoFrequencyCount < UINT8_MAX);
    CONCAT(IncludeMode2_, mode)                                                                                                                \
    (CONCAT(IncludeTimerConfig_, timerConfig)(MTU.TSYR.BIT.SYNC##timerNumber = 1;))
 
-#define EXPAND_AS_MODULE_CLCK_ENABLED(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
-   CONCAT(IncludeTmo_, mode)                                                                                                                   \
-   (CONCAT(IncludeTimerConfig_, timerConfig)(MSTP(TMR##timerNumber) = 0;))
-
-#define EXPAND_AS_SET_FREQUENCY(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
-   CONCAT(IncludeTmo_, mode)                                                                                                             \
-   (CONCAT(IncludeTimerConfig_, timerConfig)(TMR##timerNumber.TCORA = PwmTmoFrequencyCount;))
-
-#define EXPAND_AS_SET_OFF_DUTY_CYCLE(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
-   CONCAT(IncludeTmo_, mode)                                                                                                                  \
-   (CONCAT(IncludeTimerConfig_, timerConfig)(TMR##timerNumber.TCORB = PwmTmoFrequencyCount + 1;))
-
-#define EXPAND_AS_SET_TIMER_COUNT_SOURCE(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
-   CONCAT(IncludeTmo_, mode)                                                                                                                      \
-   (CONCAT(IncludeTimerConfig_, timerConfig)(                                                                                                     \
-      TMR##timerNumber.TCCR.BIT.CSS = 0x01;                                                                                                       \
-      TMR##timerNumber.TCCR.BIT.CKS = 0x04;))
-
-#define EXPAND_AS_SET_COMPARE_MATCH(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
-   CONCAT(IncludeTmo_, mode)                                                                                                                 \
-   (CONCAT(IncludeTimerConfig_, timerConfig)(                                                                                                \
-      TMR##timerNumber.TCSR.BIT.OSA = 0x01;                                                                                                  \
-      TMR##timerNumber.TCSR.BIT.OSB = 0x02;                                                                                                  \
-      TMR##timerNumber.TCR.BIT.CCLR = 1;))
-
-#define EXPAND_AS_CLEAR_COUNT(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
-   CONCAT(IncludeTmo_, mode)                                                                                                           \
-   (CONCAT(IncludeTimerConfig_, timerConfig)(TMR##timerNumber.TCNT = 0;))
-
-#define EXPAND_AS_SET_INT_REG_B(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
-   CONCAT(IncludeTmo_, mode)                                                                                                             \
-   (CONCAT(IncludeTimerConfig_, timerConfig)(TMR##timerNumber.TCR.BIT.CMIEB = 1;))
-
-#define EXPAND_AS_SET_INT_PRIORITY(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
-   CONCAT(IncludeTmo_, mode)                                                                                                                \
-   (CONCAT(IncludeTimerConfig_, timerConfig)(IPR(TMR##timerNumber, CMIB##timerNumber) = 6;))
-
-#define EXPAND_AS_ENABLE_INT(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
-   CONCAT(IncludeTmo_, mode)                                                                                                          \
-   (CONCAT(IncludeTimerConfig_, timerConfig)(IEN(TMR##timerNumber, CMIB##timerNumber) = 1;))
-
 // clang-format off
 #define EXPAND_AS_UPDATE_PWM_FUNCTION(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
    void UpdatePwm##pwm(PwmDutyCycle_t dutyCycle)                                                                                               \
@@ -181,93 +128,6 @@ STATIC_ASSERT(PwmTmoFrequencyCount < UINT8_MAX);
       }                                                                                                                                        \
    }
 
-#define EXPAND_AS_TMO_PWM_DUTY_CYCLE_VALUE(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
-   CONCAT(IncludeTmo_, mode)                                                                                                          \
-   (                                                                                        \
-   static uint8_t tmoPwmDutyCycleValue##timerNumber;                                                                                                                           \
-   )
-
-PWM_TABLE(EXPAND_AS_TMO_PWM_DUTY_CYCLE_VALUE)
-
-#define EXPAND_AS_TRM0_CMIB0(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
-   CONCAT(IncludeTmo_, mode)                                                                                                          \
-   (CONCAT(IncludeTimer0_, timerNumber)(                                                                                               \
-   TMR0.TCORB = tmoPwmDutyCycleValue0;                                                                                                                                 \
-   ))
-
-#define EXPAND_AS_TRM1_CMIB1(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
-   CONCAT(IncludeTmo_, mode)                                                                                                          \
-   (CONCAT(IncludeTimer0_, timerNumber)(                                                                                               \
-   TMR1.TCORB = tmoPwmDutyCycleValue1;                                                                                                                                 \
-   ))
-
-#define EXPAND_AS_TRM2_CMIB2(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
-   CONCAT(IncludeTmo_, mode)                                                                                                          \
-   (CONCAT(IncludeTimer0_, timerNumber)(                                                                                               \
-   TMR2.TCORB = tmoPwmDutyCycleValue2;                                                                                                                                 \
-   ))
-
-#define EXPAND_AS_TRM3_CMIB3(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
-   CONCAT(IncludeTmo_, mode)                                                                                                          \
-   (CONCAT(IncludeTimer0_, timerNumber)(                                                                                               \
-   TMR3.TCORB = tmoPwmDutyCycleValue3;                                                                                                                                 \
-   ))
-
-// TMR0_CMIB0
-void TMR0_CMIB0(void) __attribute__((interrupt));
-void TMR0_CMIB0(void)
-{
-   PWM_TABLE(EXPAND_AS_TRM0_CMIB0)
-}
-
-// TMR1_CMIB1
-void TMR1_CMIB1(void) __attribute__((interrupt));
-void TMR1_CMIB1(void)
-{
-   PWM_TABLE(EXPAND_AS_TRM1_CMIB1)
-}
-
-// TMR2_CMIB2
-void TMR2_CMIB2(void) __attribute__((interrupt));
-void TMR2_CMIB2(void)
-{
-   PWM_TABLE(EXPAND_AS_TRM2_CMIB2)
-}
-
-// TMR3_CMIB3
-void TMR3_CMIB3(void) __attribute__((interrupt));
-void TMR3_CMIB3(void)
-{
-   PWM_TABLE(EXPAND_AS_TRM3_CMIB3)
-}
-
-#define EXPAND_AS_UPDATE_TMO_PWM_FUNCTION(name, pwm, initalValue, port, bit, pinSelection, mode, timerNumber, timerCarryFreqRegister, timerConfig) \
-    CONCAT(IncludeTmo_, mode)                                                                                                               \
-   (void UpdateTmoOutputPin##pwm(PwmDutyCycle_t dutyCycle)                                                                                          \
-   {                                                                                                                                               \
-      if(dutyCycle >= PwmDutyCycle_Max)                                                                                                            \
-      {                                                                                                                                            \
-         PORT##port.PODR.BIT.B##bit = 1;                                                                                                           \
-         PORT##port.PMR.BIT.B##bit = 0;                                                                                                            \
-      }                                                                                                                                            \
-      else if(dutyCycle == PwmDutyCycle_Min)                                                                                                       \
-      {                                                                                                                                            \
-         PORT##port.PODR.BIT.B##bit = 0;                                                                                                           \
-         PORT##port.PMR.BIT.B##bit = 0;                                                                                                            \
-      }                                                                                                                                            \
-      else                                                                                                                                         \
-      {                                                                                                                                            \
-         dutyCycle = ConvertDutyCycleToCounts(PwmTmoFrequencyCount, dutyCycle);                                                                    \
-                                                                                                                                                   \
-         if(PORT##port.PMR.BIT.B##bit == 0)                                                                                                        \
-         {                                                                                                                                         \
-            TMR##timerNumber.TCNT = 0;                                                                                                             \
-            TMR##timerNumber.TCORB = (uint8_t)dutyCycle;                                                                                           \
-            PORT##port.PMR.BIT.B##bit = 1;                                                                                                         \
-         }                                                                                                                                         \
-         tmoPwmDutyCycleValue##timerNumber = (uint8_t)dutyCycle;                                                                                   \
-      }                                                                                                                                            \
-   })
 // clang-format on
 
 static PwmDutyCycle_t dutyCycles[OutputChannel_Pwm_Max];
@@ -423,38 +283,6 @@ static void ConfigurePwmMode1ForMtu3(void)
    MTU3.TIER.BYTE = 0x00;
 }
 
-static void ConfigurePwmTmo(void)
-{
-   // PRCR write enabled
-   SYSTEM.PRCR.WORD = 0xA50F;
-
-   // Enable module clock
-   PWM_TABLE(EXPAND_AS_MODULE_CLCK_ENABLED)
-
-   // PRCR write disabled
-   SYSTEM.PRCR.WORD = 0xA500;
-
-   // Set frequency
-   PWM_TABLE(EXPAND_AS_SET_FREQUENCY)
-
-   // Set off duty cycle
-   PWM_TABLE(EXPAND_AS_SET_OFF_DUTY_CYCLE)
-
-   // Count source is PCLK/64
-   PWM_TABLE(EXPAND_AS_SET_TIMER_COUNT_SOURCE)
-
-   // Low output at compare match A
-   // High output at compare match B
-   // Timer resets at compare match A
-   PWM_TABLE(EXPAND_AS_SET_COMPARE_MATCH)
-   PWM_TABLE(EXPAND_AS_CLEAR_COUNT)
-   PWM_TABLE(EXPAND_AS_SET_INT_REG_B)
-
-   // Interrupt priority medium
-   PWM_TABLE(EXPAND_AS_SET_INT_PRIORITY)
-   PWM_TABLE(EXPAND_AS_ENABLE_INT)
-}
-
 /*!
  * Convert the desired duty cycle to counts for the hardware register
  * @param dutyCycle The scaled duty cycle percent 0xFFFF is equivalent to 100%
@@ -511,7 +339,6 @@ static void StopTimersWhenPwmUnused(void)
 }
 
 PWM_TABLE(EXPAND_AS_UPDATE_PWM_FUNCTION)
-PWM_TABLE(EXPAND_AS_UPDATE_TMO_PWM_FUNCTION)
 
 static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
 {
@@ -555,22 +382,6 @@ static void Write(I_DataSource_t *_instance, const Erd_t erd, const void *data)
 
          case Erd_BspPwm_PWM_25K_04:
             UpdatePwm25K_04(invertedDutyCycle);
-            break;
-
-         case Erd_BspPwm_PWM_200_00:
-            UpdateTmoOutputPin200_00(*dutyCycle);
-            break;
-
-         case Erd_BspPwm_PWM_200_01:
-            UpdateTmoOutputPin200_01(*dutyCycle);
-            break;
-
-         case Erd_BspPwm_PWM_200_02:
-            UpdateTmoOutputPin200_02(*dutyCycle);
-            break;
-
-         case Erd_BspPwm_PWM_200_03:
-            UpdateTmoOutputPin200_03(*dutyCycle);
             break;
       }
    }
@@ -630,7 +441,6 @@ I_DataSource_t *DataSource_Pwm_Init(void)
 
    ConfigurePins();
    ConfigurePwmMode2();
-   ConfigurePwmTmo();
    ConfigurePwmMode1ForMtu3();
 
    return &instance.interface;

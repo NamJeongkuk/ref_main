@@ -108,6 +108,7 @@
 #include "DispensingInhibitedBitmap.h"
 #include "ControlLockStatus.h"
 #include "BooleanVotedState.h"
+#include "RampingPwmDutyCycle.h"
 #include "IceMakerEnableRequest.h"
 #include "TurboModeRequest.h"
 #include "CoolingSystemRequest.h"
@@ -1085,10 +1086,10 @@ enum
    ENTRY(Erd_Pwm_PWM_25K_02,                                0xF571, PwmDutyCycle_t,                                     Swap_Yes, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
    ENTRY(Erd_Pwm_PWM_25K_03,                                0xF572, PwmDutyCycle_t,                                     Swap_Yes, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
    ENTRY(Erd_Pwm_PWM_25K_04,                                0xF573, PwmDutyCycle_t,                                     Swap_Yes, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_Pwm_PWM_200_00,                                0xF574, PwmDutyCycle_t,                                     Swap_Yes, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_Pwm_PWM_200_01,                                0xF575, PwmDutyCycle_t,                                     Swap_Yes, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_Pwm_PWM_200_02,                                0xF576, PwmDutyCycle_t,                                     Swap_Yes, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
-   ENTRY(Erd_Pwm_PWM_200_03,                                0xF577, PwmDutyCycle_t,                                     Swap_Yes, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_RampingLedPwm_PWM_200_00,                      0xF574, RampingPwmDutyCycle_t,                              Swap_Yes, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_RampingLedPwm_PWM_200_01,                      0xF575, RampingPwmDutyCycle_t,                              Swap_Yes, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_RampingLedPwm_PWM_200_02,                      0xF576, RampingPwmDutyCycle_t,                              Swap_Yes, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_RampingLedPwm_PWM_200_03,                      0xF577, RampingPwmDutyCycle_t,                              Swap_Yes, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
    \
    ENTRY(Erd_InputCapture_CAPTURE_00,                       0xF58F, InputCaptureMicroSeconds_t,                         Swap_Yes, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \
    ENTRY(Erd_InputCapture_CAPTURE_01,                       0xF590, InputCaptureMicroSeconds_t,                         Swap_Yes, Io_None, Sub_N, Bsp,                    NotNv,                                    NotFault) \

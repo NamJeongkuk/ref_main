@@ -122,12 +122,16 @@ I_DataModel_t *SystemData_DataModel(SystemData_t *instance)
    return DataModel_DataModel(&instance->_private.dataModel);
 }
 
-void SystemData_AddBspDataSource(SystemData_t *instance, I_DataModel_t *dataModel, TimerModule_t *timerModule, I_Interrupt_t *debounceInterrupt)
+void SystemData_AddBspDataSource(
+   SystemData_t *instance,
+   I_DataModel_t *dataModel,
+   TimerModule_t *timerModule,
+   I_Interrupt_t *interrupt)
 {
    BspDataSource_Init(
       &instance->_private.dataSource.bsp,
       timerModule,
-      debounceInterrupt,
+      interrupt,
       dataModel);
    AddDataSourceToComposite(
       instance,

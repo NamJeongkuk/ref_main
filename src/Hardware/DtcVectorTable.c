@@ -197,16 +197,16 @@ void *const dtcVectorTable[] __attribute__((section(".dtcVectorTable"))) = {
    DUMMY_ADDR, /* 171 INTB+02ACh                   */
    DUMMY_ADDR, /* 172 INTB+02B0h                   */
    DUMMY_ADDR, /* 173 INTB+02B4h                   */
-   DUMMY_ADDR, /* 174 INTB+02B8h       CMIA0       */
+   (void *)&tmr0CompareMatchA, /* 174 INTB+02B8h       CMIA0       */
    DUMMY_ADDR, /* 175 INTB+02BCh       CMIB0       */
    DUMMY_ADDR, /* 176 INTB+02C0h                   */
-   DUMMY_ADDR, /* 177 INTB+02C4h       CMIA1       */
+   (void *)&tmr1CompareMatchA, /* 177 INTB+02C4h       CMIA1       */
    DUMMY_ADDR, /* 178 INTB+02C8h       CMIB1       */
    DUMMY_ADDR, /* 179 INTB+02CCh                   */
-   DUMMY_ADDR, /* 180 INTB+02D0h       CMIA2       */
+   (void *)&tmr2CompareMatchA, /* 180 INTB+02D0h       CMIA2       */
    DUMMY_ADDR, /* 181 INTB+02D4h       CMIB2       */
    DUMMY_ADDR, /* 182 INTB+02D8h                   */
-   DUMMY_ADDR, /* 183 INTB+02DCh       CMIA3       */
+   (void *)&tmr3CompareMatchA, /* 183 INTB+02DCh       CMIA3       */
    DUMMY_ADDR, /* 184 INTB+02E0h       CMIB3       */
    DUMMY_ADDR, /* 185 INTB+02E4h                   */
    DUMMY_ADDR, /* 186 INTB+02E8h                   */
