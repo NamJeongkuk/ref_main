@@ -15,10 +15,11 @@ assignees: ''
 - [ ] Run integration tests to ensure they still pass
 - [ ] Update GUI and ERD logger with new/changed ERDs
 - [ ] Bench test
+- [ ] After the `rockhopper-mainboard` branch is merged, create a pull request against the `next` branch in the `rockhopper-parametric` repo. The system’s team will give us preliminary production values before merging it in.
 
 **Link to requirement(s):**
 Link to requirements in Confluence <add link here>
-  
+
 **Link to design(s):**
 Link to designs in Confluence <add link here>
 
