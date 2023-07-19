@@ -152,7 +152,7 @@ TEST_GROUP(FactoryModeIntegration)
             dataModel,
             factoryVotePairs[i].factoryVoteErd);
 
-         switch(sizeof(erdSize))
+         switch(erdSize)
          {
             case sizeof(U8Vote_t): {
                U8Vote_t u8VoteErd;
@@ -170,7 +170,7 @@ TEST_GROUP(FactoryModeIntegration)
                U16Vote_t u16VoteErd;
                DataModel_Read(
                   dataModel,
-                  factoryVotePairs[i].offValue,
+                  factoryVotePairs[i].factoryVoteErd,
                   &u16VoteErd);
 
                CHECK_EQUAL(Vote_Care, u16VoteErd.vote);
