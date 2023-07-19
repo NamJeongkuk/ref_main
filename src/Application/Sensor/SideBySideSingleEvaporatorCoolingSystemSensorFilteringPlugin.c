@@ -26,11 +26,13 @@ static const OverrideArbiterConfiguration_t freezerEvaporatorFilteredTemperature
 };
 
 static const Erd_t freezerCabinetFilteredTemperatureOverrideRequestErdList[] = {
+   Erd_Freezer_AveragedTemperatureOverrideRequest,
    Erd_Freezer_FilteredTemperatureOverrideRequest
 };
 
 static const Erd_t freezerCabinetFilteredTemperatureValueErdList[] = {
    Erd_Freezer_FilteredTemperatureInDegFx100,
+   Erd_Freezer_EnhancedSabbath_AveragedTemperatureOverrideValueInDegFx100,
    Erd_Freezer_FilteredTemperatureOverrideValueInDegFx100
 };
 
@@ -42,11 +44,13 @@ static const OverrideArbiterConfiguration_t freezerCabinetFilteredTemperatureArb
 };
 
 static const Erd_t freshFoodCabinetFilteredTemperatureOverrideRequestErdList[] = {
+   Erd_FreshFood_AveragedTemperatureOverrideRequest,
    Erd_FreshFood_FilteredTemperatureOverrideRequest
 };
 
 static const Erd_t freshFoodCabinetFilteredTemperatureValueErdList[] = {
    Erd_FreshFood_FilteredTemperatureInDegFx100,
+   Erd_FreshFood_EnhancedSabbath_AveragedTemperatureOverrideValueInDegFx100,
    Erd_FreshFood_FilteredTemperatureOverrideValueInDegFx100
 };
 
@@ -190,14 +194,11 @@ static void InitializeThermistorIsValidArbiters(
       &freezerEvapThermistorValidArbiterConfiguration);
 }
 
-void SideBySideSingleEvaporatorCoolingSystemSensorFilteringPlugin_Init(
+static void InitializeSensorFiltering(
    SideBySideSingleEvaporatorCoolingSystemSensorFilteringPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
    const SensorData_t *sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
-
-   InitializeFilteredTemperatureOverrideArbiters(instance, dataModel);
-   InitializeThermistorIsValidArbiters(instance, dataModel);
 
    SensorFiltering_Init(
       &instance->freezerCabinetThermistor,
@@ -219,6 +220,15 @@ void SideBySideSingleEvaporatorCoolingSystemSensorFilteringPlugin_Init(
       &freezerEvapThermistorConfig,
       sensorData->freezerEvapThermistor,
       sensorData->periodicUpdateRateInMs);
+}
+
+void SideBySideSingleEvaporatorCoolingSystemSensorFilteringPlugin_Init(
+   SideBySideSingleEvaporatorCoolingSystemSensorFilteringPlugin_t *instance,
+   I_DataModel_t *dataModel)
+{
+   InitializeFilteredTemperatureOverrideArbiters(instance, dataModel);
+   InitializeThermistorIsValidArbiters(instance, dataModel);
+   InitializeSensorFiltering(instance, dataModel);
 
    DataModel_Write(
       dataModel,

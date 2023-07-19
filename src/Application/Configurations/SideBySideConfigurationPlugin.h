@@ -23,6 +23,7 @@
 #include "SignOfLifePlugin.h"
 #include "SideBySideBooleanRequestStatusUpdaterPlugin.h"
 #include "SideBySideDoorPlugin.h"
+#include "SideBySideEnhancedSabbathPlugin.h"
 
 typedef struct
 {
@@ -42,6 +43,7 @@ typedef struct
       SignOfLifePlugin_t signOfLifePlugin;
       SideBySideBooleanRequestStatusUpdaterPlugin_t requestStatusUpdaterPlugin;
       SideBySideDoorPlugin_t doorPlugin;
+      SideBySideEnhancedSabbathPlugin_t enhancedSabbathPlugin;
    } _private;
 } SideBySideConfigurationPlugin_t;
 

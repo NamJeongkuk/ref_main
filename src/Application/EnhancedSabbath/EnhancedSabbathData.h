@@ -13,6 +13,7 @@
 typedef struct
 {
    uint8_t numberOfFreshFoodDefrostsBeforeFreezerDefrost;
+   uint8_t minTimeBetweenTemperatureAveragingInMinutes;
 } EnhancedSabbathData_t;
 
 #endif

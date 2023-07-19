@@ -701,6 +701,12 @@ enum
    ENTRY(Erd_FeelerArmMonitoringRequest,                    0xF133, bool,                                               Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FeelerArmIsReadyToEnterHarvest,                0xF134, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_FreshFood_EnhancedSabbath_AveragedTemperatureOverrideValueInDegFx100, 0xF135, TemperatureDegFx100_t,       Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFood_AveragedTemperatureOverrideRequest,                         0xF137, bool,                        Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_Freezer_EnhancedSabbath_AveragedTemperatureOverrideValueInDegFx100,   0xF138, TemperatureDegFx100_t,       Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_AveragedTemperatureOverrideRequest,                           0xF139, bool,                        Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_TwistTrayIceMaker_MotorActionResult,                      0xF140, TwistTrayIceMakerMotorActionResult_t,    Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_OperationState,                         0xF141, TwistTrayIceMakerOperationState_t,       Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_HighLevelState,                         0xF142, TwistTrayIceMakerHighLevelState_t,       Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

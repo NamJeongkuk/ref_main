@@ -12,6 +12,7 @@ describe('enhancedSabbath', function()
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
         number_of_fresh_food_defrosts_before_freezer_defrost = 3,
+        min_time_between_temperature_averaging_in_minutes = 2
     }, overrides or {})
   end
 
@@ -27,10 +28,19 @@ describe('enhancedSabbath', function()
     end)
   end)
 
+  it('should assert if min_time_between_temperature_averaging_in_minutes is not in range', function()
+    should_fail_with('min_time_between_temperature_averaging_in_minutes=-1 must be in [0, 255]', function()
+      enhancedSabbath(generate_config({
+        min_time_between_temperature_averaging_in_minutes = -1
+      }))
+    end)
+  end)
+
   it('should generate a typed string with the correct data and type enhancedSabbath', function()
     local expected = remove_whitespace([[
       structure(
-        u8(3)
+        u8(3),
+        u8(2)
       )
     ]])
 

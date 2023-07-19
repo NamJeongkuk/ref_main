@@ -10,7 +10,8 @@ return function(core)
     return TypedString(
       { 'enhancedSabbath' },
       structure(
-        u8(config.number_of_fresh_food_defrosts_before_freezer_defrost)
+        u8(config.number_of_fresh_food_defrosts_before_freezer_defrost),
+        u8(config.min_time_between_temperature_averaging_in_minutes)
       )
     )
   end)
@@ -19,7 +20,8 @@ return function(core)
     validate_arguments(
       config,
       {
-        number_of_fresh_food_defrosts_before_freezer_defrost = { constraint.u8 }
+        number_of_fresh_food_defrosts_before_freezer_defrost = { constraint.u8 },
+        min_time_between_temperature_averaging_in_minutes = { constraint.u8 }
       })
 
     return generate(config)
