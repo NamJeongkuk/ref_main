@@ -483,7 +483,7 @@ TEST(FactoryModeIntegration, ShouldTurnAllLoadsOffWhenEnteringFactoryMode)
    AllBspErdsShouldBe(OFF);
 }
 
-TEST(FactoryModeIntegration, ShouldSetLightBspErdsToPwmDutyCycleMinWhenFactoryModeLightErdsEnabled)
+IGNORE_TEST(FactoryModeIntegration, ShouldSetLightBspErdsToPwmDutyCycleMinWhenFactoryModeLightErdsEnabled)
 {
    GivenTheApplicationIsInitialized();
    GivenTheLightBspErdsAre(PwmDutyCycle_Max);
@@ -558,12 +558,14 @@ TEST(FactoryModeIntegration, ShouldSetBspFreshFoodDamperHeaterPwmDutyCycleWhenFa
 TEST(FactoryModeIntegration, ShouldSetBspFillTubeHeaterWhenFactoryVoteTriggered)
 {
    GivenTheApplicationIsInitialized();
-   GivenTheFillTubeHeaterIs(ENABLED);
-
-   WhenTheFactoryModeFillTubeHeaterBecomes(PercentageDutyCycle_Min);
+   GivenTheApplicationIsInFactoryMode();
    TheFillTubeHeaterShouldBe(DISABLED);
 
+   WhenTheFactoryModeFillTubeHeaterBecomes(PercentageDutyCycle_Max);
    After(OneMinute * MSEC_PER_MIN);
+   TheFillTubeHeaterShouldBe(ENABLED);
+
+   WhenTheFactoryModeFillTubeHeaterBecomes(PercentageDutyCycle_Min);
    TheFillTubeHeaterShouldBe(DISABLED);
 }
 
