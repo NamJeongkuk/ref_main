@@ -113,6 +113,7 @@
 #include "TurboModeRequest.h"
 #include "CoolingSystemRequest.h"
 #include "DoorAlarmEnableRequest.h"
+#include "DimmableLightConfiguration.h"
 
 // clang-format off
 
@@ -440,8 +441,14 @@ enum
    ENTRY(Erd_TurboFreezeOnOffRequest,                       0x121A, TurboModeRequest_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TurboFreezeOnOffStatus,                        0x121B, bool,                                               Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_DimmableLight0PercentLevelRequest,             0x121E, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DimmableLight0PercentLevelStatus,              0x121F, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DimmableLight0Configuration,                   0x1220, DimmableLightConfiguration_t,                       Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_PresenceSensingEnableRequest,                  0x1222, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_PresenceSensingEnableStatus,                   0x1223, bool,                                               Swap_No,  Io_None, Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
+   ENTRY(Erd_PresenceSensedActivatesRecessLightRequest,     0x1224, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_PresenceSensedActivatesRecessLightStatus,      0x1225, bool,                                               Swap_No,  Io_None, Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
    \
    ENTRY(Erd_PresenceDetected,                              0x1226, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                              NotFault) \
    ENTRY(Erd_DoorAlarmEnableRequest,                        0x1227, DoorAlarmEnableRequest_t,                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                              NotFault) \

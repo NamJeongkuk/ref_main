@@ -32,7 +32,10 @@ void ApplianceFeatureApiUpdater_Init(I_DataModel_t *dataModel)
       ApplianceFeatureApi_Refrigerator_Version2_IceMaker0 |
       ApplianceFeatureApi_Refrigerator_Version2_IceMaker1 |
       ApplianceFeatureApi_Refrigerator_Version2_TurboCool |
-      ApplianceFeatureApi_Refrigerator_Version2_TurboFreeze;
+      ApplianceFeatureApi_Refrigerator_Version2_TurboFreeze |
+      ApplianceFeatureApi_Refrigerator_Version2_PresenceSensingEnabled |
+      ApplianceFeatureApi_Refrigerator_Version2_PresenceSensedActivatesRecessLight |
+      ApplianceFeatureApi_Refrigerator_Version2_DimmableLight0PercentLevel;
 
    DataModel_Write(dataModel, Erd_ApplianceApiApplianceTypeManifest1, &applianceFeatureApiManifest);
 }

@@ -35,7 +35,10 @@ enum
    // 0x00100000 Ice Maker 1
    // 0x00200000 Turbo Cool
    // 0x00400000 Turbo Freeze
-   Features = 0x007BFFF1
+   // 0x01000000 PresenceSensingEnabled
+   // 0x02000000 PresenceSensedActivatesRecessLight
+   // 0x04000000 Dimmable Light 0 Percent Level
+   Features = 0x077BFFF1
 };
 
 TEST_GROUP(ApplianceFeatureApiUpdater)

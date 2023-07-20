@@ -1514,7 +1514,7 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Recess Light On when presence is sensed Request",
+               "displayName": "Presence Sensing Enable Request",
                "name": "Erd_PresenceSensingEnableRequest",
                "read": false,
                "write": true,
@@ -1522,10 +1522,50 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Recess Light On when presence is sensed Status",
+               "displayName": "Presence Sensing Enable Status",
                "name": "Erd_PresenceSensingEnableStatus",
                "read": true,
                "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Recess Light On when presence is sensed Request",
+               "name": "Erd_PresenceSensedActivatesRecessLightRequest",
+               "read": false,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Recess Light On when presence is sensed Status",
+               "name": "Erd_PresenceSensedActivatesRecessLightStatus",
+               "read": true,
+               "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Dimmable Light 0 Percent Level Request",
+               "name": "Erd_DimmableLight0PercentLevelRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Dimmable Light 0 Percent Level Status",
+               "name": "Erd_DimmableLight0PercentLevelStatus",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Dimmable Light 0 Configuration",
+               "name": "Erd_DimmableLight0Configuration",
+               "read": true,
+               "write": true,
                "interval": 1000000000
             }
          ]
