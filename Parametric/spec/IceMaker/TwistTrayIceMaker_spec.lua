@@ -33,7 +33,7 @@ describe('TwistTrayIceMaker', function()
         motor_error_retry_initialize_in_minutes = 11,
         long_motor_error_timeout_period_in_sec = 12,
         short_motor_error_timeout_period_in_sec = 13,
-        delay_to_harvest_after_door_closes_in_sec = 14,
+        delay_to_harvest_after_door_opens_in_minutes = 14,
         full_bucket_dispense_check_time_in_seconds = 15,
         freeze_thaw_fill_tube_heater_on_time_in_seconds = 400,
         freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100
@@ -165,11 +165,11 @@ describe('TwistTrayIceMaker', function()
     end)
   end)
 
-  it('should assert if delay_to_harvest_after_door_closes_in_sec is not in range', function()
-    should_fail_with('delay_to_harvest_after_door_closes_in_sec=-1 must be in [0, 255]', function()
+  it('should assert if delay_to_harvest_after_door_opens_in_minutes is not in range', function()
+    should_fail_with('delay_to_harvest_after_door_opens_in_minutes=-1 must be in [0, 255]', function()
       twist_tray_ice_maker(generate_config({
         harvest = {
-          delay_to_harvest_after_door_closes_in_sec = -1
+          delay_to_harvest_after_door_opens_in_minutes = -1
         }
       }))
     end)
@@ -255,7 +255,7 @@ describe('TwistTrayIceMaker', function()
         motor_error_retry_initialize_in_minutes = 11,
         long_motor_error_timeout_period_in_sec = 12,
         short_motor_error_timeout_period_in_sec = 13,
-        delay_to_harvest_after_door_closes_in_sec = 14,
+        delay_to_harvest_after_door_opens_in_minutes = 14,
         full_bucket_dispense_check_time_in_seconds = 15,
         freeze_thaw_fill_tube_heater_on_time_in_seconds = 400,
         freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100

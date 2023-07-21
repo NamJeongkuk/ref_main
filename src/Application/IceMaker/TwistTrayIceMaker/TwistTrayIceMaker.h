@@ -22,13 +22,13 @@ typedef struct
       EventSubscription_t dataSourceChangeEventSubscription;
 
       Timer_t waitingTimer;
-      Timer_t doorClosedTimer;
+      Timer_t doorHarvestDelayTimer;
       Timer_t fillTubeHeaterTimer;
       Timer_t dispensingIceTimer;
       Timer_t retryMotorInitTimer;
 
       bool firstFreezeTransition;
-      bool doorHasBeenClosedForLongEnough;
+      bool doorHarvestDelayHasElapsed;
       bool iceDispensedLongEnoughToCheckHarvest;
       bool pauseFillMonitoring;
       bool delayFillMonitoring;

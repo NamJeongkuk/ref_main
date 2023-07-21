@@ -17,7 +17,7 @@
 #include "PercentageDutyCycleVote.h"
 
 #define FullIceBucketWaitPeriodMinutes (instance->_private.parametric->harvestData.fullBucketWaitPeriodMinutes * MSEC_PER_MIN)
-#define DelayToHarvestAfterDoorCloses (instance->_private.parametric->harvestData.delayToHarvestAfterDoorClosesSeconds * MSEC_PER_SEC)
+#define DelayToHarvestAfterDoorOpens (instance->_private.parametric->harvestData.delayToHarvestAfterDoorOpensMinutes * MSEC_PER_MIN)
 #define MaxHarvestTemperatureInDegFx100 (instance->_private.parametric->freezeData.maximumHarvestTemperatureInDegFx100)
 #define RetryMotorInitializeMinutes ((instance->_private.parametric->harvestData.motorErrorRetryInitializeMinutes) * MSEC_PER_MIN)
 
@@ -34,7 +34,7 @@ enum
    Signal_TrayFilled,
    Signal_FullIceBucketWaitTimeElapsed,
    Signal_SabbathModeDisabled,
-   Signal_DoorClosedForLongEnough,
+   Signal_HarvestDoorDelayElapsed,
    Signal_TestRequest_Fill,
    Signal_TestRequest_Harvest,
    Signal_IceMakerThermistorIsInvalid,
@@ -216,9 +216,9 @@ static bool MotorActionResultIs(TwistTrayIceMaker_t *instance, TwistTrayIceMaker
    return actual == expected;
 }
 
-static bool DoorHasBeenClosedForLongEnough(TwistTrayIceMaker_t *instance)
+static bool HarvestDoorDelayHasElapsed(TwistTrayIceMaker_t *instance)
 {
-   return instance->_private.doorHasBeenClosedForLongEnough;
+   return instance->_private.doorHarvestDelayHasElapsed;
 }
 
 static bool IceMakerThermistorIsValid(TwistTrayIceMaker_t *instance)
@@ -245,7 +245,7 @@ static bool HarvestConditionsHaveBeenMet(TwistTrayIceMaker_t *instance)
 
    return (iceTrayTempx100 < MaxHarvestTemperatureInDegFx100) &&
       harvestCountIsReadyToHarvest &&
-      DoorHasBeenClosedForLongEnough(instance);
+      HarvestDoorDelayHasElapsed(instance);
 }
 
 static void RequestHarvestCountCalculation(TwistTrayIceMaker_t *instance)
@@ -362,7 +362,7 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
       case Signal_CoolingSystemIsTurnedOn:
       case Signal_IceMakerFilteredTemperatureChanged:
       case Signal_HarvestCountIsReadyToHarvest:
-      case Signal_DoorClosedForLongEnough:
+      case Signal_HarvestDoorDelayElapsed:
          if(SabbathModeIsDisabledAndIceMakerIsEnabledAndCoolingSystemIsOn(instance))
          {
             if(HarvestConditionsHaveBeenMet(instance))
@@ -681,11 +681,11 @@ static void FullIceBucketWaitTimeElapsed(void *context)
    Fsm_SendSignal(&instance->_private.fsm, Signal_FullIceBucketWaitTimeElapsed, NULL);
 }
 
-static void DoorClosedForLongEnough(void *context)
+static void HarvestDoorDelayElapsed(void *context)
 {
    REINTERPRET(instance, context, TwistTrayIceMaker_t *);
-   instance->_private.doorHasBeenClosedForLongEnough = true;
-   Fsm_SendSignal(&instance->_private.fsm, Signal_DoorClosedForLongEnough, NULL);
+   instance->_private.doorHarvestDelayHasElapsed = true;
+   Fsm_SendSignal(&instance->_private.fsm, Signal_HarvestDoorDelayElapsed, NULL);
 }
 
 static bool IceIsSelected(DispensingRequestStatus_t dispensingRequestStatus)
@@ -761,18 +761,12 @@ static void DataSourceChanged(void *context, const void *data)
 
       if(*doorIsOpen)
       {
-         instance->_private.doorHasBeenClosedForLongEnough = false;
-         TimerModule_Stop(
-            instance->_private.timerModule,
-            &instance->_private.doorClosedTimer);
-      }
-      else
-      {
+         instance->_private.doorHarvestDelayHasElapsed = false;
          TimerModule_StartOneShot(
             instance->_private.timerModule,
-            &instance->_private.doorClosedTimer,
-            DelayToHarvestAfterDoorCloses,
-            DoorClosedForLongEnough,
+            &instance->_private.doorHarvestDelayTimer,
+            DelayToHarvestAfterDoorOpens,
+            HarvestDoorDelayElapsed,
             instance);
       }
    }
@@ -894,7 +888,7 @@ void TwistTrayIceMaker_Init(
    instance->_private.timerModule = timerModule;
    instance->_private.dataSource = dataSource;
    instance->_private.parametric = parametric;
-   instance->_private.doorHasBeenClosedForLongEnough = true;
+   instance->_private.doorHarvestDelayHasElapsed = true;
    instance->_private.firstFreezeTransition = true;
    instance->_private.iceDispensedLongEnoughToCheckHarvest = false;
    instance->_private.pauseFillMonitoring = false;

@@ -33,7 +33,7 @@ return function(core)
           u8(config.harvest.motor_error_retry_initialize_in_minutes),
           u8(config.harvest.long_motor_error_timeout_period_in_sec),
           u8(config.harvest.short_motor_error_timeout_period_in_sec),
-          u8(config.harvest.delay_to_harvest_after_door_closes_in_sec),
+          u8(config.harvest.delay_to_harvest_after_door_opens_in_minutes),
           u8(config.harvest.full_bucket_dispense_check_time_in_seconds),
           u16(config.harvest.freeze_thaw_fill_tube_heater_on_time_in_seconds),
           u8(config.harvest.freeze_thaw_fill_tube_heater_duty_cycle_percentage)
@@ -72,7 +72,7 @@ return function(core)
             motor_error_retry_initialize_in_minutes = { constraint.u8 },
             long_motor_error_timeout_period_in_sec = { constraint.u8 },
             short_motor_error_timeout_period_in_sec = { constraint.u8 },
-            delay_to_harvest_after_door_closes_in_sec = { constraint.u8 },
+            delay_to_harvest_after_door_opens_in_minutes = { constraint.u8 },
             full_bucket_dispense_check_time_in_seconds = { constraint.u8 },
             freeze_thaw_fill_tube_heater_on_time_in_seconds = { constraint.u16 },
             freeze_thaw_fill_tube_heater_duty_cycle_percentage = { constraint.in_range(0,100) }

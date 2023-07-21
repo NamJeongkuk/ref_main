@@ -34,7 +34,7 @@ typedef struct
    uint8_t motorErrorRetryInitializeMinutes;
    uint8_t longMotorErrorTimeoutPeriodSec;
    uint8_t shortMotorErrorTimeoutPeriodSec;
-   uint8_t delayToHarvestAfterDoorClosesSeconds;
+   uint8_t delayToHarvestAfterDoorOpensMinutes;
    uint8_t fullBucketDispenseCheckTimeInSeconds;
    uint16_t fillTubeHeaterOnTimeInSeconds;
    uint8_t fillTubeHeaterDutyCyclePercentage;

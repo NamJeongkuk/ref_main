@@ -965,7 +965,7 @@ TEST(TwistTrayIceMaker, ShouldWaitUntilHarvestCountIsReadyToHarvestBeforeTransit
    HarvestCountCalculationRequestShouldBe(CLEAR);
 }
 
-TEST(TwistTrayIceMaker, ShouldWaitUntilFreezeDoorHasBeenClosedForLongEnoughBeforeTransitioningToHarvestStateWhileTheOtherConditionsAreMet)
+TEST(TwistTrayIceMaker, ShouldWaitUntilFreezeDoorHarvestDelayHasElapsedBeforeTransitioningToHarvestStateWhileTheOtherConditionsAreMet)
 {
    GivenTheOperationStateIsInFreeze();
    GivenFreezerIceRateActiveBecomes(SET);
@@ -976,10 +976,31 @@ TEST(TwistTrayIceMaker, ShouldWaitUntilFreezeDoorHasBeenClosedForLongEnoughBefor
    NothingShouldHappen();
    WhenHarvestCountIsReadyToHarvestIs(SET);
 
+   After(iceMakerData->harvestData.delayToHarvestAfterDoorOpensMinutes * MSEC_PER_MIN - 1);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+
+   HarvestingShouldStart();
+   After(1);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotDelayHarvestAgainIfFreezerDoorBecomesClosedWhileHarvestDoorDelayIsOccurringFromOpenFreezerDoor)
+{
+   GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
+   WhenTheFreezerDoorIs(OPEN);
+
+   WhenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
+
+   NothingShouldHappen();
+   WhenHarvestCountIsReadyToHarvestIs(SET);
+
+   After(iceMakerData->harvestData.delayToHarvestAfterDoorOpensMinutes * MSEC_PER_MIN - 1);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+
    WhenTheFreezerDoorIs(CLOSED);
 
    HarvestingShouldStart();
-   After(iceMakerData->harvestData.delayToHarvestAfterDoorClosesSeconds * MSEC_PER_SEC);
+   After(1);
 }
 
 TEST(TwistTrayIceMaker, ShouldClearHarvestCountCalculationRequestAndTransitionToThermistorFaultWhenThermistorIsInvalidWhileFreezing)
