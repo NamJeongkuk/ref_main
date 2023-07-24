@@ -93,6 +93,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/Dispenser \
    $(TESTS_DIR)/Application/Door \
    $(TESTS_DIR)/Application/DutyCycle \
+   $(TESTS_DIR)/Application/EnhancedSabbath \
    $(TESTS_DIR)/Application/Factory \
    $(TESTS_DIR)/Application/Fan \
    $(TESTS_DIR)/Application/FlowMeter \

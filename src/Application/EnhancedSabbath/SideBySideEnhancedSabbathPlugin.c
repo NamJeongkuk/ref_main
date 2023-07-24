@@ -7,6 +7,7 @@
 
 #include "SideBySideEnhancedSabbathPlugin.h"
 #include "SystemErds.h"
+#include "DataModelErdPointerAccess.h"
 
 static const EnhancedSabbathAverageTemperatureConfig_t freshFoodEnhancedSabbathAverageTemperatureConfig = {
    .filteredTemperatureInDegFx100Erd = Erd_FreshFood_FilteredTemperatureInDegFx100,
@@ -24,6 +25,29 @@ static const EnhancedSabbathAverageTemperatureConfig_t freezerEnhancedSabbathAve
    .overrideValueErd = Erd_Freezer_EnhancedSabbath_AveragedTemperatureOverrideValueInDegFx100,
    .enhancedSabbathModeStatusErd = Erd_EnhancedSabbathModeStatus,
    .timerModuleErd = Erd_TimerModule,
+};
+
+static const EnhancedSabbathModeConfig_t enhancedSabbathModeConfig = {
+   .disableMinimumCompressorTimesVoteErd = Erd_DisableMinimumCompressorTimes_EnhancedSabbathVote,
+   .compressorSpeedVoteErd = Erd_CompressorSpeed_EnhancedSabbathVote,
+   .condenserFanVoteErd = Erd_CondenserFanSpeed_SabbathVote,
+   .freezerEvapFanVoteErd = Erd_FreezerEvapFanSpeed_SabbathVote,
+   .damperPositionVoteErd = Erd_FreshFoodDamperPosition_EnhancedSabbathVote,
+   .enhancedSabbathModeStatusErd = Erd_EnhancedSabbathModeStatus,
+   .freshFoodSetpointVoteErd = Erd_FreshFoodSetpoint_EnhancedSabbathVote,
+   .freezerSetpointVoteErd = Erd_FreezerSetpoint_EnhancedSabbathVote,
+   .freshFoodAverageCabinetTemperatureErd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
+   .freezerAverageCabinetTemperatureErd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
+   .freshFoodCabinetSetpointErd = Erd_FreshFood_AdjustedSetpointWithoutShiftInDegFx100,
+   .freezerCabinetSetpointErd = Erd_Freezer_AdjustedSetpointWithoutShiftInDegFx100,
+   .overrideIceMakerEnabledRequestErd = Erd_IceMakerEnabledEnhancedSabbathOverrideRequest,
+   .overrideIceMakerEnabledValueErd = Erd_IceMakerEnabledEnhancedSabbathOverrideValue,
+   .dispensingDisabledErd = Erd_DispensingDisabled,
+   .waitingForDefrostErd = Erd_WaitingToDefrost,
+   .sabbathGpioErd = Erd_Gpio_SABBATH,
+   .gridOverrideEnabledErd = Erd_GridOverrideEnable,
+   .coolingModeErd = Erd_CoolingMode,
+   .hsmStateErd = Erd_EnhancedSabbathModeHsmState
 };
 
 static void InitializeEnhancedSabbathAverageTemperatureFiltering(
@@ -74,4 +98,13 @@ void SideBySideEnhancedSabbathPlugin_Init(
    I_DataModel_t *dataModel)
 {
    InitializeEnhancedSabbathAverageTemperatureFiltering(instance, dataModel);
+
+   EnhancedSabbathMode_Init(
+      &instance->_private.enhancedSabbathMode,
+      dataModel,
+      DataModelErdPointerAccess_GetTimerModule(
+         dataModel,
+         Erd_TimerModule),
+      PersonalityParametricData_Get(dataModel)->enhancedSabbathData,
+      &enhancedSabbathModeConfig);
 }

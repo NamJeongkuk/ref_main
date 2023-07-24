@@ -223,11 +223,13 @@ static const OverrideArbiterConfiguration_t aluminumMoldIceMakerThermistorValidA
 };
 
 static const Erd_t iceMakerEnabledOverrideRequestErdList[] = {
-   Erd_IceMakerEnabledOverrideRequest
+   Erd_IceMakerEnabledEnhancedSabbathOverrideRequest,
+   Erd_IceMakerEnabledOverrideRequest,
 };
 
 static const Erd_t iceMakerEnabledOverrideValueErdList[] = {
    Erd_IceMaker0EnableStatus,
+   Erd_IceMakerEnabledEnhancedSabbathOverrideValue,
    Erd_IceMakerEnabledOverrideValue
 };
 

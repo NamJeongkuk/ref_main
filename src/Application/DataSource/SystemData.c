@@ -145,6 +145,4 @@ void SystemData_AddBspDataSource(
       instance,
       UnmappedBspDataSource_DataSource(&instance->_private.dataSource.unmappedBsp),
       &instance->_private.dataSource.unmappedBspComponent);
-
-   DataModel_Write(dataModel, Erd_Gpio_SABBATH, set); // TODO: Remove this when Sabbath Mode is implemented.
 }

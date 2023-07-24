@@ -9,11 +9,18 @@
 #define ENHANCEDSABBATHDATA_H
 
 #include <stdint.h>
+#include "TemperatureDegFx100.h"
 
 typedef struct
 {
+   uint16_t maxTimeInEnhancedSabbathModeInMinutes;
+   TemperatureDegFx100_t freshFoodTemperatureInDegFx100;
+   TemperatureDegFx100_t freezerTemperatureInDegFx100;
    uint8_t numberOfFreshFoodDefrostsBeforeFreezerDefrost;
    uint8_t minTimeBetweenTemperatureAveragingInMinutes;
+   uint8_t freshFoodStageTimeInMinutes;
+   uint8_t freezerStageTimeInMinutes;
+   uint8_t offStageTimeInMinutes;
 } EnhancedSabbathData_t;
 
 #endif

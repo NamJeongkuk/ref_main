@@ -12,6 +12,7 @@
 #include "Filter_WindowAverage.h"
 #include "EnhancedSabbathAverageTemperature.h"
 #include "Input_EnhancedSabbathRandomAdditionalMinute.h"
+#include "EnhancedSabbathMode.h"
 
 typedef struct
 {
@@ -27,6 +28,8 @@ typedef struct
 
       EnhancedSabbathAverageTemperature_t freshFoodEnhancedSabbathAverageTemperature;
       EnhancedSabbathAverageTemperature_t freezerEnhancedSabbathAverageTemperature;
+
+      EnhancedSabbathMode_t enhancedSabbathMode;
    } _private;
 } SideBySideEnhancedSabbathPlugin_t;
 
