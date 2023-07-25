@@ -203,6 +203,31 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_InvalidFreezerEvaporatorThermistorDuringDefrost",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_Eeprom_ClearedDefrostEepromStartup",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_DefrostTestRequestStatus",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_LeftSideFreezerDoorStatusResolved",
          "interval": 60000
       },
