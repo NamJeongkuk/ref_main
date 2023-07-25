@@ -14,8 +14,8 @@
 typedef struct
 {
    uint16_t maxTimeInEnhancedSabbathModeInMinutes;
-   TemperatureDegFx100_t freshFoodTemperatureInDegFx100;
-   TemperatureDegFx100_t freezerTemperatureInDegFx100;
+   TemperatureDegFx100_t freshFoodSetpointTemperatureInDegFx100;
+   TemperatureDegFx100_t freezerSetpointTemperatureInDegFx100;
    uint8_t numberOfFreshFoodDefrostsBeforeFreezerDefrost;
    uint8_t minTimeBetweenTemperatureAveragingInMinutes;
    uint8_t freshFoodStageTimeInMinutes;

@@ -12,8 +12,8 @@ describe('enhancedSabbath', function()
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
         max_time_in_enhanced_sabbath_mode_in_minutes = 5760,
-        fresh_food_temperature_in_degfx100 = 3700,
-        freezer_temperature_in_degfx100 = 0,
+        fresh_food_setpoint_temperature_in_degfx100 = 3700,
+        freezer_setpoint_temperature_in_degfx100 = 0,
         number_of_fresh_food_defrosts_before_freezer_defrost = 3,
         min_time_between_temperature_averaging_in_minutes = 2,
         fresh_food_stage_time_in_minutes = 1,
@@ -34,18 +34,18 @@ describe('enhancedSabbath', function()
     end)
   end)
 
-  it('should assert if fresh_food_temperature_in_degfx100 is not a number', function()
-    should_fail_with('fresh_food_temperature_in_degfx100 must be of type number but is of type string', function()
+  it('should assert if fresh_food_setpoint_temperature_in_degfx100 is not a number', function()
+    should_fail_with('fresh_food_setpoint_temperature_in_degfx100 must be of type number but is of type string', function()
       enhancedSabbath(generate_config({
-        fresh_food_temperature_in_degfx100 = "not a number"
+        fresh_food_setpoint_temperature_in_degfx100 = "not a number"
       }))
     end)
   end)
 
-  it('should assert if freezer_temperature_in_degfx100 is not a number', function()
-    should_fail_with('freezer_temperature_in_degfx100 must be of type number but is of type string', function()
+  it('should assert if freezer_setpoint_temperature_in_degfx100 is not a number', function()
+    should_fail_with('freezer_setpoint_temperature_in_degfx100 must be of type number but is of type string', function()
       enhancedSabbath(generate_config({
-        freezer_temperature_in_degfx100 = "not a number"
+        freezer_setpoint_temperature_in_degfx100 = "not a number"
       }))
     end)
   end)

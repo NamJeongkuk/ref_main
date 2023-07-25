@@ -475,8 +475,8 @@ static bool State_Enabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Hsm_Entry:
-         SetFreshFoodSetpointToCareWithTheValue(instance, instance->_private.enhancedSabbathData->freshFoodTemperatureInDegFx100);
-         SetFreezerSetpointToCareWithTheValue(instance, instance->_private.enhancedSabbathData->freezerTemperatureInDegFx100);
+         SetFreshFoodSetpointToCareWithTheValue(instance, instance->_private.enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100);
+         SetFreezerSetpointToCareWithTheValue(instance, instance->_private.enhancedSabbathData->freezerSetpointTemperatureInDegFx100);
          SetDispensingDisabledTo(instance, true);
          SetGridOverrideTo(instance, true);
          SetIceMakerEnabledOverrideRequestTo(instance, true);
