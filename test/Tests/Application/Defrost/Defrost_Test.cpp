@@ -2364,6 +2364,76 @@ TEST(Defrost_SingleEvap, ShouldThrowAssertionWhenFreezerFilteredTemperatureTooWa
    ShouldAssertOnInitialization();
 }
 
+TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenRunningAPrechillTestAsFirstFullDefrost)
+{
+   Given FreezerThermistorValidityIs(true);
+   Given FreezerEvaporatorThermistorValidityIs(true);
+   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(true);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   When DefrostTestIsRequested(DefrostTestStateRequest_Prechill);
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+   FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
+}
+
+TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenRunningAnIdleTestAfterItExitsIdle)
+{
+   Given FreezerThermistorValidityIs(true);
+   Given FreezerEvaporatorThermistorValidityIs(true);
+   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(true);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   When DefrostTestIsRequested(DefrostTestStateRequest_Idle); // when requesting Idle test while in Idle, it exits and reenters Idle
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+   FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+   FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
+}
+
+TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenRunningADefrostTestAsFirstFullDefrost)
+{
+   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(true);
+   Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   When DefrostTestIsRequested(DefrostTestStateRequest_Defrost);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
+}
+
+TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenDontSkipPrechillPrepFlagIsSet)
+{
+   Given LastFreshFoodDefrostWasNormal();
+   And LastFreezerDefrostWasNormal();
+   And LastConvertibleCompartmentDefrostWasNormal();
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+   And FreezerEvaporatorThermistorValidityIs(Valid);
+   And FreezerThermistorValidityIs(Valid);
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   And DontSkipPrechillErdIs(SET);
+
+   When ReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+   FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
+}
+
+TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenSabbathIsReadyToDefrost)
+{
+   Given LastFreshFoodDefrostWasNormal();
+   And LastFreezerDefrostWasNormal();
+   And LastConvertibleCompartmentDefrostWasNormal();
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+   And FreezerThermistorValidityIs(Valid);
+   And FreezerEvaporatorThermistorValidityIs(Valid);
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   GivenSabbathModeIs(ENABLED);
+
+   WhenSabbathIsReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+   FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
+}
+
 TEST_GROUP(Defrost_DualEvap)
 {
    ReferDataModel_TestDouble_t dataModelDouble;

@@ -761,10 +761,6 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
                   InvalidFreezerEvaporatorThermistorDuringDefrostIsSet(instance) ||
                   ClearedEepromStartup(instance))
                {
-                  if(FreezerCompartmentWasTooWarmOnPowerUp(instance))
-                  {
-                     ResetFreezerCompartmentWasTooWarmOnPowerUp(instance);
-                  }
                   Hsm_Transition(hsm, State_HeaterOnEntry);
                }
                else
@@ -784,6 +780,7 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Hsm_Exit:
+         ResetFreezerCompartmentWasTooWarmOnPowerUp(instance);
          SetClearedEepromStartupTo(instance, false);
          break;
 
