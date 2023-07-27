@@ -86,6 +86,8 @@ return function(directory)
   import('TurboModes/FreshFoodTurboCoolSetpoint')
   import('TurboModes/FreezerTurboFreezeSetpoint')
   import('TurboModes/TurboModeSetpoint')
+  import('Cooling/LoadOffDoorOpen')
+  import('Cooling/LoadOffDoorOpenCompartmentList')
 
   Core = require 'lua-parametric-tools'.common.Core
   enum = require 'lua-common'.utilities.enum
@@ -171,6 +173,8 @@ return function(directory)
   fresh_food_turbo_cool_setpoint = FreshFoodTurboCoolSetpoint(core)
   freezer_turbo_freeze_setpoint = FreezerTurboFreezeSetpoint(core)
   harvest_count_calculator = HarvestCountCalculator(core)
+  load_off_door_open = LoadOffDoorOpen(core)
+  load_off_door_open_compartment_list = LoadOffDoorOpenCompartmentList(core)
 
   return {
     core = core,
@@ -261,6 +265,8 @@ return function(directory)
     harvest_count_calculator = harvest_count_calculator,
     enum = enum,
     erd_list_to_sorted_erd_mappings = erd_list_to_sorted_erd_mappings,
+    load_off_door_open = load_off_door_open,
+    load_off_door_open_compartment_list = load_off_door_open_compartment_list,
     import = require 'lua-parametric-tools'.util.EvalInCurrentEnvironment(directory, {
       remove_tail_calls = true
     })

@@ -30,7 +30,8 @@ return function(core)
         pointer(config.flow_meter),
         pointer(config.dispenser),
         pointer(config.recess_heater),
-        pointer(config.turbo_mode_setpoint)
+        pointer(config.turbo_mode_setpoint),
+        pointer(config.load_off_door_open_compartment_list)
       ))
   end)
 
@@ -56,7 +57,8 @@ return function(core)
       flow_meter = { constraint.typed_string('flow_meter') },
       dispenser = { constraint.typed_string('dispenser') },
       recess_heater = { constraint.typed_string('recess_heater') },
-      turbo_mode_setpoint = { constraint.typed_string('turbo_mode_setpoint') }
+      turbo_mode_setpoint = { constraint.typed_string('turbo_mode_setpoint') },
+      load_off_door_open_compartment_list = { constraint.typed_string('load_off_door_open_compartment_list') }
     })
     return generate(config)
   end

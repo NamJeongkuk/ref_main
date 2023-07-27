@@ -337,7 +337,7 @@ TEST(DispensingIntegration, ShouldNotDispenseWaterWhenWaterDispensingIsInhibited
    TheAugerMotorDispensingVoteShouldBe(AugerMotorIceType_Off, Vote_DontCare);
 }
 
-TEST(DispensingIntegration, ShouldSetDispenceStatusToDispensingIsInhibitedByAnOpenDoorWhenDispensingIsInhibitedByAnOpenDoorAndByRfid)
+TEST(DispensingIntegration, ShouldSetDispenseStatusToDispensingIsInhibitedByAnOpenDoorWhenDispensingIsInhibitedByAnOpenDoorAndByRfid)
 {
    GivenApplicationHasBeenInitialized();
    AfterFirstDispenseIsCompletedSuccessfully();

@@ -80,7 +80,7 @@ describe('AluminumMoldIceMaker', function()
       aluminum_mold_ice_maker(generate_config({
         fill = {
           ice_maker_fill_monitor = 1
-       }
+        }
       }))
     end)
   end)

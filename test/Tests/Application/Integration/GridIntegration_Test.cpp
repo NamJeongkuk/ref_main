@@ -28,6 +28,12 @@ enum
 
 enum
 {
+   Closed = 0,
+   Open = 1
+};
+
+enum
+{
    AnHourInMillisecondsToAllowAmbientWindowAverageTemperatureToChange = 60 * MSEC_PER_MIN
 };
 
@@ -60,6 +66,7 @@ TEST_GROUP(GridIntegration)
    const CompressorData_t *compressorData;
    const FanCareAboutCoolingModeSpeedData_t *condenserFanSpeedData;
    const FanCareAboutCoolingModeSpeedData_t *freezerEvapFanSpeedData;
+   const LoadOffDoorOpenData_t *loadOffDoorOpenData;
 
    void setup()
    {
@@ -71,6 +78,7 @@ TEST_GROUP(GridIntegration)
       compressorData = PersonalityParametricData_Get(dataModel)->compressorData;
       condenserFanSpeedData = PersonalityParametricData_Get(dataModel)->fanData->condenserFan.careAboutCoolingModeSpeedData;
       freezerEvapFanSpeedData = PersonalityParametricData_Get(dataModel)->fanData->freezerEvapFan.careAboutCoolingModeSpeedData;
+      loadOffDoorOpenData = PersonalityParametricData_Get(dataModel)->loadOffDoorOpenData;
    }
 
    void GivenApplicationHasBeenInitialized()
@@ -345,6 +353,15 @@ TEST_GROUP(GridIntegration)
       DataModel_Read(dataModel, Erd_CalculatedFreezerEvapFanControl, &actual);
 
       CHECK_EQUAL(expected.dutyCycle, actual.dutyCycle);
+   }
+
+   void LoadOffDoorOpenVoteForFreezerEvapShouldBe(FanSpeed_t speed, Vote_t care)
+   {
+      FanVotedSpeed_t vote;
+      DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_LoadOffDoorOpenVote, &vote);
+
+      CHECK_EQUAL(speed, vote.speed);
+      CHECK_EQUAL(care, vote.care);
    }
 
    void TheFreshFoodDamperStepperMotorDriveEnableShouldBe(bool expected)
@@ -847,6 +864,39 @@ TEST_GROUP(GridIntegration)
       FreezerHighAmbientOffsetShouldBe(0);
       FreezerThermalShiftShouldBe(-4);
       FreezerAdjustedSetpointShouldBe(-29);
+   }
+
+   void WhenFreezerDoorIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_LeftSideFreezerDoorStatus, &state);
+   }
+
+   void WhenFreshFoodDoorIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_RightSideFreshFoodDoorStatus, &state);
+   }
+
+   void GivenGridIsInBlock4()
+   {
+      GivenReferDataModelTestDoubleIsResetAndApplicationIsInitializedWithValidThermistors();
+
+      WhenFreezerAndFreshFoodTemperaturesAreSetForBlock(4);
+      WhenTheCoolingModeIs(CoolingMode_Off);
+      WhenTheCoolingSpeedIs(CoolingSpeed_Off);
+      WhenTheGridAreaIs(GridArea_1);
+      WhenTheSingleEvaporatorPulldownActiveIs(CLEAR);
+      WhenTheCondenserFanAntiSweatBehaviorIs(ENABLED);
+      WhenTheIceMakerIs(ENABLED);
+
+      After(gridData->gridPeriodicRunRateInMSec);
+      TheGridBlockNumberShouldBe(4);
+      TheCoolingModeShouldBe(CoolingMode_FreshFood);
+      TheCoolingSpeedShouldBe(CoolingSpeed_PullDown);
+      TheGridAreaShouldBe(GridArea_2);
+      TheSingleEvaporatorPulldownActiveShouldBe(SET);
+      TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
+      TheCondenserFanAntiSweatBehaviorShouldBe(DISABLED);
+      TheIceMakerShouldBe(DISABLED);
    }
 };
 
@@ -2511,4 +2561,70 @@ TEST(GridIntegration, ShouldCalculateFreezerGridLines)
       5475,
       GridDelta_Freezer,
       GridLine_FreezerExtremeHigh);
+}
+
+TEST(GridIntegration, ShouldTurnOffTheFreezerEvapFanWhenDoorIsOpenForTimeoutThenReturnToPreviousSpeed)
+{
+   GivenGridIsInBlock4();
+
+   After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC);
+   TheCalculatedFreezerEvapFanControlShouldBe(
+      freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
+
+   WhenFreezerDoorIs(Open);
+   TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedOff);
+
+   After(loadOffDoorOpenData->freezerCompartmentData.timeoutInSeconds * MSEC_PER_SEC - 1);
+   TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedOff);
+
+   After(1);
+   TheCalculatedFreezerEvapFanControlShouldBe(
+      freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
+}
+
+TEST(GridIntegration, ShouldDelayTurningFanBackOnAfterDoorIsClosed)
+{
+   GivenGridIsInBlock4();
+
+   After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC);
+   TheCalculatedFreezerEvapFanControlShouldBe(
+      freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
+
+   WhenFreezerDoorIs(Open);
+   After(loadOffDoorOpenData->freezerCompartmentData.timeoutInSeconds * MSEC_PER_SEC - 1);
+
+   WhenFreezerDoorIs(Closed);
+
+   After(loadOffDoorOpenData->freezerCompartmentData.restartDelayInSeconds * MSEC_PER_SEC - 1);
+   TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedOff);
+
+   After(1);
+   TheCalculatedFreezerEvapFanControlShouldBe(
+      freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
+}
+
+TEST(GridIntegration, ShouldRestartFanOffTimeoutWhenADoorOpensAfterAllDoorsAreClosed)
+{
+   GivenGridIsInBlock4();
+
+   After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC);
+   TheCalculatedFreezerEvapFanControlShouldBe(
+      freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
+
+   WhenFreezerDoorIs(Open);
+   After(loadOffDoorOpenData->freezerCompartmentData.timeoutInSeconds * MSEC_PER_SEC - 1);
+
+   WhenFreezerDoorIs(Closed);
+   After(loadOffDoorOpenData->freezerCompartmentData.restartDelayInSeconds * MSEC_PER_SEC - 1);
+   TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedOff);
+
+   WhenFreezerDoorIs(Open);
+   TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedOff);
+
+   After(loadOffDoorOpenData->freezerCompartmentData.timeoutInSeconds * MSEC_PER_SEC - 1);
+   TheCalculatedFreezerEvapFanControlShouldBe(fanSpeedOff);
+
+   After(1);
+   TheCalculatedFreezerEvapFanControlShouldBe(
+      freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreshFood);
 }

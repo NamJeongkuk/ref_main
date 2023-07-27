@@ -2944,6 +2944,46 @@
           "write": true
         }
       ]
+    },
+    {
+      "title": "Load(s) Off Door(s) Open",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Evap Fan Speed Load Off Door Open Vote",
+          "name": "Erd_FreshFoodEvapFanSpeed_LoadOffDoorOpenVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Fan Speed Load Off Door Open Vote",
+          "name": "Erd_FreezerEvapFanSpeed_LoadOffDoorOpenVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Fan PWM",
+          "name": "Erd_FreezerEvapFan_Pwm",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Right Side Fresh Food Door Status Resolved",
+          "name": "Erd_RightSideFreshFoodDoorStatusResolved",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Left Side Freezer Door Status Resolved",
+          "name": "Erd_LeftSideFreezerDoorStatusResolved",
+          "read": true,
+          "write": false
+        }
+      ]
     }
   ]
 }

@@ -146,7 +146,7 @@ TEST_GROUP(FactoryModeIntegration)
 
    void AllFactoryVoteErdsShouldBeVotedFor()
    {
-      for(uint8_t i; i < NUM_ELEMENTS(factoryVotePairs); i++)
+      for(uint8_t i = 0; i < NUM_ELEMENTS(factoryVotePairs); i++)
       {
          uint8_t erdSize = DataModel_SizeOf(
             dataModel,

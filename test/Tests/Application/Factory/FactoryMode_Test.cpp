@@ -164,7 +164,7 @@ TEST_GROUP(FactoryMode)
 
    void After(TimerTicks_t ticks)
    {
-      TimerModule_TestDouble_ElapseTime(&timerModuleDouble, ticks, 1000);
+      TimerModule_TestDouble_ElapseTime(&timerModuleDouble, ticks);
    }
 
    void BooleanVoteStructErdHasValue(Erd_t erd, bool value, Vote_t vote)

@@ -19,5 +19,6 @@ return personality({
   flow_meter = import("../FlowMeter/flow_meter.lua"),
   dispenser = import("../Dispenser/dispenser.lua"),
   recess_heater = import("../RecessHeater/recess_heater.lua"),
-  turbo_mode_setpoint = import("../TurboModes/turbo_mode_setpoint.lua")
+  turbo_mode_setpoint = import("../TurboModes/turbo_mode_setpoint.lua"),
+  load_off_door_open_compartment_list = import("../Cooling/load_off_door_open_compartment_list.lua")
 })
