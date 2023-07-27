@@ -40,10 +40,10 @@ static const Erd_t factoryModeValveErdList[] = {
 };
 
 static const Erd_t bspLightsErdList[] = {
-   Erd_FreshFoodBackWallLight_Pwm,
-   Erd_FreshFoodTopLight_Pwm,
-   Erd_FreezerBackWallLight_Pwm,
-   Erd_FreezerTopLight_Pwm
+   Erd_FreshFoodBackWallLight_RampingPwm,
+   Erd_FreshFoodTopLight_RampingPwm,
+   Erd_FreezerBackWallLight_RampingPwm,
+   Erd_FreezerTopLight_RampingPwm
 };
 
 static const Erd_t factoryModeLightErdList[] = {
@@ -54,11 +54,7 @@ static const Erd_t factoryModeLightErdList[] = {
 };
 
 static const Erd_t uint16BspErdList[] = {
-   Erd_FreshFoodBackWallLight_Pwm,
-   Erd_FreshFoodTopLight_Pwm,
-   Erd_FreezerBackWallLight_Pwm,
-   Erd_FreezerTopLight_Pwm,
-   Erd_FreshFoodDamperHeaterPwmDutyCycle,
+   Erd_FreshFoodDamperHeaterPwmDutyCycle
 };
 
 static const Erd_t uint8BspErdList[] = {
@@ -218,27 +214,25 @@ TEST_GROUP(FactoryModeIntegration)
       }
    }
 
-   void GivenTheLightBspErdsAre(PwmDutyCycle_t pwmDutyCycle)
+   void GivenTheLightBspErdsAre(RampingPwmDutyCycle_t rampingPwmDutyCycle)
    {
-      PwmVotedDutyCycle_t pwmVotedDutyCycle = { .pwmDutyCycle = pwmDutyCycle, .care = Vote_Care };
-
       ErdList_t bspListErds = { .erds = bspLightsErdList, .numberOfErds = NUM_ELEMENTS(bspLightsErdList) };
       ErdList_WriteAll(
          dataModel,
          &bspListErds,
-         &pwmVotedDutyCycle);
+         &rampingPwmDutyCycle);
    }
 
-   void WhenTheLightBspErdsAre(PwmDutyCycle_t pwmDutyCycle)
+   void WhenTheLightBspErdsAre(RampingPwmDutyCycle_t rampingPwmDutyCycle)
    {
-      GivenTheLightBspErdsAre(pwmDutyCycle);
+      GivenTheLightBspErdsAre(rampingPwmDutyCycle);
    }
 
    void TheLightBspErdsShouldBe(PwmDutyCycle_t expectedPwmDutyCycle)
    {
       for(uint8_t i; i < NUM_ELEMENTS(bspLightsErdList); i++)
       {
-         PwmVotedDutyCycle_t actualPwmDutyCycle;
+         RampingPwmDutyCycle_t actualPwmDutyCycle;
          DataModel_Read(
             dataModel,
             bspLightsErdList[i],
@@ -248,15 +242,13 @@ TEST_GROUP(FactoryModeIntegration)
       }
    }
 
-   void WhenTheFactoryModeLightErdsBecome(PwmDutyCycle_t pwmDutyCycle)
+   void WhenTheFactoryModeLightErdsBecome(RampingPwmDutyCycle_t pwmDutyCycle)
    {
-      PwmVotedDutyCycle_t pwmVotedDutyCycle = { .pwmDutyCycle = pwmDutyCycle, .care = Vote_Care };
-
       ErdList_t factoryModeLightsList = { .erds = factoryModeLightErdList, .numberOfErds = NUM_ELEMENTS(factoryModeLightErdList) };
       ErdList_WriteAll(
          dataModel,
          &factoryModeLightsList,
-         &pwmVotedDutyCycle);
+         &pwmDutyCycle);
    }
 
    void GivenTheValveBspErdsAre(bool status)
@@ -483,12 +475,12 @@ TEST(FactoryModeIntegration, ShouldTurnAllLoadsOffWhenEnteringFactoryMode)
    AllBspErdsShouldBe(OFF);
 }
 
-IGNORE_TEST(FactoryModeIntegration, ShouldSetLightBspErdsToPwmDutyCycleMinWhenFactoryModeLightErdsEnabled)
+TEST(FactoryModeIntegration, ShouldSetLightBspErdsToPwmDutyCycleMinWhenFactoryModeLightErdsEnabled)
 {
    GivenTheApplicationIsInitialized();
-   GivenTheLightBspErdsAre(PwmDutyCycle_Max);
+   GivenTheLightBspErdsAre({ PwmDutyCycle_Max, UINT8_MAX, UINT8_MAX });
 
-   WhenTheFactoryModeLightErdsBecome(PwmDutyCycle_Min);
+   WhenTheFactoryModeLightErdsBecome({ PwmDutyCycle_Min, UINT8_MAX, UINT8_MAX });
    TheLightBspErdsShouldBe(PwmDutyCycle_Min);
 
    After(OneMinute * MSEC_PER_MIN);
@@ -586,7 +578,7 @@ TEST(FactoryModeIntegration, ShouldDirectlyModifyBspLightErdsWithoutOtherLogicOv
    GivenTheApplicationIsInitialized();
    GivenTheApplicationIsInFactoryMode();
 
-   WhenTheLightBspErdsAre(PwmDutyCycle_Max);
+   WhenTheLightBspErdsAre({ PwmDutyCycle_Max, UINT8_MAX, UINT8_MAX });
    TheLightBspErdsShouldBe(PwmDutyCycle_Max);
 
    After(OneMinute * MSEC_PER_MIN);

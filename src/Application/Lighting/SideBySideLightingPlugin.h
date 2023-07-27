@@ -24,8 +24,10 @@ typedef struct
       ErdResolver_t freezerBackWallLightErdResolver;
       ErdResolver_t freezerTopLightErdResolver;
       ConstArrayMap_LinearSearch_t linearMap;
-      LightingDoorVoteResolver_t freshFoodLightingDoorVoteResolver;
-      LightingDoorVoteResolver_t freezerLightingDoorVoteResolver;
+      LightingDoorVoteResolver_t freshFoodBackWallLightingDoorVoteResolver;
+      LightingDoorVoteResolver_t freshFoodTopLightLightingDoorVoteResolver;
+      LightingDoorVoteResolver_t freezerBackWallLightingDoorVoteResolver;
+      LightingDoorVoteResolver_t freezerTopLightLightingDoorVoteResolver;
    } _private;
 } SideBySideLightingPlugin_t;
 

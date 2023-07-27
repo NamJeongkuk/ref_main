@@ -86,6 +86,9 @@ return function(directory)
   import('TurboModes/FreshFoodTurboCoolSetpoint')
   import('TurboModes/FreezerTurboFreezeSetpoint')
   import('TurboModes/TurboModeSetpoint')
+  import('Lighting/DoorLighting')
+  import('Lighting/Lighting')
+  import('Lighting/RampingPwmDutyCyclePercentageBundle')
   import('Cooling/LoadOffDoorOpen')
   import('Cooling/LoadOffDoorOpenCompartmentList')
 
@@ -173,6 +176,9 @@ return function(directory)
   fresh_food_turbo_cool_setpoint = FreshFoodTurboCoolSetpoint(core)
   freezer_turbo_freeze_setpoint = FreezerTurboFreezeSetpoint(core)
   harvest_count_calculator = HarvestCountCalculator(core)
+  door_lighting = DoorLighting(core)
+  lighting = Lighting(core)
+  ramping_pwm_duty_cycle_percentage_bundle = RampingPwmDutyCyclePercentageBundle(core)
   load_off_door_open = LoadOffDoorOpen(core)
   load_off_door_open_compartment_list = LoadOffDoorOpenCompartmentList(core)
 
@@ -263,6 +269,9 @@ return function(directory)
     fresh_food_turbo_cool_setpoint = fresh_food_turbo_cool_setpoint,
     freezer_turbo_freeze_setpoint = freezer_turbo_freeze_setpoint,
     harvest_count_calculator = harvest_count_calculator,
+    door_lighting = door_lighting,
+    lighting = lighting,
+    ramping_pwm_duty_cycle_percentage_bundle = ramping_pwm_duty_cycle_percentage_bundle,
     enum = enum,
     erd_list_to_sorted_erd_mappings = erd_list_to_sorted_erd_mappings,
     load_off_door_open = load_off_door_open,

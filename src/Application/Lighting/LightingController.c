@@ -9,6 +9,9 @@
 #include "utils.h"
 #include "VotedPwmDutyCyclePair.h"
 #include "PwmVotedDutyCycle.h"
+#include "RampingPwmDutyCyclePercentageVote.h"
+#include "RampingPwmDutyCycle.h"
+#include "PersonalityParametricData.h"
 
 static void OnDataModelChange(void *context, const void *_args)
 {
@@ -19,21 +22,30 @@ static void OnDataModelChange(void *context, const void *_args)
    VotedPwmDutyCyclePair_t foundPwmDutyCyclePair;
    if(ConstArrayMap_Find(instance->_private.votedPwmToPwmMap, &args->erd, &foundIndex, &foundPwmDutyCyclePair))
    {
-      const PwmVotedDutyCycle_t *pwmVotedDutyCycle = args->data;
+      const RampingPwmDutyCyclePercentageVote_t *pwmVotedDutyCyclePercentage = args->data;
+      RampingPwmDutyCycle_t rampingDutyCycle;
+      PercentageDutyCycle_t maximumLightDutyCyclePercentage = instance->_private.lightingData->maximumLightDutyCyclePercentage;
+
+      rampingDutyCycle.pwmDutyCycle = (pwmVotedDutyCyclePercentage->rampingPwmDutyCyclePercentage.pwmDutyCyclePercentage * UINT16_MAX * maximumLightDutyCyclePercentage) / (100 * 100);
+      rampingDutyCycle.rampingUpCountPerMsec = pwmVotedDutyCyclePercentage->rampingPwmDutyCyclePercentage.rampingUpCountInMsec;
+      rampingDutyCycle.rampingDownCountPerMsec = pwmVotedDutyCyclePercentage->rampingPwmDutyCyclePercentage.rampingDownCountInMsec;
+
       DataModel_Write(
          instance->_private.dataModel,
          foundPwmDutyCyclePair.pwmDutyCycleErd,
-         pwmVotedDutyCycle);
+         &rampingDutyCycle);
    }
 }
 
 void LightingController_Init(
    LightingController_t *instance,
    I_DataModel_t *dataModel,
-   I_ConstArrayMap_t *votedPwmToPwmMap)
+   I_ConstArrayMap_t *votedPwmToPwmMap,
+   const LightingData_t *lightingData)
 {
    instance->_private.dataModel = dataModel,
    instance->_private.votedPwmToPwmMap = votedPwmToPwmMap,
+   instance->_private.lightingData = lightingData,
 
    EventSubscription_Init(
       &instance->_private.onDataModelChangeSubscription,

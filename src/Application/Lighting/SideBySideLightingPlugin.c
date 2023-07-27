@@ -54,10 +54,10 @@ static const ErdResolverConfiguration_t freezerTopLightErdResolverConfiguration 
 };
 
 static const VotedPwmDutyCyclePair_t votedPwmPairs[] = {
-   { Erd_FreshFoodBackWallLight_ResolvedVote, Erd_FreshFoodBackWallLight_Pwm },
-   { Erd_FreshFoodTopLight_ResolvedVote, Erd_FreshFoodTopLight_Pwm },
-   { Erd_FreezerBackWallLight_ResolvedVote, Erd_FreezerBackWallLight_Pwm },
-   { Erd_FreezerTopLight_ResolvedVote, Erd_FreezerTopLight_Pwm }
+   { Erd_FreshFoodBackWallLight_ResolvedVote, Erd_FreshFoodBackWallLight_RampingPwm },
+   { Erd_FreshFoodTopLight_ResolvedVote, Erd_FreshFoodTopLight_RampingPwm },
+   { Erd_FreezerBackWallLight_ResolvedVote, Erd_FreezerBackWallLight_RampingPwm },
+   { Erd_FreezerTopLight_ResolvedVote, Erd_FreezerTopLight_RampingPwm }
 };
 
 static const ConstArrayMap_LinearSearchConfiguration_t linearMapConfiguration = {
@@ -72,34 +72,56 @@ static const Erd_t freshFoodDoorErds[] = {
    Erd_RightSideFreshFoodDoorStatusResolved
 };
 
-static const Erd_t freshFoodPwmVotedDutyCycleErds[] = {
+static const Erd_t freshFoodPwmBackWallVotedDutyCycleErds[] = {
    Erd_FreshFoodBackWallLight_DoorVote,
+};
+
+static const LightingDoorVoteResolverConfig_t freshFoodBackWallLightingDoorVoteResolverConfig = {
+   .timerModuleErd = Erd_TimerModule,
+   .doorIsOpenErds = freshFoodDoorErds,
+   .rampingPwmDutyCyclePercentageErds = freshFoodPwmBackWallVotedDutyCycleErds,
+   .numberOfDoorErds = NUM_ELEMENTS(freshFoodDoorErds),
+   .numberOfRampingPwmDutyCyclePercentageErds = NUM_ELEMENTS(freshFoodPwmBackWallVotedDutyCycleErds),
+};
+
+static const Erd_t freshFoodTopLightPwmVotedDutyCycleErds[] = {
    Erd_FreshFoodTopLight_DoorVote
 };
 
-static const LightingDoorVoteResolverConfig_t freshFoodLightingDoorVoteResolverConfig = {
+static const LightingDoorVoteResolverConfig_t freshFoodTopLightLightingDoorVoteResolverConfig = {
    .timerModuleErd = Erd_TimerModule,
    .doorIsOpenErds = freshFoodDoorErds,
-   .pwmVotedDutyCycleErds = freshFoodPwmVotedDutyCycleErds,
+   .rampingPwmDutyCyclePercentageErds = freshFoodTopLightPwmVotedDutyCycleErds,
    .numberOfDoorErds = NUM_ELEMENTS(freshFoodDoorErds),
-   .numberOfPwmVotedDutyCycleErds = NUM_ELEMENTS(freshFoodPwmVotedDutyCycleErds),
+   .numberOfRampingPwmDutyCyclePercentageErds = NUM_ELEMENTS(freshFoodTopLightPwmVotedDutyCycleErds),
 };
 
 static const Erd_t freezerDoorErds[] = {
    Erd_LeftSideFreezerDoorStatusResolved,
 };
 
-static const Erd_t freezerPwmVotedDutyCycleErds[] = {
-   Erd_FreezerBackWallLight_DoorVote,
+static const Erd_t freezerBackWallPwmVotedDutyCycleErds[] = {
+   Erd_FreezerBackWallLight_DoorVote
+};
+
+static const LightingDoorVoteResolverConfig_t freezerBackWallLightingDoorVoteResolverConfig = {
+   .timerModuleErd = Erd_TimerModule,
+   .doorIsOpenErds = freezerDoorErds,
+   .rampingPwmDutyCyclePercentageErds = freezerBackWallPwmVotedDutyCycleErds,
+   .numberOfDoorErds = NUM_ELEMENTS(freezerDoorErds),
+   .numberOfRampingPwmDutyCyclePercentageErds = NUM_ELEMENTS(freezerBackWallPwmVotedDutyCycleErds),
+};
+
+static const Erd_t freezerTopLightPwmVotedDutyCycleErds[] = {
    Erd_FreezerTopLight_DoorVote
 };
 
-static const LightingDoorVoteResolverConfig_t freezerLightingDoorVoteResolverConfig = {
+static const LightingDoorVoteResolverConfig_t freezerTopLightLightingDoorVoteResolverConfig = {
    .timerModuleErd = Erd_TimerModule,
    .doorIsOpenErds = freezerDoorErds,
-   .pwmVotedDutyCycleErds = freezerPwmVotedDutyCycleErds,
+   .rampingPwmDutyCyclePercentageErds = freezerTopLightPwmVotedDutyCycleErds,
    .numberOfDoorErds = NUM_ELEMENTS(freezerDoorErds),
-   .numberOfPwmVotedDutyCycleErds = NUM_ELEMENTS(freezerPwmVotedDutyCycleErds),
+   .numberOfRampingPwmDutyCyclePercentageErds = NUM_ELEMENTS(freezerTopLightPwmVotedDutyCycleErds),
 };
 
 static void InitializeErdResolvers(
@@ -142,15 +164,30 @@ void SideBySideLightingPlugin_Init(
    LightingController_Init(
       &instance->_private.lightingController,
       dataModel,
-      &instance->_private.linearMap.interface);
+      &instance->_private.linearMap.interface,
+      PersonalityParametricData_Get(dataModel)->lightingData);
 
    LightingDoorVoteResolver_Init(
-      &instance->_private.freshFoodLightingDoorVoteResolver,
+      &instance->_private.freshFoodBackWallLightingDoorVoteResolver,
       dataModel,
-      &freshFoodLightingDoorVoteResolverConfig);
+      &freshFoodBackWallLightingDoorVoteResolverConfig,
+      PersonalityParametricData_Get(dataModel)->lightingData->freshFoodBackWallDoorLightingData);
 
    LightingDoorVoteResolver_Init(
-      &instance->_private.freezerLightingDoorVoteResolver,
+      &instance->_private.freshFoodTopLightLightingDoorVoteResolver,
       dataModel,
-      &freezerLightingDoorVoteResolverConfig);
+      &freshFoodTopLightLightingDoorVoteResolverConfig,
+      PersonalityParametricData_Get(dataModel)->lightingData->freshFoodTopAndSideDoorLightingData);
+
+   LightingDoorVoteResolver_Init(
+      &instance->_private.freezerBackWallLightingDoorVoteResolver,
+      dataModel,
+      &freezerBackWallLightingDoorVoteResolverConfig,
+      PersonalityParametricData_Get(dataModel)->lightingData->freezerBackWallDoorLightingData);
+
+   LightingDoorVoteResolver_Init(
+      &instance->_private.freezerTopLightLightingDoorVoteResolver,
+      dataModel,
+      &freezerTopLightLightingDoorVoteResolverConfig,
+      PersonalityParametricData_Get(dataModel)->lightingData->freezerTopAndSideDoorLightingData);
 }

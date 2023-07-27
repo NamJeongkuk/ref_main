@@ -10,6 +10,7 @@
 
 #include "I_DataModel.h"
 #include "I_ConstArrayMap.h"
+#include "LightingData.h"
 
 typedef struct
 {
@@ -18,6 +19,7 @@ typedef struct
       I_DataModel_t *dataModel;
       EventSubscription_t onDataModelChangeSubscription;
       I_ConstArrayMap_t *votedPwmToPwmMap;
+      const LightingData_t *lightingData;
    } _private;
 } LightingController_t;
 
@@ -29,6 +31,7 @@ typedef struct
 void LightingController_Init(
    LightingController_t *instance,
    I_DataModel_t *dataModel,
-   I_ConstArrayMap_t *votedPwmToPwmMap);
+   I_ConstArrayMap_t *votedPwmToPwmMap,
+   const LightingData_t *lightingData);
 
 #endif

@@ -20,9 +20,7 @@ void SideBySideConfigurationPlugin_Init(SideBySideConfigurationPlugin_t *instanc
    RecessHeaterPlugin_Init(&instance->_private.recessHeaterPlugin, dataModel);
    SideBySideFactoryPlugin_Init(&instance->_private.factoryPlugin, dataModel);
    SideBySideDispensePlugin_Init(&instance->_private.dispensePlugin, dataModel);
-
-   // Todo: ShouldSetLightBspErdsToPwmDutyCycleMinWhenFactoryModeLightErdsEnabled in FactoryModeIntegration should be enabled after SideBySideLightingPlugin_Init is enabled
-   // SideBySideLightingPlugin_Init(&instance->_private.lightingPlugin, dataModel);
+   SideBySideLightingPlugin_Init(&instance->_private.lightingPlugin, dataModel);
 
    SignOfLifePlugin_Init(&instance->_private.signOfLifePlugin, dataModel);
    SideBySideBooleanRequestStatusUpdaterPlugin_Init(&instance->_private.requestStatusUpdaterPlugin, dataModel);

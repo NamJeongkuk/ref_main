@@ -10,14 +10,15 @@
 
 #include "I_DataModel.h"
 #include "Timer.h"
+#include "DoorLightingData.h"
 
 typedef struct
 {
    Erd_t timerModuleErd; // TimerModule *
    const Erd_t *doorIsOpenErds; // bool[]
-   const Erd_t *pwmVotedDutyCycleErds; // PwmVotedDutyCycle_t[]
+   const Erd_t *rampingPwmDutyCyclePercentageErds; // Erd_t[]
    uint8_t numberOfDoorErds;
-   uint8_t numberOfPwmVotedDutyCycleErds;
+   uint8_t numberOfRampingPwmDutyCyclePercentageErds;
 } LightingDoorVoteResolverConfig_t;
 
 typedef struct
@@ -28,12 +29,14 @@ typedef struct
       const LightingDoorVoteResolverConfig_t *config;
       EventSubscription_t onDataModelChangeSubscription;
       Timer_t maxDoorOpenTimer;
+      const DoorLightingData_t *doorLightingDataType;
    } _private;
 } LightingDoorVoteResolver_t;
 
 void LightingDoorVoteResolver_Init(
    LightingDoorVoteResolver_t *instance,
    I_DataModel_t *dataModel,
-   const LightingDoorVoteResolverConfig_t *config);
+   const LightingDoorVoteResolverConfig_t *config,
+   const DoorLightingData_t *doorLightingDataType);
 
 #endif

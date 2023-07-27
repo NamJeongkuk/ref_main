@@ -31,6 +31,7 @@ return function(core)
         pointer(config.dispenser),
         pointer(config.recess_heater),
         pointer(config.turbo_mode_setpoint),
+        pointer(config.lighting),
         pointer(config.load_off_door_open_compartment_list)
       ))
   end)
@@ -58,6 +59,7 @@ return function(core)
       dispenser = { constraint.typed_string('dispenser') },
       recess_heater = { constraint.typed_string('recess_heater') },
       turbo_mode_setpoint = { constraint.typed_string('turbo_mode_setpoint') },
+      lighting = { constraint.typed_string('lighting') },
       load_off_door_open_compartment_list = { constraint.typed_string('load_off_door_open_compartment_list') }
     })
     return generate(config)

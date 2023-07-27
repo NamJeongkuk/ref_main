@@ -31,6 +31,7 @@ describe("personality", function()
       dispenser = TypedString('dispenser', 'dispenser'),
       recess_heater = TypedString('recess_heater', 'recess_heater'),
       turbo_mode_setpoint = TypedString('turbo_mode_setpoint', 'turbo_mode_setpoint'),
+      lighting = TypedString('lighting', 'lighting'),
       load_off_door_open_compartment_list = TypedString('load_off_door_open_compartment_list', 'load_off_door_open_compartment_list')
     }, overrides or {})
   end
@@ -207,6 +208,14 @@ describe("personality", function()
     end)
   end)
 
+  it('should constain all arguments', function()
+    should_fail_with('lighting must be a typed string with type lighting, but is a number', function()
+      personality(generate_config({
+        lighting = -1
+      }))
+    end)
+  end)
+
   it('should constrain all arguments', function()
     should_fail_with('load_off_door_open_compartment_list must be a typed string with type load_off_door_open_compartment_list, but is a number', function()
       personality(generate_config({
@@ -239,6 +248,7 @@ describe("personality", function()
         pointer(dispenser),
         pointer(recess_heater),
         pointer(turbo_mode_setpoint),
+        pointer(lighting),
         pointer(load_off_door_open_compartment_list)
       )
     ]])

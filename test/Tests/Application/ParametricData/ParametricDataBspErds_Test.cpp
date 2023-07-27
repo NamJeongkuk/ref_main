@@ -62,26 +62,26 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForBackwallLightPwm)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_FreshFoodBackWallLight_Pwm)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_FreshFoodBackWallLight_RampingPwm)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_FreshFoodBackWallLight_Pwm);
+   CHECK_EQUAL(*erd, Erd_FreshFoodBackWallLight_RampingPwm);
 }
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForFreshFoodLightPwm)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_FreshFoodTopLight_Pwm)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_FreshFoodTopLight_RampingPwm)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_FreshFoodTopLight_Pwm);
+   CHECK_EQUAL(*erd, Erd_FreshFoodTopLight_RampingPwm);
 }
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForFeezerLightPwm)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_FreezerTopLight_Pwm)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_FreezerTopLight_RampingPwm)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_FreezerTopLight_Pwm);
+   CHECK_EQUAL(*erd, Erd_FreezerTopLight_RampingPwm);
 }
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMakerMoldThermistorAdcCount)

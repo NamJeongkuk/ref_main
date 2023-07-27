@@ -29,6 +29,7 @@
 #include "FlowMeterData.h"
 #include "DispenserData.h"
 #include "RecessHeaterData.h"
+#include "LightingData.h"
 #include "LoadOffDoorOpenData.h"
 
 enum
@@ -59,6 +60,7 @@ typedef struct
    const DispenserData_t *dispenserData;
    const RecessHeaterData_t *recessHeaterData;
    const TurboModeSetpointData_t *turboModeSetpointData;
+   const LightingData_t *lightingData;
    const LoadOffDoorOpenData_t *loadOffDoorOpenData;
 } PersonalityParametricData_t;
 
