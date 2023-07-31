@@ -37,7 +37,8 @@ enum
    ValidAdcCount = 30336,
    RelayDelay = 2 * MSEC_PER_SEC,
    Invalid = false,
-   Valid = true
+   Valid = true,
+   Harvested = TwistTrayIceMakerMotorActionResult_Harvested
 };
 
 TEST_GROUP(TwistTrayIceMakerIntegration)
@@ -364,6 +365,22 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
          default:
             CHECK_FALSE("Invalid State");
       };
+   }
+
+   void WhenTheMotorActionResultIs(TwistTrayIceMakerMotorActionResult_t motorActionResult)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_TwistTrayIceMaker_MotorActionResult,
+         &motorActionResult);
+   }
+
+   void WhenTheTestRequestIs(IceMakerTestRequest_t request)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_TwistTrayIceMakerTestRequest,
+         &request);
    }
 };
 
@@ -836,4 +853,17 @@ TEST(TwistTrayIceMakerIntegration, ShouldTransitionFromFreezeToHarvestingOnceHar
 
    After(1);
    OperationStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+}
+
+TEST(TwistTrayIceMakerIntegration, ShouldTransitionToFillStateWhenTestRequestIsFillInHarvestingStateAndHarvestIsCompleted)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
+   GivenTheApplicationIsInitializedAndIceMakerIsInHarvest();
+
+   WhenTheMotorActionResultIs(Harvested);
+   OperationStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+
+   WhenTheTestRequestIs(IceMakerTestRequest_Fill);
+   OperationStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 }

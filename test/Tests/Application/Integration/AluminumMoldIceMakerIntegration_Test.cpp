@@ -1487,13 +1487,13 @@ TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToFillStateIfFillTestIsReq
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
 }
 
-TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToFillStateIfFillTestIsRequestedWhileInThermistorFaultState)
+TEST(AluminumMoldIceMakerIntegration, ShouldNotTransitionToFillStateIfFillTestIsRequestedWhileInThermistorFaultState)
 {
    GivenTheApplicationHasBeenInitializedAndEntersState(AluminumMoldIceMakerHsmState_ThermistorFault);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
 
    WhenTheAluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_Fill);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
 }
 
 TEST(AluminumMoldIceMakerIntegration, ShouldResetTestRequestWhenHarvestTestIsRequested)

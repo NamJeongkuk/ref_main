@@ -248,6 +248,11 @@ TEST_GROUP(TwistTrayIceMaker)
          &motorActionResult);
    }
 
+   void GivenTheMotorActionResultIs(TwistTrayIceMakerMotorActionResult_t motorActionResult)
+   {
+      WhenTheMotorActionResultIs(motorActionResult);
+   }
+
    void WhenTheFreezerDoorIs(bool freezerDoorState)
    {
       DataModel_Write(
@@ -2271,4 +2276,24 @@ TEST(TwistTrayIceMaker, ShouldNotDelayFillMonitoringWhenIceMakerThermistorBecome
 
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
    WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotTransitionToFillStateWhenTestRequestIsFillInHarvestingStateAndHarvestIsNotCompleted)
+{
+   GivenTheOperationStateIsInHarvesting();
+
+   WhenTheTestRequestIs(IceMakerTestRequest_Fill);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+}
+
+TEST(TwistTrayIceMaker, ShouldTransitionToFillStateWhenTestRequestIsFillInHarvestingStateAndHarvestIsCompleted)
+{
+   GivenTheOperationStateIsInHarvesting();
+   GivenTheMotorActionResultIs(Harvested);
+
+   TheMotorShouldBeRequestedTo(Idle);
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   FillingShouldStart();
+   WhenTheTestRequestIs(IceMakerTestRequest_Fill);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 }

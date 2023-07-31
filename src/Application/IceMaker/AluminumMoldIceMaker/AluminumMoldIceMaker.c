@@ -1004,9 +1004,6 @@ static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          }
          break;
 
-      case Signal_TestRequest_Fill:
-         break;
-
       case Signal_StopFill:
          if(MoldThermistorIsNotValid(instance))
          {
@@ -1098,6 +1095,7 @@ static bool State_ThermistorFault(Hsm_t *hsm, HsmSignal_t signal, const void *da
          break;
 
       case Signal_TestRequest_Harvest:
+      case Signal_TestRequest_Fill:
          break;
 
       case Hsm_Exit:

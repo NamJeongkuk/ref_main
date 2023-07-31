@@ -455,6 +455,13 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          instance->_private.delayFillMonitoring = false;
          break;
 
+      case Signal_TestRequest_Fill:
+         if(MotorActionResultIs(instance, Harvested))
+         {
+            Fsm_Transition(fsm, State_FillingTrayWithWater);
+         }
+         break;
+
       case Fsm_Exit:
          VoteForFillTubeHeaterOffAndDontCare(instance);
          StopFillTubeHeaterTimer(instance);
