@@ -88,7 +88,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_Ambient_ResolvedHumidityPercentx100",
+         "name": "Erd_Ambient_FilteredHumidityResolvedPercentx100",
          "interval": 60000
       },
       {
