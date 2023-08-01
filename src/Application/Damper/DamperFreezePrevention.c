@@ -271,8 +271,7 @@ void State_MonitoringTemperatureChange(Fsm_t *fsm, const FsmSignal_t signal, con
    {
       case Fsm_Entry:
          SetFsmStateTo(instance, DamperFreezePreventionFsmState_MonitoringTemperatureChange);
-         break;
-
+      // Intentional Fall Through
       case Signal_CurrentDamperPositionChanged:
          instance->_private.startingTemperature = TargetTemperature(instance);
 
@@ -290,6 +289,10 @@ void State_MonitoringTemperatureChange(Fsm_t *fsm, const FsmSignal_t signal, con
             {
                Fsm_Transition(fsm, State_DamperHeaterOn);
             }
+            else
+            {
+               Fsm_Transition(fsm, State_MonitoringTemperatureChange);
+            }
          }
          else
          {
@@ -297,6 +300,10 @@ void State_MonitoringTemperatureChange(Fsm_t *fsm, const FsmSignal_t signal, con
                instance->_private.singleDamperData->targetCompartmentMinimumTemperatureChangeInDegFx100)
             {
                Fsm_Transition(fsm, State_DamperHeaterOn);
+            }
+            else
+            {
+               Fsm_Transition(fsm, State_MonitoringTemperatureChange);
             }
          }
          break;

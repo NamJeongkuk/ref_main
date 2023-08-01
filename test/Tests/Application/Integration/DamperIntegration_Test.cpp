@@ -323,6 +323,14 @@ TEST_GROUP(DamperIntegration)
       CHECK_TRUE(actualPosition.care);
    }
 
+   void FreezePreventionDamperPositionVoteShouldBeDontCare()
+   {
+      DamperVotedPosition_t actualPosition;
+      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_DamperFreezePreventionVote, &actualPosition);
+
+      CHECK_FALSE(actualPosition.care);
+   }
+
    void StepRequestShouldBeDoorPositionClosed()
    {
       StepperPositionRequest_t stepRequest;
@@ -532,13 +540,16 @@ TEST(DamperIntegration, ShouldContinueRequestingForDamperToCloseWhenMaxTimeOpenI
    And TargetTemperatureIs(InitialTemperatureInDegFx100);
    And StepsAreSetToZero();
    DamperCurrentPositionShouldBe(DamperPosition_Open);
-   And TargetTemperatureIs(freshFoodDamperData->targetCompartmentMinimumTemperatureChangeInDegFx100 - InitialTemperatureInDegFx100);
-   After((freshFoodDamperData->maxTimeForDamperToBeOpenInMinutes * MSEC_PER_MIN) - 1);
-   DamperPositionShouldBeDontCareForMaxOpenTimeVote();
-   DamperPositionWinningVoteErdShouldBe(Erd_FreshFoodDamperPosition_FactoryVote);
-   DamperPositionResolvedVoteShouldBe(DamperPosition_Open);
 
-   After(1);
+   // This lowers the temperature periodically so as to prevent the damper freeze prevention from closing damper.
+   // Also this assumes that the max open time is a multiple of the the minimum temperature change time.
+   for(int i = 1; i <= (freshFoodDamperData->maxTimeForDamperToBeOpenInMinutes / freshFoodDamperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes); i++)
+   {
+      TargetTemperatureIs(InitialTemperatureInDegFx100 - (freshFoodDamperData->targetCompartmentMinimumTemperatureChangeInDegFx100 * i));
+      After((freshFoodDamperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN));
+      FreezePreventionDamperPositionVoteShouldBeDontCare();
+   }
+
    DamperPositionShouldBeDamperClosedAndCareForMaxOpenTimeVote();
    DamperPositionWinningVoteErdShouldBe(Erd_FreshFoodDamperPosition_FactoryVote);
    DamperPositionResolvedVoteShouldBe(DamperPosition_Open);
@@ -561,11 +572,15 @@ TEST(DamperIntegration, ShouldCloseDamperWhenDefrostVotesForDamperOpenAndThenMax
    When StepsAreSetToZero();
    DamperCurrentPositionShouldBe(DamperPosition_Open);
 
-   When TargetTemperatureIs(freshFoodDamperData->targetCompartmentMinimumTemperatureChangeInDegFx100 - InitialTemperatureInDegFx100);
-   After((freshFoodDamperData->maxTimeForDamperToBeOpenInMinutes * MSEC_PER_MIN) - 1);
-   DamperPositionShouldBeDontCareForMaxOpenTimeVote();
+   // This lowers the temperature periodically so as to prevent the damper freeze prevention from closing damper.
+   // Also this assumes that the max open time is a multiple of the the minimum temperature change time.
+   for(int i = 1; i <= (freshFoodDamperData->maxTimeForDamperToBeOpenInMinutes / freshFoodDamperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes); i++)
+   {
+      TargetTemperatureIs(InitialTemperatureInDegFx100 - (freshFoodDamperData->targetCompartmentMinimumTemperatureChangeInDegFx100 * i));
+      After((freshFoodDamperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN));
+      FreezePreventionDamperPositionVoteShouldBeDontCare();
+   }
 
-   After(1);
    DamperPositionShouldBeDamperClosedAndCareForMaxOpenTimeVote();
    DamperPositionResolvedVoteShouldBe(DamperPosition_Closed);
    DamperPositionWinningVoteErdShouldBe(Erd_FreshFoodDamperPosition_MaxOpenTimeVote);

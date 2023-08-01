@@ -604,3 +604,40 @@ TEST(DamperFreezePrevention, ShouldTransitionToMonitoringTemperatureChangeAfterV
 
    DamperFreezePreventionFsmStateShouldBe(DamperFreezePreventionFsmState_MonitoringTemperatureChange);
 }
+
+TEST(DamperFreezePrevention, ShouldAttemptToDefrostDamperRepeatedly)
+{
+   Given DamperFreezePreventionIsInMonitoringTemperatureChange();
+   Given TargetTemperatureIs(InitialTemperatureInDegFx100);
+
+   When DamperOpens();
+   TargetTemperatureIs(InitialTemperatureInDegFx100 - (freshFoodDamperParametricData->targetCompartmentMinimumTemperatureChangeInDegFx100 - 1));
+   After(freshFoodDamperParametricData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN);
+   After(freshFoodDamperParametricData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN);
+   DamperPositionShouldBeVoted(DamperPosition_Closed);
+
+   When DamperCloses();
+   DamperPositionShouldBeVotedDontCare();
+
+   When DamperOpens();
+   After(freshFoodDamperParametricData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN);
+   After(freshFoodDamperParametricData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN);
+   DamperPositionShouldBeVoted(DamperPosition_Closed);
+}
+
+TEST(DamperFreezePrevention, ShouldAttemptToDefrostEvenIfItDoesntOnTheFirstTry)
+{
+   Given DamperFreezePreventionIsInMonitoringTemperatureChange();
+   Given TargetTemperatureIs(InitialTemperatureInDegFx100);
+
+   When DamperOpens();
+   TargetTemperatureIs(InitialTemperatureInDegFx100 - (freshFoodDamperParametricData->targetCompartmentMinimumTemperatureChangeInDegFx100));
+   After(freshFoodDamperParametricData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN);
+   DamperHeaterShouldNotBeVotedFor();
+   DamperPositionShouldBeVotedDontCare();
+
+   TargetTemperatureIs(InitialTemperatureInDegFx100 - (freshFoodDamperParametricData->targetCompartmentMinimumTemperatureChangeInDegFx100 - 1));
+   After(freshFoodDamperParametricData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN);
+   After(freshFoodDamperParametricData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN);
+   DamperPositionShouldBeVoted(DamperPosition_Closed);
+}
