@@ -158,6 +158,11 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_GridArea",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_CoolingMode",
          "interval": 60000
       },
