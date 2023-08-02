@@ -93,12 +93,12 @@ static TwistTrayIceMaker_t *InstanceFrom(Fsm_t *fsm)
 
 static void UpdateHighLevelState(TwistTrayIceMaker_t *instance, TwistTrayIceMakerHighLevelState_t newState)
 {
-   DataSource_Write(instance->_private.dataSource, Erd_TwistTrayIceMaker_HighLevelState, &newState);
+   DataSource_Write(instance->_private.dataSource, instance->_private.config->highLevelStateErd, &newState);
 }
 
 static void UpdateOperationState(TwistTrayIceMaker_t *instance, TwistTrayIceMakerOperationState_t newState)
 {
-   DataSource_Write(instance->_private.dataSource, Erd_TwistTrayIceMaker_OperationState, &newState);
+   DataSource_Write(instance->_private.dataSource, instance->_private.config->operationStateErd, &newState);
 }
 
 static void RequestMotorAction(TwistTrayIceMaker_t *instance, TwistTrayIceMakerMotorAction_t newMotorAction)
@@ -107,7 +107,7 @@ static void RequestMotorAction(TwistTrayIceMaker_t *instance, TwistTrayIceMakerM
    motorVote.action = newMotorAction;
    motorVote.care = (newMotorAction == TwistTrayIceMakerMotorAction_Idle) ? Vote_DontCare : Vote_Care;
 
-   DataSource_Write(instance->_private.dataSource, Erd_TwistTrayIceMakerMotor_IceMakerVote, &motorVote);
+   DataSource_Write(instance->_private.dataSource, instance->_private.config->motorIceMakerVoteErd, &motorVote);
 }
 
 static bool ItIsSabbathMode(TwistTrayIceMaker_t *instance)
@@ -115,8 +115,8 @@ static bool ItIsSabbathMode(TwistTrayIceMaker_t *instance)
    bool sabbathMode;
    bool enhancedSabbathMode;
 
-   DataSource_Read(instance->_private.dataSource, Erd_SabbathMode, &sabbathMode);
-   DataSource_Read(instance->_private.dataSource, Erd_EnhancedSabbathModeStatus, &enhancedSabbathMode);
+   DataSource_Read(instance->_private.dataSource, instance->_private.config->sabbathModeErd, &sabbathMode);
+   DataSource_Read(instance->_private.dataSource, instance->_private.config->enhancedSabbathModeErd, &enhancedSabbathMode);
 
    return (sabbathMode || enhancedSabbathMode);
 }
@@ -124,7 +124,7 @@ static bool ItIsSabbathMode(TwistTrayIceMaker_t *instance)
 static bool IceMakerIsEnabled(TwistTrayIceMaker_t *instance)
 {
    bool iceMakerIsEnabled;
-   DataSource_Read(instance->_private.dataSource, Erd_IceMakerEnabledResolved, &iceMakerIsEnabled);
+   DataSource_Read(instance->_private.dataSource, instance->_private.config->iceMakerEnabledResolvedErd, &iceMakerIsEnabled);
 
    return iceMakerIsEnabled;
 }
@@ -144,22 +144,22 @@ static void UpdateWaterValve(TwistTrayIceMaker_t *instance, bool newState)
       vote.state = WaterValveState_Off;
    }
 
-   DataSource_Write(instance->_private.dataSource, Erd_TwistTrayIceMakerWaterValve_IceMakerVote, &vote);
-   DataSource_Write(instance->_private.dataSource, Erd_IsolationWaterValve_TwistTrayIceMakerVote, &vote);
+   DataSource_Write(instance->_private.dataSource, instance->_private.config->waterValveIceMakerVoteErd, &vote);
+   DataSource_Write(instance->_private.dataSource, instance->_private.config->isolationWaterValveVoteErd, &vote);
 }
 
 static void SendFreezerIceRateSignal(TwistTrayIceMaker_t *instance)
 {
    Signal_SendViaErd(
       instance->_private.dataSource,
-      Erd_FreezerIceRateTriggerSignal);
+      instance->_private.config->freezerIceRateTriggerSignalErd);
 }
 
 static void SetWaterFillMonitoringRequestTo(TwistTrayIceMaker_t *instance, IceMakerWaterFillMonitoringRequest_t request)
 {
    DataSource_Write(
       instance->_private.dataSource,
-      Erd_TwistTrayIceMakerWaterFillMonitoringRequest,
+      instance->_private.config->waterFillMonitoringRequestErd,
       &request);
 }
 
@@ -170,7 +170,7 @@ static void VoteForFillTubeHeater(TwistTrayIceMaker_t *instance, PercentageDutyC
       .care = Vote_Care
    };
 
-   DataSource_Write(instance->_private.dataSource, Erd_FillTubeHeater_TwistTrayIceMakerVote, &vote);
+   DataSource_Write(instance->_private.dataSource, instance->_private.config->fillTubeHeaterVoteErd, &vote);
 }
 
 static void VoteForFillTubeHeaterOffAndDontCare(TwistTrayIceMaker_t *instance)
@@ -180,7 +180,7 @@ static void VoteForFillTubeHeaterOffAndDontCare(TwistTrayIceMaker_t *instance)
       .care = Vote_DontCare
    };
 
-   DataSource_Write(instance->_private.dataSource, Erd_FillTubeHeater_TwistTrayIceMakerVote, &vote);
+   DataSource_Write(instance->_private.dataSource, instance->_private.config->fillTubeHeaterVoteErd, &vote);
 }
 
 static void FillTubeHeaterTimerExpired(void *context)
@@ -212,7 +212,7 @@ static void StopFillTubeHeaterTimer(TwistTrayIceMaker_t *instance)
 static bool MotorActionResultIs(TwistTrayIceMaker_t *instance, TwistTrayIceMakerMotorActionResult_t expected)
 {
    TwistTrayIceMakerMotorActionResult_t actual;
-   DataSource_Read(instance->_private.dataSource, Erd_TwistTrayIceMaker_MotorActionResult, &actual);
+   DataSource_Read(instance->_private.dataSource, instance->_private.config->motorActionResultErd, &actual);
    return actual == expected;
 }
 
@@ -224,7 +224,7 @@ static bool HarvestDoorDelayHasElapsed(TwistTrayIceMaker_t *instance)
 static bool IceMakerThermistorIsValid(TwistTrayIceMaker_t *instance)
 {
    bool thermistorIsValid;
-   DataSource_Read(instance->_private.dataSource, Erd_TwistTrayIceMakerThermistor_IsValidResolved, &thermistorIsValid);
+   DataSource_Read(instance->_private.dataSource, instance->_private.config->thermistorIsValidResolvedErd, &thermistorIsValid);
 
    return thermistorIsValid;
 }
@@ -234,13 +234,13 @@ static bool HarvestConditionsHaveBeenMet(TwistTrayIceMaker_t *instance)
    TemperatureDegFx100_t iceTrayTempx100;
    DataSource_Read(
       instance->_private.dataSource,
-      Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
+      instance->_private.config->filteredTemperatureResolvedInDegFx100Erd,
       &iceTrayTempx100);
 
    bool harvestCountIsReadyToHarvest;
    DataSource_Read(
       instance->_private.dataSource,
-      Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest,
+      instance->_private.config->harvestCountIsReadyToHarvestErd,
       &harvestCountIsReadyToHarvest);
 
    return (iceTrayTempx100 < MaxHarvestTemperatureInDegFx100) &&
@@ -252,7 +252,7 @@ static void RequestHarvestCountCalculation(TwistTrayIceMaker_t *instance)
 {
    DataSource_Write(
       instance->_private.dataSource,
-      Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,
+      instance->_private.config->harvestCountCalculationRequestErd,
       set);
 }
 
@@ -260,7 +260,7 @@ static void StopHarvestCountCalculation(TwistTrayIceMaker_t *instance)
 {
    DataSource_Write(
       instance->_private.dataSource,
-      Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,
+      instance->_private.config->harvestCountCalculationRequestErd,
       clear);
 }
 
@@ -269,7 +269,7 @@ static bool CoolingSystemIsOff(TwistTrayIceMaker_t *instance)
    bool coolingSystemIsOff;
    DataSource_Read(
       instance->_private.dataSource,
-      Erd_CoolingOffStatus,
+      instance->_private.config->coolingOffStatusErd,
       &coolingSystemIsOff);
 
    return coolingSystemIsOff;
@@ -285,7 +285,7 @@ static bool FreezerIceRateIsActive(TwistTrayIceMaker_t *instance)
    bool iceRateIsActive;
    DataSource_Read(
       instance->_private.dataSource,
-      Erd_Freezer_IceRateIsActive,
+      instance->_private.config->freezerIceRateIsActiveErd,
       &iceRateIsActive);
 
    return iceRateIsActive;
@@ -615,7 +615,7 @@ static void State_MotorError(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          UpdateHighLevelState(instance, TwistTrayIceMakerHighLevelState_Fault);
 
          RequestMotorAction(instance, Idle);
-         DataSource_Write(instance->_private.dataSource, Erd_TwistTrayIceMaker_MotorFaultActive, set);
+         DataSource_Write(instance->_private.dataSource, instance->_private.config->motorFaultActiveErd, set);
          break;
 
       case Signal_TestRequest_Fill:
@@ -718,7 +718,7 @@ static void DataSourceChanged(void *context, const void *data)
    TwistTrayIceMaker_t *instance = context;
    const DataSourceOnDataChangeArgs_t *onChangeArgs = data;
 
-   if(onChangeArgs->erd == Erd_DispensingRequestStatus)
+   if(onChangeArgs->erd == instance->_private.config->dispensingRequestStatusErd)
    {
       const DispensingRequestStatus_t *dispensingRequestStatus = onChangeArgs->data;
 
@@ -754,15 +754,15 @@ static void DataSourceChanged(void *context, const void *data)
          }
       }
    }
-   else if((onChangeArgs->erd == Erd_SabbathMode) ||
-      (onChangeArgs->erd == Erd_EnhancedSabbathModeStatus))
+   else if((onChangeArgs->erd == instance->_private.config->sabbathModeErd) ||
+      (onChangeArgs->erd == instance->_private.config->enhancedSabbathModeErd))
    {
       if(!ItIsSabbathMode(instance))
       {
          Fsm_SendSignal(&instance->_private.fsm, Signal_SabbathModeDisabled, NULL);
       }
    }
-   else if(onChangeArgs->erd == Erd_LeftSideFreezerDoorStatusResolved)
+   else if(onChangeArgs->erd == instance->_private.config->leftSideFreezerDoorStatusResolvedErd)
    {
       REINTERPRET(doorIsOpen, onChangeArgs->data, const bool *);
 
@@ -777,7 +777,7 @@ static void DataSourceChanged(void *context, const void *data)
             instance);
       }
    }
-   else if(onChangeArgs->erd == Erd_TwistTrayIceMakerTestRequest)
+   else if(onChangeArgs->erd == instance->_private.config->testRequestErd)
    {
       const IceMakerTestRequest_t *testRequest = onChangeArgs->data;
 
@@ -797,11 +797,11 @@ static void DataSourceChanged(void *context, const void *data)
          IceMakerTestRequest_t testRequestValue = IceMakerTestRequest_None;
          DataSource_Write(
             instance->_private.dataSource,
-            Erd_TwistTrayIceMakerTestRequest,
+            instance->_private.config->testRequestErd,
             &testRequestValue);
       }
    }
-   else if(onChangeArgs->erd == Erd_TwistTrayIceMakerThermistor_IsValidResolved)
+   else if(onChangeArgs->erd == instance->_private.config->thermistorIsValidResolvedErd)
    {
       const bool *state = onChangeArgs->data;
       if(*state)
@@ -813,7 +813,7 @@ static void DataSourceChanged(void *context, const void *data)
          Fsm_SendSignal(&instance->_private.fsm, Signal_IceMakerThermistorIsInvalid, NULL);
       }
    }
-   else if(onChangeArgs->erd == Erd_TwistTrayIceMaker_MotorActionResult)
+   else if(onChangeArgs->erd == instance->_private.config->motorActionResultErd)
    {
       const TwistTrayIceMakerMotorActionResult_t *motorActionResult = onChangeArgs->data;
 
@@ -836,11 +836,11 @@ static void DataSourceChanged(void *context, const void *data)
             break;
       }
    }
-   else if(onChangeArgs->erd == Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100)
+   else if(onChangeArgs->erd == instance->_private.config->filteredTemperatureResolvedInDegFx100Erd)
    {
       Fsm_SendSignal(&instance->_private.fsm, Signal_IceMakerFilteredTemperatureChanged, NULL);
    }
-   else if(onChangeArgs->erd == Erd_IceMakerEnabledResolved)
+   else if(onChangeArgs->erd == instance->_private.config->iceMakerEnabledResolvedErd)
    {
       const bool *state = onChangeArgs->data;
       if(*state)
@@ -852,11 +852,11 @@ static void DataSourceChanged(void *context, const void *data)
          Fsm_SendSignal(&instance->_private.fsm, Signal_IceMakerIsDisabled, NULL);
       }
    }
-   else if(onChangeArgs->erd == Erd_TwistTrayIceMakerStopFillSignal)
+   else if(onChangeArgs->erd == instance->_private.config->stopFillSignalErd)
    {
       Fsm_SendSignal(&instance->_private.fsm, Signal_TrayFilled, NULL);
    }
-   else if(onChangeArgs->erd == Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest)
+   else if(onChangeArgs->erd == instance->_private.config->harvestCountIsReadyToHarvestErd)
    {
       const bool *state = onChangeArgs->data;
       if(*state)
@@ -864,7 +864,7 @@ static void DataSourceChanged(void *context, const void *data)
          Fsm_SendSignal(&instance->_private.fsm, Signal_HarvestCountIsReadyToHarvest, NULL);
       }
    }
-   else if(onChangeArgs->erd == Erd_CoolingOffStatus)
+   else if(onChangeArgs->erd == instance->_private.config->coolingOffStatusErd)
    {
       const bool *state = onChangeArgs->data;
       if(*state)
@@ -876,7 +876,7 @@ static void DataSourceChanged(void *context, const void *data)
          Fsm_SendSignal(&instance->_private.fsm, Signal_CoolingSystemIsTurnedOn, NULL);
       }
    }
-   else if(onChangeArgs->erd == Erd_Freezer_IceRateIsActive)
+   else if(onChangeArgs->erd == instance->_private.config->freezerIceRateIsActiveErd)
    {
       const bool *state = onChangeArgs->data;
       if(!*state)
@@ -890,10 +890,12 @@ void TwistTrayIceMaker_Init(
    TwistTrayIceMaker_t *instance,
    TimerModule_t *timerModule,
    I_DataSource_t *dataSource,
+   const TwistTrayIceMakerConfiguration_t *config,
    const TwistTrayIceMakerData_t *parametric)
 {
    instance->_private.timerModule = timerModule;
    instance->_private.dataSource = dataSource;
+   instance->_private.config = config;
    instance->_private.parametric = parametric;
    instance->_private.doorHarvestDelayHasElapsed = true;
    instance->_private.firstFreezeTransition = true;

@@ -144,6 +144,32 @@ static const OverrideArbiterConfiguration_t twistTrayIceMakerFilteredTemperature
    NUM_ELEMENTS(twistTrayIceMakerFilteredTemperatureOverrideRequestErdList)
 };
 
+static const TwistTrayIceMakerConfiguration_t twistTrayIceMakerConfiguration = {
+   .highLevelStateErd = Erd_TwistTrayIceMaker_HighLevelState,
+   .operationStateErd = Erd_TwistTrayIceMaker_OperationState,
+   .thermistorIsValidResolvedErd = Erd_TwistTrayIceMakerThermistor_IsValidResolved,
+   .filteredTemperatureResolvedInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .testRequestErd = Erd_TwistTrayIceMakerTestRequest,
+   .stopFillSignalErd = Erd_TwistTrayIceMakerStopFillSignal,
+   .harvestCountIsReadyToHarvestErd = Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest,
+   .harvestCountCalculationRequestErd = Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,
+   .motorIceMakerVoteErd = Erd_TwistTrayIceMakerMotor_IceMakerVote,
+   .waterValveIceMakerVoteErd = Erd_TwistTrayIceMakerWaterValve_IceMakerVote,
+   .motorActionResultErd = Erd_TwistTrayIceMaker_MotorActionResult,
+   .motorFaultActiveErd = Erd_TwistTrayIceMaker_MotorFaultActive,
+   .waterFillMonitoringRequestErd = Erd_TwistTrayIceMakerWaterFillMonitoringRequest,
+   .isolationWaterValveVoteErd = Erd_IsolationWaterValve_TwistTrayIceMakerVote,
+   .iceMakerEnabledResolvedErd = Erd_IceMakerEnabledResolved,
+   .sabbathModeErd = Erd_SabbathMode,
+   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeStatus,
+   .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
+   .fillTubeHeaterVoteErd = Erd_FillTubeHeater_TwistTrayIceMakerVote,
+   .coolingOffStatusErd = Erd_CoolingOffStatus,
+   .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
+   .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
+   .leftSideFreezerDoorStatusResolvedErd = Erd_LeftSideFreezerDoorStatusResolved
+};
+
 void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
 {
    const SensorData_t *sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
@@ -245,5 +271,6 @@ void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataMod
       &instance->_private.twistTrayIceMaker,
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
       DataModel_AsDataSource(dataModel),
+      &twistTrayIceMakerConfiguration,
       twistTrayIceMakerData);
 }

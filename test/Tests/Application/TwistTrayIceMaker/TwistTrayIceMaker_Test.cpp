@@ -54,6 +54,32 @@ enum
    OneSecond = 1 * MSEC_PER_SEC,
 };
 
+static const TwistTrayIceMakerConfiguration_t config = {
+   .highLevelStateErd = Erd_TwistTrayIceMaker_HighLevelState,
+   .operationStateErd = Erd_TwistTrayIceMaker_OperationState,
+   .thermistorIsValidResolvedErd = Erd_TwistTrayIceMakerThermistor_IsValidResolved,
+   .filteredTemperatureResolvedInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .testRequestErd = Erd_TwistTrayIceMakerTestRequest,
+   .stopFillSignalErd = Erd_TwistTrayIceMakerStopFillSignal,
+   .harvestCountIsReadyToHarvestErd = Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest,
+   .harvestCountCalculationRequestErd = Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,
+   .motorIceMakerVoteErd = Erd_TwistTrayIceMakerMotor_IceMakerVote,
+   .waterValveIceMakerVoteErd = Erd_TwistTrayIceMakerWaterValve_IceMakerVote,
+   .motorActionResultErd = Erd_TwistTrayIceMaker_MotorActionResult,
+   .motorFaultActiveErd = Erd_TwistTrayIceMaker_MotorFaultActive,
+   .waterFillMonitoringRequestErd = Erd_TwistTrayIceMakerWaterFillMonitoringRequest,
+   .isolationWaterValveVoteErd = Erd_IsolationWaterValve_TwistTrayIceMakerVote,
+   .iceMakerEnabledResolvedErd = Erd_IceMakerEnabledResolved,
+   .sabbathModeErd = Erd_SabbathMode,
+   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeStatus,
+   .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
+   .fillTubeHeaterVoteErd = Erd_FillTubeHeater_TwistTrayIceMakerVote,
+   .coolingOffStatusErd = Erd_CoolingOffStatus,
+   .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
+   .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
+   .leftSideFreezerDoorStatusResolvedErd = Erd_LeftSideFreezerDoorStatusResolved
+};
+
 static void OnDataModelChange(void *context, const void *_args)
 {
    REINTERPRET(args, _args, const DataModelOnDataChangeArgs_t *);
@@ -146,6 +172,7 @@ TEST_GROUP(TwistTrayIceMaker)
          &instance,
          &timerModuleTestDouble.timerModule,
          DataModel_AsDataSource(dataModel),
+         &config,
          iceMakerData);
    }
 
