@@ -162,15 +162,18 @@ TEST(TwistTrayIceMakerMotorRequestManager, ShouldSetMotorControlRequestWhenMotor
    TheMotorControlRequestShouldBe(SET);
 }
 
-TEST(TwistTrayIceMakerMotorRequestManager, ShouldNotRequestMotorControlIfVoteChangesToIdle)
+TEST(TwistTrayIceMakerMotorRequestManager, ShouldPassThroughIdleCommandIfVoteChangesToIdleButNotRequestMotorControlEnable)
 {
    GivenTheModuleIsInitialized();
 
    WhenTheMotorResolvedVoteIs(TwistTrayIceMakerMotorAction_RunCycle);
    TheMotorControlRequestShouldBe(SET);
+   WhenTheMotorDriveEnableIs(SET);
    WhenTheMotorActionResultIs(TwistTrayIceMakerMotorActionResult_Harvested);
+   TheMotorControlRequestShouldBe(CLEAR);
 
    WhenTheMotorResolvedVoteIs(TwistTrayIceMakerMotorAction_Idle);
+   DoActionShouldBe(TwistTrayIceMakerMotorAction_Idle, Signal_One + 1);
    TheMotorControlRequestShouldBe(CLEAR);
 }
 

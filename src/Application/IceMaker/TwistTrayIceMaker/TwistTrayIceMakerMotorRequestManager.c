@@ -58,6 +58,11 @@ static void DataModelChanged(void *context, const void *_args)
             instance->_private.config->motorRequestErd,
             set);
       }
+      else
+      {
+         // This allows the motor controller module to get the idle request and clear the motor action
+         UpdateMotorDoActionToResolvedVoteMotorAction(instance);
+      }
    }
    else if(args->erd == instance->_private.config->motorEnableErd)
    {

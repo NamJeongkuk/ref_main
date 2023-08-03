@@ -463,6 +463,10 @@ static void State_Idle(Fsm_t *fsm, FsmSignal_t signal, const void *data)
             UpdateMotorActionResult(instance, TwistTrayIceMakerMotorActionResult_Harvesting);
             Fsm_Transition(fsm, State_Harvest_CheckingIfBucketIsFull);
          }
+         else
+         {
+            UpdateMotorActionResult(instance, TwistTrayIceMakerMotorActionResult_NoAction);
+         }
          break;
    }
 }
