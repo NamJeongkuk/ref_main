@@ -3,7 +3,7 @@ return personality({
   enhancedSabbath = import("../EnhancedSabbath/enhanced_sabbath_number_of_fresh_food_defrosts_zero.lua"),
   fans = import("../Fan/fan_list.lua"),
   grid = import("../Grid/single_evap_grid_qa.lua"),
-  sabbath = import("../Sabbath/sabbath.lua"),
+  sabbath = import("../Sabbath/sabbath_qa.lua"),
   convertibleCompartment = import("../ConvertibleCompartment/convertible_compartment.lua"),
   evaporator = import("../Evaporator/single_evaporator.lua"),
   sensors = import("../Sensor/sensors_qa.lua"),
