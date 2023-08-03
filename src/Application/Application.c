@@ -11,6 +11,7 @@
 #include "SabbathPlugin.h"
 #include "FaultWrapperPlugin.h"
 #include "ApplianceFeatureApiUpdater.h"
+#include "SnackModePlugin.h"
 
 static const ApplianceApiResetDiagnosticsConfiguration_t applianceApiResetDiagnosticsConfiguration = {
    .resetReasonErd = Erd_ResetReason,
@@ -44,6 +45,7 @@ void Application_Init(
 
    SideBySideConfigurationPlugin_Init(&instance->_private.platformConfigurations.sideBySidePlugin, dataModel);
    FaultWrapperPlugin_Init(dataModel);
+   SnackModePlugin_Init(dataModel);
 
    TimerModule_t *timerModule = DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule);
    TimerModuleDiagnostics_Init(

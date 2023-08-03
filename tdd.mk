@@ -61,6 +61,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Setpoints \
    $(PROJECT_DIR)/Application/StepperMotor \
    $(PROJECT_DIR)/Application/SystemMonitor \
+   $(PROJECT_DIR)/Application/SnackMode \
    $(PROJECT_DIR)/Application/Temperature \
    $(PROJECT_DIR)/Application/TimerModule \
    $(PROJECT_DIR)/Application/Valve \

@@ -82,6 +82,7 @@ SRC_DIRS:=\
   src/Application/ServiceDiagnostics \
   src/Application/Setpoints \
   src/Application/SignOfLife \
+  src/Application/SnackMode \
   src/Application/StepperMotor \
   src/Application/SystemMonitor \
   src/Application/TimerModule \

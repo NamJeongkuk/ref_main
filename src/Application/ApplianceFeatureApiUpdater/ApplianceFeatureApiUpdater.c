@@ -35,7 +35,8 @@ void ApplianceFeatureApiUpdater_Init(I_DataModel_t *dataModel)
       ApplianceFeatureApi_Refrigerator_Version2_TurboFreeze |
       ApplianceFeatureApi_Refrigerator_Version2_PresenceSensingEnabled |
       ApplianceFeatureApi_Refrigerator_Version2_PresenceSensedActivatesRecessLight |
-      ApplianceFeatureApi_Refrigerator_Version2_DimmableLight0PercentLevel;
+      ApplianceFeatureApi_Refrigerator_Version2_DimmableLight0PercentLevel |
+      ApplianceFeatureApi_Refrigerator_Version2_NightSnackModeLighting;
 
    DataModel_Write(dataModel, Erd_ApplianceApiApplianceTypeManifest1, &applianceFeatureApiManifest);
 }

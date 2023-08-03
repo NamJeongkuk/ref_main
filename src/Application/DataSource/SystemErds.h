@@ -116,6 +116,7 @@
 #include "RampingPwmDutyCyclePercentageVote.h"
 #include "EnhancedSabbathModeHsmState.h"
 #include "DimmableLightConfiguration.h"
+#include "SnackModeEnableRequest.h"
 
 // clang-format off
 
@@ -455,6 +456,8 @@ enum
    ENTRY(Erd_PresenceDetected,                              0x1226, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                              NotFault) \
    ENTRY(Erd_DoorAlarmEnableRequest,                        0x1227, DoorAlarmEnableRequest_t,                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                              NotFault) \
    ENTRY(Erd_DoorAlarmEnableStatus,                         0x1228, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
+   ENTRY(Erd_NightTimeSnackModeEnableRequest,               0x1229, SnackModeEnableRequest_t,                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                              NotFault) \
+   ENTRY(Erd_NightTimeSnackModeEnableStatus,                0x122A, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,      NotFault) \
    \
    ENTRY(Erd_DispenserRecessHeaterDutyCyclePercent,         0x122C, PercentageDutyCycle_t,                              Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_SecondarySignOfLife,                           0x122D, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
