@@ -1074,7 +1074,6 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks9And10)
       WhenTheCoolingModeIs(CoolingMode_Off);
       WhenTheCoolingSpeedIs(CoolingSpeed_Off);
       WhenTheSingleEvaporatorPulldownActiveIs(SET);
-      WhenCompressorTripMitigationIs(SET);
 
       After(gridData->gridPeriodicRunRateInMSec);
       TheGridBlockNumberShouldBe(gridBlockIndex);
@@ -1105,31 +1104,14 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks9And10)
 
       WhenFreezerAndFreshFoodTemperaturesAreSetForBlock(gridBlockIndex);
       WhenTheCoolingModeIs(CoolingMode_Off);
-      WhenTheCoolingSpeedIs(CoolingSpeed_Off);
+      WhenTheCoolingSpeedIs(CoolingSpeed_High);
       WhenTheSingleEvaporatorPulldownActiveIs(CLEAR);
-      WhenCompressorTripMitigationIs(CLEAR);
 
       After(gridData->gridPeriodicRunRateInMSec);
       TheGridBlockNumberShouldBe(gridBlockIndex);
-      TheCoolingModeShouldBe(CoolingMode_Freezer);
-      TheCoolingSpeedShouldBe(CoolingSpeed_Mid);
+      TheCoolingModeShouldBe(CoolingMode_Off);
+      TheCoolingSpeedShouldBe(CoolingSpeed_High);
       TheFreshFoodDamperStepperMotorDriveEnableShouldBe(SET);
-
-      CompressorRelayAndFansShouldBeOffDuringSabbathDelayAndThenCompressorShouldBeOnAndFanControlsAt(
-         condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint,
-         freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
-
-      After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
-      TheCalculatedCondenserFanControlShouldBe(
-         condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
-      TheCalculatedFreezerEvapFanControlShouldBe(
-         freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.lowSpeedFreezerWithColdSetpoint);
-
-      After(1);
-      TheCalculatedCondenserFanControlShouldBe(
-         condenserFanSpeedData->careAboutSetpointData.setpointSpeeds.mediumSpeedFreezer);
-      TheCalculatedFreezerEvapFanControlShouldBe(
-         freezerEvapFanSpeedData->careAboutSetpointData.setpointSpeeds.mediumSpeedFreezer);
    }
 }
 

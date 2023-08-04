@@ -219,10 +219,8 @@ void Grid_SingleEvap(void *context)
       case 9:
       case 10:
          SetCoolingMode(dataModel, (currentCoolingSpeed == CoolingSpeed_Off) ? CoolingMode_Freezer : currentCoolingMode);
-         SetCoolingSpeed(dataModel,
-            (pullDownActive && compressorTripMitigationActive) ? CoolingSpeed_High
-               : (currentCoolingSpeed != CoolingSpeed_High)    ? CoolingSpeed_Mid
-                                                               : CoolingSpeed_High);
+         SetCoolingSpeed(dataModel, CoolingSpeed_High);
+
          break;
 
       case 11:
@@ -278,7 +276,7 @@ void Grid_SingleEvap(void *context)
 
       case 22:
          SetCoolingMode(dataModel, CoolingMode_Freezer);
-         SetCoolingSpeed(dataModel, (currentCoolingSpeed != CoolingSpeed_Low) ? CoolingSpeed_Low : currentCoolingSpeed);
+         SetCoolingSpeed(dataModel, (currentCoolingSpeed == CoolingSpeed_Off) ? CoolingSpeed_Low : currentCoolingSpeed);
          SetGridArea(dataModel, GridArea_1);
          SetPulldownActive(dataModel, CLEAR);
          SetIceMakerEnable(dataModel, SET);

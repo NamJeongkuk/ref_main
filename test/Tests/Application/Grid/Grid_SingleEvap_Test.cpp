@@ -332,15 +332,14 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks7And8And14)
    }
 }
 
-TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10IfPulldownAndTripMitigationIsActiveAndCoolingSpeedIsNotHigh)
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10IfCoolingSpeedIsOff)
 {
    for(GridBlockNumber_t gridBlockNumber = 9; gridBlockNumber <= 10; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Freezer);
+      And CoolingModeIs(CoolingMode_FreshFood);
       And CoolingSpeedIs(CoolingSpeed_Off);
       And PulldownActiveIs(Active);
-      And CompressorTripMitigationIs(Active);
       And BothThermistorsAreValid();
       When The GridIsRun();
 
@@ -357,15 +356,14 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10IfPulldownAnd
    }
 }
 
-TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10IfPulldownAndTripMitigationIsActiveAndCoolingSpeedIsHigh)
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10IfCoolingSpeedIsOn)
 {
    for(GridBlockNumber_t gridBlockNumber = 9; gridBlockNumber <= 10; gridBlockNumber++)
    {
       Given GridBlockIs(gridBlockNumber);
       And CoolingModeIs(CoolingMode_FreshFood);
       And CoolingSpeedIs(CoolingSpeed_High);
-      And PulldownActiveIs(Active);
-      And CompressorTripMitigationIs(Active);
+      And PulldownActiveIs(Inactive);
       And BothThermistorsAreValid();
       When The GridIsRun();
 
@@ -373,48 +371,6 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10IfPulldownAnd
       CoolingSpeedShouldBe(CoolingSpeed_High);
 
       GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Open);
-      PulldownActiveShouldBe(Active);
-   }
-}
-
-TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10IfPulldownAndTripMitigationIsNotActiveAndCoolingSpeedIsNotHigh)
-{
-   for(GridBlockNumber_t gridBlockNumber = 9; gridBlockNumber <= 10; gridBlockNumber++)
-   {
-      Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Freezer);
-      And CoolingSpeedIs(CoolingSpeed_Off);
-      And PulldownActiveIs(Inactive);
-      And CompressorTripMitigationIs(Inactive);
-      And BothThermistorsAreValid();
-      When The GridIsRun();
-
-      CoolingModeShouldBe(CoolingMode_Freezer);
-      CoolingSpeedShouldBe(CoolingSpeed_Mid);
-
-      GridVotesShouldBe(CompressorSpeed_Medium, FanSpeed_Medium, FanSpeed_Medium, DamperPosition_Closed);
-
-      PulldownActiveShouldBe(Inactive);
-   }
-}
-
-TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlocks9And10IfPulldownAndTripMitigationIsNotActiveAndCoolingSpeedIsHigh)
-{
-   for(GridBlockNumber_t gridBlockNumber = 9; gridBlockNumber <= 10; gridBlockNumber++)
-   {
-      Given GridBlockIs(gridBlockNumber);
-      And CoolingModeIs(CoolingMode_Freezer);
-      And CoolingSpeedIs(CoolingSpeed_High);
-      And PulldownActiveIs(Inactive);
-      And CompressorTripMitigationIs(Inactive);
-      And BothThermistorsAreValid();
-      When The GridIsRun();
-
-      CoolingModeShouldBe(CoolingMode_Freezer);
-      CoolingSpeedShouldBe(CoolingSpeed_High);
-
-      GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Closed);
-
       PulldownActiveShouldBe(Inactive);
    }
 }
@@ -592,11 +548,11 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock21)
    PulldownActiveShouldBe(Inactive);
 }
 
-TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock22IfCoolingSpeedIsNotLow)
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock22IfCoolingSpeedIsNotOff)
 {
    Given GridBlockIs(22);
    GivenTheIceMakerEnableIs(DISABLED);
-   And CoolingModeIs(CoolingMode_Freezer);
+   And CoolingModeIs(CoolingMode_FreshFood);
    And CoolingSpeedIs(CoolingSpeed_High);
    And GridAreaIs(GridArea_Unknown);
    And BothThermistorsAreValid();
@@ -604,14 +560,14 @@ TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock22IfCoolingSpeedIsNo
 
    TheIceMakerEnableShouldBe(ENABLED);
    CoolingModeShouldBe(CoolingMode_Freezer);
-   CoolingSpeedShouldBe(CoolingSpeed_Low);
+   CoolingSpeedShouldBe(CoolingSpeed_High);
    GridAreaShouldBe(GridArea_1);
 
-   GridVotesShouldBe(CompressorSpeed_Low, FanSpeed_Low, FanSpeed_Low, DamperPosition_Closed);
+   GridVotesShouldBe(CompressorSpeed_High, FanSpeed_High, FanSpeed_High, DamperPosition_Closed);
    PulldownActiveShouldBe(Inactive);
 }
 
-TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock22IfCoolingSpeedIsLow)
+TEST(Grid_SingleEvap_Test, ShouldOutputCorrectValuesForBlock22IfCoolingSpeedIsOff)
 {
    Given GridBlockIs(22);
    GivenTheIceMakerEnableIs(DISABLED);
