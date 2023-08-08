@@ -291,6 +291,17 @@ static bool FreezerIceRateIsActive(TwistTrayIceMaker_t *instance)
    return iceRateIsActive;
 }
 
+static bool ThermistorTemperatureIsGreaterThanFullToFreezeThreshold(TwistTrayIceMaker_t *instance)
+{
+   int16_t thermistorTemperatureInDegFx100;
+   DataSource_Read(
+      instance->_private.dataSource,
+      instance->_private.config->filteredTemperatureResolvedInDegFx100Erd,
+      &thermistorTemperatureInDegFx100);
+
+   return (thermistorTemperatureInDegFx100 > instance->_private.parametric->harvestData.fullBucketToFreezeStateTemperatureInDegFx100);
+}
+
 static void State_Homing(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
    TwistTrayIceMaker_t *instance = InstanceFrom(fsm);
@@ -561,6 +572,13 @@ static void State_BucketIsFull(Fsm_t *fsm, FsmSignal_t signal, const void *data)
       case Signal_FullIceBucketWaitTimeElapsed:
       case Signal_TestRequest_Harvest:
          Fsm_Transition(fsm, State_Harvesting);
+         break;
+
+      case Signal_IceMakerFilteredTemperatureChanged:
+         if(ThermistorTemperatureIsGreaterThanFullToFreezeThreshold(instance))
+         {
+            Fsm_Transition(fsm, State_Freeze);
+         }
          break;
 
       case Signal_IceMakerThermistorIsInvalid:

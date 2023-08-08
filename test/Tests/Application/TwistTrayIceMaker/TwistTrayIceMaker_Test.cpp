@@ -1385,6 +1385,26 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFreezeStateWhenIceMakerBecomesDisabled
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
 }
 
+TEST(TwistTrayIceMaker, ShouldTransitionToFreezeStateWhenThermistorFilteredTemperatureIsGreaterThanFullToFreezeStateTemperatureAndInBucketFullState)
+{
+   GivenTheOperationStateIsInBucketIsFull();
+
+   FreezerTriggerIceRateSignalShouldIncrement();
+   WhenTheTemperatureIs((iceMakerData->harvestData.fullBucketToFreezeStateTemperatureInDegFx100) + 1);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+}
+
+TEST(TwistTrayIceMaker, ShouldStayInBucketFullStateWhenThermistorFilteredTemperatureIsLessThanOrEqualToFullToFreezeStateTemperature)
+{
+   GivenTheOperationStateIsInBucketIsFull();
+
+   WhenTheTemperatureIs((iceMakerData->harvestData.fullBucketToFreezeStateTemperatureInDegFx100) - 1);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_BucketIsFull);
+
+   WhenTheTemperatureIs(iceMakerData->harvestData.fullBucketToFreezeStateTemperatureInDegFx100);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_BucketIsFull);
+}
+
 TEST(TwistTrayIceMaker, ShouldNotTransitionToThermistorFaultStateWhenFillingAndThermistorBecomesInvalid)
 {
    GivenTheIceMakerIsEnabled();

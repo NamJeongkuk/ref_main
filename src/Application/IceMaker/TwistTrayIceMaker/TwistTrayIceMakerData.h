@@ -38,6 +38,7 @@ typedef struct
    uint8_t fullBucketDispenseCheckTimeInSeconds;
    uint16_t fillTubeHeaterOnTimeInSeconds;
    uint8_t fillTubeHeaterDutyCyclePercentage;
+   int16_t fullBucketToFreezeStateTemperatureInDegFx100;
 } TwistTrayIceMakerHarvestData_t;
 
 typedef struct

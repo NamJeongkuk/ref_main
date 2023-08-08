@@ -23,7 +23,7 @@ describe('TwistTrayIceMaker', function()
       },
       freeze = {
         harvest_count_calculator = TypedString('harvest_count_calculator', 'harvest_count_calculator'),
-        maximum_harvest_temperature_in_deg_fx100 = 1900,
+        maximum_harvest_temperature_in_deg_fx100 = 1900
       },
       harvest = {
         full_bucket_wait_period_in_minutes = 7,
@@ -36,7 +36,8 @@ describe('TwistTrayIceMaker', function()
         delay_to_harvest_after_door_opens_in_minutes = 14,
         full_bucket_dispense_check_time_in_seconds = 15,
         freeze_thaw_fill_tube_heater_on_time_in_seconds = 400,
-        freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100
+        freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100,
+        full_bucket_temperature_to_transition_to_freeze_state_in_degfx100 = 200
       }
     }, overrides or {})
   end
@@ -205,6 +206,16 @@ describe('TwistTrayIceMaker', function()
     end)
   end)
 
+  it('should assert if harvest.full_bucket_temperature_to_transition_to_freeze_state_in_degfx100 is not in range', function()
+    should_fail_with('harvest.full_bucket_temperature_to_transition_to_freeze_state_in_degfx100=32768 must be in [-32768, 32767]', function()
+      twist_tray_ice_maker(generate_config({
+        harvest = {
+          full_bucket_temperature_to_transition_to_freeze_state_in_degfx100 = 32768
+        }
+      }))
+    end)
+  end)
+
   it('should generate a typed string with the correct data and type for twist tray ice maker', function()
     local expected = remove_whitespace([[
         structure(
@@ -230,7 +241,8 @@ describe('TwistTrayIceMaker', function()
             u8(14),
             u8(15),
             u16(400),
-            u8(100)
+            u8(100),
+            i16(200)
           )
         )
       ]])
@@ -245,7 +257,7 @@ describe('TwistTrayIceMaker', function()
       },
       freeze = {
         harvest_count_calculator = TypedString('harvest_count_calculator', 'harvest_count_calculator'),
-        maximum_harvest_temperature_in_deg_fx100 = 1900,
+        maximum_harvest_temperature_in_deg_fx100 = 1900
       },
       harvest = {
         full_bucket_wait_period_in_minutes = 7,
@@ -258,7 +270,8 @@ describe('TwistTrayIceMaker', function()
         delay_to_harvest_after_door_opens_in_minutes = 14,
         full_bucket_dispense_check_time_in_seconds = 15,
         freeze_thaw_fill_tube_heater_on_time_in_seconds = 400,
-        freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100
+        freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100,
+        full_bucket_temperature_to_transition_to_freeze_state_in_degfx100 = 200
       }
     })
 

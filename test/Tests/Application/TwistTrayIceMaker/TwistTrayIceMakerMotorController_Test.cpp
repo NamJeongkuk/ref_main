@@ -94,8 +94,7 @@ static const TwistTrayIceMakerData_t iceMakerData = {
       .location = IceMakerLocation_Freezer,
    },
    .fillData{
-      .iceMakerFillMonitorData = &iceMakerFillMonitorData,
-   },
+      .iceMakerFillMonitorData = &iceMakerFillMonitorData },
    .freezeData{
       .harvestCountCalculatorData = &harvestCountCalculatorData,
       .maximumHarvestTemperatureInDegFx100 = 0,
@@ -112,7 +111,7 @@ static const TwistTrayIceMakerData_t iceMakerData = {
       .fullBucketDispenseCheckTimeInSeconds = FullBucketDispenseCheckTimeInSec,
       .fillTubeHeaterOnTimeInSeconds = 400,
       .fillTubeHeaterDutyCyclePercentage = 0,
-   }
+      .fullBucketToFreezeStateTemperatureInDegFx100 = 200 }
 };
 
 TEST_GROUP(TwistTrayIceMakerMotorController)
