@@ -26,18 +26,18 @@ describe('TwistTrayIceMaker', function()
         maximum_harvest_temperature_in_deg_fx100 = 1900
       },
       harvest = {
-        full_bucket_wait_period_in_minutes = 7,
-        full_bucket_detection_period_in_secx10 = 8,
+        full_state_wait_period_in_minutes = 7,
+        full_state_detection_period_in_secx10 = 8,
         initial_homing_twist_period_in_secx10 = 9,
         home_landing_delay_period_in_secx10 = 10,
         motor_error_retry_initialize_in_minutes = 11,
         long_motor_error_timeout_period_in_sec = 12,
         short_motor_error_timeout_period_in_sec = 13,
         delay_to_harvest_after_door_opens_in_minutes = 14,
-        full_bucket_dispense_check_time_in_seconds = 15,
+        full_state_dispense_check_time_in_seconds = 15,
         freeze_thaw_fill_tube_heater_on_time_in_seconds = 400,
         freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100,
-        full_bucket_temperature_to_transition_to_freeze_state_in_degfx100 = 200
+        full_state_temperature_to_transition_to_freeze_state_in_degfx100 = 200
       }
     }, overrides or {})
   end
@@ -96,21 +96,21 @@ describe('TwistTrayIceMaker', function()
     end)
   end)
 
-  it('should assert if full_bucket_wait_period_in_minutes is not in range', function()
-    should_fail_with('full_bucket_wait_period_in_minutes=-1 must be in [0, 255]', function()
+  it('should assert if full_state_wait_period_in_minutes is not in range', function()
+    should_fail_with('full_state_wait_period_in_minutes=-1 must be in [0, 255]', function()
       twist_tray_ice_maker(generate_config({
         harvest = {
-          full_bucket_wait_period_in_minutes = -1
+          full_state_wait_period_in_minutes = -1
         }
       }))
     end)
   end)
 
-  it('should assert if full_bucket_detection_period_in_secx10 is not in range', function()
-    should_fail_with('full_bucket_detection_period_in_secx10=-1 must be in [0, 255]', function()
+  it('should assert if full_state_detection_period_in_secx10 is not in range', function()
+    should_fail_with('full_state_detection_period_in_secx10=-1 must be in [0, 255]', function()
       twist_tray_ice_maker(generate_config({
         harvest = {
-          full_bucket_detection_period_in_secx10 = -1
+          full_state_detection_period_in_secx10 = -1
         }
       }))
     end)
@@ -176,11 +176,11 @@ describe('TwistTrayIceMaker', function()
     end)
   end)
 
-  it('should assert if full_bucket_dispense_check_time_in_seconds is not in range', function()
-    should_fail_with('full_bucket_dispense_check_time_in_seconds=-1 must be in [0, 255]', function()
+  it('should assert if full_state_dispense_check_time_in_seconds is not in range', function()
+    should_fail_with('full_state_dispense_check_time_in_seconds=-1 must be in [0, 255]', function()
       twist_tray_ice_maker(generate_config({
         harvest = {
-          full_bucket_dispense_check_time_in_seconds = -1
+          full_state_dispense_check_time_in_seconds = -1
         }
       }))
     end)
@@ -206,11 +206,11 @@ describe('TwistTrayIceMaker', function()
     end)
   end)
 
-  it('should assert if harvest.full_bucket_temperature_to_transition_to_freeze_state_in_degfx100 is not in range', function()
-    should_fail_with('harvest.full_bucket_temperature_to_transition_to_freeze_state_in_degfx100=32768 must be in [-32768, 32767]', function()
+  it('should assert if harvest.full_state_temperature_to_transition_to_freeze_state_in_degfx100 is not in range', function()
+    should_fail_with('harvest.full_state_temperature_to_transition_to_freeze_state_in_degfx100=32768 must be in [-32768, 32767]', function()
       twist_tray_ice_maker(generate_config({
         harvest = {
-          full_bucket_temperature_to_transition_to_freeze_state_in_degfx100 = 32768
+          full_state_temperature_to_transition_to_freeze_state_in_degfx100 = 32768
         }
       }))
     end)
@@ -260,18 +260,18 @@ describe('TwistTrayIceMaker', function()
         maximum_harvest_temperature_in_deg_fx100 = 1900
       },
       harvest = {
-        full_bucket_wait_period_in_minutes = 7,
-        full_bucket_detection_period_in_secx10 = 8,
+        full_state_wait_period_in_minutes = 7,
+        full_state_detection_period_in_secx10 = 8,
         initial_homing_twist_period_in_secx10 = 9,
         home_landing_delay_period_in_secx10 = 10,
         motor_error_retry_initialize_in_minutes = 11,
         long_motor_error_timeout_period_in_sec = 12,
         short_motor_error_timeout_period_in_sec = 13,
         delay_to_harvest_after_door_opens_in_minutes = 14,
-        full_bucket_dispense_check_time_in_seconds = 15,
+        full_state_dispense_check_time_in_seconds = 15,
         freeze_thaw_fill_tube_heater_on_time_in_seconds = 400,
         freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100,
-        full_bucket_temperature_to_transition_to_freeze_state_in_degfx100 = 200
+        full_state_temperature_to_transition_to_freeze_state_in_degfx100 = 200
       }
     })
 

@@ -26,18 +26,18 @@ return function(core)
           i16(config.freeze.maximum_harvest_temperature_in_deg_fx100)
         ),
         structure(
-          u8(config.harvest.full_bucket_wait_period_in_minutes),
-          u8(config.harvest.full_bucket_detection_period_in_secx10),
+          u8(config.harvest.full_state_wait_period_in_minutes),
+          u8(config.harvest.full_state_detection_period_in_secx10),
           u8(config.harvest.initial_homing_twist_period_in_secx10),
           u8(config.harvest.home_landing_delay_period_in_secx10 ),
           u8(config.harvest.motor_error_retry_initialize_in_minutes),
           u8(config.harvest.long_motor_error_timeout_period_in_sec),
           u8(config.harvest.short_motor_error_timeout_period_in_sec),
           u8(config.harvest.delay_to_harvest_after_door_opens_in_minutes),
-          u8(config.harvest.full_bucket_dispense_check_time_in_seconds),
+          u8(config.harvest.full_state_dispense_check_time_in_seconds),
           u16(config.harvest.freeze_thaw_fill_tube_heater_on_time_in_seconds),
           u8(config.harvest.freeze_thaw_fill_tube_heater_duty_cycle_percentage),
-          i16(config.harvest.full_bucket_temperature_to_transition_to_freeze_state_in_degfx100)
+          i16(config.harvest.full_state_temperature_to_transition_to_freeze_state_in_degfx100)
         )
       )
     )
@@ -66,18 +66,18 @@ return function(core)
         },
         harvest = {
           constraint.table_keys({
-            full_bucket_wait_period_in_minutes = { constraint.u8 },
-            full_bucket_detection_period_in_secx10 = { constraint.u8 },
+            full_state_wait_period_in_minutes = { constraint.u8 },
+            full_state_detection_period_in_secx10 = { constraint.u8 },
             initial_homing_twist_period_in_secx10 = { constraint.u8 },
             home_landing_delay_period_in_secx10 = { constraint.u8 },
             motor_error_retry_initialize_in_minutes = { constraint.u8 },
             long_motor_error_timeout_period_in_sec = { constraint.u8 },
             short_motor_error_timeout_period_in_sec = { constraint.u8 },
             delay_to_harvest_after_door_opens_in_minutes = { constraint.u8 },
-            full_bucket_dispense_check_time_in_seconds = { constraint.u8 },
+            full_state_dispense_check_time_in_seconds = { constraint.u8 },
             freeze_thaw_fill_tube_heater_on_time_in_seconds = { constraint.u16 },
             freeze_thaw_fill_tube_heater_duty_cycle_percentage = { constraint.in_range(0,100) },
-            full_bucket_temperature_to_transition_to_freeze_state_in_degfx100 = { constraint.i16 }
+            full_state_temperature_to_transition_to_freeze_state_in_degfx100 = { constraint.i16 }
           })
         }
       }
