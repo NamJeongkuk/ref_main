@@ -86,6 +86,7 @@ return function(directory)
   import('TurboModes/FreshFoodTurboCoolSetpoint')
   import('TurboModes/FreezerTurboFreezeSetpoint')
   import('TurboModes/TurboModeSetpoint')
+  import('RefrigeratorModel/RefrigeratorModel')
   import('Lighting/DoorLighting')
   import('Lighting/Lighting')
   import('Lighting/RampingPwmDutyCyclePercentageBundle')
@@ -176,6 +177,7 @@ return function(directory)
   fresh_food_turbo_cool_setpoint = FreshFoodTurboCoolSetpoint(core)
   freezer_turbo_freeze_setpoint = FreezerTurboFreezeSetpoint(core)
   harvest_count_calculator = HarvestCountCalculator(core)
+  refrigerator_model = RefrigeratorModel(core)
   door_lighting = DoorLighting(core)
   lighting = Lighting(core)
   ramping_pwm_duty_cycle_percentage_bundle = RampingPwmDutyCyclePercentageBundle(core)
@@ -269,6 +271,7 @@ return function(directory)
     fresh_food_turbo_cool_setpoint = fresh_food_turbo_cool_setpoint,
     freezer_turbo_freeze_setpoint = freezer_turbo_freeze_setpoint,
     harvest_count_calculator = harvest_count_calculator,
+    refrigerator_model = refrigerator_model,
     door_lighting = door_lighting,
     lighting = lighting,
     ramping_pwm_duty_cycle_percentage_bundle = ramping_pwm_duty_cycle_percentage_bundle,

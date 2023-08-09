@@ -10,6 +10,7 @@ describe("personality", function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
+      refrigerator_model = TypedString('refrigerator_model', 'refrigerator_model'),
       defrost = TypedString('defrost', 'defrost'),
       enhancedSabbath = TypedString('enhancedSabbath', 'enhancedSabbath'),
       fans = TypedString('fan_list', 'fan_list'),
@@ -38,6 +39,14 @@ describe("personality", function()
 
   it('should require all arguments', function()
     should_require_args(personality, generate_config())
+  end)
+
+  it('should constrain all arguments', function()
+    should_fail_with('refrigerator_model must be a typed string with type refrigerator_model, but is a number', function()
+      personality(generate_config({
+        refrigerator_model = -1
+      }))
+    end)
   end)
 
   it('should constrain all arguments', function()
@@ -227,6 +236,7 @@ describe("personality", function()
   it('should generate a typed string with the correct data and type personality', function()
     local expected = remove_whitespace([[
       structure(
+        pointer(refrigerator_model),
         pointer(defrost),
         pointer(enhancedSabbath),
         pointer(fan_list),

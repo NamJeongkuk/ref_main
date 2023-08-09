@@ -116,6 +116,7 @@
 #include "RampingPwmDutyCyclePercentageVote.h"
 #include "EnhancedSabbathModeHsmState.h"
 #include "DimmableLightConfiguration.h"
+#include "RefrigeratorModel.h"
 #include "SnackModeEnableRequest.h"
 
 // clang-format off
@@ -411,6 +412,8 @@ enum
    ENTRY(Erd_NumberOfSoundLevelSettings,                    0x0904, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_WaterFilterType,                               0x1019, WaterFilterType_t,                                  Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_RefrigeratorModel,                             0x101D, RefrigeratorModel_t,                                Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_CumulativeWaterDispensedOunces,                0x1060, uint32_t,                                           Swap_Yes, Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,  NotFault) \
    \

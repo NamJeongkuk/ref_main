@@ -24,6 +24,7 @@ static void InitializePlatformParametricErds(I_DataModel_t *dataModel)
    const PersonalityParametricData_t *parametricData = PersonalityParametricData_Get(dataModel);
 
    DataModel_Write(dataModel, Erd_HasConvertibleCompartment, &parametricData->convertibleCompartmentData->hasConvertibleCompartment);
+   DataModel_Write(dataModel, Erd_RefrigeratorModel, parametricData->refrigeratorModelData);
 }
 
 void Application_Init(

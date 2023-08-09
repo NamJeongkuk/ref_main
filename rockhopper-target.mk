@@ -106,6 +106,7 @@ INC_DIRS:=\
   src/Application/Grid \
   src/Application/Grid/GridFunctions \
   src/Application/RequestStatusUpdater\
+  src/Application/ModelInformation \
   src/Application/Sabbath \
   src/Application/SignOfLife \
   src/Application/SystemMonitor \

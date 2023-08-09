@@ -132,6 +132,7 @@ INCLUDE_DIRS := \
    $(APPLCOMMON_DIR)/src/Image \
    $(PROJECT_DIR)/Bsp \
    $(PROJECT_DIR)/Application/DataSource/BspDataSource \
+   $(PROJECT_DIR)/Application/ModelInformation \
    $(PROJECT_DIR)/Hardware \
    $(PROJECT_DIR)/Hardware/Eeprom \
    $(REFERCOMMON_DIR)/Source/Gea \

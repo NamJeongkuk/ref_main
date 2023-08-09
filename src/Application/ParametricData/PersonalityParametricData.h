@@ -29,6 +29,7 @@
 #include "FlowMeterData.h"
 #include "DispenserData.h"
 #include "RecessHeaterData.h"
+#include "RefrigeratorModel.h"
 #include "LightingData.h"
 #include "LoadOffDoorOpenData.h"
 
@@ -39,6 +40,7 @@ enum
 
 typedef struct
 {
+   const RefrigeratorModel_t *refrigeratorModelData;
    const DefrostData_t *defrostData;
    const EnhancedSabbathData_t *enhancedSabbathData;
    const CombinedFanData_t *fanData;
