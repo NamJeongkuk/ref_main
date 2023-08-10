@@ -4,10 +4,7 @@ local should_memoize_calls = require 'lua-common'.util.should_memoize_calls
 local remove_whitespace = require 'lua-common'.utilities.remove_whitespace
 local should_fail_with = require 'lua-common'.utilities.should_fail_with
 local should_require_args = require 'lua-common'.utilities.should_require_args
-local clone = require 'lua-common'.utilities.clone
 local TypedString = require 'lua-common'.util.TypedString
-local ice_maker_type = require 'IceMaker/IceMakerType'
-local ice_maker_location = require 'IceMaker/IceMakerLocation'
 
 describe('TwistTrayIceMaker', function()
   local twist_tray_ice_maker = TwistTrayIceMaker(core_mock)
@@ -37,7 +34,8 @@ describe('TwistTrayIceMaker', function()
         full_state_dispense_check_time_in_seconds = 15,
         freeze_thaw_fill_tube_heater_on_time_in_seconds = 400,
         freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100,
-        full_state_temperature_to_transition_to_freeze_state_in_degfx100 = 200
+        full_state_temperature_to_transition_to_freeze_state_in_degfx100 = 200,
+        full_state_door_open_check_time_in_minutes = 5
       }
     }, overrides or {})
   end
@@ -206,6 +204,15 @@ describe('TwistTrayIceMaker', function()
     end)
   end)
 
+  it('should assert if full_state_door_open_check_time_in_minutes is not in range', function()
+    should_fail_with('full_state_door_open_check_time_in_minutes=-1 must be in [0, 255]', function()
+      twist_tray_ice_maker(generate_config({
+        harvest = {
+          full_state_door_open_check_time_in_minutes = -1
+        }
+      }))
+    end)
+  end)
   it('should assert if harvest.full_state_temperature_to_transition_to_freeze_state_in_degfx100 is not in range', function()
     should_fail_with('harvest.full_state_temperature_to_transition_to_freeze_state_in_degfx100=32768 must be in [-32768, 32767]', function()
       twist_tray_ice_maker(generate_config({
@@ -242,7 +249,8 @@ describe('TwistTrayIceMaker', function()
             u8(15),
             u16(400),
             u8(100),
-            i16(200)
+            i16(200),
+            u8(5)
           )
         )
       ]])
@@ -271,7 +279,8 @@ describe('TwistTrayIceMaker', function()
         full_state_dispense_check_time_in_seconds = 15,
         freeze_thaw_fill_tube_heater_on_time_in_seconds = 400,
         freeze_thaw_fill_tube_heater_duty_cycle_percentage = 100,
-        full_state_temperature_to_transition_to_freeze_state_in_degfx100 = 200
+        full_state_temperature_to_transition_to_freeze_state_in_degfx100 = 200,
+        full_state_door_open_check_time_in_minutes = 5
       }
     })
 

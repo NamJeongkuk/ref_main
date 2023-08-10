@@ -111,7 +111,9 @@ static const TwistTrayIceMakerData_t iceMakerData = {
       .fullBucketDispenseCheckTimeInSeconds = FullBucketDispenseCheckTimeInSec,
       .fillTubeHeaterOnTimeInSeconds = 400,
       .fillTubeHeaterDutyCyclePercentage = 0,
-      .fullBucketToFreezeStateTemperatureInDegFx100 = 200 }
+      .fullBucketToFreezeStateTemperatureInDegFx100 = 200,
+      .fullBucketDoorOpenCheckTimeInMinutes = 5,
+   }
 };
 
 TEST_GROUP(TwistTrayIceMakerMotorController)

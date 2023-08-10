@@ -53,12 +53,14 @@ typedef struct
       Timer_t fillTubeHeaterTimer;
       Timer_t dispensingIceTimer;
       Timer_t retryMotorInitTimer;
+      Timer_t doorOpenCheckTimer;
 
       bool firstFreezeTransition;
       bool doorHarvestDelayHasElapsed;
       bool iceDispensedLongEnoughToCheckHarvest;
       bool pauseFillMonitoring;
       bool delayFillMonitoring;
+      bool doorOpenCheckTimeElapsed;
 
       const TwistTrayIceMakerData_t *parametric;
       const TwistTrayIceMakerConfiguration_t *config;

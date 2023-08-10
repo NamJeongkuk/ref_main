@@ -997,7 +997,7 @@ TEST(TwistTrayIceMaker, ShouldWaitUntilHarvestCountIsReadyToHarvestBeforeTransit
    HarvestCountCalculationRequestShouldBe(CLEAR);
 }
 
-TEST(TwistTrayIceMaker, ShouldWaitUntilFreezeDoorHarvestDelayHasElapsedBeforeTransitioningToHarvestStateWhileTheOtherConditionsAreMet)
+TEST(TwistTrayIceMaker, ShouldWaitUntilFreezerDoorHarvestDelayHasElapsedBeforeTransitioningToHarvestStateWhileTheOtherConditionsAreMet)
 {
    GivenTheOperationStateIsInFreeze();
    GivenFreezerIceRateActiveBecomes(SET);
@@ -2351,4 +2351,172 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFillStateWhenTestRequestIsFillInHarves
    FillingShouldStart();
    WhenTheTestRequestIs(IceMakerTestRequest_Fill);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+}
+
+TEST(TwistTrayIceMaker, ShouldTransitionToHarvestStateWhenDoorOpenedForCheckTimeThenClosed)
+{
+   GivenTheOperationStateIsInBucketIsFull();
+
+   WhenTheFreezerDoorIs(OPEN);
+   After(iceMakerData->harvestData.fullBucketDoorOpenCheckTimeInMinutes * MSEC_PER_MIN - 1);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_BucketIsFull);
+
+   After(1);
+   HarvestingShouldStart();
+   WhenTheFreezerDoorIs(CLOSED);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+}
+
+TEST(TwistTrayIceMaker, ShouldRemainInFullBucketStateWhenDoorIsOpenedForLessThanOpenCheckTime)
+{
+   GivenTheOperationStateIsInBucketIsFull();
+
+   WhenTheFreezerDoorIs(OPEN);
+   After(iceMakerData->harvestData.fullBucketDoorOpenCheckTimeInMinutes * MSEC_PER_MIN - 1);
+
+   WhenTheFreezerDoorIs(CLOSED);
+   After(1);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_BucketIsFull);
+}
+
+TEST(TwistTrayIceMaker, ShouldRemainInFullBucketStateWhenDoorHasNotBeenOpenedBeforeOpenCheckTimeExpires)
+{
+   GivenTheOperationStateIsInBucketIsFull();
+   After(iceMakerData->harvestData.fullBucketDoorOpenCheckTimeInMinutes * MSEC_PER_MIN);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_BucketIsFull);
+}
+
+TEST(TwistTrayIceMaker, ShouldRestartTheDoorOpenedCheckTimeEveryTimeTheDoorIsOpened)
+{
+   GivenTheOperationStateIsInBucketIsFull();
+
+   WhenTheFreezerDoorIs(OPEN);
+   After(iceMakerData->harvestData.fullBucketDoorOpenCheckTimeInMinutes * MSEC_PER_MIN - 1);
+
+   WhenTheFreezerDoorIs(CLOSED);
+   After(1);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_BucketIsFull);
+
+   WhenTheFreezerDoorIs(OPEN);
+   After(1);
+   WhenTheFreezerDoorIs(CLOSED);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_BucketIsFull);
+}
+
+TEST(TwistTrayIceMaker, ShouldRestartTheDoorOpenedCheckTimeEveryTimeItExitsTheFullState)
+{
+   GivenTheOperationStateIsInBucketIsFull();
+
+   WhenTheFreezerDoorIs(OPEN);
+   After(iceMakerData->harvestData.fullBucketDoorOpenCheckTimeInMinutes * MSEC_PER_MIN - 1);
+
+   HarvestingShouldStart();
+   WhenTheTestRequestIs(IceMakerTestRequest_Harvest);
+   HarvestCountCalculationRequestShouldBe(CLEAR);
+   After(1);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+
+   GivenTheCoolingSystemOffIs(false);
+   WhenTheMotorActionResultIs(Homed);
+
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   TheMotorShouldBeRequestedTo(Idle);
+   WhenTheMotorActionResultIs(BucketWasFull);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_BucketIsFull);
+
+   After(1);
+   WhenTheFreezerDoorIs(CLOSED);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_BucketIsFull);
+
+   WhenTheFreezerDoorIs(OPEN);
+   After(iceMakerData->harvestData.fullBucketDoorOpenCheckTimeInMinutes * MSEC_PER_MIN - 1);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_BucketIsFull);
+
+   After(1);
+   HarvestingShouldStart();
+   WhenTheFreezerDoorIs(CLOSED);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+}
+
+TEST(TwistTrayIceMaker, ShouldResetTheDoorOpenedCheckTimeWhenExitingTheFullState)
+{
+   GivenTheOperationStateIsInBucketIsFull();
+
+   WhenTheFreezerDoorIs(OPEN);
+   After(iceMakerData->harvestData.fullBucketDoorOpenCheckTimeInMinutes * MSEC_PER_MIN);
+
+   HarvestingShouldStart();
+   WhenTheFreezerDoorIs(CLOSED);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+
+   GivenTheCoolingSystemOffIs(false);
+   WhenTheMotorActionResultIs(Homed);
+
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   TheMotorShouldBeRequestedTo(Idle);
+   WhenTheMotorActionResultIs(BucketWasFull);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_BucketIsFull);
+
+   WhenTheFreezerDoorIs(OPEN);
+   After(1);
+   WhenTheFreezerDoorIs(CLOSED);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_BucketIsFull);
+}
+
+TEST(TwistTrayIceMaker, ShouldRestartHarvestDoorDelayTimerWhenExitingTheFreezeState)
+{
+   GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
+   WhenTheFreezerDoorIs(OPEN);
+
+   WhenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
+
+   NothingShouldHappen();
+   WhenHarvestCountIsReadyToHarvestIs(SET);
+
+   After(iceMakerData->harvestData.delayToHarvestAfterDoorOpensMinutes * MSEC_PER_MIN - 1);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+
+   FillingShouldStart();
+   WhenTheTestRequestIs(IceMakerTestRequest_Fill);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+
+   TheWaterValveShouldBecome(CLOSED);
+   FreezerTriggerIceRateSignalShouldIncrement();
+   WhenTwistTrayIceMakerTrayIsFilled();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+
+   After(1);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+}
+
+TEST(TwistTrayIceMaker, ShouldResetTheHarvestDelayWhenExitingTheFreezeState)
+{
+   GivenTheOperationStateIsInFreeze();
+   GivenFreezerIceRateActiveBecomes(SET);
+   WhenTheFreezerDoorIs(OPEN);
+
+   WhenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
+
+   NothingShouldHappen();
+   WhenHarvestCountIsReadyToHarvestIs(SET);
+
+   After(iceMakerData->harvestData.delayToHarvestAfterDoorOpensMinutes * MSEC_PER_MIN - 1);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+
+   FillingShouldStart();
+   WhenTheTestRequestIs(IceMakerTestRequest_Fill);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+
+   TheWaterValveShouldBecome(CLOSED);
+   FreezerTriggerIceRateSignalShouldIncrement();
+   WhenTwistTrayIceMakerTrayIsFilled();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+
+   WhenTheIceMakerBecomesDisabled();
+   GivenTheCoolingSystemOffIs(false);
+   TheMotorShouldBeRequestedTo(Harvest);
+   FillTubeHeaterVoteAndCareShouldBecome(iceMakerData->harvestData.fillTubeHeaterDutyCyclePercentage, Vote_Care);
+   WhenTheIceMakerBecomesEnabled();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
 }

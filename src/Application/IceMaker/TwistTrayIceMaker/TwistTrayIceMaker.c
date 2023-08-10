@@ -16,10 +16,11 @@
 #include "DispensingRequest.h"
 #include "PercentageDutyCycleVote.h"
 
-#define FullIceBucketWaitPeriodMinutes (instance->_private.parametric->harvestData.fullBucketWaitPeriodMinutes * MSEC_PER_MIN)
+#define FullIceBucketWaitPeriodMsec (instance->_private.parametric->harvestData.fullBucketWaitPeriodMinutes * MSEC_PER_MIN)
 #define DelayToHarvestAfterDoorOpens (instance->_private.parametric->harvestData.delayToHarvestAfterDoorOpensMinutes * MSEC_PER_MIN)
 #define MaxHarvestTemperatureInDegFx100 (instance->_private.parametric->freezeData.maximumHarvestTemperatureInDegFx100)
-#define RetryMotorInitializeMinutes ((instance->_private.parametric->harvestData.motorErrorRetryInitializeMinutes) * MSEC_PER_MIN)
+#define RetryMotorInitializeMsec ((instance->_private.parametric->harvestData.motorErrorRetryInitializeMinutes) * MSEC_PER_MIN)
+#define FullIceBucketDoorOpenCheckPeriodMsec ((instance->_private.parametric->harvestData.fullBucketDoorOpenCheckTimeInMinutes) * MSEC_PER_MIN)
 
 enum
 {
@@ -51,6 +52,8 @@ enum
    Signal_CoolingSystemIsTurnedOff,
    Signal_CoolingSystemIsTurnedOn,
    Signal_IceRateNoLongerActive,
+   Signal_FreezerDoorOpened,
+   Signal_FreezerDoorClosed,
 
    Idle = TwistTrayIceMakerMotorAction_Idle,
    Home = TwistTrayIceMakerMotorAction_RunHomingRoutine,
@@ -86,6 +89,7 @@ FSM_STATE_TABLE(FSM_STATE_EXPAND_AS_FUNCTION_DEFINITION)
 #define closed disabled
 
 static void FullIceBucketWaitTimeElapsed(void *context);
+static void HarvestDoorDelayElapsed(void *context);
 
 static TwistTrayIceMaker_t *InstanceFrom(Fsm_t *fsm)
 {
@@ -292,6 +296,12 @@ static bool FreezerIceRateIsActive(TwistTrayIceMaker_t *instance)
    return iceRateIsActive;
 }
 
+static void DoorOpenCheckTimeElapsed(void *context)
+{
+   TwistTrayIceMaker_t *instance = context;
+   instance->_private.doorOpenCheckTimeElapsed = true;
+}
+
 static bool ThermistorTemperatureIsGreaterThanFullToFreezeThreshold(TwistTrayIceMaker_t *instance)
 {
    int16_t thermistorTemperatureInDegFx100;
@@ -368,6 +378,16 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          }
          break;
 
+      case Signal_FreezerDoorOpened:
+         instance->_private.doorHarvestDelayHasElapsed = false;
+         TimerModule_StartOneShot(
+            instance->_private.timerModule,
+            &instance->_private.doorHarvestDelayTimer,
+            DelayToHarvestAfterDoorOpens,
+            HarvestDoorDelayElapsed,
+            instance);
+         break;
+
       case Signal_IceRateNoLongerActive:
       case Signal_SabbathModeDisabled:
       case Signal_IceMakerIsEnabled:
@@ -410,6 +430,8 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 
       case Fsm_Exit:
          StopHarvestCountCalculation(instance);
+         TimerModule_Stop(instance->_private.timerModule, &instance->_private.doorHarvestDelayTimer);
+         instance->_private.doorHarvestDelayHasElapsed = true;
          break;
    }
 }
@@ -557,7 +579,7 @@ static void State_BucketIsFull(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          TimerModule_StartOneShot(
             instance->_private.timerModule,
             &instance->_private.waitingTimer,
-            FullIceBucketWaitPeriodMinutes,
+            FullIceBucketWaitPeriodMsec,
             FullIceBucketWaitTimeElapsed,
             instance);
          break;
@@ -566,6 +588,23 @@ static void State_BucketIsFull(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          if(instance->_private.iceDispensedLongEnoughToCheckHarvest)
          {
             instance->_private.iceDispensedLongEnoughToCheckHarvest = false;
+            Fsm_Transition(fsm, State_Harvesting);
+         }
+         break;
+
+      case Signal_FreezerDoorOpened:
+         TimerModule_StartOneShot(
+            instance->_private.timerModule,
+            &instance->_private.doorOpenCheckTimer,
+            FullIceBucketDoorOpenCheckPeriodMsec,
+            DoorOpenCheckTimeElapsed,
+            instance);
+         break;
+
+      case Signal_FreezerDoorClosed:
+         TimerModule_Stop(instance->_private.timerModule, &instance->_private.doorOpenCheckTimer);
+         if(instance->_private.doorOpenCheckTimeElapsed)
+         {
             Fsm_Transition(fsm, State_Harvesting);
          }
          break;
@@ -606,6 +645,8 @@ static void State_BucketIsFull(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 
       case Fsm_Exit:
          TimerModule_Stop(instance->_private.timerModule, &instance->_private.waitingTimer);
+         TimerModule_Stop(instance->_private.timerModule, &instance->_private.doorOpenCheckTimer);
+         instance->_private.doorOpenCheckTimeElapsed = false;
          break;
    }
 }
@@ -627,7 +668,7 @@ static void State_MotorError(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          TimerModule_StartOneShot(
             instance->_private.timerModule,
             &instance->_private.retryMotorInitTimer,
-            RetryMotorInitializeMinutes,
+            RetryMotorInitializeMsec,
             MotorErrorRetryTimerExpired,
             instance);
 
@@ -788,17 +829,14 @@ static void DataSourceChanged(void *context, const void *data)
    }
    else if(onChangeArgs->erd == instance->_private.config->leftSideFreezerDoorStatusResolvedErd)
    {
-      REINTERPRET(doorIsOpen, onChangeArgs->data, const bool *);
-
+      const bool *doorIsOpen = onChangeArgs->data;
       if(*doorIsOpen)
       {
-         instance->_private.doorHarvestDelayHasElapsed = false;
-         TimerModule_StartOneShot(
-            instance->_private.timerModule,
-            &instance->_private.doorHarvestDelayTimer,
-            DelayToHarvestAfterDoorOpens,
-            HarvestDoorDelayElapsed,
-            instance);
+         Fsm_SendSignal(&instance->_private.fsm, Signal_FreezerDoorOpened, NULL);
+      }
+      else
+      {
+         Fsm_SendSignal(&instance->_private.fsm, Signal_FreezerDoorClosed, NULL);
       }
    }
    else if(onChangeArgs->erd == instance->_private.config->testRequestErd)
@@ -926,6 +964,7 @@ void TwistTrayIceMaker_Init(
    instance->_private.iceDispensedLongEnoughToCheckHarvest = false;
    instance->_private.pauseFillMonitoring = false;
    instance->_private.delayFillMonitoring = false;
+   instance->_private.doorOpenCheckTimeElapsed = false;
 
    EventSubscription_Init(&instance->_private.dataSourceChangeEventSubscription, instance, DataSourceChanged);
    Event_Subscribe(dataSource->OnDataChange, &instance->_private.dataSourceChangeEventSubscription);

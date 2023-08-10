@@ -37,7 +37,8 @@ return function(core)
           u8(config.harvest.full_state_dispense_check_time_in_seconds),
           u16(config.harvest.freeze_thaw_fill_tube_heater_on_time_in_seconds),
           u8(config.harvest.freeze_thaw_fill_tube_heater_duty_cycle_percentage),
-          i16(config.harvest.full_state_temperature_to_transition_to_freeze_state_in_degfx100)
+          i16(config.harvest.full_state_temperature_to_transition_to_freeze_state_in_degfx100),
+          u8(config.harvest.full_state_door_open_check_time_in_minutes)
         )
       )
     )
@@ -77,7 +78,8 @@ return function(core)
             full_state_dispense_check_time_in_seconds = { constraint.u8 },
             freeze_thaw_fill_tube_heater_on_time_in_seconds = { constraint.u16 },
             freeze_thaw_fill_tube_heater_duty_cycle_percentage = { constraint.in_range(0,100) },
-            full_state_temperature_to_transition_to_freeze_state_in_degfx100 = { constraint.i16 }
+            full_state_temperature_to_transition_to_freeze_state_in_degfx100 = { constraint.i16 },
+            full_state_door_open_check_time_in_minutes = { constraint.u8 }
           })
         }
       }
