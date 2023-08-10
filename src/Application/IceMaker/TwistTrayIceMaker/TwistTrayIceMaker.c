@@ -33,6 +33,7 @@ enum
    Signal_MotorActionResultHomed,
    Signal_TrayFilled,
    Signal_FullIceBucketWaitTimeElapsed,
+   Signal_SabbathModeEnabled,
    Signal_SabbathModeDisabled,
    Signal_HarvestDoorDelayElapsed,
    Signal_TestRequest_Fill,
@@ -589,6 +590,7 @@ static void State_BucketIsFull(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          Fsm_Transition(fsm, State_FillingTrayWithWater);
          break;
 
+      case Signal_SabbathModeEnabled:
       case Signal_CoolingSystemIsTurnedOff:
       case Signal_IceMakerIsDisabled:
          Fsm_Transition(fsm, State_Freeze);
@@ -778,6 +780,10 @@ static void DataSourceChanged(void *context, const void *data)
       if(!ItIsSabbathMode(instance))
       {
          Fsm_SendSignal(&instance->_private.fsm, Signal_SabbathModeDisabled, NULL);
+      }
+      else
+      {
+         Fsm_SendSignal(&instance->_private.fsm, Signal_SabbathModeEnabled, NULL);
       }
    }
    else if(onChangeArgs->erd == instance->_private.config->leftSideFreezerDoorStatusResolvedErd)

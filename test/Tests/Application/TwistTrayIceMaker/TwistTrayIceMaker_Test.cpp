@@ -1517,6 +1517,14 @@ TEST(TwistTrayIceMaker, ShouldNotClearHarvestCountCalculationRequestWhenSabbathM
    HarvestCountCalculationRequestShouldBe(SET);
 }
 
+TEST(TwistTrayIceMaker, ShouldTransitionToFreezeWhenSabbathModeBecomesOnWhileBucketIsFull)
+{
+   GivenTheOperationStateIsInBucketIsFull();
+   WhenSabbathModeIs(ON);
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+}
+
 // MOTOR ERRORS
 
 TEST(TwistTrayIceMaker, ShouldGoToErrorStateIfAHomingMovementResultsInError)
