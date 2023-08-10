@@ -1567,6 +1567,29 @@
                "read": true,
                "write": true,
                "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Night Time Snack Mode Enable Request",
+               "name": "Erd_NightTimeSnackModeEnableRequest",
+               "read": false,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Night Time Snack Mode Enable Status",
+               "name": "Erd_NightTimeSnackModeEnableStatus",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Temperature Units",
+               "name": "Erd_TemperatureDisplayUnits",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
             }
          ]
       }

@@ -62,6 +62,13 @@ static const DataSource_ApplianceApiRevision1Configuration_t applianceApiConfigu
       },
    },
 
+   .temperatureDisplayUnits = {
+      .supported = true,
+      .erd = {
+         .temperatureDisplayUnits = Erd_TemperatureDisplayUnits,
+      },
+   },
+
    .timeOfDay = {
       .supported = false,
    },
