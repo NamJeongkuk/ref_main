@@ -287,6 +287,16 @@
          "interval": 60000
       },
       {
+         "namespace": "Lighthouse-Dispenser",
+         "name": "Erd_ApplicationVersion",
+         "interval": 60000
+      },
+      {
+         "namespace": "Lighthouse-HMI",
+         "name": "Erd_ApplicationVersion",
+         "interval": 60000
+      },
+      {
          "namespace": "mb",
          "name": "Erd_SabbathMode",
          "interval": 60000
