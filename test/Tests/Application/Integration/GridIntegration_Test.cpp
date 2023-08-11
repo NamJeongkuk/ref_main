@@ -2395,7 +2395,7 @@ TEST(GridIntegration, ShouldCalculateFreshFoodGridLinesWithCrossAmbientHysteresi
    FreshFoodAdjustedSetpointShouldBeSetCorrectlyForAdjustedSetpointOf3640DegFx100();
 
    TheCalculatedGridLineTempShouldBe(
-      -86,
+      -2086,
       GridDelta_FreshFood,
       GridLine_Nfl);
 
@@ -2405,7 +2405,7 @@ TEST(GridIntegration, ShouldCalculateFreshFoodGridLinesWithCrossAmbientHysteresi
       GridLine_FreshFoodLowHyst);
 
    TheCalculatedGridLineTempShouldBe(
-      3794,
+      3494,
       GridDelta_FreshFood,
       GridLine_FreshFoodSetpointDelta);
 
@@ -2435,7 +2435,7 @@ TEST(GridIntegration, ShouldCalculateFreshFoodGridLinesWithCrossAmbientHysteresi
    FreshFoodAdjustedSetpointShouldBeSetCorrectlyForAdjustedSetpointOf3674DegFx100();
 
    TheCalculatedGridLineTempShouldBe(
-      -38,
+      -2038,
       GridDelta_FreshFood,
       GridLine_Nfl);
 
@@ -2445,7 +2445,7 @@ TEST(GridIntegration, ShouldCalculateFreshFoodGridLinesWithCrossAmbientHysteresi
       GridLine_FreshFoodLowHyst);
 
    TheCalculatedGridLineTempShouldBe(
-      3826,
+      3526,
       GridDelta_FreshFood,
       GridLine_FreshFoodSetpointDelta);
 
@@ -2481,12 +2481,12 @@ TEST(GridIntegration, ShouldCalculateFreezerGridLines)
       GridLine_FreezerLowHyst);
 
    TheCalculatedGridLineTempShouldBe(
-      -40,
+      -190,
       GridDelta_Freezer,
       GridLine_FreezerSetpointDelta);
 
    TheCalculatedGridLineTempShouldBe(
-      210,
+      -90,
       GridDelta_Freezer,
       GridLine_FreezerHighHyst);
 
@@ -2520,12 +2520,12 @@ TEST(GridIntegration, ShouldCalculateFreezerGridLines)
       GridLine_FreezerLowHyst);
 
    TheCalculatedGridLineTempShouldBe(
-      -29,
+      -179,
       GridDelta_Freezer,
       GridLine_FreezerSetpointDelta);
 
    TheCalculatedGridLineTempShouldBe(
-      221,
+      -79,
       GridDelta_Freezer,
       GridLine_FreezerHighHyst);
 

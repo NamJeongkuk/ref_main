@@ -29,7 +29,7 @@ describe('gridline', function()
   end)
 
   it('should assert if correction is not in range', function()
-    should_fail_with("correction=-1 must be in the set { 'raw_setpoint', 'offset', 'shift', 'adjusted_setpoint' }", function()
+    should_fail_with("correction=-1 must be in the set { 'offset', 'adjusted_setpoint' }", function()
         gridline(generate_config({
           correction = -1
       }))

@@ -17,9 +17,7 @@
 
 typedef struct
 {
-   Erd_t rawSetpointErd; // SetpointVotedTemperature_t
    Erd_t offsetInDegFx100Erd; // TemperatureDegFx100_t
-   Erd_t thermalShiftInDegFx100Erd; // TemperatureDegFx100_t
    Erd_t adjustedSetpointInDegFx100Erd; // TemperatureDegFx100_t
 } GridLineAdjustmentErds_t;
 

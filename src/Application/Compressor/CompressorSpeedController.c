@@ -24,7 +24,6 @@ enum
    Signal_ResolvedSpeedVoteChanged,
    Signal_SabbathDelayTimerComplete,
    Signal_MinimumRunTimerComplete,
-   Signal_MinimumTimesEnabled,
    Signal_MinimumTimesDisabled
 };
 
@@ -242,14 +241,6 @@ static void MinimumTimesDisabled(CompressorSpeedController_t *instance)
    Hsm_SendSignal(
       &instance->_private.hsm,
       Signal_MinimumTimesDisabled,
-      NULL);
-}
-
-static void MinimumTimesEnabled(CompressorSpeedController_t *instance)
-{
-   Hsm_SendSignal(
-      &instance->_private.hsm,
-      Signal_MinimumTimesEnabled,
       NULL);
 }
 
@@ -743,10 +734,6 @@ static void DataModelChanged(void *context, const void *args)
       if(minimumTimesDisableVote->state)
       {
          MinimumTimesDisabled(instance);
-      }
-      else
-      {
-         MinimumTimesEnabled(instance);
       }
    }
 }

@@ -73,16 +73,12 @@ static const GridOffsetAdderErdConfiguration_t freezerGridOffsetAdderConfig = {
 };
 
 static const GridLineAdjustmentErds_t freshFoodGridLineAdjustmentErds = {
-   .rawSetpointErd = Erd_FreshFoodSetpoint_ResolvedVote,
    .offsetInDegFx100Erd = Erd_FreshFood_CabinetPlusCrossAmbientOffsetInDegFx100,
-   .thermalShiftInDegFx100Erd = Erd_FreshFood_ThermalShiftInDegFx100,
    .adjustedSetpointInDegFx100Erd = Erd_FreshFood_AdjustedSetpointInDegFx100
 };
 
 static const GridLineAdjustmentErds_t freezerGridLineAdjustmentErds = {
-   .rawSetpointErd = Erd_FreezerSetpoint_ResolvedVote,
    .offsetInDegFx100Erd = Erd_Freezer_CabinetPlusCrossAmbientOffsetInDegFx100,
-   .thermalShiftInDegFx100Erd = Erd_Freezer_ThermalShiftInDegFx100,
    .adjustedSetpointInDegFx100Erd = Erd_Freezer_AdjustedSetpointInDegFx100,
 };
 

@@ -59,11 +59,11 @@ static const DeltaGridLineData_t freshFoodGridLineData[] = {
    },
    {
       .gridLinesDegFx100 = 150,
-      .correction = DeltaGridLinesCorrection_Shift,
+      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
    },
    {
       .gridLinesDegFx100 = 450,
-      .correction = DeltaGridLinesCorrection_RawSetpoint,
+      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
    },
    {
       .gridLinesDegFx100 = 950,
@@ -82,15 +82,15 @@ static const DeltaGridLineData_t freezerGridLineData[] = {
    },
    {
       .gridLinesDegFx100 = 0,
-      .correction = DeltaGridLinesCorrection_Offset,
+      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
    },
    {
       .gridLinesDegFx100 = 250,
-      .correction = DeltaGridLinesCorrection_RawSetpoint,
+      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
    },
    {
       .gridLinesDegFx100 = 600,
-      .correction = DeltaGridLinesCorrection_Shift,
+      .correction = DeltaGridLinesCorrection_AdjustedSetpoint,
    },
    {
       .gridLinesDegFx100 = 750,

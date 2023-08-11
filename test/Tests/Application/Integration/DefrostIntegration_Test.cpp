@@ -21,6 +21,7 @@ extern "C"
 #include "CppUTestExt/MockSupport.h"
 #include "ReferDataModel_TestDouble.h"
 #include "uassert_test.h"
+#include "TddPersonality.h"
 
 #define Given
 #define When
@@ -73,7 +74,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
 
    void setup()
    {
-      ReferDataModel_TestDouble_Init(&dataModelDouble);
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentSingleSpeedCompressor);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 

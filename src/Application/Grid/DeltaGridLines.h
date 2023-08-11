@@ -39,9 +39,7 @@ enum
 
 enum
 {
-   DeltaGridLinesCorrection_RawSetpoint,
    DeltaGridLinesCorrection_Offset,
-   DeltaGridLinesCorrection_Shift,
    DeltaGridLinesCorrection_AdjustedSetpoint
 };
 typedef uint8_t DeltaGridLinesCorrection_t;

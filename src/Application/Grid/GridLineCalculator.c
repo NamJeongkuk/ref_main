@@ -42,29 +42,17 @@ static void CalculateAxisGridLines(
       axisToCalculate->gridLinesDegFx100[line] =
          GRID_LINE_TEMP(axisDimension, line);
 
-      if(PARAMETRIC_GRID_LINE_CORRECTION(axisDimension, line) == DeltaGridLinesCorrection_RawSetpoint)
-      {
-         SetpointVotedTemperature_t rawSetpoint;
-         DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).rawSetpointErd, &rawSetpoint);
-         axisToCalculate->gridLinesDegFx100[line] += rawSetpoint.temperatureInDegFx100;
-      }
-      if(PARAMETRIC_GRID_LINE_CORRECTION(axisDimension, line) == DeltaGridLinesCorrection_Offset)
-      {
-         TemperatureDegFx100_t offset;
-         DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).offsetInDegFx100Erd, &offset);
-         axisToCalculate->gridLinesDegFx100[line] += offset;
-      }
-      if(PARAMETRIC_GRID_LINE_CORRECTION(axisDimension, line) == DeltaGridLinesCorrection_Shift)
-      {
-         TemperatureDegFx100_t shift;
-         DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).thermalShiftInDegFx100Erd, &shift);
-         axisToCalculate->gridLinesDegFx100[line] += shift;
-      }
       if(PARAMETRIC_GRID_LINE_CORRECTION(axisDimension, line) == DeltaGridLinesCorrection_AdjustedSetpoint)
       {
          SetpointVotedTemperature_t adjustedSetPoint;
          DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).adjustedSetpointInDegFx100Erd, &adjustedSetPoint);
          axisToCalculate->gridLinesDegFx100[line] += adjustedSetPoint.temperatureInDegFx100;
+      }
+      else if(PARAMETRIC_GRID_LINE_CORRECTION(axisDimension, line) == DeltaGridLinesCorrection_Offset)
+      {
+         TemperatureDegFx100_t offset;
+         DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).offsetInDegFx100Erd, &offset);
+         axisToCalculate->gridLinesDegFx100[line] += offset;
       }
       if(axisDimension == GridDelta_FreshFood)
       {
@@ -93,14 +81,10 @@ static void OnDataModelChanged(void *context, const void *args)
    const DataModelOnDataChangeArgs_t *onChangeData = args;
    const Erd_t erd = onChangeData->erd;
 
-   if((erd == instance->_private.config->gridLineAdjustmentErds[GridDelta_FreshFood].rawSetpointErd) ||
-      (erd == instance->_private.config->gridLineAdjustmentErds[GridDelta_FreshFood].offsetInDegFx100Erd) ||
+   if((erd == instance->_private.config->gridLineAdjustmentErds[GridDelta_FreshFood].offsetInDegFx100Erd) ||
       (erd == instance->_private.config->gridLineAdjustmentErds[GridDelta_FreshFood].adjustedSetpointInDegFx100Erd) ||
-      (erd == instance->_private.config->gridLineAdjustmentErds[GridDelta_FreshFood].thermalShiftInDegFx100Erd) ||
-      (erd == instance->_private.config->gridLineAdjustmentErds[GridDelta_Freezer].rawSetpointErd) ||
       (erd == instance->_private.config->gridLineAdjustmentErds[GridDelta_Freezer].offsetInDegFx100Erd) ||
       (erd == instance->_private.config->gridLineAdjustmentErds[GridDelta_Freezer].adjustedSetpointInDegFx100Erd) ||
-      (erd == instance->_private.config->gridLineAdjustmentErds[GridDelta_Freezer].thermalShiftInDegFx100Erd) ||
       (erd == instance->_private.config->crossAmbientHysteresisAdjustmentErd))
    {
       ConfigureGridLines(instance);

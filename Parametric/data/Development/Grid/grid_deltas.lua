@@ -13,11 +13,11 @@ return grid_deltas({
       }),
       fresh_food_set_point_delta_in_degfx100 = gridline({
         delta_in_degfx100 = grid_line_temps.fresh_food_grid_temperatures_in_degfx100.fresh_food_set_point_delta_in_degfx100,
-        correction = 'shift'
+        correction = 'adjusted_setpoint'
       }),
       fresh_food_high_hyst_in_degfx100 = gridline({
         delta_in_degfx100 = grid_line_temps.fresh_food_grid_temperatures_in_degfx100.fresh_food_high_hyst_in_degfx100,
-        correction = 'raw_setpoint'
+        correction = 'adjusted_setpoint'
       }),
       fresh_food_extra_high_hyst_in_degfx100 = gridline({
         delta_in_degfx100 = grid_line_temps.fresh_food_grid_temperatures_in_degfx100.fresh_food_extra_high_hyst_in_degfx100,
@@ -35,15 +35,15 @@ return grid_deltas({
       }),
       freezer_setpoint_delta_in_degfx100 = gridline({
         delta_in_degfx100 = grid_line_temps.freezer_grid_temperatures_in_degfx100.freezer_setpoint_delta_in_degfx100,
-        correction = 'offset'
+        correction = 'adjusted_setpoint'
       }),
       freezer_high_hyst_in_degfx100 = gridline({
         delta_in_degfx100 = grid_line_temps.freezer_grid_temperatures_in_degfx100.freezer_high_hyst_in_degfx100,
-        correction = 'raw_setpoint'
+        correction = 'adjusted_setpoint'
       }),
       freezer_extra_high_hyst_in_degfx100 = gridline({
         delta_in_degfx100 = grid_line_temps.freezer_grid_temperatures_in_degfx100.freezer_extra_high_hyst_in_degfx100,
-        correction = 'shift'
+        correction = 'adjusted_setpoint'
       }),
       freezer_super_high_hyst_in_degfx100 = gridline({
         delta_in_degfx100 = grid_line_temps.freezer_grid_temperatures_in_degfx100.freezer_super_high_hyst_in_degfx100,

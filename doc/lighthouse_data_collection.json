@@ -258,6 +258,11 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_CrossAmbientHysteresisAdjustmentInDegFx100",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_Grid_CalculatedGridLines",
          "interval": 60000
       },
