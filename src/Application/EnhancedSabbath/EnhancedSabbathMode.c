@@ -7,7 +7,7 @@
 
 #include "EnhancedSabbathMode.h"
 #include "utils.h"
-#include "Setpoint.h"
+#include "SetpointVotedTemperature.h"
 #include "CompressorVotedSpeed.h"
 #include "BooleanVotedState.h"
 #include "DamperVotedPosition.h"

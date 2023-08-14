@@ -10,11 +10,14 @@
 
 #include "I_DataModel.h"
 #include "ErdResolver.h"
+#include "ColdestOfSetpointVotes.h"
 
 typedef struct
 {
    struct
    {
+      ColdestOfSetpointVotes_t coldestOfFreezerSetpoints;
+      ColdestOfSetpointVotes_t coldestOfFreshFoodSetpoints;
       ErdResolver_t freshFoodSetpointResolver;
       ErdResolver_t freezeSetpointResolver;
    } _private;

@@ -9,7 +9,7 @@ extern "C"
 {
 #include "ResolvedSetpointWriter.h"
 #include "Constants_Binary.h"
-#include "Setpoint.h"
+#include "SetpointVotedTemperature.h"
 #include "utils.h"
 }
 #include "DataModel_TestDouble.h"

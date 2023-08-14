@@ -10,6 +10,7 @@
 #include "Setpoint.h"
 #include "PersonalityParametricData.h"
 #include "ConvertibleCompartmentStateType.h"
+#include "SetpointVotedTemperature.h"
 
 static void ChangeConvertibleCompartmentStateUsingSetpoint(ConvertibleCompartmentState_t *instance, TemperatureDegFx100_t convertibleCompartmentSetpoint)
 {

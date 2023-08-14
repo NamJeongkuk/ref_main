@@ -1122,15 +1122,15 @@
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Freezer Cabinet Resolved Vote for Setpoint",
-          "name": "Erd_FreezerSetpoint_ResolvedVote",
+          "displayName": "Freezer Adjusted Setpoint",
+          "name": "Erd_Freezer_AdjustedSetpointInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Freezer Adjusted Setpoint",
-          "name": "Erd_Freezer_AdjustedSetpointInDegFx100",
+          "displayName": "Freezer Cabinet Resolved Vote for Setpoint",
+          "name": "Erd_FreezerSetpoint_ResolvedVote",
           "read": true,
           "write": true
         },
@@ -1157,6 +1157,20 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Freezer Cabinet Coldest Setpoint Vote for Setpoint",
+          "name": "Erd_FreezerSetpoint_ColdestSetpointVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Cabinet Coldest Setpoint Winning Vote for Setpoint",
+          "name": "Erd_FreezerSetpoint_ColdestSetpointWinningVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Freezer Cabinet Turbo Freeze Vote for Setpoint",
           "name": "Erd_FreezerSetpoint_TurboFreezeVote",
           "read": true,
@@ -1173,6 +1187,13 @@
           "namespace": "mb",
           "displayName": "Freezer Cabinet Freezer Ice Maker Vote for Setpoint",
           "name": "Erd_FreezerSetpoint_FreezerIceMakerVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Cabinet Freezer Ice Maker Vote for Setpoint",
+          "name": "Erd_FreezerSetpoint_FreezerIceRateVote",
           "read": true,
           "write": true
         },
@@ -1220,6 +1241,20 @@
           "namespace": "mb",
           "displayName": "Fresh Food Cabinet Enhanced Sabbath Vote for Setpoint",
           "name": "Erd_FreshFoodSetpoint_EnhancedSabbathVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Cabinet Coldest Setpoint Vote for Setpoint",
+          "name": "Erd_FreshFoodSetpoint_ColdestSetpointVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Cabinet Coldest Setpoint Winning Vote for Setpoint",
+          "name": "Erd_FreshFoodSetpoint_ColdestSetpointWinningVote",
           "read": true,
           "write": true
         },

@@ -50,6 +50,7 @@
 #include "CalculatedGridLines.h"
 #include "ValvePosition.h"
 #include "Setpoint.h"
+#include "SetpointVotedTemperature.h"
 #include "DefrostState.h"
 #include "DefrostHsmState.h"
 #include "DefrostTestRequest.h"
@@ -897,18 +898,24 @@ enum
    ENTRY(Erd_FreezerSetpoint_WinningVoteErd,                0xF2CB, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerSetpoint_FactoryVote,                   0xF2CC, SetpointVotedTemperature_t,                         Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerSetpoint_EnhancedSabbathVote,           0xF2CD, SetpointVotedTemperature_t,                         Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerSetpoint_TurboFreezeVote,               0xF2CE, SetpointVotedTemperature_t,                         Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerSetpoint_IceInDoorVote,                 0xF2CF, SetpointVotedTemperature_t,                         Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerSetpoint_FreezerIceMakerVote,           0xF2D0, SetpointVotedTemperature_t,                         Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerSetpoint_FreezerIceRateVote,            0xF2D1, SetpointVotedTemperature_t,                         Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerSetpoint_UserVote,                      0xF2D2, SetpointVotedTemperature_t,                         Swap_Range, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerSetpoint_ColdestSetpointVote,           0xF2CE, SetpointVotedTemperature_t,                         Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+\
+   ENTRY(Erd_FreezerSetpoint_ColdestSetpointWinningVote,    0xF2CF, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerSetpoint_TurboFreezeVote,               0xF2D0, SetpointVotedTemperature_t,                         Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerSetpoint_IceInDoorVote,                 0xF2D1, SetpointVotedTemperature_t,                         Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerSetpoint_FreezerIceMakerVote,           0xF2D2, SetpointVotedTemperature_t,                         Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerSetpoint_FreezerIceRateVote,            0xF2D3, SetpointVotedTemperature_t,                         Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerSetpoint_UserVote,                      0xF2D4, SetpointVotedTemperature_t,                         Swap_Range, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodSetpoint_ResolvedVote,                0xF2DA, SetpointVotedTemperature_t,                         Swap_Yes,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodSetpoint_WinningVoteErd,              0xF2DB, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodSetpoint_FactoryVote,                 0xF2DC, SetpointVotedTemperature_t,                         Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodSetpoint_EnhancedSabbathVote,         0xF2DD, SetpointVotedTemperature_t,                         Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodSetpoint_TurboCoolVote,               0xF2DE, SetpointVotedTemperature_t,                         Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodSetpoint_UserVote,                    0xF2DF, SetpointVotedTemperature_t,                         Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodSetpoint_ColdestSetpointVote,         0xF2DE, SetpointVotedTemperature_t,                         Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FreshFoodSetpoint_ColdestSetpointWinningVote,  0xF2DF, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodSetpoint_TurboCoolVote,               0xF2E0, SetpointVotedTemperature_t,                         Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodSetpoint_UserVote,                    0xF2E1, SetpointVotedTemperature_t,                         Swap_Range, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ConvertibleCompartmentSetpoint_ResolvedVote,   0xF2EA, SetpointVotedTemperature_t,                         Swap_Yes,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_ConvertibleCompartmentSetpoint_WinningVoteErd, 0xF2EB, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

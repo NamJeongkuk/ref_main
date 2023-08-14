@@ -108,6 +108,11 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_FreshFoodSetpoint_ColdestSetpointWinningVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_FreshFood_ThermalShiftInDegFx100",
          "interval": 60000
       },
@@ -129,6 +134,11 @@
       {
          "namespace": "mb",
          "name": "Erd_FreezerSetpoint_ResolvedVote",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_FreezerSetpoint_ColdestSetpointWinningVote",
          "interval": 60000
       },
       {

@@ -10,6 +10,7 @@
 #include "TemperatureDegFx100.h"
 #include "PercentageDutyCycleVote.h"
 #include "HeaterControlType.h"
+#include "SetpointVotedTemperature.h"
 #include "utils.h"
 
 static bool HeaterControlTypeCaresAboutAmbientHumidity(HeaterControlType_t heaterControlType)

@@ -7,6 +7,7 @@
 
 #include "UserSetpointRequestHandler.h"
 #include "Setpoint.h"
+#include "SetpointVotedTemperature.h"
 #include "UserSetpointData.h"
 #include "utils.h"
 

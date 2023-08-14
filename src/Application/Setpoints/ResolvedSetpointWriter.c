@@ -6,7 +6,7 @@
  */
 
 #include "ResolvedSetpointWriter.h"
-#include "Setpoint.h"
+#include "SetpointVotedTemperature.h"
 #include "uassert.h"
 
 static void WriteResolvedSetpoint(void *context, const void *args)
