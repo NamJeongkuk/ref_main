@@ -819,6 +819,25 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
    {
       GivenSabbathModeIs(state);
    }
+
+   void TheNormalTimeBetweenDefrostsShouldBe(uint16_t expectedTime)
+   {
+      uint16_t actualTime;
+      DataModel_Read(dataModel, Erd_TimeBetweenDefrostsInMinutes, &actualTime);
+
+      CHECK_EQUAL(expectedTime, actualTime);
+   }
+
+   void TheNormalTimeBetweenDefrostsShouldBeLessThanSabbathTimeBetweenDefrost()
+   {
+      uint16_t sabbathTime;
+      DataModel_Read(dataModel, Erd_SabbathTimeBetweenDefrostsInMinutes, &sabbathTime);
+
+      uint16_t normalTime;
+      DataModel_Read(dataModel, Erd_TimeBetweenDefrostsInMinutes, &normalTime);
+
+      CHECK_TRUE(sabbathTime > normalTime);
+   }
 };
 
 TEST(DefrostIntegration_SingleEvap, ShouldInitialize)
@@ -1516,22 +1535,6 @@ TEST(DefrostIntegration_SingleEvap, ShouldNotStartDefrostingWhenSabbathIsReadyTo
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(DefrostIntegration_SingleEvap, ShouldDefrostWhenSabbathIsDisabledWhileReadyToDefrostIsSet)
-{
-   GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
-   GivenRefrigeratorResetsWithFreezerTooWarm();
-   GivenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
-   GivenSabbathModeIs(ENABLED);
-
-   After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN);
-   SabbathIsReadyToDefrostShouldBe(false);
-   ReadyToDefrostShouldBe(true);
-   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
-
-   WhenSabbathModeIs(DISABLED);
-   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
-}
-
 TEST(DefrostIntegration_SingleEvap, ShouldDefrostWhenSabbathIsEnabledWhileSabbathReadyToDefrostIsSet)
 {
    GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
@@ -1543,4 +1546,76 @@ TEST(DefrostIntegration_SingleEvap, ShouldDefrostWhenSabbathIsEnabledWhileSabbat
 
    WhenSabbathModeIs(ENABLED);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostWhenSabbathEnabledAfterSabbathTimeBetweenDefrostsElapsesIfSabbathTimeIsLessThanNormalTimeBetweenDefrosts)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
+
+   After(sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN);
+   WhenSabbathModeIs(DISABLED);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+   WhenSabbathModeIs(ENABLED);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostAfterSabbathTimeBetweenDefrostsWhenSabbathIsEnabledBeforeSabbathTimeBetweenDefrostCompletes)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
+   GivenSabbathModeIs(DISABLED);
+
+   WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
+
+   After(sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN -
+      compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC -
+      compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC -
+      MSEC_PER_SEC - 1);
+   SabbathIsReadyToDefrostShouldBe(false);
+   WhenSabbathModeIs(ENABLED);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostWhenSabbathDisabledBeforeSabbathTimeBetweenDefrostElapsesButNormalTimeIsMetBecauseNormalTimeIsLessThanSabbathTime)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
+   GivenRefrigeratorResetsWithFreezerTooWarm();
+   GivenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
+   GivenSabbathModeIs(ENABLED);
+   TheNormalTimeBetweenDefrostsShouldBeLessThanSabbathTimeBetweenDefrost();
+
+   After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+   WhenSabbathModeIs(DISABLED);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostAfterWaitingForFullSabbathTimeBetweenDefrostsToElapseWhenSabbathIsEnabledBeforeNormalTimeBetweenDefrostsElapses)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
+   GivenRefrigeratorResetsWithFreezerTooWarm();
+   GivenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
+   GivenSabbathModeIs(DISABLED);
+   TheNormalTimeBetweenDefrostsShouldBeLessThanSabbathTimeBetweenDefrost();
+
+   After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN - 1);
+   WhenSabbathModeIs(ENABLED);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+   After(sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN -
+      (defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN +
+         compressorData->compressorTimes.sabbathDelayTimeInSeconds * MSEC_PER_SEC +
+         compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC) -
+      MSEC_PER_SEC);
+   SabbathIsReadyToDefrostShouldBe(false);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
 }
