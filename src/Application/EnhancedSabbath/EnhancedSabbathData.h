@@ -21,6 +21,7 @@ typedef struct
    uint8_t freshFoodStageTimeInMinutes;
    uint8_t freezerStageTimeInMinutes;
    uint8_t offStageTimeInMinutes;
+   uint8_t lightsPwmDutyCyclePercentage;
 } EnhancedSabbathData_t;
 
 #endif

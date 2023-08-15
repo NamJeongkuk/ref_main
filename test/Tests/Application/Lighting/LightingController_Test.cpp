@@ -232,7 +232,7 @@ TEST(LightingController, ShouldUpdateAllPwmsIfEverythingIsVotedFor)
    ThePwmDutyCycleErdShouldBe(Erd_FreezerTopLight_RampingPwm, TheExpectedPwmDutyCycleIs(SomePercentageDutyCycle + 3));
 }
 
-TEST(LightingController, AllRampingUpShouldBeZeroOnInit)
+TEST(LightingController, ShouldHaveAllRampingUpCountsBeZeroOnInit)
 {
    GivenTheRampingUpCountPerMsecIs(Erd_FreezerTopLight_ResolvedVote, SomeRampingUpCountPerMsec);
    GivenTheRampingUpCountPerMsecIs(Erd_FreshFoodBackWallLight_ResolvedVote, SomeRampingUpCountPerMsec);
@@ -246,7 +246,7 @@ TEST(LightingController, AllRampingUpShouldBeZeroOnInit)
    TheRampingUpCountPerMsecShouldBe(Erd_FreezerTopLight_RampingPwm, 0);
 }
 
-TEST(LightingController, AllRampingDownShouldBeZeroOnInit)
+TEST(LightingController, ShouldHaveAllRampingDownCountsBeZeroOnInit)
 {
    GivenTheRampingDownCountPerMsecIs(Erd_FreezerTopLight_ResolvedVote, SomeRampingDownCountPerMsec);
    GivenTheRampingDownCountPerMsecIs(Erd_FreshFoodBackWallLight_ResolvedVote, SomeRampingDownCountPerMsec);

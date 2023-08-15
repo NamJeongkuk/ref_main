@@ -92,6 +92,7 @@ return function(directory)
   import('Lighting/RampingPwmDutyCyclePercentageBundle')
   import('Cooling/LoadOffDoorOpen')
   import('Cooling/LoadOffDoorOpenCompartmentList')
+  import('constants')
 
   Core = require 'lua-parametric-tools'.common.Core
   enum = require 'lua-common'.utilities.enum
@@ -107,7 +108,7 @@ return function(directory)
   defrost = Defrost(core)
   duty_cycle = DutyCycle(core)
   door_inhibit_dispense_table = DoorInhibitDispenseTable(core)
-  enhancedSabbath = EnhancedSabbath(core)
+  enhanced_sabbath = EnhancedSabbath(core)
   fan = Fan(core)
   fan_fault = FanFault(core)
   fan_id = FanId
@@ -196,7 +197,7 @@ return function(directory)
     defrost = defrost,
     duty_cycle = duty_cycle,
     door_inhibit_dispense_table = door_inhibit_dispense_table,
-    enhancedSabbath = enhancedSabbath,
+    enhanced_sabbath = enhanced_sabbath,
     fan = fan,
     fan_fault = fan_fault,
     fan_id = fan_id,
@@ -279,6 +280,7 @@ return function(directory)
     erd_list_to_sorted_erd_mappings = erd_list_to_sorted_erd_mappings,
     load_off_door_open = load_off_door_open,
     load_off_door_open_compartment_list = load_off_door_open_compartment_list,
+    constants = constants,
     import = require 'lua-parametric-tools'.util.EvalInCurrentEnvironment(directory, {
       remove_tail_calls = true
     })

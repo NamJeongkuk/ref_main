@@ -8,7 +8,7 @@ return function(core)
   import(core)
   local generate = memoize(function(config)
     return TypedString(
-      { 'enhancedSabbath' },
+      { 'enhanced_sabbath' },
       structure(
         u16(config.max_time_in_enhanced_sabbath_mode_in_minutes),
         i16(config.fresh_food_setpoint_temperature_in_degfx100),
@@ -17,7 +17,8 @@ return function(core)
         u8(config.min_time_between_temperature_averaging_in_minutes),
         u8(config.fresh_food_stage_time_in_minutes),
         u8(config.freezer_stage_time_in_minutes),
-        u8(config.off_stage_time_in_minutes)
+        u8(config.off_stage_time_in_minutes),
+        u8(config.interior_lights_pwm_duty_cycle_percentage)
       )
     )
   end)
@@ -33,7 +34,8 @@ return function(core)
         min_time_between_temperature_averaging_in_minutes = { constraint.u8 },
         fresh_food_stage_time_in_minutes = { constraint.u8 },
         freezer_stage_time_in_minutes = { constraint.u8 },
-        off_stage_time_in_minutes = { constraint.u8 }
+        off_stage_time_in_minutes = { constraint.u8 },
+        interior_lights_pwm_duty_cycle_percentage = { constraint.u8 }
       })
 
     return generate(config)

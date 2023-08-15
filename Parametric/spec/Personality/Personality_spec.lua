@@ -12,7 +12,7 @@ describe("personality", function()
     return require 'lua-common'.table.merge({
       refrigerator_model = TypedString('refrigerator_model', 'refrigerator_model'),
       defrost = TypedString('defrost', 'defrost'),
-      enhancedSabbath = TypedString('enhancedSabbath', 'enhancedSabbath'),
+      enhanced_sabbath = TypedString('enhanced_sabbath', 'enhanced_sabbath'),
       fans = TypedString('fan_list', 'fan_list'),
       grid = TypedString('grid', 'grid'),
       sabbath = TypedString('sabbath', 'sabbath'),
@@ -58,9 +58,9 @@ describe("personality", function()
   end)
 
   it('should constrain all arguments', function()
-    should_fail_with('enhancedSabbath must be a typed string with type enhancedSabbath, but is a number', function()
+    should_fail_with('enhanced_sabbath must be a typed string with type enhanced_sabbath, but is a number', function()
       personality(generate_config({
-        enhancedSabbath = -1
+        enhanced_sabbath = -1
       }))
     end)
   end)
@@ -238,7 +238,7 @@ describe("personality", function()
       structure(
         pointer(refrigerator_model),
         pointer(defrost),
-        pointer(enhancedSabbath),
+        pointer(enhanced_sabbath),
         pointer(fan_list),
         pointer(grid),
         pointer(sabbath),

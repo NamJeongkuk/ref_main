@@ -828,22 +828,26 @@ enum
    ENTRY(Erd_FreshFoodBackWallLight_ResolvedVote,           0xF25A, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodBackWallLight_WinningVoteErd,         0xF25B, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodBackWallLight_FactoryVote,            0xF25C, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodBackWallLight_DoorVote,               0xF25D, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodBackWallLight_EnhancedSabbathVote,    0xF25D, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodBackWallLight_DoorVote,               0xF25E, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodTopLight_ResolvedVote,                0xF26A, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodTopLight_WinningVoteErd,              0xF26B, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodTopLight_FactoryVote,                 0xF26C, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodTopLight_DoorVote,                    0xF26D, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodTopLight_EnhancedSabbathVote,         0xF26D, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodTopLight_DoorVote,                    0xF26E, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreezerBackWallLight_ResolvedVote,             0xF270, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerBackWallLight_WinningVoteErd,           0xF271, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerBackWallLight_FactoryVote,              0xF272, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerBackWallLight_DoorVote,                 0xF273, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerBackWallLight_EnhancedSabbathVote,      0xF273, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerBackWallLight_DoorVote,                 0xF274, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreezerTopLight_ResolvedVote,                  0xF27A, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerTopLight_WinningVoteErd,                0xF27B, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerTopLight_FactoryVote,                   0xF27C, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerTopLight_DoorVote,                      0xF27D, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerTopLight_EnhancedSabbathVote,           0xF27D, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerTopLight_DoorVote,                      0xF27E, RampingPwmDutyCyclePercentageVote_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_IsolationWaterValve_ResolvedVote,              0xF280, WaterValveVotedState_t,                             Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IsolationWaterValve_WinningVoteErd,            0xF281, WinningVoteErd_t,                                   Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -1116,12 +1120,12 @@ enum
    ENTRY(Erd_FreshFoodDamperStepperMotorDriveEnable,        0xF54F, bool,                                               Swap_No,    Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
    ENTRY(Erd_TwistIceMakerMotorDriveEnable,                 0xF550, bool,                                               Swap_No,    Io_None, Sub_N, MappedBsp,              NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FillTubeHeater_Pwm,                            0xF55A, PwmDutyCycle_t,                                     Swap_Yes,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodBackWallLight_RampingPwm,             0xF55B, RampingPwmDutyCycle_t,                              Swap_Yes, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodTopLight_RampingPwm,                  0xF55C, RampingPwmDutyCycle_t,                              Swap_Yes, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerTopLight_RampingPwm,                    0xF55D, RampingPwmDutyCycle_t,                              Swap_Yes, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodDamperHeaterPwmDutyCycle,             0xF55E, PwmDutyCycle_t,                                     Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerBackWallLight_RampingPwm,               0xF55F, RampingPwmDutyCycle_t,                              Swap_Yes, Io_None, Sub_Y, MappedBsp,              NotNv,                                    NotFault) \
+   ENTRY(Erd_FillTubeHeater_Pwm,                            0xF55A, PwmDutyCycle_t,                                     Swap_Yes, Io_None, Sub_Y, Ram,                      NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodBackWallLight_RampingPwm,             0xF55B, RampingPwmDutyCycle_t,                              Swap_Yes, Io_None, Sub_Y, MappedBsp,                NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodTopLight_RampingPwm,                  0xF55C, RampingPwmDutyCycle_t,                              Swap_Yes, Io_None, Sub_Y, MappedBsp,                NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerTopLight_RampingPwm,                    0xF55D, RampingPwmDutyCycle_t,                              Swap_Yes, Io_None, Sub_Y, MappedBsp,                NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodDamperHeaterPwmDutyCycle,             0xF55E, PwmDutyCycle_t,                                     Swap_Yes, Io_None, Sub_Y, Ram,                      NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerBackWallLight_RampingPwm,               0xF55F, RampingPwmDutyCycle_t,                              Swap_Yes, Io_None, Sub_Y, MappedBsp,                NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Pwm_PWM_25K_00,                                0xF56F, PwmDutyCycle_t,                                     Swap_Yes, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \
    ENTRY(Erd_Pwm_PWM_25K_01,                                0xF570, PwmDutyCycle_t,                                     Swap_Yes, Io_None, Sub_N, Bsp,                       NotNv,                                    NotFault) \

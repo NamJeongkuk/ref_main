@@ -10,6 +10,7 @@ extern "C"
 #include "EnhancedSabbathMode.h"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
+#include "PersonalityParametricData.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -20,17 +21,19 @@ extern "C"
 enum
 {
    SomeTemperatureInDegFx100 = 5000,
-   EnhancedSabbathFreshFoodSetpointTemperatureInDegFx100 = 3700,
-   EnhancedSabbathFreezerSetpointTemperatureInDegFx100 = 0,
-   EnhancedSabbathModeHsmState_Unknown = 0xFF,
-   FreshFoodStageTimeInMin = 5,
-   FreezerStageTimeInMin = 3,
-   OffStageTimeInMin = 2,
-   FreshFoodStageTimeInMsec = FreshFoodStageTimeInMin * MSEC_PER_MIN,
-   FreezerStageTimeInMsec = FreezerStageTimeInMin * MSEC_PER_MIN,
-   OffStageTimeInMsec = OffStageTimeInMin * MSEC_PER_MIN,
-   EnhancedSabbathMaxTimeInMin = 4 * MINUTES_PER_DAY,
-   EnhancedSabbathMaxTimeInMsec = MSEC_PER_MIN * EnhancedSabbathMaxTimeInMin,
+   EnhancedSabbathModeHsmState_Unknown = 0xFF
+};
+
+static const Erd_t lightVotes[] = {
+   Erd_FreshFoodBackWallLight_EnhancedSabbathVote,
+   Erd_FreshFoodTopLight_EnhancedSabbathVote,
+   Erd_FreezerBackWallLight_EnhancedSabbathVote,
+   Erd_FreezerTopLight_EnhancedSabbathVote,
+};
+
+static const ErdList_t lightVoteErdList = {
+   .erds = lightVotes,
+   .numberOfErds = NUM_ELEMENTS(lightVotes)
 };
 
 static const EnhancedSabbathModeConfig_t config = {
@@ -53,18 +56,8 @@ static const EnhancedSabbathModeConfig_t config = {
    .sabbathGpioErd = Erd_Gpio_SABBATH,
    .gridOverrideEnabledErd = Erd_GridOverrideEnable,
    .coolingModeErd = Erd_CoolingMode,
-   .hsmStateErd = Erd_EnhancedSabbathModeHsmState
-};
-
-static const EnhancedSabbathData_t enhancedSabbathData = {
-   .maxTimeInEnhancedSabbathModeInMinutes = EnhancedSabbathMaxTimeInMin,
-   .freshFoodSetpointTemperatureInDegFx100 = EnhancedSabbathFreshFoodSetpointTemperatureInDegFx100,
-   .freezerSetpointTemperatureInDegFx100 = EnhancedSabbathFreezerSetpointTemperatureInDegFx100,
-   .numberOfFreshFoodDefrostsBeforeFreezerDefrost = 0,
-   .minTimeBetweenTemperatureAveragingInMinutes = 0,
-   .freshFoodStageTimeInMinutes = FreshFoodStageTimeInMin,
-   .freezerStageTimeInMinutes = FreezerStageTimeInMin,
-   .offStageTimeInMinutes = OffStageTimeInMin,
+   .hsmStateErd = Erd_EnhancedSabbathModeHsmState,
+   .lightVoteErdList = lightVoteErdList
 };
 
 TEST_GROUP(EnhancedSabbathMode)
@@ -73,13 +66,16 @@ TEST_GROUP(EnhancedSabbathMode)
    ReferDataModel_TestDouble_t dataModelTestDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
+   const EnhancedSabbathData_t *enhancedSabbathData;
+   EventSubscription_t dataModelOnChangeSubscription;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelTestDouble);
       dataModel = dataModelTestDouble.dataModel;
-
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelTestDouble);
+
+      enhancedSabbathData = PersonalityParametricData_Get(dataModel)->enhancedSabbathData;
    }
 
    void GivenTheFreshFoodSetpointVoteIs(TemperatureDegFx100_t setpoint, Vote_t care)
@@ -365,8 +361,80 @@ TEST_GROUP(EnhancedSabbathMode)
          &instance,
          dataModel,
          &timerModuleTestDouble->timerModule,
-         &enhancedSabbathData,
+         enhancedSabbathData,
          &config);
+   }
+
+   void LightPwmVotedDutyCyclesShouldBeOffAndDontCare()
+   {
+      for(uint8_t i = 0; i < config.lightVoteErdList.numberOfErds; i++)
+      {
+         RampingPwmDutyCyclePercentageVote_t rampingPwmDutyCyclePercentageVote;
+         DataModel_Read(dataModel, config.lightVoteErdList.erds[i], &rampingPwmDutyCyclePercentageVote);
+
+         CHECK_EQUAL(PercentageDutyCycle_Min, rampingPwmDutyCyclePercentageVote.rampingPwmDutyCyclePercentage.pwmDutyCyclePercentage);
+         CHECK_EQUAL(Vote_DontCare, rampingPwmDutyCyclePercentageVote.care);
+      }
+   }
+
+   void LightPwmVotedDutyCyclesShouldBeParametricPwmDutyCyclePercenageAndCare()
+   {
+      for(uint8_t i = 0; i < config.lightVoteErdList.numberOfErds; i++)
+      {
+         RampingPwmDutyCyclePercentageVote_t rampingPwmDutyCyclePercentageVote;
+         DataModel_Read(dataModel, config.lightVoteErdList.erds[i], &rampingPwmDutyCyclePercentageVote);
+
+         CHECK_EQUAL(enhancedSabbathData->lightsPwmDutyCyclePercentage, rampingPwmDutyCyclePercentageVote.rampingPwmDutyCyclePercentage.pwmDutyCyclePercentage);
+         CHECK_EQUAL(Vote_Care, rampingPwmDutyCyclePercentageVote.care);
+      }
+   }
+
+   void LightVotedRampingUpCountsShouldBeMaxRampingUpCountAndCare()
+   {
+      for(uint8_t i = 0; i < config.lightVoteErdList.numberOfErds; i++)
+      {
+         RampingPwmDutyCyclePercentageVote_t rampingPwmDutyCyclePercentageVote;
+         DataModel_Read(dataModel, config.lightVoteErdList.erds[i], &rampingPwmDutyCyclePercentageVote);
+
+         CHECK_EQUAL(UINT8_MAX, rampingPwmDutyCyclePercentageVote.rampingPwmDutyCyclePercentage.rampingUpCountInMsec);
+         CHECK_EQUAL(Vote_Care, rampingPwmDutyCyclePercentageVote.care);
+      }
+   }
+
+   void LightVotedRampingDownCountsShouldBeMaxRampingDownCountAndCare()
+   {
+      for(uint8_t i = 0; i < config.lightVoteErdList.numberOfErds; i++)
+      {
+         RampingPwmDutyCyclePercentageVote_t rampingPwmDutyCyclePercentageVote;
+         DataModel_Read(dataModel, config.lightVoteErdList.erds[i], &rampingPwmDutyCyclePercentageVote);
+
+         CHECK_EQUAL(UINT8_MAX, rampingPwmDutyCyclePercentageVote.rampingPwmDutyCyclePercentage.rampingDownCountInMsec);
+         CHECK_EQUAL(Vote_Care, rampingPwmDutyCyclePercentageVote.care);
+      }
+   }
+
+   void LightVotedRampingUpCountsShouldbeMaxRampingUpCountAndDontCare()
+   {
+      for(uint8_t i = 0; i < config.lightVoteErdList.numberOfErds; i++)
+      {
+         RampingPwmDutyCyclePercentageVote_t rampingPwmDutyCyclePercentageVote;
+         DataModel_Read(dataModel, config.lightVoteErdList.erds[i], &rampingPwmDutyCyclePercentageVote);
+
+         CHECK_EQUAL(UINT8_MAX, rampingPwmDutyCyclePercentageVote.rampingPwmDutyCyclePercentage.rampingUpCountInMsec);
+         CHECK_EQUAL(Vote_DontCare, rampingPwmDutyCyclePercentageVote.care);
+      }
+   }
+
+   void LightVotedRampingDownCountsShouldbeMaxRampingDownCountAndDontCare()
+   {
+      for(uint8_t i = 0; i < config.lightVoteErdList.numberOfErds; i++)
+      {
+         RampingPwmDutyCyclePercentageVote_t rampingPwmDutyCyclePercentageVote;
+         DataModel_Read(dataModel, config.lightVoteErdList.erds[i], &rampingPwmDutyCyclePercentageVote);
+
+         CHECK_EQUAL(UINT8_MAX, rampingPwmDutyCyclePercentageVote.rampingPwmDutyCyclePercentage.rampingDownCountInMsec);
+         CHECK_EQUAL(Vote_DontCare, rampingPwmDutyCyclePercentageVote.care);
+      }
    }
 
    void GivenInitializationInDisabledState()
@@ -400,6 +468,10 @@ TEST_GROUP(EnhancedSabbathMode)
       TheDispensingDisabledShouldBe(false);
       SabbathGpioShouldBe(true);
       TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
+
+      LightPwmVotedDutyCyclesShouldBeOffAndDontCare();
+      LightVotedRampingUpCountsShouldbeMaxRampingUpCountAndDontCare();
+      LightVotedRampingDownCountsShouldbeMaxRampingDownCountAndDontCare();
    }
 
    void GivenInitializationInFreshFoodStageWithLoadsSetToLow()
@@ -436,7 +508,7 @@ TEST_GROUP(EnhancedSabbathMode)
       GivenTheFreezerCabinetSetpointIs(SomeTemperatureInDegFx100);
       GivenInitializationInFreshFoodStageWithLoadsSetToOff();
 
-      After(FreshFoodStageTimeInMsec);
+      After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN);
       TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
       TheCompressorSpeedVoteShouldBe(CompressorSpeed_Low, Vote_Care);
       TheCondenserFanSpeedVoteShouldBe(FanSpeed_Low, Vote_Care);
@@ -448,7 +520,7 @@ TEST_GROUP(EnhancedSabbathMode)
    {
       GivenInitializationInTheFreezerStageWithLoadsSetToLow();
 
-      After(FreezerStageTimeInMsec);
+      After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN);
       TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Off);
       CoolingModeShouldBe(CoolingMode_Off);
 
@@ -463,6 +535,49 @@ TEST_GROUP(EnhancedSabbathMode)
       TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
    }
 };
+
+TEST(EnhancedSabbathMode, ShouldVoteEnhancedSabbathPwmPercentageAndRampingUpAndRampingDownCountsPerMsecToCareWhenEnhancedSabbathModeStatusIsSetOnInit)
+{
+   GivenTheEnhancedSabbathModeStatusIs(SET);
+   GivenInitialization();
+
+   LightPwmVotedDutyCyclesShouldBeParametricPwmDutyCyclePercenageAndCare();
+   LightVotedRampingUpCountsShouldBeMaxRampingUpCountAndCare();
+   LightVotedRampingDownCountsShouldBeMaxRampingDownCountAndCare();
+}
+
+TEST(EnhancedSabbathMode, ShouldVoteEnhancedSabbathPwmPercentageAndRampingUpAndRampingDownCountsPerMsecToDontCareThenToCareWhenEnhancedSabbathModeStatusIsClearOnInitAndChangesToSet)
+{
+   GivenTheEnhancedSabbathModeStatusIs(CLEAR);
+   GivenInitialization();
+   LightPwmVotedDutyCyclesShouldBeOffAndDontCare();
+   LightVotedRampingUpCountsShouldbeMaxRampingUpCountAndDontCare();
+   LightVotedRampingDownCountsShouldbeMaxRampingDownCountAndDontCare();
+
+   WhenTheEnhancedSabbathModeStatusChangesTo(SET);
+   LightPwmVotedDutyCyclesShouldBeParametricPwmDutyCyclePercenageAndCare();
+   LightVotedRampingUpCountsShouldBeMaxRampingUpCountAndCare();
+   LightVotedRampingDownCountsShouldBeMaxRampingDownCountAndCare();
+}
+
+TEST(EnhancedSabbathMode, ShouldVoteToChangeCountUpAndCountDownCountsPerMsecAndPwmPercentageWhenEnhancedSabbathModeStatusChangesFromSetToClear)
+{
+   GivenTheEnhancedSabbathModeStatusIs(CLEAR);
+   GivenInitialization();
+   LightPwmVotedDutyCyclesShouldBeOffAndDontCare();
+   LightVotedRampingUpCountsShouldbeMaxRampingUpCountAndDontCare();
+   LightVotedRampingDownCountsShouldbeMaxRampingDownCountAndDontCare();
+
+   WhenTheEnhancedSabbathModeStatusChangesTo(SET);
+   LightPwmVotedDutyCyclesShouldBeParametricPwmDutyCyclePercenageAndCare();
+   LightVotedRampingUpCountsShouldBeMaxRampingUpCountAndCare();
+   LightVotedRampingDownCountsShouldBeMaxRampingDownCountAndCare();
+
+   WhenTheEnhancedSabbathModeStatusChangesTo(CLEAR);
+   LightPwmVotedDutyCyclesShouldBeOffAndDontCare();
+   LightVotedRampingUpCountsShouldbeMaxRampingUpCountAndDontCare();
+   LightVotedRampingDownCountsShouldbeMaxRampingDownCountAndDontCare();
+}
 
 TEST(EnhancedSabbathMode, ShouldVoteForLoadsToDontCareWhenWhenEnteringDisabledOnInit)
 {
@@ -511,8 +626,8 @@ TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodAndSetCoolingModeToFreshFoodA
    WhenTheEnhancedSabbathModeStatusChangesTo(SET);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
    CoolingModeShouldBe(CoolingMode_FreshFood);
-   TheFreshFoodSetpointVoteShouldBe(EnhancedSabbathFreshFoodSetpointTemperatureInDegFx100, Vote_Care);
-   TheFreezerSetpointVoteShouldBe(EnhancedSabbathFreezerSetpointTemperatureInDegFx100, Vote_Care);
+   TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_Care);
+   TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_Care);
    TheIceMakerEnableOverrideRequestShouldBe(true);
    TheIceMakerEnableOverrideValueShouldBe(false);
    TheGridOverrideShouldBe(true);
@@ -552,7 +667,7 @@ TEST(EnhancedSabbathMode, ShouldEnterFreezerStageWhenFreshFoodStageTimerEndsAndS
 {
    GivenInitializationInFreshFoodStageWithLoadsSetToLow();
 
-   After(FreshFoodStageTimeInMsec - 1);
+   After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN - 1);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
    CoolingModeShouldBe(CoolingMode_FreshFood);
 
@@ -567,7 +682,7 @@ TEST(EnhancedSabbathMode, ShouldEnterFreezerStageWhenFreshFoodStageTimerEndsAndS
    GivenTheFreezerCabinetSetpointIs(SomeTemperatureInDegFx100);
    GivenInitializationInFreshFoodStageWithLoadsSetToLow();
 
-   After(FreshFoodStageTimeInMsec - 1);
+   After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN - 1);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Low, Vote_Care);
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_Low, Vote_Care);
@@ -588,7 +703,7 @@ TEST(EnhancedSabbathMode, ShouldEnterFreezerStageWhenFreshFoodStageTimerEndsAndS
    GivenTheFreezerCabinetSetpointIs(SomeTemperatureInDegFx100);
    GivenInitializationInFreshFoodStageWithLoadsSetToOff();
 
-   After(FreshFoodStageTimeInMsec - 1);
+   After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN - 1);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Off, Vote_Care);
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_Off, Vote_Care);
@@ -609,7 +724,7 @@ TEST(EnhancedSabbathMode, ShouldEnterOffStageWhenFreezerStageTimerEndsAndSetCool
 {
    GivenInitializationInTheFreezerStageWithLoadsSetToLow();
 
-   After(FreezerStageTimeInMsec - 1);
+   After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN - 1);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
    CoolingModeShouldBe(CoolingMode_Freezer);
 
@@ -634,7 +749,7 @@ TEST(EnhancedSabbathMode, ShouldEnterFreshFoodStageWhenOffStageTimerEndsAndSetCo
 {
    GivenInitializationInTheOffStage();
 
-   After(OffStageTimeInMsec - 1);
+   After(enhancedSabbathData->offStageTimeInMinutes * MSEC_PER_MIN - 1);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Off);
    CoolingModeShouldBe(CoolingMode_Off);
 
@@ -649,7 +764,7 @@ TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodFromOffStageAndVoteFanAndComp
    GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 - 1);
    GivenTheFreshFoodCabinetSetpointIs(SomeTemperatureInDegFx100);
 
-   After(OffStageTimeInMsec - 1);
+   After(enhancedSabbathData->offStageTimeInMinutes * MSEC_PER_MIN - 1);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Off);
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Off, Vote_Care);
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_Off, Vote_Care);
@@ -675,7 +790,7 @@ TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodAndVoteFanAndCompressorLowThe
    GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + 1);
    GivenTheFreshFoodCabinetSetpointIs(SomeTemperatureInDegFx100);
 
-   After(OffStageTimeInMsec - 1);
+   After(enhancedSabbathData->offStageTimeInMinutes * MSEC_PER_MIN - 1);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Off);
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Off, Vote_Care);
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_Off, Vote_Care);
@@ -705,8 +820,8 @@ TEST(EnhancedSabbathMode, ShouldBeInFreshFoodStageWithAllLoadsSetToOffWhenInitia
 
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
    CoolingModeShouldBe(CoolingMode_FreshFood);
-   TheFreshFoodSetpointVoteShouldBe(EnhancedSabbathFreshFoodSetpointTemperatureInDegFx100, Vote_Care);
-   TheFreezerSetpointVoteShouldBe(EnhancedSabbathFreezerSetpointTemperatureInDegFx100, Vote_Care);
+   TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_Care);
+   TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_Care);
    TheIceMakerEnableOverrideRequestShouldBe(true);
    TheIceMakerEnableOverrideValueShouldBe(false);
    TheGridOverrideShouldBe(true);
@@ -732,8 +847,8 @@ TEST(EnhancedSabbathMode, ShouldBeInFreshFoodStageWithAllLoadsSetToLowWhenInitia
 
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
    CoolingModeShouldBe(CoolingMode_FreshFood);
-   TheFreshFoodSetpointVoteShouldBe(EnhancedSabbathFreshFoodSetpointTemperatureInDegFx100, Vote_Care);
-   TheFreezerSetpointVoteShouldBe(EnhancedSabbathFreezerSetpointTemperatureInDegFx100, Vote_Care);
+   TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_Care);
+   TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_Care);
    TheIceMakerEnableOverrideRequestShouldBe(true);
    TheIceMakerEnableOverrideValueShouldBe(false);
    TheGridOverrideShouldBe(true);
@@ -750,8 +865,8 @@ TEST(EnhancedSabbathMode, ShouldSetSabbathModeToDisabledWhenInFreshFoodStageAndS
    GivenInitializationInFreshFoodStageWithLoadsSetToLow();
 
    WhenTheEnhancedSabbathModeStatusChangesTo(CLEAR);
-   TheFreshFoodSetpointVoteShouldBe(EnhancedSabbathFreshFoodSetpointTemperatureInDegFx100, Vote_DontCare);
-   TheFreezerSetpointVoteShouldBe(EnhancedSabbathFreezerSetpointTemperatureInDegFx100, Vote_DontCare);
+   TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_DontCare);
+   TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_DontCare);
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Low, Vote_DontCare);
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_Low, Vote_DontCare);
    TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Low, Vote_DontCare);
@@ -764,7 +879,7 @@ TEST(EnhancedSabbathMode, ShouldSetSabbathModeToDisabledWhenInFreshFoodStageAndS
    SabbathGpioShouldBe(true);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
 
-   After(FreshFoodStageTimeInMsec - 1);
+   After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN - 1);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Low, Vote_DontCare);
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_Low, Vote_DontCare);
@@ -784,8 +899,8 @@ TEST(EnhancedSabbathMode, ShouldSetSabbathModeToDisabledWhenInFreezerStageAndSta
    GivenInitializationInTheFreezerStageWithLoadsSetToLow();
 
    WhenTheEnhancedSabbathModeStatusChangesTo(CLEAR);
-   TheFreshFoodSetpointVoteShouldBe(EnhancedSabbathFreshFoodSetpointTemperatureInDegFx100, Vote_DontCare);
-   TheFreezerSetpointVoteShouldBe(EnhancedSabbathFreezerSetpointTemperatureInDegFx100, Vote_DontCare);
+   TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_DontCare);
+   TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_DontCare);
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Low, Vote_DontCare);
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_Low, Vote_DontCare);
    TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Low, Vote_DontCare);
@@ -798,7 +913,7 @@ TEST(EnhancedSabbathMode, ShouldSetSabbathModeToDisabledWhenInFreezerStageAndSta
    SabbathGpioShouldBe(true);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
 
-   After(FreezerStageTimeInMsec - 1);
+   After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN - 1);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Low, Vote_DontCare);
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_Low, Vote_DontCare);
@@ -818,8 +933,8 @@ TEST(EnhancedSabbathMode, ShouldSetSabbathModeToDisabledWhenInOffStageAndStatusI
    GivenInitializationInTheOffStage();
 
    WhenTheEnhancedSabbathModeStatusChangesTo(CLEAR);
-   TheFreshFoodSetpointVoteShouldBe(EnhancedSabbathFreshFoodSetpointTemperatureInDegFx100, Vote_DontCare);
-   TheFreezerSetpointVoteShouldBe(EnhancedSabbathFreezerSetpointTemperatureInDegFx100, Vote_DontCare);
+   TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_DontCare);
+   TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_DontCare);
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Off, Vote_DontCare);
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_Off, Vote_DontCare);
    TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off, Vote_DontCare);
@@ -832,7 +947,7 @@ TEST(EnhancedSabbathMode, ShouldSetSabbathModeToDisabledWhenInOffStageAndStatusI
    SabbathGpioShouldBe(true);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
 
-   After(OffStageTimeInMsec - 1);
+   After(enhancedSabbathData->offStageTimeInMinutes * MSEC_PER_MIN - 1);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Off, Vote_DontCare);
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_Off, Vote_DontCare);
@@ -852,7 +967,7 @@ TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathModeToDisabledIfMaxTimeHasBeen
    GivenInitializationInFreshFoodStageWithLoadsSetToLow();
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
 
-   After(EnhancedSabbathMaxTimeInMsec - 1);
+   After(enhancedSabbathData->maxTimeInEnhancedSabbathModeInMinutes * MSEC_PER_MIN - 1);
    TheEnhancedSabbathModeStatusShouldBe(true);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Off);
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Off, Vote_Care);
@@ -860,8 +975,8 @@ TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathModeToDisabledIfMaxTimeHasBeen
    TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off, Vote_Care);
    TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_Care);
 
-   TheFreshFoodSetpointVoteShouldBe(EnhancedSabbathFreshFoodSetpointTemperatureInDegFx100, Vote_Care);
-   TheFreezerSetpointVoteShouldBe(EnhancedSabbathFreezerSetpointTemperatureInDegFx100, Vote_Care);
+   TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_Care);
+   TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_Care);
    TheDisableCompressorMiniumTimesVoteShouldBe(true, Vote_Care);
    TheIceMakerEnableOverrideRequestShouldBe(true);
    TheIceMakerEnableOverrideValueShouldBe(false);
@@ -877,8 +992,8 @@ TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathModeToDisabledIfMaxTimeHasBeen
    TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off, Vote_DontCare);
    TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_DontCare);
 
-   TheFreshFoodSetpointVoteShouldBe(EnhancedSabbathFreshFoodSetpointTemperatureInDegFx100, Vote_DontCare);
-   TheFreezerSetpointVoteShouldBe(EnhancedSabbathFreezerSetpointTemperatureInDegFx100, Vote_DontCare);
+   TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_DontCare);
+   TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_DontCare);
    TheDisableCompressorMiniumTimesVoteShouldBe(true, Vote_DontCare);
    TheIceMakerEnableOverrideRequestShouldBe(false);
    TheIceMakerEnableOverrideValueShouldBe(true);

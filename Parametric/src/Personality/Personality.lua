@@ -12,7 +12,7 @@ return function(core)
       structure(
         pointer(config.refrigerator_model),
         pointer(config.defrost),
-        pointer(config.enhancedSabbath),
+        pointer(config.enhanced_sabbath),
         pointer(config.fans),
         pointer(config.grid),
         pointer(config.sabbath),
@@ -41,7 +41,7 @@ return function(core)
     validate_arguments(config, {
       refrigerator_model = { constraint.typed_string('refrigerator_model') },
       defrost = { constraint.typed_string('defrost') },
-      enhancedSabbath = { constraint.typed_string('enhancedSabbath') },
+      enhanced_sabbath = { constraint.typed_string('enhanced_sabbath') },
       fans = { constraint.typed_string('fan_list') },
       grid = { constraint.typed_string('grid') },
       sabbath = { constraint.typed_string('sabbath') },

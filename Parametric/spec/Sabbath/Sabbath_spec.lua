@@ -10,7 +10,8 @@ describe('sabbath', function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-      time_between_defrosts_in_minutes = 16 * 60
+      time_between_defrosts_in_minutes = 16 * 60,
+      interior_lights_pwm_duty_cycle_percentage = 0
     }, overrides or {})
   end
 
@@ -26,15 +27,25 @@ describe('sabbath', function()
     end)
   end)
 
+  it('should assert if interior_lights_pwm_duty_cycle_percentage is not in range', function()
+    should_fail_with('interior_lights_pwm_duty_cycle_percentage=-1 must be in [0, 255]', function()
+      sabbath(generate_config({
+        interior_lights_pwm_duty_cycle_percentage = -1
+      }))
+    end)
+  end)
+
   it('should generate a typed string with the correct data and type sabbath', function()
     local expected = remove_whitespace([[
       structure(
-        u16(1440)
+        u16(1440),
+        u8(0)
       )
-      ]])
+    ]])
 
     local actual = sabbath({
-      time_between_defrosts_in_minutes = 1440
+      time_between_defrosts_in_minutes = 1440,
+      interior_lights_pwm_duty_cycle_percentage = 0
     })
 
     assert.equals(expected, remove_whitespace(tostring(actual)))

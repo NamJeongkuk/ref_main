@@ -10,7 +10,8 @@ return function(core)
     return TypedString(
       { 'sabbath' },
       structure(
-        u16(config.time_between_defrosts_in_minutes)
+        u16(config.time_between_defrosts_in_minutes),
+        u8(config.interior_lights_pwm_duty_cycle_percentage)
       )
     )
   end)
@@ -19,7 +20,8 @@ return function(core)
     validate_arguments(
       config,
       {
-        time_between_defrosts_in_minutes = { constraint.u16 }
+        time_between_defrosts_in_minutes = { constraint.u16 },
+        interior_lights_pwm_duty_cycle_percentage = { constraint.u8 }
       })
     return generate(config)
   end

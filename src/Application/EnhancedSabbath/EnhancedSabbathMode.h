@@ -12,6 +12,8 @@
 #include "Timer.h"
 #include "Hsm.h"
 #include "EnhancedSabbathData.h"
+#include "LightingData.h"
+#include "ErdList.h"
 
 typedef struct
 {
@@ -35,6 +37,7 @@ typedef struct
    Erd_t gridOverrideEnabledErd; // bool
    Erd_t coolingModeErd; // CoolingMode_t
    Erd_t hsmStateErd; // EnhancedSabbathModeHsmState_t
+   ErdList_t lightVoteErdList; // ErdList_t
 } EnhancedSabbathModeConfig_t;
 
 typedef struct

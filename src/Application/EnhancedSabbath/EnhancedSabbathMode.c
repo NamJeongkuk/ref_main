@@ -15,6 +15,9 @@
 #include "EnhancedSabbathModeHsmState.h"
 #include "Constants_Time.h"
 #include "CoolingMode.h"
+#include "RampingPwmDutyCyclePercentageVote.h"
+#include "RampingPwmDutyCycle.h"
+#include "RampingPwmDutyCyclePercentageBundleData.h"
 
 enum
 {
@@ -233,6 +236,50 @@ static void SetDisableCompressorMinimumTimesToCareWithValue(EnhancedSabbathMode_
       instance->_private.dataModel,
       instance->_private.config->disableMinimumCompressorTimesVoteErd,
       &vote);
+}
+
+static void SetLightVotesToOffAndDontCare(EnhancedSabbathMode_t *instance)
+{
+   RampingPwmDutyCyclePercentage_t lightingOffRampingPwmDutyCyclePercentage = {
+      .pwmDutyCyclePercentage = 0,
+      .rampingUpCountInMsec = UINT8_MAX,
+      .rampingDownCountInMsec = UINT8_MAX
+   };
+
+   RampingPwmDutyCyclePercentageVote_t vote = {
+      .rampingPwmDutyCyclePercentage = lightingOffRampingPwmDutyCyclePercentage,
+      .care = Vote_DontCare
+   };
+
+   for(uint8_t i = 0; i < instance->_private.config->lightVoteErdList.numberOfErds; i++)
+   {
+      DataModel_Write(
+         instance->_private.dataModel,
+         instance->_private.config->lightVoteErdList.erds[i],
+         &vote);
+   }
+}
+
+static void SetLightVotesToParametricallyDefinedPwmDutyCyclePercentageAndCare(EnhancedSabbathMode_t *instance)
+{
+   RampingPwmDutyCyclePercentage_t lightingRampingPwmDutyCyclePercentage = {
+      .pwmDutyCyclePercentage = instance->_private.enhancedSabbathData->lightsPwmDutyCyclePercentage,
+      .rampingUpCountInMsec = UINT8_MAX,
+      .rampingDownCountInMsec = UINT8_MAX
+   };
+
+   RampingPwmDutyCyclePercentageVote_t vote = {
+      .rampingPwmDutyCyclePercentage = lightingRampingPwmDutyCyclePercentage,
+      .care = Vote_Care
+   };
+
+   for(uint8_t i = 0; i < instance->_private.config->lightVoteErdList.numberOfErds; i++)
+   {
+      DataModel_Write(
+         instance->_private.dataModel,
+         instance->_private.config->lightVoteErdList.erds[i],
+         &vote);
+   }
 }
 
 static void SetAllLoadVotesToDontCare(EnhancedSabbathMode_t *instance)
@@ -454,6 +501,7 @@ static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          SetIceMakerEnabledOverrideRequestTo(instance, false);
          SetIceMakerEnabledOverrideValueTo(instance, true);
          SetSabbathGpioTo(instance, true);
+         SetLightVotesToOffAndDontCare(instance);
          break;
 
       case Signal_EnhancedSabbathModeEnabled:
@@ -484,6 +532,7 @@ static bool State_Enabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          SetSabbathGpioTo(instance, false);
          SetDisableCompressorMinimumTimesToCareWithValue(instance, true);
          StartEnhancedSabbathMaxTimer(instance);
+         SetLightVotesToParametricallyDefinedPwmDutyCyclePercentageAndCare(instance);
          break;
 
       case Signal_EnhancedSabbathModeDisabled:
