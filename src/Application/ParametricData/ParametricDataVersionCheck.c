@@ -12,7 +12,7 @@
 enum
 {
    Critical_MajorVersion = 0,
-   Critical_MinorVersion = 14
+   Critical_MinorVersion = 15
 };
 
 void ParametricDataVersionCheck_Init(I_Action_t *jumpToBootloaderAction)
