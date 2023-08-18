@@ -10,16 +10,18 @@
 
 enum
 {
-   Gea2Address_Mainboard = 0x00,
+   Gea2Address_InternalTemperatureUi = 0x01,
    Gea2Address_Dispenser = 0x02,
    Gea2Address_DoorBoard = 0x03,
    Gea2Address_DeliPanBoard = 0x04,
    Gea2Address_RfidBoard = 0x08,
    Gea2Address_NextGenRfidBoard = 0x0A,
    Gea2Address_ConvertibleDrawerBoard = 0x0D,
-   PcToolAddress = 0xE4,
-   EmbeddedWiFiGeaAddress = 0xBF,
-   ConnectPlusWiFiGeaAddress = 0xBE
+   Gea2Address_PcToolAddress = 0xE4,
+   Gea2Address_EmbeddedWiFi = 0xBF,
+   Gea2Address_ConnectPlusWiFi = 0xBE,
+   Gea2Address_Mainboard = 0xC0,
+   Gea2Address_AndroidSbc = 0xC1,
 };
 
 #endif

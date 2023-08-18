@@ -27,7 +27,7 @@
 #include "Timer.h"
 #include "TimerModuleStack.h"
 #include "Version.h"
-#include "Gea2RefAddresses.h"
+#include "Gea2Addresses.h"
 #include "Crc16Calculator_Rx2xx.h"
 #include "ContextProtector_Rx2xx.h"
 #include "UlTestsPlugin.h"
@@ -55,6 +55,7 @@
 #include "GeaStack.h"
 #include "ShortGitHash.h"
 #include "PersonalityEepromStack.h"
+#include "BoardsInSystemPlugin.h"
 
 enum
 {
@@ -78,6 +79,7 @@ static NonVolatileAsyncDataSource_t nvAsyncDataSource;
 static Input_StackUsageCalculator_t stackUsageCalculator;
 static Timer_t stackUsageUpdateTimer;
 static GeaStack_t geaStack;
+static BoardsInSystemPlugin_t boardsInSystemPlugin;
 
 enum
 {
@@ -230,7 +232,11 @@ int main(void)
       &geaStack,
       dataModel,
       SystemData_ExternalDataSource(&systemData),
-      Gea2Address_ReferMainBoard);
+      Gea2Address_Mainboard);
+
+   BoardsInSystemPlugin_Init(
+      &boardsInSystemPlugin,
+      dataModel);
 
    Application_Init(
       &application,

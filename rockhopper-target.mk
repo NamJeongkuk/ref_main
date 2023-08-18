@@ -43,6 +43,7 @@ SRC_DIRS:=\
   src/Application \
   src/Application/Auger \
   src/Application/ApplianceFeatureApiUpdater \
+  src/Application/BoardDiscovery \
   src/Application/Compressor \
   src/Application/ConfigurationPlugins \
   src/Application/Configurations \
@@ -94,6 +95,7 @@ SRC_DIRS:=\
   lib/Common/Source/Gea \
 
 INC_DIRS:=\
+  src/Application/BoardDiscovery \
   src/Application/Compressor \
   src/Application/ConvertibleCompartment \
   src/Application/Cooling \

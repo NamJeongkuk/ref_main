@@ -8,7 +8,7 @@
 #include "GeaStack.h"
 #include "DataModelErdPointerAccess.h"
 #include "Gea2Message.h"
-#include "Gea2RefAddresses.h"
+#include "Gea2Addresses.h"
 #include "Header.h"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"

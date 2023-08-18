@@ -1263,6 +1263,12 @@ enum
    ENTRY(Erd_NumberOfTimesMainboardHasLostCommunicationWithAndroidUi, 0xFB82, uint8_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_NumberOfTimesMainboardHasAttemptedToResetAndroidUi,      0xFB83, uint8_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AndroidUiResetSignal,                                    0xFB84, Signal_t,                                 Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DispenserUiInSystem,                                     0xFB85, bool,                                     Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
+   ENTRY(Erd_RfidBoardInSystem,                                       0xFB86, bool,                                     Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
+   ENTRY(Erd_DoorBoardInSystem,                                       0xFB87, bool,                                     Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
+   ENTRY(Erd_EmbeddedWifiInSystem,                                    0xFB88, bool,                                     Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
+   ENTRY(Erd_AndroidSbcBoardInSystem,                                 0xFB89, bool,                                     Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
+   ENTRY(Erd_InternalTemperatureUiInSystem,                           0xFB8A, bool,                                     Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    \
    ENTRY(Erd_NvReservedProtected,                           0xFCFA, uint8_t,                                            Swap_No,    Io_None, Sub_N,  NvProtected,           NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NvReservedUnitSetting,                         0xFCFB, uint8_t,                                            Swap_No,    Io_None, Sub_N,  NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
