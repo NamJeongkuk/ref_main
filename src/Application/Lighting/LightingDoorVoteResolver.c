@@ -15,11 +15,6 @@
 #include "PersonalityParametricData.h"
 #include "RampingPwmDutyCyclePercentageBundleData.h"
 
-enum
-{
-   MaxDoorOpenTimeInMsec = 15 * MSEC_PER_MIN
-};
-
 static bool DoorErdChanged(LightingDoorVoteResolver_t *instance, Erd_t erdToCheck)
 {
    for(uint8_t i = 0; i < instance->_private.config->numberOfDoorErds; i++)
@@ -116,7 +111,7 @@ static void StartMaxDoorOpenTimer(LightingDoorVoteResolver_t *instance)
          instance->_private.dataModel,
          instance->_private.config->timerModuleErd),
       &instance->_private.maxDoorOpenTimer,
-      MaxDoorOpenTimeInMsec,
+      PersonalityParametricData_Get(instance->_private.dataModel)->lightingData->maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN,
       MaxDoorOpenTimerExpired,
       instance);
 }

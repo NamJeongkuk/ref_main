@@ -11,6 +11,7 @@ return function(core)
        { 'lighting' },
        structure(
          u8(config.maximum_light_duty_cycle_percentage),
+         u8(config.maximum_interior_lights_on_time_in_minutes),
          pointer(config.fresh_food_backwall),
          pointer(config.fresh_food_top_and_side),
          pointer(config.freezer_backwall),
@@ -24,6 +25,7 @@ return function(core)
        config,
        {
          maximum_light_duty_cycle_percentage = { constraint.in_range(0,100) },
+         maximum_interior_lights_on_time_in_minutes = { constraint.u8 },
          fresh_food_backwall = { constraint.typed_string('door_lighting') },
          fresh_food_top_and_side = { constraint.typed_string('door_lighting') },
          freezer_backwall = { constraint.typed_string('door_lighting') },

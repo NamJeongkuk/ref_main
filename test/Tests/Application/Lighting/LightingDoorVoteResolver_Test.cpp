@@ -17,11 +17,6 @@ extern "C"
 #include "uassert_test.h"
 #include "ReferDataModel_TestDouble.h"
 
-enum
-{
-   MaxDoorOpenTimeInMsec = 15 * MSEC_PER_MIN
-};
-
 static const Erd_t doorIsOpenErds[] = {
    Erd_LeftSideFreshFoodDoorIsOpenResolved,
    Erd_RightSideFreshFoodDoorStatusResolved
@@ -350,7 +345,7 @@ TEST(LightingDoorVoteResolver, ShouldSetPwmVotedDutyCycleErdsToMinWhenAnyDoorIsO
    WhenTheDoorStateChangesTo(Erd_LeftSideFreshFoodDoorIsOpenResolved, true);
    ThePwmVotedDutyCycleErdsShouldBe(PercentageDutyCycle_Max);
 
-   After(MaxDoorOpenTimeInMsec - 1);
+   After(lightingData->maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
    ThePwmVotedDutyCycleErdsShouldBe(PercentageDutyCycle_Max);
 
    After(1);
@@ -370,7 +365,7 @@ TEST(LightingDoorVoteResolver, ShouldSetRampingUpCountInMsecToMaxPwmRampingUpCou
    TheRampingUpCountShouldChangeTo(lightingData->freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle->maxPwmRampingUpCountInMsec);
    WhenTheDoorStateChangesTo(Erd_LeftSideFreshFoodDoorIsOpenResolved, true);
 
-   After(MaxDoorOpenTimeInMsec - 1);
+   After(lightingData->maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
    TheRampingUpCountInMsecShouldBe(lightingData->freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle->maxPwmRampingUpCountInMsec);
 
    TheRampingUpCountShouldChangeTo(lightingData->freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle->maxPwmRampingUpCountInMsec);
@@ -390,7 +385,7 @@ TEST(LightingDoorVoteResolver, ShouldSetRampingDownCountInMsecToMaxPwmRampingDow
    TheRampingDownCountShouldChangeTo(lightingData->freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle->maxPwmRampingDownCountInMsec);
    WhenTheDoorStateChangesTo(Erd_LeftSideFreshFoodDoorIsOpenResolved, true);
 
-   After(MaxDoorOpenTimeInMsec - 1);
+   After(lightingData->maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
    TheRampingDownCountInMsecShouldBe(lightingData->freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle->maxPwmRampingDownCountInMsec);
 
    TheRampingDownCountShouldChangeTo(lightingData->freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle->maxPwmRampingDownCountInMsec);
@@ -408,14 +403,14 @@ TEST(LightingDoorVoteResolver, ShouldResetMaxDoorOpenTimeWhenAnotherDoorOpensWhi
    WhenTheDoorStateChangesTo(Erd_LeftSideFreshFoodDoorIsOpenResolved, true);
    ThePwmVotedDutyCycleErdsShouldBe(PercentageDutyCycle_Max);
 
-   After(MaxDoorOpenTimeInMsec - 1);
+   After(lightingData->maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
    ThePwmVotedDutyCycleErdsShouldBe(PercentageDutyCycle_Max);
 
    WhenTheDoorStateChangesTo(Erd_RightSideFreshFoodDoorStatusResolved, true);
    After(1);
    ThePwmVotedDutyCycleErdsShouldBe(PercentageDutyCycle_Max);
 
-   After(MaxDoorOpenTimeInMsec - 1);
+   After(lightingData->maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
    ThePwmVotedDutyCycleErdsShouldBe(PercentageDutyCycle_Min);
 }
 
@@ -423,7 +418,7 @@ TEST(LightingDoorVoteResolver, ShouldSetPwmVotedDutyCycleErdsToMinWhenOneDoorOpe
 {
    GivenOneDoorIsOpenAndPwmVotedDutyCycleIsMax();
 
-   After(MaxDoorOpenTimeInMsec - 1);
+   After(lightingData->maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
    ThePwmVotedDutyCycleErdsShouldBe(PercentageDutyCycle_Max);
 
    After(1);
@@ -434,7 +429,7 @@ TEST(LightingDoorVoteResolver, ShouldSetRampingUpCountInMsecToMaxPwmRampingUpCou
 {
    GivenOneDoorIsOpenAndRampingUpCountInMsecIsMaxRampingUpCountInMsec();
 
-   After(MaxDoorOpenTimeInMsec - 1);
+   After(lightingData->maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
    TheRampingUpCountInMsecShouldBe(lightingData->freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle->maxPwmRampingUpCountInMsec);
 
    TheRampingUpCountShouldChangeTo(lightingData->freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle->maxPwmRampingUpCountInMsec);
@@ -445,7 +440,7 @@ TEST(LightingDoorVoteResolver, ShouldSetRampingDownCountInMsecToMaxPwmRampingDow
 {
    GivenOneDoorIsOpenAndRampingDownCountInMsecIsMaxRampingDownCountInMsec();
 
-   After(MaxDoorOpenTimeInMsec - 1);
+   After(lightingData->maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
    TheRampingDownCountInMsecShouldBe(lightingData->freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle->maxPwmRampingDownCountInMsec);
 
    TheRampingDownCountShouldChangeTo(lightingData->freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle->maxPwmRampingDownCountInMsec);
