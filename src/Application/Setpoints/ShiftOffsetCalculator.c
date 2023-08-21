@@ -97,6 +97,11 @@ static void ShiftOffsetCalculateTimeExpired(void *context)
 
    TemperatureDegFx100_t adjustedSetpointWithoutShift = adjustedSetpoint - shiftOffset;
 
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->adjustedSetpointWithoutShiftErd,
+      &adjustedSetpointWithoutShift);
+
    if(average1 > (adjustedSetpointWithoutShift - instance->_private.shiftOffsetData->lowerAdjustmentLimitInDegFx100) &&
       average1 < (adjustedSetpointWithoutShift + instance->_private.shiftOffsetData->upperAdjustmentLimitInDegFx100))
    {

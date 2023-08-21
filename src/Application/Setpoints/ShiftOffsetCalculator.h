@@ -20,6 +20,7 @@ typedef struct
    Erd_t filteredTemperatureInDegFx100Erd; // TemperatureDegFx100_t
    Erd_t adjustedSetpointErd; // TemperatureDegFx100_t
    Erd_t shiftOffsetErd; // TemperatureDegFx100_t
+   Erd_t adjustedSetpointWithoutShiftErd; // TemperatureDegFx100_t
    Erd_t timerModuleErd; // TimerModule_t *
    Erd_t postDwellCompletionSignalErd; // Signal_t
    Erd_t resetThermalShiftOffsetSignalErd; // Signal_t
