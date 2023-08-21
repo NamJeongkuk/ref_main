@@ -1,54 +1,50 @@
-UNAME := $(shell uname)
-
-MAKE=make -f rockhopper-target.mk
-MAKE_RELEASE=$(MAKE) RELEASE=Y DEBUG=N package
-MAKE_NO_RELEASE=$(MAKE) RELEASE=N
+MAKE:=$(MAKE) --no-print-directory
 
 .PHONY: target
 target:
-	$(MAKE_NO_RELEASE) DEBUG=N
+	@$(MAKE) -f rockhopper-target.mk RELEASE=N DEBUG=N
 
 .PHONY: release
 release:
-	$(MAKE_RELEASE)
+	@$(MAKE) -f rockhopper-target.mk RELEASE=Y DEBUG=N package
 
 .PHONY: upload
 upload:
-	 $(MAKE_NO_RELEASE) DEBUG=N upload
+	@$(MAKE) -f rockhopper-target.mk RELEASE=N DEBUG=N upload
 
 .PHONY: upload_release
 upload_release:
-	 $(MAKE) RELEASE=Y DEBUG=N upload
+	@$(MAKE) RELEASE=Y DEBUG=N upload
 
 .PHONY: json
 json:
-	$(MAKE_NO_RELEASE) DEBUG=N erd_definitions
+	@$(MAKE) -f rockhopper-target.mk RELEASE=N DEBUG=N erd_definitions
 
 .PHONY: tdd
 tdd:
-	make -f tdd.mk -j16
+	@$(MAKE) -f tdd.mk -j16
 
 .PHONY: verbose
 verbose:
-	make -f tdd.mk -j16 verbose
+	@$(MAKE) -f tdd.mk -j16 verbose
 
 .PHONY: debug
 debug:
-	$(MAKE_NO_RELEASE) DEBUG=Y
+	@$(MAKE) -f rockhopper-target.mk RELEASE=N DEBUG=Y
 
 .PHONY: gdb_server
 gdb_server:
-	$(MAKE_NO_RELEASE) DEBUG=Y gdb_server
+	@$(MAKE) -f rockhopper-target.mk RELEASE=N DEBUG=Y gdb_server
 
 .PHONY: clean
 clean:
-	$(MAKE_NO_RELEASE) DEBUG=N clean
-	make -f tdd.mk RELEASE=N DEBUG=N clean
+	@$(MAKE) -f rockhopper-target.mk RELEASE=N DEBUG=N clean
+	@$(MAKE) -f tdd.mk RELEASE=N DEBUG=N clean
 
 .PHONY: erase
 erase:
-	$(MAKE_NO_RELEASE) DEBUG=N erase
+	@$(MAKE) -f rockhopper-target.mk RELEASE=N DEBUG=N erase
 
 .PHONY: parametric
 parametric:
-	$(MAKE_NO_RELEASE) DEBUG=Y build_parametric
+	@$(MAKE) -f rockhopper-target.mk RELEASE=N DEBUG=Y build_parametric

@@ -52,6 +52,7 @@ return function(path)
 
   local import = require 'lua-common'.util.EvalInCurrentEnvironment('./')
   global.import = import
+  global.constants = require 'src/constants'
 
   setmetatable(_G, {
     __index = function(_, name)
