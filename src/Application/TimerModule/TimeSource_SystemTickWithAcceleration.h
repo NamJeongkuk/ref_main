@@ -6,8 +6,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef TIMESOURCE_SYSTICKWITHACCELERATION_H
-#define TIMESOURCE_SYSTICKWITHACCELERATION_H
+#ifndef TIMESOURCE_SYSTEMTICKWITHACCELERATION_H
+#define TIMESOURCE_SYSTEMTICKWITHACCELERATION_H
 
 #include "EventSubscription.h"
 #include "I_DataModel.h"
@@ -20,7 +20,7 @@ typedef struct
    Erd_t ticksRemainingInAccelerationErd; // uint32_t
    Erd_t completeSignalErd; // Signal_t
    TimeSourceTickCount_t maxTicksPerRtc;
-} TimeSource_SysTickWithAcceleration_Config_t;
+} TimeSource_SystemTickWithAcceleration_Config_t;
 
 typedef struct
 {
@@ -28,36 +28,36 @@ typedef struct
 
    struct
    {
-      const TimeSource_SysTickWithAcceleration_Config_t *config;
+      const TimeSource_SystemTickWithAcceleration_Config_t *config;
       I_Interrupt_t *sysTickInterrupt;
       I_DataModel_t *dataModel;
       EventSubscription_t sysTickSubscription;
       volatile TimeSourceTickCount_t ticks;
    } _private;
-} TimeSource_SysTickWithAcceleration_t;
+} TimeSource_SystemTickWithAcceleration_t;
 
 /*!
  * @param instance
  * @param config
  * @param sysTickInterrupt
  */
-void TimeSource_SysTickWithAcceleration_Init(
-   TimeSource_SysTickWithAcceleration_t *instance,
-   const TimeSource_SysTickWithAcceleration_Config_t *config,
+void TimeSource_SystemTickWithAcceleration_Init(
+   TimeSource_SystemTickWithAcceleration_t *instance,
+   const TimeSource_SystemTickWithAcceleration_Config_t *config,
    I_Interrupt_t *sysTickInterrupt);
 
 /*!
  * @param instance
  * @param dataModel
  */
-void TimeSource_SysTickWithAcceleration_SetDataModel(
-   TimeSource_SysTickWithAcceleration_t *instance,
+void TimeSource_SystemTickWithAcceleration_SetDataModel(
+   TimeSource_SystemTickWithAcceleration_t *instance,
    I_DataModel_t *dataModel);
 
 /*!
  * @param instance
  */
-void TimeSource_SysTickWithAcceleration_Run(
-   TimeSource_SysTickWithAcceleration_t *instance);
+void TimeSource_SystemTickWithAcceleration_Run(
+   TimeSource_SystemTickWithAcceleration_t *instance);
 
 #endif

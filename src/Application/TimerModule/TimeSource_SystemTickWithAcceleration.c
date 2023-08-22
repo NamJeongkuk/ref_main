@@ -7,12 +7,12 @@
 
 #include "Constants_Binary.h"
 #include "Signal.h"
-#include "TimeSource_SysTickWithAcceleration.h"
+#include "TimeSource_SystemTickWithAcceleration.h"
 #include "utils.h"
 
 static void Tick(void *context, const void *_args)
 {
-   REINTERPRET(instance, context, TimeSource_SysTickWithAcceleration_t *);
+   REINTERPRET(instance, context, TimeSource_SystemTickWithAcceleration_t *);
    IGNORE(_args);
 
    instance->_private.ticks++;
@@ -20,7 +20,7 @@ static void Tick(void *context, const void *_args)
 
 static TimeSourceTickCount_t GetTicks(I_TimeSource_t *_instance)
 {
-   REINTERPRET(instance, _instance, TimeSource_SysTickWithAcceleration_t *);
+   REINTERPRET(instance, _instance, TimeSource_SystemTickWithAcceleration_t *);
    TimeSourceTickCount_t last;
    TimeSourceTickCount_t current;
 
@@ -37,9 +37,9 @@ static TimeSourceTickCount_t GetTicks(I_TimeSource_t *_instance)
 
 static const I_TimeSource_Api_t api = { GetTicks };
 
-void TimeSource_SysTickWithAcceleration_Init(
-   TimeSource_SysTickWithAcceleration_t *instance,
-   const TimeSource_SysTickWithAcceleration_Config_t *config,
+void TimeSource_SystemTickWithAcceleration_Init(
+   TimeSource_SystemTickWithAcceleration_t *instance,
+   const TimeSource_SystemTickWithAcceleration_Config_t *config,
    I_Interrupt_t *sysTickInterrupt)
 {
    instance->_private.config = config;
@@ -55,15 +55,15 @@ void TimeSource_SysTickWithAcceleration_Init(
       &instance->_private.sysTickSubscription);
 }
 
-void TimeSource_SysTickWithAcceleration_SetDataModel(
-   TimeSource_SysTickWithAcceleration_t *instance,
+void TimeSource_SystemTickWithAcceleration_SetDataModel(
+   TimeSource_SystemTickWithAcceleration_t *instance,
    I_DataModel_t *dataModel)
 {
    instance->_private.dataModel = dataModel;
 }
 
-void TimeSource_SysTickWithAcceleration_Run(
-   TimeSource_SysTickWithAcceleration_t *instance)
+void TimeSource_SystemTickWithAcceleration_Run(
+   TimeSource_SystemTickWithAcceleration_t *instance)
 {
    bool accelerationEnabled;
    DataModel_Read(

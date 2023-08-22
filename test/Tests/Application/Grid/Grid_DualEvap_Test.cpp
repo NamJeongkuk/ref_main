@@ -194,9 +194,6 @@ TEST_GROUP(Grid_DualEvap_Test)
 
    void AllGridVotesShouldBeDontCare()
    {
-      ValveVotedPosition_t valveActual;
-      DataModel_Write(dataModel, Erd_ValvePosition_GridVote, &valveActual);
-
       FanVotedSpeed_t fanSpeedVote;
       DataModel_Read(dataModel, Erd_CondenserFanSpeed_GridVote, &fanSpeedVote);
       CHECK_FALSE(fanSpeedVote.care);

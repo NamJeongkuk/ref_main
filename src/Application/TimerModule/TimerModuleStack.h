@@ -14,7 +14,7 @@
 #include "I_DataModel.h"
 
 #if defined(DEBUG)
-#include "TimeSource_SysTickWithAcceleration.h"
+#include "TimeSource_SystemTickWithAcceleration.h"
 #endif
 
 typedef struct
@@ -27,7 +27,7 @@ typedef struct
       I_Interrupt_t *systemTickInterrupt;
 
 #if defined(DEBUG)
-      TimeSource_SysTickWithAcceleration_t acceleratedTimeSource;
+      TimeSource_SystemTickWithAcceleration_t acceleratedTimeSource;
       Timer_t runTimer;
 #endif
    } _private;

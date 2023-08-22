@@ -15,7 +15,7 @@ enum
    MaxTicksToSkipAtOnce = 1000,
 };
 
-static const TimeSource_SysTickWithAcceleration_Config_t acceleratedTimeSourceConfig = {
+static const TimeSource_SystemTickWithAcceleration_Config_t acceleratedTimeSourceConfig = {
    .accelerationEnabledErd = Erd_TimeAcceleration_Enable,
    .ticksRemainingInAccelerationErd = Erd_TimeAcceleration_Ticks,
    .completeSignalErd = Erd_TimeAcceleration_CompleteSignal,
@@ -32,7 +32,7 @@ TimerModule_t *TimerModuleStack_Init(TimerModuleStack_t *instance, I_Interrupt_t
    instance->_private.timeSource = &instance->_private.systemTickTimeSource.interface;
 
 #if defined(DEBUG)
-   TimeSource_SysTickWithAcceleration_Init(
+   TimeSource_SystemTickWithAcceleration_Init(
       &instance->_private.acceleratedTimeSource,
       &acceleratedTimeSourceConfig,
       systemTickInterrupt);
@@ -50,7 +50,7 @@ static void RunTimeAcceleration(void *context)
 {
    REINTERPRET(instance, context, TimerModuleStack_t *);
 
-   TimeSource_SysTickWithAcceleration_Run(
+   TimeSource_SystemTickWithAcceleration_Run(
       &instance->_private.acceleratedTimeSource);
 }
 #endif
@@ -61,7 +61,7 @@ void TimerModuleStack_WritePointersToDataModel(TimerModuleStack_t *instance, I_D
    DataModelErdPointerAccess_Write(dataModel, Erd_TimeSource, instance->_private.timeSource);
    DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &instance->_private.timerModule_1ms);
 #if defined(DEBUG)
-   TimeSource_SysTickWithAcceleration_SetDataModel(
+   TimeSource_SystemTickWithAcceleration_SetDataModel(
       &instance->_private.acceleratedTimeSource,
       dataModel);
 

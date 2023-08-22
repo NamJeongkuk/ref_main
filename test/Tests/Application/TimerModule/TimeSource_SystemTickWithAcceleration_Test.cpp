@@ -8,7 +8,7 @@
 extern "C"
 {
 #include "Signal.h"
-#include "TimeSource_SysTickWithAcceleration.h"
+#include "TimeSource_SystemTickWithAcceleration.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -35,21 +35,21 @@ static const DataModel_TestDoubleConfigurationEntry_t erds[] = {
    { Erd_TimeAcceleration_CompleteSignal, sizeof(Signal_t) },
 };
 
-static const TimeSource_SysTickWithAcceleration_Config_t config = {
+static const TimeSource_SystemTickWithAcceleration_Config_t config = {
    .accelerationEnabledErd = Erd_TimeAcceleration_Enable,
    .ticksRemainingInAccelerationErd = Erd_TimeAcceleration_Ticks,
    .completeSignalErd = Erd_TimeAcceleration_CompleteSignal,
    .maxTicksPerRtc = MaxTicksToSkipAtOnce,
 };
 
-TEST_GROUP(TimeSource_SysTickWithAcceleration)
+TEST_GROUP(TimeSource_SystemTickWithAcceleration)
 {
    DataModel_TestDouble_t dataModelTestDouble;
    I_DataModel_t *dataModel;
 
    Interrupt_TestDouble_t sysTickTestDouble;
 
-   TimeSource_SysTickWithAcceleration_t timeSource_SysTickWithAcceleration;
+   TimeSource_SystemTickWithAcceleration_t timeSource_SystemTickWithAcceleration;
 
    void setup()
    {
@@ -61,12 +61,12 @@ TEST_GROUP(TimeSource_SysTickWithAcceleration)
 
    void TheModuleIsInitialized()
    {
-      TimeSource_SysTickWithAcceleration_Init(
-         &timeSource_SysTickWithAcceleration,
+      TimeSource_SystemTickWithAcceleration_Init(
+         &timeSource_SystemTickWithAcceleration,
          &config,
          &sysTickTestDouble.interface);
-      TimeSource_SysTickWithAcceleration_SetDataModel(
-         &timeSource_SysTickWithAcceleration,
+      TimeSource_SystemTickWithAcceleration_SetDataModel(
+         &timeSource_SystemTickWithAcceleration,
          dataModel);
    }
 
@@ -97,7 +97,7 @@ TEST_GROUP(TimeSource_SysTickWithAcceleration)
    void TickCountShouldBe(TimeSourceTickCount_t expected)
    {
       TimeSourceTickCount_t actual =
-         TimeSource_GetTicks(&timeSource_SysTickWithAcceleration.interface);
+         TimeSource_GetTicks(&timeSource_SystemTickWithAcceleration.interface);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -118,14 +118,14 @@ TEST_GROUP(TimeSource_SysTickWithAcceleration)
       Interrupt_TestDouble_TriggerInterrupt(&sysTickTestDouble);
    }
 
-   void TheSysTickWithAccelerationIsRun(void)
+   void TheSystemTickWithAccelerationIsRun(void)
    {
-      TimeSource_SysTickWithAcceleration_Run(
-         &timeSource_SysTickWithAcceleration);
+      TimeSource_SystemTickWithAcceleration_Run(
+         &timeSource_SystemTickWithAcceleration);
    }
 };
 
-TEST(TimeSource_SysTickWithAcceleration, ShouldCountTicks)
+TEST(TimeSource_SystemTickWithAcceleration, ShouldCountTicks)
 {
    Given TheModuleIsInitialized();
    TickCountShouldBe(0);
@@ -137,80 +137,80 @@ TEST(TimeSource_SysTickWithAcceleration, ShouldCountTicks)
    TickCountShouldBe(2);
 }
 
-TEST(TimeSource_SysTickWithAcceleration, RunShouldDoNothingWhenAccelerationIsDisabled)
+TEST(TimeSource_SystemTickWithAcceleration, RunShouldDoNothingWhenAccelerationIsDisabled)
 {
    Given TheModuleIsInitialized();
    Given AccelerationIs(Disabled);
 
-   When TheSysTickWithAccelerationIsRun();
+   When TheSystemTickWithAccelerationIsRun();
    TickCountShouldBe(0);
 
    When TheSysTickInterruptFires();
    TickCountShouldBe(1);
 }
 
-TEST(TimeSource_SysTickWithAcceleration, AccelerationShouldBeDisabledIfEnabledWithZeroTicksRemaining)
+TEST(TimeSource_SystemTickWithAcceleration, AccelerationShouldBeDisabledIfEnabledWithZeroTicksRemaining)
 {
    Given TheModuleIsInitialized();
    Given AccelerationIs(Enabled);
    Given TicksRemainingIs(0);
 
-   When TheSysTickWithAccelerationIsRun();
+   When TheSystemTickWithAccelerationIsRun();
    AccelerationShouldBe(Disabled);
 }
 
-TEST(TimeSource_SysTickWithAcceleration, AccelerationShouldDoNothingIfDisabledWithTicksRemaining)
+TEST(TimeSource_SystemTickWithAcceleration, AccelerationShouldDoNothingIfDisabledWithTicksRemaining)
 {
    Given TheModuleIsInitialized();
    Given AccelerationIs(Disabled);
    Given TicksRemainingIs(SomeNumberOfTicks);
 
-   When TheSysTickWithAccelerationIsRun();
+   When TheSystemTickWithAccelerationIsRun();
    TicksRemainingIs(SomeNumberOfTicks);
    TickCountShouldBe(0);
 }
 
-TEST(TimeSource_SysTickWithAcceleration, ShouldCompleteAccelerationInOneRunIfEnabledAndTicksRemainingIsLessThanMax)
+TEST(TimeSource_SystemTickWithAcceleration, ShouldCompleteAccelerationInOneRunIfEnabledAndTicksRemainingIsLessThanMax)
 {
    Given TheModuleIsInitialized();
    Given AccelerationIs(Enabled);
    Given TicksRemainingIs(MaxTicksToSkipAtOnce - 1);
 
-   When TheSysTickWithAccelerationIsRun();
+   When TheSystemTickWithAccelerationIsRun();
    TicksRemainingShouldBe(0);
    AccelerationShouldBe(Disabled);
    TickCountShouldBe(MaxTicksToSkipAtOnce - 1);
 }
 
-TEST(TimeSource_SysTickWithAcceleration, ShouldCompleteAccelerationInOneRunIfEnabledAndTicksRemainingIsEqualToMax)
+TEST(TimeSource_SystemTickWithAcceleration, ShouldCompleteAccelerationInOneRunIfEnabledAndTicksRemainingIsEqualToMax)
 {
    Given TheModuleIsInitialized();
    Given AccelerationIs(Enabled);
    Given TicksRemainingIs(MaxTicksToSkipAtOnce);
 
-   When TheSysTickWithAccelerationIsRun();
+   When TheSystemTickWithAccelerationIsRun();
    TicksRemainingShouldBe(0);
    AccelerationShouldBe(Disabled);
    TickCountShouldBe(MaxTicksToSkipAtOnce);
 }
 
-TEST(TimeSource_SysTickWithAcceleration, ShouldCompleteAccelerationInMultipleRunsIfEnabledAndTicksRemainingIsGreaterThanMax)
+TEST(TimeSource_SystemTickWithAcceleration, ShouldCompleteAccelerationInMultipleRunsIfEnabledAndTicksRemainingIsGreaterThanMax)
 {
    Given TheModuleIsInitialized();
    Given AccelerationIs(Enabled);
    Given TicksRemainingIs(MaxTicksToSkipAtOnce + SomeNumberOfTicks);
 
-   When TheSysTickWithAccelerationIsRun();
+   When TheSystemTickWithAccelerationIsRun();
    TicksRemainingShouldBe(SomeNumberOfTicks);
    TickCountShouldBe(MaxTicksToSkipAtOnce);
 
-   When TheSysTickWithAccelerationIsRun();
+   When TheSystemTickWithAccelerationIsRun();
    TicksRemainingShouldBe(0);
    AccelerationShouldBe(Disabled);
    TickCountShouldBe(MaxTicksToSkipAtOnce + SomeNumberOfTicks);
 }
 
-TEST(TimeSource_SysTickWithAcceleration, TicksBeforeEnableShouldBeRetained)
+TEST(TimeSource_SystemTickWithAcceleration, TicksBeforeEnableShouldBeRetained)
 {
    Given TheModuleIsInitialized();
 
@@ -220,38 +220,38 @@ TEST(TimeSource_SysTickWithAcceleration, TicksBeforeEnableShouldBeRetained)
    Given AccelerationIs(Enabled);
    Given TicksRemainingIs(MaxTicksToSkipAtOnce);
 
-   When TheSysTickWithAccelerationIsRun();
+   When TheSystemTickWithAccelerationIsRun();
    TicksRemainingShouldBe(0);
    AccelerationShouldBe(Disabled);
    TickCountShouldBe(MaxTicksToSkipAtOnce + 1);
 }
 
-TEST(TimeSource_SysTickWithAcceleration, TicksBetweenRunsShouldAddToTickCount)
+TEST(TimeSource_SystemTickWithAcceleration, TicksBetweenRunsShouldAddToTickCount)
 {
    Given TheModuleIsInitialized();
    Given AccelerationIs(Enabled);
    Given TicksRemainingIs(MaxTicksToSkipAtOnce + SomeNumberOfTicks);
 
-   When TheSysTickWithAccelerationIsRun();
+   When TheSystemTickWithAccelerationIsRun();
    TicksRemainingShouldBe(SomeNumberOfTicks);
    TickCountShouldBe(MaxTicksToSkipAtOnce);
 
    When TheSysTickInterruptFires();
    TickCountShouldBe(MaxTicksToSkipAtOnce + 1);
 
-   When TheSysTickWithAccelerationIsRun();
+   When TheSystemTickWithAccelerationIsRun();
    TicksRemainingShouldBe(0);
    AccelerationShouldBe(Disabled);
    TickCountShouldBe(MaxTicksToSkipAtOnce + SomeNumberOfTicks + 1);
 }
 
-TEST(TimeSource_SysTickWithAcceleration, ShouldSignalWhenAccelerationIsComplete)
+TEST(TimeSource_SystemTickWithAcceleration, ShouldSignalWhenAccelerationIsComplete)
 {
    Given TheModuleIsInitialized();
    Given AccelerationIs(Enabled);
    Given TicksRemainingIs(MaxTicksToSkipAtOnce);
    Given CompleteSignalIs(0);
 
-   When TheSysTickWithAccelerationIsRun();
+   When TheSystemTickWithAccelerationIsRun();
    CompleteSignalShouldBe(1);
 }
