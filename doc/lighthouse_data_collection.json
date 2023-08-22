@@ -198,12 +198,12 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_RightHandFreshFoodScaledDoorAccelerationInSeconds",
+         "name": "Erd_RightSideFreshFoodScaledDoorAccelerationInSeconds",
          "interval": 60000
       },
       {
          "namespace": "mb",
-         "name": "Erd_Eeprom_RightHandFreshFoodScaledDoorAccelerationInSeconds",
+         "name": "Erd_Eeprom_RightSideFreshFoodScaledDoorAccelerationInSeconds",
          "interval": 60000
       },
       {

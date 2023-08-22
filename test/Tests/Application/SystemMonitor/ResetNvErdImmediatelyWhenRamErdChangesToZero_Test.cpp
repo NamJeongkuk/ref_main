@@ -37,7 +37,7 @@ static const SystemMonitorData_t systemMonitorData = {
 static const ResetNvErdImmediatelyWhenRamErdChangesToZeroEntry_t ResetNvErdImmediatelyWhenRamErdChangesToZeroEntries[] = {
    { Erd_DefrostCompressorOnTimeInSeconds, Erd_Eeprom_DefrostCompressorOnTimeInSeconds },
    { Erd_FreezerScaledDoorAccelerationInSeconds, Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds },
-   { Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_LeftHandFreshFoodScaledDoorAccelerationInSeconds },
+   { Erd_LeftSideFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_LeftSideFreshFoodScaledDoorAccelerationInSeconds },
    { Erd_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds }
 };
 
@@ -108,14 +108,14 @@ TEST(ResetNvErdImmediatelyWhenRamErdChangesToZero, ShouldResetEepromErdToZeroImm
    EepromErdShouldBe(Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds ShouldBe 0);
 }
 
-TEST(ResetNvErdImmediatelyWhenRamErdChangesToZero, ShouldResetEepromErdToZeroImmediatelyWhenRamErdIsSetToZeroForLeftHandFreshFoodScaledDoorAccelerationInSeconds)
+TEST(ResetNvErdImmediatelyWhenRamErdChangesToZero, ShouldResetEepromErdToZeroImmediatelyWhenRamErdIsSetToZeroForLeftSideFreshFoodScaledDoorAccelerationInSeconds)
 {
-   Given RamErd(Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds Is SomeValue);
-   And EepromErd(Erd_Eeprom_LeftHandFreshFoodScaledDoorAccelerationInSeconds Is SomeOtherValue);
+   Given RamErd(Erd_LeftSideFreshFoodScaledDoorAccelerationInSeconds Is SomeValue);
+   And EepromErd(Erd_Eeprom_LeftSideFreshFoodScaledDoorAccelerationInSeconds Is SomeOtherValue);
    And Initialize();
 
-   When RamErd(Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds Is 0);
-   EepromErdShouldBe(Erd_Eeprom_LeftHandFreshFoodScaledDoorAccelerationInSeconds ShouldBe 0);
+   When RamErd(Erd_LeftSideFreshFoodScaledDoorAccelerationInSeconds Is 0);
+   EepromErdShouldBe(Erd_Eeprom_LeftSideFreshFoodScaledDoorAccelerationInSeconds ShouldBe 0);
 }
 
 TEST(ResetNvErdImmediatelyWhenRamErdChangesToZero, ShouldResetEepromErdToZeroImmediatelyWhenRamErdIsSetToZeroForConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds)

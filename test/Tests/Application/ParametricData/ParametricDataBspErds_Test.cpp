@@ -180,7 +180,7 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
    CHECK_EQUAL(*erd, Erd_IsolationValveRelay);
 }
 
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForRightHandFreshFoodDoorIsOpen)
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForRightSideFreshFoodDoorIsOpen)
 {
    GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_RightSideFreshFoodDoorStatus)");
 

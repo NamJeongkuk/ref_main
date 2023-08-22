@@ -12,12 +12,13 @@
 
 enum
 {
-   DoorIndex_LeftHandFreshFood,
-   DoorIndex_RightHandFreshFood,
-   DoorIndex_LeftHandFreezer,
-   DoorIndex_RightHandFreezer,
+   DoorIndex_LeftSideFreshFood,
+   DoorIndex_RightSideFreshFood,
+   DoorIndex_LeftSideFreezer,
+   DoorIndex_RightSideFreezer,
    DoorIndex_ConvertibleCompartment,
-   DoorIndex_DoorInDoor
+   DoorIndex_DoorInDoor,
+   DoorIndex_MaxNumberOfDoors
 };
 typedef uint8_t DoorIndex_t;
 

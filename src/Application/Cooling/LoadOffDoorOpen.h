@@ -35,8 +35,16 @@ typedef struct
 typedef struct
 {
    CompartmentVoteErdList_t compartmentVoteErdList;
-   ErdList_t doorStatusErdList;
    Erd_t timerModuleErd;
+   struct
+   {
+      Erd_t leftSideFreshFoodDoorErd;
+      Erd_t rightSideFreshFoodDoorErd;
+      Erd_t leftSideFreezerDoorErd;
+      Erd_t rightSideFreezerDoorErd;
+      Erd_t convertibleCompartmentDoorErd;
+      Erd_t doorInDoorErd;
+   } doorStatus;
 } LoadOffDoorOpenConfiguration_t;
 
 typedef struct

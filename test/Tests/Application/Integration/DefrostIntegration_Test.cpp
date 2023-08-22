@@ -263,10 +263,10 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       CHECK_EQUAL(expectedSeconds, actualSeconds);
    }
 
-   void RightHandFreshFoodScaledDoorAccelerationsInSecondsShouldBe(uint32_t expectedSeconds)
+   void RightSideFreshFoodScaledDoorAccelerationsInSecondsShouldBe(uint32_t expectedSeconds)
    {
       uint32_t actualSeconds;
-      DataModel_Read(dataModel, Erd_RightHandFreshFoodScaledDoorAccelerationInSeconds, &actualSeconds);
+      DataModel_Read(dataModel, Erd_RightSideFreshFoodScaledDoorAccelerationInSeconds, &actualSeconds);
 
       CHECK_EQUAL(expectedSeconds, actualSeconds);
    }
@@ -635,7 +635,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       DataModel_Write(dataModel, Erd_LeftSideFreezerDoorStatusResolved, &state);
    }
 
-   void WhenRightHandFreshFoodDoorIs(bool state)
+   void WhenRightSideFreshFoodDoorIs(bool state)
    {
       DataModel_Write(dataModel, Erd_RightSideFreshFoodDoorStatusResolved, &state);
    }
@@ -784,11 +784,11 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN + SomeTimeInMsec);
    }
 
-   void WhenRightHandFreshFoodDoorIsOpenForSomeSmallTime()
+   void WhenRightSideFreshFoodDoorIsOpenForSomeSmallTime()
    {
-      WhenRightHandFreshFoodDoorIs(Open);
+      WhenRightSideFreshFoodDoorIs(Open);
       After(SomeSmallTimeInMsec);
-      WhenRightHandFreshFoodDoorIs(Closed);
+      WhenRightSideFreshFoodDoorIs(Closed);
    }
 
    void WhenCompressorTurnsOnAfterSomeSmallTimeOfBeingOff()
@@ -1444,12 +1444,12 @@ TEST(DefrostIntegration_SingleEvap, ShouldSetReadyToDefrostAfterMaximumTimeReach
    After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN - SomeTimeInMsec);
    WhenGridVotesToTurnOffCompressorAndWinsAndDoesNotHaveToWaitMinimumOffTimeBecauseItAlreadyPassed();
 
-   WhenRightHandFreshFoodDoorIs(Open);
+   WhenRightSideFreshFoodDoorIs(Open);
 
    WhenGridVotesToTurnOnCompressorWhileCompressorMinimumTimesAreEnabledAfterBeingOffAndGridWinsAndGridRanThisManyTimes(1);
 
    CompressorOnTimeInSecondsShouldBe(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - SomeTimeInSeconds + 1);
-   RightHandFreshFoodScaledDoorAccelerationsInSecondsShouldBe((compressorData->compressorTimes.minimumOffTimeInMinutes * SECONDS_PER_MINUTE +
+   RightSideFreshFoodScaledDoorAccelerationsInSecondsShouldBe((compressorData->compressorTimes.minimumOffTimeInMinutes * SECONDS_PER_MINUTE +
                                                                  compressorData->compressorTimes.sabbathDelayTimeInSeconds +
                                                                  compressorData->compressorTimes.startupOnTimeInSeconds) *
       defrostData->idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
@@ -1470,10 +1470,10 @@ TEST(DefrostIntegration_SingleEvap, ShouldSetReadyToDefrostAfterMaximumTimeReach
    WhenCompressorIsOnForMinimumTimePlusSomeTime();
    WhenGridVotesToTurnOffCompressorAndWinsAndDoesNotHaveToWaitMinimumOffTimeBecauseItAlreadyPassed();
 
-   WhenRightHandFreshFoodDoorIsOpenForSomeSmallTime();
+   WhenRightSideFreshFoodDoorIsOpenForSomeSmallTime();
    WhenCompressorTurnsOnAfterSomeSmallTimeOfBeingOff();
    WhenFreezerDoorIsOpenForSomeSmallTime();
-   WhenRightHandFreshFoodDoorIs(Open);
+   WhenRightSideFreshFoodDoorIs(Open);
    WhenFreezerDoorIs(Open);
 
    ReadyToDefrostShouldChangeTo(true);

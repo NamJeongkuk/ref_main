@@ -17,20 +17,17 @@ static const CompartmentVoteErdList_t freezerCompartmentVoteErdList = {
    .numberOfPairs = NUM_ELEMENTS(freezerCompartmentLoadVotePairs)
 };
 
-static const Erd_t freezerCompartmentAssociatedDoors[] = {
-   Erd_RightSideFreshFoodDoorStatusResolved,
-   Erd_LeftSideFreezerDoorStatusResolved
-};
-
-static const ErdList_t freezerAssociatedDoorsList = {
-   .erds = freezerCompartmentAssociatedDoors,
-   .numberOfErds = NUM_ELEMENTS(freezerCompartmentAssociatedDoors),
-};
-
 static const LoadOffDoorOpenConfiguration_t freezerConfig = {
    .compartmentVoteErdList = freezerCompartmentVoteErdList,
-   .doorStatusErdList = freezerAssociatedDoorsList,
-   .timerModuleErd = Erd_TimerModule
+   .timerModuleErd = Erd_TimerModule,
+   .doorStatus = {
+      .leftSideFreshFoodDoorErd = Erd_Invalid,
+      .rightSideFreshFoodDoorErd = Erd_RightSideFreshFoodDoorStatusResolved,
+      .leftSideFreezerDoorErd = Erd_LeftSideFreezerDoorStatusResolved,
+      .rightSideFreezerDoorErd = Erd_Invalid,
+      .convertibleCompartmentDoorErd = Erd_Invalid,
+      .doorInDoorErd = Erd_Invalid,
+   }
 };
 
 void SideBySideSingleEvaporatorLoadOffDoorOpenPlugin_Init(

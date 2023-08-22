@@ -33,8 +33,10 @@ enum
    Erd_U8_LoadVoteStruct,
    Erd_U16_LoadVoteStruct,
    Erd_U32_LoadVoteStruct,
-   Erd_Door0Status,
-   Erd_Door1Status,
+   Erd_RightSideFreshFoodDoorStatus,
+   Erd_LeftSideFreshFoodDoorStatus,
+   Erd_LeftSideFreezerDoorStatus,
+   Erd_ConvertibleCompartmentDoorStatus,
    Erd_TimerModule
 };
 
@@ -43,8 +45,10 @@ static const DataModel_TestDoubleConfigurationEntry_t erdTable[] = {
    { Erd_U8_LoadVoteStruct, sizeof(U8Vote_t) },
    { Erd_U16_LoadVoteStruct, sizeof(U16Vote_t) },
    { Erd_U32_LoadVoteStruct, sizeof(U32Vote_t) },
-   { Erd_Door0Status, sizeof(bool) },
-   { Erd_Door1Status, sizeof(bool) },
+   { Erd_RightSideFreshFoodDoorStatus, sizeof(bool) },
+   { Erd_LeftSideFreshFoodDoorStatus, sizeof(bool) },
+   { Erd_LeftSideFreezerDoorStatus, sizeof(bool) },
+   { Erd_ConvertibleCompartmentDoorStatus, sizeof(bool) },
    { Erd_TimerModule, sizeof(TimerModule_t *) }
 };
 
@@ -65,26 +69,27 @@ static const CompartmentVoteErdList_t voteErdList = {
    .numberOfPairs = NUM_ELEMENTS(loadVotePairs)
 };
 
-static const Erd_t doorErds[] = {
-   Erd_Door0Status,
-   Erd_Door1Status
+static const Erd_t associatedDoors[] = {
+   Erd_RightSideFreshFoodDoorStatus,
+   Erd_LeftSideFreezerDoorStatus,
 };
 
-static const ErdList_t doorList = {
-   .erds = doorErds,
-   .numberOfErds = NUM_ELEMENTS(doorErds),
+static const Erd_t nonAssociatedDoors[] = {
+   Erd_LeftSideFreshFoodDoorStatus,
+   Erd_ConvertibleCompartmentDoorStatus,
 };
 
 static const LoadOffDoorOpenConfiguration_t config = {
    .compartmentVoteErdList = voteErdList,
-   .doorStatusErdList = doorList,
-   .timerModuleErd = Erd_TimerModule
-};
-
-static const LoadOffDoorOpenCompartmentData_t data = {
-   .enable = true,
-   .timeoutInSeconds = 106,
-   .restartDelayInSeconds = 16
+   .timerModuleErd = Erd_TimerModule,
+   .doorStatus = {
+      .leftSideFreshFoodDoorErd = Erd_LeftSideFreshFoodDoorStatus,
+      .rightSideFreshFoodDoorErd = Erd_RightSideFreshFoodDoorStatus,
+      .leftSideFreezerDoorErd = Erd_LeftSideFreezerDoorStatus,
+      .rightSideFreezerDoorErd = Erd_Invalid,
+      .convertibleCompartmentDoorErd = Erd_ConvertibleCompartmentDoorStatus,
+      .doorInDoorErd = Erd_Invalid,
+   }
 };
 
 TEST_GROUP(LoadOffDoorOpen)
@@ -94,8 +99,8 @@ TEST_GROUP(LoadOffDoorOpen)
    TimerModule_TestDouble_t timerModuleTestDouble;
 
    I_DataModel_t *dataModel;
-   LoadOffDoorOpenCompartmentData_t dataWithZeroDelay;
-   LoadOffDoorOpenCompartmentData_t dataWithZeroOffTimeout;
+   LoadOffDoorOpenDoorsBitmap_t doorsBitmap;
+   LoadOffDoorOpenCompartmentData_t data;
 
    void setup()
    {
@@ -108,13 +113,25 @@ TEST_GROUP(LoadOffDoorOpen)
          Erd_TimerModule,
          TimerModule_TestDouble_GetTimerModule(&timerModuleTestDouble));
 
-      dataWithZeroDelay = data;
-      dataWithZeroOffTimeout = data;
+      BITMAP_SET(doorsBitmap.bitmap, DoorIndex_RightSideFreshFood);
+      BITMAP_SET(doorsBitmap.bitmap, DoorIndex_LeftSideFreezer);
+
+      data = {
+         .enable = true,
+         .doorsBitmap = doorsBitmap,
+         .timeoutInSeconds = 106,
+         .restartDelayInSeconds = 16
+      };
    }
 
    void After(TimerTicks_t ticks)
    {
       TimerModule_TestDouble_ElapseTime(&timerModuleTestDouble, ticks);
+   }
+
+   void GivenDataModelIsReset()
+   {
+      setup();
    }
 
    void GivenModuleIsInitialized()
@@ -128,55 +145,80 @@ TEST_GROUP(LoadOffDoorOpen)
 
    void GivenModuleIsInitializedWithZeroDelay()
    {
-      dataWithZeroDelay.restartDelayInSeconds = 0;
+      data.restartDelayInSeconds = 0;
 
       LoadOffDoorOpen_Init(
          &instance,
          dataModel,
-         &dataWithZeroDelay,
+         &data,
          &config);
    }
 
    void GivenModuleIsInitializedWithZeroOffTimeout()
    {
-      dataWithZeroOffTimeout.timeoutInSeconds = 0;
+      data.timeoutInSeconds = 0;
 
       LoadOffDoorOpen_Init(
          &instance,
          dataModel,
-         &dataWithZeroOffTimeout,
+         &data,
          &config);
    }
 
-   void GivenADoorIsOpen()
+   void GivenAnAssociatedDoorIsOpenAndAllOtherDoorsAreClosed(DoorIndex_t doorIndex)
    {
-      DataModel_Write(dataModel, Erd_Door0Status, set);
+      DataModel_Write(dataModel, associatedDoors[doorIndex], set);
+
+      for(uint8_t i = 0; i < NUM_ELEMENTS(associatedDoors); i++)
+      {
+         if(i != doorIndex)
+         {
+            DataModel_Write(dataModel, associatedDoors[i], clear);
+         }
+      }
+
+      for(uint8_t i = 0; i < NUM_ELEMENTS(nonAssociatedDoors); i++)
+      {
+         DataModel_Write(dataModel, nonAssociatedDoors[i], clear);
+      }
    }
 
-   void GivenAllDoorsAreClosed()
+   void GivenANonAssociatedDoorIsOpen(DoorIndex_t doorIndex)
    {
-      DataModel_Write(dataModel, Erd_Door0Status, clear);
-      DataModel_Write(dataModel, Erd_Door1Status, clear);
+      DataModel_Write(dataModel, nonAssociatedDoors[doorIndex], set);
    }
 
-   void WhenAllDoorsAreClosed()
+   void GivenAllAssociatedDoorsAreClosed()
    {
-      GivenAllDoorsAreClosed();
+      for(uint8_t i = 0; i < NUM_ELEMENTS(associatedDoors); i++)
+      {
+         DataModel_Write(dataModel, associatedDoors[i], clear);
+      }
    }
 
-   void WhenADoorOpens()
+   void WhenAllAssociatedDoorsAreClosed()
    {
-      GivenADoorIsOpen();
+      GivenAllAssociatedDoorsAreClosed();
    }
 
-   void WhenAnotherDoorOpens()
+   void WhenAnAssociatedDoorOpens(uint8_t doorIndex)
    {
-      DataModel_Write(dataModel, Erd_Door1Status, set);
+      DataModel_Write(dataModel, associatedDoors[doorIndex], set);
    }
 
-   void WhenADoorCloses()
+   void WhenAnotherAssociatedDoorOpens(uint8_t doorIndex)
    {
-      DataModel_Write(dataModel, Erd_Door0Status, clear);
+      DataModel_Write(dataModel, associatedDoors[doorIndex], set);
+   }
+
+   void WhenANonAssociatedDoorOpens(uint8_t doorIndex)
+   {
+      GivenANonAssociatedDoorIsOpen(doorIndex);
+   }
+
+   void WhenAnAssociatedDoorCloses(uint8_t doorIndex)
+   {
+      DataModel_Write(dataModel, associatedDoors[doorIndex], clear);
    }
 
    void AllLoadsShouldBeVotedWithOffValue()
@@ -274,110 +316,143 @@ TEST(LoadOffDoorOpen, ShouldInitialize)
    GivenModuleIsInitialized();
 }
 
-TEST(LoadOffDoorOpen, ShouldVoteAllLoadsOffIfADoorIsOpenOnInit)
+TEST(LoadOffDoorOpen, ShouldHaveSameNumberOfDoorStatusErdsInConfigAsTheMaxDoorIndexAndShouldMatchWhenIndexedByDoorIndexOrByName)
 {
-   GivenADoorIsOpen();
-   GivenModuleIsInitialized();
+   CHECK_EQUAL(sizeof(config.doorStatus) / sizeof(Erd_t), DoorIndex_MaxNumberOfDoors);
 
-   AllLoadsShouldBeVotedWithOffValue();
+   CHECK_EQUAL(((const Erd_t *)&config.doorStatus)[DoorIndex_LeftSideFreshFood], config.doorStatus.leftSideFreshFoodDoorErd);
+   CHECK_EQUAL(((const Erd_t *)&config.doorStatus)[DoorIndex_RightSideFreshFood], config.doorStatus.rightSideFreshFoodDoorErd);
+   CHECK_EQUAL(((const Erd_t *)&config.doorStatus)[DoorIndex_LeftSideFreezer], config.doorStatus.leftSideFreezerDoorErd);
+   CHECK_EQUAL(((const Erd_t *)&config.doorStatus)[DoorIndex_RightSideFreezer], config.doorStatus.rightSideFreezerDoorErd);
+   CHECK_EQUAL(((const Erd_t *)&config.doorStatus)[DoorIndex_ConvertibleCompartment], config.doorStatus.convertibleCompartmentDoorErd);
+   CHECK_EQUAL(((const Erd_t *)&config.doorStatus)[DoorIndex_DoorInDoor], config.doorStatus.doorInDoorErd);
 }
 
-TEST(LoadOffDoorOpen, ShouldNotVoteAllLoadsOffIfAllDoorsAreClosedOnInit)
+TEST(LoadOffDoorOpen, ShouldVoteAllLoadsOffIfAnAssociatedDoorIsOpenOnInit)
 {
-   GivenAllDoorsAreClosed();
+   for(uint8_t i = 0; i < NUM_ELEMENTS(associatedDoors); i++)
+   {
+      GivenAnAssociatedDoorIsOpenAndAllOtherDoorsAreClosed(i);
+      GivenModuleIsInitialized();
+
+      AllLoadsShouldBeVotedWithOffValue();
+   }
+}
+
+TEST(LoadOffDoorOpen, ShouldNotVoteAllLoadsOffIfAllAssociatedDoorsAreClosedOnInit)
+{
+   GivenAllAssociatedDoorsAreClosed();
    GivenModuleIsInitialized();
 
    AllLoadsShouldBeVotedDontCare();
 }
 
-TEST(LoadOffDoorOpen, ShouldVoteAllLoadsDontCareAfterSomeTimeFromVotingThemOffIfDoorIsOpenOnInit)
+TEST(LoadOffDoorOpen, ShouldVoteAllLoadsDontCareAfterSomeTimeFromVotingThemOffIfAnAssociatedDoorIsOpenOnInit)
 {
-   GivenADoorIsOpen();
-   GivenModuleIsInitialized();
+   for(uint8_t i = 0; i < NUM_ELEMENTS(associatedDoors); i++)
+   {
+      GivenAnAssociatedDoorIsOpenAndAllOtherDoorsAreClosed(i);
+      GivenModuleIsInitialized();
 
-   After(data.timeoutInSeconds * MSEC_PER_SEC - 1);
-   AllLoadsShouldBeVotedWithOffValue();
+      After(data.timeoutInSeconds * MSEC_PER_SEC - 1);
+      AllLoadsShouldBeVotedWithOffValue();
 
-   After(1);
-   AllLoadsShouldBeVotedDontCare();
+      After(1);
+      AllLoadsShouldBeVotedDontCare();
+   }
 }
 
-TEST(LoadOffDoorOpen, ShouldNotVoteAllLoadsDontCareAfterSomeTimeFromVotingThemOffIfDoorIsOpenOnInitAndOffTimeoutIsZero)
+TEST(LoadOffDoorOpen, ShouldNotVoteAllLoadsDontCareAfterSomeTimeFromVotingThemOffIfAnAssociatedDoorIsOpenOnInitAndOffTimeoutIsZero)
 {
-   GivenADoorIsOpen();
-   GivenModuleIsInitializedWithZeroOffTimeout();
-   AllLoadsShouldBeVotedWithOffValue();
+   for(uint8_t i = 0; i < NUM_ELEMENTS(associatedDoors); i++)
+   {
+      GivenAnAssociatedDoorIsOpenAndAllOtherDoorsAreClosed(i);
+      GivenModuleIsInitializedWithZeroOffTimeout();
+      AllLoadsShouldBeVotedWithOffValue();
 
-   After(SomeTimeInMsec);
-   AllLoadsShouldBeVotedWithOffValue();
+      After(SomeTimeInMsec);
+      AllLoadsShouldBeVotedWithOffValue();
+   }
 }
 
-TEST(LoadOffDoorOpen, ShouldVoteDontCareAfterADelayWhenADoorClosesBeforeOffTimeoutExpires)
+TEST(LoadOffDoorOpen, ShouldVoteDontCareAfterADelayWhenAnAssociatedDoorClosesBeforeOffTimeoutExpires)
 {
-   GivenADoorIsOpen();
-   GivenModuleIsInitialized();
+   for(uint8_t i = 0; i < NUM_ELEMENTS(associatedDoors); i++)
+   {
+      GivenAnAssociatedDoorIsOpenAndAllOtherDoorsAreClosed(i);
+      GivenModuleIsInitialized();
 
-   After(data.timeoutInSeconds * MSEC_PER_SEC - 1);
-   WhenAllDoorsAreClosed();
-   AllLoadsShouldBeVotedWithOffValue();
+      After(data.timeoutInSeconds * MSEC_PER_SEC - 1);
+      WhenAnAssociatedDoorCloses(i);
+      AllLoadsShouldBeVotedWithOffValue();
 
-   After(data.restartDelayInSeconds * MSEC_PER_SEC - 1);
-   AllLoadsShouldBeVotedWithOffValue();
+      After(data.restartDelayInSeconds * MSEC_PER_SEC - 1);
+      AllLoadsShouldBeVotedWithOffValue();
 
-   After(1);
-   AllLoadsShouldBeVotedDontCare();
+      After(1);
+      AllLoadsShouldBeVotedDontCare();
+   }
 }
 
-TEST(LoadOffDoorOpen, ShouldVoteDontCareImmediatelyWhenADoorClosesBeforeOffTimeoutExpiresIfDelayIsZero)
+TEST(LoadOffDoorOpen, ShouldVoteDontCareImmediatelyWhenAnAssociatedDoorClosesBeforeOffTimeoutExpiresIfDelayIsZero)
 {
-   GivenADoorIsOpen();
-   GivenModuleIsInitializedWithZeroDelay();
+   for(uint8_t i = 0; i < NUM_ELEMENTS(associatedDoors); i++)
+   {
+      GivenAnAssociatedDoorIsOpenAndAllOtherDoorsAreClosed(i);
+      GivenModuleIsInitializedWithZeroDelay();
 
-   After(dataWithZeroDelay.timeoutInSeconds * MSEC_PER_SEC - 1);
-   WhenAllDoorsAreClosed();
-   After(0);
-   AllLoadsShouldBeVotedDontCare();
+      After(data.timeoutInSeconds * MSEC_PER_SEC - 1);
+      WhenAnAssociatedDoorCloses(i);
+      After(0);
+      AllLoadsShouldBeVotedDontCare();
+   }
 }
 
-TEST(LoadOffDoorOpen, ShouldVoteAllLoadsOffWhenADoorOpenWhileDoorsAreClosedAndWaitingForDelayTimeToExpire)
+TEST(LoadOffDoorOpen, ShouldVoteAllLoadsOffWhenAnAssociatedDoorOpensWhileAllAssociatedDoorsAreClosedAndWaitingForDelayTimeToExpire)
 {
-   GivenADoorIsOpen();
-   GivenModuleIsInitialized();
+   for(uint8_t i = 0; i < NUM_ELEMENTS(associatedDoors); i++)
+   {
+      GivenAnAssociatedDoorIsOpenAndAllOtherDoorsAreClosed(i);
+      GivenModuleIsInitialized();
 
-   After(data.timeoutInSeconds * MSEC_PER_SEC - 1);
-   WhenAllDoorsAreClosed();
-   AllLoadsShouldBeVotedWithOffValue();
+      After(data.timeoutInSeconds * MSEC_PER_SEC - 1);
+      WhenAnAssociatedDoorCloses(i);
+      AllLoadsShouldBeVotedWithOffValue();
 
-   After(data.restartDelayInSeconds * MSEC_PER_SEC - 1);
+      After(data.restartDelayInSeconds * MSEC_PER_SEC - 1);
 
-   WhenADoorOpens();
-   AllLoadsShouldBeVotedWithOffValue();
+      WhenAnAssociatedDoorOpens(i);
+      AllLoadsShouldBeVotedWithOffValue();
+   }
 }
 
-TEST(LoadOffDoorOpen, ShouldVoteDontCareForAllLoadsAfterTimeoutGivenADoorOpensWhileAllDoorsAreClosedWhileWaitingForDelayTimeToExpire)
+TEST(LoadOffDoorOpen, ShouldVoteDontCareForAllLoadsAfterTimeoutGivenAnAssociatedDoorOpensWhileAllAssociatedDoorsAreClosedWhileWaitingForDelayTimeToExpire)
 {
-   GivenADoorIsOpen();
-   GivenModuleIsInitialized();
+   for(uint8_t i = 0; i < NUM_ELEMENTS(associatedDoors); i++)
+   {
+      GivenAnAssociatedDoorIsOpenAndAllOtherDoorsAreClosed(i);
+      GivenModuleIsInitialized();
 
-   After(data.timeoutInSeconds * MSEC_PER_SEC - 1);
-   WhenAllDoorsAreClosed();
-   AllLoadsShouldBeVotedWithOffValue();
+      After(data.timeoutInSeconds * MSEC_PER_SEC - 1);
+      WhenAnAssociatedDoorCloses(i);
+      AllLoadsShouldBeVotedWithOffValue();
 
-   After(data.restartDelayInSeconds * MSEC_PER_SEC - 1);
+      After(data.restartDelayInSeconds * MSEC_PER_SEC - 1);
 
-   WhenADoorOpens();
-   AllLoadsShouldBeVotedWithOffValue();
+      WhenAnAssociatedDoorOpens(i);
+      AllLoadsShouldBeVotedWithOffValue();
 
-   After(data.timeoutInSeconds * MSEC_PER_SEC - 1);
-   AllLoadsShouldBeVotedWithOffValue();
+      After(data.timeoutInSeconds * MSEC_PER_SEC - 1);
+      AllLoadsShouldBeVotedWithOffValue();
 
-   After(1);
-   AllLoadsShouldBeVotedDontCare();
+      After(1);
+      AllLoadsShouldBeVotedDontCare();
+   }
 }
 
-TEST(LoadOffDoorOpen, ShouldVoteDontCareForAllLoadsIfAllDoorsAreClosedOnInit)
+TEST(LoadOffDoorOpen, ShouldVoteDontCareForAllLoadsIfAllAssociatedDoorsAreClosedOnInit)
 {
-   GivenAllDoorsAreClosed();
+   GivenAllAssociatedDoorsAreClosed();
    GivenModuleIsInitialized();
    AllLoadsShouldBeVotedDontCare();
 
@@ -385,77 +460,119 @@ TEST(LoadOffDoorOpen, ShouldVoteDontCareForAllLoadsIfAllDoorsAreClosedOnInit)
    AllLoadsShouldBeVotedDontCare();
 }
 
-TEST(LoadOffDoorOpen, ShouldVoteAllLoadsOffWhenADoorOpensIfAllDoorsAreClosedOnInit)
+TEST(LoadOffDoorOpen, ShouldVoteAllLoadsOffWhenAnAssociatedDoorOpensIfAllAssociatedDoorsAreClosedOnInit)
 {
-   GivenAllDoorsAreClosed();
-   GivenModuleIsInitialized();
-   AllLoadsShouldBeVotedDontCare();
+   for(uint8_t i = 0; i < NUM_ELEMENTS(associatedDoors); i++)
+   {
+      GivenDataModelIsReset();
+      GivenAllAssociatedDoorsAreClosed();
+      GivenModuleIsInitialized();
+      AllLoadsShouldBeVotedDontCare();
 
-   WhenADoorOpens();
-   AllLoadsShouldBeVotedWithOffValue();
+      WhenAnAssociatedDoorOpens(i);
+      AllLoadsShouldBeVotedWithOffValue();
+   }
 }
 
-TEST(LoadOffDoorOpen, ShouldNotRestartTimeoutTimeIfAnotherDoorOpensWhileADoorIsAlreadyOpenAndWaitingForTimeout)
+TEST(LoadOffDoorOpen, ShouldNotRestartTimeoutTimeIfAnotherAssociatedDoorOpensWhileAnAssociatedDoorIsAlreadyOpenAndWaitingForTimeout)
 {
-   GivenADoorIsOpen();
-   GivenModuleIsInitialized();
+   for(uint8_t i = 0; i < NUM_ELEMENTS(associatedDoors); i++)
+   {
+      GivenAnAssociatedDoorIsOpenAndAllOtherDoorsAreClosed(i);
+      GivenModuleIsInitialized();
 
-   After(data.timeoutInSeconds * MSEC_PER_SEC - 1);
-   WhenAnotherDoorOpens();
+      After(data.timeoutInSeconds * MSEC_PER_SEC - 1);
+      WhenAnotherAssociatedDoorOpens(i == 0 ? 1 : 0);
 
-   After(1);
-   AllLoadsShouldBeVotedDontCare();
+      After(1);
+      AllLoadsShouldBeVotedDontCare();
+   }
 }
 
-TEST(LoadOffDoorOpen, ShouldRestartTheTimerWithTheDelayTimeWhenAllDoorsCloseWhileADoorIsOpenAndWhileWaitingForTheTimeoutToExpire)
+TEST(LoadOffDoorOpen, ShouldRestartTheTimerWithTheDelayTimeWhenAllAssociatedDoorsCloseWhileAnAssociatedDoorIsOpenAndWhileWaitingForTheTimeoutToExpire)
 {
-   GivenADoorIsOpen();
-   GivenModuleIsInitialized();
+   for(uint8_t i = 0; i < NUM_ELEMENTS(associatedDoors); i++)
+   {
+      GivenAnAssociatedDoorIsOpenAndAllOtherDoorsAreClosed(i);
+      GivenModuleIsInitialized();
 
-   After(data.timeoutInSeconds * MSEC_PER_SEC - 1);
-   WhenAllDoorsAreClosed();
+      After(data.timeoutInSeconds * MSEC_PER_SEC - 1);
+      WhenAnAssociatedDoorCloses(i);
 
-   After(1);
-   AllLoadsShouldBeVotedWithOffValue();
+      After(1);
+      AllLoadsShouldBeVotedWithOffValue();
 
-   After(data.restartDelayInSeconds * MSEC_PER_SEC - 1);
-   AllLoadsShouldBeVotedDontCare();
+      After(data.restartDelayInSeconds * MSEC_PER_SEC - 1);
+      AllLoadsShouldBeVotedDontCare();
+   }
 }
 
-TEST(LoadOffDoorOpen, ShouldStopTheDelayTimerAndNotStartATimeoutTimerWhenADoorOpensWhileAllDoorsAreClosedWithAZeroOffTimeout)
+TEST(LoadOffDoorOpen, ShouldStopTheDelayTimerAndNotStartATimeoutTimerWhenAnAssociatedDoorOpensWhileAllAssociatedDoorsAreClosedWithAZeroOffTimeout)
 {
-   GivenAllDoorsAreClosed();
-   GivenModuleIsInitializedWithZeroOffTimeout();
+   for(uint8_t i = 0; i < NUM_ELEMENTS(associatedDoors); i++)
+   {
+      GivenAllAssociatedDoorsAreClosed();
+      GivenModuleIsInitializedWithZeroOffTimeout();
 
-   After(data.restartDelayInSeconds * MSEC_PER_SEC - 1);
-   WhenADoorOpens();
-   AllLoadsShouldBeVotedWithOffValue();
+      After(data.restartDelayInSeconds * MSEC_PER_SEC - 1);
+      WhenAnAssociatedDoorOpens(i);
+      AllLoadsShouldBeVotedWithOffValue();
 
-   After(1);
-   AllLoadsShouldBeVotedWithOffValue();
+      After(1);
+      AllLoadsShouldBeVotedWithOffValue();
+   }
 }
 
-TEST(LoadOffDoorOpen, ShouldNotRestartTimeoutWhenADoorOpensWhileAnotherDoorIsOpened)
+TEST(LoadOffDoorOpen, ShouldNotRestartTimeoutWhenAnAssociatedDoorOpensWhileAnotherAssociatedDoorIsOpened)
 {
-   GivenADoorIsOpen();
-   GivenModuleIsInitialized();
-   AllLoadsShouldBeVotedWithOffValue();
+   for(uint8_t i = 0; i < NUM_ELEMENTS(associatedDoors); i++)
+   {
+      GivenAnAssociatedDoorIsOpenAndAllOtherDoorsAreClosed(i);
+      GivenModuleIsInitialized();
+      AllLoadsShouldBeVotedWithOffValue();
 
-   After(data.timeoutInSeconds * MSEC_PER_SEC - 3);
+      After(data.timeoutInSeconds * MSEC_PER_SEC - 3);
 
-   WhenAnotherDoorOpens();
-   AllLoadsShouldBeVotedWithOffValue();
+      WhenAnotherAssociatedDoorOpens(i == 0 ? 1 : 0);
+      AllLoadsShouldBeVotedWithOffValue();
 
-   After(1);
+      After(1);
 
-   WhenADoorCloses();
-   AllLoadsShouldBeVotedWithOffValue();
+      WhenAnAssociatedDoorCloses(i);
+      AllLoadsShouldBeVotedWithOffValue();
 
-   After(1);
+      After(1);
 
-   WhenADoorOpens();
-   AllLoadsShouldBeVotedWithOffValue();
+      WhenAnAssociatedDoorOpens(i);
+      AllLoadsShouldBeVotedWithOffValue();
 
-   After(1);
-   AllLoadsShouldBeVotedDontCare();
+      After(1);
+      AllLoadsShouldBeVotedDontCare();
+   }
+}
+
+TEST(LoadOffDoorOpen, ShouldNotVoteWhenANonAssociatedDoorOpens)
+{
+   for(uint8_t i = 0; i < NUM_ELEMENTS(associatedDoors); i++)
+   {
+      GivenModuleIsInitialized();
+
+      WhenANonAssociatedDoorOpens(i);
+      AllLoadsShouldBeVotedDontCare();
+   }
+}
+
+TEST(LoadOffDoorOpen, ShouldVoteDontCareAfterAllAssociatedDoorsAreClosedWithZeroDelay)
+{
+   for(uint8_t i = 0; i < NUM_ELEMENTS(associatedDoors); i++)
+   {
+      GivenAnAssociatedDoorIsOpenAndAllOtherDoorsAreClosed(i);
+      GivenANonAssociatedDoorIsOpen(i);
+      GivenModuleIsInitializedWithZeroDelay();
+      AllLoadsShouldBeVotedWithOffValue();
+
+      WhenAllAssociatedDoorsAreClosed();
+      After(0);
+      AllLoadsShouldBeVotedDontCare();
+   }
 }

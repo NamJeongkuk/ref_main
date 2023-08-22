@@ -22,13 +22,13 @@ typedef struct
 
 enum
 {
-   Signal_ADoorIsOpened = Fsm_UserSignalStart,
-   Signal_AllDoorsAreClosed,
+   Signal_AnAssociatedDoorIsOpened = Fsm_UserSignalStart,
+   Signal_AllAssociatedDoorsAreClosed,
    Signal_TimeoutExpired
 };
 
-static void State_ADoorIsOpen(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
-static void State_AllDoorsAreClosed(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
+static void State_AnAssociatedDoorIsOpen(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
+static void State_AllAssociatedDoorsAreClosed(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
 
 static LoadOffDoorOpen_t *InstanceFromFsm(Fsm_t *fsm)
 {
@@ -164,54 +164,55 @@ static void TimeoutExpires(void *context)
    Fsm_SendSignal(&instance->_private.fsm, Signal_TimeoutExpired, NULL);
 }
 
-static bool ADoorChanged(LoadOffDoorOpen_t *instance, Erd_t erd)
+static bool DoorIsAssociated(LoadOffDoorOpen_t *instance, uint8_t doorsBitmapIndex)
 {
-   for(uint8_t i = 0; i < instance->_private.config->doorStatusErdList.numberOfErds; i++)
-   {
-      if(instance->_private.config->doorStatusErdList.erds[i] == erd)
-      {
-         return true;
-      }
-   }
-   return false;
+   return BITMAP_STATE(instance->_private.data->doorsBitmap.bitmap, doorsBitmapIndex);
 }
 
-static bool AllDoorsAreClosed(LoadOffDoorOpen_t *instance)
+static bool AnAssociatedDoorChanged(LoadOffDoorOpen_t *instance, Erd_t erd)
 {
-   for(uint8_t i = 0; i < instance->_private.config->doorStatusErdList.numberOfErds; i++)
+   for(uint8_t i = 0; i < (sizeof(instance->_private.config->doorStatus) / sizeof(Erd_t)); i++)
    {
-      bool doorIsOpen;
-      DataModel_Read(
-         instance->_private.dataModel,
-         instance->_private.config->doorStatusErdList.erds[i],
-         &doorIsOpen);
-
-      if(doorIsOpen)
+      Erd_t doorStatusErd = ((const Erd_t *)&instance->_private.config->doorStatus)[i];
+      if(doorStatusErd != Erd_Invalid)
       {
-         return false;
-      }
-   }
-
-   return true;
-}
-
-static bool ADoorIsOpen(LoadOffDoorOpen_t *instance)
-{
-   for(uint8_t i = 0; i < instance->_private.config->doorStatusErdList.numberOfErds; i++)
-   {
-      bool doorIsOpen;
-      DataModel_Read(
-         instance->_private.dataModel,
-         instance->_private.config->doorStatusErdList.erds[i],
-         &doorIsOpen);
-
-      if(doorIsOpen)
-      {
-         return true;
+         if(DoorIsAssociated(instance, i) &&
+            erd == doorStatusErd)
+         {
+            return true;
+         }
       }
    }
 
    return false;
+}
+
+static bool AnAssociatedDoorIsOpen(LoadOffDoorOpen_t *instance)
+{
+   for(uint8_t i = 0; i < (sizeof(instance->_private.config->doorStatus) / sizeof(Erd_t)); i++)
+   {
+      Erd_t doorStatusErd = ((const Erd_t *)&instance->_private.config->doorStatus)[i];
+      if(doorStatusErd != Erd_Invalid)
+      {
+         bool doorIsOpen;
+         DataModel_Read(
+            instance->_private.dataModel,
+            doorStatusErd,
+            &doorIsOpen);
+
+         if(DoorIsAssociated(instance, i) && doorIsOpen)
+         {
+            return true;
+         }
+      }
+   }
+
+   return false;
+}
+
+static bool AllAssociatedDoorsAreClosed(LoadOffDoorOpen_t *instance)
+{
+   return !(AnAssociatedDoorIsOpen(instance));
 }
 
 static void StopTimeoutTimer(LoadOffDoorOpen_t *instance)
@@ -235,7 +236,7 @@ static void StartTimeoutTimerFor(LoadOffDoorOpen_t *instance, TimerTicks_t ticks
       instance);
 }
 
-void State_ADoorIsOpen(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
+void State_AnAssociatedDoorIsOpen(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
 {
    LoadOffDoorOpen_t *instance = InstanceFromFsm(fsm);
    IGNORE(data);
@@ -252,12 +253,12 @@ void State_ADoorIsOpen(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          }
          break;
 
-      case Signal_ADoorIsOpened:
+      case Signal_AnAssociatedDoorIsOpened:
          // purposefully ignored
          break;
 
-      case Signal_AllDoorsAreClosed:
-         Fsm_Transition(&instance->_private.fsm, State_AllDoorsAreClosed);
+      case Signal_AllAssociatedDoorsAreClosed:
+         Fsm_Transition(&instance->_private.fsm, State_AllAssociatedDoorsAreClosed);
          break;
 
       case Signal_TimeoutExpired:
@@ -270,7 +271,7 @@ void State_ADoorIsOpen(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
    }
 }
 
-void State_AllDoorsAreClosed(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
+void State_AllAssociatedDoorsAreClosed(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
 {
    LoadOffDoorOpen_t *instance = InstanceFromFsm(fsm);
    IGNORE(data);
@@ -283,8 +284,8 @@ void State_AllDoorsAreClosed(Fsm_t *fsm, const FsmSignal_t signal, const void *d
             instance->_private.data->restartDelayInSeconds * MSEC_PER_SEC);
          break;
 
-      case Signal_ADoorIsOpened:
-         Fsm_Transition(&instance->_private.fsm, State_ADoorIsOpen);
+      case Signal_AnAssociatedDoorIsOpened:
+         Fsm_Transition(&instance->_private.fsm, State_AnAssociatedDoorIsOpen);
          break;
 
       case Signal_TimeoutExpired:
@@ -302,27 +303,27 @@ static void OnDataModelChange(void *context, const void *_args)
    LoadOffDoorOpen_t *instance = context;
    const DataModelOnDataChangeArgs_t *args = _args;
 
-   if(ADoorChanged(instance, args->erd))
+   if(AnAssociatedDoorChanged(instance, args->erd))
    {
-      if(AllDoorsAreClosed(instance))
+      if(AllAssociatedDoorsAreClosed(instance))
       {
-         Fsm_SendSignal(&instance->_private.fsm, Signal_AllDoorsAreClosed, NULL);
+         Fsm_SendSignal(&instance->_private.fsm, Signal_AllAssociatedDoorsAreClosed, NULL);
       }
       else
       {
-         Fsm_SendSignal(&instance->_private.fsm, Signal_ADoorIsOpened, NULL);
+         Fsm_SendSignal(&instance->_private.fsm, Signal_AnAssociatedDoorIsOpened, NULL);
       }
    }
 }
 
 static FsmState_t InitialState(LoadOffDoorOpen_t *instance)
 {
-   if(ADoorIsOpen(instance))
+   if(AnAssociatedDoorIsOpen(instance))
    {
-      return State_ADoorIsOpen;
+      return State_AnAssociatedDoorIsOpen;
    }
 
-   return State_AllDoorsAreClosed;
+   return State_AllAssociatedDoorsAreClosed;
 }
 
 /*!

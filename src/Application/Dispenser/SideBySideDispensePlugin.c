@@ -38,12 +38,12 @@ static const DispenseControllerConfig_t dispenseControllerConfig = {
 static const DoorInhibitDispensingResolverDoorConfig_t doorsThatInhibitDispense[] = {
    {
       .doorIsOpenErd = Erd_RightSideFreshFoodDoorStatusResolved,
-      .doorIndex = DoorIndex_RightHandFreshFood,
+      .doorIndex = DoorIndex_RightSideFreshFood,
       .offsetInParametricForDoorInhibitsDispense = OFFSET_OF(DoorInhibitDispenseTable_t, rightHandFreshFood),
    },
    {
       .doorIsOpenErd = Erd_LeftSideFreezerDoorStatusResolved,
-      .doorIndex = DoorIndex_LeftHandFreezer,
+      .doorIndex = DoorIndex_LeftSideFreezer,
       .offsetInParametricForDoorInhibitsDispense = OFFSET_OF(DoorInhibitDispenseTable_t, leftHandFreezer),
    },
 };

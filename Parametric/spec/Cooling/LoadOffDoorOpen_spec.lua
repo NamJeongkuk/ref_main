@@ -5,6 +5,7 @@ local remove_whitespace = require 'lua-common'.utilities.remove_whitespace
 local should_fail_with = require 'lua-common'.utilities.should_fail_with
 local should_require_args = require 'lua-common'.utilities.should_require_args
 local TypedString = require 'lua-common'.util.TypedString
+local doors_enum = require 'Cooling.doors_enum'
 
 describe('LoadOffDoorOpen', function()
   local load_off_door_open = LoadOffDoorOpen(core_mock)
@@ -17,6 +18,7 @@ describe('LoadOffDoorOpen', function()
   it('should require all arguments including times when enabled', function()
     should_require_args(load_off_door_open, generate_config({
       enable = true,
+      doors = { 'right_side_fresh_food_door', 'left_side_freezer_door' },
       timeout_in_seconds = 23,
       restart_delay_in_seconds = 65
     }))
@@ -36,10 +38,51 @@ describe('LoadOffDoorOpen', function()
     end)
   end)
 
+  it('should require that doors array has >0 elements', function()
+    should_fail_with("#doors=0 must be >0", function()
+      load_off_door_open(generate_config({
+        enable = true,
+        doors = { },
+        timeout_in_seconds = 3,
+        restart_delay_in_seconds = 5
+      }))
+    end)
+  end)
+
+  it('should require that doors are in doors_enum', function()
+    should_fail_with("doors[1]='not a valid door' must be in the set { 'left_side_fresh_food_door', 'right_side_fresh_food_door', 'left_side_freezer_door', 'right_side_freezer_door', 'convertible_compartment_door', 'door_in_door' }", function()
+      load_off_door_open(generate_config({
+        enable = true,
+        doors = { 'not a valid door' },
+        timeout_in_seconds = 3,
+        restart_delay_in_seconds = 5
+      }))
+    end)
+
+    should_fail_with("doors[2]='not a valid door' must be in the set { 'left_side_fresh_food_door', 'right_side_fresh_food_door', 'left_side_freezer_door', 'right_side_freezer_door', 'convertible_compartment_door', 'door_in_door' }", function()
+      load_off_door_open(generate_config({
+        enable = true,
+        doors = { 'left_side_freezer_door', 'not a valid door'},
+        timeout_in_seconds = 3,
+        restart_delay_in_seconds = 5
+      }))
+    end)
+
+    should_fail_with("doors[2]='not a valid door' must be in the set { 'left_side_fresh_food_door', 'right_side_fresh_food_door', 'left_side_freezer_door', 'right_side_freezer_door', 'convertible_compartment_door', 'door_in_door' }", function()
+      load_off_door_open(generate_config({
+        enable = true,
+        doors = { 'left_side_freezer_door', 'not a valid door', 'different invalid door'},
+        timeout_in_seconds = 3,
+        restart_delay_in_seconds = 5
+      }))
+    end)
+  end)
+
   it('should assert if timeout_in_seconds is not in range', function()
     should_fail_with('timeout_in_seconds=-1 must be in [0, 255]', function()
       load_off_door_open(generate_config({
         enable = true,
+        doors = { 'right_side_fresh_food_door', 'left_side_freezer_door' },
         timeout_in_seconds = -1,
         restart_delay_in_seconds = 10
       }))
@@ -50,6 +93,7 @@ describe('LoadOffDoorOpen', function()
     should_fail_with('restart_delay_in_seconds=-1 must be in [0, 255]', function()
       load_off_door_open(generate_config({
         enable = true,
+        doors = { 'right_side_fresh_food_door', 'left_side_freezer_door' },
         timeout_in_seconds = 3,
         restart_delay_in_seconds = -1
       }))
@@ -60,6 +104,7 @@ describe('LoadOffDoorOpen', function()
     local expected = remove_whitespace([[
       structure(
         bool(true),
+        u8(6),
         u8(23),
         u8(65)
       )
@@ -67,6 +112,7 @@ describe('LoadOffDoorOpen', function()
 
     local actual = load_off_door_open({
       enable = true,
+      doors = { 'right_side_fresh_food_door', 'left_side_freezer_door' },
       timeout_in_seconds = 23,
       restart_delay_in_seconds = 65
     })
@@ -79,6 +125,7 @@ describe('LoadOffDoorOpen', function()
     local expected = remove_whitespace([[
       structure(
         bool(false),
+        u8(0),
         u8(0),
         u8(0)
       )
@@ -95,6 +142,7 @@ describe('LoadOffDoorOpen', function()
   it('should memoize when enabled', function()
     should_memoize_calls(load_off_door_open, generate_config({
       enable = true,
+      doors = { 'right_side_fresh_food_door', 'left_side_freezer_door' },
       timeout_in_seconds = 23,
       restart_delay_in_seconds = 65
     }))

@@ -11,7 +11,6 @@ return function(core)
     return TypedString(
       { 'load_off_door_open_compartment_list' },
       structure(
-        config.fresh_food_compartment,
         config.freezer_compartment
       )
     )
@@ -21,7 +20,6 @@ return function(core)
     validate_arguments(
       config,
       {
-        fresh_food_compartment = { constraint.typed_string('load_off_door_open') },
         freezer_compartment = { constraint.typed_string('load_off_door_open') }
       })
     return generate(config)

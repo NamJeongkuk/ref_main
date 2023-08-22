@@ -437,15 +437,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Scaled Door Acceleration In Seconds",
-          "name": "Erd_RightHandFreshFoodScaledDoorAccelerationInSeconds",
+          "displayName": "Right Side Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_RightSideFreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "EEPROM Fresh Food Scaled Door Acceleration In Seconds",
-          "name": "Erd_Eeprom_RightHandFreshFoodScaledDoorAccelerationInSeconds",
+          "displayName": "EEPROM Right Side Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_Eeprom_RightSideFreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
@@ -2587,15 +2587,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Left Hand Fresh Food Scaled Door Acceleration In Seconds",
-          "name": "Erd_LeftHandFreshFoodScaledDoorAccelerationInSeconds",
+          "displayName": "Left Side Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_LeftSideFreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "EEPROM Left Hand Fresh Food Scaled Door Acceleration In Seconds",
-          "name": "Erd_Eeprom_LeftHandFreshFoodScaledDoorAccelerationInSeconds",
+          "displayName": "EEPROM Left Side Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_Eeprom_LeftSideFreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
@@ -2608,15 +2608,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Right Hand Fresh Food Scaled Door Acceleration In Seconds",
-          "name": "Erd_RightHandFreshFoodScaledDoorAccelerationInSeconds",
+          "displayName": "Right Side Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_RightSideFreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "EEPROM Right Hand Fresh Food Scaled Door Acceleration In Seconds",
-          "name": "Erd_Eeprom_RightHandFreshFoodScaledDoorAccelerationInSeconds",
+          "displayName": "EEPROM Right Side Fresh Food Scaled Door Acceleration In Seconds",
+          "name": "Erd_Eeprom_RightSideFreshFoodScaledDoorAccelerationInSeconds",
           "read": true,
           "write": true
         },
@@ -2994,6 +2994,20 @@
           "namespace": "mb",
           "displayName": "Freezer Evap Fan Speed Load Off Door Open Vote",
           "name": "Erd_FreezerEvapFanSpeed_LoadOffDoorOpenVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Fan Speed Resolved Vote",
+          "name": "Erd_FreezerEvapFanSpeed_ResolvedVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Fan Speed Winning Vote",
+          "name": "Erd_FreezerEvapFanSpeed_WinningVoteErd",
           "read": true,
           "write": false
         },

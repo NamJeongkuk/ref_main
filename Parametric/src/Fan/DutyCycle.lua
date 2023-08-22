@@ -11,10 +11,10 @@ return function(core)
     return TypedString(
       { 'speed' },
       structure(
-         u8(fan_control_type.duty_cycle),
-         u8(0), -- padding/unused
-         u8(config.duty_cycle),
-         u8(0) --unused, kept for padding with Rpm
+        u8(fan_control_type.duty_cycle),
+        u8(0), -- padding/unused
+        u8(config.duty_cycle),
+        u8(0) --unused, kept for padding with Rpm
       )
     )
   end)
