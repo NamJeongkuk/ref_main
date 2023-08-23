@@ -2520,3 +2520,50 @@ TEST(TwistTrayIceMaker, ShouldResetTheHarvestDelayWhenExitingTheFreezeState)
    WhenTheIceMakerBecomesEnabled();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
 }
+
+TEST(TwistTrayIceMaker, ShouldTransitionToThermistorFaultAfterFillTubeHeaterOnTimeIsExpiredWhileIceIsHarvestedAndIceMakerThermistorIsInvalid)
+{
+   GivenTheOperationStateIsInHarvesting();
+   GivenTheMotorActionResultIs(Harvested);
+   GivenTheIceMakerThermistorIsInvalid();
+
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   TheMotorShouldBeRequestedTo(Idle);
+   AfterTheFillTubeHeaterTimerHasExpired();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
+}
+
+TEST(TwistTrayIceMaker, ShouldTransitionToThermistorFaultWhenHarvestedWhileFillTubeHeaterOnTimeIsExpiredAndIceMakerThermistorIsInvalid)
+{
+   GivenTheOperationStateIsInHarvesting();
+   GivenTheIceMakerThermistorIsInvalid();
+
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   AfterTheFillTubeHeaterTimerHasExpired();
+
+   TheMotorShouldBeRequestedTo(Idle);
+   WhenTheMotorActionResultIs(Harvested);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
+}
+
+TEST(TwistTrayIceMaker, ShouldTransitionToThermistorFaultWhenMotorIsErrorWhileIceMakerThermistorIsInvalid)
+{
+   GivenTheOperationStateIsInHarvesting();
+   GivenTheIceMakerThermistorIsInvalid();
+
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   TheMotorShouldBeRequestedTo(Idle);
+   WhenTheMotorActionResultIs(MotorError);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
+}
+
+TEST(TwistTrayIceMaker, ShouldTransitionToThermistorFaultWhenBucketIsFullWhileIceMakerThermistorIsInvalid)
+{
+   GivenTheOperationStateIsInHarvesting();
+   GivenTheIceMakerThermistorIsInvalid();
+
+   TheMotorShouldBeRequestedTo(Idle);
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   WhenTheMotorActionResultIs(BucketWasFull);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
+}

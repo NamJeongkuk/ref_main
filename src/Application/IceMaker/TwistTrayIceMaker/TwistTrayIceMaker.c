@@ -455,19 +455,37 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 
          if(MotorActionResultIs(instance, Harvested))
          {
-            Fsm_Transition(fsm, State_FillingTrayWithWater);
+            if(!IceMakerThermistorIsValid(instance))
+            {
+               Fsm_Transition(fsm, State_ThermistorFault);
+            }
+            else
+            {
+               Fsm_Transition(fsm, State_FillingTrayWithWater);
+            }
          }
          break;
 
       case Signal_MotorActionResultHarvested:
          if(FillTubeHeaterTimerHasExpired(instance))
          {
-            Fsm_Transition(fsm, State_FillingTrayWithWater);
+            if(!IceMakerThermistorIsValid(instance))
+            {
+               Fsm_Transition(fsm, State_ThermistorFault);
+            }
+            else
+            {
+               Fsm_Transition(fsm, State_FillingTrayWithWater);
+            }
          }
          break;
 
       case Signal_MotorActionResultBucketWasFull:
-         if(IceMakerIsEnabled(instance) && !CoolingSystemIsOff(instance))
+         if(!IceMakerThermistorIsValid(instance))
+         {
+            Fsm_Transition(fsm, State_ThermistorFault);
+         }
+         else if(IceMakerIsEnabled(instance) && !CoolingSystemIsOff(instance))
          {
             Fsm_Transition(fsm, State_BucketIsFull);
          }
@@ -478,7 +496,14 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          break;
 
       case Signal_MotorActionResultMotorError:
-         Fsm_Transition(fsm, State_MotorError);
+         if(!IceMakerThermistorIsValid(instance))
+         {
+            Fsm_Transition(fsm, State_ThermistorFault);
+         }
+         else
+         {
+            Fsm_Transition(fsm, State_MotorError);
+         }
          break;
 
       case Signal_DispensingActive:
