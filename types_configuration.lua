@@ -58,6 +58,8 @@ return {
     IceMakerEnableRequest_t = 'bool',
     TurboModeRequest_t = 'bool',
     CoolingSystemRequest_t = 'bool',
-    DoorAlarmEnableRequest_t = 'bool'
+    DoorAlarmEnableRequest_t = 'bool',
+    PresenceSensingEnableRequest_t = 'bool',
+    PresenceActivatesRecessLightEnableRequest_t = 'bool'
   }
 }

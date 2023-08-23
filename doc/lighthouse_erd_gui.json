@@ -1517,8 +1517,7 @@
                "displayName": "Presence Sensing Enable Request",
                "name": "Erd_PresenceSensingEnableRequest",
                "read": false,
-               "write": true,
-               "interval": 1000000000
+               "write": true
             },
             {
                "namespace": "mb",
@@ -1533,8 +1532,7 @@
                "displayName": "Recess Light On when presence is sensed Request",
                "name": "Erd_PresenceSensedActivatesRecessLightRequest",
                "read": false,
-               "write": true,
-               "interval": 1000000000
+               "write": true
             },
             {
                "namespace": "mb",

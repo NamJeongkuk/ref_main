@@ -120,6 +120,8 @@
 #include "TemperatureDisplayUnit.h"
 #include "RefrigeratorModel.h"
 #include "SnackModeEnableRequest.h"
+#include "PresenceSensingEnableRequest.h"
+#include "PresenceActivatesRecessLightEnableRequest.h"
 
 // clang-format off
 
@@ -464,9 +466,9 @@ enum
    ENTRY(Erd_DimmableLight0PercentLevelStatus,              0x121F, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DimmableLight0Configuration,                   0x1220, DimmableLightConfiguration_t,                       Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_PresenceSensingEnableRequest,                  0x1222, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_PresenceSensingEnableRequest,                  0x1222, PresenceSensingEnableRequest_t,                     Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_PresenceSensingEnableStatus,                   0x1223, bool,                                               Swap_No,  Io_None, Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
-   ENTRY(Erd_PresenceSensedActivatesRecessLightRequest,     0x1224, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_PresenceSensedActivatesRecessLightRequest,     0x1224, PresenceActivatesRecessLightEnableRequest_t,        Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_PresenceSensedActivatesRecessLightStatus,      0x1225, bool,                                               Swap_No,  Io_None, Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
    \
    ENTRY(Erd_PresenceDetected,                              0x1226, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                              NotFault) \

@@ -17,7 +17,6 @@ extern "C"
 enum
 {
    // 0x00000001 Foundation
-   // 0x00000010 Hydration Station
    // 0x00000020 Fresh FoodCabinet .Setpoint
    // 0x00000040 Freezer Cabinet Setpoint
    // 0x00000080 Dispenser Selection
@@ -39,7 +38,7 @@ enum
    // 0x02000000 PresenceSensedActivatesRecessLight
    // 0x04000000 Dimmable Light 0 Percent Level
    // 0x10000000 Night Snack Mode Lighting
-   Features = 0x177BFFF1
+   Features = 0x177BFFE1
 };
 
 TEST_GROUP(ApplianceFeatureApiUpdater)

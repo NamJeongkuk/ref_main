@@ -15,7 +15,6 @@ void ApplianceFeatureApiUpdater_Init(I_DataModel_t *dataModel)
    applianceFeatureApiManifest.version = 2;
    applianceFeatureApiManifest.features =
       ApplianceFeatureApi_Refrigerator_Version2_Foundation |
-      ApplianceFeatureApi_Refrigerator_Version2_HydrationStation |
       ApplianceFeatureApi_Refrigerator_Version2_FreshFoodCabinetSetpoint |
       ApplianceFeatureApi_Refrigerator_Version2_FreezerCabinetSetpoint |
       ApplianceFeatureApi_Refrigerator_Version2_DispenserSelection |
