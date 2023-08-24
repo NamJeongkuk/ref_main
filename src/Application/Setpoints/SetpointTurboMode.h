@@ -15,7 +15,6 @@
 
 typedef struct
 {
-   Erd_t currentSetpointResolvedVoteErd; // SetpointVotedTemperature_t
    Erd_t turboModeSetpointVoteErd; // SetpointVotedTemperature_t
    Erd_t turboModeOnOffStatusErd; // bool
    Erd_t turboModeOnTimeInMinutesErd; // uint16_t

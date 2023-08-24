@@ -78,34 +78,19 @@ static void UpdateFreezerIceRateVoteBasedOnFreezerEvapFanSpeed(FreezerIceRateHan
    }
 }
 
-static void UpdateFreezerIceRateVoteBasedOnFreezerSetpointUserVote(FreezerIceRateHandler_t *instance)
+static void UpdateFreezerSetpointIceRateVote(FreezerIceRateHandler_t *instance)
 {
-   SetpointVotedTemperature_t freezerSetpointVote;
-   DataModel_Read(
+   SetpointVotedTemperature_t adjustedFreezerSetpointVote = {
+      .temperatureInDegFx100 = instance->_private.freezerIceRateData->freezerSetpointInDegFx100,
+      .care = true
+   };
+
+   DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->freezerSetpointUserVoteErd,
-      &freezerSetpointVote);
-
-   if(freezerSetpointVote.temperatureInDegFx100 > instance->_private.freezerIceRateData->freezerSetpointInDegFx100)
-   {
-      SetpointVotedTemperature_t adjustedFreezerSetpointVote = {
-         .temperatureInDegFx100 = instance->_private.freezerIceRateData->freezerSetpointInDegFx100,
-         .care = true
-      };
-
-      DataModel_Write(
-         instance->_private.dataModel,
-         instance->_private.config->freezerSetpointFreezerIceRateVoteErd,
-         &adjustedFreezerSetpointVote);
-   }
-   else
-   {
-      DataModel_Write(
-         instance->_private.dataModel,
-         instance->_private.config->freezerSetpointFreezerIceRateVoteErd,
-         &freezerSetpointVote);
-   }
+      instance->_private.config->freezerSetpointFreezerIceRateVoteErd,
+      &adjustedFreezerSetpointVote);
 }
+
 static void SubscribeToDataModel(FreezerIceRateHandler_t *instance)
 {
    DataModel_SubscribeAll(
@@ -134,10 +119,6 @@ static void OnDataModelChange(void *context, const void *_args)
    {
       UpdateFreezerIceRateVoteBasedOnFreezerEvapFanSpeed(instance);
    }
-   else if(args->erd == instance->_private.config->freezerSetpointUserVoteErd)
-   {
-      UpdateFreezerIceRateVoteBasedOnFreezerSetpointUserVote(instance);
-   }
 }
 
 static void IceRateSignalTriggered(void *context, const void *_args)
@@ -148,7 +129,7 @@ static void IceRateSignalTriggered(void *context, const void *_args)
    StartTimer(instance);
    SubscribeToDataModel(instance);
    UpdateFreezerIceRateVoteBasedOnFreezerEvapFanSpeed(instance);
-   UpdateFreezerIceRateVoteBasedOnFreezerSetpointUserVote(instance);
+   UpdateFreezerSetpointIceRateVote(instance);
    DataModel_Write(instance->_private.dataModel, instance->_private.config->iceRateIsActiveErd, set);
 }
 

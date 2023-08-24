@@ -73,23 +73,10 @@ static void AddElapsedMinutesToTurboModeOnTime(void *context)
 
 static void TurboModeRequestedOn(SetpointTurboMode_t *instance)
 {
-   SetpointVotedTemperature_t currentResolvedVoteTemperature;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->currentSetpointResolvedVoteErd,
-      &currentResolvedVoteTemperature);
-
-   SetpointVotedTemperature_t turboModeVote;
-   turboModeVote.care = Vote_Care;
-
-   if((currentResolvedVoteTemperature.temperatureInDegFx100 < instance->_private.turboModeData->turboModeSetpointInDegFx100) && (currentResolvedVoteTemperature.care == Vote_Care))
-   {
-      turboModeVote.temperatureInDegFx100 = currentResolvedVoteTemperature.temperatureInDegFx100;
-   }
-   else
-   {
-      turboModeVote.temperatureInDegFx100 = instance->_private.turboModeData->turboModeSetpointInDegFx100;
-   }
+   SetpointVotedTemperature_t turboModeVote = {
+      .temperatureInDegFx100 = instance->_private.turboModeData->turboModeSetpointInDegFx100,
+      .care = Vote_Care
+   };
 
    DataModel_Write(
       instance->_private.dataModel,

@@ -14,7 +14,6 @@
 typedef struct
 {
    Erd_t freezerIceRateTriggerSignalErd; // Signal_t
-   Erd_t freezerSetpointUserVoteErd; // SetpointVotedTemperature_t
    Erd_t freezerSetpointFreezerIceRateVoteErd; // SetpointVotedTemperature_t
    Erd_t freezerEvapFanSpeedFreezerIceRateVoteErd; // FanVotedSpeed_t
    Erd_t freezerEvapFanSpeedResolvedVoteErd; // FanVotedSpeed_t

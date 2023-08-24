@@ -13,7 +13,6 @@
 
 static const FreezerIceRateHandlerConfig_t iceRateHandlerConfig = {
    .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
-   .freezerSetpointUserVoteErd = Erd_FreezerSetpoint_UserVote,
    .freezerSetpointFreezerIceRateVoteErd = Erd_FreezerSetpoint_FreezerIceRateVote,
    .freezerEvapFanSpeedFreezerIceRateVoteErd = Erd_FreezerEvapFanSpeed_FreezerIceRateVote,
    .freezerEvapFanSpeedResolvedVoteErd = Erd_FreezerEvapFanSpeed_ResolvedVote,

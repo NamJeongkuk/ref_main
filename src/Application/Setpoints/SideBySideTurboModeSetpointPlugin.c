@@ -11,7 +11,6 @@
 #include "TurboModeSetpointData.h"
 
 static const SetpointTurboModeConfig_t freshFoodSetpointTurboCoolConfiguration = {
-   .currentSetpointResolvedVoteErd = Erd_FreshFoodSetpoint_ResolvedVote,
    .turboModeSetpointVoteErd = Erd_FreshFoodSetpoint_TurboCoolVote,
    .turboModeOnOffStatusErd = Erd_TurboCoolOnOffStatus,
    .turboModeOnTimeInMinutesErd = Erd_TurboCoolOnTimeInMinutes,
@@ -19,7 +18,6 @@ static const SetpointTurboModeConfig_t freshFoodSetpointTurboCoolConfiguration =
 };
 
 static const SetpointTurboModeConfig_t freezerSetpointTurboFreezeConfiguration = {
-   .currentSetpointResolvedVoteErd = Erd_FreezerSetpoint_ResolvedVote,
    .turboModeSetpointVoteErd = Erd_FreezerSetpoint_TurboFreezeVote,
    .turboModeOnOffStatusErd = Erd_TurboFreezeOnOffStatus,
    .turboModeOnTimeInMinutesErd = Erd_TurboFreezeOnTimeInMinutes,

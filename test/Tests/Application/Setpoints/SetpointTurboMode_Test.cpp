@@ -16,14 +16,7 @@ extern "C"
 #include "CppUTest/TestHarness.h"
 #include "ReferDataModel_TestDouble.h"
 
-enum
-{
-   VeryCold = -700,
-   Warm = 4000
-};
-
 static const SetpointTurboModeConfig_t setpointTurboModeConfig = {
-   .currentSetpointResolvedVoteErd = Erd_FreezerSetpoint_ResolvedVote,
    .turboModeSetpointVoteErd = Erd_FreezerSetpoint_TurboFreezeVote,
    .turboModeOnOffStatusErd = Erd_TurboFreezeOnOffStatus,
    .turboModeOnTimeInMinutesErd = Erd_TurboFreezeOnTimeInMinutes,
@@ -64,15 +57,6 @@ TEST_GROUP(SetpointTurboMode)
    void WhenTurboModeStatusIs(bool state)
    {
       DataModel_Write(dataModel, Erd_TurboFreezeOnOffStatus, &state);
-   }
-
-   void GivenCurrentResolvedVoteIs(TemperatureDegFx100_t temperature, Vote_t vote)
-   {
-      SetpointVotedTemperature_t currentResolvedVote;
-      currentResolvedVote.temperatureInDegFx100 = temperature;
-      currentResolvedVote.care = vote;
-
-      DataModel_Write(dataModel, Erd_FreezerSetpoint_ResolvedVote, &currentResolvedVote);
    }
 
    void TurboVoteShouldBe(TemperatureDegFx100_t expectedTemperature, Vote_t expectedVote)
@@ -184,37 +168,9 @@ TEST(SetpointTurboMode, ShouldResetTurboModeOnTimeInMinutesWhenTurboModeIsStoppe
    TurboModeOnTimeInMinutesShouldBe(1);
 }
 
-TEST(SetpointTurboMode, ShouldVoteForDefaultParametricTemperatureWhenEnteringTurboModeIfCurrentResolvedTemperatureIsDontCare)
+TEST(SetpointTurboMode, ShouldVoteForDefaultParametricTemperatureWhenEnteringTurboMode)
 {
    GivenTheModuleIsInitialized();
-   GivenCurrentResolvedVoteIs(VeryCold, Vote_DontCare);
-
-   WhenTurboModeStatusIs(ON);
-   TurboVoteShouldBe(turboModeSetpointData->turboModeSetpointInDegFx100, Vote_Care);
-}
-
-TEST(SetpointTurboMode, ShouldVoteForTheCurrentResolvedTemperatureWhenEnteringTurboModeIfCurrentResolvedTemperatureIsLessThanTheDefaultParametric)
-{
-   GivenTheModuleIsInitialized();
-   GivenCurrentResolvedVoteIs(VeryCold, Vote_Care);
-
-   WhenTurboModeStatusIs(ON);
-   TurboVoteShouldBe(VeryCold, Vote_Care);
-}
-
-TEST(SetpointTurboMode, ShouldVoteForDefaultParametricTemperatureWhenEnteringTurboModeIfCurrentResolvedTemperatureIsEqualToTheDefaultParametric)
-{
-   GivenTheModuleIsInitialized();
-   GivenCurrentResolvedVoteIs(turboModeSetpointData->turboModeSetpointInDegFx100, Vote_Care);
-
-   WhenTurboModeStatusIs(ON);
-   TurboVoteShouldBe(turboModeSetpointData->turboModeSetpointInDegFx100, Vote_Care);
-}
-
-TEST(SetpointTurboMode, ShouldVoteForDefaultParametricTemperatureWhenEnteringTurboModeIfCurrentResolvedTemperatureIsGreaterThanTheDefaultParametric)
-{
-   GivenTheModuleIsInitialized();
-   GivenCurrentResolvedVoteIs(Warm, Vote_Care);
 
    WhenTurboModeStatusIs(ON);
    TurboVoteShouldBe(turboModeSetpointData->turboModeSetpointInDegFx100, Vote_Care);
@@ -223,7 +179,6 @@ TEST(SetpointTurboMode, ShouldVoteForDefaultParametricTemperatureWhenEnteringTur
 TEST(SetpointTurboMode, ShouldStartTurboModeOnInitializationIfPreviousTurboModeDidNotComplete)
 {
    GivenTurboModeOnTimeInMinutesIs(turboModeSetpointData->turboModeOnTimeInMinutes - 2);
-   GivenCurrentResolvedVoteIs(VeryCold, Vote_DontCare);
    GivenTheModuleIsInitialized();
 
    TurboVoteShouldBe(turboModeSetpointData->turboModeSetpointInDegFx100, Vote_Care);
