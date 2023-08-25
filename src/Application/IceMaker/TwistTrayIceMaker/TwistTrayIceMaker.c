@@ -708,6 +708,10 @@ static void State_MotorError(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          Fsm_Transition(fsm, State_FillingTrayWithWater);
          break;
 
+      case Signal_TestRequest_Harvest:
+         Fsm_Transition(fsm, State_Harvesting);
+         break;
+
       case Signal_MotorErrorRetryTimerExpired:
          Fsm_Transition(&instance->_private.fsm, State_Homing);
          break;

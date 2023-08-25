@@ -1711,12 +1711,14 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFillingTrayWithWaterAndClearTestReques
    And TheTestRequestShouldBe(IceMakerTestRequest_None);
 }
 
-TEST(TwistTrayIceMaker, ShouldNotTransitionToHarvestingAndClearTestRequestWhenTestRequestIsHarvestWhileIceMakerStateIsInMotorError)
+TEST(TwistTrayIceMaker, ShouldTransitionToHarvestingAndClearTestRequestWhenTestRequestIsHarvestWhileIceMakerStateIsInMotorError)
 {
    GivenTheOperationStateIsInMotorError();
 
+   TheMotorShouldBeRequestedTo(Harvest);
+   FillTubeHeaterVoteAndCareShouldBecome(iceMakerData->harvestData.fillTubeHeaterDutyCyclePercentage, Vote_Care);
    WhenTheTestRequestIs(IceMakerTestRequest_Harvest);
-   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_MotorError);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
    And TheTestRequestShouldBe(IceMakerTestRequest_None);
 }
 
