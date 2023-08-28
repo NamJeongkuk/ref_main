@@ -2977,6 +2977,41 @@
           "name": "Erd_RampingLedPwm_PWM_200_03",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Erd_FreshFoodBackWallLight_ResolvedVote",
+          "name": "Erd_FreshFoodBackWallLight_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Erd_FreshFoodBackWallLight_WinningVoteErd",
+          "name": "Erd_FreshFoodBackWallLight_WinningVoteErd",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Erd_FreshFoodBackWallLight_FactoryVote",
+          "name": "Erd_FreshFoodBackWallLight_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Erd_FreshFoodBackWallLight_EnhancedSabbathVote",
+          "name": "Erd_FreshFoodBackWallLight_EnhancedSabbathVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Erd_FreshFoodBackWallLight_DoorVote",
+          "name": "Erd_FreshFoodBackWallLight_DoorVote",
+          "read": true,
+          "write": true
         }
       ]
     },

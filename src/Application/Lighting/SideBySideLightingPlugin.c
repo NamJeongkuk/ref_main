@@ -12,12 +12,16 @@
 
 static bool VotingErdCareDelegate(const void *votingErdData)
 {
-   const PwmVotedDutyCycle_t *data = votingErdData;
+   const RampingPwmDutyCyclePercentageVote_t *data = votingErdData;
    return (data->care);
 }
 
-static const PwmVotedDutyCycle_t defaultData = {
-   .pwmDutyCycle = PwmDutyCycle_Min,
+static const RampingPwmDutyCyclePercentageVote_t defaultData = {
+   .rampingPwmDutyCyclePercentage = {
+      .pwmDutyCyclePercentage = PwmDutyCycle_Min,
+      .rampingUpCountInMsec = UINT8_MAX,
+      .rampingDownCountInMsec = UINT8_MAX,
+   },
    .care = Vote_DontCare
 };
 

@@ -242,13 +242,15 @@ TEST_GROUP(FactoryModeIntegration)
       }
    }
 
-   void WhenTheFactoryModeLightErdsBecome(RampingPwmDutyCycle_t pwmDutyCycle)
+   void WhenTheFactoryModeLightErdsBecome(RampingPwmDutyCyclePercentage_t pwmDutyCyclePercentage)
    {
+      RampingPwmDutyCyclePercentageVote_t vote = { .rampingPwmDutyCyclePercentage = pwmDutyCyclePercentage, .care = Vote_Care };
+
       ErdList_t factoryModeLightsList = { .erds = factoryModeLightErdList, .numberOfErds = NUM_ELEMENTS(factoryModeLightErdList) };
       ErdList_WriteAll(
          dataModel,
          &factoryModeLightsList,
-         &pwmDutyCycle);
+         &vote);
    }
 
    void GivenTheValveBspErdsAre(bool status)
