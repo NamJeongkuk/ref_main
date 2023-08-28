@@ -17,10 +17,10 @@ static void AmbientWindowAverageTemperatureFilterReadAndWriteToErd(void *context
    AmbientTemperatureAverage_t *instance = context;
    TemperatureDegFx100_t crossAmbientWindowAverageTemperature;
 
-   Filter_Read(&instance->filter.interface, &crossAmbientWindowAverageTemperature);
+   Filter_Read(&instance->_private.filter.interface, &crossAmbientWindowAverageTemperature);
 
    DataModel_Write(
-      instance->dataModel,
+      instance->_private.dataModel,
       Erd_Ambient_WindowAveragedTemperatureInDegFx100,
       &crossAmbientWindowAverageTemperature);
 }
@@ -31,11 +31,11 @@ static void CallbackForFeedingFilter(void *context)
    TemperatureDegFx100_t temperature;
 
    DataModel_Read(
-      instance->dataModel,
+      instance->_private.dataModel,
       Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
       &temperature);
 
-   Filter_Feed(&instance->filter.interface, &temperature);
+   Filter_Feed(&instance->_private.filter.interface, &temperature);
 
    AmbientWindowAverageTemperatureFilterReadAndWriteToErd(context);
 }
@@ -43,16 +43,39 @@ static void CallbackForFeedingFilter(void *context)
 static void StartPeriodicTimerForFilterFeeding(AmbientTemperatureAverage_t *instance)
 {
    TimerModule_StartPeriodic(
-      DataModelErdPointerAccess_GetTimerModule(instance->dataModel, Erd_TimerModule),
-      &instance->sampleFeedTimer,
+      DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, Erd_TimerModule),
+      &instance->_private.sampleFeedTimer,
       AmbientTemperatureAverageSampleFrequencyInMinutes * MSEC_PER_MIN,
       CallbackForFeedingFilter,
       instance);
 }
 
+static void AmbientTemperatureChangedForTheFirstTime(void *context, const void *args)
+{
+   AmbientTemperatureAverage_t *instance = context;
+   const TemperatureDegFx100_t *temperature = args;
+
+   DataModel_Unsubscribe(
+      instance->_private.dataModel,
+      Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
+      &instance->_private.subscription);
+
+   Filter_WindowAverage_Init(
+      &instance->_private.filter,
+      instance->_private.filterI16,
+      AmbientTemperatureAverageSampleCount,
+      true,
+      sizeof(int16_t));
+
+   Filter_Seed(&instance->_private.filter.interface, temperature);
+
+   AmbientWindowAverageTemperatureFilterReadAndWriteToErd(instance);
+   StartPeriodicTimerForFilterFeeding(instance);
+}
+
 void AmbientTemperatureAverage_Init(AmbientTemperatureAverage_t *instance, I_DataModel_t *dataModel)
 {
-   instance->dataModel = dataModel;
+   instance->_private.dataModel = dataModel;
    TemperatureDegFx100_t temperature;
 
    DataModel_Read(
@@ -60,15 +83,14 @@ void AmbientTemperatureAverage_Init(AmbientTemperatureAverage_t *instance, I_Dat
       Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
       &temperature);
 
-   Filter_WindowAverage_Init(
-      &instance->filter,
-      instance->filterI16,
-      AmbientTemperatureAverageSampleCount,
-      true,
-      sizeof(int16_t));
+   DataModel_Write(
+      dataModel,
+      Erd_Ambient_WindowAveragedTemperatureInDegFx100,
+      &temperature);
 
-   Filter_Seed(&instance->filter.interface, &temperature);
-
-   AmbientWindowAverageTemperatureFilterReadAndWriteToErd(instance);
-   StartPeriodicTimerForFilterFeeding(instance);
+   EventSubscription_Init(&instance->_private.subscription, instance, AmbientTemperatureChangedForTheFirstTime);
+   DataModel_Subscribe(
+      instance->_private.dataModel,
+      Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
+      &instance->_private.subscription);
 }

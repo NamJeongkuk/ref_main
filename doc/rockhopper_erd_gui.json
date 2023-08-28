@@ -957,7 +957,7 @@
         {
           "namespace": "mb",
           "displayName": "Ambient Humidity in Relative Humidity",
-          "name": "Erd_AmbientHumidity_FilteredRelativeHumidityPercentx100",
+          "name": "Erd_AmbientHumidity_FilteredInternalRelativeHumidityPercentx100",
           "read": true,
           "write": true
         },

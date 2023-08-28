@@ -21,10 +21,14 @@ enum
 
 typedef struct
 {
-   Filter_WindowAverage_t filter;
-   int16_t filterI16[AmbientTemperatureAverageSampleCount];
-   Timer_t sampleFeedTimer;
-   I_DataModel_t *dataModel;
+   struct
+   {
+      EventSubscription_t subscription;
+      Filter_WindowAverage_t filter;
+      int16_t filterI16[AmbientTemperatureAverageSampleCount];
+      Timer_t sampleFeedTimer;
+      I_DataModel_t *dataModel;
+   } _private;
 } AmbientTemperatureAverage_t;
 
 void AmbientTemperatureAverage_Init(AmbientTemperatureAverage_t *instance, I_DataModel_t *dataModel);

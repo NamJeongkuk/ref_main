@@ -45,17 +45,22 @@ TEST_GROUP(AmbientTemperatureAverage)
       dataModel = dataModelTestDouble.dataModel;
    }
 
-   void TheWindowAverageFilterHasBeenInitialized()
+   void GivenTheWindowAverageFilterHasBeenInitialized()
    {
       AmbientTemperatureAverage_Init(&instance, dataModel);
    }
 
-   void TheFilteredAmbientTemperatureChangesTo(TemperatureDegFx100_t seedValue)
+   void WhenTheFilteredAmbientTemperatureChangesTo(TemperatureDegFx100_t temperature)
    {
       DataModel_Write(
          dataModel,
          Erd_Ambient_FilteredTemperatureResolvedInDegFx100,
-         &seedValue);
+         &temperature);
+   }
+
+   void GivenTheFilteredAmbientTemperatureIs(TemperatureDegFx100_t temperature)
+   {
+      WhenTheFilteredAmbientTemperatureChangesTo(temperature);
    }
 
    void After(TimerTicks_t ticks)
@@ -63,7 +68,7 @@ TEST_GROUP(AmbientTemperatureAverage)
       TimerModule_TestDouble_ElapseTime(timerModuleDouble, ticks, 1000);
    }
 
-   void CrossWindowAverageShouldBe(TemperatureDegFx100_t expected)
+   void WindowAverageShouldBe(TemperatureDegFx100_t expected)
    {
       TemperatureDegFx100_t actual;
       DataModel_Read(
@@ -74,76 +79,79 @@ TEST_GROUP(AmbientTemperatureAverage)
    }
 };
 
-TEST(AmbientTemperatureAverage, ShouldSetCrossWindowAverageToZeroOnInit)
+TEST(AmbientTemperatureAverage, ShouldSetWindowAverageToFilteredTemperatureOnInit)
 {
-   Given TheWindowAverageFilterHasBeenInitialized();
-   CrossWindowAverageShouldBe(0);
+   GivenTheFilteredAmbientTemperatureIs(7500);
+   GivenTheWindowAverageFilterHasBeenInitialized();
+
+   WindowAverageShouldBe(7500);
 }
 
-TEST(AmbientTemperatureAverage, ShouldSeedCrossAmbientWindowAverageTemperatureOnInit)
+TEST(AmbientTemperatureAverage, ShouldSeedAmbientWindowAverageTemperatureAfterTheFirstOnChangeEvent)
 {
-   Given TheFilteredAmbientTemperatureChangesTo(16);
-   Given TheWindowAverageFilterHasBeenInitialized();
+   GivenTheFilteredAmbientTemperatureIs(7500);
+   GivenTheWindowAverageFilterHasBeenInitialized();
 
-   CrossWindowAverageShouldBe(16);
+   WhenTheFilteredAmbientTemperatureChangesTo(9000);
+   WindowAverageShouldBe(9000);
 }
 
-TEST(AmbientTemperatureAverage, ShouldFeedFilterEveryFiveMinutesAndWriteFilterValueToCrossWindowAverage)
+TEST(AmbientTemperatureAverage, ShouldFeedFilterEveryFiveMinutesAndWriteFilterValueToWindowAverage)
 {
-   Given TheFilteredAmbientTemperatureChangesTo(4);
-   TheWindowAverageFilterHasBeenInitialized();
+   GivenTheWindowAverageFilterHasBeenInitialized();
+   GivenTheFilteredAmbientTemperatureIs(4);
 
    After(AmbientTemperatureAverageSampleFrequencyInMinutes * MSEC_PER_MIN);
 
-   Given TheFilteredAmbientTemperatureChangesTo(5);
-   CrossWindowAverageShouldBe(4);
+   WhenTheFilteredAmbientTemperatureChangesTo(5);
+   WindowAverageShouldBe(4);
 
    After(AmbientTemperatureAverageSampleFrequencyForFiftyMinutes * MSEC_PER_MIN);
-   CrossWindowAverageShouldBe(4);
+   WindowAverageShouldBe(4);
 
    After(AmbientTemperatureAverageSampleFrequencyForOneHourAndFiveMinutes * MSEC_PER_MIN);
-   CrossWindowAverageShouldBe(5);
+   WindowAverageShouldBe(5);
 
    After((AmbientTemperatureAverageSampleFrequencyForOneHourAndFiveMinutes + AmbientTemperatureAverageSampleFrequencyInMinutes) * MSEC_PER_MIN);
-   CrossWindowAverageShouldBe(5);
+   WindowAverageShouldBe(5);
 }
 
-TEST(AmbientTemperatureAverage, ShouldFeedFilterTwoHoursAndWriteFilterValueToCrossWindowAverage)
+TEST(AmbientTemperatureAverage, ShouldFeedFilterEveryTwoHoursAndWriteFilterValueToWindowAverage)
 {
-   Given TheFilteredAmbientTemperatureChangesTo(14);
-   TheWindowAverageFilterHasBeenInitialized();
+   GivenTheWindowAverageFilterHasBeenInitialized();
+   GivenTheFilteredAmbientTemperatureIs(14);
 
    After(AmbientTemperatureAverageSampleFrequencyForTwoHoursInMinutes * MSEC_PER_MIN - 1);
 
-   Given TheFilteredAmbientTemperatureChangesTo(16);
-   CrossWindowAverageShouldBe(14);
+   WhenTheFilteredAmbientTemperatureChangesTo(16);
+   WindowAverageShouldBe(14);
 
    After(1);
-   CrossWindowAverageShouldBe(14);
+   WindowAverageShouldBe(14);
 
-   Given TheFilteredAmbientTemperatureChangesTo(48);
+   WhenTheFilteredAmbientTemperatureChangesTo(48);
    After(AmbientTemperatureAverageSampleFrequencyForTwoHoursInMinutes * MSEC_PER_MIN - 1);
-   CrossWindowAverageShouldBe(47);
+   WindowAverageShouldBe(47);
 
    After(1);
-   CrossWindowAverageShouldBe(48);
+   WindowAverageShouldBe(48);
 }
 
-TEST(AmbientTemperatureAverage, ShouldUpdateCrossWindowFilterWhenTemperatureChangesMultipleTimes)
+TEST(AmbientTemperatureAverage, ShouldUpdateWindowFilterWhenTemperatureChangesMultipleTimes)
 {
-   Given TheFilteredAmbientTemperatureChangesTo(4);
-   TheWindowAverageFilterHasBeenInitialized();
+   GivenTheWindowAverageFilterHasBeenInitialized();
+   GivenTheFilteredAmbientTemperatureIs(4);
 
    After(AmbientTemperatureAverageSampleFrequencyInMinutes * MSEC_PER_MIN * (AmbientTemperatureAverageSampleCount / AmbientTemperatureAverageSampleCountDividedByTwo) - 1);
-   CrossWindowAverageShouldBe(4);
+   WindowAverageShouldBe(4);
 
    After(1);
-   CrossWindowAverageShouldBe(4);
+   WindowAverageShouldBe(4);
 
-   Given TheFilteredAmbientTemperatureChangesTo(8);
+   WhenTheFilteredAmbientTemperatureChangesTo(8);
    After(AmbientTemperatureAverageSampleFrequencyInMinutes * MSEC_PER_MIN * (AmbientTemperatureAverageSampleCount / AmbientTemperatureAverageSampleCountDividedByTwo) - 1);
-   CrossWindowAverageShouldBe(6);
+   WindowAverageShouldBe(6);
 
    After(1);
-   CrossWindowAverageShouldBe(6);
+   WindowAverageShouldBe(6);
 }

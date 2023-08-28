@@ -8,6 +8,7 @@
 #include "AmbientTemperatureAndHumidityPlugin.h"
 #include "Constants_Binary.h"
 #include "SystemErds.h"
+#include "PersonalityParametricData.h"
 
 static const Erd_t ambientFilteredTemperatureOverrideRequestErdList[] = {
    Erd_Ambient_FilteredInternalTemperatureOverrideRequest
@@ -23,6 +24,22 @@ static const OverrideArbiterConfiguration_t ambientFilteredTemperatureArbiterCon
    ambientFilteredTemperatureValueErdList,
    Erd_Ambient_FilteredInternalTemperatureResolvedInDegFx100,
    NUM_ELEMENTS(ambientFilteredTemperatureOverrideRequestErdList)
+};
+
+static const Erd_t ambientFilteredHumidityOverrideRequestErdList[] = {
+   Erd_Ambient_FilteredInternalHumidityOverrideRequest
+};
+
+static const Erd_t ambientFilteredHumidityValueErdList[] = {
+   Erd_AmbientHumidity_FilteredInternalRelativeHumidityPercentx100,
+   Erd_Ambient_FilteredInternalHumidityOverrideValueInPercentx100
+};
+
+static const OverrideArbiterConfiguration_t ambientFilteredHumidityArbiterConfiguration = {
+   .overrideRequestErds = ambientFilteredHumidityOverrideRequestErdList,
+   .valueErds = ambientFilteredHumidityValueErdList,
+   .resolvedErd = Erd_Ambient_FilteredInternalHumidityResolvedInPercentx100,
+   .numberOfOverrideRequests = NUM_ELEMENTS(ambientFilteredHumidityOverrideRequestErdList)
 };
 
 static const Erd_t ambientThermistorValidOverrideArbiterRequestErdList[] = {
@@ -68,7 +85,7 @@ static const ExternalFilteredSensorResolverConfig_t externalFilteredAmbientTempe
 };
 
 static const ExternalFilteredSensorResolverConfig_t externalFilteredAmbientHumiditySensorResolver = {
-   .internalFilteredSensorErd = Erd_AmbientHumidity_FilteredRelativeHumidityPercentx100,
+   .internalFilteredSensorErd = Erd_Ambient_FilteredInternalHumidityResolvedInPercentx100,
    .internalFilteredSensorIsValidErd = Erd_AmbientHumiditySensor_IsValidResolved,
    .externalFilteredSensorErd = Erd_ExternalAmbientFilteredRelativeHumidityPercentx100,
    .externalFilteredSensorIsValidErd = Erd_ExternalAmbientHumidity_IsValid,
@@ -77,8 +94,40 @@ static const ExternalFilteredSensorResolverConfig_t externalFilteredAmbientHumid
    .sensorType = ExternalFilteredSensorResolver_SensorType_Humidity
 };
 
+static const SensorFilteringConfig_t temperatureSensorFilteringConfig = {
+   .sensorAdcCountErd = Erd_AmbientThermistor_AdcCount,
+   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_Ambient_UnfilteredTemperatureInDegFx100,
+   .sensorFilteredTemperatureInDegFx100Erd = Erd_Ambient_FilteredInternalTemperatureInDegFx100,
+   .sensorIsValidErd = Erd_Ambient_ThermistorIsValid,
+   .timerModuleErd = Erd_TimerModule
+};
+
+static const SensorFilteringConfig_t humiditySensorFilteringConfig = {
+   .sensorAdcCountErd = Erd_AmbientHumidity_AdcCount,
+   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_AmbientHumidity_UnfilteredRelativeHumidityPercentx100,
+   .sensorFilteredTemperatureInDegFx100Erd = Erd_AmbientHumidity_FilteredInternalRelativeHumidityPercentx100,
+   .sensorIsValidErd = Erd_Ambient_HumiditySensorIsValid,
+   .timerModuleErd = Erd_TimerModule
+};
+
 void AmbientTemperatureAndHumidityPlugin_Init(AmbientTemperaturePlugin_t *instance, I_DataModel_t *dataModel)
 {
+   const SensorData_t *sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
+
+   SensorFiltering_Init(
+      &instance->ambientTemperatureSensorFiltering,
+      dataModel,
+      &temperatureSensorFilteringConfig,
+      sensorData->ambientThermistor,
+      sensorData->periodicUpdateRateInMs);
+
+   SensorFiltering_Init(
+      &instance->ambientHumiditySensorFiltering,
+      dataModel,
+      &humiditySensorFilteringConfig,
+      sensorData->ambientHumiditySensor,
+      sensorData->periodicUpdateRateInMs);
+
    OverrideArbiter_Init(
       &instance->ambientFilteredTemperatureArbiter,
       DataModel_AsDataSource(dataModel),
@@ -88,6 +137,11 @@ void AmbientTemperatureAndHumidityPlugin_Init(AmbientTemperaturePlugin_t *instan
       &instance->ambientThermistorValidArbiter,
       DataModel_AsDataSource(dataModel),
       &ambientThermistorValidArbiterConfiguration);
+
+   OverrideArbiter_Init(
+      &instance->ambientFilteredHumidityArbiter,
+      DataModel_AsDataSource(dataModel),
+      &ambientFilteredHumidityArbiterConfiguration);
 
    OverrideArbiter_Init(
       &instance->ambientHumiditySensorValidArbiter,

@@ -586,13 +586,6 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Ambient Unfiltered Temperature (DegF x100)",
-               "name": "Erd_Ambient_UnfilteredTemperatureInDegFx100",
-               "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
                "displayName": "FZ Evap FilteredTemperature (DegF x100)",
                "name": "Erd_FreezerEvap_FilteredTemperatureInDegFx100",
                "read": true,
@@ -609,6 +602,13 @@
                "namespace": "mb",
                "displayName": "Ambient Filtered Humidity (Percent x100)",
                "name": "Erd_Ambient_FilteredHumidityResolvedPercentx100",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Long Term Average Ambient Temperature (DegF x100)",
+               "name": "Erd_Ambient_WindowAveragedTemperatureInDegFx100",
                "read": true,
                "interval": 1000000000
             },

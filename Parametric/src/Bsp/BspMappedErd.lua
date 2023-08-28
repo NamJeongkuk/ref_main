@@ -13,7 +13,8 @@ return enum({
   Erd_FreezerEvapThermistor_AdcCount = 0xF0B6,
   Erd_ConvertibleCompartmentCabinetThermistor_AdcCount = 0xF0B7,
   Erd_AmbientThermistor_AdcCount = 0xF0B8,
-  Erd_ConvertibleCompartmentEvapThermistor_AdcCount = 0xF0B9,
+  Erd_AmbientHumidity_AdcCount = 0xF0B9,
+  Erd_ConvertibleCompartmentEvapThermistor_AdcCount = 0xF0BA,
 
   Erd_CompressorRelay = 0xF503,
   Erd_FillTubeHeater = 0xF504,

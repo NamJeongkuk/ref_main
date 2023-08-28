@@ -660,8 +660,8 @@ TEST_GROUP(GridIntegration)
 
    void WhenTheAmbientTemperatureChangesTo(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_Ambient_FilteredInternalTemperatureOverrideRequest, set);
       DataModel_Write(dataModel, Erd_Ambient_FilteredInternalTemperatureOverrideValueInDegFx100, &temperature);
+      DataModel_Write(dataModel, Erd_Ambient_FilteredInternalTemperatureOverrideRequest, set);
    }
 
    void GivenTheAmbientTemperatureIs(TemperatureDegFx100_t temperature)
@@ -2387,8 +2387,8 @@ TEST(GridIntegration, ShouldCalculateFreshFoodGridLinesWithCrossAmbientHysteresi
    GivenTheRawSetpointsAre(37, 0);
    GivenTheOffsetsAre(10, 43);
    GivenTheShiftsAre(0, 0);
-   GivenTheAmbientTemperatureIs(8000);
    GivenApplicationHasBeenInitialized();
+   GivenTheAmbientTemperatureIs(8000);
 
    AmbientWindowAverageTemperatureShouldBe(8000);
    CrossAmbientHysteresisAdjustmentShouldBe(4);
@@ -2470,8 +2470,8 @@ TEST(GridIntegration, ShouldCalculateFreezerGridLines)
    GivenTheRawSetpointsAre(37, 0);
    GivenTheOffsetsAre(10, 43);
    GivenTheShiftsAre(0, 0);
-   GivenTheAmbientTemperatureIs(8000);
    GivenApplicationHasBeenInitialized();
+   GivenTheAmbientTemperatureIs(8000);
 
    FreezerAdjustedSetpointShouldBeSetCorrectlyForAdjustedSetpointOfNegative40DegFx100();
 

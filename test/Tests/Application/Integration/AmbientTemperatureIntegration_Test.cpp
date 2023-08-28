@@ -36,12 +36,14 @@ TEST_GROUP(AmbientTemperatureIntegration)
    I_DataModel_t *dataModel;
    ResetReason_t resetReason;
    TimerModule_TestDouble_t *timerModuleTestDouble;
+   const SensorData_t *sensorData;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+      sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
    }
 
    void GivenTheApplicationHasBeenInitialized()
@@ -56,8 +58,13 @@ TEST_GROUP(AmbientTemperatureIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_Ambient_FilteredInternalTemperatureInDegFx100,
+         Erd_Ambient_FilteredInternalTemperatureOverrideValueInDegFx100,
          &temperature);
+
+      DataModel_Write(
+         dataModel,
+         Erd_Ambient_FilteredInternalTemperatureOverrideRequest,
+         set);
    }
 
    void WhenTheAmbientFilteredInternalTemperatureBecomes(TemperatureDegFx100_t temperature)
@@ -65,20 +72,17 @@ TEST_GROUP(AmbientTemperatureIntegration)
       GivenTheAmbientFilteredInternalTemperatureIs(temperature);
    }
 
-   void GivenTheAmbientThermistorIs(bool state)
-   {
-      DataModel_Write(
-         dataModel,
-         Erd_Ambient_ThermistorIsValid,
-         &state);
-   }
-
    void GivenTheAmbientHumiditySensorIs(bool state)
    {
       DataModel_Write(
          dataModel,
-         Erd_Ambient_HumiditySensorIsValid,
+         Erd_AmbientHumiditySensor_IsValidOverrideValue,
          &state);
+
+      DataModel_Write(
+         dataModel,
+         Erd_AmbientHumiditySensor_IsValidOverrideRequest,
+         set);
    }
 
    void TheResolvedFilteredInternalTemperatureShouldBe(TemperatureDegFx100_t expectedState)
@@ -116,18 +120,10 @@ TEST_GROUP(AmbientTemperatureIntegration)
 
    void WhenTheAmbientFilteredInternalTemperatureOverrideBecomes(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(
-         dataModel,
-         Erd_Ambient_FilteredInternalTemperatureOverrideRequest,
-         set);
-
-      DataModel_Write(
-         dataModel,
-         Erd_Ambient_FilteredInternalTemperatureOverrideValueInDegFx100,
-         &temperature);
+      GivenTheAmbientFilteredInternalTemperatureIs(temperature);
    }
 
-   void WhenTheAmbientThermistorOverrideBecomes(bool state)
+   void GivenTheAmbientThermistorIs(bool state)
    {
       DataModel_Write(
          dataModel,
@@ -167,6 +163,11 @@ TEST_GROUP(AmbientTemperatureIntegration)
 
       DataModel_Write(
          dataModel,
+         Erd_Ambient_FilteredInternalHumidityOverrideRequest,
+         clear);
+
+      DataModel_Write(
+         dataModel,
          Erd_AmbientHumiditySensor_IsValidOverrideRequest,
          clear);
    }
@@ -186,8 +187,18 @@ TEST_GROUP(AmbientTemperatureIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_AmbientHumidity_FilteredRelativeHumidityPercentx100,
+         Erd_Ambient_FilteredInternalHumidityOverrideValueInPercentx100,
          &percentx100);
+
+      DataModel_Write(
+         dataModel,
+         Erd_Ambient_FilteredInternalHumidityOverrideRequest,
+         set);
+   }
+
+   void WhenTheAmbientThermistorOverrideBecomes(bool state)
+   {
+      GivenTheAmbientThermistorIs(state);
    }
 
    void TheResolvedFilteredHumidityShouldBe(RelativeHumidityPercentx100_t expected)
@@ -244,16 +255,16 @@ TEST(AmbientTemperatureIntegration, ShouldAllowOverridesWhenSetAndReleaseControl
 
    WhenAllOverridesAreCleared();
 
-   TheResolvedFilteredInternalTemperatureShouldBe(SomeTemperatureInDegFx100);
-   TheResolvedAmbientThermistorShouldBe(Valid);
-   TheResolvedAmbientHumiditySensorShouldBe(Valid);
+   TheResolvedFilteredInternalTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
+   TheResolvedAmbientThermistorShouldBe(Invalid);
+   TheResolvedAmbientHumiditySensorShouldBe(Invalid);
 }
 
 TEST(AmbientTemperatureIntegration, ShouldInitializeResolvedFilteredTemperatureBeforeWindowAveraging)
 {
    GivenTheAmbientThermistorIs(Valid);
-   GivenTheAmbientFilteredInternalTemperatureIs(SomeTemperatureInDegFx100);
    GivenTheApplicationHasBeenInitialized();
+   GivenTheAmbientFilteredInternalTemperatureIs(SomeTemperatureInDegFx100);
 
    TheResolvedFilteredInternalTemperatureShouldBe(SomeTemperatureInDegFx100);
    TheAmbientWindowAverageTemperatureFilterShouldBe(SomeTemperatureInDegFx100);
@@ -262,8 +273,8 @@ TEST(AmbientTemperatureIntegration, ShouldInitializeResolvedFilteredTemperatureB
 TEST(AmbientTemperatureIntegration, ShouldCorrectlyCalculateAmbientTmemperatureWindowAveraging)
 {
    GivenTheAmbientThermistorIs(Valid);
-   GivenTheAmbientFilteredInternalTemperatureIs(SomeTemperatureInDegFx100);
    GivenTheApplicationHasBeenInitialized();
+   GivenTheAmbientFilteredInternalTemperatureIs(SomeTemperatureInDegFx100);
 
    TheResolvedFilteredInternalTemperatureShouldBe(SomeTemperatureInDegFx100);
    TheAmbientWindowAverageTemperatureFilterShouldBe(SomeTemperatureInDegFx100);
