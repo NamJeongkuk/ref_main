@@ -44,7 +44,7 @@ TEST_GROUP(CrossAmbientHysteresisAdjustmentCalculator)
 
    void setup()
    {
-      ReferDataModel_TestDouble_Init(&dataModelTestDouble);
+      ReferDataModel_TestDouble_Init(&dataModelTestDouble, TddPersonality_DevelopmentSingleSpeedCompressorGridIntegration);
       dataModel = dataModelTestDouble.dataModel;
 
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelTestDouble);

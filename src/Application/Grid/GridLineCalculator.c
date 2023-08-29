@@ -24,6 +24,12 @@
 #define GRID_LINE_ADJUSTMENTS(_dimension) \
    instance->_private.config->gridLineAdjustmentErds[_dimension]
 
+#define CROSS_AMBIENT_HYSTERESIS_ADJUSTMENT_MULTIPLIER(_dimension, _line) \
+   instance->_private.gridData->deltaGridLines->gridLines[_dimension].gridLineData[_line].crossAmbientAdjustment->multiplier
+
+#define CROSS_AMBIENT_HYSTERESIS_ADJUSTMENT_DIVIDER(_dimension, _line) \
+   instance->_private.gridData->deltaGridLines->gridLines[_dimension].gridLineData[_line].crossAmbientAdjustment->divider
+
 static bool AdjustedSetpointPluginIsReady(GridLineCalculator_t *instance)
 {
    bool adjustedSetpointPluginIsReady;
@@ -54,16 +60,19 @@ static void CalculateAxisGridLines(
          DataModel_Read(instance->_private.dataModel, GRID_LINE_ADJUSTMENTS(axisDimension).offsetInDegFx100Erd, &offset);
          axisToCalculate->gridLinesDegFx100[line] += offset;
       }
-      if(axisDimension == GridDelta_FreshFood)
-      {
-         TemperatureDegFx100_t crossAmbientHysteresisAdjustment;
-         DataModel_Read(
-            instance->_private.dataModel,
-            instance->_private.config->crossAmbientHysteresisAdjustmentErd,
-            &crossAmbientHysteresisAdjustment);
 
-         axisToCalculate->gridLinesDegFx100[line] += crossAmbientHysteresisAdjustment;
-      }
+      TemperatureDegFx100_t crossAmbientHysteresisAdjustment;
+      DataModel_Read(
+         instance->_private.dataModel,
+         instance->_private.config->crossAmbientHysteresisAdjustmentErd,
+         &crossAmbientHysteresisAdjustment);
+
+      crossAmbientHysteresisAdjustment =
+         ((int32_t)crossAmbientHysteresisAdjustment *
+         CROSS_AMBIENT_HYSTERESIS_ADJUSTMENT_MULTIPLIER(axisDimension, line)) /
+         CROSS_AMBIENT_HYSTERESIS_ADJUSTMENT_DIVIDER(axisDimension, line);
+
+      axisToCalculate->gridLinesDegFx100[line] += crossAmbientHysteresisAdjustment;
    }
 }
 static void ConfigureGridLines(

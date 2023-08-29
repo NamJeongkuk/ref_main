@@ -1,8 +1,10 @@
+import("../../versions.lua")
+
 return parametric_data({
-  major_data_structure_version = 0,
-  minor_data_structure_version = 15,
-  major_version = 0,
-  minor_version = 0,
+  major_data_structure_version = major_data_structure_version,
+  minor_data_structure_version = minor_data_structure_version,
+  major_version = major_version,
+  minor_version = minor_version,
   personalities = {
     import('./Personality/personalitySwqa.lua'),
     import('./Personality/personalityTestDrivenDevelopmentSingleEvap.lua'),

@@ -65,6 +65,7 @@ return function(directory)
   import('Setpoints/UserSetpointData')
   import('Damper/DamperHeater')
   import('Grid/Pulldown')
+  import('Grid/CrossAmbientHysteresisAdjustment')
   import('IceMaker/AluminumMoldIceMaker')
   import('IceMaker/FreezerIceRate')
   import('IceMaker/IceMakerFillMonitor')
@@ -105,6 +106,7 @@ return function(directory)
   coolingModeDependentCompressorSpeeds = CoolingModeDependentCompressorSpeeds(core)
   compressorTimes = CompressorTimes(core)
   convertibleCompartment = ConvertibleCompartment(core)
+  cross_ambient_hysteresis_adjustment = CrossAmbientHysteresisAdjustment(core)
   defrost = Defrost(core)
   duty_cycle = DutyCycle(core)
   door_inhibit_dispense_table = DoorInhibitDispenseTable(core)
@@ -194,6 +196,7 @@ return function(directory)
     cooling_mode_independent_compressor_speeds = coolingModeIndependentCompressorSpeeds,
     cooling_mode_dependent_compressor_speeds = coolingModeDependentCompressorSpeeds,
     convertibleCompartment = convertibleCompartment,
+    cross_ambient_hysteresis_adjustment = cross_ambient_hysteresis_adjustment,
     defrost = defrost,
     duty_cycle = duty_cycle,
     door_inhibit_dispense_table = door_inhibit_dispense_table,

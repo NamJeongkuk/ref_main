@@ -44,14 +44,17 @@ static void CalculateCrossAmbientHysteresisAdjustment(CrossAmbientHysteresisAdju
       instance->_private.config->crossAmbientHysteresisAdjustmentErd,
       &crossAmbientHysteresisAdjustment);
 
-   if((LowestHysteresis(instance) >= instance->_private.gridData->freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100) &&
+   TemperatureDegFx100_t lowestHysteresis = LowestHysteresis(instance);
+
+   if((lowestHysteresis >= instance->_private.gridData->freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100) &&
       (crossAmbientHysteresisAdjustment < AdjustmentThresholdInDegFx100))
    {
-      ambientHysteresisAdjustment = LowestHysteresis(instance) - instance->_private.gridData->freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100;
+      ambientHysteresisAdjustment = lowestHysteresis - instance->_private.gridData->freshFoodMinimumCrossAmbientAdjustedHysteresisInDegFx100;
 
-      if(UncappedHysteresisAdjustment(instance) <= ambientHysteresisAdjustment)
+      TemperatureDegFx100_t uncappedHysteresisAdjustment = UncappedHysteresisAdjustment(instance);
+      if(uncappedHysteresisAdjustment <= ambientHysteresisAdjustment)
       {
-         ambientHysteresisAdjustment = UncappedHysteresisAdjustment(instance);
+         ambientHysteresisAdjustment = uncappedHysteresisAdjustment;
       }
    }
 

@@ -70,7 +70,7 @@ TEST_GROUP(GridIntegration)
 
    void setup()
    {
-      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentSingleSpeedCompressorGridIntegration);
+      ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentSingleSpeedCompressor);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
@@ -2410,17 +2410,17 @@ TEST(GridIntegration, ShouldCalculateFreshFoodGridLinesWithCrossAmbientHysteresi
       GridLine_FreshFoodSetpointDelta);
 
    TheCalculatedGridLineTempShouldBe(
-      4094,
+      4086,
       GridDelta_FreshFood,
       GridLine_FreshFoodHighHyst);
 
    TheCalculatedGridLineTempShouldBe(
-      4594,
+      4586,
       GridDelta_FreshFood,
       GridLine_FreshFoodExtraHigh);
 
    TheCalculatedGridLineTempShouldBe(
-      4794,
+      4786,
       GridDelta_FreshFood,
       GridLine_FreshFoodSuperHigh);
 
@@ -2450,17 +2450,17 @@ TEST(GridIntegration, ShouldCalculateFreshFoodGridLinesWithCrossAmbientHysteresi
       GridLine_FreshFoodSetpointDelta);
 
    TheCalculatedGridLineTempShouldBe(
-      4126,
+      4122,
       GridDelta_FreshFood,
       GridLine_FreshFoodHighHyst);
 
    TheCalculatedGridLineTempShouldBe(
-      4626,
+      4622,
       GridDelta_FreshFood,
       GridLine_FreshFoodExtraHigh);
 
    TheCalculatedGridLineTempShouldBe(
-      4826,
+      4822,
       GridDelta_FreshFood,
       GridLine_FreshFoodSuperHigh);
 }

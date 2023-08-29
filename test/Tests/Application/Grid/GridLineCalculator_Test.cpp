@@ -292,17 +292,17 @@ TEST_GROUP(GridLineCalculator)
          GridLine_FreshFoodSetpointDelta);
 
       And TheCalculatedGridLineTempShouldBe(
-         AFreshFoodAdjustedSetpointTemperature + ACrossAmbientHysteresisAdjustmentInDegFx100,
+         AFreshFoodAdjustedSetpointTemperature - ACrossAmbientHysteresisAdjustmentInDegFx100,
          GridDelta_FreshFood,
          GridLine_FreshFoodHighHyst);
 
       And TheCalculatedGridLineTempShouldBe(
-         AFreshFoodAdjustedSetpointTemperature + ACrossAmbientHysteresisAdjustmentInDegFx100,
+         AFreshFoodAdjustedSetpointTemperature - ACrossAmbientHysteresisAdjustmentInDegFx100,
          GridDelta_FreshFood,
          GridLine_FreshFoodExtraHigh);
 
       And TheCalculatedGridLineTempShouldBe(
-         AFreshFoodAdjustedSetpointTemperature + ACrossAmbientHysteresisAdjustmentInDegFx100,
+         AFreshFoodAdjustedSetpointTemperature - ACrossAmbientHysteresisAdjustmentInDegFx100,
          GridDelta_FreshFood,
          GridLine_FreshFoodSuperHigh);
    };

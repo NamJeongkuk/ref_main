@@ -5,6 +5,7 @@ local remove_whitespace = require 'lua-common'.utilities.remove_whitespace
 local should_fail_with = require 'lua-common'.utilities.should_fail_with
 local should_require_args = require 'lua-common'.utilities.should_require_args
 local grid_line_correction = require 'Grid.GridLineCorrection'
+local TypedString = require 'lua-common'.util.TypedString
 
 describe('gridline', function()
   local gridline = Gridline(core_mock)
@@ -12,7 +13,8 @@ describe('gridline', function()
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
         delta_in_degfx100 = 450,
-        correction = 'offset'
+        correction = 'offset',
+        cross_ambient_hysteresis_adjustment = TypedString('cross_ambient_hysteresis_adjustment', 'cross_ambient_hysteresis_adjustment')
     }, overrides or {})
   end
 
@@ -36,17 +38,24 @@ describe('gridline', function()
     end)
   end)
 
+  it('should constrain all arguments', function()
+    should_fail_with('cross_ambient_hysteresis_adjustment must be a typed string with type cross_ambient_hysteresis_adjustment, but is a number', function()
+      gridline(generate_config({
+        cross_ambient_hysteresis_adjustment = -1
+      }))
+    end)
+  end)
+
   it('should generate a typed string with the correct data and type gridline', function()
     local expected = remove_whitespace([[
         structure(
-        i16(450),
-        u8(]] .. grid_line_correction.offset ..[[))
-    ]])
+          i16(450),
+          u8(]] .. grid_line_correction.offset ..[[),
+          pointer(cross_ambient_hysteresis_adjustment)
+        )
+      ]])
 
-    local actual = gridline({
-        delta_in_degfx100 = 450,
-        correction = 'offset'
-    })
+    local actual = gridline(generate_config())
 
     assert.equals(expected, remove_whitespace(tostring(actual)))
     assert(actual.is_of_type('gridline'))

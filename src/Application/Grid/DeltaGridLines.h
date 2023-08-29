@@ -46,8 +46,15 @@ typedef uint8_t DeltaGridLinesCorrection_t;
 
 typedef struct
 {
+   const TemperatureDegFx100_t multiplier;
+   const TemperatureDegFx100_t divider;
+} CrossAmbientHysteresisAdjustmentData_t;
+
+typedef struct
+{
    const TemperatureDegFx100_t gridLinesDegFx100;
    const DeltaGridLinesCorrection_t correction;
+   const CrossAmbientHysteresisAdjustmentData_t *crossAmbientAdjustment;
 } DeltaGridLineData_t;
 
 typedef struct
