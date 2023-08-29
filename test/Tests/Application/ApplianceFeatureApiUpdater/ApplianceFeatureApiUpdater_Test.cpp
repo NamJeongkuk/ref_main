@@ -38,7 +38,13 @@ enum
    // 0x02000000 PresenceSensedActivatesRecessLight
    // 0x04000000 Dimmable Light 0 Percent Level
    // 0x10000000 Night Snack Mode Lighting
-   Features = 0x177BFFE1
+   FeaturesV2 = 0x177BFFE1
+};
+
+enum
+{
+   // 0x00000004 Ice Maker 2
+   FeaturesV3 = 0x00000004
 };
 
 TEST_GROUP(ApplianceFeatureApiUpdater)
@@ -58,12 +64,13 @@ TEST_GROUP(ApplianceFeatureApiUpdater)
    }
 
    void ApplianceFeatureApiManifestShouldBe(
+      Erd_t erd,
       ApplianceFeatureApiType_t expectedType,
       ApplianceFeatureApiVersion_t expectedVersion,
       ApplianceFeatureApiFeatureWord_t expectedFeatures)
    {
       ApplianceFeatureApiManifest_t actual;
-      DataModel_Read(dataModel, Erd_ApplianceApiApplianceTypeManifest1, &actual);
+      DataModel_Read(dataModel, erd, &actual);
 
       CHECK_EQUAL(expectedType, actual.type);
       CHECK_EQUAL(expectedVersion, actual.version);
@@ -75,7 +82,13 @@ TEST(ApplianceFeatureApiUpdater, ShouldUpdateApplianceFeatureApiManifestOnInit)
 {
    GivenTheModuleIsInitialized();
    ApplianceFeatureApiManifestShouldBe(
+      Erd_ApplianceApiApplianceTypeManifest1,
       ApplianceFeatureApiType_Refrigerator,
       2,
-      Features);
+      FeaturesV2);
+   ApplianceFeatureApiManifestShouldBe(
+      Erd_ApplianceApiApplianceTypeManifest2,
+      ApplianceFeatureApiType_Refrigerator,
+      3,
+      FeaturesV3);
 }

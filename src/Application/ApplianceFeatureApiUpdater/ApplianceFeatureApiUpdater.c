@@ -38,4 +38,9 @@ void ApplianceFeatureApiUpdater_Init(I_DataModel_t *dataModel)
       ApplianceFeatureApi_Refrigerator_Version2_NightSnackModeLighting;
 
    DataModel_Write(dataModel, Erd_ApplianceApiApplianceTypeManifest1, &applianceFeatureApiManifest);
+
+   applianceFeatureApiManifest.version = 3;
+   applianceFeatureApiManifest.features = ApplianceFeatureApi_Refrigerator_Version3_IceMaker2;
+
+   DataModel_Write(dataModel, Erd_ApplianceApiApplianceTypeManifest2, &applianceFeatureApiManifest);
 }

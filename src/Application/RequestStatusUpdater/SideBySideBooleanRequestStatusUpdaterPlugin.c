@@ -17,6 +17,7 @@
    ENTRY(Erd_TurboCoolOnOffRequest, Erd_TurboCoolOnOffStatus)                                         \
    ENTRY(Erd_IceMaker0EnableRequest, Erd_IceMaker0EnableStatus)                                       \
    ENTRY(Erd_IceMaker1EnableRequest, Erd_IceMaker1EnableStatus)                                       \
+   ENTRY(Erd_IceMaker2EnableRequest, Erd_IceMaker2EnableStatus)                                       \
    ENTRY(Erd_CoolingOffRequest, Erd_CoolingOffStatus)                                                 \
    ENTRY(Erd_PresenceSensedActivatesRecessLightRequest, Erd_PresenceSensedActivatesRecessLightStatus) \
 

@@ -1474,6 +1474,34 @@
                "write": false,
                "interval": 1000000000
             },
+             {
+               "namespace": "mb",
+               "displayName": "Ice Maker 2 Enable Request",
+               "name": "Erd_IceMaker2EnableRequest",
+               "write": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 2 Enable Status",
+               "name": "Erd_IceMaker2EnableStatus",
+               "read": true
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 2 Full Status",
+               "name": "Erd_IceMaker2FullStatus",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 2 Type Info",
+               "name": "Erd_IceMaker2TypeInformation",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
             {
                "namespace": "mb",
                "displayName": "Hydration - Total Dispensed Ounces",

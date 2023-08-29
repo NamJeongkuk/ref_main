@@ -60,6 +60,7 @@ return {
     CoolingSystemRequest_t = 'bool',
     DoorAlarmEnableRequest_t = 'bool',
     PresenceSensingEnableRequest_t = 'bool',
-    PresenceActivatesRecessLightEnableRequest_t = 'bool'
+    PresenceActivatesRecessLightEnableRequest_t = 'bool',
+    IceMakerEnableRequest_t = 'bool'
   }
 }
