@@ -41,7 +41,8 @@ typedef struct
    Erd_t freezerIceRateIsActiveErd; // bool
    Erd_t aluminumMoldIceMakerTestRequestErd; // AluminumMoldIceMakerTestRequest_t
    Erd_t dispensingRequestStatusErd; // DispensingRequestStatus_t
-   Erd_t coolingSystemOffStatus; // bool
+   Erd_t coolingSystemOffStatusErd; // bool
+   Erd_t dispensingInhibitedErd; // DispensingInhibitedBitmap_t
 } AluminumMoldIceMakerConfig_t;
 
 typedef struct

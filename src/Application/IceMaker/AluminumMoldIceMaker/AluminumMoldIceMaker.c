@@ -48,7 +48,8 @@ enum
    Signal_TestRequest_Harvest,
    Signal_DispensingActive,
    Signal_DispensingInactive,
-   Signal_FreezerIceRateIsInactive
+   Signal_FreezerIceRateIsInactive,
+   Signal_DispensingIsNotInhibitedByRfid
 };
 
 static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -213,7 +214,7 @@ static bool CoolingSystemIsOn(AluminumMoldIceMaker_t *instance)
    bool state;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->coolingSystemOffStatus,
+      instance->_private.config->coolingSystemOffStatusErd,
       &state);
 
    return !state;
@@ -701,6 +702,13 @@ static void TriggerFreezerIceRateIfNecessary(AluminumMoldIceMaker_t *instance)
    }
 }
 
+static bool DispensingIsNotInhibitedByRfid(AluminumMoldIceMaker_t *instance)
+{
+   DispensingInhibitedBitmap_t dispensingInhibitedBitmap;
+   DataModel_Read(instance->_private.dataModel, instance->_private.config->dispensingInhibitedErd, &dispensingInhibitedBitmap);
+   return !BIT_STATE(dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
+}
+
 static bool HarvestConditionsAreMet(AluminumMoldIceMaker_t *instance)
 {
    return (IceMakerTemperatureIsReadyToHarvest(instance) &&
@@ -708,7 +716,8 @@ static bool HarvestConditionsAreMet(AluminumMoldIceMaker_t *instance)
       HarvestCountIsReadyToHarvest(instance) &&
       SabbathModeIsDisabled(instance) &&
       IceMakerIsEnabled(instance) &&
-      CoolingSystemIsOn(instance));
+      CoolingSystemIsOn(instance) &&
+      DispensingIsNotInhibitedByRfid(instance));
 }
 
 static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data)
@@ -782,6 +791,7 @@ static bool State_Freeze(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Signal_CoolingSystemTurnedOn:
       case Signal_IceMakerIsEnabled:
       case Signal_SabbathModeDisabled:
+      case Signal_DispensingIsNotInhibitedByRfid:
          if(HarvestConditionsAreMet(instance))
          {
             Hsm_Transition(hsm, State_Harvest);
@@ -1146,7 +1156,7 @@ static void DataModelChanged(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_IceMakerIsEnabled, NULL);
       }
    }
-   else if(erd == instance->_private.config->coolingSystemOffStatus)
+   else if(erd == instance->_private.config->coolingSystemOffStatusErd)
    {
       const bool *state = onChangeData->data;
       if(*state)
@@ -1223,6 +1233,15 @@ static void DataModelChanged(void *context, const void *args)
       if(!*freezerIceRateIsActiveStatus)
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerIceRateIsInactive, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->dispensingInhibitedErd)
+   {
+      const DispensingInhibitedBitmap_t *dispensingInhibitedBitmap = onChangeData->data;
+
+      if(!BIT_STATE(*dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter))
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_DispensingIsNotInhibitedByRfid, NULL);
       }
    }
 }

@@ -1321,22 +1321,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Dispense Inhibited By Rfid",
-          "name": "Erd_DispensingInhibitedByRfid",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Water Dispensing Inhibited By Door",
-          "name": "Erd_WaterDispensingInhibitedByDoor",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Ice Dispensing Inhibited By Door",
-          "name": "Erd_IceDispensingInhibitedByDoor",
+          "displayName": "Dispensing Inhibited Status",
+          "name": "Erd_DispensingInhibited",
           "read": true,
           "write": true
         },

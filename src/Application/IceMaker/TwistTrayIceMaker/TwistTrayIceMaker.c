@@ -54,6 +54,7 @@ enum
    Signal_IceRateNoLongerActive,
    Signal_FreezerDoorOpened,
    Signal_FreezerDoorClosed,
+   Signal_DispensingIsNotInhibitedByRfid,
 
    Idle = TwistTrayIceMakerMotorAction_Idle,
    Home = TwistTrayIceMakerMotorAction_RunHomingRoutine,
@@ -248,9 +249,16 @@ static bool HarvestConditionsHaveBeenMet(TwistTrayIceMaker_t *instance)
       instance->_private.config->harvestCountIsReadyToHarvestErd,
       &harvestCountIsReadyToHarvest);
 
+   DispensingInhibitedBitmap_t dispensingInhibitedBitmap;
+   DataSource_Read(
+      instance->_private.dataSource,
+      instance->_private.config->dispensingInhibitedErd,
+      &dispensingInhibitedBitmap);
+
    return (iceTrayTempx100 < MaxHarvestTemperatureInDegFx100) &&
       harvestCountIsReadyToHarvest &&
-      HarvestDoorDelayHasElapsed(instance);
+      HarvestDoorDelayHasElapsed(instance) &&
+      !BIT_STATE(dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
 }
 
 static void RequestHarvestCountCalculation(TwistTrayIceMaker_t *instance)
@@ -395,6 +403,7 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
       case Signal_IceMakerFilteredTemperatureChanged:
       case Signal_HarvestCountIsReadyToHarvest:
       case Signal_HarvestDoorDelayElapsed:
+      case Signal_DispensingIsNotInhibitedByRfid:
          if(SabbathModeIsDisabledAndIceMakerIsEnabledAndCoolingSystemIsOn(instance))
          {
             if(HarvestConditionsHaveBeenMet(instance))
@@ -973,6 +982,15 @@ static void DataSourceChanged(void *context, const void *data)
       if(!*state)
       {
          Fsm_SendSignal(&instance->_private.fsm, Signal_IceRateNoLongerActive, NULL);
+      }
+   }
+   else if(onChangeArgs->erd == instance->_private.config->dispensingInhibitedErd)
+   {
+      const DispensingInhibitedBitmap_t *dispensingInhibitedBitmap = onChangeArgs->data;
+
+      if(!BIT_STATE(*dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter))
+      {
+         Fsm_SendSignal(&instance->_private.fsm, Signal_DispensingIsNotInhibitedByRfid, NULL);
       }
    }
 }

@@ -50,7 +50,8 @@ static const AluminumMoldIceMakerConfig_t config = {
    .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
    .aluminumMoldIceMakerTestRequestErd = Erd_AluminumMoldIceMakerTestRequest,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
-   .coolingSystemOffStatus = Erd_CoolingOffStatus
+   .coolingSystemOffStatusErd = Erd_CoolingOffStatus,
+   .dispensingInhibitedErd = Erd_DispensingInhibited
 };
 
 TEST_GROUP(AluminumMoldIceMaker)
@@ -925,6 +926,34 @@ TEST_GROUP(AluminumMoldIceMaker)
    void WhenIceMakerBecomes(bool state)
    {
       GivenTheIceMakerIs(state);
+   }
+
+   void GivenDispensingIsInhibitedByRfid()
+   {
+      DispensingInhibitedBitmap_t bitmap;
+      DataModel_Read(dataModel, Erd_DispensingInhibited, &bitmap);
+
+      BIT_SET(bitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
+      DataModel_Write(dataModel, Erd_DispensingInhibited, &bitmap);
+   }
+
+   void WhenDispensingIsInhibitedByRfid()
+   {
+      GivenDispensingIsInhibitedByRfid();
+   }
+
+   void WhenDispensingIsNotInhibitedByRfid()
+   {
+      DispensingInhibitedBitmap_t bitmap;
+      DataModel_Read(dataModel, Erd_DispensingInhibited, &bitmap);
+
+      BIT_CLEAR(bitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
+      DataModel_Write(dataModel, Erd_DispensingInhibited, &bitmap);
+   }
+
+   void GivenDispensingIsNotInhibitedByRfid()
+   {
+      WhenDispensingIsNotInhibitedByRfid();
    }
 };
 
@@ -2597,4 +2626,55 @@ TEST(AluminumMoldIceMaker, ShouldTransitionFromHarvestToHarvestFixAfterFillTubeH
 
    After(iceMakerModifiedData.harvestData.fillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+}
+
+TEST(AluminumMoldIceMaker, ShouldStayInFreezeWhenTheOtherHarvestConditionsAreMetWhileDispensingIsInhibitedByRfid)
+{
+   GivenTheIceMakerIs(ENABLED);
+   GivenSabbathModeIs(DISABLED);
+   GivenTheMoldThermistorIsValid();
+   GivenTheRakePositionIs(RakePosition_Home);
+   GivenHarvestCountIsReadyToHarvest();
+   GivenIceMakerTemperatureIsNotReadyToHarvest();
+   GivenFeelerArmIsReadyToEnterHarvest();
+   GivenDispensingIsInhibitedByRfid();
+   GivenTheModuleIsInitialized();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+
+   WhenIceMakerTemperatureIsReadyToHarvest();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionToHarvestWhenDispensingIsNotInhibitedByRfidWhileTheOtherHarvestConditionsAreMet)
+{
+   GivenTheIceMakerIs(ENABLED);
+   GivenSabbathModeIs(DISABLED);
+   GivenTheMoldThermistorIsValid();
+   GivenTheRakePositionIs(RakePosition_Home);
+   GivenHarvestCountIsReadyToHarvest();
+   GivenFeelerArmIsReadyToEnterHarvest();
+   GivenIceMakerTemperatureIsReadyToHarvest();
+   GivenDispensingIsInhibitedByRfid();
+   GivenTheModuleIsInitialized();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+
+   WhenDispensingIsNotInhibitedByRfid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
+}
+
+TEST(AluminumMoldIceMaker, ShouldStayInFreezeWhenDispensingIsInhibitedByRfidWhileTheOtherHarvestConditionsAreMet)
+{
+   GivenTheIceMakerIs(ENABLED);
+   GivenSabbathModeIs(DISABLED);
+   GivenTheMoldThermistorIsValid();
+   GivenTheRakePositionIs(RakePosition_Home);
+   GivenHarvestCountIsReadyToHarvest();
+   GivenFeelerArmIsReadyToEnterHarvest();
+   GivenIceMakerTemperatureIsReadyToHarvest();
+   GivenDispensingIsNotInhibitedByRfid();
+   GivenTheModuleIsInitialized();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+
+   WhenDispensingIsInhibitedByRfid();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
 }

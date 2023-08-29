@@ -77,7 +77,8 @@ static const TwistTrayIceMakerConfiguration_t config = {
    .coolingOffStatusErd = Erd_CoolingOffStatus,
    .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
-   .leftSideFreezerDoorStatusResolvedErd = Erd_LeftSideFreezerDoorStatusResolved
+   .leftSideFreezerDoorStatusResolvedErd = Erd_LeftSideFreezerDoorStatusResolved,
+   .dispensingInhibitedErd = Erd_DispensingInhibited
 };
 
 static void OnDataModelChange(void *context, const void *_args)
@@ -719,6 +720,11 @@ TEST_GROUP(TwistTrayIceMaker)
       DataModel_Write(dataModel, Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest, &state);
    }
 
+   void GivenHarvestCountIsReadyToHarvestIs(bool state)
+   {
+      WhenHarvestCountIsReadyToHarvestIs(state);
+   }
+
    void GivenFillPausedDuringFillingTrayWithWaterStateAndNowInIdleFillState(void)
    {
       GivenSabbathModeIs(OFF);
@@ -770,6 +776,34 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       WhenTheMotorActionResultIs(Harvesting);
       WhenTheMotorActionResultIs(Harvested);
+   }
+
+   void GivenDispensingIsInhibitedByRfid()
+   {
+      DispensingInhibitedBitmap_t bitmap;
+      DataModel_Read(dataModel, Erd_DispensingInhibited, &bitmap);
+
+      BIT_SET(bitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
+      DataModel_Write(dataModel, Erd_DispensingInhibited, &bitmap);
+   }
+
+   void WhenDispensingIsInhibitedByRfid()
+   {
+      GivenDispensingIsInhibitedByRfid();
+   }
+
+   void WhenDispensingIsNotInhibitedByRfid()
+   {
+      DispensingInhibitedBitmap_t bitmap;
+      DataModel_Read(dataModel, Erd_DispensingInhibited, &bitmap);
+
+      BIT_CLEAR(bitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
+      DataModel_Write(dataModel, Erd_DispensingInhibited, &bitmap);
+   }
+
+   void GivenDispensingIsNotInhibitedByRfid()
+   {
+      WhenDispensingIsNotInhibitedByRfid();
    }
 };
 
@@ -1121,6 +1155,46 @@ TEST(TwistTrayIceMaker, ShouldNotTriggerFreezerIceRateAgainWhenIceMakerBecomesEn
 
    FreezerTriggerIceRateSignalShouldNotIncrement();
    WhenTheIceMakerBecomesEnabled();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+}
+
+TEST(TwistTrayIceMaker, ShouldStayInFreezeWhenTheOtherConditionsAreMetWhileDispensingIsInhibitedByRfid)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
+   GivenHomingIsCompleted();
+   GivenDispensingIsInhibitedByRfid();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+
+   FreezerTriggerIceRateSignalShouldIncrement();
+   WhenHarvestCountIsReadyToHarvestIs(SET);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+}
+
+TEST(TwistTrayIceMaker, ShouldTransitionToHarvestWhenDispensingIsNotInhibitedByRfidWhileTheOtherConditionsAreMet)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
+   GivenHarvestCountIsReadyToHarvestIs(SET);
+   GivenDispensingIsInhibitedByRfid();
+   GivenHomingIsCompleted();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+
+   HarvestingShouldStart();
+   WhenDispensingIsNotInhibitedByRfid();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+}
+
+TEST(TwistTrayIceMaker, ShouldStayInFreezeWhenDispensingIsInhibitedByRfidWhileTheOtherConditionsAreMet)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1);
+   GivenHarvestCountIsReadyToHarvestIs(SET);
+   GivenDispensingIsNotInhibitedByRfid();
+   GivenHomingIsCompleted();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+
+   WhenDispensingIsInhibitedByRfid();
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
 }
 
