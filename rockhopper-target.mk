@@ -78,6 +78,7 @@ SRC_DIRS:=\
   src/Application/Pulldown \
   src/Application/RecessHeater \
   src/Application/RequestStatusUpdater \
+  src/Application/RfidCommunication \
   src/Application/Sabbath \
   src/Application/Sensor \
   src/Application/ServiceDiagnostics \
@@ -107,7 +108,7 @@ INC_DIRS:=\
   src/Application/StepperMotor \
   src/Application/Grid \
   src/Application/Grid/GridFunctions \
-  src/Application/RequestStatusUpdater\
+  src/Application/RequestStatusUpdater \
   src/Application/ModelInformation \
   src/Application/Sabbath \
   src/Application/SignOfLife \

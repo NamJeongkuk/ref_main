@@ -56,6 +56,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Pulldown \
    $(PROJECT_DIR)/Application/RecessHeater \
    $(PROJECT_DIR)/Application/RequestStatusUpdater \
+   $(PROJECT_DIR)/Application/RfidCommunication \
    $(PROJECT_DIR)/Application/Sabbath \
    $(PROJECT_DIR)/Application/Sensor \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \
@@ -108,6 +109,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/ParametricData \
    $(TESTS_DIR)/Application/PersonalityEeprom \
    $(TESTS_DIR)/Application/RequestStatusUpdater \
+   $(TESTS_DIR)/Application/RfidCommunication \
    $(TESTS_DIR)/Application/Sabbath \
    $(TESTS_DIR)/Application/Sensor \
    $(TESTS_DIR)/Application/ServiceDiagnostics \
@@ -120,6 +122,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/VariableSweatHeater \
    $(TESTS_DIR)/Bsp \
    $(TESTS_DIR)/Hardware/SoftPwm \
+   $(APPLCOMMON_DIR)/test/Doubles \
 
 ifeq ($(INTEGRATION),Y)
 TEST_SRC_DIRS += \

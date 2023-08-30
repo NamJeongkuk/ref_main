@@ -12,6 +12,7 @@ extern "C"
 #include "Action_Context.h"
 #include "SystemData.h"
 #include "Eeprom_AT21CS11.h"
+#include "Gea2Addresses.h"
 }
 
 #include "ReferDataModel_TestDouble.h"
@@ -64,6 +65,11 @@ static void Init(ReferDataModel_TestDouble_t *instance, PersonalityId_t personal
       instance->dataModel,
       NULL,
       NULL);
+
+   Gea2MessageEndpoint_TestDouble_Init(
+      &instance->_private.messageEndpointTestDouble,
+      Gea2Address_Mainboard);
+   DataModelErdPointerAccess_Write(instance->dataModel, Erd_Gea2MessageEndpoint, &instance->_private.messageEndpointTestDouble.interface);
 }
 
 void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance)

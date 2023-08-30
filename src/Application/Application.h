@@ -16,6 +16,7 @@
 #include "PeriodicNvUpdaterPlugin.h"
 #include "SideBySideConfigurationPlugin.h"
 #include "ShiftOffsetCalculatorCommonPlugin.h"
+#include "RfidCommunicationPlugin.h"
 
 typedef struct
 {
@@ -32,11 +33,12 @@ typedef struct
       ApplianceApiResetDiagnostics_t applianceApiResetDiagnostics;
       PeriodicNvUpdaterPlugin_t periodicNvUpdaterPlugin;
       ShiftOffsetCalculatorCommonPlugin_t shiftOffsetCalculatorCommonPlugin;
+      RfidCommunicationPlugin_t rfidCommunicationPlugin;
    } _private;
 } Application_t;
 
 /*!
- * Initialize Application
+ * @brief
  * @param instance
  * @param dataModel
  * @param resetReason

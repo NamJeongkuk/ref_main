@@ -59,8 +59,11 @@ return {
     TurboModeRequest_t = 'bool',
     CoolingSystemRequest_t = 'bool',
     DoorAlarmEnableRequest_t = 'bool',
+    RfidFilterIdentifier_t = 'raw[16]',
     PresenceSensingEnableRequest_t = 'bool',
     PresenceActivatesRecessLightEnableRequest_t = 'bool',
-    IceMakerEnableRequest_t = 'bool'
+    IceMakerEnableRequest_t = 'bool',
+    RfidUid_t = 'raw[7]',
+    UnitSerialNumber_t = 'raw[8]'
   }
 }

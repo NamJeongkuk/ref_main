@@ -1171,6 +1171,41 @@
                "name": "Erd_InitializationErrorBitfield",
                "read": true,
                "interval": 1000000000
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Tag Lock Byte",
+               "name": "Erd_TagLockByte",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Tag Number of units Filter Has Been On",
+               "name": "Erd_TagNumberOfUnitsFilterHasBeenOn",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Tag Unit Serial Number",
+               "name": "Erd_TagUnitSerialNumber",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Tag Previous Unit Serial Number",
+               "name": "Erd_TagPreviousUnitSerialNumber",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "Rfid",
+               "displayName": "Tag Last Twelve Month Of Water Usage In Gallons",
+               "name": "Erd_TagLastTwelveMonthOfWaterUsageInGallons",
+               "read": true,
+               "interval": 1000000000
             }
          ]
       },
