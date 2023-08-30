@@ -69,6 +69,13 @@ static const DataSource_ApplianceApiRevision1Configuration_t applianceApiConfigu
       },
    },
 
+   .sabbath = {
+      .supported = true,
+      .erd = {
+         .sabbathModeStatus = Erd_SabbathMode,
+      },
+   },
+
    .timeOfDay = {
       .supported = false,
    },
