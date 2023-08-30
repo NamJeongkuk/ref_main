@@ -15,93 +15,76 @@
 #include "PersonalityParametricData.h"
 #include "RampingPwmDutyCyclePercentageBundleData.h"
 
-static bool DoorErdChanged(LightingDoorVoteResolver_t *instance, Erd_t erdToCheck)
+enum
 {
-   for(uint8_t i = 0; i < instance->_private.config->numberOfDoorErds; i++)
-   {
-      if(instance->_private.config->doorIsOpenErds[i] == erdToCheck)
-      {
-         return true;
-      }
-   }
-   return false;
+   Signal_AnAssociatedDoorIsOpened = Fsm_UserSignalStart,
+   Signal_AllAssociatedDoorsAreClosed,
+   Signal_MaxDoorOpenTimeExpires,
+   Signal_TimeoutExpired
+};
+
+static void State_AnAssociatedDoorIsOpen(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
+static void State_AllAssociatedDoorsAreClosed(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
+
+static LightingDoorVoteResolver_t *InstanceFromFsm(Fsm_t *fsm)
+{
+   return CONTAINER_OF(LightingDoorVoteResolver_t, _private.fsm, fsm);
 }
 
-static bool AllDoorsAreClosed(LightingDoorVoteResolver_t *instance)
-{
-   for(uint8_t i = 0; i < instance->_private.config->numberOfDoorErds; i++)
-   {
-      bool doorIsOpen;
-      DataModel_Read(
-         instance->_private.dataModel,
-         instance->_private.config->doorIsOpenErds[i],
-         &doorIsOpen);
-
-      if(doorIsOpen)
-      {
-         return false;
-      }
-   }
-
-   return true;
-}
-
-static void SetRampingPwmVotedDutyCycleErdsTo(LightingDoorVoteResolver_t *instance, RampingPwmDutyCyclePercentage_t rampingPercentage)
+static void SetRampingPwmVotedDutyCycleErdTo(
+   LightingDoorVoteResolver_t *instance,
+   RampingPwmDutyCyclePercentage_t rampingPercentage)
 {
    RampingPwmDutyCyclePercentageVote_t vote = {
       .rampingPwmDutyCyclePercentage = rampingPercentage,
       .care = Vote_Care
    };
-
-   for(uint8_t i = 0; i < instance->_private.config->numberOfRampingPwmDutyCyclePercentageErds; i++)
-   {
-      DataModel_Write(
-         instance->_private.dataModel,
-         instance->_private.config->rampingPwmDutyCyclePercentageErds[i],
-         &vote);
-   }
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->rampingPwmDutyCyclePercentageErd,
+      &vote);
 }
 
-static void SetRampingPwmDutyCyclePercentageToMinPwmDutyCyclePercentageThenToMaxPwmDutyCyclePercentage(LightingDoorVoteResolver_t *instance, RampingPwmDutyCyclePercentageBundleData_t rampingPwmDutyCyclePercentageBundleData)
+static void SetRampingPwmDutyCyclePercentageToMinPwmDutyCyclePercentageThenToMaxPwmDutyCyclePercentage(
+   LightingDoorVoteResolver_t *instance,
+   RampingPwmDutyCyclePercentageBundleData_t rampingPwmDutyCyclePercentageBundleData)
 {
    RampingPwmDutyCyclePercentage_t minPwmPercentage = {
       .pwmDutyCyclePercentage = rampingPwmDutyCyclePercentageBundleData.minPwmDutyCyclePercentage,
       .rampingUpCountInMsec = UINT8_MAX,
       .rampingDownCountInMsec = UINT8_MAX,
    };
-   SetRampingPwmVotedDutyCycleErdsTo(instance, minPwmPercentage);
+   SetRampingPwmVotedDutyCycleErdTo(instance, minPwmPercentage);
 
    RampingPwmDutyCyclePercentage_t maxPwmPercentage = {
       .pwmDutyCyclePercentage = rampingPwmDutyCyclePercentageBundleData.maxPwmDutyCyclePercentage,
       .rampingUpCountInMsec = rampingPwmDutyCyclePercentageBundleData.maxPwmRampingUpCountInMsec,
       .rampingDownCountInMsec = rampingPwmDutyCyclePercentageBundleData.maxPwmRampingDownCountInMsec,
    };
-
-   SetRampingPwmVotedDutyCycleErdsTo(instance, maxPwmPercentage);
+   SetRampingPwmVotedDutyCycleErdTo(instance, maxPwmPercentage);
 }
 
-static void SetRampingPwmDutyCyclePercentageToMinCycle(LightingDoorVoteResolver_t *instance, RampingPwmDutyCyclePercentageBundleData_t rampingPwmDutyCyclePercentageBundleData)
+static void SetRampingPwmDutyCyclePercentageToMinCycle(
+   LightingDoorVoteResolver_t *instance,
+   RampingPwmDutyCyclePercentageBundleData_t rampingPwmDutyCyclePercentageBundleData)
 {
    RampingPwmDutyCyclePercentage_t minCycle = {
       .pwmDutyCyclePercentage = PercentageDutyCycle_Min,
       .rampingUpCountInMsec = rampingPwmDutyCyclePercentageBundleData.maxPwmRampingUpCountInMsec,
       .rampingDownCountInMsec = rampingPwmDutyCyclePercentageBundleData.maxPwmRampingDownCountInMsec,
    };
-
-   SetRampingPwmVotedDutyCycleErdsTo(instance, minCycle);
+   SetRampingPwmVotedDutyCycleErdTo(instance, minCycle);
 }
 
 static RampingPwmDutyCyclePercentageBundleData_t RampingDutyCycleBundleBasedOffCurrentSystemMode(LightingDoorVoteResolver_t *instance)
 {
-   return *(instance->_private.doorLightingDataType->normalOperationRampingPwmDutyCycle);
+   return *(instance->_private.doorLightingData->normalOperationRampingPwmDutyCycle);
 }
 
 static void MaxDoorOpenTimerExpired(void *context)
 {
    LightingDoorVoteResolver_t *instance = context;
-   RampingPwmDutyCyclePercentageBundleData_t rampingPwmDutyCyclePercentageBundleData = RampingDutyCycleBundleBasedOffCurrentSystemMode(instance);
-
-   SetRampingPwmDutyCyclePercentageToMinCycle(instance, rampingPwmDutyCyclePercentageBundleData);
+   Fsm_SendSignal(&instance->_private.fsm, Signal_MaxDoorOpenTimeExpires, NULL);
 }
 
 static void StartMaxDoorOpenTimer(LightingDoorVoteResolver_t *instance)
@@ -125,54 +108,150 @@ static void StopMaxDoorOpenTimer(LightingDoorVoteResolver_t *instance)
       &instance->_private.maxDoorOpenTimer);
 }
 
+void State_AnAssociatedDoorIsOpen(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
+{
+   LightingDoorVoteResolver_t *instance = InstanceFromFsm(fsm);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Fsm_Entry:
+         SetRampingPwmDutyCyclePercentageToMinPwmDutyCyclePercentageThenToMaxPwmDutyCyclePercentage(
+            instance,
+            RampingDutyCycleBundleBasedOffCurrentSystemMode(instance));
+         StartMaxDoorOpenTimer(instance);
+         break;
+
+      case Signal_AnAssociatedDoorIsOpened:
+         StartMaxDoorOpenTimer(instance);
+         break;
+
+      case Signal_AllAssociatedDoorsAreClosed:
+         Fsm_Transition(&instance->_private.fsm, State_AllAssociatedDoorsAreClosed);
+         break;
+
+      case Signal_MaxDoorOpenTimeExpires:
+         SetRampingPwmDutyCyclePercentageToMinCycle(
+            instance,
+            RampingDutyCycleBundleBasedOffCurrentSystemMode(instance));
+         break;
+
+      case Fsm_Exit:
+         StopMaxDoorOpenTimer(instance);
+         break;
+   }
+}
+
+void State_AllAssociatedDoorsAreClosed(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
+{
+   LightingDoorVoteResolver_t *instance = InstanceFromFsm(fsm);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Fsm_Entry:
+         SetRampingPwmDutyCyclePercentageToMinCycle(
+            instance,
+            RampingDutyCycleBundleBasedOffCurrentSystemMode(instance));
+         break;
+
+      case Signal_AnAssociatedDoorIsOpened:
+         Fsm_Transition(&instance->_private.fsm, State_AnAssociatedDoorIsOpen);
+         break;
+
+      case Fsm_Exit:
+         break;
+   }
+}
+
+static bool AnAssociatedDoorChanged(LightingDoorVoteResolver_t *instance, Erd_t erdToCheck)
+{
+   for(uint8_t i = 0; i < instance->_private.config->numberOfDoorErds; i++)
+   {
+      if(instance->_private.config->doorIsOpenErds[i] == erdToCheck)
+      {
+         return true;
+      }
+   }
+   return false;
+}
+
+static bool AnAssociatedDoorIsOpen(LightingDoorVoteResolver_t *instance)
+{
+   for(uint8_t i = 0; i < instance->_private.config->numberOfDoorErds; i++)
+   {
+      bool doorIsOpen;
+      DataModel_Read(
+         instance->_private.dataModel,
+         instance->_private.config->doorIsOpenErds[i],
+         &doorIsOpen);
+
+      if(doorIsOpen)
+      {
+         return true;
+      }
+   }
+   return false;
+}
+
+static bool AllAssociatedDoorsAreClosed(LightingDoorVoteResolver_t *instance)
+{
+   return !(AnAssociatedDoorIsOpen(instance));
+}
+
+static bool TheDoorOpened(LightingDoorVoteResolver_t *instance, Erd_t erd)
+{
+   bool doorOpened;
+   DataModel_Read(
+      instance->_private.dataModel,
+      erd,
+      &doorOpened);
+
+   return doorOpened;
+}
+
 static void OnDataModelChange(void *context, const void *_args)
 {
    LightingDoorVoteResolver_t *instance = context;
    const DataModelOnDataChangeArgs_t *args = _args;
+   Erd_t erd = args->erd;
 
-   if(DoorErdChanged(instance, args->erd))
+   if(AnAssociatedDoorChanged(instance, args->erd))
    {
-      const bool *doorIsOpen = args->data;
-      RampingPwmDutyCyclePercentageBundleData_t rampingPwmDutyCyclePercentageBundleData = RampingDutyCycleBundleBasedOffCurrentSystemMode(instance);
-
-      if(*doorIsOpen)
+      if(AllAssociatedDoorsAreClosed(instance))
       {
-         SetRampingPwmDutyCyclePercentageToMinPwmDutyCyclePercentageThenToMaxPwmDutyCyclePercentage(instance, rampingPwmDutyCyclePercentageBundleData);
-         StartMaxDoorOpenTimer(instance);
+         Fsm_SendSignal(&instance->_private.fsm, Signal_AllAssociatedDoorsAreClosed, NULL);
       }
-      else if(AllDoorsAreClosed(instance))
+      else if(TheDoorOpened(instance, erd))
       {
-         SetRampingPwmDutyCyclePercentageToMinCycle(instance, rampingPwmDutyCyclePercentageBundleData);
-         StopMaxDoorOpenTimer(instance);
+         Fsm_SendSignal(&instance->_private.fsm, Signal_AnAssociatedDoorIsOpened, NULL);
       }
    }
 }
-static void SetInitialPwmVotedDutyCycleBasedOnDoorState(LightingDoorVoteResolver_t *instance)
-{
-   RampingPwmDutyCyclePercentageBundleData_t rampingPwmDutyCyclePercentageBundleData = RampingDutyCycleBundleBasedOffCurrentSystemMode(instance);
 
-   if(AllDoorsAreClosed(instance))
+static FsmState_t InitialState(LightingDoorVoteResolver_t *instance)
+{
+   if(AnAssociatedDoorIsOpen(instance))
    {
-      SetRampingPwmDutyCyclePercentageToMinCycle(instance, rampingPwmDutyCyclePercentageBundleData);
+      return State_AnAssociatedDoorIsOpen;
    }
-   else
-   {
-      SetRampingPwmDutyCyclePercentageToMinPwmDutyCyclePercentageThenToMaxPwmDutyCyclePercentage(instance, rampingPwmDutyCyclePercentageBundleData);
-      StartMaxDoorOpenTimer(instance);
-   }
+
+   return State_AllAssociatedDoorsAreClosed;
 }
 
 void LightingDoorVoteResolver_Init(
    LightingDoorVoteResolver_t *instance,
    I_DataModel_t *dataModel,
    const LightingDoorVoteResolverConfig_t *config,
-   const DoorLightingData_t *doorLightingDataType)
+   const DoorLightingData_t *doorLightingData)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
-   instance->_private.doorLightingDataType = doorLightingDataType;
+   instance->_private.doorLightingData = doorLightingData;
 
-   SetInitialPwmVotedDutyCycleBasedOnDoorState(instance);
+   Fsm_Init(
+      &instance->_private.fsm,
+      InitialState(instance));
 
    EventSubscription_Init(
       &instance->_private.onDataModelChangeSubscription,

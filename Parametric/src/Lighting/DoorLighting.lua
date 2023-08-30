@@ -10,8 +10,7 @@ return function(core)
     return TypedString(
       { 'door_lighting' },
       structure(
-        pointer(config.normal_operation_ramping_pwm_duty_cycle_percentage_bundle),
-        pointer(config.snack_mode_ramping_pwm_duty_cycle_percentage_bundle)
+        pointer(config.normal_operation_ramping_pwm_duty_cycle_percentage_bundle)
       )
     )
   end)
@@ -20,8 +19,7 @@ return function(core)
     validate_arguments(
       config,
       {
-        normal_operation_ramping_pwm_duty_cycle_percentage_bundle = { constraint.typed_string('ramping_pwm_duty_cycle_percentage_bundle') },
-        snack_mode_ramping_pwm_duty_cycle_percentage_bundle = { constraint.typed_string('ramping_pwm_duty_cycle_percentage_bundle') }
+        normal_operation_ramping_pwm_duty_cycle_percentage_bundle = { constraint.typed_string('ramping_pwm_duty_cycle_percentage_bundle') }
       })
     return generate(config)
   end

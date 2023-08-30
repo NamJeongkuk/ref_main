@@ -1,6 +1,7 @@
 /*!
  * @file
- * @brief Lighting door vote resolver module which takes in the states of doors and votes for a PwmVotedDutyCycle.
+ * @brief Lighting door vote resolver module which takes in the states of doors and votes for a PwmVotedDutyCycle for a single
+ * light whenever one of the doors opens and then when all doors are closed.
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
@@ -11,14 +12,14 @@
 #include "I_DataModel.h"
 #include "Timer.h"
 #include "DoorLightingData.h"
+#include "Fsm.h"
 
 typedef struct
 {
    Erd_t timerModuleErd; // TimerModule *
+   Erd_t rampingPwmDutyCyclePercentageErd; // RampingPwmDutyCyclePercentageVote_t
    const Erd_t *doorIsOpenErds; // bool[]
-   const Erd_t *rampingPwmDutyCyclePercentageErds; // Erd_t[]
    uint8_t numberOfDoorErds;
-   uint8_t numberOfRampingPwmDutyCyclePercentageErds;
 } LightingDoorVoteResolverConfig_t;
 
 typedef struct
@@ -29,7 +30,8 @@ typedef struct
       const LightingDoorVoteResolverConfig_t *config;
       EventSubscription_t onDataModelChangeSubscription;
       Timer_t maxDoorOpenTimer;
-      const DoorLightingData_t *doorLightingDataType;
+      Fsm_t fsm;
+      const DoorLightingData_t *doorLightingData;
    } _private;
 } LightingDoorVoteResolver_t;
 
@@ -37,6 +39,6 @@ void LightingDoorVoteResolver_Init(
    LightingDoorVoteResolver_t *instance,
    I_DataModel_t *dataModel,
    const LightingDoorVoteResolverConfig_t *config,
-   const DoorLightingData_t *doorLightingDataType);
+   const DoorLightingData_t *doorLightingData);
 
 #endif

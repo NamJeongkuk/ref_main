@@ -10,9 +10,7 @@ describe('DoorLighting', function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-      normal_operation_ramping_pwm_duty_cycle_percentage_bundle = TypedString('ramping_pwm_duty_cycle_percentage_bundle', 'ramping_pwm_duty_cycle_percentage_bundle'),
-      snack_mode_ramping_pwm_duty_cycle_percentage_bundle = TypedString('ramping_pwm_duty_cycle_percentage_bundle', 'ramping_pwm_duty_cycle_percentage_bundle')
-    }, overrides or {})
+      normal_operation_ramping_pwm_duty_cycle_percentage_bundle = TypedString('ramping_pwm_duty_cycle_percentage_bundle', 'ramping_pwm_duty_cycle_percentage_bundle')    }, overrides or {})
   end
 
   it('should require all arguments', function()
@@ -25,18 +23,11 @@ describe('DoorLighting', function()
         normal_operation_ramping_pwm_duty_cycle_percentage_bundle = -1
       }))
     end)
-
-    should_fail_with('snack_mode_ramping_pwm_duty_cycle_percentage_bundle must be a typed string with type ramping_pwm_duty_cycle_percentage_bundle, but is a number', function()
-      door_lighting(generate_config({
-        snack_mode_ramping_pwm_duty_cycle_percentage_bundle = -1
-      }))
-    end)
   end)
 
   it('should generate a typed string with the correct data and type ramping_pwm_duty_cycle_percentage_bundle', function()
     local expected = remove_whitespace([[
       structure(
-        pointer(ramping_pwm_duty_cycle_percentage_bundle),
         pointer(ramping_pwm_duty_cycle_percentage_bundle)
       )
     ]])

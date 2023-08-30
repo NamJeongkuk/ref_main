@@ -13,9 +13,6 @@
 typedef struct
 {
    const RampingPwmDutyCyclePercentageBundleData_t *normalOperationRampingPwmDutyCycle;
-   const RampingPwmDutyCyclePercentageBundleData_t *normalSabbathRampingPwmDutyCycle;
-   const RampingPwmDutyCyclePercentageBundleData_t *enhancedSabbathRampingPwmDutyCycle;
-   const RampingPwmDutyCyclePercentageBundleData_t *snackModeRampingPwmDutyCycle;
 } DoorLightingData_t;
 
 #endif

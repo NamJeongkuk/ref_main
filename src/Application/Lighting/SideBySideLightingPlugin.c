@@ -76,56 +76,36 @@ static const Erd_t freshFoodDoorErds[] = {
    Erd_RightSideFreshFoodDoorStatusResolved
 };
 
-static const Erd_t freshFoodPwmBackWallVotedDutyCycleErds[] = {
-   Erd_FreshFoodBackWallLight_DoorVote,
-};
-
 static const LightingDoorVoteResolverConfig_t freshFoodBackWallLightingDoorVoteResolverConfig = {
    .timerModuleErd = Erd_TimerModule,
+   .rampingPwmDutyCyclePercentageErd = Erd_FreshFoodBackWallLight_DoorVote,
    .doorIsOpenErds = freshFoodDoorErds,
-   .rampingPwmDutyCyclePercentageErds = freshFoodPwmBackWallVotedDutyCycleErds,
    .numberOfDoorErds = NUM_ELEMENTS(freshFoodDoorErds),
-   .numberOfRampingPwmDutyCyclePercentageErds = NUM_ELEMENTS(freshFoodPwmBackWallVotedDutyCycleErds),
-};
-
-static const Erd_t freshFoodTopLightPwmVotedDutyCycleErds[] = {
-   Erd_FreshFoodTopLight_DoorVote
 };
 
 static const LightingDoorVoteResolverConfig_t freshFoodTopLightLightingDoorVoteResolverConfig = {
    .timerModuleErd = Erd_TimerModule,
+   .rampingPwmDutyCyclePercentageErd = Erd_FreshFoodTopLight_DoorVote,
    .doorIsOpenErds = freshFoodDoorErds,
-   .rampingPwmDutyCyclePercentageErds = freshFoodTopLightPwmVotedDutyCycleErds,
    .numberOfDoorErds = NUM_ELEMENTS(freshFoodDoorErds),
-   .numberOfRampingPwmDutyCyclePercentageErds = NUM_ELEMENTS(freshFoodTopLightPwmVotedDutyCycleErds),
 };
 
 static const Erd_t freezerDoorErds[] = {
    Erd_LeftSideFreezerDoorStatusResolved,
 };
 
-static const Erd_t freezerBackWallPwmVotedDutyCycleErds[] = {
-   Erd_FreezerBackWallLight_DoorVote
-};
-
 static const LightingDoorVoteResolverConfig_t freezerBackWallLightingDoorVoteResolverConfig = {
    .timerModuleErd = Erd_TimerModule,
+   .rampingPwmDutyCyclePercentageErd = Erd_FreezerBackWallLight_DoorVote,
    .doorIsOpenErds = freezerDoorErds,
-   .rampingPwmDutyCyclePercentageErds = freezerBackWallPwmVotedDutyCycleErds,
    .numberOfDoorErds = NUM_ELEMENTS(freezerDoorErds),
-   .numberOfRampingPwmDutyCyclePercentageErds = NUM_ELEMENTS(freezerBackWallPwmVotedDutyCycleErds),
-};
-
-static const Erd_t freezerTopLightPwmVotedDutyCycleErds[] = {
-   Erd_FreezerTopLight_DoorVote
 };
 
 static const LightingDoorVoteResolverConfig_t freezerTopLightLightingDoorVoteResolverConfig = {
    .timerModuleErd = Erd_TimerModule,
+   .rampingPwmDutyCyclePercentageErd = Erd_FreezerTopLight_DoorVote,
    .doorIsOpenErds = freezerDoorErds,
-   .rampingPwmDutyCyclePercentageErds = freezerTopLightPwmVotedDutyCycleErds,
    .numberOfDoorErds = NUM_ELEMENTS(freezerDoorErds),
-   .numberOfRampingPwmDutyCyclePercentageErds = NUM_ELEMENTS(freezerTopLightPwmVotedDutyCycleErds),
 };
 
 static void InitializeErdResolvers(
