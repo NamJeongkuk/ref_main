@@ -10,7 +10,7 @@ return function(core)
     return TypedString(
       { 'door_lighting' },
       structure(
-        pointer(config.normal_operation_ramping_pwm_duty_cycle_percentage_bundle)
+        config.normal_operation_ramping_pwm_duty_cycle_percentage_bundle
       )
     )
   end)

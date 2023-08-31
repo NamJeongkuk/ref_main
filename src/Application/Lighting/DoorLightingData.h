@@ -12,7 +12,7 @@
 
 typedef struct
 {
-   const RampingPwmDutyCyclePercentageBundleData_t *normalOperationRampingPwmDutyCycle;
+   RampingPwmDutyCyclePercentageBundleData_t normalOperationRampingPwmDutyCycle;
 } DoorLightingData_t;
 
 #endif

@@ -78,7 +78,7 @@ static void SetRampingPwmDutyCyclePercentageToMinCycle(
 
 static RampingPwmDutyCyclePercentageBundleData_t RampingDutyCycleBundleBasedOffCurrentSystemMode(LightingDoorVoteResolver_t *instance)
 {
-   return *(instance->_private.doorLightingData->normalOperationRampingPwmDutyCycle);
+   return instance->_private.doorLightingData->normalOperationRampingPwmDutyCycle;
 }
 
 static void MaxDoorOpenTimerExpired(void *context)

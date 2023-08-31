@@ -72,6 +72,24 @@ static const ConstArrayMap_LinearSearchConfiguration_t linearMapConfiguration = 
    OFFSET_OF(VotedPwmDutyCyclePair_t, pwmDutyCycleResolvedVoteErd)
 };
 
+static const UserAllowableLightingConfiguration_t userAllowable0InteriorLightingRequestHandlerConfig = {
+   .userAllowableInteriorLightingRequestErd = Erd_DimmableLight0PercentLevelRequest,
+   .userAllowableInteriorLightingStateErd = Erd_DimmableLight0PercentLevelStatus,
+   .userAllowableInteriorLightingConfigurationErd = Erd_DimmableLight0Configuration,
+};
+
+static const UserAllowableLightingConfiguration_t userAllowable1InteriorLightingRequestHandlerConfig = {
+   .userAllowableInteriorLightingRequestErd = Erd_DimmableLight1PercentLevelRequest,
+   .userAllowableInteriorLightingStateErd = Erd_DimmableLight1PercentLevelStatus,
+   .userAllowableInteriorLightingConfigurationErd = Erd_DimmableLight1Configuration,
+};
+
+static const UserAllowableLightingConfiguration_t userAllowable2InteriorLightingRequestHandlerConfig = {
+   .userAllowableInteriorLightingRequestErd = Erd_DimmableLight2PercentLevelRequest,
+   .userAllowableInteriorLightingStateErd = Erd_DimmableLight2PercentLevelStatus,
+   .userAllowableInteriorLightingConfigurationErd = Erd_DimmableLight2Configuration,
+};
+
 static const Erd_t freshFoodDoorErds[] = {
    Erd_RightSideFreshFoodDoorStatusResolved
 };
@@ -150,6 +168,24 @@ void SideBySideLightingPlugin_Init(
       dataModel,
       &instance->_private.linearMap.interface,
       PersonalityParametricData_Get(dataModel)->lightingData);
+
+   UserAllowableInteriorLightingRequestHandler_Init(
+      &instance->_private.userAllowable0LightingRequestHandler,
+      dataModel,
+      PersonalityParametricData_Get(dataModel)->lightingData->userAllowableInteriorLightingData->userAllowable0InteriorLightingBitmap,
+      &userAllowable0InteriorLightingRequestHandlerConfig);
+
+   UserAllowableInteriorLightingRequestHandler_Init(
+      &instance->_private.userAllowable1LightingRequestHandler,
+      dataModel,
+      PersonalityParametricData_Get(dataModel)->lightingData->userAllowableInteriorLightingData->userAllowable1InteriorLightingBitmap,
+      &userAllowable1InteriorLightingRequestHandlerConfig);
+
+   UserAllowableInteriorLightingRequestHandler_Init(
+      &instance->_private.userAllowable2LightingRequestHandler,
+      dataModel,
+      PersonalityParametricData_Get(dataModel)->lightingData->userAllowableInteriorLightingData->userAllowable2InteriorLightingBitmap,
+      &userAllowable2InteriorLightingRequestHandlerConfig);
 
    LightingDoorVoteResolver_Init(
       &instance->_private.freshFoodBackWallLightingDoorVoteResolver,

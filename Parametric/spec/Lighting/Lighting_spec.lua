@@ -12,6 +12,7 @@ describe('Lighting', function()
     return require 'lua-common'.table.merge({
       maximum_light_duty_cycle_percentage = 100,
       maximum_interior_lights_on_time_in_minutes = 15,
+      user_allowable_interior_lighting = TypedString('user_allowable_interior_lighting', 'user_allowable_interior_lighting'),
       fresh_food_backwall = TypedString('door_lighting', 'door_lighting'),
       fresh_food_top_and_side = TypedString('door_lighting', 'door_lighting'),
       freezer_backwall = TypedString('door_lighting', 'door_lighting'),
@@ -33,6 +34,12 @@ describe('Lighting', function()
     should_fail_with('maximum_interior_lights_on_time_in_minutes=-1 must be in [0, 255]', function()
       lighting(generate_config({
         maximum_interior_lights_on_time_in_minutes = -1
+      }))
+    end)
+
+    should_fail_with('user_allowable_interior_lighting must be a typed string with type user_allowable_interior_lighting, but is a number', function()
+      lighting(generate_config({
+        user_allowable_interior_lighting = -1
       }))
     end)
 
@@ -66,6 +73,7 @@ describe('Lighting', function()
       structure(
         u8(100),
         u8(15),
+        pointer(user_allowable_interior_lighting),
         pointer(door_lighting),
         pointer(door_lighting),
         pointer(door_lighting),

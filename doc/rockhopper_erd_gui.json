@@ -2966,6 +2966,69 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Dimmable Light 0 Percent Level Request",
+          "name": "Erd_DimmableLight0PercentLevelRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dimmable Light 0 Percent Level Status",
+          "name": "Erd_DimmableLight0PercentLevelStatus",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dimmable Light 0 Configuration",
+          "name": "Erd_DimmableLight0Configuration",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dimmable Light 1 Percent Level Request",
+          "name": "Erd_DimmableLight1PercentLevelRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dimmable Light 1 Percent Level Status",
+          "name": "Erd_DimmableLight1PercentLevelStatus",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dimmable Light 1 Configuration",
+          "name": "Erd_DimmableLight1Configuration",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dimmable Light 2 Percent Level Request",
+          "name": "Erd_DimmableLight2PercentLevelRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dimmable Light 2 Percent Level Status",
+          "name": "Erd_DimmableLight2PercentLevelStatus",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dimmable Light 2 Configuration",
+          "name": "Erd_DimmableLight2Configuration",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
           "displayName": "Erd_FreshFoodBackWallLight_ResolvedVote",
           "name": "Erd_FreshFoodBackWallLight_ResolvedVote",
           "read": true,

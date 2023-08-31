@@ -464,9 +464,9 @@ enum
    ENTRY(Erd_TurboFreezeOnOffRequest,                       0x121A, TurboModeRequest_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TurboFreezeOnOffStatus,                        0x121B, bool,                                               Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_DimmableLight0PercentLevelRequest,             0x121E, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DimmableLight0PercentLevelStatus,              0x121F, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DimmableLight0Configuration,                   0x1220, DimmableLightConfiguration_t,                       Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DimmableLight0PercentLevelRequest,             0x121E, PercentageDutyCycle_t,                              Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DimmableLight0PercentLevelStatus,              0x121F, PercentageDutyCycle_t,                              Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_MaxLightBrightness, NotFault) \
+   ENTRY(Erd_DimmableLight0Configuration,                   0x1220, UserAllowableInteriorLightingBitmap_t,              Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_PresenceSensingEnableRequest,                  0x1222, PresenceSensingEnableRequest_t,                     Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_PresenceSensingEnableStatus,                   0x1223, bool,                                               Swap_No,  Io_None, Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
@@ -793,8 +793,6 @@ enum
    ENTRY(Erd_AutofillSensorError,                           0xF168, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispensingDisabled,                            0xF169, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_MainboardIsCommunicatingToAndroidUi,           0xF180, bool,                                               Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   \
    ENTRY(Erd_RfidFilterReadWriteResult_RfidBoard,           0xF181, RfidFilterReadWriteResult_t,                        Swap_No,  Io_None, Sub_Y, Ram,                      NotNv,                                    NotFault) \
    ENTRY(Erd_RfidFilterUid_RfidBoard,                       0xF182, RfidUid_t,                                          Swap_No,  Io_None, Sub_Y, Ram,                      NotNv,                                    NotFault) \
    ENTRY(Erd_RfidFilterIdentifier_RfidBoard,                0xF183, RfidFilterIdentifier_t,                             Swap_No,  Io_None, Sub_Y, Ram,                      NotNv,                                    NotFault) \
@@ -1114,6 +1112,13 @@ enum
    ENTRY(Erd_Ambient_FilteredInternalHumidityOverrideRequest,                0xF45A, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Ambient_FilteredInternalHumidityOverrideValueInPercentx100,     0xF45B, TemperatureDegFx100_t,             Swap_Range_S, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Ambient_FilteredInternalHumidityResolvedInPercentx100,          0xF45C, TemperatureDegFx100_t,             Swap_Range_E, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_DimmableLight1PercentLevelRequest,             0xF470, PercentageDutyCycle_t,                              Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DimmableLight1PercentLevelStatus,              0xF471, PercentageDutyCycle_t,                              Swap_No,    Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_MaxLightBrightness, NotFault) \
+   ENTRY(Erd_DimmableLight1Configuration,                   0xF472, UserAllowableInteriorLightingBitmap_t,              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DimmableLight2PercentLevelRequest,             0xF473, PercentageDutyCycle_t,                              Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DimmableLight2PercentLevelStatus,              0xF474, PercentageDutyCycle_t,                              Swap_No,    Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_MaxLightBrightness, NotFault) \
+   ENTRY(Erd_DimmableLight2Configuration,                   0xF475, UserAllowableInteriorLightingBitmap_t,              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_CalculatedCondenserFanControl,                 0xF480, FanControl_t,                                       Swap_Range_S, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CalculatedIceCabinetFanControl,                0xF481, FanControl_t,                                       Swap_Range,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \

@@ -91,6 +91,8 @@ return function(directory)
   import('Lighting/DoorLighting')
   import('Lighting/Lighting')
   import('Lighting/RampingPwmDutyCyclePercentageBundle')
+  import('Lighting/UserAllowableInteriorLightingBitmap')
+  import('Lighting/UserAllowableInteriorLighting')
   import('Cooling/LoadOffDoorOpen')
   import('Cooling/LoadOffDoorOpenCompartmentList')
   import('constants')
@@ -184,6 +186,8 @@ return function(directory)
   door_lighting = DoorLighting(core)
   lighting = Lighting(core)
   ramping_pwm_duty_cycle_percentage_bundle = RampingPwmDutyCyclePercentageBundle(core)
+  user_allowable_interior_lighting_bitmap = UserAllowableInteriorLightingBitmap(core)
+  user_allowable_interior_lighting = UserAllowableInteriorLighting(core)
   load_off_door_open = LoadOffDoorOpen(core)
   load_off_door_open_compartment_list = LoadOffDoorOpenCompartmentList(core)
 
@@ -279,6 +283,8 @@ return function(directory)
     door_lighting = door_lighting,
     lighting = lighting,
     ramping_pwm_duty_cycle_percentage_bundle = ramping_pwm_duty_cycle_percentage_bundle,
+    user_allowable_interior_lighting_bitmap = user_allowable_interior_lighting_bitmap,
+    user_allowable_interior_lighting = user_allowable_interior_lighting,
     enum = enum,
     erd_list_to_sorted_erd_mappings = erd_list_to_sorted_erd_mappings,
     load_off_door_open = load_off_door_open,

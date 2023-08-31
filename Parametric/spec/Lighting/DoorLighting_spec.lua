@@ -28,7 +28,7 @@ describe('DoorLighting', function()
   it('should generate a typed string with the correct data and type ramping_pwm_duty_cycle_percentage_bundle', function()
     local expected = remove_whitespace([[
       structure(
-        pointer(ramping_pwm_duty_cycle_percentage_bundle)
+        ramping_pwm_duty_cycle_percentage_bundle
       )
     ]])
 
