@@ -1,7 +1,7 @@
 return personality({
   refrigerator_model = import("../RefrigeratorModel/refrigerator_model.lua"),
   defrost = import("../Defrost/single_evaporator_defrost_qa.lua"),
-  enhanced_sabbath = import("../EnhancedSabbath/enhanced_sabbath_number_of_fresh_food_defrosts_zero.lua"),
+  enhanced_sabbath = import("../EnhancedSabbath/enhanced_sabbath_number_of_fresh_food_defrosts_zero_qa.lua"),
   fans = import("../Fan/fan_list.lua"),
   grid = import("../Grid/single_evap_grid_qa.lua"),
   sabbath = import("../Sabbath/sabbath_qa.lua"),
