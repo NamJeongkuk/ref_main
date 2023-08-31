@@ -22,8 +22,9 @@ static const SabbathDoorResolvedPair_t doorResolvedPairs[] = {
 static const SabbathInhibitDoorsConfiguration_t sabbathInhibitDoorsConfig = {
    .doorResolvedPairErdList = doorResolvedPairs,
    .numberOfPairs = NUM_ELEMENTS(doorResolvedPairs),
-   .sabbathModeErd = Erd_SabbathMode,
-   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeStatus
+   .sabbathModeErd = Erd_SabbathModeEnable,
+   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
+   .sabbathGpioErd = Erd_Gpio_SABBATH
 };
 
 void SideBySideDoorPlugin_Init(SideBySideDoorPlugin_t *instance, I_DataModel_t *dataModel)

@@ -73,7 +73,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_SabbathMode,
+         Erd_SabbathModeEnable,
          &state);
    }
 

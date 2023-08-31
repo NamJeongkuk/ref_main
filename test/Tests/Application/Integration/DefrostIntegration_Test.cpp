@@ -812,7 +812,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
 
    void GivenSabbathModeIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_SabbathMode, &state);
+      DataModel_Write(dataModel, Erd_SabbathModeEnable, &state);
    }
 
    void WhenSabbathModeIs(bool state)

@@ -36,7 +36,7 @@ static const EnhancedSabbathAverageTemperatureConfig_t config = {
    .unfilteredTemperatureInDegFx100Erd = Erd_FreshFood_UnfilteredTemperatureInDegFx100,
    .overrideRequestErd = Erd_FreshFood_AveragedTemperatureOverrideRequest,
    .overrideValueErd = Erd_FreshFood_EnhancedSabbath_AveragedTemperatureOverrideValueInDegFx100,
-   .enhancedSabbathModeStatusErd = Erd_EnhancedSabbathModeStatus,
+   .enhancedSabbathModeStatusErd = Erd_EnhancedSabbathModeEnable,
    .timerModuleErd = Erd_TimerModule,
 };
 
@@ -100,7 +100,7 @@ TEST_GROUP(EnhancedSabbathAverageTemperature)
 
    void GivenEnhancedSabbathModeIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_EnhancedSabbathModeStatus, &state);
+      DataModel_Write(dataModel, Erd_EnhancedSabbathModeEnable, &state);
    }
 
    void WhenEnhancedSabbathModeChangesTo(bool state)

@@ -42,7 +42,7 @@
         {
           "namespace": "mb",
           "displayName": "Sabbath Mode",
-          "name": "Erd_SabbathMode",
+          "name": "Erd_SabbathModeEnable",
           "read": true,
           "write": true
         }

@@ -23,6 +23,7 @@ typedef struct
    uint8_t numberOfPairs;
    Erd_t sabbathModeErd; // bool
    Erd_t enhancedSabbathModeErd; // bool
+   Erd_t sabbathGpioErd; // bool
 } SabbathInhibitDoorsConfiguration_t;
 
 typedef struct

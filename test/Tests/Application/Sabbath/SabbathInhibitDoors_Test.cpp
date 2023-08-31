@@ -29,20 +29,25 @@ static const SabbathDoorResolvedPair_t doorResolvedPairs[] = {
 static const SabbathInhibitDoorsConfiguration_t config = {
    .doorResolvedPairErdList = doorResolvedPairs,
    .numberOfPairs = NUM_ELEMENTS(doorResolvedPairs),
-   .sabbathModeErd = Erd_SabbathMode,
-   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeStatus
+   .sabbathModeErd = Erd_SabbathModeEnable,
+   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
+   .sabbathGpioErd = Erd_Gpio_SABBATH
 };
+
+static bool testPassed;
 
 TEST_GROUP(SabbathInhibitDoors)
 {
    ReferDataModel_TestDouble_t dataModelTestDouble;
    I_DataModel_t *dataModel;
    SabbathInhibitDoors_t instance;
+   EventSubscription_t subscription;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelTestDouble);
       dataModel = dataModelTestDouble.dataModel;
+      testPassed = false;
    }
 
    void GivenTheSabbathInhibitDoorsIsInitialized()
@@ -57,7 +62,7 @@ TEST_GROUP(SabbathInhibitDoors)
    {
       DataModel_Write(
          dataModel,
-         Erd_SabbathMode,
+         Erd_SabbathModeEnable,
          &state);
    }
 
@@ -65,7 +70,7 @@ TEST_GROUP(SabbathInhibitDoors)
    {
       DataModel_Write(
          dataModel,
-         Erd_EnhancedSabbathModeStatus,
+         Erd_EnhancedSabbathModeEnable,
          &state);
    }
 
@@ -104,14 +109,22 @@ TEST_GROUP(SabbathInhibitDoors)
             dataModel,
             doorResolvedPairs[index].doorStatusResolvedErd,
             &actualState);
+
+         CHECK_EQUAL(expectedState, actualState);
       }
-      CHECK_EQUAL(expectedState, actualState);
    }
 
    void GivenTheModuleIsInitalizedAndNormalSabbathAndEnhancedSabbathAreDisabled()
    {
       GivenEnhancedSabbathModeIs(DISABLED);
       GivenSabbathModeIs(DISABLED);
+      GivenTheSabbathInhibitDoorsIsInitialized();
+   }
+
+   void GivenTheModuleIsInitalizedAndNormalSabbathAndEnhancedSabbathAreEnabled()
+   {
+      GivenEnhancedSabbathModeIs(ENABLED);
+      GivenSabbathModeIs(ENABLED);
       GivenTheSabbathInhibitDoorsIsInitialized();
    }
 
@@ -165,6 +178,86 @@ TEST_GROUP(SabbathInhibitDoors)
 
          CHECK_EQUAL(resolvedDoorState, realDoorState);
       }
+   }
+
+   void GivenSabbathGpioIs(bool state)
+   {
+      DataModel_Write(dataModel, config.sabbathGpioErd, &state);
+   }
+
+   void SabbathGpioShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, config.sabbathGpioErd, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   static void DataModelChangedSabbathGpioShouldBeSetWhenDoorIsResolvedToClosed(void *context, const void *_args)
+   {
+      REINTERPRET(dataModel, context, I_DataModel_t *);
+      REINTERPRET(args, _args, const DataModelOnDataChangeArgs_t *);
+
+      if(args->erd == doorResolvedPairs[0].doorStatusResolvedErd)
+      {
+         bool gpioState;
+         DataModel_Read(
+            dataModel,
+            config.sabbathGpioErd,
+            &gpioState);
+
+         testPassed = gpioState ? true : false;
+      }
+   }
+
+   void SabbathGpioShouldBeSetWhenResolvedDoorsAreClosedUponEnteringSabbath(void)
+   {
+      EventSubscription_Init(
+         &subscription,
+         dataModel,
+         DataModelChangedSabbathGpioShouldBeSetWhenDoorIsResolvedToClosed);
+      Event_Subscribe(dataModel->OnDataChange, &subscription);
+
+      WhenSabbathModeBecomes(ENABLED);
+      CHECK_TRUE(testPassed);
+   }
+
+   static void DataModelChangedResolvedDoorsShouldBeClosedWhenSabbathGpioIsSet(void *context, const void *_args)
+   {
+      REINTERPRET(dataModel, context, I_DataModel_t *);
+      REINTERPRET(args, _args, const DataModelOnDataChangeArgs_t *);
+
+      if(args->erd == config.sabbathGpioErd)
+      {
+         bool doorState;
+         testPassed = true;
+
+         for(uint8_t index = 0; index < config.numberOfPairs; index++)
+         {
+            DataModel_Read(
+               dataModel,
+               doorResolvedPairs[index].doorStatusResolvedErd,
+               &doorState);
+
+            if(doorState == Opened)
+            {
+               testPassed = false;
+               return;
+            }
+         }
+      }
+   }
+
+   void ResolvedDoorsShouldRemainClosedWhenSabbathGpioIsSetUponDisablingSabbath(void)
+   {
+      EventSubscription_Init(
+         &subscription,
+         dataModel,
+         DataModelChangedResolvedDoorsShouldBeClosedWhenSabbathGpioIsSet);
+      Event_Subscribe(dataModel->OnDataChange, &subscription);
+
+      WhenSabbathModeBecomes(DISABLED);
+      WhenEnhancedSabbathModeBecomes(DISABLED);
+      CHECK_TRUE(testPassed);
    }
 };
 
@@ -255,4 +348,50 @@ TEST(SabbathInhibitDoors, ShouldReportResolvedDoorsAsRealDoorStateWhenSabbathAnd
    GivenTheModuleIsInitalizedAndNormalSabbathAndEnhancedSabbathAreDisabled();
    GivenASpecificDoorIs(Erd_RightSideFreshFoodDoorStatus, Opened);
    AllResolvedDoorStatesShouldBeTheRealDoorState();
+}
+
+TEST(SabbathInhibitDoors, ShouldClearSabbathGpioWhenEitherSabbathOrEnhancedSabbathAreEntered)
+{
+   GivenSabbathGpioIs(CLEAR);
+   GivenTheModuleIsInitalizedAndNormalSabbathAndEnhancedSabbathAreDisabled();
+   SabbathGpioShouldBe(SET);
+
+   WhenSabbathModeBecomes(ENABLED);
+   SabbathGpioShouldBe(CLEAR);
+
+   WhenSabbathModeBecomes(DISABLED);
+   SabbathGpioShouldBe(SET);
+
+   WhenEnhancedSabbathModeBecomes(ENABLED);
+   SabbathGpioShouldBe(CLEAR);
+}
+
+TEST(SabbathInhibitDoors, ShouldSetSabbathGpioWhenBothSabbathAndEnhancedSabbathAreCleared)
+{
+   GivenSabbathGpioIs(SET);
+   GivenTheModuleIsInitalizedAndNormalSabbathAndEnhancedSabbathAreEnabled();
+   SabbathGpioShouldBe(CLEAR);
+
+   WhenSabbathModeBecomes(DISABLED);
+   SabbathGpioShouldBe(CLEAR);
+
+   WhenEnhancedSabbathModeBecomes(DISABLED);
+   SabbathGpioShouldBe(SET);
+}
+
+TEST(SabbathInhibitDoors, ShouldVoteTheDoorStatesClosedBeforeClearingGpio)
+{
+   GivenSabbathGpioIs(SET);
+   GivenAllDoorsAre(Opened);
+   GivenTheModuleIsInitalizedAndNormalSabbathAndEnhancedSabbathAreDisabled();
+
+   SabbathGpioShouldBeSetWhenResolvedDoorsAreClosedUponEnteringSabbath();
+}
+
+TEST(SabbathInhibitDoors, ShouldSetGpioBeforeVotingForTheDoorStates)
+{
+   GivenAllDoorsAre(Opened);
+   GivenTheModuleIsInitalizedAndNormalSabbathAndEnhancedSabbathAreEnabled();
+
+   ResolvedDoorsShouldRemainClosedWhenSabbathGpioIsSetUponDisablingSabbath();
 }

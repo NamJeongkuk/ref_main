@@ -14,7 +14,7 @@ static const EnhancedSabbathAverageTemperatureConfig_t freshFoodEnhancedSabbathA
    .unfilteredTemperatureInDegFx100Erd = Erd_FreshFood_UnfilteredTemperatureInDegFx100,
    .overrideRequestErd = Erd_FreshFood_AveragedTemperatureOverrideRequest,
    .overrideValueErd = Erd_FreshFood_EnhancedSabbath_AveragedTemperatureOverrideValueInDegFx100,
-   .enhancedSabbathModeStatusErd = Erd_EnhancedSabbathModeStatus,
+   .enhancedSabbathModeStatusErd = Erd_EnhancedSabbathModeEnable,
    .timerModuleErd = Erd_TimerModule,
 };
 
@@ -23,7 +23,7 @@ static const EnhancedSabbathAverageTemperatureConfig_t freezerEnhancedSabbathAve
    .unfilteredTemperatureInDegFx100Erd = Erd_Freezer_UnfilteredTemperatureInDegFx100,
    .overrideRequestErd = Erd_Freezer_AveragedTemperatureOverrideRequest,
    .overrideValueErd = Erd_Freezer_EnhancedSabbath_AveragedTemperatureOverrideValueInDegFx100,
-   .enhancedSabbathModeStatusErd = Erd_EnhancedSabbathModeStatus,
+   .enhancedSabbathModeStatusErd = Erd_EnhancedSabbathModeEnable,
    .timerModuleErd = Erd_TimerModule,
 };
 
@@ -45,7 +45,7 @@ static const EnhancedSabbathModeConfig_t enhancedSabbathModeConfig = {
    .condenserFanVoteErd = Erd_CondenserFanSpeed_SabbathVote,
    .freezerEvapFanVoteErd = Erd_FreezerEvapFanSpeed_SabbathVote,
    .damperPositionVoteErd = Erd_FreshFoodDamperPosition_EnhancedSabbathVote,
-   .enhancedSabbathModeStatusErd = Erd_EnhancedSabbathModeStatus,
+   .enhancedSabbathModeStatusErd = Erd_EnhancedSabbathModeEnable,
    .freshFoodSetpointVoteErd = Erd_FreshFoodSetpoint_EnhancedSabbathVote,
    .freezerSetpointVoteErd = Erd_FreezerSetpoint_EnhancedSabbathVote,
    .freshFoodAverageCabinetTemperatureErd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
@@ -56,7 +56,6 @@ static const EnhancedSabbathModeConfig_t enhancedSabbathModeConfig = {
    .overrideIceMakerEnabledValueErd = Erd_IceMakerEnabledEnhancedSabbathOverrideValue,
    .dispensingDisabledErd = Erd_DispensingDisabled,
    .waitingForDefrostErd = Erd_WaitingToDefrost,
-   .sabbathGpioErd = Erd_Gpio_SABBATH,
    .gridOverrideEnabledErd = Erd_GridOverrideEnable,
    .coolingModeErd = Erd_CoolingMode,
    .hsmStateErd = Erd_EnhancedSabbathModeHsmState,

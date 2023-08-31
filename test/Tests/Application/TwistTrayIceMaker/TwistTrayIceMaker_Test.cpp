@@ -70,8 +70,8 @@ static const TwistTrayIceMakerConfiguration_t config = {
    .waterFillMonitoringRequestErd = Erd_TwistTrayIceMakerWaterFillMonitoringRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_TwistTrayIceMakerVote,
    .iceMakerEnabledResolvedErd = Erd_IceMakerEnabledResolved,
-   .sabbathModeErd = Erd_SabbathMode,
-   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeStatus,
+   .sabbathModeErd = Erd_SabbathModeEnable,
+   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
    .fillTubeHeaterVoteErd = Erd_FillTubeHeater_TwistTrayIceMakerVote,
    .coolingOffStatusErd = Erd_CoolingOffStatus,
@@ -388,7 +388,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_SabbathMode,
+         Erd_SabbathModeEnable,
          &state);
    }
 
@@ -401,7 +401,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_EnhancedSabbathModeStatus,
+         Erd_EnhancedSabbathModeEnable,
          &state);
    }
 

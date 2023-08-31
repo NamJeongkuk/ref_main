@@ -89,8 +89,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
    .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts,
    .defrostParameterSelectorReadyErd = Erd_DefrostParameterSelectorReady,
-   .sabbathModeErd = Erd_SabbathMode,
-   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeStatus,
+   .sabbathModeErd = Erd_SabbathModeEnable,
+   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost
 };
 
@@ -711,7 +711,7 @@ TEST_GROUP(Defrost_SingleEvap)
 
    void GivenSabbathModeIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_SabbathMode, &state);
+      DataModel_Write(dataModel, Erd_SabbathModeEnable, &state);
    }
 
    void WhenSabbathModeIs(bool state)
@@ -721,7 +721,7 @@ TEST_GROUP(Defrost_SingleEvap)
 
    void GivenEnhancedSabbathModeIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_EnhancedSabbathModeStatus, &state);
+      DataModel_Write(dataModel, Erd_EnhancedSabbathModeEnable, &state);
    }
 
    void WhenEnhancedSabbathModeIs(bool state)

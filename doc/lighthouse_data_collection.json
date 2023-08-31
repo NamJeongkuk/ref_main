@@ -313,12 +313,12 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_SabbathMode",
+         "name": "Erd_SabbathModeEnable",
          "interval": 60000
       },
       {
          "namespace": "mb",
-         "name": "Erd_EnhancedSabbathModeStatus",
+         "name": "Erd_EnhancedSabbathModeEnable",
          "interval": 60000
       },
       {

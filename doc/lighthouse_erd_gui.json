@@ -1083,7 +1083,7 @@
             {
                "namespace": "mb",
                "displayName": "Normal Sabbath Mode",
-               "name": "Erd_SabbathMode",
+               "name": "Erd_SabbathModeEnable",
                "read": true,
                "write": true,
                "interval": 1000000000
@@ -1091,7 +1091,7 @@
             {
                "namespace": "mb",
                "displayName": "Enhanced Sabbath Mode Status",
-               "name": "Erd_EnhancedSabbathModeStatus",
+               "name": "Erd_EnhancedSabbathModeEnable",
                "read": true,
                "write": true,
                "interval": 1000000000

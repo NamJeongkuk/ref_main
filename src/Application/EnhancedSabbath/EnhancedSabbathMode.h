@@ -33,7 +33,6 @@ typedef struct
    Erd_t overrideIceMakerEnabledValueErd; // bool
    Erd_t dispensingDisabledErd; // bool
    Erd_t waitingForDefrostErd; // bool
-   Erd_t sabbathGpioErd; // bool
    Erd_t gridOverrideEnabledErd; // bool
    Erd_t coolingModeErd; // CoolingMode_t
    Erd_t hsmStateErd; // EnhancedSabbathModeHsmState_t

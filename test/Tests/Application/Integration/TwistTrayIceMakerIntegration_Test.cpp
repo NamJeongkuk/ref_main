@@ -183,7 +183,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_SabbathMode,
+         Erd_SabbathModeEnable,
          &state);
    }
 

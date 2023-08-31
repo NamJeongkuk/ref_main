@@ -54,8 +54,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
    .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts,
    .defrostParameterSelectorReadyErd = Erd_DefrostParameterSelectorReady,
-   .sabbathModeErd = Erd_SabbathMode,
-   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeStatus,
+   .sabbathModeErd = Erd_SabbathModeEnable,
+   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost
 };
 
@@ -123,7 +123,7 @@ static const NextDefrostTypeArbiterConfig_t nextDefrostTypeArbiterConfig = {
    .defrostingErd = Erd_Defrosting,
    .freshFoodDefrostCountErd = Erd_FreshFoodDefrostCount,
    .numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd = Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost,
-   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeStatus,
+   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
    .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,

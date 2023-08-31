@@ -6,6 +6,7 @@
 
 #include "SabbathInhibitDoors.h"
 #include "utils.h"
+#include "Constants_Binary.h"
 
 enum
 {
@@ -39,9 +40,19 @@ static void InhibitDoorsInSabbathMode(void *context)
             instance->_private.config->doorResolvedPairErdList[index].doorStatusResolvedErd,
             &closed);
       }
+
+      DataModel_Write(
+         instance->_private.dataModel,
+         instance->_private.config->sabbathGpioErd,
+         clear);
    }
    else
    {
+      DataModel_Write(
+         instance->_private.dataModel,
+         instance->_private.config->sabbathGpioErd,
+         set);
+
       for(uint8_t index = 0; index < instance->_private.config->numberOfPairs; index++)
       {
          bool realDoorState;

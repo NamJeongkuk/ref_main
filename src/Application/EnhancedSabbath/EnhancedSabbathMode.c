@@ -338,14 +338,6 @@ static void SetCoolingModeTo(EnhancedSabbathMode_t *instance, CoolingMode_t cool
       &coolingMode);
 }
 
-static void SetSabbathGpioTo(EnhancedSabbathMode_t *instance, bool state)
-{
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->sabbathGpioErd,
-      &state);
-}
-
 static void SetEnhancedSabbathStatusTo(EnhancedSabbathMode_t *instance, bool state)
 {
    DataModel_Write(
@@ -500,7 +492,6 @@ static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          SetDispensingDisabledTo(instance, false);
          SetIceMakerEnabledOverrideRequestTo(instance, false);
          SetIceMakerEnabledOverrideValueTo(instance, true);
-         SetSabbathGpioTo(instance, true);
          SetLightVotesToOffAndDontCare(instance);
          break;
 
@@ -529,7 +520,6 @@ static bool State_Enabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          SetGridOverrideTo(instance, true);
          SetIceMakerEnabledOverrideRequestTo(instance, true);
          SetIceMakerEnabledOverrideValueTo(instance, false);
-         SetSabbathGpioTo(instance, false);
          SetDisableCompressorMinimumTimesToCareWithValue(instance, true);
          StartEnhancedSabbathMaxTimer(instance);
          SetLightVotesToParametricallyDefinedPwmDutyCyclePercentageAndCare(instance);
