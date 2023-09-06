@@ -14,6 +14,7 @@
 #include "ConstArrayMap_LinearSearch.h"
 #include "LightingDoorVoteResolver.h"
 #include "UserAllowableInteriorLightingRequestHandler.h"
+#include "UserAllowableInteriorLightingResolver.h"
 
 typedef struct
 {
@@ -30,8 +31,7 @@ typedef struct
       LightingDoorVoteResolver_t freezerBackWallLightingDoorVoteResolver;
       LightingDoorVoteResolver_t freezerTopLightLightingDoorVoteResolver;
       UserAllowableInteriorLightingRequestHandler_t userAllowable0LightingRequestHandler;
-      UserAllowableInteriorLightingRequestHandler_t userAllowable1LightingRequestHandler;
-      UserAllowableInteriorLightingRequestHandler_t userAllowable2LightingRequestHandler;
+      UserAllowableInteriorLightingResolver_t userAllowableInteriorLightingResolver;
    } _private;
 } SideBySideLightingPlugin_t;
 

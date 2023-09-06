@@ -78,16 +78,22 @@ static const UserAllowableLightingConfiguration_t userAllowable0InteriorLighting
    .userAllowableInteriorLightingConfigurationErd = Erd_DimmableLight0Configuration,
 };
 
-static const UserAllowableLightingConfiguration_t userAllowable1InteriorLightingRequestHandlerConfig = {
-   .userAllowableInteriorLightingRequestErd = Erd_DimmableLight1PercentLevelRequest,
-   .userAllowableInteriorLightingStateErd = Erd_DimmableLight1PercentLevelStatus,
-   .userAllowableInteriorLightingConfigurationErd = Erd_DimmableLight1Configuration,
+static const UserAllowableLightConfig_t userAllowableLightConfigs[] = {
+   {
+      .statusErd = Erd_DimmableLight0PercentLevelStatus,
+      .configErd = Erd_DimmableLight0Configuration,
+   }
 };
 
-static const UserAllowableLightingConfiguration_t userAllowable2InteriorLightingRequestHandlerConfig = {
-   .userAllowableInteriorLightingRequestErd = Erd_DimmableLight2PercentLevelRequest,
-   .userAllowableInteriorLightingStateErd = Erd_DimmableLight2PercentLevelStatus,
-   .userAllowableInteriorLightingConfigurationErd = Erd_DimmableLight2Configuration,
+static const UserAllowableInteriorLightingResolverConfiguration_t userAllowableInteriorLightingResolverConfig = {
+   .lights = {
+      .freshFoodBackLightUserAllowableStateErd = Erd_FreshFoodBackLightUserAllowableState,
+      .freshFoodTopLightUserAllowableStateErd = Erd_FreshFoodTopLightUserAllowableState,
+      .freezerBackLightUserAllowableStateErd = Erd_FreezerBackLightUserAllowableState,
+      .freezerTopLightUserAllowableStateErd = Erd_FreezerTopLightUserAllowableState,
+   },
+   .userAllowableLightConfigs = userAllowableLightConfigs,
+   .numberOfUserAllowableLightConfigs = NUM_ELEMENTS(userAllowableLightConfigs),
 };
 
 static const Erd_t freshFoodDoorErds[] = {
@@ -96,6 +102,7 @@ static const Erd_t freshFoodDoorErds[] = {
 
 static const LightingDoorVoteResolverConfig_t freshFoodBackWallLightingDoorVoteResolverConfig = {
    .timerModuleErd = Erd_TimerModule,
+   .userAllowableLightStateErd = Erd_FreshFoodBackLightUserAllowableState,
    .rampingPwmDutyCyclePercentageErd = Erd_FreshFoodBackWallLight_DoorVote,
    .doorIsOpenErds = freshFoodDoorErds,
    .numberOfDoorErds = NUM_ELEMENTS(freshFoodDoorErds),
@@ -103,6 +110,7 @@ static const LightingDoorVoteResolverConfig_t freshFoodBackWallLightingDoorVoteR
 
 static const LightingDoorVoteResolverConfig_t freshFoodTopLightLightingDoorVoteResolverConfig = {
    .timerModuleErd = Erd_TimerModule,
+   .userAllowableLightStateErd = Erd_FreshFoodTopLightUserAllowableState,
    .rampingPwmDutyCyclePercentageErd = Erd_FreshFoodTopLight_DoorVote,
    .doorIsOpenErds = freshFoodDoorErds,
    .numberOfDoorErds = NUM_ELEMENTS(freshFoodDoorErds),
@@ -114,6 +122,7 @@ static const Erd_t freezerDoorErds[] = {
 
 static const LightingDoorVoteResolverConfig_t freezerBackWallLightingDoorVoteResolverConfig = {
    .timerModuleErd = Erd_TimerModule,
+   .userAllowableLightStateErd = Erd_FreezerBackLightUserAllowableState,
    .rampingPwmDutyCyclePercentageErd = Erd_FreezerBackWallLight_DoorVote,
    .doorIsOpenErds = freezerDoorErds,
    .numberOfDoorErds = NUM_ELEMENTS(freezerDoorErds),
@@ -121,6 +130,7 @@ static const LightingDoorVoteResolverConfig_t freezerBackWallLightingDoorVoteRes
 
 static const LightingDoorVoteResolverConfig_t freezerTopLightLightingDoorVoteResolverConfig = {
    .timerModuleErd = Erd_TimerModule,
+   .userAllowableLightStateErd = Erd_FreezerTopLightUserAllowableState,
    .rampingPwmDutyCyclePercentageErd = Erd_FreezerTopLight_DoorVote,
    .doorIsOpenErds = freezerDoorErds,
    .numberOfDoorErds = NUM_ELEMENTS(freezerDoorErds),
@@ -175,39 +185,33 @@ void SideBySideLightingPlugin_Init(
       PersonalityParametricData_Get(dataModel)->lightingData->userAllowableInteriorLightingData->userAllowable0InteriorLightingBitmap,
       &userAllowable0InteriorLightingRequestHandlerConfig);
 
-   UserAllowableInteriorLightingRequestHandler_Init(
-      &instance->_private.userAllowable1LightingRequestHandler,
+   UserAllowableInteriorLightingResolver_Init(
+      &instance->_private.userAllowableInteriorLightingResolver,
       dataModel,
-      PersonalityParametricData_Get(dataModel)->lightingData->userAllowableInteriorLightingData->userAllowable1InteriorLightingBitmap,
-      &userAllowable1InteriorLightingRequestHandlerConfig);
-
-   UserAllowableInteriorLightingRequestHandler_Init(
-      &instance->_private.userAllowable2LightingRequestHandler,
-      dataModel,
-      PersonalityParametricData_Get(dataModel)->lightingData->userAllowableInteriorLightingData->userAllowable2InteriorLightingBitmap,
-      &userAllowable2InteriorLightingRequestHandlerConfig);
+      PersonalityParametricData_Get(dataModel)->lightingData,
+      &userAllowableInteriorLightingResolverConfig);
 
    LightingDoorVoteResolver_Init(
       &instance->_private.freshFoodBackWallLightingDoorVoteResolver,
       dataModel,
       &freshFoodBackWallLightingDoorVoteResolverConfig,
-      PersonalityParametricData_Get(dataModel)->lightingData->freshFoodBackWallDoorLightingData);
+      PersonalityParametricData_Get(dataModel)->lightingData->doorLightingDataSet.freshFoodBackWallDoorLightingData);
 
    LightingDoorVoteResolver_Init(
       &instance->_private.freshFoodTopLightLightingDoorVoteResolver,
       dataModel,
       &freshFoodTopLightLightingDoorVoteResolverConfig,
-      PersonalityParametricData_Get(dataModel)->lightingData->freshFoodTopAndSideDoorLightingData);
+      PersonalityParametricData_Get(dataModel)->lightingData->doorLightingDataSet.freshFoodTopAndSideDoorLightingData);
 
    LightingDoorVoteResolver_Init(
       &instance->_private.freezerBackWallLightingDoorVoteResolver,
       dataModel,
       &freezerBackWallLightingDoorVoteResolverConfig,
-      PersonalityParametricData_Get(dataModel)->lightingData->freezerBackWallDoorLightingData);
+      PersonalityParametricData_Get(dataModel)->lightingData->doorLightingDataSet.freezerBackWallDoorLightingData);
 
    LightingDoorVoteResolver_Init(
       &instance->_private.freezerTopLightLightingDoorVoteResolver,
       dataModel,
       &freezerTopLightLightingDoorVoteResolverConfig,
-      PersonalityParametricData_Get(dataModel)->lightingData->freezerTopAndSideDoorLightingData);
+      PersonalityParametricData_Get(dataModel)->lightingData->doorLightingDataSet.freezerTopAndSideDoorLightingData);
 }

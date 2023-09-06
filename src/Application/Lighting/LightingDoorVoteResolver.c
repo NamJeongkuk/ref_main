@@ -14,13 +14,14 @@
 #include "RampingPwmDutyCyclePercentageVote.h"
 #include "PersonalityParametricData.h"
 #include "RampingPwmDutyCyclePercentageBundleData.h"
+#include "UserAllowableInteriorLightState.h"
 
 enum
 {
    Signal_AnAssociatedDoorIsOpened = Fsm_UserSignalStart,
    Signal_AllAssociatedDoorsAreClosed,
    Signal_MaxDoorOpenTimeExpires,
-   Signal_TimeoutExpired
+   Signal_UserAllowableLightStateChanged
 };
 
 static void State_AnAssociatedDoorIsOpen(Fsm_t *fsm, const FsmSignal_t signal, const void *data);
@@ -45,6 +46,42 @@ static void SetRampingPwmVotedDutyCycleErdTo(
       &vote);
 }
 
+static UserAllowableInteriorLightState_t UserAllowableLightState(LightingDoorVoteResolver_t *instance)
+{
+   UserAllowableInteriorLightState_t userAllowableLightState;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->userAllowableLightStateErd,
+      &userAllowableLightState);
+
+   return userAllowableLightState;
+}
+
+static RampingPwmDutyCyclePercentage_t MaxParametricOrUserAllowableRampingPwmDutyCyclePercentage(
+   LightingDoorVoteResolver_t *instance,
+   RampingPwmDutyCyclePercentageBundleData_t rampingPwmDutyCyclePercentageBundleData)
+{
+   UserAllowableInteriorLightState_t userAllowableLightState = UserAllowableLightState(instance);
+   PercentageDutyCycle_t percentageDutyCycle;
+
+   if(userAllowableLightState.userAllowable)
+   {
+      percentageDutyCycle = userAllowableLightState.percentageDutyCycle;
+   }
+   else
+   {
+      percentageDutyCycle = rampingPwmDutyCyclePercentageBundleData.maxPwmDutyCyclePercentage;
+   }
+
+   RampingPwmDutyCyclePercentage_t maxPwmPercentage = {
+      .pwmDutyCyclePercentage = percentageDutyCycle,
+      .rampingUpCountInMsec = rampingPwmDutyCyclePercentageBundleData.maxPwmRampingUpCountInMsec,
+      .rampingDownCountInMsec = rampingPwmDutyCyclePercentageBundleData.maxPwmRampingDownCountInMsec,
+   };
+
+   return maxPwmPercentage;
+}
+
 static void SetRampingPwmDutyCyclePercentageToMinPwmDutyCyclePercentageThenToMaxPwmDutyCyclePercentage(
    LightingDoorVoteResolver_t *instance,
    RampingPwmDutyCyclePercentageBundleData_t rampingPwmDutyCyclePercentageBundleData)
@@ -56,11 +93,9 @@ static void SetRampingPwmDutyCyclePercentageToMinPwmDutyCyclePercentageThenToMax
    };
    SetRampingPwmVotedDutyCycleErdTo(instance, minPwmPercentage);
 
-   RampingPwmDutyCyclePercentage_t maxPwmPercentage = {
-      .pwmDutyCyclePercentage = rampingPwmDutyCyclePercentageBundleData.maxPwmDutyCyclePercentage,
-      .rampingUpCountInMsec = rampingPwmDutyCyclePercentageBundleData.maxPwmRampingUpCountInMsec,
-      .rampingDownCountInMsec = rampingPwmDutyCyclePercentageBundleData.maxPwmRampingDownCountInMsec,
-   };
+   RampingPwmDutyCyclePercentage_t maxPwmPercentage = MaxParametricOrUserAllowableRampingPwmDutyCyclePercentage(
+      instance,
+      rampingPwmDutyCyclePercentageBundleData);
    SetRampingPwmVotedDutyCycleErdTo(instance, maxPwmPercentage);
 }
 
@@ -132,6 +167,12 @@ void State_AnAssociatedDoorIsOpen(Fsm_t *fsm, const FsmSignal_t signal, const vo
 
       case Signal_MaxDoorOpenTimeExpires:
          SetRampingPwmDutyCyclePercentageToMinCycle(
+            instance,
+            RampingDutyCycleBundleBasedOffCurrentSystemMode(instance));
+         break;
+
+      case Signal_UserAllowableLightStateChanged:
+         SetRampingPwmDutyCyclePercentageToMinPwmDutyCyclePercentageThenToMaxPwmDutyCyclePercentage(
             instance,
             RampingDutyCycleBundleBasedOffCurrentSystemMode(instance));
          break;
@@ -226,6 +267,10 @@ static void OnDataModelChange(void *context, const void *_args)
       {
          Fsm_SendSignal(&instance->_private.fsm, Signal_AnAssociatedDoorIsOpened, NULL);
       }
+   }
+   else if(erd == instance->_private.config->userAllowableLightStateErd)
+   {
+      Fsm_SendSignal(&instance->_private.fsm, Signal_UserAllowableLightStateChanged, NULL);
    }
 }
 

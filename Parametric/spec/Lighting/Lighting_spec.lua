@@ -73,11 +73,13 @@ describe('Lighting', function()
       structure(
         u8(100),
         u8(15),
-        pointer(user_allowable_interior_lighting),
-        pointer(door_lighting),
-        pointer(door_lighting),
-        pointer(door_lighting),
-        pointer(door_lighting)
+        structure(
+          pointer(user_allowable_interior_lighting),
+          pointer(door_lighting),
+          pointer(door_lighting),
+          pointer(door_lighting),
+          pointer(door_lighting)
+        )
       )
     ]])
 

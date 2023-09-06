@@ -17,6 +17,7 @@
 typedef struct
 {
    Erd_t timerModuleErd; // TimerModule *
+   Erd_t userAllowableLightStateErd; // UserAllowableInteriorLightState_t
    Erd_t rampingPwmDutyCyclePercentageErd; // RampingPwmDutyCyclePercentageVote_t
    const Erd_t *doorIsOpenErds; // bool[]
    uint8_t numberOfDoorErds;

@@ -3029,6 +3029,34 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Fresh Food Back Light User Allowable State",
+          "name": "Erd_FreshFoodBackLightUserAllowableState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Top Light User Allowable State",
+          "name": "Erd_FreshFoodTopLightUserAllowableState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Back Light User Allowable State",
+          "name": "Erd_FreezerBackLightUserAllowableState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Top Light User Allowable State",
+          "name": "Erd_FreezerTopLightUserAllowableState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Erd_FreshFoodBackWallLight_ResolvedVote",
           "name": "Erd_FreshFoodBackWallLight_ResolvedVote",
           "read": true,

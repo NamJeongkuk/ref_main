@@ -122,6 +122,7 @@
 #include "SnackModeEnableRequest.h"
 #include "PresenceSensingEnableRequest.h"
 #include "PresenceActivatesRecessLightEnableRequest.h"
+#include "UserAllowableInteriorLightState.h"
 #include "RfidTypes.h"
 
 // clang-format off
@@ -1119,6 +1120,11 @@ enum
    ENTRY(Erd_DimmableLight2PercentLevelRequest,             0xF473, PercentageDutyCycle_t,                              Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DimmableLight2PercentLevelStatus,              0xF474, PercentageDutyCycle_t,                              Swap_No,    Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_MaxLightBrightness, NotFault) \
    ENTRY(Erd_DimmableLight2Configuration,                   0xF475, UserAllowableInteriorLightingBitmap_t,              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FreshFoodBackLightUserAllowableState,          0xF476, UserAllowableInteriorLightState_t,                  Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodTopLightUserAllowableState,           0xF477, UserAllowableInteriorLightState_t,                  Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerBackLightUserAllowableState,            0xF478, UserAllowableInteriorLightState_t,                  Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerTopLightUserAllowableState,             0xF479, UserAllowableInteriorLightState_t,                  Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_CalculatedCondenserFanControl,                 0xF480, FanControl_t,                                       Swap_Range_S, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CalculatedIceCabinetFanControl,                0xF481, FanControl_t,                                       Swap_Range,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \

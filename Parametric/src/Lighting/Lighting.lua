@@ -12,11 +12,13 @@ return function(core)
       structure(
         u8(config.maximum_light_duty_cycle_percentage),
         u8(config.maximum_interior_lights_on_time_in_minutes),
-        pointer(config.user_allowable_interior_lighting),
-        pointer(config.fresh_food_backwall),
-        pointer(config.fresh_food_top_and_side),
-        pointer(config.freezer_backwall),
-        pointer(config.freezer_top_and_side)
+        structure(
+          pointer(config.user_allowable_interior_lighting),
+          pointer(config.fresh_food_backwall),
+          pointer(config.fresh_food_top_and_side),
+          pointer(config.freezer_backwall),
+          pointer(config.freezer_top_and_side)
+        )
       )
     )
   end)

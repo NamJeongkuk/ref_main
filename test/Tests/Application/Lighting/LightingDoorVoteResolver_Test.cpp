@@ -17,6 +17,12 @@ extern "C"
 #include "uassert_test.h"
 #include "ReferDataModel_TestDouble.h"
 
+enum
+{
+   SomePercentageDutyCycle = 32,
+   AnotherPercentageDutyCycle = 68
+};
+
 static const Erd_t doorIsOpenErds[] = {
    Erd_LeftSideFreezerDoorStatusResolved,
    Erd_RightSideFreshFoodDoorStatusResolved
@@ -24,6 +30,7 @@ static const Erd_t doorIsOpenErds[] = {
 
 static LightingDoorVoteResolverConfig_t config = {
    .timerModuleErd = Erd_TimerModule,
+   .userAllowableLightStateErd = Erd_FreshFoodBackLightUserAllowableState,
    .rampingPwmDutyCyclePercentageErd = Erd_FreshFoodBackWallLight_DoorVote,
    .doorIsOpenErds = doorIsOpenErds,
    .numberOfDoorErds = NUM_ELEMENTS(doorIsOpenErds),
@@ -50,10 +57,12 @@ static const LightingData_t lightingData = {
    .maximumLightDutyCyclePercentage = 100,
    .maximumCompartmentLightOnTimeInMinutes = 15,
    .userAllowableInteriorLightingData = &userAllowableInteriorLightingData,
-   .freshFoodBackWallDoorLightingData = &doorLightingData,
-   .freshFoodTopAndSideDoorLightingData = &doorLightingData,
-   .freezerBackWallDoorLightingData = &doorLightingData,
-   .freezerTopAndSideDoorLightingData = &doorLightingData
+   .doorLightingDataSet = {
+      .freshFoodBackWallDoorLightingData = &doorLightingData,
+      .freshFoodTopAndSideDoorLightingData = &doorLightingData,
+      .freezerBackWallDoorLightingData = &doorLightingData,
+      .freezerTopAndSideDoorLightingData = &doorLightingData,
+   }
 };
 
 TEST_GROUP(LightingDoorVoteResolver)
@@ -83,7 +92,7 @@ TEST_GROUP(LightingDoorVoteResolver)
          &instance,
          dataModel,
          &config,
-         lightingData.freshFoodBackWallDoorLightingData);
+         lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData);
    }
 
    static void RampingUpCountChanged(void *context, const void *_args)
@@ -222,7 +231,7 @@ TEST_GROUP(LightingDoorVoteResolver)
       ThePwmVotedDutyCycleErdShouldBe(PercentageDutyCycle_Min);
 
       WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, true);
-      ThePwmVotedDutyCycleErdShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
+      ThePwmVotedDutyCycleErdShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
    }
 
    void GivenOneDoorIsOpenAndRampingUpCountInMsecIsMaxRampingUpCountInMsec()
@@ -232,10 +241,10 @@ TEST_GROUP(LightingDoorVoteResolver)
       GivenInitialization();
       GivenRampingUpCountSubscriptionIsInstalled();
 
-      TheRampingUpCountInMsecShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
+      TheRampingUpCountInMsecShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
 
       TheRampingUpCountShouldChangeTo(UINT8_MAX);
-      TheRampingUpCountShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
+      TheRampingUpCountShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
       WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, true);
    }
 
@@ -246,15 +255,25 @@ TEST_GROUP(LightingDoorVoteResolver)
       GivenInitialization();
       GivenRampingDownCountSubscriptionIsInstalled();
 
-      TheRampingDownCountInMsecShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
+      TheRampingDownCountInMsecShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
 
       TheRampingDownCountShouldChangeTo(UINT8_MAX);
-      TheRampingDownCountShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
+      TheRampingDownCountShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
       WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, true);
    }
 
    void NothingShouldHappen()
    {
+   }
+
+   void GivenUserAllowableStateIs(Erd_t erd, UserAllowableInteriorLightState_t state)
+   {
+      DataModel_Write(dataModel, erd, &state);
+   }
+
+   void WhenUserAllowableStateIs(Erd_t erd, UserAllowableInteriorLightState_t state)
+   {
+      GivenUserAllowableStateIs(erd, state);
    }
 };
 
@@ -273,7 +292,7 @@ TEST(LightingDoorVoteResolver, ShouldSetPwmVotedDutyCycleErdToParametricNormalOp
    GivenTheDoorIs(Erd_RightSideFreshFoodDoorStatusResolved, true);
    GivenInitialization();
 
-   ThePwmVotedDutyCycleErdShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
+   ThePwmVotedDutyCycleErdShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
 }
 
 TEST(LightingDoorVoteResolver, ShouldSetRampingUpCountInMsecToParametricMaxPwmRampingUpCountInMsecIfAllDoorsAreClosedOnInitialization)
@@ -282,7 +301,7 @@ TEST(LightingDoorVoteResolver, ShouldSetRampingUpCountInMsecToParametricMaxPwmRa
    GivenTheDoorIs(Erd_RightSideFreshFoodDoorStatusResolved, false);
    GivenInitialization();
 
-   TheRampingUpCountInMsecShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
+   TheRampingUpCountInMsecShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
 }
 
 TEST(LightingDoorVoteResolver, ShouldSetRampingUpCountInMsecToUint8MaxThenParametricMaxPwmRampingUpCountInMsecIfOneDoorIsOpenOnInitialization)
@@ -292,7 +311,7 @@ TEST(LightingDoorVoteResolver, ShouldSetRampingUpCountInMsecToUint8MaxThenParame
    GivenRampingUpCountSubscriptionIsInstalled();
 
    TheRampingUpCountShouldChangeTo(UINT8_MAX);
-   TheRampingUpCountShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
+   TheRampingUpCountShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
    GivenInitialization();
 }
 
@@ -302,7 +321,7 @@ TEST(LightingDoorVoteResolver, ShouldSetRampingDownCountInMsecToParametricMaxPwm
    GivenTheDoorIs(Erd_RightSideFreshFoodDoorStatusResolved, false);
    GivenInitialization();
 
-   TheRampingDownCountInMsecShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
+   TheRampingDownCountInMsecShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
 }
 
 TEST(LightingDoorVoteResolver, ShouldSetRampingDownCountInMsecToUint8MaxThenParametricMaxPwmRampingDownCountInMsecIfOneDoorIsOpenOnInitialization)
@@ -312,7 +331,7 @@ TEST(LightingDoorVoteResolver, ShouldSetRampingDownCountInMsecToUint8MaxThenPara
    GivenRampingDownCountSubscriptionIsInstalled();
 
    TheRampingDownCountShouldChangeTo(UINT8_MAX);
-   TheRampingDownCountShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
+   TheRampingDownCountShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
    GivenInitialization();
 }
 
@@ -325,7 +344,7 @@ TEST(LightingDoorVoteResolver, ShouldSetPwmVotedDutyCycleErdToParametricMaxPwmDu
    ThePwmVotedDutyCycleErdShouldBe(PercentageDutyCycle_Min);
 
    WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, true);
-   ThePwmVotedDutyCycleErdShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
+   ThePwmVotedDutyCycleErdShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
 }
 
 TEST(LightingDoorVoteResolver, ShouldSetPwmVotedDutyCycleErdToParametricMaxPwmDutyCycleWhenOneDoorOpensAndThenMinWhenAllDoorsAreClosed)
@@ -333,10 +352,10 @@ TEST(LightingDoorVoteResolver, ShouldSetPwmVotedDutyCycleErdToParametricMaxPwmDu
    GivenOneDoorIsOpenAndPwmVotedDutyCycleIsMax();
 
    WhenTheDoorStateChangesTo(Erd_RightSideFreshFoodDoorStatusResolved, true);
-   ThePwmVotedDutyCycleErdShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
+   ThePwmVotedDutyCycleErdShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
 
    WhenTheDoorStateChangesTo(Erd_RightSideFreshFoodDoorStatusResolved, false);
-   ThePwmVotedDutyCycleErdShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
+   ThePwmVotedDutyCycleErdShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
 
    WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, false);
    ThePwmVotedDutyCycleErdShouldBe(PercentageDutyCycle_Min);
@@ -349,10 +368,10 @@ TEST(LightingDoorVoteResolver, ShouldSetRampingUpCountInMsecToUint8MaxThenParame
    GivenInitialization();
    GivenRampingUpCountSubscriptionIsInstalled();
 
-   TheRampingUpCountInMsecShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
+   TheRampingUpCountInMsecShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
 
    TheRampingUpCountShouldChangeTo(UINT8_MAX);
-   TheRampingUpCountShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
+   TheRampingUpCountShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
    WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, true);
 }
 
@@ -364,9 +383,9 @@ TEST(LightingDoorVoteResolver, ShouldSetRampingUpCountInMsecToUint8MaxThenParame
    WhenTheDoorStateChangesTo(Erd_RightSideFreshFoodDoorStatusResolved, true);
 
    WhenTheDoorStateChangesTo(Erd_RightSideFreshFoodDoorStatusResolved, false);
-   TheRampingDownCountInMsecShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
+   TheRampingDownCountInMsecShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
 
-   TheRampingUpCountShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
+   TheRampingUpCountShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
    WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, false);
 }
 
@@ -377,10 +396,10 @@ TEST(LightingDoorVoteResolver, ShouldSetRampingDownCountInMsecToUint8MaxThenPara
    GivenInitialization();
    GivenRampingDownCountSubscriptionIsInstalled();
 
-   TheRampingDownCountInMsecShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
+   TheRampingDownCountInMsecShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
 
    TheRampingDownCountShouldChangeTo(UINT8_MAX);
-   TheRampingDownCountShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
+   TheRampingDownCountShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
    WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, true);
 }
 
@@ -392,9 +411,9 @@ TEST(LightingDoorVoteResolver, ShouldSetRampingDownCountInMsecToUint8MaxThenPara
    WhenTheDoorStateChangesTo(Erd_RightSideFreshFoodDoorStatusResolved, true);
 
    WhenTheDoorStateChangesTo(Erd_RightSideFreshFoodDoorStatusResolved, false);
-   TheRampingDownCountInMsecShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
+   TheRampingDownCountInMsecShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
 
-   TheRampingDownCountShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
+   TheRampingDownCountShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
    WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, false);
 }
 
@@ -407,10 +426,10 @@ TEST(LightingDoorVoteResolver, ShouldSetPwmVotedDutyCycleErdToMinWhenAnyDoorIsOp
    ThePwmVotedDutyCycleErdShouldBe(PercentageDutyCycle_Min);
 
    WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, true);
-   ThePwmVotedDutyCycleErdShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
+   ThePwmVotedDutyCycleErdShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
 
    After(lightingData.maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
-   ThePwmVotedDutyCycleErdShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
+   ThePwmVotedDutyCycleErdShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
 
    After(1);
    ThePwmVotedDutyCycleErdShouldBe(PercentageDutyCycle_Min);
@@ -423,16 +442,16 @@ TEST(LightingDoorVoteResolver, ShouldSetRampingUpCountInMsecToParametricMaxPwmRa
    GivenInitialization();
    GivenRampingUpCountSubscriptionIsInstalled();
 
-   TheRampingUpCountInMsecShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
+   TheRampingUpCountInMsecShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
 
    TheRampingUpCountShouldChangeTo(UINT8_MAX);
-   TheRampingUpCountShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
+   TheRampingUpCountShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
    WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, true);
 
    After(lightingData.maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
-   TheRampingUpCountInMsecShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
+   TheRampingUpCountInMsecShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
 
-   TheRampingUpCountShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
+   TheRampingUpCountShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
    After(1);
 }
 
@@ -443,16 +462,16 @@ TEST(LightingDoorVoteResolver, ShouldSetRampingDownCountInMsecToParametricMaxPwm
    GivenInitialization();
    GivenRampingDownCountSubscriptionIsInstalled();
 
-   TheRampingDownCountInMsecShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
+   TheRampingDownCountInMsecShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
 
    TheRampingDownCountShouldChangeTo(UINT8_MAX);
-   TheRampingDownCountShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
+   TheRampingDownCountShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
    WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, true);
 
    After(lightingData.maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
-   TheRampingDownCountInMsecShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
+   TheRampingDownCountInMsecShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
 
-   TheRampingDownCountShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
+   TheRampingDownCountShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
    After(1);
 }
 
@@ -465,14 +484,14 @@ TEST(LightingDoorVoteResolver, ShouldResetMaxDoorOpenTimeWhenAnotherDoorOpensWhi
    ThePwmVotedDutyCycleErdShouldBe(PercentageDutyCycle_Min);
 
    WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, true);
-   ThePwmVotedDutyCycleErdShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
+   ThePwmVotedDutyCycleErdShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
 
    After(lightingData.maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
-   ThePwmVotedDutyCycleErdShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
+   ThePwmVotedDutyCycleErdShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
 
    WhenTheDoorStateChangesTo(Erd_RightSideFreshFoodDoorStatusResolved, true);
    After(1);
-   ThePwmVotedDutyCycleErdShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
+   ThePwmVotedDutyCycleErdShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
 
    After(lightingData.maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
    ThePwmVotedDutyCycleErdShouldBe(PercentageDutyCycle_Min);
@@ -483,7 +502,7 @@ TEST(LightingDoorVoteResolver, ShouldSetPwmVotedDutyCycleErdToMinWhenOneDoorOpen
    GivenOneDoorIsOpenAndPwmVotedDutyCycleIsMax();
 
    After(lightingData.maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
-   ThePwmVotedDutyCycleErdShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
+   ThePwmVotedDutyCycleErdShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
 
    After(1);
    ThePwmVotedDutyCycleErdShouldBe(PercentageDutyCycle_Min);
@@ -494,9 +513,9 @@ TEST(LightingDoorVoteResolver, ShouldSetRampingUpCountInMsecToParametricMaxPwmRa
    GivenOneDoorIsOpenAndRampingUpCountInMsecIsMaxRampingUpCountInMsec();
 
    After(lightingData.maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
-   TheRampingUpCountInMsecShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
+   TheRampingUpCountInMsecShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
 
-   TheRampingUpCountShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
+   TheRampingUpCountShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
    After(1);
 }
 
@@ -505,9 +524,9 @@ TEST(LightingDoorVoteResolver, ShouldSetRampingDownCountInMsecToParametricMaxPwm
    GivenOneDoorIsOpenAndRampingDownCountInMsecIsMaxRampingDownCountInMsec();
 
    After(lightingData.maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
-   TheRampingDownCountInMsecShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
+   TheRampingDownCountInMsecShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
 
-   TheRampingDownCountShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
+   TheRampingDownCountShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
    After(1);
 }
 
@@ -519,7 +538,7 @@ TEST(LightingDoorVoteResolver, ShouldNotRedoRampingLightOnWhenADoorOpensAndAnoth
    GivenRampingDownCountSubscriptionIsInstalled();
 
    TheRampingDownCountShouldChangeTo(UINT8_MAX);
-   TheRampingDownCountShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
+   TheRampingDownCountShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingDownCountInMsec);
    WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, true);
 
    NothingShouldHappen();
@@ -534,7 +553,7 @@ TEST(LightingDoorVoteResolver, ShouldNotRedoRampingLightOnWhenADoorOpensAndAnoth
    GivenRampingUpCountSubscriptionIsInstalled();
 
    TheRampingUpCountShouldChangeTo(UINT8_MAX);
-   TheRampingUpCountShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
+   TheRampingUpCountShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmRampingUpCountInMsec);
    WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, true);
 
    NothingShouldHappen();
@@ -548,12 +567,51 @@ TEST(LightingDoorVoteResolver, ShouldNotRedoRampingLightOnWhenADoorOpensAndAnoth
    GivenInitialization();
    GivenPwmDutyCycleSubscriptionIsInstalled();
 
-   ThePwmDutyCycleShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.minPwmDutyCyclePercentage);
-   ThePwmDutyCycleShouldChangeTo(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
+   ThePwmDutyCycleShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.minPwmDutyCyclePercentage);
+   ThePwmDutyCycleShouldChangeTo(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
    WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, true);
 
    NothingShouldHappen();
    WhenTheDoorStateChangesTo(Erd_RightSideFreshFoodDoorStatusResolved, true);
+}
+
+TEST(LightingDoorVoteResolver, ShouldSetPwmVotedDutyCycleErdsToUserAllowableRequestedPwmDutyCycleIfOneDoorIsOpenOnInitializationAndTheUserAllowableStateIsTrue)
+{
+   GivenUserAllowableStateIs(Erd_FreshFoodBackLightUserAllowableState, { true, SomePercentageDutyCycle });
+   GivenTheDoorIs(Erd_LeftSideFreezerDoorStatusResolved, false);
+   GivenTheDoorIs(Erd_RightSideFreshFoodDoorStatusResolved, true);
+   GivenInitialization();
+
+   ThePwmVotedDutyCycleErdShouldBe(SomePercentageDutyCycle);
+}
+
+TEST(LightingDoorVoteResolver, ShouldUpdatePwmVotedDutyCycleErdsToUserAllowableRequestedPwmDutyCycleIfRequestChangesWhileADoorIsOpen)
+{
+   GivenUserAllowableStateIs(Erd_FreshFoodBackLightUserAllowableState, { true, SomePercentageDutyCycle });
+   GivenTheDoorIs(Erd_LeftSideFreezerDoorStatusResolved, false);
+   GivenTheDoorIs(Erd_RightSideFreshFoodDoorStatusResolved, true);
+   GivenInitialization();
+
+   ThePwmVotedDutyCycleErdShouldBe(SomePercentageDutyCycle);
+
+   WhenUserAllowableStateIs(Erd_FreshFoodBackLightUserAllowableState, { true, AnotherPercentageDutyCycle });
+   ThePwmVotedDutyCycleErdShouldBe(AnotherPercentageDutyCycle);
+}
+
+TEST(LightingDoorVoteResolver, ShouldNotUpdatePwmVotedDutyCycleErdsToUserAllowableRequestedPwmDutyCycleIfRequestChangesWhileDoorsAreClosed)
+{
+   GivenUserAllowableStateIs(Erd_FreshFoodBackLightUserAllowableState, { true, SomePercentageDutyCycle });
+   GivenTheDoorIs(Erd_LeftSideFreezerDoorStatusResolved, false);
+   GivenTheDoorIs(Erd_RightSideFreshFoodDoorStatusResolved, true);
+   GivenInitialization();
+
+   ThePwmVotedDutyCycleErdShouldBe(SomePercentageDutyCycle);
+
+   WhenTheDoorStateChangesTo(Erd_RightSideFreshFoodDoorStatusResolved, false);
+   ThePwmVotedDutyCycleErdShouldBe(PercentageDutyCycle_Min);
+
+   WhenUserAllowableStateIs(Erd_FreshFoodBackLightUserAllowableState, { true, AnotherPercentageDutyCycle });
+   ThePwmVotedDutyCycleErdShouldBe(PercentageDutyCycle_Min);
 }
 
 TEST(LightingDoorVoteResolver, ShouldNotTurnLightsOnAfterTheMaxOpenDoorTimeUntilAllDoorsAreClosedAndThenADoorOpens)
@@ -565,10 +623,10 @@ TEST(LightingDoorVoteResolver, ShouldNotTurnLightsOnAfterTheMaxOpenDoorTimeUntil
    ThePwmVotedDutyCycleErdShouldBe(PercentageDutyCycle_Min);
 
    WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, true);
-   ThePwmVotedDutyCycleErdShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
+   ThePwmVotedDutyCycleErdShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
 
    After(lightingData.maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
-   ThePwmVotedDutyCycleErdShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
+   ThePwmVotedDutyCycleErdShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
 
    After(1);
    ThePwmVotedDutyCycleErdShouldBe(PercentageDutyCycle_Min);
@@ -580,7 +638,7 @@ TEST(LightingDoorVoteResolver, ShouldNotTurnLightsOnAfterTheMaxOpenDoorTimeUntil
    WhenTheDoorStateChangesTo(Erd_RightSideFreshFoodDoorStatusResolved, false);
 
    WhenTheDoorStateChangesTo(Erd_LeftSideFreezerDoorStatusResolved, true);
-   ThePwmVotedDutyCycleErdShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
+   ThePwmVotedDutyCycleErdShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
 }
 
 TEST(LightingDoorVoteResolver, ShouldTurnOffLightsAfterMaxOpenDoorTimeAsLongAsOneDoorIsStillOpen)
@@ -589,11 +647,11 @@ TEST(LightingDoorVoteResolver, ShouldTurnOffLightsAfterMaxOpenDoorTimeAsLongAsOn
    GivenTheDoorIs(Erd_RightSideFreshFoodDoorStatusResolved, true);
    GivenInitialization();
 
-   ThePwmVotedDutyCycleErdShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
+   ThePwmVotedDutyCycleErdShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
 
    After(lightingData.maximumCompartmentLightOnTimeInMinutes * MSEC_PER_MIN - 1);
    WhenTheDoorStateChangesTo(Erd_RightSideFreshFoodDoorStatusResolved, false);
-   ThePwmVotedDutyCycleErdShouldBe(lightingData.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
+   ThePwmVotedDutyCycleErdShouldBe(lightingData.doorLightingDataSet.freshFoodBackWallDoorLightingData->normalOperationRampingPwmDutyCycle.maxPwmDutyCyclePercentage);
 
    After(1);
    ThePwmVotedDutyCycleErdShouldBe(PercentageDutyCycle_Min);
