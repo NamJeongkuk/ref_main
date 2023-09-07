@@ -62,6 +62,12 @@ void NonVolatileDataSourceDefaultData_DispenseSelection(void *data, size_t dataS
  * @param data
  * @param dataSize
  */
+void NonVolatileDataSourceDefaultData_FullDefrost(void *data, size_t dataSize);
+
+/*!
+ * @param data
+ * @param dataSize
+ */
 void NonVolatileDataSourceDefaultData_MaxLightBrightness(void *data, size_t dataSize);
 
 #endif

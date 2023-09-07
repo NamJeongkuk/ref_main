@@ -59,7 +59,7 @@ return defrost({
   },
   post_dwell = {
     post_dwell_exit_time_in_minutes = 10,
-    fresh_food_only_post_dwell_exit_time_in_minutes = 10,
+    fresh_food_only_post_dwell_exit_time_in_minutes = 20,
     post_dwell_freezer_evap_exit_temperature_in_degfx100 = -1000,
     fresh_food_only_post_dwell_freezer_evap_exit_temperature_in_degfx100 = -1200,
     post_dwell_refrigerant_valve_position = 'position_B',

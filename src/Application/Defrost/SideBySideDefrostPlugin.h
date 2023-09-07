@@ -13,7 +13,6 @@
 #include "DefrostHeaterMaxOnTime.h"
 #include "DefrostStateOnCompareMatch.h"
 #include "TimeThatPrechillConditionsAreMet.h"
-#include "DefrostParameterSelector.h"
 #include "DefrostStateOnCompareMatch.h"
 #include "DefrostHeaterOnTimeCounter.h"
 #include "FreezerDefrostHeaterVotingFrameworkPlugin.h"
@@ -29,7 +28,6 @@ typedef struct
       DefrostHeaterMaxOnTime_t defrostHeaterMaxOnTime;
       ReadyToDefrost_t readyToDefrost;
       TimeThatPrechillConditionsAreMet_t timeThatPrechillConditionsAreMet;
-      DefrostParameterSelector_t defrostParameterSelector;
       DefrostStateOnCompareMatch_t defrostStateOnCompareMatch;
       DefrostHeaterOnTimeCounter_t defrostHeaterOnTimeCounter;
       FreezerDefrostHeaterVotingFrameworkPlugin_t freezerDefrostHeaterVotingFramework;

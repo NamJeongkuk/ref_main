@@ -6,7 +6,6 @@
  */
 
 #include "SideBySideDefrostPlugin.h"
-#include "DefrostParameterSelector.h"
 #include "FreezerFilteredTemperatureTooWarmOnPowerUp.h"
 #include "SystemErds.h"
 #include "uassert.h"
@@ -30,7 +29,6 @@ static const DefrostConfiguration_t defrostConfig = {
    .coolingModeErd = Erd_CoolingMode,
    .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
    .disableCompressorMinimumTimesVoteErd = Erd_DisableMinimumCompressorTimes_DefrostVote,
-   .maxPrechillTimeInMinutesErd = Erd_MaxPrechillTimeInMinutes,
    .timeThatPrechillConditionsAreMetInMinutesErd = Erd_TimeThatPrechillConditionsAreMetInMinutes,
    .compressorSpeedVoteErd = Erd_CompressorSpeed_DefrostVote,
    .condenserFanSpeedVoteErd = Erd_CondenserFanSpeed_DefrostVote,
@@ -53,7 +51,6 @@ static const DefrostConfiguration_t defrostConfig = {
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill,
    .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
    .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts,
-   .defrostParameterSelectorReadyErd = Erd_DefrostParameterSelectorReady,
    .sabbathModeErd = Erd_SabbathModeEnable,
    .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost
@@ -129,7 +126,6 @@ static const NextDefrostTypeArbiterConfig_t nextDefrostTypeArbiterConfig = {
    .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .currentDefrostTypeErd = Erd_CurrentDefrostType,
-   .clearedDefrostEepromStartupErd = Erd_Eeprom_ClearedDefrostEepromStartup,
    .freezerFilteredTemperatureTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp
 };
 
@@ -203,13 +199,15 @@ void SideBySideDefrostPlugin_Init(SideBySideDefrostPlugin_t *instance, I_DataMod
 
    FreezerFilteredTemperatureTooWarmOnPowerUp_Init(dataModel);
 
-   DefrostParameterSelector_Init(&instance->_private.defrostParameterSelector, dataModel);
-
    FreezerDefrostHeaterVotingFrameworkPlugin_Init(&instance->_private.freezerDefrostHeaterVotingFramework, dataModel);
 
    DefrostStateOnCompareMatch_Init(&instance->_private.defrostStateOnCompareMatch, dataModel);
 
-   Defrost_Init(&instance->_private.defrost, dataModel, &defrostConfig);
+   Defrost_Init(
+      &instance->_private.defrost,
+      dataModel,
+      &defrostConfig,
+      PersonalityParametricData_Get(dataModel)->defrostData);
 
    DefrostHeaterOnTimeCounter_Init(
       &instance->_private.defrostHeaterOnTimeCounter,

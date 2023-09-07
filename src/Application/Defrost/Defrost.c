@@ -253,26 +253,50 @@ static bool FreezerThermistorIsValid(Defrost_t *instance)
    return state;
 }
 
-static uint8_t MaxPrechillTime(Defrost_t *instance)
+static DefrostType_t CurrentDefrostType(Defrost_t *instance)
 {
-   uint8_t maxPrechillTime;
+   DefrostType_t currentDefrostType;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->maxPrechillTimeInMinutesErd,
-      &maxPrechillTime);
+      instance->_private.config->currentDefrostTypeErd,
+      &currentDefrostType);
 
-   return maxPrechillTime;
+   return currentDefrostType;
 }
 
-static uint16_t TimeThatPrechillConditionsAreMet(Defrost_t *instance)
+static uint8_t MaxPrechillTimeInMinutes(Defrost_t *instance)
 {
-   uint16_t timeThatPrechillConditionsAreMet;
+   if(CurrentDefrostType(instance) == DefrostType_FreshFood)
+   {
+      return instance->_private.defrostParametricData->prechillData.maxPrechillTimeForFreshFoodOnlyDefrostInMinutes;
+   }
+   else
+   {
+      return instance->_private.defrostParametricData->prechillData.maxPrechillTimeInMinutes;
+   }
+}
+
+static uint8_t PostDwellExitTimeInMinutes(Defrost_t *instance)
+{
+   if(CurrentDefrostType(instance) == DefrostType_FreshFood)
+   {
+      return instance->_private.defrostParametricData->postDwellData.freshFoodOnlyPostDwellExitTimeInMinutes;
+   }
+   else
+   {
+      return instance->_private.defrostParametricData->postDwellData.postDwellExitTimeInMinutes;
+   }
+}
+
+static uint16_t TimeThatPrechillConditionsAreMetInMinutes(Defrost_t *instance)
+{
+   uint16_t timeThatPrechillConditionsAreMetInMinutes;
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->timeThatPrechillConditionsAreMetInMinutesErd,
-      &timeThatPrechillConditionsAreMet);
+      &timeThatPrechillConditionsAreMetInMinutes);
 
-   return timeThatPrechillConditionsAreMet;
+   return timeThatPrechillConditionsAreMetInMinutes;
 }
 
 static void DefrostTimerExpired(void *context)
@@ -873,7 +897,9 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          }
          else
          {
-            StartDefrostTimer(instance, instance->_private.defrostParametricData->prechillPrepData.maxPrechillPrepTimeInMinutes * MSEC_PER_MIN);
+            StartDefrostTimer(
+               instance,
+               instance->_private.defrostParametricData->prechillPrepData.maxPrechillPrepTimeInMinutes * MSEC_PER_MIN);
          }
          break;
 
@@ -903,7 +929,7 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          SetHsmStateTo(instance, DefrostHsmState_Prechill);
          VoteForPrechillLoads(instance, Vote_Care);
 
-         if(TimeThatPrechillConditionsAreMet(instance) >= MaxPrechillTime(instance))
+         if(TimeThatPrechillConditionsAreMetInMinutes(instance) >= MaxPrechillTimeInMinutes(instance))
          {
             Hsm_Transition(hsm, State_HeaterOnEntry);
          }
@@ -911,9 +937,9 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          {
             StartDefrostTimer(
                instance,
-               TRUNCATE_UNSIGNED_SUBTRACTION((uint16_t)MaxPrechillTime(instance),
-                  TimeThatPrechillConditionsAreMet(instance)) *
-                  MSEC_PER_MIN);
+               (TimerTicks_t)(((uint8_t)(TRUNCATE_UNSIGNED_SUBTRACTION((uint16_t)MaxPrechillTimeInMinutes(instance),
+                                 TimeThatPrechillConditionsAreMetInMinutes(instance)))) *
+                  MSEC_PER_MIN));
          }
 
          CheckIfPrechillTemperatureExitConditionMet(instance);
@@ -1114,7 +1140,7 @@ static bool State_PostDwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          VoteForPostDwellLoads(instance, Vote_Care);
          StartDefrostTimer(
             instance,
-            instance->_private.defrostParametricData->postDwellData.postDwellExitTimeInMinutes * MSEC_PER_MIN);
+            PostDwellExitTimeInMinutes(instance) * MSEC_PER_MIN);
          break;
 
       case Signal_DefrostTimerExpired:
@@ -1324,16 +1350,9 @@ static void DataModelChanged(void *context, const void *args)
 void Defrost_Init(
    Defrost_t *instance,
    I_DataModel_t *dataModel,
-   const DefrostConfiguration_t *defrostConfig)
+   const DefrostConfiguration_t *defrostConfig,
+   const DefrostData_t *defrostData)
 {
-   bool defrostParameterSelectorReady;
-   DataModel_Read(
-      dataModel,
-      defrostConfig->defrostParameterSelectorReadyErd,
-      &defrostParameterSelectorReady);
-
-   uassert(defrostParameterSelectorReady);
-
    bool freezerFilteredTemperatureTooWarmOnPowerUpReady;
    DataModel_Read(
       dataModel,
@@ -1344,7 +1363,7 @@ void Defrost_Init(
 
    instance->_private.dataModel = dataModel;
    instance->_private.config = defrostConfig;
-   instance->_private.defrostParametricData = PersonalityParametricData_Get(dataModel)->defrostData;
+   instance->_private.defrostParametricData = defrostData;
    instance->_private.sabbathParametricData = PersonalityParametricData_Get(dataModel)->sabbathData;
    instance->_private.gridParametricData = PersonalityParametricData_Get(dataModel)->gridData;
    instance->_private.evaporatorParametricData = PersonalityParametricData_Get(dataModel)->evaporatorData;

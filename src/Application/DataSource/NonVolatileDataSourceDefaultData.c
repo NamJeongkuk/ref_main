@@ -55,6 +55,12 @@ void NonVolatileDataSourceDefaultData_DispenseSelection(void *data, size_t dataS
    memcpy(data, &defaultDispenseSelection, dataSize);
 }
 
+void NonVolatileDataSourceDefaultData_FullDefrost(void *data, size_t dataSize)
+{
+   DefrostType_t defaultDefrostType = DefrostType_Full;
+   memcpy(data, &defaultDefrostType, dataSize);
+}
+
 void NonVolatileDataSourceDefaultData_MaxLightBrightness(void *data, size_t dataSize)
 {
    PercentageDutyCycle_t maxLightBrightness = PercentageDutyCycle_Max;

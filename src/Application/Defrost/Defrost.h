@@ -36,7 +36,6 @@ typedef struct
    Erd_t coolingModeErd; // CoolingMode_t
    Erd_t freezerFilteredTemperatureTooWarmOnPowerUpReadyErd; // bool
    Erd_t disableCompressorMinimumTimesVoteErd; // BooleanVotedState_t
-   Erd_t maxPrechillTimeInMinutesErd; // uint8_t
    Erd_t timeThatPrechillConditionsAreMetInMinutesErd; // uint16_t
    Erd_t compressorSpeedVoteErd; // CompressorVotedSpeed_t
    Erd_t condenserFanSpeedVoteErd; // FanVotedSpeed_t
@@ -59,7 +58,6 @@ typedef struct
    Erd_t dontSkipDefrostPrechillErd; // bool
    Erd_t invalidFreezerEvaporatorThermistorDuringDefrostErd; // bool
    Erd_t useMinimumReadyToDefrostTimeAndResetDefrostCountsErd; // bool
-   Erd_t defrostParameterSelectorReadyErd; // bool
    Erd_t sabbathModeErd; // bool
    Erd_t enhancedSabbathModeErd; // bool
    Erd_t sabbathIsReadyToDefrostErd; // bool
@@ -84,6 +82,7 @@ typedef struct
 void Defrost_Init(
    Defrost_t *instance,
    I_DataModel_t *dataModel,
-   const DefrostConfiguration_t *defrostConfig);
+   const DefrostConfiguration_t *defrostConfig,
+   const DefrostData_t *defrostData);
 
 #endif

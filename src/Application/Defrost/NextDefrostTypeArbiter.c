@@ -14,12 +14,22 @@
 
 static void UpdateNextDefrostTypeTo(
    NextDefrostTypeArbiter_t *instance,
-   DefrostType_t nextDefrostType)
+   DefrostType_t defrostType)
 {
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->nextDefrostTypeErd,
-      &nextDefrostType);
+      &defrostType);
+}
+
+static void UpdateCurrentDefrostTypeTo(
+   NextDefrostTypeArbiter_t *instance,
+   DefrostType_t defrostType)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->currentDefrostTypeErd,
+      &defrostType);
 }
 
 static DefrostType_t CurrentDefrostType(NextDefrostTypeArbiter_t *instance)
@@ -131,7 +141,7 @@ static uint8_t FreshFoodDefrostCount(NextDefrostTypeArbiter_t *instance)
    return freshFoodDefrostCount;
 }
 
-static uint8_t NumberOfFreshFoodDefrosts(NextDefrostTypeArbiter_t *instance)
+static uint8_t NumberOfFreshFoodDefrostsBeforeAFreezerDefrost(NextDefrostTypeArbiter_t *instance)
 {
    uint8_t numberOfFreshFoodDefrosts;
    DataModel_Read(
@@ -148,17 +158,6 @@ static void ResetFreshFoodDefrostCount(NextDefrostTypeArbiter_t *instance)
       instance->_private.dataModel,
       instance->_private.config->freshFoodDefrostCountErd,
       clear);
-}
-
-static bool ClearedDefrostEepromStartupIsSet(NextDefrostTypeArbiter_t *instance)
-{
-   bool clearedDefrostEepromStartupIsSet;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->clearedDefrostEepromStartupErd,
-      &clearedDefrostEepromStartupIsSet);
-
-   return clearedDefrostEepromStartupIsSet;
 }
 
 static bool FreezerFilteredTemperatureTooWarmAtPowerUpIsSet(NextDefrostTypeArbiter_t *instance)
@@ -187,7 +186,7 @@ static void DataModelUpdated(void *context, const void *_args)
          {
             IncreaseFreshFoodDefrostCount(instance);
 
-            if(FreshFoodDefrostCount(instance) >= NumberOfFreshFoodDefrosts(instance))
+            if(FreshFoodDefrostCount(instance) >= NumberOfFreshFoodDefrostsBeforeAFreezerDefrost(instance))
             {
                UpdateNextDefrostTypeTo(instance, DefrostType_Full);
             }
@@ -220,20 +219,17 @@ void NextDefrostTypeArbiter_Init(
 
    DetermineNumberOfFreshFoodDefrostsBeforeAFreezerDefrost(instance);
 
-   if(NumberOfFreshFoodDefrosts(instance) == 0)
+   if(NumberOfFreshFoodDefrostsBeforeAFreezerDefrost(instance) == 0)
    {
+      UpdateCurrentDefrostTypeTo(instance, DefrostType_Full);
       UpdateNextDefrostTypeTo(instance, DefrostType_Full);
    }
    else
    {
-      if(FreezerFilteredTemperatureTooWarmAtPowerUpIsSet(instance) ||
-         ClearedDefrostEepromStartupIsSet(instance))
+      if(FreezerFilteredTemperatureTooWarmAtPowerUpIsSet(instance))
       {
+         UpdateCurrentDefrostTypeTo(instance, DefrostType_Full);
          UpdateNextDefrostTypeTo(instance, DefrostType_Full);
-      }
-      else
-      {
-         UpdateNextDefrostTypeTo(instance, DefrostType_FreshFood);
       }
 
       EventSubscription_Init(
@@ -245,6 +241,4 @@ void NextDefrostTypeArbiter_Init(
          dataModel,
          &instance->_private.dataModelSubscription);
    }
-
-   ResetFreshFoodDefrostCount(instance);
 }

@@ -247,6 +247,24 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       DataModel_Write(dataModel, Erd_FreezerThermistor_AdcCount, &invalidCounts);
    }
 
+   void WhenTheFreezerEvaporatorThermistorIsGreaterThanPrechillExitTemperature()
+   {
+      AdcCounts_t abovePrechillExitTemperatureCounts = 9728; // -2117 > -3000
+      DataModel_Write(dataModel, Erd_FreezerEvapThermistor_AdcCount, &abovePrechillExitTemperatureCounts);
+   }
+
+   void WhenTheFreezerThermistorIsGreaterThanPrechillFreezerMinTemperature()
+   {
+      AdcCounts_t abovePrechillMinTemperatureCounts = 19072; // 496 > -600
+      DataModel_Write(dataModel, Erd_FreezerThermistor_AdcCount, &abovePrechillMinTemperatureCounts);
+   }
+
+   void WhenTheFreshFoodThermistorIsInvalid()
+   {
+      AdcCounts_t abovePrechillFreshFoodMinTemperatureCounts = 61000;
+      DataModel_Write(dataModel, Erd_FreshFoodThermistor_AdcCount, &abovePrechillFreshFoodMinTemperatureCounts);
+   }
+
    void CompressorOnTimeInSecondsShouldBe(uint32_t expectedSeconds)
    {
       uint32_t actualSeconds;
@@ -837,6 +855,35 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       DataModel_Read(dataModel, Erd_TimeBetweenDefrostsInMinutes, &normalTime);
 
       CHECK_TRUE(sabbathTime > normalTime);
+   }
+
+   void CurrentDefrostTypeShouldBe(DefrostType_t expected)
+   {
+      DefrostType_t actual;
+      DataModel_Read(dataModel, Erd_CurrentDefrostType, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void WhenTimeBetweenDefrostsMeetsMaxTimeBetweenDefrostsWithCompressorOnTimeAndFreezerDoorOpenAndIsInPrechillPrep()
+   {
+      WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
+
+      After(defrostData->idleData.maxTimeBetweenDefrostsInMinutes * MSEC_PER_MIN -
+         defrostData->idleData.freezerDoorIncrementFactorInSecondsPerSecond * MSEC_PER_SEC);
+
+      WhenGridVotesToTurnOffCompressorAndWinsAndDoesNotHaveToWaitMinimumOffTimeBecauseItAlreadyPassed();
+
+      WhenFreezerDoorIs(Open);
+      DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+      After(1 * MSEC_PER_SEC);
+      DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+   }
+
+   void RunTimerModuleToSaveErdInEeprom()
+   {
+      After(100);
    }
 };
 
@@ -1618,4 +1665,62 @@ TEST(DefrostIntegration_SingleEvap, ShouldDefrostAfterWaitingForFullSabbathTimeB
    After(1);
    SabbathIsReadyToDefrostShouldBe(true);
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldStartWithAFullDefrostAndCompletePrechillViaTheAppropriateMaxPrechillTimeWhenPrechillConditionsAreNotMet)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
+   CurrentDefrostTypeShouldBe(DefrostType_Full);
+
+   WhenTimeBetweenDefrostsMeetsMaxTimeBetweenDefrostsWithCompressorOnTimeAndFreezerDoorOpenAndIsInPrechillPrep();
+
+   CompressorShouldBe(OFF);
+   CoolingModeShouldBe(CoolingMode_Freezer);
+
+   WhenTheFreezerEvaporatorThermistorIsGreaterThanPrechillExitTemperature();
+   WhenTheFreshFoodThermistorIsInvalid();
+   WhenTheFreezerThermistorIsGreaterThanPrechillFreezerMinTemperature();
+
+   After(defrostData->prechillPrepData.maxPrechillPrepTimeInMinutes * MSEC_PER_MIN);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+
+   After(defrostData->prechillData.maxPrechillTimeInMinutes * MSEC_PER_MIN);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldExitPostDwellAfterNormalPostDwellExitTimeIfUnitPowersOnInDwell)
+{
+   GivenDefrostStateWas(DefrostState_Dwell);
+   RunTimerModuleToSaveErdInEeprom();
+   WhenRefrigeratorResetsWithFreezerNotTooWarm();
+
+   DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
+   CurrentDefrostTypeShouldBe(DefrostType_Full);
+   After(defrostData->dwellData.dwellTimeInMinutes * MSEC_PER_MIN);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
+
+   After(defrostData->postDwellData.postDwellExitTimeInMinutes * MSEC_PER_MIN - 1);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
+
+   After(1);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldExitPostDwellAfterNormalPostDwellExitTimeIfUnitPowersOnInHeaterOn)
+{
+   GivenDefrostStateWas(DefrostState_HeaterOn);
+   RunTimerModuleToSaveErdInEeprom();
+   WhenRefrigeratorResetsWithFreezerNotTooWarm();
+   GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
+   CurrentDefrostTypeShouldBe(DefrostType_Full);
+
+   DefrostExitsHeaterOnEntryAndIsInHeaterAfterHeaterOnDelayAfterCompressorOffTime();
+   DefrostExitsHeaterOnAndIsInDwellBecauseFreezerEvaporatorReachesTerminationTemperature();
+   DefrostExitsDwellAndIsInPostDwellAfterDwellTime();
+
+   After(defrostData->postDwellData.postDwellExitTimeInMinutes * MSEC_PER_MIN - 1);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
+
+   TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Idle);
+   After(1);
 }

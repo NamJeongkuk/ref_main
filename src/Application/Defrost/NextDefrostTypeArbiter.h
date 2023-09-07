@@ -25,7 +25,6 @@ typedef struct
    Erd_t hasConvertibleCompartmentErd; // bool
    Erd_t convertibleCompartmentStateErd; // ConvertibleCompartmentStateType_t
    Erd_t currentDefrostTypeErd; // DefrostType_t
-   Erd_t clearedDefrostEepromStartupErd; // bool
    Erd_t freezerFilteredTemperatureTooWarmAtPowerUpErd; // bool
 } NextDefrostTypeArbiterConfig_t;
 
