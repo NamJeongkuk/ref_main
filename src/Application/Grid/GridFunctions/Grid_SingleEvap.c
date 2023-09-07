@@ -220,7 +220,6 @@ void Grid_SingleEvap(void *context)
       case 10:
          SetCoolingMode(dataModel, (currentCoolingSpeed == CoolingSpeed_Off) ? CoolingMode_Freezer : currentCoolingMode);
          SetCoolingSpeed(dataModel, CoolingSpeed_High);
-
          break;
 
       case 11:
