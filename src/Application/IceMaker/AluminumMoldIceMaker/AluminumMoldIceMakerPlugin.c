@@ -47,7 +47,7 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .aluminumMoldIceMakerTestRequestErd = Erd_AluminumMoldIceMakerTestRequest,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
    .coolingSystemOffStatusErd = Erd_CoolingOffStatus,
-   .dispensingInhibitedErd = Erd_DispensingInhibited
+   .dispensingInhibitedErd = Erd_DispensingInhibitedReason
 };
 
 static const FeelerArmMonitorConfig_t feelerArmMonitorConfig = {

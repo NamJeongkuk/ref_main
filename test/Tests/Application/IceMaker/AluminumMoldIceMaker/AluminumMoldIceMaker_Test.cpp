@@ -51,7 +51,7 @@ static const AluminumMoldIceMakerConfig_t config = {
    .aluminumMoldIceMakerTestRequestErd = Erd_AluminumMoldIceMakerTestRequest,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
    .coolingSystemOffStatusErd = Erd_CoolingOffStatus,
-   .dispensingInhibitedErd = Erd_DispensingInhibited
+   .dispensingInhibitedErd = Erd_DispensingInhibitedReason
 };
 
 TEST_GROUP(AluminumMoldIceMaker)
@@ -930,11 +930,11 @@ TEST_GROUP(AluminumMoldIceMaker)
 
    void GivenDispensingIsInhibitedByRfid()
    {
-      DispensingInhibitedBitmap_t bitmap;
-      DataModel_Read(dataModel, Erd_DispensingInhibited, &bitmap);
+      DispensingInhibitedReasonBitmap_t bitmap;
+      DataModel_Read(dataModel, Erd_DispensingInhibitedReason, &bitmap);
 
-      BIT_SET(bitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
-      DataModel_Write(dataModel, Erd_DispensingInhibited, &bitmap);
+      BITMAP_SET(bitmap.bitmap, DispensingInhibitedReason_WaterDueToRfidFilter);
+      DataModel_Write(dataModel, Erd_DispensingInhibitedReason, &bitmap);
    }
 
    void WhenDispensingIsInhibitedByRfid()
@@ -944,11 +944,11 @@ TEST_GROUP(AluminumMoldIceMaker)
 
    void WhenDispensingIsNotInhibitedByRfid()
    {
-      DispensingInhibitedBitmap_t bitmap;
-      DataModel_Read(dataModel, Erd_DispensingInhibited, &bitmap);
+      DispensingInhibitedReasonBitmap_t bitmap;
+      DataModel_Read(dataModel, Erd_DispensingInhibitedReason, &bitmap);
 
-      BIT_CLEAR(bitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
-      DataModel_Write(dataModel, Erd_DispensingInhibited, &bitmap);
+      BITMAP_CLEAR(bitmap.bitmap, DispensingInhibitedReason_WaterDueToRfidFilter);
+      DataModel_Write(dataModel, Erd_DispensingInhibitedReason, &bitmap);
    }
 
    void GivenDispensingIsNotInhibitedByRfid()

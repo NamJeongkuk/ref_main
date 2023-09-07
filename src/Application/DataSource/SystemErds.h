@@ -106,7 +106,7 @@
 #include "IceMakerTypeInformation.h"
 #include "AndroidUiSignOfLifeFsmState.h"
 #include "I_OneWire.h"
-#include "DispensingInhibitedBitmap.h"
+#include "DispensingInhibitedReasonBitmap.h"
 #include "ControlLockStatus.h"
 #include "BooleanVotedState.h"
 #include "RampingPwmDutyCycle.h"
@@ -482,7 +482,7 @@ enum
    \
    ENTRY(Erd_DispenserRecessHeaterDutyCyclePercent,         0x122C, PercentageDutyCycle_t,                              Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_SecondarySignOfLife,                           0x122D, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DispensingInhibited,                           0x122F, DispensingInhibitedBitmap_t,                        Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DispensingInhibitedReason,                     0x122F, DispensingInhibitedReasonBitmap_t,                  Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker2EnableRequest,                        0x1230, IceMakerEnableRequest_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker2EnableStatus,                         0x1231, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
    ENTRY(Erd_IceMaker2FullStatus,                           0x1232, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

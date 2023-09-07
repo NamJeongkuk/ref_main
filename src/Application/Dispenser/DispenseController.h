@@ -18,7 +18,7 @@ typedef struct
 {
    Erd_t privateDispensingRequestErd; // DispensingRequest_t
    Erd_t privateDispensingResultStatusErd; // DispenseStatus_t
-   Erd_t dispensingInhibitedErd; // DispensingInhibitedBitmap_t
+   Erd_t dispensingInhibitedErd; // DispensingInhibitedReasonBitmap_t
    Erd_t autofillSensorErrorErd; // bool
    Erd_t dispensingDisabledErd; // bool
    Erd_t augerMotorDispensingVoteErd; // AugerMotorVotedIceType_t

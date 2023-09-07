@@ -12,7 +12,7 @@
 #include "DispenserData.h"
 #include "DoorIndex.h"
 #include "I_DataModel.h"
-#include "DispensingInhibitedBitmap.h"
+#include "DispensingInhibitedReasonBitmap.h"
 
 typedef struct
 {
@@ -24,7 +24,7 @@ typedef struct
 typedef struct
 {
    Erd_t dispensingInhibitedErd;
-   Erd_t dispensingInhibitedBitmapIndex;
+   DispensingInhibitedReason_t dispensingInhibitedReason;
    const DoorInhibitDispensingResolverDoorConfig_t *doorsThatInhibitDispense;
    uint8_t numberOfDoors;
 } DoorInhibitDispensingResolverConfig_t;

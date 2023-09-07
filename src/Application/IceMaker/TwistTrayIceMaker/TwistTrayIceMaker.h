@@ -37,7 +37,7 @@ typedef struct
    Erd_t freezerIceRateIsActiveErd; // bool
    Erd_t dispensingRequestStatusErd; // DispensingRequestStatus_t
    Erd_t leftSideFreezerDoorStatusResolvedErd; // bool
-   Erd_t dispensingInhibitedErd; // DispensingInhibitedBitmap_t
+   Erd_t dispensingInhibitedErd; // DispensingInhibitedReasonBitmap_t
 } TwistTrayIceMakerConfiguration_t;
 
 typedef struct

@@ -30,7 +30,7 @@ enum
    DoorInDoorIsOpenErd,
    DispensingInhibitedErd,
 
-   DispensingInhibitedBitmapIndex_SomeInhibitReason = 0
+   DispensingInhibitedReason_SomeInhibitReason = 0
 };
 
 static const DataModel_TestDoubleConfigurationEntry_t erds[] = {
@@ -40,7 +40,7 @@ static const DataModel_TestDoubleConfigurationEntry_t erds[] = {
    { RightSideFreezerDoorIsOpenErd, sizeof(bool) },
    { ConvertibleCompartmentDoorIsOpenErd, sizeof(bool) },
    { DoorInDoorIsOpenErd, sizeof(bool) },
-   { DispensingInhibitedErd, sizeof(DispensingInhibitedBitmap_t) }
+   { DispensingInhibitedErd, sizeof(DispensingInhibitedReasonBitmap_t) }
 };
 
 static DoorInhibitDispensingResolverDoorConfig_t doorsThatInhibitDispense[] = {
@@ -63,7 +63,7 @@ static DoorInhibitDispensingResolverDoorConfig_t doorsThatInhibitDispense[] = {
 
 static const DoorInhibitDispensingResolverConfig_t config = {
    .dispensingInhibitedErd = DispensingInhibitedErd,
-   .dispensingInhibitedBitmapIndex = DispensingInhibitedBitmapIndex_SomeInhibitReason,
+   .dispensingInhibitedReason = DispensingInhibitedReason_SomeInhibitReason,
    .doorsThatInhibitDispense = doorsThatInhibitDispense,
    .numberOfDoors = NUM_ELEMENTS(doorsThatInhibitDispense)
 };
@@ -192,10 +192,10 @@ TEST_GROUP(DoorInhibitDispensingResolverWithAllDoorsInhibited)
 
    void TheDispensingInhibitedByDoorBitmapIndexShouldBe(bool expected)
    {
-      DispensingInhibitedBitmap_t actual;
+      DispensingInhibitedReasonBitmap_t actual;
       DataModel_Read(dataModel, DispensingInhibitedErd, &actual);
 
-      CHECK_EQUAL(expected, BIT_STATE(actual, DispensingInhibitedBitmapIndex_SomeInhibitReason));
+      CHECK_EQUAL(expected, BITMAP_STATE(actual.bitmap, DispensingInhibitedReason_SomeInhibitReason));
    }
 };
 
@@ -428,10 +428,10 @@ TEST_GROUP(DoorInhibitDispensingResolverWithAllDoorsNotInhibited)
 
    void TheDispensingInhibitedByDoorBitmapIndexShouldBe(bool expected)
    {
-      DispensingInhibitedBitmap_t actual;
+      DispensingInhibitedReasonBitmap_t actual;
       DataModel_Read(dataModel, DispensingInhibitedErd, &actual);
 
-      CHECK_EQUAL(expected, BIT_STATE(actual, DispensingInhibitedBitmapIndex_SomeInhibitReason));
+      CHECK_EQUAL(expected, BITMAP_STATE(actual.bitmap, DispensingInhibitedReason_SomeInhibitReason));
    }
 };
 

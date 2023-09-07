@@ -1322,7 +1322,7 @@
         {
           "namespace": "mb",
           "displayName": "Dispensing Inhibited Status",
-          "name": "Erd_DispensingInhibited",
+          "name": "Erd_DispensingInhibitedReason",
           "read": true,
           "write": true
         },

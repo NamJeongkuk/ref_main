@@ -14,7 +14,7 @@
 #include "AugerMotorVotedIceType.h"
 #include "Constants_Time.h"
 #include "utils.h"
-#include "DispensingInhibitedBitmap.h"
+#include "DispensingInhibitedReasonBitmap.h"
 
 #define InstanceFromHsm(hsm) CONTAINER_OF(DispenseController_t, _private.hsm, hsm)
 
@@ -131,35 +131,35 @@ static bool DispenseEnabled(DispenseController_t *instance)
 
 static bool DispenseInhibitedByRfid(DispenseController_t *instance)
 {
-   DispensingInhibitedBitmap_t dispensingInhibitedBitmap;
+   DispensingInhibitedReasonBitmap_t dispensingInhibitedBitmap;
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->dispensingInhibitedErd,
       &dispensingInhibitedBitmap);
 
-   return BIT_STATE(dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
+   return BITMAP_STATE(dispensingInhibitedBitmap.bitmap, DispensingInhibitedReason_WaterDueToRfidFilter);
 }
 
 static bool WaterDispensingInhibitedByDoor(DispenseController_t *instance)
 {
-   DispensingInhibitedBitmap_t dispensingInhibitedBitmap;
+   DispensingInhibitedReasonBitmap_t dispensingInhibitedBitmap;
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->dispensingInhibitedErd,
       &dispensingInhibitedBitmap);
 
-   return BIT_STATE(dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_WaterDueToDoorOpen);
+   return BITMAP_STATE(dispensingInhibitedBitmap.bitmap, DispensingInhibitedReason_WaterDueToDoorOpen);
 }
 
 static bool IceDispensingInhibitedByDoor(DispenseController_t *instance)
 {
-   DispensingInhibitedBitmap_t dispensingInhibitedBitmap;
+   DispensingInhibitedReasonBitmap_t dispensingInhibitedBitmap;
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->dispensingInhibitedErd,
       &dispensingInhibitedBitmap);
 
-   return BIT_STATE(dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_IceDueToDoorOpen);
+   return BITMAP_STATE(dispensingInhibitedBitmap.bitmap, DispensingInhibitedReason_IceDueToDoorOpen);
 }
 
 static bool AutoFillSensorError(DispenseController_t *instance)
@@ -370,13 +370,13 @@ static void OnDataModelChange(void *context, const void *args)
    }
    else if(erd == instance->_private.config->dispensingInhibitedErd)
    {
-      const DispensingInhibitedBitmap_t *dispensingInhibitedBitmap = onChangeData->data;
-      if(BIT_STATE(*dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter))
+      const DispensingInhibitedReasonBitmap_t *dispensingInhibitedBitmap = onChangeData->data;
+      if(BITMAP_STATE(dispensingInhibitedBitmap->bitmap, DispensingInhibitedReason_WaterDueToRfidFilter))
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_DispensingInhibitedByRfid, NULL);
       }
-      else if(BIT_STATE(*dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_WaterDueToDoorOpen) ||
-         BIT_STATE(*dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_IceDueToDoorOpen))
+      else if(BITMAP_STATE(dispensingInhibitedBitmap->bitmap, DispensingInhibitedReason_WaterDueToDoorOpen) ||
+         BITMAP_STATE(dispensingInhibitedBitmap->bitmap, DispensingInhibitedReason_IceDueToDoorOpen))
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_DispensingInhibitedByDoor, NULL);
       }

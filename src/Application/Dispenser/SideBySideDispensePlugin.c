@@ -25,7 +25,7 @@ static const DispensingRequestHandlerConfig_t dispensingRequestHandlerConfig = {
 static const DispenseControllerConfig_t dispenseControllerConfig = {
    .privateDispensingRequestErd = Erd_PrivateDispensingRequest,
    .privateDispensingResultStatusErd = Erd_PrivateDispensingResultStatus,
-   .dispensingInhibitedErd = Erd_DispensingInhibited,
+   .dispensingInhibitedErd = Erd_DispensingInhibitedReason,
    .autofillSensorErrorErd = Erd_AutofillSensorError,
    .dispensingDisabledErd = Erd_DispensingDisabled,
    .augerMotorDispensingVoteErd = Erd_AugerMotor_DispensingVote,
@@ -49,15 +49,15 @@ static const DoorInhibitDispensingResolverDoorConfig_t doorsThatInhibitDispense[
 };
 
 static const DoorInhibitDispensingResolverConfig_t doorInhibitWaterDispensingResolverConfig = {
-   .dispensingInhibitedErd = Erd_DispensingInhibited,
-   .dispensingInhibitedBitmapIndex = DispensingInhibitedBitmapIndex_WaterDueToDoorOpen,
+   .dispensingInhibitedErd = Erd_DispensingInhibitedReason,
+   .dispensingInhibitedReason = DispensingInhibitedReason_WaterDueToDoorOpen,
    .doorsThatInhibitDispense = doorsThatInhibitDispense,
    .numberOfDoors = NUM_ELEMENTS(doorsThatInhibitDispense)
 };
 
 static const DoorInhibitDispensingResolverConfig_t doorInhibitIceDispensingResolverConfig = {
-   .dispensingInhibitedErd = Erd_DispensingInhibited,
-   .dispensingInhibitedBitmapIndex = DispensingInhibitedBitmapIndex_IceDueToDoorOpen,
+   .dispensingInhibitedErd = Erd_DispensingInhibitedReason,
+   .dispensingInhibitedReason = DispensingInhibitedReason_IceDueToDoorOpen,
    .doorsThatInhibitDispense = doorsThatInhibitDispense,
    .numberOfDoors = NUM_ELEMENTS(doorsThatInhibitDispense)
 };

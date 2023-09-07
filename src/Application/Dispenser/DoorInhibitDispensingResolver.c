@@ -36,25 +36,25 @@ static void UpdateDispensingInhibitedByDoor(
          BIT_CLEAR(instance->_private.doorInhibitStatus, doorIndex);
       }
 
-      DispensingInhibitedBitmap_t dispensingInhibitedBitmap;
+      DispensingInhibitedReasonBitmap_t dispensingInhibitedReasonBitmap;
       DataModel_Read(
          instance->_private.dataModel,
          instance->_private.config->dispensingInhibitedErd,
-         &dispensingInhibitedBitmap);
+         &dispensingInhibitedReasonBitmap);
 
       if(instance->_private.doorInhibitStatus > 0)
       {
-         BIT_SET(dispensingInhibitedBitmap, instance->_private.config->dispensingInhibitedBitmapIndex);
+         BITMAP_SET(dispensingInhibitedReasonBitmap.bitmap, instance->_private.config->dispensingInhibitedReason);
       }
       else
       {
-         BIT_CLEAR(dispensingInhibitedBitmap, instance->_private.config->dispensingInhibitedBitmapIndex);
+         BITMAP_CLEAR(dispensingInhibitedReasonBitmap.bitmap, instance->_private.config->dispensingInhibitedReason);
       }
 
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->dispensingInhibitedErd,
-         &dispensingInhibitedBitmap);
+         &dispensingInhibitedReasonBitmap);
    }
 }
 

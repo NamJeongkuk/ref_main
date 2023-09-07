@@ -78,7 +78,7 @@ static const TwistTrayIceMakerConfiguration_t config = {
    .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
    .leftSideFreezerDoorStatusResolvedErd = Erd_LeftSideFreezerDoorStatusResolved,
-   .dispensingInhibitedErd = Erd_DispensingInhibited
+   .dispensingInhibitedErd = Erd_DispensingInhibitedReason
 };
 
 static void OnDataModelChange(void *context, const void *_args)
@@ -780,11 +780,11 @@ TEST_GROUP(TwistTrayIceMaker)
 
    void GivenDispensingIsInhibitedByRfid()
    {
-      DispensingInhibitedBitmap_t bitmap;
-      DataModel_Read(dataModel, Erd_DispensingInhibited, &bitmap);
+      DispensingInhibitedReasonBitmap_t bitmap;
+      DataModel_Read(dataModel, Erd_DispensingInhibitedReason, &bitmap);
 
-      BIT_SET(bitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
-      DataModel_Write(dataModel, Erd_DispensingInhibited, &bitmap);
+      BITMAP_SET(bitmap.bitmap, DispensingInhibitedReason_WaterDueToRfidFilter);
+      DataModel_Write(dataModel, Erd_DispensingInhibitedReason, &bitmap);
    }
 
    void WhenDispensingIsInhibitedByRfid()
@@ -794,11 +794,11 @@ TEST_GROUP(TwistTrayIceMaker)
 
    void WhenDispensingIsNotInhibitedByRfid()
    {
-      DispensingInhibitedBitmap_t bitmap;
-      DataModel_Read(dataModel, Erd_DispensingInhibited, &bitmap);
+      DispensingInhibitedReasonBitmap_t bitmap;
+      DataModel_Read(dataModel, Erd_DispensingInhibitedReason, &bitmap);
 
-      BIT_CLEAR(bitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
-      DataModel_Write(dataModel, Erd_DispensingInhibited, &bitmap);
+      BITMAP_CLEAR(bitmap.bitmap, DispensingInhibitedReason_WaterDueToRfidFilter);
+      DataModel_Write(dataModel, Erd_DispensingInhibitedReason, &bitmap);
    }
 
    void GivenDispensingIsNotInhibitedByRfid()

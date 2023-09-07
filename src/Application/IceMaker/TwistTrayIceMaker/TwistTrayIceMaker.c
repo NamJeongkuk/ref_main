@@ -249,7 +249,7 @@ static bool HarvestConditionsHaveBeenMet(TwistTrayIceMaker_t *instance)
       instance->_private.config->harvestCountIsReadyToHarvestErd,
       &harvestCountIsReadyToHarvest);
 
-   DispensingInhibitedBitmap_t dispensingInhibitedBitmap;
+   DispensingInhibitedReasonBitmap_t dispensingInhibitedBitmap;
    DataSource_Read(
       instance->_private.dataSource,
       instance->_private.config->dispensingInhibitedErd,
@@ -258,7 +258,7 @@ static bool HarvestConditionsHaveBeenMet(TwistTrayIceMaker_t *instance)
    return (iceTrayTempx100 < MaxHarvestTemperatureInDegFx100) &&
       harvestCountIsReadyToHarvest &&
       HarvestDoorDelayHasElapsed(instance) &&
-      !BIT_STATE(dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
+      !BITMAP_STATE(dispensingInhibitedBitmap.bitmap, DispensingInhibitedReason_WaterDueToRfidFilter);
 }
 
 static void RequestHarvestCountCalculation(TwistTrayIceMaker_t *instance)
@@ -986,9 +986,9 @@ static void DataSourceChanged(void *context, const void *data)
    }
    else if(onChangeArgs->erd == instance->_private.config->dispensingInhibitedErd)
    {
-      const DispensingInhibitedBitmap_t *dispensingInhibitedBitmap = onChangeArgs->data;
+      const DispensingInhibitedReasonBitmap_t *dispensingInhibitedBitmap = onChangeArgs->data;
 
-      if(!BIT_STATE(*dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter))
+      if(!BITMAP_STATE(dispensingInhibitedBitmap->bitmap, DispensingInhibitedReason_WaterDueToRfidFilter))
       {
          Fsm_SendSignal(&instance->_private.fsm, Signal_DispensingIsNotInhibitedByRfid, NULL);
       }

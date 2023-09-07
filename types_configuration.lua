@@ -48,13 +48,6 @@ return {
     RakePosition_t = 'uint8_t',
     GitHash_t = 'raw[20]',
     ShortGitHash_t = 'raw[4]',
-    DispensingInhibitedBitmap_t = [[
-      uint32_t.bitmap {
-        ['0'] = bool 'WaterDueToDoorOpen',
-        ['1'] = bool 'IceDueToDoorOpen',
-        ['2'] = bool 'WaterDueToRfidFilter',
-      }
-    ]],
     IceMakerEnableRequest_t = 'bool',
     TurboModeRequest_t = 'bool',
     CoolingSystemRequest_t = 'bool',

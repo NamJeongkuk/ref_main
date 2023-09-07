@@ -66,39 +66,39 @@ TEST_GROUP(DispensingIntegration)
 
    void GivenDispensingNotInhibitedByRfid()
    {
-      DispensingInhibitedBitmap_t bitmap;
+      DispensingInhibitedReasonBitmap_t bitmap;
       DataModel_Read(
          dataModel,
-         Erd_DispensingInhibited,
+         Erd_DispensingInhibitedReason,
          &bitmap);
 
-      BIT_CLEAR(bitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
+      BITMAP_CLEAR(bitmap.bitmap, DispensingInhibitedReason_WaterDueToRfidFilter);
       DataModel_Write(
          dataModel,
-         Erd_DispensingInhibited,
+         Erd_DispensingInhibitedReason,
          &bitmap);
    }
 
    void WaterDispensingInhibitedByDoorShouldBe(bool expectedState)
    {
-      DispensingInhibitedBitmap_t actualBitmap;
+      DispensingInhibitedReasonBitmap_t actualBitmap;
       DataModel_Read(
          dataModel,
-         Erd_DispensingInhibited,
+         Erd_DispensingInhibitedReason,
          &actualBitmap);
 
-      CHECK_EQUAL(expectedState, BIT_STATE(actualBitmap, DispensingInhibitedBitmapIndex_WaterDueToDoorOpen));
+      CHECK_EQUAL(expectedState, BITMAP_STATE(actualBitmap.bitmap, DispensingInhibitedReason_WaterDueToDoorOpen));
    }
 
    void IceDispensingInhibitedByDoorShouldBe(bool expectedState)
    {
-      DispensingInhibitedBitmap_t actualBitmap;
+      DispensingInhibitedReasonBitmap_t actualBitmap;
       DataModel_Read(
          dataModel,
-         Erd_DispensingInhibited,
+         Erd_DispensingInhibitedReason,
          &actualBitmap);
 
-      CHECK_EQUAL(expectedState, BIT_STATE(actualBitmap, DispensingInhibitedBitmapIndex_IceDueToDoorOpen));
+      CHECK_EQUAL(expectedState, BITMAP_STATE(actualBitmap.bitmap, DispensingInhibitedReason_IceDueToDoorOpen));
    }
 
    void WhenTheDispensingRequestIs(DispensingAction_t action, DispensingRequestSelection_t selection)
@@ -169,16 +169,16 @@ TEST_GROUP(DispensingIntegration)
 
    void WhenDispensingIsInhibitedByRfid()
    {
-      DispensingInhibitedBitmap_t bitmap;
+      DispensingInhibitedReasonBitmap_t bitmap;
       DataModel_Read(
          dataModel,
-         Erd_DispensingInhibited,
+         Erd_DispensingInhibitedReason,
          &bitmap);
 
-      BIT_SET(bitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
+      BITMAP_SET(bitmap.bitmap, DispensingInhibitedReason_WaterDueToRfidFilter);
       DataModel_Write(
          dataModel,
-         Erd_DispensingInhibited,
+         Erd_DispensingInhibitedReason,
          &bitmap);
    }
 
@@ -189,16 +189,16 @@ TEST_GROUP(DispensingIntegration)
 
    void WhenIceDispensingIsInhibitedByDoor()
    {
-      DispensingInhibitedBitmap_t bitmap;
+      DispensingInhibitedReasonBitmap_t bitmap;
       DataModel_Read(
          dataModel,
-         Erd_DispensingInhibited,
+         Erd_DispensingInhibitedReason,
          &bitmap);
 
-      BIT_SET(bitmap, DispensingInhibitedBitmapIndex_IceDueToDoorOpen);
+      BITMAP_SET(bitmap.bitmap, DispensingInhibitedReason_IceDueToDoorOpen);
       DataModel_Write(
          dataModel,
-         Erd_DispensingInhibited,
+         Erd_DispensingInhibitedReason,
          &bitmap);
    }
 

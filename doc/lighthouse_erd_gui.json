@@ -851,6 +851,13 @@
                "name": "Erd_AugerMotor_ResolvedVote",
                "read": true,
                "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Dispense Inhibited Reason",
+               "name": "Erd_DispensingInhibitedReason",
+               "read": true,
+               "interval": 1000000000
             }
          ]
       },

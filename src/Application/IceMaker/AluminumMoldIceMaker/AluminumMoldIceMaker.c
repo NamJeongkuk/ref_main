@@ -704,9 +704,9 @@ static void TriggerFreezerIceRateIfNecessary(AluminumMoldIceMaker_t *instance)
 
 static bool DispensingIsNotInhibitedByRfid(AluminumMoldIceMaker_t *instance)
 {
-   DispensingInhibitedBitmap_t dispensingInhibitedBitmap;
+   DispensingInhibitedReasonBitmap_t dispensingInhibitedBitmap;
    DataModel_Read(instance->_private.dataModel, instance->_private.config->dispensingInhibitedErd, &dispensingInhibitedBitmap);
-   return !BIT_STATE(dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter);
+   return !BITMAP_STATE(dispensingInhibitedBitmap.bitmap, DispensingInhibitedReason_WaterDueToRfidFilter);
 }
 
 static bool HarvestConditionsAreMet(AluminumMoldIceMaker_t *instance)
@@ -1237,9 +1237,9 @@ static void DataModelChanged(void *context, const void *args)
    }
    else if(erd == instance->_private.config->dispensingInhibitedErd)
    {
-      const DispensingInhibitedBitmap_t *dispensingInhibitedBitmap = onChangeData->data;
+      const DispensingInhibitedReasonBitmap_t *dispensingInhibitedBitmap = onChangeData->data;
 
-      if(!BIT_STATE(*dispensingInhibitedBitmap, DispensingInhibitedBitmapIndex_WaterDueToRfidFilter))
+      if(!BITMAP_STATE(dispensingInhibitedBitmap->bitmap, DispensingInhibitedReason_WaterDueToRfidFilter))
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_DispensingIsNotInhibitedByRfid, NULL);
       }
