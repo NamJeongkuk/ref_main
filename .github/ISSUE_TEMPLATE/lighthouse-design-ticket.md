@@ -2,7 +2,7 @@
 name: Lighthouse Design ticket
 about: Design ticket
 title: ''
-labels: 'Lighthouse'
+labels: Lighthouse, Design
 assignees: ''
 
 ---
