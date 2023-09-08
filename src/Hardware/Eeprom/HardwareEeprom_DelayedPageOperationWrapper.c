@@ -324,7 +324,7 @@ static void State_Read(Fsm_t *fsm, FsmSignal_t signal, const void *data)
    }
 }
 
-static void Read(I_HardwareEeprom_t *_instance, uint16_t offset, uint16_t numBytes, void *readBuffer)
+static void Read(I_HardwareEeprom_t *_instance, uint32_t offset, uint32_t numBytes, void *readBuffer)
 {
    REINTERPRET(instance, _instance, Instance_t *);
 
@@ -336,7 +336,7 @@ static void Read(I_HardwareEeprom_t *_instance, uint16_t offset, uint16_t numByt
    Fsm_SendSignal(&instance->_private.fsm, Signal_ClientReadRequested, &readInfo);
 }
 
-static void Write(I_HardwareEeprom_t *_instance, uint16_t offset, uint16_t numBytes, const void *writeBuffer)
+static void Write(I_HardwareEeprom_t *_instance, uint32_t offset, uint32_t numBytes, const void *writeBuffer)
 {
    REINTERPRET(instance, _instance, Instance_t *);
 
@@ -360,7 +360,7 @@ static uint16_t GetByteAlignment(I_HardwareEeprom_t *_instance)
    return HardwareEeprom_GetByteAlignment(instance->_private.eeprom);
 }
 
-static uint16_t GetSize(I_HardwareEeprom_t *_instance)
+static uint32_t GetSize(I_HardwareEeprom_t *_instance)
 {
    REINTERPRET(instance, _instance, Instance_t *);
    return HardwareEeprom_GetSize(instance->_private.eeprom);

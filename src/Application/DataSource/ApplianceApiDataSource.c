@@ -76,10 +76,6 @@ static const DataSource_ApplianceApiRevision1Configuration_t applianceApiConfigu
       },
    },
 
-   .timeOfDay = {
-      .supported = false,
-   },
-
    .resetInformation = {
       .supported = true,
       .erd = {
@@ -97,6 +93,22 @@ static const DataSource_ApplianceApiRevision1Configuration_t applianceApiConfigu
          .enhancedSabbathModeStatus = Erd_EnhancedSabbathModeEnable,
       },
    },
+
+   .timeOfDay = {
+      .supported = true,
+      .erd = {
+         .clockTime = Erd_ClockTime,
+      },
+   },
+
+   .uiSoundLevel = {
+      .supported = true,
+      .erd = {
+         .uiSoundLevelRequest = Erd_UiSoundLevelRequest,
+         .uiSoundLevelState = Erd_UiSoundLevelState,
+         .uiSoundLevelCount = Erd_NumberOfSoundLevelSettings,
+      },
+   }
 };
 
 void ApplianceApiDataSource_Init(

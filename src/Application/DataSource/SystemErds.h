@@ -124,6 +124,7 @@
 #include "PresenceActivatesRecessLightEnableRequest.h"
 #include "UserAllowableInteriorLightState.h"
 #include "RfidTypes.h"
+#include "TimeHms.h"
 
 // clang-format off
 
@@ -399,6 +400,7 @@ enum
    ENTRY(Erd_ModelNumber,                                   0x0001, ModelNumber_t,                                      Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
    ENTRY(Erd_SerialNumber,                                  0x0002, SerialNumber_t,                                     Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
    ENTRY(Erd_ControlLockStatus,                             0x0004, ControlLockStatus_t,                                Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_UnlockedControlLockStatus, NotFault) \
+   ENTRY(Erd_ClockTime,                                     0x0005, TimeHms_t,                                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TemperatureDisplayUnits,                       0x0007, TemperatureDisplayUnit_t,                           Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ApplianceType,                                 0x0008, ApplianceType_t,                                    Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
    ENTRY(Erd_SabbathModeEnable,                             0x0009, bool,                                               Swap_No,  Io_All,  Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
@@ -426,7 +428,8 @@ enum
    \
    ENTRY(Erd_PrimaryUiSignOfLife,                           0x0900, Signal_t,                                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_SoundLevelStatus,                              0x0903, uint8_t,                                            Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_UiSoundLevelRequest,                           0x0902, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_UiSoundLevelState,                             0x0903, uint8_t,                                            Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NumberOfSoundLevelSettings,                    0x0904, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_WaterFilterType,                               0x1019, WaterFilterType_t,                                  Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

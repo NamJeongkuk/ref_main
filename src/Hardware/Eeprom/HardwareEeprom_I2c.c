@@ -494,7 +494,7 @@ static HardwareEepromErrorSource_t Write_Eeprom_Hardware(
    return error;
 }
 
-static void Read(I_HardwareEeprom_t *_instance, uint16_t offset, uint16_t numBytes, void *readBuffer)
+static void Read(I_HardwareEeprom_t *_instance, uint32_t offset, uint32_t numBytes, void *readBuffer)
 {
    IGNORE(_instance);
    HardwareEepromErrorSource_t errorSource = Read_Eeprom_Hardware(offset, readBuffer, numBytes);
@@ -506,7 +506,7 @@ static void Read(I_HardwareEeprom_t *_instance, uint16_t offset, uint16_t numByt
    Event_SafeSynchronous_Publish(&instance._private.readCompleteEvent, &eventArgs);
 }
 
-static void Write(I_HardwareEeprom_t *_instance, uint16_t offset, uint16_t numBytes, const void *writeBuffer)
+static void Write(I_HardwareEeprom_t *_instance, uint32_t offset, uint32_t numBytes, const void *writeBuffer)
 {
    IGNORE(_instance);
 
@@ -553,7 +553,7 @@ static uint16_t GetByteAlignment(I_HardwareEeprom_t *_instance)
    return EepromAlignmentByte;
 }
 
-static uint16_t GetSize(I_HardwareEeprom_t *_instance)
+static uint32_t GetSize(I_HardwareEeprom_t *_instance)
 {
    IGNORE(_instance);
    return EepromSize;

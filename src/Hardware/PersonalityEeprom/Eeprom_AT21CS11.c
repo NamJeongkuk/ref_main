@@ -230,7 +230,7 @@ static void State_Erase(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
    }
 }
 
-static void Read(I_HardwareEeprom_t *context, uint16_t offset, uint16_t numBytes, void *readBuffer)
+static void Read(I_HardwareEeprom_t *context, uint32_t offset, uint32_t numBytes, void *readBuffer)
 {
    REINTERPRET(instance, context, Eeprom_AT21CS11_t *);
 
@@ -241,7 +241,7 @@ static void Read(I_HardwareEeprom_t *context, uint16_t offset, uint16_t numBytes
    Fsm_SendSignal(&instance->_private.fsm, Signal_Read, NULL);
 }
 
-static void Write(I_HardwareEeprom_t *context, uint16_t offset, uint16_t numBytes, const void *writeBuffer)
+static void Write(I_HardwareEeprom_t *context, uint32_t offset, uint32_t numBytes, const void *writeBuffer)
 {
    REINTERPRET(instance, context, Eeprom_AT21CS11_t *);
 
@@ -265,7 +265,7 @@ static uint16_t GetByteAlignment(I_HardwareEeprom_t *context)
    return AT21CS11_ByteAlignment;
 }
 
-static uint16_t GetSize(I_HardwareEeprom_t *context)
+static uint32_t GetSize(I_HardwareEeprom_t *context)
 {
    IGNORE(context);
    return AT21CS11_SizeInBytes;

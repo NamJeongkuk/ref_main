@@ -13,12 +13,12 @@ extern "C"
 #include "Eeprom_TestDouble.h"
 #include "utils.h"
 
-static void Read(I_Eeprom_t *instance, uint16_t offset, uint16_t numBytes, void *readBuffer)
+static void Read(I_Eeprom_t *instance, uint32_t offset, uint32_t numBytes, void *readBuffer)
 {
    mock().actualCall("Read").onObject(instance).withParameter("offset", offset).withParameter("numBytes", numBytes).withOutputParameter("readBuffer", readBuffer);
 }
 
-static void Write(I_Eeprom_t *instance, uint16_t offset, uint16_t numBytes, const void *writeBuffer)
+static void Write(I_Eeprom_t *instance, uint32_t offset, uint32_t numBytes, const void *writeBuffer)
 {
    mock().actualCall("Write").onObject(instance).withParameter("offset", offset).withParameter("numBytes", numBytes).withParameter("writeBuffer", (const void *)writeBuffer);
 }
@@ -33,7 +33,7 @@ static uint16_t GetByteAlignment(I_Eeprom_t *instance)
    return mock().actualCall("GetByteAlignment").onObject(instance).returnValue().getIntValue();
 }
 
-static uint16_t GetSize(I_Eeprom_t *instance)
+static uint32_t GetSize(I_Eeprom_t *instance)
 {
    return mock().actualCall("GetSize").onObject(instance).returnValue().getIntValue();
 }
