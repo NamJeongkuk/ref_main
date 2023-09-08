@@ -52,7 +52,7 @@ jobs:
     with:
       job-name: macos-tdd
       script: tdd
-      runs-on: skynet-macos-x64
+      runs-on: skynet-macos-generic
 
   parametric-linux-tdd:
     uses: geappliances/skynet.workflow/.github/workflows/build-workflow.yml@v1
@@ -76,7 +76,7 @@ jobs:
     with:
       job-name: parametric-macos-tdd
       script: parametric_tdd
-      runs-on: skynet-macos-x64
+      runs-on: skynet-macos-generic
 
   email:
     if: ${{ (cancelled() || failure()) && github.event_name != 'pull_request' }}
