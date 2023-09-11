@@ -46,6 +46,7 @@ static const EnhancedSabbathModeConfig_t enhancedSabbathModeConfig = {
    .freezerEvapFanVoteErd = Erd_FreezerEvapFanSpeed_SabbathVote,
    .damperPositionVoteErd = Erd_FreshFoodDamperPosition_EnhancedSabbathVote,
    .enhancedSabbathModeStatusErd = Erd_EnhancedSabbathModeEnable,
+   .regularSabbathModeStatusErd = Erd_SabbathModeEnable,
    .freshFoodSetpointVoteErd = Erd_FreshFoodSetpoint_EnhancedSabbathVote,
    .freezerSetpointVoteErd = Erd_FreezerSetpoint_EnhancedSabbathVote,
    .freshFoodAverageCabinetTemperatureErd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,

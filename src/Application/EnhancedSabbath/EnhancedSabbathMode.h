@@ -23,6 +23,7 @@ typedef struct
    Erd_t freezerEvapFanVoteErd; // FanVotedSpeed_t
    Erd_t damperPositionVoteErd; // DamperVotedPosition_t
    Erd_t enhancedSabbathModeStatusErd; // bool
+   Erd_t regularSabbathModeStatusErd; // bool
    Erd_t freshFoodSetpointVoteErd; // SetpointVotedTemperature_t
    Erd_t freezerSetpointVoteErd; // SetpointVotedTemperature_t
    Erd_t freshFoodAverageCabinetTemperatureErd; // TemperatureDegFx100_t

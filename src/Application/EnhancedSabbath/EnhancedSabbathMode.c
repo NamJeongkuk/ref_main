@@ -346,6 +346,14 @@ static void SetEnhancedSabbathStatusTo(EnhancedSabbathMode_t *instance, bool sta
       &state);
 }
 
+static void SetRegularSabbathStatusTo(EnhancedSabbathMode_t *instance, bool state)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->regularSabbathModeStatusErd,
+      &state);
+}
+
 static void SetFreshFoodSetpointToCareWithTheValue(EnhancedSabbathMode_t *instance, TemperatureDegFx100_t temperature)
 {
    SetpointVotedTemperature_t vote = {
@@ -482,6 +490,7 @@ static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Hsm_Entry:
+         SetRegularSabbathStatusTo(instance, false);
          SetEnhancedSabbathStatusTo(instance, false);
          SetHsmStateTo(instance, EnhancedSabbathModeHsmState_Disabled);
          SetAllLoadVotesToDontCare(instance);

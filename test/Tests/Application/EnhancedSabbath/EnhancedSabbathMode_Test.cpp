@@ -43,6 +43,7 @@ static const EnhancedSabbathModeConfig_t config = {
    .freezerEvapFanVoteErd = Erd_FreezerEvapFanSpeed_SabbathVote,
    .damperPositionVoteErd = Erd_FreshFoodDamperPosition_EnhancedSabbathVote,
    .enhancedSabbathModeStatusErd = Erd_EnhancedSabbathModeEnable,
+   .regularSabbathModeStatusErd = Erd_SabbathModeEnable,
    .freshFoodSetpointVoteErd = Erd_FreshFoodSetpoint_EnhancedSabbathVote,
    .freezerSetpointVoteErd = Erd_FreezerSetpoint_EnhancedSabbathVote,
    .freshFoodAverageCabinetTemperatureErd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
@@ -172,10 +173,23 @@ TEST_GROUP(EnhancedSabbathMode)
       DataModel_Write(dataModel, Erd_EnhancedSabbathModeEnable, &state);
    }
 
+   void GivenRegularSabbathModeStatusIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_SabbathModeEnable, &state);
+   }
+
    void TheEnhancedSabbathModeStatusShouldBe(bool expected)
    {
       bool actual;
       DataModel_Read(dataModel, Erd_EnhancedSabbathModeEnable, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void RegularSabbathStatusShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_SabbathModeEnable, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -973,4 +987,14 @@ TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathModeToDisabledIfMaxTimeHasBeen
    TheIceMakerEnableOverrideValueShouldBe(true);
    TheGridOverrideShouldBe(false);
    TheDispensingDisabledShouldBe(false);
+}
+
+TEST(EnhancedSabbathMode, ShouldDisableRegularSabbathWhenEnhancedSabbathExits)
+{
+   GivenTheEnhancedSabbathModeStatusIs(SET);
+   GivenRegularSabbathModeStatusIs(SET);
+   GivenInitialization();
+
+   WhenTheEnhancedSabbathModeStatusChangesTo(CLEAR);
+   RegularSabbathStatusShouldBe(CLEAR);
 }
