@@ -1045,56 +1045,56 @@ enum
    ENTRY(Erd_UserSetpointPluginReady,                       0xF40C, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreezerEvap_FilteredTemperatureOverrideRequest,          0xF420, bool,                                     Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerEvap_FilteredTemperatureOverrideValueInDegFx100,  0xF421, TemperatureDegFx100_t,                    Swap_Range_S, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerEvap_FilteredTemperatureResolvedInDegFx100,       0xF422, TemperatureDegFx100_t,                    Swap_Range_E, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvap_FilteredTemperatureOverrideValueInDegFx100,  0xF421, TemperatureDegFx100_t,                    Swap_Range_S, Io_None, Sub_N, Ram,                  NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvap_FilteredTemperatureResolvedInDegFx100,       0xF422, TemperatureDegFx100_t,                    Swap_Range_E, Io_None, Sub_N, Ram,                  NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Freezer_FilteredTemperatureOverrideRequest,              0xF423, bool,                                     Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Freezer_FilteredTemperatureOverrideValueInDegFx100,      0xF424, TemperatureDegFx100_t,                    Swap_Range_S, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Freezer_FilteredTemperatureResolvedInDegFx100,           0xF425, TemperatureDegFx100_t,                    Swap_Range_E, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_FilteredTemperatureOverrideValueInDegFx100,      0xF424, TemperatureDegFx100_t,                    Swap_Range_S, Io_None, Sub_N, Ram,                  NotNv,                                    NotFault) \
+   ENTRY(Erd_Freezer_FilteredTemperatureResolvedInDegFx100,           0xF425, TemperatureDegFx100_t,                    Swap_Range_E, Io_None, Sub_N, Ram,                  NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFood_FilteredTemperatureOverrideRequest,            0xF426, bool,                                     Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFood_FilteredTemperatureOverrideValueInDegFx100,    0xF427, TemperatureDegFx100_t,                    Swap_Range_S, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,         0xF428, TemperatureDegFx100_t,                    Swap_Range_E, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFood_FilteredTemperatureOverrideValueInDegFx100,    0xF427, TemperatureDegFx100_t,                    Swap_Range_S, Io_None, Sub_N, Ram,                  NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,         0xF428, TemperatureDegFx100_t,                    Swap_Range_E, Io_None, Sub_N, Ram,                  NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FreshFoodThermistor_IsValidOverrideRequest,                     0xF429, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodThermistor_IsValidOverrideValue,                       0xF430, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodThermistor_IsValidResolved,                            0xF431, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodThermistor_IsValidOverrideRequest,                     0xF429, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodThermistor_IsValidOverrideValue,                       0xF430, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodThermistor_IsValidResolved,                            0xF431, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FreezerThermistor_IsValidOverrideRequest,                       0xF432, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerThermistor_IsValidOverrideValue,                         0xF433, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerThermistor_IsValidResolved,                              0xF434, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerThermistor_IsValidOverrideRequest,                       0xF432, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerThermistor_IsValidOverrideValue,                         0xF433, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerThermistor_IsValidResolved,                              0xF434, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FreshFoodEvapThermistor_IsValidOverrideRequest,                 0xF435, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodEvapThermistor_IsValidOverrideValue,                   0xF436, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodEvapThermistor_IsValidResolved,                        0xF437, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvapThermistor_IsValidOverrideRequest,                 0xF435, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvapThermistor_IsValidOverrideValue,                   0xF436, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFoodEvapThermistor_IsValidResolved,                        0xF437, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FreezerEvapThermistor_IsValidOverrideRequest,                   0xF438, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerEvapThermistor_IsValidOverrideValue,                     0xF439, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerEvapThermistor_IsValidResolved,                          0xF43A, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapThermistor_IsValidOverrideRequest,                   0xF438, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapThermistor_IsValidOverrideValue,                     0xF439, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_FreezerEvapThermistor_IsValidResolved,                          0xF43A, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideRequest, 0xF43B, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideValue,   0xF43C, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved,        0xF43D, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideRequest, 0xF43B, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentCabinetThermistor_IsValidOverrideValue,   0xF43C, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentCabinetThermistor_IsValidResolved,        0xF43D, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_AmbientThermistor_IsValidOverrideRequest,                       0xF43E, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AmbientThermistor_IsValidOverrideValue,                         0xF43F, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AmbientThermistor_IsValidResolved,                              0xF440, bool,                              Swap_No, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AmbientThermistor_IsValidOverrideRequest,                       0xF43E, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_AmbientThermistor_IsValidOverrideValue,                         0xF43F, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_AmbientThermistor_IsValidResolved,                              0xF440, bool,                              Swap_No, Io_None, Sub_Y, Ram,                       NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_ConvertibleCompartmentEvapThermistor_IsValidOverrideRequest,    0xF441, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentEvapThermistor_IsValidOverrideValue,      0xF442, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentEvapThermistor_IsValidResolved,           0xF443, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentEvapThermistor_IsValidOverrideRequest,    0xF441, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentEvapThermistor_IsValidOverrideValue,      0xF442, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentEvapThermistor_IsValidResolved,           0xF443, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideRequest,      0xF444, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideValue,        0xF445, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved,             0xF446, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideRequest,      0xF444, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideValue,        0xF445, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved,             0xF446, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_TwistTrayIceMakerThermistor_IsValidOverrideRequest,             0xF447, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_TwistTrayIceMakerThermistor_IsValidOverrideValue,               0xF448, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_TwistTrayIceMakerThermistor_IsValidResolved,                    0xF449, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMakerThermistor_IsValidOverrideRequest,             0xF447, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMakerThermistor_IsValidOverrideValue,               0xF448, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMakerThermistor_IsValidResolved,                    0xF449, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_Ambient_FilteredInternalTemperatureOverrideRequest,             0xF44A, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Ambient_FilteredInternalTemperatureOverrideValueInDegFx100,     0xF44B, TemperatureDegFx100_t,             Swap_Yes,Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Ambient_FilteredInternalTemperatureResolvedInDegFx100,          0xF44C, RelativeHumidityPercentx100_t,     Swap_Yes,Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Ambient_FilteredInternalTemperatureOverrideRequest,             0xF44A, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Ambient_FilteredInternalTemperatureOverrideValueInDegFx100,     0xF44B, TemperatureDegFx100_t,             Swap_Range_S, Io_None, Sub_N, Ram,                  NotNv,                                    NotFault) \
+   ENTRY(Erd_Ambient_FilteredInternalTemperatureResolvedInDegFx100,          0xF44C, TemperatureDegFx100_t,             Swap_Range_E, Io_None, Sub_N, Ram,                  NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Ambient_FilteredTemperatureResolvedInDegFx100,                  0xF44D, TemperatureDegFx100_t,             Swap_Yes,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Ambient_FilteredHumidityResolvedPercentx100,                    0xF44E, RelativeHumidityPercentx100_t,     Swap_Yes,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
@@ -1102,20 +1102,20 @@ enum
    ENTRY(Erd_AmbientHumidity_IsValidResolved,                                0xF450, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideRequest,        0xF451, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100,0xF452, TemperatureDegFx100_t,             Swap_Range_S, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,     0xF453, TemperatureDegFx100_t,             Swap_Range_E, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100,0xF452, TemperatureDegFx100_t,             Swap_Range_S, Io_None, Sub_N, Ram,                  NotNv,                                    NotFault) \
+   ENTRY(Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,     0xF453, TemperatureDegFx100_t,             Swap_Range_E, Io_None, Sub_N, Ram,                  NotNv,                                    NotFault) \
    \
    ENTRY(Erd_TwistTrayIceMaker_FilteredTemperatureOverrideRequest,           0xF454, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_TwistTrayIceMaker_FilteredTemperatureOverrideValueInDegFx100,   0xF455, TemperatureDegFx100_t,             Swap_Range_S, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,        0xF456, TemperatureDegFx100_t,             Swap_Range_E, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_FilteredTemperatureOverrideValueInDegFx100,   0xF455, TemperatureDegFx100_t,             Swap_Range_S, Io_None, Sub_N, Ram,                  NotNv,                                    NotFault) \
+   ENTRY(Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,        0xF456, TemperatureDegFx100_t,             Swap_Range_E, Io_None, Sub_N, Ram,                  NotNv,                                    NotFault) \
    \
    ENTRY(Erd_AmbientHumiditySensor_IsValidOverrideRequest,                   0xF457, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AmbientHumiditySensor_IsValidOverrideValue,                     0xF458, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AmbientHumiditySensor_IsValidResolved,                          0xF459, bool,                              Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_Ambient_FilteredInternalHumidityOverrideRequest,                0xF45A, bool,                              Swap_No, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Ambient_FilteredInternalHumidityOverrideValueInPercentx100,     0xF45B, TemperatureDegFx100_t,             Swap_Range_S, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_Ambient_FilteredInternalHumidityResolvedInPercentx100,          0xF45C, TemperatureDegFx100_t,             Swap_Range_E, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_Ambient_FilteredInternalHumidityOverrideRequest,                0xF45A, bool,                              Swap_No, Io_None, Sub_N, Ram,                       NotNv,                                    NotFault) \
+   ENTRY(Erd_Ambient_FilteredInternalHumidityOverrideValueInPercentx100,     0xF45B, RelativeHumidityPercentx100_t,     Swap_Range_S, Io_None, Sub_N, Ram,                  NotNv,                                    NotFault) \
+   ENTRY(Erd_Ambient_FilteredInternalHumidityResolvedInPercentx100,          0xF45C, RelativeHumidityPercentx100_t,     Swap_Range_E, Io_None, Sub_N, Ram,                  NotNv,                                    NotFault) \
    \
    ENTRY(Erd_RightSideFreshFoodDoorStatus_SabbathOverrideRequest,            0xF45D, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RightSideFreshFoodDoorStatus_SabbathOverrideValue,              0xF45E, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -1139,12 +1139,12 @@ enum
    ENTRY(Erd_FreezerBackLightUserAllowableState,            0xF478, UserAllowableInteriorLightState_t,                  Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerTopLightUserAllowableState,             0xF479, UserAllowableInteriorLightState_t,                  Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_CalculatedCondenserFanControl,                 0xF480, FanControl_t,                                       Swap_Range_S, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CalculatedIceCabinetFanControl,                0xF481, FanControl_t,                                       Swap_Range,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CalculatedConvertibleCompartmentFanControl,    0xF482, FanControl_t,                                       Swap_Range,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CalculatedDeliFanControl,                      0xF483, FanControl_t,                                       Swap_Range,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CalculatedFreezerEvapFanControl,               0xF484, FanControl_t,                                       Swap_Range,   Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CalculatedFreshFoodEvapFanControl,             0xF485, FanControl_t,                                       Swap_Range_E, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CalculatedCondenserFanControl,                 0xF480, FanControl_t,                                       Swap_Range_S, Io_None, Sub_Y, Ram,                  NotNv,                                    NotFault) \
+   ENTRY(Erd_CalculatedIceCabinetFanControl,                0xF481, FanControl_t,                                       Swap_Range,   Io_None, Sub_Y, Ram,                  NotNv,                                    NotFault) \
+   ENTRY(Erd_CalculatedConvertibleCompartmentFanControl,    0xF482, FanControl_t,                                       Swap_Range,   Io_None, Sub_Y, Ram,                  NotNv,                                    NotFault) \
+   ENTRY(Erd_CalculatedDeliFanControl,                      0xF483, FanControl_t,                                       Swap_Range,   Io_None, Sub_Y, Ram,                  NotNv,                                    NotFault) \
+   ENTRY(Erd_CalculatedFreezerEvapFanControl,               0xF484, FanControl_t,                                       Swap_Range,   Io_None, Sub_Y, Ram,                  NotNv,                                    NotFault) \
+   ENTRY(Erd_CalculatedFreshFoodEvapFanControl,             0xF485, FanControl_t,                                       Swap_Range_E, Io_None, Sub_Y, Ram,                  NotNv,                                    NotFault) \
    \
    ENTRY(Erd_GpioGroupInterface,                            0xF49F, I_GpioGroup_t *,                                    Swap_No,    Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
    \
