@@ -429,7 +429,7 @@ enum
    ENTRY(Erd_PrimaryUiSignOfLife,                           0x0900, Signal_t,                                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_UiSoundLevelRequest,                           0x0902, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_UiSoundLevelState,                             0x0903, uint8_t,                                            Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_UiSoundLevelState,                             0x0903, uint8_t,                                            Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NumberOfSoundLevelSettings,                    0x0904, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_WaterFilterType,                               0x1019, WaterFilterType_t,                                  Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -440,12 +440,12 @@ enum
    \
    ENTRY(Erd_FreshFoodSetpointRequest,                      0x1200, Setpoint_t,                                         Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodSetpointRangeData,                    0x1201, UserSetpointRangeData_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFoodSetpointStatus,                       0x1202, Setpoint_t,                                         Swap_No,  Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_Int8Max, NotFault) \
+   ENTRY(Erd_FreshFoodSetpointStatus,                       0x1202, Setpoint_t,                                         Swap_No,  Io_None, Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_Int8Max, NotFault) \
    ENTRY(Erd_FreezerSetpointRequest,                        0x1203, Setpoint_t,                                         Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreezerSetpointRangeData,                      0x1204, UserSetpointRangeData_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_FreezerSetpointStatus,                         0x1205, Setpoint_t,                                         Swap_No,  Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_Int8Max, NotFault) \
+   ENTRY(Erd_FreezerSetpointStatus,                         0x1205, Setpoint_t,                                         Swap_No,  Io_None, Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_Int8Max, NotFault) \
    ENTRY(Erd_DispenseSelectionRequest,                      0x1206, DispenseSelection_t,                                Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DispenseSelectionStatus,                       0x1207, DispenseSelection_t,                                Swap_No,  Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_DispenseSelection, NotFault) \
+   ENTRY(Erd_DispenseSelectionStatus,                       0x1207, DispenseSelection_t,                                Swap_No,  Io_None, Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_DispenseSelection, NotFault) \
    ENTRY(Erd_DispensingRequest,                             0x1208, DispensingRequest_t,                                Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispensingRequestStatus,                       0x1209, DispensingRequestStatus_t,                          Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
@@ -456,20 +456,20 @@ enum
    ENTRY(Erd_RightSideFreshFoodDoorStatusResolved,          0x120E, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_LeftSideFreezerDoorStatusResolved,             0x120F, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker0EnableRequest,                        0x1210, IceMakerEnableRequest_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_IceMaker0EnableStatus,                         0x1211, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
+   ENTRY(Erd_IceMaker0EnableStatus,                         0x1211, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
    ENTRY(Erd_IceMaker0FullStatus,                           0x1212, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker0TypeInformation,                      0x1213, IceMakerTypeInformation_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_WaterFilterState,                              0x1215, WaterFilterState_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker1EnableRequest,                        0x1216, IceMakerEnableRequest_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_IceMaker1EnableStatus,                         0x1217, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
+   ENTRY(Erd_IceMaker1EnableStatus,                         0x1217, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
    ENTRY(Erd_IceMaker1FullStatus,                           0x1218, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker1TypeInformation,                      0x1219, IceMakerTypeInformation_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TurboFreezeOnOffRequest,                       0x121A, TurboModeRequest_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TurboFreezeOnOffStatus,                        0x121B, bool,                                               Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_DimmableLight0PercentLevelRequest,             0x121E, PercentageDutyCycle_t,                              Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DimmableLight0PercentLevelStatus,              0x121F, PercentageDutyCycle_t,                              Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_MaxLightBrightness, NotFault) \
+   ENTRY(Erd_DimmableLight0PercentLevelStatus,              0x121F, PercentageDutyCycle_t,                              Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_MaxLightBrightness, NotFault) \
    ENTRY(Erd_DimmableLight0Configuration,                   0x1220, UserAllowableInteriorLightingBitmap_t,              Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_PresenceSensingEnableRequest,                  0x1222, PresenceSensingEnableRequest_t,                     Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
@@ -487,7 +487,7 @@ enum
    ENTRY(Erd_SecondarySignOfLife,                           0x122D, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispensingInhibitedReason,                     0x122F, DispensingInhibitedReasonBitmap_t,                  Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker2EnableRequest,                        0x1230, IceMakerEnableRequest_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_IceMaker2EnableStatus,                         0x1231, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
+   ENTRY(Erd_IceMaker2EnableStatus,                         0x1231, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
    ENTRY(Erd_IceMaker2FullStatus,                           0x1232, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker2TypeInformation,                      0x1233, IceMakerTypeInformation_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
@@ -1128,10 +1128,10 @@ enum
    ENTRY(Erd_LeftSideFreezerDoorStatus_TestingOverrideValue,                 0xF464, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_DimmableLight1PercentLevelRequest,             0xF470, PercentageDutyCycle_t,                              Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DimmableLight1PercentLevelStatus,              0xF471, PercentageDutyCycle_t,                              Swap_No,    Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_MaxLightBrightness, NotFault) \
+   ENTRY(Erd_DimmableLight1PercentLevelStatus,              0xF471, PercentageDutyCycle_t,                              Swap_No,    Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_MaxLightBrightness, NotFault) \
    ENTRY(Erd_DimmableLight1Configuration,                   0xF472, UserAllowableInteriorLightingBitmap_t,              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DimmableLight2PercentLevelRequest,             0xF473, PercentageDutyCycle_t,                              Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DimmableLight2PercentLevelStatus,              0xF474, PercentageDutyCycle_t,                              Swap_No,    Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_MaxLightBrightness, NotFault) \
+   ENTRY(Erd_DimmableLight2PercentLevelStatus,              0xF474, PercentageDutyCycle_t,                              Swap_No,    Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_MaxLightBrightness, NotFault) \
    ENTRY(Erd_DimmableLight2Configuration,                   0xF475, UserAllowableInteriorLightingBitmap_t,              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodBackLightUserAllowableState,          0xF476, UserAllowableInteriorLightState_t,                  Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
