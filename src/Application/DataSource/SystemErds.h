@@ -1117,6 +1117,16 @@ enum
    ENTRY(Erd_Ambient_FilteredInternalHumidityOverrideValueInPercentx100,     0xF45B, TemperatureDegFx100_t,             Swap_Range_S, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Ambient_FilteredInternalHumidityResolvedInPercentx100,          0xF45C, TemperatureDegFx100_t,             Swap_Range_E, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
+   ENTRY(Erd_RightSideFreshFoodDoorStatus_SabbathOverrideRequest,            0xF45D, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_RightSideFreshFoodDoorStatus_SabbathOverrideValue,              0xF45E, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_RightSideFreshFoodDoorStatus_TestingOverrideRequest,            0xF45F, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_RightSideFreshFoodDoorStatus_TestingOverrideValue,              0xF460, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_LeftSideFreezerDoorStatus_SabbathOverrideRequest,               0xF461, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_LeftSideFreezerDoorStatus_SabbathOverrideValue,                 0xF462, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_LeftSideFreezerDoorStatus_TestingOverrideRequest,               0xF463, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_LeftSideFreezerDoorStatus_TestingOverrideValue,                 0xF464, bool,                              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
    ENTRY(Erd_DimmableLight1PercentLevelRequest,             0xF470, PercentageDutyCycle_t,                              Swap_No,    Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DimmableLight1PercentLevelStatus,              0xF471, PercentageDutyCycle_t,                              Swap_No,    Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_MaxLightBrightness, NotFault) \
    ENTRY(Erd_DimmableLight1Configuration,                   0xF472, UserAllowableInteriorLightingBitmap_t,              Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

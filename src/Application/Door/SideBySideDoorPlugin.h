@@ -11,6 +11,7 @@
 #include "AllFreshFoodDoorStatus.h"
 #include "I_DataModel.h"
 #include "SabbathInhibitDoors.h"
+#include "OverrideArbiter.h"
 
 typedef struct
 {
@@ -18,6 +19,8 @@ typedef struct
    {
       AllFreshFoodDoorStatus_t allFreshFoodDoorStatus;
       SabbathInhibitDoors_t sabbathInhibitDoors;
+      OverrideArbiter_t leftSideFreezerDoorOverrideArbiter;
+      OverrideArbiter_t rightSideFreshFoodDoorOverrideArbiter;
    } _private;
 } SideBySideDoorPlugin_t;
 

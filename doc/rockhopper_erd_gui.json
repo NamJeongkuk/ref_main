@@ -642,6 +642,34 @@
           "name": "Erd_ConvertibleCompartmentDoorIsOpen",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Testing Left Freezer Override Request",
+          "name": "Erd_LeftSideFreezerDoorStatus_TestingOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Testing Left Freezer Override Value",
+          "name": "Erd_LeftSideFreezerDoorStatus_TestingOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Testing Right Fresh Food Override Request",
+          "name": "Erd_RightSideFreshFoodDoorStatus_TestingOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Testing Right Fresh Food Override Value",
+          "name": "Erd_RightSideFreshFoodDoorStatus_TestingOverrideValue",
+          "read": true,
+          "write": true
         }
       ]
     },

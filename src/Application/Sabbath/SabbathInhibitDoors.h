@@ -13,13 +13,13 @@
 
 typedef struct
 {
-   Erd_t doorStatusErd; // bool
-   Erd_t doorStatusResolvedErd; // bool
-} SabbathDoorResolvedPair_t;
+   Erd_t doorStatusOverrideRequestErd; // bool
+   Erd_t doorStatusOverrideValueErd; // bool
+} SabbathDoorOverridePair_t;
 
 typedef struct
 {
-   const SabbathDoorResolvedPair_t *doorResolvedPairErdList;
+   const SabbathDoorOverridePair_t *doorOverrideErdPairList;
    uint8_t numberOfPairs;
    Erd_t sabbathModeErd; // bool
    Erd_t enhancedSabbathModeErd; // bool

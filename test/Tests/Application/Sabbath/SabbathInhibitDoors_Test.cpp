@@ -19,16 +19,20 @@ enum
    Opened = true
 };
 
-static const SabbathDoorResolvedPair_t doorResolvedPairs[] = {
-   { .doorStatusErd = Erd_LeftSideFreshFoodDoorIsOpen, .doorStatusResolvedErd = Erd_LeftSideFreshFoodDoorIsOpenResolved },
-   { .doorStatusErd = Erd_DoorInDoorIsOpen, .doorStatusResolvedErd = Erd_DoorInDoorIsOpenResolved },
-   { .doorStatusErd = Erd_LeftSideFreezerDoorStatus, .doorStatusResolvedErd = Erd_LeftSideFreezerDoorStatusResolved },
-   { .doorStatusErd = Erd_RightSideFreshFoodDoorStatus, .doorStatusResolvedErd = Erd_RightSideFreshFoodDoorStatusResolved },
+static const SabbathDoorOverridePair_t doorOverridePairs[] = {
+   { 
+      .doorStatusOverrideRequestErd = Erd_RightSideFreshFoodDoorStatus_SabbathOverrideRequest,
+      .doorStatusOverrideValueErd = Erd_RightSideFreshFoodDoorStatus_SabbathOverrideValue,
+   },
+   { 
+      .doorStatusOverrideRequestErd = Erd_LeftSideFreezerDoorStatus_SabbathOverrideRequest,
+      .doorStatusOverrideValueErd = Erd_LeftSideFreezerDoorStatus_SabbathOverrideValue,
+   },
 };
 
 static const SabbathInhibitDoorsConfiguration_t config = {
-   .doorResolvedPairErdList = doorResolvedPairs,
-   .numberOfPairs = NUM_ELEMENTS(doorResolvedPairs),
+   .doorOverrideErdPairList = doorOverridePairs,
+   .numberOfPairs = NUM_ELEMENTS(doorOverridePairs),
    .sabbathModeErd = Erd_SabbathModeEnable,
    .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .sabbathGpioErd = Erd_Gpio_SABBATH
@@ -84,30 +88,50 @@ TEST_GROUP(SabbathInhibitDoors)
       GivenSabbathModeIs(state);
    }
 
-   void GivenAllDoorsAre(bool state)
+   void GivenAllOverrideRequestsAre(bool state)
    {
-      for(uint8_t index; index < NUM_ELEMENTS(doorResolvedPairs); index++)
+      for(uint8_t index; index < NUM_ELEMENTS(doorOverridePairs); index++)
       {
          DataModel_Write(
             dataModel,
-            doorResolvedPairs[index].doorStatusErd,
+            doorOverridePairs[index].doorStatusOverrideRequestErd,
             &state);
       }
    }
 
-   void WhenAllDoorsBecome(bool state)
+   void GivenAllOverrideValuesAre(bool state)
    {
-      GivenAllDoorsAre(state);
+      for(uint8_t index; index < NUM_ELEMENTS(doorOverridePairs); index++)
+      {
+         DataModel_Write(
+            dataModel,
+            doorOverridePairs[index].doorStatusOverrideValueErd,
+            &state);
+      }
    }
 
-   void AllResolvedDoorStatesShouldBe(bool expectedState)
+   void AllOverrideRequestsShouldBe(bool expectedState)
    {
       bool actualState;
-      for(uint8_t index; index < NUM_ELEMENTS(doorResolvedPairs); index++)
+      for(uint8_t index; index < NUM_ELEMENTS(doorOverridePairs); index++)
       {
          DataModel_Read(
             dataModel,
-            doorResolvedPairs[index].doorStatusResolvedErd,
+            doorOverridePairs[index].doorStatusOverrideRequestErd,
+            &actualState);
+
+         CHECK_EQUAL(expectedState, actualState);
+      }
+   }
+
+   void AllOverrideValuesShouldBe(bool expectedState)
+   {
+      bool actualState;
+      for(uint8_t index; index < NUM_ELEMENTS(doorOverridePairs); index++)
+      {
+         DataModel_Read(
+            dataModel,
+            doorOverridePairs[index].doorStatusOverrideValueErd,
             &actualState);
 
          CHECK_EQUAL(expectedState, actualState);
@@ -128,58 +152,6 @@ TEST_GROUP(SabbathInhibitDoors)
       GivenTheSabbathInhibitDoorsIsInitialized();
    }
 
-   void GivenASpecificDoorIs(Erd_t specificDoor, bool state)
-   {
-      if(specificDoor == Erd_LeftSideFreshFoodDoorIsOpen)
-      {
-         DataModel_Write(
-            dataModel,
-            Erd_LeftSideFreshFoodDoorIsOpen,
-            &state);
-      }
-      else if(specificDoor == Erd_DoorInDoorIsOpen)
-      {
-         DataModel_Write(
-            dataModel,
-            Erd_DoorInDoorIsOpen,
-            &state);
-      }
-      else if(specificDoor == Erd_LeftSideFreezerDoorStatus)
-      {
-         DataModel_Write(
-            dataModel,
-            Erd_LeftSideFreezerDoorStatus,
-            &state);
-      }
-      else
-      {
-         DataModel_Write(
-            dataModel,
-            Erd_RightSideFreshFoodDoorStatus,
-            &state);
-      }
-   }
-
-   void AllResolvedDoorStatesShouldBeTheRealDoorState()
-   {
-      for(uint8_t index = 0; index < NUM_ELEMENTS(doorResolvedPairs); index++)
-      {
-         bool resolvedDoorState;
-         DataModel_Read(
-            dataModel,
-            doorResolvedPairs[index].doorStatusResolvedErd,
-            &resolvedDoorState);
-
-         bool realDoorState;
-         DataModel_Read(
-            dataModel,
-            doorResolvedPairs[index].doorStatusErd,
-            &realDoorState);
-
-         CHECK_EQUAL(resolvedDoorState, realDoorState);
-      }
-   }
-
    void GivenSabbathGpioIs(bool state)
    {
       DataModel_Write(dataModel, config.sabbathGpioErd, &state);
@@ -197,7 +169,7 @@ TEST_GROUP(SabbathInhibitDoors)
       REINTERPRET(dataModel, context, I_DataModel_t *);
       REINTERPRET(args, _args, const DataModelOnDataChangeArgs_t *);
 
-      if(args->erd == doorResolvedPairs[0].doorStatusResolvedErd)
+      if(args->erd == doorOverridePairs[0].doorStatusOverrideRequestErd)
       {
          bool gpioState;
          DataModel_Read(
@@ -221,24 +193,24 @@ TEST_GROUP(SabbathInhibitDoors)
       CHECK_TRUE(testPassed);
    }
 
-   static void DataModelChangedResolvedDoorsShouldBeClosedWhenSabbathGpioIsSet(void *context, const void *_args)
+   static void DataModelChangedOverrideErdShouldBeSetWhenSabbathGpioIsSet(void *context, const void *_args)
    {
       REINTERPRET(dataModel, context, I_DataModel_t *);
       REINTERPRET(args, _args, const DataModelOnDataChangeArgs_t *);
 
       if(args->erd == config.sabbathGpioErd)
       {
-         bool doorState;
+         bool request;
          testPassed = true;
 
          for(uint8_t index = 0; index < config.numberOfPairs; index++)
          {
             DataModel_Read(
                dataModel,
-               doorResolvedPairs[index].doorStatusResolvedErd,
-               &doorState);
+               doorOverridePairs[index].doorStatusOverrideRequestErd,
+               &request);
 
-            if(doorState == Opened)
+            if(request == CLEAR)
             {
                testPassed = false;
                return;
@@ -252,7 +224,7 @@ TEST_GROUP(SabbathInhibitDoors)
       EventSubscription_Init(
          &subscription,
          dataModel,
-         DataModelChangedResolvedDoorsShouldBeClosedWhenSabbathGpioIsSet);
+         DataModelChangedOverrideErdShouldBeSetWhenSabbathGpioIsSet);
       Event_Subscribe(dataModel->OnDataChange, &subscription);
 
       WhenSabbathModeBecomes(DISABLED);
@@ -261,93 +233,54 @@ TEST_GROUP(SabbathInhibitDoors)
    }
 };
 
-TEST(SabbathInhibitDoors, ShouldReportResolvedDoorsClosedIfInSabbathModeOnInitialization)
+TEST(SabbathInhibitDoors, ShouldSetOverrideRequestsIfInSabbathModeOnInitialization)
 {
    GivenSabbathModeIs(ENABLED);
-   GivenAllDoorsAre(Opened);
+   GivenAllOverrideRequestsAre(CLEAR);
    GivenTheSabbathInhibitDoorsIsInitialized();
-   AllResolvedDoorStatesShouldBe(Closed);
+
+   AllOverrideRequestsShouldBe(SET);
 }
 
-TEST(SabbathInhibitDoors, ShouldReportResolvedDoorsClosedIfInEnhancedSabbathModeOnInitialization)
+TEST(SabbathInhibitDoors, ShouldSetOverrideValuesToClosedIfInSabbathModeOnInitialization)
 {
    GivenEnhancedSabbathModeIs(ENABLED);
-   GivenAllDoorsAre(Opened);
+   GivenAllOverrideValuesAre(Opened);
    GivenTheSabbathInhibitDoorsIsInitialized();
-   AllResolvedDoorStatesShouldBe(Closed);
+
+   AllOverrideValuesShouldBe(Closed);
 }
 
-TEST(SabbathInhibitDoors, ShouldReportResolvedDoorsAsRealDoorStateWhileSabbathAndEnhancedSabbathIsDisabled)
+TEST(SabbathInhibitDoors, ShouldNotSetOverrideRequestsOrValuesWhenInitializedNotInSabbath)
 {
    GivenSabbathModeIs(DISABLED);
-   GivenEnhancedSabbathModeIs(DISABLED);
+   GivenAllOverrideRequestsAre(CLEAR);
+   GivenAllOverrideValuesAre(Opened);
    GivenTheSabbathInhibitDoorsIsInitialized();
 
-   WhenAllDoorsBecome(Opened);
-   AllResolvedDoorStatesShouldBeTheRealDoorState();
+   AllOverrideRequestsShouldBe(CLEAR);
 }
 
-TEST(SabbathInhibitDoors, ShouldReportResolvedDoorsClosedIfInSabbathMode)
+TEST(SabbathInhibitDoors, ShouldSetOverrideErdsWhenRegularSabbathIsEntered)
 {
    GivenTheSabbathInhibitDoorsIsInitialized();
-   GivenAllDoorsAre(Opened);
-   AllResolvedDoorStatesShouldBeTheRealDoorState();
+   GivenAllOverrideValuesAre(Opened);
+   GivenAllOverrideRequestsAre(CLEAR);
 
-   WhenSabbathModeBecomes(ENABLED);
-   AllResolvedDoorStatesShouldBe(Closed);
+   WhenSabbathModeBecomes(SET);
+   AllOverrideValuesShouldBe(Closed);
+   AllOverrideRequestsShouldBe(SET);
 }
 
-TEST(SabbathInhibitDoors, ShouldReportResolvedDoorsClosedIfInEnhancedSabbath)
+TEST(SabbathInhibitDoors, ShouldSetOverrideErdsWhenEnhancedSabbathIsEntered)
 {
    GivenTheSabbathInhibitDoorsIsInitialized();
-   GivenAllDoorsAre(Opened);
-   AllResolvedDoorStatesShouldBeTheRealDoorState();
+   GivenAllOverrideValuesAre(Opened);
+   GivenAllOverrideRequestsAre(CLEAR);
 
-   WhenEnhancedSabbathModeBecomes(ENABLED);
-   AllResolvedDoorStatesShouldBe(Closed);
-}
-
-TEST(SabbathInhibitDoors, ShouldReportResolvedDoorsAsRealDoorStateWhenEnhancedSabbathIsEnabledThenDisabledWhileEnhancedSabbathDisabled)
-{
-   GivenSabbathModeIs(ENABLED);
-   GivenEnhancedSabbathModeIs(DISABLED);
-   GivenTheSabbathInhibitDoorsIsInitialized();
-   GivenAllDoorsAre(Opened);
-   AllResolvedDoorStatesShouldBe(Closed);
-
-   WhenSabbathModeBecomes(DISABLED);
-   AllResolvedDoorStatesShouldBeTheRealDoorState();
-
-   WhenAllDoorsBecome(Closed);
-   AllResolvedDoorStatesShouldBeTheRealDoorState();
-}
-
-TEST(SabbathInhibitDoors, ShouldReportResolvedDoorsAsRealDoorStateWhenSabbathAndEnhancedSabbathDisabledAndLeftSideFreshFoodDoorStateChanges)
-{
-   GivenTheModuleIsInitalizedAndNormalSabbathAndEnhancedSabbathAreDisabled();
-   GivenASpecificDoorIs(Erd_LeftSideFreshFoodDoorIsOpen, Opened);
-   AllResolvedDoorStatesShouldBeTheRealDoorState();
-}
-
-TEST(SabbathInhibitDoors, ShouldReportResolvedDoorsAsRealDoorStateWhenSabbathAndEnhancedSabbathDisabledAndDoorInDoorChanges)
-{
-   GivenTheModuleIsInitalizedAndNormalSabbathAndEnhancedSabbathAreDisabled();
-   GivenASpecificDoorIs(Erd_DoorInDoorIsOpen, Opened);
-   AllResolvedDoorStatesShouldBeTheRealDoorState();
-}
-
-TEST(SabbathInhibitDoors, ShouldReportResolvedDoorsAsRealDoorStateWhenSabbathAndEnhancedSabbathDisabledAndLeftSideFreezerDoorChanges)
-{
-   GivenTheModuleIsInitalizedAndNormalSabbathAndEnhancedSabbathAreDisabled();
-   GivenASpecificDoorIs(Erd_LeftSideFreezerDoorStatus, Opened);
-   AllResolvedDoorStatesShouldBeTheRealDoorState();
-}
-
-TEST(SabbathInhibitDoors, ShouldReportResolvedDoorsAsRealDoorStateWhenSabbathAndEnhancedSabbathDisabledAndRightSideFreshFoodDoorChanges)
-{
-   GivenTheModuleIsInitalizedAndNormalSabbathAndEnhancedSabbathAreDisabled();
-   GivenASpecificDoorIs(Erd_RightSideFreshFoodDoorStatus, Opened);
-   AllResolvedDoorStatesShouldBeTheRealDoorState();
+   WhenEnhancedSabbathModeBecomes(SET);
+   AllOverrideValuesShouldBe(Closed);
+   AllOverrideRequestsShouldBe(SET);
 }
 
 TEST(SabbathInhibitDoors, ShouldClearSabbathGpioWhenEitherSabbathOrEnhancedSabbathAreEntered)
@@ -382,7 +315,7 @@ TEST(SabbathInhibitDoors, ShouldSetSabbathGpioWhenBothSabbathAndEnhancedSabbathA
 TEST(SabbathInhibitDoors, ShouldVoteTheDoorStatesClosedBeforeClearingGpio)
 {
    GivenSabbathGpioIs(SET);
-   GivenAllDoorsAre(Opened);
+   GivenAllOverrideRequestsAre(CLEAR);
    GivenTheModuleIsInitalizedAndNormalSabbathAndEnhancedSabbathAreDisabled();
 
    SabbathGpioShouldBeSetWhenResolvedDoorsAreClosedUponEnteringSabbath();
@@ -390,7 +323,7 @@ TEST(SabbathInhibitDoors, ShouldVoteTheDoorStatesClosedBeforeClearingGpio)
 
 TEST(SabbathInhibitDoors, ShouldSetGpioBeforeVotingForTheDoorStates)
 {
-   GivenAllDoorsAre(Opened);
+   GivenAllOverrideRequestsAre(CLEAR);
    GivenTheModuleIsInitalizedAndNormalSabbathAndEnhancedSabbathAreEnabled();
 
    ResolvedDoorsShouldRemainClosedWhenSabbathGpioIsSetUponDisablingSabbath();

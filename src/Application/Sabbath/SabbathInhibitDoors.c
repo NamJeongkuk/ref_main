@@ -37,8 +37,13 @@ static void InhibitDoorsInSabbathMode(void *context)
          bool closed = Closed;
          DataModel_Write(
             instance->_private.dataModel,
-            instance->_private.config->doorResolvedPairErdList[index].doorStatusResolvedErd,
+            instance->_private.config->doorOverrideErdPairList[index].doorStatusOverrideValueErd,
             &closed);
+
+         DataModel_Write(
+            instance->_private.dataModel,
+            instance->_private.config->doorOverrideErdPairList[index].doorStatusOverrideRequestErd,
+            set);
       }
 
       DataModel_Write(
@@ -55,16 +60,10 @@ static void InhibitDoorsInSabbathMode(void *context)
 
       for(uint8_t index = 0; index < instance->_private.config->numberOfPairs; index++)
       {
-         bool realDoorState;
-         DataModel_Read(
-            instance->_private.dataModel,
-            instance->_private.config->doorResolvedPairErdList[index].doorStatusErd,
-            &realDoorState);
-
          DataModel_Write(
             instance->_private.dataModel,
-            instance->_private.config->doorResolvedPairErdList[index].doorStatusResolvedErd,
-            &realDoorState);
+            instance->_private.config->doorOverrideErdPairList[index].doorStatusOverrideRequestErd,
+            clear);
       }
    }
 };
@@ -78,14 +77,6 @@ static bool SabbathDoorLogicNeedsChecked(void *context, const void *args)
       onChangeArgs->erd == instance->_private.config->sabbathModeErd)
    {
       return true;
-   }
-
-   for(uint8_t index = 0; index < instance->_private.config->numberOfPairs; index++)
-   {
-      if(onChangeArgs->erd == instance->_private.config->doorResolvedPairErdList[index].doorStatusErd)
-      {
-         return true;
-      }
    }
 
    return false;
