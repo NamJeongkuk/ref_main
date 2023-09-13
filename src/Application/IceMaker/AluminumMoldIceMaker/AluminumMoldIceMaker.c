@@ -918,9 +918,6 @@ static bool State_HarvestFix(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          ClearRakeControllerRequest(instance);
          break;
 
-      case Signal_TestRequest_Harvest:
-         break;
-
       default:
          return HsmSignalDeferred;
    }

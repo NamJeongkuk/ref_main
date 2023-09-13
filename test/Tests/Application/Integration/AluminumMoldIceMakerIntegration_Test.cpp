@@ -1529,13 +1529,13 @@ TEST(AluminumMoldIceMakerIntegration, ShouldStayInHarvestStateIfHarvestTestIsReq
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 }
 
-TEST(AluminumMoldIceMakerIntegration, ShouldStayInHarvestFixStateIfHarvestTestIsRequestedWhileInHarvestFixState)
+TEST(AluminumMoldIceMakerIntegration, ShouldTransitionFromHarvestFixtoHarvestStateWhenHarvestTestIsRequested)
 {
    GivenIceMakerIsInHarvestFixState();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
 
    WhenTheAluminumMoldIceMakerTestRequestIs(IceMakerTestRequest_Harvest);
-   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_HarvestFix);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 }
 
 TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToHarvestIfHarvestTestIsRequestedWhileInHarvestFaultState)
