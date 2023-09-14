@@ -29,6 +29,7 @@ typedef struct
    Erd_t factoryModeTimeErd; // uint8_t
    Erd_t resetErd; // uint8_t
    const FactoryVoteList_t factoryVoteList;
+   const ErdList_t *lightVoteErdList;
 } FactoryModeConfiguration_t;
 
 typedef struct

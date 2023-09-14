@@ -11,6 +11,7 @@ extern "C"
 #include "DataModelErdPointerAccess.h"
 #include "VoteType.h"
 #include "BooleanVotedState.h"
+#include "RampingPwmDutyCyclePercentageVote.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -48,7 +49,11 @@ enum
    Erd_U8_AnotherFactoryVoteStruct,
    Erd_U16_AnotherFactoryVoteStruct,
    Erd_U32_AnotherFactoryVoteStruct,
-   Erd_U64_AnotherFactoryVoteStruct
+   Erd_U64_AnotherFactoryVoteStruct,
+   Erd_FreshFoodBackWallLightFactoryVote,
+   Erd_FreshFoodTopLightFactoryVote,
+   Erd_FreezerBackWallLightFactoryVote,
+   Erd_FreezerTopLightFactoryVote
 };
 
 static bool booleanOnValue = true;
@@ -86,7 +91,11 @@ static const DataModel_TestDoubleConfigurationEntry_t erdTable[] = {
    { Erd_U8_AnotherFactoryVoteStruct, sizeof(U8Vote_t) },
    { Erd_U16_AnotherFactoryVoteStruct, sizeof(U16Vote_t) },
    { Erd_U32_AnotherFactoryVoteStruct, sizeof(U32Vote_t) },
-   { Erd_U64_AnotherFactoryVoteStruct, sizeof(U64Vote_t) }
+   { Erd_U64_AnotherFactoryVoteStruct, sizeof(U64Vote_t) },
+   { Erd_FreshFoodBackWallLightFactoryVote, sizeof(RampingPwmDutyCyclePercentageVote_t) },
+   { Erd_FreshFoodTopLightFactoryVote, sizeof(RampingPwmDutyCyclePercentageVote_t) },
+   { Erd_FreezerBackWallLightFactoryVote, sizeof(RampingPwmDutyCyclePercentageVote_t) },
+   { Erd_FreezerTopLightFactoryVote, sizeof(RampingPwmDutyCyclePercentageVote_t) }
 };
 
 static const FactoryVotePair_t factoryVotePairs[] = {
@@ -96,7 +105,7 @@ static const FactoryVotePair_t factoryVotePairs[] = {
    { Erd_U32_FactoryVoteStruct, U32OffValue },
    { Erd_U8_AnotherFactoryVoteStruct, U8AnotherOffValue },
    { Erd_U16_AnotherFactoryVoteStruct, U16AnotherOffValue },
-   { Erd_U32_AnotherFactoryVoteStruct, U32AnotherOffValue },
+   { Erd_U32_AnotherFactoryVoteStruct, U32AnotherOffValue }
 };
 
 static const FactoryVotePair_t factoryVotePairsWithU64Vote[] = {
@@ -114,16 +123,30 @@ static const FactoryVoteList_t factoryVoteListWithU64Vote = {
    .numberOfPairs = NUM_ELEMENTS(factoryVotePairsWithU64Vote)
 };
 
+static const Erd_t lightVoteErds[] = {
+   Erd_FreshFoodBackWallLightFactoryVote,
+   Erd_FreshFoodTopLightFactoryVote,
+   Erd_FreezerBackWallLightFactoryVote,
+   Erd_FreezerTopLightFactoryVote
+};
+
+static const ErdList_t lightVoteErdList = {
+   .erds = lightVoteErds,
+   .numberOfErds = NUM_ELEMENTS(lightVoteErds)
+};
+
 static const FactoryModeConfiguration_t config = {
    .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
    .resetErd = Erd_Reset,
-   .factoryVoteList = factoryVoteList
+   .factoryVoteList = factoryVoteList,
+   .lightVoteErdList = &lightVoteErdList
 };
 
 static const FactoryModeConfiguration_t configU64Vote = {
    .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
    .resetErd = Erd_Reset,
-   .factoryVoteList = factoryVoteListWithU64Vote
+   .factoryVoteList = factoryVoteListWithU64Vote,
+   .lightVoteErdList = &lightVoteErdList
 };
 
 TEST_GROUP(FactoryMode)
@@ -253,6 +276,17 @@ TEST_GROUP(FactoryMode)
       CHECK_EQUAL(expectedVote, actual.vote);
    }
 
+   void TheLightVoteErdShouldBeOff(Erd_t erd)
+   {
+      RampingPwmDutyCyclePercentageVote_t actual;
+      DataModel_Read(dataModel, erd, &actual);
+
+      CHECK_EQUAL(PercentageDutyCycle_Min, actual.rampingPwmDutyCyclePercentage.pwmDutyCyclePercentage);
+      CHECK_EQUAL(UINT8_MAX, actual.rampingPwmDutyCyclePercentage.rampingDownCountInMsec);
+      CHECK_EQUAL(UINT8_MAX, actual.rampingPwmDutyCyclePercentage.rampingUpCountInMsec);
+      CHECK_EQUAL(Vote_Care, actual.care);
+   }
+
    void AllFactoryVotesShouldBeOff(void)
    {
       TheBooleanVoteStructErdShouldBe(Erd_Boolean_FactoryVoteStruct, booleanOffValue, Vote_Care);
@@ -262,6 +296,11 @@ TEST_GROUP(FactoryMode)
       TheU8VoteStructErdShouldBe(Erd_U8_AnotherFactoryVoteStruct, U8AnotherOffValue, Vote_Care);
       TheU16VoteStructErdShouldBe(Erd_U16_AnotherFactoryVoteStruct, U16AnotherOffValue, Vote_Care);
       TheU32VoteStructErdShouldBe(Erd_U32_AnotherFactoryVoteStruct, U32AnotherOffValue, Vote_Care);
+
+      for(uint8_t index = 0; index < lightVoteErdList.numberOfErds; index++)
+      {
+         TheLightVoteErdShouldBeOff(lightVoteErdList.erds[index]);
+      }
    }
 
    void ResetRequestShouldBe(uint8_t expected)

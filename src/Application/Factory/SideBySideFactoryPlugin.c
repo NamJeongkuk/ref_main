@@ -30,11 +30,9 @@ static const FactoryVotePair_t factoryVotePairs[] = {
    { Erd_IsolationWaterValve_FactoryVote, WaterValveState_Off },
    { Erd_AugerMotor_FactoryVote, AugerMotorIceType_Off },
    { Erd_DispenserWaterValve_FactoryVote, WaterValveState_Off },
-   { Erd_FreshFoodBackWallLight_FactoryVote, PwmDutyCycle_Min },
-   { Erd_FreshFoodTopLight_FactoryVote, PwmDutyCycle_Min },
-   { Erd_FreezerBackWallLight_FactoryVote, PwmDutyCycle_Min },
-   { Erd_FreezerTopLight_FactoryVote, PwmDutyCycle_Min },
    { Erd_DisableMinimumCompressorTimes_FactoryVote, true },
+   // Light vote ERDs should not be configured here
+   // It should be configured in lightVoteErds
 };
 
 static const FactoryVoteList_t factoryVoteList = {
@@ -42,10 +40,23 @@ static const FactoryVoteList_t factoryVoteList = {
    .numberOfPairs = NUM_ELEMENTS(factoryVotePairs)
 };
 
+static const Erd_t lightVoteErds[] = {
+   Erd_FreshFoodBackWallLight_FactoryVote,
+   Erd_FreshFoodTopLight_FactoryVote,
+   Erd_FreezerBackWallLight_FactoryVote,
+   Erd_FreezerTopLight_FactoryVote
+};
+
+static const ErdList_t lightVoteErdList = {
+   .erds = lightVoteErds,
+   .numberOfErds = NUM_ELEMENTS(lightVoteErds)
+};
+
 static const FactoryModeConfiguration_t factoryModeConfig = {
    .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
    .resetErd = Erd_Reset,
-   .factoryVoteList = factoryVoteList
+   .factoryVoteList = factoryVoteList,
+   .lightVoteErdList = &lightVoteErdList
 };
 
 void SideBySideFactoryPlugin_Init(SideBySideFactoryPlugin_t *instance, I_DataModel_t *dataModel)

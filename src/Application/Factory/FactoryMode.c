@@ -12,6 +12,7 @@
 #include "uassert.h"
 #include <stdlib.h>
 #include "Constants_Time.h"
+#include "RampingPwmDutyCyclePercentageVote.h"
 
 enum
 {
@@ -82,6 +83,20 @@ static void FactoryModeOneMinuteTimerExpired(void *context)
       &factoryModeTime);
 }
 
+static void VoteOffForAllLights(FactoryMode_t *instance)
+{
+   RampingPwmDutyCyclePercentageVote_t lightVote;
+   lightVote.rampingPwmDutyCyclePercentage.pwmDutyCyclePercentage = PercentageDutyCycle_Min;
+   lightVote.rampingPwmDutyCyclePercentage.rampingDownCountInMsec = UINT8_MAX;
+   lightVote.rampingPwmDutyCyclePercentage.rampingUpCountInMsec = UINT8_MAX;
+   lightVote.care = Vote_Care;
+
+   ErdList_WriteAll(
+      instance->_private.dataModel,
+      instance->_private.config->lightVoteErdList,
+      &lightVote);
+}
+
 static void VoteOffForAllTheLoads(void *context)
 {
    FactoryMode_t *instance = context;
@@ -100,6 +115,8 @@ static void VoteOffForAllTheLoads(void *context)
 
       StackAllocator_Allocate(erdSize, FillOffValueInFactoryVote, &factoryVoteErdCallbackContext);
    }
+
+   VoteOffForAllLights(instance);
 }
 
 static void FactoryModeTimeChanged(void *context, const void *args)

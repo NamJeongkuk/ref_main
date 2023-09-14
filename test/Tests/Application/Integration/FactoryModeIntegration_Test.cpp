@@ -85,10 +85,6 @@ static const FactoryVotePair_t factoryVotePairs[] = {
    { Erd_IsolationWaterValve_FactoryVote, WaterValveState_Off },
    { Erd_AugerMotor_FactoryVote, AugerMotorIceType_Off },
    { Erd_DispenserWaterValve_FactoryVote, WaterValveState_Off },
-   { Erd_FreshFoodBackWallLight_FactoryVote, PwmDutyCycle_Min },
-   { Erd_FreshFoodTopLight_FactoryVote, PwmDutyCycle_Min },
-   { Erd_FreezerBackWallLight_FactoryVote, PwmDutyCycle_Min },
-   { Erd_FreezerTopLight_FactoryVote, PwmDutyCycle_Min },
    { Erd_DisableMinimumCompressorTimes_FactoryVote, true },
 };
 
@@ -462,6 +458,11 @@ TEST_GROUP(FactoryModeIntegration)
       GivenTheFactoryModeEnableRequestIs(TwoMinutes);
       FactoryModeShouldBeEntered();
    }
+
+   void WhenTheApplicationIsInFactoryMode()
+   {
+      GivenTheApplicationIsInFactoryMode();
+   }
 };
 
 TEST(FactoryModeIntegration, ShouldTurnAllLoadsOffWhenEnteringFactoryMode)
@@ -486,6 +487,15 @@ TEST(FactoryModeIntegration, ShouldSetLightBspErdsToPwmDutyCycleMinWhenFactoryMo
    TheLightBspErdsShouldBe(PwmDutyCycle_Min);
 
    After(OneMinute * MSEC_PER_MIN);
+   TheLightBspErdsShouldBe(PwmDutyCycle_Min);
+}
+
+TEST(FactoryModeIntegration, ShouldSetLightBspErdsToPwmDutyCycleMinWhenFactoryModeIsEnabled)
+{
+   GivenTheApplicationIsInitialized();
+   GivenTheLightBspErdsAre({ PwmDutyCycle_Max, UINT8_MAX, UINT8_MAX });
+
+   WhenTheApplicationIsInFactoryMode();
    TheLightBspErdsShouldBe(PwmDutyCycle_Min);
 }
 
