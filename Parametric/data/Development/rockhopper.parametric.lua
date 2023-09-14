@@ -20,6 +20,7 @@ return parametric_data({
     import('./Personality/personalityTestDrivenDevelopmentSingleSpeedCompressorGridIntegration.lua'),
     import('./Personality/personalityTestDrivenDevelopmentSingleEvapEnableExternalSensorIsFalse.lua'),
     import('./Personality/personalityTestDrivenDevelopmentSingleEvapCondenserFanCoolingModeWithoutSetpoint.lua'),
-    import('./Personality/personalityTestDrivenDevelopmentSingleEvapCondenserFanNoCoolingMode.lua')
+    import('./Personality/personalityTestDrivenDevelopmentSingleEvapCondenserFanNoCoolingMode.lua'),
+    import('./Personality/personalityTestDrivenDevelopmentSingleEvapShorterTimeBetweenDefrostsThanNormalSingleEvap.lua')
   }
 })

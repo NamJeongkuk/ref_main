@@ -33,7 +33,7 @@ static const NextDefrostTypeArbiterConfig_t config = {
    .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .currentDefrostTypeErd = Erd_CurrentDefrostType,
-   .freezerFilteredTemperatureTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp
+   .freezerFilteredTemperatureTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUp
 };
 
 TEST_GROUP(NextDefrostTypeArbiter)
@@ -147,7 +147,7 @@ TEST_GROUP(NextDefrostTypeArbiter)
 
    void FreezerFilteredTemperatureTooWarmAtPowerUpFlagIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmAtPowerUp, &state);
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUp, &state);
    }
 };
 

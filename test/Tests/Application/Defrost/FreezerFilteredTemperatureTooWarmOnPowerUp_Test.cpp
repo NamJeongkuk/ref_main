@@ -80,13 +80,13 @@ TEST_GROUP(FreezerFilteredTemperatureTooWarmOnPowerUp)
 
    void FreezerFilteredTemperatureTooWarmOnPowerUpIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmAtPowerUp, &state);
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUp, &state);
    }
 
    void FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(bool expectedState)
    {
       bool actualState;
-      DataModel_Read(dataModel, Erd_FreezerFilteredTemperatureTooWarmAtPowerUp, &actualState);
+      DataModel_Read(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUp, &actualState);
 
       CHECK_EQUAL(expectedState, actualState);
    }

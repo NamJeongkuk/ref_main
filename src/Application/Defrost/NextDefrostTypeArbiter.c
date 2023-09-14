@@ -160,15 +160,15 @@ static void ResetNumberOfFreshFoodDefrostsToZero(NextDefrostTypeArbiter_t *insta
       clear);
 }
 
-static bool FreezerFilteredTemperatureTooWarmAtPowerUpIsSet(NextDefrostTypeArbiter_t *instance)
+static bool FreezerFilteredTemperatureTooWarmOnPowerUpIsSet(NextDefrostTypeArbiter_t *instance)
 {
-   bool freezerFilteredTemperatureTooWarmAtPowerUpIsSet;
+   bool FreezerFilteredTemperatureTooWarmOnPowerUpIsSet;
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->freezerFilteredTemperatureTooWarmAtPowerUpErd,
-      &freezerFilteredTemperatureTooWarmAtPowerUpIsSet);
+      &FreezerFilteredTemperatureTooWarmOnPowerUpIsSet);
 
-   return freezerFilteredTemperatureTooWarmAtPowerUpIsSet;
+   return FreezerFilteredTemperatureTooWarmOnPowerUpIsSet;
 }
 
 static void DataModelUpdated(void *context, const void *_args)
@@ -226,7 +226,7 @@ void NextDefrostTypeArbiter_Init(
    }
    else
    {
-      if(FreezerFilteredTemperatureTooWarmAtPowerUpIsSet(instance))
+      if(FreezerFilteredTemperatureTooWarmOnPowerUpIsSet(instance))
       {
          UpdateCurrentDefrostTypeTo(instance, DefrostType_Full);
          UpdateNextDefrostTypeTo(instance, DefrostType_Full);

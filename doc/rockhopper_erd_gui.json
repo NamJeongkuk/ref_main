@@ -508,7 +508,7 @@
         {
           "namespace": "mb",
           "displayName": "Freezer Filtered Temperature Too Warm At Power Up",
-          "name": "Erd_FreezerFilteredTemperatureTooWarmAtPowerUp",
+          "name": "Erd_FreezerFilteredTemperatureTooWarmOnPowerUp",
           "read": true,
           "write": true
         },
@@ -2246,7 +2246,7 @@
         {
           "namespace": "mb",
           "displayName": "Freezer filtered temperature too warm at power up",
-          "name": "Erd_FreezerFilteredTemperatureTooWarmAtPowerUp",
+          "name": "Erd_FreezerFilteredTemperatureTooWarmOnPowerUp",
           "read": true,
           "write": true
         },
@@ -2525,7 +2525,7 @@
         {
           "namespace": "mb",
           "displayName": "Freezer Filtered Temperature Too Warm At Power Up",
-          "name": "Erd_FreezerFilteredTemperatureTooWarmAtPowerUp",
+          "name": "Erd_FreezerFilteredTemperatureTooWarmOnPowerUp",
           "read": true,
           "write": true
         },

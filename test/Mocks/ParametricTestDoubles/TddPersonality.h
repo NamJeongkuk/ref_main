@@ -25,6 +25,7 @@ enum
    TddPersonality_DevelopmentExternalAmbientSensorIsDisabled,
    TddPersonality_DevelopmentCondenserFanCoolingModeWithoutSetpoint,
    TddPersonality_DevelopmentCondenserFanNoCoolingMode,
+   TddPersonality_DevelopmentSingleEvaporatorShorterTimeBetweenDefrosts,
    TddPersonality_MaxDevelopment
 };
 

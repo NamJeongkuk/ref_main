@@ -54,6 +54,13 @@ enum
 
 enum
 {
+   SomeCompressorOnTimeInMinutesBetweenMinimumAndMaximumTimeBetweenDefrosts = 200672,
+   SomeRightSideFreshFoodScaledDoorAccelerationsInSeconds = 8305,
+   SomeFreezerScaledDoorAccelerationInSeconds = 7427
+};
+
+enum
+{
    Closed = 0,
    Open = 1
 };
@@ -132,6 +139,15 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
    void WhenRefrigeratorResetsWithFreezerNotTooWarm()
    {
       ReferDataModel_TestDouble_Reset(&dataModelDouble);
+
+      GivenThermistorsAreValidAndFreezerThermistorIsNotTooWarm();
+
+      WhenApplicationIsInitialized();
+   }
+
+   void WhenRefrigeratorResetsWithNewParametricThatHasShorterTimeBetweenDefrosts()
+   {
+      ReferDataModel_TestDouble_Reset(&dataModelDouble, TddPersonality_DevelopmentSingleEvaporatorShorterTimeBetweenDefrosts);
 
       GivenThermistorsAreValidAndFreezerThermistorIsNotTooWarm();
 
@@ -377,7 +393,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
    void FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp()
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_FreezerFilteredTemperatureTooWarmAtPowerUp, &actual);
+      DataModel_Read(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUp, &actual);
 
       CHECK_FALSE(actual);
    }
@@ -385,7 +401,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
    void FreezerCompartmentTemperatureShouldBeTooWarmOnPowerUp()
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_FreezerFilteredTemperatureTooWarmAtPowerUp, &actual);
+      DataModel_Read(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUp, &actual);
 
       CHECK_TRUE(actual);
    }
@@ -627,6 +643,11 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
    void GivenEepromFreezerScaledDoorAccelerationInSecondsIs(uint32_t seconds)
    {
       DataModel_Write(dataModel, Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds, &seconds);
+   }
+
+   void GivenEepromRightSideFreshFoodScaledDoorAccelerationInSecondsIs(uint32_t seconds)
+   {
+      DataModel_Write(dataModel, Erd_Eeprom_RightSideFreshFoodScaledDoorAccelerationInSeconds, &seconds);
    }
 
    void GivenThatTheApplicationHasStartedAndDefrostIsInPostDwell()
@@ -1723,4 +1744,27 @@ TEST(DefrostIntegration_SingleEvap, ShouldExitPostDwellAfterNormalPostDwellExitT
 
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Idle);
    After(1);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostWhenEepromCompressorOnTimeAndDoorAccelerationTimesAlreadyMeetMaxTimeBetweenDefrostsAfterBeingResetWithShorterTimeBetweenDefrostParametricData)
+{
+   GivenEepromWasNotClearedAtStartup();
+   GivenDefrostStateWas(DefrostState_Idle);
+   GivenEepromCompressorOnTimeInSecondsIs(SomeCompressorOnTimeInMinutesBetweenMinimumAndMaximumTimeBetweenDefrosts);
+   GivenEepromRightSideFreshFoodScaledDoorAccelerationInSecondsIs(SomeRightSideFreshFoodScaledDoorAccelerationsInSeconds);
+   GivenEepromFreezerScaledDoorAccelerationInSecondsIs(SomeFreezerScaledDoorAccelerationInSeconds);
+
+   RunTimerModuleToSaveErdInEeprom();
+   WhenRefrigeratorResetsWithFreezerNotTooWarm();
+
+   CompressorShouldBe(OFF);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+   TheNormalTimeBetweenDefrostsShouldBe(defrostData->idleData.maxTimeBetweenDefrostsInMinutes);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+   WhenRefrigeratorResetsWithNewParametricThatHasShorterTimeBetweenDefrosts();
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+   After(0);
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
 }

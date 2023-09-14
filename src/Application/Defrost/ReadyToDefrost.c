@@ -78,7 +78,7 @@ static bool FreezerTooWarmAtPowerUp(ReadyToDefrost_t *instance)
    bool freezerTooWarmAtPowerUp;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerFilteredTemperatureWasTooWarmAtPowerUpErd,
+      instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
       &freezerTooWarmAtPowerUp);
 
    return freezerTooWarmAtPowerUp;
@@ -154,7 +154,7 @@ static bool TimeBetweenDefrostsShouldBeMinimum(ReadyToDefrost_t *instance)
    bool freezerTooWarmOnPowerUp;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerFilteredTemperatureWasTooWarmAtPowerUpErd,
+      instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
       &freezerTooWarmOnPowerUp);
 
    bool eepromWasCleared;
@@ -338,8 +338,9 @@ static void MinimumTimeBetweenDefrostsTimeExpired(void *context)
 
 static TimerTicks_t RemainingTimeUntilMinimumTimeBetweenDefrostsIsReachedInMilliseconds(ReadyToDefrost_t *instance)
 {
-   return (instance->_private.defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN) -
-      (DefrostCompressorOnTimeInSeconds(instance) * MSEC_PER_SEC);
+   return TRUNCATE_UNSIGNED_SUBTRACTION(
+      (instance->_private.defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN),
+      (DefrostCompressorOnTimeInSeconds(instance) * MSEC_PER_SEC));
 }
 
 static void StartMinimumTimeBetweenDefrostsTimer(ReadyToDefrost_t *instance)
@@ -390,11 +391,12 @@ static void StartRemainingTimeBetweenDefrostsTimerFor(ReadyToDefrost_t *instance
       instance);
 }
 
-static uint32_t RemainingTimeBetweenDefrostsInMilliseconds(ReadyToDefrost_t *instance)
+static TimerTicks_t RemainingTimeBetweenDefrostsInMilliseconds(ReadyToDefrost_t *instance)
 {
-   return ((TimeBetweenDefrostsInMinutes(instance) * SECONDS_PER_MINUTE) -
-             DefrostCompressorOnTimeInSeconds(instance) -
-             DoorAccelerationsInSeconds(instance)) *
+   return (TRUNCATE_UNSIGNED_SUBTRACTION(
+             (TimeBetweenDefrostsInMinutes(instance) * SECONDS_PER_MINUTE),
+             (DefrostCompressorOnTimeInSeconds(instance) +
+                DoorAccelerationsInSeconds(instance)))) *
       MSEC_PER_SEC;
 }
 

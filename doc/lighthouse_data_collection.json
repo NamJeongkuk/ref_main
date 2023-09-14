@@ -188,6 +188,11 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_Eeprom_DefrostCompressorOnTimeInSeconds",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_FreezerScaledDoorAccelerationInSeconds",
          "interval": 60000
       },
@@ -223,7 +228,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady",
+         "name": "Erd_FreezerFilteredTemperatureTooWarmOnPowerUp",
          "interval": 60000
       },
       {

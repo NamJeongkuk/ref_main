@@ -21,7 +21,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
    .readyToDefrostErd = Erd_ReadyToDefrost,
-   .freezerFilteredTemperatureWasTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
+   .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUp,
    .freezerEvaporatorThermistorIsValidErd = Erd_FreezerEvapThermistor_IsValidResolved,
    .freshFoodThermistorIsValidErd = Erd_FreshFoodThermistor_IsValidResolved,
    .freezerThermistorIsValidErd = Erd_FreezerThermistor_IsValidResolved,
@@ -90,7 +90,7 @@ static ReadyToDefrostConfiguration_t readyToDefrostConfig = {
    .compressorIsOnErd = Erd_CompressorIsOn,
    .defrostCompressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
-   .freezerFilteredTemperatureWasTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
+   .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUp,
    .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts,
    .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
@@ -126,7 +126,7 @@ static const NextDefrostTypeArbiterConfig_t nextDefrostTypeArbiterConfig = {
    .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .currentDefrostTypeErd = Erd_CurrentDefrostType,
-   .freezerFilteredTemperatureTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp
+   .freezerFilteredTemperatureTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUp
 };
 
 static const DefrostTestRequestHandlerConfiguration_t defrostTestRequestHandlerConfig = {

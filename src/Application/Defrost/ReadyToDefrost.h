@@ -31,7 +31,7 @@ typedef struct
    Erd_t compressorIsOnErd; // bool
    Erd_t defrostCompressorOnTimeInSecondsErd; // uint32_t
    Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpReadyErd; // bool
-   Erd_t freezerFilteredTemperatureWasTooWarmAtPowerUpErd; // bool
+   Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
    Erd_t useMinimumReadyToDefrostTimeAndResetDefrostCountsErd; // bool
    Erd_t invalidFreezerEvaporatorThermistorDuringDefrostErd; // bool
    Erd_t freshFoodDefrostWasAbnormalErd; // bool

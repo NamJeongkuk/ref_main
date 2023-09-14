@@ -57,7 +57,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .hasConvertibleCompartmentErd = Erd_HasConvertibleCompartment,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
    .readyToDefrostErd = Erd_ReadyToDefrost,
-   .freezerFilteredTemperatureWasTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmAtPowerUp,
+   .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUp,
    .freezerEvaporatorThermistorIsValidErd = Erd_FreezerEvapThermistor_IsValidResolved,
    .freshFoodThermistorIsValidErd = Erd_FreshFoodThermistor_IsValidResolved,
    .freezerThermistorIsValidErd = Erd_FreezerThermistor_IsValidResolved,
@@ -222,9 +222,9 @@ TEST_GROUP(Defrost_SingleEvap)
       CHECK_EQUAL(expectedState, actualState);
    }
 
-   void FreezerFilteredTemperatureTooWarmAtPowerUpIs(bool state)
+   void FreezerFilteredTemperatureTooWarmOnPowerUpIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmAtPowerUp, &state);
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUp, &state);
    }
 
    void FilteredFreezerCabinetTemperatureIs(TemperatureDegFx100_t temperature)
@@ -345,7 +345,7 @@ TEST_GROUP(Defrost_SingleEvap)
             break;
 
          case DefrostHsmState_Dwell:
-            Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(false);
+            Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
             And DefrostStateIs(DefrostState_Dwell);
             And DefrostIsInitialized();
 
@@ -401,15 +401,10 @@ TEST_GROUP(Defrost_SingleEvap)
       DataModel_Write(dataModel, Erd_ReadyToDefrost, clear);
    }
 
-   void FreezerFilteredTemperatureTooWarmOnPowerUpIs(bool state)
-   {
-      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmAtPowerUp, &state);
-   }
-
    void FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(bool expectedState)
    {
       bool actualState;
-      DataModel_Read(dataModel, Erd_FreezerFilteredTemperatureTooWarmAtPowerUp, &actualState);
+      DataModel_Read(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUp, &actualState);
 
       CHECK_EQUAL(expectedState, actualState);
    }
@@ -814,7 +809,7 @@ TEST_GROUP(Defrost_SingleEvap)
 
 TEST(Defrost_SingleEvap, ShouldInitializeIntoDwellHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasHeaterOn)
 {
-   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(true);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And DefrostStateIs(DefrostState_HeaterOn);
    And DefrostIsInitialized();
 
@@ -823,7 +818,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoDwellHsmStateWhenFreezerFilteredTem
 
 TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasIdle)
 {
-   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(true);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And DefrostStateIs(DefrostState_Idle);
    And DefrostIsInitialized();
 
@@ -832,7 +827,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemp
 
 TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasPrechill)
 {
-   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(true);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And DefrostStateIs(DefrostState_Prechill);
    And DefrostIsInitialized();
 
@@ -841,7 +836,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemp
 
 TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasDwell)
 {
-   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(true);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And DefrostStateIs(DefrostState_Dwell);
    And DefrostIsInitialized();
 
@@ -850,7 +845,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemp
 
 TEST(Defrost_SingleEvap, ShouldInitializeIntoHeaterOnHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasPrechill)
 {
-   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(false);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostStateIs(DefrostState_Prechill);
    And DefrostIsInitialized();
 
@@ -859,7 +854,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoHeaterOnHsmStateWhenFreezerFiltered
 
 TEST(Defrost_SingleEvap, ShouldInitializeIntoHeaterOnHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasHeaterOn)
 {
-   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(false);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostStateIs(DefrostState_HeaterOn);
    And DefrostIsInitialized();
 
@@ -868,7 +863,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoHeaterOnHsmStateWhenFreezerFiltered
 
 TEST(Defrost_SingleEvap, ShouldInitializeIntoDwellHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasDwell)
 {
-   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(false);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostStateIs(DefrostState_Dwell);
    And DefrostIsInitialized();
 
@@ -877,7 +872,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoDwellHsmStateWhenFreezerFilteredTem
 
 TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasPostDwell)
 {
-   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(false);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostStateIs(DefrostState_PostDwell);
    And DefrostIsInitialized();
 
@@ -886,7 +881,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemp
 
 TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasIdle)
 {
-   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(false);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostStateIs(DefrostState_Idle);
    And DefrostIsInitialized();
 
@@ -895,7 +890,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemp
 
 TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasDisabled)
 {
-   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(true);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    And DefrostStateIs(DefrostState_Disabled);
    And DefrostIsInitialized();
 
@@ -904,7 +899,7 @@ TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemp
 
 TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasDisabled)
 {
-   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(false);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostStateIs(DefrostState_Disabled);
    And DefrostIsInitialized();
 
@@ -1233,7 +1228,7 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepTheNextTimeThroughIdleAfterItWasT
 TEST(Defrost_SingleEvap, ShouldExitPostDwellAndGoToIdleAfterFreshFoodOnlyPostDwellExitTimeIfPostDwellExitTimeIsFreshFoodOnly)
 {
    Given CurrentDefrostTypeIs(DefrostType_FreshFood);
-   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(false);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostStateIs(DefrostState_Dwell);
    And DefrostIsInitialized();
 
@@ -1252,7 +1247,7 @@ TEST(Defrost_SingleEvap, ShouldExitPostDwellAndGoToIdleAfterFreshFoodOnlyPostDwe
 TEST(Defrost_SingleEvap, ShouldExitPostDwellAndGoToIdleAfterPostDwellExitTimeIfCurrentDefrostIsFull)
 {
    Given CurrentDefrostTypeIs(DefrostType_Full);
-   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(false);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostStateIs(DefrostState_Dwell);
    And DefrostIsInitialized();
 
@@ -2481,7 +2476,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestSt
 
 TEST(Defrost_SingleEvap, ShouldThrowAssertionWhenFreezerFilteredTemperatureTooWarmOnPowerUpReadyIsSet)
 {
-   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(true);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
 
    ShouldAssertOnInitialization();
 }
@@ -2490,7 +2485,7 @@ TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenRun
 {
    Given FreezerThermistorValidityIs(true);
    Given FreezerEvaporatorThermistorValidityIs(true);
-   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(true);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
    When DefrostTestIsRequested(DefrostTestStateRequest_Prechill);
@@ -2502,7 +2497,7 @@ TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenRun
 {
    Given FreezerThermistorValidityIs(true);
    Given FreezerEvaporatorThermistorValidityIs(true);
-   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(true);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
    When DefrostTestIsRequested(DefrostTestStateRequest_Idle); // when requesting Idle test while in Idle, it exits and reenters Idle
@@ -2516,7 +2511,7 @@ TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenRun
 
 TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenRunningADefrostTestAsFirstFullDefrost)
 {
-   Given FreezerFilteredTemperatureTooWarmAtPowerUpIs(true);
+   Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
 
    When DefrostTestIsRequested(DefrostTestStateRequest_Defrost);

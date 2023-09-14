@@ -209,7 +209,7 @@ static bool FreezerCompartmentWasTooWarmOnPowerUp(Defrost_t *instance)
    bool state;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerFilteredTemperatureWasTooWarmAtPowerUpErd,
+      instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
       &state);
 
    return state;
@@ -219,7 +219,7 @@ static void ResetFreezerCompartmentWasTooWarmOnPowerUp(Defrost_t *instance)
 {
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->freezerFilteredTemperatureWasTooWarmAtPowerUpErd,
+      instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
       clear);
 }
 
@@ -580,7 +580,7 @@ static HsmState_t InitialState(Defrost_t *instance)
    bool freezerFilteredTemperatureTooWarmAtPowerUp;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerFilteredTemperatureWasTooWarmAtPowerUpErd,
+      instance->_private.config->freezerFilteredTemperatureWasTooWarmOnPowerUpErd,
       &freezerFilteredTemperatureTooWarmAtPowerUp);
 
    DefrostState_t defrostState;
