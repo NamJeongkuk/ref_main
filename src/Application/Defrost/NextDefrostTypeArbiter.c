@@ -43,19 +43,19 @@ static DefrostType_t CurrentDefrostType(NextDefrostTypeArbiter_t *instance)
    return currentDefrostType;
 }
 
-static void IncreaseFreshFoodDefrostCount(NextDefrostTypeArbiter_t *instance)
+static void IncrementNumberOfFreshFoodDefrosts(NextDefrostTypeArbiter_t *instance)
 {
-   uint8_t freshFoodDefrostCount;
+   uint8_t numberOfFreshFoodDefrosts;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freshFoodDefrostCountErd,
-      &freshFoodDefrostCount);
+      instance->_private.config->numberOfFreshFoodDefrostsErd,
+      &numberOfFreshFoodDefrosts);
 
-   freshFoodDefrostCount++;
+   numberOfFreshFoodDefrosts++;
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->freshFoodDefrostCountErd,
-      &freshFoodDefrostCount);
+      instance->_private.config->numberOfFreshFoodDefrostsErd,
+      &numberOfFreshFoodDefrosts);
 }
 
 static bool EnhancedSabbathModeIsEnabled(NextDefrostTypeArbiter_t *instance)
@@ -104,59 +104,59 @@ static bool ConvertibleCompartmentIsActingAsFreezerAndDefrostWasAbnormal(NextDef
       (convertibleCompartmentStateType == ConvertibleCompartmentStateType_Freezer));
 }
 
-static void DetermineNumberOfFreshFoodDefrostsBeforeAFreezerDefrost(NextDefrostTypeArbiter_t *instance)
+static void DetermineNumberOfFreshFoodDefrostsBeforeAFullDefrost(NextDefrostTypeArbiter_t *instance)
 {
-   uint8_t numberOfFreshFoodDefrostsBeforeAFreezerDefrost;
+   uint8_t numberOfFreshFoodDefrostsBeforeAFullDefrost;
 
    if(EnhancedSabbathModeIsEnabled(instance))
    {
-      numberOfFreshFoodDefrostsBeforeAFreezerDefrost =
+      numberOfFreshFoodDefrostsBeforeAFullDefrost =
          instance->_private.enhancedSabbathData->numberOfFreshFoodDefrostsBeforeFreezerDefrost;
    }
    else if(FreezerDefrostWasAbnormal(instance) || (ConvertibleCompartmentIsActingAsFreezerAndDefrostWasAbnormal(instance)))
    {
-      numberOfFreshFoodDefrostsBeforeAFreezerDefrost =
+      numberOfFreshFoodDefrostsBeforeAFullDefrost =
          instance->_private.defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost;
    }
    else
    {
-      numberOfFreshFoodDefrostsBeforeAFreezerDefrost =
+      numberOfFreshFoodDefrostsBeforeAFullDefrost =
          instance->_private.defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeFreezerDefrost;
    }
 
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd,
-      &numberOfFreshFoodDefrostsBeforeAFreezerDefrost);
+      instance->_private.config->numberOfFreshFoodDefrostsBeforeAFullDefrostErd,
+      &numberOfFreshFoodDefrostsBeforeAFullDefrost);
 }
 
-static uint8_t FreshFoodDefrostCount(NextDefrostTypeArbiter_t *instance)
-{
-   uint8_t freshFoodDefrostCount;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->freshFoodDefrostCountErd,
-      &freshFoodDefrostCount);
-
-   return freshFoodDefrostCount;
-}
-
-static uint8_t NumberOfFreshFoodDefrostsBeforeAFreezerDefrost(NextDefrostTypeArbiter_t *instance)
+static uint8_t NumberOfFreshFoodDefrosts(NextDefrostTypeArbiter_t *instance)
 {
    uint8_t numberOfFreshFoodDefrosts;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd,
+      instance->_private.config->numberOfFreshFoodDefrostsErd,
       &numberOfFreshFoodDefrosts);
 
    return numberOfFreshFoodDefrosts;
 }
 
-static void ResetFreshFoodDefrostCount(NextDefrostTypeArbiter_t *instance)
+static uint8_t NumberOfFreshFoodDefrostsBeforeAFullDefrost(NextDefrostTypeArbiter_t *instance)
+{
+   uint8_t numberOfFreshFoodDefrostsBeforeAFullDefrost;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->numberOfFreshFoodDefrostsBeforeAFullDefrostErd,
+      &numberOfFreshFoodDefrostsBeforeAFullDefrost);
+
+   return numberOfFreshFoodDefrostsBeforeAFullDefrost;
+}
+
+static void ResetNumberOfFreshFoodDefrostsToZero(NextDefrostTypeArbiter_t *instance)
 {
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->freshFoodDefrostCountErd,
+      instance->_private.config->numberOfFreshFoodDefrostsErd,
       clear);
 }
 
@@ -184,16 +184,16 @@ static void DataModelUpdated(void *context, const void *_args)
          DefrostType_t currentDefrostType = CurrentDefrostType(instance);
          if(currentDefrostType == DefrostType_FreshFood)
          {
-            IncreaseFreshFoodDefrostCount(instance);
+            IncrementNumberOfFreshFoodDefrosts(instance);
 
-            if(FreshFoodDefrostCount(instance) >= NumberOfFreshFoodDefrostsBeforeAFreezerDefrost(instance))
+            if(NumberOfFreshFoodDefrosts(instance) >= NumberOfFreshFoodDefrostsBeforeAFullDefrost(instance))
             {
                UpdateNextDefrostTypeTo(instance, DefrostType_Full);
             }
          }
          else if(currentDefrostType == DefrostType_Full)
          {
-            ResetFreshFoodDefrostCount(instance);
+            ResetNumberOfFreshFoodDefrostsToZero(instance);
             UpdateNextDefrostTypeTo(instance, DefrostType_FreshFood);
          }
       }
@@ -203,7 +203,7 @@ static void DataModelUpdated(void *context, const void *_args)
       (args->erd == instance->_private.config->convertibleCompartmentDefrostWasAbnormalErd) ||
       (args->erd == instance->_private.config->convertibleCompartmentStateErd))
    {
-      DetermineNumberOfFreshFoodDefrostsBeforeAFreezerDefrost(instance);
+      DetermineNumberOfFreshFoodDefrostsBeforeAFullDefrost(instance);
    }
 }
 
@@ -217,9 +217,9 @@ void NextDefrostTypeArbiter_Init(
    instance->_private.defrostData = PersonalityParametricData_Get(dataModel)->defrostData;
    instance->_private.enhancedSabbathData = PersonalityParametricData_Get(dataModel)->enhancedSabbathData;
 
-   DetermineNumberOfFreshFoodDefrostsBeforeAFreezerDefrost(instance);
+   DetermineNumberOfFreshFoodDefrostsBeforeAFullDefrost(instance);
 
-   if(NumberOfFreshFoodDefrostsBeforeAFreezerDefrost(instance) == 0)
+   if(NumberOfFreshFoodDefrostsBeforeAFullDefrost(instance) == 0)
    {
       UpdateCurrentDefrostTypeTo(instance, DefrostType_Full);
       UpdateNextDefrostTypeTo(instance, DefrostType_Full);

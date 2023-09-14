@@ -499,15 +499,15 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Number of FZ Abnormal Defrost Cycles",
-               "name": "Erd_NumberOfFreezerAbnormalDefrostCycles",
+               "displayName": "Number of FZ Abnormal Defrosts",
+               "name": "Erd_NumberOfFreezerAbnormalDefrosts",
                "read": true,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "FZ Defrost Cycle Count",
-               "name": "Erd_FreezerDefrostCycleCount",
+               "displayName": "Number of FZ Defrosts",
+               "name": "Erd_NumberOfFreezerDefrosts",
                "read": true,
                "interval": 1000000000
             }
@@ -1516,7 +1516,7 @@
                "write": false,
                "interval": 1000000000
             },
-             {
+            {
                "namespace": "mb",
                "displayName": "Ice Maker 2 Enable Request",
                "name": "Erd_IceMaker2EnableRequest",

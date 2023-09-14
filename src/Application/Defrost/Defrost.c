@@ -504,19 +504,19 @@ static void CheckIfPrechillTemperatureExitConditionMet(Defrost_t *instance)
    }
 }
 
-static void IncrementFreezerDefrostCycleCount(Defrost_t *instance)
+static void IncrementNumberOfFreezerDefrosts(Defrost_t *instance)
 {
-   uint16_t freezerDefrostCycleCount;
+   uint16_t numberOfFreezerDefrosts;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerDefrostCycleCountErd,
-      &freezerDefrostCycleCount);
+      instance->_private.config->numberOfFreezerDefrostsErd,
+      &numberOfFreezerDefrosts);
 
-   freezerDefrostCycleCount++;
+   numberOfFreezerDefrosts++;
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->freezerDefrostCycleCountErd,
-      &freezerDefrostCycleCount);
+      instance->_private.config->numberOfFreezerDefrostsErd,
+      &numberOfFreezerDefrosts);
 }
 
 static void SetFreezerDefrostWasAbnormal(Defrost_t *instance)
@@ -535,19 +535,19 @@ static void ClearFreezerDefrostWasAbnormal(Defrost_t *instance)
       clear);
 }
 
-static void IncrementNumberOfFreezerAbnormalDefrostCycleCount(Defrost_t *instance)
+static void IncrementNumberOfFreezerAbnormalDefrosts(Defrost_t *instance)
 {
-   uint16_t numberOfFreezerAbnormalDefrostCycleCount;
+   uint16_t numberOfFreezerAbnormalDefrosts;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->numberOfFreezerAbnormalDefrostCycleCountErd,
-      &numberOfFreezerAbnormalDefrostCycleCount);
+      instance->_private.config->numberOfFreezerAbnormalDefrostsErd,
+      &numberOfFreezerAbnormalDefrosts);
 
-   numberOfFreezerAbnormalDefrostCycleCount++;
+   numberOfFreezerAbnormalDefrosts++;
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->numberOfFreezerAbnormalDefrostCycleCountErd,
-      &numberOfFreezerAbnormalDefrostCycleCount);
+      instance->_private.config->numberOfFreezerAbnormalDefrostsErd,
+      &numberOfFreezerAbnormalDefrosts);
 }
 
 static bool FreezerDefrostHeaterOnTimeLessThanAbnormalDefrostTime(Defrost_t *instance)
@@ -1027,7 +1027,7 @@ static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_FreezerAbnormalHeaterOnTimeReached:
-         IncrementNumberOfFreezerAbnormalDefrostCycleCount(instance);
+         IncrementNumberOfFreezerAbnormalDefrosts(instance);
          SetFreezerDefrostWasAbnormal(instance);
          break;
 
@@ -1050,7 +1050,7 @@ static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          {
             SetInvalidFreezerEvaporatorThermistorDuringDefrostTo(instance, false);
          }
-         IncrementFreezerDefrostCycleCount(instance);
+         IncrementNumberOfFreezerDefrosts(instance);
          EnableMinimumCompressorTimes(instance);
          VoteForHeaterOnLoads(instance, HeaterState_Off, Vote_DontCare);
          break;

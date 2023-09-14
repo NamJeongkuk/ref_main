@@ -17,8 +17,8 @@ typedef struct
 {
    Erd_t nextDefrostTypeErd; // DefrostType_t
    Erd_t defrostingErd; // bool
-   Erd_t freshFoodDefrostCountErd; // uint8_t
-   Erd_t numberOfFreshFoodDefrostsBeforeAFreezerDefrostErd; // uint8_t
+   Erd_t numberOfFreshFoodDefrostsErd; // uint8_t
+   Erd_t numberOfFreshFoodDefrostsBeforeAFullDefrostErd; // uint8_t
    Erd_t enhancedSabbathModeErd; // bool
    Erd_t freezerDefrostWasAbnormalErd; // bool
    Erd_t convertibleCompartmentDefrostWasAbnormalErd; // bool

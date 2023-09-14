@@ -75,8 +75,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .freezerFilteredTemperatureResolvedInDegFx100Erd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
    .freshFoodFilteredTemperatureResolvedInDegFx100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    .freezerDefrostHeaterVoteErd = Erd_FreezerDefrostHeater_DefrostVote,
-   .freezerDefrostCycleCountErd = Erd_FreezerDefrostCycleCount,
-   .numberOfFreezerAbnormalDefrostCycleCountErd = Erd_NumberOfFreezerAbnormalDefrostCycles,
+   .numberOfFreezerDefrostsErd = Erd_NumberOfFreezerDefrosts,
+   .numberOfFreezerAbnormalDefrostsErd = Erd_NumberOfFreezerAbnormalDefrosts,
    .freezerDefrostHeaterOnTimeInMinutesErd = Erd_FreezerDefrostHeaterOnTimeInMinutes,
    .freezerDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,
    .nextDefrostTypeErd = Erd_NextDefrostType,
@@ -571,28 +571,28 @@ TEST_GROUP(Defrost_SingleEvap)
       CHECK_TRUE(actual.care);
    }
 
-   void FreezerDefrostCycleCountIs(uint16_t count)
+   void NumberOfFreezerDefrostsIs(uint16_t count)
    {
-      DataModel_Write(dataModel, Erd_FreezerDefrostCycleCount, &count);
+      DataModel_Write(dataModel, Erd_NumberOfFreezerDefrosts, &count);
    }
 
-   void FreezerDefrostCycleCountShouldBe(uint16_t expected)
+   void NumberOfFreezerDefrostsShouldBe(uint16_t expected)
    {
       uint16_t actual;
-      DataModel_Read(dataModel, Erd_FreezerDefrostCycleCount, &actual);
+      DataModel_Read(dataModel, Erd_NumberOfFreezerDefrosts, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
 
-   void NumberOfFreezerAbnormalDefrostCycleCountIs(uint16_t count)
+   void NumberOfFreezerAbnormalDefrostsIs(uint16_t count)
    {
-      DataModel_Write(dataModel, Erd_NumberOfFreezerAbnormalDefrostCycles, &count);
+      DataModel_Write(dataModel, Erd_NumberOfFreezerAbnormalDefrosts, &count);
    }
 
-   void NumberOfFreezerAbnormalDefrostCycleCountShouldBe(uint16_t expected)
+   void NumberOfFreezerAbnormalDefrostsShouldBe(uint16_t expected)
    {
       uint16_t actual;
-      DataModel_Read(dataModel, Erd_NumberOfFreezerAbnormalDefrostCycles, &actual);
+      DataModel_Read(dataModel, Erd_NumberOfFreezerAbnormalDefrosts, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -1796,26 +1796,26 @@ TEST(Defrost_SingleEvap, ShouldReleaseControlOfHeaterOnLoadsWhenDefrostIsDisable
 TEST(Defrost_SingleEvap, ShouldTurnOffDefrostHeaterAndIncrementFreezerDefrostCountAndTransitToDwellStateWhenFreezerEvaporatorTemperatureReachesFreezerDefrostTerminationTemperatureAndFreezerEvaporatorThermistorIsValid)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
-   Given FreezerDefrostCycleCountIs(1);
+   Given NumberOfFreezerDefrostsIs(1);
    Given FreezerEvaporatorThermistorValidityIs(Valid);
    FreezerDefrostHeaterVoteShouldBe(HeaterState_On);
 
    When FilteredFreezerEvapTemperatureIs(defrostData.heaterOnData.freezerDefrostTerminationTemperatureInDegFx100);
    FreezerDefrostHeaterVoteShouldBe(HeaterState_Off);
-   And FreezerDefrostCycleCountShouldBe(2);
+   And NumberOfFreezerDefrostsShouldBe(2);
    And DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
 }
 
 TEST(Defrost_SingleEvap, ShouldNotTurnOffDefrostHeaterAndShouldNotIncrementFreezerDefrostCountAndShouldNotTransitToDwellStateWhenFreezerEvaporatorTemperatureReachesFreezerDefrostTerminationTemperatureAndFreezerEvaporatorThermistorIsInvalid)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
-   Given FreezerDefrostCycleCountIs(1);
+   Given NumberOfFreezerDefrostsIs(1);
    Given FreezerEvaporatorThermistorValidityIs(Invalid);
    FreezerDefrostHeaterVoteShouldBe(HeaterState_On);
 
    When FilteredFreezerEvapTemperatureIs(defrostData.heaterOnData.freezerDefrostTerminationTemperatureInDegFx100);
    FreezerDefrostHeaterVoteShouldBe(HeaterState_On);
-   And FreezerDefrostCycleCountShouldBe(1);
+   And NumberOfFreezerDefrostsShouldBe(1);
    And DefrostHsmStateShouldBe(DefrostHsmState_HeaterOn);
 }
 
@@ -1846,42 +1846,42 @@ TEST(Defrost_SingleEvap, ShouldNotClearFreezerDefrostWasAbnormalWhenFreezerHeate
 TEST(Defrost_SingleEvap, ShouldTurnOffDefrostHeaterAndIncrementFreezerDefrostCountAndTransitionToDwellStateWhenFreezerHeaterOnTimeReachesMaxOnTime)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
-   Given FreezerDefrostCycleCountIs(1);
+   Given NumberOfFreezerDefrostsIs(1);
    Given FreezerDefrostHeaterMaxOnTimeInMinutesIs(FreezerDefrostHeaterMaxOnTimeInMinutes);
    FreezerDefrostHeaterVoteShouldBe(HeaterState_On);
 
    When FreezerDefrostHeaterOnTimeInMinutesIs(FreezerDefrostHeaterMaxOnTimeInMinutes);
    FreezerDefrostHeaterVoteShouldBe(HeaterState_Off);
-   And FreezerDefrostCycleCountShouldBe(2);
+   And NumberOfFreezerDefrostsShouldBe(2);
    And DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
 }
 
 TEST(Defrost_SingleEvap, ShouldIncrementNumberOfFreezerAbnormalDefrostCycleCountAndSetFreezerDefrostWasAbnormalAndSaveTheFreezerDefrostCountAsTheLastAbnormalFreezerDefrostCountWhenFreezerHeaterOnTimeReachesAbnormalTime)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
-   Given NumberOfFreezerAbnormalDefrostCycleCountIs(1);
+   Given NumberOfFreezerAbnormalDefrostsIs(1);
    Given FreezerDefrostHeaterMaxOnTimeInMinutesIs(FreezerDefrostHeaterMaxOnTimeInMinutes);
    Given LastFreezerDefrostWasNormal();
-   Given FreezerDefrostCycleCountIs(3);
+   Given NumberOfFreezerDefrostsIs(3);
    FreezerDefrostHeaterVoteShouldBe(HeaterState_On);
 
    When FreezerDefrostHeaterOnTimeInMinutesIs(defrostData.heaterOnData.freezerHeaterOnTimeToSetAbnormalDefrostInMinutes);
-   NumberOfFreezerAbnormalDefrostCycleCountShouldBe(2);
+   NumberOfFreezerAbnormalDefrostsShouldBe(2);
    And FreezerDefrostWasAbnormalFlagShouldBe(SET);
 }
 
 TEST(Defrost_SingleEvap, ShouldIncrementNumberOfFreezerAbnormalDefrostCycleCountJustOnce)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
-   Given NumberOfFreezerAbnormalDefrostCycleCountIs(1);
+   Given NumberOfFreezerAbnormalDefrostsIs(1);
    Given FreezerDefrostHeaterMaxOnTimeInMinutesIs(FreezerDefrostHeaterMaxOnTimeInMinutes);
    FreezerDefrostHeaterVoteShouldBe(HeaterState_On);
 
    When FreezerDefrostHeaterOnTimeInMinutesIs(defrostData.heaterOnData.freezerHeaterOnTimeToSetAbnormalDefrostInMinutes);
-   NumberOfFreezerAbnormalDefrostCycleCountShouldBe(2);
+   NumberOfFreezerAbnormalDefrostsShouldBe(2);
 
    When FreezerDefrostHeaterOnTimeInMinutesIs(defrostData.heaterOnData.freezerHeaterOnTimeToSetAbnormalDefrostInMinutes + 1);
-   NumberOfFreezerAbnormalDefrostCycleCountShouldBe(2);
+   NumberOfFreezerAbnormalDefrostsShouldBe(2);
 }
 
 TEST(Defrost_SingleEvap, ShouldTurnOffFreezerDefrostHeaterCompressorAndAllFansWhenEnteringDwell)

@@ -381,15 +381,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Number of Freezer Abnormal Defrost Cycles (EEPROM)",
-          "name": "Erd_NumberOfFreezerAbnormalDefrostCycles",
+          "displayName": "Number of Freezer Abnormal Defrosts (EEPROM)",
+          "name": "Erd_NumberOfFreezerAbnormalDefrosts",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Freezer Defrost Cycle Count (EEPROM)",
-          "name": "Erd_FreezerDefrostCycleCount",
+          "displayName": "Number of Freezer Defrosts (EEPROM)",
+          "name": "Erd_NumberOfFreezerDefrosts",
           "read": true,
           "write": true
         },
@@ -458,8 +458,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Number of Fresh Food Defrosts Before A Freezer Defrost",
-          "name": "Erd_NumberOfFreshFoodDefrostsBeforeAFreezerDefrost",
+          "displayName": "Number of Fresh Food Defrosts Before A Full Defrost",
+          "name": "Erd_NumberOfFreshFoodDefrostsBeforeAFullDefrost",
           "read": true,
           "write": true
         },
@@ -521,8 +521,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Defrost Count",
-          "name": "Erd_FreshFoodDefrostCount",
+          "displayName": "Number of Fresh Food Defrosts",
+          "name": "Erd_NumberOfFreshFoodDefrosts",
           "read": true,
           "write": true
         },
