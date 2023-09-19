@@ -5,5 +5,5 @@ return compressor_times({
    remain_off_after_valve_move_in_minutes = 1,
    remain_off_after_valve_move_low_ambient_in_minutes = 2,
    variable_speed_minimum_run_time_in_minutes = 1,
-   sabbath_delay_time_in_seconds = 20
+   sabbath_delay_time_in_seconds = 25
  })
