@@ -19,7 +19,8 @@ describe('defrost', function()
         freezer_door_increment_factor_in_seconds_per_second = 348,
         fresh_food_door_increment_factor_in_seconds_per_second = 87,
         minimum_time_between_defrosts_abnormal_run_time_in_minutes = 6 * 60,
-        max_time_between_defrosts_in_minutes = 32 * 60
+        max_time_between_defrosts_in_minutes = 32 * 60,
+        aham_prechill_time_between_defrosts_in_minutes = 6 * 60
       },
       prechill_prep = {
         number_of_fresh_food_defrosts_before_freezer_defrost = 2,
@@ -125,6 +126,16 @@ describe('defrost', function()
       defrost(generate_config({
         idle = {
           max_time_between_defrosts_in_minutes = -1
+        }
+      }))
+    end)
+  end)
+
+  it('should assert if aham_prechill_time_between_defrosts_in_minutes is not in range', function()
+    should_fail_with('aham_prechill_time_between_defrosts_in_minutes=-1 must be in [0, 65535]', function()
+      defrost(generate_config({
+        idle = {
+          aham_prechill_time_between_defrosts_in_minutes = -1
         }
       }))
     end)
@@ -733,7 +744,8 @@ describe('defrost', function()
           u16(348),
           u16(87),
           u16(360),
-          u16(1920)
+          u16(1920),
+          u16(360)
         ),
         structure(
           u8(2),
@@ -805,7 +817,8 @@ describe('defrost', function()
         freezer_door_increment_factor_in_seconds_per_second = 348,
         fresh_food_door_increment_factor_in_seconds_per_second = 87,
         minimum_time_between_defrosts_abnormal_run_time_in_minutes = 6 * 60,
-        max_time_between_defrosts_in_minutes = 32 * 60
+        max_time_between_defrosts_in_minutes = 32 * 60,
+        aham_prechill_time_between_defrosts_in_minutes = 6 * 60
       },
       prechill_prep = {
         number_of_fresh_food_defrosts_before_freezer_defrost = 2,

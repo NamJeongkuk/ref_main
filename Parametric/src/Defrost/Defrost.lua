@@ -19,7 +19,8 @@ return function(core)
           u16(config.idle.freezer_door_increment_factor_in_seconds_per_second),
           u16(config.idle.fresh_food_door_increment_factor_in_seconds_per_second),
           u16(config.idle.minimum_time_between_defrosts_abnormal_run_time_in_minutes),
-          u16(config.idle.max_time_between_defrosts_in_minutes)
+          u16(config.idle.max_time_between_defrosts_in_minutes),
+          u16(config.idle.aham_prechill_time_between_defrosts_in_minutes)
         ),
         structure(
           u8(config.prechill_prep.number_of_fresh_food_defrosts_before_freezer_defrost),
@@ -96,7 +97,8 @@ return function(core)
             freezer_door_increment_factor_in_seconds_per_second = { constraint.u16 },
             fresh_food_door_increment_factor_in_seconds_per_second = { constraint.u16 },
             minimum_time_between_defrosts_abnormal_run_time_in_minutes = { constraint.u16 },
-            max_time_between_defrosts_in_minutes = { constraint.u16 }
+            max_time_between_defrosts_in_minutes = { constraint.u16 },
+            aham_prechill_time_between_defrosts_in_minutes = { constraint.u16 }
           })
         },
         prechill_prep = {

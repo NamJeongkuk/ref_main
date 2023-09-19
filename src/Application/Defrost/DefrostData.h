@@ -20,6 +20,7 @@ typedef struct
    uint16_t freshFoodDoorIncrementFactorInSecondsPerSecond;
    uint16_t minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes;
    uint16_t maxTimeBetweenDefrostsInMinutes;
+   uint16_t ahamPrechillTimeBetweenDefrostsInMinutes;
 } DefrostIdleData_t;
 
 typedef struct

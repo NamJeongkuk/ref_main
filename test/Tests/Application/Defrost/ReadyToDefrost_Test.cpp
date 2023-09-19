@@ -83,6 +83,7 @@ static const DefrostIdleData_t idleData = {
    .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
    .minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes = 10 * MINUTES_PER_HOUR,
    .maxTimeBetweenDefrostsInMinutes = 96 * MINUTES_PER_HOUR,
+   .ahamPrechillTimeBetweenDefrostsInMinutes = 10 * MINUTES_PER_HOUR
 };
 
 static const DefrostIdleData_t shorterTimeBetweenDefrostsIdleData = {
@@ -90,6 +91,7 @@ static const DefrostIdleData_t shorterTimeBetweenDefrostsIdleData = {
    .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
    .minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes = 3 * MINUTES_PER_HOUR,
    .maxTimeBetweenDefrostsInMinutes = 5 * MINUTES_PER_HOUR,
+   .ahamPrechillTimeBetweenDefrostsInMinutes = 3 * MINUTES_PER_HOUR
 };
 
 static const DefrostPrechillPrepData_t prechillPrepData = {
