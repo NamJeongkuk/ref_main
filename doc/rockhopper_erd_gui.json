@@ -222,15 +222,22 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Condenser Fan Speed Factory Vote",
-          "name": "Erd_CondenserFanSpeed_FactoryVote",
+          "displayName": "Condenser Fan Speed Factory/Service Vote",
+          "name": "Erd_CondenserFanSpeed_FactoryServiceVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Condenser Fan Speed Sabbath Vote",
-          "name": "Erd_CondenserFanSpeed_SabbathVote",
+          "displayName": "Condenser Fan Speed Cooling System Off Vote",
+          "name": "Erd_CondenserFanSpeed_CoolingSystemOffVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Condenser Fan Speed Demo Vote",
+          "name": "Erd_CondenserFanSpeed_DemoVote",
           "read": true,
           "write": true
         },
@@ -238,6 +245,13 @@
           "namespace": "mb",
           "displayName": "Condenser Fan Speed Defrost Vote",
           "name": "Erd_CondenserFanSpeed_DefrostVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Condenser Fan Speed Sabbath Vote",
+          "name": "Erd_CondenserFanSpeed_SabbathVote",
           "read": true,
           "write": true
         },
@@ -292,8 +306,29 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Freezer Evap Fan Speed Sabbath Vote",
-          "name": "Erd_FreezerEvapFanSpeed_SabbathVote",
+          "displayName": "Freezer Evap Fan Speed Factory/Service Vote",
+          "name": "Erd_FreezerEvapFanSpeed_FactoryServiceVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Fan Speed Cooling System Off Vote",
+          "name": "Erd_FreezerEvapFanSpeed_CoolingSystemOffVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Fan Speed Demo Vote",
+          "name": "Erd_FreezerEvapFanSpeed_DemoVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Fan Speed Load Off Door Open Vote",
+          "name": "Erd_FreezerEvapFanSpeed_LoadOffDoorOpenVote",
           "read": true,
           "write": true
         },
@@ -306,8 +341,29 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Freezer Evap Fan Speed Sabbath Vote",
+          "name": "Erd_FreezerEvapFanSpeed_SabbathVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Freezer Evap Fan Speed Compressor Startup Vote",
           "name": "Erd_FreezerEvapFanSpeed_CompressorStartUpVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Fan Speed Freezer Ice Rate Vote",
+          "name": "Erd_FreezerEvapFanSpeed_FreezerIceRateVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evap Fan Speed Grid Vote",
+          "name": "Erd_FreezerEvapFanSpeed_GridVote",
           "read": true,
           "write": true
         },

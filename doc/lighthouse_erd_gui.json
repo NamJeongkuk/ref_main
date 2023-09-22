@@ -935,8 +935,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "FZ Evap Fan Factory Vote",
-               "name": "Erd_FreezerEvapFanSpeed_FactoryVote",
+               "displayName": "FZ Evap Fan Factory/Service Vote",
+               "name": "Erd_FreezerEvapFanSpeed_FactoryServiceVote",
                "read": true,
                "write": true,
                "interval": 1000000000
@@ -950,8 +950,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Condenser Fan Factory Vote",
-               "name": "Erd_CondenserFanSpeed_FactoryVote",
+               "displayName": "Condenser Fan Factory/Service Vote",
+               "name": "Erd_CondenserFanSpeed_FactoryServiceVote",
                "read": true,
                "write": true,
                "interval": 1000000000
