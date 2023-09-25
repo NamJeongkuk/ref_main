@@ -44,6 +44,7 @@ SRC_DIRS:=\
   src/Application/Auger \
   src/Application/ApplianceFeatureApiUpdater \
   src/Application/BoardDiscovery \
+  src/Application/BroadcastReset \
   src/Application/Compressor \
   src/Application/ConfigurationPlugins \
   src/Application/Configurations \

@@ -17,6 +17,7 @@
 #include "SideBySideConfigurationPlugin.h"
 #include "ShiftOffsetCalculatorCommonPlugin.h"
 #include "RfidCommunicationPlugin.h"
+#include "BroadcastResetPlugin.h"
 
 typedef struct
 {
@@ -34,6 +35,7 @@ typedef struct
       PeriodicNvUpdaterPlugin_t periodicNvUpdaterPlugin;
       ShiftOffsetCalculatorCommonPlugin_t shiftOffsetCalculatorCommonPlugin;
       RfidCommunicationPlugin_t rfidCommunicationPlugin;
+      BroadcastResetPlugin_t broadcastResetPlugin;
    } _private;
 } Application_t;
 

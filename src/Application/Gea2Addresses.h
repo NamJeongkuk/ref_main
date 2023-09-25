@@ -21,6 +21,7 @@ enum
    Gea2Address_ConnectPlusWiFi = 0xBE,
    Gea2Address_Mainboard = 0xC0,
    Gea2Address_AndroidSbc = 0xC1,
+   Gea2Address_AllBoards = 0xFF,
 };
 
 #endif

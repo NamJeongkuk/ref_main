@@ -30,7 +30,7 @@ static void RunTimerModule(void *context)
    TimerModule_TestDouble_ElapseTime(timerModule, 1);
 }
 
-static void Init(ReferDataModel_TestDouble_t *instance, PersonalityId_t personalityIdForTest, bool clearEeprom)
+static void Init(ReferDataModel_TestDouble_t *instance, I_Action_t *action, PersonalityId_t personalityIdForTest, bool clearEeprom)
 {
    TimerModule_TestDouble_Init(&instance->_private.timerModuleTestDouble);
    Action_Context_Init(&instance->_private.runTimerModuleAction, &instance->_private.timerModuleTestDouble.timerModule, RunTimerModule);
@@ -47,7 +47,7 @@ static void Init(ReferDataModel_TestDouble_t *instance, PersonalityId_t personal
       AsyncDataSource_Eeprom_TestDouble_GetAsyncDataSource(&instance->_private.asyncEepromTestDouble),
       Crc16Calculator_Table,
       &instance->_private.runTimerModuleAction.interface,
-      Action_Null_GetInstance());
+      action);
 
    instance->dataModel = SystemData_DataModel(&instance->_private.systemData);
    instance->externalDataSource = SystemData_ExternalDataSource(&instance->_private.systemData);
@@ -84,12 +84,17 @@ void ReferDataModel_TestDouble_Reset(ReferDataModel_TestDouble_t *instance)
 
 void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance, PersonalityId_t personalityIdForTest)
 {
-   Init(instance, personalityIdForTest, true);
+   Init(instance, Action_Null_GetInstance(), personalityIdForTest, true);
 }
 
 void ReferDataModel_TestDouble_Reset(ReferDataModel_TestDouble_t *instance, PersonalityId_t personalityIdForTest)
 {
-   Init(instance, personalityIdForTest, false);
+   Init(instance, Action_Null_GetInstance(), personalityIdForTest, false);
+}
+
+void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance, I_Action_t *resetAction, PersonalityId_t personalityIdForTest)
+{
+   Init(instance, resetAction, personalityIdForTest, true);
 }
 
 TimerModule_TestDouble_t *ReferDataModel_TestDouble_GetTimerModuleTestDouble(ReferDataModel_TestDouble_t *instance)

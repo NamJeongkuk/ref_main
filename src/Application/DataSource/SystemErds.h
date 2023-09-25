@@ -1343,6 +1343,7 @@ enum
    ENTRY(Erd_EmbeddedWifiInSystem,                                    0xFB88, bool,                                     Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_AndroidSbcBoardInSystem,                                 0xFB89, bool,                                     Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_InternalTemperatureUiInSystem,                           0xFB8A, bool,                                     Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
+   ENTRY(Erd_BroadcastResetRequestSignal,                             0xFB8B, Signal_t,                                 Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_NvReservedProtected,                           0xFCFA, uint8_t,                                            Swap_No,    Io_None, Sub_N,  NvProtected,           NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NvReservedUnitSetting,                         0xFCFB, uint8_t,                                            Swap_No,    Io_None, Sub_N,  NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \

@@ -65,4 +65,8 @@ void Application_Init(
       timerModule,
       resetReason,
       &applianceApiResetDiagnosticsConfiguration);
+
+   BroadcastResetPlugin_Init(
+      &instance->_private.broadcastResetPlugin,
+      dataModel);
 }

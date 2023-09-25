@@ -54,6 +54,14 @@ void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance);
 void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance, PersonalityId_t personalityIdForTest);
 
 /*!
+ * @brief Refer DataModel TestDouble
+ * @param instance of refer datamodel testdouble
+ * @param instance of action to invoke on reset
+ * @param instance of personality id for test. Matching Lua file will be loaded into personality parametric ERD
+ */
+void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance, I_Action_t *resetAction, PersonalityId_t personalityIdForTest);
+
+/*!
  * @brief TimerModule TestDouble
  * @param instance of timermodule testdouble
  * @return pointer to the TimerModule TestDouble
