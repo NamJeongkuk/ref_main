@@ -113,7 +113,7 @@ TEST_GROUP(RfidCommunicator)
       .geaMessageEndpointErd = PublicErd_Gea2MessageEndpoint
    };
 
-   void InitReceivedPayload(RfidReceivedPayload_t *initPayload)
+   void InitReceivedPayload(RfidReceivedPayload_t * initPayload)
    {
       initPayload->readWriteResult = ReadWriteResult_ReadFailure;
       memcpy(&initPayload->uid, &Uid, sizeof(RfidUid_t));
@@ -131,7 +131,7 @@ TEST_GROUP(RfidCommunicator)
       memcpy(&initPayload->lastTwelveMonthsOfWaterUsageInGallons, &LastTwelveMonthsOfWaterUsageInGallons, sizeof(RfidTwelveMonthsGallonUsage_t));
    }
 
-   void InitLegacyReceivedPayload(LegacyReceivedPayload_t *initPayload)
+   void InitLegacyReceivedPayload(LegacyReceivedPayload_t * initPayload)
    {
       initPayload->readWriteResult = ReadWriteResult_ReadFailure;
       memcpy(&initPayload->uid, &Uid, sizeof(RfidUid_t));
@@ -145,7 +145,7 @@ TEST_GROUP(RfidCommunicator)
       initPayload->unused = 0;
    }
 
-   void InitMessagePayloadWith(RfidMessagePayload_t *initPayload, ReadWriteRequest_t readWriteRequest)
+   void InitMessagePayloadWith(RfidMessagePayload_t * initPayload, ReadWriteRequest_t readWriteRequest)
    {
       memset(initPayload, 0, sizeof(RfidMessagePayload_t));
       initPayload->readWriteRequest = readWriteRequest;
@@ -194,7 +194,7 @@ TEST_GROUP(RfidCommunicator)
       STACK_ALLOC_GEA2MESSAGE(message, sizeof(RfidReceivedPayload_t));
 
       Gea2Message_SetDestination(message, Gea2Address_Mainboard);
-      Gea2Message_SetSource(message, Gea2Address_NextGenRfidBoard);
+      Gea2Message_SetSource(message, Gea2Address_RfidBoard);
       Gea2Message_SetCommand(message, RfidMessageCommand);
       Gea2Message_SetPayloadLength(message, sizeof(RfidReceivedPayload_t));
 
@@ -209,7 +209,7 @@ TEST_GROUP(RfidCommunicator)
       STACK_ALLOC_GEA2MESSAGE(message, sizeof(LegacyReceivedPayload_t));
 
       Gea2Message_SetDestination(message, Gea2Address_Mainboard);
-      Gea2Message_SetSource(message, Gea2Address_NextGenRfidBoard);
+      Gea2Message_SetSource(message, Gea2Address_RfidBoard);
       Gea2Message_SetCommand(message, RfidMessageCommand);
       Gea2Message_SetPayloadLength(message, sizeof(LegacyReceivedPayload_t));
 
@@ -239,7 +239,7 @@ TEST_GROUP(RfidCommunicator)
       STATIC_ALLOC_GEA2MESSAGE(message, sizeof(RfidReceivedPayload_t));
 
       Gea2Message_SetDestination(message, Gea2Address_Mainboard);
-      Gea2Message_SetSource(message, Gea2Address_NextGenRfidBoard);
+      Gea2Message_SetSource(message, Gea2Address_RfidBoard);
       Gea2Message_SetCommand(message, RfidBadMessageCommand);
       Gea2Message_SetPayloadLength(message, sizeof(RfidReceivedPayload_t));
 
@@ -253,7 +253,7 @@ TEST_GROUP(RfidCommunicator)
    {
       STATIC_ALLOC_GEA2MESSAGE(message, sizeof(RfidMessagePayload_t));
 
-      Gea2Message_SetDestination(message, Gea2Address_NextGenRfidBoard);
+      Gea2Message_SetDestination(message, Gea2Address_RfidBoard);
       Gea2Message_SetSource(message, Gea2Address_Mainboard);
       Gea2Message_SetCommand(message, RfidMessageCommand);
       Gea2Message_SetPayloadLength(message, sizeof(RfidMessagePayload_t));

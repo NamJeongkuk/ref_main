@@ -16,6 +16,9 @@ typedef struct
    struct
    {
       RfidCommunicator_t rfidCommunicator;
+      EventSubscription_t rfidBoardInSystemSubscription;
+      I_DataModel_t *dataModel;
+      I_DataSource_t *externalDataSource;
    } _private;
 } RfidCommunicationPlugin_t;
 

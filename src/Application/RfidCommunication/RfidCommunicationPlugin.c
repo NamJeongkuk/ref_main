@@ -44,14 +44,58 @@ static const RfidCommunicatorConfiguration_t config = {
    .geaMessageEndpointErd = PublicErd_Gea2MessageEndpoint
 };
 
+static bool RfidBoardIsAlreadyInSystem(I_DataModel_t *dataModel)
+{
+   bool boardIsInSystem;
+   DataModel_Read(dataModel, Erd_RfidBoardInSystem, &boardIsInSystem);
+
+   return boardIsInSystem;
+}
+
+static void RfidBoardIsInSystem(void *context, const void *args)
+{
+   RfidCommunicationPlugin_t *instance = context;
+   const bool *rfidBoardIsInTheSystem = args;
+
+   if(*rfidBoardIsInTheSystem)
+   {
+      RfidCommunicator_Init(
+         &instance->_private.rfidCommunicator,
+         instance->_private.externalDataSource,
+         &config);
+
+      DataModel_Unsubscribe(
+         instance->_private.dataModel,
+         Erd_RfidBoardInSystem,
+         &instance->_private.rfidBoardInSystemSubscription);
+   }
+}
+
 void RfidCommunicationPlugin_Init(
    RfidCommunicationPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
-   I_DataSource_t *externalDataSource;
-   DataModel_Read(dataModel, Erd_ExternalDataSource, &externalDataSource);
-   RfidCommunicator_Init(
-      &instance->_private.rfidCommunicator,
-      externalDataSource,
-      &config);
+   instance->_private.dataModel = dataModel;
+   instance->_private.externalDataSource = DataModel_ReadPointer(
+      dataModel,
+      Erd_ExternalDataSource);
+
+   if(RfidBoardIsAlreadyInSystem(dataModel))
+   {
+      RfidCommunicator_Init(
+         &instance->_private.rfidCommunicator,
+         instance->_private.externalDataSource,
+         &config);
+   }
+   else
+   {
+      EventSubscription_Init(
+         &instance->_private.rfidBoardInSystemSubscription,
+         instance,
+         RfidBoardIsInSystem);
+      DataModel_Subscribe(
+         dataModel,
+         Erd_RfidBoardInSystem,
+         &instance->_private.rfidBoardInSystemSubscription);
+   }
 }

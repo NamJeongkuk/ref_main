@@ -101,7 +101,7 @@ void SystemData_Init(
    InitializeExternalDataSource(instance);
    InitializeDataModel(instance);
 
-   DataModelErdPointerAccess_Write(
+   DataModel_WritePointer(
       DataModel_DataModel(&instance->_private.dataModel),
       Erd_ExternalDataSource,
       &instance->_private.dataSource.external);

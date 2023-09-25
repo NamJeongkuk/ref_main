@@ -17,7 +17,7 @@ enum
 
 static void ConstructRfidMessage(RfidCommunicator_t *instance, ReadWriteRequest_t readWriteRequest, Gea2Message_t *message)
 {
-   Gea2Message_SetDestination(message, Gea2Address_NextGenRfidBoard);
+   Gea2Message_SetDestination(message, Gea2Address_RfidBoard);
    Gea2Message_SetSource(message, Gea2Address_Mainboard);
    Gea2Message_SetCommand(message, RfidMessageCommand);
    Gea2Message_SetPayloadLength(message, sizeof(RfidMessagePayload_t));
@@ -85,7 +85,7 @@ static void OnMessageReceived(void *context, const void *_args)
    const Gea2MessageEndpointOnReceiveArgs_t *args = _args;
    const Gea2Message_t *message = args->message;
 
-   if((Gea2Message_GetSource(message) == Gea2Address_NextGenRfidBoard) &&
+   if((Gea2Message_GetSource(message) == Gea2Address_RfidBoard) &&
       (Gea2Message_GetCommand(message) == RfidMessageCommand))
    {
       StoreAllRfidDataOnMainboard(instance, message);

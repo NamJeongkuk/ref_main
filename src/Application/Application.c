@@ -48,7 +48,9 @@ void Application_Init(
    FaultWrapperPlugin_Init(dataModel);
    SnackModePlugin_Init(dataModel);
 
-   RfidCommunicationPlugin_Init(&instance->_private.rfidCommunicationPlugin, dataModel);
+   RfidCommunicationPlugin_Init(
+      &instance->_private.rfidCommunicationPlugin,
+      instance->_private.dataModel);
 
    TimerModule_t *timerModule = DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule);
    TimerModuleDiagnostics_Init(
