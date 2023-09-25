@@ -1019,6 +1019,14 @@
                "read": true,
                "write": true,
                "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Aluminum Mold IM Water Valve Factory Vote",
+               "name": "Erd_AluminumMoldIceMakerWaterValve_FactoryVote",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
             }
          ]
       },
