@@ -32,36 +32,36 @@
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Gpio_HTR_00",
-          "name": "Erd_Gpio_HTR_00",
+          "displayName": "SoftPwmGpio_HTR_00",
+          "name": "Erd_SoftPwmGpio_HTR_00",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Gpio_HTR_01",
-          "name": "Erd_Gpio_HTR_01",
+          "displayName": "SoftPwmGpio_HTR_01",
+          "name": "Erd_SoftPwmGpio_HTR_01",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Gpio_HTR_02",
-          "name": "Erd_Gpio_HTR_02",
+          "displayName": "SoftPwmGpio_HTR_02",
+          "name": "Erd_SoftPwmGpio_HTR_02",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Gpio_HTR_03",
-          "name": "Erd_Gpio_HTR_03",
+          "displayName": "SoftPwmGpio_HTR_03",
+          "name": "Erd_SoftPwmGpio_HTR_03",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Gpio_HTR_04",
-          "name": "Erd_Gpio_HTR_04",
+          "displayName": "SoftPwmGpio_HTR_04",
+          "name": "Erd_SoftPwmGpio_HTR_04",
           "read": true,
           "write": true
         }

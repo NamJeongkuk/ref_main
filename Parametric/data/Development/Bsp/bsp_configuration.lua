@@ -17,8 +17,8 @@ local erd_list = {
   { input = bsp_mapped_erd.Erd_TwistTrayIceMakerThermistor_AdcCount,      output = bsp_erd.Erd_Adc_ANALOG_TH_LOW_04 },
   { input = bsp_mapped_erd.Erd_AluminumMoldIceMakerMoldThermistor_AdcCount, output = bsp_erd.Erd_Adc_ANALOG_TH_LOW_05 },
 
-  { input = bsp_mapped_erd.Erd_FillTubeHeater,                            output = bsp_erd.Erd_Gpio_HTR_00 },
-  { input = bsp_mapped_erd.Erd_FreshFoodDamperHeater,                     output = bsp_erd.Erd_Gpio_HTR_01 },
+  { input = bsp_mapped_erd.Erd_FillTubeHeater,                            output = bsp_erd.Erd_SoftPwmGpio_HTR_00 },
+  { input = bsp_mapped_erd.Erd_FreshFoodDamperHeater,                     output = bsp_erd.Erd_SoftPwmGpio_HTR_01 },
   { input = bsp_mapped_erd.Erd_FreshFoodDamperStepperMotorDriveEnable,    output = bsp_erd.Erd_Gpio_MTR_DRV_EN_00},
   { input = bsp_mapped_erd.Erd_TwistIceMakerMotorDriveEnable,             output = bsp_erd.Erd_Gpio_MTR_DRV_EN_01},
   { input = bsp_mapped_erd.Erd_FreezerDefrostHeaterRelay,                 output = bsp_erd.Erd_Gpio_RLY_00 },

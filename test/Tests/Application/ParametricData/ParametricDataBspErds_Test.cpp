@@ -440,42 +440,42 @@ TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableF
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForHeater_00)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Gpio_HTR_00)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_SoftPwmGpio_HTR_00)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_Gpio_HTR_00);
+   CHECK_EQUAL(*erd, Erd_SoftPwmGpio_HTR_00);
 }
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForHeater_01)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Gpio_HTR_01)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_SoftPwmGpio_HTR_01)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_Gpio_HTR_01);
+   CHECK_EQUAL(*erd, Erd_SoftPwmGpio_HTR_01);
 }
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForHeater_02)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Gpio_HTR_02)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_SoftPwmGpio_HTR_02)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_Gpio_HTR_02);
+   CHECK_EQUAL(*erd, Erd_SoftPwmGpio_HTR_02);
 }
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForHeater_03)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Gpio_HTR_03)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_SoftPwmGpio_HTR_03)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_Gpio_HTR_03);
+   CHECK_EQUAL(*erd, Erd_SoftPwmGpio_HTR_03);
 }
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForHeater_04)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_Gpio_HTR_04)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_erd.Erd_SoftPwmGpio_HTR_04)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_Gpio_HTR_04);
+   CHECK_EQUAL(*erd, Erd_SoftPwmGpio_HTR_04);
 }
 
 TEST(ParametricDataBspErds_Output, ShouldHaveMatchingErdNumbersToSystemErdTableForMotorDriveEnable_00)

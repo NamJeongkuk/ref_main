@@ -11,6 +11,7 @@
 #include "uassert.h"
 #include "Event_Synchronous.h"
 #include "DataSource_Gpio.h"
+#include "DataSource_SoftPwmGpio.h"
 #include "DataSource_Adc.h"
 #include "DataSource_Pwm.h"
 #include "DataSource_RampingLedPwm.h"
@@ -18,7 +19,7 @@
 
 enum
 {
-   BspDataSourceCount = 6
+   BspDataSourceCount = 7
 };
 
 static struct
@@ -85,6 +86,7 @@ I_DataSource_t *DataSource_Bsp_Init(TimerModule_t *timerModule, I_Interrupt_t *i
    uint8_t index = 0;
    // This needs to be initialized first for the scenario of dual purposing a pin to function as GPIO Input and Input Capture
    instance.dataSources[index++] = DataSource_Gpio_Init(&instance.OnDataChange, interrupt);
+   instance.dataSources[index++] = DataSource_SoftPwmGpio_Init(&instance.OnDataChange);
    instance.dataSources[index++] = DataSource_Pwm_Init();
    instance.dataSources[index++] = DataSource_RampingLedPwm_Init(interrupt);
    instance.dataSources[index++] = DataSource_InputCapture_Init(timerModule, &instance.OnDataChange);

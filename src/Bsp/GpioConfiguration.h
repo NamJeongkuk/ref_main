@@ -27,11 +27,6 @@
    ENTRY(Erd_BspGpio_GPIO_OUT_00,         GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortA, 2,  NonInverted) \
    ENTRY(Erd_BspGpio_GPIO_OUT_01,         GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortA, 0,  NonInverted) \
    ENTRY(Erd_BspGpio_GPIO_OUT_02,         GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortE, 7,  NonInverted) \
-   ENTRY(Erd_BspGpio_HTR_00,              GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortE, 6,  NonInverted) \
-   ENTRY(Erd_BspGpio_HTR_01,              GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortJ, 7,  NonInverted) \
-   ENTRY(Erd_BspGpio_HTR_02,              GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, Port1, 3,  NonInverted) \
-   ENTRY(Erd_BspGpio_HTR_03,              GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, PortJ, 6,  NonInverted) \
-   ENTRY(Erd_BspGpio_HTR_04,              GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, Port0, 7,  NonInverted) \
    ENTRY(Erd_BspGpio_MTR_DRV_EN_00,       GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, Port0, 6,  NonInverted) \
    ENTRY(Erd_BspGpio_MTR_DRV_EN_01,       GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, Port0, 3,  NonInverted) \
    ENTRY(Erd_BspGpio_MTR_DRV_00,          GpioDirection_Output, 0,  0,  GpioPullUp_Disable, GpioDriveCapacity_Normal, Port0, 4,  NonInverted) \

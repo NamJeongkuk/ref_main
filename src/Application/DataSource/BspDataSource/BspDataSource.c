@@ -16,6 +16,7 @@
 #include "DataSource_RampingLedPwm.h"
 #include "DataSource_InputCapture.h"
 #include "PersonalityParametricData.h"
+#include "DataSource_SoftPwmGpio.h"
 
 static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_GpioGroupInterface, Erd_GpioGroupInterface },
@@ -32,11 +33,6 @@ static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_Gpio_GPIO_OUT_00, Erd_BspGpio_GPIO_OUT_00 },
    { Erd_Gpio_GPIO_OUT_01, Erd_BspGpio_GPIO_OUT_01 },
    { Erd_Gpio_GPIO_OUT_02, Erd_BspGpio_GPIO_OUT_02 },
-   { Erd_Gpio_HTR_00, Erd_BspGpio_HTR_00 },
-   { Erd_Gpio_HTR_01, Erd_BspGpio_HTR_01 },
-   { Erd_Gpio_HTR_02, Erd_BspGpio_HTR_02 },
-   { Erd_Gpio_HTR_03, Erd_BspGpio_HTR_03 },
-   { Erd_Gpio_HTR_04, Erd_BspGpio_HTR_04 },
    { Erd_Gpio_MTR_DRV_EN_00, Erd_BspGpio_MTR_DRV_EN_00 },
    { Erd_Gpio_MTR_DRV_EN_01, Erd_BspGpio_MTR_DRV_EN_01 },
    { Erd_Gpio_MTR_DRV_00, Erd_BspGpio_MTR_DRV_00 },
@@ -64,6 +60,11 @@ static const DataSource_MappedErdPair_t applicationBspToBspMappedPairs[] = {
    { Erd_Gpio_PERSONALITY, Erd_BspGpio_PERSONALITY },
    { Erd_Gpio_SABBATH, Erd_BspGpio_SABBATH },
    { Erd_Gpio_PWM_VAR_01, Erd_BspGpio_PWM_VAR_01 },
+   { Erd_SoftPwmGpio_HTR_00, Erd_BspSoftPwmGpio_HTR_00 },
+   { Erd_SoftPwmGpio_HTR_01, Erd_BspSoftPwmGpio_HTR_01 },
+   { Erd_SoftPwmGpio_HTR_02, Erd_BspSoftPwmGpio_HTR_02 },
+   { Erd_SoftPwmGpio_HTR_03, Erd_BspSoftPwmGpio_HTR_03 },
+   { Erd_SoftPwmGpio_HTR_04, Erd_BspSoftPwmGpio_HTR_04 },
    { Erd_Adc_ANALOG_475K_TH_00, Erd_BspAdc_ANALOG_475K_TH_00 },
    { Erd_Adc_ANALOG_TH_LOW_00, Erd_BspAdc_ANALOG_TH_LOW_00 },
    { Erd_Adc_ANALOG_TH_LOW_01, Erd_BspAdc_ANALOG_TH_LOW_01 },

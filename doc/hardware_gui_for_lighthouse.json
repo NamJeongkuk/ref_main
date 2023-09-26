@@ -34,7 +34,7 @@
         {
           "namespace": "mb",
           "displayName": "HTR 00 / Twist IM Fill Tube Htr",
-          "name": "Erd_Gpio_HTR_00",
+          "name": "Erd_SoftPwmGpio_HTR_00",
           "read": true,
           "write": true,
           "interval": 1000000000
@@ -42,7 +42,7 @@
         {
           "namespace": "mb",
           "displayName": "HTR 01 / FF Damper Htr",
-          "name": "Erd_Gpio_HTR_01",
+          "name": "Erd_SoftPwmGpio_HTR_01",
           "read": true,
           "write": true,
           "interval": 1000000000
@@ -50,7 +50,7 @@
         {
           "namespace": "mb",
           "displayName": "HTR 02 / Pangea Mullion Htr",
-          "name": "Erd_Gpio_HTR_02",
+          "name": "Erd_SoftPwmGpio_HTR_02",
           "read": true,
           "write": true,
           "interval": 1000000000
@@ -58,7 +58,7 @@
         {
           "namespace": "mb",
           "displayName": "HTR 03 / Spare Recess Htr",
-          "name": "Erd_Gpio_HTR_03",
+          "name": "Erd_SoftPwmGpio_HTR_03",
           "read": true,
           "write": true,
           "interval": 1000000000
@@ -66,7 +66,7 @@
         {
           "namespace": "mb",
           "displayName": "HTR 04 / Aluminum IM Fill Tube Htr",
-          "name": "Erd_Gpio_HTR_04",
+          "name": "Erd_SoftPwmGpio_HTR_04",
           "read": true,
           "write": true,
           "interval": 1000000000

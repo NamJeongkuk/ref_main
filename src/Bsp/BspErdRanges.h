@@ -18,7 +18,9 @@ enum
 {
    BspErdGpioStart = BspErdStart,
    BspErdGpioEnd = BspErdGpioStart + BspErdRangeSize,
-   BspErdAdcStart = BspErdGpioEnd + 1,
+   BspErdSoftPwmGpioStart = BspErdGpioEnd + 1,
+   BspErdSoftPwmGpioEnd = BspErdSoftPwmGpioStart + BspErdRangeSize,
+   BspErdAdcStart = BspErdSoftPwmGpioEnd + 1,
    BspErdAdcEnd = BspErdAdcStart + BspErdRangeSize,
    BspErdPwmStart = BspErdAdcEnd + 1,
    BspErdPwmEnd = BspErdPwmStart + BspErdRangeSize,
