@@ -19,7 +19,6 @@ typedef struct
    {
       ErdResolver_t freshFoodDamperHeaterErdResolver;
       PercentageDutyCycleVoteToPwmDutyCycleConverter_t dutyCycleToPercentageCalculator;
-      SoftPwm_t damperHeaterSoftPwm;
    } _private;
 } FreshFoodDamperHeaterVotingFrameworkPlugin_t;
 

@@ -21,7 +21,6 @@ typedef struct
       ErdResolver_t fillTubeHeaterErdResolver;
       PercentageDutyCycleVoteToPwmDutyCycleConverter_t dutyCycleToPercentageCalculator;
       NonHarvestFillTubeHeaterControl_t nonHarvestFillTubeHeaterControl;
-      SoftPwm_t fillTubeHeaterSoftPwm;
    } _private;
 } FillTubeHeaterVotingFrameworkPlugin_t;
 
