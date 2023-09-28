@@ -32,6 +32,8 @@
 #include "RefrigeratorModel.h"
 #include "LightingData.h"
 #include "LoadOffDoorOpenData.h"
+#include "FilterData.h"
+#include "WaterValveFlowRate.h"
 
 enum
 {
@@ -64,6 +66,8 @@ typedef struct
    const TurboModeSetpointData_t *turboModeSetpointData;
    const LightingData_t *lightingData;
    const LoadOffDoorOpenData_t *loadOffDoorOpenData;
+   const FilterData_t *filterData;
+   const WaterValveFlowRate_t *waterValveFlowRate;
 } PersonalityParametricData_t;
 
 const PersonalityParametricData_t *PersonalityParametricData_Get(I_DataModel_t *dataModel);

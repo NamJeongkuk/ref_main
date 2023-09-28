@@ -67,11 +67,16 @@ return function(directory)
   import('Grid/Pulldown')
   import('Grid/CrossAmbientHysteresisAdjustment')
   import('IceMaker/AluminumMoldIceMaker')
+  import('IceMaker/IceMakerFillBlocker')
   import('IceMaker/FreezerIceRate')
   import('IceMaker/IceMakerFillMonitor')
   import('IceMaker/IceMaker')
   import('IceMaker/NonHarvestFillTubeHeater')
   import('IceMaker/AugerMotor')
+  import('FilterData/CommonFilterData')
+  import('FilterData/FilterData')
+  import('FilterData/RfidFilterData')
+  import('FilterData/RfidFilterUpdateRate')
   import('FlowMeter/FlowMeter')
   import('IceMaker/TwistTrayIceMaker')
   import('IceMaker/HarvestCountCalculator')
@@ -83,6 +88,7 @@ return function(directory)
   import('VariableSweatHeater/VariableSweatHeaterType5')
   import('VariableSweatHeater/VariableSweatHeaterType6')
   import('VariableSweatHeater/VariableSweatHeaterType7')
+  import('WaterValveFlowRate/WaterValveFlowRate')
   import('RecessHeater/RecessHeater')
   import('TurboModes/FreshFoodTurboCoolSetpoint')
   import('TurboModes/FreezerTurboFreezeSetpoint')
@@ -159,9 +165,14 @@ return function(directory)
   pulldown = Pulldown(core)
   aluminum_mold_ice_maker = AluminumMoldIceMaker(core)
   freezer_ice_rate = FreezerIceRate(core)
+  ice_maker_fill_blocker = IceMakerFillBlocker(core)
   ice_maker_fill_monitor = IceMakerFillMonitor(core)
   ice_maker = IceMaker(core)
   non_harvest_fill_tube_heater = NonHarvestFillTubeHeater(core)
+  common_filter_data = CommonFilterData(core)
+  filter_data = FilterData(core)
+  rfid_filter_data = RfidFilterData(core)
+  rfid_filter_update_rate = RfidFilterUpdateRate(core)
   flow_meter = FlowMeter(core)
   erd_list_to_sorted_erd_mappings = ErdListToSortedErdMappings(core)
   twist_tray_ice_maker = TwistTrayIceMaker(core)
@@ -176,6 +187,7 @@ return function(directory)
   variable_sweat_heater_type_5 = VariableSweatHeaterType5(core)
   variable_sweat_heater_type_6 = VariableSweatHeaterType6(core)
   variable_sweat_heater_type_7 = VariableSweatHeaterType7(core)
+  water_valve_flow_rate = WaterValveFlowRate(core)
   recess_heater = RecessHeater(core)
   condenser_fan = CondenserFan(core)
   turbo_mode_setpoint = TurboModeSetpoint(core)
@@ -257,9 +269,14 @@ return function(directory)
     pulldown = pulldown,
     aluminum_mold_ice_maker = aluminum_mold_ice_maker,
     freezer_ice_rate = freezer_ice_rate,
+    ice_maker_fill_blocker = ice_maker_fill_blocker,
     ice_maker_fill_monitor = ice_maker_fill_monitor,
     ice_maker = ice_maker,
     non_harvest_fill_tube_heater = non_harvest_fill_tube_heater,
+    common_filter_data = common_filter_data,
+    filter_data = filter_data,
+    rfid_filter_data = rfid_filter_data,
+    rfid_filter_update_rate = rfid_filter_update_rate,
     flow_meter = flow_meter,
     twist_tray_ice_maker = twist_tray_ice_maker,
     twist_tray_ice_maker_fill_monitor = twist_tray_ice_maker_fill_monitor,
@@ -273,6 +290,7 @@ return function(directory)
     variable_sweat_heater_type_5 = variable_sweat_heater_type_5,
     variable_sweat_heater_type_6 = variable_sweat_heater_type_6,
     variable_sweat_heater_type_7 = variable_sweat_heater_type_7,
+    water_valve_flow_rate = water_valve_flow_rate,
     recess_heater = recess_heater,
     condenser_fan = condenser_fan,
     turbo_mode_setpoint = turbo_mode_setpoint,

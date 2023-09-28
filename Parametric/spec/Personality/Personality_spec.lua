@@ -33,7 +33,9 @@ describe("personality", function()
       recess_heater = TypedString('recess_heater', 'recess_heater'),
       turbo_mode_setpoint = TypedString('turbo_mode_setpoint', 'turbo_mode_setpoint'),
       lighting = TypedString('lighting', 'lighting'),
-      load_off_door_open_compartment_list = TypedString('load_off_door_open_compartment_list', 'load_off_door_open_compartment_list')
+      load_off_door_open_compartment_list = TypedString('load_off_door_open_compartment_list', 'load_off_door_open_compartment_list'),
+      filter_data = TypedString('filter_data', 'filter_data'),
+      water_valve_flow_rate = TypedString('water_valve_flow_rate', 'water_valve_flow_rate')
     }, overrides or {})
   end
 
@@ -233,6 +235,23 @@ describe("personality", function()
     end)
   end)
 
+
+  it('should constrain all arguments', function()
+    should_fail_with('filter_data must be a typed string with type filter_data, but is a number', function()
+      personality(generate_config({
+        filter_data = -1
+      }))
+    end)
+  end)
+
+  it('should constain all arguments', function()
+    should_fail_with('water_valve_flow_rate must be a typed string with type water_valve_flow_rate, but is a number', function()
+      personality(generate_config({
+        water_valve_flow_rate = -1
+      }))
+    end)
+  end)
+
   it('should generate a typed string with the correct data and type personality', function()
     local expected = remove_whitespace([[
       structure(
@@ -259,7 +278,9 @@ describe("personality", function()
         pointer(recess_heater),
         pointer(turbo_mode_setpoint),
         pointer(lighting),
-        pointer(load_off_door_open_compartment_list)
+        pointer(load_off_door_open_compartment_list),
+        pointer(filter_data),
+        pointer(water_valve_flow_rate)
       )
     ]])
 

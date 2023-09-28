@@ -6,7 +6,7 @@ local should_fail_with = require 'lua-common'.utilities.should_fail_with
 local should_require_args = require 'lua-common'.utilities.should_require_args
 local TypedString = require 'lua-common'.util.TypedString
 
-describe('ice_maker', function()
+describe('IceMaker', function()
   local ice_maker = IceMaker(core_mock)
 
   local function generate_config(overrides)
@@ -15,7 +15,8 @@ describe('ice_maker', function()
       aluminum_mold_ice_maker = TypedString('aluminum_mold_ice_maker', 'aluminum_mold_ice_maker'),
       twist_tray_ice_maker = TypedString('twist_tray_ice_maker', 'twist_tray_ice_maker'),
       auger_motor = TypedString('auger_motor', 'auger_motor'),
-      non_harvest_fill_tube_heater = TypedString('non_harvest_fill_tube_heater', 'non_harvest_fill_tube_heater')
+      non_harvest_fill_tube_heater = TypedString('non_harvest_fill_tube_heater', 'non_harvest_fill_tube_heater'),
+      ice_maker_fill_blocker = TypedString('ice_maker_fill_blocker', 'ice_maker_fill_blocker')
     }, overrides or {})
   end
 
@@ -63,6 +64,14 @@ describe('ice_maker', function()
     end)
   end)
 
+  it('should assert if ice_maker_fill_blocker is not a string', function()
+    should_fail_with('ice_maker_fill_blocker must be a typed string with type ice_maker_fill_blocker, but is a number', function()
+      ice_maker(generate_config({
+        ice_maker_fill_blocker = 6
+      }))
+    end)
+  end)
+
   it('should generate a typed string with the correct data and type for freezer ice rate', function()
     local expected = remove_whitespace([[
         structure(
@@ -70,7 +79,8 @@ describe('ice_maker', function()
           pointer(aluminum_mold_ice_maker),
           pointer(twist_tray_ice_maker),
           pointer(auger_motor),
-          pointer(non_harvest_fill_tube_heater)
+          pointer(non_harvest_fill_tube_heater),
+          pointer(ice_maker_fill_blocker)
         )
       ]])
 
@@ -79,7 +89,8 @@ describe('ice_maker', function()
       aluminum_mold_ice_maker = TypedString('aluminum_mold_ice_maker', 'aluminum_mold_ice_maker'),
       twist_tray_ice_maker = TypedString('twist_tray_ice_maker', 'twist_tray_ice_maker'),
       auger_motor = TypedString('auger_motor', 'auger_motor'),
-      non_harvest_fill_tube_heater = TypedString('non_harvest_fill_tube_heater', 'non_harvest_fill_tube_heater')
+      non_harvest_fill_tube_heater = TypedString('non_harvest_fill_tube_heater', 'non_harvest_fill_tube_heater'),
+      ice_maker_fill_blocker = TypedString('ice_maker_fill_blocker', 'ice_maker_fill_blocker')
     })
 
     assert.equals(expected, remove_whitespace(tostring(actual)))

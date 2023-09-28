@@ -15,7 +15,8 @@ return function(core)
         pointer(config.aluminum_mold_ice_maker),
         pointer(config.twist_tray_ice_maker),
         pointer(config.auger_motor),
-        pointer(config.non_harvest_fill_tube_heater)
+        pointer(config.non_harvest_fill_tube_heater),
+        pointer(config.ice_maker_fill_blocker)
       ))
   end)
 
@@ -27,7 +28,8 @@ return function(core)
         aluminum_mold_ice_maker = { constraint.typed_string('aluminum_mold_ice_maker') },
         twist_tray_ice_maker = { constraint.typed_string('twist_tray_ice_maker') },
         auger_motor = { constraint.typed_string('auger_motor') },
-        non_harvest_fill_tube_heater = { constraint.typed_string('non_harvest_fill_tube_heater') }
+        non_harvest_fill_tube_heater = { constraint.typed_string('non_harvest_fill_tube_heater') },
+        ice_maker_fill_blocker = { constraint.typed_string('ice_maker_fill_blocker')}
       })
     return generate(config)
   end

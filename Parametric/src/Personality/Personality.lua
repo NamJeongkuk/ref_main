@@ -33,7 +33,9 @@ return function(core)
         pointer(config.recess_heater),
         pointer(config.turbo_mode_setpoint),
         pointer(config.lighting),
-        pointer(config.load_off_door_open_compartment_list)
+        pointer(config.load_off_door_open_compartment_list),
+        pointer(config.filter_data),
+        pointer(config.water_valve_flow_rate)
       ))
   end)
 
@@ -62,7 +64,9 @@ return function(core)
       recess_heater = { constraint.typed_string('recess_heater') },
       turbo_mode_setpoint = { constraint.typed_string('turbo_mode_setpoint') },
       lighting = { constraint.typed_string('lighting') },
-      load_off_door_open_compartment_list = { constraint.typed_string('load_off_door_open_compartment_list') }
+      load_off_door_open_compartment_list = { constraint.typed_string('load_off_door_open_compartment_list') },
+      filter_data = { constraint.typed_string('filter_data') },
+      water_valve_flow_rate = { constraint.typed_string('water_valve_flow_rate') }
     })
     return generate(config)
   end
