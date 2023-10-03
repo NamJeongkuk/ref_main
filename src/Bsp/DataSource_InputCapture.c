@@ -49,14 +49,11 @@ enum
    Mtu4_RisingEdgeCapture = 0x08,
    Mtu4_FallingEdgeCapture = 0x09,
    Mtu4_BothEdgesCapture = 0x0B,
-   Mtu4_MaxTgrCount = 0xFFFF,
-   OverflowCounts = Mtu4_MaxTgrCount + 1,
-   CountCutoffCloseToOverflow = 0xD999,
    Mtu5_RisingEdgeCapture = 0x11,
 
    InputCaptureOffMicroseconds = UINT32_MAX,
    InputCapturePollPeriodInMsec = 10,
-   InputCapturePollCountToSetToOff = 10, // Maximum pulse length we can measure without overflow is 65ms, set this to 100ms second for margin.
+   InputCapturePollCountToSetToOff = 30, // Maximum pulse length we can measure without overflow is 262ms, set this to 300ms second for margin.
    FilterWindowSize = 5
 };
 
@@ -230,12 +227,12 @@ static void ConfigureInputCapture(void)
    MTU5.TIER.BIT.TGIE5V = 0;
    MTU5.TIER.BIT.TGIE5W = 0;
 
-   // Timer based on PCLK (16 MHz) / 16
-   MTU2.TCR.BIT.TPSC = 2;
-   MTU4.TCR.BIT.TPSC = 2;
-   MTU5.TCRU.BIT.TPSC = 2;
-   MTU5.TCRV.BIT.TPSC = 2;
-   MTU5.TCRW.BIT.TPSC = 2;
+   // Timer based on PCLK (16 MHz) / 64
+   MTU2.TCR.BIT.TPSC = 3;
+   MTU4.TCR.BIT.TPSC = 3;
+   MTU5.TCRU.BIT.TPSC = 3;
+   MTU5.TCRV.BIT.TPSC = 3;
+   MTU5.TCRW.BIT.TPSC = 3;
 
    // Set Timer I/O control register to rising edge capture
    MTU2.TIOR.BIT.IOA = Mtu2_RisingEdgeCapture;
@@ -341,10 +338,10 @@ static void Read(I_DataSource_t *_instance, const Erd_t erd, void *data)
       {
          InputCaptureCounts_t filteredCounts;
          Filter_Read(&instance.feedbackData[channel].filter.interface, &filteredCounts);
-         // PCLK is 16 MHz, input capture clock is 16/16 = 1 MHz
-         // 1 count = 1 × 10^-6
-         // 1 micro second = 1 count
-         *totalTimeUs = (InputCaptureMicroSeconds_t)(filteredCounts);
+         // PCLK is 16 MHz, input capture clock is 16/64 = 250 kHz
+         // 1 count = 1/250k = 4 x 10^-6
+         // 1 micro second = 0.25 counts
+         *totalTimeUs = (InputCaptureMicroSeconds_t)(filteredCounts * 4);
       }
    }
    else if(ERD_IS_IN_PULSE_COUNT_ERD_RANGE(erd))
