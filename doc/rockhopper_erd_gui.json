@@ -3426,6 +3426,60 @@
           "interval": 1000000000
         }
       ]
+    },
+    {
+      "title": "Enhanced Sabbath Mode",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Enhanced Sabbath Is Requesting Defrost",
+          "name": "Erd_EnhancedSabbathIsRequestingDefrost",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Enhanced Sabbath Stage Fresh Food Cooling Is Active",
+          "name": "Erd_EnhancedSabbathStageFreshFoodCoolingIsActive",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Enhanced Sabbath Stage Freezer Cooling Is Active",
+          "name": "Erd_EnhancedSabbathStageFreezerCoolingIsActive",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Enhanced Sabbath Mode HSM State",
+          "name": "Erd_EnhancedSabbathModeHsmState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Waiting to defrost",
+          "name": "Erd_WaitingToDefrost",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Enhanced Sabbath Mode Enable",
+          "name": "Erd_EnhancedSabbathModeEnable",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Defrosting State",
+          "name": "Erd_Defrosting",
+          "read": true,
+          "write": true
+        }
+      ]
     }
   ]
 }

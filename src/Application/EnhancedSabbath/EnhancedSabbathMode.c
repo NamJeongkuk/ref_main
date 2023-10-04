@@ -24,12 +24,16 @@ enum
    Signal_EnhancedSabbathModeEnabled = Hsm_UserSignalStart,
    Signal_StageTimerExpired,
    Signal_EnhancedSabbathModeDisabled,
+   Signal_WaitingToDefrost,
+   Signal_SabbathIsReadyToDefrost,
+   Signal_Defrosting
 };
 
 static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Enabled(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Stage_FreshFood(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Stage_Freezer(Hsm_t *hsm, HsmSignal_t signal, const void *data);
+static bool State_Stage_Defrosting(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 static bool State_Stage_Off(Hsm_t *hsm, HsmSignal_t signal, const void *data);
 
 static const HsmStateHierarchyDescriptor_t stateList[] = {
@@ -37,6 +41,7 @@ static const HsmStateHierarchyDescriptor_t stateList[] = {
    { State_Enabled, HSM_NO_PARENT },
    { State_Stage_FreshFood, State_Enabled },
    { State_Stage_Freezer, State_Enabled },
+   { State_Stage_Defrosting, State_Enabled },
    { State_Stage_Off, State_Enabled }
 };
 
@@ -481,6 +486,63 @@ static void VoteCompressorAndFansToLow(EnhancedSabbathMode_t *instance)
    SetFreezerEvapFanSpeedVoteToCareWithValueOf(instance, FanSpeed_Low);
 }
 
+static bool Defrosting(EnhancedSabbathMode_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->defrostingErd,
+      &state);
+
+   return state;
+}
+
+static bool WaitingToDefrost(EnhancedSabbathMode_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->waitingToDefrostErd,
+      &state);
+
+   return state;
+}
+
+static void SetEnhancedSabbathIsRequestingDefrostTo(EnhancedSabbathMode_t *instance, bool state)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->enhancedSabbathIsRequestingDefrostErd,
+      &state);
+}
+
+static void SetEnhancedSabbathStageFreshFoodCoolingIsActiveTo(EnhancedSabbathMode_t *instance, bool state)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->enhancedSabbathStageFreshFoodCoolingIsActiveErd,
+      &state);
+}
+
+static void SetEnhancedSabbathStageFreezerCoolingIsActiveTo(EnhancedSabbathMode_t *instance, bool state)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->enhancedSabbathStageFreezerCoolingIsActiveErd,
+      &state);
+}
+
+static bool EnhancedSabbathStageFreezerCoolingIsActive(EnhancedSabbathMode_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->enhancedSabbathStageFreezerCoolingIsActiveErd,
+      &state);
+
+   return state;
+}
+
 static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    EnhancedSabbathMode_t *instance = InstanceFromHsm(hsm);
@@ -505,7 +567,14 @@ static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_EnhancedSabbathModeEnabled:
-         Hsm_Transition(hsm, State_Stage_FreshFood);
+         if(WaitingToDefrost(instance))
+         {
+            Hsm_Transition(hsm, State_Stage_FreshFood);
+         }
+         else if(Defrosting(instance))
+         {
+            Hsm_Transition(hsm, State_Stage_Defrosting);
+         }
          break;
 
       default:
@@ -563,10 +632,12 @@ static bool State_Stage_FreshFood(Hsm_t *hsm, HsmSignal_t signal, const void *da
          SetCoolingModeTo(instance, CoolingMode_FreshFood);
          if(FreshFoodAverageCabinetTemperature(instance) < FreshFoodCabinetSetpoint(instance))
          {
+            SetEnhancedSabbathStageFreshFoodCoolingIsActiveTo(instance, false);
             VoteCompressorFansAndDamperToOff(instance);
          }
          else
          {
+            SetEnhancedSabbathStageFreshFoodCoolingIsActiveTo(instance, true);
             VoteCompressorAndFansToLow(instance);
             SetDamperPositionVoteToCareWithValueOf(instance, DamperPosition_Open);
          }
@@ -597,17 +668,60 @@ static bool State_Stage_Freezer(Hsm_t *hsm, HsmSignal_t signal, const void *data
          SetCoolingModeTo(instance, CoolingMode_Freezer);
          if(FreezerAverageCabinetTemperature(instance) < FreezerCabinetSetpoint(instance))
          {
+            SetEnhancedSabbathStageFreezerCoolingIsActiveTo(instance, false);
             VoteCompressorFansAndDamperToOff(instance);
          }
          else
          {
+            SetEnhancedSabbathStageFreezerCoolingIsActiveTo(instance, true);
             VoteCompressorAndFansToLow(instance);
             SetDamperPositionVoteToCareWithValueOf(instance, DamperPosition_Closed);
          }
          break;
 
       case Signal_StageTimerExpired:
-         Hsm_Transition(hsm, State_Stage_Off);
+         if(EnhancedSabbathStageFreezerCoolingIsActive(instance))
+         {
+            SetEnhancedSabbathIsRequestingDefrostTo(instance, true);
+         }
+         else
+         {
+            Hsm_Transition(hsm, State_Stage_Off);
+         }
+         break;
+
+      case Signal_SabbathIsReadyToDefrost:
+         if(!EnhancedSabbathStageFreezerCoolingIsActive(instance))
+         {
+            SetEnhancedSabbathIsRequestingDefrostTo(instance, true);
+         }
+         break;
+
+      case Signal_Defrosting:
+         Hsm_Transition(hsm, State_Stage_Defrosting);
+         break;
+
+      default:
+         return HsmSignalDeferred;
+   }
+
+   return HsmSignalConsumed;
+}
+
+static bool State_Stage_Defrosting(Hsm_t *hsm, HsmSignal_t signal, const void *data)
+{
+   EnhancedSabbathMode_t *instance = InstanceFromHsm(hsm);
+   IGNORE(data);
+
+   switch(signal)
+   {
+      case Hsm_Entry:
+         SetHsmStateTo(instance, EnhancedSabbathModeHsmState_Stage_Defrosting);
+         SetEnhancedSabbathIsRequestingDefrostTo(instance, false);
+         break;
+
+      case Signal_WaitingToDefrost:
+         Hsm_Transition(hsm, State_Stage_FreshFood);
          break;
 
       default:
@@ -643,18 +757,47 @@ static bool State_Stage_Off(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    return HsmSignalConsumed;
 }
 
-static void OnEnhancedSabbathModeStatusChange(void *context, const void *_args)
+static void OnDataModelChange(void *context, const void *_args)
 {
    EnhancedSabbathMode_t *instance = context;
-   const bool *status = _args;
+   const DataModelOnDataChangeArgs_t *args = _args;
+   Erd_t erd = args->erd;
 
-   if(*status)
+   if(erd == instance->_private.config->waitingToDefrostErd)
    {
-      Hsm_SendSignal(&instance->_private.hsm, Signal_EnhancedSabbathModeEnabled, NULL);
+      const bool *waitingToDefrost = args->data;
+      if(*waitingToDefrost)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_WaitingToDefrost, NULL);
+      }
    }
-   else
+   else if(erd == instance->_private.config->enhancedSabbathModeStatusErd)
    {
-      Hsm_SendSignal(&instance->_private.hsm, Signal_EnhancedSabbathModeDisabled, NULL);
+      const bool *enabled = args->data;
+      if(*enabled)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_EnhancedSabbathModeEnabled, NULL);
+      }
+      else
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_EnhancedSabbathModeDisabled, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->sabbathIsReadyToDefrostErd)
+   {
+      const bool *sabbathIsReadyToDefrost = args->data;
+      if(*sabbathIsReadyToDefrost)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_SabbathIsReadyToDefrost, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->defrostingErd)
+   {
+      const bool *defrosting = args->data;
+      if(*defrosting)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_Defrosting, NULL);
+      }
    }
 }
 
@@ -685,11 +828,10 @@ void EnhancedSabbathMode_Init(
    Hsm_Init(&instance->_private.hsm, &hsmConfiguration, InitialState(instance));
 
    EventSubscription_Init(
-      &instance->_private.enhancedSabbathModeStatusSubscription,
+      &instance->_private.dataModelSubscription,
       instance,
-      OnEnhancedSabbathModeStatusChange);
-   DataModel_Subscribe(
+      OnDataModelChange);
+   DataModel_SubscribeAll(
       dataModel,
-      instance->_private.config->enhancedSabbathModeStatusErd,
-      &instance->_private.enhancedSabbathModeStatusSubscription);
+      &instance->_private.dataModelSubscription);
 }

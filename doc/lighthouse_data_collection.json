@@ -560,6 +560,21 @@
          "namespace": "mb",
          "name": "Erd_Freezer_IceRateIsActive",
          "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_EnhancedSabbathIsRequestingDefrost",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_EnhancedSabbathStageFreshFoodCoolingIsActive",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_EnhancedSabbathStageFreezerCoolingIsActive",
+         "interval": 60000
       }
    ]
 }

@@ -33,10 +33,15 @@ typedef struct
    Erd_t overrideIceMakerEnabledRequestErd; // bool
    Erd_t overrideIceMakerEnabledValueErd; // bool
    Erd_t dispensingDisabledErd; // bool
-   Erd_t waitingForDefrostErd; // bool
+   Erd_t waitingToDefrostErd; // bool
    Erd_t gridOverrideEnabledErd; // bool
    Erd_t coolingModeErd; // CoolingMode_t
    Erd_t hsmStateErd; // EnhancedSabbathModeHsmState_t
+   Erd_t defrostingErd; // bool
+   Erd_t enhancedSabbathIsRequestingDefrostErd; // bool
+   Erd_t enhancedSabbathStageFreshFoodCoolingIsActiveErd; // bool
+   Erd_t enhancedSabbathStageFreezerCoolingIsActiveErd; // bool
+   Erd_t sabbathIsReadyToDefrostErd; // bool
    ErdList_t lightVoteErdList; // ErdList_t
 } EnhancedSabbathModeConfig_t;
 
@@ -48,7 +53,7 @@ typedef struct
       TimerModule_t *timerModule;
       const EnhancedSabbathModeConfig_t *config;
       const EnhancedSabbathData_t *enhancedSabbathData;
-      EventSubscription_t enhancedSabbathModeStatusSubscription;
+      EventSubscription_t dataModelSubscription;
       Timer_t stageTimer;
       Timer_t enhancedSabbathModeEnabledTimer;
       Hsm_t hsm;

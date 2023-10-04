@@ -56,10 +56,15 @@ static const EnhancedSabbathModeConfig_t enhancedSabbathModeConfig = {
    .overrideIceMakerEnabledRequestErd = Erd_IceMakerEnabledEnhancedSabbathOverrideRequest,
    .overrideIceMakerEnabledValueErd = Erd_IceMakerEnabledEnhancedSabbathOverrideValue,
    .dispensingDisabledErd = Erd_DispensingDisabled,
-   .waitingForDefrostErd = Erd_WaitingToDefrost,
+   .waitingToDefrostErd = Erd_WaitingToDefrost,
    .gridOverrideEnabledErd = Erd_GridOverrideEnable,
    .coolingModeErd = Erd_CoolingMode,
    .hsmStateErd = Erd_EnhancedSabbathModeHsmState,
+   .defrostingErd = Erd_Defrosting,
+   .enhancedSabbathIsRequestingDefrostErd = Erd_EnhancedSabbathIsRequestingDefrost,
+   .enhancedSabbathStageFreshFoodCoolingIsActiveErd = Erd_EnhancedSabbathStageFreshFoodCoolingIsActive,
+   .enhancedSabbathStageFreezerCoolingIsActiveErd = Erd_EnhancedSabbathStageFreezerCoolingIsActive,
+   .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost,
    .lightVoteErdList = lightVoteErdList
 };
 
