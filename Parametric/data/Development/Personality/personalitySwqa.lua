@@ -18,7 +18,7 @@ return personality({
   pulldown = import("../Grid/pulldown.lua"),
   ice_maker = import("../IceMaker/ice_maker_qa.lua"),
   flow_meter = import("../FlowMeter/flow_meter.lua"),
-  dispenser = import("../Dispenser/dispenser.lua"),
+  dispenser = import("../Dispenser/dispenser_qa.lua"),
   recess_heater = import("../RecessHeater/recess_heater.lua"),
   turbo_mode_setpoint = import("../TurboModes/turbo_mode_setpoint.lua"),
   lighting = import("../Lighting/lighting.lua"),

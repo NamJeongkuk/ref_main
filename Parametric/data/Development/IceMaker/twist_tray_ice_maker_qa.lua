@@ -8,7 +8,7 @@ return twist_tray_ice_maker({
   },
   freeze = {
     harvest_count_calculator = import("../IceMaker/twist_tray_harvest_count_calculator_qa.lua"),
-    maximum_harvest_temperature_in_deg_fx100 = 1900
+    maximum_harvest_temperature_in_deg_fx100 = 1900,
   },
   harvest = {
     full_state_wait_period_in_minutes = 10,
@@ -23,6 +23,6 @@ return twist_tray_ice_maker({
     freeze_thaw_fill_tube_heater_on_time_in_seconds = 30,
     freeze_thaw_fill_tube_heater_duty_cycle_percentage = 50,
     full_state_temperature_to_transition_to_freeze_state_in_degfx100 = 200,
-    full_state_door_open_check_time_in_minutes = 1
+    full_state_door_open_check_time_in_minutes = 5,
   }
 })
