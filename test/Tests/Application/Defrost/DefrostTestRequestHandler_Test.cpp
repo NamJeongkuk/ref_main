@@ -24,7 +24,7 @@ static const DefrostTestRequestHandlerConfiguration_t config = {
    .disableDefrostErd = Erd_DisableDefrost,
    .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
    .nextDefrostTypeErd = Erd_NextDefrostType,
-   .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts,
+   .useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts,
    .defrostTestRequestStatusErd = Erd_DefrostTestRequestStatus,
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill
 };
@@ -110,10 +110,10 @@ TEST_GROUP(DefrostTestRequestHandler)
       CHECK_EQUAL(expected, actual);
    }
 
-   void UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(bool expected)
+   void UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts, &actual);
+      DataModel_Read(dataModel, Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -311,7 +311,7 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndDoTheOther
    When DefrostTestRequestIs(DefrostTestRequest_AhamFreshFoodOnlyPrechill);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_AhamFreshFoodOnlyPrechill);
    NextDefrostTypeShouldBe(DefrostType_FreshFood);
-   UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
+   UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
    DefrostTestRequestShouldBeReset();
    DontSkipPrechillShouldBe(SET);
 }
@@ -324,7 +324,7 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFullAndDoTheOthersWhen
    When DefrostTestRequestIs(DefrostTestRequest_AhamPrechill);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_AhamPrechill);
    NextDefrostTypeShouldBe(DefrostType_Full);
-   UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
+   UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
    DefrostTestRequestShouldBeReset();
    DontSkipPrechillShouldBe(SET);
 }

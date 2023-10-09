@@ -523,10 +523,10 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       DataModel_Write(dataModel, Erd_DefrostTestRequest, &request);
    }
 
-   void UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(bool expected)
+   void UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts, &actual);
+      DataModel_Read(dataModel, Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -537,9 +537,9 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       CHECK_EQUAL(expected, actual);
    }
 
-   void GivenUseMinimumReadyToDefrostTimeAndResetDefrostCountsHasBeenSetTo(bool state)
+   void GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsHasBeenSetTo(bool state)
    {
-      DataModel_Write(dataModel, Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts, &state);
+      DataModel_Write(dataModel, Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts, &state);
    }
 
    void DefrostExitsHeaterOnEntryAndIsInHeaterAfterHeaterOnDelayAfterCompressorOffTime()
@@ -606,7 +606,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
 
       WhenDefrostTestIsRequested(DefrostTestRequest_AhamPrechill);
-      UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
+      UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
       DontSkipPrechillShouldBe(true);
 
       DefrostTransitedFromHeaterOnEntryToHeaterOnToDwellToPostDwellToIdleAndWasAbnormal();
@@ -614,15 +614,17 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       WhenGridVotesToTurnOnCompressorWhileCompressorMinimumTimesAreEnabledAfterBeingOffAndGridWinsAndGridRanThisManyTimes(2);
 
       ReadyToDefrostShouldBe(false);
-      UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
+      UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
       DontSkipPrechillShouldBe(true);
 
-      // Should use minimum time to exit Idle
+      // Should use aham prechill time to exit Idle
       // Should not skip prechill prep (if it didn't use the flag, it would have gone to heater on entry)
       TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
       TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Prechill);
       TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry);
-      After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN - defrostData->postDwellData.postDwellExitTimeInMinutes * MSEC_PER_MIN);
+      UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
+      After(defrostData->idleData.ahamPrechillTimeBetweenDefrostsInMinutes * MSEC_PER_MIN - defrostData->postDwellData.postDwellExitTimeInMinutes * MSEC_PER_MIN);
+      UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
       DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
       ReadyToDefrostShouldBe(true);
    }
@@ -788,20 +790,20 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       CoolingModeShouldBe(CoolingMode_Freezer);
 
       After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN);
-      UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
+      UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
       DontSkipPrechillShouldBe(false);
 
       WhenDefrostTestIsRequested(DefrostTestRequest_AhamPrechill);
-      UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
+      UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
       DontSkipPrechillShouldBe(true);
       CompressorOnTimeInSecondsShouldBe(0);
 
-      // Should use minimum time to exit Idle
+      // Should use aham prechill time to exit Idle
       // Should not skip prechill prep (if it didn't use the flag, it would have gone to heater on entry)
       TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
       TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Prechill);
       TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry);
-      After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN);
+      After(defrostData->idleData.ahamPrechillTimeBetweenDefrostsInMinutes * MSEC_PER_MIN);
       DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
       ReadyToDefrostShouldBe(true);
 
@@ -939,7 +941,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnterin
    GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
 
    WhenDefrostTestIsRequested(DefrostTestRequest_AhamPrechill);
-   UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
+   UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
    DontSkipPrechillShouldBe(true);
 
    DefrostTransitedFromHeaterOnEntryToHeaterOnToDwellToPostDwellToIdleAndWasAbnormal();
@@ -947,15 +949,15 @@ TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnterin
    WhenGridVotesToTurnOnCompressorWhileCompressorMinimumTimesAreEnabledAfterBeingOffAndGridWinsAndGridRanThisManyTimes(2);
 
    ReadyToDefrostShouldBe(false);
-   UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
+   UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
    DontSkipPrechillShouldBe(true);
 
-   // Should use minimum time to exit Idle
+   // Should use aham prechill time to exit Idle
    // Should not skip prechill prep (if it didn't use the flag, it would have gone to heater on entry)
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Prechill);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry);
-   After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN - defrostData->postDwellData.postDwellExitTimeInMinutes * MSEC_PER_MIN);
+   After(defrostData->idleData.ahamPrechillTimeBetweenDefrostsInMinutes * MSEC_PER_MIN - defrostData->postDwellData.postDwellExitTimeInMinutes * MSEC_PER_MIN);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
    ReadyToDefrostShouldBe(true);
 }
@@ -965,13 +967,13 @@ TEST(DefrostIntegration_SingleEvap, ShouldResumeNormalDefrostAfterAhamPrechillTe
    GivenAhamPrechillTestHasBeenRequestedDuringDefrostAndHasNotSkippedPrechillPrepAndIsNowInHeaterOnEntry();
 
    DontSkipPrechillShouldBe(false);
-   UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
+   UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
 
    DefrostTransitedFromHeaterOnEntryToHeaterOnToDwellToPostDwellToIdleAndWasNormal();
    CompressorShouldBe(ON); // grid voted for compressor on earlier, and once defrost released control, it's still on
 
    DontSkipPrechillShouldBe(false);
-   UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
+   UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
 
    // goes to prechill prep b / c the defrost was normal
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
@@ -987,7 +989,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldResumeAbnormalDefrostAfterAhamPrechill
    GivenAhamPrechillTestHasBeenRequestedDuringDefrostAndHasNotSkippedPrechillPrepAndIsNowInHeaterOnEntry();
 
    DontSkipPrechillShouldBe(false);
-   UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
+   UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
 
    DefrostTransitedFromHeaterOnEntryToHeaterOnToDwellToPostDwellToIdleAndWasAbnormal();
    CompressorShouldBe(ON);
@@ -998,29 +1000,29 @@ TEST(DefrostIntegration_SingleEvap, ShouldResumeAbnormalDefrostAfterAhamPrechill
    ReadyToDefrostShouldBe(true);
 }
 
-TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnteringPrechillPrepAfterMinimumRunTimeWhenRequestedAtTheStartOfIdleOnlyUsingCompressorOnTimeDuringIdle)
+TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnteringPrechillPrepAfterAhamPrechillTimeWhenRequestedAtTheStartOfIdleOnlyUsingCompressorOnTimeDuringIdle)
 {
    GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
    GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
 
    WhenDefrostTestIsRequested(DefrostTestRequest_AhamPrechill);
-   UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
+   UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
    DontSkipPrechillShouldBe(true);
 
    WhenGridVotesToTurnCompressorOnWhileCompressorMinimumTimesAreEnabledAndGridWins();
    CoolingModeShouldBe(CoolingMode_Freezer);
 
-   // Should use minimum time to exit Idle
+   // Should use aham prechill time to exit Idle
    // Should not skip prechill prep (if it didn't use the flag, it would have gone to heater on entry)
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Prechill);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry);
-   After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN);
+   After(defrostData->idleData.ahamPrechillTimeBetweenDefrostsInMinutes * MSEC_PER_MIN);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
    ReadyToDefrostShouldBe(true);
 }
 
-TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnteringPrechillPrepAfterMinimumRunTimeWhenRequestedWhileInIdleOnlyUsingCompressorOnTimeDuringIdle)
+TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnteringPrechillPrepAfterAhamPrechillTimeWhenRequestedWhileInIdleOnlyUsingCompressorOnTimeDuringIdle)
 {
    GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
    GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
@@ -1029,25 +1031,25 @@ TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnterin
    CoolingModeShouldBe(CoolingMode_Freezer);
 
    After(SomeTimeInMinutes * MSEC_PER_MIN);
-   UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
+   UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
    DontSkipPrechillShouldBe(false);
 
    WhenDefrostTestIsRequested(DefrostTestRequest_AhamPrechill);
-   UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
+   UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
    DontSkipPrechillShouldBe(true);
    CompressorOnTimeInSecondsShouldBe(0);
 
-   // Should use minimum time to exit Idle
+   // Should use aham prechill time to exit Idle
    // Should not skip prechill prep (if it didn't use the flag, it would have gone to heater on entry)
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Prechill);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry);
-   After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN);
+   After(defrostData->idleData.ahamPrechillTimeBetweenDefrostsInMinutes * MSEC_PER_MIN);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
    ReadyToDefrostShouldBe(true);
 }
 
-TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnteringPrechillPrepAfterMinimumRunTimeWhenRequestedWhileInIdleAndHavingAlreadyReachedMinimumTimeOnlyUsingCompressorOnTimeDuringIdle)
+TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnteringPrechillPrepAfterAhamPrechillTimeWhenRequestedWhileInIdleAndHavingAlreadyReachedMinimumTimeOnlyUsingCompressorOnTimeDuringIdle)
 {
    GivenThatTheApplicationHasStartedWithValidThermistorsAndDefrostIsInIdle();
    GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
@@ -1056,20 +1058,20 @@ TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnterin
    CoolingModeShouldBe(CoolingMode_Freezer);
 
    After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN);
-   UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
+   UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
    DontSkipPrechillShouldBe(false);
 
    WhenDefrostTestIsRequested(DefrostTestRequest_AhamPrechill);
-   UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
+   UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
    DontSkipPrechillShouldBe(true);
    CompressorOnTimeInSecondsShouldBe(0);
 
-   // Should use minimum time to exit Idle
+   // Should use aham prechill time to exit Idle
    // Should not skip prechill prep (if it didn't use the flag, it would have gone to heater on entry)
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Prechill);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry);
-   After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN);
+   After(defrostData->idleData.ahamPrechillTimeBetweenDefrostsInMinutes * MSEC_PER_MIN);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
    ReadyToDefrostShouldBe(true);
 }
@@ -1081,10 +1083,12 @@ TEST(DefrostIntegration_SingleEvap, ShouldExitIdleBasedOnMaximumTimeAfterComplet
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Prechill);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry);
+
    After((defrostData->idleData.maxTimeBetweenDefrostsInMinutes - defrostData->postDwellData.postDwellExitTimeInMinutes) * MSEC_PER_MIN);
+   UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
 }
 
-TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnteringPrechillPrepAfterMinimumRunTimeWhenRequestedWhileInPostDwellOnlyUsingCompressorOnTimeDuringIdle)
+TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnteringPrechillPrepAfterAhamPrechillTimeWhenRequestedWhileInPostDwellOnlyUsingCompressorOnTimeDuringIdle)
 {
    GivenThatTheApplicationHasStartedAndDefrostIsInPostDwell();
    GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
@@ -1097,11 +1101,11 @@ TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnterin
 
    WhenGridVotesToTurnOnCompressorWhileMinimumTimesAreDisabledAndGridWins();
 
-   UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
+   UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(false);
    DontSkipPrechillShouldBe(false);
 
    WhenDefrostTestIsRequested(DefrostTestRequest_AhamPrechill);
-   UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
+   UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
    DontSkipPrechillShouldBe(true);
    CompressorOnTimeInSecondsShouldBe(0);
    CompressorShouldBe(ON);
@@ -1112,7 +1116,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldRunTheAhamPrechillTestRequestByEnterin
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Prechill);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry);
-   After(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN - defrostData->postDwellData.postDwellExitTimeInMinutes * MSEC_PER_MIN / 2);
+   After(defrostData->idleData.ahamPrechillTimeBetweenDefrostsInMinutes * MSEC_PER_MIN - defrostData->postDwellData.postDwellExitTimeInMinutes * MSEC_PER_MIN / 2);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
    ReadyToDefrostShouldBe(true);
 }
@@ -1149,11 +1153,11 @@ TEST(DefrostIntegration_SingleEvap, ShouldSetReadyToDefrostErdWhenItBecomesReady
    DefrostExitsDwellAndIsInPostDwellAfterDwellTime();
 }
 
-TEST(DefrostIntegration_SingleEvap, ShouldNotClearUseMinimumTimeErdOnInitIfSet)
+TEST(DefrostIntegration_SingleEvap, ShouldNotClearUseAhamPrechillTimeErdOnInitIfSet)
 {
-   GivenUseMinimumReadyToDefrostTimeAndResetDefrostCountsHasBeenSetTo(true);
+   GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsHasBeenSetTo(true);
    GivenApplicationHasBeenInitialized();
-   UseMinimumReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
+   UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
 }
 
 TEST(DefrostIntegration_SingleEvap, ShouldStartDefrostingOnInitIfSavedEepromCompressorOnTimeIsMinimumTimeBetweenDefrostsAndConditionsAreSuchThatTimeBetweenDefrostsIsMinimumTimeAndItPowersUpInIdle)

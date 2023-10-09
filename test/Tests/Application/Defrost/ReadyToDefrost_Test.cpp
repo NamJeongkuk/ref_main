@@ -62,7 +62,7 @@ static ReadyToDefrostConfiguration_t config = {
    .defrostCompressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUp,
-   .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts,
+   .useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts,
    .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
@@ -83,7 +83,7 @@ static const DefrostIdleData_t idleData = {
    .freshFoodDoorIncrementFactorInSecondsPerSecond = 87,
    .minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes = 10 * MINUTES_PER_HOUR,
    .maxTimeBetweenDefrostsInMinutes = 96 * MINUTES_PER_HOUR,
-   .ahamPrechillTimeBetweenDefrostsInMinutes = 10 * MINUTES_PER_HOUR
+   .ahamPrechillTimeBetweenDefrostsInMinutes = 6 * MINUTES_PER_HOUR
 };
 
 static const DefrostIdleData_t shorterTimeBetweenDefrostsIdleData = {
@@ -236,7 +236,7 @@ TEST_GROUP(ReadyToDefrost)
    {
       WhenWaitingToDefrostIs(false);
       // cleared by defrost HSM
-      WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(false);
+      WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
       WhenWaitingToDefrostIs(true);
    }
    void GivenFreezerTooWarmOnPowerUpIs(bool state)
@@ -332,14 +332,14 @@ TEST_GROUP(ReadyToDefrost)
       GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(state);
    }
 
-   void GivenUseMinimumReadyToDefrostTimeAndDefrostCountsIs(bool state)
+   void GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts, &state);
+      DataModel_Write(dataModel, Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts, &state);
    }
 
-   void WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(bool state)
+   void WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(bool state)
    {
-      GivenUseMinimumReadyToDefrostTimeAndDefrostCountsIs(state);
+      GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(state);
    }
 
    void GivenEepromClearedFlagIs(bool state)
@@ -433,7 +433,7 @@ TEST_GROUP(ReadyToDefrost)
       GivenConvertibleCompartmentDefrostWasAbnormalIs(false);
       GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
       GivenFreezerTooWarmOnPowerUpIs(false);
-      GivenUseMinimumReadyToDefrostTimeAndDefrostCountsIs(false);
+      GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
       GivenEepromClearedFlagIs(false);
    }
 
@@ -444,7 +444,7 @@ TEST_GROUP(ReadyToDefrost)
       GivenConvertibleCompartmentDefrostWasAbnormalIs(false);
       GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
       GivenFreezerTooWarmOnPowerUpIs(false);
-      GivenUseMinimumReadyToDefrostTimeAndDefrostCountsIs(false);
+      GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
       GivenEepromClearedFlagIs(false);
    }
 
@@ -802,7 +802,7 @@ TEST_GROUP(ReadyToDefrost)
       GivenTimeBetweenDefrostsIsMaximumAndCompressorOnTimeIsAtMinimumAndInWaitingForRemainingTimeBetweenDefrostsState();
    }
 
-   void GivenCompressorIsOnForMinimumTimeAndUseMinimumReadyToDefrostTimeAndResetDefrostCountsErdChangedToTrueOneMillisecondBeforeTheMinimumTime()
+   void GivenCompressorIsOnForMinimumTimeAndUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErdChangedToTrueOneMillisecondBeforeTheMinimumTime()
    {
       GivenCompressorIs(ON);
       GivenCompressorOnTimeInSecondsIs(0);
@@ -811,7 +811,7 @@ TEST_GROUP(ReadyToDefrost)
       After(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN - 1);
       ReadyToDefrostShouldBe(false);
 
-      WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(true);
+      WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
    }
    void GivenLeftSideFreshFoodDoorHasBeenOpenForTenPeriodicUpdatePeriodsAndCompressorIsOff()
    {
@@ -1125,7 +1125,7 @@ TEST(ReadyToDefrost, ShouldUpdateTimeBetweenDefrostsToMaxTimeBetweenDefrostsWhen
    GivenConvertibleCompartmentDefrostWasAbnormalIs(false);
    GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
    GivenFreezerTooWarmOnPowerUpIs(false);
-   GivenUseMinimumReadyToDefrostTimeAndDefrostCountsIs(false);
+   GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
    GivenEepromClearedFlagIs(false);
 
    GivenWaitingToDefrostIs(true);
@@ -1150,7 +1150,7 @@ TEST(ReadyToDefrost, ShouldUpdateTimeBetweenDefrostsToMinTimeBetweenDefrostsWhen
    GivenConvertibleCompartmentDefrostWasAbnormalIs(false);
    GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
    GivenFreezerTooWarmOnPowerUpIs(false);
-   GivenUseMinimumReadyToDefrostTimeAndDefrostCountsIs(false);
+   GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
    GivenEepromClearedFlagIs(false);
 
    GivenWaitingToDefrostIsTrueAndReadyToDefrostIsInitialized();
@@ -1166,7 +1166,7 @@ TEST(ReadyToDefrost, ShouldUpdateTimeBetweenDefrostsToMinTimeBetweenDefrostsWhen
    GivenConvertibleCompartmentDefrostWasAbnormalIs(false);
    GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
    GivenFreezerTooWarmOnPowerUpIs(false);
-   GivenUseMinimumReadyToDefrostTimeAndDefrostCountsIs(false);
+   GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
    GivenEepromClearedFlagIs(false);
 
    GivenWaitingToDefrostIsTrueAndReadyToDefrostIsInitialized();
@@ -1183,7 +1183,7 @@ TEST(ReadyToDefrost, ShouldUpdateTimeBetweenDefrostsToMinTimeBetweenDefrostsWhen
    GivenItHasAConvertibleCompartmentIs(true);
    GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
    GivenFreezerTooWarmOnPowerUpIs(false);
-   GivenUseMinimumReadyToDefrostTimeAndDefrostCountsIs(false);
+   GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
    GivenEepromClearedFlagIs(false);
 
    GivenWaitingToDefrostIsTrueAndReadyToDefrostIsInitialized();
@@ -1200,7 +1200,7 @@ TEST(ReadyToDefrost, ShouldNotUpdateTimeBetweenDefrostsToMinTimeBetweenDefrostsW
    GivenItHasAConvertibleCompartmentIs(false);
    GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
    GivenFreezerTooWarmOnPowerUpIs(false);
-   GivenUseMinimumReadyToDefrostTimeAndDefrostCountsIs(false);
+   GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
    GivenEepromClearedFlagIs(false);
 
    GivenWaitingToDefrostIsTrueAndReadyToDefrostIsInitialized();
@@ -1227,7 +1227,7 @@ TEST(ReadyToDefrost, ShouldUpdateTimeBetweenDefrostsToMinTimeBetweenDefrostsWhen
    GivenConvertibleCompartmentDefrostWasAbnormalIs(false);
    GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
    GivenFreezerTooWarmOnPowerUpIs(true);
-   GivenUseMinimumReadyToDefrostTimeAndDefrostCountsIs(false);
+   GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
    GivenEepromClearedFlagIs(false);
 
    GivenWaitingToDefrostIsTrueAndReadyToDefrostIsInitialized();
@@ -1243,7 +1243,7 @@ TEST(ReadyToDefrost, ShouldUpdateTimeBetweenDefrostsToMinTimeBetweenDefrostsWhen
    GivenConvertibleCompartmentDefrostWasAbnormalIs(false);
    GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
    GivenFreezerTooWarmOnPowerUpIs(false);
-   GivenUseMinimumReadyToDefrostTimeAndDefrostCountsIs(false);
+   GivenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(false);
    GivenEepromClearedFlagIs(true);
 
    GivenWaitingToDefrostIsTrueAndReadyToDefrostIsInitialized();
@@ -1252,51 +1252,51 @@ TEST(ReadyToDefrost, ShouldUpdateTimeBetweenDefrostsToMinTimeBetweenDefrostsWhen
    ReadyToDefrostHsmStateShouldBe(ReadyToDefrostHsmState_WaitingForMinimumTimeBetweenDefrosts);
 }
 
-TEST(ReadyToDefrost, ShouldUpdateTimeBetweenDefrostsToMinTimeWhenUseMinimumReadyToDefrostIsSetToTrueWhileInWaitingForMinimumTimeBetweenDefrostsState)
+TEST(ReadyToDefrost, ShouldUpdateTimeBetweenDefrostsToAhamPrechillTimeWhenUseAhamPrechillReadyToDefrostIsSetToTrueWhileInWaitingForMinimumTimeBetweenDefrostsState)
 {
    GivenCompressorOnTimeInSecondsIs(0);
    GivenTimeBetweenDefrostsIsMaximumAndWaitingToDefrostIsTrue();
 
-   WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(true);
-   TimeBetweenDefrostsInMinutesShouldBe(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+   WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
+   TimeBetweenDefrostsInMinutesShouldBe(defrostData.idleData.ahamPrechillTimeBetweenDefrostsInMinutes);
 }
 
-TEST(ReadyToDefrost, ShouldUpdateTimeBetweenDefrostsToMinTimeWhenUseMinimumReadyToDefrostIsSetToTrueWhileInWaitingForRemainingTimeBetweenDefrostsState)
+TEST(ReadyToDefrost, ShouldUpdateTimeBetweenDefrostsToAhamPrechillTimeWhenUseAhamPrechillReadyToDefrostIsSetToTrueWhileInWaitingForRemainingTimeBetweenDefrostsState)
 {
    GivenCompressorOnTimeInSecondsIs(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1);
    GivenTimeBetweenDefrostsIsMaximumAndWaitingToDefrostIsTrue();
    ReadyToDefrostHsmStateShouldBe(ReadyToDefrostHsmState_WaitingForRemainingTimeBetweenDefrosts);
 
-   WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(true);
-   TimeBetweenDefrostsInMinutesShouldBe(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+   WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
+   TimeBetweenDefrostsInMinutesShouldBe(defrostData.idleData.ahamPrechillTimeBetweenDefrostsInMinutes);
 }
 
-TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdAfterMinimumTimeWhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsErdChangedToTrueDuringWaitingForRemainingTimeBetweenDefrostsState)
+TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdAfterAhamPrechillTimeWhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErdChangedToTrueDuringWaitingForRemainingTimeBetweenDefrostsState)
 {
    GivenCompressorOnTimeInSecondsIs(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + 1);
    GivenTimeBetweenDefrostsIsMaximumAndWaitingToDefrostIsTrue();
    ReadyToDefrostHsmStateShouldBe(ReadyToDefrostHsmState_WaitingForRemainingTimeBetweenDefrosts);
 
-   WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(true);
+   WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
 
    WhenCompressorTurns(ON);
-   After(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN - 1);
+   After(defrostData.idleData.ahamPrechillTimeBetweenDefrostsInMinutes * MSEC_PER_MIN - 1);
    ReadyToDefrostShouldBe(false);
 
    After(1);
    ReadyToDefrostShouldBe(true);
 }
 
-TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdAfterMinimumTimeWhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsErdChangedToTrueDuringWaitingForMinimumTimeBetweenDefrostsState)
+TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdAfterAhamPrechillTimeWhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErdChangedToTrueDuringWaitingForMinimumTimeBetweenDefrostsState)
 {
    GivenCompressorOnTimeInSecondsIs(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE - 1);
    GivenTimeBetweenDefrostsIsMaximumAndWaitingToDefrostIsTrue();
    ReadyToDefrostHsmStateShouldBe(ReadyToDefrostHsmState_WaitingForMinimumTimeBetweenDefrosts);
 
-   WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(true);
+   WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
 
    WhenCompressorTurns(ON);
-   After(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN - 1);
+   After(defrostData.idleData.ahamPrechillTimeBetweenDefrostsInMinutes * MSEC_PER_MIN - 1);
    ReadyToDefrostShouldBe(false);
 
    After(1);
@@ -1310,7 +1310,7 @@ TEST(ReadyToDefrost, ShouldResetCompressorOnTimeAndDoorAccelerationsWhenReceivin
    GivenTimeBetweenDefrostsIsMinimumAndWaitingForDefrostIsTrue();
    ReadyToDefrostHsmStateShouldBe(ReadyToDefrostHsmState_WaitingForMinimumTimeBetweenDefrosts);
 
-   WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(true);
+   WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
    CompressorOnTimeInSecondsShouldBe(0);
    DoorAccelerationsShouldBe(0);
 }
@@ -1322,7 +1322,7 @@ TEST(ReadyToDefrost, ShouldResetCompressorOnTimeAndDoorAccelerationsWhenReceivin
    GivenTimeBetweenDefrostsIsMinimumAndWaitingForDefrostIsTrue();
    ReadyToDefrostHsmStateShouldBe(ReadyToDefrostHsmState_WaitingForRemainingTimeBetweenDefrosts);
 
-   WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(true);
+   WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
    CompressorOnTimeInSecondsShouldBe(0);
    DoorAccelerationsShouldBe(0);
 }
@@ -1334,9 +1334,28 @@ TEST(ReadyToDefrost, ShouldResetCompressorOnTimeAndDoorAccelerationsWhenReceivin
    GivenWaitingToDefrostIsFalseAndReadyToDefrostIsInitialized();
    ReadyToDefrostHsmStateShouldBe(ReadyToDefrostHsmState_ReadyAndDefrosting);
 
-   WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(true);
+   WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
    CompressorOnTimeInSecondsShouldBe(0);
    DoorAccelerationsShouldBe(0);
+}
+
+TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdAfterAhamPrechillTimeWhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErdChangedToTrueDuringReadyAndDefrosting)
+{
+   GivenTimeBetweenDefrostsIsMaximumAndWaitingToDefrostIsFalse();
+   ReadyToDefrostHsmStateShouldBe(ReadyToDefrostHsmState_ReadyAndDefrosting);
+
+   WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
+   WhenWaitingToDefrostIs(true);
+   ReadyToDefrostHsmStateShouldBe(ReadyToDefrostHsmState_WaitingForMinimumTimeBetweenDefrosts);
+
+   WhenCompressorTurns(ON);
+
+   After(defrostData.idleData.ahamPrechillTimeBetweenDefrostsInMinutes * MSEC_PER_MIN - 1);
+   ReadyToDefrostShouldBe(false);
+
+   After(1);
+   TimeBetweenDefrostsInMinutesShouldBe(defrostData.idleData.ahamPrechillTimeBetweenDefrostsInMinutes);
+   ReadyToDefrostShouldBe(true);
 }
 
 TEST(ReadyToDefrost, ShouldUpdateWaitingToDefrostTimeToTotalCompressorOnTimeOnEntryToWaitingForMinimumTimeBetweenDefrostsState)
@@ -1645,6 +1664,23 @@ TEST(ReadyToDefrost, ShouldSetReadyToDefrostAfterCompressorTurnsOnAndRemainingMi
    GivenTimeBetweenDefrostsIsMinimumAndWaitingForDefrostIsTrue();
 
    WhenCompressorTurns(OFF);
+
+   WhenCompressorTurns(ON);
+
+   After(LessThanPeriodicUpdateInSeconds * MSEC_PER_SEC - 1);
+   ReadyToDefrostShouldBe(false);
+
+   After(1);
+   ReadyToDefrostShouldBe(true);
+}
+
+TEST(ReadyToDefrost, ShouldSetReadyToDefrostAfterCompressorTurnsOnAndRemainingAhamPrechillTimeIsLessThanPeriodicUpdateTime)
+{
+   GivenTimeBetweenDefrostsIsMinimumAndWaitingForDefrostIsTrue();
+   ReadyToDefrostHsmStateShouldBe(ReadyToDefrostHsmState_WaitingForMinimumTimeBetweenDefrosts);
+
+   WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
+   WhenCompressorOnTimeInSecondsIs(defrostData.idleData.ahamPrechillTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE - LessThanPeriodicUpdateInSeconds);
 
    WhenCompressorTurns(ON);
 
@@ -2292,11 +2328,11 @@ TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdAfterMaximumTimeBetweenDefrostsAf
    ReadyToDefrostShouldBe(true);
 }
 
-TEST(ReadyToDefrost, ShouldNotSetReadyToDefrostErdWhenUseMinimumReadyToDefrostIsSetToTrueWhileInWaitingForRemainingTimeBetweenDefrostsState)
+TEST(ReadyToDefrost, ShouldNotSetReadyToDefrostErdWhenUseAhamPrechillReadyToDefrostIsSetToTrueWhileInWaitingForRemainingTimeBetweenDefrostsState)
 {
    GivenTimeBetweenDefrostsIsMaximumAndCompressorOnTimeIsAtMinimumAndInWaitingForRemainingTimeBetweenDefrostsState();
 
-   WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(true);
+   WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
    ReadyToDefrostShouldBe(false);
 }
 
@@ -2427,17 +2463,17 @@ TEST(ReadyToDefrost, ShouldNotSetReadyToDefrostErdAfterMinimumTimeWhenResetDefro
    After(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN - 1);
    ReadyToDefrostShouldBe(false);
 
-   WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(true);
+   WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
 
    After(1);
    ReadyToDefrostShouldBe(false);
 }
 
-TEST(ReadyToDefrost, ShouldRestartMinimumTimeWhenResetDefrostCountsSignalWasReceivedAndSetReadyToDefrostErdAfterCompressorHasBeenOnForMinimumTimeWhileInWaitingForMinimumTimeBetweenDefrostsState)
+TEST(ReadyToDefrost, ShouldRestartAhamPrechillTimeWhenResetDefrostCountsSignalWasReceivedAndSetReadyToDefrostErdAfterCompressorHasBeenOnForMinimumTimeWhileInWaitingForMinimumTimeBetweenDefrostsState)
 {
-   GivenCompressorIsOnForMinimumTimeAndUseMinimumReadyToDefrostTimeAndResetDefrostCountsErdChangedToTrueOneMillisecondBeforeTheMinimumTime();
+   GivenCompressorIsOnForMinimumTimeAndUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErdChangedToTrueOneMillisecondBeforeTheMinimumTime();
 
-   After(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN - 1);
+   After(defrostData.idleData.ahamPrechillTimeBetweenDefrostsInMinutes * MSEC_PER_MIN - 1);
    ReadyToDefrostShouldBe(false);
 
    After(1);
@@ -2532,12 +2568,12 @@ TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsWhenSomeDoorOpenTimeAfterReset
    GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(SomeDoorAccelerationsInSecondsPerSecond);
    GivenTimeBetweenDefrostsIsMinimumAndWaitingForDefrostIsTrue();
 
-   WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(true);
+   WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
    LeftSideFreshFoodDoorAccelerationsShouldBe(0);
-   After(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN + SomeSeconds * MSEC_PER_SEC);
+   After(defrostData.idleData.ahamPrechillTimeBetweenDefrostsInMinutes * MSEC_PER_MIN + SomeSeconds * MSEC_PER_SEC);
 
    WhenLeftSideFreshFoodDoorIs(Closed);
-   LeftSideFreshFoodDoorAccelerationsShouldBe((defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE + SomeSeconds) *
+   LeftSideFreshFoodDoorAccelerationsShouldBe((defrostData.idleData.ahamPrechillTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE + SomeSeconds) *
       defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 }
 
@@ -2552,7 +2588,7 @@ TEST(ReadyToDefrost, ShouldResetWaitingForDefrostTimeInSecondsWhenResetDefrostCo
    After(SomeSeconds * MSEC_PER_SEC);
    WaitingDefrostTimeInSecondsShouldBe(SomeCompressorOnTimeInSeconds);
 
-   WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(true);
+   WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
    WaitingDefrostTimeInSecondsShouldBe(0);
 }
 
@@ -2566,34 +2602,34 @@ TEST(ReadyToDefrost, ShouldResetWaitingForDefrostTimeInSecondsWhenResetDefrostCo
       SomeSeconds * defrostData.idleData.freshFoodDoorIncrementFactorInSecondsPerSecond +
       SomeSeconds * defrostData.idleData.freezerDoorIncrementFactorInSecondsPerSecond);
 
-   WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(true);
+   WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
    WaitingDefrostTimeInSecondsShouldBe(0);
 }
 
-TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdAfterMinimumTimeWhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsErdChangesToTrueDuringReadyAndDefrostingAfterWaitingToDefrostIsTrue)
+TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdAfterAhamPrechillTimeWhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErdChangesToTrueDuringReadyAndDefrostingAfterWaitingToDefrostIsTrue)
 {
    GivenTimeBetweenDefrostsIsMaximumAndCompressorOnTimeIsEqualToMinimumAndWaitingToDefrostIsFalseAndStateIsReadyAndDefrosting();
 
-   WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(true);
+   WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
    WhenWaitingToDefrostIs(true);
 
    WhenCompressorTurns(ON);
-   After(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN - 1);
+   After(defrostData.idleData.ahamPrechillTimeBetweenDefrostsInMinutes * MSEC_PER_MIN - 1);
    ReadyToDefrostShouldBe(false);
 
    After(1);
    ReadyToDefrostShouldBe(true);
 }
 
-TEST(ReadyToDefrost, ShouldUseMaximumTimeOnNextDefrostAfterBeingForcedToUseMinimumTimeByUseMinimumTimeErd)
+TEST(ReadyToDefrost, ShouldUseMaximumTimeOnNextDefrostAfterBeingForcedToUseAhamPrechillTimeByUseAhamPrechillErd)
 {
    GivenTimeBetweenDefrostsIsMaximumAndCompressorOnTimeIsEqualToMinimumAndWaitingToDefrostIsFalseAndStateIsReadyAndDefrosting();
 
-   WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(true);
+   WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
    WhenWaitingToDefrostIs(true);
 
    WhenCompressorTurns(ON);
-   After(defrostData.idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN - 1);
+   After(defrostData.idleData.ahamPrechillTimeBetweenDefrostsInMinutes * MSEC_PER_MIN - 1);
    ReadyToDefrostShouldBe(false);
 
    After(1);
@@ -2622,13 +2658,13 @@ TEST(ReadyToDefrost, ShouldSetReadyToDefrostErdAfterALessThanPeriodicUpdateTimeA
    ReadyToDefrostShouldBe(true);
 }
 
-TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsCorrectlyAfterUseMinimumReadyToDefrostTimeAndResetDefrostCountsErdChangesToTrueDuringAPeriodicUpdatePeriod)
+TEST(ReadyToDefrost, ShouldUpdateDoorAccelerationsCorrectlyAfterUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErdChangesToTrueDuringAPeriodicUpdatePeriod)
 {
    GivenLeftSideFreshFoodDoorAccelerationInSecondsIs(SomeDoorAccelerationsInSecondsPerSecond);
    GivenLeftSideFreshFoodDoorIsOpenAndCompressorIsOffAndItIsWaitingForMinimumTimeBetweenDefrosts();
 
    After((UpdatePeriodInSeconds * MSEC_PER_SEC / 2));
-   WhenUseMinimumReadyToDefrostTimeAndResetDefrostCountsChangesTo(true);
+   WhenUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsIs(true);
    LeftSideFreshFoodDoorAccelerationsShouldBe(0);
 
    After((UpdatePeriodInSeconds * MSEC_PER_SEC / 2));

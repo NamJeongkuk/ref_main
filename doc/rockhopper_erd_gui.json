@@ -612,8 +612,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Use Minimum Ready To Defrost Time",
-          "name": "Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts",
+          "displayName": "Use Aham Prechill Ready To Defrost Time And Reset Defrost Counts",
+          "name": "Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts",
           "read": true,
           "write": true
         },
@@ -2594,8 +2594,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Use Minimum Ready To Defrost Time",
-          "name": "Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts",
+          "displayName": "Use Aham Prechill Ready To Defrost Time And Reset Defrost Counts",
+          "name": "Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts",
           "read": true,
           "write": true
         },
@@ -2839,8 +2839,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Use Minimum Ready To Defrost Time",
-          "name": "Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts",
+          "displayName": "Use Aham Prechill Ready To Defrost Time And Reset Defrost Counts",
+          "name": "Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts",
           "read": true,
           "write": true
         },

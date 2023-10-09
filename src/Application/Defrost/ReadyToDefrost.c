@@ -23,7 +23,7 @@ enum
    Signal_MinimumTimeBetweenDefrostsTimeExpired = Fsm_UserSignalStart,
    Signal_CompressorIsOff,
    Signal_CompressorIsOn,
-   Signal_UseMinimumTimeBetweenDefrostsAndResetDefrostCounts,
+   Signal_UseAhamPrechillTimeBetweenDefrostsAndResetDefrostCounts,
    Signal_NotWaitingToDefrost,
    Signal_WaitingToDefrost,
    Signal_RemainingTimeBetweenDefrostsTimeExpired,
@@ -261,16 +261,21 @@ static void SetWaitingForDefrostTimeInSecondsToDefrostCompressorOnTimeInSecondsP
    SetWaitingDefrostTimeInSecondsTo(instance, DefrostCompressorOnTimeInSeconds(instance) + DoorAccelerationsInSeconds(instance));
 }
 
-static bool ReadyToDefrost(ReadyToDefrost_t *instance)
+static bool UseAhamPrechillTimeBetweenDefrosts(ReadyToDefrost_t *instance)
 {
-   uint16_t timeBetweenDefrostsInMinutes;
+   bool useAhamPrechillTime;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->timeBetweenDefrostsInMinutesErd,
-      &timeBetweenDefrostsInMinutes);
+      instance->_private.config->useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd,
+      &useAhamPrechillTime);
 
+   return useAhamPrechillTime;
+}
+
+static bool ReadyToDefrost(ReadyToDefrost_t *instance)
+{
    return ((DefrostCompressorOnTimeInSeconds(instance) >= (instance->_private.defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE)) &&
-      ((DefrostCompressorOnTimeInSeconds(instance) + DoorAccelerationsInSeconds(instance)) >= timeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE));
+      ((DefrostCompressorOnTimeInSeconds(instance) + DoorAccelerationsInSeconds(instance)) >= TimeBetweenDefrostsInMinutes(instance) * SECONDS_PER_MINUTE));
 }
 
 static void SetReadyToDefrostTo(ReadyToDefrost_t *instance, bool state)
@@ -338,8 +343,20 @@ static void MinimumTimeBetweenDefrostsTimeExpired(void *context)
 
 static TimerTicks_t RemainingTimeUntilMinimumTimeBetweenDefrostsIsReachedInMilliseconds(ReadyToDefrost_t *instance)
 {
+   uint16_t timeBetweenDefrostsInMinutes;
+   if(UseAhamPrechillTimeBetweenDefrosts(instance))
+   {
+      timeBetweenDefrostsInMinutes =
+         instance->_private.defrostData->idleData.ahamPrechillTimeBetweenDefrostsInMinutes;
+   }
+   else
+   {
+      timeBetweenDefrostsInMinutes =
+         instance->_private.defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes;
+   }
+
    return TRUNCATE_UNSIGNED_SUBTRACTION(
-      (instance->_private.defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * MSEC_PER_MIN),
+      (timeBetweenDefrostsInMinutes * MSEC_PER_MIN),
       (DefrostCompressorOnTimeInSeconds(instance) * MSEC_PER_SEC));
 }
 
@@ -579,12 +596,11 @@ static bool State_WaitingForMinimumTimeBetweenDefrosts(Hsm_t *hsm, HsmSignal_t s
          SetReadyToDefrostTo(instance, false);
          SetWaitingForDefrostTimeInSecondsToDefrostCompressorOnTimeInSeconds(instance);
 
-         if(instance->_private.useMinimumTimeBetweenDefrosts)
+         if(UseAhamPrechillTimeBetweenDefrosts(instance))
          {
             SetTimeBetweenDefrostsInMinutesTo(
                instance,
-               instance->_private.defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
-            instance->_private.useMinimumTimeBetweenDefrosts = false;
+               instance->_private.defrostData->idleData.ahamPrechillTimeBetweenDefrostsInMinutes);
          }
          else
          {
@@ -621,7 +637,9 @@ static bool State_WaitingForMinimumTimeBetweenDefrosts(Hsm_t *hsm, HsmSignal_t s
          SetWaitingForDefrostTimeInSecondsToDefrostCompressorOnTimeInSecondsIfCompressorIsOn(instance);
 
          if(TimeBetweenDefrostsInMinutes(instance) ==
-            instance->_private.defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes)
+               instance->_private.defrostData->idleData.ahamPrechillTimeBetweenDefrostsInMinutes ||
+            TimeBetweenDefrostsInMinutes(instance) ==
+               instance->_private.defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes)
          {
             SetReadyToDefrostTo(instance, true);
          }
@@ -646,13 +664,13 @@ static bool State_WaitingForMinimumTimeBetweenDefrosts(Hsm_t *hsm, HsmSignal_t s
          StartMinimumTimeBetweenDefrostsTimerIfCompressorIsOnAndMinimumTimeBetweenDefrostsIsLessThanPeriodicUpdateOtherwiseStartTimerForPeriodicUpdateTimeIfCompressorIsOnOrADoorIsOpen(instance);
          break;
 
-      case Signal_UseMinimumTimeBetweenDefrostsAndResetDefrostCounts:
+      case Signal_UseAhamPrechillTimeBetweenDefrostsAndResetDefrostCounts:
          ResetWaitingForDefrostTimeInSecondsToZero(instance);
          ResetCompressorOnTimeInSecondsToZero(instance);
          ResetDoorAccelerationsInSecondsToZero(instance);
          SetTimeBetweenDefrostsInMinutesTo(
             instance,
-            instance->_private.defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes);
+            instance->_private.defrostData->idleData.ahamPrechillTimeBetweenDefrostsInMinutes);
          if(CompressorIsOn(instance) || AtLeastOneDoorIsOpen(instance))
          {
             StartPeriodicUpdateTimer(instance);
@@ -734,11 +752,10 @@ static bool State_WaitingForRemainingTimeBetweenDefrosts(Hsm_t *hsm, HsmSignal_t
          SetReadyToDefrostTo(instance, true);
          break;
 
-      case Signal_UseMinimumTimeBetweenDefrostsAndResetDefrostCounts:
+      case Signal_UseAhamPrechillTimeBetweenDefrostsAndResetDefrostCounts:
          ResetWaitingForDefrostTimeInSecondsToZero(instance);
          ResetCompressorOnTimeInSecondsToZero(instance);
          ResetDoorAccelerationsInSecondsToZero(instance);
-         instance->_private.useMinimumTimeBetweenDefrosts = true;
          Hsm_Transition(&instance->_private.hsm, State_WaitingForMinimumTimeBetweenDefrosts);
          break;
 
@@ -768,10 +785,9 @@ static bool State_ReadyAndDefrosting(Hsm_t *hsm, HsmSignal_t signal, const void 
          Hsm_Transition(&instance->_private.hsm, State_WaitingForMinimumTimeBetweenDefrosts);
          break;
 
-      case Signal_UseMinimumTimeBetweenDefrostsAndResetDefrostCounts:
+      case Signal_UseAhamPrechillTimeBetweenDefrostsAndResetDefrostCounts:
          ResetCompressorOnTimeInSecondsToZero(instance);
          ResetDoorAccelerationsInSecondsToZero(instance);
-         instance->_private.useMinimumTimeBetweenDefrosts = true;
          break;
 
       case Hsm_Exit:
@@ -803,13 +819,13 @@ static void DataModelChanged(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_CompressorIsOff, NULL);
       }
    }
-   else if(erd == instance->_private.config->useMinimumReadyToDefrostTimeAndResetDefrostCountsErd)
+   else if(erd == instance->_private.config->useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd)
    {
-      const bool *useMinimumReadyToDefrostTimeAndResetCounts = onChangeData->data;
+      const bool *useAhamPrechillReadyToDefrostTimeAndResetCounts = onChangeData->data;
 
-      if(*useMinimumReadyToDefrostTimeAndResetCounts)
+      if(*useAhamPrechillReadyToDefrostTimeAndResetCounts)
       {
-         Hsm_SendSignal(&instance->_private.hsm, Signal_UseMinimumTimeBetweenDefrostsAndResetDefrostCounts, NULL);
+         Hsm_SendSignal(&instance->_private.hsm, Signal_UseAhamPrechillTimeBetweenDefrostsAndResetDefrostCounts, NULL);
       }
    }
    else if(erd == instance->_private.config->waitingToDefrostErd)

@@ -56,12 +56,12 @@ static void SetNextDefrostType(DefrostTestRequestHandler_t *instance, DefrostTyp
       &defrostType);
 }
 
-static void SetUseMinimumReadyToDefrostTimeAndResetDefrostCountsTo(DefrostTestRequestHandler_t *instance, bool useMinimumReadyToDefrostTimeAndResetDefrostCounts)
+static void SetUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsTo(DefrostTestRequestHandler_t *instance, bool useAhamPrechillReadyToDefrostTimeAndResetDefrostCounts)
 {
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->useMinimumReadyToDefrostTimeAndResetDefrostCountsErd,
-      &useMinimumReadyToDefrostTimeAndResetDefrostCounts);
+      instance->_private.config->useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd,
+      &useAhamPrechillReadyToDefrostTimeAndResetDefrostCounts);
 }
 
 static void SetDisableDefrost(DefrostTestRequestHandler_t *instance, bool disableDefrost)
@@ -137,14 +137,14 @@ static void HandleDefrostTestRequest(void *context, const void *args)
             SetDontSkipDefrostPrechillToTrue(instance);
             UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_AhamFreshFoodOnlyPrechill);
             SetNextDefrostType(instance, DefrostType_FreshFood);
-            SetUseMinimumReadyToDefrostTimeAndResetDefrostCountsTo(instance, true);
+            SetUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsTo(instance, true);
             break;
 
          case DefrostTestRequest_AhamPrechill:
             SetDontSkipDefrostPrechillToTrue(instance);
             UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_AhamPrechill);
             SetNextDefrostType(instance, DefrostType_Full);
-            SetUseMinimumReadyToDefrostTimeAndResetDefrostCountsTo(instance, true);
+            SetUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsTo(instance, true);
             break;
 
          default:

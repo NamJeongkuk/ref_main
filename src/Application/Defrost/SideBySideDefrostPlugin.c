@@ -50,7 +50,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill,
    .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
-   .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts,
+   .useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts,
    .sabbathModeErd = Erd_SabbathModeEnable,
    .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost
@@ -91,7 +91,7 @@ static ReadyToDefrostConfiguration_t readyToDefrostConfig = {
    .defrostCompressorOnTimeInSecondsErd = Erd_DefrostCompressorOnTimeInSeconds,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUp,
-   .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts,
+   .useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts,
    .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
    .freshFoodDefrostWasAbnormalErd = Erd_FreshFoodDefrostWasAbnormal,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
@@ -135,7 +135,7 @@ static const DefrostTestRequestHandlerConfiguration_t defrostTestRequestHandlerC
    .disableDefrostErd = Erd_DisableDefrost,
    .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
    .nextDefrostTypeErd = Erd_NextDefrostType,
-   .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts,
+   .useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts,
    .defrostTestRequestStatusErd = Erd_DefrostTestRequestStatus,
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill
 };

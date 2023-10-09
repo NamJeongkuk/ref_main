@@ -32,7 +32,7 @@ typedef struct
    Erd_t defrostCompressorOnTimeInSecondsErd; // uint32_t
    Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpReadyErd; // bool
    Erd_t freezerFilteredTemperatureWasTooWarmOnPowerUpErd; // bool
-   Erd_t useMinimumReadyToDefrostTimeAndResetDefrostCountsErd; // bool
+   Erd_t useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd; // bool
    Erd_t invalidFreezerEvaporatorThermistorDuringDefrostErd; // bool
    Erd_t freshFoodDefrostWasAbnormalErd; // bool
    Erd_t freezerDefrostWasAbnormalErd; // bool
@@ -52,7 +52,6 @@ typedef struct
 {
    struct
    {
-      bool useMinimumTimeBetweenDefrosts;
       I_DataModel_t *dataModel;
       Hsm_t hsm;
       Timer_t timer;

@@ -86,7 +86,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill,
    .invalidFreezerEvaporatorThermistorDuringDefrostErd = Erd_InvalidFreezerEvaporatorThermistorDuringDefrost,
-   .useMinimumReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts,
+   .useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts,
    .sabbathModeErd = Erd_SabbathModeEnable,
    .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost
@@ -716,15 +716,15 @@ TEST_GROUP(Defrost_SingleEvap)
       CHECK_EQUAL(expected, actual);
    }
 
-   void UseMinimumReadyToDefrostTimeAndResetDefrostCountsFlagIs(bool state)
+   void UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsFlagIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts, &state);
+      DataModel_Write(dataModel, Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts, &state);
    }
 
-   void UseMinimumReadyToDefrostTimeAndResetDefrostCountsFlagShouldBe(bool expected)
+   void UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsFlagShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_UseMinimumReadyToDefrostTimeAndResetDefrostCounts, &actual);
+      DataModel_Read(dataModel, Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -1121,9 +1121,9 @@ TEST(Defrost_SingleEvap, ShouldDisobeyTheDontSkipPrechillErdWhenFreezerEvaporato
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldClearUseMinimumTimeErdOnEntryToPrechillPrep)
+TEST(Defrost_SingleEvap, ShouldClearUseAhamPrechillTimeErdOnEntryToPrechillPrep)
 {
-   Given UseMinimumReadyToDefrostTimeAndResetDefrostCountsFlagIs(SET);
+   Given UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsFlagIs(SET);
    And LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
    And LastConvertibleCompartmentDefrostWasNormal();
@@ -1136,7 +1136,7 @@ TEST(Defrost_SingleEvap, ShouldClearUseMinimumTimeErdOnEntryToPrechillPrep)
 
    When ReadyToDefrost();
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
-   UseMinimumReadyToDefrostTimeAndResetDefrostCountsFlagShouldBe(CLEAR);
+   UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsFlagShouldBe(CLEAR);
 }
 
 TEST(Defrost_SingleEvap, ShouldGoToPrechillWhenEnteringPrechillPrepAndPrechillConditionsAlreadyMetAndThermistorsAreValid)
