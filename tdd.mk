@@ -82,6 +82,7 @@ TEST_SRC_DIRS := \
    $(TESTING_DIR)/Mocks \
    $(TESTING_DIR)/Mocks/Bsp \
    $(TESTING_DIR)/Mocks/DataSource \
+   $(TESTING_DIR)/Mocks/Gea2MessageEndpoint \
    $(TESTING_DIR)/Mocks/ParametricTestDoubles \
    $(TESTS_DIR) \
    $(TESTS_DIR)/Application/ \
@@ -139,6 +140,7 @@ INCLUDE_DIRS := \
    $(APPLCOMMON_DIR)/src/Hardware/Kpit/Rx130 \
    $(APPLCOMMON_DIR)/src/Image \
    $(PROJECT_DIR)/Bsp \
+   $(PROJECT_DIR)/Application/DataSource/ApplianceApiDataSource \
    $(PROJECT_DIR)/Application/DataSource/BspDataSource \
    $(PROJECT_DIR)/Application/ModelInformation \
    $(PROJECT_DIR)/Hardware \

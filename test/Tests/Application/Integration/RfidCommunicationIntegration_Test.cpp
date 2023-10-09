@@ -17,6 +17,7 @@ extern "C"
 #include "CppUTestExt/MockSupport.h"
 #include "uassert_test.h"
 #include "ReferDataModel_TestDouble.h"
+#include "Gea2MessageEndpoint_TestDouble.h"
 
 enum
 {
@@ -27,12 +28,16 @@ enum
    LeakDetectedTimeInSecondsBigEndian = 0x1E000000,
    NumberOfWriteOperationsBigEndian = 0x90010000,
    FilterStatusRfidBoardBigEndian = 0x3412,
+   FilterStatusMainboard = 0x12,
    InitErrorBitfield = 0b00000001,
    Lock = 1,
-   NumberOfUnitsFilterHasBeenOn = 1
+   NumberOfUnitsFilterHasBeenOn = 1,
+   NumberOfRetries = 3,
 };
 
 const uint8_t Uid[RfidUidSizeInBytes] = "ABCDEF";
+const uint8_t GivenUnitSerialNumber[32] = "123456789ABCDEFG";
+const uint8_t GivenUnitSerialNumberFirstEightBytes[UnitSerialNumberSizeInBytes] = { '1', '2', '3', '4', '5', '6', '7', '8' };
 const uint8_t UnitSerialNumber[UnitSerialNumberSizeInBytes] = "ABCDEF";
 const uint8_t BlankSerialNumber[UnitSerialNumberSizeInBytes] = "";
 const uint8_t PreviousUnitSerialNumber[UnitSerialNumberSizeInBytes] = "ZYXWVUT";
@@ -50,6 +55,7 @@ TEST_GROUP(RfidCommunicationIntegration)
    Gea2MessageEndpoint_TestDouble_t messageEndpointTestDouble;
    I_DataModel_t *dataModel;
    ResetReason_t resetReason;
+   RfidMessagePayload_t readMessagePayload;
 
    void InitReceivedPayload(RfidReceivedPayload_t * initPayload)
    {
@@ -69,6 +75,24 @@ TEST_GROUP(RfidCommunicationIntegration)
       memcpy(&initPayload->lastTwelveMonthsOfWaterUsageInGallons, &LastTwelveMonthsOfWaterUsageInGallons, sizeof(RfidTwelveMonthsGallonUsage_t));
    }
 
+   void InitMessagePayloadWith(RfidMessagePayload_t * initPayload, ReadWriteRequest_t readWriteRequest)
+   {
+      memset(initPayload, 0, sizeof(RfidMessagePayload_t));
+      initPayload->readWriteRequest = readWriteRequest;
+      if(readWriteRequest == ReadWriteRequest_Write)
+      {
+         memcpy(&initPayload->uid, &Uid, sizeof(RfidUid_t));
+         initPayload->volumeUsageInOunces = VolumeInOuncesBigEndian;
+         initPayload->calendarUsageInSeconds = CalendarUsageInSecondsBigEndian;
+         initPayload->filterStatus = FilterStatusMainboard;
+         initPayload->lock = Lock;
+         initPayload->numberOfUnitsFilterHasBeenOn = NumberOfUnitsFilterHasBeenOn;
+         memcpy(&initPayload->unitSerialNumber, &UnitSerialNumber, sizeof(UnitSerialNumber_t));
+         memcpy(&initPayload->previousUnitSerialNumber, &PreviousUnitSerialNumber, sizeof(UnitSerialNumber_t));
+         memcpy(&initPayload->lastTwelveMonthsOfWaterUsageInGallons, &LastTwelveMonthsOfWaterUsageInGallons, sizeof(RfidTwelveMonthsGallonUsage_t));
+      }
+   }
+
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
@@ -81,6 +105,7 @@ TEST_GROUP(RfidCommunicationIntegration)
       messageEndpoint = &messageEndpointTestDouble.interface;
       DataModel_Write(dataModel, Erd_Gea2MessageEndpoint, &messageEndpoint);
       InitReceivedPayload(&receivedPayload);
+      InitMessagePayloadWith(&readMessagePayload, ReadWriteRequest_Read);
    }
 
    void GivenApplicationHasBeenInitialized()
@@ -129,6 +154,37 @@ TEST_GROUP(RfidCommunicationIntegration)
    {
       TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
    }
+
+   void AMessageShouldBeSent(RfidMessagePayload_t messagePayload)
+   {
+      STATIC_ALLOC_GEA2MESSAGE(message, sizeof(RfidMessagePayload_t));
+
+      Gea2Message_SetDestination(message, Gea2Address_RfidBoard);
+      Gea2Message_SetSource(message, Gea2Address_Mainboard);
+      Gea2Message_SetCommand(message, RfidMessageCommand);
+      Gea2Message_SetPayloadLength(message, sizeof(RfidMessagePayload_t));
+
+      REINTERPRET(payload, Gea2Message_GetPayload(message), RfidMessagePayload_t *);
+      memcpy(payload, &messagePayload, sizeof(RfidMessagePayload_t));
+
+      mock()
+         .expectOneCall("Send")
+         .onObject(messageEndpoint)
+         .withParameterOfType("Gea2Message_t", "message", message)
+         .withParameter("retries", NumberOfRetries);
+   }
+
+   void GivenUnitSerialNumberIs(const uint8_t *unitSerialNumber)
+   {
+      DataModel_Write(dataModel, Erd_SerialNumber, unitSerialNumber);
+   }
+
+   void RfidFilterUnitSerialNumberMainboardShouldBe(const uint8_t *expected)
+   {
+      UnitSerialNumber_t actual;
+      DataModel_Read(dataModel, Erd_RfidFilterUnitSerialNumber_Mainboard, &actual);
+      MEMCMP_EQUAL(expected, &actual, sizeof(UnitSerialNumber_t));
+   }
 };
 
 TEST(RfidCommunicationIntegration, ShouldStoreRfidFilterReadWriteResultDataOnMainboardWhenAMessageIsReceivedWhenRfidBoardIsInTheSystem)
@@ -136,6 +192,7 @@ TEST(RfidCommunicationIntegration, ShouldStoreRfidFilterReadWriteResultDataOnMai
    GivenTheRfidBoardIsInTheSystem();
    After(WaitForEepromWritesToCompleteTimeInMsec);
 
+   AMessageShouldBeSent(readMessagePayload);
    GivenApplicationHasBeenInitialized();
    WhenAnRfidMessageIsReceived();
 
@@ -166,6 +223,7 @@ TEST(RfidCommunicationIntegration, ShouldStoreRfidFilterReadWriteResultDataOnMai
    GivenTheRfidBoardIsNotInTheSystem();
    After(WaitForEepromWritesToCompleteTimeInMsec);
 
+   AMessageShouldBeSent(readMessagePayload);
    GivenApplicationHasBeenInitialized();
 
    WhenTheRfidBoardIsInTheSystem();
@@ -176,4 +234,25 @@ TEST(RfidCommunicationIntegration, ShouldStoreRfidFilterReadWriteResultDataOnMai
       .signal = 1
    };
    RfidFilterReadWriteResultShouldBe(readWriteResultExpected);
+}
+
+TEST(RfidCommunicationIntegration, ShouldCopyTheFirstEightBytesOfTheUnitSerialNumberToMainboardSerialNumberUponInitWhenRfidBoardIsInTheSystem)
+{
+   GivenTheRfidBoardIsInTheSystem();
+   GivenUnitSerialNumberIs(GivenUnitSerialNumber);
+
+   AMessageShouldBeSent(readMessagePayload);
+   GivenApplicationHasBeenInitialized();
+
+   RfidFilterUnitSerialNumberMainboardShouldBe(GivenUnitSerialNumberFirstEightBytes);
+}
+
+TEST(RfidCommunicationIntegration, ShouldNotCopyTheFirstEightBytesOfTheUnitSerialNumberToMainboardSerialNumberUponInitWhenRfidBoardIsNotInTheSystem)
+{
+   GivenTheRfidBoardIsNotInTheSystem();
+   GivenUnitSerialNumberIs(GivenUnitSerialNumber);
+
+   GivenApplicationHasBeenInitialized();
+
+   RfidFilterUnitSerialNumberMainboardShouldBe(BlankSerialNumber);
 }

@@ -19,7 +19,7 @@
 #include "PersonalityId.h"
 #include "Interrupt_TestDouble.h"
 #include "GpioGroup_TestDouble.h"
-#include "Gea2MessageEndpoint_TestDouble.h"
+#include "Gea2MessageEndpoint_NonMockTestDouble.h"
 
 typedef struct
 {
@@ -35,7 +35,7 @@ typedef struct
       Action_Context_t resetAction;
       AsyncDataSource_Eeprom_TestDouble_t asyncEepromTestDouble;
       Interrupt_TestDouble_t systemTickInterruptTestDouble;
-      Gea2MessageEndpoint_TestDouble_t messageEndpointTestDouble;
+      Gea2MessageEndpoint_NonMockTestDouble_t messageEndpointNonMockTestDouble;
    } _private;
 } ReferDataModel_TestDouble_t;
 

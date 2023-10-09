@@ -23,7 +23,7 @@ typedef struct
  * @param dataSource
  * @param timerModule
  * @param resetAction
- * @param isPyramid
+ * @param crcCalculator
  */
 void ApplianceApiDataSource_Init(
    ApplianceApiDataSource_t *instance,

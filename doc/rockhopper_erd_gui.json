@@ -1405,7 +1405,7 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Dispensing Inhibited Status",
+          "displayName": "Dispensing Inhibited Reason",
           "name": "Erd_DispensingInhibitedReason",
           "read": true,
           "write": true
@@ -3523,6 +3523,227 @@
           "name": "Erd_Defrosting",
           "read": true,
           "write": true
+        }
+      ]
+    },
+    {
+      "title": "Rfid Communication Controller",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Rfid Communication Controller State",
+          "name": "Erd_RfidCommunicationControllerState",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "All Fresh Food Doors Are Closed",
+          "name": "Erd_AllFreshFoodDoorsAreClosed",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Right Side Fresh Food Door Status Testing Override Request",
+          "name": "Erd_RightSideFreshFoodDoorStatus_TestingOverrideRequest",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Right Side Fresh Food Door Status Testing Override Value",
+          "name": "Erd_RightSideFreshFoodDoorStatus_TestingOverrideValue",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Left Side Freezer Food Door Status Testing Override Request",
+          "name": "Erd_LeftSideFreezerDoorStatus_TestingOverrideRequest",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Left Side Freezer Food Door Status Testing Override Value",
+          "name": "Erd_LeftSideFreezerDoorStatus_TestingOverrideValue",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Rfid Water Filter Type",
+          "name": "Erd_WaterFilterType",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Bypass Plug",
+          "name": "Erd_BypassPlugInstalled",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Filter Error",
+          "name": "Erd_FilterError",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "RfidBoard: Rfid Filter Read Write Result",
+          "name": "Erd_RfidFilterReadWriteResult_RfidBoard",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "RfidBoard: Rfid Filter Uid",
+          "name": "Erd_RfidFilterUid_RfidBoard",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Rfid Board: Filter Status",
+          "name": "Erd_RfidFilterStatus_RfidBoard",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Rfid Filter Leak Detected Count",
+          "name": "Erd_RfidFilterLeakDetectCount",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Rfid Filter Blocked Count",
+          "name": "Erd_RfidFilterBlockedCount",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Rfid Filter Bad Read Count",
+          "name": "Erd_RfidFilterBadReadCount",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Rfid Filter Bad Write Count",
+          "name": "Erd_RfidFilterBadWriteCount",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Rfid Filter Hardware Failure Count",
+          "name": "Erd_RfidFilterHardwareFailureCount",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Rfid Board: Filter Identifier",
+          "name": "Erd_RfidFilterIdentifier_RfidBoard",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Demo Mode Enabled",
+          "name": "Erd_DemoModeEnable",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Mainboard: Filter Uid",
+          "name": "Erd_RfidFilterUid_Mainboard",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Mainboard: Number Of Units Rfid Filter Has Been On",
+          "name": "Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn_Mainboard",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Serial Number",
+          "name": "Erd_SerialNumber",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Rfid Board: Unit Serial Number",
+          "name": "Erd_RfidFilterUnitSerialNumber_RfidBoard",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Rfid Board: Previous Unit Serial Number",
+          "name": "Erd_RfidFilterPreviousUnitSerialNumber_RfidBoard",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Mainboard: Unit Serial Number",
+          "name": "Erd_RfidFilterUnitSerialNumber_Mainboard",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Mainboard: Previous Unit Serial Number",
+          "name": "Erd_RfidFilterPreviousUnitSerialNumber_Mainboard",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "New Filter Installed",
+          "name": "Erd_NewFilterInstalledSignal",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
         }
       ]
     }

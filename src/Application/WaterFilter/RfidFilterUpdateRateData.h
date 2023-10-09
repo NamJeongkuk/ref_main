@@ -15,7 +15,7 @@ typedef struct
    uint8_t doorOpenFilterReadFrequencyInSeconds;
    uint8_t doorJustClosedFilterReadFrequencyInSeconds;
    uint8_t doorClosedFilterUpdateTimeInMinutes;
-   uint8_t doorClosedRfidErrorDetectedUpdateFrequencyInSeconds;
+   uint8_t doorClosedRfidErrorDetectedReadFrequencySeconds;
    uint8_t doorJustClosedFilterReadTimeoutInSeconds;
    uint8_t rfidFilterWriteTimeoutInMinutes;
 } RfidFilterUpdateRateData_t;

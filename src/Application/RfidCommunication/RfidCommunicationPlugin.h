@@ -10,12 +10,14 @@
 
 #include "I_DataModel.h"
 #include "RfidCommunicator.h"
+#include "RfidCommunicationControllerPlugin.h"
 
 typedef struct
 {
    struct
    {
       RfidCommunicator_t rfidCommunicator;
+      RfidCommunicationControllerPlugin_t rfidCommunicationControllerPlugin;
       EventSubscription_t rfidBoardInSystemSubscription;
       I_DataModel_t *dataModel;
       I_DataSource_t *externalDataSource;

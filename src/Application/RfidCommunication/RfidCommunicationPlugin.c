@@ -64,6 +64,10 @@ static void RfidBoardIsInSystem(void *context, const void *args)
          instance->_private.externalDataSource,
          &config);
 
+      RfidCommunicationControllerPlugin_Init(
+         &instance->_private.rfidCommunicationControllerPlugin, 
+         instance->_private.dataModel);
+
       DataModel_Unsubscribe(
          instance->_private.dataModel,
          Erd_RfidBoardInSystem,
@@ -86,6 +90,10 @@ void RfidCommunicationPlugin_Init(
          &instance->_private.rfidCommunicator,
          instance->_private.externalDataSource,
          &config);
+
+      RfidCommunicationControllerPlugin_Init(
+         &instance->_private.rfidCommunicationControllerPlugin, 
+         instance->_private.dataModel);
    }
    else
    {
