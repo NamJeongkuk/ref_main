@@ -92,6 +92,7 @@ SRC_DIRS:=\
   src/Application/Uassert \
   src/Application/Valve \
   src/Application/VariableSweatHeater \
+  src/Application/WaterFilter \
   src/Application/WaterValve \
   Parametric/data/Development \
   lib/Common/Source/Gea \

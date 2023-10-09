@@ -16,8 +16,9 @@
    ENTRY(UnitSetting,            48,     1024,    NvUnitSetting)   \
    ENTRY(UserSetting,            1072,   1024,    NvUserSetting)   \
    ENTRY(Rfid,                   2096,   256,     NvRfid)           \
-   ENTRY(FaultSnapshot,          2352,   1024,    NvFaultSnapshot)  \
-   ENTRY(CycleHistory,           3376,   1024,    NvCycleHistory)
+   ENTRY(UsageProfile,           2352,   1024,    NvUsageProfile)   \
+   ENTRY(FaultSnapshot,          3376,   1024,    NvFaultSnapshot)  \
+   ENTRY(CycleHistory,           4400,   1024,    NvCycleHistory)
 
 // clang-format on
 

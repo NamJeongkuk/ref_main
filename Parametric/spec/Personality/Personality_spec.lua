@@ -235,7 +235,6 @@ describe("personality", function()
     end)
   end)
 
-
   it('should constrain all arguments', function()
     should_fail_with('filter_data must be a typed string with type filter_data, but is a number', function()
       personality(generate_config({

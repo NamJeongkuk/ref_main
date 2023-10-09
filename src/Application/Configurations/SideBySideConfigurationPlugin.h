@@ -24,6 +24,7 @@
 #include "SideBySideBooleanRequestStatusUpdaterPlugin.h"
 #include "SideBySideDoorPlugin.h"
 #include "SideBySideEnhancedSabbathPlugin.h"
+#include "SideBySideWaterFilterTrackingPlugin.h"
 
 typedef struct
 {
@@ -44,6 +45,7 @@ typedef struct
       SideBySideBooleanRequestStatusUpdaterPlugin_t requestStatusUpdaterPlugin;
       SideBySideDoorPlugin_t doorPlugin;
       SideBySideEnhancedSabbathPlugin_t enhancedSabbathPlugin;
+      SideBySideWaterFilterTrackingPlugin_t waterFilterTrackingPlugin;
    } _private;
 } SideBySideConfigurationPlugin_t;
 

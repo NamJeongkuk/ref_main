@@ -27,6 +27,7 @@ enum
    UserSettingMapIndex = EepromPartitionIndex_NvUserSetting,
    UnitSettingMapIndex = EepromPartitionIndex_NvUnitSetting,
    RfidMapIndex = EepromPartitionIndex_NvRfid,
+   UsageProfileIndex = EepromPartitionIndex_NvUsageProfile,
    FaultSnapshotMapIndex = EepromPartitionIndex_NvFaultSnapshot,
    CycleHistoryMapIndex = EepromPartitionIndex_NvCycleHistory,
    ExpectedMapCount = EepromPartitionIndex_PartitionCount
@@ -44,6 +45,7 @@ static const AsyncDataSource_EepromErdInfo_t expectedNvProtectedElements[] = { E
 static const AsyncDataSource_EepromErdInfo_t expectedNvUserSettingElements[] = { ERD_TABLE(EXPAND_AS_USERSETTING_ASYNC_MAP_ELEMENTS) };
 static const AsyncDataSource_EepromErdInfo_t expectedNvUnitSettingElements[] = { ERD_TABLE(EXPAND_AS_UNITSETTING_ASYNC_MAP_ELEMENTS) };
 static const AsyncDataSource_EepromErdInfo_t expectedNvRfidElements[] = { ERD_TABLE(EXPAND_AS_RFID_ASYNC_MAP_ELEMENTS) };
+static const AsyncDataSource_EepromErdInfo_t expectedNvUsageProfileElements[] = { ERD_TABLE(EXPAND_AS_USAGEPROFILE_ASYNC_MAP_ELEMENTS) };
 static const AsyncDataSource_EepromErdInfo_t expectedNvFaultSnapshotElements[] = { ERD_TABLE(EXPAND_AS_FAULTSNAPSHOT_ASYNC_MAP_ELEMENTS) };
 static const AsyncDataSource_EepromErdInfo_t expectedNvCycleHistoryElements[] = { ERD_TABLE(EXPAND_AS_CYCLEHISTORY_ASYNC_MAP_ELEMENTS) };
 
@@ -90,9 +92,16 @@ TEST_GROUP(AsyncNvMapConfigurations)
       uint16_t actual = ConstArrayMap_NumberOfEntries(resources[UserSettingMapIndex].map);
       uassert(actual == expected);
    }
+
    void NumberOfElementsInTheRfidMapShouldBe(uint16_t expected)
    {
       uint16_t actual = ConstArrayMap_NumberOfEntries(resources[RfidMapIndex].map);
+      uassert(actual == expected);
+   }
+
+   void NumberOfElementsInTheUsageProfileMapShouldBe(uint16_t expected)
+   {
+      uint16_t actual = ConstArrayMap_NumberOfEntries(resources[UsageProfileIndex].map);
       uassert(actual == expected);
    }
 
@@ -117,7 +126,7 @@ TEST_GROUP(AsyncNvMapConfigurations)
          snprintf(
             string,
             sizeof(string),
-            "An ERD of type Nv has been added, types can only be NvProtected, NvUserSetting, NvUnitSetting, NvRfid, NvFaultSnapshot, or NvCycleHistory");
+            "An ERD of type Nv has been added, types can only be NvProtected, NvUserSetting, NvUnitSetting, NvRfid, NvUsageProfile, NvFaultSnapshot, or NvCycleHistory");
          FAIL(string);
       }
    }
@@ -178,6 +187,7 @@ TEST(AsyncNvMapConfigurations, TheAsyncMapsShouldContainTheCorrectAmountOfElemen
    The NumberOfElementsInTheUserSettingMapShouldBe(NUM_ELEMENTS(expectedNvUserSettingElements));
    The NumberOfElementsInTheUnitSettingMapShouldBe(NUM_ELEMENTS(expectedNvUnitSettingElements));
    The NumberOfElementsInTheRfidMapShouldBe(NUM_ELEMENTS(expectedNvRfidElements));
+   The NumberOfElementsInTheUsageProfileMapShouldBe(NUM_ELEMENTS(expectedNvUsageProfileElements));
    The NumberOfElementsInTheFaultSnapshotMapShouldBe(NUM_ELEMENTS(expectedNvFaultSnapshotElements));
    The NumberOfElementsInTheCycleHistoryMapShouldBe(NUM_ELEMENTS(expectedNvCycleHistoryElements));
 }

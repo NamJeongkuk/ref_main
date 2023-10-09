@@ -26,4 +26,5 @@ void SideBySideConfigurationPlugin_Init(SideBySideConfigurationPlugin_t *instanc
    SideBySideBooleanRequestStatusUpdaterPlugin_Init(&instance->_private.requestStatusUpdaterPlugin, dataModel);
    SideBySideEnhancedSabbathPlugin_Init(&instance->_private.enhancedSabbathPlugin, dataModel);
    SideBySideDoorPlugin_Init(&instance->_private.doorPlugin, dataModel);
+   SideBySideWaterFilterTrackingPlugin_Init(&instance->_private.waterFilterTrackingPlugin, dataModel);
 }

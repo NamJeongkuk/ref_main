@@ -125,6 +125,7 @@
 #include "UserAllowableInteriorLightState.h"
 #include "RfidTypes.h"
 #include "TimeHms.h"
+#include "WaterFilterLifeStatus.h"
 
 // clang-format off
 
@@ -135,6 +136,7 @@
 #define INCLUDE_RAM_NvUnitSetting(_x)
 #define INCLUDE_RAM_NvUserSetting(_x)
 #define INCLUDE_RAM_NvRfid(_x)
+#define INCLUDE_RAM_NvUsageProfile(_x)
 #define INCLUDE_RAM_NvFaultSnapshot(_x)
 #define INCLUDE_RAM_NvCycleHistory(_x)
 #define INCLUDE_RAM_Fault(_x)
@@ -149,6 +151,7 @@
 #define INCLUDE_VIRTUAL_NvUnitSetting(_x)
 #define INCLUDE_VIRTUAL_NvUserSetting(_x)
 #define INCLUDE_VIRTUAL_NvRfid(_x) _x
+#define INCLUDE_VIRTUAL_NvUsageProfile(_x) _x
 #define INCLUDE_VIRTUAL_NvFaultSnapshot(_x)
 #define INCLUDE_VIRTUAL_NvCycleHistory(_x)
 #define INCLUDE_VIRTUAL_Fault(_x)
@@ -171,6 +174,7 @@
 #define INCLUDE_FAULT_NvUnitSetting(_x)
 #define INCLUDE_FAULT_NvUserSetting(_x)
 #define INCLUDE_FAULT_NvRfid(_x)
+#define INCLUDE_FAULT_NvUsageProfile(_x)
 #define INCLUDE_FAULT_NvFaultSnapshot(_x)
 #define INCLUDE_FAULT_NvCycleHistory(_x)
 #define INCLUDE_FAULT_Fault(_x) _x
@@ -185,6 +189,7 @@
 #define INCLUDE_BSP_NvUnitSetting(_x)
 #define INCLUDE_BSP_NvUserSetting(_x)
 #define INCLUDE_BSP_NvRfid(_x)
+#define INCLUDE_BSP_NvUsageProfile(_x)
 #define INCLUDE_BSP_NvFaultSnapshot(_x)
 #define INCLUDE_BSP_NvCycleHistory(_x)
 #define INCLUDE_BSP_Fault(_x)
@@ -199,6 +204,7 @@
 #define INCLUDE_NVONLY_NvUnitSetting(_x)
 #define INCLUDE_NVONLY_NvUserSetting(_x)
 #define INCLUDE_NVONLY_NvRfid(_x)
+#define INCLUDE_NVONLY_NvUsageProfile(_x)
 #define INCLUDE_NVONLY_NvFaultSnapshot(_x)
 #define INCLUDE_NVONLY_NvCycleHistory(_x)
 #define INCLUDE_NVONLY_Fault(_x)
@@ -213,6 +219,7 @@
 #define INCLUDE_NVALL_NvUnitSetting(_x) _x
 #define INCLUDE_NVALL_NvUserSetting(_x) _x
 #define INCLUDE_NVALL_NvRfid(_x) _x
+#define INCLUDE_NVALL_NvUsageProfile(_x) _x
 #define INCLUDE_NVALL_NvFaultSnapshot(_x) _x
 #define INCLUDE_NVALL_NvCycleHistory(_x) _x
 #define INCLUDE_NVALL_Fault(_x)
@@ -227,6 +234,7 @@
 #define INCLUDE_NVPROTECTED_NvUnitSetting(_x)
 #define INCLUDE_NVPROTECTED_NvUserSetting(_x)
 #define INCLUDE_NVPROTECTED_NvRfid(_x)
+#define INCLUDE_NVPROTECTED_NvUsageProfile(_x)
 #define INCLUDE_NVPROTECTED_NvFaultSnapshot(_x)
 #define INCLUDE_NVPROTECTED_NvCycleHistory(_x)
 #define INCLUDE_NVPROTECTED_Fault(_x)
@@ -241,6 +249,7 @@
 #define INCLUDE_NVUNITSETTING_NvUnitSetting(_x) _x
 #define INCLUDE_NVUNITSETTING_NvUserSetting(_x)
 #define INCLUDE_NVUNITSETTING_NvRfid(_x)
+#define INCLUDE_NVUNITSETTING_NvUsageProfile(_x)
 #define INCLUDE_NVUNITSETTING_NvFaultSnapshot(_x)
 #define INCLUDE_NVUNITSETTING_NvCycleHistory(_x)
 #define INCLUDE_NVUNITSETTING_Fault(_x)
@@ -255,6 +264,7 @@
 #define INCLUDE_NVUSERSETTING_NvUnitSetting(_x)
 #define INCLUDE_NVUSERSETTING_NvUserSetting(_x) _x
 #define INCLUDE_NVUSERSETTING_NvRfid(_x)
+#define INCLUDE_NVUSERSETTING_NvUsageProfile(_x)
 #define INCLUDE_NVUSERSETTING_NvFaultSnapshot(_x)
 #define INCLUDE_NVUSERSETTING_NvCycleHistory(_x)
 #define INCLUDE_NVUSERSETTING_Fault(_x)
@@ -269,12 +279,28 @@
 #define INCLUDE_NVRFID_NvUnitSetting(_x)
 #define INCLUDE_NVRFID_NvUserSetting(_x)
 #define INCLUDE_NVRFID_NvRfid(_x) _x
+#define INCLUDE_NVRFID_NvUsageProfile(_x)
 #define INCLUDE_NVRFID_NvFaultSnapshot(_x)
 #define INCLUDE_NVRFID_NvCycleHistory(_x)
 #define INCLUDE_NVRFID_Fault(_x)
 #define INCLUDE_NVRFID_Bsp(_x)
 #define INCLUDE_NVRFID_MappedBsp(_x)
 #define INCLUDE_NVRFID_PersonalityEeprom(_x)
+
+#define INCLUDE_NVUSAGEPROFILE_Ram(_x)
+#define INCLUDE_NVUSAGEPROFILE_Virtual(_x)
+#define INCLUDE_NVUSAGEPROFILE_Nv(_x) _x
+#define INCLUDE_NVUSAGEPROFILE_NvProtected(_x)
+#define INCLUDE_NVUSAGEPROFILE_NvUnitSetting(_x)
+#define INCLUDE_NVUSAGEPROFILE_NvUserSetting(_x)
+#define INCLUDE_NVUSAGEPROFILE_NvRfid(_x)
+#define INCLUDE_NVUSAGEPROFILE_NvUsageProfile(_x) _x
+#define INCLUDE_NVUSAGEPROFILE_NvFaultSnapshot(_x)
+#define INCLUDE_NVUSAGEPROFILE_NvCycleHistory(_x)
+#define INCLUDE_NVUSAGEPROFILE_Fault(_x)
+#define INCLUDE_NVUSAGEPROFILE_Bsp(_x)
+#define INCLUDE_NVUSAGEPROFILE_MappedBsp(_x)
+#define INCLUDE_NVUSAGEPROFILE_PersonalityEeprom(_x)
 
 #define INCLUDE_NVFAULTSNAPSHOT_Ram(_x)
 #define INCLUDE_NVFAULTSNAPSHOT_Virtual(_x)
@@ -283,6 +309,7 @@
 #define INCLUDE_NVFAULTSNAPSHOT_NvUnitSetting(_x)
 #define INCLUDE_NVFAULTSNAPSHOT_NvUserSetting(_x)
 #define INCLUDE_NVFAULTSNAPSHOT_NvRfid(_x)
+#define INCLUDE_NVFAULTSNAPSHOT_NvUsageProfile(_x)
 #define INCLUDE_NVFAULTSNAPSHOT_NvFaultSnapshot(_x) _x
 #define INCLUDE_NVFAULTSNAPSHOT_NvCycleHistory(_x)
 #define INCLUDE_NVFAULTSNAPSHOT_Fault(_x)
@@ -297,6 +324,7 @@
 #define INCLUDE_PERSONALITYEEPROM_NvUnitSetting(_x)
 #define INCLUDE_PERSONALITYEEPROM_NvUserSetting(_x)
 #define INCLUDE_PERSONALITYEEPROM_NvRfid(_x)
+#define INCLUDE_PERSONALITYEEPROM_NvUsageProfile(_x)
 #define INCLUDE_PERSONALITYEEPROM_NvFaultSnapshot(_x)
 #define INCLUDE_PERSONALITYEEPROM_NvCycleHistory(_x)
 #define INCLUDE_PERSONALITYEEPROM_Fault(_x)
@@ -311,8 +339,9 @@
 #define INCLUDE_NVCYCLEHISTORY_NvUnitSetting(_x)
 #define INCLUDE_NVCYCLEHISTORY_NvUserSetting(_x)
 #define INCLUDE_NVCYCLEHISTORY_NvRfid(_x)
+#define INCLUDE_NVCYCLEHISTORY_NvUsageProfile(_x)
 #define INCLUDE_NVCYCLEHISTORY_NvFaultSnapshot(_x)
-#define INCLUDE_NVCYCLEHISTORY_NvCycleHistory(_x)  _x
+#define INCLUDE_NVCYCLEHISTORY_NvCycleHistory(_x) _x
 #define INCLUDE_NVCYCLEHISTORY_Fault(_x)
 #define INCLUDE_NVCYCLEHISTORY_Bsp(_x)
 #define INCLUDE_NVCYCLEHISTORY_MappedBsp(_x)
@@ -325,6 +354,7 @@
 #define INCLUDE_NON_RAM_NvUnitSetting(_x) _x
 #define INCLUDE_NON_RAM_NvUserSetting(_x) _x
 #define INCLUDE_NON_RAM_NvRfid(_x) _x
+#define INCLUDE_NON_RAM_NvUsageProfile(_x) _x
 #define INCLUDE_NON_RAM_NvFaultSnapshot(_x) _x
 #define INCLUDE_NON_RAM_NvCycleHistory(_x) _x
 #define INCLUDE_NON_RAM_Fault(_x) _x
@@ -339,6 +369,7 @@
 #define INCLUDE_MAPPED_BSP_NvUnitSetting(_x)
 #define INCLUDE_MAPPED_BSP_NvUserSetting(_x)
 #define INCLUDE_MAPPED_BSP_NvRfid(_x)
+#define INCLUDE_MAPPED_BSP_NvUsageProfile(_x)
 #define INCLUDE_MAPPED_BSP_NvFaultSnapshot(_x)
 #define INCLUDE_MAPPED_BSP_NvCycleHistory(_x)
 #define INCLUDE_MAPPED_BSP_Fault(_x)
@@ -353,6 +384,7 @@
 #define INCLUDE_BSP_ALL_NvUnitSetting(_x)
 #define INCLUDE_BSP_ALL_NvUserSetting(_x)
 #define INCLUDE_BSP_ALL_NvRfid(_x)
+#define INCLUDE_BSP_ALL_NvUsageProfile(_x)
 #define INCLUDE_BSP_ALL_NvFaultSnapshot(_x)
 #define INCLUDE_BSP_ALL_NvCycleHistory(_x)
 #define INCLUDE_BSP_ALL_Fault(_x)
@@ -799,6 +831,10 @@ enum
    ENTRY(Erd_PrivateDispensingResultStatus,                 0xF164, DispenseStatus_t,                                   Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AutofillSensorError,                           0xF168, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispensingDisabled,                            0xF169, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_TotalWaterVolumeUsageInOuncesX100,             0xF170, uint32_t,                                           Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_WaterFilterCalendarUsageInSeconds,             0xF171, uint32_t,                                           Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_WaterFilterLifeStatus,                         0xF172, WaterFilterLifeStatus_t,                            Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_RfidFilterReadWriteResult_RfidBoard,           0xF181, RfidFilterReadWriteResult_t,                        Swap_No,  Io_None, Sub_Y, Ram,                      NotNv,                                    NotFault) \
    ENTRY(Erd_RfidFilterUid_RfidBoard,                       0xF182, RfidUid_t,                                          Swap_No,  Io_None, Sub_Y, Ram,                      NotNv,                                    NotFault) \
@@ -1334,6 +1370,8 @@ enum
    ENTRY(Erd_Eeprom_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds,   0xFB11, uint32_t,                 Swap_Range_E, Io_None, Sub_N, NvUnitSetting,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_TurboCoolOnTimeInMinutes,               0xFB12, uint16_t,                                           Swap_Yes,   Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_TurboFreezeOnTimeInMinutes,             0xFB13, uint16_t,                                           Swap_Yes,   Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_TotalWaterVolumeUsageInOunces,          0xFB14, uint32_t,                                           Swap_Yes,   Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_WaterFilterCalendarUsageInSeconds,      0xFB15, uint32_t,                                           Swap_Yes,   Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
    ENTRY(Erd_AndroidUiSignOfLifeFsmState,                   0xFB80, AndroidUiSignOfLifeFsmState_t,                      Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_MainboardIsConnectedToTheAndroidUi,            0xFB81, bool,                                               Swap_No,  Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \

@@ -122,6 +122,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/TimerModule \
    $(TESTS_DIR)/Application/TwistTrayIceMaker \
    $(TESTS_DIR)/Application/VariableSweatHeater \
+   $(TESTS_DIR)/Application/WaterFilter \
    $(TESTS_DIR)/Bsp \
    $(TESTS_DIR)/Hardware/SoftPwm \
    $(APPLCOMMON_DIR)/test/Doubles \

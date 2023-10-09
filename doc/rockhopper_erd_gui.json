@@ -3428,6 +3428,51 @@
       ]
     },
     {
+      "title": "Filter Tracking",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Water Filter Life Status",
+          "name": "Erd_WaterFilterLifeStatus",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Total Water Volume Usage In Ounces",
+          "name": "Erd_TotalWaterVolumeUsageInOuncesX100",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Eeprom Total Water Volume Usage In Ounces",
+          "name": "Erd_Eeprom_TotalWaterVolumeUsageInOunces",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Water Filter Calendar Usage In Seconds",
+          "name": "Erd_WaterFilterCalendarUsageInSeconds",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Eeprom Water Filter Calendar Usage In Seconds",
+          "name": "Erd_Eeprom_WaterFilterCalendarUsageInSeconds",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        }
+      ]
+    },
+    {
       "title": "Enhanced Sabbath Mode",
       "erds": [
         {

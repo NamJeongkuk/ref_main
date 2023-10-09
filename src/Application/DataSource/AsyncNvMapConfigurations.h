@@ -32,6 +32,10 @@ enum
    CONCAT(INCLUDE_NVUSERSETTING_, StorageType)                                                                             \
    ({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
 
+#define EXPAND_AS_USAGEPROFILE_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, FaultId) \
+   CONCAT(INCLUDE_NVUSAGEPROFILE_, StorageType)                                                                             \
+   ({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
+
 #define EXPAND_AS_RFID_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, FaultId) \
    CONCAT(INCLUDE_NVRFID_, StorageType)                                                                             \
    ({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
@@ -61,7 +65,7 @@ enum
 #define MAP_ELEMENTS_NvProtected EXPAND_AS_PROTECTED_ASYNC_MAP_ELEMENTS
 #define MAP_ELEMENTS_NvUnitSetting EXPAND_AS_UNITSETTING_ASYNC_MAP_ELEMENTS
 #define MAP_ELEMENTS_NvUserSetting EXPAND_AS_USERSETTING_ASYNC_MAP_ELEMENTS
-#define MAP_ELEMENTS_NvUsage EXPAND_AS_USAGE_ASYNC_MAP_ELEMENTS
+#define MAP_ELEMENTS_NvUsageProfile EXPAND_AS_USAGEPROFILE_ASYNC_MAP_ELEMENTS
 #define MAP_ELEMENTS_NvRfid EXPAND_AS_RFID_ASYNC_MAP_ELEMENTS
 #define MAP_ELEMENTS_NvFaultSnapshot EXPAND_AS_FAULTSNAPSHOT_ASYNC_MAP_ELEMENTS
 #define MAP_ELEMENTS_NvCycleHistory EXPAND_AS_CYCLEHISTORY_ASYNC_MAP_ELEMENTS
