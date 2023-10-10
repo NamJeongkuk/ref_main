@@ -10,8 +10,8 @@ return function(core)
     return TypedString(
       { 'common_filter_data' },
       structure(
-        u32(config.maximum_filter_volume_in_ouncesx100),
-        u32(config.maximum_filter_life_in_minutes),
+        u32(config.filter_rated_volume_in_ouncesx100),
+        u32(config.filter_rated_life_in_minutes),
         u16(config.minimum_volume_needed_to_start_filter_life_timer_in_ounces),
         u16(config.filter_month_in_minutes)
       )
@@ -22,8 +22,8 @@ return function(core)
     validate_arguments(
       config,
       {
-        maximum_filter_volume_in_ouncesx100 = { constraint.u32 },
-        maximum_filter_life_in_minutes = { constraint.u32 },
+        filter_rated_volume_in_ouncesx100 = { constraint.u32 },
+        filter_rated_life_in_minutes = { constraint.u32 },
         minimum_volume_needed_to_start_filter_life_timer_in_ounces = { constraint.u16 },
         filter_month_in_minutes = { constraint.u16 }
       }

@@ -9,8 +9,8 @@ describe('CommonFilterData', function()
   local common_filter_data = CommonFilterData(core_mock)
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-      maximum_filter_volume_in_ouncesx100 = 64000,
-      maximum_filter_life_in_minutes = 262800,
+      filter_rated_volume_in_ouncesx100 = 64000,
+      filter_rated_life_in_minutes = 262800,
       minimum_volume_needed_to_start_filter_life_timer_in_ounces = 0,
       filter_month_in_minutes = 43200
     }, overrides or {})
@@ -20,18 +20,18 @@ describe('CommonFilterData', function()
     should_require_args(common_filter_data, generate_config())
   end)
 
-  it('should assert if maximum_filter_volume_in_ouncesx100 is not in range', function()
-    should_fail_with('maximum_filter_volume_in_ouncesx100=-1 must be in [0, 4294967295]', function()
+  it('should assert if filter_rated_volume_in_ouncesx100 is not in range', function()
+    should_fail_with('filter_rated_volume_in_ouncesx100=-1 must be in [0, 4294967295]', function()
       common_filter_data(generate_config({
-        maximum_filter_volume_in_ouncesx100 = -1
+        filter_rated_volume_in_ouncesx100 = -1
       }))
     end)
   end)
 
-  it('should assert if maximum_filter_life_in_minutes is not in range', function()
-    should_fail_with('maximum_filter_life_in_minutes=-1 must be in [0, 4294967295]', function()
+  it('should assert if filter_rated_life_in_minutes is not in range', function()
+    should_fail_with('filter_rated_life_in_minutes=-1 must be in [0, 4294967295]', function()
       common_filter_data(generate_config({
-        maximum_filter_life_in_minutes = -1
+        filter_rated_life_in_minutes = -1
       }))
     end)
   end)
@@ -63,8 +63,8 @@ describe('CommonFilterData', function()
       ]])
 
     local actual = common_filter_data({
-      maximum_filter_volume_in_ouncesx100 = 64000,
-      maximum_filter_life_in_minutes = 262800,
+      filter_rated_volume_in_ouncesx100 = 64000,
+      filter_rated_life_in_minutes = 262800,
       minimum_volume_needed_to_start_filter_life_timer_in_ounces = 0,
       filter_month_in_minutes = 43200
     })

@@ -31,13 +31,13 @@ static void UpdateWaterFilterLifeStatus(WaterFilterLifeStatusUpdater_t *instance
       instance->_private.config->filterCalendarUsageInSecondsErd,
       &waterFilterCalendarUsageInSeconds);
 
-   if((totalWaterVolumeUsageInOunces >= instance->_private.data->maximumFilterVolumeInOuncesX100) ||
-      (waterFilterCalendarUsageInSeconds >= (instance->_private.data->maximumFilterLifeInMinutes * SECONDS_PER_MINUTE)))
+   if((totalWaterVolumeUsageInOunces >= instance->_private.data->filterRatedVolumeInOuncesX100) ||
+      (waterFilterCalendarUsageInSeconds >= (instance->_private.data->filterRatedLifeInMinutes * SECONDS_PER_MINUTE)))
    {
       status = WaterFilterLifeStatus_Expired;
    }
-   else if(totalWaterVolumeUsageInOunces > ((ReplacementVolumeUsagePercent * instance->_private.data->maximumFilterVolumeInOuncesX100) / 100) ||
-      waterFilterCalendarUsageInSeconds > (((ReplacementCalendarUsagePercent * instance->_private.data->maximumFilterLifeInMinutes * SECONDS_PER_MINUTE) / 100)))
+   else if(totalWaterVolumeUsageInOunces > ((ReplacementVolumeUsagePercent * instance->_private.data->filterRatedVolumeInOuncesX100) / 100) ||
+      waterFilterCalendarUsageInSeconds > (((ReplacementCalendarUsagePercent * instance->_private.data->filterRatedLifeInMinutes * SECONDS_PER_MINUTE) / 100)))
    {
       status = WaterFilterLifeStatus_Replace;
    }
