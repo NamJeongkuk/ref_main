@@ -54,7 +54,7 @@ static const ErdList_t lightVoteErdList = {
 
 static const FactoryModeConfiguration_t factoryModeConfig = {
    .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
-   .resetErd = Erd_Reset,
+   .broadcastResetRequestErd = Erd_BroadcastResetRequestSignal,
    .factoryVoteList = factoryVoteList,
    .lightVoteErdList = &lightVoteErdList
 };

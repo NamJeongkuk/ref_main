@@ -9,6 +9,7 @@
 #include "Constants_Binary.h"
 #include "VoteType.h"
 #include "StackAllocator.h"
+#include "Signal.h"
 #include "uassert.h"
 #include <stdlib.h>
 #include "Constants_Time.h"
@@ -16,7 +17,6 @@
 
 enum
 {
-   ResetDelayTimeInSeconds = 1,
    OneMinuteInMsec = 1 * MSEC_PER_MIN
 };
 
@@ -123,7 +123,6 @@ static void FactoryModeTimeChanged(void *context, const void *args)
 {
    FactoryMode_t *instance = context;
    const uint8_t *factoryModeEnableTimeInMinutes = args;
-   uint8_t delay = ResetDelayTimeInSeconds;
 
    if(*factoryModeEnableTimeInMinutes > 0)
    {
@@ -142,10 +141,9 @@ static void FactoryModeTimeChanged(void *context, const void *args)
    }
    else
    {
-      DataModel_Write(
-         instance->_private.dataModel,
-         instance->_private.config->resetErd,
-         &delay);
+      Signal_SendViaErd(
+         DataModel_AsDataSource(instance->_private.dataModel),
+         instance->_private.config->broadcastResetRequestErd);
    }
 }
 

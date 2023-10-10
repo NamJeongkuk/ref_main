@@ -17,6 +17,7 @@ extern "C"
 #include "CppUTest/TestHarness.h"
 #include "DataModel_TestDouble.h"
 #include "TimerModule_TestDouble.h"
+#include "Signal.h"
 #include "Constants_Time.h"
 #include "uassert_test.h"
 
@@ -34,13 +35,8 @@ enum
 
 enum
 {
-   ResetDelayTimeInSeconds = 1
-};
-
-enum
-{
    Erd_FactoryModeEnableRequestInMinutes,
-   Erd_Reset,
+   Erd_BroadcastResetRequestSignal,
    Erd_Boolean_FactoryVoteStruct,
    Erd_U8_FactoryVoteStruct,
    Erd_U16_FactoryVoteStruct,
@@ -82,7 +78,7 @@ typedef struct
 
 static const DataModel_TestDoubleConfigurationEntry_t erdTable[] = {
    { Erd_FactoryModeEnableRequestInMinutes, sizeof(uint8_t) },
-   { Erd_Reset, sizeof(uint8_t) },
+   { Erd_BroadcastResetRequestSignal, sizeof(Signal_t) },
    { Erd_Boolean_FactoryVoteStruct, sizeof(BooleanVotedState_t) },
    { Erd_U8_FactoryVoteStruct, sizeof(U8Vote_t) },
    { Erd_U16_FactoryVoteStruct, sizeof(U16Vote_t) },
@@ -137,14 +133,14 @@ static const ErdList_t lightVoteErdList = {
 
 static const FactoryModeConfiguration_t config = {
    .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
-   .resetErd = Erd_Reset,
+   .broadcastResetRequestErd = Erd_BroadcastResetRequestSignal,
    .factoryVoteList = factoryVoteList,
    .lightVoteErdList = &lightVoteErdList
 };
 
 static const FactoryModeConfiguration_t configU64Vote = {
    .factoryModeTimeErd = Erd_FactoryModeEnableRequestInMinutes,
-   .resetErd = Erd_Reset,
+   .broadcastResetRequestErd = Erd_BroadcastResetRequestSignal,
    .factoryVoteList = factoryVoteListWithU64Vote,
    .lightVoteErdList = &lightVoteErdList
 };
@@ -303,11 +299,16 @@ TEST_GROUP(FactoryMode)
       }
    }
 
-   void ResetRequestShouldBe(uint8_t expected)
+   void BroadcastResetRequestShouldBe(uint8_t expected)
    {
       uint8_t actual;
-      DataModel_Read(dataModel, Erd_Reset, &actual);
+      DataModel_Read(dataModel, Erd_BroadcastResetRequestSignal, &actual);
       CHECK_EQUAL(expected, actual);
+   }
+
+   void GetBroadcastResetSignalValue(Signal_t * currentValue)
+   {
+      DataModel_Read(dataModel, Erd_BroadcastResetRequestSignal, currentValue);
    }
 };
 
@@ -356,29 +357,34 @@ TEST(FactoryMode, ShouldAssertWhenOverSizeVoteErdIsIncludedInConfig)
    ShouldFailAssertionWhen(FactoryModeEnableRequestInMinutesIs(OneMinute));
 }
 
-TEST(FactoryMode, ShouldRequestResetWhenFactoryModeEnableRequestInMinutesIsSetToZero)
+TEST(FactoryMode, ShouldBroadcastResetRequestWhenFactoryModeEnableRequestInMinutesIsSetToZero)
 {
    Given ModuleIsInitialized();
    Given FactoryModeEnableRequestInMinutesIs(TwoMinutes);
-   ResetRequestShouldBe(0);
+
+   Signal_t currentBroadcastResetSignalValue;
+   GetBroadcastResetSignalValue(&currentBroadcastResetSignalValue);
 
    When FactoryModeEnableRequestInMinutesIs(ZeroMinutes);
-   ResetRequestShouldBe(ResetDelayTimeInSeconds);
+   BroadcastResetRequestShouldBe(currentBroadcastResetSignalValue + 1);
 }
 
-TEST(FactoryMode, ShouldResetWhenFactoryModeEnableRequestInMinutesReachesZero)
+TEST(FactoryMode, ShouldBroadcastResetRequestWhenFactoryModeEnableRequestInMinutesReachesZero)
 {
    Given ModuleIsInitialized();
    Given FactoryModeEnableRequestInMinutesIs(TwoMinutes);
 
+   Signal_t currentBroadcastResetSignalValue;
+   GetBroadcastResetSignalValue(&currentBroadcastResetSignalValue);
+
    After(OneMinute * MSEC_PER_MIN);
-   ResetRequestShouldBe(0);
+   BroadcastResetRequestShouldBe(currentBroadcastResetSignalValue);
 
    After(OneMinute * MSEC_PER_MIN - 1);
-   ResetRequestShouldBe(0);
+   BroadcastResetRequestShouldBe(currentBroadcastResetSignalValue);
 
    After(1);
-   ResetRequestShouldBe(ResetDelayTimeInSeconds);
+   BroadcastResetRequestShouldBe(currentBroadcastResetSignalValue + 1);
 }
 
 TEST(FactoryMode, ShouldDecreaseFactoryModeEnableRequestInMinutesByOneEveryMinute)
