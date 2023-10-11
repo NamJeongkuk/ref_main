@@ -171,9 +171,7 @@ int main(void)
       timerModule,
       &bootLoopDefenderConfiguration);
 
-   TimeSource_Interrupt_t *timeSourceInterrupt = TimeSource_Rockhopper_Init(interrupt);
-
-   EepromStack_Init(watchdogKickAction, timerModule, timeSourceInterrupt);
+   EepromStack_Init(timerModule);
    PersonalityEepromStack_Init(timerModule);
 
    AsyncNvMapConfigurations_Init();

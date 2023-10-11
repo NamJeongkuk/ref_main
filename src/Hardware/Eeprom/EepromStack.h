@@ -8,19 +8,14 @@
 #ifndef EEPROMSTACK_H
 #define EEPROMSTACK_H
 
-#include "I_Action.h"
 #include "I_Eeprom.h"
 #include "I_Input.h"
 #include "Timer.h"
-#include "TimeSource_Rockhopper.h"
 
 /*!
- * @param watchdogKickAction
+ * @param timerModule
  */
-void EepromStack_Init(
-   I_Action_t *watchdogKickAction,
-   TimerModule_t *timerModule,
-   TimeSource_Interrupt_t *timeSourceInterrupt);
+void EepromStack_Init(TimerModule_t *timerModule);
 
 /*!
  * Returns I_Eeprom_t interfaces

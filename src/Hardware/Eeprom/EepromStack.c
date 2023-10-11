@@ -9,18 +9,14 @@
 #include "InputOutput_Simple.h"
 #include "SimpleStorage.h"
 #include "Eeprom_HardwareEeprom.h"
-#include "HardwareEeprom_DelayedPageOperationWrapper.h"
 #include "HardwareEeprom_I2cMt24xxmmm.h"
-#include "HardwareEeprom_I2c.h"
 #include "I2c_Rx130SerialChannel0.h"
 #include "ContextProtector_Rx2xx.h"
 #include "utils.h"
 
 typedef struct
 {
-   HardwareEeprom_I2c_t *hardwareEepromI2c;
    Eeprom_HardwareEeprom_t eepromHardwareEepromAdapter;
-   HardwareEeprom_DelayedPageOperationWrapper_t eepromDelayedPageOperationWrapper;
    HardwareEeprom_I2cMt24xxmmm_t eepromI2cMt24;
    bool readFaultData;
    bool writeFaultData;
@@ -46,14 +42,8 @@ static const HardwareEeprom_I2cMt24xxmmmConfiguration_t eepromConfig = {
 
 static EepromStack_t instance;
 
-void EepromStack_Init(
-   I_Action_t *watchdogKickAction,
-   TimerModule_t *timerModule,
-   TimeSource_Interrupt_t *timeSourceInterrupt)
+void EepromStack_Init(TimerModule_t *timerModule)
 {
-   IGNORE(watchdogKickAction);
-   IGNORE(timeSourceInterrupt);
-   IGNORE(timerModule);
    HardwareEeprom_I2cMt24xxmmm_Init(
       &instance.eepromI2cMt24,
       I2c_Rx130SerialChannel0_Init(ContextProtector_Rx2xx_GetInstance()),
