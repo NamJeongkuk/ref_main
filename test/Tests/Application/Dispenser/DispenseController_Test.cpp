@@ -480,7 +480,7 @@ TEST(DispenseController, ShouldSetStatusToInhibitedDueToDoorOpenWhenInNotDispens
    TheDispenseStatusShouldBe(DispenseStatus_DispenseInhibitedDueToDoorOpen);
 }
 
-TEST(DispenseController, ShouldSetStatusToInhibitedDueToRFIDWhenInNotDispensingStateAndRFIDisInvalidErdIsTrue)
+TEST(DispenseController, ShouldSetStatusToInhibitedDueToRfidWhenInNotDispensingStateAndRfidIsInvalidErdIsTrue)
 {
    GivenTheFsmIsInitializedIntoNotDispensingState();
    GivenDispensingInhibitedByRfid();
