@@ -14,18 +14,18 @@ static const RfidCommunicationControllerConfig_t rfidCommunicationControllerConf
    .rfidFilterReadWriteResultErd = Erd_RfidFilterReadWriteResult_RfidBoard,
    .allFreshFoodDoorsAreClosedErd = Erd_AllFreshFoodDoorsAreClosed,
    .rfidFilterUidRfidBoardErd = Erd_RfidFilterUid_RfidBoard,
-   .rfidFilterUidMainboardErd = Erd_RfidFilterUid_Mainboard,
+   .rfidFilterUidErd = Erd_RfidFilterUid,
    .rfidFilterUnitSerialNumberRfidBoardErd = Erd_RfidFilterUnitSerialNumber_RfidBoard,
-   .rfidFilterUnitSerialNumberMainboardErd = Erd_RfidFilterUnitSerialNumber_Mainboard,
-   .rfidFilterCalendarusageInSecondsRfidBoardErd = Erd_RfidFilterCalendarUsageInSeconds_RfidBoard,
-   .rfidFilterCalendarusageInSecondsMainboardErd = Erd_RfidFilterCalendarUsageInSeconds_Mainboard,
-   .rfidFilterWaterVolumeUsageInOuncesRfidBoardErd = Erd_RfidFilterWaterVolumeUsageInOunces_RfidBoard,
-   .rfidFilterWaterVolumeUsageInOuncesMainboardErd = Erd_RfidFilterWaterVolumeUsageInOunces_Mainboard,
+   .rfidFilterUnitSerialNumberErd = Erd_RfidFilterUnitSerialNumber,
+   .rfidFilterCalendarUsageInSecondsRfidBoardErd = Erd_RfidFilterCalendarUsageInSeconds_RfidBoard,
+   .rfidFilterCalendarUsageInSecondsErd = Erd_RfidFilterCalendarUsageInSeconds,
+   .rfidFilterWaterVolumeUsageInOuncesX100RfidBoardErd = Erd_RfidFilterWaterVolumeUsageInOuncesX100_RfidBoard,
+   .rfidFilterWaterVolumeUsageInOuncesX100Erd = Erd_RfidFilterWaterVolumeUsageInOuncesX100,
    .rfidFilterStatusRfidBoardErd = Erd_RfidFilterStatus_RfidBoard,
    .rfidFilterIdentifierErd = Erd_RfidFilterIdentifier_RfidBoard,
-   .demoModeEnableErd = Erd_DemoModeEnable,
+   .demoModeEnableErd = Erd_EnableDemoModeStatus,
    .waterFilterTypeErd = Erd_WaterFilterType,
-   .bypassPlugErd = Erd_BypassPlugInstalled,
+   .bypassPlugInstalledErd = Erd_BypassPlugInstalled,
    .filterErrorErd = Erd_FilterError,
    .rfidFilterBadReadCountErd = Erd_RfidFilterBadReadCount,
    .rfidFilterBadWriteCountErd = Erd_RfidFilterBadWriteCount,
@@ -34,8 +34,8 @@ static const RfidCommunicationControllerConfig_t rfidCommunicationControllerConf
    .rfidFilterBlockedCountErd = Erd_RfidFilterBlockedCount,
    .rfidFilterDataRequestErd = Erd_RfidFilterDataRequest,
    .newFilterInstalledSignalErd = Erd_NewFilterInstalledSignal,
-   .rfidFilterNumberOfUnitsFilterHasBeenOnMainboardErd = Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn_Mainboard,
-   .rfidFilterPreviousUnitSerialNumberMainboardErd = Erd_RfidFilterPreviousUnitSerialNumber_Mainboard
+   .rfidFilterNumberOfUnitsFilterHasBeenOnErd = Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn,
+   .rfidFilterPreviousUnitSerialNumberErd = Erd_RfidFilterPreviousUnitSerialNumber
 };
 
 static void CopyUnitSerialNumberToRfidFilter(I_DataModel_t *dataModel)
@@ -51,7 +51,7 @@ static void CopyUnitSerialNumberToRfidFilter(I_DataModel_t *dataModel)
 
    DataModel_Write(
       dataModel,
-      Erd_RfidFilterUnitSerialNumber_Mainboard,
+      Erd_RfidFilterUnitSerialNumber,
       &rfidFilterUnitSerialNumber);
 }
 

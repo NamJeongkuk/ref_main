@@ -22,18 +22,18 @@ typedef struct
    Erd_t rfidFilterReadWriteResultErd; // RfidFilterReadWriteResult_t
    Erd_t allFreshFoodDoorsAreClosedErd; // bool
    Erd_t rfidFilterUidRfidBoardErd; // RfidUid_t
-   Erd_t rfidFilterUidMainboardErd; // RfidUid_t
+   Erd_t rfidFilterUidErd; // RfidUid_t
    Erd_t rfidFilterUnitSerialNumberRfidBoardErd; // UnitSerialNumber_t
-   Erd_t rfidFilterUnitSerialNumberMainboardErd; // UnitSerialNumber_t
-   Erd_t rfidFilterCalendarusageInSecondsRfidBoardErd; // VolumeInOunces_t
-   Erd_t rfidFilterCalendarusageInSecondsMainboardErd; // VolumeInOunces_t
-   Erd_t rfidFilterWaterVolumeUsageInOuncesRfidBoardErd; // CalendarUsageInSeconds_t
-   Erd_t rfidFilterWaterVolumeUsageInOuncesMainboardErd; // CalendarUsageInSeconds_t
+   Erd_t rfidFilterUnitSerialNumberErd; // UnitSerialNumber_t
+   Erd_t rfidFilterCalendarUsageInSecondsRfidBoardErd; // CalendarUsageInSeconds_t
+   Erd_t rfidFilterCalendarUsageInSecondsErd; // CalendarUsageInSeconds_t
+   Erd_t rfidFilterWaterVolumeUsageInOuncesX100RfidBoardErd; // VolumeInOuncesX100_t
+   Erd_t rfidFilterWaterVolumeUsageInOuncesX100Erd; // VolumeInOuncesX100_t
    Erd_t rfidFilterStatusRfidBoardErd; // FilterStatusRfidBoard_t
    Erd_t rfidFilterIdentifierErd; // RfidFilterIdentifier_t
    Erd_t demoModeEnableErd; // bool
    Erd_t waterFilterTypeErd; // WaterFilterType_t
-   Erd_t bypassPlugErd; // bool
+   Erd_t bypassPlugInstalledErd; // bool
    Erd_t filterErrorErd; // bool
    Erd_t rfidFilterBadReadCountErd; // uint8_t
    Erd_t rfidFilterBadWriteCountErd; // uint8_t
@@ -42,8 +42,8 @@ typedef struct
    Erd_t rfidFilterBlockedCountErd; // uint8_t
    Erd_t rfidFilterDataRequestErd; // ReadWriteRequest_t
    Erd_t newFilterInstalledSignalErd; // Signal_t
-   Erd_t rfidFilterNumberOfUnitsFilterHasBeenOnMainboardErd; // RfidFilterNumberOfUnitsFilterHasBeenOn_t
-   Erd_t rfidFilterPreviousUnitSerialNumberMainboardErd; // UnitSerialNumber_t
+   Erd_t rfidFilterNumberOfUnitsFilterHasBeenOnErd; // RfidFilterNumberOfUnitsFilterHasBeenOn_t
+   Erd_t rfidFilterPreviousUnitSerialNumberErd; // UnitSerialNumber_t
 } RfidCommunicationControllerConfig_t;
 
 typedef struct

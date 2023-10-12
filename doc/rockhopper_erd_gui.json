@@ -3268,7 +3268,7 @@
         {
           "namespace": "mb",
           "displayName": "Rfid Board: Water Volume Usage In Ounces",
-          "name": "Erd_RfidFilterWaterVolumeUsageInOunces_RfidBoard",
+          "name": "Erd_RfidFilterWaterVolumeUsageInOuncesX100_RfidBoard",
           "read": true,
           "write": true,
           "interval": 1000000000
@@ -3355,72 +3355,72 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Mainboard: Filter Uid",
-          "name": "Erd_RfidFilterUid_Mainboard",
+          "displayName": "Filter Uid",
+          "name": "Erd_RfidFilterUid",
           "read": true,
           "write": true,
           "interval": 1000000000
         },
         {
           "namespace": "mb",
-          "displayName": "Mainboard: Water Volume Usage In Ounces",
-          "name": "Erd_RfidFilterWaterVolumeUsageInOunces_Mainboard",
+          "displayName": "Water Volume Usage In Ounces",
+          "name": "Erd_RfidFilterWaterVolumeUsageInOuncesX100",
           "read": true,
           "write": true,
           "interval": 1000000000
         },
         {
           "namespace": "mb",
-          "displayName": "Mainboard: Calendar Usage In Seconds",
-          "name": "Erd_RfidFilterCalendarUsageInSeconds_Mainboard",
+          "displayName": "Calendar Usage In Seconds",
+          "name": "Erd_RfidFilterCalendarUsageInSeconds",
           "read": true,
           "write": true,
           "interval": 1000000000
         },
         {
           "namespace": "mb",
-          "displayName": "Mainboard: Filter Status",
-          "name": "Erd_RfidFilterStatus_Mainboard",
+          "displayName": "Filter Status",
+          "name": "Erd_RfidFilterStatus",
           "read": true,
           "write": true,
           "interval": 1000000000
         },
         {
           "namespace": "mb",
-          "displayName": "Mainboard Board: Lock Byte",
-          "name": "Erd_RfidFilterLockByte_Mainboard",
+          "displayName": "Lock Byte",
+          "name": "Erd_RfidFilterLockByte",
           "read": true,
           "write": true,
           "interval": 1000000000
         },
         {
           "namespace": "mb",
-          "displayName": "Mainboard: Number Of Units Rfid Filter Has Been On",
-          "name": "Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn_Mainboard",
+          "displayName": "Number Of Units Rfid Filter Has Been On",
+          "name": "Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn",
           "read": true,
           "write": true,
           "interval": 1000000000
         },
         {
           "namespace": "mb",
-          "displayName": "Mainboard: Unit Serial Number",
-          "name": "Erd_RfidFilterUnitSerialNumber_Mainboard",
+          "displayName": "Unit Serial Number",
+          "name": "Erd_RfidFilterUnitSerialNumber",
           "read": true,
           "write": true,
           "interval": 1000000000
         },
         {
           "namespace": "mb",
-          "displayName": "Mainboard: Previous Unit Serial Number",
-          "name": "Erd_RfidFilterPreviousUnitSerialNumber_Mainboard",
+          "displayName": "Previous Unit Serial Number",
+          "name": "Erd_RfidFilterPreviousUnitSerialNumber",
           "read": true,
           "write": true,
           "interval": 1000000000
         },
         {
           "namespace": "mb",
-          "displayName": "Mainboard: Last Twelve Months Of Water Usage In Gallons",
-          "name": "Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons_Mainboard",
+          "displayName": "Last Twelve Months Of Water Usage In Gallons",
+          "name": "Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons",
           "read": true,
           "write": true,
           "interval": 1000000000
@@ -3701,24 +3701,24 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Demo Mode Enabled",
-          "name": "Erd_DemoModeEnable",
+          "displayName": "Enable Demo Mode Status",
+          "name": "Erd_EnableDemoModeStatus",
           "read": true,
           "write": false,
           "interval": 1000000000
         },
         {
           "namespace": "mb",
-          "displayName": "Mainboard: Filter Uid",
-          "name": "Erd_RfidFilterUid_Mainboard",
+          "displayName": "Filter Uid",
+          "name": "Erd_RfidFilterUid",
           "read": true,
           "write": true,
           "interval": 1000000000
         },
         {
           "namespace": "mb",
-          "displayName": "Mainboard: Number Of Units Rfid Filter Has Been On",
-          "name": "Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn_Mainboard",
+          "displayName": "Number Of Units Rfid Filter Has Been On",
+          "name": "Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn",
           "read": true,
           "write": false,
           "interval": 1000000000
@@ -3749,16 +3749,16 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Mainboard: Unit Serial Number",
-          "name": "Erd_RfidFilterUnitSerialNumber_Mainboard",
+          "displayName": "Unit Serial Number",
+          "name": "Erd_RfidFilterUnitSerialNumber",
           "read": true,
           "write": true,
           "interval": 1000000000
         },
         {
           "namespace": "mb",
-          "displayName": "Mainboard: Previous Unit Serial Number",
-          "name": "Erd_RfidFilterPreviousUnitSerialNumber_Mainboard",
+          "displayName": "Previous Unit Serial Number",
+          "name": "Erd_RfidFilterPreviousUnitSerialNumber",
           "read": true,
           "write": true,
           "interval": 1000000000

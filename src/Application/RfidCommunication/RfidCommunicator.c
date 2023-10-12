@@ -29,15 +29,15 @@ static void ConstructRfidMessage(RfidCommunicator_t *instance, ReadWriteRequest_
 
    if(readWriteRequest == ReadWriteRequest_Write)
    {
-      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->mainboardErds->uid, &payload->uid);
-      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->mainboardErds->volumeWaterUsageInOunces, &payload->volumeUsageInOunces);
-      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->mainboardErds->calendarUsageInSeconds, &payload->calendarUsageInSeconds);
-      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->mainboardErds->filterStatus, &payload->filterStatus);
-      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->mainboardErds->lockByte, &payload->lock);
-      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->mainboardErds->numberOfUnitsFilterHasBeenOn, &payload->numberOfUnitsFilterHasBeenOn);
-      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->mainboardErds->unitSerialNumber, &payload->unitSerialNumber);
-      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->mainboardErds->previousUnitSerialNumber, &payload->previousUnitSerialNumber);
-      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->mainboardErds->filterWaterUsageInGallons, &payload->lastTwelveMonthsOfWaterUsageInGallons);
+      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->rfidWriteErds->uid, &payload->uid);
+      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->rfidWriteErds->volumeWaterUsageInOuncesX100, &payload->volumeUsageInOuncesX100);
+      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->rfidWriteErds->calendarUsageInSeconds, &payload->calendarUsageInSeconds);
+      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->rfidWriteErds->filterStatus, &payload->filterStatus);
+      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->rfidWriteErds->lockByte, &payload->lock);
+      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->rfidWriteErds->numberOfUnitsFilterHasBeenOn, &payload->numberOfUnitsFilterHasBeenOn);
+      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->rfidWriteErds->unitSerialNumber, &payload->unitSerialNumber);
+      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->rfidWriteErds->previousUnitSerialNumber, &payload->previousUnitSerialNumber);
+      DataSource_Read(instance->_private.externalDataSource, instance->_private.config->rfidWriteErds->filterWaterUsageInGallons, &payload->lastTwelveMonthsOfWaterUsageInGallons);
    }
 }
 
@@ -45,29 +45,29 @@ static void StoreAllRfidDataOnMainboard(RfidCommunicator_t *instance, const Gea2
 {
    REINTERPRET(receivedPayload, Gea2Message_GetConstPayload(message), const RfidReceivedPayload_t *);
 
-   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidBoardErds->filterUid, &receivedPayload->uid);
-   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidBoardErds->filterIdentifier, &receivedPayload->filterIdentifier);
-   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidBoardErds->volumeWaterUsageInOunces, &receivedPayload->volumeUsageInOunces);
-   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidBoardErds->calendarUsageInSeconds, &receivedPayload->calendarUsageInSeconds);
-   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidBoardErds->leakDetectedTimeInSeconds, &receivedPayload->leakDetectedTimeInSeconds);
-   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidBoardErds->numberOfWriteOperations, &receivedPayload->numberOfWriteOperations);
-   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidBoardErds->filterStatus, &receivedPayload->filterStatus);
-   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidBoardErds->initializationErrorBitfield, &receivedPayload->initErrorBitfield);
+   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidReadErds->filterUid, &receivedPayload->uid);
+   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidReadErds->filterIdentifier, &receivedPayload->filterIdentifier);
+   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidReadErds->volumeWaterUsageInOuncesX100, &receivedPayload->volumeUsageInOuncesX100);
+   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidReadErds->calendarUsageInSeconds, &receivedPayload->calendarUsageInSeconds);
+   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidReadErds->leakDetectedTimeInSeconds, &receivedPayload->leakDetectedTimeInSeconds);
+   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidReadErds->numberOfWriteOperations, &receivedPayload->numberOfWriteOperations);
+   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidReadErds->filterStatus, &receivedPayload->filterStatus);
+   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidReadErds->initializationErrorBitfield, &receivedPayload->initErrorBitfield);
 
    if(Gea2Message_GetPayloadLength(message) >= sizeof(RfidReceivedPayload_t))
    {
-      DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidBoardErds->lockByte, &receivedPayload->lock);
-      DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidBoardErds->unitSerialNumber, &receivedPayload->unitSerialNumber);
-      DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidBoardErds->previousUnitSerialNumber, &receivedPayload->previousUnitSerialNumber);
-      DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidBoardErds->numberOfUnitsFilterHasBeenOn, &receivedPayload->numberOfUnitsFilterHasBeenOn);
-      DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidBoardErds->filterWaterUsageInGallons, &receivedPayload->lastTwelveMonthsOfWaterUsageInGallons);
+      DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidReadErds->lockByte, &receivedPayload->lock);
+      DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidReadErds->unitSerialNumber, &receivedPayload->unitSerialNumber);
+      DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidReadErds->previousUnitSerialNumber, &receivedPayload->previousUnitSerialNumber);
+      DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidReadErds->numberOfUnitsFilterHasBeenOn, &receivedPayload->numberOfUnitsFilterHasBeenOn);
+      DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidReadErds->filterWaterUsageInGallons, &receivedPayload->lastTwelveMonthsOfWaterUsageInGallons);
    }
 
    RfidFilterReadWriteResult_t readWriteResult;
-   DataSource_Read(instance->_private.externalDataSource, instance->_private.config->rfidBoardErds->readWriteResult, &readWriteResult);
+   DataSource_Read(instance->_private.externalDataSource, instance->_private.config->rfidReadErds->readWriteResult, &readWriteResult);
    readWriteResult.result = receivedPayload->readWriteResult;
    readWriteResult.signal++;
-   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidBoardErds->readWriteResult, &readWriteResult);
+   DataSource_Write(instance->_private.externalDataSource, instance->_private.config->rfidReadErds->readWriteResult, &readWriteResult);
 }
 
 static void SetReadWriteRequestToIdle(RfidCommunicator_t *instance)

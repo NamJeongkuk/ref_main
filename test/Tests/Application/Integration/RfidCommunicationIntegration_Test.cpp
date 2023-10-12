@@ -62,7 +62,7 @@ TEST_GROUP(RfidCommunicationIntegration)
       initPayload->readWriteResult = ReadWriteResult_ReadFailure;
       memcpy(&initPayload->uid, &Uid, sizeof(RfidUid_t));
       memcpy(&initPayload->filterIdentifier, &FilterIdentifier, sizeof(RfidFilterIdentifier_t));
-      initPayload->volumeUsageInOunces = VolumeInOuncesBigEndian;
+      initPayload->volumeUsageInOuncesX100 = VolumeInOuncesBigEndian;
       initPayload->calendarUsageInSeconds = CalendarUsageInSecondsBigEndian;
       initPayload->leakDetectedTimeInSeconds = LeakDetectedTimeInSecondsBigEndian;
       initPayload->numberOfWriteOperations = NumberOfWriteOperationsBigEndian;
@@ -82,7 +82,7 @@ TEST_GROUP(RfidCommunicationIntegration)
       if(readWriteRequest == ReadWriteRequest_Write)
       {
          memcpy(&initPayload->uid, &Uid, sizeof(RfidUid_t));
-         initPayload->volumeUsageInOunces = VolumeInOuncesBigEndian;
+         initPayload->volumeUsageInOuncesX100 = VolumeInOuncesBigEndian;
          initPayload->calendarUsageInSeconds = CalendarUsageInSecondsBigEndian;
          initPayload->filterStatus = FilterStatusMainboard;
          initPayload->lock = Lock;
@@ -182,7 +182,7 @@ TEST_GROUP(RfidCommunicationIntegration)
    void RfidFilterUnitSerialNumberMainboardShouldBe(const uint8_t *expected)
    {
       UnitSerialNumber_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterUnitSerialNumber_Mainboard, &actual);
+      DataModel_Read(dataModel, Erd_RfidFilterUnitSerialNumber, &actual);
       MEMCMP_EQUAL(expected, &actual, sizeof(UnitSerialNumber_t));
    }
 };

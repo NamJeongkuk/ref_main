@@ -50,9 +50,9 @@ typedef struct
    uint8_t filterIdentifier[FilterIdentifierSizeInBytes];
 } RfidFilterIdentifier_t;
 
-typedef uint32_t VolumeInOunces_t;
+typedef uint32_t VolumeInOuncesX100_t;
 
-#define SWAP_DEFINITION_VolumeInOunces_t(_name, _type) \
+#define SWAP_DEFINITION_VolumeInOuncesX100_t(_name, _type) \
    SWAPPED_ERD(_name, sizeof(_type)),
 
 typedef uint32_t CalendarUsageInSeconds_t;
@@ -72,11 +72,11 @@ typedef uint32_t NumberOfWriteOperations_t;
 
 enum
 {
-   RfidFilterStatusBits_Blocked_Mainboard = 0,
+   RfidFilterStatusBits_Blocked = 0,
 };
-typedef uint8_t RfidFilterStatusBits_Mainboard_t;
+typedef uint8_t RfidFilterStatusBits_t;
 
-typedef uint8_t RfidFilterStatusMainboard_t;
+typedef uint8_t RfidFilterStatus_t;
 
 enum
 {

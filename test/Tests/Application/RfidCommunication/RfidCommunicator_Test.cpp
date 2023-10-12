@@ -24,8 +24,8 @@ enum
    RfidMessageCommand = 0xEA,
    RfidBadMessageCommand = 0xBB,
 
-   VolumeInOunces = 0x00002EE0,
-   VolumeInOuncesBigEndian = 0xE02E0000,
+   VolumeInOuncesX100 = 0x00002EE0,
+   VolumeInOuncesX100BigEndian = 0xE02E0000,
    CalendarUsageInSeconds = 0x0000A474,
    CalendarUsageInSecondsBigEndian = 0x74A40000,
    LeakDetectedTimeInSeconds = 0x0000001E,
@@ -55,7 +55,7 @@ typedef struct
    ReadWriteResult_t readWriteResult;
    RfidUid_t uid;
    RfidFilterIdentifier_t filterIdentifier;
-   VolumeInOunces_t volumeUsageInOunces;
+   VolumeInOuncesX100_t volumeUsageInOuncesX100;
    CalendarUsageInSeconds_t calendarUsageInSeconds;
    LeakDetectedInSeconds_t leakDetectedTimeInSeconds;
    NumberOfWriteOperations_t numberOfWriteOperations;
@@ -77,11 +77,11 @@ TEST_GROUP(RfidCommunicator)
    RfidMessagePayload_t writeMessagePayload;
    RfidMessagePayload_t readMessagePayload;
 
-   const RfidCommunicatorRfidBoardErds_t rfidBoardErds = {
+   const RfidCommunicatorRfidReadErds_t rfidReadErds = {
       .readWriteResult = PublicErd_RfidFilterReadWriteResult_RfidBoard,
       .filterUid = PublicErd_RfidFilterUid_RfidBoard,
       .filterIdentifier = PublicErd_RfidFilterIdentifier_RfidBoard,
-      .volumeWaterUsageInOunces = PublicErd_RfidFilterWaterVolumeUsageInOunces_RfidBoard,
+      .volumeWaterUsageInOuncesX100 = PublicErd_RfidFilterWaterVolumeUsageInOuncesX100_RfidBoard,
       .calendarUsageInSeconds = PublicErd_RfidFilterCalendarUsageInSeconds_RfidBoard,
       .leakDetectedTimeInSeconds = PublicErd_RfidFilterLeakDetectedTimeInSeconds_RfidBoard,
       .numberOfWriteOperations = PublicErd_RfidFilterNumberOfWriteOperations_RfidBoard,
@@ -94,21 +94,21 @@ TEST_GROUP(RfidCommunicator)
       .filterWaterUsageInGallons = PublicErd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons_RfidBoard,
    };
 
-   const RfidCommunicatorMainboardErds_t mainboardErds = {
-      .uid = PublicErd_RfidFilterUid_Mainboard,
-      .volumeWaterUsageInOunces = PublicErd_RfidFilterWaterVolumeUsageInOunces_Mainboard,
-      .calendarUsageInSeconds = PublicErd_RfidFilterCalendarUsageInSeconds_Mainboard,
-      .filterStatus = PublicErd_RfidFilterStatus_Mainboard,
-      .lockByte = PublicErd_RfidFilterLockByte_Mainboard,
-      .numberOfUnitsFilterHasBeenOn = PublicErd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn_Mainboard,
-      .unitSerialNumber = PublicErd_RfidFilterUnitSerialNumber_Mainboard,
-      .previousUnitSerialNumber = PublicErd_RfidFilterPreviousUnitSerialNumber_Mainboard,
-      .filterWaterUsageInGallons = PublicErd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons_Mainboard,
+   const RfidCommunicatorRfidWriteErds_t rfidWriteErds = {
+      .uid = PublicErd_RfidFilterUid,
+      .volumeWaterUsageInOuncesX100 = PublicErd_RfidFilterWaterVolumeUsageInOuncesX100,
+      .calendarUsageInSeconds = PublicErd_RfidFilterCalendarUsageInSeconds,
+      .filterStatus = PublicErd_RfidFilterStatus,
+      .lockByte = PublicErd_RfidFilterLockByte,
+      .numberOfUnitsFilterHasBeenOn = PublicErd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn,
+      .unitSerialNumber = PublicErd_RfidFilterUnitSerialNumber,
+      .previousUnitSerialNumber = PublicErd_RfidFilterPreviousUnitSerialNumber,
+      .filterWaterUsageInGallons = PublicErd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons,
    };
 
    const RfidCommunicatorConfiguration_t config = {
-      .rfidBoardErds = &rfidBoardErds,
-      .mainboardErds = &mainboardErds,
+      .rfidReadErds = &rfidReadErds,
+      .rfidWriteErds = &rfidWriteErds,
       .dataRequestErd = PublicErd_RfidFilterDataRequest,
       .geaMessageEndpointErd = PublicErd_Gea2MessageEndpoint
    };
@@ -118,7 +118,7 @@ TEST_GROUP(RfidCommunicator)
       initPayload->readWriteResult = ReadWriteResult_ReadFailure;
       memcpy(&initPayload->uid, &Uid, sizeof(RfidUid_t));
       memcpy(&initPayload->filterIdentifier, &FilterIdentifier, sizeof(RfidFilterIdentifier_t));
-      initPayload->volumeUsageInOunces = VolumeInOuncesBigEndian;
+      initPayload->volumeUsageInOuncesX100 = VolumeInOuncesX100BigEndian;
       initPayload->calendarUsageInSeconds = CalendarUsageInSecondsBigEndian;
       initPayload->leakDetectedTimeInSeconds = LeakDetectedTimeInSecondsBigEndian;
       initPayload->numberOfWriteOperations = NumberOfWriteOperationsBigEndian;
@@ -136,7 +136,7 @@ TEST_GROUP(RfidCommunicator)
       initPayload->readWriteResult = ReadWriteResult_ReadFailure;
       memcpy(&initPayload->uid, &Uid, sizeof(RfidUid_t));
       memcpy(&initPayload->filterIdentifier, &FilterIdentifier, sizeof(RfidFilterIdentifier_t));
-      initPayload->volumeUsageInOunces = VolumeInOuncesBigEndian;
+      initPayload->volumeUsageInOuncesX100 = VolumeInOuncesX100BigEndian;
       initPayload->calendarUsageInSeconds = CalendarUsageInSecondsBigEndian;
       initPayload->leakDetectedTimeInSeconds = LeakDetectedTimeInSecondsBigEndian;
       initPayload->numberOfWriteOperations = NumberOfWriteOperationsBigEndian;
@@ -152,7 +152,7 @@ TEST_GROUP(RfidCommunicator)
       if(readWriteRequest == ReadWriteRequest_Write)
       {
          memcpy(&initPayload->uid, &Uid, sizeof(RfidUid_t));
-         initPayload->volumeUsageInOunces = VolumeInOuncesBigEndian;
+         initPayload->volumeUsageInOuncesX100 = VolumeInOuncesX100BigEndian;
          initPayload->calendarUsageInSeconds = CalendarUsageInSecondsBigEndian;
          initPayload->filterStatus = FilterStatusMainboard;
          initPayload->lock = Lock;
@@ -279,21 +279,21 @@ TEST_GROUP(RfidCommunicator)
 
    void GivenMainboardRfidErdsAreInitialized()
    {
-      VolumeInOunces_t volumeOunces = VolumeInOunces;
+      VolumeInOuncesX100_t volumeOuncesX100 = VolumeInOuncesX100;
       CalendarUsageInSeconds_t calendarUsage = CalendarUsageInSeconds;
-      RfidFilterStatusMainboard_t filterStatus = FilterStatusMainboard;
+      RfidFilterStatus_t filterStatus = FilterStatusMainboard;
       RfidFilterNumberOfUnitsFilterHasBeenOn_t numberOfUnitsFilterHasBeenOn = NumberOfUnitsFilterHasBeenOn;
 
-      DataModel_Write(dataModel, Erd_RfidFilterUid_Mainboard, &Uid);
-      DataModel_Write(dataModel, Erd_RfidFilterWaterVolumeUsageInOunces_Mainboard, &volumeOunces);
-      DataModel_Write(dataModel, Erd_RfidFilterCalendarUsageInSeconds_Mainboard, &calendarUsage);
-      DataModel_Write(dataModel, Erd_RfidFilterStatus_Mainboard, &filterStatus);
+      DataModel_Write(dataModel, Erd_RfidFilterUid, &Uid);
+      DataModel_Write(dataModel, Erd_RfidFilterWaterVolumeUsageInOuncesX100, &volumeOuncesX100);
+      DataModel_Write(dataModel, Erd_RfidFilterCalendarUsageInSeconds, &calendarUsage);
+      DataModel_Write(dataModel, Erd_RfidFilterStatus, &filterStatus);
       uint8_t lockByte = Lock;
-      DataModel_Write(dataModel, Erd_RfidFilterLockByte_Mainboard, &lockByte);
-      DataModel_Write(dataModel, Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn_Mainboard, &numberOfUnitsFilterHasBeenOn);
-      DataModel_Write(dataModel, Erd_RfidFilterUnitSerialNumber_Mainboard, &UnitSerialNumber);
-      DataModel_Write(dataModel, Erd_RfidFilterPreviousUnitSerialNumber_Mainboard, &PreviousUnitSerialNumber);
-      DataModel_Write(dataModel, Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons_Mainboard, &LastTwelveMonthsOfWaterUsageInGallons);
+      DataModel_Write(dataModel, Erd_RfidFilterLockByte, &lockByte);
+      DataModel_Write(dataModel, Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn, &numberOfUnitsFilterHasBeenOn);
+      DataModel_Write(dataModel, Erd_RfidFilterUnitSerialNumber, &UnitSerialNumber);
+      DataModel_Write(dataModel, Erd_RfidFilterPreviousUnitSerialNumber, &PreviousUnitSerialNumber);
+      DataModel_Write(dataModel, Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons, &LastTwelveMonthsOfWaterUsageInGallons);
    }
 
    void RfidFilterReadWriteResultShouldBe(RfidFilterReadWriteResult_t expected)
@@ -317,10 +317,10 @@ TEST_GROUP(RfidCommunicator)
       MEMCMP_EQUAL(&expected, &actual, sizeof(RfidFilterIdentifier_t));
    }
 
-   void RfidFilterVolumeOuncesShouldBe(VolumeInOunces_t expected)
+   void RfidFilterVolumeOuncesShouldBe(VolumeInOuncesX100_t expected)
    {
-      VolumeInOunces_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterWaterVolumeUsageInOunces_RfidBoard, &actual);
+      VolumeInOuncesX100_t actual;
+      DataModel_Read(dataModel, Erd_RfidFilterWaterVolumeUsageInOuncesX100_RfidBoard, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -434,7 +434,7 @@ TEST(RfidCommunicator, ShouldStoreRfidFilterVolumeUsageDataOnMainboardWhenAMessa
    GivenInitialization();
    WhenAnRfidMessageIsReceived();
 
-   RfidFilterVolumeOuncesShouldBe(VolumeInOunces);
+   RfidFilterVolumeOuncesShouldBe(VolumeInOuncesX100);
 }
 
 TEST(RfidCommunicator, ShouldStoreRfidFilterCalendarUsageDataOnMainboardWhenAMessageIsReceived)
@@ -597,7 +597,7 @@ TEST(RfidCommunicator, ShouldAcceptLegacyMessages)
    memcpy(&filterIdentifierExpected, &FilterIdentifier, sizeof(RfidFilterIdentifier_t));
 
    RfidFilterIdentifierShouldBe(filterIdentifierExpected);
-   RfidFilterVolumeOuncesShouldBe(VolumeInOunces);
+   RfidFilterVolumeOuncesShouldBe(VolumeInOuncesX100);
    RfidFilterCalendarUsageShouldBe(CalendarUsageInSeconds);
    RfidFilterLeakDetectedTimeShouldBe(LeakDetectedTimeInSeconds);
    RfidFilterNumberOfWriteOperationsShouldBe(NumberOfWriteOperations);

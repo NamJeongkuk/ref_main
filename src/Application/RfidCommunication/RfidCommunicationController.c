@@ -81,11 +81,11 @@ static void SetFilterTypeTo(RfidCommunicationController_t *instance, WaterFilter
       &waterFilterType);
 }
 
-static void SetBypassPlugTo(RfidCommunicationController_t *instance, const bool *state)
+static void SetBypassPlugInstalledTo(RfidCommunicationController_t *instance, const bool *state)
 {
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->bypassPlugErd,
+      instance->_private.config->bypassPlugInstalledErd,
       state);
 }
 
@@ -177,7 +177,7 @@ static void IncrementRfidFilterHardwareFailureCountAndSetFilterError(RfidCommuni
 
 static void IncrementNumberOfUnitsFilterHasBeenOn(RfidCommunicationController_t *instance)
 {
-   IncrementU8ErdValue(instance, instance->_private.config->rfidFilterNumberOfUnitsFilterHasBeenOnMainboardErd);
+   IncrementU8ErdValue(instance, instance->_private.config->rfidFilterNumberOfUnitsFilterHasBeenOnErd);
 }
 
 static void CopyCalendarUsageToMainboard(RfidCommunicationController_t *instance)
@@ -185,25 +185,25 @@ static void CopyCalendarUsageToMainboard(RfidCommunicationController_t *instance
    CalendarUsageInSeconds_t calendarUsageInSeconds;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->rfidFilterCalendarusageInSecondsRfidBoardErd,
+      instance->_private.config->rfidFilterCalendarUsageInSecondsRfidBoardErd,
       &calendarUsageInSeconds);
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->rfidFilterCalendarusageInSecondsMainboardErd,
+      instance->_private.config->rfidFilterCalendarUsageInSecondsErd,
       &calendarUsageInSeconds);
 }
 
 static void CopyVolumeUsageToMainboard(RfidCommunicationController_t *instance)
 {
-   VolumeInOunces_t volumeUsageInOunces;
+   VolumeInOuncesX100_t volumeUsageInOuncesX100;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->rfidFilterWaterVolumeUsageInOuncesRfidBoardErd,
-      &volumeUsageInOunces);
+      instance->_private.config->rfidFilterWaterVolumeUsageInOuncesX100RfidBoardErd,
+      &volumeUsageInOuncesX100);
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->rfidFilterWaterVolumeUsageInOuncesMainboardErd,
-      &volumeUsageInOunces);
+      instance->_private.config->rfidFilterWaterVolumeUsageInOuncesX100Erd,
+      &volumeUsageInOuncesX100);
 }
 
 static void SendNewFilterInstalledSignal(RfidCommunicationController_t *instance)
@@ -224,13 +224,13 @@ static bool NewFilterInstalled(RfidCommunicationController_t *instance)
       instance->_private.config->rfidFilterUidRfidBoardErd,
       &rfidFilterUidRfidBoard);
 
-   RfidUid_t rfidFilterUidMainboard;
+   RfidUid_t rfidFilterUid;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->rfidFilterUidMainboardErd,
-      &rfidFilterUidMainboard);
+      instance->_private.config->rfidFilterUidErd,
+      &rfidFilterUid);
 
-   return !UidsMatch(rfidFilterUidRfidBoard, rfidFilterUidMainboard);
+   return !UidsMatch(rfidFilterUidRfidBoard, rfidFilterUid);
 }
 
 static void CopyFilterUidToMainboard(RfidCommunicationController_t *instance)
@@ -242,7 +242,7 @@ static void CopyFilterUidToMainboard(RfidCommunicationController_t *instance)
       &rfidFilterUidRfidBoard);
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->rfidFilterUidMainboardErd,
+      instance->_private.config->rfidFilterUidErd,
       &rfidFilterUidRfidBoard);
 }
 
@@ -256,7 +256,7 @@ static bool NewSerialNumber(RfidCommunicationController_t *instance)
    UnitSerialNumber_t unitSerialNumber;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->rfidFilterUnitSerialNumberMainboardErd,
+      instance->_private.config->rfidFilterUnitSerialNumberErd,
       &unitSerialNumber);
 
    UnitSerialNumber_t rfidFilterUnitSerialNumber;
@@ -277,7 +277,7 @@ static void CopyCurrentSerialNumberToPreviousSerialNumber(RfidCommunicationContr
       &rfidFilterUnitSerialNumber);
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->rfidFilterPreviousUnitSerialNumberMainboardErd,
+      instance->_private.config->rfidFilterPreviousUnitSerialNumberErd,
       &rfidFilterUnitSerialNumber);
 }
 
@@ -424,13 +424,13 @@ static void UpdateUnitWithNewFilterData(RfidCommunicationController_t *instance)
 
    if(FilterIsBypassFilter(instance))
    {
-      SetBypassPlugTo(instance, set);
+      SetBypassPlugInstalledTo(instance, set);
       ClearBlockedCount(instance);
       ClearLeakDetectedCount(instance);
    }
    else
    {
-      SetBypassPlugTo(instance, clear);
+      SetBypassPlugInstalledTo(instance, clear);
    }
 
    if(NewSerialNumber(instance))
@@ -507,7 +507,7 @@ static bool State_Active(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Hsm_Entry:
          UpdateHsmStateTo(instance, RfidCommunicationControllerHsmState_Active);
          SetFilterTypeTo(instance, WaterFilterType_XWFE);
-         SetBypassPlugTo(instance, clear);
+         SetBypassPlugInstalledTo(instance, clear);
          SetFilterErrorTo(instance, clear);
          break;
 
@@ -728,7 +728,7 @@ static bool State_DemoMode(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    {
       case Hsm_Entry:
          UpdateHsmStateTo(instance, RfidCommunicationControllerHsmState_DemoMode);
-         SetBypassPlugTo(instance, clear);
+         SetBypassPlugInstalledTo(instance, clear);
          SetFilterErrorTo(instance, clear);
          break;
 

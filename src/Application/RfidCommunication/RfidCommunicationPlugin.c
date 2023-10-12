@@ -8,11 +8,11 @@
 #include "RfidCommunicationPlugin.h"
 #include "SystemErds.h"
 
-static const RfidCommunicatorRfidBoardErds_t rfidBoardErds = {
+static const RfidCommunicatorRfidReadErds_t rfidReadErds = {
    .readWriteResult = PublicErd_RfidFilterReadWriteResult_RfidBoard,
    .filterUid = PublicErd_RfidFilterUid_RfidBoard,
    .filterIdentifier = PublicErd_RfidFilterIdentifier_RfidBoard,
-   .volumeWaterUsageInOunces = PublicErd_RfidFilterWaterVolumeUsageInOunces_RfidBoard,
+   .volumeWaterUsageInOuncesX100 = PublicErd_RfidFilterWaterVolumeUsageInOuncesX100_RfidBoard,
    .calendarUsageInSeconds = PublicErd_RfidFilterCalendarUsageInSeconds_RfidBoard,
    .leakDetectedTimeInSeconds = PublicErd_RfidFilterLeakDetectedTimeInSeconds_RfidBoard,
    .numberOfWriteOperations = PublicErd_RfidFilterNumberOfWriteOperations_RfidBoard,
@@ -25,21 +25,21 @@ static const RfidCommunicatorRfidBoardErds_t rfidBoardErds = {
    .filterWaterUsageInGallons = PublicErd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons_RfidBoard,
 };
 
-static const RfidCommunicatorMainboardErds_t mainboardErds = {
-   .uid = PublicErd_RfidFilterUid_Mainboard,
-   .volumeWaterUsageInOunces = PublicErd_RfidFilterWaterVolumeUsageInOunces_Mainboard,
-   .calendarUsageInSeconds = PublicErd_RfidFilterCalendarUsageInSeconds_Mainboard,
-   .filterStatus = PublicErd_RfidFilterStatus_Mainboard,
-   .lockByte = PublicErd_RfidFilterLockByte_Mainboard,
-   .numberOfUnitsFilterHasBeenOn = PublicErd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn_Mainboard,
-   .unitSerialNumber = PublicErd_RfidFilterUnitSerialNumber_Mainboard,
-   .previousUnitSerialNumber = PublicErd_RfidFilterPreviousUnitSerialNumber_Mainboard,
-   .filterWaterUsageInGallons = PublicErd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons_Mainboard,
+static const RfidCommunicatorRfidWriteErds_t rfidWriteErds = {
+   .uid = PublicErd_RfidFilterUid,
+   .volumeWaterUsageInOuncesX100 = PublicErd_RfidFilterWaterVolumeUsageInOuncesX100,
+   .calendarUsageInSeconds = PublicErd_RfidFilterCalendarUsageInSeconds,
+   .filterStatus = PublicErd_RfidFilterStatus,
+   .lockByte = PublicErd_RfidFilterLockByte,
+   .numberOfUnitsFilterHasBeenOn = PublicErd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn,
+   .unitSerialNumber = PublicErd_RfidFilterUnitSerialNumber,
+   .previousUnitSerialNumber = PublicErd_RfidFilterPreviousUnitSerialNumber,
+   .filterWaterUsageInGallons = PublicErd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons,
 };
 
 static const RfidCommunicatorConfiguration_t config = {
-   .rfidBoardErds = &rfidBoardErds,
-   .mainboardErds = &mainboardErds,
+   .rfidReadErds = &rfidReadErds,
+   .rfidWriteErds = &rfidWriteErds,
    .dataRequestErd = PublicErd_RfidFilterDataRequest,
    .geaMessageEndpointErd = PublicErd_Gea2MessageEndpoint
 };
@@ -65,7 +65,7 @@ static void RfidBoardIsInSystem(void *context, const void *args)
          &config);
 
       RfidCommunicationControllerPlugin_Init(
-         &instance->_private.rfidCommunicationControllerPlugin, 
+         &instance->_private.rfidCommunicationControllerPlugin,
          instance->_private.dataModel);
 
       DataModel_Unsubscribe(
@@ -92,7 +92,7 @@ void RfidCommunicationPlugin_Init(
          &config);
 
       RfidCommunicationControllerPlugin_Init(
-         &instance->_private.rfidCommunicationControllerPlugin, 
+         &instance->_private.rfidCommunicationControllerPlugin,
          instance->_private.dataModel);
    }
    else

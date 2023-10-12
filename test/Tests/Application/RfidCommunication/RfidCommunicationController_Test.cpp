@@ -41,18 +41,18 @@ static const RfidCommunicationControllerConfig_t config = {
    .rfidFilterReadWriteResultErd = Erd_RfidFilterReadWriteResult_RfidBoard,
    .allFreshFoodDoorsAreClosedErd = Erd_AllFreshFoodDoorsAreClosed,
    .rfidFilterUidRfidBoardErd = Erd_RfidFilterUid_RfidBoard,
-   .rfidFilterUidMainboardErd = Erd_RfidFilterUid_Mainboard,
+   .rfidFilterUidErd = Erd_RfidFilterUid,
    .rfidFilterUnitSerialNumberRfidBoardErd = Erd_RfidFilterUnitSerialNumber_RfidBoard,
-   .rfidFilterUnitSerialNumberMainboardErd = Erd_RfidFilterUnitSerialNumber_Mainboard,
-   .rfidFilterCalendarusageInSecondsRfidBoardErd = Erd_RfidFilterCalendarUsageInSeconds_RfidBoard,
-   .rfidFilterCalendarusageInSecondsMainboardErd = Erd_RfidFilterCalendarUsageInSeconds_Mainboard,
-   .rfidFilterWaterVolumeUsageInOuncesRfidBoardErd = Erd_RfidFilterWaterVolumeUsageInOunces_RfidBoard,
-   .rfidFilterWaterVolumeUsageInOuncesMainboardErd = Erd_RfidFilterWaterVolumeUsageInOunces_Mainboard,
+   .rfidFilterUnitSerialNumberErd = Erd_RfidFilterUnitSerialNumber,
+   .rfidFilterCalendarUsageInSecondsRfidBoardErd = Erd_RfidFilterCalendarUsageInSeconds_RfidBoard,
+   .rfidFilterCalendarUsageInSecondsErd = Erd_RfidFilterCalendarUsageInSeconds,
+   .rfidFilterWaterVolumeUsageInOuncesX100RfidBoardErd = Erd_RfidFilterWaterVolumeUsageInOuncesX100_RfidBoard,
+   .rfidFilterWaterVolumeUsageInOuncesX100Erd = Erd_RfidFilterWaterVolumeUsageInOuncesX100,
    .rfidFilterStatusRfidBoardErd = Erd_RfidFilterStatus_RfidBoard,
    .rfidFilterIdentifierErd = Erd_RfidFilterIdentifier_RfidBoard,
-   .demoModeEnableErd = Erd_DemoModeEnable,
+   .demoModeEnableErd = Erd_EnableDemoModeStatus,
    .waterFilterTypeErd = Erd_WaterFilterType,
-   .bypassPlugErd = Erd_BypassPlugInstalled,
+   .bypassPlugInstalledErd = Erd_BypassPlugInstalled,
    .filterErrorErd = Erd_FilterError,
    .rfidFilterBadReadCountErd = Erd_RfidFilterBadReadCount,
    .rfidFilterBadWriteCountErd = Erd_RfidFilterBadWriteCount,
@@ -61,8 +61,8 @@ static const RfidCommunicationControllerConfig_t config = {
    .rfidFilterBlockedCountErd = Erd_RfidFilterBlockedCount,
    .rfidFilterDataRequestErd = Erd_RfidFilterDataRequest,
    .newFilterInstalledSignalErd = Erd_NewFilterInstalledSignal,
-   .rfidFilterNumberOfUnitsFilterHasBeenOnMainboardErd = Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn_Mainboard,
-   .rfidFilterPreviousUnitSerialNumberMainboardErd = Erd_RfidFilterPreviousUnitSerialNumber_Mainboard
+   .rfidFilterNumberOfUnitsFilterHasBeenOnErd = Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn,
+   .rfidFilterPreviousUnitSerialNumberErd = Erd_RfidFilterPreviousUnitSerialNumber
 };
 
 static void OnDataModelChange(void *context, const void *_args)
@@ -139,13 +139,13 @@ TEST_GROUP(RfidCommunicationController)
 
    void SetMainboardSerialNumberTo(uint8_t * serialNumber)
    {
-      DataModel_Write(dataModel, Erd_RfidFilterUnitSerialNumber_Mainboard, &serialNumber);
+      DataModel_Write(dataModel, Erd_RfidFilterUnitSerialNumber, &serialNumber);
    }
 
    void GivenFilterUidIs(uint8_t * uid)
    {
       DataModel_Write(dataModel, Erd_RfidFilterUid_RfidBoard, uid);
-      DataModel_Write(dataModel, Erd_RfidFilterUid_Mainboard, uid);
+      DataModel_Write(dataModel, Erd_RfidFilterUid, uid);
    }
 
    void GivenInitialization()
@@ -344,7 +344,7 @@ TEST_GROUP(RfidCommunicationController)
 
    void WhenDemoModeIs(const bool state)
    {
-      DataModel_Write(dataModel, Erd_DemoModeEnable, &state);
+      DataModel_Write(dataModel, Erd_EnableDemoModeStatus, &state);
    }
 
    void GivenDemoModeIs(const bool state)
@@ -400,7 +400,7 @@ TEST_GROUP(RfidCommunicationController)
    void MainboardRfidFilterUidShouldBe(uint8_t * expected)
    {
       RfidUid_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterUid_Mainboard, &actual);
+      DataModel_Read(dataModel, Erd_RfidFilterUid, &actual);
       MEMCMP_EQUAL(expected, &actual, sizeof(RfidUid_t));
    }
 
@@ -412,21 +412,21 @@ TEST_GROUP(RfidCommunicationController)
    void RfidFilterPreviousUnitSerialNumberShouldBe(uint8_t * expected)
    {
       UnitSerialNumber_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterPreviousUnitSerialNumber_Mainboard, &actual);
+      DataModel_Read(dataModel, Erd_RfidFilterPreviousUnitSerialNumber, &actual);
       MEMCMP_EQUAL(expected, &actual, sizeof(UnitSerialNumber_t));
    }
 
    void RfidFilterUnitSerialNumberMainboardShouldBe(uint8_t * expected)
    {
       UnitSerialNumber_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterUnitSerialNumber_Mainboard, &actual);
+      DataModel_Read(dataModel, Erd_RfidFilterUnitSerialNumber, &actual);
       MEMCMP_EQUAL(expected, &actual, sizeof(UnitSerialNumber_t));
    }
 
    void RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(RfidFilterNumberOfUnitsFilterHasBeenOn_t expected)
    {
       RfidFilterNumberOfUnitsFilterHasBeenOn_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn_Mainboard, &actual);
+      DataModel_Read(dataModel, Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -481,19 +481,19 @@ TEST_GROUP(RfidCommunicationController)
    void CalendarUsageOnMainboardShouldBe(CalendarUsageInSeconds_t expected)
    {
       CalendarUsageInSeconds_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterCalendarUsageInSeconds_Mainboard, &actual);
+      DataModel_Read(dataModel, Erd_RfidFilterCalendarUsageInSeconds, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
-   void WhenVolumeUsageOnRfidBoardIs(VolumeInOunces_t volumeUsageInOunces)
+   void WhenVolumeUsageOnRfidBoardIs(VolumeInOuncesX100_t volumeUsageInOuncesX100)
    {
-      DataModel_Write(dataModel, Erd_RfidFilterWaterVolumeUsageInOunces_RfidBoard, &volumeUsageInOunces);
+      DataModel_Write(dataModel, Erd_RfidFilterWaterVolumeUsageInOuncesX100_RfidBoard, &volumeUsageInOuncesX100);
    }
 
-   void VolumeUsageOnMainboardShouldBe(VolumeInOunces_t expected)
+   void VolumeUsageOnMainboardShouldBe(VolumeInOuncesX100_t expected)
    {
-      VolumeInOunces_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterWaterVolumeUsageInOunces_Mainboard, &actual);
+      VolumeInOuncesX100_t actual;
+      DataModel_Read(dataModel, Erd_RfidFilterWaterVolumeUsageInOuncesX100, &actual);
       CHECK_EQUAL(expected, actual);
    }
 

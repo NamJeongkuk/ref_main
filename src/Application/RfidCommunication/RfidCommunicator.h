@@ -17,7 +17,7 @@ typedef struct
    ReadWriteResult_t readWriteResult;
    RfidUid_t uid;
    RfidFilterIdentifier_t filterIdentifier;
-   VolumeInOunces_t volumeUsageInOunces;
+   VolumeInOuncesX100_t volumeUsageInOuncesX100;
    CalendarUsageInSeconds_t calendarUsageInSeconds;
    LeakDetectedInSeconds_t leakDetectedTimeInSeconds;
    NumberOfWriteOperations_t numberOfWriteOperations;
@@ -35,9 +35,9 @@ typedef struct
 {
    ReadWriteRequest_t readWriteRequest;
    RfidUid_t uid;
-   uint32_t volumeUsageInOunces;
+   uint32_t volumeUsageInOuncesX100;
    uint32_t calendarUsageInSeconds;
-   RfidFilterStatusMainboard_t filterStatus;
+   RfidFilterStatus_t filterStatus;
    uint8_t unused;
    uint8_t lock;
    RfidFilterNumberOfUnitsFilterHasBeenOn_t numberOfUnitsFilterHasBeenOn;
@@ -51,7 +51,7 @@ typedef struct
    Erd_t readWriteResult; //! ReadWriteResult_t
    Erd_t filterUid; //! RfidUid_t
    Erd_t filterIdentifier; //! RfidFilterIdentifier_t
-   Erd_t volumeWaterUsageInOunces; //! VolumeInOunces_t
+   Erd_t volumeWaterUsageInOuncesX100; //! VolumeInOuncesX100_t
    Erd_t calendarUsageInSeconds; //! CalendarUsageInSeconds_t
    Erd_t leakDetectedTimeInSeconds; //! LeakDetectedInSeconds_t
    Erd_t numberOfWriteOperations; //! NumberOfWriteOperations_t
@@ -62,12 +62,12 @@ typedef struct
    Erd_t unitSerialNumber; //! UnitSerialNumber_t
    Erd_t previousUnitSerialNumber; //! UnitSerialNumber_t
    Erd_t filterWaterUsageInGallons; //! RfidTwelveMonthsGallonUsage_t
-} RfidCommunicatorRfidBoardErds_t;
+} RfidCommunicatorRfidReadErds_t;
 
 typedef struct
 {
    Erd_t uid; //! RfidUid_t
-   Erd_t volumeWaterUsageInOunces; //! VolumeInOunces_t
+   Erd_t volumeWaterUsageInOuncesX100; //! VolumeInOuncesX100_t
    Erd_t calendarUsageInSeconds; //! CalendarUsageInSeconds_t
    Erd_t filterStatus; //! FilterStatusRfidBoard_t
    Erd_t lockByte; //! uint8_t
@@ -75,12 +75,12 @@ typedef struct
    Erd_t unitSerialNumber; //! UnitSerialNumber_t
    Erd_t previousUnitSerialNumber; //! UnitSerialNumber_t
    Erd_t filterWaterUsageInGallons; //! RfidTwelveMonthsGallonUsage_t
-} RfidCommunicatorMainboardErds_t;
+} RfidCommunicatorRfidWriteErds_t;
 
 typedef struct
 {
-   const RfidCommunicatorRfidBoardErds_t *rfidBoardErds;
-   const RfidCommunicatorMainboardErds_t *mainboardErds;
+   const RfidCommunicatorRfidReadErds_t *rfidReadErds;
+   const RfidCommunicatorRfidWriteErds_t *rfidWriteErds;
    Erd_t dataRequestErd; //! ReadWriteRequest_t
    Erd_t geaMessageEndpointErd; //! I_Gea2MessageEndpoint_t
 } RfidCommunicatorConfiguration_t;
