@@ -3527,6 +3527,32 @@
       ]
     },
     {
+      "title": "Sound Level",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Ui Sound Level Request",
+          "name": "Erd_UiSoundLevelRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ui Sound Level State",
+          "name": "Erd_UiSoundLevelState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Number Of Sound Level Settings",
+          "name": "Erd_NumberOfSoundLevelSettings",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
       "title": "Rfid Communication Controller",
       "erds": [
         {

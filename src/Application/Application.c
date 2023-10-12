@@ -47,6 +47,7 @@ void Application_Init(
    SideBySideConfigurationPlugin_Init(&instance->_private.platformConfigurations.sideBySidePlugin, dataModel);
    FaultWrapperPlugin_Init(dataModel);
    SnackModePlugin_Init(dataModel);
+   SoundLevelPlugin_Init(&instance->_private.soundLevelPlugin, dataModel);
 
    RfidCommunicationPlugin_Init(
       &instance->_private.rfidCommunicationPlugin,

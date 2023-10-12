@@ -62,6 +62,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Sensor \
    $(PROJECT_DIR)/Application/ServiceDiagnostics \
    $(PROJECT_DIR)/Application/Setpoints \
+   $(PROJECT_DIR)/Application/SoundLevel \
    $(PROJECT_DIR)/Application/StepperMotor \
    $(PROJECT_DIR)/Application/SystemMonitor \
    $(PROJECT_DIR)/Application/SnackMode \
@@ -118,6 +119,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/ServiceDiagnostics \
    $(TESTS_DIR)/Application/Setpoints \
    $(TESTS_DIR)/Application/SignOfLife \
+   $(TESTS_DIR)/Application/SoundLevel \
    $(TESTS_DIR)/Application/StepperMotor \
    $(TESTS_DIR)/Application/SystemMonitor \
    $(TESTS_DIR)/Application/TimerModule \

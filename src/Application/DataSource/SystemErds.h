@@ -462,8 +462,8 @@ enum
    \
    ENTRY(Erd_PrimaryUiSignOfLife,                           0x0900, Signal_t,                                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_UiSoundLevelRequest,                           0x0902, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_UiSoundLevelState,                             0x0903, uint8_t,                                            Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_UiSoundLevelRequest,                           0x0902, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_UiSoundLevelState,                             0x0903, uint8_t,                                            Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSoundDefaultData_LowSoundLevel,   NotFault) \
    ENTRY(Erd_NumberOfSoundLevelSettings,                    0x0904, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_WaterFilterType,                               0x1019, WaterFilterType_t,                                  Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

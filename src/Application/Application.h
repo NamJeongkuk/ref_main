@@ -18,6 +18,7 @@
 #include "ShiftOffsetCalculatorCommonPlugin.h"
 #include "RfidCommunicationPlugin.h"
 #include "BroadcastResetPlugin.h"
+#include "SoundLevelPlugin.h"
 
 typedef struct
 {
@@ -36,6 +37,7 @@ typedef struct
       ShiftOffsetCalculatorCommonPlugin_t shiftOffsetCalculatorCommonPlugin;
       RfidCommunicationPlugin_t rfidCommunicationPlugin;
       BroadcastResetPlugin_t broadcastResetPlugin;
+      SoundLevelPlugin_t soundLevelPlugin;
    } _private;
 } Application_t;
 
