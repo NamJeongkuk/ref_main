@@ -9,7 +9,7 @@ local should_fail_with = require 'lua-common'.utilities.should_fail_with
 local should_require_args = require 'lua-common'.utilities.should_require_args
 
 describe('FanSpeedTable', function()
-  local fanSpeedTable = FanSpeedTable(core_mock)
+  local fan_speed_table = FanSpeedTable(core_mock)
   local duty_cycle = DutyCycle(core_mock)
   local rpm = Rpm(core_mock)
 
@@ -31,60 +31,60 @@ describe('FanSpeedTable', function()
   end
 
   it('should require all arguments', function()
-    should_require_args(fanSpeedTable, generate_config())
+    should_require_args(fan_speed_table, generate_config())
   end)
 
   it('should assert if fields are not a speed', function()
     should_fail_with('super_low_speed must be a typed string with type speed, has type(s) blah', function()
-      fanSpeedTable(generate_config({ super_low_speed = TypedString('blah', 'some_blah') }))
+      fan_speed_table(generate_config({ super_low_speed = TypedString('blah', 'some_blah') }))
     end)
 
     should_fail_with('low_speed must be a typed string with type speed, has type(s) blah', function()
-      fanSpeedTable(generate_config({ low_speed = TypedString('blah', 'some_blah') }))
+      fan_speed_table(generate_config({ low_speed = TypedString('blah', 'some_blah') }))
     end)
 
     should_fail_with('medium_speed must be a typed string with type speed, has type(s) blah', function()
-      fanSpeedTable(generate_config({ medium_speed = TypedString('blah', 'some_blah') }))
+      fan_speed_table(generate_config({ medium_speed = TypedString('blah', 'some_blah') }))
     end)
 
     should_fail_with('high_speed must be a typed string with type speed, has type(s) blah', function()
-      fanSpeedTable(generate_config({ high_speed = TypedString('blah', 'some_blah') }))
+      fan_speed_table(generate_config({ high_speed = TypedString('blah', 'some_blah') }))
     end)
 
     should_fail_with('super_high_speed must be a typed string with type speed, has type(s) blah', function()
-      fanSpeedTable(generate_config({ super_high_speed = TypedString('blah', 'some_blah') }))
+      fan_speed_table(generate_config({ super_high_speed = TypedString('blah', 'some_blah') }))
     end)
   end)
 
   it('should assert if on_speed is defined if single_speed_option is not present', function()
     should_fail_with('unexpected argument on_speed', function()
-      fanSpeedTable(generate_config({ on_speed = rpm({rpm = 300}) }))
+      fan_speed_table(generate_config({ on_speed = rpm({rpm = 300}) }))
     end)
   end)
 
   it('should assert if non single speed options are defined when single_speed_option is true', function()
     should_fail_with('unexpected argument super_low_speed', function()
-      fanSpeedTable(generate_single_speed_config({ super_low_speed = rpm({rpm = 300}) }))
+      fan_speed_table(generate_single_speed_config({ super_low_speed = rpm({rpm = 300}) }))
     end)
 
     should_fail_with('unexpected argument low_speed', function()
-      fanSpeedTable(generate_single_speed_config({ low_speed = rpm({rpm = 300}) }))
+      fan_speed_table(generate_single_speed_config({ low_speed = rpm({rpm = 300}) }))
     end)
 
     should_fail_with('unexpected argument medium_speed', function()
-      fanSpeedTable(generate_single_speed_config({ medium_speed = rpm({rpm = 300}) }))
+      fan_speed_table(generate_single_speed_config({ medium_speed = rpm({rpm = 300}) }))
     end)
 
     should_fail_with('unexpected argument high_speed', function()
-      fanSpeedTable(generate_single_speed_config({ high_speed = rpm({rpm = 300}) }))
+      fan_speed_table(generate_single_speed_config({ high_speed = rpm({rpm = 300}) }))
     end)
 
     should_fail_with('unexpected argument super_high_speed', function()
-      fanSpeedTable(generate_single_speed_config({ super_high_speed = rpm({rpm = 300}) }))
+      fan_speed_table(generate_single_speed_config({ super_high_speed = rpm({rpm = 300}) }))
     end)
   end)
 
-  it('should generate a typed string with the correct data and type fanSpeedTable', function()
+  it('should generate a typed string with the correct data and type fan_speed_table', function()
     local expected = remove_whitespace([[
       structure(
         structure(
@@ -118,7 +118,7 @@ describe('FanSpeedTable', function()
       )
       ]])
 
-    local actual = fanSpeedTable({
+    local actual = fan_speed_table({
       super_low_speed = duty_cycle({duty_cycle = 10}),
       low_speed = rpm({rpm = 1000}),
       medium_speed = duty_cycle({duty_cycle = 50}),
@@ -130,7 +130,7 @@ describe('FanSpeedTable', function()
     assert(actual.is_of_type('fan_speed_table'))
   end)
 
-  it('should generate a typed string with the correct data and type fanSpeedTable when single_speed_option is true', function()
+  it('should generate a typed string with the correct data and type fan_speed_table when single_speed_option is true', function()
     local expected = remove_whitespace([[
       structure(
         bool(false),
@@ -142,7 +142,7 @@ describe('FanSpeedTable', function()
       )
       ]])
 
-    local actual = fanSpeedTable({
+    local actual = fan_speed_table({
       single_speed_option = true,
       on_speed = rpm({rpm = 1000})
     })
@@ -152,6 +152,6 @@ describe('FanSpeedTable', function()
   end)
 
   it('should memoize', function()
-    should_memoize_calls(fanSpeedTable, generate_config())
+    should_memoize_calls(fan_speed_table, generate_config())
   end)
 end)

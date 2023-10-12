@@ -10,7 +10,7 @@ local TypedString = require 'lua-common'.utilities.TypedString
 local fan_speed_type = require 'Fan.FanSpeedType'
 local compressor_speed_type = require 'Compressor.CompressorSpeedType'
 
-describe('defrost', function()
+describe('Defrost', function()
   local defrost = Defrost(core_mock)
 
   local function generate_config(overrides)

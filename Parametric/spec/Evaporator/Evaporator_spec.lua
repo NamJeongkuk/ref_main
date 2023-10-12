@@ -5,7 +5,7 @@ local remove_whitespace = require 'lua-common'.utilities.remove_whitespace
 local should_fail_with = require 'lua-common'.utilities.should_fail_with
 local should_require_args = require 'lua-common'.utilities.should_require_args
 
-describe('evaporator', function()
+describe('Evaporator', function()
   local evaporator = Evaporator(core_mock)
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({

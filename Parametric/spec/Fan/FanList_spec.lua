@@ -15,7 +15,7 @@ local TypedString = require 'lua-common'.utilities.TypedString
 local Rpm = require 'Fan/Rpm'
 
 describe('FanList', function()
-  local fanList = FanList(core_mock)
+  local fan_list = FanList(core_mock)
   local fan = Fan(core_mock)
   local condenser_fan = CondenserFan(core_mock)
   local speed_table = SpeedTable(core_mock)
@@ -104,18 +104,18 @@ describe('FanList', function()
   end
 
   it('should require all arguments', function()
-    should_require_args(fanList, generate_config())
+    should_require_args(fan_list, generate_config())
   end)
 
   it('should assert if fans is not of type string fan', function()
     should_fail_with('condenser_fan must be a typed string with type condenser_fan, but is a number', function()
-      fanList(generate_config({
+      fan_list(generate_config({
         condenser_fan = 2
       }))
     end)
   end)
 
-  it('should generate a typed string with the correct data and type fanList', function()
+  it('should generate a typed string with the correct data and type fan_list', function()
     local expected = remove_whitespace([[
       structure(
         structure(
@@ -367,7 +367,7 @@ describe('FanList', function()
       )
     ]])
 
-    local actual = fanList({
+    local actual = fan_list({
       condenser_fan = some_condenser_fan,
       convertible_compartment_fan = another_fan,
       ice_cabinet_fan = another_fan,
@@ -381,7 +381,7 @@ describe('FanList', function()
   end)
 
   it('should memoize', function()
-    should_memoize_calls(fanList, generate_config())
+    should_memoize_calls(fan_list, generate_config())
   end)
 
 end)

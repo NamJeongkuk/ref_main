@@ -7,7 +7,7 @@ local should_require_args = require 'lua-common'.utilities.should_require_args
 local TypedString = require 'lua-common'.util.TypedString
 local grid_id_type = require 'Grid.GridIdType'
 
-describe('grid', function()
+describe('Grid', function()
   local grid = Grid(core_mock)
 
   local function generate_config(overrides)

@@ -13,7 +13,7 @@ local TypedString = require 'lua-common'.util.TypedString
 local DutyCycle = require 'Fan/DutyCycle'
 local Rpm = require 'Fan/Rpm'
 
-describe('fan', function()
+describe('Fan', function()
   local fan = Fan(core_mock)
   local fan_speed_table = FanSpeedTable(core_mock)
   local fan_care_about_cooling_mode_speed_table = FanCareAboutCoolingModeSpeedTable(core_mock)

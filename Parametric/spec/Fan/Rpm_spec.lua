@@ -5,7 +5,7 @@ local remove_whitespace = require 'lua-common'.utilities.remove_whitespace
 local should_fail_with = require 'lua-common'.utilities.should_fail_with
 local should_require_args = require 'lua-common'.utilities.should_require_args
 
-describe('rpm', function()
+describe('Rpm', function()
   local rpm = Rpm(core_mock)
 
   local function generate_config(overrides)

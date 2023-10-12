@@ -9,7 +9,7 @@ return function(core)
 
   local generate = memoize(function(config)
     return TypedString(
-      { 'convertibleCompartment' },
+      { 'convertible_compartment' },
       structure(
         bool(config.has_convertible_compartment),
         i16(config.cabinet_threshold_in_degfx100)

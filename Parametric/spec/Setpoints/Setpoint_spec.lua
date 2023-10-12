@@ -6,7 +6,7 @@ local should_fail_with = require 'lua-common'.utilities.should_fail_with
 local should_require_args = require 'lua-common'.utilities.should_require_args
 local TypedString = require 'lua-common'.util.TypedString
 
-describe('setpoint', function()
+describe('Setpoint', function()
   local setpoint = Setpoint(core_mock)
 
   local function generate_config(overrides)

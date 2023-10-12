@@ -5,7 +5,7 @@ local remove_whitespace = require 'lua-common'.utilities.remove_whitespace
 local should_fail_with = require 'lua-common'.utilities.should_fail_with
 local TypedString = require 'lua-common'.util.TypedString
 
-describe("personality", function()
+describe("Personality", function()
   local personality = Personality(core_mock)
 
   local function generate_config(overrides)
@@ -16,10 +16,10 @@ describe("personality", function()
       fans = TypedString('fan_list', 'fan_list'),
       grid = TypedString('grid', 'grid'),
       sabbath = TypedString('sabbath', 'sabbath'),
-      convertibleCompartment = TypedString('convertibleCompartment', 'convertibleCompartment'),
+      convertible_compartment = TypedString('convertible_compartment', 'convertible_compartment'),
       evaporator = TypedString('evaporator', 'evaporator'),
       sensors = TypedString('sensors', 'sensors'),
-      systemMonitor = TypedString('systemMonitor', 'systemMonitor'),
+      system_monitor = TypedString('system_monitor', 'system_monitor'),
       compressor = TypedString('compressor', 'compressor'),
       setpoint = TypedString('setpoint', 'setpoint'),
       cabinet_offset = TypedString('cabinet_offset', 'cabinet_offset'),
@@ -92,9 +92,9 @@ describe("personality", function()
   end)
 
   it('should constrain all arguments', function()
-    should_fail_with('convertibleCompartment must be a typed string with type convertibleCompartment, but is a number', function()
+    should_fail_with('convertible_compartment must be a typed string with type convertible_compartment, but is a number', function()
       personality(generate_config({
-        convertibleCompartment = -1
+        convertible_compartment = -1
       }))
     end)
   end)
@@ -116,9 +116,9 @@ describe("personality", function()
   end)
 
   it('should constrain all arguments', function()
-    should_fail_with('systemMonitor must be a typed string with type systemMonitor, but is a number', function()
+    should_fail_with('system_monitor must be a typed string with type system_monitor, but is a number', function()
       personality(generate_config({
-        systemMonitor = -1
+        system_monitor = -1
       }))
     end)
   end)
@@ -260,10 +260,10 @@ describe("personality", function()
         pointer(fan_list),
         pointer(grid),
         pointer(sabbath),
-        pointer(convertibleCompartment),
+        pointer(convertible_compartment),
         pointer(evaporator),
         pointer(sensors),
-        pointer(systemMonitor),
+        pointer(system_monitor),
         pointer(compressor),
         pointer(setpoint),
         pointer(cabinet_offset),

@@ -10,7 +10,7 @@ local should_fail_with = require 'lua-common'.utilities.should_fail_with
 local should_require_args = require 'lua-common'.utilities.should_require_args
 local TypedString = require 'lua-common'.util.TypedString
 
-describe('compressor', function()
+describe('Compressor', function()
   local compressorTimes = CompressorTimes(core_mock, false)
   local compressorSpeeds = CompressorSpeeds(core_mock)
   local compressor = Compressor(core_mock)

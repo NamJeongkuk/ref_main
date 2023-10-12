@@ -7,7 +7,7 @@ local should_require_args = require 'lua-common'.utilities.should_require_args
 local grid_line_correction = require 'Grid.GridLineCorrection'
 local TypedString = require 'lua-common'.util.TypedString
 
-describe('gridline', function()
+describe('Gridline', function()
   local gridline = Gridline(core_mock)
 
   local function generate_config(overrides)

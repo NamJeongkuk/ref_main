@@ -8,7 +8,7 @@ return function(core)
   import(core)
   local generate = memoize(function(config)
     return TypedString(
-      { 'sealedSystemValve' },
+      { 'sealed_system_valve' },
       structure(
         u16(config.homing_time_in_ms)
       )

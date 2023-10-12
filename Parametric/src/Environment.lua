@@ -113,7 +113,7 @@ return function(directory)
   coolingModeIndependentCompressorSpeeds = CoolingModeIndependentCompressorSpeeds(core)
   coolingModeDependentCompressorSpeeds = CoolingModeDependentCompressorSpeeds(core)
   compressorTimes = CompressorTimes(core)
-  convertibleCompartment = ConvertibleCompartment(core)
+  convertible_compartment = ConvertibleCompartment(core)
   cross_ambient_hysteresis_adjustment = CrossAmbientHysteresisAdjustment(core)
   defrost = Defrost(core)
   duty_cycle = DutyCycle(core)
@@ -135,7 +135,7 @@ return function(directory)
   sensor_type = SensorType(core)
   convertible_compartment_sensor_type = ConvertibleCompartmentSensorType(core)
   humidity_sensor_type = HumiditySensorType(core)
-  systemMonitor = SystemMonitor(core)
+  system_monitor = SystemMonitor(core)
   fan_care_about_cooling_mode_speed_table = FanCareAboutCoolingModeSpeedTable(core)
   fan_speed_table = FanSpeedTable(core)
   setpoint = Setpoint(core)
@@ -211,7 +211,7 @@ return function(directory)
     compressor_times = compressorTimes,
     cooling_mode_independent_compressor_speeds = coolingModeIndependentCompressorSpeeds,
     cooling_mode_dependent_compressor_speeds = coolingModeDependentCompressorSpeeds,
-    convertibleCompartment = convertibleCompartment,
+    convertible_compartment = convertible_compartment,
     cross_ambient_hysteresis_adjustment = cross_ambient_hysteresis_adjustment,
     defrost = defrost,
     duty_cycle = duty_cycle,
@@ -236,7 +236,7 @@ return function(directory)
     sensor_type = sensor_type,
     convertible_compartment_sensor_type = convertible_compartment_sensor_type,
     humidity_sensor_type = humidity_sensor_type,
-    systemMonitor = systemMonitor,
+    system_monitor = system_monitor,
     fan_care_about_cooling_mode_speed_table = fan_care_about_cooling_mode_speed_table,
     fan_speed_table = fan_speed_table,
     damper_position_type = DamperPositionType,
