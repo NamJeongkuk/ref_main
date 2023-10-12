@@ -66,3 +66,9 @@ void NonVolatileDataSourceDefaultData_MaxLightBrightness(void *data, size_t data
    PercentageDutyCycle_t maxLightBrightness = PercentageDutyCycle_Max;
    memcpy(data, &maxLightBrightness, dataSize);
 }
+
+void NonVolatileDataSoundDefaultData_LowSoundLevel(void *data, size_t dataSize)
+{
+   uint8_t soundLevel = 1;
+   memcpy(data, &soundLevel, dataSize);
+}

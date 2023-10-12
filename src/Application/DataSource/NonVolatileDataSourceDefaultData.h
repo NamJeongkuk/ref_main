@@ -70,4 +70,10 @@ void NonVolatileDataSourceDefaultData_FullDefrost(void *data, size_t dataSize);
  */
 void NonVolatileDataSourceDefaultData_MaxLightBrightness(void *data, size_t dataSize);
 
+/*!
+ * @param data
+ * @param dataSize
+ */
+void NonVolatileDataSoundDefaultData_LowSoundLevel(void *data, size_t dataSize);
+
 #endif
