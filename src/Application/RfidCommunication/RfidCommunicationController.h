@@ -27,8 +27,10 @@ typedef struct
    Erd_t rfidFilterUnitSerialNumberErd; // UnitSerialNumber_t
    Erd_t rfidFilterCalendarUsageInSecondsRfidBoardErd; // CalendarUsageInSeconds_t
    Erd_t rfidFilterCalendarUsageInSecondsErd; // CalendarUsageInSeconds_t
+   Erd_t eepromWaterFilterCalendarUsageInSecondsErd; // CalendarUsageInSeconds_t
    Erd_t rfidFilterWaterVolumeUsageInOuncesX100RfidBoardErd; // VolumeInOuncesX100_t
-   Erd_t rfidFilterWaterVolumeUsageInOuncesX100Erd; // VolumeInOuncesX100_t
+   Erd_t totalWaterVolumeUsageInOuncesX100Erd; // VolumeInOuncesX100_t
+   Erd_t eepromTotalWaterVolumeUsageInOuncesX100Erd; // VolumeInOuncesX100_t
    Erd_t rfidFilterStatusRfidBoardErd; // FilterStatusRfidBoard_t
    Erd_t rfidFilterIdentifierErd; // RfidFilterIdentifier_t
    Erd_t demoModeEnableErd; // bool

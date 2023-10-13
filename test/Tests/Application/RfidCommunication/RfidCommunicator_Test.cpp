@@ -96,8 +96,8 @@ TEST_GROUP(RfidCommunicator)
 
    const RfidCommunicatorRfidWriteErds_t rfidWriteErds = {
       .uid = PublicErd_RfidFilterUid,
-      .volumeWaterUsageInOuncesX100 = PublicErd_RfidFilterWaterVolumeUsageInOuncesX100,
-      .calendarUsageInSeconds = PublicErd_RfidFilterCalendarUsageInSeconds,
+      .volumeWaterUsageInOuncesX100 = PublicErd_Eeprom_TotalWaterVolumeUsageInOuncesX100,
+      .calendarUsageInSeconds = PublicErd_Eeprom_WaterFilterCalendarUsageInSeconds,
       .filterStatus = PublicErd_RfidFilterStatus,
       .lockByte = PublicErd_RfidFilterLockByte,
       .numberOfUnitsFilterHasBeenOn = PublicErd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn,
@@ -280,13 +280,13 @@ TEST_GROUP(RfidCommunicator)
    void GivenMainboardRfidErdsAreInitialized()
    {
       VolumeInOuncesX100_t volumeOuncesX100 = VolumeInOuncesX100;
-      CalendarUsageInSeconds_t calendarUsage = CalendarUsageInSeconds;
+      CalendarUsageInSeconds_t calendarUsageInSeconds = CalendarUsageInSeconds;
       RfidFilterStatus_t filterStatus = FilterStatusMainboard;
       RfidFilterNumberOfUnitsFilterHasBeenOn_t numberOfUnitsFilterHasBeenOn = NumberOfUnitsFilterHasBeenOn;
 
       DataModel_Write(dataModel, Erd_RfidFilterUid, &Uid);
-      DataModel_Write(dataModel, Erd_RfidFilterWaterVolumeUsageInOuncesX100, &volumeOuncesX100);
-      DataModel_Write(dataModel, Erd_RfidFilterCalendarUsageInSeconds, &calendarUsage);
+      DataModel_Write(dataModel, Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100, &volumeOuncesX100);
+      DataModel_Write(dataModel, Erd_Eeprom_WaterFilterCalendarUsageInSeconds, &calendarUsageInSeconds);
       DataModel_Write(dataModel, Erd_RfidFilterStatus, &filterStatus);
       uint8_t lockByte = Lock;
       DataModel_Write(dataModel, Erd_RfidFilterLockByte, &lockByte);

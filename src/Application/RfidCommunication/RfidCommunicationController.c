@@ -187,9 +187,15 @@ static void CopyCalendarUsageToMainboard(RfidCommunicationController_t *instance
       instance->_private.dataModel,
       instance->_private.config->rfidFilterCalendarUsageInSecondsRfidBoardErd,
       &calendarUsageInSeconds);
+
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->rfidFilterCalendarUsageInSecondsErd,
+      &calendarUsageInSeconds);
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->eepromWaterFilterCalendarUsageInSecondsErd,
       &calendarUsageInSeconds);
 }
 
@@ -200,9 +206,15 @@ static void CopyVolumeUsageToMainboard(RfidCommunicationController_t *instance)
       instance->_private.dataModel,
       instance->_private.config->rfidFilterWaterVolumeUsageInOuncesX100RfidBoardErd,
       &volumeUsageInOuncesX100);
+
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->rfidFilterWaterVolumeUsageInOuncesX100Erd,
+      instance->_private.config->totalWaterVolumeUsageInOuncesX100Erd,
+      &volumeUsageInOuncesX100);
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->eepromTotalWaterVolumeUsageInOuncesX100Erd,
       &volumeUsageInOuncesX100);
 }
 

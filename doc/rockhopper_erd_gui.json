@@ -3267,7 +3267,7 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Rfid Board: Water Volume Usage In Ounces",
+          "displayName": "Rfid Board: Water Volume Usage In Ounces x100",
           "name": "Erd_RfidFilterWaterVolumeUsageInOuncesX100_RfidBoard",
           "read": true,
           "write": true,
@@ -3363,8 +3363,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Water Volume Usage In Ounces",
-          "name": "Erd_RfidFilterWaterVolumeUsageInOuncesX100",
+          "displayName": "Water Volume Usage In Ounces x100",
+          "name": "Erd_TotalWaterVolumeUsageInOuncesX100",
           "read": true,
           "write": true,
           "interval": 1000000000
@@ -3372,9 +3372,25 @@
         {
           "namespace": "mb",
           "displayName": "Calendar Usage In Seconds",
-          "name": "Erd_RfidFilterCalendarUsageInSeconds",
+          "name": "Erd_WaterFilterCalendarUsageInSeconds",
           "read": true,
           "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Total Water Volume Usage In Ounces x100 Eeprom",
+          "name": "Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Calendar Usage In Seconds Eeprom",
+          "name": "Erd_Eeprom_WaterFilterCalendarUsageInSeconds",
+          "read": true,
+          "write": false,
           "interval": 1000000000
         },
         {
@@ -3440,7 +3456,7 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Total Water Volume Usage In Ounces",
+          "displayName": "Total Water Volume Usage In Ounces x100",
           "name": "Erd_TotalWaterVolumeUsageInOuncesX100",
           "read": true,
           "write": true,
@@ -3448,8 +3464,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Eeprom Total Water Volume Usage In Ounces",
-          "name": "Erd_Eeprom_TotalWaterVolumeUsageInOunces",
+          "displayName": "Eeprom Total Water Volume Usage In Ounces x100",
+          "name": "Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100",
           "read": true,
           "write": true,
           "interval": 1000000000

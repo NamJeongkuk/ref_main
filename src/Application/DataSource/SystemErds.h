@@ -837,8 +837,8 @@ enum
    ENTRY(Erd_AutofillSensorError,                           0xF168, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispensingDisabled,                            0xF169, bool,                                               Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_TotalWaterVolumeUsageInOuncesX100,             0xF170, uint32_t,                                           Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_WaterFilterCalendarUsageInSeconds,             0xF171, uint32_t,                                           Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TotalWaterVolumeUsageInOuncesX100,             0xF170, VolumeInOuncesX100_t,                               Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_WaterFilterCalendarUsageInSeconds,             0xF171, CalendarUsageInSeconds_t,                           Swap_Yes,   Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_WaterFilterLifeStatus,                         0xF172, WaterFilterLifeStatus_t,                            Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RfidFilterReadWriteResult_RfidBoard,           0xF181, RfidFilterReadWriteResult_t,                        Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RfidFilterUid_RfidBoard,                       0xF182, RfidUid_t,                                          Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -856,23 +856,21 @@ enum
    ENTRY(Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons_RfidBoard, 0xF18E, RfidTwelveMonthsGallonUsage_t,          Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_RfidFilterUid,                                 0xF18F, RfidUid_t,                                          Swap_No,    Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_RfidFilterWaterVolumeUsageInOuncesX100,        0xF190, VolumeInOuncesX100_t,                               Swap_Yes,   Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_RfidFilterCalendarUsageInSeconds,              0xF191, CalendarUsageInSeconds_t,                           Swap_Yes,   Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_RfidFilterStatus,                              0xF192, RfidFilterStatus_t,                                 Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn,    0xF193, RfidFilterNumberOfUnitsFilterHasBeenOn_t,           Swap_No,    Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_RfidFilterLockByte,                            0xF194, uint8_t,                                            Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_RfidFilterUnitSerialNumber,                    0xF195, UnitSerialNumber_t,                                 Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_RfidFilterPreviousUnitSerialNumber,            0xF196, UnitSerialNumber_t,                                 Swap_No,    Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons, 0xF197, RfidTwelveMonthsGallonUsage_t,                    Swap_No,    Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_RfidFilterStatus,                              0xF190, RfidFilterStatus_t,                                 Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn,    0xF191, RfidFilterNumberOfUnitsFilterHasBeenOn_t,           Swap_No,    Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_RfidFilterLockByte,                            0xF192, uint8_t,                                            Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_RfidFilterUnitSerialNumber,                    0xF193, UnitSerialNumber_t,                                 Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_RfidFilterPreviousUnitSerialNumber,            0xF194, UnitSerialNumber_t,                                 Swap_No,    Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons, 0xF195, RfidTwelveMonthsGallonUsage_t,                    Swap_No,    Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
-   ENTRY(Erd_RfidFilterDataRequest,                         0xF198, ReadWriteRequest_t,                                 Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_RfidFilterDataRequest,                         0xF196, ReadWriteRequest_t,                                 Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_RfidCommunicationControllerState,              0xF199, RfidCommunicationControllerState_t,                 Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_RfidFilterLeakDetectCount,                     0xF19A, uint8_t,                                            Swap_No,    Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_RfidFilterBlockedCount,                        0xF19B, uint8_t,                                            Swap_No,    Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_RfidFilterBadReadCount,                        0xF19C, uint8_t,                                            Swap_No,    Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_RfidFilterBadWriteCount,                       0xF19D, uint8_t,                                            Swap_No,    Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_RfidFilterHardwareFailureCount,                0xF19E, uint8_t,                                            Swap_No,    Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_RfidCommunicationControllerState,              0xF197, RfidCommunicationControllerState_t,                 Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_RfidFilterLeakDetectCount,                     0xF198, uint8_t,                                            Swap_No,    Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_RfidFilterBlockedCount,                        0xF199, uint8_t,                                            Swap_No,    Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_RfidFilterBadReadCount,                        0xF19A, uint8_t,                                            Swap_No,    Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_RfidFilterBadWriteCount,                       0xF19B, uint8_t,                                            Swap_No,    Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_RfidFilterHardwareFailureCount,                0xF19C, uint8_t,                                            Swap_No,    Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
    ENTRY(Erd_IceMakerFillInhibitedReason,                   0xF1A0, IceMakerFillInhibitedReasonBitmap_t,                Swap_No,    Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
@@ -1388,8 +1386,8 @@ enum
    ENTRY(Erd_Eeprom_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds,   0xFB11, uint32_t,                 Swap_Range_E, Io_None, Sub_N, NvUnitSetting,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_TurboCoolOnTimeInMinutes,               0xFB12, uint16_t,                                           Swap_Yes,   Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_TurboFreezeOnTimeInMinutes,             0xFB13, uint16_t,                                           Swap_Yes,   Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_Eeprom_TotalWaterVolumeUsageInOunces,          0xFB14, uint32_t,                                           Swap_Yes,   Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_Eeprom_WaterFilterCalendarUsageInSeconds,      0xFB15, uint32_t,                                           Swap_Yes,   Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100,      0xFB14, VolumeInOuncesX100_t,                               Swap_Yes,   Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_WaterFilterCalendarUsageInSeconds,      0xFB15, CalendarUsageInSeconds_t,                           Swap_Yes,   Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
    ENTRY(Erd_AndroidUiSignOfLifeFsmState,                   0xFB80, AndroidUiSignOfLifeFsmState_t,                      Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_MainboardIsConnectedToTheAndroidUi,            0xFB81, bool,                                               Swap_No,  Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \

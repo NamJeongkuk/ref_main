@@ -45,9 +45,11 @@ static const RfidCommunicationControllerConfig_t config = {
    .rfidFilterUnitSerialNumberRfidBoardErd = Erd_RfidFilterUnitSerialNumber_RfidBoard,
    .rfidFilterUnitSerialNumberErd = Erd_RfidFilterUnitSerialNumber,
    .rfidFilterCalendarUsageInSecondsRfidBoardErd = Erd_RfidFilterCalendarUsageInSeconds_RfidBoard,
-   .rfidFilterCalendarUsageInSecondsErd = Erd_RfidFilterCalendarUsageInSeconds,
+   .rfidFilterCalendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
+   .eepromWaterFilterCalendarUsageInSecondsErd = Erd_Eeprom_WaterFilterCalendarUsageInSeconds,
    .rfidFilterWaterVolumeUsageInOuncesX100RfidBoardErd = Erd_RfidFilterWaterVolumeUsageInOuncesX100_RfidBoard,
-   .rfidFilterWaterVolumeUsageInOuncesX100Erd = Erd_RfidFilterWaterVolumeUsageInOuncesX100,
+   .totalWaterVolumeUsageInOuncesX100Erd = Erd_TotalWaterVolumeUsageInOuncesX100,
+   .eepromTotalWaterVolumeUsageInOuncesX100Erd = Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100,
    .rfidFilterStatusRfidBoardErd = Erd_RfidFilterStatus_RfidBoard,
    .rfidFilterIdentifierErd = Erd_RfidFilterIdentifier_RfidBoard,
    .demoModeEnableErd = Erd_EnableDemoModeStatus,
@@ -481,7 +483,14 @@ TEST_GROUP(RfidCommunicationController)
    void CalendarUsageOnMainboardShouldBe(CalendarUsageInSeconds_t expected)
    {
       CalendarUsageInSeconds_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterCalendarUsageInSeconds, &actual);
+      DataModel_Read(dataModel, Erd_WaterFilterCalendarUsageInSeconds, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void EepromCalendarUsageInSecondsOnMainboardShouldBe(CalendarUsageInSeconds_t expected)
+   {
+      CalendarUsageInSeconds_t actual;
+      DataModel_Read(dataModel, Erd_Eeprom_WaterFilterCalendarUsageInSeconds, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -493,13 +502,29 @@ TEST_GROUP(RfidCommunicationController)
    void VolumeUsageOnMainboardShouldBe(VolumeInOuncesX100_t expected)
    {
       VolumeInOuncesX100_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterWaterVolumeUsageInOuncesX100, &actual);
+      DataModel_Read(dataModel, Erd_TotalWaterVolumeUsageInOuncesX100, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void EepromVolumeUsageOnMainboardShouldBe(CalendarUsageInSeconds_t expected)
+   {
+      VolumeInOuncesX100_t actual;
+      DataModel_Read(dataModel, Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
    void GivenTheABadWriteCountIs(uint8_t count)
    {
       DataModel_Write(dataModel, Erd_RfidFilterBadWriteCount, &count);
+   }
+
+   void NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear()
+   {
+      NewFilterInstalledSignalShouldBe(0);
+      CalendarUsageOnMainboardShouldBe(0);
+      VolumeUsageOnMainboardShouldBe(0);
+      EepromCalendarUsageInSecondsOnMainboardShouldBe(0);
+      EepromVolumeUsageOnMainboardShouldBe(0);
    }
 };
 
@@ -748,18 +773,14 @@ TEST(RfidCommunicationController, ShouldNotUpdateMainboardWithNewFilterDataWhenT
    WhenCalendarUsageOnRfidBoardIs(SomeCalendarUsage);
    WhenVolumeUsageOnRfidBoardIs(SomeVolumeUsage);
    GivenTheABadWriteCountIs(1);
-   NewFilterInstalledSignalShouldBe(0);
-   CalendarUsageOnMainboardShouldBe(0);
-   VolumeUsageOnMainboardShouldBe(0);
+   NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear();
 
    RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(0);
    GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
 
    WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
    RfidFilterBadWriteCountShouldBe(1);
-   NewFilterInstalledSignalShouldBe(0);
-   CalendarUsageOnMainboardShouldBe(0);
-   VolumeUsageOnMainboardShouldBe(0);
+   NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear();
    RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(0);
    GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
 }
@@ -807,9 +828,7 @@ TEST(RfidCommunicationController, ShouldClearBadWriteCountWhenANewFilterIsDetect
 TEST(RfidCommunicationController, ShouldSendNewFilterInstalledSignalAndCopyCalendarAndVolumeUsageToMainboardWhenANewFilterIsDetectedInFreshFoodDoorOpenState)
 {
    GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
-   NewFilterInstalledSignalShouldBe(0);
-   CalendarUsageOnMainboardShouldBe(0);
-   VolumeUsageOnMainboardShouldBe(0);
+   NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear();
 
    WhenCalendarUsageOnRfidBoardIs(SomeCalendarUsage);
    WhenVolumeUsageOnRfidBoardIs(SomeVolumeUsage);
@@ -817,6 +836,8 @@ TEST(RfidCommunicationController, ShouldSendNewFilterInstalledSignalAndCopyCalen
    NewFilterInstalledSignalShouldBe(1);
    CalendarUsageOnMainboardShouldBe(SomeCalendarUsage);
    VolumeUsageOnMainboardShouldBe(SomeVolumeUsage);
+   EepromCalendarUsageInSecondsOnMainboardShouldBe(SomeCalendarUsage);
+   EepromVolumeUsageOnMainboardShouldBe(SomeVolumeUsage);
 }
 
 TEST(RfidCommunicationController, ShouldCopyRfidFilterUnitSerialNumberToPreviousSerialNumberWhenANewFilterIsDetectedAndTheSerialNumberIsDifferentThanTheUnitSerialNumberWhileInFreshFoodDoorOpenState)
@@ -975,18 +996,14 @@ TEST(RfidCommunicationController, ShouldNotUpdateMainboardWithNewFilterDataWhenT
    WhenCalendarUsageOnRfidBoardIs(SomeCalendarUsage);
    WhenVolumeUsageOnRfidBoardIs(SomeVolumeUsage);
    GivenTheABadWriteCountIs(1);
-   NewFilterInstalledSignalShouldBe(0);
-   CalendarUsageOnMainboardShouldBe(0);
-   VolumeUsageOnMainboardShouldBe(0);
+   NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear();
 
    RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(0);
    GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
 
    WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
    RfidFilterBadWriteCountShouldBe(1);
-   NewFilterInstalledSignalShouldBe(0);
-   CalendarUsageOnMainboardShouldBe(0);
-   VolumeUsageOnMainboardShouldBe(0);
+   NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear();
    RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(0);
    GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
 }
@@ -1053,9 +1070,7 @@ TEST(RfidCommunicationController, ShouldIncrementNumberOfUnitsFilterHasBeenOnWhe
 TEST(RfidCommunicationController, ShouldSendNewFilterInstalledSignalAndCopyCalendarAndVolumeUsageToMainboardWhenANewFilterIsDetectedInAllFreshFoodDoorsJustClosedState)
 {
    GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
-   NewFilterInstalledSignalShouldBe(0);
-   CalendarUsageOnMainboardShouldBe(0);
-   VolumeUsageOnMainboardShouldBe(0);
+   NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear();
 
    WhenCalendarUsageOnRfidBoardIs(SomeCalendarUsage);
    WhenVolumeUsageOnRfidBoardIs(SomeVolumeUsage);
@@ -1063,6 +1078,8 @@ TEST(RfidCommunicationController, ShouldSendNewFilterInstalledSignalAndCopyCalen
    NewFilterInstalledSignalShouldBe(1);
    CalendarUsageOnMainboardShouldBe(SomeCalendarUsage);
    VolumeUsageOnMainboardShouldBe(SomeVolumeUsage);
+   EepromCalendarUsageInSecondsOnMainboardShouldBe(SomeCalendarUsage);
+   EepromVolumeUsageOnMainboardShouldBe(SomeVolumeUsage);
 }
 
 TEST(RfidCommunicationController, ShouldIncrementBadReadCountWhenReceivingAReadFailureInFreshFoodDoorOpenStateWhileInAllFreshFoodDoorsJustClosedState)
@@ -1158,18 +1175,14 @@ TEST(RfidCommunicationController, ShouldNotUpdateMainboardWithNewFilterDataWhenT
    WhenCalendarUsageOnRfidBoardIs(SomeCalendarUsage);
    WhenVolumeUsageOnRfidBoardIs(SomeVolumeUsage);
    GivenTheABadWriteCountIs(1);
-   NewFilterInstalledSignalShouldBe(0);
-   CalendarUsageOnMainboardShouldBe(0);
-   VolumeUsageOnMainboardShouldBe(0);
+   NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear();
 
    RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(0);
    GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
 
    WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
    RfidFilterBadWriteCountShouldBe(1);
-   NewFilterInstalledSignalShouldBe(0);
-   CalendarUsageOnMainboardShouldBe(0);
-   VolumeUsageOnMainboardShouldBe(0);
+   NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear();
    RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(0);
    GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
 }
