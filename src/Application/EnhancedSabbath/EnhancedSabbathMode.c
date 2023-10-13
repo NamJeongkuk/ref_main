@@ -543,6 +543,17 @@ static bool EnhancedSabbathStageFreezerCoolingIsActive(EnhancedSabbathMode_t *in
    return state;
 }
 
+static bool SabbathIsReadyToDefrost(EnhancedSabbathMode_t *instance)
+{
+   bool sabbathIsReadyToDefrost;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->sabbathIsReadyToDefrostErd,
+      &sabbathIsReadyToDefrost);
+
+   return sabbathIsReadyToDefrost;
+}
+
 static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    EnhancedSabbathMode_t *instance = InstanceFromHsm(hsm);
@@ -663,13 +674,19 @@ static bool State_Stage_Freezer(Hsm_t *hsm, HsmSignal_t signal, const void *data
    {
       case Hsm_Entry:
          SetHsmStateTo(instance, EnhancedSabbathModeHsmState_Stage_Freezer);
-         StartStageTimerWithTimeSetTo(instance, instance->_private.enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN);
 
+         StartStageTimerWithTimeSetTo(instance, instance->_private.enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN);
          SetCoolingModeTo(instance, CoolingMode_Freezer);
+
          if(FreezerAverageCabinetTemperature(instance) < FreezerCabinetSetpoint(instance))
          {
             SetEnhancedSabbathStageFreezerCoolingIsActiveTo(instance, false);
             VoteCompressorFansAndDamperToOff(instance);
+
+            if(SabbathIsReadyToDefrost(instance))
+            {
+               SetEnhancedSabbathIsRequestingDefrostTo(instance, true);
+            }
          }
          else
          {
@@ -680,7 +697,7 @@ static bool State_Stage_Freezer(Hsm_t *hsm, HsmSignal_t signal, const void *data
          break;
 
       case Signal_StageTimerExpired:
-         if(EnhancedSabbathStageFreezerCoolingIsActive(instance))
+         if(SabbathIsReadyToDefrost(instance))
          {
             SetEnhancedSabbathIsRequestingDefrostTo(instance, true);
          }

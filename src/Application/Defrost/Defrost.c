@@ -45,8 +45,9 @@ enum
    Signal_DefrostTestRequest,
    Signal_FreezerEvaporatorTemperatureChanged,
    Signal_SabbathIsReadyToDefrost,
-   Signal_SabbathIsActive,
-   Signal_SabbathIsInactive
+   Signal_AtLeastOneSabbathModeIsEnabled,
+   Signal_AtLeastOneSabbathModeIsDisabled,
+   Signal_EnhancedSabbathIsRequestingToDefrost
 };
 
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -703,7 +704,18 @@ static void ClearUseAhamPrechillReadyToDefrostTimeFlag(Defrost_t *instance)
       clear);
 }
 
-static bool SabbathModeIsEnabled(Defrost_t *instance)
+static bool EnhancedSabbathModeIsEnabled(Defrost_t *instance)
+{
+   bool enhancedSabbathMode;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->enhancedSabbathModeErd,
+      &enhancedSabbathMode);
+
+   return enhancedSabbathMode;
+}
+
+static bool AtLeastOneSabbathModeIsEnabled(Defrost_t *instance)
 {
    bool sabbathMode;
    DataModel_Read(
@@ -711,13 +723,12 @@ static bool SabbathModeIsEnabled(Defrost_t *instance)
       instance->_private.config->sabbathModeErd,
       &sabbathMode);
 
-   bool enhancedSabbathMode;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->enhancedSabbathModeErd,
-      &enhancedSabbathMode);
+   return (sabbathMode || EnhancedSabbathModeIsEnabled(instance));
+}
 
-   return (sabbathMode || enhancedSabbathMode);
+static bool AllSabbathModesAreDisabled(Defrost_t *instance)
+{
+   return !AtLeastOneSabbathModeIsEnabled(instance);
 }
 
 static bool SabbathIsReadyToDefrost(Defrost_t *instance)
@@ -740,6 +751,17 @@ static bool ReadyToDefrost(Defrost_t *instance)
       &state);
 
    return state;
+}
+
+static bool EnhancedSabbathIsRequestingDefrost(Defrost_t *instance)
+{
+   bool enhancedSabbathIsRequestingDefrost;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->enhancedSabbathIsRequestingDefrostErd,
+      &enhancedSabbathIsRequestingDefrost);
+
+   return enhancedSabbathIsRequestingDefrost;
 }
 
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
@@ -771,8 +793,8 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_ReadyToDefrost:
-      case Signal_SabbathIsInactive:
-         if(!SabbathModeIsEnabled(instance) && ReadyToDefrost(instance))
+      case Signal_AtLeastOneSabbathModeIsDisabled:
+         if(AllSabbathModesAreDisabled(instance) && ReadyToDefrost(instance))
          {
             if(DontSkipPrechill(instance))
             {
@@ -795,11 +817,19 @@ static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          }
          break;
 
+      case Signal_EnhancedSabbathIsRequestingToDefrost:
       case Signal_SabbathIsReadyToDefrost:
-      case Signal_SabbathIsActive:
-         if(SabbathModeIsEnabled(instance) && SabbathIsReadyToDefrost(instance))
+      case Signal_AtLeastOneSabbathModeIsEnabled:
+         if(AtLeastOneSabbathModeIsEnabled(instance) && SabbathIsReadyToDefrost(instance))
          {
-            Hsm_Transition(hsm, State_PrechillPrep);
+            if(EnhancedSabbathIsRequestingDefrost(instance) && EnhancedSabbathModeIsEnabled(instance))
+            {
+               Hsm_Transition(hsm, State_HeaterOnEntry);
+            }
+            else if(!EnhancedSabbathModeIsEnabled(instance))
+            {
+               Hsm_Transition(hsm, State_PrechillPrep);
+            }
          }
          break;
 
@@ -1338,11 +1368,19 @@ static void DataModelChanged(void *context, const void *args)
       const bool *state = onChangeData->data;
       if(*state)
       {
-         Hsm_SendSignal(&instance->_private.hsm, Signal_SabbathIsActive, NULL);
+         Hsm_SendSignal(&instance->_private.hsm, Signal_AtLeastOneSabbathModeIsEnabled, NULL);
       }
       else
       {
-         Hsm_SendSignal(&instance->_private.hsm, Signal_SabbathIsInactive, NULL);
+         Hsm_SendSignal(&instance->_private.hsm, Signal_AtLeastOneSabbathModeIsDisabled, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->enhancedSabbathIsRequestingDefrostErd)
+   {
+      const bool *enhancedSabbathIsRequestingDefrost = onChangeData->data;
+      if(*enhancedSabbathIsRequestingDefrost)
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_EnhancedSabbathIsRequestingToDefrost, NULL);
       }
    }
 }

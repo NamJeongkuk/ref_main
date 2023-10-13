@@ -382,7 +382,7 @@ TEST_GROUP(EnhancedSabbathMode)
       }
    }
 
-   void LightPwmVotedDutyCyclesShouldBeParametricPwmDutyCyclePercenageAndCare()
+   void LightPwmVotedDutyCyclesShouldBeParametricPwmDutyCyclePercentageAndCare()
    {
       for(uint8_t i = 0; i < config.lightVoteErdList.numberOfErds; i++)
       {
@@ -631,6 +631,11 @@ TEST_GROUP(EnhancedSabbathMode)
       DataModel_Write(dataModel, Erd_SabbathIsReadyToDefrost, &state);
    }
 
+   void GivenSabbathIsReadyToDefrostIs(bool state)
+   {
+      WhenSabbathIsReadyToDefrostIs(state);
+   }
+
    void WhenDefrostingIs(bool state)
    {
       DataModel_Write(dataModel, Erd_Defrosting, &state);
@@ -642,7 +647,7 @@ TEST(EnhancedSabbathMode, ShouldVoteEnhancedSabbathPwmPercentageAndRampingUpAndR
    GivenTheEnhancedSabbathModeStatusIs(SET);
    GivenInitialization();
 
-   LightPwmVotedDutyCyclesShouldBeParametricPwmDutyCyclePercenageAndCare();
+   LightPwmVotedDutyCyclesShouldBeParametricPwmDutyCyclePercentageAndCare();
    LightVotedRampingUpCountsShouldBeMaxRampingUpCountAndCare();
    LightVotedRampingDownCountsShouldBeMaxRampingDownCountAndCare();
 }
@@ -657,7 +662,7 @@ TEST(EnhancedSabbathMode, ShouldVoteEnhancedSabbathPwmPercentageAndRampingUpAndR
    LightVotedRampingDownCountsShouldbeMaxRampingDownCountAndDontCare();
 
    WhenTheEnhancedSabbathModeStatusChangesTo(SET);
-   LightPwmVotedDutyCyclesShouldBeParametricPwmDutyCyclePercenageAndCare();
+   LightPwmVotedDutyCyclesShouldBeParametricPwmDutyCyclePercentageAndCare();
    LightVotedRampingUpCountsShouldBeMaxRampingUpCountAndCare();
    LightVotedRampingDownCountsShouldBeMaxRampingDownCountAndCare();
 }
@@ -672,7 +677,7 @@ TEST(EnhancedSabbathMode, ShouldVoteToChangeCountUpAndCountDownCountsPerMsecAndP
    LightVotedRampingDownCountsShouldbeMaxRampingDownCountAndDontCare();
 
    WhenTheEnhancedSabbathModeStatusChangesTo(SET);
-   LightPwmVotedDutyCyclesShouldBeParametricPwmDutyCyclePercenageAndCare();
+   LightPwmVotedDutyCyclesShouldBeParametricPwmDutyCyclePercentageAndCare();
    LightVotedRampingUpCountsShouldBeMaxRampingUpCountAndCare();
    LightVotedRampingDownCountsShouldBeMaxRampingDownCountAndCare();
 
@@ -832,7 +837,7 @@ TEST(EnhancedSabbathMode, ShouldEnterFreezerStageWhenFreshFoodStageTimerEndsAndS
    EnhancedSabbathStageFreezerCoolingIsActiveShouldBe(SET);
 }
 
-TEST(EnhancedSabbathMode, ShouldStayInFreezerStageWhenFreezerStageTimerExpiredIfFreezerAverageCabinetTemperatureIsLessThanFreezerCabinetSetpoint)
+TEST(EnhancedSabbathMode, ShouldTransitionToOffWhenFreezerStageTimerExpiredIfFreezerAverageCabinetTemperatureIsLessThanFreezerCabinetSetpoint)
 {
    GivenInitializationInTheFreezerStageWithLoadsSetToLow();
    GivenEnhancedSabbathIsRequestingDefrostIs(CLEAR);
@@ -847,13 +852,13 @@ TEST(EnhancedSabbathMode, ShouldStayInFreezerStageWhenFreezerStageTimerExpiredIf
    TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_Care);
 
    After(1);
-   EnhancedSabbathIsRequestingDefrostShouldBe(SET);
-   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
-   CoolingModeShouldBe(CoolingMode_Freezer);
+   EnhancedSabbathIsRequestingDefrostShouldBe(CLEAR);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Off);
+   CoolingModeShouldBe(CoolingMode_Off);
 
-   TheCompressorSpeedVoteShouldBe(CompressorSpeed_Low, Vote_Care);
-   TheCondenserFanSpeedVoteShouldBe(FanSpeed_Low, Vote_Care);
-   TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Low, Vote_Care);
+   TheCompressorSpeedVoteShouldBe(CompressorSpeed_Off, Vote_Care);
+   TheCondenserFanSpeedVoteShouldBe(FanSpeed_Off, Vote_Care);
+   TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off, Vote_Care);
    TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_Care);
 }
 
@@ -1163,4 +1168,111 @@ TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodWhenWaitingToDefrostChangesTo
 
    WhenWaitingToDefrostIs(true);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+}
+
+TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathIsRequestingDefrostWhenEnteringEnhancedSabbathStageFreezerIfCoolingIsActiveIsClearAndSabbathIsAlreadyReadyToDefrost)
+{
+   GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 - 1);
+   GivenTheFreezerCabinetSetpointIs(SomeTemperatureInDegFx100);
+   GivenEnhancedSabbathStageFreezerCoolingIsActive(SET);
+   GivenEnhancedSabbathIsRequestingDefrostIs(CLEAR);
+   GivenSabbathIsReadyToDefrostIs(SET);
+   GivenInitializationInFreshFoodStageWithLoadsSetToLow();
+
+   After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN - 1);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   After(1);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+   EnhancedSabbathStageFreezerCoolingIsActiveShouldBe(CLEAR);
+
+   EnhancedSabbathIsRequestingDefrostShouldBe(SET);
+}
+
+TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathIsRequestingDefrostWhenEnteringEnhancedSabbathStageFreezerIfSabbathBecomesReadyToDefrostDuringEnhancedSabbathStageFreshFoodAndItIsNotActivelyCoolingInFreezerStage)
+{
+   GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 - 1);
+   GivenTheFreezerCabinetSetpointIs(SomeTemperatureInDegFx100);
+   GivenEnhancedSabbathStageFreezerCoolingIsActive(SET);
+   GivenEnhancedSabbathIsRequestingDefrostIs(CLEAR);
+   GivenInitializationInFreshFoodStageWithLoadsSetToLow();
+
+   After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN - 1);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   WhenSabbathIsReadyToDefrostIs(SET);
+   After(1);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+   EnhancedSabbathStageFreezerCoolingIsActiveShouldBe(CLEAR);
+
+   EnhancedSabbathIsRequestingDefrostShouldBe(SET);
+}
+
+TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathIsRequestingDefrostAfterEnhancedSabbathStageFreezerIsCompleteIfCoolingIsActiveIsSetAndSabbathIsAlreadyReadyToDefrost)
+{
+   GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + 1);
+   GivenTheFreezerCabinetSetpointIs(SomeTemperatureInDegFx100);
+   GivenEnhancedSabbathIsRequestingDefrostIs(CLEAR);
+   GivenSabbathIsReadyToDefrostIs(SET);
+   GivenInitializationInFreshFoodStageWithLoadsSetToLow();
+
+   After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN - 1);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   After(1);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+   EnhancedSabbathStageFreezerCoolingIsActiveShouldBe(SET);
+
+   After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN - 1);
+   EnhancedSabbathIsRequestingDefrostShouldBe(CLEAR);
+
+   After(1);
+   EnhancedSabbathIsRequestingDefrostShouldBe(SET);
+}
+
+TEST(EnhancedSabbathMode, ShouldTransitionToOffWhenEnhancedSabbathStageFreezerIsCompleteAndCoolingIsActiveAndSabbathIsNotReadyToDefrost)
+{
+   GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + 1);
+   GivenTheFreezerCabinetSetpointIs(SomeTemperatureInDegFx100);
+   GivenEnhancedSabbathIsRequestingDefrostIs(CLEAR);
+   GivenSabbathIsReadyToDefrostIs(CLEAR);
+   GivenInitializationInFreshFoodStageWithLoadsSetToLow();
+
+   After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN - 1);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   After(1);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+   EnhancedSabbathStageFreezerCoolingIsActiveShouldBe(SET);
+
+   After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN - 1);
+   EnhancedSabbathIsRequestingDefrostShouldBe(CLEAR);
+
+   After(1);
+   EnhancedSabbathIsRequestingDefrostShouldBe(CLEAR);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Off);
+}
+
+TEST(EnhancedSabbathMode, ShouldNotSetEnhancedSabbathIsRequestingDefrostWhenEnteringEnhancedSabbathStageFreezerIfCoolingIsInactiveAndSabbathIsNotReadyToDefrost)
+{
+   GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 - 1);
+   GivenTheFreezerCabinetSetpointIs(SomeTemperatureInDegFx100);
+   GivenEnhancedSabbathIsRequestingDefrostIs(CLEAR);
+   GivenSabbathIsReadyToDefrostIs(CLEAR);
+   GivenInitializationInFreshFoodStageWithLoadsSetToLow();
+
+   After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN - 1);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   After(1);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+   EnhancedSabbathStageFreezerCoolingIsActiveShouldBe(CLEAR);
+   EnhancedSabbathIsRequestingDefrostShouldBe(CLEAR);
+
+   After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN - 1);
+   EnhancedSabbathIsRequestingDefrostShouldBe(CLEAR);
+
+   After(1);
+   EnhancedSabbathIsRequestingDefrostShouldBe(CLEAR);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Off);
 }

@@ -21,6 +21,9 @@ return parametric_data({
     import('./Personality/personalityTestDrivenDevelopmentSingleEvapEnableExternalSensorIsFalse.lua'),
     import('./Personality/personalityTestDrivenDevelopmentSingleEvapCondenserFanCoolingModeWithoutSetpoint.lua'),
     import('./Personality/personalityTestDrivenDevelopmentSingleEvapCondenserFanNoCoolingMode.lua'),
-    import('./Personality/personalityTestDrivenDevelopmentSingleEvapShorterTimeBetweenDefrostsThanNormalSingleEvap.lua')
+    import('./Personality/personalityTestDrivenDevelopmentSingleEvapShorterTimeBetweenDefrostsThanNormalSingleEvap.lua'),
+    import('./Personality/personalityTestDrivenDevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathOffStage.lua'),
+    import('./Personality/personalityTestDrivenDevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathFreshFoodStage.lua'),
+    import('./Personality/personalityTestDrivenDevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathFreezerStage.lua')
   }
 })

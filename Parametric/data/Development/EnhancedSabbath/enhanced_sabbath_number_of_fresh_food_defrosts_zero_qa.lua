@@ -7,5 +7,5 @@ return enhanced_sabbath({
    fresh_food_stage_time_in_minutes = 1,
    freezer_stage_time_in_minutes = 2,
    off_stage_time_in_minutes = 3,
-   interior_lights_pwm_duty_cycle_percentage = 20  
+   interior_lights_pwm_duty_cycle_percentage = 20
 })

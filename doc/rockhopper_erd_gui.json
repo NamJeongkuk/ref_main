@@ -3477,52 +3477,139 @@
       "erds": [
         {
           "namespace": "mb",
+          "displayName": "Sabbath Is Ready To Defrost",
+          "name": "Erd_SabbathIsReadyToDefrost",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Sabbath Time Between Defrosts In Minutes",
+          "name": "Erd_SabbathTimeBetweenDefrostsInMinutes",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Sabbath Waiting For Defrost Time In Minutes",
+          "name": "Erd_SabbathWaitingForDefrostTimeInMinutes",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
           "displayName": "Enhanced Sabbath Is Requesting Defrost",
           "name": "Erd_EnhancedSabbathIsRequestingDefrost",
           "read": true,
-          "write": true
+          "write": true,
+          "interval": 1000000000
         },
         {
           "namespace": "mb",
           "displayName": "Enhanced Sabbath Stage Fresh Food Cooling Is Active",
           "name": "Erd_EnhancedSabbathStageFreshFoodCoolingIsActive",
           "read": true,
-          "write": true
+          "write": true,
+          "interval": 1000000000
         },
         {
           "namespace": "mb",
           "displayName": "Enhanced Sabbath Stage Freezer Cooling Is Active",
           "name": "Erd_EnhancedSabbathStageFreezerCoolingIsActive",
           "read": true,
-          "write": true
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Filtered Temperature Override Request",
+          "name": "Erd_Freezer_FilteredTemperatureOverrideRequest",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Filtered Temperature Override Value in DegFx100",
+          "name": "Erd_Freezer_FilteredTemperatureOverrideValueInDegFx100",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Filtered Temperature Resolved in DegFx100",
+          "name": "Erd_Freezer_FilteredTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Adjusted Setpoint Without Shift in DegFx100",
+          "name": "Erd_Freezer_AdjustedSetpointWithoutShiftInDegFx100",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
         },
         {
           "namespace": "mb",
           "displayName": "Enhanced Sabbath Mode HSM State",
           "name": "Erd_EnhancedSabbathModeHsmState",
           "read": true,
-          "write": true
+          "write": true,
+          "interval": 1000000000
         },
         {
           "namespace": "mb",
-          "displayName": "Waiting to defrost",
+          "displayName": "Waiting To Defrost",
           "name": "Erd_WaitingToDefrost",
           "read": true,
-          "write": true
+          "write": true,
+          "interval": 1000000000
         },
         {
           "namespace": "mb",
           "displayName": "Enhanced Sabbath Mode Enable",
           "name": "Erd_EnhancedSabbathModeEnable",
           "read": true,
-          "write": true
+          "write": true,
+          "interval": 1000000000
         },
         {
           "namespace": "mb",
-          "displayName": "Defrosting State",
+          "displayName": "Sabbath Mode Enable",
+          "name": "Erd_SabbathModeEnable",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Defrosting",
           "name": "Erd_Defrosting",
           "read": true,
-          "write": true
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Defrost Hsm State",
+          "name": "Erd_DefrostHsmState",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Defrost State",
+          "name": "Erd_DefrostState",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
         }
       ]
     },

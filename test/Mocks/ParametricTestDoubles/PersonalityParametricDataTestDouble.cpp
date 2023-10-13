@@ -40,7 +40,10 @@ static const string filePathByPersonality[NumberOfPersonalities][DirectoryAndScr
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapEnableExternalSensorIsFalse.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapCondenserFanCoolingModeWithoutSetpoint.lua" },
    { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapCondenserFanNoCoolingMode.lua" },
-   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapShorterTimeBetweenDefrostsThanNormalSingleEvap.lua" }
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapShorterTimeBetweenDefrostsThanNormalSingleEvap.lua" },
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathOffStage.lua" },
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathFreshFoodStage.lua" },
+   { "Parametric/data/Development/Personality/", "personalityTestDrivenDevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathFreezerStage.lua" }
 };
 
 static bool loaded[NumberOfPersonalities];

@@ -53,7 +53,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts,
    .sabbathModeErd = Erd_SabbathModeEnable,
    .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
-   .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost
+   .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost,
+   .enhancedSabbathIsRequestingDefrostErd = Erd_EnhancedSabbathIsRequestingDefrost
 };
 
 static const DefrostHeaterMaxOnTimeConfiguration_t defrostHeaterMaxOnTimeConfig = {

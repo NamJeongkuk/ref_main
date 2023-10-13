@@ -89,7 +89,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts,
    .sabbathModeErd = Erd_SabbathModeEnable,
    .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
-   .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost
+   .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost,
+   .enhancedSabbathIsRequestingDefrostErd = Erd_EnhancedSabbathIsRequestingDefrost
 };
 
 static const DefrostIdleData_t idleData = {
@@ -806,6 +807,27 @@ TEST_GROUP(Defrost_SingleEvap)
    {
       WhenSabbathIsReadyToDefrost();
    }
+
+   void WhenEnhancedSabbathIsRequestingToDefrost()
+   {
+      DataModel_Write(dataModel, Erd_EnhancedSabbathIsRequestingDefrost, set);
+   }
+
+   void WhenEnhancedSabbathIsNotRequestingToDefrost()
+   {
+      DataModel_Write(dataModel, Erd_EnhancedSabbathIsRequestingDefrost, clear);
+   }
+
+   void GivenLastDefrostsWereNormalFreezerFilteredTemperatureWasTooWarmOnPowerUpThermistorsAreValidAndDefrostIsInIdleState()
+   {
+      Given LastFreshFoodDefrostWasNormal();
+      And LastFreezerDefrostWasNormal();
+      And LastConvertibleCompartmentDefrostWasNormal();
+      And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+      And FreezerThermistorValidityIs(Valid);
+      And FreezerEvaporatorThermistorValidityIs(Valid);
+      And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   }
 };
 
 TEST(Defrost_SingleEvap, ShouldInitializeIntoDwellHsmStateWhenFreezerFilteredTemperatureIsTooWarmAtPowerUpAndPreviousDefrostStateWasHeaterOn)
@@ -1355,7 +1377,7 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenSabbathIsReadyToDefrostWhileS
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenSabbathIsReadyToDefrostWhileEnhancedSabbathModeIsEnabled)
+TEST(Defrost_SingleEvap, ShouldStayInIdleWhenSabbathIsReadyToDefrostWhileEnhancedSabbathModeIsEnabledAndSabbathModeIsDisabledIfEnhancedSabbathHasNotRequestedADefrost)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1364,13 +1386,32 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenSabbathIsReadyToDefrostWhileE
    And FreezerThermistorValidityIs(Valid);
    And FreezerEvaporatorThermistorValidityIs(Valid);
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
-   GivenEnhancedSabbathModeIs(ENABLED);
+   GivenSabbathModeIs(DISABLED);
 
+   WhenEnhancedSabbathIsNotRequestingToDefrost();
+   WhenEnhancedSabbathModeIs(ENABLED);
    WhenSabbathIsReadyToDefrost();
-   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotGoToPrechillPrepWhenSabbathIsReadyToDefrostWhileSabbathModeIsDisabled)
+TEST(Defrost_SingleEvap, ShouldStayInIdleWhenSabbathIsReadyToDefrostWhileEnhancedSabbathModeIsEnabledAndSabbathModeIsEnabledIfEnhancedSabbathHasNotRequestedADefrost)
+{
+   Given LastFreshFoodDefrostWasNormal();
+   And LastFreezerDefrostWasNormal();
+   And LastConvertibleCompartmentDefrostWasNormal();
+   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   And FreezerThermistorValidityIs(Valid);
+   And FreezerEvaporatorThermistorValidityIs(Valid);
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   GivenSabbathModeIs(ENABLED);
+
+   WhenEnhancedSabbathIsNotRequestingToDefrost();
+   WhenEnhancedSabbathModeIs(ENABLED);
+   WhenSabbathIsReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+}
+
+TEST(Defrost_SingleEvap, ShouldStayInIdleWhenSabbathIsReadyToDefrostWhileSabbathModeIsDisabled)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1385,7 +1426,7 @@ TEST(Defrost_SingleEvap, ShouldNotGoToPrechillPrepWhenSabbathIsReadyToDefrostWhi
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
-TEST(Defrost_SingleEvap, ShouldNotGoToPrechillPrepWhenSabbathIsReadyToDefrostWhileEnhancedSabbathModeIsDisabled)
+TEST(Defrost_SingleEvap, ShouldStayInIdleWhenSabbathIsReadyToDefrostWhileEnhancedSabbathModeIsDisabled)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1415,7 +1456,7 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenSabbathModeIsEnabledWhileSabb
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenEnhancedSabbathModeIsEnabledWhileSabbathIsReadyToDefrost)
+TEST(Defrost_SingleEvap, ShouldStayInIdleWhenEnhancedSabbathModeIsEnabledWhileSabbathIsReadyToDefrostIfEnhancedSabbathHasNotRequestedADefrost)
 {
    Given LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
@@ -1424,10 +1465,11 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepWhenEnhancedSabbathModeIsEnabledW
    And FreezerThermistorValidityIs(Valid);
    And FreezerEvaporatorThermistorValidityIs(Valid);
    And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
-   GivenSabbathIsReadyToDefrost();
+   WhenEnhancedSabbathIsNotRequestingToDefrost();
+   WhenSabbathIsReadyToDefrost();
 
    WhenEnhancedSabbathModeIs(ENABLED);
-   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
 
 TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenFreezerThermistorBecomesInvalidWhileInPrechillPrep)
@@ -2522,13 +2564,7 @@ TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenRun
 
 TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenDontSkipPrechillPrepFlagIsSet)
 {
-   Given LastFreshFoodDefrostWasNormal();
-   And LastFreezerDefrostWasNormal();
-   And LastConvertibleCompartmentDefrostWasNormal();
-   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
-   And FreezerEvaporatorThermistorValidityIs(Valid);
-   And FreezerThermistorValidityIs(Valid);
-   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   GivenLastDefrostsWereNormalFreezerFilteredTemperatureWasTooWarmOnPowerUpThermistorsAreValidAndDefrostIsInIdleState();
    And DontSkipPrechillErdIs(SET);
 
    When ReadyToDefrost();
@@ -2538,16 +2574,66 @@ TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenDon
 
 TEST(Defrost_SingleEvap, ShouldResetFreezerCompartmentWasTooWarmOnPowerUpWhenSabbathIsReadyToDefrost)
 {
-   Given LastFreshFoodDefrostWasNormal();
-   And LastFreezerDefrostWasNormal();
-   And LastConvertibleCompartmentDefrostWasNormal();
-   And FreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
-   And FreezerThermistorValidityIs(Valid);
-   And FreezerEvaporatorThermistorValidityIs(Valid);
-   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   GivenLastDefrostsWereNormalFreezerFilteredTemperatureWasTooWarmOnPowerUpThermistorsAreValidAndDefrostIsInIdleState();
    GivenSabbathModeIs(ENABLED);
 
    WhenSabbathIsReadyToDefrost();
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
    FreezerFilteredTemperatureTooWarmOnPowerUpShouldBe(false);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionFromIdleToHeaterOnEntryWhenSabbathIsReadyToDefrostAndBothSabbathAndEnhancedSabbathModesAreActiveAndEnhancedSabbathIsRequestingADefrost)
+{
+   GivenLastDefrostsWereNormalFreezerFilteredTemperatureWasTooWarmOnPowerUpThermistorsAreValidAndDefrostIsInIdleState();
+   GivenSabbathModeIs(ENABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+
+   WhenEnhancedSabbathIsRequestingToDefrost();
+   WhenSabbathIsReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionFromIdleToHeaterOnEntryWhenSabbathIsReadyToDefrostAndSabbathModeIsInactiveAndEnhancedSabbathModeIsActiveAndEnhancedSabbathIsRequestingADefrost)
+{
+   GivenLastDefrostsWereNormalFreezerFilteredTemperatureWasTooWarmOnPowerUpThermistorsAreValidAndDefrostIsInIdleState();
+   GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+
+   WhenEnhancedSabbathIsRequestingToDefrost();
+   WhenSabbathIsReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionFromIdleToPrechillPrepWhenSabbathIsReadyToDefrostAndSabbathModeIsActiveAndEnhancedSabbathModeIsInactiveAndEnhancedSabbathIsRequestingADefrost)
+{
+   GivenLastDefrostsWereNormalFreezerFilteredTemperatureWasTooWarmOnPowerUpThermistorsAreValidAndDefrostIsInIdleState();
+   And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   GivenSabbathModeIs(ENABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
+
+   WhenEnhancedSabbathIsRequestingToDefrost();
+   WhenSabbathIsReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(Defrost_SingleEvap, ShouldStayInIdleWhenSabbathIsReadyToDefrostAndBothSabbathAndEnhancedSabbathAreActiveAndEnhancedSabbathModeDidNotRequestADefrost)
+{
+   GivenLastDefrostsWereNormalFreezerFilteredTemperatureWasTooWarmOnPowerUpThermistorsAreValidAndDefrostIsInIdleState();
+   GivenSabbathModeIs(ENABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+
+   WhenEnhancedSabbathIsNotRequestingToDefrost();
+   WhenSabbathIsReadyToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryWhenEnhancedSabbathIsRequestingADefrostAndSabbathIsAlreadyReadyToDefrostAndEnhancedSabbathIsAlreadyActive)
+{
+   GivenLastDefrostsWereNormalFreezerFilteredTemperatureWasTooWarmOnPowerUpThermistorsAreValidAndDefrostIsInIdleState();
+   GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+
+   WhenSabbathIsReadyToDefrost();
+   WhenEnhancedSabbathIsRequestingToDefrost();
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }

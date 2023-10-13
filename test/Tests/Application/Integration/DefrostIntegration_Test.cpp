@@ -78,10 +78,26 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
    EventSubscription_t readyToDefrostSubscription;
    const SystemMonitorData_t *systemMonitorData;
    const SabbathData_t *sabbathData;
+   const EnhancedSabbathData_t *enhancedSabbathData;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentSingleSpeedCompressorGridIntegration);
+      dataModel = dataModelDouble.dataModel;
+      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+
+      defrostData = PersonalityParametricData_Get(dataModel)->defrostData;
+      compressorData = PersonalityParametricData_Get(dataModel)->compressorData;
+      systemMonitorData = PersonalityParametricData_Get(dataModel)->systemMonitorData;
+      sabbathData = PersonalityParametricData_Get(dataModel)->sabbathData;
+      enhancedSabbathData = PersonalityParametricData_Get(dataModel)->enhancedSabbathData;
+
+      mock().strictOrder();
+   }
+
+   void SetupWithDifferentParametric(uint8_t personality)
+   {
+      ReferDataModel_TestDouble_Init(&dataModelDouble, personality);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
@@ -91,6 +107,7 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       compressorData = PersonalityParametricData_Get(dataModel)->compressorData;
       systemMonitorData = PersonalityParametricData_Get(dataModel)->systemMonitorData;
       sabbathData = PersonalityParametricData_Get(dataModel)->sabbathData;
+      enhancedSabbathData = PersonalityParametricData_Get(dataModel)->enhancedSabbathData;
 
       mock().strictOrder();
    }
@@ -120,6 +137,20 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       GivenFreezerEvaporatorThermistorIsValid();
       GivenFreshFoodThermistorIsValid();
       GivenFreezerThermistorIsValidAndNotTooWarm();
+   }
+
+   void GivenThermistorsAreValidAndFreezerThermistorIsGreaterThanFreezerAdjustedSetpointWithoutShift()
+   {
+      GivenFreezerEvaporatorThermistorIsValid();
+      GivenFreshFoodThermistorIsValid();
+      GivenFreezerThermistorIsValidAndGreaterThanFreezerAdjustedSetpointWithoutShift();
+   }
+
+   void GivenThermistorsAreValidAndFreezerThermistorIsLessThanFreezerAdjustedSetpointWithoutShift()
+   {
+      GivenFreezerEvaporatorThermistorIsValid();
+      GivenFreshFoodThermistorIsValid();
+      GivenFreezerThermistorIsValidAndLessThanFreezerAdjustedSetpointWithoutShift();
    }
 
    void WhenRefrigeratorResetsWithFreezerTooWarm()
@@ -255,6 +286,26 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
    {
       AdcCounts_t validCounts = 19072; // 4.96 F
       DataModel_Write(dataModel, Erd_FreezerThermistor_AdcCount, &validCounts);
+   }
+
+   void GivenFreezerThermistorIsValidAndGreaterThanFreezerAdjustedSetpointWithoutShift()
+   {
+      AdcCounts_t validCounts = 19072; // 4.96 F
+      DataModel_Write(dataModel, Erd_FreezerThermistor_AdcCount, &validCounts);
+
+      TemperatureDegFx100_t adjustedSetpointWithoutShift;
+      DataModel_Read(dataModel, Erd_Freezer_AdjustedSetpointWithoutShiftInDegFx100, &adjustedSetpointWithoutShift);
+      CHECK_TRUE(adjustedSetpointWithoutShift < 496);
+   }
+
+   void GivenFreezerThermistorIsValidAndLessThanFreezerAdjustedSetpointWithoutShift()
+   {
+      AdcCounts_t validCounts = 15552; // -3.76 F
+      DataModel_Write(dataModel, Erd_FreezerThermistor_AdcCount, &validCounts);
+
+      TemperatureDegFx100_t adjustedSetpointWithoutShift;
+      DataModel_Read(dataModel, Erd_Freezer_AdjustedSetpointWithoutShiftInDegFx100, &adjustedSetpointWithoutShift);
+      CHECK_TRUE(adjustedSetpointWithoutShift > -376);
    }
 
    void GivenFreezerThermistorIsInvalid()
@@ -431,6 +482,96 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       GivenDefrostStateWas(DefrostState_Idle);
       GivenApplicationHasBeenInitialized();
 
+      FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp();
+      DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+   }
+
+   void GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToDoActiveFreezingAndTheSabbathTimerToExpireDuringOffStageAndDefrostIsInIdle()
+   {
+      SetupWithDifferentParametric(TddPersonality_DevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathOffStage);
+
+      GivenThermistorsAreValidAndFreezerThermistorIsGreaterThanFreezerAdjustedSetpointWithoutShift();
+      GivenAllPreviousDefrostsWereNormal();
+      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+      GivenEepromWasNotClearedAtStartup();
+      GivenDefrostStateWas(DefrostState_Idle);
+
+      GivenApplicationHasBeenInitialized();
+      FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp();
+      DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+   }
+
+   void GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToNotDoActiveFreezingAndTheSabbathTimerToExpireDuringOffStageAndDefrostIsInIdle()
+   {
+      SetupWithDifferentParametric(TddPersonality_DevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathOffStage);
+
+      GivenThermistorsAreValidAndFreezerThermistorIsLessThanFreezerAdjustedSetpointWithoutShift();
+      GivenAllPreviousDefrostsWereNormal();
+      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+      GivenEepromWasNotClearedAtStartup();
+      GivenDefrostStateWas(DefrostState_Idle);
+
+      GivenApplicationHasBeenInitialized();
+      FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp();
+      DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+   }
+
+   void GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToDoActiveFreezingAndTheSabbathTimerToExpireDuringFreshFoodStageAndDefrostIsInIdle()
+   {
+      SetupWithDifferentParametric(TddPersonality_DevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathFreshFoodStage);
+
+      GivenThermistorsAreValidAndFreezerThermistorIsGreaterThanFreezerAdjustedSetpointWithoutShift();
+      GivenAllPreviousDefrostsWereNormal();
+      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+      GivenEepromWasNotClearedAtStartup();
+      GivenDefrostStateWas(DefrostState_Idle);
+
+      GivenApplicationHasBeenInitialized();
+      FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp();
+      DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+   }
+
+   void GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToNotDoActiveFreezingAndTheSabbathTimerToExpireDuringFreshFoodStageAndDefrostIsInIdle()
+   {
+      SetupWithDifferentParametric(TddPersonality_DevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathFreshFoodStage);
+
+      GivenThermistorsAreValidAndFreezerThermistorIsLessThanFreezerAdjustedSetpointWithoutShift();
+      GivenAllPreviousDefrostsWereNormal();
+      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+      GivenEepromWasNotClearedAtStartup();
+      GivenDefrostStateWas(DefrostState_Idle);
+
+      GivenApplicationHasBeenInitialized();
+      FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp();
+      DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+   }
+
+   void GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToDoActiveFreezingAndTheSabbathTimerToExpireDuringFreezerStageAndDefrostIsInIdle()
+   {
+      SetupWithDifferentParametric(TddPersonality_DevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathFreezerStage);
+
+      GivenThermistorsAreValidAndFreezerThermistorIsGreaterThanFreezerAdjustedSetpointWithoutShift();
+      GivenAllPreviousDefrostsWereNormal();
+      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+      GivenEepromWasNotClearedAtStartup();
+      GivenDefrostStateWas(DefrostState_Idle);
+
+      GivenApplicationHasBeenInitialized();
+      FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp();
+      DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+   }
+
+   void GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToNotDoActiveFreezingAndTheSabbathTimerToExpireDuringFreezerStageAndDefrostIsInIdle()
+   {
+      SetupWithDifferentParametric(TddPersonality_DevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathFreezerStage);
+
+      GivenThermistorsAreValidAndFreezerThermistorIsLessThanFreezerAdjustedSetpointWithoutShift();
+      GivenAllPreviousDefrostsWereNormal();
+      GivenInvalidFreezerEvaporatorThermistorDuringDefrostIs(false);
+      GivenEepromWasNotClearedAtStartup();
+      GivenDefrostStateWas(DefrostState_Idle);
+
+      GivenApplicationHasBeenInitialized();
       FreezerCompartmentTemperatureShouldNotBeTooWarmOnPowerUp();
       DefrostHsmStateShouldBe(DefrostHsmState_Idle);
    }
@@ -861,6 +1002,11 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       GivenSabbathModeIs(state);
    }
 
+   void GivenEnhancedSabbathModeIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_EnhancedSabbathModeEnable, &state);
+   }
+
    void TheNormalTimeBetweenDefrostsShouldBe(uint16_t expectedTime)
    {
       uint16_t actualTime;
@@ -907,6 +1053,46 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
    void RunTimerModuleToSaveErdInEeprom()
    {
       After(100);
+   }
+
+   void EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_t expected)
+   {
+      EnhancedSabbathModeHsmState_t actual;
+      DataModel_Read(dataModel, Erd_EnhancedSabbathModeHsmState, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void EnhancedSabbathStageFreezerCoolingIsActiveShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_EnhancedSabbathStageFreezerCoolingIsActive, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void EnhancedSabbathIsRequestingDefrostShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_EnhancedSabbathIsRequestingDefrost, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void EnhancedSabbathModeTransitionsFromFreshFoodStageToFreezerStage()
+   {
+      After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN - 1);
+      EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+      After(1);
+      EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+   }
+
+   void EnhancedSabbathModeTransitionsFromFreshFoodStageToOffStage()
+   {
+      EnhancedSabbathModeTransitionsFromFreshFoodStageToFreezerStage();
+
+      After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN - 1);
+      EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+      After(1);
+      EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Off);
    }
 };
 
@@ -1771,4 +1957,374 @@ TEST(DefrostIntegration_SingleEvap, ShouldDefrostWhenEepromCompressorOnTimeAndDo
 
    After(0);
    DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldEnterPrechillPrepWhenDefrostingTheNextTimeThatSabbathTimeBetweenDefrostsHasPassedIfSabbathIsEnabledAndEnhancedSabbathIsDisabled)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToDoActiveFreezingAndTheSabbathTimerToExpireDuringOffStageAndDefrostIsInIdle();
+   GivenDefrostHsmStateSubscriptionHasBeenInitializedAndSubscribedToTheDefrostHsmState();
+   GivenSabbathModeIs(ENABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
+
+   After(sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN - 1);
+   SabbathIsReadyToDefrostShouldBe(false);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+
+   TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
+   TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Prechill);
+   TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry); // prechill conditions are already met
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostAfterFinishingEnhancedSabbathFreezerActiveCoolingStageWhenSabbathBecomesReadyToDefrostDuringOffStageAndBothSabbathAndEnhancedSabbathAreEnabled)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToDoActiveFreezingAndTheSabbathTimerToExpireDuringOffStageAndDefrostIsInIdle();
+   GivenSabbathModeIs(ENABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   EnhancedSabbathModeTransitionsFromFreshFoodStageToOffStage();
+
+   After(sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN -
+      enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN -
+      enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN - 1);
+   SabbathIsReadyToDefrostShouldBe(false);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+
+   After(enhancedSabbathData->offStageTimeInMinutes * MSEC_PER_MIN -
+      (sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN -
+         enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN -
+         enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN) -
+      1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Off);
+
+   After(1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   EnhancedSabbathModeTransitionsFromFreshFoodStageToFreezerStage();
+
+   After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN - 1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Defrosting);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostRightAwayWhenEnteringEnhancedSabbathFreezerInactiveCoolingStageIfSabbathBecomesReadyToDefrostDuringPreviousOffStageAndBothSabbathAndEnhancedSabbathAreEnabled)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToNotDoActiveFreezingAndTheSabbathTimerToExpireDuringOffStageAndDefrostIsInIdle();
+   GivenSabbathModeIs(ENABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   EnhancedSabbathModeTransitionsFromFreshFoodStageToOffStage();
+
+   After(sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN -
+      enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN -
+      enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN - 1);
+   SabbathIsReadyToDefrostShouldBe(false);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+
+   After(enhancedSabbathData->offStageTimeInMinutes * MSEC_PER_MIN -
+      (sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN -
+         enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN -
+         enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN) -
+      1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Off);
+
+   After(1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN - 1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+   After(1);
+
+   SabbathIsReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Defrosting);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostAfterFinishingEnhancedSabbathFreezerActiveCoolingStageWhenSabbathBecomesReadyToDefrostDuringOffStageAndSabbathIsDisabledAndEnhancedSabbathIsEnabled)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToDoActiveFreezingAndTheSabbathTimerToExpireDuringOffStageAndDefrostIsInIdle();
+   GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   EnhancedSabbathModeTransitionsFromFreshFoodStageToOffStage();
+
+   After(sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN -
+      enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN -
+      enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN - 1);
+   SabbathIsReadyToDefrostShouldBe(false);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+
+   After(enhancedSabbathData->offStageTimeInMinutes * MSEC_PER_MIN -
+      (sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN -
+         enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN -
+         enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN) -
+      1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Off);
+
+   After(1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   EnhancedSabbathModeTransitionsFromFreshFoodStageToFreezerStage();
+
+   After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN - 1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Defrosting);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostRightAwayWhenEnteringEnhancedSabbathFreezerInactiveCoolingStageIfSabbathBecomesReadyToDefrostDuringPreviousOffStageAndSabbathIsDisabledAndEnhancedSabbathIsEnabled)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToNotDoActiveFreezingAndTheSabbathTimerToExpireDuringOffStageAndDefrostIsInIdle();
+   GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   EnhancedSabbathModeTransitionsFromFreshFoodStageToOffStage();
+
+   After(sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN -
+      enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN -
+      enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN - 1);
+   SabbathIsReadyToDefrostShouldBe(false);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+
+   After(enhancedSabbathData->offStageTimeInMinutes * MSEC_PER_MIN -
+      (sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN -
+         enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN -
+         enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN) -
+      1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Off);
+
+   After(1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN - 1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+   After(1);
+
+   SabbathIsReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Defrosting);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostAfterFinishingEnhancedSabbathFreezerActiveCoolingStageWhenSabbathBecomesReadyToDefrostDuringFreshFoodStageAndBothSabbathAndEnhancedSabbathAreEnabled)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToDoActiveFreezingAndTheSabbathTimerToExpireDuringFreshFoodStageAndDefrostIsInIdle();
+   GivenSabbathModeIs(ENABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   After(sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN -
+      1);
+   SabbathIsReadyToDefrostShouldBe(false);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+
+   After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN -
+      sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN - 1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   After(1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+
+   After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN - 1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Defrosting);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostRightAwayWhenEnteringEnhancedSabbathFreezerInactiveCoolingStageIfSabbathBecomesReadyToDefrostDuringPreviousFreshFoodStageAndBothSabbathAndEnhancedSabbathAreEnabled)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToNotDoActiveFreezingAndTheSabbathTimerToExpireDuringFreshFoodStageAndDefrostIsInIdle();
+   GivenSabbathModeIs(ENABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   After(sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN -
+      1);
+   SabbathIsReadyToDefrostShouldBe(false);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+
+   After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN -
+      sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN - 1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Defrosting);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostAfterFinishingEnhancedSabbathFreezerActiveCoolingStageWhenSabbathBecomesReadyToDefrostDuringFreshFoodStageAndBothSabbathAndSabbathIsDisabledAndEnhancedSabbathIsEnabled)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToDoActiveFreezingAndTheSabbathTimerToExpireDuringFreshFoodStageAndDefrostIsInIdle();
+   GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   After(sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN -
+      1);
+   SabbathIsReadyToDefrostShouldBe(false);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+
+   After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN -
+      sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN - 1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   After(1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+
+   After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN - 1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Defrosting);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostRightAwayWhenEnteringEnhancedSabbathFreezerInactiveCoolingStageIfSabbathBecomesReadyToDefrostDuringPreviousFreshFoodStageAndSabbathIsDisabledAndEnhancedSabbathIsEnabled)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToNotDoActiveFreezingAndTheSabbathTimerToExpireDuringFreshFoodStageAndDefrostIsInIdle();
+   GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   After(sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN -
+      1);
+   SabbathIsReadyToDefrostShouldBe(false);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+
+   After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN -
+      sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN - 1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Defrosting);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostAfterFinishingEnhancedSabbathFreezerActiveCoolingStageWhenSabbathBecomesReadyToDefrostDuringFreezerStageAndBothSabbathAndEnhancedSabbathAreEnabled)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToDoActiveFreezingAndTheSabbathTimerToExpireDuringFreezerStageAndDefrostIsInIdle();
+   GivenSabbathModeIs(ENABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   EnhancedSabbathModeTransitionsFromFreshFoodStageToFreezerStage();
+
+   After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN -
+      sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN - 1);
+   SabbathIsReadyToDefrostShouldBe(false);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+
+   After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN -
+      (enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN -
+         sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN) -
+      1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Defrosting);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostRightAwayWhenEnteringEnhancedSabbathFreezerInactiveCoolingStageIfSabbathBecomesReadyToDefrostDuringPreviousFreezerStageAndBothSabbathAndEnhancedSabbathAreEnabled)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToNotDoActiveFreezingAndTheSabbathTimerToExpireDuringFreezerStageAndDefrostIsInIdle();
+   GivenSabbathModeIs(ENABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   EnhancedSabbathModeTransitionsFromFreshFoodStageToFreezerStage();
+
+   After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN -
+      sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN - 1);
+   SabbathIsReadyToDefrostShouldBe(false);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Defrosting);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostAfterFinishingEnhancedSabbathFreezerActiveCoolingStageWhenSabbathBecomesReadyToDefrostDuringFreezerStageAndSabbathIsDisabledAndEnhancedSabbathIsEnabled)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToDoActiveFreezingAndTheSabbathTimerToExpireDuringFreezerStageAndDefrostIsInIdle();
+   GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   EnhancedSabbathModeTransitionsFromFreshFoodStageToFreezerStage();
+
+   After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN -
+      sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN - 1);
+   SabbathIsReadyToDefrostShouldBe(false);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+
+   After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN -
+      (enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN -
+         sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN) -
+      1);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Defrosting);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldDefrostRightAwayWhenEnteringEnhancedSabbathFreezerInactiveCoolingStageIfSabbathBecomesReadyToDefrostDuringPreviousFreezerStageAndSabbathIsDisabledAndEnhancedSabbathIsEnabled)
+{
+   GivenThatTheApplicationHasStartedWithValidThermistorsThatWillCauseEnhancedSabbathToNotDoActiveFreezingAndTheSabbathTimerToExpireDuringFreezerStageAndDefrostIsInIdle();
+   GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+
+   EnhancedSabbathModeTransitionsFromFreshFoodStageToFreezerStage();
+
+   After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN -
+      sabbathData->timeBetweenDefrostsInMinutes * MSEC_PER_MIN - 1);
+   SabbathIsReadyToDefrostShouldBe(false);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+
+   After(1);
+   SabbathIsReadyToDefrostShouldBe(true);
+   DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Defrosting);
 }
