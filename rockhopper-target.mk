@@ -4,6 +4,7 @@ export TARGET:=rockhopper
 OUTPUT_DIR:=build/$(TARGET)
 BOOT_LOADER_DIR:=lib/rockhopper-boot-loader
 BOOT_LOADER_TARGET:=rockhopper
+BOOT_LOADER_UPDATER_DIR:=$(BOOT_LOADER_DIR)/lib/boot-loader-updater
 CPU:=rx100
 TOOLCHAIN_VERSION:=8.3.0.202305-gdb-12.1
 LINKER_SCRIPT:=$(TARGET).ld
@@ -144,6 +145,7 @@ $(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET).map', to = '' })
 $(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET)_memory_usage_report.md', to = '' })
 $(call add_to_package,{ from = '$(OUTPUT_DIR)/$(TARGET).apl', to = 'binaries/$(TARGET).apl', version = true })
 $(call add_to_package,{ from = '$(BOOT_LOADER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader/$(BOOT_LOADER_TARGET)-boot-loader.mot', to = 'binaries/$(TARGET).mot', version = true })
+$(call add_to_package,{ from = '$(BOOT_LOADER_UPDATER_DIR)/build/$(BOOT_LOADER_TARGET)-boot-loader-updater/$(BOOT_LOADER_TARGET)-boot-loader-updater.apl', to = 'binaries/', version = true })
 
 .PHONY: all
 all: info
