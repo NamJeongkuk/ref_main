@@ -1170,6 +1170,14 @@ TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodWhenWaitingToDefrostChangesTo
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
 }
 
+TEST(EnhancedSabbathMode, ShouldKeepRegularSabbathModeSetIfEnhancedSabbathModeInitializesIntoDisabledStateAndRegularSabbathModeIsSet)
+{
+   GivenRegularSabbathModeStatusIs(SET);
+   GivenInitializationInDisabledState();
+
+   RegularSabbathStatusShouldBe(SET);
+}
+
 TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathIsRequestingDefrostWhenEnteringEnhancedSabbathStageFreezerIfCoolingIsActiveIsClearAndSabbathIsAlreadyReadyToDefrost)
 {
    GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 - 1);

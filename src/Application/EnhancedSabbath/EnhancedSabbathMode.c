@@ -563,7 +563,6 @@ static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Hsm_Entry:
-         SetRegularSabbathStatusTo(instance, false);
          SetEnhancedSabbathStatusTo(instance, false);
          SetHsmStateTo(instance, EnhancedSabbathModeHsmState_Disabled);
          SetAllLoadVotesToDontCare(instance);
@@ -615,6 +614,7 @@ static bool State_Enabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_EnhancedSabbathModeDisabled:
+         SetRegularSabbathStatusTo(instance, false);
          Hsm_Transition(hsm, State_Disabled);
          break;
 
