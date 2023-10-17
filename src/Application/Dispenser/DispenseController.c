@@ -157,13 +157,18 @@ static bool WaterDispenseInhibitedByRfid(DispenseController_t *instance, Dispens
 
 static bool AutoFillSensorError(DispenseController_t *instance)
 {
-   bool state;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->autofillSensorErrorErd,
-      &state);
+   if(instance->_private.config->autofillSensorErrorErd != Erd_Invalid)
+   {
+      bool state;
+      DataModel_Read(
+         instance->_private.dataModel,
+         instance->_private.config->autofillSensorErrorErd,
+         &state);
 
-   return state;
+      return state;
+   }
+
+   return false;
 }
 
 static bool AutofillDispenseInhibitedByAutofillSensorError(DispenseController_t *instance, DispensingRequestSelection_t requestSelection)
@@ -378,10 +383,13 @@ static void OnDataModelChange(void *context, const void *args)
    }
    else if(erd == instance->_private.config->autofillSensorErrorErd)
    {
-      const bool *state = onChangeData->data;
-      if(*state)
+      if(erd != Erd_Invalid)
       {
-         Hsm_SendSignal(&instance->_private.hsm, Signal_AutoFillSensorError, NULL);
+         const bool *state = onChangeData->data;
+         if(*state)
+         {
+            Hsm_SendSignal(&instance->_private.hsm, Signal_AutoFillSensorError, NULL);
+         }
       }
    }
 }

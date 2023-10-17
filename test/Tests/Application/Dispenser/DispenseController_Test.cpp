@@ -34,6 +34,19 @@ static const DispenseControllerConfig_t config = {
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus
 };
 
+static const DispenseControllerConfig_t configWithInvalidAutofillSensorErd = {
+   .privateDispensingRequestErd = Erd_PrivateDispensingRequest,
+   .privateDispensingResultStatusErd = Erd_PrivateDispensingResultStatus,
+   .dispensingInhibitedErd = Erd_DispensingInhibitedReason,
+   .autofillSensorErrorErd = Erd_Invalid,
+   .dispensingDisabledErd = Erd_DispensingDisabled,
+   .augerMotorDispensingVoteErd = Erd_AugerMotor_DispensingVote,
+   .isolationValveDispensingVoteErd = Erd_IsolationWaterValve_DispensingVote,
+   .dispensingValveDispensingVoteErd = Erd_DispenserWaterValve_DispensingVote,
+   .timerModuleErd = Erd_TimerModule,
+   .dispensingRequestStatusErd = Erd_DispensingRequestStatus
+};
+
 TEST_GROUP(DispenseController)
 {
    DispenseController_t instance;
@@ -64,6 +77,15 @@ TEST_GROUP(DispenseController)
          dataModel,
          dispenserData,
          &config);
+   }
+
+   void GivenTheModuleIsInitializedWithInvalidAutofillSensorErd()
+   {
+      DispenseController_Init(
+         &instance,
+         dataModel,
+         dispenserData,
+         &configWithInvalidAutofillSensorErd);
    }
 
    void WhenDispensingRequestActionIsStopThenStart()
@@ -793,4 +815,38 @@ TEST(DispenseController, ShouldUpdateDispensingRequestStatusBasedOnPrivateDispen
 
    WhenTheDispensingRequestActionIs(DispensingAction_Stop);
    ShouldNotBeDispensing();
+}
+
+TEST(DispenseController, ShouldAllowDispenseBySettingTheDispensingRequestStatusToStartAutofillDispensingWithAutofillSensorErrorSetAndModuleInitializedWithAnInvalidAutofillSensorErrorErd)
+{
+   GivenDispensingInhibitedByAutofillSensorError();
+   GivenWaterDispensingNotInhibitedByDoor();
+   GivenTheModuleIsInitializedWithInvalidAutofillSensorErd();
+   TheDispensingRequestStatusAndSelectionAndActionShouldBe(
+      DispenseStatus_CompletedSuccessfully,
+      DispensingRequestSelection_Water,
+      DispensingAction_Stop);
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_Autofill, DispensingAction_Start);
+   TheDispensingRequestStatusAndSelectionAndActionShouldBe(
+      DispenseStatus_Dispensing,
+      DispensingRequestSelection_Autofill,
+      DispensingAction_Start);
+}
+
+TEST(DispenseController, ShouldNotAllowDispenseByNotUpdatingTheDispensingRequestStatusWithAutofillSensorErrorSetAndModuleInitializedWithAValidAutofillSensorErrorErd)
+{
+   GivenDispensingInhibitedByAutofillSensorError();
+   GivenWaterDispensingNotInhibitedByDoor();
+   GivenTheModuleIsInitialized();
+   TheDispensingRequestStatusAndSelectionAndActionShouldBe(
+      DispenseStatus_CompletedSuccessfully,
+      DispensingRequestSelection_Water,
+      DispensingAction_Stop);
+
+   WhenTheDispensingRequestIs(DispensingRequestSelection_Autofill, DispensingAction_Start);
+   TheDispensingRequestStatusAndSelectionAndActionShouldBe(
+      DispenseStatus_CompletedSuccessfully,
+      DispensingRequestSelection_Water,
+      DispensingAction_Stop);
 }
