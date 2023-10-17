@@ -1464,6 +1464,14 @@
             },
             {
                "namespace": "mb",
+               "displayName": "Ice Maker 0 Present",
+               "name": "Erd_IceMaker0Present",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
                "displayName": "Ice Maker 0 Enable Request",
                "name": "Erd_IceMaker0EnableRequest",
                "read": false,
@@ -1495,6 +1503,14 @@
             },
             {
                "namespace": "mb",
+               "displayName": "Ice Maker 1 Present",
+               "name": "Erd_IceMaker1Present",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
                "displayName": "Ice Maker 1 Enable Request",
                "name": "Erd_IceMaker1EnableRequest",
                "read": false,
@@ -1522,6 +1538,14 @@
                "name": "Erd_IceMaker1TypeInformation",
                "read": true,
                "write": false,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Ice Maker 2 Present",
+               "name": "Erd_IceMaker2Present",
+               "read": true,
+               "write": true,
                "interval": 1000000000
             },
             {
