@@ -28,7 +28,6 @@
 
 enum
 {
-   MaxNumberOfSubscriptions = 5,
    SendBufferSize = 251,
    ReceiveBufferSize = 251,
    SendReceiveBufferSize = Gea2Interface_SingleWireMaxSendReceiveBufferSize,
@@ -62,12 +61,6 @@ typedef struct
       ErdGea2SubscriptionApiRevision2SubscriptionResources_t subscriptionResources[ErdApiV2SubscriptionClients];
       uint8_t subscriptionBuffers[ErdApiV2SubscriptionClients][sizeof(GeaStackPublicErdCount_t) / 4 + 1];
       ConstArrayMap_BinarySearch_t publicErdMap;
-      ErdStreamReceiver_t erdStreamReceiver;
-      DataSourcePacketReadWriteManager_Simple_t dataSourceReadWriteManager;
-      DataSourcePacketGea2MessageEndpointConnector_t dataSourceEndpointConnector;
-      DataSourcePacketSubscriptionFrontEnd_Simple_t dataSourceSubscriptionFrontEnd;
-      DataSourcePacketSubscriptionManager_Simple_SubscriptionListItem_t subscriptionList[MaxNumberOfSubscriptions];
-      DataSourcePacketSubscriptionManager_Simple_t dataSourceSubscriptionManager;
       ErdGea2ReadWriteApiRevision2_t erdApiRevision2;
 
       Gea2Configurator_t configurator;
