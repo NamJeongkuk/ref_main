@@ -11,7 +11,7 @@
 #include "SetpointZone.h"
 #include "utils.h"
 
-static void CalculateCrossAmbientOffset(void *context, const void *args)
+static void CalculateCrossAmbientOffsetInDegFx100(void *context, const void *args)
 {
    IGNORE(args);
    CrossAmbientCalculator_t *instance = context;
@@ -22,12 +22,12 @@ static void CalculateCrossAmbientOffset(void *context, const void *args)
       instance->_private.config->crossAmbientWindowAveragedTemperatureInDegFx100Erd,
       &averageTemperature);
 
-   TemperatureDegFx100_t offset = (instance->_private.crossAmbientOffsetData->slopeCoefficient * (averageTemperature - 9000)) / 10000;
-   offset = CLAMP(offset, instance->_private.crossAmbientOffsetData->minimumAmbientOffset, instance->_private.crossAmbientOffsetData->maximumAmbientOffset);
+   TemperatureDegFx100_t crossAmbientOffsetInDegFx100 = (instance->_private.crossAmbientOffsetData->slopeCoefficient * (averageTemperature - 9000)) / 1000;
+   crossAmbientOffsetInDegFx100 = CLAMP(crossAmbientOffsetInDegFx100, instance->_private.crossAmbientOffsetData->minimumAmbientOffsetInDegFx100, instance->_private.crossAmbientOffsetData->maximumAmbientOffsetInDegFx100);
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->crossAmbientOffsetErd,
-      &offset);
+      instance->_private.config->crossAmbientOffsetInDegFx100Erd,
+      &crossAmbientOffsetInDegFx100);
 }
 
 void CrossAmbientOffsetCalculator_Init(
@@ -43,7 +43,7 @@ void CrossAmbientOffsetCalculator_Init(
    EventSubscription_Init(
       &instance->_private.crossAmbientWindowAveragedTemperatureSubscription,
       instance,
-      CalculateCrossAmbientOffset);
+      CalculateCrossAmbientOffsetInDegFx100);
 
    DataModel_Subscribe(
       instance->_private.dataModel,

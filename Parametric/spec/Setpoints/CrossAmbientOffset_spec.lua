@@ -10,9 +10,9 @@ describe('CrossAmbientOffset', function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-      cross_ambient_slope_coefficient = 1000,
+      cross_ambient_slope_coefficient = 100,
       minimum_cross_ambient_offset_in_degfx100 = -3000,
-      maximum_cross_ambient_offset_in_degfx100 = 100
+      maximum_cross_ambient_offset_in_degfx100 = 1000
     }, overrides or {})
   end
 

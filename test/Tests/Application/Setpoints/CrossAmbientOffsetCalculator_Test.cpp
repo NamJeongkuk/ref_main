@@ -33,7 +33,7 @@ enum
 
 static const CrossAmbientCalculatorConfig_t config = {
    .crossAmbientWindowAveragedTemperatureInDegFx100Erd = Erd_Ambient_WindowAveragedTemperatureInDegFx100,
-   .crossAmbientOffsetErd = Erd_FreshFood_CrossAmbientOffsetInDegFx100,
+   .crossAmbientOffsetInDegFx100Erd = Erd_FreshFood_CrossAmbientOffsetInDegFx100,
 };
 
 TEST_GROUP(CrossAmbientOffsetCalculator)
@@ -62,7 +62,7 @@ TEST_GROUP(CrossAmbientOffsetCalculator)
          &config);
    }
 
-   void CrossAmbientOffsetShouldBe(TemperatureDegFx100_t expected)
+   void CrossAmbientOffsetInDegFx100ShouldBe(TemperatureDegFx100_t expected)
    {
       TemperatureDegFx100_t actual;
       DataModel_Read(
@@ -86,38 +86,38 @@ TEST(CrossAmbientOffsetCalculator, ShouldCalculateCrossAmbientOffsetOnErdChange)
 {
    Given TheModuleIsInitialized();
    When AverageTemperatureIs(TemperatureBetweenMinandMaxAmbientOffsetInDegFx100);
-   CrossAmbientOffsetShouldBe(
-      (crossAmbientOffsetData->slopeCoefficient * (TemperatureBetweenMinandMaxAmbientOffsetInDegFx100 - 9000)) / 10000);
+   CrossAmbientOffsetInDegFx100ShouldBe(
+      (crossAmbientOffsetData->slopeCoefficient * (TemperatureBetweenMinandMaxAmbientOffsetInDegFx100 - 9000)) / 1000);
 
    When AverageTemperatureIs(AnotherTemperatureBetweenMinandMaxAmbientOffsetInDegFx100);
-   CrossAmbientOffsetShouldBe(
-      (crossAmbientOffsetData->slopeCoefficient * (AnotherTemperatureBetweenMinandMaxAmbientOffsetInDegFx100 - 9000)) / 10000);
+   CrossAmbientOffsetInDegFx100ShouldBe(
+      (crossAmbientOffsetData->slopeCoefficient * (AnotherTemperatureBetweenMinandMaxAmbientOffsetInDegFx100 - 9000)) / 1000);
 }
 
 TEST(CrossAmbientOffsetCalculator, ShouldDefaultToMinValueWhenCrossAmbientOffsetIsLessThanMin)
 {
    Given TheModuleIsInitialized();
    Given AverageTemperatureIs(TemperatureLessThanMinAmbientOffsetInDegFx100);
-   CrossAmbientOffsetShouldBe(crossAmbientOffsetData->minimumAmbientOffset);
+   CrossAmbientOffsetInDegFx100ShouldBe(crossAmbientOffsetData->minimumAmbientOffsetInDegFx100);
 }
 
 TEST(CrossAmbientOffsetCalculator, ShouldDefaultToMaxValueWhenCrossAmbientOffsetIsGreaterThanMax)
 {
    Given TheModuleIsInitialized();
    Given AverageTemperatureIs(TemperatureGreaterThanMaxAmbientOffsetInDegFx100);
-   CrossAmbientOffsetShouldBe(crossAmbientOffsetData->maximumAmbientOffset);
+   CrossAmbientOffsetInDegFx100ShouldBe(crossAmbientOffsetData->maximumAmbientOffsetInDegFx100);
 }
 
 TEST(CrossAmbientOffsetCalculator, ShouldDefaultToMinValueWhenCrossAmbientOffsetIsExactlyMin)
 {
    Given TheModuleIsInitialized();
    Given AverageTemperatureIs(TemperatureExactlyOnMinAmbientOffsetInDegFx100);
-   CrossAmbientOffsetShouldBe(crossAmbientOffsetData->minimumAmbientOffset);
+   CrossAmbientOffsetInDegFx100ShouldBe(crossAmbientOffsetData->minimumAmbientOffsetInDegFx100);
 }
 
 TEST(CrossAmbientOffsetCalculator, ShouldDefaultToMaxValueWhenCrossAmbientOffsetIsExactlyMax)
 {
    Given TheModuleIsInitialized();
    Given AverageTemperatureIs(TemperatureExactlyOnMaxAmbientOffsetInDegFx100);
-   CrossAmbientOffsetShouldBe(crossAmbientOffsetData->maximumAmbientOffset);
+   CrossAmbientOffsetInDegFx100ShouldBe(crossAmbientOffsetData->maximumAmbientOffsetInDegFx100);
 }

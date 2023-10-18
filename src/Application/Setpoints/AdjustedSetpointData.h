@@ -20,8 +20,8 @@ typedef struct
 typedef struct
 {
    int16_t slopeCoefficient;
-   TemperatureDegFx100_t minimumAmbientOffset;
-   TemperatureDegFx100_t maximumAmbientOffset;
+   TemperatureDegFx100_t minimumAmbientOffsetInDegFx100;
+   TemperatureDegFx100_t maximumAmbientOffsetInDegFx100;
 } CrossAmbientOffsetData_t;
 
 typedef struct
