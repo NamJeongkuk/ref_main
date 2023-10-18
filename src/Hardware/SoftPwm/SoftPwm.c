@@ -40,7 +40,7 @@ static void DutyCycleOnComplete(void *context)
 
 static void StartOnTimer(SoftPwm_t *instance, const PwmDutyCycle_t *pwmDutyCycle)
 {
-   TimerTicks_t onTicks = (((TimerTicks_t)*pwmDutyCycle * instance->_private.config->frequencyX100 * MSEC_PER_SEC) / PwmDutyCycle_Max);
+   TimerTicks_t onTicks = (((TimerTicks_t)*pwmDutyCycle * instance->_private.config->periodInSeconds * MSEC_PER_SEC) / PwmDutyCycle_Max);
    TimerModule_StartOneShot(
       DataModelErdPointerAccess_GetTimerModule(
          instance->_private.dataModel,
@@ -59,7 +59,11 @@ static void PeriodTimerExpired(void *context)
    if(pwmDutyCycle > 0)
    {
       SetGpioTo(instance, ON);
-      StartOnTimer(instance, &pwmDutyCycle);
+
+      if(pwmDutyCycle < PwmDutyCycle_Max)
+      {
+         StartOnTimer(instance, &pwmDutyCycle);
+      }
    }
 }
 
@@ -67,7 +71,7 @@ static void StartPeriodicTimer(void *context)
 {
    SoftPwm_t *instance = context;
 
-   TimerTicks_t periodTicks = instance->_private.config->frequencyX100 * MSEC_PER_SEC;
+   TimerTicks_t periodTicks = instance->_private.config->periodInSeconds * MSEC_PER_SEC;
    TimerModule_StartPeriodic(
       DataModelErdPointerAccess_GetTimerModule(
          instance->_private.dataModel,

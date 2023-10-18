@@ -18,7 +18,7 @@ typedef struct
    Erd_t pwmDutyCycleErd; // PwmDutyCycle_t
    Erd_t gpioErd; // bool
    Erd_t timerModuleErd; // TimerModule_t *
-   uint16_t frequencyX100;
+   uint16_t periodInSeconds;
 } SoftPwmConfiguration_t;
 
 typedef struct

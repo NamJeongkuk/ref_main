@@ -30,15 +30,16 @@ enum
    ZeroPwmDutyCycle = 0,
    SomePositivePwmDutyCycle = 12345,
    AnotherPositivePwmDutyCycle = 20000,
-   SomeFrequencyX100 = 10,
+   SomePeriodInSeconds = 10,
    SomeNumberOfCycles = 10
 };
 
 enum
 {
-   SomePeriodInMs = SomeFrequencyX100 * MSEC_PER_SEC,
-   SomeOnCycleInMs = ((SomePositivePwmDutyCycle * SomeFrequencyX100 * MSEC_PER_SEC) / PwmDutyCycle_Max),
-   AnotherOnCycleInMs = ((AnotherPositivePwmDutyCycle * SomeFrequencyX100 * MSEC_PER_SEC) / PwmDutyCycle_Max)
+   SomePeriodInMs = SomePeriodInSeconds * MSEC_PER_SEC,
+   SomeOnCycleInMs = ((SomePositivePwmDutyCycle * SomePeriodInSeconds * MSEC_PER_SEC) / PwmDutyCycle_Max),
+   AnotherOnCycleInMs = ((AnotherPositivePwmDutyCycle * SomePeriodInSeconds * MSEC_PER_SEC) / PwmDutyCycle_Max),
+   ALongTime = SomePeriodInMs * 5
 };
 
 enum
@@ -58,7 +59,7 @@ static const SoftPwmConfiguration_t config = {
    .pwmDutyCycleErd = Erd_SomePwmDutyCycle,
    .gpioErd = Erd_BspGpio,
    .timerModuleErd = Erd_TimerModule,
-   .frequencyX100 = SomeFrequencyX100
+   .periodInSeconds = SomePeriodInSeconds
 };
 
 TEST_GROUP(SoftPwm)
@@ -140,7 +141,7 @@ TEST_GROUP(SoftPwm)
    {
       Given GpioJustTurnedOffAfterBeingOn();
 
-      After((SomeFrequencyX100 * MSEC_PER_SEC - SomeOnCycleInMs) - 1);
+      After((SomePeriodInSeconds * MSEC_PER_SEC - SomeOnCycleInMs) - 1);
       GpioShouldBe(OFF);
 
       After(1);
@@ -155,7 +156,7 @@ TEST_GROUP(SoftPwm)
       After(1);
       GpioShouldBe(OFF);
 
-      After((SomeFrequencyX100 * MSEC_PER_SEC - SomeOnCycleInMs) - 1);
+      After((SomePeriodInSeconds * MSEC_PER_SEC - SomeOnCycleInMs) - 1);
       GpioShouldBe(OFF);
 
       After(1);
@@ -397,16 +398,14 @@ TEST(SoftPwm, ShouldKeepTheInitialDelayAfterZeroPwmDutyCycleAndGpioIsOff)
 
 TEST(SoftPwm, ShouldTurnGpioOnAndKeepItOnWhenDutyCycleIsMax)
 {
+   GpioSubscriptionIsInitalized();
    Given PwmDutyCycleIs(PwmDutyCycle_Max);
 
    ModuleIsInitializedAndHasWaitedForDelay(0);
    GpioShouldBe(ON);
 
-   After(SomeOnCycleInMs - 1);
-   GpioShouldBe(ON);
-
-   After(1);
-   GpioShouldBe(ON);
+   ExpectNoChangeFromGpio();
+   After(ALongTime);
 }
 
 TEST(SoftPwm, ShouldTurnGpioOffAndKeepItOffWhenDutyCycleIsZero)
