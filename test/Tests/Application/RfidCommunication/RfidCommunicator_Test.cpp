@@ -43,7 +43,8 @@ enum
 };
 
 const uint8_t Uid[RfidUidSizeInBytes] = "ABCDEF";
-const uint8_t UnitSerialNumber[UnitSerialNumberSizeInBytes] = "ABCDEF";
+const uint8_t UnitSerialNumber[UnitSerialNumberSizeInBytes] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
+const uint8_t GivenUnitSerialNumber[32] = "ABCDEFGH123456789";
 const uint8_t BlankSerialNumber[UnitSerialNumberSizeInBytes] = "";
 const uint8_t PreviousUnitSerialNumber[UnitSerialNumberSizeInBytes] = "ZYXWVUT";
 const uint8_t FilterIdentifier[FilterIdentifierSizeInBytes] = "ABCDEFGHIJKLMNO";
@@ -291,7 +292,7 @@ TEST_GROUP(RfidCommunicator)
       uint8_t lockByte = Lock;
       DataModel_Write(dataModel, Erd_RfidFilterLockByte, &lockByte);
       DataModel_Write(dataModel, Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn, &numberOfUnitsFilterHasBeenOn);
-      DataModel_Write(dataModel, Erd_RfidFilterUnitSerialNumber, &UnitSerialNumber);
+      DataModel_Write(dataModel, Erd_SerialNumber, &GivenUnitSerialNumber);
       DataModel_Write(dataModel, Erd_RfidFilterPreviousUnitSerialNumber, &PreviousUnitSerialNumber);
       DataModel_Write(dataModel, Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons, &LastTwelveMonthsOfWaterUsageInGallons);
    }

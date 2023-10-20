@@ -236,7 +236,7 @@ TEST(RfidCommunicationIntegration, ShouldStoreRfidFilterReadWriteResultDataOnMai
    RfidFilterReadWriteResultShouldBe(readWriteResultExpected);
 }
 
-TEST(RfidCommunicationIntegration, ShouldCopyTheFirstEightBytesOfTheUnitSerialNumberToMainboardSerialNumberUponInitWhenRfidBoardIsInTheSystem)
+TEST(RfidCommunicationIntegration, ShouldCopyTheFirstEightBytesOfTheUnitSerialNumberToMainboardSerialNumberUponInit)
 {
    GivenTheRfidBoardIsInTheSystem();
    GivenUnitSerialNumberIs(GivenUnitSerialNumber);
@@ -245,14 +245,4 @@ TEST(RfidCommunicationIntegration, ShouldCopyTheFirstEightBytesOfTheUnitSerialNu
    GivenApplicationHasBeenInitialized();
 
    RfidFilterUnitSerialNumberMainboardShouldBe(GivenUnitSerialNumberFirstEightBytes);
-}
-
-TEST(RfidCommunicationIntegration, ShouldNotCopyTheFirstEightBytesOfTheUnitSerialNumberToMainboardSerialNumberUponInitWhenRfidBoardIsNotInTheSystem)
-{
-   GivenTheRfidBoardIsNotInTheSystem();
-   GivenUnitSerialNumberIs(GivenUnitSerialNumber);
-
-   GivenApplicationHasBeenInitialized();
-
-   RfidFilterUnitSerialNumberMainboardShouldBe(BlankSerialNumber);
 }

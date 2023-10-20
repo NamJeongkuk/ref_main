@@ -19,6 +19,7 @@
 #include "ExternalDataSource.h"
 #include "DataModel.h"
 #include "ServiceDiagnosticsDataSource.h"
+#include "ConvertedDataSource.h"
 #include "SystemErds.h"
 #include "I_Interrupt.h"
 #include "Timer.h"
@@ -58,6 +59,9 @@ typedef struct
 
          ServiceDiagnosticsDataSource_t serviceDiagnostics;
          DataSource_CompositeComponent_t serviceDiagnosticsComponent;
+
+         ConvertedDataSource_t converted;
+         DataSource_CompositeComponent_t convertedComponent;
       } dataSource;
 
       DataModel_t dataModel;

@@ -3855,7 +3855,7 @@
           "displayName": "Unit Serial Number",
           "name": "Erd_RfidFilterUnitSerialNumber",
           "read": true,
-          "write": true,
+          "write": false,
           "interval": 1000000000
         },
         {

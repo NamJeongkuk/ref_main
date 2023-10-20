@@ -40,29 +40,10 @@ static const RfidCommunicationControllerConfig_t rfidCommunicationControllerConf
    .rfidFilterPreviousUnitSerialNumberErd = Erd_RfidFilterPreviousUnitSerialNumber
 };
 
-static void CopyUnitSerialNumberToRfidFilter(I_DataModel_t *dataModel)
-{
-   SerialNumber_t unitSerialNumber;
-   DataModel_Read(
-      dataModel,
-      Erd_SerialNumber,
-      &unitSerialNumber);
-
-   UnitSerialNumber_t rfidFilterUnitSerialNumber;
-   memcpy(&rfidFilterUnitSerialNumber, &unitSerialNumber, sizeof(UnitSerialNumber_t));
-
-   DataModel_Write(
-      dataModel,
-      Erd_RfidFilterUnitSerialNumber,
-      &rfidFilterUnitSerialNumber);
-}
-
 void RfidCommunicationControllerPlugin_Init(
    RfidCommunicationControllerPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
-   CopyUnitSerialNumberToRfidFilter(dataModel);
-
    RfidCommunicationController_Init(
       &instance->_private.rfidCommunicationController,
       dataModel,

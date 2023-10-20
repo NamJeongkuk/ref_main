@@ -55,6 +55,7 @@ SRC_DIRS:=\
   src/Application/DataSource \
   src/Application/DataSource/ApplianceApiDataSource \
   src/Application/DataSource/BspDataSource \
+  src/Application/DataSource/ConvertedDataSource \
   src/Application/Debounce \
   src/Application/Defrost \
   src/Application/Dispenser \

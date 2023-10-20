@@ -128,12 +128,14 @@
 #include "IceMakerFillInhibitReasonBitmap.h"
 #include "WaterFilterLifeStatus.h"
 #include "RfidCommunicationControllerState.h"
+#include "ConvertedCallbacks.h"
 #include "WaterFilterRemainingUsage.h"
 
 // clang-format off
 
 #define INCLUDE_RAM_Ram(_x) _x
 #define INCLUDE_RAM_Virtual(_x)
+#define INCLUDE_RAM_Converted(_x)
 #define INCLUDE_RAM_Nv(_x)
 #define INCLUDE_RAM_NvProtected(_x)
 #define INCLUDE_RAM_NvUnitSetting(_x)
@@ -149,6 +151,7 @@
 
 #define INCLUDE_VIRTUAL_Ram(_x)
 #define INCLUDE_VIRTUAL_Virtual(_x) _x
+#define INCLUDE_VIRTUAL_Converted(_x)
 #define INCLUDE_VIRTUAL_Nv(_x)
 #define INCLUDE_VIRTUAL_NvProtected(_x)
 #define INCLUDE_VIRTUAL_NvUnitSetting(_x)
@@ -162,6 +165,22 @@
 #define INCLUDE_VIRTUAL_MappedBsp(_x)
 #define INCLUDE_VIRTUAL_PersonalityEeprom(_x)
 
+#define INCLUDE_CONVERTED_Ram(_x)
+#define INCLUDE_CONVERTED_Virtual(_x)
+#define INCLUDE_CONVERTED_Converted(_x) _x
+#define INCLUDE_CONVERTED_Nv(_x)
+#define INCLUDE_CONVERTED_NvProtected(_x)
+#define INCLUDE_CONVERTED_NvUnitSetting(_x)
+#define INCLUDE_CONVERTED_NvUserSetting(_x)
+#define INCLUDE_CONVERTED_NvRfid(_x) _x
+#define INCLUDE_CONVERTED_NvUsageProfile(_x)
+#define INCLUDE_CONVERTED_NvFaultSnapshot(_x)
+#define INCLUDE_CONVERTED_NvCycleHistory(_x)
+#define INCLUDE_CONVERTED_Fault(_x)
+#define INCLUDE_CONVERTED_Bsp(_x)
+#define INCLUDE_CONVERTED_MappedBsp(_x)
+#define INCLUDE_CONVERTED_PersonalityEeprom(_x)
+
 #define INCLUDE_NV_Ram(_x)
 #define INCLUDE_NV_Virtual(_x)
 #define INCLUDE_NV_Nv(_x) _x
@@ -172,6 +191,7 @@
 
 #define INCLUDE_FAULT_Ram(_x)
 #define INCLUDE_FAULT_Virtual(_x)
+#define INCLUDE_FAULT_Converted(_x)
 #define INCLUDE_FAULT_Nv(_x)
 #define INCLUDE_FAULT_NvProtected(_x)
 #define INCLUDE_FAULT_NvUnitSetting(_x)
@@ -187,6 +207,7 @@
 
 #define INCLUDE_BSP_Ram(_x)
 #define INCLUDE_BSP_Virtual(_x)
+#define INCLUDE_BSP_Converted(_x)
 #define INCLUDE_BSP_Nv(_x)
 #define INCLUDE_BSP_NvProtected(_x)
 #define INCLUDE_BSP_NvUnitSetting(_x)
@@ -202,6 +223,7 @@
 
 #define INCLUDE_NVONLY_Ram(_x)
 #define INCLUDE_NVONLY_Virtual(_x)
+#define INCLUDE_NVONLY_Converted(_x)
 #define INCLUDE_NVONLY_Nv(_x) _x
 #define INCLUDE_NVONLY_NvProtected(_x)
 #define INCLUDE_NVONLY_NvUnitSetting(_x)
@@ -217,6 +239,7 @@
 
 #define INCLUDE_NVALL_Ram(_x)
 #define INCLUDE_NVALL_Virtual(_x)
+#define INCLUDE_NVALL_Converted(_x)
 #define INCLUDE_NVALL_Nv(_x) _x
 #define INCLUDE_NVALL_NvProtected(_x) _x
 #define INCLUDE_NVALL_NvUnitSetting(_x) _x
@@ -232,6 +255,7 @@
 
 #define INCLUDE_NVPROTECTED_Ram(_x)
 #define INCLUDE_NVPROTECTED_Virtual(_x)
+#define INCLUDE_NVPROTECTED_Converted(_x)
 #define INCLUDE_NVPROTECTED_Nv(_x) _x
 #define INCLUDE_NVPROTECTED_NvProtected(_x) _x
 #define INCLUDE_NVPROTECTED_NvUnitSetting(_x)
@@ -247,6 +271,7 @@
 
 #define INCLUDE_NVUNITSETTING_Ram(_x)
 #define INCLUDE_NVUNITSETTING_Virtual(_x)
+#define INCLUDE_NVUNITSETTING_Converted(_x)
 #define INCLUDE_NVUNITSETTING_Nv(_x) _x
 #define INCLUDE_NVUNITSETTING_NvProtected(_x)
 #define INCLUDE_NVUNITSETTING_NvUnitSetting(_x) _x
@@ -262,6 +287,7 @@
 
 #define INCLUDE_NVUSERSETTING_Ram(_x)
 #define INCLUDE_NVUSERSETTING_Virtual(_x)
+#define INCLUDE_NVUSERSETTING_Converted(_x)
 #define INCLUDE_NVUSERSETTING_Nv(_x) _x
 #define INCLUDE_NVUSERSETTING_NvProtected(_x)
 #define INCLUDE_NVUSERSETTING_NvUnitSetting(_x)
@@ -277,6 +303,7 @@
 
 #define INCLUDE_NVRFID_Ram(_x)
 #define INCLUDE_NVRFID_Virtual(_x)
+#define INCLUDE_NVRFID_Converted(_x)
 #define INCLUDE_NVRFID_Nv(_x) _x
 #define INCLUDE_NVRFID_NvProtected(_x)
 #define INCLUDE_NVRFID_NvUnitSetting(_x)
@@ -292,6 +319,7 @@
 
 #define INCLUDE_NVUSAGEPROFILE_Ram(_x)
 #define INCLUDE_NVUSAGEPROFILE_Virtual(_x)
+#define INCLUDE_NVUSAGEPROFILE_Converted(_x)
 #define INCLUDE_NVUSAGEPROFILE_Nv(_x) _x
 #define INCLUDE_NVUSAGEPROFILE_NvProtected(_x)
 #define INCLUDE_NVUSAGEPROFILE_NvUnitSetting(_x)
@@ -307,6 +335,7 @@
 
 #define INCLUDE_NVFAULTSNAPSHOT_Ram(_x)
 #define INCLUDE_NVFAULTSNAPSHOT_Virtual(_x)
+#define INCLUDE_NVFAULTSNAPSHOT_Converted(_x)
 #define INCLUDE_NVFAULTSNAPSHOT_Nv(_x) _x
 #define INCLUDE_NVFAULTSNAPSHOT_NvProtected(_x)
 #define INCLUDE_NVFAULTSNAPSHOT_NvUnitSetting(_x)
@@ -322,6 +351,7 @@
 
 #define INCLUDE_PERSONALITYEEPROM_Ram(_x)
 #define INCLUDE_PERSONALITYEEPROM_Virtual(_x)
+#define INCLUDE_PERSONALITYEEPROM_Converted(_x)
 #define INCLUDE_PERSONALITYEEPROM_Nv(_x) _x
 #define INCLUDE_PERSONALITYEEPROM_NvProtected(_x)
 #define INCLUDE_PERSONALITYEEPROM_NvUnitSetting(_x)
@@ -337,6 +367,7 @@
 
 #define INCLUDE_NVCYCLEHISTORY_Ram(_x)
 #define INCLUDE_NVCYCLEHISTORY_Virtual(_x)
+#define INCLUDE_NVCYCLEHISTORY_Converted(_x)
 #define INCLUDE_NVCYCLEHISTORY_Nv(_x) _x
 #define INCLUDE_NVCYCLEHISTORY_NvProtected(_x)
 #define INCLUDE_NVCYCLEHISTORY_NvUnitSetting(_x)
@@ -352,6 +383,7 @@
 
 #define INCLUDE_NON_RAM_Ram(_x)
 #define INCLUDE_NON_RAM_Virtual(_x) _x
+#define INCLUDE_NON_RAM_Converted(_x) _x
 #define INCLUDE_NON_RAM_Nv(_x) _x
 #define INCLUDE_NON_RAM_NvProtected(_x) _x
 #define INCLUDE_NON_RAM_NvUnitSetting(_x) _x
@@ -367,6 +399,7 @@
 
 #define INCLUDE_MAPPED_BSP_Ram(_x)
 #define INCLUDE_MAPPED_BSP_Virtual(_x)
+#define INCLUDE_MAPPED_BSP_Converted(_x)
 #define INCLUDE_MAPPED_BSP_Nv(_x)
 #define INCLUDE_MAPPED_BSP_NvProtected(_x)
 #define INCLUDE_MAPPED_BSP_NvUnitSetting(_x)
@@ -382,6 +415,7 @@
 
 #define INCLUDE_BSP_ALL_Ram(_x)
 #define INCLUDE_BSP_ALL_Virtual(_x)
+#define INCLUDE_BSP_ALL_Converted(_x)
 #define INCLUDE_BSP_ALL_Nv(_x)
 #define INCLUDE_BSP_ALL_NvProtected(_x)
 #define INCLUDE_BSP_ALL_NvUnitSetting(_x)
@@ -864,7 +898,7 @@ enum
    ENTRY(Erd_RfidFilterStatus,                              0xF190, RfidFilterStatus_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn,    0xF191, RfidFilterNumberOfUnitsFilterHasBeenOn_t,           Swap_No,  Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_RfidFilterLockByte,                            0xF192, uint8_t,                                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_RfidFilterUnitSerialNumber,                    0xF193, UnitSerialNumber_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_RfidFilterUnitSerialNumber,                    0xF193, UnitSerialNumber_t,                                 Swap_No,  Io_None, Sub_N, Converted,              NotNv,                                    NotFault) \
    ENTRY(Erd_RfidFilterPreviousUnitSerialNumber,            0xF194, UnitSerialNumber_t,                                 Swap_No,  Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons, 0xF195, RfidTwelveMonthsGallonUsage_t,                    Swap_No,  Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
@@ -1416,6 +1450,12 @@ enum
    \
    ENTRY(Erd_PersonalityEepromMetadata,                     0xFFFE, AsyncDataSource_EepromMetadata_t,                   Swap_No,  Io_None, Sub_N,  PersonalityEeprom,     NonVolatileDataSourceDefaultData_Zeros,   NotFault)
 
+#define CALLBACK_TABLE(ENTRY) \
+   ENTRY(Erd_RfidFilterUnitSerialNumber,                    ErdConvertedCallBack_WriteNotAvailable,                     ErdConvertedCallBack_ReadRfidFilterUnitSerialNumber)
+
+#define DEPENDENCY_TABLE(ENTRY) \
+   ENTRY(Erd_RfidFilterUnitSerialNumber,                    Erd_SerialNumber)
+
 #define EXPAND_AS_INTERNAL_RAM_ERD_ENUM(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)(Name COMMA)
 
@@ -1433,6 +1473,12 @@ enum
 
 #define EXPAND_AS_ERD_FAULT_CODE_COUNT(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
    CONCAT(INCLUDE_FAULT_, StorageType)(+1)
+
+#define EXPAND_AS_INDIRECT_ELEMENTS(VirtualErd, WriteCallback, ReadCallback) \
+   { VirtualErd, SizeOf##VirtualErd, WriteCallback, ReadCallback },
+
+#define EXPAND_AS_DEPENDENCY_ELEMENTS(VirtualErd, RealErdForVirtualErd) \
+   { VirtualErd, RealErdForVirtualErd },
 
 enum
 {

@@ -66,6 +66,14 @@ static void InitializeInternalDataSource(
       instance,
       ServiceDiagnosticsDataSource_DataSource(&instance->_private.dataSource.serviceDiagnostics),
       &instance->_private.dataSource.serviceDiagnosticsComponent);
+
+   ConvertedDataSource_Init(
+      &instance->_private.dataSource.converted,
+      &instance->_private.dataSource.composite.interface);
+   AddDataSourceToComposite(
+      instance,
+      ConvertedDataSource_DataSource(&instance->_private.dataSource.converted),
+      &instance->_private.dataSource.convertedComponent);
 }
 
 static void InitializeExternalDataSource(Instance_t *instance)
