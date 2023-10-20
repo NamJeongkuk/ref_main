@@ -12,5 +12,5 @@
 [Prototype wiring diagram](https://geappliances.atlassian.net/wiki/spaces/RDR/pages/3384147977/Prototype+Build)
 
 ## Branches maintained
-[ReverseLeakTest](https://github.com/geappliances/refrigeration.rockhopper-mainboard/tree/ReverseLeakTest) - Steakholer: Slawomir Bolek - Runs an inverted grid that uses Defrost Heater to warm up unit. Useful for cabinet leak testing
+[ReverseLeakTest](https://github.com/geappliances/refrigeration.rockhopper-mainboard/tree/ReverseLeakTest) - Stakeholder: Slawomir Bolek - Runs an inverted grid that uses Defrost Heater to warm up unit. Useful for cabinet leak testing
 
