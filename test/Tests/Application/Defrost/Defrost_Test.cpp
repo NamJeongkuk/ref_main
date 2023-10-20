@@ -373,6 +373,11 @@ TEST_GROUP(Defrost_SingleEvap)
       }
    }
 
+   void GivenDefrostIsInitializedAndStateIs(DefrostHsmState_t state)
+   {
+      DefrostIsInitializedAndStateIs(state);
+   }
+
    void FreezerEvaporatorThermistorValidityIs(bool state)
    {
       DataModel_Write(dataModel, Erd_FreezerEvapThermistor_IsValidResolved, &state);
@@ -693,6 +698,11 @@ TEST_GROUP(Defrost_SingleEvap)
       requestMessage.request = request;
       requestMessage.requestId++;
       DataModel_Write(dataModel, Erd_DefrostTestStateRequest, &requestMessage);
+   }
+
+   void WhenDefrostTestIsRequested(DefrostTestStateRequest_t request)
+   {
+      DefrostTestIsRequested(request);
    }
 
    void DefrostTestStateRequestShouldBeNone(void)
@@ -2514,6 +2524,105 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestSt
 
    When DefrostTestIsRequested(DefrostTestStateRequest_Defrost);
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+   DefrostTestStateRequestShouldBeNone();
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionToDefrostDwellWhenExitDefrostHeaterOnStateIsRequestedInHeaterOnState)
+{
+   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
+
+   WhenDefrostTestIsRequested(DefrostTestStateRequest_ExitDefrostHeaterOnState);
+   DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
+   DefrostTestStateRequestShouldBeNone();
+}
+
+TEST(Defrost_SingleEvap, ShouldTransitionToDefrostDwellWhenExitDefrostHeaterOnStateIsRequestedInHeaterOnEntryState)
+{
+   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
+
+   WhenDefrostTestIsRequested(DefrostTestStateRequest_ExitDefrostHeaterOnState);
+   DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
+   DefrostTestStateRequestShouldBeNone();
+}
+
+TEST(Defrost_SingleEvap, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInIdle)
+{
+   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+
+   WhenDefrostTestIsRequested(DefrostTestStateRequest_ExitDefrostHeaterOnState);
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+   DefrostTestStateRequestShouldBeNone();
+}
+
+TEST(Defrost_SingleEvap, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInPrechillPrep)
+{
+   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
+
+   WhenDefrostTestIsRequested(DefrostTestStateRequest_ExitDefrostHeaterOnState);
+   DefrostHsmStateShouldBe(DefrostHsmState_PrechillPrep);
+   DefrostTestStateRequestShouldBeNone();
+}
+
+TEST(Defrost_SingleEvap, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInPrechill)
+{
+   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
+
+   WhenDefrostTestIsRequested(DefrostTestStateRequest_ExitDefrostHeaterOnState);
+   DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
+   DefrostTestStateRequestShouldBeNone();
+}
+
+TEST(Defrost_SingleEvap, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInDwell)
+{
+   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
+
+   WhenDefrostTestIsRequested(DefrostTestStateRequest_ExitDefrostHeaterOnState);
+   DefrostHsmStateShouldBe(DefrostHsmState_Dwell);
+   DefrostTestStateRequestShouldBeNone();
+}
+
+TEST(Defrost_SingleEvap, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInPostDwell)
+{
+   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
+
+   WhenDefrostTestIsRequested(DefrostTestStateRequest_ExitDefrostHeaterOnState);
+   DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
+   DefrostTestStateRequestShouldBeNone();
+}
+
+TEST(Defrost_SingleEvap, ShouldDoNothingWhenExitDefrostHeaterOnStateIsRequestedInDisabledState)
+{
+   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Disabled);
+
+   WhenDefrostTestIsRequested(DefrostTestStateRequest_ExitDefrostHeaterOnState);
+   DefrostHsmStateShouldBe(DefrostHsmState_Disabled);
+   DefrostTestStateRequestShouldBeNone();
+}
+
+TEST(Defrost_SingleEvap, ShouldDoNothingWhenIdleTestIsRequestedInDisabledState)
+{
+   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Disabled);
+
+   WhenDefrostTestIsRequested(DefrostTestStateRequest_Idle);
+   DefrostHsmStateShouldBe(DefrostHsmState_Disabled);
+   DefrostTestStateRequestShouldBeNone();
+}
+
+TEST(Defrost_SingleEvap, ShouldDoNothingWhenDefrostTestIsRequestedInDisabledState)
+{
+   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Disabled);
+
+   WhenDefrostTestIsRequested(DefrostTestStateRequest_Defrost);
+   DefrostHsmStateShouldBe(DefrostHsmState_Disabled);
+   DefrostTestStateRequestShouldBeNone();
+}
+
+TEST(Defrost_SingleEvap, ShouldDoNothingWhenPrechillTestIsRequestedInDisabledState)
+{
+   GivenDefrostIsInitializedAndStateIs(DefrostHsmState_Disabled);
+
+   WhenDefrostTestIsRequested(DefrostTestStateRequest_Prechill);
+   DefrostHsmStateShouldBe(DefrostHsmState_Disabled);
    DefrostTestStateRequestShouldBeNone();
 }
 

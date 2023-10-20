@@ -41,17 +41,17 @@ TEST_GROUP(DefrostTestRequestHandler)
       dataModel = dataModelDouble.dataModel;
    }
 
-   void DefrostTestRequestHandlerIsInitialized()
+   void GivenDefrostTestRequestHandlerIsInitialized()
    {
       DefrostTestRequestHandler_Init(&instance, dataModel, &config);
    }
 
-   void DefrostTestRequestIs(DefrostTestRequest_t request)
+   void WhenDefrostTestRequestIs(DefrostTestRequest_t request)
    {
       DataModel_Write(dataModel, Erd_DefrostTestRequest, &request);
    }
 
-   void DefrostStateIs(DefrostState_t state)
+   void GivenDefrostStateIs(DefrostState_t state)
    {
       DataModel_Write(dataModel, Erd_DefrostState, &state);
    }
@@ -136,10 +136,10 @@ TEST_GROUP(DefrostTestRequestHandler)
 
 TEST(DefrostTestRequestHandler, ShouldRequestIdleWhenDefrostTestRequestIsIdleWhileDefrostStateIsIdle)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_Idle);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_Idle);
 
-   When DefrostTestRequestIs(DefrostTestRequest_Idle);
+   WhenDefrostTestRequestIs(DefrostTestRequest_Idle);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_Idle);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Idle, 1);
    DefrostTestRequestShouldBeReset();
@@ -147,10 +147,10 @@ TEST(DefrostTestRequestHandler, ShouldRequestIdleWhenDefrostTestRequestIsIdleWhi
 
 TEST(DefrostTestRequestHandler, ShouldRequestIdleWhenDefrostTestRequestIsIdleWhileDefrostStateIsPrechill)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_Prechill);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_Prechill);
 
-   When DefrostTestRequestIs(DefrostTestRequest_Idle);
+   WhenDefrostTestRequestIs(DefrostTestRequest_Idle);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_Idle);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Idle, 1);
    DefrostTestRequestShouldBeReset();
@@ -158,10 +158,10 @@ TEST(DefrostTestRequestHandler, ShouldRequestIdleWhenDefrostTestRequestIsIdleWhi
 
 TEST(DefrostTestRequestHandler, ShouldRequestIdleWhenDefrostTestRequestIsIdleWhileDefrostStateIsHeaterOn)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_HeaterOn);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_HeaterOn);
 
-   When DefrostTestRequestIs(DefrostTestRequest_Idle);
+   WhenDefrostTestRequestIs(DefrostTestRequest_Idle);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_Idle);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Idle, 1);
    DefrostTestRequestShouldBeReset();
@@ -169,10 +169,10 @@ TEST(DefrostTestRequestHandler, ShouldRequestIdleWhenDefrostTestRequestIsIdleWhi
 
 TEST(DefrostTestRequestHandler, ShouldRequestIdleWhenDefrostTestRequestIsIdleWhileDefrostStateIsDwell)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_Dwell);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_Dwell);
 
-   When DefrostTestRequestIs(DefrostTestRequest_Idle);
+   WhenDefrostTestRequestIs(DefrostTestRequest_Idle);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_Idle);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Idle, 1);
    DefrostTestRequestShouldBeReset();
@@ -180,10 +180,10 @@ TEST(DefrostTestRequestHandler, ShouldRequestIdleWhenDefrostTestRequestIsIdleWhi
 
 TEST(DefrostTestRequestHandler, ShouldRequestIdleWhenDefrostTestRequestIsIdleWhileDefrostStateIsPostDwell)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_PostDwell);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_PostDwell);
 
-   When DefrostTestRequestIs(DefrostTestRequest_Idle);
+   WhenDefrostTestRequestIs(DefrostTestRequest_Idle);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_Idle);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Idle, 1);
    DefrostTestRequestShouldBeReset();
@@ -191,19 +191,19 @@ TEST(DefrostTestRequestHandler, ShouldRequestIdleWhenDefrostTestRequestIsIdleWhi
 
 TEST(DefrostTestRequestHandler, ShouldNotRequestWhenDefrostTestRequestIsIdleWhileDefrostStateIsDisabled)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_Disabled);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_Disabled);
 
-   When DefrostTestRequestIs(DefrostTestRequest_Idle);
+   WhenDefrostTestRequestIs(DefrostTestRequest_Idle);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Idle, 0);
 }
 
 TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestDefrostWhenDefrostTestRequestIsFreshFoodOnlyDefrostWhileDefrostStateIsIdle)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_Idle);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_Idle);
 
-   When DefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
+   WhenDefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_FreshFoodOnlyDefrost);
    NextDefrostTypeShouldBe(DefrostType_FreshFood);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Defrost, 1);
@@ -212,10 +212,10 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestDef
 
 TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestDefrostWhenDefrostTestRequestIsFreshFoodOnlyDefrostWhileDefrostStateIsPrechill)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_Prechill);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_Prechill);
 
-   When DefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
+   WhenDefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_FreshFoodOnlyDefrost);
    NextDefrostTypeShouldBe(DefrostType_FreshFood);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Defrost, 1);
@@ -224,10 +224,10 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestDef
 
 TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestDefrostWhenDefrostTestRequestIsFreshFoodOnlyDefrostWhileDefrostStateIsHeaterOn)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_HeaterOn);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_HeaterOn);
 
-   When DefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
+   WhenDefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_FreshFoodOnlyDefrost);
    NextDefrostTypeShouldBe(DefrostType_FreshFood);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Defrost, 1);
@@ -236,10 +236,10 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestDef
 
 TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestDefrostWhenDefrostTestRequestIsFreshFoodOnlyDefrostWhileDefrostStateIsDwell)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_Dwell);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_Dwell);
 
-   When DefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
+   WhenDefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_FreshFoodOnlyDefrost);
    NextDefrostTypeShouldBe(DefrostType_FreshFood);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Defrost, 1);
@@ -248,10 +248,10 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestDef
 
 TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestDefrostWhenDefrostTestRequestIsFreshFoodOnlyDefrostWhileDefrostStateIsPostDwell)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_PostDwell);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_PostDwell);
 
-   When DefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
+   WhenDefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_FreshFoodOnlyDefrost);
    NextDefrostTypeShouldBe(DefrostType_FreshFood);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Defrost, 1);
@@ -260,19 +260,19 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestDef
 
 TEST(DefrostTestRequestHandler, ShouldNotRequestWhenDefrostTestRequestIsFreshFoodOnlyDefrostWhileDefrostStateIsDisabled)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_Disabled);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_Disabled);
 
-   When DefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
+   WhenDefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Idle, 0);
 }
 
 TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFullAndRequestDefrostWhenDefrostTestRequestIsDefrostWhileDefrostStateIsIdle)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_Idle);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_Idle);
 
-   When DefrostTestRequestIs(DefrostTestRequest_Defrost);
+   WhenDefrostTestRequestIs(DefrostTestRequest_Defrost);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_Defrost);
    NextDefrostTypeShouldBe(DefrostType_Full);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Defrost, 1);
@@ -281,10 +281,10 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFullAndRequestDefrostW
 
 TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestPrechillWhenDefrostTestRequestIsFreshFoodOnlyPrechillWhileDefrostStateIsIdle)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_Idle);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_Idle);
 
-   When DefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyPrechill);
+   WhenDefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyPrechill);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_FreshFoodOnlyPrechill);
    NextDefrostTypeShouldBe(DefrostType_FreshFood);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Prechill, 1);
@@ -293,10 +293,10 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestPre
 
 TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFullAndRequestPrechillWhenDefrostTestRequestIsPrechillWhileDefrostStateIsIdle)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_Idle);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_Idle);
 
-   When DefrostTestRequestIs(DefrostTestRequest_Prechill);
+   WhenDefrostTestRequestIs(DefrostTestRequest_Prechill);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_Prechill);
    NextDefrostTypeShouldBe(DefrostType_Full);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Prechill, 1);
@@ -305,10 +305,10 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFullAndRequestPrechill
 
 TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndDoTheOthersWhenDefrostTestRequestIsAhamFreshFoodOnlyPrechillWhileDefrostStateIsIdle)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_Idle);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_Idle);
 
-   When DefrostTestRequestIs(DefrostTestRequest_AhamFreshFoodOnlyPrechill);
+   WhenDefrostTestRequestIs(DefrostTestRequest_AhamFreshFoodOnlyPrechill);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_AhamFreshFoodOnlyPrechill);
    NextDefrostTypeShouldBe(DefrostType_FreshFood);
    UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
@@ -318,10 +318,10 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndDoTheOther
 
 TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFullAndDoTheOthersWhenDefrostTestRequestIsAhamPrechillWhileDefrostStateIsIdle)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_Idle);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_Idle);
 
-   When DefrostTestRequestIs(DefrostTestRequest_AhamPrechill);
+   WhenDefrostTestRequestIs(DefrostTestRequest_AhamPrechill);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_AhamPrechill);
    NextDefrostTypeShouldBe(DefrostType_Full);
    UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
@@ -331,10 +331,10 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFullAndDoTheOthersWhen
 
 TEST(DefrostTestRequestHandler, ShouldSetDisableDefrostToTrueWhenDefrostTestRequestIsDisableWhileDefrostStateIsIdle)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_Idle);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_Idle);
 
-   When DefrostTestRequestIs(DefrostTestRequest_Disable);
+   WhenDefrostTestRequestIs(DefrostTestRequest_Disable);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_Disable);
    DisableDefrostShouldBe(true);
    DefrostTestRequestShouldBeReset();
@@ -342,10 +342,10 @@ TEST(DefrostTestRequestHandler, ShouldSetDisableDefrostToTrueWhenDefrostTestRequ
 
 TEST(DefrostTestRequestHandler, ShouldSetDisableDefrostToFalseWhenDefrostTestRequestIsEnableWhileDefrostStateIsDisabled)
 {
-   Given DefrostTestRequestHandlerIsInitialized();
-   Given DefrostStateIs(DefrostState_Disabled);
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_Disabled);
 
-   When DefrostTestRequestIs(DefrostTestRequest_Enable);
+   WhenDefrostTestRequestIs(DefrostTestRequest_Enable);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_Enable);
    DisableDefrostShouldBe(false);
    DefrostTestRequestShouldBeReset();
@@ -353,11 +353,22 @@ TEST(DefrostTestRequestHandler, ShouldSetDisableDefrostToFalseWhenDefrostTestReq
 
 TEST(DefrostTestRequestHandler, ShouldSetDisableDefrostToTrueWhenDefrostTestRequestIsDisableWhileDefrostStateIsDisabled)
 {
-   Given DefrostStateIs(DefrostState_Disabled);
-   Given DefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_Disabled);
+   GivenDefrostTestRequestHandlerIsInitialized();
 
-   When DefrostTestRequestIs(DefrostTestRequest_Disable);
+   WhenDefrostTestRequestIs(DefrostTestRequest_Disable);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_Disable);
    DisableDefrostShouldBe(true);
+   DefrostTestRequestShouldBeReset();
+}
+
+TEST(DefrostTestRequestHandler, ShouldRequestExitDefrostHeaterOnStateAndSetDefrostTestRequestStateToExitDefrostHeaterOnStateWhenDefrostTestRequestIsExitDefrostHeaterOnState)
+{
+   GivenDefrostTestRequestHandlerIsInitialized();
+   GivenDefrostStateIs(DefrostState_Idle);
+
+   WhenDefrostTestRequestIs(DefrostTestRequest_ExitDefrostHeaterOnState);
+   DefrostTestRequestStatusShouldBe(DefrostTestRequest_ExitDefrostHeaterOnState);
+   DefrostTestStateRequestShouldBe(DefrostTestStateRequest_ExitDefrostHeaterOnState, 1);
    DefrostTestRequestShouldBeReset();
 }

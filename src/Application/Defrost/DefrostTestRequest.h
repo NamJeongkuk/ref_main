@@ -21,7 +21,8 @@ enum
    DefrostTestRequest_AhamFreshFoodOnlyPrechill,
    DefrostTestRequest_AhamPrechill,
    DefrostTestRequest_Enable,
-   DefrostTestRequest_Disable
+   DefrostTestRequest_Disable,
+   DefrostTestRequest_ExitDefrostHeaterOnState
 };
 typedef uint8_t DefrostTestRequest_t;
 

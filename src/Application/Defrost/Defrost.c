@@ -43,6 +43,7 @@ enum
    Signal_IdleTestRequest,
    Signal_PrechillTestRequest,
    Signal_DefrostTestRequest,
+   Signal_ExitDefrostHeaterOnStateTestRequest,
    Signal_FreezerEvaporatorTemperatureChanged,
    Signal_SabbathIsReadyToDefrost,
    Signal_AtLeastOneSabbathModeIsEnabled,
@@ -868,6 +869,10 @@ static bool State_Defrosting(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          Hsm_Transition(hsm, State_Idle);
          break;
 
+      case Signal_ExitDefrostHeaterOnStateTestRequest:
+         ClearDefrostTestStateRequest(instance);
+         break;
+
       case Hsm_Exit:
          break;
 
@@ -1023,6 +1028,10 @@ static bool State_HeaterOnEntry(Hsm_t *hsm, HsmSignal_t signal, const void *data
          Hsm_Transition(hsm, State_HeaterOn);
          break;
 
+      case Signal_ExitDefrostHeaterOnStateTestRequest:
+         Hsm_Transition(hsm, State_Dwell);
+         break;
+
       case Hsm_Exit:
          StopTimer(instance, &instance->_private.defrostTimer);
          EnableMinimumCompressorTimes(instance);
@@ -1075,6 +1084,10 @@ static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       }
       break;
 
+      case Signal_ExitDefrostHeaterOnStateTestRequest:
+         Hsm_Transition(hsm, State_Dwell);
+         break;
+
       case Hsm_Exit:
          if(FreezerEvaporatorThermistorIsValid(instance))
          {
@@ -1106,6 +1119,7 @@ static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          StartDefrostTimer(
             instance,
             instance->_private.defrostParametricData->dwellData.dwellTimeInMinutes * MSEC_PER_MIN);
+         ClearDefrostTestStateRequest(instance);
          break;
 
       case Signal_DefrostTimerExpired:
@@ -1145,6 +1159,10 @@ static bool State_WaitingToDefrost(Hsm_t *hsm, HsmSignal_t signal, const void *d
       case Signal_PrechillTestRequest:
       case Signal_DefrostTestRequest:
          Hsm_Transition(hsm, State_Idle);
+         break;
+
+      case Signal_ExitDefrostHeaterOnStateTestRequest:
+         ClearDefrostTestStateRequest(instance);
          break;
 
       case Hsm_Exit:
@@ -1217,6 +1235,13 @@ static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 
       case Signal_EnableDefrost:
          Hsm_Transition(hsm, State_Idle);
+         break;
+
+      case Signal_IdleTestRequest:
+      case Signal_DefrostTestRequest:
+      case Signal_PrechillTestRequest:
+      case Signal_ExitDefrostHeaterOnStateTestRequest:
+         ClearDefrostTestStateRequest(instance);
          break;
 
       case Hsm_Exit:
@@ -1348,6 +1373,10 @@ static void DataModelChanged(void *context, const void *args)
 
          case DefrostTestStateRequest_Defrost:
             Hsm_SendSignal(&instance->_private.hsm, Signal_DefrostTestRequest, NULL);
+            break;
+
+         case DefrostTestStateRequest_ExitDefrostHeaterOnState:
+            Hsm_SendSignal(&instance->_private.hsm, Signal_ExitDefrostHeaterOnStateTestRequest, NULL);
             break;
 
          default:

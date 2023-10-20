@@ -109,6 +109,11 @@ static void HandleDefrostTestRequest(void *context, const void *args)
             RequestDefrostTestState(instance, DefrostTestStateRequest_Idle);
             break;
 
+         case DefrostTestRequest_ExitDefrostHeaterOnState:
+            UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_ExitDefrostHeaterOnState);
+            RequestDefrostTestState(instance, DefrostTestStateRequest_ExitDefrostHeaterOnState);
+            break;
+
          case DefrostTestRequest_FreshFoodOnlyDefrost:
             UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_FreshFoodOnlyDefrost);
             SetNextDefrostType(instance, DefrostType_FreshFood);
