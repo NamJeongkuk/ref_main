@@ -59,6 +59,11 @@ TEST_GROUP(SetpointTurboMode)
       DataModel_Write(dataModel, Erd_TurboFreezeOnOffStatus, &state);
    }
 
+   void GivenTurboModeStatusIs(bool state)
+   {
+      WhenTurboModeStatusIs(state);
+   }
+
    void TurboVoteShouldBe(TemperatureDegFx100_t expectedTemperature, Vote_t expectedVote)
    {
       SetpointVotedTemperature_t actual;
@@ -105,6 +110,7 @@ TEST(SetpointTurboMode, ShouldStartTimerForTurboModeWhenTurboModeIsRequestedAndE
    After(1);
    TurboVoteShouldBe(0, Vote_DontCare);
    TurboModeOnTimeInMinutesShouldBe(0);
+   TurboModeStatusShouldBe(OFF);
 }
 
 TEST(SetpointTurboMode, ShouldStartTimerForTurboModeWhenTurboModeIsRequestedAndExitWhenTurboModeIsRequestedOff)
@@ -179,6 +185,7 @@ TEST(SetpointTurboMode, ShouldVoteForDefaultParametricTemperatureWhenEnteringTur
 TEST(SetpointTurboMode, ShouldStartTurboModeOnInitializationIfPreviousTurboModeDidNotComplete)
 {
    GivenTurboModeOnTimeInMinutesIs(turboModeSetpointData->turboModeOnTimeInMinutes - 2);
+   GivenTurboModeStatusIs(ON);
    GivenTheModuleIsInitialized();
 
    TurboVoteShouldBe(turboModeSetpointData->turboModeSetpointInDegFx100, Vote_Care);

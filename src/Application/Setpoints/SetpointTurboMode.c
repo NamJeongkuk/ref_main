@@ -11,6 +11,7 @@
 #include "DataModelErdPointerAccess.h"
 #include "SetpointTurboMode.h"
 #include "SystemErds.h"
+#include "Constants_Binary.h"
 
 enum
 {
@@ -51,6 +52,11 @@ static void TurboModeRequestedOff(SetpointTurboMode_t *instance)
       instance->_private.dataModel,
       instance->_private.config->turboModeOnTimeInMinutesErd,
       &minutes);
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->turboModeOnOffStatusErd,
+      off);
 }
 
 static void AddElapsedMinutesToTurboModeOnTime(void *context)
@@ -93,6 +99,13 @@ static void TurboModeRequestedOn(SetpointTurboMode_t *instance)
       instance);
 }
 
+static bool TurboModeStatus(SetpointTurboMode_t *instance)
+{
+   bool status;
+   DataModel_Read(instance->_private.dataModel, instance->_private.config->turboModeOnOffStatusErd, &status);
+   return status;
+}
+
 static void TurboModeStatusChanged(void *context, const void *_args)
 {
    SetpointTurboMode_t *instance = context;
@@ -118,12 +131,8 @@ void SetpointTurboMode_Init(
    instance->_private.config = config;
    instance->_private.turboModeData = data;
 
-   if(TurboModeOnTimeInMinutes(instance) > 0)
+   if(TurboModeStatus(instance))
    {
-      DataModel_Write(
-         instance->_private.dataModel,
-         instance->_private.config->turboModeOnOffStatusErd,
-         set);
       TurboModeRequestedOn(instance);
    }
 

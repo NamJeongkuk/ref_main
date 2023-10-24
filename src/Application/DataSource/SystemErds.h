@@ -521,7 +521,7 @@ enum
    ENTRY(Erd_CoolingOffRequest,                             0x120A, CoolingSystemRequest_t,                             Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CoolingOffStatus,                              0x120B, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_TurboCoolOnOffRequest,                         0x120C, TurboModeRequest_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_TurboCoolOnOffStatus,                          0x120D, bool,                                               Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TurboCoolOnOffStatus,                          0x120D, bool,                                               Swap_No,  Io_None, Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,      NotFault) \
    ENTRY(Erd_RightSideFreshFoodDoorStatusResolved,          0x120E, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_LeftSideFreezerDoorStatusResolved,             0x120F, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker0EnableRequest,                        0x1210, IceMakerEnableRequest_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -535,7 +535,7 @@ enum
    ENTRY(Erd_IceMaker1FullStatus,                           0x1218, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker1TypeInformation,                      0x1219, IceMakerTypeInformation_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_TurboFreezeOnOffRequest,                       0x121A, TurboModeRequest_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_TurboFreezeOnOffStatus,                        0x121B, bool,                                               Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TurboFreezeOnOffStatus,                        0x121B, bool,                                               Swap_No,  Io_None, Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,      NotFault) \
    \
    ENTRY(Erd_DimmableLight0PercentLevelRequest,             0x121E, PercentageDutyCycle_t,                              Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DimmableLight0PercentLevelStatus,              0x121F, PercentageDutyCycle_t,                              Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_MaxLightBrightness, NotFault) \
