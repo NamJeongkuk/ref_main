@@ -438,11 +438,6 @@ TEST_GROUP(Defrost_SingleEvap)
       CoolingModeIs(CoolingMode_FreshFood);
    }
 
-   void MaxPrechillTimeInMinutesIs(uint8_t maxPrechillTime)
-   {
-      DataModel_Write(dataModel, Erd_MaxPrechillTimeInMinutes, &maxPrechillTime);
-   }
-
    void TimeThatPrechillConditionsAreMetInMinutesIs(uint16_t timeThatPrechillConditionsAreMet)
    {
       DataModel_Write(dataModel, Erd_TimeThatPrechillConditionsAreMetInMinutes, &timeThatPrechillConditionsAreMet);

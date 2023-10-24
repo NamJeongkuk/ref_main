@@ -478,13 +478,6 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Max Prechill Time in Minutes",
-               "name": "Erd_MaxPrechillTimeInMinutes",
-               "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
                "displayName": "Post Dwell Exit Time in Minutes",
                "name": "Erd_PostDwellExitTimeInMinutes",
                "read": true,
