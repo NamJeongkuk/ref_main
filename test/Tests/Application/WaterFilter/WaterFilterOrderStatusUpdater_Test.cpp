@@ -25,8 +25,8 @@ enum
 static const CommonFilterData_t data = {
    .filterRatedVolumeInOuncesX100 = 50000,
    .filterRatedLifeInMinutes = 6000,
-   .minimumVolumeNeededToStartFilterLifeTimerInOunces = 1,
-   .filterMonthInMinutes = 43200
+   .minimumVolumeNeededToStartFilterLifeTimerInOunces = 100,
+   .waterFilterCalendarUsageDelayForLowUsageInMinutes = 129600
 };
 
 static const WaterFilterLifeStatusUpdaterConfig_t config = {

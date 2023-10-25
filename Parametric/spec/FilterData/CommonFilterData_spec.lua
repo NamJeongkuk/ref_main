@@ -11,8 +11,8 @@ describe('CommonFilterData', function()
     return require 'lua-common'.table.merge({
       filter_rated_volume_in_ouncesx100 = 64000,
       filter_rated_life_in_minutes = 262800,
-      minimum_volume_needed_to_start_filter_life_timer_in_ounces = 0,
-      filter_month_in_minutes = 43200
+      minimum_volume_needed_to_start_filter_life_timer_in_ounces = 100,
+      water_filter_calendar_usage_delay_for_low_usage_in_minutes = 129600
     }, overrides or {})
   end
 
@@ -44,10 +44,10 @@ describe('CommonFilterData', function()
     end)
   end)
 
-  it('should assert if filter_month_in_minutes is not in range', function()
-    should_fail_with('filter_month_in_minutes=-1 must be in [0, 65535]', function()
+  it('should assert if water_filter_calendar_usage_delay_for_low_usage_in_minutes is not in range', function()
+    should_fail_with('water_filter_calendar_usage_delay_for_low_usage_in_minutes=-1 must be in [0, 4294967295]', function()
       common_filter_data(generate_config({
-        filter_month_in_minutes = -1
+        water_filter_calendar_usage_delay_for_low_usage_in_minutes = -1
       }))
     end)
   end)
@@ -57,16 +57,16 @@ describe('CommonFilterData', function()
       structure(
         u32(64000),
         u32(262800),
-        u16(0),
-        u16(43200)
+        u16(100),
+        u32(129600)
       )
       ]])
 
     local actual = common_filter_data({
       filter_rated_volume_in_ouncesx100 = 64000,
       filter_rated_life_in_minutes = 262800,
-      minimum_volume_needed_to_start_filter_life_timer_in_ounces = 0,
-      filter_month_in_minutes = 43200
+      minimum_volume_needed_to_start_filter_life_timer_in_ounces = 100,
+      water_filter_calendar_usage_delay_for_low_usage_in_minutes = 129600
     })
 
     assert.equals(expected, remove_whitespace(tostring(actual)))

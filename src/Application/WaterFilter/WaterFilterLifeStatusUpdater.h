@@ -10,11 +10,12 @@
 
 #include "I_DataModel.h"
 #include "FilterData.h"
+#include "RfidTypes.h"
 
 typedef struct
 {
    Erd_t totalWaterVolumeUsageInOuncesX100Erd; // uint32_t
-   Erd_t filterCalendarUsageInSecondsErd; // uint32_t
+   Erd_t filterCalendarUsageInSecondsErd; // CalendarUsageInSeconds_t
    Erd_t waterFilterLifeStatusErd; // WaterFilterLifeStatus_t
 } WaterFilterLifeStatusUpdaterConfig_t;
 

@@ -16,7 +16,7 @@
 #include "PeriodicNvUpdaterPlugin.h"
 #include "SideBySideConfigurationPlugin.h"
 #include "ShiftOffsetCalculatorCommonPlugin.h"
-#include "RfidCommunicationPlugin.h"
+#include "WaterFilterPlugin.h"
 #include "BroadcastResetPlugin.h"
 #include "SoundLevelPlugin.h"
 
@@ -35,7 +35,7 @@ typedef struct
       ApplianceApiResetDiagnostics_t applianceApiResetDiagnostics;
       PeriodicNvUpdaterPlugin_t periodicNvUpdaterPlugin;
       ShiftOffsetCalculatorCommonPlugin_t shiftOffsetCalculatorCommonPlugin;
-      RfidCommunicationPlugin_t rfidCommunicationPlugin;
+      WaterFilterPlugin_t waterFilterPlugin;
       BroadcastResetPlugin_t broadcastResetPlugin;
       SoundLevelPlugin_t soundLevelPlugin;
    } _private;

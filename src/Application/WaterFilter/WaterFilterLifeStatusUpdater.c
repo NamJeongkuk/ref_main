@@ -25,7 +25,7 @@ static void UpdateWaterFilterLifeStatus(WaterFilterLifeStatusUpdater_t *instance
       instance->_private.config->totalWaterVolumeUsageInOuncesX100Erd,
       &totalWaterVolumeUsageInOunces);
 
-   uint32_t waterFilterCalendarUsageInSeconds;
+   CalendarUsageInSeconds_t waterFilterCalendarUsageInSeconds;
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->filterCalendarUsageInSecondsErd,

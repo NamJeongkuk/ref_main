@@ -49,9 +49,7 @@ void Application_Init(
    SnackModePlugin_Init(dataModel);
    SoundLevelPlugin_Init(&instance->_private.soundLevelPlugin, dataModel);
 
-   RfidCommunicationPlugin_Init(
-      &instance->_private.rfidCommunicationPlugin,
-      instance->_private.dataModel);
+   WaterFilterPlugin_Init(&instance->_private.waterFilterPlugin, dataModel);
 
    TimerModule_t *timerModule = DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule);
    TimerModuleDiagnostics_Init(

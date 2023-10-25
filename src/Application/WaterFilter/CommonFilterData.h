@@ -15,7 +15,7 @@ typedef struct
    uint32_t filterRatedVolumeInOuncesX100;
    uint32_t filterRatedLifeInMinutes;
    uint16_t minimumVolumeNeededToStartFilterLifeTimerInOunces;
-   uint16_t filterMonthInMinutes;
+   uint32_t waterFilterCalendarUsageDelayForLowUsageInMinutes;
 } CommonFilterData_t;
 
 #endif
