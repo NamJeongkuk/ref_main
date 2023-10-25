@@ -9,6 +9,7 @@
 #define SENSORDATA_H
 
 #include "Mapper_LookupTable.h"
+#include "Mapper_UnsignedSignedLookupTable.h"
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -20,7 +21,7 @@ typedef struct
 
 typedef struct
 {
-   Mapper_LookupTableConfiguration_t *lookupTable;
+   Mapper_UnsignedSignedLookupTableConfiguration_t *lookupTable;
    int16_t fallbackValueDegFx100;
    uint8_t alphaNum;
    uint8_t alphaDenom;
@@ -33,7 +34,7 @@ typedef struct
 
 typedef struct
 {
-   Mapper_LookupTableConfiguration_t *lookupTable;
+   Mapper_UnsignedSignedLookupTableConfiguration_t *lookupTable;
    int16_t freshFoodFallbackValueDegFx100;
    int16_t freezerFallbackValueDegFx100;
    uint8_t alphaNum;

@@ -15,7 +15,7 @@ return function(core)
   end
 
   local unpack_table = function(table)
-    return structure(i32(table.raw), i32(table.mapped))
+    return structure(u16(table.raw), i16(table.mapped))
   end
 
   local generate_table = memoize(function(sensorTable)
@@ -77,11 +77,11 @@ return function(core)
             constraint.array_elements({
               constraint.table_keys({
                 raw = { constraint.in_range(0, 65535) },
-                mapped = { constraint.in_range(0, 4294967295) }
+                mapped = { constraint.in_range(0, 32767) }
               })
             })
           },
-          invalid_value = { constraint.equal_to(3000000) }
+          invalid_value = { constraint.equal_to(30000) }
         })
       },
       fallback_value_in_percent_humidityx100 = { constraint.u16 },

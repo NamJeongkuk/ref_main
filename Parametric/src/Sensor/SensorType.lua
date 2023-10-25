@@ -15,7 +15,7 @@ return function(core)
   end
 
   local unpack_table = function(table)
-    return structure(i32(table.raw), i32(table.mapped))
+    return structure(u16(table.raw), i16(table.mapped))
   end
 
   local generate_table = memoize(function(sensorTable)

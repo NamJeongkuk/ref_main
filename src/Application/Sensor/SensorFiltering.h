@@ -17,6 +17,7 @@
 #include "Filter_Slew.h"
 #include "Filter_Fallback.h"
 #include "Timer.h"
+#include "Mapper_UnsignedSignedLookupTable.h"
 
 typedef struct
 {
@@ -36,7 +37,7 @@ typedef struct
       Filter_Slew_t slewFilter;
       Filter_Fallback_t fallbackFilter;
       Timer_t filterTimer;
-      Mapper_LookupTable_t lookupTable;
+      Mapper_UnsignedSignedLookupTable_t lookupTable;
       I_DataModel_t *dataModel;
       const SensorDataSensorType_t *sensorParametricData;
       const SensorFilteringConfig_t *config;

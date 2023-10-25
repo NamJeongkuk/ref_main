@@ -12,14 +12,14 @@ describe('HumiditySensorType', function()
     return require 'lua-common'.table.merge({
       mapping_table = {
         data = {
-          { raw = 4550, mapped = 79770 },
-          { raw = 4600, mapped = 81274 },
-          { raw = 4650, mapped = 82796 },
-          { raw = 4700, mapped = 84339 },
-          { raw = 4750, mapped = 85901 },
-          { raw = 4800, mapped = 87484 },
+          { raw = 4550, mapped = 7977 },
+          { raw = 4600, mapped = 8127 },
+          { raw = 4650, mapped = 8279 },
+          { raw = 4700, mapped = 8433 },
+          { raw = 4750, mapped = 8590 },
+          { raw = 4800, mapped = 8748 },
         },
-        invalid_value = 3000000
+        invalid_value = 30000
       },
       fallback_value_in_percent_humidityx100 = 7500,
       exponentially_moving_average_filter_alpha_numerator = 1,
@@ -58,23 +58,23 @@ describe('HumiditySensorType', function()
       local config = generate_config({
         mapping_table = {
           data = { { raw = -1, mapped = 3994 } },
-          invalid_value = 3000000
+          invalid_value = 30000
         }
       })
       humidity_sensor_type(config)
     end)
 
-    should_fail_with('mapping_table.data[1].mapped=-1000000000000 must be in [0, 4294967295]', function()
+    should_fail_with('mapping_table.data[1].mapped=-1000000000000 must be in [0, 32767]', function()
       local config = generate_config({
         mapping_table = {
           data = { { raw = 4992, mapped = -1000000000000 } },
-          invalid_value = 3000000
+          invalid_value = 30000
         }
       })
       humidity_sensor_type(config)
     end)
 
-    should_fail_with('mapping_table.invalid_value=30000000 must be equal to 3000000', function()
+    should_fail_with('mapping_table.invalid_value=30000000 must be equal to 30000', function()
       local config = generate_config({
         mapping_table = {
           data = { { raw = 4992, mapped = 3994 } },
@@ -88,7 +88,7 @@ describe('HumiditySensorType', function()
       local config = generate_config({
         mapping_table = {
           data = { { raw = 4992, mapped = 3994 } },
-          invalid_value = 3000000
+          invalid_value = 30000
         },
         fallback_value_in_percent_humidityx100 = -410000
       })
@@ -99,7 +99,7 @@ describe('HumiditySensorType', function()
       local config = generate_config({
         mapping_table = {
           data = { { raw = 4992, mapped = 3994 } },
-          invalid_value = 3000000
+          invalid_value = 30000
         },
         fallback_value_in_percent_humidityx100 = 7500,
         exponentially_moving_average_filter_alpha_numerator = -1
@@ -111,7 +111,7 @@ describe('HumiditySensorType', function()
       local config = generate_config({
         mapping_table = {
           data = { { raw = 4992, mapped = 3994 } },
-          invalid_value = 3000000
+          invalid_value = 30000
         },
         fallback_value_in_percent_humidityx100 = 7500,
         exponentially_moving_average_filter_alpha_numerator = 1,
@@ -124,7 +124,7 @@ describe('HumiditySensorType', function()
       local config = generate_config({
         mapping_table = {
           data = { { raw = 4992, mapped = 3994 } },
-          invalid_value = 3000000
+          invalid_value = 30000
         },
         fallback_value_in_percent_humidityx100 = 7500,
         exponentially_moving_average_filter_alpha_numerator = 1,
@@ -138,7 +138,7 @@ describe('HumiditySensorType', function()
       local config = generate_config({
         mapping_table = {
           data = { { raw = 4992, mapped = 3994 } },
-          invalid_value = 3000000
+          invalid_value = 30000
         },
         fallback_value_in_percent_humidityx100 = 7500,
         exponentially_moving_average_filter_alpha_numerator = 1,
@@ -153,7 +153,7 @@ describe('HumiditySensorType', function()
       local config = generate_config({
         mapping_table = {
           data = { { raw = 4992, mapped = 3994 } },
-          invalid_value = 3000000
+          invalid_value = 30000
         },
         fallback_value_in_percent_humidityx100 = 7500,
         exponentially_moving_average_filter_alpha_numerator = 1,
@@ -170,7 +170,7 @@ describe('HumiditySensorType', function()
       local config = generate_config({
         mapping_table = {
           data = { { raw = 4992, mapped = 3994 } },
-          invalid_value = 3000000
+          invalid_value = 30000
         },
         fallback_value_in_percent_humidityx100 = 7500,
         exponentially_moving_average_filter_alpha_numerator = 1,
@@ -192,16 +192,16 @@ describe('HumiditySensorType', function()
           structure(
             pointer(
               structure(
-                structure(i32(0),i32(3000000)),
-                structure(i32(4549),i32(3000000)),
-                structure(i32(4550),i32(79770)),
-                structure(i32(4600),i32(81274)),
-                structure(i32(4650),i32(82796)),
-                structure(i32(4700),i32(84339)),
-                structure(i32(4750),i32(85901)),
-                structure(i32(4800),i32(87484)),
-                structure(i32(4801),i32(3000000)),
-                structure(i32(65535),i32(3000000))
+                structure(u16(0),i16(30000)),
+                structure(u16(4549),i16(30000)),
+                structure(u16(4550),i16(7977)),
+                structure(u16(4600),i16(8127)),
+                structure(u16(4650),i16(8279)),
+                structure(u16(4700),i16(8433)),
+                structure(u16(4750),i16(8590)),
+                structure(u16(4800),i16(8748)),
+                structure(u16(4801),i16(30000)),
+                structure(u16(65535),i16(30000))
               )
             ),
             size(10)

@@ -7,7 +7,6 @@
 
 #include "SensorFiltering.h"
 #include "PersonalityParametricData.h"
-#include "Mapper_LookupTable.h"
 #include "DataModelErdPointerAccess.h"
 #include <stdint.h>
 
@@ -82,7 +81,7 @@ void SensorFiltering_Init(
    instance->_private.config = config;
    instance->_private.sensorParametricData = sensorParametricData;
 
-   Mapper_LookupTable_Init(
+   Mapper_UnsignedSignedLookupTable_Init(
       &instance->_private.lookupTable,
       instance->_private.sensorParametricData->lookupTable);
 

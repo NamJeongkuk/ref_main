@@ -52,6 +52,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/IceMaker/TwistTrayIceMaker \
    $(PROJECT_DIR)/Application/IsolationWaterValve \
    $(PROJECT_DIR)/Application/Lighting \
+   $(PROJECT_DIR)/Application/Mapper \
    $(PROJECT_DIR)/Application/Motor \
    $(PROJECT_DIR)/Application/ParametricData \
    $(PROJECT_DIR)/Application/Plugins \
@@ -111,6 +112,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/IceMaker \
    $(TESTS_DIR)/Application/IceMaker/AluminumMoldIceMaker \
    $(TESTS_DIR)/Application/Lighting \
+   $(TESTS_DIR)/Application/Mapper \
    $(TESTS_DIR)/Application/Motor \
    $(TESTS_DIR)/Application/ParametricData \
    $(TESTS_DIR)/Application/PersonalityEeprom \
