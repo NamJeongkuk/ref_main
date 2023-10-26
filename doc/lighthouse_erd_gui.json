@@ -1579,6 +1579,14 @@
             },
             {
                "namespace": "mb",
+               "displayName": "Water Filter Remaining Usage",
+               "name": "Erd_WaterFilterRemainingUsage",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
                "displayName": "Turbo Cool Request",
                "name": "Erd_TurboCoolOnOffRequest",
                "read": false,
