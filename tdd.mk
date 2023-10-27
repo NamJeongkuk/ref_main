@@ -86,6 +86,7 @@ TEST_SRC_DIRS := \
    $(TESTING_DIR)/Mocks/DataSource \
    $(TESTING_DIR)/Mocks/Gea2MessageEndpoint \
    $(TESTING_DIR)/Mocks/ParametricTestDoubles \
+   $(TESTING_DIR)/Mocks/ServiceDiagnostics \
    $(TESTS_DIR) \
    $(TESTS_DIR)/Application/ \
    $(TESTS_DIR)/Application/Auger \

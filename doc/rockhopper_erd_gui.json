@@ -3896,6 +3896,34 @@
           "interval": 1000000000
         }
       ]
+    },
+    {
+      "title": "Service Mode",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Service Mode Max Test Number",
+          "name": "Erd_ServiceModeTestNumberMaximum",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Service Mode Test Request",
+          "name": "Erd_ServiceModeTestNumberRequest",
+          "read": false,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Service Mode Test Status",
+          "name": "Erd_ServiceModeTestNumberStatus",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        }
+      ]
     }
   ]
 }

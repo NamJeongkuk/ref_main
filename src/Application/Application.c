@@ -68,4 +68,6 @@ void Application_Init(
    BroadcastResetPlugin_Init(
       &instance->_private.broadcastResetPlugin,
       dataModel);
+
+   ServiceModePlugin_Init(&instance->_private.serviceModePlugin, dataModel);
 }

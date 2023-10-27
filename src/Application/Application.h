@@ -19,6 +19,7 @@
 #include "WaterFilterPlugin.h"
 #include "BroadcastResetPlugin.h"
 #include "SoundLevelPlugin.h"
+#include "ServiceModePlugin.h"
 
 typedef struct
 {
@@ -38,6 +39,7 @@ typedef struct
       WaterFilterPlugin_t waterFilterPlugin;
       BroadcastResetPlugin_t broadcastResetPlugin;
       SoundLevelPlugin_t soundLevelPlugin;
+      ServiceModePlugin_t serviceModePlugin;
    } _private;
 } Application_t;
 

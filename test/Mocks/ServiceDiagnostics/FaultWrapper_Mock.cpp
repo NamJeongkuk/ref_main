@@ -6,6 +6,7 @@
  */
 
 #include "FaultWrapper_Mock.h"
+#include "CppUTestExt/MockSupport.h"
 
 static void SetRequest(I_FaultWrapper_t *instance)
 {

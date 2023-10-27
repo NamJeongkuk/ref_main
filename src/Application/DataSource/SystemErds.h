@@ -129,6 +129,9 @@
 #include "RfidCommunicationControllerState.h"
 #include "ConvertedCallbacks.h"
 #include "WaterFilterRemainingUsage.h"
+#include "ServiceModeTestRequest.h"
+#include "ServiceModeTestNumber.h"
+#include "ServiceModeTestStatus.h"
 
 // clang-format off
 
@@ -565,6 +568,10 @@ enum
    \
    ENTRY(Erd_EnableDemoModeRequest,                         0x1239, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_EnableDemoModeStatus,                          0x123A, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   \
+   ENTRY(Erd_ServiceModeTestNumberMaximum,                  0x123B, ServiceModeTestNumber_t,                            Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ServiceModeTestNumberRequest,                  0x123C, ServiceModeTestRequest_t,                           Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_ServiceModeTestNumberStatus,                   0x123D, ServiceModeTestStatus_t,                            Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_ServiceDiagnosticsEntityLocation,              0xE000, Erd_t,                                              Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \

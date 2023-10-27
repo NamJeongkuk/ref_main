@@ -13,7 +13,7 @@
 typedef struct
 {
    I_FaultWrapper_t interface;
-} FaultWrapper_Mock;
+} FaultWrapper_Mock_t;
 
 void FaultWrapper_Mock_Init(FaultWrapper_Mock_t *instance);
 
