@@ -88,7 +88,6 @@ SRC_DIRS:=\
   src/Application/Sensor \
   src/Application/ServiceDiagnostics \
   src/Application/Setpoints \
-  src/Application/SignOfLife \
   src/Application/SnackMode \
   src/Application/SoundLevel \
   src/Application/StepperMotor \
@@ -118,7 +117,6 @@ INC_DIRS:=\
   src/Application/RequestStatusUpdater \
   src/Application/ModelInformation \
   src/Application/Sabbath \
-  src/Application/SignOfLife \
   src/Application/SystemMonitor \
   src/Application/Temperature \
   src/Application/Valve \

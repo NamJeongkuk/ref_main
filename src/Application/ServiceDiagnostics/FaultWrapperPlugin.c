@@ -16,11 +16,9 @@
 // clang-format off
 // (name, faultOutputErd, consecutiveSets, consecutiveClears)
 #define FAULT_WRAPPER_CONSECUTIVE_TABLE(ENTRY)     \
-   ENTRY(SomeFault, Erd_SomeFault, 3, 3)           \
 
 // (name, faultOutputErd, requestsToSet, numberRequestsToConsider)
 #define FAULT_WRAPPER_COUNT_TABLE(ENTRY)           \
-   ENTRY(SomeOtherFault, Erd_SomeOtherFault, 3, 10) \
 
 #define EXPAND_AS_FAULT_WRAPPER_CONSECUTIVE_ENUM(name, _faultOutputErd, consecutiveSets, consecutiveClears)  \
    FaultWrapperIndex_##name,                                                                                 \

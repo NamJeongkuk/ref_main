@@ -17,17 +17,20 @@ typedef struct
 {
    uint8_t geaAddress;
    Erd_t nvErd; // bool
-} GeaAddressToNvInSystemMap_t;
+   Erd_t faultErd; // bool
+} BoardInSystemData_t;
 
 typedef struct
 {
-   const GeaAddressToNvInSystemMap_t *addressToErdMapArray;
-   uint8_t addressToErdMapArrayNumberEntries;
-   uint8_t retryPeriodInSec;
-   uint8_t initialDelayTimeInSec;
-   uint8_t numberOfRetryRequests;
+   const BoardInSystemData_t *boardsInSystemData;
+   uint8_t allBoardsInSystemNumberEntries;
+   uint8_t initialDiscoveryDelayTimeInSec;
+   uint8_t retryPeriodForDiscoveryInSec;
+   uint8_t numberOfDiscoveryRetryRequests;
+   uint8_t retryPeriodForMonitoringInMinutes;
+   uint8_t numberOfMonitoringRetryRequestsBeforeSettingFault;
    Erd_t geaMessageEndpointErd; // I_Gea2MessageEndpoint_t *
-   Erd_t TimerModuleErd; // TimerModule_t *
+   Erd_t timerModuleErd; // TimerModule_t *
 } BoardsInSystemConfig_t;
 
 typedef struct
@@ -37,6 +40,7 @@ typedef struct
       Timer_t retryTimer;
       EventSubscription_t onReceiveEventSubscription;
       const BoardsInSystemConfig_t *config;
+      uint8_t *boardMissedResponseCountBuffer;
       I_DataModel_t *dataModel;
       uint8_t numberOfRetries;
    } _private;
@@ -44,13 +48,18 @@ typedef struct
 
 /*!
  *
+ * @pre sizeOfBuffer >= config.allBoardsInSystemNumberEntries
  * @param instance
  * @param dataModel
  * @param config
+ * @param boardMissedResponseCountBuffer
+ * @param sizeOfBuffer
  */
 void BoardsInSystem_Init(
    BoardsInSystem_t *instance,
    I_DataModel_t *dataModel,
-   const BoardsInSystemConfig_t *config);
+   const BoardsInSystemConfig_t *config,
+   uint8_t *boardMissedResponseCountBuffer,
+   uint8_t sizeOfBuffer);
 
 #endif

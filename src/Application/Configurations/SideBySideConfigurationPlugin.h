@@ -20,7 +20,6 @@
 #include "DispenserWaterValvePlugin.h"
 #include "AugerMotorPlugin.h"
 #include "SideBySideLightingPlugin.h"
-#include "SignOfLifePlugin.h"
 #include "SideBySideBooleanRequestStatusUpdaterPlugin.h"
 #include "SideBySideDoorPlugin.h"
 #include "SideBySideEnhancedSabbathPlugin.h"
@@ -41,7 +40,6 @@ typedef struct
       SideBySideFactoryPlugin_t factoryPlugin;
       SideBySideDispensePlugin_t dispensePlugin;
       SideBySideLightingPlugin_t lightingPlugin;
-      SignOfLifePlugin_t signOfLifePlugin;
       SideBySideBooleanRequestStatusUpdaterPlugin_t requestStatusUpdaterPlugin;
       SideBySideDoorPlugin_t doorPlugin;
       SideBySideEnhancedSabbathPlugin_t enhancedSabbathPlugin;

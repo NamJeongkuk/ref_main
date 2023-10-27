@@ -35,15 +35,13 @@ enum
    MsecPerHour = (MSEC_PER_MIN * 60)
 };
 
-static const Erd_t snapshotErdList[] =
-   {
-      Erd_SomeData
-   };
+static const Erd_t snapshotErdList[] = {
+   Erd_SomeData
+};
 
-static const FaultId_t faultCodes[] =
-   {
-      ERD_TABLE(EXPAND_AS_FAULT_ID)
-   };
+static const FaultId_t faultCodes[] = {
+   ERD_TABLE(EXPAND_AS_FAULT_ID)
+};
 
 // clang-format off
 static const DataSource_ServiceDiagnosticsRevision3Entity_t serviceDiagnosticsEntity =
@@ -103,7 +101,7 @@ static const DataSource_ServiceDiagnosticsRevision3Entity_t serviceDiagnosticsEn
 
       .fault =
          {
-            .start = Erd_SomeFault,
+            .start = Erd_DispenserUiCommunicationFault,
             .count = ELEMENT_COUNT(faultCodes),
             .codes = faultCodes,
          },
@@ -116,42 +114,36 @@ static const DataSource_ServiceDiagnosticsRevision3Entity_t serviceDiagnosticsEn
    };
 // clang-format on
 
-static const DataSource_ServiceDiagnosticsRevision3Entity_t *entities[] =
-   {
-      &serviceDiagnosticsEntity,
-   };
+static const DataSource_ServiceDiagnosticsRevision3Entity_t *entities[] = {
+   &serviceDiagnosticsEntity,
+};
 
-static const DataSource_ServiceDiagnosticsRevision3Configuration_t serviceDiagnosticsConfiguration =
-   {
-      .entities = entities,
-      .entityCount = ELEMENT_COUNT(entities)
-   };
+static const DataSource_ServiceDiagnosticsRevision3Configuration_t serviceDiagnosticsConfiguration = {
+   .entities = entities,
+   .entityCount = ELEMENT_COUNT(entities)
+};
 
-static const PeriodicErdTransfererConfigurationEntry_t periodicErdTransferTableEntries[] =
-   {
-      { Erd_ServiceDiagnosticsRunTimeInMinutes, Erd_ApplianceRunTimeInMinutesUpdatedHourly }
-   };
+static const PeriodicErdTransfererConfigurationEntry_t periodicErdTransferTableEntries[] = {
+   { Erd_ServiceDiagnosticsRunTimeInMinutes, Erd_ApplianceRunTimeInMinutesUpdatedHourly }
+};
 
-static const PeriodicErdTransfererConfiguration_t periodicErdTransferConfiguration =
-   {
-      periodicErdTransferTableEntries,
-      NUM_ELEMENTS(periodicErdTransferTableEntries)
-   };
+static const PeriodicErdTransfererConfiguration_t periodicErdTransferConfiguration = {
+   periodicErdTransferTableEntries,
+   NUM_ELEMENTS(periodicErdTransferTableEntries)
+};
 
 static void InitializeApiVersionAndManifest(I_DataSource_t *dataSource)
 {
-   ServiceDiagnosticsApiVersion_t apiVersion =
-      {
-         .apiVersion = DiagnosticsApiVersion,
-         .profile = DiagnosticsProfileVersion
-      };
+   ServiceDiagnosticsApiVersion_t apiVersion = {
+      .apiVersion = DiagnosticsApiVersion,
+      .profile = DiagnosticsProfileVersion
+   };
    DataSource_Write(dataSource, Erd_ServiceDiagnosticsApiVersion, &apiVersion);
 
-   ServiceDiagnosticsRevision3Manifest_t manifest =
-      {
-         .entityMapStart = EntityMapStartErd,
-         .entityCount = EntityMapCount
-      };
+   ServiceDiagnosticsRevision3Manifest_t manifest = {
+      .entityMapStart = EntityMapStartErd,
+      .entityCount = EntityMapCount
+   };
    DataSource_Write(dataSource, Erd_ServiceDiagnosticsRevision3Manifest, &manifest);
 
    Erd_t entityLocation = EntityStartLocation;

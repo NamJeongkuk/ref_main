@@ -1520,15 +1520,43 @@
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Some Fault Erd",
-          "name": "Erd_SomeFault",
+          "displayName": "Dispenser UI Comm Fault",
+          "name": "Erd_DispenserUiCommunicationFault",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Some Other Fault Erd",
-          "name": "Erd_SomeOtherFault",
+          "displayName": "RFID Board Comm Fault",
+          "name": "Erd_RfidBoardCommunicationFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Android SBC Comm Fault",
+          "name": "Erd_AndroidSbcCommunicationFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Door Board Comm Fault",
+          "name": "Erd_DoorBoardCommunicationFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Combo Module Comm Fault",
+          "name": "Erd_EmbeddedWifiCommunicationFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Internal UI Board Comm Fault",
+          "name": "Erd_InternalTemperatureUiCommunicationFault",
           "read": true,
           "write": false
         }

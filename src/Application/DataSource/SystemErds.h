@@ -104,7 +104,6 @@
 #include "WaterFilterState.h"
 #include "WaterFilterType.h"
 #include "IceMakerTypeInformation.h"
-#include "AndroidUiSignOfLifeFsmState.h"
 #include "I_OneWire.h"
 #include "DispensingInhibitedReasonBitmap.h"
 #include "ControlLockStatus.h"
@@ -1392,9 +1391,6 @@ enum
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData8,     0xF708, FaultSnapshotData_t,                                Swap_Range,   Io_None, Sub_N, NvFaultSnapshot,    NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ServiceDiagnosticsFaultTableSnapshotData9,     0xF709, FaultSnapshotData_t,                                Swap_Range_E, Io_None, Sub_N, NvFaultSnapshot,    NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
-   ENTRY(Erd_SomeFault,                                     0xF710, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_SomeFault) \
-   ENTRY(Erd_SomeOtherFault,                                0xF711, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_SomeOtherFault) \
-   \
    ENTRY(Erd_CacheSyncState,                                0xF712, bool,                                               Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Fault_EepromReadFailure,                       0xF713, bool,                                               Swap_No,  Io_All,  Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -1404,6 +1400,13 @@ enum
    \
    ENTRY(Erd_FaultWrapperInterfaceArray,                    0xF717, I_FaultWrapper_t *,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CoolingStatesGridVotesConstArrayMapInterface,  0xF719, I_ConstArrayMap_t *,                                Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_DispenserUiCommunicationFault,                 0xF720, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_DispenserUiCommunicationFault) \
+   ENTRY(Erd_RfidBoardCommunicationFault,                   0xF721, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_RfidBoardCommunicationFault) \
+   ENTRY(Erd_AndroidSbcCommunicationFault,                  0xF722, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_AndroidSbcCommunicationFault) \
+   ENTRY(Erd_DoorBoardCommunicationFault,                   0xF723, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_DoorBoardCommunicationFault) \
+   ENTRY(Erd_EmbeddedWifiCommunicationFault,                0xF724, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_EmbeddedWifiCommunicationFault) \
+   ENTRY(Erd_InternalTemperatureUiCommunicationFault,       0xF725, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_InternalTemperatureUiCommunicationFault) \
    \
    ENTRY(Erd_FactoryModeEnableRequestInMinutes,             0xF801, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
@@ -1428,8 +1431,6 @@ enum
    ENTRY(Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100,      0xFB14, VolumeInOuncesX100_t,                               Swap_Yes,   Io_None, Sub_N, NvUsageProfile,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_WaterFilterCalendarUsageInSeconds,      0xFB15, CalendarUsageInSeconds_t,                           Swap_Yes,   Io_None, Sub_N, NvUsageProfile,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
-   ENTRY(Erd_AndroidUiSignOfLifeFsmState,                   0xFB80, AndroidUiSignOfLifeFsmState_t,                      Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_MainboardIsConnectedToTheAndroidUi,            0xFB81, bool,                                               Swap_No,  Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_NumberOfTimesMainboardHasLostCommunicationWithAndroidUi, 0xFB82, uint8_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_NumberOfTimesMainboardHasAttemptedToResetAndroidUi,      0xFB83, uint8_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_AndroidUiResetSignal,                          0xFB84, Signal_t,                                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \

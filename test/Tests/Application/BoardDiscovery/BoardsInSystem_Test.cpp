@@ -28,29 +28,59 @@ enum
    ADifferentGea2Command = 3,
    AnUnknownGeaAddress = 0x15,
    ARetryPeriodInSeconds = 3,
-   AnInitialDelayPeriodInSeconds = 4
+   AnInitialDelayPeriodInSeconds = 4,
+   MonitoringRetryPeriodInMinutes = 2,
+   ALotOfPingsWithNoResponse = NumberRetryRequests * 10
 };
 
 #define FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(_indexName, _startIndex) \
-   for(uint8_t _indexName = _startIndex; _indexName < config.addressToErdMapArrayNumberEntries; _indexName++)
+   for(uint8_t _indexName = _startIndex; _indexName < config.allBoardsInSystemNumberEntries; _indexName++)
 
-static const GeaAddressToNvInSystemMap_t geaErdEntries[] = {
-   { Gea2Address_Dispenser, Erd_DispenserUiInSystem },
-   { Gea2Address_RfidBoard, Erd_RfidBoardInSystem },
-   { Gea2Address_AndroidSbc, Erd_AndroidSbcBoardInSystem },
-   { Gea2Address_DoorBoard, Erd_DoorBoardInSystem },
-   { Gea2Address_EmbeddedWiFi, Erd_EmbeddedWifiInSystem }
+static const BoardInSystemData_t geaErdEntries[] = {
+   {
+      .geaAddress = Gea2Address_Dispenser,
+      .nvErd = Erd_DispenserUiInSystem,
+      .faultErd = Erd_DispenserUiCommunicationFault
+   },
+   {
+      .geaAddress = Gea2Address_RfidBoard,
+      .nvErd = Erd_RfidBoardInSystem,
+      .faultErd = Erd_RfidBoardCommunicationFault
+   },
+   {
+      .geaAddress = Gea2Address_AndroidSbc,
+      .nvErd = Erd_AndroidSbcBoardInSystem,
+      .faultErd = Erd_AndroidSbcCommunicationFault
+   },
+   {
+      .geaAddress = Gea2Address_DoorBoard,
+      .nvErd = Erd_DoorBoardInSystem,
+      .faultErd = Erd_DoorBoardCommunicationFault
+   },
+   {
+      .geaAddress = Gea2Address_InternalTemperatureUi,
+      .nvErd = Erd_InternalTemperatureUiInSystem,
+      .faultErd = Erd_InternalTemperatureUiCommunicationFault
+   },
+   {
+      .geaAddress = Gea2Address_EmbeddedWiFi,
+      .nvErd = Erd_EmbeddedWifiInSystem,
+      .faultErd = Erd_EmbeddedWifiCommunicationFault
+   }
 };
-
 static const BoardsInSystemConfig_t config = {
-   .addressToErdMapArray = geaErdEntries,
-   .addressToErdMapArrayNumberEntries = NUM_ELEMENTS(geaErdEntries),
-   .retryPeriodInSec = ARetryPeriodInSeconds,
-   .initialDelayTimeInSec = AnInitialDelayPeriodInSeconds,
-   .numberOfRetryRequests = NumberRetryRequests,
+   .boardsInSystemData = geaErdEntries,
+   .allBoardsInSystemNumberEntries = NUM_ELEMENTS(geaErdEntries),
+   .initialDiscoveryDelayTimeInSec = AnInitialDelayPeriodInSeconds,
+   .retryPeriodForDiscoveryInSec = ARetryPeriodInSeconds,
+   .numberOfDiscoveryRetryRequests = NumberRetryRequests,
+   .retryPeriodForMonitoringInMinutes = MonitoringRetryPeriodInMinutes,
+   .numberOfMonitoringRetryRequestsBeforeSettingFault = NumberRetryRequests,
    .geaMessageEndpointErd = Erd_Gea2MessageEndpoint,
-   .TimerModuleErd = Erd_TimerModule,
+   .timerModuleErd = Erd_TimerModule,
 };
+
+static uint8_t buffer[NUM_ELEMENTS(geaErdEntries)] = { 0 };
 
 STATIC_ALLOC_GEA2MESSAGE(expectedDispenserUiRequestMessage, 0);
 STATIC_ALLOC_GEA2MESSAGE(expectedRfidBoardRequestMessage, 0);
@@ -121,6 +151,8 @@ TEST_GROUP(BoardsInSystem)
          dataModel,
          Erd_Gea2MessageEndpoint,
          &messageEndpoint);
+
+      memset(buffer, 0, sizeof(buffer));
    }
 
    void GivenTheModuleIsInitialized()
@@ -128,7 +160,19 @@ TEST_GROUP(BoardsInSystem)
       BoardsInSystem_Init(
          &instance,
          dataModel,
-         &config);
+         &config,
+         buffer,
+         NUM_ELEMENTS(buffer));
+   }
+
+   void ModuleIsInitializedWithBadBuffer()
+   {
+      BoardsInSystem_Init(
+         &instance,
+         dataModel,
+         &config,
+         buffer,
+         (NUM_ELEMENTS(buffer) - 1));
    }
 
    void WhenTheModuleIsInitializedAndInitialDelayPeriodExpires()
@@ -144,7 +188,7 @@ TEST_GROUP(BoardsInSystem)
 
    void GeaMessageShouldBeRequestedForIndex(uint8_t command, uint8_t index)
    {
-      Gea2Message_SetDestination(expectedGea2RequestMessages[index], config.addressToErdMapArray[index].geaAddress);
+      Gea2Message_SetDestination(expectedGea2RequestMessages[index], config.boardsInSystemData[index].geaAddress);
       Gea2Message_SetCommand(expectedGea2RequestMessages[index], command);
       Gea2Message_SetSource(expectedGea2RequestMessages[index], Gea2Address_Mainboard);
 
@@ -167,7 +211,7 @@ TEST_GROUP(BoardsInSystem)
    {
       DataModel_Write(
          dataModel,
-         config.addressToErdMapArray[index].nvErd,
+         config.boardsInSystemData[index].nvErd,
          set);
    }
 
@@ -184,10 +228,33 @@ TEST_GROUP(BoardsInSystem)
       bool actual;
       DataModel_Read(
          dataModel,
-         config.addressToErdMapArray[index].nvErd,
+         config.boardsInSystemData[index].nvErd,
          &actual);
 
       CHECK_EQUAL(expected, actual);
+   }
+
+   void FaultErdForIndexShouldBe(uint8_t index, bool expected)
+   {
+      bool actual;
+      DataModel_Read(
+         dataModel,
+         config.boardsInSystemData[index].faultErd,
+         &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void BoardsArePingedThisManyTimesWithNoResponse(uint8_t numPings)
+   {
+      for(uint8_t i = 0; i < numPings; i++)
+      {
+         FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+         {
+            GeaMessageShouldBeRequestedForIndex(Gea2CommonCommand_Version, i);
+         }
+         After(MonitoringRetryPeriodInMinutes * MSEC_PER_MIN);
+      }
    }
 
    void NothingShouldHappen()
@@ -198,7 +265,7 @@ TEST_GROUP(BoardsInSystem)
    void WhenBoardWithGeaAddressIndexRespondsToVersionRequest(uint8_t geaAddressIndex)
    {
       Gea2Message_SetDestination(expectedGea2ResponseMessages[geaAddressIndex], Gea2Address_Mainboard);
-      Gea2Message_SetSource(expectedGea2ResponseMessages[geaAddressIndex], config.addressToErdMapArray[geaAddressIndex].geaAddress);
+      Gea2Message_SetSource(expectedGea2ResponseMessages[geaAddressIndex], config.boardsInSystemData[geaAddressIndex].geaAddress);
       Gea2Message_SetCommand(expectedGea2ResponseMessages[geaAddressIndex], Gea2CommonCommand_Version);
       uint8_t *payload = Gea2Message_GetPayload(expectedGea2ResponseMessages[geaAddressIndex]);
       payload[0] = 0xDE;
@@ -212,7 +279,7 @@ TEST_GROUP(BoardsInSystem)
    void WhenBoardWithGeaAddressIndexRespondsWithNonVersionRequestGeaCommand(uint8_t geaAddressIndex)
    {
       Gea2Message_SetDestination(expectedGea2ResponseMessages[geaAddressIndex], Gea2Address_Mainboard);
-      Gea2Message_SetSource(expectedGea2ResponseMessages[geaAddressIndex], config.addressToErdMapArray[geaAddressIndex].geaAddress);
+      Gea2Message_SetSource(expectedGea2ResponseMessages[geaAddressIndex], config.boardsInSystemData[geaAddressIndex].geaAddress);
       Gea2Message_SetCommand(expectedGea2ResponseMessages[geaAddressIndex], ADifferentGea2Command);
       uint8_t *payload = Gea2Message_GetPayload(expectedGea2ResponseMessages[geaAddressIndex]);
       payload[0] = 0xDE;
@@ -240,12 +307,12 @@ TEST_GROUP(BoardsInSystem)
 
    void AllNvErdsInAddressMapShouldBe(bool expected)
    {
-      for(uint8_t i = 0; i < config.addressToErdMapArrayNumberEntries; i++)
+      for(uint8_t i = 0; i < config.allBoardsInSystemNumberEntries; i++)
       {
          bool actual;
          DataModel_Read(
             dataModel,
-            config.addressToErdMapArray[i].nvErd,
+            config.boardsInSystemData[i].nvErd,
             &actual);
          CHECK_EQUAL(expected, actual);
       }
@@ -254,6 +321,88 @@ TEST_GROUP(BoardsInSystem)
    void After(TimerTicks_t ticks)
    {
       TimerModule_TestDouble_ElapseTime(timerModuleDouble, ticks);
+   }
+
+   void ModuleIsInitializedAndAllBoardsAreDiscovered()
+   {
+      ShouldSendVersionRequestForEachBoardAddressInArray();
+      WhenTheModuleIsInitializedAndInitialDelayPeriodExpires();
+
+      FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+      {
+         WhenBoardWithGeaAddressIndexRespondsToVersionRequest(i);
+         NvErdForIndexShouldBe(i, SET);
+      }
+      After(ARetryPeriodInSeconds * MSEC_PER_SEC * (NumberRetryRequests - 1));
+   }
+
+   void ModuleIsInitializedAndAllEvenIndexedBoardsAreDiscoveredAndDiscoveryPortionIsOver()
+   {
+      ShouldSendVersionRequestForEachBoardAddressInArray();
+      WhenTheModuleIsInitializedAndInitialDelayPeriodExpires();
+
+      FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+      {
+         if(i % 2 == 0)
+         {
+            WhenBoardWithGeaAddressIndexRespondsToVersionRequest(i);
+            NvErdForIndexShouldBe(i, SET);
+         }
+      }
+
+      FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+      {
+         if(i % 2 != 0)
+         {
+            GeaMessageShouldBeRequestedForIndex(Gea2CommonCommand_Version, i);
+            NvErdForIndexShouldBe(i, CLEAR);
+         }
+      }
+      After(ARetryPeriodInSeconds * MSEC_PER_SEC);
+
+      FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+      {
+         if(i % 2 != 0)
+         {
+            GeaMessageShouldBeRequestedForIndex(Gea2CommonCommand_Version, i);
+            NvErdForIndexShouldBe(i, CLEAR);
+         }
+      }
+      After(ARetryPeriodInSeconds * MSEC_PER_SEC);
+   }
+
+   void ModuleIsInitializedAndAllBoardsAreDiscoveredAndThenAllLoseCommunicationAndSetFault()
+   {
+      ModuleIsInitializedAndAllBoardsAreDiscovered();
+
+      for(uint8_t ping = 0; ping < NumberRetryRequests; ping++)
+      {
+         FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+         {
+            GeaMessageShouldBeRequestedForIndex(Gea2CommonCommand_Version, i);
+         }
+         After(MonitoringRetryPeriodInMinutes * MSEC_PER_MIN);
+      }
+
+      FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+      {
+         GeaMessageShouldBeRequestedForIndex(Gea2CommonCommand_Version, i);
+      }
+
+      After((MonitoringRetryPeriodInMinutes * MSEC_PER_MIN));
+
+      FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+      {
+         FaultErdForIndexShouldBe(i, SET);
+      }
+   }
+
+   void ButThenBoardsRegainCommunicationAndRespondBackToVersionRequest()
+   {
+      FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+      {
+         WhenBoardWithGeaAddressIndexRespondsToVersionRequest(i);
+      }
    }
 };
 
@@ -277,7 +426,7 @@ TEST(BoardsInSystem, ShouldSkipRequestingVersionFromBoardsWhoseNvErdsAreSet)
 
 TEST(BoardsInSystem, ShouldNotIssueAnyVersionRequestsWhenAllNvErdsAreSet)
 {
-   for(uint8_t i = 0; i < config.addressToErdMapArrayNumberEntries; i++)
+   for(uint8_t i = 0; i < config.allBoardsInSystemNumberEntries; i++)
    {
       GivenNvErdIsSetForIndex(i);
    }
@@ -330,12 +479,12 @@ TEST(BoardsInSystem, ShouldNotSetAnyNvErdsWhenMessageFromBoardIsNotInAddressTabl
    AllNvErdsInAddressMapShouldBe(CLEAR);
 }
 
-TEST(BoardsInSystem, ShouldIssueRetryRequestIfThereIsNoResponseAfterRetryPeriod)
+TEST(BoardsInSystem, ShouldDiscoverAnyBoardsAfterInitialDiscoveryPeriodPortion)
 {
    ShouldSendVersionRequestForEachBoardAddressInArray();
    WhenTheModuleIsInitializedAndInitialDelayPeriodExpires();
 
-   for(uint8_t i = 1; i < config.numberOfRetryRequests; i++)
+   for(uint8_t i = 1; i < config.numberOfDiscoveryRetryRequests; i++)
    {
       ShouldSendVersionRequestForEachBoardAddressInArray();
       After(ARetryPeriodInSeconds * MSEC_PER_SEC);
@@ -348,7 +497,7 @@ TEST(BoardsInSystem, ShouldIssueRetryRequestIfThereIsNoResponseAfterRetryPeriod)
    FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
    {
       WhenBoardWithGeaAddressIndexRespondsToVersionRequest(i);
-      NvErdForIndexShouldBe(i, CLEAR);
+      NvErdForIndexShouldBe(i, SET);
    }
 }
 
@@ -358,4 +507,142 @@ TEST(BoardsInSystem, ShouldDoNothingIfAllNvErdsAreSetBeforeInit)
    NothingShouldHappen();
    WhenTheModuleIsInitializedAndInitialDelayPeriodExpires();
    After(ARetryPeriodInSeconds * MSEC_PER_SEC);
+}
+
+TEST(BoardsInSystem, ShouldSetFaultIfDiscoveredBoardsDoNotRespondToAThresholdOfPingsWhileMonitoring)
+{
+   ModuleIsInitializedAndAllBoardsAreDiscovered();
+
+   for(uint8_t ping = 0; ping < NumberRetryRequests; ping++)
+   {
+      FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+      {
+         GeaMessageShouldBeRequestedForIndex(Gea2CommonCommand_Version, i);
+      }
+
+      After(MonitoringRetryPeriodInMinutes * MSEC_PER_MIN);
+
+      FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+      {
+         FaultErdForIndexShouldBe(i, CLEAR);
+      }
+   }
+
+   FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+   {
+      FaultErdForIndexShouldBe(i, CLEAR);
+   }
+
+   After((MonitoringRetryPeriodInMinutes * MSEC_PER_MIN) - 1);
+
+   FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+   {
+      GeaMessageShouldBeRequestedForIndex(Gea2CommonCommand_Version, i);
+   }
+
+   After(1);
+
+   FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+   {
+      FaultErdForIndexShouldBe(i, SET);
+   }
+}
+
+TEST(BoardsInSystem, ShouldSetAndClearFaultIfDiscoveredBoardsDoNotRespondToAThresholdNumberOfPingsWhileMonitoringButThenEventuallyRespond)
+{
+   ModuleIsInitializedAndAllBoardsAreDiscoveredAndThenAllLoseCommunicationAndSetFault();
+   BoardsArePingedThisManyTimesWithNoResponse(ALotOfPingsWithNoResponse);
+
+   FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+   {
+      FaultErdForIndexShouldBe(i, SET);
+   }
+
+   ButThenBoardsRegainCommunicationAndRespondBackToVersionRequest();
+
+   FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+   {
+      FaultErdForIndexShouldBe(i, CLEAR);
+   }
+}
+
+TEST(BoardsInSystem, ShouldSetAndClearFaultIfDiscoveredBoardsDoNotRespondToAThresholdOfPingsWhileMonitoringButThenEventuallyRespondForOnlyDiscoveredBoards)
+{
+   ModuleIsInitializedAndAllEvenIndexedBoardsAreDiscoveredAndDiscoveryPortionIsOver();
+   for(uint8_t ping = 0; ping < NumberRetryRequests; ping++)
+   {
+      FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+      {
+         if(i % 2 == 0)
+         {
+            GeaMessageShouldBeRequestedForIndex(Gea2CommonCommand_Version, i);
+            FaultErdForIndexShouldBe(i, CLEAR);
+         }
+      }
+      After(MonitoringRetryPeriodInMinutes * MSEC_PER_MIN);
+   }
+
+   After((MonitoringRetryPeriodInMinutes * MSEC_PER_MIN) - 1);
+
+   FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+   {
+      if(i % 2 == 0)
+      {
+         GeaMessageShouldBeRequestedForIndex(Gea2CommonCommand_Version, i);
+      }
+   }
+
+   After(1);
+
+   FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+   {
+      if(i % 2 == 0)
+      {
+         FaultErdForIndexShouldBe(i, SET);
+      }
+      else
+      {
+         FaultErdForIndexShouldBe(i, CLEAR);
+      }
+   }
+}
+
+TEST(BoardsInSystem, ShouldNotClearFaultIfDiscoveredBoardsResponseIsNotToAVersionRequest)
+{
+   ModuleIsInitializedAndAllBoardsAreDiscoveredAndThenAllLoseCommunicationAndSetFault();
+   BoardsArePingedThisManyTimesWithNoResponse(ALotOfPingsWithNoResponse);
+
+   FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+   {
+      FaultErdForIndexShouldBe(i, SET);
+   }
+
+   FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+   {
+      WhenBoardWithGeaAddressIndexRespondsWithNonVersionRequestGeaCommand(i);
+      FaultErdForIndexShouldBe(i, SET);
+   }
+}
+
+TEST(BoardsInSystem, ShouldNotExceedBoundsOfBufferToCauseFaultToGetClearedByOveflowingBufferToZero)
+{
+   ModuleIsInitializedAndAllBoardsAreDiscoveredAndThenAllLoseCommunicationAndSetFault();
+   BoardsArePingedThisManyTimesWithNoResponse(UINT8_MAX - NumberRetryRequests - 1);
+
+   FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+   {
+      FaultErdForIndexShouldBe(i, SET);
+   }
+
+   BoardsArePingedThisManyTimesWithNoResponse(1);
+
+   FOR_EACH_GEA_ADDRESS_PAIR_INDEX_STARTING_AT(i, 0)
+   {
+      FaultErdForIndexShouldBe(i, SET);
+   }
+}
+
+TEST(BoardsInSystem, ShouldUassertIfBufferSizeIsSmallerThanNumberOfPossibleBoardsInSystem)
+{
+   ShouldFailAssertionWhen(ModuleIsInitializedWithBadBuffer());
 }
