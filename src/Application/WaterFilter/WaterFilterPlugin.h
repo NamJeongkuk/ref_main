@@ -10,6 +10,7 @@
 
 #include "WaterFilterCalendarUsageUpdater.h"
 #include "RfidCommunicationPlugin.h"
+#include "WaterVolumeUsageCalculator.h"
 
 typedef struct
 {
@@ -17,6 +18,9 @@ typedef struct
    {
       WaterFilterCalendarUsageUpdater_t waterFilterCalendarUsageUpdater;
       RfidCommunicationPlugin_t rfidCommunicationPlugin;
+      WaterVolumeUsageCalculator_t aluminumMoldIceMakerWaterVolumeUsageCalculator;
+      WaterVolumeUsageCalculator_t twistTrayIceMakerWaterVolumeUsageCalculator;
+      WaterVolumeUsageCalculator_t dispensedWaterVolumeUsageCalculator;
    } _private;
 } WaterFilterPlugin_t;
 

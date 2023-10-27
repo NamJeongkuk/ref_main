@@ -647,7 +647,7 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Ice Maker Water Valve Relay",
+          "displayName": "Aluminum Mold Ice Maker Water Valve Relay",
           "name": "Erd_AluminumMoldIceMakerWaterValveRelay",
           "read": true,
           "write": false
@@ -1472,6 +1472,13 @@
           "name": "Erd_DispensingRequestStatus",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dispenser Valve Relay",
+          "name": "Erd_DispenserValveRelay",
+          "read": true,
+          "write": true
         }
       ]
     },
@@ -2089,6 +2096,13 @@
           "name": "Erd_FlowMeterMonitoringRequest",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Aluminum Mold Ice Maker Water Valve Relay",
+          "name": "Erd_AluminumMoldIceMakerWaterValveRelay",
+          "read": true,
+          "write": true
         }
       ]
     },
@@ -2197,6 +2211,13 @@
           "namespace": "mb",
           "displayName": "Twist Ice Maker Flow Meter Monitoring Request",
           "name": "Erd_TwistTrayIceMakerFlowMeterMonitoringRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Water Valve Relay",
+          "name": "Erd_TwistTrayIceMakerWaterValveRelay",
           "read": true,
           "write": true
         }
@@ -3384,7 +3405,7 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Water Volume Usage In Ounces x100",
+          "displayName": "Total Water Volume Usage In Ounces x100",
           "name": "Erd_TotalWaterVolumeUsageInOuncesX100",
           "read": true,
           "write": true,
@@ -3503,6 +3524,30 @@
           "namespace": "mb",
           "displayName": "Eeprom Water Filter Calendar Usage In Seconds",
           "name": "Erd_Eeprom_WaterFilterCalendarUsageInSeconds",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Last Aluminum Mold Ice Maker Water Volume Usage In Ounces x100",
+          "name": "Erd_LastAluminumMoldIceMakerWaterVolumeUsageInOuncesX100",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Last Twist Tray Ice Maker Water Volume Usage In Ounces x100",
+          "name": "Erd_LastTwistTrayIceMakerWaterVolumeUsageInOuncesX100",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Last Dispensed Water Volume Usage In Ounces x100",
+          "name": "Erd_LastDispensedWaterVolumeUsageInOuncesX100",
           "read": true,
           "write": true,
           "interval": 1000000000
