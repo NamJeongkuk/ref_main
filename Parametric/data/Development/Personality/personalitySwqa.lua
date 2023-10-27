@@ -20,7 +20,7 @@ return personality({
   flow_meter = import("../FlowMeter/flow_meter.lua"),
   dispenser = import("../Dispenser/dispenser_qa.lua"),
   recess_heater = import("../RecessHeater/recess_heater.lua"),
-  turbo_mode_setpoint = import("../TurboModes/turbo_mode_setpoint.lua"),
+  turbo_mode_setpoint = import("../TurboModes/turbo_mode_setpoint_qa.lua"),
   lighting = import("../Lighting/lighting.lua"),
   load_off_door_open_compartment_list = import("../Cooling/load_off_door_open_compartment_list.lua"),
   filter_data = import("../FilterData/filter_data.lua"),
