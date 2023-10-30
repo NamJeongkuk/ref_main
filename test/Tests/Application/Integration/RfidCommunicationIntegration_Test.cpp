@@ -113,6 +113,11 @@ TEST_GROUP(RfidCommunicationIntegration)
       Application_Init(&instance, dataModel, resetReason);
    }
 
+   void WhenApplicationHasBeenInitialized()
+   {
+      GivenApplicationHasBeenInitialized();
+   }
+
    void WhenAnRfidMessageIsReceived()
    {
       STACK_ALLOC_GEA2MESSAGE(message, sizeof(RfidReceivedPayload_t));
@@ -185,6 +190,25 @@ TEST_GROUP(RfidCommunicationIntegration)
       DataModel_Read(dataModel, Erd_RfidFilterUnitSerialNumber, &actual);
       MEMCMP_EQUAL(expected, &actual, sizeof(UnitSerialNumber_t));
    }
+
+   void WhenFaultIs(Erd_t erd, bool status)
+   {
+      DataModel_Write(dataModel, erd, &status);
+   }
+
+   void FilterErrorShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_FilterError, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void LeakDetectedShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_LeakDetected, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
 };
 
 TEST(RfidCommunicationIntegration, ShouldStoreRfidFilterReadWriteResultDataOnMainboardWhenAMessageIsReceivedWhenRfidBoardIsInTheSystem)
@@ -223,10 +247,11 @@ TEST(RfidCommunicationIntegration, ShouldStoreRfidFilterReadWriteResultDataOnMai
    GivenTheRfidBoardIsNotInTheSystem();
    After(WaitForEepromWritesToCompleteTimeInMsec);
 
-   AMessageShouldBeSent(readMessagePayload);
    GivenApplicationHasBeenInitialized();
 
+   AMessageShouldBeSent(readMessagePayload);
    WhenTheRfidBoardIsInTheSystem();
+
    WhenAnRfidMessageIsReceived();
 
    RfidFilterReadWriteResult_t readWriteResultExpected = {
@@ -242,7 +267,161 @@ TEST(RfidCommunicationIntegration, ShouldCopyTheFirstEightBytesOfTheUnitSerialNu
    GivenUnitSerialNumberIs(GivenUnitSerialNumber);
 
    AMessageShouldBeSent(readMessagePayload);
-   GivenApplicationHasBeenInitialized();
+   WhenApplicationHasBeenInitialized();
 
    RfidFilterUnitSerialNumberMainboardShouldBe(GivenUnitSerialNumberFirstEightBytes);
+}
+
+TEST(RfidCommunicationIntegration, ShouldSetFilterErrorErdWhenRfidBoardHardwareFailureFaultIsSetWhenRfidBoardIsInTheSystem)
+{
+   GivenTheRfidBoardIsInTheSystem();
+
+   AMessageShouldBeSent(readMessagePayload);
+   WhenApplicationHasBeenInitialized();
+   FilterErrorShouldBe(CLEAR);
+
+   WhenFaultIs(Erd_RfidBoardHardwareFailureFault, SET);
+   FilterErrorShouldBe(SET);
+}
+
+TEST(RfidCommunicationIntegration, ShouldSetFilterErrorErdWhenRfidBoardCommunicationFaultIsSetWhenRfidBoardIsInTheSystem)
+{
+   GivenTheRfidBoardIsInTheSystem();
+
+   AMessageShouldBeSent(readMessagePayload);
+   WhenApplicationHasBeenInitialized();
+   FilterErrorShouldBe(CLEAR);
+
+   WhenFaultIs(Erd_RfidBoardCommunicationFault, SET);
+   FilterErrorShouldBe(SET);
+}
+
+TEST(RfidCommunicationIntegration, ShouldSetFilterErrorErdWhenRfidBoardTagAuthenticationFailedFaultIsSetAfterRfidBoardIsInTheSystem)
+{
+   GivenTheRfidBoardIsInTheSystem();
+   After(WaitForEepromWritesToCompleteTimeInMsec);
+
+   AMessageShouldBeSent(readMessagePayload);
+   WhenApplicationHasBeenInitialized();
+   FilterErrorShouldBe(CLEAR);
+
+   WhenFaultIs(Erd_RfidBoardTagAuthenticationFailedFault, SET);
+   FilterErrorShouldBe(SET);
+}
+
+TEST(RfidCommunicationIntegration, ShouldNotClearFilterErrorUntilAllRfidCommunicationFaultsAreClearedAfterRfidBoardIsInTheSystem)
+{
+   GivenTheRfidBoardIsInTheSystem();
+
+   AMessageShouldBeSent(readMessagePayload);
+   WhenApplicationHasBeenInitialized();
+   FilterErrorShouldBe(CLEAR);
+
+   WhenFaultIs(Erd_RfidBoardHardwareFailureFault, SET);
+   WhenFaultIs(Erd_RfidBoardCommunicationFault, SET);
+   WhenFaultIs(Erd_RfidBoardTagAuthenticationFailedFault, SET);
+   FilterErrorShouldBe(SET);
+
+   WhenFaultIs(Erd_RfidBoardHardwareFailureFault, CLEAR);
+   FilterErrorShouldBe(SET);
+
+   WhenFaultIs(Erd_RfidBoardCommunicationFault, CLEAR);
+   FilterErrorShouldBe(SET);
+
+   WhenFaultIs(Erd_RfidBoardTagAuthenticationFailedFault, CLEAR);
+   FilterErrorShouldBe(CLEAR);
+}
+
+TEST(RfidCommunicationIntegration, ShouldSetLeakDetectedWhenLeakDetectedFaultIsSetAfterRfidBoardIsInTheSystem)
+{
+   GivenTheRfidBoardIsInTheSystem();
+   After(WaitForEepromWritesToCompleteTimeInMsec);
+
+   AMessageShouldBeSent(readMessagePayload);
+   WhenApplicationHasBeenInitialized();
+   LeakDetectedShouldBe(CLEAR);
+
+   WhenFaultIs(Erd_RfidBoardLeakDetectedFault, SET);
+   LeakDetectedShouldBe(SET);
+}
+
+TEST(RfidCommunicationIntegration, ShouldSetFilterErrorErdWhenRfidBoardHardwareFailureFaultIsSetAfterRfidBoardIsDiscoveredInTheSystem)
+{
+   GivenTheRfidBoardIsNotInTheSystem();
+
+   WhenApplicationHasBeenInitialized();
+   FilterErrorShouldBe(CLEAR);
+
+   AMessageShouldBeSent(readMessagePayload);
+   WhenTheRfidBoardIsInTheSystem();
+
+   WhenFaultIs(Erd_RfidBoardHardwareFailureFault, SET);
+   FilterErrorShouldBe(SET);
+}
+
+TEST(RfidCommunicationIntegration, ShouldSetFilterErrorErdWhenRfidBoardCommunicationFaultIsSetAfterRfidBoardIsDiscoveredInTheSystem)
+{
+   GivenTheRfidBoardIsNotInTheSystem();
+
+   WhenApplicationHasBeenInitialized();
+   FilterErrorShouldBe(CLEAR);
+
+   AMessageShouldBeSent(readMessagePayload);
+   WhenTheRfidBoardIsInTheSystem();
+
+   WhenFaultIs(Erd_RfidBoardCommunicationFault, SET);
+   FilterErrorShouldBe(SET);
+}
+
+TEST(RfidCommunicationIntegration, ShouldSetFilterErrorErdWhenRfidBoardTagAuthenticationFailedFaultIsSetAfterRfidBoardIsDiscoveredInTheSystem)
+{
+   GivenTheRfidBoardIsNotInTheSystem();
+
+   WhenApplicationHasBeenInitialized();
+   FilterErrorShouldBe(CLEAR);
+
+   AMessageShouldBeSent(readMessagePayload);
+   WhenTheRfidBoardIsInTheSystem();
+
+   WhenFaultIs(Erd_RfidBoardTagAuthenticationFailedFault, SET);
+   FilterErrorShouldBe(SET);
+}
+
+TEST(RfidCommunicationIntegration, ShouldNotClearFilterErrorUntilAllRfidCommunicationFaultsAreClearedAfterRfidBoardIsDiscoveredInTheSystem)
+{
+   GivenTheRfidBoardIsNotInTheSystem();
+
+   WhenApplicationHasBeenInitialized();
+   FilterErrorShouldBe(CLEAR);
+
+   AMessageShouldBeSent(readMessagePayload);
+   WhenTheRfidBoardIsInTheSystem();
+
+   WhenFaultIs(Erd_RfidBoardHardwareFailureFault, SET);
+   WhenFaultIs(Erd_RfidBoardCommunicationFault, SET);
+   WhenFaultIs(Erd_RfidBoardTagAuthenticationFailedFault, SET);
+   FilterErrorShouldBe(SET);
+
+   WhenFaultIs(Erd_RfidBoardHardwareFailureFault, CLEAR);
+   FilterErrorShouldBe(SET);
+
+   WhenFaultIs(Erd_RfidBoardCommunicationFault, CLEAR);
+   FilterErrorShouldBe(SET);
+
+   WhenFaultIs(Erd_RfidBoardTagAuthenticationFailedFault, CLEAR);
+   FilterErrorShouldBe(CLEAR);
+}
+
+TEST(RfidCommunicationIntegration, ShouldSetLeakDetectedWhenLeakDetectedFaultIsSetAfterRfidBoardIsDiscoveredInTheSystem)
+{
+   GivenTheRfidBoardIsNotInTheSystem();
+
+   WhenApplicationHasBeenInitialized();
+   LeakDetectedShouldBe(CLEAR);
+
+   AMessageShouldBeSent(readMessagePayload);
+   WhenTheRfidBoardIsInTheSystem();
+
+   WhenFaultIs(Erd_RfidBoardLeakDetectedFault, SET);
+   LeakDetectedShouldBe(SET);
 }

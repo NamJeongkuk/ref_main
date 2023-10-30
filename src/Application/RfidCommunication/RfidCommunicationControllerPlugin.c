@@ -28,7 +28,6 @@ static const RfidCommunicationControllerConfig_t rfidCommunicationControllerConf
    .demoModeEnableErd = Erd_EnableDemoModeStatus,
    .waterFilterTypeErd = Erd_WaterFilterType,
    .bypassPlugInstalledErd = Erd_BypassPlugInstalled,
-   .filterErrorErd = Erd_FilterError,
    .rfidFilterBadReadCountErd = Erd_RfidFilterBadReadCount,
    .rfidFilterBadWriteCountErd = Erd_RfidFilterBadWriteCount,
    .rfidFilterHardwareFailureCountErd = Erd_RfidFilterHardwareFailureCount,

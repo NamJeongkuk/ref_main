@@ -89,14 +89,6 @@ static void SetBypassPlugInstalledTo(RfidCommunicationController_t *instance, co
       state);
 }
 
-static void SetFilterErrorTo(RfidCommunicationController_t *instance, const bool *state)
-{
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->filterErrorErd,
-      state);
-}
-
 static void IncrementU8ErdValue(RfidCommunicationController_t *instance, Erd_t erd)
 {
    uint8_t data;
@@ -142,10 +134,9 @@ static void ClearBlockedCount(RfidCommunicationController_t *instance)
    ClearU8ErdValue(instance, instance->_private.config->rfidFilterBlockedCountErd);
 }
 
-static void IncrementRfidFilterBadReadCountAndSetFilterError(RfidCommunicationController_t *instance)
+static void IncrementRfidFilterBadReadCount(RfidCommunicationController_t *instance)
 {
    IncrementU8ErdValue(instance, instance->_private.config->rfidFilterBadReadCountErd);
-   SetFilterErrorTo(instance, set);
 }
 
 static void ClearRfidFilterBadReadCount(RfidCommunicationController_t *instance)
@@ -153,10 +144,9 @@ static void ClearRfidFilterBadReadCount(RfidCommunicationController_t *instance)
    ClearU8ErdValue(instance, instance->_private.config->rfidFilterBadReadCountErd);
 }
 
-static void IncrementRfidFilterBadWriteCountAndSetFilterError(RfidCommunicationController_t *instance)
+static void IncrementRfidFilterBadWriteCount(RfidCommunicationController_t *instance)
 {
    IncrementU8ErdValue(instance, instance->_private.config->rfidFilterBadWriteCountErd);
-   SetFilterErrorTo(instance, set);
 }
 
 static void ClearRfidFilterBadWriteCount(RfidCommunicationController_t *instance)
@@ -169,10 +159,9 @@ static void ClearRfidFilterHardwareFailureCount(RfidCommunicationController_t *i
    ClearU8ErdValue(instance, instance->_private.config->rfidFilterHardwareFailureCountErd);
 }
 
-static void IncrementRfidFilterHardwareFailureCountAndSetFilterError(RfidCommunicationController_t *instance)
+static void IncrementRfidFilterHardwareFailureCount(RfidCommunicationController_t *instance)
 {
    IncrementU8ErdValue(instance, instance->_private.config->rfidFilterHardwareFailureCountErd);
-   SetFilterErrorTo(instance, set);
 }
 
 static void IncrementNumberOfUnitsFilterHasBeenOn(RfidCommunicationController_t *instance)
@@ -502,9 +491,8 @@ static bool LastReadWriteResultWasAFailure(RfidCommunicationController_t *instan
    return (ReadWriteResultIsFailure(&readWriteResult)) || (readWriteResult.result == ReadWriteResult_HardwareFailure);
 }
 
-static void ClearFilterErrorAndReadFailureCounts(RfidCommunicationController_t *instance)
+static void ClearRfidFilterReadAndHardwareFailureCounts(RfidCommunicationController_t *instance)
 {
-   SetFilterErrorTo(instance, clear);
    ClearRfidFilterBadReadCount(instance);
    ClearRfidFilterHardwareFailureCount(instance);
 }
@@ -520,7 +508,6 @@ static bool State_Active(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          UpdateHsmStateTo(instance, RfidCommunicationControllerHsmState_Active);
          SetFilterTypeTo(instance, WaterFilterType_XWFE);
          SetBypassPlugInstalledTo(instance, clear);
-         SetFilterErrorTo(instance, clear);
          break;
 
       case Signal_DemoModeEnabled:
@@ -561,7 +548,7 @@ static bool State_AllFreshFoodDoorsJustClosed(Hsm_t *hsm, HsmSignal_t signal, co
          break;
 
       case Signal_ReadWriteResultSuccessful:
-         ClearFilterErrorAndReadFailureCounts(instance);
+         ClearRfidFilterReadAndHardwareFailureCounts(instance);
          if(NewFilterInstalled(instance))
          {
             UpdateUnitWithNewFilterData(instance);
@@ -596,7 +583,7 @@ static bool State_FreshFoodDoorOpen(Hsm_t *hsm, HsmSignal_t signal, const void *
          break;
 
       case Signal_ReadWriteResultSuccessful:
-         ClearFilterErrorAndReadFailureCounts(instance);
+         ClearRfidFilterReadAndHardwareFailureCounts(instance);
          if(NewFilterInstalled(instance))
          {
             UpdateUnitWithNewFilterData(instance);
@@ -660,7 +647,7 @@ static bool State_AllDoorsClosedRead(Hsm_t *hsm, HsmSignal_t signal, const void 
          break;
 
       case Signal_ReadWriteResultSuccessful:
-         ClearFilterErrorAndReadFailureCounts(instance);
+         ClearRfidFilterReadAndHardwareFailureCounts(instance);
          if(NewFilterInstalled(instance))
          {
             UpdateUnitWithNewFilterData(instance);
@@ -741,7 +728,6 @@ static bool State_DemoMode(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Hsm_Entry:
          UpdateHsmStateTo(instance, RfidCommunicationControllerHsmState_DemoMode);
          SetBypassPlugInstalledTo(instance, clear);
-         SetFilterErrorTo(instance, clear);
          break;
 
       default:
@@ -772,19 +758,19 @@ static void OnDataModelChange(void *context, const void *_args)
       }
       else if(ReadWriteResultIsFailure(readWriteResult))
       {
-         IncrementRfidFilterBadReadCountAndSetFilterError(instance);
+         IncrementRfidFilterBadReadCount(instance);
          Hsm_SendSignal(&instance->_private.hsm, Signal_ReadFailure, NULL);
       }
       else if(readWriteResult->result == ReadWriteResult_HardwareFailure)
       {
-         IncrementRfidFilterHardwareFailureCountAndSetFilterError(instance);
+         IncrementRfidFilterHardwareFailureCount(instance);
          Hsm_SendSignal(&instance->_private.hsm, Signal_ReadWriteResultHardwareFailure, NULL);
       }
       else if(readWriteResult->result == ReadWriteResult_EepromWriteFailure ||
          readWriteResult->result == ReadWriteResult_UidMismatch ||
          readWriteResult->result == ReadWriteResult_TagUidIsInvalid)
       {
-         IncrementRfidFilterBadWriteCountAndSetFilterError(instance);
+         IncrementRfidFilterBadWriteCount(instance);
          Hsm_SendSignal(&instance->_private.hsm, Signal_WriteFailure, NULL);
       }
    }

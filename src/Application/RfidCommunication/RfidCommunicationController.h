@@ -36,7 +36,6 @@ typedef struct
    Erd_t demoModeEnableErd; // bool
    Erd_t waterFilterTypeErd; // WaterFilterType_t
    Erd_t bypassPlugInstalledErd; // bool
-   Erd_t filterErrorErd; // bool
    Erd_t rfidFilterBadReadCountErd; // uint8_t
    Erd_t rfidFilterBadWriteCountErd; // uint8_t
    Erd_t rfidFilterHardwareFailureCountErd; // uint8_t

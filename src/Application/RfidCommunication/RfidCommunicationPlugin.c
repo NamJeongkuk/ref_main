@@ -44,12 +44,68 @@ static const RfidCommunicatorConfiguration_t config = {
    .geaMessageEndpointErd = PublicErd_Gea2MessageEndpoint
 };
 
+static const Erd_t rfidFilterErrorFaultErds[] = {
+   Erd_RfidBoardHardwareFailureFault,
+   Erd_RfidBoardCommunicationFault,
+   Erd_RfidBoardTagAuthenticationFailedFault
+};
+
+static const Erd_t rfidFilterLeakDetectedFaultErds[] = {
+   Erd_RfidBoardLeakDetectedFault
+};
+
+static const ErdLogicServiceConfigurationEntry_t rfidFilterFaultLogicServiceConfigurationEntries[] = {
+   { 
+      .logicalOperator = ErdLogicServiceOperator_Or,
+      .operandErds = {
+         rfidFilterErrorFaultErds,
+         NUM_ELEMENTS(rfidFilterErrorFaultErds) 
+      },
+      .resultErd = Erd_FilterError 
+   },
+   { 
+      .logicalOperator = ErdLogicServiceOperator_Set, 
+      .operandErds = { 
+         rfidFilterLeakDetectedFaultErds, 
+         NUM_ELEMENTS(rfidFilterLeakDetectedFaultErds) 
+      }, 
+      .resultErd = Erd_LeakDetected 
+   }
+};
+
+static const ErdLogicServiceConfiguration_t rfidFilterFaultLogicServiceConfiguration = {
+   .array = rfidFilterFaultLogicServiceConfigurationEntries,
+   .numberOfEntries = NUM_ELEMENTS(rfidFilterFaultLogicServiceConfigurationEntries)
+};
+
 static bool RfidBoardIsAlreadyInSystem(I_DataModel_t *dataModel)
 {
    bool boardIsInSystem;
    DataModel_Read(dataModel, Erd_RfidBoardInSystem, &boardIsInSystem);
 
    return boardIsInSystem;
+}
+
+static void RfidErrorAndLeakDetectedErd_Init(RfidCommunicationPlugin_t *instance)
+{
+   ErdLogicService_Init(
+      &instance->_private.rfidFilterFaultLogicService,
+      &rfidFilterFaultLogicServiceConfiguration,
+      DataModel_AsDataSource(instance->_private.dataModel));
+}
+
+static void InitRfidFilterPlugins(RfidCommunicationPlugin_t *instance)
+{
+   RfidCommunicator_Init(
+      &instance->_private.rfidCommunicator,
+      instance->_private.externalDataSource,
+      &config);
+
+   RfidCommunicationControllerPlugin_Init(
+      &instance->_private.rfidCommunicationControllerPlugin,
+      instance->_private.dataModel);
+
+   RfidErrorAndLeakDetectedErd_Init(instance);
 }
 
 static void RfidBoardIsInSystem(void *context, const void *args)
@@ -59,14 +115,7 @@ static void RfidBoardIsInSystem(void *context, const void *args)
 
    if(*rfidBoardIsInTheSystem)
    {
-      RfidCommunicator_Init(
-         &instance->_private.rfidCommunicator,
-         instance->_private.externalDataSource,
-         &config);
-
-      RfidCommunicationControllerPlugin_Init(
-         &instance->_private.rfidCommunicationControllerPlugin,
-         instance->_private.dataModel);
+      InitRfidFilterPlugins(instance);
 
       DataModel_Unsubscribe(
          instance->_private.dataModel,
@@ -86,14 +135,7 @@ void RfidCommunicationPlugin_Init(
 
    if(RfidBoardIsAlreadyInSystem(dataModel))
    {
-      RfidCommunicator_Init(
-         &instance->_private.rfidCommunicator,
-         instance->_private.externalDataSource,
-         &config);
-
-      RfidCommunicationControllerPlugin_Init(
-         &instance->_private.rfidCommunicationControllerPlugin,
-         instance->_private.dataModel);
+      InitRfidFilterPlugins(instance);
    }
    else
    {

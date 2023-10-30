@@ -55,7 +55,6 @@ static const RfidCommunicationControllerConfig_t config = {
    .demoModeEnableErd = Erd_EnableDemoModeStatus,
    .waterFilterTypeErd = Erd_WaterFilterType,
    .bypassPlugInstalledErd = Erd_BypassPlugInstalled,
-   .filterErrorErd = Erd_FilterError,
    .rfidFilterBadReadCountErd = Erd_RfidFilterBadReadCount,
    .rfidFilterBadWriteCountErd = Erd_RfidFilterBadWriteCount,
    .rfidFilterHardwareFailureCountErd = Erd_RfidFilterHardwareFailureCount,
@@ -199,17 +198,6 @@ TEST_GROUP(RfidCommunicationController)
       DataModel_Write(dataModel, Erd_BypassPlugInstalled, &state);
    }
 
-   void GivenTheFilterErrorIs(const bool state)
-   {
-      DataModel_Write(dataModel, Erd_FilterError, &state);
-   }
-
-   void GivenAllFilterStatesAre(const bool state)
-   {
-      GivenTheBypassPlugIs(state);
-      GivenTheFilterErrorIs(state);
-   }
-
    void RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerState_t expected)
    {
       RfidCommunicationControllerState_t actual;
@@ -234,19 +222,6 @@ TEST_GROUP(RfidCommunicationController)
    void BypassPlugStateIs(bool state)
    {
       DataModel_Write(dataModel, Erd_BypassPlugInstalled, &state);
-   }
-
-   void FilterErrorShouldBe(const bool expected)
-   {
-      bool actual;
-      DataModel_Read(dataModel, Erd_FilterError, &actual);
-      CHECK_EQUAL(expected, actual);
-   }
-
-   void AllFilterStatesShouldBe(const bool expected)
-   {
-      BypassPlugShouldBe(expected);
-      FilterErrorShouldBe(expected);
    }
 
    void WhenAnRfidMessageIsSentWithResult(ReadWriteResult_t result)
@@ -534,11 +509,11 @@ TEST(RfidCommunicationController, ShouldUpdateTheWaterFilterTypeToXWFEUponInit)
    WaterFilterTypeShouldBe(WaterFilterType_XWFE);
 }
 
-TEST(RfidCommunicationController, ShouldClearAllFilterStatesUponInit)
+TEST(RfidCommunicationController, ShouldClearBypassPlugStateUponInit)
 {
-   GivenAllFilterStatesAre(SET);
+   GivenTheBypassPlugIs(SET);
    GivenInitialization();
-   AllFilterStatesShouldBe(CLEAR);
+   BypassPlugShouldBe(CLEAR);
 }
 
 TEST(RfidCommunicationController, ShouldEnterTheFreshFoodDoorClosedStateWhenThereIsAFeshFoodDoorClosedUponInit)
@@ -644,24 +619,6 @@ TEST(RfidCommunicationController, ShouldClearLeakDetectedAndBlockedWhenAFilterIs
    BlockedCountShouldBe(0);
 }
 
-TEST(RfidCommunicationController, ShouldSetFilterErrorWhenReceivingAReadFailure)
-{
-   GivenInitialization();
-   FilterErrorShouldBe(CLEAR);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure);
-   FilterErrorShouldBe(SET);
-}
-
-TEST(RfidCommunicationController, ShouldSetFilterErrorWhenReceivingAHardwareFailure)
-{
-   GivenInitialization();
-   FilterErrorShouldBe(CLEAR);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_HardwareFailure);
-   FilterErrorShouldBe(SET);
-}
-
 TEST(RfidCommunicationController, ShouldEnterDemoModeStateWhenDemoModeIsEnabled)
 {
    GivenInitialization();
@@ -671,13 +628,13 @@ TEST(RfidCommunicationController, ShouldEnterDemoModeStateWhenDemoModeIsEnabled)
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_DemoMode);
 }
 
-TEST(RfidCommunicationController, ShouldClearFilterStatesWhenEnteringDemoMode)
+TEST(RfidCommunicationController, ShouldClearBypassPlugStateWhenEnteringDemoMode)
 {
    GivenInitialization();
-   GivenAllFilterStatesAre(SET);
+   GivenTheBypassPlugIs(SET);
 
    WhenDemoModeIs(ENABLED);
-   AllFilterStatesShouldBe(CLEAR);
+   BypassPlugShouldBe(CLEAR);
 }
 
 TEST(RfidCommunicationController, ShouldIgnoreDoorStatusWhenInDemoMode)
@@ -723,17 +680,6 @@ TEST(RfidCommunicationController, ShouldStopReadRequestTimerWhenTransitioningFro
 
    NothingShouldHappen();
    After(rfidFilterUpdateRateData->doorOpenFilterReadFrequencyInSeconds * MSEC_PER_SEC);
-}
-
-TEST(RfidCommunicationController, ShouldResetFilterErrorWhenReceivingASuccessfulRfidFilterReadWhileInFreshFoodDoorIsOpenState)
-{
-   GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure);
-   FilterErrorShouldBe(SET);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
-   FilterErrorShouldBe(CLEAR);
 }
 
 TEST(RfidCommunicationController, ShouldResetBadReadCountAfterReceivingASuccessfulRfidFilterReadWhileInFreshFoodDoorIsOpenState)
@@ -948,17 +894,6 @@ TEST(RfidCommunicationController, ShouldTransitionToAllDoorsClosedReadStateAndSt
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 }
 
-TEST(RfidCommunicationController, ShouldResetFilterErrorWhenReceivingASuccessfulRfidFilterReadWhileInAllFreshFoodDoorsJustClosedState)
-{
-   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure);
-   FilterErrorShouldBe(SET);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
-   FilterErrorShouldBe(CLEAR);
-}
-
 TEST(RfidCommunicationController, ShouldResetBadReadCountAfterReceivingASuccessfulRfidFilterReadWhileInAllFreshFoodDoorsJustClosedState)
 {
    GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
@@ -1125,17 +1060,6 @@ TEST(RfidCommunicationController, ShouldTransitionToFreshFoodDoorOpenStateWhenAD
    ShouldSendReadRequestToRfidFilter();
    WhenAFreshFoodDoorIsOpened();
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_FreshFoodDoorOpen);
-}
-
-TEST(RfidCommunicationController, ShouldResetFilterErrorWhenReceivingASuccessfulRfidFilterReadWhileInAllDoorsClosedReadState)
-{
-   GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState();
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure);
-   FilterErrorShouldBe(SET);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
-   FilterErrorShouldBe(CLEAR);
 }
 
 TEST(RfidCommunicationController, ShouldResetBadReadCountAfterReceivingASuccessfulRfidFilterReadWhileInAllDoorsClosedReadState)
@@ -1541,33 +1465,6 @@ TEST(RfidCommunicationController, ShouldIncrementBadWriteCountAndTransitionToAll
    RfidFilterBadWriteCountShouldBe(1);
 
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
-}
-
-TEST(RfidCommunicationController, ShouldSetFilterErrorWhenAnRfidFilterReadWriteRequestIsEepromWriteFailure)
-{
-   GivenTheRfidCommunicationControllerIsInAllDoorsClosedWriteState();
-   FilterErrorShouldBe(CLEAR);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_EepromWriteFailure);
-   FilterErrorShouldBe(SET);
-}
-
-TEST(RfidCommunicationController, ShouldSetFilterErrorWhenAnRfidFilterReadWriteRequestIsUidMismatch)
-{
-   GivenTheRfidCommunicationControllerIsInAllDoorsClosedWriteState();
-   FilterErrorShouldBe(CLEAR);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_UidMismatch);
-   FilterErrorShouldBe(SET);
-}
-
-TEST(RfidCommunicationController, ShouldSetFilterErrorWhenAnRfidFilterReadWriteRequestIsTagUidIsInvalid)
-{
-   GivenTheRfidCommunicationControllerIsInAllDoorsClosedWriteState();
-   FilterErrorShouldBe(CLEAR);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_TagUidIsInvalid);
-   FilterErrorShouldBe(SET);
 }
 
 TEST(RfidCommunicationController, ShouldTransitionToReadWhenReceivingASuccessfulWriteMessage)

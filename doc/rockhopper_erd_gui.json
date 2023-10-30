@@ -3790,14 +3790,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Filter Error",
-          "name": "Erd_FilterError",
-          "read": true,
-          "write": false,
-          "interval": 1000000000
-        },
-        {
-          "namespace": "mb",
           "displayName": "RfidBoard: Rfid Filter Read Write Result",
           "name": "Erd_RfidFilterReadWriteResult_RfidBoard",
           "read": true,
@@ -3958,7 +3950,8 @@
           "displayName": "Service Mode Test Request",
           "name": "Erd_ServiceModeTestNumberRequest",
           "read": false,
-          "write": true
+          "write": true,
+          "interval": 1000000000
         },
         {
           "namespace": "mb",
@@ -3966,6 +3959,59 @@
           "name": "Erd_ServiceModeTestNumberStatus",
           "read": true,
           "write": false,
+          "interval": 1000000000
+        }
+      ]
+    },
+    {
+      "title": "Rfid Filter Status",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Filter Error",
+          "name": "Erd_FilterError",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Leak Detected",
+          "name": "Erd_LeakDetected",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Rfid Board Hardware Failure Fault",
+          "name": "Erd_RfidBoardHardwareFailureFault",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Rfid Board Communication Fault",
+          "name": "Erd_RfidBoardCommunicationFault",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Rfid Board Tag Authentication Failed Fault",
+          "name": "Erd_RfidBoardTagAuthenticationFailedFault",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Rfid Board Leak Detected Fault",
+          "name": "Erd_RfidBoardLeakDetectedFault",
+          "read": true,
+          "write": true,
           "interval": 1000000000
         }
       ]

@@ -1417,6 +1417,9 @@ enum
    ENTRY(Erd_DoorBoardCommunicationFault,                   0xF723, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_DoorBoardCommunicationFault) \
    ENTRY(Erd_EmbeddedWifiCommunicationFault,                0xF724, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_EmbeddedWifiCommunicationFault) \
    ENTRY(Erd_InternalTemperatureUiCommunicationFault,       0xF725, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_InternalTemperatureUiCommunicationFault) \
+   ENTRY(Erd_RfidBoardHardwareFailureFault,                 0xF726, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_RfidBoardHardwareFailureFault) \
+   ENTRY(Erd_RfidBoardTagAuthenticationFailedFault,         0xF727, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_RfidBoardTagAuthenticationFailedFault) \
+   ENTRY(Erd_RfidBoardLeakDetectedFault,                    0xF728, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_RfidBoardLeakDetectedFault) \
    \
    ENTRY(Erd_FactoryModeEnableRequestInMinutes,             0xF801, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
