@@ -38,7 +38,8 @@ enum
    // 0x02000000 PresenceSensedActivatesRecessLight
    // 0x04000000 Dimmable Light 0 Percent Level
    // 0x10000000 Night Snack Mode Lighting
-   FeaturesV2 = 0x177BFFE1
+   // 0x80000000 V2RefrigerationNotifications
+   FeaturesV2 = 0x977BFFE1
 };
 
 enum

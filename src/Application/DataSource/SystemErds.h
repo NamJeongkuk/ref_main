@@ -132,6 +132,7 @@
 #include "ServiceModeTestRequest.h"
 #include "ServiceModeTestNumber.h"
 #include "ServiceModeTestStatus.h"
+#include "NotificationsBitmap.h"
 
 // clang-format off
 
@@ -556,6 +557,7 @@ enum
    \
    ENTRY(Erd_DispenserRecessHeaterDutyCyclePercent,         0x122C, PercentageDutyCycle_t,                              Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_SecondarySignOfLife,                           0x122D, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_NotificationsBitmap,                           0x122E, NotificationsBitmap_t,                              Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispensingInhibitedReason,                     0x122F, DispensingInhibitedReasonBitmap_t,                  Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker2EnableRequest,                        0x1230, IceMakerEnableRequest_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker2EnableStatus,                         0x1231, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \

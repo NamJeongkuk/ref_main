@@ -53,6 +53,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Lighting \
    $(PROJECT_DIR)/Application/Mapper \
    $(PROJECT_DIR)/Application/Motor \
+   $(PROJECT_DIR)/Application/Notifications \
    $(PROJECT_DIR)/Application/ParametricData \
    $(PROJECT_DIR)/Application/Plugins \
    $(PROJECT_DIR)/Application/Pulldown \
@@ -115,6 +116,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/Lighting \
    $(TESTS_DIR)/Application/Mapper \
    $(TESTS_DIR)/Application/Motor \
+   $(TESTS_DIR)/Application/Notifications \
    $(TESTS_DIR)/Application/ParametricData \
    $(TESTS_DIR)/Application/PersonalityEeprom \
    $(TESTS_DIR)/Application/RequestStatusUpdater \

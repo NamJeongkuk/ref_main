@@ -12,6 +12,7 @@
 #include "FaultWrapperPlugin.h"
 #include "ApplianceFeatureApiUpdater.h"
 #include "SnackModePlugin.h"
+#include "NotificationsPlugin.h"
 
 static const ApplianceApiResetDiagnosticsConfiguration_t applianceApiResetDiagnosticsConfiguration = {
    .resetReasonErd = Erd_ResetReason,
@@ -37,6 +38,8 @@ void Application_Init(
    InitializePlatformParametricErds(dataModel);
 
    ApplianceFeatureApiUpdater_Init(dataModel);
+
+   NotificationsPlugin_Init(dataModel);
 
    ShiftOffsetCalculatorCommonPlugin_Init(&instance->_private.shiftOffsetCalculatorCommonPlugin, dataModel);
 

@@ -1691,6 +1691,14 @@
                "read": true,
                "write": true,
                "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Notifications Bitmap",
+               "name": "Erd_NotificationsBitmap",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
             }
          ]
       }

@@ -78,6 +78,7 @@ SRC_DIRS:=\
   src/Application/IceMaker/TwistTrayIceMaker \
   src/Application/IsolationWaterValve \
   src/Application/Lighting \
+  src/Application/Notifications \
   src/Application/ParametricData \
   src/Application/Plugins \
   src/Application/Pulldown \
