@@ -29,9 +29,6 @@
 #include "ApplianceRunTimeMinutes.h"
 #include "ModelNumber.h"
 #include "SerialNumber.h"
-#include "ServiceDiagnosticsRevision3.h"
-#include "FaultIds.h"
-#include "FaultSnapshot.h"
 #include "CycleHistoryRecord.h"
 #include "I_Adc.h"
 #include "ResetCount.h"
@@ -57,7 +54,6 @@
 #include "DefrostTestStateRequestMessage.h"
 #include "HeaterVotedState.h"
 #include "EnergyDemandLevel.h"
-#include "I_FaultWrapper.h"
 #include "ConvertibleCompartmentStateType.h"
 #include "CompressorState.h"
 #include "CoolingMode.h"
@@ -1410,18 +1406,17 @@ enum
    ENTRY(Erd_Fault_EepromEraseFailure,                      0xF715, bool,                                               Swap_No,  Io_All,  Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_PersonalityIdOutOfRangeFlag,                   0xF716, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_FaultWrapperInterfaceArray,                    0xF717, I_FaultWrapper_t *,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_CoolingStatesGridVotesConstArrayMapInterface,  0xF719, I_ConstArrayMap_t *,                                Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_CoolingStatesGridVotesConstArrayMapInterface,  0xF717, I_ConstArrayMap_t *,                                Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_DispenserUiCommunicationFault,                 0xF720, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_DispenserUiCommunicationFault) \
-   ENTRY(Erd_RfidBoardCommunicationFault,                   0xF721, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_RfidBoardCommunicationFault) \
-   ENTRY(Erd_AndroidSbcCommunicationFault,                  0xF722, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_AndroidSbcCommunicationFault) \
-   ENTRY(Erd_DoorBoardCommunicationFault,                   0xF723, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_DoorBoardCommunicationFault) \
-   ENTRY(Erd_EmbeddedWifiCommunicationFault,                0xF724, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_EmbeddedWifiCommunicationFault) \
-   ENTRY(Erd_InternalTemperatureUiCommunicationFault,       0xF725, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_InternalTemperatureUiCommunicationFault) \
-   ENTRY(Erd_RfidBoardHardwareFailureFault,                 0xF726, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_RfidBoardHardwareFailureFault) \
-   ENTRY(Erd_RfidBoardTagAuthenticationFailedFault,         0xF727, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_RfidBoardTagAuthenticationFailedFault) \
-   ENTRY(Erd_RfidBoardLeakDetectedFault,                    0xF728, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_RfidBoardLeakDetectedFault) \
+   ENTRY(Erd_DoorBoardCommunicationFault,                   0xF720, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    523) \
+   ENTRY(Erd_DispenserUiCommunicationFault,                 0xF721, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    733) \
+   ENTRY(Erd_AndroidSbcCommunicationFault,                  0xF722, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    756) \
+   ENTRY(Erd_EmbeddedWifiCommunicationFault,                0xF723, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    757) \
+   ENTRY(Erd_InternalTemperatureUiCommunicationFault,       0xF724, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    758) \
+   ENTRY(Erd_RfidBoardHardwareFailureFault,                 0xF725, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    800) \
+   ENTRY(Erd_RfidBoardCommunicationFault,                   0xF726, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    801) \
+   ENTRY(Erd_RfidBoardTagAuthenticationFailedFault,         0xF727, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    803) \
+   ENTRY(Erd_RfidBoardLeakDetectedFault,                    0xF728, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    805) \
    \
    ENTRY(Erd_FactoryModeEnableRequestInMinutes,             0xF801, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
@@ -1514,7 +1509,9 @@ enum
  * In order to avoid circular dependencies, this file must be included as the last thing
  * in this file.
  */
-
+#include "FaultId.h"
+#include "FaultSnapshot.h"
+#include "ServiceDiagnosticsRevision3.h"
 #include "WinningVoteErd.h"
 
 #endif

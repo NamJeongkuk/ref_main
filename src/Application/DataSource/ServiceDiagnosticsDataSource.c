@@ -101,7 +101,7 @@ static const DataSource_ServiceDiagnosticsRevision3Entity_t serviceDiagnosticsEn
 
       .fault =
          {
-            .start = Erd_DispenserUiCommunicationFault,
+            .start = Erd_DoorBoardCommunicationFault,
             .count = ELEMENT_COUNT(faultCodes),
             .codes = faultCodes,
          },

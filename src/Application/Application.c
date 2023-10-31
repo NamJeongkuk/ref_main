@@ -9,7 +9,6 @@
 #include "SystemErds.h"
 #include "DataModelErdPointerAccess.h"
 #include "SabbathPlugin.h"
-#include "FaultWrapperPlugin.h"
 #include "ApplianceFeatureApiUpdater.h"
 #include "SnackModePlugin.h"
 #include "NotificationsPlugin.h"
@@ -48,7 +47,6 @@ void Application_Init(
    PeriodicNvUpdaterPlugin_Init(&instance->_private.periodicNvUpdaterPlugin, dataModel);
 
    SideBySideConfigurationPlugin_Init(&instance->_private.platformConfigurations.sideBySidePlugin, dataModel);
-   FaultWrapperPlugin_Init(dataModel);
    SnackModePlugin_Init(dataModel);
    SoundLevelPlugin_Init(&instance->_private.soundLevelPlugin, dataModel);
 

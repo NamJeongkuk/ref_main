@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "FaultIds.h"
+#include "FaultId.h"
 
 typedef struct
 {
