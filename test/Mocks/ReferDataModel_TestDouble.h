@@ -35,6 +35,7 @@ typedef struct
       Action_Context_t resetAction;
       AsyncDataSource_Eeprom_TestDouble_t asyncEepromTestDouble;
       Interrupt_TestDouble_t systemTickInterruptTestDouble;
+      Interrupt_TestDouble_t fastTickInterruptTestDouble;
       Gea2MessageEndpoint_NonMockTestDouble_t messageEndpointNonMockTestDouble;
    } _private;
 } ReferDataModel_TestDouble_t;

@@ -30,7 +30,6 @@ typedef struct
       DamperMaxOpenTime_t damperMaxOpenTime;
       ErdResolver_t damperPositionErdResolver;
       ErdResolver_t damperHeaterErdResolver;
-      Event_OneMillisecondTimer_t oneMillisecondTimerEvent;
    } _private;
 } FreshFoodDamperMotorPlugin_t;
 

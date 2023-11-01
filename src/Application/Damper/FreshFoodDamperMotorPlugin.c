@@ -99,16 +99,12 @@ void FreshFoodDamperMotorPlugin_Init(FreshFoodDamperMotorPlugin_t *instance, I_D
       DataModel_AsDataSource(dataModel),
       &damperHeaterErdResolverConfiguration);
 
-   Event_OneMillisecondTimer_Init(
-      &instance->_private.oneMillisecondTimerEvent,
-      DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule));
-
    StepperMotorDriver_Init(
       &instance->_private.stepperMotorDriver,
       dataModel,
       &driverConfig,
       DataModelErdPointerAccess_GetGpioGroup(dataModel, Erd_GpioGroupInterface),
-      &instance->_private.oneMillisecondTimerEvent.interface);
+      (DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_FastTickInterrupt))->OnInterrupt);
 
    FreshFoodDamperRequestManager_Init(
       &instance->_private.damperRequestManager,

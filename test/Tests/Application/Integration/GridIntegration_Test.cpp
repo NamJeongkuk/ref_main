@@ -14,11 +14,13 @@ extern "C"
 #include "Rx2xxResetSource.h"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
+#include "DataModelErdPointerAccess.h"
 }
 
 #include "CppUTest/TestHarness.h"
 #include "ReferDataModel_TestDouble.h"
 #include "TddPersonality.h"
+#include "Interrupt_TestDouble.h"
 
 enum
 {
@@ -60,6 +62,7 @@ TEST_GROUP(GridIntegration)
    ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
    TimerModule_TestDouble_t *timerModuleTestDouble;
+   Interrupt_TestDouble_t *fastInterruptTestDouble;
    ResetReason_t resetReason;
    GridBlockTemperatures gridBlockTemperatures[NumberOfGridBlocks];
    const GridData_t *gridData;
@@ -73,6 +76,8 @@ TEST_GROUP(GridIntegration)
       ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentSingleSpeedCompressor);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+
+      fastInterruptTestDouble = (Interrupt_TestDouble_t *)DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_FastTickInterrupt);
 
       gridData = PersonalityParametricData_Get(dataModel)->gridData;
       compressorData = PersonalityParametricData_Get(dataModel)->compressorData;
@@ -500,6 +505,21 @@ TEST_GROUP(GridIntegration)
    {
       WhenTheFreshFoodAdjustedSetpointIs(freshFoodAdjustedSetpoint);
       WhenTheFreezerAdjustedSetpointIs(freezerAdjustedSetpoint);
+   }
+
+   uint16_t DamperStepsRemaining(void)
+   {
+      StepperPositionRequest_t request;
+      DataModel_Read(dataModel, Erd_FreshFoodDamperStepperMotorPositionRequest, &request);
+      return request.stepsToMove;
+   }
+
+   void WhenTheFreshFoodDamperIsDoneMoving(void)
+   {
+      while(DamperStepsRemaining() > 0)
+      {
+         Interrupt_TestDouble_TriggerInterrupt(fastInterruptTestDouble);
+      }
    }
 
    void FreezerAdjustedSetpointShouldBe(TemperatureDegFx100_t expected)
@@ -2248,6 +2268,7 @@ TEST(GridIntegration, ShouldControlTheCorrectLoadsForBlocks48ThenChangeToBlock27
    TheGridAreaShouldBe(GridArea_2);
    TheSingleEvaporatorPulldownActiveShouldBe(CLEAR);
 
+   WhenTheFreshFoodDamperIsDoneMoving();
    TheFreshFoodDamperStepperMotorDriveEnableShouldBe(CLEAR);
    DamperPositionShouldBe(DamperPosition_Open);
    GridShouldVoteForDamperToBe({ .position = DamperPosition_Open, .care = Vote_Care });

@@ -23,6 +23,7 @@ extern "C"
 #include "ReferDataModel_TestDouble.h"
 #include "TimerModule_TestDouble.h"
 #include "uassert_test.h"
+#include "Interrupt_TestDouble.h"
 
 #define Given
 #define When
@@ -44,6 +45,7 @@ TEST_GROUP(DamperIntegration)
    I_DataModel_t *dataModel;
    ResetReason_t resetReason;
    TimerModule_TestDouble_t *timerModuleTestDouble;
+   Interrupt_TestDouble_t *interruptTestDouble;
    const SingleDamperData_t *freshFoodDamperData;
 
    void setup()
@@ -54,12 +56,22 @@ TEST_GROUP(DamperIntegration)
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
 
+      interruptTestDouble = (Interrupt_TestDouble_t *)DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_FastTickInterrupt);
+
       freshFoodDamperData = PersonalityParametricData_Get(dataModel)->freshFoodDamperData;
    }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1)
    {
       TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
+   }
+
+   void AfterNInterrupts(int numberOfInterrupts)
+   {
+      for(int i = 0; i < numberOfInterrupts; i++)
+      {
+         Interrupt_TestDouble_TriggerInterrupt(interruptTestDouble);
+      }
    }
 
    void GivenApplicationHasBeenInitialized()
@@ -110,10 +122,10 @@ TEST_GROUP(DamperIntegration)
       StepperMotorDriveEnableShouldBe(SET);
       DamperCurrentPositionShouldBe(DamperPosition_Closed);
 
-      After(freshFoodDamperData->stepsToOpen * (freshFoodDamperData->delayBetweenStepEventsInMs + 1));
+      AfterNInterrupts(freshFoodDamperData->stepsToOpen * (freshFoodDamperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1));
       DamperCurrentPositionShouldBe(DamperPosition_Closed);
 
-      After(1);
+      AfterNInterrupts(1);
       DamperCurrentPositionShouldBe(DamperPosition_Open);
    }
 
@@ -409,7 +421,7 @@ TEST_GROUP(DamperIntegration)
       StepRequestShouldBeDoorPositionHome();
       StepperMotorControlRequestShouldBe(SET);
       StepperMotorDriveEnableShouldBe(SET);
-      After(freshFoodDamperData->stepsToHome * (freshFoodDamperData->delayBetweenStepEventsInMs + 1) + 1);
+      AfterNInterrupts(freshFoodDamperData->stepsToHome * (freshFoodDamperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1) + 1);
       StepsShouldBeSetToZero();
       DamperCurrentPositionShouldBe(DamperPosition_Closed);
    }
@@ -506,7 +518,7 @@ TEST(DamperIntegration, ShouldResetMinimumTemperatureChangeTimerWhenDamperPositi
    DamperCurrentPositionShouldBe(DamperPosition_Open);
    DamperPositionResolvedVoteShouldBe(DamperPosition_Closed);
 
-   After(freshFoodDamperData->stepsToClose * (freshFoodDamperData->delayBetweenStepEventsInMs + 1) + 1);
+   AfterNInterrupts(freshFoodDamperData->stepsToClose * (freshFoodDamperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1) + 1);
    StepsShouldBeSetToZero();
    StepperMotorControlRequestShouldBe(CLEAR);
    DamperCurrentPositionShouldBe(DamperPosition_Closed);

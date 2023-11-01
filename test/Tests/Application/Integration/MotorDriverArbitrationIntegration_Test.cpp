@@ -38,6 +38,7 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
    ResetReason_t resetReason;
    TimerModule_TestDouble_t *timerModuleTestDouble;
    Interrupt_TestDouble_t *interruptTestDouble;
+   Interrupt_TestDouble_t *fastInterruptTestDouble;
    const TwistTrayIceMakerData_t *twistTrayIceMakerData;
 
    void setup()
@@ -46,6 +47,7 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
       interruptTestDouble = (Interrupt_TestDouble_t *)DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_SystemTickInterrupt);
+      fastInterruptTestDouble = (Interrupt_TestDouble_t *)DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_FastTickInterrupt);
 
       twistTrayIceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->twistTrayIceMakerData;
    }
@@ -121,7 +123,7 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
 
    static TimerTicks_t DamperHomingTime(I_DataModel_t * dataModel)
    {
-      return (PersonalityParametricData_Get(dataModel)->freshFoodDamperData->stepsToHome * (PersonalityParametricData_Get(dataModel)->freshFoodDamperData->delayBetweenStepEventsInMs + 1)) + 1;
+      return (PersonalityParametricData_Get(dataModel)->freshFoodDamperData->stepsToHome * (PersonalityParametricData_Get(dataModel)->freshFoodDamperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1)) + 1;
    }
 
    void AfterNInterrupts(int numberOfInterrupts)
@@ -173,13 +175,28 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
       DataModel_Write(dataModel, Erd_TwistTrayIceMakerTestRequest, &testRequestValue);
    }
 
+   uint16_t DamperStepsRemaining(void)
+   {
+      StepperPositionRequest_t request;
+      DataModel_Read(dataModel, Erd_FreshFoodDamperStepperMotorPositionRequest, &request);
+      return request.stepsToMove;
+   }
+
+   void WhenTheDamperHasStoppedMoving(void)
+   {
+      while(DamperStepsRemaining() > 0)
+      {
+         Interrupt_TestDouble_TriggerInterrupt(fastInterruptTestDouble);
+      }
+   }
+
    void GivenTheDamperHasHomed()
    {
       TheDamperMotorDriveEnableShouldBe(ENABLED);
       TheDamperMotorDriveControlRequestShouldBe(ENABLED);
       TheTwistTrayMotorEnableShouldBe(DISABLED);
 
-      After(DamperHomingTime(dataModel));
+      WhenTheDamperHasStoppedMoving();
 
       TheDamperMotorDriveEnableShouldBe(DISABLED);
       TheDamperMotorDriveControlRequestShouldBe(DISABLED);
@@ -226,7 +243,7 @@ TEST(MotorDriverArbitrationIntegration, DamperShouldHaveTheMotorAndBeHomingOnIni
    TheDamperMotorDriveControlRequestShouldBe(ENABLED);
    TheTwistTrayMotorEnableShouldBe(DISABLED);
 
-   After(DamperHomingTime(dataModel));
+   WhenTheDamperHasStoppedMoving();
 
    TheDamperMotorDriveEnableShouldBe(DISABLED);
    TheDamperMotorDriveControlRequestShouldBe(DISABLED);

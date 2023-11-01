@@ -164,7 +164,7 @@ int main(void)
    I_Action_t *jumpToBootLoaderAction = Header_GetEnterBootLoaderAction();
 
    I_Interrupt_t *interrupt = Interrupt_Cmt0_Init();
-   TimerModule_t *timerModule = TimerModuleStack_Init(&timerModuleStack, interrupt);
+   TimerModule_t *timerModule = TimerModuleStack_Init(&timerModuleStack, interrupt, Interrupt_Cmt0_GetFastTick());
 
    BootLoopDefender_Init(
       &bootLoopDefender,

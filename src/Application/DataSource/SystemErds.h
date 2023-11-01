@@ -654,6 +654,7 @@ enum
    ENTRY(Erd_DoorBufferedUart,                              0xF01B, I_BufferedUart_t *,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_CaseBufferedUart,                              0xF01C, I_BufferedUart_t *,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Gea2Uart,                                      0xF01D, I_Uart_t *,                                         Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_FastTickInterrupt,                             0xF01E, I_Interrupt_t *,                                    Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_Grid_BlockNumber,                              0xF030, GridBlockNumber_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_Grid_PreviousBlocks,                           0xF031, PreviousGridBlockNumbers_t,                         Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

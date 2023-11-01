@@ -184,7 +184,7 @@ TEST_GROUP(StepperMotorDriver)
    {
       for(uint16_t i = 0; i < stepRequest; i++)
       {
-         for(uint8_t j = 0; j < damperData->delayBetweenStepEventsInMs; j++)
+         for(uint8_t j = 0; j < damperData->delayBetweenStepEventsInHundredsOfMicroseconds; j++)
          {
             WhenEventIsRaised(&stepEvent);
          }
@@ -342,7 +342,7 @@ TEST(StepperMotorDriver, ShouldOnlyGetNewPositionWhenStepperMotorDriveEnableIsTr
 
    When StepperMotorDriveEnableIs(true);
 
-   for(uint8_t i = 0; i < damperData->delayBetweenStepEventsInMs; i++)
+   for(uint8_t i = 0; i < damperData->delayBetweenStepEventsInHundredsOfMicroseconds; i++)
    {
       WhenEventIsRaised(&stepEvent);
    }

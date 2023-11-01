@@ -19,6 +19,7 @@ extern "C"
 #include "utils.h"
 #include "Constants_Binary.h"
 #include "IceMakerData.h"
+#include "StepperPositionRequest.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -53,6 +54,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
    const IceMakerData_t *iceMakerData;
    GpioGroup_TestDouble_t *gpioGroupTestDouble;
    Interrupt_TestDouble_t *interruptTestDouble;
+   Interrupt_TestDouble_t *fastInterruptTestDouble;
    TimerModule_TestDouble_t *timerModuleTestDouble;
 
    void setup()
@@ -63,6 +65,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       timerModuleTestDouble = (TimerModule_TestDouble_t *)DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule);
       gpioGroupTestDouble = (GpioGroup_TestDouble_t *)DataModelErdPointerAccess_GetGpioGroup(dataModel, Erd_GpioGroupInterface);
       interruptTestDouble = (Interrupt_TestDouble_t *)DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_SystemTickInterrupt);
+      fastInterruptTestDouble = (Interrupt_TestDouble_t *)DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_FastTickInterrupt);
 
       twistTrayIceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->twistTrayIceMakerData;
       twistTrayIceMakerFillMonitorData = twistTrayIceMakerData->fillData.iceMakerFillMonitorData;
@@ -236,9 +239,25 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       GivenTheMotorSwitchIsDebouncedLow();
    }
 
+   uint16_t DamperStepsRemaining(void)
+   {
+      StepperPositionRequest_t request;
+      DataModel_Read(dataModel, Erd_FreshFoodDamperStepperMotorPositionRequest, &request);
+      return request.stepsToMove;
+   }
+
+   void GivenTheFreshFoodDamperIsDoneMoving(void)
+   {
+      while(DamperStepsRemaining() > 0)
+      {
+         Interrupt_TestDouble_TriggerInterrupt(fastInterruptTestDouble);
+      }
+   }
+
    void GivenTheApplicationIsInitializedAndTheMotorIsHomed(void)
    {
       GivenApplicationHasBeenInitialized();
+      GivenTheFreshFoodDamperIsDoneMoving();
       GivenTheMotorSwitchIsDebouncedHigh();
       WhenMotorDriveIs(ENABLED);
 

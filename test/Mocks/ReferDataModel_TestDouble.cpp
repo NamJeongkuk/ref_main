@@ -55,6 +55,9 @@ static void Init(ReferDataModel_TestDouble_t *instance, I_Action_t *action, Pers
    Interrupt_TestDouble_Init(&instance->_private.systemTickInterruptTestDouble);
    DataModelErdPointerAccess_Write(instance->dataModel, Erd_SystemTickInterrupt, &instance->_private.systemTickInterruptTestDouble.interface);
 
+   Interrupt_TestDouble_Init(&instance->_private.fastTickInterruptTestDouble);
+   DataModelErdPointerAccess_Write(instance->dataModel, Erd_FastTickInterrupt, &instance->_private.fastTickInterruptTestDouble.interface);
+
    DataModelErdPointerAccess_Write(instance->dataModel, Erd_TimerModule, &instance->_private.timerModuleTestDouble.timerModule);
 
    instance->_private.personalityParametricData = (PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(personalityIdForTest);

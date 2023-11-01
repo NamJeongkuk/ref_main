@@ -16,4 +16,10 @@
  */
 I_Interrupt_t *Interrupt_Cmt0_Init(void);
 
+/*!
+ * Returns a fast tick
+ * @return I_Interrupt_t*
+ */
+I_Interrupt_t *Interrupt_Cmt0_GetFastTick(void);
+
 #endif

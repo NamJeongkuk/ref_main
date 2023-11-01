@@ -141,7 +141,7 @@ static void StepTimeChange(void *context, const void *args)
 
       ClearStepCountRequest(instance);
    }
-   else if(instance->_private.countBetweenSteps < instance->_private.freshFoodDamperParametricData->delayBetweenStepEventsInMs)
+   else if(instance->_private.countBetweenSteps < instance->_private.freshFoodDamperParametricData->delayBetweenStepEventsInHundredsOfMicroseconds)
    {
       instance->_private.countBetweenSteps++;
    }

@@ -23,9 +23,13 @@ static const TimeSource_SystemTickWithAcceleration_Config_t acceleratedTimeSourc
 };
 #endif
 
-TimerModule_t *TimerModuleStack_Init(TimerModuleStack_t *instance, I_Interrupt_t *systemTickInterrupt)
+TimerModule_t *TimerModuleStack_Init(
+   TimerModuleStack_t *instance, 
+   I_Interrupt_t *systemTickInterrupt, 
+   I_Interrupt_t *fastTickInterrupt)
 {
    instance->_private.systemTickInterrupt = systemTickInterrupt;
+   instance->_private.fastTickInterrupt = fastTickInterrupt;
 
    // Use system tick interrupt handle to set up a 1mS time source
    TimeSource_Interrupt_Init(&instance->_private.systemTickTimeSource, instance->_private.systemTickInterrupt);
@@ -58,6 +62,7 @@ static void RunTimeAcceleration(void *context)
 void TimerModuleStack_WritePointersToDataModel(TimerModuleStack_t *instance, I_DataModel_t *dataModel)
 {
    DataModelErdPointerAccess_Write(dataModel, Erd_SystemTickInterrupt, instance->_private.systemTickInterrupt);
+   DataModelErdPointerAccess_Write(dataModel, Erd_FastTickInterrupt, instance->_private.fastTickInterrupt);
    DataModelErdPointerAccess_Write(dataModel, Erd_TimeSource, instance->_private.timeSource);
    DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &instance->_private.timerModule_1ms);
 #if defined(DEBUG)

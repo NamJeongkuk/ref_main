@@ -25,6 +25,7 @@ typedef struct
       TimeSource_Interrupt_t systemTickTimeSource;
       I_TimeSource_t *timeSource;
       I_Interrupt_t *systemTickInterrupt;
+      I_Interrupt_t *fastTickInterrupt;
 
 #if defined(DEBUG)
       TimeSource_SystemTickWithAcceleration_t acceleratedTimeSource;
@@ -37,9 +38,13 @@ typedef struct
  * Initialize everything needed for a timer module
  * @param instance
  * @param systemTickInterrupt
+ * @param fastTickInterrupt
  * @return The initialized timer module interface
  */
-TimerModule_t *TimerModuleStack_Init(TimerModuleStack_t *instance, I_Interrupt_t *systemTickInterrupt);
+TimerModule_t *TimerModuleStack_Init(
+   TimerModuleStack_t *instance, 
+   I_Interrupt_t *systemTickInterrupt, 
+   I_Interrupt_t *fastTickInterrupt);
 
 /*!
  * Writes system tick interrupt, time source, and timer module pointers to the data model

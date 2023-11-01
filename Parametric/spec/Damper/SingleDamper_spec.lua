@@ -13,7 +13,7 @@ describe('SingleDamper', function()
       steps_to_open = 650,
       steps_to_close = 700,
       steps_to_home = 1850,
-      delay_between_step_events_in_ms = 1,
+      delay_between_step_events_in_hundreds_of_microseconds = 1,
       max_time_for_damper_to_be_open_before_cycling_in_minutes = 11,
       target_compartment_minimum_temperature_change_time_in_minutes = 3,
       target_compartment_damper_heater_on_time_in_minutes = 2,
@@ -50,10 +50,10 @@ describe('SingleDamper', function()
     end)
   end)
 
-  it('should assert if delay_between_step_events_in_ms is not in range', function()
-    should_fail_with('delay_between_step_events_in_ms=256 must be in [0, 255]', function()
+  it('should assert if delay_between_step_events_in_hundreds_of_microseconds is not in range', function()
+    should_fail_with('delay_between_step_events_in_hundreds_of_microseconds=256 must be in [0, 255]', function()
       single_damper(generate_config({
-         delay_between_step_events_in_ms = 256
+         delay_between_step_events_in_hundreds_of_microseconds = 256
       }))
     end)
   end)
@@ -117,7 +117,7 @@ describe('SingleDamper', function()
       steps_to_open = 650,
       steps_to_close = 700,
       steps_to_home = 1850,
-      delay_between_step_events_in_ms = 1,
+      delay_between_step_events_in_hundreds_of_microseconds = 1,
       max_time_for_damper_to_be_open_before_cycling_in_minutes = 11,
       target_compartment_minimum_temperature_change_time_in_minutes = 3,
       target_compartment_damper_heater_on_time_in_minutes = 2,
