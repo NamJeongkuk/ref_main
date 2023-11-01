@@ -8,17 +8,20 @@
 #ifndef FAULTID_H
 #define FAULTID_H
 
-#include "SystemErds.h"
 #include <stdint.h>
-
-#define EXPAND_AS_FAULT_ID_ENUM(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_FAULT_, StorageType)                                                                      \
-   (FaultId_##Name = FaultId COMMA)
 
 enum
 {
-   FaultId_None = 0,
-   ERD_TABLE(EXPAND_AS_FAULT_ID_ENUM)
+   FaultId_Unknown = 0,
+   FaultId_DoorBoardCommunicationFault = 523,
+   FaultId_DispenserUiCommunicationFault = 733,
+   FaultId_AndroidSbcCommunicationFault = 756,
+   FaultId_EmbeddedWifiCommunicationFault = 757,
+   FaultId_InternalTemperatureUiCommunicationFault = 758,
+   FaultId_RfidBoardHardwareFailureFault = 800,
+   FaultId_RfidBoardCommunicationFault = 801,
+   FaultId_RfidBoardTagAuthenticationFailedFault = 803,
+   FaultId_RfidBoardLeakDetectedFault = 805
 };
 typedef uint16_t FaultId_t;
 
