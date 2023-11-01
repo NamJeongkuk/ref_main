@@ -8,8 +8,9 @@
 #ifndef WATERFILTERPLUGIN_H
 #define WATERFILTERPLUGIN_H
 
-#include "WaterFilterCalendarUsageUpdater.h"
+#include "DispensingDisabler.h"
 #include "RfidCommunicationPlugin.h"
+#include "WaterFilterCalendarUsageUpdater.h"
 #include "WaterVolumeUsageCalculator.h"
 
 typedef struct
@@ -21,6 +22,7 @@ typedef struct
       WaterVolumeUsageCalculator_t aluminumMoldIceMakerWaterVolumeUsageCalculator;
       WaterVolumeUsageCalculator_t twistTrayIceMakerWaterVolumeUsageCalculator;
       WaterVolumeUsageCalculator_t dispensedWaterVolumeUsageCalculator;
+      DispensingDisabler_t dispensingDisabler;
    } _private;
 } WaterFilterPlugin_t;
 

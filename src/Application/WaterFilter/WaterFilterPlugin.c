@@ -29,6 +29,12 @@ static const WaterVolumeUsageCalculatorConfig_t dispensedWaterVolumeUsageCalcula
    .waterVolumeUsageInOuncesX100Erd = Erd_LastDispensedWaterVolumeUsageInOuncesX100
 };
 
+static const DispensingDisablerConfig_t dispensingDisablerConfig = {
+   .rfidBoardLeakDetectedFaultErd = Erd_RfidBoardLeakDetectedFault,
+   .dispensingInhibitedReasonBitmapErd = Erd_DispensingInhibitedReason,
+   .iceMakerFillInhibitedReasonBitmapErd = Erd_IceMakerFillInhibitedReason
+};
+
 void WaterFilterPlugin_Init(
    WaterFilterPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -63,4 +69,9 @@ void WaterFilterPlugin_Init(
       dataModel,
       &dispensedWaterVolumeUsageCalculatorConfig,
       waterValveFlowRateData->dispenserValveFlowRateOuncesPerSecX100);
+
+   DispensingDisabler_Init(
+      &instance->_private.dispensingDisabler,
+      dataModel,
+      &dispensingDisablerConfig);
 }

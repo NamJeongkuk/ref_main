@@ -1416,7 +1416,7 @@ enum
    ENTRY(Erd_RfidBoardHardwareFailureFault,                 0xF725, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    800) \
    ENTRY(Erd_RfidBoardCommunicationFault,                   0xF726, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    801) \
    ENTRY(Erd_RfidBoardTagAuthenticationFailedFault,         0xF727, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    803) \
-   ENTRY(Erd_RfidBoardLeakDetectedFault,                    0xF728, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    805) \
+   ENTRY(Erd_RfidBoardLeakDetectedFault,                    0xF728, bool,                                               Swap_No,  Io_None, Sub_Y, Fault,                  NotNv,                                    805) \
    \
    ENTRY(Erd_FactoryModeEnableRequestInMinutes,             0xF801, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
