@@ -242,7 +242,7 @@ static bool IceMakerIsEnabled(AluminumMoldIceMaker_t *instance)
    return state;
 }
 
-static bool MoldThermistorIsNotValid(AluminumMoldIceMaker_t *instance)
+static bool MoldThermistorIsValid(AluminumMoldIceMaker_t *instance)
 {
    bool valid;
    DataModel_Read(
@@ -250,7 +250,7 @@ static bool MoldThermistorIsNotValid(AluminumMoldIceMaker_t *instance)
       instance->_private.config->moldThermistorIsValidErd,
       &valid);
 
-   return !valid;
+   return valid;
 }
 
 static bool FreezerIceRateIsActive(AluminumMoldIceMaker_t *instance)
@@ -720,6 +720,14 @@ static bool HarvestConditionsAreMet(AluminumMoldIceMaker_t *instance)
       DispensingIsNotInhibitedByRfid(instance));
 }
 
+static void SetIceMakerPresenceErd(AluminumMoldIceMaker_t *instance)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->iceMakerPresenceErd,
+      set);
+}
+
 static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    IGNORE(data);
@@ -1012,7 +1020,7 @@ static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_StopFill:
-         if(MoldThermistorIsNotValid(instance))
+         if(!MoldThermistorIsValid(instance))
          {
             Hsm_Transition(hsm, State_ThermistorFault);
          }
@@ -1090,6 +1098,7 @@ static bool State_ThermistorFault(Hsm_t *hsm, HsmSignal_t signal, const void *da
          break;
 
       case Signal_MoldThermistorIsValid:
+         SetIceMakerPresenceErd(instance);
          if(RakeIsHome(instance))
          {
             Hsm_Transition(hsm, State_Freeze);
@@ -1245,7 +1254,7 @@ static void DataModelChanged(void *context, const void *args)
 
 static HsmState_t InitialState(AluminumMoldIceMaker_t *instance)
 {
-   if(MoldThermistorIsNotValid(instance))
+   if(!MoldThermistorIsValid(instance))
    {
       return State_ThermistorFault;
    }
@@ -1279,6 +1288,11 @@ void AluminumMoldIceMaker_Init(
    uassert(instance->_private.iceMakerParametricData->harvestData.fillTubeHeaterOnTimeInSeconds >=
       instance->_private.iceMakerParametricData->harvestData.initialMinimumHeaterOnTimeInSeconds);
 #endif
+
+   if(MoldThermistorIsValid(instance))
+   {
+      SetIceMakerPresenceErd(instance);
+   }
 
    Hsm_Init(&instance->_private.hsm, &hsmConfiguration, InitialState(instance));
 

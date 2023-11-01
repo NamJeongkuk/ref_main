@@ -562,9 +562,9 @@ enum
    ENTRY(Erd_IceMaker2EnableStatus,                         0x1231, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
    ENTRY(Erd_IceMaker2FullStatus,                           0x1232, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_IceMaker2TypeInformation,                      0x1233, IceMakerTypeInformation_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_IceMaker0Present,                              0x1234, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
-   ENTRY(Erd_IceMaker1Present,                              0x1235, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
-   ENTRY(Erd_IceMaker2Present,                              0x1236, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,       NotFault) \
+   ENTRY(Erd_IceMaker0Present,                              0x1234, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
+   ENTRY(Erd_IceMaker1Present,                              0x1235, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
+   ENTRY(Erd_IceMaker2Present,                              0x1236, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_WaterFilterRemainingUsage,                     0x1237, WaterFilterRemainingUsage_t,                        Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_EnableDemoModeRequest,                         0x1239, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \

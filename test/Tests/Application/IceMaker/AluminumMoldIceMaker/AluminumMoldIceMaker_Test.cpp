@@ -51,7 +51,8 @@ static const AluminumMoldIceMakerConfig_t config = {
    .aluminumMoldIceMakerTestRequestErd = Erd_AluminumMoldIceMakerTestRequest,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
    .coolingSystemOffStatusErd = Erd_CoolingOffStatus,
-   .dispensingInhibitedErd = Erd_DispensingInhibitedReason
+   .dispensingInhibitedErd = Erd_DispensingInhibitedReason,
+   .iceMakerPresenceErd = Erd_IceMaker0Present
 };
 
 TEST_GROUP(AluminumMoldIceMaker)
@@ -954,6 +955,19 @@ TEST_GROUP(AluminumMoldIceMaker)
    void GivenDispensingIsNotInhibitedByRfid()
    {
       WhenDispensingIsNotInhibitedByRfid();
+   }
+
+   void GivenIceMakerPresenceErdIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_IceMaker0Present, &state);
+   }
+
+   void IceMakerPresenceErdShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_IceMaker0Present, &actual);
+
+      CHECK_EQUAL(expected, actual);
    }
 };
 
@@ -2696,4 +2710,26 @@ TEST(AluminumMoldIceMaker, ShouldStayInFreezeWhenDispensingIsInhibitedByRfidWhil
 
    WhenDispensingIsInhibitedByRfid();
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
+}
+
+TEST(AluminumMoldIceMaker, ShouldSetIceMakerPresenceErdWhenIceMakerThermistorIsValidInThermistorFaultState)
+{
+   GivenIceMakerPresenceErdIs(CLEAR);
+   GivenMoldThermistorIsInvalid();
+   GivenTheIceMakerIs(ENABLED);
+   GivenTheModuleIsInitialized();
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
+
+   WhenMoldThermistorIsValid();
+   IceMakerPresenceErdShouldBe(SET);
+}
+
+TEST(AluminumMoldIceMaker, ShouldSetIceMakerPresenceErdWhenIceMakerThermistorIsValidOnInit)
+{
+   GivenIceMakerPresenceErdIs(CLEAR);
+   GivenTheMoldThermistorIsValid();
+   GivenTheIceMakerIs(ENABLED);
+   GivenTheModuleIsInitialized();
+
+   IceMakerPresenceErdShouldBe(SET);
 }
