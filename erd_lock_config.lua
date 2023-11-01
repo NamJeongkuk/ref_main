@@ -32,6 +32,10 @@ return {
   titanic_ui = {
     error_message = 'Do not change these ERDs. If they change, Titanic UI\'s Common ERDs need updated.',
     erds = {
+      '0xF729',
+      '0xF72A',
+      '0xF72B',
+      '0xF72C',
       '0xFAFB',
       '0xFAFC',
       '0xFAFD',

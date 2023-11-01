@@ -14,7 +14,11 @@ enum
 {
    FaultId_Unknown = 0,
    FaultId_DoorBoardCommunicationFault = 523,
+   FaultId_AutofillCouplingFault = 721,
    FaultId_DispenserUiCommunicationFault = 733,
+   FaultId_AutofillNoWaterMovementFault = 737,
+   FaultId_AutofillTargetRemovedFault = 739,
+   FaultId_AutofillEmiDetectedFault = 740,
    FaultId_AndroidSbcCommunicationFault = 756,
    FaultId_EmbeddedWifiCommunicationFault = 757,
    FaultId_InternalTemperatureUiCommunicationFault = 758,

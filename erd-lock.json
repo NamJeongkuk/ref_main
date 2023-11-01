@@ -1119,6 +1119,70 @@
     {
       "data": [
         {
+          "name": "Erd_AutofillSensorCouplingFault",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0xF729",
+      "name": "Erd_AutofillSensorCouplingFault",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_AutofillNoWaterLevelChangeFault",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0xF72A",
+      "name": "Erd_AutofillNoWaterLevelChangeFault",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_AutofillTargetRemovedFault",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0xF72B",
+      "name": "Erd_AutofillTargetRemovedFault",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_AutofillEmiDetectedFault",
+          "offset": 0,
+          "size": 1,
+          "type": "bool"
+        }
+      ],
+      "id": "0xF72C",
+      "name": "Erd_AutofillEmiDetectedFault",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
           "name": "Erd_ExternalAmbientFilteredTemperatureInDegFx100",
           "offset": 0,
           "size": 2,

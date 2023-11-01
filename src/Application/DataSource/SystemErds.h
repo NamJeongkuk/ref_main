@@ -1420,6 +1420,10 @@ enum
    ENTRY(Erd_RfidBoardCommunicationFault,                   0xF726, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_RfidBoardCommunicationFault) \
    ENTRY(Erd_RfidBoardTagAuthenticationFailedFault,         0xF727, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_RfidBoardTagAuthenticationFailedFault) \
    ENTRY(Erd_RfidBoardLeakDetectedFault,                    0xF728, bool,                                               Swap_No,  Io_None, Sub_Y, Fault,                  NotNv,                                    FaultId_RfidBoardLeakDetectedFault) \
+   ENTRY(Erd_AutofillSensorCouplingFault,                   0xF729, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_AutofillCouplingFault) \
+   ENTRY(Erd_AutofillNoWaterLevelChangeFault,               0xF72A, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_AutofillNoWaterMovementFault) \
+   ENTRY(Erd_AutofillTargetRemovedFault,                    0xF72B, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_AutofillTargetRemovedFault) \
+   ENTRY(Erd_AutofillEmiDetectedFault,                      0xF72C, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_AutofillEmiDetectedFault) \
    \
    ENTRY(Erd_FactoryModeEnableRequestInMinutes,             0xF801, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
