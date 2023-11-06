@@ -25,7 +25,8 @@ enum
    FaultId_RfidBoardHardwareFailureFault = 800,
    FaultId_RfidBoardCommunicationFault = 801,
    FaultId_RfidBoardTagAuthenticationFailedFault = 803,
-   FaultId_RfidBoardLeakDetectedFault = 805
+   FaultId_RfidBoardLeakDetectedFault = 805,
+   FaultId_RfidBoardBlockedTagFault = 806
 };
 typedef uint16_t FaultId_t;
 

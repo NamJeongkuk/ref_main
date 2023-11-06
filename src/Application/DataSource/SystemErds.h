@@ -924,7 +924,7 @@ enum
    \
    ENTRY(Erd_IceMakerFillInhibitedReason,                   0xF1A0, IceMakerFillInhibitedReasonBitmap_t,                Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_NewFilterInstalledSignal,                      0xF1A1, Signal_t,                                           Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_NewFilterInstalledSignal,                      0xF1A1, Signal_t,                                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_BypassPlugInstalled,                           0xF1A2, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_LeakDetected,                                  0xF1A3, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FilterError,                                   0xF1A4, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -1425,6 +1425,7 @@ enum
    ENTRY(Erd_AutofillNoWaterLevelChangeFault,               0xF72A, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_AutofillNoWaterMovementFault) \
    ENTRY(Erd_AutofillTargetRemovedFault,                    0xF72B, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_AutofillTargetRemovedFault) \
    ENTRY(Erd_AutofillEmiDetectedFault,                      0xF72C, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_AutofillEmiDetectedFault) \
+   ENTRY(Erd_RfidBoardBlockedTagFault,                      0xF72D, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_RfidBoardBlockedTagFault) \
    \
    ENTRY(Erd_FactoryModeEnableRequestInMinutes,             0xF801, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \

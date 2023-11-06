@@ -12,6 +12,7 @@
 #include "RfidCommunicationPlugin.h"
 #include "WaterFilterCalendarUsageUpdater.h"
 #include "WaterVolumeUsageCalculator.h"
+#include "NewFilterInstalledHandler.h"
 
 typedef struct
 {
@@ -23,6 +24,7 @@ typedef struct
       WaterVolumeUsageCalculator_t twistTrayIceMakerWaterVolumeUsageCalculator;
       WaterVolumeUsageCalculator_t dispensedWaterVolumeUsageCalculator;
       DispensingDisabler_t dispensingDisabler;
+      NewFilterInstalledHandler_t newFilterInstalledHandler;
    } _private;
 } WaterFilterPlugin_t;
 

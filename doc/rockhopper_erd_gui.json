@@ -4013,6 +4013,14 @@
           "read": true,
           "write": true,
           "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Rfid Board Blocked Tag Fault",
+          "name": "Erd_RfidBoardBlockedTagFault",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
         }
       ]
     }

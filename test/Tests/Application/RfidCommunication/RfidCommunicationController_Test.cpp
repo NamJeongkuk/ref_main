@@ -26,15 +26,10 @@ enum
    Open,
    Closed,
    SomeLeakDetectedCount = 10,
-   SomeVolumeUsage = 1000,
-   SomeCalendarUsage = 2000
 };
 
-uint8_t GivenMainboardUnitSerialNumber[UnitSerialNumberSizeInBytes] = { '1', '2', '3', '4', '5', '6', '7', '8' };
 uint8_t Uid[RfidUidSizeInBytes] = "ABCDEF";
 uint8_t NewUid[RfidUidSizeInBytes] = "ZYXWVU";
-uint8_t BlankSerialNumber[UnitSerialNumberSizeInBytes] = "";
-uint8_t SomePreviousUnitSerialNumber[UnitSerialNumberSizeInBytes] = "ABCDEFG";
 
 static const RfidCommunicationControllerConfig_t config = {
    .rfidCommunicationControllerStateErd = Erd_RfidCommunicationControllerState,
@@ -42,19 +37,10 @@ static const RfidCommunicationControllerConfig_t config = {
    .allFreshFoodDoorsAreClosedErd = Erd_AllFreshFoodDoorsAreClosed,
    .rfidFilterUidRfidBoardErd = Erd_RfidFilterUid_RfidBoard,
    .rfidFilterUidErd = Erd_RfidFilterUid,
-   .rfidFilterUnitSerialNumberRfidBoardErd = Erd_RfidFilterUnitSerialNumber_RfidBoard,
-   .rfidFilterUnitSerialNumberErd = Erd_RfidFilterUnitSerialNumber,
-   .rfidFilterCalendarUsageInSecondsRfidBoardErd = Erd_RfidFilterCalendarUsageInSeconds_RfidBoard,
-   .rfidFilterCalendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
-   .eepromWaterFilterCalendarUsageInSecondsErd = Erd_Eeprom_WaterFilterCalendarUsageInSeconds,
-   .rfidFilterWaterVolumeUsageInOuncesX100RfidBoardErd = Erd_RfidFilterWaterVolumeUsageInOuncesX100_RfidBoard,
-   .totalWaterVolumeUsageInOuncesX100Erd = Erd_TotalWaterVolumeUsageInOuncesX100,
-   .eepromTotalWaterVolumeUsageInOuncesX100Erd = Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100,
    .rfidFilterStatusRfidBoardErd = Erd_RfidFilterStatus_RfidBoard,
    .rfidFilterIdentifierErd = Erd_RfidFilterIdentifier_RfidBoard,
    .demoModeEnableErd = Erd_EnableDemoModeStatus,
    .waterFilterTypeErd = Erd_WaterFilterType,
-   .bypassPlugInstalledErd = Erd_BypassPlugInstalled,
    .rfidFilterBadReadCountErd = Erd_RfidFilterBadReadCount,
    .rfidFilterBadWriteCountErd = Erd_RfidFilterBadWriteCount,
    .rfidFilterHardwareFailureCountErd = Erd_RfidFilterHardwareFailureCount,
@@ -62,8 +48,6 @@ static const RfidCommunicationControllerConfig_t config = {
    .rfidFilterBlockedCountErd = Erd_RfidFilterBlockedCount,
    .rfidFilterDataRequestErd = Erd_RfidFilterDataRequest,
    .newFilterInstalledSignalErd = Erd_NewFilterInstalledSignal,
-   .rfidFilterNumberOfUnitsFilterHasBeenOnErd = Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn,
-   .rfidFilterPreviousUnitSerialNumberErd = Erd_RfidFilterPreviousUnitSerialNumber
 };
 
 static void OnDataModelChange(void *context, const void *_args)
@@ -124,7 +108,6 @@ TEST_GROUP(RfidCommunicationController)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelTestDouble);
 
       SetRfidDataRequestErdToIdle();
-      SetMainboardSerialNumberTo(GivenMainboardUnitSerialNumber);
    }
 
    void After(TimerTicks_t ticks)
@@ -136,11 +119,6 @@ TEST_GROUP(RfidCommunicationController)
    {
       ReadWriteRequest_t request = ReadWriteRequest_Idle;
       DataModel_Write(dataModel, Erd_RfidFilterDataRequest, &request);
-   }
-
-   void SetMainboardSerialNumberTo(uint8_t * serialNumber)
-   {
-      DataModel_Write(dataModel, Erd_RfidFilterUnitSerialNumber, &serialNumber);
    }
 
    void GivenFilterUidIs(uint8_t * uid)
@@ -193,11 +171,6 @@ TEST_GROUP(RfidCommunicationController)
       GivenAllFreshFoodDoorsAre(false);
    }
 
-   void GivenTheBypassPlugIs(const bool state)
-   {
-      DataModel_Write(dataModel, Erd_BypassPlugInstalled, &state);
-   }
-
    void RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerState_t expected)
    {
       RfidCommunicationControllerState_t actual;
@@ -210,18 +183,6 @@ TEST_GROUP(RfidCommunicationController)
       WaterFilterType_t actual;
       DataModel_Read(dataModel, Erd_WaterFilterType, &actual);
       CHECK_EQUAL(expected, actual);
-   }
-
-   void BypassPlugShouldBe(const bool expected)
-   {
-      bool actual;
-      DataModel_Read(dataModel, Erd_BypassPlugInstalled, &actual);
-      CHECK_EQUAL(expected, actual);
-   }
-
-   void BypassPlugStateIs(bool state)
-   {
-      DataModel_Write(dataModel, Erd_BypassPlugInstalled, &state);
    }
 
    void WhenAnRfidMessageIsSentWithResult(ReadWriteResult_t result)
@@ -366,47 +327,6 @@ TEST_GROUP(RfidCommunicationController)
       WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
    }
 
-   void WhenANewRfidFilterIsInstalledWithADifferentSerialNumber(uint8_t * serialNumber)
-   {
-      DataModel_Write(dataModel, Erd_RfidFilterUid_RfidBoard, NewUid);
-      DataModel_Write(dataModel, Erd_RfidFilterUnitSerialNumber_RfidBoard, serialNumber);
-
-      WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
-   }
-
-   void MainboardRfidFilterUidShouldBe(uint8_t * expected)
-   {
-      RfidUid_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterUid, &actual);
-      MEMCMP_EQUAL(expected, &actual, sizeof(RfidUid_t));
-   }
-
-   void GivenRfidFilterUnitSerialNumberRfidBoardIs(uint8_t * unitSerialNumber)
-   {
-      DataModel_Write(dataModel, Erd_RfidFilterUnitSerialNumber_RfidBoard, unitSerialNumber);
-   }
-
-   void RfidFilterPreviousUnitSerialNumberShouldBe(uint8_t * expected)
-   {
-      UnitSerialNumber_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterPreviousUnitSerialNumber, &actual);
-      MEMCMP_EQUAL(expected, &actual, sizeof(UnitSerialNumber_t));
-   }
-
-   void RfidFilterUnitSerialNumberMainboardShouldBe(uint8_t * expected)
-   {
-      UnitSerialNumber_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterUnitSerialNumber, &actual);
-      MEMCMP_EQUAL(expected, &actual, sizeof(UnitSerialNumber_t));
-   }
-
-   void RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(RfidFilterNumberOfUnitsFilterHasBeenOn_t expected)
-   {
-      RfidFilterNumberOfUnitsFilterHasBeenOn_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn, &actual);
-      CHECK_EQUAL(expected, actual);
-   }
-
    void GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState()
    {
       GivenAllFreshFoodDoorsAre(Open);
@@ -450,56 +370,9 @@ TEST_GROUP(RfidCommunicationController)
       CHECK_EQUAL(expected, actual);
    }
 
-   void WhenCalendarUsageOnRfidBoardIs(CalendarUsageInSeconds_t calendarUsageInSeconds)
-   {
-      DataModel_Write(dataModel, Erd_RfidFilterCalendarUsageInSeconds_RfidBoard, &calendarUsageInSeconds);
-   }
-
-   void CalendarUsageOnMainboardShouldBe(CalendarUsageInSeconds_t expected)
-   {
-      CalendarUsageInSeconds_t actual;
-      DataModel_Read(dataModel, Erd_WaterFilterCalendarUsageInSeconds, &actual);
-      CHECK_EQUAL(expected, actual);
-   }
-
-   void EepromCalendarUsageInSecondsOnMainboardShouldBe(CalendarUsageInSeconds_t expected)
-   {
-      CalendarUsageInSeconds_t actual;
-      DataModel_Read(dataModel, Erd_Eeprom_WaterFilterCalendarUsageInSeconds, &actual);
-      CHECK_EQUAL(expected, actual);
-   }
-
-   void WhenVolumeUsageOnRfidBoardIs(VolumeInOuncesX100_t volumeUsageInOuncesX100)
-   {
-      DataModel_Write(dataModel, Erd_RfidFilterWaterVolumeUsageInOuncesX100_RfidBoard, &volumeUsageInOuncesX100);
-   }
-
-   void VolumeUsageOnMainboardShouldBe(VolumeInOuncesX100_t expected)
-   {
-      VolumeInOuncesX100_t actual;
-      DataModel_Read(dataModel, Erd_TotalWaterVolumeUsageInOuncesX100, &actual);
-      CHECK_EQUAL(expected, actual);
-   }
-
-   void EepromVolumeUsageOnMainboardShouldBe(CalendarUsageInSeconds_t expected)
-   {
-      VolumeInOuncesX100_t actual;
-      DataModel_Read(dataModel, Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100, &actual);
-      CHECK_EQUAL(expected, actual);
-   }
-
    void GivenTheABadWriteCountIs(uint8_t count)
    {
       DataModel_Write(dataModel, Erd_RfidFilterBadWriteCount, &count);
-   }
-
-   void NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear()
-   {
-      NewFilterInstalledSignalShouldBe(0);
-      CalendarUsageOnMainboardShouldBe(0);
-      VolumeUsageOnMainboardShouldBe(0);
-      EepromCalendarUsageInSecondsOnMainboardShouldBe(0);
-      EepromVolumeUsageOnMainboardShouldBe(0);
    }
 };
 
@@ -507,13 +380,6 @@ TEST(RfidCommunicationController, ShouldUpdateTheWaterFilterTypeToXWFEUponInit)
 {
    GivenInitialization();
    WaterFilterTypeShouldBe(WaterFilterType_XWFE);
-}
-
-TEST(RfidCommunicationController, ShouldClearBypassPlugStateUponInit)
-{
-   GivenTheBypassPlugIs(SET);
-   GivenInitialization();
-   BypassPlugShouldBe(CLEAR);
 }
 
 TEST(RfidCommunicationController, ShouldEnterTheFreshFoodDoorClosedStateWhenThereIsAFeshFoodDoorClosedUponInit)
@@ -575,50 +441,6 @@ TEST(RfidCommunicationController, ShouldClearTheBlockedCountWhenABlockedRfidFilt
    BlockedCountShouldBe(0);
 }
 
-TEST(RfidCommunicationController, ShouldSetBypassPlugWhenFilterIsABypassPlug)
-{
-   GivenInitialization();
-   BypassPlugShouldBe(CLEAR);
-
-   WhenFilterIdentifierIsABypassPlug();
-   AndSentWithinAnRfidMessageWithResult(ReadWriteResult_Success);
-   BypassPlugShouldBe(SET);
-}
-
-TEST(RfidCommunicationController, ShouldNotSetLeakDetectedOrBlockedWhenAFilterIsABypassPlug)
-{
-   GivenInitialization();
-   BypassPlugShouldBe(CLEAR);
-
-   WhenFilterIdentifierIsABypassPlug();
-   WhenRfidFilterLeakDetectedIs(SET);
-   WhenRfidBlockedIs(SET);
-   AndSentWithinAnRfidMessageWithResult(ReadWriteResult_Success);
-
-   BypassPlugShouldBe(SET);
-   LeakDetectCountShouldBe(0);
-   BlockedCountShouldBe(0);
-}
-
-TEST(RfidCommunicationController, ShouldClearLeakDetectedAndBlockedWhenAFilterIsABypassPlug)
-{
-   GivenInitialization();
-   BypassPlugShouldBe(CLEAR);
-
-   WhenRfidFilterLeakDetectedIs(SET);
-   WhenRfidBlockedIs(SET);
-   AndSentWithinAnRfidMessageWithResult(ReadWriteResult_Success);
-   LeakDetectCountShouldBe(1);
-   BlockedCountShouldBe(1);
-
-   WhenFilterIdentifierIsABypassPlug();
-   AndSentWithinAnRfidMessageWithResult(ReadWriteResult_Success);
-
-   BypassPlugShouldBe(SET);
-   LeakDetectCountShouldBe(0);
-   BlockedCountShouldBe(0);
-}
-
 TEST(RfidCommunicationController, ShouldEnterDemoModeStateWhenDemoModeIsEnabled)
 {
    GivenInitialization();
@@ -626,15 +448,6 @@ TEST(RfidCommunicationController, ShouldEnterDemoModeStateWhenDemoModeIsEnabled)
 
    WhenDemoModeIs(ENABLED);
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_DemoMode);
-}
-
-TEST(RfidCommunicationController, ShouldClearBypassPlugStateWhenEnteringDemoMode)
-{
-   GivenInitialization();
-   GivenTheBypassPlugIs(SET);
-
-   WhenDemoModeIs(ENABLED);
-   BypassPlugShouldBe(CLEAR);
 }
 
 TEST(RfidCommunicationController, ShouldIgnoreDoorStatusWhenInDemoMode)
@@ -704,51 +517,15 @@ TEST(RfidCommunicationController, ShouldResetHardwareFailureCountAfterReceivingA
    RfidFilterHardwareFailureCountShouldBe(0);
 }
 
-TEST(RfidCommunicationController, ShouldUpdateMainboardRfidFilterUidWhenNewFilterIsDetectedWhileInFreshFoodDoorOpenState)
-{
-   GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
-   MainboardRfidFilterUidShouldBe(Uid);
-
-   WhenANewRfidFilterIsInstalled();
-   MainboardRfidFilterUidShouldBe(NewUid);
-}
-
 TEST(RfidCommunicationController, ShouldNotUpdateMainboardWithNewFilterDataWhenThereIsASuccessfulReadOnTheCurrentFilterWhileInFreshFoodDoorOpenState)
 {
    GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
-   WhenCalendarUsageOnRfidBoardIs(SomeCalendarUsage);
-   WhenVolumeUsageOnRfidBoardIs(SomeVolumeUsage);
    GivenTheABadWriteCountIs(1);
-   NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear();
-
-   RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(0);
-   GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
+   NewFilterInstalledSignalShouldBe(0);
 
    WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
    RfidFilterBadWriteCountShouldBe(1);
-   NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear();
-   RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(0);
-   GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
-}
-
-TEST(RfidCommunicationController, ShouldSetBypassPlugWhenABypassPlugIsInstalledWhileInFreshFoodDoorOpenState)
-{
-   GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
-   BypassPlugShouldBe(CLEAR);
-
-   WhenFilterIdentifierIsABypassPlug();
-   AndSentWithinAnRfidMessageWithResult(ReadWriteResult_Success);
-   BypassPlugShouldBe(SET);
-}
-
-TEST(RfidCommunicationController, ShouldClearBypassPlugWhenANonBypassPlugIsInstalledWhileInFreshFoodDoorOpenState)
-{
-   GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
-   BypassPlugStateIs(SET);
-   BypassPlugShouldBe(SET);
-
-   WhenANewRfidFilterIsInstalled();
-   BypassPlugShouldBe(CLEAR);
+   NewFilterInstalledSignalShouldBe(0);
 }
 
 TEST(RfidCommunicationController, ShouldClearBadReadCountWhenANewFilterIsDetectedWhileInFreshFoodDoorOpenState)
@@ -769,41 +546,6 @@ TEST(RfidCommunicationController, ShouldClearBadWriteCountWhenANewFilterIsDetect
 
    WhenANewRfidFilterIsInstalled();
    RfidFilterBadWriteCountShouldBe(0);
-}
-
-TEST(RfidCommunicationController, ShouldSendNewFilterInstalledSignalAndCopyCalendarAndVolumeUsageToMainboardWhenANewFilterIsDetectedInFreshFoodDoorOpenState)
-{
-   GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
-   NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear();
-
-   WhenCalendarUsageOnRfidBoardIs(SomeCalendarUsage);
-   WhenVolumeUsageOnRfidBoardIs(SomeVolumeUsage);
-   WhenANewRfidFilterIsInstalled();
-   NewFilterInstalledSignalShouldBe(1);
-   CalendarUsageOnMainboardShouldBe(SomeCalendarUsage);
-   VolumeUsageOnMainboardShouldBe(SomeVolumeUsage);
-   EepromCalendarUsageInSecondsOnMainboardShouldBe(SomeCalendarUsage);
-   EepromVolumeUsageOnMainboardShouldBe(SomeVolumeUsage);
-}
-
-TEST(RfidCommunicationController, ShouldCopyRfidFilterUnitSerialNumberToPreviousSerialNumberWhenANewFilterIsDetectedAndTheSerialNumberIsDifferentThanTheUnitSerialNumberWhileInFreshFoodDoorOpenState)
-{
-   GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
-   GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
-   RfidFilterPreviousUnitSerialNumberShouldBe(BlankSerialNumber);
-
-   WhenANewRfidFilterIsInstalledWithADifferentSerialNumber(SomePreviousUnitSerialNumber);
-   RfidFilterPreviousUnitSerialNumberShouldBe(SomePreviousUnitSerialNumber);
-}
-
-TEST(RfidCommunicationController, ShouldIncrementNumberOfUnitsFilterHasBeenOnWhenANewFilterIsDetectedAndTheSerialNumberIsDifferentThanTheUnitSerialNumberWhileInFreshFoodDoorOpenState)
-{
-   GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
-   GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
-   RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(0);
-
-   WhenANewRfidFilterIsInstalled();
-   RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(1);
 }
 
 TEST(RfidCommunicationController, ShouldIncrementBadReadCountWhenReceivingAReadFailureWhileInFreshFoodDoorOpenState)
@@ -916,51 +658,15 @@ TEST(RfidCommunicationController, ShouldResetHardwareFailureCountAfterReceivingA
    RfidFilterHardwareFailureCountShouldBe(0);
 }
 
-TEST(RfidCommunicationController, ShouldUpdateMainboardRfidFilterUidWhenNewFilterIsDetectedWhileInAllFreshFoodDoorsJustClosedState)
-{
-   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
-   MainboardRfidFilterUidShouldBe(Uid);
-
-   WhenANewRfidFilterIsInstalled();
-   MainboardRfidFilterUidShouldBe(NewUid);
-}
-
 TEST(RfidCommunicationController, ShouldNotUpdateMainboardWithNewFilterDataWhenThereIsASuccessfulReadOnTheCurrentFilterWhileInAllFreshFoodDoorsJustClosedState)
 {
    GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
-   WhenCalendarUsageOnRfidBoardIs(SomeCalendarUsage);
-   WhenVolumeUsageOnRfidBoardIs(SomeVolumeUsage);
    GivenTheABadWriteCountIs(1);
-   NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear();
-
-   RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(0);
-   GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
+   NewFilterInstalledSignalShouldBe(0);
 
    WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
    RfidFilterBadWriteCountShouldBe(1);
-   NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear();
-   RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(0);
-   GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
-}
-
-TEST(RfidCommunicationController, ShouldSetBypassPlugWhenABypassPlugIsInstalledWhileInAllFreshFoodDoorsJustClosedState)
-{
-   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
-   BypassPlugShouldBe(CLEAR);
-
-   WhenFilterIdentifierIsABypassPlug();
-   AndSentWithinAnRfidMessageWithResult(ReadWriteResult_Success);
-   BypassPlugShouldBe(SET);
-}
-
-TEST(RfidCommunicationController, ShouldClearBypassPlugWhenANonBypassPlugIsInstalledWhileInAllFreshFoodDoorsJustClosedState)
-{
-   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
-   BypassPlugStateIs(SET);
-   BypassPlugShouldBe(SET);
-
-   WhenANewRfidFilterIsInstalled();
-   BypassPlugShouldBe(CLEAR);
+   NewFilterInstalledSignalShouldBe(0);
 }
 
 TEST(RfidCommunicationController, ShouldClearBadWriteCountWhenANewFilterIsDetectedWhileInAllFreshFoodDoorsJustClosedState)
@@ -979,42 +685,6 @@ TEST(RfidCommunicationController, ShouldTransitionToAllFreshFoodDoorsClosedWhenA
 
    WhenANewRfidFilterIsInstalled();
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
-}
-
-TEST(RfidCommunicationController, ShouldCopyRfidFilterUnitSerialNumberToPreviousSerialNumberWhenANewFilterIsDetectedAndTheSerialNumberIsDifferentThanTheUnitSerialNumberWhileInAllFreshFoodDoorsJustClosedState)
-{
-   GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
-   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
-
-   RfidFilterPreviousUnitSerialNumberShouldBe(BlankSerialNumber);
-
-   WhenANewRfidFilterIsInstalled();
-   RfidFilterPreviousUnitSerialNumberShouldBe(SomePreviousUnitSerialNumber);
-}
-
-TEST(RfidCommunicationController, ShouldIncrementNumberOfUnitsFilterHasBeenOnWhenANewFilterIsDetectedAndTheSerialNumberIsDifferentThanTheUnitSerialNumberWhileInAllFreshFoodDoorsJustClosedState)
-{
-   GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
-   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
-   RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(0);
-
-   WhenANewRfidFilterIsInstalled();
-   RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(1);
-}
-
-TEST(RfidCommunicationController, ShouldSendNewFilterInstalledSignalAndCopyCalendarAndVolumeUsageToMainboardWhenANewFilterIsDetectedInAllFreshFoodDoorsJustClosedState)
-{
-   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
-   NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear();
-
-   WhenCalendarUsageOnRfidBoardIs(SomeCalendarUsage);
-   WhenVolumeUsageOnRfidBoardIs(SomeVolumeUsage);
-   WhenANewRfidFilterIsInstalled();
-   NewFilterInstalledSignalShouldBe(1);
-   CalendarUsageOnMainboardShouldBe(SomeCalendarUsage);
-   VolumeUsageOnMainboardShouldBe(SomeVolumeUsage);
-   EepromCalendarUsageInSecondsOnMainboardShouldBe(SomeCalendarUsage);
-   EepromVolumeUsageOnMainboardShouldBe(SomeVolumeUsage);
 }
 
 TEST(RfidCommunicationController, ShouldIncrementBadReadCountWhenReceivingAReadFailureInFreshFoodDoorOpenStateWhileInAllFreshFoodDoorsJustClosedState)
@@ -1084,51 +754,15 @@ TEST(RfidCommunicationController, ShouldResetHardwareFailureCountAfterReceivingA
    RfidFilterHardwareFailureCountShouldBe(0);
 }
 
-TEST(RfidCommunicationController, ShouldUpdateMainboardRfidFilterUidWhenNewFilterIsDetectedWhileInInAllDoorsClosedReadState)
-{
-   GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState();
-   MainboardRfidFilterUidShouldBe(Uid);
-
-   WhenANewRfidFilterIsInstalled();
-   MainboardRfidFilterUidShouldBe(NewUid);
-}
-
 TEST(RfidCommunicationController, ShouldNotUpdateMainboardWithNewFilterDataWhenThereIsASuccessfulReadOnTheCurrentFilterWhileInInAllDoorsClosedReadState)
 {
    GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState();
-   WhenCalendarUsageOnRfidBoardIs(SomeCalendarUsage);
-   WhenVolumeUsageOnRfidBoardIs(SomeVolumeUsage);
    GivenTheABadWriteCountIs(1);
-   NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear();
-
-   RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(0);
-   GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
+   NewFilterInstalledSignalShouldBe(0);
 
    WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
    RfidFilterBadWriteCountShouldBe(1);
-   NewFilterSignalAndVolumeUsageAndCalendarUsageShouldAllBeClear();
-   RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(0);
-   GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
-}
-
-TEST(RfidCommunicationController, ShouldSetBypassPlugWhenABypassPlugIsInstalledWhileInAllDoorsClosedReadState)
-{
-   GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState();
-   BypassPlugShouldBe(CLEAR);
-
-   WhenFilterIdentifierIsABypassPlug();
-   AndSentWithinAnRfidMessageWithResult(ReadWriteResult_Success);
-   BypassPlugShouldBe(SET);
-}
-
-TEST(RfidCommunicationController, ShouldClearBypassPlugWhenANonBypassPlugIsInstalledWhileInAllDoorsClosedReadState)
-{
-   GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState();
-   BypassPlugStateIs(SET);
-   BypassPlugShouldBe(SET);
-
-   WhenANewRfidFilterIsInstalled();
-   BypassPlugShouldBe(CLEAR);
+   NewFilterInstalledSignalShouldBe(0);
 }
 
 TEST(RfidCommunicationController, ShouldClearBadWriteCountWhenANewFilterIsInstalledWhileInAllDoorsClosedReadState)
@@ -1138,42 +772,6 @@ TEST(RfidCommunicationController, ShouldClearBadWriteCountWhenANewFilterIsInstal
 
    WhenANewRfidFilterIsInstalled();
    RfidFilterBadWriteCountShouldBe(0);
-}
-
-TEST(RfidCommunicationController, ShouldSendNewFilterInstalledSignalAndCopyCalendarAndVolumeUsageToMainboardWhenANewFilterIsDetectedWhileInAllDoorsClosedReadState)
-{
-   GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState();
-   NewFilterInstalledSignalShouldBe(0);
-   CalendarUsageOnMainboardShouldBe(0);
-   VolumeUsageOnMainboardShouldBe(0);
-
-   WhenCalendarUsageOnRfidBoardIs(SomeCalendarUsage);
-   WhenVolumeUsageOnRfidBoardIs(SomeVolumeUsage);
-   WhenANewRfidFilterIsInstalled();
-   NewFilterInstalledSignalShouldBe(1);
-   CalendarUsageOnMainboardShouldBe(SomeCalendarUsage);
-   VolumeUsageOnMainboardShouldBe(SomeVolumeUsage);
-}
-
-TEST(RfidCommunicationController, ShouldCopyRfidFilterUnitSerialNumberToPreviousSerialNumberWhenANewFilterIsDetectedAndTheSerialNumberIsDifferentThanTheUnitSerialNumberWhileInAllDoorsClosedReadState)
-{
-   GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
-   GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState();
-
-   RfidFilterPreviousUnitSerialNumberShouldBe(BlankSerialNumber);
-
-   WhenANewRfidFilterIsInstalled();
-   RfidFilterPreviousUnitSerialNumberShouldBe(SomePreviousUnitSerialNumber);
-}
-
-TEST(RfidCommunicationController, ShouldIncrementNumberOfUnitsFilterHasBeenOnWhenANewFilterIsDetectedAndTheSerialNumberIsDifferentThanTheUnitSerialNumberWhileInAllDoorsClosedReadState)
-{
-   GivenRfidFilterUnitSerialNumberRfidBoardIs(SomePreviousUnitSerialNumber);
-   GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState();
-   RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(0);
-
-   WhenANewRfidFilterIsInstalled();
-   RfidFilterNumberOfUnitsFilterHasBeenOnShouldBe(1);
 }
 
 TEST(RfidCommunicationController, ShouldTransitionToFreshFoodDoorOpenStateWhenDoorIsOpenedInAllDoorsClosedWriteState)
@@ -1486,4 +1084,31 @@ TEST(RfidCommunicationController, ShouldStopReadRequestTimerWhenTransitioningToD
 
    NothingShouldHappen();
    After(1);
+}
+
+TEST(RfidCommunicationController, ShouldIncrementNewFilterInstalledSignalWhenANewFilterIsInstalledWhileInFreshFoodDoorOpenState)
+{
+   GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
+   NewFilterInstalledSignalShouldBe(0);
+
+   WhenANewRfidFilterIsInstalled();
+   NewFilterInstalledSignalShouldBe(1);
+}
+
+TEST(RfidCommunicationController, ShouldIncrementNewFilterInstalledSignalWhenANewFilterIsInstalledWhileInAllFreshFoodDoorsJustClosedState)
+{
+   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
+   NewFilterInstalledSignalShouldBe(0);
+
+   WhenANewRfidFilterIsInstalled();
+   NewFilterInstalledSignalShouldBe(1);
+}
+
+TEST(RfidCommunicationController, ShouldIncrementNewFilterInstalledSignalWhenANewFilterIsInstalledWhileInAllDoorsClosedReadState)
+{
+   GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState();
+   NewFilterInstalledSignalShouldBe(0);
+
+   WhenANewRfidFilterIsInstalled();
+   NewFilterInstalledSignalShouldBe(1);
 }

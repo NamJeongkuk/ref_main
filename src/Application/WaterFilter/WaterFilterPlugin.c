@@ -35,6 +35,38 @@ static const DispensingDisablerConfig_t dispensingDisablerConfig = {
    .iceMakerFillInhibitedReasonBitmapErd = Erd_IceMakerFillInhibitedReason
 };
 
+static const NewFilterInstalledHandlerReadErds_t newFilterInstalledHandlerReadErdsConfig = {
+   .rfidFilterUidRfidBoardErd = Erd_RfidFilterUid_RfidBoard,
+   .rfidFilterWaterVolumeUsageInOuncesX100RfidBoardErd = Erd_RfidFilterWaterVolumeUsageInOuncesX100_RfidBoard,
+   .rfidFilterCalendarUsageInSecondsRfidBoardErd = Erd_RfidFilterCalendarUsageInSeconds_RfidBoard,
+   .rfidFilterLastTwelveMonthsOfWaterUsageInGallonsRfidBoardErd = Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons_RfidBoard,
+   .rfidFilterNumberOfUnitsRfidFilterHasBeenOnRfidBoardErd = Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn_RfidBoard,
+   .rfidFilterUnitSerialNumberRfidBoardErd = Erd_RfidFilterUnitSerialNumber_RfidBoard
+};
+
+static const NewFilterInstalledHandlerWriteErds_t newFilterInstalledHandlerWriteErdsConfig = {
+   .rfidFilterUidErd = Erd_RfidFilterUid,
+   .totalWaterVolumeUsageInOuncesX100Erd = Erd_TotalWaterVolumeUsageInOuncesX100,
+   .eepromTotalWaterVolumeUsageInOuncesX100Erd = Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100,
+   .rfidFilterCalendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
+   .eepromWaterFilterCalendarUsageInSecondsErd = Erd_Eeprom_WaterFilterCalendarUsageInSeconds,
+   .rfidFilterLastTwelveMonthsOfWaterUsageInGallonsErd = Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons,
+   .rfidFilterNumberOfUnitsFilterHasBeenOnErd = Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn,
+   .rfidFilterPreviousUnitSerialNumberErd = Erd_RfidFilterPreviousUnitSerialNumber
+};
+
+static const NewFilterInstalledHandlerConfig_t newFilterInstalledHandlerConfig = {
+   .readErds = &newFilterInstalledHandlerReadErdsConfig,
+   .writeErds = &newFilterInstalledHandlerWriteErdsConfig,
+   .newFilterInstalledSignalErd = Erd_NewFilterInstalledSignal,
+   .rfidBoardInSystemErd = Erd_RfidBoardInSystem,
+   .rfidFilterIdentifierRfidBoardErd = Erd_RfidFilterIdentifier_RfidBoard,
+   .rfidFilterLeakDetectedFaultErd = Erd_RfidBoardLeakDetectedFault,
+   .rfidFilterBlockedTagFaultErd = Erd_RfidBoardBlockedTagFault,
+   .bypassPlugInstalledErd = Erd_BypassPlugInstalled,
+   .rfidFilterUnitSerialNumberErd = Erd_RfidFilterUnitSerialNumber
+};
+
 void WaterFilterPlugin_Init(
    WaterFilterPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -74,4 +106,9 @@ void WaterFilterPlugin_Init(
       &instance->_private.dispensingDisabler,
       dataModel,
       &dispensingDisablerConfig);
+
+   NewFilterInstalledHandler_Init(
+      &instance->_private.newFilterInstalledHandler,
+      dataModel,
+      &newFilterInstalledHandlerConfig);
 }

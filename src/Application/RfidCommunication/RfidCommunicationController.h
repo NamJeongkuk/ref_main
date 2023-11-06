@@ -23,19 +23,10 @@ typedef struct
    Erd_t allFreshFoodDoorsAreClosedErd; // bool
    Erd_t rfidFilterUidRfidBoardErd; // RfidUid_t
    Erd_t rfidFilterUidErd; // RfidUid_t
-   Erd_t rfidFilterUnitSerialNumberRfidBoardErd; // UnitSerialNumber_t
-   Erd_t rfidFilterUnitSerialNumberErd; // UnitSerialNumber_t
-   Erd_t rfidFilterCalendarUsageInSecondsRfidBoardErd; // CalendarUsageInSeconds_t
-   Erd_t rfidFilterCalendarUsageInSecondsErd; // CalendarUsageInSeconds_t
-   Erd_t eepromWaterFilterCalendarUsageInSecondsErd; // CalendarUsageInSeconds_t
-   Erd_t rfidFilterWaterVolumeUsageInOuncesX100RfidBoardErd; // VolumeInOuncesX100_t
-   Erd_t totalWaterVolumeUsageInOuncesX100Erd; // VolumeInOuncesX100_t
-   Erd_t eepromTotalWaterVolumeUsageInOuncesX100Erd; // VolumeInOuncesX100_t
    Erd_t rfidFilterStatusRfidBoardErd; // FilterStatusRfidBoard_t
    Erd_t rfidFilterIdentifierErd; // RfidFilterIdentifier_t
    Erd_t demoModeEnableErd; // bool
    Erd_t waterFilterTypeErd; // WaterFilterType_t
-   Erd_t bypassPlugInstalledErd; // bool
    Erd_t rfidFilterBadReadCountErd; // uint8_t
    Erd_t rfidFilterBadWriteCountErd; // uint8_t
    Erd_t rfidFilterHardwareFailureCountErd; // uint8_t
@@ -43,8 +34,6 @@ typedef struct
    Erd_t rfidFilterBlockedCountErd; // uint8_t
    Erd_t rfidFilterDataRequestErd; // ReadWriteRequest_t
    Erd_t newFilterInstalledSignalErd; // Signal_t
-   Erd_t rfidFilterNumberOfUnitsFilterHasBeenOnErd; // RfidFilterNumberOfUnitsFilterHasBeenOn_t
-   Erd_t rfidFilterPreviousUnitSerialNumberErd; // UnitSerialNumber_t
 } RfidCommunicationControllerConfig_t;
 
 typedef struct
