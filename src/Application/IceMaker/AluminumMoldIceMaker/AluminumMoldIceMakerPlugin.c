@@ -47,8 +47,7 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .aluminumMoldIceMakerTestRequestErd = Erd_AluminumMoldIceMakerTestRequest,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
    .coolingSystemOffStatusErd = Erd_CoolingOffStatus,
-   .dispensingInhibitedErd = Erd_DispensingInhibitedReason,
-   .iceMakerPresenceErd = Erd_IceMaker1Present
+   .dispensingInhibitedErd = Erd_DispensingInhibitedReason
 };
 
 static const FeelerArmMonitorConfig_t feelerArmMonitorConfig = {
@@ -164,6 +163,8 @@ static const SensorFilteringConfig_t moldThermistorConfig = {
    .sensorUnfilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMakerMold_UnfilteredTemperatureInDegFx100,
    .sensorFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100,
    .sensorIsValidErd = Erd_AluminumMoldIceMakerMoldThermistorIsValid,
+   .sensorIsInvalidFaultErd = Erd_IceMaker1ThermistorIsInvalidFault,
+   .sensorDiscoveredErd = Erd_IceMaker1Present,
    .timerModuleErd = Erd_TimerModule
 };
 

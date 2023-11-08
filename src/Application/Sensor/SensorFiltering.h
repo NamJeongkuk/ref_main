@@ -4,6 +4,14 @@
  * slew filter, EWMA filter, and a fallback filter and outputs
  * a filtered value in degFx100.
  *
+ * If sensor becomes valid after being invalid on init and
+ * it is discoverable, it sets the sensor as discovered.
+ *
+ * If sensor is not discoverable, it sets the sensor is invalid
+ * fault if sensor is invalid and clears if sensor is valid but
+ * if the sensor is discoverable, it must have been discovered before
+ * setting/clearing the fault.
+ *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
@@ -25,6 +33,8 @@ typedef struct
    Erd_t sensorUnfilteredTemperatureInDegFx100Erd;
    Erd_t sensorFilteredTemperatureInDegFx100Erd;
    Erd_t sensorIsValidErd;
+   Erd_t sensorIsInvalidFaultErd;
+   Erd_t sensorDiscoveredErd;
    Erd_t timerModuleErd;
 } SensorFilteringConfig_t;
 

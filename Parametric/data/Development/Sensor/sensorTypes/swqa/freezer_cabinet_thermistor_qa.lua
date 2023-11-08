@@ -8,5 +8,6 @@ return sensor_type({
   slew_rate_filter_slew_rate_in_degfx100_per_second = 10,
   fallback_good_reading_counter_max = 100,
   fallback_bad_reading_counter_max = 100,
-  enable_external_sensor_check = false
+  enable_external_sensor_check = false,
+  discoverable = false
 })

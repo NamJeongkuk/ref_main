@@ -1426,6 +1426,13 @@ enum
    ENTRY(Erd_AutofillTargetRemovedFault,                    0xF72B, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_AutofillTargetRemovedFault) \
    ENTRY(Erd_AutofillEmiDetectedFault,                      0xF72C, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_AutofillEmiDetectedFault) \
    ENTRY(Erd_RfidBoardBlockedTagFault,                      0xF72D, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_RfidBoardBlockedTagFault) \
+   ENTRY(Erd_FreshFoodThermistorIsInvalidFault,             0xF72E, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_FreshFoodThermistorIsInvalid) \
+   ENTRY(Erd_FreezerThermistorIsInvalidFault,               0xF72F, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_FreezerThermistorIsInvalid) \
+   ENTRY(Erd_FreezerEvaporatorThermistorIsInvalidFault,     0xF730, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_FreezerEvaporatorThermistorIsInvalid) \
+   ENTRY(Erd_AmbientThermistorIsInvalidFault,               0xF731, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_AmbientThermistorIsInvalid) \
+   ENTRY(Erd_AmbientHumiditySensorIsInvalidFault,           0xF732, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_AmbientHumiditySensorIsInvalid) \
+   ENTRY(Erd_IceMaker0ThermistorIsInvalidFault,             0xF733, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_IceMaker0ThermistorIsInvalid) \
+   ENTRY(Erd_IceMaker1ThermistorIsInvalidFault,             0xF734, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_IceMaker1ThermistorIsInvalid) \
    \
    ENTRY(Erd_FactoryModeEnableRequestInMinutes,             0xF801, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
@@ -1460,6 +1467,12 @@ enum
    ENTRY(Erd_AndroidSbcBoardInSystem,                       0xFB89, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_InternalTemperatureUiInSystem,                 0xFB8A, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_BroadcastResetRequestSignal,                   0xFB8B, Signal_t,                                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   \
+   ENTRY(Erd_FreshFoodThermistorDiscovered,                 0xFB90, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
+   ENTRY(Erd_FreezerThermistorDiscovered,                   0xFB91, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
+   ENTRY(Erd_FreezerEvaporatorThermistorDiscovered,         0xFB92, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
+   ENTRY(Erd_AmbientThermistorDiscovered,                   0xFB93, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
+   ENTRY(Erd_AmbientHumiditySensorDiscovered,               0xFB94, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    \
    ENTRY(Erd_NvReservedProtected,                           0xFCFA, uint8_t,                                            Swap_No,  Io_None, Sub_N,  NvProtected,           NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NvReservedUnitSetting,                         0xFCFB, uint8_t,                                            Swap_No,  Io_None, Sub_N,  NvUnitSetting,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \

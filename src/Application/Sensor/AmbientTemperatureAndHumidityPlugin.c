@@ -99,6 +99,8 @@ static const SensorFilteringConfig_t temperatureSensorFilteringConfig = {
    .sensorUnfilteredTemperatureInDegFx100Erd = Erd_Ambient_UnfilteredTemperatureInDegFx100,
    .sensorFilteredTemperatureInDegFx100Erd = Erd_Ambient_FilteredInternalTemperatureInDegFx100,
    .sensorIsValidErd = Erd_Ambient_ThermistorIsValid,
+   .sensorIsInvalidFaultErd = Erd_AmbientThermistorIsInvalidFault,
+   .sensorDiscoveredErd = Erd_AmbientThermistorDiscovered,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -107,6 +109,8 @@ static const SensorFilteringConfig_t humiditySensorFilteringConfig = {
    .sensorUnfilteredTemperatureInDegFx100Erd = Erd_AmbientHumidity_UnfilteredRelativeHumidityPercentx100,
    .sensorFilteredTemperatureInDegFx100Erd = Erd_AmbientHumidity_FilteredInternalRelativeHumidityPercentx100,
    .sensorIsValidErd = Erd_Ambient_HumiditySensorIsValid,
+   .sensorIsInvalidFaultErd = Erd_AmbientHumiditySensorIsInvalidFault,
+   .sensorDiscoveredErd = Erd_AmbientHumiditySensorDiscovered,
    .timerModuleErd = Erd_TimerModule
 };
 

@@ -13,6 +13,13 @@
 enum
 {
    FaultId_Unknown = 0,
+   FaultId_FreshFoodThermistorIsInvalid = 1,
+   FaultId_FreezerThermistorIsInvalid = 3,
+   FaultId_FreezerEvaporatorThermistorIsInvalid = 4,
+   FaultId_AmbientThermistorIsInvalid = 8,
+   FaultId_AmbientHumiditySensorIsInvalid = 9,
+   FaultId_IceMaker0ThermistorIsInvalid = 10,
+   FaultId_IceMaker1ThermistorIsInvalid = 12,
    FaultId_DoorBoardCommunicationFault = 523,
    FaultId_AutofillCouplingFault = 721,
    FaultId_DispenserUiCommunicationFault = 733,

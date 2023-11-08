@@ -47,6 +47,7 @@ static const SensorDataSensorType_t ambientSensorDataWithCheck = {
    .goodReadingCounterMax = 0,
    .badReadingCounterMax = 0,
    .enableExternalSensorCheck = true,
+   .discoverable = false
 };
 
 static const SensorDataSensorType_t ambientSensorDataWithoutCheck = {
@@ -59,6 +60,7 @@ static const SensorDataSensorType_t ambientSensorDataWithoutCheck = {
    .goodReadingCounterMax = 0,
    .badReadingCounterMax = 0,
    .enableExternalSensorCheck = false,
+   .discoverable = false
 };
 
 TEST_GROUP(ExternalFilteredSensorResolver)

@@ -78,8 +78,7 @@ static const TwistTrayIceMakerConfiguration_t config = {
    .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
    .leftSideFreezerDoorStatusResolvedErd = Erd_LeftSideFreezerDoorStatusResolved,
-   .dispensingInhibitedErd = Erd_DispensingInhibitedReason,
-   .iceMakerPresenceErd = Erd_IceMaker0Present
+   .dispensingInhibitedErd = Erd_DispensingInhibitedReason
 };
 
 static void OnDataModelChange(void *context, const void *_args)
@@ -805,19 +804,6 @@ TEST_GROUP(TwistTrayIceMaker)
    void GivenDispensingIsNotInhibitedByRfid()
    {
       WhenDispensingIsNotInhibitedByRfid();
-   }
-
-   void GivenIceMakerPresenceErdIs(bool state)
-   {
-      DataModel_Write(dataModel, Erd_IceMaker0Present, &state);
-   }
-
-   void IceMakerPresenceErdShouldBe(bool expected)
-   {
-      bool actual;
-      DataModel_Read(dataModel, Erd_IceMaker0Present, &actual);
-
-      CHECK_EQUAL(expected, actual);
    }
 };
 
@@ -2656,28 +2642,4 @@ TEST(TwistTrayIceMaker, ShouldTransitionToThermistorFaultWhenBucketIsFullWhileIc
    FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
    WhenTheMotorActionResultIs(BucketWasFull);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
-}
-
-TEST(TwistTrayIceMaker, ShouldSetIceMakerPresenceErdWhenIceMakerThermistorIsValidInThermistorFaultState)
-{
-   GivenIceMakerPresenceErdIs(CLEAR);
-   GivenTheIceMakerThermistorIsInvalid();
-   GivenTheIceMakerIsEnabled();
-   GivenTheModuleIsInitialized();
-   mock().disable();
-   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_ThermistorFault);
-
-   WhenTheIceMakerThermistorIsValid();
-   IceMakerPresenceErdShouldBe(SET);
-}
-
-TEST(TwistTrayIceMaker, ShouldSetIceMakerPresenceErdWhenIceMakerThermistorIsValidOnInit)
-{
-   GivenIceMakerPresenceErdIs(CLEAR);
-   GivenTheIceMakerThermistorIsValid();
-   GivenTheIceMakerIsEnabled();
-   mock().disable();
-   GivenTheModuleIsInitialized();
-
-   IceMakerPresenceErdShouldBe(SET);
 }

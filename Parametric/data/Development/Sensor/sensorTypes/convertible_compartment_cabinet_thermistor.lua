@@ -10,5 +10,6 @@ return convertible_compartment_sensor_type({
   slew_rate_filter_enabled = true,
   slew_rate_filter_slew_rate_in_degfx100_per_second = 10,
   fallback_good_reading_counter_max = 100,
-  fallback_bad_reading_counter_max = 100
+  fallback_bad_reading_counter_max = 100,
+  discoverable = false
 })

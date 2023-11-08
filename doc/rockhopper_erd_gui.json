@@ -802,6 +802,20 @@
         },
         {
           "namespace": "mb",
+          "displayName": "F001 Fresh Food Thermistor Is Invalid",
+          "name": "Erd_FreshFoodThermistorIsInvalidFault",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Thermistor Has Been Discovered",
+          "name": "Erd_FreshFoodThermistorDiscovered",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Freezer Thermistor Is Valid Override Value",
           "name": "Erd_FreezerThermistor_IsValidOverrideValue",
           "read": true,
@@ -860,6 +874,20 @@
           "namespace": "mb",
           "displayName": "Freezer FilteredTemp Resolved",
           "name": "Erd_Freezer_FilteredTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F003 Freezer Thermistor Is Invalid",
+          "name": "Erd_FreezerThermistorIsInvalidFault",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Thermistor Has Been Discovered",
+          "name": "Erd_FreezerThermistorDiscovered",
           "read": true,
           "write": true
         },
@@ -930,6 +958,20 @@
           "namespace": "mb",
           "displayName": "FreezerEvap FilteredTemp Resolved",
           "name": "Erd_FreezerEvap_FilteredTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F004 Freezer Evaporator Thermistor Is Invalid",
+          "name": "Erd_FreezerEvaporatorThermistorIsInvalidFault",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Evaporator Thermistor Has Been Discovered",
+          "name": "Erd_FreezerEvaporatorThermistorDiscovered",
           "read": true,
           "write": true
         },
@@ -1089,6 +1131,20 @@
         },
         {
           "namespace": "mb",
+          "displayName": "F008 Ambient Thermistor Is Invalid",
+          "name": "Erd_AmbientThermistorIsInvalidFault",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ambient Thermistor Has Been Discovered",
+          "name": "Erd_AmbientThermistorDiscovered",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Convertible Compartment Evap Thermistor AdcCount",
           "name": "Erd_ConvertibleCompartmentEvapThermistor_AdcCount",
           "read": true,
@@ -1138,6 +1194,20 @@
         },
         {
           "namespace": "mb",
+          "displayName": "F012 Ice Maker 1 Thermistor Is Invalid",
+          "name": "Erd_IceMaker1ThermistorIsInvalidFault",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Maker 1 Has Been Discovered/Present",
+          "name": "Erd_IceMaker1Present",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Aluminum Mold Freeze Integration Count",
           "name": "Erd_AluminumMoldFreezeIntegrationCount",
           "read": true,
@@ -1173,6 +1243,27 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker ADC Count",
+          "name": "Erd_TwistTrayIceMakerThermistor_AdcCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Unfiltered Temperature in DegFx100",
+          "name": "Erd_TwistTrayIceMaker_UnfilteredTemperatureInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Filtered Temperature in DegFx100",
+          "name": "Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Twist Tray Ice Maker Filtered Temperature Override Request",
           "name": "Erd_TwistTrayIceMaker_FilteredTemperatureOverrideRequest",
           "read": true,
@@ -1191,6 +1282,20 @@
           "name": "Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100",
           "read": true,
           "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F010 Ice Maker 0 Thermistor Is Invalid",
+          "name": "Erd_IceMaker0ThermistorIsInvalidFault",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Maker 0 Has Been Discovered/Present",
+          "name": "Erd_IceMaker0Present",
+          "read": true,
+          "write": true
         }
       ]
     },
@@ -1523,46 +1628,95 @@
       ]
     },
     {
-      "title": "FaultWrapper",
+      "title": "Faults",
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Dispenser UI Comm Fault",
+          "displayName": "F001 Fresh Food Thermistor Is Invalid",
+          "name": "Erd_FreshFoodThermistorIsInvalidFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F003 Freezer Thermistor Is Invalid",
+          "name": "Erd_FreezerThermistorIsInvalidFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F004 Freezer Evaporator Thermistor Is Invalid",
+          "name": "Erd_FreezerEvaporatorThermistorIsInvalidFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F008 Ambient Thermistor Is Invalid",
+          "name": "Erd_AmbientThermistorIsInvalidFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F009 Ambient Humidity Is Invalid",
+          "name": "Erd_AmbientHumiditySensorIsInvalidFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F010 Ice Maker 0 Thermistor Is Invalid",
+          "name": "Erd_IceMaker0ThermistorIsInvalidFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F012 Ice Maker 1 Thermistor Is Invalid",
+          "name": "Erd_IceMaker1ThermistorIsInvalidFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F733 Dispenser UI Comm Fault",
           "name": "Erd_DispenserUiCommunicationFault",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "RFID Board Comm Fault",
+          "displayName": "F801 RFID Board Comm Fault",
           "name": "Erd_RfidBoardCommunicationFault",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Android SBC Comm Fault",
+          "displayName": "F756 Android SBC Comm Fault",
           "name": "Erd_AndroidSbcCommunicationFault",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Door Board Comm Fault",
+          "displayName": "F523 Door Board Comm Fault",
           "name": "Erd_DoorBoardCommunicationFault",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Combo Module Comm Fault",
+          "displayName": "F757 Combo Module Comm Fault",
           "name": "Erd_EmbeddedWifiCommunicationFault",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Internal UI Board Comm Fault",
+          "displayName": "F758 Internal UI Board Comm Fault",
           "name": "Erd_InternalTemperatureUiCommunicationFault",
           "read": true,
           "write": false

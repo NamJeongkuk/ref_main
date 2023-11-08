@@ -34,6 +34,8 @@ static const SensorFilteringConfig_t sensorFilterConfig = {
    .sensorUnfilteredTemperatureInDegFx100Erd = Erd_TwistTrayIceMaker_UnfilteredTemperatureInDegFx100,
    .sensorFilteredTemperatureInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100,
    .sensorIsValidErd = Erd_TwistTrayIceMaker_ThermistorIsValid,
+   .sensorIsInvalidFaultErd = Erd_IceMaker0ThermistorIsInvalidFault,
+   .sensorDiscoveredErd = Erd_IceMaker0Present,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -168,8 +170,7 @@ static const TwistTrayIceMakerConfiguration_t twistTrayIceMakerConfiguration = {
    .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
    .leftSideFreezerDoorStatusResolvedErd = Erd_LeftSideFreezerDoorStatusResolved,
-   .dispensingInhibitedErd = Erd_DispensingInhibitedReason,
-   .iceMakerPresenceErd = Erd_IceMaker0Present
+   .dispensingInhibitedErd = Erd_DispensingInhibitedReason
 };
 
 void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataModel_t *dataModel)

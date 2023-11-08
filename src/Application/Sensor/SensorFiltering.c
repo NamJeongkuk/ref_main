@@ -8,6 +8,7 @@
 #include "SensorFiltering.h"
 #include "PersonalityParametricData.h"
 #include "DataModelErdPointerAccess.h"
+#include "Constants_Binary.h"
 #include <stdint.h>
 
 static int16_t UnfilteredTemperature(SensorFiltering_t *instance)
@@ -25,21 +26,63 @@ static int16_t UnfilteredTemperature(SensorFiltering_t *instance)
    return (int16_t)mappedAdcValue;
 }
 
-static bool FallbackFilterHasBeenSeeded(SensorFiltering_t *instance)
+static Filter_Fallback_Data_t FallbackFilterValue(SensorFiltering_t *instance)
 {
-   I_Input_t *readyInput = Filter_GetReadyInput(&instance->_private.fallbackFilter.interface);
-   bool hasBeenSeeded;
-   Input_Read(readyInput, &hasBeenSeeded);
-
-   return hasBeenSeeded;
-}
-
-static int16_t FallbackFilterValue(SensorFiltering_t *instance)
-{
-   int16_t value;
+   Filter_Fallback_Data_t value;
    Filter_Read(&instance->_private.fallbackFilter.interface, &value);
 
    return value;
+}
+
+static bool SensorIsDiscovered(SensorFiltering_t *instance)
+{
+   bool sensorIsDiscovered;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->sensorDiscoveredErd,
+      &sensorIsDiscovered);
+
+   return sensorIsDiscovered;
+}
+
+static void SetSensorIsValidTo(SensorFiltering_t *instance, bool state)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->sensorIsValidErd,
+      &state);
+}
+
+static void SetSensorIsInvalidFaultTo(SensorFiltering_t *instance, bool state)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->sensorIsInvalidFaultErd,
+      &state);
+}
+
+static void SetSensorDiscoveredTo(SensorFiltering_t *instance, bool state)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->sensorDiscoveredErd,
+      &state);
+}
+
+static void SetUnfilteredSensorValueTo(SensorFiltering_t *instance, int16_t value)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->sensorUnfilteredTemperatureInDegFx100Erd,
+      &value);
+}
+
+static void SetFilteredSensorValueTo(SensorFiltering_t *instance, int16_t value)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->sensorFilteredTemperatureInDegFx100Erd,
+      &value);
 }
 
 static void UpdateSensorValues(void *context)
@@ -47,27 +90,23 @@ static void UpdateSensorValues(void *context)
    SensorFiltering_t *instance = context;
 
    int16_t unfilteredTemperature = UnfilteredTemperature(instance);
+   SetUnfilteredSensorValueTo(instance, unfilteredTemperature);
 
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->sensorUnfilteredTemperatureInDegFx100Erd,
-      &unfilteredTemperature);
+   Filter_Feed(&instance->_private.fallbackFilter.interface, &unfilteredTemperature);
 
-   if(!FallbackFilterHasBeenSeeded(instance))
+   Filter_Fallback_Data_t fallbackFilterValue = FallbackFilterValue(instance);
+   SetSensorIsValidTo(instance, fallbackFilterValue.isValid);
+   SetFilteredSensorValueTo(instance, fallbackFilterValue.filteredValue);
+
+   if(fallbackFilterValue.isValid && instance->_private.sensorParametricData->discoverable)
    {
-      Filter_Seed(&instance->_private.fallbackFilter.interface, &unfilteredTemperature);
-   }
-   else
-   {
-      Filter_Feed(&instance->_private.fallbackFilter.interface, &unfilteredTemperature);
+      SetSensorDiscoveredTo(instance, SET);
    }
 
-   int16_t fallbackFilterValue = FallbackFilterValue(instance);
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->sensorFilteredTemperatureInDegFx100Erd,
-      &fallbackFilterValue);
+   if((SensorIsDiscovered(instance)) || !instance->_private.sensorParametricData->discoverable)
+   {
+      SetSensorIsInvalidFaultTo(instance, !fallbackFilterValue.isValid);
+   }
 }
 
 void SensorFiltering_Init(
@@ -112,8 +151,7 @@ void SensorFiltering_Init(
          instance->_private.sensorParametricData->lookupTable->mappings[instance->_private.sensorParametricData->lookupTable->mappingCount - 1].y,
          instance->_private.sensorParametricData->fallbackValueDegFx100,
          instance->_private.sensorParametricData->goodReadingCounterMax,
-         instance->_private.sensorParametricData->badReadingCounterMax,
-         instance->_private.config->sensorIsValidErd);
+         instance->_private.sensorParametricData->badReadingCounterMax);
    }
    else
    {
@@ -124,25 +162,30 @@ void SensorFiltering_Init(
          instance->_private.sensorParametricData->lookupTable->mappings[instance->_private.sensorParametricData->lookupTable->mappingCount - 1].y,
          instance->_private.sensorParametricData->fallbackValueDegFx100,
          instance->_private.sensorParametricData->goodReadingCounterMax,
-         instance->_private.sensorParametricData->badReadingCounterMax,
-         instance->_private.config->sensorIsValidErd);
+         instance->_private.sensorParametricData->badReadingCounterMax);
    }
 
    int16_t unfilteredTemperature = UnfilteredTemperature(instance);
-
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->sensorUnfilteredTemperatureInDegFx100Erd,
-      &unfilteredTemperature);
+   SetUnfilteredSensorValueTo(instance, unfilteredTemperature);
 
    Filter_Seed(&instance->_private.fallbackFilter.interface, &unfilteredTemperature);
 
-   int16_t fallbackFilterValue = FallbackFilterValue(instance);
+   Filter_Fallback_Data_t fallbackFilterValue = FallbackFilterValue(instance);
+   SetFilteredSensorValueTo(instance, fallbackFilterValue.filteredValue);
 
-   DataModel_Write(
-      dataModel,
-      instance->_private.config->sensorFilteredTemperatureInDegFx100Erd,
-      &fallbackFilterValue);
+   if(fallbackFilterValue.isValid)
+   {
+      if(sensorParametricData->discoverable)
+      {
+         SetSensorDiscoveredTo(instance, SET);
+      }
+      SetSensorIsValidTo(instance, SET);
+      SetSensorIsInvalidFaultTo(instance, CLEAR);
+   }
+   else
+   {
+      SetSensorIsValidTo(instance, CLEAR);
+   }
 
    TimerModule_StartPeriodic(
       DataModelErdPointerAccess_GetTimerModule(

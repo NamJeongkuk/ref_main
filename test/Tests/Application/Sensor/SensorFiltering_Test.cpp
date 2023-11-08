@@ -12,18 +12,19 @@ extern "C"
 #include "DataModelErdPointerAccess.h"
 #include "PersonalityParametricData.h"
 #include "TddPersonality.h"
+#include "Constants_Binary.h"
 }
 
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockSupport.h"
-#include "DataModel_TestDouble.h"
-#include "TimerModule_TestDouble.h"
+#include "ReferDataModel_TestDouble.h"
 #include "PersonalityParametricDataTestDouble.h"
 #include "uassert_test.h"
 
 enum
 {
    InvalidAdcCount = 5375,
+   InvalidAdcCount2 = 5374,
    InvalidTemperature = 30000,
    ValidAdcCount1 = 22656,
    MappedValidTemperature1 = 1314,
@@ -35,67 +36,48 @@ enum
    MappedValidTemperature4 = 2145,
    ValidAdcCount5 = 30336,
    MappedValidTemperature5 = 2977,
-
-   Erd_AmbientThermistor_AdcCount = 0xF000,
-   Erd_Ambient_UnfilteredTemperature,
-   Erd_Ambient_FilteredTemperature,
-   Erd_Ambient_ThermistorIsValid,
-   Erd_TimerModule,
-   Erd_FreezerEvapThermistor_AdcCount,
-   Erd_FreezerEvap_UnfilteredTemperature,
-   Erd_FreezerEvap_FilteredTemperature,
-   Erd_FreezerEvaporatorThermistorIsValid,
-};
-
-static const DataModel_TestDoubleConfigurationEntry_t erdsEntries[] = {
-   { Erd_AmbientThermistor_AdcCount, sizeof(AdcCounts_t) },
-   { Erd_Ambient_UnfilteredTemperature, sizeof(TemperatureDegFx100_t) },
-   { Erd_Ambient_FilteredTemperature, sizeof(TemperatureDegFx100_t) },
-   { Erd_Ambient_ThermistorIsValid, sizeof(bool) },
-   { Erd_TimerModule, sizeof(TimerModule_t *) },
-   { Erd_FreezerEvapThermistor_AdcCount, sizeof(AdcCounts_t) },
-   { Erd_FreezerEvap_UnfilteredTemperature, sizeof(TemperatureDegFx100_t) },
-   { Erd_FreezerEvap_FilteredTemperature, sizeof(TemperatureDegFx100_t) },
-   { Erd_FreezerEvaporatorThermistorIsValid, sizeof(bool) },
 };
 
 static const SensorFilteringConfig_t sensorConfigWithSlewRateFilterEnabled = {
    .sensorAdcCountErd = Erd_AmbientThermistor_AdcCount,
-   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_Ambient_UnfilteredTemperature,
-   .sensorFilteredTemperatureInDegFx100Erd = Erd_Ambient_FilteredTemperature,
+   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_Ambient_UnfilteredTemperatureInDegFx100,
+   .sensorFilteredTemperatureInDegFx100Erd = Erd_Ambient_FilteredInternalTemperatureInDegFx100,
    .sensorIsValidErd = Erd_Ambient_ThermistorIsValid,
+   .sensorIsInvalidFaultErd = Erd_AmbientThermistorIsInvalidFault,
+   .sensorDiscoveredErd = Erd_AmbientThermistorDiscovered,
    .timerModuleErd = Erd_TimerModule
 };
 
 static const SensorFilteringConfig_t sensorConfigWithSlewRateDisabled = {
    .sensorAdcCountErd = Erd_FreezerEvapThermistor_AdcCount,
-   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_FreezerEvap_UnfilteredTemperature,
-   .sensorFilteredTemperatureInDegFx100Erd = Erd_FreezerEvap_FilteredTemperature,
+   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_FreezerEvap_UnfilteredTemperatureInDegFx100,
+   .sensorFilteredTemperatureInDegFx100Erd = Erd_FreezerEvap_FilteredTemperatureInDegFx100,
    .sensorIsValidErd = Erd_FreezerEvaporatorThermistorIsValid,
+   .sensorIsInvalidFaultErd = Erd_FreezerEvaporatorThermistorIsInvalidFault,
+   .sensorDiscoveredErd = Erd_FreezerEvaporatorThermistorDiscovered,
    .timerModuleErd = Erd_TimerModule
 };
 
 TEST_GROUP(SensorFiltering_SlewEnabled)
 {
-   DataModel_TestDouble_t dataModelDouble;
+   ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
-   TimerModule_TestDouble_t timerModuleTestDouble;
+   TimerModule_TestDouble_t *timerModuleTestDouble;
    SensorFiltering_t instance;
    const SensorData_t *sensorData;
 
    void setup()
    {
-      DataModel_TestDouble_Init(&dataModelDouble, erdsEntries, NUM_ELEMENTS(erdsEntries));
+      ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
-      TimerModule_TestDouble_Init(&timerModuleTestDouble);
-      DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble.timerModule);
+      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       sensorData = ((PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(TddPersonality_DevelopmentSingleEvaporator))->sensorData;
    }
 
-   void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
+   void After(TimerTicks_t ticks)
    {
-      TimerModule_TestDouble_ElapseTime(&timerModuleTestDouble, ticks, ticksToElapseAtATime);
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
    }
 
    void GivenSensorWithSlewRateFilterEnabledIsInitialized()
@@ -108,6 +90,16 @@ TEST_GROUP(SensorFiltering_SlewEnabled)
          sensorData->periodicUpdateRateInMs);
    }
 
+   void GivenSensorIsDiscoverableInParametric()
+   {
+      sensorData->ambientThermistor->discoverable = true;
+   }
+
+   void GivenSensorIsNotDiscoverableInParametric()
+   {
+      sensorData->ambientThermistor->discoverable = false;
+   }
+
    void GivenInitialAdcCountsAre(AdcCounts_t counts)
    {
       DataModel_Write(dataModel, Erd_AmbientThermistor_AdcCount, &counts);
@@ -116,7 +108,7 @@ TEST_GROUP(SensorFiltering_SlewEnabled)
    void FilteredTemperatureShouldBe(TemperatureDegFx100_t expected)
    {
       TemperatureDegFx100_t actual;
-      DataModel_Read(dataModel, Erd_Ambient_FilteredTemperature, &actual);
+      DataModel_Read(dataModel, Erd_Ambient_FilteredInternalTemperatureInDegFx100, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -129,7 +121,7 @@ TEST_GROUP(SensorFiltering_SlewEnabled)
    void UnfilteredTemperatureShouldBe(TemperatureDegFx100_t expected)
    {
       TemperatureDegFx100_t actual;
-      DataModel_Read(dataModel, Erd_Ambient_UnfilteredTemperature, &actual);
+      DataModel_Read(dataModel, Erd_Ambient_UnfilteredTemperatureInDegFx100, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -181,6 +173,60 @@ TEST_GROUP(SensorFiltering_SlewEnabled)
       UnfilteredTemperatureShouldBe(MappedValidTemperature3);
       FilteredTemperatureShouldBe(MappedValidTemperature3);
    }
+
+   void GivenThermistorIsValidErdIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_Ambient_ThermistorIsValid, &state);
+   }
+
+   void ThermistorIsValidErdShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_Ambient_ThermistorIsValid, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void GivenThermistorIsInvalidFaultErdIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_AmbientThermistorIsInvalidFault, &state);
+   }
+
+   void ThermistorIsInvalidFaultErdShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_AmbientThermistorIsInvalidFault, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void GivenSensorHasBeenDiscovered(bool state)
+   {
+      DataModel_Write(dataModel, Erd_AmbientThermistorDiscovered, &state);
+   }
+
+   void SensorHasBeenDiscoveredShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_AmbientThermistorDiscovered, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void GivenSensorHasBeenDiscoveredAfterGoodReadingCounterMaxCounts()
+   {
+      GivenSensorHasBeenDiscovered(CLEAR);
+      GivenSensorIsDiscoverableInParametric();
+      GivenThermistorWasSeededWithInvalidValue();
+
+      WhenAdcCountChangesTo(ValidAdcCount1);
+
+      After(sensorData->ambientThermistor->goodReadingCounterMax * sensorData->periodicUpdateRateInMs - 1);
+      SensorHasBeenDiscoveredShouldBe(CLEAR);
+
+      After(1);
+      SensorHasBeenDiscoveredShouldBe(SET);
+   }
 };
 
 TEST(SensorFiltering_SlewEnabled, ShouldInitialize)
@@ -212,6 +258,33 @@ TEST(SensorFiltering_SlewEnabled, ShouldWriteTheFallbackTemperatureAsTheFiltered
    FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
 }
 
+TEST(SensorFiltering_SlewEnabled, ShouldSetThermistorIsValidErdWhenSeededWithValidValue)
+{
+   GivenThermistorIsValidErdIs(CLEAR);
+   GivenInitialAdcCountsAre(ValidAdcCount1);
+   GivenSensorWithSlewRateFilterEnabledIsInitialized();
+
+   ThermistorIsValidErdShouldBe(SET);
+}
+
+TEST(SensorFiltering_SlewEnabled, ShouldClearThermistorIsValidErdWhenSeededWithInvalidValue)
+{
+   GivenThermistorIsValidErdIs(SET);
+   GivenInitialAdcCountsAre(InvalidAdcCount);
+   GivenSensorWithSlewRateFilterEnabledIsInitialized();
+
+   ThermistorIsValidErdShouldBe(CLEAR);
+}
+
+TEST(SensorFiltering_SlewEnabled, ShouldClearThermistorIsInvalidFaultErdWhenSeededWithValidValue)
+{
+   GivenThermistorIsInvalidFaultErdIs(SET);
+   GivenInitialAdcCountsAre(ValidAdcCount1);
+   GivenSensorWithSlewRateFilterEnabledIsInitialized();
+
+   ThermistorIsInvalidFaultErdShouldBe(CLEAR);
+}
+
 TEST(SensorFiltering_SlewEnabled, ShouldWriteTheInvalidMappedTemperatureToUnfilteredTemperatureErdWhenSeededWithInvalidValue)
 {
    GivenInitialAdcCountsAre(InvalidAdcCount);
@@ -220,7 +293,7 @@ TEST(SensorFiltering_SlewEnabled, ShouldWriteTheInvalidMappedTemperatureToUnfilt
    UnfilteredTemperatureShouldBe(sensorData->ambientThermistor->lookupTable->mappings[sensorData->ambientThermistor->lookupTable->mappingCount - 1].y);
 }
 
-TEST(SensorFiltering_SlewEnabled, ShouldWriteUnfilteredTemperatureToFilteredTemperatureAfterFinallySeedingWithValidValue)
+TEST(SensorFiltering_SlewEnabled, ShouldWriteFilteredTemperatureAfterFinallyReachingGoodReadingCounterMaxOfValidValuesAfterBeingSeededWithInvalidValue)
 {
    GivenThermistorWasSeededWithInvalidValue();
 
@@ -231,7 +304,130 @@ TEST(SensorFiltering_SlewEnabled, ShouldWriteUnfilteredTemperatureToFilteredTemp
 
    After(1);
    UnfilteredTemperatureShouldBe(MappedValidTemperature1);
+   FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
+
+   After((sensorData->ambientThermistor->goodReadingCounterMax - 1) * sensorData->periodicUpdateRateInMs - 1);
+   FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
+
+   After(1);
    FilteredTemperatureShouldBe(MappedValidTemperature1);
+}
+
+TEST(SensorFiltering_SlewEnabled, ShouldSetThermistorIsValidErdWhenFallbackFilterReadsItIsValidAfterFinallyReachingGoodReadingCounterMaxOfValidValuesAfterBeingSeededWithInvalidValue)
+{
+   GivenThermistorWasSeededWithInvalidValue();
+
+   WhenAdcCountChangesTo(ValidAdcCount1);
+
+   After(sensorData->periodicUpdateRateInMs - 1);
+   FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
+
+   After(1);
+   UnfilteredTemperatureShouldBe(MappedValidTemperature1);
+   FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
+
+   After((sensorData->ambientThermistor->goodReadingCounterMax - 1) * sensorData->periodicUpdateRateInMs - 1);
+   FilteredTemperatureShouldBe(sensorData->ambientThermistor->fallbackValueDegFx100);
+
+   After(1);
+   FilteredTemperatureShouldBe(MappedValidTemperature1);
+   ThermistorIsValidErdShouldBe(SET);
+}
+
+TEST(SensorFiltering_SlewEnabled, ShouldNotSetThermistorIsValidErdWhenFallbackFilterIsNotReady)
+{
+   GivenThermistorIsValidErdIs(CLEAR);
+   GivenThermistorWasSeededWithInvalidValue();
+
+   ThermistorIsValidErdShouldBe(CLEAR);
+
+   WhenAdcCountChangesTo(InvalidAdcCount2);
+   After(sensorData->periodicUpdateRateInMs - 1);
+   ThermistorIsValidErdShouldBe(CLEAR);
+
+   After(1);
+   ThermistorIsValidErdShouldBe(CLEAR);
+}
+
+TEST(SensorFiltering_SlewEnabled, ShouldSetSensorAsHasBeenDiscoveredIfSensorIsValidAndSensorIsDiscoverable)
+{
+   GivenSensorHasBeenDiscovered(CLEAR);
+   GivenSensorIsDiscoverableInParametric();
+   GivenThermistorWasSeededWithInvalidValue();
+
+   SensorHasBeenDiscoveredShouldBe(CLEAR);
+
+   WhenAdcCountChangesTo(ValidAdcCount1);
+
+   After(sensorData->ambientThermistor->goodReadingCounterMax * sensorData->periodicUpdateRateInMs - 1);
+   SensorHasBeenDiscoveredShouldBe(CLEAR);
+
+   After(1);
+   SensorHasBeenDiscoveredShouldBe(SET);
+}
+
+TEST(SensorFiltering_SlewEnabled, ShouldNotSetSensorAsHasBeenDiscoveredIfSensorIsValidAndSensorIsNotDiscoverable)
+{
+   GivenSensorHasBeenDiscovered(CLEAR);
+   GivenSensorIsNotDiscoverableInParametric();
+   GivenThermistorWasSeededWithInvalidValue();
+
+   SensorHasBeenDiscoveredShouldBe(CLEAR);
+
+   WhenAdcCountChangesTo(ValidAdcCount1);
+
+   After(sensorData->ambientThermistor->goodReadingCounterMax * sensorData->periodicUpdateRateInMs - 1);
+   SensorHasBeenDiscoveredShouldBe(CLEAR);
+
+   After(1);
+   SensorHasBeenDiscoveredShouldBe(CLEAR);
+}
+
+TEST(SensorFiltering_SlewEnabled, ShouldSetFaultWhenFallbackFilterReadsAsInvalidAfterSensorIsDiscoveredIfDiscoverable)
+{
+   GivenThermistorIsInvalidFaultErdIs(SET);
+   GivenSensorHasBeenDiscoveredAfterGoodReadingCounterMaxCounts();
+
+   WhenAdcCountChangesTo(InvalidAdcCount);
+   After(sensorData->ambientThermistor->badReadingCounterMax * sensorData->periodicUpdateRateInMs - 1);
+   ThermistorIsInvalidFaultErdShouldBe(CLEAR);
+
+   After(1);
+   ThermistorIsInvalidFaultErdShouldBe(SET);
+}
+
+TEST(SensorFiltering_SlewEnabled, ShouldSetFaultWhenFallbackFilterReadsAsInvalidAndSensorIsNotDiscoverable)
+{
+   GivenThermistorIsInvalidFaultErdIs(SET);
+   GivenInitialAdcCountsAre(ValidAdcCount1);
+   GivenSensorIsNotDiscoverableInParametric();
+   GivenSensorWithSlewRateFilterEnabledIsInitialized();
+
+   ThermistorIsInvalidFaultErdShouldBe(CLEAR);
+
+   WhenAdcCountChangesTo(InvalidAdcCount);
+   After(sensorData->ambientThermistor->badReadingCounterMax * sensorData->periodicUpdateRateInMs - 1);
+   ThermistorIsInvalidFaultErdShouldBe(CLEAR);
+
+   After(1);
+   ThermistorIsInvalidFaultErdShouldBe(SET);
+}
+
+TEST(SensorFiltering_SlewEnabled, ShouldNotSetFaultWhenFallbackFilterReadsAsInvalidAndSensorIsNotDiscoveredIfDiscoverable)
+{
+   GivenThermistorIsInvalidFaultErdIs(CLEAR);
+   GivenInitialAdcCountsAre(InvalidAdcCount);
+   GivenSensorIsDiscoverableInParametric();
+   GivenSensorWithSlewRateFilterEnabledIsInitialized();
+
+   ThermistorIsInvalidFaultErdShouldBe(CLEAR);
+
+   WhenAdcCountChangesTo(InvalidAdcCount);
+   After(sensorData->ambientThermistor->badReadingCounterMax * sensorData->periodicUpdateRateInMs - 1);
+   ThermistorIsInvalidFaultErdShouldBe(CLEAR);
+
+   After(1);
+   ThermistorIsInvalidFaultErdShouldBe(CLEAR);
 }
 
 TEST(SensorFiltering_SlewEnabled, ShouldSlewTheFilteredTemperatureValueIfItChangesMoreThanTheSlewLimitInEitherDirection)
@@ -426,28 +622,62 @@ TEST(SensorFiltering_SlewEnabled, ShouldDoOnlyExponentialWeightedMovingAverageAf
    FilteredTemperatureShouldBe(MappedValidTemperature4);
 }
 
+TEST(SensorFiltering_SlewEnabled, ShouldSetSensorIsInSystemIfInitialFallbackFilterValueIsValidAndSensorIsDiscoverable)
+{
+   GivenSensorHasBeenDiscovered(CLEAR);
+   GivenInitialAdcCountsAre(ValidAdcCount1);
+   GivenSensorIsDiscoverableInParametric();
+   GivenSensorWithSlewRateFilterEnabledIsInitialized();
+
+   SensorHasBeenDiscoveredShouldBe(SET);
+}
+
+TEST(SensorFiltering_SlewEnabled, ShouldNotSetSensorIsInSystemIfInitialFallbackFilterValueIsValidAndSensorIsNotDiscoverable)
+{
+   GivenSensorHasBeenDiscovered(CLEAR);
+   GivenInitialAdcCountsAre(ValidAdcCount1);
+   GivenSensorIsNotDiscoverableInParametric();
+   GivenSensorWithSlewRateFilterEnabledIsInitialized();
+
+   SensorHasBeenDiscoveredShouldBe(CLEAR);
+}
+
+TEST(SensorFiltering_SlewEnabled, ShouldSetSensorIsInSystemWhenFallbackFilterValueIsValidAndSensorIsDiscoverable)
+{
+   GivenSensorHasBeenDiscovered(CLEAR);
+   GivenSensorIsDiscoverableInParametric();
+   GivenThermistorWasSeededWithInvalidValue();
+
+   WhenAdcCountChangesTo(ValidAdcCount1);
+
+   After(sensorData->ambientThermistor->goodReadingCounterMax * sensorData->periodicUpdateRateInMs - 1);
+   SensorHasBeenDiscoveredShouldBe(CLEAR);
+
+   After(1);
+   SensorHasBeenDiscoveredShouldBe(SET);
+}
+
 TEST_GROUP(SensorFiltering_SlewDisabled)
 {
-   DataModel_TestDouble_t dataModelDouble;
+   ReferDataModel_TestDouble_t dataModelDouble;
    I_DataModel_t *dataModel;
-   TimerModule_TestDouble_t timerModuleTestDouble;
+   TimerModule_TestDouble_t *timerModuleTestDouble;
    SensorFiltering_t instance;
 
    const SensorData_t *sensorData;
 
    void setup()
    {
-      DataModel_TestDouble_Init(&dataModelDouble, erdsEntries, NUM_ELEMENTS(erdsEntries));
+      ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
-      TimerModule_TestDouble_Init(&timerModuleTestDouble);
-      DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble.timerModule);
+      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       sensorData = ((PersonalityParametricData_t *)GivenThatTheApplicationParametricDataHasBeenLoadedIntoAPointer(TddPersonality_DevelopmentSingleEvaporator))->sensorData;
    }
 
-   void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1000)
+   void After(TimerTicks_t ticks)
    {
-      TimerModule_TestDouble_ElapseTime(&timerModuleTestDouble, ticks, ticksToElapseAtATime);
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
    }
 
    void GivenSensorWithSlewRateDisabledIsInitializedWithSlewRateOf(int16_t slewRatePerSecondx100)
@@ -470,7 +700,7 @@ TEST_GROUP(SensorFiltering_SlewDisabled)
    void FilteredTemperatureShouldBe(TemperatureDegFx100_t expected)
    {
       TemperatureDegFx100_t actual;
-      DataModel_Read(dataModel, Erd_FreezerEvap_FilteredTemperature, &actual);
+      DataModel_Read(dataModel, Erd_FreezerEvap_FilteredTemperatureInDegFx100, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -491,7 +721,7 @@ TEST_GROUP(SensorFiltering_SlewDisabled)
    void UnfilteredTemperatureShouldBe(TemperatureDegFx100_t expected)
    {
       TemperatureDegFx100_t actual;
-      DataModel_Read(dataModel, Erd_FreezerEvap_UnfilteredTemperature, &actual);
+      DataModel_Read(dataModel, Erd_FreezerEvap_UnfilteredTemperatureInDegFx100, &actual);
 
       CHECK_EQUAL(expected, actual);
    }

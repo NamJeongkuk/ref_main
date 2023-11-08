@@ -22,7 +22,7 @@ describe('Pulldown', function()
   it('should assert if pulldown_in_medium_compressor_speed_enable is not a boolean', function()
     should_fail_with('pulldown_in_medium_compressor_speed_enable must be of type boolean but is of type number', function()
       pulldown(generate_config({
-         pulldown_in_medium_compressor_speed_enable = -1
+        pulldown_in_medium_compressor_speed_enable = -1
       }))
     end)
   end)

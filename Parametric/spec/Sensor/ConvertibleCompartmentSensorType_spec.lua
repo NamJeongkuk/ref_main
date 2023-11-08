@@ -43,7 +43,8 @@ describe('ConvertibleCompartmentSensorType', function()
       slew_rate_filter_enabled = true,
       slew_rate_filter_slew_rate_in_degfx100_per_second = 10,
       fallback_good_reading_counter_max = 100,
-      fallback_bad_reading_counter_max = 100
+      fallback_bad_reading_counter_max = 100,
+      discoverable = false
     }, overrides or {})
   end
 
@@ -206,6 +207,25 @@ describe('ConvertibleCompartmentSensorType', function()
       convertible_compartment_sensor_type(config)
     end)
 
+    should_fail_with('discoverable must be of type boolean but is of type number', function()
+      local config = generate_config({
+        mapping_table = {
+          data = { { raw = 4992, mapped = 3994 } },
+          invalid_value = 30000
+        },
+        fresh_food_fallback_value_in_degfx100 = -500,
+        freezer_fallback_value_in_degfx100 = 50,
+        exponentially_moving_average_filter_alpha_numerator = 1,
+        exponentially_moving_average_filter_alpha_denominator = 10,
+        exponentially_moving_average_filter_window_size = 10,
+        slew_rate_filter_slew_rate_in_degfx100_per_second = 10,
+        slew_rate_filter_enabled = true,
+        fallback_good_reading_counter_max = 100,
+        fallback_bad_reading_counter_max = 100,
+        discoverable = 1
+      })
+      convertible_compartment_sensor_type(config)
+    end)
   end)
 
   it('should generate a typed string with the correct data and type convertible_compartment_sensor_type', function()
@@ -254,7 +274,9 @@ describe('ConvertibleCompartmentSensorType', function()
           u16(10)
         ),
         u16(100),
-        u16(100))
+        u16(100),
+        bool(false)
+      )
     ]])
 
     local actual = convertible_compartment_sensor_type(generate_config())

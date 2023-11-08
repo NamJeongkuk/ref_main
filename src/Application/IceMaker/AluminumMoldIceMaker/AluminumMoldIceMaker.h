@@ -43,7 +43,6 @@ typedef struct
    Erd_t dispensingRequestStatusErd; // DispensingRequestStatus_t
    Erd_t coolingSystemOffStatusErd; // bool
    Erd_t dispensingInhibitedErd; // DispensingInhibitedReasonBitmap_t
-   Erd_t iceMakerPresenceErd; // bool
 } AluminumMoldIceMakerConfig_t;
 
 typedef struct

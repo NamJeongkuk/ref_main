@@ -30,6 +30,7 @@ typedef struct
    uint16_t goodReadingCounterMax;
    uint16_t badReadingCounterMax;
    bool enableExternalSensorCheck;
+   bool discoverable;
 } SensorDataSensorType_t;
 
 typedef struct
@@ -43,6 +44,7 @@ typedef struct
    SensorDataSlewRateData_t clampData;
    uint16_t goodReadingCounterMax;
    uint16_t badReadingCounterMax;
+   bool discoverable;
 } SensorDataConvertibleCompartmentSensorType_t;
 
 typedef struct

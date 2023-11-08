@@ -14,6 +14,8 @@
 #include "DataSourceErdPointerAccess.h"
 #include "Erd.h"
 
+#define FirstFault Erd_DoorBoardCommunicationFault
+
 enum
 {
    ServiceDiagnosticsDataVersion_Major = 1,
@@ -42,6 +44,30 @@ static const Erd_t snapshotErdList[] = {
 static const FaultId_t faultCodes[] = {
    ERD_TABLE(EXPAND_AS_FAULT_ID)
 };
+
+#define EXPAND_AS_ERD_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   uint8_t Name;
+
+typedef struct
+{
+   ERD_TABLE(EXPAND_AS_ERD_OFFSET_STRUCT_MEMBER)
+} ErdOffset_t;
+
+#define EXPAND_AS_FIRST_FAULT_CHECK(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_FAULT_, StorageType)                                                                          \
+   (((OFFSET_OF(ErdOffset_t, Name) - OFFSET_OF(ErdOffset_t, FirstFault)) >= 0) &&)
+
+#define EXPAND_AS_FAULT_OFFSET_CHECK(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_FAULT_, StorageType)                                                                           \
+   (((OFFSET_OF(ErdOffset_t, Name) - OFFSET_OF(ErdOffset_t, FirstFault)) <= NUM_ELEMENTS(faultCodes)) &&)
+
+// This checks whether the first fault is set correctly
+// If this check fails, you need to update the FirstFault macro
+STATIC_ASSERT(ERD_TABLE(EXPAND_AS_FIRST_FAULT_CHECK) true);
+
+// This checks whether all of the faults are contiguous
+// If this check fails, you have a gap between two of your fault ERDs
+STATIC_ASSERT(ERD_TABLE(EXPAND_AS_FAULT_OFFSET_CHECK) true);
 
 // clang-format off
 static const DataSource_ServiceDiagnosticsRevision3Entity_t serviceDiagnosticsEntity =

@@ -321,14 +321,6 @@ static bool ThermistorTemperatureIsGreaterThanFullToFreezeThreshold(TwistTrayIce
    return (thermistorTemperatureInDegFx100 > instance->_private.parametric->harvestData.fullBucketToFreezeStateTemperatureInDegFx100);
 }
 
-static void SetIceMakerPresenceErd(TwistTrayIceMaker_t *instance)
-{
-   DataSource_Write(
-      instance->_private.dataSource,
-      instance->_private.config->iceMakerPresenceErd,
-      set);
-}
-
 static void State_Homing(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
    TwistTrayIceMaker_t *instance = InstanceFrom(fsm);
@@ -759,7 +751,6 @@ static void State_ThermistorFault(Fsm_t *fsm, FsmSignal_t signal, const void *da
          break;
 
       case Signal_IceMakerThermistorIsValid:
-         SetIceMakerPresenceErd(instance);
          Fsm_Transition(fsm, State_Homing);
          break;
 
@@ -1043,11 +1034,6 @@ void TwistTrayIceMaker_Init(
       &instance->_private.dataSourceChangeEventSubscription);
 
    UpdateHighLevelState(instance, TwistTrayIceMakerHighLevelState_NormalRun);
-
-   if(IceMakerThermistorIsValid(instance))
-   {
-      SetIceMakerPresenceErd(instance);
-   }
 
    Fsm_Init(&instance->_private.fsm, InitialState(instance));
 }

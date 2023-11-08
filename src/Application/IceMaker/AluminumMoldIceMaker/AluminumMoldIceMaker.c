@@ -720,14 +720,6 @@ static bool HarvestConditionsAreMet(AluminumMoldIceMaker_t *instance)
       DispensingIsNotInhibitedByRfid(instance));
 }
 
-static void SetIceMakerPresenceErd(AluminumMoldIceMaker_t *instance)
-{
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->iceMakerPresenceErd,
-      set);
-}
-
 static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    IGNORE(data);
@@ -1098,7 +1090,6 @@ static bool State_ThermistorFault(Hsm_t *hsm, HsmSignal_t signal, const void *da
          break;
 
       case Signal_MoldThermistorIsValid:
-         SetIceMakerPresenceErd(instance);
          if(RakeIsHome(instance))
          {
             Hsm_Transition(hsm, State_Freeze);
@@ -1288,11 +1279,6 @@ void AluminumMoldIceMaker_Init(
    uassert(instance->_private.iceMakerParametricData->harvestData.fillTubeHeaterOnTimeInSeconds >=
       instance->_private.iceMakerParametricData->harvestData.initialMinimumHeaterOnTimeInSeconds);
 #endif
-
-   if(MoldThermistorIsValid(instance))
-   {
-      SetIceMakerPresenceErd(instance);
-   }
 
    Hsm_Init(&instance->_private.hsm, &hsmConfiguration, InitialState(instance));
 

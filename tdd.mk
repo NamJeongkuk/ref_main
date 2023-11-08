@@ -113,6 +113,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/Grid \
    $(TESTS_DIR)/Application/IceMaker \
    $(TESTS_DIR)/Application/IceMaker/AluminumMoldIceMaker \
+   $(TESTS_DIR)/Application/IceMaker/TwistTrayIceMaker \
    $(TESTS_DIR)/Application/Lighting \
    $(TESTS_DIR)/Application/Mapper \
    $(TESTS_DIR)/Application/Motor \
@@ -123,13 +124,11 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/RfidCommunication \
    $(TESTS_DIR)/Application/Sabbath \
    $(TESTS_DIR)/Application/Sensor \
-   $(TESTS_DIR)/Application/ServiceDiagnostics \
    $(TESTS_DIR)/Application/Setpoints \
    $(TESTS_DIR)/Application/SoundLevel \
    $(TESTS_DIR)/Application/StepperMotor \
    $(TESTS_DIR)/Application/SystemMonitor \
    $(TESTS_DIR)/Application/TimerModule \
-   $(TESTS_DIR)/Application/TwistTrayIceMaker \
    $(TESTS_DIR)/Application/VariableSweatHeater \
    $(TESTS_DIR)/Application/WaterVolumeUsageCalculator \
    $(TESTS_DIR)/Application/WaterFilter \

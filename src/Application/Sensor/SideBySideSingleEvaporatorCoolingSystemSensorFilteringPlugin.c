@@ -130,6 +130,8 @@ static const SensorFilteringConfig_t freezerCabinetThermistorConfig = {
    .sensorUnfilteredTemperatureInDegFx100Erd = Erd_Freezer_UnfilteredTemperatureInDegFx100,
    .sensorFilteredTemperatureInDegFx100Erd = Erd_Freezer_FilteredTemperatureInDegFx100,
    .sensorIsValidErd = Erd_Freezer_ThermistorIsValid,
+   .sensorIsInvalidFaultErd = Erd_FreezerThermistorIsInvalidFault,
+   .sensorDiscoveredErd = Erd_FreezerThermistorDiscovered,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -138,6 +140,8 @@ static const SensorFilteringConfig_t freshFoodCabinetThermistorConfig = {
    .sensorUnfilteredTemperatureInDegFx100Erd = Erd_FreshFood_UnfilteredTemperatureInDegFx100,
    .sensorFilteredTemperatureInDegFx100Erd = Erd_FreshFood_FilteredTemperatureInDegFx100,
    .sensorIsValidErd = Erd_FreshFood_ThermistorIsValid,
+   .sensorIsInvalidFaultErd = Erd_FreshFoodThermistorIsInvalidFault,
+   .sensorDiscoveredErd = Erd_FreshFoodThermistorDiscovered,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -146,6 +150,8 @@ static const SensorFilteringConfig_t freezerEvapThermistorConfig = {
    .sensorUnfilteredTemperatureInDegFx100Erd = Erd_FreezerEvap_UnfilteredTemperatureInDegFx100,
    .sensorFilteredTemperatureInDegFx100Erd = Erd_FreezerEvap_FilteredTemperatureInDegFx100,
    .sensorIsValidErd = Erd_FreezerEvaporatorThermistorIsValid,
+   .sensorIsInvalidFaultErd = Erd_FreezerEvaporatorThermistorIsInvalidFault,
+   .sensorDiscoveredErd = Erd_FreezerEvaporatorThermistorDiscovered,
    .timerModuleErd = Erd_TimerModule
 };
 

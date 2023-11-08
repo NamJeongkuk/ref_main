@@ -63,7 +63,8 @@ return function(core)
           u16(config.slew_rate_filter_slew_rate_in_degfx100_per_second)
         ),
         u16(config.fallback_good_reading_counter_max),
-        u16(config.fallback_bad_reading_counter_max)
+        u16(config.fallback_bad_reading_counter_max),
+        bool(config.discoverable)
       )
     )
   end)
@@ -92,7 +93,8 @@ return function(core)
       slew_rate_filter_slew_rate_in_degfx100_per_second = { constraint.u16 },
       slew_rate_filter_enabled = { constraint.bool },
       fallback_good_reading_counter_max = { constraint.u16 },
-      fallback_bad_reading_counter_max = { constraint.u16 }
+      fallback_bad_reading_counter_max = { constraint.u16 },
+      discoverable = { constraint.bool }
     })
 
     return generate(config)

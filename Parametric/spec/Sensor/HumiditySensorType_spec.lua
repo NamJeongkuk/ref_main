@@ -29,7 +29,8 @@ describe('HumiditySensorType', function()
       slew_rate_filter_slew_rate_in_humidityx100_per_second = 10,
       fallback_good_reading_counter_max = 100,
       fallback_bad_reading_counter_max = 100,
-      enable_external_sensor_check = true
+      enable_external_sensor_check = true,
+      discoverable = false
     }, overrides or {})
   end
 
@@ -183,6 +184,25 @@ describe('HumiditySensorType', function()
       })
       humidity_sensor_type(config)
     end)
+
+    should_fail_with('enable_external_sensor_check must be of type boolean but is of type number', function()
+      local config = generate_config({
+        mapping_table = {
+          data = { { raw = 4992, mapped = 3994 } },
+          invalid_value = 30000
+        },
+        fallback_value_in_percent_humidityx100 = 7500,
+        exponentially_moving_average_filter_alpha_numerator = 1,
+        exponentially_moving_average_filter_alpha_denominator = 10,
+        exponentially_moving_average_filter_window_size = 10,
+        slew_rate_filter_enabled = true,
+        slew_rate_filter_slew_rate_in_humidityx100_per_second = 10,
+        fallback_good_reading_counter_max = 100,
+        fallback_bad_reading_counter_max = 100,
+        enable_external_sensor_check = 1
+      })
+      humidity_sensor_type(config)
+    end)
   end)
 
   it('should generate a typed string with the correct data and type humidity_sensor_type', function()
@@ -217,7 +237,9 @@ describe('HumiditySensorType', function()
         ),
         u16(100),
         u16(100),
-        bool(true))
+        bool(true),
+        bool(false)
+      )
     ]])
 
     local actual = humidity_sensor_type(generate_config())

@@ -8,6 +8,7 @@
 extern "C"
 {
 #include "Filter_Fallback.h"
+#include "Constants_Binary.h"
 #include "utils.h"
 }
 
@@ -19,11 +20,16 @@ extern "C"
 
 enum
 {
+   ValidValueDegFx100 = 2,
+   ValidValue1DegFx100 = 300,
+   ValidValue2DegFx100 = 320,
+   ValidValue3DegFx100 = 340,
+   ValidValue4DegFx100 = 500,
    InvalidValueDegFx100 = 30000,
    FallbackValueDegFx100 = 200,
    GoodReadingCounterMax = 10,
    BadReadingCounterMax = 5,
-   ValidDegFx100 = 345
+   AnotherValidValueDegFx100 = 345
 };
 
 enum
@@ -63,8 +69,7 @@ TEST_GROUP(Filter_Fallback)
          InvalidValueDegFx100,
          FallbackValueDegFx100,
          GoodReadingCounterMax,
-         BadReadingCounterMax,
-         Erd_ThermistorIsValid);
+         BadReadingCounterMax);
    }
 
    void AfterTheFilterIsSeededWith(int16_t value)
@@ -96,11 +101,18 @@ TEST_GROUP(Filter_Fallback)
       TheWrappedFilterShouldHaveBeenFedWith(expected);
    }
 
-   void TheFilterShouldRead(int16_t expected)
+   void TheFilterShouldRead(Filter_Fallback_Data_t expected)
    {
-      int16_t actual;
+      Filter_Fallback_Data_t actual;
       Filter_Read(&instance.interface, &actual);
-      CHECK_EQUAL(expected, actual);
+      CHECK_EQUAL(expected.filteredValue, actual.filteredValue);
+      CHECK_EQUAL(expected.isValid, actual.isValid);
+   }
+
+   void WhenTheFilterIsRead()
+   {
+      Filter_Fallback_Data_t data;
+      Filter_Read(&instance.interface, &data);
    }
 
    void TheWrappedFilterCurrentFilterValueIs(int16_t value)
@@ -116,6 +128,15 @@ TEST_GROUP(Filter_Fallback)
    void GivenTheWrappedFilterIsNotReady()
    {
       Filter_TestDouble_ChangeReadyStateTo(&wrappedFilter, false);
+   }
+
+   void TheWrappedFilterShouldBeNotReady()
+   {
+      I_Input_t *readyInput = Filter_GetReadyInput(&wrappedFilter.interface);
+      bool ready;
+      Input_Read(readyInput, &ready);
+
+      CHECK_FALSE(ready);
    }
 
    void TheFilterShouldBeReady()
@@ -157,8 +178,8 @@ TEST_GROUP(Filter_Fallback)
    void GivenTheFilterHasBeenSeededWithAValidValue()
    {
       GivenTheFilterHasBeenInitialized();
-      AfterTheFilterIsSeededWith(2);
-      TheWrappedFilterShouldHaveBeenSeededWith(2);
+      AfterTheFilterIsSeededWith(ValidValueDegFx100);
+      TheWrappedFilterShouldHaveBeenSeededWith(ValidValueDegFx100);
    }
 
    void GivenTheFilterHasBeenSeededWithAnInvalidValue()
@@ -167,7 +188,22 @@ TEST_GROUP(Filter_Fallback)
       GivenTheWrappedFilterIsNotReady();
 
       AfterTheFilterIsSeededWith(InvalidValueDegFx100);
-      TheFilterShouldBeNotReady();
+      TheFilterShouldBeReady();
+      TheWrappedFilterShouldBeNotReady();
+   }
+
+   void TheFilterShouldReadAValidValue()
+   {
+      Filter_Fallback_Data_t actual;
+      Filter_Read(&instance.interface, &actual);
+      CHECK_TRUE(actual.isValid);
+   }
+
+   void TheFilterShouldReadAnInvalidValue()
+   {
+      Filter_Fallback_Data_t actual;
+      Filter_Read(&instance.interface, &actual);
+      CHECK_FALSE(actual.isValid);
    }
 
    void GivenTheFilterHasBeenFedWithBadReadingCountingMaxNumberOfInvalidValuesAndIsReadingTheFallbackValue()
@@ -179,7 +215,7 @@ TEST_GROUP(Filter_Fallback)
          AfterTheFilterIsFedWith(InvalidValueDegFx100);
       }
 
-      TheFilterShouldRead(FallbackValueDegFx100);
+      TheFilterShouldRead({ .filteredValue = FallbackValueDegFx100, .isValid = false });
    }
 
    void GivenTheFilterSwitchedFromBadReadingCountingMaxNumberOfInvalidValuesToGoodReadingCountingMaxNumberOfValidValues()
@@ -192,7 +228,7 @@ TEST_GROUP(Filter_Fallback)
    void GivenTheFilterSwitchedFromBadReadingCountingMaxNumberOfInvalidValuesToGoodReadingCountingMaxNumberOfValidValuesToBadReadingCountingMaxNumberOfInvalidValues()
    {
       GivenTheFilterSwitchedFromBadReadingCountingMaxNumberOfInvalidValuesToGoodReadingCountingMaxNumberOfValidValues();
-      TheWrappedFilterCurrentFilterValueIs(ValidDegFx100);
+      TheWrappedFilterCurrentFilterValueIs(AnotherValidValueDegFx100);
 
       AfterFilterIsFedBadReadingCountingMaxNumberOfInvalidValues();
    }
@@ -201,12 +237,12 @@ TEST_GROUP(Filter_Fallback)
    {
       for(uint8_t i = 0; i < GoodReadingCounterMax - 1; i++)
       {
-         AfterTheFilterIsFedWith(ValidDegFx100);
-         TheFilterShouldRead(FallbackValueDegFx100);
+         AfterTheFilterIsFedWith(AnotherValidValueDegFx100);
+         TheFilterShouldRead({ .filteredValue = FallbackValueDegFx100, .isValid = false });
       }
 
-      AfterTheFilterIsFedWith(ValidDegFx100);
-      TheWrappedFilterCurrentFilterValueIs(ValidDegFx100);
+      AfterTheFilterIsFedWith(AnotherValidValueDegFx100);
+      TheWrappedFilterCurrentFilterValueIs(AnotherValidValueDegFx100);
    }
 
    void AfterFilterIsFedBadReadingCountingMaxNumberOfInvalidValues()
@@ -214,116 +250,122 @@ TEST_GROUP(Filter_Fallback)
       for(uint8_t i = 0; i < BadReadingCounterMax - 1; i++)
       {
          AfterTheFilterIsFedWith(InvalidValueDegFx100);
-         TheFilterShouldRead(ValidDegFx100);
+         TheFilterShouldRead({ .filteredValue = AnotherValidValueDegFx100, .isValid = true });
       }
 
       AfterTheFilterIsFedWith(InvalidValueDegFx100);
    }
+
+   void GivenTheFilterHasBeenReseededAndLastValueFedToTheWrappedFilterWasValidValue3DegFx100()
+   {
+      GivenTheFilterHasBeenSeededWithAValidValue();
+
+      AfterTheFilterIsFedWith(ValidValue1DegFx100);
+      TheWrappedFilterShouldHaveBeenFedWith(ValidValue1DegFx100);
+
+      AfterTheFilterIsFedWith(ValidValue2DegFx100);
+      TheWrappedFilterShouldHaveBeenFedWith(ValidValue2DegFx100);
+
+      AfterTheFilterIsFedWith(ValidValue3DegFx100);
+      TheWrappedFilterShouldHaveBeenFedWith(ValidValue3DegFx100);
+
+      TheWrappedFilterCurrentFilterValueIs(ValidValue3DegFx100);
+
+      for(uint8_t i = 0; i < BadReadingCounterMax - 1; i++)
+      {
+         AfterTheFilterIsFedWith(InvalidValueDegFx100);
+         TheFilterShouldRead({ .filteredValue = ValidValue3DegFx100, .isValid = true });
+      }
+
+      AfterTheFilterIsFedWith(InvalidValueDegFx100);
+      TheFilterShouldRead({ .filteredValue = FallbackValueDegFx100, .isValid = false });
+
+      for(uint8_t i = 0; i < GoodReadingCounterMax - 1; i++)
+      {
+         AfterTheFilterIsFedWith(ValidValue4DegFx100);
+         TheFilterShouldRead({ .filteredValue = FallbackValueDegFx100, .isValid = false });
+      }
+
+      AfterTheFilterIsFedWith(ValidValue4DegFx100);
+
+      TheWrappedFilterShouldHaveBeenSeededWith(ValidValue4DegFx100);
+      TheLastValueTheWrappedFilterWasFedShouldHaveBeen(ValidValue3DegFx100);
+   }
 };
 
-TEST(Filter_Fallback, ShouldSeedTheWrappedFilterWithSameValueWhenSeeded)
+TEST(Filter_Fallback, ShouldSeedTheWrappedFilterWithSameValueWhenSeededIfTheValueIsValid)
 {
    GivenTheFilterHasBeenInitialized();
-   AfterTheFilterIsSeededWith(2);
-   TheWrappedFilterShouldHaveBeenSeededWith(2);
+   AfterTheFilterIsSeededWith(ValidValueDegFx100);
+   TheWrappedFilterShouldHaveBeenSeededWith(ValidValueDegFx100);
+}
+
+TEST(Filter_Fallback, ShouldHaveWrappedFilterAsNotReadyBecauseItDidNotSeedTheWrappedFilterWhenFallbackFilterIsSeededWithAnInvalidValue)
+{
+   GivenTheFilterHasBeenInitialized();
+
+   AfterTheFilterIsSeededWith(InvalidValueDegFx100);
+   TheWrappedFilterShouldBeNotReady();
+}
+
+TEST(Filter_Fallback, ShouldUassertWhenReadingTheFallbackValueAndFallbackFilterIsNotReady)
+{
+   GivenTheFilterHasBeenInitialized();
+   ShouldFailAssertion(WhenTheFilterIsRead());
 }
 
 TEST(Filter_Fallback, ShouldFeedTheWrappedFilterWithSameValueIfItIsValid)
 {
    GivenTheFilterHasBeenSeededWithAValidValue();
 
-   AfterTheFilterIsFedWith(20);
-   TheWrappedFilterShouldHaveBeenFedWith(20);
-}
-
-TEST(Filter_Fallback, ShouldNotSeedTheWrappedFilterIfItIsInvalid)
-{
-   GivenTheFilterHasBeenInitialized();
-   GivenTheWrappedFilterIsNotReady();
-
-   AfterTheFilterIsSeededWith(InvalidValueDegFx100);
-   TheFilterShouldBeNotReady();
+   AfterTheFilterIsFedWith(ValidValueDegFx100);
+   TheWrappedFilterShouldHaveBeenFedWith(ValidValueDegFx100);
 }
 
 TEST(Filter_Fallback, ShouldReadTheWrappedFilterValueWhenSeededWithAValidValue)
 {
    GivenTheFilterHasBeenSeededWithAValidValue();
-   TheWrappedFilterCurrentFilterValueIs(2);
+   TheWrappedFilterCurrentFilterValueIs(ValidValueDegFx100);
 
-   TheFilterShouldRead(2);
+   TheFilterShouldRead({ .filteredValue = ValidValueDegFx100, .isValid = true });
 }
 
 TEST(Filter_Fallback, ShouldReadTheFallbackValueWhenSeededWithAnInvalidValue)
 {
    GivenTheFilterHasBeenSeededWithAnInvalidValue();
 
-   TheFilterShouldRead(FallbackValueDegFx100);
+   TheFilterShouldRead({ .filteredValue = FallbackValueDegFx100, .isValid = false });
 }
 
-TEST(Filter_Fallback, ShouldWriteTrueToValidThermistorErdWhenSeededWithValidValue)
+TEST(Filter_Fallback, ShouldReadTheValidValueAndSwitchThermistorToValidAfterGoodReadingCounterMaxNumberOfValidValuesWhenThermistorIsInvalidOnInit)
 {
-   GivenTheValidThermistorErdIs(false);
-   GivenTheFilterHasBeenSeededWithAValidValue();
-
-   TheValidThermistorErdShouldBe(true);
-}
-
-TEST(Filter_Fallback, ShouldWriteFalseToValidThermistorErdWhenSeededWithInvalidValue)
-{
-   GivenTheValidThermistorErdIs(true);
    GivenTheFilterHasBeenSeededWithAnInvalidValue();
-
-   TheValidThermistorErdShouldBe(false);
-}
-
-TEST(Filter_Fallback, ShouldSwitchThermistorToValidAfterGoodReadingCounterMaxNumberOfValidValuesWhenThermistorIsInvalidOnInit)
-{
-   GivenTheValidThermistorErdIs(true);
-   GivenTheFilterHasBeenSeededWithAnInvalidValue();
-
-   TheValidThermistorErdShouldBe(false);
+   TheFilterShouldRead({ .filteredValue = FallbackValueDegFx100, .isValid = false });
 
    for(uint8_t i = 0; i < GoodReadingCounterMax - 1; i++)
    {
-      AfterTheFilterIsFedWith(ValidDegFx100);
-      TheValidThermistorErdShouldBe(false);
+      AfterTheFilterIsFedWith(AnotherValidValueDegFx100);
    }
 
-   AfterTheFilterIsFedWith(ValidDegFx100);
-   TheWrappedFilterShouldHaveBeenSeededWith(ValidDegFx100);
-   TheValidThermistorErdShouldBe(true);
+   AfterTheFilterIsFedWith(AnotherValidValueDegFx100);
+   TheWrappedFilterShouldHaveBeenSeededWith(AnotherValidValueDegFx100);
+   TheWrappedFilterCurrentFilterValueIs(AnotherValidValueDegFx100);
+   TheFilterShouldRead({ .filteredValue = AnotherValidValueDegFx100, .isValid = true });
 }
 
-TEST(Filter_Fallback, ShouldSwitchThermistorToInvalidAfterBadReadingCounterMaxNumberOfValidValuesWhenThermistorIsValidOnInit)
+TEST(Filter_Fallback, ShouldReadTheInvalidValueAndSwitchThermistorToInvalidAfterBadReadingCounterIsMaxNumberOfValidValuesWhenThermistorIsValidOnInit)
 {
-   GivenTheValidThermistorErdIs(false);
    GivenTheFilterHasBeenSeededWithAValidValue();
-
-   TheValidThermistorErdShouldBe(true);
+   TheWrappedFilterCurrentFilterValueIs(AnotherValidValueDegFx100);
 
    for(uint8_t i = 0; i < BadReadingCounterMax - 1; i++)
    {
       AfterTheFilterIsFedWith(InvalidValueDegFx100);
-      TheValidThermistorErdShouldBe(true);
+      TheFilterShouldRead({ .filteredValue = AnotherValidValueDegFx100, .isValid = true });
    }
 
    AfterTheFilterIsFedWith(InvalidValueDegFx100);
-   TheValidThermistorErdShouldBe(false);
-}
-
-TEST(Filter_Fallback, ShouldReadTheFallbackValueAfterBeingFedBadReadingCounterMaxNumberOfInvalidValues)
-{
-   GivenTheFilterHasBeenSeededWithAValidValue();
-   TheWrappedFilterCurrentFilterValueIs(ValidDegFx100);
-
-   for(uint8_t i = 0; i < BadReadingCounterMax - 1; i++)
-   {
-      AfterTheFilterIsFedWith(InvalidValueDegFx100);
-      TheFilterShouldRead(ValidDegFx100);
-   }
-
-   AfterTheFilterIsFedWith(InvalidValueDegFx100);
-   TheFilterShouldRead(FallbackValueDegFx100);
+   TheFilterShouldRead({ .filteredValue = FallbackValueDegFx100, .isValid = false });
 }
 
 TEST(Filter_Fallback, ShouldSeedTheWrappedFilterWithValidValueAfterBeingFedGoodReadingCounterMaxNumberOfValidValuesWhenThermistorIsInvalid)
@@ -332,27 +374,27 @@ TEST(Filter_Fallback, ShouldSeedTheWrappedFilterWithValidValueAfterBeingFedGoodR
 
    for(uint8_t i = 0; i < GoodReadingCounterMax - 1; i++)
    {
-      AfterTheFilterIsFedWith(ValidDegFx100);
-      TheFilterShouldRead(FallbackValueDegFx100);
+      AfterTheFilterIsFedWith(AnotherValidValueDegFx100);
+      TheFilterShouldRead({ .filteredValue = FallbackValueDegFx100, .isValid = false });
    }
 
-   AfterTheFilterIsFedWith(ValidDegFx100);
-   TheWrappedFilterShouldHaveBeenSeededWith(ValidDegFx100);
+   AfterTheFilterIsFedWith(AnotherValidValueDegFx100);
+   TheWrappedFilterShouldHaveBeenSeededWith(AnotherValidValueDegFx100);
 }
 
 TEST(Filter_Fallback, ShouldSwitchFromReadingFallbackValueToWrappedFilterValueBackToFallbackValue)
 {
    GivenTheFilterSwitchedFromBadReadingCountingMaxNumberOfInvalidValuesToGoodReadingCountingMaxNumberOfValidValues();
-   TheWrappedFilterCurrentFilterValueIs(ValidDegFx100);
+   TheWrappedFilterCurrentFilterValueIs(AnotherValidValueDegFx100);
 
    for(uint8_t i = 0; i < BadReadingCounterMax - 1; i++)
    {
       AfterTheFilterIsFedWith(InvalidValueDegFx100);
-      TheFilterShouldRead(ValidDegFx100);
+      TheFilterShouldRead({ .filteredValue = AnotherValidValueDegFx100, .isValid = true });
    }
 
    AfterTheFilterIsFedWith(InvalidValueDegFx100);
-   TheFilterShouldRead(FallbackValueDegFx100);
+   TheFilterShouldRead({ .filteredValue = FallbackValueDegFx100, .isValid = false });
 }
 
 TEST(Filter_Fallback, ShouldSwitchFromReadingFallbackValueToWrappedFilterValueBackToFallbackValueAndBackAgain)
@@ -361,216 +403,263 @@ TEST(Filter_Fallback, ShouldSwitchFromReadingFallbackValueToWrappedFilterValueBa
 
    for(uint8_t i = 0; i < GoodReadingCounterMax - 1; i++)
    {
-      AfterTheFilterIsFedWith(ValidDegFx100);
-      TheFilterShouldRead(FallbackValueDegFx100);
+      AfterTheFilterIsFedWith(AnotherValidValueDegFx100);
+      TheFilterShouldRead({ .filteredValue = FallbackValueDegFx100, .isValid = false });
    }
 
-   AfterTheFilterIsFedWith(ValidDegFx100);
-   TheWrappedFilterCurrentFilterValueIs(ValidDegFx100);
+   AfterTheFilterIsFedWith(AnotherValidValueDegFx100);
+   TheWrappedFilterCurrentFilterValueIs(AnotherValidValueDegFx100);
 
-   TheFilterShouldRead(ValidDegFx100);
-   TheWrappedFilterShouldHaveBeenSeededWith(ValidDegFx100);
+   TheFilterShouldRead({ .filteredValue = AnotherValidValueDegFx100, .isValid = true });
+   TheWrappedFilterShouldHaveBeenSeededWith(AnotherValidValueDegFx100);
 }
 
 TEST(Filter_Fallback, ShouldReseedWrappedFilterWithValidValueAfterReachingGoodReadingCounterMaxNumberOfValidValuesWhenThermistorIsInvalidAndNotFeedIt)
 {
    GivenTheFilterHasBeenSeededWithAValidValue();
 
-   AfterTheFilterIsFedWith(300);
-   TheWrappedFilterShouldHaveBeenFedWith(300);
+   AfterTheFilterIsFedWith(ValidValue1DegFx100);
+   TheWrappedFilterShouldHaveBeenFedWith(ValidValue1DegFx100);
 
-   AfterTheFilterIsFedWith(320);
-   TheWrappedFilterShouldHaveBeenFedWith(320);
+   AfterTheFilterIsFedWith(ValidValue2DegFx100);
+   TheWrappedFilterShouldHaveBeenFedWith(ValidValue2DegFx100);
 
-   AfterTheFilterIsFedWith(340);
-   TheWrappedFilterShouldHaveBeenFedWith(340);
+   AfterTheFilterIsFedWith(ValidValue3DegFx100);
+   TheWrappedFilterShouldHaveBeenFedWith(ValidValue3DegFx100);
 
-   TheWrappedFilterCurrentFilterValueIs(340);
+   TheWrappedFilterCurrentFilterValueIs(ValidValue3DegFx100);
 
    for(uint8_t i = 0; i < BadReadingCounterMax - 1; i++)
    {
       AfterTheFilterIsFedWith(InvalidValueDegFx100);
-      TheFilterShouldRead(340);
+      TheFilterShouldRead({ .filteredValue = ValidValue3DegFx100, .isValid = true });
    }
 
    AfterTheFilterIsFedWith(InvalidValueDegFx100);
-   TheFilterShouldRead(FallbackValueDegFx100);
+   TheFilterShouldRead({ .filteredValue = FallbackValueDegFx100, .isValid = false });
 
    for(uint8_t i = 0; i < GoodReadingCounterMax - 1; i++)
    {
-      AfterTheFilterIsFedWith(500);
-      TheFilterShouldRead(FallbackValueDegFx100);
+      AfterTheFilterIsFedWith(ValidValue4DegFx100);
+      TheFilterShouldRead({ .filteredValue = FallbackValueDegFx100, .isValid = false });
    }
 
-   AfterTheFilterIsFedWith(500);
+   AfterTheFilterIsFedWith(ValidValue4DegFx100);
 
-   TheWrappedFilterShouldHaveBeenSeededWith(500);
-   TheLastValueTheWrappedFilterWasFedShouldHaveBeen(340);
+   TheWrappedFilterShouldHaveBeenSeededWith(ValidValue4DegFx100);
+   TheLastValueTheWrappedFilterWasFedShouldHaveBeen(ValidValue3DegFx100);
 }
 
-TEST(Filter_Fallback, ShouldSetThermistorAsInvalidWhenOnlyAfterBeingFedBadReadingCounterMaxNumberOfInvalidValuesAfterBeingReseededWithAValidValue)
+TEST(Filter_Fallback, ShouldFeedValidValueAfterReseedingWrappedFilter)
+{
+   GivenTheFilterHasBeenReseededAndLastValueFedToTheWrappedFilterWasValidValue3DegFx100();
+
+   AfterTheFilterIsFedWith(ValidValue4DegFx100);
+   TheWrappedFilterShouldHaveBeenFedWith(ValidValue4DegFx100);
+}
+
+TEST(Filter_Fallback, ShouldNotFeedInvalidValueAfterReseedingWrappedFilter)
+{
+   GivenTheFilterHasBeenReseededAndLastValueFedToTheWrappedFilterWasValidValue3DegFx100();
+
+   AfterTheFilterIsFedWith(InvalidValueDegFx100);
+   TheWrappedFilterShouldHaveBeenFedWith(ValidValue3DegFx100);
+}
+
+TEST(Filter_Fallback, ShouldReadAnInvalidValueWhenOnlyAfterBeingFedBadReadingCounterMaxNumberOfInvalidValuesAfterBeingReseededWithAValidValue)
 {
    GivenTheFilterHasBeenSeededWithAValidValue();
-   TheValidThermistorErdShouldBe(true);
+   TheFilterShouldReadAValidValue();
 
    for(uint8_t i = 0; i < BadReadingCounterMax - 1; i++)
    {
       AfterTheFilterIsFedWith(InvalidValueDegFx100);
    }
-   TheValidThermistorErdShouldBe(true);
+   TheFilterShouldReadAValidValue();
 
-   AfterTheFilterIsSeededWith(ValidDegFx100);
-   TheWrappedFilterShouldHaveBeenSeededWith(ValidDegFx100);
+   AfterTheFilterIsSeededWith(AnotherValidValueDegFx100);
+   TheWrappedFilterShouldHaveBeenSeededWith(AnotherValidValueDegFx100);
 
    for(uint8_t i = 0; i < BadReadingCounterMax - 1; i++)
    {
       AfterTheFilterIsFedWith(InvalidValueDegFx100);
-      TheValidThermistorErdShouldBe(true);
+      TheFilterShouldReadAValidValue();
    }
+
    AfterTheFilterIsFedWith(InvalidValueDegFx100);
-   TheValidThermistorErdShouldBe(false);
+   TheFilterShouldReadAnInvalidValue();
 }
 
-TEST(Filter_Fallback, ShouldSetThermistorAsValidWhenOnlyAfterBeingFedGoodReadingCounterMaxNumberOfValidValueAfterBeingReseededWithAnInvalidValue)
+TEST(Filter_Fallback, ShouldReadAValidValueWhenOnlyAfterBeingFedGoodReadingCounterMaxNumberOfValidValuesAfterBeingReseededWithAnInvalidValue)
 {
    GivenTheFilterHasBeenSeededWithAnInvalidValue();
-   TheValidThermistorErdShouldBe(false);
+   TheFilterShouldReadAnInvalidValue();
 
    for(uint8_t i = 0; i < GoodReadingCounterMax - 1; i++)
    {
-      AfterTheFilterIsFedWith(ValidDegFx100);
+      AfterTheFilterIsFedWith(AnotherValidValueDegFx100);
    }
-   TheValidThermistorErdShouldBe(false);
+   TheFilterShouldReadAnInvalidValue();
 
    AfterTheFilterIsSeededWith(InvalidValueDegFx100);
+   TheFilterShouldReadAnInvalidValue();
 
    for(uint8_t i = 0; i < GoodReadingCounterMax - 1; i++)
    {
-      AfterTheFilterIsFedWith(ValidDegFx100);
-      TheValidThermistorErdShouldBe(false);
+      AfterTheFilterIsFedWith(AnotherValidValueDegFx100);
+      TheFilterShouldReadAnInvalidValue();
    }
-   AfterTheFilterIsFedWith(ValidDegFx100);
-   TheValidThermistorErdShouldBe(true);
+   AfterTheFilterIsFedWith(AnotherValidValueDegFx100);
+   TheFilterShouldReadAValidValue();
 }
 
-TEST(Filter_Fallback, ShouldReseedWithValidValueAfterBeingSeededWithAnInvalidValueAndSetThermistorAsValid)
+TEST(Filter_Fallback, ShouldReseedWithValidValueAfterBeingSeededWithAnInvalidValueAndReadAValidValue)
 {
    GivenTheFilterHasBeenSeededWithAnInvalidValue();
-   TheValidThermistorErdShouldBe(false);
+   TheFilterShouldReadAnInvalidValue();
 
-   AfterTheFilterIsSeededWith(ValidDegFx100);
-   TheWrappedFilterShouldHaveBeenSeededWith(ValidDegFx100);
-   TheValidThermistorErdShouldBe(true);
+   AfterTheFilterIsSeededWith(AnotherValidValueDegFx100);
+   TheWrappedFilterShouldHaveBeenSeededWith(AnotherValidValueDegFx100);
+   TheFilterShouldReadAValidValue();
 }
 
-TEST(Filter_Fallback, ShouldWriteFalseToThermistorIsValidErdWhenFilterReadsFallbackValue)
+TEST(Filter_Fallback, ShouldReadAnInvalidValueWhenFilterReadsFallbackValue)
 {
-   GivenTheValidThermistorErdIs(true);
    GivenTheFilterHasBeenFedWithBadReadingCountingMaxNumberOfInvalidValuesAndIsReadingTheFallbackValue();
 
-   TheFilterShouldRead(FallbackValueDegFx100);
-   TheValidThermistorErdShouldBe(false);
+   TheFilterShouldRead({ .filteredValue = FallbackValueDegFx100, .isValid = false });
+   TheFilterShouldReadAnInvalidValue();
 }
 
-TEST(Filter_Fallback, ShouldWriteTrueToThermistorIsValidErdWhenFilterReadsWrappedFilterValueAgain)
+TEST(Filter_Fallback, ShouldReadAValidValueWhenFilterReadsWrappedFilterValueAgain)
 {
-   GivenTheValidThermistorErdIs(true);
    GivenTheFilterSwitchedFromBadReadingCountingMaxNumberOfInvalidValuesToGoodReadingCountingMaxNumberOfValidValues();
-   TheWrappedFilterCurrentFilterValueIs(ValidDegFx100);
+   TheWrappedFilterCurrentFilterValueIs(AnotherValidValueDegFx100);
 
-   TheFilterShouldRead(ValidDegFx100);
-   TheValidThermistorErdShouldBe(true);
+   TheFilterShouldRead({ .filteredValue = AnotherValidValueDegFx100, .isValid = true });
 }
 
-TEST(Filter_Fallback, ShouldSwitchBetweenWritingTrueAndFalseToValidErd)
+TEST(Filter_Fallback, ShouldSwitchBetweenReadingAValidValueAndReadingAnInvalidValue)
 {
-   GivenTheValidThermistorErdIs(true);
    GivenTheFilterHasBeenFedWithBadReadingCountingMaxNumberOfInvalidValuesAndIsReadingTheFallbackValue();
-
-   TheFilterShouldRead(FallbackValueDegFx100);
-   TheValidThermistorErdShouldBe(false);
+   TheFilterShouldRead({ .filteredValue = FallbackValueDegFx100, .isValid = false });
 
    AfterFilterIsFedGoodReadingCountingMaxNumberOfValidValues();
-
-   TheFilterShouldRead(ValidDegFx100);
-   TheValidThermistorErdShouldBe(true);
+   TheFilterShouldRead({ .filteredValue = AnotherValidValueDegFx100, .isValid = true });
 
    AfterFilterIsFedBadReadingCountingMaxNumberOfInvalidValues();
-
-   TheFilterShouldRead(FallbackValueDegFx100);
-   TheValidThermistorErdShouldBe(false);
+   TheFilterShouldRead({ .filteredValue = FallbackValueDegFx100, .isValid = false });
 
    AfterFilterIsFedGoodReadingCountingMaxNumberOfValidValues();
-
-   TheFilterShouldRead(ValidDegFx100);
-   TheValidThermistorErdShouldBe(true);
+   TheFilterShouldRead({ .filteredValue = AnotherValidValueDegFx100, .isValid = true });
 }
 
-TEST(Filter_Fallback, ShouldWaitUntilBadReadingCountingMaxNumberOfInvalidValuesHappenConsecutivelyBeforeWritingValidErdToFalse)
+TEST(Filter_Fallback, ShouldWaitUntilBadReadingCountingMaxNumberOfInvalidValuesHappenConsecutivelyBeforeValueReadIsInvalid)
 {
-   GivenTheValidThermistorErdIs(true);
    GivenTheFilterHasBeenSeededWithAValidValue();
 
    for(uint8_t i = 0; i < BadReadingCounterMax - 1; i++)
    {
       AfterTheFilterIsFedWith(InvalidValueDegFx100);
    }
-   TheValidThermistorErdShouldBe(true);
+   TheFilterShouldReadAValidValue();
 
    AfterTheFilterIsFedWith(2);
-   TheValidThermistorErdShouldBe(true);
+   TheFilterShouldReadAValidValue();
 
    AfterTheFilterIsFedWith(InvalidValueDegFx100);
-   TheValidThermistorErdShouldBe(true);
+   TheFilterShouldReadAValidValue();
 }
 
-TEST(Filter_Fallback, ShouldWaitUntilGoodReadingCountingMaxNumberOfValidValuesHappenConsecutivelyBeforeWritingValidErdToTrue)
+TEST(Filter_Fallback, ShouldWaitUntilGoodReadingCountingMaxNumberOfValidValuesHappenConsecutivelyBeforeValueReadIsValid)
 {
-   GivenTheValidThermistorErdIs(true);
    GivenTheFilterHasBeenFedWithBadReadingCountingMaxNumberOfInvalidValuesAndIsReadingTheFallbackValue();
-
-   TheValidThermistorErdShouldBe(false);
+   TheFilterShouldReadAnInvalidValue();
 
    for(uint8_t i = 0; i < GoodReadingCounterMax - 1; i++)
    {
       AfterTheFilterIsFedWith(2);
    }
-   TheValidThermistorErdShouldBe(false);
+   TheFilterShouldReadAnInvalidValue();
 
    AfterTheFilterIsFedWith(InvalidValueDegFx100);
-   TheValidThermistorErdShouldBe(false);
+   TheFilterShouldReadAnInvalidValue();
 
    AfterTheFilterIsFedWith(2);
-   TheValidThermistorErdShouldBe(false);
+   TheFilterShouldReadAnInvalidValue();
 
    for(uint8_t i = 0; i < GoodReadingCounterMax; i++)
    {
       AfterTheFilterIsFedWith(2);
    }
-   TheValidThermistorErdShouldBe(true);
+   TheFilterShouldReadAValidValue();
 }
 
-TEST(Filter_Fallback, ShouldBeReadyWhenWrappedFilterIsReady)
+TEST(Filter_Fallback, ShouldBeReadyWhenFallbackFilterIsSeededWithAValidValue)
 {
    GivenTheFilterHasBeenInitialized();
-   GivenTheWrappedFilterIsReady();
-
+   AfterTheFilterIsSeededWith(ValidValueDegFx100);
    TheFilterShouldBeReady();
 }
 
-TEST(Filter_Fallback, ShouldBeNotReadyWhenWrappedFilterIsNotReady)
+TEST(Filter_Fallback, ShouldBeReadyWhenFallbackFilterIsSeededWithAnInvalidValue)
 {
    GivenTheFilterHasBeenInitialized();
-   GivenTheWrappedFilterIsNotReady();
-
-   TheFilterShouldBeNotReady();
+   AfterTheFilterIsSeededWith(InvalidValueDegFx100);
+   TheFilterShouldBeReady();
 }
 
-TEST(Filter_Fallback, ShouldBeNotReadyWhenWrappedFilterIsReset)
+TEST(Filter_Fallback, ShouldBeNotReadyWhenFallbackFilterIsReset)
 {
    GivenTheFilterHasBeenInitialized();
-   GivenTheWrappedFilterIsReady();
+   AfterTheFilterIsSeededWith(ValidValueDegFx100);
+   TheFilterShouldBeReady();
 
    WhenTheFilterIsReset();
    TheFilterShouldBeNotReady();
+}
+
+TEST(Filter_Fallback, ShouldHaveWrappedFilterAsNotReadyWhenFallbackFilterIsReset)
+{
+   GivenTheWrappedFilterIsReady();
+   GivenTheFilterHasBeenInitialized();
+
+   WhenTheFilterIsReset();
+   TheWrappedFilterShouldBeNotReady();
+}
+
+TEST(Filter_Fallback, ShouldKeepFilterReadyWhenSeededWithAnInvalidValueWhileAlreadyReady)
+{
+   GivenTheWrappedFilterIsReady();
+   GivenTheFilterHasBeenInitialized();
+
+   AfterTheFilterIsSeededWith(ValidValueDegFx100);
+   TheFilterShouldBeReady();
+
+   AfterTheFilterIsSeededWith(InvalidValueDegFx100);
+   TheFilterShouldBeReady();
+}
+
+TEST(Filter_Fallback, ShouldHaveWrappedFilterAsNotReadyWhenSeededWithAnInvalidValueWhileAlreadyBeingReady)
+{
+   GivenTheWrappedFilterIsReady();
+   GivenTheFilterHasBeenInitialized();
+
+   AfterTheFilterIsSeededWith(ValidValueDegFx100);
+   TheFilterShouldBeReady();
+
+   AfterTheFilterIsSeededWith(InvalidValueDegFx100);
+   TheWrappedFilterShouldBeNotReady();
+}
+
+TEST(Filter_Fallback, ShouldReadAnInvalidValueWhenSeededWithAnInvalidValueWhileAlreadyBeingReady)
+{
+   GivenTheWrappedFilterIsReady();
+   GivenTheFilterHasBeenInitialized();
+
+   AfterTheFilterIsSeededWith(ValidValueDegFx100);
+   TheFilterShouldBeReady();
+
+   AfterTheFilterIsSeededWith(InvalidValueDegFx100);
+   TheFilterShouldReadAnInvalidValue();
 }
