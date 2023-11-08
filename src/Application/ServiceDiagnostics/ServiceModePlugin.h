@@ -11,6 +11,7 @@
 #include "I_DataModel.h"
 #include "ServiceModeRequestHandler.h"
 #include "ServiceModeTest_ExitServiceMode.h"
+#include "ServiceModeTest_Version.h"
 #include "I_ServiceTest.h"
 
 typedef struct
@@ -24,6 +25,18 @@ typedef struct
          ServiceModeTest_ExitServiceMode_t test;
          ServiceModeTestComponent_t component;
       } exitServiceMode;
+
+      struct
+      {
+         ServiceModeTest_Version_t test;
+         ServiceModeTestComponent_t component;
+      } mainBoardApplicationVersion;
+
+      struct
+      {
+         ServiceModeTest_Version_t test;
+         ServiceModeTestComponent_t component;
+      } mainBoardParametricVersion;
    } _private;
 } ServiceModePlugin_t;
 
