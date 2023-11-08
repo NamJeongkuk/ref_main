@@ -98,8 +98,7 @@ SRC_DIRS:=\
   src/Application/Valve \
   src/Application/VariableSweatHeater \
   src/Application/WaterFilter \
-  src/Application/WaterValve \
-  src/Application/WaterVolumeUsageCalculator \
+  src/Application/WaterVolumeUsage \
   Parametric/data/Development \
   lib/Common/Source/Gea \
 
@@ -124,7 +123,7 @@ INC_DIRS:=\
   src/Application/Valve \
   src/Application/Voting \
   src/Application/WaterFilter \
-  src/Application/WaterVolumeUsageCalculator \
+  src/Application/WaterVolumeUsage \
   lib/Common/Source/Temperature/ \
 
 applcommon_EXTERNAL_INC_DIRS:=\

@@ -74,8 +74,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/VariableSweatHeater \
    $(PROJECT_DIR)/Application/Voting \
    $(PROJECT_DIR)/Application/WaterFilter \
-   $(PROJECT_DIR)/Application/WaterValve \
-   $(PROJECT_DIR)/Application/WaterVolumeUsageCalculator \
+   $(PROJECT_DIR)/Application/WaterVolumeUsage \
    $(PROJECT_DIR)/Hardware/SoftPwm \
    $(PROJECT_DIR)/Hardware/PersonalityEeprom \
 
@@ -130,8 +129,8 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/SystemMonitor \
    $(TESTS_DIR)/Application/TimerModule \
    $(TESTS_DIR)/Application/VariableSweatHeater \
-   $(TESTS_DIR)/Application/WaterVolumeUsageCalculator \
    $(TESTS_DIR)/Application/WaterFilter \
+   $(TESTS_DIR)/Application/WaterVolumeUsage \
    $(TESTS_DIR)/Bsp \
    $(TESTS_DIR)/Hardware/SoftPwm \
    $(APPLCOMMON_DIR)/test/Doubles \
