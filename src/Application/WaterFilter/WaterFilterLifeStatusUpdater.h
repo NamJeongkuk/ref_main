@@ -8,9 +8,10 @@
 #ifndef WATERFILTERLIFESTATUSUPDATER_H
 #define WATERFILTERLIFESTATUSUPDATER_H
 
+#include "CalendarUsageInSeconds.h"
 #include "I_DataModel.h"
 #include "FilterData.h"
-#include "RfidTypes.h"
+#include "WaterFilterLifeStatus.h"
 
 typedef struct
 {

@@ -8,9 +8,11 @@
 #ifndef RFIDCOMMUNICATOR_H
 #define RFIDCOMMUNICATOR_H
 
+#include "CalendarUsageInSeconds.h"
 #include "I_DataSource.h"
 #include "I_Event.h"
 #include "RfidTypes.h"
+#include "VolumeInOuncesX100.h"
 
 typedef struct
 {

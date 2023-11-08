@@ -6,7 +6,6 @@
  */
 
 #include "WaterVolumeUsageCalculator.h"
-#include "RfidTypes.h"
 #include "SystemErds.h"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"

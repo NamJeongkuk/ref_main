@@ -9,7 +9,6 @@
 #include "utils.h"
 #include "RfidTypes.h"
 #include "RfidCommunicationControllerState.h"
-#include "WaterFilterType.h"
 #include "SystemErds.h"
 #include "Constants_Time.h"
 #include "Constants_Binary.h"

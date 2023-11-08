@@ -8,7 +8,6 @@
 extern "C"
 {
 #include "WaterVolumeUsageCalculator.h"
-#include "RfidTypes.h"
 #include "SystemErds.h"
 #include "DataModelErdPointerAccess.h"
 }

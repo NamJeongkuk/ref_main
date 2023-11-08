@@ -132,6 +132,8 @@
 #include "ServiceModeTestNumber.h"
 #include "ServiceModeTestStatus.h"
 #include "NotificationsBitmap.h"
+#include "CalendarUsageInSeconds.h"
+#include "VolumeInOuncesX100.h"
 
 // clang-format off
 
@@ -1452,10 +1454,10 @@ enum
    ENTRY(Erd_Eeprom_FreezerScaledDoorAccelerationInSeconds,            0xFB0F, uint32_t,                                Swap_Range,   Io_None, Sub_N, NvUnitSetting,      NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds, 0xFB10, uint32_t,                 Swap_Range,   Io_None, Sub_N, NvUnitSetting,      NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds,   0xFB11, uint32_t,                 Swap_Range_E, Io_None, Sub_N, NvUnitSetting,      NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_Eeprom_TurboCoolOnTimeInMinutes,               0xFB12, uint16_t,                                           Swap_Yes,   Io_None, Sub_N, NvUnitSetting,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_Eeprom_TurboFreezeOnTimeInMinutes,             0xFB13, uint16_t,                                           Swap_Yes,   Io_None, Sub_N, NvUnitSetting,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100,      0xFB14, VolumeInOuncesX100_t,                               Swap_Yes,   Io_None, Sub_N, NvUsageProfile,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_Eeprom_WaterFilterCalendarUsageInSeconds,      0xFB15, CalendarUsageInSeconds_t,                           Swap_Yes,   Io_None, Sub_N, NvUsageProfile,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_TurboCoolOnTimeInMinutes,               0xFB12, uint16_t,                                           Swap_Yes, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_TurboFreezeOnTimeInMinutes,             0xFB13, uint16_t,                                           Swap_Yes, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100,      0xFB14, VolumeInOuncesX100_t,                               Swap_Yes, Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_WaterFilterCalendarUsageInSeconds,      0xFB15, CalendarUsageInSeconds_t,                           Swap_Yes, Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
    ENTRY(Erd_NumberOfTimesMainboardHasLostCommunicationWithAndroidUi, 0xFB82, uint8_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_NumberOfTimesMainboardHasAttemptedToResetAndroidUi,      0xFB83, uint8_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \

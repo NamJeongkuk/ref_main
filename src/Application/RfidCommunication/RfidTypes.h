@@ -50,16 +50,6 @@ typedef struct
    uint8_t filterIdentifier[FilterIdentifierSizeInBytes];
 } RfidFilterIdentifier_t;
 
-typedef uint32_t VolumeInOuncesX100_t;
-
-#define SWAP_DEFINITION_VolumeInOuncesX100_t(_name, _type) \
-   SWAPPED_ERD(_name, sizeof(_type)),
-
-typedef uint32_t CalendarUsageInSeconds_t;
-
-#define SWAP_DEFINITION_CalendarUsageInSeconds_t(_name, _type) \
-   SWAPPED_ERD(_name, sizeof(_type)),
-
 typedef uint32_t LeakDetectedInSeconds_t;
 
 #define SWAP_DEFINITION_LeakDetectedInSeconds_t(_name, _type) \

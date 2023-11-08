@@ -8,6 +8,8 @@
 #include "NewFilterInstalledHandler.h"
 #include "utils.h"
 #include "RfidTypes.h"
+#include "CalendarUsageInSeconds.h"
+#include "VolumeInOuncesX100.h"
 #include "Constants_Binary.h"
 #include <stdio.h>
 

@@ -6,7 +6,6 @@
  */
 
 #include "WaterFilterLifeStatusUpdater.h"
-#include "WaterFilterLifeStatus.h"
 #include "Constants_Time.h"
 
 enum
