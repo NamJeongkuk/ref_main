@@ -1,4 +1,4 @@
 crit_major = 1
 crit_minor = 0
-major = 200
-minor = 21
+major = 100
+minor = 22
