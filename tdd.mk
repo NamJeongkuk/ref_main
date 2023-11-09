@@ -41,6 +41,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Evaporator \
    $(PROJECT_DIR)/Application/Factory \
    $(PROJECT_DIR)/Application/Fan \
+   $(PROJECT_DIR)/Application/Features \
    $(PROJECT_DIR)/Application/FlowMeter \
    $(PROJECT_DIR)/Application/Grid \
    $(PROJECT_DIR)/Application/Grid/GridFunctions \
