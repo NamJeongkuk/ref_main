@@ -67,6 +67,41 @@ static const NewFilterInstalledHandlerConfig_t newFilterInstalledHandlerConfig =
    .rfidFilterUnitSerialNumberErd = Erd_RfidFilterUnitSerialNumber
 };
 
+static const Erd_t waterVolumeUsageInOuncesX100Erds[] = {
+   Erd_LastAluminumMoldIceMakerWaterVolumeUsageInOuncesX100,
+   Erd_LastTwistTrayIceMakerWaterVolumeUsageInOuncesX100,
+   Erd_LastDispensedWaterVolumeUsageInOuncesX100
+};
+
+static const ErdList_t waterVolumeUsageInOuncesX100ErdList = {
+   .erds = waterVolumeUsageInOuncesX100Erds,
+   .numberOfErds = NUM_ELEMENTS(waterVolumeUsageInOuncesX100Erds)
+};
+
+static const TotalWaterValveUsageUpdaterConfig_t waterFilterValveUsageUpdaterConfig = {
+   .waterVolumeUsageInOuncesX100ErdList = waterVolumeUsageInOuncesX100ErdList,
+   .cumulativeWaterVolumeUsageInOuncesX100Erd = Erd_TotalWaterVolumeUsageInOuncesX100
+};
+
+static const TotalWaterValveUsageUpdaterConfig_t unitLifetimeWaterValveUsageUpdaterConfig = {
+   .waterVolumeUsageInOuncesX100ErdList = waterVolumeUsageInOuncesX100ErdList,
+   .cumulativeWaterVolumeUsageInOuncesX100Erd = Erd_LifetimeTotalWaterVolumeUsageInOuncesX100
+};
+
+static const Erd_t unitLifetimeDispensedWaterVolumeUsageInOuncesX100Erds[] = {
+   Erd_LastDispensedWaterVolumeUsageInOuncesX100
+};
+
+static const ErdList_t unitLifetimeDispensedWaterVolumeUsageInOuncesX100ErdList = {
+   .erds = unitLifetimeDispensedWaterVolumeUsageInOuncesX100Erds,
+   .numberOfErds = NUM_ELEMENTS(unitLifetimeDispensedWaterVolumeUsageInOuncesX100Erds)
+};
+
+static const TotalWaterValveUsageUpdaterConfig_t unitLifetimeDispensedWaterValveUsageUpdaterConfig = {
+   .waterVolumeUsageInOuncesX100ErdList = unitLifetimeDispensedWaterVolumeUsageInOuncesX100ErdList,
+   .cumulativeWaterVolumeUsageInOuncesX100Erd = Erd_UnitLifetimeDispensedWaterInOuncesX100
+};
+
 void WaterFilterPlugin_Init(
    WaterFilterPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -111,4 +146,19 @@ void WaterFilterPlugin_Init(
       &instance->_private.newFilterInstalledHandler,
       dataModel,
       &newFilterInstalledHandlerConfig);
+
+   TotalWaterValveUsageUpdater_Init(
+      &instance->_private.unitLifetimeWaterValveUsageUpdater,
+      dataModel,
+      &unitLifetimeWaterValveUsageUpdaterConfig);
+
+   TotalWaterValveUsageUpdater_Init(
+      &instance->_private.waterFilterValveUsageUpdater,
+      dataModel,
+      &waterFilterValveUsageUpdaterConfig);
+
+   TotalWaterValveUsageUpdater_Init(
+      &instance->_private.unitLifetimeDispensedWaterValveUsageUpdater,
+      dataModel,
+      &unitLifetimeDispensedWaterValveUsageUpdaterConfig);
 }

@@ -892,6 +892,7 @@ enum
    ENTRY(Erd_LastAluminumMoldIceMakerWaterVolumeUsageInOuncesX100, 0xF174, VolumeInOuncesX100_t,                        Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_LastTwistTrayIceMakerWaterVolumeUsageInOuncesX100,    0xF175, VolumeInOuncesX100_t,                        Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_LastDispensedWaterVolumeUsageInOuncesX100,     0xF176, VolumeInOuncesX100_t,                               Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_UnitLifetimeDispensedWaterInOuncesX100,        0xF177, VolumeInOuncesX100_t,                               Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RfidFilterReadWriteResult_RfidBoard,           0xF181, RfidFilterReadWriteResult_t,                        Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RfidFilterUid_RfidBoard,                       0xF182, RfidUid_t,                                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RfidFilterIdentifier_RfidBoard,                0xF183, RfidFilterIdentifier_t,                             Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -1458,6 +1459,7 @@ enum
    ENTRY(Erd_Eeprom_TurboFreezeOnTimeInMinutes,             0xFB13, uint16_t,                                           Swap_Yes, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100,      0xFB14, VolumeInOuncesX100_t,                               Swap_Yes, Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_WaterFilterCalendarUsageInSeconds,      0xFB15, CalendarUsageInSeconds_t,                           Swap_Yes, Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_UnitLifetimeDispensedWaterInOuncesX100, 0xFB16, VolumeInOuncesX100_t,                               Swap_Yes, Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
    ENTRY(Erd_NumberOfTimesMainboardHasLostCommunicationWithAndroidUi, 0xFB82, uint8_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_NumberOfTimesMainboardHasAttemptedToResetAndroidUi,      0xFB83, uint8_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \

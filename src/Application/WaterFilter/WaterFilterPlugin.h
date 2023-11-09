@@ -13,6 +13,7 @@
 #include "WaterFilterCalendarUsageUpdater.h"
 #include "WaterVolumeUsageCalculator.h"
 #include "NewFilterInstalledHandler.h"
+#include "TotalWaterValveUsageUpdater.h"
 
 typedef struct
 {
@@ -25,6 +26,9 @@ typedef struct
       WaterVolumeUsageCalculator_t dispensedWaterVolumeUsageCalculator;
       DispensingDisabler_t dispensingDisabler;
       NewFilterInstalledHandler_t newFilterInstalledHandler;
+      TotalWaterValveUsageUpdater_t unitLifetimeWaterValveUsageUpdater;
+      TotalWaterValveUsageUpdater_t waterFilterValveUsageUpdater;
+      TotalWaterValveUsageUpdater_t unitLifetimeDispensedWaterValveUsageUpdater;
    } _private;
 } WaterFilterPlugin_t;
 
