@@ -14,6 +14,7 @@
 #include "ErdResolver.h"
 #include "CompressorStartupFanVotes.h"
 #include "SabbathFanDelayHandler.h"
+#include "CompressorFaultHandler.h"
 
 typedef struct
 {
@@ -25,6 +26,7 @@ typedef struct
       SabbathFanDelayHandler_t sabbathFanDelayHandler;
       ErdResolver_t compressorSpeedErdResolver;
       ErdResolver_t disableMinimumCompressorTimesErdResolver;
+      CompressorFaultHandler_t compressorFaultHandler;
    } _private;
 } CompressorPlugin_t;
 

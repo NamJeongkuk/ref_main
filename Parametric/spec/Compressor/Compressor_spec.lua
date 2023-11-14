@@ -89,7 +89,9 @@ describe('Compressor', function()
             u8(2),
             u8(3),
             u8(1),
-            u8(20)
+            u8(20),
+            u8(3),
+            u16(24)
           )
         )
     ]])
@@ -104,7 +106,9 @@ describe('Compressor', function()
         remain_off_after_valve_move_in_minutes = 2,
         remain_off_after_valve_move_low_ambient_in_minutes = 3,
         variable_speed_minimum_run_time_in_minutes = 1,
-        sabbath_delay_time_in_seconds = 20
+        sabbath_delay_time_in_seconds = 20,
+        compressor_off_cooling_on_max_allowed_time_in_minutes = 3,
+        excessive_runtime_in_minutes = 24
       })
 
     })
@@ -126,7 +130,9 @@ describe('Compressor', function()
       u8(2),
       u8(3),
       u8(1),
-      u8(20)
+      u8(20),
+      u8(3),
+      u16(24)
     ),
     structure(
      bool(true),
@@ -171,7 +177,9 @@ describe('Compressor', function()
         remain_off_after_valve_move_in_minutes = 2,
         remain_off_after_valve_move_low_ambient_in_minutes = 3,
         variable_speed_minimum_run_time_in_minutes = 1,
-        sabbath_delay_time_in_seconds = 20
+        sabbath_delay_time_in_seconds = 20,
+        compressor_off_cooling_on_max_allowed_time_in_minutes = 3,
+        excessive_runtime_in_minutes = 24
       }),
       compressor_speeds = compressorSpeeds({
         cooling_mode_dependent = true,
@@ -221,7 +229,9 @@ describe('Compressor', function()
         u8(2),
         u8(3),
         u8(1),
-        u8(20)
+        u8(20),
+        u8(3),
+        u16(24)
       ),
       structure(
         bool(false),
@@ -248,7 +258,9 @@ describe('Compressor', function()
         remain_off_after_valve_move_in_minutes = 2,
         remain_off_after_valve_move_low_ambient_in_minutes = 3,
         variable_speed_minimum_run_time_in_minutes = 1,
-        sabbath_delay_time_in_seconds = 20
+        sabbath_delay_time_in_seconds = 20,
+        compressor_off_cooling_on_max_allowed_time_in_minutes = 3,
+        excessive_runtime_in_minutes = 24
       }),
       compressor_speeds = compressorSpeeds({
         cooling_mode_dependent = false,

@@ -16,7 +16,9 @@ describe('CompressorTimes', function()
       remain_off_after_valve_move_in_minutes = 30,
       remain_off_after_valve_move_low_ambient_in_minutes = 29,
       variable_speed_minimum_run_time_in_minutes = 3,
-      sabbath_delay_time_in_seconds = 20
+      sabbath_delay_time_in_seconds = 20,
+      excessive_runtime_in_minutes = 24,
+      compressor_off_cooling_on_max_allowed_time_in_minutes = 3
     }, overrides or {})
   end
 
@@ -80,6 +82,22 @@ describe('CompressorTimes', function()
     end)
   end)
 
+  it('should assert if excessive_runtime_in_minutes is not in range', function()
+    should_fail_with('excessive_runtime_in_minutes=-1 must be in [0, 65535]', function()
+      compressor_times(generate_config({
+        excessive_runtime_in_minutes = -1
+      }))
+    end)
+  end)
+
+  it('should assert if compressor_off_cooling_on_max_allowed_time_in_minutes is not in range', function()
+    should_fail_with('compressor_off_cooling_on_max_allowed_time_in_minutes=-1 must be in [0, 255]', function()
+      compressor_times(generate_config({
+        compressor_off_cooling_on_max_allowed_time_in_minutes = -1
+      }))
+    end)
+  end)
+
   it('should generate a typed string with the correct data and type compressor_times', function()
     local expected = remove_whitespace([[
       structure(
@@ -89,7 +107,9 @@ describe('CompressorTimes', function()
         u8(30),
         u8(29),
         u8(3),
-        u8(20))
+        u8(20),
+        u8(3),
+        u16(24))
     ]])
 
     local actual = compressor_times({
@@ -99,9 +119,13 @@ describe('CompressorTimes', function()
       remain_off_after_valve_move_in_minutes = 30,
       remain_off_after_valve_move_low_ambient_in_minutes = 29,
       variable_speed_minimum_run_time_in_minutes = 3,
-      sabbath_delay_time_in_seconds = 20
+      sabbath_delay_time_in_seconds = 20,
+      compressor_off_cooling_on_max_allowed_time_in_minutes = 3,
+      excessive_runtime_in_minutes = 24
     })
 
+    assert.equals(expected, remove_whitespace(tostring(actual)))
+    assert(actual.is_of_type('compressor_times'))
   end)
 
   it('should memoize', function()

@@ -1437,6 +1437,8 @@ enum
    ENTRY(Erd_AmbientHumiditySensorIsInvalidFault,           0xF732, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_AmbientHumiditySensorIsInvalid) \
    ENTRY(Erd_IceMaker0ThermistorIsInvalidFault,             0xF733, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_IceMaker0ThermistorIsInvalid) \
    ENTRY(Erd_IceMaker1ThermistorIsInvalidFault,             0xF734, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_IceMaker1ThermistorIsInvalid) \
+   ENTRY(Erd_ExcessiveCompressorRunTimeFault,               0xF735, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_ExcessiveCompressorRunTime) \
+   ENTRY(Erd_CompressorOffWhileCoolingSystemOnForMaxTimeFault, 0xF736, bool,                                            Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_CompressorOffWhileCoolingSystemOnForMaxTime) \
    \
    ENTRY(Erd_FactoryModeEnableRequestInMinutes,             0xF801, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \

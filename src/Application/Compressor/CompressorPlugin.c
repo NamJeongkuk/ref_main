@@ -86,6 +86,14 @@ static CompressorStartupFanVotesConfiguration_t compressorStartupFanVotesConfig 
    .coolingModeErd = Erd_CoolingMode
 };
 
+static const CompressorFaultHandlerConfig_t compressorFaultHandlerConfig = {
+   .compressorIsOnErd = Erd_CompressorIsOn,
+   .coolingOffStatusErd = Erd_CoolingOffStatus,
+   .excessiveCompressorRunTimeFaultErd = Erd_ExcessiveCompressorRunTimeFault,
+   .compressorOffWhileCoolingSystemOnForMaxTimeFaultErd = Erd_CompressorOffWhileCoolingSystemOnForMaxTimeFault,
+   .timerModuleErd = Erd_TimerModule
+};
+
 void CompressorPlugin_Init(CompressorPlugin_t *instance, I_DataModel_t *dataModel)
 {
    ErdResolver_Init(
@@ -119,4 +127,10 @@ void CompressorPlugin_Init(CompressorPlugin_t *instance, I_DataModel_t *dataMode
       &instance->_private.sabbathFanDelayHandler,
       dataModel,
       &sabbathFanDelayHandlerConfig);
+
+   CompressorFaultHandler_Init(
+      &instance->_private.compressorFaultHandler,
+      dataModel,
+      &compressorFaultHandlerConfig,
+      &PersonalityParametricData_Get(dataModel)->compressorData->compressorTimes);
 }

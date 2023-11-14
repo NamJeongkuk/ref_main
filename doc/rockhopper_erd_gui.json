@@ -106,6 +106,27 @@
           "name": "Erd_CompressorControllerSpeedRequest",
           "read": true,
           "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Excessive Compressor Run Time Fault ",
+          "name": "Erd_ExcessiveCompressorRunTimeFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Compressor Off While Cooling System On For Max Time Fault",
+          "name": "Erd_CompressorOffWhileCoolingSystemOnForMaxTimeFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Cooling Off Status",
+          "name": "Erd_CoolingOffStatus",
+          "read": true,
+          "write": true
         }
       ]
     },
@@ -1676,6 +1697,20 @@
           "namespace": "mb",
           "displayName": "F012 Ice Maker 1 Thermistor Is Invalid",
           "name": "Erd_IceMaker1ThermistorIsInvalidFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F300 Excessive Compressor Run Time",
+          "name": "Erd_ExcessiveCompressorRunTimeFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F301 Compressor Off While Cooling System On For Max Time",
+          "name": "Erd_CompressorOffWhileCoolingSystemOnForMaxTimeFault",
           "read": true,
           "write": false
         },

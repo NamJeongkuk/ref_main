@@ -20,6 +20,8 @@ enum
    FaultId_AmbientHumiditySensorIsInvalid = 9,
    FaultId_IceMaker0ThermistorIsInvalid = 10,
    FaultId_IceMaker1ThermistorIsInvalid = 12,
+   FaultId_ExcessiveCompressorRunTime = 300,
+   FaultId_CompressorOffWhileCoolingSystemOnForMaxTime = 301,
    FaultId_DoorBoardCommunicationFault = 523,
    FaultId_AutofillCouplingFault = 721,
    FaultId_DispenserUiCommunicationFault = 733,
