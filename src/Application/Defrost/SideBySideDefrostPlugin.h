@@ -19,6 +19,7 @@
 #include "NextDefrostTypeArbiter.h"
 #include "DefrostTestRequestHandler.h"
 #include "ReadyToDefrost.h"
+#include "SabbathReadyToDefrost.h"
 
 typedef struct
 {
@@ -33,6 +34,7 @@ typedef struct
       FreezerDefrostHeaterVotingFrameworkPlugin_t freezerDefrostHeaterVotingFramework;
       NextDefrostTypeArbiter_t nextDefrostTypeArbiter;
       DefrostTestRequestHandler_t defrostTestRequestHandler;
+      SabbathReadyToDefrost_t sabbathReadyToDefrost;
    } _private;
 } SideBySideDefrostPlugin_t;
 

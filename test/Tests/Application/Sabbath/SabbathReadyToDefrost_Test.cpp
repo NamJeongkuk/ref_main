@@ -16,6 +16,11 @@ extern "C"
 #include "CppUTestExt/MockSupport.h"
 #include "ReferDataModel_TestDouble.h"
 
+enum
+{
+   UpdatePeriodInMs = MSEC_PER_MIN
+};
+
 static const SabbathReadyToDefrostConfig_t config = {
    .timerModuleErd = Erd_TimerModule,
    .waitingToDefrostErd = Erd_WaitingToDefrost,
@@ -70,6 +75,11 @@ TEST_GROUP(SabbathReadyToDefrost)
    void GivenSabbathIsReadyToDefrostIs(bool state)
    {
       DataModel_Write(dataModel, Erd_SabbathIsReadyToDefrost, &state);
+   }
+
+   void GivenSabbathWaitingForDefrostTimeInMinutesIs(uint16_t timeInMinutes)
+   {
+      DataModel_Write(dataModel, Erd_SabbathWaitingForDefrostTimeInMinutes, &timeInMinutes);
    }
 
    void SabbathIsReadyToDefrostShouldBe(bool expected)
@@ -138,13 +148,13 @@ TEST(SabbathReadyToDefrost, ShouldIncrementSabbathWaitingForDefrostTimeWhileWait
    GivenWaitingToDefrostIs(true);
    GivenTheModuleIsInitialized();
 
-   After(MSEC_PER_MIN - 1);
+   After(UpdatePeriodInMs - 1);
    SabbathWaitingForDefrostTimeInMinutesShouldBe(0);
 
    After(1);
    SabbathWaitingForDefrostTimeInMinutesShouldBe(1);
 
-   After(MSEC_PER_MIN);
+   After(UpdatePeriodInMs);
    SabbathWaitingForDefrostTimeInMinutesShouldBe(2);
 }
 
@@ -162,19 +172,44 @@ TEST(SabbathReadyToDefrost, ShouldSetSabbathReadyToDefrostAndSabbathWaitingForDe
    SabbathWaitingForDefrostTimeInMinutesShouldBe(sabbathData->timeBetweenDefrostsInMinutes);
 }
 
-TEST(SabbathReadyToDefrost, ShouldResetAndNotCountSabbathWaitingForDefrostTimeInMinutesWhenWaitingToDefrostChangesToFalse)
+TEST(SabbathReadyToDefrost, ShouldNotResetAndNotCountSabbathWaitingForDefrostTimeInMinutesWhenWaitingToDefrostChangesFromTrueToFalse)
 {
    GivenWaitingToDefrostIs(true);
    GivenTheModuleIsInitialized();
 
-   After(MSEC_PER_MIN);
+   After(UpdatePeriodInMs - 1);
+   SabbathWaitingForDefrostTimeInMinutesShouldBe(0);
+
+   After(1);
    SabbathWaitingForDefrostTimeInMinutesShouldBe(1);
 
    WhenWaitingToDefrostIs(false);
+
+   After(UpdatePeriodInMs - 1);
+   SabbathWaitingForDefrostTimeInMinutesShouldBe(1);
+
+   After(1);
+   SabbathWaitingForDefrostTimeInMinutesShouldBe(1);
+}
+
+TEST(SabbathReadyToDefrost, ShouldResetAndStartCountingSabbathWaitingForDefrostTimeInMinutesWhenWaitingToDefrostChangesFromFalseToTrue)
+{
+   GivenWaitingToDefrostIs(true);
+   GivenTheModuleIsInitialized();
+
+   After(UpdatePeriodInMs);
+   SabbathWaitingForDefrostTimeInMinutesShouldBe(1);
+
+   WhenWaitingToDefrostIs(false);
+   SabbathWaitingForDefrostTimeInMinutesShouldBe(1);
+
+   WhenWaitingToDefrostIs(true);
+
+   After(UpdatePeriodInMs - 1);
    SabbathWaitingForDefrostTimeInMinutesShouldBe(0);
 
-   After(MSEC_PER_MIN);
-   SabbathWaitingForDefrostTimeInMinutesShouldBe(0);
+   After(1);
+   SabbathWaitingForDefrostTimeInMinutesShouldBe(1);
 }
 
 TEST(SabbathReadyToDefrost, ShouldNotStartCountingSabbathWaitingForDefrostTimeInMinutesWhileWaitingToDefrostIsFalse)
@@ -183,7 +218,7 @@ TEST(SabbathReadyToDefrost, ShouldNotStartCountingSabbathWaitingForDefrostTimeIn
    GivenTheModuleIsInitialized();
    SabbathWaitingForDefrostTimeInMinutesShouldBe(0);
 
-   After(MSEC_PER_MIN);
+   After(UpdatePeriodInMs);
    SabbathWaitingForDefrostTimeInMinutesShouldBe(0);
 }
 
@@ -193,8 +228,71 @@ TEST(SabbathReadyToDefrost, ShouldStartCountingSabbathWaitingForDefrostTimeInMin
    GivenTheModuleIsInitialized();
 
    WhenWaitingToDefrostIs(true);
+
+   After(UpdatePeriodInMs - 1);
    SabbathWaitingForDefrostTimeInMinutesShouldBe(0);
 
-   After(MSEC_PER_MIN);
+   After(1);
    SabbathWaitingForDefrostTimeInMinutesShouldBe(1);
+}
+
+TEST(SabbathReadyToDefrost, ShouldStartCountingFromSavedSabbathWaitingForDefrostTimeInMinutes)
+{
+   GivenWaitingToDefrostIs(true);
+   GivenSabbathWaitingForDefrostTimeInMinutesIs(sabbathData->timeBetweenDefrostsInMinutes - 1);
+   GivenTheModuleIsInitialized();
+
+   After(UpdatePeriodInMs - 1);
+   SabbathWaitingForDefrostTimeInMinutesShouldBe(sabbathData->timeBetweenDefrostsInMinutes - 1);
+
+   After(1);
+   SabbathWaitingForDefrostTimeInMinutesShouldBe(sabbathData->timeBetweenDefrostsInMinutes);
+}
+
+TEST(SabbathReadyToDefrost, ShouldStartCountingFromZeroWhenWaitingToDefrostChangesToTrueAfterPoweringUpWithANonZeroSabbathWaitingForDefrostTime)
+{
+   GivenWaitingToDefrostIs(false);
+   GivenSabbathWaitingForDefrostTimeInMinutesIs(sabbathData->timeBetweenDefrostsInMinutes - 1);
+   GivenTheModuleIsInitialized();
+
+   WhenWaitingToDefrostIs(true);
+   After(UpdatePeriodInMs - 1);
+   SabbathWaitingForDefrostTimeInMinutesShouldBe(0);
+
+   After(1);
+   SabbathWaitingForDefrostTimeInMinutesShouldBe(1);
+}
+
+TEST(SabbathReadyToDefrost, ShouldSetSabbathIsReadyToDefrostIfSabbathWaitingForDefrostTimeAlreadyEqualsSabbathTimeBetweenDefrostsAndWaitingToDefrostIsTrueOnPowerUp)
+{
+   GivenWaitingToDefrostIs(true);
+   GivenSabbathWaitingForDefrostTimeInMinutesIs(sabbathData->timeBetweenDefrostsInMinutes);
+   GivenTheModuleIsInitialized();
+
+   SabbathIsReadyToDefrostShouldBe(true);
+}
+
+TEST(SabbathReadyToDefrost, ShouldContinueCountingSabbathWaitingForDefrostTimeAfterSabbathIsReadyToDefrostIsSetIfSabbathWaitingForDefrostTimeAlreadyEqualsSabbathTimeBetweenDefrostsAndWaitingToDefrostIsTrueOnPowerUpAndWaitingToDefrostDoesNotChangeToFalse)
+{
+   GivenWaitingToDefrostIs(true);
+   GivenSabbathWaitingForDefrostTimeInMinutesIs(sabbathData->timeBetweenDefrostsInMinutes);
+   GivenTheModuleIsInitialized();
+
+   SabbathIsReadyToDefrostShouldBe(true);
+
+   After(UpdatePeriodInMs - 1);
+   SabbathWaitingForDefrostTimeInMinutesShouldBe(sabbathData->timeBetweenDefrostsInMinutes);
+
+   After(1);
+   SabbathWaitingForDefrostTimeInMinutesShouldBe(sabbathData->timeBetweenDefrostsInMinutes + 1);
+}
+
+TEST(SabbathReadyToDefrost, ShouldNotSetSabbathIsReadyToDefrostIfSabbathWaitingForDefrostTimeAlreadyEqualsSabbathTimeBetweenDefrostsOnPowerUpWhenWaitingToDefrostChangesToTrue)
+{
+   GivenWaitingToDefrostIs(false);
+   GivenSabbathWaitingForDefrostTimeInMinutesIs(sabbathData->timeBetweenDefrostsInMinutes);
+   GivenTheModuleIsInitialized();
+
+   WhenWaitingToDefrostIs(true);
+   SabbathIsReadyToDefrostShouldBe(false);
 }

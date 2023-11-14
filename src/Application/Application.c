@@ -8,7 +8,6 @@
 #include "Application.h"
 #include "SystemErds.h"
 #include "DataModelErdPointerAccess.h"
-#include "SabbathPlugin.h"
 #include "ApplianceFeatureApiUpdater.h"
 #include "SnackModePlugin.h"
 #include "NotificationsPlugin.h"
@@ -43,7 +42,6 @@ void Application_Init(
    ShiftOffsetCalculatorCommonPlugin_Init(&instance->_private.shiftOffsetCalculatorCommonPlugin, dataModel);
 
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
-   SabbathPlugin_Init(dataModel);
    PeriodicNvUpdaterPlugin_Init(&instance->_private.periodicNvUpdaterPlugin, dataModel);
 
    SideBySideConfigurationPlugin_Init(&instance->_private.platformConfigurations.sideBySidePlugin, dataModel);

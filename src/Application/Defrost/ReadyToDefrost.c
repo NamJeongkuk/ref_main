@@ -572,9 +572,6 @@ static bool State_WaitingToGetReadyToDefrost(Hsm_t *hsm, HsmSignal_t signal, con
          break;
 
       case Hsm_Exit:
-         ResetWaitingForDefrostTimeInSecondsToZero(instance);
-         ResetCompressorOnTimeInSecondsToZero(instance);
-         ResetDoorAccelerationsInSecondsToZero(instance);
          break;
 
       default:
@@ -791,6 +788,8 @@ static bool State_ReadyAndDefrosting(Hsm_t *hsm, HsmSignal_t signal, const void 
          break;
 
       case Hsm_Exit:
+         ResetCompressorOnTimeInSecondsToZero(instance);
+         ResetDoorAccelerationsInSecondsToZero(instance);
          break;
 
       default:

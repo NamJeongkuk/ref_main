@@ -141,6 +141,14 @@ static const DefrostTestRequestHandlerConfiguration_t defrostTestRequestHandlerC
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill
 };
 
+static const SabbathReadyToDefrostConfig_t sabbathReadyToDefrostConfig = {
+   .timerModuleErd = Erd_TimerModule,
+   .waitingToDefrostErd = Erd_WaitingToDefrost,
+   .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost,
+   .sabbathTimeBetweenDefrostsInMinutesErd = Erd_SabbathTimeBetweenDefrostsInMinutes,
+   .sabbathWaitingForDefrostTimeInMinutesErd = Erd_SabbathWaitingForDefrostTimeInMinutes
+};
+
 void SideBySideDefrostPlugin_Init(SideBySideDefrostPlugin_t *instance, I_DataModel_t *dataModel)
 {
    bool sensorsReadyToBeRead;
@@ -173,18 +181,11 @@ void SideBySideDefrostPlugin_Init(SideBySideDefrostPlugin_t *instance, I_DataMod
       Erd_PeriodicNvUpdaterReady,
       &periodicNvUpdaterReady);
 
-   bool sabbathPluginReady;
-   DataModel_Read(
-      dataModel,
-      Erd_SabbathPluginReady,
-      &sabbathPluginReady);
-
    uassert(sensorsReadyToBeRead &&
       setpointResolverReady &&
       ambientTemperaturePluginReady &&
       gridPluginReady &&
-      periodicNvUpdaterReady &&
-      sabbathPluginReady);
+      periodicNvUpdaterReady);
 
    const DefrostData_t *defrostData = PersonalityParametricData_Get(dataModel)->defrostData;
 
@@ -230,4 +231,10 @@ void SideBySideDefrostPlugin_Init(SideBySideDefrostPlugin_t *instance, I_DataMod
       &instance->_private.defrostTestRequestHandler,
       dataModel,
       &defrostTestRequestHandlerConfig);
+
+   SabbathReadyToDefrost_Init(
+      &instance->_private.sabbathReadyToDefrost,
+      dataModel,
+      &sabbathReadyToDefrostConfig,
+      PersonalityParametricData_Get(dataModel)->sabbathData);
 }

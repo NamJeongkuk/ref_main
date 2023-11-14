@@ -25,7 +25,8 @@ static const PeriodicNvUpdateServiceConfigurationEntry_t periodicNvUpdateTableEn
    { Erd_TurboFreezeOnTimeInMinutes, Erd_Eeprom_TurboFreezeOnTimeInMinutes },
    { Erd_TotalWaterVolumeUsageInOuncesX100, Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100 },
    { Erd_WaterFilterCalendarUsageInSeconds, Erd_Eeprom_WaterFilterCalendarUsageInSeconds },
-   { Erd_UnitLifetimeDispensedWaterInOuncesX100, Erd_Eeprom_UnitLifetimeDispensedWaterInOuncesX100 }
+   { Erd_UnitLifetimeDispensedWaterInOuncesX100, Erd_Eeprom_UnitLifetimeDispensedWaterInOuncesX100 },
+   { Erd_SabbathWaitingForDefrostTimeInMinutes, Erd_Eeprom_SabbathWaitingForDefrostTimeInMinutes }
 };
 
 static const PeriodicNvUpdateServiceConfigurationEntry_t periodicNvUpdateDefrostHeaterOnTimeTableEntries[] = {

@@ -13,6 +13,11 @@
 
 enum
 {
+   UpdatePeriodInMs = MSEC_PER_MIN
+};
+
+enum
+{
    Signal_OneMinuteTimerExpired = Fsm_UserSignalStart,
    Signal_WaitingToDefrostChanged
 };
@@ -35,7 +40,7 @@ static void IncrementSabbathWaitingForDefrostTimeInMinutes(SabbathReadyToDefrost
       &minutes);
 }
 
-static uint16_t SabbathWaitingForDefrostTime(SabbathReadyToDefrost_t *instance)
+static uint16_t SabbathWaitingForDefrostTimeInMinutes(SabbathReadyToDefrost_t *instance)
 {
    uint16_t minutes;
    DataModel_Read(
@@ -46,15 +51,9 @@ static uint16_t SabbathWaitingForDefrostTime(SabbathReadyToDefrost_t *instance)
    return minutes;
 }
 
-static uint16_t SabbathTimeBetweenDefrosts(SabbathReadyToDefrost_t *instance)
+static uint16_t SabbathTimeBetweenDefrostsInMinutes(SabbathReadyToDefrost_t *instance)
 {
-   uint16_t minutes;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->sabbathTimeBetweenDefrostsInMinutesErd,
-      &minutes);
-
-   return minutes;
+   return instance->_private.sabbathData->timeBetweenDefrostsInMinutes;
 }
 
 static void OneMinuteTimerExpired(void *context)
@@ -92,21 +91,28 @@ static void State_WaitingToDefrost(Fsm_t *fsm, const FsmSignal_t signal, const v
    switch(signal)
    {
       case Fsm_Entry:
-         SetSabbathReadyToDefrostTo(instance, false);
+         if(SabbathWaitingForDefrostTimeInMinutes(instance) >= SabbathTimeBetweenDefrostsInMinutes(instance))
+         {
+            SetSabbathReadyToDefrostTo(instance, true);
+         }
+         else
+         {
+            SetSabbathReadyToDefrostTo(instance, false);
+         }
 
          TimerModule_StartPeriodic(
             DataModelErdPointerAccess_GetTimerModule(
                instance->_private.dataModel,
                instance->_private.config->timerModuleErd),
             &instance->_private.timer,
-            MSEC_PER_MIN,
+            UpdatePeriodInMs,
             OneMinuteTimerExpired,
             instance);
          break;
 
       case Signal_OneMinuteTimerExpired:
          IncrementSabbathWaitingForDefrostTimeInMinutes(instance);
-         if(SabbathWaitingForDefrostTime(instance) >= SabbathTimeBetweenDefrosts(instance))
+         if(SabbathWaitingForDefrostTimeInMinutes(instance) >= SabbathTimeBetweenDefrostsInMinutes(instance))
          {
             SetSabbathReadyToDefrostTo(instance, true);
          }
@@ -122,19 +128,26 @@ static void State_WaitingToDefrost(Fsm_t *fsm, const FsmSignal_t signal, const v
                instance->_private.dataModel,
                instance->_private.config->timerModuleErd),
             &instance->_private.timer);
-         ResetSabbathWaitingForDefrostTime(instance);
          break;
    }
 }
 
 static void State_Defrosting(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
 {
+   SabbathReadyToDefrost_t *instance = CONTAINER_OF(SabbathReadyToDefrost_t, _private.fsm, fsm);
    IGNORE(data);
 
    switch(signal)
    {
+      case Fsm_Entry:
+         break;
+
       case Signal_WaitingToDefrostChanged:
          Fsm_Transition(fsm, State_WaitingToDefrost);
+         break;
+
+      case Fsm_Exit:
+         ResetSabbathWaitingForDefrostTime(instance);
          break;
    }
 }
