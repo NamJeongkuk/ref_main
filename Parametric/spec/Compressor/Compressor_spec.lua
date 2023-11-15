@@ -107,8 +107,8 @@ describe('Compressor', function()
         remain_off_after_valve_move_low_ambient_in_minutes = 3,
         variable_speed_minimum_run_time_in_minutes = 1,
         sabbath_delay_time_in_seconds = 20,
-        compressor_off_cooling_on_max_allowed_time_in_minutes = 3,
-        excessive_runtime_in_minutes = 24
+        compressor_excessive_off_time_to_trigger_fcode_in_minutes = 3,
+        compressor_excessive_run_time_to_trigger_fcode_in_minutes = 24
       })
 
     })
@@ -178,8 +178,8 @@ describe('Compressor', function()
         remain_off_after_valve_move_low_ambient_in_minutes = 3,
         variable_speed_minimum_run_time_in_minutes = 1,
         sabbath_delay_time_in_seconds = 20,
-        compressor_off_cooling_on_max_allowed_time_in_minutes = 3,
-        excessive_runtime_in_minutes = 24
+        compressor_excessive_off_time_to_trigger_fcode_in_minutes = 3,
+        compressor_excessive_run_time_to_trigger_fcode_in_minutes = 24
       }),
       compressor_speeds = compressorSpeeds({
         cooling_mode_dependent = true,
@@ -259,8 +259,8 @@ describe('Compressor', function()
         remain_off_after_valve_move_low_ambient_in_minutes = 3,
         variable_speed_minimum_run_time_in_minutes = 1,
         sabbath_delay_time_in_seconds = 20,
-        compressor_off_cooling_on_max_allowed_time_in_minutes = 3,
-        excessive_runtime_in_minutes = 24
+        compressor_excessive_off_time_to_trigger_fcode_in_minutes = 3,
+        compressor_excessive_run_time_to_trigger_fcode_in_minutes = 24
       }),
       compressor_speeds = compressorSpeeds({
         cooling_mode_dependent = false,

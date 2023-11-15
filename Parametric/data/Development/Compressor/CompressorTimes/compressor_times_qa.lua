@@ -6,6 +6,6 @@ return compressor_times({
    remain_off_after_valve_move_low_ambient_in_minutes = 2,
    variable_speed_minimum_run_time_in_minutes = 1,
    sabbath_delay_time_in_seconds = 25,
-   compressor_off_cooling_on_max_allowed_time_in_minutes = 15,
-   excessive_runtime_in_minutes = 30
+   compressor_excessive_off_time_to_trigger_fcode_in_minutes = 15,
+   compressor_excessive_run_time_to_trigger_fcode_in_minutes = 30
  })

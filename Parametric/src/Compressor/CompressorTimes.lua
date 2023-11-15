@@ -17,8 +17,8 @@ return function(core)
         u8(config.remain_off_after_valve_move_low_ambient_in_minutes),
         u8(config.variable_speed_minimum_run_time_in_minutes),
         u8(config.sabbath_delay_time_in_seconds),
-        u8(config.compressor_off_cooling_on_max_allowed_time_in_minutes),
-        u16(config.excessive_runtime_in_minutes)
+        u8(config.compressor_excessive_off_time_to_trigger_fcode_in_minutes),
+        u16(config.compressor_excessive_run_time_to_trigger_fcode_in_minutes)
       )
     )
   end)
@@ -34,8 +34,8 @@ return function(core)
         remain_off_after_valve_move_low_ambient_in_minutes = { constraint.u8 },
         variable_speed_minimum_run_time_in_minutes = { constraint.u8 },
         sabbath_delay_time_in_seconds = { constraint.in_range(15, 25) },
-        compressor_off_cooling_on_max_allowed_time_in_minutes = { constraint.u8 },
-        excessive_runtime_in_minutes = { constraint.u16 }
+        compressor_excessive_off_time_to_trigger_fcode_in_minutes = { constraint.u8 },
+        compressor_excessive_run_time_to_trigger_fcode_in_minutes = { constraint.u16 }
       }
     )
     return generate(config)
