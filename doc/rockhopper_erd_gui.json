@@ -3679,14 +3679,6 @@
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Water Filter Life Status",
-          "name": "Erd_WaterFilterLifeStatus",
-          "read": true,
-          "write": true,
-          "interval": 1000000000
-        },
-        {
-          "namespace": "mb",
           "displayName": "Lifetime Total Water Volume Usage In Ounces x100",
           "name": "Erd_LifetimeTotalWaterVolumeUsageInOuncesX100",
           "read": true,
@@ -3761,6 +3753,54 @@
           "namespace": "mb",
           "displayName": "Last Dispensed Water Volume Usage In Ounces x100",
           "name": "Erd_LastDispensedWaterVolumeUsageInOuncesX100",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Enable Demo Mode Status",
+          "name": "Erd_EnableDemoModeStatus",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Leak Detected",
+          "name": "Erd_LeakDetected",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Filter Error",
+          "name": "Erd_FilterError",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Bypass Plug Installed",
+          "name": "Erd_BypassPlugInstalled",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Water Filter Life Status",
+          "name": "Erd_WaterFilterLifeStatus",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Water Filter State",
+          "name": "Erd_WaterFilterState",
           "read": true,
           "write": true,
           "interval": 1000000000

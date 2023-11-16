@@ -102,6 +102,15 @@ static const TotalWaterValveUsageUpdaterConfig_t unitLifetimeDispensedWaterValve
    .cumulativeWaterVolumeUsageInOuncesX100Erd = Erd_UnitLifetimeDispensedWaterInOuncesX100
 };
 
+static const WaterFilterStateResolverConfig_t waterFilterStateResolverConfig = {
+   .enableDemoModeStatusErd = Erd_EnableDemoModeStatus,
+   .leakDetectedErd = Erd_LeakDetected,
+   .filterErrorErd = Erd_FilterError,
+   .bypassPlugInstalledErd = Erd_BypassPlugInstalled,
+   .waterFilterLifeStatusErd = Erd_WaterFilterLifeStatus,
+   .resolvedFilterStateErd = Erd_WaterFilterState
+};
+
 void WaterFilterPlugin_Init(
    WaterFilterPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -161,4 +170,9 @@ void WaterFilterPlugin_Init(
       &instance->_private.unitLifetimeDispensedWaterValveUsageUpdater,
       dataModel,
       &unitLifetimeDispensedWaterValveUsageUpdaterConfig);
+
+   WaterFilterStateResolver_Init(
+      &instance->_private.waterFilterStateResolver,
+      dataModel,
+      &waterFilterStateResolverConfig);
 }

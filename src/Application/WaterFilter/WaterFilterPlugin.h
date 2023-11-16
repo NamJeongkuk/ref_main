@@ -14,6 +14,7 @@
 #include "WaterVolumeUsageCalculator.h"
 #include "NewFilterInstalledHandler.h"
 #include "TotalWaterValveUsageUpdater.h"
+#include "WaterFilterStateResolver.h"
 
 typedef struct
 {
@@ -29,6 +30,7 @@ typedef struct
       TotalWaterValveUsageUpdater_t unitLifetimeWaterValveUsageUpdater;
       TotalWaterValveUsageUpdater_t waterFilterValveUsageUpdater;
       TotalWaterValveUsageUpdater_t unitLifetimeDispensedWaterValveUsageUpdater;
+      WaterFilterStateResolver_t waterFilterStateResolver;
    } _private;
 } WaterFilterPlugin_t;
 
