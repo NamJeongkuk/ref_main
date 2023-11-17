@@ -111,6 +111,12 @@ static const WaterFilterStateResolverConfig_t waterFilterStateResolverConfig = {
    .resolvedFilterStateErd = Erd_WaterFilterState
 };
 
+static const WaterFilterRemainingUsageUpdaterConfig_t waterFilterRemainingUsageUpdaterConfig = {
+   .totalWaterVolumeUsageInOuncesx100Erd = Erd_TotalWaterVolumeUsageInOuncesX100,
+   .waterFilterCalendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
+   .waterFilterRemainingUsageErd = Erd_WaterFilterRemainingUsage
+};
+
 void WaterFilterPlugin_Init(
    WaterFilterPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -175,4 +181,10 @@ void WaterFilterPlugin_Init(
       &instance->_private.waterFilterStateResolver,
       dataModel,
       &waterFilterStateResolverConfig);
+
+   WaterFilterRemainingUsageUpdater_Init(
+      &instance->_private.waterFilterRemainingUsageUpdater,
+      dataModel,
+      &waterFilterRemainingUsageUpdaterConfig,
+      PersonalityParametricData_Get(dataModel)->filterData->commonFilterData);
 }

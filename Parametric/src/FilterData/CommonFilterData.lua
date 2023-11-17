@@ -22,8 +22,8 @@ return function(core)
     validate_arguments(
       config,
       {
-        filter_rated_volume_in_ouncesx100 = { constraint.u32 },
-        filter_rated_life_in_minutes = { constraint.u32 },
+        filter_rated_volume_in_ouncesx100 = { constraint.u32, constraint.greater_than(0) },
+        filter_rated_life_in_minutes = { constraint.u32, constraint.greater_than(0) },
         minimum_volume_needed_to_start_filter_life_timer_in_ounces = { constraint.u16 },
         water_filter_calendar_usage_delay_for_low_usage_in_minutes = { constraint.u32 }
       }

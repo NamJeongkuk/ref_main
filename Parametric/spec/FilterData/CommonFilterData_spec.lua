@@ -28,10 +28,26 @@ describe('CommonFilterData', function()
     end)
   end)
 
+  it('should assert if filter_rated_volume_in_ouncesx100 is zero', function()
+    should_fail_with('filter_rated_volume_in_ouncesx100=0 must be >0', function()
+      common_filter_data(generate_config({
+        filter_rated_volume_in_ouncesx100 = 0
+      }))
+    end)
+  end)
+
   it('should assert if filter_rated_life_in_minutes is not in range', function()
     should_fail_with('filter_rated_life_in_minutes=-1 must be in [0, 4294967295]', function()
       common_filter_data(generate_config({
         filter_rated_life_in_minutes = -1
+      }))
+    end)
+  end)
+
+  it('should assert if filter_rated_life_in_minutes is zero', function()
+    should_fail_with('filter_rated_life_in_minutes=0 must be >0', function()
+      common_filter_data(generate_config({
+        filter_rated_life_in_minutes = 0
       }))
     end)
   end)

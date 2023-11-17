@@ -9,12 +9,15 @@
 #define WATERFILTERPLUGIN_H
 
 #include "DispensingDisabler.h"
+#include "NewFilterInstalledHandler.h"
 #include "RfidCommunicationPlugin.h"
+#include "TotalWaterValveUsageUpdater.h"
 #include "WaterFilterCalendarUsageUpdater.h"
 #include "WaterVolumeUsageCalculator.h"
 #include "NewFilterInstalledHandler.h"
 #include "TotalWaterValveUsageUpdater.h"
 #include "WaterFilterStateResolver.h"
+#include "WaterFilterRemainingUsageUpdater.h"
 
 typedef struct
 {
@@ -31,6 +34,7 @@ typedef struct
       TotalWaterValveUsageUpdater_t waterFilterValveUsageUpdater;
       TotalWaterValveUsageUpdater_t unitLifetimeDispensedWaterValveUsageUpdater;
       WaterFilterStateResolver_t waterFilterStateResolver;
+      WaterFilterRemainingUsageUpdater_t waterFilterRemainingUsageUpdater;
    } _private;
 } WaterFilterPlugin_t;
 
