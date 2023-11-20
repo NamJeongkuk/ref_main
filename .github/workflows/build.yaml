@@ -87,5 +87,5 @@ jobs:
       id-token: write
       contents: read
     with:
-      recipients: grant.miller@geappliances.com, kira.hartlage@geappliances.com, jose.padron@geappliances.com, leonardo.falconizzi@geappliances.com
+      recipients: kira.hartlage@geappliances.com, jose.padron@geappliances.com, leonardo.falconizzi@geappliances.com
       status: Failure
