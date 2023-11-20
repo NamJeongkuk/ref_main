@@ -52,7 +52,9 @@ static const ResetNvErdImmediatelyWhenRamErdChangesToZeroEntry_t resetNvErdImmed
    { Erd_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds, Erd_Eeprom_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds },
    { Erd_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds, Erd_Eeprom_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds },
    { Erd_FreezerDefrostHeaterOnTimeInMinutes, Erd_Eeprom_FreezerDefrostHeaterOnTimeInMinutes },
-   { Erd_TurboCoolOnTimeInMinutes, Erd_Eeprom_TurboCoolOnTimeInMinutes }
+   { Erd_TurboCoolOnTimeInMinutes, Erd_Eeprom_TurboCoolOnTimeInMinutes },
+   { Erd_TurboFreezeOnTimeInMinutes, Erd_Eeprom_TurboFreezeOnTimeInMinutes },
+   { Erd_SabbathWaitingForDefrostTimeInMinutes, Erd_Eeprom_SabbathWaitingForDefrostTimeInMinutes }
 };
 
 static const ResetNvErdImmediatelyWhenRamErdChangesToZeroConfiguration_t resetNvErdImmediatelyWhenRamErdChangesToZeroConfiguration = {
