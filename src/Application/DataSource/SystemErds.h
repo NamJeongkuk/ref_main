@@ -1172,7 +1172,7 @@ enum
    \
    ENTRY(Erd_FreshFood_FilteredTemperatureOverrideRequest,            0xF426, bool,                                     Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFood_FilteredTemperatureOverrideValueInDegFx100,    0xF427, TemperatureDegFx100_t,                    Swap_Range_S, Io_None, Sub_N, Ram,                NotNv,                                    NotFault) \
-   ENTRY(Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,         0xF428, TemperatureDegFx100_t,                    Swap_Range_E, Io_None, Sub_N, Ram,                NotNv,                                    NotFault) \
+   ENTRY(Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,         0xF428, TemperatureDegFx100_t,                    Swap_Range_E, Io_None, Sub_Y, Ram,                NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodThermistor_IsValidOverrideRequest,                     0xF429, bool,                              Swap_No, Io_None, Sub_N, Ram,                     NotNv,                                    NotFault) \
    ENTRY(Erd_FreshFoodThermistor_IsValidOverrideValue,                       0xF430, bool,                              Swap_No, Io_None, Sub_N, Ram,                     NotNv,                                    NotFault) \
@@ -1439,6 +1439,7 @@ enum
    ENTRY(Erd_IceMaker1ThermistorIsInvalidFault,             0xF734, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_IceMaker1ThermistorIsInvalid) \
    ENTRY(Erd_ExcessiveCompressorRunTimeFault,               0xF735, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_ExcessiveCompressorRunTime) \
    ENTRY(Erd_CompressorOffWhileCoolingSystemOnForMaxTimeFault, 0xF736, bool,                                            Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_CompressorOffWhileCoolingSystemOnForMaxTime) \
+   ENTRY(Erd_FreshFoodNoFreezeLimitTrippedFault,            0xF737, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_FreshFoodNoFreezeLimitTripped) \
    \
    ENTRY(Erd_FactoryModeEnableRequestInMinutes,             0xF801, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \

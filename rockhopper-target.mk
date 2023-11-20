@@ -65,6 +65,7 @@ SRC_DIRS:=\
   src/Application/Evaporator \
   src/Application/Factory \
   src/Application/Fan \
+  src/Application/Fault \
   src/Application/Features \
   src/Application/FlowMeter \
   src/Application/Gea \

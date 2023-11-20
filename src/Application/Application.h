@@ -20,6 +20,7 @@
 #include "BroadcastResetPlugin.h"
 #include "SoundLevelPlugin.h"
 #include "ServiceModePlugin.h"
+#include "FaultMonitorPlugin.h"
 
 typedef struct
 {
@@ -40,6 +41,7 @@ typedef struct
       BroadcastResetPlugin_t broadcastResetPlugin;
       SoundLevelPlugin_t soundLevelPlugin;
       ServiceModePlugin_t serviceModePlugin;
+      FaultMonitorPlugin_t faultMonitorPlugin;
    } _private;
 } Application_t;
 

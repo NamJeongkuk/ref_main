@@ -69,4 +69,6 @@ void Application_Init(
       dataModel);
 
    ServiceModePlugin_Init(&instance->_private.serviceModePlugin, dataModel);
+
+   FaultMonitorPlugin_Init(&instance->_private.faultMonitorPlugin, dataModel);
 }

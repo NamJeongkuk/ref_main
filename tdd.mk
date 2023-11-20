@@ -41,6 +41,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Evaporator \
    $(PROJECT_DIR)/Application/Factory \
    $(PROJECT_DIR)/Application/Fan \
+   $(PROJECT_DIR)/Application/Fault \
    $(PROJECT_DIR)/Application/Features \
    $(PROJECT_DIR)/Application/FlowMeter \
    $(PROJECT_DIR)/Application/Grid \
@@ -109,6 +110,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/EnhancedSabbath \
    $(TESTS_DIR)/Application/Factory \
    $(TESTS_DIR)/Application/Fan \
+   $(TESTS_DIR)/Application/Fault \
    $(TESTS_DIR)/Application/FlowMeter \
    $(TESTS_DIR)/Application/Grid \
    $(TESTS_DIR)/Application/IceMaker \
