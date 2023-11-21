@@ -128,6 +128,7 @@
 #include "RfidCommunicationControllerState.h"
 #include "ConvertedCallbacks.h"
 #include "WaterFilterRemainingUsage.h"
+#include "WaterFilterUsageSinceExpiration.h"
 #include "ServiceModeTestRequest.h"
 #include "ServiceModeTestNumber.h"
 #include "ServiceModeTestStatus.h"
@@ -569,6 +570,7 @@ enum
    ENTRY(Erd_IceMaker1Present,                              0x1235, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_IceMaker2Present,                              0x1236, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_WaterFilterRemainingUsage,                     0x1237, WaterFilterRemainingUsage_t,                        Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_WaterFilterUsageSinceExpiration,               0x1238, WaterFilterUsageSinceExpiration_t,                  Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_EnableDemoModeRequest,                         0x1239, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_EnableDemoModeStatus,                          0x123A, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
@@ -886,9 +888,9 @@ enum
    ENTRY(Erd_AutofillSensorError,                           0xF168, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispensingDisabled,                            0xF169, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_TotalWaterVolumeUsageInOuncesX100,             0xF170, VolumeInOuncesX100_t,                               Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_WaterFilterCalendarUsageInSeconds,             0xF171, CalendarUsageInSeconds_t,                           Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_WaterFilterLifeStatus,                         0xF172, WaterFilterLifeStatus_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_TotalWaterVolumeUsageInOuncesX100,             0xF170, VolumeInOuncesX100_t,                               Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_WaterFilterCalendarUsageInSeconds,             0xF171, CalendarUsageInSeconds_t,                           Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_WaterFilterLifeStatus,                         0xF172, WaterFilterLifeStatus_t,                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_LifetimeTotalWaterVolumeUsageInOuncesX100,     0xF173, VolumeInOuncesX100_t,                               Swap_Yes, Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_LastAluminumMoldIceMakerWaterVolumeUsageInOuncesX100, 0xF174, VolumeInOuncesX100_t,                        Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_LastTwistTrayIceMakerWaterVolumeUsageInOuncesX100,    0xF175, VolumeInOuncesX100_t,                        Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -1465,6 +1467,7 @@ enum
    ENTRY(Erd_Eeprom_WaterFilterCalendarUsageInSeconds,      0xFB15, CalendarUsageInSeconds_t,                           Swap_Yes,   Io_None, Sub_N, NvUsageProfile,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_UnitLifetimeDispensedWaterInOuncesX100, 0xFB16, VolumeInOuncesX100_t,                               Swap_Yes,   Io_None, Sub_N, NvUsageProfile,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_SabbathWaitingForDefrostTimeInMinutes,  0xFB17, uint16_t,                                           Swap_Yes,   Io_None, Sub_N, NvUnitSetting,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_WaterFilterUsageSinceExpiration,        0xFB18, WaterFilterUsageSinceExpiration_t,                  Swap_Yes,   Io_None, Sub_N, NvUsageProfile,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
    ENTRY(Erd_NumberOfTimesMainboardHasLostCommunicationWithAndroidUi, 0xFB82, uint8_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_NumberOfTimesMainboardHasAttemptedToResetAndroidUi,      0xFB83, uint8_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
