@@ -650,6 +650,14 @@ static bool InvalidFreezerEvaporatorThermistorDuringDefrostIsSet(Defrost_t *inst
    return state;
 }
 
+static void SetFreezerDefrostHeaterOnForMaxTimeFaultTo(Defrost_t *instance, bool state)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freezerDefrostHeaterOnForMaxTimeFaultErd,
+      &state);
+}
+
 static void ClearDefrostTestStateRequest(Defrost_t *instance)
 {
    DefrostTestStateRequestMessage_t requestMessage;
@@ -1061,6 +1069,7 @@ static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          if(!FreezerEvaporatorThermistorIsValid(instance))
          {
             SetInvalidFreezerEvaporatorThermistorDuringDefrostTo(instance, true);
+            SetFreezerDefrostHeaterOnForMaxTimeFaultTo(instance, true);
          }
          Hsm_Transition(hsm, State_Dwell);
          break;
@@ -1079,6 +1088,8 @@ static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
             {
                ClearFreezerDefrostWasAbnormal(instance);
             }
+
+            SetFreezerDefrostHeaterOnForMaxTimeFaultTo(instance, false);
             Hsm_Transition(hsm, State_Dwell);
          }
       }

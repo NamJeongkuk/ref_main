@@ -62,6 +62,7 @@ typedef struct
    Erd_t enhancedSabbathModeErd; // bool
    Erd_t sabbathIsReadyToDefrostErd; // bool
    Erd_t enhancedSabbathIsRequestingDefrostErd; // bool
+   Erd_t freezerDefrostHeaterOnForMaxTimeFaultErd; // bool
 } DefrostConfiguration_t;
 
 typedef struct

@@ -90,7 +90,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .sabbathModeErd = Erd_SabbathModeEnable,
    .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost,
-   .enhancedSabbathIsRequestingDefrostErd = Erd_EnhancedSabbathIsRequestingDefrost
+   .enhancedSabbathIsRequestingDefrostErd = Erd_EnhancedSabbathIsRequestingDefrost,
+   .freezerDefrostHeaterOnForMaxTimeFaultErd = Erd_FreezerDefrostHeaterOnForMaxTimeFault
 };
 
 static const DefrostIdleData_t idleData = {
@@ -832,6 +833,18 @@ TEST_GROUP(Defrost_SingleEvap)
       And FreezerThermistorValidityIs(Valid);
       And FreezerEvaporatorThermistorValidityIs(Valid);
       And DefrostIsInitializedAndStateIs(DefrostHsmState_Idle);
+   }
+
+   void FreezerDefrostHeaterOnForMaxTimeFaultShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_FreezerDefrostHeaterOnForMaxTimeFault, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void GivenFreezerDefrostHeaterOnForMaxTimeFaultIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_FreezerDefrostHeaterOnForMaxTimeFault, &state);
    }
 };
 
@@ -1862,16 +1875,18 @@ TEST(Defrost_SingleEvap, ShouldNotTurnOffDefrostHeaterAndShouldNotIncrementFreez
    And DefrostHsmStateShouldBe(DefrostHsmState_HeaterOn);
 }
 
-TEST(Defrost_SingleEvap, ShouldClearFreezerDefrostWasAbnormalWhenFreezerHeaterOnTimeIsLessThanFreezerHeaterOnTimeToSetAbnormalDefrostAndFreezerEvaporatorThermistorIsValid)
+TEST(Defrost_SingleEvap, ShouldClearFreezerDefrostWasAbnormalAndFreezerDefrostHeaterOnForMaxTimeFaultWhenFreezerHeaterOnTimeIsLessThanFreezerHeaterOnTimeToSetAbnormalDefrostAndFreezerEvaporatorThermistorIsValid)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    Given FreezerEvaporatorThermistorValidityIs(Valid);
    Given LastFreezerDefrostWasAbnormal();
    Given FreezerDefrostHeaterMaxOnTimeInMinutesIs(FreezerDefrostHeaterMaxOnTimeInMinutes);
    Given FreezerDefrostHeaterOnTimeInMinutesIs(defrostData.heaterOnData.freezerHeaterOnTimeToSetAbnormalDefrostInMinutes - 1);
+   GivenFreezerDefrostHeaterOnForMaxTimeFaultIs(SET);
 
    When FilteredFreezerEvapTemperatureIs(defrostData.heaterOnData.freezerDefrostTerminationTemperatureInDegFx100);
    FreezerDefrostWasAbnormalFlagShouldBe(CLEAR);
+   FreezerDefrostHeaterOnForMaxTimeFaultShouldBe(CLEAR);
 }
 
 TEST(Defrost_SingleEvap, ShouldNotClearFreezerDefrostWasAbnormalWhenFreezerHeaterOnTimeIsEqualToFreezerHeaterOnTimeToSetAbnormalDefrostAndFreezerEvaporatorThermistorIsInvalid)
@@ -2221,7 +2236,7 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryFromIdleWhenReadyToDefro
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldSetInvalidFreezerEvaporatorThermistorDuringDefrostWhenTheThermistorIsInvalidAndMaxOnTimeReachesOnHeaterOn)
+TEST(Defrost_SingleEvap, ShouldSetInvalidFreezerEvaporatorThermistorDuringDefrostAndFreezerDefrostHeaterOnForMaxTimeFaultWhenTheThermistorIsInvalidAndMaxOnTimeReachesOnHeaterOn)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    Given FreezerDefrostHeaterMaxOnTimeInMinutesIs(FreezerDefrostHeaterMaxOnTimeInMinutes);
@@ -2229,6 +2244,7 @@ TEST(Defrost_SingleEvap, ShouldSetInvalidFreezerEvaporatorThermistorDuringDefros
 
    When FreezerDefrostHeaterOnTimeInMinutesIs(FreezerDefrostHeaterMaxOnTimeInMinutes);
    InvalidFreezerEvaporatorThermistorDuringDefrostShouldBe(SET);
+   FreezerDefrostHeaterOnForMaxTimeFaultShouldBe(SET);
 }
 
 TEST(Defrost_SingleEvap, ShouldClearInvalidFreezerEvaporatorThermistorDuringDefrostWhenTheThermistorIsValidAndMaxOnTimeReachesOnHeaterOn)
@@ -2242,14 +2258,16 @@ TEST(Defrost_SingleEvap, ShouldClearInvalidFreezerEvaporatorThermistorDuringDefr
    InvalidFreezerEvaporatorThermistorDuringDefrostShouldBe(CLEAR);
 }
 
-TEST(Defrost_SingleEvap, ShouldClearInvalidFreezerEvaporatorThermistorDuringDefrostWhenTheThermistorIsValidAndTheThermistorTemperatureReachesHeaterOnTerminationTemperatureOnHeaterOn)
+TEST(Defrost_SingleEvap, ShouldClearInvalidFreezerEvaporatorThermistorDuringDefrostAndFreezerDefrostHeaterOnForMaxTimeFaultWhenTheThermistorIsValidAndTheThermistorTemperatureReachesHeaterOnTerminationTemperatureOnHeaterOn)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOn);
    Given FreezerEvaporatorThermistorValidityIs(Valid);
    Given InvalidFreezerEvaporatorThermistorDuringDefrostIs(SET);
+   GivenFreezerDefrostHeaterOnForMaxTimeFaultIs(SET);
 
    When FilteredFreezerEvapTemperatureIs(defrostData.heaterOnData.freezerDefrostTerminationTemperatureInDegFx100);
    InvalidFreezerEvaporatorThermistorDuringDefrostShouldBe(CLEAR);
+   FreezerDefrostHeaterOnForMaxTimeFaultShouldBe(CLEAR);
 }
 
 TEST(Defrost_SingleEvap, ShouldNotClearInvalidFreezerEvaporatorThermistorDuringDefrostWhenTheThermistorIsInvalidAndTheThermistorTemperatureReachesHeaterOnTerminationTemperatureOnHeaterOn)

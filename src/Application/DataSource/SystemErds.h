@@ -1442,6 +1442,7 @@ enum
    ENTRY(Erd_ExcessiveCompressorRunTimeFault,               0xF735, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_ExcessiveCompressorRunTime) \
    ENTRY(Erd_CompressorOffWhileCoolingSystemOnForMaxTimeFault, 0xF736, bool,                                            Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_CompressorOffWhileCoolingSystemOnForMaxTime) \
    ENTRY(Erd_FreshFoodNoFreezeLimitTrippedFault,            0xF737, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_FreshFoodNoFreezeLimitTripped) \
+   ENTRY(Erd_FreezerDefrostHeaterOnForMaxTimeFault,         0xF738, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_FreezerDefrostHeaterOnForMaxTime) \
    \
    ENTRY(Erd_FactoryModeEnableRequestInMinutes,             0xF801, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
