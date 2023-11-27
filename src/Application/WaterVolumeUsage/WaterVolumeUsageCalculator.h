@@ -15,6 +15,7 @@
 typedef struct
 {
    Erd_t waterValveRelayErd; // bool
+   Erd_t waterValveOnTimeInSecondsErd; // uint32_t
    Erd_t waterVolumeUsageInOuncesX100Erd; // VolumeInOuncesX100_t
 } WaterVolumeUsageCalculatorConfig_t;
 

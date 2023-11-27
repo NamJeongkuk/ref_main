@@ -22,6 +22,7 @@ enum
    SomeVolumeUsage = 1000,
    SomeCalendarUsage = 2000,
    SomeNumberOfUnits = 10,
+   SomeValveOnTimeInSeconds = 30000,
    MaxNumberOfUnitsFiltersCanBeInstalledOn = UINT8_MAX
 };
 
@@ -51,7 +52,8 @@ const NewFilterInstalledHandlerWriteErds_t writeErdsConfig = {
    .eepromWaterFilterCalendarUsageInSecondsErd = Erd_Eeprom_WaterFilterCalendarUsageInSeconds,
    .rfidFilterLastTwelveMonthsOfWaterUsageInGallonsErd = Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons,
    .rfidFilterNumberOfUnitsFilterHasBeenOnErd = Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn,
-   .rfidFilterPreviousUnitSerialNumberErd = Erd_RfidFilterPreviousUnitSerialNumber
+   .rfidFilterPreviousUnitSerialNumberErd = Erd_RfidFilterPreviousUnitSerialNumber,
+   .totalValveOnTimeInSecondsErd = Erd_WaterFilterTotalValveOnTimeInSeconds
 };
 
 const NewFilterInstalledHandlerConfig_t config = {
@@ -112,6 +114,11 @@ TEST_GROUP(NewFilterInstalledHandler)
    void WhenANewRfidFilterIsInstalled()
    {
       DataModel_Write(dataModel, Erd_RfidFilterUid_RfidBoard, NewUid);
+      Signal_SendViaErd(DataModel_AsDataSource(dataModel), Erd_NewFilterInstalledSignal);
+   }
+
+   void WhenANewFilterIsInstalled()
+   {
       Signal_SendViaErd(DataModel_AsDataSource(dataModel), Erd_NewFilterInstalledSignal);
    }
 
@@ -263,6 +270,18 @@ TEST_GROUP(NewFilterInstalledHandler)
       DataModel_Read(dataModel, Erd_RfidBoardBlockedTagFault, &actual);
       CHECK_EQUAL(expected, actual);
    }
+
+   void GivenWaterValveOnTimeIs(uint32_t valveTimeOn)
+   {
+      DataModel_Write(dataModel, Erd_WaterFilterTotalValveOnTimeInSeconds, &valveTimeOn);
+   }
+
+   void TotalWaterValveOnTimeShouldBe(uint32_t expected)
+   {
+      uint32_t actual;
+      DataModel_Read(dataModel, Erd_LastAluminumMoldIceMakerWaterValveOnTimeInSeconds, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
 };
 
 TEST(NewFilterInstalledHandler, ShouldCopyNewUidToMainboardWhenANewFilterIsInstalled)
@@ -384,7 +403,7 @@ TEST(NewFilterInstalledHandler, ShouldClearTotalVolumeUsageIfTheRfidBoardIsNotIn
    GivenInitialization();
    GivenTheVolumeUsageOnMainboardIs(SomeVolumeUsage);
 
-   WhenANewRfidFilterIsInstalled();
+   WhenANewFilterIsInstalled();
    VolumeUsageOnMainboardShouldBe(0);
 }
 
@@ -394,7 +413,7 @@ TEST(NewFilterInstalledHandler, ShouldClearTotalVolumeUsageEepromIfTheRfidBoardI
    GivenInitialization();
    GivenTheEepromVolumeUsageOnMainboardIs(SomeVolumeUsage);
 
-   WhenANewRfidFilterIsInstalled();
+   WhenANewFilterIsInstalled();
    EepromVolumeUsageOnMainboardShouldBe(0);
 }
 
@@ -404,7 +423,7 @@ TEST(NewFilterInstalledHandler, ShouldClearCalendarUsageIfTheRfidBoardIsNotInThe
    GivenInitialization();
    GivenTheCalendarUsageOnMainboardIs(SomeCalendarUsage);
 
-   WhenANewRfidFilterIsInstalled();
+   WhenANewFilterIsInstalled();
    CalendarUsageOnMainboardShouldBe(0);
 }
 
@@ -414,7 +433,7 @@ TEST(NewFilterInstalledHandler, ShouldClearCalendarUsageEepromIfTheRfidBoardIsNo
    GivenInitialization();
    GivenTheEepromCalendarUsageOnMainboardIs(SomeCalendarUsage);
 
-   WhenANewRfidFilterIsInstalled();
+   WhenANewFilterIsInstalled();
    EepromCalendarUsageInSecondsOnMainboardShouldBe(0);
 }
 
@@ -474,4 +493,24 @@ TEST(NewFilterInstalledHandler, ShouldClampNumberOfUnitsFilterHasBeenOnWhenTheNu
    WhenANewRfidFilterIsInstalled();
 
    NumberOfUnitsRfidFilterHasBeenOnShouldBe(MaxNumberOfUnitsFiltersCanBeInstalledOn);
+}
+
+TEST(NewFilterInstalledHandler, ShouldClearWaterValveOnTimeErdOnRfidUnitWhenANewRfidFilterIsInstalled)
+{
+   GivenTheRfidBoardIsInTheSystem();
+   GivenInitialization();
+   GivenWaterValveOnTimeIs(SomeValveOnTimeInSeconds);
+
+   WhenANewRfidFilterIsInstalled();
+   TotalWaterValveOnTimeShouldBe(0);
+}
+
+TEST(NewFilterInstalledHandler, ShouldClearWaterValveOnTimeErdOnNonRfidUnitWhenANewFilterIsInstalled)
+{
+   GivenTheRfidBoardIsNotInTheSystem();
+   GivenInitialization();
+   GivenWaterValveOnTimeIs(SomeValveOnTimeInSeconds);
+
+   WhenANewFilterIsInstalled();
+   TotalWaterValveOnTimeShouldBe(0);
 }

@@ -38,6 +38,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/Door \
    $(PROJECT_DIR)/Application/DutyCycle \
    $(PROJECT_DIR)/Application/EnhancedSabbath \
+   $(PROJECT_DIR)/Application/ErdService \
    $(PROJECT_DIR)/Application/Evaporator \
    $(PROJECT_DIR)/Application/Factory \
    $(PROJECT_DIR)/Application/Fan \
@@ -108,6 +109,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/Door \
    $(TESTS_DIR)/Application/DutyCycle \
    $(TESTS_DIR)/Application/EnhancedSabbath \
+   $(TESTS_DIR)/Application/ErdService \
    $(TESTS_DIR)/Application/Factory \
    $(TESTS_DIR)/Application/Fan \
    $(TESTS_DIR)/Application/Fault \

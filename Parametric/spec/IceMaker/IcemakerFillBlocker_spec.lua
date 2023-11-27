@@ -9,7 +9,7 @@ describe('IceMakerFillBlocker', function()
   local ice_maker_fill_blocker = IceMakerFillBlocker(core_mock)
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-      icemaker_fill_purge_oz_x100 = 0,
+      new_filter_dispenser_purge_time_before_icemaker_fill_in_seconds = 0,
       icemaker_new_filter_fill_state_delay_in_minutes = 1440
     }, overrides or {})
   end
@@ -18,10 +18,10 @@ describe('IceMakerFillBlocker', function()
     should_require_args(ice_maker_fill_blocker, generate_config())
   end)
 
-  it('should assert if icemaker_fill_purge_oz_x100 is not in range', function()
-    should_fail_with('icemaker_fill_purge_oz_x100=-1 must be in [0, 4294967295]', function()
+  it('should assert if new_filter_dispenser_purge_time_before_icemaker_fill_in_seconds is not in range', function()
+    should_fail_with('new_filter_dispenser_purge_time_before_icemaker_fill_in_seconds=-1 must be in [0, 65535]', function()
       ice_maker_fill_blocker(generate_config({
-         icemaker_fill_purge_oz_x100 = -1
+         new_filter_dispenser_purge_time_before_icemaker_fill_in_seconds = -1
       }))
     end)
   end)
@@ -37,13 +37,13 @@ describe('IceMakerFillBlocker', function()
   it('should generate a typed string with the correct data and type ice_maker_fill_blocker', function()
     local expected = remove_whitespace([[
       structure(
-        u32(0),
+        u16(0),
         u16(1440)
       )
       ]])
 
     local actual = ice_maker_fill_blocker({
-      icemaker_fill_purge_oz_x100 = 0,
+      new_filter_dispenser_purge_time_before_icemaker_fill_in_seconds = 0,
       icemaker_new_filter_fill_state_delay_in_minutes = 1440
     })
 

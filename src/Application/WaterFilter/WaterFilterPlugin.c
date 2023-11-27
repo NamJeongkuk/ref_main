@@ -16,16 +16,19 @@ static const WaterFilterCalendarUsageUpdaterConfig_t waterFilterCalendarUsageUpd
 
 static const WaterVolumeUsageCalculatorConfig_t aluminumMoldIceMakerWaterVolumeUsageCalculatorConfig = {
    .waterValveRelayErd = Erd_AluminumMoldIceMakerWaterValveRelay,
+   .waterValveOnTimeInSecondsErd = Erd_LastAluminumMoldIceMakerWaterValveOnTimeInSeconds,
    .waterVolumeUsageInOuncesX100Erd = Erd_LastAluminumMoldIceMakerWaterVolumeUsageInOuncesX100
 };
 
 static const WaterVolumeUsageCalculatorConfig_t twistTrayIceMakerWaterVolumeUsageCalculatorConfig = {
    .waterValveRelayErd = Erd_TwistTrayIceMakerWaterValveRelay,
+   .waterValveOnTimeInSecondsErd = Erd_LastTwistTrayIceMakerWaterValveOnTimeInSeconds,
    .waterVolumeUsageInOuncesX100Erd = Erd_LastTwistTrayIceMakerWaterVolumeUsageInOuncesX100
 };
 
 static const WaterVolumeUsageCalculatorConfig_t dispensedWaterVolumeUsageCalculatorConfig = {
    .waterValveRelayErd = Erd_DispenserValveRelay,
+   .waterValveOnTimeInSecondsErd = Erd_LastDispensedWaterValveOnTimeInSeconds,
    .waterVolumeUsageInOuncesX100Erd = Erd_LastDispensedWaterVolumeUsageInOuncesX100
 };
 
@@ -52,7 +55,8 @@ static const NewFilterInstalledHandlerWriteErds_t newFilterInstalledHandlerWrite
    .eepromWaterFilterCalendarUsageInSecondsErd = Erd_Eeprom_WaterFilterCalendarUsageInSeconds,
    .rfidFilterLastTwelveMonthsOfWaterUsageInGallonsErd = Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons,
    .rfidFilterNumberOfUnitsFilterHasBeenOnErd = Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn,
-   .rfidFilterPreviousUnitSerialNumberErd = Erd_RfidFilterPreviousUnitSerialNumber
+   .rfidFilterPreviousUnitSerialNumberErd = Erd_RfidFilterPreviousUnitSerialNumber,
+   .totalValveOnTimeInSecondsErd = Erd_WaterFilterTotalValveOnTimeInSeconds
 };
 
 static const NewFilterInstalledHandlerConfig_t newFilterInstalledHandlerConfig = {
@@ -78,14 +82,14 @@ static const ErdList_t waterVolumeUsageInOuncesX100ErdList = {
    .numberOfErds = NUM_ELEMENTS(waterVolumeUsageInOuncesX100Erds)
 };
 
-static const TotalWaterValveUsageUpdaterConfig_t waterFilterValveUsageUpdaterConfig = {
-   .waterVolumeUsageInOuncesX100ErdList = waterVolumeUsageInOuncesX100ErdList,
-   .cumulativeWaterVolumeUsageInOuncesX100Erd = Erd_TotalWaterVolumeUsageInOuncesX100
+static const ErdAccumulatorServiceConfig_t waterFilterValveAccumulatorConfig = {
+   .inputErdList = waterVolumeUsageInOuncesX100ErdList,
+   .cumulativeValueErd = Erd_TotalWaterVolumeUsageInOuncesX100
 };
 
-static const TotalWaterValveUsageUpdaterConfig_t unitLifetimeWaterValveUsageUpdaterConfig = {
-   .waterVolumeUsageInOuncesX100ErdList = waterVolumeUsageInOuncesX100ErdList,
-   .cumulativeWaterVolumeUsageInOuncesX100Erd = Erd_LifetimeTotalWaterVolumeUsageInOuncesX100
+static const ErdAccumulatorServiceConfig_t unitLifetimeWaterValveAccumulatorConfig = {
+   .inputErdList = waterVolumeUsageInOuncesX100ErdList,
+   .cumulativeValueErd = Erd_LifetimeTotalWaterVolumeUsageInOuncesX100
 };
 
 static const Erd_t unitLifetimeDispensedWaterVolumeUsageInOuncesX100Erds[] = {
@@ -97,9 +101,25 @@ static const ErdList_t unitLifetimeDispensedWaterVolumeUsageInOuncesX100ErdList 
    .numberOfErds = NUM_ELEMENTS(unitLifetimeDispensedWaterVolumeUsageInOuncesX100Erds)
 };
 
-static const TotalWaterValveUsageUpdaterConfig_t unitLifetimeDispensedWaterValveUsageUpdaterConfig = {
-   .waterVolumeUsageInOuncesX100ErdList = unitLifetimeDispensedWaterVolumeUsageInOuncesX100ErdList,
-   .cumulativeWaterVolumeUsageInOuncesX100Erd = Erd_UnitLifetimeDispensedWaterInOuncesX100
+static const ErdAccumulatorServiceConfig_t unitLifetimeDispensedWaterValveAccumulatorConfig = {
+   .inputErdList = unitLifetimeDispensedWaterVolumeUsageInOuncesX100ErdList,
+   .cumulativeValueErd = Erd_UnitLifetimeDispensedWaterInOuncesX100
+};
+
+static const Erd_t totalValveOnTimeErds[] = {
+   Erd_LastAluminumMoldIceMakerWaterValveOnTimeInSeconds,
+   Erd_LastTwistTrayIceMakerWaterValveOnTimeInSeconds,
+   Erd_LastDispensedWaterValveOnTimeInSeconds
+};
+
+static const ErdList_t totalValveOnTimeErdList = {
+   .erds = totalValveOnTimeErds,
+   .numberOfErds = NUM_ELEMENTS(totalValveOnTimeErds)
+};
+
+static const ErdAccumulatorServiceConfig_t totalValveOnTimeAccumulatorConfig = {
+   .inputErdList = totalValveOnTimeErdList,
+   .cumulativeValueErd = Erd_WaterFilterTotalValveOnTimeInSeconds
 };
 
 static const WaterFilterStateResolverConfig_t waterFilterStateResolverConfig = {
@@ -169,20 +189,26 @@ void WaterFilterPlugin_Init(
       dataModel,
       &newFilterInstalledHandlerConfig);
 
-   TotalWaterValveUsageUpdater_Init(
-      &instance->_private.unitLifetimeWaterValveUsageUpdater,
+   ErdAccumulatorService_Init(
+      &instance->_private.unitLifetimeWaterValveAccumulator,
       dataModel,
-      &unitLifetimeWaterValveUsageUpdaterConfig);
+      &unitLifetimeWaterValveAccumulatorConfig,
+      sizeof(VolumeInOuncesX100_t),
+      IS_SIGNED(VolumeInOuncesX100_t));
 
-   TotalWaterValveUsageUpdater_Init(
-      &instance->_private.waterFilterValveUsageUpdater,
+   ErdAccumulatorService_Init(
+      &instance->_private.waterFilterValveAccumulator,
       dataModel,
-      &waterFilterValveUsageUpdaterConfig);
+      &waterFilterValveAccumulatorConfig,
+      sizeof(VolumeInOuncesX100_t),
+      IS_SIGNED(VolumeInOuncesX100_t));
 
-   TotalWaterValveUsageUpdater_Init(
-      &instance->_private.unitLifetimeDispensedWaterValveUsageUpdater,
+   ErdAccumulatorService_Init(
+      &instance->_private.unitLifetimeDispensedWaterValveAccumulator,
       dataModel,
-      &unitLifetimeDispensedWaterValveUsageUpdaterConfig);
+      &unitLifetimeDispensedWaterValveAccumulatorConfig,
+      sizeof(VolumeInOuncesX100_t),
+      IS_SIGNED(VolumeInOuncesX100_t));
 
    WaterFilterStateResolver_Init(
       &instance->_private.waterFilterStateResolver,
@@ -200,4 +226,11 @@ void WaterFilterPlugin_Init(
       dataModel,
       &waterFilterUsageSinceExpirationUpdaterConfig,
       PersonalityParametricData_Get(dataModel)->filterData->commonFilterData);
+
+   ErdAccumulatorService_Init(
+      &instance->_private.totalValveOnTimeInSecondsAccumulator,
+      dataModel,
+      &totalValveOnTimeAccumulatorConfig,
+      sizeof(uint32_t),
+      IS_SIGNED(uint32_t));
 }

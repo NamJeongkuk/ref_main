@@ -27,7 +27,8 @@ static const PeriodicNvUpdateServiceConfigurationEntry_t periodicNvUpdateTableEn
    { Erd_WaterFilterCalendarUsageInSeconds, Erd_Eeprom_WaterFilterCalendarUsageInSeconds },
    { Erd_UnitLifetimeDispensedWaterInOuncesX100, Erd_Eeprom_UnitLifetimeDispensedWaterInOuncesX100 },
    { Erd_SabbathWaitingForDefrostTimeInMinutes, Erd_Eeprom_SabbathWaitingForDefrostTimeInMinutes },
-   { Erd_WaterFilterUsageSinceExpiration, Erd_Eeprom_WaterFilterUsageSinceExpiration }
+   { Erd_WaterFilterUsageSinceExpiration, Erd_Eeprom_WaterFilterUsageSinceExpiration },
+   { Erd_WaterFilterTotalValveOnTimeInSeconds, Erd_Eeprom_TotalValveOnTimeInSeconds }
 };
 
 static const PeriodicNvUpdateServiceConfigurationEntry_t periodicNvUpdateDefrostHeaterOnTimeTableEntries[] = {
@@ -56,7 +57,8 @@ static const ResetNvErdImmediatelyWhenRamErdChangesToZeroEntry_t resetNvErdImmed
    { Erd_TurboCoolOnTimeInMinutes, Erd_Eeprom_TurboCoolOnTimeInMinutes },
    { Erd_TurboFreezeOnTimeInMinutes, Erd_Eeprom_TurboFreezeOnTimeInMinutes },
    { Erd_SabbathWaitingForDefrostTimeInMinutes, Erd_Eeprom_SabbathWaitingForDefrostTimeInMinutes },
-   { Erd_WaterFilterUsageSinceExpiration, Erd_Eeprom_WaterFilterUsageSinceExpiration }
+   { Erd_WaterFilterUsageSinceExpiration, Erd_Eeprom_WaterFilterUsageSinceExpiration },
+   { Erd_WaterFilterTotalValveOnTimeInSeconds, Erd_Eeprom_TotalValveOnTimeInSeconds }
 };
 
 static const ResetNvErdImmediatelyWhenRamErdChangesToZeroConfiguration_t resetNvErdImmediatelyWhenRamErdChangesToZeroConfiguration = {

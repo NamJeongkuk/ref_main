@@ -30,6 +30,7 @@ typedef struct
    Erd_t rfidFilterLastTwelveMonthsOfWaterUsageInGallonsErd; // RfidTwelveMonthsGallonUsage_t
    Erd_t rfidFilterNumberOfUnitsFilterHasBeenOnErd; // RfidFilterNumberOfUnitsFilterHasBeenOn_t
    Erd_t rfidFilterPreviousUnitSerialNumberErd; // UnitSerialNumber_t
+   Erd_t totalValveOnTimeInSecondsErd; // uint32_t
 } NewFilterInstalledHandlerWriteErds_t;
 
 typedef struct

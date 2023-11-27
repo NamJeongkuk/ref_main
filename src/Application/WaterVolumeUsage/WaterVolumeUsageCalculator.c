@@ -53,6 +53,24 @@ static void CalculateWaterVolumeUsageInOuncesX100(WaterVolumeUsageCalculator_t *
       &waterVolumeUsageInOuncesX100);
 }
 
+static void WriteWaterValveOnTime(WaterVolumeUsageCalculator_t *instance)
+{
+   uint32_t waterValveOnTimeInSeconds = (WaterValveRelayOnInMilliseconds(instance) / MSEC_PER_SEC);
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->waterValveOnTimeInSecondsErd,
+      &waterValveOnTimeInSeconds);
+}
+
+static void ClearWaterValveOnTime(WaterVolumeUsageCalculator_t *instance)
+{
+   uint32_t waterValveOnTimeInSeconds = 0;
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->waterValveOnTimeInSecondsErd,
+      &waterValveOnTimeInSeconds);
+}
+
 static void WaterValveRelayChanged(void *context, const void *args)
 {
    WaterVolumeUsageCalculator_t *instance = context;
@@ -61,14 +79,27 @@ static void WaterValveRelayChanged(void *context, const void *args)
    if(*waterValveRelayIsOn)
    {
       StartWaterValveRelayOnStopwatch(instance);
+      ClearWaterValveOnTime(instance);
       ClearWaterVolumeUsageInOuncesX100(instance);
    }
    else
    {
       StopWaterValveRelayOnStopwatch(instance);
+      WriteWaterValveOnTime(instance);
       CalculateWaterVolumeUsageInOuncesX100(instance);
       ResetWaterValveRelayOnStopwatch(instance);
    }
+}
+
+static bool WaterValveRelayIsOn(WaterVolumeUsageCalculator_t *instance)
+{
+   bool waterValveRelayIsOn;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->waterValveRelayErd,
+      &waterValveRelayIsOn);
+
+   return waterValveRelayIsOn;
 }
 
 void WaterVolumeUsageCalculator_Init(
@@ -87,11 +118,15 @@ void WaterVolumeUsageCalculator_Init(
          dataModel,
          Erd_TimerModule));
 
+   if(WaterValveRelayIsOn(instance))
+   {
+      StartWaterValveRelayOnStopwatch(instance);
+   }
+
    EventSubscription_Init(
       &instance->_private.waterValveRelaySubscription,
       instance,
       WaterValveRelayChanged);
-
    DataModel_Subscribe(
       dataModel,
       instance->_private.config->waterValveRelayErd,

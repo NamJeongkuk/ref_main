@@ -12,7 +12,7 @@
 
 typedef struct
 {
-   uint32_t fillPurgeOzX100;
+   uint16_t newFilterDispenserPurgeTimeInSeconds;
    uint16_t newFilterFillStateDelayInMinutes;
 } IceMakerFillBlocker_t;
 

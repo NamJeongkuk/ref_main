@@ -9,11 +9,11 @@
 #define WATERFILTERPLUGIN_H
 
 #include "DispensingDisabler.h"
-#include "NewFilterInstalledHandler.h"
 #include "RfidCommunicationPlugin.h"
-#include "TotalWaterValveUsageUpdater.h"
 #include "WaterFilterCalendarUsageUpdater.h"
 #include "WaterVolumeUsageCalculator.h"
+#include "NewFilterInstalledHandler.h"
+#include "ErdAccumulatorService.h"
 #include "WaterFilterStateResolver.h"
 #include "WaterFilterRemainingUsageUpdater.h"
 #include "WaterFilterUsageSinceExpirationUpdater.h"
@@ -29,12 +29,13 @@ typedef struct
       WaterVolumeUsageCalculator_t dispensedWaterVolumeUsageCalculator;
       DispensingDisabler_t dispensingDisabler;
       NewFilterInstalledHandler_t newFilterInstalledHandler;
-      TotalWaterValveUsageUpdater_t unitLifetimeWaterValveUsageUpdater;
-      TotalWaterValveUsageUpdater_t waterFilterValveUsageUpdater;
-      TotalWaterValveUsageUpdater_t unitLifetimeDispensedWaterValveUsageUpdater;
+      ErdAccumulatorService_t unitLifetimeWaterValveAccumulator;
+      ErdAccumulatorService_t waterFilterValveAccumulator;
+      ErdAccumulatorService_t unitLifetimeDispensedWaterValveAccumulator;
       WaterFilterStateResolver_t waterFilterStateResolver;
       WaterFilterRemainingUsageUpdater_t waterFilterRemainingUsageUpdater;
       WaterFilterUsageSinceExpirationUpdater_t waterFilterUsageSinceExpirationUpdater;
+      ErdAccumulatorService_t totalValveOnTimeInSecondsAccumulator;
    } _private;
 } WaterFilterPlugin_t;
 
