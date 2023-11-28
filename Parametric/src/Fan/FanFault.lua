@@ -10,9 +10,9 @@ return function(core)
     return TypedString(
       { 'fan_fault' },
       structure(
-        u16(config.fan_missed_target_fault_timeout_in_seconds),
-        u16(config.missing_fan_feedback_fault_timeout_in_seconds),
-        u16(config.feedback_present_when_fan_is_off_timeout_in_seconds)
+        u8(config.cannot_reach_target_fault_timeout_in_minutes),
+        u8(config.missing_feedback_when_fan_on_fault_timeout_in_minutes),
+        u8(config.feedback_present_when_fan_off_timeout_in_minutes)
       )
     )
   end)
@@ -21,9 +21,9 @@ return function(core)
     validate_arguments(
       config,
       {
-        fan_missed_target_fault_timeout_in_seconds = { constraint.u16 },
-        missing_fan_feedback_fault_timeout_in_seconds = { constraint.u16 },
-        feedback_present_when_fan_is_off_timeout_in_seconds = { constraint.u16 }
+        cannot_reach_target_fault_timeout_in_minutes = { constraint.u8 },
+        missing_feedback_when_fan_on_fault_timeout_in_minutes = { constraint.u8 },
+        feedback_present_when_fan_off_timeout_in_minutes = { constraint.u8 }
       })
 
     return generate(config)

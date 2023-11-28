@@ -36,9 +36,9 @@ describe('FanList', function()
   })
 
   local some_fault = fan_fault({
-    fan_missed_target_fault_timeout_in_seconds = 11,
-    missing_fan_feedback_fault_timeout_in_seconds = 12,
-    feedback_present_when_fan_is_off_timeout_in_seconds = 13
+    cannot_reach_target_fault_timeout_in_minutes = 11,
+    missing_feedback_when_fan_on_fault_timeout_in_minutes = 12,
+    feedback_present_when_fan_off_timeout_in_minutes = 13
   })
 
   local another_pid = pid({
@@ -53,9 +53,9 @@ describe('FanList', function()
   })
 
   local another_fault = fan_fault({
-    fan_missed_target_fault_timeout_in_seconds = 20,
-    missing_fan_feedback_fault_timeout_in_seconds = 21,
-    feedback_present_when_fan_is_off_timeout_in_seconds = 22
+    cannot_reach_target_fault_timeout_in_minutes = 20,
+    missing_feedback_when_fan_on_fault_timeout_in_minutes = 21,
+    feedback_present_when_fan_off_timeout_in_minutes = 22
   })
 
   local some_condenser_fan = condenser_fan({
@@ -141,9 +141,9 @@ describe('FanList', function()
             i32(18)
           ),
           structure(
-            u16(11),
-            u16(12),
-            u16(13)
+            u8(11),
+            u8(12),
+            u8(13)
           ),
           pointer(some_speed_table),
           structure(
@@ -182,9 +182,9 @@ describe('FanList', function()
             i32(27)
           ),
           structure(
-            u16(20),
-            u16(21),
-            u16(22)
+            u8(20),
+            u8(21),
+            u8(22)
           ),
           pointer(some_speed_table),
           structure(
@@ -223,9 +223,9 @@ describe('FanList', function()
             i32(27)
           ),
           structure(
-            u16(20),
-            u16(21),
-            u16(22)
+            u8(20),
+            u8(21),
+            u8(22)
           ),
           pointer(some_speed_table),
           structure(
@@ -264,9 +264,9 @@ describe('FanList', function()
             i32(27)
           ),
           structure(
-            u16(20),
-            u16(21),
-            u16(22)
+            u8(20),
+            u8(21),
+            u8(22)
           ),
           pointer(some_speed_table),
           structure(
@@ -305,9 +305,9 @@ describe('FanList', function()
             i32(27)
           ),
           structure(
-            u16(20),
-            u16(21),
-            u16(22)
+            u8(20),
+            u8(21),
+            u8(22)
           ),
           pointer(some_speed_table),
           structure(
@@ -346,9 +346,9 @@ describe('FanList', function()
             i32(27)
           ),
           structure(
-            u16(20),
-            u16(21),
-            u16(22)
+            u8(20),
+            u8(21),
+            u8(22)
           ),
           pointer(some_speed_table),
           structure(

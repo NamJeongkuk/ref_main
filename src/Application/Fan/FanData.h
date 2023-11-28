@@ -70,9 +70,9 @@ typedef struct
    PidControllerGains_t gains;
    int32_t lowerLimit;
    int32_t upperLimit;
-   uint16_t fanMissedTargetFaultTimeoutInSeconds;
-   uint16_t missingFanFeedbackFaultTimeoutInSeconds;
-   uint16_t feedbackPresentWhenFanIsOffTimeoutInSeconds;
+   uint8_t cannotReachTargetFaultTimeoutInMinutes;
+   uint8_t missingFeedbackWhenOnFaultTimeoutInMinutes;
+   uint8_t feedbackPresentWhenFanOffTimeoutInMinutes;
 
    union
    {

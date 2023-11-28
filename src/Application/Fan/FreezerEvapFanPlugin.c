@@ -52,6 +52,16 @@ static const FanControllerConfig_t freezerEvapFanControllerConfig = {
    .fanActualRpmErd = Erd_FreezerEvapFan_ActualRpm,
 };
 
+static const FanFaultHandlerConfiguration_t freezerEvapFanFaultHandlerConfig = {
+   .calculatedFanControlErd = Erd_CalculatedFreezerEvapFanControl,
+   .fanActualRpmErd = Erd_FreezerEvapFan_ActualRpm,
+   .fanPwmErd = Erd_FreezerEvapFan_Pwm,
+   .fanMissingFeedbackWhenOnFaultErd = Erd_FreezerEvapFanMissingFanFeedbackWhenFanIsRunningFault,
+   .fanFeedbackPresentWhenFanOffFaultErd = Erd_FreezerEvapFanFeedbackPresentWhenFanIsOffFault,
+   .fanCannotReachTargetRpmFaultErd = Erd_FreezerEvapFanCannotReachTargetRpmFault,
+   .timerModuleErd = Erd_TimerModule
+};
+
 void FreezerEvapFanPlugin_Init(
    FreezerEvapFanPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -76,4 +86,10 @@ void FreezerEvapFanPlugin_Init(
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
       &fanData->freezerEvapFan,
       &freezerEvapFanControllerConfig);
+
+   FanFaultHandler_Init(
+      &instance->_private.fanFaultHandler,
+      dataModel,
+      &freezerEvapFanFaultHandlerConfig,
+      &fanData->freezerEvapFan);
 }

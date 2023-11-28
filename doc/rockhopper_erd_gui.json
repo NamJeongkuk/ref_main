@@ -1702,6 +1702,48 @@
         },
         {
           "namespace": "mb",
+          "displayName": "F100 Freezer Evap Fan Missing Fan Feedback When Fan Is Running",
+          "name": "Erd_FreezerEvapFanMissingFanFeedbackWhenFanIsRunningFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F101 Freezer Evap Fan Feedback Present When Fan Is Off",
+          "name": "Erd_FreezerEvapFanFeedbackPresentWhenFanIsOffFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F102 Freezer Evap Fan Cannot Reach Target RPM",
+          "name": "Erd_FreezerEvapFanCannotReachTargetRpmFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F103 Condenser Fan Missing Fan Feedback When Fan Is Running",
+          "name": "Erd_CondenserFanMissingFanFeedbackWhenFanIsRunningFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F104 Condenser Fan Feedback Present When Fan Is Off",
+          "name": "Erd_CondenserFanFeedbackPresentWhenFanIsOffFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F105 Condenser Fan Cannot Reach Target RPM",
+          "name": "Erd_CondenserFanCannotReachTargetRpmFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
           "displayName": "F300 Excessive Compressor Run Time",
           "name": "Erd_ExcessiveCompressorRunTimeFault",
           "read": true,

@@ -10,9 +10,9 @@ describe('FanFault', function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-      fan_missed_target_fault_timeout_in_seconds = 11,
-      missing_fan_feedback_fault_timeout_in_seconds = 12,
-      feedback_present_when_fan_is_off_timeout_in_seconds = 13
+      cannot_reach_target_fault_timeout_in_minutes = 11,
+      missing_feedback_when_fan_on_fault_timeout_in_minutes = 12,
+      feedback_present_when_fan_off_timeout_in_minutes = 13
     }, overrides or {})
   end
 
@@ -20,26 +20,26 @@ describe('FanFault', function()
     should_require_args(fan_fault, generate_config())
   end)
 
-  it('should assert if fan_missed_target_fault_timeout_in_seconds is not in range', function()
-    should_fail_with('fan_missed_target_fault_timeout_in_seconds=70000 must be in [0, 65535]', function()
+  it('should assert if cannot_reach_target_fault_timeout_in_minutes is not in range', function()
+    should_fail_with('cannot_reach_target_fault_timeout_in_minutes=70000 must be in [0, 255]', function()
       fan_fault(generate_config({
-        fan_missed_target_fault_timeout_in_seconds = 70000
+        cannot_reach_target_fault_timeout_in_minutes = 70000
       }))
     end)
   end)
 
-  it('should assert if missing_fan_feedback_fault_timeout_in_seconds is not in range', function()
-    should_fail_with('missing_fan_feedback_fault_timeout_in_seconds=70000 must be in [0, 65535]', function()
+  it('should assert if missing_feedback_when_fan_on_fault_timeout_in_minutes is not in range', function()
+    should_fail_with('missing_feedback_when_fan_on_fault_timeout_in_minutes=70000 must be in [0, 255]', function()
       fan_fault(generate_config({
-        missing_fan_feedback_fault_timeout_in_seconds = 70000
+        missing_feedback_when_fan_on_fault_timeout_in_minutes = 70000
       }))
     end)
   end)
 
-  it('should assert if feedback_present_when_fan_is_off_timeout_in_seconds is not in range', function()
-    should_fail_with('feedback_present_when_fan_is_off_timeout_in_seconds=70000 must be in [0, 65535]', function()
+  it('should assert if feedback_present_when_fan_off_timeout_in_minutes is not in range', function()
+    should_fail_with('feedback_present_when_fan_off_timeout_in_minutes=70000 must be in [0, 255]', function()
       fan_fault(generate_config({
-        feedback_present_when_fan_is_off_timeout_in_seconds = 70000
+        feedback_present_when_fan_off_timeout_in_minutes = 70000
       }))
     end)
   end)
@@ -47,15 +47,15 @@ describe('FanFault', function()
   it('should generate a typed string with the correct data and type fan_fault', function()
     local expected = remove_whitespace([[
       structure(
-        u16(11),
-        u16(12),
-        u16(13))
+        u8(11),
+        u8(12),
+        u8(13))
       ]])
 
     local actual = fan_fault({
-      fan_missed_target_fault_timeout_in_seconds = 11,
-      missing_fan_feedback_fault_timeout_in_seconds = 12,
-      feedback_present_when_fan_is_off_timeout_in_seconds = 13
+      cannot_reach_target_fault_timeout_in_minutes = 11,
+      missing_feedback_when_fan_on_fault_timeout_in_minutes = 12,
+      feedback_present_when_fan_off_timeout_in_minutes = 13
     })
 
     assert.equals(expected, remove_whitespace(tostring(actual)))

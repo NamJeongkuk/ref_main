@@ -54,9 +54,9 @@ describe('CondenserFan', function()
   })
 
   local some_fault = fan_fault({
-    fan_missed_target_fault_timeout_in_seconds = 11,
-    missing_fan_feedback_fault_timeout_in_seconds = 12,
-    feedback_present_when_fan_is_off_timeout_in_seconds = 13
+    cannot_reach_target_fault_timeout_in_minutes = 11,
+    missing_feedback_when_fan_on_fault_timeout_in_minutes = 12,
+    feedback_present_when_fan_off_timeout_in_minutes = 13
   })
 
   local function generate_config(overrides)
@@ -192,9 +192,9 @@ describe('CondenserFan', function()
           i32(18)
           ),
           structure(
-            u16(11),
-            u16(12),
-            u16(13)
+            u8(11),
+            u8(12),
+            u8(13)
           ),
         pointer(fan_speed_table),
         structure(
@@ -255,9 +255,9 @@ describe('CondenserFan', function()
           i32(18)
           ),
           structure(
-            u16(11),
-            u16(12),
-            u16(13)
+            u8(11),
+            u8(12),
+            u8(13)
           ),
         pointer(fan_care_about_cooling_mode_speed_table),
         structure(

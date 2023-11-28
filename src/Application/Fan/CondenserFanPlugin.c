@@ -52,6 +52,16 @@ static const FanControllerConfig_t condenserFanControllerConfig = {
    .fanActualRpmErd = Erd_CondenserFan_ActualRpm,
 };
 
+static const FanFaultHandlerConfiguration_t condenserFanFaultHandlerConfig = {
+   .calculatedFanControlErd = Erd_CalculatedCondenserFanControl,
+   .fanActualRpmErd = Erd_CondenserFan_ActualRpm,
+   .fanPwmErd = Erd_CondenserFan_Pwm,
+   .fanMissingFeedbackWhenOnFaultErd = Erd_CondenserFanMissingFanFeedbackWhenFanIsRunningFault,
+   .fanFeedbackPresentWhenFanOffFaultErd = Erd_CondenserFanFeedbackPresentWhenFanIsOffFault,
+   .fanCannotReachTargetRpmFaultErd = Erd_CondenserFanCannotReachTargetRpmFault,
+   .timerModuleErd = Erd_TimerModule
+};
+
 void CondenserFanPlugin_Init(
    CondenserFanPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -76,4 +86,10 @@ void CondenserFanPlugin_Init(
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
       &fanData->condenserFan,
       &condenserFanControllerConfig);
+
+   FanFaultHandler_Init(
+      &instance->_private.fanFaultHandler,
+      dataModel,
+      &condenserFanFaultHandlerConfig,
+      &fanData->condenserFan);
 }
