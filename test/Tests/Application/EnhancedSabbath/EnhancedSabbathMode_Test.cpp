@@ -21,7 +21,9 @@ extern "C"
 enum
 {
    SomeTemperatureInDegFx100 = 5000,
-   EnhancedSabbathModeHsmState_Unknown = 0xFF
+   EnhancedSabbathModeHsmState_Unknown = 0xFF,
+   EnhancedSabbathRunTimePeriodicCheckTimeInMinutes = 1,
+   EnhancedSabbathRunTimePeriodicCheckTimeInMsec = EnhancedSabbathRunTimePeriodicCheckTimeInMinutes * MSEC_PER_MIN
 };
 
 static const Erd_t lightVotes[] = {
@@ -62,7 +64,8 @@ static const EnhancedSabbathModeConfig_t config = {
    .enhancedSabbathStageFreshFoodCoolingIsActiveErd = Erd_EnhancedSabbathStageFreshFoodCoolingIsActive,
    .enhancedSabbathStageFreezerCoolingIsActiveErd = Erd_EnhancedSabbathStageFreezerCoolingIsActive,
    .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost,
-   .lightVoteErdList = lightVoteErdList
+   .enhancedSabbathRunTimeInMinutesErd = Erd_EnhancedSabbathRunTimeInMinutes,
+   .lightVoteErdList = lightVoteErdList,
 };
 
 TEST_GROUP(EnhancedSabbathMode)
@@ -301,6 +304,24 @@ TEST_GROUP(EnhancedSabbathMode)
 
       CHECK_EQUAL(expectedPosition, actual.position);
       CHECK_EQUAL(expectedCare, actual.care);
+   }
+
+   void TheCompressorFansAndDamperVotesShouldBe(Vote_t expectedCare)
+   {
+      CompressorVotedSpeed_t actualCompressorSpeedVote;
+      FanVotedSpeed_t actualCondenserFanVote;
+      DamperVotedPosition_t actualDamperPositionVote;
+      FanVotedSpeed_t actualFreezerEvapFanVote;
+
+      DataModel_Read(dataModel, Erd_CompressorSpeed_EnhancedSabbathVote, &actualCompressorSpeedVote);
+      DataModel_Read(dataModel, Erd_CondenserFanSpeed_SabbathVote, &actualCondenserFanVote);
+      DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_SabbathVote, &actualDamperPositionVote);
+      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_EnhancedSabbathVote, &actualFreezerEvapFanVote);
+
+      CHECK_EQUAL(expectedCare, actualCompressorSpeedVote.care);
+      CHECK_EQUAL(expectedCare, actualCondenserFanVote.care);
+      CHECK_EQUAL(expectedCare, actualDamperPositionVote.care);
+      CHECK_EQUAL(expectedCare, actualFreezerEvapFanVote.care);
    }
 
    void TheDisableCompressorMiniumTimesVoteShouldBe(bool expectedState, Vote_t expectedCare)
@@ -639,6 +660,13 @@ TEST_GROUP(EnhancedSabbathMode)
    void WhenDefrostingIs(bool state)
    {
       DataModel_Write(dataModel, Erd_Defrosting, &state);
+   }
+
+   void EnhancedSabbathRunTimeInMinutesShouldBe(uint16_t expected)
+   {
+      uint16_t actual;
+      DataModel_Read(dataModel, Erd_EnhancedSabbathRunTimeInMinutes, &actual);
+      CHECK_EQUAL(expected, actual);
    }
 };
 
@@ -1126,10 +1154,7 @@ TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathModeToDisabledIfMaxTimeHasBeen
    After(1);
    TheEnhancedSabbathModeStatusShouldBe(false);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
-   TheCompressorSpeedVoteShouldBe(CompressorSpeed_Off, Vote_DontCare);
-   TheCondenserFanSpeedVoteShouldBe(FanSpeed_Off, Vote_DontCare);
-   TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off, Vote_DontCare);
-   TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_DontCare);
+   TheCompressorFansAndDamperVotesShouldBe(Vote_DontCare);
 
    TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_DontCare);
    TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_DontCare);
@@ -1283,4 +1308,43 @@ TEST(EnhancedSabbathMode, ShouldNotSetEnhancedSabbathIsRequestingDefrostWhenEnte
    After(1);
    EnhancedSabbathIsRequestingDefrostShouldBe(CLEAR);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Off);
+}
+
+TEST(EnhancedSabbathMode, ShouldIncrementEnhancedSabbathRunTimeInMinutesAfterEnhancedSabbathRunTimePeriodicCheckTimeInMsecAfterEnteringStateEnabled)
+{
+   GivenInitializationInFreshFoodStageWithLoadsSetToLow();
+
+   After(EnhancedSabbathRunTimePeriodicCheckTimeInMsec - 1);
+   EnhancedSabbathRunTimeInMinutesShouldBe(0);
+
+   After(1);
+   EnhancedSabbathRunTimeInMinutesShouldBe(EnhancedSabbathRunTimePeriodicCheckTimeInMinutes);
+}
+
+TEST(EnhancedSabbathMode, ShouldIncrementEnhancedSabbathRunTimeInMinutesErdByOneMinuteEveryMinuteUntilReachingMaxTimeInEnhancedSabbathModeAfterEnteringStateEnabled)
+{
+   GivenInitializationInFreshFoodStageWithLoadsSetToLow();
+
+   uint16_t numberOfRunTimeTimerPeriods =
+      enhancedSabbathData->maxTimeInEnhancedSabbathModeInMinutes / EnhancedSabbathRunTimePeriodicCheckTimeInMinutes;
+
+   for(uint16_t currentRunTimeTimerCycle = 0; currentRunTimeTimerCycle < numberOfRunTimeTimerPeriods - 1; currentRunTimeTimerCycle++)
+   {
+      After(EnhancedSabbathRunTimePeriodicCheckTimeInMsec - 1);
+      EnhancedSabbathRunTimeInMinutesShouldBe(currentRunTimeTimerCycle * EnhancedSabbathRunTimePeriodicCheckTimeInMinutes);
+
+      After(1);
+      EnhancedSabbathRunTimeInMinutesShouldBe((currentRunTimeTimerCycle + 1) * EnhancedSabbathRunTimePeriodicCheckTimeInMinutes);
+   }
+}
+
+TEST(EnhancedSabbathMode, ShouldClearEnhancedSabbathRunTimeInMinutesErdAfterReachingMaxTimeInEnhancedSabbathMode)
+{
+   GivenInitializationInFreshFoodStageWithLoadsSetToLow();
+
+   After((enhancedSabbathData->maxTimeInEnhancedSabbathModeInMinutes * MSEC_PER_MIN) - 1);
+   EnhancedSabbathRunTimeInMinutesShouldBe(enhancedSabbathData->maxTimeInEnhancedSabbathModeInMinutes - EnhancedSabbathRunTimePeriodicCheckTimeInMinutes);
+
+   After(1);
+   EnhancedSabbathRunTimeInMinutesShouldBe(0);
 }

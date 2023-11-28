@@ -65,6 +65,7 @@ static const EnhancedSabbathModeConfig_t enhancedSabbathModeConfig = {
    .enhancedSabbathStageFreshFoodCoolingIsActiveErd = Erd_EnhancedSabbathStageFreshFoodCoolingIsActive,
    .enhancedSabbathStageFreezerCoolingIsActiveErd = Erd_EnhancedSabbathStageFreezerCoolingIsActive,
    .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost,
+   .enhancedSabbathRunTimeInMinutesErd = Erd_EnhancedSabbathRunTimeInMinutes,
    .lightVoteErdList = lightVoteErdList
 };
 

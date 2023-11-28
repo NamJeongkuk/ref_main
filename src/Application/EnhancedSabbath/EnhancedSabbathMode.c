@@ -21,6 +21,12 @@
 
 enum
 {
+   EnhancedSabbathRunTimePeriodicCheckTimeInMinutes = 1,
+   EnhancedSabbathRunTimePeriodicCheckTimeInMsec = EnhancedSabbathRunTimePeriodicCheckTimeInMinutes * MSEC_PER_MIN
+};
+
+enum
+{
    Signal_EnhancedSabbathModeEnabled = Hsm_UserSignalStart,
    Signal_StageTimerExpired,
    Signal_EnhancedSabbathModeDisabled,
@@ -429,16 +435,32 @@ static TemperatureDegFx100_t FreezerCabinetSetpoint(EnhancedSabbathMode_t *insta
    return temperature;
 }
 
+static uint16_t EnhancedSabbathRunTimeInMinutes(EnhancedSabbathMode_t *instance)
+{
+   uint16_t currentRunTime;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->enhancedSabbathRunTimeInMinutesErd,
+      &currentRunTime);
+
+   return currentRunTime;
+}
+
+static void IncrementEnhancedSabbathRunTimeByEnhancedSabbathRunTimeUpdatePeriod(EnhancedSabbathMode_t *instance)
+{
+   uint16_t currentRunTime =
+      EnhancedSabbathRunTimeInMinutes(instance) + EnhancedSabbathRunTimePeriodicCheckTimeInMinutes;
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->enhancedSabbathRunTimeInMinutesErd,
+      &currentRunTime);
+}
+
 static void StageTimerExpired(void *context)
 {
    EnhancedSabbathMode_t *instance = context;
    Hsm_SendSignal(&instance->_private.hsm, Signal_StageTimerExpired, NULL);
-}
-
-static void MaxEnhancedSabbathTimerExpired(void *context)
-{
-   EnhancedSabbathMode_t *instance = context;
-   Hsm_SendSignal(&instance->_private.hsm, Signal_EnhancedSabbathModeDisabled, NULL);
 }
 
 static void StartStageTimerWithTimeSetTo(EnhancedSabbathMode_t *instance, TimerTicks_t timeInMsec)
@@ -451,13 +473,24 @@ static void StartStageTimerWithTimeSetTo(EnhancedSabbathMode_t *instance, TimerT
       instance);
 }
 
-static void StartEnhancedSabbathMaxTimer(EnhancedSabbathMode_t *instance)
+static void EnhancedSabbathRunTimeTimerExpired(void *context)
 {
-   TimerModule_StartOneShot(
+   EnhancedSabbathMode_t *instance = context;
+   IncrementEnhancedSabbathRunTimeByEnhancedSabbathRunTimeUpdatePeriod(instance);
+
+   if(EnhancedSabbathRunTimeInMinutes(instance) >= instance->_private.enhancedSabbathData->maxTimeInEnhancedSabbathModeInMinutes)
+   {
+      Hsm_SendSignal(&instance->_private.hsm, Signal_EnhancedSabbathModeDisabled, NULL);
+   }
+}
+
+static void StartEnhancedSabbathRunTimeTimer(EnhancedSabbathMode_t *instance)
+{
+   TimerModule_StartPeriodic(
       instance->_private.timerModule,
-      &instance->_private.enhancedSabbathModeEnabledTimer,
-      instance->_private.enhancedSabbathData->maxTimeInEnhancedSabbathModeInMinutes * MSEC_PER_MIN,
-      MaxEnhancedSabbathTimerExpired,
+      &instance->_private.enhancedSabbathModeRunTimeTimer,
+      EnhancedSabbathRunTimePeriodicCheckTimeInMsec,
+      EnhancedSabbathRunTimeTimerExpired,
       instance);
 }
 
@@ -468,7 +501,7 @@ static void StopAllTimers(EnhancedSabbathMode_t *instance)
       &instance->_private.stageTimer);
    TimerModule_Stop(
       instance->_private.timerModule,
-      &instance->_private.enhancedSabbathModeEnabledTimer);
+      &instance->_private.enhancedSabbathModeRunTimeTimer);
 }
 
 static void VoteCompressorFansAndDamperToOff(EnhancedSabbathMode_t *instance)
@@ -554,6 +587,15 @@ static bool SabbathIsReadyToDefrost(EnhancedSabbathMode_t *instance)
    return sabbathIsReadyToDefrost;
 }
 
+static void ClearEnhancedSabbathRunTimeInMinutesErd(EnhancedSabbathMode_t *instance)
+{
+   uint16_t zeroRunTime = 0;
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->enhancedSabbathRunTimeInMinutesErd,
+      &zeroRunTime);
+}
+
 static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    EnhancedSabbathMode_t *instance = InstanceFromHsm(hsm);
@@ -574,6 +616,7 @@ static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          SetIceMakerEnabledOverrideRequestTo(instance, false);
          SetIceMakerEnabledOverrideValueTo(instance, true);
          SetLightVotesToOffAndDontCare(instance);
+         ClearEnhancedSabbathRunTimeInMinutesErd(instance);
          break;
 
       case Signal_EnhancedSabbathModeEnabled:
@@ -609,7 +652,7 @@ static bool State_Enabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          SetIceMakerEnabledOverrideRequestTo(instance, true);
          SetIceMakerEnabledOverrideValueTo(instance, false);
          SetDisableCompressorMinimumTimesToCareWithValue(instance, true);
-         StartEnhancedSabbathMaxTimer(instance);
+         StartEnhancedSabbathRunTimeTimer(instance);
          SetLightVotesToParametricallyDefinedPwmDutyCyclePercentageAndCare(instance);
          break;
 

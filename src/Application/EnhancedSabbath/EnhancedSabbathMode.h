@@ -42,6 +42,7 @@ typedef struct
    Erd_t enhancedSabbathStageFreshFoodCoolingIsActiveErd; // bool
    Erd_t enhancedSabbathStageFreezerCoolingIsActiveErd; // bool
    Erd_t sabbathIsReadyToDefrostErd; // bool
+   Erd_t enhancedSabbathRunTimeInMinutesErd; // uint16_t
    ErdList_t lightVoteErdList; // ErdList_t
 } EnhancedSabbathModeConfig_t;
 
@@ -55,7 +56,7 @@ typedef struct
       const EnhancedSabbathData_t *enhancedSabbathData;
       EventSubscription_t dataModelSubscription;
       Timer_t stageTimer;
-      Timer_t enhancedSabbathModeEnabledTimer;
+      Timer_t enhancedSabbathModeRunTimeTimer;
       Hsm_t hsm;
    } _private;
 } EnhancedSabbathMode_t;

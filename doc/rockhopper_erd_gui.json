@@ -3908,6 +3908,22 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Enhanced Sabbath Run Time In Minutes",
+          "name": "Erd_EnhancedSabbathRunTimeInMinutes",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Enhanced Sabbath Run Time In Minutes EEPROM",
+          "name": "Erd_Eeprom_EnhancedSabbathRunTimeInMinutes",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
           "displayName": "Freezer Filtered Temperature Override Request",
           "name": "Erd_Freezer_FilteredTemperatureOverrideRequest",
           "read": true,

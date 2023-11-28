@@ -695,6 +695,7 @@ enum
    ENTRY(Erd_EnhancedSabbathIsRequestingDefrost,            0xF04F, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_EnhancedSabbathStageFreshFoodCoolingIsActive,  0xF050, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_EnhancedSabbathStageFreezerCoolingIsActive,    0xF051, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_EnhancedSabbathRunTimeInMinutes,               0xF052, uint16_t,                                           Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_DefrostState,                                  0xF060, DefrostState_t,                                     Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_DefrostHsmState,                               0xF061, DefrostHsmState_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
@@ -1474,6 +1475,7 @@ enum
    ENTRY(Erd_Eeprom_SabbathWaitingForDefrostTimeInMinutes,  0xFB17, uint16_t,                                           Swap_Yes, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_WaterFilterUsageSinceExpiration,        0xFB18, WaterFilterUsageSinceExpiration_t,                  Swap_Yes, Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_TotalValveOnTimeInSeconds,              0xFB19, uint32_t,                                           Swap_Yes, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_EnhancedSabbathRunTimeInMinutes,        0xFB20, uint16_t,                                           Swap_Yes, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
    ENTRY(Erd_NumberOfTimesMainboardHasLostCommunicationWithAndroidUi, 0xFB82, uint8_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_NumberOfTimesMainboardHasAttemptedToResetAndroidUi,      0xFB83, uint8_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
