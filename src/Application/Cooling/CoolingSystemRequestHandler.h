@@ -29,6 +29,8 @@ typedef struct
    Erd_t requestErd; // uint8_t
    Erd_t statusErd; // uint8_t
    Erd_t disableDefrostErd; // bool
+   Erd_t turboCoolOnOffRequestErd; // bool
+   Erd_t turboFreezeOnOffRequestErd; // bool
    const CoolingSystemRequestVoteList_t coolingSystemRequestVoteList;
 } CoolingSystemRequestHandlerConfiguration_t;
 

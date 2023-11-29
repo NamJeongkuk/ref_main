@@ -16,6 +16,7 @@ extern "C"
 #include "DataModel_TestDouble.h"
 #include "TimerModule_TestDouble.h"
 #include "Constants_Time.h"
+#include "Constants_Binary.h"
 #include "uassert_test.h"
 
 enum
@@ -31,6 +32,8 @@ enum
    Erd_U32_AnotherCoolingSystemRequestVoteStruct,
    Erd_U64_AnotherCoolingSystemRequestVoteStruct,
    Erd_DisableDefrost,
+   Erd_TurboCoolOnOffRequest,
+   Erd_TurboFreezeOnOffRequest,
 
    ClearValue = UINT8_MAX
 };
@@ -68,7 +71,9 @@ static const DataModel_TestDoubleConfigurationEntry_t erdTable[] = {
    { Erd_U16_AnotherCoolingSystemRequestVoteStruct, sizeof(U16Vote_t) },
    { Erd_U32_AnotherCoolingSystemRequestVoteStruct, sizeof(U32Vote_t) },
    { Erd_U64_AnotherCoolingSystemRequestVoteStruct, sizeof(U64Vote_t) },
-   { Erd_DisableDefrost, sizeof(bool) }
+   { Erd_DisableDefrost, sizeof(bool) },
+   { Erd_TurboCoolOnOffRequest, sizeof(bool) },
+   { Erd_TurboFreezeOnOffRequest, sizeof(bool) }
 };
 
 static const CoolingSystemRequestVotePair_t coolingSystemVotePairs[] = {
@@ -99,6 +104,8 @@ static const CoolingSystemRequestHandlerConfiguration_t config = {
    .requestErd = Erd_CoolingSystemOffRequest,
    .statusErd = Erd_CoolingSystemOffStatus,
    .disableDefrostErd = Erd_DisableDefrost,
+   .turboCoolOnOffRequestErd = Erd_TurboCoolOnOffRequest,
+   .turboFreezeOnOffRequestErd = Erd_TurboFreezeOnOffRequest,
    .coolingSystemRequestVoteList = coolingSystemVoteList
 };
 
@@ -106,6 +113,8 @@ static const CoolingSystemRequestHandlerConfiguration_t configU64Vote = {
    .requestErd = Erd_CoolingSystemOffRequest,
    .statusErd = Erd_CoolingSystemOffStatus,
    .disableDefrostErd = Erd_DisableDefrost,
+   .turboCoolOnOffRequestErd = Erd_TurboCoolOnOffRequest,
+   .turboFreezeOnOffRequestErd = Erd_TurboFreezeOnOffRequest,
    .coolingSystemRequestVoteList = coolingSystemVoteListWithU64Vote
 };
 
@@ -259,9 +268,39 @@ TEST_GROUP(CoolingSystemRequestHandler)
       DataModel_Read(dataModel, Erd_DisableDefrost, &actual);
       CHECK_EQUAL(expected, actual);
    }
+
+   void GivenTurboCoolRequestIs(bool request)
+   {
+      DataModel_Write(dataModel, Erd_TurboCoolOnOffRequest, &request);
+   }
+
+   void GivenTurboFreezeRequestIs(bool request)
+   {
+      DataModel_Write(dataModel, Erd_TurboFreezeOnOffRequest, &request);
+   }
+
+   void TurboCoolOnOffRequestShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_TurboCoolOnOffRequest, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void TurboFreezeOnOffRequestShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_TurboFreezeOnOffRequest, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void TurboModeRequestsShouldBe(bool expectedRequest)
+   {
+      TurboCoolOnOffRequestShouldBe(expectedRequest);
+      TurboFreezeOnOffRequestShouldBe(expectedRequest);
+   }
 };
 
-TEST(CoolingSystemRequestHandler, ShouldVoteForAllTheLoadsAndDisableDefrostWhenTheCoolingSystemOffRequestChangesToTrue)
+TEST(CoolingSystemRequestHandler, ShouldVoteForAllTheLoadsAndDisableDefrostAndTurnOffTurboModesWhenTheCoolingSystemOffRequestChangesToTrueWhileTurboModesAreOff)
 {
    GivenTheModuleIsInitialized();
    GivenTheU8VoteStructErdHasValue(Erd_U8_CoolingSystemRequestVoteStruct, U8ChangeValue, Vote_DontCare);
@@ -270,14 +309,55 @@ TEST(CoolingSystemRequestHandler, ShouldVoteForAllTheLoadsAndDisableDefrostWhenT
    GivenTheU8VoteStructErdHasValue(Erd_U8_AnotherCoolingSystemRequestVoteStruct, U8ChangeValue, Vote_DontCare);
    GivenTheU16VoteStructErdHasValue(Erd_U16_AnotherCoolingSystemRequestVoteStruct, U16ChangeValue, Vote_DontCare);
    GivenTheU32VoteStructErdHasValue(Erd_U32_AnotherCoolingSystemRequestVoteStruct, U32ChangeValue, Vote_DontCare);
+   GivenTurboCoolRequestIs(ON);
+   GivenTurboFreezeRequestIs(ON);
 
    WhenTheCoolingSystemOffRequestChangesTo(true);
    TheCoolingSystemOffStatusShouldBe(true);
    DefrostDisabledShouldBe(true);
    AllCoolingSystemRequestVotesShouldBeOffAndCare();
+   TurboModeRequestsShouldBe(OFF);
 }
 
-TEST(CoolingSystemRequestHandler, ShouldVoteForAllTheLoadsWithCareAndDisableDefrostWhenTheCoolingSystemOffStatusIsTrueOnInitialization)
+TEST(CoolingSystemRequestHandler, ShouldVoteForAllTheLoadsAndDisableDefrostAndTurnOffTurboModesWhenTheCoolingSystemOffRequestChangesToTrueWhileTurboCoolIsOn)
+{
+   GivenTheModuleIsInitialized();
+   GivenTheU8VoteStructErdHasValue(Erd_U8_CoolingSystemRequestVoteStruct, U8ChangeValue, Vote_DontCare);
+   GivenTheU16VoteStructErdHasValue(Erd_U16_CoolingSystemRequestVoteStruct, U16ChangeValue, Vote_DontCare);
+   GivenTheU32VoteStructErdHasValue(Erd_U32_CoolingSystemRequestVoteStruct, U32ChangeValue, Vote_DontCare);
+   GivenTheU8VoteStructErdHasValue(Erd_U8_AnotherCoolingSystemRequestVoteStruct, U8ChangeValue, Vote_DontCare);
+   GivenTheU16VoteStructErdHasValue(Erd_U16_AnotherCoolingSystemRequestVoteStruct, U16ChangeValue, Vote_DontCare);
+   GivenTheU32VoteStructErdHasValue(Erd_U32_AnotherCoolingSystemRequestVoteStruct, U32ChangeValue, Vote_DontCare);
+   GivenTurboCoolRequestIs(ON);
+   GivenTurboFreezeRequestIs(OFF);
+
+   WhenTheCoolingSystemOffRequestChangesTo(true);
+   TheCoolingSystemOffStatusShouldBe(true);
+   DefrostDisabledShouldBe(true);
+   AllCoolingSystemRequestVotesShouldBeOffAndCare();
+   TurboModeRequestsShouldBe(OFF);
+}
+
+TEST(CoolingSystemRequestHandler, ShouldVoteForAllTheLoadsAndDisableDefrostAndTurnOffTurboModesWhenTheCoolingSystemOffRequestChangesToTrueWhileTurboFreezeIsOn)
+{
+   GivenTheModuleIsInitialized();
+   GivenTheU8VoteStructErdHasValue(Erd_U8_CoolingSystemRequestVoteStruct, U8ChangeValue, Vote_DontCare);
+   GivenTheU16VoteStructErdHasValue(Erd_U16_CoolingSystemRequestVoteStruct, U16ChangeValue, Vote_DontCare);
+   GivenTheU32VoteStructErdHasValue(Erd_U32_CoolingSystemRequestVoteStruct, U32ChangeValue, Vote_DontCare);
+   GivenTheU8VoteStructErdHasValue(Erd_U8_AnotherCoolingSystemRequestVoteStruct, U8ChangeValue, Vote_DontCare);
+   GivenTheU16VoteStructErdHasValue(Erd_U16_AnotherCoolingSystemRequestVoteStruct, U16ChangeValue, Vote_DontCare);
+   GivenTheU32VoteStructErdHasValue(Erd_U32_AnotherCoolingSystemRequestVoteStruct, U32ChangeValue, Vote_DontCare);
+   GivenTurboCoolRequestIs(OFF);
+   GivenTurboFreezeRequestIs(ON);
+
+   WhenTheCoolingSystemOffRequestChangesTo(true);
+   TheCoolingSystemOffStatusShouldBe(true);
+   DefrostDisabledShouldBe(true);
+   AllCoolingSystemRequestVotesShouldBeOffAndCare();
+   TurboModeRequestsShouldBe(OFF);
+}
+
+TEST(CoolingSystemRequestHandler, ShouldVoteForAllTheLoadsWithCareAndDisableDefrostAndTurnOffTurboModesWhenTheCoolingSystemOffStatusIsTrueOnInitialization)
 {
    GivenTheCoolingSystemOffStatusIs(true);
    GivenTheModuleIsInitialized();
@@ -285,6 +365,7 @@ TEST(CoolingSystemRequestHandler, ShouldVoteForAllTheLoadsWithCareAndDisableDefr
    TheCoolingSystemOffStatusShouldBe(true);
    DefrostDisabledShouldBe(true);
    AllCoolingSystemRequestVotesShouldBeOffAndCare();
+   TurboModeRequestsShouldBe(OFF);
 }
 
 TEST(CoolingSystemRequestHandler, ShouldNotVoteAtAllOrEnableDefrostIfCoolingSystemRequestIsClearValue)
@@ -295,11 +376,13 @@ TEST(CoolingSystemRequestHandler, ShouldNotVoteAtAllOrEnableDefrostIfCoolingSyst
    TheCoolingSystemOffStatusShouldBe(true);
    DefrostDisabledShouldBe(true);
    AllCoolingSystemRequestVotesShouldBeOffAndCare();
+   TurboModeRequestsShouldBe(OFF);
 
    WhenTheCoolingSystemOffRequestChangesTo(ClearValue);
    TheCoolingSystemOffStatusShouldBe(true);
    DefrostDisabledShouldBe(true);
    AllCoolingSystemRequestVotesShouldBeOffAndCare();
+   TurboModeRequestsShouldBe(OFF);
 }
 
 TEST(CoolingSystemRequestHandler, ShouldVoteForAllTheLoadsWithNoCareWhenTheCoolingSystemOffStatusIsFalseOnInitialization)
@@ -320,16 +403,20 @@ TEST(CoolingSystemRequestHandler, ShouldVoteForAllTheLoadsWithNoCareAndEnableDef
    GivenTheU8VoteStructErdHasValue(Erd_U8_AnotherCoolingSystemRequestVoteStruct, U8ChangeValue, Vote_DontCare);
    GivenTheU16VoteStructErdHasValue(Erd_U16_AnotherCoolingSystemRequestVoteStruct, U16ChangeValue, Vote_DontCare);
    GivenTheU32VoteStructErdHasValue(Erd_U32_AnotherCoolingSystemRequestVoteStruct, U32ChangeValue, Vote_DontCare);
+   GivenTurboCoolRequestIs(OFF);
+   GivenTurboFreezeRequestIs(ON);
 
    WhenTheCoolingSystemOffRequestChangesTo(true);
    TheCoolingSystemOffStatusShouldBe(true);
    DefrostDisabledShouldBe(true);
    AllCoolingSystemRequestVotesShouldBeOffAndCare();
+   TurboModeRequestsShouldBe(OFF);
 
    WhenTheCoolingSystemOffRequestChangesTo(false);
    TheCoolingSystemOffStatusShouldBe(false);
    DefrostDisabledShouldBe(false);
    AllCoolingSystemRequestVotesShouldBeOffAndDontCare();
+   TurboModeRequestsShouldBe(OFF);
 }
 
 TEST(CoolingSystemRequestHandler, ShouldClearRequestErdOnceARequestIsMade)

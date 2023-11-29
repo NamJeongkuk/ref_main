@@ -102,6 +102,19 @@ static void SetDefrostDisabledTo(CoolingSystemRequestHandler_t *instance, bool s
       &state);
 }
 
+static void TurnOffTurboModes(CoolingSystemRequestHandler_t *instance)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->turboCoolOnOffRequestErd,
+      off);
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->turboFreezeOnOffRequestErd,
+      off);
+}
+
 static void CoolingSystemRequestHandlerTimeChanged(void *context, const void *args)
 {
    CoolingSystemRequestHandler_t *instance = context;
@@ -112,6 +125,7 @@ static void CoolingSystemRequestHandlerTimeChanged(void *context, const void *ar
       {
          VoteOffForAllTheLoadsWithCareSetTo(instance, Vote_Care);
          SetDefrostDisabledTo(instance, true);
+         TurnOffTurboModes(instance);
       }
       else if(*offRequest == false)
       {
@@ -140,6 +154,7 @@ static void VoteBasedOnStatus(CoolingSystemRequestHandler_t *instance)
    {
       VoteOffForAllTheLoadsWithCareSetTo(instance, Vote_Care);
       SetDefrostDisabledTo(instance, true);
+      TurnOffTurboModes(instance);
    }
    else
    {

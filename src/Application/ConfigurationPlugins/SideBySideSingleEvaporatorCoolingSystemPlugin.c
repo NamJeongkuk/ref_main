@@ -28,6 +28,8 @@ static const CoolingSystemRequestHandlerConfiguration_t coolingSystemRequestHand
    .requestErd = Erd_CoolingOffRequest,
    .statusErd = Erd_CoolingOffStatus,
    .disableDefrostErd = Erd_DisableDefrost,
+   .turboCoolOnOffRequestErd = Erd_TurboCoolOnOffRequest,
+   .turboFreezeOnOffRequestErd = Erd_TurboFreezeOnOffRequest,
    .coolingSystemRequestVoteList = coolingSystemRequestVoteList
 };
 
