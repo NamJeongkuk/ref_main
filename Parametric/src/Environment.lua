@@ -105,6 +105,7 @@ return function(directory)
 
   Core = require 'lua-parametric-tools'.common.Core
   enum = require 'lua-common'.utilities.enum
+  math = require 'lua-common'.math
 
   core = Core()
   parametric_data = ParametricData(core)
@@ -308,6 +309,7 @@ return function(directory)
     load_off_door_open = load_off_door_open,
     load_off_door_open_compartment_list = load_off_door_open_compartment_list,
     constants = constants,
+    math = math,
     import = require 'lua-parametric-tools'.util.EvalInCurrentEnvironment(directory, {
       remove_tail_calls = true
     })
