@@ -55,27 +55,54 @@ static const Erd_t rfidFilterLeakDetectedFaultErds[] = {
 };
 
 static const ErdLogicServiceConfigurationEntry_t rfidFilterFaultLogicServiceConfigurationEntries[] = {
-   { 
+   {
       .logicalOperator = ErdLogicServiceOperator_Or,
       .operandErds = {
          rfidFilterErrorFaultErds,
-         NUM_ELEMENTS(rfidFilterErrorFaultErds) 
+         NUM_ELEMENTS(rfidFilterErrorFaultErds),
       },
-      .resultErd = Erd_FilterError 
+      .resultErd = Erd_FilterError,
    },
-   { 
-      .logicalOperator = ErdLogicServiceOperator_Set, 
-      .operandErds = { 
-         rfidFilterLeakDetectedFaultErds, 
-         NUM_ELEMENTS(rfidFilterLeakDetectedFaultErds) 
-      }, 
-      .resultErd = Erd_LeakDetected 
+   {
+      .logicalOperator = ErdLogicServiceOperator_Set,
+      .operandErds = {
+         rfidFilterLeakDetectedFaultErds,
+         NUM_ELEMENTS(rfidFilterLeakDetectedFaultErds),
+      },
+      .resultErd = Erd_LeakDetected,
    }
 };
 
 static const ErdLogicServiceConfiguration_t rfidFilterFaultLogicServiceConfiguration = {
    .array = rfidFilterFaultLogicServiceConfigurationEntries,
    .numberOfEntries = NUM_ELEMENTS(rfidFilterFaultLogicServiceConfigurationEntries)
+};
+
+static const RfidFaultConfig_t rfidFaultConfigs[] = {
+   {
+      .faultErd = Erd_RfidBoardHardwareFailureFault,
+      .minimumConsecutiveRequestsToSetFault = 5,
+   },
+   {
+      .faultErd = Erd_RfidBoardTagAuthenticationFailedFault,
+      .minimumConsecutiveRequestsToSetFault = 5,
+   },
+   {
+      .faultErd = Erd_RfidBoardLeakDetectedFault,
+      .minimumConsecutiveRequestsToSetFault = 5,
+   },
+   {
+      .faultErd = Erd_RfidBoardBlockedTagFault,
+      .minimumConsecutiveRequestsToSetFault = 5,
+   }
+};
+
+static uint8_t rfidFaultRequestsCountBuffer[NUM_ELEMENTS(rfidFaultConfigs)] = { 0 };
+
+static const RfidFaultHandlerConfig_t rfidFaultHandlerConfig = {
+   .faultConfigurations = rfidFaultConfigs,
+   .numberOfFaults = NUM_ELEMENTS(rfidFaultConfigs),
+   .rfidFaultRequestErd = Erd_RfidFaultRequest
 };
 
 static bool RfidBoardIsAlreadyInSystem(I_DataModel_t *dataModel)
@@ -106,6 +133,12 @@ static void InitRfidFilterPlugins(RfidCommunicationPlugin_t *instance)
       instance->_private.dataModel);
 
    RfidErrorAndLeakDetectedErd_Init(instance);
+
+   RfidFaultHandler_Init(
+      &instance->_private.rfidFaultHandler,
+      instance->_private.dataModel,
+      &rfidFaultHandlerConfig,
+      rfidFaultRequestsCountBuffer);
 }
 
 static void RfidBoardIsInSystem(void *context, const void *args)

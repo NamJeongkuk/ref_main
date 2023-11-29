@@ -12,6 +12,7 @@
 #include "RfidCommunicator.h"
 #include "RfidCommunicationControllerPlugin.h"
 #include "ErdLogicService.h"
+#include "RfidFaultHandler.h"
 
 typedef struct
 {
@@ -20,6 +21,7 @@ typedef struct
       RfidCommunicator_t rfidCommunicator;
       RfidCommunicationControllerPlugin_t rfidCommunicationControllerPlugin;
       ErdLogicService_t rfidFilterFaultLogicService;
+      RfidFaultHandler_t rfidFaultHandler;
       EventSubscription_t rfidBoardInSystemSubscription;
       I_DataModel_t *dataModel;
       I_DataSource_t *externalDataSource;

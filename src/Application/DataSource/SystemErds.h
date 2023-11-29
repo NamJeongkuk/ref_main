@@ -136,6 +136,7 @@
 #include "BoardFeatureApi.h"
 #include "CalendarUsageInSeconds.h"
 #include "VolumeInOuncesX100.h"
+#include "RfidFaultHandler.h"
 
 // clang-format off
 
@@ -932,6 +933,8 @@ enum
    ENTRY(Erd_RfidFilterBadReadCount,                        0xF19A, uint8_t,                                            Swap_No,  Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_RfidFilterBadWriteCount,                       0xF19B, uint8_t,                                            Swap_No,  Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_RfidFilterHardwareFailureCount,                0xF19C, uint8_t,                                            Swap_No,  Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   \
+   ENTRY(Erd_RfidFaultRequest,                              0xF19D, RfidFaultRequest_t,                                 Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_IceMakerFillInhibitedReason,                   0xF1A0, IceMakerFillInhibitedReasonBitmap_t,                Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \

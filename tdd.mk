@@ -41,6 +41,7 @@ SRC_DIRS := \
    $(PROJECT_DIR)/Application/ErdService \
    $(PROJECT_DIR)/Application/Evaporator \
    $(PROJECT_DIR)/Application/Factory \
+   $(PROJECT_DIR)/Application/FaultHandlers \
    $(PROJECT_DIR)/Application/Fan \
    $(PROJECT_DIR)/Application/Fault \
    $(PROJECT_DIR)/Application/Features \
@@ -111,6 +112,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/EnhancedSabbath \
    $(TESTS_DIR)/Application/ErdService \
    $(TESTS_DIR)/Application/Factory \
+   $(TESTS_DIR)/Application/FaultHandlers \
    $(TESTS_DIR)/Application/Fan \
    $(TESTS_DIR)/Application/Fault \
    $(TESTS_DIR)/Application/FlowMeter \

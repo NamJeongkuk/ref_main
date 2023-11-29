@@ -1797,6 +1797,46 @@
           "name": "Erd_InternalTemperatureUiCommunicationFault",
           "read": true,
           "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F800 Rfid Board Hardware Failure Fault",
+          "name": "Erd_RfidBoardHardwareFailureFault",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F801 Rfid Board Communication Fault",
+          "name": "Erd_RfidBoardCommunicationFault",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F803 Rfid Board Tag Authentication Failed Fault",
+          "name": "Erd_RfidBoardTagAuthenticationFailedFault",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F805 Rfid Board Leak Detected Fault",
+          "name": "Erd_RfidBoardLeakDetectedFault",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F806 Rfid Board Blocked Tag Fault",
+          "name": "Erd_RfidBoardBlockedTagFault",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
         }
       ]
     },
