@@ -34,12 +34,10 @@ enum
    // 0x00100000 Ice Maker 1
    // 0x00200000 Turbo Cool
    // 0x00400000 Turbo Freeze
-   // 0x01000000 PresenceSensingEnabled
-   // 0x02000000 PresenceSensedActivatesRecessLight
    // 0x04000000 Dimmable Light 0 Percent Level
    // 0x10000000 Night Snack Mode Lighting
    // 0x80000000 V2RefrigerationNotifications
-   FeaturesV2 = 0x977BFFE1
+   FeaturesV2 = 0x947BFFE1
 };
 
 enum

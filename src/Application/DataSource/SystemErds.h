@@ -1495,7 +1495,7 @@ enum
    ENTRY(Erd_AndroidSbcBoardInSystem,                       0xFB89, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_InternalTemperatureUiInSystem,                 0xFB8A, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_BroadcastResetRequestSignal,                   0xFB8B, Signal_t,                                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_DispenserUiReportedFeatures,                   0xFB8C, BoardFeatureApi_t,                                  Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_DispenserUiReportedFeatures,                   0xFB8C, BoardFeatureApi_t,                                  Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_FreshFoodThermistorDiscovered,                 0xFB90, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_FreezerThermistorDiscovered,                   0xFB91, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \

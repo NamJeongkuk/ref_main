@@ -115,6 +115,7 @@ TEST_SRC_DIRS := \
    $(TESTS_DIR)/Application/FaultHandlers \
    $(TESTS_DIR)/Application/Fan \
    $(TESTS_DIR)/Application/Fault \
+   $(TESTS_DIR)/Application/Features \
    $(TESTS_DIR)/Application/FlowMeter \
    $(TESTS_DIR)/Application/Grid \
    $(TESTS_DIR)/Application/IceMaker \

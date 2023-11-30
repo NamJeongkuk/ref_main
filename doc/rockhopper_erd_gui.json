@@ -4422,6 +4422,32 @@
           "interval": 1000000000
         }
       ]
+    },
+    {
+      "title": "Features API Mapping",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Manifest One",
+          "name": "Erd_ApplianceApiApplianceTypeManifest1",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Manifest Two",
+          "name": "Erd_ApplianceApiApplianceTypeManifest2",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Dispenser UI Features",
+          "name": "Erd_DispenserUiReportedFeatures",
+          "read": true,
+          "write": true
+        }
+      ]
     }
   ]
 }

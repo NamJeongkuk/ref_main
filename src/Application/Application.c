@@ -71,4 +71,6 @@ void Application_Init(
    ServiceModePlugin_Init(&instance->_private.serviceModePlugin, dataModel);
 
    FaultMonitorPlugin_Init(&instance->_private.faultMonitorPlugin, dataModel);
+
+   BoardFeaturesToApplianceApiFeaturesUpdaterPlugin_Init(&instance->_private.boardFeaturesToApplianceFeaturesPlugin, dataModel);
 }

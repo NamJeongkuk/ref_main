@@ -21,6 +21,7 @@
 #include "SoundLevelPlugin.h"
 #include "ServiceModePlugin.h"
 #include "FaultMonitorPlugin.h"
+#include "BoardFeaturesToApplianceApiFeaturesUpdaterPlugin.h"
 
 typedef struct
 {
@@ -42,6 +43,7 @@ typedef struct
       SoundLevelPlugin_t soundLevelPlugin;
       ServiceModePlugin_t serviceModePlugin;
       FaultMonitorPlugin_t faultMonitorPlugin;
+      BoardFeaturesToApplianceApiFeaturesUpdaterPlugin_t boardFeaturesToApplianceFeaturesPlugin;
    } _private;
 } Application_t;
 
