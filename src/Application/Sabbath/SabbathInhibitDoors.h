@@ -10,6 +10,7 @@
 
 #include "I_DataModel.h"
 #include "Erd.h"
+#include "Timer.h"
 
 typedef struct
 {
@@ -33,6 +34,7 @@ typedef struct
       I_DataModel_t *dataModel;
       EventSubscription_t onDataModelChangeSubscription;
       const SabbathInhibitDoorsConfiguration_t *config;
+      Timer_t timer;
    } _private;
 } SabbathInhibitDoors_t;
 

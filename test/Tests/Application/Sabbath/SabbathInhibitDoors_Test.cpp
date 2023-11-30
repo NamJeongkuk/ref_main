@@ -11,12 +11,18 @@ extern "C"
 }
 
 #include "CppUTest/TestHarness.h"
+#include "CppUTestExt/MockSupport.h"
 #include "ReferDataModel_TestDouble.h"
 
 enum
 {
    Closed = false,
    Opened = true
+};
+
+enum
+{
+   SabbathGpioDelayInMilliseconds = 100
 };
 
 static const SabbathDoorOverridePair_t doorOverridePairs[] = {
@@ -38,12 +44,11 @@ static const SabbathInhibitDoorsConfiguration_t config = {
    .sabbathGpioErd = Erd_Gpio_SABBATH
 };
 
-static bool testPassed;
-
 TEST_GROUP(SabbathInhibitDoors)
 {
    ReferDataModel_TestDouble_t dataModelTestDouble;
    I_DataModel_t *dataModel;
+   TimerModule_TestDouble_t *timerModuleTestDouble;
    SabbathInhibitDoors_t instance;
    EventSubscription_t subscription;
 
@@ -51,7 +56,52 @@ TEST_GROUP(SabbathInhibitDoors)
    {
       ReferDataModel_TestDouble_Init(&dataModelTestDouble);
       dataModel = dataModelTestDouble.dataModel;
-      testPassed = false;
+      timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelTestDouble);
+
+      mock().strictOrder();
+   }
+
+   static void DataModelChanged(void *context, const void *args)
+   {
+      (void)context;
+      const DataModelOnDataChangeArgs_t *onChangeData = (const DataModelOnDataChangeArgs_t *)args;
+      Erd_t erd = onChangeData->erd;
+
+      if(erd == Erd_Gpio_SABBATH)
+      {
+         const bool *state = (const bool *)onChangeData->data;
+
+         mock().actualCall("SabbathGpioErdChanged").withParameter("state", *state);
+      }
+      else if(erd == Erd_LeftSideFreezerDoorStatus_SabbathOverrideRequest)
+      {
+         const bool *state = (const bool *)onChangeData->data;
+
+         mock().actualCall("LeftSideFreezerDoorStatusOverrideRequest").withParameter("state", *state);
+      }
+      else if(erd == Erd_RightSideFreshFoodDoorStatus_SabbathOverrideRequest)
+      {
+         const bool *state = (const bool *)onChangeData->data;
+
+         mock().actualCall("RightSideFreshFoodDoorStatusOverrideRequest").withParameter("state", *state);
+      }
+   }
+
+   void GivenDataModelSubscriptionHasBeenInitializedAndSubscribedTo()
+   {
+      EventSubscription_Init(
+         &subscription,
+         NULL,
+         DataModelChanged);
+
+      DataModel_SubscribeAll(
+         dataModel,
+         &subscription);
+   }
+
+   void After(TimerTicks_t ticks)
+   {
+      TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks);
    }
 
    void GivenTheSabbathInhibitDoorsIsInitialized()
@@ -90,34 +140,34 @@ TEST_GROUP(SabbathInhibitDoors)
 
    void GivenAllOverrideRequestsAre(bool state)
    {
-      for(uint8_t index; index < NUM_ELEMENTS(doorOverridePairs); index++)
+      for(uint8_t i = 0; i < NUM_ELEMENTS(doorOverridePairs); i++)
       {
          DataModel_Write(
             dataModel,
-            doorOverridePairs[index].doorStatusOverrideRequestErd,
+            doorOverridePairs[i].doorStatusOverrideRequestErd,
             &state);
       }
    }
 
    void GivenAllOverrideValuesAre(bool state)
    {
-      for(uint8_t index; index < NUM_ELEMENTS(doorOverridePairs); index++)
+      for(uint8_t i = 0; i < NUM_ELEMENTS(doorOverridePairs); i++)
       {
          DataModel_Write(
             dataModel,
-            doorOverridePairs[index].doorStatusOverrideValueErd,
+            doorOverridePairs[i].doorStatusOverrideValueErd,
             &state);
       }
    }
 
    void AllOverrideRequestsShouldBe(bool expectedState)
    {
-      bool actualState;
-      for(uint8_t index; index < NUM_ELEMENTS(doorOverridePairs); index++)
+      for(uint8_t i = 0; i < NUM_ELEMENTS(doorOverridePairs); i++)
       {
+         bool actualState;
          DataModel_Read(
             dataModel,
-            doorOverridePairs[index].doorStatusOverrideRequestErd,
+            doorOverridePairs[i].doorStatusOverrideRequestErd,
             &actualState);
 
          CHECK_EQUAL(expectedState, actualState);
@@ -126,12 +176,12 @@ TEST_GROUP(SabbathInhibitDoors)
 
    void AllOverrideValuesShouldBe(bool expectedState)
    {
-      bool actualState;
-      for(uint8_t index; index < NUM_ELEMENTS(doorOverridePairs); index++)
+      for(uint8_t i = 0; i < NUM_ELEMENTS(doorOverridePairs); i++)
       {
+         bool actualState;
          DataModel_Read(
             dataModel,
-            doorOverridePairs[index].doorStatusOverrideValueErd,
+            doorOverridePairs[i].doorStatusOverrideValueErd,
             &actualState);
 
          CHECK_EQUAL(expectedState, actualState);
@@ -152,6 +202,13 @@ TEST_GROUP(SabbathInhibitDoors)
       GivenTheSabbathInhibitDoorsIsInitialized();
    }
 
+   void GivenTheModuleIsInitalizedAndNormalSabbathIsEnabledAndEnhancedSabbathIsDisabled()
+   {
+      GivenEnhancedSabbathModeIs(DISABLED);
+      GivenSabbathModeIs(ENABLED);
+      GivenTheSabbathInhibitDoorsIsInitialized();
+   }
+
    void GivenSabbathGpioIs(bool state)
    {
       DataModel_Write(dataModel, config.sabbathGpioErd, &state);
@@ -164,72 +221,26 @@ TEST_GROUP(SabbathInhibitDoors)
       CHECK_EQUAL(expected, actual);
    }
 
-   static void DataModelChangedSabbathGpioShouldBeSetWhenDoorIsResolvedToClosed(void *context, const void *_args)
+   void SabbathGpioShouldBeSet()
    {
-      REINTERPRET(dataModel, context, I_DataModel_t *);
-      REINTERPRET(args, _args, const DataModelOnDataChangeArgs_t *);
-
-      if(args->erd == doorOverridePairs[0].doorStatusOverrideRequestErd)
-      {
-         bool gpioState;
-         DataModel_Read(
-            dataModel,
-            config.sabbathGpioErd,
-            &gpioState);
-
-         testPassed = gpioState ? true : false;
-      }
+      mock().expectOneCall("SabbathGpioErdChanged").withParameter("state", true);
    }
 
-   void SabbathGpioShouldBeSetWhenResolvedDoorsAreClosedUponEnteringSabbath(void)
+   void SabbathGpioShouldBeCleared()
    {
-      EventSubscription_Init(
-         &subscription,
-         dataModel,
-         DataModelChangedSabbathGpioShouldBeSetWhenDoorIsResolvedToClosed);
-      Event_Subscribe(dataModel->OnDataChange, &subscription);
-
-      WhenSabbathModeBecomes(ENABLED);
-      CHECK_TRUE(testPassed);
+      mock().expectOneCall("SabbathGpioErdChanged").withParameter("state", false);
    }
 
-   static void DataModelChangedOverrideErdShouldBeSetWhenSabbathGpioIsSet(void *context, const void *_args)
+   void OverrideRequestsShouldBeSet()
    {
-      REINTERPRET(dataModel, context, I_DataModel_t *);
-      REINTERPRET(args, _args, const DataModelOnDataChangeArgs_t *);
-
-      if(args->erd == config.sabbathGpioErd)
-      {
-         bool request;
-         testPassed = true;
-
-         for(uint8_t index = 0; index < config.numberOfPairs; index++)
-         {
-            DataModel_Read(
-               dataModel,
-               doorOverridePairs[index].doorStatusOverrideRequestErd,
-               &request);
-
-            if(request == CLEAR)
-            {
-               testPassed = false;
-               return;
-            }
-         }
-      }
+      mock().expectOneCall("RightSideFreshFoodDoorStatusOverrideRequest").withParameter("state", true);
+      mock().expectOneCall("LeftSideFreezerDoorStatusOverrideRequest").withParameter("state", true);
    }
 
-   void ResolvedDoorsShouldRemainClosedWhenSabbathGpioIsSetUponDisablingSabbath(void)
+   void OverrideRequestsShouldBeCleared()
    {
-      EventSubscription_Init(
-         &subscription,
-         dataModel,
-         DataModelChangedOverrideErdShouldBeSetWhenSabbathGpioIsSet);
-      Event_Subscribe(dataModel->OnDataChange, &subscription);
-
-      WhenSabbathModeBecomes(DISABLED);
-      WhenEnhancedSabbathModeBecomes(DISABLED);
-      CHECK_TRUE(testPassed);
+      mock().expectOneCall("RightSideFreshFoodDoorStatusOverrideRequest").withParameter("state", false);
+      mock().expectOneCall("LeftSideFreezerDoorStatusOverrideRequest").withParameter("state", false);
    }
 };
 
@@ -259,6 +270,7 @@ TEST(SabbathInhibitDoors, ShouldNotSetOverrideRequestsOrValuesWhenInitializedNot
    GivenTheSabbathInhibitDoorsIsInitialized();
 
    AllOverrideRequestsShouldBe(CLEAR);
+   AllOverrideValuesShouldBe(Opened);
 }
 
 TEST(SabbathInhibitDoors, ShouldSetOverrideErdsWhenRegularSabbathIsEntered)
@@ -312,19 +324,28 @@ TEST(SabbathInhibitDoors, ShouldSetSabbathGpioWhenBothSabbathAndEnhancedSabbathA
    SabbathGpioShouldBe(SET);
 }
 
-TEST(SabbathInhibitDoors, ShouldVoteTheDoorStatesClosedBeforeClearingGpio)
+TEST(SabbathInhibitDoors, ShouldVoteTheDoorStatesClosedBeforeClearingGpioWhenSabbathIsEnabled)
 {
    GivenSabbathGpioIs(SET);
    GivenAllOverrideRequestsAre(CLEAR);
    GivenTheModuleIsInitalizedAndNormalSabbathAndEnhancedSabbathAreDisabled();
+   GivenDataModelSubscriptionHasBeenInitializedAndSubscribedTo();
 
-   SabbathGpioShouldBeSetWhenResolvedDoorsAreClosedUponEnteringSabbath();
+   OverrideRequestsShouldBeSet();
+   SabbathGpioShouldBeCleared();
+   WhenSabbathModeBecomes(ENABLED);
 }
 
-TEST(SabbathInhibitDoors, ShouldSetGpioBeforeVotingForTheDoorStates)
+TEST(SabbathInhibitDoors, ShouldSetGpioWhenSabbathIsDisabledAndClearOverrideRequestsAfterSabbathGpioDelay)
 {
+   GivenSabbathGpioIs(CLEAR);
    GivenAllOverrideRequestsAre(CLEAR);
-   GivenTheModuleIsInitalizedAndNormalSabbathAndEnhancedSabbathAreEnabled();
+   GivenTheModuleIsInitalizedAndNormalSabbathIsEnabledAndEnhancedSabbathIsDisabled();
+   GivenDataModelSubscriptionHasBeenInitializedAndSubscribedTo();
 
-   ResolvedDoorsShouldRemainClosedWhenSabbathGpioIsSetUponDisablingSabbath();
+   SabbathGpioShouldBeSet();
+   WhenSabbathModeBecomes(DISABLED);
+
+   OverrideRequestsShouldBeCleared();
+   After(SabbathGpioDelayInMilliseconds);
 }

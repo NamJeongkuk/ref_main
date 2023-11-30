@@ -15,11 +15,11 @@ static const AllFreshFoodDoorStatusConfiguration_t allFreshFoodDoorStatusConfigu
 };
 
 static const SabbathDoorOverridePair_t sabbathOverrideErdPairs[] = {
-   { 
+   {
       .doorStatusOverrideRequestErd = Erd_LeftSideFreezerDoorStatus_SabbathOverrideRequest,
       .doorStatusOverrideValueErd = Erd_LeftSideFreezerDoorStatus_SabbathOverrideValue,
    },
-   { 
+   {
       .doorStatusOverrideRequestErd = Erd_RightSideFreshFoodDoorStatus_SabbathOverrideRequest,
       .doorStatusOverrideValueErd = Erd_RightSideFreshFoodDoorStatus_SabbathOverrideValue,
    },

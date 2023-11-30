@@ -7,12 +7,31 @@
 #include "SabbathInhibitDoors.h"
 #include "utils.h"
 #include "Constants_Binary.h"
+#include "DataModelErdPointerAccess.h"
+#include "SystemErds.h"
 
 enum
 {
-   Closed = false,
-   Opened = true
+   Closed = false
 };
+
+enum
+{
+   SabbathGpioDelayInMilliseconds = 100 // Electron travel time
+};
+
+static void ClearOverrideRequests(void *context)
+{
+   SabbathInhibitDoors_t *instance = context;
+
+   for(uint8_t index = 0; index < instance->_private.config->numberOfPairs; index++)
+   {
+      DataModel_Write(
+         instance->_private.dataModel,
+         instance->_private.config->doorOverrideErdPairList[index].doorStatusOverrideRequestErd,
+         clear);
+   }
+}
 
 static void InhibitDoorsInSabbathMode(void *context)
 {
@@ -58,13 +77,15 @@ static void InhibitDoorsInSabbathMode(void *context)
          instance->_private.config->sabbathGpioErd,
          set);
 
-      for(uint8_t index = 0; index < instance->_private.config->numberOfPairs; index++)
-      {
-         DataModel_Write(
+      // Delay to allow for electron travel time to the new ground connection
+      TimerModule_StartOneShot(
+         DataModelErdPointerAccess_GetTimerModule(
             instance->_private.dataModel,
-            instance->_private.config->doorOverrideErdPairList[index].doorStatusOverrideRequestErd,
-            clear);
-      }
+            Erd_TimerModule),
+         &instance->_private.timer,
+         SabbathGpioDelayInMilliseconds,
+         ClearOverrideRequests,
+         instance);
    }
 };
 
