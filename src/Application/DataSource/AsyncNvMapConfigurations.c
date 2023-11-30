@@ -13,7 +13,8 @@
 enum
 {
    HarnessEepromIndex = EepromPartitionIndex_PartitionCount,
-   NumberOfAsyncDataSources
+   NumberOfAsyncDataSources,
+   Erd_NvMetadata = 0,
 };
 
 typedef struct
@@ -30,7 +31,8 @@ typedef struct
 static AsyncNvMapConfiguration_t instance;
 static NonVolatileDataSourceReadWriteBuffer_t buffers[NumberOfAsyncDataSources];
 
-static const AsyncDataSource_EepromErdInfo_t asyncNvAllElements[] = { ERD_TABLE(EXPAND_AS_ASYNC_MAP_ELEMENTS) };
+static const AsyncDataSource_EepromErdInfo_t asyncNvAllElements[] = { { .erd = Erd_NvMetadata, .size = sizeof(AsyncDataSource_EepromMetadata_t), .backupCount = 1 },
+   ERD_TABLE(EXPAND_AS_ASYNC_MAP_ELEMENTS) };
 
 EEPROM_PARTITIONS(EXPAND_AS_PARTITION_ASYNC_ELEMENTS)
 static const ConstArrayMap_BinarySearchConfiguration_t asyncNvMapConfigurations[] = {

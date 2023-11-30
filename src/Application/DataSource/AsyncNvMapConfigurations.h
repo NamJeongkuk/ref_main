@@ -44,10 +44,6 @@ enum
    CONCAT(INCLUDE_NVFAULTSNAPSHOT_, StorageType)                                                                             \
    ({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
 
-#define EXPAND_AS_NVONLY_ERD_ENUM(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, FaultId) \
-   CONCAT(INCLUDE_NVONLY_, StorageType)                                                                     \
-   (NV##Name COMMA)
-
 #define EXPAND_AS_CYCLEHISTORY_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, FaultId) \
    CONCAT(INCLUDE_NVCYCLEHISTORY_, StorageType)                                                                             \
    ({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
@@ -71,7 +67,7 @@ enum
 #define MAP_ELEMENTS_NvCycleHistory EXPAND_AS_CYCLEHISTORY_ASYNC_MAP_ELEMENTS
 
 #define EXPAND_AS_PARTITION_ASYNC_ELEMENTS(Name, StartAddress, Size, NvType) \
-   static const AsyncDataSource_EepromErdInfo_t async##NvType##Elements[] = { ERD_TABLE(MAP_ELEMENTS_##NvType) };
+   static const AsyncDataSource_EepromErdInfo_t async##NvType##Elements[] = { { .erd = Erd_NvMetadata, .size = sizeof(AsyncDataSource_EepromMetadata_t), .backupCount = 1 }, ERD_TABLE(MAP_ELEMENTS_##NvType) };
 
 #define EXPAND_AS_PARTITION_ASYNC_MAP_CONFIG(Name, StartAddress, Size, NvType) \
    { EXPAND_AS_BINARY_SEARCH_CONFIGURATION(async##NvType##Elements) },

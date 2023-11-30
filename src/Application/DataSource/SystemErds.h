@@ -472,7 +472,6 @@ enum
 
 //       Name,                                              Number, DataType,                                           Swap,     Io,      Sub,   StorageType,            NvDefaultData,                            FaultId
 #define ERD_TABLE(ENTRY)  \
-   ENTRY(Erd_NvMetadata,                                    0x0000, AsyncDataSource_EepromMetadata_t,                   Swap_No,  Io_None, Sub_N, Nv,                     NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_ModelNumber,                                   0x0001, ModelNumber_t,                                      Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
    ENTRY(Erd_SerialNumber,                                  0x0002, SerialNumber_t,                                     Swap_No,  Io_None, Sub_N, Virtual,                NotNv,                                    NotFault) \
    ENTRY(Erd_ControlLockStatus,                             0x0004, ControlLockStatus_t,                                Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_UnlockedControlLockStatus, NotFault) \
@@ -1511,7 +1510,7 @@ enum
    ENTRY(Erd_NvReservedFaultSnapshot,                       0xFCFE, uint8_t,                                            Swap_No,  Io_None, Sub_N,  NvFaultSnapshot,       NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_NvReservedCycleHistory,                        0xFCFF, uint8_t,                                            Swap_No,  Io_None, Sub_N,  NvCycleHistory,        NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
-   ENTRY(Erd_PersonalityEepromMetadata,                     0xFFFE, AsyncDataSource_EepromMetadata_t,                   Swap_No,  Io_None, Sub_N,  PersonalityEeprom,     NonVolatileDataSourceDefaultData_Zeros,   NotFault)
+   ENTRY(Erd_PersonalityEepromMetadata,                     0xFFFE, AsyncDataSource_EepromMetadata_t,                   Swap_No,  Io_None, Sub_N,  PersonalityEeprom,     NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
 
 #define CALLBACK_TABLE(ENTRY) \
    ENTRY(Erd_RfidFilterUnitSerialNumber,                    ErdConvertedCallBack_WriteNotAvailable,                     ErdConvertedCallBack_ReadRfidFilterUnitSerialNumber)

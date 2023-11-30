@@ -36,18 +36,18 @@ enum
 // clang-format off
 enum
 {
-   ERD_TABLE(EXPAND_AS_NVONLY_ERD_ENUM)
+   Erd_NvMetadata,
    NvErdCount
 };
 // clang-format on
 
-static const AsyncDataSource_EepromErdInfo_t expectedNvProtectedElements[] = { ERD_TABLE(EXPAND_AS_PROTECTED_ASYNC_MAP_ELEMENTS) };
-static const AsyncDataSource_EepromErdInfo_t expectedNvUserSettingElements[] = { ERD_TABLE(EXPAND_AS_USERSETTING_ASYNC_MAP_ELEMENTS) };
-static const AsyncDataSource_EepromErdInfo_t expectedNvUnitSettingElements[] = { ERD_TABLE(EXPAND_AS_UNITSETTING_ASYNC_MAP_ELEMENTS) };
-static const AsyncDataSource_EepromErdInfo_t expectedNvRfidElements[] = { ERD_TABLE(EXPAND_AS_RFID_ASYNC_MAP_ELEMENTS) };
-static const AsyncDataSource_EepromErdInfo_t expectedNvUsageProfileElements[] = { ERD_TABLE(EXPAND_AS_USAGEPROFILE_ASYNC_MAP_ELEMENTS) };
-static const AsyncDataSource_EepromErdInfo_t expectedNvFaultSnapshotElements[] = { ERD_TABLE(EXPAND_AS_FAULTSNAPSHOT_ASYNC_MAP_ELEMENTS) };
-static const AsyncDataSource_EepromErdInfo_t expectedNvCycleHistoryElements[] = { ERD_TABLE(EXPAND_AS_CYCLEHISTORY_ASYNC_MAP_ELEMENTS) };
+static const AsyncDataSource_EepromErdInfo_t expectedNvProtectedElements[] = { { .erd = Erd_NvMetadata, .size = sizeof(AsyncDataSource_EepromMetadata_t), .backupCount = 1 }, ERD_TABLE(EXPAND_AS_PROTECTED_ASYNC_MAP_ELEMENTS) };
+static const AsyncDataSource_EepromErdInfo_t expectedNvUserSettingElements[] = { { .erd = Erd_NvMetadata, .size = sizeof(AsyncDataSource_EepromMetadata_t), .backupCount = 1 }, ERD_TABLE(EXPAND_AS_USERSETTING_ASYNC_MAP_ELEMENTS) };
+static const AsyncDataSource_EepromErdInfo_t expectedNvUnitSettingElements[] = { { .erd = Erd_NvMetadata, .size = sizeof(AsyncDataSource_EepromMetadata_t), .backupCount = 1 }, ERD_TABLE(EXPAND_AS_UNITSETTING_ASYNC_MAP_ELEMENTS) };
+static const AsyncDataSource_EepromErdInfo_t expectedNvRfidElements[] = { { .erd = Erd_NvMetadata, .size = sizeof(AsyncDataSource_EepromMetadata_t), .backupCount = 1 }, ERD_TABLE(EXPAND_AS_RFID_ASYNC_MAP_ELEMENTS) };
+static const AsyncDataSource_EepromErdInfo_t expectedNvUsageProfileElements[] = { { .erd = Erd_NvMetadata, .size = sizeof(AsyncDataSource_EepromMetadata_t), .backupCount = 1 }, ERD_TABLE(EXPAND_AS_USAGEPROFILE_ASYNC_MAP_ELEMENTS) };
+static const AsyncDataSource_EepromErdInfo_t expectedNvFaultSnapshotElements[] = { { .erd = Erd_NvMetadata, .size = sizeof(AsyncDataSource_EepromMetadata_t), .backupCount = 1 }, ERD_TABLE(EXPAND_AS_FAULTSNAPSHOT_ASYNC_MAP_ELEMENTS) };
+static const AsyncDataSource_EepromErdInfo_t expectedNvCycleHistoryElements[] = { { .erd = Erd_NvMetadata, .size = sizeof(AsyncDataSource_EepromMetadata_t), .backupCount = 1 }, ERD_TABLE(EXPAND_AS_CYCLEHISTORY_ASYNC_MAP_ELEMENTS) };
 
 TEST_GROUP(AsyncNvMapConfigurations)
 {
@@ -117,20 +117,6 @@ TEST_GROUP(AsyncNvMapConfigurations)
       uassert(actual == expected);
    }
 
-   void CheckNvErdCount()
-   {
-      char string[200];
-
-      if(NvErdCount != 1)
-      {
-         snprintf(
-            string,
-            sizeof(string),
-            "An ERD of type Nv has been added, types can only be NvProtected, NvUserSetting, NvUnitSetting, NvRfid, NvUsageProfile, NvFaultSnapshot, or NvCycleHistory");
-         FAIL(string);
-      }
-   }
-
    void CheckReadWriteBuffers()
    {
       char string[200];
@@ -155,11 +141,6 @@ TEST(AsyncNvMapConfigurations, TheModuleShouldInitialize)
    TheModuleIsInitialized();
 }
 
-TEST(AsyncNvMapConfigurations, ThereCanOnlyBeOneNvErd)
-{
-   CheckNvErdCount();
-}
-
 TEST(AsyncNvMapConfigurations, TheReadWriteBufferSizeShouldNotChange)
 {
    TheModuleIsInitialized();
@@ -176,7 +157,7 @@ TEST(AsyncNvMapConfigurations, TheMetadataErdShouldBeCorrect)
 {
    Given TheModuleIsInitialized();
 
-   TheMetadataErdShouldBe(configuration->metadataErd, NVErd_NvMetadata);
+   TheMetadataErdShouldBe(configuration->metadataErd, Erd_NvMetadata);
 }
 
 TEST(AsyncNvMapConfigurations, TheAsyncMapsShouldContainTheCorrectAmountOfElementsInTheCorrectOrder)

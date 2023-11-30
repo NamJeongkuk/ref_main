@@ -18,6 +18,7 @@ typedef struct
 {
    union
    {
+      uint8_t erdNvMetadata[sizeof(AsyncDataSource_EepromMetadata_t) + sizeof(Crc16_t)];
       ERD_TABLE(EXPAND_AS_NON_VOLATILE_DATA_SOURCE_READ_WRITE_BUFFER_MEMBERS)
       uint64_t alignment;
    } data;

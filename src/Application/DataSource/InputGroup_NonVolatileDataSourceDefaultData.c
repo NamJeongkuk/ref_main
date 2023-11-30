@@ -13,6 +13,11 @@
 
 #define NotNv 0
 
+enum
+{
+   Erd_NvMetadata = 0
+};
+
 // clang-format off
 
 #define EXPAND_AS_NON_VOLATILE_DEFAULT_DATA_MAPPING(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
@@ -27,6 +32,7 @@ typedef struct
 } DataMap_t;
 
 static const DataMap_t defaultDataMap[] = {
+   { .erd = Erd_NvMetadata, .GetDefaultData = NonVolatileDataSourceDefaultData_Zeros },
    ERD_TABLE(EXPAND_AS_NON_VOLATILE_DEFAULT_DATA_MAPPING)
 };
 
