@@ -1,169 +1,155 @@
-PROJECT_NAME := multi-target-starter-kit
+include lib/applcommon/setup.mk
 
-APPLCOMMON_DIR := lib/applcommon
-REFERCOMMON_DIR = lib/Common
-PROJECT_DIR := src
-TESTING_DIR := test
-TESTS_DIR := test/Tests
-OUTPUT_DIR := test/Build
-
-RUN_APPLCOMMON_TESTS := N
+TARGET:=rockhopper
+OUTPUT_DIR:=build/test
 DISPLAY_ASCII_ART_RESULTS?=Y
 
-CPPUTEST_CFLAGS += -DTDD_BUILD
-CPPUTEST_CPPFLAGS += -DTDD_BUILD
+include lib/applcommon/defaults.mk
 
-# Specific files to include if you don't want the entire directory included
-SRC_FILES := \
+DEFINES+=TDD_BUILD
 
-# List of directories that contain your code under test
-SRC_DIRS := \
-   $(PROJECT_DIR)/Application \
-   $(PROJECT_DIR)/Application/Auger \
-   $(PROJECT_DIR)/Application/ApplianceFeatureApiUpdater \
-   $(PROJECT_DIR)/Application/BoardDiscovery \
-   $(PROJECT_DIR)/Application/BroadcastReset \
-   $(PROJECT_DIR)/Application/Compressor \
-   $(PROJECT_DIR)/Application/ConfigurationPlugins \
-   $(PROJECT_DIR)/Application/Configurations \
-   $(PROJECT_DIR)/Application/ConvertibleCompartment \
-   $(PROJECT_DIR)/Application/Cooling \
-   $(PROJECT_DIR)/Application/Damper \
-   $(PROJECT_DIR)/Application/DataSource \
-   $(PROJECT_DIR)/Application/DataSource/ConvertedDataSource \
-   $(PROJECT_DIR)/Application/Debounce \
-   $(PROJECT_DIR)/Application/Defrost \
-   $(PROJECT_DIR)/Application/DemandResponse \
-   $(PROJECT_DIR)/Application/Dispenser \
-   $(PROJECT_DIR)/Application/Door \
-   $(PROJECT_DIR)/Application/DutyCycle \
-   $(PROJECT_DIR)/Application/EnhancedSabbath \
-   $(PROJECT_DIR)/Application/ErdService \
-   $(PROJECT_DIR)/Application/Evaporator \
-   $(PROJECT_DIR)/Application/Factory \
-   $(PROJECT_DIR)/Application/FaultHandlers \
-   $(PROJECT_DIR)/Application/Fan \
-   $(PROJECT_DIR)/Application/Fault \
-   $(PROJECT_DIR)/Application/Features \
-   $(PROJECT_DIR)/Application/FlowMeter \
-   $(PROJECT_DIR)/Application/Grid \
-   $(PROJECT_DIR)/Application/Grid/GridFunctions \
-   $(PROJECT_DIR)/Application/Grid/GridStateTables \
-   $(PROJECT_DIR)/Application/Heater \
-   $(PROJECT_DIR)/Application/IceMaker \
-   $(PROJECT_DIR)/Application/IceMaker/AluminumMoldIceMaker \
-   $(PROJECT_DIR)/Application/IceMaker/TwistTrayIceMaker \
-   $(PROJECT_DIR)/Application/IsolationWaterValve \
-   $(PROJECT_DIR)/Application/Lighting \
-   $(PROJECT_DIR)/Application/Mapper \
-   $(PROJECT_DIR)/Application/Motor \
-   $(PROJECT_DIR)/Application/Notifications \
-   $(PROJECT_DIR)/Application/ParametricData \
-   $(PROJECT_DIR)/Application/Plugins \
-   $(PROJECT_DIR)/Application/Pulldown \
-   $(PROJECT_DIR)/Application/RecessHeater \
-   $(PROJECT_DIR)/Application/RequestStatusUpdater \
-   $(PROJECT_DIR)/Application/RfidCommunication \
-   $(PROJECT_DIR)/Application/Sabbath \
-   $(PROJECT_DIR)/Application/Sensor \
-   $(PROJECT_DIR)/Application/ServiceDiagnostics \
-   $(PROJECT_DIR)/Application/Setpoints \
-   $(PROJECT_DIR)/Application/SoundLevel \
-   $(PROJECT_DIR)/Application/StepperMotor \
-   $(PROJECT_DIR)/Application/SystemMonitor \
-   $(PROJECT_DIR)/Application/SnackMode \
-   $(PROJECT_DIR)/Application/Temperature \
-   $(PROJECT_DIR)/Application/TimerModule \
-   $(PROJECT_DIR)/Application/Valve \
-   $(PROJECT_DIR)/Application/VariableSweatHeater \
-   $(PROJECT_DIR)/Application/Voting \
-   $(PROJECT_DIR)/Application/WaterFilter \
-   $(PROJECT_DIR)/Application/WaterVolumeUsage \
-   $(PROJECT_DIR)/Hardware/SoftPwm \
-   $(PROJECT_DIR)/Hardware/PersonalityEeprom \
-
-# List of directories that contain your tests and test helpers (mocks, fakes, etc.)
-TEST_SRC_DIRS := \
-   $(TESTING_DIR) \
-   $(TESTING_DIR)/Utils \
-   $(TESTING_DIR)/Mocks \
-   $(TESTING_DIR)/Mocks/Bsp \
-   $(TESTING_DIR)/Mocks/DataSource \
-   $(TESTING_DIR)/Mocks/Gea2MessageEndpoint \
-   $(TESTING_DIR)/Mocks/ParametricTestDoubles \
-   $(TESTING_DIR)/Mocks/ServiceDiagnostics \
-   $(TESTS_DIR) \
-   $(TESTS_DIR)/Application/ \
-   $(TESTS_DIR)/Application/Auger \
-   $(TESTS_DIR)/Application/ApplianceFeatureApiUpdater \
-   $(TESTS_DIR)/Application/BoardDiscovery \
-   $(TESTS_DIR)/Application/BroadcastReset \
-   $(TESTS_DIR)/Application/Compressor \
-   $(TESTS_DIR)/Application/ConvertibleCompartment \
-   $(TESTS_DIR)/Application/Cooling \
-   $(TESTS_DIR)/Application/Damper \
-   $(TESTS_DIR)/Application/DataSource \
-   $(TESTS_DIR)/Application/DataSource/ConvertedDataSource \
-   $(TESTS_DIR)/Application/Debounce \
-   $(TESTS_DIR)/Application/Defrost \
-   $(TESTS_DIR)/Application/Dispenser \
-   $(TESTS_DIR)/Application/Door \
-   $(TESTS_DIR)/Application/DutyCycle \
-   $(TESTS_DIR)/Application/EnhancedSabbath \
-   $(TESTS_DIR)/Application/ErdService \
-   $(TESTS_DIR)/Application/Factory \
-   $(TESTS_DIR)/Application/FaultHandlers \
-   $(TESTS_DIR)/Application/Fan \
-   $(TESTS_DIR)/Application/Fault \
-   $(TESTS_DIR)/Application/Features \
-   $(TESTS_DIR)/Application/FlowMeter \
-   $(TESTS_DIR)/Application/Grid \
-   $(TESTS_DIR)/Application/IceMaker \
-   $(TESTS_DIR)/Application/IceMaker/AluminumMoldIceMaker \
-   $(TESTS_DIR)/Application/IceMaker/TwistTrayIceMaker \
-   $(TESTS_DIR)/Application/Lighting \
-   $(TESTS_DIR)/Application/Mapper \
-   $(TESTS_DIR)/Application/Motor \
-   $(TESTS_DIR)/Application/Notifications \
-   $(TESTS_DIR)/Application/ParametricData \
-   $(TESTS_DIR)/Application/PersonalityEeprom \
-   $(TESTS_DIR)/Application/RequestStatusUpdater \
-   $(TESTS_DIR)/Application/RfidCommunication \
-   $(TESTS_DIR)/Application/Sabbath \
-   $(TESTS_DIR)/Application/Sensor \
-   $(TESTS_DIR)/Application/Setpoints \
-   $(TESTS_DIR)/Application/SoundLevel \
-   $(TESTS_DIR)/Application/StepperMotor \
-   $(TESTS_DIR)/Application/SystemMonitor \
-   $(TESTS_DIR)/Application/TimerModule \
-   $(TESTS_DIR)/Application/VariableSweatHeater \
-   $(TESTS_DIR)/Application/WaterFilter \
-   $(TESTS_DIR)/Application/WaterVolumeUsage \
-   $(TESTS_DIR)/Bsp \
-   $(TESTS_DIR)/Hardware/SoftPwm \
-   $(APPLCOMMON_DIR)/test/Doubles \
+SRC_DIRS:=\
+  src/Application \
+  src/Application/Auger \
+  src/Application/ApplianceFeatureApiUpdater \
+  src/Application/BoardDiscovery \
+  src/Application/BroadcastReset \
+  src/Application/Compressor \
+  src/Application/ConfigurationPlugins \
+  src/Application/Configurations \
+  src/Application/ConvertibleCompartment \
+  src/Application/Cooling \
+  src/Application/Damper \
+  src/Application/DataSource \
+  src/Application/DataSource/ConvertedDataSource \
+  src/Application/Debounce \
+  src/Application/Defrost \
+  src/Application/DemandResponse \
+  src/Application/Dispenser \
+  src/Application/Door \
+  src/Application/DutyCycle \
+  src/Application/EnhancedSabbath \
+  src/Application/ErdService \
+  src/Application/Evaporator \
+  src/Application/Factory \
+  src/Application/FaultHandlers \
+  src/Application/Fan \
+  src/Application/Fault \
+  src/Application/Features \
+  src/Application/FlowMeter \
+  src/Application/Grid \
+  src/Application/Grid/GridFunctions \
+  src/Application/Grid/GridStateTables \
+  src/Application/Heater \
+  src/Application/IceMaker \
+  src/Application/IceMaker/AluminumMoldIceMaker \
+  src/Application/IceMaker/TwistTrayIceMaker \
+  src/Application/IsolationWaterValve \
+  src/Application/Lighting \
+  src/Application/Mapper \
+  src/Application/Motor \
+  src/Application/Notifications \
+  src/Application/ParametricData \
+  src/Application/Plugins \
+  src/Application/Pulldown \
+  src/Application/RecessHeater \
+  src/Application/RequestStatusUpdater \
+  src/Application/RfidCommunication \
+  src/Application/Sabbath \
+  src/Application/Sensor \
+  src/Application/ServiceDiagnostics \
+  src/Application/Setpoints \
+  src/Application/SoundLevel \
+  src/Application/StepperMotor \
+  src/Application/SystemMonitor \
+  src/Application/SnackMode \
+  src/Application/Temperature \
+  src/Application/TimerModule \
+  src/Application/Valve \
+  src/Application/VariableSweatHeater \
+  src/Application/Voting \
+  src/Application/WaterFilter \
+  src/Application/WaterVolumeUsage \
+  src/Hardware/SoftPwm \
+  src/Hardware/PersonalityEeprom \
+  test \
+  test/Utils \
+  test/Mocks \
+  test/Mocks/Bsp \
+  test/Mocks/DataSource \
+  test/Mocks/Gea2MessageEndpoint \
+  test/Mocks/ParametricTestDoubles \
+  test/Mocks/ServiceDiagnostics \
+  test/Tests \
+  test/Tests/Application/ \
+  test/Tests/Application/Auger \
+  test/Tests/Application/ApplianceFeatureApiUpdater \
+  test/Tests/Application/BoardDiscovery \
+  test/Tests/Application/BroadcastReset \
+  test/Tests/Application/Compressor \
+  test/Tests/Application/ConvertibleCompartment \
+  test/Tests/Application/Cooling \
+  test/Tests/Application/Damper \
+  test/Tests/Application/DataSource \
+  test/Tests/Application/DataSource/ConvertedDataSource \
+  test/Tests/Application/Debounce \
+  test/Tests/Application/Defrost \
+  test/Tests/Application/Dispenser \
+  test/Tests/Application/Door \
+  test/Tests/Application/DutyCycle \
+  test/Tests/Application/EnhancedSabbath \
+  test/Tests/Application/ErdService \
+  test/Tests/Application/Factory \
+  test/Tests/Application/FaultHandlers \
+  test/Tests/Application/Fan \
+  test/Tests/Application/Fault \
+  test/Tests/Application/Features \
+  test/Tests/Application/FlowMeter \
+  test/Tests/Application/Grid \
+  test/Tests/Application/IceMaker \
+  test/Tests/Application/IceMaker/AluminumMoldIceMaker \
+  test/Tests/Application/IceMaker/TwistTrayIceMaker \
+  test/Tests/Application/Lighting \
+  test/Tests/Application/Mapper \
+  test/Tests/Application/Motor \
+  test/Tests/Application/Notifications \
+  test/Tests/Application/ParametricData \
+  test/Tests/Application/PersonalityEeprom \
+  test/Tests/Application/RequestStatusUpdater \
+  test/Tests/Application/RfidCommunication \
+  test/Tests/Application/Sabbath \
+  test/Tests/Application/Sensor \
+  test/Tests/Application/Setpoints \
+  test/Tests/Application/SoundLevel \
+  test/Tests/Application/StepperMotor \
+  test/Tests/Application/SystemMonitor \
+  test/Tests/Application/TimerModule \
+  test/Tests/Application/VariableSweatHeater \
+  test/Tests/Application/WaterFilter \
+  test/Tests/Application/WaterVolumeUsage \
+  test/Tests/Bsp \
+  test/Tests/Hardware/SoftPwm \
 
 ifeq ($(INTEGRATION),Y)
-TEST_SRC_DIRS += \
-   $(TESTS_DIR)/Application/Integration
+SRC_DIRS += \
+  test/Tests/Application/Integration
 endif
 
-# List of include directories
-INCLUDE_DIRS := \
-   $(APPLCOMMON_DIR)/src/Hardware/Rx130 \
-   $(APPLCOMMON_DIR)/src/Hardware/Rx2xx \
-   $(APPLCOMMON_DIR)/src/Hardware/Kpit/Rx130 \
-   $(APPLCOMMON_DIR)/src/Image \
-   $(PROJECT_DIR)/Bsp \
-   $(PROJECT_DIR)/Application/DataSource/ApplianceApiDataSource \
-   $(PROJECT_DIR)/Application/DataSource/BspDataSource \
-   $(PROJECT_DIR)/Application/ModelInformation \
-   $(PROJECT_DIR)/Hardware \
-   $(PROJECT_DIR)/Hardware/Eeprom \
-   $(REFERCOMMON_DIR)/Source/Gea \
-   $(REFERCOMMON_DIR)/Source/Temperature \
+INC_DIRS:=\
+  lib/applcommon/src/Hardware/Rx130 \
+  lib/applcommon/src/Hardware/Rx2xx \
+  lib/applcommon/src/Hardware/Kpit/Rx130 \
+  src/Bsp \
+  src/Application/DataSource/ApplianceApiDataSource \
+  src/Application/DataSource/BspDataSource \
+  src/Application/ModelInformation \
+  src/Hardware \
+  src/Hardware/Eeprom \
+  lib/Common/Source/Gea \
+  lib/Common/Source/Temperature \
 
-include $(APPLCOMMON_DIR)/Makefile
+.PHONY: all
+all: run_tests
 
 artifacts: lcov_silent pmccabe_report
 	@mkdir -p artifacts
@@ -171,3 +157,11 @@ artifacts: lcov_silent pmccabe_report
 	@zip -r artifacts/lcov.zip Lcov
 	@rm -rf Lcov
 	@mv $(OUTPUT_DIR)/Pmccabe/pmccabe artifacts/pmccabe
+
+include lib/applcommon/lib_uassert_test.mk
+include lib/applcommon/lib_applcommon.mk
+include lib/applcommon/lib_applcommon_lua.mk
+include lib/applcommon/lib_applcommon_test_tools.mk
+include lib/applcommon/lib_applcommon_test_runner.mk
+
+include lib/applcommon/worker.mk

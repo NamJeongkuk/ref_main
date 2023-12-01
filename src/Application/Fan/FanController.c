@@ -166,7 +166,8 @@ void FanController_Init(
       &instance->_private.pidController,
       &instance->_private.fanData->gains,
       instance->_private.fanData->upperLimit,
-      instance->_private.fanData->lowerLimit);
+      instance->_private.fanData->lowerLimit,
+      false);
 
    UpdateActualRpm(instance);
    StartPeriodicActualRpmCalculationTimer(instance);
