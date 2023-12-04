@@ -8,6 +8,9 @@ on:
 
   pull_request:
 
+  issue_comment:
+    types: [created, edited, deleted]
+
 jobs:
   setup:
     uses: geappliances/skynet.workflow/.github/workflows/setup-workflow.yml@v1
@@ -19,6 +22,7 @@ jobs:
       artifact-retention-policy: number 50
 
   linux-tdd:
+    if: ${{ github.event_name == 'pull_request' }}
     uses: geappliances/skynet.workflow/.github/workflows/build-workflow.yml@v1
     needs: setup
     secrets: inherit
@@ -27,6 +31,19 @@ jobs:
       contents: read
     with:
       job-name: linux-tdd
+      script: tdd
+      runs-on: skynet-linux-x64
+
+  linux-tdd-with-integration:
+    if: ${{ github.event_name != 'pull_request' }}
+    uses: geappliances/skynet.workflow/.github/workflows/build-workflow.yml@v1
+    needs: setup
+    secrets: inherit
+    permissions:
+      id-token: write
+      contents: read
+    with:
+      job-name: linux-tdd-with-integration
       script: tdd
       runs-on: skynet-linux-x64
 
@@ -81,7 +98,7 @@ jobs:
   email:
     if: ${{ (cancelled() || failure()) && github.event_name != 'pull_request' }}
     uses: geappliances/skynet.workflow/.github/workflows/email-workflow.yml@v1
-    needs: [macos-tdd, linux-build, linux-tdd, parametric-linux-tdd, parametric-macos-tdd]
+    needs: [macos-tdd, linux-build, linux-tdd, linux-tdd-with-integration, parametric-linux-tdd, parametric-macos-tdd]
     secrets: inherit
     permissions:
       id-token: write

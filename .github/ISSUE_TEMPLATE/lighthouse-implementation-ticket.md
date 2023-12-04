@@ -12,7 +12,7 @@ assignees: ''
 **Definition of Done:**
 - [ ] Update Confluence design page with any changes from implementation
 - [ ] Add integration tests
-- [ ] Run integration tests to ensure they still pass
+- [ ] Run integration tests to ensure they still pass locally or via skynet (comment on the PR with /integration_tests)
 - [ ] Update GUI and ERD logger with new/changed ERDs
 - [ ] Bench test
 - [ ] After the `rockhopper-mainboard` branch is merged, create a pull request against the `next` branch in the `rockhopper-parametric` repo. The system’s team will give us preliminary production values before merging it in.

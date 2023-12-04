@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -e
 
-make -f tdd.mk -j16 "$@" INTEGRATION=Y
+make -f tdd.mk -j16 "$@"
