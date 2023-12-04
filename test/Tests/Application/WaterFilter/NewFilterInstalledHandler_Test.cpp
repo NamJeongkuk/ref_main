@@ -62,23 +62,51 @@ const NewFilterInstalledHandlerConfig_t config = {
    .newFilterInstalledSignalErd = Erd_NewFilterInstalledSignal,
    .rfidBoardInSystemErd = Erd_RfidBoardInSystem,
    .rfidFilterIdentifierRfidBoardErd = Erd_RfidFilterIdentifier_RfidBoard,
+   .rfidFaultRequestErd = Erd_RfidFaultRequest,
    .rfidFilterLeakDetectedFaultErd = Erd_RfidBoardLeakDetectedFault,
    .rfidFilterBlockedTagFaultErd = Erd_RfidBoardBlockedTagFault,
    .bypassPlugInstalledErd = Erd_BypassPlugInstalled,
    .rfidFilterUnitSerialNumberErd = Erd_RfidFilterUnitSerialNumber
 };
 
+static void OnDataModelChange(void *context, const void *_args)
+{
+   REINTERPRET(dataModel, context, I_DataModel_t *);
+   REINTERPRET(args, _args, const DataModelOnDataChangeArgs_t *);
+
+   if(args->erd == Erd_RfidFaultRequest)
+   {
+      REINTERPRET(data, args->data, const RfidFaultRequest_t *);
+
+      mock()
+         .actualCall("Rfid Fault Request")
+         .onObject(dataModel)
+         .withParameter("Erd", args->erd)
+         .withParameter("Fault Erd", data->faultErd)
+         .withParameter("Request Status", data->requestStatus)
+         .withParameter("Signal", data->signal);
+   }
+}
+
 TEST_GROUP(NewFilterInstalledHandler)
 {
    NewFilterInstalledHandler_t instance;
    ReferDataModel_TestDouble_t dataModelTestDouble;
    I_DataModel_t *dataModel;
-   TimerModule_TestDouble_t *timerModuleTestDouble;
+   EventSubscription_t dataModelTestDoubleOnChangeEventSubscription;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelTestDouble);
       dataModel = dataModelTestDouble.dataModel;
+
+      EventSubscription_Init(
+         &dataModelTestDoubleOnChangeEventSubscription,
+         dataModel,
+         OnDataModelChange);
+      Event_Subscribe(
+         dataModel->OnDataChange,
+         &dataModelTestDoubleOnChangeEventSubscription);
 
       SetMainboardSerialNumberTo(MainboardUnitSerialNumber);
    }
@@ -247,28 +275,21 @@ TEST_GROUP(NewFilterInstalledHandler)
       DataModel_Write(dataModel, Erd_RfidFilterIdentifier_RfidBoard, &filterId);
    }
 
-   void GivenLeakDetectedFaultIs(bool status)
+   void ShouldSendFaultRequestWith(Erd_t erd, bool status, uint8_t signal)
    {
-      DataModel_Write(dataModel, Erd_RfidBoardLeakDetectedFault, &status);
-   }
+      RfidFaultRequest_t rfidFaultRequest = {
+         .faultErd = erd,
+         .requestStatus = status,
+         .signal = signal
+      };
 
-   void LeakDetectedFaultShouldBe(bool expected)
-   {
-      bool actual;
-      DataModel_Read(dataModel, Erd_RfidBoardLeakDetectedFault, &actual);
-      CHECK_EQUAL(expected, actual);
-   }
-
-   void GivenBlockedTagFaultIs(bool status)
-   {
-      DataModel_Write(dataModel, Erd_RfidBoardBlockedTagFault, &status);
-   }
-
-   void BlockedTagFaultShouldBe(bool expected)
-   {
-      bool actual;
-      DataModel_Read(dataModel, Erd_RfidBoardBlockedTagFault, &actual);
-      CHECK_EQUAL(expected, actual);
+      mock()
+         .expectOneCall("Rfid Fault Request")
+         .onObject(dataModel)
+         .withParameter("Erd", Erd_RfidFaultRequest)
+         .withParameter("Fault Erd", rfidFaultRequest.faultErd)
+         .withParameter("Request Status", rfidFaultRequest.requestStatus)
+         .withParameter("Signal", rfidFaultRequest.signal);
    }
 
    void GivenWaterValveOnTimeIs(uint32_t valveTimeOn)
@@ -443,6 +464,8 @@ TEST(NewFilterInstalledHandler, ShouldSetBypassPlugInstalledWhenTheNewFilterIsAB
    GivenInitialization();
    BypassPlugInstalledShouldBe(CLEAR);
 
+   ShouldSendFaultRequestWith(Erd_RfidBoardLeakDetectedFault, CLEAR, 1);
+   ShouldSendFaultRequestWith(Erd_RfidBoardBlockedTagFault, CLEAR, 2);
    WhenTheNewRfidFilterIsABypassPlug();
    WhenANewRfidFilterIsInstalled();
    BypassPlugInstalledShouldBe(SET);
@@ -458,28 +481,15 @@ TEST(NewFilterInstalledHandler, ShouldClearBypassPlugInstalledWhenTheNewFilterIs
    BypassPlugInstalledShouldBe(CLEAR);
 }
 
-TEST(NewFilterInstalledHandler, ShouldRequestToClearLeakDetectedFaultWhenABypassFilterIsInstalled)
+TEST(NewFilterInstalledHandler, ShouldRequestToClearLeakDetectedAndBlockedTagFaultWhenABypassFilterIsInstalled)
 {
    GivenTheRfidBoardIsInTheSystem();
    GivenInitialization();
-   GivenLeakDetectedFaultIs(SET);
 
+   ShouldSendFaultRequestWith(Erd_RfidBoardLeakDetectedFault, CLEAR, 1);
+   ShouldSendFaultRequestWith(Erd_RfidBoardBlockedTagFault, CLEAR, 2);
    WhenTheNewRfidFilterIsABypassPlug();
    WhenANewRfidFilterIsInstalled();
-
-   LeakDetectedFaultShouldBe(CLEAR);
-}
-
-TEST(NewFilterInstalledHandler, ShouldRequestToClearBlockedTagFaultWhenABypassFilterIsInstalled)
-{
-   GivenTheRfidBoardIsInTheSystem();
-   GivenInitialization();
-   GivenBlockedTagFaultIs(SET);
-
-   WhenTheNewRfidFilterIsABypassPlug();
-   WhenANewRfidFilterIsInstalled();
-
-   BlockedTagFaultShouldBe(CLEAR);
 }
 
 TEST(NewFilterInstalledHandler, ShouldClampNumberOfUnitsFilterHasBeenOnWhenTheNumberIsAtTheMaxAndIsInstalledOnANewUnit)

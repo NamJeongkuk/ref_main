@@ -925,15 +925,8 @@ enum
    ENTRY(Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons, 0xF195, RfidTwelveMonthsGallonUsage_t,                    Swap_No,  Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
    ENTRY(Erd_RfidFilterDataRequest,                         0xF196, ReadWriteRequest_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   \
    ENTRY(Erd_RfidCommunicationControllerState,              0xF197, RfidCommunicationControllerState_t,                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_RfidFilterLeakDetectCount,                     0xF198, uint8_t,                                            Swap_No,  Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_RfidFilterBlockedCount,                        0xF199, uint8_t,                                            Swap_No,  Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_RfidFilterBadReadCount,                        0xF19A, uint8_t,                                            Swap_No,  Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_RfidFilterBadWriteCount,                       0xF19B, uint8_t,                                            Swap_No,  Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_RfidFilterHardwareFailureCount,                0xF19C, uint8_t,                                            Swap_No,  Io_None, Sub_N, NvRfid,                 NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   \
-   ENTRY(Erd_RfidFaultRequest,                              0xF19D, RfidFaultRequest_t,                                 Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_RfidFaultRequest,                              0xF198, RfidFaultRequest_t,                                 Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
    ENTRY(Erd_IceMakerFillInhibitedReason,                   0xF1A0, IceMakerFillInhibitedReasonBitmap_t,                Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \

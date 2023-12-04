@@ -65,6 +65,7 @@ static const NewFilterInstalledHandlerConfig_t newFilterInstalledHandlerConfig =
    .newFilterInstalledSignalErd = Erd_NewFilterInstalledSignal,
    .rfidBoardInSystemErd = Erd_RfidBoardInSystem,
    .rfidFilterIdentifierRfidBoardErd = Erd_RfidFilterIdentifier_RfidBoard,
+   .rfidFaultRequestErd = Erd_RfidFaultRequest,
    .rfidFilterLeakDetectedFaultErd = Erd_RfidBoardLeakDetectedFault,
    .rfidFilterBlockedTagFaultErd = Erd_RfidBoardBlockedTagFault,
    .bypassPlugInstalledErd = Erd_BypassPlugInstalled,

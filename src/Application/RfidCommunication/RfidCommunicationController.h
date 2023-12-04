@@ -27,11 +27,11 @@ typedef struct
    Erd_t rfidFilterIdentifierErd; // RfidFilterIdentifier_t
    Erd_t demoModeEnableErd; // bool
    Erd_t waterFilterTypeErd; // WaterFilterType_t
-   Erd_t rfidFilterBadReadCountErd; // uint8_t
-   Erd_t rfidFilterBadWriteCountErd; // uint8_t
-   Erd_t rfidFilterHardwareFailureCountErd; // uint8_t
-   Erd_t rfidFilterLeakDetectedCountErd; // uint8_t
-   Erd_t rfidFilterBlockedCountErd; // uint8_t
+   Erd_t rfidFaultRequestErd; // RfidFaultRequest_t
+   Erd_t rfidBoardTagAuthenticationFailedFault; // bool
+   Erd_t rfidBoardHardwareFailureFaultErd; // bool
+   Erd_t rfidBoardLeakDetectedFaultErd; // bool
+   Erd_t rfidBoardBlockedTagFaultErd; // bool
    Erd_t rfidFilterDataRequestErd; // ReadWriteRequest_t
    Erd_t newFilterInstalledSignalErd; // Signal_t
 } RfidCommunicationControllerConfig_t;

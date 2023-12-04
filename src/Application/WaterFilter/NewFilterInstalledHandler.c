@@ -11,7 +11,7 @@
 #include "CalendarUsageInSeconds.h"
 #include "VolumeInOuncesX100.h"
 #include "Constants_Binary.h"
-#include <stdio.h>
+#include "RfidFaultHandler.h"
 
 static const uint8_t BypassFilterIdentifier[FilterIdentifierSizeInBytes] = "BPXWFE";
 
@@ -157,20 +157,32 @@ static void SetBypassPlugInstalledTo(NewFilterInstalledHandler_t *instance, cons
       state);
 }
 
-static void ClearRfidLeakFault(NewFilterInstalledHandler_t *instance)
+static void RequestRfidFault(NewFilterInstalledHandler_t *instance, Erd_t erd, bool status)
 {
+   RfidFaultRequest_t rfidFaultRequest;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->rfidFaultRequestErd,
+      &rfidFaultRequest);
+
+   rfidFaultRequest.faultErd = erd;
+   rfidFaultRequest.requestStatus = status;
+   rfidFaultRequest.signal++;
+
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->rfidFilterLeakDetectedFaultErd,
-      clear);
+      instance->_private.config->rfidFaultRequestErd,
+      &rfidFaultRequest);
+}
+
+static void ClearRfidLeakFault(NewFilterInstalledHandler_t *instance)
+{
+   RequestRfidFault(instance, instance->_private.config->rfidFilterLeakDetectedFaultErd, CLEAR);
 }
 
 static void ClearRfidBlockedTagFault(NewFilterInstalledHandler_t *instance)
 {
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->rfidFilterBlockedTagFaultErd,
-      clear);
+   RequestRfidFault(instance, instance->_private.config->rfidFilterBlockedTagFaultErd, CLEAR);
 }
 
 static bool SerialNumbersMatch(UnitSerialNumber_t serialNumber, UnitSerialNumber_t unitSerialNumber)

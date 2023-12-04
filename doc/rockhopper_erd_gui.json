@@ -4213,46 +4213,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Rfid Filter Leak Detected Count",
-          "name": "Erd_RfidFilterLeakDetectCount",
-          "read": true,
-          "write": false,
-          "interval": 1000000000
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Rfid Filter Blocked Count",
-          "name": "Erd_RfidFilterBlockedCount",
-          "read": true,
-          "write": false,
-          "interval": 1000000000
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Rfid Filter Bad Read Count",
-          "name": "Erd_RfidFilterBadReadCount",
-          "read": true,
-          "write": false,
-          "interval": 1000000000
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Rfid Filter Bad Write Count",
-          "name": "Erd_RfidFilterBadWriteCount",
-          "read": true,
-          "write": false,
-          "interval": 1000000000
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Rfid Filter Hardware Failure Count",
-          "name": "Erd_RfidFilterHardwareFailureCount",
-          "read": true,
-          "write": false,
-          "interval": 1000000000
-        },
-        {
-          "namespace": "mb",
           "displayName": "Rfid Board: Filter Identifier",
           "name": "Erd_RfidFilterIdentifier_RfidBoard",
           "read": true,

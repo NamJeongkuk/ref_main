@@ -13,6 +13,7 @@ extern "C"
 #include "Constants_Binary.h"
 #include "PersonalityParametricData.h"
 #include "Constants_Time.h"
+#include "RfidFaultHandler.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -24,7 +25,16 @@ enum
 {
    Open,
    Closed,
-   SomeLeakDetectedCount = 10,
+
+   FaultRequestMockOverride_Enabled = 1,
+   FaultRequestMockOverride_Disabled = 0,
+
+   SignalCount_1 = 1,
+   SignalCount_2 = 2,
+   SignalCount_3 = 3,
+   SignalCount_4 = 4,
+
+   SomeInvalidResponse = 0xFF
 };
 
 uint8_t Uid[RfidUidSizeInBytes] = "ABCDEF";
@@ -40,11 +50,11 @@ static const RfidCommunicationControllerConfig_t config = {
    .rfidFilterIdentifierErd = Erd_RfidFilterIdentifier_RfidBoard,
    .demoModeEnableErd = Erd_EnableDemoModeStatus,
    .waterFilterTypeErd = Erd_WaterFilterType,
-   .rfidFilterBadReadCountErd = Erd_RfidFilterBadReadCount,
-   .rfidFilterBadWriteCountErd = Erd_RfidFilterBadWriteCount,
-   .rfidFilterHardwareFailureCountErd = Erd_RfidFilterHardwareFailureCount,
-   .rfidFilterLeakDetectedCountErd = Erd_RfidFilterLeakDetectCount,
-   .rfidFilterBlockedCountErd = Erd_RfidFilterBlockedCount,
+   .rfidFaultRequestErd = Erd_RfidFaultRequest,
+   .rfidBoardTagAuthenticationFailedFault = Erd_RfidBoardTagAuthenticationFailedFault,
+   .rfidBoardHardwareFailureFaultErd = Erd_RfidBoardHardwareFailureFault,
+   .rfidBoardLeakDetectedFaultErd = Erd_RfidBoardLeakDetectedFault,
+   .rfidBoardBlockedTagFaultErd = Erd_RfidBoardBlockedTagFault,
    .rfidFilterDataRequestErd = Erd_RfidFilterDataRequest,
    .newFilterInstalledSignalErd = Erd_NewFilterInstalledSignal,
 };
@@ -77,6 +87,18 @@ static void OnDataModelChange(void *context, const void *_args)
 
       ReadWriteRequest_t request = ReadWriteRequest_Idle;
       DataModel_Write(dataModel, Erd_RfidFilterDataRequest, &request);
+   }
+   else if(args->erd == Erd_RfidFaultRequest)
+   {
+      REINTERPRET(data, args->data, const RfidFaultRequest_t *);
+
+      mock()
+         .actualCall("Rfid Fault Request")
+         .onObject(dataModel)
+         .withParameter("Erd", args->erd)
+         .withParameter("Fault Erd", data->faultErd)
+         .withParameter("Request Status", data->requestStatus)
+         .withParameter("Signal", data->signal);
    }
 }
 
@@ -184,8 +206,104 @@ TEST_GROUP(RfidCommunicationController)
       CHECK_EQUAL(expected, actual);
    }
 
-   void WhenAnRfidMessageIsSentWithResult(ReadWriteResult_t result)
+   void ShouldSendFaultRequestWith(Erd_t erd, bool status, uint8_t signal)
    {
+      RfidFaultRequest_t rfidFaultRequest = {
+         .faultErd = erd,
+         .requestStatus = status,
+         .signal = signal
+      };
+
+      mock()
+         .expectOneCall("Rfid Fault Request")
+         .onObject(dataModel)
+         .withParameter("Erd", Erd_RfidFaultRequest)
+         .withParameter("Fault Erd", rfidFaultRequest.faultErd)
+         .withParameter("Request Status", rfidFaultRequest.requestStatus)
+         .withParameter("Signal", rfidFaultRequest.signal);
+   }
+
+   void ShouldSendFaultRequestWithLeakDetectedFault(bool status, uint8_t signal)
+   {
+      RfidFaultRequest_t rfidFaultRequest;
+      DataModel_Read(dataModel, Erd_RfidFaultRequest, &rfidFaultRequest);
+
+      ShouldSendFaultRequestWith(Erd_RfidBoardLeakDetectedFault, status, rfidFaultRequest.signal + signal);
+   }
+
+   void ShouldSendFaultRequestWithBlockedTagFault(bool status, uint8_t signal)
+   {
+      RfidFaultRequest_t rfidFaultRequest;
+      DataModel_Read(dataModel, Erd_RfidFaultRequest, &rfidFaultRequest);
+
+      ShouldSendFaultRequestWith(Erd_RfidBoardBlockedTagFault, status, rfidFaultRequest.signal + signal);
+   }
+
+   void ShouldSendFaultRequestWithTagAuthenticationFailedFault(bool status, uint8_t signal)
+   {
+      RfidFaultRequest_t rfidFaultRequest;
+      DataModel_Read(dataModel, Erd_RfidFaultRequest, &rfidFaultRequest);
+
+      ShouldSendFaultRequestWith(Erd_RfidBoardTagAuthenticationFailedFault, status, rfidFaultRequest.signal + signal);
+   }
+
+   void ShouldSendFaultRequestWithHardwareFailureFault(bool status, uint8_t signal)
+   {
+      RfidFaultRequest_t rfidFaultRequest;
+      DataModel_Read(dataModel, Erd_RfidFaultRequest, &rfidFaultRequest);
+
+      ShouldSendFaultRequestWith(Erd_RfidBoardHardwareFailureFault, status, rfidFaultRequest.signal + signal);
+   }
+
+   bool ReadWriteResultIsReadFailure(const ReadWriteResult_t result)
+   {
+      return (result == ReadWriteResult_ReadFailure ||
+         result == ReadWriteResult_ReadBeforeWriteFailure ||
+         result == ReadWriteResult_ReadAfterWriteFailure);
+   }
+
+   bool ReadWriteResultIsAWriteFailure(const ReadWriteResult_t result)
+   {
+      return (result == ReadWriteResult_EepromWriteFailure ||
+         result == ReadWriteResult_UidMismatch ||
+         result == ReadWriteResult_TagUidIsInvalid);
+   }
+
+   void ShouldClearAllFaults()
+   {
+      ShouldSendFaultRequestWithLeakDetectedFault(CLEAR, SignalCount_1);
+      ShouldSendFaultRequestWithBlockedTagFault(CLEAR, SignalCount_2);
+      ShouldSendFaultRequestWithTagAuthenticationFailedFault(CLEAR, SignalCount_3);
+      ShouldSendFaultRequestWithHardwareFailureFault(CLEAR, SignalCount_4);
+   }
+
+   void WhenAnRfidMessageIsSentWithResult(ReadWriteResult_t result, bool faultRequestMockOverrideEnabled)
+   {
+      if(!faultRequestMockOverrideEnabled)
+      {
+         if(result == ReadWriteResult_Success)
+         {
+            if(RfidLeakDetectedIsSet())
+            {
+               ShouldSendFaultRequestWithLeakDetectedFault(SET, SignalCount_1);
+            }
+            else
+            {
+               ShouldSendFaultRequestWithLeakDetectedFault(CLEAR, SignalCount_1);
+            }
+            ShouldSendFaultRequestWithBlockedTagFault(CLEAR, SignalCount_2);
+            ShouldSendFaultRequestWithTagAuthenticationFailedFault(CLEAR, SignalCount_3);
+            ShouldSendFaultRequestWithHardwareFailureFault(CLEAR, SignalCount_4);
+         }
+         else if(ReadWriteResultIsReadFailure(result) || ReadWriteResultIsAWriteFailure(result))
+         {
+            ShouldSendFaultRequestWithTagAuthenticationFailedFault(SET, SignalCount_1);
+         }
+         else if(result == ReadWriteResult_HardwareFailure)
+         {
+            ShouldSendFaultRequestWithHardwareFailureFault(SET, SignalCount_1);
+         }
+      }
       RfidFilterReadWriteResult_t rfidFilterReadWriteResult;
       DataModel_Read(dataModel, Erd_RfidFilterReadWriteResult_RfidBoard, &rfidFilterReadWriteResult);
       rfidFilterReadWriteResult.signal++;
@@ -193,9 +311,9 @@ TEST_GROUP(RfidCommunicationController)
       DataModel_Write(dataModel, Erd_RfidFilterReadWriteResult_RfidBoard, &rfidFilterReadWriteResult);
    }
 
-   void AndSentWithinAnRfidMessageWithResult(ReadWriteResult_t result)
+   void AndSentWithinAnRfidMessageWithResult(ReadWriteResult_t result, bool faultRequestMockOverride)
    {
-      WhenAnRfidMessageIsSentWithResult(result);
+      WhenAnRfidMessageIsSentWithResult(result, faultRequestMockOverride);
    }
 
    void WhenRfidFilterLeakDetectedIs(bool given)
@@ -215,16 +333,12 @@ TEST_GROUP(RfidCommunicationController)
       DataModel_Write(dataModel, Erd_RfidFilterStatus_RfidBoard, &rfidFilterStatus);
    }
 
-   void LeakDetectCountShouldBe(uint8_t expected)
+   bool RfidLeakDetectedIsSet()
    {
-      uint8_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterLeakDetectCount, &actual);
-      CHECK_EQUAL(expected, actual);
-   }
+      FilterStatusRfidBoard_t rfidFilterStatus;
+      DataModel_Read(dataModel, Erd_RfidFilterStatus_RfidBoard, &rfidFilterStatus);
 
-   void GivenTheLeakDetectCountIs(uint8_t value)
-   {
-      DataModel_Write(dataModel, Erd_RfidFilterLeakDetectCount, &value);
+      return BIT_STATE(rfidFilterStatus, RfidFilterStatusBits_LeakDetected);
    }
 
    void WhenRfidBlockedIs(bool state)
@@ -244,39 +358,11 @@ TEST_GROUP(RfidCommunicationController)
       DataModel_Write(dataModel, Erd_RfidFilterStatus_RfidBoard, &rfidFilterStatus);
    }
 
-   void BlockedCountShouldBe(uint8_t expected)
-   {
-      uint8_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterBlockedCount, &actual);
-      CHECK_EQUAL(expected, actual);
-   }
-
    void WhenFilterIdentifierIsABypassPlug()
    {
       uint8_t filterId[FilterIdentifierSizeInBytes] = "BPXWFE";
       DataModel_Write(dataModel, Erd_RfidFilterIdentifier_RfidBoard, &filterId);
       DataModel_Write(dataModel, Erd_RfidFilterUid_RfidBoard, NewUid);
-   }
-
-   void RfidFilterBadReadCountShouldBe(uint8_t expected)
-   {
-      uint8_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterBadReadCount, &actual);
-      CHECK_EQUAL(expected, actual);
-   }
-
-   void RfidFilterBadWriteCountShouldBe(uint8_t expected)
-   {
-      uint8_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterBadWriteCount, &actual);
-      CHECK_EQUAL(expected, actual);
-   }
-
-   void RfidFilterHardwareFailureCountShouldBe(uint8_t expected)
-   {
-      uint8_t actual;
-      DataModel_Read(dataModel, Erd_RfidFilterHardwareFailureCount, &actual);
-      CHECK_EQUAL(expected, actual);
    }
 
    void WhenDemoModeIs(const bool state)
@@ -320,10 +406,15 @@ TEST_GROUP(RfidCommunicationController)
    {
    }
 
+   void ShouldNotWriteToABypassPlug()
+   {
+      mock().expectNoCall("Rfid Filter Data Request Write");
+   }
+
    void WhenANewRfidFilterIsInstalled()
    {
       DataModel_Write(dataModel, Erd_RfidFilterUid_RfidBoard, NewUid);
-      WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
+      WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Disabled);
    }
 
    void GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState()
@@ -336,7 +427,7 @@ TEST_GROUP(RfidCommunicationController)
    {
       GivenAllFreshFoodDoorsAre(Closed);
       GivenInitialization();
-      WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
+      WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Disabled);
    }
 
    void GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState()
@@ -346,7 +437,7 @@ TEST_GROUP(RfidCommunicationController)
 
       ShouldSendReadRequestToRfidFilter();
       After(rfidFilterUpdateRateData->doorJustClosedFilterReadFrequencyInSeconds * MSEC_PER_SEC);
-      WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
+      WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Disabled);
       After(rfidFilterUpdateRateData->doorJustClosedFilterReadFrequencyInSeconds * MSEC_PER_SEC);
       RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
    }
@@ -359,7 +450,7 @@ TEST_GROUP(RfidCommunicationController)
       After(rfidFilterUpdateRateData->doorClosedFilterUpdateTimeInMinutes * MSEC_PER_MIN);
 
       ShouldSendWriteRequestToRfidFilter();
-      WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
+      WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Disabled);
    }
 
    void NewFilterInstalledSignalShouldBe(Signal_t expected)
@@ -367,11 +458,6 @@ TEST_GROUP(RfidCommunicationController)
       Signal_t actual;
       DataModel_Read(dataModel, Erd_NewFilterInstalledSignal, &actual);
       CHECK_EQUAL(expected, actual);
-   }
-
-   void GivenTheABadWriteCountIs(uint8_t count)
-   {
-      DataModel_Write(dataModel, Erd_RfidFilterBadWriteCount, &count);
    }
 };
 
@@ -400,44 +486,53 @@ TEST(RfidCommunicationController, ShouldEnterDemoModeStateIfDemoModeIsEnabledOnI
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_DemoMode);
 }
 
-TEST(RfidCommunicationController, ShouldIncrementTheLeakCountWhenThereIsALeak)
+TEST(RfidCommunicationController, ShouldRequestToSetTheLeakFaultWhenThereIsALeak)
 {
    GivenInitialization();
 
+   ShouldSendFaultRequestWithLeakDetectedFault(SET, SignalCount_1);
+   ShouldSendFaultRequestWithBlockedTagFault(CLEAR, SignalCount_2);
+   ShouldSendFaultRequestWithTagAuthenticationFailedFault(CLEAR, SignalCount_3);
+   ShouldSendFaultRequestWithHardwareFailureFault(CLEAR, SignalCount_4);
    WhenRfidFilterLeakDetectedIs(SET);
-   AndSentWithinAnRfidMessageWithResult(ReadWriteResult_Success);
-   LeakDetectCountShouldBe(1);
+   AndSentWithinAnRfidMessageWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Enabled);
 }
 
-TEST(RfidCommunicationController, ShouldIncrementTheBlockedRfidFilterCountWhenThereIsABlockedRfidFilter)
+TEST(RfidCommunicationController, ShouldRequestToSetTheBlockedTagFaultWhenThereIsABlockedRfidFilter)
 {
    GivenInitialization();
 
+   ShouldSendFaultRequestWithLeakDetectedFault(CLEAR, SignalCount_1);
+   ShouldSendFaultRequestWithBlockedTagFault(SET, SignalCount_2);
+   ShouldSendFaultRequestWithTagAuthenticationFailedFault(CLEAR, SignalCount_3);
+   ShouldSendFaultRequestWithHardwareFailureFault(CLEAR, SignalCount_4);
    WhenRfidBlockedIs(SET);
-   AndSentWithinAnRfidMessageWithResult(ReadWriteResult_Success);
-   BlockedCountShouldBe(1);
+   AndSentWithinAnRfidMessageWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Enabled);
 }
 
-TEST(RfidCommunicationController, ShouldClearTheLeakDetectedCountWhenALeakIsNoLongerDetected)
+TEST(RfidCommunicationController, ShouldRequestToClearTheLeakFaultWhenALeakIsNoLongerDetected)
 {
    GivenInitialization();
-   GivenTheLeakDetectCountIs(SomeLeakDetectedCount);
 
+   ShouldClearAllFaults();
    WhenRfidFilterLeakDetectedIs(CLEAR);
-   AndSentWithinAnRfidMessageWithResult(ReadWriteResult_Success);
-   LeakDetectCountShouldBe(0);
+   AndSentWithinAnRfidMessageWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Enabled);
 }
 
-TEST(RfidCommunicationController, ShouldClearTheBlockedCountWhenABlockedRfidFilterIsNoLongerDetected)
+TEST(RfidCommunicationController, ShouldRequestToClearTheBlockedTagFaultWhenABlockedRfidFilterIsNoLongerDetected)
 {
    GivenInitialization();
-   WhenRfidBlockedIs(SET);
-   AndSentWithinAnRfidMessageWithResult(ReadWriteResult_Success);
-   BlockedCountShouldBe(1);
 
+   ShouldSendFaultRequestWithLeakDetectedFault(CLEAR, SignalCount_1);
+   ShouldSendFaultRequestWithBlockedTagFault(SET, SignalCount_2);
+   ShouldSendFaultRequestWithTagAuthenticationFailedFault(CLEAR, SignalCount_3);
+   ShouldSendFaultRequestWithHardwareFailureFault(CLEAR, SignalCount_4);
+   WhenRfidBlockedIs(SET);
+   AndSentWithinAnRfidMessageWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Enabled);
+
+   ShouldClearAllFaults();
    WhenRfidBlockedIs(CLEAR);
-   AndSentWithinAnRfidMessageWithResult(ReadWriteResult_Success);
-   BlockedCountShouldBe(0);
+   AndSentWithinAnRfidMessageWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Enabled);
 }
 
 TEST(RfidCommunicationController, ShouldEnterDemoModeStateWhenDemoModeIsEnabled)
@@ -446,6 +541,18 @@ TEST(RfidCommunicationController, ShouldEnterDemoModeStateWhenDemoModeIsEnabled)
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_FreshFoodDoorOpen);
 
    WhenDemoModeIs(ENABLED);
+   RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_DemoMode);
+}
+
+TEST(RfidCommunicationController, ShouldRemainInDemoModeWhenDemoModeIsDisabled)
+{
+   GivenInitialization();
+   RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_FreshFoodDoorOpen);
+
+   WhenDemoModeIs(ENABLED);
+   RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_DemoMode);
+
+   WhenDemoModeIs(DISABLED);
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_DemoMode);
 }
 
@@ -494,93 +601,91 @@ TEST(RfidCommunicationController, ShouldStopReadRequestTimerWhenTransitioningFro
    After(rfidFilterUpdateRateData->doorOpenFilterReadFrequencyInSeconds * MSEC_PER_SEC);
 }
 
-TEST(RfidCommunicationController, ShouldResetBadReadCountAfterReceivingASuccessfulRfidFilterReadWhileInFreshFoodDoorIsOpenState)
+TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultAfterReceivingReadFailure)
 {
-   GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
+   GivenInitialization();
 
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure);
-   RfidFilterBadReadCountShouldBe(1);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
-   RfidFilterBadReadCountShouldBe(0);
+   ShouldSendFaultRequestWithTagAuthenticationFailedFault(SET, SignalCount_1);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure, FaultRequestMockOverride_Enabled);
 }
 
-TEST(RfidCommunicationController, ShouldResetHardwareFailureCountAfterReceivingASuccessfulRfidFilterReadWhileInFreshFoodDoorOpenState)
+TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultWhenReceivingAReadBeforeWriteFailure)
 {
-   GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
+   GivenInitialization();
 
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_HardwareFailure);
-   RfidFilterHardwareFailureCountShouldBe(1);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
-   RfidFilterHardwareFailureCountShouldBe(0);
+   ShouldSendFaultRequestWithTagAuthenticationFailedFault(SET, SignalCount_1);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadBeforeWriteFailure, FaultRequestMockOverride_Enabled);
 }
 
-TEST(RfidCommunicationController, ShouldNotUpdateMainboardWithNewFilterDataWhenThereIsASuccessfulReadOnTheCurrentFilterWhileInFreshFoodDoorOpenState)
+TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultWhenReceivingAReadAfterWriteFailure)
+{
+   GivenInitialization();
+
+   ShouldSendFaultRequestWithTagAuthenticationFailedFault(SET, SignalCount_1);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadAfterWriteFailure, FaultRequestMockOverride_Enabled);
+}
+
+TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultAfterReceivingEepromWriteFailure)
+{
+   GivenInitialization();
+
+   ShouldSendFaultRequestWithTagAuthenticationFailedFault(SET, SignalCount_1);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_EepromWriteFailure, FaultRequestMockOverride_Enabled);
+}
+
+TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultWhenReceivingAUidMismatch)
+{
+   GivenInitialization();
+
+   ShouldSendFaultRequestWithTagAuthenticationFailedFault(SET, SignalCount_1);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_UidMismatch, FaultRequestMockOverride_Enabled);
+}
+
+TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultWhenReceivingATagUidIsInvalid)
+{
+   GivenInitialization();
+
+   ShouldSendFaultRequestWithTagAuthenticationFailedFault(SET, SignalCount_1);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_TagUidIsInvalid, FaultRequestMockOverride_Enabled);
+}
+
+TEST(RfidCommunicationController, ShouldRequestToClearTagAuthenticationFailedFaultAfterReceivingASuccessfulRfidFilterRead)
+{
+   GivenInitialization();
+
+   ShouldSendFaultRequestWithTagAuthenticationFailedFault(SET, SignalCount_1);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure, FaultRequestMockOverride_Enabled);
+
+   ShouldClearAllFaults();
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Enabled);
+}
+
+TEST(RfidCommunicationController, ShouldRequestToSetTheHardwareFailureFaultWhenReceivingAHardwareFailure)
+{
+   GivenInitialization();
+
+   ShouldSendFaultRequestWithHardwareFailureFault(SET, SignalCount_1);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_HardwareFailure, FaultRequestMockOverride_Enabled);
+}
+
+TEST(RfidCommunicationController, ShouldRequestToClearHardwareFailureFaultAfterReceivingASuccessfulRfidFilterRead)
+{
+   GivenInitialization();
+
+   ShouldSendFaultRequestWithHardwareFailureFault(SET, SignalCount_1);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_HardwareFailure, FaultRequestMockOverride_Enabled);
+
+   ShouldClearAllFaults();
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Enabled);
+}
+
+TEST(RfidCommunicationController, ShouldNotSendNewFilterInstallSignalWhenThereIsASuccessfulReadOnTheCurrentFilterWhileInFreshFoodDoorOpenState)
 {
    GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
-   GivenTheABadWriteCountIs(1);
    NewFilterInstalledSignalShouldBe(0);
 
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
-   RfidFilterBadWriteCountShouldBe(1);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Disabled);
    NewFilterInstalledSignalShouldBe(0);
-}
-
-TEST(RfidCommunicationController, ShouldClearBadReadCountWhenANewFilterIsDetectedWhileInFreshFoodDoorOpenState)
-{
-   GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure);
-   RfidFilterBadReadCountShouldBe(1);
-
-   WhenANewRfidFilterIsInstalled();
-   RfidFilterBadReadCountShouldBe(0);
-}
-
-TEST(RfidCommunicationController, ShouldClearBadWriteCountWhenANewFilterIsDetectedWhileInFreshFoodDoorOpenState)
-{
-   GivenTheABadWriteCountIs(1);
-   GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
-
-   WhenANewRfidFilterIsInstalled();
-   RfidFilterBadWriteCountShouldBe(0);
-}
-
-TEST(RfidCommunicationController, ShouldIncrementBadReadCountWhenReceivingAReadFailureWhileInFreshFoodDoorOpenState)
-{
-   GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
-   RfidFilterBadReadCountShouldBe(0);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure);
-   RfidFilterBadReadCountShouldBe(1);
-}
-
-TEST(RfidCommunicationController, ShouldIncrementBadReadCountWhenReceivingAReadBeforeWriteFailureWhileInFreshFoodDoorOpenState)
-{
-   GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
-   RfidFilterBadReadCountShouldBe(0);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadBeforeWriteFailure);
-   RfidFilterBadReadCountShouldBe(1);
-}
-
-TEST(RfidCommunicationController, ShouldIncrementBadReadCountWhenReceivingAReadAfterWriteFailureWhileInFreshFoodDoorOpenState)
-{
-   GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
-   RfidFilterBadReadCountShouldBe(0);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadAfterWriteFailure);
-   RfidFilterBadReadCountShouldBe(1);
-}
-
-TEST(RfidCommunicationController, ShouldIncrementHardwareFailureCountWhenReceivingAHardwareFailureWhileInFreshFoodDoorOpenState)
-{
-   GivenTheRfidCommunicationControllerIsInAFreshFoodDoorOpenState();
-   RfidFilterHardwareFailureCountShouldBe(0);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_HardwareFailure);
-   RfidFilterHardwareFailureCountShouldBe(1);
 }
 
 TEST(RfidCommunicationController, ShouldTransitionToAllFreshFoodDoorsJustClosedStateWhenAllDoorsBecomeClosedWhileInFreshFoodDoorOpenState)
@@ -635,46 +740,13 @@ TEST(RfidCommunicationController, ShouldTransitionToAllDoorsClosedReadStateAndSt
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 }
 
-TEST(RfidCommunicationController, ShouldResetBadReadCountAfterReceivingASuccessfulRfidFilterReadWhileInAllFreshFoodDoorsJustClosedState)
+TEST(RfidCommunicationController, ShouldNotSendNewFilterInstallSignalWhenThereIsASuccessfulReadOnTheCurrentFilterWhileInAllFreshFoodDoorsJustClosedState)
 {
    GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure);
-   RfidFilterBadReadCountShouldBe(1);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
-   RfidFilterBadReadCountShouldBe(0);
-}
-
-TEST(RfidCommunicationController, ShouldResetHardwareFailureCountAfterReceivingASuccessfulRfidFilterReadWhileInAllFreshFoodDoorsJustClosedState)
-{
-   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_HardwareFailure);
-   RfidFilterHardwareFailureCountShouldBe(1);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
-   RfidFilterHardwareFailureCountShouldBe(0);
-}
-
-TEST(RfidCommunicationController, ShouldNotUpdateMainboardWithNewFilterDataWhenThereIsASuccessfulReadOnTheCurrentFilterWhileInAllFreshFoodDoorsJustClosedState)
-{
-   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
-   GivenTheABadWriteCountIs(1);
    NewFilterInstalledSignalShouldBe(0);
 
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
-   RfidFilterBadWriteCountShouldBe(1);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Disabled);
    NewFilterInstalledSignalShouldBe(0);
-}
-
-TEST(RfidCommunicationController, ShouldClearBadWriteCountWhenANewFilterIsDetectedWhileInAllFreshFoodDoorsJustClosedState)
-{
-   GivenTheABadWriteCountIs(1);
-   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
-
-   WhenANewRfidFilterIsInstalled();
-   RfidFilterBadWriteCountShouldBe(0);
 }
 
 TEST(RfidCommunicationController, ShouldTransitionToAllFreshFoodDoorsClosedWhenANewFilterIsDetectedInAllFreshFoodDoorsJustClosedState)
@@ -686,42 +758,6 @@ TEST(RfidCommunicationController, ShouldTransitionToAllFreshFoodDoorsClosedWhenA
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 }
 
-TEST(RfidCommunicationController, ShouldIncrementBadReadCountWhenReceivingAReadFailureInFreshFoodDoorOpenStateWhileInAllFreshFoodDoorsJustClosedState)
-{
-   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
-   RfidFilterBadReadCountShouldBe(0);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure);
-   RfidFilterBadReadCountShouldBe(1);
-}
-
-TEST(RfidCommunicationController, ShouldIncrementBadReadCountWhenReceivingAReadBeforeWriteFailureWhileInAllFreshFoodDoorsJustClosedState)
-{
-   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
-   RfidFilterBadReadCountShouldBe(0);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadBeforeWriteFailure);
-   RfidFilterBadReadCountShouldBe(1);
-}
-
-TEST(RfidCommunicationController, ShouldIncrementBadReadCountWhenReceivingAReadAfterWriteFailureWhileInAllFreshFoodDoorsJustClosedState)
-{
-   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
-   RfidFilterBadReadCountShouldBe(0);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadAfterWriteFailure);
-   RfidFilterBadReadCountShouldBe(1);
-}
-
-TEST(RfidCommunicationController, ShouldIncrementHardwareFailureCountWhenReceivingAHardwareFailureWhileInAllFreshFoodDoorsJustClosedState)
-{
-   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
-   RfidFilterHardwareFailureCountShouldBe(0);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_HardwareFailure);
-   RfidFilterHardwareFailureCountShouldBe(1);
-}
-
 TEST(RfidCommunicationController, ShouldTransitionToFreshFoodDoorOpenStateWhenADoorIsOpenedInAllFreshFoodDoorsJustClosedState)
 {
    GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
@@ -731,46 +767,13 @@ TEST(RfidCommunicationController, ShouldTransitionToFreshFoodDoorOpenStateWhenAD
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_FreshFoodDoorOpen);
 }
 
-TEST(RfidCommunicationController, ShouldResetBadReadCountAfterReceivingASuccessfulRfidFilterReadWhileInAllDoorsClosedReadState)
+TEST(RfidCommunicationController, ShouldNotSendNewFilterInstallSignalWhenThereIsASuccessfulReadOnTheCurrentFilterWhileInInAllDoorsClosedReadState)
 {
    GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState();
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure);
-   RfidFilterBadReadCountShouldBe(1);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
-   RfidFilterBadReadCountShouldBe(0);
-}
-
-TEST(RfidCommunicationController, ShouldResetHardwareFailureCountAfterReceivingASuccessfulRfidFilterReadWhileInAllDoorsClosedReadState)
-{
-   GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState();
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_HardwareFailure);
-   RfidFilterHardwareFailureCountShouldBe(1);
-
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
-   RfidFilterHardwareFailureCountShouldBe(0);
-}
-
-TEST(RfidCommunicationController, ShouldNotUpdateMainboardWithNewFilterDataWhenThereIsASuccessfulReadOnTheCurrentFilterWhileInInAllDoorsClosedReadState)
-{
-   GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState();
-   GivenTheABadWriteCountIs(1);
    NewFilterInstalledSignalShouldBe(0);
 
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
-   RfidFilterBadWriteCountShouldBe(1);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Disabled);
    NewFilterInstalledSignalShouldBe(0);
-}
-
-TEST(RfidCommunicationController, ShouldClearBadWriteCountWhenANewFilterIsInstalledWhileInAllDoorsClosedReadState)
-{
-   GivenTheABadWriteCountIs(1);
-   GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState();
-
-   WhenANewRfidFilterIsInstalled();
-   RfidFilterBadWriteCountShouldBe(0);
 }
 
 TEST(RfidCommunicationController, ShouldTransitionToFreshFoodDoorOpenStateWhenDoorIsOpenedInAllDoorsClosedWriteState)
@@ -792,7 +795,7 @@ TEST(RfidCommunicationController, ShouldTransisitionToAllDoorsClosedWriteStateAn
    After(rfidFilterUpdateRateData->doorClosedFilterUpdateTimeInMinutes * MSEC_PER_MIN);
 
    ShouldSendWriteRequestToRfidFilter();
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Disabled);
 
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedWrite);
 }
@@ -807,8 +810,10 @@ TEST(RfidCommunicationController, ShouldNotWriteToABypassPlug)
 
    WhenFilterIdentifierIsABypassPlug();
 
-   NothingShouldHappen();
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
+   ShouldNotWriteToABypassPlug();
+   ShouldSendFaultRequestWithTagAuthenticationFailedFault(CLEAR, SignalCount_1);
+   ShouldSendFaultRequestWithHardwareFailureFault(CLEAR, SignalCount_2);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Enabled);
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 }
 
@@ -821,8 +826,10 @@ TEST(RfidCommunicationController, ShouldRestartReadWriteTimerWhenReadWriteTimerE
    After(rfidFilterUpdateRateData->doorClosedFilterUpdateTimeInMinutes * MSEC_PER_MIN);
 
    WhenFilterIdentifierIsABypassPlug();
-   NothingShouldHappen();
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
+   ShouldNotWriteToABypassPlug();
+   ShouldSendFaultRequestWithTagAuthenticationFailedFault(CLEAR, SignalCount_1);
+   ShouldSendFaultRequestWithHardwareFailureFault(CLEAR, SignalCount_2);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Enabled);
 
    ShouldSendReadRequestToRfidFilter();
    After(rfidFilterUpdateRateData->doorClosedFilterUpdateTimeInMinutes * MSEC_PER_MIN);
@@ -853,7 +860,7 @@ TEST(RfidCommunicationController, ShouldSendReadRequestButNotTransitionToAllDoor
    After(1);
 
    NothingShouldHappen();
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Disabled);
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 }
 
@@ -864,7 +871,7 @@ TEST(RfidCommunicationController, ShouldSendReadRequestButNotTransitionToAllDoor
 
    ShouldSendReadRequestToRfidFilter();
    After(rfidFilterUpdateRateData->doorJustClosedFilterReadFrequencyInSeconds * MSEC_PER_SEC);
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure, FaultRequestMockOverride_Disabled);
    After(rfidFilterUpdateRateData->doorJustClosedFilterReadFrequencyInSeconds * MSEC_PER_SEC);
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 
@@ -875,7 +882,7 @@ TEST(RfidCommunicationController, ShouldSendReadRequestButNotTransitionToAllDoor
    After(1);
 
    NothingShouldHappen();
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Disabled);
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 }
 
@@ -886,7 +893,7 @@ TEST(RfidCommunicationController, ShouldSendReadRequestButNotTransitionToAllDoor
 
    ShouldSendReadRequestToRfidFilter();
    After(rfidFilterUpdateRateData->doorJustClosedFilterReadFrequencyInSeconds * MSEC_PER_SEC);
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadBeforeWriteFailure);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadBeforeWriteFailure, FaultRequestMockOverride_Disabled);
    After(rfidFilterUpdateRateData->doorJustClosedFilterReadFrequencyInSeconds * MSEC_PER_SEC);
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 
@@ -897,7 +904,7 @@ TEST(RfidCommunicationController, ShouldSendReadRequestButNotTransitionToAllDoor
    After(1);
 
    NothingShouldHappen();
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Disabled);
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 }
 
@@ -908,7 +915,7 @@ TEST(RfidCommunicationController, ShouldSendReadRequestButNotTransitionToAllDoor
 
    ShouldSendReadRequestToRfidFilter();
    After(rfidFilterUpdateRateData->doorJustClosedFilterReadFrequencyInSeconds * MSEC_PER_SEC);
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadAfterWriteFailure);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadAfterWriteFailure, FaultRequestMockOverride_Disabled);
    After(rfidFilterUpdateRateData->doorJustClosedFilterReadFrequencyInSeconds * MSEC_PER_SEC);
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 
@@ -919,7 +926,7 @@ TEST(RfidCommunicationController, ShouldSendReadRequestButNotTransitionToAllDoor
    After(1);
 
    NothingShouldHappen();
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Disabled);
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 }
 
@@ -930,7 +937,7 @@ TEST(RfidCommunicationController, ShouldSendReadRequestButNotTransitionToAllDoor
 
    ShouldSendReadRequestToRfidFilter();
    After(rfidFilterUpdateRateData->doorJustClosedFilterReadFrequencyInSeconds * MSEC_PER_SEC);
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_HardwareFailure);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_HardwareFailure, FaultRequestMockOverride_Disabled);
    After(rfidFilterUpdateRateData->doorJustClosedFilterReadFrequencyInSeconds * MSEC_PER_SEC);
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 
@@ -941,7 +948,7 @@ TEST(RfidCommunicationController, ShouldSendReadRequestButNotTransitionToAllDoor
    After(1);
 
    NothingShouldHappen();
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Disabled);
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 }
 
@@ -954,19 +961,17 @@ TEST(RfidCommunicationController, ShouldStopReadRequestTimerWhenExitingAllDoorsC
    After(rfidFilterUpdateRateData->doorClosedFilterUpdateTimeInMinutes * MSEC_PER_MIN);
 
    ShouldSendWriteRequestToRfidFilter();
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Disabled);
 
    NothingShouldHappen();
    After(rfidFilterUpdateRateData->doorClosedRfidErrorDetectedReadFrequencySeconds * MSEC_PER_SEC);
 }
 
-TEST(RfidCommunicationController, ShouldIncrementBadReadCountAndStartErrorDetectedReadTimerWhenReceivingAReadFailureWhileInAllDoorsClosedReadState)
+TEST(RfidCommunicationController, ShouldStartErrorDetectedReadTimerWhenReceivingAReadFailureWhileInAllDoorsClosedReadState)
 {
    GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState();
-   RfidFilterBadReadCountShouldBe(0);
 
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure);
-   RfidFilterBadReadCountShouldBe(1);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure, FaultRequestMockOverride_Disabled);
 
    NothingShouldHappen();
    After((rfidFilterUpdateRateData->doorClosedRfidErrorDetectedReadFrequencySeconds * MSEC_PER_SEC) - 1);
@@ -975,13 +980,11 @@ TEST(RfidCommunicationController, ShouldIncrementBadReadCountAndStartErrorDetect
    After(1);
 }
 
-TEST(RfidCommunicationController, ShouldIncrementBadReadCountAndStartErrorDetectedReadTimerWhenReceivingAReadBeforeWriteFailureWhileInAllDoorsClosedReadState)
+TEST(RfidCommunicationController, ShouldStartErrorDetectedReadTimerWhenReceivingAReadBeforeWriteFailureWhileInAllDoorsClosedReadState)
 {
    GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState();
-   RfidFilterBadReadCountShouldBe(0);
 
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadBeforeWriteFailure);
-   RfidFilterBadReadCountShouldBe(1);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadBeforeWriteFailure, FaultRequestMockOverride_Disabled);
 
    NothingShouldHappen();
    After((rfidFilterUpdateRateData->doorClosedRfidErrorDetectedReadFrequencySeconds * MSEC_PER_SEC) - 1);
@@ -990,13 +993,11 @@ TEST(RfidCommunicationController, ShouldIncrementBadReadCountAndStartErrorDetect
    After(1);
 }
 
-TEST(RfidCommunicationController, ShouldIncrementBadReadCountAndStartErrorDetectedReadTimerWhenReceivingAReadAfterWriteFailureWhileInAllDoorsClosedReadState)
+TEST(RfidCommunicationController, ShouldStartErrorDetectedReadTimerWhenReceivingAReadAfterWriteFailureWhileInAllDoorsClosedReadState)
 {
    GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState();
-   RfidFilterBadReadCountShouldBe(0);
 
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadAfterWriteFailure);
-   RfidFilterBadReadCountShouldBe(1);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadAfterWriteFailure, FaultRequestMockOverride_Disabled);
 
    NothingShouldHappen();
    After((rfidFilterUpdateRateData->doorClosedRfidErrorDetectedReadFrequencySeconds * MSEC_PER_SEC) - 1);
@@ -1005,13 +1006,11 @@ TEST(RfidCommunicationController, ShouldIncrementBadReadCountAndStartErrorDetect
    After(1);
 }
 
-TEST(RfidCommunicationController, ShouldIncrementHardwareFailureCountAndStartErrorDetectedReadTimerWhenReceivingAHardwareFailureWhileInAllDoorsClosedReadState)
+TEST(RfidCommunicationController, ShouldStartErrorDetectedReadTimerWhenReceivingAHardwareFailureWhileInAllDoorsClosedReadState)
 {
    GivenTheRfidCommunicationControllerIsInAllDoorsClosedReadState();
-   RfidFilterHardwareFailureCountShouldBe(0);
 
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_HardwareFailure);
-   RfidFilterHardwareFailureCountShouldBe(1);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_HardwareFailure, FaultRequestMockOverride_Disabled);
 
    NothingShouldHappen();
    After((rfidFilterUpdateRateData->doorClosedRfidErrorDetectedReadFrequencySeconds * MSEC_PER_SEC) - 1);
@@ -1031,36 +1030,27 @@ TEST(RfidCommunicationController, ShouldTransitionToAllDoorsClosedReadStateFromA
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 }
 
-TEST(RfidCommunicationController, ShouldIncrementBadWriteCountAndTransitionToAllDoorsClosedReadStateWhenAnRfidFilterReadWriteRequestIsEepromWriteFailure)
+TEST(RfidCommunicationController, ShouldTransitionToAllDoorsClosedReadStateWhenAnRfidFilterReadWriteRequestIsEepromWriteFailure)
 {
    GivenTheRfidCommunicationControllerIsInAllDoorsClosedWriteState();
-   RfidFilterBadWriteCountShouldBe(0);
 
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_EepromWriteFailure);
-   RfidFilterBadWriteCountShouldBe(1);
-
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_EepromWriteFailure, FaultRequestMockOverride_Disabled);
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 }
 
-TEST(RfidCommunicationController, ShouldIncrementBadWriteCountAndTransitionToAllDoorsClosedReadStateWhenAnRfidFilterReadWriteRequestIsUidMismatch)
+TEST(RfidCommunicationController, ShouldTransitionToAllDoorsClosedReadStateWhenAnRfidFilterReadWriteRequestIsUidMismatch)
 {
    GivenTheRfidCommunicationControllerIsInAllDoorsClosedWriteState();
-   RfidFilterBadWriteCountShouldBe(0);
 
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_UidMismatch);
-   RfidFilterBadWriteCountShouldBe(1);
-
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_UidMismatch, FaultRequestMockOverride_Disabled);
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 }
 
-TEST(RfidCommunicationController, ShouldIncrementBadWriteCountAndTransitionToAllDoorsClosedReadStateWhenAnRfidFilterReadWriteRequestIsTagUidIsInvalid)
+TEST(RfidCommunicationController, ShouldTransitionToAllDoorsClosedReadStateWhenAnRfidFilterReadWriteRequestIsTagUidIsInvalid)
 {
    GivenTheRfidCommunicationControllerIsInAllDoorsClosedWriteState();
-   RfidFilterBadWriteCountShouldBe(0);
 
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_TagUidIsInvalid);
-   RfidFilterBadWriteCountShouldBe(1);
-
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_TagUidIsInvalid, FaultRequestMockOverride_Disabled);
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 }
 
@@ -1068,7 +1058,9 @@ TEST(RfidCommunicationController, ShouldTransitionToReadWhenReceivingASuccessful
 {
    GivenTheRfidCommunicationControllerIsInAllDoorsClosedWriteState();
 
-   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success);
+   ShouldSendFaultRequestWithLeakDetectedFault(CLEAR, SignalCount_1);
+   ShouldSendFaultRequestWithBlockedTagFault(CLEAR, SignalCount_2);
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_Success, FaultRequestMockOverride_Enabled);
    RfidCommunicationControllerStateShouldBe(RfidCommunicationControllerHsmState_AllDoorsClosedRead);
 }
 
@@ -1110,4 +1102,12 @@ TEST(RfidCommunicationController, ShouldIncrementNewFilterInstalledSignalWhenANe
 
    WhenANewRfidFilterIsInstalled();
    NewFilterInstalledSignalShouldBe(1);
+}
+
+TEST(RfidCommunicationController, ShouldIgnoreInvalidReadWriteResult)
+{
+   GivenInitialization();
+
+   NothingShouldHappen();
+   WhenAnRfidMessageIsSentWithResult(SomeInvalidResponse, FaultRequestMockOverride_Disabled);
 }

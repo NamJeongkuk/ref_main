@@ -14,32 +14,32 @@ static const BoardInSystemData_t geaErdEntries[] = {
    {
       .geaAddress = Gea2Address_Dispenser,
       .nvErd = Erd_DispenserUiInSystem,
-      .faultErd = Erd_DispenserUiCommunicationFault
+      .faultErd = Erd_DispenserUiCommunicationFault,
    },
    {
       .geaAddress = Gea2Address_RfidBoard,
       .nvErd = Erd_RfidBoardInSystem,
-      .faultErd = Erd_RfidBoardCommunicationFault
+      .faultErd = Erd_RfidBoardCommunicationFault,
    },
    {
       .geaAddress = Gea2Address_AndroidSbc,
       .nvErd = Erd_AndroidSbcBoardInSystem,
-      .faultErd = Erd_AndroidSbcCommunicationFault
+      .faultErd = Erd_AndroidSbcCommunicationFault,
    },
    {
       .geaAddress = Gea2Address_DoorBoard,
       .nvErd = Erd_DoorBoardInSystem,
-      .faultErd = Erd_DoorBoardCommunicationFault
+      .faultErd = Erd_DoorBoardCommunicationFault,
    },
    {
       .geaAddress = Gea2Address_InternalTemperatureUi,
       .nvErd = Erd_InternalTemperatureUiInSystem,
-      .faultErd = Erd_InternalTemperatureUiCommunicationFault
+      .faultErd = Erd_InternalTemperatureUiCommunicationFault,
    },
    {
       .geaAddress = Gea2Address_EmbeddedWiFi,
       .nvErd = Erd_EmbeddedWifiInSystem,
-      .faultErd = Erd_EmbeddedWifiCommunicationFault
+      .faultErd = Erd_EmbeddedWifiCommunicationFault,
    }
 };
 
@@ -50,7 +50,7 @@ static const BoardsInSystemConfig_t boardsInSystemConfig = {
    .retryPeriodForDiscoveryInSec = 5,
    .numberOfDiscoveryRetryRequests = 5,
    .retryPeriodForMonitoringInMinutes = 1,
-   .numberOfMonitoringRetryRequestsBeforeSettingFault = 2,
+   .numberOfMonitoringRetryRequestsBeforeSettingFault = 5,
    .geaMessageEndpointErd = Erd_Gea2MessageEndpoint,
    .timerModuleErd = Erd_TimerModule,
 };

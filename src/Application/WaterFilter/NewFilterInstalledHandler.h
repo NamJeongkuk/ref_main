@@ -40,6 +40,7 @@ typedef struct
    Erd_t newFilterInstalledSignalErd; // Signal_t
    Erd_t rfidBoardInSystemErd; // bool
    Erd_t rfidFilterIdentifierRfidBoardErd; // RfidFilterIdentifier_t
+   Erd_t rfidFaultRequestErd; // RfidFaultRequest_t
    Erd_t rfidFilterLeakDetectedFaultErd; // bool
    Erd_t rfidFilterBlockedTagFaultErd; // bool
    Erd_t bypassPlugInstalledErd; // bool
