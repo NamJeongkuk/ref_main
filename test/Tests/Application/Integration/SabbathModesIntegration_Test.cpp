@@ -26,21 +26,9 @@ enum
    WaitForEepromWritesToCompleteTimeInMsec = 1000,
    EnhancedSabbathRunTimePeriodicCheckTimeInMinutes = 1,
    EnhancedSabbathRunTimePeriodicCheckTimeInMsec = EnhancedSabbathRunTimePeriodicCheckTimeInMinutes * MSEC_PER_MIN,
-   SomeRunTimeInMinutes = 3000,
+   SomeRunTimeInMinutes = 10,
    SomeOtherRunTimeInMinutes = 2351,
    ThirtyMinutes = 30
-};
-
-static const EnhancedSabbathData_t enhancedSabbathData = {
-   .maxTimeInEnhancedSabbathModeInMinutes = 5760,
-   .freshFoodSetpointTemperatureInDegFx100 = 3700,
-   .freezerSetpointTemperatureInDegFx100 = 0,
-   .numberOfFreshFoodDefrostsBeforeFreezerDefrost = 3,
-   .minTimeBetweenTemperatureAveragingInMinutes = 2,
-   .freshFoodStageTimeInMinutes = 10,
-   .freezerStageTimeInMinutes = 20,
-   .offStageTimeInMinutes = 30,
-   .lightsPwmDutyCyclePercentage = 20
 };
 
 TEST_GROUP(SabbathModesIntegration)
@@ -50,12 +38,15 @@ TEST_GROUP(SabbathModesIntegration)
    I_DataModel_t *dataModel;
    ResetReason_t resetReason;
    TimerModule_TestDouble_t *timerModuleTestDouble;
+   const EnhancedSabbathData_t *enhancedSabbathData;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentSingleSpeedCompressorGridIntegration);
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
+
+      enhancedSabbathData = PersonalityParametricData_Get(dataModel)->enhancedSabbathData;
    }
 
    void After(TimerTicks_t ticks)
@@ -209,7 +200,7 @@ TEST(SabbathModesIntegration, ShouldUpdateEepromEnhancedSabbathRunTimeErdEveryTh
    GivenApplicationHasBeenInitialized();
 
    uint16_t numberOfEepromUpdatePeriods =
-      enhancedSabbathData.maxTimeInEnhancedSabbathModeInMinutes / ThirtyMinutes;
+      enhancedSabbathData->maxTimeInEnhancedSabbathModeInMinutes / ThirtyMinutes;
 
    EepromEnhancedSabbathRunTimeInMinutesShouldBe(0);
 
@@ -242,8 +233,8 @@ TEST(SabbathModesIntegration, ShouldStartEnhancedSabbathRunTimeTimerFromEepromVa
 
    EnhancedSabbathRunTimeInMinutesShouldBe(SomeRunTimeInMinutes);
 
-   After(((enhancedSabbathData.maxTimeInEnhancedSabbathModeInMinutes - SomeRunTimeInMinutes) * MSEC_PER_MIN) - 1);
-   EnhancedSabbathRunTimeInMinutesShouldBe(enhancedSabbathData.maxTimeInEnhancedSabbathModeInMinutes - EnhancedSabbathRunTimePeriodicCheckTimeInMinutes);
+   After(((enhancedSabbathData->maxTimeInEnhancedSabbathModeInMinutes - SomeRunTimeInMinutes) * MSEC_PER_MIN) - 1);
+   EnhancedSabbathRunTimeInMinutesShouldBe(enhancedSabbathData->maxTimeInEnhancedSabbathModeInMinutes - EnhancedSabbathRunTimePeriodicCheckTimeInMinutes);
 
    After(1);
    EnhancedSabbathRunTimeInMinutesShouldBe(0);
@@ -274,8 +265,8 @@ TEST(SabbathModesIntegration, ShouldStartEnhancedSabbathRunTimeTimerFromZeroWhen
    WhenEnhancedSabbathModeIs(SET);
    EnhancedSabbathRunTimeInMinutesShouldBe(0);
 
-   After((enhancedSabbathData.maxTimeInEnhancedSabbathModeInMinutes * MSEC_PER_MIN) - 1);
-   EnhancedSabbathRunTimeInMinutesShouldBe(enhancedSabbathData.maxTimeInEnhancedSabbathModeInMinutes - EnhancedSabbathRunTimePeriodicCheckTimeInMinutes);
+   After((enhancedSabbathData->maxTimeInEnhancedSabbathModeInMinutes * MSEC_PER_MIN) - 1);
+   EnhancedSabbathRunTimeInMinutesShouldBe(enhancedSabbathData->maxTimeInEnhancedSabbathModeInMinutes - EnhancedSabbathRunTimePeriodicCheckTimeInMinutes);
 
    After(1);
    EnhancedSabbathRunTimeInMinutesShouldBe(0);

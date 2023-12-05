@@ -6,5 +6,5 @@ Related to: #[Issue Number]
 - [ ] PR Linked to Issue Ticket (or explanation why not linked)
 - [ ] Mark outdated issues this PR fulfills as `obsolete` and point them to the new issue (If applicable)
 - [ ] Issue Ticket updated with relevant information (QA Test modifications, description, etc)
-- [ ] Integration test has been run locally or via skynet (comment on the PR with /integration_tests) passes
+- [ ] Integration tests pass (if applicable)
 - [ ] Bench tested (if applicable)

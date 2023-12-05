@@ -38,11 +38,11 @@ enum
 {
    TenMinutes = 10,
    ZeroMinutes = 0,
-   SomeTimeInMinutes = 60,
+   SomeTimeInMinutes = 2,
    SomeTimeInSeconds = SomeTimeInMinutes * SECONDS_PER_MINUTE,
    SomeTimeInMsec = SomeTimeInSeconds * MSEC_PER_SEC,
    WaitForEepromWritesToCompleteTimeInMsec = 1000,
-   SomeSmallTimeInSeconds = 10,
+   SomeSmallTimeInSeconds = 5,
    SomeSmallTimeInMsec = SomeSmallTimeInSeconds * MSEC_PER_SEC
 };
 
@@ -54,9 +54,9 @@ enum
 
 enum
 {
-   SomeCompressorOnTimeInSecondsBetweenMinimumAndMaximumTimeBetweenDefrosts = 200672,
-   SomeRightSideFreshFoodScaledDoorAccelerationsInSeconds = 8305,
-   SomeFreezerScaledDoorAccelerationInSeconds = 7427
+   SomeCompressorOnTimeInSecondsBetweenMinimumAndMaximumTimeBetweenDefrosts = 160 * 60,
+   SomeRightSideFreshFoodScaledDoorAccelerationsInSeconds = 400,
+   SomeFreezerScaledDoorAccelerationInSeconds = 200
 };
 
 enum
@@ -1762,11 +1762,25 @@ TEST(DefrostIntegration_SingleEvap, ShouldSetReadyToDefrostAfterMaximumTimeReach
                                                                  compressorData->compressorTimes.startupOnTimeInSeconds) *
       defrostData->idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
 
+   After(SomeTimeInSeconds * MSEC_PER_SEC);
+   CompressorOnTimeInSecondsShouldBe(defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE);
+   RightSideFreshFoodScaledDoorAccelerationsInSecondsShouldBe((compressorData->compressorTimes.minimumOffTimeInMinutes * SECONDS_PER_MINUTE +
+                                                                 compressorData->compressorTimes.sabbathDelayTimeInSeconds +
+                                                                 compressorData->compressorTimes.startupOnTimeInSeconds + (SomeTimeInSeconds - 1)) *
+      defrostData->idleData.freshFoodDoorIncrementFactorInSecondsPerSecond);
+
    ReadyToDefrostShouldChangeTo(true);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_Prechill);
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry);
-   After(SomeTimeInSeconds * MSEC_PER_SEC);
+   After(((defrostData->idleData.maxTimeBetweenDefrostsInMinutes * SECONDS_PER_MINUTE -
+             defrostData->idleData.minimumTimeBetweenDefrostsAbnormalRunTimeInMinutes * SECONDS_PER_MINUTE -
+             (compressorData->compressorTimes.minimumOffTimeInMinutes * SECONDS_PER_MINUTE +
+                compressorData->compressorTimes.sabbathDelayTimeInSeconds +
+                compressorData->compressorTimes.startupOnTimeInSeconds + (SomeTimeInSeconds - 1)) *
+                defrostData->idleData.freshFoodDoorIncrementFactorInSecondsPerSecond) /
+            (1 + defrostData->idleData.freshFoodDoorIncrementFactorInSecondsPerSecond)) *
+      MSEC_PER_SEC);
 }
 
 TEST(DefrostIntegration_SingleEvap, ShouldSetReadyToDefrostAfterMaximumTimeReachedDueToAccumulatedDoorAccelerationsThatHappenedWhileWaitingForRemainingTimeBetweenDefrostsAndCompressorOnTime)

@@ -6,6 +6,8 @@ DISPLAY_ASCII_ART_RESULTS?=Y
 
 include lib/applcommon/defaults.mk
 
+CPPFLAGS+=-Og
+
 DEFINES+=TDD_BUILD
 
 SRC_DIRS:=\

@@ -98,7 +98,7 @@ jobs:
   email:
     if: ${{ (cancelled() || failure()) && github.event_name != 'pull_request' }}
     uses: geappliances/skynet.workflow/.github/workflows/email-workflow.yml@v1
-    needs: [macos-tdd, linux-build, linux-tdd, linux-tdd-with-integration, parametric-linux-tdd, parametric-macos-tdd]
+    needs: [macos-tdd, linux-build, linux-tdd, parametric-linux-tdd, parametric-macos-tdd]
     secrets: inherit
     permissions:
       id-token: write
