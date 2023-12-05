@@ -33,7 +33,7 @@ static void Stop(I_ServiceTest_t *instance, void *context, ServiceTestResources_
 
    ServiceTestResultArgs_t testResultArgs;
    testResultArgs.status.testResponse = ServiceModeTestStatusResponse_Stopped;
-   testResultArgs.status.dataFormat = ServiceModeTestStatusDataFormat_VersionInfo;
+   testResultArgs.status.dataFormat = ServiceModeTestStatusDataFormat_Unused;
    testResultArgs.status.testNumber = instance->testNumber;
    testResultArgs.status.diagnosticData[0] = 0;
    testResultArgs.status.diagnosticData[1] = 0;
@@ -51,7 +51,7 @@ static const I_ServiceTest_Api_t api = {
 void ServiceModeTest_Version_Init(
    ServiceModeTest_Version_t *instance,
    ServiceModeTestNumber_t testNumber,
-   const ServiceModeTest_VersionConfig *config)
+   const ServiceModeTest_VersionConfig_t *config)
 {
    instance->interface.api = &api;
    instance->interface.testNumber = testNumber;

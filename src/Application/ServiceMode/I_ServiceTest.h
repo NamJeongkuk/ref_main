@@ -11,6 +11,8 @@
 #include "ServiceModeTestStatus.h"
 #include "ServiceModeTestNumber.h"
 #include "I_DataModel.h"
+#include "Timer.h"
+#include "EventSubscription.h"
 
 typedef struct
 {
@@ -23,12 +25,16 @@ typedef struct
    ServiceModeTestNumber_t testNumber;
 } I_ServiceTest_t;
 
+typedef void (*ServiceTestCallback_t)(void *context, const ServiceTestResultArgs_t *args);
+
 typedef struct
 {
    I_DataModel_t *dataModel;
+   Timer_t timer;
+   void *context;
+   ServiceTestCallback_t callback;
+   EventSubscription_t eventSubscription;
 } ServiceTestResources_t;
-
-typedef void (*ServiceTestCallback_t)(void *context, const ServiceTestResultArgs_t *args);
 
 typedef struct I_ServiceTest_Api_t
 {

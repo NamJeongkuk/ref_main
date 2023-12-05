@@ -13,7 +13,7 @@
 typedef struct
 {
    Erd_t versionErd; // Version_t
-} ServiceModeTest_VersionConfig;
+} ServiceModeTest_VersionConfig_t;
 
 typedef struct
 {
@@ -21,13 +21,13 @@ typedef struct
 
    struct
    {
-      const ServiceModeTest_VersionConfig *config;
+      const ServiceModeTest_VersionConfig_t *config;
    } _private;
 } ServiceModeTest_Version_t;
 
 void ServiceModeTest_Version_Init(
    ServiceModeTest_Version_t *instance,
    ServiceModeTestNumber_t testNumber,
-   const ServiceModeTest_VersionConfig *config);
+   const ServiceModeTest_VersionConfig_t *config);
 
 #endif

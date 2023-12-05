@@ -10,6 +10,7 @@
 
 #include "I_DataModel.h"
 #include "ServiceModeRequestHandler.h"
+#include "ServiceModeTest_BoardVersion.h"
 #include "ServiceModeTest_ExitServiceMode.h"
 #include "ServiceModeTest_Version.h"
 #include "I_ServiceTest.h"
@@ -37,6 +38,30 @@ typedef struct
          ServiceModeTest_Version_t test;
          ServiceModeTestComponent_t component;
       } mainBoardParametricVersion;
+
+      struct
+      {
+         ServiceModeTest_BoardVersion_t test;
+         ServiceModeTestComponent_t component;
+      } dispenserBoardVersion;
+
+      struct
+      {
+         ServiceModeTest_BoardVersion_t test;
+         ServiceModeTestComponent_t component;
+      } internalTempBoardUiVersion;
+
+      struct
+      {
+         ServiceModeTest_BoardVersion_t test;
+         ServiceModeTestComponent_t component;
+      } wifiBoardVersion;
+
+      struct
+      {
+         ServiceModeTest_BoardVersion_t test;
+         ServiceModeTestComponent_t component;
+      } rfidBoardVersion;
    } _private;
 } ServiceModePlugin_t;
 

@@ -19,7 +19,7 @@ enum
    SomeTestNumber = 23
 };
 
-static const ServiceModeTest_VersionConfig config = {
+static const ServiceModeTest_VersionConfig_t config = {
    .versionErd = Erd_ApplicationVersion
 };
 
@@ -109,7 +109,7 @@ TEST(ServiceModeTest_Version, ShouldSetStopToTheResponseWhenTestIsStopped)
 
    ServiceModeTestStatus_t testStatus;
    testStatus.testResponse = ServiceModeTestStatusResponse_Stopped;
-   testStatus.dataFormat = ServiceModeTestStatusDataFormat_VersionInfo;
+   testStatus.dataFormat = ServiceModeTestStatusDataFormat_Unused;
    testStatus.testNumber = instance.interface.testNumber;
    testStatus.diagnosticData[0] = 0;
    testStatus.diagnosticData[1] = 0;

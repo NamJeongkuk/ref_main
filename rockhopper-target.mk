@@ -91,7 +91,7 @@ SRC_DIRS:=\
   src/Application/RfidCommunication \
   src/Application/Sabbath \
   src/Application/Sensor \
-  src/Application/ServiceDiagnostics \
+  src/Application/ServiceMode \
   src/Application/Setpoints \
   src/Application/SnackMode \
   src/Application/SoundLevel \
@@ -123,6 +123,7 @@ INC_DIRS:=\
   src/Application/ModelInformation \
   src/Application/Sabbath \
   src/Application/SystemMonitor \
+  src/Application/ServiceDiagnostics \
   src/Application/Temperature \
   src/Application/Valve \
   src/Application/Voting \

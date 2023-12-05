@@ -34,6 +34,7 @@ enum
    ServiceModeTestStatusDataFormat_OutOfRange,
    ServiceModeTestStatusDataFormat_Voltsx100,
    ServiceModeTestStatusDataFormat_VersionInfo,
+   ServiceModeTestStatusDataFormat_NoVersionInfo,
    ServiceModeTestStatusDataFormat_FullNotFull,
    ServiceModeTestStatusDataFormat_PresentNotPresent,
    ServiceModeTestStatusDataFormat_Pwm

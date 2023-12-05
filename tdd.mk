@@ -59,6 +59,7 @@ SRC_DIRS:=\
   src/Application/Sensor \
   src/Application/ServiceDiagnostics \
   src/Application/Setpoints \
+  src/Application/ServiceMode \
   src/Application/SoundLevel \
   src/Application/StepperMotor \
   src/Application/SystemMonitor \
@@ -120,6 +121,7 @@ SRC_DIRS:=\
   test/Tests/Application/Sabbath \
   test/Tests/Application/Sensor \
   test/Tests/Application/Setpoints \
+  test/Tests/Application/ServiceMode \
   test/Tests/Application/SoundLevel \
   test/Tests/Application/StepperMotor \
   test/Tests/Application/SystemMonitor \
