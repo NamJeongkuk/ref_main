@@ -226,7 +226,7 @@ TEST_GROUP(FactoryModeIntegration)
 
    void TheLightBspErdsShouldBe(PwmDutyCycle_t expectedPwmDutyCycle)
    {
-      for(uint8_t i; i < NUM_ELEMENTS(bspLightsErdList); i++)
+      for(uint8_t i = 0; i < NUM_ELEMENTS(bspLightsErdList); i++)
       {
          RampingPwmDutyCycle_t actualPwmDutyCycle;
          DataModel_Read(
@@ -265,7 +265,7 @@ TEST_GROUP(FactoryModeIntegration)
 
    void TheValveBspErdsShouldBe(WaterValveState_t expectedWaterValveState)
    {
-      for(uint8_t i; i < NUM_ELEMENTS(bspValveErdList); i++)
+      for(uint8_t i = 0; i < NUM_ELEMENTS(bspValveErdList); i++)
       {
          WaterValveState_t actualWaterValveState;
          DataModel_Read(

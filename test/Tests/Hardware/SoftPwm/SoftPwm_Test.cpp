@@ -260,7 +260,7 @@ TEST(SoftPwm, ShouldCycleOnAndOffMultipleTimes)
 {
    Given GpioCompletedOneCycleOfOnThenOffAndIsOnAgain();
 
-   for(uint8_t i; i < SomeNumberOfCycles; i++)
+   for(uint8_t i = 0; i < SomeNumberOfCycles; i++)
    {
       GpioCyclesOnThenOffThenOnAgain();
    }
