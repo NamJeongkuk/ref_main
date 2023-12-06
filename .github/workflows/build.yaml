@@ -95,6 +95,15 @@ jobs:
       script: parametric_tdd
       runs-on: skynet-macos-generic
 
+  update-parametric-repo:
+    if: ${{ github.ref == 'refs/heads/develop' }}
+    needs: [macos-tdd, linux-build, linux-tdd, parametric-linux-tdd, parametric-macos-tdd]
+    uses: geappliances/skynet.repository-dispatch/.github/workflows/repository-dispatch.yml@v1
+    secrets: inherit
+    with:
+      repo: refrigeration.rockhopper-parametric
+      event-type: mainboard-updated
+
   email:
     if: ${{ (cancelled() || failure()) && github.event_name != 'pull_request' }}
     uses: geappliances/skynet.workflow/.github/workflows/email-workflow.yml@v1
