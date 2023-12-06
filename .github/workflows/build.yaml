@@ -96,8 +96,8 @@ jobs:
       runs-on: skynet-macos-generic
 
   update-parametric-repo:
-    if: ${{ github.ref == 'refs/heads/develop' }}
-    needs: [macos-tdd, linux-build, linux-tdd, parametric-linux-tdd, parametric-macos-tdd]
+    if: ${{ github.ref_name == 'develop' }}
+    needs: [setup]
     uses: geappliances/skynet.repository-dispatch/.github/workflows/repository-dispatch.yml@v1
     secrets: inherit
     with:
