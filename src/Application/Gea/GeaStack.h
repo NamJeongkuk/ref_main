@@ -23,7 +23,7 @@
 #include "ErdGea2SubscriptionApiRevision2.h"
 #include "ConstArrayMap_BinarySearch.h"
 #include "ErdStreamReceiver.h"
-#include "GeaStackXmacroUtils.h"
+#include "ErdXMacroUtils.h"
 #include "SystemErds.h"
 
 enum
@@ -39,15 +39,15 @@ enum
 
 // clang-format off
 
-#define EXPAND_AS_PUBLIC_ERD_COUNT_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_PUBLIC_, Number)(uint8_t Name;)
+#define EXPAND_AS_PUBLIC_AND_SERVICE_ERD_COUNT_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_PUBLIC_AND_SERVICE_, Number)(uint8_t Name;)
 
 // clang-format on
 
 typedef struct
 {
-   ERD_TABLE(EXPAND_AS_PUBLIC_ERD_COUNT_STRUCT_MEMBER)
-} GeaStackPublicErdCount_t;
+   ERD_TABLE(EXPAND_AS_PUBLIC_AND_SERVICE_ERD_COUNT_STRUCT_MEMBER)
+} GeaStackPublicAndServiceErdCount_t;
 
 typedef struct
 {
@@ -59,8 +59,8 @@ typedef struct
       ErdGea2ReadWriteApiRevision2_t erdApiRevision2ReadWrite;
       ErdGea2SubscriptionApiRevision2_t erdApiRevision2Subscription;
       ErdGea2SubscriptionApiRevision2SubscriptionResources_t subscriptionResources[ErdApiV2SubscriptionClients];
-      uint8_t subscriptionBuffers[ErdApiV2SubscriptionClients][sizeof(GeaStackPublicErdCount_t) / 4 + 1];
-      ConstArrayMap_BinarySearch_t publicErdMap;
+      uint8_t subscriptionBuffers[ErdApiV2SubscriptionClients][sizeof(GeaStackPublicAndServiceErdCount_t) / 4 + 1];
+      ConstArrayMap_BinarySearch_t publicAndServiceErdMap;
       ErdGea2ReadWriteApiRevision2_t erdApiRevision2;
 
       Gea2Configurator_t configurator;

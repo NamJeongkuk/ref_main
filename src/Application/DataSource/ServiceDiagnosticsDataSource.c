@@ -93,7 +93,7 @@ static const DataSource_ServiceDiagnosticsRevision3Entity_t serviceDiagnosticsEn
             .status = Erd_ServiceDiagnosticsFaultTableStatus,
             .clear = Erd_ServiceDiagnosticsFaultTableClear,
 
-            .entryCount = Erd_ServiceDiagnosticsFaultTableEntry9 - Erd_ServiceDiagnosticsFaultTableEntry0 + 1,
+            .entryCount = Erd_ServiceDiagnosticsFaultTableEntry19 - Erd_ServiceDiagnosticsFaultTableEntry0 + 1,
             .entryStart = Erd_ServiceDiagnosticsFaultTableEntry0,
             .snapshotStart = Erd_ServiceDiagnosticsFaultTableSnapshot0,
             .snapshotPayloadStart = Erd_ServiceDiagnosticsFaultTableSnapshotData0

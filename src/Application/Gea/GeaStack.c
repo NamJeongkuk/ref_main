@@ -30,19 +30,19 @@ enum
 
 // clang-format off
 
-#define EXPAND_AS_PUBLIC_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_PUBLIC_, Number)(Public##Name COMMA)
+#define EXPAND_AS_PUBLIC_AND_SERVICE_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+   CONCAT(INCLUDE_PUBLIC_AND_SERVICE_, Number)(Public##Name COMMA)
 
 // clang-format on
 
-static const Erd_t publicErds[] = {
-   ERD_TABLE(EXPAND_AS_PUBLIC_ERDS)
+static const Erd_t publicAndServiceErds[] = {
+   ERD_TABLE(EXPAND_AS_PUBLIC_AND_SERVICE_ERDS)
 };
 
-static const ConstArrayMap_BinarySearchConfiguration_t publicErdMapConfiguration = {
-   publicErds,
-   NUM_ELEMENTS(publicErds),
-   ELEMENT_SIZE(publicErds),
+static const ConstArrayMap_BinarySearchConfiguration_t publicAndServiceErdMapConfiguration = {
+   publicAndServiceErds,
+   NUM_ELEMENTS(publicAndServiceErds),
+   ELEMENT_SIZE(publicAndServiceErds),
    sizeof(Erd_t),
    0,
    false
@@ -99,8 +99,8 @@ static void ConnectGea2MessageEndpointToDataSource(
       &instance->_private.erdSecurity.restrictedErdPacketRestrictor.interface);
 
    ConstArrayMap_BinarySearch_Init(
-      &instance->_private.publicErdMap,
-      &publicErdMapConfiguration);
+      &instance->_private.publicAndServiceErdMap,
+      &publicAndServiceErdMapConfiguration);
 
    ErdGea2SubscriptionApiRevision2_Init(
       &instance->_private.erdApiRevision2Subscription,
@@ -108,13 +108,13 @@ static void ConnectGea2MessageEndpointToDataSource(
       NULL,
       &instance->_private.erdSecurity.restrictedErdPacketRestrictor.interface,
       timerModule,
-      &instance->_private.publicErdMap.interface,
+      &instance->_private.publicAndServiceErdMap.interface,
       instance->_private.subscriptionResources,
       ErdApiV2SubscriptionClients,
       &instance->_private.subscriptionBuffers[0][0],
       sizeof(instance->_private.subscriptionBuffers[0]),
-      false,
-      0);
+      true,
+      Gea2PacketMaxPayload);
 
    ErdClient_ApiRevision2_Init(
       &instance->_private.erdClient,
