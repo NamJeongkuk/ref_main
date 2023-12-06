@@ -97,7 +97,7 @@ jobs:
 
   update-parametric-repo:
     if: ${{ github.ref_name == 'develop' }}
-    needs: [setup]
+    needs: [macos-tdd, linux-build, linux-tdd, parametric-linux-tdd, parametric-macos-tdd]
     uses: geappliances/skynet.repository-dispatch/.github/workflows/repository-dispatch.yml@v1
     secrets: inherit
     with:
