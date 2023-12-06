@@ -24,5 +24,6 @@ return personality({
   lighting = import("../Lighting/lighting.lua"),
   load_off_door_open_compartment_list = import("../Cooling/load_off_door_open_compartment_list.lua"),
   filter_data = import("../FilterData/filter_data.lua"),
-  water_valve_flow_rate = import("../WaterValveFlowRate/water_valve_flow_rate.lua")
+  water_valve_flow_rate = import("../WaterValveFlowRate/water_valve_flow_rate.lua"),
+  cabinet_temperature_exceeded = import("../Cooling/cabinet_temperature_exceeded.lua")
 })

@@ -30,6 +30,8 @@ enum
    FaultId_ExcessiveCompressorRunTime = 300,
    FaultId_CompressorOffWhileCoolingSystemOnForMaxTime = 301,
    FaultId_FreshFoodNoFreezeLimitTripped = 302,
+   FaultId_FreshFoodTemperatureExceeded = 303,
+   FaultId_FreezerTemperatureExceeded = 304,
    FaultId_DoorBoardCommunicationFault = 523,
    FaultId_AutofillCouplingFault = 721,
    FaultId_DispenserUiCommunicationFault = 733,

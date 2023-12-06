@@ -101,6 +101,7 @@ return function(directory)
   import('Lighting/UserAllowableInteriorLighting')
   import('Cooling/LoadOffDoorOpen')
   import('Cooling/LoadOffDoorOpenCompartmentList')
+  import('Cooling/CabinetTemperatureExceeded')
   import('constants')
 
   Core = require 'lua-parametric-tools'.common.Core
@@ -203,6 +204,7 @@ return function(directory)
   user_allowable_interior_lighting = UserAllowableInteriorLighting(core)
   load_off_door_open = LoadOffDoorOpen(core)
   load_off_door_open_compartment_list = LoadOffDoorOpenCompartmentList(core)
+  cabinet_temperature_exceeded = CabinetTemperatureExceeded(core)
 
   return {
     core = core,
@@ -308,6 +310,7 @@ return function(directory)
     erd_list_to_sorted_erd_mappings = erd_list_to_sorted_erd_mappings,
     load_off_door_open = load_off_door_open,
     load_off_door_open_compartment_list = load_off_door_open_compartment_list,
+    cabinet_temperature_exceeded = cabinet_temperature_exceeded,
     constants = constants,
     math = math,
     import = require 'lua-parametric-tools'.util.EvalInCurrentEnvironment(directory, {

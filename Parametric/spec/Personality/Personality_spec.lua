@@ -35,7 +35,8 @@ describe("Personality", function()
       lighting = TypedString('lighting', 'lighting'),
       load_off_door_open_compartment_list = TypedString('load_off_door_open_compartment_list', 'load_off_door_open_compartment_list'),
       filter_data = TypedString('filter_data', 'filter_data'),
-      water_valve_flow_rate = TypedString('water_valve_flow_rate', 'water_valve_flow_rate')
+      water_valve_flow_rate = TypedString('water_valve_flow_rate', 'water_valve_flow_rate'),
+      cabinet_temperature_exceeded = TypedString('cabinet_temperature_exceeded', 'cabinet_temperature_exceeded')
     }, overrides or {})
   end
 
@@ -251,6 +252,14 @@ describe("Personality", function()
     end)
   end)
 
+  it('should constain all arguments', function()
+    should_fail_with('cabinet_temperature_exceeded must be a typed string with type cabinet_temperature_exceeded, but is a number', function()
+      personality(generate_config({
+        cabinet_temperature_exceeded = -1
+      }))
+    end)
+  end)
+
   it('should generate a typed string with the correct data and type personality', function()
     local expected = remove_whitespace([[
       structure(
@@ -279,7 +288,8 @@ describe("Personality", function()
         pointer(lighting),
         pointer(load_off_door_open_compartment_list),
         pointer(filter_data),
-        pointer(water_valve_flow_rate)
+        pointer(water_valve_flow_rate),
+        pointer(cabinet_temperature_exceeded)
       )
     ]])
 

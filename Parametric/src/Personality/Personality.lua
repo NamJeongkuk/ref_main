@@ -35,7 +35,8 @@ return function(core)
         pointer(config.lighting),
         pointer(config.load_off_door_open_compartment_list),
         pointer(config.filter_data),
-        pointer(config.water_valve_flow_rate)
+        pointer(config.water_valve_flow_rate),
+        pointer(config.cabinet_temperature_exceeded)
       ))
   end)
 
@@ -66,7 +67,8 @@ return function(core)
       lighting = { constraint.typed_string('lighting') },
       load_off_door_open_compartment_list = { constraint.typed_string('load_off_door_open_compartment_list') },
       filter_data = { constraint.typed_string('filter_data') },
-      water_valve_flow_rate = { constraint.typed_string('water_valve_flow_rate') }
+      water_valve_flow_rate = { constraint.typed_string('water_valve_flow_rate') },
+      cabinet_temperature_exceeded = { constraint.typed_string('cabinet_temperature_exceeded') }
     })
     return generate(config)
   end

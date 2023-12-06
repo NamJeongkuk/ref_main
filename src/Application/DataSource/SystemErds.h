@@ -1484,6 +1484,8 @@ enum
    ENTRY(Erd_CondenserFanMissingFanFeedbackWhenFanIsRunningFault,   0xF73C, bool,                                       Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_CondenserFanMissingFanFeedbackWhenFanIsRunning) \
    ENTRY(Erd_CondenserFanFeedbackPresentWhenFanIsOffFault,          0xF73D, bool,                                       Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_CondenserEvapFanFeedbackPresentWhenFanIsOff) \
    ENTRY(Erd_CondenserFanCannotReachTargetRpmFault,                 0xF73E, bool,                                       Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_CondenserEvapFanCannotReachTargetRpm) \
+   ENTRY(Erd_FreshFoodTemperatureExceededFault,             0xF73F, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_FreshFoodTemperatureExceeded) \
+   ENTRY(Erd_FreezerTemperatureExceededFault,               0xF740, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_FreezerTemperatureExceeded) \
    \
    ENTRY(Erd_FactoryModeEnableRequestInMinutes,             0xF801, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
