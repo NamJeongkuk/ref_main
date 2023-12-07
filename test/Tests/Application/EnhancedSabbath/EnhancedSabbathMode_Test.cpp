@@ -391,6 +391,11 @@ TEST_GROUP(EnhancedSabbathMode)
          &config);
    }
 
+   void WhenInitialized()
+   {
+      GivenInitialization();
+   }
+
    void LightPwmVotedDutyCyclesShouldBeOffAndDontCare()
    {
       for(uint8_t i = 0; i < config.lightVoteErdList.numberOfErds; i++)
@@ -673,6 +678,8 @@ TEST_GROUP(EnhancedSabbathMode)
 TEST(EnhancedSabbathMode, ShouldVoteEnhancedSabbathPwmPercentageAndRampingUpAndRampingDownCountsPerMsecToCareWhenEnhancedSabbathModeStatusIsSetOnInit)
 {
    GivenTheEnhancedSabbathModeStatusIs(SET);
+   GivenWaitingToDefrostIs(SET);
+   GivenDefrostingIs(CLEAR);
    GivenInitialization();
 
    LightPwmVotedDutyCyclesShouldBeParametricPwmDutyCyclePercentageAndCare();
@@ -735,6 +742,46 @@ TEST(EnhancedSabbathMode, ShouldVoteForLoadsToDontCareWhenWhenEnteringDisabledOn
    TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_SuperHigh, Vote_DontCare);
    TheDamperPositionVoteShouldBe(DamperPosition_Open, Vote_DontCare);
    TheDisableCompressorMiniumTimesVoteShouldBe(false, Vote_DontCare);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
+}
+
+TEST(EnhancedSabbathMode, ShouldTransitionToStageFreshFoodWhenWaitingToDefrostIsTrueAndDefrostingIsTrueAndEnhancedSabbathModeIsEnabledOnInit)
+{
+   GivenTheEnhancedSabbathModeStatusIs(SET);
+   GivenWaitingToDefrostIs(SET);
+   GivenDefrostingIs(SET);
+
+   WhenInitialized();
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+}
+
+TEST(EnhancedSabbathMode, ShouldTransitionToStageDefrostingWhenWaitingToDefrostIsFalseAndDefrostingIsTrueAndEnhancedSabbathModeIsEnabledOnInit)
+{
+   GivenTheEnhancedSabbathModeStatusIs(SET);
+   GivenWaitingToDefrostIs(CLEAR);
+   GivenDefrostingIs(SET);
+
+   WhenInitialized();
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Defrosting);
+}
+
+TEST(EnhancedSabbathMode, ShouldTransitionToStageFreshFoodWhenWaitingToDefrostIsTrueAndDefrostingIsFalseAndEnhancedSabbathModeIsEnabledOnInit)
+{
+   GivenTheEnhancedSabbathModeStatusIs(SET);
+   GivenWaitingToDefrostIs(SET);
+   GivenDefrostingIs(CLEAR);
+
+   WhenInitialized();
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+}
+
+TEST(EnhancedSabbathMode, ShouldTransitionToDisabledWhenWaitingToDefrostIsFalseAndDefrostingIsFalseAndEnhancedSabbathModeIsEnabledOnInit)
+{
+   GivenTheEnhancedSabbathModeStatusIs(SET);
+   GivenWaitingToDefrostIs(CLEAR);
+   GivenDefrostingIs(CLEAR);
+
+   WhenInitialized();
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
 }
 
@@ -981,6 +1028,7 @@ TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodAndVoteFanAndCompressorLowThe
 TEST(EnhancedSabbathMode, ShouldBeInFreshFoodStageWithAllLoadsSetToOffWhenInitializedWithEnhancedSabbathModeStatusSet)
 {
    GivenTheEnhancedSabbathModeStatusIs(SET);
+   GivenWaitingToDefrostIs(SET);
    GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 - 1);
    GivenTheFreshFoodCabinetSetpointIs(SomeTemperatureInDegFx100);
    GivenTheHsmStateIs(EnhancedSabbathModeHsmState_Unknown);
@@ -1007,6 +1055,7 @@ TEST(EnhancedSabbathMode, ShouldBeInFreshFoodStageWithAllLoadsSetToOffWhenInitia
 TEST(EnhancedSabbathMode, ShouldBeInFreshFoodStageWithAllLoadsSetToLowWhenInitializedWithEnhancedSabbathModeStatusSet)
 {
    GivenTheEnhancedSabbathModeStatusIs(SET);
+   GivenWaitingToDefrostIs(SET);
    GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + 1);
    GivenTheFreshFoodCabinetSetpointIs(SomeTemperatureInDegFx100);
    GivenTheIceMakerEnableOverrideRequestIs(true);
@@ -1167,6 +1216,8 @@ TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathModeToDisabledIfMaxTimeHasBeen
 
 TEST(EnhancedSabbathMode, ShouldDisableRegularSabbathWhenEnhancedSabbathExits)
 {
+   GivenWaitingToDefrostIs(SET);
+   GivenDefrostingIs(CLEAR);
    GivenTheEnhancedSabbathModeStatusIs(SET);
    GivenRegularSabbathModeStatusIs(SET);
    GivenInitialization();

@@ -2436,6 +2436,32 @@ TEST(DefrostIntegration_SingleEvap, ShouldDefrostRightAwayWhenEnteringEnhancedSa
    EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Defrosting);
 }
 
+TEST(DefrostIntegration_SingleEvap, ShouldStartEnhancedSabbathFreshFoodCoolingWhenApplicationIsInitializedWhileEnhancedSabbathIsEnabledAndDefrostIsNotActive)
+{
+   GivenEnhancedSabbathModeIs(ENABLED);
+   GivenDefrostStateWas(DefrostState_Idle);
+
+   WhenApplicationIsInitialized();
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldStartEnhancedSabbathDefrostingWhenApplicationIsInitializedWhileEnhancedSabbathIsEnabledAndDefrostIsActive)
+{
+   GivenEnhancedSabbathModeIs(ENABLED);
+   GivenDefrostStateWas(DefrostState_Prechill);
+
+   WhenApplicationIsInitialized();
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Defrosting);
+}
+
+TEST(DefrostIntegration_SingleEvap, ShouldTransitionToEnhancedSabbathStageDisabledWhenApplicationIsInitializedWhileEnhancedSabbathIsDisabled)
+{
+   GivenEnhancedSabbathModeIs(DISABLED);
+
+   WhenApplicationIsInitialized();
+   EnhancedSabbathHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
+}
+
 TEST(DefrostIntegration_SingleEvap, ShouldStartFromEepromSabbathWaitingTimeWhenCountingOnPowerUp)
 {
    GivenEepromSabbathWaitingForDefrostTimeInMinutesIs(1);

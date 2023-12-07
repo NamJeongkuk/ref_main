@@ -865,12 +865,17 @@ static HsmState_t InitialState(EnhancedSabbathMode_t *instance)
 {
    if(EnhancedSabbathModeIsEnabled(instance))
    {
-      return State_Stage_FreshFood;
+      if(WaitingToDefrost(instance))
+      {
+         return State_Stage_FreshFood;
+      }
+      else if(Defrosting(instance))
+      {
+         return State_Stage_Defrosting;
+      }
    }
-   else
-   {
-      return State_Disabled;
-   }
+
+   return State_Disabled;
 }
 
 void EnhancedSabbathMode_Init(
