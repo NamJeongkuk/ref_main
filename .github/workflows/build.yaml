@@ -34,19 +34,6 @@ jobs:
       script: tdd
       runs-on: skynet-linux-x64
 
-  linux-tdd-with-integration:
-    if: ${{ github.event_name != 'pull_request' }}
-    uses: geappliances/skynet.workflow/.github/workflows/build-workflow.yml@v1
-    needs: setup
-    secrets: inherit
-    permissions:
-      id-token: write
-      contents: read
-    with:
-      job-name: linux-tdd-with-integration
-      script: tdd
-      runs-on: skynet-linux-x64
-
   linux-build:
     uses: geappliances/skynet.workflow/.github/workflows/build-workflow.yml@v1
     needs: setup
