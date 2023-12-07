@@ -25,14 +25,14 @@ static void SetAndClearFreshFoodNoFreezeLimitTrippedFault(FreshFoodNoFreezeLimit
       instance->_private.config->freshFoodFilteredTemperatureErd,
       &freshFoodTemperature);
 
-   if(freshFoodTemperature <= calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_Nfl])
+   if(freshFoodTemperature < calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_Nfl])
    {
       DataModel_Write(
          instance->_private.dataModel,
          instance->_private.config->freshFoodNoFreezeLimitTrippedFaultErd,
          set);
    }
-   else
+   else if(freshFoodTemperature > calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHyst])
    {
       DataModel_Write(
          instance->_private.dataModel,

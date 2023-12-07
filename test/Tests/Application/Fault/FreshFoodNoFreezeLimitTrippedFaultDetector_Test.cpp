@@ -16,7 +16,8 @@ extern "C"
 
 enum
 {
-   FreshFoodNoFreezeLimitGridValue = 500
+   FreshFoodNoFreezeLimitGridValue = 500,
+   FreshFoodLowHysteresisValue = 1000
 };
 
 static const FreshFoodNoFreezeLimitTrippedFaultDetectorConfig_t config = {
@@ -58,6 +59,14 @@ TEST_GROUP(FreshFoodNoFreezeLimitTrippedFaultDetector)
       DataModel_Write(dataModel, Erd_Grid_CalculatedGridLines, &calculatedGridLines);
    }
 
+   void GivenFreshFoodLowHysteresisIs(TemperatureDegFx100_t temperature)
+   {
+      CalculatedGridLines_t calculatedGridLines;
+      DataModel_Read(dataModel, Erd_Grid_CalculatedGridLines, &calculatedGridLines);
+      calculatedGridLines.freshFoodGridLine.gridLinesDegFx100[GridLine_FreshFoodLowHyst] = temperature;
+      DataModel_Write(dataModel, Erd_Grid_CalculatedGridLines, &calculatedGridLines);
+   }
+
    void GivenFreshFoodFilteredTemperatureInDegFx100Is(TemperatureDegFx100_t temperatureDegFx100)
    {
       DataModel_Write(dataModel, config.freshFoodFilteredTemperatureErd, &temperatureDegFx100);
@@ -90,23 +99,36 @@ TEST(FreshFoodNoFreezeLimitTrippedFaultDetector, ShouldSetFreshFoodNoFreezeLimit
    FreshFoodNoFreezeLimitTrippedFaultShouldBe(true);
 }
 
-TEST(FreshFoodNoFreezeLimitTrippedFaultDetector, ShouldSetFreshFoodNoFreezeLimitTrippedFaultWhenFreshFoodTemperatureIsEqualToTheNoFreezeLimitOnInit)
+TEST(FreshFoodNoFreezeLimitTrippedFaultDetector, ShouldNotSetFreshFoodNoFreezeLimitTrippedFaultWhenFreshFoodTemperatureIsEqualToTheNoFreezeLimitOnInit)
 {
    GivenFreshFoodFilteredTemperatureInDegFx100Is(FreshFoodNoFreezeLimitGridValue);
    GivenFreshFoodNoFreezeLimitIs(FreshFoodNoFreezeLimitGridValue);
+   FreshFoodNoFreezeLimitTrippedFaultShouldBe(false);
 
    WhenTheModuleIsInitialized();
-   FreshFoodNoFreezeLimitTrippedFaultShouldBe(true);
+   FreshFoodNoFreezeLimitTrippedFaultShouldBe(false);
 }
 
-TEST(FreshFoodNoFreezeLimitTrippedFaultDetector, ShouldClearFreshFoodNoFreezeLimitTrippedFaultWhenFreshFoodTemperatureIsGreaterThanNoFreezeLimitOnInit)
+TEST(FreshFoodNoFreezeLimitTrippedFaultDetector, ShouldClearFreshFoodNoFreezeLimitTrippedFaultWhenFreshFoodTemperatureIsAboveLowHysteresisOnInit)
 {
-   GivenFreshFoodFilteredTemperatureInDegFx100Is(FreshFoodNoFreezeLimitGridValue + 1);
+   GivenFreshFoodFilteredTemperatureInDegFx100Is(FreshFoodLowHysteresisValue + 1);
    GivenFreshFoodNoFreezeLimitIs(FreshFoodNoFreezeLimitGridValue);
+   GivenFreshFoodLowHysteresisIs(FreshFoodLowHysteresisValue);
    GivenFreshFoodNoFreezeLimitTrippedFaultIs(true);
 
    WhenTheModuleIsInitialized();
    FreshFoodNoFreezeLimitTrippedFaultShouldBe(false);
+}
+
+TEST(FreshFoodNoFreezeLimitTrippedFaultDetector, ShouldNotClearFreshFoodNoFreezeLimitTrippedFaultWhenFreshFoodTemperatureIsBetweenNoFreezeLimitAndLowHysteresisOnInit)
+{
+   GivenFreshFoodFilteredTemperatureInDegFx100Is(FreshFoodNoFreezeLimitGridValue + 1);
+   GivenFreshFoodNoFreezeLimitIs(FreshFoodNoFreezeLimitGridValue);
+   GivenFreshFoodLowHysteresisIs(FreshFoodLowHysteresisValue);
+   GivenFreshFoodNoFreezeLimitTrippedFaultIs(true);
+
+   WhenTheModuleIsInitialized();
+   FreshFoodNoFreezeLimitTrippedFaultShouldBe(true);
 }
 
 TEST(FreshFoodNoFreezeLimitTrippedFaultDetector, ShouldSetFreshFoodNoFreezeLimitTrippedFaultWhenFreshFoodTemperatureChangesToBelowTheNoFreezeLimit)
@@ -120,7 +142,7 @@ TEST(FreshFoodNoFreezeLimitTrippedFaultDetector, ShouldSetFreshFoodNoFreezeLimit
    FreshFoodNoFreezeLimitTrippedFaultShouldBe(true);
 }
 
-TEST(FreshFoodNoFreezeLimitTrippedFaultDetector, ShouldSetFreshFoodNoFreezeLimitTrippedFaultWhenFreshFoodTemperatureChangesToEqualToTheNoFreezeLimit)
+TEST(FreshFoodNoFreezeLimitTrippedFaultDetector, ShouldNotSetFreshFoodNoFreezeLimitTrippedFaultWhenFreshFoodTemperatureChangesToEqualToTheNoFreezeLimit)
 {
    GivenFreshFoodFilteredTemperatureInDegFx100Is(FreshFoodNoFreezeLimitGridValue + 1);
    GivenFreshFoodNoFreezeLimitIs(FreshFoodNoFreezeLimitGridValue);
@@ -128,7 +150,7 @@ TEST(FreshFoodNoFreezeLimitTrippedFaultDetector, ShouldSetFreshFoodNoFreezeLimit
    FreshFoodNoFreezeLimitTrippedFaultShouldBe(false);
 
    WhenFreshFoodFilteredTemperatureInDegFx100Is(FreshFoodNoFreezeLimitGridValue);
-   FreshFoodNoFreezeLimitTrippedFaultShouldBe(true);
+   FreshFoodNoFreezeLimitTrippedFaultShouldBe(false);
 }
 
 TEST(FreshFoodNoFreezeLimitTrippedFaultDetector, ShouldClearFreshFoodNoFreezeLimitTrippedFaultWhenFreshFoodTemperatureChangesToGreaterThanTheNoFreezeLimit)
@@ -140,4 +162,16 @@ TEST(FreshFoodNoFreezeLimitTrippedFaultDetector, ShouldClearFreshFoodNoFreezeLim
 
    WhenFreshFoodFilteredTemperatureInDegFx100Is(FreshFoodNoFreezeLimitGridValue + 10);
    FreshFoodNoFreezeLimitTrippedFaultShouldBe(false);
+}
+
+TEST(FreshFoodNoFreezeLimitTrippedFaultDetector, ShouldNotClearFreshFoodNoFreezeLimitTrippedFaultWhenFreshFoodTemperatureChangesToBetweenNoFreezeLimitAndLowHysteresisValue)
+{
+   GivenFreshFoodFilteredTemperatureInDegFx100Is(FreshFoodNoFreezeLimitGridValue - 20);
+   GivenFreshFoodNoFreezeLimitIs(FreshFoodNoFreezeLimitGridValue);
+   GivenFreshFoodLowHysteresisIs(FreshFoodLowHysteresisValue);
+   GivenTheModuleIsInitialized();
+   FreshFoodNoFreezeLimitTrippedFaultShouldBe(true);
+
+   WhenFreshFoodFilteredTemperatureInDegFx100Is(FreshFoodNoFreezeLimitGridValue + 1);
+   FreshFoodNoFreezeLimitTrippedFaultShouldBe(true);
 }
