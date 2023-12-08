@@ -74,7 +74,7 @@ describe('parametric_data', function()
         <PointerSize>4</PointerSize>
         <ByteAlignment>4</ByteAlignment>
         <Filler>FF</Filler>
-        <BaseAddress>FFFF5000</BaseAddress>
+        <BaseAddress>FFFEF000</BaseAddress>
         <SizeTSize>4</SizeTSize>
       </Metadata>
       <Data>
@@ -104,7 +104,7 @@ describe('parametric_data', function()
             name="Addresses">
             <Structure
               name="Page0"><U32
-              name="Start">4294922240</U32><U32
+              name="Start">4294897664</U32><U32
               name="End">4294946815</U32>
             </Structure>
           </Structure>

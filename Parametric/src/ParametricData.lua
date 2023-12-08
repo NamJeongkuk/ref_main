@@ -5,7 +5,7 @@ return function(core)
   local constraint = require 'lua-common'.utilities.constraint
   local validate_arguments = require 'lua-common'.utilities.validate_arguments
   local header = require 'lua-parametric-tools'.image.header
-  local start_address = 0xFFFF5000
+  local start_address = 0xFFFEF000
   local git_hash = require 'GitHash/GitHash'
   import(core)
 
