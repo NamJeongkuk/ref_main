@@ -575,6 +575,31 @@
          "namespace": "mb",
          "name": "Erd_EnhancedSabbathStageFreezerCoolingIsActive",
          "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_RfidFilterUid",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_WaterFilterVolumeUsageInOuncesX100",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_WaterFilterCalendarUsageInSeconds",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_RfidFilterStatus",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_WaterFilterState",
+         "interval": 60000
       }
    ]
 }

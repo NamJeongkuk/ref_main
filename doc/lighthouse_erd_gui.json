@@ -1107,111 +1107,122 @@
          ]
       },
       {
-         "title": "Rfid",
+         "title": "RFID",
          "erds": [
             {
-               "namespace": "Rfid",
-               "displayName": "Read Request",
-               "name": "Erd_RfidReadSignal",
+               "namespace": "mb",
+               "displayName": "Water Filter State",
+               "name": "Erd_WaterFilterState",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Water Filter Remaining Usage",
+               "name": "Erd_WaterFilterRemainingUsage",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Water Filter Volume Usage In Ounces x100",
+               "name": "Erd_WaterFilterVolumeUsageInOuncesX100",
                "read": true,
                "write": true,
                "interval": 1000000000
             },
             {
-               "namespace": "Rfid",
-               "displayName": "Result",
-               "name": "Erd_ReadWriteResult",
+               "namespace": "mb",
+               "displayName": "water Filter Calendar Usage In Seconds",
+               "name": "Erd_WaterFilterCalendarUsageInSeconds",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Water Filter Volume Usage In Ounces x100 Eeprom",
+               "name": "Erd_Eeprom_WaterFilterVolumeUsageInOuncesX100",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Water Filter Calendar Usage In Seconds Eeprom",
+               "name": "Erd_Eeprom_WaterFilterCalendarUsageInSeconds",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Rfid Filter Data Request",
+               "name": "Erd_RfidFilterDataRequest",
+               "read": true,
+               "write": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
+               "displayName": "Rfid Board: Read Write Result",
+               "name": "Erd_RfidFilterReadWriteResult_RfidBoard",
                "read": true,
                "interval": 1000000000
             },
             {
-               "namespace": "Rfid",
-               "displayName": "UID",
-               "name": "Erd_TagUid",
+               "namespace": "mb",
+               "displayName": "Rfid Board: Filter Uid",
+               "name": "Erd_RfidFilterUid_RfidBoard",
                "read": true,
                "interval": 1000000000
             },
             {
-               "namespace": "Rfid",
-               "displayName": "Filter Identifier",
-               "name": "Erd_TagFilterIdentifier",
+               "namespace": "mb",
+               "displayName": "Rfid Board: Filter Identifier",
+               "name": "Erd_RfidFilterIdentifier_RfidBoard",
                "read": true,
                "interval": 1000000000
             },
             {
-               "namespace": "Rfid",
-               "displayName": "Ounces x100",
-               "name": "Erd_TagVolume",
+               "namespace": "mb",
+               "displayName": "Rfid Board: Water Volume Usage In Ounces x100",
+               "name": "Erd_RfidFilterWaterVolumeUsageInOuncesX100_RfidBoard",
                "read": true,
                "interval": 1000000000
             },
             {
-               "namespace": "Rfid",
-               "displayName": "Calendar Seconds",
-               "name": "Erd_TagCalendarUsage",
+               "namespace": "mb",
+               "displayName": "Rfid Board: Calendar Usage In Seconds",
+               "name": "Erd_RfidFilterCalendarUsageInSeconds_RfidBoard",
                "read": true,
                "interval": 1000000000
             },
             {
-               "namespace": "Rfid",
-               "displayName": "Leak Seconds",
-               "name": "Erd_TagLeakDetectedTime",
+               "namespace": "mb",
+               "displayName": "Rfid Board: Leak Detected Time In Seconds",
+               "name": "Erd_RfidFilterLeakDetectedTimeInSeconds_RfidBoard",
                "read": true,
                "interval": 1000000000
             },
             {
-               "namespace": "Rfid",
-               "displayName": "Number of writes",
-               "name": "Erd_TagWriteOperations",
+               "namespace": "mb",
+               "displayName": "Rfid Board: Number Of Write Operations",
+               "name": "Erd_RfidFilterNumberOfWriteOperations_RfidBoard",
                "read": true,
                "interval": 1000000000
             },
             {
-               "namespace": "Rfid",
-               "displayName": "Status Bits",
-               "name": "Erd_TagFilterStatusBitmap",
+               "namespace": "mb",
+               "displayName": "Rfid Board: Filter Status",
+               "name": "Erd_RfidFilterStatus_RfidBoard",
                "read": true,
                "interval": 1000000000
             },
             {
-               "namespace": "Rfid",
-               "displayName": "Init Error Bits",
-               "name": "Erd_InitializationErrorBitfield",
-               "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "Rfid",
-               "displayName": "Tag Lock Byte",
-               "name": "Erd_TagLockByte",
-               "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "Rfid",
-               "displayName": "Tag Number of units Filter Has Been On",
-               "name": "Erd_TagNumberOfUnitsFilterHasBeenOn",
-               "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "Rfid",
-               "displayName": "Tag Unit Serial Number",
-               "name": "Erd_TagUnitSerialNumber",
-               "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "Rfid",
-               "displayName": "Tag Previous Unit Serial Number",
-               "name": "Erd_TagPreviousUnitSerialNumber",
-               "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "Rfid",
-               "displayName": "Tag Last Twelve Month Of Water Usage In Gallons",
-               "name": "Erd_TagLastTwelveMonthOfWaterUsageInGallons",
+               "namespace": "mb",
+               "displayName": "Rfid Board: Initialization Error Bitfield",
+               "name": "Erd_RfidFilterInitializationErrorBitfield_RfidBoard",
                "read": true,
                "interval": 1000000000
             }
