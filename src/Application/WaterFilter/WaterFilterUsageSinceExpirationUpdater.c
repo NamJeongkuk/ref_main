@@ -35,7 +35,7 @@ static void CalendarUsageChanged(void *context, const void *args)
       &waterFilterUsageSinceExpiration);
 }
 
-static void TotalWaterVolumeUsageChanged(void *context, const void *args)
+static void WaterFilterVolumeUsageChanged(void *context, const void *args)
 {
    WaterFilterUsageSinceExpirationUpdater_t *instance = context;
    IGNORE(args);
@@ -76,8 +76,8 @@ static void WaterFilterLifeStatusChanged(void *context, const void *args)
 
       DataModel_Subscribe(
          instance->_private.dataModel,
-         instance->_private.config->totalWaterVolumeUsageInOuncesx100Erd,
-         &instance->_private.totalWaterVolumeUsageSubscription);
+         instance->_private.config->waterFilterVolumeUsageInOuncesX100Erd,
+         &instance->_private.waterFilterVolumeUsageSubscription);
    }
    else
    {
@@ -88,8 +88,8 @@ static void WaterFilterLifeStatusChanged(void *context, const void *args)
 
       DataModel_Unsubscribe(
          instance->_private.dataModel,
-         instance->_private.config->totalWaterVolumeUsageInOuncesx100Erd,
-         &instance->_private.totalWaterVolumeUsageSubscription);
+         instance->_private.config->waterFilterVolumeUsageInOuncesX100Erd,
+         &instance->_private.waterFilterVolumeUsageSubscription);
 
       memset(&waterFilterUsageSinceExpiration, 0, sizeof(WaterFilterUsageSinceExpiration_t));
 
@@ -125,9 +125,9 @@ void WaterFilterUsageSinceExpirationUpdater_Init(
       CalendarUsageChanged);
 
    EventSubscription_Init(
-      &instance->_private.totalWaterVolumeUsageSubscription,
+      &instance->_private.waterFilterVolumeUsageSubscription,
       instance,
-      TotalWaterVolumeUsageChanged);
+      WaterFilterVolumeUsageChanged);
 
    WaterFilterLifeStatus_t waterFilterLifeStatus;
    DataModel_Read(

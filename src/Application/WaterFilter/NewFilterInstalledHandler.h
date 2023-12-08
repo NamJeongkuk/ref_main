@@ -23,8 +23,8 @@ typedef struct
 typedef struct
 {
    Erd_t rfidFilterUidErd; // RfidUid_t
-   Erd_t totalWaterVolumeUsageInOuncesX100Erd; // VolumeInOuncesX100_t
-   Erd_t eepromTotalWaterVolumeUsageInOuncesX100Erd; // VolumeInOuncesX100_t
+   Erd_t waterFilterVolumeUsageInOuncesX100Erd; // VolumeInOuncesX100_t
+   Erd_t eepromwaterFilterVolumeUsageInOuncesX100Erd; // VolumeInOuncesX100_t
    Erd_t rfidFilterCalendarUsageInSecondsErd; // CalendarUsageInSeconds_t
    Erd_t eepromWaterFilterCalendarUsageInSecondsErd; // CalendarUsageInSeconds_t
    Erd_t rfidFilterLastTwelveMonthsOfWaterUsageInGallonsErd; // RfidTwelveMonthsGallonUsage_t

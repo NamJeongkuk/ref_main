@@ -17,7 +17,7 @@ typedef struct
    Erd_t waterFilterLifeStatusErd; // WaterFilterLifeStatus_t
    Erd_t waterFilterUsageSinceExpirationErd; // WaterFilterUsageSinceExpiration_t
    Erd_t calendarUsageInSecondsErd; // CalendarUsageInSeconds_t
-   Erd_t totalWaterVolumeUsageInOuncesx100Erd; // VolumeInOuncesX100_t
+   Erd_t waterFilterVolumeUsageInOuncesX100Erd; // VolumeInOuncesX100_t
 } WaterFilterUsageSinceExpirationUpdaterConfig_t;
 
 typedef struct
@@ -26,7 +26,7 @@ typedef struct
    {
       I_DataModel_t *dataModel;
       EventSubscription_t waterFilterLifeStatusSubscription;
-      EventSubscription_t totalWaterVolumeUsageSubscription;
+      EventSubscription_t waterFilterVolumeUsageSubscription;
       EventSubscription_t calendarUsageSubscription;
       const WaterFilterUsageSinceExpirationUpdaterConfig_t *config;
       const CommonFilterData_t *commonFilterData;

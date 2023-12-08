@@ -97,7 +97,7 @@ TEST_GROUP(RfidCommunicator)
 
    const RfidCommunicatorRfidWriteErds_t rfidWriteErds = {
       .uid = PublicErd_RfidFilterUid,
-      .volumeWaterUsageInOuncesX100 = PublicErd_Eeprom_TotalWaterVolumeUsageInOuncesX100,
+      .volumeWaterUsageInOuncesX100 = PublicErd_Eeprom_WaterFilterVolumeUsageInOuncesX100,
       .calendarUsageInSeconds = PublicErd_Eeprom_WaterFilterCalendarUsageInSeconds,
       .filterStatus = PublicErd_RfidFilterStatus,
       .lockByte = PublicErd_RfidFilterLockByte,
@@ -286,7 +286,7 @@ TEST_GROUP(RfidCommunicator)
       RfidFilterNumberOfUnitsFilterHasBeenOn_t numberOfUnitsFilterHasBeenOn = NumberOfUnitsFilterHasBeenOn;
 
       DataModel_Write(dataModel, Erd_RfidFilterUid, &Uid);
-      DataModel_Write(dataModel, Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100, &volumeOuncesX100);
+      DataModel_Write(dataModel, Erd_Eeprom_WaterFilterVolumeUsageInOuncesX100, &volumeOuncesX100);
       DataModel_Write(dataModel, Erd_Eeprom_WaterFilterCalendarUsageInSeconds, &calendarUsageInSeconds);
       DataModel_Write(dataModel, Erd_RfidFilterStatus, &filterStatus);
       uint8_t lockByte = Lock;

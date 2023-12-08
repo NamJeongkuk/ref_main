@@ -32,7 +32,7 @@ enum
 
 static const WaterFilterCalendarUsageUpdaterConfig_t config = {
    .waterFilterCalendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
-   .lifetimeTotalWaterUsageInOuncesX100Erd = Erd_LifetimeTotalWaterVolumeUsageInOuncesX100,
+   .lifetimeTotalWaterUsageInOuncesX100Erd = Erd_UnitLifetimeWaterVolumeUsageInOuncesX100,
    .serviceDiagnosticsRunTimeInMinutesErd = Erd_ServiceDiagnosticsRunTimeInMinutes
 };
 
@@ -73,7 +73,7 @@ TEST_GROUP(WaterFilterCalendarUsageUpdater)
    {
       DataModel_Write(
          dataModel,
-         Erd_LifetimeTotalWaterVolumeUsageInOuncesX100,
+         Erd_UnitLifetimeWaterVolumeUsageInOuncesX100,
          &totalLifetimeWaterVolumeUsageInOzX100);
    }
 
@@ -97,7 +97,7 @@ TEST_GROUP(WaterFilterCalendarUsageUpdater)
    {
       DataModel_Write(
          dataModel,
-         Erd_LifetimeTotalWaterVolumeUsageInOuncesX100,
+         Erd_UnitLifetimeWaterVolumeUsageInOuncesX100,
          &totalLifetimeWaterVolumeUsageInOzX100);
    }
 

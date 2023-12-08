@@ -14,7 +14,7 @@
 
 typedef struct
 {
-   Erd_t totalWaterVolumeUsageInOuncesx100Erd; // VolumeInOuncesX100_t
+   Erd_t waterFilterVolumeUsageInOuncesX100Erd; // VolumeInOuncesX100_t
    Erd_t waterFilterCalendarUsageInSecondsErd; // CalendarUsageInSeconds_t
    Erd_t waterFilterRemainingUsageErd; // WaterFilterRemainingUsage_t
 } WaterFilterRemainingUsageUpdaterConfig_t;

@@ -33,7 +33,7 @@ enum
 };
 
 static const WaterFilterRemainingUsageUpdaterConfig_t config = {
-   .totalWaterVolumeUsageInOuncesx100Erd = Erd_TotalWaterVolumeUsageInOuncesX100,
+   .waterFilterVolumeUsageInOuncesX100Erd = Erd_WaterFilterVolumeUsageInOuncesX100,
    .waterFilterCalendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
    .waterFilterRemainingUsageErd = Erd_WaterFilterRemainingUsage
 };
@@ -72,17 +72,17 @@ TEST_GROUP(WaterFilterRemainingUsageUpdater)
       GivenWaterFilterRemainingUsageUpdaterIsInitialized();
    }
 
-   void GivenTotalWaterVolumeUsageInOuncesx100ErdIs(VolumeInOuncesX100_t totalWaterVolumeUsageInOuncesx100)
+   void GivenWaterFilterVolumeUsageInOuncesX100ErdIs(VolumeInOuncesX100_t waterFilterVolumeUsageInOuncesx100)
    {
       DataModel_Write(
          dataModel,
-         Erd_TotalWaterVolumeUsageInOuncesX100,
-         &totalWaterVolumeUsageInOuncesx100);
+         Erd_WaterFilterVolumeUsageInOuncesX100,
+         &waterFilterVolumeUsageInOuncesx100);
    }
 
-   void WhenTotalWaterVolumeUsageInOuncesx100ErdIs(VolumeInOuncesX100_t totalWaterVolumeUsageInOuncesx100)
+   void WhenWaterFilterVolumeUsageInOuncesX100ErdIs(VolumeInOuncesX100_t waterFilterVolumeUsageInOuncesx100)
    {
-      GivenTotalWaterVolumeUsageInOuncesx100ErdIs(totalWaterVolumeUsageInOuncesx100);
+      GivenWaterFilterVolumeUsageInOuncesX100ErdIs(waterFilterVolumeUsageInOuncesx100);
    }
 
    void GivenWaterFilterCalendarUsageInSecondsErdIs(CalendarUsageInSeconds_t waterFilterCalendarUsageInSeconds)
@@ -136,7 +136,7 @@ TEST_GROUP(WaterFilterRemainingUsageUpdater)
 
 TEST(WaterFilterRemainingUsageUpdater, ShouldUpdateWaterFilterRemainingUsageWhenModuleIsInitialized)
 {
-   GivenTotalWaterVolumeUsageInOuncesx100ErdIs(SomeTotalVolumeUsageInOuncesx100);
+   GivenWaterFilterVolumeUsageInOuncesX100ErdIs(SomeTotalVolumeUsageInOuncesx100);
    GivenWaterFilterCalendarUsageInSecondsErdIs(SomeCalendarUsageInSeconds);
 
    WhenWaterFilterRemainingUsageUpdaterIsInitialized();
@@ -145,20 +145,20 @@ TEST(WaterFilterRemainingUsageUpdater, ShouldUpdateWaterFilterRemainingUsageWhen
    WaterFilterDaysUsageRemainingShouldBe(DividedWithCeilingWith(TheLesserValueBetweenVolumeAndTimePercentUsageRemaining(SomeTotalVolumeUsageInOuncesx100, SomeCalendarUsageInSeconds)));
 }
 
-TEST(WaterFilterRemainingUsageUpdater, ShouldUpdateWaterFilterRemainingUsageWhenTotalWaterVolumeUsageIsChanged)
+TEST(WaterFilterRemainingUsageUpdater, ShouldUpdateWaterFilterRemainingUsageWhenWaterFilterVolumeUsageIsChanged)
 {
-   GivenTotalWaterVolumeUsageInOuncesx100ErdIs(SomeTotalVolumeUsageInOuncesx100);
+   GivenWaterFilterVolumeUsageInOuncesX100ErdIs(SomeTotalVolumeUsageInOuncesx100);
    GivenWaterFilterCalendarUsageInSecondsErdIs(SomeCalendarUsageInSeconds);
    GivenWaterFilterRemainingUsageUpdaterIsInitialized();
 
-   WhenTotalWaterVolumeUsageInOuncesx100ErdIs(OtherTotalVolumeUsageInOuncesx100);
+   WhenWaterFilterVolumeUsageInOuncesX100ErdIs(OtherTotalVolumeUsageInOuncesx100);
    WaterFilterPercentUsageRemainingShouldBe(TheLesserValueBetweenVolumeAndTimePercentUsageRemaining(OtherTotalVolumeUsageInOuncesx100, SomeCalendarUsageInSeconds));
    WaterFilterDaysUsageRemainingShouldBe(DividedWithCeilingWith(TheLesserValueBetweenVolumeAndTimePercentUsageRemaining(OtherTotalVolumeUsageInOuncesx100, SomeCalendarUsageInSeconds)));
 }
 
 TEST(WaterFilterRemainingUsageUpdater, ShouldUpdateWaterFilterRemainingUsageWhenCalendarUsageIsChanged)
 {
-   GivenTotalWaterVolumeUsageInOuncesx100ErdIs(SomeTotalVolumeUsageInOuncesx100);
+   GivenWaterFilterVolumeUsageInOuncesX100ErdIs(SomeTotalVolumeUsageInOuncesx100);
    GivenWaterFilterCalendarUsageInSecondsErdIs(SomeCalendarUsageInSeconds);
    GivenWaterFilterRemainingUsageUpdaterIsInitialized();
 
@@ -169,7 +169,7 @@ TEST(WaterFilterRemainingUsageUpdater, ShouldUpdateWaterFilterRemainingUsageWhen
 
 TEST(WaterFilterRemainingUsageUpdater, ShouldChangeWaterFilterDaysUsageRemainingToZeroWhenFilterPercentUsageRemainingIsFully0)
 {
-   GivenTotalWaterVolumeUsageInOuncesx100ErdIs(SomeTotalVolumeUsageInOuncesx100);
+   GivenWaterFilterVolumeUsageInOuncesX100ErdIs(SomeTotalVolumeUsageInOuncesx100);
    GivenWaterFilterCalendarUsageInSecondsErdIs(NotFullCalendarUsageInSeconds1);
    GivenWaterFilterRemainingUsageUpdaterIsInitialized();
    WaterFilterPercentUsageRemainingShouldBe(3);
@@ -188,20 +188,20 @@ TEST(WaterFilterRemainingUsageUpdater, ShouldChangeWaterFilterDaysUsageRemaining
    WaterFilterDaysUsageRemainingShouldBe(0);
 }
 
-TEST(WaterFilterRemainingUsageUpdater, ShouldUpdateWaterFilterRemainingUsageToZeroWhenTotalWaterVolumeUsageIsChangedButBiggerThanFilterRatedVolume)
+TEST(WaterFilterRemainingUsageUpdater, ShouldUpdateWaterFilterRemainingUsageToZeroWhenWaterFilterVolumeUsageIsChangedButBiggerThanFilterRatedVolume)
 {
-   GivenTotalWaterVolumeUsageInOuncesx100ErdIs(SomeTotalVolumeUsageInOuncesx100);
+   GivenWaterFilterVolumeUsageInOuncesX100ErdIs(SomeTotalVolumeUsageInOuncesx100);
    GivenWaterFilterCalendarUsageInSecondsErdIs(SomeCalendarUsageInSeconds);
    GivenWaterFilterRemainingUsageUpdaterIsInitialized();
 
-   WhenTotalWaterVolumeUsageInOuncesx100ErdIs(BiggerVolumeUsageThanFilterRatedVolume);
+   WhenWaterFilterVolumeUsageInOuncesX100ErdIs(BiggerVolumeUsageThanFilterRatedVolume);
    WaterFilterPercentUsageRemainingShouldBe(0);
    WaterFilterDaysUsageRemainingShouldBe(0);
 }
 
 TEST(WaterFilterRemainingUsageUpdater, ShouldUpdateWaterFilterRemainingUsageToZeroWhenCalendarUsageIsChangedButBiggerThanFilterRatedLife)
 {
-   GivenTotalWaterVolumeUsageInOuncesx100ErdIs(SomeTotalVolumeUsageInOuncesx100);
+   GivenWaterFilterVolumeUsageInOuncesX100ErdIs(SomeTotalVolumeUsageInOuncesx100);
    GivenWaterFilterCalendarUsageInSecondsErdIs(SomeCalendarUsageInSeconds);
    GivenWaterFilterRemainingUsageUpdaterIsInitialized();
 

@@ -3676,8 +3676,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Total Water Volume Usage In Ounces x100",
-          "name": "Erd_TotalWaterVolumeUsageInOuncesX100",
+          "displayName": "Water Filter Volume Usage In Ounces x100",
+          "name": "Erd_WaterFilterVolumeUsageInOuncesX100",
           "read": true,
           "write": true,
           "interval": 1000000000
@@ -3692,8 +3692,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Total Water Volume Usage In Ounces x100 Eeprom",
-          "name": "Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100",
+          "displayName": "Water Filter Volume Usage In Ounces x100 Eeprom",
+          "name": "Erd_Eeprom_WaterFilterVolumeUsageInOuncesX100",
           "read": true,
           "write": false,
           "interval": 1000000000
@@ -3762,23 +3762,23 @@
         {
           "namespace": "mb",
           "displayName": "Lifetime Total Water Volume Usage In Ounces x100",
-          "name": "Erd_LifetimeTotalWaterVolumeUsageInOuncesX100",
+          "name": "Erd_UnitLifetimeWaterVolumeUsageInOuncesX100",
           "read": true,
           "write": true,
           "interval": 1000000000
         },
         {
           "namespace": "mb",
-          "displayName": "Total Water Volume Usage In Ounces x100",
-          "name": "Erd_TotalWaterVolumeUsageInOuncesX100",
+          "displayName": "Water Filter Volume Usage In Ounces x100",
+          "name": "Erd_WaterFilterVolumeUsageInOuncesX100",
           "read": true,
           "write": true,
           "interval": 1000000000
         },
         {
           "namespace": "mb",
-          "displayName": "Eeprom Total Water Volume Usage In Ounces x100",
-          "name": "Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100",
+          "displayName": "Eeprom Water Filter Volume Usage In Ounces x100",
+          "name": "Erd_Eeprom_WaterFilterVolumeUsageInOuncesX100",
           "read": true,
           "write": true,
           "interval": 1000000000

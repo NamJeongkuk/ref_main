@@ -30,7 +30,7 @@ static const CommonFilterData_t data = {
 };
 
 static const WaterFilterLifeStatusUpdaterConfig_t config = {
-   .totalWaterVolumeUsageInOuncesX100Erd = Erd_TotalWaterVolumeUsageInOuncesX100,
+   .waterFilterVolumeUsageInOuncesX100Erd = Erd_WaterFilterVolumeUsageInOuncesX100,
    .filterCalendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
    .waterFilterLifeStatusErd = Erd_WaterFilterLifeStatus
 };
@@ -56,14 +56,14 @@ TEST_GROUP(WaterFilterLifeStatusUpdater)
          &data);
    }
 
-   void GivenTotalWaterVolumeUsageInOuncesX100Is(uint32_t ouncesX100)
+   void GivenWaterFilterVolumeUsageInOuncesX100Is(VolumeInOuncesX100_t ouncesX100)
    {
-      DataModel_Write(dataModel, Erd_TotalWaterVolumeUsageInOuncesX100, &ouncesX100);
+      DataModel_Write(dataModel, Erd_WaterFilterVolumeUsageInOuncesX100, &ouncesX100);
    }
 
-   void WhenTotalWaterVolumeUsageInOuncesX100Is(uint32_t ouncesX100)
+   void WhenWaterFilterVolumeUsageInOuncesX100Is(VolumeInOuncesX100_t ouncesX100)
    {
-      GivenTotalWaterVolumeUsageInOuncesX100Is(ouncesX100);
+      GivenWaterFilterVolumeUsageInOuncesX100Is(ouncesX100);
    }
 
    void GivenWaterFilterCalendarUsageInSecondsIs(uint32_t seconds)
@@ -85,18 +85,18 @@ TEST_GROUP(WaterFilterLifeStatusUpdater)
    }
 };
 
-TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToExpiredIfTotalWaterVolumeUsageExceedsParametricLimit)
+TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToExpiredIfWaterFilterVolumeUsageExceedsParametricLimit)
 {
-   GivenTotalWaterVolumeUsageInOuncesX100Is(data.filterRatedVolumeInOuncesX100 + 1);
+   GivenWaterFilterVolumeUsageInOuncesX100Is(data.filterRatedVolumeInOuncesX100 + 1);
    GivenWaterFilterCalendarUsageInSecondsIs(0);
    GivenModuleIsInitialized();
 
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_Expired);
 }
 
-TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToExpiredIfTotalWaterVolumeUsageMeetsParametricLimit)
+TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToExpiredIfWaterFilterVolumeUsageMeetsParametricLimit)
 {
-   GivenTotalWaterVolumeUsageInOuncesX100Is(data.filterRatedVolumeInOuncesX100);
+   GivenWaterFilterVolumeUsageInOuncesX100Is(data.filterRatedVolumeInOuncesX100);
    GivenWaterFilterCalendarUsageInSecondsIs(0);
    GivenModuleIsInitialized();
 
@@ -105,7 +105,7 @@ TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToExpiredIfTota
 
 TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToExpiredIfWaterFilterCalendarUsageExceedsParametricLimit)
 {
-   GivenTotalWaterVolumeUsageInOuncesX100Is(0);
+   GivenWaterFilterVolumeUsageInOuncesX100Is(0);
    GivenWaterFilterCalendarUsageInSecondsIs((data.filterRatedLifeInMinutes * SECONDS_PER_MINUTE) + 1);
    GivenModuleIsInitialized();
 
@@ -114,16 +114,16 @@ TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToExpiredIfWate
 
 TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToExpiredIfWaterFilterCalendarUsageMeetsParametricLimit)
 {
-   GivenTotalWaterVolumeUsageInOuncesX100Is(0);
+   GivenWaterFilterVolumeUsageInOuncesX100Is(0);
    GivenWaterFilterCalendarUsageInSecondsIs((data.filterRatedLifeInMinutes * SECONDS_PER_MINUTE));
    GivenModuleIsInitialized();
 
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_Expired);
 }
 
-TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToReplaceIfTotalWaterVolumeUsageIsBetweenParametricLimitAndNinetyFivePercentOfParametricLimit)
+TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToReplaceIfWaterFilterVolumeUsageIsBetweenParametricLimitAndNinetyFivePercentOfParametricLimit)
 {
-   GivenTotalWaterVolumeUsageInOuncesX100Is((data.filterRatedVolumeInOuncesX100 * ReplacementVolumeUsagePercent) / 100 + 1);
+   GivenWaterFilterVolumeUsageInOuncesX100Is((data.filterRatedVolumeInOuncesX100 * ReplacementVolumeUsagePercent) / 100 + 1);
    GivenWaterFilterCalendarUsageInSecondsIs(0);
    GivenModuleIsInitialized();
 
@@ -132,47 +132,47 @@ TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToReplaceIfTota
 
 TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToReplaceIfWaterFilterCalendarUsageIsBetweenParametricLimitAndNinetyFivePercentOfParametricLimit)
 {
-   GivenTotalWaterVolumeUsageInOuncesX100Is(0);
+   GivenWaterFilterVolumeUsageInOuncesX100Is(0);
    GivenWaterFilterCalendarUsageInSecondsIs((ReplacementCalendarUsagePercent * data.filterRatedLifeInMinutes * SECONDS_PER_MINUTE) / 100 + 1);
    GivenModuleIsInitialized();
 
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_Replace);
 }
 
-TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToNoOrderNecessaryIfBothTotalWaterVolumeUsageAndWaterFilterCalendarUsageAreBelowNinetyFivePercentOfTheirParametricLimits)
+TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToNoOrderNecessaryIfBothWaterFilterVolumeUsageAndWaterFilterCalendarUsageAreBelowNinetyFivePercentOfTheirParametricLimits)
 {
-   GivenTotalWaterVolumeUsageInOuncesX100Is((data.filterRatedVolumeInOuncesX100 * ReplacementVolumeUsagePercent) / 100 - 1);
+   GivenWaterFilterVolumeUsageInOuncesX100Is((data.filterRatedVolumeInOuncesX100 * ReplacementVolumeUsagePercent) / 100 - 1);
    GivenWaterFilterCalendarUsageInSecondsIs((ReplacementCalendarUsagePercent * data.filterRatedLifeInMinutes * SECONDS_PER_MINUTE) / 100 - 1);
    GivenModuleIsInitialized();
 
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_NoOrderNecessary);
 }
 
-TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToExpiredWhenTotalWaterVolumeUsageExceedsParametricLimit)
+TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToExpiredWhenWaterFilterVolumeUsageExceedsParametricLimit)
 {
-   GivenTotalWaterVolumeUsageInOuncesX100Is((data.filterRatedVolumeInOuncesX100 * ReplacementVolumeUsagePercent) / 100 - 1);
+   GivenWaterFilterVolumeUsageInOuncesX100Is((data.filterRatedVolumeInOuncesX100 * ReplacementVolumeUsagePercent) / 100 - 1);
    GivenWaterFilterCalendarUsageInSecondsIs(0);
    GivenModuleIsInitialized();
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_NoOrderNecessary);
 
-   WhenTotalWaterVolumeUsageInOuncesX100Is(data.filterRatedVolumeInOuncesX100 + 1);
+   WhenWaterFilterVolumeUsageInOuncesX100Is(data.filterRatedVolumeInOuncesX100 + 1);
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_Expired);
 }
 
-TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToExpiredWhenTotalWaterVolumeUsageMeetsParametricLimit)
+TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToExpiredWhenWaterFilterVolumeUsageMeetsParametricLimit)
 {
-   GivenTotalWaterVolumeUsageInOuncesX100Is((data.filterRatedVolumeInOuncesX100 * ReplacementVolumeUsagePercent) / 100 - 1);
+   GivenWaterFilterVolumeUsageInOuncesX100Is((data.filterRatedVolumeInOuncesX100 * ReplacementVolumeUsagePercent) / 100 - 1);
    GivenWaterFilterCalendarUsageInSecondsIs(0);
    GivenModuleIsInitialized();
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_NoOrderNecessary);
 
-   WhenTotalWaterVolumeUsageInOuncesX100Is(data.filterRatedVolumeInOuncesX100);
+   WhenWaterFilterVolumeUsageInOuncesX100Is(data.filterRatedVolumeInOuncesX100);
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_Expired);
 }
 
 TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToExpiredWhenWaterFilterCalendarUsageInSecondsExceedsParametricLimit)
 {
-   GivenTotalWaterVolumeUsageInOuncesX100Is(0);
+   GivenWaterFilterVolumeUsageInOuncesX100Is(0);
    GivenWaterFilterCalendarUsageInSecondsIs((ReplacementCalendarUsagePercent * data.filterRatedLifeInMinutes * SECONDS_PER_MINUTE) / 100 - 1);
    GivenModuleIsInitialized();
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_NoOrderNecessary);
@@ -183,7 +183,7 @@ TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToExpiredWhenWa
 
 TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToExpiredWhenWaterFilterCalendarUsageInSecondsMeetsParametricLimit)
 {
-   GivenTotalWaterVolumeUsageInOuncesX100Is(0);
+   GivenWaterFilterVolumeUsageInOuncesX100Is(0);
    GivenWaterFilterCalendarUsageInSecondsIs((ReplacementCalendarUsagePercent * data.filterRatedLifeInMinutes * SECONDS_PER_MINUTE) / 100 - 1);
    GivenModuleIsInitialized();
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_NoOrderNecessary);
@@ -192,20 +192,20 @@ TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToExpiredWhenWa
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_Expired);
 }
 
-TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToReplaceWhenTotalWaterVolumeUsageChangesToBetweenParametricLimitAndNinetyFivePercentOfParametricLimit)
+TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToReplaceWhenWaterFilterVolumeUsageChangesToBetweenParametricLimitAndNinetyFivePercentOfParametricLimit)
 {
-   GivenTotalWaterVolumeUsageInOuncesX100Is((data.filterRatedVolumeInOuncesX100 * ReplacementVolumeUsagePercent) / 100 - 1);
+   GivenWaterFilterVolumeUsageInOuncesX100Is((data.filterRatedVolumeInOuncesX100 * ReplacementVolumeUsagePercent) / 100 - 1);
    GivenWaterFilterCalendarUsageInSecondsIs(0);
    GivenModuleIsInitialized();
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_NoOrderNecessary);
 
-   WhenTotalWaterVolumeUsageInOuncesX100Is((data.filterRatedVolumeInOuncesX100 * ReplacementVolumeUsagePercent) / 100 + 1);
+   WhenWaterFilterVolumeUsageInOuncesX100Is((data.filterRatedVolumeInOuncesX100 * ReplacementVolumeUsagePercent) / 100 + 1);
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_Replace);
 }
 
 TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToReplaceWhenWaterFilterCalendarUsageInSecondsChangesToBetweenParametricLimitAndNinetyFivePercentOfParametricLimit)
 {
-   GivenTotalWaterVolumeUsageInOuncesX100Is(0);
+   GivenWaterFilterVolumeUsageInOuncesX100Is(0);
    GivenWaterFilterCalendarUsageInSecondsIs((ReplacementCalendarUsagePercent * data.filterRatedLifeInMinutes * SECONDS_PER_MINUTE) / 100 - 1);
    GivenModuleIsInitialized();
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_NoOrderNecessary);
@@ -214,20 +214,20 @@ TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToReplaceWhenWa
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_Replace);
 }
 
-TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToNoOrderNecessaryWhenTotalWaterVolumeUsageDecreasesBelowNinetyFivePercentOfParametricLimit)
+TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToNoOrderNecessaryWhenWaterFilterVolumeUsageDecreasesBelowNinetyFivePercentOfParametricLimit)
 {
-   GivenTotalWaterVolumeUsageInOuncesX100Is(data.filterRatedVolumeInOuncesX100 + 1);
+   GivenWaterFilterVolumeUsageInOuncesX100Is(data.filterRatedVolumeInOuncesX100 + 1);
    GivenWaterFilterCalendarUsageInSecondsIs(0);
    GivenModuleIsInitialized();
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_Expired);
 
-   WhenTotalWaterVolumeUsageInOuncesX100Is((data.filterRatedVolumeInOuncesX100 * ReplacementVolumeUsagePercent) / 100 - 1);
+   WhenWaterFilterVolumeUsageInOuncesX100Is((data.filterRatedVolumeInOuncesX100 * ReplacementVolumeUsagePercent) / 100 - 1);
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_NoOrderNecessary);
 }
 
 TEST(WaterFilterLifeStatusUpdater, ShouldSetWaterFilterLifeStatusToNoOrderNecessaryWhenWaterFilterCalendarUsageInSecondsDecreasesBelowNinetyFivePercentOfParametricLimit)
 {
-   GivenTotalWaterVolumeUsageInOuncesX100Is(0);
+   GivenWaterFilterVolumeUsageInOuncesX100Is(0);
    GivenWaterFilterCalendarUsageInSecondsIs(data.filterRatedLifeInMinutes * SECONDS_PER_MINUTE);
    GivenModuleIsInitialized();
    WaterFilterLifeStatusShouldBe(WaterFilterLifeStatus_Expired);

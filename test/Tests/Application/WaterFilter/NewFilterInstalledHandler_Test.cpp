@@ -46,8 +46,8 @@ const NewFilterInstalledHandlerReadErds_t readErdsConfig = {
 
 const NewFilterInstalledHandlerWriteErds_t writeErdsConfig = {
    .rfidFilterUidErd = Erd_RfidFilterUid,
-   .totalWaterVolumeUsageInOuncesX100Erd = Erd_TotalWaterVolumeUsageInOuncesX100,
-   .eepromTotalWaterVolumeUsageInOuncesX100Erd = Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100,
+   .waterFilterVolumeUsageInOuncesX100Erd = Erd_WaterFilterVolumeUsageInOuncesX100,
+   .eepromwaterFilterVolumeUsageInOuncesX100Erd = Erd_Eeprom_WaterFilterVolumeUsageInOuncesX100,
    .rfidFilterCalendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
    .eepromWaterFilterCalendarUsageInSecondsErd = Erd_Eeprom_WaterFilterCalendarUsageInSeconds,
    .rfidFilterLastTwelveMonthsOfWaterUsageInGallonsErd = Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons,
@@ -170,25 +170,25 @@ TEST_GROUP(NewFilterInstalledHandler)
 
    void GivenTheVolumeUsageOnMainboardIs(VolumeInOuncesX100_t volumeUsage)
    {
-      DataModel_Write(dataModel, Erd_TotalWaterVolumeUsageInOuncesX100, &volumeUsage);
+      DataModel_Write(dataModel, Erd_WaterFilterVolumeUsageInOuncesX100, &volumeUsage);
    }
 
    void GivenTheEepromVolumeUsageOnMainboardIs(VolumeInOuncesX100_t volumeUsage)
    {
-      DataModel_Write(dataModel, Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100, &volumeUsage);
+      DataModel_Write(dataModel, Erd_Eeprom_WaterFilterVolumeUsageInOuncesX100, &volumeUsage);
    }
 
    void VolumeUsageOnMainboardShouldBe(VolumeInOuncesX100_t expected)
    {
       VolumeInOuncesX100_t actual;
-      DataModel_Read(dataModel, Erd_TotalWaterVolumeUsageInOuncesX100, &actual);
+      DataModel_Read(dataModel, Erd_WaterFilterVolumeUsageInOuncesX100, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
    void EepromVolumeUsageOnMainboardShouldBe(CalendarUsageInSeconds_t expected)
    {
       VolumeInOuncesX100_t actual;
-      DataModel_Read(dataModel, Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100, &actual);
+      DataModel_Read(dataModel, Erd_Eeprom_WaterFilterVolumeUsageInOuncesX100, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -297,10 +297,10 @@ TEST_GROUP(NewFilterInstalledHandler)
       DataModel_Write(dataModel, Erd_WaterFilterTotalValveOnTimeInSeconds, &valveTimeOn);
    }
 
-   void TotalWaterValveOnTimeShouldBe(uint32_t expected)
+   void WaterFilterValveOnTimeShouldBe(uint32_t expected)
    {
       uint32_t actual;
-      DataModel_Read(dataModel, Erd_LastAluminumMoldIceMakerWaterValveOnTimeInSeconds, &actual);
+      DataModel_Read(dataModel, Erd_WaterFilterTotalValveOnTimeInSeconds, &actual);
       CHECK_EQUAL(expected, actual);
    }
 };
@@ -512,7 +512,7 @@ TEST(NewFilterInstalledHandler, ShouldClearWaterValveOnTimeErdOnRfidUnitWhenANew
    GivenWaterValveOnTimeIs(SomeValveOnTimeInSeconds);
 
    WhenANewRfidFilterIsInstalled();
-   TotalWaterValveOnTimeShouldBe(0);
+   WaterFilterValveOnTimeShouldBe(0);
 }
 
 TEST(NewFilterInstalledHandler, ShouldClearWaterValveOnTimeErdOnNonRfidUnitWhenANewFilterIsInstalled)
@@ -522,5 +522,5 @@ TEST(NewFilterInstalledHandler, ShouldClearWaterValveOnTimeErdOnNonRfidUnitWhenA
    GivenWaterValveOnTimeIs(SomeValveOnTimeInSeconds);
 
    WhenANewFilterIsInstalled();
-   TotalWaterValveOnTimeShouldBe(0);
+   WaterFilterValveOnTimeShouldBe(0);
 }

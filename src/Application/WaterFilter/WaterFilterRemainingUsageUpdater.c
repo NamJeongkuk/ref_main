@@ -14,12 +14,12 @@
 
 static uint8_t CalculatePercentUsageRemaining(
    WaterFilterRemainingUsageUpdater_t *instance,
-   const VolumeInOuncesX100_t totalWaterVolumeUsageInOuncesx100,
+   const VolumeInOuncesX100_t waterFilterVolumeInOuncesX100,
    const CalendarUsageInSeconds_t waterFilterCalendarUsageInSeconds)
 {
    uint8_t volumePercentUsageRemaining = (TRUNCATE_UNSIGNED_SUBTRACTION(
                                              instance->_private.commonFilterData->filterRatedVolumeInOuncesX100,
-                                             totalWaterVolumeUsageInOuncesx100) *
+                                             waterFilterVolumeInOuncesX100) *
                                             100) /
       instance->_private.commonFilterData->filterRatedVolumeInOuncesX100;
 
@@ -41,11 +41,11 @@ static uint16_t CalculateDaysUsageRemaining(
 
 static void UpdateWaterFilterRemainingUsage(WaterFilterRemainingUsageUpdater_t *instance)
 {
-   VolumeInOuncesX100_t currentTotalWaterVolumeUsageInOuncesx100;
+   VolumeInOuncesX100_t currentWaterFilterVolumeUsageInOuncesX100;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->totalWaterVolumeUsageInOuncesx100Erd,
-      &currentTotalWaterVolumeUsageInOuncesx100);
+      instance->_private.config->waterFilterVolumeUsageInOuncesX100Erd,
+      &currentWaterFilterVolumeUsageInOuncesX100);
 
    CalendarUsageInSeconds_t currentWaterFilterCalendarUsageInSeconds;
    DataModel_Read(
@@ -60,7 +60,7 @@ static void UpdateWaterFilterRemainingUsage(WaterFilterRemainingUsageUpdater_t *
       &waterFilterRemainingUsage);
 
    waterFilterRemainingUsage.percentUsageRemaining =
-      CalculatePercentUsageRemaining(instance, currentTotalWaterVolumeUsageInOuncesx100, currentWaterFilterCalendarUsageInSeconds);
+      CalculatePercentUsageRemaining(instance, currentWaterFilterVolumeUsageInOuncesX100, currentWaterFilterCalendarUsageInSeconds);
    waterFilterRemainingUsage.daysUsageRemaining =
       CalculateDaysUsageRemaining(instance, waterFilterRemainingUsage.percentUsageRemaining);
 
@@ -76,7 +76,7 @@ static void DataModelChanged(void *context, const void *_args)
    const DataModelOnDataChangeArgs_t *args = _args;
    Erd_t erd = args->erd;
 
-   if((erd == instance->_private.config->totalWaterVolumeUsageInOuncesx100Erd) ||
+   if((erd == instance->_private.config->waterFilterVolumeUsageInOuncesX100Erd) ||
       (erd == instance->_private.config->waterFilterCalendarUsageInSecondsErd))
    {
       UpdateWaterFilterRemainingUsage(instance);

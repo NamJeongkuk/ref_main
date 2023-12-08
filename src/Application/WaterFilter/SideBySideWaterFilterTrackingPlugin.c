@@ -9,7 +9,7 @@
 #include "SystemErds.h"
 
 static const WaterFilterLifeStatusUpdaterConfig_t waterFilterLifeStatusUpdaterConfig = {
-   .totalWaterVolumeUsageInOuncesX100Erd = Erd_TotalWaterVolumeUsageInOuncesX100,
+   .waterFilterVolumeUsageInOuncesX100Erd = Erd_WaterFilterVolumeUsageInOuncesX100,
    .filterCalendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
    .waterFilterLifeStatusErd = Erd_WaterFilterLifeStatus
 };

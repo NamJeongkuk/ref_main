@@ -23,16 +23,16 @@ enum
    FilterRatedVolumeInOuncesx100 = 50000,
    SomeCalendarUsageSinceExpirationInSeconds = (FilterRatedLifeInMinutes * SECONDS_PER_MINUTE) + 1000,
    IncreasedCalendarUsageSinceExpirationInSeconds = (FilterRatedLifeInMinutes * SECONDS_PER_MINUTE) + 2000,
-   SomeTotalWaterVolumeUsageInOuncesx100 = FilterRatedVolumeInOuncesx100 + 1000,
-   IncreasedTotalWaterVolumeUsageInOuncesx100 = FilterRatedVolumeInOuncesx100 + 2000,
-   NewTotalWaterVolumeUsageInOuncesx100 = 1000
+   SomeWaterFilterVolumeUsageInOuncesx100 = FilterRatedVolumeInOuncesx100 + 1000,
+   IncreasedWaterFilterVolumeUsageInOuncesx100 = FilterRatedVolumeInOuncesx100 + 2000,
+   NewWaterFilterVolumeUsageInOuncesx100 = 1000
 };
 
 static const WaterFilterUsageSinceExpirationUpdaterConfig_t config = {
    .waterFilterLifeStatusErd = Erd_WaterFilterLifeStatus,
    .waterFilterUsageSinceExpirationErd = Erd_WaterFilterUsageSinceExpiration,
    .calendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
-   .totalWaterVolumeUsageInOuncesx100Erd = Erd_TotalWaterVolumeUsageInOuncesX100,
+   .waterFilterVolumeUsageInOuncesX100Erd = Erd_WaterFilterVolumeUsageInOuncesX100,
 };
 
 static const CommonFilterData_t commonFilterData = {
@@ -89,14 +89,14 @@ TEST_GROUP(WaterFilterUsageSinceExpirationUpdater)
       GivenCalendarUsageInSecondsIs(calendarUsageInSeconds);
    }
 
-   void GivenTotalWaterVolumeUsageInOuncesx100Is(VolumeInOuncesX100_t volumeInOuncesx100)
+   void GivenWaterFilterVolumeUsageInOuncesx100Is(VolumeInOuncesX100_t volumeInOuncesx100)
    {
-      DataModel_Write(dataModel, Erd_TotalWaterVolumeUsageInOuncesX100, &volumeInOuncesx100);
+      DataModel_Write(dataModel, Erd_WaterFilterVolumeUsageInOuncesX100, &volumeInOuncesx100);
    }
 
-   void WhenTotalWaterVolumeUsageInOuncesx100Is(VolumeInOuncesX100_t volumeInOuncesx100)
+   void WhenWaterFilterVolumeUsageInOuncesx100Is(VolumeInOuncesX100_t volumeInOuncesx100)
    {
-      GivenTotalWaterVolumeUsageInOuncesx100Is(volumeInOuncesx100);
+      GivenWaterFilterVolumeUsageInOuncesx100Is(volumeInOuncesx100);
    }
 
    void TheDaysSinceFilterExpiredShouldBe(uint16_t expectedDaysSinceFilterExpired)
@@ -155,7 +155,7 @@ TEST(WaterFilterUsageSinceExpirationUpdater, ShouldResetWaterFilterUsageSinceExp
 {
    GivenWaterFilterLifeStatusIs(WaterFilterLifeStatus_NoOrderNecessary);
    GivenCalendarUsageInSecondsIs(SomeCalendarUsageSinceExpirationInSeconds);
-   GivenTotalWaterVolumeUsageInOuncesx100Is(SomeTotalWaterVolumeUsageInOuncesx100);
+   GivenWaterFilterVolumeUsageInOuncesx100Is(SomeWaterFilterVolumeUsageInOuncesx100);
    GivenWaterFilterUsageSinceExpirationUpdaterIsInitialized();
 
    WhenWaterFilterLifeStatusIs(WaterFilterLifeStatus_Replace);
@@ -166,22 +166,22 @@ TEST(WaterFilterUsageSinceExpirationUpdater, ShouldResetWaterFilterUsageSinceExp
 {
    GivenWaterFilterLifeStatusIs(WaterFilterLifeStatus_Expired);
    GivenCalendarUsageInSecondsIs(SomeCalendarUsageSinceExpirationInSeconds);
-   GivenTotalWaterVolumeUsageInOuncesx100Is(SomeTotalWaterVolumeUsageInOuncesx100);
+   GivenWaterFilterVolumeUsageInOuncesx100Is(SomeWaterFilterVolumeUsageInOuncesx100);
    GivenWaterFilterUsageSinceExpirationUpdaterIsInitialized();
 
    WhenWaterFilterLifeStatusIs(WaterFilterLifeStatus_NoOrderNecessary);
    WaterFilterUsageSinceExpirationShouldBeReset();
 }
 
-TEST(WaterFilterUsageSinceExpirationUpdater, ShouldResetWaterFilterUsageSinceExpirationWhenWaterFilterLifeStatusIsChangedFromExpiredToNoOrderNecessaryAfterTotalWaterVolumeUsageOrCalendarUsageIsChangedToZero)
+TEST(WaterFilterUsageSinceExpirationUpdater, ShouldResetWaterFilterUsageSinceExpirationWhenWaterFilterLifeStatusIsChangedFromExpiredToNoOrderNecessaryAfterWaterFilterVolumeUsageOrCalendarUsageIsChangedToZero)
 {
    GivenWaterFilterLifeStatusIs(WaterFilterLifeStatus_Expired);
    GivenCalendarUsageInSecondsIs(SomeCalendarUsageSinceExpirationInSeconds);
-   GivenTotalWaterVolumeUsageInOuncesx100Is(SomeTotalWaterVolumeUsageInOuncesx100);
+   GivenWaterFilterVolumeUsageInOuncesx100Is(SomeWaterFilterVolumeUsageInOuncesx100);
    GivenDispensesSinceFilterExpiredIs(10);
    GivenWaterFilterUsageSinceExpirationUpdaterIsInitialized();
 
-   WhenTotalWaterVolumeUsageInOuncesx100Is(0);
+   WhenWaterFilterVolumeUsageInOuncesx100Is(0);
    TheDispensesSinceFilterExpiredShouldBe(11);
 
    WhenCalendarUsageInSecondsIs(0);
@@ -191,26 +191,26 @@ TEST(WaterFilterUsageSinceExpirationUpdater, ShouldResetWaterFilterUsageSinceExp
    WaterFilterUsageSinceExpirationShouldBeReset();
 }
 
-TEST(WaterFilterUsageSinceExpirationUpdater, ShouldIncreaseDispensesSinceFilterExpiredWhenTotalWaterVolumeUsageIsChangedWhileWaterFilterLifeStatusIsExpired)
+TEST(WaterFilterUsageSinceExpirationUpdater, ShouldIncreaseDispensesSinceFilterExpiredWhenWaterFilterVolumeUsageIsChangedWhileWaterFilterLifeStatusIsExpired)
 {
    GivenWaterFilterLifeStatusIs(WaterFilterLifeStatus_Expired);
-   GivenTotalWaterVolumeUsageInOuncesx100Is(SomeTotalWaterVolumeUsageInOuncesx100);
+   GivenWaterFilterVolumeUsageInOuncesx100Is(SomeWaterFilterVolumeUsageInOuncesx100);
    GivenDispensesSinceFilterExpiredIs(10);
    GivenWaterFilterUsageSinceExpirationUpdaterIsInitialized();
 
-   WhenTotalWaterVolumeUsageInOuncesx100Is(IncreasedTotalWaterVolumeUsageInOuncesx100);
+   WhenWaterFilterVolumeUsageInOuncesx100Is(IncreasedWaterFilterVolumeUsageInOuncesx100);
    TheDispensesSinceFilterExpiredShouldBe(11);
 }
 
-TEST(WaterFilterUsageSinceExpirationUpdater, ShouldNotIncreaseDispensesSinceFilterExpiredWhenTotalWaterVolumeUsageIsChangedWhileWaterFilterUsageSinceExpirationHasBeenReset)
+TEST(WaterFilterUsageSinceExpirationUpdater, ShouldNotIncreaseDispensesSinceFilterExpiredWhenWaterFilterVolumeUsageIsChangedWhileWaterFilterUsageSinceExpirationHasBeenReset)
 {
    GivenWaterFilterLifeStatusIs(WaterFilterLifeStatus_Expired);
    GivenCalendarUsageInSecondsIs(SomeCalendarUsageSinceExpirationInSeconds);
-   GivenTotalWaterVolumeUsageInOuncesx100Is(SomeTotalWaterVolumeUsageInOuncesx100);
+   GivenWaterFilterVolumeUsageInOuncesx100Is(SomeWaterFilterVolumeUsageInOuncesx100);
    GivenWaterFilterUsageSinceExpirationUpdaterIsInitialized();
    GivenWaterFilterLifeStatusIs(WaterFilterLifeStatus_NoOrderNecessary);
    TheDispensesSinceFilterExpiredShouldBe(0);
 
-   WhenTotalWaterVolumeUsageInOuncesx100Is(NewTotalWaterVolumeUsageInOuncesx100);
+   WhenWaterFilterVolumeUsageInOuncesx100Is(NewWaterFilterVolumeUsageInOuncesx100);
    TheDispensesSinceFilterExpiredShouldBe(0);
 }

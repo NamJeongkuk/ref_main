@@ -27,7 +27,7 @@ static const RfidCommunicatorRfidReadErds_t rfidReadErds = {
 
 static const RfidCommunicatorRfidWriteErds_t rfidWriteErds = {
    .uid = PublicErd_RfidFilterUid,
-   .volumeWaterUsageInOuncesX100 = PublicErd_Eeprom_TotalWaterVolumeUsageInOuncesX100,
+   .volumeWaterUsageInOuncesX100 = PublicErd_Eeprom_WaterFilterVolumeUsageInOuncesX100,
    .calendarUsageInSeconds = PublicErd_Eeprom_WaterFilterCalendarUsageInSeconds,
    .filterStatus = PublicErd_RfidFilterStatus,
    .lockByte = PublicErd_RfidFilterLockByte,

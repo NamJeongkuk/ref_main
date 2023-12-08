@@ -32,11 +32,11 @@ static void WriteToVolumeUsageErds(NewFilterInstalledHandler_t *instance, Volume
 {
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->writeErds->totalWaterVolumeUsageInOuncesX100Erd,
+      instance->_private.config->writeErds->waterFilterVolumeUsageInOuncesX100Erd,
       &volumeUsageInOuncesX100);
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->writeErds->eepromTotalWaterVolumeUsageInOuncesX100Erd,
+      instance->_private.config->writeErds->eepromwaterFilterVolumeUsageInOuncesX100Erd,
       &volumeUsageInOuncesX100);
 }
 

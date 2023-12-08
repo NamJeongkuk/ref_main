@@ -10,7 +10,7 @@
 
 static const WaterFilterCalendarUsageUpdaterConfig_t waterFilterCalendarUsageUpdaterConfig = {
    .waterFilterCalendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
-   .lifetimeTotalWaterUsageInOuncesX100Erd = Erd_LifetimeTotalWaterVolumeUsageInOuncesX100,
+   .lifetimeTotalWaterUsageInOuncesX100Erd = Erd_UnitLifetimeWaterVolumeUsageInOuncesX100,
    .serviceDiagnosticsRunTimeInMinutesErd = Erd_ServiceDiagnosticsRunTimeInMinutes
 };
 
@@ -49,8 +49,8 @@ static const NewFilterInstalledHandlerReadErds_t newFilterInstalledHandlerReadEr
 
 static const NewFilterInstalledHandlerWriteErds_t newFilterInstalledHandlerWriteErdsConfig = {
    .rfidFilterUidErd = Erd_RfidFilterUid,
-   .totalWaterVolumeUsageInOuncesX100Erd = Erd_TotalWaterVolumeUsageInOuncesX100,
-   .eepromTotalWaterVolumeUsageInOuncesX100Erd = Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100,
+   .waterFilterVolumeUsageInOuncesX100Erd = Erd_WaterFilterVolumeUsageInOuncesX100,
+   .eepromwaterFilterVolumeUsageInOuncesX100Erd = Erd_Eeprom_WaterFilterVolumeUsageInOuncesX100,
    .rfidFilterCalendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
    .eepromWaterFilterCalendarUsageInSecondsErd = Erd_Eeprom_WaterFilterCalendarUsageInSeconds,
    .rfidFilterLastTwelveMonthsOfWaterUsageInGallonsErd = Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons,
@@ -85,12 +85,12 @@ static const ErdList_t waterVolumeUsageInOuncesX100ErdList = {
 
 static const ErdAccumulatorServiceConfig_t waterFilterValveAccumulatorConfig = {
    .inputErdList = waterVolumeUsageInOuncesX100ErdList,
-   .cumulativeValueErd = Erd_TotalWaterVolumeUsageInOuncesX100
+   .cumulativeValueErd = Erd_WaterFilterVolumeUsageInOuncesX100
 };
 
 static const ErdAccumulatorServiceConfig_t unitLifetimeWaterValveAccumulatorConfig = {
    .inputErdList = waterVolumeUsageInOuncesX100ErdList,
-   .cumulativeValueErd = Erd_LifetimeTotalWaterVolumeUsageInOuncesX100
+   .cumulativeValueErd = Erd_UnitLifetimeWaterVolumeUsageInOuncesX100
 };
 
 static const Erd_t unitLifetimeDispensedWaterVolumeUsageInOuncesX100Erds[] = {
@@ -133,7 +133,7 @@ static const WaterFilterStateResolverConfig_t waterFilterStateResolverConfig = {
 };
 
 static const WaterFilterRemainingUsageUpdaterConfig_t waterFilterRemainingUsageUpdaterConfig = {
-   .totalWaterVolumeUsageInOuncesx100Erd = Erd_TotalWaterVolumeUsageInOuncesX100,
+   .waterFilterVolumeUsageInOuncesX100Erd = Erd_WaterFilterVolumeUsageInOuncesX100,
    .waterFilterCalendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
    .waterFilterRemainingUsageErd = Erd_WaterFilterRemainingUsage
 };
@@ -142,7 +142,7 @@ static const WaterFilterUsageSinceExpirationUpdaterConfig_t waterFilterUsageSinc
    .waterFilterLifeStatusErd = Erd_WaterFilterLifeStatus,
    .waterFilterUsageSinceExpirationErd = Erd_WaterFilterUsageSinceExpiration,
    .calendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
-   .totalWaterVolumeUsageInOuncesx100Erd = Erd_TotalWaterVolumeUsageInOuncesX100
+   .waterFilterVolumeUsageInOuncesX100Erd = Erd_WaterFilterVolumeUsageInOuncesX100
 };
 
 void WaterFilterPlugin_Init(

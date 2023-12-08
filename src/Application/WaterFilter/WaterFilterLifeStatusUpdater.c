@@ -18,11 +18,11 @@ static void UpdateWaterFilterLifeStatus(WaterFilterLifeStatusUpdater_t *instance
 {
    WaterFilterLifeStatus_t status = WaterFilterLifeStatus_NoOrderNecessary;
 
-   uint32_t totalWaterVolumeUsageInOunces;
+   uint32_t waterFilterVolumeUsageInOunces;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->totalWaterVolumeUsageInOuncesX100Erd,
-      &totalWaterVolumeUsageInOunces);
+      instance->_private.config->waterFilterVolumeUsageInOuncesX100Erd,
+      &waterFilterVolumeUsageInOunces);
 
    CalendarUsageInSeconds_t waterFilterCalendarUsageInSeconds;
    DataModel_Read(
@@ -30,12 +30,12 @@ static void UpdateWaterFilterLifeStatus(WaterFilterLifeStatusUpdater_t *instance
       instance->_private.config->filterCalendarUsageInSecondsErd,
       &waterFilterCalendarUsageInSeconds);
 
-   if((totalWaterVolumeUsageInOunces >= instance->_private.data->filterRatedVolumeInOuncesX100) ||
+   if((waterFilterVolumeUsageInOunces >= instance->_private.data->filterRatedVolumeInOuncesX100) ||
       (waterFilterCalendarUsageInSeconds >= (instance->_private.data->filterRatedLifeInMinutes * SECONDS_PER_MINUTE)))
    {
       status = WaterFilterLifeStatus_Expired;
    }
-   else if(totalWaterVolumeUsageInOunces > ((ReplacementVolumeUsagePercent * instance->_private.data->filterRatedVolumeInOuncesX100) / 100) ||
+   else if(waterFilterVolumeUsageInOunces > ((ReplacementVolumeUsagePercent * instance->_private.data->filterRatedVolumeInOuncesX100) / 100) ||
       waterFilterCalendarUsageInSeconds > (((ReplacementCalendarUsagePercent * instance->_private.data->filterRatedLifeInMinutes * SECONDS_PER_MINUTE) / 100)))
    {
       status = WaterFilterLifeStatus_Replace;
@@ -53,7 +53,7 @@ static void DataModelChanged(void *context, const void *args)
    const DataModelOnDataChangeArgs_t *onChangeData = args;
    Erd_t erd = onChangeData->erd;
 
-   if(erd == instance->_private.config->totalWaterVolumeUsageInOuncesX100Erd ||
+   if(erd == instance->_private.config->waterFilterVolumeUsageInOuncesX100Erd ||
       erd == instance->_private.config->filterCalendarUsageInSecondsErd)
    {
       UpdateWaterFilterLifeStatus(instance);

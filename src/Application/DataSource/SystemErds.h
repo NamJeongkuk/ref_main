@@ -909,10 +909,10 @@ enum
    ENTRY(Erd_AutofillSensorError,                           0xF168, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispensingDisabled,                            0xF169, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    \
-   ENTRY(Erd_TotalWaterVolumeUsageInOuncesX100,             0xF170, VolumeInOuncesX100_t,                               Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
+   ENTRY(Erd_WaterFilterVolumeUsageInOuncesX100,            0xF170, VolumeInOuncesX100_t,                               Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_WaterFilterCalendarUsageInSeconds,             0xF171, CalendarUsageInSeconds_t,                           Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_WaterFilterLifeStatus,                         0xF172, WaterFilterLifeStatus_t,                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_LifetimeTotalWaterVolumeUsageInOuncesX100,     0xF173, VolumeInOuncesX100_t,                               Swap_Yes, Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_UnitLifetimeWaterVolumeUsageInOuncesX100,      0xF173, VolumeInOuncesX100_t,                               Swap_Yes, Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_LastAluminumMoldIceMakerWaterVolumeUsageInOuncesX100, 0xF174, VolumeInOuncesX100_t,                        Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_LastTwistTrayIceMakerWaterVolumeUsageInOuncesX100,    0xF175, VolumeInOuncesX100_t,                        Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_LastDispensedWaterVolumeUsageInOuncesX100,     0xF176, VolumeInOuncesX100_t,                               Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -1507,7 +1507,7 @@ enum
    ENTRY(Erd_Eeprom_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds,   0xFB11, uint32_t,                 Swap_Range_E, Io_None, Sub_N, NvUnitSetting,      NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_TurboCoolOnTimeInMinutes,               0xFB12, uint16_t,                                           Swap_Yes, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_TurboFreezeOnTimeInMinutes,             0xFB13, uint16_t,                                           Swap_Yes, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_Eeprom_TotalWaterVolumeUsageInOuncesX100,      0xFB14, VolumeInOuncesX100_t,                               Swap_Yes, Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_WaterFilterVolumeUsageInOuncesX100,     0xFB14, VolumeInOuncesX100_t,                               Swap_Yes, Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_WaterFilterCalendarUsageInSeconds,      0xFB15, CalendarUsageInSeconds_t,                           Swap_Yes, Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_UnitLifetimeDispensedWaterInOuncesX100, 0xFB16, VolumeInOuncesX100_t,                               Swap_Yes, Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_SabbathWaitingForDefrostTimeInMinutes,  0xFB17, uint16_t,                                           Swap_Yes, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
