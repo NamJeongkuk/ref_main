@@ -225,12 +225,25 @@ static void CreateFactoryNode(
       instance->_private.factory.buffers.packetQueueStorage,
       sizeof(instance->_private.factory.buffers.packetQueueStorage));
 
-   Gea2Configurator_AddDynamicRoutingTableWithReplacementToNode(
-      &instance->_private.configurator,
-      &instance->_private.factory.node,
-      &instance->_private.factory.dynamicRoutingResources,
-      instance->_private.factory.dynamicRoutingTable,
-      ELEMENT_COUNT(instance->_private.factory.dynamicRoutingTable));
+   bool useFullRoutingTable;
+   DataModel_Read(dataModel, Erd_FullRoutingTableFactoryOverride, &useFullRoutingTable);
+
+   if(useFullRoutingTable)
+   {
+      Gea2Configurator_AddFullRoutingTableToNode(
+         &instance->_private.configurator,
+         &instance->_private.factory.node,
+         &instance->_private.factory.resources.fullRoutingResources);
+   }
+   else
+   {
+      Gea2Configurator_AddDynamicRoutingTableWithReplacementToNode(
+         &instance->_private.configurator,
+         &instance->_private.factory.node,
+         &instance->_private.factory.resources.dynamicRoutingResources,
+         instance->_private.factory.dynamicRoutingTable,
+         ELEMENT_COUNT(instance->_private.factory.dynamicRoutingTable));
+   }
 }
 
 static void CreateDoorNode(
