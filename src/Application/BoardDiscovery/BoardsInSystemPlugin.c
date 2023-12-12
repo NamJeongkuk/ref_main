@@ -67,4 +67,8 @@ void BoardsInSystemPlugin_Init(
       &boardsInSystemConfig,
       buffer,
       NUM_ELEMENTS(buffer));
+
+   AndroidSignOfLifeMonitor_Init(
+      &instance->_private.androidMonitor,
+      dataModel);
 }

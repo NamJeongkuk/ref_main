@@ -1486,6 +1486,7 @@ enum
    ENTRY(Erd_CondenserFanCannotReachTargetRpmFault,                 0xF73E, bool,                                       Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_CondenserEvapFanCannotReachTargetRpm) \
    ENTRY(Erd_FreshFoodTemperatureExceededFault,             0xF73F, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_FreshFoodTemperatureExceeded) \
    ENTRY(Erd_FreezerTemperatureExceededFault,               0xF740, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_FreezerTemperatureExceeded) \
+   ENTRY(Erd_AndroidSignOfLifeDebugFault,                   0xF741, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_AndroidSbcSignOfLifeFault) \
    \
    ENTRY(Erd_FactoryModeEnableRequestInMinutes,             0xF801, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
@@ -1523,7 +1524,7 @@ enum
    ENTRY(Erd_RfidBoardInSystem,                             0xFB86, bool,                                               Swap_No,  Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_DoorBoardInSystem,                             0xFB87, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_EmbeddedWifiInSystem,                          0xFB88, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
-   ENTRY(Erd_AndroidSbcBoardInSystem,                       0xFB89, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
+   ENTRY(Erd_AndroidSbcBoardInSystem,                       0xFB89, bool,                                               Swap_No,  Io_None, Sub_Y, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_InternalTemperatureUiInSystem,                 0xFB8A, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse, NotFault) \
    ENTRY(Erd_BroadcastResetRequestSignal,                   0xFB8B, Signal_t,                                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_DispenserUiReportedFeatures,                   0xFB8C, BoardFeatureApi_t,                                  Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \

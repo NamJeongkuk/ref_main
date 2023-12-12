@@ -9,12 +9,14 @@
 #define BOARDSINSYSTEMPLUGIN_H
 
 #include "BoardsInSystem.h"
+#include "AndroidSignOfLifeMonitor.h"
 
 typedef struct
 {
    struct
    {
       BoardsInSystem_t boardsInSystem;
+      AndroidSignOfLifeMonitor_t androidMonitor;
    } _private;
 } BoardsInSystemPlugin_t;
 
