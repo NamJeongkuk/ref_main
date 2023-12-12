@@ -1744,6 +1744,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "F200 Freezer Defrost Heater On For Max Time",
+          "name": "Erd_FreezerDefrostHeaterOnForMaxTimeFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
           "displayName": "F300 Excessive Compressor Run Time",
           "name": "Erd_ExcessiveCompressorRunTimeFault",
           "read": true,

@@ -1066,11 +1066,15 @@ static bool State_HeaterOn(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_FreezerHeaterMaxOnTimeReached:
-         if(!FreezerEvaporatorThermistorIsValid(instance))
+         if(FreezerEvaporatorThermistorIsValid(instance))
          {
-            SetInvalidFreezerEvaporatorThermistorDuringDefrostTo(instance, true);
             SetFreezerDefrostHeaterOnForMaxTimeFaultTo(instance, true);
          }
+         else
+         {
+            SetInvalidFreezerEvaporatorThermistorDuringDefrostTo(instance, true);
+         }
+
          Hsm_Transition(hsm, State_Dwell);
          break;
 
