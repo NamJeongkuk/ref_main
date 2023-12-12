@@ -78,7 +78,8 @@ static const TwistTrayIceMakerConfiguration_t config = {
    .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
    .leftSideFreezerDoorStatusResolvedErd = Erd_LeftSideFreezerDoorStatusResolved,
-   .dispensingInhibitedErd = Erd_DispensingInhibitedReason
+   .dispensingInhibitedErd = Erd_DispensingInhibitedReason,
+   .iceMakerFullStatusErd = Erd_IceMaker0FullStatus
 };
 
 static void OnDataModelChange(void *context, const void *_args)
@@ -804,6 +805,14 @@ TEST_GROUP(TwistTrayIceMaker)
    void GivenDispensingIsNotInhibitedByRfid()
    {
       WhenDispensingIsNotInhibitedByRfid();
+   }
+
+   void IceMakerFullStatusShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_IceMaker0FullStatus, &actual);
+
+      CHECK_EQUAL(expected, actual);
    }
 };
 
@@ -1597,6 +1606,52 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFreezeWhenSabbathModeBecomesOnWhileBuc
    WhenSabbathModeIs(ON);
 
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+}
+
+TEST(TwistTrayIceMaker, ShouldSetIceMakerFullStatusWhenMotorActionResultIsBucketWasFullWhileInHarvesting)
+{
+   GivenTheOperationStateIsInHarvesting();
+   IceMakerFullStatusShouldBe(CLEAR);
+
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   TheMotorShouldBeRequestedTo(Idle);
+   WhenTheMotorActionResultIs(BucketWasFull);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_BucketIsFull);
+   IceMakerFullStatusShouldBe(SET);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotClearIceMakerFullStatusWhenTransitioningToFreezeWithSabbathModeOnWhileBucketIsFull)
+{
+   GivenTheOperationStateIsInBucketIsFull();
+   IceMakerFullStatusShouldBe(SET);
+
+   WhenSabbathModeIs(ON);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+   IceMakerFullStatusShouldBe(SET);
+}
+
+TEST(TwistTrayIceMaker, ShouldNotClearIceMakerFullStatusWhenTransitioningToFreezeWithFullBucketToFreezeStateTemperatureChangeWhileBucketIsFull)
+{
+   GivenTheOperationStateIsInBucketIsFull();
+   IceMakerFullStatusShouldBe(SET);
+
+   FreezerTriggerIceRateSignalShouldIncrement();
+   WhenTheTemperatureIs((iceMakerData->harvestData.fullBucketToFreezeStateTemperatureInDegFx100) + 1);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
+   IceMakerFullStatusShouldBe(SET);
+}
+
+TEST(TwistTrayIceMaker, ShouldClearIceMakerFullStatusWhenMotorActionIsSuccessfullyHarvestedWhileIceMakerFullStatusIsSet)
+{
+   GivenTheOperationStateIsInBucketIsFull();
+   IceMakerFullStatusShouldBe(SET);
+
+   HarvestingShouldStart();
+   After(iceMakerData->harvestData.fullBucketWaitPeriodMinutes * MSEC_PER_MIN);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
+
+   WhenTheMotorActionResultIs(Harvested);
+   IceMakerFullStatusShouldBe(CLEAR);
 }
 
 // MOTOR ERRORS

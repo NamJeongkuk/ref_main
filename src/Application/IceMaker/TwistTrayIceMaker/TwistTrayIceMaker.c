@@ -321,6 +321,14 @@ static bool ThermistorTemperatureIsGreaterThanFullToFreezeThreshold(TwistTrayIce
    return (thermistorTemperatureInDegFx100 > instance->_private.parametric->harvestData.fullBucketToFreezeStateTemperatureInDegFx100);
 }
 
+static void UpdateIceMakerFullStatus(TwistTrayIceMaker_t *instance, bool fullStatus)
+{
+   DataSource_Write(
+      instance->_private.dataSource,
+      instance->_private.config->iceMakerFullStatusErd,
+      &fullStatus);
+}
+
 static void State_Homing(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
    TwistTrayIceMaker_t *instance = InstanceFrom(fsm);
@@ -476,6 +484,7 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          break;
 
       case Signal_MotorActionResultHarvested:
+         UpdateIceMakerFullStatus(instance, CLEAR);
          if(FillTubeHeaterTimerHasExpired(instance))
          {
             if(!IceMakerThermistorIsValid(instance))
@@ -609,6 +618,7 @@ static void State_BucketIsFull(Fsm_t *fsm, FsmSignal_t signal, const void *data)
    {
       case Fsm_Entry:
          UpdateOperationState(instance, TwistTrayIceMakerOperationState_BucketIsFull);
+         UpdateIceMakerFullStatus(instance, SET);
 
          TimerModule_StartOneShot(
             instance->_private.timerModule,

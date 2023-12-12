@@ -170,7 +170,8 @@ static const TwistTrayIceMakerConfiguration_t twistTrayIceMakerConfiguration = {
    .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
    .leftSideFreezerDoorStatusResolvedErd = Erd_LeftSideFreezerDoorStatusResolved,
-   .dispensingInhibitedErd = Erd_DispensingInhibitedReason
+   .dispensingInhibitedErd = Erd_DispensingInhibitedReason,
+   .iceMakerFullStatusErd = Erd_IceMaker0FullStatus
 };
 
 void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
