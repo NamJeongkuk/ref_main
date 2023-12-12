@@ -8,9 +8,6 @@ on:
 
   pull_request:
 
-  issue_comment:
-    types: [created, edited, deleted]
-
 jobs:
   setup:
     uses: geappliances/skynet.workflow/.github/workflows/setup-workflow.yml@v1
