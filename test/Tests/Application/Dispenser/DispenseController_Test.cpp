@@ -31,7 +31,8 @@ static const DispenseControllerConfig_t config = {
    .isolationValveDispensingVoteErd = Erd_IsolationWaterValve_DispensingVote,
    .dispensingValveDispensingVoteErd = Erd_DispenserWaterValve_DispensingVote,
    .timerModuleErd = Erd_TimerModule,
-   .dispensingRequestStatusErd = Erd_DispensingRequestStatus
+   .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
+   .iceWaterStopsDispensingBasedOnTimeFaultErd = Erd_IceWaterStopsDispensingBasedOnTimeFault
 };
 
 static const DispenseControllerConfig_t configWithInvalidAutofillSensorErd = {
@@ -44,7 +45,8 @@ static const DispenseControllerConfig_t configWithInvalidAutofillSensorErd = {
    .isolationValveDispensingVoteErd = Erd_IsolationWaterValve_DispensingVote,
    .dispensingValveDispensingVoteErd = Erd_DispenserWaterValve_DispensingVote,
    .timerModuleErd = Erd_TimerModule,
-   .dispensingRequestStatusErd = Erd_DispensingRequestStatus
+   .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
+   .iceWaterStopsDispensingBasedOnTimeFaultErd = Erd_IceWaterStopsDispensingBasedOnTimeFault
 };
 
 TEST_GROUP(DispenseController)
@@ -326,43 +328,63 @@ TEST_GROUP(DispenseController)
       GivenTheModuleIsInitialized();
       TheDispenseStatusShouldBe(DispenseStatus_CompletedSuccessfully);
    }
+
+   void TheIceWaterStopsDispensingBasedOnTimeFaultShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_IceWaterStopsDispensingBasedOnTimeFault, &actual);
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void GivenTheIceWaterStopsDispensingBasedOnTimeFaultIs(bool state)
+   {
+      DataModel_Write(dataModel, Erd_IceWaterStopsDispensingBasedOnTimeFault, &state);
+   }
 };
 
-TEST(DispenseController, ShouldSetDispensingStatusToDispensingAndVoteIsolationValveOnAndDispensingValveOnUponEnteringDispensingStateIfRequestIsWater)
+TEST(DispenseController, ShouldSetDispensingStatusToDispensingAndVoteIsolationValveOnAndDispensingValveOnAndClearIceWaterStopsDispensingBasedOnTimeFaultUponEnteringDispensingStateIfRequestIsWater)
 {
+   GivenTheIceWaterStopsDispensingBasedOnTimeFaultIs(true);
    GivenTheFsmIsInitializedAndInDispensingStateWithSelection(DispensingRequestSelection_Water);
 
    TheDispensingValveDispensingVoteShouldBe(WaterValveState_On, Vote_Care);
    TheIsolationValveDispensingVoteShouldBe(WaterValveState_On, Vote_Care);
    TheAugerMotorDispensingVoteShouldBe(AugerMotorIceType_Off, Vote_DontCare);
    TheDispensingRequestStatusShouldBe(DispenseStatus_Dispensing);
+   TheIceWaterStopsDispensingBasedOnTimeFaultShouldBe(false);
 }
 
-TEST(DispenseController, ShouldVoteIsolationValveOnAndDispensingValveOnUponEnteringDispensingStateIfRequestIsAutofill)
+TEST(DispenseController, ShouldVoteIsolationValveOnAndDispensingValveOnAndClearIceWaterStopsDispensingBasedOnTimeFaultUponEnteringDispensingStateIfRequestIsAutofill)
 {
+   GivenTheIceWaterStopsDispensingBasedOnTimeFaultIs(true);
    GivenTheFsmIsInitializedAndInDispensingStateWithSelection(DispensingRequestSelection_Autofill);
 
    TheDispensingValveDispensingVoteShouldBe(WaterValveState_On, Vote_Care);
    TheIsolationValveDispensingVoteShouldBe(WaterValveState_On, Vote_Care);
    TheAugerMotorDispensingVoteShouldBe(AugerMotorIceType_Off, Vote_DontCare);
+   TheIceWaterStopsDispensingBasedOnTimeFaultShouldBe(false);
 }
 
-TEST(DispenseController, ShouldVoteAugerMotorCubedUponEnteringDispensingStateIfRequestIsCubedIce)
+TEST(DispenseController, ShouldVoteAugerMotorCubedAndClearIceWaterStopsDispensingBasedOnTimeFaultUponEnteringDispensingStateIfRequestIsCubedIce)
 {
+   GivenTheIceWaterStopsDispensingBasedOnTimeFaultIs(true);
    GivenTheFsmIsInitializedAndInDispensingStateWithSelection(DispensingRequestSelection_CubedIce);
 
    TheAugerMotorDispensingVoteShouldBe(AugerMotorIceType_Cubed, Vote_Care);
    TheDispensingValveDispensingVoteShouldBe(WaterValveState_Off, Vote_DontCare);
    TheIsolationValveDispensingVoteShouldBe(WaterValveState_Off, Vote_DontCare);
+   TheIceWaterStopsDispensingBasedOnTimeFaultShouldBe(false);
 }
 
-TEST(DispenseController, ShouldVoteAugerMotorCrushedUponEnteringDispensingStateIfRequestIsCrushedIce)
+TEST(DispenseController, ShouldVoteAugerMotorCrushedAndClearIceWaterStopsDispensingBasedOnTimeFaultUponEnteringDispensingStateIfRequestIsCrushedIce)
 {
+   GivenTheIceWaterStopsDispensingBasedOnTimeFaultIs(true);
    GivenTheFsmIsInitializedAndInDispensingStateWithSelection(DispensingRequestSelection_CrushedIce);
 
    TheAugerMotorDispensingVoteShouldBe(AugerMotorIceType_Crushed, Vote_Care);
    TheDispensingValveDispensingVoteShouldBe(WaterValveState_Off, Vote_DontCare);
    TheIsolationValveDispensingVoteShouldBe(WaterValveState_Off, Vote_DontCare);
+   TheIceWaterStopsDispensingBasedOnTimeFaultShouldBe(false);
 }
 
 TEST(DispenseController, ShouldStopMaxTimerWhenDispensingRequestActionIsStop)
@@ -376,7 +398,7 @@ TEST(DispenseController, ShouldStopMaxTimerWhenDispensingRequestActionIsStop)
    TheMaxDispenseTimerShouldNotRun();
 }
 
-TEST(DispenseController, ShouldSetStatusToHitMaxTimeWhenTimerExpires)
+TEST(DispenseController, ShouldSetStatusToHitMaxTimeAndIceWaterStopsDispensingBasedOnTimeFaultWhenTimerExpires)
 {
    GivenTheFsmIsInitializedAndInDispensingStateWithSelection(DispensingRequestSelection_Water);
 
@@ -386,6 +408,7 @@ TEST(DispenseController, ShouldSetStatusToHitMaxTimeWhenTimerExpires)
    After(1);
    TheDispenseStatusShouldBe(DispenseStatus_HitMaxTime);
    TheMaxDispenseTimerShouldNotRun();
+   TheIceWaterStopsDispensingBasedOnTimeFaultShouldBe(true);
 }
 
 TEST(DispenseController, ShouldSetStatusToDisabledOrBlockedWhenInDispensingStateAndDispensingIsDisabled)

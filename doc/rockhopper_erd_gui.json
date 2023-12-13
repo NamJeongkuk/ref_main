@@ -1765,6 +1765,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "F401 Ice/Water Stops Dispensing Based On Time Fault",
+          "name": "Erd_IceWaterStopsDispensingBasedOnTimeFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
           "displayName": "F733 Dispenser UI Comm Fault",
           "name": "Erd_DispenserUiCommunicationFault",
           "read": true,

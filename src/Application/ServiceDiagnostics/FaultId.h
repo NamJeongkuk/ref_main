@@ -32,6 +32,7 @@ enum
    FaultId_FreshFoodNoFreezeLimitTripped = 302,
    FaultId_FreshFoodTemperatureExceeded = 303,
    FaultId_FreezerTemperatureExceeded = 304,
+   FaultId_IceWaterStopsDispensingBasedOnTime = 401,
    FaultId_DoorBoardCommunicationFault = 523,
    FaultId_AutofillCouplingFault = 721,
    FaultId_DispenserUiCommunicationFault = 733,

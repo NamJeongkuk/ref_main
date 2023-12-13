@@ -208,6 +208,14 @@ static void UpdateDispensingRequestStatus(DispenseController_t *instance, Dispen
       &dispensingRequestStatus);
 }
 
+static void SetIceWaterStopsDispensingBasedOnTimeFault(DispenseController_t *instance, bool state)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->iceWaterStopsDispensingBasedOnTimeFaultErd,
+      &state);
+}
+
 static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    DispenseController_t *instance = InstanceFromHsm(hsm);
@@ -256,6 +264,7 @@ static bool State_Dispensing(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Hsm_Entry:
+         SetIceWaterStopsDispensingBasedOnTimeFault(instance, false);
          UpdateDispensingRequestStatus(instance, DispenseStatus_Dispensing);
          StartMaxDispenseTimer(instance);
          DispensingRequestSelection_t requestSelection = RequestSelection(instance);
@@ -281,6 +290,7 @@ static bool State_Dispensing(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 
       case Signal_MaxDispenseTimerExpired:
          SetDispensingResultStatusTo(instance, DispenseStatus_HitMaxTime);
+         SetIceWaterStopsDispensingBasedOnTimeFault(instance, true);
          break;
 
       case Hsm_Exit:

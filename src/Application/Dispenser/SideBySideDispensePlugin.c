@@ -32,7 +32,8 @@ static const DispenseControllerConfig_t dispenseControllerConfig = {
    .isolationValveDispensingVoteErd = Erd_IsolationWaterValve_DispensingVote,
    .dispensingValveDispensingVoteErd = Erd_DispenserWaterValve_DispensingVote,
    .timerModuleErd = Erd_TimerModule,
-   .dispensingRequestStatusErd = Erd_DispensingRequestStatus
+   .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
+   .iceWaterStopsDispensingBasedOnTimeFaultErd = Erd_IceWaterStopsDispensingBasedOnTimeFault
 };
 
 static const DoorInhibitDispensingResolverDoorConfig_t doorsThatInhibitDispense[] = {

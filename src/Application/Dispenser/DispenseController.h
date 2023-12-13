@@ -26,6 +26,7 @@ typedef struct
    Erd_t dispensingValveDispensingVoteErd; // WaterValveVotedState_t
    Erd_t timerModuleErd; // TimerModule_t *
    Erd_t dispensingRequestStatusErd; // DispensingRequestStatus_t
+   Erd_t iceWaterStopsDispensingBasedOnTimeFaultErd; // bool
 } DispenseControllerConfig_t;
 
 typedef struct

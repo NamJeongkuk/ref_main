@@ -1487,6 +1487,7 @@ enum
    ENTRY(Erd_FreshFoodTemperatureExceededFault,             0xF73F, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_FreshFoodTemperatureExceeded) \
    ENTRY(Erd_FreezerTemperatureExceededFault,               0xF740, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_FreezerTemperatureExceeded) \
    ENTRY(Erd_AndroidSignOfLifeDebugFault,                   0xF741, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_AndroidSbcSignOfLifeFault) \
+   ENTRY(Erd_IceWaterStopsDispensingBasedOnTimeFault,       0xF742, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                    FaultId_IceWaterStopsDispensingBasedOnTime) \
    \
    ENTRY(Erd_FactoryModeEnableRequestInMinutes,             0xF801, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    \
