@@ -37,7 +37,8 @@ typedef struct
    Erd_t freezerIceRateIsActiveErd; // bool
    Erd_t dispensingRequestStatusErd; // DispensingRequestStatus_t
    Erd_t leftSideFreezerDoorStatusResolvedErd; // bool
-   Erd_t dispensingInhibitedErd; // DispensingInhibitedReasonBitmap_t
+   Erd_t dispensingInhibitedReasonErd; // DispensingInhibitedReasonBitmap_t
+   Erd_t iceMakerFillInhibitedReasonErd; // IceMakerFillInhibitedReasonBitmap_t
    Erd_t iceMakerFullStatusErd; // bool
 } TwistTrayIceMakerConfiguration_t;
 

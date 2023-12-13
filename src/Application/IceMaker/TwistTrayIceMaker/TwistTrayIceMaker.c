@@ -55,6 +55,8 @@ enum
    Signal_FreezerDoorOpened,
    Signal_FreezerDoorClosed,
    Signal_DispensingIsNotInhibitedByRfid,
+   Signal_IceMakerFillIsInhibited,
+   Signal_IceMakerFillIsNotInhibited,
 
    Idle = TwistTrayIceMakerMotorAction_Idle,
    Home = TwistTrayIceMakerMotorAction_RunHomingRoutine,
@@ -252,7 +254,7 @@ static bool HarvestConditionsHaveBeenMet(TwistTrayIceMaker_t *instance)
    DispensingInhibitedReasonBitmap_t dispensingInhibitedBitmap;
    DataSource_Read(
       instance->_private.dataSource,
-      instance->_private.config->dispensingInhibitedErd,
+      instance->_private.config->dispensingInhibitedReasonErd,
       &dispensingInhibitedBitmap);
 
    return (iceTrayTempx100 < MaxHarvestTemperatureInDegFx100) &&
@@ -319,6 +321,29 @@ static bool ThermistorTemperatureIsGreaterThanFullToFreezeThreshold(TwistTrayIce
       &thermistorTemperatureInDegFx100);
 
    return (thermistorTemperatureInDegFx100 > instance->_private.parametric->harvestData.fullBucketToFreezeStateTemperatureInDegFx100);
+}
+
+static bool IceMakerFillBitmapIsSet(IceMakerFillInhibitedReasonBitmap_t iceMakerFillInhibitedReasonBitmap)
+{
+   for(uint8_t i = 0; i < IceMakerFillInhibitedReasonBitmap_NumberOfBytes; i++)
+   {
+      if(!!(iceMakerFillInhibitedReasonBitmap.bitmap[i]))
+      {
+         return true;
+      }
+   }
+   return false;
+}
+
+static bool IceMakerFillIsInhibited(TwistTrayIceMaker_t *instance)
+{
+   IceMakerFillInhibitedReasonBitmap_t iceMakerFillInhibitedReasonBitmap;
+   DataSource_Read(
+      instance->_private.dataSource,
+      instance->_private.config->iceMakerFillInhibitedReasonErd,
+      &iceMakerFillInhibitedReasonBitmap);
+
+   return IceMakerFillBitmapIsSet(iceMakerFillInhibitedReasonBitmap);
 }
 
 static void UpdateIceMakerFullStatus(TwistTrayIceMaker_t *instance, bool fullStatus)
@@ -562,7 +587,7 @@ static void State_FillingTrayWithWater(Fsm_t *fsm, FsmSignal_t signal, const voi
             SetWaterFillMonitoringRequestTo(instance, IceMakerWaterFillMonitoringRequest_Resume);
             instance->_private.pauseFillMonitoring = false;
          }
-         else if(instance->_private.delayFillMonitoring)
+         else if(instance->_private.delayFillMonitoring || IceMakerFillIsInhibited(instance))
          {
             instance->_private.delayFillMonitoring = false;
             Fsm_Transition(&instance->_private.fsm, State_IdleFill);
@@ -586,6 +611,7 @@ static void State_FillingTrayWithWater(Fsm_t *fsm, FsmSignal_t signal, const voi
          break;
 
       case Signal_DispensingActive:
+      case Signal_IceMakerFillIsInhibited:
          instance->_private.pauseFillMonitoring = true;
          Fsm_Transition(fsm, State_IdleFill);
          break;
@@ -786,6 +812,7 @@ static void State_IdleFill(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          break;
 
       case Signal_DispensingInactive:
+      case Signal_IceMakerFillIsNotInhibited:
          Fsm_Transition(fsm, State_FillingTrayWithWater);
          break;
    }
@@ -994,13 +1021,26 @@ static void DataSourceChanged(void *context, const void *data)
          Fsm_SendSignal(&instance->_private.fsm, Signal_IceRateNoLongerActive, NULL);
       }
    }
-   else if(onChangeArgs->erd == instance->_private.config->dispensingInhibitedErd)
+   else if(onChangeArgs->erd == instance->_private.config->dispensingInhibitedReasonErd)
    {
       const DispensingInhibitedReasonBitmap_t *dispensingInhibitedBitmap = onChangeArgs->data;
 
       if(!BITMAP_STATE(dispensingInhibitedBitmap->bitmap, DispensingInhibitedReason_WaterDueToRfidFilter))
       {
          Fsm_SendSignal(&instance->_private.fsm, Signal_DispensingIsNotInhibitedByRfid, NULL);
+      }
+   }
+   else if(onChangeArgs->erd == instance->_private.config->iceMakerFillInhibitedReasonErd)
+   {
+      const IceMakerFillInhibitedReasonBitmap_t *iceMakerFillInhibitedReasonBitmap = onChangeArgs->data;
+
+      if(IceMakerFillBitmapIsSet(*iceMakerFillInhibitedReasonBitmap))
+      {
+         Fsm_SendSignal(&instance->_private.fsm, Signal_IceMakerFillIsInhibited, NULL);
+      }
+      else
+      {
+         Fsm_SendSignal(&instance->_private.fsm, Signal_IceMakerFillIsNotInhibited, NULL);
       }
    }
 }

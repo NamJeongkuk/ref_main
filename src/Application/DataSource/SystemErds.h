@@ -920,7 +920,6 @@ enum
    ENTRY(Erd_LastAluminumMoldIceMakerWaterValveOnTimeInSeconds, 0xF178, uint32_t,                                       Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_LastTwistTrayIceMakerWaterValveOnTimeInSeconds,    0xF179, uint32_t,                                       Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_LastDispensedWaterValveOnTimeInSeconds,        0xF17A, uint32_t,                                           Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
-   ENTRY(Erd_WaterFilterTotalValveOnTimeInSeconds,          0xF17B, uint32_t,                                           Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RfidFilterReadWriteResult_RfidBoard,           0xF181, RfidFilterReadWriteResult_t,                        Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RfidFilterUid_RfidBoard,                       0xF182, RfidUid_t,                                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_RfidFilterIdentifier_RfidBoard,                0xF183, RfidFilterIdentifier_t,                             Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                    NotFault) \
@@ -1515,8 +1514,7 @@ enum
    ENTRY(Erd_Eeprom_UnitLifetimeDispensedWaterInOuncesX100, 0xFB16, VolumeInOuncesX100_t,                               Swap_Yes, Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_SabbathWaitingForDefrostTimeInMinutes,  0xFB17, uint16_t,                                           Swap_Yes, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    ENTRY(Erd_Eeprom_WaterFilterUsageSinceExpiration,        0xFB18, WaterFilterUsageSinceExpiration_t,                  Swap_Yes, Io_None, Sub_N, NvUsageProfile,         NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_Eeprom_TotalValveOnTimeInSeconds,              0xFB19, uint32_t,                                           Swap_Yes, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
-   ENTRY(Erd_Eeprom_EnhancedSabbathRunTimeInMinutes,        0xFB20, uint16_t,                                           Swap_Yes, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
+   ENTRY(Erd_Eeprom_EnhancedSabbathRunTimeInMinutes,        0xFB19, uint16_t,                                           Swap_Yes, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,   NotFault) \
    \
    ENTRY(Erd_NumberOfTimesMainboardHasLostCommunicationWithAndroidUi, 0xFB82, uint8_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \
    ENTRY(Erd_NumberOfTimesMainboardHasAttemptedToResetAndroidUi,      0xFB83, uint8_t,                                  Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                    NotFault) \

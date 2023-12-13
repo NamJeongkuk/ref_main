@@ -78,7 +78,8 @@ static const TwistTrayIceMakerConfiguration_t config = {
    .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
    .leftSideFreezerDoorStatusResolvedErd = Erd_LeftSideFreezerDoorStatusResolved,
-   .dispensingInhibitedErd = Erd_DispensingInhibitedReason,
+   .dispensingInhibitedReasonErd = Erd_DispensingInhibitedReason,
+   .iceMakerFillInhibitedReasonErd = Erd_IceMakerFillInhibitedReason,
    .iceMakerFullStatusErd = Erd_IceMaker0FullStatus
 };
 
@@ -807,6 +808,52 @@ TEST_GROUP(TwistTrayIceMaker)
       WhenDispensingIsNotInhibitedByRfid();
    }
 
+   void WhenIceMakerFillInhibitedDueToNewFilterIs(bool status)
+   {
+      IceMakerFillInhibitedReasonBitmap_t iceMakerFillInhibitedReason;
+      DataModel_Read(
+         dataModel,
+         Erd_IceMakerFillInhibitedReason,
+         &iceMakerFillInhibitedReason);
+
+      if(status)
+      {
+         BITMAP_SET(&iceMakerFillInhibitedReason, IceMakerFillInhibitedReason_DueToNewFilter);
+      }
+      else
+      {
+         BITMAP_CLEAR(&iceMakerFillInhibitedReason, IceMakerFillInhibitedReason_DueToNewFilter);
+      }
+
+      DataModel_Write(
+         dataModel,
+         Erd_IceMakerFillInhibitedReason,
+         &iceMakerFillInhibitedReason);
+   }
+
+   void WhenIceMakerFillInhibitedDueToRfidFilterIs(bool status)
+   {
+      IceMakerFillInhibitedReasonBitmap_t iceMakerFillInhibitedReason;
+      DataModel_Read(
+         dataModel,
+         Erd_IceMakerFillInhibitedReason,
+         &iceMakerFillInhibitedReason);
+
+      if(status)
+      {
+         BITMAP_SET(&iceMakerFillInhibitedReason, IceMakerFillInhibitedReason_DueToRfidFilter);
+      }
+      else
+      {
+         BITMAP_CLEAR(&iceMakerFillInhibitedReason, IceMakerFillInhibitedReason_DueToRfidFilter);
+      }
+
+      DataModel_Write(
+         dataModel,
+         Erd_IceMakerFillInhibitedReason,
+         &iceMakerFillInhibitedReason);
+   }
+   
    void IceMakerFullStatusShouldBe(bool expected)
    {
       bool actual;
@@ -1955,6 +2002,26 @@ TEST(TwistTrayIceMaker, ShouldTransitionToIdleFillWhenDispenseStatusIsDispensing
    And WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Pause);
 }
 
+TEST(TwistTrayIceMaker, ShouldTransitionToIdleFillWhenIceMakerFillIsInhibitedDueToNewFilterWhileIceMakerStateIsInFillingTrayWithWater)
+{
+   GivenTheOperationStateIsInFillingTrayWithWater();
+
+   TheWaterValveShouldBecome(CLOSED);
+   WhenIceMakerFillInhibitedDueToNewFilterIs(SET);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_IdleFill);
+   And WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Pause);
+}
+
+TEST(TwistTrayIceMaker, ShouldTransitionToIdleFillWhenIceMakerFillIsInhibitedDueToRfidFilterWhileIceMakerStateIsInFillingTrayWithWater)
+{
+   GivenTheOperationStateIsInFillingTrayWithWater();
+
+   TheWaterValveShouldBecome(CLOSED);
+   WhenIceMakerFillInhibitedDueToRfidFilterIs(SET);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_IdleFill);
+   And WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Pause);
+}
+
 TEST(TwistTrayIceMaker, ShouldNotTransitionToIdleFillWhenDispenseStatusIsDispensingAndSelectionIsCrushedIceWhileIceMakerStateIsInFillingTrayWithWater)
 {
    GivenTheOperationStateIsInFillingTrayWithWater();
@@ -2160,6 +2227,50 @@ TEST(TwistTrayIceMaker, ShouldDelayFillMonitoringWhenEnteringFillStateDuringWate
 
    FillingShouldStart();
    WhenWaterStopsDispensing();
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
+}
+
+TEST(TwistTrayIceMaker, ShouldDelayFillMonitoringWhenEnteringFillStateWhenFillIsInhibitedDueToNewFilterUntilFillIsNotInhibitedDueToNewFilter)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenFreezingIsCompletedAndHarvestingIsStarted();
+
+   WhenIceMakerFillInhibitedDueToNewFilterIs(SET);
+
+   After(iceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   TheMotorShouldBeRequestedTo(Idle);
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   After(1);
+   WhenTheMotorActionResultIs(Harvested);
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_IdleFill);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Stop);
+
+   FillingShouldStart();
+   WhenIceMakerFillInhibitedDueToNewFilterIs(CLEAR);
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
+}
+
+TEST(TwistTrayIceMaker, ShouldDelayFillMonitoringWhenEnteringFillStateWhenFillIsInhibitedDueToRfidFilterUntilFillIsNotInhibitedDueToRfidFilter)
+{
+   GivenTheIceMakerIsEnabled();
+   GivenFreezingIsCompletedAndHarvestingIsStarted();
+
+   WhenIceMakerFillInhibitedDueToRfidFilterIs(SET);
+
+   After(iceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   TheMotorShouldBeRequestedTo(Idle);
+   FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
+   After(1);
+   WhenTheMotorActionResultIs(Harvested);
+
+   TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_IdleFill);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Stop);
+
+   FillingShouldStart();
+   WhenIceMakerFillInhibitedDueToRfidFilterIs(CLEAR);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
    WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
 }

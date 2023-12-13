@@ -2388,6 +2388,13 @@
           "name": "Erd_AluminumMoldIceMakerWaterValveRelay",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Maker Fill Inhibited Reason",
+          "name": "Erd_IceMakerFillInhibitedReason",
+          "read": true,
+          "write": false
         }
       ]
     },
@@ -2503,6 +2510,20 @@
           "namespace": "mb",
           "displayName": "Twist Tray Ice Maker Water Valve Relay",
           "name": "Erd_TwistTrayIceMakerWaterValveRelay",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Maker Fill Inhibited Reason",
+          "name": "Erd_IceMakerFillInhibitedReason",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Twist Tray Ice Maker Test Request",
+          "name": "Erd_TwistTrayIceMakerTestRequest",
           "read": true,
           "write": true
         }
@@ -3873,22 +3894,6 @@
           "namespace": "mb",
           "displayName": "Last Dispensed Water Valve On Time In Seconds",
           "name": "Erd_LastDispensedWaterValveOnTimeInSeconds",
-          "read": true,
-          "write": true,
-          "interval": 1000000000
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Water Filter Total Water Valve On Time In Seconds",
-          "name": "Erd_WaterFilterTotalValveOnTimeInSeconds",
-          "read": true,
-          "write": true,
-          "interval": 1000000000
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Eeprom Total Water Valve On Time In Seconds",
-          "name": "Erd_Eeprom_TotalValveOnTimeInSeconds",
           "read": true,
           "write": true,
           "interval": 1000000000

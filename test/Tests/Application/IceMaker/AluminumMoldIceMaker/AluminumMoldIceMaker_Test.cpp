@@ -51,7 +51,8 @@ static const AluminumMoldIceMakerConfig_t config = {
    .aluminumMoldIceMakerTestRequestErd = Erd_AluminumMoldIceMakerTestRequest,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
    .coolingSystemOffStatusErd = Erd_CoolingOffStatus,
-   .dispensingInhibitedErd = Erd_DispensingInhibitedReason
+   .dispensingInhibitedReasonErd = Erd_DispensingInhibitedReason,
+   .iceMakerFillInhibitedReasonErd = Erd_IceMakerFillInhibitedReason
 };
 
 TEST_GROUP(AluminumMoldIceMaker)
@@ -954,6 +955,52 @@ TEST_GROUP(AluminumMoldIceMaker)
    void GivenDispensingIsNotInhibitedByRfid()
    {
       WhenDispensingIsNotInhibitedByRfid();
+   }
+
+   void WhenIceMakerFillInhibitedDueToNewFilterIs(bool status)
+   {
+      IceMakerFillInhibitedReasonBitmap_t iceMakerFillInhibitedReason;
+      DataModel_Read(
+         dataModel,
+         Erd_IceMakerFillInhibitedReason,
+         &iceMakerFillInhibitedReason);
+
+      if(status)
+      {
+         BITMAP_SET(&iceMakerFillInhibitedReason, IceMakerFillInhibitedReason_DueToNewFilter);
+      }
+      else
+      {
+         BITMAP_CLEAR(&iceMakerFillInhibitedReason, IceMakerFillInhibitedReason_DueToNewFilter);
+      }
+
+      DataModel_Write(
+         dataModel,
+         Erd_IceMakerFillInhibitedReason,
+         &iceMakerFillInhibitedReason);
+   }
+
+   void WhenIceMakerFillInhibitedDueToRfidFilterIs(bool status)
+   {
+      IceMakerFillInhibitedReasonBitmap_t iceMakerFillInhibitedReason;
+      DataModel_Read(
+         dataModel,
+         Erd_IceMakerFillInhibitedReason,
+         &iceMakerFillInhibitedReason);
+
+      if(status)
+      {
+         BITMAP_SET(&iceMakerFillInhibitedReason, IceMakerFillInhibitedReason_DueToRfidFilter);
+      }
+      else
+      {
+         BITMAP_CLEAR(&iceMakerFillInhibitedReason, IceMakerFillInhibitedReason_DueToRfidFilter);
+      }
+
+      DataModel_Write(
+         dataModel,
+         Erd_IceMakerFillInhibitedReason,
+         &iceMakerFillInhibitedReason);
    }
 };
 
@@ -2337,6 +2384,24 @@ TEST(AluminumMoldIceMaker, ShouldPauseFillMonitoringAndTransitionToIdleFillState
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFill);
 }
 
+TEST(AluminumMoldIceMaker, ShouldPauseFillMonitoringAndTransitionToIdleFillStateWhenIceMakerFillIsInhibitedDueToNewFilterWhileInFillState)
+{
+   GivenAluminumMoldIceMakerIsInFillState();
+
+   WhenIceMakerFillInhibitedDueToNewFilterIs(SET);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Pause);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldPauseFillMonitoringAndTransitionToIdleFillStateWhenIceMakerFillIsInhibitedDueToRfidFilterWhileInFillState)
+{
+   GivenAluminumMoldIceMakerIsInFillState();
+
+   WhenIceMakerFillInhibitedDueToRfidFilterIs(SET);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Pause);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFill);
+}
+
 TEST(AluminumMoldIceMaker, ShouldResumeFillMonitoringAndTransitionToFillStateWhenDispensingStatusChangesToCompletedSuccessfullyWhileInIdleFillState)
 {
    GivenAluminumMoldIceMakerIsInIdleFillState();
@@ -2458,8 +2523,8 @@ TEST(AluminumMoldIceMaker, ShouldNotStartFillMonitoringWhenEnteringFillStateDuri
 {
    GivenAluminumMoldIceMakerIsInHarvestStateAndHasCompletedAFullRevolution();
 
-   After(iceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC -
-      iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
+   After((iceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds -
+      iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds) * MSEC_PER_SEC - 1);
    WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_Dispensing);
 
    After(1);
@@ -2467,6 +2532,40 @@ TEST(AluminumMoldIceMaker, ShouldNotStartFillMonitoringWhenEnteringFillStateDuri
    WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Stop);
 
    WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_CompletedSuccessfully);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldNotStartFillMonitoringWhenEnteringFillStateWhileIceMakerFillInhibitedDueToNewFilterUntilFillIsNotInhibitedDueToNewFilter)
+{
+   GivenAluminumMoldIceMakerIsInHarvestStateAndHasCompletedAFullRevolution();
+
+   After((iceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds -
+      iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds) * MSEC_PER_SEC - 1);
+   WhenIceMakerFillInhibitedDueToNewFilterIs(SET);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFill);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Stop);
+
+   WhenIceMakerFillInhibitedDueToNewFilterIs(CLEAR);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
+}
+
+TEST(AluminumMoldIceMaker, ShouldNotStartFillMonitoringWhenEnteringFillStateWhileIceMakerFillInhibitedDueToRfidFilterUntilFillIsNotInhibitedDueToRfidFilter)
+{
+   GivenAluminumMoldIceMakerIsInHarvestStateAndHasCompletedAFullRevolution();
+
+   After((iceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds -
+      iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds) * MSEC_PER_SEC - 1);
+   WhenIceMakerFillInhibitedDueToRfidFilterIs(SET);
+
+   After(1);
+   AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_IdleFill);
+   WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Stop);
+
+   WhenIceMakerFillInhibitedDueToRfidFilterIs(CLEAR);
    WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
 }

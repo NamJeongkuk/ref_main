@@ -12,13 +12,19 @@
 
 enum
 {
-   IceMakerFillInhibitedReason_DueToRfidFilter
+   IceMakerFillInhibitedReason_DueToRfidFilter,
+   IceMakerFillInhibitedReason_DueToNewFilter
 };
 typedef uint8_t IceMakerFillInhibitedReason_t;
 
+enum
+{
+   IceMakerFillInhibitedReasonBitmap_NumberOfBytes = 1
+};
+
 typedef struct
 {
-   uint8_t bitmap[1];
+   uint8_t bitmap[IceMakerFillInhibitedReasonBitmap_NumberOfBytes];
 } IceMakerFillInhibitedReasonBitmap_t;
 
 #endif

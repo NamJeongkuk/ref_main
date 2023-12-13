@@ -49,7 +49,9 @@ enum
    Signal_DispensingActive,
    Signal_DispensingInactive,
    Signal_FreezerIceRateIsInactive,
-   Signal_DispensingIsNotInhibitedByRfid
+   Signal_DispensingIsNotInhibitedByRfid,
+   Signal_IceMakerFillIsInhibited,
+   Signal_IceMakerFillIsNotInhibited
 };
 
 static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -705,7 +707,10 @@ static void TriggerFreezerIceRateIfNecessary(AluminumMoldIceMaker_t *instance)
 static bool DispensingIsNotInhibitedByRfid(AluminumMoldIceMaker_t *instance)
 {
    DispensingInhibitedReasonBitmap_t dispensingInhibitedBitmap;
-   DataModel_Read(instance->_private.dataModel, instance->_private.config->dispensingInhibitedErd, &dispensingInhibitedBitmap);
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->dispensingInhibitedReasonErd,
+      &dispensingInhibitedBitmap);
    return !BITMAP_STATE(dispensingInhibitedBitmap.bitmap, DispensingInhibitedReason_WaterDueToRfidFilter);
 }
 
@@ -718,6 +723,29 @@ static bool HarvestConditionsAreMet(AluminumMoldIceMaker_t *instance)
       IceMakerIsEnabled(instance) &&
       CoolingSystemIsOn(instance) &&
       DispensingIsNotInhibitedByRfid(instance));
+}
+
+static bool IceMakerFillBitmapIsSet(IceMakerFillInhibitedReasonBitmap_t iceMakerFillInhibitedReasonBitmap)
+{
+   for(uint8_t i = 0; i < IceMakerFillInhibitedReasonBitmap_NumberOfBytes; i++)
+   {
+      if(!!(iceMakerFillInhibitedReasonBitmap.bitmap[i]))
+      {
+         return true;
+      }
+   }
+   return false;
+}
+
+static bool IceMakerFillIsInhibited(AluminumMoldIceMaker_t *instance)
+{
+   IceMakerFillInhibitedReasonBitmap_t iceMakerFillInhibitedReasonBitmap;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->iceMakerFillInhibitedReasonErd,
+      &iceMakerFillInhibitedReasonBitmap);
+
+   return IceMakerFillBitmapIsSet(iceMakerFillInhibitedReasonBitmap);
 }
 
 static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data)
@@ -1000,7 +1028,7 @@ static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
             ResumeWaterFillMonitoring(instance);
             instance->_private.pauseFillMonitoring = false;
          }
-         else if(instance->_private.delayFillMonitoring)
+         else if(instance->_private.delayFillMonitoring || IceMakerFillIsInhibited(instance))
          {
             instance->_private.delayFillMonitoring = false;
             Hsm_Transition(hsm, State_IdleFill);
@@ -1028,6 +1056,7 @@ static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_DispensingActive:
+      case Signal_IceMakerFillIsInhibited:
          instance->_private.pauseFillMonitoring = true;
          Hsm_Transition(hsm, State_IdleFill);
          break;
@@ -1064,6 +1093,7 @@ static bool State_IdleFill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          break;
 
       case Signal_DispensingInactive:
+      case Signal_IceMakerFillIsNotInhibited:
          Hsm_Transition(hsm, State_Fill);
          break;
 
@@ -1232,13 +1262,26 @@ static void DataModelChanged(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerIceRateIsInactive, NULL);
       }
    }
-   else if(erd == instance->_private.config->dispensingInhibitedErd)
+   else if(erd == instance->_private.config->dispensingInhibitedReasonErd)
    {
       const DispensingInhibitedReasonBitmap_t *dispensingInhibitedBitmap = onChangeData->data;
 
       if(!BITMAP_STATE(dispensingInhibitedBitmap->bitmap, DispensingInhibitedReason_WaterDueToRfidFilter))
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_DispensingIsNotInhibitedByRfid, NULL);
+      }
+   }
+   else if(erd == instance->_private.config->iceMakerFillInhibitedReasonErd)
+   {
+      const IceMakerFillInhibitedReasonBitmap_t *iceMakerFillInhibitedReasonBitmap = onChangeData->data;
+
+      if(IceMakerFillBitmapIsSet(*iceMakerFillInhibitedReasonBitmap))
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_IceMakerFillIsInhibited, NULL);
+      }
+      else
+      {
+         Hsm_SendSignal(&instance->_private.hsm, Signal_IceMakerFillIsNotInhibited, NULL);
       }
    }
 }

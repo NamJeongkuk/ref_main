@@ -17,6 +17,7 @@
 #include "WaterFilterStateResolver.h"
 #include "WaterFilterRemainingUsageUpdater.h"
 #include "WaterFilterUsageSinceExpirationUpdater.h"
+#include "IceMakerFillBlocker.h"
 
 typedef struct
 {
@@ -35,7 +36,7 @@ typedef struct
       WaterFilterStateResolver_t waterFilterStateResolver;
       WaterFilterRemainingUsageUpdater_t waterFilterRemainingUsageUpdater;
       WaterFilterUsageSinceExpirationUpdater_t waterFilterUsageSinceExpirationUpdater;
-      ErdAccumulatorService_t totalValveOnTimeInSecondsAccumulator;
+      IceMakerFillBlocker_t iceMakerFillBlocker;
    } _private;
 } WaterFilterPlugin_t;
 

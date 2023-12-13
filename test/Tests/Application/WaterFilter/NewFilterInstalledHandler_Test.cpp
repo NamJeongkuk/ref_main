@@ -53,7 +53,6 @@ const NewFilterInstalledHandlerWriteErds_t writeErdsConfig = {
    .rfidFilterLastTwelveMonthsOfWaterUsageInGallonsErd = Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons,
    .rfidFilterNumberOfUnitsFilterHasBeenOnErd = Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn,
    .rfidFilterPreviousUnitSerialNumberErd = Erd_RfidFilterPreviousUnitSerialNumber,
-   .totalValveOnTimeInSecondsErd = Erd_WaterFilterTotalValveOnTimeInSeconds
 };
 
 const NewFilterInstalledHandlerConfig_t config = {
@@ -291,18 +290,6 @@ TEST_GROUP(NewFilterInstalledHandler)
          .withParameter("Request Status", rfidFaultRequest.requestStatus)
          .withParameter("Signal", rfidFaultRequest.signal);
    }
-
-   void GivenWaterValveOnTimeIs(uint32_t valveTimeOn)
-   {
-      DataModel_Write(dataModel, Erd_WaterFilterTotalValveOnTimeInSeconds, &valveTimeOn);
-   }
-
-   void WaterFilterValveOnTimeShouldBe(uint32_t expected)
-   {
-      uint32_t actual;
-      DataModel_Read(dataModel, Erd_WaterFilterTotalValveOnTimeInSeconds, &actual);
-      CHECK_EQUAL(expected, actual);
-   }
 };
 
 TEST(NewFilterInstalledHandler, ShouldCopyNewUidToMainboardWhenANewFilterIsInstalled)
@@ -503,24 +490,4 @@ TEST(NewFilterInstalledHandler, ShouldClampNumberOfUnitsFilterHasBeenOnWhenTheNu
    WhenANewRfidFilterIsInstalled();
 
    NumberOfUnitsRfidFilterHasBeenOnShouldBe(MaxNumberOfUnitsFiltersCanBeInstalledOn);
-}
-
-TEST(NewFilterInstalledHandler, ShouldClearWaterValveOnTimeErdOnRfidUnitWhenANewRfidFilterIsInstalled)
-{
-   GivenTheRfidBoardIsInTheSystem();
-   GivenInitialization();
-   GivenWaterValveOnTimeIs(SomeValveOnTimeInSeconds);
-
-   WhenANewRfidFilterIsInstalled();
-   WaterFilterValveOnTimeShouldBe(0);
-}
-
-TEST(NewFilterInstalledHandler, ShouldClearWaterValveOnTimeErdOnNonRfidUnitWhenANewFilterIsInstalled)
-{
-   GivenTheRfidBoardIsNotInTheSystem();
-   GivenInitialization();
-   GivenWaterValveOnTimeIs(SomeValveOnTimeInSeconds);
-
-   WhenANewFilterIsInstalled();
-   WaterFilterValveOnTimeShouldBe(0);
 }

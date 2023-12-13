@@ -56,7 +56,6 @@ static const NewFilterInstalledHandlerWriteErds_t newFilterInstalledHandlerWrite
    .rfidFilterLastTwelveMonthsOfWaterUsageInGallonsErd = Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons,
    .rfidFilterNumberOfUnitsFilterHasBeenOnErd = Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn,
    .rfidFilterPreviousUnitSerialNumberErd = Erd_RfidFilterPreviousUnitSerialNumber,
-   .totalValveOnTimeInSecondsErd = Erd_WaterFilterTotalValveOnTimeInSeconds
 };
 
 static const NewFilterInstalledHandlerConfig_t newFilterInstalledHandlerConfig = {
@@ -107,22 +106,6 @@ static const ErdAccumulatorServiceConfig_t unitLifetimeDispensedWaterValveAccumu
    .cumulativeValueErd = Erd_UnitLifetimeDispensedWaterInOuncesX100
 };
 
-static const Erd_t totalValveOnTimeErds[] = {
-   Erd_LastAluminumMoldIceMakerWaterValveOnTimeInSeconds,
-   Erd_LastTwistTrayIceMakerWaterValveOnTimeInSeconds,
-   Erd_LastDispensedWaterValveOnTimeInSeconds
-};
-
-static const ErdList_t totalValveOnTimeErdList = {
-   .erds = totalValveOnTimeErds,
-   .numberOfErds = NUM_ELEMENTS(totalValveOnTimeErds)
-};
-
-static const ErdAccumulatorServiceConfig_t totalValveOnTimeAccumulatorConfig = {
-   .inputErdList = totalValveOnTimeErdList,
-   .cumulativeValueErd = Erd_WaterFilterTotalValveOnTimeInSeconds
-};
-
 static const WaterFilterStateResolverConfig_t waterFilterStateResolverConfig = {
    .enableDemoModeStatusErd = Erd_EnableDemoModeStatus,
    .leakDetectedErd = Erd_LeakDetected,
@@ -143,6 +126,13 @@ static const WaterFilterUsageSinceExpirationUpdaterConfig_t waterFilterUsageSinc
    .waterFilterUsageSinceExpirationErd = Erd_WaterFilterUsageSinceExpiration,
    .calendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
    .waterFilterVolumeUsageInOuncesX100Erd = Erd_WaterFilterVolumeUsageInOuncesX100
+};
+
+static const IceMakerFillBlockerConfig_t iceMakerFillBlockerConfig = {
+   .unitLifetimeDispensedWaterInOuncesX100Erd = Erd_UnitLifetimeDispensedWaterInOuncesX100,
+   .waterFilterVolumeUsageInOuncesX100Erd = Erd_WaterFilterVolumeUsageInOuncesX100,
+   .waterFilterCalendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
+   .iceMakerFillInhibitedReasonErd = Erd_IceMakerFillInhibitedReason
 };
 
 void WaterFilterPlugin_Init(
@@ -228,10 +218,9 @@ void WaterFilterPlugin_Init(
       &waterFilterUsageSinceExpirationUpdaterConfig,
       PersonalityParametricData_Get(dataModel)->filterData->commonFilterData);
 
-   ErdAccumulatorService_Init(
-      &instance->_private.totalValveOnTimeInSecondsAccumulator,
+   IceMakerFillBlocker_Init(
+      &instance->_private.iceMakerFillBlocker,
       dataModel,
-      &totalValveOnTimeAccumulatorConfig,
-      sizeof(uint32_t),
-      IS_SIGNED(uint32_t));
+      &iceMakerFillBlockerConfig,
+      PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerFillBlockerData);
 }

@@ -5,15 +5,15 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef ICEMAKERFILLBLOCKER_H
-#define ICEMAKERFILLBLOCKER_H
+#ifndef ICEMAKERFILLBLOCKERDATA_H
+#define ICEMAKERFILLBLOCKERDATA_H
 
 #include <stdint.h>
 
 typedef struct
 {
-   uint16_t newFilterDispenserPurgeTimeInSeconds;
+   uint32_t newFilterDispenserPurgeVolumeInOuncesX100;
    uint16_t newFilterFillStateDelayInMinutes;
-} IceMakerFillBlocker_t;
+} IceMakerFillBlockerData_t;
 
 #endif

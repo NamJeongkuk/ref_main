@@ -221,15 +221,6 @@ static void IncrementNumberOfUnitsFilterHasBeenOn(NewFilterInstalledHandler_t *i
       &numberOfUnitsFilterHasBeenOn);
 }
 
-static void ClearTotalValveOnTime(NewFilterInstalledHandler_t *instance)
-{
-   uint32_t zeroTotalValveOnTime = 0;
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->writeErds->totalValveOnTimeInSecondsErd,
-      &zeroTotalValveOnTime);
-}
-
 static void NewFilterInstalledSignalChanged(void *context, const void *args)
 {
    NewFilterInstalledHandler_t *instance = context;
@@ -260,8 +251,6 @@ static void NewFilterInstalledSignalChanged(void *context, const void *args)
    {
       ClearVolumeAndCalendarUsage(instance);
    }
-
-   ClearTotalValveOnTime(instance);
 }
 
 void NewFilterInstalledHandler_Init(

@@ -10,7 +10,7 @@ return function(core)
       return TypedString(
         { 'ice_maker_fill_blocker' },
         structure(
-          u16(config.new_filter_dispenser_purge_time_before_icemaker_fill_in_seconds),
+          u32(config.new_filter_dispenser_purge_volume_before_icemaker_fill_in_ounces_x100),
           u16(config.icemaker_new_filter_fill_state_delay_in_minutes)
         )
       )
@@ -20,7 +20,7 @@ return function(core)
       validate_arguments(
         config,
         {
-          new_filter_dispenser_purge_time_before_icemaker_fill_in_seconds = { constraint.u16 },
+          new_filter_dispenser_purge_volume_before_icemaker_fill_in_ounces_x100 = { constraint.u32 },
           icemaker_new_filter_fill_state_delay_in_minutes = { constraint.u16 }
         }
       )
