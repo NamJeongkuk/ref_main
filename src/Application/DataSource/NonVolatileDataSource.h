@@ -17,14 +17,14 @@
 
 // clang-format off
 
-#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_NVALL_, StorageType)(uint8_t CONCAT(erd, Name)[sizeof(DataType)];)
 typedef struct
 {
    ERD_TABLE(EXPAND_AS_NON_VOLATILE_DATA_SOURCE_OFFSET_STRUCT_MEMBER)
 } NonVolatileDataSourceSyncCache_t;
 
-#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_COUNT_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_COUNT_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_NVALL_, StorageType)(uint8_t CONCAT(erd, Name);)
 
 typedef struct

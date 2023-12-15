@@ -17,8 +17,8 @@ enum
    EepromMissingTimeoutTicks = 5000
 };
 
-#define EXPAND_AS_SYNC_CONFIGURATION(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_NVALL_, StorageType)                                                                           \
+#define EXPAND_AS_SYNC_CONFIGURATION(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
+   CONCAT(INCLUDE_NVALL_, StorageType)                                                                                         \
    ({ Name COMMA OFFSET_OF(NonVolatileDataSourceSyncCache_t, CONCAT(erd, Name)) } COMMA)
 
 static const DataSource_CachedAsyncDataSourceErdInfo_t syncMapElements[] = { ERD_TABLE(EXPAND_AS_SYNC_CONFIGURATION) };

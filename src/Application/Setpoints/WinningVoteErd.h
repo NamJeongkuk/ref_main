@@ -10,7 +10,7 @@
 
 #include "SystemErds.h"
 
-#define EXPAND_AS_WINNING_VOTE_ERD_ENUM(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_WINNING_VOTE_ERD_ENUM(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    WinningVoteErd_##Name = Name,
 
 enum

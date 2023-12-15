@@ -15,7 +15,7 @@
 
 // clang-format off
 
-#define EXPAND_AS_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)(uint8_t MACRO_SAFE_CONCATENATE(erd, Name)[sizeof(DataType)];)
 
 // clang-format on

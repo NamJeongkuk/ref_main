@@ -21,10 +21,10 @@ extern "C"
 
 // clang-format off
 
-#define EXPAND_AS_BSP_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_BSP_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_BSP_ALL_, StorageType)(uint8_t MACRO_SAFE_CONCATENATE(erd, Name)[sizeof(DataType)];)
 
-#define EXPAND_AS_BSP_CONFIGURATION(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_BSP_CONFIGURATION(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_BSP_ALL_, StorageType)({ Name COMMA OFFSET_OF(DataSourceStorage_t, MACRO_SAFE_CONCATENATE(erd, Name)) } COMMA)
 
 // clang-format on

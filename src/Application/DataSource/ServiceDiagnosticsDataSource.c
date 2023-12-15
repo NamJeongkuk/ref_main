@@ -45,7 +45,7 @@ static const FaultId_t faultCodes[] = {
    ERD_TABLE(EXPAND_AS_FAULT_ID)
 };
 
-#define EXPAND_AS_ERD_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_ERD_OFFSET_STRUCT_MEMBER(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    uint8_t Name;
 
 typedef struct
@@ -53,12 +53,12 @@ typedef struct
    ERD_TABLE(EXPAND_AS_ERD_OFFSET_STRUCT_MEMBER)
 } ErdOffset_t;
 
-#define EXPAND_AS_FIRST_FAULT_CHECK(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_FAULT_, StorageType)                                                                          \
+#define EXPAND_AS_FIRST_FAULT_CHECK(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
+   CONCAT(INCLUDE_FAULT_, StorageType)                                                                                        \
    (((OFFSET_OF(ErdOffset_t, Name) - OFFSET_OF(ErdOffset_t, FirstFault)) >= 0) &&)
 
-#define EXPAND_AS_FAULT_OFFSET_CHECK(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_FAULT_, StorageType)                                                                           \
+#define EXPAND_AS_FAULT_OFFSET_CHECK(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
+   CONCAT(INCLUDE_FAULT_, StorageType)                                                                                         \
    (((OFFSET_OF(ErdOffset_t, Name) - OFFSET_OF(ErdOffset_t, FirstFault)) <= NUM_ELEMENTS(faultCodes)) &&)
 
 // This checks whether the first fault is set correctly

@@ -10,7 +10,7 @@
 
 // clang-format off
 
-#define EXPAND_AS_CONVERTED_ERD_SIZE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_CONVERTED_ERD_SIZE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_CONVERTED_, StorageType)                                                                       \
    (SizeOf##Name = sizeof(DataType) COMMA)
 

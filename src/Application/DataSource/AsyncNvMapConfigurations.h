@@ -16,40 +16,40 @@ enum
    NumberOfRecordBackups = 1
 };
 
-#define EXPAND_AS_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, FaultId) \
-   CONCAT(INCLUDE_NVALL_, StorageType)                                                                         \
+#define EXPAND_AS_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, YearlyWrites, FaultId) \
+   CONCAT(INCLUDE_NVALL_, StorageType)                                                                                       \
    ({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
 
-#define EXPAND_AS_PROTECTED_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, FaultId) \
-   CONCAT(INCLUDE_NVPROTECTED_, StorageType)                                                                             \
+#define EXPAND_AS_PROTECTED_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, YearlyWrites, FaultId) \
+   CONCAT(INCLUDE_NVPROTECTED_, StorageType)                                                                                           \
    ({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
 
-#define EXPAND_AS_UNITSETTING_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, FaultId) \
-   CONCAT(INCLUDE_NVUNITSETTING_, StorageType)                                                                             \
+#define EXPAND_AS_UNITSETTING_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, YearlyWrites, FaultId) \
+   CONCAT(INCLUDE_NVUNITSETTING_, StorageType)                                                                                           \
    ({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
 
-#define EXPAND_AS_USERSETTING_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, FaultId) \
-   CONCAT(INCLUDE_NVUSERSETTING_, StorageType)                                                                             \
+#define EXPAND_AS_USERSETTING_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, YearlyWrites, FaultId) \
+   CONCAT(INCLUDE_NVUSERSETTING_, StorageType)                                                                                           \
    ({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
 
-#define EXPAND_AS_USAGEPROFILE_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, FaultId) \
-   CONCAT(INCLUDE_NVUSAGEPROFILE_, StorageType)                                                                             \
+#define EXPAND_AS_USAGEPROFILE_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, YearlyWrites, FaultId) \
+   CONCAT(INCLUDE_NVUSAGEPROFILE_, StorageType)                                                                                           \
    ({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
 
-#define EXPAND_AS_RFID_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, FaultId) \
-   CONCAT(INCLUDE_NVRFID_, StorageType)                                                                             \
+#define EXPAND_AS_RFID_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, YearlyWrites, FaultId) \
+   CONCAT(INCLUDE_NVRFID_, StorageType)                                                                                           \
    ({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
 
-#define EXPAND_AS_FAULTSNAPSHOT_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, FaultId) \
-   CONCAT(INCLUDE_NVFAULTSNAPSHOT_, StorageType)                                                                             \
+#define EXPAND_AS_FAULTSNAPSHOT_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, YearlyWrites, FaultId) \
+   CONCAT(INCLUDE_NVFAULTSNAPSHOT_, StorageType)                                                                                           \
    ({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
 
-#define EXPAND_AS_CYCLEHISTORY_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, FaultId) \
-   CONCAT(INCLUDE_NVCYCLEHISTORY_, StorageType)                                                                             \
+#define EXPAND_AS_CYCLEHISTORY_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, YearlyWrites, FaultId) \
+   CONCAT(INCLUDE_NVCYCLEHISTORY_, StorageType)                                                                                           \
    ({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
 
-#define EXPAND_AS_PERSONALITYEEPROM_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_PERSONALITYEEPROM_, StorageType)                                                                                 \
+#define EXPAND_AS_PERSONALITYEEPROM_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
+   CONCAT(INCLUDE_PERSONALITYEEPROM_, StorageType)                                                                                               \
    ({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
 
 #define EXPAND_AS_BINARY_SEARCH_CONFIGURATION(Elements)                                \

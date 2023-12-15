@@ -30,7 +30,7 @@ enum
 
 // clang-format off
 
-#define EXPAND_AS_PUBLIC_AND_SERVICE_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_PUBLIC_AND_SERVICE_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_PUBLIC_AND_SERVICE_, Number)(Public##Name COMMA)
 
 // clang-format on

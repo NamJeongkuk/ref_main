@@ -10,8 +10,8 @@
 #include "DeltaGridLines.h"
 #include "StdintSwapDefinitions.h"
 
-#define EXPAND_AS_MAPPED_ERD_PAIR(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_RAM_, StorageType)                                                                          \
+#define EXPAND_AS_MAPPED_ERD_PAIR(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
+   CONCAT(INCLUDE_RAM_, StorageType)                                                                                        \
    ({ Number COMMA Name } COMMA)
 
 static const DataSource_MappedErdPair_t internalExternalMappings[] = {
@@ -34,16 +34,16 @@ static const ConstArrayMap_BinarySearchConfiguration_t externalToInternalMapConf
    IS_SIGNED(Erd_t)
 };
 
-#define EXPAND_AS_SWAPPED_FIELDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_SWAP_, Swap)                                                                               \
+#define EXPAND_AS_SWAPPED_FIELDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
+   CONCAT(INCLUDE_SWAP_, Swap)                                                                                             \
    (CONCAT(SWAP_DEFINITION_, DataType)(Public##Name, DataType))
 
 static const DataSource_EndiannessSwappedSwappedField_t swappedFields[] = {
    ERD_TABLE(EXPAND_AS_SWAPPED_FIELDS)
 };
 
-#define EXPAND_AS_SWAPPED_RANGE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
-   CONCAT(INCLUDE_SWAP_RANGE_START_, Swap)                                                                  \
+#define EXPAND_AS_SWAPPED_RANGE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
+   CONCAT(INCLUDE_SWAP_RANGE_START_, Swap)                                                                                \
    ({ Public##Name COMMA)                                                                                   \
    CONCAT(INCLUDE_SWAP_RANGE_END_, Swap)                                                                    \
    ( Public##Name } COMMA)

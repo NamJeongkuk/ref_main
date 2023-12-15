@@ -64,16 +64,16 @@ enum
 
 // clang-format off
 
-#define ERD_EXPAND_AS_ENDIANNESS_AWARE_RAM_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define ERD_EXPAND_AS_ENDIANNESS_AWARE_RAM_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)({ Name COMMA Number COMMA Swap COMMA Io COMMA Sub } COMMA)
 
-#define ERD_EXPAND_AS_ENDIANNESS_AWARE_NV_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define ERD_EXPAND_AS_ENDIANNESS_AWARE_NV_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_NVALL_, StorageType)({ Name COMMA Number COMMA Swap COMMA Io COMMA Sub } COMMA)
 
-#define ERD_EXPAND_AS_ENDIANNESS_AWARE_BSP_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define ERD_EXPAND_AS_ENDIANNESS_AWARE_BSP_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_BSP_, StorageType)({ Name COMMA Number COMMA Swap COMMA Io COMMA Sub } COMMA)
 
-#define ERD_EXPAND_NUMBER_SIZE_NV_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, FaultId) \
+#define ERD_EXPAND_NUMBER_SIZE_NV_STORAGE(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_NVALL_, StorageType)({ Number COMMA sizeof(DataType) } COMMA)
 
 typedef struct

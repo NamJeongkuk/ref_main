@@ -9,22 +9,22 @@
 
 // clang-format off
 
-#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_NON_RAM_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_NON_RAM_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_NON_RAM_, StorageType)(CONCAT(INCLUDE_INPUT_OUTPUT_, Io)(Name COMMA))
 
-#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_RAM_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_RAM_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)(CONCAT(INCLUDE_INPUT_OUTPUT_, Io)(Name COMMA))
 
-#define EXPAND_AS_OUTPUT_NON_RAM_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_OUTPUT_NON_RAM_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_NON_RAM_, StorageType)(CONCAT(INCLUDE_OUTPUT_, Io)(Name COMMA))
 
-#define EXPAND_AS_OUTPUT_RAM_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_OUTPUT_RAM_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)(CONCAT(INCLUDE_OUTPUT_, Io)(Name COMMA))
 
-#define EXPAND_AS_SUBSCRIPTION_NON_RAM_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_SUBSCRIPTION_NON_RAM_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_NON_RAM_, StorageType)(CONCAT(INCLUDE_SUBSCRIPTION_, Sub)(Name COMMA))
 
-#define EXPAND_AS_SUBSCRIPTION_RAM_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_SUBSCRIPTION_RAM_ERDS(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_RAM_, StorageType)(CONCAT(INCLUDE_SUBSCRIPTION_, Sub)(Name COMMA))
 
 static const Erd_t inputAndInputOutputErds[] = {

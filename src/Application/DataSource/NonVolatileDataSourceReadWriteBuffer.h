@@ -10,8 +10,8 @@
 
 #include "SystemErds.h"
 
-#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_READ_WRITE_BUFFER_MEMBERS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, FaultId) \
-   CONCAT(INCLUDE_NVALL_, StorageType)                                                                                                         \
+#define EXPAND_AS_NON_VOLATILE_DATA_SOURCE_READ_WRITE_BUFFER_MEMBERS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, YearlyWrites, FaultId) \
+   CONCAT(INCLUDE_NVALL_, StorageType)                                                                                                                       \
    (uint8_t CONCAT(erd, Name)[sizeof(DataType) + sizeof(Crc16_t)];)
 
 typedef struct

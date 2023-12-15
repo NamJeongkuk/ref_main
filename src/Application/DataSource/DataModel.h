@@ -15,13 +15,13 @@
 
 // clang-format off
 
-#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_ERDS_TYPE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_INPUT_AND_INPUT_OUTPUT_ERDS_TYPE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_INPUT_OUTPUT_, Io)(uint8_t Name;)
 
-#define EXPAND_AS_OUTPUT_ERDS_TYPE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_OUTPUT_ERDS_TYPE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_OUTPUT_, Io)(uint8_t Name;)
 
-#define EXPAND_AS_SUBSCRIPTION_ERDS_TYPE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_SUBSCRIPTION_ERDS_TYPE(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_SUBSCRIPTION_, Sub)(uint8_t Name;)
 
 // clang-format on

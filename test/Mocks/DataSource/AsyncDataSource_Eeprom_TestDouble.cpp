@@ -33,8 +33,8 @@ enum
    Erd_NvMetadata = 0
 };
 
-#define EXPAND_AS_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, FaultId) \
-   CONCAT(INCLUDE_NVALL_, StorageType)                                                                         \
+#define EXPAND_AS_ASYNC_MAP_ELEMENTS(Name, Number, DataType, Swap, Io, Sub, StorageType, DefaultData, YearlyWrites, FaultId) \
+   CONCAT(INCLUDE_NVALL_, StorageType)                                                                                       \
    ({ Name COMMA sizeof(DataType) COMMA NumberOfRecordBackups } COMMA)
 
 static const AsyncDataSource_EepromErdInfo_t asyncMapElements[] = { { .erd = Erd_NvMetadata, .size = sizeof(AsyncDataSource_EepromMetadata_t), .backupCount = 1 },

@@ -10,7 +10,7 @@
 
 // clang-format off
 
-#define EXPAND_AS_CONFIGURATION(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_CONFIGURATION(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_MAPPED_BSP_, StorageType)({ Name COMMA sizeof(Erd_t) } COMMA)
 
 // clang-format on

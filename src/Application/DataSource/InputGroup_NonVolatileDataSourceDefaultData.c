@@ -20,7 +20,7 @@ enum
 
 // clang-format off
 
-#define EXPAND_AS_NON_VOLATILE_DEFAULT_DATA_MAPPING(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, FaultId) \
+#define EXPAND_AS_NON_VOLATILE_DEFAULT_DATA_MAPPING(Name, Number, DataType, Swap, Io, Sub, StorageType, NvDefaultData, YearlyWrites, FaultId) \
    CONCAT(INCLUDE_NVALL_, StorageType)({ Name COMMA NvDefaultData } COMMA)
 
 // clang-format on
