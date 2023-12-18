@@ -22,6 +22,7 @@
 #include "ServiceModePlugin.h"
 #include "FaultMonitorPlugin.h"
 #include "BoardFeaturesToApplianceApiFeaturesUpdaterPlugin.h"
+#include "NonVolatileUsageMonitorPlugin.h"
 
 typedef struct
 {
@@ -44,6 +45,7 @@ typedef struct
       ServiceModePlugin_t serviceModePlugin;
       FaultMonitorPlugin_t faultMonitorPlugin;
       BoardFeaturesToApplianceApiFeaturesUpdaterPlugin_t boardFeaturesToApplianceFeaturesPlugin;
+      NonVolatileUsageMonitorPlugin_t nvUsageMonitorPlugin;
    } _private;
 } Application_t;
 

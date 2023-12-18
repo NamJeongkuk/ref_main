@@ -137,6 +137,7 @@
 #include "CalendarUsageInSeconds.h"
 #include "VolumeInOuncesX100.h"
 #include "RfidFaultHandler.h"
+#include "NonVolatileUsageMonitor.h"
 
 // clang-format off
 
@@ -190,7 +191,15 @@
 
 #define INCLUDE_NV_Ram(_x)
 #define INCLUDE_NV_Virtual(_x)
+#define INCLUDE_NV_Converted(_x)
 #define INCLUDE_NV_Nv(_x) _x
+#define INCLUDE_NV_NvProtected(_x) _x
+#define INCLUDE_NV_NvUnitSetting(_x) _x
+#define INCLUDE_NV_NvUserSetting(_x) _x
+#define INCLUDE_NV_NvRfid(_x) _x
+#define INCLUDE_NV_NvUsageProfile(_x) _x
+#define INCLUDE_NV_NvFaultSnapshot(_x) _x
+#define INCLUDE_NV_NvCycleHistory(_x) _x
 #define INCLUDE_NV_Fault(_x)
 #define INCLUDE_NV_Bsp(_x)
 #define INCLUDE_NV_MappedBsp(_x)
@@ -1489,6 +1498,12 @@ enum
    ENTRY(Erd_IceWaterStopsDispensingBasedOnTimeFault,       0xF742, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                                       NotNv,         FaultId_IceWaterStopsDispensingBasedOnTime) \
    \
    ENTRY(Erd_FactoryModeEnableRequestInMinutes,             0xF801, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   \
+   ENTRY(Erd_NvUsageDetailsRequestErd,                      0xF810, NonVolatileUsageMonitorDetailsRequest_t,            Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_NvUsageDetailsResponseErd,                     0xF811, NonVolatileUsageMonitorDetails_t,                   Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_NvUsageWarningOrErrorDetailsErd,               0xF812, NonVolatileUsageMonitorDetails_t,                   Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_NvUsageWarningThresholdExceededErd,            0xF813, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_NvUsageErrorThresholdExceededErd,              0xF814, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_ExternalAmbientFilteredTemperatureInDegFx100,  0xFAFB, TemperatureDegFx100_t,                              Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_ExternalAmbientThermistor_IsValid,             0xFAFC, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \

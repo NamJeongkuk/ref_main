@@ -73,4 +73,6 @@ void Application_Init(
    FaultMonitorPlugin_Init(&instance->_private.faultMonitorPlugin, dataModel);
 
    BoardFeaturesToApplianceApiFeaturesUpdaterPlugin_Init(&instance->_private.boardFeaturesToApplianceFeaturesPlugin, dataModel);
+
+   NonVolatileUsageMonitorPlugin_Init(&instance->_private.nvUsageMonitorPlugin, dataModel);
 }
