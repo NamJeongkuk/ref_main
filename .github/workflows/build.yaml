@@ -97,5 +97,5 @@ jobs:
       id-token: write
       contents: read
     with:
-      recipients: kira.hartlage@geappliances.com, jose.padron@geappliances.com, leonardo.falconizzi@geappliances.com
+      recipients: ReferSoftwareSkynetNotification@geappliances.com
       status: Failure
