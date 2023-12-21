@@ -14,8 +14,13 @@ DEVICE:=R5F51308
 SVD:=tools/kpit-rx/svd/rx130.svd
 ID_CODE:=45C0C0AC1C1AC2C2AC3C3AC4C4AC5C5A
 
+ifeq ($(PRODUCTION), Y)
+PATH_TO_BUILD_PARAMETRIC:=../../
+PARAMETRIC_DIRS:=../../data
+else
 PATH_TO_BUILD_PARAMETRIC:=./Parametric
 PARAMETRIC_DIRS:=Parametric/data/Development
+endif
 
 BUILD_DEPS+=$(BOOT_LOADER_DIR)/$(BOOT_LOADER_TARGET)-boot-loader-memory.ld
 

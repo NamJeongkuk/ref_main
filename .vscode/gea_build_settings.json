@@ -9,6 +9,15 @@
       }
     },
     {
+      "name": "Target Production",
+      "makefile": "rockhopper-target.mk",
+      "defines": {
+        "RELEASE": "N",
+        "DEBUG": "Y",
+        "PRODUCTION": "Y"
+      }
+    },
+    {
       "name": "Test",
       "makefile": "tdd.mk"
     },
