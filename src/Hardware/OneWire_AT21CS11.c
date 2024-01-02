@@ -256,7 +256,7 @@ I_OneWire_t *OneWire_AT21CS11_Init(void)
    instance.interface.api = &api;
    instance.contextProtector = ContextProtector_Rx2xx_GetInstance();
 
-   PORTA.ODR1.BIT.B0 = 1; //Configure PA4 as an open drain output
+   PORTA.ODR1.BIT.B0 = 1; // Configure PA4 as an open drain output
 
    ContextProtector_Protect(instance.contextProtector);
    SendReset();
