@@ -37,17 +37,17 @@ void Hardware_InitializeStage2(I_DataModel_t *dataModel)
 
    Dtc_Init();
 
-   I_BufferedUart_t *wifiBufferedUart = BufferedUart_Channel1_Init();
-   DataModelErdPointerAccess_Write(dataModel, Erd_WifiBufferedUart, wifiBufferedUart);
+   I_BufferedUart_t *bufferedUartA = BufferedUart_Channel1_Init();
+   DataModelErdPointerAccess_Write(dataModel, Erd_BufferedUartA, bufferedUartA);
 
-   I_BufferedUart_t *factoryBufferedUart = BufferedUart_Channel5_Init();
-   DataModelErdPointerAccess_Write(dataModel, Erd_FactoryBufferedUart, factoryBufferedUart);
+   I_BufferedUart_t *bufferedUartC = BufferedUart_Channel5_Init();
+   DataModelErdPointerAccess_Write(dataModel, Erd_BufferedUartC, bufferedUartC);
 
-   I_BufferedUart_t *doorBufferedUart = BufferedUart_Channel6_Init();
-   DataModelErdPointerAccess_Write(dataModel, Erd_DoorBufferedUart, doorBufferedUart);
+   I_BufferedUart_t *bufferedUartD = BufferedUart_Channel9_Init();
+   DataModelErdPointerAccess_Write(dataModel, Erd_BufferedUartD, bufferedUartD);
 
-   I_BufferedUart_t *caseBufferedUart = BufferedUart_Channel9_Init();
-   DataModelErdPointerAccess_Write(dataModel, Erd_CaseBufferedUart, caseBufferedUart);
+   I_BufferedUart_t *bufferedUartE = BufferedUart_Channel6_Init();
+   DataModelErdPointerAccess_Write(dataModel, Erd_BufferedUartE, bufferedUartE);
 
    I_Uart_t *gea2Uart = Uart_Channel12_GetInstance(U32_PCLKB);
    DataModelErdPointerAccess_Write(dataModel, Erd_Gea2Uart, gea2Uart);
