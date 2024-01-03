@@ -16,19 +16,16 @@ static const WaterFilterCalendarUsageUpdaterConfig_t waterFilterCalendarUsageUpd
 
 static const WaterVolumeUsageCalculatorConfig_t aluminumMoldIceMakerWaterVolumeUsageCalculatorConfig = {
    .waterValveRelayErd = Erd_AluminumMoldIceMakerWaterValveRelay,
-   .waterValveOnTimeInSecondsErd = Erd_LastAluminumMoldIceMakerWaterValveOnTimeInSeconds,
    .waterVolumeUsageInOuncesX100Erd = Erd_LastAluminumMoldIceMakerWaterVolumeUsageInOuncesX100
 };
 
 static const WaterVolumeUsageCalculatorConfig_t twistTrayIceMakerWaterVolumeUsageCalculatorConfig = {
    .waterValveRelayErd = Erd_TwistTrayIceMakerWaterValveRelay,
-   .waterValveOnTimeInSecondsErd = Erd_LastTwistTrayIceMakerWaterValveOnTimeInSeconds,
    .waterVolumeUsageInOuncesX100Erd = Erd_LastTwistTrayIceMakerWaterVolumeUsageInOuncesX100
 };
 
 static const WaterVolumeUsageCalculatorConfig_t dispensedWaterVolumeUsageCalculatorConfig = {
    .waterValveRelayErd = Erd_DispenserValveRelay,
-   .waterValveOnTimeInSecondsErd = Erd_LastDispensedWaterValveOnTimeInSeconds,
    .waterVolumeUsageInOuncesX100Erd = Erd_LastDispensedWaterVolumeUsageInOuncesX100
 };
 

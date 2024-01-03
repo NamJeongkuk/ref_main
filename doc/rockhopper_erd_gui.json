@@ -3876,30 +3876,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Last Aluminum Mold Ice Maker Water Valve On Time In Seconds",
-          "name": "Erd_LastAluminumMoldIceMakerWaterValveOnTimeInSeconds",
-          "read": true,
-          "write": true,
-          "interval": 1000000000
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Last Twist Tray Ice Maker Water Valve On Time In Seconds",
-          "name": "Erd_LastTwistTrayIceMakerWaterValveOnTimeInSeconds",
-          "read": true,
-          "write": true,
-          "interval": 1000000000
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Last Dispensed Water Valve On Time In Seconds",
-          "name": "Erd_LastDispensedWaterValveOnTimeInSeconds",
-          "read": true,
-          "write": true,
-          "interval": 1000000000
-        },
-        {
-          "namespace": "mb",
           "displayName": "Enable Demo Mode Status",
           "name": "Erd_EnableDemoModeStatus",
           "read": true,

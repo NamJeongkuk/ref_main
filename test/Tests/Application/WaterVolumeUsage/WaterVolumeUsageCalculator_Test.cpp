@@ -39,21 +39,18 @@ enum
 enum
 {
    Erd_WaterValveRelay,
-   Erd_WaterValveOnTimeInSeconds,
    Erd_WaterVolumeUsageInOuncesX100,
    Erd_TimerModuleDouble = Erd_TimerModule
 };
 
 static const DataModel_TestDoubleConfigurationEntry_t erdTable[] = {
    { Erd_WaterValveRelay, sizeof(bool) },
-   { Erd_WaterValveOnTimeInSeconds, sizeof(uint32_t) },
    { Erd_WaterVolumeUsageInOuncesX100, sizeof(VolumeInOuncesX100_t) },
    { Erd_TimerModuleDouble, sizeof(TimerModule_t *) }
 };
 
 static const WaterVolumeUsageCalculatorConfig_t config = {
    .waterValveRelayErd = Erd_WaterValveRelay,
-   .waterValveOnTimeInSecondsErd = Erd_WaterValveOnTimeInSeconds,
    .waterVolumeUsageInOuncesX100Erd = Erd_WaterVolumeUsageInOuncesX100
 };
 
@@ -109,13 +106,6 @@ TEST_GROUP(WaterVolumeUsageCalculator)
    {
       VolumeInOuncesX100_t actual;
       DataModel_Read(dataModel, Erd_WaterVolumeUsageInOuncesX100, &actual);
-      CHECK_EQUAL(expected, actual);
-   }
-
-   void WaterValveOnTimeInSecondsShouldBe(uint32_t expected)
-   {
-      uint32_t actual;
-      DataModel_Read(dataModel, Erd_WaterValveOnTimeInSeconds, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -183,42 +173,6 @@ TEST(WaterVolumeUsageCalculator, ShouldWriteTheCorrectWaterVolumeUsageInOuncesX1
    WaterVolumeUsageInOuncesX100ShouldBe(MaxWaterValveFlowRateInOuncesPerSecondX100 * SomeRandomTimeInSeconds);
 }
 
-TEST(WaterVolumeUsageCalculator, ShouldWriteTheWaterValveOnTimeInSecondsWhenWaterIsDispensed)
-{
-   GivenTheModuleIsInitializedForSomeWaterValveFlowRateInOuncesPerSecondX100();
-   GivenTheWaterValveRelayTurns(ON);
-
-   After(SomeTimeInSeconds * MSEC_PER_SEC);
-
-   WhenTheWaterValveRelayTurns(OFF);
-   WaterValveOnTimeInSecondsShouldBe(SomeTimeInSeconds);
-}
-
-TEST(WaterVolumeUsageCalculator, ShouldWriteZeroToWaterValveOnTimeWhenWaterValveRelayTurnsOn)
-{
-   GivenTheModuleIsInitializedForSomeWaterValveFlowRateInOuncesPerSecondX100();
-   GivenTheWaterValveRelayTurns(ON);
-
-   After(SomeTimeInSeconds * MSEC_PER_SEC);
-
-   WhenTheWaterValveRelayTurns(OFF);
-   WaterValveOnTimeInSecondsShouldBe(SomeTimeInSeconds);
-
-   WhenTheWaterValveRelayTurns(ON);
-   WaterValveOnTimeInSecondsShouldBe(0);
-}
-
-TEST(WaterVolumeUsageCalculator, ShouldWriteWaterValveOnTimeIfAValveIsOnUponInit)
-{
-   GivenTheWaterValveRelayTurns(ON);
-   GivenTheModuleIsInitializedForSomeWaterValveFlowRateInOuncesPerSecondX100();
-
-   After(OneSecond * MSEC_PER_SEC);
-
-   WhenTheWaterValveRelayTurns(OFF);
-   WaterValveOnTimeInSecondsShouldBe(OneSecond);
-}
-
 TEST(WaterVolumeUsageCalculator, ShouldWriteTheCorrectWaterVolumeUsageInOuncesX100WhenUsingSomeWaterValveFlowRateInOuncesPerSecondX100AndWaterValveRelayIsOnUponInit)
 {
    GivenTheWaterValveRelayTurns(ON);
@@ -228,15 +182,4 @@ TEST(WaterVolumeUsageCalculator, ShouldWriteTheCorrectWaterVolumeUsageInOuncesX1
 
    WhenTheWaterValveRelayTurns(OFF);
    WaterVolumeUsageInOuncesX100ShouldBe(SomeWaterValveFlowRateInOuncesPerSecondX100 * OneSecond);
-}
-
-TEST(WaterVolumeUsageCalculator, ShouldNotWriteAnyWaterVolumeOrWaterValveOnTimeWhenValveIsOffUponInit)
-{
-   GivenTheWaterValveRelayTurns(OFF);
-   GivenTheModuleIsInitializedForSomeWaterValveFlowRateInOuncesPerSecondX100();
-
-   After(OneSecond * MSEC_PER_SEC);
-
-   WaterValveOnTimeInSecondsShouldBe(0);
-   WaterVolumeUsageInOuncesX100ShouldBe(0);
 }
