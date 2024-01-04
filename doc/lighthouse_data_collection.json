@@ -288,6 +288,11 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_AppliancePersonality",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_ApplicationVersion",
          "interval": 60000
       },
