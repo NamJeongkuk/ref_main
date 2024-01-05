@@ -53,4 +53,5 @@ void SideBySideSingleEvaporatorCoolingSystemPlugin_Init(SideBySideSingleEvaporat
 
    CoolingSystemRequestHandler_Init(&instance->_private.coolingSystemRequestHandler, dataModel, &coolingSystemRequestHandlerConfig);
    SideBySideSingleEvaporatorLoadOffDoorOpenPlugin_Init(&instance->_private.sideBySideSingleEvaporatorLoadOffDoorOpenPlugin, dataModel);
+   SideBySideSingleEvaporatorCabinetTemperatureExceededMonitorPlugin_Init(&instance->_private.sideBySideSingleEvaporatorCabinetTemperatureExceededMonitorPlugin, dataModel);
 }

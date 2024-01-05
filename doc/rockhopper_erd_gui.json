@@ -756,6 +756,39 @@
       ]
     },
     {
+      "title": "Setpoints",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Setpoint Request",
+          "name": "Erd_FreshFoodSetpointRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Setpoint Status",
+          "name": "Erd_FreshFoodSetpointStatus",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Setpoint Request",
+          "name": "Erd_FreezerSetpointRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freezer Setpoint Status",
+          "name": "Erd_FreezerSetpointStatus",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
       "title": "Sensors",
       "erds": [
         {
@@ -1760,6 +1793,27 @@
           "namespace": "mb",
           "displayName": "F301 Compressor Off While Cooling System On For Max Time",
           "name": "Erd_CompressorOffWhileCoolingSystemOnForMaxTimeFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F302 Fresh Food No Freeze Limit Tripped",
+          "name": "Erd_FreshFoodNoFreezeLimitTrippedFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F303 Fresh Food Temperature Exceeded",
+          "name": "Erd_FreshFoodTemperatureExceededFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F304 Freezer Temperature Exceeded",
+          "name": "Erd_FreezerTemperatureExceededFault",
           "read": true,
           "write": false
         },

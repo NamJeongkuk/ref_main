@@ -22,6 +22,7 @@
 #include "AmbientTemperatureAndHumidityPlugin.h"
 #include "CoolingSystemRequestHandler.h"
 #include "SideBySideSingleEvaporatorLoadOffDoorOpenPlugin.h"
+#include "SideBySideSingleEvaporatorCabinetTemperatureExceededMonitorPlugin.h"
 
 typedef struct
 {
@@ -40,6 +41,7 @@ typedef struct
       SideBySideParallelMotorControlPlugin_t sideBySideParallelMotorControlPlugin;
       CoolingSystemRequestHandler_t coolingSystemRequestHandler;
       SideBySideSingleEvaporatorLoadOffDoorOpenPlugin_t sideBySideSingleEvaporatorLoadOffDoorOpenPlugin;
+      SideBySideSingleEvaporatorCabinetTemperatureExceededMonitorPlugin_t sideBySideSingleEvaporatorCabinetTemperatureExceededMonitorPlugin;
    } _private;
 } SideBySideSingleEvaporatorCoolingSystemPlugin_t;
 
