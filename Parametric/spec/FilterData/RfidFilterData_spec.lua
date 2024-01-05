@@ -11,7 +11,8 @@ describe('RfidFilterData', function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-      rfid_filter_update_rate = TypedString('rfid_filter_update_rate', 'rfid_filter_update_rate')
+      rfid_filter_update_rate = TypedString('rfid_filter_update_rate', 'rfid_filter_update_rate'),
+      filter_month_in_minutes = 43200
     }, overrides or {})
   end
 
@@ -27,15 +28,25 @@ describe('RfidFilterData', function()
     end)
   end)
 
+  it('should assert if filter_month_in_minutes is not in range', function()
+    should_fail_with('filter_month_in_minutes=-1 must be in [0, 65535]', function()
+      rfid_filter_data(generate_config({
+        filter_month_in_minutes = -1
+      }))
+    end)
+  end)
+
   it('should generate a typed string with the correct data and type for rfid_filter_data', function()
     local expected = remove_whitespace([[
         structure(
-          pointer(rfid_filter_update_rate)
+          pointer(rfid_filter_update_rate),
+          u16(43200)
         )
       ]])
 
     local actual = rfid_filter_data({
-      rfid_filter_update_rate = TypedString('rfid_filter_update_rate', 'rfid_filter_update_rate')
+      rfid_filter_update_rate = TypedString('rfid_filter_update_rate', 'rfid_filter_update_rate'),
+      filter_month_in_minutes = 43200
     })
 
     assert.equals(expected, remove_whitespace(tostring(actual)))

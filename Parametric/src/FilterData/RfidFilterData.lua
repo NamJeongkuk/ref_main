@@ -10,7 +10,8 @@ return function(core)
     return TypedString(
       { 'rfid_filter_data' },
       structure(
-        pointer(config.rfid_filter_update_rate)
+        pointer(config.rfid_filter_update_rate),
+        u16(config.filter_month_in_minutes)
       )
     )
   end)
@@ -19,7 +20,8 @@ return function(core)
     validate_arguments(
       config,
       {
-         rfid_filter_update_rate = { constraint.typed_string('rfid_filter_update_rate') }
+         rfid_filter_update_rate = { constraint.typed_string('rfid_filter_update_rate') },
+         filter_month_in_minutes = { constraint.u16 }
       }
     )
     return generate(config)

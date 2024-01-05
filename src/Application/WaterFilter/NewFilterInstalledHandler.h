@@ -28,8 +28,11 @@ typedef struct
    Erd_t rfidFilterCalendarUsageInSecondsErd; // CalendarUsageInSeconds_t
    Erd_t eepromWaterFilterCalendarUsageInSecondsErd; // CalendarUsageInSeconds_t
    Erd_t rfidFilterLastTwelveMonthsOfWaterUsageInGallonsErd; // RfidTwelveMonthsGallonUsage_t
+   Erd_t previousWaterFilterVolumeUsageInOuncesX100Erd; // VolumeInOuncesX100_t
+   Erd_t eepromPreviousWaterFilterVolumeUsageInOuncesX100Erd; // VolumeInOuncesX100_t
    Erd_t rfidFilterNumberOfUnitsFilterHasBeenOnErd; // RfidFilterNumberOfUnitsFilterHasBeenOn_t
    Erd_t rfidFilterPreviousUnitSerialNumberErd; // UnitSerialNumber_t
+   Erd_t currentWaterFilterMonthTimeInMinutes; // uint16_t
 } NewFilterInstalledHandlerWriteErds_t;
 
 typedef struct

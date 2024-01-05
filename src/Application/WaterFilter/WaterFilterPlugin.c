@@ -51,8 +51,11 @@ static const NewFilterInstalledHandlerWriteErds_t newFilterInstalledHandlerWrite
    .rfidFilterCalendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
    .eepromWaterFilterCalendarUsageInSecondsErd = Erd_Eeprom_WaterFilterCalendarUsageInSeconds,
    .rfidFilterLastTwelveMonthsOfWaterUsageInGallonsErd = Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons,
+   .previousWaterFilterVolumeUsageInOuncesX100Erd = Erd_PreviousWaterFilterVolumeUsageInOuncesX100,
+   .eepromPreviousWaterFilterVolumeUsageInOuncesX100Erd = Erd_Eeprom_PreviousWaterFilterVolumeUsageInOuncesX100,
    .rfidFilterNumberOfUnitsFilterHasBeenOnErd = Erd_RfidFilterNumberOfUnitsRfidFilterHasBeenOn,
    .rfidFilterPreviousUnitSerialNumberErd = Erd_RfidFilterPreviousUnitSerialNumber,
+   .currentWaterFilterMonthTimeInMinutes = Erd_CurrentWaterFilterMonthTimeInMinutes
 };
 
 static const NewFilterInstalledHandlerConfig_t newFilterInstalledHandlerConfig = {
@@ -130,6 +133,13 @@ static const IceMakerFillBlockerConfig_t iceMakerFillBlockerConfig = {
    .waterFilterVolumeUsageInOuncesX100Erd = Erd_WaterFilterVolumeUsageInOuncesX100,
    .waterFilterCalendarUsageInSecondsErd = Erd_WaterFilterCalendarUsageInSeconds,
    .iceMakerFillInhibitedReasonErd = Erd_IceMakerFillInhibitedReason
+};
+
+static const LastTwelveMonthsOfWaterUsageUpdaterConfig_t lastTwelveMonthsOfWaterUsageUpdaterConfig = {
+   .currentWaterFilterVolumeUsageInOuncesX100Erd = Erd_WaterFilterVolumeUsageInOuncesX100,
+   .previousWaterFilterVolumeUsageInOuncesX100Erd = Erd_PreviousWaterFilterVolumeUsageInOuncesX100,
+   .currentWaterFilterMonthTimeInMinutesErd = Erd_CurrentWaterFilterMonthTimeInMinutes,
+   .lastTwelveMonthsOfWaterUsageInGallonsEepromErd = Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons
 };
 
 void WaterFilterPlugin_Init(
@@ -220,4 +230,10 @@ void WaterFilterPlugin_Init(
       dataModel,
       &iceMakerFillBlockerConfig,
       PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerFillBlockerData);
+
+   LastTwelveMonthsOfWaterUsageUpdater_Init(
+      &instance->_private.lastTwelveMonthsOfWaterUsageUpdater,
+      dataModel,
+      &lastTwelveMonthsOfWaterUsageUpdaterConfig,
+      PersonalityParametricData_Get(dataModel)->filterData->rfidFilterData);
 }

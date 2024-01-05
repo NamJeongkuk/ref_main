@@ -18,6 +18,7 @@
 #include "WaterFilterRemainingUsageUpdater.h"
 #include "WaterFilterUsageSinceExpirationUpdater.h"
 #include "IceMakerFillBlocker.h"
+#include "LastTwelveMonthsOfWaterUsageUpdater.h"
 
 typedef struct
 {
@@ -37,6 +38,7 @@ typedef struct
       WaterFilterRemainingUsageUpdater_t waterFilterRemainingUsageUpdater;
       WaterFilterUsageSinceExpirationUpdater_t waterFilterUsageSinceExpirationUpdater;
       IceMakerFillBlocker_t iceMakerFillBlocker;
+      LastTwelveMonthsOfWaterUsageUpdater_t lastTwelveMonthsOfWaterUsageUpdater;
    } _private;
 } WaterFilterPlugin_t;
 

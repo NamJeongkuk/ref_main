@@ -13,6 +13,7 @@
 typedef struct
 {
    RfidFilterUpdateRateData_t *rfidFilterUpdateRateData;
+   uint16_t filterMonthInMinutes;
 } RfidFilterData_t;
 
 #endif

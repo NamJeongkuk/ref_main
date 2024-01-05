@@ -38,6 +38,15 @@ static void WriteToVolumeUsageErds(NewFilterInstalledHandler_t *instance, Volume
       instance->_private.dataModel,
       instance->_private.config->writeErds->eepromwaterFilterVolumeUsageInOuncesX100Erd,
       &volumeUsageInOuncesX100);
+
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->writeErds->previousWaterFilterVolumeUsageInOuncesX100Erd,
+      &volumeUsageInOuncesX100);
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->writeErds->eepromPreviousWaterFilterVolumeUsageInOuncesX100Erd,
+      &volumeUsageInOuncesX100);
 }
 
 static void WriteToCalendarUsageErds(NewFilterInstalledHandler_t *instance, CalendarUsageInSeconds_t calendarUsageInSeconds)
@@ -221,6 +230,15 @@ static void IncrementNumberOfUnitsFilterHasBeenOn(NewFilterInstalledHandler_t *i
       &numberOfUnitsFilterHasBeenOn);
 }
 
+static void ClearCurrentWaterFilterMonthTime(NewFilterInstalledHandler_t *instance)
+{
+   uint16_t waterFilterMonthTimeInMinutes = 0;
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->writeErds->currentWaterFilterMonthTimeInMinutes,
+      &waterFilterMonthTimeInMinutes);
+}
+
 static void NewFilterInstalledSignalChanged(void *context, const void *args)
 {
    NewFilterInstalledHandler_t *instance = context;
@@ -229,6 +247,7 @@ static void NewFilterInstalledSignalChanged(void *context, const void *args)
    if(RfidBoardInSystem(instance))
    {
       UpdateUnitWithNewFilterData(instance);
+      ClearCurrentWaterFilterMonthTime(instance);
 
       if(FilterIsBypassFilter(instance))
       {

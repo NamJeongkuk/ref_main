@@ -3874,6 +3874,22 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Previous Water Filter Volume Usage In Ounces x100",
+          "name": "Erd_PreviousWaterFilterVolumeUsageInOuncesX100",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Eeprom Previous Water Filter Volume Usage In Ounces x100",
+          "name": "Erd_Eeprom_PreviousWaterFilterVolumeUsageInOuncesX100",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
           "displayName": "Unit Lifetime Dispensed Water In Ounces x100",
           "name": "Erd_UnitLifetimeDispensedWaterInOuncesX100",
           "read": true,
@@ -3900,6 +3916,30 @@
           "namespace": "mb",
           "displayName": "Eeprom Water Filter Calendar Usage In Seconds",
           "name": "Erd_Eeprom_WaterFilterCalendarUsageInSeconds",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Water Filter Month Time In Minutes",
+          "name": "Erd_CurrentWaterFilterMonthTimeInMinutes",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Eeprom Water Filter Month Time In Minutes",
+          "name": "Erd_Eeprom_CurrentWaterFilterMonthTimeInMinutes",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Last Twelve Months Of Water Usage In Gallons",
+          "name": "Erd_RfidFilterLastTwelveMonthsOfWaterUsageInGallons",
           "read": true,
           "write": true,
           "interval": 1000000000
