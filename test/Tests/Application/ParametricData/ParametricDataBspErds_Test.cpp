@@ -148,20 +148,20 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
    CHECK_EQUAL(*erd, Erd_TwistTrayIceMakerWaterValveRelay);
 }
 
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForAluminumMoldIceMakerRelay)
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMaker0HeaterRelay)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_AluminumMoldIceMakerHeaterRelay)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMaker0_HeaterRelay)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_AluminumMoldIceMakerHeaterRelay);
+   CHECK_EQUAL(*erd, Erd_IceMaker0_HeaterRelay);
 }
 
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMakerMotorRelay)
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMaker0RakeMotorRelay)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMakerRakeMotorRelay)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMaker0_RakeMotorRelay)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_IceMakerRakeMotorRelay);
+   CHECK_EQUAL(*erd, Erd_IceMaker0_RakeMotorRelay);
 }
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForDispenserValveRelay)
@@ -198,18 +198,18 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMakerFeelerArmPosition)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_AluminumMoldIceMakerFeelerArmPosition)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMaker0_FeelerArmPosition)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_AluminumMoldIceMakerFeelerArmPosition);
+   CHECK_EQUAL(*erd, Erd_IceMaker0_FeelerArmPosition);
 }
 
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMakerRakePosition)
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMaker0RakePosition)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_AluminumMoldIceMakerRakePosition)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMaker0_RakePosition)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_AluminumMoldIceMakerRakePosition);
+   CHECK_EQUAL(*erd, Erd_IceMaker0_RakePosition);
 }
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForFreezerEvapFanInputCaptureTime)

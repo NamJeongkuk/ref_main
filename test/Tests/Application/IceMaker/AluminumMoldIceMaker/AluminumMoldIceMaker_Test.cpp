@@ -29,23 +29,23 @@ static const AluminumMoldIceMakerConfig_t config = {
    .moldHeaterVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
    .rakeMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
    .harvestCountCalculationRequestErd = Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest,
-   .feelerArmMonitoringRequestErd = Erd_FeelerArmMonitoringRequest,
-   .feelerArmPositionErd = Erd_AluminumMoldIceMakerFeelerArmPosition,
+   .feelerArmMonitoringRequestErd = Erd_IceMaker0_FeelerArmMonitoringRequest,
+   .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition,
    .harvestCountIsReadyToHarvestErd = Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
    .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
    .iceMakerEnabledErd = Erd_IceMakerEnabledResolved,
    .sabbathModeErd = Erd_SabbathModeEnable,
    .fillTubeHeaterVoteErd = Erd_FillTubeHeater_AluminumMoldIceMakerVote,
-   .moldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
-   .rakeCompletedRevolutionErd = Erd_AluminumMoldIceMakerRakeCompletedRevolution,
+   .moldHeaterControlRequestErd = Erd_IceMaker0_MoldHeaterControlRequest,
+   .rakeCompletedRevolutionErd = Erd_IceMaker0_RakeCompletedRevolution,
    .moldThermistorIsValidErd = Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved,
-   .skipFillRequestErd = Erd_AluminumMoldIceMakerSkipFillRequest,
-   .rakeControlRequestErd = Erd_AluminumMoldIceMakerRakeControlRequest,
+   .skipFillRequestErd = Erd_IceMaker0_SkipFillRequest,
+   .rakeControlRequestErd = Erd_IceMaker0_RakeControlRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_AluminumMoldIceMakerVote,
    .waterFillMonitoringRequestErd = Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,
    .stopIceMakerFillSignalErd = Erd_AluminumMoldIceMakerStopFillSignal,
-   .rakePositionErd = Erd_AluminumMoldIceMakerRakePosition,
+   .rakePositionErd = Erd_IceMaker0_RakePosition,
    .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
    .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
    .aluminumMoldIceMakerTestRequestErd = Erd_AluminumMoldIceMakerTestRequest,
@@ -236,7 +236,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_FeelerArmMonitoringRequest,
+         Erd_IceMaker0_FeelerArmMonitoringRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -547,7 +547,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       IceMakerMoldHeaterControlRequest_t actualRequest;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
+         Erd_IceMaker0_MoldHeaterControlRequest,
          &actualRequest);
 
       CHECK_EQUAL(expectedRequest.enable, actualRequest.enable);
@@ -561,7 +561,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       IceMakerMoldHeaterControlRequest_t actual;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
+         Erd_IceMaker0_MoldHeaterControlRequest,
          &actual);
 
       CHECK_EQUAL(false, actual.enable);
@@ -625,12 +625,12 @@ TEST_GROUP(AluminumMoldIceMaker)
 
    void GivenSkipFillRequestIsSet()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerSkipFillRequest, set);
+      DataModel_Write(dataModel, Erd_IceMaker0_SkipFillRequest, set);
    }
 
    void GivenTheSkipFillRequestIsClear()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerSkipFillRequest, clear);
+      DataModel_Write(dataModel, Erd_IceMaker0_SkipFillRequest, clear);
    }
 
    void WhenTheRakeCompletesFullRevolutionAfterRequestSentAfterInitialMinimumHeaterOnTime()
@@ -638,19 +638,19 @@ TEST_GROUP(AluminumMoldIceMaker)
       After(iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds * MSEC_PER_SEC);
       RakeControllerRequestShouldBe(SET);
 
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeCompletedRevolution, set);
+      DataModel_Write(dataModel, Erd_IceMaker0_RakeCompletedRevolution, set);
    }
 
    void WhenTheRakeCompletesFullRevolutionAfterRequestSentDuringHarvestFault()
    {
       RakeControllerRequestShouldBe(SET);
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeCompletedRevolution, set);
+      DataModel_Write(dataModel, Erd_IceMaker0_RakeCompletedRevolution, set);
    }
 
    void WhenTheRakeCompletesFullRevolutionAfterRequestSentDuringHarvestFix()
    {
       RakeControllerRequestShouldBe(SET);
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeCompletedRevolution, set);
+      DataModel_Write(dataModel, Erd_IceMaker0_RakeCompletedRevolution, set);
    }
 
    void WhenRakeCompletesRevolutionAfterRequestSentAfterInitialMinimumHeaterOnTimeDuringFillTubeHeaterOnTimeAndFillTubeHeaterTimeExpires()
@@ -659,7 +659,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
       RakeControllerRequestShouldBe(SET);
 
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeCompletedRevolution, set);
+      DataModel_Write(dataModel, Erd_IceMaker0_RakeCompletedRevolution, set);
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
       After(1);
@@ -671,7 +671,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
 
       RakeControllerRequestShouldBe(SET);
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeCompletedRevolution, set);
+      DataModel_Write(dataModel, Erd_IceMaker0_RakeCompletedRevolution, set);
    }
 
    void WhenRakeCompletesRevolutionAfterRequestSentAfterInitialMinimumHeaterOnTimeDuringFillTubeHeaterOnTimeAndFillTubeHeaterTimeHasOneMillisecondLeft()
@@ -680,7 +680,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
       RakeControllerRequestShouldBe(SET);
 
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeCompletedRevolution, set);
+      DataModel_Write(dataModel, Erd_IceMaker0_RakeCompletedRevolution, set);
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Harvest);
    }
 
@@ -696,7 +696,7 @@ TEST_GROUP(AluminumMoldIceMaker)
 
    void GivenRakeDidNotCompleteFullRevolution()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeCompletedRevolution, clear);
+      DataModel_Write(dataModel, Erd_IceMaker0_RakeCompletedRevolution, clear);
    }
 
    void WhenRakeCompletedRevolutionIsCleared()
@@ -706,7 +706,7 @@ TEST_GROUP(AluminumMoldIceMaker)
 
    void GivenTheRakePositionIs(RakePosition_t position)
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakePosition, &position);
+      DataModel_Write(dataModel, Erd_IceMaker0_RakePosition, &position);
    }
 
    void WhenTheRakePositionIs(RakePosition_t position)
@@ -717,7 +717,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    void SkipFillRequestShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_AluminumMoldIceMakerSkipFillRequest, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker0_SkipFillRequest, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -725,7 +725,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    void RakeControllerRequestShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_AluminumMoldIceMakerRakeControlRequest, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker0_RakeControlRequest, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -841,7 +841,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMakerFeelerArmPosition,
+         Erd_IceMaker0_FeelerArmPosition,
          set);
    }
 
@@ -849,7 +849,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMakerFeelerArmPosition,
+         Erd_IceMaker0_FeelerArmPosition,
          clear);
    }
 
@@ -902,7 +902,7 @@ TEST_GROUP(AluminumMoldIceMaker)
 
    void ExpectNoChangeInRakeControllerRequest()
    {
-      DataModel_Subscribe(dataModel, Erd_AluminumMoldIceMakerRakeControlRequest, &rakeControllerRequestOnChangeSubscription);
+      DataModel_Subscribe(dataModel, Erd_IceMaker0_RakeControlRequest, &rakeControllerRequestOnChangeSubscription);
       mock().expectNoCall("No Call");
    }
 
@@ -2524,7 +2524,9 @@ TEST(AluminumMoldIceMaker, ShouldNotStartFillMonitoringWhenEnteringFillStateDuri
    GivenAluminumMoldIceMakerIsInHarvestStateAndHasCompletedAFullRevolution();
 
    After((iceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds -
-      iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds) * MSEC_PER_SEC - 1);
+            iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds) *
+         MSEC_PER_SEC -
+      1);
    WhenDispensingRequestStatusIs(DispensingRequestSelection_Water, DispenseStatus_Dispensing);
 
    After(1);
@@ -2541,7 +2543,9 @@ TEST(AluminumMoldIceMaker, ShouldNotStartFillMonitoringWhenEnteringFillStateWhil
    GivenAluminumMoldIceMakerIsInHarvestStateAndHasCompletedAFullRevolution();
 
    After((iceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds -
-      iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds) * MSEC_PER_SEC - 1);
+            iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds) *
+         MSEC_PER_SEC -
+      1);
    WhenIceMakerFillInhibitedDueToNewFilterIs(SET);
 
    After(1);
@@ -2558,7 +2562,9 @@ TEST(AluminumMoldIceMaker, ShouldNotStartFillMonitoringWhenEnteringFillStateWhil
    GivenAluminumMoldIceMakerIsInHarvestStateAndHasCompletedAFullRevolution();
 
    After((iceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds -
-      iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds) * MSEC_PER_SEC - 1);
+            iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds) *
+         MSEC_PER_SEC -
+      1);
    WhenIceMakerFillInhibitedDueToRfidFilterIs(SET);
 
    After(1);

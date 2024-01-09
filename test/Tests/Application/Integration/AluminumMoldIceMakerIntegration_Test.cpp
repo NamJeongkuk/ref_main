@@ -213,7 +213,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMakerRakePosition,
+         Erd_IceMaker0_RakePosition,
          &position);
    }
 
@@ -221,7 +221,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMakerRakePosition,
+         Erd_IceMaker0_RakePosition,
          &position);
    }
 
@@ -253,7 +253,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       bool actualState;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerHeaterRelay,
+         Erd_IceMaker0_HeaterRelay,
          &actualState);
 
       CHECK_EQUAL(expectedState, actualState);
@@ -271,23 +271,12 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       CHECK_EQUAL(expectedVoteCare, actualVote.care);
    }
 
-   void IceMakerMotorRelayShouldVote(bool expectedState)
-   {
-      bool actualState;
-      DataModel_Read(
-         dataModel,
-         Erd_IceMakerRakeMotorRelay,
-         &actualState);
-
-      CHECK_EQUAL(expectedState, actualState);
-   }
-
    void RakeControllerRequestShouldBe(bool expected)
    {
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerRakeControlRequest,
+         Erd_IceMaker0_RakeControlRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -310,7 +299,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMakerFeelerArmPosition,
+         Erd_IceMaker0_FeelerArmPosition,
          &state);
    }
 
@@ -329,7 +318,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       IceMakerMoldHeaterControlRequest_t actualRequest;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
+         Erd_IceMaker0_MoldHeaterControlRequest,
          &actualRequest);
 
       MEMCMP_EQUAL(&expectedRequest, &actualRequest, sizeof(expectedRequest));
@@ -364,7 +353,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerRakeCompletedRevolution,
+         Erd_IceMaker0_RakeCompletedRevolution,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -381,22 +370,11 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       CHECK_EQUAL(expected, actual);
    }
 
-   void TheIceMakerRakeMotorRelayShouldBe(bool expected)
-   {
-      bool actual;
-      DataModel_Read(
-         dataModel,
-         Erd_IceMakerRakeMotorRelay,
-         &actual);
-
-      CHECK_EQUAL(expected, actual);
-   }
-
    void WhenTheFeelerArmPositionIs(FeelerArmPosition_t position)
    {
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMakerFeelerArmPosition,
+         Erd_IceMaker0_FeelerArmPosition,
          &position);
    }
 
@@ -486,7 +464,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerSkipFillRequest,
+         Erd_IceMaker0_SkipFillRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -563,7 +541,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       IGNORE(context);
       const DataModelOnDataChangeArgs_t *args = (const DataModelOnDataChangeArgs_t *)_args;
 
-      if(args->erd == Erd_AluminumMoldIceMakerRakeCompletedRevolution)
+      if(args->erd == Erd_IceMaker0_RakeCompletedRevolution)
       {
          const bool *state = (const bool *)args->data;
 
@@ -725,7 +703,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_FeelerArmMonitoringRequest,
+         Erd_IceMaker0_FeelerArmMonitoringRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -738,7 +716,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
 
    void WhenFillTubeHeaterTimeReachedAfterRakeCompletedFullRevolution()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeCompletedRevolution, set);
+      DataModel_Write(dataModel, Erd_IceMaker0_RakeCompletedRevolution, set);
       After(iceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
    }
 

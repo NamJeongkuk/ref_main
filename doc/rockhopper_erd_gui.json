@@ -2192,8 +2192,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Feeler Arm Position",
-          "name": "Erd_AluminumMoldIceMakerFeelerArmPosition",
+          "displayName": "IceMaker0 Feeler Arm Position",
+          "name": "Erd_IceMaker0_FeelerArmPosition",
           "read": true,
           "write": true
         },
@@ -2206,8 +2206,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Feeler Arm Monitoring Request",
-          "name": "Erd_FeelerArmMonitoringRequest",
+          "displayName": "IceMaker0 Feeler Arm Monitoring Request",
+          "name": "Erd_IceMaker0_FeelerArmMonitoringRequest",
           "read": true,
           "write": true
         },
@@ -2305,22 +2305,22 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Mold Heater Control Request",
-          "name": "Erd_AluminumMoldIceMakerMoldHeaterControlRequest",
+          "displayName": "IceMaker0 Mold Heater Control Request",
+          "name": "Erd_IceMaker0_MoldHeaterControlRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Rake Completed Revolution",
-          "name": "Erd_AluminumMoldIceMakerRakeCompletedRevolution",
+          "displayName": "IceMaker0 Rake Completed Revolution",
+          "name": "Erd_IceMaker0_RakeCompletedRevolution",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Rake Control Request",
-          "name": "Erd_AluminumMoldIceMakerRakeControlRequest",
+          "displayName": "IceMaker0 Rake Control Request",
+          "name": "Erd_IceMaker0_RakeControlRequest",
           "read": true,
           "write": true
         },
@@ -2333,22 +2333,22 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Skip Fill Request",
-          "name": "Erd_AluminumMoldIceMakerSkipFillRequest",
+          "displayName": "IceMaker0 Skip Fill Request",
+          "name": "Erd_IceMaker0_SkipFillRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Rake Has Not Been home",
-          "name": "Erd_AluminumMoldIceMakerRakeHasNotBeenHome",
+          "displayName": "IceMaker0 Rake Has Not Been home",
+          "name": "Erd_IceMaker0_RakeHasNotBeenHome",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Feeler Arm Has Been Bucket Full",
-          "name": "Erd_AluminumMoldIceMakerFeelerArmHasBeenBucketFull",
+          "displayName": "IceMaker0 Feeler Arm Has Been Bucket Full",
+          "name": "Erd_IceMaker0_FeelerArmHasBeenBucketFull",
           "read": true,
           "write": false
         },

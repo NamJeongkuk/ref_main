@@ -34,7 +34,7 @@ enum
 };
 
 static const IceMakerMoldHeaterControllerConfig_t config = {
-   .moldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
+   .moldHeaterControlRequestErd = Erd_IceMaker0_MoldHeaterControlRequest,
    .moldHeaterVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
    .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .timerModuleErd = Erd_TimerModule,
@@ -69,7 +69,7 @@ TEST_GROUP(IceMakerMoldHeaterController)
          .offTemperatureInDegFx100 = offTemperature,
       };
 
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldHeaterControlRequest, &request);
+      DataModel_Write(dataModel, Erd_IceMaker0_MoldHeaterControlRequest, &request);
    }
 
    void WhenIceMakerMoldHeaterControlRequestIsDisabled()
@@ -81,7 +81,7 @@ TEST_GROUP(IceMakerMoldHeaterController)
          .offTemperatureInDegFx100 = SomeOffTemperatureInDegFx100,
       };
 
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldHeaterControlRequest, &request);
+      DataModel_Write(dataModel, Erd_IceMaker0_MoldHeaterControlRequest, &request);
    }
 
    void GivenIceMakerMoldTemperatureIs(TemperatureDegFx100_t temperature)

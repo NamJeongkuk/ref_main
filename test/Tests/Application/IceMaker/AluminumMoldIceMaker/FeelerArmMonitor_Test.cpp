@@ -22,10 +22,10 @@ extern "C"
 #define When
 
 static const FeelerArmMonitorConfig_t config = {
-   .feelerArmMonitoringRequestErd = Erd_FeelerArmMonitoringRequest,
+   .feelerArmMonitoringRequestErd = Erd_IceMaker0_FeelerArmMonitoringRequest,
    .timerModuleErd = Erd_TimerModule,
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
-   .feelerArmPositionErd = Erd_AluminumMoldIceMakerFeelerArmPosition
+   .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition
 };
 
 TEST_GROUP(FeelerArmMonitor)
@@ -52,12 +52,12 @@ TEST_GROUP(FeelerArmMonitor)
 
    void FeelerArmMonitoringRequestIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_FeelerArmMonitoringRequest, &state);
+      DataModel_Write(dataModel, Erd_IceMaker0_FeelerArmMonitoringRequest, &state);
    }
 
    void FeelerArmPositionIs(FeelerArmPosition_t position)
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerFeelerArmPosition, &position);
+      DataModel_Write(dataModel, Erd_IceMaker0_FeelerArmPosition, &position);
    }
 
    void FeelerArmIsReadyToEnterHarvestShouldBe(bool expected)

@@ -25,23 +25,23 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .moldHeaterVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
    .rakeMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
    .harvestCountCalculationRequestErd = Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest,
-   .feelerArmMonitoringRequestErd = Erd_FeelerArmMonitoringRequest,
-   .feelerArmPositionErd = Erd_AluminumMoldIceMakerFeelerArmPosition,
+   .feelerArmMonitoringRequestErd = Erd_IceMaker0_FeelerArmMonitoringRequest,
+   .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition,
    .harvestCountIsReadyToHarvestErd = Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
    .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
    .iceMakerEnabledErd = Erd_IceMakerEnabledResolved,
    .sabbathModeErd = Erd_SabbathModeEnable,
    .fillTubeHeaterVoteErd = Erd_FillTubeHeater_AluminumMoldIceMakerVote,
-   .moldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
-   .rakeCompletedRevolutionErd = Erd_AluminumMoldIceMakerRakeCompletedRevolution,
+   .moldHeaterControlRequestErd = Erd_IceMaker0_MoldHeaterControlRequest,
+   .rakeCompletedRevolutionErd = Erd_IceMaker0_RakeCompletedRevolution,
    .moldThermistorIsValidErd = Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved,
-   .skipFillRequestErd = Erd_AluminumMoldIceMakerSkipFillRequest,
-   .rakeControlRequestErd = Erd_AluminumMoldIceMakerRakeControlRequest,
+   .skipFillRequestErd = Erd_IceMaker0_SkipFillRequest,
+   .rakeControlRequestErd = Erd_IceMaker0_RakeControlRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_AluminumMoldIceMakerVote,
    .waterFillMonitoringRequestErd = Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,
    .stopIceMakerFillSignalErd = Erd_AluminumMoldIceMakerStopFillSignal,
-   .rakePositionErd = Erd_AluminumMoldIceMakerRakePosition,
+   .rakePositionErd = Erd_IceMaker0_RakePosition,
    .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
    .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
    .aluminumMoldIceMakerTestRequestErd = Erd_AluminumMoldIceMakerTestRequest,
@@ -52,10 +52,10 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
 };
 
 static const FeelerArmMonitorConfig_t feelerArmMonitorConfig = {
-   .feelerArmMonitoringRequestErd = Erd_FeelerArmMonitoringRequest,
+   .feelerArmMonitoringRequestErd = Erd_IceMaker0_FeelerArmMonitoringRequest,
    .timerModuleErd = Erd_TimerModule,
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
-   .feelerArmPositionErd = Erd_AluminumMoldIceMakerFeelerArmPosition
+   .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition
 };
 
 static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
@@ -137,29 +137,29 @@ static const ErdResolverConfiguration_t iceMakerRakeMotorResolverConfiguration =
 };
 
 static const RakeControllerConfig_t rakeControllerConfig = {
-   .rakeControlRequestErd = Erd_AluminumMoldIceMakerRakeControlRequest,
+   .rakeControlRequestErd = Erd_IceMaker0_RakeControlRequest,
    .rakeMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
-   .rakeCompletedRevolutionErd = Erd_AluminumMoldIceMakerRakeCompletedRevolution,
+   .rakeCompletedRevolutionErd = Erd_IceMaker0_RakeCompletedRevolution,
    .timerModuleErd = Erd_TimerModule,
-   .rakePositionErd = Erd_AluminumMoldIceMakerRakePosition,
-   .feelerArmPositionErd = Erd_AluminumMoldIceMakerFeelerArmPosition,
-   .rakePositionHasNotBeenHomeErd = Erd_AluminumMoldIceMakerRakeHasNotBeenHome,
-   .feelerArmPositionHasBeenBucketFullErd = Erd_AluminumMoldIceMakerFeelerArmHasBeenBucketFull
+   .rakePositionErd = Erd_IceMaker0_RakePosition,
+   .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition,
+   .rakePositionHasNotBeenHomeErd = Erd_IceMaker0_RakeHasNotBeenHome,
+   .feelerArmPositionHasBeenBucketFullErd = Erd_IceMaker0_FeelerArmHasBeenBucketFull
 };
 
 static const AluminumMoldIceMakerFullStatusUpdaterConfig_t iceMakerFullStatusUpdaterConfig = {
-   .feelerArmPositionErd = Erd_AluminumMoldIceMakerFeelerArmPosition,
+   .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition,
    .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState,
    .iceMakerFullStatusErd = Erd_IceMaker0FullStatus
 };
 
 static const ResolvedVoteRelayConnectorConfiguration_t rakeMotorDriverConfig = {
    .resolvedRelayVoteErd = Erd_AluminumMoldIceMakerRakeMotor_ResolvedVote,
-   .relayOutputErd = Erd_IceMakerRakeMotorRelay
+   .relayOutputErd = Erd_IceMaker0_RakeMotorRelay
 };
 
 static const IceMakerMoldHeaterControllerConfig_t iceMakerMoldHeaterControllerConfig = {
-   .moldHeaterControlRequestErd = Erd_AluminumMoldIceMakerMoldHeaterControlRequest,
+   .moldHeaterControlRequestErd = Erd_IceMaker0_MoldHeaterControlRequest,
    .moldHeaterVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
    .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .timerModuleErd = Erd_TimerModule,
@@ -212,7 +212,7 @@ static const OverrideArbiterConfiguration_t aluminumMoldIceMakerFilteredTemperat
 
 static const ResolvedVoteRelayConnectorConfiguration_t heaterRelayConnectorConfiguration = {
    .resolvedRelayVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_ResolvedVote,
-   .relayOutputErd = Erd_AluminumMoldIceMakerHeaterRelay
+   .relayOutputErd = Erd_IceMaker0_HeaterRelay
 };
 
 static const Erd_t aluminumMoldIceMakerThermistorValidOverrideArbiterRequestErdList[] = {

@@ -21,7 +21,7 @@ extern "C"
 #define When
 
 static const AluminumMoldIceMakerFullStatusUpdaterConfig_t config = {
-   .feelerArmPositionErd = Erd_AluminumMoldIceMakerFeelerArmPosition,
+   .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition,
    .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState,
    .iceMakerFullStatusErd = Erd_IceMaker0FullStatus
 };
@@ -45,7 +45,7 @@ TEST_GROUP(AluminumMoldIceMakerFullStatusUpdater)
 
    void FeelerArmPositionIs(FeelerArmPosition_t position)
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerFeelerArmPosition, &position);
+      DataModel_Write(dataModel, Erd_IceMaker0_FeelerArmPosition, &position);
    }
 
    void AluminumMoldIceMakerHsmStateIs(AluminumMoldIceMakerHsmState_t state)

@@ -25,14 +25,14 @@ local erd_list = {
   { input = bsp_mapped_erd.Erd_IsolationValveRelay,                       output = bsp_erd.Erd_Gpio_RLY_01 },
   { input = bsp_mapped_erd.Erd_DispenserValveRelay,                       output = bsp_erd.Erd_Gpio_RLY_02 },
   { input = bsp_mapped_erd.Erd_AluminumMoldIceMakerWaterValveRelay,       output = bsp_erd.Erd_Gpio_RLY_03 },
-  { input = bsp_mapped_erd.Erd_AluminumMoldIceMakerHeaterRelay,           output = bsp_erd.Erd_Gpio_RLY_04 },
-  { input = bsp_mapped_erd.Erd_IceMakerRakeMotorRelay,                    output = bsp_erd.Erd_Gpio_RLY_05 },
+  { input = bsp_mapped_erd.Erd_IceMaker0_HeaterRelay,                     output = bsp_erd.Erd_Gpio_RLY_04 },
+  { input = bsp_mapped_erd.Erd_IceMaker0_RakeMotorRelay,                  output = bsp_erd.Erd_Gpio_RLY_05 },
   { input = bsp_mapped_erd.Erd_TwistTrayIceMakerWaterValveRelay,          output = bsp_erd.Erd_Gpio_RLY_06 },
   { input = bsp_mapped_erd.Erd_LeftSideFreezerDoorStatus,                 output = bsp_erd.Erd_Gpio_DOOR_INT },
   { input = bsp_mapped_erd.Erd_RightSideFreshFoodDoorStatus,              output = bsp_erd.Erd_Gpio_DOOR_01 },
-  { input = bsp_mapped_erd.Erd_AluminumMoldIceMakerFeelerArmPosition,     output = bsp_erd.Erd_Gpio_GPIO_IN_03 },
+  { input = bsp_mapped_erd.Erd_IceMaker0_FeelerArmPosition,               output = bsp_erd.Erd_Gpio_GPIO_IN_03 },
   { input = bsp_mapped_erd.Erd_CompressorRelay,                           output = bsp_erd.Erd_Gpio_PWM_VAR_01 },
-  { input = bsp_mapped_erd.Erd_AluminumMoldIceMakerRakePosition,          output = bsp_erd.Erd_Gpio_CAPTURE_03 }
+  { input = bsp_mapped_erd.Erd_IceMaker0_RakePosition,                    output = bsp_erd.Erd_Gpio_CAPTURE_03 }
 
 }
 

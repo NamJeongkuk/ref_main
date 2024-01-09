@@ -443,7 +443,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_AluminumMoldIceMakerFeelerArmPosition",
+         "name": "Erd_IceMaker0_FeelerArmPosition",
          "interval": 60000
       },
       {
@@ -483,12 +483,12 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_AluminumMoldIceMakerSkipFillRequest",
+         "name": "Erd_IceMaker0_SkipFillRequest",
          "interval": 60000
       },
       {
          "namespace": "mb",
-         "name": "Erd_AluminumMoldIceMakerRakeCompletedRevolution",
+         "name": "Erd_IceMaker0_RakeCompletedRevolution",
          "interval": 60000
       },
       {

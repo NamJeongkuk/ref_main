@@ -640,8 +640,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "IM Feeler Arm Postion",
-               "name": "Erd_AluminumMoldIceMakerFeelerArmPosition",
+               "displayName": "IceMaker0 Feeler Arm Postion",
+               "name": "Erd_IceMaker0_FeelerArmPosition",
                "read": true,
                "interval": 1000000000
             },
