@@ -11,7 +11,6 @@
 #include "AluminumMoldIceMakerData.h"
 #include "FreezerIceRateData.h"
 #include "TwistTrayIceMakerData.h"
-#include "AugerMotorData.h"
 #include "NonHarvestFillTubeHeaterData.h"
 #include "IceMakerFillBlockerData.h"
 
@@ -20,7 +19,6 @@ typedef struct
    FreezerIceRateData_t *freezerIceRateData;
    AluminumMoldIceMakerData_t *aluminumMoldIceMakerData;
    TwistTrayIceMakerData_t *twistTrayIceMakerData;
-   AugerMotorData_t *augerMotorData;
    NonHarvestFillTubeHeaterData_t *nonHarvestFillTubeHeaterData;
    IceMakerFillBlockerData_t *iceMakerFillBlockerData;
 } IceMakerData_t;

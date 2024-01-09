@@ -13,7 +13,8 @@ describe('Dispenser', function()
       maximum_dispensed_ouncesx100 = 12800,
       maximum_dispense_time_in_seconds = 420,
       door_inhibit_water_dispense_table = TypedString('door_inhibit_dispense_table', 'door_inhibit_water_dispense_table'),
-      door_inhibit_ice_dispense_table = TypedString('door_inhibit_dispense_table', 'door_inhibit_ice_dispense_table')
+      door_inhibit_ice_dispense_table = TypedString('door_inhibit_dispense_table', 'door_inhibit_ice_dispense_table'),
+      auger_motor = TypedString('auger_motor', 'auger_motor')
     }, overrides or {})
   end
 
@@ -53,13 +54,22 @@ describe('Dispenser', function()
     end)
   end)
 
+  it('should assert if auger_motor is not a string', function()
+    should_fail_with('auger_motor must be a typed string with type auger_motor, but is a number', function()
+      dispenser(generate_config({
+        auger_motor = 4
+      }))
+    end)
+  end)
+
   it('should generate a typed string with the correct data and type dispenser', function()
     local expected = remove_whitespace([[
       structure(
         u16(12800),
         u16(420),
         pointer(door_inhibit_water_dispense_table),
-        pointer(door_inhibit_ice_dispense_table)
+        pointer(door_inhibit_ice_dispense_table),
+        pointer(auger_motor)
       )
       ]])
 
@@ -67,7 +77,8 @@ describe('Dispenser', function()
       maximum_dispensed_ouncesx100 = 12800,
       maximum_dispense_time_in_seconds = 420,
       door_inhibit_water_dispense_table = TypedString('door_inhibit_dispense_table', 'door_inhibit_water_dispense_table'),
-      door_inhibit_ice_dispense_table = TypedString('door_inhibit_dispense_table', 'door_inhibit_ice_dispense_table')
+      door_inhibit_ice_dispense_table = TypedString('door_inhibit_dispense_table', 'door_inhibit_ice_dispense_table'),
+      auger_motor = TypedString('auger_motor', 'auger_motor')
     })
 
     assert.equals(expected, remove_whitespace(tostring(actual)))

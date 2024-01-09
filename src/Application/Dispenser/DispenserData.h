@@ -8,8 +8,9 @@
 #ifndef DISPENSERDATA_H
 #define DISPENSERDATA_H
 
-#include "DoorInhibitDispenseTable.h"
 #include <stdint.h>
+#include "DoorInhibitDispenseTable.h"
+#include "AugerMotorData.h"
 
 typedef struct
 {
@@ -17,6 +18,7 @@ typedef struct
    uint16_t maximumDispenseTimeInSeconds;
    const DoorInhibitDispenseTable_t *doorInhibitWaterDispenseTable;
    const DoorInhibitDispenseTable_t *doorInhibitIceDispenseTable;
+   AugerMotorData_t *augerMotorData;
 } DispenserData_t;
 
 #endif

@@ -48,5 +48,5 @@ void AugerMotorPlugin_Init(
       &instance->_private.augerMotorController,
       dataModel,
       &augerMotorControllerConfiguration,
-      PersonalityParametricData_Get(dataModel)->iceMakerData->augerMotorData);
+      PersonalityParametricData_Get(dataModel)->dispenserData->augerMotorData);
 }
