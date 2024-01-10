@@ -47,7 +47,7 @@ static const CabinetTemperatureExceededMonitorConfiguration_t config = {
    .cabinetFilteredTemperatureInDegFX100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    .cabinetThermistorIsValidErd = Erd_FreshFoodThermistor_IsValidResolved,
    .cabinetSetpointTemperatureInDegFErd = Erd_FreshFoodSetpointStatus,
-   .defrostStateErd = Erd_DefrostState,
+   .defrostHsmStateErd = Erd_DefrostHsmState,
    .faultErd = Erd_FreshFoodTemperatureExceededFault
 };
 
@@ -147,14 +147,14 @@ TEST_GROUP(CabinetTemperatureExceededMonitor)
       GivenTheRightSideFreshFoodDoorIs(state);
    }
 
-   void GivenDefrostStateIs(DefrostState_t state)
+   void GivenDefrostHsmStateIs(DefrostHsmState_t state)
    {
-      DataModel_Write(dataModel, Erd_DefrostState, &state);
+      DataModel_Write(dataModel, Erd_DefrostHsmState, &state);
    }
 
-   void WhenDefrostStateIs(DefrostState_t state)
+   void WhenDefrostHsmStateIs(DefrostHsmState_t state)
    {
-      GivenDefrostStateIs(state);
+      GivenDefrostHsmStateIs(state);
    }
 
    void GivenCabinetFilteredTemperatureIs(TemperatureDegFx100_t temperatureDegFX100)
@@ -213,7 +213,7 @@ TEST_GROUP(CabinetTemperatureExceededMonitor)
    {
       GivenCabinetFilteredTemperatureIsValidAndGreaterThanSetpointTemperaturePlusUpperHysteresisLimitAboveSetpoint();
       GivenAllDoorsAre(CLOSED);
-      GivenDefrostStateIs(DefrostState_Idle);
+      GivenDefrostHsmStateIs(DefrostHsmState_Idle);
       GivenMonitorIsInitializedWithParametricWithMinimumDoorTimeGreaterThanDefrostTime();
 
       After(minimumDoorTimeGreaterThanDefrostTimeData.minimumTimeSincePowerOnInMinutes * MSEC_PER_MIN);
@@ -235,7 +235,7 @@ TEST_GROUP(CabinetTemperatureExceededMonitor)
    {
       GivenCabinetFilteredTemperatureIsValidAndGreaterThanSetpointTemperaturePlusUpperHysteresisLimitAboveSetpoint();
       GivenAllDoorsAre(CLOSED);
-      GivenDefrostStateIs(DefrostState_Idle);
+      GivenDefrostHsmStateIs(DefrostHsmState_Idle);
       GivenMonitorIsInitializedWithParametricWithMinimumDoorTimeGreaterThanDefrostTime();
 
       After(minimumDoorTimeGreaterThanDefrostTimeData.minimumTimeSincePowerOnInMinutes * MSEC_PER_MIN);
@@ -255,20 +255,20 @@ TEST_GROUP(CabinetTemperatureExceededMonitor)
       WhenCabinetThermistorIsValidIs(false);
    }
 
-   void GivenAllDoorsHaveBeenClosedAndDefrostHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnWithMinimumDoorTimeEqualToMinimumDefrostTime()
+   void GivenAllDoorsHaveBeenClosedAndDefrostHsmHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnWithMinimumDoorTimeEqualToMinimumDefrostTime()
    {
       GivenAllDoorsAre(CLOSED);
-      GivenDefrostStateIs(DefrostState_Idle);
+      GivenDefrostHsmStateIs(DefrostHsmState_Idle);
       GivenMonitorIsInitializedWithParametricWithMinimumDoorTimeEqualToDefrostTime();
 
       After(minimumDoorTimeGreaterThanDefrostTimeData.minimumTimeSincePowerOnInMinutes * MSEC_PER_MIN);
       After(minimumDoorTimeGreaterThanDefrostTimeData.minimumTimeDoorsMustBeClosedInMinutes * MSEC_PER_MIN);
    }
 
-   void GivenAllDoorsHaveBeenClosedAndDefrostHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnWithMinimumDoorTimeGreaterThanMinimumDefrostTime()
+   void GivenAllDoorsHaveBeenClosedAndDefrostHsmHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnWithMinimumDoorTimeGreaterThanMinimumDefrostTime()
    {
       GivenAllDoorsAre(CLOSED);
-      GivenDefrostStateIs(DefrostState_Idle);
+      GivenDefrostHsmStateIs(DefrostHsmState_Idle);
       GivenMonitorIsInitializedWithParametricWithMinimumDoorTimeGreaterThanDefrostTime();
 
       After(minimumDoorTimeGreaterThanDefrostTimeData.minimumTimeSincePowerOnInMinutes * MSEC_PER_MIN);
@@ -276,11 +276,11 @@ TEST_GROUP(CabinetTemperatureExceededMonitor)
    }
 };
 
-TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenAllDoorsHaveBeenClosedForMinimumTimeAndDefrostHasBeenInIdleForMinimumTimeAndItsBeenMinimumTimeSincePowerOnWithMinimumDoorTimeEqualToDefrostTimeDataAndCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndCabinetThermistorIsValid)
+TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenAllDoorsHaveBeenClosedForMinimumTimeAndDefrostHsmHasBeenInIdleForMinimumTimeAndItsBeenMinimumTimeSincePowerOnWithMinimumDoorTimeEqualToDefrostTimeDataAndCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndCabinetThermistorIsValid)
 {
    GivenCabinetFilteredTemperatureIsValidAndGreaterThanSetpointTemperaturePlusUpperHysteresisLimitAboveSetpoint();
    GivenAllDoorsAre(CLOSED);
-   GivenDefrostStateIs(DefrostState_Idle);
+   GivenDefrostHsmStateIs(DefrostHsmState_Idle);
    GivenMonitorIsInitializedWithParametricWithMinimumDoorTimeEqualToDefrostTime();
 
    After(minimumDoorTimeEqualToDefrostTimeData.minimumTimeSincePowerOnInMinutes * MSEC_PER_MIN);
@@ -292,11 +292,11 @@ TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenAllDoorsHaveBeenClosed
    FaultShouldBe(SET);
 }
 
-TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenAllDoorsHaveBeenClosedForMinimumTimeAndThenDefrostHasBeenInIdleForMinimumTimeAndItsBeenMinimumTimeSincePowerOnAndCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndCabinetThermistorIsValid)
+TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenAllDoorsHaveBeenClosedForMinimumTimeAndThenDefrostHsmHasBeenInIdleForMinimumTimeAndItsBeenMinimumTimeSincePowerOnAndCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndCabinetThermistorIsValid)
 {
    GivenCabinetFilteredTemperatureIsValidAndGreaterThanSetpointTemperaturePlusUpperHysteresisLimitAboveSetpoint();
    GivenAllDoorsAre(CLOSED);
-   GivenDefrostStateIs(DefrostState_Dwell);
+   GivenDefrostHsmStateIs(DefrostHsmState_Dwell);
    GivenMonitorIsInitializedWithParametricWithMinimumDoorTimeEqualToDefrostTime();
 
    After(minimumDoorTimeEqualToDefrostTimeData.minimumTimeSincePowerOnInMinutes * MSEC_PER_MIN);
@@ -307,7 +307,7 @@ TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenAllDoorsHaveBeenClosed
    After(1);
    FaultShouldBe(CLEAR);
 
-   WhenDefrostStateIs(DefrostState_Idle);
+   WhenDefrostHsmStateIs(DefrostHsmState_Idle);
 
    After(minimumDoorTimeEqualToDefrostTimeData.minimumTimeSinceDefrostHasCompletedInMinutes * MSEC_PER_MIN - 1);
    FaultShouldBe(CLEAR);
@@ -316,12 +316,12 @@ TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenAllDoorsHaveBeenClosed
    FaultShouldBe(SET);
 }
 
-TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenDefrostHasBeenInIdleForMinimumTimeAndThenAllDoorsHaveBeenClosedForMinimumTimeAndItsBeenMinimumTimeSincePowerOnAndCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndCabinetThermistorIsValid)
+TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenDefrostHsmHasBeenInIdleForMinimumTimeAndThenAllDoorsHaveBeenClosedForMinimumTimeAndItsBeenMinimumTimeSincePowerOnAndCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndCabinetThermistorIsValid)
 {
    GivenCabinetFilteredTemperatureIsValidAndGreaterThanSetpointTemperaturePlusUpperHysteresisLimitAboveSetpoint();
    GivenTheLeftSideFreshFoodDoorIs(CLOSED);
    GivenTheRightSideFreshFoodDoorIs(OPEN);
-   GivenDefrostStateIs(DefrostState_Idle);
+   GivenDefrostHsmStateIs(DefrostHsmState_Idle);
    GivenMonitorIsInitializedWithParametricWithMinimumDoorTimeEqualToDefrostTime();
 
    After(minimumDoorTimeEqualToDefrostTimeData.minimumTimeSincePowerOnInMinutes * MSEC_PER_MIN);
@@ -341,11 +341,11 @@ TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenDefrostHasBeenInIdleFo
    FaultShouldBe(SET);
 }
 
-TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenAllDoorsHaveBeenClosedForMinimumTimeAndDefrostHasBeenInIdleForMinimumTimeAndItsBeenMinimumTimeSincePowerOnWithMinimumDoorTimeLessThanDefrostTimeDataAndCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndCabinetThermistorIsValid)
+TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenAllDoorsHaveBeenClosedForMinimumTimeAndDefrostHsmHasBeenInIdleForMinimumTimeAndItsBeenMinimumTimeSincePowerOnWithMinimumDoorTimeLessThanDefrostTimeDataAndCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndCabinetThermistorIsValid)
 {
    GivenCabinetFilteredTemperatureIsValidAndGreaterThanSetpointTemperaturePlusUpperHysteresisLimitAboveSetpoint();
    GivenAllDoorsAre(CLOSED);
-   GivenDefrostStateIs(DefrostState_Idle);
+   GivenDefrostHsmStateIs(DefrostHsmState_Idle);
    GivenMonitorIsInitializedWithParametricWithMinimumDoorTimeLessThanDefrostTime();
 
    After(minimumDoorTimeLessThanDefrostTimeData.minimumTimeSincePowerOnInMinutes * MSEC_PER_MIN);
@@ -363,11 +363,11 @@ TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenAllDoorsHaveBeenClosed
    FaultShouldBe(SET);
 }
 
-TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenAllDoorsHaveBeenClosedForMinimumTimeAndDefrostHasBeenInIdleForMinimumTimeAndItsBeenMinimumTimeSincePowerOnWithMinimumDoorTimeGreaterThanDefrostTimeDataAndCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndCabinetThermistorIsValid)
+TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenAllDoorsHaveBeenClosedForMinimumTimeAndDefrostHsmHasBeenInIdleForMinimumTimeAndItsBeenMinimumTimeSincePowerOnWithMinimumDoorTimeGreaterThanDefrostTimeDataAndCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndCabinetThermistorIsValid)
 {
    GivenCabinetFilteredTemperatureIsValidAndGreaterThanSetpointTemperaturePlusUpperHysteresisLimitAboveSetpoint();
    GivenAllDoorsAre(CLOSED);
-   GivenDefrostStateIs(DefrostState_Idle);
+   GivenDefrostHsmStateIs(DefrostHsmState_Idle);
    GivenMonitorIsInitializedWithParametricWithMinimumDoorTimeGreaterThanDefrostTime();
 
    After(minimumDoorTimeGreaterThanDefrostTimeData.minimumTimeSincePowerOnInMinutes * MSEC_PER_MIN);
@@ -389,7 +389,7 @@ TEST(CabinetTemperatureExceededMonitor, ShouldNotSetFaultWhenDoorOpensBeforeMini
 {
    GivenCabinetFilteredTemperatureIsValidAndGreaterThanSetpointTemperaturePlusUpperHysteresisLimitAboveSetpoint();
    GivenAllDoorsAre(CLOSED);
-   GivenDefrostStateIs(DefrostState_Idle);
+   GivenDefrostHsmStateIs(DefrostHsmState_Idle);
    GivenMonitorIsInitializedWithParametricWithMinimumDoorTimeLessThanDefrostTime();
 
    After(minimumDoorTimeLessThanDefrostTimeData.minimumTimeSincePowerOnInMinutes * MSEC_PER_MIN);
@@ -412,7 +412,7 @@ TEST(CabinetTemperatureExceededMonitor, ShouldNotSetFaultWhenDefrostTransitionsO
 {
    GivenCabinetFilteredTemperatureIsValidAndGreaterThanSetpointTemperaturePlusUpperHysteresisLimitAboveSetpoint();
    GivenAllDoorsAre(CLOSED);
-   GivenDefrostStateIs(DefrostState_Idle);
+   GivenDefrostHsmStateIs(DefrostHsmState_Idle);
    GivenMonitorIsInitializedWithParametricWithMinimumDoorTimeGreaterThanDefrostTime();
 
    After(minimumDoorTimeGreaterThanDefrostTimeData.minimumTimeSincePowerOnInMinutes * MSEC_PER_MIN);
@@ -420,7 +420,7 @@ TEST(CabinetTemperatureExceededMonitor, ShouldNotSetFaultWhenDefrostTransitionsO
    After(minimumDoorTimeGreaterThanDefrostTimeData.minimumTimeSinceDefrostHasCompletedInMinutes * MSEC_PER_MIN - 1);
    FaultShouldBe(CLEAR);
 
-   WhenDefrostStateIs(DefrostState_Dwell);
+   WhenDefrostHsmStateIs(DefrostHsmState_Dwell);
    After(1);
    FaultShouldBe(CLEAR);
 
@@ -431,11 +431,11 @@ TEST(CabinetTemperatureExceededMonitor, ShouldNotSetFaultWhenDefrostTransitionsO
    FaultShouldBe(CLEAR);
 }
 
-TEST(CabinetTemperatureExceededMonitor, ShouldNotSetFaultIfCabinetTemperatureIsEqualToUpperHysteresisLimitAboveSetpointPlusSetpointAndAllDoorsHaveBeenClosedForMinimumTimeAndDefrostHasBeenInIdleForMinimumTimeAndItsBeenMinimumTimeSincePowerOn)
+TEST(CabinetTemperatureExceededMonitor, ShouldNotSetFaultIfCabinetTemperatureIsEqualToUpperHysteresisLimitAboveSetpointPlusSetpointAndAllDoorsHaveBeenClosedForMinimumTimeAndDefrostHsmHasBeenInIdleForMinimumTimeAndItsBeenMinimumTimeSincePowerOn)
 {
    GivenCabinetFilteredTemperatureIsValidAndEqualToSetpointTemperaturePlusUpperHysteresisLimitAboveSetpoint();
    GivenAllDoorsAre(CLOSED);
-   GivenDefrostStateIs(DefrostState_Idle);
+   GivenDefrostHsmStateIs(DefrostHsmState_Idle);
    GivenMonitorIsInitializedWithParametricWithMinimumDoorTimeEqualToDefrostTime();
 
    After(minimumDoorTimeEqualToDefrostTimeData.minimumTimeSincePowerOnInMinutes * MSEC_PER_MIN);
@@ -447,12 +447,12 @@ TEST(CabinetTemperatureExceededMonitor, ShouldNotSetFaultIfCabinetTemperatureIsE
    FaultShouldBe(CLEAR);
 }
 
-TEST(CabinetTemperatureExceededMonitor, ShouldNotSetTheFaultAgainOrClearItWhenDefrostStateChangesToANonIdleStateAfterFaultHasAlreadyBeenSetAndThenItIsInIdleAgainForMinimumTime)
+TEST(CabinetTemperatureExceededMonitor, ShouldNotSetTheFaultAgainOrClearItWhenDefrostHsmStateChangesToANonIdleStateAfterFaultHasAlreadyBeenSetAndThenItIsInIdleAgainForMinimumTime)
 {
    GivenFaultIsSetAndCabinetThermistorIsValid();
 
-   WhenDefrostStateIs(DefrostState_Prechill);
-   WhenDefrostStateIs(DefrostState_Idle);
+   WhenDefrostHsmStateIs(DefrostHsmState_Prechill);
+   WhenDefrostHsmStateIs(DefrostHsmState_Idle);
 
    After(minimumDoorTimeLessThanDefrostTimeData.minimumTimeSinceDefrostHasCompletedInMinutes * MSEC_PER_MIN - 1);
    FaultShouldBe(SET);
@@ -499,7 +499,7 @@ TEST(CabinetTemperatureExceededMonitor, ShouldNotClearFaultWhenCabinetTemperatur
    FaultShouldBe(SET);
 }
 
-TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultAgainWhenCabinetTemperatureRisesAboveSetpointTemperaturePlusUpperHysteresisLimitAboveSetpointAndAllDoorsHaveBeenClosedForMinimumTimeAndDefrostHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnAndCabinetThermistorIsValid)
+TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultAgainWhenCabinetTemperatureRisesAboveSetpointTemperaturePlusUpperHysteresisLimitAboveSetpointAndAllDoorsHaveBeenClosedForMinimumTimeAndDefrostHsmHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnAndCabinetThermistorIsValid)
 {
    GivenFaultIsSetAndCabinetThermistorIsValid();
 
@@ -510,7 +510,7 @@ TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultAgainWhenCabinetTemperatur
    FaultShouldBe(SET);
 }
 
-TEST(CabinetTemperatureExceededMonitor, ShouldNotSetFaultAgainWhenCabinetTemperatureRisesAboveSetpointTemperaturePlusUpperHysteresisLimitAboveSetpointIfAndAllDoorsHaveNotBeenClosedForMinimumTimeAndDefrostHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnAndCabinetThermistorIsValid)
+TEST(CabinetTemperatureExceededMonitor, ShouldNotSetFaultAgainWhenCabinetTemperatureRisesAboveSetpointTemperaturePlusUpperHysteresisLimitAboveSetpointIfAndAllDoorsHaveNotBeenClosedForMinimumTimeAndDefrostHsmHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnAndCabinetThermistorIsValid)
 {
    GivenFaultIsSetAndCabinetThermistorIsValid();
 
@@ -530,30 +530,30 @@ TEST(CabinetTemperatureExceededMonitor, ShouldNotSetFaultAgainWhenCabinetTempera
    WhenCabinetFilteredTemperatureIs(SomeTemperatureInDegFX100 + TemperatureLowerHysteresisLimitAboveSetpointInDegFX100 - 1);
    FaultShouldBe(CLEAR);
 
-   WhenDefrostStateIs(DefrostState_Prechill);
+   WhenDefrostHsmStateIs(DefrostHsmState_Prechill);
 
    WhenCabinetFilteredTemperatureIs(SomeTemperatureInDegFX100 + TemperatureUpperHysteresisLimitAboveSetpointInDegFX100 + 1);
    FaultShouldBe(CLEAR);
 }
 
-TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenSetpointChangesSuchThatCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndAllDoorsHaveBeenClosedAndDefrostHasBeenIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnAndCabinetThermistorIsValid)
+TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenSetpointChangesSuchThatCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndAllDoorsHaveBeenClosedAndDefrostHsmHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnAndCabinetThermistorIsValid)
 {
    GivenCabinetThermistorIsValidIs(true);
    GivenCabinetFilteredTemperatureIs(SomeTemperatureInDegFX100 + TemperatureUpperHysteresisLimitAboveSetpointInDegFX100 + 1);
    GivenSetpointTemperatureIs(SomeTemperatureInDegF + 1);
-   GivenAllDoorsHaveBeenClosedAndDefrostHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnWithMinimumDoorTimeEqualToMinimumDefrostTime();
+   GivenAllDoorsHaveBeenClosedAndDefrostHsmHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnWithMinimumDoorTimeEqualToMinimumDefrostTime();
    FaultShouldBe(CLEAR);
 
    WhenSetpointTemperatureIs(SomeTemperatureInDegF);
    FaultShouldBe(SET);
 }
 
-TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenSetpointChangesSuchThatCabinetTemperatureIsLessThanLowerHysteresisLimitAboveSetpointPlusSetpointAndAllDoorsHaveBeenClosedAndDefrostHasBeenIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnAndCabinetThermistorIsValid)
+TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenSetpointChangesSuchThatCabinetTemperatureIsLessThanLowerHysteresisLimitAboveSetpointPlusSetpointAndAllDoorsHaveBeenClosedAndDefrostHsmHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnAndCabinetThermistorIsValid)
 {
    GivenCabinetThermistorIsValidIs(true);
    GivenCabinetFilteredTemperatureIs(SomeTemperatureInDegFX100 + TemperatureUpperHysteresisLimitAboveSetpointInDegFX100 + 1);
    GivenSetpointTemperatureIs(SomeTemperatureInDegF + 1);
-   GivenAllDoorsHaveBeenClosedAndDefrostHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnWithMinimumDoorTimeEqualToMinimumDefrostTime();
+   GivenAllDoorsHaveBeenClosedAndDefrostHsmHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnWithMinimumDoorTimeEqualToMinimumDefrostTime();
    FaultShouldBe(CLEAR);
 
    WhenSetpointTemperatureIs(SomeTemperatureInDegF);
@@ -563,36 +563,36 @@ TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenSetpointChangesSuchTha
    FaultShouldBe(CLEAR);
 }
 
-TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenCabinetThermistorBecomesValidAndCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndAllDoorsHaveBeenClosedAndDefrostHasBeenIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnAndCabinetThermistorIsValidWithMinimumDoorTimeEqualToMinimumDefrostTime)
+TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenCabinetThermistorBecomesValidAndCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndAllDoorsHaveBeenClosedAndDefrostHsmHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnAndCabinetThermistorIsValidWithMinimumDoorTimeEqualToMinimumDefrostTime)
 {
    GivenCabinetThermistorIsValidIs(false);
    GivenCabinetFilteredTemperatureIs(SomeTemperatureInDegFX100 + TemperatureUpperHysteresisLimitAboveSetpointInDegFX100 + 1);
    GivenSetpointTemperatureIs(SomeTemperatureInDegF);
-   GivenAllDoorsHaveBeenClosedAndDefrostHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnWithMinimumDoorTimeEqualToMinimumDefrostTime();
+   GivenAllDoorsHaveBeenClosedAndDefrostHsmHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnWithMinimumDoorTimeEqualToMinimumDefrostTime();
    FaultShouldBe(CLEAR);
 
    WhenCabinetThermistorIsValidIs(true);
    FaultShouldBe(SET);
 }
 
-TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenCabinetThermistorBecomesValidAndCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndAllDoorsHaveBeenClosedAndDefrostHasBeenIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnAndCabinetThermistorIsValidWithMinimumDoorTimeGreaterThanMinimumDefrostTime)
+TEST(CabinetTemperatureExceededMonitor, ShouldSetFaultWhenCabinetThermistorBecomesValidAndCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndAllDoorsHaveBeenClosedAndDefrostHsmHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnAndCabinetThermistorIsValidWithMinimumDoorTimeGreaterThanMinimumDefrostTime)
 {
    GivenCabinetThermistorIsValidIs(false);
    GivenCabinetFilteredTemperatureIs(SomeTemperatureInDegFX100 + TemperatureUpperHysteresisLimitAboveSetpointInDegFX100 + 1);
    GivenSetpointTemperatureIs(SomeTemperatureInDegF);
-   GivenAllDoorsHaveBeenClosedAndDefrostHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnWithMinimumDoorTimeGreaterThanMinimumDefrostTime();
+   GivenAllDoorsHaveBeenClosedAndDefrostHsmHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnWithMinimumDoorTimeGreaterThanMinimumDefrostTime();
    FaultShouldBe(CLEAR);
 
    WhenCabinetThermistorIsValidIs(true);
    FaultShouldBe(SET);
 }
 
-TEST(CabinetTemperatureExceededMonitor, ShouldNotSetFaultWhenDefrostHasBeenInIdleForMinimumTimeAndThenAllDoorsHaveBeenClosedForMinimumTimeAndItsBeenMinimumTimeSincePowerOnAndCabinetTemperatureIsEqualToUpperHysteresisLimitAboveSetpointPlusSetpointAndCabinetThermistorIsValid)
+TEST(CabinetTemperatureExceededMonitor, ShouldNotSetFaultWhenDefrostHsmHasBeenInIdleForMinimumTimeAndThenAllDoorsHaveBeenClosedForMinimumTimeAndItsBeenMinimumTimeSincePowerOnAndCabinetTemperatureIsEqualToUpperHysteresisLimitAboveSetpointPlusSetpointAndCabinetThermistorIsValid)
 {
    GivenCabinetFilteredTemperatureIsValidAndEqualToSetpointTemperaturePlusUpperHysteresisLimitAboveSetpoint();
    GivenTheLeftSideFreshFoodDoorIs(CLOSED);
    GivenTheRightSideFreshFoodDoorIs(OPEN);
-   GivenDefrostStateIs(DefrostState_Idle);
+   GivenDefrostHsmStateIs(DefrostHsmState_Idle);
    GivenMonitorIsInitializedWithParametricWithMinimumDoorTimeEqualToDefrostTime();
 
    After(minimumDoorTimeEqualToDefrostTimeData.minimumTimeSincePowerOnInMinutes * MSEC_PER_MIN);
@@ -612,12 +612,12 @@ TEST(CabinetTemperatureExceededMonitor, ShouldNotSetFaultWhenDefrostHasBeenInIdl
    FaultShouldBe(CLEAR);
 }
 
-TEST(CabinetTemperatureExceededMonitor, ShouldNotSetFaultWhenCabinetThermistorIsInvalidAndCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndAllDoorsHaveBeenClosedAndDefrostHasBeenIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnAndCabinetThermistorIsValidWithMinimumDoorTimeEqualToMinimumDefrostTime)
+TEST(CabinetTemperatureExceededMonitor, ShouldNotSetFaultWhenCabinetThermistorIsInvalidAndCabinetTemperatureIsGreaterThanUpperHysteresisLimitAboveSetpointPlusSetpointAndAllDoorsHaveBeenClosedAndDefrostHsmHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnAndCabinetThermistorIsValidWithMinimumDoorTimeEqualToMinimumDefrostTime)
 {
    GivenCabinetThermistorIsValidIs(true);
    GivenCabinetFilteredTemperatureIs(SomeTemperatureInDegFX100 + TemperatureUpperHysteresisLimitAboveSetpointInDegFX100);
    GivenSetpointTemperatureIs(SomeTemperatureInDegF);
-   GivenAllDoorsHaveBeenClosedAndDefrostHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnWithMinimumDoorTimeEqualToMinimumDefrostTime();
+   GivenAllDoorsHaveBeenClosedAndDefrostHsmHasBeenInIdleForMinimumTimeAndItHasBeenMinimumTimeSincePowerOnWithMinimumDoorTimeEqualToMinimumDefrostTime();
    FaultShouldBe(CLEAR);
 
    WhenCabinetThermistorIsValidIs(false);

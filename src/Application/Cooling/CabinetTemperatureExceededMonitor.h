@@ -30,7 +30,7 @@ typedef struct
    Erd_t cabinetFilteredTemperatureInDegFX100Erd; // TemperatureDegFx100_t
    Erd_t cabinetThermistorIsValidErd; // bool
    Erd_t cabinetSetpointTemperatureInDegFErd; // Setpoint_t
-   Erd_t defrostStateErd; // DefrostState_t
+   Erd_t defrostHsmStateErd; // DefrostHsmState_t
    Erd_t faultErd; // bool
 } CabinetTemperatureExceededMonitorConfiguration_t;
 

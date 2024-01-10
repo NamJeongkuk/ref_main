@@ -297,11 +297,11 @@ static void DataModelChanged(void *context, const void *args)
       }
    }
 
-   if(erd == instance->_private.config->defrostStateErd)
+   if(erd == instance->_private.config->defrostHsmStateErd)
    {
-      const DefrostState_t *state = onChangeData->data;
+      const DefrostHsmState_t *state = onChangeData->data;
 
-      if(*state == DefrostState_Idle)
+      if(*state == DefrostHsmState_Idle)
       {
          Fsm_SendSignal(&instance->_private.defrostFsm, Signal_DefrostIsInIdle, NULL);
       }
@@ -356,13 +356,13 @@ static bool AllDoorsAreClosed(CabinetTemperatureExceededMonitor_t *instance)
 
 static bool DefrostIsInIdle(CabinetTemperatureExceededMonitor_t *instance)
 {
-   DefrostState_t state;
+   DefrostHsmState_t state;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->defrostStateErd,
+      instance->_private.config->defrostHsmStateErd,
       &state);
 
-   return (state == DefrostState_Idle);
+   return (state == DefrostHsmState_Idle);
 }
 
 static FsmState_t DoorFsmInitialState(CabinetTemperatureExceededMonitor_t *instance)

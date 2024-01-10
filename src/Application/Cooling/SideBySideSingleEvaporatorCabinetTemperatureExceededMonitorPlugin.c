@@ -22,7 +22,7 @@ static const CabinetTemperatureExceededMonitorConfiguration_t freshFoodCabinetTe
    .cabinetFilteredTemperatureInDegFX100Erd = Erd_FreshFood_FilteredTemperatureResolvedInDegFx100,
    .cabinetThermistorIsValidErd = Erd_FreshFoodThermistor_IsValidResolved,
    .cabinetSetpointTemperatureInDegFErd = Erd_FreshFoodSetpointStatus,
-   .defrostStateErd = Erd_DefrostState,
+   .defrostHsmStateErd = Erd_DefrostHsmState,
    .faultErd = Erd_FreshFoodTemperatureExceededFault
 };
 
@@ -40,7 +40,7 @@ static const CabinetTemperatureExceededMonitorConfiguration_t freezerCabinetTemp
    .cabinetFilteredTemperatureInDegFX100Erd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
    .cabinetThermistorIsValidErd = Erd_FreezerThermistor_IsValidResolved,
    .cabinetSetpointTemperatureInDegFErd = Erd_FreezerSetpointStatus,
-   .defrostStateErd = Erd_DefrostState,
+   .defrostHsmStateErd = Erd_DefrostHsmState,
    .faultErd = Erd_FreezerTemperatureExceededFault
 };
 
