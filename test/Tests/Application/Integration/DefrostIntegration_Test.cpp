@@ -1977,6 +1977,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldStartWithAFullDefrostAndCompletePrechi
 
 TEST(DefrostIntegration_SingleEvap, ShouldExitPostDwellAfterNormalPostDwellExitTimeIfUnitPowersOnInDwell)
 {
+   GivenEepromWasNotClearedAtStartup();
    GivenDefrostStateWas(DefrostState_Dwell);
    After(WaitForEepromWritesToCompleteTimeInMsec);
    WhenRefrigeratorResetsWithFreezerNotTooWarm();
@@ -1995,6 +1996,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldExitPostDwellAfterNormalPostDwellExitT
 
 TEST(DefrostIntegration_SingleEvap, ShouldExitPostDwellAfterNormalPostDwellExitTimeIfUnitPowersOnInHeaterOn)
 {
+   GivenEepromWasNotClearedAtStartup();
    GivenDefrostStateWas(DefrostState_HeaterOn);
    After(WaitForEepromWritesToCompleteTimeInMsec);
    WhenRefrigeratorResetsWithFreezerNotTooWarm();
@@ -2447,6 +2449,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldStartEnhancedSabbathFreshFoodCoolingWh
 
 TEST(DefrostIntegration_SingleEvap, ShouldStartEnhancedSabbathDefrostingWhenApplicationIsInitializedWhileEnhancedSabbathIsEnabledAndDefrostIsActive)
 {
+   GivenEepromWasNotClearedAtStartup();
    GivenEnhancedSabbathModeIs(ENABLED);
    GivenDefrostStateWas(DefrostState_Prechill);
 

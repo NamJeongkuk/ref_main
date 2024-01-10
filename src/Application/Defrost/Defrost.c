@@ -593,7 +593,11 @@ static HsmState_t InitialState(Defrost_t *instance)
 
    HsmState_t initialState = State_Idle;
 
-   if(freezerFilteredTemperatureTooWarmAtPowerUp)
+   if(ClearedEepromStartup(instance))
+   {
+      initialState = State_Idle;
+   }
+   else if(freezerFilteredTemperatureTooWarmAtPowerUp)
    {
       if(defrostState == DefrostState_HeaterOn)
       {

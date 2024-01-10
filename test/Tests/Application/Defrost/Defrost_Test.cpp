@@ -212,6 +212,12 @@ TEST_GROUP(Defrost_SingleEvap)
       Defrost_Init(&instance, dataModel, &defrostConfig, &defrostData);
    }
 
+   void GivenDefrostIsInitializedWithEepromNotClearedOnStartup()
+   {
+      DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady, set);
+      Defrost_Init(&instance, dataModel, &defrostConfig, &defrostData);
+   }
+
    void ShouldAssertOnInitialization()
    {
       CHECK_ASSERTION_FAILED(DefrostIsInitializedWithoutAssertErdsSet());
@@ -228,6 +234,11 @@ TEST_GROUP(Defrost_SingleEvap)
    void FreezerFilteredTemperatureTooWarmOnPowerUpIs(bool state)
    {
       DataModel_Write(dataModel, Erd_FreezerFilteredTemperatureTooWarmOnPowerUp, &state);
+   }
+
+   void GivenFreezerFilteredTemperatureTooWarmOnPowerUpIs(bool state)
+   {
+      FreezerFilteredTemperatureTooWarmOnPowerUpIs(state);
    }
 
    void FilteredFreezerCabinetTemperatureIs(TemperatureDegFx100_t temperature)
@@ -248,6 +259,11 @@ TEST_GROUP(Defrost_SingleEvap)
    void DefrostStateIs(DefrostState_t state)
    {
       DataModel_Write(dataModel, Erd_DefrostState, &state);
+   }
+
+   void GivenDefrostStateIs(DefrostState_t state)
+   {
+      DefrostStateIs(state);
    }
 
    void LastFreshFoodDefrostWasNormal()
@@ -665,6 +681,11 @@ TEST_GROUP(Defrost_SingleEvap)
    void ClearedEepromOnStartupIs(bool state)
    {
       DataModel_Write(dataModel, Erd_Eeprom_ClearedDefrostEepromStartup, &state);
+   }
+
+   void GivenClearedEepromOnStartupIs(bool state)
+   {
+      ClearedEepromOnStartupIs(state);
    }
 
    void ClearedEepromOnStartupShouldBe(bool expected)
@@ -2759,4 +2780,44 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryWhenEnhancedSabbathIsReq
    WhenSabbathIsReadyToDefrost();
    WhenEnhancedSabbathIsRequestingToDefrost();
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
+}
+
+TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenEepromClearedOnStartupIsSetAndFreezerFilteredTemperatureIsTooWarmOnPowerUpWhileDefrostStateIsHeaterOnOnInit)
+{
+   GivenFreezerFilteredTemperatureTooWarmOnPowerUpIs(true);
+   GivenClearedEepromOnStartupIs(true);
+   GivenDefrostStateIs(DefrostState_HeaterOn);
+   GivenDefrostIsInitializedWithEepromNotClearedOnStartup();
+
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+}
+
+TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenEepromClearedOnStartupIsSetAndFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasPrechill)
+{
+   GivenFreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   GivenClearedEepromOnStartupIs(true);
+   GivenDefrostStateIs(DefrostState_Prechill);
+   GivenDefrostIsInitializedWithEepromNotClearedOnStartup();
+
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+}
+
+TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenEepromClearedOnStartupIsSetAndFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasHeaterOn)
+{
+   GivenFreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   GivenClearedEepromOnStartupIs(true);
+   GivenDefrostStateIs(DefrostState_HeaterOn);
+   GivenDefrostIsInitializedWithEepromNotClearedOnStartup();
+
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
+}
+
+TEST(Defrost_SingleEvap, ShouldInitializeIntoIdleHsmStateWhenEepromClearedOnStartupIsSetAndFreezerFilteredTemperatureIsNotTooWarmAtPowerUpAndPreviousDefrostStateWasDwell)
+{
+   GivenFreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
+   GivenClearedEepromOnStartupIs(true);
+   GivenDefrostStateIs(DefrostState_Dwell);
+   GivenDefrostIsInitializedWithEepromNotClearedOnStartup();
+
+   DefrostHsmStateShouldBe(DefrostHsmState_Idle);
 }
