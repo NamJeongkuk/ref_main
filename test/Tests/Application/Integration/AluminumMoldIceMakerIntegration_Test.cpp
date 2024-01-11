@@ -299,7 +299,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMakerFeelerArmPosition,
+         Erd_IceMaker0_FeelerArmPosition,
          &state);
    }
 
