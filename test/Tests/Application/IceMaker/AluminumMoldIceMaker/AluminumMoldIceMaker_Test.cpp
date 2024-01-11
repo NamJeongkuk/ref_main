@@ -2344,7 +2344,7 @@ TEST(AluminumMoldIceMaker, ShouldProceedToFillStateAfterMaxHarvestTimeWhenIceMak
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Fill);
 }
 
-TEST(AluminumMoldIceMaker, ShouldProceedToFillStateAfterFillTuberOnTimeExpiredWhenSabbathModeIsEnabledAndHarvestIsEnteredViaTestRequest)
+TEST(AluminumMoldIceMaker, ShouldProceedToFillStateAfterFillTubeHeaterOnTimeExpiredWhenSabbathModeIsEnabledAndHarvestIsEnteredViaTestRequest)
 {
    GivenSabbathIsEnabledAndAluminumMoldIceMakerIsInFreezeState();
    WhenExternalTestRequestIs(IceMakerTestRequest_Harvest);

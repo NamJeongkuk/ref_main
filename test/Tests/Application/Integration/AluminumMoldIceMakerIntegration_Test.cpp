@@ -295,6 +295,14 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
          &temperature);
    }
 
+   void GivenFeelerArmPositionIs(FeelerArmPosition_t state)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_AluminumMoldIceMakerFeelerArmPosition,
+         &state);
+   }
+
    void WhenFeelerArmPositionIs(FeelerArmPosition_t state)
    {
       DataModel_Write(
@@ -816,12 +824,19 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
    }
 
+   void GivenFreezerIceRateIsNotActive()
+   {
+      DataModel_Write(dataModel, Erd_Freezer_IceRateIsActive, clear);
+   }
+
    void GivenTheAluminumMoldIceMakerIsInFreezeState()
    {
       GivenIceMakerIs(ENABLED);
       GivenSabbathModeIs(DISABLED);
       GivenTheMoldThermistorIsValid();
       GivenTheRakePositionIs(RakePosition_Home);
+      GivenFeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
+      GivenFreezerIceRateIsNotActive();
 
       WhenApplicationHasBeenInitialized();
       AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_Freeze);
@@ -1534,17 +1549,18 @@ TEST(AluminumMoldIceMakerIntegration, ShouldStayInThermistorFaultStateIfHarvestT
    AluminumMoldIceMakerHsmStateShouldBe(AluminumMoldIceMakerHsmState_ThermistorFault);
 }
 
-TEST(AluminumMoldIceMakerIntegration, ShouldActivateIceRateWhenIceRateSignalIsSent)
+TEST(AluminumMoldIceMakerIntegration, ShouldActivateIceRateAndSendIceRateSignalWhenSabbathModeIsDisabledDuringFreezeStateAndHarvestConditionsAreNotMet)
 {
    GivenTheAluminumMoldIceMakerIsInFreezeState();
    GivenSabbathModeIs(ENABLED);
    GivenIceMakerIs(ENABLED);
-   GivenSabbathModeIs(DISABLED);
+
+   WhenSabbathModeIs(DISABLED);
    FreezerTriggerIceRateSignalShouldBe(1);
    IceRateActiveErdStateShouldBe(ON);
 }
 
-TEST(AluminumMoldIceMakerIntegration, ShouldNotActivateIceRateWhenIceRateSignalNotSent)
+TEST(AluminumMoldIceMakerIntegration, ShouldNotActivateIceRateWhileTheInitialStateIsFreeze)
 {
    GivenTheAluminumMoldIceMakerIsInFreezeState();
    FreezerTriggerIceRateSignalShouldBe(0);

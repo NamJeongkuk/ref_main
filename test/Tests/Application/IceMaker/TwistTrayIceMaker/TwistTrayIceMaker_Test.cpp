@@ -853,7 +853,7 @@ TEST_GROUP(TwistTrayIceMaker)
          Erd_IceMakerFillInhibitedReason,
          &iceMakerFillInhibitedReason);
    }
-   
+
    void IceMakerFullStatusShouldBe(bool expected)
    {
       bool actual;
@@ -1431,7 +1431,7 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFreezeStateAndStartHarvestCountCalcula
    GivenTheIceMakerIsEnabled();
    GivenFillingHasStartedAfterCompletingFreezingAndHarvesting();
 
-   WhenSabbathModeIs(ON);
+   WhenSabbathModeIs(ENABLED);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 
    TheWaterValveShouldBecome(CLOSED);
@@ -1443,7 +1443,7 @@ TEST(TwistTrayIceMaker, ShouldTransitionToFreezeStateAndStartHarvestCountCalcula
    WhenTheTemperatureIs(iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100);
 
    FreezerTriggerIceRateSignalShouldIncrement();
-   WhenSabbathModeIs(OFF);
+   WhenSabbathModeIs(DISABLED);
 }
 
 TEST(TwistTrayIceMaker, ShouldNotTriggerFreezerIceRateWhenInFreezeStateAndSabbathBecomesDisabledButHarvestConditionsAreAlreadyMet)
@@ -1451,7 +1451,7 @@ TEST(TwistTrayIceMaker, ShouldNotTriggerFreezerIceRateWhenInFreezeStateAndSabbat
    GivenTheIceMakerIsEnabled();
    GivenFillingHasStartedAfterCompletingFreezingAndHarvesting();
 
-   WhenSabbathModeIs(ON);
+   WhenSabbathModeIs(ENABLED);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 
    TheWaterValveShouldBecome(CLOSED);
@@ -1462,7 +1462,7 @@ TEST(TwistTrayIceMaker, ShouldNotTriggerFreezerIceRateWhenInFreezeStateAndSabbat
 
    HarvestingShouldStart();
    FreezerTriggerIceRateSignalShouldNotIncrement();
-   WhenSabbathModeIs(OFF);
+   WhenSabbathModeIs(DISABLED);
 }
 
 TEST(TwistTrayIceMaker, ShouldBeAbleToHarvestTwice)
@@ -1572,7 +1572,7 @@ TEST(TwistTrayIceMaker, ShouldNotHarvestIceIfSabbathModeComesOnWhileFreezing)
    After((iceMakerData->freezeData.harvestCountCalculatorData->minimumFreezeTimeInMinutes * MSEC_PER_MIN) + 1);
 
    HarvestingShouldStart();
-   WhenSabbathModeIs(OFF);
+   WhenSabbathModeIs(DISABLED);
 }
 
 TEST(TwistTrayIceMaker, SabbathModeShouldAlsoWorkIfTheEnhancedSabbathModeErdComesOn)
@@ -1604,7 +1604,7 @@ TEST(TwistTrayIceMaker, SabbathModeShouldAlsoWorkIfBothSabbathErdsComeOn)
    WhenHarvestCountIsReadyToHarvestIs(SET);
    After((iceMakerData->freezeData.harvestCountCalculatorData->minimumFreezeTimeInMinutes * MSEC_PER_MIN) + 1);
 
-   WhenSabbathModeIs(OFF);
+   WhenSabbathModeIs(DISABLED);
 
    NothingShouldHappen();
    After((iceMakerData->freezeData.harvestCountCalculatorData->minimumFreezeTimeInMinutes * MSEC_PER_MIN) + 1);
@@ -1650,7 +1650,7 @@ TEST(TwistTrayIceMaker, ShouldNotClearHarvestCountCalculationRequestWhenSabbathM
 TEST(TwistTrayIceMaker, ShouldTransitionToFreezeWhenSabbathModeBecomesOnWhileBucketIsFull)
 {
    GivenTheOperationStateIsInBucketIsFull();
-   WhenSabbathModeIs(ON);
+   WhenSabbathModeIs(ENABLED);
 
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
 }
@@ -1672,7 +1672,7 @@ TEST(TwistTrayIceMaker, ShouldNotClearIceMakerFullStatusWhenTransitioningToFreez
    GivenTheOperationStateIsInBucketIsFull();
    IceMakerFullStatusShouldBe(SET);
 
-   WhenSabbathModeIs(ON);
+   WhenSabbathModeIs(ENABLED);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
    IceMakerFullStatusShouldBe(SET);
 }
@@ -1972,7 +1972,7 @@ TEST(TwistTrayIceMaker, ShouldTransitionFromHarvestToFillAndStartFillingWhenFill
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
 
    WhenTheMotorActionResultIs(Harvested);
-   WhenSabbathModeIs(ON);
+   WhenSabbathModeIs(ENABLED);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_Harvesting);
 
    FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
@@ -2172,7 +2172,7 @@ TEST(TwistTrayIceMaker, ShouldStartWaterFillMonitoringWhenSabbathIsDisabledWhile
    GivenSabbathIsDisabledAndInFillingTrayWithWaterState();
    GivenSabbathModeIs(ON);
 
-   WhenSabbathModeIs(OFF);
+   WhenSabbathModeIs(DISABLED);
    WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Start);
 }
 
@@ -2183,7 +2183,7 @@ TEST(TwistTrayIceMaker, ShouldResumeWaterFillMonitoringWhenSabbathIsDisabledWhil
    GivenDispensingRequestStatusIs(DispenseStatus_CompletedSuccessfully, DispensingRequestSelection_Water);
    TwistTrayIceMakerOperationalStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
 
-   WhenSabbathModeIs(OFF);
+   WhenSabbathModeIs(DISABLED);
    WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_Resume);
 }
 
