@@ -9,14 +9,15 @@
 #include "DispensingInhibitedReasonBitmap.h"
 #include "IceMakerFillInhibitReasonBitmap.h"
 #include "utils.h"
+#include "WaterFilterState.h"
 
 static void UpdateDispensingInhibitedBitmap(DispensingDisabler_t *instance)
 {
-   bool leakDetected;
+   WaterFilterState_t rfidFilterState;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->rfidBoardLeakDetectedFaultErd,
-      &leakDetected);
+      instance->_private.config->rfidFilterStateErd,
+      &rfidFilterState);
 
    DispensingInhibitedReasonBitmap_t dispensingInhibitedBitmap;
    DataModel_Read(
@@ -30,7 +31,8 @@ static void UpdateDispensingInhibitedBitmap(DispensingDisabler_t *instance)
       instance->_private.config->iceMakerFillInhibitedReasonBitmapErd,
       &iceMakerFillInhibitedReasonBitmap);
 
-   if(leakDetected)
+   if((rfidFilterState == WaterFilterState_Leak) ||
+      (rfidFilterState == WaterFilterState_Error))
    {
       BITMAP_SET(&dispensingInhibitedBitmap, DispensingInhibitedReason_WaterDueToRfidFilter);
       BITMAP_SET(&iceMakerFillInhibitedReasonBitmap, IceMakerFillInhibitedReason_DueToRfidFilter);
@@ -51,7 +53,7 @@ static void UpdateDispensingInhibitedBitmap(DispensingDisabler_t *instance)
       &iceMakerFillInhibitedReasonBitmap);
 }
 
-static void LeakFaultChanged(void *context, const void *args)
+static void RfidFilterStateChanged(void *context, const void *args)
 {
    DispensingDisabler_t *instance = context;
    IGNORE(args);
@@ -70,11 +72,11 @@ void DispensingDisabler_Init(
    UpdateDispensingInhibitedBitmap(instance);
 
    EventSubscription_Init(
-      &instance->_private.leakFaultSubscription,
+      &instance->_private.rfidFilterStateSubscription,
       instance,
-      LeakFaultChanged);
+      RfidFilterStateChanged);
    DataModel_Subscribe(
       dataModel,
-      instance->_private.config->rfidBoardLeakDetectedFaultErd,
-      &instance->_private.leakFaultSubscription);
+      instance->_private.config->rfidFilterStateErd,
+      &instance->_private.rfidFilterStateSubscription);
 }

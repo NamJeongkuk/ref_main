@@ -30,7 +30,7 @@ static const WaterVolumeUsageCalculatorConfig_t dispensedWaterVolumeUsageCalcula
 };
 
 static const DispensingDisablerConfig_t dispensingDisablerConfig = {
-   .rfidBoardLeakDetectedFaultErd = Erd_RfidBoardLeakDetectedFault,
+   .rfidFilterStateErd = Erd_WaterFilterState,
    .dispensingInhibitedReasonBitmapErd = Erd_DispensingInhibitedReason,
    .iceMakerFillInhibitedReasonBitmapErd = Erd_IceMakerFillInhibitedReason
 };

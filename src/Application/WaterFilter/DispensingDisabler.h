@@ -12,7 +12,7 @@
 
 typedef struct
 {
-   Erd_t rfidBoardLeakDetectedFaultErd; // bool
+   Erd_t rfidFilterStateErd; // bool
    Erd_t dispensingInhibitedReasonBitmapErd; // DispensingInhibitedReasonBitmap_t
    Erd_t iceMakerFillInhibitedReasonBitmapErd; // IceMakerFillInhibitedReasonBitmap_t
 } DispensingDisablerConfig_t;
@@ -22,7 +22,7 @@ typedef struct
    struct
    {
       I_DataModel_t *dataModel;
-      EventSubscription_t leakFaultSubscription;
+      EventSubscription_t rfidFilterStateSubscription;
       const DispensingDisablerConfig_t *config;
    } _private;
 } DispensingDisabler_t;

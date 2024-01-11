@@ -15,7 +15,7 @@ extern "C"
 #include "ReferDataModel_TestDouble.h"
 
 static const DispensingDisablerConfig_t config = {
-   .rfidBoardLeakDetectedFaultErd = Erd_RfidBoardLeakDetectedFault,
+   .rfidFilterStateErd = Erd_WaterFilterState,
    .dispensingInhibitedReasonBitmapErd = Erd_DispensingInhibitedReason,
    .iceMakerFillInhibitedReasonBitmapErd = Erd_IceMakerFillInhibitedReason
 };
@@ -43,19 +43,14 @@ TEST_GROUP(DispensingDisabler)
       GivenTheModuleIsInitialized();
    }
 
-   void WhenLeakDetectedIsSet()
+   void WhenWaterFilterStateIs(WaterFilterState_t state)
    {
-      DataModel_Write(dataModel, Erd_RfidBoardLeakDetectedFault, set);
+      DataModel_Write(dataModel, Erd_WaterFilterState, &state);
    }
 
-   void GivenLeakDetectedIsSet()
+   void GivenWaterFilterStateIs(WaterFilterState_t state)
    {
-      WhenLeakDetectedIsSet();
-   }
-
-   void WhenLeakDetectedIsClear()
-   {
-      DataModel_Write(dataModel, Erd_RfidBoardLeakDetectedFault, clear);
+      WhenWaterFilterStateIs(state);
    }
 
    void DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeSet()
@@ -95,34 +90,140 @@ TEST_GROUP(DispensingDisabler)
    }
 };
 
-TEST(DispensingDisabler, ShouldSetDispensingInhibitedReasonAndIceMakerFillInhibitedReasonWhenLeakIsDetectedBeforeInit)
+TEST(DispensingDisabler, ShouldSetDispensingInhibitedReasonAndIceMakerFillInhibitedReasonWhenWaterFilterStateIsLeakBeforeInit)
 {
-   GivenLeakDetectedIsSet();
+   GivenWaterFilterStateIs(WaterFilterState_Leak);
 
    WhenTheModuleIsInitialized();
    DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeSet();
    IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeSet();
 }
 
-TEST(DispensingDisabler, ShouldSetDispensingInhibitedReasonAndIceMakerFillInhibitedReasonWhenLeakIsDetected)
+TEST(DispensingDisabler, ShouldSetDispensingInhibitedReasonAndIceMakerFillInhibitedReasonWhenWaterFilterStateIsErrorBeforeInit)
 {
-   GivenTheModuleIsInitialized();
-   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeClear();
-   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeClear();
+   GivenWaterFilterStateIs(WaterFilterState_Error);
 
-   WhenLeakDetectedIsSet();
+   WhenTheModuleIsInitialized();
    DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeSet();
    IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeSet();
 }
 
-TEST(DispensingDisabler, ShouldClearDispensingInhibitedReasonAndIceMakerFillInhibitedReasonWhenLeakIsNotDetected)
+TEST(DispensingDisabler, ShouldSetDispensingInhibitedReasonAndIceMakerFillInhibitedReasonWhenWaterFilterStateIsLeak)
 {
-   GivenLeakDetectedIsSet();
+   GivenWaterFilterStateIs(WaterFilterState_Good);
+   GivenTheModuleIsInitialized();
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeClear();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeClear();
+
+   WhenWaterFilterStateIs(WaterFilterState_Leak);
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeSet();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeSet();
+}
+
+TEST(DispensingDisabler, ShouldSetDispensingInhibitedReasonAndIceMakerFillInhibitedReasonWhenWaterFilterStateIsError)
+{
+   GivenWaterFilterStateIs(WaterFilterState_Good);
+   GivenTheModuleIsInitialized();
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeClear();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeClear();
+
+   WhenWaterFilterStateIs(WaterFilterState_Error);
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeSet();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeSet();
+}
+
+TEST(DispensingDisabler, ShouldClearDispensingInhibitedReasonAndIceMakerFillInhibitedReasonWhenWaterFilterStateChangesFromLeakToGood)
+{
+   GivenWaterFilterStateIs(WaterFilterState_Leak);
    GivenTheModuleIsInitialized();
    DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeSet();
    IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeSet();
 
-   WhenLeakDetectedIsClear();
+   WhenWaterFilterStateIs(WaterFilterState_Good);
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeClear();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeClear();
+}
+
+TEST(DispensingDisabler, ShouldClearDispensingInhibitedReasonAndIceMakerFillInhibitedReasonWhenWaterFilterStateChangesFromErrorToGood)
+{
+   GivenWaterFilterStateIs(WaterFilterState_Error);
+   GivenTheModuleIsInitialized();
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeSet();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeSet();
+
+   WhenWaterFilterStateIs(WaterFilterState_Good);
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeClear();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeClear();
+}
+
+TEST(DispensingDisabler, ShouldClearDispensingInhibitedReasonAndIceMakerFillInhibitedReasonWhenWaterFilterStateChangesFromLeakToReplace)
+{
+   GivenWaterFilterStateIs(WaterFilterState_Leak);
+   GivenTheModuleIsInitialized();
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeSet();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeSet();
+
+   WhenWaterFilterStateIs(WaterFilterState_Replace);
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeClear();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeClear();
+}
+
+TEST(DispensingDisabler, ShouldClearDispensingInhibitedReasonAndIceMakerFillInhibitedReasonWhenWaterFilterStateChangesFromErrorToReplace)
+{
+   GivenWaterFilterStateIs(WaterFilterState_Error);
+   GivenTheModuleIsInitialized();
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeSet();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeSet();
+
+   WhenWaterFilterStateIs(WaterFilterState_Replace);
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeClear();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeClear();
+}
+
+TEST(DispensingDisabler, ShouldClearDispensingInhibitedReasonAndIceMakerFillInhibitedReasonWhenWaterFilterStateChangesFromLeakToExpired)
+{
+   GivenWaterFilterStateIs(WaterFilterState_Leak);
+   GivenTheModuleIsInitialized();
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeSet();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeSet();
+
+   WhenWaterFilterStateIs(WaterFilterState_Expired);
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeClear();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeClear();
+}
+
+TEST(DispensingDisabler, ShouldClearDispensingInhibitedReasonAndIceMakerFillInhibitedReasonWhenWaterFilterStateChangesFromErrorToExpired)
+{
+   GivenWaterFilterStateIs(WaterFilterState_Error);
+   GivenTheModuleIsInitialized();
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeSet();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeSet();
+
+   WhenWaterFilterStateIs(WaterFilterState_Expired);
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeClear();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeClear();
+}
+
+TEST(DispensingDisabler, ShouldClearDispensingInhibitedReasonAndIceMakerFillInhibitedReasonWhenWaterFilterStateChangesFromLeakToBypass)
+{
+   GivenWaterFilterStateIs(WaterFilterState_Leak);
+   GivenTheModuleIsInitialized();
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeSet();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeSet();
+
+   WhenWaterFilterStateIs(WaterFilterState_Bypass);
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeClear();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeClear();
+}
+
+TEST(DispensingDisabler, ShouldClearDispensingInhibitedReasonAndIceMakerFillInhibitedReasonWhenWaterFilterStateChangesFromErrorToBypass)
+{
+   GivenWaterFilterStateIs(WaterFilterState_Error);
+   GivenTheModuleIsInitialized();
+   DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeSet();
+   IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeSet();
+
+   WhenWaterFilterStateIs(WaterFilterState_Bypass);
    DispensingInhibitedReasonByWaterDueToRfidFilterShouldBeClear();
    IceMakerFillInhibitedReasonByDueToRfidFilterShouldBeClear();
 }
