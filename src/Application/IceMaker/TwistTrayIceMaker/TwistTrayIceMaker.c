@@ -9,7 +9,7 @@
 #include "Constants_Binary.h"
 #include "TwistTrayIceMakerMotorController.h"
 #include "SystemErds.h"
-#include "TwistTrayIceMakerMotorAction.h"
+#include "IceMakerMotorAction.h"
 #include "TwistTrayIceMakerHighLevelState.h"
 #include "TwistTrayIceMakerOperationState.h"
 #include "WaterValveVotedState.h"
@@ -58,14 +58,14 @@ enum
    Signal_IceMakerFillIsInhibited,
    Signal_IceMakerFillIsNotInhibited,
 
-   Idle = TwistTrayIceMakerMotorAction_Idle,
-   Home = TwistTrayIceMakerMotorAction_RunHomingRoutine,
-   Harvest = TwistTrayIceMakerMotorAction_RunCycle,
+   Idle = IceMakerMotorAction_Idle,
+   Home = IceMakerMotorAction_RunHomingRoutine,
+   Harvest = IceMakerMotorAction_RunCycle,
 
-   Homed = TwistTrayIceMakerMotorActionResult_Homed,
-   BucketWasFull = TwistTrayIceMakerMotorActionResult_BucketWasFull,
-   Harvested = TwistTrayIceMakerMotorActionResult_Harvested,
-   MotorError = TwistTrayIceMakerMotorActionResult_MotorError,
+   Homed = IceMakerMotorActionResult_Homed,
+   BucketWasFull = IceMakerMotorActionResult_BucketWasFull,
+   Harvested = IceMakerMotorActionResult_Harvested,
+   MotorError = IceMakerMotorActionResult_MotorError,
 
    OPEN = true,
    CLOSED = false,
@@ -109,11 +109,11 @@ static void UpdateOperationState(TwistTrayIceMaker_t *instance, TwistTrayIceMake
    DataSource_Write(instance->_private.dataSource, instance->_private.config->operationStateErd, &newState);
 }
 
-static void RequestMotorAction(TwistTrayIceMaker_t *instance, TwistTrayIceMakerMotorAction_t newMotorAction)
+static void RequestMotorAction(TwistTrayIceMaker_t *instance, IceMakerMotorAction_t newMotorAction)
 {
    TwistTrayIceMakerMotorVotedAction_t motorVote;
    motorVote.action = newMotorAction;
-   motorVote.care = (newMotorAction == TwistTrayIceMakerMotorAction_Idle) ? Vote_DontCare : Vote_Care;
+   motorVote.care = (newMotorAction == IceMakerMotorAction_Idle) ? Vote_DontCare : Vote_Care;
 
    DataSource_Write(instance->_private.dataSource, instance->_private.config->motorIceMakerVoteErd, &motorVote);
 }
@@ -217,9 +217,9 @@ static void StopFillTubeHeaterTimer(TwistTrayIceMaker_t *instance)
    TimerModule_Stop(instance->_private.timerModule, &instance->_private.fillTubeHeaterTimer);
 }
 
-static bool MotorActionResultIs(TwistTrayIceMaker_t *instance, TwistTrayIceMakerMotorActionResult_t expected)
+static bool MotorActionResultIs(TwistTrayIceMaker_t *instance, IceMakerMotorActionResult_t expected)
 {
-   TwistTrayIceMakerMotorActionResult_t actual;
+   IceMakerMotorActionResult_t actual;
    DataSource_Read(instance->_private.dataSource, instance->_private.config->motorActionResultErd, &actual);
    return actual == expected;
 }
@@ -487,7 +487,7 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
    {
       case Fsm_Entry:
          UpdateOperationState(instance, TwistTrayIceMakerOperationState_Harvesting);
-         RequestMotorAction(instance, TwistTrayIceMakerMotorAction_RunCycle);
+         RequestMotorAction(instance, IceMakerMotorAction_RunCycle);
          VoteForFillTubeHeater(instance, instance->_private.parametric->harvestData.fillTubeHeaterDutyCyclePercentage);
          StartFillTubeHeaterTimer(instance);
          break;
@@ -952,7 +952,7 @@ static void DataSourceChanged(void *context, const void *data)
    }
    else if(onChangeArgs->erd == instance->_private.config->motorActionResultErd)
    {
-      const TwistTrayIceMakerMotorActionResult_t *motorActionResult = onChangeArgs->data;
+      const IceMakerMotorActionResult_t *motorActionResult = onChangeArgs->data;
 
       switch(*motorActionResult)
       {

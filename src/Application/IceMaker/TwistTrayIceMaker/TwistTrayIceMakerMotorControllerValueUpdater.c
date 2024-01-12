@@ -19,21 +19,21 @@ static void PollMotorActionResult(void *context)
 {
    TwistTrayIceMakerMotorControllerValueUpdater_t *instance = context;
 
-   TwistTrayIceMakerMotorActionResult_t result =
+   IceMakerMotorActionResult_t result =
       TwistTrayIceMakerMotorController_MotorActionResult(instance->_private.twistTrayMotorController);
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->motorActionResultErd,
       &result);
 
-   TwistTrayIceMakerMotorOperationState_t operationState =
+   IceMakerMotorOperationState_t operationState =
       TwistTrayIceMakerMotorController_MotorOperationState(instance->_private.twistTrayMotorController);
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->motorOperationStateErd,
       &operationState);
 
-   TwistTrayIceMakerMotorErrorReason_t motorErrorReason =
+   IceMakerMotorErrorReason_t motorErrorReason =
       TwistTrayIceMakerMotorController_MotorErrorReason(instance->_private.twistTrayMotorController);
    DataModel_Write(
       instance->_private.dataModel,

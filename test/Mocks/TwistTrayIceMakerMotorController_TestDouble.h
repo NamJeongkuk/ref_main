@@ -28,10 +28,10 @@ typedef struct
       bool initialized : 1;
       uint8_t lastMotorState : 6;
 
-      TwistTrayIceMakerMotorActionResult_t motorActionResult;
-      TwistTrayIceMakerMotorActionResult_t harvestActionResult;
-      TwistTrayIceMakerMotorOperationState_t motorOperationState;
-      TwistTrayIceMakerMotorErrorReason_t motorErrorReason;
+      IceMakerMotorActionResult_t motorActionResult;
+      IceMakerMotorActionResult_t harvestActionResult;
+      IceMakerMotorOperationState_t motorOperationState;
+      IceMakerMotorErrorReason_t motorErrorReason;
 
       Fsm_t fsm;
       I_DataModel_t *dataModel;
@@ -47,7 +47,7 @@ typedef struct
  */
 void TwistTrayIceMakerMotorController_TestDouble_UpdateMotorActionResult(
    TwistTrayIceMakerMotorController_TestDouble_t *instance,
-   TwistTrayIceMakerMotorActionResult_t actionResult);
+   IceMakerMotorActionResult_t actionResult);
 
 /*!
  * Update the motor operation state
@@ -56,7 +56,7 @@ void TwistTrayIceMakerMotorController_TestDouble_UpdateMotorActionResult(
  */
 void TwistTrayIceMakerMotorController_TestDouble_UpdateMotorOperationState(
    TwistTrayIceMakerMotorController_TestDouble_t *instance,
-   TwistTrayIceMakerMotorOperationState_t motorOperationState);
+   IceMakerMotorOperationState_t motorOperationState);
 
 /*!
  * Update the motor error reason
@@ -65,7 +65,7 @@ void TwistTrayIceMakerMotorController_TestDouble_UpdateMotorOperationState(
  */
 void TwistTrayIceMakerMotorController_TestDouble_UpdateMotorErrorReason(
    TwistTrayIceMakerMotorController_TestDouble_t *instance,
-   TwistTrayIceMakerMotorErrorReason_t motorErrorReason);
+   IceMakerMotorErrorReason_t motorErrorReason);
 
 /*!
  * Initialize the test double

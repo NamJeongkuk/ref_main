@@ -10,7 +10,7 @@
 #include "PersonalityParametricData.h"
 #include "DataModelErdPointerAccess.h"
 #include "DataSource_Gpio.h"
-#include "TwistTrayIceMakerMotorAction.h"
+#include "IceMakerMotorAction.h"
 
 static const Output_TwistTrayIceMakerMotorStateConfig_t outputTwistIceMakerMotorStateConfig = {
    .motorDrivePositiveClockwiseChannel = Erd_BspGpio_MTR_DRV_00,
@@ -21,8 +21,8 @@ static const TwistTrayIceMakerMotorRequestManagerConfig_t requestManagerConfig =
    .resolvedVoteErd = Erd_TwistTrayIceMakerMotor_ResolvedVote,
    .motorRequestErd = Erd_TwistIceMakerMotorControlRequest,
    .motorEnableErd = Erd_TwistIceMakerMotorDriveEnable,
-   .motorActionResultErd = Erd_TwistTrayIceMaker_MotorActionResult,
-   .motorDoActionErd = Erd_TwistTrayIceMaker_MotorDoAction
+   .motorActionResultErd = Erd_IceMaker0_MotorActionResult,
+   .motorDoActionErd = Erd_IceMaker0_MotorDoAction
 };
 
 static const TwistTrayIceMakerMotorSwitchMonitorConfig_t switchMonitorConfig = {
@@ -62,7 +62,7 @@ static bool TwistMotorVotingErdCareDelegate(const void *votingErdData)
 }
 
 static const TwistTrayIceMakerMotorVotedAction_t defaultMotorData = {
-   .action = TwistTrayIceMakerMotorAction_Idle,
+   .action = IceMakerMotorAction_Idle,
    .care = Vote_DontCare
 };
 
@@ -113,7 +113,7 @@ static const ResolvedVoteRelayConnectorConfiguration_t iceMakerWaterValveRelayCo
 };
 
 static const TwistTrayIceMakerMotorControllerConfig_t twistTrayMotorControllerConfig = {
-   .motorDoActionErd = Erd_TwistTrayIceMaker_MotorDoAction
+   .motorDoActionErd = Erd_IceMaker0_MotorDoAction
 };
 
 static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
@@ -125,9 +125,9 @@ static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig 
 };
 
 static const TwistTrayIceMakerMotorControllerValueUpdaterConfig_t motorControllerValueUpdaterConfig = {
-   .motorActionResultErd = Erd_TwistTrayIceMaker_MotorActionResult,
-   .motorOperationStateErd = Erd_TwistTrayIceMaker_MotorOperationState,
-   .motorErrorReasonErd = Erd_TwistTrayIceMaker_MotorErrorReason
+   .motorActionResultErd = Erd_IceMaker0_MotorActionResult,
+   .motorOperationStateErd = Erd_IceMaker0_MotorOperationState,
+   .motorErrorReasonErd = Erd_IceMaker0_MotorErrorReason
 };
 
 static const Erd_t twistTrayIceMakerFilteredTemperatureOverrideRequestErdList[] = {
@@ -157,7 +157,7 @@ static const TwistTrayIceMakerConfiguration_t twistTrayIceMakerConfiguration = {
    .harvestCountCalculationRequestErd = Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,
    .motorIceMakerVoteErd = Erd_TwistTrayIceMakerMotor_IceMakerVote,
    .waterValveIceMakerVoteErd = Erd_TwistTrayIceMakerWaterValve_IceMakerVote,
-   .motorActionResultErd = Erd_TwistTrayIceMaker_MotorActionResult,
+   .motorActionResultErd = Erd_IceMaker0_MotorActionResult,
    .motorFaultActiveErd = Erd_TwistTrayIceMaker_MotorFaultActive,
    .waterFillMonitoringRequestErd = Erd_TwistTrayIceMakerWaterFillMonitoringRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_TwistTrayIceMakerVote,

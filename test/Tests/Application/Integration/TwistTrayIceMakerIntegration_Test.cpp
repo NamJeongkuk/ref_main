@@ -39,7 +39,7 @@ enum
    RelayDelay = 2 * MSEC_PER_SEC,
    Invalid = false,
    Valid = true,
-   Harvested = TwistTrayIceMakerMotorActionResult_Harvested
+   Harvested = IceMakerMotorActionResult_Harvested
 };
 
 TEST_GROUP(TwistTrayIceMakerIntegration)
@@ -153,17 +153,17 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       DataModel_Write(dataModel, Erd_TwistIceMakerMotorDriveEnable, &state);
    }
 
-   void TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_t expected)
+   void TheMotorActionResultShouldBe(IceMakerMotorActionResult_t expected)
    {
-      TwistTrayIceMakerMotorActionResult_t actual;
-      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_MotorActionResult, &actual);
+      IceMakerMotorActionResult_t actual;
+      DataModel_Read(dataModel, Erd_IceMaker0_MotorActionResult, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
-   void TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_t expected)
+   void TheMotorOperationStateShouldBe(IceMakerMotorOperationState_t expected)
    {
-      TwistTrayIceMakerMotorOperationState_t actual;
-      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_MotorOperationState, &actual);
+      IceMakerMotorOperationState_t actual;
+      DataModel_Read(dataModel, Erd_IceMaker0_MotorOperationState, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -269,7 +269,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       AfterNInterrupts(MotorBrakingDurationInMsec);
 
       After(MotorControllerPollingTimeInMsec);
-      TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Homed);
+      TheMotorActionResultShouldBe(IceMakerMotorActionResult_Homed);
    }
 
    void WhenTheThermistorAdcCountsAre(AdcCounts_t adcCount)
@@ -311,13 +311,13 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       WhenMotorDriveIs(ENABLED);
       After(MotorControllerPollingTimeInMsec);
 
-      TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvesting);
-      TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
+      TheMotorActionResultShouldBe(IceMakerMotorActionResult_Harvesting);
+      TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
       TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Twisting);
 
       AfterNInterrupts(twistTrayIceMakerData->harvestData.fullBucketDetectionPeriodSecX10 * 100);
       After(MotorControllerPollingTimeInMsec);
-      TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
+      TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
 
       WhenTheMotorSwitchIsDebouncedLow();
       WhenTheMotorSwitchIsDebouncedHigh();
@@ -326,12 +326,12 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       AfterNInterrupts(MotorBrakingDurationInMsec);
       After(MotorControllerPollingTimeInMsec);
       TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Untwisting);
-      TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationStateHarvest_Untwisting);
+      TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestUntwisting);
 
       WhenTheMotorSwitchIsDebouncedLow();
       WhenTheMotorSwitchIsDebouncedHigh();
       After(MotorControllerPollingTimeInMsec);
-      TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationStateHarvest_ReadyToLandInHomePosition);
+      TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestReadyToLandInHomePosition);
       TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Untwisting);
 
       WhenTheMotorSwitchIsDebouncedLow();
@@ -343,8 +343,8 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Coasting);
 
       After(MotorControllerPollingTimeInMsec);
-      TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-      TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvested);
+      TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+      TheMotorActionResultShouldBe(IceMakerMotorActionResult_Harvested);
 
       After(twistTrayIceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
       TheFillTubeHeaterWinningErdShouldBe(Erd_FillTubeHeater_NonHarvestVote);
@@ -386,11 +386,11 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       };
    }
 
-   void WhenTheMotorActionResultIs(TwistTrayIceMakerMotorActionResult_t motorActionResult)
+   void WhenTheMotorActionResultIs(IceMakerMotorActionResult_t motorActionResult)
    {
       DataModel_Write(
          dataModel,
-         Erd_TwistTrayIceMaker_MotorActionResult,
+         Erd_IceMaker0_MotorActionResult,
          &motorActionResult);
    }
 
@@ -458,8 +458,8 @@ TEST(TwistTrayIceMakerIntegration, ShouldBeginHomingMotorOnInitializationIfContr
    WhenMotorDriveIs(ENABLED);
    After(MotorControllerPollingTimeInMsec);
 
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Homing);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Homing);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
    TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Untwisting);
 }
 
@@ -478,7 +478,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldMakeSureTrayIsHome)
    TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Twisting);
 
    After(MotorControllerPollingTimeInMsec);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingJumpingOutOfHome);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingJumpingOutOfHome);
 }
 
 TEST(TwistTrayIceMakerIntegration, ShouldJumpOutOfHomeAfterBeingHome)
@@ -494,7 +494,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldJumpOutOfHomeAfterBeingHome)
 
    TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Untwisting);
    After(MotorControllerPollingTimeInMsec);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingReadyToLandInHomePosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingReadyToLandInHomePosition);
 }
 
 TEST(TwistTrayIceMakerIntegration, ShouldLandBackInHomePositionAfterJumpingOutOfHome)
@@ -516,8 +516,8 @@ TEST(TwistTrayIceMakerIntegration, ShouldLandBackInHomePositionAfterJumpingOutOf
    TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Coasting);
 
    After(MotorControllerPollingTimeInMsec);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Homed);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Homed);
    TheMotorControlRequestShouldBe(CLEAR);
 }
 
@@ -554,13 +554,13 @@ TEST(TwistTrayIceMakerIntegration, ShouldRunMotorHarvestCycle)
    WhenMotorDriveIs(ENABLED);
    After(MotorControllerPollingTimeInMsec);
 
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvesting);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Harvesting);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
    TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Twisting);
 
    AfterNInterrupts(twistTrayIceMakerData->harvestData.fullBucketDetectionPeriodSecX10 * 100);
    After(MotorControllerPollingTimeInMsec);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
 
    WhenTheMotorSwitchIsDebouncedLow();
    WhenTheMotorSwitchIsDebouncedHigh();
@@ -569,12 +569,12 @@ TEST(TwistTrayIceMakerIntegration, ShouldRunMotorHarvestCycle)
    AfterNInterrupts(MotorBrakingDurationInMsec);
    After(MotorControllerPollingTimeInMsec);
    TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Untwisting);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationStateHarvest_Untwisting);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestUntwisting);
 
    WhenTheMotorSwitchIsDebouncedLow();
    WhenTheMotorSwitchIsDebouncedHigh();
    After(MotorControllerPollingTimeInMsec);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationStateHarvest_ReadyToLandInHomePosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestReadyToLandInHomePosition);
    TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Untwisting);
 
    WhenTheMotorSwitchIsDebouncedLow();
@@ -586,8 +586,8 @@ TEST(TwistTrayIceMakerIntegration, ShouldRunMotorHarvestCycle)
    TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Coasting);
 
    After(MotorControllerPollingTimeInMsec);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvested);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Harvested);
 }
 
 TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptHarvestAndShouldGoToFillAfterHarvestWhenIceMakerBecomesDisabled)
@@ -599,13 +599,13 @@ TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptHarvestAndShouldGoToFillAft
    WhenMotorDriveIs(ENABLED);
    After(MotorControllerPollingTimeInMsec);
 
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvesting);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Harvesting);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
    TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Twisting);
 
    AfterNInterrupts(twistTrayIceMakerData->harvestData.fullBucketDetectionPeriodSecX10 * 100);
    After(MotorControllerPollingTimeInMsec);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
 
    WhenTheMotorSwitchIsDebouncedLow();
    WhenTheMotorSwitchIsDebouncedHigh();
@@ -614,12 +614,12 @@ TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptHarvestAndShouldGoToFillAft
    AfterNInterrupts(MotorBrakingDurationInMsec);
    After(MotorControllerPollingTimeInMsec);
    TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Untwisting);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationStateHarvest_Untwisting);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestUntwisting);
 
    WhenTheMotorSwitchIsDebouncedLow();
    WhenTheMotorSwitchIsDebouncedHigh();
    After(MotorControllerPollingTimeInMsec);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationStateHarvest_ReadyToLandInHomePosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestReadyToLandInHomePosition);
    TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Untwisting);
 
    WhenTheIceMakerBecomesDisabled();
@@ -634,8 +634,8 @@ TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptHarvestAndShouldGoToFillAft
    TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Coasting);
 
    After(MotorControllerPollingTimeInMsec);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvested);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Harvested);
 
    After(twistTrayIceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
    OperationStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
@@ -657,13 +657,13 @@ TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptHarvestAndShouldGoToFillAft
    GivenTheApplicationIsInitializedAndIceMakerIsInHarvest();
 
    After(MotorControllerPollingTimeInMsec);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvesting);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Harvesting);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
    TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Twisting);
 
    AfterNInterrupts(twistTrayIceMakerData->harvestData.fullBucketDetectionPeriodSecX10 * 100);
    After(MotorControllerPollingTimeInMsec);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
 
    WhenTheMotorSwitchIsDebouncedLow();
    WhenTheMotorSwitchIsDebouncedHigh();
@@ -672,12 +672,12 @@ TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptHarvestAndShouldGoToFillAft
    AfterNInterrupts(MotorBrakingDurationInMsec);
    After(MotorControllerPollingTimeInMsec);
    TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Untwisting);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationStateHarvest_Untwisting);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestUntwisting);
 
    WhenTheMotorSwitchIsDebouncedLow();
    WhenTheMotorSwitchIsDebouncedHigh();
    After(MotorControllerPollingTimeInMsec);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationStateHarvest_ReadyToLandInHomePosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestReadyToLandInHomePosition);
    TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Untwisting);
 
    WhenSabbathModeBecomes(ENABLED);
@@ -692,8 +692,8 @@ TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptHarvestAndShouldGoToFillAft
    TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Coasting);
 
    After(MotorControllerPollingTimeInMsec);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvested);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Harvested);
 
    After((twistTrayIceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC) - (5 * MotorControllerPollingTimeInMsec));
    OperationStateShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
@@ -819,8 +819,8 @@ TEST(TwistTrayIceMakerIntegration, ShouldTransitionToHomingThenFreezeWhenIceMake
    TheMotorStateShouldBe(TwistTrayIceMakerMotorState_Coasting);
 
    After(MotorControllerPollingTimeInMsec);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Homed);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Homed);
    TheMotorControlRequestShouldBe(CLEAR);
    OperationStateShouldBe(TwistTrayIceMakerOperationState_Freeze);
 }

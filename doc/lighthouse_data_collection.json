@@ -523,12 +523,12 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_TwistTrayIceMaker_MotorOperationState",
+         "name": "Erd_IceMaker0_MotorOperationState",
          "interval": 60000
       },
       {
          "namespace": "mb",
-         "name": "Erd_TwistTrayIceMaker_MotorActionResult",
+         "name": "Erd_IceMaker0_MotorActionResult",
          "interval": 60000
       },
       {

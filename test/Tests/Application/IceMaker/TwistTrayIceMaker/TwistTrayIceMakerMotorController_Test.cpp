@@ -45,9 +45,9 @@ enum
    ALongTime = 450000,
    OneSecond = MSEC_PER_SEC,
 
-   RunHomingRoutine = TwistTrayIceMakerMotorAction_RunHomingRoutine,
-   RunCycle = TwistTrayIceMakerMotorAction_RunCycle,
-   DoNothing = TwistTrayIceMakerMotorAction_Idle,
+   RunHomingRoutine = IceMakerMotorAction_RunHomingRoutine,
+   RunCycle = IceMakerMotorAction_RunCycle,
+   DoNothing = IceMakerMotorAction_Idle,
 
    PollingFrequencyInMsec = 150
 };
@@ -56,7 +56,7 @@ static uint8_t lastMotorState;
 
 static void WriteMotorState(I_Output_t *context, const void *data)
 {
-   uint8_t newMotorState = *(const TwistTrayIceMakerMotorAction_t *)data;
+   uint8_t newMotorState = *(const IceMakerMotorAction_t *)data;
 
    if(newMotorState != lastMotorState)
    {
@@ -70,7 +70,7 @@ static void WriteMotorState(I_Output_t *context, const void *data)
 }
 
 static const TwistTrayIceMakerMotorControllerConfig_t config = {
-   .motorDoActionErd = Erd_TwistTrayIceMaker_MotorDoAction
+   .motorDoActionErd = Erd_IceMaker0_MotorDoAction
 };
 
 static const I_Output_Api_t motorStateMockOutputApi = { WriteMotorState };
@@ -172,14 +172,14 @@ TEST_GROUP(TwistTrayIceMakerMotorController)
       Then TheMotorShouldBecome(newState);
    }
 
-   void TheModuleIsToldTo(TwistTrayIceMakerMotorAction_t newAction)
+   void TheModuleIsToldTo(IceMakerMotorAction_t newAction)
    {
-      TwistTrayIceMakerMotorDoAction_t doAction;
-      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_MotorDoAction, &doAction);
+      IceMakerMotorDoAction_t doAction;
+      DataModel_Read(dataModel, Erd_IceMaker0_MotorDoAction, &doAction);
 
       doAction.action = newAction;
       doAction.signal++;
-      DataModel_Write(dataModel, Erd_TwistTrayIceMaker_MotorDoAction, &doAction);
+      DataModel_Write(dataModel, Erd_IceMaker0_MotorDoAction, &doAction);
    }
 
    void TheSwitchGoes(bool newState)
@@ -192,16 +192,16 @@ TEST_GROUP(TwistTrayIceMakerMotorController)
       TheSwitchGoes(newState);
    }
 
-   void TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_t expected)
+   void TheMotorActionResultShouldBe(IceMakerMotorActionResult_t expected)
    {
-      TwistTrayIceMakerMotorActionResult_t actual =
+      IceMakerMotorActionResult_t actual =
          TwistTrayIceMakerMotorController_MotorActionResult(&instance);
       CHECK_EQUAL(expected, actual);
    }
 
-   void TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_t expected)
+   void TheMotorErrorReasonShouldBe(IceMakerMotorErrorReason_t expected)
    {
-      TwistTrayIceMakerMotorErrorReason_t actual =
+      IceMakerMotorErrorReason_t actual =
          TwistTrayIceMakerMotorController_MotorErrorReason(&instance);
       CHECK_EQUAL(expected, actual);
    }
@@ -222,7 +222,7 @@ TEST_GROUP(TwistTrayIceMakerMotorController)
 
       TheMotorShouldSwitchDirectionsTo(newState);
       After(1);
-      TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingReadyToLandInHomePosition);
+      TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingReadyToLandInHomePosition);
    }
 
    void AfterHomingDelayTheMotorShouldBecome(uint8_t newState)
@@ -271,17 +271,17 @@ TEST_GROUP(TwistTrayIceMakerMotorController)
    {
    }
 
-   void TheOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_t expected)
+   void TheOperationStateShouldBe(IceMakerMotorOperationState_t expected)
    {
       TwistTrayIceMakerOperationState_t actual;
-      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_MotorOperationState, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker0_MotorOperationState, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
 
-   void TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_t expected)
+   void TheMotorOperationStateShouldBe(IceMakerMotorOperationState_t expected)
    {
-      TwistTrayIceMakerMotorOperationState_t actual =
+      IceMakerMotorOperationState_t actual =
          TwistTrayIceMakerMotorController_MotorOperationState(&instance);
 
       CHECK_EQUAL(expected, actual);
@@ -291,8 +291,8 @@ TEST_GROUP(TwistTrayIceMakerMotorController)
 TEST(TwistTrayIceMakerMotorController, ShouldHaveNoActionResultAndIdleMotorOperationStateOnInit)
 {
    Given TheModuleIsInitialized();
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_NoAction);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_NoAction);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldCorrectlyRunThroughTheHomingRoutineAndPublishTheCorrectActionResultsWhenTheTrayIsAlreadyHome)
@@ -302,14 +302,14 @@ TEST(TwistTrayIceMakerMotorController, ShouldCorrectlyRunThroughTheHomingRoutine
 
    TheMotorShouldBecome(Untwisting);
    When TheModuleIsToldTo(RunHomingRoutine);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
 
    NothingShouldHappen();
    After(InitialHomingTwistTime - 1);
 
    TheMotorShouldSwitchDirectionsTo(Twisting);
    After(1);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingJumpingOutOfHome);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingJumpingOutOfHome);
 
    TheSwitchGoes(LOW);
 
@@ -318,13 +318,13 @@ TEST(TwistTrayIceMakerMotorController, ShouldCorrectlyRunThroughTheHomingRoutine
 
    TheMotorShouldSwitchDirectionsTo(Untwisting);
    After(1);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingReadyToLandInHomePosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingReadyToLandInHomePosition);
 
    TheSwitchGoes(HIGH);
 
    NothingShouldHappen();
    After(HomePositionLandingDelay - 1);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Homing);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Homing);
 
    TheMotorShouldBecome(Braking);
    After(1);
@@ -334,8 +334,8 @@ TEST(TwistTrayIceMakerMotorController, ShouldCorrectlyRunThroughTheHomingRoutine
 
    TheMotorShouldBecome(Coasting);
    After(1);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Homed);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Homed);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldCorrectlyRunThroughTheHomingRoutineWhenTheTrayIsALittleTwisted)
@@ -345,7 +345,7 @@ TEST(TwistTrayIceMakerMotorController, ShouldCorrectlyRunThroughTheHomingRoutine
 
    TheMotorShouldBecome(Untwisting);
    When TheModuleIsToldTo(RunHomingRoutine);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
 
    NothingShouldHappen();
    After(OneSecond);
@@ -354,7 +354,7 @@ TEST(TwistTrayIceMakerMotorController, ShouldCorrectlyRunThroughTheHomingRoutine
 
    TheMotorShouldSwitchDirectionsTo(Twisting);
    After(InitialHomingTwistTime);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingJumpingOutOfHome);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingJumpingOutOfHome);
 
    TheSwitchGoes(LOW);
 
@@ -365,7 +365,7 @@ TEST(TwistTrayIceMakerMotorController, ShouldCorrectlyRunThroughTheHomingRoutine
    AfterHomingDelayTheMotorShouldBecome(Braking);
 
    AfterCoastingDelayTheMotorShouldBecome(Coasting);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldCorrectlyRunThroughTheHomingRoutineWhenTheTrayIsFullyTwisted)
@@ -375,7 +375,7 @@ TEST(TwistTrayIceMakerMotorController, ShouldCorrectlyRunThroughTheHomingRoutine
 
    TheMotorShouldBecome(Untwisting);
    When TheModuleIsToldTo(RunHomingRoutine);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
 
    NothingShouldHappen();
    After(InitialHomingTwistTime - 1);
@@ -391,7 +391,7 @@ TEST(TwistTrayIceMakerMotorController, ShouldCorrectlyRunThroughTheHomingRoutine
 
    TheMotorShouldSwitchDirectionsTo(Twisting);
    After(InitialHomingTwistTime);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingJumpingOutOfHome);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingJumpingOutOfHome);
 
    TheSwitchGoes(LOW);
 
@@ -403,7 +403,7 @@ TEST(TwistTrayIceMakerMotorController, ShouldCorrectlyRunThroughTheHomingRoutine
 
    TheMotorShouldBecome(Coasting);
    After(CoastingTime);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldCorrectlyRunThroughTheHarvestRoutineAndPublishTheCorrectActionResultsWhenBucketIsEmpty)
@@ -412,10 +412,10 @@ TEST(TwistTrayIceMakerMotorController, ShouldCorrectlyRunThroughTheHarvestRoutin
 
    TheMotorShouldBecome(Twisting);
    When TheModuleIsToldTo(RunCycle);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
 
    SomeTimePasses(FullBucketDetectionTime);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
 
    TheMotorShouldBecome(Coasting);
    When TheSwitchGoes(HIGH);
@@ -423,16 +423,16 @@ TEST(TwistTrayIceMakerMotorController, ShouldCorrectlyRunThroughTheHarvestRoutin
    TheSwitchGoes(LOW);
 
    AfterCoastingDelayTheMotorShouldBecome(Untwisting);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationStateHarvest_Untwisting);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestUntwisting);
 
    TheSwitchBlipsQuicklyForRoutineHomewardMotionSwitchCheck();
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationStateHarvest_ReadyToLandInHomePosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestReadyToLandInHomePosition);
 
    TheSwitchGoes(HIGH);
 
    NothingShouldHappen();
    After(HomePositionLandingDelay - 1);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvesting);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Harvesting);
 
    TheMotorShouldBecome(Braking);
    After(1);
@@ -442,8 +442,8 @@ TEST(TwistTrayIceMakerMotorController, ShouldCorrectlyRunThroughTheHarvestRoutin
 
    TheMotorShouldBecome(Coasting);
    After(1);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvested);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Harvested);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldStopHarvestingIfTheIceBucketIsFull)
@@ -452,24 +452,24 @@ TEST(TwistTrayIceMakerMotorController, ShouldStopHarvestingIfTheIceBucketIsFull)
 
    TheMotorShouldBecome(Twisting);
    When TheModuleIsToldTo(RunCycle);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
 
    SomeTimePasses(FullBucketDetectionTime - 1);
 
    TheMotorShouldBecome(Coasting);
    When TheSwitchGoes(HIGH);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestBucketWasFoundToBeFull);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestBucketWasFoundToBeFull);
 
    TheSwitchGoes(LOW);
 
    AfterCoastingDelayTheMotorShouldBecome(Untwisting);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationStateHarvest_ReadyToLandInHomePosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestReadyToLandInHomePosition);
 
    TheSwitchGoes(HIGH);
    AfterHomingDelayTheMotorShouldBecome(Braking);
    AfterBrakingDelayTheMotorShouldBecome(Coasting);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_BucketWasFull);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_BucketWasFull);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldDoNothingWhileNotHavingAnActionRequest)
@@ -478,24 +478,24 @@ TEST(TwistTrayIceMakerMotorController, ShouldDoNothingWhileNotHavingAnActionRequ
 
    TheMotorShouldBecome(Twisting);
    When TheModuleIsToldTo(RunCycle);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
 
    SomeTimePasses(FullBucketDetectionTime - 1);
 
    TheMotorShouldBecome(Coasting);
    When TheSwitchGoes(HIGH);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestBucketWasFoundToBeFull);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestBucketWasFoundToBeFull);
 
    TheSwitchGoes(LOW);
 
    AfterCoastingDelayTheMotorShouldBecome(Untwisting);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationStateHarvest_ReadyToLandInHomePosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestReadyToLandInHomePosition);
 
    TheSwitchGoes(HIGH);
    AfterHomingDelayTheMotorShouldBecome(Braking);
    AfterBrakingDelayTheMotorShouldBecome(Coasting);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_BucketWasFull);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_BucketWasFull);
 
    NothingShouldHappen();
    After(ALongTime);
@@ -510,16 +510,16 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringFi
 
    TheMotorShouldBecome(Untwisting);
    When TheModuleIsToldTo(RunHomingRoutine);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
 
    After(LongMotorErrorTimeout - 1);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Homing);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Homing);
 
    TheMotorShouldBecome(Coasting);
    After(1);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_MotorError);
-   TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHomingCheckingTrayIsHome);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_MotorError);
+   TheMotorErrorReasonShouldBe(IceMakerMotorErrorReason_MotorStallsInStateHomingCheckingTrayIsHome);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringSecondHomingMovement)
@@ -529,20 +529,20 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringSe
 
    TheMotorShouldBecome(Untwisting);
    When TheModuleIsToldTo(RunHomingRoutine);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
 
    TheMotorShouldSwitchDirectionsTo(Twisting);
    After(InitialHomingTwistTime);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingJumpingOutOfHome);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingJumpingOutOfHome);
 
    After(ShortMotorErrorTimeout - 1);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Homing);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Homing);
 
    TheMotorShouldBecome(Coasting);
    After(1);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_MotorError);
-   TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHomingJumpingOutOfHome);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_MotorError);
+   TheMotorErrorReasonShouldBe(IceMakerMotorErrorReason_MotorStallsInStateHomingJumpingOutOfHome);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringThirdHomingMovement)
@@ -552,26 +552,26 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringTh
 
    TheMotorShouldBecome(Untwisting);
    When TheModuleIsToldTo(RunHomingRoutine);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
 
    TheMotorShouldSwitchDirectionsTo(Twisting);
    After(InitialHomingTwistTime);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingJumpingOutOfHome);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingJumpingOutOfHome);
 
    TheSwitchGoes(LOW);
 
    TheMotorShouldSwitchDirectionsTo(Untwisting);
    After(HomePositionLandingDelay);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingReadyToLandInHomePosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingReadyToLandInHomePosition);
 
    After(ShortMotorErrorTimeout - 1);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Homing);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Homing);
 
    TheMotorShouldBecome(Coasting);
    After(1);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_MotorError);
-   TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHomingReadyToLandInHomePosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_MotorError);
+   TheMotorErrorReasonShouldBe(IceMakerMotorErrorReason_MotorStallsInStateHomingReadyToLandInHomePosition);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringThirdHomingMovementEvenIfSwitchCheckOccurs)
@@ -581,28 +581,28 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringTh
 
    TheMotorShouldBecome(Untwisting);
    When TheModuleIsToldTo(RunHomingRoutine);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
 
    TheMotorShouldSwitchDirectionsTo(Twisting);
    After(InitialHomingTwistTime);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingJumpingOutOfHome);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingJumpingOutOfHome);
 
    TheSwitchGoes(LOW);
 
    TheMotorShouldSwitchDirectionsTo(Untwisting);
    After(HomePositionLandingDelay);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HomingReadyToLandInHomePosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HomingReadyToLandInHomePosition);
 
    After(ShortMotorErrorTimeout - 1);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Homing);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Homing);
 
    TheSwitchBlipsQuicklyForRoutineHomewardMotionSwitchCheck();
 
    TheMotorShouldBecome(Coasting);
    After(1);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_MotorError);
-   TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHomingReadyToLandInHomePosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_MotorError);
+   TheMotorErrorReasonShouldBe(IceMakerMotorErrorReason_MotorStallsInStateHomingReadyToLandInHomePosition);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringFirstHarvestingMovement)
@@ -611,17 +611,17 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringFi
 
    TheMotorShouldBecome(Twisting);
    When TheModuleIsToldTo(RunCycle);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
 
    After(LongMotorErrorTimeout - 1);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvesting);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Harvesting);
 
    TheMotorShouldBecome(Coasting);
    After(1);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_MotorError);
-   TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHarvestStoppingAtFullTwistPosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_MotorError);
+   TheMotorErrorReasonShouldBe(IceMakerMotorErrorReason_MotorStallsInStateHarvestStoppingAtFullTwistPosition);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringHarvestingAfterBucketWasFoundToBeFull)
@@ -630,27 +630,27 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringHa
 
    TheMotorShouldBecome(Twisting);
    When TheModuleIsToldTo(RunCycle);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
 
    SomeTimePasses(FullBucketDetectionTime - 1);
 
    TheMotorShouldBecome(Coasting);
    When TheSwitchGoes(HIGH);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestBucketWasFoundToBeFull);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestBucketWasFoundToBeFull);
 
    TheSwitchGoes(LOW);
 
    AfterCoastingDelayTheMotorShouldBecome(Untwisting);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationStateHarvest_ReadyToLandInHomePosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestReadyToLandInHomePosition);
 
    After(LongMotorErrorTimeout - 1);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvesting);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Harvesting);
 
    TheMotorShouldBecome(Coasting);
    After(1);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_MotorError);
-   TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHarvestReadyToLandInHomePosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_MotorError);
+   TheMotorErrorReasonShouldBe(IceMakerMotorErrorReason_MotorStallsInStateHarvestReadyToLandInHomePosition);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringHarvestingAfterActuallyHarvesting)
@@ -659,10 +659,10 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringHa
 
    TheMotorShouldBecome(Twisting);
    When TheModuleIsToldTo(RunCycle);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
 
    SomeTimePasses(FullBucketDetectionTime);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
 
    TheMotorShouldBecome(Coasting);
    When TheSwitchGoes(HIGH);
@@ -670,16 +670,16 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringHa
    TheSwitchGoes(LOW);
 
    AfterCoastingDelayTheMotorShouldBecome(Untwisting);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationStateHarvest_Untwisting);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestUntwisting);
 
    After(LongMotorErrorTimeout - 1);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvesting);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Harvesting);
 
    TheMotorShouldBecome(Coasting);
    After(1);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_MotorError);
-   TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHarvestUntwisting);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_MotorError);
+   TheMotorErrorReasonShouldBe(IceMakerMotorErrorReason_MotorStallsInStateHarvestUntwisting);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringHarvestingAfterActuallyHarvestingEvenIfTheSwitchCheckOccurs)
@@ -688,10 +688,10 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringHa
 
    TheMotorShouldBecome(Twisting);
    When TheModuleIsToldTo(RunCycle);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
 
    SomeTimePasses(FullBucketDetectionTime);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
 
    TheMotorShouldBecome(Coasting);
    When TheSwitchGoes(HIGH);
@@ -699,19 +699,19 @@ TEST(TwistTrayIceMakerMotorController, ShouldProduceAnErrorIfMotorStallsDuringHa
    TheSwitchGoes(LOW);
 
    AfterCoastingDelayTheMotorShouldBecome(Untwisting);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationStateHarvest_Untwisting);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestUntwisting);
 
    After(LongMotorErrorTimeout - 1);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvesting);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Harvesting);
 
    TheSwitchBlipsQuicklyForRoutineHomewardMotionSwitchCheck();
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationStateHarvest_ReadyToLandInHomePosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_HarvestReadyToLandInHomePosition);
 
    TheMotorShouldBecome(Coasting);
    After(1);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_MotorError);
-   TheMotorErrorReasonShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHarvestReadyToLandInHomePosition);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_MotorError);
+   TheMotorErrorReasonShouldBe(IceMakerMotorErrorReason_MotorStallsInStateHarvestReadyToLandInHomePosition);
 }
 
 TEST(TwistTrayIceMakerMotorController, ShouldSetActionResultToNoActionWhenRequestIsIdle)
@@ -719,10 +719,10 @@ TEST(TwistTrayIceMakerMotorController, ShouldSetActionResultToNoActionWhenReques
    Given TheModuleIsInitialized();
    GivenTheMotorHasHarvested();
 
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvested);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_Harvested);
 
    When TheModuleIsToldTo(DoNothing);
-   TheMotorOperationStateShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-   TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_NoAction);
+   TheMotorOperationStateShouldBe(IceMakerMotorOperationState_Idle);
+   TheMotorActionResultShouldBe(IceMakerMotorActionResult_NoAction);
 }

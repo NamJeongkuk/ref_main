@@ -15,10 +15,10 @@
 #include "I_Output.h"
 #include "Fsm.h"
 #include "TwistTrayIceMakerData.h"
-#include "TwistTrayIceMakerMotorActionResult.h"
-#include "TwistTrayIceMakerMotorAction.h"
-#include "TwistTrayIceMakerMotorErrorReason.h"
-#include "TwistTrayIceMakerMotorOperationState.h"
+#include "IceMakerMotorActionResult.h"
+#include "IceMakerMotorAction.h"
+#include "IceMakerMotorErrorReason.h"
+#include "IceMakerMotorOperationState.h"
 
 enum
 {
@@ -29,7 +29,7 @@ enum
 
 typedef struct
 {
-   Erd_t motorDoActionErd; // TwistTrayIceMakerMotorAction_t
+   Erd_t motorDoActionErd; // IceMakerMotorAction_t
 } TwistTrayIceMakerMotorControllerConfig_t;
 
 typedef struct
@@ -47,10 +47,10 @@ typedef struct
       bool initialized : 1;
       uint8_t lastMotorState : 6;
 
-      TwistTrayIceMakerMotorActionResult_t motorActionResult;
-      TwistTrayIceMakerMotorActionResult_t harvestActionResult;
-      TwistTrayIceMakerMotorOperationState_t motorOperationState;
-      TwistTrayIceMakerMotorErrorReason_t motorErrorReason;
+      IceMakerMotorActionResult_t motorActionResult;
+      IceMakerMotorActionResult_t harvestActionResult;
+      IceMakerMotorOperationState_t motorOperationState;
+      IceMakerMotorErrorReason_t motorErrorReason;
 
       Fsm_t fsm;
       I_DataModel_t *dataModel;
@@ -99,7 +99,7 @@ void TwistTrayIceMakerMotorController_UpdateSwitchState(
  * @param instance
  * @return the result of the motor action
  */
-TwistTrayIceMakerMotorActionResult_t TwistTrayIceMakerMotorController_MotorActionResult(
+IceMakerMotorActionResult_t TwistTrayIceMakerMotorController_MotorActionResult(
    TwistTrayIceMakerMotorController_t *instance);
 
 /*!
@@ -107,7 +107,7 @@ TwistTrayIceMakerMotorActionResult_t TwistTrayIceMakerMotorController_MotorActio
  * @param instance
  * @return the operation state of the motor
  */
-TwistTrayIceMakerMotorOperationState_t TwistTrayIceMakerMotorController_MotorOperationState(
+IceMakerMotorOperationState_t TwistTrayIceMakerMotorController_MotorOperationState(
    TwistTrayIceMakerMotorController_t *instance);
 
 /*!
@@ -115,7 +115,7 @@ TwistTrayIceMakerMotorOperationState_t TwistTrayIceMakerMotorController_MotorOpe
  * @param instance
  * @return the error reason of the motor
  */
-TwistTrayIceMakerMotorErrorReason_t TwistTrayIceMakerMotorController_MotorErrorReason(
+IceMakerMotorErrorReason_t TwistTrayIceMakerMotorController_MotorErrorReason(
    TwistTrayIceMakerMotorController_t *instance);
 
 #endif

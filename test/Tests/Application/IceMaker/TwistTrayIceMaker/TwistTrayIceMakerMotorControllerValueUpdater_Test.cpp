@@ -21,9 +21,9 @@ enum
 };
 
 static const TwistTrayIceMakerMotorControllerValueUpdaterConfig_t config = {
-   .motorActionResultErd = Erd_TwistTrayIceMaker_MotorActionResult,
-   .motorOperationStateErd = Erd_TwistTrayIceMaker_MotorOperationState,
-   .motorErrorReasonErd = Erd_TwistTrayIceMaker_MotorErrorReason
+   .motorActionResultErd = Erd_IceMaker0_MotorActionResult,
+   .motorOperationStateErd = Erd_IceMaker0_MotorOperationState,
+   .motorErrorReasonErd = Erd_IceMaker0_MotorErrorReason
 };
 
 TEST_GROUP(TwistTrayIceMakerMotorControllerValueUpdater)
@@ -50,41 +50,41 @@ TEST_GROUP(TwistTrayIceMakerMotorControllerValueUpdater)
       TwistTrayIceMakerMotorControllerValueUpdater_Init(&instance, dataModel, (TwistTrayIceMakerMotorController_t *)&motorControllerTestDouble, &config);
    }
 
-   void WhenTheMotorActionResultIs(TwistTrayIceMakerMotorActionResult_t actionResult)
+   void WhenTheMotorActionResultIs(IceMakerMotorActionResult_t actionResult)
    {
       TwistTrayIceMakerMotorController_TestDouble_UpdateMotorActionResult(&motorControllerTestDouble, actionResult);
    }
 
-   void TheMotorActionResultErdShouldBe(TwistTrayIceMakerMotorActionResult_t expected)
+   void TheMotorActionResultErdShouldBe(IceMakerMotorActionResult_t expected)
    {
-      TwistTrayIceMakerMotorActionResult_t actual;
-      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_MotorActionResult, &actual);
+      IceMakerMotorActionResult_t actual;
+      DataModel_Read(dataModel, Erd_IceMaker0_MotorActionResult, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
 
-   void WhenTheMotorOperationStateIs(TwistTrayIceMakerMotorOperationState_t motorOperationState)
+   void WhenTheMotorOperationStateIs(IceMakerMotorOperationState_t motorOperationState)
    {
       TwistTrayIceMakerMotorController_TestDouble_UpdateMotorOperationState(&motorControllerTestDouble, motorOperationState);
    }
 
-   void TheMotorOperationStateErdShouldBe(TwistTrayIceMakerMotorActionResult_t expected)
+   void TheMotorOperationStateErdShouldBe(IceMakerMotorActionResult_t expected)
    {
-      TwistTrayIceMakerMotorOperationState_t actual;
-      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_MotorOperationState, &actual);
+      IceMakerMotorOperationState_t actual;
+      DataModel_Read(dataModel, Erd_IceMaker0_MotorOperationState, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
 
-   void WhenTheMotorErrorIs(TwistTrayIceMakerMotorErrorReason_t motorErrorReason)
+   void WhenTheMotorErrorIs(IceMakerMotorErrorReason_t motorErrorReason)
    {
       TwistTrayIceMakerMotorController_TestDouble_UpdateMotorErrorReason(&motorControllerTestDouble, motorErrorReason);
    }
 
-   void TheMotorErrorErdShouldBe(TwistTrayIceMakerMotorErrorReason_t expected)
+   void TheMotorErrorErdShouldBe(IceMakerMotorErrorReason_t expected)
    {
-      TwistTrayIceMakerMotorErrorReason_t actual;
-      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_MotorErrorReason, &actual);
+      IceMakerMotorErrorReason_t actual;
+      DataModel_Read(dataModel, Erd_IceMaker0_MotorErrorReason, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -103,65 +103,65 @@ TEST(TwistTrayIceMakerMotorControllerValueUpdater, ShouldInitialize)
 TEST(TwistTrayIceMakerMotorControllerValueUpdater, ShouldUpdateMotorActionResultEveryPollingTime)
 {
    GivenTheModuleIsInitialized();
-   TheMotorActionResultErdShouldBe(TwistTrayIceMakerMotorActionResult_NoAction);
+   TheMotorActionResultErdShouldBe(IceMakerMotorActionResult_NoAction);
 
-   WhenTheMotorActionResultIs(TwistTrayIceMakerMotorActionResult_Harvesting);
-
-   After(PollingPeriodInMs - 1);
-   TheMotorActionResultErdShouldBe(TwistTrayIceMakerMotorActionResult_NoAction);
-
-   After(1);
-   TheMotorActionResultErdShouldBe(TwistTrayIceMakerMotorActionResult_Harvesting);
-
-   WhenTheMotorActionResultIs(TwistTrayIceMakerMotorActionResult_Harvested);
+   WhenTheMotorActionResultIs(IceMakerMotorActionResult_Harvesting);
 
    After(PollingPeriodInMs - 1);
-   TheMotorActionResultErdShouldBe(TwistTrayIceMakerMotorActionResult_Harvesting);
+   TheMotorActionResultErdShouldBe(IceMakerMotorActionResult_NoAction);
 
    After(1);
-   TheMotorActionResultErdShouldBe(TwistTrayIceMakerMotorActionResult_Harvested);
+   TheMotorActionResultErdShouldBe(IceMakerMotorActionResult_Harvesting);
+
+   WhenTheMotorActionResultIs(IceMakerMotorActionResult_Harvested);
+
+   After(PollingPeriodInMs - 1);
+   TheMotorActionResultErdShouldBe(IceMakerMotorActionResult_Harvesting);
+
+   After(1);
+   TheMotorActionResultErdShouldBe(IceMakerMotorActionResult_Harvested);
 }
 
 TEST(TwistTrayIceMakerMotorControllerValueUpdater, ShouldUpdateMotorOperationStateEveryPollingTime)
 {
    GivenTheModuleIsInitialized();
-   TheMotorOperationStateErdShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
+   TheMotorOperationStateErdShouldBe(IceMakerMotorOperationState_Idle);
 
-   WhenTheMotorOperationStateIs(TwistTrayIceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
-
-   After(PollingPeriodInMs - 1);
-   TheMotorOperationStateErdShouldBe(TwistTrayIceMakerMotorOperationState_Idle);
-
-   After(1);
-   TheMotorOperationStateErdShouldBe(TwistTrayIceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
-
-   WhenTheMotorOperationStateIs(TwistTrayIceMakerMotorOperationState_HomingReadyToLandInHomePosition);
+   WhenTheMotorOperationStateIs(IceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
 
    After(PollingPeriodInMs - 1);
-   TheMotorOperationStateErdShouldBe(TwistTrayIceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
+   TheMotorOperationStateErdShouldBe(IceMakerMotorOperationState_Idle);
 
    After(1);
-   TheMotorOperationStateErdShouldBe(TwistTrayIceMakerMotorOperationState_HomingReadyToLandInHomePosition);
+   TheMotorOperationStateErdShouldBe(IceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
+
+   WhenTheMotorOperationStateIs(IceMakerMotorOperationState_HomingReadyToLandInHomePosition);
+
+   After(PollingPeriodInMs - 1);
+   TheMotorOperationStateErdShouldBe(IceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
+
+   After(1);
+   TheMotorOperationStateErdShouldBe(IceMakerMotorOperationState_HomingReadyToLandInHomePosition);
 }
 
 TEST(TwistTrayIceMakerMotorControllerValueUpdater, ShouldUpdateMotorErrorEveryPollingTime)
 {
    GivenTheModuleIsInitialized();
-   TheMotorErrorErdShouldBe(TwistTrayIceMakerMotorErrorReason_None);
+   TheMotorErrorErdShouldBe(IceMakerMotorErrorReason_None);
 
-   WhenTheMotorErrorIs(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHomingCheckingTrayIsHome);
-
-   After(PollingPeriodInMs - 1);
-   TheMotorErrorErdShouldBe(TwistTrayIceMakerMotorErrorReason_None);
-
-   After(1);
-   TheMotorErrorErdShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHomingCheckingTrayIsHome);
-
-   WhenTheMotorErrorIs(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHomingJumpingOutOfHome);
+   WhenTheMotorErrorIs(IceMakerMotorErrorReason_MotorStallsInStateHomingCheckingTrayIsHome);
 
    After(PollingPeriodInMs - 1);
-   TheMotorErrorErdShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHomingCheckingTrayIsHome);
+   TheMotorErrorErdShouldBe(IceMakerMotorErrorReason_None);
 
    After(1);
-   TheMotorErrorErdShouldBe(TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHomingJumpingOutOfHome);
+   TheMotorErrorErdShouldBe(IceMakerMotorErrorReason_MotorStallsInStateHomingCheckingTrayIsHome);
+
+   WhenTheMotorErrorIs(IceMakerMotorErrorReason_MotorStallsInStateHomingJumpingOutOfHome);
+
+   After(PollingPeriodInMs - 1);
+   TheMotorErrorErdShouldBe(IceMakerMotorErrorReason_MotorStallsInStateHomingCheckingTrayIsHome);
+
+   After(1);
+   TheMotorErrorErdShouldBe(IceMakerMotorErrorReason_MotorStallsInStateHomingJumpingOutOfHome);
 }

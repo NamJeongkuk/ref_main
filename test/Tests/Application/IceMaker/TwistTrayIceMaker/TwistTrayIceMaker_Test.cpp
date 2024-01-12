@@ -36,14 +36,14 @@ extern "C"
 
 enum
 {
-   Idle = TwistTrayIceMakerMotorAction_Idle,
-   Home = TwistTrayIceMakerMotorAction_RunHomingRoutine,
-   Harvest = TwistTrayIceMakerMotorAction_RunCycle,
-   Homed = TwistTrayIceMakerMotorActionResult_Homed,
-   Harvesting = TwistTrayIceMakerMotorActionResult_Harvesting,
-   Harvested = TwistTrayIceMakerMotorActionResult_Harvested,
-   BucketWasFull = TwistTrayIceMakerMotorActionResult_BucketWasFull,
-   MotorError = TwistTrayIceMakerMotorActionResult_MotorError,
+   Idle = IceMakerMotorAction_Idle,
+   Home = IceMakerMotorAction_RunHomingRoutine,
+   Harvest = IceMakerMotorAction_RunCycle,
+   Homed = IceMakerMotorActionResult_Homed,
+   Harvesting = IceMakerMotorActionResult_Harvesting,
+   Harvested = IceMakerMotorActionResult_Harvested,
+   BucketWasFull = IceMakerMotorActionResult_BucketWasFull,
+   MotorError = IceMakerMotorActionResult_MotorError,
 
    FaultState = TwistTrayIceMakerHighLevelState_Fault,
 
@@ -65,7 +65,7 @@ static const TwistTrayIceMakerConfiguration_t config = {
    .harvestCountCalculationRequestErd = Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,
    .motorIceMakerVoteErd = Erd_TwistTrayIceMakerMotor_IceMakerVote,
    .waterValveIceMakerVoteErd = Erd_TwistTrayIceMakerWaterValve_IceMakerVote,
-   .motorActionResultErd = Erd_TwistTrayIceMaker_MotorActionResult,
+   .motorActionResultErd = Erd_IceMaker0_MotorActionResult,
    .motorFaultActiveErd = Erd_TwistTrayIceMaker_MotorFaultActive,
    .waterFillMonitoringRequestErd = Erd_TwistTrayIceMakerWaterFillMonitoringRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_TwistTrayIceMakerVote,
@@ -255,7 +255,7 @@ TEST_GROUP(TwistTrayIceMaker)
       GivenTheIceMakerIsDisabled();
    }
 
-   void TheMotorShouldBeRequestedTo(TwistTrayIceMakerMotorAction_t expectedMotorState)
+   void TheMotorShouldBeRequestedTo(IceMakerMotorAction_t expectedMotorState)
    {
       mock()
          .expectOneCall("Write Motor Control")
@@ -270,15 +270,15 @@ TEST_GROUP(TwistTrayIceMaker)
       Then TheMotorShouldBeRequestedTo(Home);
    }
 
-   void WhenTheMotorActionResultIs(TwistTrayIceMakerMotorActionResult_t motorActionResult)
+   void WhenTheMotorActionResultIs(IceMakerMotorActionResult_t motorActionResult)
    {
       DataModel_Write(
          dataModel,
-         Erd_TwistTrayIceMaker_MotorActionResult,
+         Erd_IceMaker0_MotorActionResult,
          &motorActionResult);
    }
 
-   void GivenTheMotorActionResultIs(TwistTrayIceMakerMotorActionResult_t motorActionResult)
+   void GivenTheMotorActionResultIs(IceMakerMotorActionResult_t motorActionResult)
    {
       WhenTheMotorActionResultIs(motorActionResult);
    }

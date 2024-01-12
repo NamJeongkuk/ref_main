@@ -2485,15 +2485,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Motor Action Result",
-          "name": "Erd_TwistTrayIceMaker_MotorActionResult",
+          "displayName": "IceMaker0 Motor Action Result",
+          "name": "Erd_IceMaker0_MotorActionResult",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Motor Operation State",
-          "name": "Erd_TwistTrayIceMaker_MotorOperationState",
+          "displayName": "IceMaker0 Motor Operation State",
+          "name": "Erd_IceMaker0_MotorOperationState",
           "read": true,
           "write": false
         },

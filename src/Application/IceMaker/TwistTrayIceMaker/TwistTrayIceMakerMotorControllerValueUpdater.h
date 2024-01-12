@@ -13,9 +13,9 @@
 
 typedef struct
 {
-   Erd_t motorActionResultErd; // TwistTrayIceMakerMotorActionResult_t
-   Erd_t motorOperationStateErd; // TwistTrayIceMakerMotorOperationState_t
-   Erd_t motorErrorReasonErd; // TwistTrayIceMakerMotorErrorReason_t
+   Erd_t motorActionResultErd; // IceMakerMotorActionResult_t
+   Erd_t motorOperationStateErd; // IceMakerMotorOperationState_t
+   Erd_t motorErrorReasonErd; // IceMakerMotorErrorReason_t
 } TwistTrayIceMakerMotorControllerValueUpdaterConfig_t;
 
 typedef struct

@@ -80,11 +80,11 @@
 #include "DispenseSelection.h"
 #include "ReadyToDefrostHsmState.h"
 #include "PwmFrequency.h"
-#include "TwistTrayIceMakerMotorActionResult.h"
-#include "TwistTrayIceMakerMotorAction.h"
-#include "TwistTrayIceMakerMotorDoAction.h"
-#include "TwistTrayIceMakerMotorErrorReason.h"
-#include "TwistTrayIceMakerMotorOperationState.h"
+#include "IceMakerMotorActionResult.h"
+#include "IceMakerMotorAction.h"
+#include "IceMakerMotorDoAction.h"
+#include "IceMakerMotorErrorReason.h"
+#include "IceMakerMotorOperationState.h"
 #include "TwistTrayIceMakerOperationState.h"
 #include "TwistTrayIceMakerHighLevelState.h"
 #include "DispensingRequest.h"
@@ -875,22 +875,18 @@ enum
    ENTRY(Erd_Freezer_EnhancedSabbath_AveragedTemperatureOverrideValueInDegFx100,   0xF138, TemperatureDegFx100_t,       Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_Freezer_AveragedTemperatureOverrideRequest,                           0xF139, bool,                        Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
-   ENTRY(Erd_TwistTrayIceMaker_MotorActionResult,                      0xF140, TwistTrayIceMakerMotorActionResult_t,    Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_OperationState,                         0xF141, TwistTrayIceMakerOperationState_t,       Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_HighLevelState,                         0xF142, TwistTrayIceMakerHighLevelState_t,       Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_FreezeIntegrationCount,                 0xF143, uint32_t,                                Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_MinimumFreezeTimeCounterInMinutes,      0xF144, uint8_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_MotorFaultActive,                       0xF145, bool,                                    Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_TwistTrayIceMakerTestRequest,                             0xF146, IceMakerTestRequest_t,                   Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_TwistTrayIceMaker_MotorOperationState,                    0xF147, TwistTrayIceMakerMotorOperationState_t,  Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_TwistTrayIceMaker_MotorErrorReason,                       0xF148, TwistTrayIceMakerMotorErrorReason_t,     Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_TwistTrayIceMakerWaterFillMonitoringRequest,              0xF149, IceMakerWaterFillMonitoringRequest_t,    Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_TwistTrayIceMakerStopFillSignal,                          0xF14A, Signal_t,                                Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_TwistTrayIceMakerFlowMeterWaterDispensedOzX100,           0xF14B, uint32_t,                                Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_TwistTrayIceMakerFlowMeterMonitoringRequest,              0xF14C, FlowMeterMonitoringRequest_t,            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,         0xF14D, bool,                                    Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest,           0xF14E, bool,                                    Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_TwistTrayIceMaker_MotorDoAction,                          0xF14F, TwistTrayIceMakerMotorDoAction_t,        Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_AluminumMoldIceMakerHsmState,                  0xF150, AluminumMoldIceMakerHsmState_t,                     Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceMaker0_FeelerArmPosition,                   0xF151, FeelerArmPosition_t,                                Swap_No,  Io_None, Sub_Y, MappedBsp,              NotNv,                                                       NotNv,         NotFault) \
@@ -961,6 +957,19 @@ enum
    ENTRY(Erd_BypassPlugInstalled,                           0xF1A2, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_LeakDetected,                                  0xF1A3, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_FilterError,                                   0xF1A4, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   \
+   ENTRY(Erd_IceMaker0_MotorActionResult,                   0xF1A5, IceMakerMotorActionResult_t,                        Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker1_MotorActionResult,                   0xF1A6, IceMakerMotorActionResult_t,                        Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker2_MotorActionResult,                   0xF1A7, IceMakerMotorActionResult_t,                        Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker0_MotorOperationState,                 0xF1A8, IceMakerMotorOperationState_t,                      Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker1_MotorOperationState,                 0xF1A9, IceMakerMotorOperationState_t,                      Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker2_MotorOperationState,                 0xF1AA, IceMakerMotorOperationState_t,                      Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker0_MotorErrorReason,                    0xF1AB, IceMakerMotorErrorReason_t,                         Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker1_MotorErrorReason,                    0xF1AC, IceMakerMotorErrorReason_t,                         Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker2_MotorErrorReason,                    0xF1AD, IceMakerMotorErrorReason_t,                         Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker0_MotorDoAction,                       0xF1AE, IceMakerMotorDoAction_t,                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker1_MotorDoAction,                       0xF1AF, IceMakerMotorDoAction_t,                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker2_MotorDoAction,                       0xF1B0, IceMakerMotorDoAction_t,                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_CondenserFanSpeed_ResolvedVote,                0xF200, FanVotedSpeed_t,                                    Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_CondenserFanSpeed_WinningVoteErd,              0xF201, WinningVoteErd_t,                                   Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \

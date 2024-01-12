@@ -722,15 +722,15 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Twist IM Motor Operation State",
-               "name": "Erd_TwistTrayIceMaker_MotorOperationState",
+               "displayName": "IceMaker0 Motor Operation State",
+               "name": "Erd_IceMaker0_MotorOperationState",
                "read": true,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "Twist IM Motor Action Result",
-               "name": "Erd_TwistTrayIceMaker_MotorActionResult",
+               "displayName": "IceMaker0 Motor Action Result",
+               "name": "Erd_IceMaker0_MotorActionResult",
                "read": true,
                "interval": 1000000000
             },

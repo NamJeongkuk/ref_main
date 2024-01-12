@@ -15,19 +15,19 @@ extern "C"
 #include "TwistTrayIceMakerMotorController_TestDouble.h"
 
 void TwistTrayIceMakerMotorController_TestDouble_UpdateMotorActionResult(
-   TwistTrayIceMakerMotorController_TestDouble_t *instance, TwistTrayIceMakerMotorActionResult_t actionResult)
+   TwistTrayIceMakerMotorController_TestDouble_t *instance, IceMakerMotorActionResult_t actionResult)
 {
    instance->_private.motorActionResult = actionResult;
 }
 
 void TwistTrayIceMakerMotorController_TestDouble_UpdateMotorOperationState(
-   TwistTrayIceMakerMotorController_TestDouble_t *instance, TwistTrayIceMakerMotorOperationState_t motorOperationState)
+   TwistTrayIceMakerMotorController_TestDouble_t *instance, IceMakerMotorOperationState_t motorOperationState)
 {
    instance->_private.motorOperationState = motorOperationState;
 }
 
 void TwistTrayIceMakerMotorController_TestDouble_UpdateMotorErrorReason(
-   TwistTrayIceMakerMotorController_TestDouble_t *instance, TwistTrayIceMakerMotorErrorReason_t motorErrorReason)
+   TwistTrayIceMakerMotorController_TestDouble_t *instance, IceMakerMotorErrorReason_t motorErrorReason)
 {
    instance->_private.motorErrorReason = motorErrorReason;
 }

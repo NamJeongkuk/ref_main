@@ -9,8 +9,8 @@
 #include "Constants_Time.h"
 #include "Constants_Binary.h"
 #include "TwistTrayIceMakerMotorState.h"
-#include "TwistTrayIceMakerMotorOperationState.h"
-#include "TwistTrayIceMakerMotorDoAction.h"
+#include "IceMakerMotorOperationState.h"
+#include "IceMakerMotorDoAction.h"
 
 enum
 {
@@ -58,21 +58,21 @@ static TwistTrayIceMakerMotorController_t *InterfaceFrom(Fsm_t *fsm)
 
 static void UpdateMotorOperationState(
    TwistTrayIceMakerMotorController_t *instance,
-   TwistTrayIceMakerMotorOperationState_t newState)
+   IceMakerMotorOperationState_t newState)
 {
    instance->_private.motorOperationState = newState;
 }
 
 static void UpdateMotorActionResult(
    TwistTrayIceMakerMotorController_t *instance,
-   TwistTrayIceMakerMotorActionResult_t actionResult)
+   IceMakerMotorActionResult_t actionResult)
 {
    instance->_private.motorActionResult = actionResult;
 }
 
 static void UpdateMotorErrorReason(
    TwistTrayIceMakerMotorController_t *instance,
-   TwistTrayIceMakerMotorErrorReason_t errorReason)
+   IceMakerMotorErrorReason_t errorReason)
 {
    instance->_private.motorErrorReason = errorReason;
 }
@@ -126,11 +126,11 @@ static void UpdateMotorState(TwistTrayIceMakerMotorController_t *instance, uint8
    instance->_private.lastMotorState = newState;
 }
 
-static void ThrowMotorError(TwistTrayIceMakerMotorController_t *instance, TwistTrayIceMakerMotorErrorReason_t reason)
+static void ThrowMotorError(TwistTrayIceMakerMotorController_t *instance, IceMakerMotorErrorReason_t reason)
 {
    UpdateMotorState(instance, TwistTrayIceMakerMotorState_Coasting, 0);
-   UpdateMotorActionResult(instance, TwistTrayIceMakerMotorActionResult_MotorError);
-   instance->_private.harvestActionResult = TwistTrayIceMakerMotorActionResult_MotorError;
+   UpdateMotorActionResult(instance, IceMakerMotorActionResult_MotorError);
+   instance->_private.harvestActionResult = IceMakerMotorActionResult_MotorError;
    UpdateMotorErrorReason(instance, reason);
 }
 
@@ -142,7 +142,7 @@ static void State_Homing_MakingSureTheTrayIsHome(Fsm_t *fsm, FsmSignal_t signal,
    switch(signal)
    {
       case Fsm_Entry:
-         UpdateMotorOperationState(instance, TwistTrayIceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
+         UpdateMotorOperationState(instance, IceMakerMotorOperationState_HomingMakingSureTheTrayIsHome);
          UpdateMotorState(instance, TwistTrayIceMakerMotorState_Untwisting, LongMotorErrorTimeout);
 
          if(instance->_private.lastSwitchState)
@@ -172,7 +172,7 @@ static void State_Homing_MakingSureTheTrayIsHome(Fsm_t *fsm, FsmSignal_t signal,
          break;
 
       case Signal_MotorTimeoutPeriodElapsed:
-         ThrowMotorError(instance, TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHomingCheckingTrayIsHome);
+         ThrowMotorError(instance, IceMakerMotorErrorReason_MotorStallsInStateHomingCheckingTrayIsHome);
          Fsm_Transition(fsm, State_Idle);
          break;
 
@@ -191,7 +191,7 @@ static void State_Homing_JumpingOutOfHome(Fsm_t *fsm, FsmSignal_t signal, const 
    switch(signal)
    {
       case Fsm_Entry:
-         UpdateMotorOperationState(instance, TwistTrayIceMakerMotorOperationState_HomingJumpingOutOfHome);
+         UpdateMotorOperationState(instance, IceMakerMotorOperationState_HomingJumpingOutOfHome);
          UpdateMotorState(instance, TwistTrayIceMakerMotorState_Twisting, ShortMotorErrorTimeout);
          break;
 
@@ -208,7 +208,7 @@ static void State_Homing_JumpingOutOfHome(Fsm_t *fsm, FsmSignal_t signal, const 
          break;
 
       case Signal_MotorTimeoutPeriodElapsed:
-         ThrowMotorError(instance, TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHomingJumpingOutOfHome);
+         ThrowMotorError(instance, IceMakerMotorErrorReason_MotorStallsInStateHomingJumpingOutOfHome);
          Fsm_Transition(fsm, State_Idle);
          break;
 
@@ -227,7 +227,7 @@ static void State_Homing_ReadyToLandInHomePosition(Fsm_t *fsm, FsmSignal_t signa
    switch(signal)
    {
       case Fsm_Entry:
-         UpdateMotorOperationState(instance, TwistTrayIceMakerMotorOperationState_HomingReadyToLandInHomePosition);
+         UpdateMotorOperationState(instance, IceMakerMotorOperationState_HomingReadyToLandInHomePosition);
          UpdateMotorState(instance, TwistTrayIceMakerMotorState_Untwisting, ShortMotorErrorTimeout);
          break;
 
@@ -249,12 +249,12 @@ static void State_Homing_ReadyToLandInHomePosition(Fsm_t *fsm, FsmSignal_t signa
          break;
 
       case Signal_StoppingPeriodElapsed:
-         UpdateMotorActionResult(instance, TwistTrayIceMakerMotorActionResult_Homed);
+         UpdateMotorActionResult(instance, IceMakerMotorActionResult_Homed);
          Fsm_Transition(fsm, State_Idle);
          break;
 
       case Signal_MotorTimeoutPeriodElapsed:
-         ThrowMotorError(instance, TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHomingReadyToLandInHomePosition);
+         ThrowMotorError(instance, IceMakerMotorErrorReason_MotorStallsInStateHomingReadyToLandInHomePosition);
          Fsm_Transition(fsm, State_Idle);
          break;
 
@@ -273,7 +273,7 @@ static void State_Harvest_CheckingIfBucketIsFull(Fsm_t *fsm, FsmSignal_t signal,
    switch(signal)
    {
       case Fsm_Entry:
-         UpdateMotorOperationState(instance, TwistTrayIceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
+         UpdateMotorOperationState(instance, IceMakerMotorOperationState_HarvestCheckingIfBucketIsFull);
          UpdateMotorState(instance, TwistTrayIceMakerMotorState_Twisting, LongMotorErrorTimeout);
 
          InterruptContextTimerModule_StartOneShot(
@@ -284,13 +284,13 @@ static void State_Harvest_CheckingIfBucketIsFull(Fsm_t *fsm, FsmSignal_t signal,
          break;
 
       case Signal_FullBucketTriggerWaitPeriodElapsed:
-         instance->_private.harvestActionResult = TwistTrayIceMakerMotorActionResult_Harvested;
+         instance->_private.harvestActionResult = IceMakerMotorActionResult_Harvested;
          // The motor does not stop moving when transitioning here
          Fsm_Transition(fsm, State_Harvest_StoppingAtFullTwistPosition);
          break;
 
       case Signal_SwitchHigh:
-         instance->_private.harvestActionResult = TwistTrayIceMakerMotorActionResult_BucketWasFull;
+         instance->_private.harvestActionResult = IceMakerMotorActionResult_BucketWasFull;
          UpdateMotorState(instance, TwistTrayIceMakerMotorState_Coasting, 0);
          Fsm_Transition(fsm, State_Harvest_BucketWasFoundToBeFull);
          break;
@@ -309,7 +309,7 @@ static void State_Harvest_BucketWasFoundToBeFull(Fsm_t *fsm, FsmSignal_t signal,
    switch(signal)
    {
       case Fsm_Entry:
-         UpdateMotorOperationState(instance, TwistTrayIceMakerMotorOperationState_HarvestBucketWasFoundToBeFull);
+         UpdateMotorOperationState(instance, IceMakerMotorOperationState_HarvestBucketWasFoundToBeFull);
          UpdateMotorState(instance, TwistTrayIceMakerMotorState_Coasting, 0);
 
          InterruptContextTimerModule_StartOneShot(
@@ -337,7 +337,7 @@ static void State_Harvest_StoppingAtFullTwistPosition(Fsm_t *fsm, FsmSignal_t si
    switch(signal)
    {
       case Fsm_Entry:
-         UpdateMotorOperationState(instance, TwistTrayIceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
+         UpdateMotorOperationState(instance, IceMakerMotorOperationState_HarvestStoppingAtFullTwistPosition);
          break;
 
       case Signal_SwitchHigh:
@@ -354,7 +354,7 @@ static void State_Harvest_StoppingAtFullTwistPosition(Fsm_t *fsm, FsmSignal_t si
          break;
 
       case Signal_MotorTimeoutPeriodElapsed:
-         ThrowMotorError(instance, TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHarvestStoppingAtFullTwistPosition);
+         ThrowMotorError(instance, IceMakerMotorErrorReason_MotorStallsInStateHarvestStoppingAtFullTwistPosition);
          Fsm_Transition(fsm, State_Idle);
          break;
 
@@ -374,7 +374,7 @@ static void State_Harvest_Untwisting(Fsm_t *fsm, FsmSignal_t signal, const void 
    switch(signal)
    {
       case Fsm_Entry:
-         UpdateMotorOperationState(instance, TwistTrayIceMakerMotorOperationStateHarvest_Untwisting);
+         UpdateMotorOperationState(instance, IceMakerMotorOperationState_HarvestUntwisting);
          UpdateMotorState(instance, TwistTrayIceMakerMotorState_Untwisting, LongMotorErrorTimeout);
          break;
 
@@ -387,7 +387,7 @@ static void State_Harvest_Untwisting(Fsm_t *fsm, FsmSignal_t signal, const void 
          break;
 
       case Signal_MotorTimeoutPeriodElapsed:
-         ThrowMotorError(instance, TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHarvestUntwisting);
+         ThrowMotorError(instance, IceMakerMotorErrorReason_MotorStallsInStateHarvestUntwisting);
          Fsm_Transition(fsm, State_Idle);
          break;
    }
@@ -401,7 +401,7 @@ static void State_Harvest_ReadyToLandInHomePosition(Fsm_t *fsm, FsmSignal_t sign
    switch(signal)
    {
       case Fsm_Entry:
-         UpdateMotorOperationState(instance, TwistTrayIceMakerMotorOperationStateHarvest_ReadyToLandInHomePosition);
+         UpdateMotorOperationState(instance, IceMakerMotorOperationState_HarvestReadyToLandInHomePosition);
          UpdateMotorState(instance, TwistTrayIceMakerMotorState_Untwisting, LongMotorErrorTimeout);
          break;
 
@@ -427,7 +427,7 @@ static void State_Harvest_ReadyToLandInHomePosition(Fsm_t *fsm, FsmSignal_t sign
          break;
 
       case Signal_MotorTimeoutPeriodElapsed:
-         ThrowMotorError(instance, TwistTrayIceMakerMotorErrorReason_MotorStallsInStateHarvestReadyToLandInHomePosition);
+         ThrowMotorError(instance, IceMakerMotorErrorReason_MotorStallsInStateHarvestReadyToLandInHomePosition);
          Fsm_Transition(fsm, State_Idle);
          break;
 
@@ -442,30 +442,30 @@ static void State_Harvest_ReadyToLandInHomePosition(Fsm_t *fsm, FsmSignal_t sign
 static void State_Idle(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
    TwistTrayIceMakerMotorController_t *instance = InterfaceFrom(fsm);
-   REINTERPRET(newAction, data, const TwistTrayIceMakerMotorAction_t *);
+   REINTERPRET(newAction, data, const IceMakerMotorAction_t *);
 
    switch(signal)
    {
       case Fsm_Entry:
-         UpdateMotorOperationState(instance, TwistTrayIceMakerMotorOperationState_Idle);
+         UpdateMotorOperationState(instance, IceMakerMotorOperationState_Idle);
          InterruptContextTimerModule_Stop(instance, Timer_GeneralPurpose);
          InterruptContextTimerModule_Stop(instance, Timer_MotorError);
          break;
 
       case Signal_NewAction:
-         if(*newAction == TwistTrayIceMakerMotorAction_RunHomingRoutine)
+         if(*newAction == IceMakerMotorAction_RunHomingRoutine)
          {
-            UpdateMotorActionResult(instance, TwistTrayIceMakerMotorActionResult_Homing);
+            UpdateMotorActionResult(instance, IceMakerMotorActionResult_Homing);
             Fsm_Transition(fsm, State_Homing_MakingSureTheTrayIsHome);
          }
-         else if(*newAction == TwistTrayIceMakerMotorAction_RunCycle)
+         else if(*newAction == IceMakerMotorAction_RunCycle)
          {
-            UpdateMotorActionResult(instance, TwistTrayIceMakerMotorActionResult_Harvesting);
+            UpdateMotorActionResult(instance, IceMakerMotorActionResult_Harvesting);
             Fsm_Transition(fsm, State_Harvest_CheckingIfBucketIsFull);
          }
          else
          {
-            UpdateMotorActionResult(instance, TwistTrayIceMakerMotorActionResult_NoAction);
+            UpdateMotorActionResult(instance, IceMakerMotorActionResult_NoAction);
          }
          break;
    }
@@ -474,7 +474,7 @@ static void State_Idle(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 static void DoActionUpdated(void *context, const void *args)
 {
    TwistTrayIceMakerMotorController_t *instance = context;
-   const TwistTrayIceMakerMotorDoAction_t *doAction = args;
+   const IceMakerMotorDoAction_t *doAction = args;
 
    Fsm_SendSignal(&instance->_private.fsm, Signal_NewAction, &doAction->action);
 }
@@ -544,19 +544,19 @@ void TwistTrayIceMakerMotorController_UpdateSwitchState(
    }
 }
 
-TwistTrayIceMakerMotorActionResult_t TwistTrayIceMakerMotorController_MotorActionResult(
+IceMakerMotorActionResult_t TwistTrayIceMakerMotorController_MotorActionResult(
    TwistTrayIceMakerMotorController_t *instance)
 {
    return instance->_private.motorActionResult;
 }
 
-TwistTrayIceMakerMotorOperationState_t TwistTrayIceMakerMotorController_MotorOperationState(
+IceMakerMotorOperationState_t TwistTrayIceMakerMotorController_MotorOperationState(
    TwistTrayIceMakerMotorController_t *instance)
 {
    return instance->_private.motorOperationState;
 }
 
-TwistTrayIceMakerMotorErrorReason_t TwistTrayIceMakerMotorController_MotorErrorReason(
+IceMakerMotorErrorReason_t TwistTrayIceMakerMotorController_MotorErrorReason(
    TwistTrayIceMakerMotorController_t *instance)
 {
    return instance->_private.motorErrorReason;

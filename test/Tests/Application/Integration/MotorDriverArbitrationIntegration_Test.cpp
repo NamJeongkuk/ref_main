@@ -154,10 +154,10 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
       DataModel_Write(dataModel, Erd_FreshFoodDamperPosition_FactoryVote, &votedPosition);
    }
 
-   void TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_t expected)
+   void TheMotorActionResultShouldBe(IceMakerMotorActionResult_t expected)
    {
-      TwistTrayIceMakerMotorActionResult_t actual;
-      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_MotorActionResult, &actual);
+      IceMakerMotorActionResult_t actual;
+      DataModel_Read(dataModel, Erd_IceMaker0_MotorActionResult, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -212,7 +212,7 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
       AfterNInterrupts(TwistTrayMotorBrakingDurationInMsec);
 
       After(TwistTrayMotorControllerPollingTimeInMsec);
-      TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Homed);
+      TheMotorActionResultShouldBe(IceMakerMotorActionResult_Homed);
    }
 
    void WhenTheTwistTrayMotorIsDoneHarvesting()
@@ -231,7 +231,7 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
       AfterNInterrupts(CoastingTimeInMs);
 
       After(TwistTrayMotorControllerPollingTimeInMsec);
-      TheMotorActionResultShouldBe(TwistTrayIceMakerMotorActionResult_Harvested);
+      TheMotorActionResultShouldBe(IceMakerMotorActionResult_Harvested);
    }
 };
 
