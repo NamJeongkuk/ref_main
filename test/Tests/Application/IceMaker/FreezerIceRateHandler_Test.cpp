@@ -19,7 +19,7 @@ extern "C"
 #include "ReferDataModel_TestDouble.h"
 #include "uassert_test.h"
 
-static const FreezerIceRateHandlerConfig_t iceRateHandlerConfig = {
+static const FreezerIceRateHandlerConfig_t freezerIceRateHandlerConfig = {
    .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
    .freezerSetpointFreezerIceRateVoteErd = Erd_FreezerSetpoint_FreezerIceRateVote,
    .freezerEvapFanSpeedFreezerIceRateVoteErd = Erd_FreezerEvapFanSpeed_FreezerIceRateVote,
@@ -41,7 +41,7 @@ TEST_GROUP(FreezerIceRateHandler)
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
-      freezerIceRateData = PersonalityParametricData_Get(dataModel)->iceMakerData->freezerIceRateData;
+      freezerIceRateData = PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerSlots->slot0Data->freezerIceRateData;
    }
 
    void GivenTheModuleIsInitialized()
@@ -49,7 +49,7 @@ TEST_GROUP(FreezerIceRateHandler)
       FreezerIceRateHandler_Init(
          &instance,
          dataModel,
-         &iceRateHandlerConfig,
+         &freezerIceRateHandlerConfig,
          freezerIceRateData);
    }
 

@@ -25,6 +25,32 @@
 #include "SensorFiltering.h"
 #include "ResolvedVoteRelayConnector.h"
 #include "OverrideArbiter.h"
+#include "IceMakerLocation.h"
+#include "FreezerIceRateData.h"
+#include "NonHarvestFillTubeHeaterData.h"
+
+typedef struct
+{
+   const FreezerIceRateHandlerConfig_t *freezerIceRateHandlerConfig;
+   const AluminumMoldIceMakerConfig_t *aluminumMoldIceMakerConfig;
+   const FeelerArmMonitorConfig_t *feelerArmMonitorConfig;
+   const HarvestCountCalculatorConfiguration_t *harvestCountCalculatorConfig;
+   const ErdLogicServiceConfiguration_t *iceMakerEnableResolverConfig;
+   const ErdResolverConfiguration_t *heaterResolverConfig;
+   const ErdResolverConfiguration_t *waterValveResolverConfig;
+   const ErdResolverConfiguration_t *rakeMotorResolverConfig;
+   const RakeControllerConfig_t *rakeControllerConfig;
+   const AluminumMoldIceMakerFullStatusUpdaterConfig_t *iceMakerFullStatusUpdaterConfig;
+   const ResolvedVoteRelayConnectorConfiguration_t *rakeMotorDriverConfig;
+   const IceMakerMoldHeaterControllerConfig_t *heaterControllerConfig;
+   const SensorFilteringConfig_t *moldThermistorConfig;
+   const IceMakerWaterFillMonitorConfig_t *fillMonitorConfig;
+   const ResolvedVoteRelayConnectorConfiguration_t *waterValveRelayConnectorConfig;
+   const OverrideArbiterConfiguration_t *filteredTemperatureArbiterConfig;
+   const ResolvedVoteRelayConnectorConfiguration_t *heaterRelayConnectorConfig;
+   const OverrideArbiterConfiguration_t *thermistorValidArbiterConfig;
+   const OverrideArbiterConfiguration_t *iceMakerEnabledOverrideConfig;
+} AluminumMoldIceMakerPluginConfig_t;
 
 typedef struct
 {
@@ -40,7 +66,6 @@ typedef struct
       AluminumMoldIceMaker_t aluminumMoldIceMaker;
       IceMakerEnableResolver_t iceMakerEnableResolver;
       IceMakerMoldHeaterController_t iceMakerMoldHeaterController;
-      FlowMeterMonitor_t flowMeterMonitor;
       IceMakerWaterFillMonitor_t iceMakerFillMonitor;
 
       ErdResolver_t iceMakerWaterValveVoteResolver;
@@ -57,9 +82,25 @@ typedef struct
 } AluminumMoldIceMakerPlugin_t;
 
 /*!
+ * @brief
+ *
  * @param instance
  * @param dataModel
+ * @param iceMakerLocation
+ * @param aluminumMoldData
+ * @param sensorData
+ * @param freezerIceRateData
+ * @param nonHarvestFillTubeHeaterData
+ * @param config
  */
-void AluminumMoldIceMakerPlugin_Init(AluminumMoldIceMakerPlugin_t *instance, I_DataModel_t *dataModel);
+void AluminumMoldIceMakerPlugin_Init(
+   AluminumMoldIceMakerPlugin_t *instance,
+   I_DataModel_t *dataModel,
+   IceMakerLocation_t iceMakerLocation,
+   const AluminumMoldIceMakerData_t *aluminumMoldData,
+   const SensorData_t *sensorData,
+   const FreezerIceRateData_t *freezerIceRateData,
+   const NonHarvestFillTubeHeaterData_t *nonHarvestFillTubeHeaterData,
+   const AluminumMoldIceMakerPluginConfig_t *config);
 
 #endif

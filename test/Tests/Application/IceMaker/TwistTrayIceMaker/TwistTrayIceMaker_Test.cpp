@@ -163,7 +163,7 @@ TEST_GROUP(TwistTrayIceMaker)
       ReferDataModel_TestDouble_Init(&referDataModelTestDouble);
       dataModel = referDataModelTestDouble.dataModel;
 
-      iceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->twistTrayIceMakerData;
+      iceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerSlots->slot0Data->twistTrayData;
 
       EventSubscription_Init(&dataModelTestDoubleOnChangeEventSubscription, dataModel, OnDataModelChange);
       Event_Subscribe(dataModel->OnDataChange, &dataModelTestDoubleOnChangeEventSubscription);

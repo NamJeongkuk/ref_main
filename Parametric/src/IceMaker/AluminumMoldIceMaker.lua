@@ -3,8 +3,6 @@ local constraint = require 'lua-common'.utilities.constraint
 local validate_arguments = require 'lua-common'.utilities.validate_arguments
 local TypedString = require 'lua-common'.utilities.TypedString
 local memoize = require 'lua-common'.util.memoize
-local ice_maker_type = require 'IceMaker/IceMakerType'
-local ice_maker_location= require 'IceMaker/IceMakerLocation'
 local enum = require 'lua-common'.utilities.enum
 local seconds_per_minute = 60
 
@@ -14,10 +12,6 @@ return function(core)
     return TypedString(
       { 'aluminum_mold_ice_maker' },
       structure(
-        structure(
-          u8(ice_maker_type[config.information.type]),
-          u8(ice_maker_location[config.information.location])
-        ),
         structure(
           pointer(config.fill.ice_maker_fill_monitor)
         ),
@@ -56,12 +50,6 @@ return function(core)
     validate_arguments(
       config,
       {
-        information = {
-          constraint.table_keys({
-            type = { constraint.in_set(enum.keys(ice_maker_type)) },
-            location = { constraint.in_set(enum.keys(ice_maker_location)) }
-          })
-        },
         fill = {
           constraint.table_keys({
             ice_maker_fill_monitor = { constraint.typed_string('ice_maker_fill_monitor') }

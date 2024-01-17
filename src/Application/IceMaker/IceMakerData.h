@@ -8,18 +8,12 @@
 #ifndef ICEMAKERDATA_H
 #define ICEMAKERDATA_H
 
-#include "AluminumMoldIceMakerData.h"
-#include "FreezerIceRateData.h"
-#include "TwistTrayIceMakerData.h"
-#include "NonHarvestFillTubeHeaterData.h"
 #include "IceMakerFillBlockerData.h"
+#include "IceMakerSlotsData.h"
 
 typedef struct
 {
-   FreezerIceRateData_t *freezerIceRateData;
-   AluminumMoldIceMakerData_t *aluminumMoldIceMakerData;
-   TwistTrayIceMakerData_t *twistTrayIceMakerData;
-   NonHarvestFillTubeHeaterData_t *nonHarvestFillTubeHeaterData;
+   IceMakerSlotsData_t *iceMakerSlots;
    IceMakerFillBlockerData_t *iceMakerFillBlockerData;
 } IceMakerData_t;
 

@@ -448,7 +448,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_AluminumMoldIceMakerRakePosition",
+         "name": "Erd_IceMaker0_RakePosition",
          "interval": 60000
       },
       {
@@ -468,7 +468,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_AluminumMoldIceMakerHeaterRelay_ResolvedVote",
+         "name": "Erd_IceMaker0_HeaterRelay_ResolvedVote",
          "interval": 60000
       },
       {

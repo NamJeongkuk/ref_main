@@ -6,18 +6,12 @@ local should_fail_with = require 'lua-common'.utilities.should_fail_with
 local should_require_args = require 'lua-common'.utilities.should_require_args
 local clone = require 'lua-common'.utilities.clone
 local TypedString = require 'lua-common'.util.TypedString
-local ice_maker_type = require 'IceMaker/IceMakerType'
-local ice_maker_location = require 'IceMaker/IceMakerLocation'
 
 describe('AluminumMoldIceMaker', function()
   local aluminum_mold_ice_maker = AluminumMoldIceMaker(core_mock)
 
   local function generate_config(overrides)
     return require 'lua-common'.table.deep_merge({
-      information = {
-        type = 'aluminum_mold',
-        location = 'freezer'
-      },
       fill = {
         ice_maker_fill_monitor = TypedString('ice_maker_fill_monitor', 'ice_maker_fill_monitor')
       },
@@ -53,26 +47,6 @@ describe('AluminumMoldIceMaker', function()
 
   it('should require all arguments', function()
     should_require_args(aluminum_mold_ice_maker, generate_config())
-  end)
-
-  it('should assert if information.type is not valid', function()
-    should_fail_with("information.type=-1 must be in the set { 'aluminum_mold', 'twist', 'cartridge', 'nugget' }", function()
-      aluminum_mold_ice_maker(generate_config({
-        information = {
-          type = -1
-        }
-      }))
-    end)
-  end)
-
-  it('should assert if infromation.location is not valid', function()
-    should_fail_with("information.location=-1 must be in the set { 'freezer', 'fridge' }", function()
-      aluminum_mold_ice_maker(generate_config({
-        information = {
-          location = -1
-        }
-      }))
-    end)
   end)
 
   it('should assert if fill.ice_maker_fill_monitor is not a string', function()
@@ -301,10 +275,6 @@ describe('AluminumMoldIceMaker', function()
     local expected = remove_whitespace([[
         structure(
           structure(
-            u8(2),
-            u8(1)
-          ),
-          structure(
             pointer(ice_maker_fill_monitor)
           ),
           structure(
@@ -338,10 +308,6 @@ describe('AluminumMoldIceMaker', function()
       ]])
 
     local actual = aluminum_mold_ice_maker({
-      information = {
-        type = 'cartridge',
-        location = 'fridge'
-      },
       fill = {
         ice_maker_fill_monitor = TypedString('ice_maker_fill_monitor', 'ice_maker_fill_monitor')
       },

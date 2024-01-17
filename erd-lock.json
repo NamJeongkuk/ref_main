@@ -925,9 +925,10 @@
           "type": "enum",
           "values": {
             "0": "IceMakerType_AluminumMold",
-            "1": "IceMakerType_Twist",
+            "1": "IceMakerType_TwistTray",
             "2": "IceMakerType_Cartridge",
-            "3": "IceMakerType_Nugget"
+            "3": "IceMakerType_Nugget",
+            "255": "IceMakerType_Disabled"
           }
         },
         {
@@ -937,7 +938,8 @@
           "type": "enum",
           "values": {
             "0": "IceMakerLocation_Freezer",
-            "1": "IceMakerLocation_Fridge"
+            "1": "IceMakerLocation_FreshFood",
+            "255": "IceMakerLocation_Disabled"
           }
         }
       ],
@@ -1029,9 +1031,10 @@
           "type": "enum",
           "values": {
             "0": "IceMakerType_AluminumMold",
-            "1": "IceMakerType_Twist",
+            "1": "IceMakerType_TwistTray",
             "2": "IceMakerType_Cartridge",
-            "3": "IceMakerType_Nugget"
+            "3": "IceMakerType_Nugget",
+            "255": "IceMakerType_Disabled"
           }
         },
         {
@@ -1041,7 +1044,8 @@
           "type": "enum",
           "values": {
             "0": "IceMakerLocation_Freezer",
-            "1": "IceMakerLocation_Fridge"
+            "1": "IceMakerLocation_FreshFood",
+            "255": "IceMakerLocation_Disabled"
           }
         }
       ],
@@ -1111,6 +1115,40 @@
       ],
       "id": "0x1228",
       "name": "Erd_DoorAlarmEnableStatus",
+      "operations": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "data": [
+        {
+          "name": "Erd_IceMaker2TypeInformation.type",
+          "offset": 0,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "IceMakerType_AluminumMold",
+            "1": "IceMakerType_TwistTray",
+            "2": "IceMakerType_Cartridge",
+            "3": "IceMakerType_Nugget",
+            "255": "IceMakerType_Disabled"
+          }
+        },
+        {
+          "name": "Erd_IceMaker2TypeInformation.location",
+          "offset": 1,
+          "size": 1,
+          "type": "enum",
+          "values": {
+            "0": "IceMakerLocation_Freezer",
+            "1": "IceMakerLocation_FreshFood",
+            "255": "IceMakerLocation_Disabled"
+          }
+        }
+      ],
+      "id": "0x1233",
+      "name": "Erd_IceMaker2TypeInformation",
       "operations": [
         "read",
         "write"

@@ -1,8 +1,4 @@
 return twist_tray_ice_maker({
-  information = {
-    type = 'twist',
-    location = 'freezer'
-  },
   fill = {
     ice_maker_fill_monitor = import("../IceMaker/twist_tray_ice_maker_fill_monitor_qa.lua")
   },

@@ -47,7 +47,7 @@ TEST_GROUP(NonZeroNonHarvestFillTubeHeaterControl)
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
-      data = PersonalityParametricData_Get(dataModel)->iceMakerData->nonHarvestFillTubeHeaterData;
+      data = PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerSlots->slot0Data->nonHarvestFillTubeHeaterData;
    }
 
    void GivenModuleIsInitialized()
@@ -236,7 +236,7 @@ TEST_GROUP(ZeroNonHarvestFillTubeHeaterControl)
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble, TddPersonality_DevelopmentSingleEvapFillTubeHeaterNonHarvestControlZeroPercentDutyCycle);
       dataModel = dataModelDouble.dataModel;
-      data = PersonalityParametricData_Get(dataModel)->iceMakerData->nonHarvestFillTubeHeaterData;
+      data = PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerSlots->slot0Data->nonHarvestFillTubeHeaterData;
    }
 
    void GivenModuleIsInitialized()
@@ -305,7 +305,7 @@ TEST_GROUP(NonZeroOffDutyCyclePercentage)
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
-      data = PersonalityParametricData_Get(dataModel)->iceMakerData->nonHarvestFillTubeHeaterData;
+      data = PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerSlots->slot0Data->nonHarvestFillTubeHeaterData;
    }
 
    void GivenModuleIsInitializedWithNonZeroOffDutyCyclePercentage()

@@ -10,13 +10,11 @@
 
 #include "SideBySideSingleEvaporatorCoolingSystemPlugin.h"
 #include "I_DataModel.h"
-#include "AluminumMoldIceMakerPlugin.h"
 #include "SideBySideStaggeredHeater.h"
 #include "RecessHeaterPlugin.h"
 #include "SideBySideFactoryPlugin.h"
 #include "IsolationWaterValvePlugin.h"
 #include "SideBySideDispensePlugin.h"
-#include "TwistTrayIceMakerPlugin.h"
 #include "DispenserWaterValvePlugin.h"
 #include "AugerMotorPlugin.h"
 #include "SideBySideLightingPlugin.h"
@@ -24,6 +22,7 @@
 #include "SideBySideDoorPlugin.h"
 #include "SideBySideEnhancedSabbathPlugin.h"
 #include "SideBySideWaterFilterTrackingPlugin.h"
+#include "IceMakerSlotsPlugin.h"
 
 typedef struct
 {
@@ -31,8 +30,7 @@ typedef struct
    {
       SideBySideSingleEvaporatorCoolingSystemPlugin_t coolingSystemPlugin;
       IsolationWaterValvePlugin_t isolationWaterValvePlugin;
-      AluminumMoldIceMakerPlugin_t aluminumMoldIceMakerPlugin;
-      TwistTrayIceMakerPlugin_t twistTrayIceMakerPlugin;
+      IceMakerSlotsPlugin_t iceMakerSlotsPlugin;
       DispenserWaterValvePlugin_t dispenserWaterValvePlugin;
       AugerMotorPlugin_t augerMotorPlugin;
       SideBySideStaggeredHeater_t staggeredHeaterPlugin;

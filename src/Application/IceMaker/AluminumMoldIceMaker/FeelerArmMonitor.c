@@ -55,7 +55,7 @@ static void FeelerArmMonitoringRequestOrFeelerArmPositionUpdated(void *context, 
             instance->_private.dataModel,
             instance->_private.config->timerModuleErd),
          &instance->_private.feelerArmDelayTimer,
-         instance->_private.aluminumMoldIceMakerData->freezeData.minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN,
+         *instance->_private.minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN,
          FeelerArmDelayTimerExpired,
          instance);
    }
@@ -77,11 +77,12 @@ static void FeelerArmMonitoringRequestOrFeelerArmPositionUpdated(void *context, 
 void FeelerArmMonitor_Init(
    FeelerArmMonitor_t *instance,
    I_DataModel_t *dataModel,
-   const FeelerArmMonitorConfig_t *config)
+   const FeelerArmMonitorConfig_t *config,
+   const uint8_t *minimumFeelerArmExtensionTimeInMinutes)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
-   instance->_private.aluminumMoldIceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData;
+   instance->_private.minimumFeelerArmExtensionTimeInMinutes = minimumFeelerArmExtensionTimeInMinutes;
 
    EventSubscription_Init(
       &instance->_private.feelerArmMonitoringRequestSubscription,

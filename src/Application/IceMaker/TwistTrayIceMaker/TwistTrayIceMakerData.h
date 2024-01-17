@@ -10,7 +10,6 @@
 
 #include <stdint.h>
 #include "TemperatureDegFx100.h"
-#include "IceMakerTypeInformation.h"
 #include "IceMakerFillMonitorData.h"
 #include "HarvestCountCalculatorData.h"
 
@@ -44,7 +43,6 @@ typedef struct
 
 typedef struct
 {
-   IceMakerTypeInformation_t typeInformation;
    TwistTrayIceMakerFillData_t fillData;
    TwistTrayIceMakerFreezeData_t freezeData;
    TwistTrayIceMakerHarvestData_t harvestData;

@@ -7,222 +7,56 @@
 
 #include "TwistTrayIceMakerPlugin.h"
 #include "SystemErds.h"
-#include "PersonalityParametricData.h"
 #include "DataModelErdPointerAccess.h"
 #include "DataSource_Gpio.h"
-#include "IceMakerMotorAction.h"
 
-static const Output_TwistTrayIceMakerMotorStateConfig_t outputTwistIceMakerMotorStateConfig = {
-   .motorDrivePositiveClockwiseChannel = Erd_BspGpio_MTR_DRV_00,
-   .motorDriveNegativeCounterClockwiseChannel = Erd_BspGpio_MTR_DRV_01
-};
-
-static const TwistTrayIceMakerMotorRequestManagerConfig_t requestManagerConfig = {
-   .resolvedVoteErd = Erd_TwistTrayIceMakerMotor_ResolvedVote,
-   .motorRequestErd = Erd_TwistIceMakerMotorControlRequest,
-   .motorEnableErd = Erd_TwistIceMakerMotorDriveEnable,
-   .motorActionResultErd = Erd_IceMaker0_MotorActionResult,
-   .motorDoActionErd = Erd_IceMaker0_MotorDoAction
-};
-
-static const TwistTrayIceMakerMotorSwitchMonitorConfig_t switchMonitorConfig = {
-   .switchInputErd = Erd_Gpio_GPIO_IN_02
-};
-
-static const SensorFilteringConfig_t sensorFilterConfig = {
-   .sensorAdcCountErd = Erd_TwistTrayIceMakerThermistor_AdcCount,
-   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_TwistTrayIceMaker_UnfilteredTemperatureInDegFx100,
-   .sensorFilteredTemperatureInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100,
-   .sensorIsValidErd = Erd_TwistTrayIceMaker_ThermistorIsValid,
-   .sensorIsInvalidFaultErd = Erd_IceMaker0ThermistorIsInvalidFault,
-   .sensorDiscoveredErd = Erd_IceMaker0Present,
-   .timerModuleErd = Erd_TimerModule
-};
-
-static const Erd_t twistTrayIceMakerThermistorValidOverrideArbiterRequestErdList[] = {
-   Erd_TwistTrayIceMakerThermistor_IsValidOverrideRequest
-};
-
-static const Erd_t twistTrayIceMakerThermistorValidValueErdList[] = {
-   Erd_TwistTrayIceMaker_ThermistorIsValid,
-   Erd_TwistTrayIceMakerThermistor_IsValidOverrideValue
-};
-
-static const OverrideArbiterConfiguration_t twistTrayIceMakerThermistorValidArbiterConfiguration = {
-   twistTrayIceMakerThermistorValidOverrideArbiterRequestErdList,
-   twistTrayIceMakerThermistorValidValueErdList,
-   Erd_TwistTrayIceMakerThermistor_IsValidResolved,
-   NUM_ELEMENTS(twistTrayIceMakerThermistorValidOverrideArbiterRequestErdList)
-};
-
-static bool TwistMotorVotingErdCareDelegate(const void *votingErdData)
+void TwistTrayIceMakerPlugin_Init(
+   TwistTrayIceMakerPlugin_t *instance,
+   I_DataModel_t *dataModel,
+   IceMakerLocation_t location,
+   const TwistTrayIceMakerData_t *twistTrayData,
+   const SensorData_t *sensorData,
+   const FreezerIceRateData_t *freezerIceRateData,
+   const NonHarvestFillTubeHeaterData_t *nonHarvestFillTubeHeaterData,
+   const TwistTrayIceMakerPlugConfig_t *config)
 {
-   const TwistTrayIceMakerMotorVotedAction_t *data = votingErdData;
-   return (data->care);
-}
-
-static const TwistTrayIceMakerMotorVotedAction_t defaultMotorData = {
-   .action = IceMakerMotorAction_Idle,
-   .care = Vote_DontCare
-};
-
-static const ErdResolverConfiguration_t twistTrayMotorResolverConfiguration = {
-   .votingErdCare = TwistMotorVotingErdCareDelegate,
-   .defaultData = &defaultMotorData,
-   .winningVoterErd = Erd_TwistTrayIceMakerMotor_WinningVoteErd,
-   .resolvedStateErd = Erd_TwistTrayIceMakerMotor_ResolvedVote,
-   .numberOfVotingErds = (Erd_TwistTrayIceMakerMotor_IceMakerVote - Erd_TwistTrayIceMakerMotor_WinningVoteErd)
-};
-
-static const FlowMeterMonitorConfig_t twistTrayIceMakerFlowMeterMonitorConfig = {
-   .flowMeterMonitoringRequest = Erd_TwistTrayIceMakerFlowMeterMonitoringRequest,
-   .flowMeterInputCaptureCountsErd = Erd_FlowMeter_InputCaptureCount,
-   .flowMeterWaterDispensedOzX100Erd = Erd_TwistTrayIceMakerFlowMeterWaterDispensedOzX100
-};
-
-static const IceMakerWaterFillMonitorConfig_t twistTrayIceMakerFillMonitorConfig = {
-   .stopIceMakerFillSignalErd = Erd_TwistTrayIceMakerStopFillSignal,
-   .flowMeterWaterDispensedOzx100Erd = Erd_TwistTrayIceMakerFlowMeterWaterDispensedOzX100,
-   .waterFillMonitoringRequestErd = Erd_TwistTrayIceMakerWaterFillMonitoringRequest,
-   .flowMeterMonitoringRequestErd = Erd_TwistTrayIceMakerFlowMeterMonitoringRequest,
-   .timerModuleErd = Erd_TimerModule
-};
-
-static bool WaterValveVotingErdCareDelegate(const void *votingErdData)
-{
-   const WaterValveVotedState_t *data = votingErdData;
-   return (data->care);
-}
-
-static const WaterValveVotedState_t defaultWaterValveData = {
-   .state = WaterValveState_Off,
-   .care = Vote_DontCare
-};
-
-static const ErdResolverConfiguration_t iceMakerWaterValveResolverConfiguration = {
-   .votingErdCare = WaterValveVotingErdCareDelegate,
-   .defaultData = &defaultWaterValveData,
-   .winningVoterErd = Erd_TwistTrayIceMakerWaterValve_WinningVoteErd,
-   .resolvedStateErd = Erd_TwistTrayIceMakerWaterValve_ResolvedVote,
-   .numberOfVotingErds = (Erd_TwistTrayIceMakerWaterValve_IceMakerVote - Erd_TwistTrayIceMakerWaterValve_WinningVoteErd)
-};
-
-static const ResolvedVoteRelayConnectorConfiguration_t iceMakerWaterValveRelayConnectorConfiguration = {
-   .resolvedRelayVoteErd = Erd_TwistTrayIceMakerWaterValve_ResolvedVote,
-   .relayOutputErd = Erd_TwistTrayIceMakerWaterValveRelay
-};
-
-static const TwistTrayIceMakerMotorControllerConfig_t twistTrayMotorControllerConfig = {
-   .motorDoActionErd = Erd_IceMaker0_MotorDoAction
-};
-
-static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
-   .harvestCountIsReadyToHarvestErd = Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest,
-   .harvestCountCalculationRequestErd = Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,
-   .moldFilteredTemperatureInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
-   .moldFreezeIntegrationCountErd = Erd_TwistTrayIceMaker_FreezeIntegrationCount,
-   .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_TwistTrayIceMaker_MinimumFreezeTimeCounterInMinutes
-};
-
-static const TwistTrayIceMakerMotorControllerValueUpdaterConfig_t motorControllerValueUpdaterConfig = {
-   .motorActionResultErd = Erd_IceMaker0_MotorActionResult,
-   .motorOperationStateErd = Erd_IceMaker0_MotorOperationState,
-   .motorErrorReasonErd = Erd_IceMaker0_MotorErrorReason
-};
-
-static const Erd_t twistTrayIceMakerFilteredTemperatureOverrideRequestErdList[] = {
-   Erd_TwistTrayIceMaker_FilteredTemperatureOverrideRequest
-};
-
-static const Erd_t twistTrayIceMakerFilteredTemperatureValueErdList[] = {
-   Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100,
-   Erd_TwistTrayIceMaker_FilteredTemperatureOverrideValueInDegFx100
-};
-
-static const OverrideArbiterConfiguration_t twistTrayIceMakerFilteredTemperatureArbiterConfiguration = {
-   twistTrayIceMakerFilteredTemperatureOverrideRequestErdList,
-   twistTrayIceMakerFilteredTemperatureValueErdList,
-   Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
-   NUM_ELEMENTS(twistTrayIceMakerFilteredTemperatureOverrideRequestErdList)
-};
-
-static const TwistTrayIceMakerConfiguration_t twistTrayIceMakerConfiguration = {
-   .highLevelStateErd = Erd_TwistTrayIceMaker_HighLevelState,
-   .operationStateErd = Erd_TwistTrayIceMaker_OperationState,
-   .thermistorIsValidResolvedErd = Erd_TwistTrayIceMakerThermistor_IsValidResolved,
-   .filteredTemperatureResolvedInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
-   .testRequestErd = Erd_TwistTrayIceMakerTestRequest,
-   .stopFillSignalErd = Erd_TwistTrayIceMakerStopFillSignal,
-   .harvestCountIsReadyToHarvestErd = Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest,
-   .harvestCountCalculationRequestErd = Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,
-   .motorIceMakerVoteErd = Erd_TwistTrayIceMakerMotor_IceMakerVote,
-   .waterValveIceMakerVoteErd = Erd_TwistTrayIceMakerWaterValve_IceMakerVote,
-   .motorActionResultErd = Erd_IceMaker0_MotorActionResult,
-   .motorFaultActiveErd = Erd_TwistTrayIceMaker_MotorFaultActive,
-   .waterFillMonitoringRequestErd = Erd_TwistTrayIceMakerWaterFillMonitoringRequest,
-   .isolationWaterValveVoteErd = Erd_IsolationWaterValve_TwistTrayIceMakerVote,
-   .iceMakerEnabledResolvedErd = Erd_IceMakerEnabledResolved,
-   .sabbathModeErd = Erd_SabbathModeEnable,
-   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
-   .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
-   .fillTubeHeaterVoteErd = Erd_FillTubeHeater_TwistTrayIceMakerVote,
-   .coolingOffStatusErd = Erd_CoolingOffStatus,
-   .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
-   .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
-   .leftSideFreezerDoorStatusResolvedErd = Erd_LeftSideFreezerDoorStatusResolved,
-   .dispensingInhibitedReasonErd = Erd_DispensingInhibitedReason,
-   .iceMakerFillInhibitedReasonErd = Erd_IceMakerFillInhibitedReason,
-   .iceMakerFullStatusErd = Erd_IceMaker0FullStatus
-};
-
-void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataModel_t *dataModel)
-{
-   const SensorData_t *sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
-   const TwistTrayIceMakerData_t *twistTrayIceMakerData =
-      PersonalityParametricData_Get(dataModel)->iceMakerData->twistTrayIceMakerData;
-
-   DataModel_Write(
-      dataModel,
-      Erd_IceMaker0TypeInformation,
-      &twistTrayIceMakerData->typeInformation);
-
    SensorFiltering_Init(
       &instance->_private.sensorFilter,
       dataModel,
-      &sensorFilterConfig,
+      config->sensorFilterConfig,
       sensorData->twistTrayIceMakerMoldThermistor,
       sensorData->periodicUpdateRateInMs);
 
    OverrideArbiter_Init(
       &instance->_private.twistTrayIceMakerThermistorIsValidOverrideArbiter,
       DataModel_AsDataSource(dataModel),
-      &twistTrayIceMakerThermistorValidArbiterConfiguration);
+      config->thermistorValidArbiterConfig);
 
    OverrideArbiter_Init(
       &instance->_private.twistTrayIceMakerFilteredTemperatureOverrideArbiter,
       DataModel_AsDataSource(dataModel),
-      &twistTrayIceMakerFilteredTemperatureArbiterConfiguration);
+      config->filteredTemperatureArbiterConfig);
 
    ErdResolver_Init(
       &instance->_private.twistTrayMotorVoteResolver,
       DataModel_AsDataSource(dataModel),
-      &twistTrayMotorResolverConfiguration);
+      config->motorResolverConfiguration);
 
    ErdResolver_Init(
       &instance->_private.iceMakerWaterValveVoteResolver,
       DataModel_AsDataSource(dataModel),
-      &iceMakerWaterValveResolverConfiguration);
+      config->waterValveResolverConfig);
 
    ResolvedVoteRelayConnector_Init(
       &instance->_private.iceMakerWaterValveRelayConnector,
       dataModel,
-      &iceMakerWaterValveRelayConnectorConfiguration);
+      config->waterValveRelayConnectorConfig);
 
    HarvestCountCalculator_Init(
       &instance->_private.harvestCountCalculator,
       dataModel,
-      &harvestCountCalculatorConfig,
-      twistTrayIceMakerData->freezeData.harvestCountCalculatorData);
+      config->harvestCountCalculatorConfig,
+      twistTrayData->freezeData.harvestCountCalculatorData);
 
    TwistTrayIceMakerRunner_Init(
       &instance->_private.twistTrayIceMakerMotorControllerRunner,
@@ -232,50 +66,54 @@ void TwistTrayIceMakerPlugin_Init(TwistTrayIceMakerPlugin_t *instance, I_DataMod
    TwistTrayIceMakerMotorRequestManager_Init(
       &instance->_private.twistTrayMotorRequestManager,
       dataModel,
-      &requestManagerConfig);
+      config->motorRequestManagerConfig);
 
    TwistTrayIceMakerMotorController_Init(
       &instance->_private.twistTrayMotorController,
-      twistTrayIceMakerData,
+      twistTrayData,
       Output_TwistTrayIceMakerMotorState_Init(
          &instance->_private.motorStateOutput,
          DataModelErdPointerAccess_GetGpioGroup(dataModel, Erd_GpioGroupInterface),
-         &outputTwistIceMakerMotorStateConfig),
+         config->outputMotorStateConfig),
       dataModel,
-      &twistTrayMotorControllerConfig);
+      config->motorControllerConfig);
 
    TwistTrayIceMakerMotorControllerValueUpdater_Init(
       &instance->_private.twistTrayMotorControllerValueUpdater,
       dataModel,
       &instance->_private.twistTrayMotorController,
-      &motorControllerValueUpdaterConfig);
+      config->motorControllerValueUpdaterConfig);
 
    TwistTrayIceMakerMotorSwitchMonitor_Init(
       &instance->_private.twistTrayIceMakerSwitchMonitor,
       dataModel,
       &instance->_private.twistTrayMotorController,
-      &switchMonitorConfig);
+      config->motorSwitchMonitorConfig);
 
    FillTubeHeaterVotingFrameworkPlugin_Init(
       &instance->_private.fillTubeHeaterVotingFrameworkPlugin,
-      dataModel);
-
-   FlowMeterMonitor_Init(
-      &instance->_private.twistTrayIceMakerFlowMeterMonitor,
       dataModel,
-      &twistTrayIceMakerFlowMeterMonitorConfig,
-      PersonalityParametricData_Get(dataModel)->flowMeterData);
+      nonHarvestFillTubeHeaterData);
+
+   if(location == IceMakerLocation_Freezer)
+   {
+      FreezerIceRateHandler_Init(
+         &instance->_private.iceRateHandler,
+         dataModel,
+         config->freezerIceRateHandlerConfig,
+         freezerIceRateData);
+   }
 
    IceMakerWaterFillMonitor_Init(
       &instance->_private.twistTrayIceMakerFillMonitor,
       dataModel,
-      &twistTrayIceMakerFillMonitorConfig,
-      PersonalityParametricData_Get(dataModel)->iceMakerData->twistTrayIceMakerData->fillData.iceMakerFillMonitorData);
+      config->fillMonitorConfig,
+      twistTrayData->fillData.iceMakerFillMonitorData);
 
    TwistTrayIceMaker_Init(
       &instance->_private.twistTrayIceMaker,
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule),
       DataModel_AsDataSource(dataModel),
-      &twistTrayIceMakerConfiguration,
-      twistTrayIceMakerData);
+      config->twistTrayIceMakerConfig,
+      twistTrayData);
 }

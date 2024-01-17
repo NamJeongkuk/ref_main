@@ -11,10 +11,7 @@ return function(core)
     return TypedString(
       { 'ice_maker' },
       structure(
-        pointer(config.freezer_ice_rate),
-        pointer(config.aluminum_mold_ice_maker),
-        pointer(config.twist_tray_ice_maker),
-        pointer(config.non_harvest_fill_tube_heater),
+        pointer(config.ice_maker_slots),
         pointer(config.ice_maker_fill_blocker)
       ))
   end)
@@ -23,10 +20,7 @@ return function(core)
     validate_arguments(
       config,
       {
-        freezer_ice_rate = { constraint.typed_string('freezer_ice_rate') },
-        aluminum_mold_ice_maker = { constraint.typed_string('aluminum_mold_ice_maker') },
-        twist_tray_ice_maker = { constraint.typed_string('twist_tray_ice_maker') },
-        non_harvest_fill_tube_heater = { constraint.typed_string('non_harvest_fill_tube_heater') },
+        ice_maker_slots = { constraint.typed_string('ice_maker_slots') },
         ice_maker_fill_blocker = { constraint.typed_string('ice_maker_fill_blocker')}
       })
     return generate(config)

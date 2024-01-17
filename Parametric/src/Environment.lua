@@ -11,6 +11,7 @@ return function(directory)
   import('Defrost/Defrost')
   import('Dispenser/Dispenser')
   import('Dispenser/DoorInhibitDispenseTable')
+  import('Dispenser/AugerMotor')
   import('EnhancedSabbath/EnhancedSabbath')
   import('Grid/Grid')
   import('Grid/Gridline')
@@ -72,7 +73,10 @@ return function(directory)
   import('IceMaker/IceMakerFillMonitor')
   import('IceMaker/IceMaker')
   import('IceMaker/NonHarvestFillTubeHeater')
-  import('IceMaker/AugerMotor')
+  import('IceMaker/IceMakerSlots')
+  import('IceMaker/IceMakerSlot')
+  import('IceMaker/IceMakerType')
+  import('IceMaker/IceMakerLocation')
   import('FilterData/CommonFilterData')
   import('FilterData/FilterData')
   import('FilterData/RfidFilterData')
@@ -169,6 +173,10 @@ return function(directory)
   freezer_ice_rate = FreezerIceRate(core)
   ice_maker_fill_blocker = IceMakerFillBlocker(core)
   ice_maker_fill_monitor = IceMakerFillMonitor(core)
+  ice_maker_slots = IceMakerSlots(core)
+  ice_maker_slot = IceMakerSlot(core)
+  ice_maker_type = IceMakerType
+  ice_maker_location = IceMakerLocation
   ice_maker = IceMaker(core)
   non_harvest_fill_tube_heater = NonHarvestFillTubeHeater(core)
   common_filter_data = CommonFilterData(core)
@@ -274,6 +282,10 @@ return function(directory)
     freezer_ice_rate = freezer_ice_rate,
     ice_maker_fill_blocker = ice_maker_fill_blocker,
     ice_maker_fill_monitor = ice_maker_fill_monitor,
+    ice_maker_slots = ice_maker_slots,
+    ice_maker_slot = ice_maker_slot,
+    ice_maker_type = ice_maker_type,
+    ice_maker_location = ice_maker_location,
     ice_maker = ice_maker,
     non_harvest_fill_tube_heater = non_harvest_fill_tube_heater,
     common_filter_data = common_filter_data,

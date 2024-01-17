@@ -9,7 +9,6 @@
 #define ALUMINUMMOLDICEMAKERDATA_H
 
 #include "TemperatureDegFx100.h"
-#include "IceMakerTypeInformation.h"
 #include "IceMakerFillMonitorData.h"
 #include "HarvestCountCalculatorData.h"
 
@@ -55,7 +54,6 @@ typedef struct
 
 typedef struct
 {
-   IceMakerTypeInformation_t typeInformation;
    AluminumMoldIceMakerFillData_t fillData;
    AluminumMoldIceMakerFreezeData_t freezeData;
    AluminumMoldIceMakerHarvestData_t harvestData;

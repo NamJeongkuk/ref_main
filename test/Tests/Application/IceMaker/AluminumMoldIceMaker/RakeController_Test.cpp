@@ -45,7 +45,7 @@ TEST_GROUP(RakeController)
       ReferDataModel_TestDouble_Init(&dataModelTestDouble);
       dataModel = dataModelTestDouble.dataModel;
       timerModuleDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelTestDouble);
-      harvestData = PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData->harvestData;
+      harvestData = PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerSlots->slot1Data->aluminumMoldData->harvestData;
    }
 
    void After(TimerTicks_t ticks)

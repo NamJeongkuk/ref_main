@@ -26,7 +26,7 @@ extern "C"
 static const AluminumMoldIceMakerConfig_t config = {
    .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState,
    .iceMakerWaterValveVoteErd = Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
-   .moldHeaterVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
+   .moldHeaterVoteErd = Erd_IceMaker0_HeaterRelay_IceMakerVote,
    .rakeMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
    .harvestCountCalculationRequestErd = Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest,
    .feelerArmMonitoringRequestErd = Erd_IceMaker0_FeelerArmMonitoringRequest,
@@ -75,7 +75,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       dataModel = referDataModelTestDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&referDataModelTestDouble);
 
-      iceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData;
+      iceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerSlots->slot1Data->aluminumMoldData;
       iceMakerModifiedData = *iceMakerData;
 
       EventSubscription_Init(&dataModelOnChangeSubscription, &instance, DataModelChanged);
@@ -179,7 +179,7 @@ TEST_GROUP(AluminumMoldIceMaker)
 
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
+         Erd_IceMaker0_HeaterRelay_IceMakerVote,
          &vote);
    }
 
@@ -188,7 +188,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       HeaterVotedState_t vote;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
+         Erd_IceMaker0_HeaterRelay_IceMakerVote,
          &vote);
 
       CHECK_EQUAL(expected, vote.state);
@@ -591,7 +591,7 @@ TEST_GROUP(AluminumMoldIceMaker)
          .state = state,
          .care = true
       };
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote, &vote);
+      DataModel_Write(dataModel, Erd_IceMaker0_HeaterRelay_IceMakerVote, &vote);
    }
 
    void GivenTheIceMakerIsolationWaterValveVoteIs(WaterValveState_t state)

@@ -35,7 +35,7 @@ enum
 
 static const IceMakerMoldHeaterControllerConfig_t config = {
    .moldHeaterControlRequestErd = Erd_IceMaker0_MoldHeaterControlRequest,
-   .moldHeaterVoteErd = Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
+   .moldHeaterVoteErd = Erd_IceMaker0_HeaterRelay_IceMakerVote,
    .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .timerModuleErd = Erd_TimerModule,
 };
@@ -53,7 +53,7 @@ TEST_GROUP(IceMakerMoldHeaterController)
       ReferDataModel_TestDouble_Init(&dataModelDouble);
       dataModel = dataModelDouble.dataModel;
       timerModuleDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
-      harvestData = &PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData->harvestData;
+      harvestData = &PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerSlots->slot1Data->aluminumMoldData->harvestData;
    }
 
    void WhenIceMakerMoldHeaterControlRequestIs(
@@ -97,7 +97,7 @@ TEST_GROUP(IceMakerMoldHeaterController)
    void TheMoldHeaterVoteShouldBeCareAnd(bool expected)
    {
       HeaterVotedState_t actual;
-      DataModel_Read(dataModel, Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker0_HeaterRelay_IceMakerVote, &actual);
 
       CHECK_EQUAL(expected, actual.state);
       CHECK_TRUE(actual.care);
@@ -106,7 +106,7 @@ TEST_GROUP(IceMakerMoldHeaterController)
    void TheMoldHeaterVoteShouldBeDontCareAnd(bool expected)
    {
       HeaterVotedState_t actual;
-      DataModel_Read(dataModel, Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker0_HeaterRelay_IceMakerVote, &actual);
 
       CHECK_EQUAL(expected, actual.state);
       CHECK_FALSE(actual.care);

@@ -52,7 +52,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       dataModel = dataModelDouble.dataModel;
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
-      iceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData;
+      iceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerSlots->slot1Data->aluminumMoldData;
       iceMakerFillMonitorData = iceMakerData->fillData.iceMakerFillMonitorData;
    }
 
@@ -101,7 +101,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
          &state);
       DataModel_Write(
          dataModel,
-         Erd_IceMaker0EnableStatus,
+         Erd_IceMaker1EnableStatus,
          &state);
    }
 
@@ -241,7 +241,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       HeaterVotedState_t actualVote;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
+         Erd_IceMaker0_HeaterRelay_IceMakerVote,
          &actualVote);
 
       CHECK_EQUAL(expectedState, actualVote.state);
@@ -337,7 +337,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       HeaterVotedState_t actual;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote,
+         Erd_IceMaker0_HeaterRelay_IceMakerVote,
          &actual);
 
       CHECK_EQUAL(expectedState, actual.state);

@@ -1,4 +1,4 @@
-local AugerMotor = require 'IceMaker/AugerMotor'
+local AugerMotor = require 'Dispenser/AugerMotor'
 local core_mock = require 'lua-parametric-tools-test'.mock.common.core
 local should_memoize_calls = require 'lua-common'.util.should_memoize_calls
 local remove_whitespace = require 'lua-common'.utilities.remove_whitespace

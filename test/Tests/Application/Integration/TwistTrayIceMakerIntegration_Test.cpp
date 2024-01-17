@@ -67,7 +67,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       interruptTestDouble = (Interrupt_TestDouble_t *)DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_SystemTickInterrupt);
       fastInterruptTestDouble = (Interrupt_TestDouble_t *)DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_FastTickInterrupt);
 
-      twistTrayIceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->twistTrayIceMakerData;
+      twistTrayIceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerSlots->slot0Data->twistTrayData;
       twistTrayIceMakerFillMonitorData = twistTrayIceMakerData->fillData.iceMakerFillMonitorData;
       sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
       iceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData;
@@ -841,7 +841,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldTurnOnFillTubeHeaterWhenEnteringHarvest
    TheFillTubeHeaterWinningErdShouldBe(Erd_FillTubeHeater_TwistTrayIceMakerVote);
 
    After(1);
-   TheFillTubeHeaterResolvedVoteShouldBe(iceMakerData->nonHarvestFillTubeHeaterData->offDutyCyclePercentage, Vote_Care);
+   TheFillTubeHeaterResolvedVoteShouldBe(iceMakerData->iceMakerSlots->slot0Data->nonHarvestFillTubeHeaterData->offDutyCyclePercentage, Vote_Care);
    TheFillTubeHeaterRelayShouldBe(OFF);
 }
 

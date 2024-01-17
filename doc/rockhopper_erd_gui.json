@@ -2284,8 +2284,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum mold ice maker heater - ice maker vote",
-          "name": "Erd_AluminumMoldIceMakerHeaterRelay_IceMakerVote",
+          "displayName": "Ice Maker 0 heater - ice maker vote",
+          "name": "Erd_IceMaker0_HeaterRelay_IceMakerVote",
           "read": true,
           "write": false
         },
@@ -2326,8 +2326,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Rake Position",
-          "name": "Erd_AluminumMoldIceMakerRakePosition",
+          "displayName": "Ice Maker 0 Rake Position",
+          "name": "Erd_IceMaker0_RakePosition",
           "read": true,
           "write": true
         },

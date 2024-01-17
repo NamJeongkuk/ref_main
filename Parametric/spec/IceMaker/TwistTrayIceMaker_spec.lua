@@ -11,10 +11,6 @@ describe('TwistTrayIceMaker', function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.deep_merge({
-      information = {
-        type = 'cartridge',
-        location = 'fridge'
-      },
       fill = {
         ice_maker_fill_monitor = TypedString('ice_maker_fill_monitor', 'ice_maker_fill_monitor')
       },
@@ -42,26 +38,6 @@ describe('TwistTrayIceMaker', function()
 
   it('should require all arguments', function()
     should_require_args(twist_tray_ice_maker, generate_config())
-  end)
-
-  it('should assert if information.type is not valid', function()
-    should_fail_with("information.type=-1 must be in the set { 'aluminum_mold', 'twist', 'cartridge', 'nugget' }", function()
-      twist_tray_ice_maker(generate_config({
-        information = {
-          type = -1
-        }
-      }))
-    end)
-  end)
-
-  it('should assert if infromation.location is not valid', function()
-    should_fail_with("information.location=-1 must be in the set { 'freezer', 'fridge' }", function()
-      twist_tray_ice_maker(generate_config({
-        information = {
-          location = -1
-        }
-      }))
-    end)
   end)
 
   it('should assert if fill.ice_maker_fill_monitor is not a string', function()
@@ -226,10 +202,6 @@ describe('TwistTrayIceMaker', function()
   it('should generate a typed string with the correct data and type for twist tray ice maker', function()
     local expected = remove_whitespace([[
         structure(
-         structure(
-            u8(2),
-            u8(1)
-          ),
           structure(
             pointer(ice_maker_fill_monitor)
           ),
@@ -256,10 +228,6 @@ describe('TwistTrayIceMaker', function()
       ]])
 
     local actual = twist_tray_ice_maker({
-      information = {
-        type = 'cartridge',
-        location = 'fridge'
-      },
       fill = {
         ice_maker_fill_monitor = TypedString('ice_maker_fill_monitor', 'ice_maker_fill_monitor')
       },

@@ -41,7 +41,10 @@ static const ErdResolverConfiguration_t fillTubeHeaterErdResolverConfiguration =
    .numberOfVotingErds = (Erd_FillTubeHeater_NonHarvestVote - Erd_FillTubeHeater_WinningVoteErd)
 };
 
-void FillTubeHeaterVotingFrameworkPlugin_Init(FillTubeHeaterVotingFrameworkPlugin_t *instance, I_DataModel_t *dataModel)
+void FillTubeHeaterVotingFrameworkPlugin_Init(
+   FillTubeHeaterVotingFrameworkPlugin_t *instance,
+   I_DataModel_t *dataModel,
+   const NonHarvestFillTubeHeaterData_t *nonHarvestFillTubeHeaterData)
 {
    ErdResolver_Init(
       &instance->_private.fillTubeHeaterErdResolver,
@@ -57,5 +60,5 @@ void FillTubeHeaterVotingFrameworkPlugin_Init(FillTubeHeaterVotingFrameworkPlugi
       &instance->_private.nonHarvestFillTubeHeaterControl,
       dataModel,
       &nonHarvestFillTubeHeaterControlConfig,
-      PersonalityParametricData_Get(dataModel)->iceMakerData->nonHarvestFillTubeHeaterData);
+      nonHarvestFillTubeHeaterData);
 }

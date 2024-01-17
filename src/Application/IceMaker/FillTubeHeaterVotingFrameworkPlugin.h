@@ -13,6 +13,7 @@
 #include "SoftPwm.h"
 #include "PercentageDutyCycleVoteToPwmDutyCycleConverter.h"
 #include "NonHarvestFillTubeHeaterControl.h"
+#include "NonHarvestFillTubeHeaterData.h"
 
 typedef struct
 {
@@ -27,7 +28,11 @@ typedef struct
 /*!
  * @param instance
  * @param dataModel
+ * @param nonHarvestFillTubeHeaterData
  */
-void FillTubeHeaterVotingFrameworkPlugin_Init(FillTubeHeaterVotingFrameworkPlugin_t *instance, I_DataModel_t *dataModel);
+void FillTubeHeaterVotingFrameworkPlugin_Init(
+   FillTubeHeaterVotingFrameworkPlugin_t *instance,
+   I_DataModel_t *dataModel,
+   const NonHarvestFillTubeHeaterData_t *nonHarvestFillTubeHeaterData);
 
 #endif

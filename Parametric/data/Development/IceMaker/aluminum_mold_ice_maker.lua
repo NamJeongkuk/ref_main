@@ -1,8 +1,4 @@
 return aluminum_mold_ice_maker({
-  information = {
-    type = 'aluminum_mold',
-    location = 'freezer'
-  },
   fill = {
     ice_maker_fill_monitor = import("../IceMaker/aluminum_mold_ice_maker_fill_monitor.lua")
   },

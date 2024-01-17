@@ -31,7 +31,7 @@ typedef struct
       EventSubscription_t feelerArmMonitoringRequestSubscription;
       EventSubscription_t feelerArmPositionSubscription;
       Timer_t feelerArmDelayTimer;
-      const AluminumMoldIceMakerData_t *aluminumMoldIceMakerData;
+      const uint8_t *minimumFeelerArmExtensionTimeInMinutes;
       const FeelerArmMonitorConfig_t *config;
    } _private;
 } FeelerArmMonitor_t;
@@ -39,6 +39,7 @@ typedef struct
 void FeelerArmMonitor_Init(
    FeelerArmMonitor_t *instance,
    I_DataModel_t *dataModel,
-   const FeelerArmMonitorConfig_t *config);
+   const FeelerArmMonitorConfig_t *config,
+   const uint8_t *minimumFeelerArmExtensionTimeInMinutes);
 
 #endif

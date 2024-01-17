@@ -25,7 +25,7 @@ enum
    PollingFrequencyInMsec = 150
 };
 
-static const TwistTrayIceMakerMotorRequestManagerConfig_t requestManagerConfig = {
+static const TwistTrayIceMakerMotorRequestManagerConfig_t motorRequestManagerConfig = {
    .resolvedVoteErd = Erd_TwistTrayIceMakerMotor_ResolvedVote,
    .motorRequestErd = Erd_TwistIceMakerMotorControlRequest,
    .motorEnableErd = Erd_TwistIceMakerMotorDriveEnable,
@@ -55,7 +55,7 @@ TEST_GROUP(TwistTrayIceMakerMotorRequestManager)
       TwistTrayIceMakerMotorRequestManager_Init(
          &instance,
          dataModel,
-         &requestManagerConfig);
+         &motorRequestManagerConfig);
    }
 
    void WhenTheMotorResolvedVoteIs(IceMakerMotorAction_t action)

@@ -648,7 +648,7 @@
             {
                "namespace": "mb",
                "displayName": "IM Rake Position",
-               "name": "Erd_AluminumMoldIceMakerRakePosition",
+               "name": "Erd_IceMaker0_RakePosition",
                "read": true,
                "interval": 1000000000
             },

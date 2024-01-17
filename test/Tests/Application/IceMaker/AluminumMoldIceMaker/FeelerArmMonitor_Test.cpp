@@ -42,12 +42,12 @@ TEST_GROUP(FeelerArmMonitor)
       dataModel = referDataModelTestDouble.dataModel;
 
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&referDataModelTestDouble);
-      aluminumMoldIceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->aluminumMoldIceMakerData;
+      aluminumMoldIceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerSlots->slot1Data->aluminumMoldData;
    }
 
    void TheModuleIsInitialized()
    {
-      FeelerArmMonitor_Init(&instance, dataModel, &config);
+      FeelerArmMonitor_Init(&instance, dataModel, &config, &aluminumMoldIceMakerData->freezeData.minimumFeelerArmExtensionTimeInMinutes);
    }
 
    void FeelerArmMonitoringRequestIs(bool state)

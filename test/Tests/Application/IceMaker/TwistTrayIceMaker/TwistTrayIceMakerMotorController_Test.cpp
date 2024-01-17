@@ -89,10 +89,6 @@ static const HarvestCountCalculatorData_t harvestCountCalculatorData = {
 };
 
 static const TwistTrayIceMakerData_t iceMakerData = {
-   .typeInformation{
-      .type = IceMakerType_Twist,
-      .location = IceMakerLocation_Freezer,
-   },
    .fillData{
       .iceMakerFillMonitorData = &iceMakerFillMonitorData },
    .freezeData{
