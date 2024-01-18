@@ -1262,8 +1262,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold Freeze Integration Count",
-          "name": "Erd_AluminumMoldFreezeIntegrationCount",
+          "displayName": "IceMaker0 Freeze Integration Count",
+          "name": "Erd_IceMaker0_FreezeIntegrationCount",
           "read": true,
           "write": true
         },
@@ -2334,15 +2334,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum mold ice maker harvest count is ready to harvest",
-          "name": "Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest",
+          "displayName": "IceMaker0 harvest count is ready to harvest",
+          "name": "Erd_IceMaker0_HarvestCountIsReadyToHarvest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Freeze Time Counter In Minutes",
-          "name": "Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes",
+          "displayName": "IceMaker0 Freeze Time Counter In Minutes",
+          "name": "Erd_IceMaker0_MinimumFreezeTimeCounterInMinutes",
           "read": true,
           "write": false
         },
@@ -2570,15 +2570,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Freeze Integration Count",
-          "name": "Erd_TwistTrayIceMaker_FreezeIntegrationCount",
+          "displayName": "IceMaker0 Freeze Integration Count",
+          "name": "Erd_IceMaker0_FreezeIntegrationCount",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Harvest Count Is Ready To Harvest",
-          "name": "Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest",
+          "displayName": "IceMaker0 Harvest Count Is Ready To Harvest",
+          "name": "Erd_IceMaker0_HarvestCountIsReadyToHarvest",
           "read": true,
           "write": false
         },

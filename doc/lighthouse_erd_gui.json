@@ -640,7 +640,7 @@
             },
             {
                "namespace": "mb",
-               "displayName": "IceMaker0 Feeler Arm Postion",
+               "displayName": "IM Feeler Arm Postion",
                "name": "Erd_IceMaker0_FeelerArmPosition",
                "read": true,
                "interval": 1000000000
@@ -655,14 +655,14 @@
             {
                "namespace": "mb",
                "displayName": "IM Freeze Integration Count",
-               "name": "Erd_AluminumMoldFreezeIntegrationCount",
+               "name": "Erd_IceMaker0_FreezeIntegrationCount",
                "read": true,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
                "displayName": "IM Freeze Integration Count Reached?",
-               "name": "Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest",
+               "name": "Erd_IceMaker0_HarvestCountIsReadyToHarvest",
                "read": true,
                "interval": 1000000000
             },
@@ -696,8 +696,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Minimum Freeze Time Counter (mins)",
-               "name": "Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes",
+               "displayName": "IM Minimum Freeze Time Counter (mins)",
+               "name": "Erd_IceMaker0_MinimumFreezeTimeCounterInMinutes",
                "read": true,
                "interval": 1000000000
             }
@@ -764,15 +764,15 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Twist IM Freeze Integration Count",
-               "name": "Erd_TwistTrayIceMaker_FreezeIntegrationCount",
+               "displayName": "IM Freeze Integration Count",
+               "name": "Erd_IceMaker0_FreezeIntegrationCount",
                "read": true,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "Twist IM Minimum Freeze Time Counter In Minutes",
-               "name": "Erd_TwistTrayIceMaker_MinimumFreezeTimeCounterInMinutes",
+               "displayName": "IM Minimum Freeze Time Counter In Minutes",
+               "name": "Erd_IceMaker0_MinimumFreezeTimeCounterInMinutes",
                "read": true,
                "interval": 1000000000
             },

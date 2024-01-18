@@ -433,7 +433,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes",
+         "name": "Erd_IceMaker0_MinimumFreezeTimeCounterInMinutes",
          "interval": 60000
       },
       {
@@ -458,7 +458,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_AluminumMoldFreezeIntegrationCount",
+         "name": "Erd_IceMaker0_FreezeIntegrationCount",
          "interval": 60000
       },
       {
@@ -553,12 +553,12 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_TwistTrayIceMaker_FreezeIntegrationCount",
+         "name": "Erd_IceMaker0_FreezeIntegrationCount",
          "interval": 60000
       },
       {
          "namespace": "mb",
-         "name": "Erd_TwistTrayIceMaker_MinimumFreezeTimeCounterInMinutes",
+         "name": "Erd_IceMaker0_MinimumFreezeTimeCounterInMinutes",
          "interval": 60000
       },
       {

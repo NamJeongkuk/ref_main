@@ -34,11 +34,11 @@ extern "C"
 #define TemperatureBelowFreezeIntegrationTemperature 3000
 
 static const HarvestCountCalculatorConfiguration_t config = {
-   .harvestCountIsReadyToHarvestErd = Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
+   .harvestCountIsReadyToHarvestErd = Erd_IceMaker1_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_IceMaker1_HarvestCountCalculationRequest,
    .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
-   .moldFreezeIntegrationCountErd = Erd_AluminumMoldFreezeIntegrationCount,
-   .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes,
+   .moldFreezeIntegrationCountErd = Erd_IceMaker1_FreezeIntegrationCount,
+   .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_IceMaker1_MinimumFreezeTimeCounterInMinutes,
 };
 
 TEST_GROUP(HarvestCountCalculator)
@@ -95,41 +95,41 @@ TEST_GROUP(HarvestCountCalculator)
 
    void GivenHarvestCountIsReadyToHarvestIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest, &state);
+      DataModel_Write(dataModel, Erd_IceMaker1_HarvestCountIsReadyToHarvest, &state);
    }
 
    void HarvestCountIsReadyToHarvestShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker1_HarvestCountIsReadyToHarvest, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
    void FreezeIntegrationCountShouldBe(uint32_t expectedCount)
    {
       uint32_t actualCount;
-      DataModel_Read(dataModel, Erd_AluminumMoldFreezeIntegrationCount, &actualCount);
+      DataModel_Read(dataModel, Erd_IceMaker1_FreezeIntegrationCount, &actualCount);
       CHECK_EQUAL(expectedCount, actualCount);
    }
 
    void FreezeIntegrationCountShouldBeGreaterThan(uint32_t minimumCount)
    {
       uint32_t actualCount;
-      DataModel_Read(dataModel, Erd_AluminumMoldFreezeIntegrationCount, &actualCount);
+      DataModel_Read(dataModel, Erd_IceMaker1_FreezeIntegrationCount, &actualCount);
       CHECK_COMPARE(actualCount, >, minimumCount);
    }
 
    void FreezeIntegrationCountShouldBeLessThan(uint32_t maximumCount)
    {
       uint32_t actualCount;
-      DataModel_Read(dataModel, Erd_AluminumMoldFreezeIntegrationCount, &actualCount);
+      DataModel_Read(dataModel, Erd_IceMaker1_FreezeIntegrationCount, &actualCount);
       CHECK_COMPARE(actualCount, <, maximumCount);
    }
 
    void MinimumFreezeTimeCounterInMinutesShouldBe(uint8_t expected)
    {
       uint8_t actual;
-      DataModel_Read(dataModel, Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker1_MinimumFreezeTimeCounterInMinutes, &actual);
       CHECK_EQUAL(expected, actual);
    }
 };

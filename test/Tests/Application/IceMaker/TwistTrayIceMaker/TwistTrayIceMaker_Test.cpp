@@ -61,7 +61,7 @@ static const TwistTrayIceMakerConfiguration_t config = {
    .filteredTemperatureResolvedInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
    .testRequestErd = Erd_IceMaker0_TestRequest,
    .stopFillSignalErd = Erd_TwistTrayIceMakerStopFillSignal,
-   .harvestCountIsReadyToHarvestErd = Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest,
+   .harvestCountIsReadyToHarvestErd = Erd_IceMaker0_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_IceMaker0_HarvestCountCalculationRequest,
    .motorIceMakerVoteErd = Erd_TwistTrayIceMakerMotor_IceMakerVote,
    .waterValveIceMakerVoteErd = Erd_TwistTrayIceMakerWaterValve_IceMakerVote,
@@ -666,7 +666,7 @@ TEST_GROUP(TwistTrayIceMaker)
    void MinimumFreezeTimeCounterInMinutesShouldBe(uint8_t expected)
    {
       uint8_t actual;
-      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_MinimumFreezeTimeCounterInMinutes, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker0_MinimumFreezeTimeCounterInMinutes, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -719,7 +719,7 @@ TEST_GROUP(TwistTrayIceMaker)
 
    void WhenHarvestCountIsReadyToHarvestIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest, &state);
+      DataModel_Write(dataModel, Erd_IceMaker0_HarvestCountIsReadyToHarvest, &state);
    }
 
    void GivenHarvestCountIsReadyToHarvestIs(bool state)

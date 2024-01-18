@@ -506,7 +506,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
+         Erd_IceMaker1_HarvestCountIsReadyToHarvest,
          set);
    }
 
@@ -520,7 +520,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
+         Erd_IceMaker1_HarvestCountIsReadyToHarvest,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -536,7 +536,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       IGNORE(context);
       const DataModelOnDataChangeArgs_t *args = (const DataModelOnDataChangeArgs_t *)_args;
 
-      if(args->erd == Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest)
+      if(args->erd == Erd_IceMaker1_HarvestCountIsReadyToHarvest)
       {
          const bool *state = (const bool *)args->data;
 

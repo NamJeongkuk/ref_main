@@ -27,7 +27,7 @@ describe("HarvestCountCalculator", () => {
    });
 
    const theFreezeIntegrationCountShouldBeGreaterThan = async (expected) => {
-      const actual = await rockhopper.read("Erd_AluminumMoldFreezeIntegrationCount");
+      const actual = await rockhopper.read("Erd_IceMaker1_FreezeIntegrationCount");
       expect(actual).toBeGreaterThanOrEqual(expected);
    };
 
@@ -41,7 +41,7 @@ describe("HarvestCountCalculator", () => {
    };
 
    const providedTheFreezeIntegrationCountShouldBeGreaterThan = async (expected) => {
-      const actual = rockhopper.read("Erd_AluminumMoldFreezeIntegrationCount");
+      const actual = rockhopper.read("Erd_IceMaker1_FreezeIntegrationCount");
       expect(actual).toBeGreaterThan(expected);
    };
 
