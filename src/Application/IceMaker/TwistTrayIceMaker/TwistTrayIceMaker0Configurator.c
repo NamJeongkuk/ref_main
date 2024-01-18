@@ -117,7 +117,7 @@ static const TwistTrayIceMakerMotorControllerConfig_t motorControllerConfig = {
 
 static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
    .harvestCountIsReadyToHarvestErd = Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest,
-   .harvestCountCalculationRequestErd = Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,
+   .harvestCountCalculationRequestErd = Erd_IceMaker0_HarvestCountCalculationRequest,
    .moldFilteredTemperatureInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
    .moldFreezeIntegrationCountErd = Erd_TwistTrayIceMaker_FreezeIntegrationCount,
    .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_TwistTrayIceMaker_MinimumFreezeTimeCounterInMinutes
@@ -153,7 +153,7 @@ static const TwistTrayIceMakerConfiguration_t twistTrayIceMakerConfig = {
    .testRequestErd = Erd_IceMaker0_TestRequest,
    .stopFillSignalErd = Erd_TwistTrayIceMakerStopFillSignal,
    .harvestCountIsReadyToHarvestErd = Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest,
-   .harvestCountCalculationRequestErd = Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,
+   .harvestCountCalculationRequestErd = Erd_IceMaker0_HarvestCountCalculationRequest,
    .motorIceMakerVoteErd = Erd_TwistTrayIceMakerMotor_IceMakerVote,
    .waterValveIceMakerVoteErd = Erd_TwistTrayIceMakerWaterValve_IceMakerVote,
    .motorActionResultErd = Erd_IceMaker0_MotorActionResult,

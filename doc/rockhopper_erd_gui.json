@@ -2313,8 +2313,22 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum mold ice maker harvest count calculation request",
-          "name": "Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest",
+          "displayName": "IceMaker0 harvest count calculation request",
+          "name": "Erd_IceMaker0_HarvestCountCalculationRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker1 harvest count calculation request",
+          "name": "Erd_IceMaker1_HarvestCountCalculationRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker2 harvest count calculation request",
+          "name": "Erd_IceMaker2_HarvestCountCalculationRequest",
           "read": true,
           "write": true
         },
@@ -2535,8 +2549,22 @@
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Harvest Count Calculation Request",
-          "name": "Erd_TwistTrayIceMaker_HarvestCountCalculationRequest",
+          "displayName": "IceMaker0 Harvest Count Calculation Request",
+          "name": "Erd_IceMaker0_HarvestCountCalculationRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker1 Harvest Count Calculation Request",
+          "name": "Erd_IceMaker1_HarvestCountCalculationRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker2 Harvest Count Calculation Request",
+          "name": "Erd_IceMaker2_HarvestCountCalculationRequest",
           "read": true,
           "write": true
         },

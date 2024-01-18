@@ -99,4 +99,3 @@ return function(core)
     return generate(config)
   end
 end
-

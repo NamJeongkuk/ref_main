@@ -21,7 +21,7 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .iceMakerWaterValveVoteErd = Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
    .moldHeaterVoteErd = Erd_IceMaker0_HeaterRelay_IceMakerVote,
    .rakeMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
-   .harvestCountCalculationRequestErd = Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest,
+   .harvestCountCalculationRequestErd = Erd_IceMaker0_HarvestCountCalculationRequest,
    .feelerArmMonitoringRequestErd = Erd_IceMaker0_FeelerArmMonitoringRequest,
    .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition,
    .harvestCountIsReadyToHarvestErd = Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
@@ -57,7 +57,7 @@ static const FeelerArmMonitorConfig_t feelerArmMonitorConfig = {
 
 static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
    .harvestCountIsReadyToHarvestErd = Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
-   .harvestCountCalculationRequestErd = Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest,
+   .harvestCountCalculationRequestErd = Erd_IceMaker0_HarvestCountCalculationRequest,
    .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
    .moldFreezeIntegrationCountErd = Erd_AluminumMoldFreezeIntegrationCount,
    .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_AluminumMoldIceMakerMinimumFreezeTimeCounterInMinutes

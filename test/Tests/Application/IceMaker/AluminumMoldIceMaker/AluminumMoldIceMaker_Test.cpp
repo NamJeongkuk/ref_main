@@ -28,7 +28,7 @@ static const AluminumMoldIceMakerConfig_t config = {
    .iceMakerWaterValveVoteErd = Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
    .moldHeaterVoteErd = Erd_IceMaker0_HeaterRelay_IceMakerVote,
    .rakeMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
-   .harvestCountCalculationRequestErd = Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest,
+   .harvestCountCalculationRequestErd = Erd_IceMaker1_HarvestCountCalculationRequest,
    .feelerArmMonitoringRequestErd = Erd_IceMaker0_FeelerArmMonitoringRequest,
    .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition,
    .harvestCountIsReadyToHarvestErd = Erd_AluminumMoldIceMaker_HarvestCountIsReadyToHarvest,
@@ -225,7 +225,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest,
+         Erd_IceMaker1_HarvestCountCalculationRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual);

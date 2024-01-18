@@ -631,7 +631,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMaker_HarvestCountCalculationRequest,
+         Erd_IceMaker1_HarvestCountCalculationRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual);

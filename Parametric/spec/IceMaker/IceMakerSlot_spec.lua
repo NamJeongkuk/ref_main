@@ -129,7 +129,7 @@ describe('IceMakerSlot', function()
         pointer(u8(0)),
         pointer(u8(0))
       )
-    ]])
+     ]])
 
     local actual = ice_maker_slot({
       enable = false
