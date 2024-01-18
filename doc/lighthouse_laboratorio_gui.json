@@ -193,8 +193,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Aluminum Mold IM Test",
-               "name": "Erd_AluminumMoldIceMakerTestRequest",
+               "displayName": "IM Slot 0 Test Request",
+               "name": "Erd_IceMaker0_TestRequest",
                "read": true,
                "write": true,
                "interval": 1000000000
@@ -208,14 +208,6 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Twist Tray IM Test",
-               "name": "Erd_TwistTrayIceMakerTestRequest",
-               "read": true,
-               "write": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
                "displayName": "Twist Tray IM Status",
                "name": "Erd_TwistTrayIceMaker_HighLevelState",
                "read": true,
@@ -223,14 +215,14 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker0 Enable Request",
+               "displayName": "IM Slot 0 Enable Request",
                "name": "Erd_IceMaker0EnableRequest",
                "read": false,
                "write": true
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker0 Enable Status",
+               "displayName": "IM Slot 0 Enable Status",
                "name": "Erd_IceMaker0EnableStatus",
                "read": true,
                "interval": 1000000000

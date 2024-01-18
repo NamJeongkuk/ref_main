@@ -398,7 +398,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_TwistTrayIceMakerTestRequest,
+         Erd_IceMaker0_TestRequest,
          &request);
    }
 };

@@ -1041,8 +1041,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Aluminum Mold IM Test Request",
-               "name": "Erd_AluminumMoldIceMakerTestRequest",
+               "displayName": "IM Test Request",
+               "name": "Erd_IceMaker0_TestRequest",
                "read": true,
                "write": true,
                "interval": 1000000000
@@ -1052,14 +1052,6 @@
                "displayName": "Aluminum Mold IM State",
                "name": "Erd_AluminumMoldIceMakerHsmState",
                "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
-               "displayName": "Twist Tray IM Test Request",
-               "name": "Erd_TwistTrayIceMakerTestRequest",
-               "read": true,
-               "write": true,
                "interval": 1000000000
             },
             {

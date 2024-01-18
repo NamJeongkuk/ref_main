@@ -172,7 +172,7 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
    void WhenTwistTrayMotorIsRequestedToHarvest()
    {
       IceMakerTestRequest_t testRequestValue = IceMakerTestRequest_Harvest;
-      DataModel_Write(dataModel, Erd_TwistTrayIceMakerTestRequest, &testRequestValue);
+      DataModel_Write(dataModel, Erd_IceMaker0_TestRequest, &testRequestValue);
    }
 
    uint16_t DamperStepsRemaining(void)

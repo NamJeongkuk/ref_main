@@ -1269,8 +1269,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold Ice Maker Test Request",
-          "name": "Erd_AluminumMoldIceMakerTestRequest",
+          "displayName": "IceMaker Slot 0 Test Request",
+          "name": "Erd_IceMaker0_TestRequest",
           "read": true,
           "write": true
         },
@@ -2181,6 +2181,84 @@
       ]
     },
     {
+      "title": "IceMaker Slot 0",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Ice maker0 enable request",
+          "name": "Erd_IceMaker0EnableRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice maker0 enable status",
+          "name": "Erd_IceMaker0EnableStatus",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Slot 0 Test Request",
+          "name": "Erd_IceMaker0_TestRequest",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
+      "title": "IceMaker Slot 1",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Ice maker1 enable request",
+          "name": "Erd_IceMaker1EnableRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice maker1 enable status",
+          "name": "Erd_IceMaker1EnableStatus",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Slot 1 Test Request",
+          "name": "Erd_IceMaker1_TestRequest",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
+      "title": "IceMaker Slot 2",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Ice maker2 enable request",
+          "name": "Erd_IceMaker2EnableRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice maker2 enable status",
+          "name": "Erd_IceMaker2EnableStatus",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Slot 2 Test Request",
+          "name": "Erd_IceMaker2_TestRequest",
+          "read": true,
+          "write": true
+        }
+      ]
+    },
+    {
       "title": "Aluminum mold ice maker",
       "erds": [
         {
@@ -2576,8 +2654,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Test Request",
-          "name": "Erd_TwistTrayIceMakerTestRequest",
+          "displayName": "IceMaker Slot 0 Test Request",
+          "name": "Erd_IceMaker0_TestRequest",
           "read": true,
           "write": true
         }

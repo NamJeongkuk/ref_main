@@ -691,7 +691,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMakerTestRequest,
+         Erd_IceMaker1_TestRequest,
          &request);
    }
 
@@ -700,7 +700,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       IceMakerTestRequest_t actual;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerTestRequest,
+         Erd_IceMaker1_TestRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual);

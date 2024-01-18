@@ -59,7 +59,7 @@ static const TwistTrayIceMakerConfiguration_t config = {
    .operationStateErd = Erd_TwistTrayIceMaker_OperationState,
    .thermistorIsValidResolvedErd = Erd_TwistTrayIceMakerThermistor_IsValidResolved,
    .filteredTemperatureResolvedInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
-   .testRequestErd = Erd_TwistTrayIceMakerTestRequest,
+   .testRequestErd = Erd_IceMaker0_TestRequest,
    .stopFillSignalErd = Erd_TwistTrayIceMakerStopFillSignal,
    .harvestCountIsReadyToHarvestErd = Erd_TwistTrayIceMaker_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_TwistTrayIceMaker_HarvestCountCalculationRequest,
@@ -567,7 +567,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_TwistTrayIceMakerTestRequest,
+         Erd_IceMaker0_TestRequest,
          &request);
    }
 
@@ -576,7 +576,7 @@ TEST_GROUP(TwistTrayIceMaker)
       IceMakerTestRequest_t actualValue;
       DataModel_Read(
          dataModel,
-         Erd_TwistTrayIceMakerTestRequest,
+         Erd_IceMaker0_TestRequest,
          &actualValue);
 
       CHECK_EQUAL(expectedValue, actualValue);

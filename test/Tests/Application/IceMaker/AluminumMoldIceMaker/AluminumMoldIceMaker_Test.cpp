@@ -48,7 +48,7 @@ static const AluminumMoldIceMakerConfig_t config = {
    .rakePositionErd = Erd_IceMaker0_RakePosition,
    .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
    .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
-   .aluminumMoldIceMakerTestRequestErd = Erd_AluminumMoldIceMakerTestRequest,
+   .aluminumMoldIceMakerTestRequestErd = Erd_IceMaker1_TestRequest,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
    .coolingSystemOffStatusErd = Erd_CoolingOffStatus,
    .dispensingInhibitedReasonErd = Erd_DispensingInhibitedReason,
@@ -867,7 +867,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMakerTestRequest,
+         Erd_IceMaker1_TestRequest,
          &request);
    }
 
@@ -879,7 +879,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    void ExternalTestRequestShouldBe(IceMakerTestRequest_t expected)
    {
       IceMakerTestRequest_t actual;
-      DataModel_Read(dataModel, Erd_AluminumMoldIceMakerTestRequest, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker1_TestRequest, &actual);
       CHECK_EQUAL(expected, actual);
    }
 

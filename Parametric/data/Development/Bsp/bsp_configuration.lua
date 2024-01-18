@@ -33,7 +33,6 @@ local erd_list = {
   { input = bsp_mapped_erd.Erd_IceMaker0_FeelerArmPosition,               output = bsp_erd.Erd_Gpio_GPIO_IN_03 },
   { input = bsp_mapped_erd.Erd_CompressorRelay,                           output = bsp_erd.Erd_Gpio_PWM_VAR_01 },
   { input = bsp_mapped_erd.Erd_IceMaker0_RakePosition,                    output = bsp_erd.Erd_Gpio_CAPTURE_03 }
-
 }
 
 return bsp_configuration({
