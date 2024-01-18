@@ -1450,9 +1450,6 @@ void Defrost_Init(
    instance->_private.dataModel = dataModel;
    instance->_private.config = defrostConfig;
    instance->_private.defrostParametricData = defrostData;
-   instance->_private.sabbathParametricData = PersonalityParametricData_Get(dataModel)->sabbathData;
-   instance->_private.gridParametricData = PersonalityParametricData_Get(dataModel)->gridData;
-   instance->_private.evaporatorParametricData = PersonalityParametricData_Get(dataModel)->evaporatorData;
 
    Hsm_Init(&instance->_private.hsm, &hsmConfiguration, InitialState(instance));
 

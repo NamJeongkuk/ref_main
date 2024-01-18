@@ -10,9 +10,6 @@
 
 #include "I_DataModel.h"
 #include "DefrostData.h"
-#include "SabbathData.h"
-#include "GridData.h"
-#include "EvaporatorData.h"
 #include "Timer.h"
 #include "Hsm.h"
 
@@ -75,9 +72,6 @@ typedef struct
       EventSubscription_t dataModelSubscription;
       const DefrostConfiguration_t *config;
       const DefrostData_t *defrostParametricData;
-      const SabbathData_t *sabbathParametricData;
-      const GridData_t *gridParametricData;
-      const EvaporatorData_t *evaporatorParametricData;
    } _private;
 } Defrost_t;
 
