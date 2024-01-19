@@ -11,15 +11,19 @@ describe('EnhancedSabbath', function()
 
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-        max_time_in_enhanced_sabbath_mode_in_minutes = 5760,
-        fresh_food_setpoint_temperature_in_degfx100 = 3700,
-        freezer_setpoint_temperature_in_degfx100 = 0,
-        number_of_fresh_food_defrosts_before_freezer_defrost = 3,
-        min_time_between_temperature_averaging_in_minutes = 2,
-        fresh_food_stage_time_in_minutes = 1,
-        freezer_stage_time_in_minutes = 2,
-        off_stage_time_in_minutes = 3,
-        interior_lights_pwm_duty_cycle_percentage = 20
+      max_time_in_enhanced_sabbath_mode_in_minutes = 5760,
+      fresh_food_setpoint_temperature_in_degfx100 = 3700,
+      freezer_setpoint_temperature_in_degfx100 = 0,
+      number_of_fresh_food_defrosts_before_freezer_defrost = 3,
+      min_time_between_temperature_averaging_in_minutes = 2,
+      fresh_food_stage_time_in_minutes = 1,
+      freezer_stage_time_in_minutes = 2,
+      off_stage_time_in_minutes = 3,
+      fresh_food_low_speed_hysteresis_in_degfx100 = 200,
+      fresh_food_medium_speed_hysteresis_in_degfx100 = 300,
+      freezer_low_speed_hysteresis_in_degfx100 = 100,
+      freezer_medium_speed_hysteresis_in_degfx100 = 200,
+      interior_lights_pwm_duty_cycle_percentage = 20
     }, overrides or {})
   end
 
@@ -91,6 +95,38 @@ describe('EnhancedSabbath', function()
     end)
   end)
 
+  it('should assert if fresh_food_low_speed_hysteresis_in_degfx100 is not a number', function()
+    should_fail_with('fresh_food_low_speed_hysteresis_in_degfx100 must be of type number but is of type string', function()
+      enhanced_sabbath(generate_config({
+        fresh_food_low_speed_hysteresis_in_degfx100 = "not a number"
+      }))
+    end)
+  end)
+
+  it('should assert if fresh_food_medium_speed_hysteresis_in_degfx100 is not a number', function()
+    should_fail_with('fresh_food_medium_speed_hysteresis_in_degfx100 must be of type number but is of type string', function()
+      enhanced_sabbath(generate_config({
+        fresh_food_medium_speed_hysteresis_in_degfx100 = "not a number"
+      }))
+    end)
+  end)
+
+  it('should assert if freezer_low_speed_hysteresis_in_degfx100 is not a number', function()
+    should_fail_with('freezer_low_speed_hysteresis_in_degfx100 must be of type number but is of type string', function()
+      enhanced_sabbath(generate_config({
+        freezer_low_speed_hysteresis_in_degfx100 = "not a number"
+      }))
+    end)
+  end)
+
+  it('should assert if freezer_medium_speed_hysteresis_in_degfx100 is not a number', function()
+    should_fail_with('freezer_medium_speed_hysteresis_in_degfx100 must be of type number but is of type string', function()
+      enhanced_sabbath(generate_config({
+        freezer_medium_speed_hysteresis_in_degfx100 = "not a number"
+      }))
+    end)
+  end)
+
   it('should assert if interior_lights_pwm_duty_cycle_percentage is not in range', function()
     should_fail_with('interior_lights_pwm_duty_cycle_percentage=-1 must be in [0, 255]', function()
       enhanced_sabbath(generate_config({
@@ -110,6 +146,10 @@ describe('EnhancedSabbath', function()
         u8(1),
         u8(2),
         u8(3),
+        i16(200),
+        i16(300),
+        i16(100),
+        i16(200),
         u8(20)
       )
     ]])

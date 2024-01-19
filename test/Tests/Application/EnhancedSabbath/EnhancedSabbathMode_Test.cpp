@@ -503,10 +503,25 @@ TEST_GROUP(EnhancedSabbathMode)
       LightVotedRampingDownCountsShouldbeMaxRampingDownCountAndDontCare();
    }
 
+   void GivenInitializationInFreshFoodStageWithLoadsSetToMedium()
+   {
+      GivenInitializationInDisabledState();
+      GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freshFoodMediumSpeedHysteresisInDegFx100 + 1);
+      GivenTheFreshFoodCabinetSetpointIs(SomeTemperatureInDegFx100);
+      GivenWaitingToDefrostIs(true);
+
+      WhenTheEnhancedSabbathModeStatusChangesTo(SET);
+      TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+      TheCompressorSpeedVoteShouldBe(CompressorSpeed_Medium, Vote_Care);
+      TheCondenserFanSpeedVoteShouldBe(FanSpeed_Medium, Vote_Care);
+      TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Medium, Vote_Care);
+      TheDamperPositionVoteShouldBe(DamperPosition_Open, Vote_Care);
+   }
+
    void GivenInitializationInFreshFoodStageWithLoadsSetToLow()
    {
       GivenInitializationInDisabledState();
-      GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + 1);
+      GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freshFoodLowSpeedHysteresisInDegFx100 + 1);
       GivenTheFreshFoodCabinetSetpointIs(SomeTemperatureInDegFx100);
       GivenWaitingToDefrostIs(true);
 
@@ -521,7 +536,7 @@ TEST_GROUP(EnhancedSabbathMode)
    void GivenInitializationInFreshFoodStageWithLoadsSetToOff()
    {
       GivenInitializationInDisabledState();
-      GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 - 1);
+      GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freshFoodLowSpeedHysteresisInDegFx100 - 1);
       GivenTheFreshFoodCabinetSetpointIs(SomeTemperatureInDegFx100);
       GivenWaitingToDefrostIs(true);
 
@@ -533,9 +548,23 @@ TEST_GROUP(EnhancedSabbathMode)
       TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_Care);
    }
 
+   void GivenInitializationInTheFreezerStageWithLoadsSetToMedium()
+   {
+      GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freezerMediumSpeedHysteresisInDegFx100 + 1);
+      GivenTheFreezerCabinetSetpointIs(SomeTemperatureInDegFx100);
+      GivenInitializationInFreshFoodStageWithLoadsSetToOff();
+
+      After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN);
+      TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+      TheCompressorSpeedVoteShouldBe(CompressorSpeed_Medium, Vote_Care);
+      TheCondenserFanSpeedVoteShouldBe(FanSpeed_Medium, Vote_Care);
+      TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Medium, Vote_Care);
+      TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_Care);
+   }
+
    void GivenInitializationInTheFreezerStageWithLoadsSetToLow()
    {
-      GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + 1);
+      GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freezerLowSpeedHysteresisInDegFx100 + 1);
       GivenTheFreezerCabinetSetpointIs(SomeTemperatureInDegFx100);
       GivenInitializationInFreshFoodStageWithLoadsSetToOff();
 
@@ -817,10 +846,10 @@ TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodAndSetCoolingModeToFreshFoodA
    TheDispensingDisabledShouldBe(true);
 }
 
-TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodAndVoteFanAndCompressorOffThenDamperToBeClosedAndClearEnhancedSabbathStageFreshFoodCoolingIsActiveWhenEnhancedSabbathModeIsEnabledAndFreshFoodAverageCabinetTemperatureIsLessThanFreshFoodCabinetSetpoint)
+TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodAndVoteFanAndCompressorOffThenDamperToBeClosedAndClearEnhancedSabbathStageFreshFoodCoolingIsActiveWhenEnhancedSabbathModeIsEnabledAndFreshFoodAverageCabinetTemperatureIsLessThanFreshFoodCabinetSetpointPlusFreshFoodLowSpeedHysteresis)
 {
    GivenInitializationInDisabledState();
-   GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 - 1);
+   GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freshFoodLowSpeedHysteresisInDegFx100 - 1);
    GivenTheFreshFoodCabinetSetpointIs(SomeTemperatureInDegFx100);
    GivenEnhancedSabbathStageFreshFoodCoolingIsActiveIs(SET);
    GivenWaitingToDefrostIs(SET);
@@ -834,10 +863,10 @@ TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodAndVoteFanAndCompressorOffThe
    EnhancedSabbathStageFreshFoodCoolingIsActiveShouldBe(CLEAR);
 }
 
-TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodAndVoteFanAndCompressorLowThenDamperToBeOnAndSetEnhancedSabbathStageFreshFoodCoolingIsActiveWhenEnhancedSabbathModeIsEnabledAndFreshFoodAverageCabinetTemperatureIsGreaterThanFreshFoodCabinetSetpoint)
+TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodAndVoteFanAndCompressorLowThenDamperToBeOnAndSetEnhancedSabbathStageFreshFoodCoolingIsActiveWhenEnhancedSabbathModeIsEnabledAndFreshFoodAverageCabinetTemperatureIsGreaterThanFreshFoodCabinetSetpointPlusFreshFoodLowSpeedHysteresisAndLessThanFreshFoodCabinetSetpointPlusFreshFoodMediumSpeedHysteresis)
 {
    GivenInitializationInDisabledState();
-   GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + 1);
+   GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freshFoodLowSpeedHysteresisInDegFx100 + 1);
    GivenTheFreshFoodCabinetSetpointIs(SomeTemperatureInDegFx100);
    GivenEnhancedSabbathStageFreshFoodCoolingIsActiveIs(CLEAR);
    GivenWaitingToDefrostIs(SET);
@@ -847,6 +876,23 @@ TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodAndVoteFanAndCompressorLowThe
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Low, Vote_Care);
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_Low, Vote_Care);
    TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Low, Vote_Care);
+   TheDamperPositionVoteShouldBe(DamperPosition_Open, Vote_Care);
+   EnhancedSabbathStageFreshFoodCoolingIsActiveShouldBe(SET);
+}
+
+TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodAndVoteFanAndCompressorMediumThenDamperToBeOnAndSetEnhancedSabbathStageFreshFoodCoolingIsActiveWhenEnhancedSabbathModeIsEnabledAndFreshFoodAverageCabinetTemperatureIsGreaterThanFreshFoodCabinetSetpointPlusFreshFoodMediumSpeedHysteresis)
+{
+   GivenInitializationInDisabledState();
+   GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freshFoodMediumSpeedHysteresisInDegFx100 + 1);
+   GivenTheFreshFoodCabinetSetpointIs(SomeTemperatureInDegFx100);
+   GivenEnhancedSabbathStageFreshFoodCoolingIsActiveIs(CLEAR);
+   GivenWaitingToDefrostIs(SET);
+
+   WhenTheEnhancedSabbathModeStatusChangesTo(SET);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+   TheCompressorSpeedVoteShouldBe(CompressorSpeed_Medium, Vote_Care);
+   TheCondenserFanSpeedVoteShouldBe(FanSpeed_Medium, Vote_Care);
+   TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Medium, Vote_Care);
    TheDamperPositionVoteShouldBe(DamperPosition_Open, Vote_Care);
    EnhancedSabbathStageFreshFoodCoolingIsActiveShouldBe(SET);
 }
@@ -864,7 +910,7 @@ TEST(EnhancedSabbathMode, ShouldEnterFreezerStageWhenFreshFoodStageTimerEndsAndS
    CoolingModeShouldBe(CoolingMode_Freezer);
 }
 
-TEST(EnhancedSabbathMode, ShouldEnterFreezerStageWhenFreshFoodStageTimerEndsAndShouldVoteLoadsToOffAndClearEnhancedSabbathStageFreezerCoolingIsActiveIfFreezerAverageCabinetTemperatureIsLessThanFreezerCabinetSetpoint)
+TEST(EnhancedSabbathMode, ShouldEnterFreezerStageWhenFreshFoodStageTimerEndsInLowVoteAndShouldVoteLoadsToOffAndClearEnhancedSabbathStageFreezerCoolingIsActiveIfFreezerAverageCabinetTemperatureIsLessThanFreezerCabinetSetpoint)
 {
    GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 - 1);
    GivenTheFreezerCabinetSetpointIs(SomeTemperatureInDegFx100);
@@ -887,9 +933,32 @@ TEST(EnhancedSabbathMode, ShouldEnterFreezerStageWhenFreshFoodStageTimerEndsAndS
    EnhancedSabbathStageFreezerCoolingIsActiveShouldBe(CLEAR);
 }
 
-TEST(EnhancedSabbathMode, ShouldEnterFreezerStageWhenFreshFoodStageTimerEndsAndShouldVoteLoadsToLowAndSetEnhancedSabbathStageFreezerCoolingIsActiveIfFreezerAverageCabinetTemperatureIsLessThanFreezerCabinetSetpoint)
+TEST(EnhancedSabbathMode, ShouldEnterFreezerStageWhenFreshFoodStageTimerEndsInMediumVoteAndShouldVoteLoadsToOffAndClearEnhancedSabbathStageFreezerCoolingIsActiveIfFreezerAverageCabinetTemperatureIsLessThanFreezerCabinetSetpoint)
 {
-   GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + 1);
+   GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 - 1);
+   GivenTheFreezerCabinetSetpointIs(SomeTemperatureInDegFx100);
+   GivenInitializationInFreshFoodStageWithLoadsSetToMedium();
+   GivenEnhancedSabbathStageFreezerCoolingIsActive(SET);
+
+   After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN - 1);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+   TheCompressorSpeedVoteShouldBe(CompressorSpeed_Medium, Vote_Care);
+   TheCondenserFanSpeedVoteShouldBe(FanSpeed_Medium, Vote_Care);
+   TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Medium, Vote_Care);
+   TheDamperPositionVoteShouldBe(DamperPosition_Open, Vote_Care);
+
+   After(1);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+   TheCompressorSpeedVoteShouldBe(CompressorSpeed_Off, Vote_Care);
+   TheCondenserFanSpeedVoteShouldBe(FanSpeed_Off, Vote_Care);
+   TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off, Vote_Care);
+   TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_Care);
+   EnhancedSabbathStageFreezerCoolingIsActiveShouldBe(CLEAR);
+}
+
+TEST(EnhancedSabbathMode, ShouldEnterFreezerStageWhenFreshFoodStageTimerEndsAndShouldVoteLoadsToLowAndSetEnhancedSabbathStageFreezerCoolingIsActiveIfFreezerAverageCabinetTemperatureIsGreaterThanFreezerCabinetSetpointPlusFreezerLowSpeedHysteresis)
+{
+   GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freezerLowSpeedHysteresisInDegFx100 + 1);
    GivenTheFreezerCabinetSetpointIs(SomeTemperatureInDegFx100);
    GivenInitializationInFreshFoodStageWithLoadsSetToOff();
    GivenEnhancedSabbathStageFreezerCoolingIsActive(CLEAR);
@@ -912,7 +981,32 @@ TEST(EnhancedSabbathMode, ShouldEnterFreezerStageWhenFreshFoodStageTimerEndsAndS
    EnhancedSabbathStageFreezerCoolingIsActiveShouldBe(SET);
 }
 
-TEST(EnhancedSabbathMode, ShouldTransitionToOffWhenFreezerStageTimerExpiredIfFreezerAverageCabinetTemperatureIsLessThanFreezerCabinetSetpoint)
+TEST(EnhancedSabbathMode, ShouldEnterFreezerStageWhenFreshFoodStageTimerEndsAndShouldVoteLoadsToMediumAndSetEnhancedSabbathStageFreezerCoolingIsActiveIfFreezerAverageCabinetTemperatureIsGreaterThanFreezerCabinetSetpointPlusFreezerMediumSpeedHysteresis)
+{
+   GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freezerMediumSpeedHysteresisInDegFx100 + 1);
+   GivenTheFreezerCabinetSetpointIs(SomeTemperatureInDegFx100);
+   GivenInitializationInFreshFoodStageWithLoadsSetToOff();
+   GivenEnhancedSabbathStageFreezerCoolingIsActive(CLEAR);
+
+   After(enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN - 1);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+   TheCompressorSpeedVoteShouldBe(CompressorSpeed_Off, Vote_Care);
+   TheCondenserFanSpeedVoteShouldBe(FanSpeed_Off, Vote_Care);
+   TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off, Vote_Care);
+   TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_Care);
+
+   WhenTheDamperPositionVoteChangesTo(DamperPosition_Open, Vote_Care);
+
+   After(1);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+   TheCompressorSpeedVoteShouldBe(CompressorSpeed_Medium, Vote_Care);
+   TheCondenserFanSpeedVoteShouldBe(FanSpeed_Medium, Vote_Care);
+   TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Medium, Vote_Care);
+   TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_Care);
+   EnhancedSabbathStageFreezerCoolingIsActiveShouldBe(SET);
+}
+
+TEST(EnhancedSabbathMode, ShouldTransitionToOffWhenFreezerStageTimerExpiredWhileInitializedInTheFreezerStageWithLoadsSetToLow)
 {
    GivenInitializationInTheFreezerStageWithLoadsSetToLow();
    GivenEnhancedSabbathIsRequestingDefrostIs(CLEAR);
@@ -924,6 +1018,31 @@ TEST(EnhancedSabbathMode, ShouldTransitionToOffWhenFreezerStageTimerExpiredIfFre
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Low, Vote_Care);
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_Low, Vote_Care);
    TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Low, Vote_Care);
+   TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_Care);
+
+   After(1);
+   EnhancedSabbathIsRequestingDefrostShouldBe(CLEAR);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Off);
+   CoolingModeShouldBe(CoolingMode_Off);
+
+   TheCompressorSpeedVoteShouldBe(CompressorSpeed_Off, Vote_Care);
+   TheCondenserFanSpeedVoteShouldBe(FanSpeed_Off, Vote_Care);
+   TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off, Vote_Care);
+   TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_Care);
+}
+
+TEST(EnhancedSabbathMode, ShouldTransitionToOffWhenFreezerStageTimerExpiredWhileInitializedInTheFreezerStageWithLoadsSetToMedium)
+{
+   GivenInitializationInTheFreezerStageWithLoadsSetToMedium();
+   GivenEnhancedSabbathIsRequestingDefrostIs(CLEAR);
+
+   After(enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN - 1);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Freezer);
+   CoolingModeShouldBe(CoolingMode_Freezer);
+
+   TheCompressorSpeedVoteShouldBe(CompressorSpeed_Medium, Vote_Care);
+   TheCondenserFanSpeedVoteShouldBe(FanSpeed_Medium, Vote_Care);
+   TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Medium, Vote_Care);
    TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_Care);
 
    After(1);
@@ -1004,10 +1123,10 @@ TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodFromOffStageAndVoteFanAndComp
    TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_Care);
 }
 
-TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodAndVoteFanAndCompressorLowThenDamperToBeOnWhenStageTimerExpiresAndFreshFoodAverageCabinetTemperatureIsGreaterThanFreshFoodCabinetSetpoint)
+TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodAndVoteFanAndCompressorLowThenDamperToBeOnWhenStageTimerExpiresAndFreshFoodAverageCabinetTemperatureIsGreaterThanFreshFoodCabinetSetpointPlusFreshFoodLowSpeedHysteresisAndLessThanFreshFoodCabinetSetpointPlusFreshFoodMediumSpeedHysteresis)
 {
    GivenInitializationInTheOffStage();
-   GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + 1);
+   GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freshFoodLowSpeedHysteresisInDegFx100 + 1);
    GivenTheFreshFoodCabinetSetpointIs(SomeTemperatureInDegFx100);
 
    After(enhancedSabbathData->offStageTimeInMinutes * MSEC_PER_MIN - 1);
@@ -1022,6 +1141,27 @@ TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodAndVoteFanAndCompressorLowThe
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Low, Vote_Care);
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_Low, Vote_Care);
    TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Low, Vote_Care);
+   TheDamperPositionVoteShouldBe(DamperPosition_Open, Vote_Care);
+}
+
+TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodAndVoteFanAndCompressorMediumThenDamperToBeOnWhenStageTimerExpiresAndFreshFoodAverageCabinetTemperatureIsGreaterThanFreshFoodCabinetSetpointPlusFreshFoodMediumSpeedHysteresis)
+{
+   GivenInitializationInTheOffStage();
+   GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freshFoodMediumSpeedHysteresisInDegFx100 + 1);
+   GivenTheFreshFoodCabinetSetpointIs(SomeTemperatureInDegFx100);
+
+   After(enhancedSabbathData->offStageTimeInMinutes * MSEC_PER_MIN - 1);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_Off);
+   TheCompressorSpeedVoteShouldBe(CompressorSpeed_Off, Vote_Care);
+   TheCondenserFanSpeedVoteShouldBe(FanSpeed_Off, Vote_Care);
+   TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off, Vote_Care);
+   TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_Care);
+
+   After(1);
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+   TheCompressorSpeedVoteShouldBe(CompressorSpeed_Medium, Vote_Care);
+   TheCondenserFanSpeedVoteShouldBe(FanSpeed_Medium, Vote_Care);
+   TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Medium, Vote_Care);
    TheDamperPositionVoteShouldBe(DamperPosition_Open, Vote_Care);
 }
 
@@ -1056,7 +1196,7 @@ TEST(EnhancedSabbathMode, ShouldBeInFreshFoodStageWithAllLoadsSetToLowWhenInitia
 {
    GivenTheEnhancedSabbathModeStatusIs(SET);
    GivenWaitingToDefrostIs(SET);
-   GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + 1);
+   GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freshFoodLowSpeedHysteresisInDegFx100 + 1);
    GivenTheFreshFoodCabinetSetpointIs(SomeTemperatureInDegFx100);
    GivenTheIceMakerEnableOverrideRequestIs(true);
    GivenTheIceMakerEnableOverrideValueIs(false);
@@ -1075,6 +1215,32 @@ TEST(EnhancedSabbathMode, ShouldBeInFreshFoodStageWithAllLoadsSetToLowWhenInitia
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Low, Vote_Care);
    TheCondenserFanSpeedVoteShouldBe(FanSpeed_Low, Vote_Care);
    TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Low, Vote_Care);
+   TheDamperPositionVoteShouldBe(DamperPosition_Open, Vote_Care);
+}
+
+TEST(EnhancedSabbathMode, ShouldBeInFreshFoodStageWithAllLoadsSetToMediumWhenInitializedWithEnhancedSabbathModeStatusSet)
+{
+   GivenTheEnhancedSabbathModeStatusIs(SET);
+   GivenWaitingToDefrostIs(SET);
+   GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freshFoodMediumSpeedHysteresisInDegFx100 + 1);
+   GivenTheFreshFoodCabinetSetpointIs(SomeTemperatureInDegFx100);
+   GivenTheIceMakerEnableOverrideRequestIs(true);
+   GivenTheIceMakerEnableOverrideValueIs(false);
+   GivenTheGridOverrideIs(true);
+   GivenDispensingDisabledIs(true);
+   GivenInitialization();
+
+   TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Stage_FreshFood);
+   CoolingModeShouldBe(CoolingMode_FreshFood);
+   TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_Care);
+   TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_Care);
+   TheIceMakerEnableOverrideRequestShouldBe(true);
+   TheIceMakerEnableOverrideValueShouldBe(false);
+   TheGridOverrideShouldBe(true);
+   TheDispensingDisabledShouldBe(true);
+   TheCompressorSpeedVoteShouldBe(CompressorSpeed_Medium, Vote_Care);
+   TheCondenserFanSpeedVoteShouldBe(FanSpeed_Medium, Vote_Care);
+   TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Medium, Vote_Care);
    TheDamperPositionVoteShouldBe(DamperPosition_Open, Vote_Care);
 }
 
@@ -1294,7 +1460,7 @@ TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathIsRequestingDefrostWhenEnterin
 
 TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathIsRequestingDefrostAfterEnhancedSabbathStageFreezerIsCompleteIfCoolingIsActiveIsSetAndSabbathIsAlreadyReadyToDefrost)
 {
-   GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + 1);
+   GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freezerLowSpeedHysteresisInDegFx100 + 1);
    GivenTheFreezerCabinetSetpointIs(SomeTemperatureInDegFx100);
    GivenEnhancedSabbathIsRequestingDefrostIs(CLEAR);
    GivenSabbathIsReadyToDefrostIs(SET);
@@ -1316,7 +1482,7 @@ TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathIsRequestingDefrostAfterEnhanc
 
 TEST(EnhancedSabbathMode, ShouldTransitionToOffWhenEnhancedSabbathStageFreezerIsCompleteAndCoolingIsActiveAndSabbathIsNotReadyToDefrost)
 {
-   GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + 1);
+   GivenTheFreezerAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freezerLowSpeedHysteresisInDegFx100 + 1);
    GivenTheFreezerCabinetSetpointIs(SomeTemperatureInDegFx100);
    GivenEnhancedSabbathIsRequestingDefrostIs(CLEAR);
    GivenSabbathIsReadyToDefrostIs(CLEAR);

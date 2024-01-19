@@ -21,6 +21,10 @@ typedef struct
    uint8_t freshFoodStageTimeInMinutes;
    uint8_t freezerStageTimeInMinutes;
    uint8_t offStageTimeInMinutes;
+   TemperatureDegFx100_t freshFoodLowSpeedHysteresisInDegFx100;
+   TemperatureDegFx100_t freshFoodMediumSpeedHysteresisInDegFx100;
+   TemperatureDegFx100_t freezerLowSpeedHysteresisInDegFx100;
+   TemperatureDegFx100_t freezerMediumSpeedHysteresisInDegFx100;
    uint8_t lightsPwmDutyCyclePercentage;
 } EnhancedSabbathData_t;
 

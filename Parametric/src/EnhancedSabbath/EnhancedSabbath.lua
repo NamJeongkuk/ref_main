@@ -18,6 +18,10 @@ return function(core)
         u8(config.fresh_food_stage_time_in_minutes),
         u8(config.freezer_stage_time_in_minutes),
         u8(config.off_stage_time_in_minutes),
+        i16(config.fresh_food_low_speed_hysteresis_in_degfx100),
+        i16(config.fresh_food_medium_speed_hysteresis_in_degfx100),
+        i16(config.freezer_low_speed_hysteresis_in_degfx100),
+        i16(config.freezer_medium_speed_hysteresis_in_degfx100),
         u8(config.interior_lights_pwm_duty_cycle_percentage)
       )
     )
@@ -35,6 +39,10 @@ return function(core)
         fresh_food_stage_time_in_minutes = { constraint.u8 },
         freezer_stage_time_in_minutes = { constraint.u8 },
         off_stage_time_in_minutes = { constraint.u8 },
+        fresh_food_low_speed_hysteresis_in_degfx100 = { constraint.i16 },
+        fresh_food_medium_speed_hysteresis_in_degfx100 = { constraint.i16 },
+        freezer_low_speed_hysteresis_in_degfx100 = { constraint.i16 },
+        freezer_medium_speed_hysteresis_in_degfx100 = { constraint.i16 },
         interior_lights_pwm_duty_cycle_percentage = { constraint.u8 }
       })
 

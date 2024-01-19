@@ -519,6 +519,13 @@ static void VoteCompressorAndFansToLow(EnhancedSabbathMode_t *instance)
    SetFreezerEvapFanSpeedVoteToCareWithValueOf(instance, FanSpeed_Low);
 }
 
+static void VoteCompressorAndFansToMedium(EnhancedSabbathMode_t *instance)
+{
+   SetCompressorSpeedVoteToCareWithValueOf(instance, CompressorSpeed_Medium);
+   SetCondenserFanSpeedVoteToCareWithValueOf(instance, FanSpeed_Medium);
+   SetFreezerEvapFanSpeedVoteToCareWithValueOf(instance, FanSpeed_Medium);
+}
+
 static bool Defrosting(EnhancedSabbathMode_t *instance)
 {
    bool state;
@@ -684,15 +691,21 @@ static bool State_Stage_FreshFood(Hsm_t *hsm, HsmSignal_t signal, const void *da
          StartStageTimerWithTimeSetTo(instance, instance->_private.enhancedSabbathData->freshFoodStageTimeInMinutes * MSEC_PER_MIN);
 
          SetCoolingModeTo(instance, CoolingMode_FreshFood);
-         if(FreshFoodAverageCabinetTemperature(instance) < FreshFoodCabinetSetpoint(instance))
+         if(FreshFoodAverageCabinetTemperature(instance) < instance->_private.enhancedSabbathData->freshFoodLowSpeedHysteresisInDegFx100 + FreshFoodCabinetSetpoint(instance))
          {
             SetEnhancedSabbathStageFreshFoodCoolingIsActiveTo(instance, false);
             VoteCompressorFansAndDamperToOff(instance);
          }
-         else
+         else if(FreshFoodAverageCabinetTemperature(instance) < instance->_private.enhancedSabbathData->freshFoodMediumSpeedHysteresisInDegFx100 + FreshFoodCabinetSetpoint(instance))
          {
             SetEnhancedSabbathStageFreshFoodCoolingIsActiveTo(instance, true);
             VoteCompressorAndFansToLow(instance);
+            SetDamperPositionVoteToCareWithValueOf(instance, DamperPosition_Open);
+         }
+         else
+         {
+            SetEnhancedSabbathStageFreshFoodCoolingIsActiveTo(instance, true);
+            VoteCompressorAndFansToMedium(instance);
             SetDamperPositionVoteToCareWithValueOf(instance, DamperPosition_Open);
          }
          break;
@@ -721,7 +734,7 @@ static bool State_Stage_Freezer(Hsm_t *hsm, HsmSignal_t signal, const void *data
          StartStageTimerWithTimeSetTo(instance, instance->_private.enhancedSabbathData->freezerStageTimeInMinutes * MSEC_PER_MIN);
          SetCoolingModeTo(instance, CoolingMode_Freezer);
 
-         if(FreezerAverageCabinetTemperature(instance) < FreezerCabinetSetpoint(instance))
+         if(FreezerAverageCabinetTemperature(instance) < instance->_private.enhancedSabbathData->freezerLowSpeedHysteresisInDegFx100 + FreezerCabinetSetpoint(instance))
          {
             SetEnhancedSabbathStageFreezerCoolingIsActiveTo(instance, false);
             VoteCompressorFansAndDamperToOff(instance);
@@ -731,10 +744,16 @@ static bool State_Stage_Freezer(Hsm_t *hsm, HsmSignal_t signal, const void *data
                SetEnhancedSabbathIsRequestingDefrostTo(instance, true);
             }
          }
-         else
+         else if(FreezerAverageCabinetTemperature(instance) < instance->_private.enhancedSabbathData->freezerMediumSpeedHysteresisInDegFx100 + FreezerCabinetSetpoint(instance))
          {
             SetEnhancedSabbathStageFreezerCoolingIsActiveTo(instance, true);
             VoteCompressorAndFansToLow(instance);
+            SetDamperPositionVoteToCareWithValueOf(instance, DamperPosition_Closed);
+         }
+         else
+         {
+            SetEnhancedSabbathStageFreezerCoolingIsActiveTo(instance, true);
+            VoteCompressorAndFansToMedium(instance);
             SetDamperPositionVoteToCareWithValueOf(instance, DamperPosition_Closed);
          }
          break;
