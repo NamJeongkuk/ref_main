@@ -36,8 +36,8 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .skipFillRequestErd = Erd_IceMaker0_SkipFillRequest,
    .rakeControlRequestErd = Erd_IceMaker0_RakeControlRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_AluminumMoldIceMakerVote,
-   .waterFillMonitoringRequestErd = Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,
-   .stopIceMakerFillSignalErd = Erd_AluminumMoldIceMakerStopFillSignal,
+   .waterFillMonitoringRequestErd = Erd_IceMaker2_WaterFillMonitoringRequest,
+   .stopIceMakerFillSignalErd = Erd_IceMaker2_StopFillSignal,
    .rakePositionErd = Erd_IceMaker0_RakePosition,
    .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
    .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
@@ -173,10 +173,10 @@ static const SensorFilteringConfig_t moldThermistorConfig = {
 };
 
 static const IceMakerWaterFillMonitorConfig_t fillMonitorConfig = {
-   .stopIceMakerFillSignalErd = Erd_AluminumMoldIceMakerStopFillSignal,
-   .flowMeterWaterDispensedOzx100Erd = Erd_FlowMeterWaterDispensedOzX100,
-   .waterFillMonitoringRequestErd = Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,
-   .flowMeterMonitoringRequestErd = Erd_FlowMeterMonitoringRequest,
+   .stopIceMakerFillSignalErd = Erd_IceMaker2_StopFillSignal,
+   .flowMeterWaterDispensedOzx100Erd = Erd_IceMaker2_FlowMeterWaterDispensedOzX100,
+   .waterFillMonitoringRequestErd = Erd_IceMaker2_WaterFillMonitoringRequest,
+   .flowMeterMonitoringRequestErd = Erd_IceMaker2_FlowMeterMonitoringRequest,
    .timerModuleErd = Erd_TimerModule
 };
 

@@ -27,9 +27,9 @@ enum
 };
 
 static const FlowMeterMonitorConfig_t config = {
-   .flowMeterMonitoringRequest = Erd_FlowMeterMonitoringRequest,
+   .flowMeterMonitoringRequest = Erd_IceMaker0_FlowMeterMonitoringRequest,
    .flowMeterInputCaptureCountsErd = Erd_FlowMeter_InputCaptureCount,
-   .flowMeterWaterDispensedOzX100Erd = Erd_FlowMeterWaterDispensedOzX100
+   .flowMeterWaterDispensedOzX100Erd = Erd_IceMaker0_FlowMeterWaterDispensedOzX100
 };
 
 TEST_GROUP(FlowMeterMonitor)
@@ -71,7 +71,7 @@ TEST_GROUP(FlowMeterMonitor)
 
    void GivenTheOuncesDispensedAre(uint32_t ounces)
    {
-      DataModel_Write(dataModel, Erd_FlowMeterWaterDispensedOzX100, &ounces);
+      DataModel_Write(dataModel, Erd_IceMaker0_FlowMeterWaterDispensedOzX100, &ounces);
    }
 
    void GivenTheFlowMeterCountsAre(InputCaptureCounts_t counts)
@@ -86,7 +86,7 @@ TEST_GROUP(FlowMeterMonitor)
 
    void GivenTheMonitoringRequestIs(FlowMeterMonitoringRequest_t request)
    {
-      DataModel_Write(dataModel, Erd_FlowMeterMonitoringRequest, &request);
+      DataModel_Write(dataModel, Erd_IceMaker0_FlowMeterMonitoringRequest, &request);
    }
 
    void WhenTheMonitoringRequestIs(FlowMeterMonitoringRequest_t request)
@@ -97,7 +97,7 @@ TEST_GROUP(FlowMeterMonitor)
    void TheOuncesDispensedShouldBe(uint32_t expected)
    {
       uint32_t actual;
-      DataModel_Read(dataModel, Erd_FlowMeterWaterDispensedOzX100, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker0_FlowMeterWaterDispensedOzX100, &actual);
 
       CHECK_EQUAL(expected, actual);
    }

@@ -43,8 +43,8 @@ static const AluminumMoldIceMakerConfig_t config = {
    .skipFillRequestErd = Erd_IceMaker0_SkipFillRequest,
    .rakeControlRequestErd = Erd_IceMaker0_RakeControlRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_AluminumMoldIceMakerVote,
-   .waterFillMonitoringRequestErd = Erd_AluminumMoldIceMakerWaterFillMonitoringRequest,
-   .stopIceMakerFillSignalErd = Erd_AluminumMoldIceMakerStopFillSignal,
+   .waterFillMonitoringRequestErd = Erd_IceMaker1_WaterFillMonitoringRequest,
+   .stopIceMakerFillSignalErd = Erd_IceMaker1_StopFillSignal,
    .rakePositionErd = Erd_IceMaker0_RakePosition,
    .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
    .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
@@ -758,7 +758,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    void WaterFillMonitoringRequestShouldBe(IceMakerWaterFillMonitoringRequest_t expected)
    {
       IceMakerWaterFillMonitoringRequest_t actual;
-      DataModel_Read(dataModel, Erd_AluminumMoldIceMakerWaterFillMonitoringRequest, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker1_WaterFillMonitoringRequest, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -794,7 +794,7 @@ TEST_GROUP(AluminumMoldIceMaker)
 
    void WhenStopFillSignalChanges()
    {
-      Signal_SendViaErd(DataModel_AsDataSource(dataModel), Erd_AluminumMoldIceMakerStopFillSignal);
+      Signal_SendViaErd(DataModel_AsDataSource(dataModel), Erd_IceMaker1_StopFillSignal);
    }
 
    void FreezerTriggerIceRateSignalShouldBe(Signal_t expected)

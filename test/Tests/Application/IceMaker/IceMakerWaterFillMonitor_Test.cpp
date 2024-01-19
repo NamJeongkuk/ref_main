@@ -24,9 +24,9 @@ extern "C"
 enum
 {
    Erd_StopIceMakerFillSignal,
-   Erd_FlowMeterWaterDispensedOzX100,
+   Erd_IceMaker0_FlowMeterWaterDispensedOzX100,
    Erd_IceMakerWaterFillMonitoringRequest,
-   Erd_FlowMeterMonitoringRequest,
+   Erd_IceMaker0_FlowMeterMonitoringRequest,
    Erd_TimerModule,
 
    TimedIceMakerFillMaxTimeInSecx10 = 31,
@@ -40,9 +40,9 @@ enum
 
 static const DataModel_TestDoubleConfigurationEntry_t erds[] = {
    { Erd_StopIceMakerFillSignal, sizeof(Signal_t) },
-   { Erd_FlowMeterWaterDispensedOzX100, sizeof(uint32_t) },
+   { Erd_IceMaker0_FlowMeterWaterDispensedOzX100, sizeof(uint32_t) },
    { Erd_IceMakerWaterFillMonitoringRequest, sizeof(IceMakerWaterFillMonitoringRequest_t) },
-   { Erd_FlowMeterMonitoringRequest, sizeof(FlowMeterMonitoringRequest_t) },
+   { Erd_IceMaker0_FlowMeterMonitoringRequest, sizeof(FlowMeterMonitoringRequest_t) },
    { Erd_TimerModule, sizeof(TimerModule_t *) },
 };
 
@@ -54,9 +54,9 @@ static const IceMakerFillMonitorData_t iceMakerFillMonitorData = {
 
 static const IceMakerWaterFillMonitorConfig_t config = {
    .stopIceMakerFillSignalErd = Erd_StopIceMakerFillSignal,
-   .flowMeterWaterDispensedOzx100Erd = Erd_FlowMeterWaterDispensedOzX100,
+   .flowMeterWaterDispensedOzx100Erd = Erd_IceMaker0_FlowMeterWaterDispensedOzX100,
    .waterFillMonitoringRequestErd = Erd_IceMakerWaterFillMonitoringRequest,
-   .flowMeterMonitoringRequestErd = Erd_FlowMeterMonitoringRequest,
+   .flowMeterMonitoringRequestErd = Erd_IceMaker0_FlowMeterMonitoringRequest,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -131,21 +131,21 @@ TEST_GROUP(IceMakerWaterFillMonitor)
    void TheFlowMeterMonitoringRequestShouldBe(FlowMeterMonitoringRequest_t expected)
    {
       FlowMeterMonitoringRequest_t actual;
-      DataModel_Read(dataModel, Erd_FlowMeterMonitoringRequest, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker0_FlowMeterMonitoringRequest, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
    void WhenTheFlowMeterWaterDispensedIncrements()
    {
       uint32_t waterDispensed;
-      DataModel_Read(dataModel, Erd_FlowMeterWaterDispensedOzX100, &waterDispensed);
+      DataModel_Read(dataModel, Erd_IceMaker0_FlowMeterWaterDispensedOzX100, &waterDispensed);
       waterDispensed++;
-      DataModel_Write(dataModel, Erd_FlowMeterWaterDispensedOzX100, &waterDispensed);
+      DataModel_Write(dataModel, Erd_IceMaker0_FlowMeterWaterDispensedOzX100, &waterDispensed);
    }
 
    void WhenTheFlowMeterWaterDispensedIsSetTo(uint32_t someAmountDispensedInOzx100)
    {
-      DataModel_Write(dataModel, Erd_FlowMeterWaterDispensedOzX100, &someAmountDispensedInOzx100);
+      DataModel_Write(dataModel, Erd_IceMaker0_FlowMeterWaterDispensedOzX100, &someAmountDispensedInOzx100);
    }
 
    void TheStopIceMakerFillSignalShouldBe(Signal_t expected)

@@ -2502,29 +2502,29 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Stop Fill Signal",
-          "name": "Erd_AluminumMoldIceMakerStopFillSignal",
+          "displayName": "IceMaker0 Stop Fill Signal",
+          "name": "Erd_IceMaker0_StopFillSignal",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Flow Meter Water Dispensed Ounces x100",
-          "name": "Erd_FlowMeterWaterDispensedOzX100",
+          "displayName": "IceMaker0 Flow Meter Water Dispensed Ounces x100",
+          "name": "Erd_IceMaker0_FlowMeterWaterDispensedOzX100",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Water Fill Monitoring Request",
-          "name": "Erd_AluminumMoldIceMakerWaterFillMonitoringRequest",
+          "displayName": "IceMaker0 Water Fill Monitoring Request",
+          "name": "Erd_IceMaker0_WaterFillMonitoringRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Flow Meter Monitoring Request",
-          "name": "Erd_FlowMeterMonitoringRequest",
+          "displayName": "IceMaker0 Flow Meter Monitoring Request",
+          "name": "Erd_IceMaker0_FlowMeterMonitoringRequest",
           "read": true,
           "write": true
         },
@@ -2640,29 +2640,29 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Water Fill Monitoring Request",
-          "name": "Erd_TwistTrayIceMakerWaterFillMonitoringRequest",
+          "displayName": "IceMaker0 Water Fill Monitoring Request",
+          "name": "Erd_IceMaker0_WaterFillMonitoringRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Stop Fill Signal",
-          "name": "Erd_TwistTrayIceMakerStopFillSignal",
+          "displayName": "IceMaker0 Stop Fill Signal",
+          "name": "Erd_IceMaker0_StopFillSignal",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Ice Maker Flow Meter Water Dispensed OzX100",
-          "name": "Erd_TwistTrayIceMakerFlowMeterWaterDispensedOzX100",
+          "displayName": "IceMaker0 Flow Meter Water Dispensed OzX100",
+          "name": "Erd_IceMaker0_FlowMeterWaterDispensedOzX100",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Ice Maker Flow Meter Monitoring Request",
-          "name": "Erd_TwistTrayIceMakerFlowMeterMonitoringRequest",
+          "displayName": "IceMaker0 Flow Meter Monitoring Request",
+          "name": "Erd_IceMaker0_FlowMeterMonitoringRequest",
           "read": true,
           "write": true
         },

@@ -60,14 +60,14 @@ static const TwistTrayIceMakerConfiguration_t config = {
    .thermistorIsValidResolvedErd = Erd_TwistTrayIceMakerThermistor_IsValidResolved,
    .filteredTemperatureResolvedInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
    .testRequestErd = Erd_IceMaker0_TestRequest,
-   .stopFillSignalErd = Erd_TwistTrayIceMakerStopFillSignal,
+   .stopFillSignalErd = Erd_IceMaker0_StopFillSignal,
    .harvestCountIsReadyToHarvestErd = Erd_IceMaker0_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_IceMaker0_HarvestCountCalculationRequest,
    .motorIceMakerVoteErd = Erd_TwistTrayIceMakerMotor_IceMakerVote,
    .waterValveIceMakerVoteErd = Erd_TwistTrayIceMakerWaterValve_IceMakerVote,
    .motorActionResultErd = Erd_IceMaker0_MotorActionResult,
    .motorFaultActiveErd = Erd_TwistTrayIceMaker_MotorFaultActive,
-   .waterFillMonitoringRequestErd = Erd_TwistTrayIceMakerWaterFillMonitoringRequest,
+   .waterFillMonitoringRequestErd = Erd_IceMaker0_WaterFillMonitoringRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_TwistTrayIceMakerVote,
    .iceMakerEnabledResolvedErd = Erd_IceMakerEnabledResolved,
    .sabbathModeErd = Erd_SabbathModeEnable,
@@ -657,7 +657,7 @@ TEST_GROUP(TwistTrayIceMaker)
       IceMakerWaterFillMonitoringRequest_t actual;
       DataModel_Read(
          dataModel,
-         Erd_TwistTrayIceMakerWaterFillMonitoringRequest,
+         Erd_IceMaker0_WaterFillMonitoringRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -675,7 +675,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_TwistTrayIceMakerStopFillSignal,
+         Erd_IceMaker0_StopFillSignal,
          set);
    }
 

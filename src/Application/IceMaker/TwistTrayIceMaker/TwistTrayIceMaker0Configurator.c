@@ -80,10 +80,10 @@ static const ErdResolverConfiguration_t motorResolverConfiguration = {
 };
 
 static const IceMakerWaterFillMonitorConfig_t fillMonitorConfig = {
-   .stopIceMakerFillSignalErd = Erd_TwistTrayIceMakerStopFillSignal,
-   .flowMeterWaterDispensedOzx100Erd = Erd_TwistTrayIceMakerFlowMeterWaterDispensedOzX100,
-   .waterFillMonitoringRequestErd = Erd_TwistTrayIceMakerWaterFillMonitoringRequest,
-   .flowMeterMonitoringRequestErd = Erd_TwistTrayIceMakerFlowMeterMonitoringRequest,
+   .stopIceMakerFillSignalErd = Erd_IceMaker0_StopFillSignal,
+   .flowMeterWaterDispensedOzx100Erd = Erd_IceMaker0_FlowMeterWaterDispensedOzX100,
+   .waterFillMonitoringRequestErd = Erd_IceMaker0_WaterFillMonitoringRequest,
+   .flowMeterMonitoringRequestErd = Erd_IceMaker0_FlowMeterMonitoringRequest,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -151,14 +151,14 @@ static const TwistTrayIceMakerConfiguration_t twistTrayIceMakerConfig = {
    .thermistorIsValidResolvedErd = Erd_TwistTrayIceMakerThermistor_IsValidResolved,
    .filteredTemperatureResolvedInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
    .testRequestErd = Erd_IceMaker0_TestRequest,
-   .stopFillSignalErd = Erd_TwistTrayIceMakerStopFillSignal,
+   .stopFillSignalErd = Erd_IceMaker0_StopFillSignal,
    .harvestCountIsReadyToHarvestErd = Erd_IceMaker0_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_IceMaker0_HarvestCountCalculationRequest,
    .motorIceMakerVoteErd = Erd_TwistTrayIceMakerMotor_IceMakerVote,
    .waterValveIceMakerVoteErd = Erd_TwistTrayIceMakerWaterValve_IceMakerVote,
    .motorActionResultErd = Erd_IceMaker0_MotorActionResult,
    .motorFaultActiveErd = Erd_TwistTrayIceMaker_MotorFaultActive,
-   .waterFillMonitoringRequestErd = Erd_TwistTrayIceMakerWaterFillMonitoringRequest,
+   .waterFillMonitoringRequestErd = Erd_IceMaker0_WaterFillMonitoringRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_TwistTrayIceMakerVote,
    .iceMakerEnabledResolvedErd = Erd_IceMakerEnabledResolved,
    .sabbathModeErd = Erd_SabbathModeEnable,
