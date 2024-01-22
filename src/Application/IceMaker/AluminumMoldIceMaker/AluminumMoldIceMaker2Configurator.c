@@ -147,7 +147,7 @@ static const RakeControllerConfig_t rakeControllerConfig = {
 static const AluminumMoldIceMakerFullStatusUpdaterConfig_t iceMakerFullStatusUpdaterConfig = {
    .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition,
    .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState,
-   .iceMakerFullStatusErd = Erd_IceMaker0FullStatus
+   .iceMakerFullStatusErd = Erd_IceMaker2FullStatus
 };
 
 static const ResolvedVoteRelayConnectorConfiguration_t rakeMotorDriverConfig = {
