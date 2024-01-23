@@ -201,8 +201,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Aluminum Mold IM Status",
-               "name": "Erd_AluminumMoldIceMakerHsmState",
+               "displayName": "IM Slot 0 State Machine State",
+               "name": "Erd_IceMaker0_StateMachineState",
                "read": true,
                "interval": 1000000000
             },
@@ -216,14 +216,14 @@
             {
                "namespace": "mb",
                "displayName": "IM Slot 0 Enable Request",
-               "name": "Erd_IceMaker0EnableRequest",
+               "name": "Erd_IceMaker0_EnableRequest",
                "read": false,
                "write": true
             },
             {
                "namespace": "mb",
                "displayName": "IM Slot 0 Enable Status",
-               "name": "Erd_IceMaker0EnableStatus",
+               "name": "Erd_IceMaker0_EnableStatus",
                "read": true,
                "interval": 1000000000
             }

@@ -14,7 +14,7 @@
 typedef struct
 {
    Erd_t feelerArmPositionErd; // FeelerArmPosition_t
-   Erd_t aluminumMoldIceMakerHsmStateErd; // AluminumMoldIceMakerHsmState_t
+   Erd_t aluminumMoldIceMakerHsmStateErd; // IceMakerStateMachineState_t
    Erd_t iceMakerFullStatusErd; // bool
 } AluminumMoldIceMakerFullStatusUpdaterConfig_t;
 

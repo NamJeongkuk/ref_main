@@ -626,8 +626,8 @@
          "erds": [
             {
                "namespace": "mb",
-               "displayName": "IM HSM State",
-               "name": "Erd_AluminumMoldIceMakerHsmState",
+               "displayName": "IM State Machine State",
+               "name": "Erd_IceMaker0_StateMachineState",
                "read": true,
                "interval": 1000000000
             },
@@ -640,7 +640,7 @@
             },
             {
                "namespace": "mb",
-               "displayName": "IM Feeler Arm Postion",
+               "displayName": "IM Feeler Arm Position",
                "name": "Erd_IceMaker0_FeelerArmPosition",
                "read": true,
                "interval": 1000000000
@@ -675,8 +675,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker0 Enable Request",
-               "name": "Erd_IceMaker0EnableRequest",
+               "displayName": "IM Enable Request",
+               "name": "Erd_IceMaker0_EnableRequest",
                "read": false,
                "write": true
             },
@@ -689,8 +689,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker0 Enable Status",
-               "name": "Erd_IceMaker0EnableStatus",
+               "displayName": "IM Enable Status",
+               "name": "Erd_IceMaker0_EnableStatus",
                "read": true,
                "interval": 1000000000
             },
@@ -715,21 +715,21 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Twist IM Operation State",
-               "name": "Erd_TwistTrayIceMaker_OperationState",
+               "displayName": "IM State Machine State",
+               "name": "Erd_IceMaker0_StateMachineState",
                "read": true,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "IceMaker0 Motor Operation State",
+               "displayName": "IM Motor Operation State",
                "name": "Erd_IceMaker0_MotorOperationState",
                "read": true,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "IceMaker0 Motor Action Result",
+               "displayName": "IM Motor Action Result",
                "name": "Erd_IceMaker0_MotorActionResult",
                "read": true,
                "interval": 1000000000
@@ -785,8 +785,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker0 Enable Request",
-               "name": "Erd_IceMaker0EnableRequest",
+               "displayName": "IM Enable Request",
+               "name": "Erd_IceMaker0_EnableRequest",
                "read": false,
                "write": true
             },
@@ -799,8 +799,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker0 Enable Status",
-               "name": "Erd_IceMaker0EnableStatus",
+               "displayName": "IM Enable Status",
+               "name": "Erd_IceMaker0_EnableStatus",
                "read": true,
                "interval": 1000000000
             },
@@ -1049,8 +1049,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Aluminum Mold IM State",
-               "name": "Erd_AluminumMoldIceMakerHsmState",
+               "displayName": "IM State Machine State",
+               "name": "Erd_IceMaker0_StateMachineState",
                "read": true,
                "interval": 1000000000
             },
@@ -1063,15 +1063,15 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker0 Enable Request",
-               "name": "Erd_IceMaker0EnableRequest",
+               "displayName": "IM Enable Request",
+               "name": "Erd_IceMaker0_EnableRequest",
                "read": false,
                "write": true
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker0 Enable Status",
-               "name": "Erd_IceMaker0EnableStatus",
+               "displayName": "IM Enable Status",
+               "name": "Erd_IceMaker0_EnableStatus",
                "read": true,
                "interval": 1000000000
             }
@@ -1460,114 +1460,114 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker 0 Present",
-               "name": "Erd_IceMaker0Present",
+               "displayName": "IM Has Been Discovered",
+               "name": "Erd_IceMaker0_HasBeenDiscovered",
                "read": true,
                "write": true,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker 0 Enable Request",
-               "name": "Erd_IceMaker0EnableRequest",
+               "displayName": "IM Enable Request",
+               "name": "Erd_IceMaker0_EnableRequest",
                "read": false,
                "write": true
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker 0 Enable Status",
-               "name": "Erd_IceMaker0EnableStatus",
+               "displayName": "IM Enable Status",
+               "name": "Erd_IceMaker0_EnableStatus",
                "read": true,
                "write": false,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker 0 Full Status",
-               "name": "Erd_IceMaker0FullStatus",
+               "displayName": "IM Full Status",
+               "name": "Erd_IceMaker0_FullStatus",
                "read": true,
                "write": false,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker 0 Type Info",
-               "name": "Erd_IceMaker0TypeInformation",
+               "displayName": "IM Type Info",
+               "name": "Erd_IceMaker0_TypeInformation",
                "read": true,
                "write": false,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker 1 Present",
-               "name": "Erd_IceMaker1Present",
+               "displayName": "IM 1 Has Been Discovered",
+               "name": "Erd_IceMaker1_HasBeenDiscovered",
                "read": true,
                "write": true,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker 1 Enable Request",
-               "name": "Erd_IceMaker1EnableRequest",
+               "displayName": "IM 1 Enable Request",
+               "name": "Erd_IceMaker1_EnableRequest",
                "read": false,
                "write": true
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker 1 Enable Status",
-               "name": "Erd_IceMaker1EnableStatus",
+               "displayName": "IM 1 Enable Status",
+               "name": "Erd_IceMaker1_EnableStatus",
                "read": true,
                "write": false,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker 1 Full Status",
-               "name": "Erd_IceMaker1FullStatus",
+               "displayName": "IM 1 Full Status",
+               "name": "Erd_IceMaker1_FullStatus",
                "read": true,
                "write": false,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker 1 Type Info",
-               "name": "Erd_IceMaker1TypeInformation",
+               "displayName": "IM 1 Type Info",
+               "name": "Erd_IceMaker1_TypeInformation",
                "read": true,
                "write": false,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker 2 Present",
-               "name": "Erd_IceMaker2Present",
+               "displayName": "IM 2 Has Been Discovered",
+               "name": "Erd_IceMaker2_HasBeenDiscovered",
                "read": true,
                "write": true,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker 2 Enable Request",
-               "name": "Erd_IceMaker2EnableRequest",
+               "displayName": "IM 2 Enable Request",
+               "name": "Erd_IceMaker2_EnableRequest",
                "write": true
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker 2 Enable Status",
-               "name": "Erd_IceMaker2EnableStatus",
+               "displayName": "IM 2 Enable Status",
+               "name": "Erd_IceMaker2_EnableStatus",
                "read": true
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker 2 Full Status",
-               "name": "Erd_IceMaker2FullStatus",
+               "displayName": "IM 2 Full Status",
+               "name": "Erd_IceMaker2_FullStatus",
                "read": true,
                "write": true,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "Ice Maker 2 Type Info",
-               "name": "Erd_IceMaker2TypeInformation",
+               "displayName": "IM 2 Type Info",
+               "name": "Erd_IceMaker2_TypeInformation",
                "read": true,
                "write": true,
                "interval": 1000000000

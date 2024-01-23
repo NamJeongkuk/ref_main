@@ -9,7 +9,7 @@
 #include "AluminumMoldIceMakerFullStatusUpdater.h"
 #include "DataModelErdPointerAccess.h"
 #include "FeelerArmPosition.h"
-#include "AluminumMoldIceMakerHsmState.h"
+#include "IceMakerStateMachineState.h"
 
 static bool FeelerArmPositionIsBucketFull(AluminumMoldIceMakerFullStatusUpdater_t *instance)
 {
@@ -22,15 +22,15 @@ static bool FeelerArmPositionIsBucketFull(AluminumMoldIceMakerFullStatusUpdater_
    return (position == FeelerArmPosition_BucketFull);
 }
 
-static bool AluminumMoldIceMakerHsmStateIsFreeze(AluminumMoldIceMakerFullStatusUpdater_t *instance)
+static bool AluminumMoldIceMakerStateMachineStateIsFreeze(AluminumMoldIceMakerFullStatusUpdater_t *instance)
 {
-   AluminumMoldIceMakerHsmState_t aluminumMoldIceMakerHsmState;
+   IceMakerStateMachineState_t aluminumMoldIceMakerHsmState;
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->aluminumMoldIceMakerHsmStateErd,
       &aluminumMoldIceMakerHsmState);
 
-   return (aluminumMoldIceMakerHsmState == AluminumMoldIceMakerHsmState_Freeze);
+   return (aluminumMoldIceMakerHsmState == IceMakerStateMachineState_Freeze);
 }
 
 static void UpdateIceMakerFullStatus(void *context, const void *args)
@@ -38,7 +38,7 @@ static void UpdateIceMakerFullStatus(void *context, const void *args)
    AluminumMoldIceMakerFullStatusUpdater_t *instance = context;
    IGNORE(args);
 
-   if(FeelerArmPositionIsBucketFull(instance) && AluminumMoldIceMakerHsmStateIsFreeze(instance))
+   if(FeelerArmPositionIsBucketFull(instance) && AluminumMoldIceMakerStateMachineStateIsFreeze(instance))
    {
       DataModel_Write(
          instance->_private.dataModel,

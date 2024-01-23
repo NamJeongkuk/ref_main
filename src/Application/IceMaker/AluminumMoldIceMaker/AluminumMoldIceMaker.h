@@ -15,7 +15,7 @@
 
 typedef struct
 {
-   Erd_t aluminumMoldIceMakerHsmStateErd; // AluminumMoldIceMakerHsmState_t
+   Erd_t aluminumMoldIceMakerHsmStateErd; // IceMakerStateMachineState_t
    Erd_t iceMakerWaterValveVoteErd; // WaterValveVotedState_t
    Erd_t moldHeaterVoteErd; // HeaterVotedState_t
    Erd_t rakeMotorVoteErd; // AluminumMoldIceMakerMotorVotedState_t

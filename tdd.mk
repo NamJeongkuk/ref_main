@@ -44,6 +44,7 @@ SRC_DIRS:=\
   src/Application/Grid/GridStateTables \
   src/Application/Heater \
   src/Application/IceMaker \
+  src/Application/IceMaker/IceMakerSlots \
   src/Application/IceMaker/AluminumMoldIceMaker \
   src/Application/IceMaker/IceMakerSlots \
   src/Application/IceMaker/TwistTrayIceMaker \

@@ -107,7 +107,7 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
 
    void GivenTheIceMakerIsEnabled()
    {
-      DataModel_Write(dataModel, Erd_IceMaker0EnableStatus, set);
+      DataModel_Write(dataModel, Erd_IceMaker0_EnableStatus, set);
       DataModel_Write(dataModel, Erd_IceMakerEnabledByGrid, set);
    }
 
@@ -162,10 +162,10 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
       CHECK_EQUAL(expected, actual);
    }
 
-   void TheTwistTrayOperationShouldBe(TwistTrayIceMakerOperationState_t expected)
+   void TheTwistTrayStateMachineStateShouldBe(IceMakerStateMachineState_t expected)
    {
-      TwistTrayIceMakerOperationState_t actual;
-      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_OperationState, &actual);
+      IceMakerStateMachineState_t actual;
+      DataModel_Read(dataModel, Erd_IceMaker0_StateMachineState, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -330,7 +330,7 @@ TEST(MotorDriverArbitrationIntegration, TwistTrayMotorShouldGiveUpControlAfterAH
 
    // This ensures we've exited the Twist Tray Ice Maker Harvest State
    After(twistTrayIceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
-   TheTwistTrayOperationShouldBe(TwistTrayIceMakerOperationState_FillingTrayWithWater);
+   TheTwistTrayStateMachineStateShouldBe(IceMakerStateMachineState_Fill);
 
    TheTwistTrayMotorControlRequestShouldBe(DISABLED);
    TheTwistTrayMotorEnableShouldBe(DISABLED);

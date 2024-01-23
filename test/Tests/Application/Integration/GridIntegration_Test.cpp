@@ -825,7 +825,7 @@ TEST_GROUP(GridIntegration)
 
    void GivenTheIceMakerIsEnabledAndTheApplicationIsInitialized()
    {
-      DataModel_Write(dataModel, Erd_IceMaker0EnableRequest, set);
+      DataModel_Write(dataModel, Erd_IceMaker0_EnableRequest, set);
       GivenApplicationHasBeenInitialized();
       DataModel_Write(dataModel, Erd_IceMakerEnabledByGrid, set);
    }

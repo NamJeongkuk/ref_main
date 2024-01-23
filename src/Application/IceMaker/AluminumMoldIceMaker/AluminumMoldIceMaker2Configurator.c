@@ -17,7 +17,7 @@ static const FreezerIceRateHandlerConfig_t freezerIceRateHandlerConfig = {
 };
 
 static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
-   .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState,
+   .aluminumMoldIceMakerHsmStateErd = Erd_IceMaker2_StateMachineState,
    .iceMakerWaterValveVoteErd = Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
    .moldHeaterVoteErd = Erd_IceMaker0_HeaterRelay_IceMakerVote,
    .rakeMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
@@ -64,7 +64,7 @@ static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig 
 };
 
 static const Erd_t enableErdsList[] = {
-   Erd_IceMaker2EnableStatus, Erd_IceMakerEnabledByGrid
+   Erd_IceMaker2_EnableStatus, Erd_IceMakerEnabledByGrid
 };
 
 static const ErdLogicServiceConfigurationEntry_t configurationEntries[] = {
@@ -146,8 +146,8 @@ static const RakeControllerConfig_t rakeControllerConfig = {
 
 static const AluminumMoldIceMakerFullStatusUpdaterConfig_t iceMakerFullStatusUpdaterConfig = {
    .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition,
-   .aluminumMoldIceMakerHsmStateErd = Erd_AluminumMoldIceMakerHsmState,
-   .iceMakerFullStatusErd = Erd_IceMaker2FullStatus
+   .aluminumMoldIceMakerHsmStateErd = Erd_IceMaker2_StateMachineState,
+   .iceMakerFullStatusErd = Erd_IceMaker2_FullStatus
 };
 
 static const ResolvedVoteRelayConnectorConfiguration_t rakeMotorDriverConfig = {
@@ -167,8 +167,8 @@ static const SensorFilteringConfig_t moldThermistorConfig = {
    .sensorUnfilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMakerMold_UnfilteredTemperatureInDegFx100,
    .sensorFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100,
    .sensorIsValidErd = Erd_AluminumMoldIceMakerMoldThermistorIsValid,
-   .sensorIsInvalidFaultErd = Erd_IceMaker1ThermistorIsInvalidFault,
-   .sensorDiscoveredErd = Erd_IceMaker2Present,
+   .sensorIsInvalidFaultErd = Erd_IceMaker2_ThermistorIsInvalidFault,
+   .sensorDiscoveredErd = Erd_IceMaker2_HasBeenDiscovered,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -228,7 +228,7 @@ static const Erd_t iceMakerEnabledOverrideRequestErdList[] = {
 };
 
 static const Erd_t iceMakerEnabledOverrideValueErdList[] = {
-   Erd_IceMaker0EnableStatus,
+   Erd_IceMaker2_EnableStatus,
    Erd_IceMakerEnabledEnhancedSabbathOverrideValue,
    Erd_IceMakerEnabledOverrideValue
 };

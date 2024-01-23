@@ -69,7 +69,6 @@
 #include "SetpointZoneTemperatureBounds.h"
 #include "DamperFreezePreventionFsmState.h"
 #include "DefrostType.h"
-#include "AluminumMoldIceMakerHsmState.h"
 #include "AluminumMoldIceMakerMotorVotedState.h"
 #include "WaterValveVotedState.h"
 #include "FeelerArmPosition.h"
@@ -85,7 +84,6 @@
 #include "IceMakerMotorDoAction.h"
 #include "IceMakerMotorErrorReason.h"
 #include "IceMakerMotorOperationState.h"
-#include "TwistTrayIceMakerOperationState.h"
 #include "TwistTrayIceMakerHighLevelState.h"
 #include "DispensingRequest.h"
 #include "DispensingRequestHandler.h"
@@ -138,6 +136,7 @@
 #include "VolumeInOuncesX100.h"
 #include "RfidFaultHandler.h"
 #include "NonVolatileUsageMonitor.h"
+#include "IceMakerStateMachineState.h"
 
 // clang-format off
 
@@ -539,16 +538,16 @@ enum
    ENTRY(Erd_TurboCoolOnOffStatus,                          0x120D, bool,                                               Swap_No,  Io_None, Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
    ENTRY(Erd_RightSideFreshFoodDoorStatusResolved,          0x120E, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_LeftSideFreezerDoorStatusResolved,             0x120F, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker0EnableRequest,                        0x1210, IceMakerEnableRequest_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker0EnableStatus,                         0x1211, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,                1,             NotFault) \
-   ENTRY(Erd_IceMaker0FullStatus,                           0x1212, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker0TypeInformation,                      0x1213, IceMakerTypeInformation_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker0_EnableRequest,                       0x1210, IceMakerEnableRequest_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker0_EnableStatus,                        0x1211, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,                1,             NotFault) \
+   ENTRY(Erd_IceMaker0_FullStatus,                          0x1212, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker0_TypeInformation,                     0x1213, IceMakerTypeInformation_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_WaterFilterState,                              0x1215, WaterFilterState_t,                                 Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker1EnableRequest,                        0x1216, IceMakerEnableRequest_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker1EnableStatus,                         0x1217, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,                1,             NotFault) \
-   ENTRY(Erd_IceMaker1FullStatus,                           0x1218, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker1TypeInformation,                      0x1219, IceMakerTypeInformation_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker1_EnableRequest,                       0x1216, IceMakerEnableRequest_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker1_EnableStatus,                        0x1217, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,                1,             NotFault) \
+   ENTRY(Erd_IceMaker1_FullStatus,                          0x1218, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker1_TypeInformation,                     0x1219, IceMakerTypeInformation_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_TurboFreezeOnOffRequest,                       0x121A, TurboModeRequest_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_TurboFreezeOnOffStatus,                        0x121B, bool,                                               Swap_No,  Io_None, Sub_Y, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
    \
@@ -571,13 +570,13 @@ enum
    ENTRY(Erd_SecondarySignOfLife,                           0x122D, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_NotificationsBitmap,                           0x122E, NotificationsBitmap_t,                              Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_DispensingInhibitedReason,                     0x122F, DispensingInhibitedReasonBitmap_t,                  Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker2EnableRequest,                        0x1230, IceMakerEnableRequest_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker2EnableStatus,                         0x1231, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,                1,             NotFault) \
-   ENTRY(Erd_IceMaker2FullStatus,                           0x1232, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker2TypeInformation,                      0x1233, IceMakerTypeInformation_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker0Present,                              0x1234, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
-   ENTRY(Erd_IceMaker1Present,                              0x1235, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
-   ENTRY(Erd_IceMaker2Present,                              0x1236, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
+   ENTRY(Erd_IceMaker2_EnableRequest,                       0x1230, IceMakerEnableRequest_t,                            Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker2_EnableStatus,                        0x1231, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,                1,             NotFault) \
+   ENTRY(Erd_IceMaker2_FullStatus,                          0x1232, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker2_TypeInformation,                     0x1233, IceMakerTypeInformation_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker0_HasBeenDiscovered,                   0x1234, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
+   ENTRY(Erd_IceMaker1_HasBeenDiscovered,                   0x1235, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
+   ENTRY(Erd_IceMaker2_HasBeenDiscovered,                   0x1236, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
    ENTRY(Erd_WaterFilterRemainingUsage,                     0x1237, WaterFilterRemainingUsage_t,                        Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_WaterFilterUsageSinceExpiration,               0x1238, WaterFilterUsageSinceExpiration_t,                  Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
@@ -884,7 +883,6 @@ enum
    ENTRY(Erd_IceMaker0_MinimumFreezeTimeCounterInMinutes,              0xF140, uint8_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceMaker1_MinimumFreezeTimeCounterInMinutes,              0xF141, uint8_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceMaker2_MinimumFreezeTimeCounterInMinutes,              0xF142, uint8_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_TwistTrayIceMaker_OperationState,                         0xF143, TwistTrayIceMakerOperationState_t,       Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_HighLevelState,                         0xF144, TwistTrayIceMakerHighLevelState_t,       Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_TwistTrayIceMaker_MotorFaultActive,                       0xF145, bool,                                    Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceMaker0_TestRequest,                                    0xF146, IceMakerTestRequest_t,                   Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
@@ -892,7 +890,7 @@ enum
    ENTRY(Erd_IceMaker1_HarvestCountCalculationRequest,                 0xF148, bool,                                    Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceMaker2_HarvestCountCalculationRequest,                 0xF149, bool,                                    Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
-   ENTRY(Erd_AluminumMoldIceMakerHsmState,                  0xF150, AluminumMoldIceMakerHsmState_t,                     Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker0_StateMachineState,                   0xF150, IceMakerStateMachineState_t,                        Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceMaker0_FeelerArmPosition,                   0xF151, FeelerArmPosition_t,                                Swap_No,  Io_None, Sub_Y, MappedBsp,              NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceMaker0_MoldHeaterControlRequest,            0xF152, IceMakerMoldHeaterControlRequest_t,                 Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceMaker0_RakeCompletedRevolution,             0xF153, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
@@ -959,6 +957,9 @@ enum
    ENTRY(Erd_RfidFilterDataRequest,                         0xF196, ReadWriteRequest_t,                                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_RfidCommunicationControllerState,              0xF197, RfidCommunicationControllerState_t,                 Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_RfidFaultRequest,                              0xF198, RfidFaultRequest_t,                                 Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   \
+   ENTRY(Erd_IceMaker1_StateMachineState,                   0xF19A, IceMakerStateMachineState_t,                        Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker2_StateMachineState,                   0xF19B, IceMakerStateMachineState_t,                        Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_IceMakerFillInhibitedReason,                   0xF1A0, IceMakerFillInhibitedReasonBitmap_t,                Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
@@ -1497,8 +1498,8 @@ enum
    ENTRY(Erd_FreezerEvaporatorThermistorIsInvalidFault,     0xF730, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                                       NotNv,         FaultId_FreezerEvaporatorThermistorIsInvalid) \
    ENTRY(Erd_AmbientThermistorIsInvalidFault,               0xF731, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                                       NotNv,         FaultId_AmbientThermistorIsInvalid) \
    ENTRY(Erd_AmbientHumiditySensorIsInvalidFault,           0xF732, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                                       NotNv,         FaultId_AmbientHumiditySensorIsInvalid) \
-   ENTRY(Erd_IceMaker0ThermistorIsInvalidFault,             0xF733, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                                       NotNv,         FaultId_IceMaker0ThermistorIsInvalid) \
-   ENTRY(Erd_IceMaker1ThermistorIsInvalidFault,             0xF734, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                                       NotNv,         FaultId_IceMaker1ThermistorIsInvalid) \
+   ENTRY(Erd_IceMaker0_ThermistorIsInvalidFault,            0xF733, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                                       NotNv,         FaultId_IceMaker0ThermistorIsInvalid) \
+   ENTRY(Erd_IceMaker1_ThermistorIsInvalidFault,            0xF734, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                                       NotNv,         FaultId_IceMaker1ThermistorIsInvalid) \
    ENTRY(Erd_ExcessiveCompressorRunTimeFault,               0xF735, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                                       NotNv,         FaultId_ExcessiveCompressorRunTime) \
    ENTRY(Erd_CompressorOffWhileCoolingSystemOnForMaxTimeFault, 0xF736, bool,                                            Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                                       NotNv,         FaultId_CompressorOffWhileCoolingSystemOnForMaxTime) \
    ENTRY(Erd_FreshFoodNoFreezeLimitTrippedFault,            0xF737, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                                       NotNv,         FaultId_FreshFoodNoFreezeLimitTripped) \
@@ -1513,6 +1514,7 @@ enum
    ENTRY(Erd_FreezerTemperatureExceededFault,               0xF740, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                                       NotNv,         FaultId_FreezerTemperatureExceeded) \
    ENTRY(Erd_AndroidSignOfLifeDebugFault,                   0xF741, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                                       NotNv,         FaultId_AndroidSbcSignOfLifeFault) \
    ENTRY(Erd_IceWaterStopsDispensingBasedOnTimeFault,       0xF742, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                                       NotNv,         FaultId_IceWaterStopsDispensingBasedOnTime) \
+   ENTRY(Erd_IceMaker2_ThermistorIsInvalidFault,            0xF743, bool,                                               Swap_No,  Io_None, Sub_N, Fault,                  NotNv,                                                       NotNv,         FaultId_IceMaker2ThermistorIsInvalid) \
    \
    ENTRY(Erd_FactoryModeEnableRequestInMinutes,             0xF801, uint8_t,                                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \

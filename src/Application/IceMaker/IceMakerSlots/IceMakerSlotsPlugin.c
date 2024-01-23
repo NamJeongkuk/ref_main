@@ -41,7 +41,7 @@ static void WriteInformationErd(I_DataModel_t *dataModel, Erd_t infoErd, IceMake
                                                                                   \
       WriteInformationErd(                                                        \
          dataModel,                                                               \
-         Erd_IceMaker##number##TypeInformation,                                   \
+         Erd_IceMaker##number##_TypeInformation,                                  \
          slotsData->slot##number##Data->type,                                     \
          slotsData->slot##number##Data->location);                                \
    }                                                                              \
@@ -49,7 +49,7 @@ static void WriteInformationErd(I_DataModel_t *dataModel, Erd_t infoErd, IceMake
    {                                                                              \
       WriteInformationErd(                                                        \
          dataModel,                                                               \
-         Erd_IceMaker##number##TypeInformation,                                   \
+         Erd_IceMaker##number##_TypeInformation,                                  \
          IceMakerType_Disabled,                                                   \
          IceMakerLocation_Disabled);                                              \
    }

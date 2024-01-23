@@ -26,6 +26,7 @@ extern "C"
 #define Still
 #define And
 #define Then
+#define AfterBrakingDelayTheMotorShouldBecome AfterCoastingDelayTheMotorShouldBecome
 
 enum
 {
@@ -261,7 +262,6 @@ TEST_GROUP(TwistTrayIceMakerMotorController)
       TheMotorShouldBecome(newState);
       After(1);
    }
-#define AfterBrakingDelayTheMotorShouldBecome AfterCoastingDelayTheMotorShouldBecome
 
    void NothingShouldHappen()
    {
@@ -269,7 +269,7 @@ TEST_GROUP(TwistTrayIceMakerMotorController)
 
    void TheOperationStateShouldBe(IceMakerMotorOperationState_t expected)
    {
-      TwistTrayIceMakerOperationState_t actual;
+      IceMakerMotorOperationState_t actual;
       DataModel_Read(dataModel, Erd_IceMaker0_MotorOperationState, &actual);
 
       CHECK_EQUAL(expected, actual);

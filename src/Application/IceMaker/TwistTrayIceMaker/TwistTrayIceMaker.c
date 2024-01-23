@@ -11,7 +11,7 @@
 #include "SystemErds.h"
 #include "IceMakerMotorAction.h"
 #include "TwistTrayIceMakerHighLevelState.h"
-#include "TwistTrayIceMakerOperationState.h"
+#include "IceMakerStateMachineState.h"
 #include "WaterValveVotedState.h"
 #include "DispensingRequest.h"
 #include "PercentageDutyCycleVote.h"
@@ -104,9 +104,9 @@ static void UpdateHighLevelState(TwistTrayIceMaker_t *instance, TwistTrayIceMake
    DataSource_Write(instance->_private.dataSource, instance->_private.config->highLevelStateErd, &newState);
 }
 
-static void UpdateOperationState(TwistTrayIceMaker_t *instance, TwistTrayIceMakerOperationState_t newState)
+static void UpdateFsmState(TwistTrayIceMaker_t *instance, IceMakerStateMachineState_t newState)
 {
-   DataSource_Write(instance->_private.dataSource, instance->_private.config->operationStateErd, &newState);
+   DataSource_Write(instance->_private.dataSource, instance->_private.config->fsmStateErd, &newState);
 }
 
 static void RequestMotorAction(TwistTrayIceMaker_t *instance, IceMakerMotorAction_t newMotorAction)
@@ -362,7 +362,7 @@ static void State_Homing(Fsm_t *fsm, FsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Fsm_Entry:
-         UpdateOperationState(instance, TwistTrayIceMakerOperationState_Homing);
+         UpdateFsmState(instance, IceMakerStateMachineState_Homing);
          RequestMotorAction(instance, Home);
          break;
 
@@ -403,7 +403,7 @@ static void State_Freeze(Fsm_t *fsm, FsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Fsm_Entry:
-         UpdateOperationState(instance, TwistTrayIceMakerOperationState_Freeze);
+         UpdateFsmState(instance, IceMakerStateMachineState_Freeze);
          RequestHarvestCountCalculation(instance);
 
          if(instance->_private.firstFreezeTransition)
@@ -486,7 +486,7 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Fsm_Entry:
-         UpdateOperationState(instance, TwistTrayIceMakerOperationState_Harvesting);
+         UpdateFsmState(instance, IceMakerStateMachineState_Harvest);
          RequestMotorAction(instance, IceMakerMotorAction_RunCycle);
          VoteForFillTubeHeater(instance, instance->_private.parametric->harvestData.fillTubeHeaterDutyCyclePercentage);
          StartFillTubeHeaterTimer(instance);
@@ -580,7 +580,7 @@ static void State_FillingTrayWithWater(Fsm_t *fsm, FsmSignal_t signal, const voi
    switch(signal)
    {
       case Fsm_Entry:
-         UpdateOperationState(instance, TwistTrayIceMakerOperationState_FillingTrayWithWater);
+         UpdateFsmState(instance, IceMakerStateMachineState_Fill);
 
          if(instance->_private.pauseFillMonitoring)
          {
@@ -643,7 +643,7 @@ static void State_BucketIsFull(Fsm_t *fsm, FsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Fsm_Entry:
-         UpdateOperationState(instance, TwistTrayIceMakerOperationState_BucketIsFull);
+         UpdateFsmState(instance, IceMakerStateMachineState_BucketIsFull);
          UpdateIceMakerFullStatus(instance, SET);
 
          TimerModule_StartOneShot(
@@ -742,7 +742,7 @@ static void State_MotorError(Fsm_t *fsm, FsmSignal_t signal, const void *data)
             MotorErrorRetryTimerExpired,
             instance);
 
-         UpdateOperationState(instance, TwistTrayIceMakerOperationState_MotorError);
+         UpdateFsmState(instance, IceMakerStateMachineState_MotorError);
          UpdateHighLevelState(instance, TwistTrayIceMakerHighLevelState_Fault);
 
          RequestMotorAction(instance, Idle);
@@ -783,7 +783,7 @@ static void State_ThermistorFault(Fsm_t *fsm, FsmSignal_t signal, const void *da
    switch(signal)
    {
       case Fsm_Entry:
-         UpdateOperationState(instance, TwistTrayIceMakerOperationState_ThermistorFault);
+         UpdateFsmState(instance, IceMakerStateMachineState_ThermistorFault);
          break;
 
       case Signal_IceMakerThermistorIsValid:
@@ -808,7 +808,7 @@ static void State_IdleFill(Fsm_t *fsm, FsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Fsm_Entry:
-         UpdateOperationState(instance, TwistTrayIceMakerOperationState_IdleFill);
+         UpdateFsmState(instance, IceMakerStateMachineState_IdleFill);
          break;
 
       case Signal_DispensingInactive:

@@ -15,9 +15,9 @@
    ENTRY(Erd_TurboFreezeOnOffRequest, Erd_TurboFreezeOnOffStatus)                                     \
    ENTRY(Erd_DoorAlarmEnableRequest, Erd_DoorAlarmEnableStatus)                                       \
    ENTRY(Erd_TurboCoolOnOffRequest, Erd_TurboCoolOnOffStatus)                                         \
-   ENTRY(Erd_IceMaker0EnableRequest, Erd_IceMaker0EnableStatus)                                       \
-   ENTRY(Erd_IceMaker1EnableRequest, Erd_IceMaker1EnableStatus)                                       \
-   ENTRY(Erd_IceMaker2EnableRequest, Erd_IceMaker2EnableStatus)                                       \
+   ENTRY(Erd_IceMaker0_EnableRequest, Erd_IceMaker0_EnableStatus)                                       \
+   ENTRY(Erd_IceMaker1_EnableRequest, Erd_IceMaker1_EnableStatus)                                       \
+   ENTRY(Erd_IceMaker2_EnableRequest, Erd_IceMaker2_EnableStatus)                                       \
    ENTRY(Erd_CoolingOffRequest, Erd_CoolingOffStatus)                                                 \
    ENTRY(Erd_PresenceSensedActivatesRecessLightRequest, Erd_PresenceSensedActivatesRecessLightStatus) \
 

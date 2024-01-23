@@ -438,7 +438,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_AluminumMoldIceMakerHsmState",
+         "name": "Erd_IceMaker0_StateMachineState",
          "interval": 60000
       },
       {
@@ -498,7 +498,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_IceMaker0EnableStatus",
+         "name": "Erd_IceMaker0_EnableStatus",
          "interval": 60000
       },
       {
@@ -518,7 +518,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_TwistTrayIceMaker_OperationState",
+         "name": "Erd_IceMaker0_StateMachineState",
          "interval": 60000
       },
       {

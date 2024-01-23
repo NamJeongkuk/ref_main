@@ -20,6 +20,7 @@ enum
    FaultId_AmbientHumiditySensorIsInvalid = 9,
    FaultId_IceMaker0ThermistorIsInvalid = 10,
    FaultId_IceMaker1ThermistorIsInvalid = 12,
+   FaultId_IceMaker2ThermistorIsInvalid = 19,
    FaultId_FreezerEvapFanMissingFanFeedbackWhenFanIsRunning = 100,
    FaultId_FreezerEvapFanFeedbackPresentWhenFanIsOff = 101,
    FaultId_FreezerEvapFanCannotReachTargetRpm = 102,

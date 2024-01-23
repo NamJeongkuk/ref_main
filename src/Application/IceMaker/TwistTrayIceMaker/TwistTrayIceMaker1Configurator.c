@@ -39,8 +39,8 @@ static const SensorFilteringConfig_t sensorFilterConfig = {
    .sensorUnfilteredTemperatureInDegFx100Erd = Erd_TwistTrayIceMaker_UnfilteredTemperatureInDegFx100,
    .sensorFilteredTemperatureInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100,
    .sensorIsValidErd = Erd_TwistTrayIceMaker_ThermistorIsValid,
-   .sensorIsInvalidFaultErd = Erd_IceMaker0ThermistorIsInvalidFault,
-   .sensorDiscoveredErd = Erd_IceMaker1Present,
+   .sensorIsInvalidFaultErd = Erd_IceMaker1_ThermistorIsInvalidFault,
+   .sensorDiscoveredErd = Erd_IceMaker1_HasBeenDiscovered,
    .timerModuleErd = Erd_TimerModule
 };
 
@@ -147,7 +147,7 @@ static const OverrideArbiterConfiguration_t filteredTemperatureArbiterConfig = {
 
 static const TwistTrayIceMakerConfiguration_t twistTrayIceMakerConfig = {
    .highLevelStateErd = Erd_TwistTrayIceMaker_HighLevelState,
-   .operationStateErd = Erd_TwistTrayIceMaker_OperationState,
+   .fsmStateErd = Erd_IceMaker1_StateMachineState,
    .thermistorIsValidResolvedErd = Erd_TwistTrayIceMakerThermistor_IsValidResolved,
    .filteredTemperatureResolvedInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
    .testRequestErd = Erd_IceMaker1_TestRequest,
@@ -171,7 +171,7 @@ static const TwistTrayIceMakerConfiguration_t twistTrayIceMakerConfig = {
    .leftSideFreezerDoorStatusResolvedErd = Erd_LeftSideFreezerDoorStatusResolved,
    .dispensingInhibitedReasonErd = Erd_DispensingInhibitedReason,
    .iceMakerFillInhibitedReasonErd = Erd_IceMakerFillInhibitedReason,
-   .iceMakerFullStatusErd = Erd_IceMaker1FullStatus
+   .iceMakerFullStatusErd = Erd_IceMaker1_FullStatus
 };
 
 static const TwistTrayIceMakerPlugConfig_t config = {

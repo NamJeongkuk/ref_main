@@ -6,7 +6,7 @@
  */
 
 #include "AluminumMoldIceMaker.h"
-#include "AluminumMoldIceMakerHsmState.h"
+#include "IceMakerStateMachineState.h"
 #include "PersonalityParametricData.h"
 #include "WaterValveVotedState.h"
 #include "HeaterVotedState.h"
@@ -86,7 +86,7 @@ static AluminumMoldIceMaker_t *InstanceFromHsm(Hsm_t *hsm)
    return CONTAINER_OF(AluminumMoldIceMaker_t, _private.hsm, hsm);
 }
 
-static void UpdateHsmStateTo(AluminumMoldIceMaker_t *instance, AluminumMoldIceMakerHsmState_t state)
+static void UpdateHsmStateTo(AluminumMoldIceMaker_t *instance, IceMakerStateMachineState_t state)
 {
    DataModel_Write(
       instance->_private.dataModel,
@@ -756,7 +756,7 @@ static bool State_Global(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Hsm_Entry:
-         UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_Global);
+         UpdateHsmStateTo(instance, IceMakerStateMachineState_Global);
          break;
 
       case Signal_MoldThermistorIsInvalid:
@@ -797,7 +797,7 @@ static bool State_Freeze(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Hsm_Entry:
-         UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_Freeze);
+         UpdateHsmStateTo(instance, IceMakerStateMachineState_Freeze);
          VoteForIceMakerWaterValve(instance, OFF, Vote_DontCare);
          VoteForIceMakerHeater(instance, OFF, Vote_DontCare);
          VoteForIceMakerMotor(instance, OFF, Vote_DontCare);
@@ -850,7 +850,7 @@ static bool State_Harvest(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Hsm_Entry:
-         UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_Harvest);
+         UpdateHsmStateTo(instance, IceMakerStateMachineState_Harvest);
          VoteForFillTubeHeater(
             instance,
             instance->_private.iceMakerParametricData->harvestData.fillTubeHeaterDutyCyclePercentage);
@@ -905,7 +905,7 @@ static bool State_HarvestFix(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Hsm_Entry:
-         UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_HarvestFix);
+         UpdateHsmStateTo(instance, IceMakerStateMachineState_HarvestFix);
          SetSkipFillFlag(instance);
          StartMaxHarvestFixTimer(instance);
          SetMoldHeaterControlRequestForHarvestFix(instance);
@@ -961,7 +961,7 @@ static bool State_HarvestFault(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Hsm_Entry:
-         UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_HarvestFault);
+         UpdateHsmStateTo(instance, IceMakerStateMachineState_HarvestFault);
          ClearMoldHeaterControlRequest(instance);
          StartHarvestFaultMaxTimer(instance);
          // Fallthrough
@@ -1020,7 +1020,7 @@ static bool State_Fill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Hsm_Entry:
-         UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_Fill);
+         UpdateHsmStateTo(instance, IceMakerStateMachineState_Fill);
          VoteForIceMakerWaterValve(instance, ON, Vote_Care);
          VoteForIsolationWaterValve(instance, ON, Vote_Care);
          if(instance->_private.pauseFillMonitoring)
@@ -1089,7 +1089,7 @@ static bool State_IdleFill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Hsm_Entry:
-         UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_IdleFill);
+         UpdateHsmStateTo(instance, IceMakerStateMachineState_IdleFill);
          break;
 
       case Signal_DispensingInactive:
@@ -1112,7 +1112,7 @@ static bool State_ThermistorFault(Hsm_t *hsm, HsmSignal_t signal, const void *da
    switch(signal)
    {
       case Hsm_Entry:
-         UpdateHsmStateTo(instance, AluminumMoldIceMakerHsmState_ThermistorFault);
+         UpdateHsmStateTo(instance, IceMakerStateMachineState_ThermistorFault);
          VoteForIceMakerWaterValve(instance, OFF, Vote_DontCare);
          VoteForIsolationWaterValve(instance, OFF, Vote_DontCare);
          VoteForIceMakerHeater(instance, OFF, Vote_DontCare);

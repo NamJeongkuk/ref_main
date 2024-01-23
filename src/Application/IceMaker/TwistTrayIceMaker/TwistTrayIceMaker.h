@@ -14,25 +14,25 @@
 
 typedef struct
 {
-   Erd_t highLevelStateErd; // uint8_t
-   Erd_t operationStateErd; // uint8_t
+   Erd_t highLevelStateErd; // TwistTrayIceMakerHighLevelState_t
+   Erd_t fsmStateErd; // IceMakerStateMachineState_t
    Erd_t thermistorIsValidResolvedErd; // bool
-   Erd_t filteredTemperatureResolvedInDegFx100Erd; // int16_t
-   Erd_t testRequestErd; // uint8_t
-   Erd_t stopFillSignalErd; // uint8_t
+   Erd_t filteredTemperatureResolvedInDegFx100Erd; // TemperatureDegFx100_t
+   Erd_t testRequestErd; // IceMakerTestRequest_t
+   Erd_t stopFillSignalErd; // Signal_t
    Erd_t harvestCountIsReadyToHarvestErd; // bool
    Erd_t harvestCountCalculationRequestErd; // bool
-   Erd_t motorIceMakerVoteErd; // uint8_t vote
-   Erd_t waterValveIceMakerVoteErd; // uint8_t vote
-   Erd_t motorActionResultErd; // uint8_t
+   Erd_t motorIceMakerVoteErd; // TwistTrayIceMakerMotorVotedAction_t
+   Erd_t waterValveIceMakerVoteErd; // WaterValveVotedState_t
+   Erd_t motorActionResultErd; // TwistTrayIceMakerMotorActionResult_t
    Erd_t motorFaultActiveErd; // bool
-   Erd_t waterFillMonitoringRequestErd; // uint8_t
-   Erd_t isolationWaterValveVoteErd; // uint8_t vote
+   Erd_t waterFillMonitoringRequestErd; // IceMakerWaterFillMonitoringRequest_t
+   Erd_t isolationWaterValveVoteErd; // WaterValveVotedState_t
    Erd_t iceMakerEnabledResolvedErd; // bool
    Erd_t sabbathModeErd; // bool
    Erd_t enhancedSabbathModeErd; // bool
-   Erd_t freezerIceRateTriggerSignalErd; // uint8_t
-   Erd_t fillTubeHeaterVoteErd; // uint8_t
+   Erd_t freezerIceRateTriggerSignalErd; // Signal_t
+   Erd_t fillTubeHeaterVoteErd; // PercentageDutyCycleVote_t
    Erd_t coolingOffStatusErd; // bool
    Erd_t freezerIceRateIsActiveErd; // bool
    Erd_t dispensingRequestStatusErd; // DispensingRequestStatus_t
