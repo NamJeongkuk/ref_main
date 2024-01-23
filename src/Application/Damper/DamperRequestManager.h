@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef FRESHFOODDAMPERREQUESTMANAGER_H
-#define FRESHFOODDAMPERREQUESTMANAGER_H
+#ifndef DAMPERREQUESTMANAGER_H
+#define DAMPERREQUESTMANAGER_H
 
 #include "I_DataModel.h"
 #include "Fsm.h"
@@ -21,7 +21,7 @@ typedef struct
    Erd_t damperStepperMotorPositionRequestErd;
    Erd_t damperHomingRequestErd;
    Erd_t damperCurrentPositionErd;
-} FreshFoodDamperRequestManagerConfiguration_t;
+} DamperRequestManagerConfiguration_t;
 
 typedef struct
 {
@@ -31,19 +31,21 @@ typedef struct
       Fsm_t fsm;
       bool homingRequired;
       EventSubscription_t dataModelSubscription;
-      const FreshFoodDamperRequestManagerConfiguration_t *configuration;
-      const SingleDamperData_t *freshFoodDamperParametricData;
+      const DamperRequestManagerConfiguration_t *configuration;
+      const SingleDamperData_t *damperData;
    } _private;
-} FreshFoodDamperRequestManager_t;
+} DamperRequestManager_t;
 
 /*!
  * @param instance
  * @param dataModel
  * @param config
+ * @param singleDamperData
  */
-void FreshFoodDamperRequestManager_Init(
-   FreshFoodDamperRequestManager_t *instance,
+void DamperRequestManager_Init(
+   DamperRequestManager_t *instance,
    I_DataModel_t *dataModel,
-   const FreshFoodDamperRequestManagerConfiguration_t *config);
+   const DamperRequestManagerConfiguration_t *config,
+   const SingleDamperData_t *singleDamperData);
 
 #endif

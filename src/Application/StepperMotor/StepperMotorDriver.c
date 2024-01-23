@@ -11,15 +11,6 @@
 #include "StepperPositionRequest.h"
 #include "utils.h"
 
-enum
-{
-   AllOff,
-   Position1,
-   Position2,
-   Position3,
-   Position4
-};
-
 static void SetPinsToStates(StepperMotorDriver_t *instance, bool a, bool b, bool aBar, bool bBar)
 {
    GpioGroup_Write(instance->_private.gpioGroup, instance->_private.config->pins->motorDriveA, a);
@@ -28,33 +19,14 @@ static void SetPinsToStates(StepperMotorDriver_t *instance, bool a, bool b, bool
    GpioGroup_Write(instance->_private.gpioGroup, instance->_private.config->pins->motorDriveBBar, bBar);
 }
 
-static void SetPinsToPosition(StepperMotorDriver_t *instance, uint8_t position)
+static void SetPinsToPosition(StepperMotorDriver_t *instance, uint8_t subStepIndex)
 {
-   switch(position)
-   {
-      case AllOff:
-         SetPinsToStates(instance, OFF, OFF, OFF, OFF);
-         break;
-
-      case Position1:
-         SetPinsToStates(instance, ON, ON, OFF, OFF);
-         break;
-
-      case Position2:
-         SetPinsToStates(instance, OFF, ON, ON, OFF);
-         break;
-
-      case Position3:
-         SetPinsToStates(instance, OFF, OFF, ON, ON);
-         break;
-
-      case Position4:
-         SetPinsToStates(instance, ON, OFF, OFF, ON);
-         break;
-
-      default:
-         break;
-   }
+   SetPinsToStates(
+      instance,
+      instance->_private.config->subStepConfig->subSteps[subStepIndex].a,
+      instance->_private.config->subStepConfig->subSteps[subStepIndex].b,
+      instance->_private.config->subStepConfig->subSteps[subStepIndex].aBar,
+      instance->_private.config->subStepConfig->subSteps[subStepIndex].bBar);
 }
 
 static void ClearStepCountRequest(StepperMotorDriver_t *instance)
@@ -90,20 +62,25 @@ static void GetNextStep(StepperMotorDriver_t *instance)
 {
    if(instance->_private.directionToTurn == TurningDirection_Clockwise)
    {
-      instance->_private.currentStepPosition++;
+      if(instance->_private.currentSubStep < instance->_private.config->subStepConfig->numberOfSubSteps - 1)
+      {
+         instance->_private.currentSubStep++;
+      }
+      else
+      {
+         instance->_private.currentSubStep = 0;
+      }
    }
    else
    {
-      instance->_private.currentStepPosition--;
-   }
-
-   if(instance->_private.currentStepPosition < Position1)
-   {
-      instance->_private.currentStepPosition = Position4;
-   }
-   else if(instance->_private.currentStepPosition > Position4)
-   {
-      instance->_private.currentStepPosition = Position1;
+      if(instance->_private.currentSubStep > 0)
+      {
+         instance->_private.currentSubStep--;
+      }
+      else
+      {
+         instance->_private.currentSubStep = instance->_private.config->subStepConfig->numberOfSubSteps - 1;
+      }
    }
 }
 
@@ -112,7 +89,7 @@ static void MoveToNextStep(void *context)
    StepperMotorDriver_t *instance = context;
 
    GetNextStep(instance);
-   SetPinsToPosition(instance, instance->_private.currentStepPosition);
+   SetPinsToPosition(instance, instance->_private.currentSubStep);
    instance->_private.stepsToRun--;
 }
 
@@ -124,15 +101,15 @@ static void StepTimeChange(void *context, const void *args)
    if(instance->_private.stepsToRun == 0)
    {
       Event_Unsubscribe(
-         instance->_private.stepEvent,
-         &instance->_private.stepEventSubscription);
+         instance->_private.timeSourceEvent,
+         &instance->_private.timeSourceEventSubscription);
 
       DataModel_Subscribe(
          instance->_private.dataModel,
          instance->_private.config->stepperMotorPositionRequestErd,
          &instance->_private.erdChangeSubscription);
 
-      SetPinsToPosition(instance, AllOff);
+      SetPinsToStates(instance, OFF, OFF, OFF, OFF);
 
       DataModel_Write(
          instance->_private.dataModel,
@@ -141,7 +118,7 @@ static void StepTimeChange(void *context, const void *args)
 
       ClearStepCountRequest(instance);
    }
-   else if(instance->_private.countBetweenSteps < instance->_private.freshFoodDamperParametricData->delayBetweenStepEventsInHundredsOfMicroseconds)
+   else if(instance->_private.countBetweenSteps < *instance->_private.numberOfEventsBetweenSteps)
    {
       instance->_private.countBetweenSteps++;
    }
@@ -174,11 +151,11 @@ static void MotorControlEnableUpdated(void *context, const void *args)
 
          instance->_private.stepsToRun = stepperMotorPositionRequest.stepsToMove;
          instance->_private.directionToTurn = stepperMotorPositionRequest.direction;
-         SetPinsToPosition(instance, instance->_private.currentStepPosition);
+         SetPinsToPosition(instance, instance->_private.currentSubStep);
 
          Event_Subscribe(
-            instance->_private.stepEvent,
-            &instance->_private.stepEventSubscription);
+            instance->_private.timeSourceEvent,
+            &instance->_private.timeSourceEventSubscription);
       }
    }
 }
@@ -188,18 +165,19 @@ void StepperMotorDriver_Init(
    I_DataModel_t *dataModel,
    const StepperMotorDriverConfiguration_t *config,
    I_GpioGroup_t *gpioGroup,
-   I_Event_t *stepEvent)
+   I_Event_t *timeSourceEvent,
+   const uint8_t *numberOfEventsBetweenSteps)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
    instance->_private.gpioGroup = gpioGroup;
-   instance->_private.stepEvent = stepEvent;
-   instance->_private.currentStepPosition = Position1;
+   instance->_private.timeSourceEvent = timeSourceEvent;
+   instance->_private.currentSubStep = 0;
    instance->_private.stepsToRun = 0;
    instance->_private.countBetweenSteps = 0;
-   instance->_private.freshFoodDamperParametricData = PersonalityParametricData_Get(dataModel)->freshFoodDamperData;
+   instance->_private.numberOfEventsBetweenSteps = numberOfEventsBetweenSteps;
 
-   SetPinsToPosition(instance, AllOff);
+   SetPinsToStates(instance, OFF, OFF, OFF, OFF);
 
    EventSubscription_Init(
       &instance->_private.erdChangeSubscription,
@@ -220,7 +198,7 @@ void StepperMotorDriver_Init(
       &instance->_private.motorEnableSubscription);
 
    EventSubscription_Init(
-      &instance->_private.stepEventSubscription,
+      &instance->_private.timeSourceEventSubscription,
       instance,
       StepTimeChange);
 }

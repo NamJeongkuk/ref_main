@@ -7,9 +7,10 @@
 
 extern "C"
 {
-#include "FreshFoodDamperRequestManager.h"
+#include "DamperRequestManager.h"
 #include "SystemErds.h"
 #include "Constants_Binary.h"
+#include "PersonalityParametricData.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -30,27 +31,33 @@ enum
    StepsToHome = 1850
 };
 
-static const FreshFoodDamperRequestManagerConfiguration_t config = {
+static const DamperRequestManagerConfiguration_t config = {
    .damperPositionRequestResolvedVoteErd = Erd_FreshFoodDamperPosition_ResolvedVote,
    .damperStepperMotorPositionRequestErd = Erd_FreshFoodDamperStepperMotorPositionRequest,
    .damperHomingRequestErd = Erd_FreshFoodDamperHomingRequest,
    .damperCurrentPositionErd = Erd_FreshFoodDamperCurrentPosition
 };
 
-TEST_GROUP(FreshFoodDamperRequestManager)
+TEST_GROUP(DamperRequestManager)
 {
-   FreshFoodDamperRequestManager_t instance;
+   DamperRequestManager_t instance;
 
    ReferDataModel_TestDouble_t dataModelDouble;
+   I_DataModel_t *dataModel;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
+      dataModel = dataModelDouble.dataModel;
    }
 
    void TheModuleIsInitialized()
    {
-      FreshFoodDamperRequestManager_Init(&instance, dataModelDouble.dataModel, &config);
+      DamperRequestManager_Init(
+         &instance,
+         dataModel,
+         &config,
+         PersonalityParametricData_Get(dataModel)->freshFoodDamperData);
    }
 
    void GivenTheModuleIsInitializedAndHomingIsComplete()
@@ -62,7 +69,7 @@ TEST_GROUP(FreshFoodDamperRequestManager)
    void HomingErdIsSetTo(bool status)
    {
       DataModel_Write(
-         dataModelDouble.dataModel,
+         dataModel,
          Erd_FreshFoodDamperHomingRequest,
          &status);
    }
@@ -71,7 +78,7 @@ TEST_GROUP(FreshFoodDamperRequestManager)
    {
       bool actual;
       DataModel_Read(
-         dataModelDouble.dataModel,
+         dataModel,
          Erd_FreshFoodDamperHomingRequest,
          &actual);
       CHECK_EQUAL(expected, actual);
@@ -81,7 +88,7 @@ TEST_GROUP(FreshFoodDamperRequestManager)
    {
       StepperPositionRequest_t actual;
       DataModel_Read(
-         dataModelDouble.dataModel,
+         dataModel,
          Erd_FreshFoodDamperStepperMotorPositionRequest,
          &actual);
 
@@ -92,7 +99,7 @@ TEST_GROUP(FreshFoodDamperRequestManager)
    {
       StepperPositionRequest_t actual;
       DataModel_Read(
-         dataModelDouble.dataModel,
+         dataModel,
          Erd_FreshFoodDamperStepperMotorPositionRequest,
          &actual);
 
@@ -102,7 +109,7 @@ TEST_GROUP(FreshFoodDamperRequestManager)
    void SetHomingFlagFalse()
    {
       DataModel_Write(
-         dataModelDouble.dataModel,
+         dataModel,
          Erd_FreshFoodDamperHomingRequest,
          clear);
    }
@@ -111,13 +118,13 @@ TEST_GROUP(FreshFoodDamperRequestManager)
    {
       StepperPositionRequest_t position;
       DataModel_Read(
-         dataModelDouble.dataModel,
+         dataModel,
          Erd_FreshFoodDamperStepperMotorPositionRequest,
          &position);
 
       position.stepsToMove = 0;
       DataModel_Write(
-         dataModelDouble.dataModel,
+         dataModel,
          Erd_FreshFoodDamperStepperMotorPositionRequest,
          &position);
    }
@@ -134,7 +141,7 @@ TEST_GROUP(FreshFoodDamperRequestManager)
       damperRequestedPosition.care = true;
 
       DataModel_Write(
-         dataModelDouble.dataModel,
+         dataModel,
          Erd_FreshFoodDamperPosition_ResolvedVote,
          &damperRequestedPosition);
    }
@@ -143,13 +150,13 @@ TEST_GROUP(FreshFoodDamperRequestManager)
    {
       StepperPositionRequest_t position;
       DataModel_Read(
-         dataModelDouble.dataModel,
+         dataModel,
          Erd_FreshFoodDamperStepperMotorPositionRequest,
          &position);
 
       position.stepsToMove = 1;
       DataModel_Write(
-         dataModelDouble.dataModel,
+         dataModel,
          Erd_FreshFoodDamperStepperMotorPositionRequest,
          &position);
    }
@@ -158,7 +165,7 @@ TEST_GROUP(FreshFoodDamperRequestManager)
    {
       DamperPosition_t actual;
       DataModel_Read(
-         dataModelDouble.dataModel,
+         dataModel,
          Erd_FreshFoodDamperCurrentPosition,
          &actual);
 
@@ -168,18 +175,18 @@ TEST_GROUP(FreshFoodDamperRequestManager)
    void WriteTheCurrentPositionIs(DamperPosition_t position)
    {
       DataModel_Write(
-         dataModelDouble.dataModel,
+         dataModel,
          Erd_FreshFoodDamperCurrentPosition,
          &position);
    }
 };
 
-TEST(FreshFoodDamperRequestManager, ShouldInitializeTheModule)
+TEST(DamperRequestManager, ShouldInitializeTheModule)
 {
    TheModuleIsInitialized();
 }
 
-TEST(FreshFoodDamperRequestManager, ShouldRequestHomingStepsAndDirectionToCounterClockwiseOnInitialization)
+TEST(DamperRequestManager, ShouldRequestHomingStepsAndDirectionToCounterClockwiseOnInitialization)
 {
    Given TheModuleIsInitialized();
 
@@ -187,7 +194,7 @@ TEST(FreshFoodDamperRequestManager, ShouldRequestHomingStepsAndDirectionToCounte
    DirectionShouldBe(TurningDirection_Clockwise);
 }
 
-TEST(FreshFoodDamperRequestManager, ShouldSetMotorStepsToOpenAndDirectionToClockwiseWhenOpenPositionRequested)
+TEST(DamperRequestManager, ShouldSetMotorStepsToOpenAndDirectionToClockwiseWhenOpenPositionRequested)
 {
    Given TheRequestedPositionIs(DamperPosition_Closed);
    And TheModuleIsInitialized();
@@ -198,7 +205,7 @@ TEST(FreshFoodDamperRequestManager, ShouldSetMotorStepsToOpenAndDirectionToClock
    DirectionShouldBe(TurningDirection_CounterClockwise);
 }
 
-TEST(FreshFoodDamperRequestManager, ShouldSetMotorStepsToCloseAndDirectionToCounterClockwiseWhenClosedPositionRequested)
+TEST(DamperRequestManager, ShouldSetMotorStepsToCloseAndDirectionToCounterClockwiseWhenClosedPositionRequested)
 {
    GivenTheModuleIsInitializedAndHomingIsComplete();
    When TheRequestedPositionIs(DamperPosition_Closed);
@@ -207,7 +214,7 @@ TEST(FreshFoodDamperRequestManager, ShouldSetMotorStepsToCloseAndDirectionToCoun
    DirectionShouldBe(TurningDirection_Clockwise);
 }
 
-TEST(FreshFoodDamperRequestManager, ShouldHandleConsecutiveRequests)
+TEST(DamperRequestManager, ShouldHandleConsecutiveRequests)
 {
    GivenTheModuleIsInitializedAndHomingIsComplete();
    SetHomingFlagFalse();
@@ -219,7 +226,7 @@ TEST(FreshFoodDamperRequestManager, ShouldHandleConsecutiveRequests)
    DirectionShouldBe(TurningDirection_Clockwise);
 }
 
-TEST(FreshFoodDamperRequestManager, ShouldHandleLatestRequestThatOccurredWhileMoving)
+TEST(DamperRequestManager, ShouldHandleLatestRequestThatOccurredWhileMoving)
 {
    GivenTheModuleIsInitializedAndHomingIsComplete();
    SetHomingFlagFalse();
@@ -234,7 +241,7 @@ TEST(FreshFoodDamperRequestManager, ShouldHandleLatestRequestThatOccurredWhileMo
    DirectionShouldBe(TurningDirection_Clockwise);
 }
 
-TEST(FreshFoodDamperRequestManager, ShouldSetMotorStepsToHomeAndDirectionToCounterClockwiseWhenHomingIsRequested)
+TEST(DamperRequestManager, ShouldSetMotorStepsToHomeAndDirectionToCounterClockwiseWhenHomingIsRequested)
 {
    GivenTheModuleIsInitializedAndHomingIsComplete();
    And HomingErdIsSetTo(true);
@@ -246,7 +253,7 @@ TEST(FreshFoodDamperRequestManager, ShouldSetMotorStepsToHomeAndDirectionToCount
    HomingErdShouldBe(false);
 }
 
-TEST(FreshFoodDamperRequestManager, ShouldSetPositionToClosedAfterHoming)
+TEST(DamperRequestManager, ShouldSetPositionToClosedAfterHoming)
 {
    GivenTheModuleIsInitializedAndHomingIsComplete();
    And HomingErdIsSetTo(true);
@@ -259,7 +266,7 @@ TEST(FreshFoodDamperRequestManager, ShouldSetPositionToClosedAfterHoming)
    HomingErdShouldBe(false);
 }
 
-TEST(FreshFoodDamperRequestManager, ShouldOpenCloseThenOpenAgain)
+TEST(DamperRequestManager, ShouldOpenCloseThenOpenAgain)
 {
    GivenTheModuleIsInitializedAndHomingIsComplete();
    And TheRequestedPositionIs(DamperPosition_Open);
@@ -270,7 +277,7 @@ TEST(FreshFoodDamperRequestManager, ShouldOpenCloseThenOpenAgain)
    DirectionShouldBe(TurningDirection_CounterClockwise);
 }
 
-TEST(FreshFoodDamperRequestManager, ShouldChangeDamperStateAfterDamperCompletesMovement)
+TEST(DamperRequestManager, ShouldChangeDamperStateAfterDamperCompletesMovement)
 {
    GivenTheModuleIsInitializedAndHomingIsComplete();
 

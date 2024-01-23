@@ -9,6 +9,7 @@
 #include "DataSource_Gpio.h"
 #include "FreshFoodDamperMotorPlugin.h"
 #include "SystemErds.h"
+#include "Constants_Binary.h"
 
 static const StepperMotorPins_t damperPins = {
    .motorDriveA = Erd_BspGpio_MTR_DRV_00,
@@ -17,14 +18,27 @@ static const StepperMotorPins_t damperPins = {
    .motorDriveBBar = Erd_BspGpio_MTR_DRV_03
 };
 
+static const StepperMotorSubStep_t subSteps[] = {
+   { ON, ON, OFF, OFF },
+   { OFF, ON, ON, OFF },
+   { OFF, OFF, ON, ON },
+   { ON, OFF, OFF, ON }
+};
+
+static const StepperMotorSubStepConfiguration_t motorSubStepConfig = {
+   .subSteps = subSteps,
+   .numberOfSubSteps = NUM_ELEMENTS(subSteps)
+};
+
 static const StepperMotorDriverConfiguration_t driverConfig = {
    .stepperMotorPositionRequestErd = Erd_FreshFoodDamperStepperMotorPositionRequest,
    .motorControlRequestErd = Erd_FreshFoodDamperStepperMotorControlRequest,
    .motorEnableErd = Erd_FreshFoodDamperStepperMotorDriveEnable,
-   .pins = &damperPins
+   .pins = &damperPins,
+   .subStepConfig = &motorSubStepConfig
 };
 
-static const FreshFoodDamperRequestManagerConfiguration_t requestManagerConfig = {
+static const DamperRequestManagerConfiguration_t requestManagerConfig = {
    .damperPositionRequestResolvedVoteErd = Erd_FreshFoodDamperPosition_ResolvedVote,
    .damperStepperMotorPositionRequestErd = Erd_FreshFoodDamperStepperMotorPositionRequest,
    .damperHomingRequestErd = Erd_FreshFoodDamperHomingRequest,
@@ -104,12 +118,14 @@ void FreshFoodDamperMotorPlugin_Init(FreshFoodDamperMotorPlugin_t *instance, I_D
       dataModel,
       &driverConfig,
       DataModelErdPointerAccess_GetGpioGroup(dataModel, Erd_GpioGroupInterface),
-      (DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_FastTickInterrupt))->OnInterrupt);
+      (DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_FastTickInterrupt))->OnInterrupt,
+      &PersonalityParametricData_Get(dataModel)->freshFoodDamperData->delayBetweenStepEventsInHundredsOfMicroseconds);
 
-   FreshFoodDamperRequestManager_Init(
+   DamperRequestManager_Init(
       &instance->_private.damperRequestManager,
       dataModel,
-      &requestManagerConfig);
+      &requestManagerConfig,
+      PersonalityParametricData_Get(dataModel)->freshFoodDamperData);
 
    DamperFreezePrevention_Init(
       &instance->_private.damperFreezePrevention,
