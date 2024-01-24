@@ -35,28 +35,28 @@ static const FreezerIceRateHandlerConfig_t freezerIceRateHandlerConfig = {
 };
 
 static const SensorFilteringConfig_t sensorFilterConfig = {
-   .sensorAdcCountErd = Erd_TwistTrayIceMakerThermistor_AdcCount,
-   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_TwistTrayIceMaker_UnfilteredTemperatureInDegFx100,
-   .sensorFilteredTemperatureInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100,
-   .sensorIsValidErd = Erd_TwistTrayIceMaker_ThermistorIsValid,
-   .sensorIsInvalidFaultErd = Erd_IceMaker2_ThermistorIsInvalidFault,
+   .sensorAdcCountErd = Erd_IceMaker2_MoldThermistor_AdcCount,
+   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_IceMaker2_MoldThermistor_UnfilteredTemperatureInDegFx100,
+   .sensorFilteredTemperatureInDegFx100Erd = Erd_IceMaker2_MoldThermistor_FilteredTemperatureInDegFx100,
+   .sensorIsValidErd = Erd_IceMaker2_MoldThermistorIsValid,
+   .sensorIsInvalidFaultErd = Erd_IceMaker2ThermistorIsInvalidFault,
    .sensorDiscoveredErd = Erd_IceMaker2_HasBeenDiscovered,
    .timerModuleErd = Erd_TimerModule
 };
 
 static const Erd_t thermistorValidOverrideArbiterRequestErdList[] = {
-   Erd_TwistTrayIceMakerThermistor_IsValidOverrideRequest
+   Erd_IceMaker2_MoldThermistor_IsValidOverrideRequest
 };
 
 static const Erd_t thermistorValidValueErdList[] = {
-   Erd_TwistTrayIceMaker_ThermistorIsValid,
-   Erd_TwistTrayIceMakerThermistor_IsValidOverrideValue
+   Erd_IceMaker2_MoldThermistorIsValid,
+   Erd_IceMaker2_MoldThermistor_IsValidOverrideValue
 };
 
 static const OverrideArbiterConfiguration_t thermistorValidArbiterConfig = {
    thermistorValidOverrideArbiterRequestErdList,
    thermistorValidValueErdList,
-   Erd_TwistTrayIceMakerThermistor_IsValidResolved,
+   Erd_IceMaker2_MoldThermistor_IsValidResolved,
    NUM_ELEMENTS(thermistorValidOverrideArbiterRequestErdList)
 };
 
@@ -118,7 +118,7 @@ static const TwistTrayIceMakerMotorControllerConfig_t motorControllerConfig = {
 static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
    .harvestCountIsReadyToHarvestErd = Erd_IceMaker2_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_IceMaker2_HarvestCountCalculationRequest,
-   .moldFilteredTemperatureInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .moldFilteredTemperatureInDegFx100Erd = Erd_IceMaker2_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
    .moldFreezeIntegrationCountErd = Erd_IceMaker2_FreezeIntegrationCount,
    .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_IceMaker2_MinimumFreezeTimeCounterInMinutes
 };
@@ -130,26 +130,26 @@ static const TwistTrayIceMakerMotorControllerValueUpdaterConfig_t motorControlle
 };
 
 static const Erd_t filteredTemperatureOverrideRequestErdList[] = {
-   Erd_TwistTrayIceMaker_FilteredTemperatureOverrideRequest
+   Erd_IceMaker2_MoldThermistor_FilteredTemperatureOverrideRequest
 };
 
 static const Erd_t filteredTemperatureValueErdList[] = {
-   Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100,
-   Erd_TwistTrayIceMaker_FilteredTemperatureOverrideValueInDegFx100
+   Erd_IceMaker2_MoldThermistor_FilteredTemperatureInDegFx100,
+   Erd_IceMaker2_MoldThermistor_FilteredTemperatureOverrideValueInDegFx100
 };
 
 static const OverrideArbiterConfiguration_t filteredTemperatureArbiterConfig = {
    filteredTemperatureOverrideRequestErdList,
    filteredTemperatureValueErdList,
-   Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
+   Erd_IceMaker2_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
    NUM_ELEMENTS(filteredTemperatureOverrideRequestErdList)
 };
 
 static const TwistTrayIceMakerConfiguration_t twistTrayIceMakerConfig = {
    .highLevelStateErd = Erd_TwistTrayIceMaker_HighLevelState,
    .fsmStateErd = Erd_IceMaker2_StateMachineState,
-   .thermistorIsValidResolvedErd = Erd_TwistTrayIceMakerThermistor_IsValidResolved,
-   .filteredTemperatureResolvedInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .thermistorIsValidResolvedErd = Erd_IceMaker2_MoldThermistor_IsValidResolved,
+   .filteredTemperatureResolvedInDegFx100Erd = Erd_IceMaker2_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
    .testRequestErd = Erd_IceMaker2_TestRequest,
    .stopFillSignalErd = Erd_IceMaker2_StopFillSignal,
    .harvestCountIsReadyToHarvestErd = Erd_IceMaker2_HarvestCountIsReadyToHarvest,
@@ -195,7 +195,7 @@ static const TwistTrayIceMakerPlugConfig_t config = {
 void TwistTrayIceMaker2Configurator_Init(TwistTrayIceMakerConfigurator_t *instance, I_DataModel_t *dataModel)
 {
    const IceMakerSlotData_t *slotData = PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerSlots->slot2Data;
-   const SensorData_t *sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
+   const SensorDataSensorType_t *sensorData = PersonalityParametricData_Get(dataModel)->sensorData->iceMaker2MoldThermistor;
 
    TwistTrayIceMakerPlugin_Init(
       &instance->_private.plugin,
@@ -203,6 +203,7 @@ void TwistTrayIceMaker2Configurator_Init(TwistTrayIceMakerConfigurator_t *instan
       slotData->location,
       slotData->twistTrayData,
       sensorData,
+      &PersonalityParametricData_Get(dataModel)->sensorData->periodicUpdateRateInMs,
       slotData->freezerIceRateData,
       slotData->nonHarvestFillTubeHeaterData,
       &config);

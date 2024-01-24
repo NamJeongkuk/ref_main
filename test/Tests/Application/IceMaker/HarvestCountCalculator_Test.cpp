@@ -36,7 +36,7 @@ extern "C"
 static const HarvestCountCalculatorConfiguration_t config = {
    .harvestCountIsReadyToHarvestErd = Erd_IceMaker1_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_IceMaker1_HarvestCountCalculationRequest,
-   .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .moldFilteredTemperatureInDegFx100Erd = Erd_IceMaker1_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
    .moldFreezeIntegrationCountErd = Erd_IceMaker1_FreezeIntegrationCount,
    .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_IceMaker1_MinimumFreezeTimeCounterInMinutes,
 };
@@ -85,7 +85,7 @@ TEST_GROUP(HarvestCountCalculator)
 
    void GivenTheIceMakerTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100, &temperature);
+      DataModel_Write(dataModel, Erd_IceMaker1_MoldThermistor_FilteredTemperatureResolvedInDegFx100, &temperature);
    }
 
    void WhenTheIceMakerTemperatureIs(TemperatureDegFx100_t temperature)

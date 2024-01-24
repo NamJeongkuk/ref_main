@@ -32,14 +32,14 @@ static const AluminumMoldIceMakerConfig_t config = {
    .feelerArmMonitoringRequestErd = Erd_IceMaker0_FeelerArmMonitoringRequest,
    .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition,
    .harvestCountIsReadyToHarvestErd = Erd_IceMaker1_HarvestCountIsReadyToHarvest,
-   .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .moldFilteredTemperatureInDegFx100Erd = Erd_IceMaker1_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
    .iceMakerEnabledErd = Erd_IceMakerEnabledResolved,
    .sabbathModeErd = Erd_SabbathModeEnable,
    .fillTubeHeaterVoteErd = Erd_FillTubeHeater_AluminumMoldIceMakerVote,
    .moldHeaterControlRequestErd = Erd_IceMaker0_MoldHeaterControlRequest,
    .rakeCompletedRevolutionErd = Erd_IceMaker0_RakeCompletedRevolution,
-   .moldThermistorIsValidErd = Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved,
+   .moldThermistorIsValidErd = Erd_IceMaker1_MoldThermistor_IsValidResolved,
    .skipFillRequestErd = Erd_IceMaker0_SkipFillRequest,
    .rakeControlRequestErd = Erd_IceMaker0_RakeControlRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_AluminumMoldIceMakerVote,
@@ -273,7 +273,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       TemperatureDegFx100_t temperature = iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100;
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+         Erd_IceMaker1_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
          &temperature);
    }
 
@@ -287,7 +287,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       TemperatureDegFx100_t temperature = iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 1;
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+         Erd_IceMaker1_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
          &temperature);
    }
 
@@ -605,7 +605,7 @@ TEST_GROUP(AluminumMoldIceMaker)
 
    void GivenTheMoldThermistorIsValid()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved, set);
+      DataModel_Write(dataModel, Erd_IceMaker1_MoldThermistor_IsValidResolved, set);
    }
 
    void WhenMoldThermistorIsValid()
@@ -615,7 +615,7 @@ TEST_GROUP(AluminumMoldIceMaker)
 
    void GivenMoldThermistorIsInvalid()
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved, clear);
+      DataModel_Write(dataModel, Erd_IceMaker1_MoldThermistor_IsValidResolved, clear);
    }
 
    void WhenMoldThermistorIsInvalid()

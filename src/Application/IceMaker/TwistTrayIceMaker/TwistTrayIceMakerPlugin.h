@@ -79,7 +79,8 @@ void TwistTrayIceMakerPlugin_Init(
    I_DataModel_t *dataModel,
    IceMakerLocation_t location,
    const TwistTrayIceMakerData_t *twistTrayData,
-   const SensorData_t *sensorData,
+   const SensorDataSensorType_t *sensorData,
+   const uint16_t *sensorPeriodicUpdateRateInMs,
    const FreezerIceRateData_t *freezerIceRateData,
    const NonHarvestFillTubeHeaterData_t *nonHarvestFillTubeHeaterData,
    const TwistTrayIceMakerPlugConfig_t *config);

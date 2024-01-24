@@ -60,7 +60,7 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
    CHECK_EQUAL(*erd, Erd_DeliFan_Pwm);
 }
 
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForBackwallLightPwm)
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForBackWallLightPwm)
 {
    GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_FreshFoodBackWallLight_RampingPwm)");
 
@@ -76,7 +76,7 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
    CHECK_EQUAL(*erd, Erd_FreshFoodTopLight_RampingPwm);
 }
 
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForFeezerLightPwm)
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForFreezerLightPwm)
 {
    GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_FreezerTopLight_RampingPwm)");
 
@@ -84,12 +84,20 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
    CHECK_EQUAL(*erd, Erd_FreezerTopLight_RampingPwm);
 }
 
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMakerMoldThermistorAdcCount)
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMakerMold0ThermistorAdcCount)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_AluminumMoldIceMakerMoldThermistor_AdcCount)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMaker0_MoldThermistor_AdcCount)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_AluminumMoldIceMakerMoldThermistor_AdcCount);
+   CHECK_EQUAL(*erd, Erd_IceMaker0_MoldThermistor_AdcCount);
+}
+
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMakerMold1ThermistorAdcCount)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMaker1_MoldThermistor_AdcCount)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_IceMaker1_MoldThermistor_AdcCount);
 }
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceBoxThermistorAdcCount)

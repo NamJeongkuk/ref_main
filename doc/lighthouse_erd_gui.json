@@ -607,15 +607,15 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Aluminum Mold Ice Maker Filtered Temperature (DegF x100)",
-               "name": "Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100",
+               "displayName": "IM 1 Mold Thermistor Filtered Temperature (DegF x100)",
+               "name": "Erd_IceMaker1_MoldThermistor_FilteredTemperatureInDegFx100",
                "read": true,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
-               "displayName": "Twist Tray Ice Maker Filtered Temperature (DegF x100)",
-               "name": "Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100",
+               "displayName": "IM 0 Mold Thermistor Filtered Temperature (DegF x100)",
+               "name": "Erd_IceMaker0_MoldThermistor_FilteredTemperatureInDegFx100",
                "read": true,
                "interval": 1000000000
             }
@@ -633,8 +633,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "IM Filtered Temperature (DegF x100)",
-               "name": "Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100",
+               "displayName": "IM 1 Mold Thermistor Filtered Temperature (DegF x100)",
+               "name": "Erd_IceMaker1_MoldThermistor_FilteredTemperatureInDegFx100",
                "read": true,
                "interval": 1000000000
             },
@@ -757,8 +757,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Twist IM Filtered Temperature (DegF x100)",
-               "name": "Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100",
+               "displayName": "IM 0 Mold Thermistor Filtered Temperature (DegF x100)",
+               "name": "Erd_IceMaker0_MoldThermistor_FilteredTemperatureInDegFx100",
                "read": true,
                "interval": 1000000000
             },

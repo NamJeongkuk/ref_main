@@ -106,7 +106,11 @@ static void CalculateHarvestCount(void *context)
 
    if(iceMakerTemperature <= instance->_private.harvestCountCalculatorData->minimumFreezeTimeInitiationTemperatureInDegFx100)
    {
-      if(!TimerModule_IsRunning(DataModelErdPointerAccess_GetTimerModule(instance->_private.dataModel, Erd_TimerModule), &instance->_private.minimumFreezeTimer) &&
+      if(!TimerModule_IsRunning(
+            DataModelErdPointerAccess_GetTimerModule(
+               instance->_private.dataModel,
+               Erd_TimerModule),
+            &instance->_private.minimumFreezeTimer) &&
          !instance->_private.minimumFreezeTimeIsSatisfied)
       {
          StartMinimumFreezeTimer(instance);

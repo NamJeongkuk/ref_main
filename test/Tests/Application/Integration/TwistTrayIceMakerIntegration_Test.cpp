@@ -85,7 +85,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
 
    void GivenTheIceMakerThermistorAdcCountIs(AdcCounts_t count)
    {
-      DataModel_Write(dataModel, Erd_TwistTrayIceMakerThermistor_AdcCount, &count);
+      DataModel_Write(dataModel, Erd_IceMaker0_MoldThermistor_AdcCount, &count);
    }
 
    void WhenTheIceMakerThermistorAdcCountIs(AdcCounts_t count)
@@ -274,13 +274,13 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
 
    void WhenTheThermistorAdcCountsAre(AdcCounts_t adcCount)
    {
-      DataModel_Write(dataModel, Erd_TwistTrayIceMakerThermistor_AdcCount, &adcCount);
+      DataModel_Write(dataModel, Erd_IceMaker0_MoldThermistor_AdcCount, &adcCount);
    }
 
    void TwistTrayIceMakerThermistorShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_TwistTrayIceMakerThermistor_IsValidResolved, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker0_MoldThermistor_IsValidResolved, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -426,7 +426,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldInitializeInThermistorFaultStateIfTherm
    TwistTrayIceMakerThermistorShouldBe(Invalid);
 
    WhenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
-   After(sensorData->twistTrayIceMakerMoldThermistor->goodReadingCounterMax * sensorData->periodicUpdateRateInMs);
+   After(sensorData->iceMaker0MoldThermistor->goodReadingCounterMax * sensorData->periodicUpdateRateInMs);
 
    TwistTrayIceMakerThermistorShouldBe(Valid);
    HighLevelStateShouldBe(TwistTrayIceMakerHighLevelState_NormalRun);
@@ -799,7 +799,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldTransitionToHomingThenFreezeWhenIceMake
    WhenTheIceMakerBecomesDisabled();
    WhenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
 
-   After(sensorData->twistTrayIceMakerMoldThermistor->goodReadingCounterMax * sensorData->periodicUpdateRateInMs);
+   After(sensorData->iceMaker0MoldThermistor->goodReadingCounterMax * sensorData->periodicUpdateRateInMs);
    TwistTrayIceMakerThermistorShouldBe(Valid);
    HighLevelStateShouldBe(TwistTrayIceMakerHighLevelState_NormalRun);
    TwistTrayIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Homing);

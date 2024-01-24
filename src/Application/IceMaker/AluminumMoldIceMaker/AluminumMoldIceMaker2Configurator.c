@@ -25,14 +25,14 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .feelerArmMonitoringRequestErd = Erd_IceMaker0_FeelerArmMonitoringRequest,
    .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition,
    .harvestCountIsReadyToHarvestErd = Erd_IceMaker2_HarvestCountIsReadyToHarvest,
-   .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .moldFilteredTemperatureInDegFx100Erd = Erd_IceMaker2_MoldThermistor_FilteredTemperatureInDegFx100,
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
    .iceMakerEnabledErd = Erd_IceMakerEnabledResolved,
    .sabbathModeErd = Erd_SabbathModeEnable,
    .fillTubeHeaterVoteErd = Erd_FillTubeHeater_AluminumMoldIceMakerVote,
    .moldHeaterControlRequestErd = Erd_IceMaker0_MoldHeaterControlRequest,
    .rakeCompletedRevolutionErd = Erd_IceMaker0_RakeCompletedRevolution,
-   .moldThermistorIsValidErd = Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved,
+   .moldThermistorIsValidErd = Erd_IceMaker2_MoldThermistor_IsValidResolved,
    .skipFillRequestErd = Erd_IceMaker0_SkipFillRequest,
    .rakeControlRequestErd = Erd_IceMaker0_RakeControlRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_AluminumMoldIceMakerVote,
@@ -58,7 +58,7 @@ static const FeelerArmMonitorConfig_t feelerArmMonitorConfig = {
 static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {
    .harvestCountIsReadyToHarvestErd = Erd_IceMaker2_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_IceMaker2_HarvestCountCalculationRequest,
-   .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .moldFilteredTemperatureInDegFx100Erd = Erd_IceMaker2_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
    .moldFreezeIntegrationCountErd = Erd_IceMaker2_FreezeIntegrationCount,
    .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_IceMaker2_MinimumFreezeTimeCounterInMinutes
 };
@@ -158,16 +158,16 @@ static const ResolvedVoteRelayConnectorConfiguration_t rakeMotorDriverConfig = {
 static const IceMakerMoldHeaterControllerConfig_t heaterControllerConfig = {
    .moldHeaterControlRequestErd = Erd_IceMaker0_MoldHeaterControlRequest,
    .moldHeaterVoteErd = Erd_IceMaker0_HeaterRelay_IceMakerVote,
-   .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .moldFilteredTemperatureInDegFx100Erd = Erd_IceMaker2_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
    .timerModuleErd = Erd_TimerModule,
 };
 
 static const SensorFilteringConfig_t moldThermistorConfig = {
-   .sensorAdcCountErd = Erd_AluminumMoldIceMakerMoldThermistor_AdcCount,
-   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMakerMold_UnfilteredTemperatureInDegFx100,
-   .sensorFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100,
-   .sensorIsValidErd = Erd_AluminumMoldIceMakerMoldThermistorIsValid,
-   .sensorIsInvalidFaultErd = Erd_IceMaker2_ThermistorIsInvalidFault,
+   .sensorAdcCountErd = Erd_IceMaker2_MoldThermistor_AdcCount,
+   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_IceMaker2_MoldThermistor_UnfilteredTemperatureInDegFx100,
+   .sensorFilteredTemperatureInDegFx100Erd = Erd_IceMaker2_MoldThermistor_FilteredTemperatureInDegFx100,
+   .sensorIsValidErd = Erd_IceMaker2_MoldThermistorIsValid,
+   .sensorIsInvalidFaultErd = Erd_IceMaker2ThermistorIsInvalidFault,
    .sensorDiscoveredErd = Erd_IceMaker2_HasBeenDiscovered,
    .timerModuleErd = Erd_TimerModule
 };
@@ -186,18 +186,18 @@ static const ResolvedVoteRelayConnectorConfiguration_t waterValveRelayConnectorC
 };
 
 static const Erd_t filteredTemperatureOverrideRequestErdList[] = {
-   Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideRequest
+   Erd_IceMaker2_MoldThermistor_FilteredTemperatureOverrideRequest
 };
 
 static const Erd_t filteredTemperatureValueErdList[] = {
-   Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100,
-   Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100
+   Erd_IceMaker2_MoldThermistor_FilteredTemperatureInDegFx100,
+   Erd_IceMaker2_MoldThermistor_FilteredTemperatureOverrideValueInDegFx100
 };
 
 static const OverrideArbiterConfiguration_t filteredTemperatureArbiterConfig = {
    filteredTemperatureOverrideRequestErdList,
    filteredTemperatureValueErdList,
-   Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+   Erd_IceMaker2_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
    NUM_ELEMENTS(filteredTemperatureOverrideRequestErdList)
 };
 
@@ -207,18 +207,18 @@ static const ResolvedVoteRelayConnectorConfiguration_t heaterRelayConnectorConfi
 };
 
 static const Erd_t thermistorValidOverrideArbiterRequestErdList[] = {
-   Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideRequest
+   Erd_IceMaker2_MoldThermistor_IsValidOverrideRequest
 };
 
 static const Erd_t thermistorValidValueErdList[] = {
-   Erd_AluminumMoldIceMakerMoldThermistorIsValid,
-   Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideValue
+   Erd_IceMaker2_MoldThermistorIsValid,
+   Erd_IceMaker2_MoldThermistor_IsValidOverrideValue
 };
 
 static const OverrideArbiterConfiguration_t thermistorValidArbiterConfig = {
    thermistorValidOverrideArbiterRequestErdList,
    thermistorValidValueErdList,
-   Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved,
+   Erd_IceMaker2_MoldThermistor_IsValidResolved,
    NUM_ELEMENTS(thermistorValidOverrideArbiterRequestErdList)
 };
 
@@ -267,7 +267,7 @@ void AluminumMoldIceMaker2Configurator_Init(
    I_DataModel_t *dataModel)
 {
    const IceMakerSlotData_t *slotData = PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerSlots->slot2Data;
-   const SensorData_t *sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
+   const SensorDataSensorType_t *sensorData = PersonalityParametricData_Get(dataModel)->sensorData->iceMaker2MoldThermistor;
 
    AluminumMoldIceMakerPlugin_Init(
       &instance->_private.plugin,
@@ -275,6 +275,7 @@ void AluminumMoldIceMaker2Configurator_Init(
       slotData->location,
       slotData->aluminumMoldData,
       sensorData,
+      &PersonalityParametricData_Get(dataModel)->sensorData->periodicUpdateRateInMs,
       slotData->freezerIceRateData,
       slotData->nonHarvestFillTubeHeaterData,
       &config);

@@ -36,7 +36,7 @@ enum
 static const IceMakerMoldHeaterControllerConfig_t config = {
    .moldHeaterControlRequestErd = Erd_IceMaker0_MoldHeaterControlRequest,
    .moldHeaterVoteErd = Erd_IceMaker0_HeaterRelay_IceMakerVote,
-   .moldFilteredTemperatureInDegFx100Erd = Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .moldFilteredTemperatureInDegFx100Erd = Erd_IceMaker1_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
    .timerModuleErd = Erd_TimerModule,
 };
 
@@ -86,7 +86,7 @@ TEST_GROUP(IceMakerMoldHeaterController)
 
    void GivenIceMakerMoldTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100, &temperature);
+      DataModel_Write(dataModel, Erd_IceMaker1_MoldThermistor_FilteredTemperatureResolvedInDegFx100, &temperature);
    }
 
    void WhenTheIceMakerMoldTemperatureChangesTo(TemperatureDegFx100_t temperature)

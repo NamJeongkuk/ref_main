@@ -57,8 +57,8 @@ enum
 static const TwistTrayIceMakerConfiguration_t config = {
    .highLevelStateErd = Erd_TwistTrayIceMaker_HighLevelState,
    .fsmStateErd = Erd_IceMaker0_StateMachineState,
-   .thermistorIsValidResolvedErd = Erd_TwistTrayIceMakerThermistor_IsValidResolved,
-   .filteredTemperatureResolvedInDegFx100Erd = Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100,
+   .thermistorIsValidResolvedErd = Erd_IceMaker0_MoldThermistor_IsValidResolved,
+   .filteredTemperatureResolvedInDegFx100Erd = Erd_IceMaker0_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
    .testRequestErd = Erd_IceMaker0_TestRequest,
    .stopFillSignalErd = Erd_IceMaker0_StopFillSignal,
    .harvestCountIsReadyToHarvestErd = Erd_IceMaker0_HarvestCountIsReadyToHarvest,
@@ -181,8 +181,8 @@ TEST_GROUP(TwistTrayIceMaker)
 
    void GivenTheTemperatureIs(TemperatureDegFx100_t temperature)
    {
-      DataModel_Write(dataModel, Erd_TwistTrayIceMakerThermistor_IsValidResolved, set);
-      DataModel_Write(dataModel, Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100, &temperature);
+      DataModel_Write(dataModel, Erd_IceMaker0_MoldThermistor_IsValidResolved, set);
+      DataModel_Write(dataModel, Erd_IceMaker0_MoldThermistor_FilteredTemperatureResolvedInDegFx100, &temperature);
    }
 
    void WhenTheTemperatureIs(TemperatureDegFx100_t temperature)
@@ -194,7 +194,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_TwistTrayIceMakerThermistor_IsValidResolved,
+         Erd_IceMaker0_MoldThermistor_IsValidResolved,
          set);
    }
 
@@ -207,7 +207,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_TwistTrayIceMakerThermistor_IsValidResolved,
+         Erd_IceMaker0_MoldThermistor_IsValidResolved,
          clear);
    }
 

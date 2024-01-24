@@ -29,8 +29,10 @@ enum
    Active = true,
    Valid = true,
    InvalidAdcCount = 5375,
-   ValidAdcCount = 13967,
-   ValidHarvestAdcCount = 42494
+   ValidAdcCount = 43904,
+   ValidHarvestAdcCount = 42494,
+   AdcCountAboveMaximumHarvestTemperature = 47104,
+   AdcCountBelowMaximumHarvestTemperature = 50112
 };
 
 TEST_GROUP(AluminumMoldIceMakerIntegration)
@@ -41,6 +43,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    ResetReason_t resetReason;
    const AluminumMoldIceMakerData_t *iceMakerData;
    const IceMakerFillMonitorData_t *iceMakerFillMonitorData;
+   const SensorDataSensorType_t *moldThermistorData;
    TimerModule_TestDouble_t *timerModuleTestDouble;
    EventSubscription_t harvestCountIsReadyToHarvestSubscription;
    EventSubscription_t feelerArmIsReadyToHarvestSubscription;
@@ -54,6 +57,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
 
       iceMakerData = PersonalityParametricData_Get(dataModel)->iceMakerData->iceMakerSlots->slot1Data->aluminumMoldData;
       iceMakerFillMonitorData = iceMakerData->fillData.iceMakerFillMonitorData;
+      moldThermistorData = PersonalityParametricData_Get(dataModel)->sensorData->iceMaker1MoldThermistor;
    }
 
    void WhenApplicationHasBeenInitialized()
@@ -109,7 +113,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMakerMoldThermistor_AdcCount,
+         Erd_IceMaker1_MoldThermistor_AdcCount,
          &count);
    }
 
@@ -123,7 +127,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       AdcCounts_t actualCount;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerMoldThermistor_AdcCount,
+         Erd_IceMaker1_MoldThermistor_AdcCount,
          &actualCount);
 
       CHECK_EQUAL(expectedCount, actualCount);
@@ -134,7 +138,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       bool actualState;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerMoldThermistorIsValid,
+         Erd_IceMaker1_MoldThermistorIsValid,
          &actualState);
 
       CHECK_EQUAL(expectedState, actualState);
@@ -142,15 +146,13 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
 
    void WhenTheMoldThermistorIsInvalid()
    {
+      AdcCounts_t invalidCount = InvalidAdcCount;
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideRequest,
-         set);
+         Erd_IceMaker1_MoldThermistor_AdcCount,
+         &invalidCount);
 
-      DataModel_Write(
-         dataModel,
-         Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideValue,
-         clear);
+      After(moldThermistorData->badReadingCounterMax * MSEC_PER_SEC);
    }
 
    void GivenTheMoldThermistorIsInvalid()
@@ -160,15 +162,13 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
 
    void WhenTheMoldThermistorIsValid()
    {
+      AdcCounts_t validCount = ValidAdcCount;
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideRequest,
-         set);
+         Erd_IceMaker1_MoldThermistor_AdcCount,
+         &validCount);
 
-      DataModel_Write(
-         dataModel,
-         Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideValue,
-         set);
+      After(moldThermistorData->badReadingCounterMax * MSEC_PER_SEC);
    }
 
    void GivenTheMoldThermistorIsValid()
@@ -236,18 +236,6 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       CHECK_EQUAL(expectedState, actualState);
    }
 
-   void IceMakerHeaterShouldVote(HeaterState_t expectedState, Vote_t expectedVoteCare)
-   {
-      HeaterVotedState_t actualVote;
-      DataModel_Read(
-         dataModel,
-         Erd_IceMaker0_HeaterRelay_IceMakerVote,
-         &actualVote);
-
-      CHECK_EQUAL(expectedState, actualVote.state);
-      CHECK_EQUAL(expectedVoteCare, actualVote.care);
-   }
-
    void IceMakerHeaterRelayShouldBe(bool expectedState)
    {
       bool actualState;
@@ -291,7 +279,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100,
+         Erd_IceMaker1_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
          &temperature);
    }
 
@@ -639,16 +627,11 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
 
    void WhenTheIceMakerMoldTemperatureIsAboveMaximumHarvestAndBelowFreezeIntegrationTemperature()
    {
-      TemperatureDegFx100_t temperature = iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 + 1;
+      AdcCounts_t count = AdcCountAboveMaximumHarvestTemperature;
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideRequest,
-         set);
-
-      DataModel_Write(
-         dataModel,
-         Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100,
-         &temperature);
+         Erd_IceMaker1_MoldThermistor_AdcCount,
+         &count);
    }
 
    void GivenTheIceMakerMoldTemperatureIsAboveMaximumHarvestAndBelowFreezeIntegrationTemperature()
@@ -658,17 +641,11 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
 
    void WhenTheIceMakerMoldTemperatureIsBelowMaximumHarvestTemperature()
    {
-      TemperatureDegFx100_t temperature = iceMakerData->freezeData.maximumHarvestTemperatureInDegFx100 - 100;
-
+      AdcCounts_t count = AdcCountBelowMaximumHarvestTemperature;
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideRequest,
-         set);
-
-      DataModel_Write(
-         dataModel,
-         Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100,
-         &temperature);
+         Erd_IceMaker1_MoldThermistor_AdcCount,
+         &count);
    }
 
    void GivenTheIceMakerMoldTemperatureIsBelowMaximumHarvestTemperature()
@@ -1005,14 +982,16 @@ TEST(AluminumMoldIceMakerIntegration, ShouldNotTransitionFromFreezeToHarvestUnti
 
    HarvestCountIsReadyToHarvestShouldChangeTo(Inactive);
    WhenTheIceMakerMoldTemperatureIsBelowMaximumHarvestTemperature();
+
+   After(MSEC_PER_SEC);
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Harvest);
 }
 
 TEST(AluminumMoldIceMakerIntegration, ShouldNotTransitionFromFreezeToHarvestUntilBucketIsNotFullForMinimumExtensionTime)
 {
-   GivenTheIceMakerMoldTemperatureIsBelowMaximumHarvestTemperature();
    GivenTheApplicationHasBeenInitializedAndEntersState(IceMakerStateMachineState_Freeze);
    GivenFeelerArmIsReadyToHarvestSubscriptionIsInitializedAndSubscribedTo();
+   GivenTheIceMakerMoldTemperatureIsBelowMaximumHarvestTemperature();
    GivenTheHarvestCountIsReadyToHarvest();
 
    TheFeelerArmReadyToEnterHarvestShouldBe(Inactive);
@@ -1033,11 +1012,20 @@ TEST(AluminumMoldIceMakerIntegration, ShouldNotTransitionFromFreezeToHarvestUnti
 
 TEST(AluminumMoldIceMakerIntegration, ShouldTransitionFromFreezeToHarvestIfIceMakerMoldTemperaturesIsBelowMaximumHarvestTemperatureAndMinimumFreezeTimeIsElapsed)
 {
-   GivenTheIceMakerMoldTemperatureIsBelowMaximumHarvestTemperature();
-   GivenFeelerArmIsReadyToEnterHarvest();
+   GivenTheApplicationHasBeenInitializedAndEntersState(IceMakerStateMachineState_Freeze);
 
-   WhenApplicationHasBeenInitializedAndEntersState(IceMakerStateMachineState_Freeze);
-   After(iceMakerData->freezeData.harvestCountCalculatorData->minimumFreezeTimeInMinutes * MSEC_PER_MIN);
+   WhenTheFeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
+   After(iceMakerData->freezeData.minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN);
+
+   WhenTheIceMakerMoldTemperatureIsBelowMaximumHarvestTemperature();
+
+   After(
+      iceMakerData->freezeData.harvestCountCalculatorData->minimumFreezeTimeInMinutes * MSEC_PER_MIN -
+      iceMakerData->freezeData.minimumFeelerArmExtensionTimeInMinutes * MSEC_PER_MIN -
+      1);
+   AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Freeze);
+
+   After(1);
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Harvest);
 }
 
@@ -1337,9 +1325,9 @@ TEST(AluminumMoldIceMakerIntegration, ShouldTurnOffWaterValveAfterFillFinishes)
 TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToThermistorFaultWhenFillFinishesWhileMoldThermistorIsInvalid)
 {
    GivenIceMakerIsInFillState();
-   GivenTheMoldThermistorIsInvalid();
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Fill);
 
+   WhenTheMoldThermistorIsInvalid();
    WhenFillStops();
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_ThermistorFault);
 }

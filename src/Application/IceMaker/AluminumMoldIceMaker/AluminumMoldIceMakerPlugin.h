@@ -98,7 +98,8 @@ void AluminumMoldIceMakerPlugin_Init(
    I_DataModel_t *dataModel,
    IceMakerLocation_t iceMakerLocation,
    const AluminumMoldIceMakerData_t *aluminumMoldData,
-   const SensorData_t *sensorData,
+   const SensorDataSensorType_t *sensorData,
+   const uint16_t *sensorPeriodicUpdateRateInMs,
    const FreezerIceRateData_t *freezerIceRateData,
    const NonHarvestFillTubeHeaterData_t *nonHarvestFillTubeHeaterData,
    const AluminumMoldIceMakerPluginConfig_t *config);

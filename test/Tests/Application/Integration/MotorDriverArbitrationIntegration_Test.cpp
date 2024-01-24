@@ -87,7 +87,7 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
    void TwistTrayIceMakerThermistorShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_ThermistorIsValid, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker0_MoldThermistorIsValid, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -102,7 +102,7 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
 
    void GivenTheIceMakerThermistorAdcCountIs(AdcCounts_t count)
    {
-      DataModel_Write(dataModel, Erd_TwistTrayIceMakerThermistor_AdcCount, &count);
+      DataModel_Write(dataModel, Erd_IceMaker0_MoldThermistor_AdcCount, &count);
    }
 
    void GivenTheIceMakerIsEnabled()

@@ -1206,50 +1206,50 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold Ice Maker Thermistor Is Valid Override Value",
-          "name": "Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideValue",
+          "displayName": "IceMaker1 Mold Thermistor Is Valid Override Value",
+          "name": "Erd_IceMaker1_MoldThermistor_IsValidOverrideValue",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold Ice Maker Thermistor Is Valid Override Request",
-          "name": "Erd_AluminumMoldIceMakerMoldThermistor_IsValidOverrideRequest",
+          "displayName": "IceMaker1 Mold Thermistor Is Valid Override Request",
+          "name": "Erd_IceMaker1_MoldThermistor_IsValidOverrideRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold Ice Maker Thermistor Is Valid Resolved",
-          "name": "Erd_AluminumMoldIceMakerMoldThermistor_IsValidResolved",
+          "displayName": "IceMaker1 Mold Thermistor Is Valid Resolved",
+          "name": "Erd_IceMaker1_MoldThermistor_IsValidResolved",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Filtered Temperature Override Request",
-          "name": "Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideRequest",
+          "displayName": "IceMaker1 Mold Thermistor Filtered Temperature Override Request",
+          "name": "Erd_IceMaker1_MoldThermistor_FilteredTemperatureOverrideRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Filtered Temperature Override Value",
-          "name": "Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100",
+          "displayName": "IceMaker1 Mold Thermistor Filtered Temperature Override Value",
+          "name": "Erd_IceMaker1_MoldThermistor_FilteredTemperatureOverrideValueInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Filtered Temperature Resolved",
-          "name": "Erd_AluminumMoldIceMaker_FilteredTemperatureResolvedInDegFx100",
+          "displayName": "IceMaker1 Mold Thermistor Filtered Temperature Resolved",
+          "name": "Erd_IceMaker1_MoldThermistor_FilteredTemperatureResolvedInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "F012 Ice Maker 1 Thermistor Is Invalid",
-          "name": "Erd_IceMaker1_ThermistorIsInvalidFault",
+          "name": "Erd_IceMaker1ThermistorIsInvalidFault",
           "read": true,
           "write": true
         },
@@ -1276,71 +1276,71 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Thermistor Is Valid Override Value",
-          "name": "Erd_TwistTrayIceMakerThermistor_IsValidOverrideValue",
+          "displayName": "IceMaker0 Mold Thermistor Is Valid Override Value",
+          "name": "Erd_IceMaker0_MoldThermistor_IsValidOverrideValue",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Thermistor Is Valid Override Request",
-          "name": "Erd_TwistTrayIceMakerThermistor_IsValidOverrideRequest",
+          "displayName": "IceMaker0 Mold Thermistor Is Valid Override Request",
+          "name": "Erd_IceMaker0_MoldThermistor_IsValidOverrideRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Thermistor Is Valid Resolved",
-          "name": "Erd_TwistTrayIceMakerThermistor_IsValidResolved",
+          "displayName": "IceMaker0 Mold Thermistor Is Valid Resolved",
+          "name": "Erd_IceMaker0_MoldThermistor_IsValidResolved",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker ADC Count",
-          "name": "Erd_TwistTrayIceMakerThermistor_AdcCount",
+          "displayName": "IceMaker0 Mold Thermistor ADC Count",
+          "name": "Erd_IceMaker0_MoldThermistor_AdcCount",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Unfiltered Temperature in DegFx100",
-          "name": "Erd_TwistTrayIceMaker_UnfilteredTemperatureInDegFx100",
+          "displayName": "IceMaker0 Mold Thermistor Unfiltered Temperature in DegFx100",
+          "name": "Erd_IceMaker0_MoldThermistor_UnfilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Filtered Temperature in DegFx100",
-          "name": "Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100",
+          "displayName": "IceMaker0 Mold Thermistor Filtered Temperature in DegFx100",
+          "name": "Erd_IceMaker0_MoldThermistor_FilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Filtered Temperature Override Request",
-          "name": "Erd_TwistTrayIceMaker_FilteredTemperatureOverrideRequest",
+          "displayName": "IceMaker0 Mold Thermistor Filtered Temperature Override Request",
+          "name": "Erd_IceMaker0_MoldThermistor_FilteredTemperatureOverrideRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Filtered Temperature Override Value",
-          "name": "Erd_TwistTrayIceMaker_FilteredTemperatureOverrideValueInDegFx100",
+          "displayName": "IceMaker0 Mold Thermistor Filtered Temperature Override Value",
+          "name": "Erd_IceMaker0_MoldThermistor_FilteredTemperatureOverrideValueInDegFx100",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Filtered Temperature Resolved",
-          "name": "Erd_TwistTrayIceMaker_FilteredTemperatureResolvedInDegFx100",
+          "displayName": "IceMaker0 Mold Thermistor Filtered Temperature Resolved",
+          "name": "Erd_IceMaker0_MoldThermistor_FilteredTemperatureResolvedInDegFx100",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
           "displayName": "F010 Ice Maker 0 Thermistor Is Invalid",
-          "name": "Erd_IceMaker0_ThermistorIsInvalidFault",
+          "name": "Erd_IceMaker0ThermistorIsInvalidFault",
           "read": true,
           "write": true
         },
@@ -2330,8 +2330,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold ice maker filtered temperature in degFx100",
-          "name": "Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100",
+          "displayName": "IceMaker1 Mold Thermistor filtered temperature in degFx100",
+          "name": "Erd_IceMaker1_MoldThermistor_FilteredTemperatureInDegFx100",
           "read": true,
           "write": true
         },
@@ -2650,15 +2650,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Thermistor Is Valid",
-          "name": "Erd_TwistTrayIceMaker_ThermistorIsValid",
+          "displayName": "IceMaker0 Mold Thermistor Thermistor Is Valid",
+          "name": "Erd_IceMaker0_MoldThermistorIsValid",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Thermistor Filtered Temperature In DegFx100",
-          "name": "Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100",
+          "displayName": "IceMaker0 Mold Thermistor Thermistor Filtered Temperature In DegFx100",
+          "name": "Erd_IceMaker0_MoldThermistor_FilteredTemperatureInDegFx100",
           "read": true,
           "write": false
         },

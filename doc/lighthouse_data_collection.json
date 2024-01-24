@@ -453,7 +453,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_AluminumMoldIceMakerMold_FilteredTemperatureInDegFx100",
+         "name": "Erd_IceMaker1_MoldThermistor_FilteredTemperatureInDegFx100",
          "interval": 60000
       },
       {
@@ -548,7 +548,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_TwistTrayIceMaker_FilteredTemperatureInDegFx100",
+         "name": "Erd_IceMaker0_MoldThermistor_FilteredTemperatureInDegFx100",
          "interval": 60000
       },
       {

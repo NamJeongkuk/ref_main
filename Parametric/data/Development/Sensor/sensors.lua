@@ -7,7 +7,8 @@ return sensors({
   ambient_thermistor = import("../Sensor/sensorTypes/ambient_thermistor.lua"),
   ambient_humidity_sensor = import("../Sensor/sensorTypes/ambient_humidity_sensor.lua"),
   convertible_compartment_evap_thermistor = import("../Sensor/sensorTypes/convertible_compartment_evap_thermistor.lua"),
-  aluminum_ice_maker_mold_thermistor = import("../Sensor/sensorTypes/aluminum_ice_maker_mold_thermistor.lua"),
-  twist_tray_ice_maker_thermistor = import("../Sensor/sensorTypes/twist_tray_ice_maker_thermistor.lua"),
+  ice_maker_0_mold_thermistor = import("../Sensor/sensorTypes/ice_maker_0_mold_thermistor.lua"),
+  ice_maker_1_mold_thermistor = import("../Sensor/sensorTypes/ice_maker_1_mold_thermistor.lua"),
+  ice_maker_2_mold_thermistor = import("../Sensor/sensorTypes/ice_maker_2_mold_thermistor.lua"),
   periodic_update_rate_in_msec = 1000
 })

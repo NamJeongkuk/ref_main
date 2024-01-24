@@ -19,8 +19,9 @@ describe('Sensors', function()
       ambient_thermistor = TypedString('sensor_type', 'ambient_thermistor'),
       ambient_humidity_sensor = TypedString('humidity_sensor_type', 'ambient_humidity_sensor'),
       convertible_compartment_evap_thermistor = TypedString('sensor_type', 'convertible_compartment_evap_thermistor'),
-      aluminum_ice_maker_mold_thermistor = TypedString('sensor_type', 'aluminum_ice_maker_mold_thermistor'),
-      twist_tray_ice_maker_thermistor = TypedString('sensor_type', 'twist_tray_ice_maker_thermistor'),
+      ice_maker_0_mold_thermistor = TypedString('sensor_type', 'ice_maker_0_mold_thermistor'),
+      ice_maker_1_mold_thermistor = TypedString('sensor_type', 'ice_maker_1_mold_thermistor'),
+      ice_maker_2_mold_thermistor = TypedString('sensor_type', 'ice_maker_2_mold_thermistor'),
       periodic_update_rate_in_msec = 1000
     }, overrides or {})
   end
@@ -104,7 +105,7 @@ describe('Sensors', function()
       }))
     end)
 
-    should_fail_with('aluminum_ice_maker_mold_thermistor must be a typed string with type sensor_type, but is a number', function()
+    should_fail_with('ice_maker_0_mold_thermistor must be a typed string with type sensor_type, but is a number', function()
       sensors(generate_config({
         freezer_cabinet_thermistor = TypedString('sensor_type', 'freezer_cabinet_thermistor'),
         fresh_food_cabinet_thermistor = TypedString('sensor_type','fresh_food_cabinet_thermistor'),
@@ -113,7 +114,33 @@ describe('Sensors', function()
         convertible_compartment_cabinet_thermistor = TypedString('convertible_compartment_sensor_type', 'convertible_compartment_cabinet_thermistor'),
         ambient_thermistor = TypedString('sensor_type', 'ambient_thermistor'),
         convertible_compartment_evap_thermistor = TypedString('sensor_type', 'convertible_compartment_evap_thermistor'),
-        aluminum_ice_maker_mold_thermistor = -1
+        ice_maker_0_mold_thermistor = -1
+      }))
+    end)
+
+    should_fail_with('ice_maker_1_mold_thermistor must be a typed string with type sensor_type, but is a number', function()
+      sensors(generate_config({
+        freezer_cabinet_thermistor = TypedString('sensor_type', 'freezer_cabinet_thermistor'),
+        fresh_food_cabinet_thermistor = TypedString('sensor_type','fresh_food_cabinet_thermistor'),
+        freezer_evap_thermistor = TypedString('sensor_type', 'freezer_evap_thermistor'),
+        fresh_food_evap_thermistor = TypedString('sensor_type', 'fresh_food_evap_thermistor'),
+        convertible_compartment_cabinet_thermistor = TypedString('convertible_compartment_sensor_type', 'convertible_compartment_cabinet_thermistor'),
+        ambient_thermistor = TypedString('sensor_type', 'ambient_thermistor'),
+        convertible_compartment_evap_thermistor = TypedString('sensor_type', 'convertible_compartment_evap_thermistor'),
+        ice_maker_1_mold_thermistor = -1
+      }))
+    end)
+
+    should_fail_with('ice_maker_2_mold_thermistor must be a typed string with type sensor_type, but is a number', function()
+      sensors(generate_config({
+        freezer_cabinet_thermistor = TypedString('sensor_type', 'freezer_cabinet_thermistor'),
+        fresh_food_cabinet_thermistor = TypedString('sensor_type','fresh_food_cabinet_thermistor'),
+        freezer_evap_thermistor = TypedString('sensor_type', 'freezer_evap_thermistor'),
+        fresh_food_evap_thermistor = TypedString('sensor_type', 'fresh_food_evap_thermistor'),
+        convertible_compartment_cabinet_thermistor = TypedString('convertible_compartment_sensor_type', 'convertible_compartment_cabinet_thermistor'),
+        ambient_thermistor = TypedString('sensor_type', 'ambient_thermistor'),
+        convertible_compartment_evap_thermistor = TypedString('sensor_type', 'convertible_compartment_evap_thermistor'),
+        ice_maker_2_mold_thermistor = -1
       }))
     end)
   end)
@@ -137,8 +164,9 @@ describe('Sensors', function()
           pointer(ambient_thermistor),
           pointer(ambient_humidity_sensor),
           pointer(convertible_compartment_evap_thermistor),
-          pointer(aluminum_ice_maker_mold_thermistor),
-          pointer(twist_tray_ice_maker_thermistor),
+          pointer(ice_maker_0_mold_thermistor),
+          pointer(ice_maker_1_mold_thermistor),
+          pointer(ice_maker_2_mold_thermistor),
           u16(1000)
       )
     ]])

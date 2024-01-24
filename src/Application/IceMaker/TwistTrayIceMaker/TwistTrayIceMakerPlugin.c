@@ -15,7 +15,8 @@ void TwistTrayIceMakerPlugin_Init(
    I_DataModel_t *dataModel,
    IceMakerLocation_t location,
    const TwistTrayIceMakerData_t *twistTrayData,
-   const SensorData_t *sensorData,
+   const SensorDataSensorType_t *sensorData,
+   const uint16_t *sensorPeriodicUpdateRateInMs,
    const FreezerIceRateData_t *freezerIceRateData,
    const NonHarvestFillTubeHeaterData_t *nonHarvestFillTubeHeaterData,
    const TwistTrayIceMakerPlugConfig_t *config)
@@ -24,8 +25,8 @@ void TwistTrayIceMakerPlugin_Init(
       &instance->_private.sensorFilter,
       dataModel,
       config->sensorFilterConfig,
-      sensorData->twistTrayIceMakerMoldThermistor,
-      sensorData->periodicUpdateRateInMs);
+      sensorData,
+      *sensorPeriodicUpdateRateInMs);
 
    OverrideArbiter_Init(
       &instance->_private.twistTrayIceMakerThermistorIsValidOverrideArbiter,

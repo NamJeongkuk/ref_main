@@ -32,8 +32,8 @@ describe("HarvestCountCalculator", () => {
    };
 
    const providedThatTheIceMakerMoldTemperatureIs = async (temperature) => {
-      await rockhopper.write("Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideRequest", true);
-      await rockhopper.write("Erd_AluminumMoldIceMaker_FilteredTemperatureOverrideValueInDegFx100", temperature);
+      await rockhopper.write("Erd_IceMaker1_MoldThermistor_FilteredTemperatureOverrideRequest", true);
+      await rockhopper.write("Erd_IceMaker1_MoldThermistor_FilteredTemperatureOverrideValueInDegFx100", temperature);
    };
 
    const providedThatTheCountCalculationRequestIs = async (request) => {

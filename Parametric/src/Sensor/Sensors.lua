@@ -19,8 +19,9 @@ return function(core)
         pointer(config.ambient_thermistor),
         pointer(config.ambient_humidity_sensor),
         pointer(config.convertible_compartment_evap_thermistor),
-        pointer(config.aluminum_ice_maker_mold_thermistor),
-        pointer(config.twist_tray_ice_maker_thermistor),
+        pointer(config.ice_maker_0_mold_thermistor),
+        pointer(config.ice_maker_1_mold_thermistor),
+        pointer(config.ice_maker_2_mold_thermistor),
         u16(config.periodic_update_rate_in_msec)
       )
     )
@@ -38,8 +39,9 @@ return function(core)
         ambient_thermistor = { constraint.typed_string('sensor_type') },
         ambient_humidity_sensor = { constraint.typed_string('humidity_sensor_type') },
         convertible_compartment_evap_thermistor = { constraint.typed_string('sensor_type') },
-        aluminum_ice_maker_mold_thermistor = { constraint.typed_string('sensor_type') },
-        twist_tray_ice_maker_thermistor = { constraint.typed_string('sensor_type') },
+        ice_maker_0_mold_thermistor = { constraint.typed_string('sensor_type') },
+        ice_maker_1_mold_thermistor = { constraint.typed_string('sensor_type') },
+        ice_maker_2_mold_thermistor = { constraint.typed_string('sensor_type') },
         periodic_update_rate_in_msec = { constraint.u16 }
       })
 
