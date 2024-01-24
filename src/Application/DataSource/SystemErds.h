@@ -136,6 +136,7 @@
 #include "VolumeInOuncesX100.h"
 #include "RfidFaultHandler.h"
 #include "NonVolatileUsageMonitor.h"
+#include "RecessLightOnRequest.h"
 #include "IceMakerStateMachineState.h"
 
 // clang-format off
@@ -586,6 +587,9 @@ enum
    ENTRY(Erd_ServiceModeTestNumberMaximum,                  0x123B, ServiceModeTestNumber_t,                            Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_ServiceModeTestNumberRequest,                  0x123C, ServiceModeTestRequest_t,                           Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_ServiceModeTestNumberStatus,                   0x123D, ServiceModeTestStatus_t,                            Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   \
+   ENTRY(Erd_RecessLightOnRequest,                          0x1255, RecessLightOnRequest_t,                             Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_RecessLightOnStatus,                           0x1256, bool,                                               Swap_No,  Io_None, Sub_N, NvUserSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
    \
    ENTRY(Erd_ServiceDiagnosticsEntityLocation,              0xE000, Erd_t,                                              Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \

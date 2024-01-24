@@ -20,6 +20,7 @@
    ENTRY(Erd_IceMaker2_EnableRequest, Erd_IceMaker2_EnableStatus)                                       \
    ENTRY(Erd_CoolingOffRequest, Erd_CoolingOffStatus)                                                 \
    ENTRY(Erd_PresenceSensedActivatesRecessLightRequest, Erd_PresenceSensedActivatesRecessLightStatus) \
+   ENTRY(Erd_RecessLightOnRequest, Erd_RecessLightOnStatus) \
 
 #define EXPAND_AS_REQUEST_STATUS_ERD_PAIRS( _requestErd, _statusErd) \
 { .requestErd = _requestErd, .statusErd = _statusErd },
