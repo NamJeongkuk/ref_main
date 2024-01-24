@@ -35,6 +35,7 @@
 #include "FilterData.h"
 #include "WaterValveFlowRate.h"
 #include "CabinetTemperatureExceededData.h"
+#include "PlatformData.h"
 
 enum
 {
@@ -43,6 +44,7 @@ enum
 
 typedef struct
 {
+   const PlatformData_t *platformData;
    const RefrigeratorModel_t *refrigeratorModelData;
    const DefrostData_t *defrostData;
    const EnhancedSabbathData_t *enhancedSabbathData;

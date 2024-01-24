@@ -10,6 +10,7 @@ return function(core)
     return TypedString(
       { 'parametric_personality' },
       structure(
+        pointer(config.platform),
         pointer(config.refrigerator_model),
         pointer(config.defrost),
         pointer(config.enhanced_sabbath),
@@ -42,6 +43,7 @@ return function(core)
 
   return function(config)
     validate_arguments(config, {
+      platform = { constraint.typed_string('platform') },
       refrigerator_model = { constraint.typed_string('refrigerator_model') },
       defrost = { constraint.typed_string('defrost') },
       enhanced_sabbath = { constraint.typed_string('enhanced_sabbath') },

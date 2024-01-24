@@ -92,6 +92,7 @@ SRC_DIRS:=\
   src/Application/ParametricData \
   src/Application/Plugins \
   src/Application/Pulldown \
+  src/Application/Platform \
   src/Application/RecessHeater \
   src/Application/RequestStatusUpdater \
   src/Application/RfidCommunication \

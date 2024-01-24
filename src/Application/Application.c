@@ -44,7 +44,8 @@ void Application_Init(
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
    PeriodicNvUpdaterPlugin_Init(&instance->_private.periodicNvUpdaterPlugin, dataModel);
 
-   SideBySideConfigurationPlugin_Init(&instance->_private.platformConfigurations.sideBySidePlugin, dataModel);
+   PlatformPlugin_Init(&instance->_private.platformPlugin, dataModel);
+
    SnackModePlugin_Init(dataModel);
    SoundLevelPlugin_Init(&instance->_private.soundLevelPlugin, dataModel);
 

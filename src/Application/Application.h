@@ -14,7 +14,6 @@
 #include "Input_StackUsageCalculator.h"
 #include "ApplianceApiResetDiagnostics.h"
 #include "PeriodicNvUpdaterPlugin.h"
-#include "SideBySideConfigurationPlugin.h"
 #include "ShiftOffsetCalculatorCommonPlugin.h"
 #include "WaterFilterPlugin.h"
 #include "BroadcastResetPlugin.h"
@@ -23,16 +22,12 @@
 #include "FaultMonitorPlugin.h"
 #include "BoardFeaturesToApplianceApiFeaturesUpdaterPlugin.h"
 #include "NonVolatileUsageMonitorPlugin.h"
+#include "PlatformPlugin.h"
 
 typedef struct
 {
    struct
    {
-      union
-      {
-         SideBySideConfigurationPlugin_t sideBySidePlugin;
-      } platformConfigurations;
-
       I_DataModel_t *dataModel;
       HeartbeatLedPlugin_t heartbeatLedPlugin;
       TimerModuleDiagnostics_t timerModuleDiagnostics;
@@ -46,6 +41,7 @@ typedef struct
       FaultMonitorPlugin_t faultMonitorPlugin;
       BoardFeaturesToApplianceApiFeaturesUpdaterPlugin_t boardFeaturesToApplianceFeaturesPlugin;
       NonVolatileUsageMonitorPlugin_t nvUsageMonitorPlugin;
+      PlatformPlugin_t platformPlugin;
    } _private;
 } Application_t;
 
