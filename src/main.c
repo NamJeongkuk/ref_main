@@ -171,6 +171,18 @@ int main(void)
       timerModule,
       &bootLoopDefenderConfiguration);
 
+   UlTestsPlugin_Init(
+      &ulTestsPlugin,
+      timerModule,
+      resetAction,
+      Crc16Calculator_Rx2xx_Init(ContextProtector_Rx2xx_GetInstance()),
+      Header_GetImageHeader(ImageType_Application),
+      RomCheckErrorEnabled,
+      UlTestsRunPeriodInMSec,
+      UlTestsWatchdogTimeoutInMSec,
+      BytesToCrcPerRomCheck,
+      watchdogKickAction);
+
    EepromStack_Init(timerModule);
    PersonalityEepromStack_Init(timerModule);
 
@@ -261,18 +273,6 @@ int main(void)
    UpdateBuildInfo(
       dataModel,
       Header_GetImageHeader(ImageType_Application));
-
-   UlTestsPlugin_Init(
-      &ulTestsPlugin,
-      timerModule,
-      resetAction,
-      Crc16Calculator_Rx2xx_Init(ContextProtector_Rx2xx_GetInstance()),
-      Header_GetImageHeader(ImageType_Application),
-      RomCheckErrorEnabled,
-      UlTestsRunPeriodInMSec,
-      UlTestsWatchdogTimeoutInMSec,
-      BytesToCrcPerRomCheck,
-      watchdogKickAction);
 
    SetReadyToEnterBootLoader(dataModel);
 
