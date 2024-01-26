@@ -601,57 +601,65 @@ TEST(RfidCommunicationController, ShouldStopReadRequestTimerWhenTransitioningFro
    After(rfidFilterUpdateRateData->doorOpenFilterReadFrequencyInSeconds * MSEC_PER_SEC);
 }
 
-TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultAfterReceivingReadFailure)
+TEST(RfidCommunicationController, ShouldNotRequestToSetTagAuthenticationFailedFaultAfterReceivingReadFailureWhileInDoorOpenState)
 {
    GivenInitialization();
+
+   NothingShouldHappen();
+   WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure, FaultRequestMockOverride_Enabled);
+}
+
+TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultAfterReceivingReadFailureWhileInDoorsJustClosedState)
+{
+   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
 
    ShouldSendFaultRequestWithTagAuthenticationFailedFault(SET, SignalCount_1);
    WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure, FaultRequestMockOverride_Enabled);
 }
 
-TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultWhenReceivingAReadBeforeWriteFailure)
+TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultWhenReceivingAReadBeforeWriteFailureWhileInDoorsJustClosedState)
 {
-   GivenInitialization();
+   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
 
    ShouldSendFaultRequestWithTagAuthenticationFailedFault(SET, SignalCount_1);
    WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadBeforeWriteFailure, FaultRequestMockOverride_Enabled);
 }
 
-TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultWhenReceivingAReadAfterWriteFailure)
+TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultWhenReceivingAReadAfterWriteFailureWhileInDoorsJustClosedState)
 {
-   GivenInitialization();
+   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
 
    ShouldSendFaultRequestWithTagAuthenticationFailedFault(SET, SignalCount_1);
    WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadAfterWriteFailure, FaultRequestMockOverride_Enabled);
 }
 
-TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultAfterReceivingEepromWriteFailure)
+TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultAfterReceivingEepromWriteFailureWhileInDoorsJustClosedState)
 {
-   GivenInitialization();
+   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
 
    ShouldSendFaultRequestWithTagAuthenticationFailedFault(SET, SignalCount_1);
    WhenAnRfidMessageIsSentWithResult(ReadWriteResult_EepromWriteFailure, FaultRequestMockOverride_Enabled);
 }
 
-TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultWhenReceivingAUidMismatch)
+TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultWhenReceivingAUidMismatchWhileInDoorsJustClosedState)
 {
-   GivenInitialization();
+   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
 
    ShouldSendFaultRequestWithTagAuthenticationFailedFault(SET, SignalCount_1);
    WhenAnRfidMessageIsSentWithResult(ReadWriteResult_UidMismatch, FaultRequestMockOverride_Enabled);
 }
 
-TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultWhenReceivingATagUidIsInvalid)
+TEST(RfidCommunicationController, ShouldRequestToSetTagAuthenticationFailedFaultWhenReceivingATagUidIsInvalidWhileInDoorsJustClosedState)
 {
-   GivenInitialization();
+   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
 
    ShouldSendFaultRequestWithTagAuthenticationFailedFault(SET, SignalCount_1);
    WhenAnRfidMessageIsSentWithResult(ReadWriteResult_TagUidIsInvalid, FaultRequestMockOverride_Enabled);
 }
 
-TEST(RfidCommunicationController, ShouldRequestToClearTagAuthenticationFailedFaultAfterReceivingASuccessfulRfidFilterRead)
+TEST(RfidCommunicationController, ShouldRequestToClearTagAuthenticationFailedFaultAfterReceivingASuccessfulRfidFilterReadWhileInDoorsJustClosedState)
 {
-   GivenInitialization();
+   GivenTheRfidCommunicationControllerIsInAllFreshFoodDoorsJustClosedState();
 
    ShouldSendFaultRequestWithTagAuthenticationFailedFault(SET, SignalCount_1);
    WhenAnRfidMessageIsSentWithResult(ReadWriteResult_ReadFailure, FaultRequestMockOverride_Enabled);

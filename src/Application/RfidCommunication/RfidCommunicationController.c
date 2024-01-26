@@ -616,7 +616,10 @@ static void OnDataModelChange(void *context, const void *_args)
       }
       else if(ReadWriteResultIsAFailure(readWriteResult))
       {
-         RequestTagAuthenticationFailedFault(instance, SET);
+         if(AllFreshFoodDoorsAreClosed(instance))
+         {
+            RequestTagAuthenticationFailedFault(instance, SET);
+         }
 
          ReadWriteResultIsAReadFailure(readWriteResult) ? 
             Hsm_SendSignal(&instance->_private.hsm, Signal_ReadFailure, NULL) : 
