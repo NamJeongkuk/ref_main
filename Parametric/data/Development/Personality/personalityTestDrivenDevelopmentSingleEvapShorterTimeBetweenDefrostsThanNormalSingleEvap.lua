@@ -1,5 +1,4 @@
 return personality({
-  platform = import("../Platform/side_by_side_platform.lua"),
   refrigerator_model = import("../RefrigeratorModel/refrigerator_model.lua"),
   defrost = import("../Defrost/single_evaporator_defrost_shorter_time_between_defrosts_than_normal_single_evap.lua"),
   enhanced_sabbath = import("../EnhancedSabbath/enhanced_sabbath_number_of_fresh_food_defrosts_zero.lua"),

@@ -11,9 +11,9 @@
 
 void PlatformPlugin_Init(PlatformPlugin_t *instance, I_DataModel_t *dataModel)
 {
-   const PlatformData_t *platformData = PersonalityParametricData_Get(dataModel)->platformData;
+   const RefrigeratorModel_t *refrigeratorModel = PersonalityParametricData_Get(dataModel)->refrigeratorModelData;
 
-   if(platformData->type == PlatformType_SideBySide)
+   if(refrigeratorModel->refrigeratorModelType == RefrigeratorModelType_SideBySide)
    {
       SideBySideConfigurationPlugin_Init(&instance->_private.platformConfigurations.sideBySidePlugin, dataModel);
    }
