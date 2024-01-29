@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef AMBIENTTEMPERATUREPLUGIN_H
-#define AMBIENTTEMPERATUREPLUGIN_H
+#ifndef AMBIENTTEMPERATUREANDHUMIDITYPLUGIN_H
+#define AMBIENTTEMPERATUREANDHUMIDITYPLUGIN_H
 
 #include "I_DataModel.h"
 #include "OverrideArbiter.h"
@@ -25,13 +25,13 @@ typedef struct
    ExternalFilteredSensorResolver_t externalFilteredAmbientTemperatureSensorResolver;
    ExternalFilteredSensorResolver_t externalFilteredAmbientHumiditySensorResolver;
    AmbientTemperatureAverage_t ambientTemperatureAverage;
-} AmbientTemperaturePlugin_t;
+} AmbientTemperatureAndHumidityPlugin_t;
 
 /*!
- * Initialize Ambient Temperature Plugin
+ * Initialize Ambient Temperature and Humidity Plugin
  * @param instance
  * @param dataModel
  */
-void AmbientTemperatureAndHumidityPlugin_Init(AmbientTemperaturePlugin_t *instance, I_DataModel_t *dataModel);
+void AmbientTemperatureAndHumidityPlugin_Init(AmbientTemperatureAndHumidityPlugin_t *instance, I_DataModel_t *dataModel);
 
 #endif

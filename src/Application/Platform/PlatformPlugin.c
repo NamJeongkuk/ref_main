@@ -17,6 +17,10 @@ void PlatformPlugin_Init(PlatformPlugin_t *instance, I_DataModel_t *dataModel)
    {
       SideBySideConfigurationPlugin_Init(&instance->_private.platformConfigurations.sideBySidePlugin, dataModel);
    }
+   else if(refrigeratorModel->refrigeratorModelType == RefrigeratorModelType_ConvertibleDrawerDoubleDrawerBottomFreezer)
+   {
+      FourDoorConfigurationPlugin_Init(&instance->_private.platformConfigurations.fourDoorPlugin, dataModel);
+   }
    else
    {
       uassert(!"Platform not supported");

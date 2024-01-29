@@ -9,6 +9,7 @@
 #define PLATFORMPLUGIN_H
 
 #include "SideBySideConfigurationPlugin.h"
+#include "FourDoorConfigurationPlugin.h"
 #include "I_DataModel.h"
 
 typedef struct
@@ -18,6 +19,7 @@ typedef struct
       union
       {
          SideBySideConfigurationPlugin_t sideBySidePlugin;
+         FourDoorConfigurationPlugin_t fourDoorPlugin;
       } platformConfigurations;
    } _private;
 } PlatformPlugin_t;

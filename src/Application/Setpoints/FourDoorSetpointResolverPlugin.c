@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "SideBySideSetpointResolverPlugin.h"
+#include "FourDoorSetpointResolverPlugin.h"
 #include "SystemErds.h"
 #include "ErdResolver.h"
 #include "Constants_Binary.h"
@@ -72,8 +72,8 @@ static const ColdestOfSetpointVotesConfiguration_t coldestOfFreshFoodSetpointsCo
    .coldestSetpointWinningVoteErd = Erd_FreshFoodSetpoint_ColdestSetpointWinningVote
 };
 
-void SideBySideSetpointResolverPlugin_Init(
-   SideBySideSetpointResolverPlugin_t *instance,
+void FourDoorSetpointResolverPlugin_Init(
+   FourDoorSetpointResolverPlugin_t *instance, 
    I_DataModel_t *dataModel)
 {
    ColdestOfSetpointVotes_Init(

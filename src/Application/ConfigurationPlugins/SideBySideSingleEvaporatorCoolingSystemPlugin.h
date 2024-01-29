@@ -37,7 +37,7 @@ typedef struct
       SideBySideSetpointPlugin_t sideBySideSetpointPlugin;
       ValvePlugin_t valvePlugin;
       SideBySideFanPlugin_t sideBySideFanPlugin;
-      AmbientTemperaturePlugin_t ambientTemperaturePlugin;
+      AmbientTemperatureAndHumidityPlugin_t ambientTemperatureAndHumidityPlugin;
       SideBySideParallelMotorControlPlugin_t sideBySideParallelMotorControlPlugin;
       CoolingSystemRequestHandler_t coolingSystemRequestHandler;
       SideBySideSingleEvaporatorLoadOffDoorOpenPlugin_t sideBySideSingleEvaporatorLoadOffDoorOpenPlugin;

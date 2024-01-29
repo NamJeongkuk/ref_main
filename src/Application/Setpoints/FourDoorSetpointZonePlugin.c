@@ -5,7 +5,7 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "SideBySideSetpointZonePlugin.h"
+#include "FourDoorSetpointZonePlugin.h"
 #include "Constants_Binary.h"
 #include "SystemErds.h"
 
@@ -21,7 +21,7 @@ static const SetpointZoneResolverConfig_t freshFoodSetpointZoneResolverConfig = 
    .setpointZoneTemperatureBoundsErd = Erd_FreshFoodSetpoint_TemperatureBounds
 };
 
-void SideBySideSetpointZonePlugin_Init(SideBySideSetpointZonePlugin_t *instance, I_DataModel_t *dataModel)
+void FourDoorSetpointZonePlugin_Init(FourDoorSetpointZonePlugin_t *instance, I_DataModel_t *dataModel)
 {
    const SetpointData_t *setpointParametricData = PersonalityParametricData_Get(dataModel)->setpointData;
    SetpointZoneTemperatureBounds_t freezerTemperatureBounds = {

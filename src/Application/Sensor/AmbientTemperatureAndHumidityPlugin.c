@@ -114,7 +114,7 @@ static const SensorFilteringConfig_t humiditySensorFilteringConfig = {
    .timerModuleErd = Erd_TimerModule
 };
 
-void AmbientTemperatureAndHumidityPlugin_Init(AmbientTemperaturePlugin_t *instance, I_DataModel_t *dataModel)
+void AmbientTemperatureAndHumidityPlugin_Init(AmbientTemperatureAndHumidityPlugin_t *instance, I_DataModel_t *dataModel)
 {
    const SensorData_t *sensorData = PersonalityParametricData_Get(dataModel)->sensorData;
 
