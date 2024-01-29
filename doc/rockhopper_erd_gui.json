@@ -661,8 +661,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold Ice Maker Water Valve Resolved Vote",
-          "name": "Erd_AluminumMoldIceMakerWaterValve_ResolvedVote",
+          "displayName": "IceMaker0 Water Valve Resolved Vote",
+          "name": "Erd_IceMaker0_WaterValve_ResolvedVote",
           "read": true,
           "write": true
         },
@@ -2407,15 +2407,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold Ice maker water valve - ice maker vote",
-          "name": "Erd_AluminumMoldIceMakerWaterValve_IceMakerVote",
+          "displayName": "IceMaker0 water valve - ice maker vote",
+          "name": "Erd_IceMaker0_WaterValve_IceMakerVote",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Isolation water valve aluminum mold ice maker vote",
-          "name": "Erd_IsolationWaterValve_AluminumMoldIceMakerVote",
+          "displayName": "Isolation water valve - ice maker0 vote",
+          "name": "Erd_IsolationWaterValve_IceMaker0Vote",
           "read": true,
           "write": false
         },
@@ -2470,57 +2470,57 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Rake Motor Resolved Vote",
-          "name": "Erd_AluminumMoldIceMakerRakeMotor_ResolvedVote",
+          "displayName": "IceMaker0 Rake Motor Resolved Vote",
+          "name": "Erd_IceMaker0_RakeMotor_ResolvedVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Rake Motor Winning Vote ERD",
-          "name": "Erd_AluminumMoldIceMakerRakeMotor_WinningVoteErd",
+          "displayName": "IceMaker0 Rake Motor Winning Vote ERD",
+          "name": "Erd_IceMaker0_RakeMotor_WinningVoteErd",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Rake Motor Factory Vote",
-          "name": "Erd_AluminumMoldIceMakerRakeMotor_FactoryVote",
+          "displayName": "IceMaker0 Rake Motor Factory Vote",
+          "name": "Erd_IceMaker0_RakeMotor_FactoryVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold IceMaker Rake Motor IceMaker Vote",
-          "name": "Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote",
+          "displayName": "IceMaker0 Rake Motor IceMaker Vote",
+          "name": "Erd_IceMaker0_RakeMotor_IceMakerVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fill Tube Heater Resolved Vote",
-          "name": "Erd_FillTubeHeater_ResolvedVote",
+          "displayName": "IceMaker0 Fill Tube Heater Resolved Vote",
+          "name": "Erd_IceMaker0_FillTubeHeater_ResolvedVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fill Tube Heater Winning Vote ERD",
-          "name": "Erd_FillTubeHeater_WinningVoteErd",
+          "displayName": "IceMaker0 Fill Tube Heater Winning Vote ERD",
+          "name": "Erd_IceMaker0_FillTubeHeater_WinningVoteErd",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fill Tube Heater Aluminum Mold IceMaker Vote",
-          "name": "Erd_FillTubeHeater_AluminumMoldIceMakerVote",
+          "displayName": "IceMaker0 Fill Tube Heater IceMaker Vote",
+          "name": "Erd_IceMaker0_FillTubeHeater_IceMakerVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fill Tube Heater Non Harvest Vote",
-          "name": "Erd_FillTubeHeater_NonHarvestVote",
+          "displayName": "IceMaker0 Fill Tube Heater Non Harvest Vote",
+          "name": "Erd_IceMaker0_FillTubeHeater_NonHarvestVote",
           "read": true,
           "write": true
         },
@@ -2629,15 +2629,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Motor Ice Maker Vote",
-          "name": "Erd_TwistTrayIceMakerMotor_IceMakerVote",
+          "displayName": "IceMaker0 Twist Motor Ice Maker Vote",
+          "name": "Erd_IceMaker0_TwistMotor_IceMakerVote",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Water Valve Ice Maker Vote",
-          "name": "Erd_TwistTrayIceMakerWaterValve_IceMakerVote",
+          "displayName": "IceMaker0 Water Valve Ice Maker Vote",
+          "name": "Erd_IceMaker0_WaterValve_IceMakerVote",
           "read": true,
           "write": false
         },
@@ -2786,36 +2786,29 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Fill Tube Heater Winning Vote ERD",
-          "name": "Erd_FillTubeHeater_WinningVoteErd",
+          "displayName": "IceMaker0 Fill Tube Heater Winning Vote ERD",
+          "name": "Erd_IceMaker0_FillTubeHeater_WinningVoteErd",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fill Tube Heater Factory Vote",
-          "name": "Erd_FillTubeHeater_FactoryVote",
+          "displayName": "IceMaker0 Fill Tube Heater Factory Vote",
+          "name": "Erd_IceMaker0_FillTubeHeater_FactoryVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fill Tube Heater Aluminum Mold Ice Maker Vote",
-          "name": "Erd_FillTubeHeater_AluminumMoldIceMakerVote",
+          "displayName": "IceMaker0 Fill Tube Heater Ice Maker Vote",
+          "name": "Erd_IceMaker0_FillTubeHeater_IceMakerVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fill Tube Heater Twist Tray Ice Maker Vote",
-          "name": "Erd_FillTubeHeater_TwistTrayIceMakerVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Fill Tube Heater Non Harvest Vote",
-          "name": "Erd_FillTubeHeater_NonHarvestVote",
+          "displayName": "IceMaker0 Fill Tube Heater Non Harvest Vote",
+          "name": "Erd_IceMaker0_FillTubeHeater_NonHarvestVote",
           "read": true,
           "write": true
         }

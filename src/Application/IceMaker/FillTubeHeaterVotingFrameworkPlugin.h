@@ -8,7 +8,6 @@
 #ifndef FILLTUBEHEATERVOTINGFRAMEWORKPLUGIN_H
 #define FILLTUBEHEATERVOTINGFRAMEWORKPLUGIN_H
 
-#include "ErdResolver.h"
 #include "I_DataModel.h"
 #include "SoftPwm.h"
 #include "PercentageDutyCycleVoteToPwmDutyCycleConverter.h"
@@ -19,7 +18,6 @@ typedef struct
 {
    struct
    {
-      ErdResolver_t fillTubeHeaterErdResolver;
       PercentageDutyCycleVoteToPwmDutyCycleConverter_t dutyCycleToPercentageCalculator;
       NonHarvestFillTubeHeaterControl_t nonHarvestFillTubeHeaterControl;
    } _private;
@@ -29,10 +27,14 @@ typedef struct
  * @param instance
  * @param dataModel
  * @param nonHarvestFillTubeHeaterData
+ * @param dutyCycleToPercentageCalculatorConfig
+ * @param nonHarvestFillTubeHeaterControlConfig
  */
 void FillTubeHeaterVotingFrameworkPlugin_Init(
    FillTubeHeaterVotingFrameworkPlugin_t *instance,
    I_DataModel_t *dataModel,
-   const NonHarvestFillTubeHeaterData_t *nonHarvestFillTubeHeaterData);
+   const NonHarvestFillTubeHeaterData_t *nonHarvestFillTubeHeaterData,
+   const PercentageDutyCycleVoteToPwmDutyCycleConverterConfig_t *dutyCycleToPercentageCalculatorConfig,
+   const NonHarvestFillTubeHeaterControlConfig_t *nonHarvestFillTubeHeaterControlConfig);
 
 #endif

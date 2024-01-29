@@ -423,7 +423,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_FillTubeHeater_WinningVoteErd",
+         "name": "Erd_IceMaker0_FillTubeHeater_WinningVoteErd",
          "interval": 60000
       },
       {
@@ -463,7 +463,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_AluminumMoldIceMakerRakeMotor_ResolvedVote",
+         "name": "Erd_IceMaker0_RakeMotor_ResolvedVote",
          "interval": 60000
       },
       {
@@ -478,7 +478,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_AluminumMoldIceMakerWaterValve_ResolvedVote",
+         "name": "Erd_IceMaker0_WaterValve_ResolvedVote",
          "interval": 60000
       },
       {
@@ -493,7 +493,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_FillTubeHeater_ResolvedVote",
+         "name": "Erd_IceMaker0_FillTubeHeater_ResolvedVote",
          "interval": 60000
       },
       {
@@ -538,12 +538,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_TwistTrayIceMakerMotor_ResolvedVote",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
-         "name": "Erd_TwistTrayIceMakerWaterValve_ResolvedVote",
+         "name": "Erd_IceMaker0_TwistMotor_ResolvedVote",
          "interval": 60000
       },
       {

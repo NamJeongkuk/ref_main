@@ -22,7 +22,7 @@ extern "C"
 
 static const RakeControllerConfig_t config = {
    .rakeControlRequestErd = Erd_IceMaker0_RakeControlRequest,
-   .rakeMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
+   .rakeMotorVoteErd = Erd_IceMaker1_RakeMotor_IceMakerVote,
    .rakeCompletedRevolutionErd = Erd_IceMaker0_RakeCompletedRevolution,
    .timerModuleErd = Erd_TimerModule,
    .rakePositionErd = Erd_IceMaker0_RakePosition,
@@ -105,8 +105,8 @@ TEST_GROUP(RakeController)
 
    void RakeMotorVoteShouldBe(MotorState_t expectedState, Vote_t expectedCare)
    {
-      AluminumMoldIceMakerMotorVotedState_t actualVote;
-      DataModel_Read(dataModel, Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote, &actualVote);
+      IceMakerMotorVotedState_t actualVote;
+      DataModel_Read(dataModel, Erd_IceMaker1_RakeMotor_IceMakerVote, &actualVote);
 
       CHECK_EQUAL(expectedState, actualVote.state);
       CHECK_EQUAL(expectedCare, actualVote.care);

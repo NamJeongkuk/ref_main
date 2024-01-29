@@ -31,7 +31,7 @@ describe("HeaterPwmOutput,", () => {
 
    const providedTheFillTubeHeaterPercentageFactoryVoteIs = async (dutyCyclePercentage) => {
       let requestedVote = { percentageDutyCycle: dutyCyclePercentage, care: 'Vote_Care' };
-      await rockhopper.write("Erd_FillTubeHeater_FactoryVote", requestedVote);
+      await rockhopper.write("Erd_IceMaker0_FillTubeHeater_FactoryVote", requestedVote);
    };
 
    const theFreshFoodDamperHeaterPwmDutyCycleShouldBe = async (expectedDutyCycle) => {

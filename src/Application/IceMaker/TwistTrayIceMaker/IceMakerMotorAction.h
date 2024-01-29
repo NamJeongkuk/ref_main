@@ -23,6 +23,6 @@ typedef struct
 {
    IceMakerMotorAction_t action;
    Vote_t care;
-} TwistTrayIceMakerMotorVotedAction_t;
+} IceMakerTwistMotorVotedAction_t;
 
 #endif

@@ -33,7 +33,7 @@ const NonHarvestFillTubeHeaterControlConfig_t config = {
    .cabinetTemperatureErd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
    .compressorIsOnErd = Erd_CompressorIsOn,
    .fanResolvedVoteErd = Erd_FreezerEvapFanSpeed_ResolvedVote,
-   .nonHarvestFillTubeHeaterVoteErd = Erd_FillTubeHeater_NonHarvestVote
+   .nonHarvestFillTubeHeaterVoteErd = Erd_IceMaker0_FillTubeHeater_NonHarvestVote
 };
 
 TEST_GROUP(NonZeroNonHarvestFillTubeHeaterControl)
@@ -261,7 +261,7 @@ TEST_GROUP(ZeroNonHarvestFillTubeHeaterControl)
    void NonHarvestPercentageVoteShouldBe(PercentageDutyCycle_t percentage, Vote_t care)
    {
       PercentageDutyCycleVote_t actual;
-      DataModel_Read(dataModel, Erd_FillTubeHeater_NonHarvestVote, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker0_FillTubeHeater_NonHarvestVote, &actual);
       CHECK_EQUAL(percentage, actual.percentageDutyCycle);
       CHECK_EQUAL(care, actual.care);
    }
@@ -271,7 +271,7 @@ TEST_GROUP(ZeroNonHarvestFillTubeHeaterControl)
       PercentageDutyCycleVote_t newValue;
       newValue.percentageDutyCycle = percentage;
       newValue.care = care;
-      DataModel_Write(dataModel, Erd_FillTubeHeater_NonHarvestVote, &newValue);
+      DataModel_Write(dataModel, Erd_IceMaker0_FillTubeHeater_NonHarvestVote, &newValue);
    }
 };
 

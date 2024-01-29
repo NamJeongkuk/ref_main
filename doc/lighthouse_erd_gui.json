@@ -743,15 +743,15 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Twist IM Motor State",
-               "name": "Erd_TwistTrayIceMakerMotor_ResolvedVote",
+               "displayName": "IM Twist Motor State",
+               "name": "Erd_IceMaker0_TwistMotor_ResolvedVote",
                "read": true,
                "interval": 1000000000
             },
             {
                "namespace": "mb",
                "displayName": "Twist IM Valve State",
-               "name": "Erd_TwistTrayIceMakerWaterValve_ResolvedVote",
+               "name": "Erd_IceMaker0_WaterValve_ResolvedVote",
                "read": true,
                "interval": 1000000000
             },
@@ -806,8 +806,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Fill Tube Heater State",
-               "name": "Erd_FillTubeHeater_ResolvedVote",
+               "displayName": "IM Fill Tube Heater State",
+               "name": "Erd_IceMaker0_FillTubeHeater_ResolvedVote",
                "read": true,
                "interval": 1000000000
             }
@@ -898,8 +898,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Fill Tube Heater",
-               "name": "Erd_FillTubeHeater_FactoryVote",
+               "displayName": "IM Fill Tube Heater",
+               "name": "Erd_IceMaker0_FillTubeHeater_FactoryVote",
                "read": true,
                "write": true,
                "interval": 1000000000
@@ -999,7 +999,7 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Isolation Valve Factory Vote",
+               "displayName": "IM Isolation Valve Factory Vote",
                "name": "Erd_IsolationWaterValve_FactoryVote",
                "read": true,
                "write": true,
@@ -1007,16 +1007,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Twist Tray IM Water Valve Factory Vote",
-               "name": "Erd_TwistTrayIceMakerWaterValve_FactoryVote",
-               "read": true,
-               "write": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
-               "displayName": "Aluminum Mold IM Water Valve Factory Vote",
-               "name": "Erd_AluminumMoldIceMakerWaterValve_FactoryVote",
+               "displayName": "Twist IM Water Valve Factory Vote",
+               "name": "Erd_IceMaker0_WaterValve_FactoryVote",
                "read": true,
                "write": true,
                "interval": 1000000000
@@ -1373,8 +1365,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Fill Tube Heater Winning Vote Erd",
-               "name": "Erd_FillTubeHeater_WinningVoteErd",
+               "displayName": "IM Fill Tube Heater Winning Vote Erd",
+               "name": "Erd_IceMaker0_FillTubeHeater_WinningVoteErd",
                "read": true,
                "interval": 1000000000
             }

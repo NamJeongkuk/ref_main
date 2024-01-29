@@ -219,7 +219,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
    void TheFillTubeHeaterResolvedVoteShouldBe(PercentageDutyCycle_t expectedDutyCycle, Vote_t expectedCare)
    {
       PercentageDutyCycleVote_t vote;
-      DataModel_Read(dataModel, Erd_FillTubeHeater_ResolvedVote, &vote);
+      DataModel_Read(dataModel, Erd_IceMaker0_FillTubeHeater_ResolvedVote, &vote);
       CHECK_EQUAL(expectedDutyCycle, vote.percentageDutyCycle);
       CHECK_EQUAL(expectedCare, vote.care);
    }
@@ -229,7 +229,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       WinningVoteErd_t actual;
       DataModel_Read(
          dataModel,
-         Erd_FillTubeHeater_WinningVoteErd,
+         Erd_IceMaker0_FillTubeHeater_WinningVoteErd,
          &actual);
       CHECK_EQUAL(expected, actual);
    }
@@ -347,7 +347,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       TheMotorActionResultShouldBe(IceMakerMotorActionResult_Harvested);
 
       After(twistTrayIceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
-      TheFillTubeHeaterWinningErdShouldBe(Erd_FillTubeHeater_NonHarvestVote);
+      TheFillTubeHeaterWinningErdShouldBe(Erd_IceMaker0_FillTubeHeater_NonHarvestVote);
    }
 
    void TheMotorControlRequestShouldBe(bool expected)
@@ -832,13 +832,13 @@ TEST(TwistTrayIceMakerIntegration, ShouldTurnOnFillTubeHeaterWhenEnteringHarvest
    GivenTheApplicationIsInitializedAndIceMakerIsInHarvest();
 
    TheFillTubeHeaterResolvedVoteShouldBe(twistTrayIceMakerData->harvestData.fillTubeHeaterDutyCyclePercentage, Vote_Care);
-   TheFillTubeHeaterWinningErdShouldBe(Erd_FillTubeHeater_TwistTrayIceMakerVote);
+   TheFillTubeHeaterWinningErdShouldBe(Erd_IceMaker0_FillTubeHeater_IceMakerVote);
    After(RelayDelay);
    TheFillTubeHeaterRelayShouldBe(ON);
 
    After((twistTrayIceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC) - RelayDelay - 1);
    TheFillTubeHeaterResolvedVoteShouldBe(twistTrayIceMakerData->harvestData.fillTubeHeaterDutyCyclePercentage, Vote_Care);
-   TheFillTubeHeaterWinningErdShouldBe(Erd_FillTubeHeater_TwistTrayIceMakerVote);
+   TheFillTubeHeaterWinningErdShouldBe(Erd_IceMaker0_FillTubeHeater_IceMakerVote);
 
    After(1);
    TheFillTubeHeaterResolvedVoteShouldBe(iceMakerData->iceMakerSlots->slot0Data->nonHarvestFillTubeHeaterData->offDutyCyclePercentage, Vote_Care);

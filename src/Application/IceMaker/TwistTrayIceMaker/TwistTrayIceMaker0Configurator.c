@@ -15,7 +15,7 @@ static const Output_TwistTrayIceMakerMotorStateConfig_t outputMotorStateConfig =
 };
 
 static const TwistTrayIceMakerMotorRequestManagerConfig_t motorRequestManagerConfig = {
-   .resolvedVoteErd = Erd_TwistTrayIceMakerMotor_ResolvedVote,
+   .resolvedVoteErd = Erd_IceMaker0_TwistMotor_ResolvedVote,
    .motorRequestErd = Erd_TwistIceMakerMotorControlRequest,
    .motorEnableErd = Erd_TwistIceMakerMotorDriveEnable,
    .motorActionResultErd = Erd_IceMaker0_MotorActionResult,
@@ -62,11 +62,11 @@ static const OverrideArbiterConfiguration_t thermistorValidArbiterConfig = {
 
 static bool TwistMotorVotingErdCareDelegate(const void *votingErdData)
 {
-   const TwistTrayIceMakerMotorVotedAction_t *data = votingErdData;
+   const IceMakerTwistMotorVotedAction_t *data = votingErdData;
    return (data->care);
 }
 
-static const TwistTrayIceMakerMotorVotedAction_t defaultMotorData = {
+static const IceMakerTwistMotorVotedAction_t defaultMotorData = {
    .action = IceMakerMotorAction_Idle,
    .care = Vote_DontCare
 };
@@ -74,9 +74,9 @@ static const TwistTrayIceMakerMotorVotedAction_t defaultMotorData = {
 static const ErdResolverConfiguration_t motorResolverConfiguration = {
    .votingErdCare = TwistMotorVotingErdCareDelegate,
    .defaultData = &defaultMotorData,
-   .winningVoterErd = Erd_TwistTrayIceMakerMotor_WinningVoteErd,
-   .resolvedStateErd = Erd_TwistTrayIceMakerMotor_ResolvedVote,
-   .numberOfVotingErds = (Erd_TwistTrayIceMakerMotor_IceMakerVote - Erd_TwistTrayIceMakerMotor_WinningVoteErd)
+   .winningVoterErd = Erd_IceMaker0_TwistMotor_WinningVoteErd,
+   .resolvedStateErd = Erd_IceMaker0_TwistMotor_ResolvedVote,
+   .numberOfVotingErds = (Erd_IceMaker0_TwistMotor_IceMakerVote - Erd_IceMaker0_TwistMotor_WinningVoteErd)
 };
 
 static const IceMakerWaterFillMonitorConfig_t fillMonitorConfig = {
@@ -85,6 +85,38 @@ static const IceMakerWaterFillMonitorConfig_t fillMonitorConfig = {
    .waterFillMonitoringRequestErd = Erd_IceMaker0_WaterFillMonitoringRequest,
    .flowMeterMonitoringRequestErd = Erd_IceMaker0_FlowMeterMonitoringRequest,
    .timerModuleErd = Erd_TimerModule
+};
+
+static bool VotingErdCareDelegate(const void *votingErdData)
+{
+   const PercentageDutyCycleVote_t *data = votingErdData;
+   return (data->care);
+}
+
+static const PercentageDutyCycleVote_t defaultFillTubeHeaterData = {
+   .percentageDutyCycle = 0,
+   .care = false
+};
+
+static const ErdResolverConfiguration_t fillTubeHeaterResolverConfig = {
+   .votingErdCare = VotingErdCareDelegate,
+   .defaultData = &defaultFillTubeHeaterData,
+   .winningVoterErd = Erd_IceMaker0_FillTubeHeater_WinningVoteErd,
+   .resolvedStateErd = Erd_IceMaker0_FillTubeHeater_ResolvedVote,
+   .numberOfVotingErds = (Erd_IceMaker0_FillTubeHeater_NonHarvestVote - Erd_IceMaker0_FillTubeHeater_WinningVoteErd)
+};
+
+static const PercentageDutyCycleVoteToPwmDutyCycleConverterConfig_t fillTubeHeaterDutyCycleToPercentageCalculatorConfig = {
+   .inputPercentageDutyCycleVoteErd = Erd_IceMaker0_FillTubeHeater_ResolvedVote,
+   .outputPwmDutyCycleErd = Erd_FillTubeHeater_Pwm
+};
+
+static const NonHarvestFillTubeHeaterControlConfig_t nonHarvestFillTubeHeaterControlConfig = {
+   .iceMakingActiveErd = Erd_Freezer_IceRateIsActive,
+   .cabinetTemperatureErd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
+   .compressorIsOnErd = Erd_CompressorIsOn,
+   .fanResolvedVoteErd = Erd_FreezerEvapFanSpeed_ResolvedVote,
+   .nonHarvestFillTubeHeaterVoteErd = Erd_IceMaker0_FillTubeHeater_NonHarvestVote
 };
 
 static bool WaterValveVotingErdCareDelegate(const void *votingErdData)
@@ -101,13 +133,13 @@ static const WaterValveVotedState_t defaultWaterValveData = {
 static const ErdResolverConfiguration_t waterValveResolverConfig = {
    .votingErdCare = WaterValveVotingErdCareDelegate,
    .defaultData = &defaultWaterValveData,
-   .winningVoterErd = Erd_TwistTrayIceMakerWaterValve_WinningVoteErd,
-   .resolvedStateErd = Erd_TwistTrayIceMakerWaterValve_ResolvedVote,
-   .numberOfVotingErds = (Erd_TwistTrayIceMakerWaterValve_IceMakerVote - Erd_TwistTrayIceMakerWaterValve_WinningVoteErd)
+   .winningVoterErd = Erd_IceMaker0_WaterValve_WinningVoteErd,
+   .resolvedStateErd = Erd_IceMaker0_WaterValve_ResolvedVote,
+   .numberOfVotingErds = (Erd_IceMaker0_WaterValve_IceMakerVote - Erd_IceMaker0_WaterValve_WinningVoteErd)
 };
 
 static const ResolvedVoteRelayConnectorConfiguration_t waterValveRelayConnectorConfig = {
-   .resolvedRelayVoteErd = Erd_TwistTrayIceMakerWaterValve_ResolvedVote,
+   .resolvedRelayVoteErd = Erd_IceMaker0_WaterValve_ResolvedVote,
    .relayOutputErd = Erd_TwistTrayIceMakerWaterValveRelay
 };
 
@@ -154,17 +186,17 @@ static const TwistTrayIceMakerConfiguration_t twistTrayIceMakerConfig = {
    .stopFillSignalErd = Erd_IceMaker0_StopFillSignal,
    .harvestCountIsReadyToHarvestErd = Erd_IceMaker0_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_IceMaker0_HarvestCountCalculationRequest,
-   .motorIceMakerVoteErd = Erd_TwistTrayIceMakerMotor_IceMakerVote,
-   .waterValveIceMakerVoteErd = Erd_TwistTrayIceMakerWaterValve_IceMakerVote,
+   .motorIceMakerVoteErd = Erd_IceMaker0_TwistMotor_IceMakerVote,
+   .waterValveIceMakerVoteErd = Erd_IceMaker0_WaterValve_IceMakerVote,
    .motorActionResultErd = Erd_IceMaker0_MotorActionResult,
    .motorFaultActiveErd = Erd_TwistTrayIceMaker_MotorFaultActive,
    .waterFillMonitoringRequestErd = Erd_IceMaker0_WaterFillMonitoringRequest,
-   .isolationWaterValveVoteErd = Erd_IsolationWaterValve_TwistTrayIceMakerVote,
+   .isolationWaterValveVoteErd = Erd_IsolationWaterValve_IceMaker0Vote,
    .iceMakerEnabledResolvedErd = Erd_IceMakerEnabledResolved,
    .sabbathModeErd = Erd_SabbathModeEnable,
    .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
-   .fillTubeHeaterVoteErd = Erd_FillTubeHeater_TwistTrayIceMakerVote,
+   .fillTubeHeaterVoteErd = Erd_IceMaker0_FillTubeHeater_IceMakerVote,
    .coolingOffStatusErd = Erd_CoolingOffStatus,
    .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
@@ -183,6 +215,9 @@ static const TwistTrayIceMakerPlugConfig_t config = {
    .thermistorValidArbiterConfig = &thermistorValidArbiterConfig,
    .motorResolverConfiguration = &motorResolverConfiguration,
    .fillMonitorConfig = &fillMonitorConfig,
+   .fillTubeHeaterResolverConfig = &fillTubeHeaterResolverConfig,
+   .fillTubeHeaterDutyCycleToPercentageCalculatorConfig = &fillTubeHeaterDutyCycleToPercentageCalculatorConfig,
+   .nonHarvestFillTubeHeaterControlConfig = &nonHarvestFillTubeHeaterControlConfig,
    .waterValveResolverConfig = &waterValveResolverConfig,
    .waterValveRelayConnectorConfig = &waterValveRelayConnectorConfig,
    .motorControllerConfig = &motorControllerConfig,

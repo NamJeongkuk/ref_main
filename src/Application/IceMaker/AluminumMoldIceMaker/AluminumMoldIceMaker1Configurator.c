@@ -18,9 +18,9 @@ static const FreezerIceRateHandlerConfig_t freezerIceRateHandlerConfig = {
 
 static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .aluminumMoldIceMakerHsmStateErd = Erd_IceMaker1_StateMachineState,
-   .iceMakerWaterValveVoteErd = Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
-   .moldHeaterVoteErd = Erd_IceMaker0_HeaterRelay_IceMakerVote,
-   .rakeMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
+   .iceMakerWaterValveVoteErd = Erd_IceMaker1_WaterValve_IceMakerVote,
+   .moldHeaterVoteErd = Erd_IceMaker1_HeaterRelay_IceMakerVote,
+   .rakeMotorVoteErd = Erd_IceMaker1_RakeMotor_IceMakerVote,
    .harvestCountCalculationRequestErd = Erd_IceMaker1_HarvestCountCalculationRequest,
    .feelerArmMonitoringRequestErd = Erd_IceMaker0_FeelerArmMonitoringRequest,
    .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition,
@@ -29,13 +29,13 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
    .iceMakerEnabledErd = Erd_IceMakerEnabledResolved,
    .sabbathModeErd = Erd_SabbathModeEnable,
-   .fillTubeHeaterVoteErd = Erd_FillTubeHeater_AluminumMoldIceMakerVote,
+   .fillTubeHeaterVoteErd = Erd_IceMaker1_FillTubeHeater_IceMakerVote,
    .moldHeaterControlRequestErd = Erd_IceMaker0_MoldHeaterControlRequest,
    .rakeCompletedRevolutionErd = Erd_IceMaker0_RakeCompletedRevolution,
    .moldThermistorIsValidErd = Erd_IceMaker1_MoldThermistor_IsValidResolved,
    .skipFillRequestErd = Erd_IceMaker0_SkipFillRequest,
    .rakeControlRequestErd = Erd_IceMaker0_RakeControlRequest,
-   .isolationWaterValveVoteErd = Erd_IsolationWaterValve_AluminumMoldIceMakerVote,
+   .isolationWaterValveVoteErd = Erd_IsolationWaterValve_IceMaker1Vote,
    .waterFillMonitoringRequestErd = Erd_IceMaker1_WaterFillMonitoringRequest,
    .stopIceMakerFillSignalErd = Erd_IceMaker1_StopFillSignal,
    .rakePositionErd = Erd_IceMaker0_RakePosition,
@@ -100,11 +100,11 @@ static bool HeaterVotingErdCareDelegate(const void *votingErdData)
 
 static bool RakeMotorVotingErdCareDelegate(const void *votingErdData)
 {
-   const AluminumMoldIceMakerMotorVotedState_t *data = votingErdData;
+   const IceMakerMotorVotedState_t *data = votingErdData;
    return (data->care);
 }
 
-static const AluminumMoldIceMakerMotorVotedState_t defaultRakeMotorData = {
+static const IceMakerMotorVotedState_t defaultRakeMotorData = {
    .state = MotorState_Off,
    .care = Vote_DontCare
 };
@@ -112,30 +112,62 @@ static const AluminumMoldIceMakerMotorVotedState_t defaultRakeMotorData = {
 static const ErdResolverConfiguration_t heaterResolverConfig = {
    .votingErdCare = HeaterVotingErdCareDelegate,
    .defaultData = &defaultHeaterData,
-   .winningVoterErd = Erd_IceMaker0_HeaterRelay_WinningVoteErd,
-   .resolvedStateErd = Erd_IceMaker0_HeaterRelay_ResolvedVote,
-   .numberOfVotingErds = (Erd_IceMaker0_HeaterRelay_IceMakerVote - Erd_IceMaker0_HeaterRelay_WinningVoteErd)
+   .winningVoterErd = Erd_IceMaker1_HeaterRelay_WinningVoteErd,
+   .resolvedStateErd = Erd_IceMaker1_HeaterRelay_ResolvedVote,
+   .numberOfVotingErds = (Erd_IceMaker1_HeaterRelay_IceMakerVote - Erd_IceMaker1_HeaterRelay_WinningVoteErd)
 };
 
 static const ErdResolverConfiguration_t waterValveResolverConfig = {
    .votingErdCare = WaterValveVotingErdCareDelegate,
    .defaultData = &defaultWaterValveData,
-   .winningVoterErd = Erd_AluminumMoldIceMakerWaterValve_WinningVoteErd,
-   .resolvedStateErd = Erd_AluminumMoldIceMakerWaterValve_ResolvedVote,
-   .numberOfVotingErds = (Erd_AluminumMoldIceMakerWaterValve_IceMakerVote - Erd_AluminumMoldIceMakerWaterValve_WinningVoteErd)
+   .winningVoterErd = Erd_IceMaker1_WaterValve_WinningVoteErd,
+   .resolvedStateErd = Erd_IceMaker1_WaterValve_ResolvedVote,
+   .numberOfVotingErds = (Erd_IceMaker1_WaterValve_IceMakerVote - Erd_IceMaker1_WaterValve_WinningVoteErd)
 };
 
 static const ErdResolverConfiguration_t rakeMotorResolverConfig = {
    .votingErdCare = RakeMotorVotingErdCareDelegate,
    .defaultData = &defaultRakeMotorData,
-   .winningVoterErd = Erd_AluminumMoldIceMakerRakeMotor_WinningVoteErd,
-   .resolvedStateErd = Erd_AluminumMoldIceMakerRakeMotor_ResolvedVote,
-   .numberOfVotingErds = (Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote - Erd_AluminumMoldIceMakerRakeMotor_WinningVoteErd)
+   .winningVoterErd = Erd_IceMaker1_RakeMotor_WinningVoteErd,
+   .resolvedStateErd = Erd_IceMaker1_RakeMotor_ResolvedVote,
+   .numberOfVotingErds = (Erd_IceMaker1_RakeMotor_IceMakerVote - Erd_IceMaker1_RakeMotor_WinningVoteErd)
+};
+
+static bool VotingErdCareDelegate(const void *votingErdData)
+{
+   const PercentageDutyCycleVote_t *data = votingErdData;
+   return (data->care);
+}
+
+static const PercentageDutyCycleVote_t defaultFillTubeHeaterData = {
+   .percentageDutyCycle = 0,
+   .care = false
+};
+
+static const ErdResolverConfiguration_t fillTubeHeaterResolverConfig = {
+   .votingErdCare = VotingErdCareDelegate,
+   .defaultData = &defaultFillTubeHeaterData,
+   .winningVoterErd = Erd_IceMaker1_FillTubeHeater_WinningVoteErd,
+   .resolvedStateErd = Erd_IceMaker1_FillTubeHeater_ResolvedVote,
+   .numberOfVotingErds = (Erd_IceMaker1_FillTubeHeater_NonHarvestVote - Erd_IceMaker1_FillTubeHeater_WinningVoteErd)
+};
+
+static const PercentageDutyCycleVoteToPwmDutyCycleConverterConfig_t fillTubeHeaterDutyCycleToPercentageCalculatorConfig = {
+   .inputPercentageDutyCycleVoteErd = Erd_IceMaker1_FillTubeHeater_ResolvedVote,
+   .outputPwmDutyCycleErd = Erd_FillTubeHeater_Pwm
+};
+
+static const NonHarvestFillTubeHeaterControlConfig_t nonHarvestFillTubeHeaterControlConfig = {
+   .iceMakingActiveErd = Erd_Freezer_IceRateIsActive,
+   .cabinetTemperatureErd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
+   .compressorIsOnErd = Erd_CompressorIsOn,
+   .fanResolvedVoteErd = Erd_FreezerEvapFanSpeed_ResolvedVote,
+   .nonHarvestFillTubeHeaterVoteErd = Erd_IceMaker1_FillTubeHeater_NonHarvestVote
 };
 
 static const RakeControllerConfig_t rakeControllerConfig = {
    .rakeControlRequestErd = Erd_IceMaker0_RakeControlRequest,
-   .rakeMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
+   .rakeMotorVoteErd = Erd_IceMaker1_RakeMotor_IceMakerVote,
    .rakeCompletedRevolutionErd = Erd_IceMaker0_RakeCompletedRevolution,
    .timerModuleErd = Erd_TimerModule,
    .rakePositionErd = Erd_IceMaker0_RakePosition,
@@ -151,13 +183,13 @@ static const AluminumMoldIceMakerFullStatusUpdaterConfig_t iceMakerFullStatusUpd
 };
 
 static const ResolvedVoteRelayConnectorConfiguration_t rakeMotorDriverConfig = {
-   .resolvedRelayVoteErd = Erd_AluminumMoldIceMakerRakeMotor_ResolvedVote,
+   .resolvedRelayVoteErd = Erd_IceMaker1_RakeMotor_ResolvedVote,
    .relayOutputErd = Erd_IceMaker0_RakeMotorRelay
 };
 
 static const IceMakerMoldHeaterControllerConfig_t heaterControllerConfig = {
    .moldHeaterControlRequestErd = Erd_IceMaker0_MoldHeaterControlRequest,
-   .moldHeaterVoteErd = Erd_IceMaker0_HeaterRelay_IceMakerVote,
+   .moldHeaterVoteErd = Erd_IceMaker1_HeaterRelay_IceMakerVote,
    .moldFilteredTemperatureInDegFx100Erd = Erd_IceMaker1_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
    .timerModuleErd = Erd_TimerModule,
 };
@@ -181,7 +213,7 @@ static const IceMakerWaterFillMonitorConfig_t fillMonitorConfig = {
 };
 
 static const ResolvedVoteRelayConnectorConfiguration_t waterValveRelayConnectorConfig = {
-   .resolvedRelayVoteErd = Erd_AluminumMoldIceMakerWaterValve_ResolvedVote,
+   .resolvedRelayVoteErd = Erd_IceMaker1_WaterValve_ResolvedVote,
    .relayOutputErd = Erd_AluminumMoldIceMakerWaterValveRelay
 };
 
@@ -202,7 +234,7 @@ static const OverrideArbiterConfiguration_t filteredTemperatureArbiterConfig = {
 };
 
 static const ResolvedVoteRelayConnectorConfiguration_t heaterRelayConnectorConfig = {
-   .resolvedRelayVoteErd = Erd_IceMaker0_HeaterRelay_ResolvedVote,
+   .resolvedRelayVoteErd = Erd_IceMaker1_HeaterRelay_ResolvedVote,
    .relayOutputErd = Erd_IceMaker0_HeaterRelay
 };
 
@@ -247,8 +279,11 @@ static const AluminumMoldIceMakerPluginConfig_t config = {
    .harvestCountCalculatorConfig = &harvestCountCalculatorConfig,
    .iceMakerEnableResolverConfig = &iceMakerEnableResolverConfig,
    .heaterResolverConfig = &heaterResolverConfig,
-   .rakeMotorResolverConfig = &rakeMotorResolverConfig,
    .waterValveResolverConfig = &waterValveResolverConfig,
+   .rakeMotorResolverConfig = &rakeMotorResolverConfig,
+   .fillTubeHeaterResolverConfig = &fillTubeHeaterResolverConfig,
+   .fillTubeHeaterDutyCycleToPercentageCalculatorConfig = &fillTubeHeaterDutyCycleToPercentageCalculatorConfig,
+   .nonHarvestFillTubeHeaterControlConfig = &nonHarvestFillTubeHeaterControlConfig,
    .rakeControllerConfig = &rakeControllerConfig,
    .iceMakerFullStatusUpdaterConfig = &iceMakerFullStatusUpdaterConfig,
    .rakeMotorDriverConfig = &rakeMotorDriverConfig,

@@ -10,7 +10,7 @@
 #include "PersonalityParametricData.h"
 #include "WaterValveVotedState.h"
 #include "HeaterVotedState.h"
-#include "AluminumMoldIceMakerMotorVotedState.h"
+#include "IceMakerMotorVotedState.h"
 #include "TemperatureDegFx100.h"
 #include "Constants_Binary.h"
 #include "Vote.h"
@@ -135,7 +135,7 @@ static void VoteForIceMakerHeater(AluminumMoldIceMaker_t *instance, HeaterState_
 
 static void VoteForIceMakerMotor(AluminumMoldIceMaker_t *instance, MotorState_t state, bool care)
 {
-   AluminumMoldIceMakerMotorVotedState_t vote = {
+   IceMakerMotorVotedState_t vote = {
       .state = state,
       .care = care
    };

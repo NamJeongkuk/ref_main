@@ -63,17 +63,17 @@ static const TwistTrayIceMakerConfiguration_t config = {
    .stopFillSignalErd = Erd_IceMaker0_StopFillSignal,
    .harvestCountIsReadyToHarvestErd = Erd_IceMaker0_HarvestCountIsReadyToHarvest,
    .harvestCountCalculationRequestErd = Erd_IceMaker0_HarvestCountCalculationRequest,
-   .motorIceMakerVoteErd = Erd_TwistTrayIceMakerMotor_IceMakerVote,
-   .waterValveIceMakerVoteErd = Erd_TwistTrayIceMakerWaterValve_IceMakerVote,
+   .motorIceMakerVoteErd = Erd_IceMaker0_TwistMotor_IceMakerVote,
+   .waterValveIceMakerVoteErd = Erd_IceMaker0_WaterValve_IceMakerVote,
    .motorActionResultErd = Erd_IceMaker0_MotorActionResult,
    .motorFaultActiveErd = Erd_TwistTrayIceMaker_MotorFaultActive,
    .waterFillMonitoringRequestErd = Erd_IceMaker0_WaterFillMonitoringRequest,
-   .isolationWaterValveVoteErd = Erd_IsolationWaterValve_TwistTrayIceMakerVote,
+   .isolationWaterValveVoteErd = Erd_IsolationWaterValve_IceMaker0Vote,
    .iceMakerEnabledResolvedErd = Erd_IceMakerEnabledResolved,
    .sabbathModeErd = Erd_SabbathModeEnable,
    .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
-   .fillTubeHeaterVoteErd = Erd_FillTubeHeater_TwistTrayIceMakerVote,
+   .fillTubeHeaterVoteErd = Erd_IceMaker0_FillTubeHeater_IceMakerVote,
    .coolingOffStatusErd = Erd_CoolingOffStatus,
    .freezerIceRateIsActiveErd = Erd_Freezer_IceRateIsActive,
    .dispensingRequestStatusErd = Erd_DispensingRequestStatus,
@@ -87,9 +87,9 @@ static void OnDataModelChange(void *context, const void *_args)
 {
    REINTERPRET(args, _args, const DataModelOnDataChangeArgs_t *);
 
-   if(args->erd == Erd_TwistTrayIceMakerMotor_IceMakerVote)
+   if(args->erd == Erd_IceMaker0_TwistMotor_IceMakerVote)
    {
-      REINTERPRET(data, args->data, const TwistTrayIceMakerMotorVotedAction_t *);
+      REINTERPRET(data, args->data, const IceMakerTwistMotorVotedAction_t *);
 
       mock()
          .actualCall("Write Motor Control")
@@ -97,7 +97,7 @@ static void OnDataModelChange(void *context, const void *_args)
          .withParameter("Erd", args->erd)
          .withParameter("Data", data->action);
    }
-   else if(args->erd == Erd_TwistTrayIceMakerWaterValve_IceMakerVote)
+   else if(args->erd == Erd_IceMaker0_WaterValve_IceMakerVote)
    {
       REINTERPRET(data, args->data, const WaterValveVotedState_t *);
 
@@ -135,7 +135,7 @@ static void OnDataModelChange(void *context, const void *_args)
          .withParameter("Erd", args->erd);
    }
 
-   else if(args->erd == Erd_FillTubeHeater_TwistTrayIceMakerVote)
+   else if(args->erd == Erd_IceMaker0_FillTubeHeater_IceMakerVote)
    {
       REINTERPRET(data, args->data, const PercentageDutyCycleVote_t *);
       mock()
@@ -260,7 +260,7 @@ TEST_GROUP(TwistTrayIceMaker)
       mock()
          .expectOneCall("Write Motor Control")
          .onObject(dataModel)
-         .withParameter("Erd", Erd_TwistTrayIceMakerMotor_IceMakerVote)
+         .withParameter("Erd", Erd_IceMaker0_TwistMotor_IceMakerVote)
          .withParameter("Data", expectedMotorState);
    }
 
@@ -296,7 +296,7 @@ TEST_GROUP(TwistTrayIceMaker)
       mock()
          .expectOneCall("Write Water Valve")
          .onObject(dataModel)
-         .withParameter("Erd", Erd_TwistTrayIceMakerWaterValve_IceMakerVote)
+         .withParameter("Erd", Erd_IceMaker0_WaterValve_IceMakerVote)
          .withParameter("Data", state);
    }
 
@@ -537,7 +537,7 @@ TEST_GROUP(TwistTrayIceMaker)
       PercentageDutyCycleVote_t actual;
       DataModel_Read(
          dataModel,
-         Erd_FillTubeHeater_TwistTrayIceMakerVote,
+         Erd_IceMaker0_FillTubeHeater_IceMakerVote,
          &actual);
 
       CHECK_EQUAL(expectedDutyCycle, actual.percentageDutyCycle);
@@ -549,7 +549,7 @@ TEST_GROUP(TwistTrayIceMaker)
       mock()
          .expectOneCall("Write Fill Tube Heater")
          .onObject(dataModel)
-         .withParameter("Erd", Erd_FillTubeHeater_TwistTrayIceMakerVote)
+         .withParameter("Erd", Erd_IceMaker0_FillTubeHeater_IceMakerVote)
          .withParameter("Percentage Duty Cycle", (PercentageDutyCycle_t)expectedDutyCycle)
          .withParameter("Care", (bool)expectedCare);
    }

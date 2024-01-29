@@ -23,7 +23,7 @@ static void ClearMotorRequest(TwistTrayIceMakerMotorRequestManager_t *instance)
 
 static void UpdateMotorDoActionToResolvedVoteMotorAction(TwistTrayIceMakerMotorRequestManager_t *instance)
 {
-   TwistTrayIceMakerMotorVotedAction_t motorVote;
+   IceMakerTwistMotorVotedAction_t motorVote;
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->resolvedVoteErd,
@@ -50,7 +50,7 @@ static void DataModelChanged(void *context, const void *_args)
 
    if(args->erd == instance->_private.config->resolvedVoteErd)
    {
-      const TwistTrayIceMakerMotorVotedAction_t *newVote = args->data;
+      const IceMakerTwistMotorVotedAction_t *newVote = args->data;
       if(newVote->action != IceMakerMotorAction_Idle)
       {
          DataModel_Write(

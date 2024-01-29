@@ -48,6 +48,11 @@ void TwistTrayIceMakerPlugin_Init(
       DataModel_AsDataSource(dataModel),
       config->waterValveResolverConfig);
 
+   ErdResolver_Init(
+      &instance->_private.fillTubeHeaterVoteResolver,
+      DataModel_AsDataSource(dataModel),
+      config->fillTubeHeaterResolverConfig);
+
    ResolvedVoteRelayConnector_Init(
       &instance->_private.iceMakerWaterValveRelayConnector,
       dataModel,
@@ -94,7 +99,9 @@ void TwistTrayIceMakerPlugin_Init(
    FillTubeHeaterVotingFrameworkPlugin_Init(
       &instance->_private.fillTubeHeaterVotingFrameworkPlugin,
       dataModel,
-      nonHarvestFillTubeHeaterData);
+      nonHarvestFillTubeHeaterData,
+      config->fillTubeHeaterDutyCycleToPercentageCalculatorConfig,
+      config->nonHarvestFillTubeHeaterControlConfig);
 
    if(location == IceMakerLocation_Freezer)
    {

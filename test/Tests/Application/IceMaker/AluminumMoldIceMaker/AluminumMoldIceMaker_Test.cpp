@@ -25,9 +25,9 @@ extern "C"
 
 static const AluminumMoldIceMakerConfig_t config = {
    .aluminumMoldIceMakerHsmStateErd = Erd_IceMaker1_StateMachineState,
-   .iceMakerWaterValveVoteErd = Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
-   .moldHeaterVoteErd = Erd_IceMaker0_HeaterRelay_IceMakerVote,
-   .rakeMotorVoteErd = Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
+   .iceMakerWaterValveVoteErd = Erd_IceMaker1_WaterValve_IceMakerVote,
+   .moldHeaterVoteErd = Erd_IceMaker1_HeaterRelay_IceMakerVote,
+   .rakeMotorVoteErd = Erd_IceMaker1_RakeMotor_IceMakerVote,
    .harvestCountCalculationRequestErd = Erd_IceMaker1_HarvestCountCalculationRequest,
    .feelerArmMonitoringRequestErd = Erd_IceMaker0_FeelerArmMonitoringRequest,
    .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition,
@@ -36,13 +36,13 @@ static const AluminumMoldIceMakerConfig_t config = {
    .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
    .iceMakerEnabledErd = Erd_IceMakerEnabledResolved,
    .sabbathModeErd = Erd_SabbathModeEnable,
-   .fillTubeHeaterVoteErd = Erd_FillTubeHeater_AluminumMoldIceMakerVote,
+   .fillTubeHeaterVoteErd = Erd_IceMaker1_FillTubeHeater_IceMakerVote,
    .moldHeaterControlRequestErd = Erd_IceMaker0_MoldHeaterControlRequest,
    .rakeCompletedRevolutionErd = Erd_IceMaker0_RakeCompletedRevolution,
    .moldThermistorIsValidErd = Erd_IceMaker1_MoldThermistor_IsValidResolved,
    .skipFillRequestErd = Erd_IceMaker0_SkipFillRequest,
    .rakeControlRequestErd = Erd_IceMaker0_RakeControlRequest,
-   .isolationWaterValveVoteErd = Erd_IsolationWaterValve_AluminumMoldIceMakerVote,
+   .isolationWaterValveVoteErd = Erd_IsolationWaterValve_IceMaker1Vote,
    .waterFillMonitoringRequestErd = Erd_IceMaker1_WaterFillMonitoringRequest,
    .stopIceMakerFillSignalErd = Erd_IceMaker1_StopFillSignal,
    .rakePositionErd = Erd_IceMaker0_RakePosition,
@@ -100,11 +100,11 @@ TEST_GROUP(AluminumMoldIceMaker)
       IGNORE(context);
       const DataModelOnDataChangeArgs_t *onChangeData = (const DataModelOnDataChangeArgs_t *)args;
 
-      if(onChangeData->erd == Erd_FillTubeHeater_AluminumMoldIceMakerVote)
+      if(onChangeData->erd == Erd_IceMaker1_FillTubeHeater_IceMakerVote)
       {
          mock().actualCall("Ice Maker Fill Tube Heater Vote Changed");
       }
-      else if(onChangeData->erd == Erd_AluminumMoldIceMakerWaterValve_IceMakerVote)
+      else if(onChangeData->erd == Erd_IceMaker1_WaterValve_IceMakerVote)
       {
          mock().actualCall("Ice Maker Water Valve Vote Changed");
       }
@@ -155,7 +155,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       WaterValveVotedState_t vote;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerWaterValve_IceMakerVote,
+         Erd_IceMaker1_WaterValve_IceMakerVote,
          &vote);
 
       CHECK_EQUAL(expected, vote.state);
@@ -179,7 +179,7 @@ TEST_GROUP(AluminumMoldIceMaker)
 
       DataModel_Write(
          dataModel,
-         Erd_IceMaker0_HeaterRelay_IceMakerVote,
+         Erd_IceMaker1_HeaterRelay_IceMakerVote,
          &vote);
    }
 
@@ -188,7 +188,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       HeaterVotedState_t vote;
       DataModel_Read(
          dataModel,
-         Erd_IceMaker0_HeaterRelay_IceMakerVote,
+         Erd_IceMaker1_HeaterRelay_IceMakerVote,
          &vote);
 
       CHECK_EQUAL(expected, vote.state);
@@ -197,23 +197,23 @@ TEST_GROUP(AluminumMoldIceMaker)
 
    void GivenIceMakerMotorVoteIsSet()
    {
-      AluminumMoldIceMakerMotorVotedState_t vote = {
+      IceMakerMotorVotedState_t vote = {
          .state = MotorState_On,
          .care = Vote_Care
       };
 
       DataModel_Write(
          dataModel,
-         Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
+         Erd_IceMaker1_RakeMotor_IceMakerVote,
          &vote);
    }
 
    void IceMakerMotorVoteShouldBe(bool expected)
    {
-      AluminumMoldIceMakerMotorVotedState_t vote;
+      IceMakerMotorVotedState_t vote;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
+         Erd_IceMaker1_RakeMotor_IceMakerVote,
          &vote);
 
       CHECK_EQUAL(expected, vote.state);
@@ -535,7 +535,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       PercentageDutyCycleVote_t vote;
       DataModel_Read(
          dataModel,
-         Erd_FillTubeHeater_AluminumMoldIceMakerVote,
+         Erd_IceMaker1_FillTubeHeater_IceMakerVote,
          &vote);
 
       CHECK_EQUAL(expectedDutyCycle, vote.percentageDutyCycle);
@@ -569,11 +569,11 @@ TEST_GROUP(AluminumMoldIceMaker)
 
    void GivenIceMakerMotorVoteIs(MotorState_t state)
    {
-      AluminumMoldIceMakerMotorVotedState_t vote = {
+      IceMakerMotorVotedState_t vote = {
          .state = state,
          .care = Vote_Care
       };
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote, &vote);
+      DataModel_Write(dataModel, Erd_IceMaker1_RakeMotor_IceMakerVote, &vote);
    }
 
    void GivenIceMakerWaterValveVoteIs(WaterValveState_t state)
@@ -582,7 +582,7 @@ TEST_GROUP(AluminumMoldIceMaker)
          .state = state,
          .care = Vote_Care
       };
-      DataModel_Write(dataModel, Erd_AluminumMoldIceMakerWaterValve_IceMakerVote, &vote);
+      DataModel_Write(dataModel, Erd_IceMaker1_WaterValve_IceMakerVote, &vote);
    }
 
    void GivenIceMakerHeaterVoteIs(HeaterState_t state)
@@ -591,7 +591,7 @@ TEST_GROUP(AluminumMoldIceMaker)
          .state = state,
          .care = true
       };
-      DataModel_Write(dataModel, Erd_IceMaker0_HeaterRelay_IceMakerVote, &vote);
+      DataModel_Write(dataModel, Erd_IceMaker1_HeaterRelay_IceMakerVote, &vote);
    }
 
    void GivenTheIceMakerIsolationWaterValveVoteIs(WaterValveState_t state)
@@ -600,7 +600,7 @@ TEST_GROUP(AluminumMoldIceMaker)
          .state = state,
          .care = true
       };
-      DataModel_Write(dataModel, Erd_IsolationWaterValve_AluminumMoldIceMakerVote, &vote);
+      DataModel_Write(dataModel, Erd_IsolationWaterValve_IceMaker1Vote, &vote);
    }
 
    void GivenTheMoldThermistorIsValid()
@@ -733,7 +733,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    void IsolationIceMakerWaterValveVoteShouldBeDontCare()
    {
       WaterValveVotedState_t vote;
-      DataModel_Read(dataModel, Erd_IsolationWaterValve_AluminumMoldIceMakerVote, &vote);
+      DataModel_Read(dataModel, Erd_IsolationWaterValve_IceMaker1Vote, &vote);
 
       CHECK_EQUAL(Vote_DontCare, vote.care);
    }
@@ -741,7 +741,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    void IsolationIceMakerWaterValveVoteShouldBe(bool expected)
    {
       WaterValveVotedState_t vote;
-      DataModel_Read(dataModel, Erd_IsolationWaterValve_AluminumMoldIceMakerVote, &vote);
+      DataModel_Read(dataModel, Erd_IsolationWaterValve_IceMaker1Vote, &vote);
 
       CHECK_EQUAL(expected, vote.state);
 

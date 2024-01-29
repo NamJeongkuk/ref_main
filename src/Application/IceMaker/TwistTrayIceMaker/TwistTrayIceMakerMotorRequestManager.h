@@ -17,7 +17,7 @@
 
 typedef struct
 {
-   Erd_t resolvedVoteErd; // TwistTrayIceMakerMotorVotedAction_t
+   Erd_t resolvedVoteErd; // IceMakerTwistMotorVotedAction_t
    Erd_t motorRequestErd; // bool
    Erd_t motorEnableErd; // bool
    Erd_t motorActionResultErd; // IceMakerMotorActionResult_t

@@ -16,7 +16,7 @@
 typedef struct
 {
    Erd_t rakeControlRequestErd; // bool
-   Erd_t rakeMotorVoteErd; // AluminumMoldIceMakerMotorVotedState_t
+   Erd_t rakeMotorVoteErd; // IceMakerMotorVotedState_t
    Erd_t rakeCompletedRevolutionErd; // bool
    Erd_t timerModuleErd; // TimerModule_t *
    Erd_t rakePositionErd; // RakePosition_t

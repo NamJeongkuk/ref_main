@@ -20,7 +20,7 @@ describe("FillTubeHeaterNonHarvestControl", () => {
 
    const fillTubeHeaterNonHarvestControlVoteShouldBe = async (requestedPercentage, requestedCare) => {
       let requestedVote = { percentageDutyCycle: requestedPercentage, care: requestedCare };
-      let actualVote = await rockhopper.read("Erd_FillTubeHeater_NonHarvestVote");
+      let actualVote = await rockhopper.read("Erd_IceMaker0_FillTubeHeater_NonHarvestVote");
       expect(actualVote.percentageDutyCycle).toEqual(requestedVote.percentageDutyCycle);
       expect(actualVote.care).toEqual(requestedVote.care);
    };

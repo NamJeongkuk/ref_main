@@ -249,10 +249,10 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
 
    void IceMakerMotorShouldVote(MotorState_t expectedState, Vote_t expectedVoteCare)
    {
-      AluminumMoldIceMakerMotorVotedState_t actualVote;
+      IceMakerMotorVotedState_t actualVote;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerRakeMotor_IceMakerVote,
+         Erd_IceMaker1_RakeMotor_IceMakerVote,
          &actualVote);
 
       CHECK_EQUAL(expectedState, actualVote.state);
@@ -325,7 +325,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       HeaterVotedState_t actual;
       DataModel_Read(
          dataModel,
-         Erd_IceMaker0_HeaterRelay_IceMakerVote,
+         Erd_IceMaker1_HeaterRelay_IceMakerVote,
          &actual);
 
       CHECK_EQUAL(expectedState, actual.state);
@@ -337,7 +337,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       PercentageDutyCycleVote_t actual;
       DataModel_Read(
          dataModel,
-         Erd_FillTubeHeater_AluminumMoldIceMakerVote,
+         Erd_IceMaker1_FillTubeHeater_IceMakerVote,
          &actual);
 
       CHECK_EQUAL(expectedDutyCycle, actual.percentageDutyCycle);

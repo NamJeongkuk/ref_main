@@ -6,7 +6,7 @@
  */
 
 #include "RakeController.h"
-#include "AluminumMoldIceMakerMotorVotedState.h"
+#include "IceMakerMotorVotedState.h"
 #include "Constants_Time.h"
 #include "DataModelErdPointerAccess.h"
 #include "FeelerArmPosition.h"
@@ -18,7 +18,7 @@ static void VoteForRakeMotor(
    MotorState_t state,
    Vote_t care)
 {
-   AluminumMoldIceMakerMotorVotedState_t rakeMotorVote = {
+   IceMakerMotorVotedState_t rakeMotorVote = {
       .state = state,
       .care = care
    };

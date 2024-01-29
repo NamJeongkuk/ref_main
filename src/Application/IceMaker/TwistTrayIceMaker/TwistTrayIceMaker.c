@@ -111,7 +111,7 @@ static void UpdateFsmState(TwistTrayIceMaker_t *instance, IceMakerStateMachineSt
 
 static void RequestMotorAction(TwistTrayIceMaker_t *instance, IceMakerMotorAction_t newMotorAction)
 {
-   TwistTrayIceMakerMotorVotedAction_t motorVote;
+   IceMakerTwistMotorVotedAction_t motorVote;
    motorVote.action = newMotorAction;
    motorVote.care = (newMotorAction == IceMakerMotorAction_Idle) ? Vote_DontCare : Vote_Care;
 

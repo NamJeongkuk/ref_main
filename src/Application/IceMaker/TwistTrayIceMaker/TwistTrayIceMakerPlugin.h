@@ -41,6 +41,9 @@ typedef struct
    const OverrideArbiterConfiguration_t *thermistorValidArbiterConfig;
    const ErdResolverConfiguration_t *motorResolverConfiguration;
    const IceMakerWaterFillMonitorConfig_t *fillMonitorConfig;
+   const ErdResolverConfiguration_t *fillTubeHeaterResolverConfig;
+   const PercentageDutyCycleVoteToPwmDutyCycleConverterConfig_t *fillTubeHeaterDutyCycleToPercentageCalculatorConfig;
+   const NonHarvestFillTubeHeaterControlConfig_t *nonHarvestFillTubeHeaterControlConfig;
    const ErdResolverConfiguration_t *waterValveResolverConfig;
    const ResolvedVoteRelayConnectorConfiguration_t *waterValveRelayConnectorConfig;
    const TwistTrayIceMakerMotorControllerConfig_t *motorControllerConfig;
@@ -65,6 +68,7 @@ typedef struct
       FillTubeHeaterVotingFrameworkPlugin_t fillTubeHeaterVotingFrameworkPlugin;
       ErdResolver_t twistTrayMotorVoteResolver;
       ErdResolver_t iceMakerWaterValveVoteResolver;
+      ErdResolver_t fillTubeHeaterVoteResolver;
       ResolvedVoteRelayConnector_t iceMakerWaterValveRelayConnector;
       OverrideArbiter_t twistTrayIceMakerThermistorIsValidOverrideArbiter;
       OverrideArbiter_t twistTrayIceMakerFilteredTemperatureOverrideArbiter;

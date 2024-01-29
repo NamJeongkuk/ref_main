@@ -28,6 +28,9 @@
 #include "IceMakerLocation.h"
 #include "FreezerIceRateData.h"
 #include "NonHarvestFillTubeHeaterData.h"
+#include "PercentageDutyCycleVote.h"
+#include "PercentageDutyCycleVoteToPwmDutyCycleConverter.h"
+#include "NonHarvestFillTubeHeaterControl.h"
 
 typedef struct
 {
@@ -39,6 +42,9 @@ typedef struct
    const ErdResolverConfiguration_t *heaterResolverConfig;
    const ErdResolverConfiguration_t *waterValveResolverConfig;
    const ErdResolverConfiguration_t *rakeMotorResolverConfig;
+   const ErdResolverConfiguration_t *fillTubeHeaterResolverConfig;
+   const PercentageDutyCycleVoteToPwmDutyCycleConverterConfig_t *fillTubeHeaterDutyCycleToPercentageCalculatorConfig;
+   const NonHarvestFillTubeHeaterControlConfig_t *nonHarvestFillTubeHeaterControlConfig;
    const RakeControllerConfig_t *rakeControllerConfig;
    const AluminumMoldIceMakerFullStatusUpdaterConfig_t *iceMakerFullStatusUpdaterConfig;
    const ResolvedVoteRelayConnectorConfiguration_t *rakeMotorDriverConfig;
@@ -73,6 +79,7 @@ typedef struct
       ErdResolver_t iceMakerMotorVoteResolver;
       SensorFiltering_t moldThermistor;
       ErdResolver_t iceMakerRakeMotorVoteResolver;
+      ErdResolver_t fillTubeHeaterVoteResolver;
       ResolvedVoteRelayConnector_t iceMakerWaterValveRelayConnector;
       ResolvedVoteRelayConnector_t heaterRelayConnector;
       OverrideArbiter_t aluminumMoldIceMakerFilteredTemperatureArbiter;

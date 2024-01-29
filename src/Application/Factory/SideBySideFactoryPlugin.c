@@ -20,13 +20,22 @@ static const FactoryVotePair_t factoryVotePairs[] = {
    { Erd_FreshFoodDefrostHeater_FactoryVote, HeaterState_Off },
    { Erd_FreshFoodDamperPosition_FactoryVote, DamperPosition_Closed },
    { Erd_FreshFoodDamperHeater_FactoryVote, PercentageDutyCycle_Min },
-   { Erd_FillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
+   { Erd_IceMaker0_FillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
+   { Erd_IceMaker1_FillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
+   { Erd_IceMaker2_FillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
    { Erd_FreezerDefrostHeater_FactoryVote, HeaterState_Off },
-   { Erd_AluminumMoldIceMakerWaterValve_FactoryVote, WaterValveState_Off },
+   { Erd_IceMaker0_WaterValve_FactoryVote, WaterValveState_Off },
+   { Erd_IceMaker1_WaterValve_FactoryVote, WaterValveState_Off },
+   { Erd_IceMaker2_WaterValve_FactoryVote, WaterValveState_Off },
    { Erd_IceMaker0_HeaterRelay_FactoryVote, HeaterState_Off },
-   { Erd_AluminumMoldIceMakerRakeMotor_FactoryVote, MotorState_Off },
-   { Erd_TwistTrayIceMakerWaterValve_FactoryVote, WaterValveState_Off },
-   { Erd_TwistTrayIceMakerMotor_FactoryVote, IceMakerMotorAction_RunHomingRoutine },
+   { Erd_IceMaker1_HeaterRelay_FactoryVote, HeaterState_Off },
+   { Erd_IceMaker2_HeaterRelay_FactoryVote, HeaterState_Off },
+   { Erd_IceMaker0_RakeMotor_FactoryVote, MotorState_Off },
+   { Erd_IceMaker1_RakeMotor_FactoryVote, MotorState_Off },
+   { Erd_IceMaker2_RakeMotor_FactoryVote, MotorState_Off },
+   { Erd_IceMaker0_TwistMotor_FactoryVote, IceMakerMotorAction_RunHomingRoutine },
+   { Erd_IceMaker1_TwistMotor_FactoryVote, IceMakerMotorAction_RunHomingRoutine },
+   { Erd_IceMaker2_TwistMotor_FactoryVote, IceMakerMotorAction_RunHomingRoutine },
    { Erd_IsolationWaterValve_FactoryVote, WaterValveState_Off },
    { Erd_AugerMotor_FactoryVote, AugerMotorIceType_Off },
    { Erd_DispenserWaterValve_FactoryVote, WaterValveState_Off },
@@ -61,7 +70,8 @@ static const FactoryModeConfiguration_t factoryModeConfig = {
 
 void SideBySideFactoryPlugin_Init(SideBySideFactoryPlugin_t *instance, I_DataModel_t *dataModel)
 {
-   FactoryMode_Init(&instance->_private.factoryMode,
+   FactoryMode_Init(
+      &instance->_private.factoryMode,
       dataModel,
       &factoryModeConfig,
       DataModelErdPointerAccess_GetTimerModule(dataModel, Erd_TimerModule));

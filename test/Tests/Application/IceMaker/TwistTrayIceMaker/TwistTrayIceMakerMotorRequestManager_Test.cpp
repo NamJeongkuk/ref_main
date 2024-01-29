@@ -26,7 +26,7 @@ enum
 };
 
 static const TwistTrayIceMakerMotorRequestManagerConfig_t motorRequestManagerConfig = {
-   .resolvedVoteErd = Erd_TwistTrayIceMakerMotor_ResolvedVote,
+   .resolvedVoteErd = Erd_IceMaker0_TwistMotor_ResolvedVote,
    .motorRequestErd = Erd_TwistIceMakerMotorControlRequest,
    .motorEnableErd = Erd_TwistIceMakerMotorDriveEnable,
    .motorActionResultErd = Erd_IceMaker0_MotorActionResult,
@@ -60,14 +60,14 @@ TEST_GROUP(TwistTrayIceMakerMotorRequestManager)
 
    void WhenTheMotorResolvedVoteIs(IceMakerMotorAction_t action)
    {
-      TwistTrayIceMakerMotorVotedAction_t vote = {
+      IceMakerTwistMotorVotedAction_t vote = {
          .action = action,
          .care = Vote_Care
       };
 
       DataModel_Write(
          dataModel,
-         Erd_TwistTrayIceMakerMotor_ResolvedVote,
+         Erd_IceMaker0_TwistMotor_ResolvedVote,
          &vote);
    }
 

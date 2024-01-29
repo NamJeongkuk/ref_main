@@ -45,6 +45,11 @@ static void InitializeErdResolvers(AluminumMoldIceMakerPlugin_t *instance, I_Dat
       &instance->_private.iceMakerRakeMotorVoteResolver,
       DataModel_AsDataSource(dataModel),
       config->rakeMotorResolverConfig);
+
+   ErdResolver_Init(
+      &instance->_private.fillTubeHeaterVoteResolver,
+      DataModel_AsDataSource(dataModel),
+      config->fillTubeHeaterResolverConfig);
 }
 
 void AluminumMoldIceMakerPlugin_Init(
@@ -80,7 +85,9 @@ void AluminumMoldIceMakerPlugin_Init(
    FillTubeHeaterVotingFrameworkPlugin_Init(
       &instance->_private.fillTubeHeaterVotingFrameworkPlugin,
       dataModel,
-      nonHarvestFillTubeHeaterData);
+      nonHarvestFillTubeHeaterData,
+      config->fillTubeHeaterDutyCycleToPercentageCalculatorConfig,
+      config->nonHarvestFillTubeHeaterControlConfig);
 
    if(iceMakerLocation == IceMakerLocation_Freezer)
    {

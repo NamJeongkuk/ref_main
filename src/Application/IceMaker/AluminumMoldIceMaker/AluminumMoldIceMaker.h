@@ -18,7 +18,7 @@ typedef struct
    Erd_t aluminumMoldIceMakerHsmStateErd; // IceMakerStateMachineState_t
    Erd_t iceMakerWaterValveVoteErd; // WaterValveVotedState_t
    Erd_t moldHeaterVoteErd; // HeaterVotedState_t
-   Erd_t rakeMotorVoteErd; // AluminumMoldIceMakerMotorVotedState_t
+   Erd_t rakeMotorVoteErd; // IceMakerMotorVotedState_t
    Erd_t harvestCountCalculationRequestErd; // bool
    Erd_t feelerArmMonitoringRequestErd; // bool
    Erd_t feelerArmPositionErd; // FeelerArmPosition_t
