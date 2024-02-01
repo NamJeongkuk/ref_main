@@ -349,14 +349,6 @@ static void SetCoolingModeTo(EnhancedSabbathMode_t *instance, CoolingMode_t cool
       &coolingMode);
 }
 
-static void SetEnhancedSabbathStatusTo(EnhancedSabbathMode_t *instance, bool state)
-{
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->enhancedSabbathModeStatusErd,
-      &state);
-}
-
 static void SetRegularSabbathStatusTo(EnhancedSabbathMode_t *instance, bool state)
 {
    DataModel_Write(
@@ -612,7 +604,6 @@ static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
    switch(signal)
    {
       case Hsm_Entry:
-         SetEnhancedSabbathStatusTo(instance, false);
          SetHsmStateTo(instance, EnhancedSabbathModeHsmState_Disabled);
          SetAllLoadVotesToDontCare(instance);
          SetFreshFoodSetpointVoteToDontCare(instance);

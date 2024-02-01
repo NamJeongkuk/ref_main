@@ -140,6 +140,11 @@ TEST_GROUP(SabbathModesIntegration)
       DataModel_Read(dataModel, Erd_Eeprom_EnhancedSabbathRunTimeInMinutes, &current);
       return current;
    }
+
+   void WhenCoolingOffRequestIs(CoolingSystemRequest_t state)
+   {
+      DataModel_Write(dataModel, Erd_CoolingOffRequest, &state);
+   }
 };
 
 TEST(SabbathModesIntegration, ShouldStayInSabbathModeThroughAPowerCycle)
@@ -270,4 +275,16 @@ TEST(SabbathModesIntegration, ShouldStartEnhancedSabbathRunTimeTimerFromZeroWhen
 
    After(1);
    EnhancedSabbathRunTimeInMinutesShouldBe(0);
+}
+
+TEST(SabbathModesIntegration, ShouldNotDisableEnhancedSabbathModeAfterResetWhileCoolingSystemIsOff)
+{
+   GivenEnhancedSabbathModeIs(SET);
+   GivenApplicationHasBeenInitialized();
+
+   WhenCoolingOffRequestIs(SET);
+   EnhancedSabbathModeShouldBe(SET);
+
+   WhenRefrigeratorResets();
+   EnhancedSabbathModeShouldBe(SET);
 }

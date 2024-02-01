@@ -1367,7 +1367,6 @@ TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathModeToDisabledIfMaxTimeHasBeen
    TheDispensingDisabledShouldBe(true);
 
    After(1);
-   TheEnhancedSabbathModeStatusShouldBe(false);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
    TheCompressorFansAndDamperVotesShouldBe(Vote_DontCare);
 
