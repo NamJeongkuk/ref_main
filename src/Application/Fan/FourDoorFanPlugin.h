@@ -9,6 +9,7 @@
 #define FOURDOORFANPLUGIN_H
 
 #include "I_DataModel.h"
+#include "FreshFoodEvapFanPlugin.h"
 #include "FreezerEvapFanPlugin.h"
 #include "CondenserFanPlugin.h"
 
@@ -16,6 +17,7 @@ typedef struct
 {
    struct
    {
+      FreshFoodEvapFanPlugin_t freshFoodEvapFanPlugin;
       FreezerEvapFanPlugin_t freezerEvapFanPlugin;
       CondenserFanPlugin_t condenserFanPlugin;
    } _private;

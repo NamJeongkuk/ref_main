@@ -1805,6 +1805,27 @@
         },
         {
           "namespace": "mb",
+          "displayName": "F106 Fresh Food Evap Fan Missing Fan Feedback When Fan Is Running",
+          "name": "Erd_FreshFoodEvapFanMissingFanFeedbackWhenFanIsRunningFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F107 Fresh Food Evap Fan Feedback Present When Fan Is Off",
+          "name": "Erd_FreshFoodEvapFanFeedbackPresentWhenFanIsOffFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F108 Fresh Food Evap Fan Cannot Reach Target RPM",
+          "name": "Erd_FreshFoodEvapFanCannotReachTargetRpmFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
           "displayName": "F200 Freezer Defrost Heater On For Max Time",
           "name": "Erd_FreezerDefrostHeaterOnForMaxTimeFault",
           "read": true,

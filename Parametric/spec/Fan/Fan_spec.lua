@@ -31,7 +31,7 @@ describe('Fan', function()
   })
 
   local some_valve_care_about_coooling_mode_speed_table = fan_care_about_cooling_mode_speed_table({
-    care_about_setpoint = false,
+    care_about_freezer_setpoint = false,
     super_low_speed = duty_cycle({duty_cycle = 10}),
     low_speed_fresh_food = rpm({rpm = 1000}),
     low_speed_freezer = rpm({rpm = 1000}),

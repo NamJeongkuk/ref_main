@@ -9,11 +9,11 @@ return function(core)
   import(core)
   local rpm = Rpm(core)
   local generate = memoize(function(config)
-    if config.care_about_setpoint == true then
+    if config.care_about_freezer_setpoint == true then
       return TypedString(
         { 'fan_care_about_cooling_mode_speed_table' },
         structure(
-          bool(config.care_about_setpoint),
+          bool(config.care_about_freezer_setpoint),
           config.super_low_speed,
           config.low_speed_fresh_food,
           config.low_speed_freezer_cold_setpoint,
@@ -35,7 +35,7 @@ return function(core)
       return TypedString(
         { 'fan_care_about_cooling_mode_speed_table' },
         structure(
-          bool(config.care_about_setpoint),
+          bool(config.care_about_freezer_setpoint),
           config.super_low_speed,
           config.low_speed_fresh_food,
           config.low_speed_freezer,
@@ -57,17 +57,17 @@ return function(core)
   end)
 
   return function(config)
-    if config.care_about_setpoint == nil then
+    if config.care_about_freezer_setpoint == nil then
       validate_arguments(
         config,
         {
-          care_about_setpoint = { constraint.boolean },
+          care_about_freezer_setpoint = { constraint.boolean },
         })
-    elseif config.care_about_setpoint == true then
+    elseif config.care_about_freezer_setpoint == true then
       validate_arguments(
         config,
         {
-          care_about_setpoint = { constraint.boolean },
+          care_about_freezer_setpoint = { constraint.boolean },
           super_low_speed = { constraint.typed_string('speed') },
           low_speed_fresh_food = { constraint.typed_string('speed') },
           low_speed_freezer_cold_setpoint = { constraint.typed_string('speed') },
@@ -88,7 +88,7 @@ return function(core)
       validate_arguments(
         config,
         {
-          care_about_setpoint = { constraint.boolean },
+          care_about_freezer_setpoint = { constraint.boolean },
           super_low_speed = { constraint.typed_string('speed') },
           low_speed_fresh_food = { constraint.typed_string('speed') },
           low_speed_freezer = { constraint.typed_string('speed') },

@@ -1,5 +1,5 @@
 return fan_care_about_cooling_mode_speed_table({
-  care_about_setpoint = false,
+  care_about_freezer_setpoint = false,
   super_low_speed = rpm({rpm = 1300}),
   low_speed_fresh_food = rpm({rpm = 1500}),
   low_speed_freezer = rpm({rpm = 1800}),

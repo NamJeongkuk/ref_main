@@ -13,10 +13,10 @@ describe('FanCareAboutCoolingModeSpeedTable', function()
   local duty_cycle = DutyCycle(core_mock)
   local rpm = Rpm(core_mock)
 
-  local function generate_config(care_about_setpoint, overrides)
-    if care_about_setpoint == true then
+  local function generate_config(care_about_freezer_setpoint, overrides)
+    if care_about_freezer_setpoint == true then
       return require 'lua-common'.table.merge({
-        care_about_setpoint = true,
+        care_about_freezer_setpoint = true,
         super_low_speed = duty_cycle({duty_cycle = 10}),
         low_speed_fresh_food = rpm({rpm = 1000}),
         low_speed_freezer_cold_setpoint = rpm({rpm = 1100}),
@@ -35,7 +35,7 @@ describe('FanCareAboutCoolingModeSpeedTable', function()
       }, overrides or {})
     else
       return require 'lua-common'.table.merge({
-        care_about_setpoint = false,
+        care_about_freezer_setpoint = false,
         super_low_speed = duty_cycle({duty_cycle = 10}),
         low_speed_fresh_food = rpm({rpm = 1000}),
         low_speed_freezer = rpm({rpm = 1000}),
@@ -53,7 +53,7 @@ describe('FanCareAboutCoolingModeSpeedTable', function()
     should_require_args(fan_care_about_cooling_mode_speed_table, generate_config())
   end)
 
-  it('should assert if care_about_setpoint fields are not a speed', function()
+  it('should assert if care_about_freezer_setpoint fields are not a speed', function()
     should_fail_with('super_low_speed must be a typed string with type speed, has type(s) blah', function()
       fan_care_about_cooling_mode_speed_table(generate_config(true, {
         super_low_speed = TypedString('blah', 'some_blah')
@@ -145,7 +145,7 @@ describe('FanCareAboutCoolingModeSpeedTable', function()
     end)
   end)
 
-  it('should assert if non care_about_setpoint fields are used when care_about_setpoint is true', function()
+  it('should assert if non care_about_freezer_setpoint fields are used when care_about_freezer_setpoint is true', function()
     should_fail_with('unexpected argument low_speed', function()
       fan_care_about_cooling_mode_speed_table(generate_config(true, {
         low_speed_freezer = rpm({rpm = 300})
@@ -153,7 +153,7 @@ describe('FanCareAboutCoolingModeSpeedTable', function()
     end)
   end)
 
-  it('should assert if care_about_setpoint fields are used when care_about_setpoint is false', function()
+  it('should assert if care_about_freezer_setpoint fields are used when care_about_freezer_setpoint is false', function()
     should_fail_with('unexpected argument low_speed_freezer_cold_setpoint', function()
       fan_care_about_cooling_mode_speed_table(generate_config(false, {
         low_speed_freezer_cold_setpoint = rpm({rpm = 300})
@@ -203,7 +203,7 @@ describe('FanCareAboutCoolingModeSpeedTable', function()
     end)
   end)
 
-  it('should assert if non care_about_setpoint and non care_about_ambient_temperature fields are not a speed', function()
+  it('should assert if non care_about_freezer_setpoint and non care_about_ambient_temperature fields are not a speed', function()
     should_fail_with('super_low_speed must be a typed string with type speed, has type(s) blah', function()
       fan_care_about_cooling_mode_speed_table(generate_config(false, {
         super_low_speed = TypedString('blah', 'some_blah')
@@ -253,7 +253,7 @@ describe('FanCareAboutCoolingModeSpeedTable', function()
     end)
   end)
 
-  it('should generate a typed string with the correct data with care_about_setpoint flag set to true', function()
+  it('should generate a typed string with the correct data with care_about_freezer_setpoint flag set to true', function()
     local expected = remove_whitespace([[
       structure(
         bool(true),
@@ -342,7 +342,7 @@ describe('FanCareAboutCoolingModeSpeedTable', function()
      ]])
 
     local actual = fan_care_about_cooling_mode_speed_table({
-      care_about_setpoint = true,
+      care_about_freezer_setpoint = true,
       super_low_speed = duty_cycle({duty_cycle = 10}),
       low_speed_fresh_food = rpm({rpm = 1000}),
       low_speed_freezer_cold_setpoint = rpm({rpm = 1100}),
@@ -364,7 +364,7 @@ describe('FanCareAboutCoolingModeSpeedTable', function()
     assert(actual.is_of_type('fan_care_about_cooling_mode_speed_table'))
   end)
 
-  it('should generate a typed string with the correct data with care_about_setpoint flag set to false', function()
+  it('should generate a typed string with the correct data with care_about_freezer_setpoint flag set to false', function()
     local expected = remove_whitespace([[
       structure(
         bool(false),
@@ -450,7 +450,7 @@ describe('FanCareAboutCoolingModeSpeedTable', function()
      ]])
 
     local actual = fan_care_about_cooling_mode_speed_table({
-      care_about_setpoint = false,
+      care_about_freezer_setpoint = false,
       super_low_speed = duty_cycle({duty_cycle = 10}),
       low_speed_fresh_food = rpm({rpm = 1000}),
       low_speed_freezer = rpm({rpm = 1000}),
