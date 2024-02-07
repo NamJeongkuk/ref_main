@@ -15,4 +15,5 @@ void FourDoorConfigurationPlugin_Init(FourDoorConfigurationPlugin_t *instance, I
    DispenserWaterValvePlugin_Init(&instance->_private.dispenserWaterValvePlugin, dataModel);
    AugerMotorPlugin_Init(&instance->_private.augerMotorPlugin, dataModel);
    RecessHeaterPlugin_Init(&instance->_private.recessHeaterPlugin, dataModel);
+   FourDoorBooleanRequestStatusUpdaterPlugin_Init(&instance->_private.booleanRequestStatusUpdaterPlugin, dataModel);
 }

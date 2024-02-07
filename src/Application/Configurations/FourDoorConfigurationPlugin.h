@@ -15,6 +15,7 @@
 #include "DispenserWaterValvePlugin.h"
 #include "AugerMotorPlugin.h"
 #include "IceMakerSlotsPlugin.h"
+#include "FourDoorBooleanRequestStatusUpdaterPlugin.h"
 
 typedef struct
 {
@@ -26,6 +27,7 @@ typedef struct
       DispenserWaterValvePlugin_t dispenserWaterValvePlugin;
       AugerMotorPlugin_t augerMotorPlugin;
       RecessHeaterPlugin_t recessHeaterPlugin;
+      FourDoorBooleanRequestStatusUpdaterPlugin_t booleanRequestStatusUpdaterPlugin;
    } _private;
 } FourDoorConfigurationPlugin_t;
 
