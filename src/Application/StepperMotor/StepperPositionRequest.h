@@ -21,6 +21,7 @@ typedef struct
 {
    TurningDirection_t direction;
    uint16_t stepsToMove;
+   bool resetSubstep;
 } StepperPositionRequest_t;
 
 #define SWAP_DEFINITION_StepperPositionRequest_t(_name, _type) \

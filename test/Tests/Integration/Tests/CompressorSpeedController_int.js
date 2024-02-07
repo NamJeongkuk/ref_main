@@ -43,11 +43,11 @@ describe("CompressorSpeedController,", () => {
    };
 
    const valvePosition = {
-      a: "ValvePosition_A",
-      b: "ValvePosition_B",
-      c: "ValvePosition_C",
-      d: "ValvePosition_D",
-      e: "ValvePosition_E",
+      a: "SealedSystemValvePosition_A",
+      b: "SealedSystemValvePosition_B",
+      c: "SealedSystemValvePosition_C",
+      d: "SealedSystemValvePosition_D",
+      e: "SealedSystemValvePosition_E",
       f: "ValvePosition_F",
       home: "ValvePosition_Home"
    };
@@ -117,7 +117,7 @@ describe("CompressorSpeedController,", () => {
 
    const theValvePositionFactoryVoteIs = async (requestedPosition) => {
       let requested = { position: requestedPosition, care: "Vote_Care" };
-      await rockhopper.write("Erd_ValvePosition_FactoryVote", requested);
+      await rockhopper.write("Erd_SealedSystemValvePosition_FactoryVote", requested);
    };
 
    const providedThatTheAmbientTemperatureOverrideIsActive = async () => {
@@ -130,7 +130,7 @@ describe("CompressorSpeedController,", () => {
    };
 
    const theValvePositionResolvedVoteShouldBe = async (expected) => {
-      let actual = await rockhopper.read("Erd_ValvePosition_ResolvedVote");
+      let actual = await rockhopper.read("Erd_SealedSystemValvePosition_ResolvedVote");
       expect(actual.position).toEqual(expected);
    };
 

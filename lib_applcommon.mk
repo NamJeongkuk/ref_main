@@ -45,6 +45,7 @@ applcommon_SRC_DIRS:=\
   $(applcommon_LIB_ROOT)/Endianness \
   $(applcommon_LIB_ROOT)/ErdStream \
   $(applcommon_LIB_ROOT)/Event \
+  $(applcommon_LIB_ROOT)/EventQueue \
   $(applcommon_LIB_ROOT)/Filter \
   $(applcommon_LIB_ROOT)/Git \
   $(applcommon_LIB_ROOT)/HardwareInterfaces \

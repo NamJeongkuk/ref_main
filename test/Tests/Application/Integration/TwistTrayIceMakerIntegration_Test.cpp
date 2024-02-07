@@ -20,6 +20,7 @@ extern "C"
 #include "Constants_Binary.h"
 #include "IceMakerData.h"
 #include "StepperPositionRequest.h"
+#include "EventQueueInterruptSafePlugin.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -246,11 +247,17 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       return request.stepsToMove;
    }
 
+   void AfterTheEventQueueIsRun()
+   {
+      EventQueue_InterruptSafe_Run(EventQueueInterruptSafePlugin_GetInterruptSafeEventQueue());
+   }
+
    void GivenTheFreshFoodDamperIsDoneMoving(void)
    {
       while(DamperStepsRemaining() > 0)
       {
          Interrupt_TestDouble_TriggerInterrupt(fastInterruptTestDouble);
+         AfterTheEventQueueIsRun();
       }
    }
 

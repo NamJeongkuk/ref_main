@@ -10,6 +10,9 @@
 #include "FreshFoodDamperMotorPlugin.h"
 #include "SystemErds.h"
 #include "Constants_Binary.h"
+#include "EventQueueInterruptSafePlugin.h"
+
+static const uint16_t noExcitationDelay = 0;
 
 static const StepperMotorPins_t damperPins = {
    .motorDriveA = Erd_BspGpio_MTR_DRV_00,
@@ -119,7 +122,9 @@ void FreshFoodDamperMotorPlugin_Init(FreshFoodDamperMotorPlugin_t *instance, I_D
       &driverConfig,
       DataModelErdPointerAccess_GetGpioGroup(dataModel, Erd_GpioGroupInterface),
       (DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_FastTickInterrupt))->OnInterrupt,
-      &PersonalityParametricData_Get(dataModel)->freshFoodDamperData->delayBetweenStepEventsInHundredsOfMicroseconds);
+      EventQueueInterruptSafePlugin_GetEventQueueInterface(),
+      &PersonalityParametricData_Get(dataModel)->freshFoodDamperData->delayBetweenStepEventsInHundredsOfMicroseconds,
+      &noExcitationDelay);
 
    DamperRequestManager_Init(
       &instance->_private.damperRequestManager,

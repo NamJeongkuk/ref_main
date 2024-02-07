@@ -9,7 +9,7 @@
 #define DEFROSTDATA_H
 
 #include "TemperatureDegFx100.h"
-#include "ValvePosition.h"
+#include "SealedSystemValvePosition.h"
 #include "DamperVotedPosition.h"
 #include "FanSpeed.h"
 #include "CompressorVotedSpeed.h"
@@ -34,7 +34,7 @@ typedef struct
 {
    uint8_t maxPrechillTimeInMinutes;
    uint8_t maxPrechillTimeForFreshFoodOnlyDefrostInMinutes;
-   ValvePosition_t prechillRefrigerantValvePosition;
+   SealedSystemValvePosition_t prechillRefrigerantValvePosition;
    CompressorSpeed_t prechillCompressorSpeed;
    FanSpeed_t prechillFreezerEvapFanSpeed;
    FanSpeed_t prechillFreshFoodEvapFanSpeed;
@@ -61,7 +61,7 @@ typedef struct
 
 typedef struct
 {
-   ValvePosition_t defrostHeaterOnRefrigerantValvePosition;
+   SealedSystemValvePosition_t defrostHeaterOnRefrigerantValvePosition;
    uint8_t freezerDefrostHeaterMaxOnTimeInMinutes;
    uint8_t freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes;
    uint8_t freezerHeaterOnTimeToSetAbnormalDefrostInMinutes;
@@ -82,7 +82,7 @@ typedef struct
 {
    uint8_t dwellTimeInMinutes;
    DamperPosition_t dwellFreshFoodDamperPosition;
-   ValvePosition_t dwellRefrigerantValvePosition;
+   SealedSystemValvePosition_t dwellRefrigerantValvePosition;
 } DefrostDwellData_t;
 
 typedef struct
@@ -91,7 +91,7 @@ typedef struct
    uint8_t freshFoodOnlyPostDwellExitTimeInMinutes;
    TemperatureDegFx100_t postDwellFreezerEvapExitTemperatureInDegFx100;
    TemperatureDegFx100_t freshFoodOnlyPostDwellFreezerEvapExitTemperatureInDegFx100;
-   ValvePosition_t postDwellRefrigerantValvePosition;
+   SealedSystemValvePosition_t postDwellRefrigerantValvePosition;
    CompressorSpeed_t postDwellCompressorSpeed;
    FanSpeed_t postDwellCondenserFanSpeed;
    DamperPosition_t postDwellFreshFoodDamperPosition;

@@ -70,6 +70,7 @@ static void SetStepperPositionRequestForHoming(DamperRequestManager_t *instance)
    StepperPositionRequest_t stepRequest;
    stepRequest.direction = TurningDirection_Clockwise;
    stepRequest.stepsToMove = instance->_private.damperData->stepsToHome;
+   stepRequest.resetSubstep = true;
 
    SetDamperStepperMotorPositionRequest(instance, stepRequest);
 }
@@ -84,7 +85,11 @@ static void SetCurrentDamperPositionTo(DamperRequestManager_t *instance, DamperP
 
 static void SetCurrentPositionRequestTo(DamperRequestManager_t *instance, DamperVotedPosition_t requestedPosition)
 {
-   StepperPositionRequest_t stepRequest = { .direction = TurningDirection_Clockwise, .stepsToMove = 0 };
+   StepperPositionRequest_t stepRequest = {
+      .direction = TurningDirection_Clockwise,
+      .stepsToMove = 0,
+      .resetSubstep = false
+   };
 
    if(requestedPosition.position == DamperPosition_Open)
    {

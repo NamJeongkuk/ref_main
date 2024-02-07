@@ -48,7 +48,7 @@
 #include "GridBlockNumber.h"
 #include "TemperatureDegFx100.h"
 #include "CalculatedGridLines.h"
-#include "ValvePosition.h"
+#include "SealedSystemValvePosition.h"
 #include "Setpoint.h"
 #include "SetpointVotedTemperature.h"
 #include "DefrostState.h"
@@ -138,6 +138,7 @@
 #include "NonVolatileUsageMonitor.h"
 #include "RecessLightOnRequest.h"
 #include "IceMakerStateMachineState.h"
+#include "SealedSystemValvePosition.h"
 
 // clang-format off
 
@@ -1225,11 +1226,11 @@ enum
    ENTRY(Erd_FreshFoodDamperPosition_DefrostVote,                0xF321, DamperVotedPosition_t,                         Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_FreshFoodDamperPosition_GridVote,                   0xF322, DamperVotedPosition_t,                         Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
-   ENTRY(Erd_ValvePosition_ResolvedVote,                    0xF32A, ValveVotedPosition_t,                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_ValvePosition_WinningVoteErd,                  0xF32B, WinningVoteErd_t,                                   Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_ValvePosition_FactoryVote,                     0xF32C, ValveVotedPosition_t,                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_ValvePosition_DefrostVote,                     0xF32D, ValveVotedPosition_t,                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_ValvePosition_GridVote,                        0xF32E, ValveVotedPosition_t,                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_SealedSystemValvePosition_ResolvedVote,        0xF32A, SealedSystemValveVotedPosition_t,              Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_SealedSystemValvePosition_WinningVoteErd,      0xF32B, WinningVoteErd_t,                              Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_SealedSystemValvePosition_FactoryVote,         0xF32C, SealedSystemValveVotedPosition_t,              Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_SealedSystemValvePosition_DefrostVote,         0xF32D, SealedSystemValveVotedPosition_t,              Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_SealedSystemValvePosition_GridVote,            0xF32E, SealedSystemValveVotedPosition_t,              Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_CompressorSpeed_ResolvedVote,                  0xF339, CompressorVotedSpeed_t,                             Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_CompressorSpeed_WinningVoteErd,                0xF33A, WinningVoteErd_t,                                   Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
@@ -1423,6 +1424,10 @@ enum
    ENTRY(Erd_TwistIceMakerMotorControlRequest,              0xF54E, bool,                                               Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_FreshFoodDamperStepperMotorDriveEnable,        0xF54F, bool,                                               Swap_No,  Io_None, Sub_Y, MappedBsp,              NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_TwistIceMakerMotorDriveEnable,                 0xF550, bool,                                               Swap_No,  Io_None, Sub_N, MappedBsp,              NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_SealedSystemValveStepperMotorPositionRequest,  0xF551, StepperPositionRequest_t,                           Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_SealedSystemValveHomingRequest,                0xF552, bool,                                               Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_SealedSystemValveCurrentPosition,              0xF553, SealedSystemValvePosition_t,                        Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_SealedSystemValveStepperMotorControlRequest,   0xF554, bool,                                               Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_FillTubeHeater_Pwm,                            0xF55A, PwmDutyCycle_t,                                     Swap_Yes, Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_FreshFoodBackWallLight_RampingPwm,             0xF55B, RampingPwmDutyCycle_t,                              Swap_Yes, Io_None, Sub_Y, MappedBsp,              NotNv,                                                       NotNv,         NotFault) \

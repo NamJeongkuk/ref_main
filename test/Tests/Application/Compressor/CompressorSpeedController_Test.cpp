@@ -12,7 +12,7 @@ extern "C"
 #include "CompressorData.h"
 #include "Constants_Time.h"
 #include "Constants_Binary.h"
-#include "ValvePosition.h"
+#include "SealedSystemValvePosition.h"
 #include "SystemErds.h"
 }
 
@@ -41,7 +41,7 @@ static const CompressorSpeedControllerConfiguration_t config = {
    .compressorStateErd = Erd_CompressorState,
    .compressorSpeedRequestErd = Erd_CompressorControllerSpeedRequest,
    .compressorSpeedResolvedVoteErd = Erd_CompressorSpeed_ResolvedVote,
-   .valvePositionResolvedVoteErd = Erd_ValvePosition_ResolvedVote,
+   .valvePositionResolvedVoteErd = Erd_SealedSystemValvePosition_ResolvedVote,
    .filteredAmbientTemperatureInDegFx100Erd = Erd_Ambient_FilteredInternalTemperatureResolvedInDegFx100,
    .disableMinimumCompressorTimesVoteErd = Erd_DisableMinimumCompressorTimes_ResolvedVote,
 };
@@ -95,23 +95,23 @@ TEST_GROUP(VariableSpeedCompressorSpeedController)
          &temperature);
    }
 
-   void TheValvePositionIs(ValvePosition_t position)
+   void TheValvePositionIs(SealedSystemValvePosition_t position)
    {
-      ValveVotedPosition_t votedPosition;
+      SealedSystemValveVotedPosition_t votedPosition;
       votedPosition.care = true;
       votedPosition.position = position;
       DataModel_Write(
          dataModel,
-         Erd_ValvePosition_ResolvedVote,
+         Erd_SealedSystemValvePosition_ResolvedVote,
          &votedPosition);
    }
 
-   ValvePosition_t GetValvePosition()
+   SealedSystemValvePosition_t GetValvePosition()
    {
-      ValveVotedPosition_t actualValvePosition;
+      SealedSystemValveVotedPosition_t actualValvePosition;
       DataModel_Read(
          dataModel,
-         Erd_ValvePosition_ResolvedVote,
+         Erd_SealedSystemValvePosition_ResolvedVote,
          &actualValvePosition);
 
       return actualValvePosition.position;
@@ -119,13 +119,13 @@ TEST_GROUP(VariableSpeedCompressorSpeedController)
 
    void TheValvePositionChanges()
    {
-      if(GetValvePosition() == ValvePosition_B)
+      if(GetValvePosition() == SealedSystemValvePosition_B)
       {
-         TheValvePositionIs(ValvePosition_C);
+         TheValvePositionIs(SealedSystemValvePosition_C);
       }
       else
       {
-         TheValvePositionIs(ValvePosition_B);
+         TheValvePositionIs(SealedSystemValvePosition_B);
       }
    }
 

@@ -15,6 +15,7 @@
 #include "CompressorPlugin.h"
 #include "FourDoorFanPlugin.h"
 #include "CoolingSystemRequestHandler.h"
+#include "ThreeWaySealedSystemValvePlugin.h"
 
 typedef struct
 {
@@ -26,6 +27,7 @@ typedef struct
       CompressorPlugin_t compressorPlugin;
       FourDoorFanPlugin_t fourDoorFanPlugin;
       CoolingSystemRequestHandler_t coolingSystemRequestHandler;
+      ThreeWaySealedSystemValvePlugin_t threeWaySealedSystemValvePlugin;
    } _private;
 } FourDoorDualEvaporatorCoolingSystemPlugin_t;
 

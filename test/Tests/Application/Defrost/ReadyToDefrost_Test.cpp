@@ -103,7 +103,7 @@ static const DefrostPrechillPrepData_t prechillPrepData = {
 static const DefrostPrechillData_t prechillData = {
    .maxPrechillTimeInMinutes = 10,
    .maxPrechillTimeForFreshFoodOnlyDefrostInMinutes = 20,
-   .prechillRefrigerantValvePosition = ValvePosition_B,
+   .prechillRefrigerantValvePosition = SealedSystemValvePosition_B,
    .prechillCompressorSpeed = CompressorSpeed_Low,
    .prechillFreezerEvapFanSpeed = FanSpeed_SuperLow,
    .prechillFreshFoodEvapFanSpeed = FanSpeed_Low,
@@ -128,7 +128,7 @@ static const DefrostHeaterOnEntryData_t heaterOnEntryData = {
 };
 
 static const DefrostHeaterOnData_t heaterOnData = {
-   .defrostHeaterOnRefrigerantValvePosition = ValvePosition_A,
+   .defrostHeaterOnRefrigerantValvePosition = SealedSystemValvePosition_A,
    .freezerDefrostHeaterMaxOnTimeInMinutes = 60,
    .freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 10,
    .freezerHeaterOnTimeToSetAbnormalDefrostInMinutes = 32,
@@ -148,7 +148,7 @@ static const DefrostHeaterOnData_t heaterOnData = {
 static const DefrostDwellData_t dwellData = {
    .dwellTimeInMinutes = 7,
    .dwellFreshFoodDamperPosition = DamperPosition_Closed,
-   .dwellRefrigerantValvePosition = ValvePosition_B
+   .dwellRefrigerantValvePosition = SealedSystemValvePosition_B
 };
 
 static const DefrostPostDwellData_t postDwellData = {
@@ -156,7 +156,7 @@ static const DefrostPostDwellData_t postDwellData = {
    .freshFoodOnlyPostDwellExitTimeInMinutes = 10,
    .postDwellFreezerEvapExitTemperatureInDegFx100 = -1000,
    .freshFoodOnlyPostDwellFreezerEvapExitTemperatureInDegFx100 = -1200,
-   .postDwellRefrigerantValvePosition = ValvePosition_B,
+   .postDwellRefrigerantValvePosition = SealedSystemValvePosition_B,
    .postDwellCompressorSpeed = CompressorSpeed_Low,
    .postDwellCondenserFanSpeed = FanSpeed_Low,
    .postDwellFreshFoodDamperPosition = DamperPosition_Closed

@@ -43,6 +43,7 @@ void FourDoorDualEvaporatorCoolingSystemPlugin_Init(FourDoorDualEvaporatorCoolin
 
    CompressorPlugin_Init(&instance->_private.compressorPlugin, dataModel);
    FourDoorFanPlugin_Init(&instance->_private.fourDoorFanPlugin, dataModel);
+   ThreeWaySealedSystemValvePlugin_Init(&instance->_private.threeWaySealedSystemValvePlugin, dataModel);
 
    CoolingSystemRequestHandler_Init(&instance->_private.coolingSystemRequestHandler, dataModel, &coolingSystemRequestHandlerConfig);
 }

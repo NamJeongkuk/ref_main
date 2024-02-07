@@ -17,6 +17,7 @@ extern "C"
 #include "Rx2xxResetSource.h"
 #include "PersonalityParametricData.h"
 #include "TddPersonality.h"
+#include "EventQueueInterruptSafePlugin.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -64,6 +65,11 @@ TEST_GROUP(DamperIntegration)
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1)
    {
       TimerModule_TestDouble_ElapseTime(timerModuleTestDouble, ticks, ticksToElapseAtATime);
+   }
+
+   void AfterTheEventQueueIsRun()
+   {
+      EventQueue_InterruptSafe_Run(EventQueueInterruptSafePlugin_GetInterruptSafeEventQueue());
    }
 
    void AfterNInterrupts(int numberOfInterrupts)
@@ -126,6 +132,7 @@ TEST_GROUP(DamperIntegration)
       DamperCurrentPositionShouldBe(DamperPosition_Closed);
 
       AfterNInterrupts(1);
+      AfterTheEventQueueIsRun();
       DamperCurrentPositionShouldBe(DamperPosition_Open);
    }
 
@@ -422,6 +429,7 @@ TEST_GROUP(DamperIntegration)
       StepperMotorControlRequestShouldBe(SET);
       StepperMotorDriveEnableShouldBe(SET);
       AfterNInterrupts(freshFoodDamperData->stepsToHome * (freshFoodDamperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1) + 1);
+      AfterTheEventQueueIsRun();
       StepsShouldBeSetToZero();
       DamperCurrentPositionShouldBe(DamperPosition_Closed);
    }
@@ -519,6 +527,7 @@ TEST(DamperIntegration, ShouldResetMinimumTemperatureChangeTimerWhenDamperPositi
    DamperPositionResolvedVoteShouldBe(DamperPosition_Closed);
 
    AfterNInterrupts(freshFoodDamperData->stepsToClose * (freshFoodDamperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1) + 1);
+   AfterTheEventQueueIsRun();
    StepsShouldBeSetToZero();
    StepperMotorControlRequestShouldBe(CLEAR);
    DamperCurrentPositionShouldBe(DamperPosition_Closed);

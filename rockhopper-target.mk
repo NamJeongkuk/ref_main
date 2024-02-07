@@ -97,6 +97,7 @@ SRC_DIRS:=\
   src/Application/RequestStatusUpdater \
   src/Application/RfidCommunication \
   src/Application/Sabbath \
+  src/Application/SealedSystemValve \
   src/Application/Sensor \
   src/Application/ServiceMode \
   src/Application/Setpoints \
@@ -106,7 +107,6 @@ SRC_DIRS:=\
   src/Application/SystemMonitor \
   src/Application/TimerModule \
   src/Application/Uassert \
-  src/Application/Valve \
   src/Application/VariableSweatHeater \
   src/Application/WaterFilter \
   src/Application/WaterVolumeUsage \
@@ -132,7 +132,6 @@ INC_DIRS:=\
   src/Application/SystemMonitor \
   src/Application/ServiceDiagnostics \
   src/Application/Temperature \
-  src/Application/Valve \
   src/Application/Voting \
   src/Application/WaterFilter \
   src/Application/WaterVolumeUsage \

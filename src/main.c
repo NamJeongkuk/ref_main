@@ -56,6 +56,7 @@
 #include "ShortGitHash.h"
 #include "PersonalityEepromStack.h"
 #include "BoardsInSystemPlugin.h"
+#include "EventQueueInterruptSafePlugin.h"
 
 enum
 {
@@ -248,6 +249,9 @@ int main(void)
       &boardsInSystemPlugin,
       dataModel);
 
+   EventQueueInterruptSafePlugin_Init();
+   EventQueue_InterruptSafe_t *eventQueue = EventQueueInterruptSafePlugin_GetInterruptSafeEventQueue();
+
    Application_Init(
       &application,
       dataModel,
@@ -282,7 +286,7 @@ int main(void)
 
       DataSource_Gpio_Run();
 
-      if(!TimerModule_Run(timerModule))
+      if(!TimerModule_Run(timerModule) | EventQueue_InterruptSafe_Run(eventQueue))
       {
          Interrupts_WaitForInterrupt();
       }

@@ -12,6 +12,8 @@
 #include "I_DataModel.h"
 #include "I_GpioGroup.h"
 #include "SingleDamperData.h"
+#include "Timer.h"
+#include "I_EventQueue.h"
 
 typedef struct
 {
@@ -49,18 +51,24 @@ typedef struct
 {
    struct
    {
-      I_DataModel_t *dataModel;
-      const StepperMotorDriverConfiguration_t *config;
-      I_GpioGroup_t *gpioGroup;
       EventSubscription_t erdChangeSubscription;
       EventSubscription_t timeSourceEventSubscription;
       EventSubscription_t motorEnableSubscription;
+      I_DataModel_t *dataModel;
+      const StepperMotorDriverConfiguration_t *config;
+      I_GpioGroup_t *gpioGroup;
       I_Event_t *timeSourceEvent;
-      uint8_t currentSubStep;
-      uint16_t stepsToRun;
-      bool directionToTurn;
-      uint8_t countBetweenSteps;
+      I_EventQueue_t *eventQueue;
       const uint8_t *numberOfEventsBetweenSteps;
+      const uint16_t *numberOfEventsForExcitationDelay;
+      uint16_t currentOverallStep;
+      uint16_t stepsToRun;
+      uint16_t excitationDelayStepCount;
+      uint8_t countBetweenSteps;
+      uint8_t currentSubStep;
+      bool directionToTurn;
+      bool excitationDelayActive;
+      bool subStepResetRequested;
    } _private;
 } StepperMotorDriver_t;
 
@@ -70,7 +78,9 @@ typedef struct
  * @param config
  * @param gpioGroup
  * @param timeSourceEvent
+ * @param interruptSafeEventQueue
  * @param numberOfEventsBetweenSteps
+ * @param numberOfEventsForExcitationDelay
  */
 void StepperMotorDriver_Init(
    StepperMotorDriver_t *instance,
@@ -78,6 +88,8 @@ void StepperMotorDriver_Init(
    const StepperMotorDriverConfiguration_t *config,
    I_GpioGroup_t *gpioGroup,
    I_Event_t *timeSourceEvent,
-   const uint8_t *numberOfEventsBetweenSteps);
+   I_EventQueue_t *interruptSafeEventQueue,
+   const uint8_t *numberOfEventsBetweenSteps,
+   const uint16_t *numberOfEventsForExcitationDelay);
 
 #endif

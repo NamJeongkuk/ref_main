@@ -106,6 +106,17 @@ TEST_GROUP(DamperRequestManager)
       CHECK_EQUAL(expected, actual.direction);
    }
 
+   void ResetSubStepShouldBe(bool expected)
+   {
+      StepperPositionRequest_t actual;
+      DataModel_Read(
+         dataModel,
+         Erd_FreshFoodDamperStepperMotorPositionRequest,
+         &actual);
+
+      CHECK_EQUAL(expected, actual.resetSubstep);
+   }
+
    void SetHomingFlagFalse()
    {
       DataModel_Write(
@@ -186,15 +197,16 @@ TEST(DamperRequestManager, ShouldInitializeTheModule)
    TheModuleIsInitialized();
 }
 
-TEST(DamperRequestManager, ShouldRequestHomingStepsAndDirectionToCounterClockwiseOnInitialization)
+TEST(DamperRequestManager, ShouldRequestHomingStepsAndDirectionToCounterClockwiseAndResetSubstepOnInitialization)
 {
    Given TheModuleIsInitialized();
 
    DamperMotorRequestedStepsShouldBe(StepsToHome);
    DirectionShouldBe(TurningDirection_Clockwise);
+   ResetSubStepShouldBe(true);
 }
 
-TEST(DamperRequestManager, ShouldSetMotorStepsToOpenAndDirectionToClockwiseWhenOpenPositionRequested)
+TEST(DamperRequestManager, ShouldSetMotorStepsToOpenAndDirectionToCounterClockwiseAndResetSubstepToFalseWhenOpenPositionRequested)
 {
    Given TheRequestedPositionIs(DamperPosition_Closed);
    And TheModuleIsInitialized();
@@ -203,15 +215,17 @@ TEST(DamperRequestManager, ShouldSetMotorStepsToOpenAndDirectionToClockwiseWhenO
 
    DamperMotorRequestedStepsShouldBe(StepsToOpen);
    DirectionShouldBe(TurningDirection_CounterClockwise);
+   ResetSubStepShouldBe(false);
 }
 
-TEST(DamperRequestManager, ShouldSetMotorStepsToCloseAndDirectionToCounterClockwiseWhenClosedPositionRequested)
+TEST(DamperRequestManager, ShouldSetMotorStepsToCloseAndDirectionToClockwiseWhenClosedPositionRequested)
 {
    GivenTheModuleIsInitializedAndHomingIsComplete();
    When TheRequestedPositionIs(DamperPosition_Closed);
 
    DamperMotorRequestedStepsShouldBe(StepsToClose);
    DirectionShouldBe(TurningDirection_Clockwise);
+   ResetSubStepShouldBe(false);
 }
 
 TEST(DamperRequestManager, ShouldHandleConsecutiveRequests)

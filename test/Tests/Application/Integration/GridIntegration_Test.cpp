@@ -15,6 +15,7 @@ extern "C"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
 #include "DataModelErdPointerAccess.h"
+#include "EventQueueInterruptSafePlugin.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -514,11 +515,17 @@ TEST_GROUP(GridIntegration)
       return request.stepsToMove;
    }
 
+   void AfterTheEventQueueIsRun()
+   {
+      EventQueue_InterruptSafe_Run(EventQueueInterruptSafePlugin_GetInterruptSafeEventQueue());
+   }
+
    void WhenTheFreshFoodDamperIsDoneMoving(void)
    {
       while(DamperStepsRemaining() > 0)
       {
          Interrupt_TestDouble_TriggerInterrupt(fastInterruptTestDouble);
+         AfterTheEventQueueIsRun();
       }
    }
 

@@ -136,35 +136,35 @@
         {
           "namespace": "mb",
           "displayName": "Valve Position Resolved Vote",
-          "name": "Erd_ValvePosition_ResolvedVote",
+          "name": "Erd_SealedSystemValvePosition_ResolvedVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "Valve Position Winning Vote ERD",
-          "name": "Erd_ValvePosition_WinningVoteErd",
+          "name": "Erd_SealedSystemValvePosition_WinningVoteErd",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "Valve Position Factory Vote",
-          "name": "Erd_ValvePosition_FactoryVote",
+          "name": "Erd_SealedSystemValvePosition_FactoryVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "Valve Position Defrost Vote",
-          "name": "Erd_ValvePosition_DefrostVote",
+          "name": "Erd_SealedSystemValvePosition_DefrostVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Valve Position Grid Vote",
-          "name": "Erd_ValvePosition_GridVote",
+          "displayName": "Sealed System Valve Position Grid Vote",
+          "name": "Erd_SealedSystemValvePosition_GridVote",
           "read": true,
           "write": true
         },
@@ -172,6 +172,34 @@
           "namespace": "mb",
           "displayName": "Time In Minutes In Position B",
           "name": "Erd_TimeInMinutesInValvePositionB",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Valve Current Position",
+          "name": "Erd_SealedSystemValveCurrentPosition",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Homing Request",
+          "name": "Erd_SealedSystemValveHomingRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Stepper Motor Position Request",
+          "name": "Erd_SealedSystemValveStepperMotorPositionRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Stepper Motor Control Request",
+          "name": "Erd_SealedSystemValveStepperMotorControlRequest",
           "read": true,
           "write": true
         }
@@ -556,8 +584,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Valve Position Defrost Vote",
-          "name": "Erd_ValvePosition_DefrostVote",
+          "displayName": "Sealed System Valve Position Defrost Vote",
+          "name": "Erd_SealedSystemValvePosition_DefrostVote",
           "read": true,
           "write": true
         },

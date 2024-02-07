@@ -322,7 +322,7 @@ describe('Defrost', function()
   end)
 
   it('should require sealed system valve position argument of prechill to be valid sealed system valve position', function()
-    should_fail_with("prechill.prechill_refrigerant_valve_position='not a valid position' must be in the set { 'position_A', 'position_B', 'position_C', 'position_D' }", function()
+    should_fail_with("prechill.prechill_refrigerant_valve_position='not a valid position' must be in the set { 'position_home', 'position_A', 'position_B', 'position_C', 'position_D' }", function()
       local config = generate_config()
       config.prechill['prechill_refrigerant_valve_position'] = 'not a valid position'
       defrost(config)
@@ -330,7 +330,7 @@ describe('Defrost', function()
   end)
 
   it('should require sealed system valve position argument of heater on to be valid sealed system valve position', function()
-    should_fail_with("heater_on.defrost_heater_on_refrigerant_valve_position='not a valid position' must be in the set { 'position_A', 'position_B', 'position_C', 'position_D' }", function()
+    should_fail_with("heater_on.defrost_heater_on_refrigerant_valve_position='not a valid position' must be in the set { 'position_home', 'position_A', 'position_B', 'position_C', 'position_D' }", function()
       local config = generate_config()
       config.heater_on['defrost_heater_on_refrigerant_valve_position'] = 'not a valid position'
       defrost(config)
@@ -338,7 +338,7 @@ describe('Defrost', function()
   end)
 
   it('should require sealed system valve position argument of dwell to be valid sealed system valve position', function()
-    should_fail_with("dwell.dwell_refrigerant_valve_position='not a valid position' must be in the set { 'position_A', 'position_B', 'position_C', 'position_D' }", function()
+    should_fail_with("dwell.dwell_refrigerant_valve_position='not a valid position' must be in the set { 'position_home', 'position_A', 'position_B', 'position_C', 'position_D' }", function()
       local config = generate_config()
       config.dwell['dwell_refrigerant_valve_position'] = 'not a valid position'
       defrost(config)
@@ -346,7 +346,7 @@ describe('Defrost', function()
   end)
 
   it('should require sealed system valve position argument of post dwell to be valid sealed system valve position', function()
-    should_fail_with("post_dwell.post_dwell_refrigerant_valve_position='not a valid position' must be in the set { 'position_A', 'position_B', 'position_C', 'position_D' }", function()
+    should_fail_with("post_dwell.post_dwell_refrigerant_valve_position='not a valid position' must be in the set { 'position_home', 'position_A', 'position_B', 'position_C', 'position_D' }", function()
       local config = generate_config()
       config.post_dwell['post_dwell_refrigerant_valve_position'] = 'not a valid position'
       defrost(config)

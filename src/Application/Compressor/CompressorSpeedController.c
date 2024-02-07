@@ -721,7 +721,7 @@ static void DataModelChanged(void *context, const void *args)
    }
    else if(onChangeArgs->erd == instance->_private.config->valvePositionResolvedVoteErd)
    {
-      const ValveVotedPosition_t *resolvedValvePosition = onChangeArgs->data;
+      const SealedSystemValveVotedPosition_t *resolvedValvePosition = onChangeArgs->data;
 
       Hsm_SendSignal(
          &instance->_private.hsm,

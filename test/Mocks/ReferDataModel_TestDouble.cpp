@@ -13,6 +13,7 @@ extern "C"
 #include "SystemData.h"
 #include "Eeprom_AT21CS11.h"
 #include "Gea2Addresses.h"
+#include "EventQueueInterruptSafePlugin.h"
 }
 
 #include "ReferDataModel_TestDouble.h"
@@ -73,6 +74,8 @@ static void Init(ReferDataModel_TestDouble_t *instance, I_Action_t *action, Pers
       &instance->_private.messageEndpointNonMockTestDouble,
       Gea2Address_Mainboard);
    DataModelErdPointerAccess_Write(instance->dataModel, Erd_Gea2MessageEndpoint, &instance->_private.messageEndpointNonMockTestDouble.interface);
+
+   EventQueueInterruptSafePlugin_Init();
 }
 
 void ReferDataModel_TestDouble_Init(ReferDataModel_TestDouble_t *instance)

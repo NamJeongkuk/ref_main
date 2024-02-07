@@ -15,7 +15,6 @@
 #include "SideBySideDefrostPlugin.h"
 #include "FreshFoodDamperPlugin.h"
 #include "SideBySideSetpointPlugin.h"
-#include "ValvePlugin.h"
 #include "SideBySideSingleEvaporatorCoolingSystemSensorFilteringPlugin.h"
 #include "SideBySideParallelMotorControlPlugin.h"
 #include "SideBySideFanPlugin.h"
@@ -35,7 +34,6 @@ typedef struct
       SideBySideDefrostPlugin_t defrostPlugin;
       FreshFoodDamperPlugin_t freshFoodDamperPlugin;
       SideBySideSetpointPlugin_t sideBySideSetpointPlugin;
-      ValvePlugin_t valvePlugin;
       SideBySideFanPlugin_t sideBySideFanPlugin;
       AmbientTemperatureAndHumidityPlugin_t ambientTemperatureAndHumidityPlugin;
       SideBySideParallelMotorControlPlugin_t sideBySideParallelMotorControlPlugin;

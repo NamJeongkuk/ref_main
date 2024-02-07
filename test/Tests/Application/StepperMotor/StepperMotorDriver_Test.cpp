@@ -12,6 +12,7 @@ extern "C"
 #include "StepperPositionRequest.h"
 #include "utils.h"
 #include "EventSubscription.h"
+#include "EventQueue_InterruptSafe.h"
 }
 
 #include "CppUTest/TestHarness.h"
@@ -33,10 +34,9 @@ enum
    B,
    Abar,
    Bbar,
-   NumberOfPins,
 
    ClockwiseSteps = 600,
-   CounterClockwiseSteps = 700
+   CounterClockwiseSteps = 701
 };
 
 static const StepperMotorSubStep_t subSteps[] = {
@@ -51,10 +51,10 @@ static const StepperMotorSubStepConfiguration_t subStepConfig = {
    .numberOfSubSteps = NUM_ELEMENTS(subSteps)
 };
 
-static const StepperMotorPins_t damperPins = { 
-   .motorDriveA = A, 
-   .motorDriveB = B, 
-   .motorDriveABar = Abar, 
+static const StepperMotorPins_t motorPins = {
+   .motorDriveA = A,
+   .motorDriveB = B,
+   .motorDriveABar = Abar,
    .motorDriveBBar = Bbar,
 };
 
@@ -62,12 +62,12 @@ static const StepperMotorDriverConfiguration_t config = {
    .stepperMotorPositionRequestErd = Erd_FreshFoodDamperStepperMotorPositionRequest,
    .motorControlRequestErd = Erd_FreshFoodDamperStepperMotorControlRequest,
    .motorEnableErd = Erd_FreshFoodDamperStepperMotorDriveEnable,
-   .pins = &damperPins,
-   .subStepConfig = &subStepConfig
+   .pins = &motorPins,
+   .subStepConfig = &subStepConfig,
 };
 
-static bool inputStates[NumberOfPins];
-static bool outputStates[NumberOfPins];
+static bool inputStates[4];
+static bool outputStates[4];
 
 static void DataModelChanged(void *context, const void *_args)
 {
@@ -83,7 +83,8 @@ static void DataModelChanged(void *context, const void *_args)
          .onObject(context)
          .withParameter("Erd", args->erd)
          .withParameter("Direction", positionRequest->direction)
-         .withParameter("Steps", positionRequest->stepsToMove);
+         .withParameter("Steps", positionRequest->stepsToMove)
+         .withParameter("ResetSubstep", positionRequest->resetSubstep);
    }
    else if(args->erd == config.motorControlRequestErd)
    {
@@ -95,6 +96,11 @@ static void DataModelChanged(void *context, const void *_args)
    }
 }
 
+static void FailedToEnqueueEvent()
+{
+   FAIL("Failed to enqueue event");
+}
+
 TEST_GROUP(StepperMotorDriver)
 {
    StepperMotorDriver_t instance;
@@ -102,18 +108,23 @@ TEST_GROUP(StepperMotorDriver)
    Event_Synchronous_t stepEvent;
    GpioGroup_TestDouble_t gpioGroupDouble;
    EventSubscription_t dataModelOnChangeSubscription;
+   EventQueue_InterruptSafe_t eventQueue;
+   uint8_t eventBuffer[50];
    uint8_t numberOfEventsBetweenSteps;
+   uint16_t numberOfEventsForExcitationDelay;
 
    void setup()
    {
       ReferDataModel_TestDouble_Init(&dataModelDouble);
       Event_Synchronous_Init(&stepEvent);
       GpioGroup_TestDouble_Init(&gpioGroupDouble, inputStates, outputStates);
+      EventQueue_InterruptSafe_Init(&eventQueue, &eventBuffer, sizeof(eventBuffer), FailedToEnqueueEvent);
 
       EventSubscription_Init(&dataModelOnChangeSubscription, NULL, DataModelChanged);
       Event_Subscribe(dataModelDouble.dataModel->OnDataChange, &dataModelOnChangeSubscription);
 
       numberOfEventsBetweenSteps = 10;
+      numberOfEventsForExcitationDelay = 500;
    }
 
    void TheModuleIsInitialized()
@@ -126,7 +137,9 @@ TEST_GROUP(StepperMotorDriver)
          &config,
          &gpioGroupDouble.gpioGroup,
          &stepEvent.interface,
-         &numberOfEventsBetweenSteps);
+         &eventQueue.interface,
+         &numberOfEventsBetweenSteps,
+         &numberOfEventsForExcitationDelay);
    }
 
    void PinShouldBe(GpioChannel_t pinChannel, bool expectedState)
@@ -182,12 +195,20 @@ TEST_GROUP(StepperMotorDriver)
       DataModel_Write(dataModelDouble.dataModel, config.stepperMotorPositionRequestErd, &request);
    }
 
+   void WhenTheSubstepResetIsSetTo(bool resetSubstep)
+   {
+      StepperPositionRequest_t request;
+      DataModel_Read(dataModelDouble.dataModel, config.stepperMotorPositionRequestErd, &request);
+      request.resetSubstep = resetSubstep;
+      DataModel_Write(dataModelDouble.dataModel, config.stepperMotorPositionRequestErd, &request);
+   }
+
    void WhenEventIsRaised(Event_Synchronous_t * event)
    {
       Event_Synchronous_Publish(event, NULL);
    }
 
-   void RunForNSteps(uint16_t stepRequest)
+   void AfterNSteps(uint16_t stepRequest)
    {
       for(uint16_t i = 0; i < stepRequest; i++)
       {
@@ -199,9 +220,22 @@ TEST_GROUP(StepperMotorDriver)
       }
    }
 
+   void AfterNEvents(uint16_t numberOfEvents)
+   {
+      for(uint16_t i = 0; i < numberOfEvents; i++)
+      {
+         WhenEventIsRaised(&stepEvent);
+      }
+   }
+
    void ShouldStopOnNextTimeout()
    {
       WhenEventIsRaised(&stepEvent);
+
+      AfterNEvents(numberOfEventsForExcitationDelay);
+      AllPinsShouldBeOff();
+
+      AfterTheEventQueueIsRun();
    }
 
    void TheGpioChannelDirectionIs(GpioChannel_t channel, GpioDirection_t direction)
@@ -244,6 +278,13 @@ TEST_GROUP(StepperMotorDriver)
          &state);
    }
 
+   void WhenTheRequestedStepsAreSetToAndMotorDriveEnabled(uint16_t stepRequest)
+   {
+      When StepperMotorDriveEnableIs(CLEAR);
+      WhenTheRequestedStepsAreSetTo(stepRequest);
+      When StepperMotorDriveEnableIs(SET);
+   }
+
    void TheMotorShouldBeRequestedTo(bool expectedRequest)
    {
       mock()
@@ -259,6 +300,11 @@ TEST_GROUP(StepperMotorDriver)
          .withParameter("Erd", config.stepperMotorPositionRequestErd)
          .withParameter("Steps", expectedSteps)
          .ignoreOtherParameters();
+   }
+
+   void AfterTheEventQueueIsRun()
+   {
+      EventQueue_InterruptSafe_Run(&eventQueue);
    }
 };
 
@@ -285,13 +331,17 @@ TEST(StepperMotorDriver, ShouldClearMotorControlRequestAfterMotorControlHasCompl
 {
    Given TheModuleIsInitialized();
    WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
-   WhenTheRequestedStepsAreSetTo(ClockwiseSteps);
-   Given StepperMotorDriveEnableIs(true);
-   ThePinsShouldBe(subSteps[0]);
+   WhenTheRequestedStepsAreSetToAndMotorDriveEnabled(CounterClockwiseSteps);
 
-   After RunForNSteps(ClockwiseSteps);
+   ThePinsShouldBe(subSteps[3]);
+   AfterNEvents(numberOfEventsForExcitationDelay);
+   ThePinsShouldBe(subSteps[2]);
+
+   AfterNSteps(CounterClockwiseSteps - 2);
    WhenEventIsRaised(&stepEvent);
-   AllPinsShouldBeOff();
+   AfterNEvents(numberOfEventsForExcitationDelay);
+
+   AfterTheEventQueueIsRun();
    StepperMotorControlRequestShouldBe(CLEAR);
 }
 
@@ -304,17 +354,6 @@ TEST(StepperMotorDriver, ShouldNotDriveMotorWhenStepperMotorPositionRequestChang
    WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
    WhenTheRequestedStepsAreSetTo(ClockwiseSteps);
    AllPinsShouldBeOff();
-}
-
-TEST(StepperMotorDriver, ShouldDriveMotorWhenMotorDriveEnableChangesToTrueAndStepIsGreaterThanZero)
-{
-   Given TheModuleIsInitialized();
-   Given StepperMotorDriveEnableIs(false);
-   WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
-   WhenTheRequestedStepsAreSetTo(ClockwiseSteps);
-
-   When StepperMotorDriveEnableIs(true);
-   ThePinsShouldBe(subSteps[0]);
 }
 
 TEST(StepperMotorDriver, ShouldNotDriveMotorWhenMotorDriveEnableChangesToFalseAndStepIsGreaterThanZero)
@@ -334,209 +373,246 @@ TEST(StepperMotorDriver, ShouldClearMotorRequestWhenMotorDriveEnableChangesToTru
    Given TheModuleIsInitialized();
    Given StepperMotorDriveEnableIs(false);
    WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
-   WhenTheRequestedStepsAreSetTo(0);
+   WhenTheRequestedStepsAreSetToAndMotorDriveEnabled(0);
 
-   When StepperMotorDriveEnableIs(true);
    StepperMotorControlRequestShouldBe(CLEAR);
 }
 
 TEST(StepperMotorDriver, ShouldOnlyGetNewPositionWhenStepperMotorDriveEnableIsTrueAndAfterParametricAmountOfSteps)
 {
    Given TheModuleIsInitialized();
+   WhenTheSubstepResetIsSetTo(false);
    WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
-   WhenTheRequestedStepsAreSetTo(CounterClockwiseSteps);
+   WhenTheRequestedStepsAreSetToAndMotorDriveEnabled(ClockwiseSteps);
 
-   When StepperMotorDriveEnableIs(true);
+   ThePinsShouldBe(subSteps[1]);
+   AfterNEvents(numberOfEventsForExcitationDelay);
+   ThePinsShouldBe(subSteps[2]);
 
    for(uint8_t i = 0; i < numberOfEventsBetweenSteps; i++)
    {
       WhenEventIsRaised(&stepEvent);
    }
-
-   ThePinsShouldBe(subSteps[0]);
+   ThePinsShouldBe(subSteps[2]);
 
    WhenEventIsRaised(&stepEvent);
-   ThePinsShouldBe(subSteps[1]);
-}
-
-TEST(StepperMotorDriver, ShouldCorrectlyStartClosingWhenStepperMotorDriveEnableIsTrueAndRequestedStepsChange)
-{
-   Given TheModuleIsInitialized();
-   WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
-   WhenTheRequestedStepsAreSetTo(CounterClockwiseSteps);
-
-   When StepperMotorDriveEnableIs(true);
-   After RunForNSteps(1);
-   ThePinsShouldBe(subSteps[1]);
-}
-
-TEST(StepperMotorDriver, ShouldCorrectlyStartOpeningWhenStepperMotorDriveEnableIsTrueAndRequestedStepsChange)
-{
-   Given TheModuleIsInitialized();
-   WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
-   WhenTheRequestedStepsAreSetTo(ClockwiseSteps);
-
-   When StepperMotorDriveEnableIs(true);
-   After RunForNSteps(1);
    ThePinsShouldBe(subSteps[3]);
+}
+
+TEST(StepperMotorDriver, ShouldHoldPinSignalForExcitationPeriodWhenStartingMovement)
+{
+   Given TheModuleIsInitialized();
+   WhenTheSubstepResetIsSetTo(false);
+   WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
+   WhenTheRequestedStepsAreSetToAndMotorDriveEnabled(ClockwiseSteps);
+
+   ThePinsShouldBe(subSteps[1]);
+   AfterNEvents(numberOfEventsForExcitationDelay - 1);
+   ThePinsShouldBe(subSteps[1]);
+
+   AfterNEvents(1);
+   ThePinsShouldBe(subSteps[2]);
+}
+
+TEST(StepperMotorDriver, ShouldHoldPinSignalForExcitationPeriodWhenEndingMovement)
+{
+   Given TheModuleIsInitialized();
+   WhenTheSubstepResetIsSetTo(false);
+   WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
+   WhenTheRequestedStepsAreSetToAndMotorDriveEnabled(ClockwiseSteps);
+
+   ThePinsShouldBe(subSteps[1]);
+   AfterNEvents(numberOfEventsForExcitationDelay);
+   ThePinsShouldBe(subSteps[2]);
+
+   AfterNSteps(ClockwiseSteps - 2);
+   WhenEventIsRaised(&stepEvent);
+
+   AfterNEvents(numberOfEventsForExcitationDelay - 1);
+   ThePinsShouldBe(subSteps[0]);
+
+   AfterNEvents(1);
+   AllPinsShouldBeOff();
 }
 
 TEST(StepperMotorDriver, ShouldCorrectlyCycleThroughPositionsInClockwiseDirectionGivenStepperMotorDriveEnableIsTrue)
 {
    Given TheModuleIsInitialized();
+   WhenTheSubstepResetIsSetTo(false);
    WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
-   WhenTheRequestedStepsAreSetTo(CounterClockwiseSteps);
-   Given StepperMotorDriveEnableIs(true);
-   ThePinsShouldBe(subSteps[0]);
+   WhenTheRequestedStepsAreSetToAndMotorDriveEnabled(ClockwiseSteps);
 
-   After RunForNSteps(1);
    ThePinsShouldBe(subSteps[1]);
-
-   After RunForNSteps(1);
+   AfterNEvents(numberOfEventsForExcitationDelay);
    ThePinsShouldBe(subSteps[2]);
 
-   After RunForNSteps(1);
+   AfterNSteps(1);
    ThePinsShouldBe(subSteps[3]);
 
-   After RunForNSteps(1);
+   AfterNSteps(1);
    ThePinsShouldBe(subSteps[0]);
+
+   AfterNSteps(1);
+   ThePinsShouldBe(subSteps[1]);
+
+   AfterNSteps(1);
+   ThePinsShouldBe(subSteps[2]);
 }
 
 TEST(StepperMotorDriver, ShouldCorrectlyCycleThroughPositionsInCounterClockwiseDirectionGivenStepperMotorDriveEnableIsTrue)
 {
    Given TheModuleIsInitialized();
+   WhenTheSubstepResetIsSetTo(false);
    WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
-   WhenTheRequestedStepsAreSetTo(ClockwiseSteps);
-   Given StepperMotorDriveEnableIs(true);
-   ThePinsShouldBe(subSteps[0]);
+   WhenTheRequestedStepsAreSetToAndMotorDriveEnabled(CounterClockwiseSteps);
 
-   After RunForNSteps(1);
    ThePinsShouldBe(subSteps[3]);
-
-   After RunForNSteps(1);
+   AfterNEvents(numberOfEventsForExcitationDelay);
    ThePinsShouldBe(subSteps[2]);
 
-   After RunForNSteps(1);
+   AfterNSteps(1);
    ThePinsShouldBe(subSteps[1]);
 
-   After RunForNSteps(1);
+   AfterNSteps(1);
    ThePinsShouldBe(subSteps[0]);
 
-   After RunForNSteps(1);
+   AfterNSteps(1);
    ThePinsShouldBe(subSteps[3]);
-}
 
-TEST(StepperMotorDriver, ShouldSetPinsToAllOffAfterCompletingAnOpenRequestGivenStepperMotorDriveEnableIsTrue)
-{
-   Given TheModuleIsInitialized();
-   WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
-   WhenTheRequestedStepsAreSetTo(CounterClockwiseSteps);
-   Given StepperMotorDriveEnableIs(true);
+   AfterNSteps(1);
+   ThePinsShouldBe(subSteps[2]);
 
-   ThePinsShouldBe(subSteps[0]);
-
-   After RunForNSteps(CounterClockwiseSteps);
-   WhenEventIsRaised(&stepEvent);
-   AllPinsShouldBeOff();
-}
-
-TEST(StepperMotorDriver, ShouldSetPinsToAllOffAfterCompletingACloseRequestGivenStepperMotorDriveEnableIsTrue)
-{
-   Given TheModuleIsInitialized();
-   WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
-   WhenTheRequestedStepsAreSetTo(ClockwiseSteps);
-   Given StepperMotorDriveEnableIs(true);
-   ThePinsShouldBe(subSteps[0]);
-
-   After RunForNSteps(ClockwiseSteps);
-   ShouldStopOnNextTimeout();
+   AfterNSteps(1);
+   ThePinsShouldBe(subSteps[1]);
 }
 
 TEST(StepperMotorDriver, ShouldStopRunningAfterCompletingARequestGivenStepperMotorDriveEnableIsTrue)
 {
    Given TheModuleIsInitialized();
+   WhenTheSubstepResetIsSetTo(false);
    WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
-   WhenTheRequestedStepsAreSetTo(CounterClockwiseSteps);
-   Given StepperMotorDriveEnableIs(true);
-   ThePinsShouldBe(subSteps[0]);
+   WhenTheRequestedStepsAreSetToAndMotorDriveEnabled(ClockwiseSteps);
 
-   After RunForNSteps(CounterClockwiseSteps);
-   ShouldStopOnNextTimeout();
+   ThePinsShouldBe(subSteps[1]);
+   AfterNEvents(numberOfEventsForExcitationDelay);
+   ThePinsShouldBe(subSteps[2]);
+
+   AfterNSteps(ClockwiseSteps - 2);
    ShouldStopOnNextTimeout();
 }
 
 TEST(StepperMotorDriver, ShouldHandleConsecutiveRequestsGivenStepperMotorDriveEnableIsTrue)
 {
    Given TheModuleIsInitialized();
+   WhenTheSubstepResetIsSetTo(false);
    WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
-   WhenTheRequestedStepsAreSetTo(CounterClockwiseSteps);
-   Given StepperMotorDriveEnableIs(true);
-   ThePinsShouldBe(subSteps[0]);
+   WhenTheRequestedStepsAreSetToAndMotorDriveEnabled(ClockwiseSteps);
 
-   After RunForNSteps(CounterClockwiseSteps);
+   ThePinsShouldBe(subSteps[1]);
+   AfterNEvents(numberOfEventsForExcitationDelay);
+   ThePinsShouldBe(subSteps[2]);
+
+   AfterNSteps(ClockwiseSteps - 2);
    ShouldStopOnNextTimeout();
 
    WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
-   WhenTheRequestedStepsAreSetTo(ClockwiseSteps);
-   After RunForNSteps(ClockwiseSteps);
+   WhenTheRequestedStepsAreSetToAndMotorDriveEnabled(CounterClockwiseSteps);
+
+   ThePinsShouldBe(subSteps[3]);
+   AfterNEvents(numberOfEventsForExcitationDelay);
+   ThePinsShouldBe(subSteps[2]);
+
+   AfterNSteps(CounterClockwiseSteps - 2);
    ShouldStopOnNextTimeout();
 
    WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
-   WhenTheRequestedStepsAreSetTo(CounterClockwiseSteps);
-   After RunForNSteps(CounterClockwiseSteps);
+   WhenTheRequestedStepsAreSetToAndMotorDriveEnabled(ClockwiseSteps);
+
+   ThePinsShouldBe(subSteps[0]);
+   AfterNEvents(numberOfEventsForExcitationDelay);
+   ThePinsShouldBe(subSteps[1]);
+
+   AfterNSteps(ClockwiseSteps - 2);
    ShouldStopOnNextTimeout();
 }
 
 TEST(StepperMotorDriver, ShouldNotListenToChangesInStepRequestWhileRunningGivenStepperMotorDriveEnableIsTrue)
 {
    Given TheModuleIsInitialized();
+   WhenTheSubstepResetIsSetTo(false);
    WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
    WhenTheRequestedStepsAreSetTo(ClockwiseSteps);
    Given StepperMotorDriveEnableIs(true);
-   ThePinsShouldBe(subSteps[0]);
 
-   After RunForNSteps(ClockwiseSteps - 10);
+   ThePinsShouldBe(subSteps[3]);
+   AfterNEvents(numberOfEventsForExcitationDelay);
+   ThePinsShouldBe(subSteps[2]);
+
+   AfterNSteps(ClockwiseSteps - 10);
    WhenTheRequestedStepsAreSetTo(CounterClockwiseSteps);
-   After RunForNSteps(10);
+   AfterNSteps(10);
    ShouldStopOnNextTimeout();
 }
 
 TEST(StepperMotorDriver, ShouldNotListenToChangesInDirectionRequestWhileRunningGivenStepperMotorDriveEnableIsTrue)
 {
    Given TheModuleIsInitialized();
+   WhenTheSubstepResetIsSetTo(false);
    WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
    WhenTheRequestedStepsAreSetTo(CounterClockwiseSteps);
    Given StepperMotorDriveEnableIs(true);
 
-   After RunForNSteps(1);
    ThePinsShouldBe(subSteps[1]);
+   AfterNEvents(numberOfEventsForExcitationDelay);
+   ThePinsShouldBe(subSteps[2]);
 
    WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
-   After RunForNSteps(1);
-   ThePinsShouldBe(subSteps[2]);
+   AfterNSteps(1);
+   ThePinsShouldBe(subSteps[3]);
 }
 
 TEST(StepperMotorDriver, ShouldClearMotorControlRequestThenClearStepRequestWhenCompleted)
 {
    Given TheModuleIsInitialized();
+   WhenTheSubstepResetIsSetTo(false);
    WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
    WhenTheRequestedStepsAreSetTo(CounterClockwiseSteps);
    Given StepperMotorDriveEnableIs(enabled);
 
-   After RunForNSteps(CounterClockwiseSteps);
+   AfterNEvents(numberOfEventsForExcitationDelay);
+   AfterNSteps(CounterClockwiseSteps);
    mock().enable();
    mock().strictOrder();
 
+   AfterNEvents(numberOfEventsForExcitationDelay);
    TheMotorShouldBeRequestedTo(0);
    TheStepRequestShouldBeSetTo(0);
-   After RunForNSteps(1);
+   AfterTheEventQueueIsRun();
 }
 
 TEST(StepperMotorDriver, ShouldNotReactToRequestsForZeroSteps)
 {
    Given TheModuleIsInitialized();
+   WhenTheSubstepResetIsSetTo(false);
    WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
    WhenTheRequestedStepsAreSetTo(0);
 
    StepperMotorStepRequestShouldBeCleared();
+}
+
+TEST(StepperMotorDriver, ShouldStartNextMovementFromFirstSubStepIfSubStepResetRequestIsTrue)
+{
+   Given TheModuleIsInitialized();
+   WhenTheSubstepResetIsSetTo(true);
+   WhenTheDirectionIsSetTo(TurningDirection_CounterClockwise);
+   WhenTheRequestedStepsAreSetToAndMotorDriveEnabled(CounterClockwiseSteps);
+   AfterNEvents(numberOfEventsForExcitationDelay);
+   AfterNSteps(CounterClockwiseSteps);
+   AfterNEvents(numberOfEventsForExcitationDelay);
+   AfterTheEventQueueIsRun();
+
+   WhenTheSubstepResetIsSetTo(false);
+   WhenTheDirectionIsSetTo(TurningDirection_Clockwise);
+   WhenTheRequestedStepsAreSetToAndMotorDriveEnabled(ClockwiseSteps);
+   ThePinsShouldBe(subSteps[0]);
 }
