@@ -5,8 +5,8 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef SIDEBYSIDEDEFROSTPLUGIN_H
-#define SIDEBYSIDEDEFROSTPLUGIN_H
+#ifndef ALLFRESHFOODDEFROSTPLUGIN_H
+#define ALLFRESHFOODDEFROSTPLUGIN_H
 
 #include "I_DataModel.h"
 #include "Defrost.h"
@@ -15,7 +15,7 @@
 #include "TimeThatPrechillConditionsAreMet.h"
 #include "DefrostStateOnCompareMatch.h"
 #include "DefrostHeaterOnTimeCounter.h"
-#include "FreezerDefrostHeaterVotingFrameworkPlugin.h"
+#include "FreshFoodDefrostHeaterVotingFrameworkPlugin.h"
 #include "NextDefrostTypeArbiter.h"
 #include "DefrostTestRequestHandler.h"
 #include "ReadyToDefrost.h"
@@ -31,18 +31,18 @@ typedef struct
       TimeThatPrechillConditionsAreMet_t timeThatPrechillConditionsAreMet;
       DefrostStateOnCompareMatch_t defrostStateOnCompareMatch;
       DefrostHeaterOnTimeCounter_t defrostHeaterOnTimeCounter;
-      FreezerDefrostHeaterVotingFrameworkPlugin_t freezerDefrostHeaterVotingFramework;
+      FreshFoodDefrostHeaterVotingFrameworkPlugin_t freshFoodDefrostHeaterVotingFramework;
       NextDefrostTypeArbiter_t nextDefrostTypeArbiter;
       DefrostTestRequestHandler_t defrostTestRequestHandler;
       SabbathReadyToDefrost_t sabbathReadyToDefrost;
    } _private;
-} SideBySideDefrostPlugin_t;
+} AllFreshFoodDefrostPlugin_t;
 
 /*!
  *
  * @param instance
  * @param dataModel
  */
-void SideBySideDefrostPlugin_Init(SideBySideDefrostPlugin_t *instance, I_DataModel_t *dataModel);
+void AllFreshFoodDefrostPlugin_Init(AllFreshFoodDefrostPlugin_t *instance, I_DataModel_t *dataModel);
 
 #endif

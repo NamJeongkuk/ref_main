@@ -31,7 +31,7 @@ typedef struct
       GridPlugin_t gridPlugin;
       ConstArrayMap_SideBySideSingleEvap_t coolingStateBasedGridVotesTable;
       CompressorPlugin_t compressorPlugin;
-      SideBySideDefrostPlugin_t defrostPlugin;
+      SideBySideDefrostPlugin_t sideBySideDefrostPlugin;
       FreshFoodDamperPlugin_t freshFoodDamperPlugin;
       SideBySideSetpointPlugin_t sideBySideSetpointPlugin;
       SideBySideFanPlugin_t sideBySideFanPlugin;

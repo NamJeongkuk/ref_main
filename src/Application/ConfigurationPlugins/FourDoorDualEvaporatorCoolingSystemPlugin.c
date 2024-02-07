@@ -7,6 +7,7 @@
 
 #include "FourDoorDualEvaporatorCoolingSystemPlugin.h"
 #include "SystemErds.h"
+#include "Constants_Binary.h"
 
 static const CoolingSystemRequestVotePair_t votingPairs[] = {
    { Erd_CondenserFanSpeed_CoolingSystemOffVote, FanSpeed_Off },
@@ -34,6 +35,12 @@ static const CoolingSystemRequestHandlerConfiguration_t coolingSystemRequestHand
 
 void FourDoorDualEvaporatorCoolingSystemPlugin_Init(FourDoorDualEvaporatorCoolingSystemPlugin_t *instance, I_DataModel_t *dataModel)
 {
+   // remove when grid is plugged in
+   DataModel_Write(
+      dataModel,
+      Erd_GridPluginReady,
+      set);
+
    FourDoorSetpointPlugin_Init(&instance->_private.fourDoorSetpointPlugin, dataModel);
    FourDoorDualEvaporatorCoolingSystemSensorFilteringPlugin_Init(
       &instance->_private.fourDoorDualEvaporatorCoolingSystemSensorFilteringPlugin,
@@ -44,6 +51,8 @@ void FourDoorDualEvaporatorCoolingSystemPlugin_Init(FourDoorDualEvaporatorCoolin
    CompressorPlugin_Init(&instance->_private.compressorPlugin, dataModel);
    FourDoorFanPlugin_Init(&instance->_private.fourDoorFanPlugin, dataModel);
    ThreeWaySealedSystemValvePlugin_Init(&instance->_private.threeWaySealedSystemValvePlugin, dataModel);
+
+   FourDoorDualEvapDefrostPlugin_Init(&instance->_private.fourDoorDualEvapDefrostPlugin, dataModel);
 
    CoolingSystemRequestHandler_Init(&instance->_private.coolingSystemRequestHandler, dataModel, &coolingSystemRequestHandlerConfig);
 }

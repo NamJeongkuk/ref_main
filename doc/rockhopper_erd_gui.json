@@ -675,6 +675,20 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Fresh Food Defrost Heater Resolved Vote",
+          "name": "Erd_FreshFoodDefrostHeater_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Defrost Heater Relay",
+          "name": "Erd_FreshFoodDefrostHeaterRelay",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
           "displayName": "Don't skip defrost prechill",
           "name": "Erd_DontSkipDefrostPrechill",
           "read": true,

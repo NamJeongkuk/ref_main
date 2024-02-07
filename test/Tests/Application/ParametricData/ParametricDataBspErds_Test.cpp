@@ -156,6 +156,14 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
    CHECK_EQUAL(*erd, Erd_TwistTrayIceMakerWaterValveRelay);
 }
 
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForFreshFoodDefrostHeaterRelay)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_FreshFoodDefrostHeaterRelay)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_FreshFoodDefrostHeaterRelay);
+}
+
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMaker0HeaterRelay)
 {
    GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_IceMaker0_HeaterRelay)");
