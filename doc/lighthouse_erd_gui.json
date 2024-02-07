@@ -478,13 +478,6 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Post Dwell Exit Time in Minutes",
-               "name": "Erd_PostDwellExitTimeInMinutes",
-               "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
                "displayName": "Time That Prechill Conditions Are Met in Minutes",
                "name": "Erd_TimeThatPrechillConditionsAreMetInMinutes",
                "read": true,

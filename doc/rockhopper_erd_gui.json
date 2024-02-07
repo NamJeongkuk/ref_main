@@ -591,13 +591,6 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Post Dwell Exit Time In Minutes",
-          "name": "Erd_PostDwellExitTimeInMinutes",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
           "displayName": "Time That Prechill Conditions Are Met In Minutes",
           "name": "Erd_TimeThatPrechillConditionsAreMetInMinutes",
           "read": true,
