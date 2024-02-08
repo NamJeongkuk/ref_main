@@ -21,6 +21,14 @@ void PlatformPlugin_Init(PlatformPlugin_t *instance, I_DataModel_t *dataModel)
    {
       FourDoorConfigurationPlugin_Init(&instance->_private.platformConfigurations.fourDoorPlugin, dataModel);
    }
+   else if(refrigeratorModel->refrigeratorModelType == RefrigeratorModelType_SingleCabinetFreshFood)
+   {
+      SingleDoorFreshFoodConfigurationPlugin_Init(&instance->_private.platformConfigurations.singleDoorFreshFoodPlugin, dataModel);
+   }
+   else if(refrigeratorModel->refrigeratorModelType == RefrigeratorModelType_SingleCabinetFreezer)
+   {
+      SingleDoorFreezerConfigurationPlugin_Init(&instance->_private.platformConfigurations.singleDoorFreezerPlugin, dataModel);
+   }
    else
    {
       uassert(!"Platform not supported");

@@ -5,24 +5,24 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#ifndef SINGLEDOORFRESHFOODFANPLUGIN_H
-#define SINGLEDOORFRESHFOODFANPLUGIN_H
+#ifndef SINGLEDOORFREEZERFANPLUGIN_H
+#define SINGLEDOORFREEZERFANPLUGIN_H
 
-#include "FreshFoodEvapFanPlugin.h"
 #include "CondenserFanPlugin.h"
+#include "FreezerEvapFanPlugin.h"
 #include "I_DataModel.h"
 
 typedef struct
 {
    struct
    {
-      FreshFoodEvapFanPlugin_t freshFoodEvapFanPlugin;
+      FreezerEvapFanPlugin_t freezerEvapFanPlugin;
       CondenserFanPlugin_t condenserFanPlugin;
    } _private;
-} SingleDoorFreshFoodFanPlugin_t;
+} SingleDoorFreezerFanPlugin_t;
 
-void SingleDoorFreshFoodFanPlugin_Init(
-   SingleDoorFreshFoodFanPlugin_t *instance,
+void SingleDoorFreezerFanPlugin_Init(
+   SingleDoorFreezerFanPlugin_t *instance,
    I_DataModel_t *dataModel);
 
 #endif

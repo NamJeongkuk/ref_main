@@ -27,4 +27,5 @@ typedef struct
 void SideBySideSetpointZonePlugin_Init(
    SideBySideSetpointZonePlugin_t *instance,
    I_DataModel_t *dataModel);
+
 #endif

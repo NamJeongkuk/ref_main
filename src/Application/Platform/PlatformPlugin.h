@@ -11,6 +11,8 @@
 #include "SideBySideConfigurationPlugin.h"
 #include "FourDoorConfigurationPlugin.h"
 #include "I_DataModel.h"
+#include "SingleDoorFreshFoodConfigurationPlugin.h"
+#include "SingleDoorFreezerConfigurationPlugin.h"
 
 typedef struct
 {
@@ -20,6 +22,8 @@ typedef struct
       {
          SideBySideConfigurationPlugin_t sideBySidePlugin;
          FourDoorConfigurationPlugin_t fourDoorPlugin;
+         SingleDoorFreshFoodConfigurationPlugin_t singleDoorFreshFoodPlugin;
+         SingleDoorFreezerConfigurationPlugin_t singleDoorFreezerPlugin;
       } platformConfigurations;
    } _private;
 } PlatformPlugin_t;
