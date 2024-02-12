@@ -584,6 +584,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Convertible Compartment Defrost Heater Defrost Vote",
+          "name": "Erd_ConvertibleCompartmentDefrostHeater_DefrostVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Sealed System Valve Position Defrost Vote",
           "name": "Erd_SealedSystemValvePosition_DefrostVote",
           "read": true,
@@ -679,6 +686,34 @@
           "name": "Erd_FreshFoodDefrostHeaterRelay",
           "read": true,
           "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Defrost Heater Resolved Vote",
+          "name": "Erd_ConvertibleCompartmentDefrostHeater_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Defrost Heater Factory Vote",
+          "name": "Erd_ConvertibleCompartmentDefrostHeater_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Defrost Heater Cooling System Off Vote",
+          "name": "Erd_ConvertibleCompartmentDefrostHeater_CoolingSystemOffVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Defrost Heater Relay",
+          "name": "Erd_ConvertibleCompartmentDefrostHeaterRelay",
+          "read": true,
+          "write": true
         },
         {
           "namespace": "mb",
@@ -1713,6 +1748,55 @@
           "name": "Erd_ConvertibleCompartmentSetpoint_UserVote",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Defrost Heater Relay",
+          "name": "Erd_ConvertibleCompartmentDefrostHeaterRelay",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Defrost Heater Resolved Vote",
+          "name": "Erd_ConvertibleCompartmentDefrostHeater_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Defrost Heater Factory Vote",
+          "name": "Erd_ConvertibleCompartmentDefrostHeater_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Damper Pwm Duty Cycle",
+          "name": "Erd_ConvertibleCompartmentDamperHeaterPwmDutyCycle",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Damper Heater Resolved Vote",
+          "name": "Erd_ConvertibleCompartmentDamperHeater_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Damper Heater Factory Vote",
+          "name": "Erd_ConvertibleCompartmentDamperHeater_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Damper Heater",
+          "name": "Erd_ConvertibleCompartmentDamperHeater",
+          "read": true,
+          "write": true
         }
       ]
     },
@@ -2191,6 +2275,48 @@
           "namespace": "mb",
           "displayName": "Damper Freeze Prevention Fsm State",
           "name": "Erd_DamperFreezePreventionFsmState",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Damper Heater Resolved Vote",
+          "name": "Erd_ConvertibleCompartmentDamperHeater_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Damper Heater Winning Vote",
+          "name": "Erd_ConvertibleCompartmentDamperHeater_WinningVoteErd",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Damper Heater Factory Vote",
+          "name": "Erd_ConvertibleCompartmentDamperHeater_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Damper Heater Cooling System Off Vote",
+          "name": "Erd_ConvertibleCompartmentDamperHeater_CoolingSystemOffVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Damper Heater Damper Freeze Prevention Vote",
+          "name": "Erd_ConvertibleCompartmentDamperHeater_DamperFreezePreventionVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Damper Heater Defrost Heater Sync Vote",
+          "name": "Erd_ConvertibleCompartmentDamperHeater_DefrostHeaterSyncVote",
           "read": true,
           "write": true
         }

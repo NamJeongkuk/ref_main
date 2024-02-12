@@ -255,6 +255,7 @@ void FourDoorDualEvapDefrostPlugin_Init(FourDoorDualEvapDefrostPlugin_t *instanc
 
    FreshFoodDefrostHeaterVotingFrameworkPlugin_Init(&instance->_private.freshFoodDefrostHeaterVotingFramework, dataModel);
    FreezerDefrostHeaterVotingFrameworkPlugin_Init(&instance->_private.freezerDefrostHeaterVotingFramework, dataModel);
+   ConvertibleCompartmentDefrostHeaterVotingFrameworkPlugin_Init(&instance->_private.convertibleCompartmentDefrostHeaterVotingFramework, dataModel);
 
    DefrostStateOnCompareMatch_Init(&instance->_private.defrostStateOnCompareMatch, dataModel);
 

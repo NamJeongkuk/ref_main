@@ -8,9 +8,9 @@
 #include "SystemErds.h"
 #include "FreshFoodDamperHeaterVotingFrameworkPlugin.h"
 
-static const HeaterVotedState_t defaultData = {
-   .state = HeaterState_Off,
-   .care = Vote_DontCare
+static const PercentageDutyCycleVote_t defaultData = {
+   .percentageDutyCycle = PercentageDutyCycle_Min,
+   .care = Vote_DontCare,
 };
 
 static const PercentageDutyCycleVoteToPwmDutyCycleConverterConfig_t dutyCycleToPercentageCalculatorConfig = {
@@ -20,8 +20,8 @@ static const PercentageDutyCycleVoteToPwmDutyCycleConverterConfig_t dutyCycleToP
 
 static bool VotingErdCareDelegate(const void *votingErdData)
 {
-   const HeaterVotedState_t *data = votingErdData;
-   return (data->care);
+   const PercentageDutyCycleVote_t *data = votingErdData;
+   return data->care;
 }
 
 static const ErdResolverConfiguration_t freshFoodDamperHeaterErdResolverConfiguration = {

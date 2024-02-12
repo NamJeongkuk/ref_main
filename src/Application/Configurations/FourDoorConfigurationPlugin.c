@@ -14,6 +14,7 @@ void FourDoorConfigurationPlugin_Init(FourDoorConfigurationPlugin_t *instance, I
    IceMakerSlotsPlugin_Init(&instance->_private.iceMakerSlotsPlugin, dataModel);
    DispenserWaterValvePlugin_Init(&instance->_private.dispenserWaterValvePlugin, dataModel);
    AugerMotorPlugin_Init(&instance->_private.augerMotorPlugin, dataModel);
+   FourDoorStaggeredHeater_Init(&instance->_private.staggeredHeaterPlugin, dataModel);
    RecessHeaterPlugin_Init(&instance->_private.recessHeaterPlugin, dataModel);
    FourDoorBooleanRequestStatusUpdaterPlugin_Init(&instance->_private.booleanRequestStatusUpdaterPlugin, dataModel);
 }

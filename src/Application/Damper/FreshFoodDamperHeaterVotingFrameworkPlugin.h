@@ -10,7 +10,6 @@
 
 #include "ErdResolver.h"
 #include "I_DataModel.h"
-#include "SoftPwm.h"
 #include "PercentageDutyCycleVoteToPwmDutyCycleConverter.h"
 
 typedef struct

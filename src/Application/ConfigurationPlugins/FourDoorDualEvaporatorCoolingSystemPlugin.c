@@ -15,13 +15,9 @@ static const CoolingSystemRequestVotePair_t votingPairs[] = {
    { Erd_FreezerDefrostHeater_CoolingSystemOffVote, HeaterState_Off },
    { Erd_FreshFoodEvapFanSpeed_CoolingSystemOffVote, FanSpeed_Off },
    { Erd_FreshFoodDefrostHeater_CoolingSystemOffVote, HeaterState_Off },
+   { Erd_ConvertibleCompartmentDefrostHeater_CoolingSystemOffVote, HeaterState_Off },
    { Erd_CompressorSpeed_CoolingSystemOffVote, CompressorSpeed_Off },
    { Erd_RecessHeater_CoolingSystemOffVote, PercentageDutyCycle_Min }
-};
-
-static const CoolingSystemRequestVoteList_t coolingSystemRequestVoteList = {
-   .pairs = votingPairs,
-   .numberOfPairs = NUM_ELEMENTS(votingPairs)
 };
 
 static const CoolingSystemRequestHandlerConfiguration_t coolingSystemRequestHandlerConfig = {
@@ -30,7 +26,8 @@ static const CoolingSystemRequestHandlerConfiguration_t coolingSystemRequestHand
    .disableDefrostErd = Erd_DisableDefrost,
    .turboCoolOnOffRequestErd = Erd_TurboCoolOnOffRequest,
    .turboFreezeOnOffRequestErd = Erd_TurboFreezeOnOffRequest,
-   .coolingSystemRequestVoteList = coolingSystemRequestVoteList
+   .coolingSystemRequestVoteList.pairs = votingPairs,
+   .coolingSystemRequestVoteList.numberOfPairs = NUM_ELEMENTS(votingPairs),
 };
 
 void FourDoorDualEvaporatorCoolingSystemPlugin_Init(FourDoorDualEvaporatorCoolingSystemPlugin_t *instance, I_DataModel_t *dataModel)
@@ -52,7 +49,12 @@ void FourDoorDualEvaporatorCoolingSystemPlugin_Init(FourDoorDualEvaporatorCoolin
    FourDoorFanPlugin_Init(&instance->_private.fourDoorFanPlugin, dataModel);
    ThreeWaySealedSystemValvePlugin_Init(&instance->_private.threeWaySealedSystemValvePlugin, dataModel);
 
-   FourDoorDualEvapDefrostPlugin_Init(&instance->_private.fourDoorDualEvapDefrostPlugin, dataModel);
+   FourDoorDualEvapDefrostPlugin_Init(
+      &instance->_private.fourDoorDualEvapDefrostPlugin,
+      dataModel);
+   ConvertibleCompartmentDamperPlugin_Init(
+      &instance->_private.convertibleCompartmentDamperPlugin,
+      dataModel);
 
    CoolingSystemRequestHandler_Init(&instance->_private.coolingSystemRequestHandler, dataModel, &coolingSystemRequestHandlerConfig);
 }
