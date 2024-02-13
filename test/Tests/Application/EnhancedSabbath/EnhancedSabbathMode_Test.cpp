@@ -52,8 +52,6 @@ static const EnhancedSabbathModeConfig_t config = {
    .freezerAverageCabinetTemperatureErd = Erd_Freezer_FilteredTemperatureResolvedInDegFx100,
    .freshFoodCabinetSetpointErd = Erd_FreshFood_AdjustedSetpointWithoutShiftInDegFx100,
    .freezerCabinetSetpointErd = Erd_Freezer_AdjustedSetpointWithoutShiftInDegFx100,
-   .overrideIceMakerEnabledRequestErd = Erd_IceMakerEnabledEnhancedSabbathOverrideRequest,
-   .overrideIceMakerEnabledValueErd = Erd_IceMakerEnabledEnhancedSabbathOverrideValue,
    .dispensingDisabledErd = Erd_DispensingDisabled,
    .waitingToDefrostErd = Erd_WaitingToDefrost,
    .gridOverrideEnabledErd = Erd_GridOverrideEnable,
@@ -207,16 +205,6 @@ TEST_GROUP(EnhancedSabbathMode)
       GivenTheEnhancedSabbathModeStatusIs(state);
    }
 
-   void GivenTheIceMakerEnableOverrideRequestIs(bool state)
-   {
-      DataModel_Write(dataModel, Erd_IceMakerEnabledEnhancedSabbathOverrideRequest, &state);
-   }
-
-   void GivenTheIceMakerEnableOverrideValueIs(bool state)
-   {
-      DataModel_Write(dataModel, Erd_IceMakerEnabledEnhancedSabbathOverrideValue, &state);
-   }
-
    void GivenDispensingDisabledIs(bool state)
    {
       DataModel_Write(dataModel, Erd_DispensingDisabled, &state);
@@ -331,22 +319,6 @@ TEST_GROUP(EnhancedSabbathMode)
 
       CHECK_EQUAL(expectedState, actual.state);
       CHECK_EQUAL(expectedCare, actual.care);
-   }
-
-   void TheIceMakerEnableOverrideRequestShouldBe(bool expected)
-   {
-      bool actual;
-      DataModel_Read(dataModel, Erd_IceMakerEnabledEnhancedSabbathOverrideRequest, &actual);
-
-      CHECK_EQUAL(expected, actual);
-   }
-
-   void TheIceMakerEnableOverrideValueShouldBe(bool expected)
-   {
-      bool actual;
-      DataModel_Read(dataModel, Erd_IceMakerEnabledEnhancedSabbathOverrideValue, &actual);
-
-      CHECK_EQUAL(expected, actual);
    }
 
    void TheDispensingDisabledShouldBe(bool expected)
@@ -479,8 +451,6 @@ TEST_GROUP(EnhancedSabbathMode)
       GivenTheDamperPositionVoteIs(DamperPosition_Open, Vote_Care);
       GivenTheDisableCompressorMiniumTimesVoteIs(false, Vote_Care);
       GivenTheHsmStateIs(EnhancedSabbathModeHsmState_Unknown);
-      GivenTheIceMakerEnableOverrideRequestIs(true);
-      GivenTheIceMakerEnableOverrideValueIs(false);
       GivenTheGridOverrideIs(true);
       GivenDispensingDisabledIs(true);
       GivenInitialization();
@@ -492,8 +462,6 @@ TEST_GROUP(EnhancedSabbathMode)
       TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_SuperHigh, Vote_DontCare);
       TheDamperPositionVoteShouldBe(DamperPosition_Open, Vote_DontCare);
       TheDisableCompressorMiniumTimesVoteShouldBe(false, Vote_DontCare);
-      TheIceMakerEnableOverrideRequestShouldBe(false);
-      TheIceMakerEnableOverrideValueShouldBe(true);
       TheGridOverrideShouldBe(false);
       TheDispensingDisabledShouldBe(false);
       TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
@@ -814,17 +782,13 @@ TEST(EnhancedSabbathMode, ShouldTransitionToDisabledWhenWaitingToDefrostIsFalseA
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
 }
 
-TEST(EnhancedSabbathMode, ShouldEnableIceMakersAndEnableDispensingAndEnableTheGrid)
+TEST(EnhancedSabbathMode, ShouldEnableDispensingAndEnableTheGrid)
 {
    GivenTheEnhancedSabbathModeStatusIs(CLEAR);
-   GivenTheIceMakerEnableOverrideRequestIs(true);
-   GivenTheIceMakerEnableOverrideValueIs(false);
    GivenTheGridOverrideIs(true);
    GivenDispensingDisabledIs(true);
    GivenInitialization();
 
-   TheIceMakerEnableOverrideRequestShouldBe(false);
-   TheIceMakerEnableOverrideValueShouldBe(true);
    TheGridOverrideShouldBe(false);
    TheDispensingDisabledShouldBe(false);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
@@ -840,8 +804,6 @@ TEST(EnhancedSabbathMode, ShouldEnterStageFreshFoodAndSetCoolingModeToFreshFoodA
    CoolingModeShouldBe(CoolingMode_FreshFood);
    TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_Care);
    TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_Care);
-   TheIceMakerEnableOverrideRequestShouldBe(true);
-   TheIceMakerEnableOverrideValueShouldBe(false);
    TheGridOverrideShouldBe(true);
    TheDispensingDisabledShouldBe(true);
 }
@@ -1172,8 +1134,6 @@ TEST(EnhancedSabbathMode, ShouldBeInFreshFoodStageWithAllLoadsSetToOffWhenInitia
    GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 - 1);
    GivenTheFreshFoodCabinetSetpointIs(SomeTemperatureInDegFx100);
    GivenTheHsmStateIs(EnhancedSabbathModeHsmState_Unknown);
-   GivenTheIceMakerEnableOverrideRequestIs(true);
-   GivenTheIceMakerEnableOverrideValueIs(false);
    GivenTheGridOverrideIs(true);
    GivenDispensingDisabledIs(true);
    GivenInitialization();
@@ -1182,8 +1142,6 @@ TEST(EnhancedSabbathMode, ShouldBeInFreshFoodStageWithAllLoadsSetToOffWhenInitia
    CoolingModeShouldBe(CoolingMode_FreshFood);
    TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_Care);
    TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_Care);
-   TheIceMakerEnableOverrideRequestShouldBe(true);
-   TheIceMakerEnableOverrideValueShouldBe(false);
    TheGridOverrideShouldBe(true);
    TheDispensingDisabledShouldBe(true);
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Off, Vote_Care);
@@ -1198,8 +1156,6 @@ TEST(EnhancedSabbathMode, ShouldBeInFreshFoodStageWithAllLoadsSetToLowWhenInitia
    GivenWaitingToDefrostIs(SET);
    GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freshFoodLowSpeedHysteresisInDegFx100 + 1);
    GivenTheFreshFoodCabinetSetpointIs(SomeTemperatureInDegFx100);
-   GivenTheIceMakerEnableOverrideRequestIs(true);
-   GivenTheIceMakerEnableOverrideValueIs(false);
    GivenTheGridOverrideIs(true);
    GivenDispensingDisabledIs(true);
    GivenInitialization();
@@ -1208,8 +1164,6 @@ TEST(EnhancedSabbathMode, ShouldBeInFreshFoodStageWithAllLoadsSetToLowWhenInitia
    CoolingModeShouldBe(CoolingMode_FreshFood);
    TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_Care);
    TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_Care);
-   TheIceMakerEnableOverrideRequestShouldBe(true);
-   TheIceMakerEnableOverrideValueShouldBe(false);
    TheGridOverrideShouldBe(true);
    TheDispensingDisabledShouldBe(true);
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Low, Vote_Care);
@@ -1224,8 +1178,6 @@ TEST(EnhancedSabbathMode, ShouldBeInFreshFoodStageWithAllLoadsSetToMediumWhenIni
    GivenWaitingToDefrostIs(SET);
    GivenTheFreshFoodAverageCabinetTemperatureIs(SomeTemperatureInDegFx100 + enhancedSabbathData->freshFoodMediumSpeedHysteresisInDegFx100 + 1);
    GivenTheFreshFoodCabinetSetpointIs(SomeTemperatureInDegFx100);
-   GivenTheIceMakerEnableOverrideRequestIs(true);
-   GivenTheIceMakerEnableOverrideValueIs(false);
    GivenTheGridOverrideIs(true);
    GivenDispensingDisabledIs(true);
    GivenInitialization();
@@ -1234,8 +1186,6 @@ TEST(EnhancedSabbathMode, ShouldBeInFreshFoodStageWithAllLoadsSetToMediumWhenIni
    CoolingModeShouldBe(CoolingMode_FreshFood);
    TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_Care);
    TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_Care);
-   TheIceMakerEnableOverrideRequestShouldBe(true);
-   TheIceMakerEnableOverrideValueShouldBe(false);
    TheGridOverrideShouldBe(true);
    TheDispensingDisabledShouldBe(true);
    TheCompressorSpeedVoteShouldBe(CompressorSpeed_Medium, Vote_Care);
@@ -1256,8 +1206,6 @@ TEST(EnhancedSabbathMode, ShouldSetSabbathModeToDisabledWhenInFreshFoodStageAndS
    TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Low, Vote_DontCare);
    TheDamperPositionVoteShouldBe(DamperPosition_Open, Vote_DontCare);
    TheDisableCompressorMiniumTimesVoteShouldBe(true, Vote_DontCare);
-   TheIceMakerEnableOverrideRequestShouldBe(false);
-   TheIceMakerEnableOverrideValueShouldBe(true);
    TheGridOverrideShouldBe(false);
    TheDispensingDisabledShouldBe(false);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
@@ -1289,8 +1237,6 @@ TEST(EnhancedSabbathMode, ShouldSetSabbathModeToDisabledWhenInFreezerStageAndSta
    TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Low, Vote_DontCare);
    TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_DontCare);
    TheDisableCompressorMiniumTimesVoteShouldBe(true, Vote_DontCare);
-   TheIceMakerEnableOverrideRequestShouldBe(false);
-   TheIceMakerEnableOverrideValueShouldBe(true);
    TheGridOverrideShouldBe(false);
    TheDispensingDisabledShouldBe(false);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
@@ -1322,8 +1268,6 @@ TEST(EnhancedSabbathMode, ShouldSetSabbathModeToDisabledWhenInOffStageAndStatusI
    TheFreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off, Vote_DontCare);
    TheDamperPositionVoteShouldBe(DamperPosition_Closed, Vote_DontCare);
    TheDisableCompressorMiniumTimesVoteShouldBe(true, Vote_DontCare);
-   TheIceMakerEnableOverrideRequestShouldBe(false);
-   TheIceMakerEnableOverrideValueShouldBe(true);
    TheGridOverrideShouldBe(false);
    TheDispensingDisabledShouldBe(false);
    TheHsmStateShouldBe(EnhancedSabbathModeHsmState_Disabled);
@@ -1361,8 +1305,6 @@ TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathModeToDisabledIfMaxTimeHasBeen
    TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_Care);
    TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_Care);
    TheDisableCompressorMiniumTimesVoteShouldBe(true, Vote_Care);
-   TheIceMakerEnableOverrideRequestShouldBe(true);
-   TheIceMakerEnableOverrideValueShouldBe(false);
    TheGridOverrideShouldBe(true);
    TheDispensingDisabledShouldBe(true);
 
@@ -1373,8 +1315,6 @@ TEST(EnhancedSabbathMode, ShouldSetEnhancedSabbathModeToDisabledIfMaxTimeHasBeen
    TheFreshFoodSetpointVoteShouldBe(enhancedSabbathData->freshFoodSetpointTemperatureInDegFx100, Vote_DontCare);
    TheFreezerSetpointVoteShouldBe(enhancedSabbathData->freezerSetpointTemperatureInDegFx100, Vote_DontCare);
    TheDisableCompressorMiniumTimesVoteShouldBe(true, Vote_DontCare);
-   TheIceMakerEnableOverrideRequestShouldBe(false);
-   TheIceMakerEnableOverrideValueShouldBe(true);
    TheGridOverrideShouldBe(false);
    TheDispensingDisabledShouldBe(false);
 }

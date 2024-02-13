@@ -24,7 +24,7 @@ extern "C"
 static const FeelerArmMonitorConfig_t config = {
    .feelerArmMonitoringRequestErd = Erd_IceMaker0_FeelerArmMonitoringRequest,
    .timerModuleErd = Erd_TimerModule,
-   .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
+   .feelerArmIsReadyToEnterHarvestErd = Erd_IceMaker0_FeelerArmIsReadyToEnterHarvest,
    .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition
 };
 
@@ -63,7 +63,7 @@ TEST_GROUP(FeelerArmMonitor)
    void FeelerArmIsReadyToEnterHarvestShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_FeelerArmIsReadyToEnterHarvest, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker0_FeelerArmIsReadyToEnterHarvest, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -74,7 +74,7 @@ TEST_GROUP(FeelerArmMonitor)
 
    void FeelerArmIsReadyToEnterHarvestIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_FeelerArmIsReadyToEnterHarvest, &state);
+      DataModel_Write(dataModel, Erd_IceMaker0_FeelerArmIsReadyToEnterHarvest, &state);
    }
 };
 

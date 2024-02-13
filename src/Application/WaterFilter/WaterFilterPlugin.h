@@ -26,8 +26,9 @@ typedef struct
    {
       WaterFilterCalendarUsageUpdater_t waterFilterCalendarUsageUpdater;
       RfidCommunicationPlugin_t rfidCommunicationPlugin;
-      WaterVolumeUsageCalculator_t aluminumMoldIceMakerWaterVolumeUsageCalculator;
-      WaterVolumeUsageCalculator_t twistTrayIceMakerWaterVolumeUsageCalculator;
+      WaterVolumeUsageCalculator_t iceMaker0WaterVolumeUsageCalculator;
+      WaterVolumeUsageCalculator_t iceMaker1WaterVolumeUsageCalculator;
+      WaterVolumeUsageCalculator_t iceMaker2WaterVolumeUsageCalculator;
       WaterVolumeUsageCalculator_t dispensedWaterVolumeUsageCalculator;
       DispensingDisabler_t dispensingDisabler;
       NewFilterInstalledHandler_t newFilterInstalledHandler;

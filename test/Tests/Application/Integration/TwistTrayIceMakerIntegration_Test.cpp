@@ -10,7 +10,6 @@ extern "C"
 #include "Application.h"
 #include "TwistTrayIceMakerData.h"
 #include "DataModelErdPointerAccess.h"
-#include "TwistTrayIceMakerHighLevelState.h"
 #include "IceMakerStateMachineState.h"
 #include "TwistTrayIceMakerMotorState.h"
 #include "Constants_Binary.h"
@@ -94,9 +93,12 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       GivenTheIceMakerThermistorAdcCountIs(count);
    }
 
-   void GivenTheIceMakerIsEnabled()
+   void GivenTheIceMakerIsEnabledAndNotInSabbath()
    {
       DataModel_Write(dataModel, Erd_IceMaker0_EnableStatus, set);
+      DataModel_Write(dataModel, Erd_IceMakerEnabledByGrid, set);
+
+      GivenSabbathModeIs(DISABLED);
    }
 
    void GivenTheIceMakerIsDisabled()
@@ -112,7 +114,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
 
    void WhenTheIceMakerBecomesEnabled()
    {
-      GivenTheIceMakerIsEnabled();
+      GivenTheIceMakerIsEnabledAndNotInSabbath();
    }
 
    void After(TimerTicks_t ticks)
@@ -126,13 +128,6 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       {
          Interrupt_TestDouble_TriggerInterrupt(interruptTestDouble);
       }
-   }
-
-   void HighLevelStateShouldBe(TwistTrayIceMakerHighLevelState_t expected)
-   {
-      TwistTrayIceMakerHighLevelState_t actual;
-      DataModel_Read(dataModel, Erd_TwistTrayIceMaker_HighLevelState, &actual);
-      CHECK_EQUAL(expected, actual);
    }
 
    void TwistTrayIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_t expected)
@@ -199,7 +194,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
    void TheIceMakerWaterValveShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_TwistTrayIceMakerWaterValveRelay, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker0_WaterValveRelay, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -213,7 +208,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
    void TheFillTubeHeaterRelayShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_FillTubeHeater, &actual);
+      DataModel_Read(dataModel, Erd_IceMaker0_FillTubeHeater, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -426,7 +421,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldGoToFreezeAfterHomingWhileIceMakerIsDis
 
 TEST(TwistTrayIceMakerIntegration, ShouldInitializeInThermistorFaultStateIfThermistorIsInvalidThenHomeWhenTheThermistorBecomesValid)
 {
-   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerIsEnabledAndNotInSabbath();
    GivenTheIceMakerThermistorAdcCountIs(InvalidAdcCount);
    GivenApplicationHasBeenInitialized();
    TwistTrayIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_ThermistorFault);
@@ -436,15 +431,13 @@ TEST(TwistTrayIceMakerIntegration, ShouldInitializeInThermistorFaultStateIfTherm
    After(sensorData->iceMaker0MoldThermistor->goodReadingCounterMax * sensorData->periodicUpdateRateInMs);
 
    TwistTrayIceMakerThermistorShouldBe(Valid);
-   HighLevelStateShouldBe(TwistTrayIceMakerHighLevelState_NormalRun);
    TwistTrayIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Homing);
 }
 
-TEST(TwistTrayIceMakerIntegration, ShouldInitializeInHighLevelStateNormalRunAndFsmStateHoming)
+TEST(TwistTrayIceMakerIntegration, ShouldInitializeInFsmStateHoming)
 {
    GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenApplicationHasBeenInitialized();
-   HighLevelStateShouldBe(TwistTrayIceMakerHighLevelState_NormalRun);
    TwistTrayIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Homing);
 }
 
@@ -530,7 +523,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldLandBackInHomePositionAfterJumpingOutOf
 
 TEST(TwistTrayIceMakerIntegration, ShouldGoToFreezeAfterHoming)
 {
-   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerIsEnabledAndNotInSabbath();
    GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenTheApplicationIsInitializedAndTheMotorIsHomed();
 
@@ -539,7 +532,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldGoToFreezeAfterHoming)
 
 TEST(TwistTrayIceMakerIntegration, ShouldCompleteFreezeAndEnterHarvest)
 {
-   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerIsEnabledAndNotInSabbath();
    GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenTheApplicationIsInitializedAndIceMakerIsInFreeze();
 
@@ -554,7 +547,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldCompleteFreezeAndEnterHarvest)
 
 TEST(TwistTrayIceMakerIntegration, ShouldRunMotorHarvestCycle)
 {
-   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerIsEnabledAndNotInSabbath();
    GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenTheApplicationIsInitializedAndIceMakerIsInHarvest();
 
@@ -599,7 +592,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldRunMotorHarvestCycle)
 
 TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptHarvestAndShouldGoToFillAfterHarvestWhenIceMakerBecomesDisabled)
 {
-   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerIsEnabledAndNotInSabbath();
    GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenTheApplicationIsInitializedAndIceMakerIsInHarvest();
 
@@ -658,7 +651,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptHarvestAndShouldGoToFillAft
 
 TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptHarvestAndShouldGoToFillAfterHarvestWhenSabbathModeBecomesEnabled)
 {
-   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerIsEnabledAndNotInSabbath();
    GivenSabbathModeIs(DISABLED);
    GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenTheApplicationIsInitializedAndIceMakerIsInHarvest();
@@ -716,7 +709,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptHarvestAndShouldGoToFillAft
 
 TEST(TwistTrayIceMakerIntegration, ShouldFillAfterHarvest)
 {
-   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerIsEnabledAndNotInSabbath();
    GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenTheApplicationIsInitializedAndIceMakerHasJustHarvested();
 
@@ -733,7 +726,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldFillAfterHarvest)
 
 TEST(TwistTrayIceMakerIntegration, ShouldRemainInStateFreezeWhenIceMakerEnabledStateChanges)
 {
-   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerIsEnabledAndNotInSabbath();
    GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenTheApplicationIsInitializedAndIceMakerHasJustHarvested();
 
@@ -756,7 +749,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldRemainInStateFreezeWhenIceMakerEnabledS
 
 TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptFillWhenIceMakerBecomesDisabled)
 {
-   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerIsEnabledAndNotInSabbath();
    GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenTheApplicationIsInitializedAndIceMakerHasJustHarvested();
 
@@ -776,7 +769,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptFillWhenIceMakerBecomesDisa
 
 TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptFillWhenSabbathModeBecomesEnabled)
 {
-   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerIsEnabledAndNotInSabbath();
    GivenSabbathModeIs(DISABLED);
    GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenTheApplicationIsInitializedAndIceMakerHasJustHarvested();
@@ -797,7 +790,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldNotInterruptFillWhenSabbathModeBecomesE
 
 TEST(TwistTrayIceMakerIntegration, ShouldTransitionToHomingThenFreezeWhenIceMakerIsDisabledInThermistorFaultState)
 {
-   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerIsEnabledAndNotInSabbath();
    GivenTheIceMakerThermistorAdcCountIs(InvalidAdcCount);
    GivenApplicationHasBeenInitialized();
    TwistTrayIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_ThermistorFault);
@@ -808,7 +801,6 @@ TEST(TwistTrayIceMakerIntegration, ShouldTransitionToHomingThenFreezeWhenIceMake
 
    After(sensorData->iceMaker0MoldThermistor->goodReadingCounterMax * sensorData->periodicUpdateRateInMs);
    TwistTrayIceMakerThermistorShouldBe(Valid);
-   HighLevelStateShouldBe(TwistTrayIceMakerHighLevelState_NormalRun);
    TwistTrayIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Homing);
 
    GivenTheMotorSwitchIsDebouncedHigh();
@@ -834,7 +826,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldTransitionToHomingThenFreezeWhenIceMake
 
 TEST(TwistTrayIceMakerIntegration, ShouldTurnOnFillTubeHeaterWhenEnteringHarvest)
 {
-   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerIsEnabledAndNotInSabbath();
    GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenTheApplicationIsInitializedAndIceMakerIsInHarvest();
 
@@ -854,7 +846,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldTurnOnFillTubeHeaterWhenEnteringHarvest
 
 TEST(TwistTrayIceMakerIntegration, ShouldTransitionFromFreezeToHarvestingOnceHarvestCountIsReachedWhenStartingCountingWithABelowStartIntegrationTemperature)
 {
-   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerIsEnabledAndNotInSabbath();
    GivenTheIceMakerThermistorAdcCountIs(BelowFreezingAdcCounts);
    GivenTheApplicationIsInitializedAndIceMakerIsInFreeze();
 
@@ -867,7 +859,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldTransitionFromFreezeToHarvestingOnceHar
 
 TEST(TwistTrayIceMakerIntegration, ShouldTransitionFromFreezeToHarvestingOnceHarvestCountIsReachedWhenStartingCountingAfterTemperatureDecreasesBelowStartIntegrationTemperature)
 {
-   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerIsEnabledAndNotInSabbath();
    GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenTheApplicationIsInitializedAndIceMakerIsInFreeze();
 
@@ -883,7 +875,7 @@ TEST(TwistTrayIceMakerIntegration, ShouldTransitionFromFreezeToHarvestingOnceHar
 
 TEST(TwistTrayIceMakerIntegration, ShouldTransitionToFillStateWhenTestRequestIsFillInHarvestingStateAndHarvestIsCompleted)
 {
-   GivenTheIceMakerIsEnabled();
+   GivenTheIceMakerIsEnabledAndNotInSabbath();
    GivenTheIceMakerThermistorAdcCountIs(ValidAdcCount);
    GivenTheApplicationIsInitializedAndIceMakerIsInHarvest();
 

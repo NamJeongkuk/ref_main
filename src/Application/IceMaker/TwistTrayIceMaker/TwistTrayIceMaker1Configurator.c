@@ -108,7 +108,7 @@ static const ErdResolverConfiguration_t fillTubeHeaterResolverConfig = {
 
 static const PercentageDutyCycleVoteToPwmDutyCycleConverterConfig_t fillTubeHeaterDutyCycleToPercentageCalculatorConfig = {
    .inputPercentageDutyCycleVoteErd = Erd_IceMaker1_FillTubeHeater_ResolvedVote,
-   .outputPwmDutyCycleErd = Erd_FillTubeHeater_Pwm
+   .outputPwmDutyCycleErd = Erd_IceMaker1_FillTubeHeater_Pwm
 };
 
 static const NonHarvestFillTubeHeaterControlConfig_t nonHarvestFillTubeHeaterControlConfig = {
@@ -140,7 +140,7 @@ static const ErdResolverConfiguration_t waterValveResolverConfig = {
 
 static const ResolvedVoteRelayConnectorConfiguration_t waterValveRelayConnectorConfig = {
    .resolvedRelayVoteErd = Erd_IceMaker1_WaterValve_ResolvedVote,
-   .relayOutputErd = Erd_TwistTrayIceMakerWaterValveRelay
+   .relayOutputErd = Erd_IceMaker1_WaterValveRelay
 };
 
 static const TwistTrayIceMakerMotorControllerConfig_t motorControllerConfig = {
@@ -153,6 +153,19 @@ static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig 
    .moldFilteredTemperatureInDegFx100Erd = Erd_IceMaker1_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
    .moldFreezeIntegrationCountErd = Erd_IceMaker1_FreezeIntegrationCount,
    .moldIceMakerMinimumFreezeTimeCounterInMinutesErd = Erd_IceMaker1_MinimumFreezeTimeCounterInMinutes
+};
+
+static const Erd_t enableErdsList[] = {
+   Erd_IceMaker1_EnableStatus, Erd_IceMakerEnabledByGrid
+};
+
+static const ErdLogicServiceConfigurationEntry_t configurationEntries[] = {
+   { ErdLogicServiceOperator_And, { enableErdsList, NUM_ELEMENTS(enableErdsList) }, Erd_IceMaker1_EnabledResolved },
+};
+
+static const ErdLogicServiceConfiguration_t iceMakerEnableResolverConfig = {
+   configurationEntries,
+   NUM_ELEMENTS(configurationEntries)
 };
 
 static const TwistTrayIceMakerMotorControllerValueUpdaterConfig_t motorControllerValueUpdaterConfig = {
@@ -178,7 +191,6 @@ static const OverrideArbiterConfiguration_t filteredTemperatureArbiterConfig = {
 };
 
 static const TwistTrayIceMakerConfiguration_t twistTrayIceMakerConfig = {
-   .highLevelStateErd = Erd_TwistTrayIceMaker_HighLevelState,
    .fsmStateErd = Erd_IceMaker1_StateMachineState,
    .thermistorIsValidResolvedErd = Erd_IceMaker1_MoldThermistor_IsValidResolved,
    .filteredTemperatureResolvedInDegFx100Erd = Erd_IceMaker1_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
@@ -192,7 +204,7 @@ static const TwistTrayIceMakerConfiguration_t twistTrayIceMakerConfig = {
    .motorFaultActiveErd = Erd_TwistTrayIceMaker_MotorFaultActive,
    .waterFillMonitoringRequestErd = Erd_IceMaker1_WaterFillMonitoringRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_IceMaker1Vote,
-   .iceMakerEnabledResolvedErd = Erd_IceMakerEnabledResolved,
+   .iceMakerEnabledResolvedErd = Erd_IceMaker1_EnabledResolved,
    .sabbathModeErd = Erd_SabbathModeEnable,
    .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
@@ -207,6 +219,7 @@ static const TwistTrayIceMakerConfiguration_t twistTrayIceMakerConfig = {
 };
 
 static const TwistTrayIceMakerPlugConfig_t config = {
+   .iceMakerEnableResolverConfig = &iceMakerEnableResolverConfig,
    .outputMotorStateConfig = &outputMotorStateConfig,
    .motorRequestManagerConfig = &motorRequestManagerConfig,
    .motorSwitchMonitorConfig = &motorSwitchMonitorConfig,

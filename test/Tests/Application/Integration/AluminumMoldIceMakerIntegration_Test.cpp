@@ -86,6 +86,19 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       GivenSabbathModeIs(state);
    }
 
+   void GivenEnhancedSabbathModeIs(bool state)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_EnhancedSabbathModeEnable,
+         &state);
+   }
+
+   void WhenEnhancedSabbathModeIs(bool state)
+   {
+      GivenEnhancedSabbathModeIs(state);
+   }
+
    void AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_t expectedState)
    {
       IceMakerStateMachineState_t actualState;
@@ -180,6 +193,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       GivenIceMakerIs(ENABLED);
       GivenSabbathModeIs(DISABLED);
+      GivenEnhancedSabbathModeIs(DISABLED);
 
       if(state == IceMakerStateMachineState_Freeze)
       {
@@ -213,7 +227,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMaker0_RakePosition,
+         Erd_IceMaker1_RakePosition,
          &position);
    }
 
@@ -221,7 +235,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMaker0_RakePosition,
+         Erd_IceMaker1_RakePosition,
          &position);
    }
 
@@ -230,7 +244,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       bool actualState;
       DataModel_Read(
          dataModel,
-         Erd_AluminumMoldIceMakerWaterValveRelay,
+         Erd_IceMaker1_WaterValveRelay,
          &actualState);
 
       CHECK_EQUAL(expectedState, actualState);
@@ -241,7 +255,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       bool actualState;
       DataModel_Read(
          dataModel,
-         Erd_IceMaker0_HeaterRelay,
+         Erd_IceMaker1_HeaterRelay,
          &actualState);
 
       CHECK_EQUAL(expectedState, actualState);
@@ -264,7 +278,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_IceMaker0_RakeControlRequest,
+         Erd_IceMaker1_RakeControlRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -287,7 +301,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMaker0_FeelerArmPosition,
+         Erd_IceMaker1_FeelerArmPosition,
          &state);
    }
 
@@ -295,7 +309,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMaker0_FeelerArmPosition,
+         Erd_IceMaker1_FeelerArmPosition,
          &state);
    }
 
@@ -314,7 +328,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       IceMakerMoldHeaterControlRequest_t actualRequest;
       DataModel_Read(
          dataModel,
-         Erd_IceMaker0_MoldHeaterControlRequest,
+         Erd_IceMaker1_MoldHeaterControlRequest,
          &actualRequest);
 
       MEMCMP_EQUAL(&expectedRequest, &actualRequest, sizeof(expectedRequest));
@@ -349,7 +363,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_IceMaker0_RakeCompletedRevolution,
+         Erd_IceMaker1_RakeCompletedRevolution,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -370,7 +384,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMaker0_FeelerArmPosition,
+         Erd_IceMaker1_FeelerArmPosition,
          &position);
    }
 
@@ -378,6 +392,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       GivenIceMakerIs(ENABLED);
       GivenSabbathModeIs(DISABLED);
+      GivenEnhancedSabbathModeIs(DISABLED);
       GivenMoldThermistorAdcCountIs(ValidHarvestAdcCount);
       WhenTheRakePositionIs(RakePosition_NotHome);
 
@@ -400,6 +415,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       GivenIceMakerIs(ENABLED);
       GivenSabbathModeIs(DISABLED);
+      GivenEnhancedSabbathModeIs(DISABLED);
       GivenMoldThermistorAdcCountIs(ValidHarvestAdcCount);
       WhenTheRakePositionIs(RakePosition_NotHome);
 
@@ -460,7 +476,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_IceMaker0_SkipFillRequest,
+         Erd_IceMaker1_SkipFillRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -470,7 +486,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_FeelerArmIsReadyToEnterHarvest,
+         Erd_IceMaker1_FeelerArmIsReadyToEnterHarvest,
          &state);
    }
 
@@ -479,7 +495,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_FeelerArmIsReadyToEnterHarvest,
+         Erd_IceMaker1_FeelerArmIsReadyToEnterHarvest,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -537,7 +553,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       IGNORE(context);
       const DataModelOnDataChangeArgs_t *args = (const DataModelOnDataChangeArgs_t *)_args;
 
-      if(args->erd == Erd_IceMaker0_RakeCompletedRevolution)
+      if(args->erd == Erd_IceMaker1_RakeCompletedRevolution)
       {
          const bool *state = (const bool *)args->data;
 
@@ -594,7 +610,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       IGNORE(context);
       const DataModelOnDataChangeArgs_t *args = (const DataModelOnDataChangeArgs_t *)_args;
 
-      if(args->erd == Erd_FeelerArmIsReadyToEnterHarvest)
+      if(args->erd == Erd_IceMaker1_FeelerArmIsReadyToEnterHarvest)
       {
          const bool *state = (const bool *)args->data;
 
@@ -688,7 +704,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_IceMaker0_FeelerArmMonitoringRequest,
+         Erd_IceMaker1_FeelerArmMonitoringRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -701,7 +717,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
 
    void WhenFillTubeHeaterTimeReachedAfterRakeCompletedFullRevolution()
    {
-      DataModel_Write(dataModel, Erd_IceMaker0_RakeCompletedRevolution, set);
+      DataModel_Write(dataModel, Erd_IceMaker1_RakeCompletedRevolution, set);
       After(iceMakerData->harvestData.fillTubeHeaterOnTimeInSeconds * MSEC_PER_SEC);
    }
 
@@ -810,6 +826,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
    {
       GivenIceMakerIs(ENABLED);
       GivenSabbathModeIs(DISABLED);
+      GivenEnhancedSabbathModeIs(DISABLED);
       GivenTheMoldThermistorIsValid();
       GivenTheRakePositionIs(RakePosition_Home);
       GivenFeelerArmPositionIs(FeelerArmPosition_BucketNotFull);
@@ -906,10 +923,23 @@ TEST(AluminumMoldIceMakerIntegration, ShouldStartInFreezeStateWhenInitializedWhi
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Freeze);
 }
 
+TEST(AluminumMoldIceMakerIntegration, ShouldStartInFreezeStateWhenInitializedWhileEnhancedSabbathModeIsEnabledAndIceMakerIsEnabledAndRakeIsHomeAndThermistorIsValid)
+{
+   GivenEnhancedSabbathModeIs(ENABLED);
+   GivenIceMakerIs(ENABLED);
+   GivenMoldThermistorAdcCountIs(ValidAdcCount);
+   GivenTheRakePositionIs(RakePosition_Home);
+
+   WhenApplicationHasBeenInitialized();
+   MoldThermistorShouldBe(Valid);
+   AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Freeze);
+}
+
 TEST(AluminumMoldIceMakerIntegration, ShouldStartInFreezeStateWhenInitializedWhileIceMakerIsDisabledAndSabbathModeIsDisabledAndRakeIsHomeAndThermistorIsValid)
 {
    GivenIceMakerIs(DISABLED);
    GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
    GivenMoldThermistorAdcCountIs(ValidAdcCount);
    GivenTheRakePositionIs(RakePosition_Home);
 
@@ -930,10 +960,23 @@ TEST(AluminumMoldIceMakerIntegration, ShouldStartInFreezeStateWhenInitializedWhi
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Freeze);
 }
 
+TEST(AluminumMoldIceMakerIntegration, ShouldStartInFreezeStateWhenInitializedWhileIceMakerIsDisabledAndEnhancedSabbathModeIsEnabledAndThermistorIsValidAndRakePositionIsHome)
+{
+   GivenIceMakerIs(DISABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+   GivenMoldThermistorAdcCountIs(ValidAdcCount);
+   GivenTheRakePositionIs(RakePosition_Home);
+
+   WhenApplicationHasBeenInitialized();
+   MoldThermistorShouldBe(Valid);
+   AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Freeze);
+}
+
 TEST(AluminumMoldIceMakerIntegration, ShouldStartInThermistorFaultStateWhenMoldThermistorIsInvalidAndSabbathModeIsDisabledAndIceMakerIsEnabled)
 {
    GivenIceMakerIs(ENABLED);
    GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
    GivenMoldThermistorAdcCountIs(InvalidAdcCount);
    GivenTheRakePositionIs(RakePosition_NotHome);
 
@@ -946,6 +989,7 @@ TEST(AluminumMoldIceMakerIntegration, ShouldStartInFreezeStateWhenRakePositionIs
 {
    GivenIceMakerIs(ENABLED);
    GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
    GivenMoldThermistorAdcCountIs(ValidAdcCount);
    GivenTheRakePositionIs(RakePosition_Home);
 
@@ -958,6 +1002,7 @@ TEST(AluminumMoldIceMakerIntegration, ShouldStartInHarvestStateWhenRakePositionI
 {
    GivenIceMakerIs(ENABLED);
    GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
    GivenMoldThermistorAdcCountIs(ValidAdcCount);
    GivenTheRakePositionIs(RakePosition_NotHome);
 
@@ -1544,6 +1589,17 @@ TEST(AluminumMoldIceMakerIntegration, ShouldActivateIceRateAndSendIceRateSignalW
    GivenIceMakerIs(ENABLED);
 
    WhenSabbathModeIs(DISABLED);
+   FreezerTriggerIceRateSignalShouldBe(1);
+   IceRateActiveErdStateShouldBe(ON);
+}
+
+TEST(AluminumMoldIceMakerIntegration, ShouldActivateIceRateAndSendIceRateSignalWhenEnhancedSabbathModeIsDisabledDuringFreezeStateAndHarvestConditionsAreNotMet)
+{
+   GivenTheAluminumMoldIceMakerIsInFreezeState();
+   GivenEnhancedSabbathModeIs(ENABLED);
+   GivenIceMakerIs(ENABLED);
+
+   WhenEnhancedSabbathModeIs(DISABLED);
    FreezerTriggerIceRateSignalShouldBe(1);
    IceRateActiveErdStateShouldBe(ON);
 }

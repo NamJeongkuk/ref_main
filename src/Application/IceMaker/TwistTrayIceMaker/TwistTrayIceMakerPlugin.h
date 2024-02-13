@@ -30,9 +30,11 @@
 #include "TwistTrayIceMakerData.h"
 #include "SensorData.h"
 #include "NonHarvestFillTubeHeaterData.h"
+#include "IceMakerEnableResolver.h"
 
 typedef struct
 {
+   const ErdLogicServiceConfiguration_t *iceMakerEnableResolverConfig;
    const Output_TwistTrayIceMakerMotorStateConfig_t *outputMotorStateConfig;
    const TwistTrayIceMakerMotorRequestManagerConfig_t *motorRequestManagerConfig;
    const TwistTrayIceMakerMotorSwitchMonitorConfig_t *motorSwitchMonitorConfig;
@@ -57,6 +59,7 @@ typedef struct
 {
    struct
    {
+      IceMakerEnableResolver_t iceMakerEnableResolver;
       SensorFiltering_t sensorFilter;
       TwistTrayIceMaker_t twistTrayIceMaker;
       Output_TwistTrayIceMakerMotorState_t motorStateOutput;

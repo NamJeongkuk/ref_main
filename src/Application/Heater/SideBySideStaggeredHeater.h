@@ -15,7 +15,9 @@ typedef struct
 {
    struct
    {
-      SoftPwm_t fillTubeHeaterSoftPwm;
+      SoftPwm_t iceMaker0FillTubeHeaterSoftPwm;
+      SoftPwm_t iceMaker1FillTubeHeaterSoftPwm;
+      SoftPwm_t iceMaker2FillTubeHeaterSoftPwm;
       SoftPwm_t freshFoodDamperHeaterSoftPwm;
    } _private;
 } SideBySideStaggeredHeater_t;

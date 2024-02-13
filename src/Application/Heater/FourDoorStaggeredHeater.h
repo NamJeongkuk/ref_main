@@ -15,8 +15,10 @@ typedef struct
 {
    struct
    {
-      SoftPwm_t convertibleCompartmentSoftPwm;
-      SoftPwm_t fillTubeSoftPwm;
+      SoftPwm_t convertibleCompartmentDamperHeaterSoftPwm;
+      SoftPwm_t iceMaker0FillTubeHeaterSoftPwm;
+      SoftPwm_t iceMaker1FillTubeHeaterSoftPwm;
+      SoftPwm_t iceMaker2FillTubeHeaterSoftPwm;
    } _private;
 } FourDoorStaggeredHeater_t;
 

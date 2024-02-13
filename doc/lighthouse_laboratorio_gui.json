@@ -208,13 +208,6 @@
             },
             {
                "namespace": "mb",
-               "displayName": "Twist Tray IM Status",
-               "name": "Erd_TwistTrayIceMaker_HighLevelState",
-               "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
                "displayName": "IM Slot 0 Enable Request",
                "name": "Erd_IceMaker0_EnableRequest",
                "read": false,

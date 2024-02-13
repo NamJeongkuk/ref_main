@@ -600,14 +600,7 @@
             },
             {
                "namespace": "mb",
-               "displayName": "IM 1 Mold Thermistor Filtered Temperature (DegF x100)",
-               "name": "Erd_IceMaker1_MoldThermistor_FilteredTemperatureInDegFx100",
-               "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
-               "displayName": "IM 0 Mold Thermistor Filtered Temperature (DegF x100)",
+               "displayName": "IM Mold Thermistor Filtered Temperature (DegF x100)",
                "name": "Erd_IceMaker0_MoldThermistor_FilteredTemperatureInDegFx100",
                "read": true,
                "interval": 1000000000
@@ -619,6 +612,13 @@
          "erds": [
             {
                "namespace": "mb",
+               "displayName": "IM Info",
+               "name": "Erd_IceMaker0_TypeInformation",
+               "read": true,
+               "interval": 1000000000
+            },
+            {
+               "namespace": "mb",
                "displayName": "IM State Machine State",
                "name": "Erd_IceMaker0_StateMachineState",
                "read": true,
@@ -626,8 +626,8 @@
             },
             {
                "namespace": "mb",
-               "displayName": "IM 1 Mold Thermistor Filtered Temperature (DegF x100)",
-               "name": "Erd_IceMaker1_MoldThermistor_FilteredTemperatureInDegFx100",
+               "displayName": "IM Mold Thermistor Filtered Temperature (DegF x100)",
+               "name": "Erd_IceMaker0_MoldThermistor_FilteredTemperatureInDegFx100",
                "read": true,
                "interval": 1000000000
             },
@@ -662,7 +662,7 @@
             {
                "namespace": "mb",
                "displayName": "IM Arm is OK to Harvest?",
-               "name": "Erd_FeelerArmIsReadyToEnterHarvest",
+               "name": "Erd_IceMaker0_FeelerArmIsReadyToEnterHarvest",
                "read": true,
                "interval": 1000000000
             },
@@ -701,8 +701,8 @@
          "erds": [
             {
                "namespace": "mb",
-               "displayName": "Twist IM High Level State",
-               "name": "Erd_TwistTrayIceMaker_HighLevelState",
+               "displayName": "IM Info",
+               "name": "Erd_IceMaker0_TypeInformation",
                "read": true,
                "interval": 1000000000
             },
@@ -750,7 +750,7 @@
             },
             {
                "namespace": "mb",
-               "displayName": "IM 0 Mold Thermistor Filtered Temperature (DegF x100)",
+               "displayName": "IM Mold Thermistor Filtered Temperature (DegF x100)",
                "name": "Erd_IceMaker0_MoldThermistor_FilteredTemperatureInDegFx100",
                "read": true,
                "interval": 1000000000
@@ -1036,13 +1036,6 @@
                "namespace": "mb",
                "displayName": "IM State Machine State",
                "name": "Erd_IceMaker0_StateMachineState",
-               "read": true,
-               "interval": 1000000000
-            },
-            {
-               "namespace": "mb",
-               "displayName": "Twist Tray IM State",
-               "name": "Erd_TwistTrayIceMaker_HighLevelState",
                "read": true,
                "interval": 1000000000
             },

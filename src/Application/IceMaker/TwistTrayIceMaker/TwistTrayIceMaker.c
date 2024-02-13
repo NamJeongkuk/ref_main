@@ -10,7 +10,6 @@
 #include "TwistTrayIceMakerMotorController.h"
 #include "SystemErds.h"
 #include "IceMakerMotorAction.h"
-#include "TwistTrayIceMakerHighLevelState.h"
 #include "IceMakerStateMachineState.h"
 #include "WaterValveVotedState.h"
 #include "DispensingRequest.h"
@@ -97,11 +96,6 @@ static void HarvestDoorDelayElapsed(void *context);
 static TwistTrayIceMaker_t *InstanceFrom(Fsm_t *fsm)
 {
    return CONTAINER_OF(TwistTrayIceMaker_t, _private.fsm, fsm);
-}
-
-static void UpdateHighLevelState(TwistTrayIceMaker_t *instance, TwistTrayIceMakerHighLevelState_t newState)
-{
-   DataSource_Write(instance->_private.dataSource, instance->_private.config->highLevelStateErd, &newState);
 }
 
 static void UpdateFsmState(TwistTrayIceMaker_t *instance, IceMakerStateMachineState_t newState)
@@ -743,7 +737,6 @@ static void State_MotorError(Fsm_t *fsm, FsmSignal_t signal, const void *data)
             instance);
 
          UpdateFsmState(instance, IceMakerStateMachineState_MotorError);
-         UpdateHighLevelState(instance, TwistTrayIceMakerHighLevelState_Fault);
 
          RequestMotorAction(instance, Idle);
          DataSource_Write(instance->_private.dataSource, instance->_private.config->motorFaultActiveErd, set);
@@ -1082,8 +1075,6 @@ void TwistTrayIceMaker_Init(
    Event_Subscribe(
       dataSource->OnDataChange,
       &instance->_private.dataSourceChangeEventSubscription);
-
-   UpdateHighLevelState(instance, TwistTrayIceMakerHighLevelState_NormalRun);
 
    Fsm_Init(&instance->_private.fsm, InitialState(instance));
 }

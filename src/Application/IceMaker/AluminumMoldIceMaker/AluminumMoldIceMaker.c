@@ -224,13 +224,13 @@ static bool CoolingSystemIsOn(AluminumMoldIceMaker_t *instance)
 
 static bool SabbathModeIsDisabled(AluminumMoldIceMaker_t *instance)
 {
-   bool state;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->sabbathModeErd,
-      &state);
+   bool sabbathMode;
+   bool enhancedSabbathMode;
 
-   return !state;
+   DataModel_Read(instance->_private.dataModel, instance->_private.config->sabbathModeErd, &sabbathMode);
+   DataModel_Read(instance->_private.dataModel, instance->_private.config->enhancedSabbathModeErd, &enhancedSabbathMode);
+
+   return !(sabbathMode || enhancedSabbathMode);
 }
 
 static bool IceMakerIsEnabled(AluminumMoldIceMaker_t *instance)
@@ -1167,10 +1167,10 @@ static void DataModelChanged(void *context, const void *args)
    {
       Hsm_SendSignal(&instance->_private.hsm, Signal_FeelerArmIsReadyToEnterHarvest, NULL);
    }
-   else if(erd == instance->_private.config->sabbathModeErd)
+   else if((erd == instance->_private.config->sabbathModeErd) ||
+      (erd == instance->_private.config->enhancedSabbathModeErd))
    {
-      const bool *state = onChangeData->data;
-      if(!*state)
+      if(SabbathModeIsDisabled(instance))
       {
          Hsm_SendSignal(&instance->_private.hsm, Signal_SabbathModeDisabled, NULL);
       }

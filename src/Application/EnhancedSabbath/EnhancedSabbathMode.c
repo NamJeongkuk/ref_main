@@ -309,22 +309,6 @@ static void SetGridOverrideTo(EnhancedSabbathMode_t *instance, bool state)
       &state);
 }
 
-static void SetIceMakerEnabledOverrideRequestTo(EnhancedSabbathMode_t *instance, bool state)
-{
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->overrideIceMakerEnabledRequestErd,
-      &state);
-}
-
-static void SetIceMakerEnabledOverrideValueTo(EnhancedSabbathMode_t *instance, bool state)
-{
-   DataModel_Write(
-      instance->_private.dataModel,
-      instance->_private.config->overrideIceMakerEnabledValueErd,
-      &state);
-}
-
 static void SetDispensingDisabledTo(EnhancedSabbathMode_t *instance, bool state)
 {
    DataModel_Write(
@@ -611,8 +595,6 @@ static bool State_Disabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          SetDisableCompressorMinimumTimesToDontCare(instance);
          SetGridOverrideTo(instance, false);
          SetDispensingDisabledTo(instance, false);
-         SetIceMakerEnabledOverrideRequestTo(instance, false);
-         SetIceMakerEnabledOverrideValueTo(instance, true);
          SetLightVotesToOffAndDontCare(instance);
          ClearEnhancedSabbathRunTimeInMinutesErd(instance);
          break;
@@ -647,8 +629,6 @@ static bool State_Enabled(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          SetFreezerSetpointToCareWithTheValue(instance, instance->_private.enhancedSabbathData->freezerSetpointTemperatureInDegFx100);
          SetDispensingDisabledTo(instance, true);
          SetGridOverrideTo(instance, true);
-         SetIceMakerEnabledOverrideRequestTo(instance, true);
-         SetIceMakerEnabledOverrideValueTo(instance, false);
          SetDisableCompressorMinimumTimesToCareWithValue(instance, true);
          StartEnhancedSabbathRunTimeTimer(instance);
          SetLightVotesToParametricallyDefinedPwmDutyCyclePercentageAndCare(instance);

@@ -64,6 +64,11 @@ void TwistTrayIceMakerPlugin_Init(
       config->harvestCountCalculatorConfig,
       twistTrayData->freezeData.harvestCountCalculatorData);
 
+   IceMakerEnableResolver_Init(
+      &instance->_private.iceMakerEnableResolver,
+      dataModel,
+      config->iceMakerEnableResolverConfig);
+
    TwistTrayIceMakerRunner_Init(
       &instance->_private.twistTrayIceMakerMotorControllerRunner,
       &instance->_private.twistTrayMotorController,

@@ -30,8 +30,6 @@ typedef struct
    Erd_t freezerAverageCabinetTemperatureErd; // TemperatureDegFx100_t
    Erd_t freshFoodCabinetSetpointErd; // TemperatureDegFx100_t
    Erd_t freezerCabinetSetpointErd; // TemperatureDegFx100_t
-   Erd_t overrideIceMakerEnabledRequestErd; // bool
-   Erd_t overrideIceMakerEnabledValueErd; // bool
    Erd_t dispensingDisabledErd; // bool
    Erd_t waitingToDefrostErd; // bool
    Erd_t gridOverrideEnabledErd; // bool

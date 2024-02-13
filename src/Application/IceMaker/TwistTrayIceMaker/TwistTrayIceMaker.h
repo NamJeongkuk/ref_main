@@ -14,7 +14,6 @@
 
 typedef struct
 {
-   Erd_t highLevelStateErd; // TwistTrayIceMakerHighLevelState_t
    Erd_t fsmStateErd; // IceMakerStateMachineState_t
    Erd_t thermistorIsValidResolvedErd; // bool
    Erd_t filteredTemperatureResolvedInDegFx100Erd; // TemperatureDegFx100_t

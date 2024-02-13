@@ -22,11 +22,6 @@ static void InitializeIceMakerOverrideArbiters(AluminumMoldIceMakerPlugin_t *ins
       &instance->_private.aluminumMoldIceMakerThermistorValidArbiter,
       DataModel_AsDataSource(dataModel),
       config->thermistorValidArbiterConfig);
-
-   OverrideArbiter_Init(
-      &instance->_private.iceMakerEnabledArbiter,
-      DataModel_AsDataSource(dataModel),
-      config->iceMakerEnabledOverrideConfig);
 }
 
 static void InitializeErdResolvers(AluminumMoldIceMakerPlugin_t *instance, I_DataModel_t *dataModel, const AluminumMoldIceMakerPluginConfig_t *config)

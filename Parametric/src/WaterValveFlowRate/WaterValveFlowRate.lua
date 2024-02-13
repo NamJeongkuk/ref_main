@@ -10,8 +10,9 @@ return function(core)
       return TypedString(
         { 'water_valve_flow_rate' },
         structure(
-          u8(config.aluminum_mold_icemaker_valve_flow_rate_ounces_per_sec_x100),
-          u8(config.twist_tray_icemaker_valve_flow_rate_ounces_per_sec_x100),
+          u8(config.icemaker0_valve_flow_rate_ounces_per_sec_x100),
+          u8(config.icemaker1_valve_flow_rate_ounces_per_sec_x100),
+          u8(config.icemaker2_valve_flow_rate_ounces_per_sec_x100),
           u8(config.dispenser_valve_flow_rate_ounces_per_sec_x100)
         )
       )
@@ -21,8 +22,9 @@ return function(core)
       validate_arguments(
         config,
         {
-          aluminum_mold_icemaker_valve_flow_rate_ounces_per_sec_x100 = { constraint.u8 },
-          twist_tray_icemaker_valve_flow_rate_ounces_per_sec_x100 = { constraint.u8 },
+          icemaker0_valve_flow_rate_ounces_per_sec_x100 = { constraint.u8 },
+          icemaker1_valve_flow_rate_ounces_per_sec_x100 = { constraint.u8 },
+          icemaker2_valve_flow_rate_ounces_per_sec_x100 = { constraint.u8 },
           dispenser_valve_flow_rate_ounces_per_sec_x100 = { constraint.u8 }
         })
 

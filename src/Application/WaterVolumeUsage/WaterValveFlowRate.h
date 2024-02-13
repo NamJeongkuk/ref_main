@@ -12,8 +12,9 @@
 
 typedef struct
 {
-   uint8_t aluminumMoldIcemakerValveFlowRateOuncesPerSecX100;
-   uint8_t twistTrayIcemakerValveFlowRateOuncesPerSecX100;
+   uint8_t icemaker0ValveFlowRateOuncesPerSecX100;
+   uint8_t icemaker1ValveFlowRateOuncesPerSecX100;
+   uint8_t icemaker2ValveFlowRateOuncesPerSecX100;
    uint8_t dispenserValveFlowRateOuncesPerSecX100;
 } WaterValveFlowRate_t;
 

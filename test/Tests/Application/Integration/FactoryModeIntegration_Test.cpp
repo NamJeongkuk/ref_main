@@ -26,16 +26,15 @@ enum
 };
 
 static const Erd_t bspValveErdList[] = {
-   Erd_AluminumMoldIceMakerWaterValveRelay,
+   Erd_IceMaker0_WaterValveRelay,
+   Erd_IceMaker1_WaterValveRelay,
    Erd_DispenserValveRelay,
    Erd_IsolationValveRelay,
-   Erd_TwistTrayIceMakerWaterValveRelay
 };
 
 static const Erd_t factoryModeValveErdList[] = {
    Erd_IceMaker0_WaterValve_FactoryVote,
    Erd_IceMaker1_WaterValve_FactoryVote,
-   Erd_IceMaker2_WaterValve_FactoryVote,
    Erd_DispenserWaterValve_FactoryVote,
    Erd_IsolationWaterValve_FactoryVote,
 };
@@ -59,14 +58,14 @@ static const Erd_t uint16BspErdList[] = {
 };
 
 static const Erd_t uint8BspErdList[] = {
-   Erd_FillTubeHeater,
-   Erd_AluminumMoldIceMakerWaterValveRelay,
+   Erd_IceMaker0_FillTubeHeater,
+   Erd_IceMaker0_WaterValveRelay,
+   Erd_IceMaker1_WaterValveRelay,
    Erd_DispenserValveRelay,
    Erd_IsolationValveRelay,
-   Erd_TwistTrayIceMakerWaterValveRelay,
-   Erd_IceMaker0_RakeMotorRelay,
+   Erd_IceMaker1_RakeMotorRelay,
    Erd_FreezerDefrostHeaterRelay,
-   Erd_IceMaker0_HeaterRelay,
+   Erd_IceMaker1_HeaterRelay,
    Erd_TwistIceMakerMotorDriveEnable
 };
 
@@ -299,17 +298,17 @@ TEST_GROUP(FactoryModeIntegration)
          &waterValveVotedState);
    }
 
-   void GivenTheIceMaker0HeaterRelayIs(HeaterState_t heaterState)
+   void GivenTheIceMaker1HeaterRelayIs(HeaterState_t heaterState)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMaker0_HeaterRelay,
+         Erd_IceMaker1_HeaterRelay,
          &heaterState);
    }
 
-   void WhenTheIceMaker0HeaterRelayIs(HeaterState_t heaterState)
+   void WhenTheIceMaker1HeaterRelayIs(HeaterState_t heaterState)
    {
-      GivenTheIceMaker0HeaterRelayIs(heaterState);
+      GivenTheIceMaker1HeaterRelayIs(heaterState);
    }
 
    void WhenTheFactoryModeIceMaker1HeaterRelayBecomes(HeaterState_t heaterState)
@@ -321,12 +320,12 @@ TEST_GROUP(FactoryModeIntegration)
          &heaterStateVote);
    }
 
-   void TheIceMaker0HeaterRelayShouldBe(HeaterState_t expectedHeaterState)
+   void TheIceMaker1HeaterRelayShouldBe(HeaterState_t expectedHeaterState)
    {
       HeaterState_t actualHeaterState;
       DataModel_Read(
          dataModel,
-         Erd_IceMaker0_HeaterRelay,
+         Erd_IceMaker1_HeaterRelay,
          &actualHeaterState);
 
       CHECK_EQUAL(expectedHeaterState, actualHeaterState);
@@ -365,17 +364,17 @@ TEST_GROUP(FactoryModeIntegration)
       CHECK_EQUAL(expectedHeaterState, actualHeaterState);
    }
 
-   void GivenTheIceMaker0RakeMotorRelayIs(MotorState_t motorState)
+   void GivenTheIceMaker1RakeMotorRelayIs(MotorState_t motorState)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMaker0_RakeMotorRelay,
+         Erd_IceMaker1_RakeMotorRelay,
          &motorState);
    }
 
-   void WhenTheIceMaker0RakeMotorRelayIs(MotorState_t motorState)
+   void WhenTheIceMaker1RakeMotorRelayIs(MotorState_t motorState)
    {
-      GivenTheIceMaker0RakeMotorRelayIs(motorState);
+      GivenTheIceMaker1RakeMotorRelayIs(motorState);
    }
 
    void WhenTheFactoryModeIceMaker1RakeMotorIs(MotorState_t motorState)
@@ -387,12 +386,12 @@ TEST_GROUP(FactoryModeIntegration)
          &motorStateVote);
    }
 
-   void TheIceMaker0RakeMotorRelayShouldBe(MotorState_t expectedMotorState)
+   void TheIceMaker1RakeMotorRelayShouldBe(MotorState_t expectedMotorState)
    {
       MotorState_t actualMotorState;
       DataModel_Read(
          dataModel,
-         Erd_IceMaker0_RakeMotorRelay,
+         Erd_IceMaker1_RakeMotorRelay,
          &actualMotorState);
 
       CHECK_EQUAL(expectedMotorState, actualMotorState);
@@ -431,17 +430,30 @@ TEST_GROUP(FactoryModeIntegration)
       CHECK_EQUAL(expectedPwmDutyCycle, actualDutyCycle);
    }
 
-   void WhenTheFillTubeHeaterIs(bool status)
+   void WhenTheIceMaker0FillTubeHeaterIs(bool status)
    {
       DataModel_Write(
          dataModel,
-         Erd_FillTubeHeater,
+         Erd_IceMaker0_FillTubeHeater,
          &status);
    }
 
-   void GivenTheFillTubeHeaterIs(bool status)
+   void GivenTheIceMaker0FillTubeHeaterIs(bool status)
    {
-      WhenTheFillTubeHeaterIs(status);
+      WhenTheIceMaker0FillTubeHeaterIs(status);
+   }
+
+   void WhenTheIceMaker1FillTubeHeaterIs(bool status)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_IceMaker1_FillTubeHeater,
+         &status);
+   }
+
+   void GivenTheIceMaker1FillTubeHeaterIs(bool status)
+   {
+      WhenTheIceMaker1FillTubeHeaterIs(status);
    }
 
    void WhenTheFactoryModeIceMaker0FillTubeHeaterBecomes(PercentageDutyCycle_t percentDutyCycle)
@@ -462,12 +474,23 @@ TEST_GROUP(FactoryModeIntegration)
          &votedDutyCycle);
    }
 
-   void TheFillTubeHeaterShouldBe(bool expectedStatus)
+   void TheIceMaker0FillTubeHeaterShouldBe(bool expectedStatus)
    {
       bool actualStatus;
       DataModel_Read(
          dataModel,
-         Erd_FillTubeHeater,
+         Erd_IceMaker0_FillTubeHeater,
+         &actualStatus);
+
+      CHECK_EQUAL(expectedStatus, actualStatus);
+   }
+
+   void TheIceMaker1FillTubeHeaterShouldBe(bool expectedStatus)
+   {
+      bool actualStatus;
+      DataModel_Read(
+         dataModel,
+         Erd_IceMaker1_FillTubeHeater,
          &actualStatus);
 
       CHECK_EQUAL(expectedStatus, actualStatus);
@@ -560,17 +583,17 @@ TEST(FactoryModeIntegration, ShouldSetWaterValveErdsToOffWhenFactoryModeWaterVal
    TheValveBspErdsShouldBe(WaterValveState_On);
 }
 
-TEST(FactoryModeIntegration, ShouldSetBspIceMaker0HeaterRelayWhenIceMaker1FactoryVoteTriggered)
+TEST(FactoryModeIntegration, ShouldSetBspIceMaker1HeaterRelayWhenIceMaker1FactoryVoteTriggered)
 {
    GivenTheApplicationIsInitialized();
    GivenTheApplicationIsInFactoryMode();
-   GivenTheIceMaker0HeaterRelayIs(HeaterState_Off);
+   GivenTheIceMaker1HeaterRelayIs(HeaterState_Off);
 
    WhenTheFactoryModeIceMaker1HeaterRelayBecomes(HeaterState_On);
-   TheIceMaker0HeaterRelayShouldBe(HeaterState_On);
+   TheIceMaker1HeaterRelayShouldBe(HeaterState_On);
 
    After(OneMinute * MSEC_PER_MIN);
-   TheIceMaker0HeaterRelayShouldBe(HeaterState_On);
+   TheIceMaker1HeaterRelayShouldBe(HeaterState_On);
 }
 
 TEST(FactoryModeIntegration, ShouldSetBspFreezerDefrostHeaterRelayWhenFactoryVoteTriggered)
@@ -586,17 +609,17 @@ TEST(FactoryModeIntegration, ShouldSetBspFreezerDefrostHeaterRelayWhenFactoryVot
    TheFreezerDefrostHeaterRelayShouldBe(HeaterState_On);
 }
 
-TEST(FactoryModeIntegration, ShouldSetBspIceMaker0RakeMotorRelayWhenIceMaker1FactoryVoteTriggered)
+TEST(FactoryModeIntegration, ShouldSetBspIceMaker1RakeMotorRelayWhenIceMaker1FactoryVoteTriggered)
 {
    GivenTheApplicationIsInitialized();
    GivenTheApplicationIsInFactoryMode();
-   GivenTheIceMaker0RakeMotorRelayIs(MotorState_Off);
+   GivenTheIceMaker1RakeMotorRelayIs(MotorState_Off);
 
    WhenTheFactoryModeIceMaker1RakeMotorIs(MotorState_On);
-   TheIceMaker0RakeMotorRelayShouldBe(MotorState_On);
+   TheIceMaker1RakeMotorRelayShouldBe(MotorState_On);
 
    After(OneMinute * MSEC_PER_MIN);
-   TheIceMaker0RakeMotorRelayShouldBe(MotorState_On);
+   TheIceMaker1RakeMotorRelayShouldBe(MotorState_On);
 }
 
 TEST(FactoryModeIntegration, ShouldSetBspFreshFoodDamperHeaterPwmDutyCycleWhenFactoryVoteTriggered)
@@ -616,28 +639,28 @@ TEST(FactoryModeIntegration, ShouldSetBspFillTubeHeaterWhenIceMaker0FactoryVoteT
 {
    GivenTheApplicationIsInitialized();
    GivenTheApplicationIsInFactoryMode();
-   TheFillTubeHeaterShouldBe(DISABLED);
+   TheIceMaker0FillTubeHeaterShouldBe(DISABLED);
 
    WhenTheFactoryModeIceMaker0FillTubeHeaterBecomes(PercentageDutyCycle_Max);
    After(OneMinute * MSEC_PER_MIN);
-   TheFillTubeHeaterShouldBe(ENABLED);
+   TheIceMaker0FillTubeHeaterShouldBe(ENABLED);
 
    WhenTheFactoryModeIceMaker0FillTubeHeaterBecomes(PercentageDutyCycle_Min);
-   TheFillTubeHeaterShouldBe(DISABLED);
+   TheIceMaker0FillTubeHeaterShouldBe(DISABLED);
 }
 
 TEST(FactoryModeIntegration, ShouldSetBspFillTubeHeaterWhenIceMaker1FactoryVoteTriggered)
 {
    GivenTheApplicationIsInitialized();
    GivenTheApplicationIsInFactoryMode();
-   TheFillTubeHeaterShouldBe(DISABLED);
+   TheIceMaker1FillTubeHeaterShouldBe(DISABLED);
 
    WhenTheFactoryModeIceMaker1FillTubeHeaterBecomes(PercentageDutyCycle_Max);
    After(OneMinute * MSEC_PER_MIN);
-   TheFillTubeHeaterShouldBe(ENABLED);
+   TheIceMaker1FillTubeHeaterShouldBe(ENABLED);
 
    WhenTheFactoryModeIceMaker1FillTubeHeaterBecomes(PercentageDutyCycle_Min);
-   TheFillTubeHeaterShouldBe(DISABLED);
+   TheIceMaker1FillTubeHeaterShouldBe(DISABLED);
 }
 
 TEST(FactoryModeIntegration, ShouldDirectlyModifyBspWaterValveErdsWithoutOtherLogicOverride)
@@ -664,16 +687,16 @@ TEST(FactoryModeIntegration, ShouldDirectlyModifyBspLightErdsWithoutOtherLogicOv
    TheLightBspErdsShouldBe(PwmDutyCycle_Max);
 }
 
-TEST(FactoryModeIntegration, ShouldDirectlyModifyBspIceMaker0HeaterRelayWithoutOtherLogicOverride)
+TEST(FactoryModeIntegration, ShouldDirectlyModifyBspIceMaker1HeaterRelayWithoutOtherLogicOverride)
 {
    GivenTheApplicationIsInitialized();
    GivenTheApplicationIsInFactoryMode();
 
-   WhenTheIceMaker0HeaterRelayIs(HeaterState_On);
-   TheIceMaker0HeaterRelayShouldBe(HeaterState_On);
+   WhenTheIceMaker1HeaterRelayIs(HeaterState_On);
+   TheIceMaker1HeaterRelayShouldBe(HeaterState_On);
 
    After(OneMinute * MSEC_PER_MIN);
-   TheIceMaker0HeaterRelayShouldBe(HeaterState_On);
+   TheIceMaker1HeaterRelayShouldBe(HeaterState_On);
 }
 
 TEST(FactoryModeIntegration, ShouldDirectlyModifyBspFreezerDefrostHeaterRelayWithoutOtherLogicOverride)
@@ -693,11 +716,11 @@ TEST(FactoryModeIntegration, ShouldDirectlyModifyBspIceMaker0RakeMotorRelayWitho
    GivenTheApplicationIsInitialized();
    GivenTheApplicationIsInFactoryMode();
 
-   WhenTheIceMaker0RakeMotorRelayIs(MotorState_On);
-   TheIceMaker0RakeMotorRelayShouldBe(MotorState_On);
+   WhenTheIceMaker1RakeMotorRelayIs(MotorState_On);
+   TheIceMaker1RakeMotorRelayShouldBe(MotorState_On);
 
    After(OneMinute * MSEC_PER_MIN);
-   TheIceMaker0RakeMotorRelayShouldBe(MotorState_On);
+   TheIceMaker1RakeMotorRelayShouldBe(MotorState_On);
 }
 
 TEST(FactoryModeIntegration, ShouldDirectlyModifyBspFreshFoodDamperHeaterPwmDutyCycleWithoutOtherLogicOverride)
@@ -712,16 +735,28 @@ TEST(FactoryModeIntegration, ShouldDirectlyModifyBspFreshFoodDamperHeaterPwmDuty
    TheFreshFoodDamperHeaterPwmDutyCycleShouldBe(PwmDutyCycle_Max);
 }
 
-TEST(FactoryModeIntegration, ShouldDirectlyModifyBspFillTubeHeaterWithoutOtherLogicOverride)
+TEST(FactoryModeIntegration, ShouldDirectlyModifyBspIceMaker0FillTubeHeaterWithoutOtherLogicOverride)
 {
    GivenTheApplicationIsInitialized();
    GivenTheApplicationIsInFactoryMode();
 
-   WhenTheFillTubeHeaterIs(ENABLED);
-   TheFillTubeHeaterShouldBe(ENABLED);
+   WhenTheIceMaker0FillTubeHeaterIs(ENABLED);
+   TheIceMaker0FillTubeHeaterShouldBe(ENABLED);
 
    After(OneMinute * MSEC_PER_MIN);
-   TheFillTubeHeaterShouldBe(ENABLED);
+   TheIceMaker0FillTubeHeaterShouldBe(ENABLED);
+}
+
+TEST(FactoryModeIntegration, ShouldDirectlyModifyBspIceMaker1FillTubeHeaterWithoutOtherLogicOverride)
+{
+   GivenTheApplicationIsInitialized();
+   GivenTheApplicationIsInFactoryMode();
+
+   WhenTheIceMaker1FillTubeHeaterIs(ENABLED);
+   TheIceMaker1FillTubeHeaterShouldBe(ENABLED);
+
+   After(OneMinute * MSEC_PER_MIN);
+   TheIceMaker1FillTubeHeaterShouldBe(ENABLED);
 }
 
 TEST(FactoryModeIntegration, ShouldSetBspTwistMotorWhenIceMaker0FactoryVoteTriggered)

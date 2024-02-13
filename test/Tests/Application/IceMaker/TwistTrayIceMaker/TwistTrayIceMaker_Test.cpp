@@ -12,7 +12,6 @@ extern "C"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
 #include "Signal.h"
-#include "TwistTrayIceMakerHighLevelState.h"
 #include "TwistTrayIceMakerMotorController.h"
 #include "SystemErds.h"
 #include "TddPersonality.h"
@@ -45,8 +44,6 @@ enum
    BucketWasFull = IceMakerMotorActionResult_BucketWasFull,
    MotorError = IceMakerMotorActionResult_MotorError,
 
-   FaultState = TwistTrayIceMakerHighLevelState_Fault,
-
    VeryCold = 200,
 
    IceTemperaturePollingTime = 3 * MSEC_PER_SEC,
@@ -55,7 +52,6 @@ enum
 };
 
 static const TwistTrayIceMakerConfiguration_t config = {
-   .highLevelStateErd = Erd_TwistTrayIceMaker_HighLevelState,
    .fsmStateErd = Erd_IceMaker0_StateMachineState,
    .thermistorIsValidResolvedErd = Erd_IceMaker0_MoldThermistor_IsValidResolved,
    .filteredTemperatureResolvedInDegFx100Erd = Erd_IceMaker0_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
@@ -69,7 +65,7 @@ static const TwistTrayIceMakerConfiguration_t config = {
    .motorFaultActiveErd = Erd_TwistTrayIceMaker_MotorFaultActive,
    .waterFillMonitoringRequestErd = Erd_IceMaker0_WaterFillMonitoringRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_IceMaker0Vote,
-   .iceMakerEnabledResolvedErd = Erd_IceMakerEnabledResolved,
+   .iceMakerEnabledResolvedErd = Erd_IceMaker0_EnabledResolved,
    .sabbathModeErd = Erd_SabbathModeEnable,
    .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
@@ -113,16 +109,6 @@ static void OnDataModelChange(void *context, const void *_args)
 
       mock()
          .actualCall("Write Motor Fault")
-         .onObject(context)
-         .withParameter("Erd", args->erd)
-         .withParameter("Data", *data);
-   }
-   else if(args->erd == Erd_TwistTrayIceMaker_HighLevelState)
-   {
-      REINTERPRET(data, args->data, const uint8_t *);
-
-      mock()
-         .actualCall("Write High Level State")
          .onObject(context)
          .withParameter("Erd", args->erd)
          .withParameter("Data", *data);
@@ -220,7 +206,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMakerEnabledResolved,
+         Erd_IceMaker0_EnabledResolved,
          set);
    }
 
@@ -246,7 +232,7 @@ TEST_GROUP(TwistTrayIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMakerEnabledResolved,
+         Erd_IceMaker0_EnabledResolved,
          clear);
    }
 
@@ -418,15 +404,6 @@ TEST_GROUP(TwistTrayIceMaker)
          .expectOneCall("Write Motor Fault")
          .onObject(dataModel)
          .withParameter("Erd", Erd_TwistTrayIceMaker_MotorFaultActive)
-         .withParameter("Data", expectedState);
-   }
-
-   void TheHighLevelStateShouldBecome(uint8_t expectedState)
-   {
-      mock()
-         .expectOneCall("Write High Level State")
-         .onObject(dataModel)
-         .withParameter("Erd", Erd_TwistTrayIceMaker_HighLevelState)
          .withParameter("Data", expectedState);
    }
 
@@ -621,7 +598,6 @@ TEST_GROUP(TwistTrayIceMaker)
 
       TheMotorShouldBeRequestedTo(Idle);
       FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
-      TheHighLevelStateShouldBecome(FaultState);
       TheMotorFaultShouldBecome(ACTIVE);
       WhenTheMotorActionResultIs(MotorError);
       TwistTrayIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_MotorError);
@@ -712,7 +688,6 @@ TEST_GROUP(TwistTrayIceMaker)
       GivenTheModuleIsInitialized();
 
       TheMotorShouldBeRequestedTo(Idle);
-      TheHighLevelStateShouldBecome(FaultState);
       TheMotorFaultShouldBecome(ACTIVE);
       WhenTheMotorActionResultIs(MotorError);
    }
@@ -1712,7 +1687,6 @@ TEST(TwistTrayIceMaker, ShouldGoToErrorStateIfAHomingMovementResultsInError)
    GivenTheModuleIsInitialized();
 
    TheMotorShouldBeRequestedTo(Idle);
-   TheHighLevelStateShouldBecome(FaultState);
    TheMotorFaultShouldBecome(ACTIVE);
    WhenTheMotorActionResultIs(MotorError);
 }
@@ -1730,7 +1704,6 @@ TEST(TwistTrayIceMaker, ShouldGoToErrorStateIfAHomingMovementResultsInErrorAndIc
    TwistTrayIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Homing);
 
    TheMotorShouldBeRequestedTo(Idle);
-   TheHighLevelStateShouldBecome(FaultState);
    TheMotorFaultShouldBecome(ACTIVE);
    WhenTheMotorActionResultIs(MotorError);
    TwistTrayIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_MotorError);
@@ -1747,7 +1720,6 @@ TEST(TwistTrayIceMaker, ShouldGoToErrorStateIfAHarvestMovementResultsInErrorAndI
 
    TheMotorShouldBeRequestedTo(Idle);
    FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
-   TheHighLevelStateShouldBecome(FaultState);
    TheMotorFaultShouldBecome(ACTIVE);
    WhenTheMotorActionResultIs(MotorError);
 }
@@ -1759,7 +1731,6 @@ TEST(TwistTrayIceMaker, ShouldGoToErrorStateIfAHarvestMovementResultsInError)
 
    TheMotorShouldBeRequestedTo(Idle);
    FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
-   TheHighLevelStateShouldBecome(FaultState);
    TheMotorFaultShouldBecome(ACTIVE);
    WhenTheMotorActionResultIs(MotorError);
 }
@@ -1771,7 +1742,6 @@ TEST(TwistTrayIceMaker, ShouldNotTransitionToThermistorFaultStateWhenThermistorB
 
    TheMotorShouldBeRequestedTo(Idle);
    FillTubeHeaterVoteAndCareShouldBecome(OFF, Vote_DontCare);
-   TheHighLevelStateShouldBecome(FaultState);
    TheMotorFaultShouldBecome(ACTIVE);
    WhenTheMotorActionResultIs(MotorError);
    TwistTrayIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_MotorError);

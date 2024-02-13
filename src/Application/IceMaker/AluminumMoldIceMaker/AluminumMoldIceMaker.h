@@ -27,6 +27,7 @@ typedef struct
    Erd_t feelerArmIsReadyToEnterHarvestErd; // bool
    Erd_t iceMakerEnabledErd; // bool
    Erd_t sabbathModeErd; // bool
+   Erd_t enhancedSabbathModeErd; // bool
    Erd_t fillTubeHeaterVoteErd; // PercentageDutyCycleVote_t
    Erd_t moldHeaterControlRequestErd; // IceMakerMoldHeaterControlRequest_t
    Erd_t rakeCompletedRevolutionErd; // bool

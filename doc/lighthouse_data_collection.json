@@ -428,6 +428,11 @@
       },
       {
          "namespace": "mb",
+         "name": "Erd_IceMaker0_TypeInformation",
+         "interval": 60000
+      },
+      {
+         "namespace": "mb",
          "name": "Erd_FreshFoodDamperHeater_WinningVoteErd",
          "interval": 60000
       },
@@ -449,11 +454,6 @@
       {
          "namespace": "mb",
          "name": "Erd_IceMaker0_RakePosition",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
-         "name": "Erd_IceMaker1_MoldThermistor_FilteredTemperatureInDegFx100",
          "interval": 60000
       },
       {
@@ -508,17 +508,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_IceMakerEnabledResolved",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
-         "name": "Erd_TwistTrayIceMaker_HighLevelState",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
-         "name": "Erd_IceMaker0_StateMachineState",
+         "name": "Erd_IceMaker0_EnabledResolved",
          "interval": 60000
       },
       {
@@ -549,11 +539,6 @@
       {
          "namespace": "mb",
          "name": "Erd_IceMaker0_FreezeIntegrationCount",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
-         "name": "Erd_IceMaker0_MinimumFreezeTimeCounterInMinutes",
          "interval": 60000
       },
       {

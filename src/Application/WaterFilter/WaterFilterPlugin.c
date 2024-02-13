@@ -14,14 +14,19 @@ static const WaterFilterCalendarUsageUpdaterConfig_t waterFilterCalendarUsageUpd
    .serviceDiagnosticsRunTimeInMinutesErd = Erd_ServiceDiagnosticsRunTimeInMinutes
 };
 
-static const WaterVolumeUsageCalculatorConfig_t aluminumMoldIceMakerWaterVolumeUsageCalculatorConfig = {
-   .waterValveRelayErd = Erd_AluminumMoldIceMakerWaterValveRelay,
-   .waterVolumeUsageInOuncesX100Erd = Erd_LastAluminumMoldIceMakerWaterVolumeUsageInOuncesX100
+static const WaterVolumeUsageCalculatorConfig_t iceMaker0WaterVolumeUsageCalculatorConfig = {
+   .waterValveRelayErd = Erd_IceMaker0_WaterValveRelay,
+   .waterVolumeUsageInOuncesX100Erd = Erd_IceMaker0_LastWaterVolumeUsageInOuncesX100
 };
 
-static const WaterVolumeUsageCalculatorConfig_t twistTrayIceMakerWaterVolumeUsageCalculatorConfig = {
-   .waterValveRelayErd = Erd_TwistTrayIceMakerWaterValveRelay,
-   .waterVolumeUsageInOuncesX100Erd = Erd_LastTwistTrayIceMakerWaterVolumeUsageInOuncesX100
+static const WaterVolumeUsageCalculatorConfig_t iceMaker1WaterVolumeUsageCalculatorConfig = {
+   .waterValveRelayErd = Erd_IceMaker1_WaterValveRelay,
+   .waterVolumeUsageInOuncesX100Erd = Erd_IceMaker1_LastWaterVolumeUsageInOuncesX100
+};
+
+static const WaterVolumeUsageCalculatorConfig_t iceMaker2WaterVolumeUsageCalculatorConfig = {
+   .waterValveRelayErd = Erd_IceMaker2_WaterValveRelay,
+   .waterVolumeUsageInOuncesX100Erd = Erd_IceMaker2_LastWaterVolumeUsageInOuncesX100
 };
 
 static const WaterVolumeUsageCalculatorConfig_t dispensedWaterVolumeUsageCalculatorConfig = {
@@ -72,8 +77,9 @@ static const NewFilterInstalledHandlerConfig_t newFilterInstalledHandlerConfig =
 };
 
 static const Erd_t waterVolumeUsageInOuncesX100Erds[] = {
-   Erd_LastAluminumMoldIceMakerWaterVolumeUsageInOuncesX100,
-   Erd_LastTwistTrayIceMakerWaterVolumeUsageInOuncesX100,
+   Erd_IceMaker0_LastWaterVolumeUsageInOuncesX100,
+   Erd_IceMaker1_LastWaterVolumeUsageInOuncesX100,
+   Erd_IceMaker2_LastWaterVolumeUsageInOuncesX100,
    Erd_LastDispensedWaterVolumeUsageInOuncesX100
 };
 
@@ -160,16 +166,22 @@ void WaterFilterPlugin_Init(
       dataModel);
 
    WaterVolumeUsageCalculator_Init(
-      &instance->_private.aluminumMoldIceMakerWaterVolumeUsageCalculator,
+      &instance->_private.iceMaker0WaterVolumeUsageCalculator,
       dataModel,
-      &aluminumMoldIceMakerWaterVolumeUsageCalculatorConfig,
-      waterValveFlowRateData->aluminumMoldIcemakerValveFlowRateOuncesPerSecX100);
+      &iceMaker0WaterVolumeUsageCalculatorConfig,
+      waterValveFlowRateData->icemaker0ValveFlowRateOuncesPerSecX100);
 
    WaterVolumeUsageCalculator_Init(
-      &instance->_private.twistTrayIceMakerWaterVolumeUsageCalculator,
+      &instance->_private.iceMaker1WaterVolumeUsageCalculator,
       dataModel,
-      &twistTrayIceMakerWaterVolumeUsageCalculatorConfig,
-      waterValveFlowRateData->twistTrayIcemakerValveFlowRateOuncesPerSecX100);
+      &iceMaker1WaterVolumeUsageCalculatorConfig,
+      waterValveFlowRateData->icemaker1ValveFlowRateOuncesPerSecX100);
+
+   WaterVolumeUsageCalculator_Init(
+      &instance->_private.iceMaker2WaterVolumeUsageCalculator,
+      dataModel,
+      &iceMaker2WaterVolumeUsageCalculatorConfig,
+      waterValveFlowRateData->icemaker2ValveFlowRateOuncesPerSecX100);
 
    WaterVolumeUsageCalculator_Init(
       &instance->_private.dispensedWaterVolumeUsageCalculator,

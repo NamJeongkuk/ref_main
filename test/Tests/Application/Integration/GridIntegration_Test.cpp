@@ -840,7 +840,7 @@ TEST_GROUP(GridIntegration)
    void TheIceMakerShouldBe(bool expectedState)
    {
       bool actualState;
-      DataModel_Read(dataModel, Erd_IceMakerEnabledResolved, &actualState);
+      DataModel_Read(dataModel, Erd_IceMaker0_EnabledResolved, &actualState);
 
       CHECK_EQUAL(expectedState, actualState);
    }

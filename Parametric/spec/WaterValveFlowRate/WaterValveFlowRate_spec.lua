@@ -9,8 +9,9 @@ describe('WaterValveFlowRate', function()
   local water_valve_flow_rate = WaterValveFlowRate(core_mock)
   local function generate_config(overrides)
     return require 'lua-common'.table.merge({
-      aluminum_mold_icemaker_valve_flow_rate_ounces_per_sec_x100 = 0,
-      twist_tray_icemaker_valve_flow_rate_ounces_per_sec_x100 = 0,
+      icemaker0_valve_flow_rate_ounces_per_sec_x100 = 0,
+      icemaker1_valve_flow_rate_ounces_per_sec_x100 = 0,
+      icemaker2_valve_flow_rate_ounces_per_sec_x100 = 0,
       dispenser_valve_flow_rate_ounces_per_sec_x100 = 0
     }, overrides or {})
   end
@@ -19,18 +20,26 @@ describe('WaterValveFlowRate', function()
     should_require_args(water_valve_flow_rate, generate_config())
   end)
 
-  it('should assert if aluminum_mold_icemaker_valve_flow_rate_ounces_per_sec_x100 is not in range', function()
-    should_fail_with('aluminum_mold_icemaker_valve_flow_rate_ounces_per_sec_x100=-1 must be in [0, 255]', function()
+  it('should assert if icemaker0_valve_flow_rate_ounces_per_sec_x100 is not in range', function()
+    should_fail_with('icemaker0_valve_flow_rate_ounces_per_sec_x100=-1 must be in [0, 255]', function()
       water_valve_flow_rate(generate_config({
-        aluminum_mold_icemaker_valve_flow_rate_ounces_per_sec_x100 = -1
+        icemaker0_valve_flow_rate_ounces_per_sec_x100 = -1
       }))
     end)
   end)
 
-  it('should assert if twist_tray_icemaker_valve_flow_rate_ounces_per_sec_x100 is not in range', function()
-    should_fail_with('twist_tray_icemaker_valve_flow_rate_ounces_per_sec_x100=-1 must be in [0, 255]', function()
+  it('should assert if icemaker1_valve_flow_rate_ounces_per_sec_x100 is not in range', function()
+    should_fail_with('icemaker1_valve_flow_rate_ounces_per_sec_x100=-1 must be in [0, 255]', function()
       water_valve_flow_rate(generate_config({
-        twist_tray_icemaker_valve_flow_rate_ounces_per_sec_x100 = -1
+        icemaker1_valve_flow_rate_ounces_per_sec_x100 = -1
+      }))
+    end)
+  end)
+
+  it('should assert if icemaker2_valve_flow_rate_ounces_per_sec_x100 is not in range', function()
+    should_fail_with('icemaker2_valve_flow_rate_ounces_per_sec_x100=-1 must be in [0, 255]', function()
+      water_valve_flow_rate(generate_config({
+        icemaker2_valve_flow_rate_ounces_per_sec_x100 = -1
       }))
     end)
   end)
@@ -48,13 +57,15 @@ describe('WaterValveFlowRate', function()
       structure(
         u8(0),
         u8(0),
+        u8(0),
         u8(0)
       )
       ]])
 
     local actual = water_valve_flow_rate({
-      aluminum_mold_icemaker_valve_flow_rate_ounces_per_sec_x100 = 0,
-      twist_tray_icemaker_valve_flow_rate_ounces_per_sec_x100 = 0,
+      icemaker0_valve_flow_rate_ounces_per_sec_x100 = 0,
+      icemaker1_valve_flow_rate_ounces_per_sec_x100 = 0,
+      icemaker2_valve_flow_rate_ounces_per_sec_x100 = 0,
       dispenser_valve_flow_rate_ounces_per_sec_x100 = 0
     })
 

@@ -33,9 +33,10 @@ static const AluminumMoldIceMakerConfig_t config = {
    .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition,
    .harvestCountIsReadyToHarvestErd = Erd_IceMaker1_HarvestCountIsReadyToHarvest,
    .moldFilteredTemperatureInDegFx100Erd = Erd_IceMaker1_MoldThermistor_FilteredTemperatureResolvedInDegFx100,
-   .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
-   .iceMakerEnabledErd = Erd_IceMakerEnabledResolved,
+   .feelerArmIsReadyToEnterHarvestErd = Erd_IceMaker0_FeelerArmIsReadyToEnterHarvest,
+   .iceMakerEnabledErd = Erd_IceMaker0_EnabledResolved,
    .sabbathModeErd = Erd_SabbathModeEnable,
+   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .fillTubeHeaterVoteErd = Erd_IceMaker1_FillTubeHeater_IceMakerVote,
    .moldHeaterControlRequestErd = Erd_IceMaker0_MoldHeaterControlRequest,
    .rakeCompletedRevolutionErd = Erd_IceMaker0_RakeCompletedRevolution,
@@ -300,7 +301,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_FeelerArmIsReadyToEnterHarvest,
+         Erd_IceMaker0_FeelerArmIsReadyToEnterHarvest,
          set);
    }
 
@@ -313,7 +314,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       DataModel_Write(
          dataModel,
-         Erd_FeelerArmIsReadyToEnterHarvest,
+         Erd_IceMaker0_FeelerArmIsReadyToEnterHarvest,
          clear);
    }
 
@@ -353,11 +354,24 @@ TEST_GROUP(AluminumMoldIceMaker)
       GivenSabbathModeIs(state);
    }
 
+   void GivenEnhancedSabbathModeIs(bool state)
+   {
+      DataModel_Write(
+         dataModel,
+         Erd_EnhancedSabbathModeEnable,
+         &state);
+   }
+
+   void WhenEnhancedSabbathModeIs(bool state)
+   {
+      GivenEnhancedSabbathModeIs(state);
+   }
+
    void GivenTheIceMakerIs(bool state)
    {
       DataModel_Write(
          dataModel,
-         Erd_IceMakerEnabledResolved,
+         Erd_IceMaker0_EnabledResolved,
          &state);
    }
 
@@ -383,12 +397,14 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       GivenTheIceMakerIs(ENABLED);
       GivenSabbathModeIs(DISABLED);
+      GivenEnhancedSabbathModeIs(DISABLED);
    }
 
    void GivenTheAluminumMoldIceMakerIsInFreezeState()
    {
       GivenTheIceMakerIs(ENABLED);
       GivenSabbathModeIs(DISABLED);
+      GivenEnhancedSabbathModeIs(DISABLED);
       GivenTheMoldThermistorIsValid();
       GivenTheRakePositionIs(RakePosition_Home);
       GivenTheModuleIsInitialized();
@@ -399,6 +415,16 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       GivenTheIceMakerIs(ENABLED);
       GivenSabbathModeIs(ENABLED);
+      GivenTheMoldThermistorIsValid();
+      GivenTheRakePositionIs(RakePosition_Home);
+      GivenTheModuleIsInitialized();
+      AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Freeze);
+   }
+
+   void GivenEnhancedSabbathIsEnabledAndAluminumMoldIceMakerIsInFreezeState()
+   {
+      GivenTheIceMakerIs(ENABLED);
+      GivenEnhancedSabbathModeIs(ENABLED);
       GivenTheMoldThermistorIsValid();
       GivenTheRakePositionIs(RakePosition_Home);
       GivenTheModuleIsInitialized();
@@ -433,6 +459,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       GivenTheIceMakerIs(ENABLED);
       GivenSabbathModeIs(DISABLED);
+      GivenEnhancedSabbathModeIs(DISABLED);
       GivenTheMoldThermistorIsValid();
       GivenTheRakePositionIs(RakePosition_Home);
       GivenHarvestCountIsReadyToHarvest();
@@ -524,6 +551,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    {
       GivenTheIceMakerIs(ENABLED);
       GivenSabbathModeIs(DISABLED);
+      GivenEnhancedSabbathModeIs(DISABLED);
       GivenMoldThermistorIsInvalid();
       GivenTheRakePositionIs(RakePosition_NotHome);
       GivenTheModuleIsInitialized();
@@ -1013,6 +1041,7 @@ TEST(AluminumMoldIceMaker, ShouldGoToHarvestStateOnInitIfSabbathModeIsDisabledAn
 {
    GivenTheIceMakerIs(ENABLED);
    GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
    GivenTheMoldThermistorIsValid();
    GivenTheRakePositionIs(RakePosition_NotHome);
    GivenTheModuleIsInitialized();
@@ -1023,6 +1052,7 @@ TEST(AluminumMoldIceMaker, ShouldGoToFreezeStateOnInitIfSabbathModeIsDisabledAnd
 {
    GivenTheIceMakerIs(ENABLED);
    GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
    GivenTheMoldThermistorIsValid();
    GivenTheRakePositionIs(RakePosition_Home);
    GivenTheModuleIsInitialized();
@@ -1039,6 +1069,16 @@ TEST(AluminumMoldIceMaker, ShouldGoToHarvestStateOnInitIfSabbathModeIsEnabledAnd
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Harvest);
 }
 
+TEST(AluminumMoldIceMaker, ShouldGoToHarvestStateOnInitIfEnhancedSabbathModeIsEnabledAndIceMakerIsEnabledAndRakePositionIsNotHome)
+{
+   GivenTheIceMakerIs(ENABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+   GivenTheMoldThermistorIsValid();
+   GivenTheRakePositionIs(RakePosition_NotHome);
+   GivenTheModuleIsInitialized();
+   AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Harvest);
+}
+
 TEST(AluminumMoldIceMaker, ShouldGoToHarvestStateOnInitIfSabbathModeIsEnabledAndIceMakerIsDisabledAndRakePositionIsNotHome)
 {
    GivenTheIceMakerIs(DISABLED);
@@ -1049,10 +1089,21 @@ TEST(AluminumMoldIceMaker, ShouldGoToHarvestStateOnInitIfSabbathModeIsEnabledAnd
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Harvest);
 }
 
+TEST(AluminumMoldIceMaker, ShouldGoToHarvestStateOnInitIfEnhancedSabbathModeIsEnabledAndIceMakerIsDisabledAndRakePositionIsNotHome)
+{
+   GivenTheIceMakerIs(DISABLED);
+   GivenEnhancedSabbathModeIs(ENABLED);
+   GivenTheMoldThermistorIsValid();
+   GivenTheRakePositionIs(RakePosition_NotHome);
+   GivenTheModuleIsInitialized();
+   AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Harvest);
+}
+
 TEST(AluminumMoldIceMaker, ShouldGoToHarvestStateOnInitIfSabbathModeIsDisabledAndIceMakerIsDisabledAndRakePositionIsNotHome)
 {
    GivenTheIceMakerIs(DISABLED);
    GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
    GivenTheMoldThermistorIsValid();
    GivenTheRakePositionIs(RakePosition_NotHome);
    GivenTheModuleIsInitialized();
@@ -1063,6 +1114,7 @@ TEST(AluminumMoldIceMaker, ShouldGoToFreezeStateOnInitIfSabbathModeIsDisabledAnd
 {
    GivenTheIceMakerIs(DISABLED);
    GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
    GivenTheMoldThermistorIsValid();
    GivenTheRakePositionIs(RakePosition_Home);
    GivenTheModuleIsInitialized();
@@ -1073,6 +1125,7 @@ TEST(AluminumMoldIceMaker, ShouldGoToThermistorFaultStateOnInitIfSabbathModeIsDi
 {
    GivenTheIceMakerIs(DISABLED);
    GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
    GivenMoldThermistorIsInvalid();
    GivenTheRakePositionIs(RakePosition_NotHome);
    GivenTheModuleIsInitialized();
@@ -1083,6 +1136,7 @@ TEST(AluminumMoldIceMaker, ShouldGoToThermistorFaultStateOnInitIfSabbathModeIsDi
 {
    GivenTheIceMakerIs(ENABLED);
    GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
    GivenMoldThermistorIsInvalid();
    GivenTheRakePositionIs(RakePosition_NotHome);
    GivenTheModuleIsInitialized();
@@ -1093,6 +1147,7 @@ TEST(AluminumMoldIceMaker, ShouldGoToThermistorFaultStateOnInitIfSabbathModeIsDi
 {
    GivenTheIceMakerIs(ENABLED);
    GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
    GivenMoldThermistorIsInvalid();
    GivenTheRakePositionIs(RakePosition_Home);
    GivenTheModuleIsInitialized();
@@ -1103,6 +1158,7 @@ TEST(AluminumMoldIceMaker, ShouldGoToFreezeStateOnInitIfSabbathModeIsDisabledAnd
 {
    GivenTheIceMakerIs(ENABLED);
    GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
    GivenTheMoldThermistorIsValid();
    GivenTheRakePositionIs(RakePosition_Home);
    GivenTheModuleIsInitialized();
@@ -1714,6 +1770,14 @@ TEST(AluminumMoldIceMaker, ShouldStayInFreezeWhenReadyToEnterHarvestConditionsAr
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Freeze);
 }
 
+TEST(AluminumMoldIceMaker, ShouldStayInFreezeWhenReadyToEnterHarvestConditionsAreMetWhileEnhancedSabbathModeIsEnabled)
+{
+   GivenEnhancedSabbathIsEnabledAndAluminumMoldIceMakerIsInFreezeState();
+
+   WhenReadyToEnterHarvest();
+   AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Freeze);
+}
+
 TEST(AluminumMoldIceMaker, ShouldTransitionToHarvestWhenSabbathModeIsDisabledWhileTheOtherConditionsAreMet)
 {
    GivenSabbathIsEnabledAndAluminumMoldIceMakerIsInFreezeState();
@@ -1721,6 +1785,16 @@ TEST(AluminumMoldIceMaker, ShouldTransitionToHarvestWhenSabbathModeIsDisabledWhi
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Freeze);
 
    WhenSabbathModeIs(DISABLED);
+   AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Harvest);
+}
+
+TEST(AluminumMoldIceMaker, ShouldTransitionToHarvestWhenEnhancedSabbathModeIsDisabledWhileTheOtherConditionsAreMet)
+{
+   GivenEnhancedSabbathIsEnabledAndAluminumMoldIceMakerIsInFreezeState();
+   GivenReadyToEnterHarvest();
+   AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Freeze);
+
+   WhenEnhancedSabbathModeIs(DISABLED);
    AluminumMoldIceMakerStateMachineStateShouldBe(IceMakerStateMachineState_Harvest);
 }
 
@@ -1804,6 +1878,7 @@ TEST(AluminumMoldIceMaker, ShouldIncrementFreezerTriggerIceRateSignalWhenTransit
 {
    GivenTheIceMakerIs(ENABLED);
    GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
    GivenTheMoldThermistorIsValid();
    GivenTheRakePositionIs(RakePosition_Home);
    GivenTheModuleIsInitialized();
@@ -2756,6 +2831,7 @@ TEST(AluminumMoldIceMaker, ShouldStayInFreezeWhenTheOtherHarvestConditionsAreMet
 {
    GivenTheIceMakerIs(ENABLED);
    GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
    GivenTheMoldThermistorIsValid();
    GivenTheRakePositionIs(RakePosition_Home);
    GivenHarvestCountIsReadyToHarvest();
@@ -2773,6 +2849,7 @@ TEST(AluminumMoldIceMaker, ShouldTransitionToHarvestWhenDispensingIsNotInhibited
 {
    GivenTheIceMakerIs(ENABLED);
    GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
    GivenTheMoldThermistorIsValid();
    GivenTheRakePositionIs(RakePosition_Home);
    GivenHarvestCountIsReadyToHarvest();
@@ -2790,6 +2867,7 @@ TEST(AluminumMoldIceMaker, ShouldStayInFreezeWhenDispensingIsInhibitedByRfidWhil
 {
    GivenTheIceMakerIs(ENABLED);
    GivenSabbathModeIs(DISABLED);
+   GivenEnhancedSabbathModeIs(DISABLED);
    GivenTheMoldThermistorIsValid();
    GivenTheRakePositionIs(RakePosition_Home);
    GivenHarvestCountIsReadyToHarvest();

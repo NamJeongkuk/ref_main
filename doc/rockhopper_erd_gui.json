@@ -738,8 +738,22 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Aluminum Mold Ice Maker Water Valve Relay",
-          "name": "Erd_AluminumMoldIceMakerWaterValveRelay",
+          "displayName": "Ice Maker 0 Water Valve Relay",
+          "name": "Erd_IceMaker0_WaterValveRelay",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Maker 1 Water Valve Relay",
+          "name": "Erd_IceMaker1_WaterValveRelay",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Maker 2 Water Valve Relay",
+          "name": "Erd_IceMaker2_WaterValveRelay",
           "read": true,
           "write": false
         }
@@ -1327,13 +1341,6 @@
           "namespace": "mb",
           "displayName": "Ice Maker 1 Has Been Discovered",
           "name": "Erd_IceMaker1_HasBeenDiscovered",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Freeze Integration Count",
-          "name": "Erd_IceMaker0_FreezeIntegrationCount",
           "read": true,
           "write": true
         },
@@ -2367,7 +2374,7 @@
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Ice Maker0 Info",
+          "displayName": "Type information",
           "name": "Erd_IceMaker0_TypeInformation",
           "read": true,
           "write": false,
@@ -2375,22 +2382,303 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Ice Maker0 enable request",
+          "displayName": "State machine state",
+          "name": "Erd_IceMaker0_StateMachineState",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Enable request",
           "name": "Erd_IceMaker0_EnableRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Ice Maker0 enable status",
+          "displayName": "Enable status",
           "name": "Erd_IceMaker0_EnableStatus",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Ice Maker0 state machine state",
-          "name": "Erd_IceMaker0_StateMachineState",
+          "displayName": "Enabled by grid",
+          "name": "Erd_IceMakerEnabledByGrid",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Enabled resolved",
+          "name": "Erd_IceMaker0_EnabledResolved",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Mold Thermistor Thermistor Is Valid",
+          "name": "Erd_IceMaker0_MoldThermistorIsValid",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Mold Thermistor filtered temperature in degFx100",
+          "name": "Erd_IceMaker0_MoldThermistor_FilteredTemperatureInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freeze Integration Count",
+          "name": "Erd_IceMaker0_FreezeIntegrationCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Harvest count calculation request",
+          "name": "Erd_IceMaker0_HarvestCountCalculationRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Harvest count is ready to harvest",
+          "name": "Erd_IceMaker0_HarvestCountIsReadyToHarvest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feeler Arm Position",
+          "name": "Erd_IceMaker0_FeelerArmPosition",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feeler Arm Is Ready To Enter Harvest",
+          "name": "Erd_IceMaker0_FeelerArmIsReadyToEnterHarvest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feeler Arm Monitoring Request",
+          "name": "Erd_IceMaker0_FeelerArmMonitoringRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Feeler Arm Has Been Bucket Full",
+          "name": "Erd_IceMaker0_FeelerArmHasBeenBucketFull",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fill Tube Heater (Load)",
+          "name": "Erd_IceMaker0_FillTubeHeater",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fill Tube Heater Pwm Duty Cycle (Out of 65535)",
+          "description": "Out of 65535",
+          "name": "Erd_IceMaker0_FillTubeHeater_Pwm",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Fill Tube Heater Resolved Vote",
+          "name": "Erd_IceMaker0_FillTubeHeater_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Fill Tube Heater Winning Vote ERD",
+          "name": "Erd_IceMaker0_FillTubeHeater_WinningVoteErd",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Fill Tube Heater IceMaker Vote",
+          "name": "Erd_IceMaker0_FillTubeHeater_IceMakerVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Fill Tube Heater Non Harvest Vote",
+          "name": "Erd_IceMaker0_FillTubeHeater_NonHarvestVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freeze Time Counter In Minutes",
+          "name": "Erd_IceMaker0_MinimumFreezeTimeCounterInMinutes",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker heater - ice maker vote",
+          "name": "Erd_IceMaker0_HeaterRelay_IceMakerVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Mold Heater Control Request",
+          "name": "Erd_IceMaker0_MoldHeaterControlRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker water valve - ice maker vote",
+          "name": "Erd_IceMaker0_WaterValve_IceMakerVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Isolation water valve - ice maker vote",
+          "name": "Erd_IsolationWaterValve_IceMaker0Vote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Skip Fill Request",
+          "name": "Erd_IceMaker0_SkipFillRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Stop Fill Signal",
+          "name": "Erd_IceMaker0_StopFillSignal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Maker Fill Inhibited Reason",
+          "name": "Erd_IceMakerFillInhibitedReason",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Flow Meter Water Dispensed Ounces x100",
+          "name": "Erd_IceMaker0_FlowMeterWaterDispensedOzX100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Water Fill Monitoring Request",
+          "name": "Erd_IceMaker0_WaterFillMonitoringRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Flow Meter Monitoring Request",
+          "name": "Erd_IceMaker0_FlowMeterMonitoringRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Completed Revolution",
+          "name": "Erd_IceMaker0_RakeCompletedRevolution",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Control Request",
+          "name": "Erd_IceMaker0_RakeControlRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Position",
+          "name": "Erd_IceMaker0_RakePosition",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Has Not Been home",
+          "name": "Erd_IceMaker0_RakeHasNotBeenHome",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Motor Resolved Vote",
+          "name": "Erd_IceMaker0_RakeMotor_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Motor Winning Vote ERD",
+          "name": "Erd_IceMaker0_RakeMotor_WinningVoteErd",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Motor Factory Vote",
+          "name": "Erd_IceMaker0_RakeMotor_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Motor IceMaker Vote",
+          "name": "Erd_IceMaker0_RakeMotor_IceMakerVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Motor Action Result",
+          "name": "Erd_IceMaker0_MotorActionResult",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Motor Operation State",
+          "name": "Erd_IceMaker0_MotorOperationState",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Twist Motor Ice Maker Vote",
+          "name": "Erd_IceMaker0_TwistMotor_IceMakerVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Water Valve Ice Maker Vote",
+          "name": "Erd_IceMaker0_WaterValve_IceMakerVote",
           "read": true,
           "write": false
         }
@@ -2401,7 +2689,7 @@
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Ice Maker1 Info",
+          "displayName": "Type information",
           "name": "Erd_IceMaker1_TypeInformation",
           "read": true,
           "write": false,
@@ -2409,22 +2697,303 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Ice Maker1 enable request",
+          "displayName": "State machine state",
+          "name": "Erd_IceMaker1_StateMachineState",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Enable request",
           "name": "Erd_IceMaker1_EnableRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Ice Maker1 enable status",
+          "displayName": "Enable status",
           "name": "Erd_IceMaker1_EnableStatus",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Ice Maker1 state machine state",
-          "name": "Erd_IceMaker1_StateMachineState",
+          "displayName": "Enabled by grid",
+          "name": "Erd_IceMakerEnabledByGrid",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Enabled resolved",
+          "name": "Erd_IceMaker1_EnabledResolved",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Mold Thermistor Thermistor Is Valid",
+          "name": "Erd_IceMaker1_MoldThermistorIsValid",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Mold Thermistor filtered temperature in degFx100",
+          "name": "Erd_IceMaker1_MoldThermistor_FilteredTemperatureInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker1 Freeze Integration Count",
+          "name": "Erd_IceMaker1_FreezeIntegrationCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Harvest count calculation request",
+          "name": "Erd_IceMaker1_HarvestCountCalculationRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Harvest count is ready to harvest",
+          "name": "Erd_IceMaker1_HarvestCountIsReadyToHarheaterIvest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feeler Arm Position",
+          "name": "Erd_IceMaker1_FeelerArmPosition",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feeler Arm Is Ready To Enter Harvest",
+          "name": "Erd_IceMaker1_FeelerArmIsReadyToEnterHarvest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feeler Arm Monitoring Request",
+          "name": "Erd_IceMaker1_FeelerArmMonitoringRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Feeler Arm Has Been Bucket Full",
+          "name": "Erd_IceMaker1_FeelerArmHasBeenBucketFull",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fill Tube Heater (Load)",
+          "name": "Erd_IceMaker1_FillTubeHeater",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fill Tube Heater Pwm Duty Cycle (Out of 65535)",
+          "description": "Out of 65535",
+          "name": "Erd_IceMaker1_FillTubeHeater_Pwm",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Fill Tube Heater Resolved Vote",
+          "name": "Erd_IceMaker1_FillTubeHeater_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Fill Tube Heater Winning Vote ERD",
+          "name": "Erd_IceMaker1_FillTubeHeater_WinningVoteErd",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Fill Tube Heater IceMaker Vote",
+          "name": "Erd_IceMaker1_FillTubeHeater_IceMakerVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Fill Tube Heater Non Harvest Vote",
+          "name": "Erd_IceMaker1_FillTubeHeater_NonHarvestVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freeze Time Counter In Minutes",
+          "name": "Erd_IceMaker1_MinimumFreezeTimeCounterInMinutes",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker heater - ice maker vote",
+          "name": "Erd_IceMaker1_HeaterRelay_IceMakerVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Mold Heater Control Request",
+          "name": "Erd_IceMaker1_MoldHeaterControlRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker water valve - ice maker vote",
+          "name": "Erd_IceMaker1_WaterValve_IceMakerVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Isolation water valve - ice maker vote",
+          "name": "Erd_IsolationWaterValve_IceMaker1Vote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Skip Fill Request",
+          "name": "Erd_IceMaker1_SkipFillRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Stop Fill Signal",
+          "name": "Erd_IceMaker1_StopFillSignal",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Fill Inhibited Reason",
+          "name": "Erd_IceMakerFillInhibitedReason",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Flow Meter Water Dispensed Ounces x100",
+          "name": "Erd_IceMaker1_FlowMeterWaterDispensedOzX100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Water Fill Monitoring Request",
+          "name": "Erd_IceMaker1_WaterFillMonitoringRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Flow Meter Monitoring Request",
+          "name": "Erd_IceMaker1_FlowMeterMonitoringRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Completed Revolution",
+          "name": "Erd_IceMaker1_RakeCompletedRevolution",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Control Request",
+          "name": "Erd_IceMaker1_RakeControlRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Maker Rake Position",
+          "name": "Erd_IceMaker1_RakePosition",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Has Not Been home",
+          "name": "Erd_IceMaker1_RakeHasNotBeenHome",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Motor Resolved Vote",
+          "name": "Erd_IceMaker1_RakeMotor_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Motor Winning Vote ERD",
+          "name": "Erd_IceMaker1_RakeMotor_WinningVoteErd",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Motor Factory Vote",
+          "name": "Erd_IceMaker1_RakeMotor_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Motor IceMaker Vote",
+          "name": "Erd_IceMaker1_RakeMotor_IceMakerVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Motor Action Result",
+          "name": "Erd_IceMaker1_MotorActionResult",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Motor Operation State",
+          "name": "Erd_IceMaker1_MotorOperationState",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Twist Motor Ice Maker Vote",
+          "name": "Erd_IceMaker1_TwistMotor_IceMakerVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Water Valve Ice Maker Vote",
+          "name": "Erd_IceMaker1_WaterValve_IceMakerVote",
           "read": true,
           "write": false
         }
@@ -2435,7 +3004,7 @@
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Ice Maker2 Info",
+          "displayName": "Type information",
           "name": "Erd_IceMaker2_TypeInformation",
           "read": true,
           "write": false,
@@ -2443,62 +3012,106 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Ice Maker2 enable request",
+          "displayName": "State machine state",
+          "name": "Erd_IceMaker2_StateMachineState",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Enable request",
           "name": "Erd_IceMaker2_EnableRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Ice Maker2 enable status",
+          "displayName": "Enable status",
           "name": "Erd_IceMaker2_EnableStatus",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Ice Maker2 state machine state",
-          "name": "Erd_IceMaker2_StateMachineState",
+          "displayName": "Enabled by grid",
+          "name": "Erd_IceMakerEnabledByGrid",
           "read": true,
-          "write": false
-        }
-      ]
-    },
-    {
-      "title": "Aluminum mold ice maker",
-      "erds": [
+          "write": true
+        },
         {
           "namespace": "mb",
-          "displayName": "IceMaker0 State Machine State",
-          "name": "Erd_IceMaker0_StateMachineState",
+          "displayName": "Enabled resolved",
+          "name": "Erd_IceMaker2_EnabledResolved",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "IceMaker0 Feeler Arm Position",
-          "name": "Erd_IceMaker0_FeelerArmPosition",
+          "displayName": "Mold Thermistor Thermistor Is Valid",
+          "name": "Erd_IceMaker2_MoldThermistorIsValid",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Mold Thermistor filtered temperature in degFx100",
+          "name": "Erd_IceMaker2_MoldThermistor_FilteredTemperatureInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Freeze Integration Count",
+          "name": "Erd_IceMaker2_FreezeIntegrationCount",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Harvest count calculation request",
+          "name": "Erd_IceMaker2_HarvestCountCalculationRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Harvest count is ready to harvest",
+          "name": "Erd_IceMaker2_HarvestCountIsReadyToHarvest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Feeler Arm Position",
+          "name": "Erd_IceMaker2_FeelerArmPosition",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
           "displayName": "Feeler Arm Is Ready To Enter Harvest",
-          "name": "Erd_FeelerArmIsReadyToEnterHarvest",
+          "name": "Erd_IceMaker2_FeelerArmIsReadyToEnterHarvest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "IceMaker0 Feeler Arm Monitoring Request",
-          "name": "Erd_IceMaker0_FeelerArmMonitoringRequest",
+          "displayName": "Feeler Arm Monitoring Request",
+          "name": "Erd_IceMaker2_FeelerArmMonitoringRequest",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Feeler Arm Has Been Bucket Full",
+          "name": "Erd_IceMaker2_FeelerArmHasBeenBucketFull",
+          "read": true,
+          "write": false
         },
         {
           "namespace": "mb",
           "displayName": "Fill Tube Heater (Load)",
-          "name": "Erd_FillTubeHeater",
+          "name": "Erd_IceMaker2_FillTubeHeater",
           "read": true,
           "write": true
         },
@@ -2506,392 +3119,198 @@
           "namespace": "mb",
           "displayName": "Fill Tube Heater Pwm Duty Cycle (Out of 65535)",
           "description": "Out of 65535",
-          "name": "Erd_FillTubeHeater_Pwm",
+          "name": "Erd_IceMaker2_FillTubeHeater_Pwm",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "IceMaker1 Mold Thermistor filtered temperature in degFx100",
-          "name": "Erd_IceMaker1_MoldThermistor_FilteredTemperatureInDegFx100",
+          "displayName": "IceMaker Fill Tube Heater Resolved Vote",
+          "name": "Erd_IceMaker2_FillTubeHeater_ResolvedVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "IceMaker0 harvest count calculation request",
-          "name": "Erd_IceMaker0_HarvestCountCalculationRequest",
+          "displayName": "IceMaker Fill Tube Heater Winning Vote ERD",
+          "name": "Erd_IceMaker2_FillTubeHeater_WinningVoteErd",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "IceMaker1 harvest count calculation request",
-          "name": "Erd_IceMaker1_HarvestCountCalculationRequest",
+          "displayName": "IceMaker Fill Tube Heater IceMaker Vote",
+          "name": "Erd_IceMaker2_FillTubeHeater_IceMakerVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "IceMaker2 harvest count calculation request",
-          "name": "Erd_IceMaker2_HarvestCountCalculationRequest",
+          "displayName": "IceMaker Fill Tube Heater Non Harvest Vote",
+          "name": "Erd_IceMaker2_FillTubeHeater_NonHarvestVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "IceMaker0 harvest count is ready to harvest",
-          "name": "Erd_IceMaker0_HarvestCountIsReadyToHarvest",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Freeze Time Counter In Minutes",
-          "name": "Erd_IceMaker0_MinimumFreezeTimeCounterInMinutes",
+          "displayName": "Freeze Time Counter In Minutes",
+          "name": "Erd_IceMaker2_MinimumFreezeTimeCounterInMinutes",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Ice maker0 enable request",
-          "name": "Erd_IceMaker0_EnableRequest",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Ice maker enabled by grid",
-          "name": "Erd_IceMakerEnabledByGrid",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Ice maker enabled resolved",
-          "name": "Erd_IceMakerEnabledResolved",
+          "displayName": "IceMaker heater - ice maker vote",
+          "name": "Erd_IceMaker2_HeaterRelay_IceMakerVote",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Ice maker0 enable status",
-          "name": "Erd_IceMaker0_EnableStatus",
+          "displayName": "IceMaker Mold Heater Control Request",
+          "name": "Erd_IceMaker2_MoldHeaterControlRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker water valve - ice maker vote",
+          "name": "Erd_IceMaker2_WaterValve_IceMakerVote",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "Ice Maker 0 heater - ice maker vote",
-          "name": "Erd_IceMaker0_HeaterRelay_IceMakerVote",
+          "displayName": "Isolation water valve - ice maker vote",
+          "name": "Erd_IsolationWaterValve_IceMaker2Vote",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "IceMaker0 water valve - ice maker vote",
-          "name": "Erd_IceMaker0_WaterValve_IceMakerVote",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Isolation water valve - ice maker0 vote",
-          "name": "Erd_IsolationWaterValve_IceMaker0Vote",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Mold Heater Control Request",
-          "name": "Erd_IceMaker0_MoldHeaterControlRequest",
+          "displayName": "IceMaker Skip Fill Request",
+          "name": "Erd_IceMaker2_SkipFillRequest",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "IceMaker0 Rake Completed Revolution",
-          "name": "Erd_IceMaker0_RakeCompletedRevolution",
+          "displayName": "IceMaker Stop Fill Signal",
+          "name": "Erd_IceMaker2_StopFillSignal",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "IceMaker0 Rake Control Request",
-          "name": "Erd_IceMaker0_RakeControlRequest",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Ice Maker 0 Rake Position",
-          "name": "Erd_IceMaker0_RakePosition",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Skip Fill Request",
-          "name": "Erd_IceMaker0_SkipFillRequest",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Rake Has Not Been home",
-          "name": "Erd_IceMaker0_RakeHasNotBeenHome",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Feeler Arm Has Been Bucket Full",
-          "name": "Erd_IceMaker0_FeelerArmHasBeenBucketFull",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Rake Motor Resolved Vote",
-          "name": "Erd_IceMaker0_RakeMotor_ResolvedVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Rake Motor Winning Vote ERD",
-          "name": "Erd_IceMaker0_RakeMotor_WinningVoteErd",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Rake Motor Factory Vote",
-          "name": "Erd_IceMaker0_RakeMotor_FactoryVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Rake Motor IceMaker Vote",
-          "name": "Erd_IceMaker0_RakeMotor_IceMakerVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Fill Tube Heater Resolved Vote",
-          "name": "Erd_IceMaker0_FillTubeHeater_ResolvedVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Fill Tube Heater Winning Vote ERD",
-          "name": "Erd_IceMaker0_FillTubeHeater_WinningVoteErd",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Fill Tube Heater IceMaker Vote",
-          "name": "Erd_IceMaker0_FillTubeHeater_IceMakerVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Fill Tube Heater Non Harvest Vote",
-          "name": "Erd_IceMaker0_FillTubeHeater_NonHarvestVote",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Stop Fill Signal",
-          "name": "Erd_IceMaker0_StopFillSignal",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Flow Meter Water Dispensed Ounces x100",
-          "name": "Erd_IceMaker0_FlowMeterWaterDispensedOzX100",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Water Fill Monitoring Request",
-          "name": "Erd_IceMaker0_WaterFillMonitoringRequest",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Flow Meter Monitoring Request",
-          "name": "Erd_IceMaker0_FlowMeterMonitoringRequest",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Aluminum Mold Ice Maker Water Valve Relay",
-          "name": "Erd_AluminumMoldIceMakerWaterValveRelay",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Ice Maker Fill Inhibited Reason",
-          "name": "Erd_IceMakerFillInhibitedReason",
-          "read": true,
-          "write": false
-        }
-      ]
-    },
-    {
-      "title": "Twist tray ice maker",
-      "erds": [
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Harvest Count Calculation Request",
-          "name": "Erd_IceMaker0_HarvestCountCalculationRequest",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker1 Harvest Count Calculation Request",
-          "name": "Erd_IceMaker1_HarvestCountCalculationRequest",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker2 Harvest Count Calculation Request",
-          "name": "Erd_IceMaker2_HarvestCountCalculationRequest",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Freeze Integration Count",
-          "name": "Erd_IceMaker0_FreezeIntegrationCount",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Harvest Count Is Ready To Harvest",
-          "name": "Erd_IceMaker0_HarvestCountIsReadyToHarvest",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 State Machine State",
-          "name": "Erd_IceMaker0_StateMachineState",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Motor Action Result",
-          "name": "Erd_IceMaker0_MotorActionResult",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Motor Operation State",
-          "name": "Erd_IceMaker0_MotorOperationState",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Twist Motor Ice Maker Vote",
-          "name": "Erd_IceMaker0_TwistMotor_IceMakerVote",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Water Valve Ice Maker Vote",
-          "name": "Erd_IceMaker0_WaterValve_IceMakerVote",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Switch Input",
-          "name": "Erd_Gpio_GPIO_IN_02",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Mold Thermistor Thermistor Is Valid",
-          "name": "Erd_IceMaker0_MoldThermistorIsValid",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Mold Thermistor Thermistor Filtered Temperature In DegFx100",
-          "name": "Erd_IceMaker0_MoldThermistor_FilteredTemperatureInDegFx100",
-          "read": true,
-          "write": false
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Water Fill Monitoring Request",
-          "name": "Erd_IceMaker0_WaterFillMonitoringRequest",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Stop Fill Signal",
-          "name": "Erd_IceMaker0_StopFillSignal",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Flow Meter Water Dispensed OzX100",
-          "name": "Erd_IceMaker0_FlowMeterWaterDispensedOzX100",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "IceMaker0 Flow Meter Monitoring Request",
-          "name": "Erd_IceMaker0_FlowMeterMonitoringRequest",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Twist Tray Ice Maker Water Valve Relay",
-          "name": "Erd_TwistTrayIceMakerWaterValveRelay",
-          "read": true,
-          "write": true
-        },
-        {
-          "namespace": "mb",
-          "displayName": "Ice Maker Fill Inhibited Reason",
+          "displayName": "IceMaker Fill Inhibited Reason",
           "name": "Erd_IceMakerFillInhibitedReason",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "IceMaker Slot 0 Test Request",
-          "name": "Erd_IceMaker0_TestRequest",
+          "displayName": "IceMaker Flow Meter Water Dispensed Ounces x100",
+          "name": "Erd_IceMaker2_FlowMeterWaterDispensedOzX100",
           "read": true,
           "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Water Fill Monitoring Request",
+          "name": "Erd_IceMaker2_WaterFillMonitoringRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Flow Meter Monitoring Request",
+          "name": "Erd_IceMaker2_FlowMeterMonitoringRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Completed Revolution",
+          "name": "Erd_IceMaker2_RakeCompletedRevolution",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Control Request",
+          "name": "Erd_IceMaker2_RakeControlRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Ice Maker Rake Position",
+          "name": "Erd_IceMaker2_RakePosition",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Has Not Been home",
+          "name": "Erd_IceMaker2_RakeHasNotBeenHome",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Motor Resolved Vote",
+          "name": "Erd_IceMaker2_RakeMotor_ResolvedVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Motor Winning Vote ERD",
+          "name": "Erd_IceMaker2_RakeMotor_WinningVoteErd",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Motor Factory Vote",
+          "name": "Erd_IceMaker2_RakeMotor_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Rake Motor IceMaker Vote",
+          "name": "Erd_IceMaker2_RakeMotor_IceMakerVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Motor Action Result",
+          "name": "Erd_IceMaker2_MotorActionResult",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Motor Operation State",
+          "name": "Erd_IceMaker2_MotorOperationState",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Twist Motor Ice Maker Vote",
+          "name": "Erd_IceMaker2_TwistMotor_IceMakerVote",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "IceMaker Water Valve Ice Maker Vote",
+          "name": "Erd_IceMaker2_WaterValve_IceMakerVote",
+          "read": true,
+          "write": false
         }
       ]
     },

@@ -26,9 +26,10 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
    .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition,
    .harvestCountIsReadyToHarvestErd = Erd_IceMaker0_HarvestCountIsReadyToHarvest,
    .moldFilteredTemperatureInDegFx100Erd = Erd_IceMaker0_MoldThermistor_FilteredTemperatureInDegFx100,
-   .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
-   .iceMakerEnabledErd = Erd_IceMakerEnabledResolved,
+   .feelerArmIsReadyToEnterHarvestErd = Erd_IceMaker0_FeelerArmIsReadyToEnterHarvest,
+   .iceMakerEnabledErd = Erd_IceMaker0_EnabledResolved,
    .sabbathModeErd = Erd_SabbathModeEnable,
+   .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .fillTubeHeaterVoteErd = Erd_IceMaker0_FillTubeHeater_IceMakerVote,
    .moldHeaterControlRequestErd = Erd_IceMaker0_MoldHeaterControlRequest,
    .rakeCompletedRevolutionErd = Erd_IceMaker0_RakeCompletedRevolution,
@@ -51,7 +52,7 @@ static const AluminumMoldIceMakerConfig_t aluminumMoldIceMakerConfig = {
 static const FeelerArmMonitorConfig_t feelerArmMonitorConfig = {
    .feelerArmMonitoringRequestErd = Erd_IceMaker0_FeelerArmMonitoringRequest,
    .timerModuleErd = Erd_TimerModule,
-   .feelerArmIsReadyToEnterHarvestErd = Erd_FeelerArmIsReadyToEnterHarvest,
+   .feelerArmIsReadyToEnterHarvestErd = Erd_IceMaker0_FeelerArmIsReadyToEnterHarvest,
    .feelerArmPositionErd = Erd_IceMaker0_FeelerArmPosition
 };
 
@@ -68,7 +69,7 @@ static const Erd_t enableErdsList[] = {
 };
 
 static const ErdLogicServiceConfigurationEntry_t configurationEntries[] = {
-   { ErdLogicServiceOperator_And, { enableErdsList, NUM_ELEMENTS(enableErdsList) }, Erd_IceMakerEnabledResolved },
+   { ErdLogicServiceOperator_And, { enableErdsList, NUM_ELEMENTS(enableErdsList) }, Erd_IceMaker0_EnabledResolved },
 };
 
 static const ErdLogicServiceConfiguration_t iceMakerEnableResolverConfig = {
@@ -154,7 +155,7 @@ static const ErdResolverConfiguration_t fillTubeHeaterResolverConfig = {
 
 static const PercentageDutyCycleVoteToPwmDutyCycleConverterConfig_t fillTubeHeaterDutyCycleToPercentageCalculatorConfig = {
    .inputPercentageDutyCycleVoteErd = Erd_IceMaker0_FillTubeHeater_ResolvedVote,
-   .outputPwmDutyCycleErd = Erd_FillTubeHeater_Pwm
+   .outputPwmDutyCycleErd = Erd_IceMaker0_FillTubeHeater_Pwm
 };
 
 static const NonHarvestFillTubeHeaterControlConfig_t nonHarvestFillTubeHeaterControlConfig = {
@@ -214,7 +215,7 @@ static const IceMakerWaterFillMonitorConfig_t fillMonitorConfig = {
 
 static const ResolvedVoteRelayConnectorConfiguration_t waterValveRelayConnectorConfig = {
    .resolvedRelayVoteErd = Erd_IceMaker0_WaterValve_ResolvedVote,
-   .relayOutputErd = Erd_AluminumMoldIceMakerWaterValveRelay
+   .relayOutputErd = Erd_IceMaker0_WaterValveRelay
 };
 
 static const Erd_t filteredTemperatureOverrideRequestErdList[] = {
@@ -254,24 +255,6 @@ static const OverrideArbiterConfiguration_t thermistorValidArbiterConfig = {
    NUM_ELEMENTS(thermistorValidOverrideArbiterRequestErdList)
 };
 
-static const Erd_t iceMakerEnabledOverrideRequestErdList[] = {
-   Erd_IceMakerEnabledEnhancedSabbathOverrideRequest,
-   Erd_IceMakerEnabledOverrideRequest,
-};
-
-static const Erd_t iceMakerEnabledOverrideValueErdList[] = {
-   Erd_IceMaker0_EnableStatus,
-   Erd_IceMakerEnabledEnhancedSabbathOverrideValue,
-   Erd_IceMakerEnabledOverrideValue
-};
-
-static const OverrideArbiterConfiguration_t iceMakerEnabledOverrideConfig = {
-   iceMakerEnabledOverrideRequestErdList,
-   iceMakerEnabledOverrideValueErdList,
-   Erd_IceMakerEnabledResolved,
-   NUM_ELEMENTS(iceMakerEnabledOverrideRequestErdList)
-};
-
 static const AluminumMoldIceMakerPluginConfig_t config = {
    .freezerIceRateHandlerConfig = &freezerIceRateHandlerConfig,
    .aluminumMoldIceMakerConfig = &aluminumMoldIceMakerConfig,
@@ -294,7 +277,6 @@ static const AluminumMoldIceMakerPluginConfig_t config = {
    .filteredTemperatureArbiterConfig = &filteredTemperatureArbiterConfig,
    .heaterRelayConnectorConfig = &heaterRelayConnectorConfig,
    .thermistorValidArbiterConfig = &thermistorValidArbiterConfig,
-   .iceMakerEnabledOverrideConfig = &iceMakerEnabledOverrideConfig
 };
 
 void AluminumMoldIceMaker0Configurator_Init(

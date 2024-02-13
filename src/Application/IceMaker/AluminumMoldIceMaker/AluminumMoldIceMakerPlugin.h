@@ -55,7 +55,6 @@ typedef struct
    const OverrideArbiterConfiguration_t *filteredTemperatureArbiterConfig;
    const ResolvedVoteRelayConnectorConfiguration_t *heaterRelayConnectorConfig;
    const OverrideArbiterConfiguration_t *thermistorValidArbiterConfig;
-   const OverrideArbiterConfiguration_t *iceMakerEnabledOverrideConfig;
 } AluminumMoldIceMakerPluginConfig_t;
 
 typedef struct
@@ -84,7 +83,6 @@ typedef struct
       ResolvedVoteRelayConnector_t heaterRelayConnector;
       OverrideArbiter_t aluminumMoldIceMakerFilteredTemperatureArbiter;
       OverrideArbiter_t aluminumMoldIceMakerThermistorValidArbiter;
-      OverrideArbiter_t iceMakerEnabledArbiter;
    } _private;
 } AluminumMoldIceMakerPlugin_t;
 
