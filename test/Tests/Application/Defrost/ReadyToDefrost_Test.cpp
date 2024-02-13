@@ -41,7 +41,7 @@ enum
 
 static ReadyToDefrostDoorConfiguration_t doorsConfiguration[] = {
    {
-      .doorIsOpenErd = Erd_LeftSideFreshFoodDoorIsOpenResolved,
+      .doorIsOpenErd = Erd_LeftSideFreshFoodDoorStatusResolved,
       .doorAccelerationErd = Erd_LeftSideFreshFoodScaledDoorAccelerationInSeconds,
       .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
    },
@@ -51,7 +51,7 @@ static ReadyToDefrostDoorConfiguration_t doorsConfiguration[] = {
       .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freezerDoorIncrementFactorInSecondsPerSecond),
    },
    {
-      .doorIsOpenErd = Erd_ConvertibleCompartmentAsFreshFoodDoorIsOpen,
+      .doorIsOpenErd = Erd_ConvertibleCompartmentAsFreshFoodDoorStatus,
       .doorAccelerationErd = Erd_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds,
       .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
    },
@@ -398,7 +398,7 @@ TEST_GROUP(ReadyToDefrost)
 
    void GivenLeftSideFreshFoodDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpenResolved, &state);
+      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorStatusResolved, &state);
    }
 
    void GivenRightSideFreshFoodDoorIs(bool state)
@@ -418,7 +418,7 @@ TEST_GROUP(ReadyToDefrost)
 
    void GivenConvertibleCompartmentDoorAsFreshFoodDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentAsFreshFoodDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentAsFreshFoodDoorStatus, &state);
    }
 
    void GivenConvertibleCompartmentStateTypeIs(ConvertibleCompartmentStateType_t state)
@@ -494,7 +494,7 @@ TEST_GROUP(ReadyToDefrost)
 
    void WhenLeftSideFreshFoodDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpenResolved, &state);
+      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorStatusResolved, &state);
    }
 
    void WhenFreezerDoorIs(bool state)
@@ -560,7 +560,7 @@ TEST_GROUP(ReadyToDefrost)
    {
       DataModel_Write(
          dataModel,
-         Erd_ConvertibleCompartmentAsFreshFoodDoorIsOpen,
+         Erd_ConvertibleCompartmentAsFreshFoodDoorStatus,
          &state);
    }
 

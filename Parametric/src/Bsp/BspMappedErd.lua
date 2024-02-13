@@ -2,8 +2,11 @@
 local enum = require 'lua-common'.utilities.enum
 
 return enum({
+  Erd_LeftSideFreshFoodDoorStatus = 0xF0A0,
+  Erd_ConvertibleCompartmentDoorStatus = 0xF0A2,
   Erd_RightSideFreshFoodDoorStatus = 0xF0A8,
   Erd_LeftSideFreezerDoorStatus = 0xF0A9,
+  Erd_BottomFreezerDrawerStatus = 0xF0AB,
   
   Erd_IceMaker0_MoldThermistor_AdcCount = 0xF0B0,
   Erd_IceMaker1_MoldThermistor_AdcCount = 0xF0B1,

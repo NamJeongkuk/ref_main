@@ -898,11 +898,6 @@ TEST_GROUP(GridIntegration)
       DataModel_Write(dataModel, Erd_LeftSideFreezerDoorStatus, &state);
    }
 
-   void WhenFreshFoodDoorIs(bool state)
-   {
-      DataModel_Write(dataModel, Erd_RightSideFreshFoodDoorStatus, &state);
-   }
-
    void GivenGridIsInBlock4()
    {
       GivenReferDataModelTestDoubleIsResetAndApplicationIsInitializedWithValidThermistors();

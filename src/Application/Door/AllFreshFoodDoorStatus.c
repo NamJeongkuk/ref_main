@@ -16,12 +16,12 @@ static void UpdateAllFreshFoodDoorStatus(AllFreshFoodDoorStatus_t *instance)
 
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->rightFreshDoorIsOpenErd,
+      instance->_private.config->rightFreshDoorStatusErd,
       &rightFreshFoodDoorIsOpen);
 
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->leftFreshDoorIsOpenErd,
+      instance->_private.config->leftFreshDoorStatusErd,
       &leftFreshFoodDoorIsOpen);
 
    allFreshFoodDoorsAreClosed = (!rightFreshFoodDoorIsOpen) && (!leftFreshFoodDoorIsOpen);
@@ -38,8 +38,8 @@ static void DataModelChanged(void *context, const void *_args)
    REINTERPRET(onChangeData, _args, const DataModelOnDataChangeArgs_t *);
    REINTERPRET(erd, onChangeData->erd, Erd_t);
 
-   if(erd == instance->_private.config->rightFreshDoorIsOpenErd ||
-      erd == instance->_private.config->leftFreshDoorIsOpenErd)
+   if(erd == instance->_private.config->rightFreshDoorStatusErd ||
+      erd == instance->_private.config->leftFreshDoorStatusErd)
    {
       UpdateAllFreshFoodDoorStatus(instance);
    }

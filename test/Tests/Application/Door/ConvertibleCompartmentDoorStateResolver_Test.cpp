@@ -26,10 +26,10 @@ enum
 };
 
 static ConvertibleCompartmentDoorResolverConfiguration_t config = {
-   .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorIsOpen,
+   .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorStatus,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
-   .convertibleCompartmentAsFreshFoodDoorIsOpenErd = Erd_ConvertibleCompartmentAsFreshFoodDoorIsOpen,
-   .convertibleCompartmentAsFreezerDoorIsOpenErd = Erd_ConvertibleCompartmentAsFreezerDoorIsOpen
+   .convertibleCompartmentAsFreshFoodDoorIsOpenErd = Erd_ConvertibleCompartmentAsFreshFoodDoorStatus,
+   .convertibleCompartmentAsFreezerDoorIsOpenErd = Erd_ConvertibleCompartmentAsFreezerDoorStatus
 };
 
 TEST_GROUP(ConvertibleCompartmentDoorStateResolver)
@@ -51,7 +51,7 @@ TEST_GROUP(ConvertibleCompartmentDoorStateResolver)
 
    void GivenConvertibleCompartmentDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentDoorStatus, &state);
    }
 
    void GivenConvertibleCompartmentDoorIsActingAsA(ConvertibleCompartmentStateType_t state)
@@ -61,18 +61,18 @@ TEST_GROUP(ConvertibleCompartmentDoorStateResolver)
 
    void GivenConvertibleCompartmentActingAsAFreshFoodDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentAsFreshFoodDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentAsFreshFoodDoorStatus, &state);
    }
 
    void GivenConvertibleCompartmentActingAsAFreezerDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentAsFreezerDoorIsOpen, &state);
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentAsFreezerDoorStatus, &state);
    }
 
    void ConvertibleCompartmentAsFreshFoodDoorShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_ConvertibleCompartmentAsFreshFoodDoorIsOpen, &actual);
+      DataModel_Read(dataModel, Erd_ConvertibleCompartmentAsFreshFoodDoorStatus, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -80,7 +80,7 @@ TEST_GROUP(ConvertibleCompartmentDoorStateResolver)
    void ConvertibleCompartmentAsFreezerDoorShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_ConvertibleCompartmentAsFreezerDoorIsOpen, &actual);
+      DataModel_Read(dataModel, Erd_ConvertibleCompartmentAsFreezerDoorStatus, &actual);
 
       CHECK_EQUAL(expected, actual);
    }

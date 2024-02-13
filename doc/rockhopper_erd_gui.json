@@ -764,8 +764,8 @@
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Left Side Fresh Food Door Is Open",
-          "name": "Erd_LeftSideFreshFoodDoorIsOpen",
+          "displayName": "Left Side Fresh Food Door Status",
+          "name": "Erd_LeftSideFreshFoodDoorStatus",
           "read": true,
           "write": true
         },
@@ -792,8 +792,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Door Is Open",
-          "name": "Erd_ConvertibleCompartmentDoorIsOpen",
+          "displayName": "Convertible Compartment Door Status",
+          "name": "Erd_ConvertibleCompartmentDoorStatus",
           "read": true,
           "write": true
         },
@@ -3776,8 +3776,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Left Side Fresh Food Door Is Open",
-          "name": "Erd_LeftSideFreshFoodDoorIsOpen",
+          "displayName": "Left Side Fresh Food Door Status",
+          "name": "Erd_LeftSideFreshFoodDoorStatus",
           "read": true,
           "write": true
         },
@@ -3797,7 +3797,7 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Right Side Fresh Food Door Is Open",
+          "displayName": "Right Side Fresh Food Door Status",
           "name": "Erd_RightSideFreshFoodDoorStatus",
           "read": true,
           "write": true
@@ -3839,7 +3839,7 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Left Side Freezer Door Is Open",
+          "displayName": "Left Side Freezer Door Status",
           "name": "Erd_LeftSideFreezerDoorStatus",
           "read": true,
           "write": true
@@ -3874,15 +3874,15 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Door Is Open",
-          "name": "Erd_ConvertibleCompartmentDoorIsOpen",
+          "displayName": "Convertible Compartment Door Status",
+          "name": "Erd_ConvertibleCompartmentDoorStatus",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment As Fresh Food Door Is Open",
-          "name": "Erd_ConvertibleCompartmentAsFreshFoodDoorIsOpen",
+          "displayName": "Convertible Compartment As Fresh Food Door Status",
+          "name": "Erd_ConvertibleCompartmentAsFreshFoodDoorStatus",
           "read": true,
           "write": true
         },
@@ -3902,8 +3902,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment As Freezer Door Is Open",
-          "name": "Erd_ConvertibleCompartmentAsFreezerDoorIsOpen",
+          "displayName": "Convertible Compartment As Freezer Door Status",
+          "name": "Erd_ConvertibleCompartmentAsFreezerDoorStatus",
           "read": true,
           "write": true
         },
@@ -5219,6 +5219,211 @@
           "name": "Erd_DispenserUiReportedFeatures",
           "read": true,
           "write": true
+        }
+      ]
+    },
+    {
+      "title": "Four Door Doors",
+      "erds": [
+        {
+          "namespace": "mb",
+          "displayName": "Left Side Fresh Food Door Status",
+          "name": "Erd_LeftSideFreshFoodDoorStatus",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Testing Left Fresh Food Override Request",
+          "name": "Erd_LeftSideFreshFoodDoorStatus_TestingOverrideRequest",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Testing Left Fresh Food Override Value",
+          "name": "Erd_LeftSideFreshFoodDoorStatus_TestingOverrideValue",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Testing Left Fresh Food Sabbath Override Request",
+          "name": "Erd_LeftSideFreshFoodDoorStatus_SabbathOverrideRequest",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Left Fresh Food Sabbath Override Value",
+          "name": "Erd_LeftSideFreshFoodDoorStatus_SabbathOverrideValue",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Left Side Fresh Food Door Status Resolved",
+          "name": "Erd_LeftSideFreshFoodDoorStatusResolved",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Right Side Fresh Food Door Status",
+          "name": "Erd_RightSideFreshFoodDoorStatus",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Testing Right Fresh Food Override Request",
+          "name": "Erd_RightSideFreshFoodDoorStatus_TestingOverrideRequest",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Testing Right Fresh Food Override Value",
+          "name": "Erd_RightSideFreshFoodDoorStatus_TestingOverrideValue",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Right Fresh Food Sabbath Override Request",
+          "name": "Erd_RightSideFreshFoodDoorStatus_SabbathOverrideRequest",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Right Fresh Food Sabbath Override Value",
+          "name": "Erd_RightSideFreshFoodDoorStatus_SabbathOverrideValue",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Right Side Fresh Food Door Status Resolved",
+          "name": "Erd_RightSideFreshFoodDoorStatusResolved",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Door Status",
+          "name": "Erd_ConvertibleCompartmentDoorStatus",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Testing Convertible Compartment Door Override Request",
+          "name": "Erd_ConvertibleCompartmentStatus_TestingOverrideRequest",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Testing Convertible Compartment Door Override Value",
+          "name": "Erd_ConvertibleCompartmentStatus_TestingOverrideValue",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Door Sabbath Override Request",
+          "name": "Erd_ConvertibleCompartmentStatus_SabbathOverrideRequest",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Door Sabbath Override Value",
+          "name": "Erd_ConvertibleCompartmentStatus_SabbathOverrideValue",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Door Status Resolved",
+          "name": "Erd_ConvertibleCompartmentDoorStatusResolved",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Bottom Freezer Drawer Status",
+          "name": "Erd_BottomFreezerDrawerStatus",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Testing Bottom Freezer Drawer Override Request",
+          "name": "Erd_BottomFreezerDrawerStatus_TestingOverrideRequest",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Testing Bottom Freezer Drawer Override Value",
+          "name": "Erd_BottomFreezerDrawerStatus_TestingOverrideValue",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Bottom Freezer Drawer Sabbath Override Request",
+          "name": "Erd_BottomFreezerDrawerStatus_SabbathOverrideRequest",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Bottom Freezer Drawer Sabbath Override Value",
+          "name": "Erd_BottomFreezerDrawerStatus_SabbathOverrideValue",
+          "read": true,
+          "write": true,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Bottom Freezer Drawer Status Resolved",
+          "name": "Erd_BottomFreezerDrawerStatusResolved",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
+        },
+        {
+          "namespace": "mb",
+          "displayName": "All Fresh Food Doors Are Closed",
+          "name": "Erd_AllFreshFoodDoorsAreClosed",
+          "read": true,
+          "write": false,
+          "interval": 1000000000
         }
       ]
     }

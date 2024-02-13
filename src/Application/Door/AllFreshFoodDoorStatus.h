@@ -12,8 +12,8 @@
 
 typedef struct
 {
-   Erd_t rightFreshDoorIsOpenErd; // bool
-   Erd_t leftFreshDoorIsOpenErd; // bool
+   Erd_t rightFreshDoorStatusErd; // bool
+   Erd_t leftFreshDoorStatusErd; // bool
    Erd_t allFreshFoodDoorsAreClosedErd; // bool
 } AllFreshFoodDoorStatusConfiguration_t;
 

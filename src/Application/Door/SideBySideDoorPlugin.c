@@ -9,8 +9,8 @@
 #include "SystemErds.h"
 
 static const AllFreshFoodDoorStatusConfiguration_t allFreshFoodDoorStatusConfiguration = {
-   .rightFreshDoorIsOpenErd = Erd_RightSideFreshFoodDoorStatusResolved,
-   .leftFreshDoorIsOpenErd = Erd_LeftSideFreshFoodDoorIsOpenResolved,
+   .rightFreshDoorStatusErd = Erd_RightSideFreshFoodDoorStatusResolved,
+   .leftFreshDoorStatusErd = Erd_LeftSideFreshFoodDoorStatusResolved,
    .allFreshFoodDoorsAreClosedErd = Erd_AllFreshFoodDoorsAreClosed
 };
 

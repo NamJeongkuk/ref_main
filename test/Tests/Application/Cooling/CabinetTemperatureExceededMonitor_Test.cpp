@@ -34,7 +34,7 @@ enum
 
 static const Erd_t doors[] = {
    Erd_RightSideFreshFoodDoorStatusResolved,
-   Erd_LeftSideFreshFoodDoorIsOpenResolved
+   Erd_LeftSideFreshFoodDoorStatusResolved
 };
 
 static const ErdList_t doorErdList = {
@@ -123,7 +123,7 @@ TEST_GROUP(CabinetTemperatureExceededMonitor)
 
    void GivenTheLeftSideFreshFoodDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpenResolved, &state);
+      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorStatusResolved, &state);
    }
 
    void WhenTheLeftSideFreshFoodDoorIs(bool state)

@@ -52,11 +52,11 @@ TEST_GROUP(DispensingIntegration)
 
    void WhenAllDoorsAreClosed()
    {
-      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorIsOpenResolved, clear);
+      DataModel_Write(dataModel, Erd_LeftSideFreshFoodDoorStatusResolved, clear);
       DataModel_Write(dataModel, Erd_RightSideFreshFoodDoorStatusResolved, clear);
       DataModel_Write(dataModel, Erd_DoorInDoorIsOpenResolved, clear);
       DataModel_Write(dataModel, Erd_LeftSideFreezerDoorStatusResolved, clear);
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentDoorIsOpen, clear);
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentDoorStatus, clear);
    }
 
    void GivenAllDoorsAreClosed()

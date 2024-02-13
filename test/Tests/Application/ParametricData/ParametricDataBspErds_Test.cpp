@@ -268,7 +268,7 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
    CHECK_EQUAL(*erd, Erd_IsolationValveRelay);
 }
 
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForRightSideFreshFoodDoorIsOpen)
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForRightSideFreshFoodDoorStatus)
 {
    GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_RightSideFreshFoodDoorStatus)");
 
@@ -276,7 +276,31 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
    CHECK_EQUAL(*erd, Erd_RightSideFreshFoodDoorStatus);
 }
 
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForFreezerDoorIsOpen)
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForLeftSideFreshFoodDoorStatus)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_LeftSideFreshFoodDoorStatus)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_LeftSideFreshFoodDoorStatus);
+}
+
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForConvertibleCompartmentStatus)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_ConvertibleCompartmentDoorStatus)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_ConvertibleCompartmentDoorStatus);
+}
+
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForBottomFreezerDrawerStatus)
+{
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_BottomFreezerDrawerStatus)");
+
+   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
+   CHECK_EQUAL(*erd, Erd_BottomFreezerDrawerStatus);
+}
+
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForFreezerDoorStatus)
 {
    GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_LeftSideFreezerDoorStatus)");
 

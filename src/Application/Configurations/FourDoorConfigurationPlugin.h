@@ -17,6 +17,7 @@
 #include "IceMakerSlotsPlugin.h"
 #include "FourDoorBooleanRequestStatusUpdaterPlugin.h"
 #include "FourDoorStaggeredHeater.h"
+#include "FourDoorDoorPlugin.h"
 
 typedef struct
 {
@@ -30,6 +31,7 @@ typedef struct
       RecessHeaterPlugin_t recessHeaterPlugin;
       FourDoorBooleanRequestStatusUpdaterPlugin_t booleanRequestStatusUpdaterPlugin;
       FourDoorStaggeredHeater_t staggeredHeaterPlugin;
+      FourDoorDoorPlugin_t fourDoorDoorPlugin;
    } _private;
 } FourDoorConfigurationPlugin_t;
 
