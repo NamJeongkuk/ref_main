@@ -25,7 +25,6 @@
 #include "IceMakerWaterFillMonitor.h"
 #include "HarvestCountCalculator.h"
 #include "IceMakerLocation.h"
-#include "IceMakerMotorAction.h"
 #include "FreezerIceRateHandler.h"
 #include "TwistTrayIceMakerData.h"
 #include "SensorData.h"

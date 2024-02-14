@@ -16,7 +16,6 @@
 #include "Fsm.h"
 #include "TwistTrayIceMakerData.h"
 #include "IceMakerMotorActionResult.h"
-#include "IceMakerMotorAction.h"
 #include "IceMakerMotorErrorReason.h"
 #include "IceMakerMotorOperationState.h"
 
@@ -29,7 +28,7 @@ enum
 
 typedef struct
 {
-   Erd_t motorDoActionErd; // IceMakerMotorAction_t
+   Erd_t motorRequestedStateErd; // IceMakerMotorRequestedState_t
 } TwistTrayIceMakerMotorControllerConfig_t;
 
 typedef struct
@@ -54,7 +53,7 @@ typedef struct
 
       Fsm_t fsm;
       I_DataModel_t *dataModel;
-      EventSubscription_t doActionSubscription;
+      EventSubscription_t motorRequestedStateSubscription;
       const TwistTrayIceMakerMotorControllerConfig_t *config;
    } _private;
 } TwistTrayIceMakerMotorController_t;

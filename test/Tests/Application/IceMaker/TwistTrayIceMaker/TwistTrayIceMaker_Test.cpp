@@ -35,9 +35,9 @@ extern "C"
 
 enum
 {
-   Idle = IceMakerMotorAction_Idle,
-   Home = IceMakerMotorAction_RunHomingRoutine,
-   Harvest = IceMakerMotorAction_RunCycle,
+   Idle = IceMakerMotorState_Off,
+   Home = IceMakerMotorState_Homing,
+   Harvest = IceMakerMotorState_Run,
    Homed = IceMakerMotorActionResult_Homed,
    Harvesting = IceMakerMotorActionResult_Harvesting,
    Harvested = IceMakerMotorActionResult_Harvested,
@@ -85,13 +85,13 @@ static void OnDataModelChange(void *context, const void *_args)
 
    if(args->erd == Erd_IceMaker0_TwistMotor_IceMakerVote)
    {
-      REINTERPRET(data, args->data, const IceMakerTwistMotorVotedAction_t *);
+      REINTERPRET(data, args->data, const IceMakerMotorVotedState_t *);
 
       mock()
          .actualCall("Write Motor Control")
          .onObject(context)
          .withParameter("Erd", args->erd)
-         .withParameter("Data", data->action);
+         .withParameter("Data", data->state);
    }
    else if(args->erd == Erd_IceMaker0_WaterValve_IceMakerVote)
    {
@@ -241,7 +241,7 @@ TEST_GROUP(TwistTrayIceMaker)
       GivenTheIceMakerIsDisabled();
    }
 
-   void TheMotorShouldBeRequestedTo(IceMakerMotorAction_t expectedMotorState)
+   void TheMotorShouldBeRequestedTo(IceMakerMotorState_t expectedMotorState)
    {
       mock()
          .expectOneCall("Write Motor Control")

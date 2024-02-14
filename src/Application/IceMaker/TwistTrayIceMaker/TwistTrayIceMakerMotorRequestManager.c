@@ -7,8 +7,7 @@
 
 #include "TwistTrayIceMakerMotorRequestManager.h"
 #include "TwistTrayIceMakerMotorController.h"
-#include "IceMakerMotorAction.h"
-#include "IceMakerMotorDoAction.h"
+#include "IceMakerMotorRequestedState.h"
 #include "IceMakerMotorActionResult.h"
 #include "IceMakerMotorOperationState.h"
 #include "Constants_Binary.h"
@@ -21,26 +20,26 @@ static void ClearMotorRequest(TwistTrayIceMakerMotorRequestManager_t *instance)
    DataModel_Write(instance->_private.dataModel, instance->_private.config->motorRequestErd, clear);
 }
 
-static void UpdateMotorDoActionToResolvedVoteMotorAction(TwistTrayIceMakerMotorRequestManager_t *instance)
+static void UpdateMotorRequestedStateToResolvedVoteMotorState(TwistTrayIceMakerMotorRequestManager_t *instance)
 {
-   IceMakerTwistMotorVotedAction_t motorVote;
+   IceMakerMotorVotedState_t motorVote;
    DataModel_Read(
       instance->_private.dataModel,
       instance->_private.config->resolvedVoteErd,
       &motorVote);
 
-   IceMakerMotorDoAction_t doAction;
+   IceMakerMotorRequestedState_t motorRequestedState;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->motorDoActionErd,
-      &doAction);
+      instance->_private.config->motorRequestedStateErd,
+      &motorRequestedState);
 
-   doAction.action = motorVote.action;
-   doAction.signal++;
+   motorRequestedState.state = motorVote.state;
+   motorRequestedState.signal++;
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->motorDoActionErd,
-      &doAction);
+      instance->_private.config->motorRequestedStateErd,
+      &motorRequestedState);
 }
 
 static void DataModelChanged(void *context, const void *_args)
@@ -50,8 +49,8 @@ static void DataModelChanged(void *context, const void *_args)
 
    if(args->erd == instance->_private.config->resolvedVoteErd)
    {
-      const IceMakerTwistMotorVotedAction_t *newVote = args->data;
-      if(newVote->action != IceMakerMotorAction_Idle)
+      const IceMakerMotorVotedState_t *newVote = args->data;
+      if(newVote->state != IceMakerMotorState_Off)
       {
          DataModel_Write(
             instance->_private.dataModel,
@@ -61,7 +60,7 @@ static void DataModelChanged(void *context, const void *_args)
       else
       {
          // This allows the motor controller module to get the idle request and clear the motor action
-         UpdateMotorDoActionToResolvedVoteMotorAction(instance);
+         UpdateMotorRequestedStateToResolvedVoteMotorState(instance);
       }
    }
    else if(args->erd == instance->_private.config->motorEnableErd)
@@ -69,7 +68,7 @@ static void DataModelChanged(void *context, const void *_args)
       const bool *enabled = args->data;
       if(*enabled)
       {
-         UpdateMotorDoActionToResolvedVoteMotorAction(instance);
+         UpdateMotorRequestedStateToResolvedVoteMotorState(instance);
       }
    }
    else if(args->erd == instance->_private.config->motorActionResultErd)

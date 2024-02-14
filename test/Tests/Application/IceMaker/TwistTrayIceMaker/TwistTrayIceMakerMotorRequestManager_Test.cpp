@@ -30,7 +30,7 @@ static const TwistTrayIceMakerMotorRequestManagerConfig_t motorRequestManagerCon
    .motorRequestErd = Erd_TwistIceMakerMotorControlRequest,
    .motorEnableErd = Erd_TwistIceMakerMotorDriveEnable,
    .motorActionResultErd = Erd_IceMaker0_MotorActionResult,
-   .motorDoActionErd = Erd_IceMaker0_MotorDoAction
+   .motorRequestedStateErd = Erd_IceMaker0_MotorRequestedState
 };
 
 TEST_GROUP(TwistTrayIceMakerMotorRequestManager)
@@ -58,10 +58,10 @@ TEST_GROUP(TwistTrayIceMakerMotorRequestManager)
          &motorRequestManagerConfig);
    }
 
-   void WhenTheMotorResolvedVoteIs(IceMakerMotorAction_t action)
+   void WhenTheMotorResolvedVoteIs(IceMakerMotorState_t state)
    {
-      IceMakerTwistMotorVotedAction_t vote = {
-         .action = action,
+      IceMakerMotorVotedState_t vote = {
+         .state = state,
          .care = Vote_Care
       };
 
@@ -71,7 +71,7 @@ TEST_GROUP(TwistTrayIceMakerMotorRequestManager)
          &vote);
    }
 
-   void GivenTheMotorResolvedVoteIs(IceMakerMotorAction_t action)
+   void GivenTheMotorResolvedVoteIs(IceMakerMotorState_t action)
    {
       WhenTheMotorResolvedVoteIs(action);
    }
@@ -100,27 +100,27 @@ TEST_GROUP(TwistTrayIceMakerMotorRequestManager)
       WhenTheMotorDriveEnableIs(state);
    }
 
-   void DoActionShouldBe(
-      IceMakerMotorAction_t expectedAction,
+   void MotorRequestedStateShouldBe(
+      IceMakerMotorState_t expectedState,
       Signal_t expectedSignal)
    {
-      IceMakerMotorDoAction_t actual;
+      IceMakerMotorRequestedState_t actual;
       DataModel_Read(
          dataModel,
-         Erd_IceMaker0_MotorDoAction,
+         Erd_IceMaker0_MotorRequestedState,
          &actual);
 
-      CHECK_EQUAL(expectedAction, actual.action);
+      CHECK_EQUAL(expectedState, actual.state);
       CHECK_EQUAL(expectedSignal, actual.signal);
    }
 
    void GivenTheModuleIsInitializedAndTheMotorIsRunning()
    {
       GivenTheModuleIsInitialized();
-      GivenTheMotorResolvedVoteIs(IceMakerMotorAction_RunCycle);
+      GivenTheMotorResolvedVoteIs(IceMakerMotorState_Run);
 
       WhenTheMotorDriveEnableIs(SET);
-      DoActionShouldBe(IceMakerMotorAction_RunCycle, Signal_One);
+      MotorRequestedStateShouldBe(IceMakerMotorState_Run, Signal_One);
    }
 
    void WhenTheMotorActionResultIs(IceMakerMotorActionResult_t actionResult)
@@ -144,21 +144,21 @@ TEST(TwistTrayIceMakerMotorRequestManager, ShouldInitialize)
 
 TEST(TwistTrayIceMakerMotorRequestManager, ShouldSetMotorControlRequestWhenMotorActionChangesToRunHomingRoutine)
 {
-   GivenTheMotorResolvedVoteIs(IceMakerMotorAction_Idle);
+   GivenTheMotorResolvedVoteIs(IceMakerMotorState_Off);
    GivenTheModuleIsInitialized();
    TheMotorControlRequestShouldBe(CLEAR);
 
-   WhenTheMotorResolvedVoteIs(IceMakerMotorAction_RunHomingRoutine);
+   WhenTheMotorResolvedVoteIs(IceMakerMotorState_Homing);
    TheMotorControlRequestShouldBe(SET);
 }
 
 TEST(TwistTrayIceMakerMotorRequestManager, ShouldSetMotorControlRequestWhenMotorActionChangesToRunCycle)
 {
-   GivenTheMotorResolvedVoteIs(IceMakerMotorAction_Idle);
+   GivenTheMotorResolvedVoteIs(IceMakerMotorState_Off);
    GivenTheModuleIsInitialized();
    TheMotorControlRequestShouldBe(CLEAR);
 
-   WhenTheMotorResolvedVoteIs(IceMakerMotorAction_RunCycle);
+   WhenTheMotorResolvedVoteIs(IceMakerMotorState_Run);
    TheMotorControlRequestShouldBe(SET);
 }
 
@@ -166,43 +166,43 @@ TEST(TwistTrayIceMakerMotorRequestManager, ShouldPassThroughIdleCommandIfVoteCha
 {
    GivenTheModuleIsInitialized();
 
-   WhenTheMotorResolvedVoteIs(IceMakerMotorAction_RunCycle);
+   WhenTheMotorResolvedVoteIs(IceMakerMotorState_Run);
    TheMotorControlRequestShouldBe(SET);
    WhenTheMotorDriveEnableIs(SET);
    WhenTheMotorActionResultIs(IceMakerMotorActionResult_Harvested);
    TheMotorControlRequestShouldBe(CLEAR);
 
-   WhenTheMotorResolvedVoteIs(IceMakerMotorAction_Idle);
-   DoActionShouldBe(IceMakerMotorAction_Idle, Signal_One + 1);
+   WhenTheMotorResolvedVoteIs(IceMakerMotorState_Off);
+   MotorRequestedStateShouldBe(IceMakerMotorState_Off, Signal_One + 1);
    TheMotorControlRequestShouldBe(CLEAR);
 }
 
-TEST(TwistTrayIceMakerMotorRequestManager, ShouldUpdateDoActionToTheMotorActionWhenMotorIsEnabled)
+TEST(TwistTrayIceMakerMotorRequestManager, ShouldUpdateMotorRequestedStateToTheMotorResolvedVoteWhenMotorDriveIsEnabled)
 {
-   GivenTheMotorResolvedVoteIs(IceMakerMotorAction_RunCycle);
+   GivenTheMotorResolvedVoteIs(IceMakerMotorState_Run);
    GivenTheModuleIsInitialized();
 
    WhenTheMotorDriveEnableIs(SET);
-   DoActionShouldBe(IceMakerMotorAction_RunCycle, Signal_One);
+   MotorRequestedStateShouldBe(IceMakerMotorState_Run, Signal_One);
 }
 
-TEST(TwistTrayIceMakerMotorRequestManager, ShouldIncrementDoActionSignalMultipleTimesWhenMotorDriveIsEnabled)
+TEST(TwistTrayIceMakerMotorRequestManager, ShouldIncrementMotorRequestedStateSignalMultipleTimesWhenMotorDriveIsEnabled)
 {
-   GivenTheMotorResolvedVoteIs(IceMakerMotorAction_RunCycle);
+   GivenTheMotorResolvedVoteIs(IceMakerMotorState_Run);
    GivenTheModuleIsInitialized();
 
    WhenTheMotorDriveEnableIs(SET);
-   DoActionShouldBe(IceMakerMotorAction_RunCycle, Signal_One);
+   MotorRequestedStateShouldBe(IceMakerMotorState_Run, Signal_One);
 
    WhenTheMotorDriveEnableIs(CLEAR);
    WhenTheMotorDriveEnableIs(SET);
 
-   DoActionShouldBe(IceMakerMotorAction_RunCycle, Signal_One + 1);
+   MotorRequestedStateShouldBe(IceMakerMotorState_Run, Signal_One + 1);
 
    WhenTheMotorDriveEnableIs(CLEAR);
    WhenTheMotorDriveEnableIs(SET);
 
-   DoActionShouldBe(IceMakerMotorAction_RunCycle, Signal_One + 2);
+   MotorRequestedStateShouldBe(IceMakerMotorState_Run, Signal_One + 2);
 }
 
 TEST(TwistTrayIceMakerMotorRequestManager, ShouldClearMotorControlRequestWhenMotorActionResultIsMotorError)

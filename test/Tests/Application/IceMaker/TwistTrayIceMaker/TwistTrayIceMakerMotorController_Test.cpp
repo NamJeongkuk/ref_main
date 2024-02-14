@@ -46,9 +46,9 @@ enum
    ALongTime = 450000,
    OneSecond = MSEC_PER_SEC,
 
-   RunHomingRoutine = IceMakerMotorAction_RunHomingRoutine,
-   RunCycle = IceMakerMotorAction_RunCycle,
-   DoNothing = IceMakerMotorAction_Idle,
+   RunHomingRoutine = IceMakerMotorState_Homing,
+   RunCycle = IceMakerMotorState_Run,
+   DoNothing = IceMakerMotorState_Off,
 
    PollingFrequencyInMsec = 150
 };
@@ -57,7 +57,7 @@ static uint8_t lastMotorState;
 
 static void WriteMotorState(I_Output_t *context, const void *data)
 {
-   uint8_t newMotorState = *(const IceMakerMotorAction_t *)data;
+   uint8_t newMotorState = *(const IceMakerMotorState_t *)data;
 
    if(newMotorState != lastMotorState)
    {
@@ -71,7 +71,7 @@ static void WriteMotorState(I_Output_t *context, const void *data)
 }
 
 static const TwistTrayIceMakerMotorControllerConfig_t config = {
-   .motorDoActionErd = Erd_IceMaker0_MotorDoAction
+   .motorRequestedStateErd = Erd_IceMaker0_MotorRequestedState
 };
 
 static const I_Output_Api_t motorStateMockOutputApi = { WriteMotorState };
@@ -169,14 +169,14 @@ TEST_GROUP(TwistTrayIceMakerMotorController)
       Then TheMotorShouldBecome(newState);
    }
 
-   void TheModuleIsToldTo(IceMakerMotorAction_t newAction)
+   void TheModuleIsToldTo(IceMakerMotorState_t newState)
    {
-      IceMakerMotorDoAction_t doAction;
-      DataModel_Read(dataModel, Erd_IceMaker0_MotorDoAction, &doAction);
+      IceMakerMotorRequestedState_t motorRequestedState;
+      DataModel_Read(dataModel, Erd_IceMaker0_MotorRequestedState, &motorRequestedState);
 
-      doAction.action = newAction;
-      doAction.signal++;
-      DataModel_Write(dataModel, Erd_IceMaker0_MotorDoAction, &doAction);
+      motorRequestedState.state = newState;
+      motorRequestedState.signal++;
+      DataModel_Write(dataModel, Erd_IceMaker0_MotorRequestedState, &motorRequestedState);
    }
 
    void TheSwitchGoes(bool newState)

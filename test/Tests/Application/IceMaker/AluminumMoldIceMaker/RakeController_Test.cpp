@@ -77,7 +77,7 @@ TEST_GROUP(RakeController)
       After(harvestData.feelerArmTestTimeInSeconds * MSEC_PER_SEC);
 
       When RakePositionIs(RakePosition_Home);
-      RakeMotorVoteShouldBe(MotorState_Off, Vote_Care);
+      RakeMotorVoteShouldBe(IceMakerMotorState_Off, Vote_Care);
       And RakeCompletedRevolutionShouldBe(SET);
    }
 
@@ -94,7 +94,7 @@ TEST_GROUP(RakeController)
 
       When FeelerArmPositionIs(FeelerArmPosition_BucketFull);
       After(harvestData.feelerArmTestTimeInSeconds * MSEC_PER_SEC);
-      RakeMotorVoteShouldBe(MotorState_Off, Vote_Care);
+      RakeMotorVoteShouldBe(IceMakerMotorState_Off, Vote_Care);
       And RakeCompletedRevolutionShouldBe(SET);
    }
 
@@ -103,7 +103,7 @@ TEST_GROUP(RakeController)
       DataModel_Write(dataModel, Erd_IceMaker0_RakeControlRequest, &state);
    }
 
-   void RakeMotorVoteShouldBe(MotorState_t expectedState, Vote_t expectedCare)
+   void RakeMotorVoteShouldBe(IceMakerMotorState_t expectedState, Vote_t expectedCare)
    {
       IceMakerMotorVotedState_t actualVote;
       DataModel_Read(dataModel, Erd_IceMaker1_RakeMotor_IceMakerVote, &actualVote);
@@ -181,20 +181,20 @@ TEST(RakeController, ShouldInitialize)
 TEST(RakeController, ShouldVoteToTurnOnRakeMotorWhenRakeControlRequestIsSet)
 {
    Given TheModuleIsInitialized();
-   RakeMotorVoteShouldBe(MotorState_Off, Vote_DontCare);
+   RakeMotorVoteShouldBe(IceMakerMotorState_Off, Vote_DontCare);
 
    When RakeControlRequestIs(SET);
-   RakeMotorVoteShouldBe(MotorState_On, Vote_Care);
+   RakeMotorVoteShouldBe(IceMakerMotorState_Run, Vote_Care);
 }
 
 TEST(RakeController, ShouldVoteToTurnOffRakeMotorWhenIceMakerRakeControlRequestIsClear)
 {
    Given TheModuleIsInitialized();
    Given RakeControlRequestIs(SET);
-   RakeMotorVoteShouldBe(MotorState_On, Vote_Care);
+   RakeMotorVoteShouldBe(IceMakerMotorState_Run, Vote_Care);
 
    When RakeControlRequestIs(CLEAR);
-   RakeMotorVoteShouldBe(MotorState_Off, Vote_Care);
+   RakeMotorVoteShouldBe(IceMakerMotorState_Off, Vote_Care);
 }
 
 TEST(RakeController, ShouldClearRakeCompletedRevolutionWhenIceMakerRakeControlRequestIsClear)
@@ -353,7 +353,7 @@ TEST(RakeController, ShouldVoteToTurnOffRakeMotorAndSetRakeCompletedRevolutionWh
    FeelerArmPositionHasBeenBucketFullShouldBe(SET);
 
    When RakePositionIs(RakePosition_Home);
-   And RakeMotorVoteShouldBe(MotorState_Off, Vote_Care);
+   And RakeMotorVoteShouldBe(IceMakerMotorState_Off, Vote_Care);
    RakeCompletedRevolutionShouldBe(SET);
 }
 
@@ -387,7 +387,7 @@ TEST(RakeController, ShouldVoteToTurnOffRakeMotorAndSetRakeCompletedRevolutionWh
 
    When FeelerArmPositionIs(FeelerArmPosition_BucketFull);
    After(harvestData.feelerArmTestTimeInSeconds * MSEC_PER_SEC);
-   RakeMotorVoteShouldBe(MotorState_Off, Vote_Care);
+   RakeMotorVoteShouldBe(IceMakerMotorState_Off, Vote_Care);
    And RakeCompletedRevolutionShouldBe(SET);
 }
 

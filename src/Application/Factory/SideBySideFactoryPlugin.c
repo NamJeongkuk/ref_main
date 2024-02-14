@@ -11,7 +11,6 @@
 #include "DataModelErdPointerAccess.h"
 #include "Constants_Binary.h"
 #include "WaterValveVotedState.h"
-#include "IceMakerMotorAction.h"
 
 static const FactoryVotePair_t factoryVotePairs[] = {
    { Erd_CompressorSpeed_FactoryVote, CompressorSpeed_Off },
@@ -30,12 +29,12 @@ static const FactoryVotePair_t factoryVotePairs[] = {
    { Erd_IceMaker0_HeaterRelay_FactoryVote, HeaterState_Off },
    { Erd_IceMaker1_HeaterRelay_FactoryVote, HeaterState_Off },
    { Erd_IceMaker2_HeaterRelay_FactoryVote, HeaterState_Off },
-   { Erd_IceMaker0_RakeMotor_FactoryVote, MotorState_Off },
-   { Erd_IceMaker1_RakeMotor_FactoryVote, MotorState_Off },
-   { Erd_IceMaker2_RakeMotor_FactoryVote, MotorState_Off },
-   { Erd_IceMaker0_TwistMotor_FactoryVote, IceMakerMotorAction_RunHomingRoutine },
-   { Erd_IceMaker1_TwistMotor_FactoryVote, IceMakerMotorAction_RunHomingRoutine },
-   { Erd_IceMaker2_TwistMotor_FactoryVote, IceMakerMotorAction_RunHomingRoutine },
+   { Erd_IceMaker0_RakeMotor_FactoryVote, IceMakerMotorState_Off },
+   { Erd_IceMaker1_RakeMotor_FactoryVote, IceMakerMotorState_Off },
+   { Erd_IceMaker2_RakeMotor_FactoryVote, IceMakerMotorState_Off },
+   { Erd_IceMaker0_TwistMotor_FactoryVote, IceMakerMotorState_Homing },
+   { Erd_IceMaker1_TwistMotor_FactoryVote, IceMakerMotorState_Homing },
+   { Erd_IceMaker2_TwistMotor_FactoryVote, IceMakerMotorState_Homing },
    { Erd_IsolationWaterValve_FactoryVote, WaterValveState_Off },
    { Erd_AugerMotor_FactoryVote, AugerMotorIceType_Off },
    { Erd_DispenserWaterValve_FactoryVote, WaterValveState_Off },

@@ -133,7 +133,7 @@ static void VoteForIceMakerHeater(AluminumMoldIceMaker_t *instance, HeaterState_
       &vote);
 }
 
-static void VoteForIceMakerMotor(AluminumMoldIceMaker_t *instance, MotorState_t state, bool care)
+static void VoteForIceMakerMotor(AluminumMoldIceMaker_t *instance, IceMakerMotorState_t state, bool care)
 {
    IceMakerMotorVotedState_t vote = {
       .state = state,

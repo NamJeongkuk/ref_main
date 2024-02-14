@@ -9,7 +9,6 @@
 #include "Constants_Binary.h"
 #include "TwistTrayIceMakerMotorController.h"
 #include "SystemErds.h"
-#include "IceMakerMotorAction.h"
 #include "IceMakerStateMachineState.h"
 #include "WaterValveVotedState.h"
 #include "DispensingRequest.h"
@@ -57,9 +56,9 @@ enum
    Signal_IceMakerFillIsInhibited,
    Signal_IceMakerFillIsNotInhibited,
 
-   Idle = IceMakerMotorAction_Idle,
-   Home = IceMakerMotorAction_RunHomingRoutine,
-   Harvest = IceMakerMotorAction_RunCycle,
+   Idle = IceMakerMotorState_Off,
+   Home = IceMakerMotorState_Homing,
+   Harvest = IceMakerMotorState_Run,
 
    Homed = IceMakerMotorActionResult_Homed,
    BucketWasFull = IceMakerMotorActionResult_BucketWasFull,
@@ -103,11 +102,11 @@ static void UpdateFsmState(TwistTrayIceMaker_t *instance, IceMakerStateMachineSt
    DataSource_Write(instance->_private.dataSource, instance->_private.config->fsmStateErd, &newState);
 }
 
-static void RequestMotorAction(TwistTrayIceMaker_t *instance, IceMakerMotorAction_t newMotorAction)
+static void RequestMotorState(TwistTrayIceMaker_t *instance, IceMakerMotorState_t newMotorState)
 {
-   IceMakerTwistMotorVotedAction_t motorVote;
-   motorVote.action = newMotorAction;
-   motorVote.care = (newMotorAction == IceMakerMotorAction_Idle) ? Vote_DontCare : Vote_Care;
+   IceMakerMotorVotedState_t motorVote;
+   motorVote.state = newMotorState;
+   motorVote.care = (newMotorState == Idle) ? Vote_DontCare : Vote_Care;
 
    DataSource_Write(instance->_private.dataSource, instance->_private.config->motorIceMakerVoteErd, &motorVote);
 }
@@ -357,7 +356,7 @@ static void State_Homing(Fsm_t *fsm, FsmSignal_t signal, const void *data)
    {
       case Fsm_Entry:
          UpdateFsmState(instance, IceMakerStateMachineState_Homing);
-         RequestMotorAction(instance, Home);
+         RequestMotorState(instance, Home);
          break;
 
       case Signal_MotorActionResultHomed:
@@ -384,7 +383,7 @@ static void State_Homing(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          break;
 
       case Fsm_Exit:
-         RequestMotorAction(instance, Idle);
+         RequestMotorState(instance, Idle);
          break;
    }
 }
@@ -481,7 +480,7 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
    {
       case Fsm_Entry:
          UpdateFsmState(instance, IceMakerStateMachineState_Harvest);
-         RequestMotorAction(instance, IceMakerMotorAction_RunCycle);
+         RequestMotorState(instance, Harvest);
          VoteForFillTubeHeater(instance, instance->_private.parametric->harvestData.fillTubeHeaterDutyCyclePercentage);
          StartFillTubeHeaterTimer(instance);
          break;
@@ -561,7 +560,7 @@ static void State_Harvesting(Fsm_t *fsm, FsmSignal_t signal, const void *data)
       case Fsm_Exit:
          VoteForFillTubeHeaterOffAndDontCare(instance);
          StopFillTubeHeaterTimer(instance);
-         RequestMotorAction(instance, Idle);
+         RequestMotorState(instance, Idle);
          break;
    }
 }
@@ -738,7 +737,7 @@ static void State_MotorError(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 
          UpdateFsmState(instance, IceMakerStateMachineState_MotorError);
 
-         RequestMotorAction(instance, Idle);
+         RequestMotorState(instance, Idle);
          DataSource_Write(instance->_private.dataSource, instance->_private.config->motorFaultActiveErd, set);
          break;
 

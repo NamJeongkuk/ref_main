@@ -7,6 +7,7 @@
 
 #include "AluminumMoldIceMakerConfigurator.h"
 #include "PersonalityParametricData.h"
+#include "IceMakerMotorVotedState.h"
 
 static const FreezerIceRateHandlerConfig_t freezerIceRateHandlerConfig = {
    .freezerIceRateTriggerSignalErd = Erd_FreezerIceRateTriggerSignal,
@@ -106,7 +107,7 @@ static bool RakeMotorVotingErdCareDelegate(const void *votingErdData)
 }
 
 static const IceMakerMotorVotedState_t defaultRakeMotorData = {
-   .state = MotorState_Off,
+   .state = IceMakerMotorState_Off,
    .care = Vote_DontCare
 };
 

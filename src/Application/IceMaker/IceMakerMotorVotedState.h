@@ -13,14 +13,15 @@
 
 enum
 {
-   MotorState_Off,
-   MotorState_On
+   IceMakerMotorState_Off,
+   IceMakerMotorState_Run,
+   IceMakerMotorState_Homing
 };
-typedef uint8_t MotorState_t;
+typedef uint8_t IceMakerMotorState_t;
 
 typedef struct
 {
-   MotorState_t state;
+   IceMakerMotorState_t state;
    Vote_t care;
 } IceMakerMotorVotedState_t;
 

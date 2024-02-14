@@ -19,7 +19,7 @@ static const TwistTrayIceMakerMotorRequestManagerConfig_t motorRequestManagerCon
    .motorRequestErd = Erd_TwistIceMakerMotorControlRequest,
    .motorEnableErd = Erd_TwistIceMakerMotorDriveEnable,
    .motorActionResultErd = Erd_IceMaker2_MotorActionResult,
-   .motorDoActionErd = Erd_IceMaker2_MotorDoAction
+   .motorRequestedStateErd = Erd_IceMaker2_MotorRequestedState
 };
 
 static const TwistTrayIceMakerMotorSwitchMonitorConfig_t motorSwitchMonitorConfig = {
@@ -62,12 +62,12 @@ static const OverrideArbiterConfiguration_t thermistorValidArbiterConfig = {
 
 static bool TwistMotorVotingErdCareDelegate(const void *votingErdData)
 {
-   const IceMakerTwistMotorVotedAction_t *data = votingErdData;
+   const IceMakerMotorVotedState_t *data = votingErdData;
    return (data->care);
 }
 
-static const IceMakerTwistMotorVotedAction_t defaultMotorData = {
-   .action = IceMakerMotorAction_Idle,
+static const IceMakerMotorVotedState_t defaultMotorData = {
+   .state = IceMakerMotorState_Off,
    .care = Vote_DontCare
 };
 
@@ -144,7 +144,7 @@ static const ResolvedVoteRelayConnectorConfiguration_t waterValveRelayConnectorC
 };
 
 static const TwistTrayIceMakerMotorControllerConfig_t motorControllerConfig = {
-   .motorDoActionErd = Erd_IceMaker2_MotorDoAction
+   .motorRequestedStateErd = Erd_IceMaker2_MotorRequestedState
 };
 
 static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig = {

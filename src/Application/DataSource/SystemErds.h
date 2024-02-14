@@ -80,8 +80,7 @@
 #include "ReadyToDefrostHsmState.h"
 #include "PwmFrequency.h"
 #include "IceMakerMotorActionResult.h"
-#include "IceMakerMotorAction.h"
-#include "IceMakerMotorDoAction.h"
+#include "IceMakerMotorRequestedState.h"
 #include "IceMakerMotorErrorReason.h"
 #include "IceMakerMotorOperationState.h"
 #include "DispensingRequest.h"
@@ -998,9 +997,9 @@ enum
    ENTRY(Erd_IceMaker0_MotorErrorReason,                    0xF1AB, IceMakerMotorErrorReason_t,                         Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceMaker1_MotorErrorReason,                    0xF1AC, IceMakerMotorErrorReason_t,                         Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceMaker2_MotorErrorReason,                    0xF1AD, IceMakerMotorErrorReason_t,                         Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker0_MotorDoAction,                       0xF1AE, IceMakerMotorDoAction_t,                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker1_MotorDoAction,                       0xF1AF, IceMakerMotorDoAction_t,                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker2_MotorDoAction,                       0xF1B0, IceMakerMotorDoAction_t,                            Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker0_MotorRequestedState,                 0xF1AE, IceMakerMotorRequestedState_t,                      Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker1_MotorRequestedState,                 0xF1AF, IceMakerMotorRequestedState_t,                      Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker2_MotorRequestedState,                 0xF1B0, IceMakerMotorRequestedState_t,                      Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_IceMaker1_FeelerArmPosition,                   0xF1B1, FeelerArmPosition_t,                                Swap_No,  Io_None, Sub_Y, MappedBsp,              NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceMaker2_FeelerArmPosition,                   0xF1B2, FeelerArmPosition_t,                                Swap_No,  Io_None, Sub_Y, MappedBsp,              NotNv,                                                       NotNv,         NotFault) \
@@ -1164,20 +1163,20 @@ enum
    ENTRY(Erd_IceMaker2_FillTubeHeater_IceMakerVote,         0xF2C3, PercentageDutyCycleVote_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceMaker2_FillTubeHeater_NonHarvestVote,       0xF2C4, PercentageDutyCycleVote_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
-   ENTRY(Erd_IceMaker0_TwistMotor_ResolvedVote,             0xF2C5, IceMakerTwistMotorVotedAction_t,                    Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker0_TwistMotor_ResolvedVote,             0xF2C5, IceMakerMotorVotedState_t,                          Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceMaker0_TwistMotor_WinningVoteErd,           0xF2C6, WinningVoteErd_t,                                   Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker0_TwistMotor_FactoryVote,              0xF2C7, IceMakerTwistMotorVotedAction_t,                    Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker0_TwistMotor_IceMakerVote,             0xF2C8, IceMakerTwistMotorVotedAction_t,                    Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker0_TwistMotor_FactoryVote,              0xF2C7, IceMakerMotorVotedState_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker0_TwistMotor_IceMakerVote,             0xF2C8, IceMakerMotorVotedState_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
-   ENTRY(Erd_IceMaker1_TwistMotor_ResolvedVote,             0xF2C9, IceMakerTwistMotorVotedAction_t,                    Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker1_TwistMotor_ResolvedVote,             0xF2C9, IceMakerMotorVotedState_t,                          Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceMaker1_TwistMotor_WinningVoteErd,           0xF2CA, WinningVoteErd_t,                                   Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker1_TwistMotor_FactoryVote,              0xF2CB, IceMakerTwistMotorVotedAction_t,                    Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker1_TwistMotor_IceMakerVote,             0xF2CC, IceMakerTwistMotorVotedAction_t,                    Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker1_TwistMotor_FactoryVote,              0xF2CB, IceMakerMotorVotedState_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker1_TwistMotor_IceMakerVote,             0xF2CC, IceMakerMotorVotedState_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
-   ENTRY(Erd_IceMaker2_TwistMotor_ResolvedVote,             0xF2CD, IceMakerTwistMotorVotedAction_t,                    Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker2_TwistMotor_ResolvedVote,             0xF2CD, IceMakerMotorVotedState_t,                          Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_IceMaker2_TwistMotor_WinningVoteErd,           0xF2CE, WinningVoteErd_t,                                   Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker2_TwistMotor_FactoryVote,              0xF2CF, IceMakerTwistMotorVotedAction_t,                    Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_IceMaker2_TwistMotor_IceMakerVote,             0xF2D0, IceMakerTwistMotorVotedAction_t,                    Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker2_TwistMotor_FactoryVote,              0xF2CF, IceMakerMotorVotedState_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_IceMaker2_TwistMotor_IceMakerVote,             0xF2D0, IceMakerMotorVotedState_t,                          Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_AugerMotor_ResolvedVote,                       0xF2D1, AugerMotorVotedIceType_t,                           Swap_No,  Io_None, Sub_Y, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_AugerMotor_WinningVoteErd,                     0xF2D2, WinningVoteErd_t,                                   Swap_Yes, Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \

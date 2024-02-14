@@ -199,7 +199,7 @@ TEST_GROUP(AluminumMoldIceMaker)
    void GivenIceMakerMotorVoteIsSet()
    {
       IceMakerMotorVotedState_t vote = {
-         .state = MotorState_On,
+         .state = IceMakerMotorState_Run,
          .care = Vote_Care
       };
 
@@ -595,7 +595,7 @@ TEST_GROUP(AluminumMoldIceMaker)
       CHECK_EQUAL(false, actual.enable);
    }
 
-   void GivenIceMakerMotorVoteIs(MotorState_t state)
+   void GivenIceMakerMotorVoteIs(IceMakerMotorState_t state)
    {
       IceMakerMotorVotedState_t vote = {
          .state = state,
@@ -1180,7 +1180,7 @@ TEST(AluminumMoldIceMaker, ShouldTurnOffIceMakerHeaterOnEntryToFreezeState)
 TEST(AluminumMoldIceMaker, ShouldTurnOffIceMakerMotorOnEntryToFreezeState)
 {
    GivenTheAluminumMoldIceMakerIsInFreezeState();
-   IceMakerMotorVoteShouldBe(MotorState_Off);
+   IceMakerMotorVoteShouldBe(IceMakerMotorState_Off);
 }
 
 TEST(AluminumMoldIceMaker, ShouldRequestToMonitorFeelerArmOnEntryToFreezeState)
@@ -2109,10 +2109,10 @@ TEST(AluminumMoldIceMaker, ShouldVoteToTurnOffIceMakerMotorWhenMoldThermistorIsI
    GivenTheIceMakerIsEnabledAndSabbathModeIsDisabled();
    GivenTheMoldThermistorIsValid();
    GivenTheModuleIsInitialized();
-   GivenIceMakerMotorVoteIs(MotorState_On);
+   GivenIceMakerMotorVoteIs(IceMakerMotorState_Run);
 
    WhenMoldThermistorIsInvalid();
-   IceMakerMotorVoteShouldBe(MotorState_Off);
+   IceMakerMotorVoteShouldBe(IceMakerMotorState_Off);
 }
 
 TEST(AluminumMoldIceMaker, ShouldBeInThermistorFaultStateIfThermistorIsInvalidBeforeInitialization)

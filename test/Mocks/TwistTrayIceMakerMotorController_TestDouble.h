@@ -35,7 +35,7 @@ typedef struct
 
       Fsm_t fsm;
       I_DataModel_t *dataModel;
-      EventSubscription_t doActionSubscription;
+      EventSubscription_t motorRequestedStateSubscription;
       const TwistTrayIceMakerMotorControllerConfig_t *config;
    } _private;
 } TwistTrayIceMakerMotorController_TestDouble_t;

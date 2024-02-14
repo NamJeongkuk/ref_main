@@ -15,7 +15,7 @@
 
 static void VoteForRakeMotor(
    RakeController_t *instance,
-   MotorState_t state,
+   IceMakerMotorState_t state,
    Vote_t care)
 {
    IceMakerMotorVotedState_t rakeMotorVote = {
@@ -121,7 +121,7 @@ static void StopRakeControlWhenRakeRevolutionHasCompleted(RakeController_t *inst
 {
    if(RakeRevolutionHasCompleted(instance))
    {
-      VoteForRakeMotor(instance, MotorState_Off, Vote_Care);
+      VoteForRakeMotor(instance, IceMakerMotorState_Off, Vote_Care);
 
       DataModel_Unsubscribe(
          instance->_private.dataModel,
@@ -175,7 +175,7 @@ static void RakeControlRequestUpdated(void *context, const void *args)
 
    if(*rakeControlRequestIsSet)
    {
-      VoteForRakeMotor(instance, MotorState_On, Vote_Care);
+      VoteForRakeMotor(instance, IceMakerMotorState_Run, Vote_Care);
 
       DataModel_Subscribe(
          instance->_private.dataModel,
@@ -198,7 +198,7 @@ static void RakeControlRequestUpdated(void *context, const void *args)
    }
    else
    {
-      VoteForRakeMotor(instance, MotorState_Off, Vote_Care);
+      VoteForRakeMotor(instance, IceMakerMotorState_Off, Vote_Care);
 
       DataModel_Unsubscribe(
          instance->_private.dataModel,

@@ -261,7 +261,7 @@ TEST_GROUP(AluminumMoldIceMakerIntegration)
       CHECK_EQUAL(expectedState, actualState);
    }
 
-   void IceMakerMotorShouldVote(MotorState_t expectedState, Vote_t expectedVoteCare)
+   void IceMakerMotorShouldVote(IceMakerMotorState_t expectedState, Vote_t expectedVoteCare)
    {
       IceMakerMotorVotedState_t actualVote;
       DataModel_Read(
@@ -1137,10 +1137,10 @@ TEST(AluminumMoldIceMakerIntegration, ShouldTurnOnTheRakeMotorAfterMoldHeaterHas
       iceMakerData->harvestData.heaterOffTemperatureInDegFx100);
 
    After(iceMakerData->harvestData.initialMinimumHeaterOnTimeInSeconds * MSEC_PER_SEC - 1);
-   IceMakerMotorShouldVote(MotorState_Off, Vote_DontCare);
+   IceMakerMotorShouldVote(IceMakerMotorState_Off, Vote_DontCare);
 
    After(1);
-   IceMakerMotorShouldVote(MotorState_On, Vote_Care);
+   IceMakerMotorShouldVote(IceMakerMotorState_Run, Vote_Care);
 }
 
 TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToFreezeStateWhenRakeCompletedRevolutionFlagHasBeenSet)
@@ -1199,19 +1199,19 @@ TEST(AluminumMoldIceMakerIntegration, ShouldTransitionToFreezeStateWhenFillTubeT
 TEST(AluminumMoldIceMakerIntegration, ShouldTurnRakeMotorOnAndOffAccordingToParametricallyDefinedTime)
 {
    GivenIceMakerIsInHarvestFixState();
-   IceMakerMotorShouldVote(MotorState_On, Vote_Care);
+   IceMakerMotorShouldVote(IceMakerMotorState_Run, Vote_Care);
 
    After(iceMakerData->harvestFixData.motorOffTimeInSeconds * MSEC_PER_SEC - 1);
-   IceMakerMotorShouldVote(MotorState_On, Vote_Care);
+   IceMakerMotorShouldVote(IceMakerMotorState_Run, Vote_Care);
 
    After(1);
-   IceMakerMotorShouldVote(MotorState_Off, Vote_Care);
+   IceMakerMotorShouldVote(IceMakerMotorState_Off, Vote_Care);
 
    After(iceMakerData->harvestFixData.motorOnTimeInSeconds * MSEC_PER_SEC - 1);
-   IceMakerMotorShouldVote(MotorState_Off, Vote_Care);
+   IceMakerMotorShouldVote(IceMakerMotorState_Off, Vote_Care);
 
    After(1);
-   IceMakerMotorShouldVote(MotorState_On, Vote_Care);
+   IceMakerMotorShouldVote(IceMakerMotorState_Run, Vote_Care);
 }
 
 TEST(AluminumMoldIceMakerIntegration, ShouldTurnMoldHeaterOnUponEnteringHarvestFixState)
@@ -1654,10 +1654,10 @@ TEST(AluminumMoldIceMakerIntegration, ShouldNotTransitionToThermistorFaultWhenTh
 TEST(AluminumMoldIceMakerIntegration, ShouldTurnOffRakeMotorWhenTheMoldThermistorIsInvalid)
 {
    GivenIceMakerIsInHarvestFixState();
-   IceMakerMotorShouldVote(MotorState_On, Vote_Care);
+   IceMakerMotorShouldVote(IceMakerMotorState_Run, Vote_Care);
 
    WhenTheMoldThermistorIsInvalid();
-   IceMakerMotorShouldVote(MotorState_Off, Vote_DontCare);
+   IceMakerMotorShouldVote(IceMakerMotorState_Off, Vote_DontCare);
 }
 
 TEST(AluminumMoldIceMakerIntegration, ShouldTurnOffMoldHeaterWhenTheMoldThermistorIsInvalid)

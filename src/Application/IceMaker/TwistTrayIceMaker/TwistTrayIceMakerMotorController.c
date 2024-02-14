@@ -10,7 +10,7 @@
 #include "Constants_Binary.h"
 #include "TwistTrayIceMakerMotorState.h"
 #include "IceMakerMotorOperationState.h"
-#include "IceMakerMotorDoAction.h"
+#include "IceMakerMotorRequestedState.h"
 
 enum
 {
@@ -22,7 +22,7 @@ enum
    Signal_HomePositionLandingDelayElapsed,
    Signal_FullBucketTriggerWaitPeriodElapsed,
    Signal_StoppingPeriodElapsed,
-   Signal_NewAction,
+   Signal_NewMotorRequestedState,
 };
 
 #define FSM_STATE_EXPAND_AS_FUNCTION_DEFINITION(Name) \
@@ -442,7 +442,7 @@ static void State_Harvest_ReadyToLandInHomePosition(Fsm_t *fsm, FsmSignal_t sign
 static void State_Idle(Fsm_t *fsm, FsmSignal_t signal, const void *data)
 {
    TwistTrayIceMakerMotorController_t *instance = InterfaceFrom(fsm);
-   REINTERPRET(newAction, data, const IceMakerMotorAction_t *);
+   const IceMakerMotorState_t *newMotorState = data;
 
    switch(signal)
    {
@@ -452,13 +452,13 @@ static void State_Idle(Fsm_t *fsm, FsmSignal_t signal, const void *data)
          InterruptContextTimerModule_Stop(instance, Timer_MotorError);
          break;
 
-      case Signal_NewAction:
-         if(*newAction == IceMakerMotorAction_RunHomingRoutine)
+      case Signal_NewMotorRequestedState:
+         if(*newMotorState == IceMakerMotorState_Homing)
          {
             UpdateMotorActionResult(instance, IceMakerMotorActionResult_Homing);
             Fsm_Transition(fsm, State_Homing_MakingSureTheTrayIsHome);
          }
-         else if(*newAction == IceMakerMotorAction_RunCycle)
+         else if(*newMotorState == IceMakerMotorState_Run)
          {
             UpdateMotorActionResult(instance, IceMakerMotorActionResult_Harvesting);
             Fsm_Transition(fsm, State_Harvest_CheckingIfBucketIsFull);
@@ -471,12 +471,12 @@ static void State_Idle(Fsm_t *fsm, FsmSignal_t signal, const void *data)
    }
 }
 
-static void DoActionUpdated(void *context, const void *args)
+static void MotorRequestedStateUpdated(void *context, const void *args)
 {
    TwistTrayIceMakerMotorController_t *instance = context;
-   const IceMakerMotorDoAction_t *doAction = args;
+   const IceMakerMotorRequestedState_t *motorRequestedState = args;
 
-   Fsm_SendSignal(&instance->_private.fsm, Signal_NewAction, &doAction->action);
+   Fsm_SendSignal(&instance->_private.fsm, Signal_NewMotorRequestedState, &motorRequestedState->state);
 }
 
 void TwistTrayIceMakerMotorController_Init(
@@ -495,13 +495,13 @@ void TwistTrayIceMakerMotorController_Init(
    instance->_private.lastMotorState = TwistTrayIceMakerMotorState_Coasting;
 
    EventSubscription_Init(
-      &instance->_private.doActionSubscription,
+      &instance->_private.motorRequestedStateSubscription,
       instance,
-      DoActionUpdated);
+      MotorRequestedStateUpdated);
    DataModel_Subscribe(
       dataModel,
-      instance->_private.config->motorDoActionErd,
-      &instance->_private.doActionSubscription);
+      instance->_private.config->motorRequestedStateErd,
+      &instance->_private.motorRequestedStateSubscription);
 
    Fsm_Init(&instance->_private.fsm, State_Idle);
 

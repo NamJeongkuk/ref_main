@@ -21,7 +21,7 @@ typedef struct
    Erd_t motorRequestErd; // bool
    Erd_t motorEnableErd; // bool
    Erd_t motorActionResultErd; // IceMakerMotorActionResult_t
-   Erd_t motorDoActionErd; // IceMakerMotorDoAction_t
+   Erd_t motorRequestedStateErd; // IceMakerMotorRequestedState_t
 } TwistTrayIceMakerMotorRequestManagerConfig_t;
 
 typedef struct
