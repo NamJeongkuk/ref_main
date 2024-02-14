@@ -382,6 +382,7 @@ static void VoteForPrechillLoads(Defrost_t *instance, bool care)
    VoteForCompressorSpeed(instance, instance->_private.defrostParametricData->prechillData.prechillCompressorSpeed, care);
    VoteForFreezerEvapFanSpeed(instance, instance->_private.defrostParametricData->prechillData.prechillFreezerEvapFanSpeed, care);
    VoteForDamperPosition(instance, instance->_private.defrostParametricData->prechillData.prechillFreshFoodDamperPosition, care);
+   VoteForIceCabinetFanSpeed(instance, instance->_private.defrostParametricData->prechillData.prechillIceBoxFanSpeed, care);
 }
 
 static void VoteForHeaterOnEntryLoads(Defrost_t *instance, bool care)

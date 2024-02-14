@@ -1796,6 +1796,7 @@ TEST(Defrost_SingleEvap, ShouldVoteForLoadsOnEntryToPrechill)
    CompressorSpeedVoteShouldBe(defrostData.prechillData.prechillCompressorSpeed);
    FreezerEvapFanSpeedVoteShouldBe(defrostData.prechillData.prechillFreezerEvapFanSpeed);
    FreshFoodDamperPositionVoteShouldBe(defrostData.prechillData.prechillFreshFoodDamperPosition);
+   IceCabinetFanSpeedVoteShouldBe(defrostData.prechillData.prechillIceBoxFanSpeed);
 }
 
 TEST(Defrost_SingleEvap, ShouldTurnOffCompressorAndFansOnHeaterOnEntryState)
