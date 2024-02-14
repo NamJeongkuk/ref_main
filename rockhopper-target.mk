@@ -48,7 +48,6 @@ SRC_DIRS:=\
   src/Hardware/SoftPwm \
   src/Application \
   src/Application/Auger \
-  src/Application/ApplianceFeatureApiUpdater \
   src/Application/BoardDiscovery \
   src/Application/BroadcastReset \
   src/Application/Compressor \

@@ -8,7 +8,6 @@
 #include "Application.h"
 #include "SystemErds.h"
 #include "DataModelErdPointerAccess.h"
-#include "ApplianceFeatureApiUpdater.h"
 #include "SnackModePlugin.h"
 #include "NotificationsPlugin.h"
 
@@ -35,7 +34,8 @@ void Application_Init(
 
    InitializePlatformParametricErds(dataModel);
 
-   ApplianceFeatureApiUpdater_Init(dataModel);
+   ApplianceFeatureApiUpdaterPlugin_Init(&instance->_private.applianceFeatureApiUpdaterPlugin, dataModel);
+   BoardFeaturesToApplianceApiFeaturesUpdaterPlugin_Init(&instance->_private.boardFeaturesToApplianceFeaturesPlugin, dataModel);
 
    NotificationsPlugin_Init(dataModel);
 
@@ -72,8 +72,6 @@ void Application_Init(
    ServiceModePlugin_Init(&instance->_private.serviceModePlugin, dataModel);
 
    FaultMonitorPlugin_Init(&instance->_private.faultMonitorPlugin, dataModel);
-
-   BoardFeaturesToApplianceApiFeaturesUpdaterPlugin_Init(&instance->_private.boardFeaturesToApplianceFeaturesPlugin, dataModel);
 
    NonVolatileUsageMonitorPlugin_Init(&instance->_private.nvUsageMonitorPlugin, dataModel);
 }

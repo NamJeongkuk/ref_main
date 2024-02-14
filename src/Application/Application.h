@@ -13,6 +13,7 @@
 #include "TimerModuleDiagnostics.h"
 #include "Input_StackUsageCalculator.h"
 #include "ApplianceApiResetDiagnostics.h"
+#include "ApplianceFeatureApiUpdaterPlugin.h"
 #include "PeriodicNvUpdaterPlugin.h"
 #include "ShiftOffsetCalculatorCommonPlugin.h"
 #include "WaterFilterPlugin.h"
@@ -32,6 +33,7 @@ typedef struct
       HeartbeatLedPlugin_t heartbeatLedPlugin;
       TimerModuleDiagnostics_t timerModuleDiagnostics;
       ApplianceApiResetDiagnostics_t applianceApiResetDiagnostics;
+      ApplianceFeatureApiUpdaterPlugin_t applianceFeatureApiUpdaterPlugin;
       PeriodicNvUpdaterPlugin_t periodicNvUpdaterPlugin;
       ShiftOffsetCalculatorCommonPlugin_t shiftOffsetCalculatorCommonPlugin;
       WaterFilterPlugin_t waterFilterPlugin;

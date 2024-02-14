@@ -13,7 +13,6 @@ DEFINES+=TDD_BUILD
 SRC_DIRS:=\
   src/Application \
   src/Application/Auger \
-  src/Application/ApplianceFeatureApiUpdater \
   src/Application/BoardDiscovery \
   src/Application/BroadcastReset \
   src/Application/Compressor \
@@ -90,7 +89,6 @@ SRC_DIRS:=\
   test/Tests \
   test/Tests/Application/ \
   test/Tests/Application/Auger \
-  test/Tests/Application/ApplianceFeatureApiUpdater \
   test/Tests/Application/BoardDiscovery \
   test/Tests/Application/BroadcastReset \
   test/Tests/Application/Compressor \
