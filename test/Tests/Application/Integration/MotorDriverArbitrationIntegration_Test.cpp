@@ -64,7 +64,7 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
    void TheDamperMotorDriveEnableShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperStepperMotorDriveEnable, &actual);
+      DataModel_Read(dataModel, Erd_DamperStepperMotorDriveEnable, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -72,7 +72,7 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
    void TheDamperMotorDriveControlRequestShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperStepperMotorControlRequest, &actual);
+      DataModel_Read(dataModel, Erd_DamperStepperMotorControlRequest, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -124,7 +124,7 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
 
    static TimerTicks_t DamperHomingTime(I_DataModel_t * dataModel)
    {
-      return (PersonalityParametricData_Get(dataModel)->freshFoodDamperData->stepsToHome * (PersonalityParametricData_Get(dataModel)->freshFoodDamperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1)) + 1;
+      return (PersonalityParametricData_Get(dataModel)->damperData->stepsToHome * (PersonalityParametricData_Get(dataModel)->damperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1)) + 1;
    }
 
    void AfterNInterrupts(int numberOfInterrupts)
@@ -179,7 +179,7 @@ TEST_GROUP(MotorDriverArbitrationIntegration)
    uint16_t DamperStepsRemaining(void)
    {
       StepperPositionRequest_t request;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperStepperMotorPositionRequest, &request);
+      DataModel_Read(dataModel, Erd_DamperStepperMotorPositionRequest, &request);
       return request.stepsToMove;
    }
 

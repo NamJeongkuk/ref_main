@@ -1779,29 +1779,50 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Damper Pwm Duty Cycle",
-          "name": "Erd_ConvertibleCompartmentDamperHeaterPwmDutyCycle",
+          "displayName": "Damper Heater Pwm Duty Cycle",
+          "name": "Erd_DamperHeaterPwmDutyCycle",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Damper Heater Resolved Vote",
-          "name": "Erd_ConvertibleCompartmentDamperHeater_ResolvedVote",
+          "displayName": "Damper Heater Resolved Vote",
+          "name": "Erd_DamperHeater_ResolvedVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Damper Heater Factory Vote",
-          "name": "Erd_ConvertibleCompartmentDamperHeater_FactoryVote",
+          "displayName": "Damper Heater Factory Vote",
+          "name": "Erd_DamperHeater_FactoryVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Damper Heater",
-          "name": "Erd_ConvertibleCompartmentDamperHeater",
+          "displayName": "Damper Heater",
+          "name": "Erd_DamperHeater",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Damper Position Factory Vote",
+          "name": "Erd_ConvertibleCompartmentDamperPosition_FactoryVote",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Damper Stepper Motor Position Request",
+          "name": "Erd_DamperStepperMotorPositionRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Damper Current Position",
+          "name": "Erd_DamperCurrentPosition",
           "read": true,
           "write": true
         }
@@ -2185,95 +2206,95 @@
       ]
     },
     {
-      "title": "Damper",
+      "title": "Fresh Food Damper",
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Damper Heater Resolved Vote",
-          "name": "Erd_FreshFoodDamperHeater_ResolvedVote",
+          "displayName": "Damper Heater Resolved Vote",
+          "name": "Erd_DamperHeater_ResolvedVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Damper Heater Winning Vote ERD",
-          "name": "Erd_FreshFoodDamperHeater_WinningVoteErd",
+          "displayName": "Damper Heater Winning Vote ERD",
+          "name": "Erd_DamperHeater_WinningVoteErd",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Damper Heater Factory Vote",
-          "name": "Erd_FreshFoodDamperHeater_FactoryVote",
+          "displayName": "Damper Heater Factory Vote",
+          "name": "Erd_DamperHeater_FactoryVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Damper Heater Damper Freeze Prevention Vote",
-          "name": "Erd_FreshFoodDamperHeater_DamperFreezePreventionVote",
+          "displayName": "Damper Heater Damper Freeze Prevention Vote",
+          "name": "Erd_DamperHeater_DamperFreezePreventionVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Damper Heater Defrost Heater Sync Vote",
-          "name": "Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote",
+          "displayName": "Damper Heater Defrost Heater Sync Vote",
+          "name": "Erd_DamperHeater_DefrostHeaterSyncVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Damper Current Position",
-          "name": "Erd_FreshFoodDamperCurrentPosition",
+          "displayName": "Damper Current Position",
+          "name": "Erd_DamperCurrentPosition",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Damper Position Resolved Vote",
+          "displayName": "Damper Position Resolved Vote",
           "name": "Erd_FreshFoodDamperPosition_ResolvedVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Damper Position Winning Vote ERD",
+          "displayName": "Damper Position Winning Vote ERD",
           "name": "Erd_FreshFoodDamperPosition_WinningVoteErd",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Damper Position Factory Vote",
+          "displayName": "Damper Position Factory Vote",
           "name": "Erd_FreshFoodDamperPosition_FactoryVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Damper Position Damper Freeze Prevention Vote",
+          "displayName": "Damper Position Damper Freeze Prevention Vote",
           "name": "Erd_FreshFoodDamperPosition_DamperFreezePreventionVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Damper Position Max Open Time Vote",
+          "displayName": "Damper Position Max Open Time Vote",
           "name": "Erd_FreshFoodDamperPosition_MaxOpenTimeVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Damper Position Defrost Vote",
+          "displayName": "Damper Position Defrost Vote",
           "name": "Erd_FreshFoodDamperPosition_DefrostVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Damper Position Grid Vote",
+          "displayName": "Damper Position Grid Vote",
           "name": "Erd_FreshFoodDamperPosition_GridVote",
           "read": true,
           "write": true
@@ -2287,43 +2308,43 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Damper Heater Resolved Vote",
-          "name": "Erd_ConvertibleCompartmentDamperHeater_ResolvedVote",
+          "displayName": "Damper Heater Resolved Vote",
+          "name": "Erd_DamperHeater_ResolvedVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Damper Heater Winning Vote",
-          "name": "Erd_ConvertibleCompartmentDamperHeater_WinningVoteErd",
+          "displayName": "Damper Heater Winning Vote",
+          "name": "Erd_DamperHeater_WinningVoteErd",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Damper Heater Factory Vote",
-          "name": "Erd_ConvertibleCompartmentDamperHeater_FactoryVote",
+          "displayName": "Damper Heater Factory Vote",
+          "name": "Erd_DamperHeater_FactoryVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Damper Heater Cooling System Off Vote",
-          "name": "Erd_ConvertibleCompartmentDamperHeater_CoolingSystemOffVote",
+          "displayName": "Damper Heater Cooling System Off Vote",
+          "name": "Erd_DamperHeater_CoolingSystemOffVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Damper Heater Damper Freeze Prevention Vote",
-          "name": "Erd_ConvertibleCompartmentDamperHeater_DamperFreezePreventionVote",
+          "displayName": "Damper Heater Damper Freeze Prevention Vote",
+          "name": "Erd_DamperHeater_DamperFreezePreventionVote",
           "read": true,
           "write": true
         },
         {
           "namespace": "mb",
-          "displayName": "Convertible Compartment Damper Heater Defrost Heater Sync Vote",
-          "name": "Erd_ConvertibleCompartmentDamperHeater_DefrostHeaterSyncVote",
+          "displayName": "Damper Heater Defrost Heater Sync Vote",
+          "name": "Erd_DamperHeater_DefrostHeaterSyncVote",
           "read": true,
           "write": true
         }
@@ -3633,8 +3654,8 @@
       "erds": [
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Damper Stepper Motor Control Request",
-          "name": "Erd_FreshFoodDamperStepperMotorControlRequest",
+          "displayName": "Damper Stepper Motor Control Request",
+          "name": "Erd_DamperStepperMotorControlRequest",
           "read": true,
           "write": true
         },
@@ -3647,8 +3668,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Fresh Food Damper Stepper Motor Drive Enable",
-          "name": "Erd_FreshFoodDamperStepperMotorDriveEnable",
+          "displayName": "Damper Stepper Motor Drive Enable",
+          "name": "Erd_DamperStepperMotorDriveEnable",
           "read": true,
           "write": true
         },

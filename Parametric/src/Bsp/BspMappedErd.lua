@@ -40,8 +40,7 @@ return enum({
   Erd_IceMaker0_FillTubeHeater = 0xF504,
   Erd_IceMaker1_FillTubeHeater = 0xF512,
   Erd_IceMaker2_FillTubeHeater = 0xF513,
-  Erd_FreshFoodDamperHeater = 0xF506,
-  Erd_ConvertibleCompartmentDamperHeater = 0xF511,
+  Erd_DamperHeater = 0xF506,
   
   Erd_IceMaker0_FeelerArmPosition = 0xF151,
   Erd_IceMaker1_FeelerArmPosition = 0xF1B1,
@@ -70,6 +69,6 @@ return enum({
   Erd_AluminumIceMakerRake_InputCaptureTime = 0xF540,
   Erd_FlowMeter_InputCaptureCount = 0xF541,
 
-  Erd_FreshFoodDamperStepperMotorDriveEnable = 0xF54F,
+  Erd_DamperStepperMotorDriveEnable = 0xF54F,
   Erd_TwistIceMakerMotorDriveEnable = 0xF550,
 })

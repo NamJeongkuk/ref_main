@@ -22,7 +22,7 @@
 #include "SetpointData.h"
 #include "CabinetOffsetData.h"
 #include "BspParametricConfiguration.h"
-#include "SingleDamperData.h"
+#include "DamperData.h"
 #include "DamperHeaterData.h"
 #include "PulldownData.h"
 #include "IceMakerData.h"
@@ -58,7 +58,7 @@ typedef struct
    const SetpointData_t *setpointData;
    const CabinetOffsetData_t *cabinetOffsetData;
    const BspParametricConfiguration_t *bspConfigurationData;
-   const SingleDamperData_t *freshFoodDamperData;
+   const DamperData_t *damperData;
    const DamperHeaterData_t *damperHeaterData;
    const PulldownData_t *pulldownData;
    const IceMakerData_t *iceMakerData;

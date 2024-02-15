@@ -27,7 +27,7 @@ extern "C"
 
 static const DamperHeaterDefrostControlConfig_t config = {
    .defrostHeaterVoteErd = Erd_FreezerDefrostHeater_DefrostVote,
-   .damperHeaterDefrostHeaterSyncVoteErd = Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote,
+   .damperHeaterDefrostHeaterSyncVoteErd = Erd_DamperHeater_DefrostHeaterSyncVote,
    .defrostHeaterStateErd = Erd_FreezerDefrostHeaterRelay
 };
 
@@ -62,7 +62,7 @@ TEST_GROUP(DamperHeaterDefrostControl)
       HeaterVotedState_t actual;
       DataModel_Read(
          dataModelDouble.dataModel,
-         Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote,
+         Erd_DamperHeater_DefrostHeaterSyncVote,
          &actual);
       CHECK_EQUAL(expected, actual.state);
    }
@@ -72,7 +72,7 @@ TEST_GROUP(DamperHeaterDefrostControl)
       HeaterVotedState_t actual;
       DataModel_Read(
          dataModelDouble.dataModel,
-         Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote,
+         Erd_DamperHeater_DefrostHeaterSyncVote,
          &actual);
       CHECK_EQUAL(expected, actual.care);
    }
@@ -85,7 +85,7 @@ TEST_GROUP(DamperHeaterDefrostControl)
       };
       DataModel_Write(
          dataModelDouble.dataModel,
-         Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote,
+         Erd_DamperHeater_DefrostHeaterSyncVote,
          &votedState);
    }
 
@@ -220,7 +220,7 @@ TEST_GROUP(DamperHeaterDefrostControl_DontFollow)
       };
       DataModel_Write(
          dataModelDouble.dataModel,
-         Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote,
+         Erd_DamperHeater_DefrostHeaterSyncVote,
          &votedState);
    }
 
@@ -241,7 +241,7 @@ TEST_GROUP(DamperHeaterDefrostControl_DontFollow)
       HeaterVotedState_t actual;
       DataModel_Read(
          dataModelDouble.dataModel,
-         Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote,
+         Erd_DamperHeater_DefrostHeaterSyncVote,
          &actual);
       CHECK_EQUAL(expected, actual.care);
    }
@@ -251,7 +251,7 @@ TEST_GROUP(DamperHeaterDefrostControl_DontFollow)
       HeaterVotedState_t actual;
       DataModel_Read(
          dataModelDouble.dataModel,
-         Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote,
+         Erd_DamperHeater_DefrostHeaterSyncVote,
          &actual);
       CHECK_EQUAL(expected, actual.state);
    }
@@ -311,7 +311,7 @@ TEST_GROUP(DamperHeaterDefrostControl_ZeroOnTime)
       };
       DataModel_Write(
          dataModelDouble.dataModel,
-         Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote,
+         Erd_DamperHeater_DefrostHeaterSyncVote,
          &votedState);
    }
 
@@ -332,7 +332,7 @@ TEST_GROUP(DamperHeaterDefrostControl_ZeroOnTime)
       HeaterVotedState_t actual;
       DataModel_Read(
          dataModelDouble.dataModel,
-         Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote,
+         Erd_DamperHeater_DefrostHeaterSyncVote,
          &actual);
       CHECK_EQUAL(expected, actual.care);
    }

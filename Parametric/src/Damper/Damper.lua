@@ -8,7 +8,7 @@ return function(core)
    import(core)
    local generate = memoize(function(config)
        return TypedString(
-         { 'single_damper' },
+         { 'damper' },
          structure(
            u16(config.steps_to_open),
            u16(config.steps_to_close),

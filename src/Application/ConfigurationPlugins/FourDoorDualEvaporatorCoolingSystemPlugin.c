@@ -16,6 +16,8 @@ static const CoolingSystemRequestVotePair_t votingPairs[] = {
    { Erd_FreshFoodEvapFanSpeed_CoolingSystemOffVote, FanSpeed_Off },
    { Erd_FreshFoodDefrostHeater_CoolingSystemOffVote, HeaterState_Off },
    { Erd_ConvertibleCompartmentDefrostHeater_CoolingSystemOffVote, HeaterState_Off },
+   { Erd_ConvertibleCompartmentDamperPosition_CoolingSystemOffVote, DamperPosition_Open },
+   { Erd_DamperHeater_CoolingSystemOffVote, PercentageDutyCycle_Min },
    { Erd_CompressorSpeed_CoolingSystemOffVote, CompressorSpeed_Off },
    { Erd_RecessHeater_CoolingSystemOffVote, PercentageDutyCycle_Min }
 };

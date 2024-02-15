@@ -100,12 +100,12 @@ void DamperMaxOpenTimeMonitor_Init(
    DamperMaxOpenTime_t *instance,
    I_DataModel_t *dataModel,
    const DamperMaxOpenTimeConfiguration_t *configuration,
-   const SingleDamperData_t *singleDamperData)
+   const DamperData_t *damperData)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.configuration = configuration;
    instance->_private.maxOpenTimerTicks =
-      singleDamperData->maxTimeForDamperToBeOpenInMinutes * MSEC_PER_MIN;
+      damperData->maxTimeForDamperToBeOpenInMinutes * MSEC_PER_MIN;
 
    DamperPosition_t damperPosition = CurrentDamperPosition(instance);
 

@@ -24,7 +24,7 @@ describe("Personality", function()
       setpoint = TypedString('setpoint', 'setpoint'),
       cabinet_offset = TypedString('cabinet_offset', 'cabinet_offset'),
       bsp_configuration = TypedString('bsp_configuration', 'bsp_configuration'),
-      single_damper = TypedString('single_damper', 'single_damper'),
+      damper = TypedString('damper', 'damper'),
       damper_heater = TypedString('damper_heater', 'damper_heater'),
       pulldown = TypedString('pulldown', 'pulldown'),
       ice_maker = TypedString('ice_maker', 'ice_maker'),
@@ -158,9 +158,9 @@ describe("Personality", function()
   end)
 
   it('should constrain all arguments', function()
-    should_fail_with('single_damper must be a typed string with type single_damper, but is a number', function()
+    should_fail_with('damper must be a typed string with type damper, but is a number', function()
       personality(generate_config({
-        single_damper = -1
+        damper = -1
       }))
     end)
   end)
@@ -286,7 +286,7 @@ describe("Personality", function()
         pointer(setpoint),
         pointer(cabinet_offset),
         pointer(bsp_configuration),
-        pointer(single_damper),
+        pointer(damper),
         pointer(damper_heater),
         pointer(pulldown),
         pointer(ice_maker),

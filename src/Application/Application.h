@@ -24,6 +24,7 @@
 #include "BoardFeaturesToApplianceApiFeaturesUpdaterPlugin.h"
 #include "NonVolatileUsageMonitorPlugin.h"
 #include "PlatformPlugin.h"
+#include "ParallelMotorControlPlugin.h"
 
 typedef struct
 {
@@ -44,6 +45,7 @@ typedef struct
       BoardFeaturesToApplianceApiFeaturesUpdaterPlugin_t boardFeaturesToApplianceFeaturesPlugin;
       NonVolatileUsageMonitorPlugin_t nvUsageMonitorPlugin;
       PlatformPlugin_t platformPlugin;
+      ParallelMotorControlPlugin_t parallelMotorControlPlugin;
    } _private;
 } Application_t;
 

@@ -61,7 +61,7 @@ return function(directory)
   import('Setpoints/CrossAmbientOffset')
   import('Setpoints/HighAmbientOffset')
   import('Setpoints/CabinetOffset')
-  import('Damper/SingleDamper')
+  import('Damper/Damper')
   import('Setpoints/UserSetpoint')
   import('Setpoints/UserSetpointData')
   import('Damper/DamperHeater')
@@ -165,7 +165,7 @@ return function(directory)
   cross_ambient_offset = CrossAmbientOffset(core)
   high_ambient_offset = HighAmbientOffset(core)
   cabinet_offset = CabinetOffset(core)
-  single_damper = SingleDamper(core)
+  damper = Damper(core)
   user_setpoint = UserSetpoint(core)
   user_setpoint_data = UserSetpointData(core)
   damper_heater = DamperHeater(core)
@@ -275,7 +275,7 @@ return function(directory)
     cross_ambient_offset = cross_ambient_offset,
     high_ambient_offset = high_ambient_offset,
     cabinet_offset = cabinet_offset,
-    single_damper = single_damper,
+    damper = damper,
     user_setpoint = user_setpoint,
     user_setpoint_data = user_setpoint_data,
     damper_heater = damper_heater,

@@ -47,7 +47,7 @@ TEST_GROUP(DamperIntegration)
    ResetReason_t resetReason;
    TimerModule_TestDouble_t *timerModuleTestDouble;
    Interrupt_TestDouble_t *interruptTestDouble;
-   const SingleDamperData_t *freshFoodDamperData;
+   const DamperData_t *damperData;
 
    void setup()
    {
@@ -59,7 +59,7 @@ TEST_GROUP(DamperIntegration)
 
       interruptTestDouble = (Interrupt_TestDouble_t *)DataModelErdPointerAccess_GetInterrupt(dataModel, Erd_FastTickInterrupt);
 
-      freshFoodDamperData = PersonalityParametricData_Get(dataModel)->freshFoodDamperData;
+      damperData = PersonalityParametricData_Get(dataModel)->damperData;
    }
 
    void After(TimerTicks_t ticks, TimeSourceTickCount_t ticksToElapseAtATime = 1)
@@ -102,7 +102,7 @@ TEST_GROUP(DamperIntegration)
 
    void SourceTemperatureIsLessThanSourceCompartmentMaximumTemperatureToRunCheck()
    {
-      TemperatureDegFx100_t temperature = freshFoodDamperData->sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 - 1;
+      TemperatureDegFx100_t temperature = damperData->sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 - 1;
       DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureOverrideValueInDegFx100, &temperature);
    }
 
@@ -128,7 +128,7 @@ TEST_GROUP(DamperIntegration)
       StepperMotorDriveEnableShouldBe(SET);
       DamperCurrentPositionShouldBe(DamperPosition_Closed);
 
-      AfterNInterrupts(freshFoodDamperData->stepsToOpen * (freshFoodDamperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1));
+      AfterNInterrupts(damperData->stepsToOpen * (damperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1));
       DamperCurrentPositionShouldBe(DamperPosition_Closed);
 
       AfterNInterrupts(1);
@@ -139,7 +139,7 @@ TEST_GROUP(DamperIntegration)
    void DamperCurrentPositionShouldBe(DamperPosition_t expectedPosition)
    {
       DamperPosition_t actualPosition;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperCurrentPosition, &actualPosition);
+      DataModel_Read(dataModel, Erd_DamperCurrentPosition, &actualPosition);
 
       CHECK_EQUAL(expectedPosition, actualPosition);
    }
@@ -204,13 +204,13 @@ TEST_GROUP(DamperIntegration)
       vote.percentageDutyCycle = PercentageDutyCycle_Max;
       vote.care = Vote_Care;
 
-      DataModel_Write(dataModel, Erd_FreshFoodDamperHeater_FactoryVote, &vote);
+      DataModel_Write(dataModel, Erd_DamperHeater_FactoryVote, &vote);
    }
 
    void DamperFreezePreventionVoteForDamperHeaterShouldBeDontCare()
    {
       PercentageDutyCycleVote_t vote;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperHeater_DamperFreezePreventionVote, &vote);
+      DataModel_Read(dataModel, Erd_DamperHeater_DamperFreezePreventionVote, &vote);
 
       CHECK_FALSE(vote.care);
    }
@@ -218,7 +218,7 @@ TEST_GROUP(DamperIntegration)
    void DamperFreezePreventionShouldVoteDamperHeaterOn()
    {
       PercentageDutyCycleVote_t vote;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperHeater_DamperFreezePreventionVote, &vote);
+      DataModel_Read(dataModel, Erd_DamperHeater_DamperFreezePreventionVote, &vote);
 
       CHECK_EQUAL(PercentageDutyCycle_Max, vote.percentageDutyCycle);
       CHECK_TRUE(vote.care);
@@ -227,7 +227,7 @@ TEST_GROUP(DamperIntegration)
    void DamperFreezePreventionShouldVoteDamperHeaterOff()
    {
       PercentageDutyCycleVote_t vote;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperHeater_DamperFreezePreventionVote, &vote);
+      DataModel_Read(dataModel, Erd_DamperHeater_DamperFreezePreventionVote, &vote);
 
       CHECK_EQUAL(PercentageDutyCycle_Min, vote.percentageDutyCycle);
       CHECK_FALSE(vote.care);
@@ -236,7 +236,7 @@ TEST_GROUP(DamperIntegration)
    void DamperHeaterDefrostSyncShouldVoteDamperHeaterOn()
    {
       PercentageDutyCycleVote_t vote;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote, &vote);
+      DataModel_Read(dataModel, Erd_DamperHeater_DefrostHeaterSyncVote, &vote);
 
       CHECK_EQUAL(PercentageDutyCycle_Max, vote.percentageDutyCycle);
       CHECK_TRUE(vote.care);
@@ -245,7 +245,7 @@ TEST_GROUP(DamperIntegration)
    void DamperHeaterDefrostSyncShouldVoteDamperHeaterOffAndDontCare()
    {
       PercentageDutyCycleVote_t vote;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote, &vote);
+      DataModel_Read(dataModel, Erd_DamperHeater_DefrostHeaterSyncVote, &vote);
 
       CHECK_EQUAL(PercentageDutyCycle_Min, vote.percentageDutyCycle);
       CHECK_FALSE(vote.care);
@@ -254,7 +254,7 @@ TEST_GROUP(DamperIntegration)
    void DamperHeaterWinningErdShouldBe(Erd_t expectedErd)
    {
       Erd_t actualErd;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperHeater_WinningVoteErd, &actualErd);
+      DataModel_Read(dataModel, Erd_DamperHeater_WinningVoteErd, &actualErd);
 
       CHECK_EQUAL(expectedErd, actualErd);
    }
@@ -262,7 +262,7 @@ TEST_GROUP(DamperIntegration)
    void ResolvedDamperHeaterVoteShouldBe(PercentageDutyCycle_t expectedDutyCycle)
    {
       PercentageDutyCycleVote_t vote;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperHeater_ResolvedVote, &vote);
+      DataModel_Read(dataModel, Erd_DamperHeater_ResolvedVote, &vote);
 
       CHECK_EQUAL(expectedDutyCycle, vote.percentageDutyCycle);
    }
@@ -353,28 +353,28 @@ TEST_GROUP(DamperIntegration)
    void StepRequestShouldBeDoorPositionClosed()
    {
       StepperPositionRequest_t stepRequest;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperStepperMotorPositionRequest, &stepRequest);
+      DataModel_Read(dataModel, Erd_DamperStepperMotorPositionRequest, &stepRequest);
 
       CHECK_EQUAL(TurningDirection_Clockwise, stepRequest.direction);
-      CHECK_EQUAL(freshFoodDamperData->stepsToClose, stepRequest.stepsToMove);
+      CHECK_EQUAL(damperData->stepsToClose, stepRequest.stepsToMove);
    }
 
    void StepRequestShouldBeDoorPositionOpen()
    {
       StepperPositionRequest_t stepRequest;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperStepperMotorPositionRequest, &stepRequest);
+      DataModel_Read(dataModel, Erd_DamperStepperMotorPositionRequest, &stepRequest);
 
       CHECK_EQUAL(TurningDirection_CounterClockwise, stepRequest.direction);
-      CHECK_EQUAL(freshFoodDamperData->stepsToOpen, stepRequest.stepsToMove);
+      CHECK_EQUAL(damperData->stepsToOpen, stepRequest.stepsToMove);
    }
 
    void StepRequestShouldBeDoorPositionHome()
    {
       StepperPositionRequest_t stepRequest;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperStepperMotorPositionRequest, &stepRequest);
+      DataModel_Read(dataModel, Erd_DamperStepperMotorPositionRequest, &stepRequest);
 
       CHECK_EQUAL(TurningDirection_Clockwise, stepRequest.direction);
-      CHECK_EQUAL(freshFoodDamperData->stepsToHome, stepRequest.stepsToMove);
+      CHECK_EQUAL(damperData->stepsToHome, stepRequest.stepsToMove);
    }
 
    void EnsureTwistIceMakerIsNotRequestingControl(void)
@@ -387,7 +387,7 @@ TEST_GROUP(DamperIntegration)
       EnsureTwistIceMakerIsNotRequestingControl();
 
       bool actualRequest;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperStepperMotorControlRequest, &actualRequest);
+      DataModel_Read(dataModel, Erd_DamperStepperMotorControlRequest, &actualRequest);
 
       CHECK_EQUAL(expectedRequest, actualRequest);
    }
@@ -395,7 +395,7 @@ TEST_GROUP(DamperIntegration)
    void StepperMotorDriveEnableShouldBe(bool expectedState)
    {
       bool actualState;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperStepperMotorDriveEnable, &actualState);
+      DataModel_Read(dataModel, Erd_DamperStepperMotorDriveEnable, &actualState);
 
       CHECK_EQUAL(expectedState, actualState);
    }
@@ -405,20 +405,20 @@ TEST_GROUP(DamperIntegration)
       StepperPositionRequest_t position;
       DataModel_Read(
          dataModelDouble.dataModel,
-         Erd_FreshFoodDamperStepperMotorPositionRequest,
+         Erd_DamperStepperMotorPositionRequest,
          &position);
 
       position.stepsToMove = 0;
       DataModel_Write(
          dataModelDouble.dataModel,
-         Erd_FreshFoodDamperStepperMotorPositionRequest,
+         Erd_DamperStepperMotorPositionRequest,
          &position);
    }
 
    void StepsShouldBeSetToZero()
    {
       StepperPositionRequest_t position;
-      DataModel_Read(dataModelDouble.dataModel, Erd_FreshFoodDamperStepperMotorPositionRequest, &position);
+      DataModel_Read(dataModelDouble.dataModel, Erd_DamperStepperMotorPositionRequest, &position);
 
       CHECK_EQUAL(0, position.stepsToMove);
    }
@@ -428,7 +428,7 @@ TEST_GROUP(DamperIntegration)
       StepRequestShouldBeDoorPositionHome();
       StepperMotorControlRequestShouldBe(SET);
       StepperMotorDriveEnableShouldBe(SET);
-      AfterNInterrupts(freshFoodDamperData->stepsToHome * (freshFoodDamperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1) + 1);
+      AfterNInterrupts(damperData->stepsToHome * (damperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1) + 1);
       AfterTheEventQueueIsRun();
       StepsShouldBeSetToZero();
       DamperCurrentPositionShouldBe(DamperPosition_Closed);
@@ -477,15 +477,15 @@ TEST(DamperIntegration, ShouldTurnOnDamperHeaterWhenTemperatureDoesNotDecreaseBy
 
    When TargetTemperatureIs(InitialTemperatureInDegFx100);
    And DamperOpens();
-   And TargetTemperatureIs(InitialTemperatureInDegFx100 - (freshFoodDamperData->targetCompartmentMinimumTemperatureChangeInDegFx100 - 1));
-   After((freshFoodDamperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN) - 1);
+   And TargetTemperatureIs(InitialTemperatureInDegFx100 - (damperData->targetCompartmentMinimumTemperatureChangeInDegFx100 - 1));
+   After((damperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN) - 1);
    DamperFreezePreventionVoteForDamperHeaterShouldBeDontCare();
 
    After(1);
    DamperFreezePreventionShouldVoteDamperHeaterOn();
    DamperFreezePreventionFsmStateShouldBe(DamperFreezePreventionFsmState_DamperHeaterOn);
 
-   After((freshFoodDamperData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN) - 1);
+   After((damperData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN) - 1);
    DamperFreezePreventionShouldVoteDamperHeaterOn();
 
    After(1);
@@ -494,10 +494,10 @@ TEST(DamperIntegration, ShouldTurnOnDamperHeaterWhenTemperatureDoesNotDecreaseBy
    ResolvedDamperHeaterVoteShouldBe(PercentageDutyCycle_Min);
 
    After(
-      (freshFoodDamperData->maxTimeForDamperToBeOpenInMinutes * MSEC_PER_MIN) -
+      (damperData->maxTimeForDamperToBeOpenInMinutes * MSEC_PER_MIN) -
          1 -
-         (freshFoodDamperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN) -
-         (freshFoodDamperData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN),
+         (damperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN) -
+         (damperData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN),
       1000);
    DamperPositionShouldBeDontCareForMaxOpenTimeVote();
    DamperPositionWinningVoteErdShouldBe(Erd_FreshFoodDamperPosition_DamperFreezePreventionVote);
@@ -526,21 +526,21 @@ TEST(DamperIntegration, ShouldResetMinimumTemperatureChangeTimerWhenDamperPositi
    DamperCurrentPositionShouldBe(DamperPosition_Open);
    DamperPositionResolvedVoteShouldBe(DamperPosition_Closed);
 
-   AfterNInterrupts(freshFoodDamperData->stepsToClose * (freshFoodDamperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1) + 1);
+   AfterNInterrupts(damperData->stepsToClose * (damperData->delayBetweenStepEventsInHundredsOfMicroseconds + 1) + 1);
    AfterTheEventQueueIsRun();
    StepsShouldBeSetToZero();
    StepperMotorControlRequestShouldBe(CLEAR);
    DamperCurrentPositionShouldBe(DamperPosition_Closed);
 
-   TargetTemperatureIs((freshFoodDamperData->targetCompartmentMinimumTemperatureChangeInDegFx100 - InitialTemperatureInDegFx100) - 1);
-   After((freshFoodDamperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN) - 1);
+   TargetTemperatureIs((damperData->targetCompartmentMinimumTemperatureChangeInDegFx100 - InitialTemperatureInDegFx100) - 1);
+   After((damperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN) - 1);
    DamperFreezePreventionVoteForDamperHeaterShouldBeDontCare();
 
    After(1);
    DamperFreezePreventionShouldVoteDamperHeaterOn();
    DamperFreezePreventionFsmStateShouldBe(DamperFreezePreventionFsmState_DamperHeaterOn);
 
-   After(freshFoodDamperData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN - 1);
+   After(damperData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN - 1);
    DamperFreezePreventionShouldVoteDamperHeaterOn();
 
    DamperCurrentPositionShouldBe(DamperPosition_Closed);
@@ -564,10 +564,10 @@ TEST(DamperIntegration, ShouldContinueRequestingForDamperToCloseWhenMaxTimeOpenI
 
    // This lowers the temperature periodically so as to prevent the damper freeze prevention from closing damper.
    // Also this assumes that the max open time is a multiple of the the minimum temperature change time.
-   for(int i = 1; i <= (freshFoodDamperData->maxTimeForDamperToBeOpenInMinutes / freshFoodDamperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes); i++)
+   for(int i = 1; i <= (damperData->maxTimeForDamperToBeOpenInMinutes / damperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes); i++)
    {
-      TargetTemperatureIs(InitialTemperatureInDegFx100 - (freshFoodDamperData->targetCompartmentMinimumTemperatureChangeInDegFx100 * i));
-      After((freshFoodDamperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN));
+      TargetTemperatureIs(InitialTemperatureInDegFx100 - (damperData->targetCompartmentMinimumTemperatureChangeInDegFx100 * i));
+      After((damperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN));
       FreezePreventionDamperPositionVoteShouldBeDontCare();
    }
 
@@ -595,10 +595,10 @@ TEST(DamperIntegration, ShouldCloseDamperWhenDefrostVotesForDamperOpenAndThenMax
 
    // This lowers the temperature periodically so as to prevent the damper freeze prevention from closing damper.
    // Also this assumes that the max open time is a multiple of the the minimum temperature change time.
-   for(int i = 1; i <= (freshFoodDamperData->maxTimeForDamperToBeOpenInMinutes / freshFoodDamperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes); i++)
+   for(int i = 1; i <= (damperData->maxTimeForDamperToBeOpenInMinutes / damperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes); i++)
    {
-      TargetTemperatureIs(InitialTemperatureInDegFx100 - (freshFoodDamperData->targetCompartmentMinimumTemperatureChangeInDegFx100 * i));
-      After((freshFoodDamperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN));
+      TargetTemperatureIs(InitialTemperatureInDegFx100 - (damperData->targetCompartmentMinimumTemperatureChangeInDegFx100 * i));
+      After((damperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN));
       FreezePreventionDamperPositionVoteShouldBeDontCare();
    }
 
@@ -625,14 +625,14 @@ TEST(DamperIntegration, ShouldCloseDamperPositionWhenDefrostVotesForDamperOpenAn
    DamperCurrentPositionShouldBe(DamperPosition_Open);
 
    When TargetTemperatureIs(InitialTemperatureInDegFx100);
-   After((freshFoodDamperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN) - 1);
+   After((damperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN) - 1);
    DamperFreezePreventionVoteForDamperHeaterShouldBeDontCare();
 
    After(1);
    DamperFreezePreventionShouldVoteDamperHeaterOn();
    DamperFreezePreventionFsmStateShouldBe(DamperFreezePreventionFsmState_DamperHeaterOn);
 
-   After(freshFoodDamperData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN - 1);
+   After(damperData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN - 1);
    DamperFreezePreventionShouldVoteDamperHeaterOn();
 
    After(1);
@@ -677,7 +677,7 @@ TEST(DamperIntegration, ShouldSubscribeToDefrostHeaterStateChangeWhenEnabledInPa
 
    When DamperOpens();
    And TargetTemperatureIs(InitialTemperatureInDegFx100);
-   After((freshFoodDamperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN) - 1);
+   After((damperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN) - 1);
    DamperHeaterDefrostSyncShouldVoteDamperHeaterOffAndDontCare();
 
    After(1);
@@ -688,7 +688,7 @@ TEST(DamperIntegration, ShouldSubscribeToDefrostHeaterStateChangeWhenEnabledInPa
    DamperHeaterDefrostSyncShouldVoteDamperHeaterOffAndDontCare();
    ResolvedDamperHeaterVoteShouldBe(PercentageDutyCycle_Max);
 
-   After((freshFoodDamperData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN) - 1);
+   After((damperData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN) - 1);
    DamperFreezePreventionShouldVoteDamperHeaterOn();
 
    After(1);
@@ -698,7 +698,7 @@ TEST(DamperIntegration, ShouldSubscribeToDefrostHeaterStateChangeWhenEnabledInPa
 
    When FreezerDefrostHeaterStateIs(ON);
    DamperHeaterDefrostSyncShouldVoteDamperHeaterOn();
-   DamperHeaterWinningErdShouldBe(Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote);
+   DamperHeaterWinningErdShouldBe(Erd_DamperHeater_DefrostHeaterSyncVote);
 
    When FreezerDefrostHeaterVoteErdIsOffAndDontCare();
    DamperHeaterDefrostSyncShouldVoteDamperHeaterOffAndDontCare();
@@ -719,30 +719,30 @@ TEST(DamperIntegration, FactoryVoteShouldTakePriorityForDamperHeater)
 
    When DamperOpens();
    And TargetTemperatureIs(InitialTemperatureInDegFx100);
-   After((freshFoodDamperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN) - 1);
+   After((damperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN) - 1);
    DamperHeaterDefrostSyncShouldVoteDamperHeaterOffAndDontCare();
 
    After(1);
    DamperFreezePreventionShouldVoteDamperHeaterOn();
    DamperFreezePreventionFsmStateShouldBe(DamperFreezePreventionFsmState_DamperHeaterOn);
-   DamperHeaterWinningErdShouldBe(Erd_FreshFoodDamperHeater_FactoryVote);
+   DamperHeaterWinningErdShouldBe(Erd_DamperHeater_FactoryVote);
 
    When FreezerDefrostHeaterVoteErdIsOffAndCare();
    DamperHeaterDefrostSyncShouldVoteDamperHeaterOffAndDontCare();
    ResolvedDamperHeaterVoteShouldBe(PercentageDutyCycle_Max);
 
-   After((freshFoodDamperData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN) - 1);
+   After((damperData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN) - 1);
    DamperFreezePreventionShouldVoteDamperHeaterOn();
 
    After(1);
    DamperFreezePreventionShouldVoteDamperHeaterOff();
    DamperFreezePreventionFsmStateShouldBe(DamperFreezePreventionFsmState_MoveDamper);
    ResolvedDamperHeaterVoteShouldBe(PercentageDutyCycle_Max);
-   DamperHeaterWinningErdShouldBe(Erd_FreshFoodDamperHeater_FactoryVote);
+   DamperHeaterWinningErdShouldBe(Erd_DamperHeater_FactoryVote);
 
    When FreezerDefrostHeaterStateIs(ON);
    DamperHeaterDefrostSyncShouldVoteDamperHeaterOn();
-   DamperHeaterWinningErdShouldBe(Erd_FreshFoodDamperHeater_FactoryVote);
+   DamperHeaterWinningErdShouldBe(Erd_DamperHeater_FactoryVote);
 }
 
 TEST_GROUP(DamperIntegration_MaxOpenTimeZero)
@@ -752,7 +752,7 @@ TEST_GROUP(DamperIntegration_MaxOpenTimeZero)
    I_DataModel_t *dataModel;
    ResetReason_t resetReason;
    TimerModule_TestDouble_t *timerModuleTestDouble;
-   const SingleDamperData_t *freshFoodDamperData;
+   const DamperData_t *damperData;
 
    void setup()
    {
@@ -761,7 +761,7 @@ TEST_GROUP(DamperIntegration_MaxOpenTimeZero)
       timerModuleTestDouble = ReferDataModel_TestDouble_GetTimerModuleTestDouble(&dataModelDouble);
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
-      freshFoodDamperData = PersonalityParametricData_Get(dataModelDouble.dataModel)->freshFoodDamperData;
+      damperData = PersonalityParametricData_Get(dataModelDouble.dataModel)->damperData;
    }
 
    void GivenApplicationHasBeenInitialized()
@@ -786,7 +786,7 @@ TEST_GROUP(DamperIntegration_MaxOpenTimeZero)
 
    void SourceTemperatureIsLessThanSourceCompartmentMaximumTemperatureToRunCheck()
    {
-      TemperatureDegFx100_t temperature = freshFoodDamperData->sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 - 1;
+      TemperatureDegFx100_t temperature = damperData->sourceCompartmentMaximumTemperatureToRunCheckInDegFx100 - 1;
       DataModel_Write(dataModel, Erd_Freezer_FilteredTemperatureOverrideValueInDegFx100, &temperature);
    }
 
@@ -818,20 +818,20 @@ TEST_GROUP(DamperIntegration_MaxOpenTimeZero)
       StepperPositionRequest_t position;
       DataModel_Read(
          dataModelDouble.dataModel,
-         Erd_FreshFoodDamperStepperMotorPositionRequest,
+         Erd_DamperStepperMotorPositionRequest,
          &position);
 
       position.stepsToMove = 0;
       DataModel_Write(
          dataModelDouble.dataModel,
-         Erd_FreshFoodDamperStepperMotorPositionRequest,
+         Erd_DamperStepperMotorPositionRequest,
          &position);
    }
 
    void DamperCurrentPositionShouldBe(DamperPosition_t expectedPosition)
    {
       DamperPosition_t actualPosition;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperCurrentPosition, &actualPosition);
+      DataModel_Read(dataModel, Erd_DamperCurrentPosition, &actualPosition);
 
       CHECK_EQUAL(expectedPosition, actualPosition);
    }
@@ -894,8 +894,8 @@ TEST(DamperIntegration_MaxOpenTimeZero, ShouldNotVoteToCloseDamperHeaterWhenMaxT
    When StepsAreSetToZero();
    DamperCurrentPositionShouldBe(DamperPosition_Open);
 
-   When TargetTemperatureIs(freshFoodDamperData->targetCompartmentMinimumTemperatureChangeInDegFx100 - InitialTemperatureInDegFx100);
-   After(freshFoodDamperData->maxTimeForDamperToBeOpenInMinutes * MSEC_PER_MIN);
+   When TargetTemperatureIs(damperData->targetCompartmentMinimumTemperatureChangeInDegFx100 - InitialTemperatureInDegFx100);
+   After(damperData->maxTimeForDamperToBeOpenInMinutes * MSEC_PER_MIN);
    DamperPositionShouldBeDontCareForMaxOpenTimeVote();
 
    After(1);

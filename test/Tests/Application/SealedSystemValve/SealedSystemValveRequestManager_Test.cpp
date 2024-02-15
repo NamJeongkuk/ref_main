@@ -31,7 +31,7 @@ enum
 
 static const SealedSystemValveRequestManagerConfiguration_t config = {
    .positionRequestResolvedVoteErd = Erd_SealedSystemValvePosition_ResolvedVote,
-   .stepperMotorPositionRequestErd = Erd_FreshFoodDamperStepperMotorPositionRequest,
+   .stepperMotorPositionRequestErd = Erd_DamperStepperMotorPositionRequest,
    .homingRequestErd = Erd_SealedSystemValveHomingRequest,
    .currentPositionErd = Erd_SealedSystemValveCurrentPosition
 };
@@ -127,7 +127,7 @@ TEST_GROUP(SealedSystemValveRequestManager)
       StepperPositionRequest_t actual;
       DataModel_Read(
          dataModel,
-         Erd_FreshFoodDamperStepperMotorPositionRequest,
+         Erd_DamperStepperMotorPositionRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual.resetSubstep);

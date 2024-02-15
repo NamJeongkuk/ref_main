@@ -29,8 +29,8 @@ static void ConvertibleCompartmentDamperHeaterSoftPwm_Init(
    TimerTicks_t delay)
 {
    static const SoftPwmConfiguration_t config = {
-      .pwmDutyCycleErd = Erd_ConvertibleCompartmentDamperHeaterPwmDutyCycle,
-      .gpioErd = Erd_ConvertibleCompartmentDamperHeater,
+      .pwmDutyCycleErd = Erd_DamperHeaterPwmDutyCycle,
+      .gpioErd = Erd_DamperHeater,
       .timerModuleErd = Erd_TimerModule,
       .periodInSeconds = SoftPwmPeriodInSeconds
    };

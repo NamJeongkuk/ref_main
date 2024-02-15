@@ -54,7 +54,7 @@ static const Erd_t factoryModeLightErdList[] = {
 };
 
 static const Erd_t uint16BspErdList[] = {
-   Erd_FreshFoodDamperHeaterPwmDutyCycle
+   Erd_DamperHeaterPwmDutyCycle
 };
 
 static const Erd_t uint8BspErdList[] = {
@@ -75,7 +75,7 @@ static const FactoryVotePair_t factoryVotePairs[] = {
    { Erd_FreezerEvapFanSpeed_FactoryServiceVote, FanSpeed_Off },
    { Erd_FreshFoodDefrostHeater_FactoryVote, HeaterState_Off },
    { Erd_FreshFoodDamperPosition_FactoryVote, DamperPosition_Closed },
-   { Erd_FreshFoodDamperHeater_FactoryVote, PercentageDutyCycle_Min },
+   { Erd_DamperHeater_FactoryVote, PercentageDutyCycle_Min },
    { Erd_IceMaker0_FillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
    { Erd_IceMaker1_FillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
    { Erd_IceMaker2_FillTubeHeater_FactoryVote, PercentageDutyCycle_Min },
@@ -397,34 +397,34 @@ TEST_GROUP(FactoryModeIntegration)
       CHECK_EQUAL(expectedMotorState, actualMotorState);
    }
 
-   void GivenTheFreshFoodDamperHeaterPwmDutyCycleIs(PwmDutyCycle_t pwmDutyCycle)
+   void GivenTheDamperHeaterPwmDutyCycleIs(PwmDutyCycle_t pwmDutyCycle)
    {
       DataModel_Write(
          dataModel,
-         Erd_FreshFoodDamperHeaterPwmDutyCycle,
+         Erd_DamperHeaterPwmDutyCycle,
          &pwmDutyCycle);
    }
 
-   void WhenTheFreshFoodDamperHeaterPwmDutyCycleIs(PwmDutyCycle_t pwmDutyCycle)
+   void WhenTheDamperHeaterPwmDutyCycleIs(PwmDutyCycle_t pwmDutyCycle)
    {
-      GivenTheFreshFoodDamperHeaterPwmDutyCycleIs(pwmDutyCycle);
+      GivenTheDamperHeaterPwmDutyCycleIs(pwmDutyCycle);
    }
 
-   void WhenTheFactoryModeFreshFoodDamperHeaterPwmDutyCycleBecomes(PercentageDutyCycle_t percentDutyCycle)
+   void WhenTheFactoryModeDamperHeaterPwmDutyCycleBecomes(PercentageDutyCycle_t percentDutyCycle)
    {
       PercentageDutyCycleVote_t votedDutyCycle = { .percentageDutyCycle = percentDutyCycle, .care = Vote_Care };
       DataModel_Write(
          dataModel,
-         Erd_FreshFoodDamperHeater_FactoryVote,
+         Erd_DamperHeater_FactoryVote,
          &votedDutyCycle);
    }
 
-   void TheFreshFoodDamperHeaterPwmDutyCycleShouldBe(PwmDutyCycle_t expectedPwmDutyCycle)
+   void TheDamperHeaterPwmDutyCycleShouldBe(PwmDutyCycle_t expectedPwmDutyCycle)
    {
       PwmDutyCycle_t actualDutyCycle;
       DataModel_Read(
          dataModel,
-         Erd_FreshFoodDamperHeaterPwmDutyCycle,
+         Erd_DamperHeaterPwmDutyCycle,
          &actualDutyCycle);
 
       CHECK_EQUAL(expectedPwmDutyCycle, actualDutyCycle);
@@ -524,9 +524,9 @@ TEST_GROUP(FactoryModeIntegration)
          &votedAction);
    }
 
-   void GivenTheFreshFoodDamperStepperMotorDriveEnableIs(bool status)
+   void GivenTheDamperStepperMotorDriveEnableIs(bool status)
    {
-      DataModel_Write(dataModel, Erd_FreshFoodDamperStepperMotorDriveEnable, &status);
+      DataModel_Write(dataModel, Erd_DamperStepperMotorDriveEnable, &status);
    }
 
    void GivenTheTwistIceMakerMotorControlRequestIs(bool request)
@@ -622,17 +622,17 @@ TEST(FactoryModeIntegration, ShouldSetBspIceMaker1RakeMotorRelayWhenIceMaker1Fac
    TheIceMaker1RakeMotorRelayShouldBe(IceMakerMotorState_Run);
 }
 
-TEST(FactoryModeIntegration, ShouldSetBspFreshFoodDamperHeaterPwmDutyCycleWhenFactoryVoteTriggered)
+TEST(FactoryModeIntegration, ShouldSetBspDamperHeaterPwmDutyCycleWhenFactoryVoteTriggered)
 {
    GivenTheApplicationIsInitialized();
    GivenTheApplicationIsInFactoryMode();
-   GivenTheFreshFoodDamperHeaterPwmDutyCycleIs(PwmDutyCycle_Min);
+   GivenTheDamperHeaterPwmDutyCycleIs(PwmDutyCycle_Min);
 
-   WhenTheFactoryModeFreshFoodDamperHeaterPwmDutyCycleBecomes(PercentageDutyCycle_Max);
-   TheFreshFoodDamperHeaterPwmDutyCycleShouldBe(PwmDutyCycle_Max);
+   WhenTheFactoryModeDamperHeaterPwmDutyCycleBecomes(PercentageDutyCycle_Max);
+   TheDamperHeaterPwmDutyCycleShouldBe(PwmDutyCycle_Max);
 
    After(OneMinute * MSEC_PER_MIN);
-   TheFreshFoodDamperHeaterPwmDutyCycleShouldBe(PwmDutyCycle_Max);
+   TheDamperHeaterPwmDutyCycleShouldBe(PwmDutyCycle_Max);
 }
 
 TEST(FactoryModeIntegration, ShouldSetBspFillTubeHeaterWhenIceMaker0FactoryVoteTriggered)
@@ -723,16 +723,16 @@ TEST(FactoryModeIntegration, ShouldDirectlyModifyBspIceMaker1RakeMotorRelayWitho
    TheIceMaker1RakeMotorRelayShouldBe(IceMakerMotorState_Run);
 }
 
-TEST(FactoryModeIntegration, ShouldDirectlyModifyBspFreshFoodDamperHeaterPwmDutyCycleWithoutOtherLogicOverride)
+TEST(FactoryModeIntegration, ShouldDirectlyModifyBspDamperHeaterPwmDutyCycleWithoutOtherLogicOverride)
 {
    GivenTheApplicationIsInitialized();
    GivenTheApplicationIsInFactoryMode();
 
-   WhenTheFreshFoodDamperHeaterPwmDutyCycleIs(PwmDutyCycle_Max);
-   TheFreshFoodDamperHeaterPwmDutyCycleShouldBe(PwmDutyCycle_Max);
+   WhenTheDamperHeaterPwmDutyCycleIs(PwmDutyCycle_Max);
+   TheDamperHeaterPwmDutyCycleShouldBe(PwmDutyCycle_Max);
 
    After(OneMinute * MSEC_PER_MIN);
-   TheFreshFoodDamperHeaterPwmDutyCycleShouldBe(PwmDutyCycle_Max);
+   TheDamperHeaterPwmDutyCycleShouldBe(PwmDutyCycle_Max);
 }
 
 TEST(FactoryModeIntegration, ShouldDirectlyModifyBspIceMaker0FillTubeHeaterWithoutOtherLogicOverride)
@@ -764,7 +764,7 @@ TEST(FactoryModeIntegration, ShouldSetBspTwistMotorWhenIceMaker0FactoryVoteTrigg
    GivenTheApplicationIsInitialized();
    GivenTheApplicationIsInFactoryMode();
    GivenTheTwistIceMakerMotorControlRequestIs(CLEAR);
-   GivenTheFreshFoodDamperStepperMotorDriveEnableIs(DISABLED);
+   GivenTheDamperStepperMotorDriveEnableIs(DISABLED);
    TheTwistIceMakerMotorDriveEnableShouldBe(DISABLED);
 
    WhenTheFactoryModeIceMaker0TwistMotorIs(IceMakerMotorState_Run);

@@ -12,7 +12,7 @@ extern "C"
 #include "SystemErds.h"
 #include "Constants_Binary.h"
 #include "Constants_Time.h"
-#include "SingleDamperData.h"
+#include "DamperData.h"
 #include "TddPersonality.h"
 #include "DamperVotedPosition.h"
 #include "Vote.h"
@@ -30,17 +30,16 @@ extern "C"
 
 static const DamperMaxOpenTimeConfiguration_t config = {
    .damperPositionMaxOpenTimeVoteErd = Erd_FreshFoodDamperPosition_MaxOpenTimeVote,
-   .damperCurrentPositionErd = Erd_FreshFoodDamperCurrentPosition
+   .damperCurrentPositionErd = Erd_DamperCurrentPosition
 };
 
 TEST_GROUP(MaxOpenTime)
 {
    DamperMaxOpenTime_t instance;
-   SingleDamperData_t singleDamperData;
    I_DataModel_t *dataModel;
    ReferDataModel_TestDouble_t dataModelDouble;
    TimerModule_TestDouble_t *timerModuleTestDouble;
-   const SingleDamperData_t *damperData;
+   const DamperData_t *damperData;
    const DamperPosition_t *damperCurrentPosition;
    const DamperPosition_t *damperPosition;
 
@@ -54,7 +53,7 @@ TEST_GROUP(MaxOpenTime)
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
 
-      damperData = PersonalityParametricData_Get(dataModel)->freshFoodDamperData;
+      damperData = PersonalityParametricData_Get(dataModel)->damperData;
       damperCurrentPosition = damperPosition;
    }
 
@@ -65,7 +64,7 @@ TEST_GROUP(MaxOpenTime)
 
    void DamperCurrentPositionIs(DamperPosition_t position)
    {
-      DataModel_Write(dataModel, Erd_FreshFoodDamperCurrentPosition, &position);
+      DataModel_Write(dataModel, Erd_DamperCurrentPosition, &position);
    }
 
    void TheModuleIsInitialized()
@@ -148,12 +147,11 @@ TEST(MaxOpenTime, ShouldStartTimerWhenDamperOpensThenStopsTimerAndSetCareToFalse
 TEST_GROUP(MaxOpenTime_Zero)
 {
    DamperMaxOpenTime_t instance;
-   SingleDamperData_t singleDamperData;
    I_DataModel_t *dataModel;
    ReferDataModel_TestDouble_t dataModelDouble;
    TimerModule_TestDouble_t *timerModuleTestDouble;
 
-   const SingleDamperData_t *damperData;
+   const DamperData_t *damperData;
    const DamperPosition_t *damperCurrentPosition;
 
    void setup()
@@ -164,7 +162,7 @@ TEST_GROUP(MaxOpenTime_Zero)
 
       DataModelErdPointerAccess_Write(dataModel, Erd_TimerModule, &timerModuleTestDouble->timerModule);
 
-      damperData = PersonalityParametricData_Get(dataModel)->freshFoodDamperData;
+      damperData = PersonalityParametricData_Get(dataModel)->damperData;
       damperCurrentPosition = (const DamperPosition_t *)DamperPosition_Closed;
    }
 
@@ -180,7 +178,7 @@ TEST_GROUP(MaxOpenTime_Zero)
 
    void DamperCurrentPositionIs(DamperPosition_t position)
    {
-      DataModel_Write(dataModel, Erd_FreshFoodDamperCurrentPosition, &position);
+      DataModel_Write(dataModel, Erd_DamperCurrentPosition, &position);
    }
 
    void DamperCareStateShouldBeDontCare()

@@ -11,7 +11,7 @@
 #include "I_DataModel.h"
 #include "EventSubscription.h"
 #include "Timer.h"
-#include "SingleDamperData.h"
+#include "DamperData.h"
 #include "TemperatureDegFx100.h"
 #include "Fsm.h"
 
@@ -40,7 +40,7 @@ typedef struct
       TemperatureDegFx100_t startingTemperature;
       EventSubscription_t dataModelSubscription;
       const DamperFreezePreventionConfiguration_t *configuration;
-      const SingleDamperData_t *singleDamperData;
+      const DamperData_t *damperData;
    } _private;
 } DamperFreezePrevention_t;
 
@@ -49,12 +49,12 @@ typedef struct
  * @param instance
  * @param dataModel
  * @param config
- * @param singleDamperData
+ * @param damperData
  */
 void DamperFreezePrevention_Init(
    DamperFreezePrevention_t *instance,
    I_DataModel_t *dataModel,
    const DamperFreezePreventionConfiguration_t *config,
-   const SingleDamperData_t *singleDamperData);
+   const DamperData_t *damperData);
 
 #endif

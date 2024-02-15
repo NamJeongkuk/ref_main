@@ -373,7 +373,7 @@ TEST_GROUP(GridIntegration)
    void TheFreshFoodDamperStepperMotorDriveEnableShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperStepperMotorDriveEnable, &actual);
+      DataModel_Read(dataModel, Erd_DamperStepperMotorDriveEnable, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -381,7 +381,7 @@ TEST_GROUP(GridIntegration)
    void DamperPositionShouldBe(DamperPosition_t expected)
    {
       DamperPosition_t actual;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperCurrentPosition, &actual);
+      DataModel_Read(dataModel, Erd_DamperCurrentPosition, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -511,7 +511,7 @@ TEST_GROUP(GridIntegration)
    uint16_t DamperStepsRemaining(void)
    {
       StepperPositionRequest_t request;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperStepperMotorPositionRequest, &request);
+      DataModel_Read(dataModel, Erd_DamperStepperMotorPositionRequest, &request);
       return request.stepsToMove;
    }
 

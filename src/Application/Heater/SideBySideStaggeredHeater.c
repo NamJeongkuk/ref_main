@@ -29,8 +29,8 @@ static void FreshFoodDamperHeaterSoftPwm_Init(
    TimerTicks_t delay)
 {
    static const SoftPwmConfiguration_t config = {
-      .pwmDutyCycleErd = Erd_FreshFoodDamperHeaterPwmDutyCycle,
-      .gpioErd = Erd_FreshFoodDamperHeater,
+      .pwmDutyCycleErd = Erd_DamperHeaterPwmDutyCycle,
+      .gpioErd = Erd_DamperHeater,
       .timerModuleErd = Erd_TimerModule,
       .periodInSeconds = SoftPwmPeriodInSeconds
    };

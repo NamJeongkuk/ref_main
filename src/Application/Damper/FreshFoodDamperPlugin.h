@@ -9,15 +9,26 @@
 #define FRESHFOODDAMPERPLUGIN_H
 
 #include "I_DataModel.h"
-#include "FreshFoodDamperMotorPlugin.h"
-#include "FreshFoodDamperHeaterVotingFrameworkPlugin.h"
+#include "DamperMotorPlugin.h"
+#include "DamperRequestManager.h"
+#include "DamperHeaterVotingFrameworkPlugin.h"
+#include "DamperHeaterDefrostControl.h"
+#include "DamperMaxOpenTimeMonitor.h"
+#include "DamperFreezePrevention.h"
+#include "ErdResolver.h"
 
 typedef struct
 {
    struct
    {
-      FreshFoodDamperMotorPlugin_t freshFoodDamperMotorPlugin;
-      FreshFoodDamperHeaterVotingFrameworkPlugin_t freshFoodDamperHeaterVotingFrameworkPlugin;
+      ErdResolver_t damperPositionErdResolver;
+      ErdResolver_t damperHeaterErdResolver;
+      DamperMotorPlugin_t damperMotorPlugin;
+      DamperRequestManager_t damperRequestManager;
+      DamperHeaterVotingFrameworkPlugin_t damperHeaterVotingFrameworkPlugin;
+      DamperFreezePrevention_t damperFreezePrevention;
+      DamperHeaterDefrostControl_t damperHeaterDefrostControl;
+      DamperMaxOpenTime_t damperMaxOpenTime;
    } _private;
 } FreshFoodDamperPlugin_t;
 

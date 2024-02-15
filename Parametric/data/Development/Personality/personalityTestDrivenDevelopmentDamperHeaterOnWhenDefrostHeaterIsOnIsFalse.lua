@@ -13,7 +13,7 @@ return personality({
   setpoint = import("../Setpoints/setpoint.lua"),
   cabinet_offset = import("../Setpoints/AdjustedSetpoint/CabinetOffset/cabinet_offset.lua"),
   bsp_configuration = import("../Bsp/bsp_configuration_sxs.lua"),
-  single_damper = import("../Damper/fresh_food_damper.lua"),
+  damper = import("../Damper/fresh_food_damper.lua"),
   damper_heater = import("../Damper/damper_heater_with_false_flag_for_following_defrost.lua"),
   pulldown = import("../Grid/pulldown.lua"),
   ice_maker = import("../IceMaker/ice_maker.lua"),

@@ -196,7 +196,7 @@ static bool ReadyToMonitorTemperature(DamperFreezePrevention_t *instance)
    return (TargetThermistorIsValid(instance) &&
       SourceThermistorIsValid(instance) &&
       SourceTemperature(instance) <
-         instance->_private.singleDamperData->sourceCompartmentMaximumTemperatureToRunCheckInDegFx100);
+         instance->_private.damperData->sourceCompartmentMaximumTemperatureToRunCheckInDegFx100);
 }
 
 void State_MoveDamper(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
@@ -247,7 +247,7 @@ void State_DamperHeaterOn(Fsm_t *fsm, const FsmSignal_t signal, const void *data
          VoteDamperHeaterOn(instance);
          StartTimerFor(
             instance,
-            (instance->_private.singleDamperData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN),
+            (instance->_private.damperData->targetCompartmentDamperHeaterOnTimeInMinutes * MSEC_PER_MIN),
             DamperHeaterTimerExpired);
          break;
 
@@ -277,7 +277,7 @@ void State_MonitoringTemperatureChange(Fsm_t *fsm, const FsmSignal_t signal, con
 
          StartTimerFor(
             instance,
-            (instance->_private.singleDamperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN),
+            (instance->_private.damperData->targetCompartmentMinimumTemperatureChangeTimeInMinutes * MSEC_PER_MIN),
             MinTemperatureChangeTimerExpired);
          break;
 
@@ -285,7 +285,7 @@ void State_MonitoringTemperatureChange(Fsm_t *fsm, const FsmSignal_t signal, con
          if(CurrentDamperPosition(instance) == DamperPosition_Open)
          {
             if((instance->_private.startingTemperature - TargetTemperature(instance)) <
-               instance->_private.singleDamperData->targetCompartmentMinimumTemperatureChangeInDegFx100)
+               instance->_private.damperData->targetCompartmentMinimumTemperatureChangeInDegFx100)
             {
                Fsm_Transition(fsm, State_DamperHeaterOn);
             }
@@ -297,7 +297,7 @@ void State_MonitoringTemperatureChange(Fsm_t *fsm, const FsmSignal_t signal, con
          else
          {
             if((TargetTemperature(instance) - instance->_private.startingTemperature) <
-               instance->_private.singleDamperData->targetCompartmentMinimumTemperatureChangeInDegFx100)
+               instance->_private.damperData->targetCompartmentMinimumTemperatureChangeInDegFx100)
             {
                Fsm_Transition(fsm, State_DamperHeaterOn);
             }
@@ -399,7 +399,7 @@ static void DataModelChanged(void *context, const void *args)
    {
       const TemperatureDegFx100_t *sourceTemperature = onChangeData->data;
 
-      if(*sourceTemperature >= instance->_private.singleDamperData->sourceCompartmentMaximumTemperatureToRunCheckInDegFx100)
+      if(*sourceTemperature >= instance->_private.damperData->sourceCompartmentMaximumTemperatureToRunCheckInDegFx100)
       {
          Fsm_SendSignal(
             &instance->_private.fsm,
@@ -429,11 +429,11 @@ void DamperFreezePrevention_Init(
    DamperFreezePrevention_t *instance,
    I_DataModel_t *dataModel,
    const DamperFreezePreventionConfiguration_t *configuration,
-   const SingleDamperData_t *singleDamperData)
+   const DamperData_t *damperData)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.configuration = configuration;
-   instance->_private.singleDamperData = singleDamperData;
+   instance->_private.damperData = damperData;
 
    Fsm_Init(&instance->_private.fsm, InitialState(instance));
 

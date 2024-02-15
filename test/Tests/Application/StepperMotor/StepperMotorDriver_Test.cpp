@@ -59,9 +59,9 @@ static const StepperMotorPins_t motorPins = {
 };
 
 static const StepperMotorDriverConfiguration_t config = {
-   .stepperMotorPositionRequestErd = Erd_FreshFoodDamperStepperMotorPositionRequest,
-   .motorControlRequestErd = Erd_FreshFoodDamperStepperMotorControlRequest,
-   .motorEnableErd = Erd_FreshFoodDamperStepperMotorDriveEnable,
+   .stepperMotorPositionRequestErd = Erd_DamperStepperMotorPositionRequest,
+   .motorControlRequestErd = Erd_DamperStepperMotorControlRequest,
+   .motorEnableErd = Erd_DamperStepperMotorDriveEnable,
    .pins = &motorPins,
    .subStepConfig = &subStepConfig,
 };
@@ -253,7 +253,7 @@ TEST_GROUP(StepperMotorDriver)
       bool actual;
       DataModel_Read(
          dataModelDouble.dataModel,
-         Erd_FreshFoodDamperStepperMotorControlRequest,
+         Erd_DamperStepperMotorControlRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -274,7 +274,7 @@ TEST_GROUP(StepperMotorDriver)
    {
       DataModel_Write(
          dataModelDouble.dataModel,
-         Erd_FreshFoodDamperStepperMotorDriveEnable,
+         Erd_DamperStepperMotorDriveEnable,
          &state);
    }
 

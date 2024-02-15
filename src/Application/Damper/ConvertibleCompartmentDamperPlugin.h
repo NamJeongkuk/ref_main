@@ -9,13 +9,26 @@
 #define CONVERTIBLECOMPARTMENTDAMPERPLUGIN_H
 
 #include "I_DataModel.h"
-#include "ConvertibleCompartmentDamperHeaterVotingFrameworkPlugin.h"
+#include "DamperMotorPlugin.h"
+#include "DamperRequestManager.h"
+#include "DamperHeaterVotingFrameworkPlugin.h"
+#include "DamperHeaterDefrostControl.h"
+#include "DamperMaxOpenTimeMonitor.h"
+#include "DamperFreezePrevention.h"
+#include "ErdResolver.h"
 
 typedef struct
 {
    struct
    {
-      ConvertibleCompartmentDamperHeaterVotingFrameworkPlugin_t votingFramework;
+      ErdResolver_t damperPositionErdResolver;
+      ErdResolver_t damperHeaterErdResolver;
+      DamperMotorPlugin_t damperMotorPlugin;
+      DamperRequestManager_t damperRequestManager;
+      DamperHeaterVotingFrameworkPlugin_t damperHeaterVotingFrameworkPlugin;
+      DamperFreezePrevention_t damperFreezePrevention;
+      DamperHeaterDefrostControl_t damperHeaterDefrostControl;
+      DamperMaxOpenTime_t damperMaxOpenTime;
    } _private;
 } ConvertibleCompartmentDamperPlugin_t;
 

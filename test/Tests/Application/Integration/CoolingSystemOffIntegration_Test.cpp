@@ -151,7 +151,7 @@ TEST_GROUP(CoolingSystemOffIntegration)
       TheFanVoteShouldBe(Erd_CondenserFanSpeed_CoolingSystemOffVote, FanSpeed_Off, Vote_Care);
       TheFanVoteShouldBe(Erd_FreezerEvapFanSpeed_CoolingSystemOffVote, FanSpeed_Off, Vote_Care);
       TheHeaterStateVoteShouldBe(Erd_FreezerDefrostHeater_CoolingSystemOffVote, HeaterState_Off, Vote_Care);
-      ThePercentageDutyCycleVoteShouldBe(Erd_FreshFoodDamperHeater_CoolingSystemOffVote, PercentageDutyCycle_Min, Vote_Care);
+      ThePercentageDutyCycleVoteShouldBe(Erd_DamperHeater_CoolingSystemOffVote, PercentageDutyCycle_Min, Vote_Care);
       ThePercentageDutyCycleVoteShouldBe(Erd_RecessHeater_CoolingSystemOffVote, PercentageDutyCycle_Min, Vote_Care);
       TheDamperPositionVoteShouldBe(Erd_FreshFoodDamperPosition_CoolingSystemOffVote, DamperPosition_Open, Vote_Care);
       TheCompressorSpeedVoteShouldBe(Erd_CompressorSpeed_CoolingSystemOffVote, CompressorSpeed_Off, Vote_Care);
@@ -159,7 +159,7 @@ TEST_GROUP(CoolingSystemOffIntegration)
       TheFanVoteShouldBe(Erd_CondenserFanSpeed_ResolvedVote, FanSpeed_Off, Vote_Care);
       TheFanVoteShouldBe(Erd_FreezerEvapFanSpeed_ResolvedVote, FanSpeed_Off, Vote_Care);
       TheHeaterStateVoteShouldBe(Erd_FreezerDefrostHeater_ResolvedVote, HeaterState_Off, Vote_Care);
-      ThePercentageDutyCycleVoteShouldBe(Erd_FreshFoodDamperHeater_ResolvedVote, PercentageDutyCycle_Min, Vote_Care);
+      ThePercentageDutyCycleVoteShouldBe(Erd_DamperHeater_ResolvedVote, PercentageDutyCycle_Min, Vote_Care);
       ThePercentageDutyCycleVoteShouldBe(Erd_RecessHeater_ResolvedVote, PercentageDutyCycle_Min, Vote_Care);
       TheDamperPositionVoteShouldBe(Erd_FreshFoodDamperPosition_ResolvedVote, DamperPosition_Open, Vote_Care);
       TheCompressorSpeedVoteShouldBe(Erd_CompressorSpeed_ResolvedVote, CompressorSpeed_Off, Vote_Care);
@@ -167,7 +167,7 @@ TEST_GROUP(CoolingSystemOffIntegration)
       TheWinningVoteShouldBe(Erd_CondenserFanSpeed_WinningVoteErd, WinningVoteErd_Erd_CondenserFanSpeed_CoolingSystemOffVote);
       TheWinningVoteShouldBe(Erd_FreezerEvapFanSpeed_WinningVoteErd, WinningVoteErd_Erd_FreezerEvapFanSpeed_CoolingSystemOffVote);
       TheWinningVoteShouldBe(Erd_FreezerDefrostHeater_WinningVoteErd, WinningVoteErd_Erd_FreezerDefrostHeater_CoolingSystemOffVote);
-      TheWinningVoteShouldBe(Erd_FreshFoodDamperHeater_WinningVoteErd, WinningVoteErd_Erd_FreshFoodDamperHeater_CoolingSystemOffVote);
+      TheWinningVoteShouldBe(Erd_DamperHeater_WinningVoteErd, WinningVoteErd_Erd_DamperHeater_CoolingSystemOffVote);
       TheWinningVoteShouldBe(Erd_FreshFoodDamperPosition_WinningVoteErd, WinningVoteErd_Erd_FreshFoodDamperPosition_CoolingSystemOffVote);
       TheWinningVoteShouldBe(Erd_CompressorSpeed_WinningVoteErd, WinningVoteErd_Erd_CompressorSpeed_CoolingSystemOffVote);
       TheWinningVoteShouldBe(Erd_RecessHeater_WinningVoteErd, WinningVoteErd_Erd_RecessHeater_CoolingSystemOffVote);
@@ -178,7 +178,7 @@ TEST_GROUP(CoolingSystemOffIntegration)
       TheFanVoteShouldBe(Erd_CondenserFanSpeed_CoolingSystemOffVote, FanSpeed_Off, Vote_DontCare);
       TheFanVoteShouldBe(Erd_FreezerEvapFanSpeed_CoolingSystemOffVote, FanSpeed_Off, Vote_DontCare);
       TheHeaterStateVoteShouldBe(Erd_FreezerDefrostHeater_CoolingSystemOffVote, HeaterState_Off, Vote_DontCare);
-      ThePercentageDutyCycleVoteShouldBe(Erd_FreshFoodDamperHeater_CoolingSystemOffVote, PercentageDutyCycle_Min, Vote_DontCare);
+      ThePercentageDutyCycleVoteShouldBe(Erd_DamperHeater_CoolingSystemOffVote, PercentageDutyCycle_Min, Vote_DontCare);
       ThePercentageDutyCycleVoteShouldBe(Erd_RecessHeater_CoolingSystemOffVote, PercentageDutyCycle_Min, Vote_DontCare);
       TheDamperPositionVoteShouldBe(Erd_FreshFoodDamperPosition_CoolingSystemOffVote, DamperPosition_Open, Vote_DontCare);
       TheCompressorSpeedVoteShouldBe(Erd_CompressorSpeed_CoolingSystemOffVote, CompressorSpeed_Off, Vote_DontCare);

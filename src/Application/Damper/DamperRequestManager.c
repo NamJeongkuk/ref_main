@@ -222,11 +222,11 @@ void DamperRequestManager_Init(
    DamperRequestManager_t *instance,
    I_DataModel_t *dataModel,
    const DamperRequestManagerConfiguration_t *config,
-   const SingleDamperData_t *singleDamperData)
+   const DamperData_t *damperData)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.configuration = config;
-   instance->_private.damperData = singleDamperData;
+   instance->_private.damperData = damperData;
 
    Fsm_Init(&instance->_private.fsm, State_Homing);
 

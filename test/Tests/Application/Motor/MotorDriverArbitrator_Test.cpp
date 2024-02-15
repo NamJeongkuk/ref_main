@@ -24,9 +24,9 @@ extern "C"
 #define When
 
 static const MotorDriverArbitratorConfiguration_t motorConfig = {
-   .motor0ControlRequestErd = Erd_FreshFoodDamperStepperMotorControlRequest,
+   .motor0ControlRequestErd = Erd_DamperStepperMotorControlRequest,
    .motor1ControlRequestErd = Erd_TwistIceMakerMotorControlRequest,
-   .motor0DriveEnableErd = Erd_FreshFoodDamperStepperMotorDriveEnable,
+   .motor0DriveEnableErd = Erd_DamperStepperMotorDriveEnable,
    .motor1DriveEnableErd = Erd_TwistIceMakerMotorDriveEnable
 };
 
@@ -44,7 +44,7 @@ TEST_GROUP(MotorDriverArbitrator)
 
    void Motor0ControlRequestErdIs(bool status)
    {
-      DataModel_Write(dataModel, Erd_FreshFoodDamperStepperMotorControlRequest, &status);
+      DataModel_Write(dataModel, Erd_DamperStepperMotorControlRequest, &status);
    }
 
    void Motor1ControlRequestErdIs(bool status)
@@ -55,7 +55,7 @@ TEST_GROUP(MotorDriverArbitrator)
    void Motor0DriveEnableErdShouldBe(bool expected)
    {
       bool actual;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperStepperMotorDriveEnable, &actual);
+      DataModel_Read(dataModel, Erd_DamperStepperMotorDriveEnable, &actual);
 
       CHECK_EQUAL(expected, actual);
    }

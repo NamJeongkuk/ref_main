@@ -238,7 +238,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
    uint16_t DamperStepsRemaining(void)
    {
       StepperPositionRequest_t request;
-      DataModel_Read(dataModel, Erd_FreshFoodDamperStepperMotorPositionRequest, &request);
+      DataModel_Read(dataModel, Erd_DamperStepperMotorPositionRequest, &request);
       return request.stepsToMove;
    }
 
@@ -247,7 +247,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
       EventQueue_InterruptSafe_Run(EventQueueInterruptSafePlugin_GetInterruptSafeEventQueue());
    }
 
-   void GivenTheFreshFoodDamperIsDoneMoving(void)
+   void GivenTheDamperIsDoneMoving(void)
    {
       while(DamperStepsRemaining() > 0)
       {
@@ -259,7 +259,7 @@ TEST_GROUP(TwistTrayIceMakerIntegration)
    void GivenTheApplicationIsInitializedAndTheMotorIsHomed(void)
    {
       GivenApplicationHasBeenInitialized();
-      GivenTheFreshFoodDamperIsDoneMoving();
+      GivenTheDamperIsDoneMoving();
       GivenTheMotorSwitchIsDebouncedHigh();
       WhenMotorDriveIs(ENABLED);
 

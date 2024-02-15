@@ -44,6 +44,8 @@ void Application_Init(
    HeartbeatLedPlugin_Init(&instance->_private.heartbeatLedPlugin, dataModel);
    PeriodicNvUpdaterPlugin_Init(&instance->_private.periodicNvUpdaterPlugin, dataModel);
 
+   ParallelMotorControlPlugin_Init(&instance->_private.parallelMotorControlPlugin, dataModel);
+
    PlatformPlugin_Init(&instance->_private.platformPlugin, dataModel);
 
    SnackModePlugin_Init(dataModel);

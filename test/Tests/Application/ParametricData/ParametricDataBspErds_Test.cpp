@@ -148,12 +148,12 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
    CHECK_EQUAL(*erd, Erd_FreezerDefrostHeaterRelay);
 }
 
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForFreshFoodDamperHeater)
+TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForDamperHeater)
 {
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_FreshFoodDamperHeater)");
+   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_DamperHeater)");
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_FreshFoodDamperHeater);
+   CHECK_EQUAL(*erd, Erd_DamperHeater);
 }
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMaker0WaterValveRelay)
@@ -194,14 +194,6 @@ TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableFo
 
    auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
    CHECK_EQUAL(*erd, Erd_ConvertibleCompartmentDefrostHeaterRelay);
-}
-
-TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForConvertibleCompartmentDamperHeater)
-{
-   GivenDataHasBeenGeneratedFor("core.u16(bsp_mapped_erd.Erd_ConvertibleCompartmentDamperHeater)");
-
-   auto erd = reinterpret_cast<const Erd_t *>(ParametricData());
-   CHECK_EQUAL(*erd, Erd_ConvertibleCompartmentDamperHeater);
 }
 
 TEST(ParametricDataBspErds_Input, ShouldHaveMatchingErdNumbersToSystemErdTableForIceMaker0HeaterRelay)

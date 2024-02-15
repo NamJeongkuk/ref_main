@@ -33,9 +33,9 @@ enum
 
 static const DamperRequestManagerConfiguration_t config = {
    .damperPositionRequestResolvedVoteErd = Erd_FreshFoodDamperPosition_ResolvedVote,
-   .damperStepperMotorPositionRequestErd = Erd_FreshFoodDamperStepperMotorPositionRequest,
-   .damperHomingRequestErd = Erd_FreshFoodDamperHomingRequest,
-   .damperCurrentPositionErd = Erd_FreshFoodDamperCurrentPosition
+   .damperStepperMotorPositionRequestErd = Erd_DamperStepperMotorPositionRequest,
+   .damperHomingRequestErd = Erd_DamperHomingRequest,
+   .damperCurrentPositionErd = Erd_DamperCurrentPosition
 };
 
 TEST_GROUP(DamperRequestManager)
@@ -57,7 +57,7 @@ TEST_GROUP(DamperRequestManager)
          &instance,
          dataModel,
          &config,
-         PersonalityParametricData_Get(dataModel)->freshFoodDamperData);
+         PersonalityParametricData_Get(dataModel)->damperData);
    }
 
    void GivenTheModuleIsInitializedAndHomingIsComplete()
@@ -70,7 +70,7 @@ TEST_GROUP(DamperRequestManager)
    {
       DataModel_Write(
          dataModel,
-         Erd_FreshFoodDamperHomingRequest,
+         Erd_DamperHomingRequest,
          &status);
    }
 
@@ -79,7 +79,7 @@ TEST_GROUP(DamperRequestManager)
       bool actual;
       DataModel_Read(
          dataModel,
-         Erd_FreshFoodDamperHomingRequest,
+         Erd_DamperHomingRequest,
          &actual);
       CHECK_EQUAL(expected, actual);
    }
@@ -89,7 +89,7 @@ TEST_GROUP(DamperRequestManager)
       StepperPositionRequest_t actual;
       DataModel_Read(
          dataModel,
-         Erd_FreshFoodDamperStepperMotorPositionRequest,
+         Erd_DamperStepperMotorPositionRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual.stepsToMove);
@@ -100,7 +100,7 @@ TEST_GROUP(DamperRequestManager)
       StepperPositionRequest_t actual;
       DataModel_Read(
          dataModel,
-         Erd_FreshFoodDamperStepperMotorPositionRequest,
+         Erd_DamperStepperMotorPositionRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual.direction);
@@ -111,7 +111,7 @@ TEST_GROUP(DamperRequestManager)
       StepperPositionRequest_t actual;
       DataModel_Read(
          dataModel,
-         Erd_FreshFoodDamperStepperMotorPositionRequest,
+         Erd_DamperStepperMotorPositionRequest,
          &actual);
 
       CHECK_EQUAL(expected, actual.resetSubstep);
@@ -121,7 +121,7 @@ TEST_GROUP(DamperRequestManager)
    {
       DataModel_Write(
          dataModel,
-         Erd_FreshFoodDamperHomingRequest,
+         Erd_DamperHomingRequest,
          clear);
    }
 
@@ -130,13 +130,13 @@ TEST_GROUP(DamperRequestManager)
       StepperPositionRequest_t position;
       DataModel_Read(
          dataModel,
-         Erd_FreshFoodDamperStepperMotorPositionRequest,
+         Erd_DamperStepperMotorPositionRequest,
          &position);
 
       position.stepsToMove = 0;
       DataModel_Write(
          dataModel,
-         Erd_FreshFoodDamperStepperMotorPositionRequest,
+         Erd_DamperStepperMotorPositionRequest,
          &position);
    }
 
@@ -162,13 +162,13 @@ TEST_GROUP(DamperRequestManager)
       StepperPositionRequest_t position;
       DataModel_Read(
          dataModel,
-         Erd_FreshFoodDamperStepperMotorPositionRequest,
+         Erd_DamperStepperMotorPositionRequest,
          &position);
 
       position.stepsToMove = 1;
       DataModel_Write(
          dataModel,
-         Erd_FreshFoodDamperStepperMotorPositionRequest,
+         Erd_DamperStepperMotorPositionRequest,
          &position);
    }
 
@@ -177,7 +177,7 @@ TEST_GROUP(DamperRequestManager)
       DamperPosition_t actual;
       DataModel_Read(
          dataModel,
-         Erd_FreshFoodDamperCurrentPosition,
+         Erd_DamperCurrentPosition,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -187,7 +187,7 @@ TEST_GROUP(DamperRequestManager)
    {
       DataModel_Write(
          dataModel,
-         Erd_FreshFoodDamperCurrentPosition,
+         Erd_DamperCurrentPosition,
          &position);
    }
 };

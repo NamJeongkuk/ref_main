@@ -1,4 +1,4 @@
-return single_damper({
+return damper({
   steps_to_open = 650,
   steps_to_close = 700,
   steps_to_home = 1850,

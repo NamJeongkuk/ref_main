@@ -6,7 +6,7 @@
  */
 
 #include "SystemErds.h"
-#include "FreshFoodDamperHeaterVotingFrameworkPlugin.h"
+#include "DamperHeaterVotingFrameworkPlugin.h"
 
 static const PercentageDutyCycleVote_t defaultData = {
    .percentageDutyCycle = PercentageDutyCycle_Min,
@@ -14,8 +14,8 @@ static const PercentageDutyCycleVote_t defaultData = {
 };
 
 static const PercentageDutyCycleVoteToPwmDutyCycleConverterConfig_t dutyCycleToPercentageCalculatorConfig = {
-   .inputPercentageDutyCycleVoteErd = Erd_FreshFoodDamperHeater_ResolvedVote,
-   .outputPwmDutyCycleErd = Erd_FreshFoodDamperHeaterPwmDutyCycle
+   .inputPercentageDutyCycleVoteErd = Erd_DamperHeater_ResolvedVote,
+   .outputPwmDutyCycleErd = Erd_DamperHeaterPwmDutyCycle
 };
 
 static bool VotingErdCareDelegate(const void *votingErdData)
@@ -24,20 +24,20 @@ static bool VotingErdCareDelegate(const void *votingErdData)
    return data->care;
 }
 
-static const ErdResolverConfiguration_t freshFoodDamperHeaterErdResolverConfiguration = {
+static const ErdResolverConfiguration_t damperHeaterErdResolverConfiguration = {
    .votingErdCare = VotingErdCareDelegate,
    .defaultData = &defaultData,
-   .winningVoterErd = Erd_FreshFoodDamperHeater_WinningVoteErd,
-   .resolvedStateErd = Erd_FreshFoodDamperHeater_ResolvedVote,
-   .numberOfVotingErds = (Erd_FreshFoodDamperHeater_DefrostHeaterSyncVote - Erd_FreshFoodDamperHeater_WinningVoteErd)
+   .winningVoterErd = Erd_DamperHeater_WinningVoteErd,
+   .resolvedStateErd = Erd_DamperHeater_ResolvedVote,
+   .numberOfVotingErds = (Erd_DamperHeater_DefrostHeaterSyncVote - Erd_DamperHeater_WinningVoteErd)
 };
 
-void FreshFoodDamperHeaterVotingFrameworkPlugin_Init(FreshFoodDamperHeaterVotingFrameworkPlugin_t *instance, I_DataModel_t *dataModel)
+void DamperHeaterVotingFrameworkPlugin_Init(DamperHeaterVotingFrameworkPlugin_t *instance, I_DataModel_t *dataModel)
 {
    ErdResolver_Init(
-      &instance->_private.freshFoodDamperHeaterErdResolver,
+      &instance->_private.damperHeaterErdResolver,
       DataModel_AsDataSource(dataModel),
-      &freshFoodDamperHeaterErdResolverConfiguration);
+      &damperHeaterErdResolverConfiguration);
 
    PercentageDutyCycleVoteToPwmDutyCycleConverter_Init(
       &instance->_private.dutyCycleToPercentageCalculator,

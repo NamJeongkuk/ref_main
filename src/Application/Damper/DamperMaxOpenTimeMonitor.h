@@ -12,7 +12,7 @@
 #include "EventSubscription.h"
 #include "Timer.h"
 #include "DamperVotedPosition.h"
-#include "SingleDamperData.h"
+#include "DamperData.h"
 
 typedef struct
 {
@@ -36,12 +36,12 @@ typedef struct
  * @param instance
  * @param dataModel
  * @param configuration
- * @param singleDamperData
+ * @param damperData
  */
 void DamperMaxOpenTimeMonitor_Init(
    DamperMaxOpenTime_t *instance,
    I_DataModel_t *dataModel,
    const DamperMaxOpenTimeConfiguration_t *configuration,
-   const SingleDamperData_t *singleDamperData);
+   const DamperData_t *damperData);
 
 #endif

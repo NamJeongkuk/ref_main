@@ -13,7 +13,7 @@ static const CoolingSystemRequestVotePair_t votingPairs[] = {
    { Erd_CondenserFanSpeed_CoolingSystemOffVote, FanSpeed_Off },
    { Erd_FreezerEvapFanSpeed_CoolingSystemOffVote, FanSpeed_Off },
    { Erd_FreezerDefrostHeater_CoolingSystemOffVote, HeaterState_Off },
-   { Erd_FreshFoodDamperHeater_CoolingSystemOffVote, PercentageDutyCycle_Min },
+   { Erd_DamperHeater_CoolingSystemOffVote, PercentageDutyCycle_Min },
    { Erd_FreshFoodDamperPosition_CoolingSystemOffVote, DamperPosition_Open },
    { Erd_CompressorSpeed_CoolingSystemOffVote, CompressorSpeed_Off },
    { Erd_RecessHeater_CoolingSystemOffVote, PercentageDutyCycle_Min },
@@ -43,7 +43,6 @@ void SideBySideSingleEvaporatorCoolingSystemPlugin_Init(SideBySideSingleEvaporat
    CompressorPlugin_Init(&instance->_private.compressorPlugin, dataModel);
 
    SideBySideDefrostPlugin_Init(&instance->_private.sideBySideDefrostPlugin, dataModel);
-   SideBySideParallelMotorControlPlugin_Init(&instance->_private.sideBySideParallelMotorControlPlugin, dataModel);
    FreshFoodDamperPlugin_Init(&instance->_private.freshFoodDamperPlugin, dataModel);
    SideBySideFanPlugin_Init(&instance->_private.sideBySideFanPlugin, dataModel);
 
