@@ -24,8 +24,8 @@ static const SabbathDoorOverridePair_t sabbathOverrideErdPairs[] = {
       .doorStatusOverrideValueErd = Erd_RightSideFreshFoodDoorStatus_SabbathOverrideValue,
    },
    {
-      .doorStatusOverrideRequestErd = Erd_ConvertibleCompartmentStatus_SabbathOverrideRequest,
-      .doorStatusOverrideValueErd = Erd_ConvertibleCompartmentStatus_SabbathOverrideValue,
+      .doorStatusOverrideRequestErd = Erd_ConvertibleCompartmentDoorStatus_SabbathOverrideRequest,
+      .doorStatusOverrideValueErd = Erd_ConvertibleCompartmentDoorStatus_SabbathOverrideValue,
    },
    {
       .doorStatusOverrideRequestErd = Erd_BottomFreezerDrawerStatus_SabbathOverrideRequest,
@@ -78,14 +78,14 @@ static const OverrideArbiterConfiguration_t rightSideFreshFoodDoorStatusOverride
 };
 
 static const Erd_t convertibleCompartmentDoorStatusOverrideRequestErds[] = {
-   Erd_ConvertibleCompartmentStatus_SabbathOverrideRequest,
-   Erd_ConvertibleCompartmentStatus_TestingOverrideRequest
+   Erd_ConvertibleCompartmentDoorStatus_SabbathOverrideRequest,
+   Erd_ConvertibleCompartmentDoorStatus_TestingOverrideRequest
 };
 
 static const Erd_t convertibleCompartmentDoorStatusOverrideValueErds[] = {
    Erd_ConvertibleCompartmentDoorStatus,
-   Erd_ConvertibleCompartmentStatus_SabbathOverrideValue,
-   Erd_ConvertibleCompartmentStatus_TestingOverrideValue
+   Erd_ConvertibleCompartmentDoorStatus_SabbathOverrideValue,
+   Erd_ConvertibleCompartmentDoorStatus_TestingOverrideValue
 };
 
 static const OverrideArbiterConfiguration_t convertibleCompartmentDoorStatusOverrideConfiguration = {

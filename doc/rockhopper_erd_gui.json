@@ -5353,7 +5353,7 @@
         {
           "namespace": "mb",
           "displayName": "Testing Convertible Compartment Door Override Request",
-          "name": "Erd_ConvertibleCompartmentStatus_TestingOverrideRequest",
+          "name": "Erd_ConvertibleCompartmentDoorStatus_TestingOverrideRequest",
           "read": true,
           "write": true,
           "interval": 1000000000
@@ -5361,7 +5361,7 @@
         {
           "namespace": "mb",
           "displayName": "Testing Convertible Compartment Door Override Value",
-          "name": "Erd_ConvertibleCompartmentStatus_TestingOverrideValue",
+          "name": "Erd_ConvertibleCompartmentDoorStatus_TestingOverrideValue",
           "read": true,
           "write": true,
           "interval": 1000000000
@@ -5369,7 +5369,7 @@
         {
           "namespace": "mb",
           "displayName": "Convertible Compartment Door Sabbath Override Request",
-          "name": "Erd_ConvertibleCompartmentStatus_SabbathOverrideRequest",
+          "name": "Erd_ConvertibleCompartmentDoorStatus_SabbathOverrideRequest",
           "read": true,
           "write": true,
           "interval": 1000000000
@@ -5377,7 +5377,7 @@
         {
           "namespace": "mb",
           "displayName": "Convertible Compartment Door Sabbath Override Value",
-          "name": "Erd_ConvertibleCompartmentStatus_SabbathOverrideValue",
+          "name": "Erd_ConvertibleCompartmentDoorStatus_SabbathOverrideValue",
           "read": true,
           "write": true,
           "interval": 1000000000
