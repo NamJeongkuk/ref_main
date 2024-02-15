@@ -25,15 +25,15 @@ typedef struct
 
 typedef struct
 {
-   uint8_t numberOfFreshFoodDefrostsBeforeFreezerDefrost;
-   uint8_t numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost;
+   uint8_t numberOfSecondaryOnlyDefrostsBeforeFullDefrost;
+   uint8_t numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet;
    uint8_t maxPrechillPrepTimeInMinutes;
 } DefrostPrechillPrepData_t;
 
 typedef struct
 {
    uint8_t maxPrechillTimeInMinutes;
-   uint8_t maxPrechillTimeForFreshFoodOnlyDefrostInMinutes;
+   uint8_t maxPrechillTimeForSecondaryOnlyDefrostInMinutes;
    SealedSystemValvePosition_t prechillRefrigerantValvePosition;
    CompressorSpeed_t prechillCompressorSpeed;
    FanSpeed_t prechillFreezerEvapFanSpeed;
@@ -88,9 +88,9 @@ typedef struct
 typedef struct
 {
    uint8_t postDwellExitTimeInMinutes;
-   uint8_t freshFoodOnlyPostDwellExitTimeInMinutes;
+   uint8_t secondaryOnlyPostDwellExitTimeInMinutes;
    TemperatureDegFx100_t postDwellFreezerEvapExitTemperatureInDegFx100;
-   TemperatureDegFx100_t freshFoodOnlyPostDwellFreezerEvapExitTemperatureInDegFx100;
+   TemperatureDegFx100_t secondaryOnlyPostDwellFreezerEvapExitTemperatureInDegFx100;
    SealedSystemValvePosition_t postDwellRefrigerantValvePosition;
    CompressorSpeed_t postDwellCompressorSpeed;
    FanSpeed_t postDwellCondenserFanSpeed;

@@ -103,14 +103,14 @@ static const DefrostIdleData_t idleData = {
 };
 
 static const DefrostPrechillPrepData_t prechillPrepData = {
-   .numberOfFreshFoodDefrostsBeforeFreezerDefrost = 0,
-   .numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost = 0,
+   .numberOfSecondaryOnlyDefrostsBeforeFullDefrost = 0,
+   .numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet = 0,
    .maxPrechillPrepTimeInMinutes = 5
 };
 
 static const DefrostPrechillData_t prechillData = {
    .maxPrechillTimeInMinutes = 10,
-   .maxPrechillTimeForFreshFoodOnlyDefrostInMinutes = 20,
+   .maxPrechillTimeForSecondaryOnlyDefrostInMinutes = 20,
    .prechillRefrigerantValvePosition = SealedSystemValvePosition_B,
    .prechillCompressorSpeed = CompressorSpeed_Low,
    .prechillFreezerEvapFanSpeed = FanSpeed_SuperLow,
@@ -161,9 +161,9 @@ static const DefrostDwellData_t dwellData = {
 
 static const DefrostPostDwellData_t postDwellData = {
    .postDwellExitTimeInMinutes = 5,
-   .freshFoodOnlyPostDwellExitTimeInMinutes = 10,
+   .secondaryOnlyPostDwellExitTimeInMinutes = 10,
    .postDwellFreezerEvapExitTemperatureInDegFx100 = -1000,
-   .freshFoodOnlyPostDwellFreezerEvapExitTemperatureInDegFx100 = -1200,
+   .secondaryOnlyPostDwellFreezerEvapExitTemperatureInDegFx100 = -1200,
    .postDwellRefrigerantValvePosition = SealedSystemValvePosition_B,
    .postDwellCompressorSpeed = CompressorSpeed_Low,
    .postDwellCondenserFanSpeed = FanSpeed_Low,
@@ -345,9 +345,9 @@ TEST_GROUP(Defrost_SingleEvap)
             Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
             Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
 
-            if(currentDefrostType == DefrostType_FreshFood)
+            if(currentDefrostType == DefrostType_SecondaryOnly)
             {
-               After(defrostData.prechillData.maxPrechillTimeForFreshFoodOnlyDefrostInMinutes * MSEC_PER_MIN);
+               After(defrostData.prechillData.maxPrechillTimeForSecondaryOnlyDefrostInMinutes * MSEC_PER_MIN);
             }
             else
             {
@@ -1289,7 +1289,7 @@ TEST(Defrost_SingleEvap, ShouldGoToPrechillPrepTheNextTimeThroughIdleAfterItWasT
 
 TEST(Defrost_SingleEvap, ShouldExitPostDwellAndGoToIdleAfterFreshFoodOnlyPostDwellExitTimeIfPostDwellExitTimeIsFreshFoodOnly)
 {
-   Given CurrentDefrostTypeIs(DefrostType_FreshFood);
+   Given CurrentDefrostTypeIs(DefrostType_SecondaryOnly);
    Given FreezerFilteredTemperatureTooWarmOnPowerUpIs(false);
    And DefrostStateIs(DefrostState_Dwell);
    And DefrostIsInitialized();
@@ -1299,7 +1299,7 @@ TEST(Defrost_SingleEvap, ShouldExitPostDwellAndGoToIdleAfterFreshFoodOnlyPostDwe
    After(defrostData.dwellData.dwellTimeInMinutes * MSEC_PER_MIN);
    DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
 
-   After(defrostData.postDwellData.freshFoodOnlyPostDwellExitTimeInMinutes * MSEC_PER_MIN - 1);
+   After(defrostData.postDwellData.secondaryOnlyPostDwellExitTimeInMinutes * MSEC_PER_MIN - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
 
    After(1);
@@ -1531,18 +1531,18 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenFreezerEvapThermistorBecomes
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeWhileTimeThatPrechillConditionsAreMetIsZeroInPrechillForFreshFoodOnlyDefrost)
+TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeWhileTimeThatPrechillConditionsAreMetIsZeroInPrechillForSecondaryOnlyDefrost)
 {
-   Given NextDefrostTypeIs(DefrostType_FreshFood);
+   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
    Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
    Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
    Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
 
-   CurrentDefrostTypeShouldBe(DefrostType_FreshFood);
+   CurrentDefrostTypeShouldBe(DefrostType_SecondaryOnly);
 
-   After(defrostData.prechillData.maxPrechillTimeForFreshFoodOnlyDefrostInMinutes * MSEC_PER_MIN - 1);
+   After(defrostData.prechillData.maxPrechillTimeForSecondaryOnlyDefrostInMinutes * MSEC_PER_MIN - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
 
    After(1);
@@ -1565,15 +1565,15 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeWhileTimeTha
    DefrostHsmStateShouldBe(DefrostHsmState_HeaterOnEntry);
 }
 
-TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeMinusTimeThatPrechillConditionsAreMetWhileTimeThatPrechillConditionsAreMetIsNotZeroInPrechillForFreshFoodOnlyDefrost)
+TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeMinusTimeThatPrechillConditionsAreMetWhileTimeThatPrechillConditionsAreMetIsNotZeroInPrechillForSecondaryOnlyDefrost)
 {
-   Given NextDefrostTypeIs(DefrostType_FreshFood);
-   Given TimeThatPrechillConditionsAreMetInMinutesIs(defrostData.prechillData.maxPrechillTimeForFreshFoodOnlyDefrostInMinutes - OneMinute);
+   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(defrostData.prechillData.maxPrechillTimeForSecondaryOnlyDefrostInMinutes - OneMinute);
    Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
    Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
    Given FilteredFreshFoodCabinetTemperatureIs(defrostData.prechillData.prechillFreshFoodMinTempInDegFx100 + 1);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Prechill);
-   CurrentDefrostTypeShouldBe(DefrostType_FreshFood);
+   CurrentDefrostTypeShouldBe(DefrostType_SecondaryOnly);
 
    After(OneMinute * MSEC_PER_MIN - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_Prechill);
@@ -1601,7 +1601,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeMinusTimeTha
 
 TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndMaxPrechillTimeAlreadyMet)
 {
-   Given TimeThatPrechillConditionsAreMetInMinutesIs(defrostData.prechillData.maxPrechillTimeForFreshFoodOnlyDefrostInMinutes);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(defrostData.prechillData.maxPrechillTimeForSecondaryOnlyDefrostInMinutes);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
    When PrechillConditionsAreMet();
@@ -1610,7 +1610,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndMaxPrechi
 
 TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenEnteringPrechillAndPrechillConditionsHaveBeenMetForLongerThanMaxPrechillTime)
 {
-   Given TimeThatPrechillConditionsAreMetInMinutesIs(defrostData.prechillData.maxPrechillTimeForFreshFoodOnlyDefrostInMinutes + 1);
+   Given TimeThatPrechillConditionsAreMetInMinutesIs(defrostData.prechillData.maxPrechillTimeForSecondaryOnlyDefrostInMinutes + 1);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PrechillPrep);
 
    When PrechillConditionsAreMet();
@@ -2006,12 +2006,12 @@ TEST(Defrost_SingleEvap, ShouldVoteForCompressorAndCondenserFanAndDamperWhenEnte
    IceCabinetFanSpeedVoteShouldBe(FanSpeed_Off);
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToIdleAfterPostDwellTimeHasPassedForFreshFoodOnlyDefrost)
+TEST(Defrost_SingleEvap, ShouldTransitionToIdleAfterPostDwellTimeHasPassedForSecondaryOnlyDefrost)
 {
-   Given CurrentDefrostTypeIs(DefrostType_FreshFood);
+   Given CurrentDefrostTypeIs(DefrostType_SecondaryOnly);
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_PostDwell);
 
-   After(defrostData.postDwellData.freshFoodOnlyPostDwellExitTimeInMinutes * MSEC_PER_MIN - 1);
+   After(defrostData.postDwellData.secondaryOnlyPostDwellExitTimeInMinutes * MSEC_PER_MIN - 1);
    DefrostHsmStateShouldBe(DefrostHsmState_PostDwell);
 
    After(1);
@@ -2235,7 +2235,7 @@ TEST(Defrost_SingleEvap, ShouldReleaseControlOfFreezerDefrostHeaterWhenDefrostBe
 TEST(Defrost_SingleEvap, ShouldWriteToCurrentDefrostTypeWhenExitingWaitingToDefrost)
 {
    Given NextDefrostTypeIs(DefrostType_Full);
-   And CurrentDefrostTypeIs(DefrostType_FreshFood);
+   And CurrentDefrostTypeIs(DefrostType_SecondaryOnly);
    And LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();
    And LastConvertibleCompartmentDefrostWasNormal();

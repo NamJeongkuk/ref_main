@@ -23,13 +23,13 @@ describe('Defrost', function()
         aham_prechill_time_between_defrosts_in_minutes = 6 * 60
       },
       prechill_prep = {
-        number_of_fresh_food_defrosts_before_freezer_defrost = 2,
-        number_of_fresh_food_defrosts_before_abnormal_freezer_defrost = 1,
+        number_of_secondary_only_defrosts_before_full_defrost = 2,
+        number_of_secondary_only_defrosts_before_full_defrost_when_abnormal_is_set = 1,
         max_prechill_prep_time_in_minutes = 0
       },
       prechill = {
         max_prechill_time_in_minutes = 10,
-        max_prechill_time_for_fresh_food_only_defrost_in_minutes = 20,
+        max_prechill_time_for_secondary_only_defrost_in_minutes = 20,
         prechill_refrigerant_valve_position = 'position_B',
         prechill_compressor_speed = 'low_speed',
         prechill_freezer_evap_fan_speed = 'super_low_speed',
@@ -58,7 +58,7 @@ describe('Defrost', function()
         freezer_invalid_thermistor_defrost_heater_max_on_time_in_minutes = 30,
         freezer_heater_on_time_to_set_abnormal_defrost_in_minutes = 32,
         freezer_defrost_termination_temperature_in_degfx100 = 5900,
-        fresh_food_defrost_termination_temperature_in_degfx100 = 4460,
+        secondary_only_defrost_termination_temperature_in_degfx100 = 4460,
         convertible_compartment_defrost_termination_temperature_in_degfx100 = 4460,
         fresh_food_defrost_heater_max_on_time_in_minutes = 60,
         fresh_food_invalid_thermistor_defrost_heater_max_on_time_in_minutes = 20,
@@ -76,9 +76,9 @@ describe('Defrost', function()
       },
       post_dwell = {
         post_dwell_exit_time_in_minutes = 10,
-        fresh_food_only_post_dwell_exit_time_in_minutes = 10,
+        secondary_only_post_dwell_exit_time_in_minutes = 10,
         post_dwell_freezer_evap_exit_temperature_in_degfx100 = -1000,
-        fresh_food_only_post_dwell_freezer_evap_exit_temperature_in_degfx100 = -1200,
+        secondary_only_post_dwell_freezer_evap_exit_temperature_in_degfx100 = -1200,
         post_dwell_refrigerant_valve_position = 'position_B',
         post_dwell_compressor_speed = 'low_speed',
         post_dwell_condenser_fan_speed = 'low_speed',
@@ -217,33 +217,33 @@ describe('Defrost', function()
     end)
   end)
 
-  it('should assert if post_dwell.fresh_food_only_post_dwell_exit_time_in_minutes is greater than idle.minimum_time_between_defrosts_abnormal_run_time_in_minutes', function()
+  it('should assert if post_dwell.secondary_only_post_dwell_exit_time_in_minutes is greater than idle.minimum_time_between_defrosts_abnormal_run_time_in_minutes', function()
     should_fail_with('fresh food only post dwell time should be less than minimum or maximum time between defrosts', function()
       defrost(generate_config({
         idle = {
           minimum_time_between_defrosts_abnormal_run_time_in_minutes = 4,
         },
         post_dwell = {
-          fresh_food_only_post_dwell_exit_time_in_minutes = 5
+          secondary_only_post_dwell_exit_time_in_minutes = 5
         }
       }))
     end)
   end)
 
-  it('should assert if post_dwell.fresh_food_only_post_dwell_exit_time_in_minutes is equal to idle.minimum_time_between_defrosts_abnormal_run_time_in_minutes', function()
+  it('should assert if post_dwell.secondary_only_post_dwell_exit_time_in_minutes is equal to idle.minimum_time_between_defrosts_abnormal_run_time_in_minutes', function()
     should_fail_with('fresh food only post dwell time should be less than minimum or maximum time between defrosts', function()
       defrost(generate_config({
         idle = {
           minimum_time_between_defrosts_abnormal_run_time_in_minutes = 4
         },
         post_dwell = {
-          fresh_food_only_post_dwell_exit_time_in_minutes = 4
+          secondary_only_post_dwell_exit_time_in_minutes = 4
         }
       }))
     end)
   end)
 
-  it('should assert if post_dwell.fresh_food_only_post_dwell_exit_time_in_minutes is greater than idle.max_time_between_defrosts_in_minutes', function()
+  it('should assert if post_dwell.secondary_only_post_dwell_exit_time_in_minutes is greater than idle.max_time_between_defrosts_in_minutes', function()
     should_fail_with('fresh food only post dwell time should be less than minimum or maximum time between defrosts', function()
       defrost(generate_config({
         idle = {
@@ -251,13 +251,13 @@ describe('Defrost', function()
           max_time_between_defrosts_in_minutes = 5
         },
         post_dwell = {
-          fresh_food_only_post_dwell_exit_time_in_minutes = 6
+          secondary_only_post_dwell_exit_time_in_minutes = 6
         }
       }))
     end)
   end)
 
-  it('should assert if post_dwell.fresh_food_only_post_dwell_exit_time_in_minutes is equal to idle.max_time_between_defrosts_in_minutes', function()
+  it('should assert if post_dwell.secondary_only_post_dwell_exit_time_in_minutes is equal to idle.max_time_between_defrosts_in_minutes', function()
     should_fail_with('fresh food only post dwell time should be less than minimum or maximum time between defrosts', function()
       defrost(generate_config({
         idle = {
@@ -265,27 +265,27 @@ describe('Defrost', function()
           max_time_between_defrosts_in_minutes = 5
         },
         post_dwell = {
-          fresh_food_only_post_dwell_exit_time_in_minutes = 5
+          secondary_only_post_dwell_exit_time_in_minutes = 5
         }
       }))
     end)
   end)
 
-  it('should assert if number_of_fresh_food_defrosts_before_freezer_defrost is not in range', function()
-    should_fail_with('number_of_fresh_food_defrosts_before_freezer_defrost=-1 must be in [0, 255]', function()
+  it('should assert if number_of_secondary_only_defrosts_before_full_defrost is not in range', function()
+    should_fail_with('number_of_secondary_only_defrosts_before_full_defrost=-1 must be in [0, 255]', function()
       defrost(generate_config({
         prechill_prep = {
-          number_of_fresh_food_defrosts_before_freezer_defrost = -1
+          number_of_secondary_only_defrosts_before_full_defrost = -1
         }
       }))
     end)
   end)
 
-  it('should assert if number_of_fresh_food_defrosts_before_abnormal_freezer_defrost is not in range', function()
-    should_fail_with('number_of_fresh_food_defrosts_before_abnormal_freezer_defrost=-1 must be in [0, 255]', function()
+  it('should assert if number_of_secondary_only_defrosts_before_full_defrost_when_abnormal_is_set is not in range', function()
+    should_fail_with('number_of_secondary_only_defrosts_before_full_defrost_when_abnormal_is_set=-1 must be in [0, 255]', function()
       defrost(generate_config({
         prechill_prep = {
-          number_of_fresh_food_defrosts_before_abnormal_freezer_defrost = -1
+          number_of_secondary_only_defrosts_before_full_defrost_when_abnormal_is_set = -1
         }
       }))
     end)
@@ -311,11 +311,11 @@ describe('Defrost', function()
     end)
   end)
 
-  it('should assert if max_prechill_time_for_fresh_food_only_defrost_in_minutes is not in range', function()
-    should_fail_with('max_prechill_time_for_fresh_food_only_defrost_in_minutes=-1 must be in [0, 255]', function()
+  it('should assert if max_prechill_time_for_secondary_only_defrost_in_minutes is not in range', function()
+    should_fail_with('max_prechill_time_for_secondary_only_defrost_in_minutes=-1 must be in [0, 255]', function()
       defrost(generate_config({
         prechill = {
-          max_prechill_time_for_fresh_food_only_defrost_in_minutes = -1
+          max_prechill_time_for_secondary_only_defrost_in_minutes = -1
         }
       }))
     end)
@@ -587,11 +587,11 @@ describe('Defrost', function()
     end)
   end)
 
-  it('should assert if fresh_food_defrost_termination_temperature_in_degfx100 is not in range', function()
-    should_fail_with('fresh_food_defrost_termination_temperature_in_degfx100=-100000 must be in [-32768, 32767]', function()
+  it('should assert if secondary_only_defrost_termination_temperature_in_degfx100 is not in range', function()
+    should_fail_with('secondary_only_defrost_termination_temperature_in_degfx100=-100000 must be in [-32768, 32767]', function()
       defrost(generate_config({
         heater_on = {
-          fresh_food_defrost_termination_temperature_in_degfx100 = -100000
+          secondary_only_defrost_termination_temperature_in_degfx100 = -100000
         }
       }))
     end)
@@ -707,11 +707,11 @@ describe('Defrost', function()
     end)
   end)
 
-  it('should assert if fresh_food_only_post_dwell_exit_time_in_minutes is not in range', function()
-    should_fail_with('fresh_food_only_post_dwell_exit_time_in_minutes=-1 must be in [0, 255]', function()
+  it('should assert if secondary_only_post_dwell_exit_time_in_minutes is not in range', function()
+    should_fail_with('secondary_only_post_dwell_exit_time_in_minutes=-1 must be in [0, 255]', function()
       defrost(generate_config({
         post_dwell = {
-          fresh_food_only_post_dwell_exit_time_in_minutes = -1
+          secondary_only_post_dwell_exit_time_in_minutes = -1
         }
       }))
     end)
@@ -727,11 +727,11 @@ describe('Defrost', function()
     end)
   end)
 
-  it('should assert if fresh_food_only_post_dwell_freezer_evap_exit_temperature_in_degfx100 is not in range', function()
-    should_fail_with('fresh_food_only_post_dwell_freezer_evap_exit_temperature_in_degfx100=-100000 must be in [-32768, 32767]', function()
+  it('should assert if secondary_only_post_dwell_freezer_evap_exit_temperature_in_degfx100 is not in range', function()
+    should_fail_with('secondary_only_post_dwell_freezer_evap_exit_temperature_in_degfx100=-100000 must be in [-32768, 32767]', function()
       defrost(generate_config({
         post_dwell = {
-          fresh_food_only_post_dwell_freezer_evap_exit_temperature_in_degfx100 = -100000
+          secondary_only_post_dwell_freezer_evap_exit_temperature_in_degfx100 = -100000
         }
       }))
     end)
@@ -821,13 +821,13 @@ describe('Defrost', function()
         aham_prechill_time_between_defrosts_in_minutes = 6 * 60
       },
       prechill_prep = {
-        number_of_fresh_food_defrosts_before_freezer_defrost = 2,
-        number_of_fresh_food_defrosts_before_abnormal_freezer_defrost = 1,
+        number_of_secondary_only_defrosts_before_full_defrost = 2,
+        number_of_secondary_only_defrosts_before_full_defrost_when_abnormal_is_set = 1,
         max_prechill_prep_time_in_minutes = 0
       },
       prechill = {
         max_prechill_time_in_minutes = 10,
-        max_prechill_time_for_fresh_food_only_defrost_in_minutes = 20,
+        max_prechill_time_for_secondary_only_defrost_in_minutes = 20,
         prechill_refrigerant_valve_position = 'position_B',
         prechill_compressor_speed = 'low_speed',
         prechill_freezer_evap_fan_speed = 'super_low_speed',
@@ -856,7 +856,7 @@ describe('Defrost', function()
         freezer_invalid_thermistor_defrost_heater_max_on_time_in_minutes = 30,
         freezer_heater_on_time_to_set_abnormal_defrost_in_minutes = 32,
         freezer_defrost_termination_temperature_in_degfx100 = 5900,
-        fresh_food_defrost_termination_temperature_in_degfx100 = 4460,
+        secondary_only_defrost_termination_temperature_in_degfx100 = 4460,
         convertible_compartment_defrost_termination_temperature_in_degfx100 = 4460,
         fresh_food_defrost_heater_max_on_time_in_minutes = 60,
         fresh_food_invalid_thermistor_defrost_heater_max_on_time_in_minutes = 20,
@@ -874,9 +874,9 @@ describe('Defrost', function()
       },
       post_dwell = {
         post_dwell_exit_time_in_minutes = 10,
-        fresh_food_only_post_dwell_exit_time_in_minutes = 10,
+        secondary_only_post_dwell_exit_time_in_minutes = 10,
         post_dwell_freezer_evap_exit_temperature_in_degfx100 = -1000,
-        fresh_food_only_post_dwell_freezer_evap_exit_temperature_in_degfx100 = -1200,
+        secondary_only_post_dwell_freezer_evap_exit_temperature_in_degfx100 = -1200,
         post_dwell_refrigerant_valve_position = 'position_B',
         post_dwell_compressor_speed = 'low_speed',
         post_dwell_condenser_fan_speed = 'low_speed',

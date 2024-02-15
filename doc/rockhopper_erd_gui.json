@@ -563,8 +563,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Number of Fresh Food Defrosts Before A Full Defrost",
-          "name": "Erd_NumberOfFreshFoodDefrostsBeforeAFullDefrost",
+          "displayName": "Number of Secondary Only Defrosts Before A Full Defrost",
+          "name": "Erd_NumberOfSecondaryOnlyDefrostsBeforeAFullDefrost",
           "read": true,
           "write": true
         },
@@ -619,8 +619,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Number of Fresh Food Defrosts",
-          "name": "Erd_NumberOfFreshFoodDefrosts",
+          "displayName": "Number of Secondary Only Defrosts",
+          "name": "Erd_NumberOfSecondaryOnlyDefrosts",
           "read": true,
           "write": true
         },

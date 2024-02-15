@@ -14,7 +14,7 @@ describe('EnhancedSabbath', function()
       max_time_in_enhanced_sabbath_mode_in_minutes = 5760,
       fresh_food_setpoint_temperature_in_degfx100 = 3700,
       freezer_setpoint_temperature_in_degfx100 = 0,
-      number_of_fresh_food_defrosts_before_freezer_defrost = 3,
+      number_of_secondary_only_defrosts_before_full_defrost = 3,
       min_time_between_temperature_averaging_in_minutes = 2,
       fresh_food_stage_time_in_minutes = 1,
       freezer_stage_time_in_minutes = 2,
@@ -55,10 +55,10 @@ describe('EnhancedSabbath', function()
     end)
   end)
 
-  it('should assert if number_of_fresh_food_defrosts_before_freezer_defrost is not in range', function()
-    should_fail_with('number_of_fresh_food_defrosts_before_freezer_defrost=-1 must be in [0, 255]', function()
+  it('should assert if number_of_secondary_only_defrosts_before_full_defrost is not in range', function()
+    should_fail_with('number_of_secondary_only_defrosts_before_full_defrost=-1 must be in [0, 255]', function()
       enhanced_sabbath(generate_config({
-        number_of_fresh_food_defrosts_before_freezer_defrost = -1
+        number_of_secondary_only_defrosts_before_full_defrost = -1
       }))
     end)
   end)

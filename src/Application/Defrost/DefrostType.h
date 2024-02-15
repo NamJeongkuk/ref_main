@@ -12,7 +12,7 @@
 
 enum
 {
-   DefrostType_FreshFood,
+   DefrostType_SecondaryOnly,
    DefrostType_Full
 };
 typedef uint8_t DefrostType_t;

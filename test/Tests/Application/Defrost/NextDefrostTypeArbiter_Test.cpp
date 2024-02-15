@@ -25,8 +25,8 @@ extern "C"
 static const NextDefrostTypeArbiterConfig_t config = {
    .nextDefrostTypeErd = Erd_NextDefrostType,
    .defrostingErd = Erd_Defrosting,
-   .numberOfFreshFoodDefrostsErd = Erd_NumberOfFreshFoodDefrosts,
-   .numberOfFreshFoodDefrostsBeforeAFullDefrostErd = Erd_NumberOfFreshFoodDefrostsBeforeAFullDefrost,
+   .numberOfSecondaryOnlyDefrostsErd = Erd_NumberOfSecondaryOnlyDefrosts,
+   .numberOfSecondaryOnlyDefrostsBeforeAFullDefrostErd = Erd_NumberOfSecondaryOnlyDefrostsBeforeAFullDefrost,
    .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
@@ -111,12 +111,12 @@ TEST_GROUP(NextDefrostTypeArbiter)
       DataModel_Write(dataModel, Erd_Defrosting, &state);
    }
 
-   void NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(uint8_t expected)
+   void NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(uint8_t expected)
    {
       uint8_t actual;
       DataModel_Read(
          dataModel,
-         Erd_NumberOfFreshFoodDefrostsBeforeAFullDefrost,
+         Erd_NumberOfSecondaryOnlyDefrostsBeforeAFullDefrost,
          &actual);
 
       CHECK_EQUAL(expected, actual);
@@ -132,15 +132,15 @@ TEST_GROUP(NextDefrostTypeArbiter)
       DataModel_Write(dataModel, Erd_CurrentDefrostType, &defrostType);
    }
 
-   void NumberOfFreshFoodDefrostsIs(uint8_t count)
+   void NumberOfSecondaryOnlyDefrostsIs(uint8_t count)
    {
-      DataModel_Write(dataModel, Erd_NumberOfFreshFoodDefrosts, &count);
+      DataModel_Write(dataModel, Erd_NumberOfSecondaryOnlyDefrosts, &count);
    }
 
-   void NumberOfFreshFoodDefrostsShouldBe(uint8_t expected)
+   void NumberOfSecondaryOnlyDefrostsShouldBe(uint8_t expected)
    {
       uint8_t actual;
-      DataModel_Read(dataModel, Erd_NumberOfFreshFoodDefrosts, &actual);
+      DataModel_Read(dataModel, Erd_NumberOfSecondaryOnlyDefrosts, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -156,59 +156,59 @@ TEST(NextDefrostTypeArbiter, ShouldInitialize)
    TheModuleIsInitialized();
 }
 
-TEST(NextDefrostTypeArbiter, ShouldNotSetNextDefrostTypeOnInitWhenNumberOfFreshFoodDefrostsBeforeAFreezerDefrostIsGreaterThanZeroAndFreezerCompartmentIsNotTooWarmAndEepromWasNotCleared)
+TEST(NextDefrostTypeArbiter, ShouldNotSetNextDefrostTypeOnInitWhenNumberOfSecondaryOnlyDefrostsBeforeAFullDefrostIsGreaterThanZeroAndFreezerCompartmentIsNotTooWarmAndEepromWasNotCleared)
 {
-   Given NextDefrostTypeIs(DefrostType_FreshFood);
+   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
    Given TheModuleIsInitialized();
-   NextDefrostTypeShouldBe(DefrostType_FreshFood);
+   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldNotResetFreshFoodDefrostCountOnInit)
+TEST(NextDefrostTypeArbiter, ShouldNotResetSecondaryOnlyDefrostCountOnInit)
 {
-   Given NumberOfFreshFoodDefrostsIs(5);
+   Given NumberOfSecondaryOnlyDefrostsIs(5);
    Given TheModuleIsInitialized();
 
-   NumberOfFreshFoodDefrostsShouldBe(5);
+   NumberOfSecondaryOnlyDefrostsShouldBe(5);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToAbnormalCountWhenFreezerDefrostIsAbnormalOnInit)
+TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormalCountWhenFreezerDefrostIsAbnormalOnInit)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(true);
    Given ConvertibleCompartmentDefrostWasAbnormalIs(false);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToAbnormalCountWhenItHasAConvertibleCompartmentAndConvertibleCompartmentDefrostIsAbnormalAndConvertibleCompartmentIsActingAsFreezerOnInit)
+TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormalCountWhenItHasAConvertibleCompartmentAndConvertibleCompartmentDefrostIsAbnormalAndConvertibleCompartmentIsActingAsFreezerOnInit)
 {
    Given EnhancedSabbathModeIs(false);
    Given HasConvertibleCompartmentIs(true);
    Given ConvertibleCompartmentDefrostWasAbnormalIs(true);
    Given ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToEnhancedSabbathCountWhenEnhancedSabbathIsEnabledOnInit)
+TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToEnhancedSabbathCountWhenEnhancedSabbathIsEnabledOnInit)
 {
    Given EnhancedSabbathModeIs(true);
    Given FreezerDefrostWasAbnormalIs(false);
    Given ConvertibleCompartmentDefrostWasAbnormalIs(false);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(enhancedSabbathData->numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(enhancedSabbathData->numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToEnhancedSabbathCountWhenEnhancedSabbathIsEnabledAndFreezerDefrostWasAbnormalIsSetOnInit)
+TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToEnhancedSabbathCountWhenEnhancedSabbathIsEnabledAndFreezerDefrostWasAbnormalIsSetOnInit)
 {
    Given EnhancedSabbathModeIs(true);
    Given FreezerDefrostWasAbnormalIs(true);
    Given ConvertibleCompartmentDefrostWasAbnormalIs(false);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(enhancedSabbathData->numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(enhancedSabbathData->numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToNormalCountWhenEnhancedSabbathIsNotEnabledAndFreezerDefrostIsNotAbnormalAndConvertibleCompartmentDefrostIsNotAbnormalOnInit)
+TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalCountWhenEnhancedSabbathIsNotEnabledAndFreezerDefrostIsNotAbnormalAndConvertibleCompartmentDefrostIsNotAbnormalOnInit)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -216,10 +216,10 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToNormalCountW
    Given ConvertibleCompartmentDefrostWasAbnormalIs(false);
    Given ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToNormalCountWhenEnhancedSabbathIsNotEnabledAndFreezerDefrostIsNotAbnormalAndDoesNotHaveConvertibleCompartmentOnInit)
+TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalCountWhenEnhancedSabbathIsNotEnabledAndFreezerDefrostIsNotAbnormalAndDoesNotHaveConvertibleCompartmentOnInit)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -227,10 +227,10 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToNormalCountW
    Given ConvertibleCompartmentDefrostWasAbnormalIs(true);
    Given ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToNormalCountWhenEnhancedSabbathIsNotEnabledAndFreezerDefrostIsNotAbnormalAndConvertibleCompartmentTypeIsFreshFoodOnInit)
+TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalCountWhenEnhancedSabbathIsNotEnabledAndFreezerDefrostIsNotAbnormalAndConvertibleCompartmentTypeIsFreshFoodOnInit)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -238,28 +238,28 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToNormalCountW
    Given ConvertibleCompartmentDefrostWasAbnormalIs(true);
    Given ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_FreshFood);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldSetNextDefrostTypeToFullWhenFreshFoodDefrostCountReachesNumberOfFreshFoodDefrostsWhileCurrentDefrostTypeIsFreshFood)
+TEST(NextDefrostTypeArbiter, ShouldSetNextDefrostTypeToFullWhenSecondaryOnlyDefrostCountReachesNumberOfSecondaryOnlyDefrostsWhileCurrentDefrostTypeIsSecondaryOnly)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
    Given ConvertibleCompartmentDefrostWasAbnormalIs(false);
-   Given CurrentDefrostTypeIs(DefrostType_FreshFood);
-   Given NextDefrostTypeIs(DefrostType_FreshFood);
+   Given CurrentDefrostTypeIs(DefrostType_SecondaryOnly);
+   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
    Given TheModuleIsInitialized();
-   NextDefrostTypeShouldBe(DefrostType_FreshFood);
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 
-   After DefrostingStateIsChangedFromFalseToTrueNTimes(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeFreezerDefrost - 1);
-   NextDefrostTypeShouldBe(DefrostType_FreshFood);
+   After DefrostingStateIsChangedFromFalseToTrueNTimes(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost - 1);
+   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
 
    After DefrostingStateIsChangedFromFalseToTrueNTimes(1);
    NextDefrostTypeShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldSetNextDefrostTypeToFreshFoodAndResetFreshFoodDefrostCountToZeroWhenDefrostStateIsChangedFromFalseToTrueWhileCurrentDefrostTypeIsFull)
+TEST(NextDefrostTypeArbiter, ShouldSetNextDefrostTypeToSecondaryOnlyAndResetSecondaryOnlyDefrostCountToZeroWhenDefrostStateIsChangedFromFalseToTrueWhileCurrentDefrostTypeIsFull)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -267,28 +267,28 @@ TEST(NextDefrostTypeArbiter, ShouldSetNextDefrostTypeToFreshFoodAndResetFreshFoo
    Given TheModuleIsInitialized();
    Given NextDefrostTypeIs(DefrostType_Full);
    Given CurrentDefrostTypeIs(DefrostType_Full);
-   Given NumberOfFreshFoodDefrostsIs(10);
+   Given NumberOfSecondaryOnlyDefrostsIs(10);
 
    After DefrostingStateIsChangedFromFalseToTrueNTimes(1);
-   NextDefrostTypeShouldBe(DefrostType_FreshFood);
-   And NumberOfFreshFoodDefrostsShouldBe(0);
+   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
+   And NumberOfSecondaryOnlyDefrostsShouldBe(0);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldNotIncreaseFreshFoodDefrostCountWhenDefrostingChangesToFalseWhileCurrentDefrostTypeIsFreshFood)
+TEST(NextDefrostTypeArbiter, ShouldNotIncreaseSecondaryOnlyDefrostCountWhenDefrostingChangesToFalseWhileCurrentDefrostTypeIsSecondaryOnly)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
    Given ConvertibleCompartmentDefrostWasAbnormalIs(false);
    Given DefrostingIs(true);
-   Given CurrentDefrostTypeIs(DefrostType_FreshFood);
+   Given CurrentDefrostTypeIs(DefrostType_SecondaryOnly);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsShouldBe(0);
+   NumberOfSecondaryOnlyDefrostsShouldBe(0);
 
    When DefrostingIs(false);
-   NumberOfFreshFoodDefrostsShouldBe(0);
+   NumberOfSecondaryOnlyDefrostsShouldBe(0);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldNotResetFreshFoodDefrostCountWhenDefrostingChangesToFalseWhileCurrentDefrostTypeIsFull)
+TEST(NextDefrostTypeArbiter, ShouldNotResetSecondaryOnlyDefrostCountWhenDefrostingChangesToFalseWhileCurrentDefrostTypeIsFull)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -296,13 +296,13 @@ TEST(NextDefrostTypeArbiter, ShouldNotResetFreshFoodDefrostCountWhenDefrostingCh
    Given DefrostingIs(true);
    Given CurrentDefrostTypeIs(DefrostType_Full);
    Given TheModuleIsInitialized();
-   Given NumberOfFreshFoodDefrostsIs(5);
+   Given NumberOfSecondaryOnlyDefrostsIs(5);
 
    When DefrostingIs(false);
-   NumberOfFreshFoodDefrostsShouldBe(5);
+   NumberOfSecondaryOnlyDefrostsShouldBe(5);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldNotChangeNextDefrostTypeToFreshFoodWhenDefrostingChangesToFalseWhileCurrentDefrostTypeIsFull)
+TEST(NextDefrostTypeArbiter, ShouldNotChangeNextDefrostTypeToSecondaryOnlyWhenDefrostingChangesToFalseWhileCurrentDefrostTypeIsFull)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -316,31 +316,31 @@ TEST(NextDefrostTypeArbiter, ShouldNotChangeNextDefrostTypeToFreshFoodWhenDefros
    NextDefrostTypeShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToEnhancedSabbathCountWhenEnhancedSabbathIsEnabled)
+TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToEnhancedSabbathCountWhenEnhancedSabbathIsEnabled)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
    Given ConvertibleCompartmentDefrostWasAbnormalIs(false);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 
    When EnhancedSabbathModeIs(true);
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(enhancedSabbathData->numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(enhancedSabbathData->numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToAbnormalFreezeDefrostCountWhenFreezerDefrostWasAbnormalIsTrue)
+TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormalFreezeDefrostCountWhenFreezerDefrostWasAbnormalIsTrue)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
    Given ConvertibleCompartmentDefrostWasAbnormalIs(false);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 
    When FreezerDefrostWasAbnormalIs(true);
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToAbnormalFreezeDefrostCountWhenHasConvertibleCompartmentAndConvertibleCompartmentDefrostWasAbnormalIsTrueAndConvertibleCompartmentStateChangesToFreezer)
+TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormalFreezeDefrostCountWhenHasConvertibleCompartmentAndConvertibleCompartmentDefrostWasAbnormalIsTrueAndConvertibleCompartmentStateChangesToFreezer)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -348,13 +348,13 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToAbnormalFree
    Given ConvertibleCompartmentDefrostWasAbnormalIs(true);
    Given ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_FreshFood);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 
    When ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToAbnormalFreezeDefrostCountWhenHasConvertibleCompartmentAndConvertibleCompartmentStateIsFreezerAndConvertibleCompartmentDefrostWasAbnormalChangesToTrue)
+TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormalFreezeDefrostCountWhenHasConvertibleCompartmentAndConvertibleCompartmentStateIsFreezerAndConvertibleCompartmentDefrostWasAbnormalChangesToTrue)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -362,69 +362,69 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToAbnormalFree
    Given ConvertibleCompartmentDefrostWasAbnormalIs(false);
    Given ConvertibleCompartmentStateIs(ConvertibleCompartmentStateType_Freezer);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 
    When ConvertibleCompartmentDefrostWasAbnormalIs(true);
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToNormalWhenEnhancedSabbathModeIsDisabledWhileFreezerDefrostWasAbnormalIsFalse)
+TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalWhenEnhancedSabbathModeIsDisabledWhileFreezerDefrostWasAbnormalIsFalse)
 {
    Given EnhancedSabbathModeIs(true);
    Given FreezerDefrostWasAbnormalIs(false);
    Given ConvertibleCompartmentDefrostWasAbnormalIs(false);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(enhancedSabbathData->numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(enhancedSabbathData->numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 
    When EnhancedSabbathModeIs(false);
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfFreshFoodDefrostsToNormalWhenFreezerDefrostWasAbnormalIsFalseWhileEnhancedSabbathModeIsDisabled)
+TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalWhenFreezerDefrostWasAbnormalIsFalseWhileEnhancedSabbathModeIsDisabled)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(true);
    Given ConvertibleCompartmentDefrostWasAbnormalIs(false);
    Given TheModuleIsInitialized();
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet);
 
    When FreezerDefrostWasAbnormalIs(false);
-   NumberOfFreshFoodDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfFreshFoodDefrostsBeforeFreezerDefrost);
+   NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 }
 
 TEST(NextDefrostTypeArbiter, ShouldUpdateCurrentAndNextDefrostTypeToFullWhenFreezerFilteredTemperatureTooWarmAtPowerUpFlagIsSetOnInit)
 {
-   Given CurrentDefrostTypeIs(DefrostType_FreshFood);
-   Given NextDefrostTypeIs(DefrostType_FreshFood);
+   Given CurrentDefrostTypeIs(DefrostType_SecondaryOnly);
+   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
    Given FreezerFilteredTemperatureTooWarmAtPowerUpFlagIs(SET);
    Given TheModuleIsInitialized();
    CurrentDefrostTypeShouldBe(DefrostType_Full);
    NextDefrostTypeShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldNotUpdateCurrentAndNextDefrostTypeToFreshFoodWhenFreezerFilteredTemperatureTooWarmAtPowerUpFlagAndEepromClearedFlagAreClearOnInit)
+TEST(NextDefrostTypeArbiter, ShouldNotUpdateCurrentAndNextDefrostTypeToSecondaryOnlyWhenFreezerFilteredTemperatureTooWarmAtPowerUpFlagAndEepromClearedFlagAreClearOnInit)
 {
-   Given CurrentDefrostTypeIs(DefrostType_FreshFood);
+   Given CurrentDefrostTypeIs(DefrostType_SecondaryOnly);
    Given NextDefrostTypeIs(DefrostType_Full);
    Given FreezerFilteredTemperatureTooWarmAtPowerUpFlagIs(CLEAR);
    Given TheModuleIsInitialized();
-   CurrentDefrostTypeShouldBe(DefrostType_FreshFood);
+   CurrentDefrostTypeShouldBe(DefrostType_SecondaryOnly);
    NextDefrostTypeShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldSetNextDefrostTypeToFreshFoodAfterTheTypeIsFullWithTooWarmAtPowerUpOnInit)
+TEST(NextDefrostTypeArbiter, ShouldSetNextDefrostTypeToSecondaryOnlyAfterTheTypeIsFullWithTooWarmAtPowerUpOnInit)
 {
-   Given NextDefrostTypeIs(DefrostType_FreshFood);
+   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
    Given FreezerFilteredTemperatureTooWarmAtPowerUpFlagIs(SET);
    Given TheModuleIsInitialized();
    Given CurrentDefrostTypeIs(DefrostType_Full);
    NextDefrostTypeShouldBe(DefrostType_Full);
 
    After DefrostingStateIsChangedFromFalseToTrueNTimes(1);
-   NextDefrostTypeShouldBe(DefrostType_FreshFood);
+   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
 }
 
-TEST_GROUP(NextDefrostTypeArbiterWithNumberOfFreshFoodDefrostCountIsZero)
+TEST_GROUP(NextDefrostTypeArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero)
 {
    NextDefrostTypeArbiter_t instance;
    ReferDataModel_TestDouble_t referDataModelTestDouble;
@@ -490,52 +490,52 @@ TEST_GROUP(NextDefrostTypeArbiterWithNumberOfFreshFoodDefrostCountIsZero)
    }
 };
 
-TEST(NextDefrostTypeArbiterWithNumberOfFreshFoodDefrostCountIsZero, ShouldSetNextDefrostTypeToFullOnInitWhenEnhancedSabbathModeIsEnabledAndFreezerDefrostWasAbnormalIsFalse)
+TEST(NextDefrostTypeArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldSetNextDefrostTypeToFullOnInitWhenEnhancedSabbathModeIsEnabledAndFreezerDefrostWasAbnormalIsFalse)
 {
    Given EnhancedSabbathModeIs(true);
    Given FreezerDefrostWasAbnormalIs(false);
-   Given NextDefrostTypeIs(DefrostType_FreshFood);
+   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
    Given TheModuleIsInitialized();
    NextDefrostTypeShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiterWithNumberOfFreshFoodDefrostCountIsZero, ShouldSetNextDefrostTypeToFullOnInitWhenEnhancedSabbathModeIsDisabledAndFreezerDefrostWasAbnormalIsTrue)
+TEST(NextDefrostTypeArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldSetNextDefrostTypeToFullOnInitWhenEnhancedSabbathModeIsDisabledAndFreezerDefrostWasAbnormalIsTrue)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(true);
-   Given NextDefrostTypeIs(DefrostType_FreshFood);
+   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
    Given TheModuleIsInitialized();
    NextDefrostTypeShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiterWithNumberOfFreshFoodDefrostCountIsZero, ShouldSetNextDefrostTypeToFullOnInitWhenEnhancedSabbathModeIsEnabledAndFreezerDefrostWasAbnormalIsTrue)
+TEST(NextDefrostTypeArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldSetNextDefrostTypeToFullOnInitWhenEnhancedSabbathModeIsEnabledAndFreezerDefrostWasAbnormalIsTrue)
 {
    Given EnhancedSabbathModeIs(true);
    Given FreezerDefrostWasAbnormalIs(true);
-   Given NextDefrostTypeIs(DefrostType_FreshFood);
+   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
    Given TheModuleIsInitialized();
    NextDefrostTypeShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiterWithNumberOfFreshFoodDefrostCountIsZero, ShouldSetNextDefrostTypeToFullOnInitWhenEnhancedSabbathModeIsDisabledAndFreezerDefrostWasAbnormalIsFalse)
+TEST(NextDefrostTypeArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldSetNextDefrostTypeToFullOnInitWhenEnhancedSabbathModeIsDisabledAndFreezerDefrostWasAbnormalIsFalse)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
-   Given NextDefrostTypeIs(DefrostType_FreshFood);
+   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
    Given TheModuleIsInitialized();
    NextDefrostTypeShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiterWithNumberOfFreshFoodDefrostCountIsZero, ShouldSetCurrentAndNextDefrostTypeToFullWhenNumberOfFreshFoodDefrostCountIsZeroOnInit)
+TEST(NextDefrostTypeArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldSetCurrentAndNextDefrostTypeToFullWhenNumberOfSecondaryOnlyDefrostCountIsZeroOnInit)
 {
-   Given CurrentDefrostTypeIs(DefrostType_FreshFood);
-   Given NextDefrostTypeIs(DefrostType_FreshFood);
+   Given CurrentDefrostTypeIs(DefrostType_SecondaryOnly);
+   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
    Given TheModuleIsInitialized();
    NextDefrostTypeShouldBe(DefrostType_Full);
    CurrentDefrostTypeShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiterWithNumberOfFreshFoodDefrostCountIsZero, ShouldNotChangeDefrostTypeToFreshFoodAfterDefrostingStateChangesToTrue)
+TEST(NextDefrostTypeArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldNotChangeDefrostTypeToSecondaryOnlyAfterDefrostingStateChangesToTrue)
 {
    Given CurrentDefrostTypeIs(DefrostType_Full);
    Given TheModuleIsInitialized();

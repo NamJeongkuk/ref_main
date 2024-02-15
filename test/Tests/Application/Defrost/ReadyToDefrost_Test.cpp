@@ -95,14 +95,14 @@ static const DefrostIdleData_t shorterTimeBetweenDefrostsIdleData = {
 };
 
 static const DefrostPrechillPrepData_t prechillPrepData = {
-   .numberOfFreshFoodDefrostsBeforeFreezerDefrost = 0,
-   .numberOfFreshFoodDefrostsBeforeAbnormalFreezerDefrost = 0,
+   .numberOfSecondaryOnlyDefrostsBeforeFullDefrost = 0,
+   .numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet = 0,
    .maxPrechillPrepTimeInMinutes = 5
 };
 
 static const DefrostPrechillData_t prechillData = {
    .maxPrechillTimeInMinutes = 10,
-   .maxPrechillTimeForFreshFoodOnlyDefrostInMinutes = 20,
+   .maxPrechillTimeForSecondaryOnlyDefrostInMinutes = 20,
    .prechillRefrigerantValvePosition = SealedSystemValvePosition_B,
    .prechillCompressorSpeed = CompressorSpeed_Low,
    .prechillFreezerEvapFanSpeed = FanSpeed_SuperLow,
@@ -153,9 +153,9 @@ static const DefrostDwellData_t dwellData = {
 
 static const DefrostPostDwellData_t postDwellData = {
    .postDwellExitTimeInMinutes = 5,
-   .freshFoodOnlyPostDwellExitTimeInMinutes = 10,
+   .secondaryOnlyPostDwellExitTimeInMinutes = 10,
    .postDwellFreezerEvapExitTemperatureInDegFx100 = -1000,
-   .freshFoodOnlyPostDwellFreezerEvapExitTemperatureInDegFx100 = -1200,
+   .secondaryOnlyPostDwellFreezerEvapExitTemperatureInDegFx100 = -1200,
    .postDwellRefrigerantValvePosition = SealedSystemValvePosition_B,
    .postDwellCompressorSpeed = CompressorSpeed_Low,
    .postDwellCondenserFanSpeed = FanSpeed_Low,

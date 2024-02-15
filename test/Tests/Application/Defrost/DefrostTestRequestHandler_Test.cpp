@@ -198,72 +198,72 @@ TEST(DefrostTestRequestHandler, ShouldNotRequestWhenDefrostTestRequestIsIdleWhil
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Idle, 0);
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestDefrostWhenDefrostTestRequestIsFreshFoodOnlyDefrostWhileDefrostStateIsIdle)
+TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToSecondaryOnlyAndRequestDefrostWhenDefrostTestRequestIsSecondaryOnlyDefrostWhileDefrostStateIsIdle)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_Idle);
 
-   WhenDefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
-   DefrostTestRequestStatusShouldBe(DefrostTestRequest_FreshFoodOnlyDefrost);
-   NextDefrostTypeShouldBe(DefrostType_FreshFood);
+   WhenDefrostTestRequestIs(DefrostTestRequest_SecondaryOnlyDefrost);
+   DefrostTestRequestStatusShouldBe(DefrostTestRequest_SecondaryOnlyDefrost);
+   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Defrost, 1);
    DefrostTestRequestShouldBeReset();
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestDefrostWhenDefrostTestRequestIsFreshFoodOnlyDefrostWhileDefrostStateIsPrechill)
+TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToSecondaryOnlyAndRequestDefrostWhenDefrostTestRequestIsSecondaryOnlyDefrostWhileDefrostStateIsPrechill)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_Prechill);
 
-   WhenDefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
-   DefrostTestRequestStatusShouldBe(DefrostTestRequest_FreshFoodOnlyDefrost);
-   NextDefrostTypeShouldBe(DefrostType_FreshFood);
+   WhenDefrostTestRequestIs(DefrostTestRequest_SecondaryOnlyDefrost);
+   DefrostTestRequestStatusShouldBe(DefrostTestRequest_SecondaryOnlyDefrost);
+   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Defrost, 1);
    DefrostTestRequestShouldBeReset();
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestDefrostWhenDefrostTestRequestIsFreshFoodOnlyDefrostWhileDefrostStateIsHeaterOn)
+TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToSecondaryOnlyAndRequestDefrostWhenDefrostTestRequestIsSecondaryOnlyDefrostWhileDefrostStateIsHeaterOn)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_HeaterOn);
 
-   WhenDefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
-   DefrostTestRequestStatusShouldBe(DefrostTestRequest_FreshFoodOnlyDefrost);
-   NextDefrostTypeShouldBe(DefrostType_FreshFood);
+   WhenDefrostTestRequestIs(DefrostTestRequest_SecondaryOnlyDefrost);
+   DefrostTestRequestStatusShouldBe(DefrostTestRequest_SecondaryOnlyDefrost);
+   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Defrost, 1);
    DefrostTestRequestShouldBeReset();
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestDefrostWhenDefrostTestRequestIsFreshFoodOnlyDefrostWhileDefrostStateIsDwell)
+TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToSecondaryOnlyAndRequestDefrostWhenDefrostTestRequestIsSecondaryOnlyDefrostWhileDefrostStateIsDwell)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_Dwell);
 
-   WhenDefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
-   DefrostTestRequestStatusShouldBe(DefrostTestRequest_FreshFoodOnlyDefrost);
-   NextDefrostTypeShouldBe(DefrostType_FreshFood);
+   WhenDefrostTestRequestIs(DefrostTestRequest_SecondaryOnlyDefrost);
+   DefrostTestRequestStatusShouldBe(DefrostTestRequest_SecondaryOnlyDefrost);
+   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Defrost, 1);
    DefrostTestRequestShouldBeReset();
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestDefrostWhenDefrostTestRequestIsFreshFoodOnlyDefrostWhileDefrostStateIsPostDwell)
+TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToSecondaryOnlyAndRequestDefrostWhenDefrostTestRequestIsSecondaryOnlyDefrostWhileDefrostStateIsPostDwell)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_PostDwell);
 
-   WhenDefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
-   DefrostTestRequestStatusShouldBe(DefrostTestRequest_FreshFoodOnlyDefrost);
-   NextDefrostTypeShouldBe(DefrostType_FreshFood);
+   WhenDefrostTestRequestIs(DefrostTestRequest_SecondaryOnlyDefrost);
+   DefrostTestRequestStatusShouldBe(DefrostTestRequest_SecondaryOnlyDefrost);
+   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Defrost, 1);
    DefrostTestRequestShouldBeReset();
 }
 
-TEST(DefrostTestRequestHandler, ShouldNotRequestWhenDefrostTestRequestIsFreshFoodOnlyDefrostWhileDefrostStateIsDisabled)
+TEST(DefrostTestRequestHandler, ShouldNotRequestWhenDefrostTestRequestIsSecondaryOnlyDefrostWhileDefrostStateIsDisabled)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_Disabled);
 
-   WhenDefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyDefrost);
+   WhenDefrostTestRequestIs(DefrostTestRequest_SecondaryOnlyDefrost);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Idle, 0);
 }
 
@@ -279,14 +279,14 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFullAndRequestDefrostW
    DefrostTestRequestShouldBeReset();
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndRequestPrechillWhenDefrostTestRequestIsFreshFoodOnlyPrechillWhileDefrostStateIsIdle)
+TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToSecondaryOnlyAndRequestPrechillWhenDefrostTestRequestIsSecondaryOnlyPrechillWhileDefrostStateIsIdle)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_Idle);
 
-   WhenDefrostTestRequestIs(DefrostTestRequest_FreshFoodOnlyPrechill);
-   DefrostTestRequestStatusShouldBe(DefrostTestRequest_FreshFoodOnlyPrechill);
-   NextDefrostTypeShouldBe(DefrostType_FreshFood);
+   WhenDefrostTestRequestIs(DefrostTestRequest_SecondaryOnlyPrechill);
+   DefrostTestRequestStatusShouldBe(DefrostTestRequest_SecondaryOnlyPrechill);
+   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Prechill, 1);
    DefrostTestRequestShouldBeReset();
 }
@@ -303,14 +303,14 @@ TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFullAndRequestPrechill
    DefrostTestRequestShouldBeReset();
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFreshFoodAndDoTheOthersWhenDefrostTestRequestIsAhamFreshFoodOnlyPrechillWhileDefrostStateIsIdle)
+TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToSecondaryOnlyAndDoTheOthersWhenDefrostTestRequestIsAhamSecondaryOnlyPrechillWhileDefrostStateIsIdle)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_Idle);
 
-   WhenDefrostTestRequestIs(DefrostTestRequest_AhamFreshFoodOnlyPrechill);
-   DefrostTestRequestStatusShouldBe(DefrostTestRequest_AhamFreshFoodOnlyPrechill);
-   NextDefrostTypeShouldBe(DefrostType_FreshFood);
+   WhenDefrostTestRequestIs(DefrostTestRequest_AhamSecondaryOnlyPrechill);
+   DefrostTestRequestStatusShouldBe(DefrostTestRequest_AhamSecondaryOnlyPrechill);
+   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
    UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
    DefrostTestRequestShouldBeReset();
    DontSkipPrechillShouldBe(SET);

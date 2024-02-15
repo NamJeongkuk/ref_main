@@ -114,9 +114,9 @@ static void HandleDefrostTestRequest(void *context, const void *args)
             RequestDefrostTestState(instance, DefrostTestStateRequest_ExitDefrostHeaterOnState);
             break;
 
-         case DefrostTestRequest_FreshFoodOnlyDefrost:
-            UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_FreshFoodOnlyDefrost);
-            SetNextDefrostType(instance, DefrostType_FreshFood);
+         case DefrostTestRequest_SecondaryOnlyDefrost:
+            UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_SecondaryOnlyDefrost);
+            SetNextDefrostType(instance, DefrostType_SecondaryOnly);
             RequestDefrostTestState(instance, DefrostTestStateRequest_Defrost);
             break;
 
@@ -126,9 +126,9 @@ static void HandleDefrostTestRequest(void *context, const void *args)
             RequestDefrostTestState(instance, DefrostTestStateRequest_Defrost);
             break;
 
-         case DefrostTestRequest_FreshFoodOnlyPrechill:
-            UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_FreshFoodOnlyPrechill);
-            SetNextDefrostType(instance, DefrostType_FreshFood);
+         case DefrostTestRequest_SecondaryOnlyPrechill:
+            UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_SecondaryOnlyPrechill);
+            SetNextDefrostType(instance, DefrostType_SecondaryOnly);
             RequestDefrostTestState(instance, DefrostTestStateRequest_Prechill);
             break;
 
@@ -138,10 +138,10 @@ static void HandleDefrostTestRequest(void *context, const void *args)
             RequestDefrostTestState(instance, DefrostTestStateRequest_Prechill);
             break;
 
-         case DefrostTestRequest_AhamFreshFoodOnlyPrechill:
+         case DefrostTestRequest_AhamSecondaryOnlyPrechill:
             SetDontSkipDefrostPrechillToTrue(instance);
-            UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_AhamFreshFoodOnlyPrechill);
-            SetNextDefrostType(instance, DefrostType_FreshFood);
+            UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_AhamSecondaryOnlyPrechill);
+            SetNextDefrostType(instance, DefrostType_SecondaryOnly);
             SetUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsTo(instance, true);
             break;
 

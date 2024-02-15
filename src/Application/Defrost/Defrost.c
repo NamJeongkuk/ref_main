@@ -268,9 +268,9 @@ static DefrostType_t CurrentDefrostType(Defrost_t *instance)
 
 static uint8_t MaxPrechillTimeInMinutes(Defrost_t *instance)
 {
-   if(CurrentDefrostType(instance) == DefrostType_FreshFood)
+   if(CurrentDefrostType(instance) == DefrostType_SecondaryOnly)
    {
-      return instance->_private.defrostParametricData->prechillData.maxPrechillTimeForFreshFoodOnlyDefrostInMinutes;
+      return instance->_private.defrostParametricData->prechillData.maxPrechillTimeForSecondaryOnlyDefrostInMinutes;
    }
    else
    {
@@ -280,9 +280,9 @@ static uint8_t MaxPrechillTimeInMinutes(Defrost_t *instance)
 
 static uint8_t PostDwellExitTimeInMinutes(Defrost_t *instance)
 {
-   if(CurrentDefrostType(instance) == DefrostType_FreshFood)
+   if(CurrentDefrostType(instance) == DefrostType_SecondaryOnly)
    {
-      return instance->_private.defrostParametricData->postDwellData.freshFoodOnlyPostDwellExitTimeInMinutes;
+      return instance->_private.defrostParametricData->postDwellData.secondaryOnlyPostDwellExitTimeInMinutes;
    }
    else
    {

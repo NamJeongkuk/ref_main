@@ -23,13 +23,13 @@ return function(core)
           u16(config.idle.aham_prechill_time_between_defrosts_in_minutes)
         ),
         structure(
-          u8(config.prechill_prep.number_of_fresh_food_defrosts_before_freezer_defrost),
-          u8(config.prechill_prep.number_of_fresh_food_defrosts_before_abnormal_freezer_defrost),
+          u8(config.prechill_prep.number_of_secondary_only_defrosts_before_full_defrost),
+          u8(config.prechill_prep.number_of_secondary_only_defrosts_before_full_defrost_when_abnormal_is_set),
           u8(config.prechill_prep.max_prechill_prep_time_in_minutes)
         ),
         structure(
           u8(config.prechill.max_prechill_time_in_minutes),
-          u8(config.prechill.max_prechill_time_for_fresh_food_only_defrost_in_minutes),
+          u8(config.prechill.max_prechill_time_for_secondary_only_defrost_in_minutes),
           u8(sealed_system_valve_position_type[config.prechill.prechill_refrigerant_valve_position]),
           u8(compressor_speed_type[config.prechill.prechill_compressor_speed]),
           u8(fan_speed_type[config.prechill.prechill_freezer_evap_fan_speed]),
@@ -58,7 +58,7 @@ return function(core)
           u8(config.heater_on.freezer_invalid_thermistor_defrost_heater_max_on_time_in_minutes),
           u8(config.heater_on.freezer_heater_on_time_to_set_abnormal_defrost_in_minutes),
           i16(config.heater_on.freezer_defrost_termination_temperature_in_degfx100),
-          i16(config.heater_on.fresh_food_defrost_termination_temperature_in_degfx100),
+          i16(config.heater_on.secondary_only_defrost_termination_temperature_in_degfx100),
           i16(config.heater_on.convertible_compartment_defrost_termination_temperature_in_degfx100),
           u8(config.heater_on.fresh_food_defrost_heater_max_on_time_in_minutes),
           u8(config.heater_on.fresh_food_invalid_thermistor_defrost_heater_max_on_time_in_minutes),
@@ -76,9 +76,9 @@ return function(core)
         ),
         structure(
           u8(config.post_dwell.post_dwell_exit_time_in_minutes),
-          u8(config.post_dwell.fresh_food_only_post_dwell_exit_time_in_minutes),
+          u8(config.post_dwell.secondary_only_post_dwell_exit_time_in_minutes),
           i16(config.post_dwell.post_dwell_freezer_evap_exit_temperature_in_degfx100),
-          i16(config.post_dwell.fresh_food_only_post_dwell_freezer_evap_exit_temperature_in_degfx100),
+          i16(config.post_dwell.secondary_only_post_dwell_freezer_evap_exit_temperature_in_degfx100),
           u8(sealed_system_valve_position_type[config.post_dwell.post_dwell_refrigerant_valve_position]),
           u8(compressor_speed_type[config.post_dwell.post_dwell_compressor_speed]),
           u8(fan_speed_type[config.post_dwell.post_dwell_condenser_fan_speed]),
@@ -103,15 +103,15 @@ return function(core)
         },
         prechill_prep = {
           constraint.table_keys({
-            number_of_fresh_food_defrosts_before_freezer_defrost = { constraint.u8 },
-            number_of_fresh_food_defrosts_before_abnormal_freezer_defrost = { constraint.u8 },
+            number_of_secondary_only_defrosts_before_full_defrost = { constraint.u8 },
+            number_of_secondary_only_defrosts_before_full_defrost_when_abnormal_is_set = { constraint.u8 },
             max_prechill_prep_time_in_minutes = { constraint.u8 }
           })
         },
         prechill = {
           constraint.table_keys({
             max_prechill_time_in_minutes = { constraint.u8 },
-            max_prechill_time_for_fresh_food_only_defrost_in_minutes = { constraint.u8 },
+            max_prechill_time_for_secondary_only_defrost_in_minutes = { constraint.u8 },
             prechill_refrigerant_valve_position = { constraint.in_set(enum.keys(sealed_system_valve_position_type)) },
             prechill_compressor_speed = { constraint.in_set(enum.keys(compressor_speed_type)) },
             prechill_freezer_evap_fan_speed = { constraint.in_set(enum.keys(fan_speed_type)) },
@@ -144,7 +144,7 @@ return function(core)
             freezer_invalid_thermistor_defrost_heater_max_on_time_in_minutes = { constraint.u8 },
             freezer_heater_on_time_to_set_abnormal_defrost_in_minutes = { constraint.u8 },
             freezer_defrost_termination_temperature_in_degfx100 = { constraint.i16 },
-            fresh_food_defrost_termination_temperature_in_degfx100 = { constraint.i16 },
+            secondary_only_defrost_termination_temperature_in_degfx100 = { constraint.i16 },
             convertible_compartment_defrost_termination_temperature_in_degfx100 = { constraint.i16 },
             fresh_food_defrost_heater_max_on_time_in_minutes = { constraint.u8 },
             fresh_food_invalid_thermistor_defrost_heater_max_on_time_in_minutes = { constraint.u8 },
@@ -166,9 +166,9 @@ return function(core)
         post_dwell = {
           constraint.table_keys({
             post_dwell_exit_time_in_minutes = { constraint.u8 },
-            fresh_food_only_post_dwell_exit_time_in_minutes = { constraint.u8 },
+            secondary_only_post_dwell_exit_time_in_minutes = { constraint.u8 },
             post_dwell_freezer_evap_exit_temperature_in_degfx100 = { constraint.i16 },
-            fresh_food_only_post_dwell_freezer_evap_exit_temperature_in_degfx100 = { constraint.i16 },
+            secondary_only_post_dwell_freezer_evap_exit_temperature_in_degfx100 = { constraint.i16 },
             post_dwell_refrigerant_valve_position = { constraint.in_set(enum.keys(sealed_system_valve_position_type)) },
             post_dwell_compressor_speed = { constraint.in_set(enum.keys(compressor_speed_type)) },
             post_dwell_condenser_fan_speed = { constraint.in_set(enum.keys(fan_speed_type)) },
@@ -182,13 +182,13 @@ return function(core)
       error('max time between defrosts must be greater than minimum time between defrosts abnormal run time', 2)
     end
 
-    if (config.post_dwell.fresh_food_only_post_dwell_exit_time_in_minutes >= config.idle.minimum_time_between_defrosts_abnormal_run_time_in_minutes or
-        config.post_dwell.fresh_food_only_post_dwell_exit_time_in_minutes >= config.idle.max_time_between_defrosts_in_minutes) then
+    if (config.post_dwell.secondary_only_post_dwell_exit_time_in_minutes >= config.idle.minimum_time_between_defrosts_abnormal_run_time_in_minutes or
+      config.post_dwell.secondary_only_post_dwell_exit_time_in_minutes >= config.idle.max_time_between_defrosts_in_minutes) then
       error('fresh food only post dwell time should be less than minimum or maximum time between defrosts', 2)
     end
 
     if (config.post_dwell.post_dwell_exit_time_in_minutes >= config.idle.minimum_time_between_defrosts_abnormal_run_time_in_minutes or
-        config.post_dwell.post_dwell_exit_time_in_minutes >= config.idle.max_time_between_defrosts_in_minutes) then
+      config.post_dwell.post_dwell_exit_time_in_minutes >= config.idle.max_time_between_defrosts_in_minutes) then
       error('post dwell time should be less than minimum or maximum time between defrosts', 2)
     end
 

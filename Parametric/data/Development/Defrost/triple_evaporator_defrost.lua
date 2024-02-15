@@ -7,13 +7,13 @@ return defrost({
     aham_prechill_time_between_defrosts_in_minutes = 6 * 60
   },
   prechill_prep = {
-    number_of_fresh_food_defrosts_before_freezer_defrost = 2,
-    number_of_fresh_food_defrosts_before_abnormal_freezer_defrost = 1,
+    number_of_secondary_only_defrosts_before_full_defrost = 2,
+    number_of_secondary_only_defrosts_before_full_defrost_when_abnormal_is_set = 1,
     max_prechill_prep_time_in_minutes = 5,
   },
   prechill = {
     max_prechill_time_in_minutes = 10,
-    max_prechill_time_for_fresh_food_only_defrost_in_minutes = 20,
+    max_prechill_time_for_secondary_only_defrost_in_minutes = 20,
     prechill_refrigerant_valve_position = 'position_B',
     prechill_compressor_speed = 'low_speed',
     prechill_freezer_evap_fan_speed = 'super_low_speed',
@@ -42,7 +42,7 @@ return defrost({
     freezer_invalid_thermistor_defrost_heater_max_on_time_in_minutes = 30,
     freezer_heater_on_time_to_set_abnormal_defrost_in_minutes = 32,
     freezer_defrost_termination_temperature_in_degfx100 = 5900,
-    fresh_food_defrost_termination_temperature_in_degfx100 = 4460,
+    secondary_only_defrost_termination_temperature_in_degfx100 = 4460,
     convertible_compartment_defrost_termination_temperature_in_degfx100 = 4460,
     fresh_food_defrost_heater_max_on_time_in_minutes = 60,
     fresh_food_invalid_thermistor_defrost_heater_max_on_time_in_minutes = 20,
@@ -60,9 +60,9 @@ return defrost({
   },
   post_dwell = {
     post_dwell_exit_time_in_minutes = 10,
-    fresh_food_only_post_dwell_exit_time_in_minutes = 10,
+    secondary_only_post_dwell_exit_time_in_minutes = 10,
     post_dwell_freezer_evap_exit_temperature_in_degfx100 = -1000,
-    fresh_food_only_post_dwell_freezer_evap_exit_temperature_in_degfx100 = -1200,
+    secondary_only_post_dwell_freezer_evap_exit_temperature_in_degfx100 = -1200,
     post_dwell_refrigerant_valve_position = 'position_B',
     post_dwell_compressor_speed = 'low_speed',
     post_dwell_condenser_fan_speed = 'low_speed',

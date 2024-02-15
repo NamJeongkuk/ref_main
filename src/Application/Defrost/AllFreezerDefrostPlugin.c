@@ -120,8 +120,8 @@ static const TimeThatPrechillConditionsAreMetConfiguration_t timeThatPrechillCon
 static const NextDefrostTypeArbiterConfig_t nextDefrostTypeArbiterConfig = {
    .nextDefrostTypeErd = Erd_NextDefrostType,
    .defrostingErd = Erd_Defrosting,
-   .numberOfFreshFoodDefrostsErd = Erd_NumberOfFreshFoodDefrosts,
-   .numberOfFreshFoodDefrostsBeforeAFullDefrostErd = Erd_NumberOfFreshFoodDefrostsBeforeAFullDefrost,
+   .numberOfSecondaryOnlyDefrostsErd = Erd_NumberOfSecondaryOnlyDefrosts,
+   .numberOfSecondaryOnlyDefrostsBeforeAFullDefrostErd = Erd_NumberOfSecondaryOnlyDefrostsBeforeAFullDefrost,
    .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .freezerDefrostWasAbnormalErd = Erd_FreezerDefrostWasAbnormal,
    .convertibleCompartmentDefrostWasAbnormalErd = Erd_ConvertibleCompartmentDefrostWasAbnormal,
