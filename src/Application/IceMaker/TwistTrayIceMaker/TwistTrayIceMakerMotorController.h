@@ -46,10 +46,10 @@ typedef struct
       bool initialized : 1;
       uint8_t lastMotorState : 6;
 
-      IceMakerMotorActionResult_t motorActionResult;
-      IceMakerMotorActionResult_t harvestActionResult;
-      IceMakerMotorOperationState_t motorOperationState;
-      IceMakerMotorErrorReason_t motorErrorReason;
+      volatile IceMakerMotorActionResult_t motorActionResult;
+      volatile IceMakerMotorActionResult_t harvestActionResult;
+      volatile IceMakerMotorOperationState_t motorOperationState;
+      volatile IceMakerMotorErrorReason_t motorErrorReason;
 
       Fsm_t fsm;
       I_DataModel_t *dataModel;
