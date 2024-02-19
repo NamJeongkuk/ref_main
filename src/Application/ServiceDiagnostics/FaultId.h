@@ -31,6 +31,8 @@ enum
    FaultId_FreshFoodEvapFanFeedbackPresentWhenFanIsOff = 107,
    FaultId_FreshFoodEvapFanCannotReachTargetRpm = 108,
    FaultId_FreezerDefrostHeaterOnForMaxTime = 200,
+   FaultId_FreshFoodDefrostHeaterOnForMaxTimeFault = 201,
+   FaultId_ConvertibleCompartmentDefrostHeaterOnForMaxTimeFault = 204,
    FaultId_ExcessiveCompressorRunTime = 300,
    FaultId_CompressorOffWhileCoolingSystemOnForMaxTime = 301,
    FaultId_FreshFoodNoFreezeLimitTripped = 302,

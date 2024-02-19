@@ -756,6 +756,41 @@
           "name": "Erd_IceMaker2_WaterValveRelay",
           "read": true,
           "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Number of Convertible Compartment Defrosts",
+          "name": "Erd_NumberOfConvertibleCompartmentDefrosts",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Number of Fresh Food Abnormal Defrosts",
+          "name": "Erd_NumberOfFreshFoodAbnormalDefrosts",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Number of Convertible Compartment Abnormal Defrosts",
+          "name": "Erd_NumberOfConvertibleCompartmentAbnormalDefrosts",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Defrost Heater On Time In Minutes",
+          "name": "Erd_FreshFoodDefrostHeaterOnTimeInMinutes",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Convertible Compartment Defrost Heater On Time In Minutes",
+          "name": "Erd_ConvertibleCompartmentDefrostHeaterOnTimeInMinutes",
+          "read": true,
+          "write": true
         }
       ]
     },
@@ -2022,15 +2057,29 @@
         },
         {
           "namespace": "mb",
-          "displayName": "F757 Combo Module Comm Fault",
+          "displayName": "F758 Combo Module Comm Fault",
           "name": "Erd_EmbeddedWifiCommunicationFault",
           "read": true,
           "write": false
         },
         {
           "namespace": "mb",
-          "displayName": "F758 Internal UI Board Comm Fault",
+          "displayName": "F759 Internal UI Board Comm Fault",
           "name": "Erd_InternalTemperatureUiCommunicationFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F201 Fresh Food Defrost Heater On For Max Time Fault",
+          "name": "Erd_FreshFoodDefrostHeaterOnForMaxTimeFault",
+          "read": true,
+          "write": false
+        },
+        {
+          "namespace": "mb",
+          "displayName": "F204 Convertible Compartment Defrost Heater On For Max Time Fault",
+          "name": "Erd_ConvertibleCompartmentDefrostHeaterOnForMaxTimeFault",
           "read": true,
           "write": false
         },
