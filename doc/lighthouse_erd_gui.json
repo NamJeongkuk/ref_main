@@ -104,7 +104,7 @@
             {
                "namespace": "mb",
                "displayName": "FF Damper",
-               "name": "Erd_DamperPosition_ResolvedVote",
+               "name": "Erd_FreshFoodDamperPosition_ResolvedVote",
                "read": true,
                "interval": 1000000000
             },
@@ -198,7 +198,7 @@
             {
                "namespace": "mb",
                "displayName": "FF Damper Resolved State",
-               "name": "Erd_DamperPosition_ResolvedVote",
+               "name": "Erd_FreshFoodDamperPosition_ResolvedVote",
                "read": true,
                "interval": 1000000000
             }
@@ -907,7 +907,7 @@
             {
                "namespace": "mb",
                "displayName": "FF Damper Position Factory Vote",
-               "name": "Erd_DamperPosition_FactoryVote",
+               "name": "Erd_FreshFoodDamperPosition_FactoryVote",
                "read": true,
                "write": true,
                "interval": 1000000000
@@ -1303,7 +1303,7 @@
             {
                "namespace": "mb",
                "displayName": "FF Damper Winning Vote Erd",
-               "name": "Erd_DamperPosition_WinningVoteErd",
+               "name": "Erd_FreshFoodDamperPosition_WinningVoteErd",
                "read": true,
                "interval": 1000000000
             },
