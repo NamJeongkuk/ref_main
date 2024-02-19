@@ -103,6 +103,7 @@ static void CompressorStateChanged(void *context, const void *args)
       switch(numberOfEvaporators)
       {
          case 1:
+            VoteForFreshFoodEvaporatorFanSpeed(instance, FanSpeed_Low, Vote_Care);
             VoteForFreezerEvaporatorFanSpeed(instance, FanSpeed_Low, Vote_Care);
             break;
 

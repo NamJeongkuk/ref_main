@@ -131,13 +131,14 @@ TEST(CompressorStartupFanVotes_SingleEvaporator, ShouldVoteForCondenserFanLowWhe
    CondenserFanSpeedVoteShouldBe(FanSpeed_Low);
 }
 
-TEST(CompressorStartupFanVotes_SingleEvaporator, ShouldVoteForFreezerEvapFanLowWhenCompressorStateChangesToStartup)
+TEST(CompressorStartupFanVotes_SingleEvaporator, ShouldVoteForFreezerFreezerAndFreshFoodEvapFanLowWhenCompressorStateChangesToStartup)
 {
    Given CompressorStateIs(CompressorState_Off);
    And CompressorStartupFanVotesIsInitialized();
 
    When CompressorStateIs(CompressorState_Startup);
    FreezerEvaporatorFanSpeedVoteShouldBe(FanSpeed_Low);
+   FreshFoodEvaporatorFanSpeedVoteShouldBe(FanSpeed_Low);
 }
 
 TEST(CompressorStartupFanVotes_SingleEvaporator, ShouldVoteDontCareForCondenserFanWhenStartupTimeExpires)
@@ -154,7 +155,7 @@ TEST(CompressorStartupFanVotes_SingleEvaporator, ShouldVoteDontCareForCondenserF
    CondenserFanSpeedVoteShouldBeDontCare();
 }
 
-TEST(CompressorStartupFanVotes_SingleEvaporator, ShouldVoteDontCareForFreezerEvapFanLowWhenStartupTimeExpires)
+TEST(CompressorStartupFanVotes_SingleEvaporator, ShouldVoteDontCareForFreezerAndFreshFoodEvapFanLowWhenStartupTimeExpires)
 {
    Given CompressorStateIs(CompressorState_Off);
    And CompressorStartupFanVotesIsInitialized();
@@ -163,9 +164,11 @@ TEST(CompressorStartupFanVotes_SingleEvaporator, ShouldVoteDontCareForFreezerEva
 
    After(compressorData->compressorTimes.startupOnTimeInSeconds * MSEC_PER_SEC - 1);
    FreezerEvaporatorFanSpeedVoteShouldBe(FanSpeed_Low);
+   FreshFoodEvaporatorFanSpeedVoteShouldBe(FanSpeed_Low);
 
    After(1);
    FreezerEvaporatorFanSpeedVoteShouldBeDontCare();
+   FreshFoodEvaporatorFanSpeedVoteShouldBeDontCare();
 }
 
 TEST_GROUP(CompressorStartupFanVotes_DualEvaporator)
