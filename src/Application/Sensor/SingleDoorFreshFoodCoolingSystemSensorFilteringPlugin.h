@@ -15,10 +15,13 @@
 typedef struct
 {
    OverrideArbiter_t freshFoodCabinetFilteredTemperatureArbiter;
+   OverrideArbiter_t freshFoodEvaporatorFilteredTemperatureArbiter;
+
    OverrideArbiter_t freshFoodThermistorValidArbiter;
    OverrideArbiter_t freshFoodEvapThermistorValidArbiter;
 
    SensorFiltering_t freshFoodCabinetThermistor;
+   SensorFiltering_t freshFoodEvapThermistor;
 } SingleDoorFreshFoodCoolingSystemSensorFilteringPlugin_t;
 
 void SingleDoorFreshFoodCoolingSystemSensorFilteringPlugin_Init(

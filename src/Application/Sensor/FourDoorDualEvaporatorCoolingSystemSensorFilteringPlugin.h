@@ -17,6 +17,7 @@ typedef struct
    OverrideArbiter_t freezerEvaporatorFilteredTemperatureArbiter;
    OverrideArbiter_t freezerCabinetFilteredTemperatureArbiter;
    OverrideArbiter_t freshFoodCabinetFilteredTemperatureArbiter;
+   OverrideArbiter_t freshFoodEvaporatorFilteredTemperatureArbiter;
 
    OverrideArbiter_t freshFoodThermistorValidArbiter;
    OverrideArbiter_t freezerThermistorValidArbiter;
@@ -26,6 +27,7 @@ typedef struct
    SensorFiltering_t freezerCabinetThermistor;
    SensorFiltering_t freshFoodCabinetThermistor;
    SensorFiltering_t freezerEvapThermistor;
+   SensorFiltering_t freshFoodEvapThermistor;
 } FourDoorDualEvaporatorCoolingSystemSensorFilteringPlugin_t;
 
 void FourDoorDualEvaporatorCoolingSystemSensorFilteringPlugin_Init(

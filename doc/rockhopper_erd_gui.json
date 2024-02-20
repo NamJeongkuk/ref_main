@@ -1073,6 +1073,83 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Fresh Food Evap Unfiltered Temperature",
+          "name": "Erd_FreshFoodEvap_UnfilteredTemperatureInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Evap Filtered Temperature",
+          "name": "Erd_FreshFoodEvap_FilteredTemperatureInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Evap Thermistor Is Valid",
+          "name": "Erd_FreshFoodEvaporatorThermistorIsValid",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Evap Filtered Temp Override Request",
+          "name": "Erd_FreshFoodEvap_FilteredTemperatureOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Evap Filtered Temp Override Value",
+          "name": "Erd_FreshFoodEvap_FilteredTemperatureOverrideValueInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Evap Filtered Temp Resolved",
+          "name": "Erd_FreshFoodEvap_FilteredTemperatureResolvedInDegFx100",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Evap Thermistor Is Valid Override Request",
+          "name": "Erd_FreshFoodEvapThermistor_IsValidOverrideRequest",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Evap Thermistor Is Valid Override Value",
+          "name": "Erd_FreshFoodEvapThermistor_IsValidOverrideValue",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Evap Thermistor Is Valid Resolved",
+          "name": "Erd_FreshFoodEvapThermistor_IsValidResolved",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Evaporator Thermistor Is Invalid",
+          "name": "Erd_FreshFoodEvaporatorThermistorIsInvalidFault",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
+          "displayName": "Fresh Food Evaporator Thermistor Has Been Discovered",
+          "name": "Erd_FreshFoodEvaporatorThermistorDiscovered",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Freezer Evap Thermistor Is Valid Override Value",
           "name": "Erd_FreezerEvapThermistor_IsValidOverrideValue",
           "read": true,

@@ -125,6 +125,22 @@ static const OverrideArbiterConfiguration_t freezerEvapThermistorValidArbiterCon
    NUM_ELEMENTS(freezerEvapThermistorValidOverrideArbiterRequestErdList)
 };
 
+static const Erd_t freshFoodEvaporatorFilteredTemperatureOverrideRequestErdList[] = {
+   Erd_FreshFoodEvap_FilteredTemperatureOverrideRequest
+};
+
+static const Erd_t freshFoodEvaporatorFilteredTemperatureValueErdList[] = {
+   Erd_FreshFoodEvap_FilteredTemperatureInDegFx100,
+   Erd_FreshFoodEvap_FilteredTemperatureOverrideValueInDegFx100
+};
+
+static const OverrideArbiterConfiguration_t freshFoodEvaporatorFilteredTemperatureArbiterConfiguration = {
+   freshFoodEvaporatorFilteredTemperatureOverrideRequestErdList,
+   freshFoodEvaporatorFilteredTemperatureValueErdList,
+   Erd_FreshFoodEvap_FilteredTemperatureResolvedInDegFx100,
+   NUM_ELEMENTS(freshFoodEvaporatorFilteredTemperatureOverrideRequestErdList)
+};
+
 static const SensorFilteringConfig_t freezerCabinetThermistorConfig = {
    .sensorAdcCountErd = Erd_FreezerThermistor_AdcCount,
    .sensorUnfilteredTemperatureInDegFx100Erd = Erd_Freezer_UnfilteredTemperatureInDegFx100,
@@ -155,6 +171,16 @@ static const SensorFilteringConfig_t freezerEvapThermistorConfig = {
    .timerModuleErd = Erd_TimerModule
 };
 
+static const SensorFilteringConfig_t freshFoodEvapThermistorConfig = {
+   .sensorAdcCountErd = Erd_FreshFoodEvapThermistor_AdcCount,
+   .sensorUnfilteredTemperatureInDegFx100Erd = Erd_FreshFoodEvap_UnfilteredTemperatureInDegFx100,
+   .sensorFilteredTemperatureInDegFx100Erd = Erd_FreshFoodEvap_FilteredTemperatureInDegFx100,
+   .sensorIsValidErd = Erd_FreshFoodEvaporatorThermistorIsValid,
+   .sensorIsInvalidFaultErd = Erd_FreshFoodEvaporatorThermistorIsInvalidFault,
+   .sensorDiscoveredErd = Erd_FreshFoodEvaporatorThermistorDiscovered,
+   .timerModuleErd = Erd_TimerModule
+};
+
 static void InitializeFilteredTemperatureOverrideArbiters(
    FourDoorDualEvaporatorCoolingSystemSensorFilteringPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -173,6 +199,11 @@ static void InitializeFilteredTemperatureOverrideArbiters(
       &instance->freshFoodCabinetFilteredTemperatureArbiter,
       DataModel_AsDataSource(dataModel),
       &freshFoodCabinetFilteredTemperatureArbiterConfiguration);
+
+   OverrideArbiter_Init(
+      &instance->freshFoodEvaporatorFilteredTemperatureArbiter,
+      DataModel_AsDataSource(dataModel),
+      &freshFoodEvaporatorFilteredTemperatureArbiterConfiguration);
 }
 
 static void InitializeThermistorIsValidArbiters(
@@ -225,6 +256,13 @@ static void InitializeSensorFiltering(
       dataModel,
       &freezerEvapThermistorConfig,
       sensorData->freezerEvapThermistor,
+      sensorData->periodicUpdateRateInMs);
+
+   SensorFiltering_Init(
+      &instance->freshFoodEvapThermistor,
+      dataModel,
+      &freshFoodEvapThermistorConfig,
+      sensorData->freshFoodEvapThermistor,
       sensorData->periodicUpdateRateInMs);
 }
 
