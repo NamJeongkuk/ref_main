@@ -30,8 +30,7 @@ enum
 };
 
 static const SystemMonitorData_t systemMonitorData = {
-   .periodicNvUpdateInMinutes = 60,
-   .periodicNvUpdateDefrostHeaterOnTimeInMinutes = 0,
+   .periodicNvUpdateInMinutes = 60
 };
 
 static const ResetNvErdImmediatelyWhenRamErdChangesToZeroEntry_t ResetNvErdImmediatelyWhenRamErdChangesToZeroEntries[] = {

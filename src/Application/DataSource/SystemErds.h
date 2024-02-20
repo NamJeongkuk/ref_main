@@ -1680,7 +1680,6 @@ enum
    ENTRY(Erd_FullRoutingTableUartDOverride,                 0xFB00, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanFalse,               1,             NotFault) \
    \
    ENTRY(Erd_Eeprom_DefrostCompressorOnTimeInSeconds,       0xFB06, uint32_t,                                           Swap_Yes, Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,                      1,             NotFault) \
-   ENTRY(Erd_Eeprom_FreezerDefrostHeaterOnTimeInMinutes,    0xFB07, uint8_t,                                            Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_Zeros,                      1,             NotFault) \
    ENTRY(Erd_Eeprom_ClearedDefrostEepromStartup,            0xFB08, bool,                                               Swap_No,  Io_None, Sub_N, NvUnitSetting,          NonVolatileDataSourceDefaultData_BooleanTrue,                1,             NotFault) \
    ENTRY(Erd_Eeprom_LeftSideFreshFoodScaledDoorAccelerationInSeconds,  0xFB0C, uint32_t,                                Swap_Range_S, Io_None, Sub_N, NvUnitSetting,      NonVolatileDataSourceDefaultData_Zeros,                      1,             NotFault) \
    ENTRY(Erd_Eeprom_RightSideFreshFoodScaledDoorAccelerationInSeconds, 0xFB0D, uint32_t,                                Swap_Range,   Io_None, Sub_N, NvUnitSetting,      NonVolatileDataSourceDefaultData_Zeros,                      1,             NotFault) \

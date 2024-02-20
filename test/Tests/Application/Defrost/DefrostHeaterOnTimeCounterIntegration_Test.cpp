@@ -19,11 +19,6 @@ extern "C"
 #include "ReferDataModel_TestDouble.h"
 #include "uassert_test.h"
 
-enum
-{
-   SomeMinutes = 10
-};
-
 static const DefrostHeaterOnTimeCounterConfig_t config = {
    .defrostHeaterOnTimeErd = Erd_FreezerDefrostHeaterOnTimeInMinutes,
    .defrostHeaterStateErd = Erd_FreezerDefrostHeater_ResolvedVote,
@@ -84,11 +79,6 @@ TEST_GROUP(DefrostHeaterOnTimeCounterIntegration)
       DataModel_Write(dataModel, Erd_FreezerDefrostHeaterOnTimeInMinutes, &minutes);
    }
 
-   void GivenEepromHeaterOnTimeInMinutesIs(uint8_t minutes)
-   {
-      DataModel_Write(dataModel, Erd_Eeprom_FreezerDefrostHeaterOnTimeInMinutes, &minutes);
-   }
-
    void HeaterOnTimeInMinutesShouldBe(uint8_t expected)
    {
       uint8_t actual;
@@ -97,95 +87,78 @@ TEST_GROUP(DefrostHeaterOnTimeCounterIntegration)
       CHECK_EQUAL(expected, actual);
    }
 
-   void EepromHeaterOnTimeInMinutesShouldBe(uint8_t expected)
+   void WhenTheBoardIsReset(void)
    {
-      uint8_t actual;
-      DataModel_Read(dataModel, Erd_Eeprom_FreezerDefrostHeaterOnTimeInMinutes, &actual);
-
-      CHECK_EQUAL(expected, actual);
+      GivenHeaterOnTimeInMinutesIs(0);
+      GivenPeriodicNvUpdaterPluginIsInitialized();
+      GivenDefrostHeaterOnTimeCounterIsInitialized();
    }
 };
 
-TEST(DefrostHeaterOnTimeCounterIntegration, ShouldResetHeaterOnTimeInBothRamAndNvWhenDefrostStateIsNotHeaterOn)
+TEST(DefrostHeaterOnTimeCounterIntegration, ShouldNotCountHeaterOnTimeWhileDefrostStateIsNotHeaterOn)
 {
-   GivenHeaterOnTimeInMinutesIs(SomeMinutes);
-   GivenEepromHeaterOnTimeInMinutesIs(SomeMinutes);
+   GivenHeaterOnTimeInMinutesIs(0);
    GivenPeriodicNvUpdaterPluginIsInitialized();
    GivenDefrostStateIs(DefrostState_Idle);
    GivenDefrostHeaterOnTimeCounterIsInitialized();
 
    HeaterOnTimeInMinutesShouldBe(0);
-   EepromHeaterOnTimeInMinutesShouldBe(0);
+
+   After(MSEC_PER_MIN);
+   HeaterOnTimeInMinutesShouldBe(0);
 }
 
-TEST(DefrostHeaterOnTimeCounterIntegration, ShouldCountFromSavedHeaterOnTimeWhenDefrostStateIsHeaterOnAndHeaterIsOn)
+TEST(DefrostHeaterOnTimeCounterIntegration, ShouldCountAtZeroWhenDefrostStateIsHeaterOnAndHeaterIsOn)
 {
-   GivenEepromHeaterOnTimeInMinutesIs(SomeMinutes);
    GivenDefrostStateIs(DefrostState_HeaterOn);
    GivenDefrostHeaterIs(HeaterState_On);
    GivenPeriodicNvUpdaterPluginIsInitialized();
    GivenDefrostHeaterOnTimeCounterIsInitialized();
 
-   HeaterOnTimeInMinutesShouldBe(SomeMinutes);
+   HeaterOnTimeInMinutesShouldBe(0);
 
    After(MSEC_PER_MIN - 1);
-   HeaterOnTimeInMinutesShouldBe(SomeMinutes);
+   HeaterOnTimeInMinutesShouldBe(0);
 
    After(1);
-   HeaterOnTimeInMinutesShouldBe(SomeMinutes + 1);
+   HeaterOnTimeInMinutesShouldBe(1);
 }
 
-TEST(DefrostHeaterOnTimeCounterIntegration, ShouldCountFromSavedHeaterOnTimeWhenDefrostStateIsHeaterOnAndHeaterIsOffThenTurnsOn)
+TEST(DefrostHeaterOnTimeCounterIntegration, ShouldCountAtZeroWhenDefrostStateIsHeaterOnAndHeaterIsOffThenTurnsOn)
 {
-   GivenEepromHeaterOnTimeInMinutesIs(SomeMinutes);
    GivenDefrostStateIs(DefrostState_HeaterOn);
    GivenDefrostHeaterIs(HeaterState_Off);
    GivenPeriodicNvUpdaterPluginIsInitialized();
    GivenDefrostHeaterOnTimeCounterIsInitialized();
 
-   HeaterOnTimeInMinutesShouldBe(SomeMinutes);
+   HeaterOnTimeInMinutesShouldBe(0);
 
    After(MSEC_PER_MIN);
-   HeaterOnTimeInMinutesShouldBe(SomeMinutes);
+   HeaterOnTimeInMinutesShouldBe(0);
 
    WhenDefrostHeaterIs(HeaterState_On);
    After(MSEC_PER_MIN - 1);
-   HeaterOnTimeInMinutesShouldBe(SomeMinutes);
+   HeaterOnTimeInMinutesShouldBe(0);
 
    After(1);
-   HeaterOnTimeInMinutesShouldBe(SomeMinutes + 1);
+   HeaterOnTimeInMinutesShouldBe(1);
 }
 
-TEST(DefrostHeaterOnTimeCounterIntegration, ShouldSaveHeaterOnTimeToNv)
+TEST(DefrostHeaterOnTimeCounterIntegration, ShouldCountFromZeroAgainWhenTheBoardIsResetWhileDefrostStateIsHeaterOnAndHeaterIsOn)
 {
-   GivenEepromHeaterOnTimeInMinutesIs(0);
-   GivenPeriodicNvUpdaterPluginIsInitialized();
    GivenDefrostStateIs(DefrostState_HeaterOn);
-   GivenDefrostHeaterOnTimeCounterIsInitialized();
    GivenDefrostHeaterIs(HeaterState_On);
-
-   After(systemMonitorData->periodicNvUpdateDefrostHeaterOnTimeInMinutes * MSEC_PER_MIN - 1);
-   EepromHeaterOnTimeInMinutesShouldBe(0);
-
-   After(1);
-   HeaterOnTimeInMinutesShouldBe(systemMonitorData->periodicNvUpdateDefrostHeaterOnTimeInMinutes);
-   EepromHeaterOnTimeInMinutesShouldBe(systemMonitorData->periodicNvUpdateDefrostHeaterOnTimeInMinutes - 1);
-
-   After(systemMonitorData->periodicNvUpdateDefrostHeaterOnTimeInMinutes * MSEC_PER_MIN);
-   EepromHeaterOnTimeInMinutesShouldBe(2 * systemMonitorData->periodicNvUpdateDefrostHeaterOnTimeInMinutes - 1);
-}
-
-TEST(DefrostHeaterOnTimeCounterIntegration, ShouldResetNvHeaterOnTimeImmediatelyWhenRamHeaterOnTimeIsReset)
-{
-   GivenEepromHeaterOnTimeInMinutesIs(0);
    GivenPeriodicNvUpdaterPluginIsInitialized();
-   GivenDefrostStateIs(DefrostState_HeaterOn);
    GivenDefrostHeaterOnTimeCounterIsInitialized();
-   GivenDefrostHeaterIs(HeaterState_On);
 
-   After(systemMonitorData->periodicNvUpdateDefrostHeaterOnTimeInMinutes * MSEC_PER_MIN);
-   EepromHeaterOnTimeInMinutesShouldBe(systemMonitorData->periodicNvUpdateDefrostHeaterOnTimeInMinutes - 1);
+   HeaterOnTimeInMinutesShouldBe(0);
 
-   WhenDefrostHeaterIs(HeaterState_Off);
-   EepromHeaterOnTimeInMinutesShouldBe(0);
+   After(MSEC_PER_MIN);
+   HeaterOnTimeInMinutesShouldBe(1);
+
+   WhenTheBoardIsReset();
+   HeaterOnTimeInMinutesShouldBe(0);
+
+   After(MSEC_PER_MIN);
+   HeaterOnTimeInMinutesShouldBe(1);
 }

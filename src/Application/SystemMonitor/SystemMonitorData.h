@@ -13,7 +13,6 @@
 typedef struct
 {
    uint8_t periodicNvUpdateInMinutes;
-   uint8_t periodicNvUpdateDefrostHeaterOnTimeInMinutes;
 } SystemMonitorData_t;
 
 #endif
