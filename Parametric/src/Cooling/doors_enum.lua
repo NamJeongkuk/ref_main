@@ -1,7 +1,7 @@
 local enum = require 'lua-common'.utilities.enum
 
 return enum ({
-  'left_side_fresh_food_door', -- ice box
+  'left_side_fresh_food_door', -- ice cabinet
   'right_side_fresh_food_door',
   'left_side_freezer_door',
   'right_side_freezer_door',

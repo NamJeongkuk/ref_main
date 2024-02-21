@@ -30,11 +30,11 @@ describe('Defrost', function()
       prechill = {
         max_prechill_time_in_minutes = 10,
         max_prechill_time_for_secondary_only_defrost_in_minutes = 20,
-        prechill_refrigerant_valve_position = 'position_B',
+        prechill_sealed_system_valve_position = 'position_B',
         prechill_compressor_speed = 'low_speed',
         prechill_freezer_evap_fan_speed = 'super_low_speed',
         prechill_fresh_food_evap_fan_speed = 'low_speed',
-        prechill_ice_box_fan_speed = 'medium_speed',
+        prechill_ice_cabinet_fan_speed = 'medium_speed',
         prechill_deli_fan_speed = 'high_speed',
         prechill_convertible_compartment_damper_position = 'open',
         prechill_convertible_compartment_fan_speed = 'super_low_speed',
@@ -53,7 +53,7 @@ describe('Defrost', function()
         heater_on_entry_fresh_food_damper_position = 'closed'
       },
       heater_on = {
-        defrost_heater_on_refrigerant_valve_position = 'position_A',
+        defrost_heater_on_sealed_system_valve_position = 'position_A',
         freezer_defrost_heater_max_on_time_in_minutes = 60,
         freezer_invalid_thermistor_defrost_heater_max_on_time_in_minutes = 30,
         freezer_heater_on_time_to_set_abnormal_defrost_in_minutes = 32,
@@ -72,14 +72,14 @@ describe('Defrost', function()
       dwell = {
         dwell_time_in_minutes = 7,
         dwell_fresh_food_damper_position = 'closed',
-        dwell_refrigerant_valve_position = 'position_B'
+        dwell_sealed_system_valve_position = 'position_B'
       },
       post_dwell = {
         post_dwell_exit_time_in_minutes = 10,
         secondary_only_post_dwell_exit_time_in_minutes = 10,
         post_dwell_freezer_evap_exit_temperature_in_degfx100 = -1000,
         secondary_only_post_dwell_freezer_evap_exit_temperature_in_degfx100 = -1200,
-        post_dwell_refrigerant_valve_position = 'position_B',
+        post_dwell_sealed_system_valve_position = 'position_B',
         post_dwell_compressor_speed = 'low_speed',
         post_dwell_condenser_fan_speed = 'low_speed',
         post_dwell_fresh_food_damper_position = 'closed'
@@ -322,33 +322,33 @@ describe('Defrost', function()
   end)
 
   it('should require sealed system valve position argument of prechill to be valid sealed system valve position', function()
-    should_fail_with("prechill.prechill_refrigerant_valve_position='not a valid position' must be in the set { 'position_home', 'position_A', 'position_B', 'position_C', 'position_D' }", function()
+    should_fail_with("prechill.prechill_sealed_system_valve_position='not a valid position' must be in the set { 'position_home', 'position_A', 'position_B', 'position_C', 'position_D' }", function()
       local config = generate_config()
-      config.prechill['prechill_refrigerant_valve_position'] = 'not a valid position'
+      config.prechill['prechill_sealed_system_valve_position'] = 'not a valid position'
       defrost(config)
     end)
   end)
 
   it('should require sealed system valve position argument of heater on to be valid sealed system valve position', function()
-    should_fail_with("heater_on.defrost_heater_on_refrigerant_valve_position='not a valid position' must be in the set { 'position_home', 'position_A', 'position_B', 'position_C', 'position_D' }", function()
+    should_fail_with("heater_on.defrost_heater_on_sealed_system_valve_position='not a valid position' must be in the set { 'position_home', 'position_A', 'position_B', 'position_C', 'position_D' }", function()
       local config = generate_config()
-      config.heater_on['defrost_heater_on_refrigerant_valve_position'] = 'not a valid position'
+      config.heater_on['defrost_heater_on_sealed_system_valve_position'] = 'not a valid position'
       defrost(config)
     end)
   end)
 
   it('should require sealed system valve position argument of dwell to be valid sealed system valve position', function()
-    should_fail_with("dwell.dwell_refrigerant_valve_position='not a valid position' must be in the set { 'position_home', 'position_A', 'position_B', 'position_C', 'position_D' }", function()
+    should_fail_with("dwell.dwell_sealed_system_valve_position='not a valid position' must be in the set { 'position_home', 'position_A', 'position_B', 'position_C', 'position_D' }", function()
       local config = generate_config()
-      config.dwell['dwell_refrigerant_valve_position'] = 'not a valid position'
+      config.dwell['dwell_sealed_system_valve_position'] = 'not a valid position'
       defrost(config)
     end)
   end)
 
   it('should require sealed system valve position argument of post dwell to be valid sealed system valve position', function()
-    should_fail_with("post_dwell.post_dwell_refrigerant_valve_position='not a valid position' must be in the set { 'position_home', 'position_A', 'position_B', 'position_C', 'position_D' }", function()
+    should_fail_with("post_dwell.post_dwell_sealed_system_valve_position='not a valid position' must be in the set { 'position_home', 'position_A', 'position_B', 'position_C', 'position_D' }", function()
       local config = generate_config()
-      config.post_dwell['post_dwell_refrigerant_valve_position'] = 'not a valid position'
+      config.post_dwell['post_dwell_sealed_system_valve_position'] = 'not a valid position'
       defrost(config)
     end)
   end)
@@ -386,9 +386,9 @@ describe('Defrost', function()
   end)
 
   it('should require ice box fan speed argument of prechill to be valid fan speed', function()
-    should_fail_with("prechill.prechill_ice_box_fan_speed='not a valid fan speed' must be in the set { 'off_speed', 'super_low_speed', 'low_speed', 'medium_speed', 'high_speed', 'super_high_speed' }", function()
+    should_fail_with("prechill.prechill_ice_cabinet_fan_speed='not a valid fan speed' must be in the set { 'off_speed', 'super_low_speed', 'low_speed', 'medium_speed', 'high_speed', 'super_high_speed' }", function()
       local config = generate_config()
-      config.prechill['prechill_ice_box_fan_speed'] = 'not a valid fan speed'
+      config.prechill['prechill_ice_cabinet_fan_speed'] = 'not a valid fan speed'
       defrost(config)
     end)
   end)
@@ -828,11 +828,11 @@ describe('Defrost', function()
       prechill = {
         max_prechill_time_in_minutes = 10,
         max_prechill_time_for_secondary_only_defrost_in_minutes = 20,
-        prechill_refrigerant_valve_position = 'position_B',
+        prechill_sealed_system_valve_position = 'position_B',
         prechill_compressor_speed = 'low_speed',
         prechill_freezer_evap_fan_speed = 'super_low_speed',
         prechill_fresh_food_evap_fan_speed = 'low_speed',
-        prechill_ice_box_fan_speed = 'medium_speed',
+        prechill_ice_cabinet_fan_speed = 'medium_speed',
         prechill_deli_fan_speed = 'high_speed',
         prechill_convertible_compartment_damper_position = 'open',
         prechill_convertible_compartment_fan_speed = 'super_low_speed',
@@ -851,7 +851,7 @@ describe('Defrost', function()
         heater_on_entry_fresh_food_damper_position = 'closed'
       },
       heater_on = {
-        defrost_heater_on_refrigerant_valve_position = 'position_A',
+        defrost_heater_on_sealed_system_valve_position = 'position_A',
         freezer_defrost_heater_max_on_time_in_minutes = 60,
         freezer_invalid_thermistor_defrost_heater_max_on_time_in_minutes = 30,
         freezer_heater_on_time_to_set_abnormal_defrost_in_minutes = 32,
@@ -870,14 +870,14 @@ describe('Defrost', function()
       dwell = {
         dwell_time_in_minutes = 7,
         dwell_fresh_food_damper_position = 'closed',
-        dwell_refrigerant_valve_position = 'position_B'
+        dwell_sealed_system_valve_position = 'position_B'
       },
       post_dwell = {
         post_dwell_exit_time_in_minutes = 10,
         secondary_only_post_dwell_exit_time_in_minutes = 10,
         post_dwell_freezer_evap_exit_temperature_in_degfx100 = -1000,
         secondary_only_post_dwell_freezer_evap_exit_temperature_in_degfx100 = -1200,
-        post_dwell_refrigerant_valve_position = 'position_B',
+        post_dwell_sealed_system_valve_position = 'position_B',
         post_dwell_compressor_speed = 'low_speed',
         post_dwell_condenser_fan_speed = 'low_speed',
         post_dwell_fresh_food_damper_position = 'closed'

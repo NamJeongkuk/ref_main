@@ -34,11 +34,11 @@ typedef struct
 {
    uint8_t maxPrechillTimeInMinutes;
    uint8_t maxPrechillTimeForSecondaryOnlyDefrostInMinutes;
-   SealedSystemValvePosition_t prechillRefrigerantValvePosition;
+   SealedSystemValvePosition_t prechillSealedSystemValvePosition;
    CompressorSpeed_t prechillCompressorSpeed;
    FanSpeed_t prechillFreezerEvapFanSpeed;
    FanSpeed_t prechillFreshFoodEvapFanSpeed;
-   FanSpeed_t prechillIceBoxFanSpeed;
+   FanSpeed_t prechillIceCabinetFanSpeed;
    FanSpeed_t prechillDeliFanSpeed;
    DamperPosition_t prechillConvertibleCompartmentDamperPosition;
    FanSpeed_t prechillConvertibleCompartmentFanSpeed;
@@ -61,7 +61,7 @@ typedef struct
 
 typedef struct
 {
-   SealedSystemValvePosition_t defrostHeaterOnRefrigerantValvePosition;
+   SealedSystemValvePosition_t defrostHeaterOnSealedSystemValvePosition;
    uint8_t freezerDefrostHeaterMaxOnTimeInMinutes;
    uint8_t freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes;
    uint8_t freezerHeaterOnTimeToSetAbnormalDefrostInMinutes;
@@ -82,7 +82,7 @@ typedef struct
 {
    uint8_t dwellTimeInMinutes;
    DamperPosition_t dwellFreshFoodDamperPosition;
-   SealedSystemValvePosition_t dwellRefrigerantValvePosition;
+   SealedSystemValvePosition_t dwellSealedSystemValvePosition;
 } DefrostDwellData_t;
 
 typedef struct
@@ -91,7 +91,7 @@ typedef struct
    uint8_t secondaryOnlyPostDwellExitTimeInMinutes;
    TemperatureDegFx100_t postDwellFreezerEvapExitTemperatureInDegFx100;
    TemperatureDegFx100_t secondaryOnlyPostDwellFreezerEvapExitTemperatureInDegFx100;
-   SealedSystemValvePosition_t postDwellRefrigerantValvePosition;
+   SealedSystemValvePosition_t postDwellSealedSystemValvePosition;
    CompressorSpeed_t postDwellCompressorSpeed;
    FanSpeed_t postDwellCondenserFanSpeed;
    DamperPosition_t postDwellFreshFoodDamperPosition;

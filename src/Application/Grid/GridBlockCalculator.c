@@ -46,7 +46,7 @@ static bool FreezerThermistorIsValid(GridBlockCalculator_t *instance)
    bool state;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerThermistorIsValidErd,
+      instance->_private.config->freezerThermistorIsValidResolvedErd,
       &state);
    return state;
 }
@@ -56,7 +56,7 @@ static bool FreshFoodThermistorIsValid(GridBlockCalculator_t *instance)
    bool state;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freshFoodThermistorIsValidErd,
+      instance->_private.config->freshFoodThermistorIsValidResolvedErd,
       &state);
    return state;
 }
@@ -256,8 +256,8 @@ static void OnDataModelChanged(void *context, const void *args)
    if((erd == instance->_private.config->freshFoodFilteredResolvedTemperatureInDegFx100) ||
       (erd == instance->_private.config->freezerFilteredResolvedTemperatureInDegFx100) ||
       (erd == instance->_private.config->calculatedGridLinesErd) ||
-      (erd == instance->_private.config->freezerThermistorIsValidErd) ||
-      (erd == instance->_private.config->freshFoodThermistorIsValidErd))
+      (erd == instance->_private.config->freezerThermistorIsValidResolvedErd) ||
+      (erd == instance->_private.config->freshFoodThermistorIsValidResolvedErd))
    {
       if(FreshFoodThermistorIsValid(instance) || FreezerThermistorIsValid(instance))
       {

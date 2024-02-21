@@ -14,11 +14,11 @@ return defrost({
   prechill = {
     max_prechill_time_in_minutes = 10,
     max_prechill_time_for_secondary_only_defrost_in_minutes = 20,
-    prechill_refrigerant_valve_position = 'position_B',
+    prechill_sealed_system_valve_position = 'position_B',
     prechill_compressor_speed = 'low_speed',
     prechill_freezer_evap_fan_speed = 'super_low_speed',
     prechill_fresh_food_evap_fan_speed = 'low_speed',
-    prechill_ice_box_fan_speed = 'medium_speed',
+    prechill_ice_cabinet_fan_speed = 'medium_speed',
     prechill_deli_fan_speed = 'high_speed',
     prechill_convertible_compartment_damper_position = 'open',
     prechill_convertible_compartment_fan_speed = 'high_speed',
@@ -37,7 +37,7 @@ return defrost({
     heater_on_entry_fresh_food_damper_position = 'closed'
   },
   heater_on = {
-    defrost_heater_on_refrigerant_valve_position = 'position_A',
+    defrost_heater_on_sealed_system_valve_position = 'position_A',
     freezer_defrost_heater_max_on_time_in_minutes = 60,
     freezer_invalid_thermistor_defrost_heater_max_on_time_in_minutes = 30,
     freezer_heater_on_time_to_set_abnormal_defrost_in_minutes = 32,
@@ -56,14 +56,14 @@ return defrost({
   dwell = {
     dwell_time_in_minutes = 7,
     dwell_fresh_food_damper_position = 'closed',
-    dwell_refrigerant_valve_position = 'position_B',
+    dwell_sealed_system_valve_position = 'position_B',
   },
   post_dwell = {
     post_dwell_exit_time_in_minutes = 10,
     secondary_only_post_dwell_exit_time_in_minutes = 10,
     post_dwell_freezer_evap_exit_temperature_in_degfx100 = -1000,
     secondary_only_post_dwell_freezer_evap_exit_temperature_in_degfx100 = -1200,
-    post_dwell_refrigerant_valve_position = 'position_B',
+    post_dwell_sealed_system_valve_position = 'position_B',
     post_dwell_compressor_speed = 'low_speed',
     post_dwell_condenser_fan_speed = 'low_speed',
     post_dwell_fresh_food_damper_position = 'closed'

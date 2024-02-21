@@ -85,7 +85,7 @@ typedef struct
 {
    TemperatureDegFx100_t iceFormationOffsetInDegFx100;
    const ShiftOffsetData_t *shiftOffsetData;
-} IceBoxAdjustedSetpointData_t;
+} IceCabinetAdjustedSetpointData_t;
 
 typedef struct
 {
@@ -100,7 +100,7 @@ typedef struct
    const FreezerAdjustedSetpointData_t *freezerAdjustedSetpointData;
    const ConvertibleCompartmentAdjustedSetpointData_t *convertibleCompartmentAdjustedSetpointData;
    const DeliPanAdjustedSetpointData_t *deliPanAdjustedSetpointData;
-   const IceBoxAdjustedSetpointData_t *iceBoxAdjustedSetpointData;
+   const IceCabinetAdjustedSetpointData_t *iceCabinetAdjustedSetpointData;
    const ShiftOffsetCalculatorData_t *shiftOffsetCalculatorData;
 } AdjustedSetpointData_t;
 

@@ -7,11 +7,11 @@ return enum({
   Erd_RightSideFreshFoodDoorStatus = 0xF0A8,
   Erd_LeftSideFreezerDoorStatus = 0xF0A9,
   Erd_BottomFreezerDrawerStatus = 0xF0AB,
-  
+
   Erd_IceMaker0_MoldThermistor_AdcCount = 0xF0B0,
   Erd_IceMaker1_MoldThermistor_AdcCount = 0xF0B1,
   Erd_IceMaker2_MoldThermistor_AdcCount = 0xF0BB,
-  Erd_IceMakerBoxThermistor_AdcCount = 0xF0B2,
+  Erd_IceMakerCabinetThermistor_AdcCount = 0xF0B2,
   Erd_FreshFoodThermistor_AdcCount = 0xF0B3,
   Erd_FreezerThermistor_AdcCount = 0xF0B4,
   Erd_FreshFoodEvapThermistor_AdcCount = 0xF0B5,
@@ -41,7 +41,7 @@ return enum({
   Erd_IceMaker1_FillTubeHeater = 0xF512,
   Erd_IceMaker2_FillTubeHeater = 0xF513,
   Erd_DamperHeater = 0xF506,
-  
+
   Erd_IceMaker0_FeelerArmPosition = 0xF151,
   Erd_IceMaker1_FeelerArmPosition = 0xF1B1,
   Erd_IceMaker2_FeelerArmPosition = 0xF1B2,

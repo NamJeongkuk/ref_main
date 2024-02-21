@@ -15,7 +15,7 @@ describe('AdjustedSetpoint', function()
       freezer_adjusted_setpoint = TypedString('freezer_adjusted_setpoint', 'freezer_adjusted_setpoint'),
       convertible_compartment_adjusted_setpoint = TypedString('convertible_compartment_adjusted_setpoint', 'convertible_compartment_adjusted_setpoint'),
       deli_pan_adjusted_setpoint = TypedString('deli_pan_adjusted_setpoint', 'deli_pan_adjusted_setpoint'),
-      ice_box_adjusted_setpoint = TypedString('ice_box_adjusted_setpoint', 'ice_box_adjusted_setpoint'),
+      ice_cabinet_adjusted_setpoint = TypedString('ice_cabinet_adjusted_setpoint', 'ice_cabinet_adjusted_setpoint'),
       shift_offset_calculator = TypedString('shift_offset_calculator', 'shift_offset_calculator')
     }, overrides or {})
   end
@@ -49,9 +49,9 @@ describe('AdjustedSetpoint', function()
       }))
     end)
 
-    should_fail_with('ice_box_adjusted_setpoint must be a typed string with type ice_box_adjusted_setpoint, but is a number', function()
+    should_fail_with('ice_cabinet_adjusted_setpoint must be a typed string with type ice_cabinet_adjusted_setpoint, but is a number', function()
       adjusted_setpoint(generate_config({
-        ice_box_adjusted_setpoint = -1
+        ice_cabinet_adjusted_setpoint = -1
       }))
     end)
 
@@ -69,7 +69,7 @@ describe('AdjustedSetpoint', function()
         pointer(freezer_adjusted_setpoint),
         pointer(convertible_compartment_adjusted_setpoint),
         pointer(deli_pan_adjusted_setpoint),
-        pointer(ice_box_adjusted_setpoint),
+        pointer(ice_cabinet_adjusted_setpoint),
         pointer(shift_offset_calculator)
       )
     ]])

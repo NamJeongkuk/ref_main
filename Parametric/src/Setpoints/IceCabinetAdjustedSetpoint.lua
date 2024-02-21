@@ -5,17 +5,17 @@ local validate_arguments = require 'lua-common'.utilities.validate_arguments
 local TypedString = require 'lua-common'.utilities.TypedString
 
 return function(core)
-   import(core)
+  import(core)
 
-   local generate = memoize(function(config)
+  local generate = memoize(function(config)
     return TypedString(
-      { 'ice_box_adjusted_setpoint' },
+      { 'ice_cabinet_adjusted_setpoint' },
       structure(
         i16(config.ice_formation_offset_in_degfx100),
         pointer(config.shift_offset)
       )
     )
-   end)
+  end)
 
   return function(config)
     validate_arguments(

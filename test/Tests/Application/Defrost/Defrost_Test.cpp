@@ -59,8 +59,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .readyToDefrostErd = Erd_ReadyToDefrost,
    .freezerFilteredTemperatureWasTooWarmOnPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUp,
    .freezerEvaporatorThermistorIsValidErd = Erd_FreezerEvapThermistor_IsValidResolved,
-   .freshFoodThermistorIsValidErd = Erd_FreshFoodThermistor_IsValidResolved,
-   .freezerThermistorIsValidErd = Erd_FreezerThermistor_IsValidResolved,
+   .freshFoodThermistorIsValidResolvedErd = Erd_FreshFoodThermistor_IsValidResolved,
+   .freezerThermistorIsValidResolvedErd = Erd_FreezerThermistor_IsValidResolved,
    .compressorIsOnErd = Erd_CompressorIsOn,
    .coolingModeErd = Erd_CoolingMode,
    .freezerFilteredTemperatureTooWarmOnPowerUpReadyErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUpReady,
@@ -111,11 +111,11 @@ static const DefrostPrechillPrepData_t prechillPrepData = {
 static const DefrostPrechillData_t prechillData = {
    .maxPrechillTimeInMinutes = 10,
    .maxPrechillTimeForSecondaryOnlyDefrostInMinutes = 20,
-   .prechillRefrigerantValvePosition = SealedSystemValvePosition_B,
+   .prechillSealedSystemValvePosition = SealedSystemValvePosition_B,
    .prechillCompressorSpeed = CompressorSpeed_Low,
    .prechillFreezerEvapFanSpeed = FanSpeed_SuperLow,
    .prechillFreshFoodEvapFanSpeed = FanSpeed_Low,
-   .prechillIceBoxFanSpeed = FanSpeed_Medium,
+   .prechillIceCabinetFanSpeed = FanSpeed_Medium,
    .prechillDeliFanSpeed = FanSpeed_High,
    .prechillConvertibleCompartmentDamperPosition = DamperPosition_Open,
    .prechillConvertibleCompartmentFanSpeed = FanSpeed_High,
@@ -136,7 +136,7 @@ static const DefrostHeaterOnEntryData_t heaterOnEntryData = {
 };
 
 static const DefrostHeaterOnData_t heaterOnData = {
-   .defrostHeaterOnRefrigerantValvePosition = SealedSystemValvePosition_A,
+   .defrostHeaterOnSealedSystemValvePosition = SealedSystemValvePosition_A,
    .freezerDefrostHeaterMaxOnTimeInMinutes = 60,
    .freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 10,
    .freezerHeaterOnTimeToSetAbnormalDefrostInMinutes = 32,
@@ -156,7 +156,7 @@ static const DefrostHeaterOnData_t heaterOnData = {
 static const DefrostDwellData_t dwellData = {
    .dwellTimeInMinutes = 7,
    .dwellFreshFoodDamperPosition = DamperPosition_Closed,
-   .dwellRefrigerantValvePosition = SealedSystemValvePosition_B
+   .dwellSealedSystemValvePosition = SealedSystemValvePosition_B
 };
 
 static const DefrostPostDwellData_t postDwellData = {
@@ -164,7 +164,7 @@ static const DefrostPostDwellData_t postDwellData = {
    .secondaryOnlyPostDwellExitTimeInMinutes = 10,
    .postDwellFreezerEvapExitTemperatureInDegFx100 = -1000,
    .secondaryOnlyPostDwellFreezerEvapExitTemperatureInDegFx100 = -1200,
-   .postDwellRefrigerantValvePosition = SealedSystemValvePosition_B,
+   .postDwellSealedSystemValvePosition = SealedSystemValvePosition_B,
    .postDwellCompressorSpeed = CompressorSpeed_Low,
    .postDwellCondenserFanSpeed = FanSpeed_Low,
    .postDwellFreshFoodDamperPosition = DamperPosition_Closed
@@ -1796,7 +1796,7 @@ TEST(Defrost_SingleEvap, ShouldVoteForLoadsOnEntryToPrechill)
    CompressorSpeedVoteShouldBe(defrostData.prechillData.prechillCompressorSpeed);
    FreezerEvapFanSpeedVoteShouldBe(defrostData.prechillData.prechillFreezerEvapFanSpeed);
    FreshFoodDamperPositionVoteShouldBe(defrostData.prechillData.prechillFreshFoodDamperPosition);
-   IceCabinetFanSpeedVoteShouldBe(defrostData.prechillData.prechillIceBoxFanSpeed);
+   IceCabinetFanSpeedVoteShouldBe(defrostData.prechillData.prechillIceCabinetFanSpeed);
 }
 
 TEST(Defrost_SingleEvap, ShouldTurnOffCompressorAndFansOnHeaterOnEntryState)

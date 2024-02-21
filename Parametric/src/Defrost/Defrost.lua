@@ -30,11 +30,11 @@ return function(core)
         structure(
           u8(config.prechill.max_prechill_time_in_minutes),
           u8(config.prechill.max_prechill_time_for_secondary_only_defrost_in_minutes),
-          u8(sealed_system_valve_position_type[config.prechill.prechill_refrigerant_valve_position]),
+          u8(sealed_system_valve_position_type[config.prechill.prechill_sealed_system_valve_position]),
           u8(compressor_speed_type[config.prechill.prechill_compressor_speed]),
           u8(fan_speed_type[config.prechill.prechill_freezer_evap_fan_speed]),
           u8(fan_speed_type[config.prechill.prechill_fresh_food_evap_fan_speed]),
-          u8(fan_speed_type[config.prechill.prechill_ice_box_fan_speed]),
+          u8(fan_speed_type[config.prechill.prechill_ice_cabinet_fan_speed]),
           u8(fan_speed_type[config.prechill.prechill_deli_fan_speed]),
           u8(damper_position_type[config.prechill.prechill_convertible_compartment_damper_position]),
           u8(fan_speed_type[config.prechill.prechill_convertible_compartment_fan_speed]),
@@ -53,7 +53,7 @@ return function(core)
           u8(damper_position_type[config.heater_on_entry.heater_on_entry_fresh_food_damper_position])
         ),
         structure(
-          u8(sealed_system_valve_position_type[config.heater_on.defrost_heater_on_refrigerant_valve_position]),
+          u8(sealed_system_valve_position_type[config.heater_on.defrost_heater_on_sealed_system_valve_position]),
           u8(config.heater_on.freezer_defrost_heater_max_on_time_in_minutes),
           u8(config.heater_on.freezer_invalid_thermistor_defrost_heater_max_on_time_in_minutes),
           u8(config.heater_on.freezer_heater_on_time_to_set_abnormal_defrost_in_minutes),
@@ -72,14 +72,14 @@ return function(core)
         structure(
           u8(config.dwell.dwell_time_in_minutes),
           u8(damper_position_type[config.dwell.dwell_fresh_food_damper_position]),
-          u8(sealed_system_valve_position_type[config.dwell.dwell_refrigerant_valve_position])
+          u8(sealed_system_valve_position_type[config.dwell.dwell_sealed_system_valve_position])
         ),
         structure(
           u8(config.post_dwell.post_dwell_exit_time_in_minutes),
           u8(config.post_dwell.secondary_only_post_dwell_exit_time_in_minutes),
           i16(config.post_dwell.post_dwell_freezer_evap_exit_temperature_in_degfx100),
           i16(config.post_dwell.secondary_only_post_dwell_freezer_evap_exit_temperature_in_degfx100),
-          u8(sealed_system_valve_position_type[config.post_dwell.post_dwell_refrigerant_valve_position]),
+          u8(sealed_system_valve_position_type[config.post_dwell.post_dwell_sealed_system_valve_position]),
           u8(compressor_speed_type[config.post_dwell.post_dwell_compressor_speed]),
           u8(fan_speed_type[config.post_dwell.post_dwell_condenser_fan_speed]),
           u8(damper_position_type[config.post_dwell.post_dwell_fresh_food_damper_position])
@@ -112,11 +112,11 @@ return function(core)
           constraint.table_keys({
             max_prechill_time_in_minutes = { constraint.u8 },
             max_prechill_time_for_secondary_only_defrost_in_minutes = { constraint.u8 },
-            prechill_refrigerant_valve_position = { constraint.in_set(enum.keys(sealed_system_valve_position_type)) },
+            prechill_sealed_system_valve_position = { constraint.in_set(enum.keys(sealed_system_valve_position_type)) },
             prechill_compressor_speed = { constraint.in_set(enum.keys(compressor_speed_type)) },
             prechill_freezer_evap_fan_speed = { constraint.in_set(enum.keys(fan_speed_type)) },
             prechill_fresh_food_evap_fan_speed = { constraint.in_set(enum.keys(fan_speed_type)) },
-            prechill_ice_box_fan_speed = { constraint.in_set(enum.keys(fan_speed_type)) },
+            prechill_ice_cabinet_fan_speed = { constraint.in_set(enum.keys(fan_speed_type)) },
             prechill_deli_fan_speed = { constraint.in_set(enum.keys(fan_speed_type)) },
             prechill_convertible_compartment_damper_position = { constraint.in_set(enum.keys(damper_position_type)) },
             prechill_convertible_compartment_fan_speed = { constraint.in_set(enum.keys(fan_speed_type)) },
@@ -139,7 +139,7 @@ return function(core)
         },
         heater_on = {
           constraint.table_keys({
-            defrost_heater_on_refrigerant_valve_position = { constraint.in_set(enum.keys(sealed_system_valve_position_type)) },
+            defrost_heater_on_sealed_system_valve_position = { constraint.in_set(enum.keys(sealed_system_valve_position_type)) },
             freezer_defrost_heater_max_on_time_in_minutes = { constraint.u8 },
             freezer_invalid_thermistor_defrost_heater_max_on_time_in_minutes = { constraint.u8 },
             freezer_heater_on_time_to_set_abnormal_defrost_in_minutes = { constraint.u8 },
@@ -160,7 +160,7 @@ return function(core)
           constraint.table_keys({
             dwell_time_in_minutes = { constraint.u8 },
             dwell_fresh_food_damper_position = { constraint.in_set(enum.keys(damper_position_type)) },
-            dwell_refrigerant_valve_position = { constraint.in_set(enum.keys(sealed_system_valve_position_type)) }
+            dwell_sealed_system_valve_position = { constraint.in_set(enum.keys(sealed_system_valve_position_type)) }
           })
         },
         post_dwell = {
@@ -169,7 +169,7 @@ return function(core)
             secondary_only_post_dwell_exit_time_in_minutes = { constraint.u8 },
             post_dwell_freezer_evap_exit_temperature_in_degfx100 = { constraint.i16 },
             secondary_only_post_dwell_freezer_evap_exit_temperature_in_degfx100 = { constraint.i16 },
-            post_dwell_refrigerant_valve_position = { constraint.in_set(enum.keys(sealed_system_valve_position_type)) },
+            post_dwell_sealed_system_valve_position = { constraint.in_set(enum.keys(sealed_system_valve_position_type)) },
             post_dwell_compressor_speed = { constraint.in_set(enum.keys(compressor_speed_type)) },
             post_dwell_condenser_fan_speed = { constraint.in_set(enum.keys(fan_speed_type)) },
             post_dwell_fresh_food_damper_position = { constraint.in_set(enum.keys(damper_position_type)) }

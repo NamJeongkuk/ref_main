@@ -14,7 +14,7 @@ typedef struct
 {
    TemperatureDegFx100_t freshFoodOffsetInDegFx100;
    TemperatureDegFx100_t freezerOffsetInDegFx100;
-   TemperatureDegFx100_t iceBoxOffsetInDegFx100;
+   TemperatureDegFx100_t iceCabinetOffsetInDegFx100;
 } CabinetOffsetData_t;
 
 #endif

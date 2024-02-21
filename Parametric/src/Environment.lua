@@ -52,7 +52,7 @@ return function(directory)
   import('Setpoints/FreezerAdjustedSetpoint')
   import('Setpoints/ConvertibleCompartmentAdjustedSetpoint')
   import('Setpoints/DeliPanAdjustedSetpoint')
-  import('Setpoints/IceBoxAdjustedSetpoint')
+  import('Setpoints/IceCabinetAdjustedSetpoint')
   import('Setpoints/CrossAmbientOffsetCalculator')
   import('Setpoints/ShiftOffsetCalculator')
   import('Setpoints/FixedSetpointOffset')
@@ -156,7 +156,7 @@ return function(directory)
   freezer_adjusted_setpoint = FreezerAdjustedSetpoint(core)
   convertible_compartment_adjusted_setpoint = ConvertibleCompartmentAdjustedSetpoint(core)
   deli_pan_adjusted_setpoint = DeliPanAdjustedSetpoint(core)
-  ice_box_adjusted_setpoint = IceBoxAdjustedSetpoint(core)
+  ice_cabinet_adjusted_setpoint = IceCabinetAdjustedSetpoint(core)
   cross_ambient_offset_calculator = CrossAmbientOffsetCalculator(core)
   shift_offset_calculator = ShiftOffsetCalculator(core)
   fixed_setpoint_offset = FixedSetpointOffset(core)
@@ -266,7 +266,7 @@ return function(directory)
     freezer_adjusted_setpoint = freezer_adjusted_setpoint,
     convertible_compartment_adjusted_setpoint = convertible_compartment_adjusted_setpoint,
     deli_pan_adjusted_setpoint = deli_pan_adjusted_setpoint,
-    ice_box_adjusted_setpoint = ice_box_adjusted_setpoint,
+    ice_cabinet_adjusted_setpoint = ice_cabinet_adjusted_setpoint,
     cross_ambient_offset_calculator = cross_ambient_offset_calculator,
     shift_offset_calculator = shift_offset_calculator,
     fixed_setpoint_offset = fixed_setpoint_offset,
@@ -325,7 +325,7 @@ return function(directory)
     load_off_door_open = load_off_door_open,
     load_off_door_open_compartment_list = load_off_door_open_compartment_list,
     cabinet_temperature_exceeded = cabinet_temperature_exceeded,
-    sealed_system_valve = sealed_system_valve,  
+    sealed_system_valve = sealed_system_valve,
     constants = constants,
     math = math,
     import = require 'lua-parametric-tools'.util.EvalInCurrentEnvironment(directory, {

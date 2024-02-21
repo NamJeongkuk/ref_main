@@ -240,7 +240,7 @@ static bool FreshFoodThermistorIsValid(Defrost_t *instance)
    bool state;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freshFoodThermistorIsValidErd,
+      instance->_private.config->freshFoodThermistorIsValidResolvedErd,
       &state);
    return state;
 }
@@ -250,7 +250,7 @@ static bool FreezerThermistorIsValid(Defrost_t *instance)
    bool state;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freezerThermistorIsValidErd,
+      instance->_private.config->freezerThermistorIsValidResolvedErd,
       &state);
    return state;
 }
@@ -382,7 +382,7 @@ static void VoteForPrechillLoads(Defrost_t *instance, bool care)
    VoteForCompressorSpeed(instance, instance->_private.defrostParametricData->prechillData.prechillCompressorSpeed, care);
    VoteForFreezerEvapFanSpeed(instance, instance->_private.defrostParametricData->prechillData.prechillFreezerEvapFanSpeed, care);
    VoteForDamperPosition(instance, instance->_private.defrostParametricData->prechillData.prechillFreshFoodDamperPosition, care);
-   VoteForIceCabinetFanSpeed(instance, instance->_private.defrostParametricData->prechillData.prechillIceBoxFanSpeed, care);
+   VoteForIceCabinetFanSpeed(instance, instance->_private.defrostParametricData->prechillData.prechillIceCabinetFanSpeed, care);
 }
 
 static void VoteForHeaterOnEntryLoads(Defrost_t *instance, bool care)
@@ -494,7 +494,7 @@ static void CheckIfPrechillTemperatureExitConditionMet(Defrost_t *instance)
    bool freshFoodThermistorIsValid;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->freshFoodThermistorIsValidErd,
+      instance->_private.config->freshFoodThermistorIsValidResolvedErd,
       &freshFoodThermistorIsValid);
 
    if(freezerEvaporatorTemperature <= instance->_private.defrostParametricData->prechillData.prechillFreezerEvapExitTemperatureInDegFx100 ||
@@ -1298,7 +1298,7 @@ static void DataModelChanged(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_PrechillConditionsAreMet, NULL);
       }
    }
-   else if(erd == instance->_private.config->freshFoodThermistorIsValidErd)
+   else if(erd == instance->_private.config->freshFoodThermistorIsValidResolvedErd)
    {
       const bool *freshFoodThermistorIsValid = onChangeData->data;
 
@@ -1307,7 +1307,7 @@ static void DataModelChanged(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_FreshFoodThermistorIsInvalid, NULL);
       }
    }
-   else if(erd == instance->_private.config->freezerThermistorIsValidErd)
+   else if(erd == instance->_private.config->freezerThermistorIsValidResolvedErd)
    {
       const bool *freezerThermistorIsValid = onChangeData->data;
 

@@ -12,7 +12,7 @@ return function(core)
       structure(
         i16(config.fresh_food_offset_in_degfx100),
         i16(config.freezer_offset_in_degfx100),
-        i16(config.ice_box_offset_in_degfx100)
+        i16(config.ice_cabinet_offset_in_degfx100)
       )
     )
   end)
@@ -23,7 +23,7 @@ return function(core)
       {
         fresh_food_offset_in_degfx100 = { constraint.i16 },
         freezer_offset_in_degfx100 = { constraint.i16 },
-        ice_box_offset_in_degfx100 = { constraint.i16 }
+        ice_cabinet_offset_in_degfx100 = { constraint.i16 }
       }
     )
     return generate(config)

@@ -2908,7 +2908,7 @@
         {
           "namespace": "mb",
           "displayName": "Harvest count is ready to harvest",
-          "name": "Erd_IceMaker1_HarvestCountIsReadyToHarheaterIvest",
+          "name": "Erd_IceMaker1_HarvestCountIsReadyToHarvest",
           "read": true,
           "write": true
         },

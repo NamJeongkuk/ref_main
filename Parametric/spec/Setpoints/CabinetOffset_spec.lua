@@ -12,7 +12,7 @@ describe('CabinetOffset', function()
     return require 'lua-common'.table.merge({
       fresh_food_offset_in_degfx100 = 10,
       freezer_offset_in_degfx100 = -10,
-      ice_box_offset_in_degfx100 = -100
+      ice_cabinet_offset_in_degfx100 = -100
     }, overrides or {})
   end
 
@@ -36,10 +36,10 @@ describe('CabinetOffset', function()
     end)
   end)
 
-  it('should assert if ice_box_offset_in_degfx100 is not in range', function()
-    should_fail_with('ice_box_offset_in_degfx100=32768 must be in [-32768, 32767]', function()
+  it('should assert if ice_cabinet_offset_in_degfx100 is not in range', function()
+    should_fail_with('ice_cabinet_offset_in_degfx100=32768 must be in [-32768, 32767]', function()
       cabinet_offset(generate_config({
-        ice_box_offset_in_degfx100 = 32768
+        ice_cabinet_offset_in_degfx100 = 32768
       }))
     end)
   end)
@@ -56,7 +56,7 @@ describe('CabinetOffset', function()
     local actual = cabinet_offset({
       fresh_food_offset_in_degfx100 = 10,
       freezer_offset_in_degfx100 = -10,
-      ice_box_offset_in_degfx100 = -100
+      ice_cabinet_offset_in_degfx100 = -100
     })
 
     assert.equals(expected, remove_whitespace(tostring(actual)))
