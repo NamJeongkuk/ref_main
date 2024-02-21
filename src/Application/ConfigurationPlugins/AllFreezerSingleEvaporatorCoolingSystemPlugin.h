@@ -11,6 +11,7 @@
 #include "AmbientTemperatureAndHumidityPlugin.h"
 #include "CompressorPlugin.h"
 #include "CoolingSystemRequestHandler.h"
+#include "ConstArrayMap_SingleDoorSingleEvap.h"
 #include "I_DataModel.h"
 #include "SingleDoorFreezerSetpointPlugin.h"
 #include "SingleDoorFreezerCoolingSystemSensorFilteringPlugin.h"
@@ -26,6 +27,7 @@ typedef struct
       AmbientTemperatureAndHumidityPlugin_t ambientTemperatureAndHumidityPlugin;
       CompressorPlugin_t compressorPlugin;
       CoolingSystemRequestHandler_t coolingSystemRequestHandler;
+      ConstArrayMap_SingleDoorSingleEvap_t coolingStateBasedGridVotesTable;
    } _private;
 } AllFreezerSingleEvaporatorCoolingSystemPlugin_t;
 

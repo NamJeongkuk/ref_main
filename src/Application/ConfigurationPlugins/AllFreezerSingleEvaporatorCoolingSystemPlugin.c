@@ -6,6 +6,7 @@
  */
 
 #include "AllFreezerSingleEvaporatorCoolingSystemPlugin.h"
+#include "DataModelErdPointerAccess.h"
 #include "SystemErds.h"
 
 static const CoolingSystemRequestVotePair_t votingPairs[] = {
@@ -34,6 +35,9 @@ void AllFreezerSingleEvaporatorCoolingSystemPlugin_Init(
    AllFreezerSingleEvaporatorCoolingSystemPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
+   I_ConstArrayMap_t *constArrayMapInterface = ConstArrayMap_SingleDoorSingleEvap_Init(&instance->_private.coolingStateBasedGridVotesTable);
+   DataModelErdPointerAccess_Write(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface, constArrayMapInterface);
+
    SingleDoorFreezerSetpointPlugin_Init(&instance->_private.singleDoorFreezerSetpointPlugin, dataModel);
    SingleDoorFreezerCoolingSystemSensorFilteringPlugin_Init(
       &instance->_private.singleDoorFreezerCoolingSystemSensorFilteringPlugin,
