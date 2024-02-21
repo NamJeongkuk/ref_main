@@ -16,7 +16,6 @@ typedef struct
    struct
    {
       PeriodicNvUpdateService_t periodicNvUpdate;
-      PeriodicNvUpdateService_t periodicNvHeaterOnTimeUpdate;
    } _private;
 } PeriodicNvUpdaterPlugin_t;
 
