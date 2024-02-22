@@ -8,8 +8,6 @@
 #ifndef CONSTARRAYMAP_SIDEBYSIDESINGLEEVAP_H
 #define CONSTARRAYMAP_SIDEBYSIDESINGLEEVAP_H
 
-#include "CoolingMode.h"
-#include "CoolingSpeed.h"
 #include "FanSpeed.h"
 #include "CompressorVotedSpeed.h"
 #include "DamperVotedPosition.h"

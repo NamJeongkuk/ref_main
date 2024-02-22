@@ -11,6 +11,7 @@
 #include "I_DataModel.h"
 #include "FourDoorSetpointPlugin.h"
 #include "FourDoorDualEvaporatorCoolingSystemSensorFilteringPlugin.h"
+#include "ConstArrayMap_FourDoorDualEvap.h"
 #include "AmbientTemperatureAndHumidityPlugin.h"
 #include "CompressorPlugin.h"
 #include "FourDoorFanPlugin.h"
@@ -25,6 +26,7 @@ typedef struct
    {
       FourDoorSetpointPlugin_t fourDoorSetpointPlugin;
       FourDoorDualEvaporatorCoolingSystemSensorFilteringPlugin_t fourDoorDualEvaporatorCoolingSystemSensorFilteringPlugin;
+      ConstArrayMap_FourDoorDualEvap_t coolingStateBasedGridVotesTable;
       AmbientTemperatureAndHumidityPlugin_t ambientTemperatureAndHumidityPlugin;
       CompressorPlugin_t compressorPlugin;
       FourDoorFanPlugin_t fourDoorFanPlugin;

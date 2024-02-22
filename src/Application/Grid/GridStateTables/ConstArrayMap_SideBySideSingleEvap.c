@@ -6,7 +6,6 @@
  */
 
 #include "ConstArrayMap_SideBySideSingleEvap.h"
-#include "ConstArrayMap_LinearSearch.h"
 
 // clang-format off
 static const SideBySideSingleEvaporatorStatesTable_t table[] =

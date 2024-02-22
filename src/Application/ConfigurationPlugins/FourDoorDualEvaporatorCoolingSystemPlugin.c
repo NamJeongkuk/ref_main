@@ -5,9 +5,10 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "FourDoorDualEvaporatorCoolingSystemPlugin.h"
 #include "SystemErds.h"
 #include "Constants_Binary.h"
+#include "DataModelErdPointerAccess.h"
+#include "FourDoorDualEvaporatorCoolingSystemPlugin.h"
 
 static const CoolingSystemRequestVotePair_t votingPairs[] = {
    { Erd_CondenserFanSpeed_CoolingSystemOffVote, FanSpeed_Off },
@@ -34,6 +35,8 @@ static const CoolingSystemRequestHandlerConfiguration_t coolingSystemRequestHand
 
 void FourDoorDualEvaporatorCoolingSystemPlugin_Init(FourDoorDualEvaporatorCoolingSystemPlugin_t *instance, I_DataModel_t *dataModel)
 {
+   I_ConstArrayMap_t *constArrayMapInterface = ConstArrayMap_FourDoorDualEvap_Init(&instance->_private.coolingStateBasedGridVotesTable);
+   DataModelErdPointerAccess_Write(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface, constArrayMapInterface);
    // remove when grid is plugged in
    DataModel_Write(
       dataModel,
