@@ -76,5 +76,46 @@ return {
       '0x1228',
       '0x1233'
     }
+  },
+  pqa_delta_t_sequences_erds = {
+    error_message = 'Do not change these ERDs. The ERDs are used by PQA and Delta T Sequences.',
+    erds = {
+      '0x0035',
+      '0x003A',
+      '0x003B',
+      '0x120E',
+      '0x120F',
+      '0xF0C0',
+      '0xF0C1',
+      '0xF0C2',
+      '0xF0C5',
+      '0xF140',
+      '0xF202',
+      '0xF22C',
+      '0xF2BC',
+      '0xF2D4',
+      '0xF2E1',
+      '0xF31C',
+      '0xF342',
+      '0xF44D',
+      '0xF44E',
+      '0xF50B',
+      '0xF52A',
+      '0xF52E',
+      '0xF56F',
+      '0xF574',
+      '0xF575',
+      '0xF576',
+      '0xF577',
+      '0xF612',
+      '0xF613',
+      '0xF621',
+      '0xF622',
+      '0xF623',
+      '0xF627',
+      '0xF638',
+      '0xF801',
+      '0xFB86'
+    }
   }
 }
