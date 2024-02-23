@@ -17,6 +17,7 @@ enum
    FaultId_FreezerThermistorIsInvalid = 3,
    FaultId_FreezerEvaporatorThermistorIsInvalid = 4,
    FaultId_FreshFoodEvaporatorThermistorIsInvalid = 6,
+   FaultId_ConvertibleCompartmentCabinetThermistorIsInvalid = 7,
    FaultId_AmbientThermistorIsInvalid = 8,
    FaultId_AmbientHumiditySensorIsInvalid = 9,
    FaultId_IceMaker0ThermistorIsInvalid = 10,
