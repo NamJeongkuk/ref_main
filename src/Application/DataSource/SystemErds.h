@@ -1441,9 +1441,9 @@ enum
    ENTRY(Erd_FreezerBackLightUserAllowableState,            0xF47A, UserAllowableInteriorLightState_t,                  Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_FreezerTopLightUserAllowableState,             0xF47B, UserAllowableInteriorLightState_t,                  Swap_No,  Io_None, Sub_N, Ram,                    NotNv,                                                       NotNv,         NotFault) \
    \
-   ENTRY(Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideRequest,         0xF47B, bool,                    Swap_No,      Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideValueInDegFx100, 0xF47C, TemperatureDegFx100_t,   Swap_Range_S, Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
-   ENTRY(Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100,      0xF47D, TemperatureDegFx100_t,   Swap_Range_E, Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideRequest,         0xF47C, bool,                    Swap_No,      Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentCabinet_FilteredTemperatureOverrideValueInDegFx100, 0xF47D, TemperatureDegFx100_t,   Swap_Range_S, Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
+   ENTRY(Erd_ConvertibleCompartmentCabinet_FilteredTemperatureResolvedInDegFx100,      0xF47E, TemperatureDegFx100_t,   Swap_Range_E, Io_None, Sub_N, Ram,                NotNv,                                                       NotNv,         NotFault) \
    \
    ENTRY(Erd_CalculatedCondenserFanControl,                 0xF480, FanControl_t,                                       Swap_Range_S, Io_None, Sub_Y, Ram,                NotNv,                                                       NotNv,         NotFault) \
    ENTRY(Erd_CalculatedIceCabinetFanControl,                0xF481, FanControl_t,                                       Swap_Range,   Io_None, Sub_Y, Ram,                NotNv,                                                       NotNv,         NotFault) \
@@ -1777,6 +1777,18 @@ enum
    ERD_TABLE(EXPAND_AS_NON_RAM_ERD_ENUM)
    Erd_RamBase = (RamErdBase - 1),
    ERD_TABLE(EXPAND_AS_INTERNAL_RAM_ERD_ENUM)
+};
+
+// The following #define and XMACRO expansion prevent ERD ID duplication.
+// The enumeration created should not be used for anything because there is no meaning.
+// If a Number is used more than once in the ERD_TABLE, this enumeration will cause the following error in the compile.
+//     error: redeclaration of enumerator 'DUPLICATE-ERD_<Number>'
+#define EXPAND_AS_DUPLICATE_PREVENTION_ENUM(Name, Number, ...) \
+   CONCAT(DUPLICATE_ERD_, Number),
+
+enum
+{
+   ERD_TABLE(EXPAND_AS_DUPLICATE_PREVENTION_ENUM)
 };
 
 enum
