@@ -8,6 +8,7 @@
 #include "AllFreezerSingleEvaporatorCoolingSystemPlugin.h"
 #include "DataModelErdPointerAccess.h"
 #include "SystemErds.h"
+#include "Constants_Binary.h"
 
 static const CoolingSystemRequestVotePair_t votingPairs[] = {
    { Erd_CondenserFanSpeed_CoolingSystemOffVote, FanSpeed_Off },
@@ -35,6 +36,12 @@ void AllFreezerSingleEvaporatorCoolingSystemPlugin_Init(
    AllFreezerSingleEvaporatorCoolingSystemPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
+   // remove when grid is plugged in
+   DataModel_Write(
+      dataModel,
+      Erd_GridPluginReady,
+      set);
+
    I_ConstArrayMap_t *constArrayMapInterface = ConstArrayMap_SingleDoorSingleEvap_Init(&instance->_private.coolingStateBasedGridVotesTable);
    DataModelErdPointerAccess_Write(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface, constArrayMapInterface);
 
@@ -49,4 +56,6 @@ void AllFreezerSingleEvaporatorCoolingSystemPlugin_Init(
    SingleDoorFreezerFanPlugin_Init(&instance->_private.singleDoorFreezerFanPlugin, dataModel);
 
    CoolingSystemRequestHandler_Init(&instance->_private.coolingSystemRequestHandler, dataModel, &coolingSystemRequestHandlerConfig);
+
+   AllFreezerDefrostPlugin_Init(&instance->_private.allFreezerDefrostPlugin, dataModel);
 }

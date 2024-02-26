@@ -15,6 +15,7 @@
 #include "SingleDoorFreshFoodSetpointPlugin.h"
 #include "SingleDoorFreshFoodCoolingSystemSensorFilteringPlugin.h"
 #include "SingleDoorFreshFoodFanPlugin.h"
+#include "AllFreshFoodDefrostPlugin.h"
 
 typedef struct
 {
@@ -27,6 +28,7 @@ typedef struct
       CompressorPlugin_t compressorPlugin;
       CoolingSystemRequestHandler_t coolingSystemRequestHandler;
       ConstArrayMap_SingleDoorSingleEvap_t coolingStateBasedGridVotesTable;
+      AllFreshFoodDefrostPlugin_t allFreshFoodDefrostPlugin;
    } _private;
 } AllFreshFoodSingleEvaporatorCoolingSystemPlugin_t;
 

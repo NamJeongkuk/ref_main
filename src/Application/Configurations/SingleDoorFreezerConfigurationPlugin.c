@@ -15,4 +15,5 @@ void SingleDoorFreezerConfigurationPlugin_Init(SingleDoorFreezerConfigurationPlu
    DispenserWaterValvePlugin_Init(&instance->_private.dispenserWaterValvePlugin, dataModel);
    AugerMotorPlugin_Init(&instance->_private.augerMotorPlugin, dataModel);
    RecessHeaterPlugin_Init(&instance->_private.recessHeaterPlugin, dataModel);
+   SingleDoorFreezerDoorPlugin_Init(&instance->_private.singleDoorFreezerDoorPlugin, dataModel);
 }

@@ -113,6 +113,13 @@ static const OverrideArbiterConfiguration_t bottomFreezerDrawerStatusOverrideCon
    .numberOfOverrideRequests = NUM_ELEMENTS(bottomFreezerDrawerStatusOverrideRequestErds)
 };
 
+static ConvertibleCompartmentDoorResolverConfiguration_t convertibleCompartmentDoorStateResolverConfiguration = {
+   .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorStatusResolved,
+   .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
+   .convertibleCompartmentAsFreshFoodDoorIsOpenErd = Erd_ConvertibleCompartmentAsFreshFoodDoorStatus,
+   .convertibleCompartmentAsFreezerDoorIsOpenErd = Erd_ConvertibleCompartmentAsFreezerDoorStatus
+};
+
 void FourDoorDoorPlugin_Init(
    FourDoorDoorPlugin_t *instance,
    I_DataModel_t *dataModel)
@@ -146,4 +153,9 @@ void FourDoorDoorPlugin_Init(
       &instance->_private.allFreshFoodDoorStatus,
       dataModel,
       &allFreshFoodDoorStatusConfiguration);
+
+   ConvertibleCompartmentDoorStateResolver_Init(
+      &instance->_private.convertibleCompartmentDoorStateResolver,
+      dataModel,
+      &convertibleCompartmentDoorStateResolverConfiguration);
 }

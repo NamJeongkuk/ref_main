@@ -13,6 +13,7 @@
 #include "I_DataModel.h"
 #include "IsolationWaterValvePlugin.h"
 #include "RecessHeaterPlugin.h"
+#include "SingleDoorFreshFoodDoorPlugin.h"
 
 typedef struct
 {
@@ -22,6 +23,7 @@ typedef struct
       IsolationWaterValvePlugin_t isolationWaterValvePlugin;
       DispenserWaterValvePlugin_t dispenserWaterValvePlugin;
       RecessHeaterPlugin_t recessHeaterPlugin;
+      SingleDoorFreshFoodDoorPlugin_t singleDoorFreshFoodDoorPlugin;
    } _private;
 } SingleDoorFreshFoodConfigurationPlugin_t;
 

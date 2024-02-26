@@ -13,6 +13,7 @@
 #include "SabbathInhibitDoors.h"
 #include "OverrideArbiter.h"
 #include "ConvertibleCompartmentStatePlugin.h"
+#include "ConvertibleCompartmentDoorStateResolver.h"
 
 typedef struct
 {
@@ -24,6 +25,7 @@ typedef struct
       OverrideArbiter_t rightSideFreshFoodDoorOverrideArbiter;
       OverrideArbiter_t convertibleCompartmentDoorOverrideArbiter;
       OverrideArbiter_t bottomFreezerDrawerOverrideArbiter;
+      ConvertibleCompartmentDoorStateResolver_t convertibleCompartmentDoorStateResolver;
    } _private;
 } FourDoorDoorPlugin_t;
 

@@ -54,12 +54,14 @@ void FourDoorDualEvaporatorCoolingSystemPlugin_Init(FourDoorDualEvaporatorCoolin
    FourDoorFanPlugin_Init(&instance->_private.fourDoorFanPlugin, dataModel);
    ThreeWaySealedSystemValvePlugin_Init(&instance->_private.threeWaySealedSystemValvePlugin, dataModel);
 
-   FourDoorDualEvapDefrostPlugin_Init(
-      &instance->_private.fourDoorDualEvapDefrostPlugin,
-      dataModel);
    ConvertibleCompartmentDamperPlugin_Init(
       &instance->_private.convertibleCompartmentDamperPlugin,
       dataModel);
 
    CoolingSystemRequestHandler_Init(&instance->_private.coolingSystemRequestHandler, dataModel, &coolingSystemRequestHandlerConfig);
+
+   ConvertibleCompartmentStatePlugin_Init(&instance->_private.convertibleCompartmentStatePlugin, dataModel);
+   FourDoorDualEvapDefrostPlugin_Init(
+      &instance->_private.fourDoorDualEvapDefrostPlugin,
+      dataModel);
 }

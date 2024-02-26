@@ -92,6 +92,16 @@ static ReadyToDefrostDoorConfiguration_t doorsConfiguration[] = {
       .doorAccelerationErd = Erd_FreezerScaledDoorAccelerationInSeconds,
       .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freezerDoorIncrementFactorInSecondsPerSecond),
    },
+   {
+      .doorIsOpenErd = Erd_ConvertibleCompartmentAsFreezerDoorStatus,
+      .doorAccelerationErd = Erd_ConvertibleCompartmentAsFreezerScaledDoorAccelerationInSeconds,
+      .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freezerDoorIncrementFactorInSecondsPerSecond),
+   },
+   {
+      .doorIsOpenErd = Erd_ConvertibleCompartmentAsFreshFoodDoorStatus,
+      .doorAccelerationErd = Erd_ConvertibleCompartmentAsFreshFoodScaledDoorAccelerationInSeconds,
+      .offsetInParametricForDoorFactor = OFFSET_OF(DefrostData_t, idleData.freshFoodDoorIncrementFactorInSecondsPerSecond),
+   },
 };
 
 static ReadyToDefrostConfiguration_t readyToDefrostConfig = {

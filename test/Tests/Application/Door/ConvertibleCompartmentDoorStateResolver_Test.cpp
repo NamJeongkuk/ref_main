@@ -26,7 +26,7 @@ enum
 };
 
 static ConvertibleCompartmentDoorResolverConfiguration_t config = {
-   .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorStatus,
+   .convertibleCompartmentDoorIsOpenErd = Erd_ConvertibleCompartmentDoorStatusResolved,
    .convertibleCompartmentStateErd = Erd_ConvertibleCompartmentState,
    .convertibleCompartmentAsFreshFoodDoorIsOpenErd = Erd_ConvertibleCompartmentAsFreshFoodDoorStatus,
    .convertibleCompartmentAsFreezerDoorIsOpenErd = Erd_ConvertibleCompartmentAsFreezerDoorStatus
@@ -51,7 +51,7 @@ TEST_GROUP(ConvertibleCompartmentDoorStateResolver)
 
    void GivenConvertibleCompartmentDoorIs(bool state)
    {
-      DataModel_Write(dataModel, Erd_ConvertibleCompartmentDoorStatus, &state);
+      DataModel_Write(dataModel, Erd_ConvertibleCompartmentDoorStatusResolved, &state);
    }
 
    void GivenConvertibleCompartmentDoorIsActingAsA(ConvertibleCompartmentStateType_t state)

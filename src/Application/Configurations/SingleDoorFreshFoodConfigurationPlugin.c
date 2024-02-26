@@ -13,4 +13,5 @@ void SingleDoorFreshFoodConfigurationPlugin_Init(SingleDoorFreshFoodConfiguratio
    IsolationWaterValvePlugin_Init(&instance->_private.isolationWaterValvePlugin, dataModel);
    DispenserWaterValvePlugin_Init(&instance->_private.dispenserWaterValvePlugin, dataModel);
    RecessHeaterPlugin_Init(&instance->_private.recessHeaterPlugin, dataModel);
+   SingleDoorFreshFoodDoorPlugin_Init(&instance->_private.singleDoorFreshFoodDoorPlugin, dataModel);
 }

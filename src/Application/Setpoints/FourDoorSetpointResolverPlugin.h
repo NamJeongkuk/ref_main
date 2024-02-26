@@ -20,6 +20,7 @@ typedef struct
       ColdestOfSetpointVotes_t coldestOfFreezerSetpoints;
       ErdResolver_t freshFoodSetpointResolver;
       ErdResolver_t freezerSetpointResolver;
+      ErdResolver_t convertibleCompartmentSetpointResolver;
    } _private;
 } FourDoorSetpointResolverPlugin_t;
 

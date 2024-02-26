@@ -37,6 +37,14 @@ static const ErdResolverConfiguration_t freezerResolverConfiguration = {
    .numberOfVotingErds = (Erd_FreezerSetpoint_ColdestSetpointVote - Erd_FreezerSetpoint_WinningVoteErd)
 };
 
+static const ErdResolverConfiguration_t convertibleCompartmentResolverConfiguration = {
+   .votingErdCare = VotingErdCareDelegate,
+   .defaultData = &defaultData,
+   .winningVoterErd = Erd_ConvertibleCompartmentSetpoint_WinningVoteErd,
+   .resolvedStateErd = Erd_ConvertibleCompartmentSetpoint_ResolvedVote,
+   .numberOfVotingErds = (Erd_ConvertibleCompartmentSetpoint_UserVote - Erd_ConvertibleCompartmentSetpoint_WinningVoteErd)
+};
+
 static const Erd_t freezerSetpointVoteErds[] = {
    Erd_FreezerSetpoint_TurboFreezeVote,
    Erd_FreezerSetpoint_IceInDoorVote,
@@ -73,7 +81,7 @@ static const ColdestOfSetpointVotesConfiguration_t coldestOfFreshFoodSetpointsCo
 };
 
 void FourDoorSetpointResolverPlugin_Init(
-   FourDoorSetpointResolverPlugin_t *instance, 
+   FourDoorSetpointResolverPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
    ColdestOfSetpointVotes_Init(
@@ -94,6 +102,10 @@ void FourDoorSetpointResolverPlugin_Init(
       &instance->_private.freezerSetpointResolver,
       DataModel_AsDataSource(dataModel),
       &freezerResolverConfiguration);
+   ErdResolver_Init(
+      &instance->_private.convertibleCompartmentSetpointResolver,
+      DataModel_AsDataSource(dataModel),
+      &convertibleCompartmentResolverConfiguration);
 
    DataModel_Write(
       dataModel,
