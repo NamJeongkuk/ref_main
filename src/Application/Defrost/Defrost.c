@@ -525,11 +525,26 @@ static void VoteForDwellLoads(Defrost_t *instance, bool care)
 static void VoteForPostDwellLoads(Defrost_t *instance, bool care)
 {
    VoteForFreezerDefrostHeater(instance, HeaterState_Off, care);
-   VoteForCompressorSpeed(instance, instance->_private.defrostParametricData->postDwellData.postDwellCompressorSpeed, care);
-   VoteForCondenserFanSpeed(instance, instance->_private.defrostParametricData->postDwellData.postDwellCondenserFanSpeed, care);
+   VoteForCompressorSpeed(
+      instance,
+      instance->_private.defrostParametricData->postDwellData.postDwellCompressorSpeed,
+      care);
+   VoteForCondenserFanSpeed(
+      instance,
+      instance->_private.defrostParametricData->postDwellData.postDwellCondenserFanSpeed,
+      care);
    VoteForFreezerEvapFanSpeed(instance, FanSpeed_Off, care);
    VoteForIceCabinetFanSpeed(instance, FanSpeed_Off, care);
-   VoteForDamperPosition(instance, instance->_private.defrostParametricData->postDwellData.postDwellFreshFoodDamperPosition, care);
+   VoteForFreshFoodEvapFanSpeed(instance, FanSpeed_Off, care);
+   VoteForConvertibleCompartmentEvapFanSpeed(instance, FanSpeed_Off, care);
+   VoteForDamperPosition(
+      instance,
+      instance->_private.defrostParametricData->postDwellData.postDwellFreshFoodDamperPosition,
+      care);
+   VoteForSealedSystemValvePosition(
+      instance,
+      instance->_private.defrostParametricData->postDwellData.postDwellSealedSystemValvePosition,
+      care);
 }
 
 static void VoteDontCareForPostDwellLoads(Defrost_t *instance)
@@ -539,7 +554,13 @@ static void VoteDontCareForPostDwellLoads(Defrost_t *instance)
    VoteForIceCabinetFanSpeed(instance, FanSpeed_Off, Vote_DontCare);
    VoteForCondenserFanSpeed(instance, FanSpeed_Off, Vote_DontCare);
    VoteForFreezerEvapFanSpeed(instance, FanSpeed_Off, Vote_DontCare);
+   VoteForFreshFoodEvapFanSpeed(instance, FanSpeed_Off, Vote_DontCare);
+   VoteForConvertibleCompartmentEvapFanSpeed(instance, FanSpeed_Off, Vote_DontCare);
    VoteForDamperPosition(instance, DamperPosition_Closed, Vote_DontCare);
+   VoteForSealedSystemValvePosition(
+      instance,
+      instance->_private.defrostParametricData->postDwellData.postDwellSealedSystemValvePosition,
+      Vote_DontCare);
 }
 
 static void CheckIfPrechillTemperatureExitConditionMet(Defrost_t *instance)
