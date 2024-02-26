@@ -331,14 +331,38 @@ static void VoteForCompressorSpeed(Defrost_t *instance, CompressorSpeed_t speed,
 
 static void VoteForFreezerEvapFanSpeed(Defrost_t *instance, FanSpeed_t speed, bool care)
 {
-   FanVotedSpeed_t freezerEvapFanVote = {
+   FanVotedSpeed_t fanVote = {
       .speed = speed,
       .care = care
    };
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->freezerEvapFanSpeedVoteErd,
-      &freezerEvapFanVote);
+      &fanVote);
+}
+
+static void VoteForFreshFoodEvapFanSpeed(Defrost_t *instance, FanSpeed_t speed, bool care)
+{
+   FanVotedSpeed_t fanVote = {
+      .speed = speed,
+      .care = care
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freshFoodEvapFanVoteErd,
+      &fanVote);
+}
+
+static void VoteForConvertibleCompartmentEvapFanSpeed(Defrost_t *instance, FanSpeed_t speed, bool care)
+{
+   FanVotedSpeed_t fanVote = {
+      .speed = speed,
+      .care = care
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->convertibleCompartmentEvapFanVoteErd,
+      &fanVote);
 }
 
 static void VoteForCondenserFanSpeed(Defrost_t *instance, FanSpeed_t speed, bool care)
@@ -377,6 +401,18 @@ static void VoteForDamperPosition(Defrost_t *instance, DamperPosition_t position
       &damperVote);
 }
 
+static void VoteForSealedSystemValvePosition(Defrost_t *instance, SealedSystemValvePosition_t position, bool care)
+{
+   SealedSystemValveVotedPosition_t valvePositionVote = {
+      .position = position,
+      .care = care
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->sealedSystemValvePositionVoteErd,
+      &valvePositionVote);
+}
+
 static void VoteForPrechillLoads(Defrost_t *instance, bool care)
 {
    VoteForCompressorSpeed(instance, instance->_private.defrostParametricData->prechillData.prechillCompressorSpeed, care);
@@ -406,6 +442,30 @@ static void VoteForFreezerDefrostHeater(
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->freezerDefrostHeaterVoteErd,
+      &heaterVote);
+}
+
+static void VoteForFreshFoodDefrostHeater(Defrost_t *instance, HeaterState_t state, bool care)
+{
+   HeaterVotedState_t heaterVote = {
+      .state = state,
+      .care = care
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->freshFoodDefrostHeaterVoteErd,
+      &heaterVote);
+}
+
+static void VoteForConvertibleCompartmentDefrostHeater(Defrost_t *instance, HeaterState_t state, bool care)
+{
+   HeaterVotedState_t heaterVote = {
+      .state = state,
+      .care = care
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->convertibleCompartmentDefrostHeaterVoteErd,
       &heaterVote);
 }
 
@@ -444,11 +504,22 @@ static void DisableMinimumCompressorTimes(Defrost_t *instance)
 static void VoteForDwellLoads(Defrost_t *instance, bool care)
 {
    VoteForFreezerDefrostHeater(instance, HeaterState_Off, care);
+   VoteForFreshFoodDefrostHeater(instance, HeaterState_Off, care);
+   VoteForConvertibleCompartmentDefrostHeater(instance, HeaterState_Off, care);
    VoteForCompressorSpeed(instance, CompressorSpeed_Off, care);
    VoteForCondenserFanSpeed(instance, FanSpeed_Off, care);
    VoteForFreezerEvapFanSpeed(instance, FanSpeed_Off, care);
+   VoteForFreshFoodEvapFanSpeed(instance, FanSpeed_Off, care);
+   VoteForConvertibleCompartmentEvapFanSpeed(instance, FanSpeed_Off, care);
    VoteForIceCabinetFanSpeed(instance, FanSpeed_Off, care);
-   VoteForDamperPosition(instance, instance->_private.defrostParametricData->dwellData.dwellFreshFoodDamperPosition, care);
+   VoteForDamperPosition(
+      instance,
+      instance->_private.defrostParametricData->dwellData.dwellFreshFoodDamperPosition,
+      care);
+   VoteForSealedSystemValvePosition(
+      instance,
+      instance->_private.defrostParametricData->dwellData.dwellSealedSystemValvePosition,
+      care);
 }
 
 static void VoteForPostDwellLoads(Defrost_t *instance, bool care)
@@ -776,6 +847,14 @@ static bool EnhancedSabbathIsRequestingDefrost(Defrost_t *instance)
       &enhancedSabbathIsRequestingDefrost);
 
    return enhancedSabbathIsRequestingDefrost;
+}
+
+static void RequestValveHoming(Defrost_t *instance)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->sealedSystemValveHomingRequestErd,
+      set);
 }
 
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
@@ -1135,6 +1214,7 @@ static bool State_Dwell(Hsm_t *hsm, HsmSignal_t signal, const void *data)
       case Hsm_Entry:
          SetHsmStateTo(instance, DefrostHsmState_Dwell);
          DisableMinimumCompressorTimes(instance);
+         RequestValveHoming(instance);
          VoteForDwellLoads(instance, Vote_Care);
          StartDefrostTimer(
             instance,

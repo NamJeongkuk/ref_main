@@ -60,6 +60,12 @@ typedef struct
    Erd_t sabbathIsReadyToDefrostErd; // bool
    Erd_t enhancedSabbathIsRequestingDefrostErd; // bool
    Erd_t freezerDefrostHeaterOnForMaxTimeFaultErd; // bool
+   Erd_t freshFoodDefrostHeaterVoteErd; // HeaterVotedState_t
+   Erd_t convertibleCompartmentDefrostHeaterVoteErd; // HeaterVotedState_t
+   Erd_t freshFoodEvapFanVoteErd; // FanVotedSpeed_t
+   Erd_t convertibleCompartmentEvapFanVoteErd; // FanVotedSpeed_t
+   Erd_t sealedSystemValveHomingRequestErd; // bool
+   Erd_t sealedSystemValvePositionVoteErd; // SealedSystemValveVotedPosition_t
 } DefrostConfiguration_t;
 
 typedef struct

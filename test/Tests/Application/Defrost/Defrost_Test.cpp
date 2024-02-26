@@ -91,7 +91,13 @@ static const DefrostConfiguration_t defrostConfig = {
    .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost,
    .enhancedSabbathIsRequestingDefrostErd = Erd_EnhancedSabbathIsRequestingDefrost,
-   .freezerDefrostHeaterOnForMaxTimeFaultErd = Erd_FreezerDefrostHeaterOnForMaxTimeFault
+   .freezerDefrostHeaterOnForMaxTimeFaultErd = Erd_FreezerDefrostHeaterOnForMaxTimeFault,
+   .freshFoodDefrostHeaterVoteErd = Erd_FreshFoodDefrostHeater_DefrostVote,
+   .convertibleCompartmentDefrostHeaterVoteErd = Erd_ConvertibleCompartmentDefrostHeater_DefrostVote,
+   .freshFoodEvapFanVoteErd = Erd_FreshFoodEvapFanSpeed_DefrostVote,
+   .convertibleCompartmentEvapFanVoteErd = Erd_ConvertibleCompartmentEvapFanSpeed_DefrostVote,
+   .sealedSystemValveHomingRequestErd = Erd_SealedSystemValveHomingRequest,
+   .sealedSystemValvePositionVoteErd = Erd_SealedSystemValvePosition_DefrostVote
 };
 
 static const DefrostIdleData_t idleData = {
@@ -478,6 +484,14 @@ TEST_GROUP(Defrost_SingleEvap)
       CHECK_TRUE(actual.care);
    }
 
+   void CondenserFanSpeedVoteShouldBeDontCare()
+   {
+      FanVotedSpeed_t actual;
+      DataModel_Read(dataModel, Erd_CondenserFanSpeed_DefrostVote, &actual);
+
+      CHECK_FALSE(actual.care);
+   }
+
    void FreezerEvapFanSpeedVoteShouldBe(FanSpeed_t expected)
    {
       FanVotedSpeed_t actual;
@@ -487,6 +501,48 @@ TEST_GROUP(Defrost_SingleEvap)
       CHECK_TRUE(actual.care);
    }
 
+   void FreezerEvapFanSpeedVoteShouldBeDontCare()
+   {
+      FanVotedSpeed_t actual;
+      DataModel_Read(dataModel, Erd_FreezerEvapFanSpeed_DefrostVote, &actual);
+
+      CHECK_FALSE(actual.care);
+   }
+
+   void FreshFoodEvapFanSpeedVoteShouldBe(FanSpeed_t expected)
+   {
+      FanVotedSpeed_t actual;
+      DataModel_Read(dataModel, Erd_FreshFoodEvapFanSpeed_DefrostVote, &actual);
+
+      CHECK_EQUAL(expected, actual.speed);
+      CHECK_TRUE(actual.care);
+   }
+
+   void FreshFoodEvapFanSpeedVoteShouldBeDontCare()
+   {
+      FanVotedSpeed_t actual;
+      DataModel_Read(dataModel, Erd_FreshFoodEvapFanSpeed_DefrostVote, &actual);
+
+      CHECK_FALSE(actual.care);
+   }
+
+   void ConvertibleCompartmentEvapFanSpeedVoteShouldBe(FanSpeed_t expected)
+   {
+      FanVotedSpeed_t actual;
+      DataModel_Read(dataModel, Erd_ConvertibleCompartmentEvapFanSpeed_DefrostVote, &actual);
+
+      CHECK_EQUAL(expected, actual.speed);
+      CHECK_TRUE(actual.care);
+   }
+
+   void ConvertibleCompartmentEvapFanSpeedVoteShouldBeDontCare()
+   {
+      FanVotedSpeed_t actual;
+      DataModel_Read(dataModel, Erd_ConvertibleCompartmentEvapFanSpeed_DefrostVote, &actual);
+
+      CHECK_FALSE(actual.care);
+   }
+
    void FreshFoodDamperPositionVoteShouldBe(DamperPosition_t expected)
    {
       DamperVotedPosition_t actual;
@@ -494,6 +550,14 @@ TEST_GROUP(Defrost_SingleEvap)
 
       CHECK_EQUAL(expected, actual.position);
       CHECK_TRUE(actual.care);
+   }
+
+   void FreshFoodDamperPositionVoteShouldBeDontCare()
+   {
+      DamperVotedPosition_t actual;
+      DataModel_Read(dataModel, Erd_FreshFoodDamperPosition_DefrostVote, &actual);
+
+      CHECK_FALSE(actual.care);
    }
 
    void PrechillLoadVotesShouldBeDontCare()
@@ -524,6 +588,22 @@ TEST_GROUP(Defrost_SingleEvap)
    {
       HeaterVotedState_t actual;
       DataModel_Read(dataModel, Erd_FreezerDefrostHeater_DefrostVote, &actual);
+
+      CHECK_FALSE(actual.care);
+   }
+
+   void FreshFoodDefrostHeaterVoteShouldBeDontCare()
+   {
+      HeaterVotedState_t actual;
+      DataModel_Read(dataModel, Erd_FreshFoodDefrostHeater_DefrostVote, &actual);
+
+      CHECK_FALSE(actual.care);
+   }
+
+   void ConvertibleCompartmentHeaterVoteShouldBeDontCare()
+   {
+      HeaterVotedState_t actual;
+      DataModel_Read(dataModel, Erd_ConvertibleCompartmentDefrostHeater_DefrostVote, &actual);
 
       CHECK_FALSE(actual.care);
    }
@@ -583,6 +663,14 @@ TEST_GROUP(Defrost_SingleEvap)
 
       CHECK_EQUAL(expected, actual.speed);
       CHECK_TRUE(actual.care);
+   }
+
+   void IceCabinetFanSpeedVoteShouldBeDontCare()
+   {
+      FanVotedSpeed_t actual;
+      DataModel_Read(dataModel, Erd_IceCabinetFanSpeed_DefrostVote, &actual);
+
+      CHECK_FALSE(actual.care);
    }
 
    void NumberOfFreezerDefrostsIs(uint16_t count)
@@ -866,6 +954,49 @@ TEST_GROUP(Defrost_SingleEvap)
    void GivenFreezerDefrostHeaterOnForMaxTimeFaultIs(bool state)
    {
       DataModel_Write(dataModel, Erd_FreezerDefrostHeaterOnForMaxTimeFault, &state);
+   }
+
+   void FreshFoodDefrostHeaterVoteShouldBe(HeaterState_t expected)
+   {
+      HeaterVotedState_t actual;
+      DataModel_Read(dataModel, Erd_FreshFoodDefrostHeater_DefrostVote, &actual);
+
+      CHECK_EQUAL(expected, actual.state);
+      CHECK_TRUE(actual.care);
+   }
+
+   void ConvertibleCompartmentDefrostHeaterVoteShouldBe(HeaterState_t expected)
+   {
+      HeaterVotedState_t actual;
+      DataModel_Read(dataModel, Erd_ConvertibleCompartmentDefrostHeater_DefrostVote, &actual);
+
+      CHECK_EQUAL(expected, actual.state);
+      CHECK_TRUE(actual.care);
+   }
+
+   void SealedSystemValveHomingRequestShouldBe(bool expected)
+   {
+      bool actual;
+      DataModel_Read(dataModel, Erd_SealedSystemValveHomingRequest, &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void SealedSystemValvePositionVoteShouldBe(SealedSystemValvePosition_t expected)
+   {
+      SealedSystemValveVotedPosition_t actual;
+      DataModel_Read(dataModel, Erd_SealedSystemValvePosition_DefrostVote, &actual);
+
+      CHECK_EQUAL(expected, actual.position);
+      CHECK_TRUE(actual.care);
+   }
+
+   void SealedSystemValvePositionVoteShouldBeDontCare()
+   {
+      SealedSystemValveVotedPosition_t actual;
+      DataModel_Read(dataModel, Erd_SealedSystemValvePosition_DefrostVote, &actual);
+
+      CHECK_FALSE(actual.care);
    }
 };
 
@@ -1964,16 +2095,23 @@ TEST(Defrost_SingleEvap, ShouldIncrementNumberOfFreezerAbnormalDefrostCycleCount
    NumberOfFreezerAbnormalDefrostsShouldBe(2);
 }
 
-TEST(Defrost_SingleEvap, ShouldTurnOffFreezerDefrostHeaterCompressorAndAllFansWhenEnteringDwell)
+TEST(Defrost_SingleEvap, ShouldDisableMinimumCompressorTimesAndRequestValveHomingAndVoteForDwellLoadsWhenEnteringDwell)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
 
+   DisableMinimumCompressorTimesShouldBe(SET, Vote_Care);
+   SealedSystemValveHomingRequestShouldBe(SET);
+
    FreezerDefrostHeaterVoteShouldBe(HeaterState_Off);
+   FreshFoodDefrostHeaterVoteShouldBe(HeaterState_Off);
+   ConvertibleCompartmentDefrostHeaterVoteShouldBe(HeaterState_Off);
    CompressorSpeedVoteShouldBe(CompressorSpeed_Off);
    FreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off);
+   FreshFoodEvapFanSpeedVoteShouldBe(FanSpeed_Off);
+   ConvertibleCompartmentEvapFanSpeedVoteShouldBe(FanSpeed_Off);
    CondenserFanSpeedVoteShouldBe(FanSpeed_Off);
    IceCabinetFanSpeedVoteShouldBe(FanSpeed_Off);
-   DisableMinimumCompressorTimesShouldBe(SET, Vote_Care);
+   SealedSystemValvePositionVoteShouldBe(defrostData.dwellData.dwellSealedSystemValvePosition);
 }
 
 TEST(Defrost_SingleEvap, ShouldVoteForFreshFoodDamperWhenEnteringDwell)
@@ -2509,13 +2647,25 @@ TEST(Defrost_SingleEvap, ShouldTransitionToHeaterOnEntryAndClearTheDefrostTestSt
    DefrostTestStateRequestShouldBeNone();
 }
 
-TEST(Defrost_SingleEvap, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestAndEnableMinimumCompressorTimesWhenIdleTestIsRequestedInDwellState)
+TEST(Defrost_SingleEvap, ShouldTransitionToIdleAndClearTheDefrostTestStateRequestAndEnableMinimumCompressorTimesAndVoteDontCareForDwellLoadsWhenIdleTestIsRequestedInDwellState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_Dwell);
 
    When DefrostTestIsRequested(DefrostTestStateRequest_Idle);
    DefrostHsmStateShouldBe(DefrostHsmState_Idle);
    DisableMinimumCompressorTimesShouldBe(CLEAR, Vote_DontCare);
+   FreezerDefrostHeaterVoteShouldBeDontCare();
+   FreshFoodDefrostHeaterVoteShouldBeDontCare();
+   ConvertibleCompartmentHeaterVoteShouldBeDontCare();
+   CompressorSpeedVoteShouldBeDontCare();
+   CondenserFanSpeedVoteShouldBeDontCare();
+   FreezerEvapFanSpeedVoteShouldBeDontCare();
+   FreshFoodEvapFanSpeedVoteShouldBeDontCare();
+   ConvertibleCompartmentEvapFanSpeedVoteShouldBeDontCare();
+   IceCabinetFanSpeedVoteShouldBeDontCare();
+   FreshFoodDamperPositionVoteShouldBeDontCare();
+   SealedSystemValvePositionVoteShouldBeDontCare();
+
    DefrostTestStateRequestShouldBeNone();
 }
 
