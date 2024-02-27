@@ -319,6 +319,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "PWM_25K_01",
+          "name": "Erd_Pwm_PWM_25K_01",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "PWM_25K_02",
           "name": "Erd_Pwm_PWM_25K_02",
           "read": true,
