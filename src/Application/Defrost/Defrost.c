@@ -657,17 +657,17 @@ static bool FreezerDefrostHeaterOnTimeLessThanAbnormalDefrostTime(Defrost_t *ins
       instance->_private.defrostParametricData->heaterOnData.freezerHeaterOnTimeToSetAbnormalDefrostInMinutes;
 }
 
-static void SetCurrentDefrostTypeToNextDefrostType(Defrost_t *instance)
+static void SetCurrentDefrostTypeToNextDefrostTypeOverride(Defrost_t *instance)
 {
-   DefrostType_t nextDefrostType;
+   DefrostType_t nextDefrostTypeOverride;
    DataModel_Read(
       instance->_private.dataModel,
-      instance->_private.config->nextDefrostTypeErd,
-      &nextDefrostType);
+      instance->_private.config->nextDefrostTypeOverrideErd,
+      &nextDefrostTypeOverride);
    DataModel_Write(
       instance->_private.dataModel,
       instance->_private.config->currentDefrostTypeErd,
-      &nextDefrostType);
+      &nextDefrostTypeOverride);
 }
 
 static HsmState_t InitialState(Defrost_t *instance)
@@ -1287,7 +1287,7 @@ static bool State_WaitingToDefrost(Hsm_t *hsm, HsmSignal_t signal, const void *d
          break;
 
       case Hsm_Exit:
-         SetCurrentDefrostTypeToNextDefrostType(instance);
+         SetCurrentDefrostTypeToNextDefrostTypeOverride(instance);
          break;
 
       default:

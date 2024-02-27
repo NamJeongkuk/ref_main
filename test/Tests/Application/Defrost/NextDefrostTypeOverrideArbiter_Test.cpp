@@ -7,7 +7,7 @@
 
 extern "C"
 {
-#include "NextDefrostTypeArbiter.h"
+#include "NextDefrostTypeOverrideArbiter.h"
 #include "Constants_Binary.h"
 #include "SystemErds.h"
 }
@@ -22,8 +22,8 @@ extern "C"
 #define And
 #define When
 
-static const NextDefrostTypeArbiterConfig_t config = {
-   .nextDefrostTypeErd = Erd_NextDefrostType,
+static const NextDefrostTypeOverrideArbiterConfig_t config = {
+   .nextDefrostTypeOverrideErd = Erd_NextDefrostTypeOverride,
    .defrostingErd = Erd_Defrosting,
    .numberOfSecondaryOnlyDefrostsErd = Erd_NumberOfSecondaryOnlyDefrosts,
    .numberOfSecondaryOnlyDefrostsBeforeAFullDefrostErd = Erd_NumberOfSecondaryOnlyDefrostsBeforeAFullDefrost,
@@ -36,9 +36,9 @@ static const NextDefrostTypeArbiterConfig_t config = {
    .freezerFilteredTemperatureTooWarmAtPowerUpErd = Erd_FreezerFilteredTemperatureTooWarmOnPowerUp
 };
 
-TEST_GROUP(NextDefrostTypeArbiter)
+TEST_GROUP(NextDefrostTypeOverrideArbiter)
 {
-   NextDefrostTypeArbiter_t instance;
+   NextDefrostTypeOverrideArbiter_t instance;
    ReferDataModel_TestDouble_t referDataModelTestDouble;
    I_DataModel_t *dataModel;
    const DefrostData_t *defrostData;
@@ -55,18 +55,18 @@ TEST_GROUP(NextDefrostTypeArbiter)
 
    void TheModuleIsInitialized()
    {
-      NextDefrostTypeArbiter_Init(&instance, dataModel, &config);
+      NextDefrostTypeOverrideArbiter_Init(&instance, dataModel, &config);
    }
 
-   void NextDefrostTypeIs(DefrostType_t nextDefrostType)
+   void NextDefrostTypeOverrideIs(DefrostType_t nextDefrostTypeOverride)
    {
-      DataModel_Write(dataModel, Erd_NextDefrostType, &nextDefrostType);
+      DataModel_Write(dataModel, Erd_NextDefrostTypeOverride, &nextDefrostTypeOverride);
    }
 
-   void NextDefrostTypeShouldBe(DefrostType_t expected)
+   void NextDefrostTypeOverrideShouldBe(DefrostType_t expected)
    {
       DefrostType_t actual;
-      DataModel_Read(dataModel, Erd_NextDefrostType, &actual);
+      DataModel_Read(dataModel, Erd_NextDefrostTypeOverride, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -151,19 +151,19 @@ TEST_GROUP(NextDefrostTypeArbiter)
    }
 };
 
-TEST(NextDefrostTypeArbiter, ShouldInitialize)
+TEST(NextDefrostTypeOverrideArbiter, ShouldInitialize)
 {
    TheModuleIsInitialized();
 }
 
-TEST(NextDefrostTypeArbiter, ShouldNotSetNextDefrostTypeOnInitWhenNumberOfSecondaryOnlyDefrostsBeforeAFullDefrostIsGreaterThanZeroAndFreezerCompartmentIsNotTooWarmAndEepromWasNotCleared)
+TEST(NextDefrostTypeOverrideArbiter, ShouldNotSetNextDefrostTypeOverrideOnInitWhenNumberOfSecondaryOnlyDefrostsBeforeAFullDefrostIsGreaterThanZeroAndFreezerCompartmentIsNotTooWarmAndEepromWasNotCleared)
 {
-   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
+   Given NextDefrostTypeOverrideIs(DefrostType_SecondaryOnly);
    Given TheModuleIsInitialized();
-   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
+   NextDefrostTypeOverrideShouldBe(DefrostType_SecondaryOnly);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldNotResetSecondaryOnlyDefrostCountOnInit)
+TEST(NextDefrostTypeOverrideArbiter, ShouldNotResetSecondaryOnlyDefrostCountOnInit)
 {
    Given NumberOfSecondaryOnlyDefrostsIs(5);
    Given TheModuleIsInitialized();
@@ -171,7 +171,7 @@ TEST(NextDefrostTypeArbiter, ShouldNotResetSecondaryOnlyDefrostCountOnInit)
    NumberOfSecondaryOnlyDefrostsShouldBe(5);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormalCountWhenFreezerDefrostIsAbnormalOnInit)
+TEST(NextDefrostTypeOverrideArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormalCountWhenFreezerDefrostIsAbnormalOnInit)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(true);
@@ -180,7 +180,7 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormal
    NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormalCountWhenItHasAConvertibleCompartmentAndConvertibleCompartmentDefrostIsAbnormalAndConvertibleCompartmentIsActingAsFreezerOnInit)
+TEST(NextDefrostTypeOverrideArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormalCountWhenItHasAConvertibleCompartmentAndConvertibleCompartmentDefrostIsAbnormalAndConvertibleCompartmentIsActingAsFreezerOnInit)
 {
    Given EnhancedSabbathModeIs(false);
    Given HasConvertibleCompartmentIs(true);
@@ -190,7 +190,7 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormal
    NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToEnhancedSabbathCountWhenEnhancedSabbathIsEnabledOnInit)
+TEST(NextDefrostTypeOverrideArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToEnhancedSabbathCountWhenEnhancedSabbathIsEnabledOnInit)
 {
    Given EnhancedSabbathModeIs(true);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -199,7 +199,7 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToEnhanced
    NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(enhancedSabbathData->numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToEnhancedSabbathCountWhenEnhancedSabbathIsEnabledAndFreezerDefrostWasAbnormalIsSetOnInit)
+TEST(NextDefrostTypeOverrideArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToEnhancedSabbathCountWhenEnhancedSabbathIsEnabledAndFreezerDefrostWasAbnormalIsSetOnInit)
 {
    Given EnhancedSabbathModeIs(true);
    Given FreezerDefrostWasAbnormalIs(true);
@@ -208,7 +208,7 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToEnhanced
    NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(enhancedSabbathData->numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalCountWhenEnhancedSabbathIsNotEnabledAndFreezerDefrostIsNotAbnormalAndConvertibleCompartmentDefrostIsNotAbnormalOnInit)
+TEST(NextDefrostTypeOverrideArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalCountWhenEnhancedSabbathIsNotEnabledAndFreezerDefrostIsNotAbnormalAndConvertibleCompartmentDefrostIsNotAbnormalOnInit)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -219,7 +219,7 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalCo
    NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalCountWhenEnhancedSabbathIsNotEnabledAndFreezerDefrostIsNotAbnormalAndDoesNotHaveConvertibleCompartmentOnInit)
+TEST(NextDefrostTypeOverrideArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalCountWhenEnhancedSabbathIsNotEnabledAndFreezerDefrostIsNotAbnormalAndDoesNotHaveConvertibleCompartmentOnInit)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -230,7 +230,7 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalCo
    NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalCountWhenEnhancedSabbathIsNotEnabledAndFreezerDefrostIsNotAbnormalAndConvertibleCompartmentTypeIsFreshFoodOnInit)
+TEST(NextDefrostTypeOverrideArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalCountWhenEnhancedSabbathIsNotEnabledAndFreezerDefrostIsNotAbnormalAndConvertibleCompartmentTypeIsFreshFoodOnInit)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -241,40 +241,40 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalCo
    NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldSetNextDefrostTypeToFullWhenSecondaryOnlyDefrostCountReachesNumberOfSecondaryOnlyDefrostsWhileCurrentDefrostTypeIsSecondaryOnly)
+TEST(NextDefrostTypeOverrideArbiter, ShouldSetNextDefrostTypeOverrideToFullWhenSecondaryOnlyDefrostCountReachesNumberOfSecondaryOnlyDefrostsWhileCurrentDefrostTypeIsSecondaryOnly)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
    Given ConvertibleCompartmentDefrostWasAbnormalIs(false);
    Given CurrentDefrostTypeIs(DefrostType_SecondaryOnly);
-   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
+   Given NextDefrostTypeOverrideIs(DefrostType_SecondaryOnly);
    Given TheModuleIsInitialized();
-   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
+   NextDefrostTypeOverrideShouldBe(DefrostType_SecondaryOnly);
    NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 
    After DefrostingStateIsChangedFromFalseToTrueNTimes(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost - 1);
-   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
+   NextDefrostTypeOverrideShouldBe(DefrostType_SecondaryOnly);
 
    After DefrostingStateIsChangedFromFalseToTrueNTimes(1);
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldSetNextDefrostTypeToSecondaryOnlyAndResetSecondaryOnlyDefrostCountToZeroWhenDefrostStateIsChangedFromFalseToTrueWhileCurrentDefrostTypeIsFull)
+TEST(NextDefrostTypeOverrideArbiter, ShouldSetNextDefrostTypeOverrideToSecondaryOnlyAndResetSecondaryOnlyDefrostCountToZeroWhenDefrostStateIsChangedFromFalseToTrueWhileCurrentDefrostTypeIsFull)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
    Given ConvertibleCompartmentDefrostWasAbnormalIs(false);
    Given TheModuleIsInitialized();
-   Given NextDefrostTypeIs(DefrostType_Full);
+   Given NextDefrostTypeOverrideIs(DefrostType_Full);
    Given CurrentDefrostTypeIs(DefrostType_Full);
    Given NumberOfSecondaryOnlyDefrostsIs(10);
 
    After DefrostingStateIsChangedFromFalseToTrueNTimes(1);
-   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
+   NextDefrostTypeOverrideShouldBe(DefrostType_SecondaryOnly);
    And NumberOfSecondaryOnlyDefrostsShouldBe(0);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldNotIncreaseSecondaryOnlyDefrostCountWhenDefrostingChangesToFalseWhileCurrentDefrostTypeIsSecondaryOnly)
+TEST(NextDefrostTypeOverrideArbiter, ShouldNotIncreaseSecondaryOnlyDefrostCountWhenDefrostingChangesToFalseWhileCurrentDefrostTypeIsSecondaryOnly)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -288,7 +288,7 @@ TEST(NextDefrostTypeArbiter, ShouldNotIncreaseSecondaryOnlyDefrostCountWhenDefro
    NumberOfSecondaryOnlyDefrostsShouldBe(0);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldNotResetSecondaryOnlyDefrostCountWhenDefrostingChangesToFalseWhileCurrentDefrostTypeIsFull)
+TEST(NextDefrostTypeOverrideArbiter, ShouldNotResetSecondaryOnlyDefrostCountWhenDefrostingChangesToFalseWhileCurrentDefrostTypeIsFull)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -302,7 +302,7 @@ TEST(NextDefrostTypeArbiter, ShouldNotResetSecondaryOnlyDefrostCountWhenDefrosti
    NumberOfSecondaryOnlyDefrostsShouldBe(5);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldNotChangeNextDefrostTypeToSecondaryOnlyWhenDefrostingChangesToFalseWhileCurrentDefrostTypeIsFull)
+TEST(NextDefrostTypeOverrideArbiter, ShouldNotChangeNextDefrostTypeOverrideToSecondaryOnlyWhenDefrostingChangesToFalseWhileCurrentDefrostTypeIsFull)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -310,13 +310,13 @@ TEST(NextDefrostTypeArbiter, ShouldNotChangeNextDefrostTypeToSecondaryOnlyWhenDe
    Given DefrostingIs(true);
    Given CurrentDefrostTypeIs(DefrostType_Full);
    Given TheModuleIsInitialized();
-   Given NextDefrostTypeIs(DefrostType_Full);
+   Given NextDefrostTypeOverrideIs(DefrostType_Full);
 
    When DefrostingIs(false);
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToEnhancedSabbathCountWhenEnhancedSabbathIsEnabled)
+TEST(NextDefrostTypeOverrideArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToEnhancedSabbathCountWhenEnhancedSabbathIsEnabled)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -328,7 +328,7 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToEnhanced
    NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(enhancedSabbathData->numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormalFreezeDefrostCountWhenFreezerDefrostWasAbnormalIsTrue)
+TEST(NextDefrostTypeOverrideArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormalFreezeDefrostCountWhenFreezerDefrostWasAbnormalIsTrue)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -340,7 +340,7 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormal
    NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormalFreezeDefrostCountWhenHasConvertibleCompartmentAndConvertibleCompartmentDefrostWasAbnormalIsTrueAndConvertibleCompartmentStateChangesToFreezer)
+TEST(NextDefrostTypeOverrideArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormalFreezeDefrostCountWhenHasConvertibleCompartmentAndConvertibleCompartmentDefrostWasAbnormalIsTrueAndConvertibleCompartmentStateChangesToFreezer)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -354,7 +354,7 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormal
    NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormalFreezeDefrostCountWhenHasConvertibleCompartmentAndConvertibleCompartmentStateIsFreezerAndConvertibleCompartmentDefrostWasAbnormalChangesToTrue)
+TEST(NextDefrostTypeOverrideArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormalFreezeDefrostCountWhenHasConvertibleCompartmentAndConvertibleCompartmentStateIsFreezerAndConvertibleCompartmentDefrostWasAbnormalChangesToTrue)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -368,7 +368,7 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToAbnormal
    NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrostWhenAbnormalIsSet);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalWhenEnhancedSabbathModeIsDisabledWhileFreezerDefrostWasAbnormalIsFalse)
+TEST(NextDefrostTypeOverrideArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalWhenEnhancedSabbathModeIsDisabledWhileFreezerDefrostWasAbnormalIsFalse)
 {
    Given EnhancedSabbathModeIs(true);
    Given FreezerDefrostWasAbnormalIs(false);
@@ -380,7 +380,7 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalWh
    NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalWhenFreezerDefrostWasAbnormalIsFalseWhileEnhancedSabbathModeIsDisabled)
+TEST(NextDefrostTypeOverrideArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalWhenFreezerDefrostWasAbnormalIsFalseWhileEnhancedSabbathModeIsDisabled)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(true);
@@ -392,41 +392,41 @@ TEST(NextDefrostTypeArbiter, ShouldUpdateNumberOfSecondaryOnlyDefrostsToNormalWh
    NumberOfSecondaryOnlyDefrostsBeforeAFullDefrostShouldBe(defrostData->prechillPrepData.numberOfSecondaryOnlyDefrostsBeforeFullDefrost);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldUpdateCurrentAndNextDefrostTypeToFullWhenFreezerFilteredTemperatureTooWarmAtPowerUpFlagIsSetOnInit)
+TEST(NextDefrostTypeOverrideArbiter, ShouldUpdateCurrentAndNextDefrostTypeOverrideToFullWhenFreezerFilteredTemperatureTooWarmAtPowerUpFlagIsSetOnInit)
 {
    Given CurrentDefrostTypeIs(DefrostType_SecondaryOnly);
-   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
+   Given NextDefrostTypeOverrideIs(DefrostType_SecondaryOnly);
    Given FreezerFilteredTemperatureTooWarmAtPowerUpFlagIs(SET);
    Given TheModuleIsInitialized();
    CurrentDefrostTypeShouldBe(DefrostType_Full);
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldNotUpdateCurrentAndNextDefrostTypeToSecondaryOnlyWhenFreezerFilteredTemperatureTooWarmAtPowerUpFlagAndEepromClearedFlagAreClearOnInit)
+TEST(NextDefrostTypeOverrideArbiter, ShouldNotUpdateCurrentAndNextDefrostTypeOverrideToSecondaryOnlyWhenFreezerFilteredTemperatureTooWarmAtPowerUpFlagAndEepromClearedFlagAreClearOnInit)
 {
    Given CurrentDefrostTypeIs(DefrostType_SecondaryOnly);
-   Given NextDefrostTypeIs(DefrostType_Full);
+   Given NextDefrostTypeOverrideIs(DefrostType_Full);
    Given FreezerFilteredTemperatureTooWarmAtPowerUpFlagIs(CLEAR);
    Given TheModuleIsInitialized();
    CurrentDefrostTypeShouldBe(DefrostType_SecondaryOnly);
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiter, ShouldSetNextDefrostTypeToSecondaryOnlyAfterTheTypeIsFullWithTooWarmAtPowerUpOnInit)
+TEST(NextDefrostTypeOverrideArbiter, ShouldSetNextDefrostTypeOverrideToSecondaryOnlyAfterTheTypeIsFullWithTooWarmAtPowerUpOnInit)
 {
-   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
+   Given NextDefrostTypeOverrideIs(DefrostType_SecondaryOnly);
    Given FreezerFilteredTemperatureTooWarmAtPowerUpFlagIs(SET);
    Given TheModuleIsInitialized();
    Given CurrentDefrostTypeIs(DefrostType_Full);
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
 
    After DefrostingStateIsChangedFromFalseToTrueNTimes(1);
-   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
+   NextDefrostTypeOverrideShouldBe(DefrostType_SecondaryOnly);
 }
 
-TEST_GROUP(NextDefrostTypeArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero)
+TEST_GROUP(NextDefrostTypeOverrideArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero)
 {
-   NextDefrostTypeArbiter_t instance;
+   NextDefrostTypeOverrideArbiter_t instance;
    ReferDataModel_TestDouble_t referDataModelTestDouble;
    I_DataModel_t *dataModel;
    const DefrostData_t *defrostData;
@@ -443,18 +443,18 @@ TEST_GROUP(NextDefrostTypeArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero)
 
    void TheModuleIsInitialized()
    {
-      NextDefrostTypeArbiter_Init(&instance, dataModel, &config);
+      NextDefrostTypeOverrideArbiter_Init(&instance, dataModel, &config);
    }
 
-   void NextDefrostTypeIs(DefrostType_t nextDefrostType)
+   void NextDefrostTypeOverrideIs(DefrostType_t nextDefrostTypeOverride)
    {
-      DataModel_Write(dataModel, Erd_NextDefrostType, &nextDefrostType);
+      DataModel_Write(dataModel, Erd_NextDefrostTypeOverride, &nextDefrostTypeOverride);
    }
 
-   void NextDefrostTypeShouldBe(DefrostType_t expected)
+   void NextDefrostTypeOverrideShouldBe(DefrostType_t expected)
    {
       DefrostType_t actual;
-      DataModel_Read(dataModel, Erd_NextDefrostType, &actual);
+      DataModel_Read(dataModel, Erd_NextDefrostTypeOverride, &actual);
       CHECK_EQUAL(expected, actual);
    }
 
@@ -490,57 +490,57 @@ TEST_GROUP(NextDefrostTypeArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero)
    }
 };
 
-TEST(NextDefrostTypeArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldSetNextDefrostTypeToFullOnInitWhenEnhancedSabbathModeIsEnabledAndFreezerDefrostWasAbnormalIsFalse)
+TEST(NextDefrostTypeOverrideArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldSetNextDefrostTypeOverrideToFullOnInitWhenEnhancedSabbathModeIsEnabledAndFreezerDefrostWasAbnormalIsFalse)
 {
    Given EnhancedSabbathModeIs(true);
    Given FreezerDefrostWasAbnormalIs(false);
-   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
+   Given NextDefrostTypeOverrideIs(DefrostType_SecondaryOnly);
    Given TheModuleIsInitialized();
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldSetNextDefrostTypeToFullOnInitWhenEnhancedSabbathModeIsDisabledAndFreezerDefrostWasAbnormalIsTrue)
+TEST(NextDefrostTypeOverrideArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldSetNextDefrostTypeOverrideToFullOnInitWhenEnhancedSabbathModeIsDisabledAndFreezerDefrostWasAbnormalIsTrue)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(true);
-   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
+   Given NextDefrostTypeOverrideIs(DefrostType_SecondaryOnly);
    Given TheModuleIsInitialized();
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldSetNextDefrostTypeToFullOnInitWhenEnhancedSabbathModeIsEnabledAndFreezerDefrostWasAbnormalIsTrue)
+TEST(NextDefrostTypeOverrideArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldSetNextDefrostTypeOverrideToFullOnInitWhenEnhancedSabbathModeIsEnabledAndFreezerDefrostWasAbnormalIsTrue)
 {
    Given EnhancedSabbathModeIs(true);
    Given FreezerDefrostWasAbnormalIs(true);
-   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
+   Given NextDefrostTypeOverrideIs(DefrostType_SecondaryOnly);
    Given TheModuleIsInitialized();
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldSetNextDefrostTypeToFullOnInitWhenEnhancedSabbathModeIsDisabledAndFreezerDefrostWasAbnormalIsFalse)
+TEST(NextDefrostTypeOverrideArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldSetNextDefrostTypeOverrideToFullOnInitWhenEnhancedSabbathModeIsDisabledAndFreezerDefrostWasAbnormalIsFalse)
 {
    Given EnhancedSabbathModeIs(false);
    Given FreezerDefrostWasAbnormalIs(false);
-   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
+   Given NextDefrostTypeOverrideIs(DefrostType_SecondaryOnly);
    Given TheModuleIsInitialized();
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldSetCurrentAndNextDefrostTypeToFullWhenNumberOfSecondaryOnlyDefrostCountIsZeroOnInit)
+TEST(NextDefrostTypeOverrideArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldSetCurrentAndNextDefrostTypeOverrideToFullWhenNumberOfSecondaryOnlyDefrostCountIsZeroOnInit)
 {
    Given CurrentDefrostTypeIs(DefrostType_SecondaryOnly);
-   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
+   Given NextDefrostTypeOverrideIs(DefrostType_SecondaryOnly);
    Given TheModuleIsInitialized();
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
    CurrentDefrostTypeShouldBe(DefrostType_Full);
 }
 
-TEST(NextDefrostTypeArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldNotChangeDefrostTypeToSecondaryOnlyAfterDefrostingStateChangesToTrue)
+TEST(NextDefrostTypeOverrideArbiterWithNumberOfSecondaryOnlyDefrostCountIsZero, ShouldNotChangeDefrostTypeToSecondaryOnlyAfterDefrostingStateChangesToTrue)
 {
    Given CurrentDefrostTypeIs(DefrostType_Full);
    Given TheModuleIsInitialized();
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
 
    After DefrostingStateIsChangedFromFalseToTrueNTimes(1);
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
 }

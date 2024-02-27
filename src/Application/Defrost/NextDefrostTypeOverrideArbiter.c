@@ -5,25 +5,25 @@
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
 
-#include "NextDefrostTypeArbiter.h"
+#include "NextDefrostTypeOverrideArbiter.h"
 #include "Constants_Binary.h"
 #include "DefrostType.h"
 #include "ConvertibleCompartmentStateType.h"
 #include "PersonalityParametricData.h"
 #include "utils.h"
 
-static void UpdateNextDefrostTypeTo(
-   NextDefrostTypeArbiter_t *instance,
+static void UpdateNextDefrostTypeOverrideTo(
+   NextDefrostTypeOverrideArbiter_t *instance,
    DefrostType_t defrostType)
 {
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->nextDefrostTypeErd,
+      instance->_private.config->nextDefrostTypeOverrideErd,
       &defrostType);
 }
 
 static void UpdateCurrentDefrostTypeTo(
-   NextDefrostTypeArbiter_t *instance,
+   NextDefrostTypeOverrideArbiter_t *instance,
    DefrostType_t defrostType)
 {
    DataModel_Write(
@@ -32,7 +32,7 @@ static void UpdateCurrentDefrostTypeTo(
       &defrostType);
 }
 
-static DefrostType_t CurrentDefrostType(NextDefrostTypeArbiter_t *instance)
+static DefrostType_t CurrentDefrostType(NextDefrostTypeOverrideArbiter_t *instance)
 {
    DefrostType_t currentDefrostType;
    DataModel_Read(
@@ -43,7 +43,7 @@ static DefrostType_t CurrentDefrostType(NextDefrostTypeArbiter_t *instance)
    return currentDefrostType;
 }
 
-static void IncrementNumberOfSecondaryOnlyDefrosts(NextDefrostTypeArbiter_t *instance)
+static void IncrementNumberOfSecondaryOnlyDefrosts(NextDefrostTypeOverrideArbiter_t *instance)
 {
    uint8_t numberOfSecondaryOnlyDefrosts;
    DataModel_Read(
@@ -58,7 +58,7 @@ static void IncrementNumberOfSecondaryOnlyDefrosts(NextDefrostTypeArbiter_t *ins
       &numberOfSecondaryOnlyDefrosts);
 }
 
-static bool EnhancedSabbathModeIsEnabled(NextDefrostTypeArbiter_t *instance)
+static bool EnhancedSabbathModeIsEnabled(NextDefrostTypeOverrideArbiter_t *instance)
 {
    bool enhancedSabbathModeIsEnabled;
    DataModel_Read(
@@ -69,7 +69,7 @@ static bool EnhancedSabbathModeIsEnabled(NextDefrostTypeArbiter_t *instance)
    return enhancedSabbathModeIsEnabled;
 }
 
-static bool FreezerDefrostWasAbnormal(NextDefrostTypeArbiter_t *instance)
+static bool FreezerDefrostWasAbnormal(NextDefrostTypeOverrideArbiter_t *instance)
 {
    bool freezerDefrostWasAbnormal;
    DataModel_Read(
@@ -80,7 +80,7 @@ static bool FreezerDefrostWasAbnormal(NextDefrostTypeArbiter_t *instance)
    return freezerDefrostWasAbnormal;
 }
 
-static bool ConvertibleCompartmentIsActingAsFreezerAndDefrostWasAbnormal(NextDefrostTypeArbiter_t *instance)
+static bool ConvertibleCompartmentIsActingAsFreezerAndDefrostWasAbnormal(NextDefrostTypeOverrideArbiter_t *instance)
 {
    bool hasConvertibleCompartment;
    bool convertibleCompartmentDefrostWasAbnormal;
@@ -104,7 +104,7 @@ static bool ConvertibleCompartmentIsActingAsFreezerAndDefrostWasAbnormal(NextDef
       (convertibleCompartmentStateType == ConvertibleCompartmentStateType_Freezer));
 }
 
-static void DetermineNumberOfSecondaryOnlyDefrostsBeforeAFullDefrost(NextDefrostTypeArbiter_t *instance)
+static void DetermineNumberOfSecondaryOnlyDefrostsBeforeAFullDefrost(NextDefrostTypeOverrideArbiter_t *instance)
 {
    uint8_t numberOfSecondaryOnlyDefrostsBeforeAFullDefrost;
 
@@ -130,7 +130,7 @@ static void DetermineNumberOfSecondaryOnlyDefrostsBeforeAFullDefrost(NextDefrost
       &numberOfSecondaryOnlyDefrostsBeforeAFullDefrost);
 }
 
-static uint8_t NumberOfSecondaryOnlyDefrosts(NextDefrostTypeArbiter_t *instance)
+static uint8_t NumberOfSecondaryOnlyDefrosts(NextDefrostTypeOverrideArbiter_t *instance)
 {
    uint8_t numberOfSecondaryOnlyDefrosts;
    DataModel_Read(
@@ -141,7 +141,7 @@ static uint8_t NumberOfSecondaryOnlyDefrosts(NextDefrostTypeArbiter_t *instance)
    return numberOfSecondaryOnlyDefrosts;
 }
 
-static uint8_t NumberOfSecondaryOnlyDefrostsBeforeAFullDefrost(NextDefrostTypeArbiter_t *instance)
+static uint8_t NumberOfSecondaryOnlyDefrostsBeforeAFullDefrost(NextDefrostTypeOverrideArbiter_t *instance)
 {
    uint8_t numberOfSecondaryOnlyDefrostsBeforeAFullDefrost;
    DataModel_Read(
@@ -152,7 +152,7 @@ static uint8_t NumberOfSecondaryOnlyDefrostsBeforeAFullDefrost(NextDefrostTypeAr
    return numberOfSecondaryOnlyDefrostsBeforeAFullDefrost;
 }
 
-static void ResetNumberOfSecondaryOnlyDefrostsToZero(NextDefrostTypeArbiter_t *instance)
+static void ResetNumberOfSecondaryOnlyDefrostsToZero(NextDefrostTypeOverrideArbiter_t *instance)
 {
    DataModel_Write(
       instance->_private.dataModel,
@@ -160,7 +160,7 @@ static void ResetNumberOfSecondaryOnlyDefrostsToZero(NextDefrostTypeArbiter_t *i
       clear);
 }
 
-static bool FreezerFilteredTemperatureTooWarmOnPowerUpIsSet(NextDefrostTypeArbiter_t *instance)
+static bool FreezerFilteredTemperatureTooWarmOnPowerUpIsSet(NextDefrostTypeOverrideArbiter_t *instance)
 {
    bool FreezerFilteredTemperatureTooWarmOnPowerUpIsSet;
    DataModel_Read(
@@ -173,7 +173,7 @@ static bool FreezerFilteredTemperatureTooWarmOnPowerUpIsSet(NextDefrostTypeArbit
 
 static void DataModelUpdated(void *context, const void *_args)
 {
-   NextDefrostTypeArbiter_t *instance = context;
+   NextDefrostTypeOverrideArbiter_t *instance = context;
    const DataModelOnDataChangeArgs_t *args = _args;
 
    if(args->erd == instance->_private.config->defrostingErd)
@@ -188,13 +188,13 @@ static void DataModelUpdated(void *context, const void *_args)
 
             if(NumberOfSecondaryOnlyDefrosts(instance) >= NumberOfSecondaryOnlyDefrostsBeforeAFullDefrost(instance))
             {
-               UpdateNextDefrostTypeTo(instance, DefrostType_Full);
+               UpdateNextDefrostTypeOverrideTo(instance, DefrostType_Full);
             }
          }
          else if(currentDefrostType == DefrostType_Full)
          {
             ResetNumberOfSecondaryOnlyDefrostsToZero(instance);
-            UpdateNextDefrostTypeTo(instance, DefrostType_SecondaryOnly);
+            UpdateNextDefrostTypeOverrideTo(instance, DefrostType_SecondaryOnly);
          }
       }
    }
@@ -207,10 +207,10 @@ static void DataModelUpdated(void *context, const void *_args)
    }
 }
 
-void NextDefrostTypeArbiter_Init(
-   NextDefrostTypeArbiter_t *instance,
+void NextDefrostTypeOverrideArbiter_Init(
+   NextDefrostTypeOverrideArbiter_t *instance,
    I_DataModel_t *dataModel,
-   const NextDefrostTypeArbiterConfig_t *config)
+   const NextDefrostTypeOverrideArbiterConfig_t *config)
 {
    instance->_private.dataModel = dataModel;
    instance->_private.config = config;
@@ -222,14 +222,14 @@ void NextDefrostTypeArbiter_Init(
    if(NumberOfSecondaryOnlyDefrostsBeforeAFullDefrost(instance) == 0)
    {
       UpdateCurrentDefrostTypeTo(instance, DefrostType_Full);
-      UpdateNextDefrostTypeTo(instance, DefrostType_Full);
+      UpdateNextDefrostTypeOverrideTo(instance, DefrostType_Full);
    }
    else
    {
       if(FreezerFilteredTemperatureTooWarmOnPowerUpIsSet(instance))
       {
          UpdateCurrentDefrostTypeTo(instance, DefrostType_Full);
-         UpdateNextDefrostTypeTo(instance, DefrostType_Full);
+         UpdateNextDefrostTypeOverrideTo(instance, DefrostType_Full);
       }
 
       EventSubscription_Init(

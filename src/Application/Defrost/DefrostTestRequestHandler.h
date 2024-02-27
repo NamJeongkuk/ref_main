@@ -16,7 +16,7 @@ typedef struct
    Erd_t defrostTestRequestErd; // DefrostTestRequest_t
    Erd_t disableDefrostErd; // bool
    Erd_t defrostTestStateRequestErd; // DefrostTestStateRequestMessage_t
-   Erd_t nextDefrostTypeErd; // DefrostType_t
+   Erd_t nextDefrostTypeOverrideErd; // DefrostType_t
    Erd_t useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd; // bool
    Erd_t defrostTestRequestStatusErd; // DefrostTestStateRequestMessage_t
    Erd_t dontSkipDefrostPrechillErd; // bool

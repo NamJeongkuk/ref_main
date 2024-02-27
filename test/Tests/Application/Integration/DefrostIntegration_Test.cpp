@@ -939,10 +939,10 @@ TEST_GROUP(DefrostIntegration_SingleEvap)
       CompressorShouldBe(OFF);
    }
 
-   void NextDefrostTypeShouldBe(DefrostType_t expected)
+   void NextDefrostTypeOverrideShouldBe(DefrostType_t expected)
    {
       DefrostType_t actual;
-      DataModel_Read(dataModel, Erd_NextDefrostType, &actual);
+      DataModel_Read(dataModel, Erd_NextDefrostTypeOverride, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -1491,7 +1491,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToHeaterOnEntryWhenDefrostTe
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry);
    WhenDefrostTestIsRequested(DefrostTestRequest_Defrost);
 
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
 
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOn);
    After(defrostData->heaterOnEntryData.defrostHeaterOnDelayAfterCompressorOffInSeconds * MSEC_PER_SEC);
@@ -1507,7 +1507,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToHeaterOnEntryWhenDefrostTe
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOnEntry);
    WhenDefrostTestIsRequested(DefrostTestRequest_Defrost);
    CompressorOnTimeInSecondsShouldBe(0);
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
 
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOn);
    After(defrostData->heaterOnEntryData.defrostHeaterOnDelayAfterCompressorOffInSeconds * MSEC_PER_SEC);
@@ -1524,7 +1524,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldReenterHeaterOnEntryWhenDefrostTestReq
    WhenDefrostTestIsRequested(DefrostTestRequest_Defrost);
    CompressorOnTimeInSecondsShouldBe(0);
 
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
 
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_HeaterOn);
    After(defrostData->heaterOnEntryData.defrostHeaterOnDelayAfterCompressorOffInSeconds * MSEC_PER_SEC);
@@ -1539,7 +1539,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToPrechillPrepWhenPrechillTe
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
    WhenDefrostTestIsRequested(DefrostTestRequest_Prechill);
 
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
 }
 
 TEST(DefrostIntegration_SingleEvap, ShouldNotTransitionToPrechillPrepButToHeaterOnEntryWhenPrechillTestRequestedAndFreezerThermistorIsInvalidDuringWaitingToDefrostState)
@@ -1569,7 +1569,7 @@ TEST(DefrostIntegration_SingleEvap, ShouldTransitionToPrechillPrepWhenPrechillTe
    TheDefrostHsmStateShouldChangeTo(DefrostHsmState_PrechillPrep);
    WhenDefrostTestIsRequested(DefrostTestRequest_Prechill);
 
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
 }
 
 TEST(DefrostIntegration_SingleEvap, ShouldNotTransitionToPrechillPrepButToHeaterOnEntryWhenPrechillTestRequestedAndFreezerThermistorIsInvalidDuringDefrostingState)

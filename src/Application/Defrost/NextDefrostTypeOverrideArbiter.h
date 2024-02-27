@@ -1,6 +1,6 @@
 /*!
  * @file
- * @brief This module determine the next defrost type after counting number of fresh food defrosts
+ * @brief This module determine the next defrost type override after counting number of fresh food defrosts
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
@@ -15,7 +15,7 @@
 
 typedef struct
 {
-   Erd_t nextDefrostTypeErd; // DefrostType_t
+   Erd_t nextDefrostTypeOverrideErd; // DefrostType_t
    Erd_t defrostingErd; // bool
    Erd_t numberOfSecondaryOnlyDefrostsErd; // uint8_t
    Erd_t numberOfSecondaryOnlyDefrostsBeforeAFullDefrostErd; // uint8_t
@@ -26,7 +26,7 @@ typedef struct
    Erd_t convertibleCompartmentStateErd; // ConvertibleCompartmentStateType_t
    Erd_t currentDefrostTypeErd; // DefrostType_t
    Erd_t freezerFilteredTemperatureTooWarmAtPowerUpErd; // bool
-} NextDefrostTypeArbiterConfig_t;
+} NextDefrostTypeOverrideArbiterConfig_t;
 
 typedef struct
 {
@@ -36,9 +36,9 @@ typedef struct
       EventSubscription_t dataModelSubscription;
       const DefrostData_t *defrostData;
       const EnhancedSabbathData_t *enhancedSabbathData;
-      const NextDefrostTypeArbiterConfig_t *config;
+      const NextDefrostTypeOverrideArbiterConfig_t *config;
    } _private;
-} NextDefrostTypeArbiter_t;
+} NextDefrostTypeOverrideArbiter_t;
 
 /*!
  *
@@ -46,9 +46,9 @@ typedef struct
  * @param dataModel
  * @param config
  */
-void NextDefrostTypeArbiter_Init(
-   NextDefrostTypeArbiter_t *instance,
+void NextDefrostTypeOverrideArbiter_Init(
+   NextDefrostTypeOverrideArbiter_t *instance,
    I_DataModel_t *dataModel,
-   const NextDefrostTypeArbiterConfig_t *config);
+   const NextDefrostTypeOverrideArbiterConfig_t *config);
 
 #endif

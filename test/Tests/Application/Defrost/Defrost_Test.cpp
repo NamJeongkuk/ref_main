@@ -79,7 +79,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .numberOfFreezerAbnormalDefrostsErd = Erd_NumberOfFreezerAbnormalDefrosts,
    .freezerDefrostHeaterOnTimeInMinutesErd = Erd_FreezerDefrostHeaterOnTimeInMinutes,
    .freezerDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,
-   .nextDefrostTypeErd = Erd_NextDefrostType,
+   .nextDefrostTypeOverrideErd = Erd_NextDefrostTypeOverride,
    .currentDefrostTypeErd = Erd_CurrentDefrostType,
    .timerModuleErd = Erd_TimerModule,
    .eepromClearedErd = Erd_Eeprom_ClearedDefrostEepromStartup,
@@ -748,9 +748,9 @@ TEST_GROUP(Defrost_SingleEvap)
       DataModel_Write(dataModel, Erd_DisableDefrost, &state);
    }
 
-   void NextDefrostTypeIs(DefrostType_t defrostType)
+   void NextDefrostTypeOverrideIs(DefrostType_t defrostType)
    {
-      DataModel_Write(dataModel, Erd_NextDefrostType, &defrostType);
+      DataModel_Write(dataModel, Erd_NextDefrostTypeOverride, &defrostType);
    }
 
    void CurrentDefrostTypeIs(DefrostType_t defrostType)
@@ -1664,7 +1664,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryWhenFreezerEvapThermistorBecomes
 
 TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeWhileTimeThatPrechillConditionsAreMetIsZeroInPrechillForSecondaryOnlyDefrost)
 {
-   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
+   Given NextDefrostTypeOverrideIs(DefrostType_SecondaryOnly);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
    Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
    Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
@@ -1682,7 +1682,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeWhileTimeTha
 
 TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeWhileTimeThatPrechillConditionsAreMetIsZeroInPrechillForFullDefrost)
 {
-   Given NextDefrostTypeIs(DefrostType_Full);
+   Given NextDefrostTypeOverrideIs(DefrostType_Full);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(ZeroMinutes);
    Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
    Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
@@ -1698,7 +1698,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeWhileTimeTha
 
 TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeMinusTimeThatPrechillConditionsAreMetWhileTimeThatPrechillConditionsAreMetIsNotZeroInPrechillForSecondaryOnlyDefrost)
 {
-   Given NextDefrostTypeIs(DefrostType_SecondaryOnly);
+   Given NextDefrostTypeOverrideIs(DefrostType_SecondaryOnly);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(defrostData.prechillData.maxPrechillTimeForSecondaryOnlyDefrostInMinutes - OneMinute);
    Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
    Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
@@ -1715,7 +1715,7 @@ TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeMinusTimeTha
 
 TEST(Defrost_SingleEvap, ShouldGoToHeaterOnEntryAfterMaxPrechillTimeMinusTimeThatPrechillConditionsAreMetWhileTimeThatPrechillConditionsAreMetIsNotZeroInPrechillForFullDefrost)
 {
-   Given NextDefrostTypeIs(DefrostType_Full);
+   Given NextDefrostTypeOverrideIs(DefrostType_Full);
    Given TimeThatPrechillConditionsAreMetInMinutesIs(defrostData.prechillData.maxPrechillTimeInMinutes - OneMinute);
    Given FilteredFreezerEvapTemperatureIs(defrostData.prechillData.prechillFreezerEvapExitTemperatureInDegFx100 + 1);
    Given FilteredFreezerCabinetTemperatureIs(defrostData.prechillData.prechillFreezerMinTempInDegFx100 + 1);
@@ -2379,7 +2379,7 @@ TEST(Defrost_SingleEvap, ShouldReleaseControlOfFreezerDefrostHeaterWhenDefrostBe
 
 TEST(Defrost_SingleEvap, ShouldWriteToCurrentDefrostTypeWhenExitingWaitingToDefrost)
 {
-   Given NextDefrostTypeIs(DefrostType_Full);
+   Given NextDefrostTypeOverrideIs(DefrostType_Full);
    And CurrentDefrostTypeIs(DefrostType_SecondaryOnly);
    And LastFreshFoodDefrostWasNormal();
    And LastFreezerDefrostWasNormal();

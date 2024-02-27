@@ -23,7 +23,7 @@ static const DefrostTestRequestHandlerConfiguration_t config = {
    .defrostTestRequestErd = Erd_DefrostTestRequest,
    .disableDefrostErd = Erd_DisableDefrost,
    .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
-   .nextDefrostTypeErd = Erd_NextDefrostType,
+   .nextDefrostTypeOverrideErd = Erd_NextDefrostTypeOverride,
    .useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts,
    .defrostTestRequestStatusErd = Erd_DefrostTestRequestStatus,
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill
@@ -102,10 +102,10 @@ TEST_GROUP(DefrostTestRequestHandler)
       DataModel_Write(dataModel, Erd_DisableDefrost, &state);
    }
 
-   void NextDefrostTypeShouldBe(DefrostType_t expected)
+   void NextDefrostTypeOverrideShouldBe(DefrostType_t expected)
    {
       DefrostType_t actual;
-      DataModel_Read(dataModel, Erd_NextDefrostType, &actual);
+      DataModel_Read(dataModel, Erd_NextDefrostTypeOverride, &actual);
 
       CHECK_EQUAL(expected, actual);
    }
@@ -198,62 +198,62 @@ TEST(DefrostTestRequestHandler, ShouldNotRequestWhenDefrostTestRequestIsIdleWhil
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Idle, 0);
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToSecondaryOnlyAndRequestDefrostWhenDefrostTestRequestIsSecondaryOnlyDefrostWhileDefrostStateIsIdle)
+TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeOverrideToSecondaryOnlyAndRequestDefrostWhenDefrostTestRequestIsSecondaryOnlyDefrostWhileDefrostStateIsIdle)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_Idle);
 
    WhenDefrostTestRequestIs(DefrostTestRequest_SecondaryOnlyDefrost);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_SecondaryOnlyDefrost);
-   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
+   NextDefrostTypeOverrideShouldBe(DefrostType_SecondaryOnly);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Defrost, 1);
    DefrostTestRequestShouldBeReset();
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToSecondaryOnlyAndRequestDefrostWhenDefrostTestRequestIsSecondaryOnlyDefrostWhileDefrostStateIsPrechill)
+TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeOverrideToSecondaryOnlyAndRequestDefrostWhenDefrostTestRequestIsSecondaryOnlyDefrostWhileDefrostStateIsPrechill)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_Prechill);
 
    WhenDefrostTestRequestIs(DefrostTestRequest_SecondaryOnlyDefrost);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_SecondaryOnlyDefrost);
-   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
+   NextDefrostTypeOverrideShouldBe(DefrostType_SecondaryOnly);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Defrost, 1);
    DefrostTestRequestShouldBeReset();
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToSecondaryOnlyAndRequestDefrostWhenDefrostTestRequestIsSecondaryOnlyDefrostWhileDefrostStateIsHeaterOn)
+TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeOverrideToSecondaryOnlyAndRequestDefrostWhenDefrostTestRequestIsSecondaryOnlyDefrostWhileDefrostStateIsHeaterOn)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_HeaterOn);
 
    WhenDefrostTestRequestIs(DefrostTestRequest_SecondaryOnlyDefrost);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_SecondaryOnlyDefrost);
-   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
+   NextDefrostTypeOverrideShouldBe(DefrostType_SecondaryOnly);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Defrost, 1);
    DefrostTestRequestShouldBeReset();
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToSecondaryOnlyAndRequestDefrostWhenDefrostTestRequestIsSecondaryOnlyDefrostWhileDefrostStateIsDwell)
+TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeOverrideToSecondaryOnlyAndRequestDefrostWhenDefrostTestRequestIsSecondaryOnlyDefrostWhileDefrostStateIsDwell)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_Dwell);
 
    WhenDefrostTestRequestIs(DefrostTestRequest_SecondaryOnlyDefrost);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_SecondaryOnlyDefrost);
-   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
+   NextDefrostTypeOverrideShouldBe(DefrostType_SecondaryOnly);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Defrost, 1);
    DefrostTestRequestShouldBeReset();
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToSecondaryOnlyAndRequestDefrostWhenDefrostTestRequestIsSecondaryOnlyDefrostWhileDefrostStateIsPostDwell)
+TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeOverrideToSecondaryOnlyAndRequestDefrostWhenDefrostTestRequestIsSecondaryOnlyDefrostWhileDefrostStateIsPostDwell)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_PostDwell);
 
    WhenDefrostTestRequestIs(DefrostTestRequest_SecondaryOnlyDefrost);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_SecondaryOnlyDefrost);
-   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
+   NextDefrostTypeOverrideShouldBe(DefrostType_SecondaryOnly);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Defrost, 1);
    DefrostTestRequestShouldBeReset();
 }
@@ -267,63 +267,63 @@ TEST(DefrostTestRequestHandler, ShouldNotRequestWhenDefrostTestRequestIsSecondar
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Idle, 0);
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFullAndRequestDefrostWhenDefrostTestRequestIsDefrostWhileDefrostStateIsIdle)
+TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeOverrideToFullAndRequestDefrostWhenDefrostTestRequestIsDefrostWhileDefrostStateIsIdle)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_Idle);
 
    WhenDefrostTestRequestIs(DefrostTestRequest_Defrost);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_Defrost);
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Defrost, 1);
    DefrostTestRequestShouldBeReset();
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToSecondaryOnlyAndRequestPrechillWhenDefrostTestRequestIsSecondaryOnlyPrechillWhileDefrostStateIsIdle)
+TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeOverrideToSecondaryOnlyAndRequestPrechillWhenDefrostTestRequestIsSecondaryOnlyPrechillWhileDefrostStateIsIdle)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_Idle);
 
    WhenDefrostTestRequestIs(DefrostTestRequest_SecondaryOnlyPrechill);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_SecondaryOnlyPrechill);
-   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
+   NextDefrostTypeOverrideShouldBe(DefrostType_SecondaryOnly);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Prechill, 1);
    DefrostTestRequestShouldBeReset();
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFullAndRequestPrechillWhenDefrostTestRequestIsPrechillWhileDefrostStateIsIdle)
+TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeOverrideToFullAndRequestPrechillWhenDefrostTestRequestIsPrechillWhileDefrostStateIsIdle)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_Idle);
 
    WhenDefrostTestRequestIs(DefrostTestRequest_Prechill);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_Prechill);
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
    DefrostTestStateRequestShouldBe(DefrostTestStateRequest_Prechill, 1);
    DefrostTestRequestShouldBeReset();
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToSecondaryOnlyAndDoTheOthersWhenDefrostTestRequestIsAhamSecondaryOnlyPrechillWhileDefrostStateIsIdle)
+TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeOverrideToSecondaryOnlyAndDoTheOthersWhenDefrostTestRequestIsAhamSecondaryOnlyPrechillWhileDefrostStateIsIdle)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_Idle);
 
    WhenDefrostTestRequestIs(DefrostTestRequest_AhamSecondaryOnlyPrechill);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_AhamSecondaryOnlyPrechill);
-   NextDefrostTypeShouldBe(DefrostType_SecondaryOnly);
+   NextDefrostTypeOverrideShouldBe(DefrostType_SecondaryOnly);
    UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
    DefrostTestRequestShouldBeReset();
    DontSkipPrechillShouldBe(SET);
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeToFullAndDoTheOthersWhenDefrostTestRequestIsAhamPrechillWhileDefrostStateIsIdle)
+TEST(DefrostTestRequestHandler, ShouldSetNextDefrostTypeOverrideToFullAndDoTheOthersWhenDefrostTestRequestIsAhamPrechillWhileDefrostStateIsIdle)
 {
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_Idle);
 
    WhenDefrostTestRequestIs(DefrostTestRequest_AhamPrechill);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_AhamPrechill);
-   NextDefrostTypeShouldBe(DefrostType_Full);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
    UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(true);
    DefrostTestRequestShouldBeReset();
    DontSkipPrechillShouldBe(SET);

@@ -612,8 +612,8 @@
         },
         {
           "namespace": "mb",
-          "displayName": "Next Defrost Type",
-          "name": "Erd_NextDefrostType",
+          "displayName": "Next Defrost Type Override",
+          "name": "Erd_NextDefrostTypeOverride",
           "read": true,
           "write": false
         },

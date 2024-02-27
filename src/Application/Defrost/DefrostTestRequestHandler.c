@@ -48,11 +48,11 @@ static void UpdateDefrostTestRequestStatus(DefrostTestRequestHandler_t *instance
       &status);
 }
 
-static void SetNextDefrostType(DefrostTestRequestHandler_t *instance, DefrostType_t defrostType)
+static void SetNextDefrostTypeOverride(DefrostTestRequestHandler_t *instance, DefrostType_t defrostType)
 {
    DataModel_Write(
       instance->_private.dataModel,
-      instance->_private.config->nextDefrostTypeErd,
+      instance->_private.config->nextDefrostTypeOverrideErd,
       &defrostType);
 }
 
@@ -116,39 +116,39 @@ static void HandleDefrostTestRequest(void *context, const void *args)
 
          case DefrostTestRequest_SecondaryOnlyDefrost:
             UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_SecondaryOnlyDefrost);
-            SetNextDefrostType(instance, DefrostType_SecondaryOnly);
+            SetNextDefrostTypeOverride(instance, DefrostType_SecondaryOnly);
             RequestDefrostTestState(instance, DefrostTestStateRequest_Defrost);
             break;
 
          case DefrostTestRequest_Defrost:
             UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_Defrost);
-            SetNextDefrostType(instance, DefrostType_Full);
+            SetNextDefrostTypeOverride(instance, DefrostType_Full);
             RequestDefrostTestState(instance, DefrostTestStateRequest_Defrost);
             break;
 
          case DefrostTestRequest_SecondaryOnlyPrechill:
             UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_SecondaryOnlyPrechill);
-            SetNextDefrostType(instance, DefrostType_SecondaryOnly);
+            SetNextDefrostTypeOverride(instance, DefrostType_SecondaryOnly);
             RequestDefrostTestState(instance, DefrostTestStateRequest_Prechill);
             break;
 
          case DefrostTestRequest_Prechill:
             UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_Prechill);
-            SetNextDefrostType(instance, DefrostType_Full);
+            SetNextDefrostTypeOverride(instance, DefrostType_Full);
             RequestDefrostTestState(instance, DefrostTestStateRequest_Prechill);
             break;
 
          case DefrostTestRequest_AhamSecondaryOnlyPrechill:
             SetDontSkipDefrostPrechillToTrue(instance);
             UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_AhamSecondaryOnlyPrechill);
-            SetNextDefrostType(instance, DefrostType_SecondaryOnly);
+            SetNextDefrostTypeOverride(instance, DefrostType_SecondaryOnly);
             SetUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsTo(instance, true);
             break;
 
          case DefrostTestRequest_AhamPrechill:
             SetDontSkipDefrostPrechillToTrue(instance);
             UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_AhamPrechill);
-            SetNextDefrostType(instance, DefrostType_Full);
+            SetNextDefrostTypeOverride(instance, DefrostType_Full);
             SetUseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsTo(instance, true);
             break;
 

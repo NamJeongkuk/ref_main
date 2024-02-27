@@ -47,7 +47,7 @@ typedef struct
    Erd_t numberOfFreezerAbnormalDefrostsErd; // uint16_t
    Erd_t freezerDefrostHeaterOnTimeInMinutesErd; // uint8_t
    Erd_t freezerDefrostHeaterMaxOnTimeInMinutesErd; // uint8_t
-   Erd_t nextDefrostTypeErd; // DefrostType_t
+   Erd_t nextDefrostTypeOverrideErd; // DefrostType_t
    Erd_t currentDefrostTypeErd; // DefrostType_t
    Erd_t timerModuleErd; // TimerModule_t *
    Erd_t eepromClearedErd; // bool

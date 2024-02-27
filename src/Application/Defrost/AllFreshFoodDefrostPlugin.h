@@ -16,7 +16,7 @@
 #include "DefrostStateOnCompareMatch.h"
 #include "DefrostHeaterOnTimeCounter.h"
 #include "FreshFoodDefrostHeaterVotingFrameworkPlugin.h"
-#include "NextDefrostTypeArbiter.h"
+#include "NextDefrostTypeOverrideArbiter.h"
 #include "DefrostTestRequestHandler.h"
 #include "ReadyToDefrost.h"
 #include "SabbathReadyToDefrost.h"
@@ -32,7 +32,7 @@ typedef struct
       DefrostStateOnCompareMatch_t defrostStateOnCompareMatch;
       DefrostHeaterOnTimeCounter_t defrostHeaterOnTimeCounter;
       FreshFoodDefrostHeaterVotingFrameworkPlugin_t freshFoodDefrostHeaterVotingFramework;
-      NextDefrostTypeArbiter_t nextDefrostTypeArbiter;
+      NextDefrostTypeOverrideArbiter_t nextDefrostTypeOverrideArbiter;
       DefrostTestRequestHandler_t defrostTestRequestHandler;
       SabbathReadyToDefrost_t sabbathReadyToDefrost;
    } _private;

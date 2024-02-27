@@ -43,7 +43,7 @@ static const DefrostConfiguration_t defrostConfig = {
    .numberOfFreezerAbnormalDefrostsErd = Erd_NumberOfFreezerAbnormalDefrosts,
    .freezerDefrostHeaterOnTimeInMinutesErd = Erd_FreezerDefrostHeaterOnTimeInMinutes,
    .freezerDefrostHeaterMaxOnTimeInMinutesErd = Erd_FreezerDefrostHeaterMaxOnTimeInMinutes,
-   .nextDefrostTypeErd = Erd_NextDefrostType,
+   .nextDefrostTypeOverrideErd = Erd_NextDefrostTypeOverride,
    .currentDefrostTypeErd = Erd_CurrentDefrostType,
    .timerModuleErd = Erd_TimerModule,
    .eepromClearedErd = Erd_Eeprom_ClearedDefrostEepromStartup,
@@ -133,8 +133,8 @@ static const TimeThatPrechillConditionsAreMetConfiguration_t timeThatPrechillCon
    .timerModuleErd = Erd_TimerModule
 };
 
-static const NextDefrostTypeArbiterConfig_t nextDefrostTypeArbiterConfig = {
-   .nextDefrostTypeErd = Erd_NextDefrostType,
+static const NextDefrostTypeOverrideArbiterConfig_t nextDefrostTypeOverrideArbiterConfig = {
+   .nextDefrostTypeOverrideErd = Erd_NextDefrostTypeOverride,
    .defrostingErd = Erd_Defrosting,
    .numberOfSecondaryOnlyDefrostsErd = Erd_NumberOfSecondaryOnlyDefrosts,
    .numberOfSecondaryOnlyDefrostsBeforeAFullDefrostErd = Erd_NumberOfSecondaryOnlyDefrostsBeforeAFullDefrost,
@@ -152,7 +152,7 @@ static const DefrostTestRequestHandlerConfiguration_t defrostTestRequestHandlerC
    .defrostTestRequestErd = Erd_DefrostTestRequest,
    .disableDefrostErd = Erd_DisableDefrost,
    .defrostTestStateRequestErd = Erd_DefrostTestStateRequest,
-   .nextDefrostTypeErd = Erd_NextDefrostType,
+   .nextDefrostTypeOverrideErd = Erd_NextDefrostTypeOverride,
    .useAhamPrechillReadyToDefrostTimeAndResetDefrostCountsErd = Erd_UseAhamPrechillReadyToDefrostTimeAndResetDefrostCounts,
    .defrostTestRequestStatusErd = Erd_DefrostTestRequestStatus,
    .dontSkipDefrostPrechillErd = Erd_DontSkipDefrostPrechill
@@ -291,10 +291,10 @@ void FourDoorDualEvapDefrostPlugin_Init(FourDoorDualEvapDefrostPlugin_t *instanc
       &readyToDefrostConfig,
       defrostData);
 
-   NextDefrostTypeArbiter_Init(
-      &instance->_private.nextDefrostTypeArbiter,
+   NextDefrostTypeOverrideArbiter_Init(
+      &instance->_private.nextDefrostTypeOverrideArbiter,
       dataModel,
-      &nextDefrostTypeArbiterConfig);
+      &nextDefrostTypeOverrideArbiterConfig);
 
    DefrostTestRequestHandler_Init(
       &instance->_private.defrostTestRequestHandler,

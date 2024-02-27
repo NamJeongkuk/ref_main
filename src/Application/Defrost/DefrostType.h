@@ -13,7 +13,8 @@
 enum
 {
    DefrostType_SecondaryOnly,
-   DefrostType_Full
+   DefrostType_Full,
+   DefrostType_DontCare
 };
 typedef uint8_t DefrostType_t;
 
