@@ -156,7 +156,7 @@ static const HarvestCountCalculatorConfiguration_t harvestCountCalculatorConfig 
 };
 
 static const Erd_t enableErdsList[] = {
-   Erd_IceMaker0_EnableStatus, 
+   Erd_IceMaker0_EnableStatus,
    Erd_IceMakerEnabledByGrid
 };
 
@@ -202,7 +202,7 @@ static const TwistTrayIceMakerConfiguration_t twistTrayIceMakerConfig = {
    .motorIceMakerVoteErd = Erd_IceMaker0_TwistMotor_IceMakerVote,
    .waterValveIceMakerVoteErd = Erd_IceMaker0_WaterValve_IceMakerVote,
    .motorActionResultErd = Erd_IceMaker0_MotorActionResult,
-   .motorFaultActiveErd = Erd_TwistTrayIceMaker_MotorFaultActive,
+   .motorFaultActiveErd = Erd_IceMaker0_TwistTrayMotorFault,
    .waterFillMonitoringRequestErd = Erd_IceMaker0_WaterFillMonitoringRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_IceMaker0Vote,
    .iceMakerEnabledResolvedErd = Erd_IceMaker0_EnabledResolved,

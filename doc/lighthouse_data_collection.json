@@ -523,7 +523,7 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_TwistTrayIceMaker_MotorFaultActive",
+         "name": "Erd_IceMaker0_TwistTrayMotorFault",
          "interval": 60000
       },
       {

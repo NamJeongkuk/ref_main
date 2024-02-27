@@ -730,7 +730,7 @@
             {
                "namespace": "mb",
                "displayName": "Twist IM Motor Fault Active Flag",
-               "name": "Erd_TwistTrayIceMaker_MotorFaultActive",
+               "name": "Erd_IceMaker0_TwistTrayMotorFault",
                "read": true,
                "interval": 1000000000
             },

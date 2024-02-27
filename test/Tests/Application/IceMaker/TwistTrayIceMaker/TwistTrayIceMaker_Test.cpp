@@ -62,7 +62,7 @@ static const TwistTrayIceMakerConfiguration_t config = {
    .motorIceMakerVoteErd = Erd_IceMaker0_TwistMotor_IceMakerVote,
    .waterValveIceMakerVoteErd = Erd_IceMaker0_WaterValve_IceMakerVote,
    .motorActionResultErd = Erd_IceMaker0_MotorActionResult,
-   .motorFaultActiveErd = Erd_TwistTrayIceMaker_MotorFaultActive,
+   .motorFaultActiveErd = Erd_IceMaker0_TwistTrayMotorFault,
    .waterFillMonitoringRequestErd = Erd_IceMaker0_WaterFillMonitoringRequest,
    .isolationWaterValveVoteErd = Erd_IsolationWaterValve_IceMaker0Vote,
    .iceMakerEnabledResolvedErd = Erd_IceMaker0_EnabledResolved,
@@ -103,7 +103,7 @@ static void OnDataModelChange(void *context, const void *_args)
          .withParameter("Erd", args->erd)
          .withParameter("Data", (bool)data->state);
    }
-   else if(args->erd == Erd_TwistTrayIceMaker_MotorFaultActive)
+   else if(args->erd == Erd_IceMaker0_TwistTrayMotorFault)
    {
       REINTERPRET(data, args->data, const bool *);
 
@@ -403,7 +403,7 @@ TEST_GROUP(TwistTrayIceMaker)
       mock()
          .expectOneCall("Write Motor Fault")
          .onObject(dataModel)
-         .withParameter("Erd", Erd_TwistTrayIceMaker_MotorFaultActive)
+         .withParameter("Erd", Erd_IceMaker0_TwistTrayMotorFault)
          .withParameter("Data", expectedState);
    }
 
