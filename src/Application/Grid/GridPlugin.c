@@ -11,6 +11,7 @@
 #include "Grid_SingleEvap.h"
 #include "Grid_DualEvap.h"
 #include "Grid_TripleEvap.h"
+#include "Grid_SingleDoorSingleEvap.h"
 #include "uassert.h"
 #include "Constants_Binary.h"
 #include "ParametricData.h"
@@ -20,16 +21,19 @@ typedef struct
    GridFunction_t singleEvap;
    GridFunction_t dualEvap;
    GridFunction_t tripleEvap;
+   GridFunction_t singleDoorSingleEvap;
 } GridFunctions_t;
 
 STATIC_ASSERT(OFFSET_OF(GridFunctions_t, singleEvap) / sizeof(GridFunction_t) == GridId_SingleEvap);
 STATIC_ASSERT(OFFSET_OF(GridFunctions_t, dualEvap) / sizeof(GridFunction_t) == GridId_DualEvap);
 STATIC_ASSERT(OFFSET_OF(GridFunctions_t, tripleEvap) / sizeof(GridFunction_t) == GridId_TripleEvap);
+STATIC_ASSERT(OFFSET_OF(GridFunctions_t, singleDoorSingleEvap) / sizeof(GridFunction_t) == GridId_SingleDoorSingleEvap);
 
 static const GridFunctions_t gridFunctions = {
    .singleEvap = Grid_SingleEvap,
    .dualEvap = Grid_DualEvap,
-   .tripleEvap = Grid_TripleEvap
+   .tripleEvap = Grid_TripleEvap,
+   .singleDoorSingleEvap = Grid_SingleDoorSingleEvap
 };
 
 static const GridFunctionArray_t gridFunctionArray = {

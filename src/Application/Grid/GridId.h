@@ -12,7 +12,8 @@ enum
 {
    GridId_SingleEvap,
    GridId_DualEvap,
-   GridId_TripleEvap
+   GridId_TripleEvap,
+   GridId_SingleDoorSingleEvap
 };
 typedef uint8_t GridId_t;
 

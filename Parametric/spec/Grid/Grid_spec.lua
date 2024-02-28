@@ -27,7 +27,7 @@ describe('Grid', function()
   end)
 
   it('should require grid_id to be a valid grid id', function()
-    should_fail_with("must be in the set { 'grid_single_evap', 'grid_dual_evap', 'grid_triple_evap' }", function()
+    should_fail_with("must be in the set { 'grid_single_evap', 'grid_dual_evap', 'grid_triple_evap', 'grid_single_door_single_evap' }", function()
       grid(generate_config({
         grid_id = 'not a valid grid id'
       }))

@@ -23,7 +23,7 @@ static void SetCoolingSpeed(I_DataModel_t *dataModel, CoolingSpeed_t currentCool
    DataModel_Write(dataModel, Erd_CoolingSpeed, &currentCoolingSpeed);
 }
 
-static CoolingSpeed_t GetCoolingSpeed(I_DataModel_t *dataModel)
+static CoolingSpeed_t CoolingSpeed(I_DataModel_t *dataModel)
 {
    CoolingSpeed_t currentCoolingSpeed;
    DataModel_Read(dataModel, Erd_CoolingSpeed, &currentCoolingSpeed);
@@ -64,7 +64,7 @@ static void SetCondenserFanAntiSweatBehavior(I_DataModel_t *dataModel, bool stat
    DataModel_Write(dataModel, Erd_CondenserFanAntiSweatBehaviorEnabledByGrid, &state);
 }
 
-static GridArea_t GetGridArea(I_DataModel_t *dataModel)
+static GridArea_t GridArea(I_DataModel_t *dataModel)
 {
    GridArea_t currentGridArea;
    DataModel_Read(dataModel, Erd_GridArea, &currentGridArea);
@@ -170,8 +170,8 @@ void Grid_SingleEvap(void *context)
    DataModel_Read(dataModel, Erd_GridBlockNumberOverrideResolved, &blockNumber);
 
    CoolingMode_t currentCoolingMode = GetCoolingMode(dataModel);
-   CoolingSpeed_t currentCoolingSpeed = GetCoolingSpeed(dataModel);
-   GridArea_t currentGridArea = GetGridArea(dataModel);
+   CoolingSpeed_t currentCoolingSpeed = CoolingSpeed(dataModel);
+   GridArea_t currentGridArea = GridArea(dataModel);
    bool pullDownActive = GetPulldownActive(dataModel);
    bool compressorTripMitigationActive = GetCompressorTripMitigationActive(dataModel);
 

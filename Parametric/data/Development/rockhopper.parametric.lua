@@ -25,6 +25,8 @@ return parametric_data({
     import('./Personality/personalityTestDrivenDevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathOffStage.lua'),
     import('./Personality/personalityTestDrivenDevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathFreshFoodStage.lua'),
     import('./Personality/personalityTestDrivenDevelopmentSingleEvapSingleSpeedCompressorGridIntegrationAndSabbathReadyToDefrostDuringEnhancedSabbathFreezerStage.lua'),
-    import('./Personality/personalityTestDrivenDevelopmentDualEvapFourDoor.lua')
+    import('./Personality/personalityTestDrivenDevelopmentDualEvapFourDoor.lua'),
+    import('./Personality/personalityTestDrivenDevelopmentSingleDoorSingleEvapAllFreezer.lua'),
+    import('./Personality/personalityTestDrivenDevelopmentSingleDoorSingleEvapAllFreshFood.lua')
   }
 })

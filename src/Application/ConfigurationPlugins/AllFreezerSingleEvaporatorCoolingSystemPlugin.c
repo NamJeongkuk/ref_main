@@ -36,12 +36,6 @@ void AllFreezerSingleEvaporatorCoolingSystemPlugin_Init(
    AllFreezerSingleEvaporatorCoolingSystemPlugin_t *instance,
    I_DataModel_t *dataModel)
 {
-   // remove when grid is plugged in
-   DataModel_Write(
-      dataModel,
-      Erd_GridPluginReady,
-      set);
-
    I_ConstArrayMap_t *constArrayMapInterface = ConstArrayMap_SingleDoorSingleEvap_Init(&instance->_private.coolingStateBasedGridVotesTable);
    DataModelErdPointerAccess_Write(dataModel, Erd_CoolingStatesGridVotesConstArrayMapInterface, constArrayMapInterface);
 
@@ -51,6 +45,8 @@ void AllFreezerSingleEvaporatorCoolingSystemPlugin_Init(
       dataModel);
 
    AmbientTemperatureAndHumidityPlugin_Init(&instance->_private.ambientTemperatureAndHumidityPlugin, dataModel);
+
+   GridPlugin_Init(&instance->_private.gridPlugin, dataModel);
 
    CompressorPlugin_Init(&instance->_private.compressorPlugin, dataModel);
    SingleDoorFreezerFanPlugin_Init(&instance->_private.singleDoorFreezerFanPlugin, dataModel);
