@@ -458,11 +458,6 @@
       },
       {
          "namespace": "mb",
-         "name": "Erd_IceMaker0_FreezeIntegrationCount",
-         "interval": 60000
-      },
-      {
-         "namespace": "mb",
          "name": "Erd_IceMaker0_RakeMotor_ResolvedVote",
          "interval": 60000
       },
