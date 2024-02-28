@@ -1962,7 +1962,7 @@
         {
           "namespace": "mb",
           "displayName": "Damper Heater Pwm Duty Cycle",
-          "name": "Erd_DamperHeaterPwmDutyCycle",
+          "name": "Erd_DamperHeater_Pwm",
           "read": true,
           "write": true
         },

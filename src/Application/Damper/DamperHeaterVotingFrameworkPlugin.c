@@ -15,7 +15,7 @@ static const PercentageDutyCycleVote_t defaultData = {
 
 static const PercentageDutyCycleVoteToPwmDutyCycleConverterConfig_t dutyCycleToPercentageCalculatorConfig = {
    .inputPercentageDutyCycleVoteErd = Erd_DamperHeater_ResolvedVote,
-   .outputPwmDutyCycleErd = Erd_DamperHeaterPwmDutyCycle
+   .outputPwmDutyCycleErd = Erd_DamperHeater_Pwm
 };
 
 static bool VotingErdCareDelegate(const void *votingErdData)

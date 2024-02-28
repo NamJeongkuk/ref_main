@@ -29,7 +29,7 @@ static void ConvertibleCompartmentDamperHeaterSoftPwm_Init(
    TimerTicks_t delay)
 {
    static const SoftPwmConfiguration_t config = {
-      .pwmDutyCycleErd = Erd_DamperHeaterPwmDutyCycle,
+      .pwmDutyCycleErd = Erd_DamperHeater_Pwm,
       .gpioErd = Erd_DamperHeater,
       .timerModuleErd = Erd_TimerModule,
       .periodInSeconds = SoftPwmPeriodInSeconds
@@ -83,6 +83,21 @@ static void IceMaker2FillTubeSoftPwm_Init(
    SoftPwm_Init(softPwm, dataModel, delay, &config);
 }
 
+static void ConvertibleCompartmentHeaterSoftPwm_Init(
+   SoftPwm_t *softPwm,
+   I_DataModel_t *dataModel,
+   TimerTicks_t delay)
+{
+   static const SoftPwmConfiguration_t config = {
+      .pwmDutyCycleErd = Erd_ConvertibleCompartmentHeater_Pwm,
+      .gpioErd = Erd_ConvertibleCompartmentHeater,
+      .timerModuleErd = Erd_TimerModule,
+      .periodInSeconds = SoftPwmPeriodInSeconds
+   };
+
+   SoftPwm_Init(softPwm, dataModel, delay, &config);
+}
+
 void FourDoorStaggeredHeater_Init(FourDoorStaggeredHeater_t *instance,
    I_DataModel_t *dataModel)
 {
@@ -94,4 +109,6 @@ void FourDoorStaggeredHeater_Init(FourDoorStaggeredHeater_t *instance,
       &instance->_private.iceMaker1FillTubeHeaterSoftPwm, dataModel, ThirdHeaterDelay);
    IceMaker2FillTubeSoftPwm_Init(
       &instance->_private.iceMaker2FillTubeHeaterSoftPwm, dataModel, FourthHeaterDelay);
+   ConvertibleCompartmentHeaterSoftPwm_Init(
+      &instance->_private.convertibleCompartmentHeaterSoftPwm, dataModel, FifthHeaterDelay);
 }

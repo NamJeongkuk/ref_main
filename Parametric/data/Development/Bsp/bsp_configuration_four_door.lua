@@ -19,6 +19,7 @@ local erd_list = {
 
   { input = bsp_mapped_erd.Erd_IceMaker0_FillTubeHeater,                  output = bsp_erd.Erd_SoftPwmGpio_HTR_00 },
   { input = bsp_mapped_erd.Erd_DamperHeater,                              output = bsp_erd.Erd_SoftPwmGpio_HTR_01 },
+  { input = bsp_mapped_erd.Erd_ConvertibleCompartmentHeater,              output = bsp_erd.Erd_SoftPwmGpio_HTR_04 },
   { input = bsp_mapped_erd.Erd_DamperStepperMotorDriveEnable,             output = bsp_erd.Erd_Gpio_MTR_DRV_EN_00},
   { input = bsp_mapped_erd.Erd_TwistIceMakerMotorDriveEnable,             output = bsp_erd.Erd_Gpio_MTR_DRV_EN_01},
   { input = bsp_mapped_erd.Erd_FreezerDefrostHeaterRelay,                 output = bsp_erd.Erd_Gpio_RLY_00 },

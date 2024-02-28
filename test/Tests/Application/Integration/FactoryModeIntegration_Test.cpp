@@ -54,7 +54,7 @@ static const Erd_t factoryModeLightErdList[] = {
 };
 
 static const Erd_t uint16BspErdList[] = {
-   Erd_DamperHeaterPwmDutyCycle
+   Erd_DamperHeater_Pwm
 };
 
 static const Erd_t uint8BspErdList[] = {
@@ -401,7 +401,7 @@ TEST_GROUP(FactoryModeIntegration)
    {
       DataModel_Write(
          dataModel,
-         Erd_DamperHeaterPwmDutyCycle,
+         Erd_DamperHeater_Pwm,
          &pwmDutyCycle);
    }
 
@@ -424,7 +424,7 @@ TEST_GROUP(FactoryModeIntegration)
       PwmDutyCycle_t actualDutyCycle;
       DataModel_Read(
          dataModel,
-         Erd_DamperHeaterPwmDutyCycle,
+         Erd_DamperHeater_Pwm,
          &actualDutyCycle);
 
       CHECK_EQUAL(expectedPwmDutyCycle, actualDutyCycle);

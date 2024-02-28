@@ -28,6 +28,7 @@ return enum({
   Erd_FreezerDefrostHeaterRelay = 0xF505,
   Erd_FreshFoodDefrostHeaterRelay = 0xF50F,
   Erd_ConvertibleCompartmentDefrostHeaterRelay = 0xF510,
+  Erd_ConvertibleCompartmentHeater = 0xF511,
   Erd_IceMaker0_WaterValveRelay = 0xF507,
   Erd_IceMaker1_WaterValveRelay = 0xF50E,
   Erd_IceMaker2_WaterValveRelay = 0xF544,

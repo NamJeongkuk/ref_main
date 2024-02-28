@@ -1,6 +1,6 @@
 /*!
  * @file
- * @brief
+ * @brief Plugin for the convertible compartment defrost heater voting
  *
  * Copyright GE Appliances - Confidential - All rights reserved.
  */
@@ -22,7 +22,6 @@ typedef struct
 } ConvertibleCompartmentDefrostHeaterVotingFrameworkPlugin_t;
 
 /*!
- * @brief Plugin for the convertible compartment defrost heater voting
  * @param instance
  * @param dataModel
  */

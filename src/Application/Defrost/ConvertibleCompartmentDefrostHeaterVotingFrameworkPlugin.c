@@ -8,22 +8,14 @@
 #include "ConvertibleCompartmentDefrostHeaterVotingFrameworkPlugin.h"
 #include "SystemErds.h"
 
-enum
-{
-   WinningVoteErd = Erd_ConvertibleCompartmentDefrostHeater_WinningVoteErd,
-   ResolvedVoteErd = Erd_ConvertibleCompartmentDefrostHeater_ResolvedVote,
-   LastVoteErd = Erd_ConvertibleCompartmentDefrostHeater_DefrostVote,
-   RelayOutputErd = Erd_ConvertibleCompartmentDefrostHeaterRelay,
-};
-
 static const ResolvedVoteRelayConnectorConfiguration_t relayConnectorConfiguration = {
-   .resolvedRelayVoteErd = ResolvedVoteErd,
-   .relayOutputErd = RelayOutputErd,
+   .resolvedRelayVoteErd = Erd_ConvertibleCompartmentDefrostHeater_ResolvedVote,
+   .relayOutputErd = Erd_ConvertibleCompartmentDefrostHeaterRelay
 };
 
 static const HeaterVotedState_t defaultData = {
    .state = HeaterState_Off,
-   .care = Vote_DontCare,
+   .care = Vote_DontCare
 };
 
 static bool VotingErdCareDelegate(const void *votingErdData)
@@ -35,9 +27,9 @@ static bool VotingErdCareDelegate(const void *votingErdData)
 static const ErdResolverConfiguration_t erdResolverConfiguration = {
    .votingErdCare = VotingErdCareDelegate,
    .defaultData = &defaultData,
-   .winningVoterErd = WinningVoteErd,
-   .resolvedStateErd = ResolvedVoteErd,
-   .numberOfVotingErds = LastVoteErd - WinningVoteErd,
+   .winningVoterErd = Erd_ConvertibleCompartmentDefrostHeater_WinningVoteErd,
+   .resolvedStateErd = Erd_ConvertibleCompartmentDefrostHeater_ResolvedVote,
+   .numberOfVotingErds = Erd_ConvertibleCompartmentDefrostHeater_DefrostVote - Erd_ConvertibleCompartmentDefrostHeater_WinningVoteErd
 };
 
 void ConvertibleCompartmentDefrostHeaterVotingFrameworkPlugin_Init(

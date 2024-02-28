@@ -16,6 +16,7 @@ typedef struct
    struct
    {
       SoftPwm_t convertibleCompartmentDamperHeaterSoftPwm;
+      SoftPwm_t convertibleCompartmentHeaterSoftPwm;
       SoftPwm_t iceMaker0FillTubeHeaterSoftPwm;
       SoftPwm_t iceMaker1FillTubeHeaterSoftPwm;
       SoftPwm_t iceMaker2FillTubeHeaterSoftPwm;
