@@ -110,6 +110,11 @@ TEST_GROUP(DefrostTestRequestHandler)
       CHECK_EQUAL(expected, actual);
    }
 
+   void GivenNextDefrostTypeOverrideIs(DefrostType_t defrostType)
+   {
+      DataModel_Write(dataModel, Erd_NextDefrostTypeOverride, &defrostType);
+   }
+
    void UseAhamPrechillReadyToDefrostTimeAndResetDefrostCountsShouldBe(bool expected)
    {
       bool actual;
@@ -340,14 +345,16 @@ TEST(DefrostTestRequestHandler, ShouldSetDisableDefrostToTrueWhenDefrostTestRequ
    DefrostTestRequestShouldBeReset();
 }
 
-TEST(DefrostTestRequestHandler, ShouldSetDisableDefrostToFalseWhenDefrostTestRequestIsEnableWhileDefrostStateIsDisabled)
+TEST(DefrostTestRequestHandler, ShouldSetDisableDefrostToFalseAndNextDefrostTypeOverrideToFullWhenDefrostTestRequestIsEnableWhileDefrostStateIsDisabled)
 {
+   GivenNextDefrostTypeOverrideIs(DefrostType_DontCare);
    GivenDefrostTestRequestHandlerIsInitialized();
    GivenDefrostStateIs(DefrostState_Disabled);
 
    WhenDefrostTestRequestIs(DefrostTestRequest_Enable);
    DefrostTestRequestStatusShouldBe(DefrostTestRequest_Enable);
    DisableDefrostShouldBe(false);
+   NextDefrostTypeOverrideShouldBe(DefrostType_Full);
    DefrostTestRequestShouldBeReset();
 }
 

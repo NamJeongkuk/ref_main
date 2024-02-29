@@ -159,6 +159,7 @@ static void HandleDefrostTestRequest(void *context, const void *args)
    else if(*defrostTestRequest == DefrostTestRequest_Enable)
    {
       UpdateDefrostTestRequestStatus(instance, DefrostTestRequest_Enable);
+      SetNextDefrostTypeOverride(instance, DefrostType_Full);
       SetDisableDefrost(instance, false);
    }
 
