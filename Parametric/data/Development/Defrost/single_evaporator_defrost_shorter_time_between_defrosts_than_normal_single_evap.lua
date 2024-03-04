@@ -34,10 +34,10 @@ return defrost({
   },
   heater_on_entry = {
     defrost_heater_on_delay_after_compressor_off_in_seconds = 2,
-    heater_on_entry_fresh_food_damper_position = 'open'
+    heater_on_entry_fresh_food_damper_position = 'open',
+    heater_on_entry_sealed_system_valve_position = 'position_A'
   },
   heater_on = {
-    defrost_heater_on_sealed_system_valve_position = 'position_A',
     freezer_defrost_heater_max_on_time_in_minutes = 60,
     freezer_invalid_thermistor_defrost_heater_max_on_time_in_minutes = 10,
     freezer_heater_on_time_to_set_abnormal_defrost_in_minutes = 32,

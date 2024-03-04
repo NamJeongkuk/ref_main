@@ -50,10 +50,10 @@ describe('Defrost', function()
       },
       heater_on_entry = {
         defrost_heater_on_delay_after_compressor_off_in_seconds = 2,
-        heater_on_entry_fresh_food_damper_position = 'closed'
+        heater_on_entry_fresh_food_damper_position = 'closed',
+        heater_on_entry_sealed_system_valve_position = 'position_A'
       },
       heater_on = {
-        defrost_heater_on_sealed_system_valve_position = 'position_A',
         freezer_defrost_heater_max_on_time_in_minutes = 60,
         freezer_invalid_thermistor_defrost_heater_max_on_time_in_minutes = 30,
         freezer_heater_on_time_to_set_abnormal_defrost_in_minutes = 32,
@@ -329,10 +329,10 @@ describe('Defrost', function()
     end)
   end)
 
-  it('should require sealed system valve position argument of heater on to be valid sealed system valve position', function()
-    should_fail_with("heater_on.defrost_heater_on_sealed_system_valve_position='not a valid position' must be in the set { 'position_home', 'position_A', 'position_B', 'position_C', 'position_D' }", function()
+  it('should require sealed system valve position argument of heater on entry to be valid sealed system valve position', function()
+    should_fail_with("heater_on_entry.heater_on_entry_sealed_system_valve_position='not a valid position' must be in the set { 'position_home', 'position_A', 'position_B', 'position_C', 'position_D' }", function()
       local config = generate_config()
-      config.heater_on['defrost_heater_on_sealed_system_valve_position'] = 'not a valid position'
+      config.heater_on_entry['heater_on_entry_sealed_system_valve_position'] = 'not a valid position'
       defrost(config)
     end)
   end)
@@ -775,10 +775,10 @@ describe('Defrost', function()
         ),
         structure(
           u8(2),
-          u8(]] .. damper_position_type.closed .. [[)
+          u8(]] .. damper_position_type.closed .. [[),
+          u8(]] .. sealed_system_valve_position_type.position_A .. [[)
         ),
         structure(
-          u8(]] .. sealed_system_valve_position_type.position_A .. [[),
           u8(60),
           u8(30),
           u8(32),
@@ -848,10 +848,10 @@ describe('Defrost', function()
       },
       heater_on_entry = {
         defrost_heater_on_delay_after_compressor_off_in_seconds = 2,
-        heater_on_entry_fresh_food_damper_position = 'closed'
+        heater_on_entry_fresh_food_damper_position = 'closed',
+        heater_on_entry_sealed_system_valve_position = 'position_A'
       },
       heater_on = {
-        defrost_heater_on_sealed_system_valve_position = 'position_A',
         freezer_defrost_heater_max_on_time_in_minutes = 60,
         freezer_invalid_thermistor_defrost_heater_max_on_time_in_minutes = 30,
         freezer_heater_on_time_to_set_abnormal_defrost_in_minutes = 32,

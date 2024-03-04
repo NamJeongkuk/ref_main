@@ -124,11 +124,11 @@ static const DefrostPrechillData_t prechillData = {
 
 static const DefrostHeaterOnEntryData_t heaterOnEntryData = {
    .defrostHeaterOnDelayAfterCompressorOffInSeconds = 2,
-   .heaterOnEntryFreshFoodDamperPosition = DamperPosition_Open
+   .heaterOnEntryFreshFoodDamperPosition = DamperPosition_Open,
+   .heaterOnEntrySealedSystemValvePosition = SealedSystemValvePosition_A
 };
 
 static const DefrostHeaterOnData_t heaterOnData = {
-   .defrostHeaterOnSealedSystemValvePosition = SealedSystemValvePosition_A,
    .freezerDefrostHeaterMaxOnTimeInMinutes = 60,
    .freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 10,
    .freezerHeaterOnTimeToSetAbnormalDefrostInMinutes = 32,

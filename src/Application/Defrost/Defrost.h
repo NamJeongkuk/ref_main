@@ -66,6 +66,7 @@ typedef struct
    Erd_t convertibleCompartmentEvapFanVoteErd; // FanVotedSpeed_t
    Erd_t sealedSystemValveHomingRequestErd; // bool
    Erd_t sealedSystemValvePositionVoteErd; // SealedSystemValveVotedPosition_t
+   Erd_t convertibleCompartmentDamperPositionVoteErd; // DamperVotedPosition_t
 } DefrostConfiguration_t;
 
 typedef struct

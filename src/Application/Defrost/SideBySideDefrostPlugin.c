@@ -61,7 +61,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .freshFoodEvapFanVoteErd = Erd_FreshFoodEvapFanSpeed_DefrostVote,
    .convertibleCompartmentEvapFanVoteErd = Erd_ConvertibleCompartmentEvapFanSpeed_DefrostVote,
    .sealedSystemValveHomingRequestErd = Erd_SealedSystemValveHomingRequest,
-   .sealedSystemValvePositionVoteErd = Erd_SealedSystemValvePosition_DefrostVote
+   .sealedSystemValvePositionVoteErd = Erd_SealedSystemValvePosition_DefrostVote,
+   .convertibleCompartmentDamperPositionVoteErd = Erd_ConvertibleCompartmentDamperPosition_DefrostVote
 };
 
 static const DefrostHeaterMaxOnTimeConfiguration_t defrostHeaterMaxOnTimeConfig = {

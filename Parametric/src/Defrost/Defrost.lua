@@ -50,10 +50,10 @@ return function(core)
         ),
         structure(
           u8(config.heater_on_entry.defrost_heater_on_delay_after_compressor_off_in_seconds),
-          u8(damper_position_type[config.heater_on_entry.heater_on_entry_fresh_food_damper_position])
+          u8(damper_position_type[config.heater_on_entry.heater_on_entry_fresh_food_damper_position]),
+          u8(sealed_system_valve_position_type[config.heater_on_entry.heater_on_entry_sealed_system_valve_position])
         ),
         structure(
-          u8(sealed_system_valve_position_type[config.heater_on.defrost_heater_on_sealed_system_valve_position]),
           u8(config.heater_on.freezer_defrost_heater_max_on_time_in_minutes),
           u8(config.heater_on.freezer_invalid_thermistor_defrost_heater_max_on_time_in_minutes),
           u8(config.heater_on.freezer_heater_on_time_to_set_abnormal_defrost_in_minutes),
@@ -134,12 +134,12 @@ return function(core)
         heater_on_entry = {
           constraint.table_keys({
             defrost_heater_on_delay_after_compressor_off_in_seconds = { constraint.u8 },
-            heater_on_entry_fresh_food_damper_position = { constraint.in_set(enum.keys(damper_position_type)) }
+            heater_on_entry_fresh_food_damper_position = { constraint.in_set(enum.keys(damper_position_type)) },
+            heater_on_entry_sealed_system_valve_position = { constraint.in_set(enum.keys(sealed_system_valve_position_type)) }
           })
         },
         heater_on = {
           constraint.table_keys({
-            defrost_heater_on_sealed_system_valve_position = { constraint.in_set(enum.keys(sealed_system_valve_position_type)) },
             freezer_defrost_heater_max_on_time_in_minutes = { constraint.u8 },
             freezer_invalid_thermistor_defrost_heater_max_on_time_in_minutes = { constraint.u8 },
             freezer_heater_on_time_to_set_abnormal_defrost_in_minutes = { constraint.u8 },

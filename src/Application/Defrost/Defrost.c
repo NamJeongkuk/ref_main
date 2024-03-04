@@ -389,7 +389,7 @@ static void VoteForIceCabinetFanSpeed(Defrost_t *instance, FanSpeed_t speed, boo
       &fanVote);
 }
 
-static void VoteForDamperPosition(Defrost_t *instance, DamperPosition_t position, bool care)
+static void VoteForFreshFoodDamperPosition(Defrost_t *instance, DamperPosition_t position, bool care)
 {
    DamperVotedPosition_t damperVote = {
       .position = position,
@@ -413,11 +413,23 @@ static void VoteForSealedSystemValvePosition(Defrost_t *instance, SealedSystemVa
       &valvePositionVote);
 }
 
+static void VoteForConvertibleCompartmentDamperPosition(Defrost_t *instance, DamperPosition_t position, bool care)
+{
+   DamperVotedPosition_t vote = {
+      .position = position,
+      .care = care
+   };
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->convertibleCompartmentDamperPositionVoteErd,
+      &vote);
+}
+
 static void VoteForPrechillLoads(Defrost_t *instance, bool care)
 {
    VoteForCompressorSpeed(instance, instance->_private.defrostParametricData->prechillData.prechillCompressorSpeed, care);
    VoteForFreezerEvapFanSpeed(instance, instance->_private.defrostParametricData->prechillData.prechillFreezerEvapFanSpeed, care);
-   VoteForDamperPosition(instance, instance->_private.defrostParametricData->prechillData.prechillFreshFoodDamperPosition, care);
+   VoteForFreshFoodDamperPosition(instance, instance->_private.defrostParametricData->prechillData.prechillFreshFoodDamperPosition, care);
    VoteForIceCabinetFanSpeed(instance, instance->_private.defrostParametricData->prechillData.prechillIceCabinetFanSpeed, care);
 }
 
@@ -427,7 +439,9 @@ static void VoteForHeaterOnEntryLoads(Defrost_t *instance, bool care)
    VoteForCondenserFanSpeed(instance, FanSpeed_Off, care);
    VoteForFreezerEvapFanSpeed(instance, FanSpeed_Off, care);
    VoteForIceCabinetFanSpeed(instance, FanSpeed_Off, care);
-   VoteForDamperPosition(instance, instance->_private.defrostParametricData->heaterOnEntryData.heaterOnEntryFreshFoodDamperPosition, care);
+   VoteForFreshFoodDamperPosition(instance, instance->_private.defrostParametricData->heaterOnEntryData.heaterOnEntryFreshFoodDamperPosition, care);
+   VoteForConvertibleCompartmentDamperPosition(instance, DamperPosition_Closed, care);
+   VoteForSealedSystemValvePosition(instance, instance->_private.defrostParametricData->heaterOnEntryData.heaterOnEntrySealedSystemValvePosition, care);
 }
 
 static void VoteForFreezerDefrostHeater(
@@ -512,7 +526,7 @@ static void VoteForDwellLoads(Defrost_t *instance, bool care)
    VoteForFreshFoodEvapFanSpeed(instance, FanSpeed_Off, care);
    VoteForConvertibleCompartmentEvapFanSpeed(instance, FanSpeed_Off, care);
    VoteForIceCabinetFanSpeed(instance, FanSpeed_Off, care);
-   VoteForDamperPosition(
+   VoteForFreshFoodDamperPosition(
       instance,
       instance->_private.defrostParametricData->dwellData.dwellFreshFoodDamperPosition,
       care);
@@ -537,7 +551,7 @@ static void VoteForPostDwellLoads(Defrost_t *instance, bool care)
    VoteForIceCabinetFanSpeed(instance, FanSpeed_Off, care);
    VoteForFreshFoodEvapFanSpeed(instance, FanSpeed_Off, care);
    VoteForConvertibleCompartmentEvapFanSpeed(instance, FanSpeed_Off, care);
-   VoteForDamperPosition(
+   VoteForFreshFoodDamperPosition(
       instance,
       instance->_private.defrostParametricData->postDwellData.postDwellFreshFoodDamperPosition,
       care);
@@ -556,7 +570,7 @@ static void VoteDontCareForPostDwellLoads(Defrost_t *instance)
    VoteForFreezerEvapFanSpeed(instance, FanSpeed_Off, Vote_DontCare);
    VoteForFreshFoodEvapFanSpeed(instance, FanSpeed_Off, Vote_DontCare);
    VoteForConvertibleCompartmentEvapFanSpeed(instance, FanSpeed_Off, Vote_DontCare);
-   VoteForDamperPosition(instance, DamperPosition_Closed, Vote_DontCare);
+   VoteForFreshFoodDamperPosition(instance, DamperPosition_Closed, Vote_DontCare);
    VoteForSealedSystemValvePosition(
       instance,
       instance->_private.defrostParametricData->postDwellData.postDwellSealedSystemValvePosition,

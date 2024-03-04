@@ -57,11 +57,11 @@ typedef struct
 {
    uint8_t defrostHeaterOnDelayAfterCompressorOffInSeconds;
    DamperPosition_t heaterOnEntryFreshFoodDamperPosition;
+   SealedSystemValvePosition_t heaterOnEntrySealedSystemValvePosition;
 } DefrostHeaterOnEntryData_t;
 
 typedef struct
 {
-   SealedSystemValvePosition_t defrostHeaterOnSealedSystemValvePosition;
    uint8_t freezerDefrostHeaterMaxOnTimeInMinutes;
    uint8_t freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes;
    uint8_t freezerHeaterOnTimeToSetAbnormalDefrostInMinutes;

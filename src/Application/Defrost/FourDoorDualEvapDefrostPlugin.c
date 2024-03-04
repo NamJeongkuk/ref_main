@@ -55,7 +55,14 @@ static const DefrostConfiguration_t defrostConfig = {
    .enhancedSabbathModeErd = Erd_EnhancedSabbathModeEnable,
    .sabbathIsReadyToDefrostErd = Erd_SabbathIsReadyToDefrost,
    .enhancedSabbathIsRequestingDefrostErd = Erd_EnhancedSabbathIsRequestingDefrost,
-   .freezerDefrostHeaterOnForMaxTimeFaultErd = Erd_FreezerDefrostHeaterOnForMaxTimeFault
+   .freezerDefrostHeaterOnForMaxTimeFaultErd = Erd_FreezerDefrostHeaterOnForMaxTimeFault,
+   .freshFoodDefrostHeaterVoteErd = Erd_FreshFoodDefrostHeater_DefrostVote,
+   .convertibleCompartmentDefrostHeaterVoteErd = Erd_ConvertibleCompartmentDefrostHeater_DefrostVote,
+   .freshFoodEvapFanVoteErd = Erd_FreshFoodEvapFanSpeed_DefrostVote,
+   .convertibleCompartmentEvapFanVoteErd = Erd_ConvertibleCompartmentEvapFanSpeed_DefrostVote,
+   .sealedSystemValveHomingRequestErd = Erd_SealedSystemValveHomingRequest,
+   .sealedSystemValvePositionVoteErd = Erd_SealedSystemValvePosition_DefrostVote,
+   .convertibleCompartmentDamperPositionVoteErd = Erd_ConvertibleCompartmentDamperPosition_DefrostVote
 };
 
 static const DefrostHeaterMaxOnTimeConfiguration_t defrostHeaterMaxOnTimeConfig = {

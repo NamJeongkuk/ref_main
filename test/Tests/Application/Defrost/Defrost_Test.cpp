@@ -97,7 +97,8 @@ static const DefrostConfiguration_t defrostConfig = {
    .freshFoodEvapFanVoteErd = Erd_FreshFoodEvapFanSpeed_DefrostVote,
    .convertibleCompartmentEvapFanVoteErd = Erd_ConvertibleCompartmentEvapFanSpeed_DefrostVote,
    .sealedSystemValveHomingRequestErd = Erd_SealedSystemValveHomingRequest,
-   .sealedSystemValvePositionVoteErd = Erd_SealedSystemValvePosition_DefrostVote
+   .sealedSystemValvePositionVoteErd = Erd_SealedSystemValvePosition_DefrostVote,
+   .convertibleCompartmentDamperPositionVoteErd = Erd_ConvertibleCompartmentDamperPosition_DefrostVote
 };
 
 static const DefrostIdleData_t idleData = {
@@ -138,11 +139,11 @@ static const DefrostPrechillData_t prechillData = {
 
 static const DefrostHeaterOnEntryData_t heaterOnEntryData = {
    .defrostHeaterOnDelayAfterCompressorOffInSeconds = 2,
-   .heaterOnEntryFreshFoodDamperPosition = DamperPosition_Open
+   .heaterOnEntryFreshFoodDamperPosition = DamperPosition_Open,
+   .heaterOnEntrySealedSystemValvePosition = SealedSystemValvePosition_A
 };
 
 static const DefrostHeaterOnData_t heaterOnData = {
-   .defrostHeaterOnSealedSystemValvePosition = SealedSystemValvePosition_A,
    .freezerDefrostHeaterMaxOnTimeInMinutes = 60,
    .freezerInvalidThermistorDefrostHeaterMaxOnTimeInMinutes = 10,
    .freezerHeaterOnTimeToSetAbnormalDefrostInMinutes = 32,
@@ -995,6 +996,23 @@ TEST_GROUP(Defrost_SingleEvap)
    {
       SealedSystemValveVotedPosition_t actual;
       DataModel_Read(dataModel, Erd_SealedSystemValvePosition_DefrostVote, &actual);
+
+      CHECK_FALSE(actual.care);
+   }
+
+   void ConvertibleCompartmentDamperVoteShouldBe(DamperPosition_t expected)
+   {
+      DamperVotedPosition_t actual;
+      DataModel_Read(dataModel, Erd_ConvertibleCompartmentDamperPosition_DefrostVote, &actual);
+
+      CHECK_EQUAL(expected, actual.position);
+      CHECK_TRUE(actual.care);
+   }
+
+   void ConvertibleCompartmentDamperVoteShouldBeDontCare()
+   {
+      DamperVotedPosition_t actual;
+      DataModel_Read(dataModel, Erd_ConvertibleCompartmentDamperPosition_DefrostVote, &actual);
 
       CHECK_FALSE(actual.care);
    }
@@ -1930,7 +1948,7 @@ TEST(Defrost_SingleEvap, ShouldVoteForLoadsOnEntryToPrechill)
    IceCabinetFanSpeedVoteShouldBe(defrostData.prechillData.prechillIceCabinetFanSpeed);
 }
 
-TEST(Defrost_SingleEvap, ShouldTurnOffCompressorAndFansOnHeaterOnEntryState)
+TEST(Defrost_SingleEvap, ShouldVoteForHeaterOnEntryLoadsWhenEnteringHeaterOnEntryState)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
 
@@ -1938,12 +1956,9 @@ TEST(Defrost_SingleEvap, ShouldTurnOffCompressorAndFansOnHeaterOnEntryState)
    CondenserFanSpeedVoteShouldBe(FanSpeed_Off);
    FreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off);
    IceCabinetFanSpeedVoteShouldBe(FanSpeed_Off);
-}
-
-TEST(Defrost_SingleEvap, ShouldVoteForFreshFoodDamperBasedOnParametricallyDefinedPositionOnEntryToHeaterOnEntry)
-{
-   Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
-   FreshFoodDamperPositionVoteShouldBe(DamperPosition_Open);
+   FreshFoodDamperPositionVoteShouldBe(defrostData.heaterOnEntryData.heaterOnEntryFreshFoodDamperPosition);
+   ConvertibleCompartmentDamperVoteShouldBe(DamperPosition_Closed);
+   SealedSystemValvePositionVoteShouldBe(defrostData.heaterOnEntryData.heaterOnEntrySealedSystemValvePosition);
 }
 
 TEST(Defrost_SingleEvap, ShouldReleaseControlOfHeaterOnEntryLoadsWhenDefrostIsDisabled)
@@ -1955,6 +1970,8 @@ TEST(Defrost_SingleEvap, ShouldReleaseControlOfHeaterOnEntryLoadsWhenDefrostIsDi
    CompressorSpeedVoteShouldBeDontCare();
    FanSpeedVotesShouldBeDontCare();
    FreshFoodDamperVoteShouldBeDontCare();
+   ConvertibleCompartmentDamperVoteShouldBeDontCare();
+   SealedSystemValvePositionVoteShouldBeDontCare();
 }
 
 TEST(Defrost_SingleEvap, ShouldExitOnHeaterEntryStateAndTurnOnTheDefrostHeaterAndEnableMinimumCompressorTimesAfterDefrostHeaterOnDelayTimerExpired)
@@ -1971,7 +1988,7 @@ TEST(Defrost_SingleEvap, ShouldExitOnHeaterEntryStateAndTurnOnTheDefrostHeaterAn
    FreezerDefrostHeaterVoteShouldBe(HeaterState_On);
 }
 
-TEST(Defrost_SingleEvap, ShouldVoteCompressorAndFansOffAndFreshFoodDamperPositionBasedOnParametricallyDefinedPositionUponEntryToHeaterOn)
+TEST(Defrost_SingleEvap, ShouldVoteForHeaterOnLoadsUponEntryToHeaterOn)
 {
    Given DefrostIsInitializedAndStateIs(DefrostHsmState_HeaterOnEntry);
 
@@ -1984,7 +2001,9 @@ TEST(Defrost_SingleEvap, ShouldVoteCompressorAndFansOffAndFreshFoodDamperPositio
    CondenserFanSpeedVoteShouldBe(FanSpeed_Off);
    FreezerEvapFanSpeedVoteShouldBe(FanSpeed_Off);
    IceCabinetFanSpeedVoteShouldBe(FanSpeed_Off);
-   FreshFoodDamperPositionVoteShouldBe(DamperPosition_Open);
+   FreshFoodDamperPositionVoteShouldBe(defrostData.heaterOnEntryData.heaterOnEntryFreshFoodDamperPosition);
+   ConvertibleCompartmentDamperVoteShouldBe(DamperPosition_Closed);
+   SealedSystemValvePositionVoteShouldBe(defrostData.heaterOnEntryData.heaterOnEntrySealedSystemValvePosition);
 }
 
 TEST(Defrost_SingleEvap, ShouldReleaseControlOfHeaterOnLoadsWhenDefrostIsDisabled)
@@ -1997,6 +2016,8 @@ TEST(Defrost_SingleEvap, ShouldReleaseControlOfHeaterOnLoadsWhenDefrostIsDisable
    FanSpeedVotesShouldBeDontCare();
    FreezerDefrostHeaterVoteShouldBe(HeaterState_Off);
    DisableMinimumCompressorTimesShouldBe(CLEAR, Vote_DontCare);
+   ConvertibleCompartmentDamperVoteShouldBeDontCare();
+   SealedSystemValvePositionVoteShouldBeDontCare();
 
    When DisableDefrostIs(false);
    FreezerDefrostHeaterVoteShouldBeDontCare();
