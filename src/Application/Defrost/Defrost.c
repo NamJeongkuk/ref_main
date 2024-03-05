@@ -26,6 +26,8 @@
 #include "CoolingMode.h"
 #include "DefrostTestStateRequestMessage.h"
 #include "BooleanVotedState.h"
+#include "SetpointVotedTemperature.h"
+#include "ConvertibleCompartmentStateType.h"
 
 enum
 {
@@ -33,7 +35,6 @@ enum
    Signal_PrechillConditionsAreMet,
    Signal_DefrostTimerExpired,
    Signal_PrechillTemperatureExitConditionMet,
-   Signal_FreshFoodThermistorIsInvalid,
    Signal_FreezerThermistorIsInvalid,
    Signal_FreezerEvaporatorThermistorIsInvalid,
    Signal_FreezerHeaterMaxOnTimeReached,
@@ -48,7 +49,10 @@ enum
    Signal_SabbathIsReadyToDefrost,
    Signal_AtLeastOneSabbathModeIsEnabled,
    Signal_AtLeastOneSabbathModeIsDisabled,
-   Signal_EnhancedSabbathIsRequestingToDefrost
+   Signal_EnhancedSabbathIsRequestingToDefrost,
+   Signal_FreezerTemperatureChanged,
+   Signal_FreshFoodTemperatureChanged,
+   Signal_ConvertibleCompartmentTemperatureChanged,
 };
 
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data);
@@ -90,6 +94,11 @@ static Defrost_t *InstanceFromHsm(Hsm_t *hsm)
 static void SetHsmStateTo(Defrost_t *instance, DefrostHsmState_t state)
 {
    DataModel_Write(instance->_private.dataModel, instance->_private.config->defrostHsmStateErd, &state);
+}
+
+static const DefrostPrechillData_t *PrechillData(Defrost_t *instance)
+{
+   return &instance->_private.defrostParametricData->prechillData;
 }
 
 static uint8_t FreezerDefrostHeaterMaxOnTimeInMinutes(Defrost_t *instance)
@@ -255,6 +264,26 @@ static bool FreezerThermistorIsValid(Defrost_t *instance)
    return state;
 }
 
+static bool ConvertibleCompartmentThermistorIsValid(Defrost_t *instance)
+{
+   bool state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->convertibleCompartmentThermistorIsValidErd,
+      &state);
+   return state;
+}
+
+static ConvertibleCompartmentStateType_t ConvertibleCompartmentState(Defrost_t *instance)
+{
+   ConvertibleCompartmentStateType_t state;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->convertibleCompartmentStateErd,
+      &state);
+   return state;
+}
+
 static DefrostType_t CurrentDefrostType(Defrost_t *instance)
 {
    DefrostType_t currentDefrostType;
@@ -413,6 +442,38 @@ static void VoteForSealedSystemValvePosition(Defrost_t *instance, SealedSystemVa
       &valvePositionVote);
 }
 
+static SealedSystemValvePosition_t GridOrParametricSealedSystemValvePosition(Defrost_t *instance)
+{
+   SealedSystemValveVotedPosition_t vote;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->sealedSystemValvePositionGridVoteErd,
+      &vote);
+
+   if(vote.care == Vote_Care)
+   {
+      return vote.position;
+   }
+
+   return instance->_private.defrostParametricData->prechillData.prechillSealedSystemValvePosition;
+}
+
+static DamperPosition_t GridOrParametricFreshFoodDamperPosition(Defrost_t *instance)
+{
+   DamperVotedPosition_t vote;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freshFoodDamperPositionGridVoteErd,
+      &vote);
+
+   if(vote.care == Vote_Care)
+   {
+      return vote.position;
+   }
+
+   return instance->_private.defrostParametricData->prechillData.prechillFreshFoodDamperPosition;
+}
+
 static void VoteForConvertibleCompartmentDamperPosition(Defrost_t *instance, DamperPosition_t position, bool care)
 {
    DamperVotedPosition_t vote = {
@@ -431,6 +492,8 @@ static void VoteForPrechillLoads(Defrost_t *instance, bool care)
    VoteForFreezerEvapFanSpeed(instance, instance->_private.defrostParametricData->prechillData.prechillFreezerEvapFanSpeed, care);
    VoteForFreshFoodDamperPosition(instance, instance->_private.defrostParametricData->prechillData.prechillFreshFoodDamperPosition, care);
    VoteForIceCabinetFanSpeed(instance, instance->_private.defrostParametricData->prechillData.prechillIceCabinetFanSpeed, care);
+   VoteForFreshFoodDamperPosition(instance, GridOrParametricFreshFoodDamperPosition(instance), care);
+   VoteForSealedSystemValvePosition(instance, GridOrParametricSealedSystemValvePosition(instance), care);
 }
 
 static void VoteForHeaterOnEntryLoads(Defrost_t *instance, bool care)
@@ -575,42 +638,6 @@ static void VoteDontCareForPostDwellLoads(Defrost_t *instance)
       instance,
       instance->_private.defrostParametricData->postDwellData.postDwellSealedSystemValvePosition,
       Vote_DontCare);
-}
-
-static void CheckIfPrechillTemperatureExitConditionMet(Defrost_t *instance)
-{
-   TemperatureDegFx100_t freezerEvaporatorTemperature;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->freezerEvaporatorFilteredTemperatureResolvedInDegFx100Erd,
-      &freezerEvaporatorTemperature);
-
-   TemperatureDegFx100_t freezerTemperature;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->freezerFilteredTemperatureResolvedInDegFx100Erd,
-      &freezerTemperature);
-
-   TemperatureDegFx100_t freshFoodTemperature;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->freshFoodFilteredTemperatureResolvedInDegFx100Erd,
-      &freshFoodTemperature);
-
-   bool freshFoodThermistorIsValid;
-   DataModel_Read(
-      instance->_private.dataModel,
-      instance->_private.config->freshFoodThermistorIsValidResolvedErd,
-      &freshFoodThermistorIsValid);
-
-   if(freezerEvaporatorTemperature <= instance->_private.defrostParametricData->prechillData.prechillFreezerEvapExitTemperatureInDegFx100 ||
-      freezerTemperature <= instance->_private.defrostParametricData->prechillData.prechillFreezerMinTempInDegFx100 ||
-      ((freshFoodTemperature <= instance->_private.defrostParametricData->prechillData.prechillFreshFoodMinTempInDegFx100 ||
-          freshFoodTemperature >= instance->_private.defrostParametricData->prechillData.prechillFreshFoodMaxTempInDegFx100) &&
-         freshFoodThermistorIsValid))
-   {
-      Hsm_SendSignal(&instance->_private.hsm, Signal_PrechillTemperatureExitConditionMet, NULL);
-   }
 }
 
 static void IncrementNumberOfFreezerDefrosts(Defrost_t *instance)
@@ -892,6 +919,81 @@ static void RequestValveHoming(Defrost_t *instance)
       set);
 }
 
+static TimerTicks_t PrechillTimeLeft(Defrost_t *instance)
+{
+   uint16_t maxPrechillTime = MaxPrechillTimeInMinutes(instance);
+   uint8_t minutes = TRUNCATE_UNSIGNED_SUBTRACTION(maxPrechillTime, TimeThatPrechillConditionsAreMetInMinutes(instance));
+   return minutes * MSEC_PER_MIN;
+}
+
+static bool PrechillExitConditionMetForFreezerEvaporator(Defrost_t *instance)
+{
+   TemperatureDegFx100_t temperature;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerEvaporatorFilteredTemperatureResolvedInDegFx100Erd,
+      &temperature);
+
+   return temperature <= PrechillData(instance)->prechillFreezerEvapExitTemperatureInDegFx100;
+}
+
+static bool PrechillExitConditionMetForFreezer(Defrost_t *instance)
+{
+   TemperatureDegFx100_t temperature;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freezerFilteredTemperatureResolvedInDegFx100Erd,
+      &temperature);
+
+   return temperature <= PrechillData(instance)->prechillFreezerMinTempInDegFx100;
+}
+
+static bool PrechillExitConditionMetForFreshFood(Defrost_t *instance)
+{
+   if(!FreshFoodThermistorIsValid(instance))
+   {
+      return false;
+   }
+
+   TemperatureDegFx100_t temperature;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->freshFoodFilteredTemperatureResolvedInDegFx100Erd,
+      &temperature);
+
+   TemperatureDegFx100_t min = PrechillData(instance)->prechillFreshFoodMinTempInDegFx100;
+   TemperatureDegFx100_t max = PrechillData(instance)->prechillFreshFoodMaxTempInDegFx100;
+   return !BETWEEN(min, temperature, max);
+}
+
+static bool PrechillExitConditionMetForConvertibleCompartment(Defrost_t *instance)
+{
+   if(!ConvertibleCompartmentThermistorIsValid(instance))
+   {
+      return false;
+   }
+
+   TemperatureDegFx100_t temperature;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->convertibleCompartmentTemperatureErd,
+      &temperature);
+
+   switch(ConvertibleCompartmentState(instance))
+   {
+      case ConvertibleCompartmentStateType_Freezer:
+         return temperature <= PrechillData(instance)->prechillConvertibleCompartmentAsFreezerMinTempInDegFx100;
+
+      case ConvertibleCompartmentStateType_FreshFood:
+         return !BETWEEN(
+            PrechillData(instance)->prechillConvertibleCompartmentAsFreshFoodMinTempInDegFx100,
+            temperature,
+            PrechillData(instance)->prechillConvertibleCompartmentAsFreshFoodMaxTempInDegFx100);
+   }
+
+   return false;
+}
+
 static bool State_Idle(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
@@ -1084,6 +1186,7 @@ static bool State_PrechillPrep(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
 {
    Defrost_t *instance = InstanceFromHsm(hsm);
+   (void)data;
 
    switch(signal)
    {
@@ -1091,31 +1194,46 @@ static bool State_Prechill(Hsm_t *hsm, HsmSignal_t signal, const void *data)
          SetHsmStateTo(instance, DefrostHsmState_Prechill);
          VoteForPrechillLoads(instance, Vote_Care);
 
-         if(TimeThatPrechillConditionsAreMetInMinutes(instance) >= MaxPrechillTimeInMinutes(instance))
+         if(PrechillTimeLeft(instance) == 0 ||
+            PrechillExitConditionMetForFreezer(instance) ||
+            PrechillExitConditionMetForFreezerEvaporator(instance) ||
+            PrechillExitConditionMetForFreshFood(instance) ||
+            PrechillExitConditionMetForConvertibleCompartment(instance))
          {
-            Hsm_Transition(hsm, State_HeaterOnEntry);
-         }
-         else
-         {
-            StartDefrostTimer(
-               instance,
-               (TimerTicks_t)(((uint8_t)(TRUNCATE_UNSIGNED_SUBTRACTION((uint16_t)MaxPrechillTimeInMinutes(instance),
-                                 TimeThatPrechillConditionsAreMetInMinutes(instance)))) *
-                  MSEC_PER_MIN));
+            Hsm_SendSignal(hsm, Signal_PrechillTemperatureExitConditionMet, NULL);
+            break;
          }
 
-         CheckIfPrechillTemperatureExitConditionMet(instance);
+         StartDefrostTimer(instance, PrechillTimeLeft(instance));
          break;
 
-      case Signal_FreezerEvaporatorTemperatureChanged: {
-         const TemperatureDegFx100_t *freezerEvaporatorTemperature = data;
-
-         if(*freezerEvaporatorTemperature <= instance->_private.defrostParametricData->prechillData.prechillFreezerEvapExitTemperatureInDegFx100)
+      case Signal_FreezerTemperatureChanged:
+         if(PrechillExitConditionMetForFreezer(instance))
          {
-            Hsm_Transition(hsm, State_HeaterOnEntry);
+            Hsm_SendSignal(hsm, Signal_PrechillTemperatureExitConditionMet, NULL);
          }
-      }
-      break;
+         break;
+
+      case Signal_FreezerEvaporatorTemperatureChanged:
+         if(PrechillExitConditionMetForFreezerEvaporator(instance))
+         {
+            Hsm_SendSignal(hsm, Signal_PrechillTemperatureExitConditionMet, NULL);
+         }
+         break;
+
+      case Signal_FreshFoodTemperatureChanged:
+         if(PrechillExitConditionMetForFreshFood(instance))
+         {
+            Hsm_SendSignal(hsm, Signal_PrechillTemperatureExitConditionMet, NULL);
+         }
+         break;
+
+      case Signal_ConvertibleCompartmentTemperatureChanged:
+         if(PrechillExitConditionMetForConvertibleCompartment(instance))
+         {
+            Hsm_SendSignal(hsm, Signal_PrechillTemperatureExitConditionMet, NULL);
+         }
+         break;
 
       case Signal_PrechillTemperatureExitConditionMet:
       case Signal_DefrostTimerExpired:
@@ -1413,15 +1531,6 @@ static void DataModelChanged(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_PrechillConditionsAreMet, NULL);
       }
    }
-   else if(erd == instance->_private.config->freshFoodThermistorIsValidResolvedErd)
-   {
-      const bool *freshFoodThermistorIsValid = onChangeData->data;
-
-      if(!(*freshFoodThermistorIsValid))
-      {
-         Hsm_SendSignal(&instance->_private.hsm, Signal_FreshFoodThermistorIsInvalid, NULL);
-      }
-   }
    else if(erd == instance->_private.config->freezerThermistorIsValidResolvedErd)
    {
       const bool *freezerThermistorIsValid = onChangeData->data;
@@ -1442,28 +1551,19 @@ static void DataModelChanged(void *context, const void *args)
    }
    else if(erd == instance->_private.config->freezerEvaporatorFilteredTemperatureResolvedInDegFx100Erd)
    {
-      const TemperatureDegFx100_t *freezerEvaporatorTemperature = onChangeData->data;
-      Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerEvaporatorTemperatureChanged, freezerEvaporatorTemperature);
+      Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerEvaporatorTemperatureChanged, onChangeData->data);
    }
    else if(erd == instance->_private.config->freezerFilteredTemperatureResolvedInDegFx100Erd)
    {
-      const TemperatureDegFx100_t *freezerTemperature = onChangeData->data;
-
-      if(*freezerTemperature <= instance->_private.defrostParametricData->prechillData.prechillFreezerMinTempInDegFx100)
-      {
-         Hsm_SendSignal(&instance->_private.hsm, Signal_PrechillTemperatureExitConditionMet, NULL);
-      }
+      Hsm_SendSignal(&instance->_private.hsm, Signal_FreezerTemperatureChanged, NULL);
    }
    else if(erd == instance->_private.config->freshFoodFilteredTemperatureResolvedInDegFx100Erd)
    {
-      const TemperatureDegFx100_t *freshFoodTemperature = onChangeData->data;
-
-      if((*freshFoodTemperature <= instance->_private.defrostParametricData->prechillData.prechillFreshFoodMinTempInDegFx100 ||
-            *freshFoodTemperature >= instance->_private.defrostParametricData->prechillData.prechillFreshFoodMaxTempInDegFx100) &&
-         FreshFoodThermistorIsValid(instance))
-      {
-         Hsm_SendSignal(&instance->_private.hsm, Signal_PrechillTemperatureExitConditionMet, NULL);
-      }
+      Hsm_SendSignal(&instance->_private.hsm, Signal_FreshFoodTemperatureChanged, NULL);
+   }
+   else if(erd == instance->_private.config->convertibleCompartmentTemperatureErd)
+   {
+      Hsm_SendSignal(&instance->_private.hsm, Signal_ConvertibleCompartmentTemperatureChanged, NULL);
    }
    else if(erd == instance->_private.config->freezerDefrostHeaterOnTimeInMinutesErd)
    {
@@ -1526,8 +1626,7 @@ static void DataModelChanged(void *context, const void *args)
          Hsm_SendSignal(&instance->_private.hsm, Signal_SabbathIsReadyToDefrost, NULL);
       }
    }
-   else if((erd == instance->_private.config->sabbathModeErd) ||
-      (erd == instance->_private.config->enhancedSabbathModeErd))
+   else if((erd == instance->_private.config->sabbathModeErd) || (erd == instance->_private.config->enhancedSabbathModeErd))
    {
       const bool *state = onChangeData->data;
       if(*state)

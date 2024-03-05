@@ -66,6 +66,11 @@ typedef struct
    Erd_t convertibleCompartmentEvapFanVoteErd; // FanVotedSpeed_t
    Erd_t sealedSystemValveHomingRequestErd; // bool
    Erd_t sealedSystemValvePositionVoteErd; // SealedSystemValveVotedPosition_t
+   Erd_t sealedSystemValvePositionGridVoteErd; // SealedSystemValveVotedPosition_t
+   Erd_t freshFoodDamperPositionGridVoteErd; // DamperVotedPosition_t
+   Erd_t convertibleCompartmentStateErd; // ConvertibleCompartmentStateType_t
+   Erd_t convertibleCompartmentTemperatureErd; // TemperatureDegFx100_t
+   Erd_t convertibleCompartmentThermistorIsValidErd; // bool
    Erd_t convertibleCompartmentDamperPositionVoteErd; // DamperVotedPosition_t
 } DefrostConfiguration_t;
 
