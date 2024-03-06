@@ -21,6 +21,7 @@ typedef struct
    Erd_t stepperMotorPositionRequestErd; // StepperPositionRequest_t
    Erd_t homingRequestErd; // bool
    Erd_t currentPositionErd; // SealedSystemValvePosition_t
+   Erd_t previousPositionErd; // SealedSystemValvePosition_t
 } SealedSystemValveRequestManagerConfiguration_t;
 
 typedef struct

@@ -31,9 +31,10 @@ enum
 
 static const SealedSystemValveRequestManagerConfiguration_t config = {
    .positionRequestResolvedVoteErd = Erd_SealedSystemValvePosition_ResolvedVote,
-   .stepperMotorPositionRequestErd = Erd_DamperStepperMotorPositionRequest,
+   .stepperMotorPositionRequestErd = Erd_SealedSystemValveStepperMotorPositionRequest,
    .homingRequestErd = Erd_SealedSystemValveHomingRequest,
-   .currentPositionErd = Erd_SealedSystemValveCurrentPosition
+   .currentPositionErd = Erd_SealedSystemValveCurrentPosition,
+   .previousPositionErd = Erd_SealedSystemValvePreviousPosition
 };
 
 static const SealedSystemValveData_t parameters = {
@@ -127,7 +128,7 @@ TEST_GROUP(SealedSystemValveRequestManager)
       StepperPositionRequest_t actual;
       DataModel_Read(
          dataModel,
-         Erd_DamperStepperMotorPositionRequest,
+         config.stepperMotorPositionRequestErd,
          &actual);
 
       CHECK_EQUAL(expected, actual.resetSubstep);
@@ -165,24 +166,9 @@ TEST_GROUP(SealedSystemValveRequestManager)
          &requestedPosition);
    }
 
-   void OneMoreStepToComplete()
+   void TheCurrentPositionShouldBe(SealedSystemValvePosition_t expected)
    {
-      StepperPositionRequest_t position;
-      DataModel_Read(
-         dataModel,
-         config.stepperMotorPositionRequestErd,
-         &position);
-
-      position.stepsToMove = 1;
-      DataModel_Write(
-         dataModel,
-         config.stepperMotorPositionRequestErd,
-         &position);
-   }
-
-   void TheCurrentPositionShouldBe(DamperPosition_t expected)
-   {
-      DamperPosition_t actual;
+      SealedSystemValvePosition_t actual;
       DataModel_Read(
          dataModel,
          config.currentPositionErd,
@@ -191,11 +177,30 @@ TEST_GROUP(SealedSystemValveRequestManager)
       CHECK_EQUAL(expected, actual);
    }
 
-   void GivenTheCurrentPositionIs(DamperPosition_t position)
+   void ThePreviousPositionShouldBe(SealedSystemValvePosition_t expected)
+   {
+      SealedSystemValvePosition_t actual;
+      DataModel_Read(
+         dataModel,
+         config.previousPositionErd,
+         &actual);
+
+      CHECK_EQUAL(expected, actual);
+   }
+
+   void GivenTheCurrentPositionIs(SealedSystemValvePosition_t position)
    {
       DataModel_Write(
          dataModel,
          config.currentPositionErd,
+         &position);
+   }
+
+   void GivenThePreviousPositionIs(SealedSystemValvePosition_t position)
+   {
+      DataModel_Write(
+         dataModel,
+         config.previousPositionErd,
          &position);
    }
 };
@@ -205,12 +210,14 @@ TEST(SealedSystemValveRequestManager, ShouldInitializeTheModule)
    GivenTheModuleIsInitialized();
 }
 
-TEST(SealedSystemValveRequestManager, ShouldSetInitialPositionToHome)
+TEST(SealedSystemValveRequestManager, ShouldSetInitialCurrentAndPreviousPositionToHome)
 {
    GivenTheCurrentPositionIs(SealedSystemValvePosition_A);
+   GivenThePreviousPositionIs(SealedSystemValvePosition_A);
    GivenTheModuleIsInitialized();
 
    TheCurrentPositionShouldBe(SealedSystemValvePosition_Home);
+   ThePreviousPositionShouldBe(SealedSystemValvePosition_Home);
 }
 
 TEST(SealedSystemValveRequestManager, ShouldRequestHomingStepsAndDirectionToCounterClockwiseAndSubstepResetOnInitialization)
@@ -341,7 +348,7 @@ TEST(SealedSystemValveRequestManager, ShouldSetMotorStepsToHomeAndDirectionToCou
    HomingErdShouldBe(CLEAR);
 }
 
-TEST(SealedSystemValveRequestManager, ShouldSetPositionToHomeAfterHoming)
+TEST(SealedSystemValveRequestManager, ShouldSetCurrentPositionToHomeAndPreviousPositionToTheOldCurrentPositionAfterHoming)
 {
    GivenTheModuleIsInitializedAndMovedToPosition(SealedSystemValvePosition_C);
 
@@ -350,6 +357,7 @@ TEST(SealedSystemValveRequestManager, ShouldSetPositionToHomeAfterHoming)
    DirectionShouldBe(TurningDirection_CounterClockwise);
 
    WhenValveCompletesPositionChange();
+   ThePreviousPositionShouldBe(SealedSystemValvePosition_C);
    TheCurrentPositionShouldBe(SealedSystemValvePosition_Home);
    HomingErdShouldBe(CLEAR);
 }
@@ -382,4 +390,16 @@ TEST(SealedSystemValveRequestManager, ShouldChangeCurrentPositionErdAfterMovemen
 
    WhenValveCompletesPositionChange();
    TheCurrentPositionShouldBe(SealedSystemValvePosition_C);
+}
+
+TEST(SealedSystemValveRequestManager, ShouldCopyCurrentPositionErdIntoPreviousPositionErdAfterMovementIsCompleted)
+{
+   GivenTheModuleIsInitializedAndMovedToPosition(SealedSystemValvePosition_A);
+
+   WhenTheRequestedPositionIs(SealedSystemValvePosition_B);
+   TheCurrentPositionShouldBe(SealedSystemValvePosition_A);
+   WhenValveCompletesPositionChange();
+
+   ThePreviousPositionShouldBe(SealedSystemValvePosition_A);
+   TheCurrentPositionShouldBe(SealedSystemValvePosition_B);
 }

@@ -184,6 +184,13 @@
         },
         {
           "namespace": "mb",
+          "displayName": "Valve Previous Position",
+          "name": "Erd_SealedSystemValvePreviousPosition",
+          "read": true,
+          "write": true
+        },
+        {
+          "namespace": "mb",
           "displayName": "Homing Request",
           "name": "Erd_SealedSystemValveHomingRequest",
           "read": true,

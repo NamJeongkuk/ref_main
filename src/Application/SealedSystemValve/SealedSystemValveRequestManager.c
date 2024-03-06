@@ -71,6 +71,25 @@ static void SetCurrentPositionTo(SealedSystemValveRequestManager_t *instance, Da
       &currentPosition);
 }
 
+static void SetPreviousPositionTo(SealedSystemValveRequestManager_t *instance, DamperPosition_t previousPosition)
+{
+   DataModel_Write(
+      instance->_private.dataModel,
+      instance->_private.config->previousPositionErd,
+      &previousPosition);
+}
+
+static void SetPreviousPositionToCurrentPosition(SealedSystemValveRequestManager_t *instance)
+{
+   SealedSystemValvePosition_t currentPosition;
+   DataModel_Read(
+      instance->_private.dataModel,
+      instance->_private.config->currentPositionErd,
+      &currentPosition);
+
+   SetPreviousPositionTo(instance, currentPosition);
+}
+
 static uint8_t StepLocationForPosition(SealedSystemValveRequestManager_t *instance, SealedSystemValvePosition_t position)
 {
    switch(position)
@@ -163,6 +182,7 @@ static void State_Homing(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          break;
 
       case Signal_StepRequestCompleted:
+         SetPreviousPositionToCurrentPosition(instance);
          SetCurrentPositionTo(instance, instance->_private.activePositionRequest);
          Fsm_Transition(fsm, State_Idle);
          break;
@@ -190,6 +210,7 @@ static void State_Moving(Fsm_t *fsm, const FsmSignal_t signal, const void *data)
          break;
 
       case Signal_StepRequestCompleted:
+         SetPreviousPositionToCurrentPosition(instance);
          SetCurrentPositionTo(instance, instance->_private.activePositionRequest);
 
          if(instance->_private.homingRequired)
@@ -249,6 +270,7 @@ void SealedSystemValveRequestManager_Init(
    instance->_private.dataModel = dataModel;
 
    SetCurrentPositionTo(instance, SealedSystemValvePosition_Home);
+   SetPreviousPositionTo(instance, SealedSystemValvePosition_Home);
    Fsm_Init(&instance->_private.fsm, State_Homing);
 
    EventSubscription_Init(

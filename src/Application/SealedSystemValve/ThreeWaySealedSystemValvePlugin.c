@@ -41,7 +41,8 @@ static const SealedSystemValveRequestManagerConfiguration_t requestManagerConfig
    .positionRequestResolvedVoteErd = Erd_SealedSystemValvePosition_ResolvedVote,
    .stepperMotorPositionRequestErd = Erd_SealedSystemValveStepperMotorPositionRequest,
    .homingRequestErd = Erd_SealedSystemValveHomingRequest,
-   .currentPositionErd = Erd_SealedSystemValveCurrentPosition
+   .currentPositionErd = Erd_SealedSystemValveCurrentPosition,
+   .previousPositionErd = Erd_SealedSystemValvePreviousPosition
 };
 
 static const StepperMotorDriverConfiguration_t stepperMotorDriverConfig = {
