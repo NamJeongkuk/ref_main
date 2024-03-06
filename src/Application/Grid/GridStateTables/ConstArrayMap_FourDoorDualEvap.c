@@ -11,9 +11,11 @@
 static const FourDoorDualEvaporatorStatesTable_t table[] =
 {    //Cooling Speed         Cooling Mode               Compressor                Condenser Fan       Freezer Evap Fan   Fresh Food Evap Fan  Sealed System Valve Position
    {{ CoolingSpeed_Off,      CoolingMode_Off       }, { CompressorSpeed_Off,      FanSpeed_Off,       FanSpeed_Off,      FanSpeed_Off,        SealedSystemValvePosition_D }},
+   {{ CoolingSpeed_Off,      CoolingMode_Freezer   }, { CompressorSpeed_Off,      FanSpeed_Off,       FanSpeed_Off,      FanSpeed_Off,        SealedSystemValvePosition_B }},
    {{ CoolingSpeed_Low,      CoolingMode_Freezer   }, { CompressorSpeed_Low,      FanSpeed_Low,       FanSpeed_Low,      FanSpeed_Off,        SealedSystemValvePosition_B }},
    {{ CoolingSpeed_Mid,      CoolingMode_Freezer   }, { CompressorSpeed_Medium,   FanSpeed_Medium,    FanSpeed_Medium,   FanSpeed_Off,        SealedSystemValvePosition_B }},
    {{ CoolingSpeed_High,     CoolingMode_Freezer   }, { CompressorSpeed_High,     FanSpeed_High,      FanSpeed_High,     FanSpeed_Off,        SealedSystemValvePosition_B }},
+   {{ CoolingSpeed_Off,      CoolingMode_FreshFood }, { CompressorSpeed_Off,      FanSpeed_Off,       FanSpeed_Off,      FanSpeed_Off,        SealedSystemValvePosition_A }},
    {{ CoolingSpeed_Low,      CoolingMode_FreshFood }, { CompressorSpeed_Low,      FanSpeed_Low,       FanSpeed_Low,      FanSpeed_Low,        SealedSystemValvePosition_A }},
    {{ CoolingSpeed_Mid,      CoolingMode_FreshFood }, { CompressorSpeed_Medium,   FanSpeed_Medium,    FanSpeed_Medium,   FanSpeed_Medium,     SealedSystemValvePosition_A }},
    {{ CoolingSpeed_High,     CoolingMode_FreshFood }, { CompressorSpeed_High,     FanSpeed_High,      FanSpeed_High,     FanSpeed_High,       SealedSystemValvePosition_A }},
