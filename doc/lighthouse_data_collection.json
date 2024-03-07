@@ -580,6 +580,11 @@
          "namespace": "mb",
          "name": "Erd_WaterFilterState",
          "interval": 60000
+      },
+      {
+         "namespace": "mb",
+         "name": "Erd_DispenserRecessHeaterDutyCyclePercent",
+         "interval": 60000
       }
    ]
 }
