@@ -29,6 +29,7 @@ local erd_list = {
   { input = bsp_mapped_erd.Erd_IceMaker1_HeaterRelay,                     output = bsp_erd.Erd_Gpio_RLY_04 },
   { input = bsp_mapped_erd.Erd_IceMaker1_RakeMotorRelay,                  output = bsp_erd.Erd_Gpio_RLY_05 },
   { input = bsp_mapped_erd.Erd_IceMaker0_WaterValveRelay,                 output = bsp_erd.Erd_Gpio_RLY_06 },
+  { input = bsp_mapped_erd.Erd_IceMaker2_WaterValveRelay,                 output = bsp_erd.Erd_Gpio_RLY_07 },
   { input = bsp_mapped_erd.Erd_LeftSideFreshFoodDoorStatus,               output = bsp_erd.Erd_Gpio_DOOR_INT },
   { input = bsp_mapped_erd.Erd_RightSideFreshFoodDoorStatus,              output = bsp_erd.Erd_Gpio_DOOR_01 },
   { input = bsp_mapped_erd.Erd_ConvertibleCompartmentDoorStatus,          output = bsp_erd.Erd_Gpio_DOOR_02 },
