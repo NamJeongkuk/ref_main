@@ -17,6 +17,7 @@
 #include "SingleDoorFreezerCoolingSystemSensorFilteringPlugin.h"
 #include "SingleDoorFreezerFanPlugin.h"
 #include "AllFreezerDefrostPlugin.h"
+#include "AllFreezerDamperPlugin.h"
 #include "GridPlugin.h"
 
 typedef struct
@@ -31,6 +32,7 @@ typedef struct
       CoolingSystemRequestHandler_t coolingSystemRequestHandler;
       ConstArrayMap_SingleDoorSingleEvap_t coolingStateBasedGridVotesTable;
       AllFreezerDefrostPlugin_t allFreezerDefrostPlugin;
+      AllFreezerDamperPlugin_t allFreezerDamperPlugin;
       GridPlugin_t gridPlugin;
    } _private;
 } AllFreezerSingleEvaporatorCoolingSystemPlugin_t;

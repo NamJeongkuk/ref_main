@@ -52,4 +52,6 @@ void AllFreshFoodSingleEvaporatorCoolingSystemPlugin_Init(
    CoolingSystemRequestHandler_Init(&instance->_private.coolingSystemRequestHandler, dataModel, &coolingSystemRequestHandlerConfig);
 
    AllFreshFoodDefrostPlugin_Init(&instance->_private.allFreshFoodDefrostPlugin, dataModel);
+
+   AllFreshFoodDamperPlugin_Init(&instance->_private.allFreshFoodDamperPlugin, dataModel);
 }

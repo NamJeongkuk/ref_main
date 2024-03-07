@@ -16,6 +16,7 @@
 #include "SingleDoorFreshFoodCoolingSystemSensorFilteringPlugin.h"
 #include "SingleDoorFreshFoodFanPlugin.h"
 #include "AllFreshFoodDefrostPlugin.h"
+#include "AllFreshFoodDamperPlugin.h"
 #include "GridPlugin.h"
 
 typedef struct
@@ -30,6 +31,7 @@ typedef struct
       CoolingSystemRequestHandler_t coolingSystemRequestHandler;
       ConstArrayMap_SingleDoorSingleEvap_t coolingStateBasedGridVotesTable;
       AllFreshFoodDefrostPlugin_t allFreshFoodDefrostPlugin;
+      AllFreshFoodDamperPlugin_t allFreshFoodDamperPlugin;
       GridPlugin_t gridPlugin;
    } _private;
 } AllFreshFoodSingleEvaporatorCoolingSystemPlugin_t;

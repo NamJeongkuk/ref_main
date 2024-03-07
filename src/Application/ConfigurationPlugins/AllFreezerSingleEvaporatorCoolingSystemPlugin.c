@@ -54,4 +54,6 @@ void AllFreezerSingleEvaporatorCoolingSystemPlugin_Init(
    CoolingSystemRequestHandler_Init(&instance->_private.coolingSystemRequestHandler, dataModel, &coolingSystemRequestHandlerConfig);
 
    AllFreezerDefrostPlugin_Init(&instance->_private.allFreezerDefrostPlugin, dataModel);
+
+   AllFreezerDamperPlugin_Init(&instance->_private.allFreezerDamperPlugin, dataModel);
 }
